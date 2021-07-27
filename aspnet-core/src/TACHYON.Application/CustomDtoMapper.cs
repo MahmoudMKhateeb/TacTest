@@ -348,7 +348,14 @@ namespace TACHYON
             //configuration.CreateMap<CreateOrEditRouteDto, Route>().ReverseMap();
             //configuration.CreateMap<RouteDto, Route>().ReverseMap();
             configuration.CreateMap<CreateOrEditCityDto, City>().ReverseMap();
-            configuration.CreateMap<CityDto, City>().ReverseMap();
+            configuration.CreateMap<City, CreateOrEditCityDto>()
+                .ForPath(dst => dst.Longitude, opt => opt.MapFrom(src => src.Location.X))
+                 .ForPath(dst => dst.Latitude, opt => opt.MapFrom(src => src.Location.Y));
+            configuration.CreateMap<CityDto, City>()
+                .ForPath(dst => dst.Location.X, opt => opt.MapFrom(src => src.Longitude))
+                 .ForPath(dst => dst.Location.Y, opt => opt.MapFrom(src => src.Latitude))
+                 .ReverseMap();
+
             configuration.CreateMap<CreateOrEditCountyDto, County>().ReverseMap();
             configuration.CreateMap<CountyDto, County>().ReverseMap();
             configuration.CreateMap<GoodCategoryDto, GoodCategory>().ReverseMap();
