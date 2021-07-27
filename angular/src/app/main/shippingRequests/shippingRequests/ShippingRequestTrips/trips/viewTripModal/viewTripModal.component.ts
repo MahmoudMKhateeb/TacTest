@@ -17,6 +17,7 @@ import { finalize } from '@node_modules/rxjs/operators';
 import { FileDownloadService } from '@shared/utils/file-download.service';
 import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
 import Swal from 'sweetalert2';
+import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
 
 @Component({
   selector: 'viewTripModal',
@@ -24,7 +25,6 @@ import Swal from 'sweetalert2';
 })
 export class ViewTripModalComponent extends AppComponentBase implements OnInit {
   @ViewChild('viewTripDetails', { static: false }) modal: ModalDirective;
-  // @ViewChild('wayPointsComponent') wayPointsComponent: PointsComponent;
   @Output() modalSave: EventEmitter<any> = new EventEmitter();
   Vases: CreateOrEditShippingRequestTripVasDto[];
   selectedVases: CreateOrEditShippingRequestTripVasDto[];
@@ -47,7 +47,8 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit {
     private _waybillsServiceProxy: WaybillsServiceProxy,
     private _trucksServiceProxy: TrucksServiceProxy,
     private _shippingRequestDriverServiceProxy: ShippingRequestDriverServiceProxy,
-    private _PointsService: PointsService
+    private _PointsService: PointsService,
+    private _TripService: TripService
   ) {
     super(injector);
   }
@@ -62,6 +63,8 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit {
   show(id): void {
     this.loading = true;
     this.currentTripId = id;
+    //update the active trip id in TripsService
+    this._TripService.updateActiveTripId(id);
     this._shippingRequestTripsService
       .getShippingRequestTripForView(id)
       .pipe(
