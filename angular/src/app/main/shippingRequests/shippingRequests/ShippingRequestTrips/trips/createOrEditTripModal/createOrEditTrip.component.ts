@@ -1,4 +1,16 @@
-import { Component, ViewChild, Injector, Output, EventEmitter, Input, OnInit, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  ViewChild,
+  Injector,
+  Output,
+  EventEmitter,
+  Input,
+  OnInit,
+  ChangeDetectorRef,
+  OnChanges,
+  SimpleChanges,
+  OnDestroy,
+} from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import {
   FacilityForDropdownDto,
@@ -17,6 +29,7 @@ import {
   UpdateDocumentFileInput,
   DocumentFilesServiceProxy,
   DocumentTypeDto,
+  ShippingRequestRouteType,
   ShippingRequestTripVasDto,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
@@ -29,13 +42,18 @@ import { FileDownloadService } from '@shared/utils/file-download.service';
 import { FileItem, FileUploader, FileUploaderOptions } from '@node_modules/ng2-file-upload';
 import { AppConsts } from '@shared/AppConsts';
 import { IAjaxResponse, TokenService } from '@node_modules/abp-ng2-module';
+import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
+import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
+import { FormControl, NgForm, Validators } from '@angular/forms';
 
 @Component({
   selector: 'AddNewTripModal',
   styleUrls: ['./createOrEditTrip.component.css'],
   templateUrl: './createOrEditTrip.component.html',
 })
-export class CreateOrEditTripComponent extends AppComponentBase implements OnInit {
+export class CreateOrEditTripComponent extends AppComponentBase implements OnInit, OnDestroy {
+  @ViewChild('shippingRequestTripsForm') shippingRequestTripsForm: NgForm;
+
   @ViewChild('addNewTripsModal', { static: true }) modal: ModalDirective;
   @ViewChild('PointsComponent') PointsComponent: PointsComponent;
   @ViewChild('createOrEditFacilityModal') createOrEditFacilityModal: CreateOrEditFacilityModalComponent;
@@ -43,6 +61,9 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
   @Input() shippingRequest: ShippingRequestDto;
   @Input() VasListFromFather: GetShippingRequestVasForViewDto[];
+
+  tripStartDate = new FormControl('', Validators.required);
+  endTripDate = new FormControl('');
 
   allFacilities: FacilityForDropdownDto[];
   trip = new CreateOrEditShippingRequestTripDto();
@@ -53,6 +74,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   activeTripId: number = undefined;
   cleanVasesList: CreateOrEditShippingRequestTripVasDto[] = [];
   isApproximateValueRequired = false;
+  RouteTypes = ShippingRequestRouteType;
 
   //documentFile: CreateOrEditDocumentFileDto = new CreateOrEditDocumentFileDto();
   alldocumentsValid = false;
@@ -76,15 +98,45 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     private _waybillsServiceProxy: WaybillsServiceProxy,
     private cdref: ChangeDetectorRef,
     private _documentFilesServiceProxy: DocumentFilesServiceProxy,
+    private _TripService: TripService,
+    private _PointsService: PointsService,
     private _tokenService: TokenService
   ) {
     super(injector);
   }
 
+  TripsServiceSubscription: any;
+  PointsServiceSubscription: any;
   ngOnInit() {
+    //link the trip from the shared service to the this component
+    this.TripsServiceSubscription = this._TripService.currentActiveTrip.subscribe((res) => (this.trip = res));
+    //Take The Points List From the Points Shared Service
+    this.PointsServiceSubscription = this._PointsService.currentWayPointsList.subscribe((res) => (this.trip.routPoints = res));
     //load the Facilites
     this.refreshOrGetFacilities(null);
     this.vasesHandler();
+  }
+
+  /**
+   * Validate Trip Facilitites
+   */
+  ValidateTripFacilities() {
+    //prevent the user from selecting same facilty
+    if (this.trip.originFacilityId == this.trip.destinationFacilityId) {
+      this.shippingRequestTripsForm.controls['sourceFacility'].setErrors({ invalid: true });
+      this.shippingRequestTripsForm.controls['destFacility'].setErrors({ invalid: true });
+      this.notify.error(this.l('OriginFacilityAndDestinationFacilityCantBeTheSame'));
+    } else {
+      this.shippingRequestTripsForm.controls['sourceFacility'].setErrors(null);
+      this.shippingRequestTripsForm.controls['destFacility'].setErrors(null);
+    }
+  }
+  /**
+   * update Shared Service Trip and SingleDrop Validation
+   */
+  SyncFacilitiesWithService() {
+    this._TripService.updateSourceFacility(this.trip.originFacilityId);
+    this._TripService.updateDestFacility(this.trip.destinationFacilityId);
   }
 
   /**
@@ -105,16 +157,20 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   show(record?: CreateOrEditShippingRequestTripDto): void {
     if (record) {
       this.activeTripId = record.id;
+      this._TripService.updateActiveTripId(this.activeTripId);
       this._shippingRequestTripsService.getShippingRequestTripForEdit(record.id).subscribe((res) => {
         this.trip = res;
-        this.PointsComponent.wayPointsList = this.trip.routPoints;
+        //this.PointsComponent.wayPointsList = this.trip.routPoints;
+        this._PointsService.updateWayPoints(this.trip.routPoints);
         this.loading = false;
       });
     } else {
       //this is a create
-
       //init file document
       this.trip = new CreateOrEditShippingRequestTripDto();
+      this._TripService.updateActiveTripId(null);
+      this._PointsService.updateSinglePoint(new CreateOrEditRoutPointDto());
+      this._PointsService.updateWayPoints([]);
       this.trip.createOrEditDocumentFileDto = new CreateOrEditDocumentFileDto();
       this.trip.createOrEditDocumentFileDto.extn = '_';
       this.trip.createOrEditDocumentFileDto.name = '_';
@@ -125,7 +181,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     this.active = true;
     this.modal.show();
     this.initDocsUploader();
-    this.cdref.detectChanges();
+    //this.cdref.detectChanges();
   }
   close(): void {
     this.loading = true;
@@ -135,19 +191,22 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   }
 
   createOrEditTrip() {
-    this.saving = true;
-    this._shippingRequestTripsService
-      .createOrEdit(this.trip)
-      .pipe(
-        finalize(() => {
-          this.saving = false;
-        })
-      )
-      .subscribe(() => {
-        this.close();
-        this.modalSave.emit(null);
-        this.notify.info(this.l('SuccessfullySaved'));
-      });
+    //if there is a Validation issue in the Points do Not Proceed
+    if (this.validatePointsBeforeAddTrip()) {
+      this.saving = true;
+      this._shippingRequestTripsService
+        .createOrEdit(this.trip)
+        .pipe(
+          finalize(() => {
+            this.saving = false;
+          })
+        )
+        .subscribe(() => {
+          this.close();
+          this.modalSave.emit(null);
+          this.notify.info(this.l('SuccessfullySaved'));
+        });
+    }
   }
 
   deleteTrip(tripid: number) {
@@ -184,16 +243,6 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     this._waybillsServiceProxy.getSingleDropOrMasterWaybillPdf(id).subscribe((result) => {
       this._fileDownloadService.downloadTempFile(result);
     });
-  }
-
-  /**
-   * validates add or Edit Trip Dates
-   */
-  validateTripDates() {
-    // if (this.trip.endTripDate && this.trip.startTripDate > this.trip.endTripDate) {
-    //   this.trip.endTripDate = undefined;
-    //   this.notify.error(this.l('tripStartDateCantBeGretterThanTripEndDate'));
-    // }
   }
 
   /**
@@ -298,5 +347,28 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
    */
   isSelectedVasesHasinsurance($event: CreateOrEditShippingRequestTripVasDto[]) {
     $event.find((x) => x.name == 'Insurance') ? (this.isApproximateValueRequired = true) : (this.isApproximateValueRequired = false);
+  }
+
+  ngOnDestroy() {
+    this.trip = undefined;
+    this.TripsServiceSubscription.unsubscribe();
+    this.PointsServiceSubscription.unsubscribe();
+    console.log('Detsroid From Create/Edit Trip');
+  }
+
+  private validatePointsBeforeAddTrip() {
+    //if trip Drop Points is less than number of drops Prevent Adding Trip
+    if (this.trip.routPoints.length !== this.shippingRequest.numberOfDrops + 1) {
+      console.log('first Condition Fired');
+      Swal.fire(this.l('IncompleteTripPoint'), this.l('PleaseAddAllTheDropPoints'), 'warning');
+      return false;
+      //if the routetype is single drop and the Drop point setup is not completed prevent adding trip
+    } else if (this.shippingRequest.routeTypeId === this.RouteTypes.SingleDrop && !this.trip.routPoints[1].goodsDetailListDto) {
+      console.log('Secound Condition Fired');
+      Swal.fire(this.l('IncompleteTripPoint'), this.l('PleaseCompleteTheDropPointSetup'), 'warning');
+      return false;
+    } else {
+      return true;
+    }
   }
 }
