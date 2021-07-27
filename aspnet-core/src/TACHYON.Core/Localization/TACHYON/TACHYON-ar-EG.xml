@@ -317,6 +317,7 @@
 		<text name="CreateNewTrailer">إضافة مقطورة جديدة</text>
 		<text name="CreateNewTrailerStatus">إضافة حالة مقطورة جديدة</text>
 		<text name="CreateNewTrailerType">إضافة نوع مقطورة جديدة</text>
+		<text name="TransportSubtype">نوع النقل </text>
 		<text name="CreateNewTransportType">إضافة نوع نقل جديد</text>
 		<text name="CreateNewTransportTypesTranslation">إضافة ترجمة نوع النقل</text>
 		<text name="CreateNewTruck">إضافة شاحنة جديدة</text>

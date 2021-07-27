@@ -1983,7 +1983,7 @@
 		<text name="Transactions">Transactions</text>
 		<text name="TranslatedDisplayName">Translated Display Name</text>
 		<text name="TranslatedName">Translated Name</text>
-		<text name="TransportSubtyp">Transport subtyp</text>
+		<text name="TransportSubtype">Transport subtype</text>
 		<text name="TransportType">Transport type</text>
 		<text name="TransportTypeDisplayName">Transport type</text>
 		<text name="TransportTypes">Transports types</text>
