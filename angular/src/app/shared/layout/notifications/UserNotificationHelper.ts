@@ -78,6 +78,44 @@ export class UserNotificationHelper extends AppComponentBase {
         return `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.id}`;
       case 'App.App.ShipperReminderToCompelteTrips':
         return `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.id}`;
+      case 'App.CancelShipment':
+        return `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.id}`;
+      case 'App.DeclineDriectRequest':
+        return `/app/main/directrequest/list?id=${userNotification.notification.data.properties.id}`;
+      case 'App.InvoiceShipperGenerated':
+        return `/app/main/invoices/detail/${userNotification.notification.data.properties.invoiceid}`;
+      case 'App.PendingOffer':
+        return `/app/main/offers/list?id=${userNotification.notification.data.properties.id}`;
+      case 'App.RejectedOffer':
+        return `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.id}&offerid=${userNotification.notification.data.properties.offerid}`;
+      case 'App.SendDriectRequest':
+        return `/app/main/directrequest/list?id=${userNotification.notification.data.properties.id}`;
+      case 'App.ShipperAcceptedOffer':
+        return `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.id}`;
+      case 'App.ShipperReminderToCompelteTrips':
+        return `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.id}`;
+      case 'App.ShippingRequestNotifyCarrirerWhenShipperAccepted':
+        return `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.id}`;
+      case 'App.ShippingRequestSendOfferWhenUpdatePrice':
+        return `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.id}&offerid=${userNotification.notification.data.properties.offerId}`;
+      case 'App.SubmitInvoiceGenerated':
+        return `/app/main/invoices/submitinvoices/detail/${userNotification.notification.data.properties.id}`;
+      case 'App.SubmitInvoiceOnAccepted':
+        return `/app/main/invoices/submitinvoices/detail/${userNotification.notification.data.properties.id}`;
+      //Redirect Invoice Notification
+      case 'App.InvoiceShipperGenerated':
+        return '/app/main/invoices/detail/' + userNotification.notification.data.properties.invoiceid;
+      case 'App.SubmitInvoiceOnClaim':
+        return '/app/main/invoices/detail/' + userNotification.notification.data.properties.invoiceid;
+      case 'App.SubmitInvoiceOnRejected':
+        return '/app/main/invoices/detail/' + userNotification.notification.data.properties.invoiceid;
+
+      case 'App.TachyonDealOfferAcceptedByShipper':
+        return `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.id}`;
+
+      case 'App.TMSAcceptedOffer':
+        return `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.id}`;
+
       //New Offer Redirection
       case 'App.ShippingRequestSendOfferWhenAddPrice':
         return (
@@ -86,9 +124,6 @@ export class UserNotificationHelper extends AppComponentBase {
           '&offerid=' +
           userNotification.notification.data.properties.offerid
         );
-      //Redirect Invoice Notification
-      case 'App.InvoiceShipperGenerated':
-        return '/app/main/invoices/detail/' + userNotification.notification.data.properties.invoiceid;
     }
 
     //No url for this notification
