@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Inject, Injector, OnInit, ViewChild } from '@angular/core';
+import { AfterViewChecked, ChangeDetectorRef, Component, Inject, Injector, OnInit, ViewChild } from '@angular/core';
 import {
   GetShippingRequestForViewOutput,
   ShippingRequestDto,
@@ -13,13 +13,14 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { BreadcrumbItem } from '@app/shared/common/sub-header/sub-header.component';
 import { filter } from '@node_modules/rxjs/internal/operators';
 import { DOCUMENT } from '@angular/common';
+import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
 
 @Component({
   templateUrl: './view-shippingRequest.component.html',
   styleUrls: ['./view-shippingRequest.component.scss'],
   animations: [appModuleAnimation()],
 })
-export class ViewShippingRequestComponent extends AppComponentBase implements OnInit {
+export class ViewShippingRequestComponent extends AppComponentBase implements OnInit, AfterViewChecked {
   active = false;
   saving = false;
   loading = true;
@@ -39,6 +40,7 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
     private _router: Router,
     private _shippingRequestsServiceProxy: ShippingRequestsServiceProxy,
     private changeDetectorRef: ChangeDetectorRef,
+    private _trip: TripService,
     @Inject(DOCUMENT) private _document: Document
   ) {
     super(injector);
@@ -53,6 +55,12 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
       this.show(this._activatedRoute.snapshot.queryParams['id']);
     });
     // this.GetAllDirectRequestsTable.sendDirectRequestsModal.shippingRequestId = this._activatedRoute.snapshot.queryParams['id'];
+  }
+
+  ngAfterViewChecked() {
+    //update the Trips Shared Service With RouteType
+    //routeType id is not reterned from backend
+    this._trip.updateShippingRequest(this.shippingRequestforView);
   }
 
   show(shippingRequestId: number): void {

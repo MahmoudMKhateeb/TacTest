@@ -5,8 +5,8 @@
   "angular-cli": {},
   "scripts": {
     "ng": "ng",
-    "publish": "gulp build && ng build --configuration production",
-    "start": "node --max_old_space_size=8048 ./node_modules/@angular/cli/bin/ng serve --host 0.0.0.0 --port 4200",
+    "publish": "gulp build && node --max_old_space_size=8048 ./node_modules/@angular/cli/bin/ng build --configuration production",
+    "start": "gulp buildDev && node --max_old_space_size=8048 ./node_modules/@angular/cli/bin/ng serve --host 0.0.0.0 --port 4200",
     "hmr": "gulp buildDev && ng serve --host 0.0.0.0 --port 4200 --hmr",
     "test": "gulp buildDev && ng test",
     "pree2e": "webdriver-manager update --standalone false --gecko false",

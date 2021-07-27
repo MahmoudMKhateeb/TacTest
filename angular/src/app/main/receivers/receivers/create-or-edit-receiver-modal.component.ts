@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild, Injector, Output, EventEmitter } from '@angular/core';
+﻿import { Component, ViewChild, Injector, Output, EventEmitter, Input } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
 import { ReceiversServiceProxy, CreateOrEditReceiverDto, ReceiverFacilityLookupTableDto } from '@shared/service-proxies/service-proxies';
@@ -11,7 +11,7 @@ import * as moment from 'moment';
 })
 export class CreateOrEditReceiverModalComponent extends AppComponentBase {
   @ViewChild('createOrEditModal', { static: true }) modal: ModalDirective;
-
+  @Input() facilityIdFromTrips: number;
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
   active = false;
   saving = false;
@@ -46,6 +46,7 @@ export class CreateOrEditReceiverModalComponent extends AppComponentBase {
     this._receiversServiceProxy.getAllFacilityForTableDropdown().subscribe((result) => {
       this.allFacilitys = result;
     });
+    this.receiver.facilityId = this.facilityIdFromTrips;
   }
 
   save(): void {

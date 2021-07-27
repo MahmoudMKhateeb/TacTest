@@ -9,7 +9,7 @@
             <div
               class="progress-bar progress-bar-striped progress-bar-animated bg-primary"
               role="progressbar"
-              style="width: 100%;"
+              style="width: 100%"
               aria-valuenow="100"
               aria-valuemin="0"
               aria-valuemax="100"
@@ -97,6 +97,7 @@
                         <option disabled selected>{{ l('select') }}</option>
                         <option value="bidding">{{ l('Marketplace') }}</option>
                         <option value="tachyondeal">{{ l('TachyonManageService') }}</option>
+                        <option *ngIf="this.feature.isEnabled('App.SendDirectRequest')" value="directrequest">{{ l('DirectRequest') }}</option>
                       </select>
                       <span class="form-text text-muted">{{ l('PickaShippingRequestType') }}</span>
                     </div>
@@ -156,7 +157,7 @@
                           required
                         >
                           <option [ngValue]="null">{{ l('SelectAshippingType') }}</option>
-                          <option *ngFor="let item of allShippingTypes" value="{{ item.id }}">{{ item.displayName }} </option>
+                          <option *ngFor="let item of allShippingTypes" value="{{ item.id }}">{{ item.displayName }}</option>
                         </select>
                       </div>
                       <span class="form-text text-muted">{{ l('SelectAShippingType') }}</span>
@@ -221,7 +222,7 @@
                               required
                             >
                               <option value="">{{ l('SelectanOriginCity') }}</option>
-                              <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }} </option>
+                              <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }}</option>
                             </select>
                           </div>
 
@@ -247,7 +248,7 @@
                               required
                             >
                               <option value="">{{ l('selectaDestination') }}</option>
-                              <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }} </option>
+                              <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }}</option>
                             </select>
                           </div>
                           <span class="form-text text-muted">{{ l('SelectaCity') }}</span>
@@ -355,7 +356,7 @@
                             required
                           >
                             <option [ngValue]="undefined" disabled selected>{{ l('SelectAGoodCategory') }}</option>
-                            <option *ngFor="let item of allGoodCategorys" value="{{ item.id }}">{{ item.displayName }} </option>
+                            <option *ngFor="let item of allGoodCategorys" value="{{ item.id }}">{{ item.displayName }}</option>
                           </select>
                         </div>
 
@@ -366,9 +367,7 @@
                         <div>
                           <div class="input-group">
                             <div class="input-group-append">
-                              <span class="input-group-text">
-                                KG
-                              </span>
+                              <span class="input-group-text"> KG </span>
                             </div>
                             <input
                               type="number"
@@ -411,7 +410,7 @@
                               required
                             >
                               <option [ngValue]="null" disabled selected>{{ l('SelectaPackingType') }}</option>
-                              <option *ngFor="let item of allpackingTypes" value="{{ item.id }}">{{ item.displayName }} </option>
+                              <option *ngFor="let item of allpackingTypes" value="{{ item.id }}">{{ item.displayName }}</option>
                             </select>
                           </div>
                           <span class="form-text text-muted">{{ l('EnterPackingType') }}</span>
@@ -460,7 +459,7 @@
                             (change)="transportTypeSelectChange(step3Dto.transportTypeId)"
                           >
                             <option [ngValue]="null" disabled selected>{{ l('SelectaTransportType') }}</option>
-                            <option *ngFor="let item of allTransportTypes" value="{{ item.id }}">{{ item.displayName }} </option>
+                            <option *ngFor="let item of allTransportTypes" value="{{ item.id }}">{{ item.displayName }}</option>
                           </select>
                         </div>
                         <span class="form-text text-muted">{{ l('SelectaTransportType') }}</span>
@@ -497,7 +496,7 @@
                               required
                             >
                               <option [ngValue]="null" selected disabled>{{ l('SelectaTruckType') }}</option>
-                              <option *ngFor="let item of allTrucksTypes" value="{{ item.id }}">{{ item.displayName }} </option>
+                              <option *ngFor="let item of allTrucksTypes" value="{{ item.id }}">{{ item.displayName }}</option>
                             </select>
                           </div>
                         </div>
@@ -538,7 +537,7 @@
                             required
                           >
                             <option [ngValue]="null" selected disabled>{{ l('SelectaCapacity') }}</option>
-                            <option *ngFor="let item of allCapacities" value="{{ item.id }}">{{ item.displayName }} </option>
+                            <option *ngFor="let item of allCapacities" value="{{ item.id }}">{{ item.displayName }}</option>
                           </select>
                         </div>
                         <span class="form-text text-muted">{{ l('SelectaCapacity') }}</span>

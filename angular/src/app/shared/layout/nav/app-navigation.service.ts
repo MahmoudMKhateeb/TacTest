@@ -110,7 +110,7 @@ export class AppNavigationService {
             'CreateNewRequest',
             'Pages.ShippingRequests',
             '',
-            '/app/main/shippingRequests/shippingRequests/createOrEdit',
+            '/app/main/shippingRequests/shippingRequestWizard',
             undefined,
             undefined,
             undefined,
