@@ -43,7 +43,7 @@
                         <option *ngFor="let item of allSubGoodCategorys" [value]="item.id">{{ item.displayName }}</option>
                       </select>
                     </div>
-                    <span class="form-text text-muted">{{ l('SelectaGoodCategory') }}</span>
+                    <span class="form-text text-muted"></span>
                   </div>
                 </div>
                 <div class="col-lg-6">
@@ -57,6 +57,8 @@
                       [maxLength]="7"
                       [minLength]="1"
                       (keypress)="numberOnly($event)"
+                      [min]="1"
+                      pattern="^[1-9][0-9]*$"
                       name="Weight"
                       type="number"
                       [class.is-invalid]="GoodsWeight.touched && !GoodsWeight.valid"
@@ -79,6 +81,8 @@
                       (keypress)="numberOnly($event)"
                       [maxLength]="6"
                       [minLength]="1"
+                      [min]="1"
+                      pattern="^[1-9][0-9]*$"
                       [class.is-invalid]="GoodsAmount.touched && !GoodsAmount.valid"
                       [class.is-valid]="GoodsAmount.touched && GoodsAmount.valid"
                       required
@@ -97,43 +101,27 @@
                         name="goodsDetail.unitOfMeasureId"
                         [disabled]="!allUnitOfMeasure"
                         [class.is-valid]="GoodsUnitOfMeasure.touched && GoodsUnitOfMeasure.valid"
+                        [class.is-invalid]="GoodsUnitOfMeasure.touched && !GoodsUnitOfMeasure.valid"
+                        required
                       >
-                        <option [value]="">{{ l('selectAUnitOfMeasure') }}</option>
+                        <option value="">{{ l('selectAUnitOfMeasure') }}</option>
                         <option *ngFor="let item of allUnitOfMeasure" [value]="item.id">{{ item.displayName }}</option>
                       </select>
                     </div>
-                    <span class="form-text text-muted">{{ l('selectAUnitOfMeasure') }}</span>
+                    <span class="form-text text-muted"></span>
                   </div>
                 </div>
 
                 <div class="col-lg-6">
                   <div class="form-group">
                     <label for="GoodsDetail_Description">{{ l('Description') }}</label>
-                    <input
-                      #DescGoods="ngModel"
-                      [(ngModel)]="goodsDetail.description"
-                      class="form-control"
-                      id="GoodsDetail_Description"
-                      [minLength]="1"
-                      name="Description"
-                      type="text"
-                      [class.is-invalid]="DescGoods.touched && !DescGoods.valid"
-                      [class.is-valid]="DescGoods.touched && DescGoods.valid"
-                    />
+                    <input [(ngModel)]="goodsDetail.description" class="form-control" id="GoodsDetail_Description" name="Description" type="text" />
                   </div>
                 </div>
                 <div class="col-lg-6">
                   <div class="form-group">
                     <label for="GoodsDetail_Dimentions">{{ l('Dimentions') }}</label>
-                    <input
-                      #DimentionGoods="ngModel"
-                      [(ngModel)]="goodsDetail.dimentions"
-                      class="form-control"
-                      id="GoodsDetail_Dimentions"
-                      name="Dimentions"
-                      type="text"
-                      [class.is-valid]="DimentionGoods.touched && DimentionGoods.valid"
-                    />
+                    <input [(ngModel)]="goodsDetail.dimentions" class="form-control" id="GoodsDetail_Dimentions" name="Dimentions" type="text" />
                   </div>
                 </div>
                 <div class="col-lg-6 mt-10">
