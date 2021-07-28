@@ -3,7 +3,6 @@ using Abp.Authorization.Users;
 using Abp.MultiTenancy;
 using System.ComponentModel.DataAnnotations;
 using TACHYON.MultiTenancy.Payments;
-using TACHYON.MultiTenancy.Payments.Dto;
 
 namespace TACHYON.MultiTenancy.Dto
 {
@@ -17,6 +16,9 @@ namespace TACHYON.MultiTenancy.Dto
         [StringLength(AbpTenantBase.MaxTenancyNameLength)]
         public string companyName { get; set; }
         //tenant mobile no
+        [Required]
+        [StringLength(RegisterTenantInputConsts.MaxMobileNumberLength,
+            MinimumLength = RegisterTenantInputConsts.MinMobileNumberLength)]
         public string MobileNo { get; set; }
         [Required]
         [StringLength(AbpUserBase.MaxNameLength)]
@@ -50,5 +52,15 @@ namespace TACHYON.MultiTenancy.Dto
         [StringLength(AbpUserBase.MaxSurnameLength)]
         public string UserAdminSurname { get; set; }
 
+    }
+
+    /// <summary>
+    /// Constants For RegisterTenantInput
+    /// Usually Used For Validation and Constrains ...etc
+    /// </summary>
+    public static class RegisterTenantInputConsts
+    {
+        public const int MaxMobileNumberLength = 16;
+        public const int MinMobileNumberLength = 11;
     }
 }
