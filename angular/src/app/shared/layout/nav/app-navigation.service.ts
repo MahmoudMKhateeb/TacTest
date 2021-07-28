@@ -100,7 +100,7 @@ export class AppNavigationService {
       new AppMenuItem(
         'Requests',
         'Pages.ShippingRequests',
-        '',
+        'map, navigation, location, navigate, book, bookmark, pin.svg',
         '/app/main/comingSoon',
         [],
 
@@ -117,7 +117,7 @@ export class AppNavigationService {
             undefined,
             () => this._featureCheckerService.isEnabled('App.Shipper')
           ),
-          new AppMenuItem('ShippingRequests', 'Pages.ShippingRequests', 'flaticon2-cube', '/app/main/shippingRequests/shippingRequests'),
+          new AppMenuItem('ShippingRequests', 'Pages.ShippingRequests', '', '/app/main/shippingRequests/shippingRequests'),
           new AppMenuItem('Marketplace', '', '', '/app/main/marketplace/list', undefined, undefined, undefined, undefined, () =>
             this._featureCheckerService.isEnabled('App.Carrier')
           ),
