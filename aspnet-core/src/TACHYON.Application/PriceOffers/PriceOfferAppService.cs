@@ -512,7 +512,7 @@ namespace TACHYON.PriceOffers
 
             List<GetShippingRequestForPriceOfferListDto> ShippingRequestForPriceOfferList = new List<GetShippingRequestForPriceOfferListDto>();
 
-            foreach (var request in directRequests)
+            foreach (var request in await directRequests.ToListAsync())
             {
                 var dto = ObjectMapper.Map<GetShippingRequestForPriceOfferListDto>(request.ShippingRequestFK);
                 dto.DirectRequestStatusTitle = request.Status.GetEnumDescription();
@@ -583,7 +583,7 @@ namespace TACHYON.PriceOffers
 
             List<GetShippingRequestForPriceOfferListDto> ShippingRequestForPriceOfferList = new List<GetShippingRequestForPriceOfferListDto>();
 
-            foreach (var request in query)
+            foreach (var request in await query.ToListAsync())
             {
                 var dto = ObjectMapper.Map<GetShippingRequestForPriceOfferListDto>(request);
 
@@ -662,7 +662,7 @@ namespace TACHYON.PriceOffers
 
                 List<GetShippingRequestForPriceOfferListDto> ShippingRequestForPriceOfferList = new List<GetShippingRequestForPriceOfferListDto>();
 
-                foreach (var request in query)
+                foreach (var request in await query.ToListAsync())
                 {
                     var dto = ObjectMapper.Map<GetShippingRequestForPriceOfferListDto>(request);
                     dto.TruckType = ObjectMapper.Map<TrucksTypeDto>(request.TrucksTypeFk)?.TranslatedDisplayName;
@@ -691,7 +691,7 @@ namespace TACHYON.PriceOffers
 
         private async Task<List<GetShippingRequestForPriceOfferListDto>> GetFromOffers(ShippingRequestForPriceOfferGetAllInput input)
         {
-            var directRequests = _priceOfferRepository
+            var offers = _priceOfferRepository
                             .GetAll()
                             .AsNoTracking()
                             .Include(carrier => carrier.Tenant)
@@ -728,7 +728,7 @@ namespace TACHYON.PriceOffers
 
             List<GetShippingRequestForPriceOfferListDto> ShippingRequestForPriceOfferList = new List<GetShippingRequestForPriceOfferListDto>();
 
-            foreach (var request in directRequests)
+            foreach (var request in await offers.ToListAsync())
             {
                 var dto = ObjectMapper.Map<GetShippingRequestForPriceOfferListDto>(request.ShippingRequestFK);
                 dto.DirectRequestStatusTitle = request.Status.GetEnumDescription();
@@ -736,7 +736,7 @@ namespace TACHYON.PriceOffers
 
                 if (!AbpSession.TenantId.HasValue || IsEnabled(AppFeatures.TachyonDealer) || IsEnabled(AppFeatures.Shipper))
                 {
-                    dto.Name = request.Tenant.Name;
+                    dto.Name = request.Tenant?.Name;
                     dto.RemainingDays = string.Empty;
                     if (AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Shipper) && request.Status == PriceOfferStatus.AcceptedAndWaitingForCarrier)
                     {
