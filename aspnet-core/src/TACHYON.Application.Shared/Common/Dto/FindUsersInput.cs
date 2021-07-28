@@ -7,5 +7,7 @@ namespace TACHYON.Common.Dto
         public int? TenantId { get; set; }
 
         public bool ExcludeCurrentUser { get; set; }
+        public bool ExcludeDrivers { get; set; }
+
     }
 }

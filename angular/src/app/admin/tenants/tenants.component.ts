@@ -108,6 +108,7 @@ export class TenantsComponent extends AppComponentBase implements OnInit {
         input.maxResultCount = maxResultCount;
         input.skipCount = skipCount;
         input.tenantId = tenantId;
+        input.excludeDrivers = true;
         return this._commonLookupService.findUsers(input);
       },
     });
