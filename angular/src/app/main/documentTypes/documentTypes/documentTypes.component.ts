@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, Injector, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
+  CreateOrEditDocumentTypeDto,
   DocumentsEntitiesEnum,
   DocumentTypeDto,
   DocumentTypesServiceProxy,
@@ -17,6 +18,8 @@ import { Table } from 'primeng/table';
 import { Paginator } from 'primeng/paginator';
 import { LazyLoadEvent } from 'primeng/api';
 import { FileDownloadService } from '@shared/utils/file-download.service';
+import CustomStore from '@node_modules/devextreme/data/custom_store';
+import { LoadOptions } from '@node_modules/devextreme/data/load_options';
 
 @Component({
   templateUrl: './documentTypes.component.html',
@@ -37,6 +40,12 @@ export class DocumentTypesComponent extends AppComponentBase implements OnInit, 
   hasExpirationDateFilter = -1;
   requiredFromFilter: DocumentsEntitiesEnum;
   entityList: SelectItemDto[] = [];
+  editions: SelectItemDto[] = [];
+
+  // ADDED DEVEXTREME GRID
+  dataSource: any = {};
+  popupPosition = { of: window, at: 'top', my: 'top', offset: { y: 10 } };
+  createOrEditDocumentTypeDto: CreateOrEditDocumentTypeDto = new CreateOrEditDocumentTypeDto();
 
   constructor(
     injector: Injector,
@@ -51,36 +60,69 @@ export class DocumentTypesComponent extends AppComponentBase implements OnInit, 
 
   ngOnInit(): void {
     this.getDocumentsEntityLookUp();
+
+    this.getEditionsLookUp();
+    this.getDocumentTypes();
   }
 
   ngAfterViewInit(): void {
     this.primengTableHelper.adjustScroll(this.dataTable);
   }
 
-  getDocumentTypes(event?: LazyLoadEvent) {
-    if (this.primengTableHelper.shouldResetPaging(event)) {
-      this.paginator.changePage(0);
-      return;
-    }
+  // getDocumentTypes(event?: LazyLoadEvent) {
+  //   if (this.primengTableHelper.shouldResetPaging(event)) {
+  //     this.paginator.changePage(0);
+  //     return;
+  //   }
+  //
+  //   this.primengTableHelper.showLoadingIndicator();
+  //
+  //   this._documentTypesServiceProxy
+  //     .getAll(
+  //       this.filterText,
+  //       this.displayNameFilter,
+  //       this.isRequiredFilter,
+  //       this.hasExpirationDateFilter,
+  //       this.requiredFromFilter,
+  //       this.primengTableHelper.getSorting(this.dataTable),
+  //       this.primengTableHelper.getSkipCount(this.paginator, event),
+  //       this.primengTableHelper.getMaxResultCount(this.paginator, event)
+  //     )
+  //     .subscribe((result) => {
+  //       this.primengTableHelper.totalRecordsCount = result.totalCount;
+  //       this.primengTableHelper.records = result.items;
+  //       this.primengTableHelper.hideLoadingIndicator();
+  //     });
+  // }
 
-    this.primengTableHelper.showLoadingIndicator();
+  getDocumentTypes() {
+    let self = this;
 
-    this._documentTypesServiceProxy
-      .getAll(
-        this.filterText,
-        this.displayNameFilter,
-        this.isRequiredFilter,
-        this.hasExpirationDateFilter,
-        this.requiredFromFilter,
-        this.primengTableHelper.getSorting(this.dataTable),
-        this.primengTableHelper.getSkipCount(this.paginator, event),
-        this.primengTableHelper.getMaxResultCount(this.paginator, event)
-      )
-      .subscribe((result) => {
-        this.primengTableHelper.totalRecordsCount = result.totalCount;
-        this.primengTableHelper.records = result.items;
-        this.primengTableHelper.hideLoadingIndicator();
-      });
+    this.dataSource = {};
+    this.dataSource.store = new CustomStore({
+      load(loadOptions: LoadOptions) {
+        console.log(JSON.stringify(loadOptions));
+        return self._documentTypesServiceProxy
+          .getAll(JSON.stringify(loadOptions))
+          .toPromise()
+          .then((response) => {
+            return {
+              data: response.items,
+              totalCount: response.totalCount,
+            };
+          })
+          .catch((error) => {
+            console.log(error);
+            throw new Error('Data Loading Error');
+          });
+      },
+      update: (key, values) => {
+        console.log(JSON.stringify(key.id));
+        console.log(JSON.stringify(values));
+        let dto: CreateOrEditDocumentTypeDto = new CreateOrEditDocumentTypeDto();
+        return self._documentTypesServiceProxy.createOrEdit(dto).toPromise();
+      },
+    });
   }
 
   reloadPage(): void {
@@ -114,5 +156,22 @@ export class DocumentTypesComponent extends AppComponentBase implements OnInit, 
     this._documentTypesServiceProxy.getDocumentEntitiesForTableDropdown().subscribe((result) => {
       this.entityList = result;
     });
+  }
+
+  getEditionsLookUp() {
+    this._documentTypesServiceProxy.getEditionsForTableDropdown().subscribe((result) => {
+      this.editions = result;
+    });
+  }
+
+  downloadTemplate(id: number): void {
+    this.notify.info(this.l('downloading'));
+    this._documentTypesServiceProxy.getFileDto(id).subscribe((result) => {
+      this._fileDownloadService.downloadTempFile(result);
+    });
+  }
+
+  onEditingStart($event: any) {
+    console.log(JSON.stringify($event.data));
   }
 }

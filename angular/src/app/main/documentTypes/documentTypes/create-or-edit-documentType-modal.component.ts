@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild, ViewEncapsulation, Injector, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { Component, ViewChild, ViewEncapsulation, Injector, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 
@@ -11,6 +11,7 @@ import {
   DocumentTypeTranslationsServiceProxy,
   DocumentTypeTranslationDto,
   TokenAuthServiceProxy,
+  ISelectItemDto,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import * as moment from 'moment';
@@ -19,9 +20,20 @@ import { LazyLoadEvent } from 'primeng/api';
 
 import { Paginator } from '@node_modules/primeng/paginator';
 import { Table } from '@node_modules/primeng/table';
-import { NotifyService } from '@node_modules/abp-ng2-module';
+import { IAjaxResponse, NotifyService, TokenService } from '@node_modules/abp-ng2-module';
 import { ActivatedRoute } from '@angular/router';
 import { FileDownloadService } from '@shared/utils/file-download.service';
+import { id } from '@swimlane/ngx-charts';
+import { AppConsts } from '@shared/AppConsts';
+import FileUploader from 'devextreme/ui/file_uploader';
+
+const toBase64 = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+  });
 
 @Component({
   selector: 'createOrEditDocumentTypeModal',
@@ -47,60 +59,56 @@ export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase {
   documentNameisAvaliable = true;
   documentType: CreateOrEditDocumentTypeDto = new CreateOrEditDocumentTypeDto();
   allDocumentsEntities: SelectItemDto[];
+  buttonOptions: any = {
+    text: 'Add',
+    type: 'success',
+    useSubmitBehavior: true,
+  };
 
   editions: SelectItemDto[];
   tenantOptionSelected = false;
+  Tenant: ISelectItemDto;
+  Tenants: ISelectItemDto[];
+  value: File[] = [];
+  authorizationToken: string;
+  uploadUrl: string;
 
   constructor(
-    injector: Injector,
-    private _documentTypesServiceProxy: DocumentTypesServiceProxy,
+    private injector: Injector,
+    public _documentTypesServiceProxy: DocumentTypesServiceProxy,
     private _documentTypeTranslationsServiceProxy: DocumentTypeTranslationsServiceProxy,
     private _documentFilesServiceProxy: DocumentFilesServiceProxy,
     private _notifyService: NotifyService,
     private _tokenAuth: TokenAuthServiceProxy,
     private _activatedRoute: ActivatedRoute,
     private _fileDownloadService: FileDownloadService,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private _tokenService: TokenService
   ) {
     super(injector);
+    this.authorizationToken = 'Bearer ' + this._tokenService.getToken();
+    this.uploadUrl = AppConsts.remoteServiceBaseUrl + '/Helper/UploadDocumentFile';
   }
 
   show(documentTypeId?: number): void {
+    this._documentTypesServiceProxy.getAllDocumentsEntitiesForTableDropdown().subscribe((result) => {
+      this.allDocumentsEntities = result;
+    });
+
     if (!documentTypeId) {
       this.documentType = new CreateOrEditDocumentTypeDto();
-      this.documentType.documentsEntityId = null;
-      this.documentType.editionId = null;
-      this.documentType.id = documentTypeId;
-      this.documentType.numberMaxDigits = 2;
-      this.documentType.numberMinDigits = 1;
-      this.documentType.expirationAlertDays = 0;
-      this.documentType.inActiveToleranceDays = 0;
-      this._documentTypesServiceProxy.getAllDocumentsEntitiesForTableDropdown().subscribe((result) => {
-        this.allDocumentsEntities = result;
-      });
       this.active = true;
-      this.modal.show();
     } else if (documentTypeId) {
       this._documentTypesServiceProxy.getDocumentTypeForEdit(documentTypeId).subscribe((result) => {
         this.documentType = result.documentType;
-        if (this.documentType.hasNumber || this.documentType.hasExpirationDate) {
-          this.documentType.numberMinDigits = this.documentType.numberMinDigits == null ? 0 : this.documentType.numberMinDigits;
-          this.documentType.numberMaxDigits = this.documentType.numberMaxDigits == null ? 0 : this.documentType.numberMaxDigits;
-          this.documentType.inActiveToleranceDays = this.documentType.inActiveToleranceDays == null ? 0 : this.documentType.inActiveToleranceDays;
-          this.documentType.expirationAlertDays = this.documentType.expirationAlertDays == null ? 0 : this.documentType.expirationAlertDays;
-        }
-        this._documentTypesServiceProxy.getAllDocumentsEntitiesForTableDropdown().subscribe((result) => {
-          this.allDocumentsEntities = result;
-          this.tenantOptionSelected = this.documentType.editionId != null;
-          this.active = true;
-          this.modal.show();
-        });
       });
     }
 
     this._documentFilesServiceProxy.getAllEditionsForDropdown().subscribe((result) => {
       this.editions = result;
     });
+    this.active = true;
+    this.modal.show();
   }
 
   save(): void {
@@ -120,15 +128,11 @@ export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase {
       });
   }
 
-  createDocumentTypeTranslation(): void {
-    // this.createOrEditDocumentTypeTranslationModal.
-    this.createOrEditDocumentTypeTranslationModal.show();
-  }
-
   close(): void {
     this.active = false;
     this.documentType = new CreateOrEditDocumentTypeDto();
     this.primengTableHelper.records = null;
+    this.value = [];
     this.modal.hide();
   }
 
@@ -141,98 +145,53 @@ export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase {
     }
   }
 
-  getDocumentTypeTranslations(event?: LazyLoadEvent) {
-    if (this.documentType.id) {
-      this.changeDetectorRef.detectChanges();
-      if (this.primengTableHelper.shouldResetPaging(event)) {
-        this.paginator.changePage(0);
-        return;
-      }
-
-      this.primengTableHelper.showLoadingIndicator();
-
-      this._documentTypeTranslationsServiceProxy
-        .getAll(
-          this.filterText,
-          this.nameFilter,
-          this.languageFilter,
-          this.documentType.displayName,
-          this.primengTableHelper.getSorting(this.dataTable),
-          this.primengTableHelper.getSkipCount(this.paginator, event),
-          this.primengTableHelper.getMaxResultCount(this.paginator, event)
-        )
-        .subscribe((result) => {
-          this.primengTableHelper.totalRecordsCount = result.totalCount;
-          this.primengTableHelper.records = result.items;
-          this.primengTableHelper.hideLoadingIndicator();
-        });
-    } else {
-    }
-  }
-
   reloadPage(): void {
     this.changeDetectorRef.detectChanges();
     this.paginator.changePage(this.paginator.getPage());
   }
 
-  deleteDocumentTypeTranslation(documentTypeTranslation: DocumentTypeTranslationDto): void {
-    this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
-      if (isConfirmed) {
-        this._documentTypeTranslationsServiceProxy.delete(documentTypeTranslation.id).subscribe(() => {
-          this.reloadPage();
-          this.notify.success(this.l('SuccessfullyDeleted'));
-        });
-      }
+  onFormSubmit($event: Event) {}
+
+  editionOnValueChanged($event: any) {
+    this._documentTypesServiceProxy.getAutoCompleteTenants(this.documentType.editionId, ' ').subscribe((result) => {
+      this.Tenants = result;
     });
   }
 
-  hasNumberCheckBoxChange() {
-    if (!this.documentType.hasNumber) {
-      this.documentType.numberMaxDigits = 2;
-      this.documentType.numberMinDigits = 1;
+  onUploaded($event: any) {
+    const resp = <IAjaxResponse>JSON.parse($event.request.response);
+    this.documentType.templateContentType = $event.file.type;
+    this.documentType.templateName = $event.file.name;
+    this.documentType.fileToken = resp.result.fileToken;
+    this.notify.success(this.l('file is successfully uploaded.'));
+  }
+
+  DeleteTemplate() {
+    console.log(this.documentType.templateId);
+    if (this.documentType.templateId) {
+      this._documentTypesServiceProxy.deleteTemplate(this.documentType.id).subscribe((result) => {
+        this.clearFileTemplateData();
+        this.notify.success('success');
+      });
+    } else {
+      this.clearFileTemplateData();
     }
   }
 
-  HasExpDateCheckBoxChange() {
-    if (!this.documentType.hasExpirationDate) {
-      this.documentType.expirationAlertDays = 0;
-      this.documentType.inActiveToleranceDays = 0;
-    }
+  private clearFileTemplateData() {
+    this.documentType.templateContentType =
+      this.documentType.templateName =
+      this.documentType.templateExt =
+      this.documentType.templateBase64 =
+      this.documentType.templateId =
+      this.documentType.fileToken =
+        undefined;
+    this.value = [];
   }
 
-  numberOnly(event): boolean {
-    const charCode = event.which ? event.which : event.keyCode;
-    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-      return false;
-    }
-    return true;
-  }
-
-  isDocumentTypeNameAvaliable(name: string, id) {
-    this._documentTypesServiceProxy.isDocuemntTypeNameAvaliable(name, id).subscribe((result) => {
-      this.documentNameisAvaliable = result;
+  downloadTemplate(id: number): void {
+    this._documentTypesServiceProxy.getFileDto(id).subscribe((result) => {
+      this._fileDownloadService.downloadTempFile(result);
     });
-  }
-
-  numberChange(type: string) {
-    if (type == 'Min') {
-      if (this.documentType.numberMinDigits < 1) {
-        this.documentType.numberMinDigits = 1;
-        this.notify.info('MinDigitNumberCanNotBeLessThan1!');
-      }
-      if (this.documentType.numberMinDigits >= this.documentType.numberMaxDigits) {
-        this.documentType.numberMaxDigits = this.documentType.numberMinDigits + 1;
-        this.notify.warn('MinDigitNumberShouldBeLessMaxDigitNumber!');
-      }
-    } else if (type == 'Max') {
-      if (this.documentType.numberMaxDigits <= this.documentType.numberMinDigits) {
-        this.documentType.numberMaxDigits = this.documentType.numberMinDigits + 1;
-        this.notify.warn('MaxDigitNumberCanNotbeLessThanMinDigitNumber!');
-      }
-      if (this.documentType.numberMaxDigits > 100) {
-        this.documentType.numberMaxDigits = 100;
-        this.notify.info('MaxDigitNumberCanNotbeMoreThan100!');
-      }
-    }
   }
 }

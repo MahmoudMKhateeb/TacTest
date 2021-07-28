@@ -9,7 +9,6 @@ namespace TACHYON.Invoices.SubmitInvoices
 {
     public interface ISubmitInvoiceAppService:IApplicationService
     {
-        Task<PagedResultDto<SubmitInvoiceListDto>> GetAll(SubmitInvoiceFilterInput input);
         Task<SubmitInvoiceInfoDto> GetById(EntityDto input);
 
         Task Claim(SubmitInvoiceClaimCreateInput Input);

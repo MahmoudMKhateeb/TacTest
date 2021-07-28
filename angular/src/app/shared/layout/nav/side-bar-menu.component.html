@@ -91,9 +91,23 @@
 <ng-template #mMenuItemText let-item="item" let-parentItem="parentItem">
   <span class="menu-item-here"></span>
   <!-- if menu item has icon -->
-  <span class="menu-icon" *ngIf="item.icon">
-    <i class="menu-link-icon" [ngClass]="item.icon"></i>
+  <span class="menu-icon mr-5" *ngIf="item.icon">
+    <!--    <i class="menu-link-icon" [ngClass]="item.icon"></i>-->
+
+    <span class="svg-icon menu-icon">
+      <!--begin::Svg Icon | path:/metronic/theme/html/demo1/dist/assets/media/svg/icons/Files/Upload.svg-->
+
+      <!--      <svg-icon *ngIf="item.icon" [src]="'assets/SVG/' + item.icon"></svg-icon>-->
+
+      <img src="assets/SVG/{{ item.icon }}" alt="" />
+
+      <!--end::Svg Icon-->
+    </span>
   </span>
+  <!-- if menu item has no icon -->
+  <i *ngIf="!item.icon" class="menu-bullet menu-bullet-dot">
+    <span></span>
+  </i>
 
   <ng-container *ngIf="!item.badge; else mMenuLinkBadge">
     <!-- menu item title text -->

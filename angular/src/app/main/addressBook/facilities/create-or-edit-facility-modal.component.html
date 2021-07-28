@@ -17,7 +17,7 @@
             <!--                <span *ngIf="!routStep.id">{{l("CreateNewRoutStep")}}</span>-->
             <span>{{ facility.id ? l('EditFacility') : l('CreateNewFacility') }}</span>
           </h4>
-          <button type="button" class="close" (click)="show()" aria-label="Close" [disabled]="saving">
+          <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
@@ -94,7 +94,7 @@
             <!-- CreateNewFacilityMap -->
             <div class="form-group col-md-12">
               <agm-map
-                style="height: 350px;"
+                style="height: 350px"
                 [latitude]="facility.latitude"
                 [longitude]="facility.longitude"
                 [zoom]="zoom"

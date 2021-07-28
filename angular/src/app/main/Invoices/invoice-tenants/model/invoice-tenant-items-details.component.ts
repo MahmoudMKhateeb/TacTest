@@ -34,7 +34,6 @@ export class InvoiceTenantItemsDetailsComponent extends AppComponentBase {
   ) {
     super(injector);
   }
-  ngOnInit(): void {}
   show(data: SubmitInvoiceInfoDto | InvoiceInfoDto): void {
     this.direction = document.getElementsByTagName('html')[0].getAttribute('dir');
     this.Data = data;

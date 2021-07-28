@@ -70,7 +70,8 @@ namespace TACHYON.Common
                             u.Surname.Contains(input.Filter) ||
                             u.UserName.Contains(input.Filter) ||
                             u.EmailAddress.Contains(input.Filter)
-                    ).WhereIf(input.ExcludeCurrentUser, u => u.Id != AbpSession.GetUserId());
+                    ).WhereIf(input.ExcludeCurrentUser, u => u.Id != AbpSession.GetUserId())
+                    .WhereIf(input.ExcludeDrivers, u => !u.IsDriver );
 
                 var userCount = await query.CountAsync();
                 var users = await query

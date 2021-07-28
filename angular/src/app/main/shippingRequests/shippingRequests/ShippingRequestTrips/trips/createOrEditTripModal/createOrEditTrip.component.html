@@ -36,7 +36,8 @@
                   [(ngModel)]="trip.originFacilityId"
                   [class.is-invalid]="sourceFacility.touched && !sourceFacility.valid"
                   [class.is-valid]="sourceFacility.touched && sourceFacility.valid"
-                  (change)="PointsComponent.sourceTripFacilityId = trip.originFacilityId"
+                  (ngModelChange)="ValidateTripFacilities()"
+                  (change)="SyncFacilitiesWithService()"
                   required
                 >
                   <option [ngValue]="null" selected disabled>{{ l('SelectaFacility') }}</option>
@@ -60,6 +61,8 @@
                   [(ngModel)]="trip.destinationFacilityId"
                   [class.is-invalid]="destFacility.touched && !destFacility.valid"
                   [class.is-valid]="destFacility.touched && destFacility.valid"
+                  (ngModelChange)="ValidateTripFacilities()"
+                  (change)="SyncFacilitiesWithService()"
                   required
                 >
                   <option [ngValue]="null" selected disabled>{{ l('SelectaFacility') }}</option>
@@ -79,22 +82,21 @@
                 <label>{{ l('TripsStartDate') }} <span class="required-fileds">*</span> </label>
                 <div class="input-group date">
                   <input
-                    #startTripDate="ngModel"
-                    [(ngModel)]="trip.startTripDate"
+                    id="tripStartDate"
+                    [formControl]="tripStartDate"
+                    type="text"
                     class="form-control"
-                    [(date)]="trip.startTripDate"
                     name="tripStartDate"
-                    placeholder="{{ l('DatePlaceholder') }}"
-                    [minDate]="shippingRequest.startTripDate"
-                    [maxDate]="shippingRequest.endTripDate"
-                    [required]="true"
-                    (dateChange)="validateTripDates()"
-                    [class.is-invalid]="startTripDate.touched && !startTripDate.valid"
-                    [class.is-valid]="startTripDate.touched && startTripDate.valid"
                     bsDatepicker
                     datePickerMomentModifier
+                    [class.is-invalid]="trip.startTripDate && tripStartDate.touched && !tripStartDate.valid"
+                    [class.is-valid]="trip.startTripDate && tripStartDate.touched && tripStartDate.valid"
+                    [(date)]="trip.startTripDate"
+                    [minDate]="shippingRequest.startTripDate"
+                    [maxDate]="shippingRequest.endTripDate"
+                    [bsConfig]="{ adaptivePosition: true }"
+                    required
                   />
-
                   <div class="input-group-append">
                     <span class="input-group-text">
                       <i class="la la-calendar-check-o"></i>
@@ -108,20 +110,19 @@
                 <label> <span class="required-fileds"></span> {{ l('TripsEndDate') }} </label>
                 <div class="input-group date">
                   <input
-                    #endTripDate="ngModel"
-                    [(ngModel)]="trip.endTripDate"
-                    [(date)]="trip.endTripDate"
+                    id="endTripDate"
+                    [formControl]="endTripDate"
+                    type="text"
                     class="form-control"
-                    name="tripEndDate"
-                    placeholder="{{ l('DatePlaceholder') }}"
-                    [minDate]="trip.startTripDate"
-                    [maxDate]="shippingRequest.endTripDate"
-                    (dateChange)="validateTripDates()"
-                    [class.is-invalid]="endTripDate.touched && !endTripDate.valid"
-                    [class.is-valid]="endTripDate.touched && endTripDate.valid"
-                    required
+                    name="endTripDate"
                     bsDatepicker
                     datePickerMomentModifier
+                    [class.is-invalid]="trip.endTripDate && endTripDate.touched && !endTripDate.valid"
+                    [class.is-valid]="trip.endTripDate && endTripDate.touched && endTripDate.valid"
+                    [(date)]="trip.endTripDate"
+                    [minDate]="trip.startTripDate"
+                    [maxDate]="shippingRequest.endTripDate"
+                    [bsConfig]="{ adaptivePosition: true }"
                   />
                   <div class="input-group-append">
                     <span class="input-group-text">
@@ -142,9 +143,10 @@
                   [(ngModel)]="trip.shippingRequestTripVases"
                   (ngModelChange)="isSelectedVasesHasinsurance($event)"
                   [style]="{ width: '100%' }"
-                  [filter]="false"
-                  [showHeader]="false"
-                  [defaultLabel]="l('SelectTripVases')"
+                  styleClass="form-control pt-1"
+                  tooltipPositionStyle="dropdown-menu"
+                  [filter]="true"
+                  [showHeader]="true"
                   [dataKey]="'shippingRequestVasId'"
                   optionLabel="name"
                 ></p-multiSelect>
@@ -165,7 +167,6 @@
                     [min]="1"
                     [class.is-invalid]="isApproximateValueRequired && approximateGoodsTotalValue.touched && !approximateGoodsTotalValue.valid"
                     [class.is-valid]="isApproximateValueRequired && approximateGoodsTotalValue.touched && approximateGoodsTotalValue.valid"
-                    placeholder="{{ l('ApproximateTripGoodsValue') }}"
                     [required]="isApproximateValueRequired"
                   />
                   <div class="input-group-append">
@@ -178,20 +179,27 @@
             </div>
             <!--  end::Trip Goods Approximate Value -->
             <div class="col-lg-6">
-              <div class="form-group">
-                <div class="checkbox-list">
-                  <label class="checkbox">
-                    <input type="checkbox" [(ngModel)]="trip.needsDeliveryNote" name="Checkboxes1" />
-                    <span></span>{{ l('NeedsDeliveryNote') }}</label
-                  >
-                  <label class="checkbox">
-                    <input type="checkbox" [(ngModel)]="trip.hasAttachment" name="Checkboxes2" />
-                    <span></span>{{ l('HasAttachment') }}</label
-                  >
+              <div class="form-group row">
+                <div class="col-6 col-form-label">
+                  <div class="checkbox-inline">
+                    <label class="checkbox checkbox-danger">
+                      <input type="checkbox" name="trip.needsDeliveryNote" [(ngModel)]="trip.needsDeliveryNote" />
+                      <span></span>
+                      {{ l('NeedsDeliveryNote') }}
+                    </label>
+                  </div>
+                </div>
+                <div class="col-6 col-form-label">
+                  <div class="checkbox-inline float-right">
+                    <label class="checkbox checkbox-danger">
+                      <input type="checkbox" name="trip.hasAttachment" [(ngModel)]="trip.hasAttachment" />
+                      <span></span>
+                      {{ l('HasAttachment') }}
+                    </label>
+                  </div>
                 </div>
               </div>
             </div>
-
             <div *ngIf="trip.hasAttachment" class="form-group col-lg-6">
               <label>{{ l('SelectFile') }} {{ fileToken }} </label>
               <div class="custom-file">
@@ -213,13 +221,7 @@
 
             <!--      end:Vas's      -->
             <!--  start:: RouteSteps -->
-            <PointsComponent
-              #PointsComponent
-              (SelectedWayPointsFromChild)="trip.routPoints = $event"
-              [WayPointListFromFatherForShippingRequestEdit]="trip.routPoints"
-              [MainGoodsCategory]="shippingRequest.goodCategoryId"
-              [NumberOfDrops]="shippingRequest.numberOfDrops"
-            ></PointsComponent>
+            <PointsComponent #PointsComponent (SelectedWayPointsFromChild)="trip.routPoints = $event"></PointsComponent>
             <!--  end:: RouteSteps -->
             <!--end::Body-->
           </div>
@@ -232,7 +234,7 @@
 
             <button
               type="submit"
-              [disabled]="saving || !shippingRequestTripsForm.form.valid"
+              [disabled]="saving || !shippingRequestTripsForm.form.valid || tripStartDate.invalid || endTripDate.invalid"
               class="btn btn-primary font-weight-bolder btn-sm py-3 px-6"
               (click)="createOrEditTrip()"
             >

@@ -5,6 +5,7 @@ using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
+using NetTopologySuite.Geometries;
 using System;
 using System.Collections.Generic;
 using System.Collections.Generic;
@@ -40,11 +41,11 @@ namespace TACHYON.Cities
 
             var filteredCities = _cityRepository.GetAll()
                         .Include(e => e.CountyFk)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter) || e.Code.Contains(input.Filter) || e.Latitude.Contains(input.Filter) || e.Longitude.Contains(input.Filter))
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter) || e.Code.Contains(input.Filter) )//|| e.Latitude.Contains(input.Filter) || e.Longitude.Contains(input.Filter))
                         .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.DisplayName == input.DisplayNameFilter)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.CodeFilter), e => e.Code == input.CodeFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.LatitudeFilter), e => e.Latitude == input.LatitudeFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.LongitudeFilter), e => e.Longitude == input.LongitudeFilter)
+                       // .WhereIf(!string.IsNullOrWhiteSpace(input.LatitudeFilter), e => e.Location.Y == input.LatitudeFilter)
+                       // .WhereIf(!string.IsNullOrWhiteSpace(input.LongitudeFilter), e => e.Longitude == input.LongitudeFilter)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.CountyDisplayNameFilter), e => e.CountyFk != null && e.CountyFk.DisplayName == input.CountyDisplayNameFilter);
 
             var pagedAndFilteredCities = filteredCities
@@ -61,8 +62,8 @@ namespace TACHYON.Cities
                              {
                                  DisplayName = o.DisplayName,
                                  Code = o.Code,
-                                 Latitude = o.Latitude,
-                                 Longitude = o.Longitude,
+                                 Latitude = o.Location.Y,
+                                 Longitude = o.Location.X,
                                  Id = o.Id
                              },
                              CountyDisplayName = s1 == null || s1.DisplayName == null ? "" : s1.DisplayName.ToString()
@@ -127,7 +128,7 @@ namespace TACHYON.Cities
             {
                 throw new UserFriendlyException(L("CannotCreateEmptyName"));
             }
-            if (await _cityRepository.FirstOrDefaultAsync(x => x.DisplayName.ToLower() == input.DisplayName.ToLower() && x.CountyId == input.CountyId) != null)
+            if (await _cityRepository.FirstOrDefaultAsync(x => x.DisplayName.ToLower() == input.DisplayName.ToLower() && x.CountyId == input.CountyId && x.Id!=input.Id) != null)
             {
                 throw new UserFriendlyException(L("CityIsAlreadyExistsForThisCountry"));
             }
@@ -136,9 +137,14 @@ namespace TACHYON.Cities
         [AbpAuthorize(AppPermissions.Pages_Cities_Create)]
         protected virtual async Task Create(CreateOrEditCityDto input)
         {
+            var point = new Point
+                (input.Longitude, input.Latitude)
+            {
+                SRID = 4326
+            };
+
             var city = ObjectMapper.Map<City>(input);
-
-
+            city.Location = point;
 
             await _cityRepository.InsertAsync(city);
         }
@@ -147,6 +153,16 @@ namespace TACHYON.Cities
         protected virtual async Task Update(CreateOrEditCityDto input)
         {
             var city = await _cityRepository.FirstOrDefaultAsync((int)input.Id);
+            if( (city.Location?.X!=input.Longitude || city.Location?.Y!=input.Latitude))
+            {
+                var point = new Point
+                (input.Longitude, input.Latitude)
+                {
+                    SRID = 4326
+                };
+
+                city.Location = point;
+            }
             ObjectMapper.Map(input, city);
         }
 
@@ -161,11 +177,11 @@ namespace TACHYON.Cities
 
             var filteredCities = _cityRepository.GetAll()
                         .Include(e => e.CountyFk)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter) || e.Code.Contains(input.Filter) || e.Latitude.Contains(input.Filter) || e.Longitude.Contains(input.Filter))
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter) || e.Code.Contains(input.Filter))// || e.Latitude.Contains(input.Filter) || e.Longitude.Contains(input.Filter))
                         .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.DisplayName == input.DisplayNameFilter)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.CodeFilter), e => e.Code == input.CodeFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.LatitudeFilter), e => e.Latitude == input.LatitudeFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.LongitudeFilter), e => e.Longitude == input.LongitudeFilter)
+                       // .WhereIf(!string.IsNullOrWhiteSpace(input.LatitudeFilter), e => e.Latitude == input.LatitudeFilter)
+                        //.WhereIf(!string.IsNullOrWhiteSpace(input.LongitudeFilter), e => e.Longitude == input.LongitudeFilter)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.CountyDisplayNameFilter), e => e.CountyFk != null && e.CountyFk.DisplayName == input.CountyDisplayNameFilter);
 
             var query = (from o in filteredCities
@@ -178,8 +194,8 @@ namespace TACHYON.Cities
                              {
                                  DisplayName = o.DisplayName,
                                  Code = o.Code,
-                                 Latitude = o.Latitude,
-                                 Longitude = o.Longitude,
+                                 Latitude = o.Location.Y,
+                                 Longitude = o.Location.X,
                                  Id = o.Id
                              },
                              CountyDisplayName = s1 == null || s1.DisplayName == null ? "" : s1.DisplayName.ToString()

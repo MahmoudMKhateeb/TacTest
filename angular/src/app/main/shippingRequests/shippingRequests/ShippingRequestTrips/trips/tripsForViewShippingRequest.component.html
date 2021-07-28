@@ -3,10 +3,7 @@
     <h3 class="card-title">
       {{ l('shippingRequestTrips') }}
     </h3>
-    <div class="card-toolbar">
-      <!-- *ngIf="feature.isEnabled('App.Shipper')" -->
-
-      <!--          *ngIf="ShippingRequest.status <= 1"-->
+    <div class="card-toolbar" *ngIf="feature.isEnabled('App.Shipper')">
       <button
         class="btn btn-primary"
         (click)="AddNewTripModal.show()"
@@ -119,6 +116,9 @@
                     <li>
                       <a class="dropdown-item" (click)="ViewTripModal.show(record.id)">{{ l('View') }}</a>
                     </li>
+                    <li *ngIf="feature.isEnabled('App.Carrier') || feature.isEnabled('App.TachyonDealer')">
+                      <a class="dropdown-item" (click)="ViewTripModal.ResetTrip(record.id)">{{ l('ResetTrip') }}</a>
+                    </li>
                     <li *ngIf="record.status != 0 && record.status != 6 && record.status != 7">
                       <a class="dropdown-item" (click)="TripAccidentModal.show(record.id, null)">{{ l('CreateAccident') }}</a>
                     </li>
@@ -163,6 +163,6 @@
   [shippingRequest]="ShippingRequest"
   [VasListFromFather]="VasListFromFather"
 ></AddNewTripModal>
-<viewTripModal #ViewTripModal></viewTripModal>
+<viewTripModal #ViewTripModal (modalSave)="reloadPage()"></viewTripModal>
 <trip-accident-modal #TripAccidentModal (modalSave)="getShippingRequestsTrips($event)"></trip-accident-modal>
 <view-trip-accident-modal #ViewTripAccidentModal (modalcanceltrip)="reloadPage()"></view-trip-accident-modal>

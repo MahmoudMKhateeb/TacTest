@@ -1,4 +1,4 @@
-import { Component, Injector, NgZone, OnInit } from '@angular/core';
+import { Component, Injector, NgZone, OnInit, ViewChild } from '@angular/core';
 import { finalize } from 'rxjs/operators';
 
 import {
@@ -24,6 +24,8 @@ import { BreadcrumbItem } from '@app/shared/common/sub-header/sub-header.compone
 import { MapsAPILoader } from '@node_modules/@agm/core';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 
+import { NgForm } from '@angular/forms';
+
 @Component({
   templateUrl: './create-or-edit-shippingRequest.component.html',
   styleUrls: ['./create-or-edit-shippingRequest.component.scss'],
@@ -31,6 +33,7 @@ import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
   providers: [EnumToArrayPipe],
 })
 export class CreateOrEditShippingRequestComponent extends AppComponentBase implements OnInit {
+  @ViewChild('shippingRequestForm') shippingRequestForm: NgForm;
   breadcrumbs: BreadcrumbItem[] = [
     new BreadcrumbItem(this.l('ShippingRequest'), '/app/main/shippingRequests/shippingRequests'),
     // new BreadcrumbItem(this.l('Entity_Name_Plural_Here') + '' + this.l('Details')),
@@ -275,18 +278,28 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
     }
   }
 
- // check if user select same city in source and destination
-  validateDuplicatedCites(event:Event){
-    let index:number =  event.target["selectedIndex"] - 1;
+  // check if user select same city in source and destination
+  validateDuplicatedCites(event: Event) {
+    let index: number = event.target['selectedIndex'] - 1;
 
-    if(this.shippingRequest.originCityId == this.shippingRequest.destinationCityId)
-    {      
-    
-      this.shippingRequest.destinationCityId = null;
-     
-}
+    if (this.shippingRequest.originCityId == this.shippingRequest.destinationCityId) this.shippingRequest.destinationCityId = null;
   }
 
- 
- 
+  /**
+   * Validates Shipping Request Origing&Dest According to Shipping Type
+   */
+  validateShippingRequestType() {
+    //check if user choose local-inside city  but the origin&des same
+    if (this.shippingRequest.shippingTypeId == 1) {
+      this.shippingRequest.destinationCityId = this.shippingRequest.originCityId;
+    } else if (this.shippingRequest.shippingTypeId == 2) {
+      // check if user select same city in source and destination
+      if (this.shippingRequest.originCityId == this.shippingRequest.destinationCityId) {
+        this.shippingRequestForm.controls['destination'].setErrors({ invalid: true });
+        this.shippingRequestForm.controls['origin'].setErrors({ invalid: true });
+
+        this.notify.error(this.l(' SourceAndDestinationCantBeTheSame'));
+      }
+    }
+  }
 }

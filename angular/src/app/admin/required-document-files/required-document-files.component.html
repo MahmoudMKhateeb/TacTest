@@ -33,7 +33,7 @@
               >
                 <ng-template pTemplate="header">
                   <tr>
-                    <th style="width: 130px;">{{ l('Actions') }}</th>
+                    <th style="width: 130px">{{ l('Actions') }}</th>
                     <th>
                       {{ l('Name') }}
                     </th>
@@ -50,7 +50,7 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-record="$implicit">
                   <tr>
-                    <td style="width: 130px;">
+                    <td style="width: 130px">
                       <div class="btn-group dropdown" dropdown container="body">
                         <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
                           <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
@@ -77,6 +77,15 @@
                     <td>
                       <span class="ui-column-title"></span>
                       {{ record.documentTypeDto.name }}
+                      <a
+                        *ngIf="record.documentTypeDto.templateName"
+                        class="d-flex align-items-center text-muted text-hover-primary py-1"
+                        href="javascript:;"
+                        (click)="downloadTemplate(record.documentTypeDto)"
+                      >
+                        <span class="flaticon2-clip-symbol text-warning icon-1x mr-2"></span>
+                        {{ l('DownloadTemplate') }}
+                      </a>
                     </td>
                     <td>
                       <span class="ui-column-title"></span>

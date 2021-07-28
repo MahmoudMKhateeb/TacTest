@@ -1,1 +1,16 @@
-.not-allowed {cursor: not-allowed !important;}
+.not-allowed {
+  cursor: not-allowed !important;
+}
+.aside-menu .menu-nav > .menu-item .menu-submenu .menu-item > .menu-heading .menu-icon svg,
+.aside-menu .menu-nav > .menu-item .menu-submenu .menu-item > .menu-link .menu-icon svg {
+  height: 30px;
+  width: 30px;
+  margin-bottom: 5px;
+}
+
+.aside-menu .menu-nav > .menu-item > .menu-heading .menu-icon svg,
+.aside-menu .menu-nav > .menu-item > .menu-link .menu-icon svg {
+  height: 30px;
+  width: 30px;
+  margin-bottom: 5px;
+}

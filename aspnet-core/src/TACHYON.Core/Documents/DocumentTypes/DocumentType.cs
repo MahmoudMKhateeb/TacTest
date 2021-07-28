@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using Abp.AutoMapper;
 using TACHYON.Documents.DocumentFiles;
 using TACHYON.Documents.DocumentTypeTranslations;
+using TACHYON.MultiTenancy;
 
 namespace TACHYON.Documents.DocumentTypes
 {
@@ -78,5 +79,14 @@ namespace TACHYON.Documents.DocumentTypes
         public bool HasHijriExpirationDate { get; set; }
 
         public ICollection<DocumentTypeTranslation> Translations { get; set; }
+
+        public string TemplateName { get; set; }
+        public string TemplateContentType { get; set; }
+        public Guid? TemplateId { get; set; }
+        public int? DocumentRelatedWithId { get; set; }
+
+        [ForeignKey("DocumentRelatedWithId")]
+        public Tenant DocumentRelatedWithFk { get; set; }
+
     }
 }

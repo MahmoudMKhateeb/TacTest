@@ -317,6 +317,7 @@
 		<text name="CreateNewTrailer">إضافة مقطورة جديدة</text>
 		<text name="CreateNewTrailerStatus">إضافة حالة مقطورة جديدة</text>
 		<text name="CreateNewTrailerType">إضافة نوع مقطورة جديدة</text>
+		<text name="TransportSubtype">نوع النقل </text>
 		<text name="CreateNewTransportType">إضافة نوع نقل جديد</text>
 		<text name="CreateNewTransportTypesTranslation">إضافة ترجمة نوع النقل</text>
 		<text name="CreateNewTruck">إضافة شاحنة جديدة</text>
@@ -484,6 +485,7 @@
 		<text name="DifferentTenantImpersonationErrorMessage">لا يمكن تمثيل مستخدم من عميل آخر!</text>
 		<text name="Dimentions">الأبعاد</text>
 		<text name="DirectRequests">الطلبات المباشرة</text>
+		<text name="DirectRequest">طلب شحن مباشر</text>
 		<text name="DirectShippingRequests">طلبات الشحن الخاصة</text>
 		<text name="Disable">تعطيل</text>
 		<text name="Disabled">معطّل</text>
@@ -521,6 +523,7 @@
 		<text name="DownloadCollectedData_Description">تحميل إعدادات حسابك</text>
 		<text name="DownloadDropWaybill">تحميل وثيقة الشحن</text>
 		<text name="DownloadInvoice">تحميل الفاتورة</text>
+		<text name="UploadInvoiceDocument">تحميل مستند الفاتورة</text>
 		<text name="DriectRequestCarrierRespone">
 			<a href="/app/main/shippingRequests/shippingRequests/view?id={id}">{clientname} قام بوضع عرض مالي للشحنة رقم: {ShipimentNo}.</a>
 		</text>

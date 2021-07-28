@@ -1,4 +1,7 @@
-<div [ngClass]="{ 'subscription-bar-visible': subscriptionStatusBarVisible() }" class="d-flex flex-column flex-root">
+<div
+  [ngClass]="{ 'subscription-bar-visible': subscriptionStatusBarVisible(), 'dx-rtl': isRightToLeft() }"
+  class="d-flex flex-column flex-root dx-viewport"
+>
   <default-layout *ngIf="theme == 'default'"></default-layout>
   <theme2-layout *ngIf="theme == 'theme2'"></theme2-layout>
   <theme3-layout *ngIf="theme == 'theme3'"></theme3-layout>

@@ -181,29 +181,29 @@
               >
                 <ng-template pTemplate="header">
                   <tr>
-                    <th style="width: 130px;" [hidden]="!isGrantedAny('Pages.Facilities.Edit', 'Pages.Facilities.Delete')">{{ l('Actions') }}</th>
-                    <th style="width: 150px;" pSortableColumn="cityFk.CountyFk.displayName">
+                    <th [hidden]="!isGrantedAny('Pages.Facilities.Edit', 'Pages.Facilities.Delete')">{{ l('Actions') }}</th>
+                    <th pSortableColumn="cityFk.CountyFk.displayName">
                       {{ l('Country') }}
                       <p-sortIcon field="CountryDisplayName"></p-sortIcon>
                     </th>
 
-                    <th style="width: 150px;" pSortableColumn="cityFk.displayName">
+                    <th pSortableColumn="cityFk.displayName">
                       {{ l('CityName') }}
                       <p-sortIcon field="cityDisplayName"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="name">
+                    <th pSortableColumn="name">
                       {{ l('FacilityName') }}
                       <p-sortIcon field="facility.name"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="address">
+                    <th pSortableColumn="address">
                       {{ l('Address') }}
                       <p-sortIcon field="facility.address"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="longitude">
+                    <th pSortableColumn="longitude">
                       {{ l('Longitude') }}
                       <p-sortIcon field="facility.longitude"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="latitude">
+                    <th pSortableColumn="latitude">
                       {{ l('Latitude') }}
                       <p-sortIcon field="facility.latitude"></p-sortIcon>
                     </th>
@@ -215,7 +215,7 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-record="$implicit">
                   <tr>
-                    <td style="width: 130px;" [hidden]="!isGrantedAny('Pages.Facilities.Edit', 'Pages.Facilities.Delete')">
+                    <td [hidden]="!isGrantedAny('Pages.Facilities.Edit', 'Pages.Facilities.Delete')">
                       <div class="btn-group dropdown" dropdown container="body">
                         <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
                           <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
@@ -245,27 +245,27 @@
                         </ul>
                       </div>
                     </td>
-                    <td style="width: 150px;">
+                    <td>
                       <span class="ui-column-title"> {{ l('Country') }}</span>
                       {{ record.country }}
                     </td>
-                    <td style="width: 150px;">
+                    <td>
                       <span class="ui-column-title"> {{ l('DisplayName') }}</span>
                       {{ record.cityDisplayName }}
                     </td>
-                    <td style="width: 150px;">
+                    <td>
                       <span class="ui-column-title"> {{ l('Name') }}</span>
                       {{ record.facility.name }}
                     </td>
-                    <td style="width: 150px;">
+                    <td>
                       <span class="ui-column-title"> {{ l('Address') }}</span>
                       {{ record.facility.address }}
                     </td>
-                    <td style="width: 150px;">
+                    <td>
                       <span class="ui-column-title"> {{ l('Longitude') }}</span>
                       {{ record.facility.longitude }}
                     </td>
-                    <td style="width: 150px;">
+                    <td>
                       <span class="ui-column-title"> {{ l('Latitude') }}</span>
                       {{ record.facility.latitude }}
                     </td>

@@ -1,5 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using Abp.Application.Services.Dto;
+using TACHYON.Dto;
 
 namespace TACHYON.Documents.DocumentTypes.Dtos
 {
@@ -29,6 +31,19 @@ namespace TACHYON.Documents.DocumentTypes.Dtos
         public int? InActiveToleranceDays { get; set; }
         public bool HasHijriExpirationDate { get; set; }
 
+
+        public string TemplateBase64 { get; set; }
+
+        public string TemplateName { get; set; }
+        public string TemplateContentType { get; set; }
+        public string TemplateExt { get; set; }
+        public Guid? TemplateId { get; set; }
+        /* public int? TenantId { get; set; }*/
+        public int? DocumentRelatedWithId { get; set; }
+        public SelectItemDto DocumentRelatedWith { get; set; }
+
+        [MaxLength(400)]
+        public string FileToken { get; set; }
 
     }
 }

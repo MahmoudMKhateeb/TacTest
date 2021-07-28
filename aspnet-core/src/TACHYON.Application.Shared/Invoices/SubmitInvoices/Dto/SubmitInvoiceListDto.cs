@@ -9,6 +9,7 @@ namespace TACHYON.Invoices.SubmitInvoices.Dto
         public long? ReferencNumber { get; set; }
         public string TenantName { get; set; }
         public string Period { get; set; }
+        public int PeriodId { get; set; }
         public SubmitInvoiceStatus Status { get; set; }
         public string StatusTitle { get { return Status.GetEnumDescription(); } }
         public Guid? DocumentId { get; set; }
