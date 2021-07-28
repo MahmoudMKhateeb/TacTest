@@ -525,6 +525,20 @@ namespace TACHYON.Notifications
             await _notificationPublisher.PublishAsync(AppNotificationNames.ShipperShippingRequestTripNotifyDriverWhenAssignTrip, notificationData, userIds: new[] { argsUser });
         }
 
+        public async Task ShipperShippingRequestTripNotifyDriverWhenUnassignedTrip(UserIdentifier argsUser, ShippingRequestTrip Trip)
+        { // Need To Add Localization Message String
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    L(AppNotificationNames.ShipperShippingRequestTripNotifyDriverWhenUnassignedTrip),
+                    TACHYONConsts.LocalizationSourceName
+                )
+            )
+            {
+                ["id"] = Trip.Id
+            };
+
+            await _notificationPublisher.PublishAsync(AppNotificationNames.ShipperShippingRequestTripNotifyDriverWhenUnassignedTrip, notificationData, userIds: new[] { argsUser });
+        }
 
         public async Task NotifyDriverWhenAssignToTrip(ShippingRequestTrip Trip)
         {
