@@ -22,8 +22,8 @@
         </div>
         <div class="modal-body">
           <div class="form-group m-form__group">
-            <agm-map [latitude]="Number(city.latitude)" [longitude]="Number(city.longitude)" [zoom]="zoom" (mapClick)="mapClicked($event)">
-              <agm-marker [latitude]="Number(city.latitude)" [longitude]="Number(city.longitude)" [markerDraggable]="true"></agm-marker>
+            <agm-map [latitude]="city.latitude" [longitude]="city.longitude" [zoom]="zoom" (mapClick)="mapClicked($event)">
+              <agm-marker [latitude]="city.latitude" [longitude]="city.longitude" [markerDraggable]="true"></agm-marker>
             </agm-map>
           </div>
 
