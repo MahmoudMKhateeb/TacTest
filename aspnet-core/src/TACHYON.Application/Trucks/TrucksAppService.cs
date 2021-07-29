@@ -107,6 +107,9 @@ namespace TACHYON.Trucks
                 .Where(x => x.IsRequired)
                 .CountAsync();
 
+            if (documentTypesCount == 0)
+                return;
+
             var submittedDocuments = await (_documentFileRepository.GetAll()
                     .Where(x => ids.Contains((long)x.TruckId))
                     .Where(x => x.DocumentTypeFk.IsRequired)
@@ -116,10 +119,18 @@ namespace TACHYON.Trucks
 
             foreach (TruckDto truckDto in pagedResultDto.Items)
             {
-                if (submittedDocuments != null)
+                if (submittedDocuments == null)
+                    continue;
+
+
+                var t = submittedDocuments.FirstOrDefault(x => x.TruckId == truckDto.Id);
+                if (t != null)
                 {
-                    truckDto.IsMissingDocumentFiles = submittedDocuments
-                        .FirstOrDefault(x => x.TruckId == truckDto.Id).IsMissingDocumentFiles;
+                    truckDto.IsMissingDocumentFiles = t.IsMissingDocumentFiles;
+                }
+                else
+                {
+                    truckDto.IsMissingDocumentFiles = true;
                 }
             }
         }
