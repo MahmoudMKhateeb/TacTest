@@ -236,7 +236,7 @@
                     <Value />
                     <Style>
                       <FontStyle>Normal</FontStyle>
-                      <FontFamily>ge Flow</FontFamily>
+                       
                       <FontSize>8pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                       <TextDecoration>None</TextDecoration>
@@ -383,7 +383,7 @@
                     <Value>يرجى ارسال الشيك لصالح </Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
-                      <FontFamily>Ge Flow</FontFamily>
+                       
                       <FontSize>7pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
@@ -394,7 +394,7 @@
                     <Value>شركة</Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
-                      <FontFamily>ge Flow</FontFamily>
+                       
                       <FontSize>7pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
@@ -405,7 +405,7 @@
                     <Value> الحلول المتكاملة للخدمات اللوجستية</Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
-                      <FontFamily>ge Flow</FontFamily>
+                       
                       <FontSize>7pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                       <TextDecoration>None</TextDecoration>
@@ -446,7 +446,7 @@
                     <Value>ا لتاريخ هو تاريخ تسليم الشحنة الفعلي</Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
-                      <FontFamily>GE Flow</FontFamily>
+                       
                       <FontSize>6pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
@@ -533,7 +533,7 @@
                     <Value>الحلول المتكاملة للخدمات اللوجستية</Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
-                      <FontFamily>GE Flow</FontFamily>
+                       
                       <FontSize>7pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                       <TextDecoration>None</TextDecoration>
@@ -575,7 +575,7 @@
                     <Value>في حالة الخدمات الاضافية، الخدمات الاضافية ستضاف الي رقم وثيقة الشحن كمرجع </Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
-                      <FontFamily>GE Flow</FontFamily>
+                       
                       <FontSize>6pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
@@ -872,7 +872,7 @@
                                 <TextRun>
                                   <Value>:إسم العميل</Value>
                                   <Style>
-                                    <FontFamily>GE Flow</FontFamily>
+                                     
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <Color>#282828</Color>
@@ -989,7 +989,7 @@
                                 <TextRun>
                                   <Value>:رقم الهاتف</Value>
                                   <Style>
-                                    <FontFamily>GE Flow</FontFamily>
+                                     
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <Color>#282828</Color>
@@ -1118,7 +1118,7 @@
                                 <TextRun>
                                   <Value>:رقم الفاتورة</Value>
                                   <Style>
-                                    <FontFamily>GE Flow</FontFamily>
+                                     
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <Color>#282828</Color>
@@ -1242,7 +1242,7 @@
                                 <TextRun>
                                   <Value>:العنوان</Value>
                                   <Style>
-                                    <FontFamily>GE Flow</FontFamily>
+                                     
                                     <FontSize>8pt</FontSize>
                                     <Color>#181818</Color>
                                   </Style>
@@ -1357,7 +1357,7 @@
                                 <TextRun>
                                   <Value>:تاريخ الفاتورة</Value>
                                   <Style>
-                                    <FontFamily>GE Flow</FontFamily>
+                                     
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <Color>#282828</Color>
@@ -1477,7 +1477,7 @@
                                 <TextRun>
                                   <Value>:السجل التجاري</Value>
                                   <Style>
-                                    <FontFamily>GE Flow</FontFamily>
+                                     
                                     <FontSize>8pt</FontSize>
                                     <Color>#181818</Color>
                                   </Style>
@@ -1603,7 +1603,7 @@
                                 <TextRun>
                                   <Value>:البريد إلكتروني</Value>
                                   <Style>
-                                    <FontFamily>GE Flow</FontFamily>
+                                     
                                     <FontSize>8pt</FontSize>
                                     <Color>#181818</Color>
                                   </Style>
@@ -1731,7 +1731,7 @@
                                 <TextRun>
                                   <Value>:تاريخ الإستحقاق</Value>
                                   <Style>
-                                    <FontFamily>GE Flow</FontFamily>
+                                     
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <Color>#282828</Color>
@@ -1854,7 +1854,7 @@
                                 <TextRun>
                                   <Value>:رقم العقد</Value>
                                   <Style>
-                                    <FontFamily>GE Flow</FontFamily>
+                                     
                                     <FontSize>8pt</FontSize>
                                     <Color>#181818</Color>
                                   </Style>
@@ -1968,7 +1968,7 @@
                                 <TextRun>
                                   <Value>:عناية</Value>
                                   <Style>
-                                    <FontFamily>GE Flow</FontFamily>
+                                     
                                     <FontSize>8pt</FontSize>
                                     <Color>#181818</Color>
                                   </Style>
@@ -2105,7 +2105,7 @@
                                 <TextRun>
                                   <Value>التسلسل</Value>
                                   <Style>
-                                    <FontFamily>GE Flow</FontFamily>
+                                     
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <Color>White</Color>
@@ -2159,7 +2159,7 @@
                                 <TextRun>
                                   <Value>التاريخ</Value>
                                   <Style>
-                                    <FontFamily>GE Flow</FontFamily>
+                                     
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <Color>White</Color>
@@ -2218,7 +2218,7 @@
                                 <TextRun>
                                   <Value>وثيقة الشحن</Value>
                                   <Style>
-                                    <FontFamily>GE Flow</FontFamily>
+                                     
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <Color>White</Color>
@@ -2276,7 +2276,7 @@
                                 <TextRun>
                                   <Value>مكان التحميل</Value>
                                   <Style>
-                                    <FontFamily>GE Flow</FontFamily>
+                                     
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <Color>White</Color>
@@ -2335,7 +2335,7 @@
                                 <TextRun>
                                   <Value>مكان التنزيل</Value>
                                   <Style>
-                                    <FontFamily>GE Flow</FontFamily>
+                                     
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <Color>White</Color>
@@ -2394,7 +2394,7 @@
                                 <TextRun>
                                   <Value>نوع الشاحنة</Value>
                                   <Style>
-                                    <FontFamily>GE Flow</FontFamily>
+                                     
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <Color>White</Color>
@@ -2463,7 +2463,7 @@
                                 <TextRun>
                                   <Value>السعر ر.س</Value>
                                   <Style>
-                                    <FontFamily>GE Flow</FontFamily>
+                                     
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <Color>White</Color>
@@ -2516,7 +2516,7 @@
                                 <TextRun>
                                   <Value>(VAT </Value>
                                   <Style>
-                                    <FontFamily>GE Flow</FontFamily>
+                                     
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <Color>White</Color>
@@ -2525,7 +2525,7 @@
                                 <TextRun>
                                   <Value>=First(Fields!TaxVat.Value, "GetInvoiceReportInfoDataset")</Value>
                                   <Style>
-                                    <FontFamily>GE Flow</FontFamily>
+                                     
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <Color>White</Color>
@@ -2535,7 +2535,7 @@
                                   <Value> %)
 ضريبة القيمة المضافة</Value>
                                   <Style>
-                                    <FontFamily>GE Flow</FontFamily>
+                                     
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <Color>White</Color>
@@ -2600,7 +2600,7 @@
                                 <TextRun>
                                   <Value>الإجمالي</Value>
                                   <Style>
-                                    <FontFamily>GE Flow</FontFamily>
+                                     
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <Color>White</Color>
@@ -2666,7 +2666,7 @@
                                 <TextRun>
                                   <Value>الكمية</Value>
                                   <Style>
-                                    <FontFamily>GE Flow</FontFamily>
+                                     
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <Color>White</Color>
@@ -3264,7 +3264,7 @@
                                 <TextRun>
                                   <Value>مجموع الفاتورة</Value>
                                   <Style>
-                                    <FontFamily>GE Flow</FontFamily>
+                                     
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                   </Style>
@@ -3399,7 +3399,7 @@
                                 <TextRun>
                                   <Value>(%</Value>
                                   <Style>
-                                    <FontFamily>GE Flow</FontFamily>
+                                     
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                   </Style>
@@ -3407,7 +3407,7 @@
                                 <TextRun>
                                   <Value>=Fields!TaxVat.Value</Value>
                                   <Style>
-                                    <FontFamily>GE Flow</FontFamily>
+                                     
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                   </Style>
@@ -3423,7 +3423,7 @@
                                 <TextRun>
                                   <Value>) قيمة الضريبة المضافة</Value>
                                   <Style>
-                                    <FontFamily>GE Flow</FontFamily>
+                                     
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                   </Style>
@@ -3554,7 +3554,7 @@
                                 <TextRun>
                                   <Value>المبلغ المستحق</Value>
                                   <Style>
-                                    <FontFamily>GE Flow</FontFamily>
+                                     
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <Color>White</Color>
@@ -3706,7 +3706,7 @@
                                   <Value>1391708819940</Value>
                                   <Style>
                                     <FontStyle>Normal</FontStyle>
-                                    <FontFamily>GE Flow</FontFamily>
+                                     
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <TextDecoration>None</TextDecoration>
@@ -3750,7 +3750,7 @@
                                 <TextRun>
                                   <Value>الحساب</Value>
                                   <Style>
-                                    <FontFamily>GE Flow</FontFamily>
+                                     
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                   </Style>
@@ -3844,7 +3844,7 @@
                                   <Value>SA6420000001391708819940</Value>
                                   <Style>
                                     <FontStyle>Normal</FontStyle>
-                                    <FontFamily>GE Flow</FontFamily>
+                                     
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <TextDecoration>None</TextDecoration>
@@ -3884,7 +3884,7 @@
                                 <TextRun>
                                   <Value>ايبان</Value>
                                   <Style>
-                                    <FontFamily>GE Flow</FontFamily>
+                                     
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                   </Style>
@@ -3958,7 +3958,7 @@
                     <Value>التوقيع</Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
-                      <FontFamily>GE Flow</FontFamily>
+                       
                       <FontSize>7pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                       <TextDecoration>None</TextDecoration>
@@ -4068,7 +4068,7 @@
                     <Value>:أو التحويل مباشرة إلى حسابنا البنكي</Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
-                      <FontFamily>ge Flow</FontFamily>
+                       
                       <FontSize>7pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
@@ -4123,7 +4123,7 @@
                       <Value>الحلول المتكاملة للخدمات اللوجستية</Value>
                       <Style>
                         <FontStyle>Normal</FontStyle>
-                        <FontFamily>Ge Flow</FontFamily>
+                         
                         <FontSize>8.5pt</FontSize>
                         <TextDecoration>None</TextDecoration>
                         <Color>DimGray</Color>
@@ -4176,7 +4176,7 @@
                       <Value>فاتورة</Value>
                       <Style>
                         <FontStyle>Normal</FontStyle>
-                        <FontFamily>Ge Flow</FontFamily>
+                         
                         <FontSize>11pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                         <TextDecoration>None</TextDecoration>
@@ -4405,7 +4405,7 @@
                       <Value>:رقم السجل الضريبي</Value>
                       <Style>
                         <FontStyle>Normal</FontStyle>
-                        <FontFamily>GE Flow</FontFamily>
+                         
                         <FontSize>7pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                         <TextDecoration>None</TextDecoration>
@@ -4445,7 +4445,7 @@
                       <Value>310496565400003</Value>
                       <Style>
                         <FontStyle>Normal</FontStyle>
-                        <FontFamily>GE Flow</FontFamily>
+                         
                         <FontSize>7pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                         <TextDecoration>None</TextDecoration>
@@ -4624,7 +4624,7 @@
                       <Value>:السجل التجاري</Value>
                       <Style>
                         <FontStyle>Normal</FontStyle>
-                        <FontFamily>ge Flow</FontFamily>
+                         
                         <FontSize>7pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                         <TextDecoration>None</TextDecoration>
@@ -4664,7 +4664,7 @@
                       <Value>1010621994</Value>
                       <Style>
                         <FontStyle>Normal</FontStyle>
-                        <FontFamily>GE Flow</FontFamily>
+                         
                         <FontSize>7pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                         <TextDecoration>None</TextDecoration>
