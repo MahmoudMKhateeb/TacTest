@@ -11,7 +11,8 @@ namespace TACHYON.Invoices.Transactions.Dto
         public DateTime CreationTime { get; set ; }
         public string ClientName { get; set; }
         public string Edition { get; set; }
-        public byte ChannelId { get; set; }
+        public int EditionId { get; set; }
+        public ChannelType ChannelId { get; set; }
         public string Channel { get; set; }
         public decimal Amount { get; set; }
         public int Count { get; set; }
