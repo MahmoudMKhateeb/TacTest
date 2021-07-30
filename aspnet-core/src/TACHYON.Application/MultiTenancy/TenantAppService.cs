@@ -10,6 +10,7 @@ using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Abp.Runtime.Security;
 using Abp.Timing;
+using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -64,33 +65,40 @@ namespace TACHYON.MultiTenancy
                 );
         }
 
+        public async Task<PagedResultDto<TenantListDto>> GetAllTenants(string loadOptions)
+        {
+            var query = TenantManager.Tenants.ProjectTo<TenantListDto>(AutoMapperConfigurationProvider);
+
+            return await LoadResultAsync(query, loadOptions);
+        }
+
         [AbpAuthorize(AppPermissions.Pages_Tenants_Create)]
         [UnitOfWork(IsDisabled = true)]
         public async Task CreateTenant(CreateTenantInput input)
         {
             var tenancyName = input.companyName.Trim().Replace(" ", "_");
 
-           var tenantId= await TenantManager.CreateWithAdminUserAsync(
-                input.companyName,
-                input.MobileNo,
-                tenancyName,
-                input.Name,
-                input.Address,
-                input.CountryId,
-                input.CityId,
-                input.AdminPassword,
-                input.AdminEmailAddress,
-                input.ConnectionString,
-                input.IsActive,
-                input.EditionId,
-                input.ShouldChangePasswordOnNextLogin,
-                input.SendActivationEmail,
-                input.SubscriptionEndDateUtc?.ToUniversalTime(),
-                input.IsInTrialPeriod,
-                AppUrlService.CreateEmailActivationUrlFormat(tenancyName),
-                input.UserAdminFirstName,
-                input.UserAdminSurname
-            );
+            var tenantId = await TenantManager.CreateWithAdminUserAsync(
+                 input.companyName,
+                 input.MobileNo,
+                 tenancyName,
+                 input.Name,
+                 input.Address,
+                 input.CountryId,
+                 input.CityId,
+                 input.AdminPassword,
+                 input.AdminEmailAddress,
+                 input.ConnectionString,
+                 input.IsActive,
+                 input.EditionId,
+                 input.ShouldChangePasswordOnNextLogin,
+                 input.SendActivationEmail,
+                 input.SubscriptionEndDateUtc?.ToUniversalTime(),
+                 input.IsInTrialPeriod,
+                 AppUrlService.CreateEmailActivationUrlFormat(tenancyName),
+                 input.UserAdminFirstName,
+                 input.UserAdminSurname
+             );
 
             var tenant = await TenantManager.GetByIdAsync(tenantId);
         }
