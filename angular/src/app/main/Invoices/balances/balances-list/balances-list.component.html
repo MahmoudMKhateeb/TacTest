@@ -12,173 +12,237 @@
     <div [class]="containerClass">
       <div class="card card-custom gutter-b">
         <div class="card-body">
-          <form class="form" autocomplete="off">
-            <div>
-              <div class="row align-items-center">
-                <div class="col-xl-3">
-                  <div class="form-group m-form__group align-items-center">
-                    <div class="input-group">
-                      <p-autoComplete
-                        [inputStyleClass]="'form-control'"
-                        [placeholder]="l('Shipper')"
-                        name="Tenant"
-                        [(ngModel)]="Tenant"
-                        [suggestions]="Tenants"
-                        (completeMethod)="search($event)"
-                        field="displayName"
-                      ></p-autoComplete>
-                      <span class="input-group-btn">
-                        <button (click)="getAll()" class="btn btn-primary" type="submit"><i class="flaticon-search-1"></i></button>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-xl-3">
-                  <div class="checkbox-list mb-2">
-                    <label class="checkbox ml-2">
-                      <input
-                        type="checkbox"
-                        [(ngModel)]="creationDateRangeActive"
-                        id="TenantsTable_CreationDateRangeActive"
-                        name="CreationDateRangeActive"
-                        value="true"
-                      />
-                      {{ 'CreationTime' | localize }}
-                      <span class="ml-2 mt-1"></span>
-                    </label>
-                  </div>
-                  <input
-                    class="form-control"
-                    name="CreationDateRange"
-                    [attr.disabled]="!creationDateRangeActive ? 'disabled' : null"
-                    #drpCreationDateRange="bsDaterangepicker"
-                    bsDaterangepicker
-                    readonly="readonly"
-                    dateRangePickerMomentModifier
-                    [(date)]="creationDateRange"
-                  />
-                </div>
-                <div class="col-xl-3">
-                  <div class="form-group">
-                    <label for="MinLongitudeFilter">{{ l('Amount') }}</label>
-                    <div class="input-group">
-                      <input
-                        type="number"
-                        class="form-control"
-                        id="minLongitude"
-                        [(ngModel)]="minLongitude"
-                        placeholder="{{ l('MinValue') }}"
-                        name="minLongitude"
-                      />
-                      <input type="number" class="form-control" [(ngModel)]="maxLongitude" placeholder="{{ l('MaxValue') }}" name="maxLongitude" />
-                    </div>
-                  </div>
-                </div>
-                <div class="col-xl-3">
-                  <div class="form-group m-form__group align-items-center">
-                    <div class="input-group">
-                      <label for="ReferenceNo">{{ l('ReferenceNo') }}</label>
-                      <input type="text" name="ReferenceNo" id="ReferenceNo" [(ngModel)]="ReferenceNo" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </form>
+          <!--          <form class="form" autocomplete="off">-->
+          <!--            <div>-->
+          <!--              <div class="row align-items-center">-->
+          <!--                <div class="col-xl-3">-->
+          <!--                  <div class="form-group m-form__group align-items-center">-->
+          <!--                    <div class="input-group">-->
+          <!--                      <p-autoComplete-->
+          <!--                        [inputStyleClass]="'form-control'"-->
+          <!--                        [placeholder]="l('Shipper')"-->
+          <!--                        name="Tenant"-->
+          <!--                        [(ngModel)]="Tenant"-->
+          <!--                        [suggestions]="Tenants"-->
+          <!--                        (completeMethod)="search($event)"-->
+          <!--                        field="displayName"-->
+          <!--                      ></p-autoComplete>-->
+          <!--                      <span class="input-group-btn">-->
+          <!--                        <button (click)="getAll()" class="btn btn-primary" type="submit"><i class="flaticon-search-1"></i></button>-->
+          <!--                      </span>-->
+          <!--                    </div>-->
+          <!--                  </div>-->
+          <!--                </div>-->
+          <!--                <div class="col-xl-3">-->
+          <!--                  <div class="checkbox-list mb-2">-->
+          <!--                    <label class="checkbox ml-2">-->
+          <!--                      <input-->
+          <!--                        type="checkbox"-->
+          <!--                        [(ngModel)]="creationDateRangeActive"-->
+          <!--                        id="TenantsTable_CreationDateRangeActive"-->
+          <!--                        name="CreationDateRangeActive"-->
+          <!--                        value="true"-->
+          <!--                      />-->
+          <!--                      {{ 'CreationTime' | localize }}-->
+          <!--                      <span class="ml-2 mt-1"></span>-->
+          <!--                    </label>-->
+          <!--                  </div>-->
+          <!--                  <input-->
+          <!--                    class="form-control"-->
+          <!--                    name="CreationDateRange"-->
+          <!--                    [attr.disabled]="!creationDateRangeActive ? 'disabled' : null"-->
+          <!--                    #drpCreationDateRange="bsDaterangepicker"-->
+          <!--                    bsDaterangepicker-->
+          <!--                    readonly="readonly"-->
+          <!--                    dateRangePickerMomentModifier-->
+          <!--                    [(date)]="creationDateRange"-->
+          <!--                  />-->
+          <!--                </div>-->
+          <!--                <div class="col-xl-3">-->
+          <!--                  <div class="form-group">-->
+          <!--                    <label for="MinLongitudeFilter">{{ l('Amount') }}</label>-->
+          <!--                    <div class="input-group">-->
+          <!--                      <input-->
+          <!--                        type="number"-->
+          <!--                        class="form-control"-->
+          <!--                        id="minLongitude"-->
+          <!--                        [(ngModel)]="minLongitude"-->
+          <!--                        placeholder="{{ l('MinValue') }}"-->
+          <!--                        name="minLongitude"-->
+          <!--                      />-->
+          <!--                      <input type="number" class="form-control" [(ngModel)]="maxLongitude" placeholder="{{ l('MaxValue') }}" name="maxLongitude" />-->
+          <!--                    </div>-->
+          <!--                  </div>-->
+          <!--                </div>-->
+          <!--                <div class="col-xl-3">-->
+          <!--                  <div class="form-group m-form__group align-items-center">-->
+          <!--                    <div class="input-group">-->
+          <!--                      <label for="ReferenceNo">{{ l('ReferenceNo') }}</label>-->
+          <!--                      <input type="text" name="ReferenceNo" id="ReferenceNo" [(ngModel)]="ReferenceNo" />-->
+          <!--                    </div>-->
+          <!--                  </div>-->
+          <!--                </div>-->
+          <!--              </div>-->
+          <!--            </div>-->
+          <!--          </form>-->
 
           <div class="row align-items-center">
             <!--<Primeng-Datatable-Start>-->
-            <div class="primeng-datatable-container col-12" [busyIf]="primengTableHelper.isLoading">
-              <p-table
-                #dataTable
-                (onLazyLoad)="getAll($event)"
-                [value]="primengTableHelper.records"
-                rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"
-                [paginator]="false"
-                [lazy]="true"
-                [scrollable]="true"
-                ScrollWidth="100%"
-                [responsive]="primengTableHelper.isResponsive"
-                [resizableColumns]="primengTableHelper.resizableColumns"
-              >
-                <ng-template pTemplate="header">
-                  <tr>
-                    <th style="width: 130px;" [hidden]="!isGrantedAny('Pages.Administration.Host.Invoices.Balances.Delete')">
-                      {{ l('Actions') }}
-                    </th>
+            <!--            <div class="primeng-datatable-container col-12" [busyIf]="primengTableHelper.isLoading">-->
+            <!--              <p-table-->
+            <!--                #dataTable-->
+            <!--                (onLazyLoad)="getAll($event)"-->
+            <!--                [value]="primengTableHelper.records"-->
+            <!--                rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"-->
+            <!--                [paginator]="false"-->
+            <!--                [lazy]="true"-->
+            <!--                [scrollable]="true"-->
+            <!--                ScrollWidth="100%"-->
+            <!--                [responsive]="primengTableHelper.isResponsive"-->
+            <!--                [resizableColumns]="primengTableHelper.resizableColumns"-->
+            <!--              >-->
+            <!--                <ng-template pTemplate="header">-->
+            <!--                  <tr>-->
+            <!--                    <th style="width: 130px" [hidden]="!isGrantedAny('Pages.Administration.Host.Invoices.Balances.Delete')">-->
+            <!--                      {{ l('Actions') }}-->
+            <!--                    </th>-->
 
-                    <th pSortableColumn="TenantId">
-                      {{ l('ClientName') }}
-                      <p-sortIcon field="TenantId"></p-sortIcon>
-                    </th>
-                    <th pSortableColumn="Amount">
-                      {{ l('Amount') }}
-                      <p-sortIcon field="Amount"></p-sortIcon>
-                    </th>
-                    <th pSortableColumn="ReferenceNo">
-                      {{ l('ReferenceNo') }}
-                      <p-sortIcon field="ReferenceNo"></p-sortIcon>
-                    </th>
+            <!--                    <th pSortableColumn="TenantId">-->
+            <!--                      {{ l('ClientName') }}-->
+            <!--                      <p-sortIcon field="TenantId"></p-sortIcon>-->
+            <!--                    </th>-->
+            <!--                    <th pSortableColumn="Amount">-->
+            <!--                      {{ l('Amount') }}-->
+            <!--                      <p-sortIcon field="Amount"></p-sortIcon>-->
+            <!--                    </th>-->
+            <!--                    <th pSortableColumn="ReferenceNo">-->
+            <!--                      {{ l('ReferenceNo') }}-->
+            <!--                      <p-sortIcon field="ReferenceNo"></p-sortIcon>-->
+            <!--                    </th>-->
 
-                    <th pSortableColumn="CreationTime">
-                      {{ l('CreationTime') }}
-                      <p-sortIcon field="CreationTime"></p-sortIcon>
-                    </th>
-                  </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-record="$implicit">
-                  <tr [class]="record.isPaid ? 'table-success' : 'table-danger'">
-                    <td style="width: 130px;" [hidden]="!isGrantedAny('Pages.Administration.Host.Invoices.Balances.Delete')">
-                      <div class="btn-group dropdown" dropdown container="body">
-                        <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
-                          <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
-                        </button>
-                        <ul class="dropdown-menu" *dropdownMenu>
-                          <li>
-                            <a class="dropdown-item" href="javascript:;" (click)="delete(record)">{{ l('Delete') }}</a>
-                          </li>
-                        </ul>
-                      </div>
-                    </td>
+            <!--                    <th pSortableColumn="CreationTime">-->
+            <!--                      {{ l('CreationTime') }}-->
+            <!--                      <p-sortIcon field="CreationTime"></p-sortIcon>-->
+            <!--                    </th>-->
+            <!--                  </tr>-->
+            <!--                </ng-template>-->
+            <!--                <ng-template pTemplate="body" let-record="$implicit">-->
+            <!--                  <tr [class]="record.isPaid ? 'table-success' : 'table-danger'">-->
+            <!--                    <td style="width: 130px" [hidden]="!isGrantedAny('Pages.Administration.Host.Invoices.Balances.Delete')">-->
+            <!--                      <div class="btn-group dropdown" dropdown container="body">-->
+            <!--                        <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>-->
+            <!--                          <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}-->
+            <!--                        </button>-->
+            <!--                        <ul class="dropdown-menu" *dropdownMenu>-->
+            <!--                          <li>-->
+            <!--                            <a class="dropdown-item" href="javascript:;" (click)="delete(record)">{{ l('Delete') }}</a>-->
+            <!--                          </li>-->
+            <!--                        </ul>-->
+            <!--                      </div>-->
+            <!--                    </td>-->
 
-                    <td>
-                      <span class="ui-column-title"> {{ l('ShipperName') }}</span>
-                      {{ record.tenantName }}
-                    </td>
+            <!--                    <td>-->
+            <!--                      <span class="ui-column-title"> {{ l('ShipperName') }}</span>-->
+            <!--                      {{ record.tenantName }}-->
+            <!--                    </td>-->
 
-                    <td>
-                      <span class="ui-column-title"> {{ l('Amount') }}</span>
-                      {{ record.amount }}
-                    </td>
-                    <td>
-                      <span class="ui-column-title"> {{ l('ReferenceNo') }}</span>
-                      {{ record.referenceNo }}
-                    </td>
-                    <td>
-                      <span class="ui-column-title"> {{ l('CreationTime') }}</span>
-                      {{ record.creationTime | momentFormat: 'L' }}
-                    </td>
-                  </tr>
-                </ng-template>
-              </p-table>
-              <div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0 && IsStartSearch">
-                {{ l('NoData') }}
-              </div>
-              <div class="primeng-paging-container">
-                <p-paginator
-                  [rows]="primengTableHelper.defaultRecordsCountPerPage"
-                  #paginator
-                  (onPageChange)="getAll($event)"
-                  [totalRecords]="primengTableHelper.totalRecordsCount"
-                  [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
-                >
-                </p-paginator>
-                <span class="total-records-count">
-                  {{ l('TotalRecordsCount', primengTableHelper.totalRecordsCount) }}
-                </span>
-              </div>
-            </div>
+            <!--                    <td>-->
+            <!--                      <span class="ui-column-title"> {{ l('Amount') }}</span>-->
+            <!--                      {{ record.amount }}-->
+            <!--                    </td>-->
+            <!--                    <td>-->
+            <!--                      <span class="ui-column-title"> {{ l('ReferenceNo') }}</span>-->
+            <!--                      {{ record.referenceNo }}-->
+            <!--                    </td>-->
+            <!--                    <td>-->
+            <!--                      <span class="ui-column-title"> {{ l('CreationTime') }}</span>-->
+            <!--                      {{ record.creationTime | momentFormat: 'L' }}-->
+            <!--                    </td>-->
+            <!--                  </tr>-->
+            <!--                </ng-template>-->
+            <!--              </p-table>-->
+            <!--              <div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0 && IsStartSearch">-->
+            <!--                {{ l('NoData') }}-->
+            <!--              </div>-->
+            <!--              <div class="primeng-paging-container">-->
+            <!--                <p-paginator-->
+            <!--                  [rows]="primengTableHelper.defaultRecordsCountPerPage"-->
+            <!--                  #paginator-->
+            <!--                  (onPageChange)="getAll($event)"-->
+            <!--                  [totalRecords]="primengTableHelper.totalRecordsCount"-->
+            <!--                  [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"-->
+            <!--                >-->
+            <!--                </p-paginator>-->
+            <!--                <span class="total-records-count">-->
+            <!--                  {{ l('TotalRecordsCount', primengTableHelper.totalRecordsCount) }}-->
+            <!--                </span>-->
+            <!--              </div>-->
+            <!--            </div>-->
             <!--<Primeng-Datatable-End>-->
+
+            <dx-data-grid
+              #grid
+              id="dataGrid"
+              [dataSource]="dataSource"
+              [remoteOperations]="true"
+              [showColumnLines]="true"
+              [showRowLines]="false"
+              [showBorders]="true"
+              [rowAlternationEnabled]="true"
+              keyExpr="id"
+            >
+              <dxo-filter-row [visible]="true"></dxo-filter-row>
+              <dxo-search-panel [visible]="true"></dxo-search-panel>
+              <dxo-filter-panel [visible]="true"></dxo-filter-panel>
+              <dxo-filter-builder-popup></dxo-filter-builder-popup>
+
+              <dxi-column
+                cellTemplate="cellTemplateActions"
+                [allowFiltering]="false"
+                [allowSorting]="false"
+                [allowEditing]="false"
+                [editorOptions]="{ visible: false }"
+                [width]="50"
+              ></dxi-column>
+              <dxi-column dataField="tenantName" caption="{{ l('ClientName') }}"> </dxi-column>
+              <dxi-column dataField="amount" dataType="number" caption="{{ l('Amount') }}"> </dxi-column>
+              <dxi-column dataField="referenceNo" caption="{{ l('ReferenceNo') }}"> </dxi-column>
+              <dxi-column dataField="creationTime" dataType="date" caption="{{ l('CreationTime') }}"> </dxi-column>
+
+              <div *dxTemplate="let options of 'cellTemplateActions'">
+                <div class="btn-group dropdown" dropdown container="body">
+                  <a href="javascript:;" class="btn btn-sm btn-clean btn-icon mr-2" dropdownToggle>
+                    <span class="svg-icon svg-icon-md">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        xmlns:xlink="http://www.w3.org/1999/xlink"
+                        width="24px"
+                        height="24px"
+                        viewBox="0 0 24 24"
+                        version="1.1"
+                      >
+                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                          <rect x="0" y="0" width="24" height="24"></rect>
+                          <path
+                            d="M5,8.6862915 L5,5 L8.6862915,5 L11.5857864,2.10050506 L14.4852814,5 L19,5 L19,9.51471863 L21.4852814,12 L19,14.4852814 L19,19 L14.4852814,19 L11.5857864,21.8994949 L8.6862915,19 L5,19 L5,15.3137085 L1.6862915,12 L5,8.6862915 Z M12,15 C13.6568542,15 15,13.6568542 15,12 C15,10.3431458 13.6568542,9 12,9 C10.3431458,9 9,10.3431458 9,12 C9,13.6568542 10.3431458,15 12,15 Z"
+                            fill="#000000"
+                          ></path>
+                        </g>
+                      </svg>
+                    </span>
+                  </a>
+                  <ul class="dropdown-menu" *dropdownMenu>
+                    <li>
+                      <a class="dropdown-item" href="javascript:;" (click)="delete(options.data)">{{ l('Delete') }}</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <dxo-remote-operations [sorting]="true" [paging]="true" [filtering]="true"> </dxo-remote-operations>
+              <dxo-paging [pageSize]="10"></dxo-paging>
+              <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20, 50, 200]"></dxo-pager>
+            </dx-data-grid>
           </div>
         </div>
       </div>

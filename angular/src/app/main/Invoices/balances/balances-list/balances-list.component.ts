@@ -16,11 +16,13 @@ import * as moment from 'moment';
 
 import * as _ from 'lodash';
 import { FileDownloadService } from '@shared/utils/file-download.service';
+import CustomStore from '@node_modules/devextreme/data/custom_store';
+import { LoadOptions } from '@node_modules/devextreme/data/load_options';
 @Component({
   templateUrl: './balances-list.component.html',
   animations: [appModuleAnimation()],
 })
-export class BalancesListComponent extends AppComponentBase {
+export class BalancesListComponent extends AppComponentBase implements OnInit {
   @ViewChild('dataTable', { static: true }) dataTable: Table;
   @ViewChild('paginator', { static: true }) paginator: Paginator;
   Balances: BalanceRechargeListDto[] = [];
@@ -35,6 +37,7 @@ export class BalancesListComponent extends AppComponentBase {
   creationDateRangeActive: boolean = false;
   minLongitude: number | null | undefined;
   maxLongitude: number | null | undefined;
+  dataSource: any = {};
   constructor(
     injector: Injector,
     private _CurrentServ: BalanceRechargeServiceProxy,
@@ -42,6 +45,10 @@ export class BalancesListComponent extends AppComponentBase {
     private _fileDownloadService: FileDownloadService
   ) {
     super(injector);
+  }
+
+  ngOnInit(): void {
+    this.fillDataSource();
   }
   getAll(event?: LazyLoadEvent): void {
     if (this.creationDateRangeActive) {
@@ -58,24 +65,24 @@ export class BalancesListComponent extends AppComponentBase {
       this.Tenant = undefined;
     }
     this.primengTableHelper.showLoadingIndicator();
-    this._CurrentServ
-      .getAll(
-        this.TenantId,
-        this.fromDate,
-        this.toDate,
-        this.ReferenceNo,
-        this.minLongitude,
-        this.maxLongitude,
-        this.primengTableHelper.getSorting(this.dataTable),
-        this.primengTableHelper.getSkipCount(this.paginator, event),
-        this.primengTableHelper.getMaxResultCount(this.paginator, event)
-      )
-      .subscribe((result) => {
-        this.IsStartSearch = true;
-        this.primengTableHelper.totalRecordsCount = result.totalCount;
-        this.primengTableHelper.records = result.items;
-        this.primengTableHelper.hideLoadingIndicator();
-      });
+    // this._CurrentServ
+    //   .getAll(
+    //     this.TenantId,
+    //     this.fromDate,
+    //     this.toDate,
+    //     this.ReferenceNo,
+    //     this.minLongitude,
+    //     this.maxLongitude,
+    //     this.primengTableHelper.getSorting(this.dataTable),
+    //     this.primengTableHelper.getSkipCount(this.paginator, event),
+    //     this.primengTableHelper.getMaxResultCount(this.paginator, event)
+    //   )
+    //   .subscribe((result) => {
+    //     this.IsStartSearch = true;
+    //     this.primengTableHelper.totalRecordsCount = result.totalCount;
+    //     this.primengTableHelper.records = result.items;
+    //     this.primengTableHelper.hideLoadingIndicator();
+    //   });
   }
 
   reloadPage(): void {
@@ -99,14 +106,38 @@ export class BalancesListComponent extends AppComponentBase {
   }
 
   exportToExcel(): void {
-    var data = {
-      tenantId: this.Tenant ? parseInt(this.Tenant.id) : undefined,
-      fromDate: this.fromDate,
-      toDate: this.toDate,
-      sorting: this.primengTableHelper.getSorting(this.dataTable),
-    };
-    this._CurrentServ.exports(data as GetAllBalanceRechargeInput).subscribe((result) => {
-      this._fileDownloadService.downloadTempFile(result);
+    // var data = {
+    //   tenantId: this.Tenant ? parseInt(this.Tenant.id) : undefined,
+    //   fromDate: this.fromDate,
+    //   toDate: this.toDate,
+    //   sorting: this.primengTableHelper.getSorting(this.dataTable),
+    // };
+    // this._CurrentServ.exports(data as GetAllBalanceRechargeInput).subscribe((result) => {
+    //   this._fileDownloadService.downloadTempFile(result);
+    // });
+  }
+
+  fillDataSource() {
+    let self = this;
+
+    this.dataSource = {};
+    this.dataSource.store = new CustomStore({
+      load(loadOptions: LoadOptions) {
+        console.log(JSON.stringify(loadOptions));
+        return self._CurrentServ
+          .getAll(JSON.stringify(loadOptions))
+          .toPromise()
+          .then((response) => {
+            return {
+              data: response.items,
+              totalCount: response.totalCount,
+            };
+          })
+          .catch((error) => {
+            console.log(error);
+            throw new Error('Data Loading Error');
+          });
+      },
     });
   }
 }
