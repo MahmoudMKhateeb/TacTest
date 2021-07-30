@@ -15,6 +15,7 @@ using TACHYON.Dto;
 using TACHYON.Invoices.Balances.Dto;
 using TACHYON.Invoices.Balances.Exporting;
 using TACHYON.Invoices.Transactions;
+using TACHYON.MultiTenancy;
 
 namespace TACHYON.Invoices.Balances
 {
@@ -24,17 +25,19 @@ namespace TACHYON.Invoices.Balances
         private readonly BalanceManager _balanceManager;
         private readonly IBalanceRechargeExcelExporter _BalanceRechargeExcelExporter;
         private readonly TransactionManager _transactionManager;
+        private readonly IRepository<Tenant> _tenantsRepository;
 
         public BalanceRechargeAppService(
             IRepository<BalanceRecharge> Repository,
             BalanceManager balanceManager,
             IBalanceRechargeExcelExporter BalanceRechargeExcelExporter,
-            TransactionManager transactionManager)
+            TransactionManager transactionManager, IRepository<Tenant> tenantsRepository)
         {
             _Repository = Repository;
             _balanceManager = balanceManager;
             _BalanceRechargeExcelExporter = BalanceRechargeExcelExporter;
             _transactionManager = transactionManager;
+            _tenantsRepository = tenantsRepository;
         }
 
         [AbpAuthorize(AppPermissions.Pages_Administration_Host_Invoices_Balances)]
@@ -80,13 +83,25 @@ namespace TACHYON.Invoices.Balances
                 var query = _Repository
                     .GetAll()
                     .Include(i => i.Tenant);
-                    //.WhereIf(input.TenantId.HasValue, i => i.TenantId == input.TenantId)
-                    //.WhereIf(input.FromDate.HasValue && input.ToDate.HasValue, i => i.CreationTime >= input.FromDate && i.CreationTime < input.ToDate)
-                    //.OrderBy(!string.IsNullOrEmpty(input.Sorting) ? input.Sorting : "id desc");
+                //.WhereIf(input.TenantId.HasValue, i => i.TenantId == input.TenantId)
+                //.WhereIf(input.FromDate.HasValue && input.ToDate.HasValue, i => i.CreationTime >= input.FromDate && i.CreationTime < input.ToDate)
+                //.OrderBy(!string.IsNullOrEmpty(input.Sorting) ? input.Sorting : "id desc");
                 var data = ObjectMapper.Map<List<BalanceRechargeListDto>>(query);
                 return Task.FromResult(_BalanceRechargeExcelExporter.ExportToFile(data));
             }
 
+        }
+
+        public async Task<decimal> GetTenantBalance()
+        {
+            int? abpSessionTenantId = this.AbpSession.TenantId;
+            if (abpSessionTenantId != null)
+            {
+                var tenant = await _tenantsRepository.GetAsync(abpSessionTenantId.Value);
+                return tenant.Balance;
+            }
+
+            return await Task.FromResult(decimal.Zero);
         }
 
     }
