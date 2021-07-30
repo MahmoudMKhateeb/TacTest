@@ -104,7 +104,7 @@ namespace TACHYON.Trucks.Importing
                 //4
                 truck.TransportTypeId = GetTransportTypeId(_tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet, row, 4, "Transport Type*", exceptionMessage), exceptionMessage);
                 //5
-                truck.TrucksTypeId = GetTruckTypeId(_tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet, row, 5, "Truck Type*", exceptionMessage), truck.TransportTypeId, exceptionMessage).Value;
+                truck.TrucksTypeId = GetTruckTypeId(_tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet, row, 5, "Truck Type*", exceptionMessage), truck.TransportTypeId, exceptionMessage);
                 //6
                 truck.Length = ToNullableInt(_tachyonExcelDataReaderHelper.GetValueFromRowOrNull<string>(worksheet, row, 6, "Truck length ", exceptionMessage));
                 //7
