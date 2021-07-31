@@ -1,5 +1,6 @@
 using Abp.Application.Editions;
 using Abp.Application.Features;
+using Abp.Application.Services.Dto;
 using Abp.Auditing;
 using Abp.Authorization;
 using Abp.Authorization.Users;
@@ -12,6 +13,7 @@ using Abp.Organizations;
 using Abp.UI.Inputs;
 using Abp.Webhooks;
 using AutoMapper;
+using DevExtreme.AspNet.Data.ResponseModel;
 using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -563,6 +565,7 @@ namespace TACHYON
                 ;
 
             /* ADD YOUR OWN CUSTOM AUTOMAPPER MAPPINGS HERE */
+            configuration.CreateMap(typeof(TACHYONAppServiceBase.TachyonLoadResult<>), typeof(LoadResult)).ReverseMap();
         }
         /// <summary>
         /// MultiLingualMapping configuration 

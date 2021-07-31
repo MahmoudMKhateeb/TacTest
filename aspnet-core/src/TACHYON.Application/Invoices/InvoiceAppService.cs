@@ -25,6 +25,7 @@ using TACHYON.Invoices.Transactions;
 using TACHYON.ShippingRequestVases;
 using TACHYON.Trucks.TrucksTypes.Dtos;
 using AutoMapper.QueryableExtensions;
+using DevExtreme.AspNet.Data.ResponseModel;
 
 
 namespace TACHYON.Invoices
@@ -68,7 +69,7 @@ namespace TACHYON.Invoices
         }
 
 
-        public async Task<PagedResultDto<InvoiceListDto>> GetAll(string filter)
+        public async Task<LoadResult> GetAll(string filter)
 
         {
             var query = _invoiceRepository

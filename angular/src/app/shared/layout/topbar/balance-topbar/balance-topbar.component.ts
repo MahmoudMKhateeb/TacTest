@@ -15,7 +15,7 @@ export class BalanceTopbarComponent extends AppComponentBase implements OnInit {
   }
   balance = 0;
   ngOnInit(): void {
-    this._balanceRechargeServiceProxy.getTenantBalance(this.appSession.tenantId).subscribe((result) => {
+    this._balanceRechargeServiceProxy.getTenantBalance().subscribe((result) => {
       this.balance = result;
     });
   }

@@ -5,6 +5,7 @@ using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Linq.Extensions;
 using AutoMapper.QueryableExtensions;
+using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,12 +42,11 @@ namespace TACHYON.Invoices.Balances
         }
 
         [AbpAuthorize(AppPermissions.Pages_Administration_Host_Invoices_Balances)]
-        public async Task<PagedResultDto<BalanceRechargeListDto>> GetAll(GetAllBalanceRechargeInput input)
+        public async Task<LoadResult> GetAll(GetAllBalanceRechargeInput input)
         {
             using (UnitOfWorkManager.Current.DisableFilter(AbpDataFilters.MustHaveTenant))
             {
-                var query = _Repository.GetAll()
-                    .ProjectTo<BalanceRechargeListDto>(AutoMapperConfigurationProvider);
+                var query = _Repository.GetAll().ProjectTo<BalanceRechargeListDto>(AutoMapperConfigurationProvider);
 
                 return await LoadResultAsync(query, input.LoadOptions);
             }

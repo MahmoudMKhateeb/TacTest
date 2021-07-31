@@ -1,5 +1,6 @@
 ﻿using Abp.Application.Services;
 using Abp.Application.Services.Dto;
+using DevExtreme.AspNet.Data.ResponseModel;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,7 +11,7 @@ namespace TACHYON.Invoices.Transactions
 {
   public  interface ITransactionAppService: IApplicationService
     {
-       Task<PagedResultDto<TransactionListDto>> GetAll(TransactionFilterInput input);
+       Task<LoadResult> GetAll(TransactionFilterInput input);
 
     }
 }

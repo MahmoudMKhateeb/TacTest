@@ -181,6 +181,7 @@
             <!--<Primeng-Datatable-End>-->
 
             <dx-data-grid
+              style="height: 45vw"
               #grid
               id="dataGrid"
               [dataSource]="dataSource"
@@ -190,11 +191,20 @@
               [showBorders]="true"
               [rowAlternationEnabled]="true"
               keyExpr="id"
+              [wordWrapEnabled]="true"
             >
               <dxo-filter-row [visible]="true"></dxo-filter-row>
               <dxo-search-panel [visible]="true"></dxo-search-panel>
               <dxo-filter-panel [visible]="true"></dxo-filter-panel>
               <dxo-filter-builder-popup></dxo-filter-builder-popup>
+              <dxo-scrolling mode="virtual"></dxo-scrolling>
+              <dxo-group-panel [visible]="true"></dxo-group-panel>
+              <dxo-grouping #expand [autoExpandAll]="false"></dxo-grouping>
+              <dxo-remote-operations [groupPaging]="true" [sorting]="true" [filtering]="true"> </dxo-remote-operations>
+              <dxo-paging [pageSize]="20"></dxo-paging>
+              <dxo-summary>
+                <dxi-group-item column="id" summaryType="count"> </dxi-group-item>
+              </dxo-summary>
 
               <dxi-column
                 cellTemplate="cellTemplateActions"
@@ -204,7 +214,7 @@
                 [editorOptions]="{ visible: false }"
                 [width]="50"
               ></dxi-column>
-              <dxi-column dataField="tenantName" caption="{{ l('ClientName') }}"> </dxi-column>
+              <dxi-column dataField="tenantName" [groupIndex]="0" caption="{{ l('ClientName') }}"> </dxi-column>
               <dxi-column dataField="amount" dataType="number" caption="{{ l('Amount') }}"> </dxi-column>
               <dxi-column dataField="referenceNo" caption="{{ l('ReferenceNo') }}"> </dxi-column>
               <dxi-column dataField="creationTime" dataType="date" caption="{{ l('CreationTime') }}"> </dxi-column>
@@ -238,10 +248,6 @@
                   </ul>
                 </div>
               </div>
-
-              <dxo-remote-operations [sorting]="true" [paging]="true" [filtering]="true"> </dxo-remote-operations>
-              <dxo-paging [pageSize]="10"></dxo-paging>
-              <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20, 50, 200]"></dxo-pager>
             </dx-data-grid>
           </div>
         </div>

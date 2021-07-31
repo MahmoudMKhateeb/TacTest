@@ -11,6 +11,7 @@ using Abp.Linq.Extensions;
 using Abp.Runtime.Security;
 using Abp.Timing;
 using AutoMapper.QueryableExtensions;
+using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,7 +66,7 @@ namespace TACHYON.MultiTenancy
                 );
         }
 
-        public async Task<PagedResultDto<TenantListDto>> GetAllTenants(string loadOptions)
+        public async Task<LoadResult> GetAllTenants(string loadOptions)
         {
             var query = TenantManager.Tenants.ProjectTo<TenantListDto>(AutoMapperConfigurationProvider);
 

@@ -21,6 +21,7 @@ using TACHYON.Dto;
 using TACHYON.Storage;
 using Abp.Domain.Uow;
 using AutoMapper.QueryableExtensions;
+using DevExtreme.AspNet.Data.ResponseModel;
 using TACHYON.MultiTenancy;
 
 namespace TACHYON.Documents.DocumentTypes
@@ -61,7 +62,7 @@ namespace TACHYON.Documents.DocumentTypes
 
         }
 
-        public async Task<PagedResultDto<DocumentTypeDto>> GetAll(GetAllDocumentTypesInput input)
+        public async Task<LoadResult> GetAll(GetAllDocumentTypesInput input)
         {
             var filteredDocumentFiles = _documentTypeRepository
                 .GetAll()

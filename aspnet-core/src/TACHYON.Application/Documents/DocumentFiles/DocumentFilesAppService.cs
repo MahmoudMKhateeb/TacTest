@@ -14,6 +14,7 @@ using Abp.Linq.Extensions;
 using Abp.Runtime.Session;
 using Abp.UI;
 using AutoMapper.QueryableExtensions;
+using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
 using TACHYON.Authorization;
 using TACHYON.Authorization.Users;
@@ -93,7 +94,7 @@ namespace TACHYON.Documents.DocumentFiles
         private readonly IAppNotifier _appNotifier;
         private readonly IUserEmailer _userEmailer;
 
-        public async Task<PagedResultDto<GetAllTenantsSubmittedDocumentsDto>> GetAllTenantsSubmittedDocuments(GetAllForListDocumentFilesInput input)
+        public async Task<LoadResult> GetAllTenantsSubmittedDocuments(GetAllForListDocumentFilesInput input)
         {
             DisableTenancyFiltersIfHost();
 
@@ -104,7 +105,7 @@ namespace TACHYON.Documents.DocumentFiles
             var result = await LoadResultAsync(filteredDocumentFiles, input.Filter);
             return result;
         }
-        public async Task<PagedResultDto<GetAllTrucksSubmittedDocumentsDto>> GetAllTrucksSubmittedDocuments(GetAllTrucksSubmittedDocumentsInput input)
+        public async Task<LoadResult> GetAllTrucksSubmittedDocuments(GetAllTrucksSubmittedDocumentsInput input)
         {
             DisableTenancyFiltersIfHost();
 
@@ -116,7 +117,7 @@ namespace TACHYON.Documents.DocumentFiles
             var result = await LoadResultAsync(filteredDocumentFiles, input.Filter);
             return result;
         }
-        public async Task<PagedResultDto<GetAllDriversSubmittedDocumentsDto>> GetAllDriversSubmittedDocuments(GetAllDriversSubmittedDocumentsInput input)
+        public async Task<LoadResult> GetAllDriversSubmittedDocuments(GetAllDriversSubmittedDocumentsInput input)
         {
 
             DisableTenancyFiltersIfHost();

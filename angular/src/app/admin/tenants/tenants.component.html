@@ -13,6 +13,7 @@
         <div class="card-body">
           <div class="row align-items-center">
             <dx-data-grid
+              style="height: 45vw"
               #grid
               id="dataGrid"
               [dataSource]="dataSource"
@@ -22,11 +23,20 @@
               [showBorders]="true"
               [rowAlternationEnabled]="true"
               keyExpr="id"
+              [wordWrapEnabled]="true"
             >
               <dxo-filter-row [visible]="true"></dxo-filter-row>
               <dxo-search-panel [visible]="true"></dxo-search-panel>
               <dxo-filter-panel [visible]="true"></dxo-filter-panel>
               <dxo-filter-builder-popup></dxo-filter-builder-popup>
+              <dxo-scrolling mode="virtual"></dxo-scrolling>
+              <dxo-group-panel [visible]="true"></dxo-group-panel>
+              <dxo-grouping #expand [autoExpandAll]="false" [contextMenuEnabled]="true"> ></dxo-grouping>
+              <dxo-remote-operations [groupPaging]="true" [sorting]="true" [filtering]="true"> </dxo-remote-operations>
+              <dxo-paging [pageSize]="20"></dxo-paging>
+              <dxo-summary>
+                <dxi-group-item column="id" summaryType="count"> </dxi-group-item>
+              </dxo-summary>
 
               <dxi-column
                 cellTemplate="cellTemplateActions"
@@ -41,7 +51,7 @@
               <dxi-column dataField="name" caption="{{ l('TenantName') }}"> </dxi-column>
               <dxi-column dataField="accountNumber" caption="{{ l('AccountNumber') }}"> </dxi-column>
               <dxi-column dataField="contractNumber" caption="{{ l('ContractNumber') }}"> </dxi-column>
-              <dxi-column dataField="editionId" caption="{{ l('Edition') }}">
+              <dxi-column dataField="editionId" [groupIndex]="0" caption="{{ l('Edition') }}">
                 <dxo-lookup [dataSource]="editions" displayExpr="displayText" valueExpr="value"> </dxo-lookup>
               </dxi-column>
               <dxi-column
@@ -140,10 +150,6 @@
                   </ul>
                 </div>
               </div>
-
-              <dxo-remote-operations [sorting]="true" [paging]="true" [filtering]="true"> </dxo-remote-operations>
-              <dxo-paging [pageSize]="10"></dxo-paging>
-              <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20, 50, 200]"></dxo-pager>
             </dx-data-grid>
           </div>
         </div>

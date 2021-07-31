@@ -6,7 +6,7 @@ import { Paginator } from 'primeng/paginator';
 import { LazyLoadEvent } from 'primeng/api';
 import {
   BalanceRechargeServiceProxy,
-  BalanceRechargeListDto,
+  // BalanceRechargeListDto,
   ISelectItemDto,
   CommonLookupServiceProxy,
   GetAllBalanceRechargeInput,
@@ -25,8 +25,8 @@ import { LoadOptions } from '@node_modules/devextreme/data/load_options';
 export class BalancesListComponent extends AppComponentBase implements OnInit {
   @ViewChild('dataTable', { static: true }) dataTable: Table;
   @ViewChild('paginator', { static: true }) paginator: Paginator;
-  Balances: BalanceRechargeListDto[] = [];
-  IsStartSearch: boolean = false;
+  // Balances: BalanceRechargeListDto[] = [];
+  IsStartSearch = false;
   fromDate: moment.Moment | null | undefined;
   toDate: moment.Moment | null | undefined;
   ReferenceNo: string | null | undefined;
@@ -34,7 +34,7 @@ export class BalancesListComponent extends AppComponentBase implements OnInit {
   Tenants: ISelectItemDto[];
   TenantId: number | undefined = undefined;
   creationDateRange: Date[] = [moment().startOf('day').toDate(), moment().endOf('day').toDate()];
-  creationDateRangeActive: boolean = false;
+  creationDateRangeActive = false;
   minLongitude: number | null | undefined;
   maxLongitude: number | null | undefined;
   dataSource: any = {};
@@ -88,7 +88,7 @@ export class BalancesListComponent extends AppComponentBase implements OnInit {
   reloadPage(): void {
     this.paginator.changePage(this.paginator.getPage());
   }
-  delete(input: BalanceRechargeListDto): void {
+  delete(input: any): void {
     this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
       if (isConfirmed) {
         this._CurrentServ.delete(input.id).subscribe(() => {
@@ -123,14 +123,15 @@ export class BalancesListComponent extends AppComponentBase implements OnInit {
     this.dataSource = {};
     this.dataSource.store = new CustomStore({
       load(loadOptions: LoadOptions) {
-        console.log(JSON.stringify(loadOptions));
         return self._CurrentServ
           .getAll(JSON.stringify(loadOptions))
           .toPromise()
           .then((response) => {
             return {
-              data: response.items,
+              data: response.data,
               totalCount: response.totalCount,
+              summary: response.summary,
+              groupCount: response.groupCount,
             };
           })
           .catch((error) => {

@@ -7,6 +7,7 @@ using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
 using Abp.UI;
 using AutoMapper.QueryableExtensions;
+using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -74,7 +75,7 @@ namespace TACHYON.Invoices.Groups
         }
 
 
-        public async Task<PagedResultDto<SubmitInvoiceListDto>> GetAllSubmitInvoices(GetAllSubmitInvoicesInput input)
+        public async Task<LoadResult> GetAllSubmitInvoices(GetAllSubmitInvoicesInput input)
         {
             DisableTenancyFilters();
 

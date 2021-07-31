@@ -7,7 +7,6 @@ import { LazyLoadEvent } from 'primeng/api';
 import * as _ from 'lodash';
 import {
   InvoiceServiceProxy,
-  InvoiceListDto,
   ISelectItemDto,
   CommonLookupServiceProxy,
   InvoiceFilterInput,
@@ -32,8 +31,7 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
   @ViewChild('paginator', { static: true }) paginator: Paginator;
   @ViewChild('InvoiceDetailsModel', { static: true }) InvoiceDetailsModel: InvoiceTenantItemsDetailsComponent;
 
-  Invoices: InvoiceListDto[] = [];
-  IsStartSearch: boolean = false;
+  IsStartSearch = false;
   PaidStatus: boolean | null | undefined;
   advancedFiltersAreShown = false;
   periodId: number | null | undefined;
@@ -46,10 +44,10 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
   dueToDate: moment.Moment | null | undefined;
 
   creationDateRange: Date[] = [moment().startOf('day').toDate(), moment().endOf('day').toDate()];
-  creationDateRangeActive: boolean = false;
+  creationDateRangeActive = false;
 
   dueDateRange: Date[] = [moment().startOf('day').toDate(), moment().endOf('day').toDate()];
-  duteDateRangeActive: boolean = false;
+  duteDateRangeActive = false;
   accountType: InvoiceAccountType | undefined = undefined;
   dataSource: any = {};
   constructor(
@@ -64,7 +62,9 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
   }
 
   ngOnInit() {
-    if (this.appSession.tenantId) this.advancedFiltersAreShown = true;
+    if (this.appSession.tenantId) {
+      this.advancedFiltersAreShown = true;
+    }
     this._CommonServ.getPeriods().subscribe((result) => {
       this.Periods = result;
     });
@@ -120,7 +120,7 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
     this.paginator.changePage(this.paginator.getPage());
   }
 
-  MakePaid(invoice: InvoiceListDto): void {
+  MakePaid(invoice: any): void {
     this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
       if (isConfirmed) {
         this._InvoiceServiceProxy.makePaid(invoice.id).subscribe((r: boolean) => {
@@ -135,7 +135,7 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
     });
   }
 
-  MakeUnPaid(invoice: InvoiceListDto): void {
+  MakeUnPaid(invoice: any): void {
     this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
       if (isConfirmed) {
         this._InvoiceServiceProxy.makeUnPaid(invoice.id).subscribe(() => {
@@ -173,7 +173,7 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
       this._fileDownloadService.downloadTempFile(result);
     });
   }
-  details(invoice: InvoiceListDto): void {
+  details(invoice: any): void {
     if (invoice.accountType == InvoiceAccountType.AccountReceivable) {
       this.router.navigate([`/app/main/invoices/detail/${invoice.id}`]);
     } else {
@@ -195,8 +195,10 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
           .toPromise()
           .then((response) => {
             return {
-              data: response.items,
+              data: response.data,
               totalCount: response.totalCount,
+              summary: response.summary,
+              groupCount: response.groupCount,
             };
           })
           .catch((error) => {

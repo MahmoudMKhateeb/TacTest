@@ -12,6 +12,7 @@ using Abp.Linq.Extensions;
 using System.Linq;
 using Abp.Authorization;
 using AutoMapper.QueryableExtensions;
+using DevExtreme.AspNet.Data.ResponseModel;
 using TACHYON.Authorization;
 using TACHYON.Common;
 using TACHYON.Dto;
@@ -36,7 +37,7 @@ namespace TACHYON.Invoices.Transactions
         }
 
         [AbpAuthorize(AppPermissions.Pages_Invoices_Transaction)]
-        public async Task<PagedResultDto<TransactionListDto>> GetAll(TransactionFilterInput input)
+        public async Task<LoadResult> GetAll(TransactionFilterInput input)
         {
             DisableTenancyFiltersIfHost();
             var query = _transactionRepository

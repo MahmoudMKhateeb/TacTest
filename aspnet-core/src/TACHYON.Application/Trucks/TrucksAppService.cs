@@ -10,6 +10,7 @@ using Abp.Runtime.Session;
 using Abp.UI;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using DevExtreme.AspNet.Data.ResponseModel;
 using IdentityServer4.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -88,7 +89,7 @@ namespace TACHYON.Trucks
             _plateTypesRepository = PlateTypesRepository;
         }
 
-        public async Task<PagedResultDto<TruckDto>> GetAll(GetAllTrucksInput input)
+        public async Task<LoadResult> GetAll(GetAllTrucksInput input)
         {
             var query = _truckRepository.GetAll()
                 .ProjectTo<TruckDto>(AutoMapperConfigurationProvider);
@@ -99,9 +100,9 @@ namespace TACHYON.Trucks
             return result;
         }
 
-        private async Task FillIsMissingDocumentFiles(PagedResultDto<TruckDto> pagedResultDto)
+        private async Task FillIsMissingDocumentFiles(LoadResult pagedResultDto)
         {
-            var ids = pagedResultDto.Items.Select(x => x.Id);
+            var ids = pagedResultDto.data.ToDynamicList<TruckDto>().Select(x => x.Id);
             var documentTypesCount = await _documentTypeRepository.GetAll()
                 .Where(doc => doc.DocumentsEntityId == (int)DocumentsEntitiesEnum.Truck)
                 .Where(x => x.IsRequired)
@@ -117,7 +118,7 @@ namespace TACHYON.Trucks
                     .Select(x => new { TruckId = x.Key, IsMissingDocumentFiles = x.Count() == documentTypesCount }))
                 .ToListAsync();
 
-            foreach (TruckDto truckDto in pagedResultDto.Items)
+            foreach (TruckDto truckDto in pagedResultDto.data.ToDynamicList<TruckDto>())
             {
                 if (submittedDocuments == null)
                     continue;

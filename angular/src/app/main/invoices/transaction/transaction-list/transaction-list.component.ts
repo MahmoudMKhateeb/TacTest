@@ -1,16 +1,11 @@
 import { Component, OnInit, Injector, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
-import { Table } from 'primeng/table';
-import { Paginator } from 'primeng/paginator';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 
 import {
   TransactionServiceProxy,
-  TransactionListDto,
   ISelectItemDto,
-  CommonLookupServiceProxy,
-  ChannelType,
   EditionServiceProxy,
   ComboboxItemDto,
   TransactionFilterInput,
@@ -41,7 +36,7 @@ export class TransactionListComponent extends AppComponentBase implements OnInit
     super(injector);
   }
   ngOnInit(): void {
-    this.ChannelType = this.enumToArray.transform(ChannelType);
+    //this.ChannelType = this.enumToArray.transform(ChannelType);
     if (!this.appSession.tenantId || this.feature.isEnabled('App.TachyonDealer')) {
       this._editionService.getEditionComboboxItems(0, true, false).subscribe((editions) => {
         this.editions = editions;
@@ -72,8 +67,10 @@ export class TransactionListComponent extends AppComponentBase implements OnInit
           .toPromise()
           .then((response) => {
             return {
-              data: response.items,
+              data: response.data,
               totalCount: response.totalCount,
+              summary: response.summary,
+              groupCount: response.groupCount,
             };
           })
           .catch((error) => {
