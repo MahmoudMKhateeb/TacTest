@@ -1,7 +1,10 @@
 <div dropdown class="dropdown dropdown-language" aria-haspopup="true" *ngIf="languages.length > 1" [dropup]="isDropup">
   <div dropdownToggle class="topbar-item" data-toggle="dropdown" data-offset="10px,0px" aria-expanded="false">
     <div [class]="customStyle">
-      <i [class]="currentLanguage.icon"></i>
+      <!--      <i [class]="currentLanguage.icon"></i>-->
+      <span
+        class="flag-icon-background flag-icon-{{ currentLanguage.icon.replace('famfamfam-flags ', '') }} flag-icon-squared h-20px w-20px rounded-sm"
+      ></span>
     </div>
   </div>
   <div *dropdownMenu class="dropdown-menu p-0 m-0 dropdown-menu-anim-up dropdown-menu-sm dropdown-menu-right" [attr.aria-label]="l('Languages')">
@@ -9,9 +12,15 @@
       <ul class="navi navi-hover py-4">
         <li class="navi-item" *ngFor="let language of languages">
           <a href="javascript:;" (click)="changeLanguage(language.name)" class="navi-link">
-            <span class="symbol symbol-20 mr-3">
-              <i [class]="language.icon"></i>
-            </span>
+            <!--            <span class="symbol symbol-20 mr-3">-->
+            <!--              <i [class]="language.icon"></i>-->
+            <!--            </span>-->
+            <span
+              class="flag-icon-background flag-icon-{{
+                language.icon.replace('famfamfam-flags ', '')
+              }} flag-icon-squared h-20px w-20px rounded-sm mr-3"
+            ></span>
+
             <span class="navi-text">
               {{ language.displayName }}
             </span>

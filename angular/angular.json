@@ -64,7 +64,8 @@
               "node_modules/devextreme/dist/css/dx.light.css",
               "src/styles.css",
               "src/assets/custom/css/style.scss",
-              "src/assets/custom/css/model.scss"
+              "src/assets/custom/css/model.scss",
+              "src/assets/flag-icon-css/css/flag-icon.css"
             ],
             "scripts": [
               "node_modules/@microsoft/signalr/dist/browser/signalr.min.js",
@@ -192,7 +193,8 @@
               "src/app/shared/layout/layout.less",
               "src/styles.css",
               "src/assets/custom/css/style.scss",
-              "src/assets/custom/css/model.scss"
+              "src/assets/custom/css/model.scss",
+              "src/assets/flag-icon-css/css/flag-icon.css"
             ],
             "scripts": [
               "node_modules/@microsoft/signalr/dist/browser/signalr.min.js",
