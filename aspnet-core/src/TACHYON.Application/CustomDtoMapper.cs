@@ -294,7 +294,8 @@ namespace TACHYON
                 .ForMember(dest => dest.ShippingRequestVasList, opt => opt.MapFrom(src => src.ShippingRequestVases));
 
             configuration.CreateMap<CreateOrEditShippingRequestTripDto, ShippingRequestTrip>()
-                .ForMember(d => d.RoutPoints, opt => opt.Ignore())
+                .ForMember(d=>d.WaybillNumber, opt=>opt.Ignore())
+                .ForMember(d=>d.RoutPoints,opt=>opt.Ignore())
                 .ForMember(d => d.ShippingRequestTripVases, opt => opt.Ignore())
                 .AfterMap(AddOrUpdateShippingRequestTrip);
 
@@ -340,6 +341,7 @@ namespace TACHYON
                 .ReverseMap();
 
             configuration.CreateMap<CreateOrEditRoutPointDto, RoutPoint>()
+                .ForMember(x=> x.WaybillNumber,otp=> otp.Ignore())
                 .AfterMap(AddOrUpdateShippingRequestTripRoutePointGoods);
 
             configuration.CreateMap<RoutPoint, CreateOrEditRoutPointDto>()

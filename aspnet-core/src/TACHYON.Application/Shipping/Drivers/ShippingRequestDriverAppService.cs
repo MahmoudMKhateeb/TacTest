@@ -310,11 +310,13 @@ namespace TACHYON.Shipping.Drivers
 
                 if (CurrentPoint.PickingType == PickingType.Pickup && trip.RoutePointStatus != RoutePointStatus.FinishLoading) throw new UserFriendlyException(L("TheTripIsNotFound"));
 
-                if (trip.RoutePointStatus == RoutePointStatus.FinishLoading)
+                if (trip.RoutePointStatus == RoutePointStatus.FinishLoading || trip.RoutePointStatus == RoutePointStatus.DeliveryConfirmation)
                 {
                     CurrentPoint.IsActive = false;
                     CurrentPoint.IsComplete = true;
                     CurrentPoint.EndTime = Clock.Now;
+
+                    await CurrentUnitOfWork.SaveChangesAsync();
                 }
             }
             else
@@ -331,7 +333,10 @@ namespace TACHYON.Shipping.Drivers
             if (Count>0) throw new UserFriendlyException(L("ThereIsAnotherActivePointStillNotClose"));
 
 
-            var Newpoint = await _RoutPointRepository.GetAll().Include(x=>x.FacilityFk).FirstOrDefaultAsync(x => x.Id == PointId);
+            var Newpoint = await _RoutPointRepository.GetAll().Include(x=>x.FacilityFk)
+                .Include(x=>x.ShippingRequestTripFk)
+                .ThenInclude(x=>x.ShippingRequestFk)
+                .FirstOrDefaultAsync(x => x.Id == PointId);
                 if (Newpoint == null) throw new UserFriendlyException(L("the trip is not exists"));
                 Newpoint.StartTime = Clock.Now;
                 Newpoint.IsActive = true;
