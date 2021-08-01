@@ -4,6 +4,8 @@ using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Linq.Extensions;
+using AutoMapper.QueryableExtensions;
+using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +16,7 @@ using TACHYON.Dto;
 using TACHYON.Invoices.Balances.Dto;
 using TACHYON.Invoices.Balances.Exporting;
 using TACHYON.Invoices.Transactions;
+using TACHYON.MultiTenancy;
 
 namespace TACHYON.Invoices.Balances
 {
@@ -21,51 +24,38 @@ namespace TACHYON.Invoices.Balances
     {
         private readonly IRepository<BalanceRecharge> _Repository;
         private readonly BalanceManager _balanceManager;
-        private readonly IBalanceRechargeExcelExporter  _BalanceRechargeExcelExporter;
+        private readonly IBalanceRechargeExcelExporter _BalanceRechargeExcelExporter;
         private readonly TransactionManager _transactionManager;
+        private readonly IRepository<Tenant> _tenantsRepository;
 
         public BalanceRechargeAppService(
             IRepository<BalanceRecharge> Repository,
             BalanceManager balanceManager,
             IBalanceRechargeExcelExporter BalanceRechargeExcelExporter,
-            TransactionManager transactionManager)
+            TransactionManager transactionManager, IRepository<Tenant> tenantsRepository)
         {
             _Repository = Repository;
             _balanceManager = balanceManager;
             _BalanceRechargeExcelExporter = BalanceRechargeExcelExporter;
-             _transactionManager= transactionManager;
+            _transactionManager = transactionManager;
+            _tenantsRepository = tenantsRepository;
         }
 
         [AbpAuthorize(AppPermissions.Pages_Administration_Host_Invoices_Balances)]
-        public async Task<PagedResultDto<BalanceRechargeListDto>> GetAll(GetAllBalanceRechargeInput input)
-       {
+        public async Task<LoadResult> GetAll(GetAllBalanceRechargeInput input)
+        {
             using (UnitOfWorkManager.Current.DisableFilter(AbpDataFilters.MustHaveTenant))
             {
-                var query = _Repository
-                    .GetAll()
-                    .Include(i => i.Tenant)
-                    .WhereIf(!string.IsNullOrEmpty(input.ReferenceNo), i => i.ReferenceNo == input.ReferenceNo)
-                    .WhereIf(input.TenantId.HasValue, i => i.TenantId == input.TenantId)
-                    .WhereIf(input.minLongitude.HasValue && input.maxLongitude.HasValue, i => i.Amount >= input.minLongitude.Value && i.Amount <= input.maxLongitude.Value)
-                    .WhereIf(input.FromDate.HasValue && input.ToDate.HasValue, i => i.CreationTime >= input.FromDate && i.CreationTime < input.ToDate);
+                var query = _Repository.GetAll().ProjectTo<BalanceRechargeListDto>(AutoMapperConfigurationProvider);
 
-                var paged = query
-                  .OrderBy(input.Sorting ?? "id desc")
-                  .PageBy(input);
-
-                var totalCount = await query.CountAsync();
-
-                return new PagedResultDto<BalanceRechargeListDto>(
-                    totalCount,
-                    ObjectMapper.Map<List<BalanceRechargeListDto>>(paged)
-                );
+                return await LoadResultAsync(query, input.LoadOptions);
             }
         }
         [AbpAuthorize(AppPermissions.Pages_Administration_Host_Invoices_Balances_Create)]
         public async Task Create(CreateBalanceRechargeInput input)
         {
             var Recharge = ObjectMapper.Map<BalanceRecharge>(input);
-           var id= await _Repository.InsertAndGetIdAsync(Recharge);
+            var id = await _Repository.InsertAndGetIdAsync(Recharge);
             await _balanceManager.AddBalanceToShipper(Recharge.TenantId, Recharge.Amount);
             await _transactionManager.Create(new Transaction
             {
@@ -90,16 +80,28 @@ namespace TACHYON.Invoices.Balances
         {
             using (UnitOfWorkManager.Current.DisableFilter(AbpDataFilters.MustHaveTenant))
             {
-                var query =  _Repository
+                var query = _Repository
                     .GetAll()
-                    .Include(i => i.Tenant)
-                    .WhereIf(input.TenantId.HasValue, i => i.TenantId == input.TenantId)
-                    .WhereIf(input.FromDate.HasValue && input.ToDate.HasValue, i => i.CreationTime >= input.FromDate && i.CreationTime < input.ToDate)
-                    .OrderBy(!string.IsNullOrEmpty(input.Sorting) ? input.Sorting : "id desc");
+                    .Include(i => i.Tenant);
+                //.WhereIf(input.TenantId.HasValue, i => i.TenantId == input.TenantId)
+                //.WhereIf(input.FromDate.HasValue && input.ToDate.HasValue, i => i.CreationTime >= input.FromDate && i.CreationTime < input.ToDate)
+                //.OrderBy(!string.IsNullOrEmpty(input.Sorting) ? input.Sorting : "id desc");
                 var data = ObjectMapper.Map<List<BalanceRechargeListDto>>(query);
                 return Task.FromResult(_BalanceRechargeExcelExporter.ExportToFile(data));
             }
 
+        }
+
+        public async Task<decimal> GetTenantBalance()
+        {
+            int? abpSessionTenantId = this.AbpSession.TenantId;
+            if (abpSessionTenantId != null)
+            {
+                var tenant = await _tenantsRepository.GetAsync(abpSessionTenantId.Value);
+                return tenant.Balance;
+            }
+
+            return await Task.FromResult(decimal.Zero);
         }
 
     }

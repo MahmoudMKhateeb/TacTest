@@ -107,8 +107,10 @@ export class DocumentTypesComponent extends AppComponentBase implements OnInit, 
           .toPromise()
           .then((response) => {
             return {
-              data: response.items,
+              data: response.data,
               totalCount: response.totalCount,
+              summary: response.summary,
+              groupCount: response.groupCount,
             };
           })
           .catch((error) => {
@@ -169,9 +171,5 @@ export class DocumentTypesComponent extends AppComponentBase implements OnInit, 
     this._documentTypesServiceProxy.getFileDto(id).subscribe((result) => {
       this._fileDownloadService.downloadTempFile(result);
     });
-  }
-
-  onEditingStart($event: any) {
-    console.log(JSON.stringify($event.data));
   }
 }

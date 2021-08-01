@@ -59,8 +59,10 @@ export class DriversComponent extends UsersComponent implements AfterViewInit, O
           .toPromise()
           .then((response) => {
             return {
-              data: response.items,
+              data: response.data,
               totalCount: response.totalCount,
+              summary: response.summary,
+              groupCount: response.groupCount,
             };
           })
           .catch((error) => {

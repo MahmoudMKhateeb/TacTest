@@ -42,7 +42,7 @@ import { FileDownloadService } from '@shared/utils/file-download.service';
 import { FileItem, FileUploader, FileUploaderOptions } from '@node_modules/ng2-file-upload';
 import { AppConsts } from '@shared/AppConsts';
 import { IAjaxResponse, TokenService } from '@node_modules/abp-ng2-module';
-import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
+import { DropDownMenu, TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
 import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
 import { FormControl, NgForm, Validators } from '@angular/forms';
 
@@ -232,9 +232,10 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       this.trip.originFacilityId = facility.id;
     } else {
       this.facilityLoading = true;
-      this._routStepsServiceProxy.getAllFacilitiesForDropdown().subscribe((result) => {
-        this.allFacilities = result;
-        this.facilityLoading = false;
+      // this._shippingRequestDDService.allFacilities.subscribe((res) => (this.allFacilities = res));
+      this._TripService.currentFacilitiesItems.subscribe((res: DropDownMenu) => {
+        this.facilityLoading = res.isLoading;
+        this.allFacilities = res.items;
       });
     }
   }

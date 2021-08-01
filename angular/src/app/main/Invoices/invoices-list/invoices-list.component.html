@@ -19,6 +19,7 @@
         <div class="card-body">
           <div class="row align-items-center">
             <dx-data-grid
+              style="height: 45vw"
               #grid
               id="dataGrid"
               [dataSource]="dataSource"
@@ -28,11 +29,20 @@
               [showBorders]="true"
               [rowAlternationEnabled]="true"
               keyExpr="id"
+              [wordWrapEnabled]="true"
             >
               <dxo-filter-row [visible]="true"></dxo-filter-row>
               <dxo-search-panel [visible]="true"></dxo-search-panel>
               <dxo-filter-panel [visible]="true"></dxo-filter-panel>
               <dxo-filter-builder-popup></dxo-filter-builder-popup>
+              <dxo-scrolling mode="virtual"></dxo-scrolling>
+              <dxo-group-panel [visible]="true"></dxo-group-panel>
+              <dxo-grouping #expand [autoExpandAll]="false"></dxo-grouping>
+              <dxo-remote-operations [groupPaging]="true" [sorting]="true" [filtering]="true"> </dxo-remote-operations>
+              <dxo-paging [pageSize]="20"></dxo-paging>
+              <dxo-summary>
+                <dxi-group-item column="id" summaryType="count"> </dxi-group-item>
+              </dxo-summary>
 
               <dxi-column
                 cellTemplate="cellTemplateActions"
@@ -46,6 +56,7 @@
               <dxi-column
                 *ngIf="!appSession.tenantId || feature.isEnabled('App.TachyonDealer')"
                 dataField="tenantName"
+                [groupIndex]="0"
                 caption="{{ l('CompanyName') }}"
               >
               </dxi-column>
@@ -59,11 +70,12 @@
               </dxi-column>
               <dxi-column dataField="totalAmount" caption="{{ l('TotalAmount') }}"> </dxi-column>
               <dxi-column dataField="creationTime" caption="{{ l('IssuanceDate') }}" dataType="date"> </dxi-column>
-              <dxi-column dataField="isPaid" caption="{{ l('Status') }}"> </dxi-column>
+              <dxi-column dataField="isPaid" cellTemplate="cellTemplate_isPaid" caption="{{ l('Status') }}"> </dxi-column>
 
-              <dxo-remote-operations [sorting]="true" [paging]="true" [filtering]="true"> </dxo-remote-operations>
-              <dxo-paging [pageSize]="10"></dxo-paging>
-              <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20, 50, 200]"></dxo-pager>
+              <div *dxTemplate="let options of 'cellTemplate_isPaid'">
+                <span *ngIf="options.data.isPaid" class="badge badge-success badge-inline">{{ 'Paid' | localize }}</span>
+                <span *ngIf="!options.data.isPaid" class="badge badge-danger badge-inline">{{ 'UnPaid' | localize }}</span>
+              </div>
 
               <div *dxTemplate="let options of 'cellTemplateActions'">
                 <div class="btn-group dropdown" dropdown container="body">

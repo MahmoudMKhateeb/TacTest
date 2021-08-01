@@ -22,6 +22,7 @@ import { isNumeric } from '@node_modules/rxjs/internal/util/isNumeric';
 import { TerminologieServiceProxy } from 'shared/service-proxies/terminologies-ervice-proxy';
 import { HttpClient } from '@angular/common/http';
 import { map } from '@node_modules/rxjs/internal/operators';
+import { DevExtremeDataGridHelper } from '@shared/helpers/DevExtremeDataGridHelper';
 
 const capitalize = (s) => {
   if (typeof s !== 'string') return '';
@@ -40,6 +41,7 @@ export abstract class AppComponentBase {
   multiTenancy: AbpMultiTenancyService;
   appSession: AppSessionService;
   primengTableHelper: PrimengTableHelper;
+  devExtremeDataGridHelper: DevExtremeDataGridHelper;
   ui: AppUiCustomizationService;
   appUrlService: AppUrlService;
   spinnerService: NgxSpinnerService;

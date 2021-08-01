@@ -79,8 +79,10 @@ export class DriverSubmitedDocumentsListComponent extends AppComponentBase imple
           .toPromise()
           .then((response) => {
             return {
-              data: response.items,
+              data: response.data,
               totalCount: response.totalCount,
+              summary: response.summary,
+              groupCount: response.groupCount,
             };
           })
           .catch((error) => {
@@ -102,8 +104,10 @@ export class DriverSubmitedDocumentsListComponent extends AppComponentBase imple
           .toPromise()
           .then((response) => {
             return {
-              data: response.items,
+              data: response.data,
               totalCount: response.totalCount,
+              summary: response.summary,
+              groupCount: response.groupCount,
             };
           })
           .catch((error) => {

@@ -4514,6 +4514,10 @@ namespace TACHYON.Migrations
                     b.Property<bool>("NeedsDeliveryNote")
                         .HasColumnType("bit");
 
+                    b.Property<string>("Note")
+                        .HasColumnType("nvarchar(600)")
+                        .HasMaxLength(600);
+
                     b.Property<long?>("OriginFacilityId")
                         .HasColumnType("bigint");
 

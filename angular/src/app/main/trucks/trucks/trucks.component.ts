@@ -172,8 +172,10 @@ export class TrucksComponent extends AppComponentBase implements OnInit, AfterVi
           .toPromise()
           .then((response) => {
             return {
-              data: response.items,
+              data: response.data,
               totalCount: response.totalCount,
+              summary: response.summary,
+              groupCount: response.groupCount,
             };
           })
           .catch((error) => {

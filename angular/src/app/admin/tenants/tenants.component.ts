@@ -5,7 +5,9 @@ import { CommonLookupModalComponent } from '@app/shared/common/lookup/common-loo
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import {
+  ComboboxItemDto,
   CommonLookupServiceProxy,
+  EditionServiceProxy,
   EntityDtoOfInt64,
   FindUsersInput,
   NameValueDto,
@@ -22,6 +24,8 @@ import { TenantFeaturesModalComponent } from './tenant-features-modal.component'
 import { EntityTypeHistoryModalComponent } from '@app/shared/common/entityHistory/entity-type-history-modal.component';
 import * as _ from 'lodash';
 import { finalize } from 'rxjs/operators';
+import { LoadOptions } from '@node_modules/devextreme/data/load_options';
+import CustomStore from '@node_modules/devextreme/data/custom_store';
 
 @Component({
   templateUrl: './tenants.component.html',
@@ -49,13 +53,16 @@ export class TenantsComponent extends AppComponentBase implements OnInit {
     subscriptionEndDateRangeActive: boolean;
     selectedEditionId: number;
   } = <any>{};
+  dataSource: any = {};
+  editions: ComboboxItemDto[] = [];
 
   constructor(
     injector: Injector,
     private _tenantService: TenantServiceProxy,
     private _activatedRoute: ActivatedRoute,
     private _commonLookupService: CommonLookupServiceProxy,
-    private _impersonationService: ImpersonationService
+    private _impersonationService: ImpersonationService,
+    private _editionService: EditionServiceProxy
   ) {
     super(injector);
     this.setFiltersFromRoute();
@@ -112,6 +119,12 @@ export class TenantsComponent extends AppComponentBase implements OnInit {
         return this._commonLookupService.findUsers(input);
       },
     });
+
+    this._editionService.getEditionComboboxItems(0, true, false).subscribe((editions) => {
+      this.editions = editions;
+    });
+
+    this.getAllTenants();
   }
 
   private setIsEntityHistoryEnabled(): void {
@@ -193,5 +206,31 @@ export class TenantsComponent extends AppComponentBase implements OnInit {
 
   impersonateUser(item: NameValueDto): void {
     this._impersonationService.impersonate(parseInt(item.value), this.impersonateUserLookupModal.tenantId);
+  }
+
+  getAllTenants() {
+    let self = this;
+
+    this.dataSource = {};
+    this.dataSource.store = new CustomStore({
+      load(loadOptions: LoadOptions) {
+        console.log(JSON.stringify(loadOptions));
+        return self._tenantService
+          .getAllTenants(JSON.stringify(loadOptions))
+          .toPromise()
+          .then((response) => {
+            return {
+              data: response.data,
+              totalCount: response.totalCount,
+              summary: response.summary,
+              groupCount: response.groupCount,
+            };
+          })
+          .catch((error) => {
+            console.log(error);
+            throw new Error('Data Loading Error');
+          });
+      },
+    });
   }
 }

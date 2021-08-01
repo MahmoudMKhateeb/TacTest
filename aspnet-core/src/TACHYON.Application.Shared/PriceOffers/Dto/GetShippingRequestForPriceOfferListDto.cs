@@ -15,7 +15,7 @@ namespace TACHYON.PriceOffers.Dto
         public bool IsTachyonDeal { get; set; }
         public string OriginCity { get; set; }
         public string DestinationCity { get; set; }
-        public string TrukType { get; set; }
+        public string TruckType { get; set; }
         public bool isPriced { get; set; }
         public string RemainingDays { get; set; }
         public string RangeDate { get; set; }
@@ -40,6 +40,7 @@ namespace TACHYON.PriceOffers.Dto
         public ShippingRequestType requestType { get; set; }
         public string requestTypeTitle { get { return requestType.GetEnumDescription(); } }
 
+        public bool IsDrafted { get; set; }
     }
  
 }

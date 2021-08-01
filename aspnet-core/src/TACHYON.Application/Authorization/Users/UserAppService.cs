@@ -13,6 +13,7 @@ using Abp.Runtime.Session;
 using Abp.UI;
 using Abp.Zero.Configuration;
 using AutoMapper.QueryableExtensions;
+using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -163,7 +164,7 @@ namespace TACHYON.Authorization.Users
         }
 
 
-        public async Task<PagedResultDto<DriverListDto>> GetDrivers(GetDriversInput input)
+        public async Task<LoadResult> GetDrivers(GetDriversInput input)
         {
             var query = UserManager.Users
                 .Where(u => u.IsDriver)
@@ -173,9 +174,9 @@ namespace TACHYON.Authorization.Users
             await FillIsMissingDocumentFiles(result);
             return result;
         }
-        private async Task FillIsMissingDocumentFiles(PagedResultDto<DriverListDto> pagedResultDto)
+        private async Task FillIsMissingDocumentFiles(LoadResult pagedResultDto)
         {
-            var ids = pagedResultDto.Items.Select(x => x.Id);
+            var ids = pagedResultDto.data.ToDynamicList<DriverListDto>().Select(x => x.Id);
             var documentTypesCount = await _documentTypeRepository.GetAll()
                 .Where(doc => doc.DocumentsEntityId == (int)DocumentsEntitiesEnum.Driver)
                 .Where(x => x.IsRequired)
@@ -188,7 +189,7 @@ namespace TACHYON.Authorization.Users
                     .Select(x => new { TruckId = x.Key, IsMissingDocumentFiles = x.Count() == documentTypesCount }))
                 .ToListAsync();
 
-            foreach (DriverListDto driverListDto in pagedResultDto.Items)
+            foreach (DriverListDto driverListDto in pagedResultDto.data.ToDynamicList<DriverListDto>())
             {
                 if (submittedDocuments != null)
                 {

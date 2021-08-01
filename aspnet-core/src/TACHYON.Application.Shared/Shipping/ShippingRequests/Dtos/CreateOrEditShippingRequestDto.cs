@@ -85,9 +85,9 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
                 case  ShippingRequestRouteType.SingleDrop:
                     this.NumberOfDrops = 1;
                 break;
-                case ShippingRequestRouteType.TwoWay:
-                    this.NumberOfDrops = 2;
-                    break;
+                //case ShippingRequestRouteType.TwoWay:
+                //    this.NumberOfDrops = 2;
+                //    break;
                 default :
                     if (this.NumberOfDrops<2)
                         context.Results.Add(new ValidationResult("TheNumberOfDropsMustHigerOrEqualTwo"));
