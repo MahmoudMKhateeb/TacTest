@@ -9,6 +9,8 @@ import { HttpClient } from '@angular/common/http';
 import { LocalStorageService } from '@shared/utils/local-storage.service';
 import { AppConsts } from '@shared/AppConsts';
 import { ViewOrEditEntityDocumentsModalComponent } from '@app/main/documentFiles/documentFiles/documentFilesViewComponents/view-or-edit-entity-documents-modal.componant';
+import CustomStore from '@node_modules/devextreme/data/custom_store';
+import { LoadOptions } from '@node_modules/devextreme/data/load_options';
 
 @Component({
   selector: 'app-drivers',
@@ -17,10 +19,11 @@ import { ViewOrEditEntityDocumentsModalComponent } from '@app/main/documentFiles
   styleUrls: ['../users.component.less'],
   animations: [appModuleAnimation()],
 })
-export class DriversComponent extends UsersComponent implements AfterViewInit {
+export class DriversComponent extends UsersComponent implements AfterViewInit, OnInit {
   @ViewChild('viewOrEditEntityDocumentsModal', { static: true }) viewOrEditEntityDocumentsModal: ViewOrEditEntityDocumentsModalComponent;
   isArabic = false;
   documentsEntitiesEnum = DocumentsEntitiesEnum;
+  dataSource: any = {};
 
   constructor(
     injector: Injector,
@@ -43,5 +46,34 @@ export class DriversComponent extends UsersComponent implements AfterViewInit {
 
   showDriverkDocuments(driverId) {
     this.viewOrEditEntityDocumentsModal.show(driverId, DocumentsEntitiesEnum.Driver);
+  }
+
+  getDrivers() {
+    let self = this;
+
+    this.dataSource = {};
+    this.dataSource.store = new CustomStore({
+      load(loadOptions: LoadOptions) {
+        return self._userServiceProxy
+          .getDrivers(JSON.stringify(loadOptions))
+          .toPromise()
+          .then((response) => {
+            return {
+              data: response.data,
+              totalCount: response.totalCount,
+              summary: response.summary,
+              groupCount: response.groupCount,
+            };
+          })
+          .catch((error) => {
+            console.log(error);
+            throw new Error('Data Loading Error');
+          });
+      },
+    });
+  }
+
+  ngOnInit(): void {
+    this.getDrivers();
   }
 }

@@ -11,7 +11,7 @@
               <TextRun>
                 <Value />
                 <Style>
-                  <FontFamily>GE Flow</FontFamily>
+                   
                   <FontSize>8pt</FontSize>
                   <Color>#282828</Color>
                 </Style>
@@ -48,7 +48,7 @@
               <TextRun>
                 <Value />
                 <Style>
-                  <FontFamily>GE Flow</FontFamily>
+                   
                   <FontSize>8pt</FontSize>
                   <Color>#282828</Color>
                 </Style>
@@ -86,7 +86,7 @@
               <TextRun>
                 <Value />
                 <Style>
-                  <FontFamily>GE Flow</FontFamily>
+                   
                   <FontSize>8pt</FontSize>
                   <Color>#282828</Color>
                 </Style>
@@ -124,7 +124,7 @@
               <TextRun>
                 <Value />
                 <Style>
-                  <FontFamily>GE Flow</FontFamily>
+                   
                   <FontSize>8pt</FontSize>
                   <Color>#282828</Color>
                 </Style>
@@ -162,7 +162,7 @@
               <TextRun>
                 <Value />
                 <Style>
-                  <FontFamily>GE Flow</FontFamily>
+                   
                   <FontSize>8pt</FontSize>
                   <Color>#282828</Color>
                 </Style>
@@ -200,7 +200,7 @@
               <TextRun>
                 <Value />
                 <Style>
-                  <FontFamily>GE Flow</FontFamily>
+                   
                   <FontSize>8pt</FontSize>
                   <Color>#282828</Color>
                 </Style>
@@ -289,7 +289,7 @@
               <TextRun>
                 <Value>:مرجع المرسل</Value>
                 <Style>
-                  <FontFamily>GE Flow</FontFamily>
+                   
                   <FontSize>8pt</FontSize>
                   <FontWeight>Normal</FontWeight>
                   <Color>#3b3a3c</Color>
@@ -326,7 +326,7 @@
               <TextRun>
                 <Value>:وثيقة الشحن الفرعية</Value>
                 <Style>
-                  <FontFamily>GE Flow</FontFamily>
+                   
                   <FontSize>8pt</FontSize>
                   <FontWeight>Normal</FontWeight>
                   <Color>#282828</Color>
@@ -519,7 +519,7 @@
               <TextRun>
                 <Value>الحالة</Value>
                 <Style>
-                  <FontFamily>GE Flow</FontFamily>
+                   
                   <FontSize>8pt</FontSize>
                   <Color>#3b3a3c</Color>
                 </Style>
@@ -626,7 +626,7 @@
               <TextRun>
                 <Value>: التاريخ</Value>
                 <Style>
-                  <FontFamily>GE Flow</FontFamily>
+                   
                   <FontSize>8pt</FontSize>
                   <FontWeight>Normal</FontWeight>
                   <Color>#282828</Color>
@@ -737,7 +737,7 @@
               <TextRun>
                 <Value>إسم الناقل</Value>
                 <Style>
-                  <FontFamily>GE Flow</FontFamily>
+                   
                   <FontSize>8pt</FontSize>
                   <Color>#3b3a3c</Color>
                 </Style>
@@ -809,7 +809,7 @@
               <TextRun>
                 <Value>إسم العميل</Value>
                 <Style>
-                  <FontFamily>GE Flow</FontFamily>
+                   
                   <FontSize>8pt</FontSize>
                   <FontWeight>Normal</FontWeight>
                   <Color>#282828</Color>
@@ -1033,7 +1033,7 @@
               <TextRun>
                 <Value>رقم الفاتورة</Value>
                 <Style>
-                  <FontFamily>GE Flow</FontFamily>
+                   
                   <FontSize>8pt</FontSize>
                   <FontWeight>Normal</FontWeight>
                   <Color>#282828</Color>
@@ -1072,7 +1072,7 @@
               <TextRun>
                 <Value>: وثيقة الشحن الرئيسية</Value>
                 <Style>
-                  <FontFamily>GE Flow</FontFamily>
+                   
                   <FontSize>8pt</FontSize>
                   <FontWeight>Normal</FontWeight>
                   <Color>#404040</Color>
@@ -1196,7 +1196,7 @@
               <TextRun>
                 <Value xml:space="preserve"> </Value>
                 <Style>
-                  <FontFamily>GE Flow</FontFamily>
+                   
                   <FontSize>13pt</FontSize>
                   <FontWeight>Bold</FontWeight>
                   <Color>White</Color>
@@ -1235,7 +1235,7 @@
               <TextRun>
                 <Value>تفاصيل المستلم</Value>
                 <Style>
-                  <FontFamily>GE Flow</FontFamily>
+                   
                   <FontWeight>Normal</FontWeight>
                   <Color>White</Color>
                 </Style>
@@ -1320,7 +1320,7 @@
               <TextRun>
                 <Value xml:space="preserve"> </Value>
                 <Style>
-                  <FontFamily>GE Flow</FontFamily>
+                   
                   <FontSize>13pt</FontSize>
                   <FontWeight>Bold</FontWeight>
                   <Color>White</Color>
@@ -1359,7 +1359,7 @@
               <TextRun>
                 <Value>تفاصيل المرسل</Value>
                 <Style>
-                  <FontFamily>GE Flow</FontFamily>
+                   
                   <FontWeight>Normal</FontWeight>
                   <Color>White</Color>
                 </Style>
@@ -1555,7 +1555,7 @@
                             <TextRun>
                               <Value>:</Value>
                               <Style>
-                                <FontFamily>GE Flow</FontFamily>
+                                 
                                 <FontSize>8pt</FontSize>
                                 <Color>#282828</Color>
                               </Style>
@@ -1563,7 +1563,7 @@
                             <TextRun>
                               <Value>إسم الشركة</Value>
                               <Style>
-                                <FontFamily>GE Flow</FontFamily>
+                                 
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Normal</FontWeight>
                                 <Color>#282828</Color>
@@ -1697,7 +1697,7 @@
                             <TextRun>
                               <Value>:</Value>
                               <Style>
-                                <FontFamily>GE Flow</FontFamily>
+                                 
                                 <FontSize>8pt</FontSize>
                                 <Color>#282828</Color>
                               </Style>
@@ -1705,7 +1705,7 @@
                             <TextRun>
                               <Value>إسم الشركة</Value>
                               <Style>
-                                <FontFamily>GE Flow</FontFamily>
+                                 
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Normal</FontWeight>
                                 <Color>#282828</Color>
@@ -1825,7 +1825,7 @@
                             <TextRun>
                               <Value>:جهة الإتصال</Value>
                               <Style>
-                                <FontFamily>GE Flow</FontFamily>
+                                 
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Normal</FontWeight>
                                 <Color>#282828</Color>
@@ -1955,7 +1955,7 @@
                             <TextRun>
                               <Value>:جهة الإتصال</Value>
                               <Style>
-                                <FontFamily>GE Flow</FontFamily>
+                                 
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Normal</FontWeight>
                                 <Color>#282828</Color>
@@ -2074,7 +2074,7 @@
                             <TextRun>
                               <Value>:الجوال</Value>
                               <Style>
-                                <FontFamily>GE Flow</FontFamily>
+                                 
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Normal</FontWeight>
                                 <Color>#282828</Color>
@@ -2201,7 +2201,7 @@
                             <TextRun>
                               <Value>:الجوال</Value>
                               <Style>
-                                <FontFamily>GE Flow</FontFamily>
+                                 
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Normal</FontWeight>
                                 <Color>#282828</Color>
@@ -2338,7 +2338,7 @@
                             <TextRun>
                               <Value>تفاصيل السائق</Value>
                               <Style>
-                                <FontFamily>GE Flow</FontFamily>
+                                 
                                 <FontWeight>Bold</FontWeight>
                                 <Color>White</Color>
                               </Style>
@@ -2430,7 +2430,7 @@
                             <TextRun>
                               <Value>تفاصيل الشاحنة</Value>
                               <Style>
-                                <FontFamily>GE Flow</FontFamily>
+                                 
                                 <FontWeight>Bold</FontWeight>
                                 <Color>White</Color>
                               </Style>
@@ -2598,7 +2598,7 @@
                             <TextRun>
                               <Value>:اسم السائق</Value>
                               <Style>
-                                <FontFamily>GE Flow</FontFamily>
+                                 
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Normal</FontWeight>
                                 <Color>#282828</Color>
@@ -2712,7 +2712,7 @@
                             <TextRun>
                               <Value>:نوع الشاحنة</Value>
                               <Style>
-                                <FontFamily>GE Flow</FontFamily>
+                                 
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Normal</FontWeight>
                                 <Color>#282828</Color>
@@ -2831,7 +2831,7 @@
                             <TextRun>
                               <Value>:رقم إقامة/هوية السائق</Value>
                               <Style>
-                                <FontFamily>GE Flow</FontFamily>
+                                 
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Normal</FontWeight>
                                 <Color>#282828</Color>
@@ -2960,7 +2960,7 @@
                             <TextRun>
                               <Value>:رقم لوحة الشاحنة</Value>
                               <Style>
-                                <FontFamily>GE Flow</FontFamily>
+                                 
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Normal</FontWeight>
                                 <Color>#282828</Color>
@@ -3147,7 +3147,7 @@
                               <Value>وﺻﻒ اﻟﻤﻨﺘﺞ</Value>
                               <Style>
                                 <FontStyle>Normal</FontStyle>
-                                <FontFamily>GE Flow</FontFamily>
+                                 
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Medium</FontWeight>
                                 <TextDecoration>None</TextDecoration>
@@ -3228,7 +3228,7 @@
                             <TextRun>
                               <Value>الكمية</Value>
                               <Style>
-                                <FontFamily>GE Flow</FontFamily>
+                                 
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Medium</FontWeight>
                                 <TextDecoration>None</TextDecoration>
@@ -3313,7 +3313,7 @@
                               <Value>وﺣﺪة اﻟﻘﻴﺎس</Value>
                               <Style>
                                 <FontStyle>Normal</FontStyle>
-                                <FontFamily>GE Flow</FontFamily>
+                                 
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Medium</FontWeight>
                                 <TextDecoration>None</TextDecoration>
@@ -3635,7 +3635,7 @@
                             <TextRun>
                               <Value>تفاصيل البضاعة</Value>
                               <Style>
-                                <FontFamily>GE Flow</FontFamily>
+                                 
                                 <FontWeight>Bold</FontWeight>
                                 <Color>White</Color>
                               </Style>
@@ -3801,7 +3801,7 @@
                             <TextRun>
                               <Value>:نوع التعبئة</Value>
                               <Style>
-                                <FontFamily>GE Flow</FontFamily>
+                                 
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Normal</FontWeight>
                                 <Color>#282828</Color>
@@ -3914,7 +3914,7 @@
                             <TextRun>
                               <Value>:الوزن الإجمالي</Value>
                               <Style>
-                                <FontFamily>GE Flow</FontFamily>
+                                 
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Normal</FontWeight>
                                 <Color>#282828</Color>
@@ -4030,7 +4030,7 @@
                             <TextRun>
                               <Value>:عدد أنواع التعبئة</Value>
                               <Style>
-                                <FontFamily>GE Flow</FontFamily>
+                                 
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Normal</FontWeight>
                                 <Color>#282828</Color>
@@ -4140,7 +4140,7 @@
                             <TextRun>
                               <Value>:المرفقات</Value>
                               <Style>
-                                <FontFamily>GE Flow</FontFamily>
+                                 
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Normal</FontWeight>
                                 <Color>#282828</Color>
@@ -4255,7 +4255,7 @@
                             <TextRun>
                               <Value>:مذكرة التسليم</Value>
                               <Style>
-                                <FontFamily>GE Flow</FontFamily>
+                                 
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Normal</FontWeight>
                                 <Color>#282828</Color>
@@ -4367,7 +4367,7 @@
                             <TextRun>
                               <Value>:نوع البضاعة</Value>
                               <Style>
-                                <FontFamily>GE Flow</FontFamily>
+                                 
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Normal</FontWeight>
                                 <Color>#282828</Color>
@@ -4444,7 +4444,7 @@
               <TextRun>
                 <Value>:تاريخ و وقت الإستلام</Value>
                 <Style>
-                  <FontFamily>GE Flow</FontFamily>
+                   
                   <FontSize>9pt</FontSize>
                   <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
@@ -4635,7 +4635,7 @@
                             <TextRun>
                               <Value>اسم المنشأة</Value>
                               <Style>
-                                <FontFamily>GE Flow</FontFamily>
+                                 
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Normal</FontWeight>
                                 <Color>#282828</Color>
@@ -4709,7 +4709,7 @@
                             <TextRun>
                               <Value>الدولة</Value>
                               <Style>
-                                <FontFamily>GE Flow</FontFamily>
+                                 
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Normal</FontWeight>
                                 <Color>#282828</Color>
@@ -4783,7 +4783,7 @@
                             <TextRun>
                               <Value>المدينة</Value>
                               <Style>
-                                <FontFamily>GE Flow</FontFamily>
+                                 
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Normal</FontWeight>
                                 <Color>#282828</Color>
@@ -4859,7 +4859,7 @@
                             <TextRun>
                               <Value>المنطقة</Value>
                               <Style>
-                                <FontFamily>GE Flow</FontFamily>
+                                 
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Normal</FontWeight>
                                 <Color>#282828</Color>
@@ -5197,7 +5197,7 @@
                             <TextRun>
                               <Value>موقع التسليم</Value>
                               <Style>
-                                <FontFamily>GE Flow</FontFamily>
+                                 
                                 <FontSize>12pt</FontSize>
                                 <FontWeight>Normal</FontWeight>
                                 <Color>White</Color>
@@ -5264,7 +5264,7 @@
               <TextRun>
                 <Value>:تاريخ الطباعة</Value>
                 <Style>
-                  <FontFamily>GE Flow</FontFamily>
+                   
                   <FontSize>8pt</FontSize>
                   <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
@@ -5443,7 +5443,7 @@
               <TextRun>
                 <Value xml:space="preserve"> </Value>
                 <Style>
-                  <FontFamily>GE Flow</FontFamily>
+                   
                   <FontSize>8pt</FontSize>
                   <Color>#282828</Color>
                 </Style>
@@ -5451,7 +5451,7 @@
               <TextRun>
                 <Value>السائق </Value>
                 <Style>
-                  <FontFamily>GE Flow</FontFamily>
+                   
                   <FontSize>8pt</FontSize>
                   <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
@@ -5509,7 +5509,7 @@
               <TextRun>
                 <Value xml:space="preserve"> </Value>
                 <Style>
-                  <FontFamily>GE Flow</FontFamily>
+                   
                   <FontSize>8pt</FontSize>
                   <Color>#282828</Color>
                 </Style>
@@ -5517,7 +5517,7 @@
               <TextRun>
                 <Value>المستلم</Value>
                 <Style>
-                  <FontFamily>GE Flow</FontFamily>
+                   
                   <FontSize>8pt</FontSize>
                   <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
@@ -5575,7 +5575,7 @@
               <TextRun>
                 <Value>المرسل</Value>
                 <Style>
-                  <FontFamily>GE Flow</FontFamily>
+                   
                   <FontSize>8pt</FontSize>
                   <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
@@ -5615,7 +5615,7 @@
               <TextRun>
                 <Value>:ملاحظات</Value>
                 <Style>
-                  <FontFamily>GE Flow</FontFamily>
+                   
                   <FontSize>9pt</FontSize>
                   <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
@@ -5692,7 +5692,7 @@
               <TextRun>
                 <Value>:التواقيع</Value>
                 <Style>
-                  <FontFamily>GE Flow</FontFamily>
+                   
                   <FontSize>9pt</FontSize>
                   <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
@@ -5796,7 +5796,7 @@
                 <TextRun>
                   <Value xml:space="preserve"> </Value>
                   <Style>
-                    <FontFamily>GE Flow</FontFamily>
+                     
                     <FontSize>9pt</FontSize>
                     <FontWeight>SemiBold</FontWeight>
                     <TextDecoration>None</TextDecoration>
@@ -5818,7 +5818,7 @@
                   <Value>وثيقة شحن</Value>
                   <Style>
                     <FontStyle>Normal</FontStyle>
-                    <FontFamily>GE Flow</FontFamily>
+                     
                     <FontSize>13pt</FontSize>
                     <FontWeight>Bold</FontWeight>
                     <TextDecoration>None</TextDecoration>

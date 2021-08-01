@@ -219,7 +219,7 @@ namespace TACHYON.Configuration
                     isVisibleToClients: true, scopes: SettingScopes.All),
 
                 new SettingDefinition(themeName + "." + AppSettings.UiManagement.LeftAside.AsideSkin,
-                    GetFromAppSettings(themeName + "." + AppSettings.UiManagement.LeftAside.AsideSkin, "light"),
+                    GetFromAppSettings(themeName + "." + AppSettings.UiManagement.LeftAside.AsideSkin, "dark"),
                     isVisibleToClients: true, scopes: SettingScopes.All),
                 new SettingDefinition(themeName + "." + AppSettings.UiManagement.LeftAside.FixedAside,
                     GetFromAppSettings(themeName + "." + AppSettings.UiManagement.LeftAside.FixedAside, "true"),

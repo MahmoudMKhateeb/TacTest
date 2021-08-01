@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using TACHYON.Features;
 using TACHYON.Firebases;
 using TACHYON.Goods.GoodCategories.Dtos;
 using TACHYON.Mobile;
@@ -431,7 +432,43 @@ namespace TACHYON.Shipping.Drivers
             }
 
         }
-      
+
+
+        public async Task ResetTrip(int TripId)
+        {
+            DisableTenancyFilters();
+
+            var trip = await _ShippingRequestTrip.GetAll()
+                .WhereIf(IsEnabled(AppFeatures.Carrier), x=>x.ShippingRequestFk.CarrierTenantId==AbpSession.TenantId)
+                .WhereIf(IsEnabled(AppFeatures.TachyonDealer), x=>x.ShippingRequestFk.IsTachyonDeal==true)
+                .Include(x => x.ShippingRequestFk)
+                .Include(x => x.RoutPoints)
+                .FirstOrDefaultAsync(x => x.Id == TripId);
+            if (trip != null)
+            {
+                trip.Status = ShippingRequestTripStatus.New;
+                trip.RoutePointStatus = RoutePointStatus.StandBy;
+                trip.DriverStatus = ShippingRequestTripDriverStatus.None;
+                trip.RejectedReason = string.Empty;
+                trip.RejectReasonId = default(int?);
+                trip.RoutPoints.ToList().ForEach(item =>
+                {
+                    item.IsActive = false;
+                    item.IsComplete = false;
+                    item.Status = RoutePointStatus.StandBy;
+                });
+                var request = trip.ShippingRequestFk;
+                request.Status = ShippingRequestStatus.PostPrice;
+
+                await _shippingRequestTripTransitionRepository.DeleteAsync(x => x.ToPoint.ShippingRequestTripId == TripId);
+            }
+            else
+            {
+                throw new UserFriendlyException(L("TripCannotFound"));
+            }
+
+        }
+
         public async Task PushNotification(int id)
         {
             

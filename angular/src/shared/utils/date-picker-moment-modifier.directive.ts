@@ -33,13 +33,9 @@ export class DatePickerMomentModifierDirective implements OnDestroy, OnChanges {
 
   ngOnChanges({ date }: SimpleChanges) {
     if (date && date.currentValue && !compare(date.currentValue, date.previousValue)) {
-      setTimeout(() => {
-        this.bsDatepicker.bsValue = moment(date.currentValue).toDate();
-      }, 0);
+      this.bsDatepicker.bsValue = moment(date.currentValue).toDate();
     } else {
-      setTimeout(() => {
-        this.bsDatepicker.bsValue = null;
-      }, 0);
+      this.bsDatepicker.bsValue = null;
     }
   }
 }

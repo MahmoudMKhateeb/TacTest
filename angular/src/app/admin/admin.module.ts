@@ -132,11 +132,10 @@ import { NgbDateParserFormatter, NgbModule } from '@node_modules/@ng-bootstrap/n
 import { DriversComponent } from './users/drivers/drivers.component';
 import { CreateOrEditDriverModalComponent } from '@app/admin/users/drivers/create-or-edit-driver-modal.component';
 import { ViewOrEditEntityDocumentsModalComponent } from '@app/main/documentFiles/documentFiles/documentFilesViewComponents/view-or-edit-entity-documents-modal.componant';
-import { CreateOrEditDocumentFileModalComponent } from '@app/main/documentFiles/documentFiles/create-or-edit-documentFile-modal.component';
 import { CustomNgbDateParserFormatter } from '@app/shared/common/hijri-gregorian-datepicker/CustomNgbDateParserFormatter';
-import { ViewRejectionReasonModalComponent } from './required-document-files/view-rejection-reason-modal.component';
 import { waybillsComponent } from './waybills/waybills';
 import { NotRequiredDocumentFilesComponent } from '@app/admin/not-required-document-files/not-required-document-files.component';
+import { DevExtremeModule } from '@node_modules/devextreme-angular';
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   // suppressScrollX: true
 };
@@ -173,6 +172,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     DropdownModule,
     AppBsModalModule,
     NgbModule,
+    DevExtremeModule,
   ],
   declarations: [
     VasesComponent,
@@ -183,8 +183,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 
     ViewTermAndConditionTranslationModalComponent,
     CreateOrEditTermAndConditionTranslationModalComponent,
-    ViewRejectionReasonModalComponent,
-    CreateOrEditDocumentFileModalComponent,
     ViewOrEditEntityDocumentsModalComponent,
     ShippingRequestStatusesComponent,
     ViewShippingRequestStatusModalComponent,
@@ -278,13 +276,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     CreateOrEditDriverModalComponent,
   ],
 
-  exports: [
-    AddMemberModalComponent,
-    AddRoleModalComponent,
-    CreateOrEditDocumentFileModalComponent,
-    ViewRejectionReasonModalComponent,
-    ViewOrEditEntityDocumentsModalComponent,
-  ],
+  exports: [AddMemberModalComponent, AddRoleModalComponent, ViewOrEditEntityDocumentsModalComponent],
   providers: [
     ImpersonationService,
     TreeDragDropService,

@@ -5,19 +5,20 @@ using System.Text;
 
 namespace TACHYON.Invoices.Balances.Dto
 {
-    public class GetAllBalanceRechargeInput : PagedAndSortedResultRequestDto
+    public class GetAllBalanceRechargeInput
     {
-        public int? TenantId { get; set; }
+        public string LoadOptions { get; set; }
+        //public int? TenantId { get; set; }
 
-        public DateTime? FromDate { get; set; }
+        //public DateTime? FromDate { get; set; }
 
-        public DateTime? ToDate { get; set; }
+        //public DateTime? ToDate { get; set; }
 
-        public string ReferenceNo { get; set; }
+        //public string ReferenceNo { get; set; }
 
-        public decimal? minLongitude { get; set; }
+        //public decimal? minLongitude { get; set; }
 
-        public decimal? maxLongitude { get; set; }
+        //public decimal? maxLongitude { get; set; }
 
 
     }

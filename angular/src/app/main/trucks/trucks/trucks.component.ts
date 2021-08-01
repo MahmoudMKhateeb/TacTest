@@ -1,6 +1,6 @@
 ﻿import { Component, Injector, ViewEncapsulation, ViewChild, ChangeDetectorRef, AfterViewInit, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TrucksServiceProxy, TruckDto, DocumentsEntitiesEnum } from '@shared/service-proxies/service-proxies';
+import { TrucksServiceProxy, TruckDto, DocumentsEntitiesEnum, CreateOrEditDocumentTypeDto } from '@shared/service-proxies/service-proxies';
 import { NotifyService } from 'abp-ng2-module';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { TokenAuthServiceProxy } from '@shared/service-proxies/service-proxies';
@@ -22,6 +22,8 @@ import { FileUpload } from '@node_modules/primeng/fileupload';
 import { ViewOrEditEntityDocumentsModalComponent } from '@app/main/documentFiles/documentFiles/documentFilesViewComponents/view-or-edit-entity-documents-modal.componant';
 import { TruckUserLookupTableModalComponent } from './truck-user-lookup-table-modal.component';
 import { AppSessionService } from '@shared/common/session/app-session.service';
+import CustomStore from '@node_modules/devextreme/data/custom_store';
+import { LoadOptions } from '@node_modules/devextreme/data/load_options';
 
 @Component({
   templateUrl: './trucks.component.html',
@@ -36,8 +38,6 @@ export class TrucksComponent extends AppComponentBase implements OnInit, AfterVi
   @ViewChild('viewOrEditEntityDocumentsModal', { static: false }) viewOrEditEntityDocumentsModal: ViewOrEditEntityDocumentsModalComponent;
   @ViewChild('truckUserLookupTableModal', { static: true }) truckUserLookupTableModal: TruckUserLookupTableModalComponent;
 
-  @ViewChild('dataTable', { static: true }) dataTable: Table;
-  @ViewChild('paginator', { static: true }) paginator: Paginator;
   @ViewChild('ExcelFileUpload', { static: false }) excelFileUpload: FileUpload;
 
   advancedFiltersAreShown = false;
@@ -54,6 +54,7 @@ export class TrucksComponent extends AppComponentBase implements OnInit, AfterVi
   isArabic = false;
   uploadUrl: string;
   documentsEntitiesEnum = DocumentsEntitiesEnum;
+  dataSource: any = {};
 
   constructor(
     injector: Injector,
@@ -72,11 +73,10 @@ export class TrucksComponent extends AppComponentBase implements OnInit, AfterVi
   ngOnInit(): void {
     this.entityHistoryEnabled = this.setIsEntityHistoryEnabled();
     this.isArabic = abp.localization.currentLanguage.name.startsWith('ar');
+    this.getAllTrucks();
   }
 
-  ngAfterViewInit(): void {
-    this.primengTableHelper.adjustScroll(this.dataTable);
-  }
+  ngAfterViewInit(): void {}
 
   private setIsEntityHistoryEnabled(): boolean {
     let customSettings = (abp as any).custom;
@@ -88,40 +88,7 @@ export class TrucksComponent extends AppComponentBase implements OnInit, AfterVi
     );
   }
 
-  getTrucks(event?: LazyLoadEvent) {
-    // this.reloadPage();
-
-    this.changeDetectorRef.detectChanges();
-    if (this.primengTableHelper.shouldResetPaging(event)) {
-      this.paginator.changePage(0);
-      return;
-    }
-
-    this.primengTableHelper.showLoadingIndicator();
-
-    this._trucksServiceProxy
-      .getAll(
-        this.filterText,
-        this.plateNumberFilter,
-        this.modelNameFilter,
-        this.modelYearFilter,
-        this.isAttachableFilter,
-        this.trucksTypeDisplayNameFilter,
-        this.truckStatusDisplayNameFilter,
-        this.primengTableHelper.getSorting(this.dataTable),
-        this.primengTableHelper.getSkipCount(this.paginator, event),
-        this.primengTableHelper.getMaxResultCount(this.paginator, event)
-      )
-      .subscribe((result) => {
-        this.primengTableHelper.totalRecordsCount = result.totalCount;
-        this.primengTableHelper.records = result.items;
-        this.primengTableHelper.hideLoadingIndicator();
-      });
-  }
-
-  reloadPage(): void {
-    this.paginator.changePage(this.paginator.getPage());
-  }
+  reloadPage(): void {}
 
   showTruckDocuments(truckId) {
     this.viewOrEditEntityDocumentsModal.show(truckId, DocumentsEntitiesEnum.Truck);
@@ -191,5 +158,31 @@ export class TrucksComponent extends AppComponentBase implements OnInit, AfterVi
     this.truckUserLookupTableModal.id = null;
     this.truckUserLookupTableModal.displayName = '';
     this.truckUserLookupTableModal.show();
+  }
+
+  getAllTrucks() {
+    let self = this;
+
+    this.dataSource = {};
+    this.dataSource.store = new CustomStore({
+      load(loadOptions: LoadOptions) {
+        console.log(JSON.stringify(loadOptions));
+        return self._trucksServiceProxy
+          .getAll(JSON.stringify(loadOptions))
+          .toPromise()
+          .then((response) => {
+            return {
+              data: response.data,
+              totalCount: response.totalCount,
+              summary: response.summary,
+              groupCount: response.groupCount,
+            };
+          })
+          .catch((error) => {
+            console.log(error);
+            throw new Error('Data Loading Error');
+          });
+      },
+    });
   }
 }

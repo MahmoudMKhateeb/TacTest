@@ -16,6 +16,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public DateTime? BidStartDate { get; set; }
         public DateTime? BidEndDate { get; set; }
         public virtual bool IsTachyonDeal { get; set; }
+        public bool IsDirectRequest { get; set; }
         [Required]
         public int ShippingTypeId { get; set; }
         [Required]

@@ -19,6 +19,8 @@ namespace TACHYON.Web.Startup
                 {
                     opt.AddServerHeader = false;
                     opt.Limits.MaxRequestLineSize = 16 * 1024;
+                    opt.AllowSynchronousIO = true;
+
                 })
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIIS()

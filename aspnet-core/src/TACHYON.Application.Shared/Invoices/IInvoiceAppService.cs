@@ -1,5 +1,6 @@
 ﻿using Abp.Application.Services;
 using Abp.Application.Services.Dto;
+using DevExtreme.AspNet.Data.ResponseModel;
 using System.Threading.Tasks;
 using TACHYON.Dto;
 using TACHYON.Invoices.Dto;
@@ -8,7 +9,7 @@ namespace TACHYON.Invoices
 {
     public interface IInvoiceAppService : IApplicationService
     {
-        Task<PagedResultDto<InvoiceListDto>> GetAll(InvoiceFilterInput input);
+        Task<LoadResult> GetAll(string filter);
 
         Task<InvoiceInfoDto> GetById(EntityDto input);
 

@@ -13,13 +13,14 @@ using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Abp.Runtime.Session;
 using Abp.UI;
+using AutoMapper.QueryableExtensions;
+using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
 using TACHYON.Authorization;
 using TACHYON.Authorization.Users;
 using TACHYON.Documents.DocumentFiles.Dtos;
 using TACHYON.Documents.DocumentFiles.Exporting;
 using TACHYON.Documents.DocumentsEntities;
-using TACHYON.Documents.DocumentsEntities.Dtos;
 using TACHYON.Documents.DocumentTypes;
 using TACHYON.Documents.DocumentTypes.Dtos;
 using TACHYON.Dto;
@@ -29,6 +30,7 @@ using TACHYON.Routs.RoutSteps;
 using TACHYON.Storage;
 using TACHYON.Trailers;
 using TACHYON.Trucks;
+
 
 namespace TACHYON.Documents.DocumentFiles
 {
@@ -92,109 +94,43 @@ namespace TACHYON.Documents.DocumentFiles
         private readonly IAppNotifier _appNotifier;
         private readonly IUserEmailer _userEmailer;
 
-        public async Task<PagedResultDto<GetDocumentFileForViewDto>> GetAll(GetAllDocumentFilesInput input)
+        public async Task<LoadResult> GetAllTenantsSubmittedDocuments(GetAllForListDocumentFilesInput input)
         {
             DisableTenancyFiltersIfHost();
+
             var filteredDocumentFiles = _documentFileRepository.GetAll()
-                .Include(e => e.DocumentTypeFk)
-                .ThenInclude(x => x.Translations)
-                .Include(e => e.TruckFk)
-                .Include(e => e.TrailerFk)
-                .Include(e => e.UserFk)
-                .Include(e => e.TenantFk)
-                .WhereIf(!AbpSession.TenantId.HasValue, e => e.DocumentTypeFk.DocumentsEntityId == (int)DocumentsEntitiesEnum.Tenant && (e.DocumentTypeFk.DocumentRelatedWithId.HasValue == false || e.DocumentTypeFk.DocumentRelatedWithId == AbpSession.TenantId))
-                .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Name.Contains(input.Filter)
-                || e.Extn.Contains(input.Filter) || e.Number.Contains(input.Filter) ||
-                //If the filter related to tenant name, the rows that contains not null tenant Id should be returned and contain tenancy name
-                (e.TenantId != null && e.TenantFk.TenancyName.Contains(input.Filter)) ||
-                //If Filter text equals Host so the null rows tenant Id only should be returned
-                (e.TenantId == null && input.Filter.ToLower() == "host"))
-                //.WhereIf(!string.IsNullOrWhiteSpace(input.NameFilter), e => e.Name == input.NameFilter)
-                //.WhereIf(!string.IsNullOrWhiteSpace(input.ExtnFilter), e => e.Extn == input.ExtnFilter)
-                //.WhereIf(!string.IsNullOrWhiteSpace(input.BinaryObjectIdFilter.ToString()), e => e.BinaryObjectId.ToString() == input.BinaryObjectIdFilter.ToString())
-                .WhereIf(input.MinExpirationDateFilter != null, e => e.ExpirationDate >= input.MinExpirationDateFilter)
-                .WhereIf(input.MaxExpirationDateFilter != null, e => e.ExpirationDate <= input.MaxExpirationDateFilter)
-                //.WhereIf(input.IsAcceptedFilter.HasValue, e => e.IsAccepted == input.IsAcceptedFilter.Value)
-                .WhereIf(!string.IsNullOrWhiteSpace(input.DocumentTypeDisplayNameFilter), e => e.DocumentTypeFk != null && e.DocumentTypeFk.DisplayName == input.DocumentTypeDisplayNameFilter)
-                .WhereIf(input.TruckIdFilter != null, e => e.TruckFk.Id == input.TruckIdFilter)
+                .Where(e => e.DocumentTypeFk.DocumentsEntityId == (int)DocumentsEntitiesEnum.Tenant)
+                .ProjectTo<GetAllTenantsSubmittedDocumentsDto>(AutoMapperConfigurationProvider);
 
-                .WhereIf(input.EntityIdFilter != null && input.DocumentEntityFilter == DocumentsEntitiesEnum.Truck, e => e.TruckFk.Id == long.Parse(input.EntityIdFilter))
-                .WhereIf(input.EntityIdFilter != null && input.DocumentEntityFilter == DocumentsEntitiesEnum.Driver, e => e.UserFk.Id == long.Parse(input.EntityIdFilter))
-
-                //.WhereIf(!string.IsNullOrWhiteSpace(input.TruckIdFilter), e => e.TruckFk != null && e.TruckFk.Id == input.TruckIdFilter)
-                .WhereIf(!string.IsNullOrWhiteSpace(input.TrailerTrailerCodeFilter), e => e.TrailerFk != null && e.TrailerFk.TrailerCode == input.TrailerTrailerCodeFilter)
-                .WhereIf(input.DocumentEntityFilter.HasValue, e => e.DocumentTypeFk.DocumentsEntityId == (int)input.DocumentEntityFilter)
-                .WhereIf(!string.IsNullOrWhiteSpace(input.UserNameFilter), e => e.UserFk != null && e.UserFk.Name == input.UserNameFilter);
-            //.WhereIf(!string.IsNullOrWhiteSpace(input.RoutStepDisplayNameFilter), e => e.RoutStepFk != null && e.RoutStepFk.DisplayName == input.RoutStepDisplayNameFilter);
-
-            var pagedAndFilteredDocumentFiles = filteredDocumentFiles
-                .OrderBy(input.Sorting ?? "id asc")
-                .PageBy(input);
-
-            var documentFiles = await (from o in pagedAndFilteredDocumentFiles
-                                       join o1 in _lookupDocumentTypeRepository.GetAll() on o.DocumentTypeId equals o1.Id into j1
-                                       from s1 in j1.DefaultIfEmpty()
-                                       join o2 in _lookupTruckRepository.GetAll() on o.TruckId equals o2.Id into j2
-                                       from s2 in j2.DefaultIfEmpty()
-                                       join o3 in _lookupTrailerRepository.GetAll() on o.TrailerId equals o3.Id into j3
-                                       from s3 in j3.DefaultIfEmpty()
-                                       join o4 in _lookupUserRepository.GetAll() on o.UserId equals o4.Id into j4
-                                       from s4 in j4.DefaultIfEmpty()
-                                       select new
-                                       {
-                                           DocumentFile = o,
-                                           User = s4,
-                                           SubmitterTenatTenancyName = o.TenantId == null ? "Host" : o.TenantFk.TenancyName.ToString(),
-                                           //s6 == null || s6.TenancyName == null ? "Host" : s6.TenancyName.ToString(),
-                                           HasDate = o.DocumentTypeFk.HasExpirationDate,
-                                           HasNumber = o.DocumentTypeFk.HasNumber,
-                                           Number = o.Number,
-                                           DocumentEntityDisplayName = (o.DocumentTypeFk.DocumentsEntityFk) == null ? "" : o.DocumentTypeFk.DocumentsEntityFk.DisplayName,
-                                           DocumentTypeDisplayName = s1 == null || s1.DisplayName == null ? "" : s1.DisplayName,
-                                           TruckId = (o.TruckFk == null ? (long?)null : o.TruckFk.Id).ToString(),
-                                           PlateNumber = (o.TruckFk == null ? "" : o.TruckFk.PlateNumber),
-                                           TrailerTrailerCode = s3 == null || s3.TrailerCode == null ? "" : s3.TrailerCode,
-                                           UserName = s4 == null || s4.Name == null ? "" : s4.UserName,
-                                       }).ToListAsync();
-
-            var result = documentFiles.Select(x => new GetDocumentFileForViewDto
-            {
-                DocumentFile = ObjectMapper.Map<DocumentFileDto>(x.DocumentFile),
-                DocumentType = ObjectMapper.Map<DocumentTypeDto>(x.DocumentFile.DocumentTypeFk),
-                User = ObjectMapper.Map<UserInGetDocumentFileForViewDto>(x.User),
-                SubmitterTenatTenancyName = x.SubmitterTenatTenancyName,
-                //s6 == null || s6.TenancyName == null ? "Host" : s6.TenancyName.ToString(),
-                //HasDate = x.HasDate,
-                //HasNumber = x.HasDate,
-                //Number = x.Number,
-                DocumentEntityDisplayName = x.DocumentEntityDisplayName,
-                //DocumentTypeDisplayName = x.DocumentTypeDisplayName,
-                TruckId = x.TruckId,
-                PlateNumber = x.PlateNumber,
-                TrailerTrailerCode = x.TrailerTrailerCode,
-                UserName = x.UserName,
-            }).ToList();
-
-            //GetDocumentFileForViewDto
-            if (AbpSession.TenantId.HasValue)
-            {
-                return new PagedResultDto<GetDocumentFileForViewDto>(
-                    await filteredDocumentFiles.CountAsync(),
-                   result
-                );
-            }
-
-            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant))
-            {
-                return new PagedResultDto<GetDocumentFileForViewDto>(
-                    await filteredDocumentFiles.CountAsync(),
-                    result
-
-                );
-            }
+            var result = await LoadResultAsync(filteredDocumentFiles, input.Filter);
+            return result;
         }
+        public async Task<LoadResult> GetAllTrucksSubmittedDocuments(GetAllTrucksSubmittedDocumentsInput input)
+        {
+            DisableTenancyFiltersIfHost();
 
+            var filteredDocumentFiles = _documentFileRepository.GetAll()
+                .Where(e => e.DocumentTypeFk.DocumentsEntityId == (int)DocumentsEntitiesEnum.Truck)
+                .WhereIf(input.TruckId.HasValue, x => x.TruckId == input.TruckId)
+                .ProjectTo<GetAllTrucksSubmittedDocumentsDto>(AutoMapperConfigurationProvider);
 
+            var result = await LoadResultAsync(filteredDocumentFiles, input.Filter);
+            return result;
+        }
+        public async Task<LoadResult> GetAllDriversSubmittedDocuments(GetAllDriversSubmittedDocumentsInput input)
+        {
+
+            DisableTenancyFiltersIfHost();
+
+            var filteredDocumentFiles = _documentFileRepository.GetAll()
+                .Where(e => e.DocumentTypeFk.DocumentsEntityId == (int)DocumentsEntitiesEnum.Driver)
+                .WhereIf(input.DriverId.HasValue, x => x.UserId == input.DriverId)
+                .ProjectTo<GetAllDriversSubmittedDocumentsDto>(AutoMapperConfigurationProvider);
+
+            var result = await LoadResultAsync(filteredDocumentFiles, input.Filter);
+
+            return result;
+        }
         public async Task<GetDocumentFileForViewDto> GetDocumentFileForView(Guid id)
         {
             var documentFile = await _documentFileRepository.GetAsync(id);
@@ -241,8 +177,6 @@ namespace TACHYON.Documents.DocumentFiles
                 return await _GetDocumentFileForEdit(input);
             }
         }
-
-
 
         //todo add this action to domain service -- trucksServers used it
         public async Task CreateOrEdit(CreateOrEditDocumentFileDto input)
@@ -559,7 +493,11 @@ namespace TACHYON.Documents.DocumentFiles
                 .Where(x => x.DocumentsEntityId == (int)documentsEntityId)
                 .ToListAsync();
 
-                return list.Select(x => new CreateOrEditDocumentFileDto { DocumentTypeId = x.Id, DocumentTypeDto = ObjectMapper.Map<DocumentTypeDto>(x) }).ToList();
+                return list.Select(x => new CreateOrEditDocumentFileDto
+                {
+                    DocumentTypeId = x.Id,
+                    DocumentTypeDto = ObjectMapper.Map<DocumentTypeDto>(x)
+                }).ToList();
             }
 
             var mainQuery = _documentTypeRepository.GetAll()
@@ -703,36 +641,7 @@ namespace TACHYON.Documents.DocumentFiles
 
         public async Task<bool> CheckIfMissingDocumentFiles(string entityId, DocumentsEntitiesEnum documentsEntityId)
         {
-            var result = false;
-            switch (documentsEntityId)
-            {
-                case DocumentsEntitiesEnum.Driver:
-                    {
-                        var documentTypes = await _documentTypeRepository.GetAll()
-                            .Where(doc => doc.DocumentsEntityId == (int)DocumentsEntitiesEnum.Driver).CountAsync();
-
-                        var submittedDocuments = await _documentFileRepository.GetAll()
-                            .Where(t => t.UserId == long.Parse(entityId))
-                            .CountAsync();
-                        result = documentTypes != submittedDocuments;
-                        break;
-                    }
-                case DocumentsEntitiesEnum.Truck:
-                    {
-                        var documentTypes = await _documentTypeRepository.GetAll()
-                            .Where(doc => doc.DocumentsEntityId == (int)DocumentsEntitiesEnum.Truck).CountAsync();
-
-                        var submittedDocuments = await _documentFileRepository.GetAll()
-                            .Where(t => t.TruckId == long.Parse(entityId))
-                            .CountAsync();
-                        result = documentTypes != submittedDocuments;
-                        break;
-                    }
-            }
-
-
-
-            return result;
+            return await _documentFilesManager.CheckIfMissingDocumentFiles(entityId, documentsEntityId);
         }
         public async Task<List<CreateOrEditDocumentFileDto>> GetTenantRequiredDocumentFilesTemplateForCreate()
         {

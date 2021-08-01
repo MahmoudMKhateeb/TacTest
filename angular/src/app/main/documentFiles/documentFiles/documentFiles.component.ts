@@ -5,18 +5,16 @@ import { NotifyService } from 'abp-ng2-module';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { TokenAuthServiceProxy } from '@shared/service-proxies/service-proxies';
 import { CreateOrEditDocumentFileModalComponent } from './create-or-edit-documentFile-modal.component';
-
 import { ViewDocumentFileModalComponent } from './view-documentFile-modal.component';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
-import { Table } from 'primeng/table';
-import { Paginator } from 'primeng/paginator';
-import { LazyLoadEvent } from 'primeng/api';
 import { FileDownloadService } from '@shared/utils/file-download.service';
 import { EntityTypeHistoryModalComponent } from '@app/shared/common/entityHistory/entity-type-history-modal.component';
 import { DateFormatterService } from '@app/shared/common/hijri-gregorian-datepicker/date-formatter.service';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import session = abp.session;
+import CustomStore from '@node_modules/devextreme/data/custom_store';
+import { LoadOptions } from '@node_modules/devextreme/data/load_options';
 
 @Component({
   templateUrl: './documentFiles.component.html',
@@ -24,38 +22,27 @@ import session = abp.session;
   animations: [appModuleAnimation()],
   providers: [DateFormatterService],
 })
-export class DocumentFilesComponent extends AppComponentBase implements OnInit, AfterViewInit {
+export class DocumentFilesComponent extends AppComponentBase implements OnInit {
   @ViewChild('entityTypeHistoryModal', { static: true }) entityTypeHistoryModal: EntityTypeHistoryModalComponent;
   @ViewChild('createOrEditDocumentFileModal', { static: true }) createOrEditDocumentFileModal: CreateOrEditDocumentFileModalComponent;
   @ViewChild('viewDocumentFileModalComponent', { static: true }) viewDocumentFileModal: ViewDocumentFileModalComponent;
 
-  @ViewChild('dataTable', { static: true }) dataTable: Table;
-  @ViewChild('paginator', { static: true }) paginator: Paginator;
-
-  advancedFiltersAreShown = false;
-  filterText = '';
-  nameFilter = '';
-  extnFilter = '';
-  binaryObjectIdFilter = '';
-  maxExpirationDateFilter: moment.Moment;
-  minExpirationDateFilter: moment.Moment;
-  isAcceptedFilter = false;
-  documentTypeDisplayNameFilter = '';
-  truckIdFilter: number;
-  entityIdFilter = '';
-  trailerTrailerCodeFilter = '';
-  userNameFilter = '';
   isHost = true;
-  routStepDisplayNameFilter = '';
   todayGregorian = this.dateFormatterService.GetTodayGregorian();
   entityType = DocumentsEntitiesEnum.Tenant;
   entityTypesList: SelectItemDto[] = [];
-  documentsEntitiesEnum = DocumentsEntitiesEnum;
 
   _entityTypeFullName = 'TACHYON.Documents.DocumentFiles.DocumentFile';
   entityHistoryEnabled = false;
+  entityIdFilter = '';
 
   todayMoment = this.dateFormatterService.NgbDateStructToMoment(this.todayGregorian);
+  statuses: any[];
+  items: any[] = [];
+
+  // ADDED DEVEXTREME GRID
+  dataSource: any = {};
+  popupPosition = { of: window, at: 'top', my: 'top', offset: { y: 10 } };
 
   constructor(
     injector: Injector,
@@ -69,8 +56,9 @@ export class DocumentFilesComponent extends AppComponentBase implements OnInit, 
   }
 
   ngOnInit(): void {
+    this.getDocumentFiles();
+
     this.isHost = session.tenantId == null;
-    this.entityType = DocumentsEntitiesEnum.Tenant;
 
     this._documentFilesServiceProxy.getDocumentEntitiesForTableDropdown().subscribe((res) => {
       this.entityTypesList = res;
@@ -79,8 +67,29 @@ export class DocumentFilesComponent extends AppComponentBase implements OnInit, 
     this.entityHistoryEnabled = this.setIsEntityHistoryEnabled();
   }
 
-  ngAfterViewInit(): void {
-    this.primengTableHelper.adjustScroll(this.dataTable);
+  getDocumentFiles() {
+    let self = this;
+
+    this.dataSource = {};
+    this.dataSource.store = new CustomStore({
+      load(loadOptions: LoadOptions) {
+        return self._documentFilesServiceProxy
+          .getAllTenantsSubmittedDocuments(JSON.stringify(loadOptions))
+          .toPromise()
+          .then((response) => {
+            return {
+              data: response.data,
+              totalCount: response.totalCount,
+              summary: response.summary,
+              groupCount: response.groupCount,
+            };
+          })
+          .catch((error) => {
+            console.log(error);
+            throw new Error('Data Loading Error');
+          });
+      },
+    });
   }
 
   private setIsEntityHistoryEnabled(): boolean {
@@ -93,47 +102,9 @@ export class DocumentFilesComponent extends AppComponentBase implements OnInit, 
     );
   }
 
-  getDocumentFiles(event?: LazyLoadEvent) {
-    if (this.primengTableHelper.shouldResetPaging(event)) {
-      this.paginator.changePage(0);
-      return;
-    }
-
-    this.primengTableHelper.showLoadingIndicator();
-    this._documentFilesServiceProxy
-      .getAll(
-        this.filterText,
-        // this.nameFilter,
-        // this.extnFilter,
-        // this.binaryObjectIdFilter,
-        this.maxExpirationDateFilter,
-        this.minExpirationDateFilter,
-        // this.isAcceptedFilter,
-        this.documentTypeDisplayNameFilter,
-        this.entityType,
-        this.truckIdFilter,
-        this.entityIdFilter,
-        this.trailerTrailerCodeFilter,
-        this.userNameFilter,
-        // this.routStepDisplayNameFilter,
-        this.primengTableHelper.getSorting(this.dataTable),
-        this.primengTableHelper.getSkipCount(this.paginator, event),
-        this.primengTableHelper.getMaxResultCount(this.paginator, event)
-      )
-      .subscribe((result) => {
-        this.primengTableHelper.totalRecordsCount = result.totalCount;
-        this.primengTableHelper.records = result.items;
-        this.primengTableHelper.hideLoadingIndicator();
-      });
-  }
-
   reloadPage(): void {
-    this.paginator.changePage(this.paginator.getPage());
+    this.getDocumentFiles();
   }
-
-  // createDocumentFile(): void {
-  //   this.createOrEditDocumentFileModal.show();
-  // }
 
   showHistory(documentFile: DocumentFileDto): void {
     this.entityTypeHistoryModal.show({
@@ -154,27 +125,6 @@ export class DocumentFilesComponent extends AppComponentBase implements OnInit, 
     });
   }
 
-  // exportToExcel(): void {
-  //   this._documentFilesServiceProxy
-  //     .getDocumentFilesToExcel(
-  //       this.filterText,
-  //       this.nameFilter,
-  //       this.extnFilter,
-  //       this.binaryObjectIdFilter,
-  //       this.maxExpirationDateFilter,
-  //       this.minExpirationDateFilter,
-  //       this.isAcceptedFilter,
-  //       this.documentTypeDisplayNameFilter,
-  //       this.truckPlateNumberFilter,
-  //       this.trailerTrailerCodeFilter,
-  //       this.userNameFilter,
-  //       this.routStepDisplayNameFilter
-  //     )
-  //     .subscribe((result) => {
-  //       this._fileDownloadService.downloadTempFile(result);
-  //     });
-  // }
-
   downloadDocument(documentFile: DocumentFileDto) {
     this._documentFilesServiceProxy.getDocumentFileDto(documentFile.id).subscribe((result) => {
       this._fileDownloadService.downloadTempFile(result);
@@ -185,15 +135,5 @@ export class DocumentFilesComponent extends AppComponentBase implements OnInit, 
       this.reloadPage();
       this.notify.success(this.l('SuccessfullyAccepted'));
     });
-  }
-
-  SwitchEntityType(type) {
-    this.entityType = <DocumentsEntitiesEnum>type;
-    console.log('type', type);
-    this.getDocumentFiles();
-  }
-  documentsEntitiesEnumKeys(): Array<string> {
-    var keys = Object.keys(this.documentsEntitiesEnum);
-    return keys.slice(keys.length / 2);
   }
 }

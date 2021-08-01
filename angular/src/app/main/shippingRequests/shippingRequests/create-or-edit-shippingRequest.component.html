@@ -62,7 +62,7 @@
                               (change)="trucksTypeSelectChange(shippingRequest.trucksTypeId)"
                             >
                               <option [ngValue]="null">{{ l('SelectaTruckType') }}</option>
-                              <option *ngFor="let item of allTrucksTypes" value="{{ item.id }}">{{ item.displayName }} </option>
+                              <option *ngFor="let item of allTrucksTypes" value="{{ item.id }}">{{ item.displayName }}</option>
                             </select>
                           </div>
                         </div>
@@ -93,7 +93,7 @@
                             [class.is-valid]="allCapacities && Capacity.touched && Capacity.valid"
                           >
                             <option [ngValue]="null">{{ l('SelectaCapacity') }}</option>
-                            <option *ngFor="let item of allCapacities" value="{{ item.id }}">{{ item.displayName }} </option>
+                            <option *ngFor="let item of allCapacities" value="{{ item.id }}">{{ item.displayName }}</option>
                           </select>
                         </div>
                         <span class="form-text text-muted">{{ l('SelectaCapacity') }}</span>
@@ -209,7 +209,7 @@
                             [disabled]="!allShippingTypes"
                           >
                             <option [ngValue]="null">{{ l('SelectAshippingType') }}</option>
-                            <option *ngFor="let item of allShippingTypes" value="{{ item.id }}">{{ item.displayName }} </option>
+                            <option *ngFor="let item of allShippingTypes" value="{{ item.id }}">{{ item.displayName }}</option>
                           </select>
                         </div>
                         <span class="form-text text-muted">{{ l('SelectAShippingType') }}</span>
@@ -252,7 +252,7 @@
                             [class.is-valid]="goodCategory.touched && goodCategory.valid"
                           >
                             <option [ngValue]="undefined">{{ l('SelectaGoodCategory') }}</option>
-                            <option *ngFor="let item of allGoodCategorys" value="{{ item.id }}">{{ item.displayName }} </option>
+                            <option *ngFor="let item of allGoodCategorys" value="{{ item.id }}">{{ item.displayName }}</option>
                           </select>
                         </div>
 
@@ -304,7 +304,7 @@
                               [disabled]="!allpackingTypes"
                             >
                               <option [ngValue]="null">{{ l('SelectaPackingType') }}</option>
-                              <option *ngFor="let item of allpackingTypes" value="{{ item.id }}">{{ item.displayName }} </option>
+                              <option *ngFor="let item of allpackingTypes" value="{{ item.id }}">{{ item.displayName }}</option>
                             </select>
                           </div>
                           <span class="form-text text-muted">{{ l('EnterPackingType') }}</span>
@@ -372,7 +372,7 @@
                               (ngModelChange)="validateShippingRequestType()"
                             >
                               <option value="">{{ l('SelectanOriginCity') }}</option>
-                              <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }} </option>
+                              <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }}</option>
                             </select>
                           </div>
 
@@ -410,7 +410,7 @@
 
                       <div class="col-lg-6">
                         <div class="form-group">
-                          <label><span class="required-fileds">*</span> {{ l('TripsStartDate') }}</label>
+                          <label>{{ l('TripsStartDate') }}</label>
                           <div class="input-group date">
                             <input
                               bsDatepicker
@@ -489,15 +489,17 @@
                             class="form-control"
                             type="number"
                             name="numberOfDrops"
-                            pattern="^([2-9]|1[0-9])$"
+                            [min]="1"
+                            [max]="100"
+                            pattern="^[0-9]*[1-9][0-9]*$"
                             id="numberOfDrops"
                             maxlength="2"
-                            [required]="selectedRouteType == 3"
                             [(ngModel)]="shippingRequest.numberOfDrops"
                             [class.is-invalid]="selectedRouteType == 3 && NumberOfDrops.touched && !NumberOfDrops.valid"
                             [class.is-valid]="selectedRouteType == 3 && NumberOfDrops.touched && NumberOfDrops.valid"
                             [disabled]="selectedRouteType != 3"
                             (keypress)="numberOnly($event)"
+                            [required]="selectedRouteType == 3"
                           />
                           <span class="form-text text-muted">{{ l('DescriptionNumberOfDrops') }} </span>
                         </div>

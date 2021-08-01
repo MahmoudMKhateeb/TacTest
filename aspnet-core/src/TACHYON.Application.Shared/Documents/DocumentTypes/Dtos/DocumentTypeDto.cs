@@ -24,7 +24,10 @@ namespace TACHYON.Documents.DocumentTypes.Dtos
         public bool HasExpirationDate { get; set; }
 
         public string RequiredFrom { get; set; }
+        public int DocumentsEntityId { get; set; }
+
         public string Edition { get; set; }
+        public int? EditionId { get; set; }
 
 
         public bool HasNumber { get; set; }
@@ -47,8 +50,7 @@ namespace TACHYON.Documents.DocumentTypes.Dtos
         public string TemplateContentType { get; set; }
         public Guid? TemplateId { get; set; }
         public int? DocumentRelatedWithId { get; set; }
-       /* public int? TenantId { get; set; }
-        public SelectItemDto Tenant { get; set; }*/
+        public string DocumentRelatedWithName { get; set; }
 
     }
 }

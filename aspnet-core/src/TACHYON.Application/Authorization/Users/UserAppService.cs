@@ -12,6 +12,8 @@ using Abp.Organizations;
 using Abp.Runtime.Session;
 using Abp.UI;
 using Abp.Zero.Configuration;
+using AutoMapper.QueryableExtensions;
+using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -134,7 +136,7 @@ namespace TACHYON.Authorization.Users
                     ProfilePictureId = u.ProfilePictureId,
                     Surname = u.Surname,
                     DateOfBirth = u.DateOfBirth,
-                    AccountNumber=u.AccountNumber
+                    AccountNumber = u.AccountNumber
                 })
                 .OrderBy(input.Sorting)
                 .PageBy(input)
@@ -160,6 +162,43 @@ namespace TACHYON.Authorization.Users
 
 
         }
+
+
+        public async Task<LoadResult> GetDrivers(GetDriversInput input)
+        {
+            var query = UserManager.Users
+                .Where(u => u.IsDriver)
+                .ProjectTo<DriverListDto>(AutoMapperConfigurationProvider);
+
+            var result = await LoadResultAsync(query, input.LoadOptions);
+            await FillIsMissingDocumentFiles(result);
+            return result;
+        }
+        private async Task FillIsMissingDocumentFiles(LoadResult pagedResultDto)
+        {
+            var ids = pagedResultDto.data.ToDynamicList<DriverListDto>().Select(x => x.Id);
+            var documentTypesCount = await _documentTypeRepository.GetAll()
+                .Where(doc => doc.DocumentsEntityId == (int)DocumentsEntitiesEnum.Driver)
+                .Where(x => x.IsRequired)
+                .CountAsync();
+
+            var submittedDocuments = await (_documentFileRepository.GetAll()
+                    .Where(x => ids.Contains((long)x.UserId))
+                    .Where(x => x.DocumentTypeFk.IsRequired)
+                    .GroupBy(x => x.UserId)
+                    .Select(x => new { TruckId = x.Key, IsMissingDocumentFiles = x.Count() == documentTypesCount }))
+                .ToListAsync();
+
+            foreach (DriverListDto driverListDto in pagedResultDto.data.ToDynamicList<DriverListDto>())
+            {
+                if (submittedDocuments != null)
+                {
+                    driverListDto.IsMissingDocumentFiles = submittedDocuments
+                        .FirstOrDefault(x => x.TruckId == driverListDto.Id).IsMissingDocumentFiles;
+                }
+            }
+        }
+
 
         public async Task<FileDto> GetUsersToExcel(GetUsersToExcelInput input)
         {
@@ -811,5 +850,10 @@ namespace TACHYON.Authorization.Users
                 }
             }
         }
+    }
+
+    public class GetDriversInput
+    {
+        public string LoadOptions { get; set; }
     }
 }

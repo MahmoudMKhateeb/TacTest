@@ -1,4 +1,7 @@
 ﻿using Abp.Application.Services;
+using Abp.Application.Services.Dto;
+using Abp.AutoMapper;
+using Abp.Dependency;
 using Abp.IdentityFramework;
 using Abp.MultiTenancy;
 using Abp.Runtime.Session;
@@ -12,6 +15,12 @@ using TACHYON.MultiTenancy;
 using System.Globalization;
 using System.Linq;
 using Abp.UI;
+using AutoMapper;
+using DevExtreme.AspNet.Data;
+using DevExtreme.AspNet.Data.ResponseModel;
+using Newtonsoft.Json;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace TACHYON
 {
@@ -25,10 +34,14 @@ namespace TACHYON
         public UserManager UserManager { get; set; }
 
         public string CurrentLanguage { get; set; }
+
+        protected IConfigurationProvider AutoMapperConfigurationProvider { get; set; }
         protected TACHYONAppServiceBase()
         {
             LocalizationSourceName = TACHYONConsts.LocalizationSourceName;
             CurrentLanguage = CultureInfo.CurrentCulture.Name;
+            var mapper = IocManager.Instance.Resolve<IMapper>();
+            AutoMapperConfigurationProvider = mapper.ConfigurationProvider;
         }
 
         protected virtual async Task<User> GetCurrentUserAsync()
@@ -95,5 +108,42 @@ namespace TACHYON
             throw new UserFriendlyException("YouDoNotHavePermissionToAccessThePage");
         }
 
+
+        public  async Task<LoadResult> LoadResultAsync<T>(IQueryable<T> query, string filter)
+        {
+            DataSourceLoadOptionsBase dataSourceLoadOptionsBase = JsonConvert.DeserializeObject<DataSourceLoadOptionsBase>(filter);
+            return await DataSourceLoader.LoadAsync(query, dataSourceLoadOptionsBase);
+        }
+
+
+
+
+
+        /// <summary>
+        /// Take all data with 0 Skip 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query"></param>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        public static async Task<PagedResultDto<T>> LoadResultWithoutPagingAsync<T>(IQueryable<T> query, string filter)
+        {
+            DataSourceLoadOptionsBase dataSourceLoadOptionsBase =
+                JsonConvert.DeserializeObject<DataSourceLoadOptionsBase>(filter);
+
+            dataSourceLoadOptionsBase.Skip = 0;
+            dataSourceLoadOptionsBase.Take = Int32.MaxValue;
+            LoadResult loadResult = await DataSourceLoader.LoadAsync(query, dataSourceLoadOptionsBase);
+            return new PagedResultDto<T>(loadResult.totalCount, (IReadOnlyList<T>)loadResult.data);
+        }
+
+
+
+        public class TachyonLoadResult<T> : LoadResult
+        {
+            public new IEnumerable<T> data { get; set; }
+
+
+        }
     }
 }
