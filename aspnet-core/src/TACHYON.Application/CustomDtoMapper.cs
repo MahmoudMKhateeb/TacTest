@@ -1,5 +1,6 @@
 using Abp.Application.Editions;
 using Abp.Application.Features;
+using Abp.Application.Services.Dto;
 using Abp.Auditing;
 using Abp.Authorization;
 using Abp.Authorization.Users;
@@ -12,6 +13,7 @@ using Abp.Organizations;
 using Abp.UI.Inputs;
 using Abp.Webhooks;
 using AutoMapper;
+using DevExtreme.AspNet.Data.ResponseModel;
 using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -218,6 +220,9 @@ namespace TACHYON
             configuration.CreateMap<CreateOrEditUnitOfMeasureDto, UnitOfMeasure>().ReverseMap();
             configuration.CreateMap<UnitOfMeasureDto, UnitOfMeasure>().ReverseMap();
             configuration.CreateMap<CreateOrEditFacilityDto, Facility>().ReverseMap();
+            configuration.CreateMap<Facility, CreateOrEditFacilityDto>()
+                .ForMember(dst => dst.Longitude, opt => opt.MapFrom(src => src.Location.X))
+                 .ForMember(dst => dst.Latitude, opt => opt.MapFrom(src => src.Location.Y));
             configuration.CreateMap<FacilityDto, Facility>()
                  .ForPath(dst => dst.Location.X, opt => opt.MapFrom(src => src.Longitude))
                  .ForPath(dst => dst.Location.Y, opt => opt.MapFrom(src => src.Latitude))
@@ -289,7 +294,8 @@ namespace TACHYON
                 .ForMember(dest => dest.ShippingRequestVasList, opt => opt.MapFrom(src => src.ShippingRequestVases));
 
             configuration.CreateMap<CreateOrEditShippingRequestTripDto, ShippingRequestTrip>()
-                .ForMember(d => d.RoutPoints, opt => opt.Ignore())
+                .ForMember(d=>d.WaybillNumber, opt=>opt.Ignore())
+                .ForMember(d=>d.RoutPoints,opt=>opt.Ignore())
                 .ForMember(d => d.ShippingRequestTripVases, opt => opt.Ignore())
                 .AfterMap(AddOrUpdateShippingRequestTrip);
 
@@ -335,6 +341,7 @@ namespace TACHYON
                 .ReverseMap();
 
             configuration.CreateMap<CreateOrEditRoutPointDto, RoutPoint>()
+                .ForMember(x=> x.WaybillNumber,otp=> otp.Ignore())
                 .AfterMap(AddOrUpdateShippingRequestTripRoutePointGoods);
 
             configuration.CreateMap<RoutPoint, CreateOrEditRoutPointDto>()
@@ -345,7 +352,14 @@ namespace TACHYON
             //configuration.CreateMap<CreateOrEditRouteDto, Route>().ReverseMap();
             //configuration.CreateMap<RouteDto, Route>().ReverseMap();
             configuration.CreateMap<CreateOrEditCityDto, City>().ReverseMap();
-            configuration.CreateMap<CityDto, City>().ReverseMap();
+            configuration.CreateMap<City, CreateOrEditCityDto>()
+                .ForPath(dst => dst.Longitude, opt => opt.MapFrom(src => src.Location.X))
+                 .ForPath(dst => dst.Latitude, opt => opt.MapFrom(src => src.Location.Y));
+            configuration.CreateMap<CityDto, City>()
+                .ForPath(dst => dst.Location.X, opt => opt.MapFrom(src => src.Longitude))
+                 .ForPath(dst => dst.Location.Y, opt => opt.MapFrom(src => src.Latitude))
+                 .ReverseMap();
+
             configuration.CreateMap<CreateOrEditCountyDto, County>().ReverseMap();
             configuration.CreateMap<CountyDto, County>().ReverseMap();
             configuration.CreateMap<GoodCategoryDto, GoodCategory>().ReverseMap();
@@ -548,9 +562,12 @@ namespace TACHYON
             configuration.CreateMap<TACHYON.Invoices.Transactions.Transaction, TransactionListDto>()
                 .ForMember(dto => dto.ClientName, options => options.MapFrom(entity => entity.Tenant.Name))
                  .ForMember(dto => dto.Edition, options => options.MapFrom(entity => entity.Tenant.Edition.DisplayName))
-                .ForMember(dto => dto.Channel, options => options.MapFrom(entity => Enum.GetName(typeof(ChannelType), entity.ChannelId)));
+                 .ForMember(dto => dto.EditionId, options => options.MapFrom(entity => entity.Tenant.Edition.Id))
+                //.ForMember(dto => dto.Channel, options => options.MapFrom(entity => Enum.GetName(typeof(ChannelType), entity.ChannelId)))
+                ;
 
             /* ADD YOUR OWN CUSTOM AUTOMAPPER MAPPINGS HERE */
+            configuration.CreateMap(typeof(TACHYONAppServiceBase.TachyonLoadResult<>), typeof(LoadResult)).ReverseMap();
         }
         /// <summary>
         /// MultiLingualMapping configuration 

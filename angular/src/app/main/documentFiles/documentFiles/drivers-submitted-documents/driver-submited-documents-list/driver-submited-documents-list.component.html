@@ -1,4 +1,5 @@
 <dx-data-grid
+  style="height: 45vw"
   #grid
   id="dataGrid"
   [dataSource]="dataSource"
@@ -7,26 +8,32 @@
   [showRowLines]="false"
   [showBorders]="true"
   [rowAlternationEnabled]="true"
+  keyExpr="id"
+  [wordWrapEnabled]="true"
 >
   <dxo-filter-row [visible]="true"></dxo-filter-row>
   <dxo-search-panel [visible]="true"></dxo-search-panel>
   <dxo-filter-panel [visible]="true"></dxo-filter-panel>
-
   <dxo-filter-builder-popup [position]="popupPosition"></dxo-filter-builder-popup>
+  <dxo-scrolling mode="virtual"></dxo-scrolling>
+  <dxo-group-panel [visible]="true"></dxo-group-panel>
+  <dxo-grouping #expand [autoExpandAll]="false"></dxo-grouping>
+  <dxo-remote-operations [groupPaging]="true" [sorting]="true" [filtering]="true"> </dxo-remote-operations>
+  <dxo-paging [pageSize]="20"></dxo-paging>
+  <dxo-summary>
+    <dxi-group-item column="id" summaryType="count"> </dxi-group-item>
+  </dxo-summary>
 
   <dxi-column cellTemplate="cellTemplateActions" [allowFiltering]="false" [allowSorting]="false" [width]="50"></dxi-column>
   <dxi-column dataField="driverName"></dxi-column>
   <dxi-column dataField="creationTime" dataType="date"></dxi-column>
-  <dxi-column dataField="documentTypeName"></dxi-column>
+  <dxi-column dataField="documentTypeName" [allowGrouping]="false"></dxi-column>
   <dxi-column dataField="expirationDate" dataType="date" cellTemplate="cellTemplateStatus"></dxi-column>
   <dxi-column dataField="extn" [allowFiltering]="false"></dxi-column>
   <dxi-column dataField="isAccepted"></dxi-column>
   <dxi-column dataField="isRejected"></dxi-column>
   <dxi-column dataField="number"></dxi-column>
 
-  <dxo-remote-operations [sorting]="true" [paging]="true" [filtering]="true"> </dxo-remote-operations>
-  <dxo-paging [pageSize]="10"></dxo-paging>
-  <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20, 50, 200]"></dxo-pager>
   <div *dxTemplate="let data of 'cellTemplateStatus'">
     <span *ngIf="data.value <= todayMoment" class="text-warning"> {{ data.value | date }}</span>
     <span *ngIf="data.value > todayMoment"> {{ data.value | date }}</span>

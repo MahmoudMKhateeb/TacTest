@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using TACHYON.DataExporting.Excel.NPOI;
 using TACHYON.Dto;
 using TACHYON.Invoices.Balances.Dto;
@@ -7,7 +8,7 @@ using TACHYON.Storage;
 
 namespace TACHYON.Invoices.Balances.Exporting
 {
-    public  class TransactionExcelExporter : NpoiExcelExporterBase, ITransactionExcelExporter
+    public class TransactionExcelExporter : NpoiExcelExporterBase, ITransactionExcelExporter
     {
         public TransactionExcelExporter(
 
@@ -36,7 +37,7 @@ base(tempFileCacheManager)
                     AddObjects(
                         sheet, 1, Transactions,
                         _ => _.ClientName,
-                        _ => L(_.Channel),
+                        _ => L(_.ChannelId.ToString()),
                         _ => _.Amount,
                         _ => _.CreationTime
                         );

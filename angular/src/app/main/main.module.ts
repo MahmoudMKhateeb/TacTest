@@ -246,11 +246,14 @@ import { MultiSelectModule } from '@node_modules/primeng/multiselect';
 import { ListboxModule } from '@node_modules/primeng/listbox';
 import { DevExtremeModule, DxButtonModule } from '@node_modules/devextreme-angular';
 import { PdfJsViewerModule } from '@node_modules/ng2-pdfjs-viewer';
+import { GoodDetailsComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/points/good-details/good-details.component';
+import { CreateOrEditGoodDetailsModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/points/good-details/create-or-edit-good-details-modal/create-or-edit-good-details-modal.component';
+import { CreateOrEditPointModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/points/createOrEditPointModal/createOrEditPointModal.component';
 import { InputNumberModule } from '@node_modules/primeng/inputnumber';
-import { TrucksSubmittedDocumentsComponent } from './documentFiles/documentFiles/trucks-submitted-documents/trucks-submitted-documents.component';
-import { DriversSubmittedDocumentsComponent } from './documentFiles/documentFiles/drivers-submitted-documents/drivers-submitted-documents.component';
-import { ViweTruckDocumentsModalComponent } from './trucks/trucks/viwe-truck-documents-modal/viwe-truck-documents-modal.component';
-import { InvoiceTenantItemComponent } from './Invoices/invoice-tenants/invoice-tenant-item/invoice-tenant-item.component';
+import { TrucksSubmittedDocumentsComponent } from '@app/main/documentFiles/documentFiles/trucks-submitted-documents/trucks-submitted-documents.component';
+import { DriversSubmittedDocumentsComponent } from '@app/main/documentFiles/documentFiles/drivers-submitted-documents/drivers-submitted-documents.component';
+import { ViweTruckDocumentsModalComponent } from '@app/main/trucks/trucks/viwe-truck-documents-modal/viwe-truck-documents-modal.component';
+import { InvoiceTenantItemComponent } from '@app/main/Invoices/invoice-tenants/invoice-tenant-item/invoice-tenant-item.component';
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
 @NgModule({
@@ -472,11 +475,12 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     TrackingConfirmModalComponent,
     TrackingPODModalComponent,
     TMSRequestListComponent,
+    GoodDetailsComponent,
+    CreateOrEditGoodDetailsModalComponent,
+    CreateOrEditPointModalComponent,
     TrucksSubmittedDocumentsComponent,
     DriversSubmittedDocumentsComponent,
     ViweTruckDocumentsModalComponent,
-    ViweTruckDocumentsModalComponent,
-    InvoiceTenantItemComponent,
     InvoiceTenantItemComponent,
   ],
   providers: [

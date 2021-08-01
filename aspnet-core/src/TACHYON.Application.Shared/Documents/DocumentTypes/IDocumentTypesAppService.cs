@@ -1,5 +1,6 @@
 ﻿using Abp.Application.Services;
 using Abp.Application.Services.Dto;
+using DevExtreme.AspNet.Data.ResponseModel;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ namespace TACHYON.Documents.DocumentTypes
 {
     public interface IDocumentTypesAppService : IApplicationService
     {
-        Task<PagedResultDto<DocumentTypeDto>> GetAll(GetAllDocumentTypesInput input);
+        Task<LoadResult> GetAll(GetAllDocumentTypesInput input);
 
         Task<GetDocumentTypeForViewDto> GetDocumentTypeForView(long id);
 

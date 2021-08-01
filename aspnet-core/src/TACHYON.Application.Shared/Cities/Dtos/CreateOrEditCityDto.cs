@@ -17,12 +17,12 @@ namespace TACHYON.Cities.Dtos
         public string Code { get; set; }
 
 
-        [StringLength(CityConsts.MaxLatitudeLength, MinimumLength = CityConsts.MinLatitudeLength)]
-        public string Latitude { get; set; }
+        //[StringLength(CityConsts.MaxLatitudeLength, MinimumLength = CityConsts.MinLatitudeLength)]
+        public double Latitude { get; set; }
 
 
-        [StringLength(CityConsts.MaxLongitudeLength, MinimumLength = CityConsts.MinLongitudeLength)]
-        public string Longitude { get; set; }
+        //[StringLength(CityConsts.MaxLongitudeLength, MinimumLength = CityConsts.MinLongitudeLength)]
+        public double Longitude { get; set; }
 
 
         public int CountyId { get; set; }

@@ -237,6 +237,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     this.step1Dto.id = this.activeShippingRequestId || undefined;
     this.shippingRequestType == 'bidding' ? (this.step1Dto.isBid = true) : (this.step1Dto.isBid = false);
     this.shippingRequestType == 'tachyondeal' ? (this.step1Dto.isTachyonDeal = true) : (this.step1Dto.isTachyonDeal = false);
+    this.shippingRequestType == 'directrequest' ? (this.step1Dto.isDirectRequest = true) : (this.step1Dto.isDirectRequest = false);
     this.step1Dto.bidStartDate = this.biddingDateRange ? moment(this.biddingDateRange[0]) : undefined;
     this.step1Dto.bidEndDate = this.biddingDateRange ? moment(this.biddingDateRange[1]) : undefined;
     this.step1Dto.startTripDate = moment(this.tripsDateRange[0]);
@@ -328,7 +329,9 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
       .subscribe((res) => {
         this.biddingDateRange = [moment(this.step1Dto.bidStartDate).toDate(), moment(this.step1Dto.bidEndDate).toDate()];
         this.tripsDateRange = [moment(this.step1Dto.startTripDate).toDate(), moment(this.step1Dto.endTripDate).toDate()];
-        this.shippingRequestType = res.isBid === true ? 'bidding' : 'tachyondeal';
+        res.isBid = this.shippingRequestType === 'bidding' ? true : false;
+        res.isTachyonDeal = this.shippingRequestType === 'tachyondeal' ? true : false;
+        res.isDirectRequest = this.shippingRequestType === 'directrequest' ? true : false;
         this.step1Dto = res;
       });
   }

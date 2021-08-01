@@ -1,72 +1,60 @@
-import { Component, EventEmitter, Injector, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Injector, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import {
   CreateOrEditRoutPointDto,
   FacilitiesServiceProxy,
   FacilityForDropdownDto,
-  GoodsDetailDto,
-  GetAllGoodsCategoriesForDropDownOutput,
-  GoodsDetailsServiceProxy,
   PickingType,
   RoutesServiceProxy,
-  RoutStepCityLookupTableDto,
   RoutStepsServiceProxy,
-  SelectItemDto,
-  ShippingRequestsServiceProxy,
+  ShippingRequestRouteType,
   WaybillsServiceProxy,
-  ReceiversServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import Swal from 'sweetalert2';
 import { FileDownloadService } from '@shared/utils/file-download.service';
+import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
+import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
+import { GoodDetailsComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/good-details/good-details.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'PointsComponent',
   templateUrl: './points.component.html',
   styleUrls: ['./points.component.scss'],
 })
-export class PointsComponent extends AppComponentBase implements OnInit, OnChanges {
+export class PointsComponent extends AppComponentBase implements OnInit, OnDestroy {
   constructor(
     injector: Injector,
-    private _goodsDetailsServiceProxy: GoodsDetailsServiceProxy,
     private _routesServiceProxy: RoutesServiceProxy,
     private _facilitiesServiceProxy: FacilitiesServiceProxy,
     private _routStepsServiceProxy: RoutStepsServiceProxy,
-    private _shippingRequestsServiceProxy: ShippingRequestsServiceProxy,
     private _fileDownloadService: FileDownloadService,
     private _waybillsServiceProxy: WaybillsServiceProxy,
-    private _receiversServiceProxy: ReceiversServiceProxy
+    private _tripService: TripService,
+    private _PointsService: PointsService
   ) {
     super(injector);
   }
   @ViewChild('createOrEditFacilityModal') public createOrEditFacilityModal: ModalDirective;
   @ViewChild('createRouteStepModal') public createRouteStepModal: ModalDirective;
-  @ViewChild('createOrEditGoodDetail', { static: false }) public createOrEditGoodDetail: ModalDirective;
-  @ViewChild('createOrEditReceiverModal', { static: false }) public CreateOrEditReceiver: ModalDirective;
+  @ViewChild('PointGoodDetailsComponent') public PointGoodDetailsComponent: GoodDetailsComponent;
 
-  @Input() MainGoodsCategory: number;
-  @Input() RouteType: number;
-  @Input() NumberOfDrops: number;
-
-  @Input() WayPointListFromFatherForShippingRequestEdit: [];
+  MainGoodsCategory: number;
+  NumberOfDrops: number;
+  sourceFacility: number;
+  destFacility: number;
+  activeTripId: number;
   @Output() SelectedWayPointsFromChild: EventEmitter<CreateOrEditRoutPointDto[]> = new EventEmitter<CreateOrEditRoutPointDto[]>();
-
+  RouteType: number;
+  RouteTypes = ShippingRequestRouteType;
   wayPointsList: CreateOrEditRoutPointDto[] = [];
-  singleWayPoint: CreateOrEditRoutPointDto = new CreateOrEditRoutPointDto();
-  goodsDetail: GoodsDetailDto = new GoodsDetailDto();
+
   allFacilities: FacilityForDropdownDto[];
-  allReceivers: any;
-
   PickingType = PickingType;
-
   active = false;
   saving = false;
-  allCitys: RoutStepCityLookupTableDto[];
   facilityLoading = false;
-  receiversLoading = false;
-  editRouteId: number = undefined;
-
-  routeStepIdForEdit: number = undefined;
   zoom: Number = 13; //map zoom
   //this dir is for Single Route Step Map Route Draw
   lat: Number = 24.717942;
@@ -75,174 +63,103 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnChang
   wayPoints = [];
   wayPointMapSource = undefined;
   wayPointMapDest = undefined;
-  allSubGoodCategorys: GetAllGoodsCategoriesForDropDownOutput[];
-  allUnitOfMeasure: SelectItemDto[];
-  wayPointValidationSets = {
-    singlePoint: {
-      allowedPoints: 2,
-      numberOfPickUps: 1,
-      numberOfDrops: 1,
-    },
-    twoWay: {
-      allowedPoints: 4,
-      numberOfPickUps: 1,
-      numberOfDrops: 3,
-    },
-    multiDrops: {
-      allowedPoints: 1,
-      numberOfPickUps: 1,
-      numberOfDrops: 1,
-    },
-  };
-  //TODO : to change this line when twoWay Type Become Active
-  activeValidator: any;
-  sourceTripFacilityId: number;
-  desTripFacilityId: number;
-  isAdditionalReceiverEnabled = false;
+  Point: CreateOrEditRoutPointDto;
+  private pointsServiceSubscription$: Subscription;
+  private tripDestFacilitySub$: Subscription;
+  private tripSourceFacilitySub$: Subscription;
+  private currentActiveTripSubs$: Subscription;
+
+  ngOnDestroy() {
+    this.pointsServiceSubscription$.unsubscribe();
+    this.tripDestFacilitySub$?.unsubscribe();
+    this.tripSourceFacilitySub$.unsubscribe();
+    this.currentActiveTripSubs$.unsubscribe();
+    console.log('Unsubscribed/Destroid from  Point Component');
+  }
 
   ngOnInit() {
-    this.wayPointValidationSets.multiDrops.allowedPoints = this.NumberOfDrops + 1;
-    this.wayPointValidationSets.multiDrops.numberOfDrops = this.NumberOfDrops + 1;
-    this.activeValidator = this.RouteType == 1 ? this.wayPointValidationSets.singlePoint : this.wayPointValidationSets.multiDrops;
     this.loadDropDowns();
-    //check if ShippingRequest is in Edit Mode
-    if (this.WayPointListFromFatherForShippingRequestEdit) {
-      this.wayPointsList = this.WayPointListFromFatherForShippingRequestEdit;
-      this.wayPointsSetter();
+    //in case of edit trip
+    //and found that already there is a way point
+    //and the way Points count is greater than 0
+    //Draw on map wayPointsSetter()
+    this.pointsServiceSubscription$ = this._PointsService.currentWayPointsList.subscribe((res) => {
+      this.wayPointsList = res;
+      if (res.length > 0) {
+        this.wayPointsSetter();
+      }
+      //validate if point Limit Reached For Multible Drops And Show Success Message
+      if (!this.activeTripId && this.RouteType == ShippingRequestRouteType.MultipleDrops && res.length - 1 == this.NumberOfDrops) {
+        Swal.fire(this.l('GoodJob'), this.l('AllDropPointsAddedSuccessfully'), 'success');
+      }
+    });
+    //if action is edit trip get active Trip id
+    this.currentActiveTripSubs$ = this._tripService.currentActiveTripId.subscribe((res) => (this.activeTripId = res));
+    //get some Stuff from ShippingRequest Dto
+    this.tripSourceFacilitySub$ = this._tripService.currentShippingRequest.subscribe((res) => {
+      this.RouteType = res.shippingRequest.routeTypeId;
+      this.NumberOfDrops = res.shippingRequest.numberOfDrops;
+      this.MainGoodsCategory = res.shippingRequest.goodCategoryId;
+    });
+    //Take Trip Source Facility From Trip Service
+    this.tripSourceFacilitySub$ = this._tripService.currentSourceFacility.subscribe((res) => {
+      this.sourceFacility = res;
+      if (this.sourceFacility) {
+        this.drawPointForSingleDropTrip('pickup');
+      }
+    });
+    //in case of the Shipping Request Route Type is Single Drop -- Create the Drop Point From Dest Trip Facility
+    if (this.RouteType == ShippingRequestRouteType.SingleDrop) {
+      //Take Trip Dest Facility From Trip Service
+      this.tripDestFacilitySub$ = this._tripService.currentDestFacility.subscribe((res) => {
+        this.destFacility = res;
+        if (this.destFacility) {
+          this.drawPointForSingleDropTrip('drop');
+        }
+      });
     }
-  }
-  ngOnChanges(changes: SimpleChanges) {
-    //if RouteType Was MultipleDrops/twoWays And Changed To SomeThing Else i want to keep the First 2 Point of the points
-    const Route = changes.RouteType;
-    if (Route?.currentValue !== Route?.previousValue) {
-      this.wayPointsList.length = 0;
-    }
-    //in case of single Drop allow only 2 points
-    // setInterval((_) => {
-    //   return console.log(this.activeValidator, this.RouteType, this.NumberOfDrops);
+
+    // setInterval(() => {
+    //   console.log(this.wayPointsList);
     // }, 1000);
-    if (this.RouteType == 1) {
-      this.activeValidator = this.wayPointValidationSets.singlePoint;
-    } else if (this.RouteType == 2) {
-      this.activeValidator = this.wayPointValidationSets.twoWay;
-    } else if (this.RouteType == 3) {
-      this.activeValidator = this.wayPointValidationSets.multiDrops;
-    }
-    //console.log('Changes Happend');
-    this.EmitToFather();
   }
+
   //Load DropDowns For Shipper Only
   loadDropDowns() {
-    if (this.feature.isEnabled('App.Shipper')) {
-      this._routStepsServiceProxy.getAllCityForTableDropdown().subscribe((result) => {
-        this.allCitys = result;
-      });
-      this._shippingRequestsServiceProxy.getAllUnitOfMeasuresForDropdown().subscribe((result) => {
-        this.allUnitOfMeasure = result;
-      });
-
-      this.loadFacilities();
-    }
+    this.feature.isEnabled('App.Shipper') ? this.loadFacilities() : 0;
   }
-  //to Select PickUp Point
-  showPickUpModal() {
-    // if (!this.MainGoodsCategory) {
-    //   return Swal.fire(this.l('Warning'), this.l('pleaseSelectMainGoodCategoryFirst'), 'warning');
-    // }
-    // if (!this.RouteType) {
-    //   return Swal.fire(this.l('Warning'), this.l('pleaseSelectaRouteTypeFirst'), 'warning');
-    // }
-    this.singleWayPoint = new CreateOrEditRoutPointDto();
-    this.singleWayPoint.pickingType = PickingType.Pickup;
-    this.createRouteStepModal.show();
-    this.loadFacilities();
-  }
-  //to Select DropDown point
-  showDropPointUpModal() {
-    this.singleWayPoint = new CreateOrEditRoutPointDto();
-    this.singleWayPoint.pickingType = PickingType.Dropoff;
-    this.createRouteStepModal.show();
-    this.loadFacilities();
-  }
-
-  openCreateFacilityModal() {
-    this.active = true;
-    //load Places Autocomplete
-    // this.zoom = 14;
-    this.createOrEditFacilityModal.show();
-  }
-
-  EditRouteStep(id) {
-    //if there is an id for the RouteStep then update the Record Don't Create A new one
-    this.RouteStepCordSetter();
-    this.wayPointsList[id] = this.singleWayPoint;
-    //if there is additional Receiver Phone Number that means that the Additional Receiver CheckObx Should Be Checked
-    this.isAdditionalReceiverEnabled = this.singleWayPoint.receiverPhoneNumber ? true : false;
-    this.createRouteStepModal.hide();
-    this.notify.info(this.l('UpdatedSuccessfully'));
-    this.EmitToFather();
-  }
-  AddRouteStep(id?: number) {
-    if (id !== undefined) {
-      //view
-      //if there is an id open the modal and display the data
-      this.routeStepIdForEdit = id;
-      this.singleWayPoint = this.wayPointsList[id];
-      this.createRouteStepModal.show();
-      console.log('this is show: ', this.singleWayPoint);
+  //for SingleDrop Trip Only
+  //draws the points and sets them
+  drawPointForSingleDropTrip(pointType: 'pickup' | 'drop') {
+    console.log('Before From the Points Component:', this.wayPointsList);
+    //if create Make New Dto
+    if (!this.activeTripId) {
+      //this is for create Trip
+      this.Point = new CreateOrEditRoutPointDto();
     } else {
-      //create new route Step
-      this.RouteStepCordSetter();
-      //console.log(this.wayPointsList);
-      if (this.validateAddRoutePoint()) {
-        this.wayPointsList.push(this.singleWayPoint);
-        this.createRouteStepModal.hide();
-        this.notify.info(this.l('SuccessfullyAdded'));
-        this.EmitToFather();
-      } else {
-        this.createRouteStepModal.hide();
-        //Swal.fire(this.l('Warning'), this.l('wayPointsLimitReched'), 'warning');
-      }
+      //if edit
+      this.Point = pointType == 'drop' ? this.wayPointsList[1] : this.wayPointsList[0];
     }
+    this.Point.pickingType = pointType == 'drop' ? PickingType.Dropoff : PickingType.Pickup;
+    this.Point.facilityId = pointType == 'drop' ? this.destFacility : this.sourceFacility;
+    this.Point.latitude = this.allFacilities.find((x) => (pointType == 'drop' ? x.id == this.destFacility : x.id == this.sourceFacility))?.lat;
+    this.Point.longitude = this.allFacilities.find((x) => (pointType == 'drop' ? x.id == this.destFacility : x.id == this.sourceFacility))?.long;
+    //sets the long and lat of the point
+    this.wayPointsList[pointType == 'drop' ? 1 : 0] = this.Point;
+    //sync points list with the cloud
+    this._PointsService.updateWayPoints(this.wayPointsList);
+    //Points Drawer
+    this.wayPointsSetter();
+    console.log('after:', this.wayPointsList);
   }
 
-  /**
-   * this Methoud Controlls the Validation Of Creating New WayPoint/sourcePoint/DropPoint
-   */
-  validateAddRoutePoint() {
-    //if the user Didnt not Select a Source Trip Facility
-    if (this.sourceTripFacilityId === undefined) {
-      Swal.fire(this.l('Warning'), this.l('pleaseSelectASourceTripFacilityFirst'), 'warning');
-      return false;
-    }
-    //if point type is pick up ...Validate if Trip Source Facility == the PickUp Point Facility
-    if (this.singleWayPoint.pickingType === PickingType.Pickup && this.singleWayPoint.facilityId !== this.sourceTripFacilityId) {
-      Swal.fire(this.l('Warning'), this.l('pickupPointFacilityAndSourceTripFacilityareNotTheSame'), 'warning');
-      return false;
-      // Validate the Allowed Number Of Drops
-    } else if (this.wayPointsList.length === this.activeValidator.allowedPoints) {
-      Swal.fire(this.l('Warning'), this.l('pointsLimitReached'), 'warning');
-      return false;
-      //validate if dropPoint Has Goods Or No
-    } else if (this.singleWayPoint.pickingType === PickingType.Dropoff && this.singleWayPoint.goodsDetailListDto === undefined) {
-      Swal.fire(this.l('Warning'), this.l('goodDetailsCantBeEmptyInDropPoint'), 'warning');
-      return false;
-    }
-    return true;
-  }
   delete(index: number) {
     this.wayPointsList.splice(index, 1);
     this.notify.info(this.l('SuccessfullyDeleted'));
-    this.EmitToFather();
   }
 
-  EmitToFather() {
-    this.routeStepIdForEdit = undefined;
-    this.SelectedWayPointsFromChild.emit(this.wayPointsList);
-    this.wayPointsSetter();
-    this.singleWayPoint = new CreateOrEditRoutPointDto();
-  }
   loadFacilities() {
+    console.log('Facilites Loaded');
     this.facilityLoading = true;
     this._routStepsServiceProxy.getAllFacilitiesForDropdown().subscribe((result) => {
       this.allFacilities = result;
@@ -250,25 +167,10 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnChang
     });
   }
 
-  /**
-   * loads a list of Receivers by facility Id
-   * @param facilityId
-   */
-  loadReceivers(facilityId) {
-    this.receiversLoading = true;
-    //to be Changed
-    this._receiversServiceProxy.getAllReceiversByFacilityForTableDropdown(facilityId).subscribe((result) => {
-      this.allReceivers = result;
-      this.receiversLoading = false;
-    });
-  }
   getFacilityNameByid(id: number) {
     return this.allFacilities?.find((x) => x.id == id)?.displayName;
   }
-  RouteStepCordSetter() {
-    this.singleWayPoint.latitude = this.allFacilities.find((x) => x.id == this.singleWayPoint.facilityId)?.lat;
-    this.singleWayPoint.longitude = this.allFacilities.find((x) => x.id == this.singleWayPoint.facilityId)?.long;
-  }
+
   wayPointsSetter() {
     this.wayPointMapSource = undefined;
     this.wayPoints = [];
@@ -295,38 +197,6 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnChang
         lng: this.wayPointsList[this.wayPointsList.length - 1]?.longitude || undefined,
       };
     }
-  }
-  //GootDetails Section
-
-  GetAllSubCat(FatherID) {
-    //Get All Sub-Good Category
-    if (FatherID) {
-      this.allSubGoodCategorys = undefined;
-      this._goodsDetailsServiceProxy.getAllGoodCategoryForTableDropdown(FatherID).subscribe((result) => {
-        this.allSubGoodCategorys = result;
-      });
-    }
-  }
-
-  getGoodSubDisplayname(id) {
-    return this.allSubGoodCategorys ? this.allSubGoodCategorys.find((x) => x.id == id)?.displayName : 0;
-  }
-
-  openAddNewGoodDetailModal() {
-    this.GetAllSubCat(this.MainGoodsCategory);
-    this.createOrEditGoodDetail.show();
-  }
-  AddGoodDetail() {
-    if (!this.singleWayPoint.goodsDetailListDto) {
-      this.singleWayPoint.goodsDetailListDto = [];
-    }
-    this.singleWayPoint.goodsDetailListDto.push(this.goodsDetail);
-    this.goodsDetail = new GoodsDetailDto();
-    this.createOrEditGoodDetail.hide();
-  }
-
-  DeleteGoodDetail(id) {
-    this.singleWayPoint.goodsDetailListDto.splice(id, 1);
   }
 
   downloadDropWayBill(i: number) {

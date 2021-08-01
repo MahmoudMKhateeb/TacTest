@@ -7,7 +7,6 @@ import { LazyLoadEvent } from 'primeng/api';
 import * as _ from 'lodash';
 import {
   SubmitInvoicesServiceProxy,
-  SubmitInvoiceListDto,
   ISelectItemDto,
   CommonLookupServiceProxy,
   SubmitInvoiceFilterInput,
@@ -30,8 +29,7 @@ export class InvoiceTenantComponent extends AppComponentBase implements OnInit {
   @ViewChild('InvoiceDetailsModel', { static: true }) InvoiceDetailsModel: InvoiceTenantItemsDetailsComponent;
 
   SubmitStatus: any;
-  Invoices: SubmitInvoiceListDto[] = [];
-  IsStartSearch: boolean = false;
+  IsStartSearch = false;
   advancedFiltersAreShown = false;
   Periods: ISelectItemDto[];
   Tenant: ISelectItemDto;
@@ -40,7 +38,7 @@ export class InvoiceTenantComponent extends AppComponentBase implements OnInit {
   toDate: moment.Moment | null | undefined;
 
   creationDateRange: Date[] = [moment().startOf('day').toDate(), moment().endOf('day').toDate()];
-  creationDateRangeActive: boolean = false;
+  creationDateRangeActive = false;
 
   inputSearch: SubmitInvoiceFilterInput = new SubmitInvoiceFilterInput();
   dataSource: any = {};
@@ -56,7 +54,9 @@ export class InvoiceTenantComponent extends AppComponentBase implements OnInit {
   }
 
   ngOnInit() {
-    if (this.appSession.tenantId) this.advancedFiltersAreShown = true;
+    if (this.appSession.tenantId) {
+      this.advancedFiltersAreShown = true;
+    }
     this._CommonServ.getPeriods().subscribe((result) => {
       this.Periods = result;
     });
@@ -107,10 +107,10 @@ export class InvoiceTenantComponent extends AppComponentBase implements OnInit {
     });
   }
 
-  Accepted(Group: SubmitInvoiceListDto): void {
+  Accepted(id): void {
     this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
       if (isConfirmed) {
-        this._InvoiceServiceProxy.accepted(Group.id).subscribe(() => {
+        this._InvoiceServiceProxy.accepted(id).subscribe(() => {
           this.notify.success(this.l('Successfully'));
           this.reloadPage();
         });
@@ -146,8 +146,8 @@ export class InvoiceTenantComponent extends AppComponentBase implements OnInit {
     });
   }
 
-  details(invoice: SubmitInvoiceListDto): void {
-    this._InvoiceServiceProxy.getById(invoice.id).subscribe((result) => {
+  details(id): void {
+    this._InvoiceServiceProxy.getById(id).subscribe((result) => {
       this.InvoiceDetailsModel.show(result);
     });
   }
@@ -164,8 +164,10 @@ export class InvoiceTenantComponent extends AppComponentBase implements OnInit {
           .toPromise()
           .then((response) => {
             return {
-              data: response.items,
+              data: response.data,
               totalCount: response.totalCount,
+              summary: response.summary,
+              groupCount: response.groupCount,
             };
           })
           .catch((error) => {

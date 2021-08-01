@@ -1897,13 +1897,8 @@ namespace TACHYON.Migrations
                     b.Property<long?>("LastModifierUserId")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("Latitude")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
-
-                    b.Property<string>("Longitude")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
+                    b.Property<Point>("Location")
+                        .HasColumnType("geography");
 
                     b.HasKey("Id");
 
@@ -2221,6 +2216,8 @@ namespace TACHYON.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DocumentRelatedWithId");
 
                     b.HasIndex("DocumentsEntityId");
 
@@ -6633,6 +6630,10 @@ namespace TACHYON.Migrations
 
             modelBuilder.Entity("TACHYON.Documents.DocumentTypes.DocumentType", b =>
                 {
+                    b.HasOne("TACHYON.MultiTenancy.Tenant", "DocumentRelatedWithFk")
+                        .WithMany()
+                        .HasForeignKey("DocumentRelatedWithId");
+
                     b.HasOne("TACHYON.Documents.DocumentsEntities.DocumentsEntity", "DocumentsEntityFk")
                         .WithMany()
                         .HasForeignKey("DocumentsEntityId")

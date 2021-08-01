@@ -25,6 +25,7 @@ using TACHYON.Invoices.Transactions;
 using TACHYON.ShippingRequestVases;
 using TACHYON.Trucks.TrucksTypes.Dtos;
 using AutoMapper.QueryableExtensions;
+using DevExtreme.AspNet.Data.ResponseModel;
 
 
 namespace TACHYON.Invoices
@@ -68,7 +69,7 @@ namespace TACHYON.Invoices
         }
 
 
-        public async Task<PagedResultDto<InvoiceListDto>> GetAll(string filter)
+        public async Task<LoadResult> GetAll(string filter)
 
         {
             var query = _invoiceRepository
@@ -306,7 +307,7 @@ namespace TACHYON.Invoices
             var invoice = AsyncHelper.RunSync(() => GetInvoiceInfo(invoiceId));
 
             if (invoice == null) throw new UserFriendlyException(L("TheInvoiceNotFound"));
-            var TotalItem = invoice.Trips.Count + invoice.Trips.Select(v => v.ShippingRequestTripFK.ShippingRequestTripVases).Count();
+            var TotalItem = invoice.Trips.Count + invoice.Trips.SelectMany(v => v.ShippingRequestTripFK.ShippingRequestTripVases).Count();
             int Sequence = 1;
             List<InvoiceItemDto> Items = new List<InvoiceItemDto>();
             invoice.Trips.ToList().ForEach(trip =>

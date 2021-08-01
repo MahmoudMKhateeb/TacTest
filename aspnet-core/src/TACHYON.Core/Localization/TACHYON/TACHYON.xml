@@ -545,6 +545,7 @@
 		<text name="DifferentTenantImpersonationErrorMessage">Can not impersonate a user of a different tenant!</text>
 		<text name="Dimentions">Dimensions</text>
 		<text name="DirectRequests">Direct requests</text>
+		<text name="DirectRequest">Direct request</text>
 		<text name="DirectShippingRequests">Direct Shipping Requests</text>
 		<text name="Disable">Disable</text>
 		<text name="Disabled">Disabled</text>
@@ -586,6 +587,7 @@
 		<text name="DownloadDropWaybill">Download waybill</text>
 		<text name="DocumentHeaderDetails">Document Details</text>
 		<text name="DownloadInvoice">Download invoice</text>
+		<text name="UploadInvoiceDocument">Upload invoice document</text>
 		<text name="DriectRequestCarrierRespone">The {clientname} has established a current view of the  shipment No.: {id}.</text>
 		<text name="Driver">Driver</text>
 		<text name="DriverAcceptTrip">The driver {driver} has been accepted the trip from {source} to {destination}</text>
@@ -1555,7 +1557,7 @@
 		<text name="SelectAnItem">Select an item</text>
 		<text name="SelectAnOrganizationUnitToSeeMembers">Select an organization unit to see members.</text>
 		<text name="SelectAnOrganizationUnitToSeeRoles">Select an organization unit to see roles</text>
-		<text name="SelectanOriginCity">Selectan origin city</text>
+		<text name="SelectanOriginCity">Select an origin city</text>
 		<text name="SelectaPackingType">Select a packing type</text>
 		<text name="SelectAPermission">Select A Permission</text>
 		<text name="SelectARole">Select a role</text>
@@ -1983,7 +1985,7 @@
 		<text name="Transactions">Transactions</text>
 		<text name="TranslatedDisplayName">Translated Display Name</text>
 		<text name="TranslatedName">Translated Name</text>
-		<text name="TransportSubtyp">Transport subtyp</text>
+		<text name="TransportSubtype">Transport subtype</text>
 		<text name="TransportType">Transport type</text>
 		<text name="TransportTypeDisplayName">Transport type</text>
 		<text name="TransportTypes">Transports types</text>
@@ -2005,7 +2007,7 @@
 		<text name="TripInfo">Trip Info</text>
 		<text name="TripRejectReason">Trip reject reason</text>
 		<text name="TripsEndDate">Trip pickup date end</text>
-		<text name="TripsStartDate">Trips pickup date start</text>
+		<text name="TripsStartDate">Trip pickup date start</text>
 		<text name="TripStartDate">Trips start date</text>
 		<text name="TripStartDateCantBeGretterThanTripEndDate">Trip start date cant be gretter than trip end date</text>
 		<text name="TripStatus">Trip status</text>

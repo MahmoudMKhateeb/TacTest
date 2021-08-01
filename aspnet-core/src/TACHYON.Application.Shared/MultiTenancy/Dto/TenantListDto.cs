@@ -27,5 +27,7 @@ namespace TACHYON.MultiTenancy.Dto
         public int? EditionId { get; set; }
 
         public bool IsInTrialPeriod { get; set; }
+        public string ContractNumber { get; set; }
+
     }
 }
