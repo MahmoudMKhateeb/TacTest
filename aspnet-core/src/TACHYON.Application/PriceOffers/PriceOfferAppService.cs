@@ -512,7 +512,7 @@ namespace TACHYON.PriceOffers
 
             List<GetShippingRequestForPriceOfferListDto> ShippingRequestForPriceOfferList = new List<GetShippingRequestForPriceOfferListDto>();
 
-            foreach (var request in directRequests)
+            foreach (var request in await directRequests.ToListAsync())
             {
                 var dto = ObjectMapper.Map<GetShippingRequestForPriceOfferListDto>(request.ShippingRequestFK);
                 dto.DirectRequestStatusTitle = request.Status.GetEnumDescription();
@@ -538,7 +538,7 @@ namespace TACHYON.PriceOffers
                 dto.CreationTime = request.CreationTime;
                 dto.DirectRequestStatus = request.Status;
                 dto.BidStatusTitle = string.Empty;
-                dto.TrukType = ObjectMapper.Map<TrucksTypeDto>(request.ShippingRequestFK.TrucksTypeFk).TranslatedDisplayName;
+                dto.TruckType = ObjectMapper.Map<TrucksTypeDto>(request.ShippingRequestFK.TrucksTypeFk).TranslatedDisplayName;
                 dto.GoodsCategory = ObjectMapper.Map<GoodCategoryDto>(request.ShippingRequestFK.GoodCategoryFk).DisplayName;
                 ShippingRequestForPriceOfferList.Add(dto);
 
@@ -583,7 +583,7 @@ namespace TACHYON.PriceOffers
 
             List<GetShippingRequestForPriceOfferListDto> ShippingRequestForPriceOfferList = new List<GetShippingRequestForPriceOfferListDto>();
 
-            foreach (var request in query)
+            foreach (var request in await query.ToListAsync())
             {
                 var dto = ObjectMapper.Map<GetShippingRequestForPriceOfferListDto>(request);
 
@@ -611,7 +611,7 @@ namespace TACHYON.PriceOffers
                     dto.StatusTitle = "";
                 }
                 dto.CreationTime = request.BidStartDate;
-                dto.TrukType = ObjectMapper.Map<TrucksTypeDto>(request.TrucksTypeFk).TranslatedDisplayName;
+                dto.TruckType = ObjectMapper.Map<TrucksTypeDto>(request.TrucksTypeFk).TranslatedDisplayName;
                 dto.GoodsCategory = ObjectMapper.Map<GoodCategoryDto>(request.GoodCategoryFk).DisplayName;
                 ShippingRequestForPriceOfferList.Add(dto);
 
@@ -623,18 +623,20 @@ namespace TACHYON.PriceOffers
 
         private async Task<List<GetShippingRequestForPriceOfferListDto>> GetFromShippingRequest(ShippingRequestForPriceOfferGetAllInput input)
         {
-            var query = _shippingRequestsRepository
+            using (CurrentUnitOfWork.DisableFilter(nameof(IHasIsDrafted)))
+            {
+                var query = _shippingRequestsRepository
                 .GetAll()
                 .AsNoTracking()
                     .Include(t => t.Tenant)
-                    .Include(c=>c.CarrierTenantFk)
+                    .Include(c => c.CarrierTenantFk)
                     .Include(oc => oc.OriginCityFk)
                     .Include(dc => dc.DestinationCityFk)
                     .Include(c => c.GoodCategoryFk)
                      .ThenInclude(x => x.Translations)
                     .Include(t => t.TrucksTypeFk)
                      .ThenInclude(x => x.Translations)
-                .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper), x => x.TenantId == AbpSession.TenantId )
+                .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper), x => x.TenantId == AbpSession.TenantId)
                 .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Carrier), x => x.CarrierTenantId == AbpSession.TenantId)
                 .WhereIf(!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer), x => input.isTMSRequest || (!input.isTMSRequest && (x.Status == ShippingRequestStatus.Cancled || x.Status == ShippingRequestStatus.Completed)))
                 .WhereIf(input.PickupFromDate.HasValue && input.PickupToDate.HasValue, x => x.StartTripDate >= input.PickupFromDate.Value && x.StartTripDate <= input.PickupToDate.Value)
@@ -651,38 +653,45 @@ namespace TACHYON.PriceOffers
                 .OrderBy(input.Sorting ?? "id desc")
                 .PageBy(input);
 
+                var myDraftsOnly = query.Where(x => x.TenantId == AbpSession.TenantId)
+                             .Where(x => x.IsDrafted);
 
-            List<GetShippingRequestForPriceOfferListDto> ShippingRequestForPriceOfferList = new List<GetShippingRequestForPriceOfferListDto>();
+                var withoutDrafts = query.Where(x => !x.IsDrafted);
+                //concat all requests without draft with my draft requests
+                query = myDraftsOnly.Concat(withoutDrafts);
 
-            foreach (var request in query)
-            {
-                var dto = ObjectMapper.Map<GetShippingRequestForPriceOfferListDto>(request);
-                dto.TrukType = ObjectMapper.Map<TrucksTypeDto>(request.TrucksTypeFk).TranslatedDisplayName;
-                dto.GoodsCategory = ObjectMapper.Map<GoodCategoryDto>(request.GoodCategoryFk).DisplayName;
+                List<GetShippingRequestForPriceOfferListDto> ShippingRequestForPriceOfferList = new List<GetShippingRequestForPriceOfferListDto>();
 
-                if (AbpSession.TenantId.HasValue && (IsEnabled(AppFeatures.Carrier)))
+                foreach (var request in await query.ToListAsync())
                 {
+                    var dto = ObjectMapper.Map<GetShippingRequestForPriceOfferListDto>(request);
+                    dto.TruckType = ObjectMapper.Map<TrucksTypeDto>(request.TrucksTypeFk)?.TranslatedDisplayName;
+                    dto.GoodsCategory = ObjectMapper.Map<GoodCategoryDto>(request.GoodCategoryFk)?.DisplayName;
 
-                    dto.Price = request.CarrierPrice;
-                }
-                else if (AbpSession.TenantId.HasValue && (IsEnabled(AppFeatures.Shipper)))
-                {
-                    if (request.IsTachyonDeal)
+                    if (AbpSession.TenantId.HasValue && (IsEnabled(AppFeatures.Carrier)))
                     {
-                     dto.TotalOffers=   _priceOfferManager.GetTotalOffersByTMS(request.Id);               
+
+                        dto.Price = request.CarrierPrice;
                     }
-                }
+                    else if (AbpSession.TenantId.HasValue && (IsEnabled(AppFeatures.Shipper)))
+                    {
+                        if (request.IsTachyonDeal)
+                        {
+                            dto.TotalOffers = _priceOfferManager.GetTotalOffersByTMS(request.Id);
+                        }
+                    }
 
                     ShippingRequestForPriceOfferList.Add(dto);
 
-            }
+                }
 
-            return ShippingRequestForPriceOfferList;
+                return ShippingRequestForPriceOfferList;
+            }
         }
 
         private async Task<List<GetShippingRequestForPriceOfferListDto>> GetFromOffers(ShippingRequestForPriceOfferGetAllInput input)
         {
-            var directRequests = _priceOfferRepository
+            var offers = _priceOfferRepository
                             .GetAll()
                             .AsNoTracking()
                             .Include(carrier => carrier.Tenant)
@@ -719,7 +728,7 @@ namespace TACHYON.PriceOffers
 
             List<GetShippingRequestForPriceOfferListDto> ShippingRequestForPriceOfferList = new List<GetShippingRequestForPriceOfferListDto>();
 
-            foreach (var request in directRequests)
+            foreach (var request in await offers.ToListAsync())
             {
                 var dto = ObjectMapper.Map<GetShippingRequestForPriceOfferListDto>(request.ShippingRequestFK);
                 dto.DirectRequestStatusTitle = request.Status.GetEnumDescription();
@@ -727,7 +736,7 @@ namespace TACHYON.PriceOffers
 
                 if (!AbpSession.TenantId.HasValue || IsEnabled(AppFeatures.TachyonDealer) || IsEnabled(AppFeatures.Shipper))
                 {
-                    dto.Name = request.Tenant.Name;
+                    dto.Name = request.Tenant?.Name;
                     dto.RemainingDays = string.Empty;
                     if (AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Shipper) && request.Status == PriceOfferStatus.AcceptedAndWaitingForCarrier)
                     {
@@ -751,7 +760,7 @@ namespace TACHYON.PriceOffers
                 dto.CreationTime = request.CreationTime;
                 dto.OfferStatus = request.Status;
                 dto.BidStatusTitle = string.Empty;
-                dto.TrukType = ObjectMapper.Map<TrucksTypeDto>(request.ShippingRequestFK.TrucksTypeFk).TranslatedDisplayName;
+                dto.TruckType = ObjectMapper.Map<TrucksTypeDto>(request.ShippingRequestFK.TrucksTypeFk).TranslatedDisplayName;
                 dto.GoodsCategory = ObjectMapper.Map<GoodCategoryDto>(request.ShippingRequestFK.GoodCategoryFk).DisplayName;
                 ShippingRequestForPriceOfferList.Add(dto);
 
