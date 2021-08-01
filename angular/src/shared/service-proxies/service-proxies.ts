@@ -2040,40 +2040,12 @@ export class BalanceRechargeServiceProxy {
   }
 
   /**
-   * @param tenantId (optional)
-   * @param fromDate (optional)
-   * @param toDate (optional)
-   * @param referenceNo (optional)
-   * @param minLongitude (optional)
-   * @param maxLongitude (optional)
-   * @param sorting (optional)
-   * @param skipCount (optional)
-   * @param maxResultCount (optional)
+   * @param loadOptions (optional)
    * @return Success
    */
-  getAll(
-    tenantId: number | null | undefined,
-    fromDate: moment.Moment | null | undefined,
-    toDate: moment.Moment | null | undefined,
-    referenceNo: string | null | undefined,
-    minLongitude: number | null | undefined,
-    maxLongitude: number | null | undefined,
-    sorting: string | null | undefined,
-    skipCount: number | undefined,
-    maxResultCount: number | undefined
-  ): Observable<PagedResultDtoOfBalanceRechargeListDto> {
+  getAll(loadOptions: string | null | undefined): Observable<LoadResult> {
     let url_ = this.baseUrl + '/api/services/app/BalanceRecharge/GetAll?';
-    if (tenantId !== undefined && tenantId !== null) url_ += 'TenantId=' + encodeURIComponent('' + tenantId) + '&';
-    if (fromDate !== undefined && fromDate !== null) url_ += 'FromDate=' + encodeURIComponent(fromDate ? '' + fromDate.toJSON() : '') + '&';
-    if (toDate !== undefined && toDate !== null) url_ += 'ToDate=' + encodeURIComponent(toDate ? '' + toDate.toJSON() : '') + '&';
-    if (referenceNo !== undefined && referenceNo !== null) url_ += 'ReferenceNo=' + encodeURIComponent('' + referenceNo) + '&';
-    if (minLongitude !== undefined && minLongitude !== null) url_ += 'minLongitude=' + encodeURIComponent('' + minLongitude) + '&';
-    if (maxLongitude !== undefined && maxLongitude !== null) url_ += 'maxLongitude=' + encodeURIComponent('' + maxLongitude) + '&';
-    if (sorting !== undefined && sorting !== null) url_ += 'Sorting=' + encodeURIComponent('' + sorting) + '&';
-    if (skipCount === null) throw new Error("The parameter 'skipCount' cannot be null.");
-    else if (skipCount !== undefined) url_ += 'SkipCount=' + encodeURIComponent('' + skipCount) + '&';
-    if (maxResultCount === null) throw new Error("The parameter 'maxResultCount' cannot be null.");
-    else if (maxResultCount !== undefined) url_ += 'MaxResultCount=' + encodeURIComponent('' + maxResultCount) + '&';
+    if (loadOptions !== undefined && loadOptions !== null) url_ += 'LoadOptions=' + encodeURIComponent('' + loadOptions) + '&';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -2097,14 +2069,14 @@ export class BalanceRechargeServiceProxy {
             try {
               return this.processGetAll(<any>response_);
             } catch (e) {
-              return <Observable<PagedResultDtoOfBalanceRechargeListDto>>(<any>_observableThrow(e));
+              return <Observable<LoadResult>>(<any>_observableThrow(e));
             }
-          } else return <Observable<PagedResultDtoOfBalanceRechargeListDto>>(<any>_observableThrow(response_));
+          } else return <Observable<LoadResult>>(<any>_observableThrow(response_));
         })
       );
   }
 
-  protected processGetAll(response: HttpResponseBase): Observable<PagedResultDtoOfBalanceRechargeListDto> {
+  protected processGetAll(response: HttpResponseBase): Observable<LoadResult> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -2119,7 +2091,7 @@ export class BalanceRechargeServiceProxy {
         _observableMergeMap((_responseText) => {
           let result200: any = null;
           let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
-          result200 = PagedResultDtoOfBalanceRechargeListDto.fromJS(resultData200);
+          result200 = LoadResult.fromJS(resultData200);
           return _observableOf(result200);
         })
       );
@@ -2130,7 +2102,7 @@ export class BalanceRechargeServiceProxy {
         })
       );
     }
-    return _observableOf<PagedResultDtoOfBalanceRechargeListDto>(<any>null);
+    return _observableOf<LoadResult>(<any>null);
   }
 
   /**
@@ -2327,6 +2299,70 @@ export class BalanceRechargeServiceProxy {
       );
     }
     return _observableOf<FileDto>(<any>null);
+  }
+
+  /**
+   * @return Success
+   */
+  getTenantBalance(): Observable<number> {
+    let url_ = this.baseUrl + '/api/services/app/BalanceRecharge/GetTenantBalance';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetTenantBalance(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetTenantBalance(<any>response_);
+            } catch (e) {
+              return <Observable<number>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<number>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetTenantBalance(response: HttpResponseBase): Observable<number> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = resultData200 !== undefined ? resultData200 : <any>null;
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<number>(<any>null);
   }
 }
 
@@ -6477,7 +6513,7 @@ export class DocumentFilesServiceProxy {
    * @param filter (optional)
    * @return Success
    */
-  getAllTenantsSubmittedDocuments(filter: string | null | undefined): Observable<PagedResultDtoOfGetAllTenantsSubmittedDocumentsDto> {
+  getAllTenantsSubmittedDocuments(filter: string | null | undefined): Observable<LoadResult> {
     let url_ = this.baseUrl + '/api/services/app/DocumentFiles/GetAllTenantsSubmittedDocuments?';
     if (filter !== undefined && filter !== null) url_ += 'Filter=' + encodeURIComponent('' + filter) + '&';
     url_ = url_.replace(/[?&]$/, '');
@@ -6503,14 +6539,14 @@ export class DocumentFilesServiceProxy {
             try {
               return this.processGetAllTenantsSubmittedDocuments(<any>response_);
             } catch (e) {
-              return <Observable<PagedResultDtoOfGetAllTenantsSubmittedDocumentsDto>>(<any>_observableThrow(e));
+              return <Observable<LoadResult>>(<any>_observableThrow(e));
             }
-          } else return <Observable<PagedResultDtoOfGetAllTenantsSubmittedDocumentsDto>>(<any>_observableThrow(response_));
+          } else return <Observable<LoadResult>>(<any>_observableThrow(response_));
         })
       );
   }
 
-  protected processGetAllTenantsSubmittedDocuments(response: HttpResponseBase): Observable<PagedResultDtoOfGetAllTenantsSubmittedDocumentsDto> {
+  protected processGetAllTenantsSubmittedDocuments(response: HttpResponseBase): Observable<LoadResult> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -6525,7 +6561,7 @@ export class DocumentFilesServiceProxy {
         _observableMergeMap((_responseText) => {
           let result200: any = null;
           let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
-          result200 = PagedResultDtoOfGetAllTenantsSubmittedDocumentsDto.fromJS(resultData200);
+          result200 = LoadResult.fromJS(resultData200);
           return _observableOf(result200);
         })
       );
@@ -6536,7 +6572,7 @@ export class DocumentFilesServiceProxy {
         })
       );
     }
-    return _observableOf<PagedResultDtoOfGetAllTenantsSubmittedDocumentsDto>(<any>null);
+    return _observableOf<LoadResult>(<any>null);
   }
 
   /**
@@ -6544,10 +6580,7 @@ export class DocumentFilesServiceProxy {
    * @param truckId (optional)
    * @return Success
    */
-  getAllTrucksSubmittedDocuments(
-    filter: string | null | undefined,
-    truckId: number | null | undefined
-  ): Observable<PagedResultDtoOfGetAllTrucksSubmittedDocumentsDto> {
+  getAllTrucksSubmittedDocuments(filter: string | null | undefined, truckId: number | null | undefined): Observable<LoadResult> {
     let url_ = this.baseUrl + '/api/services/app/DocumentFiles/GetAllTrucksSubmittedDocuments?';
     if (filter !== undefined && filter !== null) url_ += 'Filter=' + encodeURIComponent('' + filter) + '&';
     if (truckId !== undefined && truckId !== null) url_ += 'TruckId=' + encodeURIComponent('' + truckId) + '&';
@@ -6574,14 +6607,14 @@ export class DocumentFilesServiceProxy {
             try {
               return this.processGetAllTrucksSubmittedDocuments(<any>response_);
             } catch (e) {
-              return <Observable<PagedResultDtoOfGetAllTrucksSubmittedDocumentsDto>>(<any>_observableThrow(e));
+              return <Observable<LoadResult>>(<any>_observableThrow(e));
             }
-          } else return <Observable<PagedResultDtoOfGetAllTrucksSubmittedDocumentsDto>>(<any>_observableThrow(response_));
+          } else return <Observable<LoadResult>>(<any>_observableThrow(response_));
         })
       );
   }
 
-  protected processGetAllTrucksSubmittedDocuments(response: HttpResponseBase): Observable<PagedResultDtoOfGetAllTrucksSubmittedDocumentsDto> {
+  protected processGetAllTrucksSubmittedDocuments(response: HttpResponseBase): Observable<LoadResult> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -6596,7 +6629,7 @@ export class DocumentFilesServiceProxy {
         _observableMergeMap((_responseText) => {
           let result200: any = null;
           let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
-          result200 = PagedResultDtoOfGetAllTrucksSubmittedDocumentsDto.fromJS(resultData200);
+          result200 = LoadResult.fromJS(resultData200);
           return _observableOf(result200);
         })
       );
@@ -6607,7 +6640,7 @@ export class DocumentFilesServiceProxy {
         })
       );
     }
-    return _observableOf<PagedResultDtoOfGetAllTrucksSubmittedDocumentsDto>(<any>null);
+    return _observableOf<LoadResult>(<any>null);
   }
 
   /**
@@ -6615,10 +6648,7 @@ export class DocumentFilesServiceProxy {
    * @param driverId (optional)
    * @return Success
    */
-  getAllDriversSubmittedDocuments(
-    filter: string | null | undefined,
-    driverId: number | null | undefined
-  ): Observable<PagedResultDtoOfGetAllDriversSubmittedDocumentsDto> {
+  getAllDriversSubmittedDocuments(filter: string | null | undefined, driverId: number | null | undefined): Observable<LoadResult> {
     let url_ = this.baseUrl + '/api/services/app/DocumentFiles/GetAllDriversSubmittedDocuments?';
     if (filter !== undefined && filter !== null) url_ += 'Filter=' + encodeURIComponent('' + filter) + '&';
     if (driverId !== undefined && driverId !== null) url_ += 'DriverId=' + encodeURIComponent('' + driverId) + '&';
@@ -6645,14 +6675,14 @@ export class DocumentFilesServiceProxy {
             try {
               return this.processGetAllDriversSubmittedDocuments(<any>response_);
             } catch (e) {
-              return <Observable<PagedResultDtoOfGetAllDriversSubmittedDocumentsDto>>(<any>_observableThrow(e));
+              return <Observable<LoadResult>>(<any>_observableThrow(e));
             }
-          } else return <Observable<PagedResultDtoOfGetAllDriversSubmittedDocumentsDto>>(<any>_observableThrow(response_));
+          } else return <Observable<LoadResult>>(<any>_observableThrow(response_));
         })
       );
   }
 
-  protected processGetAllDriversSubmittedDocuments(response: HttpResponseBase): Observable<PagedResultDtoOfGetAllDriversSubmittedDocumentsDto> {
+  protected processGetAllDriversSubmittedDocuments(response: HttpResponseBase): Observable<LoadResult> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -6667,7 +6697,7 @@ export class DocumentFilesServiceProxy {
         _observableMergeMap((_responseText) => {
           let result200: any = null;
           let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
-          result200 = PagedResultDtoOfGetAllDriversSubmittedDocumentsDto.fromJS(resultData200);
+          result200 = LoadResult.fromJS(resultData200);
           return _observableOf(result200);
         })
       );
@@ -6678,7 +6708,7 @@ export class DocumentFilesServiceProxy {
         })
       );
     }
-    return _observableOf<PagedResultDtoOfGetAllDriversSubmittedDocumentsDto>(<any>null);
+    return _observableOf<LoadResult>(<any>null);
   }
 
   /**
@@ -8617,7 +8647,7 @@ export class DocumentTypesServiceProxy {
    * @param filter (optional)
    * @return Success
    */
-  getAll(filter: string | null | undefined): Observable<PagedResultDtoOfDocumentTypeDto> {
+  getAll(filter: string | null | undefined): Observable<LoadResult> {
     let url_ = this.baseUrl + '/api/services/app/DocumentTypes/GetAll?';
     if (filter !== undefined && filter !== null) url_ += 'Filter=' + encodeURIComponent('' + filter) + '&';
     url_ = url_.replace(/[?&]$/, '');
@@ -8643,14 +8673,14 @@ export class DocumentTypesServiceProxy {
             try {
               return this.processGetAll(<any>response_);
             } catch (e) {
-              return <Observable<PagedResultDtoOfDocumentTypeDto>>(<any>_observableThrow(e));
+              return <Observable<LoadResult>>(<any>_observableThrow(e));
             }
-          } else return <Observable<PagedResultDtoOfDocumentTypeDto>>(<any>_observableThrow(response_));
+          } else return <Observable<LoadResult>>(<any>_observableThrow(response_));
         })
       );
   }
 
-  protected processGetAll(response: HttpResponseBase): Observable<PagedResultDtoOfDocumentTypeDto> {
+  protected processGetAll(response: HttpResponseBase): Observable<LoadResult> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -8665,7 +8695,7 @@ export class DocumentTypesServiceProxy {
         _observableMergeMap((_responseText) => {
           let result200: any = null;
           let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
-          result200 = PagedResultDtoOfDocumentTypeDto.fromJS(resultData200);
+          result200 = LoadResult.fromJS(resultData200);
           return _observableOf(result200);
         })
       );
@@ -8676,7 +8706,7 @@ export class DocumentTypesServiceProxy {
         })
       );
     }
-    return _observableOf<PagedResultDtoOfDocumentTypeDto>(<any>null);
+    return _observableOf<LoadResult>(<any>null);
   }
 
   /**
@@ -16728,7 +16758,7 @@ export class InvoiceServiceProxy {
    * @param filter (optional)
    * @return Success
    */
-  getAll(filter: string | null | undefined): Observable<PagedResultDtoOfInvoiceListDto> {
+  getAll(filter: string | null | undefined): Observable<LoadResult> {
     let url_ = this.baseUrl + '/api/services/app/Invoice/GetAll?';
     if (filter !== undefined && filter !== null) url_ += 'filter=' + encodeURIComponent('' + filter) + '&';
     url_ = url_.replace(/[?&]$/, '');
@@ -16754,14 +16784,14 @@ export class InvoiceServiceProxy {
             try {
               return this.processGetAll(<any>response_);
             } catch (e) {
-              return <Observable<PagedResultDtoOfInvoiceListDto>>(<any>_observableThrow(e));
+              return <Observable<LoadResult>>(<any>_observableThrow(e));
             }
-          } else return <Observable<PagedResultDtoOfInvoiceListDto>>(<any>_observableThrow(response_));
+          } else return <Observable<LoadResult>>(<any>_observableThrow(response_));
         })
       );
   }
 
-  protected processGetAll(response: HttpResponseBase): Observable<PagedResultDtoOfInvoiceListDto> {
+  protected processGetAll(response: HttpResponseBase): Observable<LoadResult> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -16776,7 +16806,7 @@ export class InvoiceServiceProxy {
         _observableMergeMap((_responseText) => {
           let result200: any = null;
           let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
-          result200 = PagedResultDtoOfInvoiceListDto.fromJS(resultData200);
+          result200 = LoadResult.fromJS(resultData200);
           return _observableOf(result200);
         })
       );
@@ -16787,7 +16817,7 @@ export class InvoiceServiceProxy {
         })
       );
     }
-    return _observableOf<PagedResultDtoOfInvoiceListDto>(<any>null);
+    return _observableOf<LoadResult>(<any>null);
   }
 
   /**
@@ -35939,7 +35969,7 @@ export class SubmitInvoicesServiceProxy {
    * @param loadData (optional)
    * @return Success
    */
-  getAllSubmitInvoices(loadData: string | null | undefined): Observable<PagedResultDtoOfSubmitInvoiceListDto> {
+  getAllSubmitInvoices(loadData: string | null | undefined): Observable<LoadResult> {
     let url_ = this.baseUrl + '/api/services/app/SubmitInvoices/GetAllSubmitInvoices?';
     if (loadData !== undefined && loadData !== null) url_ += 'LoadData=' + encodeURIComponent('' + loadData) + '&';
     url_ = url_.replace(/[?&]$/, '');
@@ -35965,14 +35995,14 @@ export class SubmitInvoicesServiceProxy {
             try {
               return this.processGetAllSubmitInvoices(<any>response_);
             } catch (e) {
-              return <Observable<PagedResultDtoOfSubmitInvoiceListDto>>(<any>_observableThrow(e));
+              return <Observable<LoadResult>>(<any>_observableThrow(e));
             }
-          } else return <Observable<PagedResultDtoOfSubmitInvoiceListDto>>(<any>_observableThrow(response_));
+          } else return <Observable<LoadResult>>(<any>_observableThrow(response_));
         })
       );
   }
 
-  protected processGetAllSubmitInvoices(response: HttpResponseBase): Observable<PagedResultDtoOfSubmitInvoiceListDto> {
+  protected processGetAllSubmitInvoices(response: HttpResponseBase): Observable<LoadResult> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -35987,7 +36017,7 @@ export class SubmitInvoicesServiceProxy {
         _observableMergeMap((_responseText) => {
           let result200: any = null;
           let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
-          result200 = PagedResultDtoOfSubmitInvoiceListDto.fromJS(resultData200);
+          result200 = LoadResult.fromJS(resultData200);
           return _observableOf(result200);
         })
       );
@@ -35998,7 +36028,7 @@ export class SubmitInvoicesServiceProxy {
         })
       );
     }
-    return _observableOf<PagedResultDtoOfSubmitInvoiceListDto>(<any>null);
+    return _observableOf<LoadResult>(<any>null);
   }
 
   /**
@@ -36705,6 +36735,72 @@ export class TenantServiceProxy {
       );
     }
     return _observableOf<PagedResultDtoOfTenantListDto>(<any>null);
+  }
+
+  /**
+   * @param loadOptions (optional)
+   * @return Success
+   */
+  getAllTenants(loadOptions: string | null | undefined): Observable<LoadResult> {
+    let url_ = this.baseUrl + '/api/services/app/Tenant/GetAllTenants?';
+    if (loadOptions !== undefined && loadOptions !== null) url_ += 'loadOptions=' + encodeURIComponent('' + loadOptions) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAllTenants(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAllTenants(<any>response_);
+            } catch (e) {
+              return <Observable<LoadResult>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<LoadResult>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAllTenants(response: HttpResponseBase): Observable<LoadResult> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = LoadResult.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<LoadResult>(<any>null);
   }
 
   /**
@@ -43283,44 +43379,12 @@ export class TransactionServiceProxy {
   }
 
   /**
-   * @param channelType (optional)
-   * @param tenantId (optional)
-   * @param fromDate (optional)
-   * @param toDate (optional)
-   * @param minLongitude (optional)
-   * @param maxLongitude (optional)
-   * @param editionId (optional)
-   * @param sorting (optional)
-   * @param skipCount (optional)
-   * @param maxResultCount (optional)
+   * @param loadOptions (optional)
    * @return Success
    */
-  getAll(
-    channelType: ChannelType | undefined,
-    tenantId: number | null | undefined,
-    fromDate: moment.Moment | null | undefined,
-    toDate: moment.Moment | null | undefined,
-    minLongitude: number | null | undefined,
-    maxLongitude: number | null | undefined,
-    editionId: number | null | undefined,
-    sorting: string | null | undefined,
-    skipCount: number | undefined,
-    maxResultCount: number | undefined
-  ): Observable<PagedResultDtoOfTransactionListDto> {
+  getAll(loadOptions: string | null | undefined): Observable<LoadResult> {
     let url_ = this.baseUrl + '/api/services/app/Transaction/GetAll?';
-    if (channelType === null) throw new Error("The parameter 'channelType' cannot be null.");
-    else if (channelType !== undefined) url_ += 'channelType=' + encodeURIComponent('' + channelType) + '&';
-    if (tenantId !== undefined && tenantId !== null) url_ += 'TenantId=' + encodeURIComponent('' + tenantId) + '&';
-    if (fromDate !== undefined && fromDate !== null) url_ += 'FromDate=' + encodeURIComponent(fromDate ? '' + fromDate.toJSON() : '') + '&';
-    if (toDate !== undefined && toDate !== null) url_ += 'ToDate=' + encodeURIComponent(toDate ? '' + toDate.toJSON() : '') + '&';
-    if (minLongitude !== undefined && minLongitude !== null) url_ += 'minLongitude=' + encodeURIComponent('' + minLongitude) + '&';
-    if (maxLongitude !== undefined && maxLongitude !== null) url_ += 'maxLongitude=' + encodeURIComponent('' + maxLongitude) + '&';
-    if (editionId !== undefined && editionId !== null) url_ += 'EditionId=' + encodeURIComponent('' + editionId) + '&';
-    if (sorting !== undefined && sorting !== null) url_ += 'Sorting=' + encodeURIComponent('' + sorting) + '&';
-    if (skipCount === null) throw new Error("The parameter 'skipCount' cannot be null.");
-    else if (skipCount !== undefined) url_ += 'SkipCount=' + encodeURIComponent('' + skipCount) + '&';
-    if (maxResultCount === null) throw new Error("The parameter 'maxResultCount' cannot be null.");
-    else if (maxResultCount !== undefined) url_ += 'MaxResultCount=' + encodeURIComponent('' + maxResultCount) + '&';
+    if (loadOptions !== undefined && loadOptions !== null) url_ += 'LoadOptions=' + encodeURIComponent('' + loadOptions) + '&';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -43344,14 +43408,14 @@ export class TransactionServiceProxy {
             try {
               return this.processGetAll(<any>response_);
             } catch (e) {
-              return <Observable<PagedResultDtoOfTransactionListDto>>(<any>_observableThrow(e));
+              return <Observable<LoadResult>>(<any>_observableThrow(e));
             }
-          } else return <Observable<PagedResultDtoOfTransactionListDto>>(<any>_observableThrow(response_));
+          } else return <Observable<LoadResult>>(<any>_observableThrow(response_));
         })
       );
   }
 
-  protected processGetAll(response: HttpResponseBase): Observable<PagedResultDtoOfTransactionListDto> {
+  protected processGetAll(response: HttpResponseBase): Observable<LoadResult> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -43366,7 +43430,7 @@ export class TransactionServiceProxy {
         _observableMergeMap((_responseText) => {
           let result200: any = null;
           let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
-          result200 = PagedResultDtoOfTransactionListDto.fromJS(resultData200);
+          result200 = LoadResult.fromJS(resultData200);
           return _observableOf(result200);
         })
       );
@@ -43377,7 +43441,7 @@ export class TransactionServiceProxy {
         })
       );
     }
-    return _observableOf<PagedResultDtoOfTransactionListDto>(<any>null);
+    return _observableOf<LoadResult>(<any>null);
   }
 
   /**
@@ -44687,7 +44751,7 @@ export class TrucksServiceProxy {
    * @param filter (optional)
    * @return Success
    */
-  getAll(filter: string | null | undefined): Observable<PagedResultDtoOfTruckDto> {
+  getAll(filter: string | null | undefined): Observable<LoadResult> {
     let url_ = this.baseUrl + '/api/services/app/Trucks/GetAll?';
     if (filter !== undefined && filter !== null) url_ += 'Filter=' + encodeURIComponent('' + filter) + '&';
     url_ = url_.replace(/[?&]$/, '');
@@ -44713,14 +44777,14 @@ export class TrucksServiceProxy {
             try {
               return this.processGetAll(<any>response_);
             } catch (e) {
-              return <Observable<PagedResultDtoOfTruckDto>>(<any>_observableThrow(e));
+              return <Observable<LoadResult>>(<any>_observableThrow(e));
             }
-          } else return <Observable<PagedResultDtoOfTruckDto>>(<any>_observableThrow(response_));
+          } else return <Observable<LoadResult>>(<any>_observableThrow(response_));
         })
       );
   }
 
-  protected processGetAll(response: HttpResponseBase): Observable<PagedResultDtoOfTruckDto> {
+  protected processGetAll(response: HttpResponseBase): Observable<LoadResult> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -44735,7 +44799,7 @@ export class TrucksServiceProxy {
         _observableMergeMap((_responseText) => {
           let result200: any = null;
           let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
-          result200 = PagedResultDtoOfTruckDto.fromJS(resultData200);
+          result200 = LoadResult.fromJS(resultData200);
           return _observableOf(result200);
         })
       );
@@ -44746,7 +44810,7 @@ export class TrucksServiceProxy {
         })
       );
     }
-    return _observableOf<PagedResultDtoOfTruckDto>(<any>null);
+    return _observableOf<LoadResult>(<any>null);
   }
 
   /**
@@ -48391,7 +48455,7 @@ export class UserServiceProxy {
    * @param loadOptions (optional)
    * @return Success
    */
-  getDrivers(loadOptions: string | null | undefined): Observable<PagedResultDtoOfDriverListDto> {
+  getDrivers(loadOptions: string | null | undefined): Observable<LoadResult> {
     let url_ = this.baseUrl + '/api/services/app/User/GetDrivers?';
     if (loadOptions !== undefined && loadOptions !== null) url_ += 'LoadOptions=' + encodeURIComponent('' + loadOptions) + '&';
     url_ = url_.replace(/[?&]$/, '');
@@ -48417,14 +48481,14 @@ export class UserServiceProxy {
             try {
               return this.processGetDrivers(<any>response_);
             } catch (e) {
-              return <Observable<PagedResultDtoOfDriverListDto>>(<any>_observableThrow(e));
+              return <Observable<LoadResult>>(<any>_observableThrow(e));
             }
-          } else return <Observable<PagedResultDtoOfDriverListDto>>(<any>_observableThrow(response_));
+          } else return <Observable<LoadResult>>(<any>_observableThrow(response_));
         })
       );
   }
 
-  protected processGetDrivers(response: HttpResponseBase): Observable<PagedResultDtoOfDriverListDto> {
+  protected processGetDrivers(response: HttpResponseBase): Observable<LoadResult> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -48439,7 +48503,7 @@ export class UserServiceProxy {
         _observableMergeMap((_responseText) => {
           let result200: any = null;
           let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
-          result200 = PagedResultDtoOfDriverListDto.fromJS(resultData200);
+          result200 = LoadResult.fromJS(resultData200);
           return _observableOf(result200);
         })
       );
@@ -48450,7 +48514,7 @@ export class UserServiceProxy {
         })
       );
     }
-    return _observableOf<PagedResultDtoOfDriverListDto>(<any>null);
+    return _observableOf<LoadResult>(<any>null);
   }
 
   /**
@@ -53723,100 +53787,67 @@ export interface IEntityPropertyChangeDto {
   id: number;
 }
 
-export class BalanceRechargeListDto implements IBalanceRechargeListDto {
-  tenantName!: string;
-  amount!: number;
-  creationTime!: moment.Moment;
-  referenceNo!: string | undefined;
-  id!: number;
-
-  constructor(data?: IBalanceRechargeListDto) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(_data?: any) {
-    if (_data) {
-      this.tenantName = _data['tenantName'];
-      this.amount = _data['amount'];
-      this.creationTime = _data['creationTime'] ? moment(_data['creationTime'].toString()) : <any>undefined;
-      this.referenceNo = _data['referenceNo'];
-      this.id = _data['id'];
-    }
-  }
-
-  static fromJS(data: any): BalanceRechargeListDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new BalanceRechargeListDto();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['tenantName'] = this.tenantName;
-    data['amount'] = this.amount;
-    data['creationTime'] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
-    data['referenceNo'] = this.referenceNo;
-    data['id'] = this.id;
-    return data;
-  }
-}
-
-export interface IBalanceRechargeListDto {
-  tenantName: string;
-  amount: number;
-  creationTime: moment.Moment;
-  referenceNo: string | undefined;
-  id: number;
-}
-
-export class PagedResultDtoOfBalanceRechargeListDto implements IPagedResultDtoOfBalanceRechargeListDto {
+export class LoadResult implements ILoadResult {
+  data!: any[] | undefined;
   totalCount!: number;
-  items!: BalanceRechargeListDto[] | undefined;
+  groupCount!: number;
+  summary!: any[] | undefined;
 
-  constructor(data?: IPagedResultDtoOfBalanceRechargeListDto) {
+  constructor(data?: ILoadResult) {
     if (data) {
       for (var property in data) {
         if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
       }
     }
+    if (!data) {
+      this.totalCount = -1;
+      this.groupCount = -1;
+    }
   }
 
   init(_data?: any) {
     if (_data) {
-      this.totalCount = _data['totalCount'];
-      if (Array.isArray(_data['items'])) {
-        this.items = [] as any;
-        for (let item of _data['items']) this.items!.push(BalanceRechargeListDto.fromJS(item));
+      if (Array.isArray(_data['data'])) {
+        this.data = [] as any;
+        for (let item of _data['data']) this.data!.push(item);
+      }
+      this.totalCount = _data['totalCount'] !== undefined ? _data['totalCount'] : -1;
+      this.groupCount = _data['groupCount'] !== undefined ? _data['groupCount'] : -1;
+      if (Array.isArray(_data['summary'])) {
+        this.summary = [] as any;
+        for (let item of _data['summary']) this.summary!.push(item);
       }
     }
   }
 
-  static fromJS(data: any): PagedResultDtoOfBalanceRechargeListDto {
+  static fromJS(data: any): LoadResult {
     data = typeof data === 'object' ? data : {};
-    let result = new PagedResultDtoOfBalanceRechargeListDto();
+    let result = new LoadResult();
     result.init(data);
     return result;
   }
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
+    if (Array.isArray(this.data)) {
+      data['data'] = [];
+      for (let item of this.data) data['data'].push(item);
+    }
     data['totalCount'] = this.totalCount;
-    if (Array.isArray(this.items)) {
-      data['items'] = [];
-      for (let item of this.items) data['items'].push(item.toJSON());
+    data['groupCount'] = this.groupCount;
+    if (Array.isArray(this.summary)) {
+      data['summary'] = [];
+      for (let item of this.summary) data['summary'].push(item);
     }
     return data;
   }
 }
 
-export interface IPagedResultDtoOfBalanceRechargeListDto {
+export interface ILoadResult {
+  data: any[] | undefined;
   totalCount: number;
-  items: BalanceRechargeListDto[] | undefined;
+  groupCount: number;
+  summary: any[] | undefined;
 }
 
 export class CreateBalanceRechargeInput implements ICreateBalanceRechargeInput {
@@ -53863,15 +53894,7 @@ export interface ICreateBalanceRechargeInput {
 }
 
 export class GetAllBalanceRechargeInput implements IGetAllBalanceRechargeInput {
-  tenantId!: number | undefined;
-  fromDate!: moment.Moment | undefined;
-  toDate!: moment.Moment | undefined;
-  referenceNo!: string | undefined;
-  minLongitude!: number | undefined;
-  maxLongitude!: number | undefined;
-  sorting!: string | undefined;
-  skipCount!: number;
-  maxResultCount!: number;
+  loadOptions!: string | undefined;
 
   constructor(data?: IGetAllBalanceRechargeInput) {
     if (data) {
@@ -53883,15 +53906,7 @@ export class GetAllBalanceRechargeInput implements IGetAllBalanceRechargeInput {
 
   init(_data?: any) {
     if (_data) {
-      this.tenantId = _data['tenantId'];
-      this.fromDate = _data['fromDate'] ? moment(_data['fromDate'].toString()) : <any>undefined;
-      this.toDate = _data['toDate'] ? moment(_data['toDate'].toString()) : <any>undefined;
-      this.referenceNo = _data['referenceNo'];
-      this.minLongitude = _data['minLongitude'];
-      this.maxLongitude = _data['maxLongitude'];
-      this.sorting = _data['sorting'];
-      this.skipCount = _data['skipCount'];
-      this.maxResultCount = _data['maxResultCount'];
+      this.loadOptions = _data['loadOptions'];
     }
   }
 
@@ -53904,29 +53919,13 @@ export class GetAllBalanceRechargeInput implements IGetAllBalanceRechargeInput {
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data['tenantId'] = this.tenantId;
-    data['fromDate'] = this.fromDate ? this.fromDate.toISOString() : <any>undefined;
-    data['toDate'] = this.toDate ? this.toDate.toISOString() : <any>undefined;
-    data['referenceNo'] = this.referenceNo;
-    data['minLongitude'] = this.minLongitude;
-    data['maxLongitude'] = this.maxLongitude;
-    data['sorting'] = this.sorting;
-    data['skipCount'] = this.skipCount;
-    data['maxResultCount'] = this.maxResultCount;
+    data['loadOptions'] = this.loadOptions;
     return data;
   }
 }
 
 export interface IGetAllBalanceRechargeInput {
-  tenantId: number | undefined;
-  fromDate: moment.Moment | undefined;
-  toDate: moment.Moment | undefined;
-  referenceNo: string | undefined;
-  minLongitude: number | undefined;
-  maxLongitude: number | undefined;
-  sorting: string | undefined;
-  skipCount: number;
-  maxResultCount: number;
+  loadOptions: string | undefined;
 }
 
 export class CacheDto implements ICacheDto {
@@ -56451,350 +56450,6 @@ export interface IStringOutput {
   output: string | undefined;
 }
 
-export class GetAllTenantsSubmittedDocumentsDto implements IGetAllTenantsSubmittedDocumentsDto {
-  id!: string;
-  documentTypeName!: string | undefined;
-  submitterTenatTenancyName!: string | undefined;
-  creationTime!: moment.Moment;
-  number!: string | undefined;
-  extn!: string | undefined;
-  expirationDate!: moment.Moment | undefined;
-  isAccepted!: boolean;
-  isRejected!: boolean;
-
-  constructor(data?: IGetAllTenantsSubmittedDocumentsDto) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(_data?: any) {
-    if (_data) {
-      this.id = _data['id'];
-      this.documentTypeName = _data['documentTypeName'];
-      this.submitterTenatTenancyName = _data['submitterTenatTenancyName'];
-      this.creationTime = _data['creationTime'] ? moment(_data['creationTime'].toString()) : <any>undefined;
-      this.number = _data['number'];
-      this.extn = _data['extn'];
-      this.expirationDate = _data['expirationDate'] ? moment(_data['expirationDate'].toString()) : <any>undefined;
-      this.isAccepted = _data['isAccepted'];
-      this.isRejected = _data['isRejected'];
-    }
-  }
-
-  static fromJS(data: any): GetAllTenantsSubmittedDocumentsDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new GetAllTenantsSubmittedDocumentsDto();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['id'] = this.id;
-    data['documentTypeName'] = this.documentTypeName;
-    data['submitterTenatTenancyName'] = this.submitterTenatTenancyName;
-    data['creationTime'] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
-    data['number'] = this.number;
-    data['extn'] = this.extn;
-    data['expirationDate'] = this.expirationDate ? this.expirationDate.toISOString() : <any>undefined;
-    data['isAccepted'] = this.isAccepted;
-    data['isRejected'] = this.isRejected;
-    return data;
-  }
-}
-
-export interface IGetAllTenantsSubmittedDocumentsDto {
-  id: string;
-  documentTypeName: string | undefined;
-  submitterTenatTenancyName: string | undefined;
-  creationTime: moment.Moment;
-  number: string | undefined;
-  extn: string | undefined;
-  expirationDate: moment.Moment | undefined;
-  isAccepted: boolean;
-  isRejected: boolean;
-}
-
-export class PagedResultDtoOfGetAllTenantsSubmittedDocumentsDto implements IPagedResultDtoOfGetAllTenantsSubmittedDocumentsDto {
-  totalCount!: number;
-  items!: GetAllTenantsSubmittedDocumentsDto[] | undefined;
-
-  constructor(data?: IPagedResultDtoOfGetAllTenantsSubmittedDocumentsDto) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(_data?: any) {
-    if (_data) {
-      this.totalCount = _data['totalCount'];
-      if (Array.isArray(_data['items'])) {
-        this.items = [] as any;
-        for (let item of _data['items']) this.items!.push(GetAllTenantsSubmittedDocumentsDto.fromJS(item));
-      }
-    }
-  }
-
-  static fromJS(data: any): PagedResultDtoOfGetAllTenantsSubmittedDocumentsDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new PagedResultDtoOfGetAllTenantsSubmittedDocumentsDto();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['totalCount'] = this.totalCount;
-    if (Array.isArray(this.items)) {
-      data['items'] = [];
-      for (let item of this.items) data['items'].push(item.toJSON());
-    }
-    return data;
-  }
-}
-
-export interface IPagedResultDtoOfGetAllTenantsSubmittedDocumentsDto {
-  totalCount: number;
-  items: GetAllTenantsSubmittedDocumentsDto[] | undefined;
-}
-
-export class GetAllTrucksSubmittedDocumentsDto implements IGetAllTrucksSubmittedDocumentsDto {
-  id!: string;
-  documentTypeName!: string | undefined;
-  truckId!: number;
-  truckPlateNumber!: string | undefined;
-  creationTime!: moment.Moment;
-  number!: string | undefined;
-  extn!: string | undefined;
-  expirationDate!: moment.Moment | undefined;
-  isAccepted!: boolean;
-  isRejected!: boolean;
-
-  constructor(data?: IGetAllTrucksSubmittedDocumentsDto) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(_data?: any) {
-    if (_data) {
-      this.id = _data['id'];
-      this.documentTypeName = _data['documentTypeName'];
-      this.truckId = _data['truckId'];
-      this.truckPlateNumber = _data['truckPlateNumber'];
-      this.creationTime = _data['creationTime'] ? moment(_data['creationTime'].toString()) : <any>undefined;
-      this.number = _data['number'];
-      this.extn = _data['extn'];
-      this.expirationDate = _data['expirationDate'] ? moment(_data['expirationDate'].toString()) : <any>undefined;
-      this.isAccepted = _data['isAccepted'];
-      this.isRejected = _data['isRejected'];
-    }
-  }
-
-  static fromJS(data: any): GetAllTrucksSubmittedDocumentsDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new GetAllTrucksSubmittedDocumentsDto();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['id'] = this.id;
-    data['documentTypeName'] = this.documentTypeName;
-    data['truckId'] = this.truckId;
-    data['truckPlateNumber'] = this.truckPlateNumber;
-    data['creationTime'] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
-    data['number'] = this.number;
-    data['extn'] = this.extn;
-    data['expirationDate'] = this.expirationDate ? this.expirationDate.toISOString() : <any>undefined;
-    data['isAccepted'] = this.isAccepted;
-    data['isRejected'] = this.isRejected;
-    return data;
-  }
-}
-
-export interface IGetAllTrucksSubmittedDocumentsDto {
-  id: string;
-  documentTypeName: string | undefined;
-  truckId: number;
-  truckPlateNumber: string | undefined;
-  creationTime: moment.Moment;
-  number: string | undefined;
-  extn: string | undefined;
-  expirationDate: moment.Moment | undefined;
-  isAccepted: boolean;
-  isRejected: boolean;
-}
-
-export class PagedResultDtoOfGetAllTrucksSubmittedDocumentsDto implements IPagedResultDtoOfGetAllTrucksSubmittedDocumentsDto {
-  totalCount!: number;
-  items!: GetAllTrucksSubmittedDocumentsDto[] | undefined;
-
-  constructor(data?: IPagedResultDtoOfGetAllTrucksSubmittedDocumentsDto) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(_data?: any) {
-    if (_data) {
-      this.totalCount = _data['totalCount'];
-      if (Array.isArray(_data['items'])) {
-        this.items = [] as any;
-        for (let item of _data['items']) this.items!.push(GetAllTrucksSubmittedDocumentsDto.fromJS(item));
-      }
-    }
-  }
-
-  static fromJS(data: any): PagedResultDtoOfGetAllTrucksSubmittedDocumentsDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new PagedResultDtoOfGetAllTrucksSubmittedDocumentsDto();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['totalCount'] = this.totalCount;
-    if (Array.isArray(this.items)) {
-      data['items'] = [];
-      for (let item of this.items) data['items'].push(item.toJSON());
-    }
-    return data;
-  }
-}
-
-export interface IPagedResultDtoOfGetAllTrucksSubmittedDocumentsDto {
-  totalCount: number;
-  items: GetAllTrucksSubmittedDocumentsDto[] | undefined;
-}
-
-export class GetAllDriversSubmittedDocumentsDto implements IGetAllDriversSubmittedDocumentsDto {
-  id!: string;
-  documentTypeName!: string | undefined;
-  driverId!: number;
-  driverName!: string | undefined;
-  creationTime!: moment.Moment;
-  number!: string | undefined;
-  extn!: string | undefined;
-  expirationDate!: moment.Moment | undefined;
-  isAccepted!: boolean;
-  isRejected!: boolean;
-
-  constructor(data?: IGetAllDriversSubmittedDocumentsDto) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(_data?: any) {
-    if (_data) {
-      this.id = _data['id'];
-      this.documentTypeName = _data['documentTypeName'];
-      this.driverId = _data['driverId'];
-      this.driverName = _data['driverName'];
-      this.creationTime = _data['creationTime'] ? moment(_data['creationTime'].toString()) : <any>undefined;
-      this.number = _data['number'];
-      this.extn = _data['extn'];
-      this.expirationDate = _data['expirationDate'] ? moment(_data['expirationDate'].toString()) : <any>undefined;
-      this.isAccepted = _data['isAccepted'];
-      this.isRejected = _data['isRejected'];
-    }
-  }
-
-  static fromJS(data: any): GetAllDriversSubmittedDocumentsDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new GetAllDriversSubmittedDocumentsDto();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['id'] = this.id;
-    data['documentTypeName'] = this.documentTypeName;
-    data['driverId'] = this.driverId;
-    data['driverName'] = this.driverName;
-    data['creationTime'] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
-    data['number'] = this.number;
-    data['extn'] = this.extn;
-    data['expirationDate'] = this.expirationDate ? this.expirationDate.toISOString() : <any>undefined;
-    data['isAccepted'] = this.isAccepted;
-    data['isRejected'] = this.isRejected;
-    return data;
-  }
-}
-
-export interface IGetAllDriversSubmittedDocumentsDto {
-  id: string;
-  documentTypeName: string | undefined;
-  driverId: number;
-  driverName: string | undefined;
-  creationTime: moment.Moment;
-  number: string | undefined;
-  extn: string | undefined;
-  expirationDate: moment.Moment | undefined;
-  isAccepted: boolean;
-  isRejected: boolean;
-}
-
-export class PagedResultDtoOfGetAllDriversSubmittedDocumentsDto implements IPagedResultDtoOfGetAllDriversSubmittedDocumentsDto {
-  totalCount!: number;
-  items!: GetAllDriversSubmittedDocumentsDto[] | undefined;
-
-  constructor(data?: IPagedResultDtoOfGetAllDriversSubmittedDocumentsDto) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(_data?: any) {
-    if (_data) {
-      this.totalCount = _data['totalCount'];
-      if (Array.isArray(_data['items'])) {
-        this.items = [] as any;
-        for (let item of _data['items']) this.items!.push(GetAllDriversSubmittedDocumentsDto.fromJS(item));
-      }
-    }
-  }
-
-  static fromJS(data: any): PagedResultDtoOfGetAllDriversSubmittedDocumentsDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new PagedResultDtoOfGetAllDriversSubmittedDocumentsDto();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['totalCount'] = this.totalCount;
-    if (Array.isArray(this.items)) {
-      data['items'] = [];
-      for (let item of this.items) data['items'].push(item.toJSON());
-    }
-    return data;
-  }
-}
-
-export interface IPagedResultDtoOfGetAllDriversSubmittedDocumentsDto {
-  totalCount: number;
-  items: GetAllDriversSubmittedDocumentsDto[] | undefined;
-}
-
 export class DocumentFileDto implements IDocumentFileDto {
   name!: string | undefined;
   extn!: string | undefined;
@@ -57832,51 +57487,6 @@ export class GetDocumentsEntityForEditOutput implements IGetDocumentsEntityForEd
 
 export interface IGetDocumentsEntityForEditOutput {
   documentsEntity: CreateOrEditDocumentsEntityDto;
-}
-
-export class PagedResultDtoOfDocumentTypeDto implements IPagedResultDtoOfDocumentTypeDto {
-  totalCount!: number;
-  items!: DocumentTypeDto[] | undefined;
-
-  constructor(data?: IPagedResultDtoOfDocumentTypeDto) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(_data?: any) {
-    if (_data) {
-      this.totalCount = _data['totalCount'];
-      if (Array.isArray(_data['items'])) {
-        this.items = [] as any;
-        for (let item of _data['items']) this.items!.push(DocumentTypeDto.fromJS(item));
-      }
-    }
-  }
-
-  static fromJS(data: any): PagedResultDtoOfDocumentTypeDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new PagedResultDtoOfDocumentTypeDto();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['totalCount'] = this.totalCount;
-    if (Array.isArray(this.items)) {
-      data['items'] = [];
-      for (let item of this.items) data['items'].push(item.toJSON());
-    }
-    return data;
-  }
-}
-
-export interface IPagedResultDtoOfDocumentTypeDto {
-  totalCount: number;
-  items: DocumentTypeDto[] | undefined;
 }
 
 export class GetDocumentTypeForViewDto implements IGetDocumentTypeForViewDto {
@@ -62857,130 +62467,6 @@ export interface ICreateInvoiceDto {
 export enum InvoiceAccountType {
   AccountReceivable = 1,
   AccountPayable = 2,
-}
-
-export class InvoiceListDto implements IInvoiceListDto {
-  invoiceNumber!: number;
-  periodId!: number;
-  tenantName!: string | undefined;
-  period!: string | undefined;
-  dueDate!: moment.Moment;
-  isPaid!: boolean;
-  accountType!: InvoiceAccountType;
-  readonly accountTypeTitle!: string | undefined;
-  totalAmount!: number;
-  creationTime!: moment.Moment;
-  creatorUserId!: number | undefined;
-  id!: number;
-
-  constructor(data?: IInvoiceListDto) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(_data?: any) {
-    if (_data) {
-      this.invoiceNumber = _data['invoiceNumber'];
-      this.periodId = _data['periodId'];
-      this.tenantName = _data['tenantName'];
-      this.period = _data['period'];
-      this.dueDate = _data['dueDate'] ? moment(_data['dueDate'].toString()) : <any>undefined;
-      this.isPaid = _data['isPaid'];
-      this.accountType = _data['accountType'];
-      (<any>this).accountTypeTitle = _data['accountTypeTitle'];
-      this.totalAmount = _data['totalAmount'];
-      this.creationTime = _data['creationTime'] ? moment(_data['creationTime'].toString()) : <any>undefined;
-      this.creatorUserId = _data['creatorUserId'];
-      this.id = _data['id'];
-    }
-  }
-
-  static fromJS(data: any): InvoiceListDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new InvoiceListDto();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['invoiceNumber'] = this.invoiceNumber;
-    data['periodId'] = this.periodId;
-    data['tenantName'] = this.tenantName;
-    data['period'] = this.period;
-    data['dueDate'] = this.dueDate ? this.dueDate.toISOString() : <any>undefined;
-    data['isPaid'] = this.isPaid;
-    data['accountType'] = this.accountType;
-    data['accountTypeTitle'] = this.accountTypeTitle;
-    data['totalAmount'] = this.totalAmount;
-    data['creationTime'] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
-    data['creatorUserId'] = this.creatorUserId;
-    data['id'] = this.id;
-    return data;
-  }
-}
-
-export interface IInvoiceListDto {
-  invoiceNumber: number;
-  periodId: number;
-  tenantName: string | undefined;
-  period: string | undefined;
-  dueDate: moment.Moment;
-  isPaid: boolean;
-  accountType: InvoiceAccountType;
-  accountTypeTitle: string | undefined;
-  totalAmount: number;
-  creationTime: moment.Moment;
-  creatorUserId: number | undefined;
-  id: number;
-}
-
-export class PagedResultDtoOfInvoiceListDto implements IPagedResultDtoOfInvoiceListDto {
-  totalCount!: number;
-  items!: InvoiceListDto[] | undefined;
-
-  constructor(data?: IPagedResultDtoOfInvoiceListDto) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(_data?: any) {
-    if (_data) {
-      this.totalCount = _data['totalCount'];
-      if (Array.isArray(_data['items'])) {
-        this.items = [] as any;
-        for (let item of _data['items']) this.items!.push(InvoiceListDto.fromJS(item));
-      }
-    }
-  }
-
-  static fromJS(data: any): PagedResultDtoOfInvoiceListDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new PagedResultDtoOfInvoiceListDto();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['totalCount'] = this.totalCount;
-    if (Array.isArray(this.items)) {
-      data['items'] = [];
-      for (let item of this.items) data['items'].push(item.toJSON());
-    }
-    return data;
-  }
-}
-
-export interface IPagedResultDtoOfInvoiceListDto {
-  totalCount: number;
-  items: InvoiceListDto[] | undefined;
 }
 
 export class InvoiceItemDto implements IInvoiceItemDto {
@@ -69473,7 +68959,6 @@ export enum ShippingRequestType {
 
 export enum ShippingRequestRouteType {
   SingleDrop = 1,
-  TwoWay = 2,
   MultipleDrops = 3,
 }
 
@@ -69502,7 +68987,7 @@ export class GetShippingRequestForPriceOfferListDto implements IGetShippingReque
   isTachyonDeal!: boolean;
   originCity!: string | undefined;
   destinationCity!: string | undefined;
-  trukType!: string | undefined;
+  truckType!: string | undefined;
   isPriced!: boolean;
   remainingDays!: string | undefined;
   rangeDate!: string | undefined;
@@ -69524,6 +69009,7 @@ export class GetShippingRequestForPriceOfferListDto implements IGetShippingReque
   referenceNumber!: string | undefined;
   requestType!: ShippingRequestType;
   readonly requestTypeTitle!: string | undefined;
+  isDrafted!: boolean;
   id!: number;
 
   constructor(data?: IGetShippingRequestForPriceOfferListDto) {
@@ -69544,7 +69030,7 @@ export class GetShippingRequestForPriceOfferListDto implements IGetShippingReque
       this.isTachyonDeal = _data['isTachyonDeal'];
       this.originCity = _data['originCity'];
       this.destinationCity = _data['destinationCity'];
-      this.trukType = _data['trukType'];
+      this.truckType = _data['truckType'];
       this.isPriced = _data['isPriced'];
       this.remainingDays = _data['remainingDays'];
       this.rangeDate = _data['rangeDate'];
@@ -69566,6 +69052,7 @@ export class GetShippingRequestForPriceOfferListDto implements IGetShippingReque
       this.referenceNumber = _data['referenceNumber'];
       this.requestType = _data['requestType'];
       (<any>this).requestTypeTitle = _data['requestTypeTitle'];
+      this.isDrafted = _data['isDrafted'];
       this.id = _data['id'];
     }
   }
@@ -69587,7 +69074,7 @@ export class GetShippingRequestForPriceOfferListDto implements IGetShippingReque
     data['isTachyonDeal'] = this.isTachyonDeal;
     data['originCity'] = this.originCity;
     data['destinationCity'] = this.destinationCity;
-    data['trukType'] = this.trukType;
+    data['truckType'] = this.truckType;
     data['isPriced'] = this.isPriced;
     data['remainingDays'] = this.remainingDays;
     data['rangeDate'] = this.rangeDate;
@@ -69609,6 +69096,7 @@ export class GetShippingRequestForPriceOfferListDto implements IGetShippingReque
     data['referenceNumber'] = this.referenceNumber;
     data['requestType'] = this.requestType;
     data['requestTypeTitle'] = this.requestTypeTitle;
+    data['isDrafted'] = this.isDrafted;
     data['id'] = this.id;
     return data;
   }
@@ -69623,7 +69111,7 @@ export interface IGetShippingRequestForPriceOfferListDto {
   isTachyonDeal: boolean;
   originCity: string | undefined;
   destinationCity: string | undefined;
-  trukType: string | undefined;
+  truckType: string | undefined;
   isPriced: boolean;
   remainingDays: string | undefined;
   rangeDate: string | undefined;
@@ -69645,6 +69133,7 @@ export interface IGetShippingRequestForPriceOfferListDto {
   referenceNumber: string | undefined;
   requestType: ShippingRequestType;
   requestTypeTitle: string | undefined;
+  isDrafted: boolean;
   id: number;
 }
 
@@ -76493,6 +75982,7 @@ export class ShippingRequestsTripForViewDto implements IShippingRequestsTripForV
   driverStatusTitle!: string | undefined;
   rejectedReason!: string | undefined;
   totalValue!: string | undefined;
+  note!: string | undefined;
 
   constructor(data?: IShippingRequestsTripForViewDto) {
     if (data) {
@@ -76529,6 +76019,7 @@ export class ShippingRequestsTripForViewDto implements IShippingRequestsTripForV
       this.driverStatusTitle = _data['driverStatusTitle'];
       this.rejectedReason = _data['rejectedReason'];
       this.totalValue = _data['totalValue'];
+      this.note = _data['note'];
     }
   }
 
@@ -76566,6 +76057,7 @@ export class ShippingRequestsTripForViewDto implements IShippingRequestsTripForV
     data['driverStatusTitle'] = this.driverStatusTitle;
     data['rejectedReason'] = this.rejectedReason;
     data['totalValue'] = this.totalValue;
+    data['note'] = this.note;
     return data;
   }
 }
@@ -76590,6 +76082,7 @@ export interface IShippingRequestsTripForViewDto {
   driverStatusTitle: string | undefined;
   rejectedReason: string | undefined;
   totalValue: string | undefined;
+  note: string | undefined;
 }
 
 export class CreateOrEditShippingRequestTripVasDto implements ICreateOrEditShippingRequestTripVasDto {
@@ -76648,6 +76141,7 @@ export class CreateOrEditShippingRequestTripDto implements ICreateOrEditShipping
   originFacilityId!: number | undefined;
   destinationFacilityId!: number | undefined;
   totalValue!: string | undefined;
+  note!: string | undefined;
   routPoints!: CreateOrEditRoutPointDto[] | undefined;
   shippingRequestTripVases!: CreateOrEditShippingRequestTripVasDto[] | undefined;
   createOrEditDocumentFileDto!: CreateOrEditDocumentFileDto;
@@ -76671,6 +76165,7 @@ export class CreateOrEditShippingRequestTripDto implements ICreateOrEditShipping
       this.originFacilityId = _data['originFacilityId'];
       this.destinationFacilityId = _data['destinationFacilityId'];
       this.totalValue = _data['totalValue'];
+      this.note = _data['note'];
       if (Array.isArray(_data['routPoints'])) {
         this.routPoints = [] as any;
         for (let item of _data['routPoints']) this.routPoints!.push(CreateOrEditRoutPointDto.fromJS(item));
@@ -76703,6 +76198,7 @@ export class CreateOrEditShippingRequestTripDto implements ICreateOrEditShipping
     data['originFacilityId'] = this.originFacilityId;
     data['destinationFacilityId'] = this.destinationFacilityId;
     data['totalValue'] = this.totalValue;
+    data['note'] = this.note;
     if (Array.isArray(this.routPoints)) {
       data['routPoints'] = [];
       for (let item of this.routPoints) data['routPoints'].push(item.toJSON());
@@ -76726,6 +76222,7 @@ export interface ICreateOrEditShippingRequestTripDto {
   originFacilityId: number | undefined;
   destinationFacilityId: number | undefined;
   totalValue: string | undefined;
+  note: string | undefined;
   routPoints: CreateOrEditRoutPointDto[] | undefined;
   shippingRequestTripVases: CreateOrEditShippingRequestTripVasDto[] | undefined;
   createOrEditDocumentFileDto: CreateOrEditDocumentFileDto;
@@ -77693,137 +77190,6 @@ export interface IStripePaymentResultOutput {
   paymentDone: boolean;
 }
 
-export enum SubmitInvoiceStatus {
-  New = 0,
-  Claim = 1,
-  Accepted = 2,
-  Rejected = 3,
-}
-
-export class SubmitInvoiceListDto implements ISubmitInvoiceListDto {
-  referencNumber!: number | undefined;
-  tenantName!: string | undefined;
-  period!: string | undefined;
-  periodId!: number;
-  status!: SubmitInvoiceStatus;
-  readonly statusTitle!: string | undefined;
-  documentId!: string | undefined;
-  documentName!: string | undefined;
-  documentContentType!: string | undefined;
-  creationTime!: moment.Moment;
-  totalAmount!: number;
-  id!: number;
-
-  constructor(data?: ISubmitInvoiceListDto) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(_data?: any) {
-    if (_data) {
-      this.referencNumber = _data['referencNumber'];
-      this.tenantName = _data['tenantName'];
-      this.period = _data['period'];
-      this.periodId = _data['periodId'];
-      this.status = _data['status'];
-      (<any>this).statusTitle = _data['statusTitle'];
-      this.documentId = _data['documentId'];
-      this.documentName = _data['documentName'];
-      this.documentContentType = _data['documentContentType'];
-      this.creationTime = _data['creationTime'] ? moment(_data['creationTime'].toString()) : <any>undefined;
-      this.totalAmount = _data['totalAmount'];
-      this.id = _data['id'];
-    }
-  }
-
-  static fromJS(data: any): SubmitInvoiceListDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new SubmitInvoiceListDto();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['referencNumber'] = this.referencNumber;
-    data['tenantName'] = this.tenantName;
-    data['period'] = this.period;
-    data['periodId'] = this.periodId;
-    data['status'] = this.status;
-    data['statusTitle'] = this.statusTitle;
-    data['documentId'] = this.documentId;
-    data['documentName'] = this.documentName;
-    data['documentContentType'] = this.documentContentType;
-    data['creationTime'] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
-    data['totalAmount'] = this.totalAmount;
-    data['id'] = this.id;
-    return data;
-  }
-}
-
-export interface ISubmitInvoiceListDto {
-  referencNumber: number | undefined;
-  tenantName: string | undefined;
-  period: string | undefined;
-  periodId: number;
-  status: SubmitInvoiceStatus;
-  statusTitle: string | undefined;
-  documentId: string | undefined;
-  documentName: string | undefined;
-  documentContentType: string | undefined;
-  creationTime: moment.Moment;
-  totalAmount: number;
-  id: number;
-}
-
-export class PagedResultDtoOfSubmitInvoiceListDto implements IPagedResultDtoOfSubmitInvoiceListDto {
-  totalCount!: number;
-  items!: SubmitInvoiceListDto[] | undefined;
-
-  constructor(data?: IPagedResultDtoOfSubmitInvoiceListDto) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(_data?: any) {
-    if (_data) {
-      this.totalCount = _data['totalCount'];
-      if (Array.isArray(_data['items'])) {
-        this.items = [] as any;
-        for (let item of _data['items']) this.items!.push(SubmitInvoiceListDto.fromJS(item));
-      }
-    }
-  }
-
-  static fromJS(data: any): PagedResultDtoOfSubmitInvoiceListDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new PagedResultDtoOfSubmitInvoiceListDto();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['totalCount'] = this.totalCount;
-    if (Array.isArray(this.items)) {
-      data['items'] = [];
-      for (let item of this.items) data['items'].push(item.toJSON());
-    }
-    return data;
-  }
-}
-
-export interface IPagedResultDtoOfSubmitInvoiceListDto {
-  totalCount: number;
-  items: SubmitInvoiceListDto[] | undefined;
-}
-
 export class SubmitInvoiceInfoDto implements ISubmitInvoiceInfoDto {
   clientName!: string | undefined;
   email!: string | undefined;
@@ -78031,6 +77397,13 @@ export interface ISubmitInvoiceRejectedInput {
   id: number;
 }
 
+export enum SubmitInvoiceStatus {
+  New = 0,
+  Claim = 1,
+  Accepted = 2,
+  Rejected = 3,
+}
+
 export class SubmitInvoiceFilterInput implements ISubmitInvoiceFilterInput {
   tenantId!: number | undefined;
   periodId!: number | undefined;
@@ -78105,6 +77478,7 @@ export class TenantListDto implements ITenantListDto {
   subscriptionEndDateUtc!: moment.Moment | undefined;
   editionId!: number | undefined;
   isInTrialPeriod!: boolean;
+  contractNumber!: string | undefined;
   id!: number;
 
   constructor(data?: ITenantListDto) {
@@ -78127,6 +77501,7 @@ export class TenantListDto implements ITenantListDto {
       this.subscriptionEndDateUtc = _data['subscriptionEndDateUtc'] ? moment(_data['subscriptionEndDateUtc'].toString()) : <any>undefined;
       this.editionId = _data['editionId'];
       this.isInTrialPeriod = _data['isInTrialPeriod'];
+      this.contractNumber = _data['contractNumber'];
       this.id = _data['id'];
     }
   }
@@ -78150,6 +77525,7 @@ export class TenantListDto implements ITenantListDto {
     data['subscriptionEndDateUtc'] = this.subscriptionEndDateUtc ? this.subscriptionEndDateUtc.toISOString() : <any>undefined;
     data['editionId'] = this.editionId;
     data['isInTrialPeriod'] = this.isInTrialPeriod;
+    data['contractNumber'] = this.contractNumber;
     data['id'] = this.id;
     return data;
   }
@@ -78166,6 +77542,7 @@ export interface ITenantListDto {
   subscriptionEndDateUtc: moment.Moment | undefined;
   editionId: number | undefined;
   isInTrialPeriod: boolean;
+  contractNumber: string | undefined;
   id: number;
 }
 
@@ -79321,7 +78698,7 @@ export enum SubscriptionStartType {
 export class RegisterTenantInput implements IRegisterTenantInput {
   tenancyName!: string;
   companyName!: string;
-  mobileNo!: string | undefined;
+  mobileNo!: string;
   name!: string;
   adminEmailAddress!: string;
   adminPassword!: string | undefined;
@@ -79391,7 +78768,7 @@ export class RegisterTenantInput implements IRegisterTenantInput {
 export interface IRegisterTenantInput {
   tenancyName: string;
   companyName: string;
-  mobileNo: string | undefined;
+  mobileNo: string;
   name: string;
   adminEmailAddress: string;
   adminPassword: string | undefined;
@@ -80578,6 +79955,7 @@ export class ShippingRequestTripDto implements IShippingRequestTripDto {
   originFacilityId!: number | undefined;
   destinationFacilityId!: number | undefined;
   totalValue!: string | undefined;
+  note!: string | undefined;
   id!: number;
 
   constructor(data?: IShippingRequestTripDto) {
@@ -80604,6 +79982,7 @@ export class ShippingRequestTripDto implements IShippingRequestTripDto {
       this.originFacilityId = _data['originFacilityId'];
       this.destinationFacilityId = _data['destinationFacilityId'];
       this.totalValue = _data['totalValue'];
+      this.note = _data['note'];
       this.id = _data['id'];
     }
   }
@@ -80631,6 +80010,7 @@ export class ShippingRequestTripDto implements IShippingRequestTripDto {
     data['originFacilityId'] = this.originFacilityId;
     data['destinationFacilityId'] = this.destinationFacilityId;
     data['totalValue'] = this.totalValue;
+    data['note'] = this.note;
     data['id'] = this.id;
     return data;
   }
@@ -80651,6 +80031,7 @@ export interface IShippingRequestTripDto {
   originFacilityId: number | undefined;
   destinationFacilityId: number | undefined;
   totalValue: string | undefined;
+  note: string | undefined;
   id: number;
 }
 
@@ -82256,134 +81637,8 @@ export interface IGetTrailerTypeForEditOutput {
   trailerType: CreateOrEditTrailerTypeDto;
 }
 
-export enum ChannelType {
-  Invoices = 1,
-  BalanceRecharge = 2,
-}
-
-export class TransactionListDto implements ITransactionListDto {
-  creationTime!: moment.Moment;
-  clientName!: string | undefined;
-  edition!: string | undefined;
-  channelId!: number;
-  channel!: string | undefined;
-  amount!: number;
-  count!: number;
-  sourceId!: number;
-  id!: number;
-
-  constructor(data?: ITransactionListDto) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(_data?: any) {
-    if (_data) {
-      this.creationTime = _data['creationTime'] ? moment(_data['creationTime'].toString()) : <any>undefined;
-      this.clientName = _data['clientName'];
-      this.edition = _data['edition'];
-      this.channelId = _data['channelId'];
-      this.channel = _data['channel'];
-      this.amount = _data['amount'];
-      this.count = _data['count'];
-      this.sourceId = _data['sourceId'];
-      this.id = _data['id'];
-    }
-  }
-
-  static fromJS(data: any): TransactionListDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new TransactionListDto();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['creationTime'] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
-    data['clientName'] = this.clientName;
-    data['edition'] = this.edition;
-    data['channelId'] = this.channelId;
-    data['channel'] = this.channel;
-    data['amount'] = this.amount;
-    data['count'] = this.count;
-    data['sourceId'] = this.sourceId;
-    data['id'] = this.id;
-    return data;
-  }
-}
-
-export interface ITransactionListDto {
-  creationTime: moment.Moment;
-  clientName: string | undefined;
-  edition: string | undefined;
-  channelId: number;
-  channel: string | undefined;
-  amount: number;
-  count: number;
-  sourceId: number;
-  id: number;
-}
-
-export class PagedResultDtoOfTransactionListDto implements IPagedResultDtoOfTransactionListDto {
-  totalCount!: number;
-  items!: TransactionListDto[] | undefined;
-
-  constructor(data?: IPagedResultDtoOfTransactionListDto) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(_data?: any) {
-    if (_data) {
-      this.totalCount = _data['totalCount'];
-      if (Array.isArray(_data['items'])) {
-        this.items = [] as any;
-        for (let item of _data['items']) this.items!.push(TransactionListDto.fromJS(item));
-      }
-    }
-  }
-
-  static fromJS(data: any): PagedResultDtoOfTransactionListDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new PagedResultDtoOfTransactionListDto();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['totalCount'] = this.totalCount;
-    if (Array.isArray(this.items)) {
-      data['items'] = [];
-      for (let item of this.items) data['items'].push(item.toJSON());
-    }
-    return data;
-  }
-}
-
-export interface IPagedResultDtoOfTransactionListDto {
-  totalCount: number;
-  items: TransactionListDto[] | undefined;
-}
-
 export class TransactionFilterInput implements ITransactionFilterInput {
-  channelType!: ChannelType;
-  tenantId!: number | undefined;
-  fromDate!: moment.Moment | undefined;
-  toDate!: moment.Moment | undefined;
-  minLongitude!: number | undefined;
-  maxLongitude!: number | undefined;
-  editionId!: number | undefined;
-  sorting!: string | undefined;
-  skipCount!: number;
-  maxResultCount!: number;
+  loadOptions!: string | undefined;
 
   constructor(data?: ITransactionFilterInput) {
     if (data) {
@@ -82395,16 +81650,7 @@ export class TransactionFilterInput implements ITransactionFilterInput {
 
   init(_data?: any) {
     if (_data) {
-      this.channelType = _data['channelType'];
-      this.tenantId = _data['tenantId'];
-      this.fromDate = _data['fromDate'] ? moment(_data['fromDate'].toString()) : <any>undefined;
-      this.toDate = _data['toDate'] ? moment(_data['toDate'].toString()) : <any>undefined;
-      this.minLongitude = _data['minLongitude'];
-      this.maxLongitude = _data['maxLongitude'];
-      this.editionId = _data['editionId'];
-      this.sorting = _data['sorting'];
-      this.skipCount = _data['skipCount'];
-      this.maxResultCount = _data['maxResultCount'];
+      this.loadOptions = _data['loadOptions'];
     }
   }
 
@@ -82417,31 +81663,13 @@ export class TransactionFilterInput implements ITransactionFilterInput {
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data['channelType'] = this.channelType;
-    data['tenantId'] = this.tenantId;
-    data['fromDate'] = this.fromDate ? this.fromDate.toISOString() : <any>undefined;
-    data['toDate'] = this.toDate ? this.toDate.toISOString() : <any>undefined;
-    data['minLongitude'] = this.minLongitude;
-    data['maxLongitude'] = this.maxLongitude;
-    data['editionId'] = this.editionId;
-    data['sorting'] = this.sorting;
-    data['skipCount'] = this.skipCount;
-    data['maxResultCount'] = this.maxResultCount;
+    data['loadOptions'] = this.loadOptions;
     return data;
   }
 }
 
 export interface ITransactionFilterInput {
-  channelType: ChannelType;
-  tenantId: number | undefined;
-  fromDate: moment.Moment | undefined;
-  toDate: moment.Moment | undefined;
-  minLongitude: number | undefined;
-  maxLongitude: number | undefined;
-  editionId: number | undefined;
-  sorting: string | undefined;
-  skipCount: number;
-  maxResultCount: number;
+  loadOptions: string | undefined;
 }
 
 export class TransportTypeDto implements ITransportTypeDto {
@@ -83155,51 +82383,6 @@ export class TruckCapacitiesTranslationCapacityLookupTableDto implements ITruckC
 export interface ITruckCapacitiesTranslationCapacityLookupTableDto {
   id: number;
   displayName: string | undefined;
-}
-
-export class PagedResultDtoOfTruckDto implements IPagedResultDtoOfTruckDto {
-  totalCount!: number;
-  items!: TruckDto[] | undefined;
-
-  constructor(data?: IPagedResultDtoOfTruckDto) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(_data?: any) {
-    if (_data) {
-      this.totalCount = _data['totalCount'];
-      if (Array.isArray(_data['items'])) {
-        this.items = [] as any;
-        for (let item of _data['items']) this.items!.push(TruckDto.fromJS(item));
-      }
-    }
-  }
-
-  static fromJS(data: any): PagedResultDtoOfTruckDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new PagedResultDtoOfTruckDto();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['totalCount'] = this.totalCount;
-    if (Array.isArray(this.items)) {
-      data['items'] = [];
-      for (let item of this.items) data['items'].push(item.toJSON());
-    }
-    return data;
-  }
-}
-
-export interface IPagedResultDtoOfTruckDto {
-  totalCount: number;
-  items: TruckDto[] | undefined;
 }
 
 export class UpdateTruckPictureInput implements IUpdateTruckPictureInput {
@@ -84822,134 +84005,6 @@ export class PagedResultDtoOfUserListDto implements IPagedResultDtoOfUserListDto
 export interface IPagedResultDtoOfUserListDto {
   totalCount: number;
   items: UserListDto[] | undefined;
-}
-
-export class DriverListDto implements IDriverListDto {
-  accountNumber!: string | undefined;
-  name!: string | undefined;
-  surname!: string | undefined;
-  userName!: string | undefined;
-  emailAddress!: string | undefined;
-  phoneNumber!: string | undefined;
-  profilePictureId!: string | undefined;
-  isEmailConfirmed!: boolean;
-  isActive!: boolean;
-  isMissingDocumentFiles!: boolean;
-  creationTime!: moment.Moment;
-  dateOfBirth!: moment.Moment | undefined;
-  id!: number;
-
-  constructor(data?: IDriverListDto) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(_data?: any) {
-    if (_data) {
-      this.accountNumber = _data['accountNumber'];
-      this.name = _data['name'];
-      this.surname = _data['surname'];
-      this.userName = _data['userName'];
-      this.emailAddress = _data['emailAddress'];
-      this.phoneNumber = _data['phoneNumber'];
-      this.profilePictureId = _data['profilePictureId'];
-      this.isEmailConfirmed = _data['isEmailConfirmed'];
-      this.isActive = _data['isActive'];
-      this.isMissingDocumentFiles = _data['isMissingDocumentFiles'];
-      this.creationTime = _data['creationTime'] ? moment(_data['creationTime'].toString()) : <any>undefined;
-      this.dateOfBirth = _data['dateOfBirth'] ? moment(_data['dateOfBirth'].toString()) : <any>undefined;
-      this.id = _data['id'];
-    }
-  }
-
-  static fromJS(data: any): DriverListDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new DriverListDto();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['accountNumber'] = this.accountNumber;
-    data['name'] = this.name;
-    data['surname'] = this.surname;
-    data['userName'] = this.userName;
-    data['emailAddress'] = this.emailAddress;
-    data['phoneNumber'] = this.phoneNumber;
-    data['profilePictureId'] = this.profilePictureId;
-    data['isEmailConfirmed'] = this.isEmailConfirmed;
-    data['isActive'] = this.isActive;
-    data['isMissingDocumentFiles'] = this.isMissingDocumentFiles;
-    data['creationTime'] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
-    data['dateOfBirth'] = this.dateOfBirth ? this.dateOfBirth.toISOString() : <any>undefined;
-    data['id'] = this.id;
-    return data;
-  }
-}
-
-export interface IDriverListDto {
-  accountNumber: string | undefined;
-  name: string | undefined;
-  surname: string | undefined;
-  userName: string | undefined;
-  emailAddress: string | undefined;
-  phoneNumber: string | undefined;
-  profilePictureId: string | undefined;
-  isEmailConfirmed: boolean;
-  isActive: boolean;
-  isMissingDocumentFiles: boolean;
-  creationTime: moment.Moment;
-  dateOfBirth: moment.Moment | undefined;
-  id: number;
-}
-
-export class PagedResultDtoOfDriverListDto implements IPagedResultDtoOfDriverListDto {
-  totalCount!: number;
-  items!: DriverListDto[] | undefined;
-
-  constructor(data?: IPagedResultDtoOfDriverListDto) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(_data?: any) {
-    if (_data) {
-      this.totalCount = _data['totalCount'];
-      if (Array.isArray(_data['items'])) {
-        this.items = [] as any;
-        for (let item of _data['items']) this.items!.push(DriverListDto.fromJS(item));
-      }
-    }
-  }
-
-  static fromJS(data: any): PagedResultDtoOfDriverListDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new PagedResultDtoOfDriverListDto();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['totalCount'] = this.totalCount;
-    if (Array.isArray(this.items)) {
-      data['items'] = [];
-      for (let item of this.items) data['items'].push(item.toJSON());
-    }
-    return data;
-  }
-}
-
-export interface IPagedResultDtoOfDriverListDto {
-  totalCount: number;
-  items: DriverListDto[] | undefined;
 }
 
 export class UserEditDto implements IUserEditDto {
