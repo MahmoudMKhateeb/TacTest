@@ -74,6 +74,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
     private ngZone: NgZone,
     private _facilitiesServiceProxy: FacilitiesServiceProxy,
     private _routStepsServiceProxy: RoutStepsServiceProxy,
+
     private enumToArray: EnumToArrayPipe
   ) {
     super(injector);
@@ -173,9 +174,6 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
           this.allRoutTypes = result;
         });*/
 
-    this._routStepsServiceProxy.getAllFacilitiesForDropdown().subscribe((result) => {
-      this.allFacilities = result;
-    });
     this.loadallVases();
   }
 

@@ -1,11 +1,10 @@
-import { Injectable, Input, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import {
   CreateOrEditShippingRequestTripDto,
   FacilityForDropdownDto,
   GetShippingRequestForViewOutput,
   RoutStepsServiceProxy,
-  ShippingRequestDto,
 } from '@shared/service-proxies/service-proxies';
 
 @Injectable({
@@ -25,7 +24,12 @@ export class TripService {
   private destFacility = new BehaviorSubject<number>(null);
   currentDestFacility = this.destFacility.asObservable();
 
-  constructor() {}
+  private FacilitiesItems: BehaviorSubject<any> = new BehaviorSubject(new Array<DropDownMenu>());
+  currentFacilitiesItems = this.FacilitiesItems.asObservable();
+
+  constructor(private _routStepsServiceProxy: RoutStepsServiceProxy) {
+    this.GetOrRefreshFacilities();
+  }
 
   updateShippingRequest(shippingRequest: GetShippingRequestForViewOutput) {
     this.shippingRequest.next(shippingRequest);
@@ -44,4 +48,17 @@ export class TripService {
   updateDestFacility(id: number) {
     this.destFacility.next(id);
   }
+  //Loads All facilities
+  GetOrRefreshFacilities() {
+    console.log('Facilities Refreshed');
+    this.FacilitiesItems.next({ isLoading: true, items: null });
+    this._routStepsServiceProxy.getAllFacilitiesForDropdown().subscribe((result) => {
+      this.FacilitiesItems.next({ isLoading: false, items: result });
+    });
+  }
+}
+
+export interface DropDownMenu {
+  isLoading: boolean;
+  items: FacilityForDropdownDto[];
 }

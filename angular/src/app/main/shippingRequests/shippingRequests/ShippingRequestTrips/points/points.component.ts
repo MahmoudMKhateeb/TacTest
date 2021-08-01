@@ -13,7 +13,7 @@ import {
 } from '@shared/service-proxies/service-proxies';
 import Swal from 'sweetalert2';
 import { FileDownloadService } from '@shared/utils/file-download.service';
-import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
+import { TripService, DropDownMenu } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
 import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
 import { GoodDetailsComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/good-details/good-details.component';
 import { Subscription } from 'rxjs';
@@ -159,11 +159,16 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
   }
 
   loadFacilities() {
-    console.log('Facilites Loaded');
+    console.log('Facilites Loaded From Points');
     this.facilityLoading = true;
-    this._routStepsServiceProxy.getAllFacilitiesForDropdown().subscribe((result) => {
-      this.allFacilities = result;
-      this.facilityLoading = false;
+    // this._shippingRequestDDService.allFacilities.subscribe((res) => (this.allFacilities = res));
+    // this._routStepsServiceProxy.getAllFacilitiesForDropdown().subscribe((result) => {
+    //   this.allFacilities = result;
+    //   this.facilityLoading = false;
+    // });
+    this._tripService.currentFacilitiesItems.subscribe((res: DropDownMenu) => {
+      this.facilityLoading = res.isLoading;
+      this.allFacilities = res.items;
     });
   }
 
