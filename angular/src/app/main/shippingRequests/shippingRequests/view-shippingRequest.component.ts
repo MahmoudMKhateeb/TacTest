@@ -55,6 +55,7 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
       this.show(this._activatedRoute.snapshot.queryParams['id']);
     });
     // this.GetAllDirectRequestsTable.sendDirectRequestsModal.shippingRequestId = this._activatedRoute.snapshot.queryParams['id'];
+    // this._ShippingRequestDDService.ngOnInit();
   }
 
   ngAfterViewChecked() {

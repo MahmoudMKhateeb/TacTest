@@ -9,7 +9,7 @@ import {
   RoutStepsServiceProxy,
   ShippingRequestRouteType,
 } from '@shared/service-proxies/service-proxies';
-import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
+import { DropDownMenu, TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ModalDirective } from '@node_modules/ngx-bootstrap/modal';
 import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
@@ -159,9 +159,10 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
    */
   loadFacilities() {
     this.facilityLoading = true;
-    this._routStepsServiceProxy.getAllFacilitiesForDropdown().subscribe((result) => {
-      this.allFacilities = result;
-      this.facilityLoading = false;
+    // this._shippingRequestDDService.allFacilities.subscribe((res) => (this.allFacilities = res));
+    this._tripService.currentFacilitiesItems.subscribe((res: DropDownMenu) => {
+      this.facilityLoading = res.isLoading;
+      this.allFacilities = res.items;
     });
   }
 
