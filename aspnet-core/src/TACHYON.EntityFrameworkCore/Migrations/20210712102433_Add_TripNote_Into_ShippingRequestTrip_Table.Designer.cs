@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using TACHYON.EntityFrameworkCore;
@@ -10,9 +11,10 @@ using TACHYON.EntityFrameworkCore;
 namespace TACHYON.Migrations
 {
     [DbContext(typeof(TACHYONDbContext))]
-    partial class TACHYONDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210712102433_Add_TripNote_Into_ShippingRequestTrip_Table")]
+    partial class Add_TripNote_Into_ShippingRequestTrip_Table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1897,8 +1899,13 @@ namespace TACHYON.Migrations
                     b.Property<long?>("LastModifierUserId")
                         .HasColumnType("bigint");
 
-                    b.Property<Point>("Location")
-                        .HasColumnType("geography");
+                    b.Property<string>("Latitude")
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("Longitude")
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.HasKey("Id");
 
@@ -2152,9 +2159,6 @@ namespace TACHYON.Migrations
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
-                    b.Property<int?>("DocumentRelatedWithId")
-                        .HasColumnType("int");
-
                     b.Property<int>("DocumentsEntityId")
                         .HasColumnType("int");
 
@@ -2206,18 +2210,7 @@ namespace TACHYON.Migrations
                     b.Property<string>("SpecialConstant")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("TemplateContentType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("TemplateId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("TemplateName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("DocumentRelatedWithId");
 
                     b.HasIndex("DocumentsEntityId");
 
@@ -4514,10 +4507,6 @@ namespace TACHYON.Migrations
                     b.Property<bool>("NeedsDeliveryNote")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Note")
-                        .HasColumnType("nvarchar(600)")
-                        .HasMaxLength(600);
-
                     b.Property<long?>("OriginFacilityId")
                         .HasColumnType("bigint");
 
@@ -4559,6 +4548,10 @@ namespace TACHYON.Migrations
 
                     b.Property<string>("TotalValue")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TripNote")
+                        .HasColumnType("nvarchar(600)")
+                        .HasMaxLength(600);
 
                     b.Property<decimal?>("VatAmount")
                         .HasColumnType("decimal(18,2)");
@@ -6634,10 +6627,6 @@ namespace TACHYON.Migrations
 
             modelBuilder.Entity("TACHYON.Documents.DocumentTypes.DocumentType", b =>
                 {
-                    b.HasOne("TACHYON.MultiTenancy.Tenant", "DocumentRelatedWithFk")
-                        .WithMany()
-                        .HasForeignKey("DocumentRelatedWithId");
-
                     b.HasOne("TACHYON.Documents.DocumentsEntities.DocumentsEntity", "DocumentsEntityFk")
                         .WithMany()
                         .HasForeignKey("DocumentsEntityId")
