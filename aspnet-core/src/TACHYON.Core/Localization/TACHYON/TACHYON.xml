@@ -1579,7 +1579,6 @@
 		<text name="SelfUserRegistrationIsDisabledMessage_Detail">Self user registration is disabled. Please contact the system administrator to register.</text>
 		<text name="Send">Send</text>
 		<text name="SendActivationEmail">Send activation email.</text>
-		<text name="SendDirectRequest">Send Direct Request</text>
 		<text name="SendDirectRequestOffer">Send direct request offer</text>
 		<text name="SendDirectRequests">Send direct request</text>
 		<text name="SendDirectRequest">Please send us a quote for the shipment.</text>
