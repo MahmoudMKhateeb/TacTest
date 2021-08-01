@@ -3,7 +3,7 @@
     public  enum ShippingRequestRouteType:byte
     {
         SingleDrop=1,
-        TwoWay=2,
+        //TwoWay=2,
         MultipleDrops=3
     }
 }
