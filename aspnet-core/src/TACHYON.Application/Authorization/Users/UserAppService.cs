@@ -186,15 +186,22 @@ namespace TACHYON.Authorization.Users
                     .Where(x => ids.Contains((long)x.UserId))
                     .Where(x => x.DocumentTypeFk.IsRequired)
                     .GroupBy(x => x.UserId)
-                    .Select(x => new { TruckId = x.Key, IsMissingDocumentFiles = x.Count() == documentTypesCount }))
+                    .Select(x => new { UserId = x.Key, IsMissingDocumentFiles = x.Count() == documentTypesCount }))
                 .ToListAsync();
 
             foreach (DriverListDto driverListDto in pagedResultDto.data.ToDynamicList<DriverListDto>())
             {
-                if (submittedDocuments != null)
+                if (submittedDocuments == null)
+                    continue;
+
+                var t = submittedDocuments.FirstOrDefault(x => x.UserId == driverListDto.Id);
+                if (t != null)
                 {
-                    driverListDto.IsMissingDocumentFiles = submittedDocuments
-                        .FirstOrDefault(x => x.TruckId == driverListDto.Id).IsMissingDocumentFiles;
+                    driverListDto.IsMissingDocumentFiles = t.IsMissingDocumentFiles;
+                }
+                else
+                {
+                    driverListDto.IsMissingDocumentFiles = true;
                 }
             }
         }

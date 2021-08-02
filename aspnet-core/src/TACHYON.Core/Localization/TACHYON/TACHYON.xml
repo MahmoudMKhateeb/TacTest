@@ -558,7 +558,7 @@
 		<text name="DocumentFilesHeaderInfo">DocumentFilesHeaderInfo</text>
 		<text name="DocumentFileWarnSizeLimit">Document exceeds the maximum allowed limit</text>
 		<text name="DocumentManagement">Documents Management</text>
-		<text name="NonMandatoryDocuments">Non-Mandatory Documents</text>
+		<text name="NonMandatoryDocuments">Additional Documents</text>
 		<text name="DocumentName">Document name</text>
 		<text name="Documents">Documents</text>
 		<text name="DocumentsEntities">Documents entities</text>
@@ -1630,7 +1630,7 @@
 		<text name="ShippingRequestPricingResponse">Shipping Request Pricing Response</text>
 		<text name="ShippingRequestProperties">Shipping Request Properties</text>
 		<text name="ShippingRequestReceiverCode">Your Shipping code is {0}</text>
-		<text name="ShippingRequests">My Shipping Requests</text>
+		<text name="ShippingRequests">Shipping Requests</text>
 		<text name="MyShippingRequests">My Shipping Requests</text>
 		<text name="ShippingRequestsCreate">Create Shipping Request</text>
 		<text name="ShippingRequestsEdit">Edit Shipping Request</text>
@@ -1693,7 +1693,7 @@
 		<text name="StringLengthDoesntMatch">The field {0} must be a minimum length of {1} and a maximum length of {2}.</text>
 		<text name="Strong">Strong</text>
 		<text name="Submit">Submit</text>
-		<text name="SubmitInvoice">Carrier Invoices</text>
+		<text name="SubmitInvoice">My Invoices</text>
 		<text name="SubmitInvoiceDetail">Submit invoice detail</text>
 		<text name="SubmitInvoiceGenerated">The submit invoice has been generated.</text>
 		<text name="SubmitInvoiceOnAccepted">The submit invoice has been Accepted</text>
@@ -2161,7 +2161,7 @@
 		<text name="VasesHeaderInfo">Vases header info</text>
 		<text name="VasName">VAS name</text>
 		<text name="VasPrice">VAS price</text>
-		<text name="VasPrices">Value Added Services Setting (VAS)</text>
+		<text name="VasPrices">VAS Settings</text>
 		<text name="VasPricesHeaderInfo">Vas prices header info</text>
 		<text name="Vat">Vat</text>
 		<text name="VatAmount">Vat amount</text>
@@ -2283,6 +2283,7 @@
 		<text name="YourSessionIsLocked">Your session is locked</text>
 		<text name="Youruseridentifier">Your user identifier</text>
 		<text name="Youruserprofileinformation(firstname,lastname,etc.)">Your user profile information (first name, last name, etc.)</text>
-		<text name="جاريالحفظ...">جاري الحفظ...</text>
+	    <text name="TrucksSubmittedDocuments">Trucks Documents</text>
+	    <text name="DriversSubmittedDocuments">Drivers Documents</text>
 	</texts>
 </localizationDictionary>
