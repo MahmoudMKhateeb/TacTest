@@ -30,6 +30,7 @@ using TACHYON.Routs.RoutSteps;
 using TACHYON.Storage;
 using TACHYON.Trailers;
 using TACHYON.Trucks;
+using TACHYON.Url;
 
 
 namespace TACHYON.Documents.DocumentFiles
@@ -74,6 +75,7 @@ namespace TACHYON.Documents.DocumentFiles
             _tenantManager = tenantManager;
             _appNotifier = appNotifier;
             _userEmailer = userEmailer;
+            _appUrlService = NullAppUrlService.Instance;
         }
 
         private readonly IRepository<Tenant, int> _lookupTenantRepository;
@@ -93,6 +95,7 @@ namespace TACHYON.Documents.DocumentFiles
         private readonly TenantManager _tenantManager;
         private readonly IAppNotifier _appNotifier;
         private readonly IUserEmailer _userEmailer;
+        private readonly IAppUrlService _appUrlService;
 
         public async Task<LoadResult> GetAllTenantsSubmittedDocuments(GetAllForListDocumentFilesInput input)
         {
@@ -571,7 +574,8 @@ namespace TACHYON.Documents.DocumentFiles
 
             if (await IsAllRequiredDocumentsApproved(documentFile.TenantId.Value))
             {
-                await _userEmailer.SendAllApprovedDocumentsAsyn(documentFile.TenantFk);
+                await _userEmailer.SendAllApprovedDocumentsAsync(documentFile.TenantFk,
+                    _appUrlService.GetTachyonPlatformLoginUrl());
             }
 
         }
