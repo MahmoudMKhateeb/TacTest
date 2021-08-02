@@ -94,7 +94,7 @@
                         "
                         required
                       >
-                        <option disabled selected>{{ l('select') }}</option>
+                        <option selected>{{ l('select') }}</option>
                         <option value="bidding">{{ l('Marketplace') }}</option>
                         <option value="tachyondeal">{{ l('TachyonManageService') }}</option>
                         <option *ngIf="this.feature.isEnabled('App.SendDirectRequest')" value="directrequest">{{ l('DirectRequest') }}</option>
@@ -111,7 +111,6 @@
                             name="biddingDateRangeTest"
                             formControlName="biddingDateRangeTest"
                             [(date)]="biddingDateRange"
-                            [(ngModel)]="biddingDateRange"
                             [minDate]="today"
                             [class.is-valid]="
                               step1Form.get('biddingDateRangeTest').valid &&
@@ -172,7 +171,6 @@
                             name="tripsDateRange"
                             formControlName="tripsDateRange"
                             [(date)]="tripsDateRange"
-                            [(ngModel)]="tripsDateRange"
                             [minDate]="today"
                             [class.is-valid]="
                               step1Form.get('tripsDateRange').valid &&

@@ -274,7 +274,7 @@
 		<text name="CountyDisplayName">الدولة</text>
 		<text name="Create">إنشاء</text>
 		<text name="DriverInformation">معلومات السائق</text>
-		<text name="NonMandatoryDocuments">المستندات غير الإلزامية</text>
+		<text name="NonMandatoryDocuments">المستندات الإضافية</text>
 		<text name="CreateAccident">إضافة حادث</text>
 		<text name="CreateAccidentReason">إضافة سبب جديد</text>
 		<text name="CreateAnAccount">إنشاء حساب</text>
@@ -486,7 +486,7 @@
 		<text name="Dimentions">الأبعاد</text>
 		<text name="DirectRequests">الطلبات المباشرة</text>
 		<text name="DirectRequest">طلب شحن مباشر</text>
-		<text name="DirectShippingRequests">طلبات الشحن الخاصة</text>
+		<text name="DirectShippingRequests">طلبات الشحن المباشرة</text>
 		<text name="Disable">تعطيل</text>
 		<text name="Disabled">معطّل</text>
 		<text name="DisableRecurringPayments">لا تفوتر حسابي تلقائيا</text>
@@ -987,7 +987,7 @@
 		<text name="MyLoadPast">المكتملة</text>
 		<text name="MySettings">إعداداتي</text>
 		<text name="MySettings_Description">تغيير إعدادات حسابك</text>
-		<text name="MyShippingRequests">شحناتي</text>
+		<text name="MyShippingRequests">طلبات الشحن الخاصة بي</text>
 		<text name="Name">الاسم</text>
 		<text name="NameSurname">الإسم</text>
 		<text name="Nationalities">الجنسيات</text>
@@ -1279,7 +1279,7 @@
 		<text name="ReceiverFullName">اسم المستلم</text>
 		<text name="ReceiverPhoneNumber">رقم الجوال</text>
 		<text name="Receivers">المستلمين</text>
-		<text name="ReceiversSetup">إدارة المستلمين</text>
+		<text name="ReceiversSetup">إدارة جهات الاتصال</text>
 		<text name="ReceivingPaymentResult">تلقي نتيجة الدفع.</text>
 		<text name="RecentTenants">الشركات الأخيرة</text>
 		<text name="RecentTenantsHelpText">آخر {1} من العملاء المسجلين في {0} يوما ...</text>
@@ -1313,7 +1313,7 @@
 		<text name="Reports">تقارير</text>
 		<text name="RePricing">إعادة تسعير</text>
 		<text name="RequestedFileDoesNotExists">لم نعثر على الملف المطلوب</text>
-		<text name="Requests">الطلبات المغلقة</text>
+		<text name="Requests">الطلبات</text>
 		<text name="RequestTimedOut">انتهت مهلة طلبك، الرجاء إعادة المحاولة لاحقا.</text>
 		<text name="RequestType">نوع الطلب</text>
 		<text name="Required">مطلوب</text>
@@ -1472,7 +1472,7 @@
 		<text name="ShippingRequestPrice">سعر طلب الشحن</text>
 		<text name="ShippingRequestProperties">خصائص طلب الشحن</text>
 		<text name="ShippingRequestReceiverCode">رقم الشحنة الخاصة بك هي:{0}</text>
-		<text name="ShippingRequests">طلبات الشحن الخاصة بي</text>
+		<text name="ShippingRequests">طلبات الشحن</text>
 		<text name="ShippingRequestsCreate">إنشاء طلب شحن</text>
 		<text name="ShippingRequestsEdit">تعديل طلب الشحن</text>
 		<text name="ShippingRequestSendOfferWhenAddPrice"><![CDATA[<a href="/app/main/shippingRequests/shippingRequests/view?id={id}&offerid={offerid}">تم إضافة عرض جديد للشحنة</a>]]></text>
@@ -1528,7 +1528,7 @@
 		<text name="StringLengthDoesntMatch">يجب أن يكون {0} كحد ادنى {1} وحد اقصى {2}.</text>
 		<text name="Strong">قوي</text>
 		<text name="Submit">إرسال</text>
-		<text name="SubmitInvoice">فواتير الناقلين</text>
+		<text name="SubmitInvoice">فواتيري</text>
 		<text name="SubmitInvoiceOnAccepted">
 			<a href="/app/main/invoices/submitinvoices/detail/{groupid}">The submit invoice has been Accepted</a>
 		</text>
@@ -1660,7 +1660,7 @@
 		<text name="TenantNameOrTenancyCode">اسم الشركة/ رمز الشركة</text>
 		<text name="TenantRegistrationLoginInfo">إضغط هنا لتسجيل الدخول</text>
 		<text name="TenantRequiredDocuments">المستندات المطلوبة من الشركة</text>
-		<text name="Tenants">العملاء</text>
+		<text name="Tenants">الشركات</text>
 		<text name="TenantsCannotCreateLanguage">العملاء لايمكنهم إنشاء لغة.</text>
 		<text name="TenantSelection">اختيار الشركة</text>
 		<text name="TenantSelection_Detail">الرجاء اختيار إحدى الشركات التالية</text>
@@ -2091,5 +2091,9 @@
 		<text name="YourSessionIsLocked">الجلسة مغلقة</text>
 		<text name="Youruseridentifier">معرف المستخدم</text>
 		<text name="Youruserprofileinformation(firstname,lastname,etc.)">معلومات الملف الشخصي للمستخدم (الاسم الأول واسم العائلة وما إلى ذلك)</text>
+		<text name="TrucksSubmittedDocuments">مستندات الشاحنات</text>
+		<text name="DriversSubmittedDocuments">مستندات السائقين</text>
+		 <text name="SubmitInvoiceForHost">فواتير الناقلين</text>
+		 <text name="ShippingSettings">إعدادات الشحن</text>
 	</texts>
 </localizationDictionary>
