@@ -6,6 +6,7 @@ import {
   GetShippingRequestForViewOutput,
   RoutStepsServiceProxy,
 } from '@shared/service-proxies/service-proxies';
+import { FeatureCheckerService } from '@node_modules/abp-ng2-module';
 
 @Injectable({
   providedIn: 'root',
@@ -27,7 +28,7 @@ export class TripService {
   private FacilitiesItems: BehaviorSubject<any> = new BehaviorSubject(new Array<DropDownMenu>());
   currentFacilitiesItems = this.FacilitiesItems.asObservable();
 
-  constructor(private _routStepsServiceProxy: RoutStepsServiceProxy) {
+  constructor(private _routStepsServiceProxy: RoutStepsServiceProxy, private feature: FeatureCheckerService) {
     this.GetOrRefreshFacilities();
   }
 
@@ -50,11 +51,13 @@ export class TripService {
   }
   //Loads All facilities
   GetOrRefreshFacilities() {
-    console.log('Facilities Refreshed');
-    this.FacilitiesItems.next({ isLoading: true, items: null });
-    this._routStepsServiceProxy.getAllFacilitiesForDropdown().subscribe((result) => {
-      this.FacilitiesItems.next({ isLoading: false, items: result });
-    });
+    if (this.feature.isEnabled('App.Shipper')) {
+      console.log('Facilities Loaded/Refreshed Only For Shipper From Trip Shared Service');
+      this.FacilitiesItems.next({ isLoading: true, items: null });
+      this._routStepsServiceProxy.getAllFacilitiesForDropdown().subscribe((result) => {
+        this.FacilitiesItems.next({ isLoading: false, items: result });
+      });
+    }
   }
 }
 
