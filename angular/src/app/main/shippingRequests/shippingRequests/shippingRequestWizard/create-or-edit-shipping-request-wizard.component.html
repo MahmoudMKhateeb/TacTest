@@ -111,7 +111,6 @@
                             name="biddingDateRangeTest"
                             formControlName="biddingDateRangeTest"
                             [(date)]="biddingDateRange"
-                            [(ngModel)]="biddingDateRange"
                             [minDate]="today"
                             [class.is-valid]="
                               step1Form.get('biddingDateRangeTest').valid &&
@@ -172,7 +171,6 @@
                             name="tripsDateRange"
                             formControlName="tripsDateRange"
                             [(date)]="tripsDateRange"
-                            [(ngModel)]="tripsDateRange"
                             [minDate]="today"
                             [class.is-valid]="
                               step1Form.get('tripsDateRange').valid &&
