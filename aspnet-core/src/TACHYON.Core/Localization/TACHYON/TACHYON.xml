@@ -1427,7 +1427,7 @@
 		<text name="ReceiverPhoneNumber">Receiver mobile number</text>
 		<text name="Receivers">Receivers</text>
 		<text name="ReceiversHeaderInfo">Receivers header info</text>
-		<text name="ReceiversSetup">Receivers Setup</text>
+		<text name="ReceiversSetup">Contacts Management</text>
 		<text name="ReceivingPaymentResult">Receiving payment result.</text>
 		<text name="RecentTenants">Recent companies</text>
 		<text name="RecentTenantsHelpText">Last {1} customers registered in {0} days...</text>
@@ -2285,5 +2285,7 @@
 		<text name="Youruserprofileinformation(firstname,lastname,etc.)">Your user profile information (first name, last name, etc.)</text>
 	    <text name="TrucksSubmittedDocuments">Trucks Documents</text>
 	    <text name="DriversSubmittedDocuments">Drivers Documents</text>
+	    <text name="SubmitInvoiceForHost">Carrier Invoices</text>
+	    <text name="ShippingSettings">Shipping Settings</text>
 	</texts>
 </localizationDictionary>

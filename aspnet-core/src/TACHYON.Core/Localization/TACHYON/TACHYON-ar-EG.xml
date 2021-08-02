@@ -1279,7 +1279,7 @@
 		<text name="ReceiverFullName">اسم المستلم</text>
 		<text name="ReceiverPhoneNumber">رقم الجوال</text>
 		<text name="Receivers">المستلمين</text>
-		<text name="ReceiversSetup">إدارة المستلمين</text>
+		<text name="ReceiversSetup">إدارة جهات الاتصال</text>
 		<text name="ReceivingPaymentResult">تلقي نتيجة الدفع.</text>
 		<text name="RecentTenants">الشركات الأخيرة</text>
 		<text name="RecentTenantsHelpText">آخر {1} من العملاء المسجلين في {0} يوما ...</text>
@@ -1660,7 +1660,7 @@
 		<text name="TenantNameOrTenancyCode">اسم الشركة/ رمز الشركة</text>
 		<text name="TenantRegistrationLoginInfo">إضغط هنا لتسجيل الدخول</text>
 		<text name="TenantRequiredDocuments">المستندات المطلوبة من الشركة</text>
-		<text name="Tenants">العملاء</text>
+		<text name="Tenants">الشركات</text>
 		<text name="TenantsCannotCreateLanguage">العملاء لايمكنهم إنشاء لغة.</text>
 		<text name="TenantSelection">اختيار الشركة</text>
 		<text name="TenantSelection_Detail">الرجاء اختيار إحدى الشركات التالية</text>
@@ -2093,5 +2093,7 @@
 		<text name="Youruserprofileinformation(firstname,lastname,etc.)">معلومات الملف الشخصي للمستخدم (الاسم الأول واسم العائلة وما إلى ذلك)</text>
 		<text name="TrucksSubmittedDocuments">مستندات الشاحنات</text>
 		<text name="DriversSubmittedDocuments">مستندات السائقين</text>
+		 <text name="SubmitInvoiceForHost">فواتير الناقلين</text>
+		 <text name="ShippingSettings">إعدادات الشحن</text>
 	</texts>
 </localizationDictionary>

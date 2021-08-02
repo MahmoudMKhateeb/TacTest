@@ -321,6 +321,19 @@ export class AppNavigationService {
             () => this.isEnabled('App.TachyonDealer') || !this._appSessionService.tenantId
           ),
           new AppMenuItem(
+            'SubmitInvoiceForHost',
+            //todo make it Pages.Administration.invoices
+            '',
+            '',
+            '/app/main/invoices/submitinvoice',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            () => !this._appSessionService.tenantId
+          ),
+
+          new AppMenuItem(
             'SubmitInvoice',
             'Pages.Invoices',
 
@@ -330,8 +343,9 @@ export class AppNavigationService {
             undefined,
             undefined,
             undefined,
-            () => this.isEnabled('App.Carrier') || this.isEnabled('App.TachyonDealer') || !this._appSessionService.tenantId
+            () => this.isEnabled('App.Carrier') || this.isEnabled('App.TachyonDealer')
           ),
+
           new AppMenuItem(
             'InvoicesProformas',
             'Pages.Invoices',
