@@ -94,7 +94,7 @@
                         "
                         required
                       >
-                        <option disabled selected>{{ l('select') }}</option>
+                        <option selected>{{ l('select') }}</option>
                         <option value="bidding">{{ l('Marketplace') }}</option>
                         <option value="tachyondeal">{{ l('TachyonManageService') }}</option>
                         <option *ngIf="this.feature.isEnabled('App.SendDirectRequest')" value="directrequest">{{ l('DirectRequest') }}</option>
