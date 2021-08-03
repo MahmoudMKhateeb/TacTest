@@ -130,6 +130,7 @@ namespace TACHYON.Authorization.Accounts
 
         public async Task<ResetPasswordOutput> ResetPassword(ResetPasswordInput input)
         {
+            DisableTenancyFilters();
             var user = await UserManager.GetUserByIdAsync(input.UserId);
             if (user == null || user.PasswordResetCode.IsNullOrEmpty() || user.PasswordResetCode != input.ResetCode)
             {
@@ -163,6 +164,7 @@ namespace TACHYON.Authorization.Accounts
 
         public async Task ActivateEmail(ActivateEmailInput input)
         {
+            DisableTenancyFilters();
             var user = await UserManager.GetUserByIdAsync(input.UserId);
             if (user != null && user.IsEmailConfirmed)
             {
@@ -256,6 +258,7 @@ namespace TACHYON.Authorization.Accounts
 
         private async Task<User> GetUserByChecking(string inputEmailAddress)
         {
+            DisableTenancyFilters();
             var user = await UserManager.FindByEmailAsync(inputEmailAddress);
             if (user == null)
             {
