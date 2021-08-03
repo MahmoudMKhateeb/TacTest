@@ -144,6 +144,7 @@ namespace TACHYON.Web.Startup
                 {
                     config.UseSqlServerStorage(_appConfiguration.GetConnectionString("Default"));
                 });
+                GlobalConfiguration.Configuration.UseSqlServerStorage(_appConfiguration.GetConnectionString("Default"));
             }
 
             if (WebConsts.GraphQL.Enabled)

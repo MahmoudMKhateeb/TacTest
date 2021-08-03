@@ -14,6 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using TACHYON.Chat;
+using TACHYON.Documents.DocumentFiles;
 using TACHYON.Editions;
 using TACHYON.Localization;
 using TACHYON.MultiTenancy;
@@ -162,12 +163,45 @@ namespace TACHYON.Authorization.Users
             await ReplaceBodyAndSend(adminUser.EmailAddress, L("ExpiredDocument"), emailTemplate, mailMessage);
         }
 
-            /// <summary>
-            /// Sends a password reset link to user's email.
-            /// </summary>
-            /// <param name="user">User</param>
-            /// <param name="link">Reset link</param>
-            public async Task SendPasswordResetLinkAsync(User user, string link = null)
+        /// <summary>
+        /// Send Email to tenant when approve all documents and eligible to use platform
+        /// </summary>
+        /// <param name="file"></param>
+        /// /// <param name="tenantId"></param>
+        /// <returns></returns>
+        [UnitOfWork]
+        public virtual async Task SendDocumentsExpiredInfoAsyn(List<DocumentFile> files, int tenantId)
+        {
+            var adminUser = await _userManager.GetAdminByTenantIdAsync(tenantId);
+            var mailMessage = new StringBuilder();
+            var tenantItem = await _tenantRepository.GetAsync(tenantId);
+            var emailTemplate = GetTitleAndSubTitle(tenantId, L("DocumentsExpiredInfo_Title"), L("DocumentsExpiredInfo_SubTitle"));
+
+            mailMessage.AppendLine("<b>" + L("TenancyName") + "</b>:" + tenantItem.TenancyName);
+            mailMessage.AppendLine("<b>" + L("CompanyName") + "</b>:" + tenantItem.companyName);
+            mailMessage.AppendLine("<b>" + L("Address") + "</b>:" + tenantItem.Address);
+            mailMessage.AppendLine("<table> <tr>" + L("DocumentType") + "<th> " + L("DocumentName") + " </th> <th> " + L("ExpiredStatus") + "</th> <th> " + L("ExpiredDate") + " </th> </tr></table>");
+
+            foreach (var file in files)
+            {
+                var expiredStatus = file.ExpirationDate != null ? (file.ExpirationDate.Value.Date < DateTime.Now.Date ? L("Expired") :L("Active")) : "Active";
+                var documentType = file.TruckId != null ? L("Truck") : L("Driver");
+
+                mailMessage.AppendLine("<tr><td>"+documentType+"</td> <td>"+file.Name+" </td> <td>"+expiredStatus+" </td> <td> "+file.ExpirationDate+"</td> </tr>");
+            }
+
+            mailMessage.AppendLine("</table>");
+
+            await ReplaceBodyAndSend(adminUser.EmailAddress, L("DocumentsExpiredInfo"), emailTemplate, mailMessage);
+        }
+
+
+        /// <summary>
+        /// Sends a password reset link to user's email.
+        /// </summary>
+        /// <param name="user">User</param>
+        /// <param name="link">Reset link</param>
+        public async Task SendPasswordResetLinkAsync(User user, string link = null)
         {
             if (user.PasswordResetCode.IsNullOrEmpty())
             {

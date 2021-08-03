@@ -6,6 +6,7 @@ using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
+using TACHYON.Authorization.Users;
 using TACHYON.Documents.DocumentFiles;
 using TACHYON.Documents.DocumentFiles.Dtos;
 using TACHYON.Documents.DocumentsEntities;
@@ -20,13 +21,14 @@ namespace TACHYON.Documents
         private const int MaxDocumentFileBytes = 5242880; //5MB
 
 
-        public DocumentFilesManager(IRepository<DocumentFile, Guid> documentFileRepository, TenantManager tenantManager, IRepository<DocumentType, long> documentTypeRepository, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager)
+        public DocumentFilesManager(IRepository<DocumentFile, Guid> documentFileRepository, TenantManager tenantManager, IRepository<DocumentType, long> documentTypeRepository, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager, IUserEmailer userEmailer)
         {
             _documentFileRepository = documentFileRepository;
             _tenantManager = tenantManager;
             _documentTypeRepository = documentTypeRepository;
             _tempFileCacheManager = tempFileCacheManager;
             _binaryObjectManager = binaryObjectManager;
+            _userEmailer = userEmailer;
         }
 
         private readonly IRepository<DocumentFile, Guid> _documentFileRepository;
@@ -34,6 +36,8 @@ namespace TACHYON.Documents
         private readonly TenantManager _tenantManager;
         private readonly ITempFileCacheManager _tempFileCacheManager;
         private readonly IBinaryObjectManager _binaryObjectManager;
+        private readonly IUserEmailer _userEmailer;
+
 
 
         /// <summary>
@@ -103,6 +107,40 @@ namespace TACHYON.Documents
                     .Where(x => x.IsAccepted)
                     .ToListAsync();
             }
+        }
+
+        /// <summary>
+        /// list all tenant active document Files
+        /// </summary>
+        /// <param name="tenantId"></param>
+        /// <returns>
+        /// list of Accepted and not Rejected and not expired documentsFiles
+        /// </returns>
+        public async Task<List<DocumentFile>> GetAllTenantDriverAndTruckDocumentFilesListAsync()
+        {
+                return await _documentFileRepository.GetAll()
+                      .Include(doc => doc.DocumentTypeFk)
+                      .Where(x => x.DocumentTypeFk.DocumentsEntityId == (int)DocumentsEntitiesEnum.Driver ||
+                       x.DocumentTypeFk.DocumentsEntityId == (int)DocumentsEntitiesEnum.Truck)
+                    .Where(x => x.DocumentTypeFk.HasExpirationDate)
+                    .Where(x => !x.IsRejected)
+                    .Where(x => x.IsAccepted)
+                    .ToListAsync();
+        }
+
+
+        /// <summary>
+        /// list all tenant active document Files
+        /// </summary>
+        /// <param name="tenantId"></param>
+        /// <returns>
+        /// list of Accepted and not Rejected and not expired documentsFiles
+        /// </returns>
+        public async Task SendDocumentsExpiredStatusMonthlyReport()
+        {
+            var documents = await GetAllTenantDriverAndTruckDocumentFilesListAsync();
+            if(documents.Count>0)
+            await _userEmailer.SendDocumentsExpiredInfoAsyn(documents, documents.FirstOrDefault().TenantId.Value);
         }
 
         /// <summary>
