@@ -623,8 +623,8 @@ namespace TACHYON.PriceOffers
 
         private async Task<List<GetShippingRequestForPriceOfferListDto>> GetFromShippingRequest(ShippingRequestForPriceOfferGetAllInput input)
         {
-            using (CurrentUnitOfWork.DisableFilter(nameof(IHasIsDrafted)))
-            {
+            //using (CurrentUnitOfWork.DisableFilter(nameof(IHasIsDrafted)))
+            //{
                 var query = _shippingRequestsRepository
                 .GetAll()
                 .AsNoTracking()
@@ -653,12 +653,12 @@ namespace TACHYON.PriceOffers
                 .OrderBy(input.Sorting ?? "id desc")
                 .PageBy(input);
 
-                var myDraftsOnly = query.Where(x => x.TenantId == AbpSession.TenantId)
-                             .Where(x => x.IsDrafted);
+                //var myDraftsOnly = query.Where(x => x.TenantId == AbpSession.TenantId)
+                //             .Where(x => x.IsDrafted);
 
-                var withoutDrafts = query.Where(x => !x.IsDrafted);
+                //var withoutDrafts = query.Where(x => !x.IsDrafted);
                 //concat all requests without draft with my draft requests
-                query = myDraftsOnly.Concat(withoutDrafts);
+                //query = myDraftsOnly.Concat(withoutDrafts);
 
                 List<GetShippingRequestForPriceOfferListDto> ShippingRequestForPriceOfferList = new List<GetShippingRequestForPriceOfferListDto>();
 
@@ -686,7 +686,7 @@ namespace TACHYON.PriceOffers
                 }
 
                 return ShippingRequestForPriceOfferList;
-            }
+          //  }
         }
 
         private async Task<List<GetShippingRequestForPriceOfferListDto>> GetFromOffers(ShippingRequestForPriceOfferGetAllInput input)
