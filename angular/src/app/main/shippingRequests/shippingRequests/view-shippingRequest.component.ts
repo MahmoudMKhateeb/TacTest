@@ -139,7 +139,13 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
     if (this.feature.isEnabled('App.TachyonDealer') && this.shippingRequestforView.shippingRequest.isTachyonDeal) {
       return true;
     }
-    if (this.feature.isEnabled('App.Shipper') && !this.shippingRequestforView.shippingRequest.isBid) return true;
+    if (
+      this.feature.isEnabled('App.Shipper') &&
+      this.feature.isEnabled('App.SendDirectRequest') &&
+      this.shippingRequestforView.shippingRequest.isDirectRequest
+    ) {
+      return true;
+    }
 
     return false;
   }
