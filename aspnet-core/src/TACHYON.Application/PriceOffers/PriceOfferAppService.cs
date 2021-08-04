@@ -21,6 +21,7 @@ using TACHYON.PriceOffers.Dto;
 using TACHYON.Shipping.DirectRequests;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequests.Dtos;
+using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Trucks.TrucksTypes;
 using TACHYON.Trucks.TrucksTypes.Dtos;
 using TACHYON.Vases;
@@ -37,13 +38,14 @@ namespace TACHYON.PriceOffers
         private readonly IRepository<City> _cityRepository;
         private readonly IRepository<TrucksType, long> _trucksTypeRepository;
         private readonly IAppNotifier _appNotifier;
+        private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepository;
 
 
         private IRepository<VasPrice> _vasPriceRepository;
         public PriceOfferAppService(IRepository<ShippingRequestDirectRequest, long> shippingRequestDirectRequestRepository,
             IRepository<ShippingRequest, long> shippingRequestsRepository, PriceOfferManager priceOfferManager,
             IRepository<PriceOffer, long> priceOfferRepository, IRepository<VasPrice> vasPriceRepository,
-            IRepository<City> cityRepository, IRepository<TrucksType, long> trucksTypeRepository, IAppNotifier appNotifier)
+            IRepository<City> cityRepository, IRepository<TrucksType, long> trucksTypeRepository, IAppNotifier appNotifier, IRepository<ShippingRequestTrip> shippingRequestTripRepository)
         {
             _shippingRequestDirectRequestRepository = shippingRequestDirectRequestRepository;
             _shippingRequestsRepository = shippingRequestsRepository;
@@ -53,6 +55,7 @@ namespace TACHYON.PriceOffers
             _cityRepository = cityRepository;
             _trucksTypeRepository = trucksTypeRepository;
             _appNotifier = appNotifier;
+            _shippingRequestTripRepository = shippingRequestTripRepository;
         }
         #region Services
 
@@ -540,6 +543,8 @@ namespace TACHYON.PriceOffers
                 dto.BidStatusTitle = string.Empty;
                 dto.TruckType = ObjectMapper.Map<TrucksTypeDto>(request.ShippingRequestFK.TrucksTypeFk).TranslatedDisplayName;
                 dto.GoodsCategory = ObjectMapper.Map<GoodCategoryDto>(request.ShippingRequestFK.GoodCategoryFk).DisplayName;
+                dto.NumberOfCompletedTrips = await getCompletedRequestTripsCount(request.ShippingRequestFK);
+
                 ShippingRequestForPriceOfferList.Add(dto);
 
             }
@@ -613,6 +618,8 @@ namespace TACHYON.PriceOffers
                 dto.CreationTime = request.BidStartDate;
                 dto.TruckType = ObjectMapper.Map<TrucksTypeDto>(request.TrucksTypeFk).TranslatedDisplayName;
                 dto.GoodsCategory = ObjectMapper.Map<GoodCategoryDto>(request.GoodCategoryFk).DisplayName;
+                dto.NumberOfCompletedTrips = await getCompletedRequestTripsCount(request);
+
                 ShippingRequestForPriceOfferList.Add(dto);
 
             }
@@ -667,6 +674,7 @@ namespace TACHYON.PriceOffers
                     var dto = ObjectMapper.Map<GetShippingRequestForPriceOfferListDto>(request);
                     dto.TruckType = ObjectMapper.Map<TrucksTypeDto>(request.TrucksTypeFk)?.TranslatedDisplayName;
                     dto.GoodsCategory = ObjectMapper.Map<GoodCategoryDto>(request.GoodCategoryFk)?.DisplayName;
+                    dto.NumberOfCompletedTrips = await getCompletedRequestTripsCount(request);
 
                     if (AbpSession.TenantId.HasValue && (IsEnabled(AppFeatures.Carrier)))
                     {
@@ -733,6 +741,7 @@ namespace TACHYON.PriceOffers
                 var dto = ObjectMapper.Map<GetShippingRequestForPriceOfferListDto>(request.ShippingRequestFK);
                 dto.DirectRequestStatusTitle = request.Status.GetEnumDescription();
                 dto.OfferStatus = request.Status;
+                dto.NumberOfCompletedTrips = await getCompletedRequestTripsCount(request.ShippingRequestFK);
 
                 if (!AbpSession.TenantId.HasValue || IsEnabled(AppFeatures.TachyonDealer) || IsEnabled(AppFeatures.Shipper))
                 {
@@ -768,6 +777,11 @@ namespace TACHYON.PriceOffers
 
             return ShippingRequestForPriceOfferList;
 
+        }
+
+        private async Task<int> getCompletedRequestTripsCount(ShippingRequest request)
+        {
+            return await _shippingRequestTripRepository.CountAsync(x => x.ShippingRequestId == request.Id && x.Status == Shipping.Trips.ShippingRequestTripStatus.Delivered);
         }
         public async Task CancelShipment(CancelShippingRequestInput input)
         {
