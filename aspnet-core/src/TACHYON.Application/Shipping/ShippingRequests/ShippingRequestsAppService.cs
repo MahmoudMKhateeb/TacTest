@@ -128,8 +128,8 @@ namespace TACHYON.Shipping.ShippingRequests
         public async Task<GetAllShippingRequestsOutputDto> GetAll(GetAllShippingRequestsInput Input)
         {
             DisableTenancyFilters();
-            using (CurrentUnitOfWork.DisableFilter("IHasIsDrafted"))
-            {
+            //using (CurrentUnitOfWork.DisableFilter("IHasIsDrafted"))
+            //{
                 IQueryable<ShippingRequest> query = _shippingRequestRepository
                 .GetAll()
                 .AsNoTracking()
@@ -145,18 +145,21 @@ namespace TACHYON.Shipping.ShippingRequests
                 .OrderBy(Input.Sorting ?? "id desc");
 
 
-                var myDraftsOnly = query.Where(x => x.TenantId == AbpSession.TenantId)
-                             .Where(x => x.IsDrafted);
+            //var myDraftsOnly = query.Where(x => x.TenantId == AbpSession.TenantId)
+            //             .Where(x => x.IsDrafted);
 
-                var withoutDrafts = query.Where(x => !x.IsDrafted);
-                //concat all requests without draft with my draft requests
-                var allWithMyDraftsOnly = myDraftsOnly.Concat(withoutDrafts);
+            //var withoutDrafts = query.Where(x => !x.IsDrafted);
+            ////concat all requests without draft with my draft requests
+            //var allWithMyDraftsOnly = myDraftsOnly.Concat(withoutDrafts);
 
-                var ResultPage = allWithMyDraftsOnly.PageBy(Input);
-                var totalCount = await allWithMyDraftsOnly.CountAsync();
+            //var ResultPage = allWithMyDraftsOnly.PageBy(Input);
+            //var totalCount = await allWithMyDraftsOnly.CountAsync();
+            var totalCount = await query.CountAsync();
 
-                var output = ObjectMapper.Map<List<ShippingRequestListDto>>(await ResultPage.ToListAsync());
-                foreach (var item in output.Where(x => IsEnabled(AppFeatures.Shipper) && x.IsTachyonDeal))
+            //var output = ObjectMapper.Map<List<ShippingRequestListDto>>(await ResultPage.ToListAsync());
+            var output = ObjectMapper.Map<List<ShippingRequestListDto>>(await query.ToListAsync());
+
+            foreach (var item in output.Where(x => IsEnabled(AppFeatures.Shipper) && x.IsTachyonDeal))
                 {
                     item.TotalBids = 0;
                 }
@@ -168,7 +171,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 ,
                     NoOfPostPriceWithoutTrips = IsEnabled(AppFeatures.Shipper) ? _shippingRequestRepository.GetAll().Where(r => r.Status == ShippingRequestStatus.PostPrice && r.TotalsTripsAddByShippier == 0 && r.TenantId == AbpSession.TenantId).Count() : 0
                 };
-            }
+           // }
         }
 
         public async Task<GetShippingRequestForViewOutput> GetShippingRequestForView(long id)
@@ -530,8 +533,8 @@ namespace TACHYON.Shipping.ShippingRequests
 
         protected virtual async Task<GetShippingRequestForViewOutput> _GetShippingRequestForView(long id)
         {
-            using (CurrentUnitOfWork.DisableFilter("IHasIsDrafted"))
-            {
+            //using (CurrentUnitOfWork.DisableFilter("IHasIsDrafted"))
+            //{
                 ShippingRequest shippingRequest = await _shippingRequestRepository.GetAll()
                     .Where(e => e.Id == id)
                     .WhereIf(await IsEnabledAsync(AppFeatures.Shipper), x => x.TenantId == AbpSession.TenantId)
@@ -607,13 +610,13 @@ namespace TACHYON.Shipping.ShippingRequests
                                         + "-" + ObjectMapper.Map<CapacityDto>(shippingRequest.CapacityFk).TranslatedDisplayName;
 
                 return output;
-            }
+            //}
         }
 
         protected virtual GetShippingRequestForEditOutput _GetShippingRequestForEdit(EntityDto<long> input)
         {
-            using (CurrentUnitOfWork.DisableFilter("IHasIsDrafted"))
-            {
+            //using (CurrentUnitOfWork.DisableFilter("IHasIsDrafted"))
+            //{
                 ShippingRequest shippingRequest = _shippingRequestRepository
                     .GetAll()
                     .Include(x => x.ShippingRequestVases)
@@ -631,7 +634,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     ShippingRequest = Request
                 };
                 return output;
-            }
+           // }
         }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequests_Create)]
