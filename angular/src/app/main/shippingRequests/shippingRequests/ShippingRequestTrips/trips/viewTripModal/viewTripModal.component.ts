@@ -11,6 +11,7 @@ import {
   SelectItemDto,
   AssignDriverAndTruckToShippmentByCarrierInput,
   ShippingRequestDriverServiceProxy,
+  GetShippingRequestForViewOutput,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { finalize } from '@node_modules/rxjs/operators';
@@ -39,6 +40,7 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit {
   currentTripId: number;
   wayBillIsDownloading = false;
   isResetTripLoading = false;
+  private TruckTypeId: number;
   constructor(
     injector: Injector,
     private _routStepsServiceProxy: RoutStepsServiceProxy,
@@ -54,10 +56,9 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit {
   }
 
   ngOnInit() {
-    if (this.feature.isEnabled('App.Carrier')) {
-      this.getAllTrucks();
-      this.getAllDrivers();
-    }
+    this._TripService.currentShippingRequest.subscribe((res) => {
+      this.TruckTypeId = res.truckTypeId;
+    });
   }
 
   show(id): void {
@@ -65,6 +66,10 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit {
     this.currentTripId = id;
     //update the active trip id in TripsService
     this._TripService.updateActiveTripId(id);
+    if (this.feature.isEnabled('App.Carrier')) {
+      this.getAllTrucks(this.TruckTypeId);
+      this.getAllDrivers();
+    }
     this._shippingRequestTripsService
       .getShippingRequestTripForView(id)
       .pipe(
@@ -113,9 +118,9 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit {
   /**
    * this method is for Getting All Carriers Trucks For DD
    */
-  getAllTrucks() {
+  getAllTrucks(truckTypeId) {
     if (this.feature.isEnabled('App.Carrier')) {
-      this._trucksServiceProxy.getAllCarrierTrucksForDropDown().subscribe((res) => {
+      this._trucksServiceProxy.getAllCarrierTrucksByTruckTypeForDropDown(truckTypeId).subscribe((res) => {
         this.allTrucks = res;
       });
     }
