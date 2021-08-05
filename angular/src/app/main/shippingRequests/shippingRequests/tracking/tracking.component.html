@@ -11,13 +11,14 @@
 
     <div class="container-fluid">
       <div class="row">
-        <div class="col-12 col-lg-6 mb-4" *ngFor="let item of Items">
+        <div class="col-12 mb-4" *ngFor="let item of Items">
           <div class="shipCard {{ item.requestType ? 'tachyonDialer' : '' }} {{ direction == 'rtl' ? ' rtl' : '' }}">
             <img class="markTachyon" src="/assets/custom/imgs/mark.svg" alt="" />
             <div class="infoBasic">
               <a href="javascript:void(0)" class="companyName">
                 {{ item.name }}
               </a>
+              {{ item.waybillNumber }}
               <a
                 href="javascript:void(0)"
                 (click)="showIncident(item)"

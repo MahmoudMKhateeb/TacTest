@@ -37,6 +37,7 @@ export class InvoicePeriodsModalComponent extends AppComponentBase implements On
   Months: KeyValuePair[];
   Weeks: KeyValuePair[];
   Specifiedtime: Date = new Date();
+  cronValue = '0 0 9 1/1 * ?';
   constructor(injector: Injector, private enumToArray: EnumToArrayPipe, private _periodService: InvoicePeriodServiceProxy) {
     super(injector);
   }

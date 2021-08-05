@@ -254,6 +254,7 @@ import { TrucksSubmittedDocumentsComponent } from '@app/main/documentFiles/docum
 import { DriversSubmittedDocumentsComponent } from '@app/main/documentFiles/documentFiles/drivers-submitted-documents/drivers-submitted-documents.component';
 import { ViweTruckDocumentsModalComponent } from '@app/main/trucks/trucks/viwe-truck-documents-modal/viwe-truck-documents-modal.component';
 import { InvoiceTenantItemComponent } from '@app/main/Invoices/invoice-tenants/invoice-tenant-item/invoice-tenant-item.component';
+import { QuartzCronModule } from '@node_modules/@sbzen/ng-cron';
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
 @NgModule({
@@ -296,6 +297,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     DevExtremeModule,
     PdfJsViewerModule,
     InputNumberModule,
+    QuartzCronModule,
   ],
   declarations: [
     TrucksTypesTranslationsComponent,

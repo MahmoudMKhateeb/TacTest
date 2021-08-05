@@ -1356,6 +1356,21 @@
     node-gyp "^7.1.0"
     read-package-json-fast "^2.0.1"
 
+"@sbzen/cron-core@1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@sbzen/cron-core/-/cron-core-1.0.5.tgz#84fbe9269e0562f71cc607cb5ac12495df016331"
+  integrity sha512-tFv4zh6Eaar987uvP7bSP11mdQ5MnCXrJNsew0dloksUfA5t1Tu/QzhkdmnuZhOFYHAa9dIThCoa8KhFWzBeHQ==
+  dependencies:
+    tslib "^2.0.0"
+
+"@sbzen/ng-cron@^1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@sbzen/ng-cron/-/ng-cron-1.0.5.tgz#c5fca4241f3945f7220a21cdf81d3fda73b25bc7"
+  integrity sha512-sWzatpiwsLC+0uy9BNKxOsY9msclSzUf5tq9rjSHlqAsHlTn6/Tik9+Kbe+EEaV8oCc+Hx3wWsMKtgvLpcmgyA==
+  dependencies:
+    "@sbzen/cron-core" "1.0.5"
+    tslib "^2.0.0"
+
 "@schematics/angular@12.1.1":
   version "12.1.1"
   resolved "https://registry.yarnpkg.com/@schematics/angular/-/angular-12.1.1.tgz#e0e0d909cb641f808fa04fd1567e1f06c3676923"

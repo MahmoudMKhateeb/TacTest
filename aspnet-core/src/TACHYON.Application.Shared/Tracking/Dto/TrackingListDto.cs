@@ -30,5 +30,8 @@ namespace TACHYON.Tracking.Dto
 
         public bool isApproveCancledByCarrier { get; set; }
         public bool isApproveCancledByShipper { get; set; }
+
+        public long? WaybillNumber { get; set; }
+
     }
 }

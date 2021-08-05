@@ -11,7 +11,7 @@
 
     <div class="container-fluid">
       <div class="row">
-        <div class="col-12 col-lg-6 mb-4" *ngFor="let item of Items">
+        <div class="col-12 mb-4" *ngFor="let item of Items">
           <ng-template [ngIf]="!Channel"> </ng-template>
           <div
             class="shipCard {{ item.isTachyonDeal ? 'tachyonDialer' : '' }}
