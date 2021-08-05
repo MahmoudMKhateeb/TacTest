@@ -16,7 +16,14 @@
             <span>{{ l('TripDetails') }}</span>
           </p>
           <div class="card-toolbar">
-            <button class="btn btn-primary" *ngIf="trip.id" [disabled]="!trip.id" (click)="DownloadSingleDropWaybillPdf(trip.id)">
+            <button
+              class="btn btn-primary"
+              *ngIf="trip.id"
+              [disabled]="!trip.id"
+              (click)="DownloadSingleDropWaybillPdf(trip.id)"
+              [buttonBusy]="wayBillIsDownloading"
+            >
+              <i class="fa flaticon2-print"></i>
               {{ l('PrintWaybill') }}
             </button>
           </div>
