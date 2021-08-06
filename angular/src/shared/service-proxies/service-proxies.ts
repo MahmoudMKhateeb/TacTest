@@ -45372,6 +45372,78 @@ export class TrucksServiceProxy {
   }
 
   /**
+   * @param truckTypeId (optional)
+   * @return Success
+   */
+  getAllCarrierTrucksByTruckTypeForDropDown(truckTypeId: number | undefined): Observable<SelectItemDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/Trucks/GetAllCarrierTrucksByTruckTypeForDropDown?';
+    if (truckTypeId === null) throw new Error("The parameter 'truckTypeId' cannot be null.");
+    else if (truckTypeId !== undefined) url_ += 'truckTypeId=' + encodeURIComponent('' + truckTypeId) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAllCarrierTrucksByTruckTypeForDropDown(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAllCarrierTrucksByTruckTypeForDropDown(<any>response_);
+            } catch (e) {
+              return <Observable<SelectItemDto[]>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<SelectItemDto[]>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAllCarrierTrucksByTruckTypeForDropDown(response: HttpResponseBase): Observable<SelectItemDto[]> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          if (Array.isArray(resultData200)) {
+            result200 = [] as any;
+            for (let item of resultData200) result200!.push(SelectItemDto.fromJS(item));
+          } else {
+            result200 = <any>null;
+          }
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<SelectItemDto[]>(<any>null);
+  }
+
+  /**
    * @return Success
    */
   getAllDriversForDropDown(): Observable<SelectItemDto[]> {
@@ -74149,6 +74221,7 @@ export class GetShippingRequestForViewOutput implements IGetShippingRequestForVi
   shippingRequestVasDtoList!: GetShippingRequestVasForViewDto[] | undefined;
   vasCount!: number;
   truckTypeDisplayName!: string | undefined;
+  truckTypeId!: number;
   transportTypeDisplayName!: string | undefined;
   capacityDisplayName!: string | undefined;
   driverName!: string | undefined;
@@ -74187,6 +74260,7 @@ export class GetShippingRequestForViewOutput implements IGetShippingRequestForVi
       }
       this.vasCount = _data['vasCount'];
       this.truckTypeDisplayName = _data['truckTypeDisplayName'];
+      this.truckTypeId = _data['truckTypeId'];
       this.transportTypeDisplayName = _data['transportTypeDisplayName'];
       this.capacityDisplayName = _data['capacityDisplayName'];
       this.driverName = _data['driverName'];
@@ -74226,6 +74300,7 @@ export class GetShippingRequestForViewOutput implements IGetShippingRequestForVi
     }
     data['vasCount'] = this.vasCount;
     data['truckTypeDisplayName'] = this.truckTypeDisplayName;
+    data['truckTypeId'] = this.truckTypeId;
     data['transportTypeDisplayName'] = this.transportTypeDisplayName;
     data['capacityDisplayName'] = this.capacityDisplayName;
     data['driverName'] = this.driverName;
@@ -74252,6 +74327,7 @@ export interface IGetShippingRequestForViewOutput {
   shippingRequestVasDtoList: GetShippingRequestVasForViewDto[] | undefined;
   vasCount: number;
   truckTypeDisplayName: string | undefined;
+  truckTypeId: number;
   transportTypeDisplayName: string | undefined;
   capacityDisplayName: string | undefined;
   driverName: string | undefined;
@@ -80533,6 +80609,8 @@ export class TrackingListDto implements ITrackingListDto {
   hasAccident!: boolean;
   isApproveCancledByCarrier!: boolean;
   isApproveCancledByShipper!: boolean;
+  waybillNumber!: number | undefined;
+  referenceNumber!: string | undefined;
   id!: number;
 
   constructor(data?: ITrackingListDto) {
@@ -80567,6 +80645,8 @@ export class TrackingListDto implements ITrackingListDto {
       this.hasAccident = _data['hasAccident'];
       this.isApproveCancledByCarrier = _data['isApproveCancledByCarrier'];
       this.isApproveCancledByShipper = _data['isApproveCancledByShipper'];
+      this.waybillNumber = _data['waybillNumber'];
+      this.referenceNumber = _data['referenceNumber'];
       this.id = _data['id'];
     }
   }
@@ -80602,6 +80682,8 @@ export class TrackingListDto implements ITrackingListDto {
     data['hasAccident'] = this.hasAccident;
     data['isApproveCancledByCarrier'] = this.isApproveCancledByCarrier;
     data['isApproveCancledByShipper'] = this.isApproveCancledByShipper;
+    data['waybillNumber'] = this.waybillNumber;
+    data['referenceNumber'] = this.referenceNumber;
     data['id'] = this.id;
     return data;
   }
@@ -80630,6 +80712,8 @@ export interface ITrackingListDto {
   hasAccident: boolean;
   isApproveCancledByCarrier: boolean;
   isApproveCancledByShipper: boolean;
+  waybillNumber: number | undefined;
+  referenceNumber: string | undefined;
   id: number;
 }
 
