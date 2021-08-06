@@ -33,5 +33,8 @@ namespace TACHYON.Tracking.Dto
 
         public long? WaybillNumber { get; set; }
 
+        public string ReferenceNumber { get; set; }
+
+
     }
 }
