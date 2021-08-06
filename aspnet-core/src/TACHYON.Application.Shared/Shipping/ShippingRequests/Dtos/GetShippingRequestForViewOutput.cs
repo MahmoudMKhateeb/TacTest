@@ -16,6 +16,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         //public List<RoutPointDto> RoutPointDtoList { get; set; }
         public int VasCount { get; set; }
         public string TruckTypeDisplayName { get; set; }
+        public long TruckTypeId { get; set; }
         public string TransportTypeDisplayName { get; set; }
         public string CapacityDisplayName { get; set; }
         public string DriverName { get; set; }
