@@ -16,6 +16,7 @@ namespace TACHYON.AutoMapper.Shipping
                 .ForMember(dst => dst.RouteType, opt => opt.MapFrom(src => Enum.GetName(typeof(ShippingRequestRouteType), src.RouteTypeId)));
 
             CreateMap<ShippingRequest, GetShippingRequestForViewOutput>()
+                .ForMember(dest=> dest.TruckTypeId,opt=> opt.MapFrom(x=> x.TrucksTypeId))
                 .ForMember(dest => dest.ShippingRequest, opt => opt.MapFrom(src => src))
                 .ForMember(dest => dest.ShippingRequestBidDtoList, opt => opt.Ignore())
                 .ForMember(dest => dest.AssignedTruckDto, opt => opt.MapFrom(src => src.AssignedTruckFk))
