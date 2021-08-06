@@ -51,7 +51,7 @@
                 *ngIf="!appSession.tenantId || feature.isEnabled('App.TachyonDealer')"
               >
               </dxi-column>
-              <dxi-column dataField="periodId" caption=" {{ l('Interval') }}">
+              <dxi-column dataField="periodId" caption=" {{ l('period') }}">
                 <dxo-lookup [dataSource]="Periods" displayExpr="displayName" valueExpr="id"> </dxo-lookup>
               </dxi-column>
 
@@ -103,9 +103,9 @@
                     </span>
                   </a>
                   <ul class="dropdown-menu" *dropdownMenu>
-                    <li>
-                      <a class="dropdown-item" (click)="details(options.data.id)">{{ l('Detail') }}</a>
-                    </li>
+                    <!--                    <li>-->
+                    <!--                      <a class="dropdown-item" (click)="details(options.data.id)">{{ l('Detail') }}</a>-->
+                    <!--                    </li>-->
                     <li *ngIf="options.data.documentName">
                       <a class="dropdown-item" href="javascript:;" (click)="downloadDocument(options.data.id)">
                         {{ l('Download') }}

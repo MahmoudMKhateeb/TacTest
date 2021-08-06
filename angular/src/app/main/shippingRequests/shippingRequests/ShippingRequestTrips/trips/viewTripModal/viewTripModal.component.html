@@ -22,7 +22,7 @@
             [buttonBusy]="isResetTripLoading"
           >
             <i class="fa flaticon2-reload-1"></i>
-            {{ l('ResetTrip') }}
+            {{ l('Reset') }}
           </button>
           <button class="btn btn-primary" (click)="DownloadSingleDropWaybillPdf(currentTripId)" [buttonBusy]="wayBillIsDownloading">
             <i class="fa flaticon2-print"></i>
@@ -90,31 +90,29 @@
               </div>
             </div>
           </div>
+          <!--  end:: Trip start&End Dates-->
+          <!--  start:: Notes-->
+
+          <div class="col-lg-12">
+            <label>{{ l('Notes') }}</label>
+            <div class="input-group">
+              <textarea name="notes" class="form-control" [(ngModel)]="trip.note" disabled></textarea>
+            </div>
+          </div>
+          <!--  end:: Notes-->
 
           <!-- StartOf::Driver&Truck -->
           <ng-container *ngIf="feature.isEnabled('App.Carrier')">
             <div class="form-group col-lg-6">
               <label>{{ l('driver') }}</label>
-              <select
-                name="driver"
-                type="text"
-                [(ngModel)]="assignDriverAndTruck.assignedDriverUserId"
-                class="form-control"
-                [disabled]="saving || trip.driverStatus !== 0"
-              >
+              <select name="driver" type="text" [(ngModel)]="assignDriverAndTruck.assignedDriverUserId" class="form-control" [disabled]="saving">
                 <option [ngValue]="null">{{ l('selectaDriver') }}</option>
                 <option *ngFor="let item of allDrivers" [value]="item.id">{{ item.displayName }}</option>
               </select>
             </div>
             <div class="form-group col-lg-{{ trip.driverStatus == 0 ? 5 : 6 }}">
               <label>{{ l('tuck') }}</label>
-              <select
-                name="truck"
-                type="text"
-                [(ngModel)]="assignDriverAndTruck.assignedTruckId"
-                class="form-control"
-                [disabled]="saving || trip.driverStatus !== 0"
-              >
+              <select name="truck" type="text" [(ngModel)]="assignDriverAndTruck.assignedTruckId" class="form-control" [disabled]="saving">
                 <option [ngValue]="null">{{ l('selectatruck') }}</option>
                 <option *ngFor="let item of allTrucks" [value]="item.id">{{ item.displayName }}</option>
               </select>
@@ -128,7 +126,7 @@
 
           <!--   EndOf::Driver&Truck -->
           <!--  begin::Trip Goods Approximate Value -->
-          <div class="col-lg-6">
+          <div class="col-lg-6 mt-6">
             <div class="form-group">
               <label>{{ l('ApproximateTripGoodsValue') }} *</label>
               <div class="input-group date">
@@ -150,7 +148,6 @@
             </div>
           </div>
           <!--  end::Trip Goods Approximate Value -->
-          <!--  end:: Trip start&End Dates-->
           <!-- begin::Vas's  -->
           <!--          <div class="col-lg-6" *ngIf="VasListFromFather.length > 0">-->
           <!--            <div class="form-group" *ngIf="selectedVases != []">-->

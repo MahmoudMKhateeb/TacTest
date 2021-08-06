@@ -25,16 +25,6 @@
                 {{ item.statusTitle }}
               </a>
             </div>
-            <div class="detailsRoad">
-              <div class="from">
-                <p class="pickup">{{ l('CityOrigin') }}</p>
-                <p>{{ item.origin }}</p>
-              </div>
-              <div class="to">
-                <p class="delivery">{{ l('DestinationDelivery') }}</p>
-                <p>{{ item.destination }}</p>
-              </div>
-            </div>
             <div class="divirCard"></div>
             <div class="moreDetails">
               <div class="goodCategory">
@@ -52,7 +42,6 @@
                   {{ l('DriverName') }}
                 </p>
                 <p>
-                  <img class="userDriver" src="{{ item.profilePictureUrl }}" alt="" />
                   {{ item.driver }}
                 </p>
               </div>
@@ -94,12 +83,11 @@
           <form class="{{ pickup.status == 4 ? 'complete' : '' }}">
             <div class="title-x">
               <span>
-                {{ l('CityOrigin') }}
+                {{ l('Source') }}
               </span>
               <span class="icon">
                 <span class="textComplete">
                   <i class="fas fa-check-circle"></i>
-                  {{ l('Complete') }}
                 </span>
                 <!-- NOTE!! class "rotateDown" to rotate icon 180deg .. as shown "close" -->
                 <i (click)="pickup.isShow = !pickup.isShow" class="{{ pickup.isShow ? 'rotateDown' : 'rotate' }} fas fa-chevron-up"></i>
@@ -152,16 +140,14 @@
                 <a href="javascript:void(0)" *ngIf="!saving && item.isAssign" (click)="changeStatus(pickup)">
                   {{ pickup.nextStatus }}
                 </a>
-                <a href="javascript:void(0)" *ngIf="saving" [buttonBusy]="saving">
-                  Saving
-                </a>
+                <a href="javascript:void(0)" *ngIf="saving" [buttonBusy]="saving"> Saving </a>
               </div>
             </ng-template>
           </form>
           <form *ngFor="let drop of drops" class="{{ drop.status == 10 ? 'complete' : '' }}">
             <div class="title-x">
               <span>
-                {{ l('DropOff') }}
+                {{ l('DestinationDelivery') }}
               </span>
               <span class="icon">
                 <a href="javascript:void(0)">
@@ -169,7 +155,6 @@
                 </a>
                 <span class="textComplete">
                   <i class="fas fa-check-circle"></i>
-                  {{ l('Complete') }}
                 </span>
                 <!-- NOTE!! class "rotateDown" to rotate icon 180deg .. as shown "close" -->
                 <i (click)="drop.isShow = !drop.isShow" class="{{ drop.isShow ? 'rotateDown' : 'rotate' }} fas fa-chevron-up"></i>
@@ -252,9 +237,7 @@
                 <a href="javascript:void(0)" *ngIf="!saving" (click)="changeStatus(drop)">
                   {{ drop.nextStatus }}
                 </a>
-                <a href="javascript:void(0)" *ngIf="saving" [buttonBusy]="saving">
-                  Saving
-                </a>
+                <a href="javascript:void(0)" *ngIf="saving" [buttonBusy]="saving"> Saving </a>
               </div>
             </ng-template>
           </form>

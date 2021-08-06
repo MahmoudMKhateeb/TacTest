@@ -238,10 +238,10 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     this.shippingRequestType == 'bidding' ? (this.step1Dto.isBid = true) : (this.step1Dto.isBid = false);
     this.shippingRequestType == 'tachyondeal' ? (this.step1Dto.isTachyonDeal = true) : (this.step1Dto.isTachyonDeal = false);
     this.shippingRequestType == 'directrequest' ? (this.step1Dto.isDirectRequest = true) : (this.step1Dto.isDirectRequest = false);
-    this.step1Dto.bidStartDate = this.biddingDateRange ? moment(this.biddingDateRange[0]) : undefined;
-    this.step1Dto.bidEndDate = this.biddingDateRange ? moment(this.biddingDateRange[1]) : undefined;
-    this.step1Dto.startTripDate = moment(this.tripsDateRange[0]);
-    this.step1Dto.endTripDate = moment(this.tripsDateRange[1]);
+    this.step1Dto.bidStartDate = this.biddingDateRange ? moment(this.biddingDateRange[0]).startOf('day') : undefined;
+    this.step1Dto.bidEndDate = this.biddingDateRange ? moment(this.biddingDateRange[1]).endOf('day') : undefined;
+    this.step1Dto.startTripDate = moment(this.tripsDateRange[0]).startOf('day');
+    this.step1Dto.endTripDate = moment(this.tripsDateRange[1]).endOf('day');
     this._shippingRequestsServiceProxy
       .createOrEditStep1(this.step1Dto)
       .pipe(

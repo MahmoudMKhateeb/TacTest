@@ -17,7 +17,7 @@
 		<text name="AcceptedDate">تاريخ القبول</text>
 		<text name="AcceptPrice">الموافقة على السعر</text>
 		<text name="Accesstoyourapplicationsandresources,evenwhenyouareoffline">الوصول إلى التطبيقات والموارد الخاصة بك، حتى عندما لاتكون متصلا</text>
-		<text name="AccidentReason">أسباب الحادثة</text>
+		<text name="AccidentReason">سبب الحدث</text>
 		<text name="AccidentReasonHeaderInfo">الهيدر</text>
 		<text name="Account">الحساب</text>
 		<text name="AccountInvoiceType">نوع الحساب</text>
@@ -80,7 +80,7 @@
 		<text name="AllowUsingGravatarProfilePicture">السماح للمستخدمين باستخدام صورة ملف تعريف Gravatar</text>
 		<text name="AllUsersSuccessfullyImportedFromExcel">اكتملت عملية استيراد المستخدم بنجاح. تم استيراد جميع المستخدمين في الملف.</text>
 		<text name="AlreadyTaken">سبق إستخدامه</text>
-		<text name="Amount">الكمية</text>
+		<text name="Amount">القيمة</text>
 		<text name="AmountWithTaxVat">المبلغ يشمل ضريبة القيمة المضافة</text>
 		<text name="AnErrorOccurred">لقد حدث خطأ، يرجى إعادة المحاولة لاحقاً</text>
 		<text name="AnHttpErrorOccured">حدث خطأ أثناء الاتصال بالخادم.</text>
@@ -219,7 +219,7 @@
 		<text name="City">المدينة</text>
 		<text name="CityDisplayName">المدينة</text>
 		<text name="CityName">المدينة</text>
-		<text name="Claim" />
+		<text name="Claim">مطالبة</text>
 		<text name="ClaimKey">مفتاح المطالبة</text>
 		<text name="ClaimsMapping">تخطيط المطالبات</text>
 		<text name="ClaimValue">قيمة المطالبة</text>
@@ -275,7 +275,7 @@
 		<text name="Create">إنشاء</text>
 		<text name="DriverInformation">معلومات السائق</text>
 		<text name="NonMandatoryDocuments">المستندات الإضافية</text>
-		<text name="CreateAccident">إضافة حادث</text>
+		<text name="CreateAccident">إضافة حدث</text>
 		<text name="CreateAccidentReason">إضافة سبب جديد</text>
 		<text name="CreateAnAccount">إنشاء حساب</text>
 		<text name="CreatedAtByUser"><![CDATA[تم الإنشاء في <b> {0} </ b> بواسطة <b> {1} </ b>]]></text>
@@ -534,7 +534,7 @@
 		<text name="DriverCreationDateAndTime">تاريخ و وقت الإنشاء</text>
 		<text name="DriverDocuments">مستندات السائق</text>
 		<text name="DriverInformations">معلومات السائق</text>
-		<text name="DriverName" />
+		<text name="DriverName">اسم السائق</text>
 		<text name="DriverRejectTrip">
 			<a href="/app/main/shippingRequests/shippingRequests/view?id={id}">السائق {driver} لقد رفض الرحلة من {source} إلى {destination}</a>
 		</text>
@@ -824,12 +824,12 @@
 		<text name="InvalidUserNameOrPassword">اسم المستخدم أو كلمة المرور غير صحيحة</text>
 		<text name="InvlalidLanguageCode">رمز اللغة غير صحيح</text>
 		<text name="Invoice">فاتورة</text>
-		<text name="InvoiceDetail">تفاصيل الفاتوره</text>
+		<text name="InvoiceDetail">تفاصيل الفاتورة</text>
 		<text name="InvoiceId">رقم الفاتورة</text>
 		<text name="InvoiceInfoIsMissingOrNotCompleted">معلومات الفاتورة غير متوفرة أو غير مكتملة</text>
 		<text name="InvoiceInformation">معلومات الفاتورة</text>
 		<text name="InvoiceNo">رقم الفاتورة</text>
-		<text name="InvoiceNumber">رقم الفاتوره</text>
+		<text name="InvoiceNumber">رقم الفاتورة</text>
 		<text name="Invoices">الفواتير</text>
 		<text name="InvoicesList">قائمة الفواتير</text>
 		<text name="InvoicesProformas">الفواتير الأولية</text>
@@ -1051,7 +1051,7 @@
 		<text name="NoInternetConnection">أنت غير متصل  بالإنترنت حالياً</text>
 		<text name="None">لا شيء</text>
 		<text name="NoNotificationsYet">لا يوجد اشعارات بعد</text>
-		<text name="NoOfTrips">الرحلات</text>
+		<text name="NoOfTrips">عدد الرحلات</text>
 		<text name="NoOrganizationUnitDefinedYet">لا توجد وحدات تنظيمية.</text>
 		<text name="NoPermission">ليس لديك أي صلاحيات تواصل مع مشرف حسابك</text>
 		<text name="NoRecordsFound">لا يوجد سجلات</text>
@@ -1112,7 +1112,7 @@
 		<text name="OtherReason">اسباب اخرى</text>
 		<text name="Others">أخرى</text>
 		<text name="OtherSettings">إعدادات اخرى</text>
-		<text name="PackingType">النوع</text>
+		<text name="PackingType">نوع التعبئة</text>
 		<text name="PackingTypes">أنواع التعبئة</text>
 		<text name="AddNewWayPoint">إضافة منطقة التنزيل</text>
 		<text name="PageDeleteWarningMessage">هل أنت متأكد من إزالة صفحة "{0}"؟</text>
@@ -1164,7 +1164,7 @@
 			<a href="/app/main/offers/list?id={id}">تم استلام عرضك المالي وقيد المراجعة من المسؤول.</a>
 		</text>
 		<text name="PerDay">في اليوم</text>
-		<text name="Period">فترة</text>
+		<text name="Period">الفترة</text>
 		<text name="Permission">الصلاحيات</text>
 		<text name="Permissions">الصلاحيات</text>
 		<text name="PerMonth">كل شهر</text>
@@ -1424,7 +1424,7 @@
 		<text name="SendDriectRequestForCarrier">يرجى إرسال عرض أسعار الشحنة رقم.: {id}.</text>
 		<text name="SendEmailActivationLink_Information">سيتم إرسال رابط تأكيد بريدك الإلكتروني. إذا لم يصلك البريد الإلكتروني في غضون بضع دقائق, الرجاء أعد المحاولة.</text>
 		<text name="Sender">المرسل</text>
-		<text name="SendOffer">إرسال العرض</text>
+		<text name="SendOffer">إرسال عرض السعر</text>
 		<text name="SendPasswordResetLink_Information">سيتم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني. إذا لم يصلك البريد الإلكتروني في غضون بضع دقائق, يرجى إعادة المحاولة.</text>
 		<text name="SendPriceOfferToShipper">ارسال عرض سعر للشاحن</text>
 		<text name="SendPricingOfferToShipper">ارسال عرض سعر</text>
@@ -1511,7 +1511,7 @@
 		<text name="SmsVerificationMessage">رمز التحقق الخاص بك: {0}</text>
 		<text name="SmtpHost">عنوان خادم البريد الإلكتروني - SMTP Host</text>
 		<text name="SmtpPort">رقم المنفذ لخادم البريد الإلكتروني - SMTP Port</text>
-		<text name="Source">موقع الاستلام</text>
+		<text name="Source">موقع التحميل</text>
 		<text name="SourceFacility">منطقة التحميل</text>
 		<text name="SpecialConstant">رمز مميز</text>
 		<text name="Start">بدء</text>
@@ -1564,7 +1564,7 @@
 		<text name="SubscriptionPrice">سعر الإشتراك</text>
 		<text name="Subscriptions">الاشتراكات</text>
 		<text name="SubscriptionStartDate">تاريخ بداية الاشتراك</text>
-		<text name="SubTotalAmount">المبلغ الاجمالي</text>
+		<text name="SubTotalAmount">المجموع</text>
 		<text name="Success">نجاح</text>
 		<text name="SuccessfullyActivated">تم التفعيل بنجاح</text>
 		<text name="SuccessfullyAdded">تمت الإضافة بنجاح.</text>
@@ -1786,7 +1786,7 @@
 		<text name="TrialWithoutEndDateErrorMessage">يجب أن يكون للحسابات التجريبية تاريخ انتهاء الاشتراك</text>
 		<text name="Trip_StartDate">تاريخ بداية التحميل</text>
 		<text name="TripDetails">تفاصيل الرحلة</text>
-		<text name="TripEndDate">تاريح نهاية الرحلة</text>
+		<text name="TripEndDate">تاريح نهاية التحميل</text>
 		<text name="TripFinishedSuccessfully">انتهت الرحلة بنجاح</text>
 		<text name="TripInfo">معلومات الرحلة</text>
 		<text name="TripRejectReason">سبب رفض الرحلة</text>
@@ -1971,10 +1971,10 @@
 		<text name="VasCount">عدد الخدمات الإضافية</text>
 		<text name="VasDetails">الخدمات الإضافية</text>
 		<text name="Vases">الخدمات الإضافية</text>
-		<text name="VasName">اسم الخدمة الإضافية</text>
+		<text name="VasName">نوع الخدمة الإضافية</text>
 		<text name="VasPrice">سعر الخدمات الإضافية</text>
 		<text name="VasPrices">إعدادات الخدمات الإضافية</text>
-		<text name="VatAmount">قيمة الضريبة</text>
+		<text name="VatAmount">قيمة الضريبة المضافة</text>
 		<text name="VerificationCode">رمز التحقق</text>
 		<text name="Verify">التحقق</text>
 		<text name="VerifySecurityCode">التحقق من رمز الأمان</text>
@@ -2093,7 +2093,18 @@
 		<text name="Youruserprofileinformation(firstname,lastname,etc.)">معلومات الملف الشخصي للمستخدم (الاسم الأول واسم العائلة وما إلى ذلك)</text>
 		<text name="TrucksSubmittedDocuments">مستندات الشاحنات</text>
 		<text name="DriversSubmittedDocuments">مستندات السائقين</text>
-		 <text name="SubmitInvoiceForHost">فواتير الناقلين</text>
-		 <text name="ShippingSettings">إعدادات الشحن</text>
+		<text name="SubmitInvoiceForHost">فواتير الناقلين</text>
+		<text name="ShippingSettings">إعدادات الشحن</text>
+		<text name="RequestId">رقم الطلب</text>
+		<text name="DestinationDelivery">موقع التنزيل</text>
+		<text name="FinishLoading">تم إنهاء التحميل</text>
+		<text name="POD">إثبات التسليم</text>
+		<text name="IsRejected">تم رفضه</text>
+		<text name="EstimatedPickUpDate">تاريخ التحميل المتوقع</text>
+		<text name="EstimatedDropOffDate">تاريخ التنزيل المتوقع</text>
+		<text name="ApproximateTripGoodsValue">قيمة البضاعة التقريبية</text>\
+		<text name="AccidentReasonName">سبب الحدث</text>
+		<text name="Vat">ضريبة القيمة المضافة</text>
+		
 	</texts>
 </localizationDictionary>

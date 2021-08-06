@@ -59,12 +59,12 @@
                       class="form-control"
                       [(ngModel)]="Point.receiverId"
                       [class.is-valid]="receiver.touched && receiver.valid"
-                      [class.is-invalid]="receiver.touched && !isAdditionalReceiverEnabled && !receiver.valid"
+                      [class.is-invalid]="receiver.touched && !receiver.valid && !isAdditionalReceiverEnabled"
                       [disabled]="receiversLoading || !Point.facilityId"
                       [required]="!isAdditionalReceiverEnabled"
                     >
-                      <option [value]="" disabled selected>{{ l('PickAReceiver') }}</option>
-                      <option *ngFor="let item of allReceivers" [value]="item.id">{{ item.displayName }}</option>
+                      <option [ngValue]="" selected>{{ l('PickAReceiver') }}</option>
+                      <option *ngFor="let item of allReceivers" [ngValue]="item.id">{{ item.displayName }}</option>
                     </select>
                     <div class="input-group-btn">
                       <button class="btn btn-primary" [disabled]="receiversLoading" (click)="createOrEditReceiverModal.show()">

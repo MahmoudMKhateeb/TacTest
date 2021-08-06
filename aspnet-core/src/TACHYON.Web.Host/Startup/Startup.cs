@@ -18,6 +18,7 @@ using IdentityServer4.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.AspNetCore.Server.Kestrel.Https;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -70,6 +71,12 @@ namespace TACHYON.Web.Startup
             {
                 options.Filters.Add(new AbpAutoValidateAntiforgeryTokenAttribute());
             }).AddNewtonsoftJson();
+
+            // kestrel
+            services.Configure<KestrelServerOptions>(options => { options.AllowSynchronousIO = true; });
+
+            // IIS
+            services.Configure<IISServerOptions>(options => { options.AllowSynchronousIO = true; });
 
             services.AddSignalR();
             //Firebase register

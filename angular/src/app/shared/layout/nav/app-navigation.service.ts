@@ -137,7 +137,7 @@ export class AppNavigationService {
             undefined,
             () => this.isEnabled('App.Shipper')
           ),
-          new AppMenuItem('ShippingRequests', 'Pages.ShippingRequests', '', '/app/main/shippingRequests/shippingRequests'),
+          new AppMenuItem('MyShippingRequests', 'Pages.ShippingRequests', '', '/app/main/shippingRequests/shippingRequests'),
           new AppMenuItem('Marketplace', '', '', '/app/main/marketplace/list', undefined, undefined, undefined, undefined, () =>
             this.isEnabled('App.Carrier')
           ),
@@ -346,17 +346,17 @@ export class AppNavigationService {
             () => this.isEnabled('App.Carrier') || this.isEnabled('App.TachyonDealer')
           ),
 
-          new AppMenuItem(
-            'InvoicesProformas',
-            'Pages.Invoices',
-            '',
-            '/app/main/invoices/proformas',
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            () => this.isEnabled('App.Shipper') || this.isEnabled('App.TachyonDealer') || !this._appSessionService.tenantId
-          ),
+          // new AppMenuItem(
+          //   'InvoicesProformas',
+          //   'Pages.Invoices',
+          //   '',
+          //   '/app/main/invoices/proformas',
+          //   undefined,
+          //   undefined,
+          //   undefined,
+          //   undefined,
+          //   () => this.isEnabled('App.Shipper') || this.isEnabled('App.TachyonDealer') || !this._appSessionService.tenantId
+          // ),
           new AppMenuItem('FinancialTransActionMenu', 'Pages.Invoices.Transaction', '', '/app/main/invoices/transaction'),
         ]
         // undefined,

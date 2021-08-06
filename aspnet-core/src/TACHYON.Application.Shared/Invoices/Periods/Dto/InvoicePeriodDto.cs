@@ -34,48 +34,7 @@ namespace TACHYON.Invoices.Periods.Dto
                 FreqRelativeInterval = 0;
                 FreqRecurrence = null;
             }
-            else
-            {
-                switch (PeriodType)
-                {
 
-                    case InvoicePeriodType.Daily:
-                        FreqRelativeInterval = 0;
-                        FreqRecurrence = null;
-                        if (FreqInterval < 1) context.Results.Add(new ValidationResult("	The field FreqInterval value must greater than or equal to 1."));
-                        Cronexpression = $"0 0 9 {Clock.Now.Day}/{FreqInterval} * ?";
-                        break;
-
-                    case InvoicePeriodType.Weekly:
-                        FreqRelativeInterval = 0;
-                        if (FreqInterval < 1) context.Results.Add(new ValidationResult("	The field FreqInterval value must greater than or equal to 1."));
-                        if (FreqRecurrence == null)
-                            context.Results.Add(new ValidationResult("Please select at least one list for field FrequencyRecurrenceWeekDays	"));
-
-                        Cronexpression = $"0 59 23 ? * {FreqRecurrence}#{FreqInterval}";
-                        break;
-                    case InvoicePeriodType.Monthly:
-                        if (FreqRecurrence == null)
-                            context.Results.Add(new ValidationResult("Please select at least one list for field FrequencyRecurrenceMonths	"));
-
-                        if (FreqRelativeInterval == 0)
-                        {
-                            if (FreqInterval < 1 || FreqInterval > 31)
-
-                                context.Results.Add(new ValidationResult("The field FreqIntervalMonthlyperday value must between 1 and 31.	"));
-
-                            Cronexpression = $"0 59 23 {FreqInterval} {FreqRecurrence} ?";
-
-                        }
-                        else
-                        {
-                            Cronexpression = $"0 59 23 ? {FreqRecurrence} {FreqInterval}#{FreqRelativeInterval}";
-                        }
-
-                        break;
-                }
-
-            }
         }
     }
 }
