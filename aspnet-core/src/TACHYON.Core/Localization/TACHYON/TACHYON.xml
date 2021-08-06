@@ -92,7 +92,7 @@
 		<text name="AllowUsingGravatarProfilePicture">Allow users to use Gravatar profile picture</text>
 		<text name="AllUsersSuccessfullyImportedFromExcel">import process has been completed successfully. All companies in the file are imported.</text>
 		<text name="AlreadyTaken">already taken</text>
-		<text name="Amount">QTY</text>
+		<text name="Amount">Amount</text>
 		<text name="AmountWithTaxVat">The amount includes VAT</text>
 		<text name="AnErrorOccurred">An error occurred, please try again later</text>
 		<text name="AnHttpErrorOccured">There was an error communicating with the server.</text>
@@ -316,7 +316,6 @@
 		<text name="Create">Create</text>
 		<text name="CreateAccident">Add Incident</text>
 		<text name="CreateAccidentReason">Create incident reason</text>
-		<text name="PleaseSelectTheIncidentReason">Please select the incident reason</text>
 		<text name="CreateAnAccount">Create account</text>
 		<text name="CreateAppLocalization">Create app localization</text>
 		<text name="CreateBidRequestNotificationMessage">Bid request is created</text>
@@ -338,7 +337,7 @@
 		<text name="CreateNewDocumentFile">Create new document</text>
 		<text name="CreateNewDocumentsEntity">Create new documents entity</text>
 		<text name="CreateNewDocumentType">Add new document type</text>
-		<text name="CreateNewDriver">Add New Driver</text>
+		<text name="CreateNewDriver">Add new driver</text>
 		<text name="CreateNewEdition">Add new subscription type</text>
 		<text name="CreateNewFacility">Add New Facility</text>
 		<text name="CreateNewGoodCategory">Add new good category</text>
@@ -531,7 +530,7 @@
 		<text name="DestFacility">Drop off facility</text>
 		<text name="Destination">Destination</text>
 		<text name="DestinationCity">To</text>
-		<text name="DestinationDelivery">Destination</text>
+		<text name="DestinationDelivery">Drop off location</text>
 		<text name="DestinationFacility">Drop off facility</text>
 		<text name="Detail">Details</text>
 		<text name="DetailingSubscription">See webhook detail page</text>
@@ -588,7 +587,7 @@
 		<text name="Driver">Driver</text>
 		<text name="DriverAcceptTrip">The driver {driver} has been accepted the trip from {source} to {destination}</text>
 		<text name="DriverCreationDateAndTime">Creation date and time</text>
-		<text name="DriverDocuments">Driver Documents</text>
+		<text name="DriverDocuments">Driver documents</text>
 		<text name="DriverInformation">Driver information</text>
 		<text name="DriverInformations">Driver information</text>
 		<text name="DriverName">Driver name</text>
@@ -817,7 +816,7 @@
 		<text name="GoingToPointConformation">Are You Sure You Want To Go To This Point?</text>
 		<text name="GoodCategories">Goods categories</text>
 		<text name="GoodCategoriesHeaderInfo">Good categories header info</text>
-		<text name="GoodCategory">Good category</text>
+		<text name="GoodCategory">Goods category</text>
 		<text name="GoodCategoryDisplayName">Good category</text>
 		<text name="GoodCategoryId">Good Category Id</text>
 		<text name="GoodCategoryName">Good category</text>
@@ -941,7 +940,7 @@
 		<text name="IsPriceAccepted">Is Price Accepted</text>
 		<text name="IsQuickThemeSelectEnabled">Is quick theme select enabled</text>
 		<text name="IsReefer">Is reefer</text>
-		<text name="IsRejected">Is Rejected</text>
+		<text name="IsRejected">Is rejected</text>
 		<text name="IsRequired">Required</text>
 		<text name="IsResolve">Is resolve</text>
 		<text name="IsRollDoor">Is roll door</text>
@@ -1994,10 +1993,10 @@
 		<text name="TruckStatusesTranslation">Truck statuses translation</text>
 		<text name="TruckStatusesTranslations">Truck statuses translation</text>
 		<text name="TruckStatusesTranslationsHeaderInfo">Truck Statuses Translations header info</text>
-		<text name="TrucksType">Trucks types</text>
+		<text name="TrucksType">Truck type</text>
 		<text name="TrucksTypeDisplayName">Trucks types</text>
 		<text name="TrucksTypeDuplicateName">There is already a Truck Type with name : {0}</text>
-		<text name="TrucksTypes">Trucks types</text>
+		<text name="TrucksTypes">Truck type</text>
 		<text name="TrucksTypesHeaderInfo">Trucks Types Header Info</text>
 		<text name="TrucksTypesTranslation">Trucks types translation</text>
 		<text name="TrucksTypesTranslations">Trucks types translation</text>
@@ -2006,7 +2005,7 @@
 		<text name="TruckType">Truck type</text>
 		<text name="TruckTypeDetails">Truck type details</text>
 		<text name="TruckTypeDisplayName">Truck type</text>
-		<text name="TruckTypes">Trucks types</text>
+		<text name="TruckTypes">Truck type</text>
 		<text name="True">True</text>
 		<text name="TrukType">Truck type</text>
 		<text name="TryIt">Try it</text>
@@ -2159,7 +2158,7 @@
 		<text name="VasDetails">VAS</text>
 		<text name="Vases">VAS</text>
 		<text name="VasesHeaderInfo">Vases header info</text>
-		<text name="VasName">VAS name</text>
+		<text name="VasName">VAS type</text>
 		<text name="VasPrice">VAS price</text>
 		<text name="VasPrices">VAS Settings</text>
 		<text name="VasPricesHeaderInfo">Vas prices header info</text>
@@ -2192,7 +2191,7 @@
 		<text name="WaitingForResponse">Waiting for response</text>
 		<text name="WaitingForReviewMsg">Please wait until we review your documents</text>
 		<text name="Warning">Warning</text>
-		<text name="WaybillNumber">Waybill Number</text>
+		<text name="WaybillNumber">Waybill number</text>
 		<text name="Waybills">Waybills</text>
 		<text name="Waypoints">Pickup/Drop off Locations</text>
 		<text name="Weak">Weak</text>
@@ -2287,5 +2286,11 @@
 	    <text name="DriversSubmittedDocuments">Drivers Documents</text>
 	    <text name="SubmitInvoiceForHost">Carrier Invoices</text>
 	    <text name="ShippingSettings">Shipping Settings</text>
+		<text name="FinishLoading">Loading finished</text>
+		<text name="POD">POD</text>
+		<text name="EstimatedPickUpDate">Estimated pickup date</text>
+		<text name="EstimatedDropOffDate">Estimated drop off date</text>
+		<text name="ApproximateTripGoodsValue">Approximate trip goods value</text>
+		<text name="SendOffer">Send price offer</text>
 	</texts>
 </localizationDictionary>

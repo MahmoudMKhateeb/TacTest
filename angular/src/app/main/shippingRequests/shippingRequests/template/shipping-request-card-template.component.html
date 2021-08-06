@@ -44,11 +44,11 @@
             </div>
             <div class="detailsRoad">
               <div class="from">
-                <p class="pickup">{{ l('CityOrigin') }}</p>
+                <p class="pickup">{{ l('Origin') }}</p>
                 <p>{{ item.originCity }}</p>
               </div>
               <div class="to">
-                <p class="delivery">{{ l('DestinationDelivery') }}</p>
+                <p class="delivery">{{ l('Destination') }}</p>
                 <p>{{ item.destinationCity }}</p>
               </div>
             </div>
@@ -56,7 +56,7 @@
             <div class="moreDetails">
               <div *ngIf="item.rangeDate" class="dateRange">
                 <p>
-                  {{ l('DateRange') }}
+                  {{ l('EstimatedPickUpDate') }}
                 </p>
                 <p>
                   {{ item.rangeDate }}

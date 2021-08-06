@@ -1,7 +1,7 @@
 <div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
     <!--begin::Subheader-->
-    <sub-header [title]="'Tracking' | localize" [description]="'' | localize">
+    <sub-header [title]="'ShipmentTracking' | localize" [description]="'' | localize">
       <div role="actions">
         <button (click)="ModelSearch.show(searchInput)" class="btn btn-primary red"><i class="fas fa-search"></i> {{ l('Search') }}</button>
       </div>
@@ -128,56 +128,12 @@
             <div class="card-body">
               <div class="row">
                 <div class="col-6">
-                  <p class="text-muted">{{ l('CityOrigin') }}</p>
+                  <p class="text-muted">{{ l('Source') }}</p>
                   <p>{{ item.origin }}</p>
                 </div>
                 <div class="col-6">
                   <p class="text-muted">{{ l('DestinationDelivery') }}</p>
                   <p>{{ item.destination }}</p>
-                </div>
-
-                <div class="col-12">
-                  <div class="separator separator-dashed mb-5"></div>
-
-                  <div class="moreDetails" style="display: flex; justify-content: space-between">
-                    <div class="goodCategory">
-                      <p class="text-muted">
-                        <img src="/assets/custom/imgs/box.svg" width="16" alt="" />
-                        {{ l('GoodCategory') }}
-                      </p>
-                      <p>
-                        {{ item.goodsCategory }}
-                      </p>
-                    </div>
-                    <div class="driverName">
-                      <p class="text-muted">
-                        <i class="fas fa-user"></i>
-                        {{ l('DriverName') }}
-                      </p>
-                      <p>
-                        <img class="userDriver" src="{{ item.profilePictureUrl }}" alt="" />
-                        {{ item.driver }}
-                      </p>
-                    </div>
-                    <div class="truckType">
-                      <p class="text-muted">
-                        <i class="fas fa-truck"></i>
-                        {{ l('TruckType') }}
-                      </p>
-                      <p>
-                        {{ item.truckType }}
-                      </p>
-                    </div>
-                    <div class="routeType">
-                      <p class="text-muted">
-                        <i class="fas fa-road"></i>
-                        {{ l('routeType') }}
-                      </p>
-                      <p>
-                        {{ l(item.routeType) }}
-                      </p>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>

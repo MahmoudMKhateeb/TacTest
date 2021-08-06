@@ -137,7 +137,7 @@ export class AppNavigationService {
             undefined,
             () => this.isEnabled('App.Shipper')
           ),
-          new AppMenuItem('ShippingRequests', 'Pages.ShippingRequests', '', '/app/main/shippingRequests/shippingRequests'),
+          new AppMenuItem('MyShippingRequests', 'Pages.ShippingRequests', '', '/app/main/shippingRequests/shippingRequests'),
           new AppMenuItem('Marketplace', '', '', '/app/main/marketplace/list', undefined, undefined, undefined, undefined, () =>
             this.isEnabled('App.Carrier')
           ),

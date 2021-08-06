@@ -25,14 +25,14 @@
   </dxo-summary>
 
   <dxi-column cellTemplate="cellTemplateActions" [allowFiltering]="false" [allowSorting]="false" [width]="50"></dxi-column>
-  <dxi-column dataField="driverName"></dxi-column>
-  <dxi-column dataField="creationTime" dataType="date"></dxi-column>
-  <dxi-column dataField="documentTypeName" [allowGrouping]="false"></dxi-column>
-  <dxi-column dataField="expirationDate" dataType="date" cellTemplate="cellTemplateStatus"></dxi-column>
-  <dxi-column dataField="extn" [allowFiltering]="false"></dxi-column>
-  <dxi-column dataField="isAccepted"></dxi-column>
-  <dxi-column dataField="isRejected"></dxi-column>
-  <dxi-column dataField="number"></dxi-column>
+  <dxi-column dataField="driverName" caption="{{ l('DriverName') }}"></dxi-column>
+  <dxi-column dataField="creationTime" caption="{{ l('SubmittingTime') }}" dataType="datetime"></dxi-column>
+  <dxi-column dataField="documentTypeName" caption="{{ l('DatatableDocumentName') }}" [allowGrouping]="false"></dxi-column>
+  <dxi-column dataField="expirationDate" caption="{{ l('ExpirationDate') }}" dataType="date" cellTemplate="cellTemplateStatus"></dxi-column>
+  <dxi-column dataField="extn" caption="{{ l('Extn') }}" [allowFiltering]="false"></dxi-column>
+  <dxi-column dataField="isAccepted" caption="{{ l('isAccepted') }}"></dxi-column>
+  <dxi-column dataField="isRejected" caption="{{ l('isRejected') }}"></dxi-column>
+  <dxi-column dataField="number" caption="{{ l('Number') }}"></dxi-column>
 
   <div *dxTemplate="let data of 'cellTemplateStatus'">
     <span *ngIf="data.value <= todayMoment" class="text-warning"> {{ data.value | date }}</span>

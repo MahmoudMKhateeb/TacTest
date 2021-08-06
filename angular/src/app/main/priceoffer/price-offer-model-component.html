@@ -19,29 +19,17 @@
             <table>
               <thead>
                 <tr>
-                  <th>
-                    {{l('Price')}}
-                  </th>
+                  <th>{{l('Price')}}</th>
                   <th *ngIf="!feature.isEnabled('App.Carrier')">
                     <select name="CommissionType" [(ngModel)]="offer.commissionType" (change)="changeItemComissionValue();calculator()">
-                      <option [value]="code.key" *ngFor="let code of priceOfferCommissionType">
-                        {{ l(code.value) | localize }}
-                      </option>
+                      <option [value]="code.key" *ngFor="let code of priceOfferCommissionType">{{ l(code.value) | localize }}</option>
                     </select>
                   </th>
-                  <th *ngIf="!feature.isEnabled('App.Carrier')">
-                    {{l('Commission')}}
-                  </th>
+                  <th *ngIf="!feature.isEnabled('App.Carrier')">{{l('Commission')}}</th>
 
-                  <th>
-                    {{l('Qty')}}
-                  </th>
-                  <th>
-                    {{l('Total')}}
-                  </th>
-                  <th *ngIf="!feature.isEnabled('App.Carrier')">
-                    {{l('Commission')}}
-                  </th>
+                  <th>{{l('NumberOfTrips')}}</th>
+                  <th>{{l('Total')}}</th>
+                  <th *ngIf="!feature.isEnabled('App.Carrier')">{{l('Commission')}}</th>
                 </tr>
               </thead>
               <tbody>
@@ -69,12 +57,8 @@
                       [(ngModel)]="offer.commissionPercentageOrAddValue"
                     />
                   </td>
-                  <td *ngIf="!feature.isEnabled('App.Carrier')">
-                    {{offer.itemCommissionAmount}}
-                  </td>
-                  <td>
-                    {{offer.quantity}}
-                  </td>
+                  <td *ngIf="!feature.isEnabled('App.Carrier')">{{offer.itemCommissionAmount}}</td>
+                  <td>{{offer.quantity}}</td>
                   <td>
                     <ng-template [ngIf]="offer.itemTotalAmount>0">
                       <span>{{offer.itemTotalAmount | number}}</span>
@@ -94,14 +78,10 @@
           <div class="divirCard"></div>
           <div class="table-vas" *ngIf="Items.length">
             <div *ngIf="!feature.isEnabled('App.Carrier')">
-              <span class="titleVas">
-                VAS
-              </span>
+              <span class="titleVas"> VAS </span>
               <div>
                 <select name="vasCommissionType" [(ngModel)]="offer.vasCommissionType" (change)="changeVasComissionValue();calculator()">
-                  <option [value]="code.key" *ngFor="let code of priceOfferCommissionType">
-                    {{ l(code.value) | localize }}
-                  </option>
+                  <option [value]="code.key" *ngFor="let code of priceOfferCommissionType">{{ l(code.value) | localize }}</option>
                 </select>
                 <input
                   type="number"
@@ -117,25 +97,15 @@
             <table>
               <thead>
                 <tr>
-                  <th>
-                    {{l('Name')}}
-                  </th>
-                  <th>
-                    {{l('Price')}}
-                  </th>
-                  <th>
-                    {{l('Qty')}}
-                  </th>
-                  <th>
-                    {{l('Total')}}
-                  </th>
+                  <th>{{l('VasName')}}</th>
+                  <th>{{l('Price')}}</th>
+                  <th>{{l('Qty')}}</th>
+                  <th>{{l('Total')}}</th>
                 </tr>
               </thead>
               <tbody>
                 <tr *ngFor="let item of Items; let i = index">
-                  <td>
-                    {{item.itemName}}
-                  </td>
+                  <td>{{item.itemName}}</td>
                   <td>
                     <input
                       type="number"
@@ -147,9 +117,7 @@
                       required
                     />
                   </td>
-                  <td>
-                    {{item.quantity}}
-                  </td>
+                  <td>{{item.quantity}}</td>
                   <td>
                     <ng-template [ngIf]="item.itemTotalAmount>0">
                       <span>{{item.itemTotalAmount | number}}</span>
@@ -163,9 +131,7 @@
           <div class="divirCard"></div>
           <div class="resultPrice">
             <div>
-              <p>
-                {{l('SubTotalAmount')}}
-              </p>
+              <p>{{l('SubTotalAmount')}}</p>
               <p>
                 <ng-template [ngIf]="offer.subTotalAmount>0">
                   <span>{{offer.subTotalAmount | number}}</span>
@@ -174,9 +140,7 @@
               </p>
             </div>
             <div>
-              <p>
-                {{l('VatAmount')}}
-              </p>
+              <p>{{l('VatAmount')}} 15%</p>
               <p>
                 <ng-template [ngIf]="offer.vatAmount>0">
                   <span>{{offer.vatAmount | number}}</span>
@@ -185,9 +149,7 @@
               </p>
             </div>
             <div>
-              <p>
-                {{l('TotalAmount')}}
-              </p>
+              <p>{{l('TotalAmount')}}</p>
               <p>
                 <ng-template [ngIf]="offer.totalAmount>0">
                   <span>{{offer.totalAmount | number}}</span>
@@ -196,9 +158,7 @@
               </p>
             </div>
             <div *ngIf="feature.isEnabled('App.TachyonDealer') || !appSession.tenantId">
-              <p>
-                {{l('Commission')}}
-              </p>
+              <p>{{l('Commission')}}</p>
               <p>
                 <span>{{offer.commissionAmount | number}}</span>
                 <span>{{l('SAR')}}</span>
