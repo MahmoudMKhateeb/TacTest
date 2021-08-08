@@ -116,15 +116,16 @@ namespace TACHYON.Documents
         /// <returns>
         /// list of Accepted and not Rejected and not expired documentsFiles
         /// </returns>
-        public async Task<List<DocumentFile>> GetAllTenantDriverAndTruckDocumentFilesListAsync()
+        public async Task<List<DocumentFile>> GetAllTenantDriverAndTruckDocumentFilesListAsync(int tenantId)
         {
                 return await _documentFileRepository.GetAll()
                       .Include(doc => doc.DocumentTypeFk)
                       .Where(x => x.DocumentTypeFk.DocumentsEntityId == (int)DocumentsEntitiesEnum.Driver ||
                        x.DocumentTypeFk.DocumentsEntityId == (int)DocumentsEntitiesEnum.Truck)
+                      .Where(x=>x.TenantId==tenantId)
                     .Where(x => x.DocumentTypeFk.HasExpirationDate)
-                    .Where(x => !x.IsRejected)
-                    .Where(x => x.IsAccepted)
+                    //.Where(x => !x.IsRejected)
+                    //.Where(x => x.IsAccepted)
                     .ToListAsync();
         }
 
@@ -136,11 +137,12 @@ namespace TACHYON.Documents
         /// <returns>
         /// list of Accepted and not Rejected and not expired documentsFiles
         /// </returns>
-        public async Task SendDocumentsExpiredStatusMonthlyReport()
+        public async Task SendDocumentsExpiredStatusMonthlyReport(int tenantId)
         {
-            var documents = await GetAllTenantDriverAndTruckDocumentFilesListAsync();
-            if(documents.Count>0)
-            await _userEmailer.SendDocumentsExpiredInfoAsyn(documents, documents.FirstOrDefault().TenantId.Value);
+            DisableTenancyFilters();
+            var documents = await GetAllTenantDriverAndTruckDocumentFilesListAsync(tenantId);
+            if (documents.Count > 0)
+                await _userEmailer.SendDocumentsExpiredInfoAsyn(documents, 5); //documents.FirstOrDefault().TenantId.Value);
         }
 
         /// <summary>

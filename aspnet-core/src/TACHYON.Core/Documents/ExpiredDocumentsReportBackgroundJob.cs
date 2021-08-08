@@ -36,11 +36,11 @@ namespace TACHYON.Documents
         {
             //var documents = await _documentFilesManager.GetAllTenantDriverAndTruckDocumentFilesListAsync();
             //await _userEmailer.SendDocumentsExpiredInfoAsyn(documents, documents.FirstOrDefault().TenantId.Value);
-            //using (var uow = _unitOfWorkManager.Begin())
-            //{
-                await _documentFilesManager.SendDocumentsExpiredStatusMonthlyReport();
-              //  uow.Complete();
-           // }
+            using (var uow = _unitOfWorkManager.Begin())
+            {
+                await _documentFilesManager.SendDocumentsExpiredStatusMonthlyReport(args);
+                uow.Complete();
+            }
         }
     }
 }

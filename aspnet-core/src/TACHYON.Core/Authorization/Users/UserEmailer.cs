@@ -179,15 +179,26 @@ namespace TACHYON.Authorization.Users
 
             mailMessage.AppendLine("<b>" + L("TenancyName") + "</b>:" + tenantItem.TenancyName);
             mailMessage.AppendLine("<b>" + L("CompanyName") + "</b>:" + tenantItem.companyName);
-            mailMessage.AppendLine("<b>" + L("Address") + "</b>:" + tenantItem.Address);
-            mailMessage.AppendLine("<table> <tr>" + L("DocumentType") + "<th> " + L("DocumentName") + " </th> <th> " + L("ExpiredStatus") + "</th> <th> " + L("ExpiredDate") + " </th> </tr></table>");
+            mailMessage.AppendLine("<b>" + L("Address") + "</b>:" + tenantItem.Address +"<br/>");
+            mailMessage.AppendLine("<table style=\"border-collapse: collapse; border: 1px solid black;\"> " +
+                "<tr>" +
+                " <th style=\"border: 1px solid black;  \">" + L("DocumentType") + "</th> " +
+                "<th style=\"border: 1px solid black;  \"> " + L("DocumentName") + " </th> " +
+                "<th style=\"border: 1px solid black;  \"> " + L("ExpiredStatus") + "</th>" +
+                " <th style=\"border: 1px solid black;  \"> " + L("ExpiredDate") + " </th>" +
+                " </tr>");
 
             foreach (var file in files)
             {
                 var expiredStatus = file.ExpirationDate != null ? (file.ExpirationDate.Value.Date < DateTime.Now.Date ? L("Expired") :L("Active")) : "Active";
                 var documentType = file.TruckId != null ? L("Truck") : L("Driver");
 
-                mailMessage.AppendLine("<tr><td>"+documentType+"</td> <td>"+file.Name+" </td> <td>"+expiredStatus+" </td> <td> "+file.ExpirationDate+"</td> </tr>");
+                mailMessage.AppendLine("<tr>" +
+                    "<td style=\"border: 1px solid black;  \">" + documentType+ "</td>" +
+                    " <td style=\"border: 1px solid black;  \">" + file.Name+ " </td> " +
+                    "<td style=\"border: 1px solid black;  \">" + expiredStatus+ " </td>" +
+                    " <td style=\"border: 1px solid black;  \"> " + file.ExpirationDate+"</td>" +
+                    " </tr>");
             }
 
             mailMessage.AppendLine("</table>");

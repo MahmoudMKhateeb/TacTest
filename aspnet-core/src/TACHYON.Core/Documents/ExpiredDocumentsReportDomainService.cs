@@ -42,11 +42,11 @@ namespace TACHYON.Documents
                        .WithSimpleSchedule(schedule =>
                        {
                            schedule.RepeatForever()
-                               .WithIntervalInSeconds(120)
+                               .WithIntervalInSeconds(240)
                                .Build();
                        }); //for test
             });
-            Console.WriteLine("tasneem ");
+            //Console.WriteLine("tasneem ");
 
             // return Content("OK, scheduled!");
 
