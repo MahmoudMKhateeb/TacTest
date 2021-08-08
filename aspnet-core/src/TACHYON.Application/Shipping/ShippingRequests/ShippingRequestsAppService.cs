@@ -951,7 +951,9 @@ namespace TACHYON.Shipping.ShippingRequests
                     DeliveryDate = x.EndTripDate,
                     TotalWeight = x.ShippingRequestFk.TotalWeight,
                     GoodCategoryTranslation = x.ShippingRequestFk.GoodCategoryFk.Translations,
-                    GoodsCategoryDisplayName = x.ShippingRequestFk.GoodCategoryFk //x.ShippingRequestFk.GoodCategoryFk.DisplayName
+                    GoodsCategoryDisplayName = x.ShippingRequestFk.GoodCategoryFk, //x.ShippingRequestFk.GoodCategoryFk.DisplayName,
+                    HasAttachment=x.HasAttachment,
+                    NeedDeliveryNote=x.NeedsDeliveryNote
                 });
 
                 var pickup = GetPickupOrDropPointFacilityForTrip(shippingRequestTripId, PickingType.Pickup);
@@ -988,6 +990,8 @@ namespace TACHYON.Shipping.ShippingRequests
                         ClientName = x.ClientName,
                         CarrierName = x.CarrierName,
                         GoodsCategoryDisplayName = ObjectMapper.Map<GoodCategoryDto>(x.GoodsCategoryDisplayName).DisplayName,
+                        HasAttachment=x.HasAttachment,
+                        NeedsDeliveryNote=x.NeedDeliveryNote
 
                     });
 
@@ -1060,7 +1064,9 @@ namespace TACHYON.Shipping.ShippingRequests
                     TotalWeight = x.ShippingRequestFk.TotalWeight,
                     GoodsCategoryTranslation = x.ShippingRequestFk.GoodCategoryFk.Translations,
                     GoodsCategoryDisplayName = x.ShippingRequestFk.GoodCategoryFk,
-                    DeliveryDate = x.EndTripDate
+                    DeliveryDate = x.EndTripDate,
+                    HasAttachment=x.HasAttachment,
+                    NeedsDeliveryNote=x.NeedsDeliveryNote
                 });
 
 
@@ -1090,7 +1096,9 @@ namespace TACHYON.Shipping.ShippingRequests
                         ClientName = x.ClientName,
                         TotalWeight = x.TotalWeight,
                         GoodsCategoryDisplayName = ObjectMapper.Map<GoodCategoryDto>(x.GoodsCategoryDisplayName).DisplayName,// x.GoodsCategoryDisplayName,
-                        DeliveryDate = x.DeliveryDate
+                        DeliveryDate = x.DeliveryDate,
+                        HasAttachment=x.HasAttachment,
+                        NeedsDeliveryNote=x.NeedsDeliveryNote
                     });
 
                 return finalOutput;

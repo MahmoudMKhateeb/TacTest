@@ -345,6 +345,10 @@ namespace TACHYON.Waybills.Reports {
             
             private global::System.Data.DataColumn columnCarrierName;
             
+            private global::System.Data.DataColumn columnHasAttachment;
+            
+            private global::System.Data.DataColumn columnNeedsDeliveryNote;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public DataTable1DataTable() {
@@ -644,6 +648,22 @@ namespace TACHYON.Waybills.Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn HasAttachmentColumn {
+                get {
+                    return this.columnHasAttachment;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn NeedsDeliveryNoteColumn {
+                get {
+                    return this.columnNeedsDeliveryNote;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -712,7 +732,9 @@ namespace TACHYON.Waybills.Reports {
                         string TotalWeight, 
                         string GoodsCategoryDisplayName, 
                         string ClientName, 
-                        string CarrierName) {
+                        string CarrierName, 
+                        string HasAttachment, 
+                        string NeedsDeliveryNote) {
                 DataTable1Row rowDataTable1Row = ((DataTable1Row)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         MasterWaybillNo,
@@ -747,7 +769,9 @@ namespace TACHYON.Waybills.Reports {
                         TotalWeight,
                         GoodsCategoryDisplayName,
                         ClientName,
-                        CarrierName};
+                        CarrierName,
+                        HasAttachment,
+                        NeedsDeliveryNote};
                 rowDataTable1Row.ItemArray = columnValuesArray;
                 this.Rows.Add(rowDataTable1Row);
                 return rowDataTable1Row;
@@ -803,6 +827,8 @@ namespace TACHYON.Waybills.Reports {
                 this.columnGoodsCategoryDisplayName = base.Columns["GoodsCategoryDisplayName"];
                 this.columnClientName = base.Columns["ClientName"];
                 this.columnCarrierName = base.Columns["CarrierName"];
+                this.columnHasAttachment = base.Columns["HasAttachment"];
+                this.columnNeedsDeliveryNote = base.Columns["NeedsDeliveryNote"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -874,6 +900,10 @@ namespace TACHYON.Waybills.Reports {
                 base.Columns.Add(this.columnClientName);
                 this.columnCarrierName = new global::System.Data.DataColumn("CarrierName", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnCarrierName);
+                this.columnHasAttachment = new global::System.Data.DataColumn("HasAttachment", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnHasAttachment);
+                this.columnNeedsDeliveryNote = new global::System.Data.DataColumn("NeedsDeliveryNote", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnNeedsDeliveryNote);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1544,6 +1574,38 @@ namespace TACHYON.Waybills.Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string HasAttachment {
+                get {
+                    try {
+                        return ((string)(this[this.tableDataTable1.HasAttachmentColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'HasAttachment\' in table \'DataTable1\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableDataTable1.HasAttachmentColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string NeedsDeliveryNote {
+                get {
+                    try {
+                        return ((string)(this[this.tableDataTable1.NeedsDeliveryNoteColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'NeedsDeliveryNote\' in table \'DataTable1\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableDataTable1.NeedsDeliveryNoteColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public bool IsMasterWaybillNoNull() {
                 return this.IsNull(this.tableDataTable1.MasterWaybillNoColumn);
             }
@@ -1936,6 +1998,30 @@ namespace TACHYON.Waybills.Reports {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public void SetCarrierNameNull() {
                 this[this.tableDataTable1.CarrierNameColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsHasAttachmentNull() {
+                return this.IsNull(this.tableDataTable1.HasAttachmentColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetHasAttachmentNull() {
+                this[this.tableDataTable1.HasAttachmentColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsNeedsDeliveryNoteNull() {
+                return this.IsNull(this.tableDataTable1.NeedsDeliveryNoteColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetNeedsDeliveryNoteNull() {
+                this[this.tableDataTable1.NeedsDeliveryNoteColumn] = global::System.Convert.DBNull;
             }
         }
         
