@@ -71,7 +71,7 @@
             </div>
             <!--end: Form Wizard Nav -->
             <div class="row justify-content-center my-10 px-8 my-lg-15 px-lg-10">
-              <div class="col-xl-12 col-xxl-7">
+              <div class="col-xl-12 col-xxl-8">
                 <!--begin: Form Wizard Form-->
                 <div class="form" id="kt_form">
                   <!--begin: Form Wizard Step 1-->
@@ -545,7 +545,7 @@
                       {{ l('SetupYourValueAddedServices') }}
                     </div>
                     <div class="row">
-                      <div class="col-sm-3">
+                      <div class="col-sm-4">
                         <p-listbox
                           *ngIf="cleanedVases.length > 0"
                           [options]="cleanedVases"
@@ -553,11 +553,12 @@
                           filter="true"
                           multiple="true"
                           [(ngModel)]="selectedVases"
+                          [listStyle]="'text-align: center;'"
                           optionLabel="vasName"
                           [dataKey]="'vasId'"
                         ></p-listbox>
                       </div>
-                      <div class="col-sm-9">
+                      <div class="col-sm-8">
                         <table class="table" *ngIf="selectedVasesProperties.length > 0">
                           <thead>
                             <tr class="table-active">
