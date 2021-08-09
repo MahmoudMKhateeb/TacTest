@@ -2113,5 +2113,6 @@
 		<text name="ReceiverEmailAddress">البريد الإلكتروني</text>
 		<text name="ReceiverId">رقم هوية المستلم</text>
 		<text name="CompleteDropPointSetup">إكمال تفاصيل الشحنة</text>
+		<text name="Publish">Publish</text>
 	</texts>
 </localizationDictionary>

@@ -533,9 +533,11 @@ namespace TACHYON.Shipping.ShippingRequests
 
         protected virtual async Task<GetShippingRequestForViewOutput> _GetShippingRequestForView(long id)
         {
-            DisableTenancyFilters();
-            ShippingRequest shippingRequest = await _shippingRequestRepository.GetAll()
-                .Where(e => e.Id == id)
+            using (CurrentUnitOfWork.DisableFilter("IHasIsDrafted")) // for wizard last step 
+            {
+                DisableTenancyFilters();
+                ShippingRequest shippingRequest = await _shippingRequestRepository.GetAll()
+                    .Where(e => e.Id == id)
                     .Include(e => e.ShippingRequestBids)
                     .Include(e => e.OriginCityFk)
                     .Include(e => e.DestinationCityFk)
@@ -555,74 +557,82 @@ namespace TACHYON.Shipping.ShippingRequests
                     .Include(e => e.CarrierTenantFk)
                     .FirstOrDefaultAsync();
 
-            bool isShipper = await IsEnabledAsync(AppFeatures.Shipper);
-            bool isCarrier = await IsEnabledAsync(AppFeatures.Carrier);
-            int? abpSessionTenantId = AbpSession.TenantId;
+                bool isShipper = await IsEnabledAsync(AppFeatures.Shipper);
+                bool isCarrier = await IsEnabledAsync(AppFeatures.Carrier);
+                int? abpSessionTenantId = AbpSession.TenantId;
 
 
 
-            // shippers access
-            if (isShipper && shippingRequest.TenantId != abpSessionTenantId)
-            {
-                throw new UserFriendlyException("You cant view this shipping request msg");
-            }
-
-            //carrier access if he is not assigned to the SR
-            if (isCarrier && shippingRequest.CarrierTenantId != abpSessionTenantId)
-            {
-                //if PrePrice or NeedsAction
-                if (shippingRequest.Status == ShippingRequestStatus.PrePrice || shippingRequest.Status == ShippingRequestStatus.NeedsAction)
+                // shippers access
+                if (isShipper && shippingRequest.TenantId != abpSessionTenantId)
                 {
-                    var carrierHasOffers = _carrierDirectPricingRepository.GetAll().Any(e => e.RequestId == id && e.CarrirerTenantId == abpSessionTenantId);
-                    // if carrier has no offers 
-                    if (!carrierHasOffers)
+                    throw new UserFriendlyException("You cant view this shipping request msg");
+                }
+
+                //carrier access if he is not assigned to the SR
+                if (isCarrier && shippingRequest.CarrierTenantId != abpSessionTenantId)
+                {
+                    //if PrePrice or NeedsAction
+                    if (shippingRequest.Status == ShippingRequestStatus.PrePrice ||
+                        shippingRequest.Status == ShippingRequestStatus.NeedsAction)
+                    {
+                        var carrierHasOffers = _carrierDirectPricingRepository.GetAll().Any(e =>
+                            e.RequestId == id && e.CarrirerTenantId == abpSessionTenantId);
+                        // if carrier has no offers 
+                        if (!carrierHasOffers)
+                        {
+                            throw new UserFriendlyException("You cant view this shipping request msg");
+                        }
+                    }
+                    else
                     {
                         throw new UserFriendlyException("You cant view this shipping request msg");
                     }
                 }
+
+                //VAS
+                var shippingRequestVasList = await _shippingRequestVasRepository.GetAll()
+                    .Where(x => x.ShippingRequestId == id)
+                    .Select(e =>
+                        new GetShippingRequestVasForViewDto
+                        {
+                            ShippingRequestVas = ObjectMapper.Map<ShippingRequestVasDto>(e), VasName = e.VasFk.Name
+                        }).ToListAsync();
+
+                //Bids
+                List<ShippingRequestBidDto> shippingRequestBidDtoList = new List<ShippingRequestBidDto>();
+                //hid bids for shipper if SR IsTachyonDeal 
+                if (isShipper && shippingRequest.IsTachyonDeal)
+                {
+                    // don't fill bids list
+                }
                 else
                 {
-                    throw new UserFriendlyException("You cant view this shipping request msg");
+                    shippingRequestBidDtoList =
+                        ObjectMapper.Map<List<ShippingRequestBidDto>>(shippingRequest.ShippingRequestBids);
                 }
+
+
+                GetShippingRequestForViewOutput output =
+                    ObjectMapper.Map<GetShippingRequestForViewOutput>(shippingRequest);
+                output.ShippingRequestBidDtoList = shippingRequestBidDtoList;
+                output.ShippingRequestVasDtoList = shippingRequestVasList;
+
+                //return translated good category name by default language
+                output.GoodsCategoryName =
+                    ObjectMapper.Map<GoodCategoryDto>(shippingRequest.GoodCategoryFk).DisplayName;
+
+                //return translated truck type by default language
+                output.TruckTypeDisplayName =
+                    ObjectMapper.Map<TrucksTypeDto>(shippingRequest.TrucksTypeFk).TranslatedDisplayName;
+                output.TruckTypeFullName = ObjectMapper.Map<TransportTypeDto>(shippingRequest.TransportTypeFk)
+                                               .TranslatedDisplayName
+                                           + "-" + output.TruckTypeDisplayName
+                                           + "-" + ObjectMapper.Map<CapacityDto>(shippingRequest.CapacityFk)
+                                               .TranslatedDisplayName;
+
+                return output;
             }
-
-            //VAS
-            var shippingRequestVasList = await _shippingRequestVasRepository.GetAll()
-                .Where(x => x.ShippingRequestId == id)
-                .Select(e =>
-                new GetShippingRequestVasForViewDto
-                {
-                    ShippingRequestVas = ObjectMapper.Map<ShippingRequestVasDto>(e),
-                    VasName = e.VasFk.Name
-                }).ToListAsync();
-
-            //Bids
-            List<ShippingRequestBidDto> shippingRequestBidDtoList = new List<ShippingRequestBidDto>();
-            //hid bids for shipper if SR IsTachyonDeal 
-            if (isShipper && shippingRequest.IsTachyonDeal)
-            {
-                // don't fill bids list
-            }
-            else
-            {
-                shippingRequestBidDtoList = ObjectMapper.Map<List<ShippingRequestBidDto>>(shippingRequest.ShippingRequestBids);
-            }
-
-
-            GetShippingRequestForViewOutput output = ObjectMapper.Map<GetShippingRequestForViewOutput>(shippingRequest);
-            output.ShippingRequestBidDtoList = shippingRequestBidDtoList;
-            output.ShippingRequestVasDtoList = shippingRequestVasList;
-
-            //return translated good category name by default language
-            output.GoodsCategoryName = ObjectMapper.Map<GoodCategoryDto>(shippingRequest.GoodCategoryFk).DisplayName;
-
-            //return translated truck type by default language
-            output.TruckTypeDisplayName = ObjectMapper.Map<TrucksTypeDto>(shippingRequest.TrucksTypeFk).TranslatedDisplayName;
-            output.TruckTypeFullName = ObjectMapper.Map<TransportTypeDto>(shippingRequest.TransportTypeFk).TranslatedDisplayName
-                                    + "-" + output.TruckTypeDisplayName
-                                    + "-" + ObjectMapper.Map<CapacityDto>(shippingRequest.CapacityFk).TranslatedDisplayName;
-
-            return output;
         }
 
         protected virtual GetShippingRequestForEditOutput _GetShippingRequestForEdit(EntityDto<long> input)
