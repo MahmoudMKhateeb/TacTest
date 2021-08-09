@@ -35,9 +35,15 @@
               <b *ngIf="item.remainingDays == '0' && Channel == 1 && item.bidStatusTitle" class="infoHighLight red stautsTruck">
                 {{ l(item.bidStatusTitle) }}
               </b>
+
               <b *ngIf="Channel == 2 || Channel == 10" class="infoHighLight red stautsTruck">
                 {{ l(item.directRequestStatusTitle) }}
               </b>
+              <b *ngIf="Channel == 2 || Channel == 10" class="infoHighLight red stautsTruck">
+                {{ l(item.directRequestStatusTitle) }}
+              </b>
+              <b *ngIf="item.numberOfCompletedTrips >= item.numberOfTrips" class="infoHighLight green stautsTruck">{{ l('Complated') }}</b>
+              <b *ngIf="item.numberOfCompletedTrips < item.numberOfTrips" class="infoHighLight red stautsTruck">{{ l('InProgress') }}</b>
               <b *ngIf="!Channel && item.statusTitle" class="infoHighLight green stautsTruck">
                 {{ l(item.statusTitle) }}
               </b>
