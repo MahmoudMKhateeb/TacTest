@@ -19,6 +19,7 @@ html {
 .dropdown-menu-right {
   left: 0px !important;
   right: auto !important;
+  transform: translate3d(-91px, 1px, 0);
 }
 
 li.dropdown-language ul.dropdown-menu li a:after {
