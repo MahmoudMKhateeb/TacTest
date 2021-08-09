@@ -63,6 +63,8 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   selectedVasesProperties = [];
   selectedvas: any;
   today = new Date();
+  //CleanedVases
+  cleanedVases: CreateOrEditShippingRequestVasListDto[] = [];
 
   constructor(
     injector: Injector,
@@ -181,10 +183,23 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
     this._router.navigate(['app/main/shippingRequests/shippingRequests']);
   }
 
+  /**
+   * loads the vases list and Cleans Them out
+   */
   loadallVases() {
     this._shippingRequestsServiceProxy.getAllShippingRequestVasesForTableDropdown().subscribe((result) => {
-      this.allVases = result;
-      this.allVases.forEach((item) => {
+      result.forEach((x) => {
+        const cleanVas = new CreateOrEditShippingRequestVasListDto();
+        cleanVas.id = undefined;
+        cleanVas.vasId = x.id; //get the vas id from All Vases
+        cleanVas.numberOfTrips = undefined;
+        cleanVas.requestMaxAmount = x.maxAmount;
+        cleanVas.requestMaxCount = x.maxCount;
+        cleanVas.vasName = x.vasName;
+        this.cleanedVases.push(cleanVas);
+      });
+      //array the contains each vases and its Properties like hascount and hasAmount -- helpful for the vases table
+      result.forEach((item) => {
         this.selectedVasesProperties[item.id] = {
           vasId: item.id,
           vasName: item.vasName,
@@ -192,7 +207,6 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
           vasAmountDisabled: item.hasAmount ? false : true,
         };
       });
-      console.log(this.selectedVasesProperties);
     });
   }
 
