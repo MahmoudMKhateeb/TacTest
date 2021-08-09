@@ -58,7 +58,7 @@
                 <a class="wizard-step" href="javascript:;" data-wizard-type="step">
                   <div class="wizard-label">
                     <i class="wizard-icon flaticon-app"></i>
-                    <h3 class="wizard-title">{{ l('ValueAddedServices') }}</h3>
+                    <h3 class="wizard-title">{{ l('Vas') }}</h3>
                   </div>
                 </a>
                 <a class="wizard-step" href="javascript:;" data-wizard-type="step">
@@ -199,9 +199,6 @@
                   <!--end: Form Wizard Step 1-->
                   <!-- begin: Form Wizard Step 2-->
                   <div class="pb-5" [formGroup]="step2Form" data-wizard-type="step-content">
-                    <div class="mb-10 font-weight-bold text-dark">
-                      {{ l('EntertheRouteDetailsofyourShippingRequest') }}
-                    </div>
                     <div class="row">
                       <!-- Start of Select Source -->
                       <div class="col-lg-6">
@@ -301,7 +298,7 @@
                             "
                             [attr.disabled]="step2Dto.routeTypeId != 3 ? true : null"
                           />
-                          <span class="form-text text-muted">{{ l('NumberOfDrops') }} {{ l('ForMiltibleTripsRouteType') }}</span>
+                          <span class="form-text text-muted">{{ l('NumberOfDrops') }} </span>
                         </div>
                       </div>
                       <div class="col-lg-12">
@@ -333,9 +330,6 @@
 
                   <!--begin: Form Wizard Step 3-->
                   <div class="pb-5" [formGroup]="step3Form" data-wizard-type="step-content">
-                    <div class="mb-10 font-weight-bold text-dark">
-                      {{ l('AddGoodDetailsInfo') }}
-                    </div>
                     <div class="row">
                       <div class="col-lg-6">
                         <label>{{ l('MainGoodCategory') }} <span class="required-fileds">*</span></label>
@@ -695,7 +689,7 @@
                         {{ l('Publish') }}
                       </button>
                       <button class="btn btn-primary font-weight-bold text-uppercase px-9 py-4" data-wizard-type="action-next" [buttonBusy]="saving">
-                        {{ l('NextStep') }}
+                        {{ l('Next') }}
                       </button>
                     </div>
                   </div>
