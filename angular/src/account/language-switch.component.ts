@@ -16,7 +16,8 @@ export class LanguageSwitchComponent extends AppComponentBase implements OnInit 
   }
 
   ngOnInit(): void {
-    this.languages = _.filter(abp.localization.languages, (l) => (<any>l).isDisabled === false);
+    let languageallow: string[] = ['en', 'ar-EG'];
+    this.languages = _.filter(this.localization.languages, (l) => l.isDisabled === false && languageallow.includes(l.name));
     this.currentLanguage = abp.localization.currentLanguage;
   }
 
