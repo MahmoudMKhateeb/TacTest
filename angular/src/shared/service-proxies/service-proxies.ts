@@ -69065,6 +69065,7 @@ export class GetShippingRequestForPriceOfferListDto implements IGetShippingReque
   rangeDate!: string | undefined;
   numberOfDrops!: number;
   numberOfTrips!: number;
+  numberOfCompletedTrips!: number;
   goodsCategory!: string | undefined;
   totalWeight!: number;
   totalOffers!: number;
@@ -69108,6 +69109,7 @@ export class GetShippingRequestForPriceOfferListDto implements IGetShippingReque
       this.rangeDate = _data['rangeDate'];
       this.numberOfDrops = _data['numberOfDrops'];
       this.numberOfTrips = _data['numberOfTrips'];
+      this.numberOfCompletedTrips = _data['numberOfCompletedTrips'];
       this.goodsCategory = _data['goodsCategory'];
       this.totalWeight = _data['totalWeight'];
       this.totalOffers = _data['totalOffers'];
@@ -69152,6 +69154,7 @@ export class GetShippingRequestForPriceOfferListDto implements IGetShippingReque
     data['rangeDate'] = this.rangeDate;
     data['numberOfDrops'] = this.numberOfDrops;
     data['numberOfTrips'] = this.numberOfTrips;
+    data['numberOfCompletedTrips'] = this.numberOfCompletedTrips;
     data['goodsCategory'] = this.goodsCategory;
     data['totalWeight'] = this.totalWeight;
     data['totalOffers'] = this.totalOffers;
@@ -69189,6 +69192,7 @@ export interface IGetShippingRequestForPriceOfferListDto {
   rangeDate: string | undefined;
   numberOfDrops: number;
   numberOfTrips: number;
+  numberOfCompletedTrips: number;
   goodsCategory: string | undefined;
   totalWeight: number;
   totalOffers: number;
