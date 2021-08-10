@@ -25,9 +25,6 @@ namespace TACHYON.Documents
 
         public async void RunJob()
         {
-            //var documents =await _documentFilesManager.GetAllTenantDriverAndTruckDocumentFilesListAsync();
-
-            //await _userEmailer.SendDocumentsExpiredInfoAsyn(documents, documents.FirstOrDefault().TenantId.Value);
             await _jobManager.ScheduleAsync<ExpiredDocumentsReportJob>(
             job =>
             {
@@ -38,15 +35,18 @@ namespace TACHYON.Documents
             {
                 trigger.StartNow()
                        .WithIdentity("Run Infinitely every 1st day of the month", "Monthly_Day_1")
-                       //.WithSchedule(CronScheduleBuilder.MonthlyOnDayAndHourAndMinute(1, 1, 0)).Build();
-                       .WithSimpleSchedule(schedule =>
-                       {
-                           schedule.RepeatForever()
-                               .WithIntervalInSeconds(240)
-                               .Build();
-                       }); //for test
+
+                       //to set it monthly period,  1st of each month
+                       .WithSchedule(CronScheduleBuilder.MonthlyOnDayAndHourAndMinute(1, 1, 0)).Build();
+
+                       //for test 
+                       //.WithSimpleSchedule(schedule =>
+                       //{
+                       //    schedule.RepeatForever()
+                       //        .WithIntervalInSeconds(240)
+                       //        .Build();
+                       //});
             });
-            //Console.WriteLine("tasneem ");
 
             // return Content("OK, scheduled!");
 

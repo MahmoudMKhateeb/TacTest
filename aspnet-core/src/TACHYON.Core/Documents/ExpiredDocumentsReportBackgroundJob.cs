@@ -11,7 +11,7 @@ using TACHYON.Authorization.Users;
 
 namespace TACHYON.Documents
 {
-    public class ExpiredDocumentsReportBackgroundJob : AsyncBackgroundJob<int>, ITransientDependency
+    public class ExpiredDocumentsReportBackgroundJob : AsyncBackgroundJob<int?>, ITransientDependency
     {
         private readonly IUserEmailer _userEmailer;
         private readonly DocumentFilesManager _documentFilesManager;
@@ -24,21 +24,12 @@ namespace TACHYON.Documents
             _unitOfWorkManager = unitOfWorkManager;
         }
 
-        //[UnitOfWork]
-        //public override async Task Execute(int args)
-        //{
-        //    var documents = await _documentFilesManager.GetAllTenantDriverAndTruckDocumentFilesListAsync();
-        //    await _userEmailer.SendDocumentsExpiredInfoAsyn(documents, documents.FirstOrDefault().TenantId.Value));
-        //}
-
         [UnitOfWork]
-        protected override async Task ExecuteAsync(int args)
+        protected override async Task ExecuteAsync(int? args)
         {
-            //var documents = await _documentFilesManager.GetAllTenantDriverAndTruckDocumentFilesListAsync();
-            //await _userEmailer.SendDocumentsExpiredInfoAsyn(documents, documents.FirstOrDefault().TenantId.Value);
             using (var uow = _unitOfWorkManager.Begin())
             {
-                await _documentFilesManager.SendDocumentsExpiredStatusMonthlyReport(args);
+                await _documentFilesManager.SendDocumentsExpiredStatusMonthlyReport();
                 uow.Complete();
             }
         }

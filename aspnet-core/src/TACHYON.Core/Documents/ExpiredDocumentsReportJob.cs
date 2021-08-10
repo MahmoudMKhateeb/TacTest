@@ -18,7 +18,6 @@ namespace TACHYON.Documents
         private readonly DocumentFilesManager _documentFilesManager;
         public readonly IBackgroundJobManager _backgroundJobManager;
 
-
         public ExpiredDocumentsReportJob(IUserEmailer userEmailer, DocumentFilesManager documentFilesManager, IBackgroundJobManager backgroundJobManager)
         {
             _userEmailer = userEmailer;
@@ -28,12 +27,8 @@ namespace TACHYON.Documents
 
         public Task Execute(IJobExecutionContext context)
         {
-            // var documents = AsyncHelper.RunSync(() => _documentFilesManager.GetAllTenantDriverAndTruckDocumentFilesListAsync());
-            // var documents = await _documentFilesManager.GetAllTenantDriverAndTruckDocumentFilesListAsync();
-            _backgroundJobManager.EnqueueAsync<ExpiredDocumentsReportBackgroundJob, int>(5);
-            //AsyncHelper.RunSync(() =>_userEmailer.SendDocumentsExpiredInfoAsyn(documents, documents.FirstOrDefault().TenantId.Value));
-            //await _userEmailer.SendDocumentsExpiredInfoAsyn(await _documentFilesManager.GetAllTenantDriverAndTruckDocumentFilesListAsync(),4);
-            //await Console.Error.WriteLineAsync("tasneemJob");
+            _backgroundJobManager.EnqueueAsync<ExpiredDocumentsReportBackgroundJob, int?>(null);
+
             return Task.CompletedTask;
         }
     }
