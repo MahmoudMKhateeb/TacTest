@@ -27,10 +27,10 @@
         <span class="form-text text-danger text-left">{{ 'DuplicateFileUploadMsg' | localize }}</span>
       </div>
     </div>
-    <div class="form-group col-6">
+    <div *ngIf="item.documentTypeDto?.templateName" class="form-group col-6">
       <label>{{ l('FileTemplate') }}</label>
 
-      <div *ngIf="item.documentTypeDto?.templateName">
+      <div>
         <div class="d-flex align-items-center flex-wrap mb-8">
           <!--begin::Symbol-->
           <div class="symbol symbol-50 symbol-light mr-3 ml-3">

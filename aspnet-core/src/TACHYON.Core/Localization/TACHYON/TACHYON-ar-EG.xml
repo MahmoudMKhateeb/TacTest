@@ -1082,7 +1082,7 @@
 		<text name="OccupationCard">البطاقة المهنية</text>
 		<text name="Off">معطّل</text>
 		<text name="Offer">عرض</text>
-		<text name="Offers">العروض</text>
+		<text name="Offers">عروض الأسعار</text>
 		<text name="OfferStatus">حالة العرض</text>
 		<text name="Offline">غير متصل</text>
 		<text name="OfflineAccess">الوصول دون اتصال</text>
@@ -2105,6 +2105,14 @@
 		<text name="ApproximateTripGoodsValue">قيمة البضاعة التقريبية</text>\
 		<text name="AccidentReasonName">سبب الحدث</text>
 		<text name="Vat">ضريبة القيمة المضافة</text>
-		
+		<text name="ReviewAndSubmit">عرض واعتماد</text>
+		<text name="BasicDetails">تفاصيل اولية</text>
+		<text name="BiddingRange">نظاق التسعير</text>
+		<text name="TripsDateRange">نظاق تاريخ تحميل الرحيلات</text>
+		<text name="SetUpAdditionalReceiver">مستلم إضافي</text>
+		<text name="ReceiverEmailAddress">البريد الإلكتروني</text>
+		<text name="ReceiverId">رقم هوية المستلم</text>
+		<text name="CompleteDropPointSetup">إكمال تفاصيل الشحنة</text>
+		<text name="Publish">Publish</text>
 	</texts>
 </localizationDictionary>

@@ -54,10 +54,11 @@
 }
 
 .shipCard .infoBasic {
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   flex-wrap: wrap;
   min-height: 50px;
+  margin: 3px;
 }
 
 .shipCard .infoBasic .companyName {
