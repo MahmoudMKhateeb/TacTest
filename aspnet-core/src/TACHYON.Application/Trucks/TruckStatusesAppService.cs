@@ -16,6 +16,8 @@ using TACHYON.Authorization;
 using TACHYON.Dto;
 using TACHYON.Features;
 using TACHYON.Trucks.Dtos;
+using TACHYON.Trucks.TruckStatusesTranslations;
+using TACHYON.Trucks.TruckStatusesTranslations.Dtos;
 
 namespace TACHYON.Trucks
 {
@@ -23,48 +25,66 @@ namespace TACHYON.Trucks
     public class TruckStatusesAppService : TACHYONAppServiceBase, ITruckStatusesAppService
     {
         private readonly IRepository<TruckStatus, long> _truckStatusRepository;
+        private readonly IRepository<TruckStatusesTranslation> _truckStatusTranslationRepository;
 
 
-        public TruckStatusesAppService(IRepository<TruckStatus, long> truckStatusRepository)
+        public TruckStatusesAppService(IRepository<TruckStatus, long> truckStatusRepository, IRepository<TruckStatusesTranslation> truckStatusTranslationRepository)
         {
             _truckStatusRepository = truckStatusRepository;
-
+            _truckStatusTranslationRepository = truckStatusTranslationRepository;
         }
 
         public async Task<PagedResultDto<GetTruckStatusForViewDto>> GetAll(GetAllTruckStatusesInput input)
         {
 
-            var filteredTruckStatuses = _truckStatusRepository.GetAll()
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter))
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.DisplayName == input.DisplayNameFilter);
+            var truckStatuses = _truckStatusRepository.GetAll()
+                .AsNoTracking()
+                .Include(x=> x.Translations)
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter),
+                    e => false || e.DisplayName.Contains(input.Filter))
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter),
+                    e => e.DisplayName == input.DisplayNameFilter)
+                .OrderBy(input.Sorting ?? "id asc");
 
-            var pagedAndFilteredTruckStatuses = filteredTruckStatuses
-                .OrderBy(input.Sorting ?? "id asc")
-                .PageBy(input);
+            var pageResult = await truckStatuses.PageBy(input).ToListAsync();
 
-            var truckStatuses = from o in pagedAndFilteredTruckStatuses
-                                select new GetTruckStatusForViewDto()
-                                {
-                                    TruckStatus = new TruckStatusDto
-                                    {
-                                        DisplayName = o.DisplayName,
-                                        Id = o.Id
-                                    }
-                                };
+            var totalCount = await truckStatuses.CountAsync();
 
-            var totalCount = await filteredTruckStatuses.CountAsync();
+            var items = pageResult.Select(x => new GetTruckStatusForViewDto()
+            {
+                TruckStatus = new TruckStatusDto()
+                {
+                    DisplayName = x.DisplayName,
+                    Id = x.Id,
+                    TruckStatusesTranslation = x.Translations
+                        .Select(t=> new TruckStatusesTranslationDto()
+                    {
+                            CoreId = t.CoreId,
+                            Id = t.Id,
+                            Language = t.Language,
+                            TranslatedDisplayName = t.TranslatedDisplayName
 
-            return new PagedResultDto<GetTruckStatusForViewDto>(
-                totalCount,
-                await truckStatuses.ToListAsync()
-            );
+                    }).ToList()
+                }
+            }).ToList();
+
+            return new PagedResultDto<GetTruckStatusForViewDto>()
+            {
+                Items = ObjectMapper.Map<List<GetTruckStatusForViewDto>>(pageResult),
+                TotalCount = totalCount
+            };
         }
 
         public async Task<GetTruckStatusForViewDto> GetTruckStatusForView(long id)
         {
-            var truckStatus = await _truckStatusRepository.GetAsync(id);
+            var truckStatus = await _truckStatusRepository.GetAll().AsNoTracking()
+                .Include(x=> x.Translations)
+                .FirstOrDefaultAsync(x=> x.Id == id);
 
-            var output = new GetTruckStatusForViewDto { TruckStatus = ObjectMapper.Map<TruckStatusDto>(truckStatus) };
+            var output = new GetTruckStatusForViewDto
+            {
+                TruckStatus = ObjectMapper.Map<TruckStatusDto>(truckStatus)
+            };
 
             return output;
         }
@@ -94,15 +114,34 @@ namespace TACHYON.Trucks
         [AbpAuthorize(AppPermissions.Pages_Administration_TruckStatuses_Create)]
         protected virtual async Task Create(CreateOrEditTruckStatusDto input)
         {
+            // TODO Ignore Map Translations List
+
             var truckStatus = ObjectMapper.Map<TruckStatus>(input);
 
-            await _truckStatusRepository.InsertAsync(truckStatus);
+            using (var unitOfWork = UnitOfWorkManager.Begin())
+            {
+               var coreId=  await _truckStatusRepository.InsertAndGetIdAsync(truckStatus);
+
+                var truckStatusTranslations =
+                    ObjectMapper.Map<List<TruckStatusesTranslation>>(input.TruckStatusTranslation);
+
+                foreach (var tst in truckStatusTranslations)
+                {
+                    tst.CoreId = coreId;
+                    await _truckStatusTranslationRepository.InsertAsync(tst);
+                }
+
+                await unitOfWork.CompleteAsync();
+            }
         }
 
         [AbpAuthorize(AppPermissions.Pages_Administration_TruckStatuses_Edit)]
         protected virtual async Task Update(CreateOrEditTruckStatusDto input)
         {
-            var truckStatus = await _truckStatusRepository.FirstOrDefaultAsync((long)input.Id);
+            var truckStatus = await _truckStatusRepository.FirstOrDefaultAsync(input.Id.Value);
+
+            truckStatus.Translations.Clear();
+
             ObjectMapper.Map(input, truckStatus);
         }
 

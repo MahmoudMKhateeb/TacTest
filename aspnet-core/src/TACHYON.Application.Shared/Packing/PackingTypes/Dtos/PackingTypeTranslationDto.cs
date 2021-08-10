@@ -1,14 +1,9 @@
-﻿using System;
+﻿using Abp.Application.Services.Dto;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Abp.Domain.Entities.Auditing;
-using Abp.Domain.Entities;
-using System.Collections.Generic;
 
-namespace TACHYON.Packing.PackingTypes
+namespace TACHYON.Packing.PackingTypes.Dtos
 {
-    [Table("PackingTypes")]
-    public class PackingType : FullAuditedEntity, IMultiLingualEntity<PackingTypeTranslation>
+    public class PackingTypeTranslationDto : EntityDto
     {
 
         [Required]
@@ -18,6 +13,8 @@ namespace TACHYON.Packing.PackingTypes
         [StringLength(PackingTypeConsts.MaxDescriptionLength, MinimumLength = PackingTypeConsts.MinDescriptionLength)]
         public virtual string Description { get; set; }
 
-        public ICollection<PackingTypeTranslation> Translations { get; set; }
+        [Required]
+        public string Language { get; set; }
+
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Linq.Dynamic.Core;
 using Abp.Linq.Extensions;
 using System.Collections.Generic;
@@ -21,65 +20,56 @@ namespace TACHYON.Vases
     public class VasesAppService : TACHYONAppServiceBase, IVasesAppService
     {
         private readonly IRepository<Vas> _vasRepository;
+        private readonly IRepository<VasTranslation> _vasTranslationRepository;
         private readonly IVasesExcelExporter _vasesExcelExporter;
 
-        public VasesAppService(IRepository<Vas> vasRepository, IVasesExcelExporter vasesExcelExporter)
+        public VasesAppService(IRepository<Vas> vasRepository, IVasesExcelExporter vasesExcelExporter, IRepository<VasTranslation> vasTranslationRepository)
         {
             _vasRepository = vasRepository;
             _vasesExcelExporter = vasesExcelExporter;
-
+            _vasTranslationRepository = vasTranslationRepository;
         }
 
         public async Task<PagedResultDto<GetVasForViewDto>> GetAll(GetAllVasesInput input)
         {
 
-            var filteredVases = _vasRepository.GetAll()
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Name.Contains(input.Filter) || e.DisplayName.Contains(input.Filter))
-                        .WhereIf(input.HasAmountFilter.HasValue && input.HasAmountFilter > -1, e => (input.HasAmountFilter == 1 && e.HasAmount) || (input.HasAmountFilter == 0 && !e.HasAmount))
-                        .WhereIf(input.HasCountFilter.HasValue && input.HasCountFilter > -1, e => (input.HasCountFilter == 1 && e.HasCount) || (input.HasCountFilter == 0 && !e.HasCount));
+            var vases = _vasRepository.GetAll()
+                .Include(x=> x.Translations)
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter),
+                    e => false || e.Name.Contains(input.Filter) || e.DisplayName.Contains(input.Filter))
+                        .WhereIf(input.HasAmountFilter.HasValue && input.HasAmountFilter > -1,
+                    e => (input.HasAmountFilter == 1 && e.HasAmount) || (input.HasAmountFilter == 0 && !e.HasAmount))
+                        .WhereIf(input.HasCountFilter.HasValue && input.HasCountFilter > -1,
+                    e => (input.HasCountFilter == 1 && e.HasCount) || (input.HasCountFilter == 0 && !e.HasCount))
+                .OrderBy(input.Filter??"Id asc");
 
-            var pagedAndFilteredVases = filteredVases
-                .OrderBy(input.Sorting ?? "id asc")
-                .PageBy(input);
+            var pageResult = await vases.PageBy(input).ToListAsync();
+            var totalCount = await vases.CountAsync();
 
-            var vases = from o in pagedAndFilteredVases
-                        select new GetVasForViewDto()
-                        {
-                            Vas = new VasDto
-                            {
-                                Name = o.Name,
-                                HasAmount = o.HasAmount,
-                                HasCount = o.HasCount,
-                                Id = o.Id,
-                                CreationTime= o.CreationTime
-                            }
-                        };
-
-            var totalCount = await filteredVases.CountAsync();
-
-            return new PagedResultDto<GetVasForViewDto>(
-                totalCount,
-                await vases.ToListAsync()
-            );
+            return new PagedResultDto<GetVasForViewDto>()
+            {
+                TotalCount = totalCount,
+                Items = ObjectMapper.Map<List<GetVasForViewDto>>(pageResult)
+            };
         }
 
         public async Task<GetVasForViewDto> GetVasForView(int id)
         {
-            var vas = await _vasRepository.GetAsync(id);
+            var vas = await _vasRepository.GetAll().AsNoTracking()
+                .Include(x=> x.Translations)
+                .FirstOrDefaultAsync(x=> x.Id == id);
 
-            var output = new GetVasForViewDto { Vas = ObjectMapper.Map<VasDto>(vas) };
-
-            return output;
+            return ObjectMapper.Map<GetVasForViewDto>(vas);
         }
 
         [AbpAuthorize(AppPermissions.Pages_Administration_Vases_Edit)]
         public async Task<GetVasForEditOutput> GetVasForEdit(EntityDto input)
         {
-            var vas = await _vasRepository.FirstOrDefaultAsync(input.Id);
+            var vas = await _vasRepository.GetAll()
+                .Include(x=> x.Translations)
+                .FirstOrDefaultAsync(x=> x.Id == input.Id);
 
-            var output = new GetVasForEditOutput { Vas = ObjectMapper.Map<CreateOrEditVasDto>(vas) };
-
-            return output;
+            return ObjectMapper.Map<GetVasForEditOutput>(vas);
         }
 
         public async Task CreateOrEdit(CreateOrEditVasDto input)
@@ -96,19 +86,38 @@ namespace TACHYON.Vases
             }
         }
 
-
+       
         [AbpAuthorize(AppPermissions.Pages_Administration_Vases_Create)]
         protected virtual async Task Create(CreateOrEditVasDto input)
         {
+            // TO DO Ignore VasTranslation List Mapping ----> Done
+
             var vas = ObjectMapper.Map<Vas>(input);
 
-            await _vasRepository.InsertAsync(vas);
+            using (var unitOfWork = UnitOfWorkManager.Begin())
+            {
+               var coreId =  await _vasRepository.InsertAndGetIdAsync(vas);
+
+               var vasTranslations = ObjectMapper.Map<List<VasTranslation>>(input.TranslationDtos);
+                
+                foreach (var vasTranslation in vasTranslations)
+                {
+                    vasTranslation.CoreId = coreId;
+                    await _vasTranslationRepository.InsertAsync(vasTranslation);
+                }
+
+                await unitOfWork.CompleteAsync();
+            }
+
         }
 
         [AbpAuthorize(AppPermissions.Pages_Administration_Vases_Edit)]
         protected virtual async Task Update(CreateOrEditVasDto input)
         {
-            var vas = await _vasRepository.FirstOrDefaultAsync((int)input.Id);
+            var vas = await _vasRepository.FirstOrDefaultAsync((input.Id.Value));
+            
+            vas.Translations.Clear();
+
             ObjectMapper.Map(input, vas);
         }
 
@@ -120,7 +129,7 @@ namespace TACHYON.Vases
 
         public async Task<FileDto> GetVasesToExcel(GetAllVasesForExcelInput input)
         {
-
+            
             var filteredVases = _vasRepository.GetAll()
                         .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Name.Contains(input.Filter) || e.DisplayName.Contains(input.Filter))
                         .WhereIf(input.HasAmountFilter.HasValue && input.HasAmountFilter > -1, e => (input.HasAmountFilter == 1 && e.HasAmount) || (input.HasAmountFilter == 0 && !e.HasAmount))
@@ -146,8 +155,19 @@ namespace TACHYON.Vases
 
         private async Task CheckIfEmptyOrDuplicatedVasName(CreateOrEditVasDto input)
         {
-            var item =await _vasRepository.FirstOrDefaultAsync(x => x.Name.ToLower() == input.Name.ToLower() && x.Id!=input.Id);
-            if (item != null)
+
+            if (input.TranslationDtos.Any(x=> x.Name.IsNullOrEmpty()))
+            {
+                throw new UserFriendlyException(L("VasNameCannotBeEmpty"));
+            }
+
+            var anyItemNotValid = await  _vasTranslationRepository
+                .GetAll()
+                .Where(x=> input.TranslationDtos.Select(i=> i.Name).Contains( x.Name))
+                .FirstOrDefaultAsync();
+           
+            
+            if (anyItemNotValid != null)
             {
                 throw new UserFriendlyException(L("CannotInsertDuplicatedVasNameMessage"));
             }

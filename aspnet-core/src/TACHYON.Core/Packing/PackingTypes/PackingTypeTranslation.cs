@@ -1,16 +1,13 @@
-﻿using System;
+﻿using Abp.Domain.Entities;
+using Abp.Domain.Entities.Auditing;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Abp.Domain.Entities.Auditing;
-using Abp.Domain.Entities;
-using System.Collections.Generic;
 
 namespace TACHYON.Packing.PackingTypes
 {
-    [Table("PackingTypes")]
-    public class PackingType : FullAuditedEntity, IMultiLingualEntity<PackingTypeTranslation>
+    [Table("PackingTypesTranslations")]
+    public class PackingTypeTranslation : FullAuditedEntity, IEntityTranslation<PackingType>
     {
-
         [Required]
         [StringLength(PackingTypeConsts.MaxDisplayNameLength, MinimumLength = PackingTypeConsts.MinDisplayNameLength)]
         public virtual string DisplayName { get; set; }
@@ -18,6 +15,9 @@ namespace TACHYON.Packing.PackingTypes
         [StringLength(PackingTypeConsts.MaxDescriptionLength, MinimumLength = PackingTypeConsts.MinDescriptionLength)]
         public virtual string Description { get; set; }
 
-        public ICollection<PackingTypeTranslation> Translations { get; set; }
+        [Required]
+        public string Language { get; set; }
+        public PackingType Core { get; set; }
+        public int CoreId { get; set; }
     }
 }
