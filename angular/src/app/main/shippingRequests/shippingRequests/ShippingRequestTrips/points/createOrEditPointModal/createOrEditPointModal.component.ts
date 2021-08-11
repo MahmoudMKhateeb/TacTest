@@ -171,7 +171,6 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
    */
   resetAdditionalReviverFields() {
     if (!this.isAdditionalReceiverEnabled) {
-      // this.Point.receiverAddress = undefined;
       this.Point.receiverCardIdNumber = undefined;
       this.Point.receiverEmailAddress = undefined;
       this.Point.receiverPhoneNumber = undefined;
