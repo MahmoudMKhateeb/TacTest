@@ -210,7 +210,6 @@ namespace TACHYON.Shipping.Drivers
             if (Point == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
             var DropOff = ObjectMapper.Map<RoutDropOffDto>(Point);
 
-            DropOff.IsDeliveryNoteUploaded = Point.RoutPointDocuments.Any(x => x.RoutePointDocumentType == RoutePointDocumentType.DeliveryNote);
 
             return DropOff;
         }
@@ -422,7 +421,11 @@ namespace TACHYON.Shipping.Drivers
         {
             DisableTenancyFilters();
 
-            var trip = await _ShippingRequestTrip.GetAll().Include(x=>x.ShippingRequestFk).Include(x=>x.RoutPoints).FirstOrDefaultAsync(x => x.Id == TripId);
+            var trip = await _ShippingRequestTrip.GetAll()
+                .Include(x=>x.ShippingRequestFk)
+                .Include(x=>x.RoutPoints)
+                .ThenInclude(x => x.RoutPointDocuments)
+                .FirstOrDefaultAsync(x => x.Id == TripId);
             await ResetTripStatus(trip);
 
         }
@@ -446,6 +449,7 @@ namespace TACHYON.Shipping.Drivers
                 .WhereIf(IsEnabled(AppFeatures.TachyonDealer), x=>x.ShippingRequestFk.IsTachyonDeal==true)
                 .Include(x => x.ShippingRequestFk)
                 .Include(x => x.RoutPoints)
+                .ThenInclude(x=>x.RoutPointDocuments)
                 .FirstOrDefaultAsync(x => x.Id == TripId);
 
             await ResetTripStatus(trip);
@@ -465,6 +469,8 @@ namespace TACHYON.Shipping.Drivers
                     item.IsActive = false;
                     item.IsComplete = false;
                     item.Status = RoutePointStatus.StandBy;
+                    item.IsDeliveryNoteUploaded = false;
+                    item.RoutPointDocuments.Clear();
                     //item.ShippingRequestTripAccidents.Clear();
                     //item.ShippingRequestTripTransitions.Clear();
                 });

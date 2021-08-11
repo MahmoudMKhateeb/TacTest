@@ -76,7 +76,7 @@ namespace TACHYON.Shipping.Drivers
                 x.ShippingRequestTripFk.AssignedDriverUserId == _abpSession.UserId);
             if (CurrentPoint == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
 
-            if(CurrentPoint.ShippingRequestTripFk.NeedsDeliveryNote && !CurrentPoint.RoutPointDocuments.Any(x=>x.RoutePointDocumentType==RoutePointDocumentType.DeliveryNote))
+            if(CurrentPoint.ShippingRequestTripFk.NeedsDeliveryNote && !CurrentPoint.IsDeliveryNoteUploaded)
             {
                 throw new UserFriendlyException(L("YouNeedToUploadDeliveryNoteBefore"));
             }
@@ -130,7 +130,7 @@ namespace TACHYON.Shipping.Drivers
             if (CurrentPoint == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
 
             if (!CurrentPoint.ShippingRequestTripFk.NeedsDeliveryNote) throw new UserFriendlyException(L("TripDidnnotNeedsDeliveryNote"));
-
+            CurrentPoint.IsDeliveryNoteUploaded = true;
             await InsertRoutePointDocument(CurrentPoint.Id, document,RoutePointDocumentType.DeliveryNote);
 
             return true;
