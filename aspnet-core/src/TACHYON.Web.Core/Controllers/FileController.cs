@@ -70,7 +70,7 @@ namespace TACHYON.Web.Controllers
         {
             DisableTenancyFilters();
            // var Point = await _routPointRepository.GetAll().Include(e=>e.RoutPointDocuments).FirstOrDefaultAsync(x => x.Id == id && x.IsComplete && x.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId);
-            var POD =await _routPointDocumentRepository.FirstOrDefaultAsync(x => x.RoutePointDocumentType == RoutePointDocumentType.POD && x.Id == id && x.RoutPointFk.IsComplete && x.RoutPointFk.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId);
+            var POD =await _routPointDocumentRepository.FirstOrDefaultAsync(x => x.RoutePointDocumentType == RoutePointDocumentType.POD && x.RoutPointId == id && x.RoutPointFk.IsComplete && x.RoutPointFk.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId);
             if (POD == null)
             {
                 throw new UserFriendlyException(L("ThePODDocumentIsNotFound"));
