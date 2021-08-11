@@ -9,6 +9,7 @@ using Abp.Application.Services.Dto;
 using TACHYON.Authorization;
 using Abp.Authorization;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace TACHYON.Packing.PackingTypes
 {
@@ -39,19 +40,19 @@ namespace TACHYON.Packing.PackingTypes
 
         public async Task<GetPackingTypeForViewDto> GetPackingTypeForView(int id)
         {
-            var packingType = await _packingTypeRepository.GetAll().AsNoTracking()
-                .Include(x=>x.Translations)
-                .FirstOrDefaultAsync(x=> x.Id == id);
+            var packingType = await _packingTypeRepository
+                .GetAll()
+                .AsNoTracking()
+                .Include(x => x.Translations)
+                .FirstOrDefaultAsync(x => x.Id == id);
 
-            // TODO Add Localization Here
 
             if (packingType == null)
-                throw new UserFriendlyException(L("PackingTypeWithId"+id+"NotFound"));
+                throw new UserFriendlyException(L("PackingTypeWithId" + id + "NotFound"));
 
             var output = new GetPackingTypeForViewDto
             {
-                PackingTypeTranslations =
-                    ObjectMapper.Map<List<PackingTypeTranslationDto>>(packingType)
+                PackingType = ObjectMapper.Map<PackingTypeDto>(packingType)
             };
 
             return output;
@@ -93,7 +94,7 @@ namespace TACHYON.Packing.PackingTypes
 
             using (var unitOfWork = UnitOfWorkManager.Begin())
             {
-               var coreId = await _packingTypeRepository.InsertAndGetIdAsync(packingType);
+                var coreId = await _packingTypeRepository.InsertAndGetIdAsync(packingType);
 
                 var packingTypeTranslations = ObjectMapper.Map<List<PackingTypeTranslation>>(input.TranslationDtos);
 
