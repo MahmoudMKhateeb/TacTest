@@ -110,7 +110,7 @@
                               >{{ l('Edit') }}</a
                             >
                           </li>
-                          <li>
+                          <!-- <li>
                             <a
                               class="dropdown-item"
                               href="javascript:;"
@@ -118,7 +118,8 @@
                               (click)="deleteGoodCategory(record.goodCategory)"
                               >{{ l('Delete') }}</a
                             >
-                          </li>
+                          </li> -->
+
                           <li>
                             <a href="javascript:;" *ngIf="entityHistoryEnabled" (click)="showHistory(record.goodCategory)">{{ l('History') }}</a>
                           </li>

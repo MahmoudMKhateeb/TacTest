@@ -9,5 +9,6 @@ namespace TACHYON.Goods.GoodCategories.Dtos
         public string DisplayName { get; set; }
 
         public int? FatherId { get; set; }
+        public bool IsActive { get; set; }
     }
 }

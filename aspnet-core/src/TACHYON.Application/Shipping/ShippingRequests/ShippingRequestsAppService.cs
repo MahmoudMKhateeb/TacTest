@@ -518,6 +518,7 @@ namespace TACHYON.Shipping.ShippingRequests
         public async Task<List<GetAllGoodsCategoriesForDropDownOutput>> GetAllGoodCategoriesForTableDropdown()
         {
             var list = await _lookup_goodCategoryRepository.GetAll()
+                .Where(x=>x.IsActive)
                 .Include(x => x.Translations).ToListAsync();
 
             return ObjectMapper.Map<List<GetAllGoodsCategoriesForDropDownOutput>>(list);
