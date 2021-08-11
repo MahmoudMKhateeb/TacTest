@@ -562,4 +562,21 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
       }
     });
   }
+
+  /**
+   * Validates Shipping Request Origing&Dest According to Shipping Type
+   */
+  validateShippingRequestType() {
+    //check if user choose local-inside city  but the origin&des same
+    if (this.step1Dto.shippingTypeId == 1) {
+      this.step2Dto.destinationCityId = this.step2Dto.originCityId;
+    } else if (this.step1Dto.shippingTypeId == 2) {
+      // check if user select same city in source and destination
+      if (this.step2Dto.originCityId == this.step2Dto.destinationCityId) {
+        this.step2Form.controls['destination'].setErrors({ invalid: true });
+        // this.step2Form.controls['origin'].setErrors({ invalid: true });
+        this.notify.error(this.l(' SourceAndDestinationCantBeTheSame'));
+      }
+    }
+  }
 }
