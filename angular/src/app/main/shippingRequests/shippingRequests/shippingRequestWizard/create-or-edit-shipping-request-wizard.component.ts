@@ -112,8 +112,10 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   step1Form = this.fb.group({
     shippingRequestType: [{ value: '', disabled: false }, Validators.required],
     shippingType: [{ value: '', disabled: false }, Validators.required],
-    tripsDateRange: ['', Validators.required],
-    biddingDateRangeTest: [{ value: '', disabled: false }, Validators.required],
+    tripsStartDate: [''],
+    tripsEndDate: [''],
+    biddingStartDate: [''],
+    biddingEndDate: [''],
   });
   step2Form = this.fb.group({
     origin: ['', Validators.required],
@@ -238,10 +240,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     this.shippingRequestType == 'bidding' ? (this.step1Dto.isBid = true) : (this.step1Dto.isBid = false);
     this.shippingRequestType == 'tachyondeal' ? (this.step1Dto.isTachyonDeal = true) : (this.step1Dto.isTachyonDeal = false);
     this.shippingRequestType == 'directrequest' ? (this.step1Dto.isDirectRequest = true) : (this.step1Dto.isDirectRequest = false);
-    this.step1Dto.bidStartDate = this.biddingDateRange ? moment(this.biddingDateRange[0]).startOf('day') : undefined;
-    this.step1Dto.bidEndDate = this.biddingDateRange ? moment(this.biddingDateRange[1]).endOf('day') : undefined;
-    this.step1Dto.startTripDate = moment(this.tripsDateRange[0]).startOf('day');
-    this.step1Dto.endTripDate = moment(this.tripsDateRange[1]).endOf('day');
+    this.step1Dto.startTripDate == null ? (this.step1Dto.startTripDate = moment(this.today)) : null;
     this._shippingRequestsServiceProxy
       .createOrEditStep1(this.step1Dto)
       .pipe(
@@ -327,8 +326,6 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
         })
       )
       .subscribe((res) => {
-        this.biddingDateRange = [moment(this.step1Dto.bidStartDate).toDate(), moment(this.step1Dto.bidEndDate).toDate()];
-        this.tripsDateRange = [moment(this.step1Dto.startTripDate).toDate(), moment(this.step1Dto.endTripDate).toDate()];
         res.isBid = this.shippingRequestType === 'bidding' ? true : false;
         res.isTachyonDeal = this.shippingRequestType === 'tachyondeal' ? true : false;
         res.isDirectRequest = this.shippingRequestType === 'directrequest' ? true : false;
@@ -481,14 +478,6 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
       this.allCapacities = null;
     }
   }
-  /**
-   * resets the bidding start and end dates
-   */
-  resetBiddingDates(): void {
-    //this.biddingDateRange = undefined;
-    this.step1Form.controls.biddingDateRangeTest.setValidators(null);
-    this.step1Form.controls.biddingDateRangeTest.updateValueAndValidity();
-  }
 
   /**
    * loads the vases list and Cleans Them out
@@ -532,6 +521,26 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     this.activeStep = Step;
   }
 
+  /**
+   * validates trips start/end date
+   */
+  validateTripsDates() {
+    //checks if the trips end date is less than trips start date
+    if (this.step1Dto.endTripDate < this.step1Dto.startTripDate) {
+      this.step1Dto.endTripDate = undefined;
+    }
+  }
+
+  /**
+   * validates bidding start+end date
+   */
+  validateBiddingDates() {
+    console.log('Validate Bidding Dates Is Working');
+    //if end date is more than start date reset end date
+    if (this.step1Dto.bidStartDate > this.step1Dto.bidEndDate) {
+      this.step1Dto.bidEndDate = undefined;
+    }
+  }
   /**
    * Resets Shipping Request Wizard
    */
