@@ -88,6 +88,9 @@
                     <th style="width: 150px">
                       {{ l('SubCategory') }}
                     </th>
+                    <th style="width: 150px">
+                      {{ l('IsActive') }}
+                    </th>
                   </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-record="$implicit">
@@ -110,7 +113,7 @@
                               >{{ l('Edit') }}</a
                             >
                           </li>
-                          <li>
+                          <!-- <li>
                             <a
                               class="dropdown-item"
                               href="javascript:;"
@@ -118,7 +121,8 @@
                               (click)="deleteGoodCategory(record.goodCategory)"
                               >{{ l('Delete') }}</a
                             >
-                          </li>
+                          </li> -->
+
                           <li>
                             <a href="javascript:;" *ngIf="entityHistoryEnabled" (click)="showHistory(record.goodCategory)">{{ l('History') }}</a>
                           </li>
@@ -132,6 +136,10 @@
                     <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('SubCategory') }}</span>
                       {{ record.fatherCategoryName ? record.goodCategory.displayName : '' }}
+                    </td>
+                    <td style="width: 150px">
+                      <span class="ui-column-title"> {{ l('IsActive') }}</span>
+                      {{ record.goodCategory.isActive }}
                     </td>
                   </tr>
                 </ng-template>

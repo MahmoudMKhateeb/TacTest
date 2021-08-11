@@ -38,10 +38,19 @@
                     [ngValue]="item.id"
                     [disabled]="goodCategory.id && item.id === goodCategory.id"
                   >
-                    {{ item.displayName }}</option
-                  >
+                    {{ item.displayName }}
+                  </option>
                 </select>
                 <span class="form-text text-muted">{{ 'SubCategoryFather' }}</span>
+              </div>
+              <div class="form-group">
+                <div class="checkbox-inline">
+                  <label for="ISActive" class="checkbox">
+                    <input id="ISActive" type="checkbox" name="OnlyLockedUsers" [(ngModel)]="goodCategory.isActive" />
+                    {{ 'ISActive' | localize }}
+                    <span></span>
+                  </label>
+                </div>
               </div>
             </div>
           </div>

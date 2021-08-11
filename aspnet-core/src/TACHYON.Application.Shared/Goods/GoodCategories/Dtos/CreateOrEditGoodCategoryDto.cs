@@ -16,6 +16,7 @@ namespace TACHYON.Goods.GoodCategories.Dtos
         public int? FatherId { get; set; }
 
         public ICollection<GoodCategoryTranslationDto> Translations { get; set; }
+        public bool IsActive { get; set; } = true;
 
     }
 }
