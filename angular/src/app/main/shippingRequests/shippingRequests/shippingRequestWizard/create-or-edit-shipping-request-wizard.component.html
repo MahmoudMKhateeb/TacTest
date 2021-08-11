@@ -83,7 +83,6 @@
                         name="shippingRequestType"
                         formControlName="shippingRequestType"
                         [(ngModel)]="shippingRequestType"
-                        (change)="resetBiddingDates()"
                         [class.is-valid]="
                           step1Form.get('shippingRequestType').valid &&
                           (step1Form.get('shippingRequestType').dirty || step1Form.get('shippingRequestType').touched)
@@ -103,36 +102,59 @@
                       <span class="form-text text-muted">{{ l('PickaShippingRequestType') }}</span>
                     </div>
 
-                    <div class="row pb-5">
-                      <div class="col-lg-12" *ngIf="shippingRequestType == 'bidding'" [@grow]>
-                        <label>{{ l('BiddingRange') }} <span class="required-fileds">*</span></label>
-                        <div class="input-group date">
-                          <input
-                            class="form-control"
-                            name="biddingDateRangeTest"
-                            formControlName="biddingDateRangeTest"
-                            [(date)]="biddingDateRange"
-                            [minDate]="today"
-                            [class.is-valid]="
-                              step1Form.get('biddingDateRangeTest').valid &&
-                              (step1Form.get('biddingDateRangeTest').dirty || step1Form.get('biddingDateRangeTest').touched)
-                            "
-                            [class.is-invalid]="
-                              step1Form.get('biddingDateRangeTest').invalid &&
-                              (step1Form.get('biddingDateRangeTest').dirty || step1Form.get('biddingDateRangeTest').touched)
-                            "
-                            bsDaterangepicker
-                            dateRangePickerMomentModifier
-                            [attr.disabled]="shippingRequestType == 'bidding' ? null : true"
-                            [required]="shippingRequestType == 'bidding'"
-                          />
-                          <div class="input-group-append">
-                            <span class="input-group-text">
-                              <i class="la la-calendar-check-o"></i>
-                            </span>
+                    <div class="row pb-5" *ngIf="shippingRequestType == 'bidding'" [@grow]>
+                      <!--                        bidding gonna be here -->
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <label>{{ l('BiddingStartDate') }} </label>
+                          <div class="input-group date">
+                            <input
+                              bsDatepicker
+                              datePickerMomentModifier
+                              formControlName="biddingStartDate"
+                              [(date)]="step1Dto.bidStartDate"
+                              class="form-control"
+                              type="datetime"
+                              name="startdate"
+                              [minDate]="today"
+                              (dateChange)="validateBiddingDates()"
+                              readonly="readonly"
+                              [attr.disabled]="shippingRequestType == 'bidding' ? null : true"
+                            />
+
+                            <div class="input-group-append">
+                              <span class="input-group-text">
+                                <i class="la la-calendar-check-o"></i>
+                              </span>
+                            </div>
                           </div>
                         </div>
-                        <span class="form-text text-muted">{{ l('BiddingEndDate') }}</span>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <label>{{ l('BiddingEndDate') }}</label>
+                          <div class="input-group date">
+                            <input
+                              bsDatepicker
+                              datePickerMomentModifier
+                              formControlName="biddingEndDate"
+                              [(date)]="step1Dto.bidEndDate"
+                              class="form-control"
+                              type="datetime"
+                              name="enddate"
+                              [minDate]="step1Dto.bidStartDate || today"
+                              (dateChange)="validateBiddingDates()"
+                              readonly="readonly"
+                              [attr.disabled]="shippingRequestType == 'bidding' ? null : true"
+                            />
+
+                            <div class="input-group-append">
+                              <span class="input-group-text">
+                                <i class="la la-calendar-check-o"></i>
+                              </span>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
 
@@ -164,35 +186,54 @@
                     </div>
 
                     <div class="row">
-                      <div class="col-lg-12">
-                        <label>{{ l('TripsDateRange') }} <span class="required-fileds">*</span></label>
-                        <div class="input-group date">
-                          <input
-                            class="form-control"
-                            name="tripsDateRange"
-                            formControlName="tripsDateRange"
-                            [(date)]="tripsDateRange"
-                            [minDate]="today"
-                            [class.is-valid]="
-                              step1Form.get('tripsDateRange').valid &&
-                              (step1Form.get('tripsDateRange').dirty || step1Form.get('tripsDateRange').touched)
-                            "
-                            [class.is-invalid]="
-                              step1Form.get('tripsDateRange').invalid &&
-                              (step1Form.get('tripsDateRange').dirty || step1Form.get('tripsDateRange').touched)
-                            "
-                            bsDaterangepicker
-                            readonly="readonly"
-                            dateRangePickerMomentModifier
-                            required
-                          />
-                          <div class="input-group-append">
-                            <span class="input-group-text">
-                              <i class="la la-calendar-check-o"></i>
-                            </span>
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <label>{{ l('TripsStartDate') }} </label>
+                          <div class="input-group date">
+                            <input
+                              bsDatepicker
+                              datePickerMomentModifier
+                              formControlName="tripsStartDate"
+                              [(date)]="step1Dto.startTripDate"
+                              class="form-control"
+                              type="datetime"
+                              name="startdate"
+                              [minDate]="today"
+                              (dateChange)="validateTripsDates()"
+                              readonly="readonly"
+                            />
+                            <div class="input-group-append">
+                              <span class="input-group-text">
+                                <i class="la la-calendar-check-o"></i>
+                              </span>
+                            </div>
                           </div>
                         </div>
-                        <span class="form-text text-muted">{{ l('TripsDateRange') }}</span>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <label>{{ l('TripsEndDate') }}</label>
+                          <div class="input-group date">
+                            <input
+                              bsDatepicker
+                              datePickerMomentModifier
+                              formControlName="tripsEndDate"
+                              [(date)]="step1Dto.endTripDate"
+                              class="form-control"
+                              type="datetime"
+                              name="enddate"
+                              [minDate]="step1Dto.startTripDate || today"
+                              (dateChange)="validateTripsDates()"
+                              readonly="readonly"
+                            />
+
+                            <div class="input-group-append">
+                              <span class="input-group-text">
+                                <i class="la la-calendar-check-o"></i>
+                              </span>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -215,6 +256,7 @@
                               [class.is-invalid]="
                                 step2Form.get('origin').invalid && (step2Form.get('origin').dirty || step2Form.get('origin').touched)
                               "
+                              (ngModelChange)="validateShippingRequestType()"
                               required
                             >
                               <option value="">{{ l('SelectanOriginCity') }}</option>
@@ -240,7 +282,8 @@
                               [class.is-invalid]="
                                 step2Form.get('destination').invalid && (step2Form.get('destination').dirty || step2Form.get('destination').touched)
                               "
-                              [attr.disabled]="allCitys ? null : true"
+                              [attr.disabled]="step1Dto.shippingTypeId == 1 ? true : null"
+                              (ngModelChange)="validateShippingRequestType()"
                               required
                             >
                               <option value="">{{ l('selectaDestination') }}</option>

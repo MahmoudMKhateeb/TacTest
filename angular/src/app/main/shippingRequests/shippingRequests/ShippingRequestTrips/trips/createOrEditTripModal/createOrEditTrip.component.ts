@@ -172,6 +172,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       this._TripService.updateActiveTripId(null);
       this._PointsService.updateSinglePoint(new CreateOrEditRoutPointDto());
       this._PointsService.updateWayPoints([]);
+      this._TripService.currentShippingRequest.subscribe((res) => (this.trip.startTripDate = res.shippingRequest.startTripDate));
       this.trip.createOrEditDocumentFileDto = new CreateOrEditDocumentFileDto();
       this.trip.createOrEditDocumentFileDto.extn = '_';
       this.trip.createOrEditDocumentFileDto.name = '_';
