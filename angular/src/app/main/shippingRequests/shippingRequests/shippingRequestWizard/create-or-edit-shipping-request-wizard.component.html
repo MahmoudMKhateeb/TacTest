@@ -215,6 +215,7 @@
                               [class.is-invalid]="
                                 step2Form.get('origin').invalid && (step2Form.get('origin').dirty || step2Form.get('origin').touched)
                               "
+                              (ngModelChange)="validateShippingRequestType()"
                               required
                             >
                               <option value="">{{ l('SelectanOriginCity') }}</option>
@@ -240,7 +241,8 @@
                               [class.is-invalid]="
                                 step2Form.get('destination').invalid && (step2Form.get('destination').dirty || step2Form.get('destination').touched)
                               "
-                              [attr.disabled]="allCitys ? null : true"
+                              [attr.disabled]="step1Dto.shippingTypeId == 1 ? true : null"
+                              (ngModelChange)="validateShippingRequestType()"
                               required
                             >
                               <option value="">{{ l('selectaDestination') }}</option>
