@@ -200,6 +200,7 @@ namespace TACHYON.Shipping.Drivers
                 .Include(t=>t.ShippingRequestTripFk)
                  .ThenInclude(r=>r.ShippingRequestFk)
                     .ThenInclude(p=>p.PackingTypeFk)
+                .Include(t => t.RoutPointDocuments)
             .Include(i => i.FacilityFk)
                .ThenInclude(c => c.CityFk)
            .Include(i => i.ReceiverFk)
@@ -208,6 +209,8 @@ namespace TACHYON.Shipping.Drivers
             .SingleOrDefaultAsync(t => t.Id == PointId && t.ShippingRequestTripFk.Status != ShippingRequestTripStatus.Canceled && t.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId && t.ShippingRequestTripFk.DriverStatus != ShippingRequestTripDriverStatus.Rejected);
             if (Point == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
             var DropOff = ObjectMapper.Map<RoutDropOffDto>(Point);
+
+            DropOff.IsDeliveryNoteUploaded = Point.RoutPointDocuments.Any(x => x.RoutePointDocumentType == RoutePointDocumentType.DeliveryNote);
 
             return DropOff;
         }
