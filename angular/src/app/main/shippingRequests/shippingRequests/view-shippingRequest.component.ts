@@ -29,10 +29,7 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
   activeShippingRequestId: number;
   bidsloading = false;
 
-  breadcrumbs: BreadcrumbItem[] = [
-    new BreadcrumbItem(this.l('ShippingRequests'), '/app/main/shippingRequests/shippingRequests'),
-    new BreadcrumbItem('' + this._activatedRoute.snapshot.queryParams['id']),
-  ];
+  breadcrumbs: BreadcrumbItem[] = [new BreadcrumbItem(this.l('ShippingRequests'), '/app/main/shippingRequests/shippingRequests')];
 
   constructor(
     injector: Injector,
@@ -68,6 +65,7 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
     this._shippingRequestsServiceProxy.getShippingRequestForView(shippingRequestId).subscribe((result) => {
       this.shippingRequestforView = result;
       this.vases = result.shippingRequestVasDtoList;
+      this.breadcrumbs.push(new BreadcrumbItem('' + result.referenceNumber));
       this.activeShippingRequestId = this.shippingRequestforView.shippingRequest.id;
       this.active = true;
       this.loading = false;
