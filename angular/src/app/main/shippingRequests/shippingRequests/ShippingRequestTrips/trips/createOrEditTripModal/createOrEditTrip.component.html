@@ -196,14 +196,11 @@
                   #notes="ngModel"
                   name="notes"
                   class="form-control"
-                  [minLength]="20"
-                  [maxlength]="600"
+                  [maxlength]="512"
                   [(ngModel)]="trip.note"
                   [class.is-valid]="notes.touched && notes.valid && notes.value?.length != 0"
                   [class.is-invalid]="notes.touched && !notes.valid"
-                  requiredLength="20"
                 ></textarea>
-                <div class="invalid-feedback">{{ l('TripNotesShouldBeAtLeast20Digits') }}</div>
               </div>
             </div>
             <!--End :: notes-->

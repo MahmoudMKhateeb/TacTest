@@ -214,6 +214,7 @@ export class AppPreBootstrap {
     if (abp.clock.provider.supportsMultipleTimezone) {
       moment.tz.setDefault(abp.timing.timeZoneInfo.iana.timeZoneId);
       (window as any).moment.tz.setDefault(abp.timing.timeZoneInfo.iana.timeZoneId);
+      console.log('zzzzzzzzzzzzzzzzzzzzzzzzzz', abp.timing.timeZoneInfo.iana.timeZoneId);
     } else {
       moment.fn.toJSON = function () {
         return this.locale('en').format();

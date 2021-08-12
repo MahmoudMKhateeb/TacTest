@@ -43,22 +43,19 @@ namespace TACHYON.Routs.RoutPoints.Dtos
 
         public void AddValidationErrors(CustomValidationContext context)
         {
-           
+
 
             if (PickingType == PickingType.Pickup) return;
             //additional receiver must provided
-            if (!ReceiverId.HasValue)
+            if (!ReceiverId.HasValue && ReceiverPhoneNumber.IsNullOrEmpty() )
             {
-                if (string.IsNullOrEmpty(ReceiverFullName)) context.Results.Add(new ValidationResult("PleaseAddAdditionalReceiverFullName"));
-                if (string.IsNullOrEmpty(ReceiverPhoneNumber)) context.Results.Add(new ValidationResult("PleaseAddAdditionalReceiverPhoneNumber"));
-                else if (!isValidMobileNumber(ReceiverPhoneNumber)) context.Results.Add(new ValidationResult("InvalidAdditionalReceiverMobileNumber"));
-                //if (string.IsNullOrEmpty(ReceiverCardIdNumber)) context.Results.Add(new ValidationResult("PleaseAddReceiverCardIdNumber"));
+                context.Results.Add(new ValidationResult("AtLeastOneReceiverShouldBeProvided"));
             }
             //there is additional receiver
             if (ReceiverPhoneNumber != null)
             {
                 if (string.IsNullOrEmpty(ReceiverFullName)) context.Results.Add(new ValidationResult("PleaseAddAdditionalReceiverFullName"));
-                if (string.IsNullOrEmpty(ReceiverEmailAddress)) context.Results.Add(new ValidationResult("PleaseAddAdditionalReceiverEmailAddress"));
+                if (string.IsNullOrEmpty(ReceiverPhoneNumber)) context.Results.Add(new ValidationResult("PleaseAddAdditionalReceiverPhoneNumber"));
                 else if (!isValidMobileNumber(ReceiverPhoneNumber)) context.Results.Add(new ValidationResult("InvalidAdditionalReceiverMobileNumber"));
             }
         }
