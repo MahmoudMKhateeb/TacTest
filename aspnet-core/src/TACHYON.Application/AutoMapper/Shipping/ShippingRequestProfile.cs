@@ -22,7 +22,9 @@ namespace TACHYON.AutoMapper.Shipping
                 .ForMember(dest => dest.AssignedTruckDto, opt => opt.MapFrom(src => src.AssignedTruckFk))
                 .ForMember(dest => dest.VasCount, opt => opt.MapFrom(src => src.ShippingRequestVases.Count))
                 .ForMember(dest => dest.OriginalCityName, opt => opt.MapFrom(src => src.OriginCityFk.DisplayName))
+                .ForMember(dest => dest.OriginalCityId, opt => opt.MapFrom(src => src.OriginCityFk.Id))
                 .ForMember(dest => dest.DestinationCityName, opt => opt.MapFrom(src => src.DestinationCityFk.DisplayName))
+                .ForMember(dest => dest.DestinationCityId, opt => opt.MapFrom(src => src.DestinationCityFk.Id))
                 .ForMember(dest => dest.DriverName, opt => opt.MapFrom(src => src.AssignedDriverUserFk.Name))
                 //.ForMember(dest => dest.GoodsCategoryName, opt => opt.MapFrom(src => src.GoodCategoryFk.DisplayName))
 
