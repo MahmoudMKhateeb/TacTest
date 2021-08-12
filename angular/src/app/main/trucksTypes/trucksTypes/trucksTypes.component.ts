@@ -100,14 +100,14 @@ export class TrucksTypesComponent extends AppComponentBase {
     });
   }
 
-  deleteTrucksType(trucksType: TrucksTypeDto): void {
-    this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
-      if (isConfirmed) {
-        this._trucksTypesServiceProxy.delete(trucksType.id).subscribe(() => {
-          this.reloadPage();
-          this.notify.success(this.l('SuccessfullyDeleted'));
-        });
-      }
-    });
-  }
+  // deleteTrucksType(trucksType: TrucksTypeDto): void {
+  //   this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
+  //     if (isConfirmed) {
+  //       this._trucksTypesServiceProxy.delete(trucksType.id).subscribe(() => {
+  //         this.reloadPage();
+  //         this.notify.success(this.l('SuccessfullyDeleted'));
+  //       });
+  //     }
+  //   });
+  // }
 }
