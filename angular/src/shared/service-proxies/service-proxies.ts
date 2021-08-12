@@ -13750,68 +13750,6 @@ export class GoodCategoriesServiceProxy {
   }
 
   /**
-   * @param id (optional)
-   * @return Success
-   */
-  delete(id: number | undefined): Observable<void> {
-    let url_ = this.baseUrl + '/api/services/app/GoodCategories/Delete?';
-    if (id === null) throw new Error("The parameter 'id' cannot be null.");
-    else if (id !== undefined) url_ += 'Id=' + encodeURIComponent('' + id) + '&';
-    url_ = url_.replace(/[?&]$/, '');
-
-    let options_: any = {
-      observe: 'response',
-      responseType: 'blob',
-      headers: new HttpHeaders({}),
-    };
-
-    return this.http
-      .request('delete', url_, options_)
-      .pipe(
-        _observableMergeMap((response_: any) => {
-          return this.processDelete(response_);
-        })
-      )
-      .pipe(
-        _observableCatch((response_: any) => {
-          if (response_ instanceof HttpResponseBase) {
-            try {
-              return this.processDelete(<any>response_);
-            } catch (e) {
-              return <Observable<void>>(<any>_observableThrow(e));
-            }
-          } else return <Observable<void>>(<any>_observableThrow(response_));
-        })
-      );
-  }
-
-  protected processDelete(response: HttpResponseBase): Observable<void> {
-    const status = response.status;
-    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-    let _headers: any = {};
-    if (response.headers) {
-      for (let key of response.headers.keys()) {
-        _headers[key] = response.headers.get(key);
-      }
-    }
-    if (status === 200) {
-      return blobToText(responseBlob).pipe(
-        _observableMergeMap((_responseText) => {
-          return _observableOf<void>(<any>null);
-        })
-      );
-    } else if (status !== 200 && status !== 204) {
-      return blobToText(responseBlob).pipe(
-        _observableMergeMap((_responseText) => {
-          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
-        })
-      );
-    }
-    return _observableOf<void>(<any>null);
-  }
-
-  /**
    * @param filter (optional)
    * @param displayNameFilter (optional)
    * @return Success
@@ -29134,6 +29072,78 @@ export class RoutStepsServiceProxy {
   }
 
   protected processGetAllFacilitiesForDropdown(response: HttpResponseBase): Observable<FacilityForDropdownDto[]> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          if (Array.isArray(resultData200)) {
+            result200 = [] as any;
+            for (let item of resultData200) result200!.push(FacilityForDropdownDto.fromJS(item));
+          } else {
+            result200 = <any>null;
+          }
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<FacilityForDropdownDto[]>(<any>null);
+  }
+
+  /**
+   * @param cityId (optional)
+   * @return Success
+   */
+  getAllFacilitiesByCityIdForDropdown(cityId: number | undefined): Observable<FacilityForDropdownDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/RoutSteps/GetAllFacilitiesByCityIdForDropdown?';
+    if (cityId === null) throw new Error("The parameter 'cityId' cannot be null.");
+    else if (cityId !== undefined) url_ += 'cityId=' + encodeURIComponent('' + cityId) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAllFacilitiesByCityIdForDropdown(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAllFacilitiesByCityIdForDropdown(<any>response_);
+            } catch (e) {
+              return <Observable<FacilityForDropdownDto[]>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<FacilityForDropdownDto[]>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAllFacilitiesByCityIdForDropdown(response: HttpResponseBase): Observable<FacilityForDropdownDto[]> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -47092,68 +47102,6 @@ export class TrucksTypesServiceProxy {
   }
 
   /**
-   * @param id (optional)
-   * @return Success
-   */
-  delete(id: number | undefined): Observable<void> {
-    let url_ = this.baseUrl + '/api/services/app/TrucksTypes/Delete?';
-    if (id === null) throw new Error("The parameter 'id' cannot be null.");
-    else if (id !== undefined) url_ += 'Id=' + encodeURIComponent('' + id) + '&';
-    url_ = url_.replace(/[?&]$/, '');
-
-    let options_: any = {
-      observe: 'response',
-      responseType: 'blob',
-      headers: new HttpHeaders({}),
-    };
-
-    return this.http
-      .request('delete', url_, options_)
-      .pipe(
-        _observableMergeMap((response_: any) => {
-          return this.processDelete(response_);
-        })
-      )
-      .pipe(
-        _observableCatch((response_: any) => {
-          if (response_ instanceof HttpResponseBase) {
-            try {
-              return this.processDelete(<any>response_);
-            } catch (e) {
-              return <Observable<void>>(<any>_observableThrow(e));
-            }
-          } else return <Observable<void>>(<any>_observableThrow(response_));
-        })
-      );
-  }
-
-  protected processDelete(response: HttpResponseBase): Observable<void> {
-    const status = response.status;
-    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-    let _headers: any = {};
-    if (response.headers) {
-      for (let key of response.headers.keys()) {
-        _headers[key] = response.headers.get(key);
-      }
-    }
-    if (status === 200) {
-      return blobToText(responseBlob).pipe(
-        _observableMergeMap((_responseText) => {
-          return _observableOf<void>(<any>null);
-        })
-      );
-    } else if (status !== 200 && status !== 204) {
-      return blobToText(responseBlob).pipe(
-        _observableMergeMap((_responseText) => {
-          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
-        })
-      );
-    }
-    return _observableOf<void>(<any>null);
-  }
-
-  /**
    * @return Success
    */
   getAllTransportTypeForTableDropdown(): Observable<ISelectItemDto[]> {
@@ -59923,6 +59871,7 @@ export interface IAcceptFriendshipRequestInput {
 export class GoodCategoryDto implements IGoodCategoryDto {
   displayName!: string | undefined;
   fatherId!: number | undefined;
+  isActive!: boolean;
   id!: number;
 
   constructor(data?: IGoodCategoryDto) {
@@ -59937,6 +59886,7 @@ export class GoodCategoryDto implements IGoodCategoryDto {
     if (_data) {
       this.displayName = _data['displayName'];
       this.fatherId = _data['fatherId'];
+      this.isActive = _data['isActive'];
       this.id = _data['id'];
     }
   }
@@ -59952,6 +59902,7 @@ export class GoodCategoryDto implements IGoodCategoryDto {
     data = typeof data === 'object' ? data : {};
     data['displayName'] = this.displayName;
     data['fatherId'] = this.fatherId;
+    data['isActive'] = this.isActive;
     data['id'] = this.id;
     return data;
   }
@@ -59960,6 +59911,7 @@ export class GoodCategoryDto implements IGoodCategoryDto {
 export interface IGoodCategoryDto {
   displayName: string | undefined;
   fatherId: number | undefined;
+  isActive: boolean;
   id: number;
 }
 
@@ -60101,6 +60053,7 @@ export interface IGoodCategoryTranslationDto {
 export class CreateOrEditGoodCategoryDto implements ICreateOrEditGoodCategoryDto {
   fatherId!: number | undefined;
   translations!: GoodCategoryTranslationDto[] | undefined;
+  isActive!: boolean;
   id!: number | undefined;
 
   constructor(data?: ICreateOrEditGoodCategoryDto) {
@@ -60118,6 +60071,7 @@ export class CreateOrEditGoodCategoryDto implements ICreateOrEditGoodCategoryDto
         this.translations = [] as any;
         for (let item of _data['translations']) this.translations!.push(GoodCategoryTranslationDto.fromJS(item));
       }
+      this.isActive = _data['isActive'];
       this.id = _data['id'];
     }
   }
@@ -60136,6 +60090,7 @@ export class CreateOrEditGoodCategoryDto implements ICreateOrEditGoodCategoryDto
       data['translations'] = [];
       for (let item of this.translations) data['translations'].push(item.toJSON());
     }
+    data['isActive'] = this.isActive;
     data['id'] = this.id;
     return data;
   }
@@ -60144,6 +60099,7 @@ export class CreateOrEditGoodCategoryDto implements ICreateOrEditGoodCategoryDto
 export interface ICreateOrEditGoodCategoryDto {
   fatherId: number | undefined;
   translations: GoodCategoryTranslationDto[] | undefined;
+  isActive: boolean;
   id: number | undefined;
 }
 
@@ -68324,6 +68280,7 @@ export interface IPagedResultDtoOfPriceOfferListDto {
 export class TrucksTypeDto implements ITrucksTypeDto {
   transportTypeId!: number | undefined;
   translatedDisplayName!: string | undefined;
+  isActive!: boolean;
   id!: number;
 
   constructor(data?: ITrucksTypeDto) {
@@ -68338,6 +68295,7 @@ export class TrucksTypeDto implements ITrucksTypeDto {
     if (_data) {
       this.transportTypeId = _data['transportTypeId'];
       this.translatedDisplayName = _data['translatedDisplayName'];
+      this.isActive = _data['isActive'];
       this.id = _data['id'];
     }
   }
@@ -68353,6 +68311,7 @@ export class TrucksTypeDto implements ITrucksTypeDto {
     data = typeof data === 'object' ? data : {};
     data['transportTypeId'] = this.transportTypeId;
     data['translatedDisplayName'] = this.translatedDisplayName;
+    data['isActive'] = this.isActive;
     data['id'] = this.id;
     return data;
   }
@@ -68361,6 +68320,7 @@ export class TrucksTypeDto implements ITrucksTypeDto {
 export interface ITrucksTypeDto {
   transportTypeId: number | undefined;
   translatedDisplayName: string | undefined;
+  isActive: boolean;
   id: number;
 }
 
@@ -70964,7 +70924,6 @@ export class CreateOrEditRoutPointDto implements ICreateOrEditRoutPointDto {
   receiverPhoneNumber!: string | undefined;
   receiverEmailAddress!: string | undefined;
   receiverCardIdNumber!: string | undefined;
-  receiverAddress!: string | undefined;
   note!: string | undefined;
   goodsDetailListDto!: CreateOrEditGoodsDetailDto[] | undefined;
   id!: number | undefined;
@@ -70989,7 +70948,6 @@ export class CreateOrEditRoutPointDto implements ICreateOrEditRoutPointDto {
       this.receiverPhoneNumber = _data['receiverPhoneNumber'];
       this.receiverEmailAddress = _data['receiverEmailAddress'];
       this.receiverCardIdNumber = _data['receiverCardIdNumber'];
-      this.receiverAddress = _data['receiverAddress'];
       this.note = _data['note'];
       if (Array.isArray(_data['goodsDetailListDto'])) {
         this.goodsDetailListDto = [] as any;
@@ -71018,7 +70976,6 @@ export class CreateOrEditRoutPointDto implements ICreateOrEditRoutPointDto {
     data['receiverPhoneNumber'] = this.receiverPhoneNumber;
     data['receiverEmailAddress'] = this.receiverEmailAddress;
     data['receiverCardIdNumber'] = this.receiverCardIdNumber;
-    data['receiverAddress'] = this.receiverAddress;
     data['note'] = this.note;
     if (Array.isArray(this.goodsDetailListDto)) {
       data['goodsDetailListDto'] = [];
@@ -71040,7 +70997,6 @@ export interface ICreateOrEditRoutPointDto {
   receiverPhoneNumber: string | undefined;
   receiverEmailAddress: string | undefined;
   receiverCardIdNumber: string | undefined;
-  receiverAddress: string | undefined;
   note: string | undefined;
   goodsDetailListDto: CreateOrEditGoodsDetailDto[] | undefined;
   id: number | undefined;
@@ -74220,6 +74176,7 @@ export interface IGetTruckForViewOutput {
 }
 
 export class GetShippingRequestForViewOutput implements IGetShippingRequestForViewOutput {
+  referenceNumber!: string | undefined;
   shippingRequest!: ShippingRequestDto;
   shippingRequestBidDtoList!: ShippingRequestBidDto[] | undefined;
   shippingRequestVasDtoList!: GetShippingRequestVasForViewDto[] | undefined;
@@ -74253,6 +74210,7 @@ export class GetShippingRequestForViewOutput implements IGetShippingRequestForVi
 
   init(_data?: any) {
     if (_data) {
+      this.referenceNumber = _data['referenceNumber'];
       this.shippingRequest = _data['shippingRequest'] ? ShippingRequestDto.fromJS(_data['shippingRequest']) : <any>undefined;
       if (Array.isArray(_data['shippingRequestBidDtoList'])) {
         this.shippingRequestBidDtoList = [] as any;
@@ -74293,6 +74251,7 @@ export class GetShippingRequestForViewOutput implements IGetShippingRequestForVi
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
+    data['referenceNumber'] = this.referenceNumber;
     data['shippingRequest'] = this.shippingRequest ? this.shippingRequest.toJSON() : <any>undefined;
     if (Array.isArray(this.shippingRequestBidDtoList)) {
       data['shippingRequestBidDtoList'] = [];
@@ -74326,6 +74285,7 @@ export class GetShippingRequestForViewOutput implements IGetShippingRequestForVi
 }
 
 export interface IGetShippingRequestForViewOutput {
+  referenceNumber: string | undefined;
   shippingRequest: ShippingRequestDto;
   shippingRequestBidDtoList: ShippingRequestBidDto[] | undefined;
   shippingRequestVasDtoList: GetShippingRequestVasForViewDto[] | undefined;
@@ -83431,6 +83391,7 @@ export interface ITrucksTypesTranslationDto {
 export class CreateOrEditTrucksTypeDto implements ICreateOrEditTrucksTypeDto {
   transportTypeId!: number | undefined;
   translations!: TrucksTypesTranslationDto[] | undefined;
+  isActive!: boolean;
   id!: number | undefined;
 
   constructor(data?: ICreateOrEditTrucksTypeDto) {
@@ -83448,6 +83409,7 @@ export class CreateOrEditTrucksTypeDto implements ICreateOrEditTrucksTypeDto {
         this.translations = [] as any;
         for (let item of _data['translations']) this.translations!.push(TrucksTypesTranslationDto.fromJS(item));
       }
+      this.isActive = _data['isActive'];
       this.id = _data['id'];
     }
   }
@@ -83466,6 +83428,7 @@ export class CreateOrEditTrucksTypeDto implements ICreateOrEditTrucksTypeDto {
       data['translations'] = [];
       for (let item of this.translations) data['translations'].push(item.toJSON());
     }
+    data['isActive'] = this.isActive;
     data['id'] = this.id;
     return data;
   }
@@ -83474,6 +83437,7 @@ export class CreateOrEditTrucksTypeDto implements ICreateOrEditTrucksTypeDto {
 export interface ICreateOrEditTrucksTypeDto {
   transportTypeId: number | undefined;
   translations: TrucksTypesTranslationDto[] | undefined;
+  isActive: boolean;
   id: number | undefined;
 }
 
