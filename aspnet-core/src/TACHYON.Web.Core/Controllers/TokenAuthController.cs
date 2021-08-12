@@ -881,10 +881,14 @@ namespace TACHYON.Web.Controllers
                 new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.Now.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64),
                 new Claim(AppConsts.TokenValidityKey, tokenValidityKey),
                 new Claim(AppConsts.UserIdentifier, user.ToUserIdentifier().ToUserIdentifierString()),
-                new Claim(AppConsts.TokenType, tokenType.To<int>().ToString()),
-                new Claim(AppConsts.MobileDeviceId, mobileDeviceId),
-                new Claim(AppConsts.MobileDeviceToken, mobileDeviceToken)
+                new Claim(AppConsts.TokenType, tokenType.To<int>().ToString())
             });
+
+            if (!mobileDeviceId.IsNullOrEmpty() && !mobileDeviceToken.IsNullOrEmpty())
+            {
+                claims.Add(new Claim(AppConsts.MobileDeviceId, mobileDeviceId));
+                claims.Add(new Claim(AppConsts.MobileDeviceToken, mobileDeviceToken));
+            }
 
             if (!expiration.HasValue)
             {
