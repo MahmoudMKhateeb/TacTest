@@ -74188,7 +74188,9 @@ export class GetShippingRequestForViewOutput implements IGetShippingRequestForVi
   driverName!: string | undefined;
   routTypeName!: string | undefined;
   originalCityName!: string | undefined;
+  originalCityId!: number;
   destinationCityName!: string | undefined;
+  destinationCityId!: number;
   goodsCategoryName!: string | undefined;
   truckTypeFullName!: string | undefined;
   shippingRequestStatusName!: string | undefined;
@@ -74228,7 +74230,9 @@ export class GetShippingRequestForViewOutput implements IGetShippingRequestForVi
       this.driverName = _data['driverName'];
       this.routTypeName = _data['routTypeName'];
       this.originalCityName = _data['originalCityName'];
+      this.originalCityId = _data['originalCityId'];
       this.destinationCityName = _data['destinationCityName'];
+      this.destinationCityId = _data['destinationCityId'];
       this.goodsCategoryName = _data['goodsCategoryName'];
       this.truckTypeFullName = _data['truckTypeFullName'];
       this.shippingRequestStatusName = _data['shippingRequestStatusName'];
@@ -74269,7 +74273,9 @@ export class GetShippingRequestForViewOutput implements IGetShippingRequestForVi
     data['driverName'] = this.driverName;
     data['routTypeName'] = this.routTypeName;
     data['originalCityName'] = this.originalCityName;
+    data['originalCityId'] = this.originalCityId;
     data['destinationCityName'] = this.destinationCityName;
+    data['destinationCityId'] = this.destinationCityId;
     data['goodsCategoryName'] = this.goodsCategoryName;
     data['truckTypeFullName'] = this.truckTypeFullName;
     data['shippingRequestStatusName'] = this.shippingRequestStatusName;
@@ -74297,7 +74303,9 @@ export interface IGetShippingRequestForViewOutput {
   driverName: string | undefined;
   routTypeName: string | undefined;
   originalCityName: string | undefined;
+  originalCityId: number;
   destinationCityName: string | undefined;
+  destinationCityId: number;
   goodsCategoryName: string | undefined;
   truckTypeFullName: string | undefined;
   shippingRequestStatusName: string | undefined;
