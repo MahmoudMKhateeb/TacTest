@@ -6,6 +6,7 @@ using Abp.Castle.Logging.Log4Net;
 using Abp.Extensions;
 using Abp.Hangfire;
 using Abp.PlugIns;
+using Abp.Timing;
 using Castle.Facilities.Logging;
 using CrystalQuartz.AspNetCore;
 using FirebaseAdmin;
@@ -66,6 +67,8 @@ namespace TACHYON.Web.Startup
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            Clock.Provider = ClockProviders.Utc;
+
             //MVC
             services.AddControllersWithViews(options =>
             {
