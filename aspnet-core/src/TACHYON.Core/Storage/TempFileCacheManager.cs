@@ -16,7 +16,7 @@ namespace TACHYON.Storage
 
         public void SetFile(string token, byte[] content)
         {
-            _cacheManager.GetCache(TempFileCacheName).Set(token, content, new TimeSpan(0, 0, 1, 0)); // expire time is 1 min by default
+            _cacheManager.GetCache(TempFileCacheName).Set(token, content, new TimeSpan(0, 0, 20, 0)); // expire time is 1 min by default
         }
 
         public byte[] GetFile(string token)
