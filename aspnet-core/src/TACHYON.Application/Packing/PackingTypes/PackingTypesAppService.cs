@@ -1,16 +1,14 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Linq.Dynamic.Core;
 using Abp.Linq.Extensions;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Abp.Domain.Repositories;
 using TACHYON.Packing.PackingTypes.Dtos;
-using TACHYON.Dto;
 using Abp.Application.Services.Dto;
 using TACHYON.Authorization;
 using Abp.Extensions;
 using Abp.Authorization;
+using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 
 namespace TACHYON.Packing.PackingTypes
@@ -76,6 +74,8 @@ namespace TACHYON.Packing.PackingTypes
 
         public async Task CreateOrEdit(CreateOrEditPackingTypeDto input)
         {
+            await IsPackingTypeDuplicatedOrEmpty(input.DisplayName);
+
             if (input.Id == null)
             {
                 await Create(input);
@@ -105,6 +105,20 @@ namespace TACHYON.Packing.PackingTypes
         public async Task Delete(EntityDto input)
         {
             await _packingTypeRepository.DeleteAsync(input.Id);
+        }
+
+
+        private async Task IsPackingTypeDuplicatedOrEmpty(string displayName)
+        {
+            if (displayName.IsNullOrEmpty() || displayName.IsNullOrWhiteSpace())
+                throw new UserFriendlyException(L("PackingTypeNameCanNotBeEmpty"));
+
+
+            var isDuplicated = await _packingTypeRepository.GetAll()
+                .AnyAsync(x => x.DisplayName.ToUpper().Equals(displayName.ToUpper()));
+
+            if (isDuplicated)
+                throw new UserFriendlyException(L("PackingTypeNameCanNotBeDuplicated"));
         }
     }
 }

@@ -12,15 +12,11 @@ namespace TACHYON.Goods.GoodCategories
     [Audited]
     public class GoodCategory : FullAuditedEntity, IMultiLingualEntity<GoodCategoryTranslation>
     {
-
-        //[Required]
-        //[StringLength(GoodCategoryConsts.MaxDisplayNameLength, MinimumLength = GoodCategoryConsts.MinDisplayNameLength)]
-        //public virtual string DisplayName { get; set; }
-
         public int? FatherId { get; set; }
 
         [ForeignKey("FatherId")]
         public GoodCategory FatherFk { get; set; }
         public ICollection<GoodCategoryTranslation> Translations { get; set; }
+        public bool IsActive { get; set; } = true;
     }
 }

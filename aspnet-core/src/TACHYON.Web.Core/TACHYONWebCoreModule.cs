@@ -24,6 +24,7 @@ using System.IO;
 using System.Text;
 using TACHYON.Chat;
 using TACHYON.Configuration;
+using TACHYON.Documents;
 using TACHYON.EntityFrameworkCore;
 using TACHYON.Invoices;
 using TACHYON.Startup;
@@ -135,7 +136,7 @@ namespace TACHYON.Web
             using (IocManager.Resolve<IUnitOfWorkManager>().Begin())
             {
                 IocManager.Resolve<InvoiceManager>().RunAllJobs();
-
+                IocManager.Resolve<ExpiredDocumentsReportDomainService>().RunJob();
             }
         }
 

@@ -30,5 +30,15 @@ namespace TACHYON.Url
         {
             throw new NotImplementedException();
         }
+
+        public string CreateInvoiceDetailsFormat(long invoiceId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetTachyonPlatformLoginUrl()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

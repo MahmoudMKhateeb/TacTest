@@ -11,6 +11,7 @@ using Abp.Application.Services.Dto;
 using TACHYON.Authorization;
 using Abp.Extensions;
 using Abp.Authorization;
+using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 
 namespace TACHYON.Nationalities
@@ -76,6 +77,9 @@ namespace TACHYON.Nationalities
 
         public async Task CreateOrEdit(CreateOrEditNationalityDto input)
         {
+
+            await IsNationalityNameDuplicatedOrEmpty(input.Name);
+
             if (input.Id == null)
             {
                 await Create(input);
@@ -120,5 +124,17 @@ namespace TACHYON.Nationalities
 
         }
 
+        private async Task IsNationalityNameDuplicatedOrEmpty(string name)
+        {
+            if (name.IsNullOrEmpty() || name.IsNullOrWhiteSpace())
+                throw new UserFriendlyException(L("NationalityNameCanNotBeEmpty"));
+
+
+            var isDuplicated = await _nationalityRepository.GetAll()
+                .AnyAsync(x => x.Name.ToUpper().Equals(name.ToUpper()));
+
+            if (isDuplicated)
+                throw new UserFriendlyException(L("NationalityNameCanNotBeDuplicated"));
+        }
     }
 }

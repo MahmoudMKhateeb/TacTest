@@ -101,6 +101,10 @@ nav.m-menu__submenu--right span.m-menu__arrow {
   left: 0px !important;
   right: auto !important;
 }
+.ribbon-target {
+  left: 20px !important;
+  right: auto !important;
+}
 .p-checkbox {
   margin-left: 7px !important;
 }

@@ -135,11 +135,11 @@ namespace TACHYON.Trucks.TrucksTypes
             ObjectMapper.Map(input, trucksType);
         }
 
-        [AbpAuthorize(AppPermissions.Pages_TrucksTypes_Delete)]
-        public async Task Delete(EntityDto<long> input)
-        {
-            await _trucksTypeRepository.DeleteAsync(input.Id);
-        }
+        //[AbpAuthorize(AppPermissions.Pages_TrucksTypes_Delete)]
+        //public async Task Delete(EntityDto<long> input)
+        //{
+        //    await _trucksTypeRepository.DeleteAsync(input.Id);
+        //}
 
         [AbpAuthorize(AppPermissions.Pages_TrucksTypes)]
 

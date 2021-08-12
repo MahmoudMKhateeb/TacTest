@@ -47,6 +47,7 @@ namespace TACHYON.Notifications
         Task ShipperShippingRequestFinish(UserIdentifier argsUser, ShippingRequest Request);
         #region Trips
         Task ShipperShippingRequestTripNotifyDriverWhenAssignTrip(UserIdentifier argsUser, ShippingRequestTrip Trip);
+        Task ShipperShippingRequestTripNotifyDriverWhenUnassignedTrip(UserIdentifier argsUser, ShippingRequestTrip Trip);
         Task NotifyDriverWhenAssignToTrip(ShippingRequestTrip Trip);
         Task DriverRejectTrip(ShippingRequestTrip Trip, string driver);
         Task DriverAcceptTrip(ShippingRequestTrip Trip, string driver);

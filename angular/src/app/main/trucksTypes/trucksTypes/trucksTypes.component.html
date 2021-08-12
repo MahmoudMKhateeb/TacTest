@@ -77,12 +77,12 @@
               >
                 <ng-template pTemplate="header">
                   <tr>
-                    <th style="width: 130px;" [hidden]="!isGrantedAny('Pages.TrucksTypes.Edit', 'Pages.TrucksTypes.Delete')">{{ l('Actions') }}</th>
-                    <th style="width: 150px;" pSortableColumn="displayName">
+                    <th style="width: 130px" [hidden]="!isGrantedAny('Pages.TrucksTypes.Edit', 'Pages.TrucksTypes.Delete')">{{ l('Actions') }}</th>
+                    <th style="width: 150px" pSortableColumn="displayName">
                       {{ l('TruckType') }}
                       <p-sortIcon field="trucksType.displayName"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="transportTypeId">
+                    <th style="width: 150px" pSortableColumn="transportTypeId">
                       {{ l('TransportType') }}
                       <p-sortIcon field="transportTypeId"></p-sortIcon>
                     </th>
@@ -90,7 +90,7 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-record="$implicit">
                   <tr>
-                    <td style="width: 130px;" [hidden]="!isGrantedAny('Pages.TrucksTypes.Edit', 'Pages.TrucksTypes.Delete')">
+                    <td style="width: 130px" [hidden]="!isGrantedAny('Pages.TrucksTypes.Edit', 'Pages.TrucksTypes.Delete')">
                       <div class="btn-group dropdown" dropdown container="body">
                         <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
                           <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
@@ -108,26 +108,26 @@
                               >{{ l('Edit') }}</a
                             >
                           </li>
-                          <li>
-                            <a
-                              class="dropdown-item"
-                              href="javascript:;"
-                              *ngIf="permission.isGranted('Pages.TrucksTypes.Delete')"
-                              (click)="deleteTrucksType(record.trucksType)"
-                              >{{ l('Delete') }}</a
-                            >
-                          </li>
+                          <!--                          <li>-->
+                          <!--                            <a-->
+                          <!--                              class="dropdown-item"-->
+                          <!--                              href="javascript:;"-->
+                          <!--                              *ngIf="permission.isGranted('Pages.TrucksTypes.Delete')"-->
+                          <!--                              (click)="deleteTrucksType(record.trucksType)"-->
+                          <!--                              >{{ l('Delete') }}</a-->
+                          <!--                            >-->
+                          <!--                          </li>-->
                           <li>
                             <a href="javascript:;" *ngIf="entityHistoryEnabled" (click)="showHistory(record.trucksType)">{{ l('History') }}</a>
                           </li>
                         </ul>
                       </div>
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('TrucksType') }}</span>
                       {{ record.trucksType.translatedDisplayName }}
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('TransportSubtyp') }}</span>
                       {{ record.transportTypeDisplayName }}
                     </td>

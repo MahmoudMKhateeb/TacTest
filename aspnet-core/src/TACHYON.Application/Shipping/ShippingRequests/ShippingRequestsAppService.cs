@@ -518,6 +518,7 @@ namespace TACHYON.Shipping.ShippingRequests
         public async Task<List<GetAllGoodsCategoriesForDropDownOutput>> GetAllGoodCategoriesForTableDropdown()
         {
             var list = await _lookup_goodCategoryRepository.GetAll()
+                .Where(x=>x.IsActive)
                 .Include(x => x.Translations).ToListAsync();
 
             return ObjectMapper.Map<List<GetAllGoodsCategoriesForDropDownOutput>>(list);
@@ -827,11 +828,9 @@ namespace TACHYON.Shipping.ShippingRequests
 
         public async Task<List<TrucksTypeSelectItemDto>> GetAllTruckTypesByTransportTypeIdForDropdown(int transportTypeId)
         {
-
-
             var list = await _lookup_trucksTypeRepository.GetAll()
                 .Include(x => x.Translations)
-                .Where(x => x.TransportTypeId == transportTypeId).ToListAsync();
+                .Where(x => x.TransportTypeId == transportTypeId && x.IsActive).ToListAsync();
             return ObjectMapper.Map<List<TrucksTypeSelectItemDto>>(list);
             //.Select(x => new SelectItemDto()
             //{

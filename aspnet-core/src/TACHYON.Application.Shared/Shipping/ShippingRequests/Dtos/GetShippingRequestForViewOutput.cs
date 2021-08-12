@@ -9,6 +9,9 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
 {
     public class GetShippingRequestForViewOutput
     {
+
+        public string ReferenceNumber { get; set; }
+
         public ShippingRequestDto ShippingRequest { get; set; }
 
         public List<ShippingRequestBidDto> ShippingRequestBidDtoList { get; set; }

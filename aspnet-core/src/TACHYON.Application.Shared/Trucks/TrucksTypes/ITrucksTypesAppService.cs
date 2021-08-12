@@ -19,7 +19,7 @@ namespace TACHYON.Trucks.TrucksTypes
 
         Task CreateOrEdit(CreateOrEditTrucksTypeDto input);
 
-        Task Delete(EntityDto<long> input);
+        //Task Delete(EntityDto<long> input);
 
 
     }
