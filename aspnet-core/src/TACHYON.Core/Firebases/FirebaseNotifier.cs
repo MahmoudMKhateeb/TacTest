@@ -141,7 +141,7 @@ namespace TACHYON.Firebases
                 }
                 catch 
                 {
-
+                    // todo add log here 
                 }
             }
         }

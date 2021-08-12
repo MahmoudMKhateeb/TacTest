@@ -263,6 +263,7 @@ namespace TACHYON.Web.Controllers
 
 
 
+
             return new AuthenticateResultModel
             {
                 AccessToken = accessToken,
@@ -277,7 +278,7 @@ namespace TACHYON.Web.Controllers
         }
 
         [HttpPost]
-        public async Task MobileAuthenticate(string Username,string Language)
+        public async Task MobileAuthenticate(string Username, string Language)
         {
             if (string.IsNullOrEmpty(Username)) throw new AbpAuthorizationException(L("InvalidMobileNumber"));
             var user = await _userManager.GetUserByDriverPhoneNumberAsync(Username);
@@ -298,8 +299,8 @@ namespace TACHYON.Web.Controllers
             {
                 throw new AbpAuthorizationException(L("InvalidMobileNumber"));
             }
-            if (MobileTest != model.Username) 
-            await _mobileManager.OTPValidate(user.Id, model.OTP);
+            if (MobileTest != model.Username)
+                await _mobileManager.OTPValidate(user.Id, model.OTP);
 
             //  get tenantId from UserName
 
@@ -340,8 +341,8 @@ namespace TACHYON.Web.Controllers
                 loginResult.Identity.ReplaceClaim(new Claim(AppConsts.SecurityStampKey, loginResult.User.SecurityStamp));
             }
 
-            var accessToken = CreateAccessToken(await CreateJwtClaims(loginResult.Identity, loginResult.User));
-            var refreshToken = CreateRefreshToken(await CreateJwtClaims(loginResult.Identity, loginResult.User, tokenType: TokenType.RefreshToken));
+            var accessToken = CreateAccessToken(await CreateJwtClaims(loginResult.Identity, loginResult.User, mobileDeviceId: model.DeviceId, mobileDeviceToken: model.DeviceToken));
+            var refreshToken = CreateRefreshToken(await CreateJwtClaims(loginResult.Identity, loginResult.User, tokenType: TokenType.RefreshToken, mobileDeviceId: model.DeviceId, mobileDeviceToken: model.DeviceToken));
 
 
             if (!string.IsNullOrEmpty(model.Language))
@@ -352,8 +353,11 @@ namespace TACHYON.Web.Controllers
                     model.Language
                 );
             }
+
+            //DeviceToken
             if (!string.IsNullOrEmpty(model.DeviceToken) && !string.IsNullOrEmpty(model.DeviceId))
             {
+
                 await _userDeviceTokenManager.CreateOrEdit(new UserDeviceTokenDto { DeviceId = model.DeviceId, Token = model.DeviceToken, ExpireDate = model.DeviceExpireDate, UserId = loginResult.User.Id });
             }
 
@@ -365,7 +369,7 @@ namespace TACHYON.Web.Controllers
                 RefreshTokenExpireInSeconds = (int)_configuration.RefreshTokenExpiration.TotalSeconds,
                 EncryptedAccessToken = GetEncryptedAccessToken(accessToken),
                 UserId = loginResult.User.Id,
-                TripDto=await _shippingRequestsTripManager.GetCurrentDriverTrip(loginResult.User.Id)
+                TripDto = await _shippingRequestsTripManager.GetCurrentDriverTrip(loginResult.User.Id)
             };
         }
 
@@ -421,6 +425,8 @@ namespace TACHYON.Web.Controllers
                 var tokenValidityKeyInClaims = User.Claims.First(c => c.Type == AppConsts.TokenValidityKey);
                 await _userManager.RemoveTokenValidityKeyAsync(_userManager.GetUser(AbpSession.ToUserIdentifier()), tokenValidityKeyInClaims.Value);
                 _cacheManager.GetCache(AppConsts.TokenValidityKey).Remove(tokenValidityKeyInClaims.Value);
+
+                await _userDeviceTokenManager.DeleteUserDeviceToken();
 
                 if (AllowOneConcurrentLoginPerUser())
                 {
@@ -858,7 +864,7 @@ namespace TACHYON.Web.Controllers
             return SimpleStringCipher.Instance.Encrypt(accessToken, AppConsts.DefaultPassPhrase);
         }
 
-        private async Task<IEnumerable<Claim>> CreateJwtClaims(ClaimsIdentity identity, User user, TimeSpan? expiration = null, TokenType tokenType = TokenType.AccessToken)
+        private async Task<IEnumerable<Claim>> CreateJwtClaims(ClaimsIdentity identity, User user, TimeSpan? expiration = null, TokenType tokenType = TokenType.AccessToken, string mobileDeviceId = null, string mobileDeviceToken = null)
         {
             var tokenValidityKey = Guid.NewGuid().ToString();
             var claims = identity.Claims.ToList();
@@ -875,8 +881,10 @@ namespace TACHYON.Web.Controllers
                 new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.Now.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64),
                 new Claim(AppConsts.TokenValidityKey, tokenValidityKey),
                 new Claim(AppConsts.UserIdentifier, user.ToUserIdentifier().ToUserIdentifierString()),
-                new Claim(AppConsts.TokenType, tokenType.To<int>().ToString())
-             });
+                new Claim(AppConsts.TokenType, tokenType.To<int>().ToString()),
+                new Claim(AppConsts.MobileDeviceId, mobileDeviceId),
+                new Claim(AppConsts.MobileDeviceToken, mobileDeviceToken)
+            });
 
             if (!expiration.HasValue)
             {
