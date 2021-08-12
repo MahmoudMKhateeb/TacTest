@@ -49,6 +49,7 @@ namespace TACHYON.Notifications
 
         #region Trip
         public const string ShipperShippingRequestTripNotifyDriverWhenAssignTrip = "App.ShipperShippingRequestTripNotifyDriverWhenAssignTrip";
+        public const string ShipperShippingRequestTripNotifyDriverWhenUnassignedTrip = "App.ShipperShippingRequestTripNotifyDriverWhenUnassignedTrip";
         public const string NotifyDriverWhenAssignToTrip = "App.NotifyDriverWhenAssignToTrip";
         public const string DriverRejectTrip = "App.DriverRejectTrip";
         public const string DriverAcceptTrip = "App.DriverAcceptTrip";
