@@ -54,6 +54,16 @@ namespace TACHYON.Web.Url
             return resetLink;
         }
 
+        public string CreateInvoiceDetailsFormat(long invoiceId)
+        => WebUrlService.GetSiteRootAddress()
+               .EnsureEndsWith('/') +
+           "app/main/invoices/detail/" + invoiceId;
+
+
+        public string GetTachyonPlatformLoginUrl()
+            => WebUrlService.GetSiteRootAddress()
+                .EnsureEndsWith('/') + "account/login";
+
 
         private string GetTenancyName(int? tenantId)
         {
