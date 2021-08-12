@@ -23,5 +23,15 @@ namespace TACHYON.Test.Base.Url
         {
             return "http://test.com/";
         }
+
+        public string CreateInvoiceDetailsFormat(long invoiceId)
+        {
+            return "http://test.com/";
+        }
+
+        public string GetTachyonPlatformLoginUrl()
+        {
+           return "http://test.com/";
+        }
     }
 }
