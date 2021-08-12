@@ -1,7 +1,4 @@
-﻿
-
-using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Linq.Dynamic.Core;
 using Abp.Linq.Extensions;
 using System.Collections.Generic;
@@ -13,6 +10,7 @@ using Abp.Application.Services.Dto;
 using TACHYON.Authorization;
 using Abp.Extensions;
 using Abp.Authorization;
+using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 
 namespace TACHYON.UnitOfMeasures
@@ -78,6 +76,9 @@ namespace TACHYON.UnitOfMeasures
 
 		 public async Task CreateOrEdit(CreateOrEditUnitOfMeasureDto input)
          {
+
+             await IsUintOfMeasureNameDuplicatedOrEmpty(input.DisplayName);
+
             if(input.Id == null){
 				await Create(input);
 			}
@@ -118,5 +119,19 @@ namespace TACHYON.UnitOfMeasures
                      DisplayName = x.DisplayName
                  }).ToListAsync();
          }
+
+
+         private async Task IsUintOfMeasureNameDuplicatedOrEmpty(string displayName) 
+         {
+             if (displayName.IsNullOrEmpty() || displayName.IsNullOrWhiteSpace())
+                 throw new UserFriendlyException(L("UintOfMeasureNameCanNotBeEmpty"));
+
+             var isDuplicated = await _unitOfMeasureRepository.GetAll()
+                 .AnyAsync(x => x.DisplayName.ToUpper().Equals(displayName.ToUpper()));
+
+             if (isDuplicated)
+                 throw new UserFriendlyException(L("UintOfMeasureNameCanNotBeDuplicated"));
+         }
+
     }
 }
