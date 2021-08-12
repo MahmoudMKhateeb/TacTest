@@ -50,13 +50,15 @@
 
 .shipCard > div {
   display: flex;
+  justify-content: space-between;
 }
 
 .shipCard .infoBasic {
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   flex-wrap: wrap;
-  min-height: 58px;
+  min-height: 50px;
+  margin: 3px;
 }
 
 .shipCard .infoBasic .companyName {
@@ -107,17 +109,17 @@
   text-align: right;
 }
 
-.shipCard .detailsRoad::before {
-  content: '';
-  position: absolute;
-  left: -3px;
-  top: 6px;
-  width: 16px;
-  height: 100%;
-  background-repeat: no-repeat;
-  background-image: url('/assets/custom/imgs/iconRoad.png');
-  background-size: 11px calc(100% - 31px);
-}
+//.shipCard .detailsRoad::before {
+//  content: '';
+//  position: absolute;
+//  left: -3px;
+//  top: 6px;
+//  width: 16px;
+//  height: 100%;
+//  background-repeat: no-repeat;
+//  background-image: url('/assets/custom/imgs/iconRoad.png');
+//  background-size: 11px calc(100% - 31px);
+//}
 
 .shipCard.rtl .detailsRoad::before {
   left: unset;
@@ -125,7 +127,7 @@
 }
 
 .shipCard .detailsRoad > div {
-  flex: 0 0 100%;
+  flex: 0 0 50%;
   max-width: 100%;
 }
 
@@ -154,7 +156,6 @@
 .shipCard .moreDetails {
   white-space: nowrap;
   flex-wrap: wrap;
-  margin-bottom: 15px;
 }
 
 .shipCard .moreDetails > div {
@@ -246,6 +247,7 @@
   -moz-border-radius: 50px;
   -ms-border-radius: 50px;
   -o-border-radius: 50px;
+  margin: inherit;
 }
 
 .shipCard .infoHighLight:hover {
@@ -285,7 +287,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 8px 12px;
+  padding: 3px 12px;
   font-size: 15px;
   font-weight: 500;
   color: #fff;
@@ -294,7 +296,7 @@
   -moz-border-radius: 4px;
   -ms-border-radius: 4px;
   -o-border-radius: 4px;
-  margin: 10px 12px 10px 0;
+  margin: 5px;
 }
 
 .shipCard.rtl .actions a {

@@ -54,86 +54,9 @@
             </label>
           </div>
 
-          <ng-container *ngIf="Period.periodType == 3 || Period.periodType == 4">
-            <div class="form-group">
-              <label>{{ 'FreqInterval' | localize }}</label>
-              <input class="form-control" type="number" name="freqInterval" min="1" [(ngModel)]="Period.freqInterval" />
-              <span>{{ Period.periodType == 3 ? l('FreqIntervalDays') : l('FreqIntervalWeeks') }}</span>
-            </div>
-          </ng-container>
-
-          <ng-container *ngIf="Period.periodType == 4">
-            <div class="form-group">
-              <label>{{ 'WeekDays' | localize }}</label>
-              <select name="FreqRecurrenceWeekDays" [(ngModel)]="FreqRecurrenceWeekDays" class="form-control" multiple>
-                <option [value]="w.value" *ngFor="let w of Weeks">
-                  {{ w.key }}
-                </option>
-              </select>
-            </div>
-          </ng-container>
-
-          <ng-container *ngIf="Period.periodType == 5">
-            <div class="form-group">
-              <label>{{ 'FreqInterval' | localize }}</label>
-
-              <div class="form-check">
-                <input class="form-check-input" type="radio" name="RDMonthType" id="RDMonthTypeDay" value="1" [(ngModel)]="MonthType" />
-                <label class="form-check-label" for="inlineRadio1">{{ 'Day' | localize }}</label>
-                <div class="form-group">
-                  <input
-                    class="form-control"
-                    type="number"
-                    name="FreqIntervalMonthlyperday"
-                    min="1"
-                    [(ngModel)]="FreqIntervalMonthlyperday"
-                    [attr.disabled]="MonthType != '1' ? '' : null"
-                  />
-                  <span>{{ 'OFMonth_S' | localize }}</span>
-                </div>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input" type="radio" name="RDMonthType" id="RDMonthTypeThe" value="2" [(ngModel)]="MonthType" />
-                <label class="form-check-label" for="inlineRadio2">{{ 'The' | localize }}</label>
-                <div class="form-row">
-                  <div class="col-md-4 mb-3">
-                    <select
-                      name="Period.freqRelativeInterval"
-                      [(ngModel)]="Period.freqRelativeInterval"
-                      [attr.disabled]="MonthType != '2' ? '' : null"
-                      class="form-control"
-                    >
-                      <option [value]="R.key" *ngFor="let R of FreRelativeInterval">
-                        {{ R.value | localize }}
-                      </option>
-                    </select>
-                  </div>
-                  <div class="col-md-4 mb-3">
-                    <select
-                      name="FreqIntervalMonthlyperweek"
-                      [(ngModel)]="FreqIntervalMonthlyperweek"
-                      [attr.disabled]="MonthType != '2' ? '' : null"
-                      class="form-control"
-                    >
-                      <option [value]="w.value" *ngFor="let w of Weeks">
-                        {{ w.key }}
-                      </option>
-                    </select>
-                  </div>
-                  <div class="col-md-4 mb-3">
-                    <span>{{ 'OFMonth_S' | localize }}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="form-group">
-              <label>{{ 'Months' | localize }}</label>
-              <select name="FreqRecurrenceMonths" [(ngModel)]="FreqRecurrenceMonths" class="form-control" multiple>
-                <option [value]="m.value" *ngFor="let m of Months">
-                  {{ m.key }}
-                </option>
-              </select>
-            </div>
+          <ng-container *ngIf="Period.periodType == 3 || Period.periodType == 4 || Period.periodType == 5">
+            <hr />
+            <quartz-cron name="cronexpression" [(ngModel)]="Period.cronexpression"></quartz-cron>
           </ng-container>
         </div>
 

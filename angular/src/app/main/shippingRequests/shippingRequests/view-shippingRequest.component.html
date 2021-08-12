@@ -10,6 +10,15 @@
     </sub-header>
 
     <div [class]="containerClass">
+      <!--  start:: PriceOfferingSection -->
+      <ng-template [ngIf]="canSeePriceOffers()">
+        <shipping-request-offers-list
+          [shippingRequestId]="activeShippingRequestId"
+          [isTachyonDeal]="shippingRequestforView.shippingRequest.isTachyonDeal"
+          [Channel]="shippingRequestforView.shippingRequest.isBid ? 1 : 2"
+        ></shipping-request-offers-list>
+      </ng-template>
+      <!--  end:: PricOfferingSection -->
       <div class="card card-custom gutter-b">
         <!--  start of card::form-->
         <div class="card-header">
@@ -19,9 +28,7 @@
         <div class="card-body">
           <div *ngIf="shippingRequestforView.shippingRequest.hasAccident" class="alert alert-custom alert-light-warning" role="alert">
             <div class="alert-icon"><i class="flaticon-warning"></i></div>
-            <div class="alert-text">
-              You have trips that contain accidents
-            </div>
+            <div class="alert-text">You have trips that contain accidents</div>
           </div>
           <div
             *ngIf="feature.isEnabled('App.TachyonDealer') && !shippingRequestforView.shippingRequest.isBid"
@@ -159,9 +166,7 @@
                       <div>
                         <div class="input-group">
                           <div class="input-group-append">
-                            <span class="input-group-text">
-                              KG
-                            </span>
+                            <span class="input-group-text"> KG </span>
                           </div>
                           <input
                             type="number"
@@ -327,15 +332,6 @@
         <direct-request [shippingRequestId]="activeShippingRequestId"></direct-request>
       </ng-template>
       <!--  end:: DirectOffers        -->
-      <!--  start:: PriceOfferingSection -->
-      <ng-template [ngIf]="canSeePriceOffers()">
-        <shipping-request-offers-list
-          [shippingRequestId]="activeShippingRequestId"
-          [isTachyonDeal]="shippingRequestforView.shippingRequest.isTachyonDeal"
-          [Channel]="shippingRequestforView.shippingRequest.isBid ? 1 : 2"
-        ></shipping-request-offers-list>
-      </ng-template>
-      <!--  end:: PricOfferingSection -->
 
       <!--   Start::Trips Section     -->
       <!--        !feature.isEnabled('App.TachyonDealer') || -->

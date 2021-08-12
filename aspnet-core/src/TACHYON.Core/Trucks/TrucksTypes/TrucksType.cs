@@ -25,5 +25,6 @@ namespace TACHYON.Trucks.TrucksTypes
         public TransportType TransportTypeFk { get; set; }
 
         public ICollection<TrucksTypesTranslation> Translations { get; set; }
+        public bool IsActive { get; set; } = true;
     }
 }

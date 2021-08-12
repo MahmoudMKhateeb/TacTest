@@ -78,22 +78,24 @@
               >
                 <ng-template pTemplate="header">
                   <tr>
-                    <th style="width: 130px;" [hidden]="!isGrantedAny('Pages.GoodCategories.Edit', 'Pages.GoodCategories.Delete')">
+                    <th style="width: 130px" [hidden]="!isGrantedAny('Pages.GoodCategories.Edit', 'Pages.GoodCategories.Delete')">
                       {{ l('Actions') }}
                     </th>
-                    <th style="width: 150px;" pSortableColumn="fatherId">
+                    <th style="width: 150px" pSortableColumn="fatherId">
                       {{ l('Category') }}
                       <p-sortIcon field="goodCategory.fatherId"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="displayName">
+                    <th style="width: 150px">
                       {{ l('SubCategory') }}
-                      <p-sortIcon field="goodCategory.displayName"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px">
+                      {{ l('IsActive') }}
                     </th>
                   </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-record="$implicit">
                   <tr>
-                    <td style="width: 130px;" [hidden]="!isGrantedAny('Pages.GoodCategories.Edit', 'Pages.GoodCategories.Delete')">
+                    <td style="width: 130px" [hidden]="!isGrantedAny('Pages.GoodCategories.Edit', 'Pages.GoodCategories.Delete')">
                       <div class="btn-group dropdown" dropdown container="body">
                         <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
                           <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
@@ -111,7 +113,7 @@
                               >{{ l('Edit') }}</a
                             >
                           </li>
-                          <li>
+                          <!-- <li>
                             <a
                               class="dropdown-item"
                               href="javascript:;"
@@ -119,20 +121,25 @@
                               (click)="deleteGoodCategory(record.goodCategory)"
                               >{{ l('Delete') }}</a
                             >
-                          </li>
+                          </li> -->
+
                           <li>
                             <a href="javascript:;" *ngIf="entityHistoryEnabled" (click)="showHistory(record.goodCategory)">{{ l('History') }}</a>
                           </li>
                         </ul>
                       </div>
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('Category') }}</span>
                       {{ record.fatherCategoryName || record.goodCategory.displayName }}
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('SubCategory') }}</span>
                       {{ record.fatherCategoryName ? record.goodCategory.displayName : '' }}
+                    </td>
+                    <td style="width: 150px">
+                      <span class="ui-column-title"> {{ l('IsActive') }}</span>
+                      {{ record.goodCategory.isActive }}
                     </td>
                   </tr>
                 </ng-template>

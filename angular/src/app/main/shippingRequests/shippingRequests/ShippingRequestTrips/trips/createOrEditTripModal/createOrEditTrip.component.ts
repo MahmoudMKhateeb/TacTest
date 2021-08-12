@@ -107,6 +107,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
 
   TripsServiceSubscription: any;
   PointsServiceSubscription: any;
+  wayBillIsDownloading: boolean;
   ngOnInit() {
     //link the trip from the shared service to the this component
     this.TripsServiceSubscription = this._TripService.currentActiveTrip.subscribe((res) => (this.trip = res));
@@ -171,6 +172,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       this._TripService.updateActiveTripId(null);
       this._PointsService.updateSinglePoint(new CreateOrEditRoutPointDto());
       this._PointsService.updateWayPoints([]);
+      this._TripService.currentShippingRequest.subscribe((res) => (this.trip.startTripDate = res.shippingRequest.startTripDate));
       this.trip.createOrEditDocumentFileDto = new CreateOrEditDocumentFileDto();
       this.trip.createOrEditDocumentFileDto.extn = '_';
       this.trip.createOrEditDocumentFileDto.name = '_';
@@ -240,9 +242,15 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     }
   }
 
-  DownloadSingleDropWaybillPdf(id: number): void {
-    this._waybillsServiceProxy.getSingleDropOrMasterWaybillPdf(id).subscribe((result) => {
+  /**
+   * Downloads Single DropWaybill
+   * @param tripId
+   */
+  DownloadSingleDropWaybillPdf(tripId: number): void {
+    this.wayBillIsDownloading = true;
+    this._waybillsServiceProxy.getSingleDropOrMasterWaybillPdf(tripId).subscribe((result) => {
       this._fileDownloadService.downloadTempFile(result);
+      this.wayBillIsDownloading = false;
     });
   }
 

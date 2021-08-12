@@ -43,8 +43,28 @@ export class AppNavigationService {
             undefined
           ),
           new AppMenuItem('SubmittedDocuments', 'Pages.DocumentFiles', '', '/app/main/documentFiles/documentFiles'),
-          new AppMenuItem('TrucksSubmittedDocuments', 'Pages.DocumentFiles', '', '/app/main/documentFiles/TrucksSubmittedDocuments'),
-          new AppMenuItem('DriversSubmittedDocuments', 'Pages.DocumentFiles', '', '/app/main/documentFiles/DriversSubmittedDocuments'),
+          new AppMenuItem(
+            'TrucksSubmittedDocuments',
+            'Pages.DocumentFiles',
+            '',
+            '/app/main/documentFiles/TrucksSubmittedDocuments',
+            [],
+            undefined,
+            undefined,
+            undefined,
+            () => this.isEnabled('App.Carrier') || this.isEnabled('App.TachyonDealer')
+          ),
+          new AppMenuItem(
+            'DriversSubmittedDocuments',
+            'Pages.DocumentFiles',
+            '',
+            '/app/main/documentFiles/DriversSubmittedDocuments',
+            [],
+            undefined,
+            undefined,
+            undefined,
+            () => this.isEnabled('App.Carrier') || this.isEnabled('App.TachyonDealer')
+          ),
           //TODO: the contracts subMenu Need Permission and Route
           new AppMenuItem(
             'contracts',
@@ -55,7 +75,7 @@ export class AppNavigationService {
             undefined,
             undefined,
             undefined,
-            () => this._featureCheckerService.isEnabled('App.Carrier') || this._featureCheckerService.isEnabled('App.Shipper')
+            () => this.isEnabled('App.Carrier') || this.isEnabled('App.Shipper')
           ),
 
           // new AppMenuItem('TenantRequiredDocuments', '', 'flaticon-settings', '/app/admin/tenantRequiredDocuments'),
@@ -87,12 +107,12 @@ export class AppNavigationService {
             undefined,
             undefined,
             undefined,
-            () => this._featureCheckerService.isEnabled('App.SendDirectRequest') || !this._appSessionService.tenantId
+            () => this.isEnabled('App.SendDirectRequest') || !this._appSessionService.tenantId
           ),
         ],
         undefined,
         undefined,
-        () => this._featureCheckerService.isEnabled('App.TachyonDealer') || !this._appSessionService.tenantId
+        () => this.isEnabled('App.TachyonDealer') || !this._appSessionService.tenantId
       ),
       //end of operations
       //start of requests
@@ -115,11 +135,11 @@ export class AppNavigationService {
             undefined,
             undefined,
             undefined,
-            () => this._featureCheckerService.isEnabled('App.Shipper')
+            () => this.isEnabled('App.Shipper')
           ),
-          new AppMenuItem('ShippingRequests', 'Pages.ShippingRequests', '', '/app/main/shippingRequests/shippingRequests'),
+          new AppMenuItem('MyShippingRequests', 'Pages.ShippingRequests', '', '/app/main/shippingRequests/shippingRequests'),
           new AppMenuItem('Marketplace', '', '', '/app/main/marketplace/list', undefined, undefined, undefined, undefined, () =>
-            this._featureCheckerService.isEnabled('App.Carrier')
+            this.isEnabled('App.Carrier')
           ),
           new AppMenuItem(
             'Offers',
@@ -130,22 +150,22 @@ export class AppNavigationService {
             undefined,
             undefined,
             undefined,
-            () => this._featureCheckerService.isEnabled('App.Carrier') || this._featureCheckerService.isEnabled('App.Shipper')
+            () => this.isEnabled('App.Carrier') || this.isEnabled('App.Shipper')
           ),
           new AppMenuItem('DirectShippingRequests', '', '', '/app/main/directrequest/list', undefined, undefined, undefined, undefined, () =>
-            this._featureCheckerService.isEnabled('App.Carrier')
+            this.isEnabled('App.Carrier')
           ),
           // TODO this Hole Component need To be removed Later
           // new AppMenuItem('waybills', undefined, 'flaticon-more', '/app/admin/waybills/waybills'),
         ],
         undefined,
         undefined,
-        () => this._featureCheckerService.isEnabled('App.Shipper')
+        () => this.isEnabled('App.Shipper')
       ),
       // end shipper menu
       //start carrier menu
       new AppMenuItem(
-        'CarrierShippingRequests',
+        'ShippingRequests',
         '',
         'map, navigation, location, navigate, book, bookmark, pin.svg',
         '/app/main/comingSoon',
@@ -162,9 +182,9 @@ export class AppNavigationService {
             undefined,
             undefined,
             undefined,
-            () => this._featureCheckerService.isEnabled('App.Shipper')
+            () => this.isEnabled('App.Shipper')
           ),
-          new AppMenuItem('ShippingRequests', 'Pages.ShippingRequests', '', '/app/main/shippingRequests/shippingRequests'),
+          new AppMenuItem('MyShippingRequests', 'Pages.ShippingRequests', '', '/app/main/shippingRequests/shippingRequests'),
           new AppMenuItem(
             'Marketplace',
             '',
@@ -174,7 +194,7 @@ export class AppNavigationService {
             undefined,
             undefined,
             undefined,
-            () => this._featureCheckerService.isEnabled('App.Carrier') || this._featureCheckerService.isEnabled('App.Shipper')
+            () => this.isEnabled('App.Carrier') || this.isEnabled('App.Shipper')
           ),
           new AppMenuItem(
             'Offers',
@@ -185,7 +205,7 @@ export class AppNavigationService {
             undefined,
             undefined,
             undefined,
-            () => this._featureCheckerService.isEnabled('App.Carrier') || this._featureCheckerService.isEnabled('App.Shipper')
+            () => this.isEnabled('App.Carrier') || this.isEnabled('App.Shipper')
           ),
           new AppMenuItem(
             'DirectShippingRequests',
@@ -196,14 +216,14 @@ export class AppNavigationService {
             undefined,
             undefined,
             undefined,
-            () => this._featureCheckerService.isEnabled('App.Carrier') || this._featureCheckerService.isEnabled('App.SendDirectRequest')
+            () => this.isEnabled('App.Carrier') || this.isEnabled('App.SendDirectRequest')
           ),
           // TODO this Hole Component need To be removed Later
           // new AppMenuItem('waybills', undefined, 'flaticon-more', '/app/admin/waybills/waybills'),
         ],
         undefined,
         undefined,
-        () => this._featureCheckerService.isEnabled('App.Carrier')
+        () => this.isEnabled('App.Carrier')
       ),
       // end carrier menu
 
@@ -219,7 +239,7 @@ export class AppNavigationService {
         undefined,
         undefined,
         undefined,
-        () => this._featureCheckerService.isEnabled('App.Carrier') || this._featureCheckerService.isEnabled('App.Shipper')
+        () => this.isEnabled('App.Carrier') || this.isEnabled('App.Shipper')
       ),
       //end of shipment tracking
       new AppMenuItem(
@@ -249,12 +269,12 @@ export class AppNavigationService {
             undefined,
             undefined,
             undefined,
-            () => this._featureCheckerService.isEnabled('App.Carrier')
+            () => this.isEnabled('App.Carrier')
           ),
         ],
         undefined,
         undefined,
-        () => this._featureCheckerService.isEnabled('App.Carrier')
+        () => this.isEnabled('App.Carrier')
       ),
 
       //TODO: not all of these are visable to the TachyonDealer Need to Fix the Permisions in order for it to work
@@ -276,7 +296,7 @@ export class AppNavigationService {
             undefined,
             undefined,
             undefined,
-            () => this._featureCheckerService.isEnabled('App.TachyonDealer') || !this._appSessionService.tenantId
+            () => this.isEnabled('App.TachyonDealer') || !this._appSessionService.tenantId
           ),
           new AppMenuItem(
             'PaymentMethods',
@@ -287,7 +307,7 @@ export class AppNavigationService {
             undefined,
             undefined,
             undefined,
-            () => this._featureCheckerService.isEnabled('App.TachyonDealer') || !this._appSessionService.tenantId
+            () => this.isEnabled('App.TachyonDealer') || !this._appSessionService.tenantId
           ),
           new AppMenuItem(
             'BalnaceRecharges',
@@ -298,8 +318,21 @@ export class AppNavigationService {
             undefined,
             undefined,
             undefined,
-            () => this._featureCheckerService.isEnabled('App.TachyonDealer') || !this._appSessionService.tenantId
+            () => this.isEnabled('App.TachyonDealer') || !this._appSessionService.tenantId
           ),
+          new AppMenuItem(
+            'SubmitInvoiceForHost',
+            //todo make it Pages.Administration.invoices
+            '',
+            '',
+            '/app/main/invoices/submitinvoice',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            () => !this._appSessionService.tenantId
+          ),
+
           new AppMenuItem(
             'SubmitInvoice',
             'Pages.Invoices',
@@ -310,30 +343,25 @@ export class AppNavigationService {
             undefined,
             undefined,
             undefined,
-            () =>
-              this._featureCheckerService.isEnabled('App.Carrier') ||
-              this._featureCheckerService.isEnabled('App.TachyonDealer') ||
-              !this._appSessionService.tenantId
+            () => this.isEnabled('App.Carrier') || this.isEnabled('App.TachyonDealer')
           ),
-          new AppMenuItem(
-            'InvoicesProformas',
-            'Pages.Invoices',
-            '',
-            '/app/main/invoices/proformas',
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            () =>
-              this._featureCheckerService.isEnabled('App.Shipper') ||
-              this._featureCheckerService.isEnabled('App.TachyonDealer') ||
-              !this._appSessionService.tenantId
-          ),
+
+          // new AppMenuItem(
+          //   'InvoicesProformas',
+          //   'Pages.Invoices',
+          //   '',
+          //   '/app/main/invoices/proformas',
+          //   undefined,
+          //   undefined,
+          //   undefined,
+          //   undefined,
+          //   () => this.isEnabled('App.Shipper') || this.isEnabled('App.TachyonDealer') || !this._appSessionService.tenantId
+          // ),
           new AppMenuItem('FinancialTransActionMenu', 'Pages.Invoices.Transaction', '', '/app/main/invoices/transaction'),
         ]
         // undefined,
         // undefined,
-        // () => !this._featureCheckerService.isEnabled('App.TachyonDealer')
+        // () => !this.isEnabled('App.TachyonDealer')
       ),
       //end of  Invoices
 
@@ -353,7 +381,7 @@ export class AppNavigationService {
         ]
         // undefined,
         // undefined,
-        // () => !this._featureCheckerService.isEnabled('App.TachyonDealer')
+        // () => !this.isEnabled('App.TachyonDealer')
       ),
       //end of report
 
@@ -422,7 +450,7 @@ export class AppNavigationService {
         ],
         undefined,
         undefined
-        // () => this._featureCheckerService.isEnabled('App.Host')
+        // () => this.isEnabled('App.Host')
       ),
       //end of  TMSsettings
 
@@ -457,11 +485,11 @@ export class AppNavigationService {
       //   ],
       //   undefined,
       //   undefined,
-      //   () => this._featureCheckerService.isEnabled('App.Carrier')
+      //   () => this.isEnabled('App.Carrier')
       // ),
 
       // new AppMenuItem('VasPrices', 'Pages.VasPrices', 'flaticon-more', '/app/main/vases/vasPrices', undefined, undefined, undefined, undefined, () =>
-      // this._featureCheckerService.isEnabled('App.Carrier')
+      // this.isEnabled('App.Carrier')
       // ),
 
       new AppMenuItem(
@@ -478,7 +506,7 @@ export class AppNavigationService {
         //added these line because the tachyon dealer has the above permision and he suppose not to see this menu
         undefined,
         undefined,
-        () => !this._featureCheckerService.isEnabled('App.TachyonDealer') && !this._featureCheckerService.isEnabled('App.Carrier')
+        () => !this.isEnabled('App.TachyonDealer') && !this.isEnabled('App.Carrier')
       ),
 
       // new AppMenuItem(
@@ -493,7 +521,7 @@ export class AppNavigationService {
       //   ],
       //   undefined,
       //   undefined,
-      //   () => this._featureCheckerService.isEnabled('App.Shipper')
+      //   () => this.isEnabled('App.Shipper')
       // ),
 
       //host
@@ -560,7 +588,7 @@ export class AppNavigationService {
             undefined
           ),
 
-          new AppMenuItem('AuditLogs', 'Pages.Administration.AuditLogs', '', '/app/admin/auditLogs'),
+          // new AppMenuItem('AuditLogs', 'Pages.Administration.AuditLogs', '', '/app/admin/auditLogs'),
           new AppMenuItem('Maintenance', 'Pages.Administration.Host.Maintenance', '', '/app/admin/maintenance'),
           // new AppMenuItem(
           //   'Subscription',
@@ -646,7 +674,7 @@ export class AppNavigationService {
             ],
             undefined,
             [],
-            () => this._featureCheckerService.isEnabled('App.Carrier')
+            () => this.isEnabled('App.Carrier')
           ),
           new AppMenuItem(
             'GeneralSettings',
@@ -675,9 +703,9 @@ export class AppNavigationService {
       //       undefined,
       //       undefined,
       //       () =>
-      //         this._featureCheckerService.isEnabled('App.shippingRequest') ||
-      //         this._featureCheckerService.isEnabled('App.TachyonDealer') ||
-      //         this._featureCheckerService.isEnabled('App.Broker')
+      //         this.isEnabled('App.shippingRequest') ||
+      //         this.isEnabled('App.TachyonDealer') ||
+      //         this.isEnabled('App.Broker')
       //     ),
       //   ]
       // ),
@@ -713,7 +741,7 @@ export class AppNavigationService {
       //   [new AppMenuItem('Marketplace', '', 'label label-danger label-dot', '/app/main/marketPlace/marketPlace')],
       //   undefined,
       //   undefined,
-      //   () => this._featureCheckerService.isEnabled('App.Carrier')
+      //   () => this.isEnabled('App.Carrier')
       // ),
       //Host
 
@@ -740,12 +768,12 @@ export class AppNavigationService {
       //   undefined,
       //   undefined,
       //   undefined,
-      //   () => this._featureCheckerService.isEnabled('App.Carrier')
+      //   () => this.isEnabled('App.Carrier')
       // ),
 
       // Host
 
-      //   this._featureCheckerService.isEnabled('App.Carrier')
+      //   this.isEnabled('App.Carrier')
       // ),
 
       // new AppMenuItem(
@@ -757,7 +785,7 @@ export class AppNavigationService {
       //   undefined,
       //   undefined,
       //   undefined,
-      //   () => this._featureCheckerService.isEnabled('App.Carrier') || this._featureCheckerService.isEnabled('App.OffersMarketPlace')
+      //   () => this.isEnabled('App.Carrier') || this.isEnabled('App.OffersMarketPlace')
       // ),
 
       //new AppMenuItem('DemoUiComponents', 'Pages.DemoUiComponents', 'flaticon-shapes', '/app/admin/demo-ui-components'),
@@ -845,5 +873,9 @@ export class AppNavigationService {
     });
 
     return menuItems;
+  }
+
+  isEnabled(featureName: string) {
+    return this._featureCheckerService.isEnabled(featureName);
   }
 }

@@ -11,7 +11,7 @@
 
     <div class="container-fluid">
       <div class="row">
-        <div class="col-12 col-lg-6 mb-4" *ngFor="let item of Items">
+        <div class="col-12 mb-4" *ngFor="let item of Items">
           <ng-template [ngIf]="!Channel"> </ng-template>
           <div
             class="shipCard {{ item.isTachyonDeal ? 'tachyonDialer' : '' }}
@@ -20,7 +20,6 @@
                 {{ (item.status == 3 || item.status == 4) && !Channel ? ' shipCardRed' : '' }}
                {{ direction == 'rtl' ? ' rtl' : '' }}"
           >
-            <img class="markTachyon" src="/assets/custom/imgs/mark.svg" alt="" />
             <div class="infoBasic">
               <div class="serialNumber">
                 <a href="javascript:void(0)">{{ item.referenceNumber }}</a>
@@ -36,20 +35,24 @@
               <b *ngIf="item.remainingDays == '0' && Channel == 1 && item.bidStatusTitle" class="infoHighLight red stautsTruck">
                 {{ l(item.bidStatusTitle) }}
               </b>
+
               <b *ngIf="Channel == 2 || Channel == 10" class="infoHighLight red stautsTruck">
                 {{ l(item.directRequestStatusTitle) }}
               </b>
+
+              <b *ngIf="item.numberOfCompletedTrips >= item.numberOfTrips" class="infoHighLight green stautsTruck">{{ l('Complated') }}</b>
+              <b *ngIf="item.numberOfCompletedTrips < item.numberOfTrips" class="infoHighLight red stautsTruck">{{ l('InProgress') }}</b>
               <b *ngIf="!Channel && item.statusTitle" class="infoHighLight green stautsTruck">
                 {{ l(item.statusTitle) }}
               </b>
             </div>
             <div class="detailsRoad">
               <div class="from">
-                <p class="pickup">{{ l('CityOrigin') }}</p>
+                <p class="pickup">{{ l('Origin') }}</p>
                 <p>{{ item.originCity }}</p>
               </div>
               <div class="to">
-                <p class="delivery">{{ l('DestinationDelivery') }}</p>
+                <p class="delivery">{{ l('Destination') }}</p>
                 <p>{{ item.destinationCity }}</p>
               </div>
             </div>
@@ -57,8 +60,7 @@
             <div class="moreDetails">
               <div *ngIf="item.rangeDate" class="dateRange">
                 <p>
-                  <img src="/assets/custom/imgs/time.svg" width="16" alt="" />
-                  {{ l('DateRange') }}
+                  {{ l('EstimatedPickUpDate') }}
                 </p>
                 <p>
                   {{ item.rangeDate }}
@@ -67,7 +69,6 @@
 
               <div *ngIf="item.creationTime" class="dateRange">
                 <p>
-                  <img src="/assets/custom/imgs/time.svg" width="16" alt="" />
                   {{ l('CreationTime') }}
                 </p>
                 <p>
@@ -77,7 +78,6 @@
 
               <div class="goodCategory">
                 <p>
-                  <img src="/assets/custom/imgs/box.svg" width="16" alt="" />
                   {{ l('GoodCategory') }}
                 </p>
                 <p>
@@ -86,7 +86,6 @@
               </div>
               <div class="truckType">
                 <p>
-                  <i class="fas fa-truck"></i>
                   {{ l('TruckType') }}
                 </p>
                 <p>
@@ -95,7 +94,6 @@
               </div>
               <div class="numOfTrips">
                 <p>
-                  <i class="fas fa-truck-loading"></i>
                   {{ l('NoOfTrips') }}
                 </p>
                 <p class="isNum">
@@ -104,7 +102,6 @@
               </div>
               <div class="routeType">
                 <p>
-                  <i class="fas fa-road"></i>
                   {{ l('routeType') }}
                 </p>
                 <p>

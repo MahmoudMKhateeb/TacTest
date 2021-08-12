@@ -58,6 +58,7 @@ namespace TACHYON.Auditing
 
         public async Task<PagedResultDto<AuditLogListDto>> GetAuditLogs(GetAuditLogsInput input)
         {
+            DisableTenancyFiltersIfHost();
             var query = CreateAuditLogAndUsersQuery(input);
 
             var resultCount = await query.CountAsync();
@@ -73,6 +74,8 @@ namespace TACHYON.Auditing
 
         public async Task<FileDto> GetAuditLogsToExcel(GetAuditLogsInput input)
         {
+            DisableTenancyFiltersIfHost();
+
             var auditLogs = await CreateAuditLogAndUsersQuery(input)
                 .AsNoTracking()
                 .OrderByDescending(al => al.AuditLog.ExecutionTime)

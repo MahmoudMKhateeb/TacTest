@@ -1,6 +1,6 @@
 <div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
-    <sub-header [title]="'TenantRequiredDocuments' | localize"> </sub-header>
+    <sub-header [title]="'NonMandatoryDocuments' | localize"> </sub-header>
     <!-- <sub-header [title]="'TenantRequiredDocuments' | localize"
       [description]="'TenantRequiredDocumentsHeaderInfo' | localize"> </sub-header> -->
     <div [class]="containerClass">
@@ -33,7 +33,7 @@
               >
                 <ng-template pTemplate="header">
                   <tr>
-                    <th style="width: 130px;">{{ l('Actions') }}</th>
+                    <th style="width: 130px">{{ l('Actions') }}</th>
                     <th>
                       {{ l('Name') }}
                     </th>
@@ -50,7 +50,7 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-record="$implicit">
                   <tr>
-                    <td style="width: 130px;">
+                    <td style="width: 130px">
                       <div class="btn-group dropdown" dropdown container="body">
                         <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
                           <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}

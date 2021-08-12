@@ -4,7 +4,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title">
-          {{ l('SetupNewDropLocation') }}
+          {{ l('CreateOrEditPoint') }}
         </h4>
       </div>
       <form *ngIf="active" #createOrEditPintForm="ngForm" novalidate autocomplete="off">
@@ -59,12 +59,12 @@
                       class="form-control"
                       [(ngModel)]="Point.receiverId"
                       [class.is-valid]="receiver.touched && receiver.valid"
-                      [class.is-invalid]="receiver.touched && !isAdditionalReceiverEnabled && !receiver.valid"
+                      [class.is-invalid]="receiver.touched && !receiver.valid && !isAdditionalReceiverEnabled"
                       [disabled]="receiversLoading || !Point.facilityId"
                       [required]="!isAdditionalReceiverEnabled"
                     >
-                      <option [value]="" disabled selected>{{ l('PickAReceiver') }}</option>
-                      <option *ngFor="let item of allReceivers" [value]="item.id">{{ item.displayName }}</option>
+                      <option [ngValue]="" selected>{{ l('PickAReceiver') }}</option>
+                      <option *ngFor="let item of allReceivers" [ngValue]="item.id">{{ item.displayName }}</option>
                     </select>
                     <div class="input-group-btn">
                       <button class="btn btn-primary" [disabled]="receiversLoading" (click)="createOrEditReceiverModal.show()">
@@ -117,9 +117,8 @@
                     type="email"
                     class="form-control"
                     [(ngModel)]="Point.receiverEmailAddress"
-                    [required]="isAdditionalReceiverEnabled"
                     [ngClass]="{
-                      'is-valid': ReceiverEmailAddress.touched && ReceiverEmailAddress.valid,
+                      'is-valid': ReceiverEmailAddress.touched && ReceiverEmailAddress.valid && ReceiverEmailAddress.value,
                       'is-invalid': ReceiverEmailAddress.touched && ReceiverEmailAddress.value && !ReceiverEmailAddress.valid
                     }"
                   />
@@ -170,28 +169,11 @@
                       [(ngModel)]="Point.receiverCardIdNumber"
                       (keypress)="numberOnly($event)"
                       [ngClass]="{
-                        'is-valid': receiverId.touched && receiverId.valid,
+                        'is-valid': receiverId.touched && receiverId.valid && receiverId.value,
                         'is-invalid': receiverId.touched && receiverId.value && !receiverId.valid
                       }"
-                      [required]="isAdditionalReceiverEnabled"
                     />
                   </div>
-                </div>
-
-                <div class="form-group col-lg-12">
-                  <label>{{ l('ReceiverAddress') }}</label>
-                  <input
-                    #ReceiverAddress="ngModel"
-                    type="text"
-                    name="ReceiverAddress"
-                    class="form-control"
-                    [(ngModel)]="Point.receiverAddress"
-                    [ngClass]="{
-                      'is-valid': ReceiverAddress.touched && ReceiverAddress.valid,
-                      'is-invalid': ReceiverAddress.touched && ReceiverAddress.value && !ReceiverAddress.valid
-                    }"
-                    [required]="isAdditionalReceiverEnabled"
-                  />
                 </div>
               </ng-template>
 

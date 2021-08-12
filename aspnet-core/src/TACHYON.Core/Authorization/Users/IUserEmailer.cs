@@ -1,6 +1,7 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using TACHYON.Chat;
+using TACHYON.Documents.DocumentFiles;
 using TACHYON.MultiTenancy;
 
 namespace TACHYON.Authorization.Users
@@ -30,6 +31,16 @@ namespace TACHYON.Authorization.Users
         /// <param name="documentFileName"></param>
         /// <returns></returns>
         Task SendExpiredDateDocumentsAsyn(Tenant tenant, string documentFileName);
+
+
+        /// <summary>
+        /// Send Email to tenant when approve all documents and eligible to use platform
+        /// </summary>
+        /// <param name="file"></param>
+        /// /// <param name="tenantId"></param>
+        /// <returns></returns>
+        Task SendDocumentsExpiredInfoAsyn(List<DocumentFile> files, int tenantId);
+
         /// <summary>
         /// Sends a password reset link to user's email.
         /// </summary>

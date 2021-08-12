@@ -16,7 +16,14 @@
             <span>{{ l('TripDetails') }}</span>
           </p>
           <div class="card-toolbar">
-            <button class="btn btn-primary" *ngIf="trip.id" [disabled]="!trip.id" (click)="DownloadSingleDropWaybillPdf(trip.id)">
+            <button
+              class="btn btn-primary"
+              *ngIf="trip.id"
+              [disabled]="!trip.id"
+              (click)="DownloadSingleDropWaybillPdf(trip.id)"
+              [buttonBusy]="wayBillIsDownloading"
+            >
+              <i class="fa flaticon2-print"></i>
               {{ l('PrintWaybill') }}
             </button>
           </div>
@@ -95,6 +102,7 @@
                     [minDate]="shippingRequest.startTripDate"
                     [maxDate]="shippingRequest.endTripDate"
                     [bsConfig]="{ adaptivePosition: true }"
+                    disabled
                     required
                   />
                   <div class="input-group-append">
@@ -152,6 +160,8 @@
                 ></p-multiSelect>
               </div>
             </div>
+            <!--      end:Vas's      -->
+
             <!--  begin::Trip Goods Approximate Value -->
             <div class="col-lg-6">
               <div class="form-group">
@@ -178,7 +188,26 @@
               </div>
             </div>
             <!--  end::Trip Goods Approximate Value -->
-            <div class="col-lg-6">
+            <!--       start:: Notes       -->
+            <div class="col-lg-12">
+              <label>{{ l('Notes') }}</label>
+              <div class="input-group">
+                <textarea
+                  #notes="ngModel"
+                  name="notes"
+                  class="form-control"
+                  [minLength]="20"
+                  [maxlength]="600"
+                  [(ngModel)]="trip.note"
+                  [class.is-valid]="notes.touched && notes.valid && notes.value?.length != 0"
+                  [class.is-invalid]="notes.touched && !notes.valid"
+                  requiredLength="20"
+                ></textarea>
+                <div class="invalid-feedback">{{ l('TripNotesShouldBeAtLeast20Digits') }}</div>
+              </div>
+            </div>
+            <!--End :: notes-->
+            <div class="col-lg-6 mt-4">
               <div class="form-group row">
                 <div class="col-6 col-form-label">
                   <div class="checkbox-inline">
@@ -200,7 +229,7 @@
                 </div>
               </div>
             </div>
-            <div *ngIf="trip.hasAttachment" class="form-group col-lg-6">
+            <div *ngIf="trip.hasAttachment" class="col-lg-6 mt-4">
               <label>{{ l('SelectFile') }} {{ fileToken }} </label>
               <div class="custom-file">
                 <input
@@ -218,8 +247,6 @@
                 <p-progressBar [value]="docProgress" [style]="{ height: '6px', width: '100' }"></p-progressBar>
               </div>
             </div>
-
-            <!--      end:Vas's      -->
             <!--  start:: RouteSteps -->
             <PointsComponent #PointsComponent (SelectedWayPointsFromChild)="trip.routPoints = $event"></PointsComponent>
             <!--  end:: RouteSteps -->

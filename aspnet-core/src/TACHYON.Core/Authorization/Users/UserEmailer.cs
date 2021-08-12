@@ -11,11 +11,14 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using TACHYON.Chat;
+using TACHYON.Documents.DocumentFiles;
+using TACHYON.Documents.DocumentsEntities;
 using TACHYON.Editions;
 using TACHYON.Localization;
 using TACHYON.MultiTenancy;
@@ -164,16 +167,59 @@ namespace TACHYON.Authorization.Users
             await ReplaceBodyAndSend(adminUser.EmailAddress, L("ExpiredDocument"), emailTemplate, mailMessage);
         }
 
-            /// <summary>
-            /// Sends a password reset link to user's email.
-            /// </summary>
-            /// <param name="user">User</param>
-            /// <param name="link">Reset link</param>
-            public async Task SendPasswordResetLinkAsync(User user, string link = null)
-            {
-                // TODO See TAC-432 For Localization
+        /// <summary>
+        /// Send Email to tenant when approve all documents and eligible to use platform
+        /// </summary>
+        /// <param name="file"></param>
+        /// /// <param name="tenantId"></param>
+        /// <returns></returns>
+        [UnitOfWork]
+        public virtual async Task SendDocumentsExpiredInfoAsyn(List<DocumentFile> files, int tenantId)
+        {
+            var adminUser = await _userManager.GetAdminByTenantIdAsync(tenantId);
+            var mailMessage = new StringBuilder();
+            var tenantItem = await _tenantRepository.GetAsync(tenantId);
+            var emailTemplate = GetTitleAndSubTitle(tenantId, L("DocumentsExpiredInfo_Title"), L("DocumentsExpiredInfo_SubTitle"));
 
-                if (user.PasswordResetCode.IsNullOrEmpty())
+            mailMessage.AppendLine("<b>" + L("TenancyName") + "</b>:" + tenantItem.TenancyName);
+            mailMessage.AppendLine("<b>" + L("CompanyName") + "</b>:" + tenantItem.companyName);
+            mailMessage.AppendLine("<b>" + L("Address") + "</b>:" + tenantItem.Address + "<br/>");
+
+            //Truck table
+            //If exists Truck files
+            if (files.Any(x => x.DocumentTypeFk.DocumentsEntityId == (int)DocumentsEntitiesEnum.Truck ))
+            {
+                //bind html Trucks table
+                BindTruckFilesTable(mailMessage, 
+                    files.Where(x => x.DocumentTypeFk.DocumentsEntityId == (int)DocumentsEntitiesEnum.Truck &&
+                    x.TruckFk != null).ToList());
+            }
+
+            //Driver table
+            //If exists driver files
+            else if (files.Any(x => x.DocumentTypeFk.DocumentsEntityId == (int)DocumentsEntitiesEnum.Driver))
+            {
+                //bind html driver table
+                BindDriverFilesTable(mailMessage, 
+                    files.Where(x => x.DocumentTypeFk.DocumentsEntityId == (int)DocumentsEntitiesEnum.Driver && 
+                    x.UserFk != null).ToList());
+            }
+
+
+            await ReplaceBodyAndSend(adminUser.EmailAddress, L("DocumentsExpiredInfo"), emailTemplate, mailMessage);
+        }
+
+        
+
+
+        /// <summary>
+        /// Sends a password reset link to user's email.
+        /// </summary>
+        /// <param name="user">User</param>
+        /// <param name="link">Reset link</param>
+        public async Task SendPasswordResetLinkAsync(User user, string link = null)
+        {
+            if (user.PasswordResetCode.IsNullOrEmpty())
             {
                 throw new Exception("PasswordResetCode should be set in order to send password reset link.");
             }
@@ -525,6 +571,70 @@ namespace TACHYON.Authorization.Users
             var query = link.Substring(link.IndexOf('?')).TrimStart('?');
 
             return basePath + "?" + encrptedParameterName + "=" + HttpUtility.UrlEncode(SimpleStringCipher.Instance.Encrypt(query));
+        }
+
+        /// <summary>
+        /// Bind Trucks Documents html
+        /// </summary>
+        /// <param name="mailMessage"></param>
+        /// <param name="files"></param>
+        private void BindTruckFilesTable(StringBuilder mailMessage, List<DocumentFile> files)
+        {
+            mailMessage.AppendLine("<b>" + L("TruckDocuments") + "</b>");
+            mailMessage.AppendLine("<table style=\"border-collapse: collapse; border: 1px solid black;\"> " +
+                "<tr>" +
+                " <th style=\"border: 1px solid black;  \">" + L("PlateNumber") + "</th> " +
+                "<th style=\"border: 1px solid black;  \"> " + L("DocumentName") + " </th> " +
+                "<th style=\"border: 1px solid black;  \"> " + L("ExpiredStatus") + "</th>" +
+                " <th style=\"border: 1px solid black;  \"> " + L("ExpiredDate") + " </th>" +
+                " </tr>");
+
+            foreach (var file in files)
+            {
+                var expiredStatus = file.ExpirationDate != null ? (file.ExpirationDate.Value.Date < DateTime.Now.Date ? L("Expired") : L("Active")) : "Active";
+                //var documentType = file.TruckId != null ? L("Truck") : L("Driver");
+
+                mailMessage.AppendLine("<tr>" +
+                    "<td style=\"border: 1px solid black;  \">" + file.TruckFk.PlateNumber + "</td>" +
+                    " <td style=\"border: 1px solid black;  \">" + file.Name + " </td> " +
+                    "<td style=\"border: 1px solid black;  \">" + expiredStatus + " </td>" +
+                    " <td style=\"border: 1px solid black;  \"> " + file.ExpirationDate + "</td>" +
+                    " </tr>");
+            }
+
+            mailMessage.AppendLine("</table> <br/>");
+        }
+
+        /// <summary>
+        /// Bind Driver documents html
+        /// </summary>
+        /// <param name="mailMessage"></param>
+        /// <param name="files"></param>
+        private void BindDriverFilesTable(StringBuilder mailMessage, List<DocumentFile> files)
+        {
+            mailMessage.AppendLine("<b>" + L("DriverDocuments") + "</b>");
+            mailMessage.AppendLine("<table style=\"border-collapse: collapse; border: 1px solid black;\"> " +
+                "<tr>" +
+                " <th style=\"border: 1px solid black;  \">" + L("DriverName") + "</th> " +
+                "<th style=\"border: 1px solid black;  \"> " + L("DocumentName") + " </th> " +
+                "<th style=\"border: 1px solid black;  \"> " + L("ExpiredStatus") + "</th>" +
+                " <th style=\"border: 1px solid black;  \"> " + L("ExpiredDate") + " </th>" +
+                " </tr>");
+
+            foreach (var file in files)
+            {
+                var expiredStatus = file.ExpirationDate != null ? (file.ExpirationDate.Value.Date < DateTime.Now.Date ? L("Expired") : L("Active")) : "Active";
+                //var documentType = file.TruckId != null ? L("Truck") : L("Driver");
+
+                mailMessage.AppendLine("<tr>" +
+                    "<td style=\"border: 1px solid black;  \">" + file.UserFk.Name + "</td>" +
+                    " <td style=\"border: 1px solid black;  \">" + file.Name + " </td> " +
+                    "<td style=\"border: 1px solid black;  \">" + expiredStatus + " </td>" +
+                    " <td style=\"border: 1px solid black;  \"> " + file.ExpirationDate + "</td>" +
+                    " </tr>");
+            }
+
+            mailMessage.AppendLine("</table>");
         }
     }
 }

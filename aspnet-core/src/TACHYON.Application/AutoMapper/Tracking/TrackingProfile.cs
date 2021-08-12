@@ -21,6 +21,7 @@ namespace TACHYON.AutoMapper.Tracking
             .ForMember(dst => dst.DriverImageProfile, opt => opt.MapFrom(src => src.AssignedDriverUserFk.ProfilePictureId))
             .ForMember(dst => dst.Origin, opt => opt.MapFrom(src => src.OriginFacilityFk.Address))
             .ForMember(dst => dst.Destination, opt => opt.MapFrom(src => src.DestinationFacilityFk.Address))
+            .ForMember(dst => dst.ReferenceNumber, opt => opt.MapFrom(src => src.ShippingRequestFk.ReferenceNumber))
             ;
 
             CreateMap<IHasDocument, RoutPoint>().ReverseMap();
