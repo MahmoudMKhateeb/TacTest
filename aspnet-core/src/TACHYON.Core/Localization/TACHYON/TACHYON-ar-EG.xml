@@ -534,6 +534,12 @@
 		<text name="DriverCreationDateAndTime">تاريخ و وقت الإنشاء</text>
 		<text name="DriverDocuments">مستندات السائق</text>
 		<text name="DriverInformations">معلومات السائق</text>
+		<text name="DriverWelcomeMessageRegistrationNotification">
+			عزيزي {0} لقد تم انشاء حسابك في تطبيق تاكيون للسائقين ,اسم المستخدم الخاص بك هو رقم جوالك يمكنك تحميل التطبيق من خلال الروابط التالية : /n
+			رابط تطبيق اندرويد {1}
+			رابط تطبيق اي او اس {2}
+
+		</text>
 		<text name="DriverName">اسم السائق</text>
 		<text name="DriverRejectTrip">
 			<a href="/app/main/shippingRequests/shippingRequests/view?id={id}">السائق {driver} لقد رفض الرحلة من {source} إلى {destination}</a>
@@ -1501,8 +1507,8 @@
 		<text name="SingleDrop">ذهاب فقط</text>
 		<text name="Sms">SMS - رسائل قصيرة</text>
 		<text name="SMSOTP">
-			رمز كلمة المرور المؤقتة هو
-			رمز:{0}
+			الرجاء استخدام الرمز التالي لتسجيل الدخول
+			الرمز:{0}
 		</text>
 		<text name="SmsSecurityCodeMessage">رمز الأمان الخاص بك هو</text>
 		<text name="SMSSettings">إعدادات الرسائل النصية</text>

@@ -79,9 +79,17 @@
         /// </summary>
         public const string TruckInsuranceDocumentTypeSpecialConstant = "TruckInsurance";
 
+        #region Mobile
+
+        public const string AndroidAppLink = "https://play.google.com/store/apps/details?id=com.trustangle.tachyondriver";
+        public const string IOSAppLink = "https://apps.apple.com/us/app/tachyon-driver/id1561722003";
+
+        #endregion
+
         #region SMS
         public const string SMSOTP = "SMSOTP";
         public const string SMSShippingRequestReceiverCode = "ShippingRequestReceiverCode";
+        public const string DriverWelcomeMessage = "DriverWelcomeMessageRegistrationNotification";
         #endregion
         #region Signalr triggers
         #region Tracking
