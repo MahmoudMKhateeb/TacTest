@@ -36,6 +36,7 @@ namespace TACHYON.Net.Emailing
                 {
                     var bytes = stream.GetAllBytes();
                     var template = Encoding.UTF8.GetString(bytes, 3, bytes.Length - 3);
+                    template = template.Replace("<!-- @format -->", "");
                     template = template.Replace("{THIS_YEAR}", DateTime.Now.Year.ToString());
                     return template.Replace("{EMAIL_LOGO_URL}", GetTenantLogoUrl(tenantId));
                 }
@@ -45,13 +46,9 @@ namespace TACHYON.Net.Emailing
         public async Task<string> GetActivationTemplateBody()
         {
 
-            var path = Directory.GetCurrentDirectory()
-                .Replace("TACHYON.Web.Host", "TACHYON.Core")+
-                                   "\\Net\\Emailing\\EmailTemplates\\activationTemplateBody.html";
-
-            using var stream = new StreamReader(path);
-
-            return await stream.ReadToEndAsync();
+            var stream = typeof(EmailTemplateProvider).GetAssembly().GetManifestResourceStream("TACHYON.Net.Emailing.EmailTemplates.activationTemplateBody.html");
+            var bytes = stream.GetAllBytes();
+            return Encoding.UTF8.GetString(bytes, 3, bytes.Length - 3);
         }
 
 
