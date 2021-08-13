@@ -239,7 +239,9 @@ namespace TACHYON.Shipping.Trips
             }
             await _appNotifier.ShipperShippingRequestTripNotifyDriverWhenAssignTrip(new UserIdentifier(AbpSession.TenantId, trip.AssignedDriverUserId.Value), trip);
             // Notify Old Driver (The Trip Was Unassigned To You)
-            await _appNotifier.ShipperShippingRequestTripNotifyDriverWhenUnassignedTrip(new UserIdentifier(AbpSession.TenantId, oldAssignedDriverUserId.Value), trip);
+            if (oldAssignedDriverUserId != null)
+                await _appNotifier.ShipperShippingRequestTripNotifyDriverWhenUnassignedTrip(new UserIdentifier(AbpSession.TenantId, oldAssignedDriverUserId.Value), trip);
+            
 
             await _appNotifier.NotificationWhenTripDetailsChanged(trip,await GetCurrentUserAsync());
 
