@@ -17,9 +17,11 @@
     <EmbeddedResource Include="Localization\TACHYON\*.xml;Net\Emailing\EmailTemplates\default.html" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Net\Emailing\EmailTemplates\activationTemplateBody.html" />
     <None Remove="Net\Emailing\EmailTemplates\ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage.html" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Net\Emailing\EmailTemplates\activationTemplateBody.html" />
     <EmbeddedResource Include="Net\Emailing\EmailTemplates\ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage.html" />
   </ItemGroup>
   <ItemGroup>

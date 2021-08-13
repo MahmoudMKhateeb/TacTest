@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using TACHYON.EntityFrameworkCore;
@@ -10,9 +11,10 @@ using TACHYON.EntityFrameworkCore;
 namespace TACHYON.Migrations
 {
     [DbContext(typeof(TACHYONDbContext))]
-    partial class TACHYONDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210812225334_update_ShippingRequestTrip")]
+    partial class update_ShippingRequestTrip
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3944,9 +3946,6 @@ namespace TACHYON.Migrations
                         .HasColumnType("float");
 
                     b.Property<string>("ReceiverCardIdNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ReceiverEmailAddress")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ReceiverFullName")

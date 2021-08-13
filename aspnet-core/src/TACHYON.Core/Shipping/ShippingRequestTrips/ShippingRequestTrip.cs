@@ -24,8 +24,8 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public DateTime? EndWorking { get; set; }
         public bool HasAttachment { get; set; }
         public bool NeedsDeliveryNote { get; set; }
-        public ShippingRequestTripStatus Status { get; set; } 
-        public RoutePointStatus  RoutePointStatus { get; set; }
+        public ShippingRequestTripStatus Status { get; set; }
+        public RoutePointStatus RoutePointStatus { get; set; }
 
         public long? AssignedDriverUserId { get; set; }
         /// <summary>
@@ -75,11 +75,10 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         /// This is a Trip Note Added By Shipper
         /// </summary>
         // Entity Validation Not Required But Best Practice
-        [StringLength(ShippingRequestTripConsts.MaxNoteLength,
-            MinimumLength = ShippingRequestTripConsts.MinNoteLength)]
+        [StringLength(ShippingRequestTripConsts.MaxNoteLength)]
         public string Note { get; set; }
 
-    #region Prices
+        #region Prices
         public bool IsShipperHaveInvoice { get; set; }
         public bool IsCarrierHaveInvoice { get; set; }
         public decimal? TotalAmount { get; set; }
@@ -92,6 +91,6 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public PriceOfferCommissionType? CommissionType { get; set; }
         public decimal? CommissionPercentageOrAddValue { get; set; }
         public decimal? CommissionAmount { get; set; }
-    #endregion
-}
+        #endregion
+    }
 }
