@@ -11,124 +11,90 @@
     <div [class]="containerClass">
       <div class="card card-custom gutter-b">
         <div class="card-body">
-          <form class="form" autocomplete="off">
-            <div>
-              <div class="row align-items-center">
-                <div class="col-xl-12">
-                  <div class="form-group m-form__group align-items-center">
-                    <div class="input-group">
-                      <input
-                        [(ngModel)]="filterText"
-                        name="filterText"
-                        autoFocus
-                        class="form-control m-input"
-                        [placeholder]="l('SearchWithThreeDot')"
-                        type="text"
-                      />
-                      <span class="input-group-btn">
-                        <button (click)="getPackingTypes()" class="btn btn-primary" type="submit"><i class="flaticon-search-1"></i></button>
-                      </span>
-                    </div>
-                  </div>
+          <div class="row align-items-center">
+            <dx-data-grid
+              #grid
+              id="dataGrid"
+              [dataSource]="dataSource"
+              [remoteOperations]="true"
+              [showColumnLines]="true"
+              [showRowLines]="false"
+              [showBorders]="true"
+              [rowAlternationEnabled]="true"
+              keyExpr="id"
+            >
+              <dxo-filter-row [visible]="true"></dxo-filter-row>
+              <dxo-search-panel [visible]="true"></dxo-search-panel>
+              <dxo-filter-panel [visible]="true"></dxo-filter-panel>
+              <dxo-filter-builder-popup></dxo-filter-builder-popup>
+
+              <dxi-column
+                cellTemplate="cellTemplateActions"
+                [allowFiltering]="false"
+                [allowSorting]="false"
+                [allowEditing]="false"
+                [editorOptions]="{ visible: false }"
+                [width]="50"
+              ></dxi-column>
+              <dxi-column dataField="displayName" caption="{{ l('DisplayName') }}"></dxi-column>
+              <dxi-column dataField="description" caption="{{ l('Description') }}"></dxi-column>
+
+              <div *dxTemplate="let options of 'cellTemplateActions'">
+                <div class="btn-group dropdown" dropdown container="body">
+                  <a href="javascript:;" class="btn btn-sm btn-clean btn-icon mr-2" dropdownToggle>
+                    <span class="svg-icon svg-icon-md">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        xmlns:xlink="http://www.w3.org/1999/xlink"
+                        width="24px"
+                        height="24px"
+                        viewBox="0 0 24 24"
+                        version="1.1"
+                      >
+                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                          <rect x="0" y="0" width="24" height="24"></rect>
+                          <path
+                            d="M5,8.6862915 L5,5 L8.6862915,5 L11.5857864,2.10050506 L14.4852814,5 L19,5 L19,9.51471863 L21.4852814,12 L19,14.4852814 L19,19 L14.4852814,19 L11.5857864,21.8994949 L8.6862915,19 L5,19 L5,15.3137085 L1.6862915,12 L5,8.6862915 Z M12,15 C13.6568542,15 15,13.6568542 15,12 C15,10.3431458 13.6568542,9 12,9 C10.3431458,9 9,10.3431458 9,12 C9,13.6568542 10.3431458,15 12,15 Z"
+                            fill="#000000"
+                          ></path>
+                        </g>
+                      </svg>
+                    </span>
+                  </a>
+                  <ul class="dropdown-menu" *dropdownMenu>
+                    <li>
+                      <a href="javascript:;" class="dropdown-item" (click)="viewPackingTypeModal.show(options.data)">{{ l('View') }}</a>
+                    </li>
+                    <li>
+                      <a
+                        href="javascript:;"
+                        *ngIf="permission.isGranted('Pages.PackingTypes.Edit')"
+                        class="dropdown-item"
+                        (click)="createOrEditPackingTypeModal.show(options.data.id)"
+                        >{{ l('Edit') }}</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        class="dropdown-item"
+                        href="javascript:;"
+                        *ngIf="permission.isGranted('Pages.PackingTypes.Delete')"
+                        (click)="deletePackingType(options.data)"
+                        >{{ l('Delete') }}</a
+                      >
+                    </li>
+                  </ul>
                 </div>
               </div>
-            </div>
-          </form>
-
-          <div class="row align-items-center">
-            <!--<Primeng-Datatable-Start>-->
-            <div class="primeng-datatable-container col-12" [busyIf]="primengTableHelper.isLoading">
-              <p-table
-                #dataTable
-                (onLazyLoad)="getPackingTypes($event)"
-                [value]="primengTableHelper.records"
-                rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"
-                [paginator]="false"
-                [lazy]="true"
-                [scrollable]="true"
-                ScrollWidth="100%"
-                [responsive]="primengTableHelper.isResponsive"
-                [resizableColumns]="primengTableHelper.resizableColumns"
-              >
-                <ng-template pTemplate="header">
-                  <tr>
-                    <th style="width: 130px;" [hidden]="!isGrantedAny('Pages.PackingTypes.Edit', 'Pages.PackingTypes.Delete')">{{ l('Actions') }}</th>
-                    <th style="width: 150px;" pSortableColumn="displayName">
-                      {{ l('DisplayName') }}
-                      <p-sortIcon field="packingType.displayName"></p-sortIcon>
-                    </th>
-                    <th style="width: 150px;" pSortableColumn="description">
-                      {{ l('Description') }}
-                      <p-sortIcon field="packingType.description"></p-sortIcon>
-                    </th>
-                  </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-record="$implicit" let-i="rowIndex">
-                  <tr>
-                    <td style="width: 130px;" [hidden]="!isGrantedAny('Pages.PackingTypes.Edit', 'Pages.PackingTypes.Delete')">
-                      <div class="btn-group dropdown" dropdown container="body">
-                        <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
-                          <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
-                        </button>
-                        <ul class="dropdown-menu" *dropdownMenu>
-                          <li>
-                            <a href="javascript:;" class="dropdown-item" (click)="viewPackingTypeModal.show(record)">{{ l('View') }}</a>
-                          </li>
-                          <li>
-                            <a
-                              href="javascript:;"
-                              *ngIf="permission.isGranted('Pages.PackingTypes.Edit')"
-                              class="dropdown-item"
-                              (click)="createOrEditPackingTypeModal.show(record.packingType.id)"
-                              >{{ l('Edit') }}</a
-                            >
-                          </li>
-                          <li>
-                            <a
-                              class="dropdown-item"
-                              href="javascript:;"
-                              *ngIf="permission.isGranted('Pages.PackingTypes.Delete')"
-                              (click)="deletePackingType(record.packingType)"
-                              >{{ l('Delete') }}</a
-                            >
-                          </li>
-                        </ul>
-                      </div>
-                    </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('DisplayName') }}</span>
-                      {{ record.packingType.displayName }}
-                    </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('Description') }}</span>
-                      {{ record.packingType.description }}
-                    </td>
-                  </tr>
-                </ng-template>
-              </p-table>
-              <div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">
-                {{ l('NoData') }}
-              </div>
-              <div class="primeng-paging-container">
-                <p-paginator
-                  [rows]="primengTableHelper.defaultRecordsCountPerPage"
-                  #paginator
-                  (onPageChange)="getPackingTypes($event)"
-                  [totalRecords]="primengTableHelper.totalRecordsCount"
-                  [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
-                >
-                </p-paginator>
-                <span class="total-records-count">
-                  {{ l('TotalRecordsCount', primengTableHelper.totalRecordsCount) }}
-                </span>
-              </div>
-            </div>
-            <!--<Primeng-Datatable-End>-->
+              <dxo-remote-operations [sorting]="true" [paging]="true" [filtering]="true"></dxo-remote-operations>
+              <dxo-paging [pageSize]="10"></dxo-paging>
+              <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20, 50, 200]"></dxo-pager>
+            </dx-data-grid>
           </div>
         </div>
       </div>
     </div>
-    <createOrEditPackingTypeModal #createOrEditPackingTypeModal (modalSave)="getPackingTypes()"> </createOrEditPackingTypeModal>
+    <createOrEditPackingTypeModal #createOrEditPackingTypeModal (modalSave)="getAll()"> </createOrEditPackingTypeModal>
     <viewPackingTypeModal #viewPackingTypeModal></viewPackingTypeModal>
   </div>
 </div>

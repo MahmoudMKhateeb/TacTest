@@ -9,6 +9,8 @@ using TACHYON.Authorization;
 using Abp.Extensions;
 using Abp.Authorization;
 using Abp.UI;
+using AutoMapper.QueryableExtensions;
+using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
 
 namespace TACHYON.Packing.PackingTypes
@@ -24,33 +26,17 @@ namespace TACHYON.Packing.PackingTypes
 
         }
 
-        public async Task<PagedResultDto<GetPackingTypeForViewDto>> GetAll(GetAllPackingTypesInput input)
+        public async Task<LoadResult> GetAll(GetAllPackingTypesInput input)
         {
-
+             DisableTenancyFiltersIfHost();
             var filteredPackingTypes = _packingTypeRepository.GetAll()
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter) || e.Description.Contains(input.Filter));
+                .ProjectTo<PackingTypeDto>(AutoMapperConfigurationProvider);
 
-            var pagedAndFilteredPackingTypes = filteredPackingTypes
-                .OrderBy(input.Sorting ?? "id asc")
-                .PageBy(input);
 
-            var packingTypes = from o in pagedAndFilteredPackingTypes
-                               select new GetPackingTypeForViewDto()
-                               {
-                                   PackingType = new PackingTypeDto
-                                   {
-                                       DisplayName = o.DisplayName,
-                                       Description = o.Description,
-                                       Id = o.Id
-                                   }
-                               };
+            return await LoadResultAsync(filteredPackingTypes, input.LoadOptions);
 
-            var totalCount = await filteredPackingTypes.CountAsync();
 
-            return new PagedResultDto<GetPackingTypeForViewDto>(
-                totalCount,
-                await packingTypes.ToListAsync()
-            );
+
         }
 
         public async Task<GetPackingTypeForViewDto> GetPackingTypeForView(int id)

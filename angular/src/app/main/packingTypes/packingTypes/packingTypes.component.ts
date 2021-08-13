@@ -1,4 +1,4 @@
-﻿import { Component, Injector, ViewEncapsulation, ViewChild } from '@angular/core';
+﻿import { Component, Injector, ViewEncapsulation, ViewChild, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PackingTypesServiceProxy, PackingTypeDto } from '@shared/service-proxies/service-proxies';
 import { NotifyService } from 'abp-ng2-module';
@@ -8,27 +8,22 @@ import { CreateOrEditPackingTypeModalComponent } from './create-or-edit-packingT
 
 import { ViewPackingTypeModalComponent } from './view-packingType-modal.component';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
-import { Table } from 'primeng/table';
-import { Paginator } from 'primeng/paginator';
-import { LazyLoadEvent } from 'primeng/api';
 import { FileDownloadService } from '@shared/utils/file-download.service';
-import * as _ from 'lodash';
-import * as moment from 'moment';
+import CustomStore from '@node_modules/devextreme/data/custom_store';
+import { LoadOptions } from '@node_modules/devextreme/data/load_options';
 
 @Component({
   templateUrl: './packingTypes.component.html',
   encapsulation: ViewEncapsulation.None,
   animations: [appModuleAnimation()],
 })
-export class PackingTypesComponent extends AppComponentBase {
+export class PackingTypesComponent extends AppComponentBase implements OnInit {
   @ViewChild('createOrEditPackingTypeModal', { static: true }) createOrEditPackingTypeModal: CreateOrEditPackingTypeModalComponent;
   @ViewChild('viewPackingTypeModalComponent', { static: true }) viewPackingTypeModal: ViewPackingTypeModalComponent;
 
-  @ViewChild('dataTable', { static: true }) dataTable: Table;
-  @ViewChild('paginator', { static: true }) paginator: Paginator;
-
   advancedFiltersAreShown = false;
   filterText = '';
+  dataSource: any = {};
 
   constructor(
     injector: Injector,
@@ -41,31 +36,11 @@ export class PackingTypesComponent extends AppComponentBase {
     super(injector);
   }
 
-  getPackingTypes(event?: LazyLoadEvent) {
-    if (this.primengTableHelper.shouldResetPaging(event)) {
-      this.paginator.changePage(0);
-      return;
-    }
-
-    this.primengTableHelper.showLoadingIndicator();
-
-    this._packingTypesServiceProxy
-      .getAll(
-        this.filterText,
-        this.primengTableHelper.getSorting(this.dataTable),
-        this.primengTableHelper.getSkipCount(this.paginator, event),
-        this.primengTableHelper.getMaxResultCount(this.paginator, event)
-      )
-      .subscribe((result) => {
-        this.primengTableHelper.totalRecordsCount = result.totalCount;
-        this.primengTableHelper.records = result.items;
-        this.primengTableHelper.hideLoadingIndicator();
-      });
+  ngOnInit(): void {
+    this.getAll();
   }
 
-  reloadPage(): void {
-    this.paginator.changePage(this.paginator.getPage());
-  }
+  reloadPage(): void {}
 
   createPackingType(): void {
     this.createOrEditPackingTypeModal.show();
@@ -79,6 +54,30 @@ export class PackingTypesComponent extends AppComponentBase {
           this.notify.success(this.l('SuccessfullyDeleted'));
         });
       }
+    });
+  }
+
+  getAll() {
+    let self = this;
+
+    this.dataSource = {};
+    this.dataSource.store = new CustomStore({
+      load(loadOptions: LoadOptions) {
+        console.log(JSON.stringify(loadOptions));
+        return self._packingTypesServiceProxy
+          .getAll(JSON.stringify(loadOptions))
+          .toPromise()
+          .then((response) => {
+            return {
+              data: response.data,
+              totalCount: response.totalCount,
+            };
+          })
+          .catch((error) => {
+            console.log(error);
+            throw new Error('Data Loading Error');
+          });
+      },
     });
   }
 }
