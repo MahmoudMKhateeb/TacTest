@@ -25,6 +25,7 @@ namespace TACHYON.Shipping.Drivers
         private readonly IRepository<RoutPoint, long> _RoutPointRepository;
         private readonly IRepository<ShippingRequest, long> _ShippingRequestRepository;
         private readonly IRepository<RoutPointStatusTransition> _routPointStatusTransitionRepository;
+        private readonly IRepository<RoutPointDocument,long> _routPointDocumentRepository;
 
         private readonly InvoiceManager _invoiceManager;
         private readonly UserManager _userManager;
@@ -40,7 +41,7 @@ namespace TACHYON.Shipping.Drivers
             InvoiceManager invoiceManager,
             UserManager userManager,
             IAppNotifier appNotifier,
-            IAbpSession abpSession)
+            IAbpSession abpSession, IRepository<RoutPointDocument, long> routPointDocumentRepository)
         {
             _ShippingRequestTrip = ShippingRequestTrip;
             _ShippingRequestRepository = ShippingRequestRepository;
@@ -51,7 +52,7 @@ namespace TACHYON.Shipping.Drivers
             _userManager = userManager;
             _appNotifier = appNotifier;
             _abpSession = abpSession;
-
+            _routPointDocumentRepository = routPointDocumentRepository;
         }
 
         /// <summary>
@@ -75,10 +76,19 @@ namespace TACHYON.Shipping.Drivers
                 x.ShippingRequestTripFk.AssignedDriverUserId == _abpSession.UserId);
             if (CurrentPoint == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
 
+            if(CurrentPoint.ShippingRequestTripFk.NeedsDeliveryNote && !CurrentPoint.IsDeliveryNoteUploaded)
+            {
+                throw new UserFriendlyException(L("YouNeedToUploadDeliveryNoteBefore"));
+            }
             CurrentPoint.EndTime = Clock.Now;
-            CurrentPoint.DocumentContentType = "image/jpeg";
-            CurrentPoint.DocumentName = document.DocumentName;
-            CurrentPoint.DocumentId = document.DocumentId;
+            //CurrentPoint.DocumentContentType = "image/jpeg";
+            //CurrentPoint.DocumentName = document.DocumentName;
+            //CurrentPoint.DocumentId = document.DocumentId;
+
+
+            await InsertRoutePointDocument(CurrentPoint.Id, document, RoutePointDocumentType.POD);
+
+
             CurrentPoint.IsActive = false;
             CurrentPoint.IsComplete = true;
             await SetRoutStatusTransition(CurrentPoint, RoutePointStatus.DeliveryConfirmation);
@@ -99,6 +109,30 @@ namespace TACHYON.Shipping.Drivers
                 trip.RoutePointStatus = RoutePointStatus.DeliveryConfirmation;
 
             }
+            return true;
+
+
+        }
+
+
+        public async Task<bool> UploadDeliveryNote(IHasDocument document)
+        {
+            DisableTenancyFilters();
+            var CurrentPoint = await _RoutPointRepository.GetAll().
+                Include(x => x.ShippingRequestTripFk)
+                    .ThenInclude(x => x.ShippingRequestTripVases)
+                .Include(x => x.ShippingRequestTripFk)
+                    .ThenInclude(x => x.ShippingRequestFk)
+                     .ThenInclude(x => x.Tenant)
+                .FirstOrDefaultAsync(x => x.IsActive &&
+                x.ShippingRequestTripFk.RoutePointStatus == RoutePointStatus.ReceiverConfirmed &&
+                x.ShippingRequestTripFk.AssignedDriverUserId == _abpSession.UserId);
+            if (CurrentPoint == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
+
+            if (!CurrentPoint.ShippingRequestTripFk.NeedsDeliveryNote) throw new UserFriendlyException(L("TripDidnnotNeedsDeliveryNote"));
+            CurrentPoint.IsDeliveryNoteUploaded = true;
+            await InsertRoutePointDocument(CurrentPoint.Id, document,RoutePointDocumentType.DeliveryNote);
+
             return true;
 
 
@@ -240,6 +274,18 @@ namespace TACHYON.Shipping.Drivers
             var Last = await GetLastTransitionInComplete(TripId);
             Last.IsComplete = true;
 
+        }
+
+        private async Task InsertRoutePointDocument(long PointId, IHasDocument document,RoutePointDocumentType documentType)
+        {
+            var routePointDocument = new RoutPointDocument();
+            routePointDocument.RoutPointId = PointId;
+            routePointDocument.RoutePointDocumentType = documentType;
+            routePointDocument.DocumentContentType = "image/jpeg";
+            routePointDocument.DocumentName = document.DocumentName;
+            routePointDocument.DocumentId = document.DocumentId;
+
+            await _routPointDocumentRepository.InsertAsync(routePointDocument);
         }
 
 
