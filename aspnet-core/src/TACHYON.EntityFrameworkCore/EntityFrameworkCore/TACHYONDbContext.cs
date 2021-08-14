@@ -237,6 +237,7 @@ namespace TACHYON.EntityFrameworkCore
         public virtual DbSet<ShippingRequestBid> ShippingRequestBids { get; set; }
 
         public virtual DbSet<RoutPoint> RoutPoints { get; set; }
+        public virtual DbSet<RoutPointDocument> RoutPointDocuments { get; set; }
         public virtual DbSet<RoutPointStatusTransition> RoutPointStatusTransitions { get; set; }
 
         public DbSet<TenantCarrier> TenantCarriers { get; set; }

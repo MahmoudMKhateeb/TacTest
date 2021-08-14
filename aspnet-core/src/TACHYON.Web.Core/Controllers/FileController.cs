@@ -3,8 +3,10 @@ using Abp.Auditing;
 using Abp.Domain.Repositories;
 using Abp.UI;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MimeKit;
 using System;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using TACHYON.Documents.DocumentFiles;
@@ -69,15 +71,15 @@ namespace TACHYON.Web.Controllers
         public async Task<ActionResult> DownloadPDOFile(long id)
         {
             DisableTenancyFilters();
-            var Point = await _routPointRepository.FirstOrDefaultAsync(x => x.Id == id && x.IsComplete && x.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId);
-
-            if (Point == null)
+           // var Point = await _routPointRepository.GetAll().Include(e=>e.RoutPointDocuments).FirstOrDefaultAsync(x => x.Id == id && x.IsComplete && x.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId);
+            var POD =await _routPointDocumentRepository.FirstOrDefaultAsync(x => x.RoutePointDocumentType == RoutePointDocumentType.POD && x.RoutPointId == id && x.RoutPointFk.IsComplete && x.RoutPointFk.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId);
+            if (POD == null)
             {
-                throw new UserFriendlyException(L("TheDropOffPointIsNotFound"));
+                throw new UserFriendlyException(L("ThePODDocumentIsNotFound"));
 
             }
-            var binaryObject = await _binaryObjectManager.GetOrNullAsync(Point.DocumentId.Value);
-            var file = new FileDto(Point.DocumentName, Point.DocumentContentType);
+            var binaryObject = await _binaryObjectManager.GetOrNullAsync(POD.DocumentId.Value);
+            var file = new FileDto(POD.DocumentName, POD.DocumentContentType);
 
             MimeTypes.TryGetExtension(file.FileType, out var exten);
 

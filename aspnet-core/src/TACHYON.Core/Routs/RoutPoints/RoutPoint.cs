@@ -38,7 +38,7 @@ namespace TACHYON.Routs.RoutPoints
         public ShippingRequestTrip ShippingRequestTripFk { get; set; }
 
         public ICollection<GoodsDetail> GoodsDetails { get; set; }
-
+        public ICollection<RoutPointDocument> RoutPointDocuments { get; set; }
         public string Code { get; set; }
         public RoutePointStatus Status { get; set; }
         public DateTime? StartTime { get; set; }
@@ -46,10 +46,13 @@ namespace TACHYON.Routs.RoutPoints
         public bool IsActive { get; set; } 
         public bool IsComplete { get; set; }
 
+        //todo will be removed
         public Guid? DocumentId { get; set; }
+        //todo will be removed
         public string DocumentName { get; set; }
+        //todo will be removed
         public string DocumentContentType { get; set; }
-
+        
         public double? Rating { get; set; }
         [CanBeNull] public string ReceiverNote { get; set; }
         //to do receiver attribute
@@ -65,6 +68,7 @@ namespace TACHYON.Routs.RoutPoints
          [CanBeNull] public string ReceiverEmailAddress { get; set; }
         //Shipper Note
         [CanBeNull] public string Note { get; set; }
+        public bool IsDeliveryNoteUploaded { get; set; }
 
 
     }

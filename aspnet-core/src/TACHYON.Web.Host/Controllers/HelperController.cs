@@ -213,6 +213,37 @@ namespace TACHYON.Web.Controllers
             }
         }
 
+        [HttpPost]
+        [AbpMvcAuthorize()]
+        // [Produces("application/json")]
+        [Route("/api/services/app/ShippingRequestDriver/UploadDeliveryNoteDocument")]
+        public async Task<JsonResult> UploadDeliveryNoteDocument()
+        {
+            try
+            {
+                var file = Request.Form.Files.First();
+                //Input.Document = file;
+                if (file.Length == 0)
+                {
+                    throw new UserFriendlyException(L("File_Empty_Error"));
+                }
+
+                if (file.Length > 1048576 * 100) //100 MB
+                {
+                    throw new UserFriendlyException(L("File_SizeLimit_Error"));
+                }
+
+                var document = await _commonManager.UploadDocument(file, AbpSession.TenantId);
+                await _shippingRequestDriverManager.UploadDeliveryNote(document);
+
+                return Json(new AjaxResponse(new { }));
+            }
+            catch (UserFriendlyException ex)
+            {
+                return Json(new AjaxResponse(new ErrorInfo(ex.Message)));
+            }
+        }
+
 
         [HttpPost]
         [AbpMvcAuthorize()]

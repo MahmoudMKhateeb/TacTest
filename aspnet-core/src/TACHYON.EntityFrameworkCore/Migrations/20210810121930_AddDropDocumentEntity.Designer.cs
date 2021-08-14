@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using TACHYON.EntityFrameworkCore;
@@ -10,9 +11,10 @@ using TACHYON.EntityFrameworkCore;
 namespace TACHYON.Migrations
 {
     [DbContext(typeof(TACHYONDbContext))]
-    partial class TACHYONDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210810121930_AddDropDocumentEntity")]
+    partial class AddDropDocumentEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2335,11 +2337,6 @@ namespace TACHYON.Migrations
                     b.Property<int?>("FatherId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsActive")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -3928,9 +3925,6 @@ namespace TACHYON.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsDeliveryNoteUploaded")
-                        .HasColumnType("bit");
-
                     b.Property<DateTime?>("LastModificationTime")
                         .HasColumnType("datetime2");
 
@@ -3945,6 +3939,9 @@ namespace TACHYON.Migrations
 
                     b.Property<double?>("Rating")
                         .HasColumnType("float");
+
+                    b.Property<string>("ReceiverAddress")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ReceiverCardIdNumber")
                         .HasColumnType("nvarchar(max)");
@@ -4570,8 +4567,8 @@ namespace TACHYON.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Note")
-                        .HasColumnType("nvarchar(512)")
-                        .HasMaxLength(512);
+                        .HasColumnType("nvarchar(600)")
+                        .HasMaxLength(600);
 
                     b.Property<long?>("OriginFacilityId")
                         .HasColumnType("bigint");
@@ -6158,11 +6155,6 @@ namespace TACHYON.Migrations
 
                     b.Property<DateTime?>("DeletionTime")
                         .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsActive")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");

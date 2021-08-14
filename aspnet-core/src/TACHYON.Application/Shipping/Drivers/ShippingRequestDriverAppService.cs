@@ -200,6 +200,7 @@ namespace TACHYON.Shipping.Drivers
                 .Include(t=>t.ShippingRequestTripFk)
                  .ThenInclude(r=>r.ShippingRequestFk)
                     .ThenInclude(p=>p.PackingTypeFk)
+                .Include(t => t.RoutPointDocuments)
             .Include(i => i.FacilityFk)
                .ThenInclude(c => c.CityFk)
            .Include(i => i.ReceiverFk)
@@ -208,6 +209,7 @@ namespace TACHYON.Shipping.Drivers
             .SingleOrDefaultAsync(t => t.Id == PointId && t.ShippingRequestTripFk.Status != ShippingRequestTripStatus.Canceled && t.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId && t.ShippingRequestTripFk.DriverStatus != ShippingRequestTripDriverStatus.Rejected);
             if (Point == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
             var DropOff = ObjectMapper.Map<RoutDropOffDto>(Point);
+
 
             return DropOff;
         }
@@ -419,7 +421,11 @@ namespace TACHYON.Shipping.Drivers
         {
             DisableTenancyFilters();
 
-            var trip = await _ShippingRequestTrip.GetAll().Include(x=>x.ShippingRequestFk).Include(x=>x.RoutPoints).FirstOrDefaultAsync(x => x.Id == TripId);
+            var trip = await _ShippingRequestTrip.GetAll()
+                .Include(x=>x.ShippingRequestFk)
+                .Include(x=>x.RoutPoints)
+                .ThenInclude(x => x.RoutPointDocuments)
+                .FirstOrDefaultAsync(x => x.Id == TripId);
             await ResetTripStatus(trip);
 
         }
@@ -443,6 +449,7 @@ namespace TACHYON.Shipping.Drivers
                 .WhereIf(IsEnabled(AppFeatures.TachyonDealer), x=>x.ShippingRequestFk.IsTachyonDeal==true)
                 .Include(x => x.ShippingRequestFk)
                 .Include(x => x.RoutPoints)
+                .ThenInclude(x=>x.RoutPointDocuments)
                 .FirstOrDefaultAsync(x => x.Id == TripId);
 
             await ResetTripStatus(trip);
@@ -462,6 +469,8 @@ namespace TACHYON.Shipping.Drivers
                     item.IsActive = false;
                     item.IsComplete = false;
                     item.Status = RoutePointStatus.StandBy;
+                    item.IsDeliveryNoteUploaded = false;
+                    item.RoutPointDocuments.Clear();
                     //item.ShippingRequestTripAccidents.Clear();
                     //item.ShippingRequestTripTransitions.Clear();
                 });
