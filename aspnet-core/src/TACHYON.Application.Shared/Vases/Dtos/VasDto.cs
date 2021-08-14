@@ -12,8 +12,6 @@ namespace TACHYON.Vases.Dtos
 
         public bool HasCount { get; set; }
 
-        public DateTime CreationTime { get; set; }
 
-        public List<VasTranslationDto> VasTranslation { get; set; }
     }
 }

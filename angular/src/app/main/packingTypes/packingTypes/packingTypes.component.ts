@@ -15,8 +15,6 @@ import { LoadOptions } from '@node_modules/devextreme/data/load_options';
   animations: [appModuleAnimation()],
 })
 export class PackingTypesComponent extends AppComponentBase implements OnInit {
-  advancedFiltersAreShown = false;
-  filterText = '';
   dataSource: any = {};
 
   constructor(

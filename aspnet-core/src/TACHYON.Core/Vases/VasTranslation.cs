@@ -8,10 +8,6 @@ namespace TACHYON.Vases
     [Table("VasesTranslations")]
     public class VasTranslation : FullAuditedEntity,IEntityTranslation<Vas>
     {
-
-        [StringLength(VasConsts.MaxNameLength, MinimumLength = VasConsts.MinNameLength)]
-        public virtual string Name { get; set; }
-
         [StringLength(VasConsts.MaxDisplayNameLength, MinimumLength = VasConsts.MinDisplayNameLength)]
         public virtual string DisplayName { get; set; }
         public string Language { get; set; }

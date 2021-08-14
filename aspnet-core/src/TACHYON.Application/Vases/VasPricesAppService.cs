@@ -41,8 +41,8 @@ namespace TACHYON.Vases
         {
 
             var filteredVASs = _lookup_vasRepository.GetAll()
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Name.Contains(input.Filter) || e.DisplayName.Contains(input.Filter))
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.VasNameFilter), e => false || e.Name.Contains(input.VasNameFilter) || e.DisplayName.Contains(input.VasNameFilter));
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Name.Contains(input.Filter) )
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.VasNameFilter), e => false || e.Name.Contains(input.VasNameFilter) );
 
             var vasPrices = from o in filteredVASs
                             join o1 in _vasPriceRepository.GetAll()
@@ -60,7 +60,7 @@ namespace TACHYON.Vases
                                     Id = s1.Id,
                                     VasId = o.Id,
                                 },
-                                VasName = o == null || o.Name == null ? "" : o.Name,
+                                VasName = o.Translations.FirstOrDefault(t=> t.Language.Contains(CurrentLanguage)) != null ? o.Translations.FirstOrDefault(t=> t.Language.Contains(CurrentLanguage)).DisplayName : o.Name,
                                 HasCount = o == null ? false : o.HasCount,
                                 HasAmount = o == null ? false : o.HasAmount
                             };

@@ -1,4 +1,4 @@
-﻿import { Component, Injector, ViewEncapsulation, ViewChild } from '@angular/core';
+﻿import { Component, Injector, ViewEncapsulation, ViewChild, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { VasesServiceProxy, VasDto } from '@shared/service-proxies/service-proxies';
 import { NotifyService } from 'abp-ng2-module';
@@ -14,23 +14,19 @@ import { LazyLoadEvent } from 'primeng/api';
 import { FileDownloadService } from '@shared/utils/file-download.service';
 import * as _ from 'lodash';
 import * as moment from 'moment';
+import CustomStore from '@node_modules/devextreme/data/custom_store';
+import { LoadOptions } from '@node_modules/devextreme/data/load_options';
 
 @Component({
   templateUrl: './vases.component.html',
   encapsulation: ViewEncapsulation.None,
   animations: [appModuleAnimation()],
 })
-export class VasesComponent extends AppComponentBase {
+export class VasesComponent extends AppComponentBase implements OnInit {
   @ViewChild('createOrEditVasModal', { static: true }) createOrEditVasModal: CreateOrEditVasModalComponent;
   @ViewChild('viewVasModalComponent', { static: true }) viewVasModal: ViewVasModalComponent;
 
-  @ViewChild('dataTable', { static: true }) dataTable: Table;
-  @ViewChild('paginator', { static: true }) paginator: Paginator;
-
-  advancedFiltersAreShown = false;
-  filterText = '';
-  hasAmountFilter = -1;
-  hasCountFilter = -1;
+  dataSource: any = {};
 
   constructor(
     injector: Injector,
@@ -43,52 +39,50 @@ export class VasesComponent extends AppComponentBase {
     super(injector);
   }
 
-  getVases(event?: LazyLoadEvent) {
-    if (this.primengTableHelper.shouldResetPaging(event)) {
-      this.paginator.changePage(0);
-      return;
-    }
-
-    this.primengTableHelper.showLoadingIndicator();
-
-    this._vasesServiceProxy
-      .getAll(
-        this.filterText,
-        this.hasAmountFilter,
-        this.hasCountFilter,
-        this.primengTableHelper.getSorting(this.dataTable),
-        this.primengTableHelper.getSkipCount(this.paginator, event),
-        this.primengTableHelper.getMaxResultCount(this.paginator, event)
-      )
-      .subscribe((result) => {
-        this.primengTableHelper.totalRecordsCount = result.totalCount;
-        this.primengTableHelper.records = result.items;
-        this.primengTableHelper.hideLoadingIndicator();
-      });
-  }
-
-  reloadPage(): void {
-    this.paginator.changePage(this.paginator.getPage());
-  }
+  reloadPage(): void {}
 
   createVas(): void {
     this.createOrEditVasModal.show();
   }
 
-  deleteVas(vas: VasDto): void {
-    this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
-      if (isConfirmed) {
-        this._vasesServiceProxy.delete(vas.id).subscribe(() => {
-          this.reloadPage();
-          this.notify.success(this.l('SuccessfullyDeleted'));
-        });
-      }
+  ngOnInit(): void {
+    this.getAll();
+  }
+
+  getAll() {
+    let self = this;
+
+    this.dataSource = {};
+    this.dataSource.store = new CustomStore({
+      key: 'id',
+      load(loadOptions: LoadOptions) {
+        return self._vasesServiceProxy
+          .getAll(JSON.stringify(loadOptions))
+          .toPromise()
+          .then((response) => {
+            return {
+              data: response.data,
+              totalCount: response.totalCount,
+            };
+          })
+          .catch((error) => {
+            console.log(error);
+            throw new Error('Data Loading Error');
+          });
+      },
+      insert: (values) => {
+        return self._vasesServiceProxy.createOrEdit(values).toPromise();
+      },
+      update: (key, values) => {
+        return self._vasesServiceProxy.createOrEdit(values).toPromise();
+      },
+      remove: (key) => {
+        return self._vasesServiceProxy.delete(key).toPromise();
+      },
     });
   }
 
-  exportToExcel(): void {
-    this._vasesServiceProxy.getVasesToExcel(this.filterText, this.hasAmountFilter, this.hasCountFilter).subscribe((result) => {
-      this._fileDownloadService.downloadTempFile(result);
-    });
+  updateRow(options) {
+    options.newData = { ...options.oldData, ...options.newData };
   }
 }

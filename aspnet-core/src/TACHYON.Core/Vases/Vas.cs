@@ -12,9 +12,6 @@ namespace TACHYON.Vases
         [StringLength(VasConsts.MaxNameLength, MinimumLength = VasConsts.MinNameLength)]
         public virtual string Name { get; set; }
 
-        [StringLength(VasConsts.MaxDisplayNameLength, MinimumLength = VasConsts.MinDisplayNameLength)]
-        public virtual string DisplayName { get; set; }
-
         public virtual bool HasAmount { get; set; }
 
         public virtual bool HasCount { get; set; }

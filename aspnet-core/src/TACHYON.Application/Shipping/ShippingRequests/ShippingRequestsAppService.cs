@@ -752,7 +752,7 @@ namespace TACHYON.Shipping.ShippingRequests
             return await _lookup_vasRepository.GetAll()
                 .Select(vas => new ShippingRequestVasListOutput
                 {
-                    VasName = vas == null || vas.Name == null ? "" : vas.Name.ToString(),
+                    VasName = vas.Translations.FirstOrDefault(t=> t.Language.Contains(CurrentLanguage)) != null ? vas.Translations.FirstOrDefault(t=> t.Language.Contains(CurrentLanguage)).DisplayName : vas.Name,
                     HasAmount = vas.HasAmount,
                     HasCount = vas.HasCount,
                     MaxAmount = 0,
@@ -1111,7 +1111,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
             var output = vases.Select(x => new GetAllShippingRequestVasesOutput
             {
-                VasName = x.ShippingRequestVasFk.VasFk.DisplayName,
+                VasName = x.ShippingRequestVasFk.VasFk.Name,
                 Amount = x.ShippingRequestVasFk.RequestMaxAmount,
                 Count = x.ShippingRequestVasFk.RequestMaxCount
             });

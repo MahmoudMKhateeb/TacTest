@@ -218,12 +218,10 @@ namespace TACHYON
             configuration.CreateMap<Vas, GetVasForEditOutput>()
                 .ForMember(x => x.Vas, x
                     => x.MapFrom(i => i));
-            configuration.CreateMap<Vas, CreateOrEditVasDto>()
-                .ForMember(x => x.TranslationDtos,
-                    x
-                        => x.MapFrom(i => i.Translations));
+            configuration.CreateMap<Vas, CreateOrEditVasDto>();
             configuration.CreateMap<CreateOrEditVasDto, Vas>()
-                .ForMember(x => x.Translations, x => x.Ignore());
+                .ForMember(x => x.Translations, x => x.Ignore()); 
+            configuration.CreateMap<VasDto, Vas>().ReverseMap();
             configuration.CreateMap<CreateOrEditReceiverDto, Receiver>().ReverseMap();
             configuration.CreateMap<ReceiverDto, Receiver>().ReverseMap();
             configuration.CreateMap<CreateOrEditTermAndConditionTranslationDto, TermAndConditionTranslation>().ReverseMap();
@@ -678,10 +676,10 @@ namespace TACHYON
                 .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
                 .ReverseMap();
 
-            configuration.CreateMultiLingualMap<Vas, VasTranslation, VasDto>(context)
-                .EntityMap.ForMember(x => x.VasTranslation,
-                    x =>
-                        x.MapFrom(i => i.Translations));
+            //configuration.CreateMultiLingualMap<Vas, VasTranslation, VasDto>(context)
+            //    .EntityMap.ForMember(x => x.VasTranslation,
+            //        x =>
+            //            x.MapFrom(i => i.Translations));
 
             configuration.
                 CreateMultiLingualMap<ShippingRequestReasonAccident, ShippingRequestReasonAccidentTranslation, ShippingRequestReasonAccidentListDto>(context);
