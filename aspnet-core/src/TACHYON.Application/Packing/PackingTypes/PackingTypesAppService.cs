@@ -8,11 +8,23 @@ using TACHYON.Packing.PackingTypes.Dtos;
 using Abp.Application.Services.Dto;
 using TACHYON.Authorization;
 using Abp.Authorization;
+using Abp.UI;
+using AutoMapper.QueryableExtensions;
+using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
+using Abp.Extensions;
 
 namespace TACHYON.Packing.PackingTypes
 {
+    public class GetAllTranslationsInput
+    {
+
+        public string LoadOptions { get; set; }
+        public string CoreId { get; set; }
+    }
+
     [AbpAuthorize(AppPermissions.Pages_PackingTypes)]
     public class PackingTypesAppService : TACHYONAppServiceBase, IPackingTypesAppService
     {
@@ -27,7 +39,7 @@ namespace TACHYON.Packing.PackingTypes
 
         public async Task<LoadResult> GetAll(GetAllPackingTypesInput input)
         {
-             DisableTenancyFiltersIfHost();
+            DisableTenancyFiltersIfHost();
             var filteredPackingTypes = _packingTypeRepository.GetAll()
                 .ProjectTo<PackingTypeDto>(AutoMapperConfigurationProvider);
 
@@ -73,7 +85,7 @@ namespace TACHYON.Packing.PackingTypes
 
         public async Task CreateOrEdit(CreateOrEditPackingTypeDto input)
         {
-            await IsPackingTypeDuplicatedOrEmpty(input.DisplayName);
+            //  await IsPackingTypeDuplicatedOrEmpty(input.DisplayName);
 
             if (input.Id == null)
             {
@@ -92,20 +104,7 @@ namespace TACHYON.Packing.PackingTypes
 
             var packingType = ObjectMapper.Map<PackingType>(input);
 
-            using (var unitOfWork = UnitOfWorkManager.Begin())
-            {
-                var coreId = await _packingTypeRepository.InsertAndGetIdAsync(packingType);
-
-                var packingTypeTranslations = ObjectMapper.Map<List<PackingTypeTranslation>>(input.TranslationDtos);
-
-                foreach (var ptt in packingTypeTranslations)
-                {
-                    ptt.CoreId = coreId;
-                    await _packingTypeTranslationRepository.InsertAsync(ptt);
-                }
-
-                await unitOfWork.CompleteAsync();
-            }
+            await _packingTypeRepository.InsertAsync(packingType);
         }
 
         [AbpAuthorize(AppPermissions.Pages_PackingTypes_Edit)]
@@ -113,7 +112,7 @@ namespace TACHYON.Packing.PackingTypes
         {
             var packingType = await _packingTypeRepository.FirstOrDefaultAsync(input.Id.Value);
 
-            packingType.Translations.Clear();
+            // packingType.Translations.Clear();
 
             ObjectMapper.Map(input, packingType);
         }
@@ -137,5 +136,47 @@ namespace TACHYON.Packing.PackingTypes
             if (isDuplicated)
                 throw new UserFriendlyException(L("PackingTypeNameCanNotBeDuplicated"));
         }
+
+
+        #region MultiLingual
+
+        public async Task CreateOrEditTranslation(PackingTypeTranslationDto input)
+        {
+
+            var translation = await _packingTypeTranslationRepository.FirstOrDefaultAsync(x => x.Id == input.Id);
+            if (translation == null)
+            {
+                var newTranslation = ObjectMapper.Map<PackingTypeTranslation>(input);
+                await _packingTypeTranslationRepository.InsertAsync(newTranslation);
+            }
+            else
+            {
+                var duplication = await _packingTypeTranslationRepository.FirstOrDefaultAsync(x => x.CoreId == translation.CoreId && x.Language.Contains(translation.Language) && x.Id != translation.Id);
+                if (duplication != null)
+                {
+                    throw new UserFriendlyException(
+                        "The translation for this language already exists, you can modify it");
+                }
+                ObjectMapper.Map(input, translation); 
+            }
+        }
+
+        public async Task<LoadResult> GetAllTranslations(GetAllTranslationsInput input)
+        {
+            var filteredPackingTypes = _packingTypeTranslationRepository
+                .GetAll()
+                .Where(x => x.CoreId == Convert.ToInt32(input.CoreId))
+                .ProjectTo<PackingTypeTranslationDto>(AutoMapperConfigurationProvider);
+
+            return await LoadResultAsync(filteredPackingTypes, input.LoadOptions);
+        }
+
+
+        public async Task DeleteTranslation(EntityDto input)
+        {
+            await _packingTypeTranslationRepository.DeleteAsync(input.Id);
+        }
+
+        #endregion
     }
 }

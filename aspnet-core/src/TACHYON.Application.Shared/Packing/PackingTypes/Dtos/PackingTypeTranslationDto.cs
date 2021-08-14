@@ -16,5 +16,7 @@ namespace TACHYON.Packing.PackingTypes.Dtos
         [Required]
         public string Language { get; set; }
 
+         public int CoreId { get; set; }
+
     }
 }

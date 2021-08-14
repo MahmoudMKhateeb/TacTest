@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TACHYON.Packing.PackingTypes.Dtos
 {
-    public class CreateOrEditPackingTypeDto : EntityDto<int?>, ICustomValidate
+    public class CreateOrEditPackingTypeDto : EntityDto<int?>
     {
         [Required]
         [StringLength(PackingTypeConsts.MaxDisplayNameLength,
@@ -19,10 +19,5 @@ namespace TACHYON.Packing.PackingTypes.Dtos
 
         public List<PackingTypeTranslationDto> TranslationDtos { get; set; }
 
-        public void AddValidationErrors(CustomValidationContext context)
-        {
-            if (!Id.HasValue && TranslationDtos.IsNullOrEmpty())
-                context.Results.Add(new ValidationResult("At Least One Translation Item"));
-        }
     }
 }

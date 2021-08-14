@@ -4,9 +4,6 @@ import { PackingTypesServiceProxy, PackingTypeDto } from '@shared/service-proxie
 import { NotifyService } from 'abp-ng2-module';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { TokenAuthServiceProxy } from '@shared/service-proxies/service-proxies';
-import { CreateOrEditPackingTypeModalComponent } from './create-or-edit-packingType-modal.component';
-
-import { ViewPackingTypeModalComponent } from './view-packingType-modal.component';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { FileDownloadService } from '@shared/utils/file-download.service';
 import CustomStore from '@node_modules/devextreme/data/custom_store';
@@ -18,9 +15,6 @@ import { LoadOptions } from '@node_modules/devextreme/data/load_options';
   animations: [appModuleAnimation()],
 })
 export class PackingTypesComponent extends AppComponentBase implements OnInit {
-  @ViewChild('createOrEditPackingTypeModal', { static: true }) createOrEditPackingTypeModal: CreateOrEditPackingTypeModalComponent;
-  @ViewChild('viewPackingTypeModalComponent', { static: true }) viewPackingTypeModal: ViewPackingTypeModalComponent;
-
   advancedFiltersAreShown = false;
   filterText = '';
   dataSource: any = {};
@@ -40,30 +34,13 @@ export class PackingTypesComponent extends AppComponentBase implements OnInit {
     this.getAll();
   }
 
-  reloadPage(): void {}
-
-  createPackingType(): void {
-    this.createOrEditPackingTypeModal.show();
-  }
-
-  deletePackingType(packingType: PackingTypeDto): void {
-    this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
-      if (isConfirmed) {
-        this._packingTypesServiceProxy.delete(packingType.id).subscribe(() => {
-          this.reloadPage();
-          this.notify.success(this.l('SuccessfullyDeleted'));
-        });
-      }
-    });
-  }
-
   getAll() {
     let self = this;
 
     this.dataSource = {};
     this.dataSource.store = new CustomStore({
+      key: 'id',
       load(loadOptions: LoadOptions) {
-        console.log(JSON.stringify(loadOptions));
         return self._packingTypesServiceProxy
           .getAll(JSON.stringify(loadOptions))
           .toPromise()
@@ -78,6 +55,19 @@ export class PackingTypesComponent extends AppComponentBase implements OnInit {
             throw new Error('Data Loading Error');
           });
       },
+      insert: (values) => {
+        return self._packingTypesServiceProxy.createOrEdit(values).toPromise();
+      },
+      update: (key, values) => {
+        return self._packingTypesServiceProxy.createOrEdit(values).toPromise();
+      },
+      remove: (key) => {
+        return self._packingTypesServiceProxy.delete(key).toPromise();
+      },
     });
+  }
+
+  updateRow(options) {
+    options.newData = { ...options.oldData, ...options.newData };
   }
 }
