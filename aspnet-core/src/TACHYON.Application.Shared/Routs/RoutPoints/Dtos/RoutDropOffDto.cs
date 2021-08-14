@@ -23,7 +23,7 @@ namespace TACHYON.Routs.RoutPoints.Dtos
         public string ReceiverEmailAddress { get; set; }
         public string ReceiverCardIdNumber { get; set; }
         public string Note { get; set; }
-
+        public bool IsDeliveryNoteUploaded { get; set; }
         public List<GoodsDetailDto> GoodsDetailListDto { get; set; }
 
 

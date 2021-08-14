@@ -1,7 +1,12 @@
 ﻿import { Component, ViewChild, Injector, Output, EventEmitter, OnInit } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
-import { TrucksTypesServiceProxy, CreateOrEditTrucksTypeDto, SelectItemDto, TrucksTypesTranslationDto } from '@shared/service-proxies/service-proxies';
+import {
+  TrucksTypesServiceProxy,
+  CreateOrEditTrucksTypeDto,
+  SelectItemDto,
+  TrucksTypesTranslationDto,
+} from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import * as _ from 'lodash';
 
@@ -16,8 +21,8 @@ export class CreateOrEditTrucksTypeModalComponent extends AppComponentBase imple
 
   active = false;
   saving = false;
-languages: abp.localization.ILanguageInfo[];
-Translations: TrucksTypesTranslationDto[];
+  languages: abp.localization.ILanguageInfo[];
+  Translations: TrucksTypesTranslationDto[];
   trucksType: CreateOrEditTrucksTypeDto = new CreateOrEditTrucksTypeDto();
   allTransportTypes: SelectItemDto[];
   constructor(injector: Injector, private _trucksTypesServiceProxy: TrucksTypesServiceProxy) {
@@ -27,7 +32,7 @@ Translations: TrucksTypesTranslationDto[];
     this.languages = _.filter(this.localization.languages, (l) => l.isDisabled === false);
   }
   show(trucksTypeId?: number): void {
-    this.Translations=[];
+    this.Translations = [];
     if (!trucksTypeId) {
       this.trucksType = new CreateOrEditTrucksTypeDto();
       this.trucksType.id = trucksTypeId;
@@ -48,19 +53,20 @@ Translations: TrucksTypesTranslationDto[];
     });
   }
 
- private  PopulateTranslations(Translations: TrucksTypesTranslationDto[]){
-   this.languages.forEach((r)=>{
-let item=new TrucksTypesTranslationDto;
-item.icon=r.icon;
-item.language=r.name;
-item.languageDisplayName=r.displayName;
-item.translatedDisplayName=_.find(Translations, (t)=>t.language==r.name)?.translatedDisplayName;
-this.Translations.push(item);
-   });
- }
+  private PopulateTranslations(Translations: TrucksTypesTranslationDto[]) {
+    this.languages.forEach((r) => {
+      let item = new TrucksTypesTranslationDto();
+      item.icon = r.icon;
+      item.language = r.name;
+      item.languageDisplayName = r.displayName;
+      item.translatedDisplayName = _.find(Translations, (t) => t.language == r.name)?.translatedDisplayName;
+      this.Translations.push(item);
+    });
+  }
+
   save(): void {
     this.saving = true;
-    this.trucksType.translations=this.Translations;
+    this.trucksType.translations = this.Translations;
     if (this.trucksType.transportTypeId == -1) {
       this.notify.error(this.l('PleaseChooseATransportType'));
       return;

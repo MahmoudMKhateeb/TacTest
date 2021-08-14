@@ -136,6 +136,7 @@ import { CustomNgbDateParserFormatter } from '@app/shared/common/hijri-gregorian
 import { waybillsComponent } from './waybills/waybills';
 import { NotRequiredDocumentFilesComponent } from '@app/admin/not-required-document-files/not-required-document-files.component';
 import { DevExtremeModule } from '@node_modules/devextreme-angular';
+import { VasesTranslationsTemplateComponent } from './vases/vases/vases-translations-template/vases-translations-template.component';
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   // suppressScrollX: true
 };
@@ -274,6 +275,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     NotRequiredDocumentFilesComponent,
     DriversComponent,
     CreateOrEditDriverModalComponent,
+    VasesTranslationsTemplateComponent,
+    VasesTranslationsTemplateComponent,
   ],
 
   exports: [AddMemberModalComponent, AddRoleModalComponent, ViewOrEditEntityDocumentsModalComponent],

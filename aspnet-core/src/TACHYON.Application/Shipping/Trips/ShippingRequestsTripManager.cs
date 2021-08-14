@@ -45,6 +45,7 @@ namespace TACHYON.Shipping.Trips
         private readonly IAbpSession _abpSession;
         private readonly IHubContext<AbpCommonHub> _hubContext;
         private readonly IRepository<RoutPoint, long> _routPointRepository;
+        private readonly IRepository<RoutPointDocument, long> _routPointDocumentRepository;
         private readonly IRepository<ShippingRequestTripTransition> _shippingRequestTripTransitionRepository;
         private readonly IRepository<RoutPointStatusTransition> _routPointStatusTransitionRepository;
         private readonly FirebaseNotifier _firebaseNotifier;
@@ -52,7 +53,7 @@ namespace TACHYON.Shipping.Trips
         private readonly InvoiceManager _invoiceManager;
         private readonly CommonManager _commonManager;
 
-        public ShippingRequestsTripManager(IRepository<ShippingRequestTrip> shippingRequestTrip, PriceOfferManager priceOfferManager, IAppNotifier appNotifier, ISettingManager settingManager, IFeatureChecker featureChecker, IAbpSession abpSession, IHubContext<AbpCommonHub> hubContext, IRepository<RoutPoint, long> routPointRepository, IRepository<ShippingRequestTripTransition> shippingRequestTripTransitionRepository, IRepository<RoutPointStatusTransition> routPointStatusTransitionRepository, FirebaseNotifier firebaseNotifier, ISmsSender smsSender, InvoiceManager invoiceManager, CommonManager commonManager)
+        public ShippingRequestsTripManager(IRepository<ShippingRequestTrip> shippingRequestTrip, PriceOfferManager priceOfferManager, IAppNotifier appNotifier, ISettingManager settingManager, IFeatureChecker featureChecker, IAbpSession abpSession, IHubContext<AbpCommonHub> hubContext, IRepository<RoutPoint, long> routPointRepository, IRepository<ShippingRequestTripTransition> shippingRequestTripTransitionRepository, IRepository<RoutPointStatusTransition> routPointStatusTransitionRepository, FirebaseNotifier firebaseNotifier, ISmsSender smsSender, InvoiceManager invoiceManager, CommonManager commonManager, IRepository<RoutPointDocument, long> routPointDocumentRepository)
         {
             _shippingRequestTrip = shippingRequestTrip;
             _priceOfferManager = priceOfferManager;
@@ -68,6 +69,7 @@ namespace TACHYON.Shipping.Trips
             _smsSender = smsSender;
             _invoiceManager = invoiceManager;
             _commonManager = commonManager;
+            _routPointDocumentRepository = routPointDocumentRepository;
         }
 
         /// <summary>
@@ -321,9 +323,17 @@ namespace TACHYON.Shipping.Trips
             if (CurrentPoint == null) throw new UserFriendlyException(L("TheRoutePointIsNotFound"));
 
             CurrentPoint.EndTime = Clock.Now;
-            CurrentPoint.DocumentContentType = "image/jpeg";
-            CurrentPoint.DocumentName = document.DocumentName;
-            CurrentPoint.DocumentId = document.DocumentId;
+
+            //CurrentPoint.DocumentContentType = "image/jpeg";
+            //CurrentPoint.DocumentName = document.DocumentName;
+            //CurrentPoint.DocumentId = document.DocumentId;
+            var routePointDocument = new RoutPointDocument();
+            routePointDocument.RoutPointId = CurrentPoint.Id;
+            routePointDocument.DocumentContentType = "image/jpeg";
+            routePointDocument.DocumentName = document.DocumentName;
+            routePointDocument.DocumentId = document.DocumentId;
+            await _routPointDocumentRepository.InsertAsync(routePointDocument);
+
             CurrentPoint.IsActive = false;
             CurrentPoint.IsComplete = true;
             CurrentPoint.Status = RoutePointStatus.DeliveryConfirmation;

@@ -3,8 +3,10 @@ using Abp.Auditing;
 using Abp.Domain.Repositories;
 using Abp.UI;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MimeKit;
 using System;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using TACHYON.Documents.DocumentFiles;
@@ -23,17 +25,19 @@ namespace TACHYON.Web.Controllers
         private readonly IRepository<RoutPoint, long> _routPointRepository;
         private readonly IRepository<DocumentFile, Guid> _documentFileRepository;
         private readonly WaybillsManager _waybillsManager;
+        private readonly IRepository<RoutPointDocument, long> _routPointDocumentRepository;
 
         public FileController(
             ITempFileCacheManager tempFileCacheManager,
             IBinaryObjectManager binaryObjectManager
-, IRepository<RoutPoint, long> routPointRepository, WaybillsManager waybillsManager, IRepository<DocumentFile, Guid> documentFileRepository)
+, IRepository<RoutPoint, long> routPointRepository, WaybillsManager waybillsManager, IRepository<DocumentFile, Guid> documentFileRepository, IRepository<RoutPointDocument, long> routPointDocumentRepository)
         {
             _tempFileCacheManager = tempFileCacheManager;
             _binaryObjectManager = binaryObjectManager;
             _routPointRepository = routPointRepository;
             _waybillsManager = waybillsManager;
             _documentFileRepository = documentFileRepository;
+            _routPointDocumentRepository = routPointDocumentRepository;
         }
 
         [DisableAuditing]
@@ -45,9 +49,9 @@ namespace TACHYON.Web.Controllers
             {
                 return NotFound(L("RequestedFileDoesNotExists"));
             }
-             MimeTypes.TryGetExtension(file.FileType,out var exten);
+            MimeTypes.TryGetExtension(file.FileType, out var exten);
 
-            file.FileName = file.FileName +"."+ exten;
+            file.FileName = file.FileName + "." + exten;
             return File(fileBytes, file.FileType, file.FileName);
         }
 
@@ -69,15 +73,15 @@ namespace TACHYON.Web.Controllers
         public async Task<ActionResult> DownloadPDOFile(long id)
         {
             DisableTenancyFilters();
-            var Point = await _routPointRepository.FirstOrDefaultAsync(x => x.Id == id && x.IsComplete && x.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId);
-
-            if (Point == null)
+            // var Point = await _routPointRepository.GetAll().Include(e=>e.RoutPointDocuments).FirstOrDefaultAsync(x => x.Id == id && x.IsComplete && x.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId);
+            var POD = await _routPointDocumentRepository.FirstOrDefaultAsync(x => x.RoutePointDocumentType == RoutePointDocumentType.POD && x.RoutPointId == id && x.RoutPointFk.IsComplete && x.RoutPointFk.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId);
+            if (POD == null)
             {
-                throw new UserFriendlyException(L("TheDropOffPointIsNotFound"));
+                throw new UserFriendlyException(L("ThePODDocumentIsNotFound"));
 
             }
-            var binaryObject = await _binaryObjectManager.GetOrNullAsync(Point.DocumentId.Value);
-            var file = new FileDto(Point.DocumentName, Point.DocumentContentType);
+            var binaryObject = await _binaryObjectManager.GetOrNullAsync(POD.DocumentId.Value);
+            var file = new FileDto(POD.DocumentName, POD.DocumentContentType);
 
             MimeTypes.TryGetExtension(file.FileType, out var exten);
 
@@ -90,8 +94,8 @@ namespace TACHYON.Web.Controllers
         public async Task<ActionResult> DownloadTripAttachmentFile(int id)
         {
             DisableTenancyFilters();
-            var documentFile = await _documentFileRepository.FirstOrDefaultAsync(x => x.ShippingRequestTripId==id && x.ShippingRequestTripFk.HasAttachment);
-            if(documentFile == null)
+            var documentFile = await _documentFileRepository.FirstOrDefaultAsync(x => x.ShippingRequestTripId == id && x.ShippingRequestTripFk.HasAttachment);
+            if (documentFile == null)
             {
                 throw new UserFriendlyException(L("TheFileIsNotFound"));
             }
@@ -104,11 +108,11 @@ namespace TACHYON.Web.Controllers
             file.FileName = file.FileName + "." + exten;
             return File(binaryObject.Bytes, file.FileType, file.FileName);
         }
-            [AbpMvcAuthorize()]
+        [AbpMvcAuthorize()]
         public ActionResult waybill(int id)
         {
 
-           var bytes = _waybillsManager.GetSingleDropOrMasterWaybillPdf(id);
+            var bytes = _waybillsManager.GetSingleDropOrMasterWaybillPdf(id);
 
             MimeTypes.TryGetExtension("application/pdf", out var exten);
 

@@ -1,6 +1,4 @@
 ﻿using TACHYON.Vases;
-
-using System;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using Abp.Linq.Extensions;
@@ -8,12 +6,11 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Abp.Domain.Repositories;
 using TACHYON.ShippingRequestVases.Dtos;
-using TACHYON.Dto;
 using Abp.Application.Services.Dto;
 using TACHYON.Authorization;
-using Abp.Extensions;
 using Abp.Authorization;
 using Microsoft.EntityFrameworkCore;
+using TACHYON.Vases.Dtos;
 
 namespace TACHYON.ShippingRequestVases
 {
@@ -28,54 +25,56 @@ namespace TACHYON.ShippingRequestVases
             _shippingRequestVasRepository = shippingRequestVasRepository;
             _lookup_vasRepository = lookup_vasRepository;
 
-        }
+        } // TO DO ADD ALL MAPPING CONFIGURATION => done
 
-        public async Task<PagedResultDto<GetShippingRequestVasForViewDto>> GetAll(GetAllShippingRequestVasesInput input)
+        public async Task<PagedResultDto<ShippingRequestVasDto>> GetAll(GetAllShippingRequestVasesInput input)
         {
 
-            var filteredShippingRequestVases = _shippingRequestVasRepository.GetAll()
-                        .Include(e => e.VasFk)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.VasNameFilter), e => e.VasFk != null && e.VasFk.Name == input.VasNameFilter);
+            var shippingRequestVases = _shippingRequestVasRepository.GetAll()
+                        .AsNoTracking().Include(e => e.VasFk)
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter),
+                            e => false)
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.VasNameFilter), 
+                            e => e.VasFk != null && e.VasFk.Name == input.VasNameFilter)
+                        .OrderBy(input.Sorting ?? "id asc");
 
-            var pagedAndFilteredShippingRequestVases = filteredShippingRequestVases
-                .OrderBy(input.Sorting ?? "id asc")
-                .PageBy(input);
+            var pageResult = await shippingRequestVases.PageBy(input).ToListAsync();
 
-            var shippingRequestVases = from o in pagedAndFilteredShippingRequestVases
-                                       join o1 in _lookup_vasRepository.GetAll() on o.VasId equals o1.Id into j1
-                                       from s1 in j1.DefaultIfEmpty()
+            var totalCount = await shippingRequestVases.CountAsync();
 
-                                       select new GetShippingRequestVasForViewDto()
-                                       {
-                                           ShippingRequestVas = new ShippingRequestVasDto
-                                           {
-                                               Id = o.Id
-                                           },
-                                           VasName = s1 == null || s1.Name == null ? "" : s1.Name.ToString()
-                                       };
+            var items = pageResult
+                .Select(x => new ShippingRequestVasDto()
+                {
+                    Id = x.Id,
+                    OtherVasName = x.OtherVasName,
+                    RequestMaxAmount = x.RequestMaxAmount,
+                    RequestMaxCount = x.RequestMaxCount,
+                    ShippingRequestId = x.ShippingRequestId,
+                    Vas = ObjectMapper.Map<VasDto>(x.VasFk)
+                }).ToList();
 
-            var totalCount = await filteredShippingRequestVases.CountAsync();
-
-            return new PagedResultDto<GetShippingRequestVasForViewDto>(
-                totalCount,
-                await shippingRequestVases.ToListAsync()
-            );
-        }
-
-        public async Task<GetShippingRequestVasForViewDto> GetShippingRequestVasForView(long id)
-        {
-            var shippingRequestVas = await _shippingRequestVasRepository.GetAsync(id);
-
-            var output = new GetShippingRequestVasForViewDto { ShippingRequestVas = ObjectMapper.Map<ShippingRequestVasDto>(shippingRequestVas) };
-
-            if (output.ShippingRequestVas.VasId != null)
+            return new PagedResultDto<ShippingRequestVasDto>()
             {
-                var _lookupVas = await _lookup_vasRepository.FirstOrDefaultAsync((int)output.ShippingRequestVas.VasId);
-                output.VasName = _lookupVas?.Name?.ToString();
-            }
+                Items = items,
+                TotalCount = totalCount
+            };
+        }
 
-            return output;
+        public async Task<ShippingRequestVasDto> GetShippingRequestVasForView(long id)
+        {
+            var shippingRequestVas = await _shippingRequestVasRepository
+                .GetAll().AsNoTracking().Include(x=> x.VasFk)
+                .ThenInclude(x=> x.Translations).FirstOrDefaultAsync(x=> x.Id == id);
+
+            return new ShippingRequestVasDto()
+            {
+                Id = shippingRequestVas.Id,
+                OtherVasName = shippingRequestVas.OtherVasName,
+                RequestMaxAmount = shippingRequestVas.RequestMaxAmount,
+                RequestMaxCount = shippingRequestVas.RequestMaxCount,
+                ShippingRequestId = shippingRequestVas.ShippingRequestId,
+                Vas = ObjectMapper.Map<VasDto>(shippingRequestVas.VasFk)
+            };
         }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestVases_Edit)]

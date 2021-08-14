@@ -7,6 +7,7 @@ using Abp.Authorization.Users;
 using Abp.AutoMapper;
 using Abp.DynamicEntityParameters;
 using Abp.EntityHistory;
+using Abp.Extensions;
 using Abp.Localization;
 using Abp.Notifications;
 using Abp.Organizations;
@@ -168,9 +169,25 @@ namespace TACHYON
             configuration.CreateMap<CreateOrEditTruckStatusesTranslationDto, TruckStatusesTranslation>().ReverseMap();
             configuration.CreateMap<TruckStatusesTranslationDto, TruckStatusesTranslation>().ReverseMap();
 
+            configuration.CreateMap<PackingTypeTranslation, PackingTypeTranslationDto>().ReverseMap();
+            configuration.CreateMap<PackingTypeTranslation, PackingTypeTranslationDto>().ReverseMap();
 
-            configuration.CreateMap<CreateOrEditPackingTypeDto, PackingType>().ReverseMap();
-            configuration.CreateMap<PackingTypeDto, PackingType>().ReverseMap();
+            configuration.CreateMap<CreateOrEditPackingTypeDto, PackingType>().ForMember(x => x.Translations, x => x.Ignore());
+            // configuration.CreateMap<GetPackingTypeForViewDto, PackingType>().ForPath(x => x, x => x.MapFrom(src => src.PackingType)).ReverseMap();
+
+            configuration.CreateMap<PackingType, CreateOrEditPackingTypeDto>()
+                .ForMember(x => x.TranslationDtos, x =>
+                    x.MapFrom(i => i.Translations));
+
+
+            configuration.CreateMap<PackingType, PackingTypeDto>()
+                .ForMember(x => x.DisplayName, x =>
+                    x.MapFrom(i => i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)) == null ? i.DisplayName : i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).DisplayName))
+                .ForMember(x => x.Description, x =>
+                    x.MapFrom(i => i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)) == null ? i.Description : i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).Description));
+
+
+
             configuration.CreateMap<CreateOrEditShippingTypeDto, ShippingType>().ReverseMap();
             configuration.CreateMap<ShippingTypeDto, ShippingType>().ReverseMap();
             configuration.CreateMap<CreateOrEditTruckCapacitiesTranslationDto, TruckCapacitiesTranslation>().ReverseMap();
@@ -191,11 +208,19 @@ namespace TACHYON
             configuration.CreateMap<TrucksTypesTranslationDto, TrucksTypesTranslation>().ReverseMap();
             configuration.CreateMap<CreateOrEditTransportTypesTranslationDto, TransportTypesTranslation>().ReverseMap();
             configuration.CreateMap<TransportTypesTranslationDto, TransportTypesTranslation>().ReverseMap();
+            configuration.CreateMap<VasTranslation, VasTranslationDto>().ReverseMap();
+            configuration.CreateMap<Vas, GetVasForViewDto>()
+                .ForMember(x => x.Vas, x => x.MapFrom(i => i));
             configuration.CreateMap<CreateOrEditShippingRequestVasDto, ShippingRequestVas>().ReverseMap();
             configuration.CreateMap<ShippingRequestVasDto, ShippingRequestVas>().ReverseMap();
             configuration.CreateMap<CreateOrEditVasPriceDto, VasPrice>().ReverseMap();
             configuration.CreateMap<VasPriceDto, VasPrice>().ReverseMap();
-            configuration.CreateMap<CreateOrEditVasDto, Vas>().ReverseMap();
+            configuration.CreateMap<Vas, GetVasForEditOutput>()
+                .ForMember(x => x.Vas, x
+                    => x.MapFrom(i => i));
+            configuration.CreateMap<Vas, CreateOrEditVasDto>();
+            configuration.CreateMap<CreateOrEditVasDto, Vas>()
+                .ForMember(x => x.Translations, x => x.Ignore()); 
             configuration.CreateMap<VasDto, Vas>().ReverseMap();
             configuration.CreateMap<CreateOrEditReceiverDto, Receiver>().ReverseMap();
             configuration.CreateMap<ReceiverDto, Receiver>().ReverseMap();
@@ -294,8 +319,8 @@ namespace TACHYON
                 .ForMember(dest => dest.ShippingRequestVasList, opt => opt.MapFrom(src => src.ShippingRequestVases));
 
             configuration.CreateMap<CreateOrEditShippingRequestTripDto, ShippingRequestTrip>()
-                .ForMember(d=>d.WaybillNumber, opt=>opt.Ignore())
-                .ForMember(d=>d.RoutPoints,opt=>opt.Ignore())
+                .ForMember(d => d.WaybillNumber, opt => opt.Ignore())
+                .ForMember(d => d.RoutPoints, opt => opt.Ignore())
                 .ForMember(d => d.ShippingRequestTripVases, opt => opt.Ignore())
                 .AfterMap(AddOrUpdateShippingRequestTrip);
 
@@ -341,7 +366,7 @@ namespace TACHYON
                 .ReverseMap();
 
             configuration.CreateMap<CreateOrEditRoutPointDto, RoutPoint>()
-                .ForMember(x=> x.WaybillNumber,otp=> otp.Ignore())
+                .ForMember(x => x.WaybillNumber, otp => otp.Ignore())
                 .AfterMap(AddOrUpdateShippingRequestTripRoutePointGoods);
 
             configuration.CreateMap<RoutPoint, CreateOrEditRoutPointDto>()
@@ -391,7 +416,12 @@ namespace TACHYON
                 .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations))
                 .ReverseMap();
             configuration.CreateMap<TrucksTypeDto, TrucksType>().ReverseMap();
-            configuration.CreateMap<CreateOrEditTruckStatusDto, TruckStatus>().ReverseMap();
+            configuration.CreateMap<CreateOrEditTruckStatusDto, TruckStatus>()
+                .ForMember(x => x.Translations, x => x.Ignore());
+
+            configuration.CreateMap<CreateOrEditTruckStatusDto, TruckStatus>()
+                .ForMember(x => x.Translations, x => x.MapFrom(i => i.TruckStatusTranslation));
+
             configuration.CreateMap<TruckStatusDto, TruckStatus>().ReverseMap();
             //Inputs
             configuration.CreateMap<CheckboxInputType, FeatureInputTypeDto>();
@@ -646,7 +676,10 @@ namespace TACHYON
                 .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
                 .ReverseMap();
 
-
+            //configuration.CreateMultiLingualMap<Vas, VasTranslation, VasDto>(context)
+            //    .EntityMap.ForMember(x => x.VasTranslation,
+            //        x =>
+            //            x.MapFrom(i => i.Translations));
 
             configuration.
                 CreateMultiLingualMap<ShippingRequestReasonAccident, ShippingRequestReasonAccidentTranslation, ShippingRequestReasonAccidentListDto>(context);

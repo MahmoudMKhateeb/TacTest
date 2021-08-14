@@ -115,6 +115,7 @@ namespace TACHYON.EntityFrameworkCore
 
         #endregion
         public virtual DbSet<PackingType> PackingTypes { get; set; }
+        public virtual DbSet<PackingTypeTranslation> PackingTypeTranslations { get; set; }
 
         public virtual DbSet<ShippingType> ShippingTypes { get; set; }
 
@@ -127,6 +128,8 @@ namespace TACHYON.EntityFrameworkCore
         public virtual DbSet<TransportTypesTranslation> TransportTypesTranslations { get; set; }
 
         public virtual DbSet<Vas> Vases { get; set; }
+
+        public virtual DbSet<VasTranslation> VasTranslations { get; set; }
 
         public virtual DbSet<VasPrice> VasPrices { get; set; }
         public virtual DbSet<ShippingRequestVas> ShippingRequestVases { get; set; }
@@ -237,6 +240,7 @@ namespace TACHYON.EntityFrameworkCore
         public virtual DbSet<ShippingRequestBid> ShippingRequestBids { get; set; }
 
         public virtual DbSet<RoutPoint> RoutPoints { get; set; }
+        public virtual DbSet<RoutPointDocument> RoutPointDocuments { get; set; }
         public virtual DbSet<RoutPointStatusTransition> RoutPointStatusTransitions { get; set; }
 
         public DbSet<TenantCarrier> TenantCarriers { get; set; }
