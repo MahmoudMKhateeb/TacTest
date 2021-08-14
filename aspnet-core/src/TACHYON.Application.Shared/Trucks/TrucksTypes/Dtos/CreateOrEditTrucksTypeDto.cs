@@ -17,6 +17,7 @@ namespace TACHYON.Trucks.TrucksTypes.Dtos
 
         public int? TransportTypeId { get; set; }
         public ICollection<TrucksTypesTranslationDto> Translations { get; set; }
+        public bool IsActive { get; set; } = true;
 
     }
 }

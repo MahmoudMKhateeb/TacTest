@@ -3,8 +3,7 @@
     public class ShippingRequestTripConsts
     {
 
-        public const int MinNoteLength = 20;
-        public const int MaxNoteLength = 600;
+        public const int MaxNoteLength = 512;
 
     }
 }

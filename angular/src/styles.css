@@ -526,3 +526,8 @@ card-body {
 .ui-column-title {
   display: none;
 }
+.dropdown-menu {
+  left: auto;
+  right: 0px;
+  transform: translate3d(85px, 1px, 0);
+}

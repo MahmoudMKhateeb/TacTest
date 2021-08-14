@@ -1,5 +1,6 @@
 ﻿using Abp.Application.Services.Dto;
 using Abp.Runtime.Validation;
+using Castle.Core.Internal;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using System;
@@ -35,7 +36,6 @@ namespace TACHYON.Routs.RoutPoints.Dtos
 
         [DataType(DataType.EmailAddress)] [CanBeNull] public string ReceiverEmailAddress { get; set; }
         [CanBeNull] public string ReceiverCardIdNumber { get; set; }
-        [CanBeNull] public string ReceiverAddress { get; set; }
 
         [CanBeNull] public string Note { get; set; }
 
@@ -43,23 +43,19 @@ namespace TACHYON.Routs.RoutPoints.Dtos
 
         public void AddValidationErrors(CustomValidationContext context)
         {
+
+
             if (PickingType == PickingType.Pickup) return;
             //additional receiver must provided
-            if (!ReceiverId.HasValue)
+            if (!ReceiverId.HasValue && ReceiverPhoneNumber.IsNullOrEmpty() )
             {
-                if (string.IsNullOrEmpty(ReceiverFullName)) context.Results.Add(new ValidationResult("PleaseAddAdditionalReceiverFullName"));
-                if (string.IsNullOrEmpty(ReceiverPhoneNumber)) context.Results.Add(new ValidationResult("PleaseAddAdditionalReceiverPhoneNumber"));
-                if (string.IsNullOrEmpty(ReceiverEmailAddress)) context.Results.Add(new ValidationResult("PleaseAddAdditionalReceiverEmailAddress"));
-                if (string.IsNullOrEmpty(ReceiverAddress)) context.Results.Add(new ValidationResult("PleaseAddAdditionalReceiverAddress"));
-                else if (!isValidMobileNumber(ReceiverPhoneNumber)) context.Results.Add(new ValidationResult("InvalidAdditionalReceiverMobileNumber"));
-                //if (string.IsNullOrEmpty(ReceiverCardIdNumber)) context.Results.Add(new ValidationResult("PleaseAddReceiverCardIdNumber"));
+                context.Results.Add(new ValidationResult("AtLeastOneReceiverShouldBeProvided"));
             }
             //there is additional receiver
             if (ReceiverPhoneNumber != null)
             {
                 if (string.IsNullOrEmpty(ReceiverFullName)) context.Results.Add(new ValidationResult("PleaseAddAdditionalReceiverFullName"));
-                if (string.IsNullOrEmpty(ReceiverEmailAddress)) context.Results.Add(new ValidationResult("PleaseAddAdditionalReceiverEmailAddress"));
-                if (string.IsNullOrEmpty(ReceiverAddress)) context.Results.Add(new ValidationResult("PleaseAddAdditionalReceiverAddress"));
+                if (string.IsNullOrEmpty(ReceiverPhoneNumber)) context.Results.Add(new ValidationResult("PleaseAddAdditionalReceiverPhoneNumber"));
                 else if (!isValidMobileNumber(ReceiverPhoneNumber)) context.Results.Add(new ValidationResult("InvalidAdditionalReceiverMobileNumber"));
             }
         }

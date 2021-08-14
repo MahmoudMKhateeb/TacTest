@@ -64,10 +64,8 @@ namespace TACHYON.Routs.RoutPoints
         //Receiver Info if he is outside the platform
         [CanBeNull] public string ReceiverFullName { get; set; }
         [DataType(DataType.PhoneNumber)] [CanBeNull] public string ReceiverPhoneNumber { get; set; }
-        [CanBeNull] public string ReceiverEmailAddress { get; set; }
         [CanBeNull] public string ReceiverCardIdNumber { get; set; }
-        [CanBeNull] public string ReceiverAddress { get; set; }
-
+         [CanBeNull] public string ReceiverEmailAddress { get; set; }
         //Shipper Note
         [CanBeNull] public string Note { get; set; }
         public bool IsDeliveryNoteUploaded { get; set; }

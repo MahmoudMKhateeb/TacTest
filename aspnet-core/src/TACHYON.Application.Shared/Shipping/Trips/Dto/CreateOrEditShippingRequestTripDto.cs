@@ -33,8 +33,7 @@ namespace TACHYON.Shipping.Trips.Dto
         public virtual long? DestinationFacilityId { get; set; }
         public string TotalValue { get; set; }
 
-        [StringLength(ShippingRequestTripConsts.MaxNoteLength,
-            MinimumLength = ShippingRequestTripConsts.MinNoteLength)]
+        [StringLength(ShippingRequestTripConsts.MaxNoteLength)]
         public string Note { get; set; }
         public List<CreateOrEditRoutPointDto> RoutPoints { get; set; }
         public List<CreateOrEditShippingRequestTripVasDto> ShippingRequestTripVases { get; set; }
@@ -58,9 +57,7 @@ namespace TACHYON.Shipping.Trips.Dto
             foreach (var drop in dropPoints)
             {
                 if (drop.ReceiverId == null &&
-                    (string.IsNullOrWhiteSpace(drop.ReceiverCardIdNumber) ||
-                    string.IsNullOrWhiteSpace(drop.ReceiverEmailAddress) ||
-                    string.IsNullOrWhiteSpace(drop.ReceiverFullName) ||
+                    (string.IsNullOrWhiteSpace(drop.ReceiverFullName) ||
                     string.IsNullOrWhiteSpace(drop.ReceiverPhoneNumber)))
                 {
                     //throw new UserFriendlyException(L("YouMustEnterReceiver"));

@@ -52,8 +52,8 @@
 		<text name="AddNew">Add new</text>
 		<text name="AddNewDynamicParameter">Add A New Dynamic Parameter</text>
 		<text name="AddNewEntityDynamicParameter">Assign Dynamic Parameter To Entity</text>
-		<text name="AddNewGoodDetail">Add good details</text>
-		<text name="AddNewGoodDetails">Add good details</text>
+		<text name="AddNewGoodDetail">Add goods details</text>
+		<text name="AddNewGoodDetails">Add goods details</text>
 		<text name="AddNewTrip">Add trip</text>
 		<text name="AddNewWayPoint">Add New Pickup Facility</text>
 		<text name="AddNewWebhookSubscription">Add New Webhook Subscription</text>
@@ -340,7 +340,7 @@
 		<text name="CreateNewDriver">Add new driver</text>
 		<text name="CreateNewEdition">Add new subscription type</text>
 		<text name="CreateNewFacility">Add New Facility</text>
-		<text name="CreateNewGoodCategory">Add new good category</text>
+		<text name="CreateNewGoodCategory">Add new goods category</text>
 		<text name="CreateNewGoodsDetail">Add goods details</text>
 		<text name="CreateNewLanguage">Add new language</text>
 		<text name="CreateNewNationality">Add new nationality</text>
@@ -471,7 +471,7 @@
 		<text name="DeleteEntityDynamicParameterMessage">Entities dynamic parameter and its relationships will be deleted completely. (This cannot be undo!) Entity Name:{0}, Dynamic parameter name:{1}</text>
 		<text name="DeleteEntityDynamicParameterValueMessage">Value(s) of {0} will be cleaned</text>
 		<text name="DeleteFacility">Delete facility</text>
-		<text name="DeleteGoodCategory">Delete good category</text>
+		<text name="DeleteGoodCategory">Delete goods category</text>
 		<text name="DeleteGoodsDetail">Delete goods details</text>
 		<text name="DeleteListedNotifications">Delete listed notifications</text>
 		<text name="DeleteListedNotificationsWarningMessage">All notifications will be deleted.</text>
@@ -635,7 +635,7 @@
 		<text name="EditEdition">Edit subscription type</text>
 		<text name="EditFacility">Edit Facility</text>
 		<text name="EditFacilityModal">Edit facility modal</text>
-		<text name="EditGoodCategory">Edit good category</text>
+		<text name="EditGoodCategory">Edit goods category</text>
 		<text name="EditGoodsDetail">Edit goods details</text>
 		<text name="EditingDynamicParameters">Editing Dynamic Parameters</text>
 		<text name="EditingDynamicParameterValue">Editing Dynamic Parameter Value</text>
@@ -815,19 +815,19 @@
 		<text name="GiveLocationPermission">Give Us My Location Permission</text>
 		<text name="GoingToPointConformation">Are You Sure You Want To Go To This Point?</text>
 		<text name="GoodCategories">Goods categories</text>
-		<text name="GoodCategoriesHeaderInfo">Good categories header info</text>
+		<text name="GoodCategoriesHeaderInfo">Goods categories header info</text>
 		<text name="GoodCategory">Goods category</text>
-		<text name="GoodCategoryDisplayName">Good category</text>
-		<text name="GoodCategoryId">Good Category Id</text>
-		<text name="GoodCategoryName">Good category</text>
-		<text name="MainGoodCategory">Good category</text>
-		<text name="GoodDetailsCantBeEmptyInDropPoint">Good details cant be empty in drop point</text>
+		<text name="GoodCategoryDisplayName">Goods category</text>
+		<text name="GoodCategoryId">Goods Category Id</text>
+		<text name="GoodCategoryName">Goods category</text>
+		<text name="MainGoodCategory">Goods category</text>
+		<text name="GoodDetailsCantBeEmptyInDropPoint">Goods details cant be empty in drop point</text>
 		<text name="GoodsDetail">Goods Details</text>
 		<text name="GoodsDetailName">Goods details</text>
 		<text name="GoodsDetails">Goods Details</text>
 		<text name="GoodsDetailsHeaderInfo">Goods details header info</text>
 		<text name="GoodsName">Good</text>
-		<text name="GoodSubCategory">Good sub-category</text>
+		<text name="GoodSubCategory">Goods sub-category</text>
 		<text name="GoogleAuthenticatorIsNotEnabled">Google Authenticator is not enabled for your account. You must first enable it in your settings.</text>
 		<text name="GoogleAuthenticatorReferrerLink">Not sure what this screen means? You may need to check this </text>
 		<text name="GoToApplication">Go to application</text>
@@ -1009,7 +1009,7 @@
 		<text name="LookingForMpaVersion">Looking for Multi-Page Application Version?</text>
 		<text name="LookingForSpaVersion">Looking for Single-Page Application Version?</text>
 		<text name="MailSent">Mail sent</text>
-		<text name="SelectaGoodCategory">Select good category</text>
+		<text name="SelectaGoodCategory">Select goods category</text>
 		<text name="MainMenu">Main menu</text>
 		<text name="Maintenance">Maintenance</text>
 		<text name="MakePaid">label as paid</text>
@@ -1200,7 +1200,7 @@
 		<text name="Off">Off</text>
 		<text name="Offer">Offer</text>
 		<text name="OfferedPrice">Offer</text>
-		<text name="Offers">Offers</text>
+		<text name="Offers">Price offers</text>
 		<text name="OffersHeaderInfo">Offers header info</text>
 		<text name="OfferStatus">Status</text>
 		<text name="Offline">Offline</text>
@@ -1313,7 +1313,7 @@
 		<text name="PickDocumentType">Select document type</text>
 		<text name="PickFacility">Select facility</text>
 		<text name="PickFromGallery">Select from gallery</text>
-		<text name="PickGoodCategory">Select good category</text>
+		<text name="PickGoodCategory">Select goods category</text>
 		<text name="PickGoodsDetail">Pick goods detail</text>
 		<text name="PickingType">Packing type</text>
 		<text name="PickingTypes">Packing types</text>
@@ -1385,7 +1385,7 @@
 		<text name="PreviewOffer">Preview offer</text>
 		<text name="Previous">Previous</text>
 		<text name="Price">Price</text>
-		<text name="GoodDetails">Good Details</text>
+		<text name="GoodDetails">Goods Details</text>
 		<text name="PriceOffers">Offers</text>
 		<text name="Prices">Prices</text>
 		<text name="PriceSubmitted">Price submitted</text>
@@ -1538,8 +1538,8 @@
 		<text name="SelectaDriver">Selecta driver</text>
 		<text name="SelectADynamicParameter">Select A DynamicParameter</text>
 		<text name="SelectaFacility">Select facility</text>
-		<text name="SelectAGoodCategory">Select good category</text>
-		<text name="SelectAGoodSubCategory">Select good sub category</text>
+		<text name="SelectAGoodCategory">Select goods category</text>
+		<text name="SelectAGoodSubCategory">Select goods sub category</text>
 		<text name="SelectAnEntity">Select an entity</text>
 		<text name="SelectAnItem">Select an item</text>
 		<text name="SelectAnOrganizationUnitToSeeMembers">Select an organization unit to see members.</text>
@@ -1675,7 +1675,7 @@
 		<text name="SpecialConstant">Special Constant</text>
 		<text name="Standard">Standard</text>
 		<text name="Start">Start</text>
-		<text name="StartDate">Trip pickup date start</text>
+		<text name="StartDate">Trips pickup date start</text>
 		<text name="StartLoading">Start loading</text>
 		<text name="StartMovingToDestination">Start moving to destination</text>
 		<text name="StartMovingToLoadingLocation">Start Moving To Loading Location</text>
@@ -1769,7 +1769,7 @@
 		<text name="TACHYON.DocumentsEntities.DocumentsEntity">DocumentsEntity</text>
 		<text name="TACHYON.DocumentTypes.DocumentType">Document type</text>
 		<text name="TACHYON.DocumentTypeTranslations.DocumentTypeTranslation">Document type translation</text>
-		<text name="TACHYON.GoodCategories.GoodCategory">Good category</text>
+		<text name="TACHYON.GoodCategories.GoodCategory">Goods category</text>
 		<text name="TACHYON.GoodsDetails.GoodsDetail">Goods details</text>
 		<text name="TACHYON.MultiTenancy.Tenant">Company</text>
 		<text name="TACHYON.Nationalities.Nationality">Nationality</text>
@@ -1963,7 +1963,7 @@
 		<text name="TrialExpireNotification">Your trial period will expire in {0} day(s).</text>
 		<text name="TrialSubscriptionNotification">You are in Trial period for {0} edition, {1} to purchase.</text>
 		<text name="TrialWithoutEndDateErrorMessage">Trial accounts must have subscription end date</text>
-		<text name="Trip_StartDate">Trip pickup date start</text>
+		<text name="Trip_StartDate">Trips pickup date start</text>
 		<text name="TripDetails">Trip Details</text>
 		<text name="TripEndDate">Trip end date</text>
 		<text name="TripFinishedSuccessfully">Trip Finished Successfully</text>
@@ -1971,7 +1971,7 @@
 		<text name="TripInfo">Trip Info</text>
 		<text name="TripRejectReason">Trip reject reason</text>
 		<text name="TripsEndDate">Trip pickup date end</text>
-		<text name="TripsStartDate">Trip pickup date start</text>
+		<text name="TripsStartDate">Trips pickup date start</text>
 		<text name="TripStartDate">Trips start date</text>
 		<text name="TripStartDateCantBeGretterThanTripEndDate">Trip start date cant be gretter than trip end date</text>
 		<text name="TripStatus">Trip status</text>
@@ -2290,7 +2290,18 @@
 		<text name="POD">POD</text>
 		<text name="EstimatedPickUpDate">Estimated pickup date</text>
 		<text name="EstimatedDropOffDate">Estimated drop off date</text>
-		<text name="ApproximateTripGoodsValue">Approximate trip goods value</text>
+		<text name="ApproximateTripGoodsValue">Approximate total value of goods</text>
 		<text name="SendOffer">Send price offer</text>
+		<text name="Review and submit">عرض واعتماد</text>
+		<text name="BasicDetails">Basic details</text>
+		<text name="BiddingRange">Bidding range</text>
+		<text name="TripsDateRange">Trips pickup date range</text>
+		<text name="SetUpAdditionalReceiver">Additional receiver</text>
+		<text name="ReceiverEmailAddress">Receiver email address</text>
+		<text name="CompleteDropPointSetup">Complete shipment details</text>
+		<text name="Publish">نشر</text>
+		
+	
+		
 	</texts>
 </localizationDictionary>

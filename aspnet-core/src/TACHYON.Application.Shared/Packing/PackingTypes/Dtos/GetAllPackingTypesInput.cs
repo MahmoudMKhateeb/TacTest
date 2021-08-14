@@ -3,9 +3,9 @@ using System;
 
 namespace TACHYON.Packing.PackingTypes.Dtos
 {
-    public class GetAllPackingTypesInput : PagedAndSortedResultRequestDto
+    public class GetAllPackingTypesInput 
     {
-        public string Filter { get; set; }
+        public string LoadOptions { get; set; }
 
     }
 }

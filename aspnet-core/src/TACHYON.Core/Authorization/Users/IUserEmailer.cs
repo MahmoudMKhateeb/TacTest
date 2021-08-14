@@ -1,5 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using TACHYON.Chat;
+using TACHYON.Documents.DocumentFiles;
 using TACHYON.MultiTenancy;
 
 namespace TACHYON.Authorization.Users
@@ -18,10 +21,10 @@ namespace TACHYON.Authorization.Users
         /// <summary>
         /// Send Email to admin tenant user when all documents approved by host
         /// </summary>
-        /// <param name="user"></param>
+        /// <param name="loginLink"></param>
         /// <param name="tenant"></param>
         /// <returns></returns>
-        Task SendAllApprovedDocumentsAsyn(Tenant tenant);
+        Task SendAllApprovedDocumentsAsync(Tenant tenant,string loginLink);
         /// <summary>
         /// Send Email to admin tenant user when all documents approved by host
         /// </summary>
@@ -29,6 +32,16 @@ namespace TACHYON.Authorization.Users
         /// <param name="documentFileName"></param>
         /// <returns></returns>
         Task SendExpiredDateDocumentsAsyn(Tenant tenant, string documentFileName);
+
+
+        /// <summary>
+        /// Send Email to tenant when approve all documents and eligible to use platform
+        /// </summary>
+        /// <param name="file"></param>
+        /// /// <param name="tenantId"></param>
+        /// <returns></returns>
+        Task SendDocumentsExpiredInfoAsyn(List<DocumentFile> files, int tenantId);
+
         /// <summary>
         /// Sends a password reset link to user's email.
         /// </summary>
@@ -44,5 +57,54 @@ namespace TACHYON.Authorization.Users
         /// <param name="senderTenancyName"></param>
         /// <param name="chatMessage"></param>
         Task TryToSendChatMessageMail(User user, string senderUsername, string senderTenancyName, ChatMessage chatMessage);
+        /// <summary>
+        /// Send an Email When User Account Password Updated or Changed
+        /// </summary>
+        /// <param name="newPassword"></param>
+        /// <param name="userEmail"></param>
+        /// /// <param name="tenantId"></param>
+        /// <returns></returns>
+        Task SendPasswordUpdatedEmail(int? tenantId, string userEmail, string newPassword); 
+
+        /// <summary>
+        /// Send an Email To Warn User From Suspend Him Account Because That He Has Document Almost Expired
+        /// </summary>
+        /// <param name="tenant"></param>
+        /// <param name="documentName"></param>
+        /// <param name="documentExpireDate"></param>
+        /// <returns></returns>
+        Task SendWarningSuspendAccountForExpiredDocumentEmail(Tenant tenant,string documentName,DateTime documentExpireDate); 
+       
+        /// <summary>
+        /// Send an Email To Notify User That Him Account Was Suspended For Expired Document
+        /// </summary>
+        /// <param name="tenant"></param>
+        /// <param name="documentName"></param>
+        /// <returns></returns>
+        Task SendSuspendedAccountForExpiredDocumentEmail(Tenant tenant, string documentName);
+
+        /// <summary>
+        /// Send an Email To Notify User That He Have Due Invoice
+        /// </summary>
+        /// <param name="tenant"></param>
+        /// <param name="invoiceNumber"></param>
+        /// <param name="invoiceIssueDate"></param>
+        /// <param name="invoiceTotalAmount"></param>
+        /// <returns></returns>
+        Task SendInvoiceDueEmail(Tenant tenant, string invoiceNumber, DateTime invoiceIssueDate,
+            decimal invoiceTotalAmount);
+
+        /// <summary>
+        /// Send Email To Tell User He Have a New Created Invoice
+        /// </summary>
+        /// <param name="tenant"></param>
+        /// <param name="invoiceDueDate"></param>
+        /// <param name="invoiceIssueDate"></param>
+        /// <param name="invoiceTotalAmount"></param>
+        /// <param name="invoiceLink"></param>
+        /// <returns></returns>
+        Task SendIssuedInvoiceEmail(Tenant tenant, DateTime invoiceDueDate,
+            DateTime invoiceIssueDate, decimal invoiceTotalAmount,string invoiceLink);
+
     }
 }

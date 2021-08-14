@@ -256,6 +256,7 @@ namespace TACHYON.Authorization.Accounts
 
         private async Task<User> GetUserByChecking(string inputEmailAddress)
         {
+            DisableTenancyFilters();
             var user = await UserManager.FindByEmailAsync(inputEmailAddress);
             if (user == null)
             {

@@ -210,7 +210,7 @@ namespace TACHYON.Shipping.Trips
                 Include(e => e.ShippingRequestFk)
                 .Include(d => d.AssignedDriverUserFk)
                 .Where(e => e.Id == input.Id)
-                .Where(e => e.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId && e.DriverStatus != ShippingRequestTripDriverStatus.Accepted)
+                .Where(e => e.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId )
                 .FirstOrDefaultAsync();
             if (trip == null) throw new UserFriendlyException(L("NoTripToAssignDriver"));
 
@@ -238,7 +238,12 @@ namespace TACHYON.Shipping.Trips
                 await _firebase.TripChanged(new UserIdentifier(trip.AssignedDriverUserFk.TenantId, trip.AssignedDriverUserId.Value), trip.Id.ToString());
             }
             await _appNotifier.ShipperShippingRequestTripNotifyDriverWhenAssignTrip(new UserIdentifier(AbpSession.TenantId, trip.AssignedDriverUserId.Value), trip);
-            await _appNotifier.NotificationWhenTripDetailsChanged(trip,GetCurrentUser());
+            // Notify Old Driver (The Trip Was Unassigned To You)
+            if (oldAssignedDriverUserId != null)
+                await _appNotifier.ShipperShippingRequestTripNotifyDriverWhenUnassignedTrip(new UserIdentifier(AbpSession.TenantId, oldAssignedDriverUserId.Value), trip);
+            
+
+            await _appNotifier.NotificationWhenTripDetailsChanged(trip,await GetCurrentUserAsync());
 
         }
 

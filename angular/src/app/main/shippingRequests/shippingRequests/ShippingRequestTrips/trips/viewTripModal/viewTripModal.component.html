@@ -50,7 +50,7 @@
           <!--  begin:: Trip start&End Dates-->
           <div class="col-lg-6">
             <div class="form-group">
-              <label><span class="required-fileds">*</span>{{ l('Trip_StartDate') }} </label>
+              <label>{{ l('Trip_StartDate') }} </label>
               <div class="input-group date">
                 <input
                   [(date)]="trip.startTripDate"
@@ -128,7 +128,7 @@
           <!--  begin::Trip Goods Approximate Value -->
           <div class="col-lg-6 mt-6">
             <div class="form-group">
-              <label>{{ l('ApproximateTripGoodsValue') }} *</label>
+              <label>{{ l('ApproximateTripGoodsValue') }} </label>
               <div class="input-group date">
                 <input
                   type="text"
@@ -148,6 +148,29 @@
             </div>
           </div>
           <!--  end::Trip Goods Approximate Value -->
+          <div class="col-lg-6 mt-4">
+            <div class="form-group row">
+              <div class="col-6 col-form-label mt-10">
+                <div class="checkbox-inline">
+                  <label class="checkbox checkbox-danger">
+                    <input type="checkbox" name="trip.needsDeliveryNote" [(ngModel)]="trip.needsDeliveryNote" disabled />
+                    <span></span>
+                    {{ l('NeedsDeliveryNote') }}
+                  </label>
+                </div>
+              </div>
+              <div class="col-6 col-form-label d-flex justify-content-center mt-10">
+                <div class="checkbox-inline float-right">
+                  <label class="checkbox checkbox-danger">
+                    <input type="checkbox" name="trip.hasAttachment" [(ngModel)]="trip.hasAttachment" disabled />
+                    <span></span>
+                    {{ l('HasAttachment') }}
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- begin::Vas's  -->
           <!--          <div class="col-lg-6" *ngIf="VasListFromFather.length > 0">-->
           <!--            <div class="form-group" *ngIf="selectedVases != []">-->

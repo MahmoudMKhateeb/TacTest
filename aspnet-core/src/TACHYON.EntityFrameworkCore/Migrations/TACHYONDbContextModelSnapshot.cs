@@ -2335,6 +2335,11 @@ namespace TACHYON.Migrations
                     b.Property<int?>("FatherId")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -3941,9 +3946,6 @@ namespace TACHYON.Migrations
                     b.Property<double?>("Rating")
                         .HasColumnType("float");
 
-                    b.Property<string>("ReceiverAddress")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("ReceiverCardIdNumber")
                         .HasColumnType("nvarchar(max)");
 
@@ -4568,8 +4570,8 @@ namespace TACHYON.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Note")
-                        .HasColumnType("nvarchar(600)")
-                        .HasMaxLength(600);
+                        .HasColumnType("nvarchar(512)")
+                        .HasMaxLength(512);
 
                     b.Property<long?>("OriginFacilityId")
                         .HasColumnType("bigint");
@@ -6156,6 +6158,11 @@ namespace TACHYON.Migrations
 
                     b.Property<DateTime?>("DeletionTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");

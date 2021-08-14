@@ -5,7 +5,9 @@ using Abp.MultiTenancy;
 using Abp.Reflection.Extensions;
 using System;
 using System.Collections.Concurrent;
+using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using TACHYON.MultiTenancy;
 using TACHYON.Url;
 
@@ -34,12 +36,20 @@ namespace TACHYON.Net.Emailing
                 {
                     var bytes = stream.GetAllBytes();
                     var template = Encoding.UTF8.GetString(bytes, 3, bytes.Length - 3);
+                    template = template.Replace("<!-- @format -->", "");
                     template = template.Replace("{THIS_YEAR}", DateTime.Now.Year.ToString());
                     return template.Replace("{EMAIL_LOGO_URL}", GetTenantLogoUrl(tenantId));
                 }
             });
         }
 
+        public async Task<string> GetActivationTemplateBody()
+        {
+
+            var stream = typeof(EmailTemplateProvider).GetAssembly().GetManifestResourceStream("TACHYON.Net.Emailing.EmailTemplates.activationTemplateBody.html");
+            var bytes = stream.GetAllBytes();
+            return Encoding.UTF8.GetString(bytes, 3, bytes.Length - 3);
+        }
 
 
         public string ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage(int? TenantId, int Percentage)

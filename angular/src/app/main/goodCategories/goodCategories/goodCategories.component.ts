@@ -100,16 +100,16 @@ export class GoodCategoriesComponent extends AppComponentBase {
     });
   }
 
-  deleteGoodCategory(goodCategory: GoodCategoryDto): void {
-    this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
-      if (isConfirmed) {
-        this._goodCategoriesServiceProxy.delete(goodCategory.id).subscribe(() => {
-          this.reloadPage();
-          this.notify.success(this.l('SuccessfullyDeleted'));
-        });
-      }
-    });
-  }
+  // deleteGoodCategory(goodCategory: GoodCategoryDto): void {
+  //   this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
+  //     if (isConfirmed) {
+  //       this._goodCategoriesServiceProxy.delete(goodCategory.id).subscribe(() => {
+  //         this.reloadPage();
+  //         this.notify.success(this.l('SuccessfullyDeleted'));
+  //       });
+  //     }
+  //   });
+  // }
 
   exportToExcel(): void {
     this._goodCategoriesServiceProxy.getGoodCategoriesToExcel(this.filterText, this.displayNameFilter).subscribe((result) => {

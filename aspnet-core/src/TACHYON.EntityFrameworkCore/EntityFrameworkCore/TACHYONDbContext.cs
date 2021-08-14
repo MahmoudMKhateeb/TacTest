@@ -357,6 +357,14 @@ namespace TACHYON.EntityFrameworkCore
                            t.HasIndex(e => new { e.TenantId });
                        });
 
+            modelBuilder.Entity<TrucksType>()
+                .Property(b=>b.IsActive)
+                .HasDefaultValue(true);
+
+            modelBuilder.Entity<GoodCategory>()
+                .Property(b => b.IsActive)
+                .HasDefaultValue(true);
+
             modelBuilder.Entity<BinaryObject>(b =>
                        {
                            b.HasIndex(e => new { e.TenantId });

@@ -1,16 +1,16 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Linq.Dynamic.Core;
 using Abp.Linq.Extensions;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Abp.Domain.Repositories;
 using TACHYON.Packing.PackingTypes.Dtos;
-using TACHYON.Dto;
 using Abp.Application.Services.Dto;
 using TACHYON.Authorization;
 using Abp.Extensions;
 using Abp.Authorization;
+using Abp.UI;
+using AutoMapper.QueryableExtensions;
+using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
 
 namespace TACHYON.Packing.PackingTypes
@@ -26,33 +26,17 @@ namespace TACHYON.Packing.PackingTypes
 
         }
 
-        public async Task<PagedResultDto<GetPackingTypeForViewDto>> GetAll(GetAllPackingTypesInput input)
+        public async Task<LoadResult> GetAll(GetAllPackingTypesInput input)
         {
-
+             DisableTenancyFiltersIfHost();
             var filteredPackingTypes = _packingTypeRepository.GetAll()
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter) || e.Description.Contains(input.Filter));
+                .ProjectTo<PackingTypeDto>(AutoMapperConfigurationProvider);
 
-            var pagedAndFilteredPackingTypes = filteredPackingTypes
-                .OrderBy(input.Sorting ?? "id asc")
-                .PageBy(input);
 
-            var packingTypes = from o in pagedAndFilteredPackingTypes
-                               select new GetPackingTypeForViewDto()
-                               {
-                                   PackingType = new PackingTypeDto
-                                   {
-                                       DisplayName = o.DisplayName,
-                                       Description = o.Description,
-                                       Id = o.Id
-                                   }
-                               };
+            return await LoadResultAsync(filteredPackingTypes, input.LoadOptions);
 
-            var totalCount = await filteredPackingTypes.CountAsync();
 
-            return new PagedResultDto<GetPackingTypeForViewDto>(
-                totalCount,
-                await packingTypes.ToListAsync()
-            );
+
         }
 
         public async Task<GetPackingTypeForViewDto> GetPackingTypeForView(int id)
@@ -76,6 +60,8 @@ namespace TACHYON.Packing.PackingTypes
 
         public async Task CreateOrEdit(CreateOrEditPackingTypeDto input)
         {
+            await IsPackingTypeDuplicatedOrEmpty(input.DisplayName);
+
             if (input.Id == null)
             {
                 await Create(input);
@@ -105,6 +91,20 @@ namespace TACHYON.Packing.PackingTypes
         public async Task Delete(EntityDto input)
         {
             await _packingTypeRepository.DeleteAsync(input.Id);
+        }
+
+
+        private async Task IsPackingTypeDuplicatedOrEmpty(string displayName)
+        {
+            if (displayName.IsNullOrEmpty() || displayName.IsNullOrWhiteSpace())
+                throw new UserFriendlyException(L("PackingTypeNameCanNotBeEmpty"));
+
+
+            var isDuplicated = await _packingTypeRepository.GetAll()
+                .AnyAsync(x => x.DisplayName.ToUpper().Equals(displayName.ToUpper()));
+
+            if (isDuplicated)
+                throw new UserFriendlyException(L("PackingTypeNameCanNotBeDuplicated"));
         }
     }
 }

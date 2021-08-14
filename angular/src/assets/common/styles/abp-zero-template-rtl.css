@@ -19,6 +19,7 @@ html {
 .dropdown-menu-right {
   left: 0px !important;
   right: auto !important;
+  transform: translate3d(-91px, 1px, 0);
 }
 
 li.dropdown-language ul.dropdown-menu li a:after {
@@ -99,4 +100,11 @@ nav.m-menu__submenu--right span.m-menu__arrow {
 .kt-header__topbar div.dropdown-menu {
   left: 0px !important;
   right: auto !important;
+}
+.ribbon-target {
+  left: 20px !important;
+  right: auto !important;
+}
+.p-checkbox {
+  margin-left: 7px !important;
 }

@@ -9,6 +9,9 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
 {
     public class GetShippingRequestForViewOutput
     {
+
+        public string ReferenceNumber { get; set; }
+
         public ShippingRequestDto ShippingRequest { get; set; }
 
         public List<ShippingRequestBidDto> ShippingRequestBidDtoList { get; set; }
@@ -22,7 +25,9 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public string DriverName { get; set; }
         public string RoutTypeName { get; set; }
         public string OriginalCityName { get; set; }
+        public int OriginalCityId { get; set; }
         public string DestinationCityName { get; set; }
+        public int DestinationCityId { get; set; }
         public string GoodsCategoryName { get; set; }
         public string TruckTypeFullName { get; set; }
         public string ShippingRequestStatusName { get; set; }
