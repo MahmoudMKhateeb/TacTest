@@ -1,6 +1,4 @@
-﻿using System;
-using Abp.Application.Services.Dto;
-using System.ComponentModel.DataAnnotations;
+﻿using Abp.Application.Services.Dto;
 
 namespace TACHYON.ShippingRequestVases.Dtos
 {

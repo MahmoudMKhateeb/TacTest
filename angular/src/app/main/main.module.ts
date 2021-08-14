@@ -255,6 +255,7 @@ import { DriversSubmittedDocumentsComponent } from '@app/main/documentFiles/docu
 import { ViweTruckDocumentsModalComponent } from '@app/main/trucks/trucks/viwe-truck-documents-modal/viwe-truck-documents-modal.component';
 import { InvoiceTenantItemComponent } from '@app/main/Invoices/invoice-tenants/invoice-tenant-item/invoice-tenant-item.component';
 import { QuartzCronModule } from '@node_modules/@sbzen/ng-cron';
+import { TranslationsTemplateComponent } from './packingTypes/packingTypeTranslations/translations-template/translations-template.component';
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
 @NgModule({
@@ -484,6 +485,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     DriversSubmittedDocumentsComponent,
     ViweTruckDocumentsModalComponent,
     InvoiceTenantItemComponent,
+    TranslationsTemplateComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },

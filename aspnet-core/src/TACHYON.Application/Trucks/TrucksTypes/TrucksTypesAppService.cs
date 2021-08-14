@@ -38,10 +38,10 @@ namespace TACHYON.Trucks.TrucksTypes
         {
 
             var filteredTrucksTypes = _trucksTypeRepository.GetAll()
-                .Include(x=>x.Translations)
-                .Include(x=>x.TransportTypeFk)
-                .ThenInclude(x=>x.Translations)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Translations.Any(x=>x.TranslatedDisplayName.Contains(input.Filter)))
+                .Include(x => x.Translations)
+                .Include(x => x.TransportTypeFk)
+                .ThenInclude(x => x.Translations)
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Translations.Any(x => x.TranslatedDisplayName.Contains(input.Filter)))
                         .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.Translations.Any(x => x.TranslatedDisplayName.Contains(input.DisplayNameFilter)));
 
             var pagedAndFilteredTrucksTypes = filteredTrucksTypes
@@ -49,11 +49,11 @@ namespace TACHYON.Trucks.TrucksTypes
                 .PageBy(input);
 
             var trucksTypes = from o in await pagedAndFilteredTrucksTypes.ToListAsync()
-                              //join o1 in _transportTypeRepository.GetAll() on o.TransportTypeId equals o1.Id into j1
-                              //from s1 in j1.DefaultIfEmpty()
+                                  //join o1 in _transportTypeRepository.GetAll() on o.TransportTypeId equals o1.Id into j1
+                                  //from s1 in j1.DefaultIfEmpty()
                               select new GetTrucksTypeForViewDto()
                               {
-                                  TrucksType=ObjectMapper.Map<TrucksTypeDto>(o),
+                                  TrucksType = ObjectMapper.Map<TrucksTypeDto>(o),
                                   //TrucksType = new TrucksTypeDto
                                   //{
                                   //    DisplayName = o.DisplayName,
@@ -82,8 +82,8 @@ namespace TACHYON.Trucks.TrucksTypes
         [AbpAuthorize(AppPermissions.Pages_TrucksTypes_Edit)]
         public async Task<GetTrucksTypeForEditOutput> GetTrucksTypeForEdit(EntityDto<long> input)
         {
-            var trucksType = await _trucksTypeRepository.GetAllIncluding(x=>x.Translations)
-                .FirstOrDefaultAsync(x=>x.Id == input.Id);
+            var trucksType = await _trucksTypeRepository.GetAllIncluding(x => x.Translations)
+                .FirstOrDefaultAsync(x => x.Id == input.Id);
 
             var output = new GetTrucksTypeForEditOutput { TrucksType = ObjectMapper.Map<CreateOrEditTrucksTypeDto>(trucksType) };
 
@@ -99,8 +99,8 @@ namespace TACHYON.Trucks.TrucksTypes
                     throw new UserFriendlyException(L("DisplayNameCannotBeEmpty"));
                 }
                 var isDuplicateUserName = await _trucksTypeRepository
-                   .FirstOrDefaultAsync(x => x.Translations.Any(x=>x.TranslatedDisplayName==transItem.TranslatedDisplayName) &&
-                   x.TransportTypeId==input.TransportTypeId &&
+                   .FirstOrDefaultAsync(x => x.Translations.Any(x => x.TranslatedDisplayName == transItem.TranslatedDisplayName) &&
+                   x.TransportTypeId == input.TransportTypeId &&
                    x.Id != input.Id);
                 if (isDuplicateUserName != null)
                 {
@@ -129,8 +129,8 @@ namespace TACHYON.Trucks.TrucksTypes
         [AbpAuthorize(AppPermissions.Pages_TrucksTypes_Edit)]
         protected virtual async Task Update(CreateOrEditTrucksTypeDto input)
         {
-            var trucksType = await _trucksTypeRepository.GetAllIncluding(x=>x.Translations)
-                .FirstOrDefaultAsync(x=>x.Id== input.Id.Value);
+            var trucksType = await _trucksTypeRepository.GetAllIncluding(x => x.Translations)
+                .FirstOrDefaultAsync(x => x.Id == input.Id.Value);
             trucksType.Translations.Clear();
             ObjectMapper.Map(input, trucksType);
         }
@@ -147,7 +147,7 @@ namespace TACHYON.Trucks.TrucksTypes
         public async Task<IEnumerable<ISelectItemDto>> GetAllTransportTypeForTableDropdown()
         {
             List<TransportType> transportTypes = await _transportTypeRepository
-                .GetAllIncluding(x =>x.Translations)
+                .GetAllIncluding(x => x.Translations)
                 .ToListAsync();
 
             List<TransportTypeSelectItemDto> transportTypeDtos = ObjectMapper.Map<List<TransportTypeSelectItemDto>>(transportTypes);

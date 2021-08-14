@@ -1,5 +1,6 @@
 ﻿using System;
 using Abp.Application.Services.Dto;
+using System.Collections.Generic;
 
 namespace TACHYON.Vases.Dtos
 {
@@ -10,8 +11,9 @@ namespace TACHYON.Vases.Dtos
         public bool HasAmount { get; set; }
 
         public bool HasCount { get; set; }
-        public  DateTime CreationTime { get; set; }
 
+        public DateTime CreationTime { get; set; }
 
+        public List<VasTranslationDto> VasTranslation { get; set; }
     }
 }
