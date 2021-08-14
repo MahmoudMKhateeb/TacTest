@@ -14656,6 +14656,65 @@ export class ShippingRequestDriverServiceProxy {
   }
 
   /**
+   * @return Success
+   */
+  uploadDeliveryNoteDocument(): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/ShippingRequestDriver/UploadDeliveryNoteDocument';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({}),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processUploadDeliveryNoteDocument(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processUploadDeliveryNoteDocument(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processUploadDeliveryNoteDocument(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
    * @param status (optional)
    * @param sorting (optional)
    * @param skipCount (optional)
@@ -21663,25 +21722,12 @@ export class PackingTypesServiceProxy {
   }
 
   /**
-   * @param filter (optional)
-   * @param sorting (optional)
-   * @param skipCount (optional)
-   * @param maxResultCount (optional)
+   * @param loadOptions (optional)
    * @return Success
    */
-  getAll(
-    filter: string | null | undefined,
-    sorting: string | null | undefined,
-    skipCount: number | undefined,
-    maxResultCount: number | undefined
-  ): Observable<PagedResultDtoOfGetPackingTypeForViewDto> {
+  getAll(loadOptions: string | null | undefined): Observable<LoadResult> {
     let url_ = this.baseUrl + '/api/services/app/PackingTypes/GetAll?';
-    if (filter !== undefined && filter !== null) url_ += 'Filter=' + encodeURIComponent('' + filter) + '&';
-    if (sorting !== undefined && sorting !== null) url_ += 'Sorting=' + encodeURIComponent('' + sorting) + '&';
-    if (skipCount === null) throw new Error("The parameter 'skipCount' cannot be null.");
-    else if (skipCount !== undefined) url_ += 'SkipCount=' + encodeURIComponent('' + skipCount) + '&';
-    if (maxResultCount === null) throw new Error("The parameter 'maxResultCount' cannot be null.");
-    else if (maxResultCount !== undefined) url_ += 'MaxResultCount=' + encodeURIComponent('' + maxResultCount) + '&';
+    if (loadOptions !== undefined && loadOptions !== null) url_ += 'LoadOptions=' + encodeURIComponent('' + loadOptions) + '&';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -21705,14 +21751,14 @@ export class PackingTypesServiceProxy {
             try {
               return this.processGetAll(<any>response_);
             } catch (e) {
-              return <Observable<PagedResultDtoOfGetPackingTypeForViewDto>>(<any>_observableThrow(e));
+              return <Observable<LoadResult>>(<any>_observableThrow(e));
             }
-          } else return <Observable<PagedResultDtoOfGetPackingTypeForViewDto>>(<any>_observableThrow(response_));
+          } else return <Observable<LoadResult>>(<any>_observableThrow(response_));
         })
       );
   }
 
-  protected processGetAll(response: HttpResponseBase): Observable<PagedResultDtoOfGetPackingTypeForViewDto> {
+  protected processGetAll(response: HttpResponseBase): Observable<LoadResult> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -21727,7 +21773,7 @@ export class PackingTypesServiceProxy {
         _observableMergeMap((_responseText) => {
           let result200: any = null;
           let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
-          result200 = PagedResultDtoOfGetPackingTypeForViewDto.fromJS(resultData200);
+          result200 = LoadResult.fromJS(resultData200);
           return _observableOf(result200);
         })
       );
@@ -21738,7 +21784,7 @@ export class PackingTypesServiceProxy {
         })
       );
     }
-    return _observableOf<PagedResultDtoOfGetPackingTypeForViewDto>(<any>null);
+    return _observableOf<LoadResult>(<any>null);
   }
 
   /**
@@ -21977,6 +22023,201 @@ export class PackingTypesServiceProxy {
   }
 
   protected processDelete(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @param body (optional)
+   * @return Success
+   */
+  createOrEditTranslation(body: PackingTypeTranslationDto | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/PackingTypes/CreateOrEditTranslation';
+    url_ = url_.replace(/[?&]$/, '');
+
+    const content_ = JSON.stringify(body);
+
+    let options_: any = {
+      body: content_,
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processCreateOrEditTranslation(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processCreateOrEditTranslation(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processCreateOrEditTranslation(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @param loadOptions (optional)
+   * @param coreId (optional)
+   * @return Success
+   */
+  getAllTranslations(loadOptions: string | null | undefined, coreId: string | null | undefined): Observable<LoadResult> {
+    let url_ = this.baseUrl + '/api/services/app/PackingTypes/GetAllTranslations?';
+    if (loadOptions !== undefined && loadOptions !== null) url_ += 'LoadOptions=' + encodeURIComponent('' + loadOptions) + '&';
+    if (coreId !== undefined && coreId !== null) url_ += 'CoreId=' + encodeURIComponent('' + coreId) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAllTranslations(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAllTranslations(<any>response_);
+            } catch (e) {
+              return <Observable<LoadResult>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<LoadResult>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAllTranslations(response: HttpResponseBase): Observable<LoadResult> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = LoadResult.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<LoadResult>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
+  deleteTranslation(id: number | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/PackingTypes/DeleteTranslation?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'Id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({}),
+    };
+
+    return this.http
+      .request('delete', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processDeleteTranslation(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processDeleteTranslation(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processDeleteTranslation(response: HttpResponseBase): Observable<void> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -34858,7 +35099,7 @@ export class ShippingRequestVasesServiceProxy {
     sorting: string | null | undefined,
     skipCount: number | undefined,
     maxResultCount: number | undefined
-  ): Observable<PagedResultDtoOfGetShippingRequestVasForViewDto> {
+  ): Observable<PagedResultDtoOfShippingRequestVasDto> {
     let url_ = this.baseUrl + '/api/services/app/ShippingRequestVases/GetAll?';
     if (filter !== undefined && filter !== null) url_ += 'Filter=' + encodeURIComponent('' + filter) + '&';
     if (vasNameFilter !== undefined && vasNameFilter !== null) url_ += 'VasNameFilter=' + encodeURIComponent('' + vasNameFilter) + '&';
@@ -34890,14 +35131,14 @@ export class ShippingRequestVasesServiceProxy {
             try {
               return this.processGetAll(<any>response_);
             } catch (e) {
-              return <Observable<PagedResultDtoOfGetShippingRequestVasForViewDto>>(<any>_observableThrow(e));
+              return <Observable<PagedResultDtoOfShippingRequestVasDto>>(<any>_observableThrow(e));
             }
-          } else return <Observable<PagedResultDtoOfGetShippingRequestVasForViewDto>>(<any>_observableThrow(response_));
+          } else return <Observable<PagedResultDtoOfShippingRequestVasDto>>(<any>_observableThrow(response_));
         })
       );
   }
 
-  protected processGetAll(response: HttpResponseBase): Observable<PagedResultDtoOfGetShippingRequestVasForViewDto> {
+  protected processGetAll(response: HttpResponseBase): Observable<PagedResultDtoOfShippingRequestVasDto> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -34912,7 +35153,7 @@ export class ShippingRequestVasesServiceProxy {
         _observableMergeMap((_responseText) => {
           let result200: any = null;
           let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
-          result200 = PagedResultDtoOfGetShippingRequestVasForViewDto.fromJS(resultData200);
+          result200 = PagedResultDtoOfShippingRequestVasDto.fromJS(resultData200);
           return _observableOf(result200);
         })
       );
@@ -34923,14 +35164,14 @@ export class ShippingRequestVasesServiceProxy {
         })
       );
     }
-    return _observableOf<PagedResultDtoOfGetShippingRequestVasForViewDto>(<any>null);
+    return _observableOf<PagedResultDtoOfShippingRequestVasDto>(<any>null);
   }
 
   /**
    * @param id (optional)
    * @return Success
    */
-  getShippingRequestVasForView(id: number | undefined): Observable<GetShippingRequestVasForViewDto> {
+  getShippingRequestVasForView(id: number | undefined): Observable<ShippingRequestVasDto> {
     let url_ = this.baseUrl + '/api/services/app/ShippingRequestVases/GetShippingRequestVasForView?';
     if (id === null) throw new Error("The parameter 'id' cannot be null.");
     else if (id !== undefined) url_ += 'id=' + encodeURIComponent('' + id) + '&';
@@ -34957,14 +35198,14 @@ export class ShippingRequestVasesServiceProxy {
             try {
               return this.processGetShippingRequestVasForView(<any>response_);
             } catch (e) {
-              return <Observable<GetShippingRequestVasForViewDto>>(<any>_observableThrow(e));
+              return <Observable<ShippingRequestVasDto>>(<any>_observableThrow(e));
             }
-          } else return <Observable<GetShippingRequestVasForViewDto>>(<any>_observableThrow(response_));
+          } else return <Observable<ShippingRequestVasDto>>(<any>_observableThrow(response_));
         })
       );
   }
 
-  protected processGetShippingRequestVasForView(response: HttpResponseBase): Observable<GetShippingRequestVasForViewDto> {
+  protected processGetShippingRequestVasForView(response: HttpResponseBase): Observable<ShippingRequestVasDto> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -34979,7 +35220,7 @@ export class ShippingRequestVasesServiceProxy {
         _observableMergeMap((_responseText) => {
           let result200: any = null;
           let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
-          result200 = GetShippingRequestVasForViewDto.fromJS(resultData200);
+          result200 = ShippingRequestVasDto.fromJS(resultData200);
           return _observableOf(result200);
         })
       );
@@ -34990,7 +35231,7 @@ export class ShippingRequestVasesServiceProxy {
         })
       );
     }
-    return _observableOf<GetShippingRequestVasForViewDto>(<any>null);
+    return _observableOf<ShippingRequestVasDto>(<any>null);
   }
 
   /**
@@ -50011,31 +50252,12 @@ export class VasesServiceProxy {
   }
 
   /**
-   * @param filter (optional)
-   * @param hasAmountFilter (optional)
-   * @param hasCountFilter (optional)
-   * @param sorting (optional)
-   * @param skipCount (optional)
-   * @param maxResultCount (optional)
+   * @param loadOptions (optional)
    * @return Success
    */
-  getAll(
-    filter: string | null | undefined,
-    hasAmountFilter: number | null | undefined,
-    hasCountFilter: number | null | undefined,
-    sorting: string | null | undefined,
-    skipCount: number | undefined,
-    maxResultCount: number | undefined
-  ): Observable<PagedResultDtoOfGetVasForViewDto> {
+  getAll(loadOptions: string | null | undefined): Observable<LoadResult> {
     let url_ = this.baseUrl + '/api/services/app/Vases/GetAll?';
-    if (filter !== undefined && filter !== null) url_ += 'Filter=' + encodeURIComponent('' + filter) + '&';
-    if (hasAmountFilter !== undefined && hasAmountFilter !== null) url_ += 'HasAmountFilter=' + encodeURIComponent('' + hasAmountFilter) + '&';
-    if (hasCountFilter !== undefined && hasCountFilter !== null) url_ += 'HasCountFilter=' + encodeURIComponent('' + hasCountFilter) + '&';
-    if (sorting !== undefined && sorting !== null) url_ += 'Sorting=' + encodeURIComponent('' + sorting) + '&';
-    if (skipCount === null) throw new Error("The parameter 'skipCount' cannot be null.");
-    else if (skipCount !== undefined) url_ += 'SkipCount=' + encodeURIComponent('' + skipCount) + '&';
-    if (maxResultCount === null) throw new Error("The parameter 'maxResultCount' cannot be null.");
-    else if (maxResultCount !== undefined) url_ += 'MaxResultCount=' + encodeURIComponent('' + maxResultCount) + '&';
+    if (loadOptions !== undefined && loadOptions !== null) url_ += 'LoadOptions=' + encodeURIComponent('' + loadOptions) + '&';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -50059,14 +50281,14 @@ export class VasesServiceProxy {
             try {
               return this.processGetAll(<any>response_);
             } catch (e) {
-              return <Observable<PagedResultDtoOfGetVasForViewDto>>(<any>_observableThrow(e));
+              return <Observable<LoadResult>>(<any>_observableThrow(e));
             }
-          } else return <Observable<PagedResultDtoOfGetVasForViewDto>>(<any>_observableThrow(response_));
+          } else return <Observable<LoadResult>>(<any>_observableThrow(response_));
         })
       );
   }
 
-  protected processGetAll(response: HttpResponseBase): Observable<PagedResultDtoOfGetVasForViewDto> {
+  protected processGetAll(response: HttpResponseBase): Observable<LoadResult> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -50081,7 +50303,7 @@ export class VasesServiceProxy {
         _observableMergeMap((_responseText) => {
           let result200: any = null;
           let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
-          result200 = PagedResultDtoOfGetVasForViewDto.fromJS(resultData200);
+          result200 = LoadResult.fromJS(resultData200);
           return _observableOf(result200);
         })
       );
@@ -50092,7 +50314,7 @@ export class VasesServiceProxy {
         })
       );
     }
-    return _observableOf<PagedResultDtoOfGetVasForViewDto>(<any>null);
+    return _observableOf<LoadResult>(<any>null);
   }
 
   /**
@@ -50428,6 +50650,201 @@ export class VasesServiceProxy {
       );
     }
     return _observableOf<FileDto>(<any>null);
+  }
+
+  /**
+   * @param body (optional)
+   * @return Success
+   */
+  createOrEditTranslation(body: VasTranslationDto | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/Vases/CreateOrEditTranslation';
+    url_ = url_.replace(/[?&]$/, '');
+
+    const content_ = JSON.stringify(body);
+
+    let options_: any = {
+      body: content_,
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processCreateOrEditTranslation(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processCreateOrEditTranslation(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processCreateOrEditTranslation(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @param loadOptions (optional)
+   * @param coreId (optional)
+   * @return Success
+   */
+  getAllTranslations(loadOptions: string | null | undefined, coreId: string | null | undefined): Observable<LoadResult> {
+    let url_ = this.baseUrl + '/api/services/app/Vases/GetAllTranslations?';
+    if (loadOptions !== undefined && loadOptions !== null) url_ += 'LoadOptions=' + encodeURIComponent('' + loadOptions) + '&';
+    if (coreId !== undefined && coreId !== null) url_ += 'CoreId=' + encodeURIComponent('' + coreId) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAllTranslations(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAllTranslations(<any>response_);
+            } catch (e) {
+              return <Observable<LoadResult>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<LoadResult>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAllTranslations(response: HttpResponseBase): Observable<LoadResult> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = LoadResult.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<LoadResult>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
+  deleteTranslation(id: number | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/Vases/DeleteTranslation?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'Id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({}),
+    };
+
+    return this.http
+      .request('delete', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processDeleteTranslation(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processDeleteTranslation(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processDeleteTranslation(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
   }
 }
 
@@ -65748,11 +66165,14 @@ export interface IGetPackingTypeForViewDto {
   packingType: PackingTypeDto;
 }
 
-export class PagedResultDtoOfGetPackingTypeForViewDto implements IPagedResultDtoOfGetPackingTypeForViewDto {
-  totalCount!: number;
-  items!: GetPackingTypeForViewDto[] | undefined;
+export class PackingTypeTranslationDto implements IPackingTypeTranslationDto {
+  displayName!: string;
+  description!: string | undefined;
+  language!: string;
+  coreId!: number;
+  id!: number;
 
-  constructor(data?: IPagedResultDtoOfGetPackingTypeForViewDto) {
+  constructor(data?: IPackingTypeTranslationDto) {
     if (data) {
       for (var property in data) {
         if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
@@ -65762,40 +66182,44 @@ export class PagedResultDtoOfGetPackingTypeForViewDto implements IPagedResultDto
 
   init(_data?: any) {
     if (_data) {
-      this.totalCount = _data['totalCount'];
-      if (Array.isArray(_data['items'])) {
-        this.items = [] as any;
-        for (let item of _data['items']) this.items!.push(GetPackingTypeForViewDto.fromJS(item));
-      }
+      this.displayName = _data['displayName'];
+      this.description = _data['description'];
+      this.language = _data['language'];
+      this.coreId = _data['coreId'];
+      this.id = _data['id'];
     }
   }
 
-  static fromJS(data: any): PagedResultDtoOfGetPackingTypeForViewDto {
+  static fromJS(data: any): PackingTypeTranslationDto {
     data = typeof data === 'object' ? data : {};
-    let result = new PagedResultDtoOfGetPackingTypeForViewDto();
+    let result = new PackingTypeTranslationDto();
     result.init(data);
     return result;
   }
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data['totalCount'] = this.totalCount;
-    if (Array.isArray(this.items)) {
-      data['items'] = [];
-      for (let item of this.items) data['items'].push(item.toJSON());
-    }
+    data['displayName'] = this.displayName;
+    data['description'] = this.description;
+    data['language'] = this.language;
+    data['coreId'] = this.coreId;
+    data['id'] = this.id;
     return data;
   }
 }
 
-export interface IPagedResultDtoOfGetPackingTypeForViewDto {
-  totalCount: number;
-  items: GetPackingTypeForViewDto[] | undefined;
+export interface IPackingTypeTranslationDto {
+  displayName: string;
+  description: string | undefined;
+  language: string;
+  coreId: number;
+  id: number;
 }
 
 export class CreateOrEditPackingTypeDto implements ICreateOrEditPackingTypeDto {
   displayName!: string;
   description!: string | undefined;
+  translationDtos!: PackingTypeTranslationDto[] | undefined;
   id!: number | undefined;
 
   constructor(data?: ICreateOrEditPackingTypeDto) {
@@ -65810,6 +66234,10 @@ export class CreateOrEditPackingTypeDto implements ICreateOrEditPackingTypeDto {
     if (_data) {
       this.displayName = _data['displayName'];
       this.description = _data['description'];
+      if (Array.isArray(_data['translationDtos'])) {
+        this.translationDtos = [] as any;
+        for (let item of _data['translationDtos']) this.translationDtos!.push(PackingTypeTranslationDto.fromJS(item));
+      }
       this.id = _data['id'];
     }
   }
@@ -65825,6 +66253,10 @@ export class CreateOrEditPackingTypeDto implements ICreateOrEditPackingTypeDto {
     data = typeof data === 'object' ? data : {};
     data['displayName'] = this.displayName;
     data['description'] = this.description;
+    if (Array.isArray(this.translationDtos)) {
+      data['translationDtos'] = [];
+      for (let item of this.translationDtos) data['translationDtos'].push(item.toJSON());
+    }
     data['id'] = this.id;
     return data;
   }
@@ -65833,6 +66265,7 @@ export class CreateOrEditPackingTypeDto implements ICreateOrEditPackingTypeDto {
 export interface ICreateOrEditPackingTypeDto {
   displayName: string;
   description: string | undefined;
+  translationDtos: PackingTypeTranslationDto[] | undefined;
   id: number | undefined;
 }
 
@@ -67581,28 +68014,28 @@ export interface IEnvelope {
 }
 
 export class Geometry implements IGeometry {
+  readonly area!: number;
+  dimension!: Dimension;
+  readonly geometryType!: string | undefined;
+  readonly isEmpty!: boolean;
+  readonly isValid!: boolean;
+  readonly length!: number;
+  readonly numGeometries!: number;
+  readonly numPoints!: number;
+  boundary!: Geometry;
+  centroid!: Point;
+  envelope!: Geometry;
+  interiorPoint!: Point;
+  readonly isSimple!: boolean;
+  pointOnSurface!: Point;
+  ogcGeometryType!: OgcGeometryType;
+  srid!: number;
   factory!: GeometryFactory;
   userData!: any | undefined;
-  srid!: number;
-  readonly geometryType!: string | undefined;
-  ogcGeometryType!: OgcGeometryType;
   precisionModel!: PrecisionModel;
   coordinate!: Coordinate;
   readonly coordinates!: Coordinate[] | undefined;
-  readonly numPoints!: number;
-  readonly numGeometries!: number;
-  readonly isSimple!: boolean;
-  readonly isValid!: boolean;
-  readonly isEmpty!: boolean;
-  readonly area!: number;
-  readonly length!: number;
-  centroid!: Point;
-  interiorPoint!: Point;
-  pointOnSurface!: Point;
-  dimension!: Dimension;
-  boundary!: Geometry;
   boundaryDimension!: Dimension;
-  envelope!: Geometry;
   envelopeInternal!: Envelope;
   readonly isRectangle!: boolean;
 
@@ -67616,31 +68049,31 @@ export class Geometry implements IGeometry {
 
   init(_data?: any) {
     if (_data) {
+      (<any>this).area = _data['area'];
+      this.dimension = _data['dimension'];
+      (<any>this).geometryType = _data['geometryType'];
+      (<any>this).isEmpty = _data['isEmpty'];
+      (<any>this).isValid = _data['isValid'];
+      (<any>this).length = _data['length'];
+      (<any>this).numGeometries = _data['numGeometries'];
+      (<any>this).numPoints = _data['numPoints'];
+      this.boundary = _data['boundary'] ? Geometry.fromJS(_data['boundary']) : <any>undefined;
+      this.centroid = _data['centroid'] ? Point.fromJS(_data['centroid']) : <any>undefined;
+      this.envelope = _data['envelope'] ? Geometry.fromJS(_data['envelope']) : <any>undefined;
+      this.interiorPoint = _data['interiorPoint'] ? Point.fromJS(_data['interiorPoint']) : <any>undefined;
+      (<any>this).isSimple = _data['isSimple'];
+      this.pointOnSurface = _data['pointOnSurface'] ? Point.fromJS(_data['pointOnSurface']) : <any>undefined;
+      this.ogcGeometryType = _data['ogcGeometryType'];
+      this.srid = _data['srid'];
       this.factory = _data['factory'] ? GeometryFactory.fromJS(_data['factory']) : <any>undefined;
       this.userData = _data['userData'];
-      this.srid = _data['srid'];
-      (<any>this).geometryType = _data['geometryType'];
-      this.ogcGeometryType = _data['ogcGeometryType'];
       this.precisionModel = _data['precisionModel'] ? PrecisionModel.fromJS(_data['precisionModel']) : <any>undefined;
       this.coordinate = _data['coordinate'] ? Coordinate.fromJS(_data['coordinate']) : <any>undefined;
       if (Array.isArray(_data['coordinates'])) {
         (<any>this).coordinates = [] as any;
         for (let item of _data['coordinates']) (<any>this).coordinates!.push(Coordinate.fromJS(item));
       }
-      (<any>this).numPoints = _data['numPoints'];
-      (<any>this).numGeometries = _data['numGeometries'];
-      (<any>this).isSimple = _data['isSimple'];
-      (<any>this).isValid = _data['isValid'];
-      (<any>this).isEmpty = _data['isEmpty'];
-      (<any>this).area = _data['area'];
-      (<any>this).length = _data['length'];
-      this.centroid = _data['centroid'] ? Point.fromJS(_data['centroid']) : <any>undefined;
-      this.interiorPoint = _data['interiorPoint'] ? Point.fromJS(_data['interiorPoint']) : <any>undefined;
-      this.pointOnSurface = _data['pointOnSurface'] ? Point.fromJS(_data['pointOnSurface']) : <any>undefined;
-      this.dimension = _data['dimension'];
-      this.boundary = _data['boundary'] ? Geometry.fromJS(_data['boundary']) : <any>undefined;
       this.boundaryDimension = _data['boundaryDimension'];
-      this.envelope = _data['envelope'] ? Geometry.fromJS(_data['envelope']) : <any>undefined;
       this.envelopeInternal = _data['envelopeInternal'] ? Envelope.fromJS(_data['envelopeInternal']) : <any>undefined;
       (<any>this).isRectangle = _data['isRectangle'];
     }
@@ -67655,31 +68088,31 @@ export class Geometry implements IGeometry {
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
+    data['area'] = this.area;
+    data['dimension'] = this.dimension;
+    data['geometryType'] = this.geometryType;
+    data['isEmpty'] = this.isEmpty;
+    data['isValid'] = this.isValid;
+    data['length'] = this.length;
+    data['numGeometries'] = this.numGeometries;
+    data['numPoints'] = this.numPoints;
+    data['boundary'] = this.boundary ? this.boundary.toJSON() : <any>undefined;
+    data['centroid'] = this.centroid ? this.centroid.toJSON() : <any>undefined;
+    data['envelope'] = this.envelope ? this.envelope.toJSON() : <any>undefined;
+    data['interiorPoint'] = this.interiorPoint ? this.interiorPoint.toJSON() : <any>undefined;
+    data['isSimple'] = this.isSimple;
+    data['pointOnSurface'] = this.pointOnSurface ? this.pointOnSurface.toJSON() : <any>undefined;
+    data['ogcGeometryType'] = this.ogcGeometryType;
+    data['srid'] = this.srid;
     data['factory'] = this.factory ? this.factory.toJSON() : <any>undefined;
     data['userData'] = this.userData;
-    data['srid'] = this.srid;
-    data['geometryType'] = this.geometryType;
-    data['ogcGeometryType'] = this.ogcGeometryType;
     data['precisionModel'] = this.precisionModel ? this.precisionModel.toJSON() : <any>undefined;
     data['coordinate'] = this.coordinate ? this.coordinate.toJSON() : <any>undefined;
     if (Array.isArray(this.coordinates)) {
       data['coordinates'] = [];
       for (let item of this.coordinates) data['coordinates'].push(item.toJSON());
     }
-    data['numPoints'] = this.numPoints;
-    data['numGeometries'] = this.numGeometries;
-    data['isSimple'] = this.isSimple;
-    data['isValid'] = this.isValid;
-    data['isEmpty'] = this.isEmpty;
-    data['area'] = this.area;
-    data['length'] = this.length;
-    data['centroid'] = this.centroid ? this.centroid.toJSON() : <any>undefined;
-    data['interiorPoint'] = this.interiorPoint ? this.interiorPoint.toJSON() : <any>undefined;
-    data['pointOnSurface'] = this.pointOnSurface ? this.pointOnSurface.toJSON() : <any>undefined;
-    data['dimension'] = this.dimension;
-    data['boundary'] = this.boundary ? this.boundary.toJSON() : <any>undefined;
     data['boundaryDimension'] = this.boundaryDimension;
-    data['envelope'] = this.envelope ? this.envelope.toJSON() : <any>undefined;
     data['envelopeInternal'] = this.envelopeInternal ? this.envelopeInternal.toJSON() : <any>undefined;
     data['isRectangle'] = this.isRectangle;
     return data;
@@ -67687,28 +68120,28 @@ export class Geometry implements IGeometry {
 }
 
 export interface IGeometry {
+  area: number;
+  dimension: Dimension;
+  geometryType: string | undefined;
+  isEmpty: boolean;
+  isValid: boolean;
+  length: number;
+  numGeometries: number;
+  numPoints: number;
+  boundary: Geometry;
+  centroid: Point;
+  envelope: Geometry;
+  interiorPoint: Point;
+  isSimple: boolean;
+  pointOnSurface: Point;
+  ogcGeometryType: OgcGeometryType;
+  srid: number;
   factory: GeometryFactory;
   userData: any | undefined;
-  srid: number;
-  geometryType: string | undefined;
-  ogcGeometryType: OgcGeometryType;
   precisionModel: PrecisionModel;
   coordinate: Coordinate;
   coordinates: Coordinate[] | undefined;
-  numPoints: number;
-  numGeometries: number;
-  isSimple: boolean;
-  isValid: boolean;
-  isEmpty: boolean;
-  area: number;
-  length: number;
-  centroid: Point;
-  interiorPoint: Point;
-  pointOnSurface: Point;
-  dimension: Dimension;
-  boundary: Geometry;
   boundaryDimension: Dimension;
-  envelope: Geometry;
   envelopeInternal: Envelope;
   isRectangle: boolean;
 }
@@ -72950,6 +73383,7 @@ export class ShippingRequestTripDriverRoutePointDto implements IShippingRequestT
   endTime!: moment.Moment | undefined;
   isActive!: boolean;
   isComplete!: boolean;
+  isDeliveryNoteUploaded!: boolean;
   rating!: number | undefined;
   goodsDetails!: GoodsDetailDto[] | undefined;
   isShow!: boolean;
@@ -72980,6 +73414,7 @@ export class ShippingRequestTripDriverRoutePointDto implements IShippingRequestT
       this.endTime = _data['endTime'] ? moment(_data['endTime'].toString()) : <any>undefined;
       this.isActive = _data['isActive'];
       this.isComplete = _data['isComplete'];
+      this.isDeliveryNoteUploaded = _data['isDeliveryNoteUploaded'];
       this.rating = _data['rating'];
       if (Array.isArray(_data['goodsDetails'])) {
         this.goodsDetails = [] as any;
@@ -73014,6 +73449,7 @@ export class ShippingRequestTripDriverRoutePointDto implements IShippingRequestT
     data['endTime'] = this.endTime ? this.endTime.toISOString() : <any>undefined;
     data['isActive'] = this.isActive;
     data['isComplete'] = this.isComplete;
+    data['isDeliveryNoteUploaded'] = this.isDeliveryNoteUploaded;
     data['rating'] = this.rating;
     if (Array.isArray(this.goodsDetails)) {
       data['goodsDetails'] = [];
@@ -73041,6 +73477,7 @@ export interface IShippingRequestTripDriverRoutePointDto {
   endTime: moment.Moment | undefined;
   isActive: boolean;
   isComplete: boolean;
+  isDeliveryNoteUploaded: boolean;
   rating: number | undefined;
   goodsDetails: GoodsDetailDto[] | undefined;
   isShow: boolean;
@@ -73202,6 +73639,7 @@ export class RoutDropOffDto implements IRoutDropOffDto {
   receiverEmailAddress!: string | undefined;
   receiverCardIdNumber!: string | undefined;
   note!: string | undefined;
+  isDeliveryNoteUploaded!: boolean;
   goodsDetailListDto!: GoodsDetailDto[] | undefined;
   id!: number;
 
@@ -73226,6 +73664,7 @@ export class RoutDropOffDto implements IRoutDropOffDto {
       this.receiverEmailAddress = _data['receiverEmailAddress'];
       this.receiverCardIdNumber = _data['receiverCardIdNumber'];
       this.note = _data['note'];
+      this.isDeliveryNoteUploaded = _data['isDeliveryNoteUploaded'];
       if (Array.isArray(_data['goodsDetailListDto'])) {
         this.goodsDetailListDto = [] as any;
         for (let item of _data['goodsDetailListDto']) this.goodsDetailListDto!.push(GoodsDetailDto.fromJS(item));
@@ -73254,6 +73693,7 @@ export class RoutDropOffDto implements IRoutDropOffDto {
     data['receiverEmailAddress'] = this.receiverEmailAddress;
     data['receiverCardIdNumber'] = this.receiverCardIdNumber;
     data['note'] = this.note;
+    data['isDeliveryNoteUploaded'] = this.isDeliveryNoteUploaded;
     if (Array.isArray(this.goodsDetailListDto)) {
       data['goodsDetailListDto'] = [];
       for (let item of this.goodsDetailListDto) data['goodsDetailListDto'].push(item.toJSON());
@@ -73275,6 +73715,7 @@ export interface IRoutDropOffDto {
   receiverEmailAddress: string | undefined;
   receiverCardIdNumber: string | undefined;
   note: string | undefined;
+  isDeliveryNoteUploaded: boolean;
   goodsDetailListDto: GoodsDetailDto[] | undefined;
   id: number;
 }
@@ -73943,12 +74384,59 @@ export interface IShippingRequestBidDto {
   id: number;
 }
 
+export class VasDto implements IVasDto {
+  name!: string | undefined;
+  hasAmount!: boolean;
+  hasCount!: boolean;
+  id!: number;
+
+  constructor(data?: IVasDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.name = _data['name'];
+      this.hasAmount = _data['hasAmount'];
+      this.hasCount = _data['hasCount'];
+      this.id = _data['id'];
+    }
+  }
+
+  static fromJS(data: any): VasDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new VasDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['name'] = this.name;
+    data['hasAmount'] = this.hasAmount;
+    data['hasCount'] = this.hasCount;
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+export interface IVasDto {
+  name: string | undefined;
+  hasAmount: boolean;
+  hasCount: boolean;
+  id: number;
+}
+
 export class ShippingRequestVasDto implements IShippingRequestVasDto {
   requestMaxAmount!: number;
   requestMaxCount!: number;
-  vasId!: number;
   shippingRequestId!: number | undefined;
   otherVasName!: string | undefined;
+  vas!: VasDto;
   id!: number | undefined;
 
   constructor(data?: IShippingRequestVasDto) {
@@ -73963,9 +74451,9 @@ export class ShippingRequestVasDto implements IShippingRequestVasDto {
     if (_data) {
       this.requestMaxAmount = _data['requestMaxAmount'];
       this.requestMaxCount = _data['requestMaxCount'];
-      this.vasId = _data['vasId'];
       this.shippingRequestId = _data['shippingRequestId'];
       this.otherVasName = _data['otherVasName'];
+      this.vas = _data['vas'] ? VasDto.fromJS(_data['vas']) : <any>undefined;
       this.id = _data['id'];
     }
   }
@@ -73981,9 +74469,9 @@ export class ShippingRequestVasDto implements IShippingRequestVasDto {
     data = typeof data === 'object' ? data : {};
     data['requestMaxAmount'] = this.requestMaxAmount;
     data['requestMaxCount'] = this.requestMaxCount;
-    data['vasId'] = this.vasId;
     data['shippingRequestId'] = this.shippingRequestId;
     data['otherVasName'] = this.otherVasName;
+    data['vas'] = this.vas ? this.vas.toJSON() : <any>undefined;
     data['id'] = this.id;
     return data;
   }
@@ -73992,9 +74480,9 @@ export class ShippingRequestVasDto implements IShippingRequestVasDto {
 export interface IShippingRequestVasDto {
   requestMaxAmount: number;
   requestMaxCount: number;
-  vasId: number;
   shippingRequestId: number | undefined;
   otherVasName: string | undefined;
+  vas: VasDto;
   id: number | undefined;
 }
 
@@ -76746,11 +77234,11 @@ export interface ICreateOrEditShippingRequestTripRejectReasonDto {
   id: number;
 }
 
-export class PagedResultDtoOfGetShippingRequestVasForViewDto implements IPagedResultDtoOfGetShippingRequestVasForViewDto {
+export class PagedResultDtoOfShippingRequestVasDto implements IPagedResultDtoOfShippingRequestVasDto {
   totalCount!: number;
-  items!: GetShippingRequestVasForViewDto[] | undefined;
+  items!: ShippingRequestVasDto[] | undefined;
 
-  constructor(data?: IPagedResultDtoOfGetShippingRequestVasForViewDto) {
+  constructor(data?: IPagedResultDtoOfShippingRequestVasDto) {
     if (data) {
       for (var property in data) {
         if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
@@ -76763,14 +77251,14 @@ export class PagedResultDtoOfGetShippingRequestVasForViewDto implements IPagedRe
       this.totalCount = _data['totalCount'];
       if (Array.isArray(_data['items'])) {
         this.items = [] as any;
-        for (let item of _data['items']) this.items!.push(GetShippingRequestVasForViewDto.fromJS(item));
+        for (let item of _data['items']) this.items!.push(ShippingRequestVasDto.fromJS(item));
       }
     }
   }
 
-  static fromJS(data: any): PagedResultDtoOfGetShippingRequestVasForViewDto {
+  static fromJS(data: any): PagedResultDtoOfShippingRequestVasDto {
     data = typeof data === 'object' ? data : {};
-    let result = new PagedResultDtoOfGetShippingRequestVasForViewDto();
+    let result = new PagedResultDtoOfShippingRequestVasDto();
     result.init(data);
     return result;
   }
@@ -76786,9 +77274,9 @@ export class PagedResultDtoOfGetShippingRequestVasForViewDto implements IPagedRe
   }
 }
 
-export interface IPagedResultDtoOfGetShippingRequestVasForViewDto {
+export interface IPagedResultDtoOfShippingRequestVasDto {
   totalCount: number;
-  items: GetShippingRequestVasForViewDto[] | undefined;
+  items: ShippingRequestVasDto[] | undefined;
 }
 
 export class CreateOrEditShippingRequestVasDto implements ICreateOrEditShippingRequestVasDto {
@@ -82804,9 +83292,56 @@ export interface IPlateTypeSelectItemDto {
   translatedDisplayName: string | undefined;
 }
 
-export class TruckStatusDto implements ITruckStatusDto {
-  displayName!: string | undefined;
+export class TruckStatusesTranslationDto implements ITruckStatusesTranslationDto {
   translatedDisplayName!: string | undefined;
+  language!: string | undefined;
+  coreId!: number;
+  id!: number;
+
+  constructor(data?: ITruckStatusesTranslationDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.translatedDisplayName = _data['translatedDisplayName'];
+      this.language = _data['language'];
+      this.coreId = _data['coreId'];
+      this.id = _data['id'];
+    }
+  }
+
+  static fromJS(data: any): TruckStatusesTranslationDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new TruckStatusesTranslationDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['translatedDisplayName'] = this.translatedDisplayName;
+    data['language'] = this.language;
+    data['coreId'] = this.coreId;
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+export interface ITruckStatusesTranslationDto {
+  translatedDisplayName: string | undefined;
+  language: string | undefined;
+  coreId: number;
+  id: number;
+}
+
+export class TruckStatusDto implements ITruckStatusDto {
+  displayName!: string;
+  truckStatusesTranslation!: TruckStatusesTranslationDto[] | undefined;
   id!: number;
 
   constructor(data?: ITruckStatusDto) {
@@ -82820,7 +83355,10 @@ export class TruckStatusDto implements ITruckStatusDto {
   init(_data?: any) {
     if (_data) {
       this.displayName = _data['displayName'];
-      this.translatedDisplayName = _data['translatedDisplayName'];
+      if (Array.isArray(_data['truckStatusesTranslation'])) {
+        this.truckStatusesTranslation = [] as any;
+        for (let item of _data['truckStatusesTranslation']) this.truckStatusesTranslation!.push(TruckStatusesTranslationDto.fromJS(item));
+      }
       this.id = _data['id'];
     }
   }
@@ -82835,15 +83373,18 @@ export class TruckStatusDto implements ITruckStatusDto {
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
     data['displayName'] = this.displayName;
-    data['translatedDisplayName'] = this.translatedDisplayName;
+    if (Array.isArray(this.truckStatusesTranslation)) {
+      data['truckStatusesTranslation'] = [];
+      for (let item of this.truckStatusesTranslation) data['truckStatusesTranslation'].push(item.toJSON());
+    }
     data['id'] = this.id;
     return data;
   }
 }
 
 export interface ITruckStatusDto {
-  displayName: string | undefined;
-  translatedDisplayName: string | undefined;
+  displayName: string;
+  truckStatusesTranslation: TruckStatusesTranslationDto[] | undefined;
   id: number;
 }
 
@@ -82929,6 +83470,7 @@ export interface IPagedResultDtoOfGetTruckStatusForViewDto {
 
 export class CreateOrEditTruckStatusDto implements ICreateOrEditTruckStatusDto {
   displayName!: string;
+  truckStatusTranslation!: TruckStatusesTranslationDto[] | undefined;
   id!: number | undefined;
 
   constructor(data?: ICreateOrEditTruckStatusDto) {
@@ -82942,6 +83484,10 @@ export class CreateOrEditTruckStatusDto implements ICreateOrEditTruckStatusDto {
   init(_data?: any) {
     if (_data) {
       this.displayName = _data['displayName'];
+      if (Array.isArray(_data['truckStatusTranslation'])) {
+        this.truckStatusTranslation = [] as any;
+        for (let item of _data['truckStatusTranslation']) this.truckStatusTranslation!.push(TruckStatusesTranslationDto.fromJS(item));
+      }
       this.id = _data['id'];
     }
   }
@@ -82956,6 +83502,10 @@ export class CreateOrEditTruckStatusDto implements ICreateOrEditTruckStatusDto {
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
     data['displayName'] = this.displayName;
+    if (Array.isArray(this.truckStatusTranslation)) {
+      data['truckStatusTranslation'] = [];
+      for (let item of this.truckStatusTranslation) data['truckStatusTranslation'].push(item.toJSON());
+    }
     data['id'] = this.id;
     return data;
   }
@@ -82963,6 +83513,7 @@ export class CreateOrEditTruckStatusDto implements ICreateOrEditTruckStatusDto {
 
 export interface ICreateOrEditTruckStatusDto {
   displayName: string;
+  truckStatusTranslation: TruckStatusesTranslationDto[] | undefined;
   id: number | undefined;
 }
 
@@ -82999,53 +83550,6 @@ export class GetTruckStatusForEditOutput implements IGetTruckStatusForEditOutput
 
 export interface IGetTruckStatusForEditOutput {
   truckStatus: CreateOrEditTruckStatusDto;
-}
-
-export class TruckStatusesTranslationDto implements ITruckStatusesTranslationDto {
-  translatedDisplayName!: string | undefined;
-  language!: string | undefined;
-  coreId!: number;
-  id!: number;
-
-  constructor(data?: ITruckStatusesTranslationDto) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(_data?: any) {
-    if (_data) {
-      this.translatedDisplayName = _data['translatedDisplayName'];
-      this.language = _data['language'];
-      this.coreId = _data['coreId'];
-      this.id = _data['id'];
-    }
-  }
-
-  static fromJS(data: any): TruckStatusesTranslationDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new TruckStatusesTranslationDto();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['translatedDisplayName'] = this.translatedDisplayName;
-    data['language'] = this.language;
-    data['coreId'] = this.coreId;
-    data['id'] = this.id;
-    return data;
-  }
-}
-
-export interface ITruckStatusesTranslationDto {
-  translatedDisplayName: string | undefined;
-  language: string | undefined;
-  coreId: number;
-  id: number;
 }
 
 export class GetTruckStatusesTranslationForViewDto implements IGetTruckStatusesTranslationForViewDto {
@@ -84947,57 +85451,6 @@ export interface IListResultDtoOfUserLoginAttemptDto {
   items: UserLoginAttemptDto[] | undefined;
 }
 
-export class VasDto implements IVasDto {
-  name!: string | undefined;
-  hasAmount!: boolean;
-  hasCount!: boolean;
-  creationTime!: moment.Moment;
-  id!: number;
-
-  constructor(data?: IVasDto) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(_data?: any) {
-    if (_data) {
-      this.name = _data['name'];
-      this.hasAmount = _data['hasAmount'];
-      this.hasCount = _data['hasCount'];
-      this.creationTime = _data['creationTime'] ? moment(_data['creationTime'].toString()) : <any>undefined;
-      this.id = _data['id'];
-    }
-  }
-
-  static fromJS(data: any): VasDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new VasDto();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['name'] = this.name;
-    data['hasAmount'] = this.hasAmount;
-    data['hasCount'] = this.hasCount;
-    data['creationTime'] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
-    data['id'] = this.id;
-    return data;
-  }
-}
-
-export interface IVasDto {
-  name: string | undefined;
-  hasAmount: boolean;
-  hasCount: boolean;
-  creationTime: moment.Moment;
-  id: number;
-}
-
 export class GetVasForViewDto implements IGetVasForViewDto {
   vas!: VasDto;
 
@@ -85033,54 +85486,8 @@ export interface IGetVasForViewDto {
   vas: VasDto;
 }
 
-export class PagedResultDtoOfGetVasForViewDto implements IPagedResultDtoOfGetVasForViewDto {
-  totalCount!: number;
-  items!: GetVasForViewDto[] | undefined;
-
-  constructor(data?: IPagedResultDtoOfGetVasForViewDto) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(_data?: any) {
-    if (_data) {
-      this.totalCount = _data['totalCount'];
-      if (Array.isArray(_data['items'])) {
-        this.items = [] as any;
-        for (let item of _data['items']) this.items!.push(GetVasForViewDto.fromJS(item));
-      }
-    }
-  }
-
-  static fromJS(data: any): PagedResultDtoOfGetVasForViewDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new PagedResultDtoOfGetVasForViewDto();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['totalCount'] = this.totalCount;
-    if (Array.isArray(this.items)) {
-      data['items'] = [];
-      for (let item of this.items) data['items'].push(item.toJSON());
-    }
-    return data;
-  }
-}
-
-export interface IPagedResultDtoOfGetVasForViewDto {
-  totalCount: number;
-  items: GetVasForViewDto[] | undefined;
-}
-
 export class CreateOrEditVasDto implements ICreateOrEditVasDto {
   name!: string;
-  displayName!: string | undefined;
   hasAmount!: boolean;
   hasCount!: boolean;
   id!: number | undefined;
@@ -85096,7 +85503,6 @@ export class CreateOrEditVasDto implements ICreateOrEditVasDto {
   init(_data?: any) {
     if (_data) {
       this.name = _data['name'];
-      this.displayName = _data['displayName'];
       this.hasAmount = _data['hasAmount'];
       this.hasCount = _data['hasCount'];
       this.id = _data['id'];
@@ -85113,7 +85519,6 @@ export class CreateOrEditVasDto implements ICreateOrEditVasDto {
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
     data['name'] = this.name;
-    data['displayName'] = this.displayName;
     data['hasAmount'] = this.hasAmount;
     data['hasCount'] = this.hasCount;
     data['id'] = this.id;
@@ -85123,7 +85528,6 @@ export class CreateOrEditVasDto implements ICreateOrEditVasDto {
 
 export interface ICreateOrEditVasDto {
   name: string;
-  displayName: string | undefined;
   hasAmount: boolean;
   hasCount: boolean;
   id: number | undefined;
@@ -85162,6 +85566,53 @@ export class GetVasForEditOutput implements IGetVasForEditOutput {
 
 export interface IGetVasForEditOutput {
   vas: CreateOrEditVasDto;
+}
+
+export class VasTranslationDto implements IVasTranslationDto {
+  displayName!: string;
+  language!: string;
+  coreId!: number | undefined;
+  id!: number;
+
+  constructor(data?: IVasTranslationDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.displayName = _data['displayName'];
+      this.language = _data['language'];
+      this.coreId = _data['coreId'];
+      this.id = _data['id'];
+    }
+  }
+
+  static fromJS(data: any): VasTranslationDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new VasTranslationDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['displayName'] = this.displayName;
+    data['language'] = this.language;
+    data['coreId'] = this.coreId;
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+export interface IVasTranslationDto {
+  displayName: string;
+  language: string;
+  coreId: number | undefined;
+  id: number;
 }
 
 export class VasPriceDto implements IVasPriceDto {
