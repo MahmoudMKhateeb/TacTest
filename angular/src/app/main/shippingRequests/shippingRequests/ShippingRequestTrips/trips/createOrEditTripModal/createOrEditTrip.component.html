@@ -48,7 +48,7 @@
                   required
                 >
                   <option value="" selected>{{ l('SelectaFacility') }}</option>
-                  <option *ngFor="let item of sourceFacilities" value="{{ item.id }}">{{ item.displayName }}</option>
+                  <option *ngFor="let item of allFacilities" value="{{ item.id }}">{{ item.displayName }}</option>
                 </select>
                 <div class="input-group-btn">
                   <button class="btn btn-primary" [disabled]="facilityLoading" (click)="createOrEditFacilityModal.show()">
@@ -73,7 +73,7 @@
                   required
                 >
                   <option value="" selected>{{ l('SelectaFacility') }}</option>
-                  <option *ngFor="let item of destFacilities" value="{{ item.id }}">{{ item.displayName }}</option>
+                  <option *ngFor="let item of allFacilities" value="{{ item.id }}">{{ item.displayName }}</option>
                 </select>
                 <div class="input-group-btn">
                   <button class="btn btn-primary" [disabled]="facilityLoading" (click)="createOrEditFacilityModal.show()">
