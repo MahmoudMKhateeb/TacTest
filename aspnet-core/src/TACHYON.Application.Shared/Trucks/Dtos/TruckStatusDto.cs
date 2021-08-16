@@ -13,6 +13,5 @@ namespace TACHYON.Trucks.Dtos
         [StringLength(TruckStatusConsts.MaxDisplayNameLength, MinimumLength = TruckStatusConsts.MinDisplayNameLength)]
         public string DisplayName { get; set; }
 
-        public List<TruckStatusesTranslationDto> TruckStatusesTranslation { get; set; }
     }
 }

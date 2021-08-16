@@ -6,6 +6,9 @@ using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
+using Abp.UI;
+using AutoMapper.QueryableExtensions;
+using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -27,6 +30,7 @@ namespace TACHYON.Trucks
         private readonly IRepository<TruckStatus, long> _truckStatusRepository;
         private readonly IRepository<TruckStatusesTranslation> _truckStatusTranslationRepository;
 
+        //! Don't Forget Translation Permissions
 
         public TruckStatusesAppService(IRepository<TruckStatus, long> truckStatusRepository, IRepository<TruckStatusesTranslation> truckStatusTranslationRepository)
         {
@@ -34,45 +38,13 @@ namespace TACHYON.Trucks
             _truckStatusTranslationRepository = truckStatusTranslationRepository;
         }
 
-        public async Task<PagedResultDto<GetTruckStatusForViewDto>> GetAll(GetAllTruckStatusesInput input)
+        public async Task<LoadResult> GetAll(GetAllTruckStatusesInput input)
         {
 
             var truckStatuses = _truckStatusRepository.GetAll()
-                .AsNoTracking()
-                .Include(x=> x.Translations)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter),
-                    e => false || e.DisplayName.Contains(input.Filter))
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter),
-                    e => e.DisplayName == input.DisplayNameFilter)
-                .OrderBy(input.Sorting ?? "id asc");
+                .AsNoTracking().ProjectTo<TruckStatusDto>(AutoMapperConfigurationProvider);
 
-            var pageResult = await truckStatuses.PageBy(input).ToListAsync();
-
-            var totalCount = await truckStatuses.CountAsync();
-
-            var items = pageResult.Select(x => new GetTruckStatusForViewDto()
-            {
-                TruckStatus = new TruckStatusDto()
-                {
-                    DisplayName = x.DisplayName,
-                    Id = x.Id,
-                    TruckStatusesTranslation = x.Translations
-                        .Select(t=> new TruckStatusesTranslationDto()
-                    {
-                            CoreId = t.CoreId,
-                            Id = t.Id,
-                            Language = t.Language,
-                            TranslatedDisplayName = t.TranslatedDisplayName
-
-                    }).ToList()
-                }
-            }).ToList();
-
-            return new PagedResultDto<GetTruckStatusForViewDto>()
-            {
-                Items = ObjectMapper.Map<List<GetTruckStatusForViewDto>>(pageResult),
-                TotalCount = totalCount
-            };
+            return await LoadResultAsync(truckStatuses, input.LoadOptions);
         }
 
         public async Task<GetTruckStatusForViewDto> GetTruckStatusForView(long id)
@@ -114,25 +86,10 @@ namespace TACHYON.Trucks
         [AbpAuthorize(AppPermissions.Pages_Administration_TruckStatuses_Create)]
         protected virtual async Task Create(CreateOrEditTruckStatusDto input)
         {
-            // TODO Ignore Map Translations List
-
             var truckStatus = ObjectMapper.Map<TruckStatus>(input);
 
-            using (var unitOfWork = UnitOfWorkManager.Begin())
-            {
-               var coreId=  await _truckStatusRepository.InsertAndGetIdAsync(truckStatus);
-
-                var truckStatusTranslations =
-                    ObjectMapper.Map<List<TruckStatusesTranslation>>(input.TruckStatusTranslation);
-
-                foreach (var tst in truckStatusTranslations)
-                {
-                    tst.CoreId = coreId;
-                    await _truckStatusTranslationRepository.InsertAsync(tst);
-                }
-
-                await unitOfWork.CompleteAsync();
-            }
+            truckStatus.CreatorUserId = AbpSession.UserId;
+            await _truckStatusRepository.InsertAndGetIdAsync(truckStatus);
         }
 
         [AbpAuthorize(AppPermissions.Pages_Administration_TruckStatuses_Edit)]
@@ -140,15 +97,73 @@ namespace TACHYON.Trucks
         {
             var truckStatus = await _truckStatusRepository.FirstOrDefaultAsync(input.Id.Value);
 
-            truckStatus.Translations.Clear();
-
             ObjectMapper.Map(input, truckStatus);
         }
 
         [AbpAuthorize(AppPermissions.Pages_Administration_TruckStatuses_Delete)]
         public async Task Delete(EntityDto<long> input)
         {
-            await _truckStatusRepository.DeleteAsync(input.Id);
+            var deletedEntity = await _truckStatusRepository.FirstOrDefaultAsync(input.Id);
+
+            if (deletedEntity == null)
+                throw new UserFriendlyException(L("TruckStatusNotFound"));
+
+            deletedEntity.DeleterUserId = AbpSession.UserId;
+            deletedEntity.DeletionTime = DateTime.Now;
+
+            await _truckStatusRepository.DeleteAsync(deletedEntity);
+        }
+
+        public async Task<LoadResult> GetAllTranslations(GetAllTruckStatusesTranslationsInput input)
+        {
+            var filteredTruckStatusTranslations = _truckStatusTranslationRepository
+                .GetAll().AsNoTracking()
+                .Where(x => x.CoreId == input.CoreId)
+                .ProjectTo<TruckStatusesTranslationDto>(AutoMapperConfigurationProvider);
+
+            return await LoadResultAsync(filteredTruckStatusTranslations, input.LoadOptions);
+        }
+
+        public async Task CreateOrEditTranslation(CreateOrEditTruckStatusesTranslationDto input)
+        {
+
+            if (!input.Id.HasValue)
+            {
+                var d = await _truckStatusTranslationRepository
+                    .GetAll()
+                    .Where(x => x.CoreId == input.CoreId)
+                    .Where(x => x.TranslatedDisplayName == input.TranslatedDisplayName)
+                    .Where(x => x.Language.Contains(input.Language))
+                    .FirstOrDefaultAsync();
+                if (d != null)
+                {
+                    throw new UserFriendlyException(L("TranslationDuplicated"));
+                }
+
+                var createdTranslation = ObjectMapper.Map<TruckStatusesTranslation>(input);
+                await _truckStatusTranslationRepository.InsertAsync(createdTranslation);
+            }
+            else
+            {
+                var updatedTranslation = await _truckStatusTranslationRepository.SingleAsync(x => x.Id == input.Id);
+                ObjectMapper.Map(input, updatedTranslation);
+            }
+
+
+        }
+
+        public async Task DeleteTranslation(EntityDto input)
+        {
+            var deletedTranslation = await _truckStatusTranslationRepository
+                .FirstOrDefaultAsync(input.Id);
+
+            if (deletedTranslation == null)
+                throw new UserFriendlyException(L("TruckStatusTranslationNotFound"));
+
+            deletedTranslation.DeletionTime = DateTime.Now;
+            deletedTranslation.DeleterUserId = AbpSession.UserId;
+
+            await _truckStatusTranslationRepository.DeleteAsync(deletedTranslation);
         }
     }
 }

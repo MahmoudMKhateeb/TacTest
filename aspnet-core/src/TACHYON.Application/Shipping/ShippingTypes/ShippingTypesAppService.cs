@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Linq.Dynamic.Core;
-using Abp.Linq.Extensions;
+﻿using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Abp.Domain.Repositories;
@@ -9,9 +6,12 @@ using TACHYON.Shipping.ShippingTypes.Dtos;
 using TACHYON.Dto;
 using Abp.Application.Services.Dto;
 using TACHYON.Authorization;
-using Abp.Extensions;
 using Abp.Authorization;
+using Abp.UI;
+using AutoMapper.QueryableExtensions;
+using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
+using TACHYON.Common;
 
 namespace TACHYON.Shipping.ShippingTypes
 {
@@ -19,61 +19,21 @@ namespace TACHYON.Shipping.ShippingTypes
     public class ShippingTypesAppService : TACHYONAppServiceBase, IShippingTypesAppService
     {
         private readonly IRepository<ShippingType> _shippingTypeRepository;
+        private readonly IRepository<ShippingTypeTranslation> _shippingTypeTranslationRepository;
 
-        public ShippingTypesAppService(IRepository<ShippingType> shippingTypeRepository)
+        public ShippingTypesAppService(IRepository<ShippingType> shippingTypeRepository, IRepository<ShippingTypeTranslation> shippingTypeTranslationRepository)
         {
             _shippingTypeRepository = shippingTypeRepository;
-
+            _shippingTypeTranslationRepository = shippingTypeTranslationRepository;
         }
 
-        public async Task<PagedResultDto<GetShippingTypeForViewDto>> GetAll(GetAllShippingTypesInput input)
+        public async Task<LoadResult> GetAll(LoadOptionsInput input)
         {
 
-            var filteredShippingTypes = _shippingTypeRepository.GetAll()
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter) || e.Description.Contains(input.Filter))
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.DisplayName == input.DisplayNameFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.DescriptionFilter), e => e.Description == input.DescriptionFilter);
+            var query = _shippingTypeRepository.GetAll()
+                .ProjectTo<ShippingTypeDto>(AutoMapperConfigurationProvider);
 
-            var pagedAndFilteredShippingTypes = filteredShippingTypes
-                .OrderBy(input.Sorting ?? "id asc")
-                .PageBy(input);
-
-            var shippingTypes = from o in pagedAndFilteredShippingTypes
-                                select new GetShippingTypeForViewDto()
-                                {
-                                    ShippingType = new ShippingTypeDto
-                                    {
-                                        DisplayName = o.DisplayName,
-                                        Description = o.Description,
-                                        Id = o.Id
-                                    }
-                                };
-
-            var totalCount = await filteredShippingTypes.CountAsync();
-
-            return new PagedResultDto<GetShippingTypeForViewDto>(
-                totalCount,
-                await shippingTypes.ToListAsync()
-            );
-        }
-
-        public async Task<GetShippingTypeForViewDto> GetShippingTypeForView(int id)
-        {
-            var shippingType = await _shippingTypeRepository.GetAsync(id);
-
-            var output = new GetShippingTypeForViewDto { ShippingType = ObjectMapper.Map<ShippingTypeDto>(shippingType) };
-
-            return output;
-        }
-
-        [AbpAuthorize(AppPermissions.Pages_ShippingTypes_Edit)]
-        public async Task<GetShippingTypeForEditOutput> GetShippingTypeForEdit(EntityDto input)
-        {
-            var shippingType = await _shippingTypeRepository.FirstOrDefaultAsync(input.Id);
-
-            var output = new GetShippingTypeForEditOutput { ShippingType = ObjectMapper.Map<CreateOrEditShippingTypeDto>(shippingType) };
-
-            return output;
+            return await LoadResultAsync(query, input.LoadOptions);
         }
 
         public async Task CreateOrEdit(CreateOrEditShippingTypeDto input)
@@ -118,5 +78,59 @@ namespace TACHYON.Shipping.ShippingTypes
                     DisplayName = x.DisplayName
                 }).ToListAsync();
         }
+
+        #region Translations
+
+
+        public async Task<LoadResult> GetAllTranslations(GetAllTranslationsInput input)
+        {
+            var filteredTruckStatusTranslations = _shippingTypeTranslationRepository
+                .GetAll().AsNoTracking()
+                .Where(x => x.CoreId == input.CoreId)
+                .ProjectTo<ShippingTypeTranslationDto>(AutoMapperConfigurationProvider);
+
+            return await LoadResultAsync(filteredTruckStatusTranslations, input.LoadOptions);
+        }
+
+        public async Task CreateOrEditTranslation(CreateOrEditShippingTypeTranslationDto input)
+        {
+
+            if (!input.Id.HasValue)
+            {
+                var d = await _shippingTypeTranslationRepository
+                    .GetAll()
+                    .Where(x => x.CoreId == input.CoreId)
+                    .Where(x => x.DisplayName == input.DisplayName)
+                    .Where(x => x.Language.Contains(input.Language))
+                    .FirstOrDefaultAsync();
+                if (d != null)
+                {
+                    throw new UserFriendlyException(L("TranslationDuplicated"));
+                }
+
+                var createdTranslation = ObjectMapper.Map<ShippingTypeTranslation>(input);
+                await _shippingTypeTranslationRepository.InsertAsync(createdTranslation);
+            }
+            else
+            {
+                var updatedTranslation = await _shippingTypeTranslationRepository.SingleAsync(x => x.Id == input.Id);
+                ObjectMapper.Map(input, updatedTranslation);
+            }
+
+
+        }
+
+        public async Task DeleteTranslation(EntityDto input)
+        {
+            // Here I Used Single Async
+
+            var deletedTranslation = await _shippingTypeTranslationRepository
+                .SingleAsync(x => x.Id == input.Id);
+
+            await _shippingTypeTranslationRepository.DeleteAsync(deletedTranslation);
+        }
+
+        #endregion
+
     }
 }
