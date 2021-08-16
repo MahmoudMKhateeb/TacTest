@@ -94,9 +94,9 @@
                         required
                         readonly="readonly"
                       >
-                        <option selected>{{ l('select') }}</option>
-                        <option value="bidding">{{ l('Marketplace') }}</option>
-                        <option value="tachyondeal">{{ l('TachyonManageService') }}</option>
+                        <option value="" selected>{{ l('select') }}</option>
+                        <option [value]="'bidding'">{{ l('Marketplace') }}</option>
+                        <option [value]="'tachyondeal'">{{ l('TachyonManageService') }}</option>
                         <option *ngIf="this.feature.isEnabled('App.SendDirectRequest')" value="directrequest">{{ l('DirectRequest') }}</option>
                       </select>
                       <span class="form-text text-muted">{{ l('PickaShippingRequestType') }}</span>
@@ -118,7 +118,6 @@
                               name="startdate"
                               [minDate]="today"
                               (dateChange)="validateBiddingDates()"
-                              readonly="readonly"
                               [attr.disabled]="shippingRequestType == 'bidding' ? null : true"
                             />
 
@@ -144,7 +143,6 @@
                               name="enddate"
                               [minDate]="step1Dto.bidStartDate || today"
                               (dateChange)="validateBiddingDates()"
-                              readonly="readonly"
                               [attr.disabled]="shippingRequestType == 'bidding' ? null : true"
                             />
 
@@ -200,7 +198,6 @@
                               name="startdate"
                               [minDate]="today"
                               (dateChange)="validateTripsDates()"
-                              readonly="readonly"
                             />
                             <div class="input-group-append">
                               <span class="input-group-text">
@@ -224,7 +221,6 @@
                               name="enddate"
                               [minDate]="step1Dto.startTripDate || today"
                               (dateChange)="validateTripsDates()"
-                              readonly="readonly"
                             />
 
                             <div class="input-group-append">

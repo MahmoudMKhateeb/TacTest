@@ -330,9 +330,9 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
         })
       )
       .subscribe((res) => {
-        res.isBid = this.shippingRequestType === 'bidding' ? true : false;
-        res.isTachyonDeal = this.shippingRequestType === 'tachyondeal' ? true : false;
-        res.isDirectRequest = this.shippingRequestType === 'directrequest' ? true : false;
+        res.isBid ? (this.shippingRequestType = 'bidding') : '';
+        res.isTachyonDeal ? (this.shippingRequestType = 'tachyondeal') : '';
+        res.isDirectRequest ? (this.shippingRequestType = 'directrequest') : '';
         this.step1Dto = res;
       });
   }
