@@ -340,6 +340,7 @@
                               step2Dto.routeTypeId == 3 && step2Form.get('numberOfDrops').touched && step2Form.get('numberOfDrops').valid
                             "
                             [attr.disabled]="step2Dto.routeTypeId != 3 ? true : null"
+                            [min]="2"
                           />
                           <span class="form-text text-muted">{{ l('NumberOfDrops') }} </span>
                         </div>
