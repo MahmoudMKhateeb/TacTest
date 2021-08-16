@@ -54,21 +54,21 @@ export class TruckStatusesTranslationsComponent extends AppComponentBase {
 
     this.primengTableHelper.showLoadingIndicator();
 
-    this._truckStatusesTranslationsServiceProxy
-      .getAll(
-        this.filterText,
-        this.translatedDisplayNameFilter,
-        this.languageFilter,
-        this.truckStatusDisplayNameFilter,
-        this.primengTableHelper.getSorting(this.dataTable),
-        this.primengTableHelper.getSkipCount(this.paginator, event),
-        this.primengTableHelper.getMaxResultCount(this.paginator, event)
-      )
-      .subscribe((result) => {
-        this.primengTableHelper.totalRecordsCount = result.totalCount;
-        this.primengTableHelper.records = result.items;
-        this.primengTableHelper.hideLoadingIndicator();
-      });
+    // this._truckStatusesTranslationsServiceProxy
+    //   .getAll(
+    //     this.filterText,
+    //     this.translatedDisplayNameFilter,
+    //     this.languageFilter,
+    //     this.truckStatusDisplayNameFilter,
+    //     this.primengTableHelper.getSorting(this.dataTable),
+    //     this.primengTableHelper.getSkipCount(this.paginator, event),
+    //     this.primengTableHelper.getMaxResultCount(this.paginator, event)
+    //   )
+    //   .subscribe((result) => {
+    //     this.primengTableHelper.totalRecordsCount = result.totalCount;
+    //     this.primengTableHelper.records = result.items;
+    //     this.primengTableHelper.hideLoadingIndicator();
+    //   });
   }
 
   reloadPage(): void {

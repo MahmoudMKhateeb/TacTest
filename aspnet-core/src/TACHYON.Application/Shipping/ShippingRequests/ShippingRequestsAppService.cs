@@ -7,6 +7,7 @@ using Abp.Domain.Uow;
 using Abp.Linq.Extensions;
 using Abp.Timing;
 using Abp.UI;
+using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Rest;
 using System;
@@ -24,6 +25,7 @@ using TACHYON.Goods.GoodCategories.Dtos;
 using TACHYON.MultiTenancy;
 using TACHYON.Notifications;
 using TACHYON.Packing.PackingTypes;
+using TACHYON.Packing.PackingTypes.Dtos;
 using TACHYON.PriceOffers;
 using TACHYON.PriceOffers.Dto;
 using TACHYON.Routs.RoutPoints;
@@ -35,6 +37,7 @@ using TACHYON.Shipping.ShippingRequests.Dtos;
 using TACHYON.Shipping.ShippingRequests.TachyonDealer;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.ShippingTypes;
+using TACHYON.Shipping.ShippingTypes.Dtos;
 using TACHYON.ShippingRequestTripVases;
 using TACHYON.ShippingRequestVases;
 using TACHYON.ShippingRequestVases.Dtos;
@@ -518,7 +521,7 @@ namespace TACHYON.Shipping.ShippingRequests
         public async Task<List<GetAllGoodsCategoriesForDropDownOutput>> GetAllGoodCategoriesForTableDropdown()
         {
             var list = await _lookup_goodCategoryRepository.GetAll()
-                .Where(x=>x.IsActive)
+                .Where(x => x.IsActive)
                 .Include(x => x.Translations).ToListAsync();
 
             return ObjectMapper.Map<List<GetAllGoodsCategoriesForDropDownOutput>>(list);
@@ -597,7 +600,8 @@ namespace TACHYON.Shipping.ShippingRequests
                     .Select(e =>
                         new GetShippingRequestVasForViewDto
                         {
-                            ShippingRequestVas = ObjectMapper.Map<ShippingRequestVasDto>(e), VasName = e.VasFk.Name
+                            ShippingRequestVas = ObjectMapper.Map<ShippingRequestVasDto>(e),
+                            VasName = e.VasFk.Name
                         }).ToListAsync();
 
                 //Bids
@@ -1178,21 +1182,25 @@ namespace TACHYON.Shipping.ShippingRequests
 
         public async Task<List<SelectItemDto>> GetAllShippingTypesForDropdown()
         {
-            return await _shippingTypeRepository.GetAll()
+            return (await _shippingTypeRepository.GetAll()
+                .ProjectTo<ShippingTypeDto>(AutoMapperConfigurationProvider)
+                    .ToArrayAsync())
                 .Select(x => new SelectItemDto()
                 {
                     Id = x.Id.ToString(),
                     DisplayName = x.DisplayName
-                }).ToListAsync();
+                }).ToList();
         }
         public async Task<List<SelectItemDto>> GetAllPackingTypesForDropdown()
         {
-            return await _packingTypeRepository.GetAll()
+            return (await _packingTypeRepository.GetAll()
+                    .ProjectTo<PackingTypeDto>(AutoMapperConfigurationProvider)
+                    .ToArrayAsync())
                 .Select(x => new SelectItemDto()
                 {
                     Id = x.Id.ToString(),
                     DisplayName = x.DisplayName
-                }).ToListAsync();
+                }).ToList();
         }
         //end Multiple Drops
 
