@@ -798,7 +798,7 @@
 		<text name="ImportUsersUploadFailed">فشلت عملية استيراد المستخدم.</text>
 		<text name="InActiveAccountExpired">قفل الحساب بعد إنتهاء الصلاحية</text>
 		<text name="InActiveToleranceDays">عدد أيام السماحية بعد تاريخ إنتهاء الصلاحية</text>
-		<text name="Incident">حادث!!</text>
+		<text name="Incident">حادث</text>
 		<text name="Income">دخل</text>
 		<text name="IncomeStatistics">إحصاءات الدخل</text>
 		<text name="IncomeWithAmount">الدخل: {0}</text>
@@ -2113,6 +2113,11 @@
 		<text name="ReceiverEmailAddress">البريد الإلكتروني</text>
 		<text name="ReceiverId">رقم هوية المستلم</text>
 		<text name="CompleteDropPointSetup">إكمال تفاصيل الشحنة</text>
-		<text name="Publish">Publish</text>
+		<text name="Publish">نشر</text>
+		<text name="Trips:InProgress">الرحلات: قيد التنفيذ</text>
+		<text name="Trips:completed">الرحلات: مكتملة</text>
+		<text name="Review and submit">عرض واعتماد</text>
+		<text name="Delivered">تم التوصيل</text>
+		<text name="TheNumberOfDropsMustHigerOrEqualTwo">عدد مرات التنزيل يجب ان يكون اكبر من او يساوي 2 </text>
 	</texts>
 </localizationDictionary>

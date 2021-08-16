@@ -178,7 +178,7 @@
                           "
                           required
                         >
-                          <option [ngValue]="null">{{ l('SelectAshippingType') }}</option>
+                          <!--                          <option [ngValue]="null">{{ l('SelectAshippingType') }}</option>-->
                           <option *ngFor="let item of allShippingTypes" value="{{ item.id }}">{{ item.displayName }}</option>
                         </select>
                       </div>
@@ -391,7 +391,7 @@
                             "
                             required
                           >
-                            <option [ngValue]="undefined" disabled selected>{{ l('SelectAGoodCategory') }}</option>
+                            <!--                            <option [ngValue]="undefined" disabled selected>{{ l('SelectAGoodCategory') }}</option>-->
                             <option *ngFor="let item of allGoodCategorys" value="{{ item.id }}">{{ item.displayName }}</option>
                           </select>
                         </div>

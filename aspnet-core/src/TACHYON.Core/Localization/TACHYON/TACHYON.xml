@@ -529,7 +529,7 @@
 		<text name="DesiredPrice">Desired price</text>
 		<text name="DestFacility">Drop off facility</text>
 		<text name="Destination">Destination</text>
-		<text name="DestinationCity">To</text>
+		<text name="DestinationCity">Destination</text>
 		<text name="DestinationDelivery">Drop off location</text>
 		<text name="DestinationFacility">Drop off facility</text>
 		<text name="Detail">Details</text>
@@ -1385,7 +1385,7 @@
 		<text name="PreviewOffer">Preview offer</text>
 		<text name="Previous">Previous</text>
 		<text name="Price">Price</text>
-		<text name="GoodDetails">Goods Details</text>
+		<text name="GoodDetails">Goods details</text>
 		<text name="PriceOffers">Offers</text>
 		<text name="Prices">Prices</text>
 		<text name="PriceSubmitted">Price submitted</text>
@@ -1496,7 +1496,7 @@
 		<text name="Root">Root</text>
 		<text name="Rotate">Rotate</text>
 		<text name="Route">Route</text>
-		<text name="RouteDetails">Route Details</text>
+		<text name="RouteDetails">Route details</text>
 		<text name="RouteDisplayName">Route type</text>
 		<text name="Routes">Routes</text>
 		<text name="RoutesHeaderInfo">Routes header info</text>
@@ -2292,15 +2292,18 @@
 		<text name="EstimatedDropOffDate">Estimated drop off date</text>
 		<text name="ApproximateTripGoodsValue">Approximate total value of goods</text>
 		<text name="SendOffer">Send price offer</text>
-		<text name="Review and submit">عرض واعتماد</text>
+		
 		<text name="BasicDetails">Basic details</text>
 		<text name="BiddingRange">Bidding range</text>
 		<text name="TripsDateRange">Trips pickup date range</text>
 		<text name="SetUpAdditionalReceiver">Additional receiver</text>
 		<text name="ReceiverEmailAddress">Receiver email address</text>
 		<text name="CompleteDropPointSetup">Complete shipment details</text>
-		<text name="Publish">نشر</text>
-		
+		<text name="Publish">Publish</text>
+		<text name="Trips:InProgress">trips: in progress</text>
+		<text name="Trips:completed">trips: completed</text>
+		<text name="ReviewAndSubmit">Review and submit</text>
+		<text name="TheNumberOfDropsMustHigerOrEqualTwo">The number of drops must higher or equal Two</text>
 	
 		
 	</texts>
