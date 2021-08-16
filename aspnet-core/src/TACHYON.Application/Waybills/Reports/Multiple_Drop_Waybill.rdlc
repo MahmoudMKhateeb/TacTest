@@ -11,7 +11,6 @@
               <TextRun>
                 <Value />
                 <Style>
-                   
                   <FontSize>8pt</FontSize>
                   <Color>#282828</Color>
                 </Style>
@@ -48,7 +47,6 @@
               <TextRun>
                 <Value />
                 <Style>
-                   
                   <FontSize>8pt</FontSize>
                   <Color>#282828</Color>
                 </Style>
@@ -86,7 +84,6 @@
               <TextRun>
                 <Value />
                 <Style>
-                   
                   <FontSize>8pt</FontSize>
                   <Color>#282828</Color>
                 </Style>
@@ -124,7 +121,6 @@
               <TextRun>
                 <Value />
                 <Style>
-                   
                   <FontSize>8pt</FontSize>
                   <Color>#282828</Color>
                 </Style>
@@ -162,7 +158,6 @@
               <TextRun>
                 <Value />
                 <Style>
-                   
                   <FontSize>8pt</FontSize>
                   <Color>#282828</Color>
                 </Style>
@@ -200,7 +195,6 @@
               <TextRun>
                 <Value />
                 <Style>
-                   
                   <FontSize>8pt</FontSize>
                   <Color>#282828</Color>
                 </Style>
@@ -289,7 +283,6 @@
               <TextRun>
                 <Value>:مرجع المرسل</Value>
                 <Style>
-                   
                   <FontSize>8pt</FontSize>
                   <FontWeight>Normal</FontWeight>
                   <Color>#3b3a3c</Color>
@@ -326,7 +319,6 @@
               <TextRun>
                 <Value>:وثيقة الشحن الفرعية</Value>
                 <Style>
-                   
                   <FontSize>8pt</FontSize>
                   <FontWeight>Normal</FontWeight>
                   <Color>#282828</Color>
@@ -519,7 +511,6 @@
               <TextRun>
                 <Value>الحالة</Value>
                 <Style>
-                   
                   <FontSize>8pt</FontSize>
                   <Color>#3b3a3c</Color>
                 </Style>
@@ -626,7 +617,6 @@
               <TextRun>
                 <Value>: التاريخ</Value>
                 <Style>
-                   
                   <FontSize>8pt</FontSize>
                   <FontWeight>Normal</FontWeight>
                   <Color>#282828</Color>
@@ -737,7 +727,6 @@
               <TextRun>
                 <Value>إسم الناقل</Value>
                 <Style>
-                   
                   <FontSize>8pt</FontSize>
                   <Color>#3b3a3c</Color>
                 </Style>
@@ -809,7 +798,6 @@
               <TextRun>
                 <Value>إسم العميل</Value>
                 <Style>
-                   
                   <FontSize>8pt</FontSize>
                   <FontWeight>Normal</FontWeight>
                   <Color>#282828</Color>
@@ -1033,7 +1021,6 @@
               <TextRun>
                 <Value>رقم الفاتورة</Value>
                 <Style>
-                   
                   <FontSize>8pt</FontSize>
                   <FontWeight>Normal</FontWeight>
                   <Color>#282828</Color>
@@ -1072,7 +1059,6 @@
               <TextRun>
                 <Value>: وثيقة الشحن الرئيسية</Value>
                 <Style>
-                   
                   <FontSize>8pt</FontSize>
                   <FontWeight>Normal</FontWeight>
                   <Color>#404040</Color>
@@ -1196,7 +1182,6 @@
               <TextRun>
                 <Value xml:space="preserve"> </Value>
                 <Style>
-                   
                   <FontSize>13pt</FontSize>
                   <FontWeight>Bold</FontWeight>
                   <Color>White</Color>
@@ -1235,7 +1220,6 @@
               <TextRun>
                 <Value>تفاصيل المستلم</Value>
                 <Style>
-                   
                   <FontWeight>Normal</FontWeight>
                   <Color>White</Color>
                 </Style>
@@ -1320,7 +1304,6 @@
               <TextRun>
                 <Value xml:space="preserve"> </Value>
                 <Style>
-                   
                   <FontSize>13pt</FontSize>
                   <FontWeight>Bold</FontWeight>
                   <Color>White</Color>
@@ -1359,7 +1342,6 @@
               <TextRun>
                 <Value>تفاصيل المرسل</Value>
                 <Style>
-                   
                   <FontWeight>Normal</FontWeight>
                   <Color>White</Color>
                 </Style>
@@ -1555,7 +1537,6 @@
                             <TextRun>
                               <Value>:</Value>
                               <Style>
-                                 
                                 <FontSize>8pt</FontSize>
                                 <Color>#282828</Color>
                               </Style>
@@ -1563,7 +1544,6 @@
                             <TextRun>
                               <Value>إسم الشركة</Value>
                               <Style>
-                                 
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Normal</FontWeight>
                                 <Color>#282828</Color>
@@ -1697,7 +1677,6 @@
                             <TextRun>
                               <Value>:</Value>
                               <Style>
-                                 
                                 <FontSize>8pt</FontSize>
                                 <Color>#282828</Color>
                               </Style>
@@ -1705,7 +1684,6 @@
                             <TextRun>
                               <Value>إسم الشركة</Value>
                               <Style>
-                                 
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Normal</FontWeight>
                                 <Color>#282828</Color>
@@ -1825,7 +1803,6 @@
                             <TextRun>
                               <Value>:جهة الإتصال</Value>
                               <Style>
-                                 
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Normal</FontWeight>
                                 <Color>#282828</Color>
@@ -1955,7 +1932,6 @@
                             <TextRun>
                               <Value>:جهة الإتصال</Value>
                               <Style>
-                                 
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Normal</FontWeight>
                                 <Color>#282828</Color>
@@ -2074,7 +2050,6 @@
                             <TextRun>
                               <Value>:الجوال</Value>
                               <Style>
-                                 
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Normal</FontWeight>
                                 <Color>#282828</Color>
@@ -2201,7 +2176,6 @@
                             <TextRun>
                               <Value>:الجوال</Value>
                               <Style>
-                                 
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Normal</FontWeight>
                                 <Color>#282828</Color>
@@ -2338,7 +2312,6 @@
                             <TextRun>
                               <Value>تفاصيل السائق</Value>
                               <Style>
-                                 
                                 <FontWeight>Bold</FontWeight>
                                 <Color>White</Color>
                               </Style>
@@ -2430,7 +2403,6 @@
                             <TextRun>
                               <Value>تفاصيل الشاحنة</Value>
                               <Style>
-                                 
                                 <FontWeight>Bold</FontWeight>
                                 <Color>White</Color>
                               </Style>
@@ -2598,7 +2570,6 @@
                             <TextRun>
                               <Value>:اسم السائق</Value>
                               <Style>
-                                 
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Normal</FontWeight>
                                 <Color>#282828</Color>
@@ -2712,7 +2683,6 @@
                             <TextRun>
                               <Value>:نوع الشاحنة</Value>
                               <Style>
-                                 
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Normal</FontWeight>
                                 <Color>#282828</Color>
@@ -2831,7 +2801,6 @@
                             <TextRun>
                               <Value>:رقم إقامة/هوية السائق</Value>
                               <Style>
-                                 
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Normal</FontWeight>
                                 <Color>#282828</Color>
@@ -2960,7 +2929,6 @@
                             <TextRun>
                               <Value>:رقم لوحة الشاحنة</Value>
                               <Style>
-                                 
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Normal</FontWeight>
                                 <Color>#282828</Color>
@@ -3017,7 +2985,7 @@
         <Top>8.81555cm</Top>
         <Left>0.55771cm</Left>
         <Height>1.37638cm</Height>
-        <Width>17.39892cm</Width>
+        <Width>17.39891cm</Width>
         <ZIndex>39</ZIndex>
         <Style>
           <Border>
@@ -3147,7 +3115,6 @@
                               <Value>وﺻﻒ اﻟﻤﻨﺘﺞ</Value>
                               <Style>
                                 <FontStyle>Normal</FontStyle>
-                                 
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Medium</FontWeight>
                                 <TextDecoration>None</TextDecoration>
@@ -3228,7 +3195,6 @@
                             <TextRun>
                               <Value>الكمية</Value>
                               <Style>
-                                 
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Medium</FontWeight>
                                 <TextDecoration>None</TextDecoration>
@@ -3313,7 +3279,6 @@
                               <Value>وﺣﺪة اﻟﻘﻴﺎس</Value>
                               <Style>
                                 <FontStyle>Normal</FontStyle>
-                                 
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Medium</FontWeight>
                                 <TextDecoration>None</TextDecoration>
@@ -3635,7 +3600,6 @@
                             <TextRun>
                               <Value>تفاصيل البضاعة</Value>
                               <Style>
-                                 
                                 <FontWeight>Bold</FontWeight>
                                 <Color>White</Color>
                               </Style>
@@ -3801,7 +3765,6 @@
                             <TextRun>
                               <Value>:نوع التعبئة</Value>
                               <Style>
-                                 
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Normal</FontWeight>
                                 <Color>#282828</Color>
@@ -3914,7 +3877,6 @@
                             <TextRun>
                               <Value>:الوزن الإجمالي</Value>
                               <Style>
-                                 
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Normal</FontWeight>
                                 <Color>#282828</Color>
@@ -4030,7 +3992,6 @@
                             <TextRun>
                               <Value>:عدد أنواع التعبئة</Value>
                               <Style>
-                                 
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Normal</FontWeight>
                                 <Color>#282828</Color>
@@ -4105,7 +4066,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value />
+                              <Value>=Fields!HasAttachment.Value</Value>
                               <Style>
                                 <FontFamily>Open Sans</FontFamily>
                                 <FontSize>8pt</FontSize>
@@ -4140,7 +4101,6 @@
                             <TextRun>
                               <Value>:المرفقات</Value>
                               <Style>
-                                 
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Normal</FontWeight>
                                 <Color>#282828</Color>
@@ -4213,14 +4173,14 @@
                 </TablixCell>
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="Textbox188">
+                    <Textbox Name="NeedsDeliveryNote">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value />
+                              <Value>=Fields!NeedsDeliveryNote.Value</Value>
                               <Style>
                                 <FontFamily>Open Sans</FontFamily>
                                 <FontSize>8pt</FontSize>
@@ -4230,7 +4190,7 @@
                           <Style />
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>Textbox188</rd:DefaultName>
+                      <rd:DefaultName>NeedsDeliveryNote</rd:DefaultName>
                       <Style>
                         <Border>
                           <Color>LightGrey</Color>
@@ -4242,6 +4202,7 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
+                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell>
@@ -4255,7 +4216,6 @@
                             <TextRun>
                               <Value>:مذكرة التسليم</Value>
                               <Style>
-                                 
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Normal</FontWeight>
                                 <Color>#282828</Color>
@@ -4367,7 +4327,6 @@
                             <TextRun>
                               <Value>:نوع البضاعة</Value>
                               <Style>
-                                 
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Normal</FontWeight>
                                 <Color>#282828</Color>
@@ -4444,7 +4403,6 @@
               <TextRun>
                 <Value>:تاريخ و وقت الإستلام</Value>
                 <Style>
-                   
                   <FontSize>9pt</FontSize>
                   <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
@@ -4635,7 +4593,6 @@
                             <TextRun>
                               <Value>اسم المنشأة</Value>
                               <Style>
-                                 
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Normal</FontWeight>
                                 <Color>#282828</Color>
@@ -4709,7 +4666,6 @@
                             <TextRun>
                               <Value>الدولة</Value>
                               <Style>
-                                 
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Normal</FontWeight>
                                 <Color>#282828</Color>
@@ -4783,7 +4739,6 @@
                             <TextRun>
                               <Value>المدينة</Value>
                               <Style>
-                                 
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Normal</FontWeight>
                                 <Color>#282828</Color>
@@ -4859,7 +4814,6 @@
                             <TextRun>
                               <Value>المنطقة</Value>
                               <Style>
-                                 
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Normal</FontWeight>
                                 <Color>#282828</Color>
@@ -5197,7 +5151,6 @@
                             <TextRun>
                               <Value>موقع التسليم</Value>
                               <Style>
-                                 
                                 <FontSize>12pt</FontSize>
                                 <FontWeight>Normal</FontWeight>
                                 <Color>White</Color>
@@ -5264,7 +5217,6 @@
               <TextRun>
                 <Value>:تاريخ الطباعة</Value>
                 <Style>
-                   
                   <FontSize>8pt</FontSize>
                   <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
@@ -5443,7 +5395,6 @@
               <TextRun>
                 <Value xml:space="preserve"> </Value>
                 <Style>
-                   
                   <FontSize>8pt</FontSize>
                   <Color>#282828</Color>
                 </Style>
@@ -5451,7 +5402,6 @@
               <TextRun>
                 <Value>السائق </Value>
                 <Style>
-                   
                   <FontSize>8pt</FontSize>
                   <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
@@ -5509,7 +5459,6 @@
               <TextRun>
                 <Value xml:space="preserve"> </Value>
                 <Style>
-                   
                   <FontSize>8pt</FontSize>
                   <Color>#282828</Color>
                 </Style>
@@ -5517,7 +5466,6 @@
               <TextRun>
                 <Value>المستلم</Value>
                 <Style>
-                   
                   <FontSize>8pt</FontSize>
                   <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
@@ -5575,7 +5523,6 @@
               <TextRun>
                 <Value>المرسل</Value>
                 <Style>
-                   
                   <FontSize>8pt</FontSize>
                   <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
@@ -5615,7 +5562,6 @@
               <TextRun>
                 <Value>:ملاحظات</Value>
                 <Style>
-                   
                   <FontSize>9pt</FontSize>
                   <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
@@ -5692,7 +5638,6 @@
               <TextRun>
                 <Value>:التواقيع</Value>
                 <Style>
-                   
                   <FontSize>9pt</FontSize>
                   <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
@@ -5796,7 +5741,6 @@
                 <TextRun>
                   <Value xml:space="preserve"> </Value>
                   <Style>
-                     
                     <FontSize>9pt</FontSize>
                     <FontWeight>SemiBold</FontWeight>
                     <TextDecoration>None</TextDecoration>
@@ -5818,7 +5762,6 @@
                   <Value>وثيقة شحن</Value>
                   <Style>
                     <FontStyle>Normal</FontStyle>
-                     
                     <FontSize>13pt</FontSize>
                     <FontWeight>Bold</FontWeight>
                     <TextDecoration>None</TextDecoration>
@@ -6474,10 +6417,18 @@
           <DataField>DeliveryDate</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="HasAttachment">
+          <DataField>HasAttachment</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="NeedsDeliveryNote">
+          <DataField>NeedsDeliveryNote</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
       </Fields>
       <rd:DataSetInfo>
         <rd:DataSetName>MultipleDropDataSet</rd:DataSetName>
-        <rd:SchemaPath>C:\Users\tasneem\source\repos\tachyonhub\tachyon-core\aspnet-core\src\TACHYON.Application\Waybills\Reports\MultipleDropDataSet.xsd</rd:SchemaPath>
+        <rd:SchemaPath>C:\Users\DELL\source\repos\tachyon-core1\tachyon-core1\aspnet-core\src\TACHYON.Application\Waybills\Reports\MultipleDropDataSet.xsd</rd:SchemaPath>
         <rd:TableName>DataTable1</rd:TableName>
         <rd:TableAdapterFillMethod />
         <rd:TableAdapterGetDataMethod />

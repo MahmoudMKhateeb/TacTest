@@ -141,6 +141,8 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   tripsDateRange: Date[];
   selectedvas: any;
 
+  origin = { lat: null, lng: null };
+  destination = { lat: null, lng: null };
   ngOnInit() {
     this.loadAllDropDownLists();
     this.allRoutTypes = this.enumToArray.transform(ShippingRequestRouteType);
@@ -313,6 +315,8 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     this._shippingRequestsServiceProxy.getShippingRequestForView(this.activeShippingRequestId).subscribe((res) => {
       this.shippingRequestReview = res;
       this.loading = false;
+      this.getCordinatesByCityName(res.originalCityName, 'source');
+      this.getCordinatesByCityName(res.destinationCityName, 'destanation');
     });
   }
   loadStep1ForEdit() {
@@ -326,9 +330,9 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
         })
       )
       .subscribe((res) => {
-        res.isBid = this.shippingRequestType === 'bidding' ? true : false;
-        res.isTachyonDeal = this.shippingRequestType === 'tachyondeal' ? true : false;
-        res.isDirectRequest = this.shippingRequestType === 'directrequest' ? true : false;
+        res.isBid ? (this.shippingRequestType = 'bidding') : '';
+        res.isTachyonDeal ? (this.shippingRequestType = 'tachyondeal') : '';
+        res.isDirectRequest ? (this.shippingRequestType = 'directrequest') : '';
         this.step1Dto = res;
       });
   }
@@ -578,5 +582,35 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
         this.notify.error(this.l(' SourceAndDestinationCantBeTheSame'));
       }
     }
+  }
+
+  /**
+   * Get City Cordinates By Providing its name
+   * this finction is to draw the shipping Request Main Route in View SR Details in marketPlace
+   * @param cityName
+   * @param cityType   source/dest
+   */
+  getCordinatesByCityName(cityName: string, cityType: string) {
+    console.log('cityName : ', cityName);
+    const geocoder = new google.maps.Geocoder();
+    geocoder.geocode(
+      {
+        address: cityName,
+      },
+      (results, status) => {
+        console.log(results);
+        if (status == google.maps.GeocoderStatus.OK) {
+          const Lat = results[0].geometry.location.lat();
+          const Lng = results[0].geometry.location.lng();
+          if (cityType == 'source') {
+            this.origin = { lat: Lat, lng: Lng };
+          } else {
+            this.destination = { lat: Lat, lng: Lng };
+          }
+        } else {
+          console.log('Something got wrong ' + status);
+        }
+      }
+    );
   }
 }

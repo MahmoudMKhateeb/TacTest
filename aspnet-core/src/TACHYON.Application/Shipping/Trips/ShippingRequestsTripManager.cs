@@ -378,17 +378,25 @@ namespace TACHYON.Shipping.Trips
             DisableTenancyFilters();
             var currentUser = await GetCurrentUserAsync(_abpSession);
 
-            var CurrentPoint = await _routPointRepository.GetAll()
-                .Where(x =>x.Id == id && x.Status == RoutePointStatus.DeliveryConfirmation)
+            var document=await _routPointDocumentRepository.GetAll()
+                .Where(x=>x.RoutPointId==id && x.RoutPointFk.Status == RoutePointStatus.DeliveryConfirmation && x.RoutePointDocumentType==RoutePointDocumentType.POD)
                 .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => true)
-                .WhereIf(currentUser.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == currentUser.TenantId.Value)
-                .WhereIf(currentUser.IsDriver, x => x.ShippingRequestTripFk.AssignedDriverUserId == currentUser.Id)
+                .WhereIf(currentUser.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.RoutPointFk.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == currentUser.TenantId.Value)
+                .WhereIf(currentUser.IsDriver, x => x.RoutPointFk.ShippingRequestTripFk.AssignedDriverUserId == currentUser.Id)
                 .FirstOrDefaultAsync();
-            if (CurrentPoint == null) throw new UserFriendlyException(L("TheRoutePointIsNotFound"));
+
+
+            //var CurrentPoint = await _routPointRepository.GetAll()
+            //    .Where(x =>x.Id == id && x.Status == RoutePointStatus.DeliveryConfirmation)
+            //    .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => true)
+            //    .WhereIf(currentUser.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == currentUser.TenantId.Value)
+            //    .WhereIf(currentUser.IsDriver, x => x.ShippingRequestTripFk.AssignedDriverUserId == currentUser.Id)
+            //    .FirstOrDefaultAsync();
+            if (document == null) throw new UserFriendlyException(L("TheRoutePointIsNotFound"));
 
 
 
-            return await _commonManager.GetDocument(ObjectMapper.Map<IHasDocument>(CurrentPoint));
+            return await _commonManager.GetDocument(ObjectMapper.Map<IHasDocument>(document));
 
 
         }

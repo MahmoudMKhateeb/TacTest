@@ -63,7 +63,7 @@
                       [disabled]="receiversLoading || !Point.facilityId"
                       [required]="!isAdditionalReceiverEnabled"
                     >
-                      <option [ngValue]="" selected>{{ l('PickAReceiver') }}</option>
+                      <option value="" selected>{{ l('PickAReceiver') }}</option>
                       <option *ngFor="let item of allReceivers" [ngValue]="item.id">{{ item.displayName }}</option>
                     </select>
                     <div class="input-group-btn">

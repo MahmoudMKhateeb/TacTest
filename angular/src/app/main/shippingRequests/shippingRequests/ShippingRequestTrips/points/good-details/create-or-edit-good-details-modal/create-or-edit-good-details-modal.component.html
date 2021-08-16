@@ -39,7 +39,7 @@
                         [class.is-invalid]="subgoodsDetail.touched && !subgoodsDetail.valid"
                         [class.is-valid]="subgoodsDetail.touched && subgoodsDetail.valid"
                       >
-                        <option [value]="">{{ l('SelectAGoodSubCategory') }}</option>
+                        <option value="">{{ l('SelectAGoodSubCategory') }}</option>
                         <option *ngFor="let item of allSubGoodCategorys" [value]="item.id">{{ item.displayName }}</option>
                       </select>
                     </div>
