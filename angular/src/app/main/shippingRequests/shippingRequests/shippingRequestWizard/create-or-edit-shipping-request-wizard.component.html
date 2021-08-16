@@ -657,11 +657,23 @@
                   <!--end: Form Wizard Step 4-->
                   <!--begin: Form Wizard Step 5-->
                   <div class="pb-5" data-wizard-type="step-content">
-                    <h4 class="mb-10 font-weight-bold text-dark"></h4>
+                    <h4 class="mb-10 font-weight-bold text-dark">{{ l('ReviewYourDetailsAndSubmit') }}</h4>
+
                     <div>
+                      <div class="border-bottom mb-5 pb-5 map">
+                        <agm-map [latitude]="24.717942" [longitude]="46.675761" [zoom]="10">
+                          <agm-direction
+                            *ngIf="destination.lat"
+                            [origin]="{ lat: origin.lat, lng: origin.lng }"
+                            [destination]="{ lat: destination.lat, lng: destination.lng }"
+                            [travelMode]="'DRIVING'"
+                          ></agm-direction>
+                        </agm-map>
+                      </div>
+
                       <div class="border-bottom mb-5 pb-5">
-                        <div class="font-weight-bolder mb-3">{{ l('BasicDetails') }}:</div>
-                        <div class="line-height-xl">
+                        <div class="font-weight-bolder text-primary mb-3">{{ l('BasicDetails') }}:</div>
+                        <div class="font-size-base line-height-xl">
                           {{ l('ShippingRequestType') }} :
                           {{ shippingRequestReview?.shippingRequest?.isBid ? l('Marketplace') : l('TachyonManageService') }}
                           <br />
@@ -675,7 +687,7 @@
                         </div>
                       </div>
                       <div class="border-bottom mb-5 pb-5">
-                        <div class="font-weight-bolder mb-3">{{ l('RouteDetails') }}:</div>
+                        <div class="font-weight-bolder text-primary mb-3">{{ l('RouteDetails') }}:</div>
                         <div class="line-height-xl">
                           {{ l('OriginCity') }} : {{ shippingRequestReview?.originalCityName }}
                           <br />
@@ -689,7 +701,7 @@
                         </div>
                       </div>
                       <div class="border-bottom mb-5 pb-5">
-                        <div class="font-weight-bolder mb-3">{{ l('GoodDetails') }}:</div>
+                        <div class="font-weight-bolder text-primary mb-3">{{ l('GoodDetails') }}:</div>
                         <div class="line-height-xl">
                           {{ l('MainGoodCategory') }} : {{ shippingRequestReview?.goodsCategoryName }}
                           <br />
@@ -707,9 +719,28 @@
                         </div>
                       </div>
                       <div class="mb-5 pb-5">
-                        <div class="font-weight-bolder mb-3">{{ l('Vas') }}:</div>
+                        <div class="font-weight-bolder text-primary mb-3">{{ l('Vas') }}:</div>
                         <div class="line-height-xl">
-                          <span *ngFor="let vas of shippingRequestReview?.shippingRequestVasDtoList"> {{ vas.vasName }} , </span>
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">{{ l('VasName') }}</th>
+                                <th scope="col">{{ l('VasAmount') }}</th>
+                                <th scope="col">{{ l('VasCount') }}</th>
+                                <th scope="col">{{ l('NumberOfTTrips') }}</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr *ngFor="let vas of selectedVases; let i = index">
+                                <th scope="row">{{ i + 1 }}</th>
+                                <th>{{ selectedVasesProperties[vas.vasId].vasName }}</th>
+                                <td>{{ vas.requestMaxAmount == 0 ? '-' : vas.requestMaxAmount }}</td>
+                                <td>{{ vas.requestMaxCount == 0 ? '-' : vas.requestMaxCount }}</td>
+                                <td>{{ vas.numberOfTrips == 0 ? '-' : vas.numberOfTrips }}</td>
+                              </tr>
+                            </tbody>
+                          </table>
                         </div>
                       </div>
                     </div>
