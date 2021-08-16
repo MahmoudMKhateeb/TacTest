@@ -58,13 +58,11 @@
             </div>
             <div class="divirCard"></div>
             <div class="moreDetails">
-              <div *ngIf="item.rangeDate" class="dateRange">
+              <div *ngIf="item.startTripDate && item.endTripDate" class="dateRange">
                 <p>
                   {{ l('EstimatedPickUpDate') }}
                 </p>
-                <p>
-                  {{ item.rangeDate }}
-                </p>
+                <p>{{ item.startTripDate | momentFormat: 'L' }} - {{ item.endTripDate | momentFormat: 'L' }}</p>
               </div>
 
               <div *ngIf="item.creationTime" class="dateRange">
