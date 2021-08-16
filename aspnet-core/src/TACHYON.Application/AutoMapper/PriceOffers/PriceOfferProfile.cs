@@ -45,7 +45,6 @@ namespace TACHYON.AutoMapper.PriceOffers
              .ForMember(dst => dst.BidStatusTitle, opt => opt.MapFrom(src => src.BidStatus.GetEnumDescription()))
              .ForMember(dst => dst.StatusTitle, opt => opt.MapFrom(src => src.Status.GetEnumDescription()))
              .ForMember(dst => dst.RemainingDays, opt => opt.MapFrom(src => "0"))
-             .ForMember(dst => dst.RangeDate, opt => opt.MapFrom(src => GetDateRange(src.StartTripDate, src.EndTripDate)))
              .ForMember(dst => dst.RemainingDays, opt => opt.MapFrom(src => GetRemainingDays(src.BidEndDate, src.BidStatus)))
              .ForMember(dst => dst.Price, opt => opt.MapFrom(src => src.Price))
      ;
