@@ -174,7 +174,7 @@ namespace TACHYON.Tracking
                     dto.CanStartTrip = CanStartTrip(trip);
                     dto.IsAssign = true;
                 }
-                dto.Name = $"{trip.ShippingRequestFk.Tenant.Name}-{trip.ShippingRequestFk.CarrierTenantFk.Name}";
+                dto.Name = $"{trip.ShippingRequestFk?.Tenant?.Name}-{trip.ShippingRequestFk?.CarrierTenantFk?.Name}";
             }
             return dto;
         }
