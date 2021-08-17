@@ -579,7 +579,6 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
       if (this.step2Dto.originCityId == this.step2Dto.destinationCityId) {
         this.step2Form.controls['destination'].setErrors({ invalid: true });
         // this.step2Form.controls['origin'].setErrors({ invalid: true });
-        this.notify.error(this.l(' SourceAndDestinationCantBeTheSame'));
       }
     }
   }
