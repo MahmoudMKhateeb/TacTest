@@ -35,7 +35,7 @@
 		<text name="Active">مفعل</text>
 		<text name="Add">أضف</text>
 		<text name="AddATrip">إضافة رحلة</text>
-		<text name="AddDocument">إضافة مستند</text>
+		<text name="AddDocument">الرجاء رفع المستند</text>
 		<text name="AddDrop">إضافة منطقة التنزيل</text>
 		<text name="AddedTime">الإضافة</text>
 		<text name="AddFriend">أضف صديق</text>
@@ -100,7 +100,7 @@
 		<text name="Arabic">العربية</text>
 		<text name="AreYouSure">هل أنت متأكد؟</text>
 		<text name="AreYouSure?">هل أنت متأكد</text>
-		<text name="ArrivedToDestination">الوصول لموقع التسليم</text>
+		<text name="ArrivedToDestination">الوصول إلى موقع التنزيل</text>
 		<text name="Assign">تعيين</text>
 		<text name="AssignCarrier">تعيين الناقل</text>
 		<text name="AssignDriverToTruckNotificationMessage">رسالة تعيين سائق لشاحنة</text>
@@ -116,7 +116,7 @@
 		<text name="AutomaticallyBillMyAccount">فوتر حسابي تلقائيا</text>
 		<text name="AutomaticBilling">الفوترة التلقائية</text>
 		<text name="Available">متوفر</text>
-		<text name="Back">العودة</text>
+		<text name="Back">رجوع</text>
 		<text name="BackToDefaultPage">العودة إلى الافتراضي</text>
 		<text name="BackToDefaultPageWarningMessage">هل أنت متأكد من إزالة صفحة "{0}" والعودة إلى الوضع الافتراضي؟</text>
 		<text name="BackToMyAccount">العودة لحسابي</text>
@@ -171,7 +171,7 @@
 		<text name="Carriers">الناقلين</text>
 		<text name="CarrierTripNeedAccept">يوجد لديك السائق {driver} لم يوافق الشحنة رقم وثيقة الشحن {waybillnumber}</text>
 		<text name="CascadeImpersonationErrorMessage">لايمكن ثمتيل شخص آخر. لان تسجيل دخولك الحالي ممثّل من قبل مستخدم آخر.</text>
-		<text name="Category">التصنيف</text>
+		<text name="Category">صنف البضاعة</text>
 		<text name="Change">تغيير</text>
 		<text name="ChangeDateRange">تغيير النطاق الزمني</text>
 		<text name="ChangeLogs">سجلات التحريرات</text>
@@ -205,12 +205,12 @@
 			Test\admin -&gt; للمشرف العميل Test
 			admin -&gt; للمشرف المحلي
 		</text>
-		<text name="Check">فحص</text>
+		<text name="Check">تحقق</text>
 		<text name="CheckoutWithPaypal">ادفع باستعمال باي بال</text>
 		<text name="CheckoutWithStripe">ادفع باستعمال سترايب</text>
 		<text name="CheckRecipient">تأكيد المستلم</text>
 		<text name="CheckTheRecipient">تحقق من المستلم</text>
-		<text name="Choose">إختر</text>
+		<text name="Choose">اختيار</text>
 		<text name="ChooseNationality">اختر الجنسية</text>
 		<text name="ChooseWhatIncidentIs">الرجاء اختيار ما هو الحادث</text>
 		<text name="Cities">المدن</text>
@@ -473,8 +473,8 @@
 		<text name="DemoUiComponents_Info_Metronic_Link_Text">Check Metronic theme for more UI components</text>
 		<text name="Description">الوصف</text>
 		<text name="DescriptionNumberOfDrops">يتم تطبيقها على كل شحنة،، على مستوى كل شحنة</text>
-		<text name="DestFacility">منطقة التنزيل</text>
-		<text name="Destination">مدينة الوصول</text>
+		<text name="DestFacility">موقع التسليم</text>
+		<text name="Destination">الوجهة</text>
 		<text name="DestinationCity">مدينة الوصول</text>
 		<text name="DestinationFacility">منطقة التنزيل</text>
 		<text name="Detail">تفاصيل</text>
@@ -544,13 +544,13 @@
 		<text name="DriverTripReminder">لديك رحلة جديدة غداً</text>
 		<text name="DrivingLicense">رخصة القيادة</text>
 		<text name="DropOff">تنزيل</text>
-		<text name="DropoffDetailCommodity">البضاعة</text>
+		<text name="DropoffDetailCommodity">تفاصيل البضاعة</text>
 		<text name="DropoffDetailDropoff">نقطة التنزيل</text>
 		<text name="DropoffDetailID">رقم الهوية</text>
 		<text name="DropoffDetailMobile">رقم الموبايل</text>
 		<text name="DropoffDetailPackagingType">نوع التغليف</text>
 		<text name="DropoffDetailQuantity">الكمية</text>
-		<text name="DropoffDetailShipperNotes">ملاحظات </text>
+		<text name="DropoffDetailShipperNotes">ملاحظات الشاحن </text>
 		<text name="DropoffDetailUnitOfMeasure">وحدة القياس</text>
 		<text name="DropoffDetailWeight">الوزن</text>
 		<text name="DueDate">تاريخ الاستحقاق</text>
@@ -732,7 +732,7 @@
 		<text name="FriendshipRequestAccepted">تم قبول طلب الإضافة</text>
 		<text name="FromTenantToHostImpersonationErrorMessage">لا يمكن تمثيل مستخدم النظام من مستخدم العميل.</text>
 		<text name="FullName">الاسم الكامل</text>
-		<text name="Gallery">الاستديو</text>
+		<text name="Gallery">الصور</text>
 		<text name="Gateway">بوابة</text>
 		<text name="GdprDataPreparedNotificationMessage">تم إعداد بياناتك ، انقر هنا للتنزيل.</text>
 		<text name="GdprDataPrepareStartedNotification">نحن نعد بياناتك. سيتم إخطارك عند الإنتهاء من إعداد بياناتك.</text>
@@ -784,7 +784,7 @@
 		<text name="History">تاريخ</text>
 		<text name="HomePage">الصفحة الرئيسية</text>
 		<text name="HostDashboardHeaderInfo">الإحصاءات العامة والأنشطة الأخيرة</text>
-		<text name="HowWasFacility">كيف كانت الرحلة</text>
+		<text name="HowWasFacility">تقييم موقع التسليم</text>
 		<text name="HttpStatusCode">Http Status Code</text>
 		<text name="IAgreeonTahcyon">أنا أوافق على</text>
 		<text name="IAMA">أنا</text>
@@ -798,7 +798,7 @@
 		<text name="ImportUsersUploadFailed">فشلت عملية استيراد المستخدم.</text>
 		<text name="InActiveAccountExpired">قفل الحساب بعد إنتهاء الصلاحية</text>
 		<text name="InActiveToleranceDays">عدد أيام السماحية بعد تاريخ إنتهاء الصلاحية</text>
-		<text name="Incident">حادث</text>
+		<text name="Incident">حادثة!!</text>
 		<text name="Income">دخل</text>
 		<text name="IncomeStatistics">إحصاءات الدخل</text>
 		<text name="IncomeWithAmount">الدخل: {0}</text>
@@ -1086,7 +1086,7 @@
 		<text name="OfferStatus">حالة العرض</text>
 		<text name="Offline">غير متصل</text>
 		<text name="OfflineAccess">الوصول دون اتصال</text>
-		<text name="Ok">موافق</text>
+		<text name="Ok">حسنا</text>
 		<text name="On">ممكّن</text>
 		<text name="OnDemand">على الطلب</text>
 		<text name="OneConcurrentLoginPerUser">تسجيل دخول متزامن ,واحد فقط لكل مستخدم</text>
@@ -1265,8 +1265,8 @@
 		<text name="QuickNav">الإنتقال السريع</text>
 		<text name="QuickThemeSelection">الاختيار السريع للتصميم</text>
 		<text name="RateLoadingFacility">تقييم إجراءات  تحميل الحمولة </text>
-		<text name="RateOffloadingAdditionalNote">ملاحظات اضافية</text>
-		<text name="RateOffloadingRateFacility">حفظ التقيم</text>
+		<text name="RateOffloadingAdditionalNote">الرجاء إضافة ملاحظاتك</text>
+		<text name="RateOffloadingRateFacility">قيم المنشأة</text>
 		<text name="Read">مقروء</text>
 		<text name="ReadState">مقروء</text>
 		<text name="ReadyForLoading">تأكيد الجهوزية لتحميل الحمولة </text>
@@ -1514,7 +1514,7 @@
 		<text name="Source">موقع التحميل</text>
 		<text name="SourceFacility">منطقة التحميل</text>
 		<text name="SpecialConstant">رمز مميز</text>
-		<text name="Start">بدء</text>
+		<text name="Start">بدء الرحلة</text>
 		<text name="StartDate">تاريخ بداية التحميل</text>
 		<text name="StartShippmentNotificationMessage">تم بدء الشحنة</text>
 		<text name="StartTime">وقت البداية</text>
@@ -1565,7 +1565,7 @@
 		<text name="Subscriptions">الاشتراكات</text>
 		<text name="SubscriptionStartDate">تاريخ بداية الاشتراك</text>
 		<text name="SubTotalAmount">المجموع</text>
-		<text name="Success">نجاح</text>
+		<text name="Success">تم إكمال الرحلة بنجاح</text>
 		<text name="SuccessfullyActivated">تم التفعيل بنجاح</text>
 		<text name="SuccessfullyAdded">تمت الإضافة بنجاح.</text>
 		<text name="SuccessfullyCanceled">تم الإلغاء بنجاح</text>
@@ -1738,7 +1738,7 @@
 		<text name="TimeZoneSettingChangedRefreshPageNotification">تم تغيير إعدادات المنطقة الزمنية. انقر على زر موافق لتحديث الصفحة وسيتم تفعيل التغييرات.</text>
 		<text name="Title">العنوان</text>
 		<text name="TitleLogin">لتسجيل الدخول ، قم بأدخال رقم هاتفك المحمول</text>
-		<text name="TitleOTP">قم بأدخال الكود المكون من 4 خانات المرسل الي رقم الهاتف</text>
+		<text name="TitleOTP">الرجاء ادخال كلمة المرور المؤقتة التي تم ارسالها إلى رقم الجوال الخاص بك</text>
 		<text name="TMS">نظام إدارة النقل</text>
 		<text name="TMSAcceptedOffer">
 			<a href="/app/main/shippingRequests/shippingRequests/view?id={id}">{name} تم الموافقة على العرض.</a>
@@ -1787,7 +1787,7 @@
 		<text name="Trip_StartDate">تاريخ بداية التحميل</text>
 		<text name="TripDetails">تفاصيل الرحلة</text>
 		<text name="TripEndDate">تاريح نهاية التحميل</text>
-		<text name="TripFinishedSuccessfully">انتهت الرحلة بنجاح</text>
+		<text name="TripFinishedSuccessfully">رحلتك تم إكمالها بنجاح</text>
 		<text name="TripInfo">معلومات الرحلة</text>
 		<text name="TripRejectReason">سبب رفض الرحلة</text>
 		<text name="TripsEndDate">تاريخ نهاية التحميل </text>
@@ -2116,8 +2116,21 @@
 		<text name="Publish">نشر</text>
 		<text name="Trips:InProgress">الرحلات: قيد التنفيذ</text>
 		<text name="Trips:completed">الرحلات: مكتملة</text>
+    <text name="StandBy">تمت الموافقة/ لم تبدأ</text>
+    <text name="TripHasAnAttachment">يوجد مرفقات</text> 
+    <text name="TripNeedDeliveryNotes">بحاجة إلى مذكرة تسليم</text>
+    <text name="UploadDeliveryNote">مذكرة التسليم</text>
+    <text name="PleaseUploadDeliveryNote">يرجى رفع مذكرة التسليم</text>
+    <text name="Navigation">ابدأ التنقل</text>
+    <text name="IdDropOff">هوية المستلم</text>
+    <text name="Skip">تخطي</text>
+    <text name="Acknowledge">موافقة</text>
+    <text name="ReceiverCode">رمز المستلم</text>
+    <text name="AnotherTripWarning">ملاحظة: يجب عليك إكمال الرحلة السابقة قبل البدء برحلة جديدة</text>
+    <text name="StartMovingToOfLoadingLocation">الذهاب إلى موقع التنزيل</text>
 		<text name="Review and submit">عرض واعتماد</text>
 		<text name="Delivered">تم التوصيل</text>
 		<text name="TheNumberOfDropsMustHigerOrEqualTwo">عدد مرات التنزيل يجب ان يكون اكبر من او يساوي 2 </text>
+    <text name="StartMovingToDestination">الذهاب إلى موقع التنزيل</text>
 	</texts>
 </localizationDictionary>
