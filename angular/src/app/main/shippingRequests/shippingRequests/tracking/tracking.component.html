@@ -16,7 +16,7 @@
           <div class="card card-custom">
             <div class="card-header ribbon ribbon-top">
               <a class="ribbon-target bg-danger" style="top: -1px; right: 20px">
-                {{ item.statusTitle }}
+                {{ item.statusTitle | localize }}
               </a>
               <a
                 (click)="showIncident(item)"
