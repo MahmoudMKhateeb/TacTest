@@ -168,6 +168,7 @@
                           name="shippingType"
                           formControlName="shippingType"
                           [(ngModel)]="step1Dto.shippingTypeId"
+                          (change)="step2Dto.destinationCityId = undefined"
                           [class.is-valid]="
                             step1Form.get('shippingType').valid && (step1Form.get('shippingType').dirty || step1Form.get('shippingType').touched)
                           "
