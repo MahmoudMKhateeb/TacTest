@@ -43,7 +43,7 @@
 		<text name="ActualPercentCommission">Actual percent commission</text>
 		<text name="Add">Add</text>
 		<text name="AddATrip">Add trip</text>
-		<text name="AddDocument">Add document</text>
+		<text name="AddDocument">Please upload the document</text>
 		<text name="AddDrop">Add drop off facility </text>
 		<text name="AddedTime">Addition time</text>
 		<text name="AddFriend">Add friend</text>
@@ -112,7 +112,7 @@
 		<text name="Arabic">Arabic</text>
 		<text name="AreYouSure">Are you sure ?</text>
 		<text name="AreYouSure?">Are you sure?</text>
-		<text name="ArrivedToDestination">Arrived to Destination</text>
+		<text name="ArrivedToDestination">Arrive to offloading location</text>
 		<text name="ArriveToLoadingLocation">Arrive to loading location </text>
 		<text name="AShipmentWasAssignedForYouToReceiveOn">A shipment was assigned for you to receive on</text>
 		<text name="AspNetZeroPlatForm">AspNetZero</text>
@@ -203,7 +203,7 @@
 		<text name="CarrierShippingRequests">Shipping Requests</text>
 		<text name="CarrierTripNeedAccept">You have a driver {driver} who did not approve shipment waybill number {waybillnumber}.</text>
 		<text name="CascadeImpersonationErrorMessage">Can not make cascade impersonation. This is already an impersonated login!</text>
-		<text name="Category">Category</text>
+		<text name="Category">Goods category</text>
 		<text name="Change">Change</text>
 		<text name="ChangeDateRange">Change date range</text>
 		<text name="ChangeLogs">Change logs</text>
@@ -523,6 +523,7 @@
 			This page shows a few useful UI components those can be used in your application.
 			Components in this page are implemented as full stack (includes the server side).
 		</text>
+    <text name="StandBy">Accepted/ Not started</text>
 		<text name="DemoUiComponents_Info_Metronic_Link_Text">Check Metronic theme for more UI components</text>
 		<text name="Description">Description</text>
 		<text name="DescriptionNumberOfDrops">Please enter number of drops</text>
@@ -599,13 +600,13 @@
 		<text name="DrivingLicense">Driving License</text>
 		<text name="Drop">Drop</text>
 		<text name="DropOff">Drop off</text>
-		<text name="DropoffDetailCommodity">Commodity</text>
+		<text name="DropoffDetailCommodity">Goods details</text>
 		<text name="DropoffDetailDropoff">Dropoff </text>
 		<text name="DropoffDetailID">id</text>
 		<text name="DropoffDetailMobile">phone No.</text>
 		<text name="DropoffDetailPackagingType">Packaging Type </text>
 		<text name="DropoffDetailQuantity">Quantity</text>
-		<text name="DropoffDetailShipperNotes">Shipper Notes</text>
+		<text name="DropoffDetailShipperNotes">Shipper Note</text>
 		<text name="DropoffDetailUnitOfMeasure">Unit Of Measure</text>
 		<text name="DropoffDetailWeight">Weight</text>
 		<text name="DueDate">Due date</text>
@@ -860,7 +861,7 @@
 		<text name="History">History</text>
 		<text name="HomePage">Home Page</text>
 		<text name="HostDashboardHeaderInfo">General statistics and recent activities</text>
-		<text name="HowWasFacility">How Was The Facility</text>
+		<text name="HowWasFacility">Rate offloading facility</text>
 		<text name="HttpStatusCode">Http Status Code</text>
 		<text name="IAgreeonTahcyon">I agree on Tachyon's</text>
 		<text name="IAMA">I am a</text>
@@ -1409,7 +1410,7 @@
 		<text name="QuickNav">Quick Navigation</text>
 		<text name="QuickThemeSelection">Quick theme selection</text>
 		<text name="RateLoadingFacility">Rate loading facility</text>
-		<text name="RateOffloadingAdditionalNote">AdditionalNote</text>
+		<text name="RateOffloadingAdditionalNote">Please add your feedback</text>
 		<text name="RateOffloadingRateFacility">Rate Facility</text>
 		<text name="Read">Read</text>
 		<text name="ReadState">Read state</text>
@@ -1677,7 +1678,7 @@
 		<text name="Start">Start</text>
 		<text name="StartDate">Trips pickup date start</text>
 		<text name="StartLoading">Start loading</text>
-		<text name="StartMovingToDestination">Start moving to destination</text>
+		<text name="StartMovingToDestination">Start moving to offloading location</text>
 		<text name="StartMovingToLoadingLocation">Start Moving To Loading Location</text>
 		<text name="StartShippmentNotificationMessage">Shippment is started</text>
 		<text name="StartTime">Start time</text>
@@ -1729,7 +1730,7 @@
 		<text name="Subscriptions">Subscriptions</text>
 		<text name="SubscriptionStartDate">Subscription start date</text>
 		<text name="SubTotalAmount">Sub total amount</text>
-		<text name="Success">Success</text>
+		<text name="Success">Done successfully</text>
 		<text name="SuccessfullyAccepted">Successfully accepted</text>
 		<text name="SuccessfullyActivated">Successfully activated</text>
 		<text name="SuccessfullyAdded">Successfully added</text>
@@ -1910,7 +1911,7 @@
 		<text name="TimeZoneSettingChangedRefreshPageNotification">Time zone setting changed. Click OK button to refresh page and changes to take effect.</text>
 		<text name="Title">Title</text>
 		<text name="TitleLogin">To Sign In , What Is Your Mobile Phone Number </text>
-		<text name="TitleOTP">Enter The 4-Digit Code We Send To Mobile Number To Verify Your Account</text>
+		<text name="TitleOTP">Please enter your one time password that has been sent to your mobile number</text>
 		<text name="TMS">Transport Management System (TMS)</text>
 		<text name="TMSAcceptedOffer">The {name} has been accepted offer.</text>
 		<text name="TMSSettings">TMS Settings</text>
@@ -1966,7 +1967,7 @@
 		<text name="Trip_StartDate">Trips pickup date start</text>
 		<text name="TripDetails">Trip Details</text>
 		<text name="TripEndDate">Trip end date</text>
-		<text name="TripFinishedSuccessfully">Trip Finished Successfully</text>
+		<text name="TripFinishedSuccessfully">Your trip has been completed successfully</text>
 		<text name="TripIncident">Trip incident</text>
 		<text name="TripInfo">Trip Info</text>
 		<text name="TripRejectReason">Trip reject reason</text>
@@ -2301,10 +2302,17 @@
 		<text name="CompleteDropPointSetup">Complete shipment details</text>
 		<text name="Publish">Publish</text>
 		<text name="Trips:InProgress">trips: in progress</text>
-		<text name="Trips:completed">trips: completed</text>
 		<text name="ReviewAndSubmit">Review and submit</text>
+		<text name="Trips:completed">trips: completed</text>
 		<text name="TheNumberOfDropsMustHigerOrEqualTwo">The number of drops must higher or equal Two</text>
-	
-		
+    <text name="TripHasAnAttachment">Has attachment</text>
+    <text name="TripNeedDeliveryNotes">Needs delivery note</text>
+    <text name="UploadDeliveryNote">Delivery note</text>
+    <text name="PleaseUploadDeliveryNote">Please upload the delivery note</text>
+    <text name="Navigation">Start navigation</text>
+    <text name="IdDropOff">Receiver ID</text>
+    <text name="Skip">Skip</text>
+    <text name="AnotherTripWarning">Note: You have to complete the previous trip before starting a new trip</text>
+    <text name="StartMovingToOfLoadingLocation">Start moving to offloading location</text>
 	</texts>
 </localizationDictionary>
