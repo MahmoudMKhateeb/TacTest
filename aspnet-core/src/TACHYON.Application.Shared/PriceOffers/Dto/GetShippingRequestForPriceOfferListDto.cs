@@ -19,7 +19,7 @@ namespace TACHYON.PriceOffers.Dto
         public bool isPriced { get; set; }
         public string RemainingDays { get; set; }
         public DateTime StartTripDate { get; set; }
-        public DateTime EndTripDate { get; set; }
+        public DateTime? EndTripDate { get; set; }
 
         //x public string RangeDate { get; set; } 
         public int NumberOfDrops { get; set; }
