@@ -24,7 +24,7 @@ namespace TACHYON.AutoMapper.Tracking
             .ForMember(dst => dst.ReferenceNumber, opt => opt.MapFrom(src => src.ShippingRequestFk.ReferenceNumber))
             ;
 
-            CreateMap<IHasDocument, RoutPoint>().ReverseMap();
+            CreateMap<IHasDocument, RoutPointDocument>().ReverseMap();
         }
     }
 }

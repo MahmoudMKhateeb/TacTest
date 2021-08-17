@@ -118,6 +118,7 @@ namespace TACHYON.EntityFrameworkCore
         public virtual DbSet<PackingTypeTranslation> PackingTypeTranslations { get; set; }
 
         public virtual DbSet<ShippingType> ShippingTypes { get; set; }
+        public virtual DbSet<ShippingTypeTranslation> ShippingTypeTranslations { get; set; }
 
         public virtual DbSet<Nationality> Nationalities { get; set; }
 

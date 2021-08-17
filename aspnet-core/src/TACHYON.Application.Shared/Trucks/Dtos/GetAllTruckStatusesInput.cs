@@ -1,15 +1,7 @@
-﻿using Abp.Application.Services.Dto;
-using System;
-
-namespace TACHYON.Trucks.Dtos
+﻿namespace TACHYON.Trucks.Dtos
 {
-    public class GetAllTruckStatusesInput : PagedAndSortedResultRequestDto
+    public class GetAllTruckStatusesInput 
     {
-        public string Filter { get; set; }
-
-        public string DisplayNameFilter { get; set; }
-
-
-
+        public string LoadOptions { get; set; }
     }
 }

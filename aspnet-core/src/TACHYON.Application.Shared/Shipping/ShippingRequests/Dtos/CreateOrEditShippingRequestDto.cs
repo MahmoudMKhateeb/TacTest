@@ -1,5 +1,6 @@
 ﻿
 using Abp.Application.Services.Dto;
+using Abp.Localization;
 using Abp.Runtime.Validation;
 using Newtonsoft.Json;
 using System;
@@ -80,7 +81,10 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
 
         public void AddValidationErrors(CustomValidationContext context)
         {
-            switch(this.RouteTypeId)
+            var localization = context.IocResolver
+             .Resolve<ILocalizationManager>();
+
+            switch (this.RouteTypeId)
             {
                 case  ShippingRequestRouteType.SingleDrop:
                     this.NumberOfDrops = 1;
@@ -90,7 +94,14 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
                 //    break;
                 default :
                     if (this.NumberOfDrops<2)
-                        context.Results.Add(new ValidationResult("TheNumberOfDropsMustHigerOrEqualTwo"));
+                    {
+
+                        var errorMessage = localization.GetString(
+                            TACHYONConsts.LocalizationSourceName,
+                            "TheNumberOfDropsMustHigerOrEqualTwo");
+                        context.Results.Add(new ValidationResult(errorMessage));
+                    }
+
                     break;
             }
 

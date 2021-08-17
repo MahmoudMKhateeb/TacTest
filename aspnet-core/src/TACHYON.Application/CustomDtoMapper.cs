@@ -169,6 +169,10 @@ namespace TACHYON
             configuration.CreateMap<CreateOrEditTruckStatusesTranslationDto, TruckStatusesTranslation>().ReverseMap();
             configuration.CreateMap<TruckStatusesTranslationDto, TruckStatusesTranslation>().ReverseMap();
 
+            configuration.CreateMap<TruckStatus, GetTruckStatusForViewDto>()
+                .ForMember(x => x.TruckStatus,
+                    x => x.MapFrom(i => i));
+            configuration.CreateMap<TruckStatus, TruckStatusDto>().ReverseMap();
             configuration.CreateMap<PackingTypeTranslation, PackingTypeTranslationDto>().ReverseMap();
             configuration.CreateMap<PackingTypeTranslation, PackingTypeTranslationDto>().ReverseMap();
 
@@ -186,10 +190,25 @@ namespace TACHYON
                 .ForMember(x => x.Description, x =>
                     x.MapFrom(i => i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)) == null ? i.Description : i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).Description));
 
-
+            configuration.CreateMap<TruckStatusesTranslation, GetTruckStatusesTranslationForViewDto>()
+                .ForMember(x => x.TruckStatusDisplayName,
+                    x => x.MapFrom(i => i.Core.DisplayName))
+                .ForMember(x => x.TruckStatusesTranslation,
+                    x => x.MapFrom(i => i));
 
             configuration.CreateMap<CreateOrEditShippingTypeDto, ShippingType>().ReverseMap();
             configuration.CreateMap<ShippingTypeDto, ShippingType>().ReverseMap();
+            configuration.CreateMap<ShippingType, ShippingTypeDto>()
+             .ForMember(x => x.DisplayName, x =>
+                x.MapFrom(i => i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)) == null ? i.DisplayName : i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).DisplayName))
+            .ForMember(x => x.Description, x =>
+                x.MapFrom(i => i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).Description));
+
+            configuration.CreateMap<ShippingTypeTranslation, ShippingTypeTranslationDto>().ReverseMap();
+            configuration.CreateMap<ShippingTypeTranslation, CreateOrEditShippingTypeTranslationDto>().ReverseMap();
+
+
+
             configuration.CreateMap<CreateOrEditTruckCapacitiesTranslationDto, TruckCapacitiesTranslation>().ReverseMap();
             configuration.CreateMap<TruckCapacitiesTranslationDto, TruckCapacitiesTranslation>().ReverseMap();
             configuration.CreateMap<CreateOrEditTruckStatusesTranslationDto, TruckStatusesTranslation>().ReverseMap();
@@ -419,8 +438,7 @@ namespace TACHYON
             configuration.CreateMap<CreateOrEditTruckStatusDto, TruckStatus>()
                 .ForMember(x => x.Translations, x => x.Ignore());
 
-            configuration.CreateMap<CreateOrEditTruckStatusDto, TruckStatus>()
-                .ForMember(x => x.Translations, x => x.MapFrom(i => i.TruckStatusTranslation));
+            configuration.CreateMap<CreateOrEditTruckStatusDto, TruckStatus>();
 
             configuration.CreateMap<TruckStatusDto, TruckStatus>().ReverseMap();
             //Inputs

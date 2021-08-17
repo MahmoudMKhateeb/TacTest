@@ -39,7 +39,7 @@
                         [class.is-invalid]="subgoodsDetail.touched && !subgoodsDetail.valid"
                         [class.is-valid]="subgoodsDetail.touched && subgoodsDetail.valid"
                       >
-                        <option [value]="">{{ l('SelectAGoodSubCategory') }}</option>
+                        <option value="">{{ l('SelectAGoodSubCategory') }}</option>
                         <option *ngFor="let item of allSubGoodCategorys" [value]="item.id">{{ item.displayName }}</option>
                       </select>
                     </div>
@@ -112,8 +112,18 @@
 
                 <div class="col-lg-6">
                   <div class="form-group">
-                    <label for="GoodsDetail_Description">{{ l('Description') }}</label>
-                    <input [(ngModel)]="goodsDetail.description" class="form-control" id="GoodsDetail_Description" name="Description" type="text" />
+                    <label for="GoodsDetail_Description">{{ l('Description') }} <span class="required-fileds">*</span> </label>
+                    <input
+                      #Description="ngModel"
+                      [(ngModel)]="goodsDetail.description"
+                      class="form-control"
+                      id="GoodsDetail_Description"
+                      name="Description"
+                      type="text"
+                      [class.is-valid]="Description.touched && Description.valid"
+                      [class.is-invalid]="Description.touched && !Description.valid"
+                      required
+                    />
                   </div>
                 </div>
                 <div class="col-lg-6">

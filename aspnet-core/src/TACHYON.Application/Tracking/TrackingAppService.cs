@@ -44,8 +44,8 @@ namespace TACHYON.Tracking
 
             DisableTenancyFilters();
             var query = _ShippingRequestTripRepository
-        .GetAll()
-        .AsNoTracking()
+            .GetAll()
+            .AsNoTracking()
             .Include(x => x.OriginFacilityFk)
             .Include(x => x.DestinationFacilityFk)
             .Include(x => x.AssignedTruckFk)
@@ -61,7 +61,8 @@ namespace TACHYON.Tracking
              .ThenInclude(s => s.Tenant)
             .Include(r => r.ShippingRequestFk)
              .ThenInclude(c => c.CarrierTenantFk)
-                            .Where(x => x.ShippingRequestFk.CarrierTenantId.HasValue)
+                            //TAC-1509
+                            //.Where(x => x.ShippingRequestFk.CarrierTenantId.HasValue)
                             .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper), x => x.ShippingRequestFk.TenantId == AbpSession.TenantId)
                             .WhereIf(!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer), x => true)
                             .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)

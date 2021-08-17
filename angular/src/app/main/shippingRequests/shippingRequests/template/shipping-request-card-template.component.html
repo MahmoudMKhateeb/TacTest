@@ -40,8 +40,8 @@
                 {{ l(item.directRequestStatusTitle) }}
               </b>
 
-              <b *ngIf="item.numberOfCompletedTrips >= item.numberOfTrips" class="infoHighLight green stautsTruck">{{ l('Complated') }}</b>
-              <b *ngIf="item.numberOfCompletedTrips < item.numberOfTrips" class="infoHighLight red stautsTruck">{{ l('InProgress') }}</b>
+              <!--              <b *ngIf="item.numberOfCompletedTrips >= item.numberOfTrips" class="infoHighLight green stautsTruck">{{ l('Completed') }}</b>-->
+              <!--              <b *ngIf="item.numberOfCompletedTrips < item.numberOfTrips" class="infoHighLight red stautsTruck">{{ l('Trips:InProgress') }}</b>-->
               <b *ngIf="!Channel && item.statusTitle" class="infoHighLight green stautsTruck">
                 {{ l(item.statusTitle) }}
               </b>
@@ -58,13 +58,11 @@
             </div>
             <div class="divirCard"></div>
             <div class="moreDetails">
-              <div *ngIf="item.rangeDate" class="dateRange">
+              <div *ngIf="item.startTripDate" class="dateRange">
                 <p>
                   {{ l('EstimatedPickUpDate') }}
                 </p>
-                <p>
-                  {{ item.rangeDate }}
-                </p>
+                <p>{{ item.startTripDate | momentFormat: 'L' }} {{ item.endTripDate ? '-' : '' }} {{ item.endTripDate | momentFormat: 'L' }}</p>
               </div>
 
               <div *ngIf="item.creationTime" class="dateRange">
@@ -89,7 +87,7 @@
                   {{ l('TruckType') }}
                 </p>
                 <p>
-                  {{ item.trukType }}
+                  {{ item.truckType }}
                 </p>
               </div>
               <div class="numOfTrips">

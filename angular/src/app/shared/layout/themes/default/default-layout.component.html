@@ -79,7 +79,7 @@
             <div class="topbar-item subscription-warning d-print-none" *ngIf="!isMobileDevice() && subscriptionStatusBarVisible()">
               <subscription-notification-bar></subscription-notification-bar>
             </div>
-            <app-balance-topbar *ngIf="appSession.tenantId" class="topbar-item"></app-balance-topbar>
+            <!--            <app-balance-topbar *ngIf="appSession.tenantId" class="topbar-item"></app-balance-topbar>-->
             <active-delegated-users-combo *ngIf="!installationMode"></active-delegated-users-combo>
             <quick-theme-selection></quick-theme-selection>
             <language-switch-dropdown></language-switch-dropdown>

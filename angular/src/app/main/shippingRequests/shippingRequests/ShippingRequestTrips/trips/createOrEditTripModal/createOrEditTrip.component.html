@@ -47,7 +47,7 @@
                   (change)="SyncFacilitiesWithService()"
                   required
                 >
-                  <option [ngValue]="null" selected disabled>{{ l('SelectaFacility') }}</option>
+                  <option value="" selected>{{ l('SelectaFacility') }}</option>
                   <option *ngFor="let item of allFacilities" value="{{ item.id }}">{{ item.displayName }}</option>
                 </select>
                 <div class="input-group-btn">
@@ -72,7 +72,7 @@
                   (change)="SyncFacilitiesWithService()"
                   required
                 >
-                  <option [ngValue]="null" selected disabled>{{ l('SelectaFacility') }}</option>
+                  <option value="" selected>{{ l('SelectaFacility') }}</option>
                   <option *ngFor="let item of allFacilities" value="{{ item.id }}">{{ item.displayName }}</option>
                 </select>
                 <div class="input-group-btn">
@@ -96,13 +96,12 @@
                     name="tripStartDate"
                     bsDatepicker
                     datePickerMomentModifier
-                    [class.is-invalid]="trip.startTripDate && tripStartDate.touched && !tripStartDate.valid"
-                    [class.is-valid]="trip.startTripDate && tripStartDate.touched && tripStartDate.valid"
+                    [class.is-valid]="tripStartDate.valid && tripStartDate.value"
                     [(date)]="trip.startTripDate"
                     [minDate]="shippingRequest.startTripDate"
-                    [maxDate]="shippingRequest.endTripDate"
+                    [maxDate]="shippingRequest.startTripDate"
                     [bsConfig]="{ adaptivePosition: true }"
-                    disabled
+                    readonly="readonly"
                     required
                   />
                   <div class="input-group-append">
@@ -115,7 +114,7 @@
             </div>
             <div class="col-lg-6">
               <div class="form-group">
-                <label> <span class="required-fileds"></span> {{ l('TripsEndDate') }} </label>
+                <label> {{ l('TripsEndDate') }} </label>
                 <div class="input-group date">
                   <input
                     id="endTripDate"
@@ -131,6 +130,7 @@
                     [minDate]="trip.startTripDate"
                     [maxDate]="shippingRequest.endTripDate"
                     [bsConfig]="{ adaptivePosition: true }"
+                    readonly="readonly"
                   />
                   <div class="input-group-append">
                     <span class="input-group-text">

@@ -8,8 +8,6 @@ import { ViewPackingTypeModalComponent } from './packingTypes/packingTypes/view-
 import { CreateOrEditPackingTypeModalComponent } from './packingTypes/packingTypes/create-or-edit-packingType-modal.component';
 
 import { ShippingTypesComponent } from './shippingTypes/shippingTypes/shippingTypes.component';
-import { ViewShippingTypeModalComponent } from './shippingTypes/shippingTypes/view-shippingType-modal.component';
-import { CreateOrEditShippingTypeModalComponent } from './shippingTypes/shippingTypes/create-or-edit-shippingType-modal.component';
 
 import { TruckCapacitiesTranslationsComponent } from './truckCapacitiesTranslations/truckCapacitiesTranslations/truckCapacitiesTranslations.component';
 import { ViewTruckCapacitiesTranslationModalComponent } from './truckCapacitiesTranslations/truckCapacitiesTranslations/view-truckCapacitiesTranslation-modal.component';
@@ -256,6 +254,7 @@ import { ViweTruckDocumentsModalComponent } from '@app/main/trucks/trucks/viwe-t
 import { InvoiceTenantItemComponent } from '@app/main/Invoices/invoice-tenants/invoice-tenant-item/invoice-tenant-item.component';
 import { QuartzCronModule } from '@node_modules/@sbzen/ng-cron';
 import { TranslationsTemplateComponent } from './packingTypes/packingTypeTranslations/translations-template/translations-template.component';
+import { ShippingTypesTranslationsComponent } from './shippingTypes/shipping-types-translations/shipping-types-translations.component';
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
 @NgModule({
@@ -315,8 +314,6 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ViewPackingTypeModalComponent,
     CreateOrEditPackingTypeModalComponent,
     ShippingTypesComponent,
-    ViewShippingTypeModalComponent,
-    CreateOrEditShippingTypeModalComponent,
     ViewCitiesTranslationModalComponent,
     CreateOrEditCitiesTranslationModalComponent,
     CountriesTranslationsComponent,
@@ -486,6 +483,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ViweTruckDocumentsModalComponent,
     InvoiceTenantItemComponent,
     TranslationsTemplateComponent,
+    ShippingTypesTranslationsComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },

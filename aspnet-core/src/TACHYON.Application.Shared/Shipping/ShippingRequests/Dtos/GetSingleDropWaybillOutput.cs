@@ -18,6 +18,8 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public DateTime? DeliveryDate { get; set; }
         public double TotalWeight { get; set; }
         public string GoodsCategoryDisplayName { get; set; }
+        public bool HasAttachment { get; set; }
+        public bool NeedsDeliveryNote { get; set; }
 
         //Sender Details Info
         public string SenderCompanyName { get; set; }

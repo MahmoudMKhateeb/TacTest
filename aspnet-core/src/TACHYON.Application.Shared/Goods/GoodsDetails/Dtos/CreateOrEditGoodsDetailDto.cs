@@ -1,13 +1,11 @@
-﻿
-using Abp.Application.Services.Dto;
-using System;
+﻿using Abp.Application.Services.Dto;
 using System.ComponentModel.DataAnnotations;
 
 namespace TACHYON.Goods.GoodsDetails.Dtos
 {
     public class CreateOrEditGoodsDetailDto : EntityDto<long?>
     {
-
+        [Required]
         [StringLength(GoodsDetailConsts.MaxDescriptionLength, MinimumLength = GoodsDetailConsts.MinDescriptionLength)]
         public string Description { get; set; }
 

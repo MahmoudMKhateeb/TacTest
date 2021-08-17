@@ -15,15 +15,16 @@
           <!--begin::Card-->
           <div class="card card-custom">
             <div class="card-header ribbon ribbon-top">
-              <a
-                (click)="showIncident(item)"
-                class="ribbon-target bg-danger"
-                [ngClass]="{ 'bg-danger': item.hasAccident, 'bg-success': !item.hasAccident }"
-                style="top: -1px; right: 20px"
-              >
+              <a class="ribbon-target bg-danger" style="top: -1px; right: 20px">
                 {{ item.statusTitle }}
               </a>
-              <a (click)="showIncident(item)" class="ribbon-target bg-warning" *ngIf="item.hasAccident" style="top: -1px; right: 104px">
+              <a
+                (click)="showIncident(item)"
+                class="ribbon-target bg-warning"
+                *ngIf="item.hasAccident"
+                style="top: -1px; right: 104px; margin-left: 84px"
+                type="submit"
+              >
                 <span class="svg-icon svg-icon-light svg-icon-1.5x"
                   ><!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-05-14-112058/theme/html/demo1/dist/../src/media/svg/icons/Code/Warning-1-circle.svg--><svg
                     xmlns="http://www.w3.org/2000/svg"

@@ -1,18 +1,13 @@
-﻿using TACHYON.Trucks;
-
-using System;
-using System.Linq;
-using System.Linq.Dynamic.Core;
-using Abp.Linq.Extensions;
+﻿using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Abp.Domain.Repositories;
 using TACHYON.Trucks.TruckStatusesTranslations.Dtos;
-using TACHYON.Dto;
 using Abp.Application.Services.Dto;
 using TACHYON.Authorization;
-using Abp.Extensions;
 using Abp.Authorization;
+using AutoMapper.QueryableExtensions;
+using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
 
 namespace TACHYON.Trucks.TruckStatusesTranslations
@@ -30,41 +25,15 @@ namespace TACHYON.Trucks.TruckStatusesTranslations
 
         }
 
-        public async Task<PagedResultDto<GetTruckStatusesTranslationForViewDto>> GetAll(GetAllTruckStatusesTranslationsInput input)
+        public async Task<LoadResult> GetAll(GetAllTruckStatusesTranslationsInput input)
         {
 
-            var filteredTruckStatusesTranslations = _truckStatusesTranslationRepository.GetAll()
-                        .Include(e => e.Core)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.TranslatedDisplayName.Contains(input.Filter) || e.Language.Contains(input.Filter))
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.TranslatedDisplayNameFilter), e => e.TranslatedDisplayName == input.TranslatedDisplayNameFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.LanguageFilter), e => e.Language == input.LanguageFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.TruckStatusDisplayNameFilter), e => e.Core != null && e.Core.DisplayName == input.TruckStatusDisplayNameFilter);
+            var truckStatusTranslations = _truckStatusesTranslationRepository.GetAll()
+                .Where(x=> x.CoreId == input.CoreId)
+                .AsNoTracking().ProjectTo<GetTruckStatusesTranslationForViewDto>
+                    (AutoMapperConfigurationProvider);
 
-            var pagedAndFilteredTruckStatusesTranslations = filteredTruckStatusesTranslations
-                .OrderBy(input.Sorting ?? "id asc")
-                .PageBy(input);
-
-            var truckStatusesTranslations = from o in pagedAndFilteredTruckStatusesTranslations
-                                            join o1 in _lookup_truckStatusRepository.GetAll() on o.CoreId equals o1.Id into j1
-                                            from s1 in j1.DefaultIfEmpty()
-
-                                            select new GetTruckStatusesTranslationForViewDto()
-                                            {
-                                                TruckStatusesTranslation = new TruckStatusesTranslationDto
-                                                {
-                                                    TranslatedDisplayName = o.TranslatedDisplayName,
-                                                    Language = o.Language,
-                                                    Id = o.Id
-                                                },
-                                                TruckStatusDisplayName = s1 == null || s1.DisplayName == null ? "" : s1.DisplayName.ToString()
-                                            };
-
-            var totalCount = await filteredTruckStatusesTranslations.CountAsync();
-
-            return new PagedResultDto<GetTruckStatusesTranslationForViewDto>(
-                totalCount,
-                await truckStatusesTranslations.ToListAsync()
-            );
+            return await LoadResultAsync(truckStatusTranslations, input.LoadOptions);
         }
 
         public async Task<GetTruckStatusesTranslationForViewDto> GetTruckStatusesTranslationForView(int id)
