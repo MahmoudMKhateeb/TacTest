@@ -3,16 +3,16 @@
   <texts>
     <text name="Account">کھاتہ</text>
     <text name="Arabic">عربی</text>
-    <text name="ArrivedToDestination">منزل تک پہنچیں</text>
+    <text name="ArrivedToDestination">آف لوڈنگ مقام پر پہنچیں</text>
+    <text name="Destination">منزل</text>
     <text name="ArriveToLoadingLocation">لوڈنگ مقام پر پہنچیں</text>
     <text name="AssignedTruck">ٹرک کی تفصیلات</text>
     <text name="CheckTheRecipient">وصول کنندہ کو چیک کریں</text>
     <text name="CorrectlyTypingYourNameMakesTheProcessEasyForSystemUsers">اپنے نام کو درست طریقے سے ٹائپ کرنا سسٹم صارفین کے لئے عمل آسان بناتا ہے</text>
     <text name="Current">موجودہ</text>
     <text name="DisplayName">نام</text>
-    <text name="DropoffDetailCommodity">سامان</text>
     <text name="DropoffDetailDropoff">باہر نکالنا</text>
-    <text name="DropoffDetailShipperNotes">شیپر نوٹس</text>
+    <text name="DropoffDetailShipperNotes">شپر نوٹ</text>
     <text name="EditingLanguage">زبان تبدیل کریں</text>
     <text name="EditYourName">اپنے نام میں ترمیم کریں</text>
     <text name="EndOffloadingShipment">لوڈنگ شپمنٹ کا اختتام کریں</text>
@@ -61,7 +61,7 @@
     <text name="SelectYourLanguage">اپنی زبان منتخب کریں</text>
     <text name="ShipmentDetails">تفصیلات چھوڑیں</text>
     <text name="StartLoading">لوڈنگ شروع کریں</text>
-    <text name="StartMovingToDestination">منزل کی طرف بڑھنا شروع کریں</text>
+    <text name="StartMovingToDestination">آف لوڈنگ مقام پر منتقل ہونا آغاز کریں</text>
     <text name="StartMovingToLoadingLocation">لوڈنگ مقام پر منتقل کرنا شروع کریں</text>
     <text name="TitleLogin">سائن ان کریں</text>
     <text name="TotalDistance">کل فاصلہ</text>
@@ -78,5 +78,44 @@
     <text name="WaybillNumber">برائے کرم مسترد ہونے کی وجہ لکھیں</text>
     <text name="Weight">وزن</text>
     <text name="WeWillSendYouCodeToVerfiyYourEmailPleaseCheckYourInbox">ہم آپ کو اپنے ای میل کی توثیق کے لئے کوڈ بھیجیں گے، براہ کرم اپنے ان باکس کو جانچ کریں</text>
+    <text name="Second">دوسرا</text>
+    <text name="Resend">دوبارہ بھیجیں</text>
+    <text name="DropoffDetailCommodity">سامان کی تفصیلات</text>
+    <text name="StandBy">منظور شدہ / شروع نہیں کیا</text>
+    <text name="TripHasAnAttachment">منسلکہ ہیں</text>
+    <text name="TripNeedDeliveryNotes">ترسیلی نوٹ درکار ہے</text>
+    <text name="UploadDeliveryNote">ترسیلی نوٹ</text>
+    <text name="PleaseUploadDeliveryNote">براہِ کرم ترسیلی نوٹ اپ لوڈ کریں۔</text>
+    <text name="Navigation">سمت شناسی کا آغاز کریں</text>
+    <text name="IdDropOff">وصول کنندہ کی آئی ڈی</text>
+    <text name="Skip">چھوڑ دیں</text>
+    <text name="Category">سامان کا زمرہ</text>
+    <text name="DownloadDropWaybill">وے بل ڈاؤن لوڈ کریں</text>
+    <text name="TripStatus">سفر کی حیثیت</text>
+    <text name="Acknowledge">اتفاق رکھنا</text>
+    <text name="Start">آغاز کرنا</text>
+    <text name="Incident">واقعہ</text>
+    <text name="ReceiverCode">وصول کنندہ کوڈ</text>
+    <text name="Check">جانچیں</text>
+    <text name="Upload">اپ لوڈ کریں</text>
+    <text name="HowWasFacility">آف لوڈنگ سہولت کی درجہ بندی کریں</text>
+    <text name="RateOffloadingAdditionalNote">براہِ کرم اپنی رائے شامل کریں۔</text>
+    <text name="RateOffloadingRateFacility">سہولت کی درجہ بندی</text>
+    <text name="Success">کامیابی سے مکمل ہو گیا</text>
+    <text name="TripFinishedSuccessfully">آپ کا سفر کامیابی سے مکمل ہو گیا ہے۔</text>
+    <text name="Ok">بند کریں</text>
+    <text name="ContinueTrip">سفر جاری رکھیں</text>
+    <text name="AnotherTripWarning">نوٹ: نیا سفر شروع کرنے سے پہلے آپ کو پچھلا سفر مکمل کرنا ہوگا۔</text>
+    <text name="AddDocument">براہ کرم دستاویز اپ لوڈ کریں</text>
+    <text name="StartMovingToOfLoadingLocation">آف لوڈنگ مقام پر منتقل ہونا آغاز کریں</text>
+    <text name="DestFacility">سہولت چھوڑ دیں</text>
+    <text name="Choose">منتخب کریں</text>
+    <text name="Gallery">گیلری</text>
+    <text name="Camera">کیمرہ</text>
+    <text name="Save">محفوظ کریں</text>
+    <text name="Back">پیچھے جائیں</text>
+    <text name="TitleOTP">براہِ کرم اپنا ایک وقتی پاس ورڈ درج کریں جو آپ کے موبائل نمبر پر بھیجا گیا ہے</text>
+    <text name="Close">ٹھیک ہے</text>
+
   </texts>
 </localizationDictionary>
