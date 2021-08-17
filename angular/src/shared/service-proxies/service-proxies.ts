@@ -35510,33 +35510,12 @@ export class ShippingTypesServiceProxy {
   }
 
   /**
-   * @param filter (optional)
-   * @param displayNameFilter (optional)
-   * @param descriptionFilter (optional)
-   * @param sorting (optional)
-   * @param skipCount (optional)
-   * @param maxResultCount (optional)
+   * @param loadOptions (optional)
    * @return Success
    */
-  getAll(
-    filter: string | null | undefined,
-    displayNameFilter: string | null | undefined,
-    descriptionFilter: string | null | undefined,
-    sorting: string | null | undefined,
-    skipCount: number | undefined,
-    maxResultCount: number | undefined
-  ): Observable<PagedResultDtoOfGetShippingTypeForViewDto> {
+  getAll(loadOptions: string | null | undefined): Observable<LoadResult> {
     let url_ = this.baseUrl + '/api/services/app/ShippingTypes/GetAll?';
-    if (filter !== undefined && filter !== null) url_ += 'Filter=' + encodeURIComponent('' + filter) + '&';
-    if (displayNameFilter !== undefined && displayNameFilter !== null)
-      url_ += 'DisplayNameFilter=' + encodeURIComponent('' + displayNameFilter) + '&';
-    if (descriptionFilter !== undefined && descriptionFilter !== null)
-      url_ += 'DescriptionFilter=' + encodeURIComponent('' + descriptionFilter) + '&';
-    if (sorting !== undefined && sorting !== null) url_ += 'Sorting=' + encodeURIComponent('' + sorting) + '&';
-    if (skipCount === null) throw new Error("The parameter 'skipCount' cannot be null.");
-    else if (skipCount !== undefined) url_ += 'SkipCount=' + encodeURIComponent('' + skipCount) + '&';
-    if (maxResultCount === null) throw new Error("The parameter 'maxResultCount' cannot be null.");
-    else if (maxResultCount !== undefined) url_ += 'MaxResultCount=' + encodeURIComponent('' + maxResultCount) + '&';
+    if (loadOptions !== undefined && loadOptions !== null) url_ += 'LoadOptions=' + encodeURIComponent('' + loadOptions) + '&';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -35560,14 +35539,14 @@ export class ShippingTypesServiceProxy {
             try {
               return this.processGetAll(<any>response_);
             } catch (e) {
-              return <Observable<PagedResultDtoOfGetShippingTypeForViewDto>>(<any>_observableThrow(e));
+              return <Observable<LoadResult>>(<any>_observableThrow(e));
             }
-          } else return <Observable<PagedResultDtoOfGetShippingTypeForViewDto>>(<any>_observableThrow(response_));
+          } else return <Observable<LoadResult>>(<any>_observableThrow(response_));
         })
       );
   }
 
-  protected processGetAll(response: HttpResponseBase): Observable<PagedResultDtoOfGetShippingTypeForViewDto> {
+  protected processGetAll(response: HttpResponseBase): Observable<LoadResult> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -35582,7 +35561,7 @@ export class ShippingTypesServiceProxy {
         _observableMergeMap((_responseText) => {
           let result200: any = null;
           let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
-          result200 = PagedResultDtoOfGetShippingTypeForViewDto.fromJS(resultData200);
+          result200 = LoadResult.fromJS(resultData200);
           return _observableOf(result200);
         })
       );
@@ -35593,141 +35572,7 @@ export class ShippingTypesServiceProxy {
         })
       );
     }
-    return _observableOf<PagedResultDtoOfGetShippingTypeForViewDto>(<any>null);
-  }
-
-  /**
-   * @param id (optional)
-   * @return Success
-   */
-  getShippingTypeForView(id: number | undefined): Observable<GetShippingTypeForViewDto> {
-    let url_ = this.baseUrl + '/api/services/app/ShippingTypes/GetShippingTypeForView?';
-    if (id === null) throw new Error("The parameter 'id' cannot be null.");
-    else if (id !== undefined) url_ += 'id=' + encodeURIComponent('' + id) + '&';
-    url_ = url_.replace(/[?&]$/, '');
-
-    let options_: any = {
-      observe: 'response',
-      responseType: 'blob',
-      headers: new HttpHeaders({
-        Accept: 'text/plain',
-      }),
-    };
-
-    return this.http
-      .request('get', url_, options_)
-      .pipe(
-        _observableMergeMap((response_: any) => {
-          return this.processGetShippingTypeForView(response_);
-        })
-      )
-      .pipe(
-        _observableCatch((response_: any) => {
-          if (response_ instanceof HttpResponseBase) {
-            try {
-              return this.processGetShippingTypeForView(<any>response_);
-            } catch (e) {
-              return <Observable<GetShippingTypeForViewDto>>(<any>_observableThrow(e));
-            }
-          } else return <Observable<GetShippingTypeForViewDto>>(<any>_observableThrow(response_));
-        })
-      );
-  }
-
-  protected processGetShippingTypeForView(response: HttpResponseBase): Observable<GetShippingTypeForViewDto> {
-    const status = response.status;
-    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-    let _headers: any = {};
-    if (response.headers) {
-      for (let key of response.headers.keys()) {
-        _headers[key] = response.headers.get(key);
-      }
-    }
-    if (status === 200) {
-      return blobToText(responseBlob).pipe(
-        _observableMergeMap((_responseText) => {
-          let result200: any = null;
-          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
-          result200 = GetShippingTypeForViewDto.fromJS(resultData200);
-          return _observableOf(result200);
-        })
-      );
-    } else if (status !== 200 && status !== 204) {
-      return blobToText(responseBlob).pipe(
-        _observableMergeMap((_responseText) => {
-          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
-        })
-      );
-    }
-    return _observableOf<GetShippingTypeForViewDto>(<any>null);
-  }
-
-  /**
-   * @param id (optional)
-   * @return Success
-   */
-  getShippingTypeForEdit(id: number | undefined): Observable<GetShippingTypeForEditOutput> {
-    let url_ = this.baseUrl + '/api/services/app/ShippingTypes/GetShippingTypeForEdit?';
-    if (id === null) throw new Error("The parameter 'id' cannot be null.");
-    else if (id !== undefined) url_ += 'Id=' + encodeURIComponent('' + id) + '&';
-    url_ = url_.replace(/[?&]$/, '');
-
-    let options_: any = {
-      observe: 'response',
-      responseType: 'blob',
-      headers: new HttpHeaders({
-        Accept: 'text/plain',
-      }),
-    };
-
-    return this.http
-      .request('get', url_, options_)
-      .pipe(
-        _observableMergeMap((response_: any) => {
-          return this.processGetShippingTypeForEdit(response_);
-        })
-      )
-      .pipe(
-        _observableCatch((response_: any) => {
-          if (response_ instanceof HttpResponseBase) {
-            try {
-              return this.processGetShippingTypeForEdit(<any>response_);
-            } catch (e) {
-              return <Observable<GetShippingTypeForEditOutput>>(<any>_observableThrow(e));
-            }
-          } else return <Observable<GetShippingTypeForEditOutput>>(<any>_observableThrow(response_));
-        })
-      );
-  }
-
-  protected processGetShippingTypeForEdit(response: HttpResponseBase): Observable<GetShippingTypeForEditOutput> {
-    const status = response.status;
-    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-    let _headers: any = {};
-    if (response.headers) {
-      for (let key of response.headers.keys()) {
-        _headers[key] = response.headers.get(key);
-      }
-    }
-    if (status === 200) {
-      return blobToText(responseBlob).pipe(
-        _observableMergeMap((_responseText) => {
-          let result200: any = null;
-          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
-          result200 = GetShippingTypeForEditOutput.fromJS(resultData200);
-          return _observableOf(result200);
-        })
-      );
-    } else if (status !== 200 && status !== 204) {
-      return blobToText(responseBlob).pipe(
-        _observableMergeMap((_responseText) => {
-          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
-        })
-      );
-    }
-    return _observableOf<GetShippingTypeForEditOutput>(<any>null);
+    return _observableOf<LoadResult>(<any>null);
   }
 
   /**
@@ -35924,6 +35769,202 @@ export class ShippingTypesServiceProxy {
       );
     }
     return _observableOf<SelectItemDto[]>(<any>null);
+  }
+
+  /**
+   * @param coreId (optional)
+   * @param loadOptions (optional)
+   * @return Success
+   */
+  getAllTranslations(coreId: number | undefined, loadOptions: string | null | undefined): Observable<LoadResult> {
+    let url_ = this.baseUrl + '/api/services/app/ShippingTypes/GetAllTranslations?';
+    if (coreId === null) throw new Error("The parameter 'coreId' cannot be null.");
+    else if (coreId !== undefined) url_ += 'CoreId=' + encodeURIComponent('' + coreId) + '&';
+    if (loadOptions !== undefined && loadOptions !== null) url_ += 'LoadOptions=' + encodeURIComponent('' + loadOptions) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAllTranslations(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAllTranslations(<any>response_);
+            } catch (e) {
+              return <Observable<LoadResult>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<LoadResult>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAllTranslations(response: HttpResponseBase): Observable<LoadResult> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = LoadResult.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<LoadResult>(<any>null);
+  }
+
+  /**
+   * @param body (optional)
+   * @return Success
+   */
+  createOrEditTranslation(body: CreateOrEditShippingTypeTranslationDto | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/ShippingTypes/CreateOrEditTranslation';
+    url_ = url_.replace(/[?&]$/, '');
+
+    const content_ = JSON.stringify(body);
+
+    let options_: any = {
+      body: content_,
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processCreateOrEditTranslation(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processCreateOrEditTranslation(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processCreateOrEditTranslation(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
+  deleteTranslation(id: number | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/ShippingTypes/DeleteTranslation?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'Id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({}),
+    };
+
+    return this.http
+      .request('delete', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processDeleteTranslation(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processDeleteTranslation(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processDeleteTranslation(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
   }
 }
 
@@ -46273,29 +46314,12 @@ export class TruckStatusesServiceProxy {
   }
 
   /**
-   * @param filter (optional)
-   * @param displayNameFilter (optional)
-   * @param sorting (optional)
-   * @param skipCount (optional)
-   * @param maxResultCount (optional)
+   * @param loadOptions (optional)
    * @return Success
    */
-  getAll(
-    filter: string | null | undefined,
-    displayNameFilter: string | null | undefined,
-    sorting: string | null | undefined,
-    skipCount: number | undefined,
-    maxResultCount: number | undefined
-  ): Observable<PagedResultDtoOfGetTruckStatusForViewDto> {
+  getAll(loadOptions: string | null | undefined): Observable<LoadResult> {
     let url_ = this.baseUrl + '/api/services/app/TruckStatuses/GetAll?';
-    if (filter !== undefined && filter !== null) url_ += 'Filter=' + encodeURIComponent('' + filter) + '&';
-    if (displayNameFilter !== undefined && displayNameFilter !== null)
-      url_ += 'DisplayNameFilter=' + encodeURIComponent('' + displayNameFilter) + '&';
-    if (sorting !== undefined && sorting !== null) url_ += 'Sorting=' + encodeURIComponent('' + sorting) + '&';
-    if (skipCount === null) throw new Error("The parameter 'skipCount' cannot be null.");
-    else if (skipCount !== undefined) url_ += 'SkipCount=' + encodeURIComponent('' + skipCount) + '&';
-    if (maxResultCount === null) throw new Error("The parameter 'maxResultCount' cannot be null.");
-    else if (maxResultCount !== undefined) url_ += 'MaxResultCount=' + encodeURIComponent('' + maxResultCount) + '&';
+    if (loadOptions !== undefined && loadOptions !== null) url_ += 'LoadOptions=' + encodeURIComponent('' + loadOptions) + '&';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -46319,14 +46343,14 @@ export class TruckStatusesServiceProxy {
             try {
               return this.processGetAll(<any>response_);
             } catch (e) {
-              return <Observable<PagedResultDtoOfGetTruckStatusForViewDto>>(<any>_observableThrow(e));
+              return <Observable<LoadResult>>(<any>_observableThrow(e));
             }
-          } else return <Observable<PagedResultDtoOfGetTruckStatusForViewDto>>(<any>_observableThrow(response_));
+          } else return <Observable<LoadResult>>(<any>_observableThrow(response_));
         })
       );
   }
 
-  protected processGetAll(response: HttpResponseBase): Observable<PagedResultDtoOfGetTruckStatusForViewDto> {
+  protected processGetAll(response: HttpResponseBase): Observable<LoadResult> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -46341,7 +46365,7 @@ export class TruckStatusesServiceProxy {
         _observableMergeMap((_responseText) => {
           let result200: any = null;
           let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
-          result200 = PagedResultDtoOfGetTruckStatusForViewDto.fromJS(resultData200);
+          result200 = LoadResult.fromJS(resultData200);
           return _observableOf(result200);
         })
       );
@@ -46352,7 +46376,7 @@ export class TruckStatusesServiceProxy {
         })
       );
     }
-    return _observableOf<PagedResultDtoOfGetTruckStatusForViewDto>(<any>null);
+    return _observableOf<LoadResult>(<any>null);
   }
 
   /**
@@ -46615,6 +46639,202 @@ export class TruckStatusesServiceProxy {
     }
     return _observableOf<void>(<any>null);
   }
+
+  /**
+   * @param loadOptions (optional)
+   * @param coreId (optional)
+   * @return Success
+   */
+  getAllTranslations(loadOptions: string | null | undefined, coreId: number | undefined): Observable<LoadResult> {
+    let url_ = this.baseUrl + '/api/services/app/TruckStatuses/GetAllTranslations?';
+    if (loadOptions !== undefined && loadOptions !== null) url_ += 'LoadOptions=' + encodeURIComponent('' + loadOptions) + '&';
+    if (coreId === null) throw new Error("The parameter 'coreId' cannot be null.");
+    else if (coreId !== undefined) url_ += 'CoreId=' + encodeURIComponent('' + coreId) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAllTranslations(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAllTranslations(<any>response_);
+            } catch (e) {
+              return <Observable<LoadResult>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<LoadResult>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAllTranslations(response: HttpResponseBase): Observable<LoadResult> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = LoadResult.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<LoadResult>(<any>null);
+  }
+
+  /**
+   * @param body (optional)
+   * @return Success
+   */
+  createOrEditTranslation(body: CreateOrEditTruckStatusesTranslationDto | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/TruckStatuses/CreateOrEditTranslation';
+    url_ = url_.replace(/[?&]$/, '');
+
+    const content_ = JSON.stringify(body);
+
+    let options_: any = {
+      body: content_,
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processCreateOrEditTranslation(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processCreateOrEditTranslation(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processCreateOrEditTranslation(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
+  deleteTranslation(id: number | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/TruckStatuses/DeleteTranslation?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'Id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({}),
+    };
+
+    return this.http
+      .request('delete', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processDeleteTranslation(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processDeleteTranslation(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processDeleteTranslation(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
 }
 
 @Injectable()
@@ -46629,36 +46849,15 @@ export class TruckStatusesTranslationsServiceProxy {
   }
 
   /**
-   * @param filter (optional)
-   * @param translatedDisplayNameFilter (optional)
-   * @param languageFilter (optional)
-   * @param truckStatusDisplayNameFilter (optional)
-   * @param sorting (optional)
-   * @param skipCount (optional)
-   * @param maxResultCount (optional)
+   * @param loadOptions (optional)
+   * @param coreId (optional)
    * @return Success
    */
-  getAll(
-    filter: string | null | undefined,
-    translatedDisplayNameFilter: string | null | undefined,
-    languageFilter: string | null | undefined,
-    truckStatusDisplayNameFilter: string | null | undefined,
-    sorting: string | null | undefined,
-    skipCount: number | undefined,
-    maxResultCount: number | undefined
-  ): Observable<PagedResultDtoOfGetTruckStatusesTranslationForViewDto> {
+  getAll(loadOptions: string | null | undefined, coreId: number | undefined): Observable<LoadResult> {
     let url_ = this.baseUrl + '/api/services/app/TruckStatusesTranslations/GetAll?';
-    if (filter !== undefined && filter !== null) url_ += 'Filter=' + encodeURIComponent('' + filter) + '&';
-    if (translatedDisplayNameFilter !== undefined && translatedDisplayNameFilter !== null)
-      url_ += 'TranslatedDisplayNameFilter=' + encodeURIComponent('' + translatedDisplayNameFilter) + '&';
-    if (languageFilter !== undefined && languageFilter !== null) url_ += 'LanguageFilter=' + encodeURIComponent('' + languageFilter) + '&';
-    if (truckStatusDisplayNameFilter !== undefined && truckStatusDisplayNameFilter !== null)
-      url_ += 'TruckStatusDisplayNameFilter=' + encodeURIComponent('' + truckStatusDisplayNameFilter) + '&';
-    if (sorting !== undefined && sorting !== null) url_ += 'Sorting=' + encodeURIComponent('' + sorting) + '&';
-    if (skipCount === null) throw new Error("The parameter 'skipCount' cannot be null.");
-    else if (skipCount !== undefined) url_ += 'SkipCount=' + encodeURIComponent('' + skipCount) + '&';
-    if (maxResultCount === null) throw new Error("The parameter 'maxResultCount' cannot be null.");
-    else if (maxResultCount !== undefined) url_ += 'MaxResultCount=' + encodeURIComponent('' + maxResultCount) + '&';
+    if (loadOptions !== undefined && loadOptions !== null) url_ += 'LoadOptions=' + encodeURIComponent('' + loadOptions) + '&';
+    if (coreId === null) throw new Error("The parameter 'coreId' cannot be null.");
+    else if (coreId !== undefined) url_ += 'CoreId=' + encodeURIComponent('' + coreId) + '&';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -46682,14 +46881,14 @@ export class TruckStatusesTranslationsServiceProxy {
             try {
               return this.processGetAll(<any>response_);
             } catch (e) {
-              return <Observable<PagedResultDtoOfGetTruckStatusesTranslationForViewDto>>(<any>_observableThrow(e));
+              return <Observable<LoadResult>>(<any>_observableThrow(e));
             }
-          } else return <Observable<PagedResultDtoOfGetTruckStatusesTranslationForViewDto>>(<any>_observableThrow(response_));
+          } else return <Observable<LoadResult>>(<any>_observableThrow(response_));
         })
       );
   }
 
-  protected processGetAll(response: HttpResponseBase): Observable<PagedResultDtoOfGetTruckStatusesTranslationForViewDto> {
+  protected processGetAll(response: HttpResponseBase): Observable<LoadResult> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -46704,7 +46903,7 @@ export class TruckStatusesTranslationsServiceProxy {
         _observableMergeMap((_responseText) => {
           let result200: any = null;
           let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
-          result200 = PagedResultDtoOfGetTruckStatusesTranslationForViewDto.fromJS(resultData200);
+          result200 = LoadResult.fromJS(resultData200);
           return _observableOf(result200);
         })
       );
@@ -46715,7 +46914,7 @@ export class TruckStatusesTranslationsServiceProxy {
         })
       );
     }
-    return _observableOf<PagedResultDtoOfGetTruckStatusesTranslationForViewDto>(<any>null);
+    return _observableOf<LoadResult>(<any>null);
   }
 
   /**
@@ -60770,7 +60969,7 @@ export interface IPagedResultDtoOfGetGoodsDetailForViewDto {
 }
 
 export class CreateOrEditGoodsDetailDto implements ICreateOrEditGoodsDetailDto {
-  description!: string | undefined;
+  description!: string;
   amount!: number;
   weight!: number;
   dimentions!: string | undefined;
@@ -60831,7 +61030,7 @@ export class CreateOrEditGoodsDetailDto implements ICreateOrEditGoodsDetailDto {
 }
 
 export interface ICreateOrEditGoodsDetailDto {
-  description: string | undefined;
+  description: string;
   amount: number;
   weight: number;
   dimentions: string | undefined;
@@ -68014,28 +68213,28 @@ export interface IEnvelope {
 }
 
 export class Geometry implements IGeometry {
-  readonly area!: number;
-  dimension!: Dimension;
-  readonly geometryType!: string | undefined;
-  readonly isEmpty!: boolean;
-  readonly isValid!: boolean;
-  readonly length!: number;
-  readonly numGeometries!: number;
-  readonly numPoints!: number;
-  boundary!: Geometry;
-  centroid!: Point;
-  envelope!: Geometry;
-  interiorPoint!: Point;
-  readonly isSimple!: boolean;
-  pointOnSurface!: Point;
-  ogcGeometryType!: OgcGeometryType;
-  srid!: number;
   factory!: GeometryFactory;
   userData!: any | undefined;
+  srid!: number;
+  readonly geometryType!: string | undefined;
+  ogcGeometryType!: OgcGeometryType;
   precisionModel!: PrecisionModel;
   coordinate!: Coordinate;
   readonly coordinates!: Coordinate[] | undefined;
+  readonly numPoints!: number;
+  readonly numGeometries!: number;
+  readonly isSimple!: boolean;
+  readonly isValid!: boolean;
+  readonly isEmpty!: boolean;
+  readonly area!: number;
+  readonly length!: number;
+  centroid!: Point;
+  interiorPoint!: Point;
+  pointOnSurface!: Point;
+  dimension!: Dimension;
+  boundary!: Geometry;
   boundaryDimension!: Dimension;
+  envelope!: Geometry;
   envelopeInternal!: Envelope;
   readonly isRectangle!: boolean;
 
@@ -68049,31 +68248,31 @@ export class Geometry implements IGeometry {
 
   init(_data?: any) {
     if (_data) {
-      (<any>this).area = _data['area'];
-      this.dimension = _data['dimension'];
-      (<any>this).geometryType = _data['geometryType'];
-      (<any>this).isEmpty = _data['isEmpty'];
-      (<any>this).isValid = _data['isValid'];
-      (<any>this).length = _data['length'];
-      (<any>this).numGeometries = _data['numGeometries'];
-      (<any>this).numPoints = _data['numPoints'];
-      this.boundary = _data['boundary'] ? Geometry.fromJS(_data['boundary']) : <any>undefined;
-      this.centroid = _data['centroid'] ? Point.fromJS(_data['centroid']) : <any>undefined;
-      this.envelope = _data['envelope'] ? Geometry.fromJS(_data['envelope']) : <any>undefined;
-      this.interiorPoint = _data['interiorPoint'] ? Point.fromJS(_data['interiorPoint']) : <any>undefined;
-      (<any>this).isSimple = _data['isSimple'];
-      this.pointOnSurface = _data['pointOnSurface'] ? Point.fromJS(_data['pointOnSurface']) : <any>undefined;
-      this.ogcGeometryType = _data['ogcGeometryType'];
-      this.srid = _data['srid'];
       this.factory = _data['factory'] ? GeometryFactory.fromJS(_data['factory']) : <any>undefined;
       this.userData = _data['userData'];
+      this.srid = _data['srid'];
+      (<any>this).geometryType = _data['geometryType'];
+      this.ogcGeometryType = _data['ogcGeometryType'];
       this.precisionModel = _data['precisionModel'] ? PrecisionModel.fromJS(_data['precisionModel']) : <any>undefined;
       this.coordinate = _data['coordinate'] ? Coordinate.fromJS(_data['coordinate']) : <any>undefined;
       if (Array.isArray(_data['coordinates'])) {
         (<any>this).coordinates = [] as any;
         for (let item of _data['coordinates']) (<any>this).coordinates!.push(Coordinate.fromJS(item));
       }
+      (<any>this).numPoints = _data['numPoints'];
+      (<any>this).numGeometries = _data['numGeometries'];
+      (<any>this).isSimple = _data['isSimple'];
+      (<any>this).isValid = _data['isValid'];
+      (<any>this).isEmpty = _data['isEmpty'];
+      (<any>this).area = _data['area'];
+      (<any>this).length = _data['length'];
+      this.centroid = _data['centroid'] ? Point.fromJS(_data['centroid']) : <any>undefined;
+      this.interiorPoint = _data['interiorPoint'] ? Point.fromJS(_data['interiorPoint']) : <any>undefined;
+      this.pointOnSurface = _data['pointOnSurface'] ? Point.fromJS(_data['pointOnSurface']) : <any>undefined;
+      this.dimension = _data['dimension'];
+      this.boundary = _data['boundary'] ? Geometry.fromJS(_data['boundary']) : <any>undefined;
       this.boundaryDimension = _data['boundaryDimension'];
+      this.envelope = _data['envelope'] ? Geometry.fromJS(_data['envelope']) : <any>undefined;
       this.envelopeInternal = _data['envelopeInternal'] ? Envelope.fromJS(_data['envelopeInternal']) : <any>undefined;
       (<any>this).isRectangle = _data['isRectangle'];
     }
@@ -68088,31 +68287,31 @@ export class Geometry implements IGeometry {
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data['area'] = this.area;
-    data['dimension'] = this.dimension;
-    data['geometryType'] = this.geometryType;
-    data['isEmpty'] = this.isEmpty;
-    data['isValid'] = this.isValid;
-    data['length'] = this.length;
-    data['numGeometries'] = this.numGeometries;
-    data['numPoints'] = this.numPoints;
-    data['boundary'] = this.boundary ? this.boundary.toJSON() : <any>undefined;
-    data['centroid'] = this.centroid ? this.centroid.toJSON() : <any>undefined;
-    data['envelope'] = this.envelope ? this.envelope.toJSON() : <any>undefined;
-    data['interiorPoint'] = this.interiorPoint ? this.interiorPoint.toJSON() : <any>undefined;
-    data['isSimple'] = this.isSimple;
-    data['pointOnSurface'] = this.pointOnSurface ? this.pointOnSurface.toJSON() : <any>undefined;
-    data['ogcGeometryType'] = this.ogcGeometryType;
-    data['srid'] = this.srid;
     data['factory'] = this.factory ? this.factory.toJSON() : <any>undefined;
     data['userData'] = this.userData;
+    data['srid'] = this.srid;
+    data['geometryType'] = this.geometryType;
+    data['ogcGeometryType'] = this.ogcGeometryType;
     data['precisionModel'] = this.precisionModel ? this.precisionModel.toJSON() : <any>undefined;
     data['coordinate'] = this.coordinate ? this.coordinate.toJSON() : <any>undefined;
     if (Array.isArray(this.coordinates)) {
       data['coordinates'] = [];
       for (let item of this.coordinates) data['coordinates'].push(item.toJSON());
     }
+    data['numPoints'] = this.numPoints;
+    data['numGeometries'] = this.numGeometries;
+    data['isSimple'] = this.isSimple;
+    data['isValid'] = this.isValid;
+    data['isEmpty'] = this.isEmpty;
+    data['area'] = this.area;
+    data['length'] = this.length;
+    data['centroid'] = this.centroid ? this.centroid.toJSON() : <any>undefined;
+    data['interiorPoint'] = this.interiorPoint ? this.interiorPoint.toJSON() : <any>undefined;
+    data['pointOnSurface'] = this.pointOnSurface ? this.pointOnSurface.toJSON() : <any>undefined;
+    data['dimension'] = this.dimension;
+    data['boundary'] = this.boundary ? this.boundary.toJSON() : <any>undefined;
     data['boundaryDimension'] = this.boundaryDimension;
+    data['envelope'] = this.envelope ? this.envelope.toJSON() : <any>undefined;
     data['envelopeInternal'] = this.envelopeInternal ? this.envelopeInternal.toJSON() : <any>undefined;
     data['isRectangle'] = this.isRectangle;
     return data;
@@ -68120,28 +68319,28 @@ export class Geometry implements IGeometry {
 }
 
 export interface IGeometry {
-  area: number;
-  dimension: Dimension;
-  geometryType: string | undefined;
-  isEmpty: boolean;
-  isValid: boolean;
-  length: number;
-  numGeometries: number;
-  numPoints: number;
-  boundary: Geometry;
-  centroid: Point;
-  envelope: Geometry;
-  interiorPoint: Point;
-  isSimple: boolean;
-  pointOnSurface: Point;
-  ogcGeometryType: OgcGeometryType;
-  srid: number;
   factory: GeometryFactory;
   userData: any | undefined;
+  srid: number;
+  geometryType: string | undefined;
+  ogcGeometryType: OgcGeometryType;
   precisionModel: PrecisionModel;
   coordinate: Coordinate;
   coordinates: Coordinate[] | undefined;
+  numPoints: number;
+  numGeometries: number;
+  isSimple: boolean;
+  isValid: boolean;
+  isEmpty: boolean;
+  area: number;
+  length: number;
+  centroid: Point;
+  interiorPoint: Point;
+  pointOnSurface: Point;
+  dimension: Dimension;
+  boundary: Geometry;
   boundaryDimension: Dimension;
+  envelope: Geometry;
   envelopeInternal: Envelope;
   isRectangle: boolean;
 }
@@ -69455,7 +69654,8 @@ export class GetShippingRequestForPriceOfferListDto implements IGetShippingReque
   truckType!: string | undefined;
   isPriced!: boolean;
   remainingDays!: string | undefined;
-  rangeDate!: string | undefined;
+  startTripDate!: moment.Moment;
+  endTripDate!: moment.Moment | undefined;
   numberOfDrops!: number;
   numberOfTrips!: number;
   numberOfCompletedTrips!: number;
@@ -69499,7 +69699,8 @@ export class GetShippingRequestForPriceOfferListDto implements IGetShippingReque
       this.truckType = _data['truckType'];
       this.isPriced = _data['isPriced'];
       this.remainingDays = _data['remainingDays'];
-      this.rangeDate = _data['rangeDate'];
+      this.startTripDate = _data['startTripDate'] ? moment(_data['startTripDate'].toString()) : <any>undefined;
+      this.endTripDate = _data['endTripDate'] ? moment(_data['endTripDate'].toString()) : <any>undefined;
       this.numberOfDrops = _data['numberOfDrops'];
       this.numberOfTrips = _data['numberOfTrips'];
       this.numberOfCompletedTrips = _data['numberOfCompletedTrips'];
@@ -69544,7 +69745,8 @@ export class GetShippingRequestForPriceOfferListDto implements IGetShippingReque
     data['truckType'] = this.truckType;
     data['isPriced'] = this.isPriced;
     data['remainingDays'] = this.remainingDays;
-    data['rangeDate'] = this.rangeDate;
+    data['startTripDate'] = this.startTripDate ? this.startTripDate.toISOString() : <any>undefined;
+    data['endTripDate'] = this.endTripDate ? this.endTripDate.toISOString() : <any>undefined;
     data['numberOfDrops'] = this.numberOfDrops;
     data['numberOfTrips'] = this.numberOfTrips;
     data['numberOfCompletedTrips'] = this.numberOfCompletedTrips;
@@ -69582,7 +69784,8 @@ export interface IGetShippingRequestForPriceOfferListDto {
   truckType: string | undefined;
   isPriced: boolean;
   remainingDays: string | undefined;
-  rangeDate: string | undefined;
+  startTripDate: moment.Moment;
+  endTripDate: moment.Moment | undefined;
   numberOfDrops: number;
   numberOfTrips: number;
   numberOfCompletedTrips: number;
@@ -75738,6 +75941,8 @@ export class GetSingleDropWaybillOutput implements IGetSingleDropWaybillOutput {
   deliveryDate!: moment.Moment | undefined;
   totalWeight!: number;
   goodsCategoryDisplayName!: string | undefined;
+  hasAttachment!: boolean;
+  needsDeliveryNote!: boolean;
   senderCompanyName!: string | undefined;
   senderContactName!: string | undefined;
   senderMobile!: string | undefined;
@@ -75780,6 +75985,8 @@ export class GetSingleDropWaybillOutput implements IGetSingleDropWaybillOutput {
       this.deliveryDate = _data['deliveryDate'] ? moment(_data['deliveryDate'].toString()) : <any>undefined;
       this.totalWeight = _data['totalWeight'];
       this.goodsCategoryDisplayName = _data['goodsCategoryDisplayName'];
+      this.hasAttachment = _data['hasAttachment'];
+      this.needsDeliveryNote = _data['needsDeliveryNote'];
       this.senderCompanyName = _data['senderCompanyName'];
       this.senderContactName = _data['senderContactName'];
       this.senderMobile = _data['senderMobile'];
@@ -75823,6 +76030,8 @@ export class GetSingleDropWaybillOutput implements IGetSingleDropWaybillOutput {
     data['deliveryDate'] = this.deliveryDate ? this.deliveryDate.toISOString() : <any>undefined;
     data['totalWeight'] = this.totalWeight;
     data['goodsCategoryDisplayName'] = this.goodsCategoryDisplayName;
+    data['hasAttachment'] = this.hasAttachment;
+    data['needsDeliveryNote'] = this.needsDeliveryNote;
     data['senderCompanyName'] = this.senderCompanyName;
     data['senderContactName'] = this.senderContactName;
     data['senderMobile'] = this.senderMobile;
@@ -75859,6 +76068,8 @@ export interface IGetSingleDropWaybillOutput {
   deliveryDate: moment.Moment | undefined;
   totalWeight: number;
   goodsCategoryDisplayName: string | undefined;
+  hasAttachment: boolean;
+  needsDeliveryNote: boolean;
   senderCompanyName: string | undefined;
   senderContactName: string | undefined;
   senderMobile: string | undefined;
@@ -75939,6 +76150,8 @@ export class GetMultipleDropWaybillOutput implements IGetMultipleDropWaybillOutp
   clientName!: string | undefined;
   totalWeight!: number;
   goodsCategoryDisplayName!: string | undefined;
+  hasAttachment!: boolean;
+  needsDeliveryNote!: boolean;
   senderCompanyName!: string | undefined;
   senderContactName!: string | undefined;
   senderMobile!: string | undefined;
@@ -75978,6 +76191,8 @@ export class GetMultipleDropWaybillOutput implements IGetMultipleDropWaybillOutp
       this.clientName = _data['clientName'];
       this.totalWeight = _data['totalWeight'];
       this.goodsCategoryDisplayName = _data['goodsCategoryDisplayName'];
+      this.hasAttachment = _data['hasAttachment'];
+      this.needsDeliveryNote = _data['needsDeliveryNote'];
       this.senderCompanyName = _data['senderCompanyName'];
       this.senderContactName = _data['senderContactName'];
       this.senderMobile = _data['senderMobile'];
@@ -76018,6 +76233,8 @@ export class GetMultipleDropWaybillOutput implements IGetMultipleDropWaybillOutp
     data['clientName'] = this.clientName;
     data['totalWeight'] = this.totalWeight;
     data['goodsCategoryDisplayName'] = this.goodsCategoryDisplayName;
+    data['hasAttachment'] = this.hasAttachment;
+    data['needsDeliveryNote'] = this.needsDeliveryNote;
     data['senderCompanyName'] = this.senderCompanyName;
     data['senderContactName'] = this.senderContactName;
     data['senderMobile'] = this.senderMobile;
@@ -76051,6 +76268,8 @@ export interface IGetMultipleDropWaybillOutput {
   clientName: string | undefined;
   totalWeight: number;
   goodsCategoryDisplayName: string | undefined;
+  hasAttachment: boolean;
+  needsDeliveryNote: boolean;
   senderCompanyName: string | undefined;
   senderContactName: string | undefined;
   senderMobile: string | undefined;
@@ -76500,7 +76719,7 @@ export interface IShippingRequestTripVasDto {
 
 export class ShippingRequestsTripForViewDto implements IShippingRequestsTripForViewDto {
   startTripDate!: moment.Moment;
-  endTripDate!: moment.Moment;
+  endTripDate!: moment.Moment | undefined;
   startWorking!: moment.Moment | undefined;
   endWorking!: moment.Moment | undefined;
   status!: string | undefined;
@@ -76600,7 +76819,7 @@ export class ShippingRequestsTripForViewDto implements IShippingRequestsTripForV
 
 export interface IShippingRequestsTripForViewDto {
   startTripDate: moment.Moment;
-  endTripDate: moment.Moment;
+  endTripDate: moment.Moment | undefined;
   startWorking: moment.Moment | undefined;
   endWorking: moment.Moment | undefined;
   status: string | undefined;
@@ -77412,129 +77631,6 @@ export interface IShippingRequestVasVasLookupTableDto {
   displayName: string | undefined;
 }
 
-export class ShippingTypeDto implements IShippingTypeDto {
-  displayName!: string | undefined;
-  description!: string | undefined;
-  id!: number;
-
-  constructor(data?: IShippingTypeDto) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(_data?: any) {
-    if (_data) {
-      this.displayName = _data['displayName'];
-      this.description = _data['description'];
-      this.id = _data['id'];
-    }
-  }
-
-  static fromJS(data: any): ShippingTypeDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new ShippingTypeDto();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['displayName'] = this.displayName;
-    data['description'] = this.description;
-    data['id'] = this.id;
-    return data;
-  }
-}
-
-export interface IShippingTypeDto {
-  displayName: string | undefined;
-  description: string | undefined;
-  id: number;
-}
-
-export class GetShippingTypeForViewDto implements IGetShippingTypeForViewDto {
-  shippingType!: ShippingTypeDto;
-
-  constructor(data?: IGetShippingTypeForViewDto) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(_data?: any) {
-    if (_data) {
-      this.shippingType = _data['shippingType'] ? ShippingTypeDto.fromJS(_data['shippingType']) : <any>undefined;
-    }
-  }
-
-  static fromJS(data: any): GetShippingTypeForViewDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new GetShippingTypeForViewDto();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['shippingType'] = this.shippingType ? this.shippingType.toJSON() : <any>undefined;
-    return data;
-  }
-}
-
-export interface IGetShippingTypeForViewDto {
-  shippingType: ShippingTypeDto;
-}
-
-export class PagedResultDtoOfGetShippingTypeForViewDto implements IPagedResultDtoOfGetShippingTypeForViewDto {
-  totalCount!: number;
-  items!: GetShippingTypeForViewDto[] | undefined;
-
-  constructor(data?: IPagedResultDtoOfGetShippingTypeForViewDto) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(_data?: any) {
-    if (_data) {
-      this.totalCount = _data['totalCount'];
-      if (Array.isArray(_data['items'])) {
-        this.items = [] as any;
-        for (let item of _data['items']) this.items!.push(GetShippingTypeForViewDto.fromJS(item));
-      }
-    }
-  }
-
-  static fromJS(data: any): PagedResultDtoOfGetShippingTypeForViewDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new PagedResultDtoOfGetShippingTypeForViewDto();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['totalCount'] = this.totalCount;
-    if (Array.isArray(this.items)) {
-      data['items'] = [];
-      for (let item of this.items) data['items'].push(item.toJSON());
-    }
-    return data;
-  }
-}
-
-export interface IPagedResultDtoOfGetShippingTypeForViewDto {
-  totalCount: number;
-  items: GetShippingTypeForViewDto[] | undefined;
-}
-
 export class CreateOrEditShippingTypeDto implements ICreateOrEditShippingTypeDto {
   displayName!: string;
   description!: string | undefined;
@@ -77578,10 +77674,14 @@ export interface ICreateOrEditShippingTypeDto {
   id: number | undefined;
 }
 
-export class GetShippingTypeForEditOutput implements IGetShippingTypeForEditOutput {
-  shippingType!: CreateOrEditShippingTypeDto;
+export class CreateOrEditShippingTypeTranslationDto implements ICreateOrEditShippingTypeTranslationDto {
+  language!: string;
+  coreId!: number;
+  displayName!: string;
+  description!: string | undefined;
+  id!: number | undefined;
 
-  constructor(data?: IGetShippingTypeForEditOutput) {
+  constructor(data?: ICreateOrEditShippingTypeTranslationDto) {
     if (data) {
       for (var property in data) {
         if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
@@ -77591,26 +77691,38 @@ export class GetShippingTypeForEditOutput implements IGetShippingTypeForEditOutp
 
   init(_data?: any) {
     if (_data) {
-      this.shippingType = _data['shippingType'] ? CreateOrEditShippingTypeDto.fromJS(_data['shippingType']) : <any>undefined;
+      this.language = _data['language'];
+      this.coreId = _data['coreId'];
+      this.displayName = _data['displayName'];
+      this.description = _data['description'];
+      this.id = _data['id'];
     }
   }
 
-  static fromJS(data: any): GetShippingTypeForEditOutput {
+  static fromJS(data: any): CreateOrEditShippingTypeTranslationDto {
     data = typeof data === 'object' ? data : {};
-    let result = new GetShippingTypeForEditOutput();
+    let result = new CreateOrEditShippingTypeTranslationDto();
     result.init(data);
     return result;
   }
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data['shippingType'] = this.shippingType ? this.shippingType.toJSON() : <any>undefined;
+    data['language'] = this.language;
+    data['coreId'] = this.coreId;
+    data['displayName'] = this.displayName;
+    data['description'] = this.description;
+    data['id'] = this.id;
     return data;
   }
 }
 
-export interface IGetShippingTypeForEditOutput {
-  shippingType: CreateOrEditShippingTypeDto;
+export interface ICreateOrEditShippingTypeTranslationDto {
+  language: string;
+  coreId: number;
+  displayName: string;
+  description: string | undefined;
+  id: number | undefined;
 }
 
 export class StripeConfigurationDto implements IStripeConfigurationDto {
@@ -83292,56 +83404,8 @@ export interface IPlateTypeSelectItemDto {
   translatedDisplayName: string | undefined;
 }
 
-export class TruckStatusesTranslationDto implements ITruckStatusesTranslationDto {
-  translatedDisplayName!: string | undefined;
-  language!: string | undefined;
-  coreId!: number;
-  id!: number;
-
-  constructor(data?: ITruckStatusesTranslationDto) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(_data?: any) {
-    if (_data) {
-      this.translatedDisplayName = _data['translatedDisplayName'];
-      this.language = _data['language'];
-      this.coreId = _data['coreId'];
-      this.id = _data['id'];
-    }
-  }
-
-  static fromJS(data: any): TruckStatusesTranslationDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new TruckStatusesTranslationDto();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['translatedDisplayName'] = this.translatedDisplayName;
-    data['language'] = this.language;
-    data['coreId'] = this.coreId;
-    data['id'] = this.id;
-    return data;
-  }
-}
-
-export interface ITruckStatusesTranslationDto {
-  translatedDisplayName: string | undefined;
-  language: string | undefined;
-  coreId: number;
-  id: number;
-}
-
 export class TruckStatusDto implements ITruckStatusDto {
   displayName!: string;
-  truckStatusesTranslation!: TruckStatusesTranslationDto[] | undefined;
   id!: number;
 
   constructor(data?: ITruckStatusDto) {
@@ -83355,10 +83419,6 @@ export class TruckStatusDto implements ITruckStatusDto {
   init(_data?: any) {
     if (_data) {
       this.displayName = _data['displayName'];
-      if (Array.isArray(_data['truckStatusesTranslation'])) {
-        this.truckStatusesTranslation = [] as any;
-        for (let item of _data['truckStatusesTranslation']) this.truckStatusesTranslation!.push(TruckStatusesTranslationDto.fromJS(item));
-      }
       this.id = _data['id'];
     }
   }
@@ -83373,10 +83433,6 @@ export class TruckStatusDto implements ITruckStatusDto {
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
     data['displayName'] = this.displayName;
-    if (Array.isArray(this.truckStatusesTranslation)) {
-      data['truckStatusesTranslation'] = [];
-      for (let item of this.truckStatusesTranslation) data['truckStatusesTranslation'].push(item.toJSON());
-    }
     data['id'] = this.id;
     return data;
   }
@@ -83384,7 +83440,6 @@ export class TruckStatusDto implements ITruckStatusDto {
 
 export interface ITruckStatusDto {
   displayName: string;
-  truckStatusesTranslation: TruckStatusesTranslationDto[] | undefined;
   id: number;
 }
 
@@ -83423,54 +83478,8 @@ export interface IGetTruckStatusForViewDto {
   truckStatus: TruckStatusDto;
 }
 
-export class PagedResultDtoOfGetTruckStatusForViewDto implements IPagedResultDtoOfGetTruckStatusForViewDto {
-  totalCount!: number;
-  items!: GetTruckStatusForViewDto[] | undefined;
-
-  constructor(data?: IPagedResultDtoOfGetTruckStatusForViewDto) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(_data?: any) {
-    if (_data) {
-      this.totalCount = _data['totalCount'];
-      if (Array.isArray(_data['items'])) {
-        this.items = [] as any;
-        for (let item of _data['items']) this.items!.push(GetTruckStatusForViewDto.fromJS(item));
-      }
-    }
-  }
-
-  static fromJS(data: any): PagedResultDtoOfGetTruckStatusForViewDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new PagedResultDtoOfGetTruckStatusForViewDto();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['totalCount'] = this.totalCount;
-    if (Array.isArray(this.items)) {
-      data['items'] = [];
-      for (let item of this.items) data['items'].push(item.toJSON());
-    }
-    return data;
-  }
-}
-
-export interface IPagedResultDtoOfGetTruckStatusForViewDto {
-  totalCount: number;
-  items: GetTruckStatusForViewDto[] | undefined;
-}
-
 export class CreateOrEditTruckStatusDto implements ICreateOrEditTruckStatusDto {
   displayName!: string;
-  truckStatusTranslation!: TruckStatusesTranslationDto[] | undefined;
   id!: number | undefined;
 
   constructor(data?: ICreateOrEditTruckStatusDto) {
@@ -83484,10 +83493,6 @@ export class CreateOrEditTruckStatusDto implements ICreateOrEditTruckStatusDto {
   init(_data?: any) {
     if (_data) {
       this.displayName = _data['displayName'];
-      if (Array.isArray(_data['truckStatusTranslation'])) {
-        this.truckStatusTranslation = [] as any;
-        for (let item of _data['truckStatusTranslation']) this.truckStatusTranslation!.push(TruckStatusesTranslationDto.fromJS(item));
-      }
       this.id = _data['id'];
     }
   }
@@ -83502,10 +83507,6 @@ export class CreateOrEditTruckStatusDto implements ICreateOrEditTruckStatusDto {
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
     data['displayName'] = this.displayName;
-    if (Array.isArray(this.truckStatusTranslation)) {
-      data['truckStatusTranslation'] = [];
-      for (let item of this.truckStatusTranslation) data['truckStatusTranslation'].push(item.toJSON());
-    }
     data['id'] = this.id;
     return data;
   }
@@ -83513,7 +83514,6 @@ export class CreateOrEditTruckStatusDto implements ICreateOrEditTruckStatusDto {
 
 export interface ICreateOrEditTruckStatusDto {
   displayName: string;
-  truckStatusTranslation: TruckStatusesTranslationDto[] | undefined;
   id: number | undefined;
 }
 
@@ -83550,92 +83550,6 @@ export class GetTruckStatusForEditOutput implements IGetTruckStatusForEditOutput
 
 export interface IGetTruckStatusForEditOutput {
   truckStatus: CreateOrEditTruckStatusDto;
-}
-
-export class GetTruckStatusesTranslationForViewDto implements IGetTruckStatusesTranslationForViewDto {
-  truckStatusesTranslation!: TruckStatusesTranslationDto;
-  truckStatusDisplayName!: string | undefined;
-
-  constructor(data?: IGetTruckStatusesTranslationForViewDto) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(_data?: any) {
-    if (_data) {
-      this.truckStatusesTranslation = _data['truckStatusesTranslation']
-        ? TruckStatusesTranslationDto.fromJS(_data['truckStatusesTranslation'])
-        : <any>undefined;
-      this.truckStatusDisplayName = _data['truckStatusDisplayName'];
-    }
-  }
-
-  static fromJS(data: any): GetTruckStatusesTranslationForViewDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new GetTruckStatusesTranslationForViewDto();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['truckStatusesTranslation'] = this.truckStatusesTranslation ? this.truckStatusesTranslation.toJSON() : <any>undefined;
-    data['truckStatusDisplayName'] = this.truckStatusDisplayName;
-    return data;
-  }
-}
-
-export interface IGetTruckStatusesTranslationForViewDto {
-  truckStatusesTranslation: TruckStatusesTranslationDto;
-  truckStatusDisplayName: string | undefined;
-}
-
-export class PagedResultDtoOfGetTruckStatusesTranslationForViewDto implements IPagedResultDtoOfGetTruckStatusesTranslationForViewDto {
-  totalCount!: number;
-  items!: GetTruckStatusesTranslationForViewDto[] | undefined;
-
-  constructor(data?: IPagedResultDtoOfGetTruckStatusesTranslationForViewDto) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(_data?: any) {
-    if (_data) {
-      this.totalCount = _data['totalCount'];
-      if (Array.isArray(_data['items'])) {
-        this.items = [] as any;
-        for (let item of _data['items']) this.items!.push(GetTruckStatusesTranslationForViewDto.fromJS(item));
-      }
-    }
-  }
-
-  static fromJS(data: any): PagedResultDtoOfGetTruckStatusesTranslationForViewDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new PagedResultDtoOfGetTruckStatusesTranslationForViewDto();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['totalCount'] = this.totalCount;
-    if (Array.isArray(this.items)) {
-      data['items'] = [];
-      for (let item of this.items) data['items'].push(item.toJSON());
-    }
-    return data;
-  }
-}
-
-export interface IPagedResultDtoOfGetTruckStatusesTranslationForViewDto {
-  totalCount: number;
-  items: GetTruckStatusesTranslationForViewDto[] | undefined;
 }
 
 export class CreateOrEditTruckStatusesTranslationDto implements ICreateOrEditTruckStatusesTranslationDto {
@@ -83683,6 +83597,94 @@ export interface ICreateOrEditTruckStatusesTranslationDto {
   language: string;
   coreId: number;
   id: number | undefined;
+}
+
+export class TruckStatusesTranslationDto implements ITruckStatusesTranslationDto {
+  translatedDisplayName!: string | undefined;
+  language!: string | undefined;
+  coreId!: number;
+  id!: number;
+
+  constructor(data?: ITruckStatusesTranslationDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.translatedDisplayName = _data['translatedDisplayName'];
+      this.language = _data['language'];
+      this.coreId = _data['coreId'];
+      this.id = _data['id'];
+    }
+  }
+
+  static fromJS(data: any): TruckStatusesTranslationDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new TruckStatusesTranslationDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['translatedDisplayName'] = this.translatedDisplayName;
+    data['language'] = this.language;
+    data['coreId'] = this.coreId;
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+export interface ITruckStatusesTranslationDto {
+  translatedDisplayName: string | undefined;
+  language: string | undefined;
+  coreId: number;
+  id: number;
+}
+
+export class GetTruckStatusesTranslationForViewDto implements IGetTruckStatusesTranslationForViewDto {
+  truckStatusesTranslation!: TruckStatusesTranslationDto;
+  truckStatusDisplayName!: string | undefined;
+
+  constructor(data?: IGetTruckStatusesTranslationForViewDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.truckStatusesTranslation = _data['truckStatusesTranslation']
+        ? TruckStatusesTranslationDto.fromJS(_data['truckStatusesTranslation'])
+        : <any>undefined;
+      this.truckStatusDisplayName = _data['truckStatusDisplayName'];
+    }
+  }
+
+  static fromJS(data: any): GetTruckStatusesTranslationForViewDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new GetTruckStatusesTranslationForViewDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['truckStatusesTranslation'] = this.truckStatusesTranslation ? this.truckStatusesTranslation.toJSON() : <any>undefined;
+    data['truckStatusDisplayName'] = this.truckStatusDisplayName;
+    return data;
+  }
+}
+
+export interface IGetTruckStatusesTranslationForViewDto {
+  truckStatusesTranslation: TruckStatusesTranslationDto;
+  truckStatusDisplayName: string | undefined;
 }
 
 export class GetTruckStatusesTranslationForEditOutput implements IGetTruckStatusesTranslationForEditOutput {
