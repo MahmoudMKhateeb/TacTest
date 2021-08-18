@@ -329,7 +329,8 @@
                             id="numberOfDrops"
                             formControlName="numberOfDrops"
                             maxlength="2"
-                            [required]="step2Dto.routeTypeId == 3"
+                            [min]="step2Dto.routeTypeId == 1 ? 1 : 2"
+                            [max]="100"
                             [(ngModel)]="step2Dto.numberOfDrops"
                             [class.is-invalid]="
                               step2Dto.routeTypeId == 3 && step2Form.get('numberOfDrops').touched && !step2Form.get('numberOfDrops').valid
@@ -338,6 +339,7 @@
                               step2Dto.routeTypeId == 3 && step2Form.get('numberOfDrops').touched && step2Form.get('numberOfDrops').valid
                             "
                             [attr.disabled]="step2Dto.routeTypeId != 3 ? true : null"
+                            [required]="step2Dto.routeTypeId == 3"
                           />
                           <span class="form-text text-muted">{{ l('NumberOfDrops') }} </span>
                         </div>
@@ -748,7 +750,7 @@
                   <!--begin: Form Actions -->
                   <div class="d-flex justify-content-between border-top pt-10">
                     <div class="mr-2">
-                      <div class="btn btn-light-primary font-weight-bold text-uppercase px-9 py-4" data-wizard-type="action-prev">
+                      <div class="btn btn-light-danger font-weight text-uppercase px-9 py-4" data-wizard-type="action-prev">
                         {{ l('Previous') }}
                       </div>
                     </div>
