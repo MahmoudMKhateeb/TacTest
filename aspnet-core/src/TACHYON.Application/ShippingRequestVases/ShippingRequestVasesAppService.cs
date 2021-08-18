@@ -9,6 +9,8 @@ using TACHYON.ShippingRequestVases.Dtos;
 using Abp.Application.Services.Dto;
 using TACHYON.Authorization;
 using Abp.Authorization;
+using Abp.UI;
+using Castle.Core.Internal;
 using Microsoft.EntityFrameworkCore;
 using TACHYON.Vases.Dtos;
 
@@ -95,6 +97,9 @@ namespace TACHYON.ShippingRequestVases
 
         public async Task CreateOrEdit(CreateOrEditShippingRequestVasDto input)
         {
+
+            await ValidateOtherVasName(input);
+
             if (input.Id == null)
             {
                 await Create(input);
@@ -135,6 +140,18 @@ namespace TACHYON.ShippingRequestVases
                     DisplayName = vas == null || vas.Name == null ? "" : vas.Name.ToString()
                 }).ToListAsync();
         }
+
+        #region Helpers
+
+        private async Task ValidateOtherVasName(CreateOrEditShippingRequestVasDto input)
+        {
+            var vas = await _lookup_vasRepository.FirstOrDefaultAsync(input.VasId);
+
+            if (vas.Name.ToUpper().Contains("OTHER") && input.OtherVasName.IsNullOrEmpty())
+                throw new UserFriendlyException(L("OtherVasNameMustBeNotEmpty"));
+        }
+
+        #endregion
 
     }
 }

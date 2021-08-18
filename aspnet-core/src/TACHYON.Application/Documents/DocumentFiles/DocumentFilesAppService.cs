@@ -184,11 +184,7 @@ namespace TACHYON.Documents.DocumentFiles
         //todo add this action to domain service -- trucksServers used it
         public async Task CreateOrEdit(CreateOrEditDocumentFileDto input)
         {
-            //todo convert this to custom validation
-            if (input.IsAccepted && input.IsRejected)
-            {
-                throw new UserFriendlyException(L("document cant be accepted and rejected at same time "));
-            }
+            //x todo convert this to custom validation
 
 
             //NumberUnique
