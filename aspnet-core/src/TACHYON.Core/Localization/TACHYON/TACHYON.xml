@@ -452,7 +452,7 @@
 		<text name="DefaultFromDisplayName">Default from (sender) display name</text>
 		<text name="DefaultFromSenderDisplayName">Default from (sender) display name</text>
 		<text name="DefaultFromSenderEmailAddress">Default from (sender) email address</text>
-		<text name="DefaultLanguage">Default Language</text>
+		<text name="DefaultLanguage">Language</text>
 		<text name="DefaultRole_Description">Assign to new users by default.</text>
 		<text name="Definitions">Definitions</text>
 		<text name="DelegateNewUser">Delegate new user</text>
@@ -727,7 +727,7 @@
 		<text name="EnterNumberOfPacking">Enter the QTY of packing type</text>
 		<text name="EnterNumberOfTrips">Enter number of trips</text>
 		<text name="EnterPackingType">Select packing type</text>
-		<text name="EnterRecipientCode">Please Enter The Code, With The Recipient</text>
+		<text name="EnterRecipientCode">Please Enter The Code sent to the receiver</text>
 		<text name="EnterTenancyName">Enter company name...</text>
 		<text name="EnterYourDetailsToLoginToYourAccount">Enter your email and password to login</text>
 		<text name="EnterYourEmailAndPassword">Enter your email and password</text>
@@ -809,7 +809,7 @@
 		<text name="Gateway">Gateway</text>
 		<text name="GdprDataPreparedNotificationMessage">Your data is prepared, click here to download.</text>
 		<text name="GdprDataPrepareStartedNotification">We are preparing your data. You will be notified when your data is ready.</text>
-		<text name="General">General</text>
+		<text name="General">Trip details</text>
 		<text name="GeneralDetails">General details</text>
 		<text name="GeneralSettings">General Settings</text>
 		<text name="Generate">Generate</text>
@@ -859,7 +859,7 @@
 		<text name="Hijri">Hijri</text>
 		<text name="Hindi">Hindi</text>
 		<text name="History">History</text>
-		<text name="HomePage">Home Page</text>
+		<text name="HomePage">Home</text>
 		<text name="HostDashboardHeaderInfo">General statistics and recent activities</text>
 		<text name="HowWasFacility">Rate offloading facility</text>
 		<text name="HttpStatusCode">Http Status Code</text>
@@ -1005,7 +1005,7 @@
 		<text name="LoginForTenants">Login for companies</text>
 		<text name="LoginForUsers">Login for users</text>
 		<text name="LoginWith">Login with:</text>
-		<text name="Logout">Logout</text>
+		<text name="Logout">Log out</text>
 		<text name="Longitude">Longitude</text>
 		<text name="LookingForMpaVersion">Looking for Multi-Page Application Version?</text>
 		<text name="LookingForSpaVersion">Looking for Single-Page Application Version?</text>
@@ -1679,7 +1679,7 @@
 		<text name="StartDate">Trips pickup date start</text>
 		<text name="StartLoading">Start loading</text>
 		<text name="StartMovingToDestination">Start moving to offloading location</text>
-		<text name="StartMovingToLoadingLocation">Start Moving To Loading Location</text>
+		<text name="StartedMovingToLoadingLocation">Start Moving To Loading Location</text>
 		<text name="StartShippmentNotificationMessage">Shippment is started</text>
 		<text name="StartTime">Start time</text>
 		<text name="StartTripDate">Pickup date</text>
@@ -1910,7 +1910,7 @@
 		<text name="Timezone">Time zone</text>
 		<text name="TimeZoneSettingChangedRefreshPageNotification">Time zone setting changed. Click OK button to refresh page and changes to take effect.</text>
 		<text name="Title">Title</text>
-		<text name="TitleLogin">To Sign In , What Is Your Mobile Phone Number </text>
+		<text name="TitleLogin">Please enter your mobile number</text>
 		<text name="TitleOTP">Please enter your one time password that has been sent to your mobile number</text>
 		<text name="TMS">Transport Management System (TMS)</text>
 		<text name="TMSAcceptedOffer">The {name} has been accepted offer.</text>
@@ -1976,7 +1976,7 @@
 		<text name="TripStartDate">Trips start date</text>
 		<text name="TripStartDateCantBeGretterThanTripEndDate">Trip start date cant be gretter than trip end date</text>
 		<text name="TripStatus">Trip status</text>
-		<text name="Truck">Truck</text>
+		<text name="Truck">Truck details</text>
 		<text name="TruckCapacities">Truck Capacity</text>
 		<text name="TruckCapacitiesTranslation">Truck Capacities Translation</text>
 		<text name="TruckCapacitiesTranslations">Truck capacities translations</text>
@@ -2112,7 +2112,7 @@
 		<text name="UploadLogo_Info">Select a JPG/JPEG/PNG/GIF file with a maximum of 30KB size and 139x35 pixel resolution.</text>
 		<text name="UploadPOD">Upload POD</text>
 		<text name="UploadPODLbl">Upload POD</text>
-		<text name="UploadPODProofOfDelivery">Please Upload Proof Of Delivery</text>
+		<text name="UploadPODProofOfDelivery">Please Upload POD</text>
 		<text name="Urdu">Urdu</text>
 		<text name="UsagePolicy">Usage Policy</text>
 		<text name="UseArrowKeysToChooseTheYear">Use arrow keys to choose the year</text>
@@ -2139,7 +2139,7 @@
 		<text name="UserLockedOutMessage">The user account has been locked out. Please try again later.</text>
 		<text name="UserLockOut">User lock out</text>
 		<text name="UserManagement">User management</text>
-		<text name="UserName">Username</text>
+		<text name="UserName">Name</text>
 		<text name="UserNameOrEmail">User name or email</text>
 		<text name="Userprofile">User profile</text>
 		<text name="Users">Users</text>
@@ -2287,7 +2287,7 @@
 	    <text name="DriversSubmittedDocuments">Drivers Documents</text>
 	    <text name="SubmitInvoiceForHost">Carrier Invoices</text>
 	    <text name="ShippingSettings">Shipping Settings</text>
-		<text name="FinishLoading">Loading finished</text>
+		<text name="FinishLoading">Finish loading</text>
 		<text name="POD">POD</text>
 		<text name="EstimatedPickUpDate">Estimated pickup date</text>
 		<text name="EstimatedDropOffDate">Estimated drop off date</text>
@@ -2313,6 +2313,14 @@
     <text name="IdDropOff">Receiver ID</text>
     <text name="Skip">Skip</text>
     <text name="AnotherTripWarning">Note: You have to complete the previous trip before starting a new trip</text>
-    <text name="StartMovingToOfLoadingLocation">Start moving to offloading location</text>
+    <text name="StartedMovingToOfLoadingLocation">Start moving to offloading location</text>
+    <text name="uiCustomizationMobile">Mobile number</text>
+    <text name="MyLoadComing">Upcoming</text>
+    <text name="FinishOffLoadShipment">Finish offloading</text>
+    <text name="Delivered">Delivered</text>
+    <text name="AddIncident">Add incident</text>
+    <!--<text name="StartOffloading"></text>
+    <text name="ReceiverConfirmed"></text>
+    <text name="DeliveryConfirmation"></text>-->
 	</texts>
 </localizationDictionary>
