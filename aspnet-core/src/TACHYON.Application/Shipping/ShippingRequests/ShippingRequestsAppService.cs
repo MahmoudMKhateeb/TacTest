@@ -7,7 +7,7 @@ using Abp.Domain.Uow;
 using Abp.Linq.Extensions;
 using Abp.Timing;
 using Abp.UI;
-using AutoMapper.QueryableExtensions;
+using Castle.Core.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Rest;
 using System;
@@ -264,6 +264,9 @@ namespace TACHYON.Shipping.ShippingRequests
         /// <returns></returns>
         public async Task EditStep3(EditShippingRequestStep3Dto input)
         {
+
+            await OthersNameValidation(input);
+
             var shippingRequest = await GetDraftedShippingRequest(input.Id);
             if (shippingRequest.DraftStep < 3)
             {
@@ -393,6 +396,9 @@ namespace TACHYON.Shipping.ShippingRequests
         [RequiresFeature(AppFeatures.ShippingRequest)]
         public async Task CreateOrEdit(CreateOrEditShippingRequestDto input)
         {
+
+            await OthersNameValidation(input);
+
             if (input.IsTachyonDeal)
             {
                 if (!await IsEnabledAsync(AppFeatures.SendTachyonDealShippingRequest))
@@ -521,7 +527,7 @@ namespace TACHYON.Shipping.ShippingRequests
         public async Task<List<GetAllGoodsCategoriesForDropDownOutput>> GetAllGoodCategoriesForTableDropdown()
         {
             var list = await _lookup_goodCategoryRepository.GetAll()
-                .Where(x => x.IsActive)
+                .Where(x=>x.IsActive)
                 .Include(x => x.Translations).ToListAsync();
 
             return ObjectMapper.Map<List<GetAllGoodsCategoriesForDropDownOutput>>(list);
@@ -600,8 +606,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     .Select(e =>
                         new GetShippingRequestVasForViewDto
                         {
-                            ShippingRequestVas = ObjectMapper.Map<ShippingRequestVasDto>(e),
-                            VasName = e.VasFk.Name
+                            ShippingRequestVas = ObjectMapper.Map<ShippingRequestVasDto>(e), VasName = e.VasFk.Name
                         }).ToListAsync();
 
                 //Bids
@@ -1242,6 +1247,63 @@ namespace TACHYON.Shipping.ShippingRequests
                     }
                 }
             }
+        }
+        /// <summary>
+        /// 
+        /// <list type="bullet|number|table">
+        /// <listheader>This Method Used For Validate</listheader>
+        ///    <item>1-OtherGoodsCategoryName</item>
+        ///    <item>2-OtherTransportTypeName</item>
+        ///    <item>3-OtherTrucksTypeName</item>
+        /// </list>
+        /// See <see cref="CreateOrEditShippingRequestDto"/>
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        private async Task OthersNameValidation(IShippingRequestDtoHaveOthersName input)
+        { 
+           
+
+            #region Validate GoodCategory
+
+            if (input.GoodCategoryId != null)
+            {
+                var goodCategory = await _lookup_goodCategoryRepository
+                    .FirstOrDefaultAsync(input.GoodCategoryId.Value);
+
+                if (goodCategory.Key.ToUpper().Contains("OTHER") &&
+                    input.OtherGoodsCategoryName.IsNullOrEmpty())
+                    throw new UserFriendlyException(L("GoodCategoryCanNotBeOtherAndEmptyAtSameTime"));
+            }
+
+            #endregion
+
+            #region Validate TransportType
+
+            if (input.TransportTypeId != null)
+            {
+                var transportType = await _transportTypeRepository
+                    .FirstOrDefaultAsync(input.TransportTypeId.Value);
+
+                if (transportType.DisplayName.ToUpper().Contains("OTHER") &&
+                    input.OtherTransportTypeName.IsNullOrEmpty())
+                    throw new UserFriendlyException(L("TransportTypeCanNotBeOtherAndEmptyAtSameTime"));
+            }
+
+            #endregion
+
+            #region Validate TrucksType
+
+            //? FYI TrucksTypeId Not Nullable 
+            var trucksType = await _lookup_trucksTypeRepository
+                .FirstOrDefaultAsync(input.TrucksTypeId);
+
+            if (trucksType.Key.ToUpper().Contains("OTHER") &&
+                input.OtherTrucksTypeName.IsNullOrEmpty())
+                throw new UserFriendlyException(L("TrucksTypeCanNotBeOtherAndEmptyAtSameTime"));
+
+            #endregion
+
         }
 
         private Facility GetPickupOrDropPointFacilityForTrip(int id, PickingType type)

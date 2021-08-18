@@ -12,6 +12,9 @@ namespace TACHYON.Goods.GoodCategories
     [Audited]
     public class GoodCategory : FullAuditedEntity, IMultiLingualEntity<GoodCategoryTranslation>
     {
+        // This Column Contain Original DisplayName Value
+        [Required]
+        public string Key { get; set; } 
         public int? FatherId { get; set; }
 
         [ForeignKey("FatherId")]

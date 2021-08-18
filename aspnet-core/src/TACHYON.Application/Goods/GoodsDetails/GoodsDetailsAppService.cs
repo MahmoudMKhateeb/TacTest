@@ -3,6 +3,7 @@ using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
+using Abp.UI;
 using Castle.MicroKernel.ModelBuilder.Descriptors;
 using Microsoft.EntityFrameworkCore;
 using Org.BouncyCastle.Math.EC.Rfc7748;
@@ -20,6 +21,7 @@ using TACHYON.Routs.RoutPoints;
 using TACHYON.Routs.RoutSteps;
 using TACHYON.Routs.RoutPoints.Dtos;
 using TACHYON.Goods.GoodCategories.Dtos;
+using TACHYON.UnitOfMeasures;
 
 namespace TACHYON.Goods.GoodsDetails
 {
@@ -30,17 +32,20 @@ namespace TACHYON.Goods.GoodsDetails
         private readonly IRepository<RoutPoint, long> _routPointRepository;
         private readonly IGoodsDetailsExcelExporter _goodsDetailsExcelExporter;
         private readonly IRepository<GoodCategory, int> _lookup_goodCategoryRepository;
+        private readonly IRepository<UnitOfMeasure> _lookup_UnitOfMeasureRepository;
 
 
         public GoodsDetailsAppService(IRepository<GoodsDetail, long> goodsDetailRepository, 
             IGoodsDetailsExcelExporter goodsDetailsExcelExporter,
             IRepository<GoodCategory, int> lookup_goodCategoryRepository,
-            IRepository<RoutPoint, long> routPointRepository)
+            IRepository<RoutPoint, long> routPointRepository,
+            IRepository<UnitOfMeasure> lookupUnitOfMeasureRepository)
         {
             _goodsDetailRepository = goodsDetailRepository;
             _goodsDetailsExcelExporter = goodsDetailsExcelExporter;
             _lookup_goodCategoryRepository = lookup_goodCategoryRepository;
             _routPointRepository = routPointRepository;
+            _lookup_UnitOfMeasureRepository = lookupUnitOfMeasureRepository;
         }
 
         public async Task<PagedResultDto<GetGoodsDetailForViewDto>> GetAll(GetAllGoodsDetailsInput input)
@@ -140,6 +145,14 @@ namespace TACHYON.Goods.GoodsDetails
 
         public async Task CreateOrEdit(CreateOrEditGoodsDetailDto input)
         {
+            //? This Validation Can't Added In Custom Validation
+            var unitOfMeasure = await _lookup_UnitOfMeasureRepository.GetAll()
+                .SingleAsync(x=> x.Id==input.UnitOfMeasureId);
+
+            if (unitOfMeasure.DisplayName.ToUpper().Contains("OTHER") 
+                && input.OtherUnitOfMeasureName.IsNullOrEmpty())
+                throw new UserFriendlyException(L("OtherNameIsRequired"));
+
             if (input.Id == null)
             {
                 await Create(input);

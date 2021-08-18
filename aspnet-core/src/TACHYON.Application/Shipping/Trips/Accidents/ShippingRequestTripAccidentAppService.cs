@@ -2,6 +2,7 @@
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
+using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
@@ -131,6 +132,7 @@ namespace TACHYON.Shipping.Trips.Accidents
             DisableTenancyFilters();
             if (input.ReasoneId.HasValue && input.ReasoneId.Value == 0) input.ReasoneId = default(int?);
 
+            await ValidateOtherReason(input);
 
             if (input.Id == 0)
             {
@@ -349,7 +351,17 @@ namespace TACHYON.Shipping.Trips.Accidents
 
         }
 
+        private async Task ValidateOtherReason(CreateOrEditShippingRequestTripAccidentDto input)
+        {
+            if (input.ReasoneId != null)
+            {
+                var reason = await _shippingRequestReasonAccidentRepository
+                    .FirstOrDefaultAsync(input.ReasoneId.Value);
 
+                if (reason.Name.ToUpper().Contains("OTHER") && input.OtherReasonName.IsNullOrEmpty())
+                    throw new UserFriendlyException(L("AccidentReasonConNotBeOtherAndEmptyAtTheSameTime"))
+            }
+        }
 
 
         #endregion
