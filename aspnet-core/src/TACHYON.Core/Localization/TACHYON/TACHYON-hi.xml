@@ -18,7 +18,7 @@
     <text name="EndOffloadingShipment">लोडिंग शिपमेंट को समाप्त करें</text>
     <text name="English">अंग्रेज़ी</text>
     <text name="FinishLoading">लोडिंग समाप्त करें</text>
-    <text name="General">सेटिंग्स</text>
+    <text name="General">सैर का विवरण</text>
     <text name="Hindi">हिन्दी</text>
     <text name="HomePage">होम</text>
     <text name="Id">आई डी</text>
@@ -42,7 +42,6 @@
     <text name="NoNotificationsYet">अभी तक कोई सूचना नहीं</text>
     <text name="Notifications">सूचनाएं</text>
     <text name="PackagingType">पैकिंग प्रकार</text>
-    <text name="PhoneNumber">मोबाइल फोन नंबर</text>
     <text name="Pickup">उठाना</text>
     <text name="PlateNumber">प्लेट नंबर</text>
     <text name="PleaseEnterTheCodeSentToRecipient">कृपया प्राप्तकर्ता को भेजा गया कोड दर्ज करें</text>
@@ -62,8 +61,8 @@
     <text name="ShipmentDetails">विवरण छोड़ें</text>
     <text name="StartLoading">लोड करना शुरू करें</text>
     <text name="StartMovingToDestination">ऑफलोडिंग स्थान पर जाना आरंभ करें</text>
-    <text name="StartMovingToLoadingLocation">लोडिंग स्थान पर जाना शुरू करें</text>
-    <text name="TitleLogin">साइन इन करें</text>
+    <text name="StartedMovingToLoadingLocation">लोडिंग स्थान पर जाना शुरू करें</text>
+    <text name="TitleLogin">अपना मोबाइल नंबर दर्ज करें</text>
     <text name="TotalDistance">कुल दूरी</text>
     <text name="Traveltime">सैर समय</text>
     <text name="TripDetails">सैर का विवरण</text>
@@ -106,7 +105,7 @@
     <text name="ContinueTrip">यात्रा जारी रखें</text>
     <text name="AnotherTripWarning">नोट: नई यात्रा का आरंभ करने से पहले आपको पिछली यात्रा पूर्ण करनी होगी</text>
     <text name="AddDocument">कृपया दस्तावेज़ अपलोड करें</text>
-    <text name="StartMovingToOfLoadingLocation">ऑफलोडिंग स्थान पर जाना आरंभ करें</text>
+    <text name="StartedMovingToOfLoadingLocation">ऑफलोडिंग स्थान पर जाना आरंभ करें</text>
     <text name="DestFacility">सुविधा छोड़ दें</text>
     <text name="Choose">चुनें</text>
     <text name="Gallery">गैलरी</text>
@@ -115,6 +114,38 @@
     <text name="Back">वापस जाएं</text>
     <text name="TitleOTP">कृपया अपना वन टाइम पासवर्ड दर्ज करें जो आपके मोबाइल नंबर पर भेजा गया है</text>
     <text name="Close">ठीक है</text>
+    <text name="LogIn">साइन इन करें</text>
+    <text name="uiCustomizationMobile">मोबाइल फोन नंबर</text>
+    <text name="Profile">खाता</text>
+    <text name="MyLoadCurrent">वर्तमान</text>
+    <text name="MyLoadComing">आगामी लोड</text>
+    <text name="DropOff">बाहर निकलना</text>
+    <text name="PackingTypes">पैकिंग प्रकार</text>
+    <text name="ShippingNote">शिपर नोट्स</text>
+    <text name="UserName">नाम</text>
+    <text name="PhoneNumber">मोबाइल नंबर</text>
+    <text name="Email">ई-मेल</text>
+    <text name="DefaultLanguage">भाषा</text>
+    <text name="Truck">ट्रक का विवरण</text>
+    <text name="TermsAndConditions">नियम और शर्तें</text>
+    <text name="UsagePolicy">उपयोग नीति</text>
+    <text name="Logout">लॉग आउट</text>
+    <text name="FinishOffLoadShipment">लोडिंग शिपमेंट को समाप्त करें</text>
+    <text name="CheckRecipient">प्राप्तकर्ता की जाँच करें</text>
+    <text name="EnterRecipientCode">कृपया प्राप्तकर्ता को भेजा गया कोड दर्ज करें</text>
+    <text name="UploadPODLbl">पीओडी अपलोड करें</text>
+    <text name="UploadPODProofOfDelivery">कृपया पीओडी अपलोड करें</text>
+    <text name="Send">भेजना</text>
+     <text name="WriteIncidentReport">कारण लिखिए</text>
+    <text name="ChooseWhatIncidentIs">कृपया घटना का कारण चुनें</text>
+    <text name="Others">अन्य</text>
+     <text name="Delivered">डिलीवर किया गया</text>
+    <text name="AddIncident">घटना जोड़ें</text>
+    <text name="ReSendAfter">के बाद फिर से भेजें</text>
+    <!--<text name="StartOffloading"></text>
+    <text name="ReceiverConfirmed"></text>
+    <text name="DeliveryConfirmation"></text>-->
+  
 
   </texts>
 </localizationDictionary>

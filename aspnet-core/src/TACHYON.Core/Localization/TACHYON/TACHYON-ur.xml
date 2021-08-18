@@ -18,7 +18,7 @@
     <text name="EndOffloadingShipment">لوڈنگ شپمنٹ کا اختتام کریں</text>
     <text name="English">انگریزی</text>
     <text name="FinishLoading">لوڈنگ ختم کریں</text>
-    <text name="General">ترتیبات</text>
+    <text name="General">تفریح کی تفصیلات</text>
     <text name="Hindi">ہندی</text>
     <text name="HomePage">ہوم</text>
     <text name="Id">آئی ڈی</text>
@@ -44,7 +44,6 @@
     <text name="PackagingType">پیکنگ کی قسم</text>
     <text name="PhoneNumber">موبائل نمبر</text>
     <text name="Pickup">اٹھانا</text>
-    <text name="PlateNumber">پلیٹ نمبر</text>
     <text name="PleaseEnterTheCodeSentToRecipient">براہ کرم وصول کنندہ کو بھیجا گیا کوڈ درج کریں</text>
     <text name="PleaseEnterYourMobileNumber">برائے کرم اپنا موبائل نمبر درج کریں</text>
     <text name="PleaseSelectAReason">براہ کرم کوئی وجہ منتخب کریں</text>
@@ -62,12 +61,12 @@
     <text name="ShipmentDetails">تفصیلات چھوڑیں</text>
     <text name="StartLoading">لوڈنگ شروع کریں</text>
     <text name="StartMovingToDestination">آف لوڈنگ مقام پر منتقل ہونا آغاز کریں</text>
-    <text name="StartMovingToLoadingLocation">لوڈنگ مقام پر منتقل کرنا شروع کریں</text>
-    <text name="TitleLogin">سائن ان کریں</text>
+    <text name="StartedMovingToLoadingLocation">لوڈنگ مقام پر منتقل کرنا شروع کریں</text>
+    <text name="TitleLogin">برائے کرم اپنا موبائل نمبر درج کریں</text>
     <text name="TotalDistance">کل فاصلہ</text>
     <text name="Traveltime">تفریح کا وقت</text>
     <text name="TripDetails">تفریح کی تفصیلات</text>
-    <text name="TruckType">ٹرک کی قسم</text>
+    <text name="PlateNumber">پلیٹ نمبر</text>
     <text name="UnitOfMeasure">پیمائش کی اکائی</text>
     <text name="UpComingLoad">آنے والا لوڈ</text>
     <text name="UpdatePhoneNumber">فون نمبر اپ ڈیٹ کریں</text>
@@ -107,7 +106,7 @@
     <text name="ContinueTrip">سفر جاری رکھیں</text>
     <text name="AnotherTripWarning">نوٹ: نیا سفر شروع کرنے سے پہلے آپ کو پچھلا سفر مکمل کرنا ہوگا۔</text>
     <text name="AddDocument">براہ کرم دستاویز اپ لوڈ کریں</text>
-    <text name="StartMovingToOfLoadingLocation">آف لوڈنگ مقام پر منتقل ہونا آغاز کریں</text>
+    <text name="StartedMovingToOfLoadingLocation">آف لوڈنگ مقام پر منتقل ہونا آغاز کریں</text>
     <text name="DestFacility">سہولت چھوڑ دیں</text>
     <text name="Choose">منتخب کریں</text>
     <text name="Gallery">گیلری</text>
@@ -116,6 +115,37 @@
     <text name="Back">پیچھے جائیں</text>
     <text name="TitleOTP">براہِ کرم اپنا ایک وقتی پاس ورڈ درج کریں جو آپ کے موبائل نمبر پر بھیجا گیا ہے</text>
     <text name="Close">ٹھیک ہے</text>
+    <text name="LogIn">سائن ان کریں</text>
+    <text name="uiCustomizationMobile">موبائل فون نمبر</text>
+    <text name="Profile">کھاتہ</text>
+    <text name="MyLoadCurrent">موجودہ</text>
+    <text name="MyLoadComing">آنے والا لوڈ</text>
+    <text name="DropOff">باہر نکالنا</text>
+    <text name="PackingTypes">پیکنگ کی قسم</text>
+    <text name="ShippingNote">شیپر نوٹس</text>
+    <text name="UserName">نام</text>
+    <text name="Email">ای میل</text>
+    <text name="DefaultLanguage">زبان</text>
+    <text name="Truck">ٹرک کی تفصیلات</text>
+    <text name="TermsAndConditions">شرائط و ضوابط</text>
+    <text name="UsagePolicy">استعمال کی پالیسی</text>
+    <text name="Logout">لاگ آوٹ</text>
+    <text name="FinishOffLoadShipment">لوڈنگ شپمنٹ کا اختتام کریں</text>
+    <text name="CheckRecipient">وصول کنندہ کو چیک کریں</text>
+    <text name="EnterRecipientCode">براہ کرم وصول کنندہ کو بھیجا گیا کوڈ درج کریں</text>
+    <text name="UploadPODLbl">پی او ڈی اپ لوڈ کریں</text>
+    <text name="UploadPODProofOfDelivery">براہ کرم پی او ڈی اپ لوڈ کریں</text>
+    <text name="Send">بھیجیں</text>
+    <text name="WriteIncidentReport">وجہ لکھیں۔</text>
+    <text name="ChooseWhatIncidentIs">براہِ کرم واقعہ کی وجہ منتخب کریں۔</text>
+    <text name="Others">دیگر</text>
+    <text name="Delivered">ترسیل کیا گیا</text>
+    <text name="AddIncident">واقعہ شامل کریں</text>
+    <text name="ReSendAfter">کے بعد دوبارہ بھیجیں</text>
+    <text name="TruckType">ٹرک کی قسم</text>
+    <!--<text name="StartOffloading"></text>
+    <text name="ReceiverConfirmed"></text>
+    <text name="DeliveryConfirmation"></text>-->
 
   </texts>
 </localizationDictionary>
