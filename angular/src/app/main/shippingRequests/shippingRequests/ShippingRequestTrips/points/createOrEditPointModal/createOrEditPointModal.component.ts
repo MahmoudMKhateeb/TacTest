@@ -95,6 +95,8 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
       this.Point = this.wayPointsList[id];
     }
     //tell the service that i have this SinglePoint Active Right Now
+    this.isAdditionalReceiverEnabled = this.Point.receiverFullName ? true : false;
+
     this._PointService.updateSinglePoint(this.Point);
     this.loadReceivers(this.Point.facilityId);
     this.modal.show();
