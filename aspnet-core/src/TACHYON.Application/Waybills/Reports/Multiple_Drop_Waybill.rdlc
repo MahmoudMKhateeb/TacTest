@@ -431,7 +431,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value />
+                <Value>=First(Fields!ShipperReference.Value, "MultipleDropDataSet")</Value>
                 <Style>
                   <FontFamily>open sans</FontFamily>
                   <FontSize>8pt</FontSize>
@@ -4202,7 +4202,6 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
-                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell>

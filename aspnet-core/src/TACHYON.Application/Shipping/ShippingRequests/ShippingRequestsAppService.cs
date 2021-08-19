@@ -22,12 +22,14 @@ using TACHYON.Dto;
 using TACHYON.Features;
 using TACHYON.Goods.GoodCategories;
 using TACHYON.Goods.GoodCategories.Dtos;
+using TACHYON.Invoices;
 using TACHYON.MultiTenancy;
 using TACHYON.Notifications;
 using TACHYON.Packing.PackingTypes;
 using TACHYON.Packing.PackingTypes.Dtos;
 using TACHYON.PriceOffers;
 using TACHYON.PriceOffers.Dto;
+using TACHYON.Receivers;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Routs.RoutSteps;
 using TACHYON.Shipping.DirectRequests;
@@ -78,7 +80,7 @@ namespace TACHYON.Shipping.ShippingRequests
             BidDomainService bidDomainService,
             IRepository<Capacity, int> capacityRepository, IRepository<TransportType, int> transportTypeRepository, IRepository<RoutPoint, long> routPointRepository,
             IRepository<ShippingRequestsCarrierDirectPricing> carrierDirectPricingRepository,
-            IRepository<ShippingRequestDirectRequest, long> shippingRequestDirectRequestRepository, PriceOfferManager priceOfferManager)
+            IRepository<ShippingRequestDirectRequest, long> shippingRequestDirectRequestRepository, PriceOfferManager priceOfferManager, IRepository<InvoiceTrip, long> invoiveTripRepository)
         {
             _vasPriceRepository = vasPriceRepository;
             _shippingRequestRepository = shippingRequestRepository;
@@ -103,6 +105,7 @@ namespace TACHYON.Shipping.ShippingRequests
             _carrierDirectPricingRepository = carrierDirectPricingRepository;
             _shippingRequestDirectRequestRepository = shippingRequestDirectRequestRepository;
             _priceOfferManager = priceOfferManager;
+            _InvoiveTripRepository = invoiveTripRepository;
         }
         private readonly IRepository<ShippingRequestsCarrierDirectPricing> _carrierDirectPricingRepository;
         private readonly IRepository<VasPrice> _vasPriceRepository;
@@ -128,6 +131,7 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly IRepository<TransportType, int> _transportTypeRepository;
         private readonly IRepository<ShippingRequestTripVas, long> _shippingRequestTripVasRepository;
         private readonly PriceOfferManager _priceOfferManager;
+        private readonly IRepository<InvoiceTrip, long> _InvoiveTripRepository;
         public async Task<GetAllShippingRequestsOutputDto> GetAll(GetAllShippingRequestsInput Input)
         {
             DisableTenancyFilters();
@@ -870,7 +874,14 @@ namespace TACHYON.Shipping.ShippingRequests
                     .Include(e => e.ShippingRequestFk)
                     .Where(e => e.Id == shippingRequestTripId);
 
+                
+
                 string pickupFacility = GetFacilityPoint(shippingRequestTripId, null, PickingType.Pickup);
+
+                var SenderpickupPoint = GetSenderInfo(null, shippingRequestTripId);
+                var contactName = SenderpickupPoint!=null ?SenderpickupPoint.FullName :"";
+                var mobileNo = SenderpickupPoint != null ? SenderpickupPoint.PhoneNumber : "";
+
                 var query = info.Select(x => new
                 {
                     MasterWaybillNo = x.WaybillNumber.Value,
@@ -887,13 +898,11 @@ namespace TACHYON.Shipping.ShippingRequests
                     IsMultipDrops = x.ShippingRequestFk.NumberOfDrops > 1 ? true : false,
                     TotalDrops = x.ShippingRequestFk.NumberOfDrops,
                     StartTripDate = x.StartTripDate,
-                    //(x.StartTripDate != null && x.StartTripDate.Year > 1)
-                    //   ? x.StartTripDate
-                    //   : default,
                     CarrierName = x.ShippingRequestFk.CarrierTenantFk != null ? x.ShippingRequestFk.CarrierTenantFk.TenancyName : "",
                     PackingTypeDisplayName = x.ShippingRequestFk.PackingTypeFk.DisplayName,
                     NumberOfPacking = x.ShippingRequestFk.NumberOfPacking,
-                    TotalWeight = x.ShippingRequestFk.TotalWeight
+                    TotalWeight = x.ShippingRequestFk.TotalWeight,
+                    ShipperReference=x.ShippingRequestFk.ReferenceNumber
                 });
 
                 var pickup = GetPickupOrDropPointFacilityForTrip(shippingRequestTripId, PickingType.Pickup);
@@ -906,6 +915,8 @@ namespace TACHYON.Shipping.ShippingRequests
                         Date = Clock.Now.ToShortDateString(),
                         ShippingRequestStatus = x.ShippingRequestStatus,
                         CompanyName = x.SenderCompanyName,
+                        ContactName=contactName,
+                        Mobile=mobileNo,
                         DriverName = x.DriverName,
                         DriverIqamaNo = "",
                         TruckTypeDisplayName = x.TruckTypeDisplayName,
@@ -920,9 +931,10 @@ namespace TACHYON.Shipping.ShippingRequests
                         Area = pickup?.Address,
                         StartTripDate = x.StartTripDate,
                         CarrierName = x.CarrierName,
-                        TotalWeight = x.TotalWeight
-
-                    });
+                        TotalWeight = x.TotalWeight,
+                        ShipperReference = x.ShipperReference,
+                        InvoiceNumber = GetInvoiceNumberByTripId(shippingRequestTripId)
+                    }) ;
 
                 return finalOutput;
             }
@@ -961,12 +973,17 @@ namespace TACHYON.Shipping.ShippingRequests
                     GoodCategoryTranslation = x.ShippingRequestFk.GoodCategoryFk.Translations,
                     GoodsCategoryDisplayName = x.ShippingRequestFk.GoodCategoryFk, //x.ShippingRequestFk.GoodCategoryFk.DisplayName,
                     HasAttachment=x.HasAttachment,
-                    NeedDeliveryNote=x.NeedsDeliveryNote
+                    NeedDeliveryNote=x.NeedsDeliveryNote,
+                    ShipperReference=x.ShippingRequestFk.ReferenceNumber
                 });
 
                 var pickup = GetPickupOrDropPointFacilityForTrip(shippingRequestTripId, PickingType.Pickup);
 
                 var delivery = GetPickupOrDropPointFacilityForTrip(shippingRequestTripId, PickingType.Dropoff);
+
+                var SenderpickupPoint = GetSenderInfo(null, shippingRequestTripId);
+                var contactName = SenderpickupPoint != null ? SenderpickupPoint.FullName : "";
+                var mobileNo = SenderpickupPoint != null ? SenderpickupPoint.PhoneNumber : "";
 
                 var finalOutput = query.ToList().Select(x
                     => new GetSingleDropWaybillOutput
@@ -975,6 +992,8 @@ namespace TACHYON.Shipping.ShippingRequests
                         Date = Clock.Now.ToShortDateString(),
                         ShippingRequestStatus = x.ShippingRequestStatus,
                         SenderCompanyName = GetFacilityPoint(x.Id, null, PickingType.Pickup),// x.SenderCompanyName,
+                        SenderContactName=contactName,
+                        SenderMobile=mobileNo,
                         ReceiverCompanyName = GetFacilityPoint(x.Id, null, PickingType.Dropoff),
                         ReceiverContactName = GetReceiverName(null, x.Id),
                         ReceiverMobile = GetReceiverPhone(null, x.Id),
@@ -999,7 +1018,9 @@ namespace TACHYON.Shipping.ShippingRequests
                         CarrierName = x.CarrierName,
                         GoodsCategoryDisplayName = ObjectMapper.Map<GoodCategoryDto>(x.GoodsCategoryDisplayName).DisplayName,
                         HasAttachment=x.HasAttachment,
-                        NeedsDeliveryNote=x.NeedDeliveryNote
+                        NeedsDeliveryNote=x.NeedDeliveryNote,
+                        ShipperReference=x.ShipperReference,
+                        InvoiceNumber= GetInvoiceNumberByTripId(shippingRequestTripId)
 
                     });
 
@@ -1176,7 +1197,24 @@ namespace TACHYON.Shipping.ShippingRequests
             return "";
         }
 
+        private Receiver GetSenderInfo(long? PointId,int? tripId)
+        {
+            return _routPointRepository.GetAll()
+                .Include(x => x.ReceiverFk)
+                .WhereIf(PointId != null, x => x.Id == PointId && x.PickingType == PickingType.Dropoff)
+                .WhereIf(tripId != null, x => x.ShippingRequestTripId == tripId && x.PickingType == PickingType.Dropoff)
+                .FirstOrDefault().ReceiverFk;
+        }
 
+        private long? GetInvoiceNumberByTripId(int tripId)
+        {
+            var invoiceNumber = _InvoiveTripRepository.GetAll()
+                    .Where(x => x.TripId == tripId)
+                    .WhereIf(AbpSession.TenantId != null, x => x.InvoiceFK.TenantId == AbpSession.TenantId)
+                    .Select(x => x.InvoiceFK.InvoiceNumber)
+                    .FirstOrDefault();
+            return invoiceNumber;
+        }
         #endregion
 
         #region dropDowns

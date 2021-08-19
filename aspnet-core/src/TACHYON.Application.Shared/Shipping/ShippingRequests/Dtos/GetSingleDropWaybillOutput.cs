@@ -12,7 +12,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public long MasterWaybillNo { get; set; }
         public string Date { get; set; }
         public string ShippingRequestStatus { get; set; }
-        public int InvoiceNumber { get; set; }
+        public long? InvoiceNumber { get; set; }
         public string ShipperReference { get; set; }
         public DateTime StartTripDate { get; set; }
         public DateTime? DeliveryDate { get; set; }
