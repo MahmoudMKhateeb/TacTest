@@ -60,7 +60,8 @@ namespace TACHYON.Shipping.ShippingRequests
         public async  void SendSmsToReceiver(RoutPoint point,string Culture)
         {
             string number= point.ReceiverPhoneNumber;
-            string message = L(TACHYONConsts.SMSShippingRequestReceiverCode, new CultureInfo(Culture) , point.Code);
+            string message = L(TACHYONConsts.SMSShippingRequestReceiverCode, new CultureInfo(Culture) ,
+                point.WaybillNumber, point.EndTime, point.Code);
            if (point.ReceiverFk !=null)
             {
                 number = point.ReceiverFk.PhoneNumber;
@@ -77,7 +78,7 @@ namespace TACHYON.Shipping.ShippingRequests
         public async Task SendSmsToReceiver(RoutPoint point)
         {
             string number = point.ReceiverPhoneNumber;
-            string message = L(TACHYONConsts.SMSShippingRequestReceiverCode, point.Code);
+            string message = L(TACHYONConsts.SMSShippingRequestReceiverCode, point.WaybillNumber,point.EndTime,point.Code);
             if (point.ReceiverFk != null)
             {
                 await _smsSender.SendAsync(point.ReceiverFk.PhoneNumber, message);

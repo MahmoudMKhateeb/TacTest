@@ -103,6 +103,12 @@ namespace TACHYON.Configuration
             public const string UseHostDefaultEmailSettings = "App.Email.UseHostDefaultEmailSettings";
         }
 
+        public static class Links
+        {
+            public const string AndroidAppLink = "App.Links.AndroidAppLink";
+            public const string IosAppLink = "App.Links.IosAppLink";
+        }
+
         public static class Recaptcha
         {
             public const string SiteKey = "Recaptcha.SiteKey";

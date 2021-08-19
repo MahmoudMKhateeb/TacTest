@@ -569,7 +569,7 @@ namespace TACHYON.Shipping.Trips
         public async Task SendSmsToReceiver(RoutPoint point)
         {
             string number = point.ReceiverPhoneNumber;
-            string message = L(TACHYONConsts.SMSShippingRequestReceiverCode, point.Code);
+            string message = L(TACHYONConsts.SMSShippingRequestReceiverCode, point.WaybillNumber, point.EndTime, point.Code);
             if (point.ReceiverFk != null)
             {
                 number = point.ReceiverFk.PhoneNumber;

@@ -116,6 +116,12 @@ namespace TACHYON.Configuration
                 new SettingDefinition(AppSettings.Sms.UnifonicNotificationSenderId,
                     GetFromAppSettings(AppSettings.Sms.UnifonicNotificationSenderId, "TACHYON"), isVisibleToClients: true,
                     scopes: SettingScopes.Application),
+                new SettingDefinition(AppSettings.Links.AndroidAppLink,
+                    GetFromAppSettings(AppSettings.Links.AndroidAppLink, TACHYONConsts.AndroidAppLink),isVisibleToClients:true,
+                    scopes:SettingScopes.Application),
+                new SettingDefinition(AppSettings.Links.IosAppLink,
+                    GetFromAppSettings(AppSettings.Links.IosAppLink, TACHYONConsts.IOSAppLink),isVisibleToClients:true,
+                    scopes:SettingScopes.Application)
             };
         }
 

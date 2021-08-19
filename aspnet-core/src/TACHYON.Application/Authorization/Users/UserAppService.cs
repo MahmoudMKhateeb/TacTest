@@ -29,6 +29,7 @@ using TACHYON.Authorization.Permissions.Dto;
 using TACHYON.Authorization.Roles;
 using TACHYON.Authorization.Users.Dto;
 using TACHYON.Authorization.Users.Exporting;
+using TACHYON.Configuration;
 using TACHYON.Documents.DocumentFiles;
 using TACHYON.Documents.DocumentsEntities;
 using TACHYON.Documents.DocumentTypes;
@@ -482,10 +483,13 @@ namespace TACHYON.Authorization.Users
                     await _documentFilesAppService.CreateOrEdit(item);
                 }
 
+                var iosLink = await SettingManager.GetSettingValueAsync(AppSettings.Links.IosAppLink);
+                var androidLink = await SettingManager.GetSettingValueAsync(AppSettings.Links.AndroidAppLink);
+
                 await _smsSender.SendAsync(user.PhoneNumber,
                     L(TACHYONConsts.DriverWelcomeMessage,
-                        user.FullName,TACHYONConsts.AndroidAppLink
-                        ,TACHYONConsts.IOSAppLink));
+                        user.FullName,androidLink
+                        ,iosLink));
             }
 
 

@@ -1630,10 +1630,10 @@
 		<text name="ShippingRequestPricingResponse">Shipping Request Pricing Response</text>
 		<text name="ShippingRequestProperties">Shipping Request Properties</text>
 		<text name="ShippingRequestReceiverCode">
-			Please note that shipment (waybill No){0} on its way. And expected to arrive on (date){1}, please give this code to
-			the driver when the delivery is completed.\n
-			For more details about the shipment click below: \n {2} (waybill / tracking page link) \n\n
-			Your shipping code is {3}
+			Welcome from TACHYON \n
+			Please note that shipment {0} on its way. And expected to arrive on {1}, please give this code to
+			the driver when the delivery is completed.\n\n
+			Your shipping code:{2}
 		</text>
 		<text name="ShippingRequests">Shipping Requests</text>
 		<text name="MyShippingRequests">My Shipping Requests</text>
@@ -1671,7 +1671,7 @@
 		<text name="Sms">SMS</text>
 		<text name="SMSOTP">
 			Please use the code below to login.\n
-			Code: {0}</text>
+			Code:{0}</text>
 		<text name="SmsSecurityCodeMessage">Your security code is: {0}</text>
 		<text name="SMSSettings">SMS Settings</text>
 		<text name="SmsVerificationEnabled">Phone number verification enabled (via SMS)</text>

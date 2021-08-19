@@ -1476,7 +1476,11 @@
 		</text>
 		<text name="ShippingRequestPrice">سعر طلب الشحن</text>
 		<text name="ShippingRequestProperties">خصائص طلب الشحن</text>
-		<text name="ShippingRequestReceiverCode">رقم الشحنة الخاصة بك هي:{0}</text>
+		<text name="ShippingRequestReceiverCode">
+			مرحباً من تاكيون \n\n
+			الشحنة رقم {0} في طريقها . ومن المتوقع ان تصل في {1} ، يرجى إعطاء الرمز للسائق عند اكتمال التسليم\n
+			الرمز:{2}
+		</text>
 		<text name="ShippingRequests">طلبات الشحن</text>
 		<text name="ShippingRequestsCreate">إنشاء طلب شحن</text>
 		<text name="ShippingRequestsEdit">تعديل طلب الشحن</text>
