@@ -798,7 +798,7 @@
 		<text name="ImportUsersUploadFailed">فشلت عملية استيراد المستخدم.</text>
 		<text name="InActiveAccountExpired">قفل الحساب بعد إنتهاء الصلاحية</text>
 		<text name="InActiveToleranceDays">عدد أيام السماحية بعد تاريخ إنتهاء الصلاحية</text>
-		<text name="Incident">حادثة!!</text>
+		<text name="Incident">حادثة</text>
 		<text name="Income">دخل</text>
 		<text name="IncomeStatistics">إحصاءات الدخل</text>
 		<text name="IncomeWithAmount">الدخل: {0}</text>

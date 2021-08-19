@@ -143,6 +143,7 @@
     <text name="AddIncident">واقعہ شامل کریں</text>
     <text name="ReSendAfter">کے بعد دوبارہ بھیجیں</text>
     <text name="TruckType">ٹرک کی قسم</text>
+    <text name="No">نہیں</text>
     <!--<text name="StartOffloading"></text>
     <text name="ReceiverConfirmed"></text>
     <text name="DeliveryConfirmation"></text>-->
