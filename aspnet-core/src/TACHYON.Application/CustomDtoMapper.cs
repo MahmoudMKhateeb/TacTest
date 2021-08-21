@@ -1,3 +1,5 @@
+﻿using TACHYON.Goods.Dtos;
+using TACHYON.Goods;
 using Abp.Application.Editions;
 using Abp.Application.Features;
 using Abp.Application.Services.Dto;
@@ -160,6 +162,8 @@ namespace TACHYON
         }
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
+            configuration.CreateMap<CreateOrEditDangerousGoodTypeDto, DangerousGoodType>().ReverseMap();
+            configuration.CreateMap<DangerousGoodTypeDto, DangerousGoodType>().ReverseMap();
             configuration.CreateMap<CreateOrEditCitiesTranslationDto, CitiesTranslation>().ReverseMap();
             configuration.CreateMap<CitiesTranslationDto, CitiesTranslation>().ReverseMap();
             configuration.CreateMap<CreateOrEditCountriesTranslationDto, CountriesTranslation>().ReverseMap();

@@ -2,29 +2,18 @@
 "propertyTemplates":[
 		{
 			"placeholder" : "{{Property_Datetime_Init_Looped_Template_Here}}",
-			"condition" : "{{Project_Version_Here}} >= 060000 && {{Project_Version_Here}} < 070200 && {{Property_CreateOrEdit_Here}} == true && {{Property_Is_Nullable_Here}} == false",
+			"condition" : "{{Project_Version_Here}} >= 060000 && {{Property_CreateOrEdit_Here}} == true && {{Property_Is_Nullable_Here}} == false",
 			"templates" : [
 					{
 					"type" : "DateTime",
 					"content" : "
-            this.{{entity_Name_Here}}.{{property_Name_Here}} = {{Start_Of_Day_Here}};"
-					}
-				]
-		},
-		{
-			"placeholder" : "{{Property_Datetime_Init_Looped_Template_Here_After_070200}}",
-			"condition" : "{{Project_Version_Here}} >= 070200 && {{Property_CreateOrEdit_Here}} == true",
-			"templates" : [
-					{
-					"type" : "DateTime",
-					"content" : "
-            this.{{entity_Name_Here}}.{{property_Name_Here}} = {{Start_Of_Day_Here}};"
+            this.{{entity_Name_Here}}.{{property_Name_Here}} = moment().startOf('day');"
 					}
 				]
 		},
 		{
 			"placeholder" : "{{Property_Nullable_Datetime_SetNull_Looped_Template_Here}}",
-			"condition" : "{{Project_Version_Here}} >= 060000 && {{Project_Version_Here}} < 070200 && {{Property_CreateOrEdit_Here}} == true && {{Property_Is_Nullable_Here}} == true",
+			"condition" : "{{Project_Version_Here}} >= 060000 && {{Property_CreateOrEdit_Here}} == true && {{Property_Is_Nullable_Here}} == true",
 			"templates" : [
 					{
 					"type" : "DateTime",
@@ -35,7 +24,7 @@
 		},
 		{
 			"placeholder" : "{{Property_Nullable_Datetime_Dec_Looped_Template_Here}}",
-			"condition" : "{{Project_Version_Here}} >= 060000 && {{Project_Version_Here}} < 070200 && {{Property_CreateOrEdit_Here}} == true && {{Property_Is_Nullable_Here}} == true",
+			"condition" : "{{Project_Version_Here}} >= 060000 && {{Property_CreateOrEdit_Here}} == true && {{Property_Is_Nullable_Here}} == true",
 			"templates" : [
 					{
 					"type" : "DateTime",
@@ -46,7 +35,7 @@
 		},
 		{
 			"placeholder" : "{{Property_Nullable_Datetime_Init_Looped_Template_Here}}",
-			"condition" : "{{Project_Version_Here}} >= 060000 && {{Project_Version_Here}} < 070200 && {{Property_CreateOrEdit_Here}} == true && {{Property_Is_Nullable_Here}} == true",
+			"condition" : "{{Project_Version_Here}} >= 060000 && {{Property_CreateOrEdit_Here}} == true && {{Property_Is_Nullable_Here}} == true",
 			"templates" : [
 					{
 					"type" : "DateTime",
@@ -59,17 +48,17 @@
 		},
 		{
 			"placeholder" : "{{Property_Nullable_Datetime_GetValue_Looped_Template_Here}}",
-			"condition" : "{{Project_Version_Here}} >= 060000 && {{Project_Version_Here}} < 070200 && {{Property_CreateOrEdit_Here}} == true && {{Property_Is_Nullable_Here}} == true",
+			"condition" : "{{Project_Version_Here}} >= 060000 && {{Property_CreateOrEdit_Here}} == true && {{Property_Is_Nullable_Here}} == true",
 			"templates" : [
 					{
 					"type" : "DateTime",
 					"content" : "
         if (this.{{property_Name_Here}}) {
             if (!this.{{entity_Name_Here}}.{{property_Name_Here}}) {
-                this.{{entity_Name_Here}}.{{property_Name_Here}} = {{DateTime_Start_Of_Day_From_Property_Here}};
+                this.{{entity_Name_Here}}.{{property_Name_Here}} = moment(this.{{property_Name_Here}}).startOf('day');
             }
             else {
-                this.{{entity_Name_Here}}.{{property_Name_Here}} = {{DateTime_From_Property_Here}};
+                this.{{entity_Name_Here}}.{{property_Name_Here}} = moment(this.{{property_Name_Here}});
             }
         }
         else {
@@ -118,7 +107,7 @@
 					"viewType": "LookupTable",
 					"preventDuplicate":true,
 					"content" : "
-import { {{Master_Detail_Child_Prefix_Here}}{{Entity_Name_Here}}{{NP_Foreign_Entity_Name_Here}}LookupTableModalComponent } from './{{master_Detail_Child_Prefix_Here}}{{entity_Name_Here}}-{{nP_Foreign_Entity_Name_Here}}-lookup-table-modal.component';"
+import { {{Entity_Name_Here}}{{NP_Foreign_Entity_Name_Here}}LookupTableModalComponent } from './{{entity_Name_Here}}-{{nP_Foreign_Entity_Name_Here}}-lookup-table-modal.component';"
 					}
 				]
 		},
@@ -128,7 +117,7 @@ import { {{Master_Detail_Child_Prefix_Here}}{{Entity_Name_Here}}{{NP_Foreign_Ent
 					{
 					"relation" : "single",
 					"viewType": "LookupTable",
-					"content" : "    @ViewChild('{{entity_Name_Here}}{{NP_Foreign_Entity_Name_Here}}LookupTableModal{{NP_Duplication_Number_Here}}', { static: true }) {{entity_Name_Here}}{{NP_Foreign_Entity_Name_Here}}LookupTableModal{{NP_Duplication_Number_Here}}: {{Master_Detail_Child_Prefix_Here}}{{Entity_Name_Here}}{{NP_Foreign_Entity_Name_Here}}LookupTableModalComponent;
+					"content" : "    @ViewChild('{{entity_Name_Here}}{{NP_Foreign_Entity_Name_Here}}LookupTableModal{{NP_Duplication_Number_Here}}', { static: true }) {{entity_Name_Here}}{{NP_Foreign_Entity_Name_Here}}LookupTableModal{{NP_Duplication_Number_Here}}: {{Entity_Name_Here}}{{NP_Foreign_Entity_Name_Here}}LookupTableModalComponent;
 "
 					}
 				]
@@ -229,96 +218,6 @@ import { {{Master_Detail_Child_Prefix_Here}}{{Entity_Name_Here}}{{NP_Foreign_Ent
 			"placeholder": "{{Primary_Key_Type_Here}}",
 			"condition": "{{Primary_Key_Here}} != 'Guid'",
 			"content": "number"
-		},
-		{
-			"placeholder": "{{Import_Modal_Directive_Here}}",
-			"condition": "{{Project_Version_Here}} < 080500",
-			"content": "import { ModalDirective } from 'ngx-bootstrap';"
-		},
-		{
-			"placeholder": "{{Import_Modal_Directive_Here}}",
-			"condition": "{{Project_Version_Here}} >= 080500",
-			"content": "import { ModalDirective } from 'ngx-bootstrap/modal';"
-		},
-		{
-            "placeholder" : "{{Master_Detail_Child_Base_Property_Here}}",
-            "condition": "{{Is_Master_Detail_Page_Child_Here}} == true",
-            "content" : "
-                this.{{entity_Name_Here}}.{{master_Detail_Child_Foreign_Property_Name_Here}} = this.{{master_Detail_Child_Foreign_Property_Name_Here}};
-            "
-        },
-        {
-             "placeholder" : "{{Master_Detail_Child_Base_Property_Id_Here}}",
-             "condition": "{{Is_Master_Detail_Page_Child_Here}} == true",
-             "content" : "
-                 {{master_Detail_Child_Foreign_Property_Name_Here}}: any;
-             "
-        },
-        {
-             "placeholder" : "{{Master_Detail_Child_Base_Property_Parameter_Here}}",
-             "condition": "{{Is_Master_Detail_Page_Child_Here}} == true",
-             "content" : "
-                 {{master_Detail_Child_Foreign_Property_Name_Here}}: any,
-             "
-        },
-        {
-             "placeholder" : "{{Master_Detail_Child_Base_Property_Parameter_Load_Here}}",
-             "condition": "{{Is_Master_Detail_Page_Child_Here}} == true",
-             "content" : "
-                 this.{{master_Detail_Child_Foreign_Property_Name_Here}} = {{master_Detail_Child_Foreign_Property_Name_Here}};
-             "
-        },
-        {
-             "placeholder" : "{{Import_Datetime_Here}}",
-             "condition": "{{Project_Version_Here}} < 100000",
-             "content" : "import * as moment from 'moment';"
-        },
-        {
-             "placeholder" : "{{Import_Datetime_Here}}",
-             "condition": "{{Project_Version_Here}} >= 100000",
-             "content" : "import { DateTime } from 'luxon';"
-        },
-        {
-             "placeholder" : "{{Start_Of_Day_Here}}",
-             "condition": "{{Project_Version_Here}} < 100000",
-             "content" : "moment().startOf('day')"
-        },
-        {
-             "placeholder" : "{{Start_Of_Day_Here}}",
-             "condition": "{{Project_Version_Here}} >= 100000",
-             "content" : "this._dateTimeService.getStartOfDay()"
-        },
-        {
-             "placeholder" : "{{Import_DateTime_Service_Here}}",
-             "condition": "{{Project_Version_Here}} >= 100000",
-             "content" : "
-             import { DateTimeService } from '@app/shared/common/timing/date-time.service';"
-        },
-        {
-             "placeholder" : "{{Get_DateTime_Service_Here}}",
-             "condition": "{{Project_Version_Here}} >= 100000",
-             "content" : ",
-             private _dateTimeService: DateTimeService"
-        },
-        {
-             "placeholder" : "{{DateTime_From_Property_Here}}",
-             "condition": "{{Project_Version_Here}} < 100000",
-             "content" : "moment(this.{{property_Name_Here}})"
-        },
-        {
-             "placeholder" : "{{DateTime_From_Property_Here}}",
-             "condition": "{{Project_Version_Here}} >= 100000",
-             "content" : "this._dateTimeService.fromJSDate(this.{{property_Name_Here}})"
-        },
-        {
-             "placeholder" : "{{DateTime_Start_Of_Day_From_Property_Here}}",
-             "condition": "{{Project_Version_Here}} < 100000",
-             "content" : "moment(this.{{property_Name_Here}}).startOf('day')"
-        },
-        {
-             "placeholder" : "{{DateTime_Start_Of_Day_From_Property_Here}}",
-             "condition": "{{Project_Version_Here}} >= 100000",
-             "content" : "this._dateTimeService.getStartOfDayForDate(this.{{property_Name_Here}})"
-        }
+		}
 	]
 }

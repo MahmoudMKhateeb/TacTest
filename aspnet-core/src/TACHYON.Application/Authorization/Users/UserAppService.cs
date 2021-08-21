@@ -117,44 +117,16 @@ namespace TACHYON.Authorization.Users
             var userCount = await query.CountAsync();
             var users = new List<User>();
             var userListDtos = new List<UserListDto>();
-            if (input.OnlyDrivers)
-            {
-                var documentTypesCount = await _documentTypeRepository.GetAll()
-                .Where(a => a.DocumentsEntityId == (int)DocumentsEntitiesEnum.Driver).CountAsync();
 
-                userListDtos = await query.Select(u => new UserListDto()
-                {
-                    IsMissingDocumentFiles = documentTypesCount != _documentFileRepository.GetAll().Where(t => t.UserId == u.Id).Count(),
-                    EmailAddress = u.EmailAddress,
-                    UserName = u.UserName,
-                    CreationTime = u.CreationTime,
-                    Id = u.Id,
-                    IsActive = u.IsActive,
-                    IsEmailConfirmed = u.IsEmailConfirmed,
-                    Name = u.Name,
-                    PhoneNumber = u.PhoneNumber,
-                    ProfilePictureId = u.ProfilePictureId,
-                    Surname = u.Surname,
-                    DateOfBirth = u.DateOfBirth,
-                    AccountNumber = u.AccountNumber
-                })
-                .OrderBy(input.Sorting)
-                .PageBy(input)
-                .ToListAsync();
-                await FillRoleNames(userListDtos);
+            users = await query
+            .OrderBy(input.Sorting)
+            .PageBy(input)
+            .ToListAsync();
 
-            }
-            else if (input.OnlyUsers)
-            {
-                users = await query
-                .OrderBy(input.Sorting)
-                .PageBy(input)
-                .ToListAsync();
+            userListDtos = ObjectMapper.Map<List<UserListDto>>(users);
+            await FillRoleNames(userListDtos);
 
-                userListDtos = ObjectMapper.Map<List<UserListDto>>(users);
-                await FillRoleNames(userListDtos);
 
-            }
             return new PagedResultDto<UserListDto>(
               userCount,
               userListDtos

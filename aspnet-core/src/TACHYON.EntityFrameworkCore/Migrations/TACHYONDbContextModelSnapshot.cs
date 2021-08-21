@@ -2313,6 +2313,47 @@ namespace TACHYON.Migrations
                     b.ToTable("AppFriendships");
                 });
 
+            modelBuilder.Entity("TACHYON.Goods.DangerousGoodType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("BayanIntegrationId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("CreatorUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("DeleterUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("LastModifierUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(255)")
+                        .HasMaxLength(255);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DangerousGoodTypes");
+                });
+
             modelBuilder.Entity("TACHYON.Goods.GoodCategories.GoodCategory", b =>
                 {
                     b.Property<int>("Id")
@@ -2395,6 +2436,9 @@ namespace TACHYON.Migrations
                     b.Property<long?>("CreatorUserId")
                         .HasColumnType("bigint");
 
+                    b.Property<int?>("DangerousGoodTypeId")
+                        .HasColumnType("int");
+
                     b.Property<string>("DangerousGoodsCode")
                         .HasColumnType("nvarchar(64)")
                         .HasMaxLength(64);
@@ -2445,6 +2489,8 @@ namespace TACHYON.Migrations
                         .HasMaxLength(64);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DangerousGoodTypeId");
 
                     b.HasIndex("GoodCategoryId");
 
@@ -5219,10 +5265,6 @@ namespace TACHYON.Migrations
                     b.Property<DateTime?>("DeletionTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
-
                     b.Property<string>("DisplayName")
                         .IsRequired()
                         .HasColumnType("nvarchar(128)")
@@ -6869,6 +6911,10 @@ namespace TACHYON.Migrations
 
             modelBuilder.Entity("TACHYON.Goods.GoodsDetails.GoodsDetail", b =>
                 {
+                    b.HasOne("TACHYON.Goods.DangerousGoodType", "DangerousGoodTypeFk")
+                        .WithMany()
+                        .HasForeignKey("DangerousGoodTypeId");
+
                     b.HasOne("TACHYON.Goods.GoodCategories.GoodCategory", "GoodCategoryFk")
                         .WithMany()
                         .HasForeignKey("GoodCategoryId")

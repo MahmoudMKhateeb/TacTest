@@ -1,7 +1,8 @@
 ﻿namespace TACHYON.Common
 {
-    public class LoadOptionsInput
+    public class LoadOptionsInput 
     {
-          public string LoadOptions { get; set; }
+        public string LoadOptions { get; set; }
     }
+
 }

@@ -26,6 +26,8 @@ namespace TACHYON.Goods.GoodsDetails.Dtos
         [StringLength(GoodsDetailConsts.MaxDangerousGoodsCodeLength, MinimumLength = GoodsDetailConsts.MinDangerousGoodsCodeLength)]
         public string DangerousGoodsCode { get; set; }
 
+         public virtual int? DangerousGoodTypeId { get; set; }
+
         public int? GoodCategoryId { get; set; }
 
         [Required]
