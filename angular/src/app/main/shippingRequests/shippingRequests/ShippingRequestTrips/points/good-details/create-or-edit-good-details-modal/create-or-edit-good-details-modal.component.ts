@@ -4,6 +4,7 @@ import { PointsService } from '@app/main/shippingRequests/shippingRequests/Shipp
 import {
   CreateOrEditGoodsDetailDto,
   CreateOrEditRoutPointDto,
+  DangerousGoodTypesServiceProxy,
   GetAllGoodsCategoriesForDropDownOutput,
   GoodsDetailDto,
   GoodsDetailsServiceProxy,
@@ -32,13 +33,16 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
   allUnitOfMeasure: SelectItemDto[];
   GoodCategory: number;
   allSubGoodCategorys: GetAllGoodsCategoriesForDropDownOutput[];
+  isDangerousGoodLoading: boolean;
+  allDangerousGoodTypes: SelectItemDto[];
 
   constructor(
     injector: Injector,
     private _PointsService: PointsService,
     private _TripService: TripService,
     private _shippingRequestsServiceProxy: ShippingRequestsServiceProxy,
-    private _goodsDetailsServiceProxy: GoodsDetailsServiceProxy
+    private _goodsDetailsServiceProxy: GoodsDetailsServiceProxy,
+    private _dangerousGoodTypesAppService: DangerousGoodTypesServiceProxy
   ) {
     super(injector);
   }
@@ -57,7 +61,6 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
     this.tripServiceSubs$ = this._TripService.currentShippingRequest.subscribe((res) => (this.GoodCategory = res.shippingRequest.goodCategoryId));
     //sync the singleWayPoint From the Service
     this.pointServiceSubs$ = this._PointsService.currentSingleWayPoint.subscribe((res) => (this.singleWayPoint = res));
-    this.loadAllDropDowns();
   }
   /**
    * load DropDowns
@@ -67,11 +70,13 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
       this.allUnitOfMeasure = result;
     });
     this.loadGoodSubCategory(this.GoodCategory);
+    this.loadGoodDangerousTypes();
   }
 
   show() {
     this.active = true;
     this.createOrEditGoodDetail.show();
+    this.loadAllDropDowns();
   }
   close() {
     this.active = false;
@@ -96,5 +101,16 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
         this.allSubGoodCategorys = result;
       });
     }
+  }
+
+  /**
+   * load All Good Dangerous Types For DropDown
+   */
+  loadGoodDangerousTypes() {
+    this.isDangerousGoodLoading = true;
+    this._dangerousGoodTypesAppService.getAllForDropdownList().subscribe((res) => {
+      this.isDangerousGoodLoading = false;
+      this.allDangerousGoodTypes = res;
+    });
   }
 }
