@@ -78,6 +78,7 @@ namespace TACHYON.Goods
             await _dangerousGoodTypeRepository.DeleteAsync(input.Id);
         }
 
+        [AbpAllowAnonymous]
         public async Task<List<SelectItemDto>> GetAllForDropdownList()
         {
             return await _dangerousGoodTypeRepository.GetAll().Select(x => new SelectItemDto
