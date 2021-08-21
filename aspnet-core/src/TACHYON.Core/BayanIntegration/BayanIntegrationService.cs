@@ -1,12 +1,16 @@
 ﻿using Abp.Application.Services;
+using Abp.AutoMapper;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Json;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -15,11 +19,21 @@ using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.ShippingRequestTripVases;
+using Flurl;
+using Flurl.Http;
+using System.Net;
+using System.Net.Http.Headers;
 
 namespace TACHYON.BayanIntegration
 {
     public class BayanIntegrationService : ApplicationService
     {
+
+        private const string Url = "https://bayan.api.elm.sa/api/v1/eff/";
+        private const string app_id = "431b4bd1";
+        private const string app_key = "d4738b317b9fa32a95ec65a39e84adbd";
+        private const string client_id = "56beeab2-d96a-4afd-baed-e4a88894629e";
+
         private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
         private readonly IRepository<ShippingRequestTrip> _shippingRequestTripTripRepository;
         private readonly IRepository<ShippingRequestTripVas, long> _shippingRequestTripVasRepository;
@@ -36,11 +50,33 @@ namespace TACHYON.BayanIntegration
         /// <summary>
         /// This is service shall be utilized by Electronic Freight Forwarders to allows their systems to create Consignment note in Bayan system. 
         /// </summary>
-        public async Task<Root> CreateConsignmentNote(int id)
+        public async Task CreateConsignmentNote(int id)
         {
-            var root = await GetRoot(id);
-            return root;
-            //return Send(root);
+            try
+            {
+                var root = await GetRoot(id);
+                var client = new RestClient(Url + "consignment-notes");
+                client.Timeout = -1;
+                var request = new RestRequest(Method.POST);
+                request.AddHeader("app_id", app_id);
+                request.AddHeader("app_key", app_key);
+                request.AddHeader("Content-Type", "application/json");
+                request.AddHeader("client_id", client_id);
+                string body = ToJsonLowerCaseFirstLetter(root);
+                request.AddParameter("application/json", body, ParameterType.RequestBody);
+                IRestResponse response = await client.ExecuteAsync(request);
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    Logger.Error("CreateConsignmentNote" + response);
+                }
+
+            }
+            catch (Exception e)
+            {
+                Logger.Error("CreateConsignmentNote" + e.Message);
+            }
+
+
         }
 
         /// <summary>
@@ -90,14 +126,14 @@ namespace TACHYON.BayanIntegration
                         Name = x.ShippingRequestFk.Tenant.companyName,
                         //todo: must not be blank
                         //todo: must match \"\\+9665\\d{8}\
-                        Phone = "+966"+x.ShippingRequestFk.Tenant.MobileNo
+                        Phone = "+966" + x.ShippingRequestFk.Tenant.MobileNo
                     },
                     Recipient = new Recipient()
                     {
                         Address = x.ShippingRequestFk.CarrierTenantFk.Address,
                         //todo: must not be blank 
                         //todo: must match \"\\+9665\\d{8}\
-                        Phone = "+966"+x.ShippingRequestFk.CarrierTenantFk.MobileNo,
+                        Phone = "+966" + x.ShippingRequestFk.CarrierTenantFk.MobileNo,
                         Name = x.ShippingRequestFk.CarrierTenantFk.companyName,
                     },
                     PickUpLocation = new PickUpLocation()
@@ -116,7 +152,7 @@ namespace TACHYON.BayanIntegration
                         .Select(g => new Item()
                         {
                             DangerousCode = g.DangerousGoodsCode,
-                            DangerousGoodTypeId = null,
+                            DangerousGoodTypeId = g.DangerousGoodTypeId,
 
                             //?  goodsCatgoy or free text or Good Types Description
                             Description = g.Description,
@@ -163,7 +199,7 @@ namespace TACHYON.BayanIntegration
                     DropOffDate = x.EndTripDate.HasValue ? x.EndTripDate.Value.Date.ToString() : x.StartTripDate.Date.AddDays(1).ToString(),
                     DropOffAddress = x.DestinationFacilityFk.Address,
                     Tradable = false,
-                    ExtraCharges = extraCharges,
+                    ExtraCharges = extraCharges.IsNullOrEmpty() ? "0" : extraCharges,
                     PaymentMethod = "",
                     PaymentComment = "",
                     PaidBy = "Sender"
@@ -173,22 +209,16 @@ namespace TACHYON.BayanIntegration
             return root;
         }
 
-        private string Send(Root root)
-        {
-            var client = new RestClient("https://bayan.api.elm.sa/api/v1/eff/consignment-notes");
-            client.Timeout = -1;
-            var request = new RestRequest(Method.POST);
-            request.AddHeader("app_id", "431b4bd1");
-            request.AddHeader("app_key", "d4738b317b9fa32a95ec65a39e84adbd");
-            request.AddHeader("Content-Type", "application/json");
-            request.AddHeader("client_id", "56beeab2-d96a-4afd-baed-e4a88894629e");
-            //request.AddHeader("Cookie", "NSC_Q-PDQ-3tdbmf_qspevdujpo-TTM=5ccba3d82e1dfb2c99c5d0554ea7a4f932223e9da2adb3d6974724963dda60cc1f0611c1; TS01e2737f=01987f91d384ef676dcfc8b83e0ea812889dd2d603dc030cb5ceb70f435ac16ed48b68ad77dcb34e22ab5fda769b7149d775bc9c93430d5d810488038403935618b287b801521ed1f2ab58b309fa4f33ca071d89cd; ddcb7a40eaf7373e607e39721feb07af=8da15bd2a9ee93a036c66dd184249e13");
-            var body = root.ToJsonString();
-            request.AddParameter("application/json", body, ParameterType.RequestBody);
-            IRestResponse response = client.Execute(request);
-            return response.Content;
-        }
 
+
+
+
+        private static string ToJsonLowerCaseFirstLetter(object root)
+        {
+            var body = Newtonsoft.Json.JsonConvert.SerializeObject(root, new JsonSerializerSettings
+            { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() });
+            return body;
+        }
 
         public class Sender
         {

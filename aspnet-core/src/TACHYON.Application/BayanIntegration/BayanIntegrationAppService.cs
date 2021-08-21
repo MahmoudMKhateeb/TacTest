@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,14 +17,14 @@ namespace TACHYON.BayanIntegration
             _bayanIntegrationService = bayanIntegrationService;
         }
 
-        public async Task<BayanIntegrationService.Root> Test(int shippingRequestTripId)
+        public async Task<Task<string>> Test(int shippingRequestTripId)
         {
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
             {
-                return await _bayanIntegrationService.CreateConsignmentNote(shippingRequestTripId);
+                var r = await _bayanIntegrationService.CreateConsignmentNote(shippingRequestTripId);
 
+              return  _bayanIntegrationService.PostJsonContent(r);
             }
-
 
         }
 
