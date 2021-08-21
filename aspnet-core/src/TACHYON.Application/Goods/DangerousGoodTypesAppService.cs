@@ -20,7 +20,7 @@ using TACHYON.Common;
 
 namespace TACHYON.Goods
 {
-    [AbpAuthorize(AppPermissions.Pages_DangerousGoodTypes)]
+    //[AbpAuthorize(AppPermissions.Pages_DangerousGoodTypes)]
     public class DangerousGoodTypesAppService : TACHYONAppServiceBase
     {
         private readonly IRepository<DangerousGoodType> _dangerousGoodTypeRepository;
@@ -78,7 +78,6 @@ namespace TACHYON.Goods
             await _dangerousGoodTypeRepository.DeleteAsync(input.Id);
         }
 
-        [AbpAllowAnonymous]
         public async Task<List<SelectItemDto>> GetAllForDropdownList()
         {
             return await _dangerousGoodTypeRepository.GetAll().Select(x => new SelectItemDto
