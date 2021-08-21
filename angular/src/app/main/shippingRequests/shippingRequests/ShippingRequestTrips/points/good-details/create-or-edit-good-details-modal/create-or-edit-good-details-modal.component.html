@@ -149,6 +149,26 @@
                     </label>
                   </div>
                 </div>
+                <div class="col-lg-6" [hidden]="!goodsDetail.isDangerousGood">
+                  <div class="form-group">
+                    <label> {{ l('DangerousGoodType') }} <span class="required-fileds">*</span> </label>
+                    <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': isDangerousGoodLoading }">
+                      <select
+                        #DangerousGoodTypes="ngModel"
+                        [(ngModel)]="goodsDetail.dangerousGoodTypeId"
+                        class="form-control"
+                        name="goodsDetail.dangerousGoodTypeId"
+                        [disabled]="!allSubGoodCategorys"
+                        [class.is-invalid]="DangerousGoodTypes.touched && !DangerousGoodTypes.valid"
+                        [class.is-valid]="DangerousGoodTypes.touched && DangerousGoodTypes.valid"
+                        [required]="goodsDetail.isDangerousGood"
+                      >
+                        <option value="">{{ l('SelectADangeroudGoodType') }}</option>
+                        <option *ngFor="let item of allDangerousGoodTypes" [value]="item.id">{{ item.displayName }}</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
 
                 <div class="col-lg-6">
                   <div class="form-group" [hidden]="!goodsDetail.isDangerousGood">
