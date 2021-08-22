@@ -17,16 +17,16 @@ namespace TACHYON.BayanIntegration
             _bayanIntegrationService = bayanIntegrationService;
         }
 
-        public async Task<Task<string>> Test(int shippingRequestTripId)
-        {
-            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
-            {
-                var r = await _bayanIntegrationService.CreateConsignmentNote(shippingRequestTripId);
+        //public async Task<Task<string>> Test(int shippingRequestTripId)
+        //{
+        //    using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
+        //    {
+        //      //  var r = await _bayanIntegrationService.CreateConsignmentNote(shippingRequestTripId);
 
-              return  _bayanIntegrationService.PostJsonContent(r);
-            }
+             
+        //    }
 
-        }
+        //}
 
     }
 

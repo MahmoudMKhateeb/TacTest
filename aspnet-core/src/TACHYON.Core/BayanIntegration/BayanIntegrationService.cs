@@ -1,6 +1,7 @@
 ﻿using Abp.Application.Services;
 using Abp.AutoMapper;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Abp.Extensions;
 using Abp.Json;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +11,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -19,8 +19,6 @@ using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.ShippingRequestTripVases;
-using Flurl;
-using Flurl.Http;
 using System.Net;
 using System.Net.Http.Headers;
 
@@ -52,28 +50,35 @@ namespace TACHYON.BayanIntegration
         /// </summary>
         public async Task CreateConsignmentNote(int id)
         {
-            try
+
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
             {
-                var root = await GetRoot(id);
-                var client = new RestClient(Url + "consignment-notes");
-                client.Timeout = -1;
-                var request = new RestRequest(Method.POST);
-                request.AddHeader("app_id", app_id);
-                request.AddHeader("app_key", app_key);
-                request.AddHeader("Content-Type", "application/json");
-                request.AddHeader("client_id", client_id);
-                string body = ToJsonLowerCaseFirstLetter(root);
-                request.AddParameter("application/json", body, ParameterType.RequestBody);
-                IRestResponse response = await client.ExecuteAsync(request);
-                if (response.StatusCode != HttpStatusCode.OK)
+                try
                 {
-                    Logger.Error("CreateConsignmentNote" + response);
+                    var root = await GetRoot(id);
+                    var client = new RestClient(Url + "consignment-notes");
+                    client.Timeout = -1;
+                    var request = new RestRequest(Method.POST);
+                    request.AddHeader("app_id", app_id);
+                    request.AddHeader("app_key", app_key);
+                    request.AddHeader("Content-Type", "application/json");
+                    request.AddHeader("client_id", client_id);
+                    string body = ToJsonLowerCaseFirstLetter(root);
+                    request.AddParameter("application/json", body, ParameterType.RequestBody);
+                    IRestResponse response = await client.ExecuteAsync(request);
+                    if (response.StatusCode != HttpStatusCode.OK)
+                    {
+                        Logger.Error("CreateConsignmentNote" + response);
+                    }
+
+                }
+                catch (Exception e)
+                {
+                    Logger.Error("CreateConsignmentNote" + e.Message);
                 }
 
-            }
-            catch (Exception e)
-            {
-                Logger.Error("CreateConsignmentNote" + e.Message);
+
+
             }
 
 
