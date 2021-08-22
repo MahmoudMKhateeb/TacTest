@@ -109,13 +109,22 @@ namespace TACHYON.Trucks.TruckCategories.TransportTypes
         protected virtual async Task Update(CreateOrEditTransportTypeDto input)
         {
             var transportType = await _transportTypeRepository.FirstOrDefaultAsync((int)input.Id);
+
+            if (transportType.DisplayName.ToUpper().Contains("OTHER")
+                && !input.DisplayName.ToUpper().Contains("OTHER"))
+                throw new UserFriendlyException(L("OtherTransportTypeMustContainOther"));
+
             ObjectMapper.Map(input, transportType);
         }
 
         [AbpAuthorize(AppPermissions.Pages_TransportTypes_Delete)]
         public async Task Delete(EntityDto input)
         {
-            await _transportTypeRepository.DeleteAsync(input.Id);
+            var transportType = await _transportTypeRepository.SingleAsync(x => x.Id == input.Id);
+            if (transportType.DisplayName.ToUpper().Contains("OTHER"))
+                throw new UserFriendlyException(L("OtherTransportTypeNotRemovable"));
+
+            await _transportTypeRepository.DeleteAsync(transportType);
         }
 
 

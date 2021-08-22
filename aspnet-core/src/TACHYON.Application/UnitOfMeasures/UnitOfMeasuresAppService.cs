@@ -101,13 +101,23 @@ namespace TACHYON.UnitOfMeasures
 		 protected virtual async Task Update(CreateOrEditUnitOfMeasureDto input)
          {
             var unitOfMeasure = await _unitOfMeasureRepository.FirstOrDefaultAsync((int)input.Id);
-             ObjectMapper.Map(input, unitOfMeasure);
+
+            if (unitOfMeasure.DisplayName.ToUpper().Contains("OTHER") 
+                && !input.DisplayName.ToUpper().Contains("OTHER"))
+                throw new UserFriendlyException(L("OtherUnitOfMeasureMustContainTheOtherWord"));
+
+            ObjectMapper.Map(input, unitOfMeasure);
          }
 
 		 [AbpAuthorize(AppPermissions.Pages_Administration_UnitOfMeasures_Delete)]
          public async Task Delete(EntityDto input)
          {
-            await _unitOfMeasureRepository.DeleteAsync(input.Id);
+             var unitOfMeasure = await _unitOfMeasureRepository.SingleAsync(x => x.Id == input.Id);
+
+             if (unitOfMeasure.DisplayName.ToUpper().Contains("OTHER"))
+                 throw new UserFriendlyException(L("OtherUnitOfMeasureNotRemovable"));
+
+            await _unitOfMeasureRepository.DeleteAsync(unitOfMeasure);
          }
 
          public async Task<List<SelectItemDto>> GetAllUnitOfMeasuresForDropdown()

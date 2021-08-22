@@ -90,13 +90,23 @@ namespace TACHYON.Vases
         protected virtual async Task Update(CreateOrEditVasDto input)
         {
             var vas = await _vasRepository.FirstOrDefaultAsync((input.Id.Value));
+
+            if (vas.Name.ToUpper().Contains("OTHER") && !input.Name.ToUpper().Contains("OTHER"))
+                throw new UserFriendlyException(L("OtherVasNameMustContainOther"));
+
             ObjectMapper.Map(input, vas);
         }
 
         [AbpAuthorize(AppPermissions.Pages_Administration_Vases_Delete)]
         public async Task Delete(EntityDto input)
         {
-            await _vasRepository.DeleteAsync(input.Id);
+
+            var vas = await _vasRepository.SingleAsync(x => x.Id == input.Id);
+
+            if (vas.Name.ToUpper().Contains("OTHER"))
+                throw new UserFriendlyException(L("OtherVasNotRemovable"));
+
+            await _vasRepository.DeleteAsync(vas);
         }
 
         public async Task<FileDto> GetVasesToExcel(GetAllVasesForExcelInput input)

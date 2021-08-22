@@ -2,6 +2,7 @@
 using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
+using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -89,7 +90,13 @@ namespace TACHYON.Shipping.Accidents
 
         public async Task Delete(EntityDto input)
         {
-            await _ShippingRequestReasonAccidentRepository.DeleteAsync(input.Id);
+            var reasonAccident = await _ShippingRequestReasonAccidentRepository
+                .SingleAsync(x => x.Id == input.Id);
+
+            if (reasonAccident.Key.ToUpper().Contains("OTHER"))
+                throw new UserFriendlyException(L("OtherReasonAccidentNotRemovable"));
+
+            await _ShippingRequestReasonAccidentRepository.DeleteAsync(reasonAccident);
         }
 
         #region Helper
