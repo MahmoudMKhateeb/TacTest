@@ -18,7 +18,7 @@ namespace TACHYON.Trucks.TrucksTypes
         [Required]
         [StringLength(TrucksTypeConsts.MaxDisplayNameLength,
             MinimumLength = TrucksTypeConsts.MinDisplayNameLength)]
-        public virtual string Key { get; set; }
+        public virtual string DisplayName { get; set; }
 
         public int? TransportTypeId { get; set; }
         

@@ -7,6 +7,7 @@ using Abp.Domain.Uow;
 using Abp.Linq.Extensions;
 using Abp.Timing;
 using Abp.UI;
+using AutoMapper.QueryableExtensions;
 using Castle.Core.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Rest;
@@ -1298,7 +1299,7 @@ namespace TACHYON.Shipping.ShippingRequests
             var trucksType = await _lookup_trucksTypeRepository
                 .FirstOrDefaultAsync(input.TrucksTypeId);
 
-            if (trucksType.Key.ToUpper().Contains("OTHER") &&
+            if (trucksType.DisplayName.ToUpper().Contains("OTHER") &&
                 input.OtherTrucksTypeName.IsNullOrEmpty())
                 throw new UserFriendlyException(L("TrucksTypeCanNotBeOtherAndEmptyAtSameTime"));
 

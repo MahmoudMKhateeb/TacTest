@@ -359,7 +359,7 @@ namespace TACHYON.Shipping.Trips.Accidents
                     .FirstOrDefaultAsync(input.ReasoneId.Value);
 
                 if (reason.Name.ToUpper().Contains("OTHER") && input.OtherReasonName.IsNullOrEmpty())
-                    throw new UserFriendlyException(L("AccidentReasonConNotBeOtherAndEmptyAtTheSameTime"))
+                    throw new UserFriendlyException(L("AccidentReasonConNotBeOtherAndEmptyAtTheSameTime"));
             }
         }
 
