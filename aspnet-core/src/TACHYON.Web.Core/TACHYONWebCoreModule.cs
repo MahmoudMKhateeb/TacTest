@@ -103,7 +103,7 @@ namespace TACHYON.Web
             //Send All Exceptions To Clients
             if (_env.EnvironmentName.ToLower() == "development")
             {
-               // Configuration.Modules.AbpWebCommon().SendAllExceptionsToClients = true;
+                Configuration.Modules.AbpWebCommon().SendAllExceptionsToClients = true;
             }
 
         }

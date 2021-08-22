@@ -1,4 +1,5 @@
-﻿using Abp.IdentityServer4;
+﻿using TACHYON.Goods;
+using Abp.IdentityServer4;
 using Abp.Zero.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
@@ -77,6 +78,8 @@ namespace TACHYON.EntityFrameworkCore
 {
     public class TACHYONDbContext : AbpZeroDbContext<Tenant, Role, User, TACHYONDbContext>, IAbpPersistedGrantDbContext
     {
+        public virtual DbSet<DangerousGoodType> DangerousGoodTypes { get; set; }
+
         public virtual DbSet<CitiesTranslation> CitiesTranslations { get; set; }
 
         public virtual DbSet<CountriesTranslation> CountriesTranslations { get; set; }

@@ -6,6 +6,11 @@
     /// </summary>
     public static class AppPermissions
     {
+        public const string Pages_DangerousGoodTypes = "Pages.DangerousGoodTypes";
+        public const string Pages_DangerousGoodTypes_Create = "Pages.DangerousGoodTypes.Create";
+        public const string Pages_DangerousGoodTypes_Edit = "Pages.DangerousGoodTypes.Edit";
+        public const string Pages_DangerousGoodTypes_Delete = "Pages.DangerousGoodTypes.Delete";
+
         public const string Pages_Receivers = "Pages.Receivers";
         public const string Pages_Receivers_Create = "Pages.Receivers.Create";
         public const string Pages_Receivers_Edit = "Pages.Receivers.Edit";

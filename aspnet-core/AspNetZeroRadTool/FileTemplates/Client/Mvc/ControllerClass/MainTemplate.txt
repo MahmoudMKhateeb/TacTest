@@ -32,9 +32,29 @@ namespace {{Namespace_Here}}.Web.Areas.{{App_Area_Name_Here}}.Controllers
 
             return View(model);
         } 
-       
-{{Create_Or_Edit_Here}}
-{{View_Method_Here}}
+
+        [AbpMvcAuthorize(AppPermissions.{{Permission_Name_Here}}_Create, AppPermissions.{{Permission_Name_Here}}_Edit)]
+        public async Task<PartialViewResult> CreateOrEditModal({{Primary_Key_Here}}{{Primary_Key_Nullable_If_Not_String_Here}} id)
+        {
+			Get{{Entity_Name_Here}}ForEditOutput get{{Entity_Name_Here}}ForEditOutput;
+
+			if ({{Id_Null_Check_Here}}){
+				get{{Entity_Name_Here}}ForEditOutput = await _{{entity_Name_Plural_Here}}AppService.Get{{Entity_Name_Here}}ForEdit(new EntityDto{{Primary_Key_Inside_Tag_Here}} { Id = ({{Primary_Key_Here}}) id });
+			}
+			else {
+				get{{Entity_Name_Here}}ForEditOutput = new Get{{Entity_Name_Here}}ForEditOutput{
+					{{Entity_Name_Here}} = new CreateOrEdit{{Entity_Name_Here}}Dto()
+				};{{Property_Init_Here}}
+			}
+
+            var viewModel = new CreateOrEdit{{Entity_Name_Here}}ModalViewModel()
+            {
+				{{Entity_Name_Here}} = get{{Entity_Name_Here}}ForEditOutput.{{Entity_Name_Here}}{{NP_Looped_Display_Property_Init_Here}}{{NP_Looped_Dropdown_Init_Here}},                
+            };
+
+            return PartialView("_CreateOrEditModal", viewModel);
+        }
+{{View_Modal_Method_Here}}
 
 {{NP_Looped_Controller_Here}}
     }

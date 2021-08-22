@@ -22,17 +22,5 @@
 			"content" : "    {{enum_Name_Here}} = {{Enum_Name_Here}};
 "
 		}
-	],
-	"conditionalTemplates":[		
-		{
-			"placeholder": "{{Import_Modal_Directive_Here}}",
-			"condition": "{{Project_Version_Here}} < 080500",
-			"content": "import { ModalDirective } from 'ngx-bootstrap';"
-		},
-		{
-			"placeholder": "{{Import_Modal_Directive_Here}}",
-			"condition": "{{Project_Version_Here}} >= 080500",
-			"content": "import { ModalDirective } from 'ngx-bootstrap/modal';"
-		}
 	]
 }

@@ -18,6 +18,7 @@ namespace TACHYON.Goods.GoodsDetails.Dtos
         public bool IsDangerousGood { get; set; }
 
         public string DangerousGoodsCode { get; set; }
+         public  int? DangerousGoodTypeId { get; set; }
 
         public int? GoodCategoryId { get; set; }
         public string GoodCategory { get; set; }

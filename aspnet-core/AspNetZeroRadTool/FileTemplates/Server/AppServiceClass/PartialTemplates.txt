@@ -6,10 +6,8 @@
 			"templates" : [
 					{
 					"type" : "enum",
-					"content" : "var {{property_Name_Here}}Filter = input.{{Property_Name_Here}}Filter.HasValue
-                        ? ({{Property_Type_Here}}) input.{{Property_Name_Here}}Filter
-                        : default;			
-					"
+					"content" : "var {{property_Name_Here}}Filter = ({{Property_Type_Here}}) input.{{Property_Name_Here}}Filter;
+			"
 					}
 				] 
 		},
@@ -32,7 +30,7 @@
 					{
 					"type" : "enum",
 					"content" : "
-						.WhereIf(input.{{Property_Name_Here}}Filter.HasValue && input.{{Property_Name_Here}}Filter > -1, e => e.{{Property_Name_Here}} == {{property_Name_Here}}Filter)"
+						.WhereIf(input.{{Property_Name_Here}}Filter > -1, e => e.{{Property_Name_Here}} == {{property_Name_Here}}Filter)"
 					},
 					{
 					"type" : "string",
@@ -42,7 +40,7 @@
 					{
 					"type" : "bool",
 					"content" : "
-						.WhereIf(input.{{Property_Name_Here}}Filter.HasValue && input.{{Property_Name_Here}}Filter > -1,  e => (input.{{Property_Name_Here}}Filter == 1 && e.{{Property_Name_Here}}) || (input.{{Property_Name_Here}}Filter == 0 && !e.{{Property_Name_Here}}) )"
+						.WhereIf(input.{{Property_Name_Here}}Filter > -1,  e => (input.{{Property_Name_Here}}Filter == 1 && e.{{Property_Name_Here}}) || (input.{{Property_Name_Here}}Filter == 0 && !e.{{Property_Name_Here}}) )"
 					},
 					{
 					"type" : "default",
@@ -145,7 +143,7 @@
 					{
 					"relation" : "single",
 					"content" : ",
-                         	{{NP_Foreign_Entity_Name_Here}}{{NP_Display_Property_Name_Here}}{{NP_Duplication_Number_Here}} = s{{Loop_Index}} == null || s{{Loop_Index}}.{{NP_Display_Property_Name_Here}} == null ? \"\" : s{{Loop_Index}}.{{NP_Display_Property_Name_Here}}.ToString()"
+                         	{{NP_Foreign_Entity_Name_Here}}{{NP_Display_Property_Name_Here}}{{NP_Duplication_Number_Here}} = s{{Loop_Index}} == null ? \"\" : s{{Loop_Index}}.{{NP_Display_Property_Name_Here}}.ToString()"
 					}
 				]
 		},
@@ -159,7 +157,7 @@
 		    if (output.{{Entity_Name_Here}}.{{NP_Name_Here}} != null)
             {
                 var _lookup{{NP_Foreign_Entity_Name_Here}} = await _lookup_{{nP_Foreign_Entity_Name_Here}}Repository.FirstOrDefaultAsync(({{NP_Id_Type_Here}})output.{{Entity_Name_Here}}.{{NP_Name_Here}});
-                output.{{NP_Foreign_Entity_Name_Here}}{{NP_Display_Property_Name_Here}}{{NP_Duplication_Number_Here}} = _lookup{{NP_Foreign_Entity_Name_Here}}?.{{NP_Display_Property_Name_Here}}?.ToString();
+                output.{{NP_Foreign_Entity_Name_Here}}{{NP_Display_Property_Name_Here}}{{NP_Duplication_Number_Here}} = _lookup{{NP_Foreign_Entity_Name_Here}}.{{NP_Display_Property_Name_Here}}.ToString();
             }"
 					}
 				]
@@ -183,6 +181,7 @@
 					"viewType": "Dropdown",						
 					"preventDuplicate":true,
 					"content" : "using {{NP_Namespace_Here}};
+					using System.Collections.Generic;
 "
 					},
 				]
@@ -201,7 +200,7 @@
          {
              var query = _lookup_{{nP_Foreign_Entity_Name_Here}}Repository.GetAll().WhereIf(
                     !string.IsNullOrWhiteSpace(input.Filter),
-                   e=> e.{{NP_Display_Property_Name_Here}} != null && e.{{NP_Display_Property_Name_Here}}.Contains(input.Filter)
+                   e=> (e.{{NP_Display_Property_Name_Here}} != null ? e.{{NP_Display_Property_Name_Here}}.ToString():\"\").Contains(input.Filter)
                 );
 
             var totalCount = await query.CountAsync();
@@ -237,7 +236,7 @@
 					.Select({{nP_Foreign_Entity_Name_Here}} => new {{Entity_Name_Here}}{{NP_Foreign_Entity_Name_Here}}LookupTableDto
 					{
 						Id = {{nP_Foreign_Entity_Name_Here}}.Id{{NP_Id_Type_ToStringIfNeeded_Here}},
-						DisplayName = {{nP_Foreign_Entity_Name_Here}} == null || {{nP_Foreign_Entity_Name_Here}}.{{NP_Display_Property_Name_Here}} == null ? \"\" : {{nP_Foreign_Entity_Name_Here}}.{{NP_Display_Property_Name_Here}}.ToString()
+						DisplayName = {{nP_Foreign_Entity_Name_Here}}.{{NP_Display_Property_Name_Here}}.ToString()
 					}).ToListAsync();
 			}
 							"
@@ -248,7 +247,6 @@
 "enumTemplates":[
 		{
 			"placeholder" : "{{Enum_Using_Looped_Template_Here}}",
-			"preventDuplicate":true,
 			"content" : "using {{Enum_Namespace_Here}};
 "
 		}
@@ -368,5 +366,5 @@ using {{Namespace_Here}}.{{Namespace_Relative_Full_Here}}.Exporting;"
             return output;
          }"
 		}
-	],
+	]
 }

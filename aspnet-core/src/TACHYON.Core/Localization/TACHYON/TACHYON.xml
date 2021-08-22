@@ -1,6 +1,14 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <localizationDictionary culture="en">
-	<texts>
+	<texts>    <text name="Goods">Goods</text>
+    <text name="DangerousGoodType">Dangerous good type</text>
+    <text name="TACHYON.Goods.DangerousGoodType">DangerousGoodType</text>
+    <text name="DangerousGoodTypesHeaderInfo">Dangerous good types header info</text>
+    <text name="CreateNewDangerousGoodType">Create new dangerous good type</text>
+    <text name="EditDangerousGoodType">Edit dangerous good type</text>
+    <text name="DeleteDangerousGoodType">Delete dangerous good type</text>
+    <text name="DangerousGoodTypes">Dangerous good types</text>
+
 		<text name="{0}IsInvalid">"{0}" is invalid</text>
 		<text name="{0}IsRequired">{0} is required.</text>
 		<text name="{0}UserCannotBeDeleted">{0} user can not be deleted.</text>

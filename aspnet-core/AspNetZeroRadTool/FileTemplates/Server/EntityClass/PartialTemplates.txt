@@ -47,7 +47,6 @@
 "enumTemplates":[
 		{
 			"placeholder" : "{{Enum_Using_Looped_Template_Here}}",
-			"preventDuplicate":true,
 			"content" : "using {{Enum_Namespace_Here}};
 "
 		}
