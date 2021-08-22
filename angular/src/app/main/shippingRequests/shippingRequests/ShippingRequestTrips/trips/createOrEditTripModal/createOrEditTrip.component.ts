@@ -19,23 +19,21 @@ import {
   CreateOrEditShippingRequestTripDto,
   CreateOrEditRoutPointDto,
   ShippingRequestDto,
-  CreateOrEditShippingRequestVasListDto,
   CreateOrEditShippingRequestTripVasDto,
-  ShippingRequestVasDto,
   GetShippingRequestVasForViewDto,
-  ShippingRequestsTripForViewDto,
   WaybillsServiceProxy,
   CreateOrEditDocumentFileDto,
   UpdateDocumentFileInput,
   DocumentFilesServiceProxy,
   DocumentTypeDto,
   ShippingRequestRouteType,
+  ReceiverFacilityLookupTableDto,
+  ReceiversServiceProxy,
   ShippingRequestTripVasDto,
   DocumentTypesServiceProxy,
   FileDto,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { Router } from '@angular/router';
 import { finalize } from '@node_modules/rxjs/operators';
 import { PointsComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.component';
 import Swal from 'sweetalert2';
@@ -101,7 +99,8 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     private cdref: ChangeDetectorRef,
     private _TripService: TripService,
     private _PointsService: PointsService,
-    private _tokenService: TokenService
+    private _tokenService: TokenService,
+    private _receiversServiceProxy: ReceiversServiceProxy
   ) {
     super(injector);
   }
@@ -109,6 +108,9 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   TripsServiceSubscription: any;
   PointsServiceSubscription: any;
   wayBillIsDownloading: boolean;
+  receiversLoading: boolean;
+  allReceivers: ReceiverFacilityLookupTableDto[];
+  pickupPointSenderId: number;
 
   get isFileInputValid() {
     return this.trip.hasAttachment ? (this.trip.createOrEditDocumentFileDto.name ? true : false) : true;
@@ -119,6 +121,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     //Take The Points List From the Points Shared Service
     this.PointsServiceSubscription = this._PointsService.currentWayPointsList.subscribe((res) => (this.trip.routPoints = res));
     //load the Facilites
+    //this._PointsService.updateWayPoints(new CreateOrEditRoutPointDto[]);
     this.refreshOrGetFacilities(null);
     this.vasesHandler();
   }
@@ -167,6 +170,9 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       this._shippingRequestTripsService.getShippingRequestTripForEdit(record.id).subscribe((res) => {
         this.trip = res;
         this._PointsService.updateWayPoints(this.trip.routPoints);
+        this.pickupPointSenderId = res.routPoints[0].receiverId;
+        console.table(res.routPoints[0].receiverId);
+        this.loadReceivers(this.trip.originFacilityId);
         this.loading = false;
       });
     } else {
@@ -202,6 +208,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   createOrEditTrip() {
     //if there is a Validation issue in the Points do Not Proceed
     if (this.validatePointsBeforeAddTrip()) {
+      this.trip.routPoints[0].receiverId = this.pickupPointSenderId;
       this.saving = true;
       if (!this.trip.hasAttachment) {
         this.trip.createOrEditDocumentFileDto = null;
@@ -376,6 +383,26 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     console.log('Detsroid From Create/Edit Trip');
   }
 
+  /**
+   * loads a list of Receivers by facility Id
+   * @param facilityId
+   */
+  loadReceivers(facilityId) {
+    if (facilityId) {
+      this.receiversLoading = true;
+      //to be Changed
+      this._receiversServiceProxy.getAllReceiversByFacilityForTableDropdown(facilityId).subscribe((result) => {
+        this.allReceivers = result;
+        console.log('all Receivers logged .................  : ', result);
+        this.receiversLoading = false;
+      });
+    }
+  }
+
+  /**
+   * Validates Shipping Request Trip Before Create/Edit
+   * @private
+   */
   private validatePointsBeforeAddTrip() {
     //if trip Drop Points is less than number of drops Prevent Adding Trip
     if (this.trip.routPoints.length !== this.shippingRequest.numberOfDrops + 1) {
