@@ -9,13 +9,16 @@ using Abp.Linq.Extensions;
 using Abp.Timing;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
 using TACHYON.Authorization.Users;
+using TACHYON.Documents;
 using TACHYON.Documents.DocumentFiles;
+using TACHYON.Documents.DocumentFiles.Dtos;
 using TACHYON.Features;
 using TACHYON.Firebases;
 using TACHYON.Goods.GoodCategories;
@@ -44,6 +47,9 @@ namespace TACHYON.Shipping.Trips
         private readonly IFirebaseNotifier _firebase;
         private readonly ShippingRequestManager _shippingRequestManager;
         private readonly DocumentFilesAppService _documentFilesAppService;
+        private readonly IRepository<DocumentFile, Guid> _documentFileRepository;
+        private readonly DocumentFilesManager _documentFilesManager;
+
 
         public ShippingRequestsTripAppService(
             IRepository<ShippingRequestTrip> ShippingRequestTripRepository,
@@ -54,7 +60,7 @@ namespace TACHYON.Shipping.Trips
             UserManager userManager,
             IAppNotifier appNotifier,
             IFirebaseNotifier firebase,
-            ShippingRequestManager shippingRequestManager, DocumentFilesAppService documentFilesAppService, IRepository<GoodCategory> goodCategoryRepository)
+            ShippingRequestManager shippingRequestManager, DocumentFilesAppService documentFilesAppService, IRepository<GoodCategory> goodCategoryRepository, IRepository<DocumentFile, Guid> documentFileRepository, DocumentFilesManager documentFilesManager)
         {
             _ShippingRequestTripRepository = ShippingRequestTripRepository;
             _ShippingRequestRepository = ShippingRequestRepository;
@@ -67,6 +73,8 @@ namespace TACHYON.Shipping.Trips
             _shippingRequestManager = shippingRequestManager;
             _documentFilesAppService = documentFilesAppService;
             _GoodCategoryRepository = goodCategoryRepository;
+            _documentFileRepository = documentFileRepository;
+            _documentFilesManager = documentFilesManager;
         }
 
 
@@ -79,9 +87,9 @@ namespace TACHYON.Shipping.Trips
         .GetAll()
         .AsNoTracking()
             .Include(x => x.OriginFacilityFk)
-            .ThenInclude(x=>x.CityFk)
+            .ThenInclude(x => x.CityFk)
             .Include(x => x.DestinationFacilityFk)
-            .ThenInclude(x=>x.CityFk)
+            .ThenInclude(x => x.CityFk)
             .Include(x => x.AssignedTruckFk)
             .Include(x => x.AssignedDriverUserFk)
             .Include(x => x.ShippingRequestTripRejectReason)
@@ -97,7 +105,7 @@ namespace TACHYON.Shipping.Trips
                 if (r.ShippingRequestTripRejectReason != null)
                 {
                     var reasone = ObjectMapper.Map<ShippingRequestTripRejectReasonListDto>(r.ShippingRequestTripRejectReason);
-                   if (reasone !=null)
+                    if (reasone != null)
                     {
                         if (!string.IsNullOrEmpty(r.RejectedReason))
                         {
@@ -131,8 +139,19 @@ namespace TACHYON.Shipping.Trips
 
         public async Task<CreateOrEditShippingRequestTripDto> GetShippingRequestTripForEdit(EntityDto input)
         {
-            return await GetShippingRequestTripForMapper<CreateOrEditShippingRequestTripDto>(input.Id);
 
+            var shippingRequestTrip = await GetShippingRequestTripForMapper<CreateOrEditShippingRequestTripDto>(input.Id);
+
+            // fill Attachment file
+            if (shippingRequestTrip.HasAttachment)
+            {
+                var documentFile = await _documentFileRepository.FirstOrDefaultAsync(x => x.ShippingRequestTripId == input.Id);
+                if (documentFile != null)
+                {
+                    shippingRequestTrip.CreateOrEditDocumentFileDto = ObjectMapper.Map<CreateOrEditDocumentFileDto>(documentFile);
+                }
+            }
+            return shippingRequestTrip;
         }
 
         public async Task CreateOrEdit(CreateOrEditShippingRequestTripDto input)
@@ -142,7 +161,7 @@ namespace TACHYON.Shipping.Trips
             if (
                 input.StartTripDate.Date > request.EndTripDate?.Date ||
                 input.StartTripDate.Date < request.StartTripDate?.Date ||
-                (input.EndTripDate!=null && input.EndTripDate.Value.Date > request.EndTripDate?.Date) ||
+                (input.EndTripDate != null && input.EndTripDate.Value.Date > request.EndTripDate?.Date) ||
                 (input.EndTripDate != null && input.EndTripDate.Value.Date < request.StartTripDate?.Date)
                 )
             {
@@ -196,9 +215,9 @@ namespace TACHYON.Shipping.Trips
             else
             {
 
-               await Update(input, request);
+                await Update(input, request);
             }
-            
+
 
         }
 
@@ -210,7 +229,7 @@ namespace TACHYON.Shipping.Trips
                 Include(e => e.ShippingRequestFk)
                 .Include(d => d.AssignedDriverUserFk)
                 .Where(e => e.Id == input.Id)
-                .Where(e => e.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId )
+                .Where(e => e.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
                 .FirstOrDefaultAsync();
             if (trip == null) throw new UserFriendlyException(L("NoTripToAssignDriver"));
 
@@ -230,10 +249,11 @@ namespace TACHYON.Shipping.Trips
                 trip.AssignedDriverTime = Clock.Now;
                 await _appNotifier.NotifyDriverWhenAssignToTrip(trip);
                 await _firebase.PushNotificationToDriverWhenAssignTrip(new UserIdentifier(trip.AssignedDriverUserFk.TenantId, trip.AssignedDriverUserId.Value), trip.Id.ToString(), trip.WaybillNumber.ToString());
-            if (oldAssignedDriverUserId.HasValue)
+                if (oldAssignedDriverUserId.HasValue)
                     await _firebase.TripChanged(new UserIdentifier(trip.AssignedDriverUserFk.TenantId, oldAssignedDriverUserId.Value), trip.Id.ToString());
 
-            } else if (OldAssignedTruckId != trip.AssignedTruckId)
+            }
+            else if (OldAssignedTruckId != trip.AssignedTruckId)
             {
                 await _firebase.TripChanged(new UserIdentifier(trip.AssignedDriverUserFk.TenantId, trip.AssignedDriverUserId.Value), trip.Id.ToString());
             }
@@ -241,9 +261,9 @@ namespace TACHYON.Shipping.Trips
             // Notify Old Driver (The Trip Was Unassigned To You)
             if (oldAssignedDriverUserId != null)
                 await _appNotifier.ShipperShippingRequestTripNotifyDriverWhenUnassignedTrip(new UserIdentifier(AbpSession.TenantId, oldAssignedDriverUserId.Value), trip);
-            
 
-            await _appNotifier.NotificationWhenTripDetailsChanged(trip,await GetCurrentUserAsync());
+
+            await _appNotifier.NotificationWhenTripDetailsChanged(trip, await GetCurrentUserAsync());
 
         }
 
@@ -269,7 +289,7 @@ namespace TACHYON.Shipping.Trips
             }
 
             //Notify Carrier with trip details
-            await NotifyCarrierWithTripDetails(trip, request.CarrierTenantId,true ,true);
+            await NotifyCarrierWithTripDetails(trip, request.CarrierTenantId, true, true);
 
         }
 
@@ -296,7 +316,6 @@ namespace TACHYON.Shipping.Trips
                     }
                 }
             }
-
             foreach (var vas in trip.ShippingRequestTripVases)
             {
                 if (!input.ShippingRequestTripVases.Any(x => x.Id == vas.Id))
@@ -308,12 +327,21 @@ namespace TACHYON.Shipping.Trips
             var NeedseliveryNoteOldValue = trip.NeedsDeliveryNote;
             ObjectMapper.Map(input, trip);
 
-            if (HasAttachmentOldValue != input.HasAttachment)
+
+            if (input.HasAttachment && input.CreateOrEditDocumentFileDto != null)
             {
-                //Notify Carrier with trip details
-                await NotifyCarrierWithTripDetails(trip, request.CarrierTenantId,true,false);
+                if (input.CreateOrEditDocumentFileDto.UpdateDocumentFileInput != null && !input.CreateOrEditDocumentFileDto.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
+                {
+                    await _documentFilesManager.UpdateDocumentFile(input.CreateOrEditDocumentFileDto);
+                    //Notify Carrier with trip details
+                    await NotifyCarrierWithTripDetails(trip, request.CarrierTenantId, true, false);
+                }
+
             }
-            else if (NeedseliveryNoteOldValue != input.NeedsDeliveryNote)
+
+
+
+            if (NeedseliveryNoteOldValue != input.NeedsDeliveryNote)
             {
                 //Notify Carrier with trip details
                 await NotifyCarrierWithTripDetails(trip, request.CarrierTenantId, false, true);
@@ -321,16 +349,16 @@ namespace TACHYON.Shipping.Trips
             await _appNotifier.NotificationWhenTripDetailsChanged(trip, GetCurrentUser());
         }
 
-        private async Task NotifyCarrierWithTripDetails(ShippingRequestTrip trip, int? carrierTenantId,bool HasAttachmentNotification,bool NeedseliverNoteNotification )
+        private async Task NotifyCarrierWithTripDetails(ShippingRequestTrip trip, int? carrierTenantId, bool HasAttachmentNotification, bool NeedseliverNoteNotification)
         {
             //Notify carrier when trip has attachment or needs delivery note
             if (trip.ShippingRequestFk.CarrierTenantId != null && trip.HasAttachment && HasAttachmentNotification)
             {
-                await _appNotifier.NotifyCarrierWhenTripHasAttachment(trip.Id,carrierTenantId);
+                await _appNotifier.NotifyCarrierWhenTripHasAttachment(trip.Id, carrierTenantId);
             }
             else if (trip.ShippingRequestFk.CarrierTenantId != null && trip.NeedsDeliveryNote && NeedseliverNoteNotification)
             {
-                await _appNotifier.NotifyCarrierWhenTripNeedsDeliverNote(trip.Id,carrierTenantId);
+                await _appNotifier.NotifyCarrierWhenTripNeedsDeliverNote(trip.Id, carrierTenantId);
             }
         }
 
@@ -422,7 +450,7 @@ namespace TACHYON.Shipping.Trips
             {
                 var trip = await _ShippingRequestTripRepository
                 .GetAll()
-                .Include(x=>x.ShippingRequestFk)
+                .Include(x => x.ShippingRequestFk)
                 .Include(x => x.OriginFacilityFk)
                 .Include(x => x.DestinationFacilityFk)
                 .Include(x => x.AssignedTruckFk)
@@ -485,23 +513,23 @@ namespace TACHYON.Shipping.Trips
             return new UserIdentifier(TenantId, (await _userManager.GetAdminByTenantIdAsync(TenantId)).Id);
         }
 
-        private async Task ValidateGoodsCategory(IEnumerable<CreateOrEditRoutPointDto> routPoints , int? shippingRequestGoodCategoryId)
+        private async Task ValidateGoodsCategory(IEnumerable<CreateOrEditRoutPointDto> routPoints, int? shippingRequestGoodCategoryId)
         {
 
             var goodsCategories = await _GoodCategoryRepository.GetAllListAsync();
 
             // todo Add Localized String Here
-            foreach (var goodsDetail in routPoints.Where(x=>x.GoodsDetailListDto!=null).SelectMany(routPoint => routPoint.GoodsDetailListDto))
+            foreach (var goodsDetail in routPoints.Where(x => x.GoodsDetailListDto != null).SelectMany(routPoint => routPoint.GoodsDetailListDto))
             {
 
 
                 if (goodsDetail.GoodCategoryId != null)
                 {
-                    if (shippingRequestGoodCategoryId == null) 
+                    if (shippingRequestGoodCategoryId == null)
                         throw new UserFriendlyException(L("ErrorWhenCreateTrip")); // Need Review
 
                     var goodCategory = goodsCategories
-                        .FirstOrDefault(x=> x.Id == goodsDetail.GoodCategoryId.Value);
+                        .FirstOrDefault(x => x.Id == goodsDetail.GoodCategoryId.Value);
 
                     if (goodCategory.FatherId == null)
                         throw new UserFriendlyException(L("GoodsCategoryMustBeSubCategoryNotMainCategory"));

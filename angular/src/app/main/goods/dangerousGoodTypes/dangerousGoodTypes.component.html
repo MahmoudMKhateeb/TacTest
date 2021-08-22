@@ -26,11 +26,6 @@
               <dxo-remote-operations [sorting]="true" [paging]="true" [filtering]="true"></dxo-remote-operations>
               <dxo-paging [pageSize]="10"></dxo-paging>
               <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20, 50, 200]"></dxo-pager>
-
-              <dxi-column dataField="name" caption="{{ l('name') }}">
-                <dxi-validation-rule type="required"></dxi-validation-rule>
-              </dxi-column>
-              <dxi-column dataField="bayanIntegrationId" dataType="number" caption="{{ l('BayanIntegrationId') }}"></dxi-column>
             </dx-data-grid>
           </div>
         </div>

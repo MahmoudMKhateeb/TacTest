@@ -430,30 +430,7 @@ namespace TACHYON.Documents.DocumentFiles
             //host can update tenants documents 
             DisableTenancyFiltersIfHost();
 
-            DocumentFile documentFile = await _documentFileRepository
-                .GetAll()
-                .FirstOrDefaultAsync(x => x.Id == (Guid)input.Id);
-
-            if (input.UpdateDocumentFileInput != null && !input.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
-            {
-                if (documentFile.BinaryObjectId != null)
-                {
-                    await _binaryObjectManager.DeleteAsync(documentFile.BinaryObjectId.Value);
-                }
-
-                input.BinaryObjectId = await _documentFilesManager.SaveDocumentFileBinaryObject(input.UpdateDocumentFileInput.FileToken, AbpSession.TenantId);
-                input.IsAccepted = false;
-                input.IsRejected = false;
-
-            }
-            if (documentFile.ExpirationDate != input.ExpirationDate)
-            {
-                input.IsAccepted = false;
-                input.IsRejected = false;
-            }
-
-            ObjectMapper.Map(input, documentFile);
-            documentFile.RejectionReason = "";
+            await _documentFilesManager.UpdateDocumentFile(input);
 
         }
 

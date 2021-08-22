@@ -540,6 +540,8 @@ namespace TACHYON.Shipping.ShippingRequests
             using (CurrentUnitOfWork.DisableFilter("IHasIsDrafted")) // for wizard last step 
             {
                 DisableTenancyFilters();
+
+
                 ShippingRequest shippingRequest = await _shippingRequestRepository.GetAll()
                     .Where(e => e.Id == id)
                     .Include(e => e.ShippingRequestBids)
@@ -547,15 +549,17 @@ namespace TACHYON.Shipping.ShippingRequests
                     .Include(e => e.DestinationCityFk)
                     .Include(e => e.AssignedDriverUserFk)
                     .Include(e => e.AssignedTruckFk)
-                    .ThenInclude(e => e.TrucksTypeFk)
+                        .ThenInclude(e => e.TrucksTypeFk)
                     .Include(e => e.TrucksTypeFk)
-                    .ThenInclude(e => e.Translations)
+                        .ThenInclude(e => e.Translations)
                     .Include(e => e.TransportTypeFk)
                     .Include(e => e.CapacityFk)
+
                     .Include(e => e.AssignedTruckFk)
                     .ThenInclude(e => e.TruckStatusFk)
                     .Include(e => e.GoodCategoryFk)
                     .ThenInclude(e => e.Translations)
+
                     .Include(e => e.ShippingTypeFk)
                     .Include(e => e.PackingTypeFk)
                     .Include(e => e.CarrierTenantFk)

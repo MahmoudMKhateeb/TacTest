@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.Runtime.Session;
 using Abp.Specifications;
 using Abp.UI;
 using DevExtreme.AspNet.Data.ResponseModel;
@@ -18,6 +19,7 @@ using TACHYON.Documents.DocumentTypes;
 using TACHYON.MultiTenancy;
 using TACHYON.Storage;
 using TACHYON.Trucks.Dtos;
+using Abp.Extensions;
 
 namespace TACHYON.Documents
 {
@@ -34,6 +36,7 @@ namespace TACHYON.Documents
             _tempFileCacheManager = tempFileCacheManager;
             _binaryObjectManager = binaryObjectManager;
             _userEmailer = userEmailer;
+            AbpSession = NullAbpSession.Instance;
         }
 
         private readonly IRepository<DocumentFile, Guid> _documentFileRepository;
@@ -42,6 +45,7 @@ namespace TACHYON.Documents
         private readonly ITempFileCacheManager _tempFileCacheManager;
         private readonly IBinaryObjectManager _binaryObjectManager;
         private readonly IUserEmailer _userEmailer;
+        public IAbpSession AbpSession { get; set; }
 
 
 
@@ -261,6 +265,36 @@ namespace TACHYON.Documents
         }
 
 
+
+        public async Task UpdateDocumentFile(CreateOrEditDocumentFileDto input)
+        {
+
+            DocumentFile documentFile = await _documentFileRepository
+                .GetAll()
+                .FirstOrDefaultAsync(x => x.Id == (Guid)input.Id);
+
+            if (input.UpdateDocumentFileInput != null && !input.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
+            {
+                if (documentFile.BinaryObjectId != null)
+                {
+                    await _binaryObjectManager.DeleteAsync(documentFile.BinaryObjectId.Value);
+                }
+
+                input.BinaryObjectId = await SaveDocumentFileBinaryObject(input.UpdateDocumentFileInput.FileToken, AbpSession.TenantId);
+                input.IsAccepted = false;
+                input.IsRejected = false;
+
+            }
+            if (documentFile.ExpirationDate != input.ExpirationDate)
+            {
+                input.IsAccepted = false;
+                input.IsRejected = false;
+            }
+
+            ObjectMapper.Map(input, documentFile);
+            documentFile.RejectionReason = "";
+
+        }
         //---R
 
         /// <summary>
