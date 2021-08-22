@@ -6,6 +6,8 @@ using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Abp.UI;
+using AutoMapper.QueryableExtensions;
+using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -13,6 +15,7 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
+using TACHYON.Common;
 using TACHYON.Dto;
 using TACHYON.Trucks.TruckCategories.TransportTypes;
 using TACHYON.Trucks.TruckCategories.TransportTypes.Dtos;
@@ -68,6 +71,14 @@ namespace TACHYON.Trucks.TrucksTypes
                 totalCount,
                 trucksTypes.ToList()
             );
+        }
+
+        public async Task<LoadResult> DxGetAll(LoadOptionsInput input)
+        {
+            var trucksTypes = _trucksTypeRepository.GetAll().AsNoTracking()
+                .ProjectTo<GetTrucksTypeForViewDto>(AutoMapperConfigurationProvider);
+
+            return await LoadResultAsync(trucksTypes, input.LoadOptions);
         }
 
         public async Task<GetTrucksTypeForViewDto> GetTrucksTypeForView(long id)
