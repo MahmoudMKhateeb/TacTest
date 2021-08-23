@@ -461,6 +461,8 @@ namespace TACHYON.Shipping.Trips
                 .Include(x => x.RoutPoints)
                    .ThenInclude(r => r.GoodsDetails)
                     .ThenInclude(c => c.GoodCategoryFk)
+                .Include(x=>x.RoutPoints)
+                    .ThenInclude(c=>c.ReceiverFk)
                 .Include(x => x.ShippingRequestTripVases)
                   .ThenInclude(v => v.ShippingRequestVasFk)
                     .ThenInclude(v => v.VasFk)
