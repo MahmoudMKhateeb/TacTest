@@ -73,12 +73,12 @@ namespace TACHYON.Trucks.TrucksTypes
             );
         }
 
-        public async Task<LoadResult> DxGetAll(TrucksTypesInput input)
+        public async Task<LoadResult> DxGetAll(string loadOptions)
         {
             var trucksTypes = _trucksTypeRepository.GetAll().AsNoTracking()
                 .ProjectTo<GetTrucksTypeForViewDto>(AutoMapperConfigurationProvider);
 
-            return await LoadResultAsync(trucksTypes, input.LoadOptions);
+            return await LoadResultAsync(trucksTypes, loadOptions);
         }
 
         public async Task<GetTrucksTypeForViewDto> GetTrucksTypeForView(long id)

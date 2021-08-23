@@ -10,7 +10,7 @@ namespace TACHYON.Trucks.TrucksTypes
     public interface ITrucksTypesAppService : IApplicationService
     {
         Task<PagedResultDto<GetTrucksTypeForViewDto>> GetAll(GetAllTrucksTypesInput input);
-        Task<LoadResult> DxGetAll(TrucksTypesInput input);
+        Task<LoadResult> DxGetAll(string loadOptions);
         
         Task<GetTrucksTypeForViewDto> GetTrucksTypeForView(long id);
 
