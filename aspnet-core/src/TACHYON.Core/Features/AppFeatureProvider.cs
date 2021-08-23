@@ -98,7 +98,7 @@ namespace TACHYON.Features
                     );
 
             var periods = _PeriodRepository.GetAll().Where(p => p.Enabled == true).ToList();
-     
+
             shipperFeature.CreateChildFeature(
                 AppFeatures.ShipperCreditLimit,
                 "false",
@@ -107,7 +107,7 @@ namespace TACHYON.Features
             if (periods != null && periods.Count > 0)
             {
 
-                LocalizableComboboxItem[] ShipperPeriods = periods.Where(x=>x.Enabled).Select(i => new LocalizableComboboxItem(i.Id.ToString(),L(i.DisplayName))).ToArray();
+                LocalizableComboboxItem[] ShipperPeriods = periods.Where(x => x.Enabled).Select(i => new LocalizableComboboxItem(i.Id.ToString(), L(i.DisplayName))).ToArray();
                 shipperFeature.CreateChildFeature(
                           AppFeatures.ShipperPeriods,
                           defaultValue: "false",
@@ -213,18 +213,21 @@ namespace TACHYON.Features
             List<LocalizableComboboxItem> CommissionTypes = new List<LocalizableComboboxItem>();
             foreach (byte i in Enum.GetValues(typeof(PriceOfferCommissionType)))
             {
-                if (i !=1 && i!=2) continue;
+                if (i != 1 && i != 2) continue;
                 CommissionTypes.Add(new LocalizableComboboxItem(i.ToString(), L(Enum.GetName(typeof(PriceOfferCommissionType), i))));
             }
 
-
-            shipperFeature.CreateChildFeature(
-                AppFeatures.InvoicePaymentMethod,
-                "false",
-                L("InvoicePaymentMethod"),
-                inputType: new ComboboxInputType(new StaticLocalizableComboboxItemSource
-                (_invoicePaymentMethodRepository.GetAll()
-                .Select(x=> new LocalizableComboboxItem(x.Id.ToString(), L(x.DisplayName))).ToArray())));
+            var invoicePaymentMethods = _invoicePaymentMethodRepository.GetAll()
+                .Select(x => new LocalizableComboboxItem(x.Id.ToString(), L(x.DisplayName))).ToArray();
+            if (invoicePaymentMethods.Length > 0)
+            {
+                shipperFeature.CreateChildFeature(
+                    AppFeatures.InvoicePaymentMethod,
+                    "false",
+                    L("InvoicePaymentMethod"),
+                    inputType: new ComboboxInputType(new StaticLocalizableComboboxItemSource
+                        (invoicePaymentMethods)));
+            }
 
 
             shipperFeature.CreateChildFeature(
