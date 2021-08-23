@@ -48,7 +48,7 @@ namespace TACHYON.Shipping.Trips.Dto
             }
 
             //document 
-            if (CreateOrEditDocumentFileDto.UpdateDocumentFileInput?.FileToken != null && HasAttachment && CreateOrEditDocumentFileDto.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
+            if (HasAttachment && CreateOrEditDocumentFileDto.UpdateDocumentFileInput != null  && CreateOrEditDocumentFileDto.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
             {
                 context.Results.Add(new ValidationResult("document missing: " + CreateOrEditDocumentFileDto.Name));
             }
