@@ -2,6 +2,7 @@
 using Abp.Application.Services.Dto;
 using DevExtreme.AspNet.Data.ResponseModel;
 using System.Threading.Tasks;
+using TACHYON.Common;
 using TACHYON.Trucks.TrucksTypes.Dtos;
 
 
@@ -10,7 +11,7 @@ namespace TACHYON.Trucks.TrucksTypes
     public interface ITrucksTypesAppService : IApplicationService
     {
         Task<PagedResultDto<GetTrucksTypeForViewDto>> GetAll(GetAllTrucksTypesInput input);
-        Task<LoadResult> DxGetAll(TrucksTypesInput input);
+        Task<LoadResult> DxGetAll(LoadOptionsInput input);
         
         Task<GetTrucksTypeForViewDto> GetTrucksTypeForView(long id);
 

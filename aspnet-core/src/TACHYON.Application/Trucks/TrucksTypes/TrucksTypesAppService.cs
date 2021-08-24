@@ -20,7 +20,6 @@ using TACHYON.Dto;
 using TACHYON.Trucks.TruckCategories.TransportTypes;
 using TACHYON.Trucks.TruckCategories.TransportTypes.Dtos;
 using TACHYON.Trucks.TrucksTypes.Dtos;
-using TACHYON.Trucks.TrucksTypes.TrucksTypesTranslations;
 
 namespace TACHYON.Trucks.TrucksTypes
 {
@@ -51,19 +50,8 @@ namespace TACHYON.Trucks.TrucksTypes
                 .OrderBy(input.Sorting ?? "id asc")
                 .PageBy(input);
 
-            var trucksTypes = from o in await pagedAndFilteredTrucksTypes.ToListAsync()
-                                  //join o1 in _transportTypeRepository.GetAll() on o.TransportTypeId equals o1.Id into j1
-                                  //from s1 in j1.DefaultIfEmpty()
-                              select new GetTrucksTypeForViewDto()
-                              {
-                                  TrucksType = ObjectMapper.Map<TrucksTypeDto>(o),
-                                  //TrucksType = new TrucksTypeDto
-                                  //{
-                                  //    DisplayName = o.DisplayName,
-                                  //    Id = o.Id
-                                  //},
-                                  TransportTypeDisplayName = ObjectMapper.Map<TransportTypeDto>(o.TransportTypeFk).TranslatedDisplayName//s1 == null || s1.DisplayName == null ? "" : s1.DisplayName.ToString()
-                              };
+            var trucksTypes =
+                ObjectMapper.Map<List<GetTrucksTypeForViewDto>>(await pagedAndFilteredTrucksTypes.ToListAsync());
 
             var totalCount = await filteredTrucksTypes.CountAsync();
 
@@ -73,7 +61,7 @@ namespace TACHYON.Trucks.TrucksTypes
             );
         }
 
-        public async Task<LoadResult> DxGetAll(TrucksTypesInput input)
+        public async Task<LoadResult> DxGetAll(LoadOptionsInput input)
         {
             var trucksTypes = _trucksTypeRepository.GetAll().AsNoTracking()
                 .ProjectTo<GetTrucksTypeForViewDto>(AutoMapperConfigurationProvider);
