@@ -292,86 +292,15 @@ namespace TACHYON.Shipping.Trips
 
 
             await ValidateGoodsCategory(input.RoutPoints, request.GoodCategoryId);
+            await RemoveDeletedTripPoints(input, trip);
+            await RemoveDeletedTripVases(input, trip);
 
-            foreach (var point in trip.RoutPoints)
-            {
-                if (!input.RoutPoints.Any(x => x.Id == point.Id))
-                {
-                    await _RoutPointRepository.DeleteAsync(point);
-                }
-                foreach (var g in point.GoodsDetails.Where(x => x.Id != 0))
-                {
-                    if (!input.RoutPoints.Any(x => x.GoodsDetailListDto.Any(d => d.Id == g.Id)))
-                    {
-                        await _GoodsDetailRepository.DeleteAsync(g);
-                    }
-                }
-            }
-            foreach (var vas in trip.ShippingRequestTripVases)
-            {
-                if (!input.ShippingRequestTripVases.Any(x => x.Id == vas.Id))
-                {
-                    await _ShippingRequestTripVasRepository.DeleteAsync(vas);
-                }
-            }
-            var HasAttachmentOldValue = trip.HasAttachment;
-            var NeedseliveryNoteOldValue = trip.NeedsDeliveryNote;
+            
+            await CompleteAttachmentsAndDeliveryNoteMappingAndNotification(input, request, trip);
+
             ObjectMapper.Map(input, trip);
-
-
-            if (input.HasAttachment && input.CreateOrEditDocumentFileDto != null)
-            {
-                if (input.CreateOrEditDocumentFileDto.UpdateDocumentFileInput != null && !input.CreateOrEditDocumentFileDto.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
-                {
-                    if (HasAttachmentOldValue)
-                    {
-                        //update previous file
-                        await _documentFilesManager.UpdateDocumentFile(input.CreateOrEditDocumentFileDto);
-                    }
-                    else
-                    {
-                        // the file is new and want to add it
-                        var docFileDto = input.CreateOrEditDocumentFileDto;
-                        docFileDto.ShippingRequestTripId = trip.Id;
-                        docFileDto.Name = docFileDto.Name + "_" + trip.Id.ToString();
-                        await _documentFilesAppService.CreateOrEdit(docFileDto);
-
-                    }
-                    //Notify Carrier with trip details
-                }
-                 await NotifyCarrierWithTripDetails(trip, request.CarrierTenantId, true, false,true);
-
-            }
-            else if(!input.HasAttachment && HasAttachmentOldValue)
-            {
-                //remove file
-                var documentFile = await _documentFileRepository.FirstOrDefaultAsync(x => x.ShippingRequestTripId == trip.Id);
-                await _documentFilesManager.DeleteDocumentFile(documentFile);
-                await NotifyCarrierWithTripDetails(trip, request.CarrierTenantId, true, false,false);
-            }
-
-
-
-            if (NeedseliveryNoteOldValue != input.NeedsDeliveryNote)
-            {
-                //Notify Carrier with trip details
-                await NotifyCarrierWithTripDetails(trip, request.CarrierTenantId, false, true,false);
-            }
-            await _appNotifier.NotificationWhenTripDetailsChanged(trip, GetCurrentUser());
         }
 
-        private async Task NotifyCarrierWithTripDetails(ShippingRequestTrip trip, int? carrierTenantId, bool HasAttachmentNotification, bool NeedseliverNoteNotification,bool hasAttachment)
-        {
-            //Notify carrier when trip has attachment or needs delivery note
-            if (trip.ShippingRequestFk.CarrierTenantId != null && trip.HasAttachment && HasAttachmentNotification)
-            {
-                await _appNotifier.NotifyCarrierWhenTripHasAttachment(trip.Id, carrierTenantId,hasAttachment);
-            }
-            if (trip.ShippingRequestFk.CarrierTenantId != null && trip.NeedsDeliveryNote && NeedseliverNoteNotification)
-            {
-                await _appNotifier.NotifyCarrierWhenTripNeedsDeliverNote(trip.Id, carrierTenantId);
-            }
-        }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Delete)]
         public async Task Delete(EntityDto input)
@@ -551,6 +480,94 @@ namespace TACHYON.Shipping.Trips
 
                 }
                 else throw new UserFriendlyException(L("GoodsCategoryIsRequired"));
+            }
+        }
+
+        private async Task CompleteAttachmentsAndDeliveryNoteMappingAndNotification(CreateOrEditShippingRequestTripDto input, ShippingRequest request, ShippingRequestTrip trip)
+        {
+            var HasAttachmentOldValue = trip.HasAttachment;
+            var NeedseliveryNoteOldValue = trip.NeedsDeliveryNote;
+
+            if (input.HasAttachment && input.CreateOrEditDocumentFileDto != null)
+            {
+                if (input.CreateOrEditDocumentFileDto.UpdateDocumentFileInput != null && !input.CreateOrEditDocumentFileDto.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
+                {
+                    if (HasAttachmentOldValue)
+                    {
+                        //update previous file
+                        await _documentFilesManager.UpdateDocumentFile(input.CreateOrEditDocumentFileDto);
+                    }
+                    else
+                    {
+                        // the file is new and want to add it
+                        var docFileDto = input.CreateOrEditDocumentFileDto;
+                        docFileDto.ShippingRequestTripId = trip.Id;
+                        docFileDto.Name = docFileDto.Name + "_" + trip.Id.ToString();
+                        await _documentFilesAppService.CreateOrEdit(docFileDto);
+
+                    }
+                    //Notify Carrier with trip details
+                }
+                await NotifyCarrierWithTripDetails(trip, request.CarrierTenantId, true, false, true);
+
+            }
+            else if (!input.HasAttachment && HasAttachmentOldValue)
+            {
+                //remove file
+                var documentFile = await _documentFileRepository.FirstOrDefaultAsync(x => x.ShippingRequestTripId == trip.Id);
+                await _documentFilesManager.DeleteDocumentFile(documentFile);
+                await NotifyCarrierWithTripDetails(trip, request.CarrierTenantId, true, false, false);
+            }
+
+
+
+            if (NeedseliveryNoteOldValue != input.NeedsDeliveryNote)
+            {
+                //Notify Carrier with trip details
+                await NotifyCarrierWithTripDetails(trip, request.CarrierTenantId, false, true, false);
+            }
+            await _appNotifier.NotificationWhenTripDetailsChanged(trip, GetCurrentUser());
+        }
+
+        private async Task RemoveDeletedTripVases(CreateOrEditShippingRequestTripDto input, ShippingRequestTrip trip)
+        {
+            foreach (var vas in trip.ShippingRequestTripVases)
+            {
+                if (!input.ShippingRequestTripVases.Any(x => x.Id == vas.Id))
+                {
+                    await _ShippingRequestTripVasRepository.DeleteAsync(vas);
+                }
+            }
+        }
+
+        private async Task RemoveDeletedTripPoints(CreateOrEditShippingRequestTripDto input, ShippingRequestTrip trip)
+        {
+            foreach (var point in trip.RoutPoints)
+            {
+                if (!input.RoutPoints.Any(x => x.Id == point.Id))
+                {
+                    await _RoutPointRepository.DeleteAsync(point);
+                }
+                foreach (var g in point.GoodsDetails.Where(x => x.Id != 0))
+                {
+                    if (!input.RoutPoints.Any(x => x.GoodsDetailListDto.Any(d => d.Id == g.Id)))
+                    {
+                        await _GoodsDetailRepository.DeleteAsync(g);
+                    }
+                }
+            }
+        }
+
+        private async Task NotifyCarrierWithTripDetails(ShippingRequestTrip trip, int? carrierTenantId, bool HasAttachmentNotification, bool NeedseliverNoteNotification, bool hasAttachment)
+        {
+            //Notify carrier when trip has attachment or needs delivery note
+            if (trip.ShippingRequestFk.CarrierTenantId != null && trip.HasAttachment && HasAttachmentNotification)
+            {
+                await _appNotifier.NotifyCarrierWhenTripHasAttachment(trip.Id, carrierTenantId, hasAttachment);
+            }
+            if (trip.ShippingRequestFk.CarrierTenantId != null && trip.NeedsDeliveryNote && NeedseliverNoteNotification)
+            {
+                await _appNotifier.NotifyCarrierWhenTripNeedsDeliverNote(trip.Id, carrierTenantId);
             }
         }
 
