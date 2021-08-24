@@ -1,4 +1,5 @@
-﻿using Abp.Application.Services.Dto;
+﻿using Abp;
+using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
@@ -257,6 +258,15 @@ namespace TACHYON.Authorization.Users
             }
 
             return output;
+        }
+
+
+        public async Task SendActivationEmail(UserIdentifier userInput,string password)
+        {
+            var user = await _userManager.GetUserAsync(userInput);
+            await _userEmailer.SendEmailActivationLinkAsync(user,
+                AppUrlService.CreateEmailActivationUrlFormat(AbpSession.TenantId),
+                password);
         }
 
         private List<string> GetAllRoleNamesOfUsersOrganizationUnits(long userId)
