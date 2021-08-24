@@ -128,16 +128,14 @@ namespace TACHYON.Web
 
         public override void PostInitialize()
         {
+
+
             SetAppFolders();
 
             IocManager.Resolve<ApplicationPartManager>()
                 .AddApplicationPartsIfNotAddedBefore(typeof(TACHYONWebCoreModule).Assembly);
 
-            using (IocManager.Resolve<IUnitOfWorkManager>().Begin())
-            {
-                IocManager.Resolve<InvoiceManager>().RunAllJobs();
-                IocManager.Resolve<ExpiredDocumentsReportDomainService>().RunJob();
-            }
+   
         }
 
         private void SetAppFolders()
