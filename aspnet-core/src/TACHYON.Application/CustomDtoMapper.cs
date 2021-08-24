@@ -434,6 +434,7 @@ namespace TACHYON
             configuration.CreateMap<CreateOrEditTrucksTypeDto, TrucksType>()
                 .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations))
                 .ReverseMap();
+
             configuration.CreateMap<TrucksTypeDto, TrucksType>().ReverseMap()
                 .ForMember(x=> x.TranslatedDisplayName , x=> x.MapFrom(
                     i=> i.Translations.FirstOrDefault(t=> t.Language.Contains(CultureInfo.CurrentUICulture.Name)) != null ? i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName : "Translation Not Found"));

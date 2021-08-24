@@ -1,4 +1,4 @@
-﻿import { Component, Injector, ViewEncapsulation, ViewChild } from '@angular/core';
+﻿import { Component, Injector, ViewEncapsulation, ViewChild, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TrucksTypesServiceProxy, TrucksTypeDto } from '@shared/service-proxies/service-proxies';
 import { NotifyService } from 'abp-ng2-module';
@@ -15,13 +15,17 @@ import { FileDownloadService } from '@shared/utils/file-download.service';
 import { EntityTypeHistoryModalComponent } from '@app/shared/common/entityHistory/entity-type-history-modal.component';
 import * as _ from 'lodash';
 import * as moment from 'moment';
+import CustomStore from '@node_modules/devextreme/data/custom_store';
+import { LoadOptions } from '@node_modules/devextreme/data/load_options';
 
 @Component({
   templateUrl: './trucksTypes.component.html',
   encapsulation: ViewEncapsulation.None,
   animations: [appModuleAnimation()],
 })
-export class TrucksTypesComponent extends AppComponentBase {
+export class TrucksTypesComponent extends AppComponentBase implements OnInit {
+  dataSource: any = {};
+
   @ViewChild('entityTypeHistoryModal', { static: true }) entityTypeHistoryModal: EntityTypeHistoryModalComponent;
   @ViewChild('createOrEditTrucksTypeModal', { static: true }) createOrEditTrucksTypeModal: CreateOrEditTrucksTypeModalComponent;
   @ViewChild('viewTrucksTypeModalComponent', { static: true }) viewTrucksTypeModal: ViewTrucksTypeModalComponent;
@@ -48,7 +52,36 @@ export class TrucksTypesComponent extends AppComponentBase {
   }
 
   ngOnInit(): void {
-    this.entityHistoryEnabled = this.setIsEntityHistoryEnabled();
+    this.DxGetAll();
+  }
+  DxGetAll() {
+    let self = this;
+
+    this.dataSource = {};
+    this.dataSource.store = new CustomStore({
+      key: 'id',
+      load(loadOptions: LoadOptions) {
+        return self._trucksTypesServiceProxy
+          .dxGetAll(JSON.stringify(loadOptions))
+          .toPromise()
+          .then((response) => {
+            return {
+              data: response.data,
+              totalCount: response.totalCount,
+            };
+          })
+          .catch((error) => {
+            console.log(error);
+            throw new Error('Data Loading Error');
+          });
+      },
+      insert: (values) => {
+        return self._trucksTypesServiceProxy.createOrEdit(values).toPromise();
+      },
+      update: (key, values) => {
+        return self._trucksTypesServiceProxy.createOrEdit(values).toPromise();
+      },
+    });
   }
 
   private setIsEntityHistoryEnabled(): boolean {
@@ -59,29 +92,6 @@ export class TrucksTypesComponent extends AppComponentBase {
       customSettings.EntityHistory.isEnabled &&
       _.filter(customSettings.EntityHistory.enabledEntities, (entityType) => entityType === this._entityTypeFullName).length === 1
     );
-  }
-
-  getTrucksTypes(event?: LazyLoadEvent) {
-    if (this.primengTableHelper.shouldResetPaging(event)) {
-      this.paginator.changePage(0);
-      return;
-    }
-
-    this.primengTableHelper.showLoadingIndicator();
-
-    this._trucksTypesServiceProxy
-      .getAll(
-        this.filterText,
-        this.displayNameFilter,
-        this.primengTableHelper.getSorting(this.dataTable),
-        this.primengTableHelper.getSkipCount(this.paginator, event),
-        this.primengTableHelper.getMaxResultCount(this.paginator, event)
-      )
-      .subscribe((result) => {
-        this.primengTableHelper.totalRecordsCount = result.totalCount;
-        this.primengTableHelper.records = result.items;
-        this.primengTableHelper.hideLoadingIndicator();
-      });
   }
 
   reloadPage(): void {

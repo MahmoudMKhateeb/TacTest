@@ -20,6 +20,7 @@ using TACHYON.Dto;
 using TACHYON.Trucks.TruckCategories.TransportTypes;
 using TACHYON.Trucks.TruckCategories.TransportTypes.Dtos;
 using TACHYON.Trucks.TrucksTypes.Dtos;
+using TACHYON.Trucks.TrucksTypes.TrucksTypesTranslations;
 
 namespace TACHYON.Trucks.TrucksTypes
 {
