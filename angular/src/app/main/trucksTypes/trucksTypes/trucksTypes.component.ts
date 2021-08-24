@@ -1,6 +1,6 @@
 ﻿import { Component, Injector, ViewEncapsulation, ViewChild, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TrucksTypesServiceProxy, TrucksTypeDto } from '@shared/service-proxies/service-proxies';
+import { TrucksTypesServiceProxy, TrucksTypeDto, LoadOptionsInput } from '@shared/service-proxies/service-proxies';
 import { NotifyService } from 'abp-ng2-module';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { TokenAuthServiceProxy } from '@shared/service-proxies/service-proxies';
@@ -40,6 +40,8 @@ export class TrucksTypesComponent extends AppComponentBase implements OnInit {
   _entityTypeFullName = 'TACHYON.Trucks.TrucksTypes.TrucksType';
   entityHistoryEnabled = false;
 
+  transportTypes: any;
+
   constructor(
     injector: Injector,
     private _trucksTypesServiceProxy: TrucksTypesServiceProxy,
@@ -52,6 +54,9 @@ export class TrucksTypesComponent extends AppComponentBase implements OnInit {
   }
 
   ngOnInit(): void {
+    this._trucksTypesServiceProxy.getAllTransportTypeForTableDropdown().subscribe((result) => {
+      this.transportTypes = result;
+    });
     this.DxGetAll();
   }
   DxGetAll() {
@@ -61,8 +66,11 @@ export class TrucksTypesComponent extends AppComponentBase implements OnInit {
     this.dataSource.store = new CustomStore({
       key: 'id',
       load(loadOptions: LoadOptions) {
+        let Input = new LoadOptionsInput();
+        Input.loadOptions = JSON.stringify(loadOptions);
+
         return self._trucksTypesServiceProxy
-          .dxGetAll(JSON.stringify(loadOptions))
+          .dxGetAll(Input)
           .toPromise()
           .then((response) => {
             return {
@@ -120,4 +128,8 @@ export class TrucksTypesComponent extends AppComponentBase implements OnInit {
   //     }
   //   });
   // }
+
+  updateRow(options) {
+    options.newData = { ...options.oldData, ...options.newData };
+  }
 }

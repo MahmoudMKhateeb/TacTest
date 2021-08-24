@@ -11,12 +11,11 @@ namespace TACHYON.Trucks.TrucksTypes.Dtos
     public class CreateOrEditTrucksTypeDto : EntityDto<long?>
     {
 
-        //[Required]
-        //[StringLength(TrucksTypeConsts.MaxDisplayNameLength, MinimumLength = TrucksTypeConsts.MinDisplayNameLength)]
-        //public string DisplayName { get; set; }
+        [Required]
+        [StringLength(TrucksTypeConsts.MaxDisplayNameLength, MinimumLength = TrucksTypeConsts.MinDisplayNameLength)]
+        public string DisplayName { get; set; }
 
         public int? TransportTypeId { get; set; }
-        public ICollection<TrucksTypesTranslationDto> Translations { get; set; }
         public bool IsActive { get; set; } = true;
 
     }
