@@ -133,7 +133,17 @@ namespace TACHYON.Shipping.Trips
         public async Task<ShippingRequestsTripForViewDto> GetShippingRequestTripForView(int id)
         {
 
-            return await GetShippingRequestTripForMapper<ShippingRequestsTripForViewDto>(id);
+            var shippingRequestTrip= await GetShippingRequestTripForMapper<ShippingRequestsTripForViewDto>(id);
+            if (shippingRequestTrip.HasAttachment)
+            {
+                var documentFile = await _documentFileRepository.FirstOrDefaultAsync(x => x.ShippingRequestTripId == id);
+                if (documentFile != null)
+                {
+                    shippingRequestTrip.DocumentFile = ObjectMapper.Map<DocumentFileDto>(documentFile);
+                }
+            }
+
+            return shippingRequestTrip;
         }
 
 
@@ -185,25 +195,6 @@ namespace TACHYON.Shipping.Trips
                     throw new UserFriendlyException(L("TheTotalWeightOfGoodsDetailsshouldNotBeGreaterThanShippingRequestWeight", request.TotalWeight));
                 }
             }
-            //var dropPoints = input.RoutPoints.Where(x => x.PickingType == PickingType.Dropoff);
-            //foreach (var drop in dropPoints)
-            //{
-            //    if (drop.ReceiverId == null &&
-            //        (string.IsNullOrWhiteSpace(drop.ReceiverCardIdNumber) ||
-            //        string.IsNullOrWhiteSpace(drop.ReceiverEmailAddress) ||
-            //        string.IsNullOrWhiteSpace(drop.ReceiverFullName) ||
-            //        string.IsNullOrWhiteSpace(drop.ReceiverPhoneNumber)))
-            //    {
-            //        throw new UserFriendlyException(L("YouMustEnterReceiver"));
-            //    }
-            //else if(drop.ReceiverId!= null && (drop.ReceiverCardIdNumber != null ||
-            //    !string.IsNullOrWhiteSpace(drop.ReceiverEmailAddress) ||
-            //    !string.IsNullOrWhiteSpace(drop.ReceiverFullName) ||
-            //    drop.ReceiverPhoneNumber != null))
-            //{
-            //    throw new UserFriendlyException(L("YouMustEnterOneReceiver"));
-            //}
-            //}
 
             if (!input.Id.HasValue)
             {
@@ -289,7 +280,7 @@ namespace TACHYON.Shipping.Trips
             }
 
             //Notify Carrier with trip details
-            await NotifyCarrierWithTripDetails(trip, request.CarrierTenantId, true, true);
+            await NotifyCarrierWithTripDetails(trip, request.CarrierTenantId, true, true,true);
 
         }
 
@@ -347,8 +338,8 @@ namespace TACHYON.Shipping.Trips
 
                     }
                     //Notify Carrier with trip details
-                    await NotifyCarrierWithTripDetails(trip, request.CarrierTenantId, true, false);
                 }
+                 await NotifyCarrierWithTripDetails(trip, request.CarrierTenantId, true, false,true);
 
             }
             else if(!input.HasAttachment && HasAttachmentOldValue)
@@ -356,6 +347,7 @@ namespace TACHYON.Shipping.Trips
                 //remove file
                 var documentFile = await _documentFileRepository.FirstOrDefaultAsync(x => x.ShippingRequestTripId == trip.Id);
                 await _documentFilesManager.DeleteDocumentFile(documentFile);
+                await NotifyCarrierWithTripDetails(trip, request.CarrierTenantId, true, false,false);
             }
 
 
@@ -363,19 +355,19 @@ namespace TACHYON.Shipping.Trips
             if (NeedseliveryNoteOldValue != input.NeedsDeliveryNote)
             {
                 //Notify Carrier with trip details
-                await NotifyCarrierWithTripDetails(trip, request.CarrierTenantId, false, true);
+                await NotifyCarrierWithTripDetails(trip, request.CarrierTenantId, false, true,false);
             }
             await _appNotifier.NotificationWhenTripDetailsChanged(trip, GetCurrentUser());
         }
 
-        private async Task NotifyCarrierWithTripDetails(ShippingRequestTrip trip, int? carrierTenantId, bool HasAttachmentNotification, bool NeedseliverNoteNotification)
+        private async Task NotifyCarrierWithTripDetails(ShippingRequestTrip trip, int? carrierTenantId, bool HasAttachmentNotification, bool NeedseliverNoteNotification,bool hasAttachment)
         {
             //Notify carrier when trip has attachment or needs delivery note
             if (trip.ShippingRequestFk.CarrierTenantId != null && trip.HasAttachment && HasAttachmentNotification)
             {
-                await _appNotifier.NotifyCarrierWhenTripHasAttachment(trip.Id, carrierTenantId);
+                await _appNotifier.NotifyCarrierWhenTripHasAttachment(trip.Id, carrierTenantId,hasAttachment);
             }
-            else if (trip.ShippingRequestFk.CarrierTenantId != null && trip.NeedsDeliveryNote && NeedseliverNoteNotification)
+            if (trip.ShippingRequestFk.CarrierTenantId != null && trip.NeedsDeliveryNote && NeedseliverNoteNotification)
             {
                 await _appNotifier.NotifyCarrierWhenTripNeedsDeliverNote(trip.Id, carrierTenantId);
             }
