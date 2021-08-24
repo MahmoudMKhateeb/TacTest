@@ -29,13 +29,13 @@
               <dxo-filter-panel [visible]="true"></dxo-filter-panel>
               <dxo-filter-builder-popup></dxo-filter-builder-popup>
               <dxo-master-detail [enabled]="true" template="translations"></dxo-master-detail>
-              <div *dxTemplate="let options of 'translations'">
-                <app-translations-template [CoreId]="options.data.id"></app-translations-template>
-              </div>
+              <!--              <div *dxTemplate="let options of 'translations'">-->
+              <!--                <app-translations-template [CoreId]="options.data.id"></app-translations-template>-->
+              <!--              </div>-->
               <dxo-remote-operations [sorting]="true" [paging]="true" [filtering]="true"></dxo-remote-operations>
               <dxo-paging [pageSize]="10"></dxo-paging>
               <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20, 50, 200]"></dxo-pager>
-              <dxi-column dataField="" caption="{{ l('truckType') }}"></dxi-column>
+              <dxi-column dataField="trucksType.translatedDisplayName" caption="{{ l('truckType') }}"></dxi-column>
               <dxi-validation-rule type="required"></dxi-validation-rule>
 
               <dxi-column dataField="transportTypeDisplayName" caption="{{ l('transportType') }}"></dxi-column>

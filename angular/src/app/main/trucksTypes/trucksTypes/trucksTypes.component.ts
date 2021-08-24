@@ -1,6 +1,6 @@
 ﻿import { Component, Injector, ViewEncapsulation, ViewChild, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TrucksTypesServiceProxy, TrucksTypeDto } from '@shared/service-proxies/service-proxies';
+import { TrucksTypesServiceProxy, TrucksTypeDto, LoadOptionsInput } from '@shared/service-proxies/service-proxies';
 import { NotifyService } from 'abp-ng2-module';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { TokenAuthServiceProxy } from '@shared/service-proxies/service-proxies';
@@ -59,10 +59,12 @@ export class TrucksTypesComponent extends AppComponentBase implements OnInit {
 
     this.dataSource = {};
     this.dataSource.store = new CustomStore({
-      key: 'id',
+      key: 'trucksType.id',
       load(loadOptions: LoadOptions) {
+        let input = new LoadOptionsInput();
+        input.loadOptions = JSON.stringify(loadOptions);
         return self._trucksTypesServiceProxy
-          .dxGetAll(JSON.stringify(loadOptions))
+          .dxGetAll(input)
           .toPromise()
           .then((response) => {
             return {

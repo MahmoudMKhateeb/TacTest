@@ -16,11 +16,13 @@ using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
 using TACHYON.Common;
+using TACHYON.Common.Dto;
 using TACHYON.Dto;
 using TACHYON.Trucks.TruckCategories.TransportTypes;
 using TACHYON.Trucks.TruckCategories.TransportTypes.Dtos;
 using TACHYON.Trucks.TrucksTypes.Dtos;
 using TACHYON.Trucks.TrucksTypes.TrucksTypesTranslations;
+using TACHYON.Trucks.TrucksTypes.TrucksTypesTranslations.Dtos;
 
 namespace TACHYON.Trucks.TrucksTypes
 {
@@ -28,13 +30,17 @@ namespace TACHYON.Trucks.TrucksTypes
     public class TrucksTypesAppService : TACHYONAppServiceBase, ITrucksTypesAppService
     {
         private readonly IRepository<TrucksType, long> _trucksTypeRepository;
+        private readonly IRepository<TrucksTypesTranslation> _trucksTypeTranslationRepository;
 
         private readonly IRepository<TransportType, int> _transportTypeRepository;
 
-        public TrucksTypesAppService(IRepository<TrucksType, long> trucksTypeRepository, IRepository<TransportType, int> transportTypeRepository)
+        public TrucksTypesAppService(IRepository<TrucksType, long> trucksTypeRepository,
+            IRepository<TransportType, int> transportTypeRepository, 
+            IRepository<TrucksTypesTranslation> trucksTypeTranslationRepository)
         {
             _trucksTypeRepository = trucksTypeRepository;
             _transportTypeRepository = transportTypeRepository;
+            _trucksTypeTranslationRepository = trucksTypeTranslationRepository;
         }
 
         public async Task<PagedResultDto<GetTrucksTypeForViewDto>> GetAll(GetAllTrucksTypesInput input)
@@ -92,21 +98,21 @@ namespace TACHYON.Trucks.TrucksTypes
 
         public async Task CreateOrEdit(CreateOrEditTrucksTypeDto input)
         {
-            foreach (var transItem in input.Translations)
-            {
-                if (string.IsNullOrWhiteSpace(transItem.TranslatedDisplayName))
-                {
-                    throw new UserFriendlyException(L("DisplayNameCannotBeEmpty"));
-                }
-                var isDuplicateUserName = await _trucksTypeRepository
-                   .FirstOrDefaultAsync(x => x.Translations.Any(x => x.TranslatedDisplayName == transItem.TranslatedDisplayName) &&
-                   x.TransportTypeId == input.TransportTypeId &&
-                   x.Id != input.Id);
-                if (isDuplicateUserName != null)
-                {
-                    throw new UserFriendlyException(string.Format(L("TrucksTypeDuplicateName"), transItem.TranslatedDisplayName));
-                }
-            }
+            //foreach (var transItem in input.Translations)
+            //{
+            //    if (string.IsNullOrWhiteSpace(transItem.TranslatedDisplayName))
+            //    {
+            //        throw new UserFriendlyException(L("DisplayNameCannotBeEmpty"));
+            //    }
+            //    var isDuplicateUserName = await _trucksTypeRepository
+            //       .FirstOrDefaultAsync(x => x.Translations.Any(x => x.TranslatedDisplayName == transItem.TranslatedDisplayName) &&
+            //       x.TransportTypeId == input.TransportTypeId &&
+            //       x.Id != input.Id);
+            //    if (isDuplicateUserName != null)
+            //    {
+            //        throw new UserFriendlyException(string.Format(L("TrucksTypeDuplicateName"), transItem.TranslatedDisplayName));
+            //    }
+            //}
 
 
             if (input.Id == null)
@@ -154,5 +160,17 @@ namespace TACHYON.Trucks.TrucksTypes
 
             return transportTypeDtos;
         }
+
+
+        public async Task<LoadResult> GetAllTranslation(GetAllTranslationInput<long> input)
+        {
+            var translations =  _trucksTypeTranslationRepository
+                .GetAll().Where(x => x.CoreId == input.CoreId)
+                .AsNoTracking().ProjectTo<GetTrucksTypesTranslationForViewDto>(AutoMapperConfigurationProvider);
+
+           return await LoadResultAsync(translations, input.LoadOptions);
+        }
+
+
     }
 }

@@ -3,7 +3,9 @@ using Abp.Application.Services.Dto;
 using DevExtreme.AspNet.Data.ResponseModel;
 using System.Threading.Tasks;
 using TACHYON.Common;
+using TACHYON.Common.Dto;
 using TACHYON.Trucks.TrucksTypes.Dtos;
+using TACHYON.Trucks.TrucksTypes.TrucksTypesTranslations.Dtos;
 
 
 namespace TACHYON.Trucks.TrucksTypes
@@ -21,6 +23,7 @@ namespace TACHYON.Trucks.TrucksTypes
 
         //Task Delete(EntityDto<long> input);
 
+        Task<LoadResult> GetAllTranslation(GetAllTranslationInput<long> input);
 
     }
 }
