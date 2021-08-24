@@ -157,7 +157,8 @@ namespace TACHYON.Authorization.Accounts
             user.SetNewEmailConfirmationCode();
             await _userEmailer.SendEmailActivationLinkAsync(
                 user,
-                AppUrlService.CreateEmailActivationUrlFormat(AbpSession.TenantId)
+                AppUrlService.CreateEmailActivationUrlFormat(AbpSession.TenantId),
+                input.UserPassword
             );
         }
 
