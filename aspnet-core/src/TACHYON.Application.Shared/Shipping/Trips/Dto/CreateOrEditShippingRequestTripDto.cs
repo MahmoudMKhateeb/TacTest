@@ -2,6 +2,7 @@
 using Abp.Extensions;
 using Abp.Runtime.Validation;
 using Abp.UI;
+using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -42,6 +43,10 @@ namespace TACHYON.Shipping.Trips.Dto
 
         public void AddValidationErrors(CustomValidationContext context)
         {
+            if(!HasAttachment && CreateOrEditDocumentFileDto == null)
+            {
+                return;
+            }
             if (EndTripDate != null && StartTripDate.Date > EndTripDate.Value.Date)
             {
                 context.Results.Add(new ValidationResult("The start date must be or equal to end date."));

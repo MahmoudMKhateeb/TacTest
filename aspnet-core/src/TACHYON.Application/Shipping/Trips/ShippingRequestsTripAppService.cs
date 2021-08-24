@@ -332,11 +332,30 @@ namespace TACHYON.Shipping.Trips
             {
                 if (input.CreateOrEditDocumentFileDto.UpdateDocumentFileInput != null && !input.CreateOrEditDocumentFileDto.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
                 {
-                    await _documentFilesManager.UpdateDocumentFile(input.CreateOrEditDocumentFileDto);
+                    if (HasAttachmentOldValue)
+                    {
+                        //update previous file
+                        await _documentFilesManager.UpdateDocumentFile(input.CreateOrEditDocumentFileDto);
+                    }
+                    else
+                    {
+                        // the file is new and want to add it
+                        var docFileDto = input.CreateOrEditDocumentFileDto;
+                        docFileDto.ShippingRequestTripId = trip.Id;
+                        docFileDto.Name = docFileDto.Name + "_" + trip.Id.ToString();
+                        await _documentFilesAppService.CreateOrEdit(docFileDto);
+
+                    }
                     //Notify Carrier with trip details
                     await NotifyCarrierWithTripDetails(trip, request.CarrierTenantId, true, false);
                 }
 
+            }
+            else if(!input.HasAttachment && HasAttachmentOldValue)
+            {
+                //remove file
+                var documentFile = await _documentFileRepository.FirstOrDefaultAsync(x => x.ShippingRequestTripId == trip.Id);
+                await _documentFilesManager.DeleteDocumentFile(documentFile);
             }
 
 
