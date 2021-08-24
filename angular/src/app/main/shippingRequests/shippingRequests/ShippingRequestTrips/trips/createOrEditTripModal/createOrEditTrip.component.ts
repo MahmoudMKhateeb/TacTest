@@ -203,6 +203,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     //if there is a Validation issue in the Points do Not Proceed
     if (this.validatePointsBeforeAddTrip()) {
       this.saving = true;
+      !this.trip.hasAttachment ? (this.trip.createOrEditDocumentFileDto = null) : '';
       this._shippingRequestTripsService
         .createOrEdit(this.trip)
         .pipe(
