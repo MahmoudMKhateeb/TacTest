@@ -261,13 +261,6 @@ namespace TACHYON.Authorization.Users
         }
 
 
-        public async Task SendActivationEmail(UserIdentifier userInput,string password)
-        {
-            var user = await _userManager.GetUserAsync(userInput);
-            await _userEmailer.SendEmailActivationLinkAsync(user,
-                AppUrlService.CreateEmailActivationUrlFormat(AbpSession.TenantId),
-                password);
-        }
 
         private List<string> GetAllRoleNamesOfUsersOrganizationUnits(long userId)
         {
