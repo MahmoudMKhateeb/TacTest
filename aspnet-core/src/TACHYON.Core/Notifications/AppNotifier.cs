@@ -640,7 +640,7 @@ namespace TACHYON.Notifications
             }
             if (trip.ShippingRequestFk.CarrierTenantId.HasValue && trip.ShippingRequestFk.CarrierTenantId != currentuser.TenantId)
             {
-                var carrier = await UserManager.GetAdminByTenantIdAsync(trip.ShippingRequestFk.CarrierTenantId.Value);
+                var carrier = await _userManager.GetAdminByTenantIdAsync(trip.ShippingRequestFk.CarrierTenantId.Value);
                 users.Add(new UserIdentifier(carrier.TenantId, carrier.Id));
             }
             else if (trip.ShippingRequestFk.IsTachyonDeal)
