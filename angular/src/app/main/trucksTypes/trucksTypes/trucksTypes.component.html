@@ -21,24 +21,29 @@
               [showRowLines]="false"
               [showBorders]="true"
               [rowAlternationEnabled]="true"
-              keyExpr="trucksType.id"
+              (onRowUpdating)="updateRow($event)"
+              keyExpr="id"
             >
-              <dxo-editing mode="row" [allowUpdating]="true" [allowAdding]="true"> </dxo-editing>
+              <dxo-editing mode="popup" [allowUpdating]="true" [allowAdding]="true"> </dxo-editing>
               <dxo-filter-row [visible]="true"></dxo-filter-row>
               <dxo-search-panel [visible]="true"></dxo-search-panel>
               <dxo-filter-panel [visible]="true"></dxo-filter-panel>
               <dxo-filter-builder-popup></dxo-filter-builder-popup>
               <dxo-master-detail [enabled]="true" template="translations"></dxo-master-detail>
-              <!--              <div *dxTemplate="let options of 'translations'">-->
-              <!--                <app-translations-template [CoreId]="options.data.id"></app-translations-template>-->
-              <!--              </div>-->
+              <div *dxTemplate="let options of 'translations'">
+                <app-translations-template [CoreId]="options.data.id"></app-translations-template>
+              </div>
               <dxo-remote-operations [sorting]="true" [paging]="true" [filtering]="true"></dxo-remote-operations>
               <dxo-paging [pageSize]="10"></dxo-paging>
               <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20, 50, 200]"></dxo-pager>
-              <dxi-column dataField="trucksType.translatedDisplayName" caption="{{ l('truckType') }}"></dxi-column>
-              <dxi-validation-rule type="required"></dxi-validation-rule>
+              <dxi-column dataField="translatedDisplayName" caption="{{ l('truckType') }}">
+                <dxi-validation-rule type="required"></dxi-validation-rule
+              ></dxi-column>
 
-              <dxi-column dataField="transportTypeDisplayName" caption="{{ l('transportType') }}"></dxi-column>
+              <dxi-column dataField="transportTypeId" caption="{{ l('transportType') }}">
+                <dxo-lookup [dataSource]="transportTypes" displayExpr="displayName" valueExpr="id"> </dxo-lookup>
+              </dxi-column>
+              <dxi-column dataField="isActive" caption="{{ l('IsActive') }}"></dxi-column>
             </dx-data-grid>
           </div>
         </div>

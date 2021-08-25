@@ -40,6 +40,8 @@ export class TrucksTypesComponent extends AppComponentBase implements OnInit {
   _entityTypeFullName = 'TACHYON.Trucks.TrucksTypes.TrucksType';
   entityHistoryEnabled = false;
 
+  transportTypes: any;
+
   constructor(
     injector: Injector,
     private _trucksTypesServiceProxy: TrucksTypesServiceProxy,
@@ -52,6 +54,9 @@ export class TrucksTypesComponent extends AppComponentBase implements OnInit {
   }
 
   ngOnInit(): void {
+    this._trucksTypesServiceProxy.getAllTransportTypeForTableDropdown().subscribe((result) => {
+      this.transportTypes = result;
+    });
     this.DxGetAll();
   }
   DxGetAll() {
@@ -59,12 +64,13 @@ export class TrucksTypesComponent extends AppComponentBase implements OnInit {
 
     this.dataSource = {};
     this.dataSource.store = new CustomStore({
-      key: 'trucksType.id',
+      key: 'id',
       load(loadOptions: LoadOptions) {
-        let input = new LoadOptionsInput();
-        input.loadOptions = JSON.stringify(loadOptions);
+        let Input = new LoadOptionsInput();
+        Input.loadOptions = JSON.stringify(loadOptions);
+
         return self._trucksTypesServiceProxy
-          .dxGetAll(input)
+          .dxGetAll(Input)
           .toPromise()
           .then((response) => {
             return {
@@ -122,4 +128,8 @@ export class TrucksTypesComponent extends AppComponentBase implements OnInit {
   //     }
   //   });
   // }
+
+  updateRow(options) {
+    options.newData = { ...options.oldData, ...options.newData };
+  }
 }

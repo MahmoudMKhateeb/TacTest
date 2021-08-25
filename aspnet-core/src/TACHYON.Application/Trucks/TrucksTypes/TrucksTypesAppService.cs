@@ -71,7 +71,7 @@ namespace TACHYON.Trucks.TrucksTypes
         public async Task<LoadResult> DxGetAll(LoadOptionsInput input)
         {
             var trucksTypes = _trucksTypeRepository.GetAll().AsNoTracking()
-                .ProjectTo<GetTrucksTypeForViewDto>(AutoMapperConfigurationProvider);
+                .ProjectTo<TrucksTypeDto>(AutoMapperConfigurationProvider);
 
             return await LoadResultAsync(trucksTypes, input.LoadOptions);
         }
@@ -98,22 +98,6 @@ namespace TACHYON.Trucks.TrucksTypes
 
         public async Task CreateOrEdit(CreateOrEditTrucksTypeDto input)
         {
-            //foreach (var transItem in input.Translations)
-            //{
-            //    if (string.IsNullOrWhiteSpace(transItem.TranslatedDisplayName))
-            //    {
-            //        throw new UserFriendlyException(L("DisplayNameCannotBeEmpty"));
-            //    }
-            //    var isDuplicateUserName = await _trucksTypeRepository
-            //       .FirstOrDefaultAsync(x => x.Translations.Any(x => x.TranslatedDisplayName == transItem.TranslatedDisplayName) &&
-            //       x.TransportTypeId == input.TransportTypeId &&
-            //       x.Id != input.Id);
-            //    if (isDuplicateUserName != null)
-            //    {
-            //        throw new UserFriendlyException(string.Format(L("TrucksTypeDuplicateName"), transItem.TranslatedDisplayName));
-            //    }
-            //}
-
 
             if (input.Id == null)
             {
@@ -135,8 +119,7 @@ namespace TACHYON.Trucks.TrucksTypes
         [AbpAuthorize(AppPermissions.Pages_TrucksTypes_Edit)]
         protected virtual async Task Update(CreateOrEditTrucksTypeDto input)
         {
-            var trucksType = await _trucksTypeRepository.GetAllIncluding(x => x.Translations)
-                .FirstOrDefaultAsync(x => x.Id == input.Id.Value);
+            var trucksType = await _trucksTypeRepository.FirstOrDefaultAsync(x => x.Id == input.Id.Value);
             trucksType.Translations.Clear();
             ObjectMapper.Map(input, trucksType);
         }
