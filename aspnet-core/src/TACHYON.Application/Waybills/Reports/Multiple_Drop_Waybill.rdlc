@@ -4846,14 +4846,14 @@
               <TablixCells>
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="FacilityName">
+                    <Textbox Name="DroppFacilityName">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!FacilityName.Value</Value>
+                              <Value>=Fields!DroppFacilityName.Value</Value>
                               <Style>
                                 <FontFamily>open sans</FontFamily>
                                 <FontSize>8pt</FontSize>
@@ -4866,7 +4866,7 @@
                           </Style>
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>FacilityName</rd:DefaultName>
+                      <rd:DefaultName>DroppFacilityName</rd:DefaultName>
                       <Style>
                         <Border>
                           <Color>White</Color>
@@ -4886,14 +4886,14 @@
                 <TablixCell />
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="CountryName">
+                    <Textbox Name="DroppCountryName">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!CountryName.Value</Value>
+                              <Value>=Fields!DroppCountryName.Value</Value>
                               <Style>
                                 <FontFamily>open sans</FontFamily>
                                 <FontSize>8pt</FontSize>
@@ -4906,50 +4906,7 @@
                           </Style>
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>CountryName</rd:DefaultName>
-                      <Style>
-                        <Border>
-                          <Color>White</Color>
-                          <Style>Solid</Style>
-                        </Border>
-                        <LeftBorder>
-                          <Color>White</Color>
-                        </LeftBorder>
-                        <BackgroundColor>#e1e1e1</BackgroundColor>
-                        <VerticalAlign>Middle</VerticalAlign>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
-                      </Style>
-                    </Textbox>
-                    <ColSpan>2</ColSpan>
-                  </CellContents>
-                </TablixCell>
-                <TablixCell />
-                <TablixCell>
-                  <CellContents>
-                    <Textbox Name="CityName">
-                      <CanGrow>true</CanGrow>
-                      <KeepTogether>true</KeepTogether>
-                      <Paragraphs>
-                        <Paragraph>
-                          <TextRuns>
-                            <TextRun>
-                              <Value>=Fields!CityName.Value</Value>
-                              <Style>
-                                <FontFamily>open sans</FontFamily>
-                                <FontSize>8pt</FontSize>
-                                <Color>#181818</Color>
-                              </Style>
-                            </TextRun>
-                          </TextRuns>
-                          <Style>
-                            <TextAlign>Center</TextAlign>
-                          </Style>
-                        </Paragraph>
-                      </Paragraphs>
-                      <rd:DefaultName>CityName</rd:DefaultName>
+                      <rd:DefaultName>DroppCountryName</rd:DefaultName>
                       <Style>
                         <Border>
                           <Color>White</Color>
@@ -4972,14 +4929,14 @@
                 <TablixCell />
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="Area">
+                    <Textbox Name="DroppCityName">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!Area.Value</Value>
+                              <Value>=Fields!DroppCityName.Value</Value>
                               <Style>
                                 <FontFamily>open sans</FontFamily>
                                 <FontSize>8pt</FontSize>
@@ -4992,7 +4949,50 @@
                           </Style>
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>Area</rd:DefaultName>
+                      <rd:DefaultName>DroppCityName</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>White</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <LeftBorder>
+                          <Color>White</Color>
+                        </LeftBorder>
+                        <BackgroundColor>#e1e1e1</BackgroundColor>
+                        <VerticalAlign>Middle</VerticalAlign>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                    <ColSpan>2</ColSpan>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell />
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="DroppArea">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!DroppArea.Value</Value>
+                              <Style>
+                                <FontFamily>open sans</FontFamily>
+                                <FontSize>8pt</FontSize>
+                                <Color>#181818</Color>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>DroppArea</rd:DefaultName>
                       <Style>
                         <Border>
                           <Color>White</Color>
