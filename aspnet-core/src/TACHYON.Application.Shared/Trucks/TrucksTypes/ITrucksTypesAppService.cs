@@ -23,7 +23,11 @@ namespace TACHYON.Trucks.TrucksTypes
 
         //Task Delete(EntityDto<long> input);
 
-        Task<LoadResult> GetAllTranslation(GetAllTranslationInput<long> input);
+        Task<LoadResult> GetAllTranslations(GetAllTranslationInput<long> input);
+
+        Task CreateOrEditTranslation(CreateOrEditTrucksTypesTranslationDto input);
+
+        Task DeleteTranslation(EntityDto input);
 
     }
 }

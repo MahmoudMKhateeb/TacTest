@@ -31,7 +31,7 @@ namespace TACHYON.Trucks.TrucksTypes
     {
         private readonly IRepository<TrucksType, long> _trucksTypeRepository;
         private readonly IRepository<TrucksTypesTranslation> _trucksTypeTranslationRepository;
-
+        //! Don't Forget Mapping Configurations
         private readonly IRepository<TransportType, int> _transportTypeRepository;
 
         public TrucksTypesAppService(IRepository<TrucksType, long> trucksTypeRepository,
@@ -130,9 +130,6 @@ namespace TACHYON.Trucks.TrucksTypes
         //    await _trucksTypeRepository.DeleteAsync(input.Id);
         //}
 
-        [AbpAuthorize(AppPermissions.Pages_TrucksTypes)]
-
-
         public async Task<IEnumerable<ISelectItemDto>> GetAllTransportTypeForTableDropdown()
         {
             List<TransportType> transportTypes = await _transportTypeRepository
@@ -144,16 +141,56 @@ namespace TACHYON.Trucks.TrucksTypes
             return transportTypeDtos;
         }
 
-
-        public async Task<LoadResult> GetAllTranslation(GetAllTranslationInput<long> input)
+        [AbpAuthorize(AppPermissions.Pages_TrucksTypesTranslations)]
+        public async Task<LoadResult> GetAllTranslations(GetAllTranslationInput<long> input)
         {
             var translations =  _trucksTypeTranslationRepository
                 .GetAll().Where(x => x.CoreId == input.CoreId)
-                .AsNoTracking().ProjectTo<GetTrucksTypesTranslationForViewDto>(AutoMapperConfigurationProvider);
+                .AsNoTracking().ProjectTo<TrucksTypesTranslationDto>(AutoMapperConfigurationProvider);
 
            return await LoadResultAsync(translations, input.LoadOptions);
         }
 
+        public async Task CreateOrEditTranslation(CreateOrEditTrucksTypesTranslationDto input)
+        {
+            //? Check if Core of Translation Is Exist Or Not
+            #region CoreValidation
+
+            var coreTruckType = await _trucksTypeRepository.FirstOrDefaultAsync(input.CoreId);
+            if (coreTruckType == null)
+                throw new UserFriendlyException(L("TruckTypeForThisTranslationNotFound"));
+
+            #endregion
+
+            if (!input.Id.HasValue)
+                await CreateTranslation(input);
+            else
+                await UpdateTranslation(input);
+        }
+
+        [AbpAuthorize(AppPermissions.Pages_TrucksTypesTranslations_Create)]
+        protected virtual async Task CreateTranslation(CreateOrEditTrucksTypesTranslationDto input)
+        {
+            
+            var translation = ObjectMapper.Map<TrucksTypesTranslation>(input);
+
+            await _trucksTypeTranslationRepository.InsertAsync(translation);
+        }
+
+        [AbpAuthorize(AppPermissions.Pages_TrucksTypesTranslations_Edit)]
+        protected virtual async Task UpdateTranslation(CreateOrEditTrucksTypesTranslationDto input)
+        {
+            var translation = await _trucksTypeTranslationRepository
+                .SingleAsync(x => x.Id == input.Id.Value);
+
+            ObjectMapper.Map(translation, input);
+        }
+
+        [AbpAuthorize(AppPermissions.Pages_TrucksTypesTranslations_Delete)]
+        public async Task DeleteTranslation(EntityDto input)
+        {
+            await _trucksTypeTranslationRepository.DeleteAsync(input.Id);
+        }
 
     }
 }
