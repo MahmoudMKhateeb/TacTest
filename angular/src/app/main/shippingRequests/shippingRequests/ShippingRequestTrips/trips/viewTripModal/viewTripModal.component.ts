@@ -45,7 +45,7 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit {
     injector: Injector,
     private _routStepsServiceProxy: RoutStepsServiceProxy,
     private _shippingRequestTripsService: ShippingRequestsTripServiceProxy,
-    private _fileDownloadService: FileDownloadService,
+    public _fileDownloadService: FileDownloadService,
     private _waybillsServiceProxy: WaybillsServiceProxy,
     private _trucksServiceProxy: TrucksServiceProxy,
     private _shippingRequestDriverServiceProxy: ShippingRequestDriverServiceProxy,
