@@ -236,12 +236,51 @@
                   accept="image/x-png,image/jpeg,application/pdf"
                   required
                 />
-                <label class="custom-file-label text-truncate" [for]="trip.createOrEditDocumentFileDto?.name">
-                  {{ trip.createOrEditDocumentFileDto?.name ? trip.createOrEditDocumentFileDto?.name : l('SelectFile') }}</label
+                <label class="custom-file-label text-truncate" [for]="trip.createOrEditDocumentFileDto.name">
+                  {{ trip.createOrEditDocumentFileDto.name ? trip.createOrEditDocumentFileDto.name : l('SelectFile') }}</label
                 >
               </div>
               <div class="margin-top-5">
                 <p-progressBar [value]="docProgress" [style]="{ height: '6px', width: '100' }"></p-progressBar>
+              </div>
+              <div class="mt-2" *ngIf="trip.createOrEditDocumentFileDto.binaryObjectId">
+                <div class="d-flex align-items-center flex-wrap mb-8">
+                  <!--begin::Symbol-->
+                  <div class="symbol symbol-50 symbol-light mr-3 ml-3">
+                    <span class="symbol-label">
+                      <i class="fa-2x fa-file-image fas" style="color: #5cb85c" aria-hidden="true"></i>
+                    </span>
+                  </div>
+                  <!--end::Symbol-->
+                  <!--begin::Text-->
+                  <div class="d-flex flex-column flex-grow-1 mr-2">
+                    <a
+                      (click)="
+                        _fileDownloadService.downloadFileByBinaryId(
+                          this.trip.createOrEditDocumentFileDto.name,
+                          this.trip.createOrEditDocumentFileDto.binaryObjectId
+                        )
+                      "
+                      class="font-weight-bold text-dark-75 text-hover-primary font-size-lg mb-1"
+                    >
+                      {{ trip.createOrEditDocumentFileDto?.name }}</a
+                    >
+                    <span class="text-muted font-weight-bold">{{ trip.createOrEditDocumentFileDto?.documentTypeDto?.templateContentType }}</span>
+                  </div>
+                  <!--end::Text-->
+                  <a
+                    *ngIf="trip.createOrEditDocumentFileDto?.binaryObjectId"
+                    (click)="
+                      _fileDownloadService.downloadFileByBinaryId(
+                        this.trip.createOrEditDocumentFileDto.name,
+                        this.trip.createOrEditDocumentFileDto.binaryObjectId
+                      )
+                    "
+                    class="btn btn-sm btn-icon btn-bg-light btn-icon-primary btn-hover-primary"
+                  >
+                    <i class="flaticon2-download"></i>
+                  </a>
+                </div>
               </div>
             </div>
             <!--  start:: RouteSteps -->

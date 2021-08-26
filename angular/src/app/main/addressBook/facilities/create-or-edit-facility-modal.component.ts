@@ -46,12 +46,12 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
   }
   ngOnInit() {
     this.loadMapApi();
-    this.loadAllCountries();
     this.facility.latitude = 24.67911662122269;
     this.facility.longitude = 46.6355543345471;
   }
 
   show(facilityId?: number): void {
+    this.loadAllCountries();
     if (!facilityId) {
       this.facility = new CreateOrEditFacilityDto();
       this.facility.id = facilityId;
