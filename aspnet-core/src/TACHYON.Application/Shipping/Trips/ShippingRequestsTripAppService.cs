@@ -272,7 +272,7 @@ namespace TACHYON.Shipping.Trips
 
             // add document file
             var docFileDto = input.CreateOrEditDocumentFileDto;
-            if (docFileDto.UpdateDocumentFileInput != null && !docFileDto.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
+            if (trip.HasAttachment && docFileDto.UpdateDocumentFileInput != null && !docFileDto.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
             {
                 docFileDto.ShippingRequestTripId = shippingRequestTripId;
                 docFileDto.Name = docFileDto.Name + "_" + shippingRequestTripId.ToString();
