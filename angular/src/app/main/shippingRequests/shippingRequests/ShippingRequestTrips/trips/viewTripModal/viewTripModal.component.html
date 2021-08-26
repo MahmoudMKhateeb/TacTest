@@ -108,8 +108,12 @@
                 <option *ngFor="let item of allTrucks" [value]="item.id">{{ item.displayName }}</option>
               </select>
             </div>
-            <div class="form-group col-lg-1 mt-7 align-items-end" *ngIf="trip.driverStatus == 0">
-              <button class="btn btn-danger btn-shadow-hover font-weight-bold mr-2" (click)="assignDriverandTruck()" [disabled]="saving">
+            <div class="form-group col-lg-1 mt-7 align-items-end">
+              <button
+                class="btn btn-danger btn-shadow-hover font-weight-bold mr-2"
+                (click)="assignDriverandTruck()"
+                [disabled]="saving || !assignDriverAndTruck.assignedDriverUserId || !assignDriverAndTruck.assignedTruckId"
+              >
                 {{ l('Save') }}
               </button>
             </div>
