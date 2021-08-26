@@ -91,6 +91,8 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public PriceOfferCommissionType? CommissionType { get; set; }
         public decimal? CommissionPercentageOrAddValue { get; set; }
         public decimal? CommissionAmount { get; set; }
+        public string BayanId { get; set; }
+
         #endregion
     }
 }

@@ -104,6 +104,7 @@ namespace TACHYON.Configuration
                 new SettingDefinition(AppSettings.UiManagement.Theme,
                     GetFromAppSettings(AppSettings.UiManagement.Theme, "default"), isVisibleToClients: true,
                     scopes: SettingScopes.All),
+                //Unifonic
                 new SettingDefinition(AppSettings.Sms.UnifonicAppSid,
                     GetFromAppSettings(AppSettings.Sms.UnifonicAppSid, "D3vqp9VLePqA4NTXhz95h8VrfHyLWx"), isVisibleToClients: true,
                     scopes: SettingScopes.Application),
@@ -116,6 +117,25 @@ namespace TACHYON.Configuration
                 new SettingDefinition(AppSettings.Sms.UnifonicNotificationSenderId,
                     GetFromAppSettings(AppSettings.Sms.UnifonicNotificationSenderId, "TACHYON"), isVisibleToClients: true,
                     scopes: SettingScopes.Application),
+
+                //Bayan Integration
+                //todo add this to host settings page
+                new SettingDefinition(AppSettings.BayanIntegration.Url,
+                    GetFromAppSettings(AppSettings.BayanIntegration.Url, "https://bayan.api.elm.sa/api/v1/eff/"), isVisibleToClients: true,
+                    scopes: SettingScopes.Application),
+
+                new SettingDefinition(AppSettings.BayanIntegration.AppId,
+                    GetFromAppSettings(AppSettings.BayanIntegration.AppId, "431b4bd1"), isVisibleToClients: true,
+                    scopes: SettingScopes.Application),
+
+                new SettingDefinition(AppSettings.BayanIntegration.AppKey,
+                    GetFromAppSettings(AppSettings.BayanIntegration.AppKey, "d4738b317b9fa32a95ec65a39e84adbd"), isVisibleToClients: true,
+                    scopes: SettingScopes.Application),
+
+                new SettingDefinition(AppSettings.BayanIntegration.ClientId,
+                    GetFromAppSettings(AppSettings.BayanIntegration.ClientId, "56beeab2-d96a-4afd-baed-e4a88894629e"), isVisibleToClients: true,
+                    scopes: SettingScopes.Application),
+
             };
         }
 

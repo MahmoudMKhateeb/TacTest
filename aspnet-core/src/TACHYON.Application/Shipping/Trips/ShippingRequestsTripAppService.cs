@@ -229,15 +229,17 @@ namespace TACHYON.Shipping.Trips
                 Include(e => e.ShippingRequestFk)
                 .Include(d => d.AssignedDriverUserFk)
                 .Where(e => e.Id == input.Id)
-                .Where(e => e.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
-                .Where(e => e.Status != ShippingRequestTripStatus.Delivered)
+                //.Where(e => e.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
+                //.Where(e => e.Status != ShippingRequestTripStatus.Delivered)
                 .FirstOrDefaultAsync();
-            if (trip == null) throw new UserFriendlyException(L("NoTripToAssignDriver"));
+             if (trip == null) throw new UserFriendlyException(L("NoTripToAssignDriver"));
 
             long? oldAssignedDriverUserId = trip.AssignedDriverUserId;
             long? OldAssignedTruckId = input.AssignedTruckId;
             trip.AssignedDriverUserId = input.AssignedDriverUserId;
             trip.AssignedTruckId = input.AssignedTruckId;
+
+            //todo new driver can accept ? 
             if (trip.DriverStatus != ShippingRequestTripDriverStatus.None)
             {
                 trip.DriverStatus = ShippingRequestTripDriverStatus.None;
@@ -251,17 +253,19 @@ namespace TACHYON.Shipping.Trips
                 await _appNotifier.NotifyDriverWhenAssignToTrip(trip);
                 await _firebase.PushNotificationToDriverWhenAssignTrip(new UserIdentifier(trip.AssignedDriverUserFk.TenantId, trip.AssignedDriverUserId.Value), trip.Id.ToString(), trip.WaybillNumber.ToString());
                 if (oldAssignedDriverUserId.HasValue)
+                {
+                    //todo send specific notification    
                     await _firebase.TripChanged(new UserIdentifier(trip.AssignedDriverUserFk.TenantId, oldAssignedDriverUserId.Value), trip.Id.ToString());
-
+                    await _appNotifier.ShipperShippingRequestTripNotifyDriverWhenUnassignedTrip(new UserIdentifier(AbpSession.TenantId, oldAssignedDriverUserId.Value), trip);
+                }
             }
-            else if (OldAssignedTruckId != trip.AssignedTruckId)
+
+            if (OldAssignedTruckId != trip.AssignedTruckId)
             {
+                 //todo send specific notification    
                 await _firebase.TripChanged(new UserIdentifier(trip.AssignedDriverUserFk.TenantId, trip.AssignedDriverUserId.Value), trip.Id.ToString());
             }
             await _appNotifier.ShipperShippingRequestTripNotifyDriverWhenAssignTrip(new UserIdentifier(AbpSession.TenantId, trip.AssignedDriverUserId.Value), trip);
-            // Notify Old Driver (The Trip Was Unassigned To You)
-            if (oldAssignedDriverUserId != null)
-                await _appNotifier.ShipperShippingRequestTripNotifyDriverWhenUnassignedTrip(new UserIdentifier(AbpSession.TenantId, oldAssignedDriverUserId.Value), trip);
 
 
             await _appNotifier.NotificationWhenTripDetailsChanged(trip, await GetCurrentUserAsync());

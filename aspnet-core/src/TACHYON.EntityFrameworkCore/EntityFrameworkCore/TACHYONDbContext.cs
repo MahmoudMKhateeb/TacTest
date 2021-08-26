@@ -1,7 +1,9 @@
-﻿using TACHYON.Goods;
+﻿using Abp.Events.Bus.Entities;
+using TACHYON.Goods;
 using Abp.IdentityServer4;
 using Abp.Zero.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata;
 using System;
 using System.Linq.Expressions;
@@ -158,7 +160,7 @@ namespace TACHYON.EntityFrameworkCore
 
         public virtual DbSet<Port> Ports { get; set; }
 
-       // public virtual DbSet<PickingType> PickingTypes { get; set; }
+        // public virtual DbSet<PickingType> PickingTypes { get; set; }
 
         public virtual DbSet<UnitOfMeasure> UnitOfMeasures { get; set; }
 
@@ -205,9 +207,9 @@ namespace TACHYON.EntityFrameworkCore
         /*Invoice entity*/
         public virtual DbSet<InvoicePeriod> InvoicePeriod { get; set; }
         public virtual DbSet<Invoices.Invoice> Invoice { get; set; }
-        public  DbSet<InvoiceProforma> InvoiceProforma { get; set; }
+        public DbSet<InvoiceProforma> InvoiceProforma { get; set; }
 
-        
+
         public virtual DbSet<InvoiceTrip> InvoiceTrips { get; set; }
         public virtual DbSet<GroupPeriod> GroupPeriod { get; set; }
         public virtual DbSet<GroupShippingRequests> GroupShippingRequests { get; set; }
@@ -365,7 +367,7 @@ namespace TACHYON.EntityFrameworkCore
                        });
 
             modelBuilder.Entity<TrucksType>()
-                .Property(b=>b.IsActive)
+                .Property(b => b.IsActive)
                 .HasDefaultValue(true);
 
             modelBuilder.Entity<GoodCategory>()
@@ -422,9 +424,10 @@ namespace TACHYON.EntityFrameworkCore
             .HasIndex(e => e.WaybillNumber)
             .IsUnique();
 
-            modelBuilder.Entity<Tenant>(b => {
-            b.HasIndex(a => a.AccountNumber).IsUnique();
-            b.HasIndex(a => a.ContractNumber).IsUnique();
+            modelBuilder.Entity<Tenant>(b =>
+            {
+                b.HasIndex(a => a.AccountNumber).IsUnique();
+                b.HasIndex(a => a.ContractNumber).IsUnique();
             });
 
 
@@ -445,5 +448,6 @@ namespace TACHYON.EntityFrameworkCore
             .IsUnique();
             modelBuilder.ConfigurePersistedGrantEntity();
         }
+
     }
 }
