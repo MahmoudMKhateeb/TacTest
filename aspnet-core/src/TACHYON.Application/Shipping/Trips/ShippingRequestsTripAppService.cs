@@ -230,6 +230,7 @@ namespace TACHYON.Shipping.Trips
                 .Include(d => d.AssignedDriverUserFk)
                 .Where(e => e.Id == input.Id)
                 .Where(e => e.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
+                .Where(e => e.Status != ShippingRequestTripStatus.Delivered)
                 .FirstOrDefaultAsync();
             if (trip == null) throw new UserFriendlyException(L("NoTripToAssignDriver"));
 
