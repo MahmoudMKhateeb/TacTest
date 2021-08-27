@@ -1,0 +1,5 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+#exit 1 # Commit will be aborted
+cd angular && npx lint-staged -v -d -r 
