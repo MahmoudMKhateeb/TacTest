@@ -236,7 +236,6 @@
                     <Value />
                     <Style>
                       <FontStyle>Normal</FontStyle>
-                       
                       <FontSize>8pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                       <TextDecoration>None</TextDecoration>
@@ -383,7 +382,6 @@
                     <Value>يرجى ارسال الشيك لصالح </Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
-                       
                       <FontSize>7pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
@@ -394,7 +392,6 @@
                     <Value>شركة</Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
-                       
                       <FontSize>7pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
@@ -405,7 +402,6 @@
                     <Value> الحلول المتكاملة للخدمات اللوجستية</Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
-                       
                       <FontSize>7pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                       <TextDecoration>None</TextDecoration>
@@ -446,7 +442,6 @@
                     <Value>ا لتاريخ هو تاريخ تسليم الشحنة الفعلي</Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
-                       
                       <FontSize>6pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
@@ -533,7 +528,6 @@
                     <Value>الحلول المتكاملة للخدمات اللوجستية</Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
-                       
                       <FontSize>7pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                       <TextDecoration>None</TextDecoration>
@@ -575,7 +569,6 @@
                     <Value>في حالة الخدمات الاضافية، الخدمات الاضافية ستضاف الي رقم وثيقة الشحن كمرجع </Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
-                       
                       <FontSize>6pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
@@ -872,7 +865,6 @@
                                 <TextRun>
                                   <Value>:إسم العميل</Value>
                                   <Style>
-                                     
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <Color>#282828</Color>
@@ -989,7 +981,6 @@
                                 <TextRun>
                                   <Value>:رقم الهاتف</Value>
                                   <Style>
-                                     
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <Color>#282828</Color>
@@ -1118,7 +1109,6 @@
                                 <TextRun>
                                   <Value>:رقم الفاتورة</Value>
                                   <Style>
-                                     
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <Color>#282828</Color>
@@ -1242,7 +1232,6 @@
                                 <TextRun>
                                   <Value>:العنوان</Value>
                                   <Style>
-                                     
                                     <FontSize>8pt</FontSize>
                                     <Color>#181818</Color>
                                   </Style>
@@ -1357,7 +1346,6 @@
                                 <TextRun>
                                   <Value>:تاريخ الفاتورة</Value>
                                   <Style>
-                                     
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <Color>#282828</Color>
@@ -1477,7 +1465,6 @@
                                 <TextRun>
                                   <Value>:السجل التجاري</Value>
                                   <Style>
-                                     
                                     <FontSize>8pt</FontSize>
                                     <Color>#181818</Color>
                                   </Style>
@@ -1603,7 +1590,6 @@
                                 <TextRun>
                                   <Value>:البريد إلكتروني</Value>
                                   <Style>
-                                     
                                     <FontSize>8pt</FontSize>
                                     <Color>#181818</Color>
                                   </Style>
@@ -1731,7 +1717,6 @@
                                 <TextRun>
                                   <Value>:تاريخ الإستحقاق</Value>
                                   <Style>
-                                     
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <Color>#282828</Color>
@@ -1854,7 +1839,6 @@
                                 <TextRun>
                                   <Value>:رقم العقد</Value>
                                   <Style>
-                                     
                                     <FontSize>8pt</FontSize>
                                     <Color>#181818</Color>
                                   </Style>
@@ -1968,7 +1952,6 @@
                                 <TextRun>
                                   <Value>:عناية</Value>
                                   <Style>
-                                     
                                     <FontSize>8pt</FontSize>
                                     <Color>#181818</Color>
                                   </Style>
@@ -2105,7 +2088,6 @@
                                 <TextRun>
                                   <Value>التسلسل</Value>
                                   <Style>
-                                     
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <Color>White</Color>
@@ -2159,7 +2141,6 @@
                                 <TextRun>
                                   <Value>التاريخ</Value>
                                   <Style>
-                                     
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <Color>White</Color>
@@ -2218,7 +2199,6 @@
                                 <TextRun>
                                   <Value>وثيقة الشحن</Value>
                                   <Style>
-                                     
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <Color>White</Color>
@@ -2276,7 +2256,6 @@
                                 <TextRun>
                                   <Value>مكان التحميل</Value>
                                   <Style>
-                                     
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <Color>White</Color>
@@ -2335,7 +2314,6 @@
                                 <TextRun>
                                   <Value>مكان التنزيل</Value>
                                   <Style>
-                                     
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <Color>White</Color>
@@ -2394,7 +2372,6 @@
                                 <TextRun>
                                   <Value>نوع الشاحنة</Value>
                                   <Style>
-                                     
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <Color>White</Color>
@@ -2463,7 +2440,6 @@
                                 <TextRun>
                                   <Value>السعر ر.س</Value>
                                   <Style>
-                                     
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <Color>White</Color>
@@ -2516,7 +2492,6 @@
                                 <TextRun>
                                   <Value>(VAT </Value>
                                   <Style>
-                                     
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <Color>White</Color>
@@ -2525,7 +2500,6 @@
                                 <TextRun>
                                   <Value>=First(Fields!TaxVat.Value, "GetInvoiceReportInfoDataset")</Value>
                                   <Style>
-                                     
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <Color>White</Color>
@@ -2535,7 +2509,6 @@
                                   <Value> %)
 ضريبة القيمة المضافة</Value>
                                   <Style>
-                                     
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <Color>White</Color>
@@ -2600,7 +2573,6 @@
                                 <TextRun>
                                   <Value>الإجمالي</Value>
                                   <Style>
-                                     
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <Color>White</Color>
@@ -2666,7 +2638,6 @@
                                 <TextRun>
                                   <Value>الكمية</Value>
                                   <Style>
-                                     
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <Color>White</Color>
@@ -3264,7 +3235,6 @@
                                 <TextRun>
                                   <Value>مجموع الفاتورة</Value>
                                   <Style>
-                                     
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                   </Style>
@@ -3315,7 +3285,23 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>VAT Amount (%)</Value>
+                                  <Value>VAT Amount (</Value>
+                                  <Style>
+                                    <FontFamily>Open Sans</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Normal</FontWeight>
+                                    <Color>#282828</Color>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
+                                  <Value>=Fields!TaxVat.Value</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Normal</FontWeight>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
+                                  <Value>%)</Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -3399,7 +3385,6 @@
                                 <TextRun>
                                   <Value>(%</Value>
                                   <Style>
-                                     
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                   </Style>
@@ -3407,7 +3392,6 @@
                                 <TextRun>
                                   <Value>=Fields!TaxVat.Value</Value>
                                   <Style>
-                                     
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                   </Style>
@@ -3423,7 +3407,6 @@
                                 <TextRun>
                                   <Value>) قيمة الضريبة المضافة</Value>
                                   <Style>
-                                     
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                   </Style>
@@ -3503,14 +3486,14 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox259">
+                        <Textbox Name="TotalAmount">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=First(Fields!DueAmount.Value, "GetInvoiceReportInfoDataset")</Value>
+                                  <Value>=Fields!TotalAmount.Value</Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -3524,7 +3507,7 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox259</rd:DefaultName>
+                          <rd:DefaultName>TotalAmount</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>White</Color>
@@ -3554,7 +3537,6 @@
                                 <TextRun>
                                   <Value>المبلغ المستحق</Value>
                                   <Style>
-                                     
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <Color>White</Color>
@@ -3706,7 +3688,6 @@
                                   <Value>1391708819940</Value>
                                   <Style>
                                     <FontStyle>Normal</FontStyle>
-                                     
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <TextDecoration>None</TextDecoration>
@@ -3750,7 +3731,6 @@
                                 <TextRun>
                                   <Value>الحساب</Value>
                                   <Style>
-                                     
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                   </Style>
@@ -3844,7 +3824,6 @@
                                   <Value>SA6420000001391708819940</Value>
                                   <Style>
                                     <FontStyle>Normal</FontStyle>
-                                     
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <TextDecoration>None</TextDecoration>
@@ -3884,7 +3863,6 @@
                                 <TextRun>
                                   <Value>ايبان</Value>
                                   <Style>
-                                     
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                   </Style>
@@ -3958,7 +3936,6 @@
                     <Value>التوقيع</Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
-                       
                       <FontSize>7pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                       <TextDecoration>None</TextDecoration>
@@ -4068,7 +4045,6 @@
                     <Value>:أو التحويل مباشرة إلى حسابنا البنكي</Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
-                       
                       <FontSize>7pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
@@ -4123,7 +4099,6 @@
                       <Value>الحلول المتكاملة للخدمات اللوجستية</Value>
                       <Style>
                         <FontStyle>Normal</FontStyle>
-                         
                         <FontSize>8.5pt</FontSize>
                         <TextDecoration>None</TextDecoration>
                         <Color>DimGray</Color>
@@ -4176,7 +4151,6 @@
                       <Value>فاتورة</Value>
                       <Style>
                         <FontStyle>Normal</FontStyle>
-                         
                         <FontSize>11pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                         <TextDecoration>None</TextDecoration>
@@ -4405,7 +4379,6 @@
                       <Value>:رقم السجل الضريبي</Value>
                       <Style>
                         <FontStyle>Normal</FontStyle>
-                         
                         <FontSize>7pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                         <TextDecoration>None</TextDecoration>
@@ -4445,7 +4418,6 @@
                       <Value>310496565400003</Value>
                       <Style>
                         <FontStyle>Normal</FontStyle>
-                         
                         <FontSize>7pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                         <TextDecoration>None</TextDecoration>
@@ -4624,7 +4596,6 @@
                       <Value>:السجل التجاري</Value>
                       <Style>
                         <FontStyle>Normal</FontStyle>
-                         
                         <FontSize>7pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                         <TextDecoration>None</TextDecoration>
@@ -4664,7 +4635,6 @@
                       <Value>1010621994</Value>
                       <Style>
                         <FontStyle>Normal</FontStyle>
-                         
                         <FontSize>7pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                         <TextDecoration>None</TextDecoration>
