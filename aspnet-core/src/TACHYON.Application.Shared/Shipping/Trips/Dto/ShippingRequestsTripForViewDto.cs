@@ -14,6 +14,7 @@ namespace TACHYON.Shipping.Trips.Dto
         public DateTime? StartWorking { get; set; }
         public DateTime? EndWorking { get; set; }
         public string Status { get; set; }
+        public string RoutePointStatus { get; set; }
         public long? AssignedDriverUserId { get; set; }
         public long? AssignedTruckId { get; set; }
         public bool HasAttachment { get; set; }

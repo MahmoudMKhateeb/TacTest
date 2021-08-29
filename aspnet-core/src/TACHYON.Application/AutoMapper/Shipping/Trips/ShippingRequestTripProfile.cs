@@ -27,7 +27,8 @@ namespace TACHYON.AutoMapper.Shipping.Trips
                .ForMember(dst => dst.DestinationFacility, opt => opt.MapFrom(src => src.DestinationFacilityFk != null ? $"{src.DestinationFacilityFk.Name} - {src.DestinationFacilityFk.Address}" : ""))
                .ForMember(dst => dst.Truck, opt => opt.MapFrom(src => src.AssignedTruckFk != null ? src.AssignedTruckFk.ModelName : string.Empty))
                .ForMember(dst => dst.Driver, opt => opt.MapFrom(src => src.AssignedDriverUserFk != null ? src.AssignedDriverUserFk.Name : string.Empty))
-               .ForMember(dst => dst.Status, opt => opt.MapFrom(src => Enum.GetName(typeof(RoutePointStatus), src.Status)))
+               .ForMember(dst => dst.Status, opt => opt.MapFrom(src => Enum.GetName(typeof(ShippingRequestTripStatus), src.Status)))
+               .ForMember(dst => dst.RoutePointStatus, opt => opt.MapFrom(src => Enum.GetName(typeof(RoutePointStatus), src.Status)))
                .ForMember(dst => dst.DriverStatusTitle, opt => opt.MapFrom(src => Enum.GetName(typeof(ShippingRequestTripDriverStatus), src.DriverStatus)))
                .ForMember(dst => dst.RoutPoints, opt => opt.MapFrom(src => src.RoutPoints))
                .ForMember(dst => dst.ShippingRequestTripVases, opt => opt.MapFrom(src => src.ShippingRequestTripVases))
@@ -97,7 +98,7 @@ namespace TACHYON.AutoMapper.Shipping.Trips
                 case RoutePointStatus.StartedMovingToLoadingLocation:
                     return Enum.GetName(typeof(RoutePointStatus), RoutePointStatus.ArriveToLoadingLocation);
                 case RoutePointStatus.ArriveToLoadingLocation:
-                    return Enum.GetName(typeof(RoutePointStatus), RoutePointStatus.StartLoading);
+                    return Enum.GetName(typeof(RoutePointStatus), RoutePointStatus.StartLoading+1);
                 case RoutePointStatus.StartLoading:
                     return Enum.GetName(typeof(RoutePointStatus), RoutePointStatus.FinishLoading);
                 case RoutePointStatus.StartedMovingToOfLoadingLocation:
