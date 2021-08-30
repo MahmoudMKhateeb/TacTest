@@ -340,6 +340,7 @@
                             "
                             [attr.disabled]="step2Dto.routeTypeId != 3 ? true : null"
                             [required]="step2Dto.routeTypeId == 3"
+                            (keypress)="numberOnly($event)"
                           />
                           <span class="form-text text-muted">{{ l('NumberOfDrops') }} </span>
                         </div>
