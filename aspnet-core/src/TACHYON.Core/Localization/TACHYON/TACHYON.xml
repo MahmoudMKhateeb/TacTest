@@ -1202,6 +1202,7 @@
 		<text name="NumberOfDrops">Number of drops</text>
 		<text name="NumberOfPacking">Number of packing type</text>
 		<text name="NumberOfTrips">Number of trips</text>
+		<text name="SourceAndDestinationCantBeTheSame">Source and destination can't be the same</text>
 		<text name="TotalBids">Total bids</text>
 		<text name="NumbersOnly">Numbers only</text>
 		<text name="Object">Object</text>
@@ -1347,6 +1348,7 @@
 		<text name="PickupPointFacilityAndSourceTripFacilityareNotTheSame">Pickup point facility and source trip facilityare not the same</text>
 		<text name="PickUser">Select user</text>
 		<text name="PickVas">Select VAS</text>
+		<text name="VASType">VAS Type</text>
 		<text name="Pin">Pin</text>
 		<text name="Pink">Pink</text>
 		<text name="Place">Send</text>
