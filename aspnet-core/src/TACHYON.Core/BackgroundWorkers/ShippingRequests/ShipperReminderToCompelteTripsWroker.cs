@@ -27,6 +27,7 @@ namespace TACHYON.BackgroundWorkers.ShippingRequests
             IAppNotifier appNotifier) : base(timer)
         {
             Timer.Period = runEvery;
+            Timer.RunOnStart = true;
             _shippingRequestRepository = shippingRequestRepository;
             _firebaseNotifier = firebaseNotifier;
             _appNotifier = appNotifier;

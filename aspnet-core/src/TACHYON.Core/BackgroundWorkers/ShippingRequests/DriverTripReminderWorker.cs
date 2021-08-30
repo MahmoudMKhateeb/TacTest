@@ -27,6 +27,7 @@ namespace TACHYON.BackgroundWorkers.ShippingRequests
             IFirebaseNotifier firebaseNotifier) : base(timer)
         {
             Timer.Period = runEvery;
+            Timer.RunOnStart = true;
             _shippingRequestTripRepository = shippingRequestTripRepository;
             _firebaseNotifier = firebaseNotifier;
         }
