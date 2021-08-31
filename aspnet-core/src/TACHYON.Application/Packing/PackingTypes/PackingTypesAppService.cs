@@ -1,20 +1,20 @@
-﻿using System;
-using System.Linq;
-using System.Linq.Dynamic.Core;
-using Abp.Linq.Extensions;
-using System.Threading.Tasks;
-using Abp.Domain.Repositories;
-using TACHYON.Packing.PackingTypes.Dtos;
-using Abp.Application.Services.Dto;
-using TACHYON.Authorization;
+﻿using Abp.Application.Services.Dto;
 using Abp.Authorization;
+using Abp.Domain.Repositories;
+using Abp.Extensions;
+using Abp.Linq.Extensions;
 using Abp.UI;
 using AutoMapper.QueryableExtensions;
 using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Abp.Extensions;
+using System.Linq;
+using System.Linq.Dynamic.Core;
+using System.Threading.Tasks;
+using TACHYON.Authorization;
+using TACHYON.Packing.PackingTypes.Dtos;
 
 namespace TACHYON.Packing.PackingTypes
 {
@@ -85,7 +85,7 @@ namespace TACHYON.Packing.PackingTypes
 
         public async Task CreateOrEdit(CreateOrEditPackingTypeDto input)
         {
-            //  await IsPackingTypeDuplicatedOrEmpty(input.DisplayName);
+            await IsPackingTypeDuplicatedOrEmpty(input);
 
             if (input.Id == null)
             {
@@ -124,14 +124,15 @@ namespace TACHYON.Packing.PackingTypes
         }
 
 
-        private async Task IsPackingTypeDuplicatedOrEmpty(string displayName)
+        private async Task IsPackingTypeDuplicatedOrEmpty(CreateOrEditPackingTypeDto input)
         {
-            if (displayName.IsNullOrEmpty() || displayName.IsNullOrWhiteSpace())
+            if (input.DisplayName.IsNullOrEmpty() || input.DisplayName.IsNullOrWhiteSpace())
                 throw new UserFriendlyException(L("PackingTypeNameCanNotBeEmpty"));
 
 
             var isDuplicated = await _packingTypeRepository.GetAll()
-                .AnyAsync(x => x.DisplayName.ToUpper().Equals(displayName.ToUpper()));
+                .Where(x => x.Id != input.Id)
+                .AnyAsync(x => x.DisplayName.ToUpper().Equals(input.DisplayName.ToUpper()));
 
             if (isDuplicated)
                 throw new UserFriendlyException(L("PackingTypeNameCanNotBeDuplicated"));
@@ -157,7 +158,7 @@ namespace TACHYON.Packing.PackingTypes
                     throw new UserFriendlyException(
                         "The translation for this language already exists, you can modify it");
                 }
-                ObjectMapper.Map(input, translation); 
+                ObjectMapper.Map(input, translation);
             }
         }
 
