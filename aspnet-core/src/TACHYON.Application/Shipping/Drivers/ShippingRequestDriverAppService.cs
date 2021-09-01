@@ -278,6 +278,10 @@ namespace TACHYON.Shipping.Drivers
                 case RoutePointStatus.StartLoading:
                     trip.RoutePointStatus = RoutePointStatus.FinishLoading;
                     await _shippingRequestManager.SendSmsToReceivers(trip.Id);
+                    if(Point.PickingType==PickingType.Pickup)
+                    {
+                        Point.ActualPickupOrDeliveryDate = trip.ActualPickupDate = Clock.Now;
+                    }
                     break;
                 case RoutePointStatus.StartedMovingToOfLoadingLocation:
                     trip.RoutePointStatus = RoutePointStatus.ArrivedToDestination;
@@ -288,6 +292,16 @@ namespace TACHYON.Shipping.Drivers
                     break;
                 case RoutePointStatus.StartOffloading:
                     trip.RoutePointStatus = RoutePointStatus.FinishOffLoadShipment;
+                    if (Point.PickingType == PickingType.Dropoff)
+                    {
+                        Point.ActualPickupOrDeliveryDate = Clock.Now;
+                    }
+
+                    //if all points delivered, actual delivery date of last point will be stored in trip
+                    if(!trip.RoutPoints.Any(x=> x.ActualPickupOrDeliveryDate == null && x.Id!=Point.Id))
+                    {
+                        trip.ActualDeliveryDate = Clock.Now;
+                    }
 
                     break;
             }
@@ -464,6 +478,7 @@ namespace TACHYON.Shipping.Drivers
                 trip.DriverStatus = ShippingRequestTripDriverStatus.None;
                 trip.RejectedReason = string.Empty;
                 trip.RejectReasonId = default(int?);
+                trip.ActualDeliveryDate = trip.ActualPickupDate = null;
                 trip.RoutPoints.ToList().ForEach(item =>
                 {
                     item.IsActive = false;
@@ -471,6 +486,7 @@ namespace TACHYON.Shipping.Drivers
                     item.Status = RoutePointStatus.StandBy;
                     item.IsDeliveryNoteUploaded = false;
                     item.RoutPointDocuments.Clear();
+                    item.ActualPickupOrDeliveryDate = null;
                     //item.ShippingRequestTripAccidents.Clear();
                     //item.ShippingRequestTripTransitions.Clear();
                 });

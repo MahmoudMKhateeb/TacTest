@@ -78,6 +78,8 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         [StringLength(ShippingRequestTripConsts.MaxNoteLength)]
         public string Note { get; set; }
 
+        public DateTime? ActualPickupDate { get; set; }
+        public DateTime? ActualDeliveryDate { get; set; }
         #region Prices
         public bool IsShipperHaveInvoice { get; set; }
         public bool IsCarrierHaveInvoice { get; set; }
