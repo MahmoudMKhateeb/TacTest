@@ -1,12 +1,15 @@
-﻿using Abp.Configuration;
+﻿using Abp.BackgroundJobs;
+using Abp.Configuration;
 using Abp.Dependency;
 using Abp.Localization;
 using Abp.Runtime.Session;
+using Castle.Core.Internal;
 using Castle.Core.Logging;
 using RestSharp;
 using System;
 using System.Threading.Tasks;
 using TACHYON.Configuration;
+using TACHYON.Net.Sms.UnifonicSms;
 
 namespace TACHYON.Net.Sms
 {
@@ -15,15 +18,16 @@ namespace TACHYON.Net.Sms
         public ILogger Logger { get; set; }
         private readonly ILocalizationContext _localizationContext;
         private readonly ISettingManager _settingManager;
-        private readonly UnifonicSmsClient _unifonicSmsClient;
+        private readonly IBackgroundJobManager _backgroundJobManager;
 
 
-        public SmsSender(ILocalizationContext localizationContext, ISettingManager settingManager, UnifonicSmsClient unifonicSmsClient)
+
+        public SmsSender(ILocalizationContext localizationContext, ISettingManager settingManager, IBackgroundJobManager backgroundJobManager)
         {
             Logger = NullLogger.Instance;
             _localizationContext = localizationContext;
             _settingManager = settingManager;
-            _unifonicSmsClient = unifonicSmsClient;
+            _backgroundJobManager = backgroundJobManager;
         }
 
         public async Task<bool> SendAsync(string number, string message)
@@ -31,9 +35,13 @@ namespace TACHYON.Net.Sms
             /* Implement this service to send SMS to users (can be used for two factor auth). */
 
             if (string.IsNullOrEmpty(number) || string.IsNullOrEmpty(message)) return false;
-            var response = await _unifonicSmsClient.SendSmsAsync(AddCountryCode(number), message);
-            return response.ErrorException == null;
+            var jobId = await _backgroundJobManager.EnqueueAsync<UnifonicSendSmsJob, UnifonicSendSmsJobArgs>(new UnifonicSendSmsJobArgs
+            {
+                Recipient = AddCountryCode(number),
+                Text = message
+            });
 
+            return jobId.IsNullOrEmpty();
 
         }
 
@@ -50,8 +58,13 @@ namespace TACHYON.Net.Sms
             var l7 = "\n" + L("PleaseOnClickFollowingLinkToTrackYourShipmentAndRateTheShippingCompany").Localize(_localizationContext) + ": " + link;
 
             var message = l1 + l2 + l3 + l4 + l5 + l6 + l7;
-            var response = await _unifonicSmsClient.SendSmsAsync(AddCountryCode(number), message);
-            return response.ErrorException == null;
+            var jobId = await _backgroundJobManager.EnqueueAsync<UnifonicSendSmsJob, UnifonicSendSmsJobArgs>(new UnifonicSendSmsJobArgs
+            {
+                Recipient = AddCountryCode(number),
+                Text = message
+            });
+
+            return jobId.IsNullOrEmpty();
 
         }
 

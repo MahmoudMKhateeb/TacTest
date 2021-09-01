@@ -18,18 +18,12 @@ using TACHYON.Configuration.Dto;
 using TACHYON.Configuration.Host.Dto;
 using TACHYON.Editions;
 using TACHYON.Net.Sms;
+using TACHYON.Net.Sms.UnifonicSms;
 using TACHYON.Security;
 using TACHYON.Timing;
 
 namespace TACHYON.Configuration.Host
 {
-    public class TestUnifonicSmsInput
-    {
-        public string Text { get; set; }
-        public string Number { get; set; }
-
-
-    }
 
     [AbpAuthorize(AppPermissions.Pages_Administration_Host_Settings)]
     public class HostSettingsAppService : SettingsAppServiceBase, IHostSettingsAppService
@@ -39,21 +33,21 @@ namespace TACHYON.Configuration.Host
         private readonly EditionManager _editionManager;
         private readonly ITimeZoneService _timeZoneService;
         readonly ISettingDefinitionManager _settingDefinitionManager;
-        private readonly UnifonicSmsClient _unifonicSmsClient;
+        private readonly ISmsSender _smsSender;
 
         public HostSettingsAppService(
             IEmailSender emailSender,
             EditionManager editionManager,
             ITimeZoneService timeZoneService,
             ISettingDefinitionManager settingDefinitionManager,
-            IAppConfigurationAccessor configurationAccessor, UnifonicSmsClient unifonicSmsClient) : base(emailSender, configurationAccessor)
+            IAppConfigurationAccessor configurationAccessor, ISmsSender smsSender) : base(emailSender, configurationAccessor)
         {
             ExternalLoginOptionsCacheManager = NullExternalLoginOptionsCacheManager.Instance;
 
             _editionManager = editionManager;
             _timeZoneService = timeZoneService;
             _settingDefinitionManager = settingDefinitionManager;
-            _unifonicSmsClient = unifonicSmsClient;
+            _smsSender = smsSender;
         }
 
         #region Get Settings
@@ -694,14 +688,21 @@ namespace TACHYON.Configuration.Host
 
         }
 
-        public async Task<UnifonicResponseRoot> TestUnifonicSms(TestUnifonicSmsInput testUnifonicSmsInput)
+        public async Task<bool> TestUnifonicSms(TestUnifonicSmsInput testUnifonicSmsInput)
         {
-            var result = await _unifonicSmsClient.SendSmsAsync(testUnifonicSmsInput.Number, testUnifonicSmsInput.Text);
-            return result.Data;
+            return await _smsSender.SendAsync(testUnifonicSmsInput.Number, testUnifonicSmsInput.Text);
         }
 
         #endregion
 
         #endregion
+    }
+
+    public class TestUnifonicSmsInput
+    {
+        public string Text { get; set; }
+        public string Number { get; set; }
+
+
     }
 }
