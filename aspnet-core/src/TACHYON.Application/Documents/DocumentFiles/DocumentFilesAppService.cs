@@ -386,7 +386,8 @@ namespace TACHYON.Documents.DocumentFiles
 
             var documentFile = ObjectMapper.Map<DocumentFile>(input);
 
-            if (input.DocumentTypeDto.IsNumberUnique)
+            if (input.DocumentTypeDto!=null && input.DocumentTypeDto.IsNumberUnique)
+            //if(input.DocumentTypeDto.IsNumberUnique)
             {
                 var count = await _documentFileRepository.CountAsync(x => x.Number == input.Number && x.DocumentTypeId == input.DocumentTypeId);
                 if (count > 0)
@@ -394,7 +395,10 @@ namespace TACHYON.Documents.DocumentFiles
                     throw new UserFriendlyException(L("document number should be unique message"));
                 }
             }
-            documentFile.Name = input.DocumentTypeDto.DisplayName + "_" + AbpSession.GetTenantId();
+            if (string.IsNullOrEmpty(documentFile.Name))
+            {
+                documentFile.Name = input.DocumentTypeDto.DisplayName + "_" + AbpSession.GetTenantId();
+            }
 
 
             if (AbpSession.TenantId != null)

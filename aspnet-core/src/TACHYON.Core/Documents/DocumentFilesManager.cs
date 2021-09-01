@@ -296,6 +296,15 @@ namespace TACHYON.Documents
             documentFile.RejectionReason = "";
 
         }
+
+        public async Task DeleteDocumentFile(DocumentFile documentFile)
+        {
+            if (documentFile.BinaryObjectId != null)
+            {
+                await _binaryObjectManager.DeleteAsync(documentFile.BinaryObjectId.Value);
+            }
+            await _documentFileRepository.DeleteAsync(documentFile.Id);
+        }
         //---R
 
         /// <summary>

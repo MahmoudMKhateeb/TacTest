@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using TACHYON.Documents.DocumentFiles.Dtos;
 using TACHYON.Routs.RoutPoints.Dtos;
 using TACHYON.ShippingRequestTripVases.Dtos;
 
@@ -22,6 +23,7 @@ namespace TACHYON.Shipping.Trips.Dto
         public string Truck { get; set; }
         public string OriginFacility { get; set; }
         public string DestinationFacility { get; set; }
+        public DocumentFileDto DocumentFile { get; set; }
 
         public ICollection<RoutPointDto> RoutPoints { get; set; }
         public ICollection<ShippingRequestTripVasDto> ShippingRequestTripVases { get; set; }

@@ -31,6 +31,8 @@ import {
   DocumentTypeDto,
   ShippingRequestRouteType,
   ShippingRequestTripVasDto,
+  DocumentTypesServiceProxy,
+  FileDto,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { Router } from '@angular/router';
@@ -94,10 +96,9 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     injector: Injector,
     private _routStepsServiceProxy: RoutStepsServiceProxy,
     private _shippingRequestTripsService: ShippingRequestsTripServiceProxy,
-    private _fileDownloadService: FileDownloadService,
+    public _fileDownloadService: FileDownloadService,
     private _waybillsServiceProxy: WaybillsServiceProxy,
     private cdref: ChangeDetectorRef,
-    private _documentFilesServiceProxy: DocumentFilesServiceProxy,
     private _TripService: TripService,
     private _PointsService: PointsService,
     private _tokenService: TokenService
@@ -161,7 +162,12 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       this._TripService.updateActiveTripId(this.activeTripId);
       this._shippingRequestTripsService.getShippingRequestTripForEdit(record.id).subscribe((res) => {
         this.trip = res;
-        //this.PointsComponent.wayPointsList = this.trip.routPoints;
+        if (res.createOrEditDocumentFileDto) {
+          this.trip.createOrEditDocumentFileDto.documentTypeDto = new DocumentTypeDto();
+          this.trip.createOrEditDocumentFileDto = res.createOrEditDocumentFileDto;
+        } else {
+          this.trip.createOrEditDocumentFileDto = new CreateOrEditDocumentFileDto();
+        }
         this._PointsService.updateWayPoints(this.trip.routPoints);
         this.loading = false;
       });
@@ -190,12 +196,14 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     this.active = false;
     this.modal.hide();
     this.trip = new CreateOrEditShippingRequestTripDto();
+    this.fileToken = undefined;
   }
 
   createOrEditTrip() {
     //if there is a Validation issue in the Points do Not Proceed
     if (this.validatePointsBeforeAddTrip()) {
       this.saving = true;
+      !this.trip.hasAttachment ? (this.trip.createOrEditDocumentFileDto = null) : '';
       this._shippingRequestTripsService
         .createOrEdit(this.trip)
         .pipe(
@@ -362,6 +370,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     this.trip = undefined;
     this.TripsServiceSubscription.unsubscribe();
     this.PointsServiceSubscription.unsubscribe();
+    this.docProgress = undefined;
     console.log('Detsroid From Create/Edit Trip');
   }
 

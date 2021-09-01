@@ -653,11 +653,11 @@ namespace TACHYON.Notifications
             await _notificationPublisher.PublishAsync(AppNotificationNames.NotificationWhenTripDetailsChanged, notificationData, userIds: users.ToArray());
         }
 
-        public async Task NotifyCarrierWhenTripHasAttachment(int tripId,int? carrierTenantId)
+        public async Task NotifyCarrierWhenTripHasAttachment(int tripId,int? carrierTenantId, bool hasAttachment)
         {
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(
-                    L("TripHasAttachment"),
+                   hasAttachment? L("TripHasAttachment") :L("TripAttachmentRemoved"),
                     TACHYONConsts.LocalizationSourceName
                 )
             );
