@@ -109,6 +109,10 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   TripsServiceSubscription: any;
   PointsServiceSubscription: any;
   wayBillIsDownloading: boolean;
+
+  get isFileInputValid() {
+    return this.trip.hasAttachment ? (this.trip.createOrEditDocumentFileDto.name ? true : false) : true;
+  }
   ngOnInit() {
     //link the trip from the shared service to the this component
     this.TripsServiceSubscription = this._TripService.currentActiveTrip.subscribe((res) => (this.trip = res));
