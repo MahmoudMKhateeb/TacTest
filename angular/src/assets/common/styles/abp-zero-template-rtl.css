@@ -108,3 +108,6 @@ nav.m-menu__submenu--right span.m-menu__arrow {
 .p-checkbox {
   margin-left: 7px !important;
 }
+.not-drop {
+  transform: translate3d(-60px, 1px, 0);
+}
