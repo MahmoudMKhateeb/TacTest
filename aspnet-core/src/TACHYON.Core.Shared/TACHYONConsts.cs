@@ -81,6 +81,8 @@
 
         public const string DriverIqamaDocumentTypeSpecialConstant = "DriverIqama";
 
+        public const string TripAttachmentDocumentTypeSpecialConstant = "TripAttachment";
+
 
 
 

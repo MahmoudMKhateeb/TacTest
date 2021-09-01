@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace TACHYON.Documents.DocumentsEntities
 {
-  [DataContract]
+    [DataContract]
     public enum DocumentsEntitiesEnum : int
     {
         [Description("Tenant")]
@@ -17,5 +17,7 @@ namespace TACHYON.Documents.DocumentsEntities
         Driver = 2,
         [Description("Truck")]
         Truck = 3,
+        [Description("Trip")]
+        Trip = 3,
     }
 }

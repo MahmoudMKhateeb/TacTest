@@ -162,30 +162,26 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       this._TripService.updateActiveTripId(this.activeTripId);
       this._shippingRequestTripsService.getShippingRequestTripForEdit(record.id).subscribe((res) => {
         this.trip = res;
-        if (res.createOrEditDocumentFileDto) {
-          this.trip.createOrEditDocumentFileDto.documentTypeDto = new DocumentTypeDto();
-          this.trip.createOrEditDocumentFileDto = res.createOrEditDocumentFileDto;
-        } else {
-          this.trip.createOrEditDocumentFileDto = new CreateOrEditDocumentFileDto();
-        }
         this._PointsService.updateWayPoints(this.trip.routPoints);
         this.loading = false;
       });
     } else {
       //this is a create
       //init file document
-      this.trip = new CreateOrEditShippingRequestTripDto();
+      this._shippingRequestTripsService.getShippingRequestTripForCreate().subscribe((result) => {
+        this.trip = result;
+        this.trip.createOrEditDocumentFileDto.extn = '_';
+        this.trip.createOrEditDocumentFileDto.name = '_';
+      });
+
       this._TripService.updateActiveTripId(null);
       this._PointsService.updateSinglePoint(new CreateOrEditRoutPointDto());
       this._PointsService.updateWayPoints([]);
       this._TripService.currentShippingRequest.subscribe((res) => (this.trip.startTripDate = res.shippingRequest.startTripDate));
-      this.trip.createOrEditDocumentFileDto = new CreateOrEditDocumentFileDto();
-      this.trip.createOrEditDocumentFileDto.extn = '_';
-      this.trip.createOrEditDocumentFileDto.name = '_';
-      this.trip.createOrEditDocumentFileDto.documentTypeDto = new DocumentTypeDto();
       this.loading = false;
       this.trip.shippingRequestId = this.shippingRequest.id;
     }
+
     this.active = true;
     this.modal.show();
     this.initDocsUploader();
@@ -203,7 +199,9 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     //if there is a Validation issue in the Points do Not Proceed
     if (this.validatePointsBeforeAddTrip()) {
       this.saving = true;
-      !this.trip.hasAttachment ? (this.trip.createOrEditDocumentFileDto = null) : '';
+      if (!this.trip.hasAttachment) {
+        this.trip.createOrEditDocumentFileDto = null;
+      }
       this._shippingRequestTripsService
         .createOrEdit(this.trip)
         .pipe(
