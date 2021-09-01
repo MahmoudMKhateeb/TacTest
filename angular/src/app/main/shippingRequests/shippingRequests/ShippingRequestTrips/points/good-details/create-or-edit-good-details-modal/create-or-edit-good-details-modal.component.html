@@ -10,8 +10,8 @@
   tabindex="-10000"
 >
   <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <form *ngIf="active" #goodsDetailForm="ngForm" (ngSubmit)="AddGoodDetail()" autocomplete="off" novalidate>
+    <div *ngIf="active" class="modal-content">
+      <form #goodsDetailForm="ngForm" (ngSubmit)="AddOrEditGoodDetail()" autocomplete="off" novalidate>
         <div class="modal-header">
           <h4 class="modal-title">
             <span>{{ l('AddNewGoodDetail') }}</span>
@@ -31,7 +31,7 @@
                     <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allSubGoodCategorys }">
                       <select
                         #subgoodsDetail="ngModel"
-                        [(ngModel)]="goodsDetail.goodCategoryId"
+                        [(ngModel)]="goodCategoryId"
                         class="form-control"
                         name="goodsDetail.goodCategoryId"
                         [disabled]="!allSubGoodCategorys"
@@ -50,7 +50,7 @@
                     <label for="GoodsDetail_Weight">{{ l('Weight') }} <span class="required-fileds">*</span> </label>
                     <input
                       #GoodsWeight="ngModel"
-                      [(ngModel)]="goodsDetail.weight"
+                      [(ngModel)]="weight"
                       class="form-control"
                       id="GoodsDetail_Weight"
                       [maxLength]="7"
@@ -72,7 +72,7 @@
                     <label for="goodsDetail.amount">{{ l('Quantity') }} <span class="required-fileds">*</span> </label>
                     <input
                       #GoodsAmount="ngModel"
-                      [(ngModel)]="goodsDetail.amount"
+                      [(ngModel)]="amount"
                       class="form-control"
                       id="goodsDetail.amount"
                       name="goodsDetail.amount"
@@ -95,7 +95,7 @@
                     <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allUnitOfMeasure }">
                       <select
                         #GoodsUnitOfMeasure="ngModel"
-                        [(ngModel)]="goodsDetail.unitOfMeasureId"
+                        [(ngModel)]="unitOfMeasureId"
                         class="form-control"
                         name="goodsDetail.unitOfMeasureId"
                         [disabled]="!allUnitOfMeasure"
@@ -115,7 +115,7 @@
                     <label for="GoodsDetail_Description">{{ l('Description') }} <span class="required-fileds">*</span> </label>
                     <input
                       #Description="ngModel"
-                      [(ngModel)]="goodsDetail.description"
+                      [(ngModel)]="description"
                       class="form-control"
                       id="GoodsDetail_Description"
                       name="Description"
@@ -129,7 +129,7 @@
                 <div class="col-lg-6">
                   <div class="form-group">
                     <label for="GoodsDetail_Dimentions">{{ l('Dimentions') }}</label>
-                    <input [(ngModel)]="goodsDetail.dimentions" class="form-control" id="GoodsDetail_Dimentions" name="Dimentions" type="text" />
+                    <input [(ngModel)]="dimentions" class="form-control" id="GoodsDetail_Dimentions" name="Dimentions" type="text" />
                   </div>
                 </div>
                 <div class="col-lg-6 mt-10">
@@ -137,7 +137,7 @@
                     <label class="checkbox checkbox-danger">
                       <input
                         #CheckDan="ngModel"
-                        [(ngModel)]="goodsDetail.isDangerousGood"
+                        [(ngModel)]="isDangerousGood"
                         id="GoodsDetail_IsDangerousGood"
                         name="IsDangerousGood"
                         type="checkbox"
@@ -171,16 +171,16 @@
                 </div>
 
                 <div class="col-lg-6">
-                  <div class="form-group" [hidden]="!goodsDetail.isDangerousGood">
+                  <div class="form-group" [hidden]="!isDangerousGood">
                     <label for="GoodsDetail_DangerousGoodsCode">{{ l('DangerousGoodsCode') }} <span class="required-fileds">*</span> </label>
                     <input
                       #DangerousGoods="ngModel"
-                      [(ngModel)]="goodsDetail.dangerousGoodsCode"
+                      [(ngModel)]="dangerousGoodsCode"
                       class="form-control"
                       id="GoodsDetail_DangerousGoodsCode"
                       name="DangerousGoodsCode"
                       type="text"
-                      [required]="goodsDetail.isDangerousGood"
+                      [required]="isDangerousGood"
                       [class.is-invalid]="DangerousGoods.touched && !DangerousGoods.valid"
                       [class.is-valid]="DangerousGoods.touched && DangerousGoods.valid"
                     />
@@ -190,7 +190,6 @@
             </div>
           </div>
         </div>
-
         <div class="modal-footer">
           <button (click)="close()" class="btn btn-default" type="button">{{ l('Cancel') }}</button>
           <button [disabled]="!goodsDetailForm.form.valid" class="btn btn-primary blue" type="submit">

@@ -43,6 +43,8 @@ export class GoodDetailsComponent extends AppComponentBase implements OnInit, On
       this.Point = res;
       this.goodsDetailList = res.goodsDetailListDto || [];
     });
+    //  this.goodsDetailList = [];
+
     this.loadGoodSubCategory(this.MainGoodsCategory);
   }
 

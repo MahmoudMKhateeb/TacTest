@@ -22,8 +22,8 @@ export class PointsService {
   private goodDetail = new BehaviorSubject<GoodsDetailDto>(new GoodsDetailDto());
   CurrentGoodDetail = this.goodDetail.asObservable();
 
-  private goodDetailsList = new BehaviorSubject<CreateOrEditGoodsDetailDto[]>([]);
-  currentGoodDetailsList = this.goodDetailsList.asObservable();
+  // private goodDetailsList = new BehaviorSubject<CreateOrEditGoodsDetailDto[]>([]);
+  // currentGoodDetailsList = this.goodDetailsList.asObservable();
 
   /**
    * Takes the single point as an input and updates it
@@ -46,7 +46,7 @@ export class PointsService {
    * updates the Goods List From Outside
    * @param newList
    */
-  updateGoodDetailsList(newList: CreateOrEditGoodsDetailDto[]) {
-    this.goodDetailsList.next(newList);
-  }
+  // updateGoodDetailsList(newList: CreateOrEditGoodsDetailDto[]) {
+  //  // this.goodDetailsList.next(newList);
+  // }
 }

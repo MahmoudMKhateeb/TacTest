@@ -38,7 +38,7 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
   }
   @ViewChild('createOrEditFacilityModal') public createOrEditFacilityModal: ModalDirective;
   @ViewChild('createRouteStepModal') public createRouteStepModal: ModalDirective;
-  @ViewChild('PointGoodDetailsComponent') public PointGoodDetailsComponent: GoodDetailsComponent;
+  // @ViewChild('PointGoodDetailsComponent') public PointGoodDetailsComponent: GoodDetailsComponent;
 
   MainGoodsCategory: number;
   NumberOfDrops: number;
