@@ -230,11 +230,12 @@
               <label>{{ l('SelectFile') }} {{ fileToken }} </label>
               <div class="custom-file">
                 <input
+                  name="file"
                   (change)="DocFileChangeEvent($event, trip.createOrEditDocumentFileDto)"
                   type="file"
                   class="custom-file-input"
                   accept="image/x-png,image/jpeg,application/pdf"
-                  required
+                  [required]="trip.hasAttachment"
                 />
                 <label class="custom-file-label text-truncate" [for]="trip.createOrEditDocumentFileDto.name">
                   {{ trip.createOrEditDocumentFileDto.name ? trip.createOrEditDocumentFileDto.name : l('SelectFile') }}</label
@@ -243,7 +244,7 @@
               <div class="margin-top-5">
                 <p-progressBar [value]="docProgress" [style]="{ height: '6px', width: '100' }"></p-progressBar>
               </div>
-              <div class="mt-2" *ngIf="trip.createOrEditDocumentFileDto.binaryObjectId">
+              <div class="mt-2" *ngIf="trip.createOrEditDocumentFileDto.name">
                 <div class="d-flex align-items-center flex-wrap mb-8">
                   <!--begin::Symbol-->
                   <div class="symbol symbol-50 symbol-light mr-3 ml-3">
@@ -297,7 +298,7 @@
 
             <button
               type="submit"
-              [disabled]="saving || !shippingRequestTripsForm.form.valid || tripStartDate.invalid || endTripDate.invalid"
+              [disabled]="saving || !shippingRequestTripsForm.form.valid || tripStartDate.invalid || endTripDate.invalid || !isFileInputValid"
               class="btn btn-primary font-weight-bolder btn-sm py-3 px-6"
               (click)="createOrEditTrip()"
             >
