@@ -70,6 +70,6 @@ namespace TACHYON.Routs.RoutPoints
         [CanBeNull] public string Note { get; set; }
         public bool IsDeliveryNoteUploaded { get; set; }
 
-
+        public DateTime? ActualPickupOrDeliveryDate { get; set; }
     }
 }
