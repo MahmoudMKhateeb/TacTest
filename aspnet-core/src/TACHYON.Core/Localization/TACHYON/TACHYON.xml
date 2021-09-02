@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <localizationDictionary culture="en">
-	<texts>    <text name="Goods">Goods</text>
+	<texts>
+    <text name="Goods">Goods</text>
     <text name="DangerousGoodType">Dangerous good type</text>
     <text name="TACHYON.Goods.DangerousGoodType">DangerousGoodType</text>
     <text name="DangerousGoodTypesHeaderInfo">Dangerous good types header info</text>
@@ -2330,5 +2331,8 @@
     <!--<text name="StartOffloading"></text>
     <text name="ReceiverConfirmed"></text>
     <text name="DeliveryConfirmation"></text>-->
+		
+		<text name="TripDataChanged">You Have Trip With Id {0} Changed Please Review All Of Trip Changes</text>
+		
 	</texts>
 </localizationDictionary>

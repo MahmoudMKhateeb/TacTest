@@ -2144,5 +2144,6 @@
     <!--<text name="StartOffloading"></text>
     <text name="ReceiverConfirmed"></text>
     <text name="DeliveryConfirmation"></text>-->
+		<text name="TripDataChanged">لديك رحلة بالمعرف {0} تم تغييرها ، يرجى مراجعة جميع تغييرات الرحلة</text>
 	</texts>
 </localizationDictionary>

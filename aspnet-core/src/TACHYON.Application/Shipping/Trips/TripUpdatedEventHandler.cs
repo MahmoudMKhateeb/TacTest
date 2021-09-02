@@ -1,12 +1,15 @@
 ﻿// unset
 
+using Abp;
 using Abp.Dependency;
 using Abp.Events.Bus.Entities;
 using Abp.Events.Bus.Handlers;
 using Abp.Extensions;
 using Abp.Threading;
 using NPOI.HSSF.Record;
+using System.Threading.Tasks;
 using TACHYON.BayanIntegration;
+using TACHYON.Firebases;
 using TACHYON.Notifications;
 using TACHYON.Shipping.ShippingRequestTrips;
 
@@ -15,17 +18,21 @@ namespace TACHYON.Shipping.Trips
     public class TripUpdatedEventHandler : IEventHandler<EntityUpdatedEventData<ShippingRequestTrip>>, ITransientDependency
     {
         private readonly BayanIntegrationManager _bayanIntegrationManager;
+        private readonly IAppNotifier _appNotifier;
+        private readonly IFirebaseNotifier _firebaseNotifier;
 
-        public TripUpdatedEventHandler(BayanIntegrationManager bayanIntegrationManager)
+        public TripUpdatedEventHandler(BayanIntegrationManager bayanIntegrationManager, IAppNotifier appNotifier, IFirebaseNotifier firebaseNotifier)
         {
-
             _bayanIntegrationManager = bayanIntegrationManager;
+            _appNotifier = appNotifier;
+            _firebaseNotifier = firebaseNotifier;
         }
 
         public void HandleEvent(EntityUpdatedEventData<ShippingRequestTrip> eventData)
         {
             //todo send notification for driver and shipper and carrier using eventBus
 
+            AsyncHelper.RunSync(async () => await NotifyTripUpdated(eventData.Entity));
 
             // Add BayanIntegration Jobs To the Queue
             if (eventData.Entity.AssignedDriverUserId.HasValue && eventData.Entity.AssignedTruckId.HasValue)
@@ -38,6 +45,30 @@ namespace TACHYON.Shipping.Trips
                 {
                     AsyncHelper.RunSync(() => _bayanIntegrationManager.QueueEditConsignmentNote(eventData.Entity.Id));
                 }
+            }
+        }
+
+
+        private async Task NotifyTripUpdated(ShippingRequestTrip trip)
+        {
+            var shipperTenantId = trip.ShippingRequestFk.TenantId;
+            var carrierTenantId = trip.ShippingRequestFk.CarrierTenantId;
+
+
+            if (carrierTenantId is null)
+            {
+                await _appNotifier.NotifyShipperWhenTripUpdated(shipperTenantId, trip.Id);
+            }
+            else
+            {
+                await _appNotifier.NotifyShipperAndCarrierWhenTripUpdated
+                    (shipperTenantId, carrierTenantId.Value, trip.Id);
+
+                var driverId = trip.AssignedDriverUserId;
+                if (driverId is null) return;
+
+                var driverIdentifier = new UserIdentifier(carrierTenantId, driverId.Value);
+                await _firebaseNotifier.TripChanged(driverIdentifier, trip.Id.ToString());
             }
         }
     }
