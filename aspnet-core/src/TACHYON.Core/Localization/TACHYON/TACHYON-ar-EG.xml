@@ -264,7 +264,7 @@
 		<text name="CostOfProration">فرق السعر خلال هذه الفترة</text>
 		<text name="CouldNotCompleteLoginOperation">تعذر إكمال عملية تسجيل الدخول</text>
 		<text name="CouldNotValidateExternalUser">لم نتمكن من التحقق من صحة تسجيل دخول المستخدم الخارجي</text>
-		<text name="Count">كمية</text>
+		<text name="Count">الكمية</text>
 		<text name="Counties">الدول</text>
 		<text name="Countries">الدول</text>
 		<text name="CountriesTranslation">ترجمة الدول</text>
@@ -473,6 +473,7 @@
 		<text name="DemoUiComponents_Info_Metronic_Link_Text">Check Metronic theme for more UI components</text>
 		<text name="Description">الوصف</text>
 		<text name="DescriptionNumberOfDrops">يتم تطبيقها على كل شحنة،، على مستوى كل شحنة</text>
+		<text name="Drop">تنزيل</text>
 		<text name="DestFacility">موقع التسليم</text>
 		<text name="Destination">الوجهة</text>
 		<text name="DestinationCity">مدينة الوصول</text>
@@ -1184,6 +1185,7 @@
 		<text name="PickCity">اختر المدينة</text>
 		<text name="PickCounty">اختر الدولة</text>
 		<text name="PickDocumentType">اختر نوع الملف</text>
+		<text name="SourceAndDestinationCantBeTheSame">مدينة الإنطلاق ومدينة الوصول يجب أن لا يكونا متطابقين</text>
 		<text name="PickFacility">اختر المنشأة</text>
 		<text name="PickFromGallery">اختيار من المعرض</text>
 		<text name="PickGoodCategory">اختر نوع البضاعة</text>
@@ -1458,7 +1460,7 @@
 			<a href="/app/main/shippingRequests/shippingRequests/view?id={id}">لديك شحنة لم تكمل الرحلات الخاصة بها</a>
 		</text>
 		<text name="ShippingNote">ملاحظات الشاحن</text>
-		<text name="ShippingRequest">طلب الشحن</text>
+		<text name="ShippingRequest">إنشاء طلب شحن</text>
 		<text name="ShippingRequestAccidentsOccure">
 			<a href="/app/main/shippingRequests/shippingRequests/view?id={id}">لقد حدث حادث للشحنة رقم: {id}.</a>
 		</text>
@@ -1967,6 +1969,7 @@
 		<text name="Value">قيمة</text>
 		<text name="Values">قيم</text>
 		<text name="Vas">الخدمات الإضافية</text>
+		<text name="VASType">النوع</text>
 		<text name="VasAmount">القيمة</text>
 		<text name="VasCount">عدد الخدمات الإضافية</text>
 		<text name="VasDetails">الخدمات الإضافية</text>
