@@ -1466,7 +1466,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>=First(Fields!StartTripDate.Value, "SingleDropDataSet")</Value>
+                <Value>=First(Fields!ActualPickupDate.Value, "SingleDropDataSet")</Value>
                 <Style>
                   <FontSize>8pt</FontSize>
                 </Style>
@@ -7778,10 +7778,14 @@
           <DataField>NeedsDeliveryNote</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="ActualPickupDate">
+          <DataField>ActualPickupDate</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
       </Fields>
       <rd:DataSetInfo>
         <rd:DataSetName>SingleDropDataSet</rd:DataSetName>
-        <rd:SchemaPath>C:\Users\DELL\source\repos\tachyon-core1\tachyon-core1\aspnet-core\src\TACHYON.Application\Waybills\Reports\SingleDropDataSet.xsd</rd:SchemaPath>
+        <rd:SchemaPath>C:\Users\DELL\source\repos\tachyon-core2\aspnet-core\src\TACHYON.Application\Waybills\Reports\SingleDropDataSet.xsd</rd:SchemaPath>
         <rd:TableName>DataTable1</rd:TableName>
         <rd:TableAdapterFillMethod />
         <rd:TableAdapterGetDataMethod />

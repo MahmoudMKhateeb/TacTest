@@ -39,7 +39,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public string CountryName { get; set; }
         public string CityName { get; set; }
         public string Area { get; set; }
-        public DateTime StartTripDate { get; set; }
+        public DateTime? StartTripDate { get; set; }
 
         //carrier name
         public string CarrierName { get; set; }

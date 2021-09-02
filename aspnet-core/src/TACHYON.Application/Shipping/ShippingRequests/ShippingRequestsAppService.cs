@@ -885,7 +885,8 @@ namespace TACHYON.Shipping.ShippingRequests
                 var query = info.Select(x => new
                 {
                     MasterWaybillNo = x.WaybillNumber.Value,
-                    ShippingRequestStatus = (x.AssignedDriverUserId != null && x.AssignedTruckId != null) ? "Final" : "Draft",
+                    ShippingRequestStatus = x.Status == Trips.ShippingRequestTripStatus.Delivered ? "Final" : "Draft",
+                    //(x.AssignedDriverUserId != null && x.AssignedTruckId != null) ? "Final" : "Draft",
                     SenderCompanyName = pickupFacility,//.ShippingRequestFk.Tenant.companyName,
                     DriverName = x.AssignedDriverUserFk != null ? x.AssignedDriverUserFk.FullName : "",
                     DriverIqamaNo = "",
@@ -897,7 +898,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     PlateNumber = x.AssignedTruckFk != null ? x.AssignedTruckFk.PlateNumber : "",
                     IsMultipDrops = x.ShippingRequestFk.NumberOfDrops > 1 ? true : false,
                     TotalDrops = x.ShippingRequestFk.NumberOfDrops,
-                    StartTripDate = x.StartTripDate,
+                    StartTripDate = x.ActualPickupDate,
                     CarrierName = x.ShippingRequestFk.CarrierTenantFk != null ? x.ShippingRequestFk.CarrierTenantFk.TenancyName : "",
                     PackingTypeDisplayName = x.ShippingRequestFk.PackingTypeFk.DisplayName,
                     NumberOfPacking = x.ShippingRequestFk.NumberOfPacking,
@@ -953,7 +954,8 @@ namespace TACHYON.Shipping.ShippingRequests
                 {
                     Id = x.Id,
                     MasterWaybillNo = x.WaybillNumber.Value,
-                    ShippingRequestStatus = (x.AssignedDriverUserId != null && x.AssignedTruckId != null) ? "Final" : "Draft",
+                    ShippingRequestStatus = x.Status == Trips.ShippingRequestTripStatus.Delivered ? "Final" : "Draft",
+                    //(x.AssignedDriverUserId != null && x.AssignedTruckId != null) ? "Final" : "Draft",
                     // SenderCompanyName = "",//x.ShippingRequestFk.Tenant.companyName,
                     ClientName = x.ShippingRequestFk.Tenant.Name,
                     // ReceiverCompanyName = x.ShippingRequestFk.CarrierTenantFk != null ? x.ShippingRequestFk.CarrierTenantFk.companyName : "",
@@ -968,7 +970,8 @@ namespace TACHYON.Shipping.ShippingRequests
                     PackingTypeDisplayName = x.ShippingRequestFk.PackingTypeFk.DisplayName,
                     NumberOfPacking = x.ShippingRequestFk.NumberOfPacking,
                     StartTripDate = x.StartTripDate,
-                    DeliveryDate = x.EndTripDate,
+                    ActualPickupDate=x.ActualPickupDate,
+                    DeliveryDate = x.ActualDeliveryDate,
                     TotalWeight = x.ShippingRequestFk.TotalWeight,
                     GoodCategoryTranslation = x.ShippingRequestFk.GoodCategoryFk.Translations,
                     GoodsCategoryDisplayName = x.ShippingRequestFk.GoodCategoryFk, //x.ShippingRequestFk.GoodCategoryFk.DisplayName,
@@ -1008,6 +1011,7 @@ namespace TACHYON.Shipping.ShippingRequests
                         CityName = pickup?.CityFk.DisplayName,
                         Area = pickup?.Address,
                         StartTripDate = x.StartTripDate,
+                        ActualPickupDate=x.ActualPickupDate,
                         DroppFacilityName = delivery?.Name,
                         DroppCountryName = delivery?.CityFk.CountyFk.DisplayName,
                         DroppCityName = delivery?.CityFk.DisplayName,
@@ -1069,7 +1073,8 @@ namespace TACHYON.Shipping.ShippingRequests
                     Id = x.Id,
                     MasterWaybillNo = x.WaybillNumber.Value,
                     SubWaybillNo = routPoint.WaybillNumber,
-                    ShippingRequestStatus = (x.AssignedDriverUserId != null && x.AssignedTruckId != null) ? "Final" : "Draft",
+                    ShippingRequestStatus = x.Status==Trips.ShippingRequestTripStatus.Delivered ?"Final" :"Draft",
+                    //(x.AssignedDriverUserId != null && x.AssignedTruckId != null) ? "Final" : "Draft",
                     ClientName = x.ShippingRequestFk.Tenant.Name,
                     DriverName = x.AssignedDriverUserFk != null ? x.AssignedDriverUserFk.Name : "",
                     DriverIqamaNo = "",
@@ -1080,9 +1085,11 @@ namespace TACHYON.Shipping.ShippingRequests
                     PlateNumber = x.AssignedTruckFk != null ? x.AssignedTruckFk.PlateNumber : "",
                     PackingTypeDisplayName = x.ShippingRequestFk.PackingTypeFk.DisplayName,
                     NumberOfPacking = x.ShippingRequestFk.NumberOfPacking,
-                    StartTripDate = (x.StartTripDate != null && x.StartTripDate.Year > 1)
-                        ? x.StartTripDate.ToShortDateString()
-                        : "",
+                    StartTripDate =x.StartTripDate,
+                    //(x.StartTripDate != null && x.StartTripDate.Year > 1)
+                    //    ? x.StartTripDate.ToShortDateString()
+                    //    : "",
+                    x.ActualPickupDate,
                     DroppFacilityName = routPoint.FacilityFk.Name,
                     DroppCountryName = routPoint.FacilityFk.CityFk.CountyFk.DisplayName,
                     DroppCityName = routPoint.FacilityFk.CityFk.DisplayName,
@@ -1091,11 +1098,11 @@ namespace TACHYON.Shipping.ShippingRequests
                     TotalWeight = x.ShippingRequestFk.TotalWeight,
                     GoodsCategoryTranslation = x.ShippingRequestFk.GoodCategoryFk.Translations,
                     GoodsCategoryDisplayName = x.ShippingRequestFk.GoodCategoryFk,
-                    DeliveryDate = x.EndTripDate,
+                    DeliveryDate = x.ActualDeliveryDate,
                     HasAttachment=x.HasAttachment,
                     NeedsDeliveryNote=x.NeedsDeliveryNote,
                     ShipperReference=x.ShippingRequestFk.ReferenceNumber
-                });
+                });;
 
                 var SenderpickupPoint = GetSenderInfo(routPoint.ShippingRequestTripId);
                 var contactName = SenderpickupPoint != null ? SenderpickupPoint.FullName : "";

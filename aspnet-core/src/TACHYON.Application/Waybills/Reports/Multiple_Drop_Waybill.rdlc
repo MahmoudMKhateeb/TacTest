@@ -4400,7 +4400,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>:تاريخ و وقت الإستلام</Value>
+                <Value>:تاريخ و وقت التسليم</Value>
                 <Style>
                   <FontSize>9pt</FontSize>
                   <FontWeight>SemiBold</FontWeight>
@@ -4472,7 +4472,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>Pickup Date &amp; Time</Value>
+                <Value>Delivery Date &amp; Time</Value>
                 <Style>
                   <FontFamily>Open Sans</FontFamily>
                   <FontSize>9pt</FontSize>

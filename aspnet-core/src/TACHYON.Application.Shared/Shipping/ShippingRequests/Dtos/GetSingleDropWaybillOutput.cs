@@ -14,7 +14,8 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public string ShippingRequestStatus { get; set; }
         public long? InvoiceNumber { get; set; }
         public string ShipperReference { get; set; }
-        public DateTime StartTripDate { get; set; }
+        public DateTime? StartTripDate { get; set; }
+        public DateTime? ActualPickupDate { get; set; }
         public DateTime? DeliveryDate { get; set; }
         public double TotalWeight { get; set; }
         public string GoodsCategoryDisplayName { get; set; }
