@@ -696,6 +696,7 @@
 		<text name="Facilities">المنشأت</text>
 		<text name="FacilitiesSetup">إدارة المنشآت</text>
 		<text name="Facility">المنشأة</text>
+		<text name="MissingDocumentFiles">الملفات الناقصة</text>
 		<text name="FacilityName">اسم المنشأة</text>
 		<text name="Failed">فشل</text>
 		<text name="FailedSubscriptionTerminations_Email_Body">فشل إنهاء الاشتراك للشركات التالية {0} في {1}. يمكنك العثور على رسائل الخطأ المفصلة في سجلات النظام.</text>
