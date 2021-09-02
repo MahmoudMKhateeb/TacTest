@@ -44,7 +44,7 @@
                   [class.is-invalid]="sourceFacility.touched && !sourceFacility.valid"
                   [class.is-valid]="sourceFacility.touched && sourceFacility.valid"
                   (ngModelChange)="ValidateTripFacilities()"
-                  (change)="SyncFacilitiesWithService()"
+                  (change)="SyncFacilitiesWithService(); loadReceivers(trip.originFacilityId)"
                   required
                 >
                   <option value="" selected>{{ l('SelectaFacility') }}</option>
@@ -57,6 +57,33 @@
                 </div>
               </div>
             </div>
+            <!-- StartOf::sender -->
+            <div class="form-group col-lg-6">
+              <label>{{ l('Sender') }}</label>
+              <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': receiversLoading }">
+                <div class="input-group">
+                  <select
+                    #receiver="ngModel"
+                    name="receiver"
+                    class="form-control"
+                    [(ngModel)]="pickupPointSenderId"
+                    [class.is-valid]="receiver.touched && receiver.valid"
+                    [class.is-invalid]="receiver.touched && !receiver.valid"
+                    [disabled]="receiversLoading || !trip.originFacilityId"
+                    required
+                  >
+                    <option value="">{{ l('SelectAPickUpAgent') }}</option>
+                    <option *ngFor="let item of allReceivers" [ngValue]="item.id">{{ item.displayName }}</option>
+                  </select>
+                  <div class="input-group-btn">
+                    <button class="btn btn-primary" [disabled]="receiversLoading" (click)="createOrEditReceiverModal.show()">
+                      <i class="flaticon-plus"></i>{{ l('New') }}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- EndOf::sender -->
             <div class="col-lg-6 form-group">
               <label> {{ l('DestFacility') }} <span class="required-fileds">*</span></label>
               <div class="input-group">
@@ -83,6 +110,7 @@
               </div>
             </div>
             <!--  end:: Source Dest Facilitys  -->
+            <div class="col-lg-6"></div>
             <!--  begin:: Trip start&End Dates-->
             <div class="col-lg-6">
               <div class="form-group">
@@ -292,7 +320,7 @@
           <div class="modal-footer">
             <!--begin::Buttons-->
 
-            <button [disabled]="saving" type="button" class="btn btn-primary font-weight-bolder btn-sm py-3 px-6" (click)="close()">
+            <button [disabled]="saving" type="button" class="btn btn-secondary font-weight-bolder btn-sm py-3 px-6" (click)="close()">
               {{ l('Close') }}
             </button>
 
@@ -311,4 +339,16 @@
     </div>
   </div>
 </div>
+<!-- begin::CreateOrEditFacility -->
 <createOrEditFacilityModal #createOrEditFacilityModal (modalSave)="refreshOrGetFacilities($event)"> </createOrEditFacilityModal>
+<!-- end::CreateOrEditFacility -->
+
+<!-- begin::CreateOrEditReceiver -->
+<createOrEditReceiverModal
+  #createOrEditReceiverModal
+  [facilityIdFromTrips]="trip.originFacilityId"
+  [agentType]="'sender'"
+  (modalSave)="loadReceivers(trip.originFacilityId)"
+>
+</createOrEditReceiverModal>
+<!--End::CreateOrEditReceiver-->
