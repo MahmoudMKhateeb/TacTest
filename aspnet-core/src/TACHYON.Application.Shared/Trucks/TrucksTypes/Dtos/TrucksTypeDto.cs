@@ -7,7 +7,7 @@ namespace TACHYON.Trucks.TrucksTypes.Dtos
 {
     public class TrucksTypeDto : EntityDto<long>
     {
-       // public string DisplayName { get; set; }
+        public string DisplayName { get; set; }
 
         public int? TransportTypeId { get; set; }
 
