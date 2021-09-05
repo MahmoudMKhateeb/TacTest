@@ -33,6 +33,7 @@ using TACHYON.Receivers;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Routs.RoutSteps;
 using TACHYON.Shipping.DirectRequests;
+using TACHYON.Shipping.DirectRequests.Dto;
 using TACHYON.Shipping.ShippingRequestBids;
 using TACHYON.Shipping.ShippingRequestBids.Dtos;
 using TACHYON.Shipping.ShippingRequests.Dtos;
@@ -80,7 +81,7 @@ namespace TACHYON.Shipping.ShippingRequests
             BidDomainService bidDomainService,
             IRepository<Capacity, int> capacityRepository, IRepository<TransportType, int> transportTypeRepository, IRepository<RoutPoint, long> routPointRepository,
             IRepository<ShippingRequestsCarrierDirectPricing> carrierDirectPricingRepository,
-            IRepository<ShippingRequestDirectRequest, long> shippingRequestDirectRequestRepository, PriceOfferManager priceOfferManager, IRepository<InvoiceTrip, long> invoiveTripRepository)
+            IRepository<ShippingRequestDirectRequest, long> shippingRequestDirectRequestRepository, PriceOfferManager priceOfferManager, IRepository<InvoiceTrip, long> invoiveTripRepository, ShippingRequestDirectRequestAppService shippingRequestDirectRequestAppService)
         {
             _vasPriceRepository = vasPriceRepository;
             _shippingRequestRepository = shippingRequestRepository;
@@ -106,6 +107,7 @@ namespace TACHYON.Shipping.ShippingRequests
             _shippingRequestDirectRequestRepository = shippingRequestDirectRequestRepository;
             _priceOfferManager = priceOfferManager;
             _InvoiveTripRepository = invoiveTripRepository;
+            _shippingRequestDirectRequestAppService = shippingRequestDirectRequestAppService;
         }
         private readonly IRepository<ShippingRequestsCarrierDirectPricing> _carrierDirectPricingRepository;
         private readonly IRepository<VasPrice> _vasPriceRepository;
@@ -132,6 +134,7 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly IRepository<ShippingRequestTripVas, long> _shippingRequestTripVasRepository;
         private readonly PriceOfferManager _priceOfferManager;
         private readonly IRepository<InvoiceTrip, long> _InvoiveTripRepository;
+        private readonly ShippingRequestDirectRequestAppService _shippingRequestDirectRequestAppService;
         public async Task<GetAllShippingRequestsOutputDto> GetAll(GetAllShippingRequestsInput Input)
         {
             DisableTenancyFilters();
@@ -223,6 +226,8 @@ namespace TACHYON.Shipping.ShippingRequests
                 {
                     throw new UserFriendlyException(L("feature SendDirectRequest not enabled"));
                 }
+               
+
             }
 
             if (input.Id == null)
@@ -327,7 +332,7 @@ namespace TACHYON.Shipping.ShippingRequests
             //shippingRequest.IsDrafted = false;
         }
 
-        public async Task PublishShippingRequest(long id)
+        public async Task PublishShippingRequest(long id, int? CarrierTenantId)
         {
             ShippingRequest shippingRequest = await GetDraftedShippingRequest(id);
             if (shippingRequest.DraftStep < 4)
@@ -335,6 +340,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 throw new UserFriendlyException(L("YouMustCompleteWizardStepsFirst"));
             }
             await ValidateShippingRequestBeforePublish(shippingRequest);
+            await SendtoCarrierIfShippingRequestIsDirectRequest(shippingRequest);
             // _commissionManager.AddShippingRequestCommissionSettingInfo(shippingRequest);
             shippingRequest.IsDrafted = false;
         }
@@ -390,7 +396,20 @@ namespace TACHYON.Shipping.ShippingRequests
                 shippingRequest.BidStatus = shippingRequest.BidStartDate.Value.Date == Clock.Now.Date ? ShippingRequestBidStatus.OnGoing : ShippingRequestBidStatus.StandBy;
                 await SendNotificationToCarriersWithTheSameTrucks(shippingRequest);
             }
+
         }
+
+        private async Task SendtoCarrierIfShippingRequestIsDirectRequest(ShippingRequest shippingRequest)
+        {
+            if (shippingRequest.IsDirectRequest)
+            {
+                var directRequestInput = new CreateShippingRequestDirectRequestInput();
+                directRequestInput.CarrierTenantId = shippingRequest.CarrierTenantId.Value;
+                directRequestInput.ShippingRequestId = shippingRequest.Id;
+                await _shippingRequestDirectRequestAppService.Create(directRequestInput);
+            }
+        }
+
 
         #endregion
 

@@ -17,6 +17,10 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public DateTime? BidEndDate { get; set; }
         public virtual bool IsTachyonDeal { get; set; }
         public bool IsDirectRequest { get; set; }
+        /// <summary>
+        /// this field describes carrier that will send direct request for, when the request isDirectRequest
+        /// </summary>
+        public int? CarrierTenantIdForDirectRequest { get; set; }
         [Required]
         public int ShippingTypeId { get; set; }
         [Required]
@@ -48,6 +52,11 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
             else
             {
                 RequestType = ShippingRequestType.DirectRequest;
+            }
+
+            if(IsDirectRequest && CarrierTenantIdForDirectRequest == null)
+            {
+                context.Results.Add(new ValidationResult("You must choose one carrier to send direct request"));
             }
         }
     }
