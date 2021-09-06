@@ -313,7 +313,7 @@
               </div>
             </div>
             <!--  start:: RouteSteps -->
-            <PointsComponent #PointsComponent (SelectedWayPointsFromChild)="trip.routPoints = $event"></PointsComponent>
+            <PointsComponent #PointsComponent (SelectedWayPointsFromChild)="trip.routPoints = $event" [usedIn]="'createOrEdit'"></PointsComponent>
             <!--  end:: RouteSteps -->
             <!--end::Body-->
           </div>
@@ -326,7 +326,7 @@
 
             <button
               type="submit"
-              [disabled]="saving || !shippingRequestTripsForm.form.valid || tripStartDate.invalid || endTripDate.invalid || !isFileInputValid"
+              [disabled]="saving || !shippingRequestTripsForm.form.valid || !isFileInputValid"
               class="btn btn-primary font-weight-bolder btn-sm py-3 px-6"
               (click)="createOrEditTrip()"
             >
@@ -342,7 +342,6 @@
 <!-- begin::CreateOrEditFacility -->
 <createOrEditFacilityModal #createOrEditFacilityModal (modalSave)="refreshOrGetFacilities($event)"> </createOrEditFacilityModal>
 <!-- end::CreateOrEditFacility -->
-
 <!-- begin::CreateOrEditReceiver -->
 <createOrEditReceiverModal
   #createOrEditReceiverModal

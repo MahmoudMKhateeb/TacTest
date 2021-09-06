@@ -72,15 +72,28 @@
                             <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
                           </a>
                           <ul *dropdownMenu class="dropdown-menu">
-                            <ng-template [ngIf]="feature.isEnabled('App.Shipper') && record.pickingType == PickingType.Dropoff">
+                            <ng-template [ngIf]="record.pickingType == PickingType.Dropoff">
                               <li>
                                 <!--                                  AddRouteStep(i)-->
-                                <a class="dropdown-item" (click)="createOrEditPointModal.show(i)">{{ l('Edit') }}</a>
+                                <a
+                                  class="dropdown-item"
+                                  [hidden]="usedIn == 'view'"
+                                  *ngIf="feature.isEnabled('App.Shipper')"
+                                  (click)="createOrEditPointModal.show(i)"
+                                  >{{ l('Edit') }}</a
+                                >
                               </li>
                               <li>
-                                <a class="dropdown-item" (click)="delete(i)" *ngIf="record.pickingType == PickingType.Dropoff && !activeTripId">{{
-                                  l('Delete')
-                                }}</a>
+                                <a
+                                  class="dropdown-item"
+                                  [hidden]="usedIn == 'view'"
+                                  (click)="delete(i)"
+                                  *ngIf="feature.isEnabled('App.Shipper') && record.pickingType == PickingType.Dropoff && !activeTripId"
+                                  >{{ l('Delete') }}</a
+                                >
+                              </li>
+                              <li>
+                                <a class="dropdown-item" [hidden]="usedIn !== 'view'" (click)="viewPointDetailsModal.show(record)">{{ l('View') }}</a>
                               </li>
                             </ng-template>
                             <li>
@@ -124,6 +137,9 @@
   <!--Create/Edit Point Modal-->
   <createOrEditPointModal #createOrEditPointModal></createOrEditPointModal>
   <!--END::Create/Edit Point Modal-->
+  <!--  View Point Modal  -->
+  <view-point-details-modal #viewPointDetailsModal></view-point-details-modal>
+  <!--End :: ViewPointModal    -->
 </div>
 
 <!--begin::CreateOrEditFacilityModal -->

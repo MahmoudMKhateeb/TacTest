@@ -7,7 +7,13 @@
       </h3>
       <div class="card-toolbar">
         <!--          openAddNewGoodDetailModal()-->
-        <button type="button" class="btn btn-primary blue" (click)="createOrEditGoodDetail.show()" [disabled]="!MainGoodsCategory">
+        <button
+          *ngIf="usedIn !== 'view'"
+          type="button"
+          class="btn btn-primary blue"
+          (click)="createOrEditGoodDetail.show()"
+          [disabled]="!MainGoodsCategory"
+        >
           <i class="fa fa-plus"></i>
           {{ l('AddNewGoodDetails') }}
         </button>
@@ -19,7 +25,7 @@
         <div class="col-lg-12 mt-4">
           <div class="row align-items-center">
             <!--<Primeng-Datatable-Start>-->
-            <div [busyIf]="allSubGoodCategorysLoading" class="primeng-datatable-container col-12">
+            <div [busyIf]="usedIn == 'view' ? !goodDetailsListForView : allSubGoodCategorysLoading" class="primeng-datatable-container col-12">
               <p-table
                 ScrollWidth="100%"
                 [paginator]="false"
@@ -27,7 +33,7 @@
                 [resizableColumns]="primengTableHelper.resizableColumns"
                 [responsive]="primengTableHelper.isResponsive"
                 [scrollable]="true"
-                [value]="goodsDetailList"
+                [value]="this.usedIn == 'view' ? goodDetailsListForView : goodsDetailList"
                 rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"
               >
                 <ng-template pTemplate="header">
@@ -49,13 +55,22 @@
                 <ng-template let-record="$implicit" pTemplate="body" let-i="rowIndex">
                   <tr>
                     <td>
-                      <div class="dropdown">
-                        <button class="btn btn-icon btn-danger btn-circle mr-1" (click)="DeleteGoodDetail(i)">
-                          <i class="la la-trash"></i>
-                        </button>
-                        <button class="btn btn-icon btn-danger btn-circle" (click)="createOrEditGoodDetail.show(i)">
-                          <i class="flaticon-edit"></i>
-                        </button>
+                      <span class="ui-column-title"> {{ l('Actions') }}</span>
+                      <div class="btn-group dropdown" container="body" dropdown>
+                        <a class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
+                          <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
+                        </a>
+                        <ul *dropdownMenu class="dropdown-menu">
+                          <li>
+                            <a class="dropdown-item" (click)="createOrEditGoodDetail.show(i)" *ngIf="usedIn !== 'view'">{{ l('Edit') }}</a>
+                          </li>
+                          <li>
+                            <a class="dropdown-item" (click)="DeleteGoodDetail(i)" *ngIf="usedIn !== 'view'">{{ l('Delete') }}</a>
+                          </li>
+                          <li>
+                            <a class="dropdown-item" [hidden]="usedIn !== 'view'" (click)="viewGoodDetails.show(record)">{{ l('view') }}</a>
+                          </li>
+                        </ul>
                       </div>
                     </td>
                     <td>
@@ -85,9 +100,11 @@
     </div>
   </div>
 </div>
-<!--     Endof::GoodDetailsSection           -->
+<!--     Endof::GoodDetailsSection -->
 <createOrEditGoodDetailsModal
   #createOrEditGoodDetail
   [GoodDetailsListInput]="goodsDetailList"
   (modalSave)="Point.goodsDetailListDto = goodsDetailList = $event"
 ></createOrEditGoodDetailsModal>
+
+<view-good-details #viewGoodDetails [allSubGoodCategorys]="allSubGoodCategorys"></view-good-details>

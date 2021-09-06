@@ -144,18 +144,17 @@
                         [class.is-valid]="CheckDan.touched && CheckDan.valid"
                       />
                       <span></span>
-
                       {{ l('IsDangerousGood') }}
                     </label>
                   </div>
                 </div>
-                <div class="col-lg-6" [hidden]="!goodsDetail.isDangerousGood">
+                <div class="col-lg-6" [hidden]="!isDangerousGood">
                   <div class="form-group">
                     <label> {{ l('DangerousGoodType') }} <span class="required-fileds">*</span> </label>
                     <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': isDangerousGoodLoading }">
                       <select
                         #DangerousGoodTypes="ngModel"
-                        [(ngModel)]="goodsDetail.dangerousGoodTypeId"
+                        [(ngModel)]="dangerousGoodsTypeId"
                         class="form-control"
                         name="goodsDetail.dangerousGoodTypeId"
                         [disabled]="!allSubGoodCategorys"
@@ -191,7 +190,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button (click)="close()" class="btn btn-default" type="button">{{ l('Cancel') }}</button>
+          <button (click)="close()" class="btn btn-secondary" type="button">{{ l('Cancel') }}</button>
           <button [disabled]="!goodsDetailForm.form.valid" class="btn btn-primary blue" type="submit">
             <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
           </button>
