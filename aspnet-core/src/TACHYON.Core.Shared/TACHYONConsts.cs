@@ -46,9 +46,9 @@
 
         #region Tachyon consts
         public const int MaxDocumentFileBytesUserFriendlyValue = 5;
-        public const string ShipperEdtionName= "shipper";
+        public const string ShipperEdtionName = "shipper";
         public const string CarrierEdtionName = "carrier";
-        public const string TachyonDealerEdtionName = "Tachyon dealer";
+        public const string TachyonDealerEdtionName = "Tachyon";
 
         //BidStatus consts
         public const int ShippingRequestStatusStandBy = 1;
@@ -70,14 +70,21 @@
         public const int TruckDefualtPlateTypeId = 1;
 
         /// <summary>
-        /// Is used for mapping fields for Truck Istimara document in import from excel
+        ///  used for mapping fields for Truck Istimara document in import from excel
         /// </summary>
         public const string TruckIstimaraDocumentTypeSpecialConstant = "TruckIstimara";
 
         /// <summary>
-        /// Is used for mapping fields for Truck Insurance document in import from excel
+        ///  used for mapping fields for Truck Insurance document in import from excel
         /// </summary>
         public const string TruckInsuranceDocumentTypeSpecialConstant = "TruckInsurance";
+
+        public const string DriverIqamaDocumentTypeSpecialConstant = "DriverIqama";
+
+        public const string TripAttachmentDocumentTypeSpecialConstant = "TripAttachment";
+
+
+
 
         #region SMS
         public const string SMSOTP = "SMSOTP";
@@ -85,12 +92,12 @@
         #endregion
         #region Signalr triggers
         #region Tracking
-        public const string TriggerTrackingAccepted="app.tracking.accepted";
+        public const string TriggerTrackingAccepted = "app.tracking.accepted";
         public const string TriggerTrackingStarted = "app.tracking.started";
         public const string TriggerTrackingChanged = "app.tracking.changed";
         public const string TriggerTrackingShipmentDelivered = "app.tracking.Shipment.Delivered";
 
-        
+
         #endregion
         #endregion
         #endregion

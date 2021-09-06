@@ -1,7 +1,7 @@
 ﻿(function () {
     $(function () {
 
-        var _${{entity_Name_Plural_Here}}Table = $('#{{Master_Detail_Child_Prefix_Here}}{{Entity_Name_Plural_Here}}Table');
+        var _${{entity_Name_Plural_Here}}Table = $('#{{Entity_Name_Plural_Here}}Table');
         var _{{entity_Name_Plural_Here}}Service = abp.services.app.{{entity_Name_Plural_Here}};
 		{{EntityTypeFullName_Dec_Here}}
         $('.date-picker').datetimepicker({
@@ -15,7 +15,11 @@
             'delete': abp.auth.hasPermission('{{Permission_Value_Here}}.Delete')
         };
 
-        {{Create_Or_Edit_Modal_Dec_Here}}       
+        var _createOrEditModal = new app.ModalManager({
+            viewUrl: abp.appPath + '{{App_Area_Name_Here}}/{{Entity_Name_Plural_Here}}/CreateOrEditModal',
+            scriptUrl: abp.appPath + 'view-resources/Areas/{{App_Area_Name_Here}}/Views/{{Entity_Name_Plural_Here}}/_CreateOrEditModal.js',
+            modalClass: 'CreateOrEdit{{Entity_Name_Here}}Modal'
+        });
 {{View_Modal_Manager_Here}}
 
 		{{EntityTypeHistoyModal_Dec_Here}}
@@ -27,13 +31,6 @@
             }
             return element.data("DateTimePicker").date().format("YYYY-MM-DDT00:00:00Z"); 
         }
-        
-        var getMaxDateFilter = function (element) {
-            if (element.data("DateTimePicker").date() == null) {
-                return null;
-            }
-            return element.data("DateTimePicker").date().format("YYYY-MM-DDT23:59:59Z"); 
-        }
 
         var dataTable = _${{entity_Name_Plural_Here}}Table.DataTable({
             paging: true,
@@ -43,22 +40,14 @@
                 ajaxFunction: _{{entity_Name_Plural_Here}}Service.getAll,
                 inputFilter: function () {
                     return {
-					filter: $('#{{Master_Detail_Child_Prefix_Here}}{{Entity_Name_Plural_Here}}TableFilter').val(){{Property_Filter_Param_Here}}{{NP_Filter_Param_Here}}{{Master_Detail_Child_Base_Entity_Filter_Here}}
+					filter: $('#{{Entity_Name_Plural_Here}}TableFilter').val(){{Property_Filter_Param_Here}}{{NP_Filter_Param_Here}}
                     };
                 }
             },
             columnDefs: [
                 {
-                    className: 'control responsive',
-                    orderable: false,
-                    render: function () {
-                        return '';
-                    },
-                    targets: 0
-                },
-                {
                     width: 120,
-                    targets: 1,
+                    targets: 0,
                     data: null,
                     orderable: false,
                     autoWidth: false,
@@ -69,17 +58,15 @@
                         items: [{{View_Button_Here}}
 						{
                             text: app.localize('Edit'),
-                            iconStyle: 'far fa-edit mr-2',
                             visible: function () {
                                 return _permissions.edit;
                             },
                             action: function (data) {
-                            {{Edit_Button_OnClick_Here}}                                
+                                _createOrEditModal.open({ id: data.record.{{entity_Name_Here}}.id });
                             }
                         },{{EntityHistory_Action_Here}} 
 						{
                             text: app.localize('Delete'),
-                            iconStyle: 'far fa-trash-alt mr-2',
                             visible: function () {
                                 return _permissions.delete;
                             },
@@ -88,7 +75,7 @@
                             }
                         }]
                     }
-                }{{NP_Looped_One_To_Many_Table_Column_Def_Here}}{{Property_Looped_Template_Here}}{{NP_Looped_Template_Here}}
+                }{{Property_Looped_Template_Here}}{{NP_Looped_Template_Here}}
             ]
         });
 
@@ -113,19 +100,21 @@
             );
         }
 
-		$('#{{Master_Detail_Child_Prefix_Here}}ShowAdvancedFiltersSpan').click(function () {
-            $('#{{Master_Detail_Child_Prefix_Here}}ShowAdvancedFiltersSpan').hide();
-            $('#{{Master_Detail_Child_Prefix_Here}}HideAdvancedFiltersSpan').show();
-            $('#{{Master_Detail_Child_Prefix_Here}}AdvacedAuditFiltersArea').slideDown();
+		$('#ShowAdvancedFiltersSpan').click(function () {
+            $('#ShowAdvancedFiltersSpan').hide();
+            $('#HideAdvancedFiltersSpan').show();
+            $('#AdvacedAuditFiltersArea').slideDown();
         });
 
-        $('#{{Master_Detail_Child_Prefix_Here}}HideAdvancedFiltersSpan').click(function () {
-            $('#{{Master_Detail_Child_Prefix_Here}}HideAdvancedFiltersSpan').hide();
-            $('#{{Master_Detail_Child_Prefix_Here}}ShowAdvancedFiltersSpan').show();
-            $('#{{Master_Detail_Child_Prefix_Here}}AdvacedAuditFiltersArea').slideUp();
+        $('#HideAdvancedFiltersSpan').click(function () {
+            $('#HideAdvancedFiltersSpan').hide();
+            $('#ShowAdvancedFiltersSpan').show();
+            $('#AdvacedAuditFiltersArea').slideUp();
         });
 
-        {{Create_Button_Here}}        
+        $('#CreateNew{{Entity_Name_Here}}Button').click(function () {
+            _createOrEditModal.open();
+        });
 
 		{{Get_Excel_Method_Here}}
 
@@ -143,8 +132,5 @@
 			get{{Entity_Name_Plural_Here}}();
 		  }
 		});
-		
-		{{NP_Looped_One_To_Many_Table_Open_Detail_Row}}
-		{{NP_Looped_One_To_Many_Table_Details_Control_On_Click_Here}}
     });
 })();

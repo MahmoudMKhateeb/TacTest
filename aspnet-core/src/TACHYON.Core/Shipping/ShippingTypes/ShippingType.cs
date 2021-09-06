@@ -15,6 +15,9 @@ namespace TACHYON.Shipping.ShippingTypes
         [StringLength(ShippingTypeConsts.MaxDisplayNameLength, MinimumLength = ShippingTypeConsts.MinDisplayNameLength)]
         public virtual string DisplayName { get; set; }
 
+        [StringLength(ShippingTypeConsts.MaxDescriptionLength, MinimumLength = ShippingTypeConsts.MinDescriptionLength)]
+        public virtual string Description { get; set; }
+
         public ICollection<ShippingTypeTranslation> Translations { get; set; }
     }
 }

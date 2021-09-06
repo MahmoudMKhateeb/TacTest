@@ -1,5 +1,6 @@
 ﻿using Abp.Dependency;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Abp.Threading;
 using Abp.Threading.BackgroundWorkers;
 using Abp.Threading.Timers;
@@ -41,6 +42,7 @@ namespace TACHYON.MultiTenancy
             LocalizationSourceName = TACHYONConsts.LocalizationSourceName;
         }
 
+        [UnitOfWork]
         protected override void DoWork()
         {
             var utcNow = Clock.Now.ToUniversalTime();

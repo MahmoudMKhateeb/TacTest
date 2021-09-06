@@ -79,7 +79,7 @@ namespace TACHYON.Authorization.Users
         /// Can be set to user's plain password to include it in the email.
         /// </param>
         [UnitOfWork]
-        public virtual async Task SendEmailActivationLinkAsync(User user, string link, string plainPassword = null)
+        public virtual async Task SendEmailActivationLinkAsync(User user, string link, string plainPassword)
         {
             // TODO Please Ensure From Localization Strings
 
@@ -109,6 +109,7 @@ namespace TACHYON.Authorization.Users
             mailMessage = mailMessage.Replace("{Email}", L("Email"));
             mailMessage = mailMessage.Replace("{email}", user.EmailAddress);
             mailMessage = mailMessage.Replace("{Password}", L("Password"));
+            mailMessage = mailMessage.Replace("{password}", plainPassword);
             mailMessage = mailMessage.Replace("{ClickTheButton}", L("EmailActivation_ClickTheLinkBelowToVerifyYourEmail"));
             mailMessage = mailMessage.Replace("{ClickTheLink}", L("EmailMessage_CopyTheLinkBelowToYourBrowser"));
             mailMessage = mailMessage.Replace("{link}", link);

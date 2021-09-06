@@ -3,7 +3,7 @@ using System.IO;
 using TACHYON.Web.Helpers;
 
 namespace TACHYON.Web.Startup
-{
+{   
     public class Program
     {
         public static void Main(string[] args)

@@ -36,7 +36,6 @@ namespace TACHYON.Net.Emailing
                 {
                     var bytes = stream.GetAllBytes();
                     var template = Encoding.UTF8.GetString(bytes, 3, bytes.Length - 3);
-                    template = template.Replace("<!-- @format -->", "");
                     template = template.Replace("{THIS_YEAR}", DateTime.Now.Year.ToString());
                     return template.Replace("{EMAIL_LOGO_URL}", GetTenantLogoUrl(tenantId));
                 }

@@ -20,20 +20,19 @@ export class ViewDocumentFileModalComponent extends AppComponentBase {
   active = false;
   saving = false;
 
-  item: GetDocumentFileForViewDto;
+  item: any;
   entityType: DocumentsEntitiesEnum;
   isHost = false;
   documentsEntitiesEnum = DocumentsEntitiesEnum;
 
   constructor(injector: Injector) {
     super(injector);
-    this.item = new GetDocumentFileForViewDto();
-    this.item.documentFile = new DocumentFileDto();
-    this.item.documentType = new DocumentTypeDto();
-    this.item.user = new UserInGetDocumentFileForViewDto();
+    this.item = null;
   }
 
-  show(item: GetDocumentFileForViewDto, entityType: DocumentsEntitiesEnum, isHost: boolean): void {
+  show(item: any, entityType: DocumentsEntitiesEnum, isHost: boolean): void {
+    //a
+    console.log('this : ', this.item);
     this.item = item;
     this.isHost = isHost;
     this.entityType = entityType;

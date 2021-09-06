@@ -1,6 +1,14 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <localizationDictionary culture="en">
-	<texts>
+	<texts>    <text name="Goods">Goods</text>
+    <text name="DangerousGoodType">Dangerous good type</text>
+    <text name="TACHYON.Goods.DangerousGoodType">DangerousGoodType</text>
+    <text name="DangerousGoodTypesHeaderInfo">Dangerous good types header info</text>
+    <text name="CreateNewDangerousGoodType">Create new dangerous good type</text>
+    <text name="EditDangerousGoodType">Edit dangerous good type</text>
+    <text name="DeleteDangerousGoodType">Delete dangerous good type</text>
+    <text name="DangerousGoodTypes">Dangerous good types</text>
+
 		<text name="{0}IsInvalid">"{0}" is invalid</text>
 		<text name="{0}IsRequired">{0} is required.</text>
 		<text name="{0}UserCannotBeDeleted">{0} user can not be deleted.</text>
@@ -633,6 +641,7 @@
 		<text name="EditDocumentType">Edit document type</text>
 		<text name="EditDocumentTypeTranslation">Edit document type translation</text>
 		<text name="EditDriver">Edit driver information</text>
+		<text name="UserID">User Id</text>
 		<text name="EditEdition">Edit subscription type</text>
 		<text name="EditFacility">Edit Facility</text>
 		<text name="EditFacilityModal">Edit facility modal</text>
@@ -727,7 +736,7 @@
 		<text name="EnterNumberOfPacking">Enter the QTY of packing type</text>
 		<text name="EnterNumberOfTrips">Enter number of trips</text>
 		<text name="EnterPackingType">Select packing type</text>
-		<text name="EnterRecipientCode">Please Enter The Code sent to the receiver</text>
+		<text name="EnterRecipientCode">Please enter the code sent to the receiver</text>
 		<text name="EnterTenancyName">Enter company name...</text>
 		<text name="EnterYourDetailsToLoginToYourAccount">Enter your email and password to login</text>
 		<text name="EnterYourEmailAndPassword">Enter your email and password</text>
@@ -813,8 +822,8 @@
 		<text name="GeneralDetails">General details</text>
 		<text name="GeneralSettings">General Settings</text>
 		<text name="Generate">Generate</text>
-		<text name="GiveLocationPermission">Give Us My Location Permission</text>
-		<text name="GoingToPointConformation">Are You Sure You Want To Go To This Point?</text>
+		<text name="GiveLocationPermission">Give us my location permission</text>
+		<text name="GoingToPointConformation">Are you sure you want to go to this point?</text>
 		<text name="GoodCategories">Goods categories</text>
 		<text name="GoodCategoriesHeaderInfo">Goods categories header info</text>
 		<text name="GoodCategory">Goods category</text>
@@ -876,7 +885,7 @@
 		<text name="InActiveAccountExpired">InActive Account Expired</text>
 		<text name="InActiveToleranceDays">InActive Tolerance Days</text>
 		<text name="InCaseOfShippingRequestTypeIsBidding">In Case Of Shipping, Request Type Is Bidding</text>
-		<text name="Incident">Incident!!</text>
+		<text name="Incident">Incident</text>
 		<text name="Income">Income</text>
 		<text name="IncomeStatistics">Income statistics</text>
 		<text name="IncomeWithAmount">Income: {0}</text>
@@ -1104,7 +1113,7 @@
 		<text name="NationalityTranslationsHeaderInfo">Nationality Translations header info</text>
 		<text name="NeedsAction">Needs action</text>
 		<text name="NeedsDeliveryNote">Needs delivery note</text>
-		<text name="NeedToSelectDropPoint">You Need To Select Drop Off Point</text>
+		<text name="NeedToSelectDropPoint">You need to Select drop off point</text>
 		<text name="New">New</text>
 		<text name="NewCapacity">New capacity</text>
 		<text name="NewCapacityCategory">New capacity category</text>
@@ -1194,6 +1203,7 @@
 		<text name="NumberOfDrops">Number of drops</text>
 		<text name="NumberOfPacking">Number of packing type</text>
 		<text name="NumberOfTrips">Number of trips</text>
+		<text name="SourceAndDestinationCantBeTheSame">Source and destination can't be the same</text>
 		<text name="TotalBids">Total bids</text>
 		<text name="NumbersOnly">Numbers only</text>
 		<text name="Object">Object</text>
@@ -1339,6 +1349,7 @@
 		<text name="PickupPointFacilityAndSourceTripFacilityareNotTheSame">Pickup point facility and source trip facilityare not the same</text>
 		<text name="PickUser">Select user</text>
 		<text name="PickVas">Select VAS</text>
+		<text name="VASType">VAS Type</text>
 		<text name="Pin">Pin</text>
 		<text name="Pink">Pink</text>
 		<text name="Place">Send</text>
@@ -1687,6 +1698,7 @@
 		<text name="Static">Static</text>
 		<text name="StaticRole_Tooltip">Static roles can not be deleted.</text>
 		<text name="Status">Status</text>
+		<text name="MissingDocumentFiles">Missingdocument files</text>
 		<text name="StatusName">status</text>
 		<text name="StatusTitle">Status title</text>
 		<text name="StopBiddingOnthisRequest">Stop pricing on this request</text>
@@ -2112,7 +2124,7 @@
 		<text name="UploadLogo_Info">Select a JPG/JPEG/PNG/GIF file with a maximum of 30KB size and 139x35 pixel resolution.</text>
 		<text name="UploadPOD">Upload POD</text>
 		<text name="UploadPODLbl">Upload POD</text>
-		<text name="UploadPODProofOfDelivery">Please Upload POD</text>
+		<text name="UploadPODProofOfDelivery">Please upload POD</text>
 		<text name="Urdu">Urdu</text>
 		<text name="UsagePolicy">Usage Policy</text>
 		<text name="UseArrowKeysToChooseTheYear">Use arrow keys to choose the year</text>

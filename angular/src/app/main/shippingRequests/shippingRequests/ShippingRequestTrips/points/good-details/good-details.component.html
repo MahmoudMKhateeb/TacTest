@@ -37,24 +37,24 @@
                     </th>
                     <th>
                       {{ l('GoodsName') }}
-                      <p-sortIcon field="goodCategoryDisplayName"></p-sortIcon>
                     </th>
                     <th>
                       {{ l('Quantity') }}
-                      <p-sortIcon field="goodCategoryDisplayName"></p-sortIcon>
                     </th>
                     <th>
                       {{ l('Weight') }}
-                      <p-sortIcon field="goodCategoryDisplayName"></p-sortIcon>
                     </th>
                   </tr>
                 </ng-template>
                 <ng-template let-record="$implicit" pTemplate="body" let-i="rowIndex">
                   <tr>
                     <td>
-                      <div class="btn-group dropdown">
-                        <button class="btn font-weight-bold btn-danger btn-icon float-right" (click)="DeleteGoodDetail(i)">
-                          <i class="la la-trash float-right"></i>
+                      <div class="dropdown">
+                        <button class="btn btn-icon btn-danger btn-circle mr-1" (click)="DeleteGoodDetail(i)">
+                          <i class="la la-trash"></i>
+                        </button>
+                        <button class="btn btn-icon btn-danger btn-circle" (click)="createOrEditGoodDetail.show(i)">
+                          <i class="flaticon-edit"></i>
                         </button>
                       </div>
                     </td>
@@ -88,6 +88,6 @@
 <!--     Endof::GoodDetailsSection           -->
 <createOrEditGoodDetailsModal
   #createOrEditGoodDetail
-  (modalSave)="Point.goodsDetailListDto = goodsDetailList = $event"
   [GoodDetailsListInput]="goodsDetailList"
+  (modalSave)="Point.goodsDetailListDto = goodsDetailList = $event"
 ></createOrEditGoodDetailsModal>

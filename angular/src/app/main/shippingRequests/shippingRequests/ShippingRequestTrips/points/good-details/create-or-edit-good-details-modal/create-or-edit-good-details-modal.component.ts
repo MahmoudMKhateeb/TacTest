@@ -3,7 +3,7 @@ import { ModalDirective } from '@node_modules/ngx-bootstrap/modal';
 import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
 import {
   CreateOrEditGoodsDetailDto,
-  CreateOrEditRoutPointDto,
+  DangerousGoodTypesServiceProxy,
   GetAllGoodsCategoriesForDropDownOutput,
   GoodsDetailDto,
   GoodsDetailsServiceProxy,
@@ -12,8 +12,6 @@ import {
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
-import { CreateOrEditFacilityModalComponent } from '@app/main/addressBook/facilities/create-or-edit-facility-modal.component';
-import { GoodDetailsComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/good-details/good-details.component';
 import { Subscription } from '@node_modules/rxjs';
 
 @Component({
@@ -25,38 +23,49 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
   @ViewChild('createOrEditGoodDetail', { static: false }) public createOrEditGoodDetail: ModalDirective;
 
   active = false;
-  singleWayPoint: CreateOrEditRoutPointDto;
-  goodsDetail: GoodsDetailDto = new GoodsDetailDto();
-  goodsDetailList: CreateOrEditGoodsDetailDto[] = [];
-
+  // singleWayPoint: CreateOrEditRoutPointDto;
+  goodsDetail: CreateOrEditGoodsDetailDto = new GoodsDetailDto();
+  myGoodsDetailList: CreateOrEditGoodsDetailDto[] = [];
   allUnitOfMeasure: SelectItemDto[];
   GoodCategory: number;
   allSubGoodCategorys: GetAllGoodsCategoriesForDropDownOutput[];
+  isDangerousGoodLoading: boolean;
+  allDangerousGoodTypes: SelectItemDto[];
+
+  private activeEditId: number;
 
   constructor(
     injector: Injector,
     private _PointsService: PointsService,
     private _TripService: TripService,
     private _shippingRequestsServiceProxy: ShippingRequestsServiceProxy,
-    private _goodsDetailsServiceProxy: GoodsDetailsServiceProxy
+    private _goodsDetailsServiceProxy: GoodsDetailsServiceProxy,
+    private _dangerousGoodTypesAppService: DangerousGoodTypesServiceProxy
   ) {
     super(injector);
   }
   @Input() GoodDetailsListInput: CreateOrEditGoodsDetailDto[];
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
   tripServiceSubs$: Subscription;
-  pointServiceSubs$: Subscription;
+  // pointServiceSubs$: Subscription;
+  goodCategoryId: number;
+  weight: number;
+  amount: number;
+  unitOfMeasureId: number;
+  description: string;
+  isDangerousGood: boolean;
+  dangerousGoodsCode: string;
+  dimentions: string;
   ngOnDestroy() {
     this.tripServiceSubs$.unsubscribe();
-    this.pointServiceSubs$.unsubscribe();
-    console.log('Destroy From Create/Edit Good Details Component');
+    // this.pointServiceSubs$.unsubscribe();
   }
   ngOnInit(): void {
-    this.goodsDetailList = this.GoodDetailsListInput || [];
+    this.myGoodsDetailList = this.GoodDetailsListInput || [];
     //take the current Active WayPoint From the Shared Service
     this.tripServiceSubs$ = this._TripService.currentShippingRequest.subscribe((res) => (this.GoodCategory = res.shippingRequest.goodCategoryId));
     //sync the singleWayPoint From the Service
-    this.pointServiceSubs$ = this._PointsService.currentSingleWayPoint.subscribe((res) => (this.singleWayPoint = res));
+    // this.pointServiceSubs$ = this._PointsService.currentSingleWayPoint.subscribe((res) => (this.singleWayPoint = res));
     this.loadAllDropDowns();
   }
   /**
@@ -67,21 +76,60 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
       this.allUnitOfMeasure = result;
     });
     this.loadGoodSubCategory(this.GoodCategory);
+    this.loadGoodDangerousTypes();
   }
 
-  show() {
+  show(id?) {
     this.active = true;
+    // console.log('this is a Good Details Edit OutSide Of Edit....', id, this.myGoodsDetailList);
+    this.goodsDetail = new GoodsDetailDto();
+    //if there is an id this is an edit
+    if (typeof id !== 'undefined') {
+      // console.log('this is a Good Details Edit ....', id);
+      // console.log(this.myGoodsDetailList);
+      this.activeEditId = id;
+      this.goodCategoryId = this.myGoodsDetailList[id].goodCategoryId;
+      this.weight = this.myGoodsDetailList[id].weight;
+      this.amount = this.myGoodsDetailList[id].amount;
+      this.unitOfMeasureId = this.myGoodsDetailList[id].unitOfMeasureId;
+      this.description = this.myGoodsDetailList[id].description;
+      this.isDangerousGood = this.myGoodsDetailList[id].isDangerousGood;
+      this.dangerousGoodsCode = this.myGoodsDetailList[id].dangerousGoodsCode;
+      this.dimentions = this.myGoodsDetailList[id].dimentions;
+    }
     this.createOrEditGoodDetail.show();
+    this.loadAllDropDowns();
   }
   close() {
     this.active = false;
-    this.goodsDetail = new GoodsDetailDto();
+    this.activeEditId = undefined;
+    this.goodCategoryId = undefined;
+    this.weight = undefined;
+    this.amount = undefined;
+    this.unitOfMeasureId = undefined;
+    this.description = undefined;
+    this.isDangerousGood = undefined;
+    this.dangerousGoodsCode = undefined;
+    this.dimentions = undefined;
     this.createOrEditGoodDetail.hide();
   }
 
-  AddGoodDetail() {
-    this.goodsDetailList.push(this.goodsDetail);
-    this.modalSave.emit(this.goodsDetailList);
+  AddOrEditGoodDetail() {
+    this.goodsDetail.goodCategoryId = this.goodCategoryId;
+    this.goodsDetail.weight = this.weight;
+    this.goodsDetail.amount = this.amount;
+    this.goodsDetail.unitOfMeasureId = this.unitOfMeasureId;
+    this.goodsDetail.description = this.description;
+    this.goodsDetail.isDangerousGood = this.isDangerousGood;
+    this.goodsDetail.dimentions = this.dimentions;
+    this.goodsDetail.dangerousGoodsCode = this.dangerousGoodsCode;
+    //inCase of Edit Update the Record Dont Create A new one
+    if (typeof this.activeEditId !== 'undefined') {
+      this.myGoodsDetailList[this.activeEditId] = this.goodsDetail;
+    } else {
+      this.myGoodsDetailList.push(this.goodsDetail);
+    }
+    this.modalSave.emit(this.myGoodsDetailList);
     this.close();
   }
 
@@ -96,5 +144,16 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
         this.allSubGoodCategorys = result;
       });
     }
+  }
+
+  /**
+   * load All Good Dangerous Types For DropDown
+   */
+  loadGoodDangerousTypes() {
+    this.isDangerousGoodLoading = true;
+    this._dangerousGoodTypesAppService.getAllForDropdownList().subscribe((res) => {
+      this.isDangerousGoodLoading = false;
+      this.allDangerousGoodTypes = res;
+    });
   }
 }

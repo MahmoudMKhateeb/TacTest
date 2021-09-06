@@ -1,4 +1,4 @@
-import { AppSessionService } from '@shared/common/session/app-session.service';
+﻿import { AppSessionService } from '@shared/common/session/app-session.service';
 import { Injectable } from '@angular/core';
 import { AppMenu } from './app-menu';
 import { AppMenuItem } from './app-menu-item';
@@ -466,6 +466,7 @@ export class AppNavigationService {
           new AppMenuItem('ShippingTypes', 'Pages.ShippingTypes', '', '/app/main/shippingTypes/shippingTypes'),
           new AppMenuItem('Routes', 'Pages.RoutTypes', '', '/app/main/routs/routes'),
           new AppMenuItem('GoodCategories', 'Pages.GoodCategories', '', '/app/main/goodCategories/goodCategories'),
+          new AppMenuItem('DangerousGoodTypes', 'Pages.DangerousGoodTypes', '', '/app/main/goods/dangerousGoodTypes'),
           new AppMenuItem('PackingTypes', 'Pages.PackingTypes', '', '/app/main/packingTypes/packingTypes'),
           new AppMenuItem('UnitOfMeasures', 'Pages.Administration.UnitOfMeasures', '', '/app/admin/unitOfMeasures/unitOfMeasures'),
           new AppMenuItem('Vas', 'Pages.Administration.Vases', '', '/app/admin/vases/vases'),
@@ -790,7 +791,7 @@ export class AppNavigationService {
 
       //new AppMenuItem('DemoUiComponents', 'Pages.DemoUiComponents', 'flaticon-shapes', '/app/admin/demo-ui-components'),
     ]);
-    console.log('menu', JSON.stringify(menu));
+    // console.log('menu', JSON.stringify(menu));
     return menu;
   }
 

@@ -39,6 +39,25 @@ namespace TACHYON.Documents.DocumentFiles
     public class DocumentFilesAppService : TACHYONAppServiceBase, IDocumentFilesAppService
     {
 
+        private readonly IRepository<Tenant, int> _lookupTenantRepository;
+        private readonly IRepository<DocumentFile, Guid> _documentFileRepository;
+        private readonly IDocumentFilesExcelExporter _documentFilesExcelExporter;
+        private readonly IRepository<DocumentType, long> _lookupDocumentTypeRepository;
+        private readonly IRepository<Truck, long> _lookupTruckRepository;
+        private readonly IRepository<Trailer, long> _lookupTrailerRepository;
+        private readonly IRepository<User, long> _lookupUserRepository;
+        private readonly IRepository<RoutStep, long> _lookupRoutStepRepository;
+        private readonly ITempFileCacheManager _tempFileCacheManager;
+        private readonly IBinaryObjectManager _binaryObjectManager;
+        private readonly IRepository<DocumentType, long> _documentTypeRepository;
+        private readonly IRepository<DocumentsEntity, int> _documentEntityRepository;
+        private readonly IRepository<Edition, int> _editionRepository;
+        private readonly DocumentFilesManager _documentFilesManager;
+        private readonly TenantManager _tenantManager;
+        private readonly IAppNotifier _appNotifier;
+        private readonly IUserEmailer _userEmailer;
+
+        public IAppUrlService _appUrlService { get; set; }
 
         public DocumentFilesAppService(TenantManager tenantManager,
             IRepository<DocumentFile, Guid> documentFileRepository,
@@ -78,24 +97,6 @@ namespace TACHYON.Documents.DocumentFiles
             _appUrlService = NullAppUrlService.Instance;
         }
 
-        private readonly IRepository<Tenant, int> _lookupTenantRepository;
-        private readonly IRepository<DocumentFile, Guid> _documentFileRepository;
-        private readonly IDocumentFilesExcelExporter _documentFilesExcelExporter;
-        private readonly IRepository<DocumentType, long> _lookupDocumentTypeRepository;
-        private readonly IRepository<Truck, long> _lookupTruckRepository;
-        private readonly IRepository<Trailer, long> _lookupTrailerRepository;
-        private readonly IRepository<User, long> _lookupUserRepository;
-        private readonly IRepository<RoutStep, long> _lookupRoutStepRepository;
-        private readonly ITempFileCacheManager _tempFileCacheManager;
-        private readonly IBinaryObjectManager _binaryObjectManager;
-        private readonly IRepository<DocumentType, long> _documentTypeRepository;
-        private readonly IRepository<DocumentsEntity, int> _documentEntityRepository;
-        private readonly IRepository<Edition, int> _editionRepository;
-        private readonly DocumentFilesManager _documentFilesManager;
-        private readonly TenantManager _tenantManager;
-        private readonly IAppNotifier _appNotifier;
-        private readonly IUserEmailer _userEmailer;
-        private readonly IAppUrlService _appUrlService;
 
         public async Task<LoadResult> GetAllTenantsSubmittedDocuments(GetAllForListDocumentFilesInput input)
         {
@@ -385,7 +386,8 @@ namespace TACHYON.Documents.DocumentFiles
 
             var documentFile = ObjectMapper.Map<DocumentFile>(input);
 
-            if (input.DocumentTypeDto.IsNumberUnique)
+            if (input.DocumentTypeDto!=null && input.DocumentTypeDto.IsNumberUnique)
+            //if(input.DocumentTypeDto.IsNumberUnique)
             {
                 var count = await _documentFileRepository.CountAsync(x => x.Number == input.Number && x.DocumentTypeId == input.DocumentTypeId);
                 if (count > 0)
@@ -393,7 +395,10 @@ namespace TACHYON.Documents.DocumentFiles
                     throw new UserFriendlyException(L("document number should be unique message"));
                 }
             }
-            documentFile.Name = input.DocumentTypeDto.DisplayName + "_" + AbpSession.GetTenantId();
+            if (string.IsNullOrEmpty(documentFile.Name))
+            {
+                documentFile.Name = input.DocumentTypeDto.DisplayName + "_" + AbpSession.GetTenantId();
+            }
 
 
             if (AbpSession.TenantId != null)
@@ -430,30 +435,7 @@ namespace TACHYON.Documents.DocumentFiles
             //host can update tenants documents 
             DisableTenancyFiltersIfHost();
 
-            DocumentFile documentFile = await _documentFileRepository
-                .GetAll()
-                .FirstOrDefaultAsync(x => x.Id == (Guid)input.Id);
-
-            if (input.UpdateDocumentFileInput != null && !input.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
-            {
-                if (documentFile.BinaryObjectId != null)
-                {
-                    await _binaryObjectManager.DeleteAsync(documentFile.BinaryObjectId.Value);
-                }
-
-                input.BinaryObjectId = await _documentFilesManager.SaveDocumentFileBinaryObject(input.UpdateDocumentFileInput.FileToken, AbpSession.TenantId);
-                input.IsAccepted = false;
-                input.IsRejected = false;
-
-            }
-            if (documentFile.ExpirationDate != input.ExpirationDate)
-            {
-                input.IsAccepted = false;
-                input.IsRejected = false;
-            }
-
-            ObjectMapper.Map(input, documentFile);
-            documentFile.RejectionReason = "";
+            await _documentFilesManager.UpdateDocumentFile(input);
 
         }
 
@@ -574,8 +556,7 @@ namespace TACHYON.Documents.DocumentFiles
 
             if (await IsAllRequiredDocumentsApproved(documentFile.TenantId.Value))
             {
-                await _userEmailer.SendAllApprovedDocumentsAsync(documentFile.TenantFk,
-                    _appUrlService.GetTachyonPlatformLoginUrl());
+                await _userEmailer.SendAllApprovedDocumentsAsync(documentFile.TenantFk, _appUrlService.GetTachyonPlatformLoginUrl());
             }
 
         }

@@ -848,7 +848,7 @@ namespace TACHYON.Migrations
                         column: x => x.DynamicParameterId,
                         principalTable: "AbpDynamicParameters",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -869,7 +869,7 @@ namespace TACHYON.Migrations
                         column: x => x.DynamicParameterId,
                         principalTable: "AbpDynamicParameters",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -894,7 +894,7 @@ namespace TACHYON.Migrations
                         column: x => x.EditionId,
                         principalTable: "AbpEditions",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -933,7 +933,7 @@ namespace TACHYON.Migrations
                         column: x => x.EditionId,
                         principalTable: "AbpEditions",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -981,7 +981,7 @@ namespace TACHYON.Migrations
                         column: x => x.EntityChangeSetId,
                         principalTable: "AbpEntityChangeSets",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -1005,7 +1005,7 @@ namespace TACHYON.Migrations
                         column: x => x.WebhookEventId,
                         principalTable: "AbpWebhookEvents",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -1035,7 +1035,7 @@ namespace TACHYON.Migrations
                         column: x => x.CountyId,
                         principalTable: "Counties",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -1063,7 +1063,7 @@ namespace TACHYON.Migrations
                         column: x => x.CoreId,
                         principalTable: "Counties",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -1103,7 +1103,7 @@ namespace TACHYON.Migrations
                         column: x => x.DocumentsEntityId,
                         principalTable: "DocumentsEntities",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_DocumentTypes_AbpEditions_EditionId",
                         column: x => x.EditionId,
@@ -1212,7 +1212,7 @@ namespace TACHYON.Migrations
                         column: x => x.CoreId,
                         principalTable: "Nationalities",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -1240,7 +1240,7 @@ namespace TACHYON.Migrations
                         column: x => x.CoreId,
                         principalTable: "TransportTypes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -1295,7 +1295,7 @@ namespace TACHYON.Migrations
                         column: x => x.CoreId,
                         principalTable: "TruckStatuses",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -1336,7 +1336,7 @@ namespace TACHYON.Migrations
                         column: x => x.UnitOfMeasureId,
                         principalTable: "UnitOfMeasures",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -1366,7 +1366,7 @@ namespace TACHYON.Migrations
                         column: x => x.VasId,
                         principalTable: "Vases",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -1388,7 +1388,7 @@ namespace TACHYON.Migrations
                         column: x => x.EntityDynamicParameterId,
                         principalTable: "AbpEntityDynamicParameters",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -1409,7 +1409,7 @@ namespace TACHYON.Migrations
                         column: x => x.CoreId,
                         principalTable: "TermAndConditions",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -1433,7 +1433,7 @@ namespace TACHYON.Migrations
                         column: x => x.EntityChangeId,
                         principalTable: "AbpEntityChanges",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -1461,7 +1461,7 @@ namespace TACHYON.Migrations
                         column: x => x.CoreId,
                         principalTable: "Cities",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -1492,7 +1492,7 @@ namespace TACHYON.Migrations
                         column: x => x.CityId,
                         principalTable: "Cities",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -1522,7 +1522,7 @@ namespace TACHYON.Migrations
                         column: x => x.CityId,
                         principalTable: "Cities",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -1543,7 +1543,7 @@ namespace TACHYON.Migrations
                         column: x => x.CoreId,
                         principalTable: "DocumentTypes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -1696,7 +1696,7 @@ namespace TACHYON.Migrations
                         column: x => x.UserId,
                         principalTable: "AbpUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -1718,7 +1718,7 @@ namespace TACHYON.Migrations
                         column: x => x.UserId,
                         principalTable: "AbpUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -1742,7 +1742,7 @@ namespace TACHYON.Migrations
                         column: x => x.UserId,
                         principalTable: "AbpUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -1765,7 +1765,7 @@ namespace TACHYON.Migrations
                         column: x => x.UserId,
                         principalTable: "AbpUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -1789,7 +1789,7 @@ namespace TACHYON.Migrations
                         column: x => x.UserId,
                         principalTable: "AbpUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -1816,7 +1816,7 @@ namespace TACHYON.Migrations
                         column: x => x.TrucksTypeId,
                         principalTable: "TrucksTypes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -1844,7 +1844,7 @@ namespace TACHYON.Migrations
                         column: x => x.CoreId,
                         principalTable: "TrucksTypes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -1927,13 +1927,13 @@ namespace TACHYON.Migrations
                         column: x => x.RoleId,
                         principalTable: "AbpRoles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_AbpPermissions_AbpUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AbpUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -1957,7 +1957,7 @@ namespace TACHYON.Migrations
                         column: x => x.RoleId,
                         principalTable: "AbpRoles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -1985,7 +1985,7 @@ namespace TACHYON.Migrations
                         column: x => x.CoreId,
                         principalTable: "Capacities",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -2087,19 +2087,19 @@ namespace TACHYON.Migrations
                         column: x => x.RouteId,
                         principalTable: "Routes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Offers_TrailerTypes_TrailerTypeId",
                         column: x => x.TrailerTypeId,
                         principalTable: "TrailerTypes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Offers_TrucksTypes_TrucksTypeId",
                         column: x => x.TrucksTypeId,
                         principalTable: "TrucksTypes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -2146,19 +2146,19 @@ namespace TACHYON.Migrations
                         column: x => x.PayloadMaxWeightId,
                         principalTable: "PayloadMaxWeights",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Trailers_TrailerStatuses_TrailerStatusId",
                         column: x => x.TrailerStatusId,
                         principalTable: "TrailerStatuses",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Trailers_TrailerTypes_TrailerTypeId",
                         column: x => x.TrailerTypeId,
                         principalTable: "TrailerTypes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -2244,13 +2244,13 @@ namespace TACHYON.Migrations
                         column: x => x.GoodCategoryId,
                         principalTable: "GoodCategories",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_ShippingRequests_Routes_RouteId",
                         column: x => x.RouteId,
                         principalTable: "Routes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_ShippingRequests_ShippingRequestBidStatuses_ShippingRequestBidStatusId",
                         column: x => x.ShippingRequestBidStatusId,
@@ -2262,13 +2262,13 @@ namespace TACHYON.Migrations
                         column: x => x.ShippingRequestStatusId,
                         principalTable: "ShippingRequestStatuses",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_ShippingRequests_AbpTenants_TenantId",
                         column: x => x.TenantId,
                         principalTable: "AbpTenants",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_ShippingRequests_TransportTypes_TransportTypeId",
                         column: x => x.TransportTypeId,
@@ -2280,7 +2280,7 @@ namespace TACHYON.Migrations
                         column: x => x.TrucksTypeId,
                         principalTable: "TrucksTypes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -2322,19 +2322,19 @@ namespace TACHYON.Migrations
                         column: x => x.AssignedDriverUserId,
                         principalTable: "AbpUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_RoutSteps_Trailers_AssignedTrailerId",
                         column: x => x.AssignedTrailerId,
                         principalTable: "Trailers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_RoutSteps_Trucks_AssignedTruckId",
                         column: x => x.AssignedTruckId,
                         principalTable: "Trucks",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_RoutSteps_Cities_DestinationCityId",
                         column: x => x.DestinationCityId,
@@ -2364,7 +2364,7 @@ namespace TACHYON.Migrations
                         column: x => x.PickingTypeId,
                         principalTable: "PickingTypes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_RoutSteps_ShippingRequests_ShippingRequestId",
                         column: x => x.ShippingRequestId,
@@ -2422,7 +2422,7 @@ namespace TACHYON.Migrations
                         column: x => x.ShippingRequestId,
                         principalTable: "ShippingRequests",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_ShippingRequestBids_AbpTenants_TenantId",
                         column: x => x.TenantId,
@@ -2460,13 +2460,13 @@ namespace TACHYON.Migrations
                         column: x => x.ShippingRequestId,
                         principalTable: "ShippingRequests",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_ShippingRequestVases_Vases_VasId",
                         column: x => x.VasId,
                         principalTable: "Vases",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -2506,7 +2506,7 @@ namespace TACHYON.Migrations
                         column: x => x.DocumentTypeId,
                         principalTable: "DocumentTypes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_DocumentFiles_RoutSteps_RoutStepId",
                         column: x => x.RoutStepId,

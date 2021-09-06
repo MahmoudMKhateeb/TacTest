@@ -640,7 +640,7 @@ namespace TACHYON.Notifications
             }
             if (trip.ShippingRequestFk.CarrierTenantId.HasValue && trip.ShippingRequestFk.CarrierTenantId != currentuser.TenantId)
             {
-                var carrier = await UserManager.GetAdminByTenantIdAsync(trip.ShippingRequestFk.CarrierTenantId.Value);
+                var carrier = await _userManager.GetAdminByTenantIdAsync(trip.ShippingRequestFk.CarrierTenantId.Value);
                 users.Add(new UserIdentifier(carrier.TenantId, carrier.Id));
             }
             else if (trip.ShippingRequestFk.IsTachyonDeal)
@@ -653,11 +653,11 @@ namespace TACHYON.Notifications
             await _notificationPublisher.PublishAsync(AppNotificationNames.NotificationWhenTripDetailsChanged, notificationData, userIds: users.ToArray());
         }
 
-        public async Task NotifyCarrierWhenTripHasAttachment(int tripId,int? carrierTenantId)
+        public async Task NotifyCarrierWhenTripHasAttachment(int tripId,int? carrierTenantId, bool hasAttachment)
         {
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(
-                    L("TripHasAttachment"),
+                   hasAttachment? L("TripHasAttachment") :L("TripAttachmentRemoved"),
                     TACHYONConsts.LocalizationSourceName
                 )
             );

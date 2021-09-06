@@ -26,7 +26,7 @@
           <div class="row">
             <div class="col-md-6">
               <div class="form-group m-form__group">
-                <label for="transportTypeId"><span class="text-danger">*</span> {{ l('TransportType') }}</label>
+                <label for="transportTypeId">{{ l('TransportType') }}<span class="text-danger">*</span> </label>
                 <select
                   id="transportTypeId"
                   #transportTypeId="ngModel"
@@ -49,7 +49,7 @@
 
             <div class="col-md-6">
               <div class="form-group m-form__group">
-                <label for="trucksTypeId"><span class="text-danger">*</span> {{ l('TruckType') }}</label>
+                <label for="trucksTypeId">{{ l('TruckType') }}<span class="text-danger">*</span> </label>
                 <select
                   id="trucksTypeId"
                   #trucksTypeId="ngModel"
@@ -74,7 +74,7 @@
 
             <div class="col-md-6">
               <div class="form-group m-form__group">
-                <label for="capacityId"><span class="text-danger">*</span> {{ l('CapacityCategory') }}</label>
+                <label for="capacityId"> {{ l('CapacityCategory') }}<span class="text-danger">*</span></label>
                 <select
                   id="capacityId"
                   #capacityId="ngModel"
@@ -138,7 +138,7 @@
 
           <div class="row">
             <div class="form-group col-md-6">
-              <label for="TruckStatus"><span class="text-danger">*</span> {{ l('TruckStatus') }}</label>
+              <label for="TruckStatus">{{ l('TruckStatus') }}<span class="text-danger">*</span> </label>
               <select
                 #TruckStatus="ngModel"
                 id="TruckStatus"
@@ -157,7 +157,7 @@
               <validation-messages [formCtrl]="TruckStatus"></validation-messages>
             </div>
             <div class="form-group col-md-6">
-              <label for="PlateTypeId"><span class="text-danger">*</span> {{ l('PlateType') }}</label>
+              <label for="PlateTypeId"> {{ l('PlateType') }}<span class="text-danger">*</span></label>
               <select
                 #PlateTypeId="ngModel"
                 id="PlateTypeId"
@@ -177,7 +177,7 @@
             </div>
 
             <div class="form-group col-md-6">
-              <label for="Truck_PlateNumber"><span class="text-danger">*</span> {{ l('PlateNumber') }}</label>
+              <label for="Truck_PlateNumber">{{ l('PlateNumber') }}<span class="text-danger">*</span> </label>
               <input
                 [(ngModel)]="truck.plateNumber"
                 #plateNumberInput="ngModel"
@@ -198,7 +198,7 @@
             </div>
 
             <div class="form-group col-md-6">
-              <label for="Truck_ModelName"> <span class="text-danger">*</span> {{ l('ModelName') }}</label>
+              <label for="Truck_ModelName"> {{ l('ModelName') }}<span class="text-danger">*</span> </label>
               <input
                 [(ngModel)]="truck.modelName"
                 #modelName="ngModel"
@@ -218,7 +218,7 @@
             </div>
 
             <div class="form-group col-md-6">
-              <label for="Truck_ModelYear"> <span class="text-danger">*</span> {{ l('ModelYear') }}</label>
+              <label for="Truck_ModelYear"> {{ l('ModelYear') }}<span class="text-danger">*</span> </label>
               <input
                 #modelYear="bsDatepicker"
                 id="Truck_ModelYear"

@@ -11,8 +11,8 @@ namespace TACHYON
 {
     public abstract class TACHYONDomainServiceBase : DomainService
     {
-        public TenantManager TenantManager { get; set; }
-        public UserManager UserManager { get; set; }
+        //public TenantManager TenantManager { get; set; }
+        //public UserManager UserManager { get; set; }
 
         /* Add your common members for all your domain services. */
         protected TACHYONDomainServiceBase()
@@ -25,23 +25,23 @@ namespace TACHYON
             CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant);
 
         }
-        protected virtual Tenant GetCurrentTenant(IAbpSession abpSession)
-        {
-            using (CurrentUnitOfWork.SetTenantId(null))
-            {
-                return TenantManager.GetById(abpSession.GetTenantId());
-            }
-        }
+        //protected virtual Tenant GetCurrentTenant(IAbpSession abpSession)
+        //{
+        //    using (CurrentUnitOfWork.SetTenantId(null))
+        //    {
+        //        return TenantManager.GetById(abpSession.GetTenantId());
+        //    }
+        //}
 
-        protected virtual async Task<User> GetCurrentUserAsync(IAbpSession abpSession)
-        {
-            var user = await UserManager.FindByIdAsync(abpSession.GetUserId().ToString());
-            if (user == null)
-            {
-                throw new Exception("There is no current user!");
-            }
+        //protected virtual async Task<User> GetCurrentUserAsync(IAbpSession abpSession)
+        //{
+        //    var user = await UserManager.FindByIdAsync(abpSession.GetUserId().ToString());
+        //    if (user == null)
+        //    {
+        //        throw new Exception("There is no current user!");
+        //    }
 
-            return user;
-        }
+        //    return user;
+        //}
     }
 }

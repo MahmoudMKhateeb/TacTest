@@ -1,5 +1,6 @@
-import { NgModule } from '@angular/core';
+﻿import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { DangerousGoodTypesComponent } from './goods/dangerousGoodTypes/dangerousGoodTypes.component';
 import { PackingTypesComponent } from './packingTypes/packingTypes/packingTypes.component';
 import { ShippingTypesComponent } from './shippingTypes/shippingTypes/shippingTypes.component';
 import { CitiesTranslationsComponent } from './citiesTranslations/citiesTranslations/citiesTranslations.component';
@@ -74,6 +75,7 @@ import { DriversSubmittedDocumentsComponent } from '@app/main/documentFiles/docu
       {
         path: '',
         children: [
+          { path: 'goods/dangerousGoodTypes', component: DangerousGoodTypesComponent, data: { permission: 'Pages.DangerousGoodTypes' } },
           {
             path: 'truckCapacitiesTranslations/truckCapacitiesTranslations',
             component: TruckCapacitiesTranslationsComponent,

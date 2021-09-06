@@ -141,6 +141,14 @@ namespace TACHYON.Configuration
             public const string UnifonicAdvertisingSenderId = "App.Sms.UnifonicAdvertisingSenderId";
             public const string UnifonicNotificationSenderId = "App.Sms.UnifonicNotificationSenderId";
         }
+        public static class BayanIntegration
+        {
+            public const string Url = "App.BayanIntegration.Url";
+            public const string AppId = "App.BayanIntegration.AppId";
+            public const string AppKey = "App.BayanIntegration.AppKey";
+            public const string ClientId = "App.BayanIntegration.ClientId";
+        }
+
 
     }
 }

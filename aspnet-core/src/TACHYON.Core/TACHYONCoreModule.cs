@@ -130,11 +130,7 @@ namespace TACHYON
             IocManager.Resolve<AppTimes>().StartupTime = Clock.Now;
 
 
-            var workManager = IocManager.Resolve<IBackgroundWorkerManager>();
-            //workManager.Add(IocManager.Resolve<SendShipmentCodeToReceiverWorker>());
-            workManager.Add(IocManager.Resolve<DriverTripReminderWorker>());
-            workManager.Add(IocManager.Resolve<ShipperReminderToCompelteTripsWroker>());
-            workManager.Add(IocManager.Resolve<TripReminderMissingAcceptWorker>());
+           
 
             
 

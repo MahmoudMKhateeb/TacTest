@@ -16,6 +16,14 @@ export class FileDownloadService {
     location.href = url; //TODO: This causes reloading of same page in Firefox
   }
 
+  /**
+   * downloads a file by Binary Id
+   */
+  downloadFileByBinaryId(fileName: string, BinaryToken: string) {
+    const url = AppConsts.remoteServiceBaseUrl + '/File/DownloadBinaryFile?id=' + BinaryToken + '&contentType=application/zip&fileName=' + fileName;
+    location.href = url;
+  }
+
   GetTempFileUrl(file: FileDto): string {
     return (
       AppConsts.remoteServiceBaseUrl +

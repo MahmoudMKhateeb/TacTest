@@ -2313,6 +2313,47 @@ namespace TACHYON.Migrations
                     b.ToTable("AppFriendships");
                 });
 
+            modelBuilder.Entity("TACHYON.Goods.DangerousGoodType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("BayanIntegrationId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("CreatorUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("DeleterUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("LastModifierUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(255)")
+                        .HasMaxLength(255);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DangerousGoodTypes");
+                });
+
             modelBuilder.Entity("TACHYON.Goods.GoodCategories.GoodCategory", b =>
                 {
                     b.Property<int>("Id")
@@ -2395,6 +2436,9 @@ namespace TACHYON.Migrations
                     b.Property<long?>("CreatorUserId")
                         .HasColumnType("bigint");
 
+                    b.Property<int?>("DangerousGoodTypeId")
+                        .HasColumnType("int");
+
                     b.Property<string>("DangerousGoodsCode")
                         .HasColumnType("nvarchar(64)")
                         .HasMaxLength(64);
@@ -2445,6 +2489,8 @@ namespace TACHYON.Migrations
                         .HasMaxLength(64);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DangerousGoodTypeId");
 
                     b.HasIndex("GoodCategoryId");
 
@@ -3937,6 +3983,9 @@ namespace TACHYON.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<DateTime?>("ActualPickupOrDeliveryDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Code")
                         .HasColumnType("nvarchar(max)");
 
@@ -4548,6 +4597,12 @@ namespace TACHYON.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<DateTime?>("ActualDeliveryDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("ActualPickupDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime?>("AssignedDriverTime")
                         .HasColumnType("datetime2");
 
@@ -4556,6 +4611,9 @@ namespace TACHYON.Migrations
 
                     b.Property<long?>("AssignedTruckId")
                         .HasColumnType("bigint");
+
+                    b.Property<string>("BayanId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("CommissionAmount")
                         .HasColumnType("decimal(18,2)");
@@ -6869,6 +6927,10 @@ namespace TACHYON.Migrations
 
             modelBuilder.Entity("TACHYON.Goods.GoodsDetails.GoodsDetail", b =>
                 {
+                    b.HasOne("TACHYON.Goods.DangerousGoodType", "DangerousGoodTypeFk")
+                        .WithMany()
+                        .HasForeignKey("DangerousGoodTypeId");
+
                     b.HasOne("TACHYON.Goods.GoodCategories.GoodCategory", "GoodCategoryFk")
                         .WithMany()
                         .HasForeignKey("GoodCategoryId")

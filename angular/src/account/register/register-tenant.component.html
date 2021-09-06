@@ -183,19 +183,26 @@
       <div class="col-12">
         <div class="form-group">
           <label>{{ 'MobileNo' | localize }}</label>
-          <input
-            #mobileNo="ngModel"
-            class="form-control"
-            type="number"
-            onkeypress="numberOnly($event)"
-            [(ngModel)]="model.mobileNo"
-            name="MobileNo"
-            required
-            maxlength="128"
-          />
-          <div>
-            <validation-messages [formCtrl]="mobileNo"></validation-messages>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">+966</span>
+            </div>
+            <input
+              style="text-align: left !important"
+              id="mobileNo"
+              #mobileNo="ngModel"
+              name="mobileNo"
+              pattern="\b5\d{8}\b"
+              maxlength="9"
+              placeholder="{{ '5XXXXXXXX' | localize }}"
+              type="tel"
+              class="form-control"
+              [(ngModel)]="mobileNumber"
+              required
+            />
           </div>
+          <validation-messages [formCtrl]="mobileNo"></validation-messages>
+          <span *ngIf="mobileNo.value?.length == 9 && mobileNo.invalid" class="form-text text-danger">{{ l('PhoneNumberMustStartWith5') }}</span>
         </div>
       </div>
     </div>

@@ -8,6 +8,7 @@ using Abp.AspNetZeroCore.Web.Authentication.External.WsFederation;
 using Abp.Auditing;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
+using Abp.Domain.Uow;
 using Abp.Modules;
 using Abp.Reflection.Extensions;
 using Abp.Threading.BackgroundWorkers;
@@ -16,9 +17,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using System.Collections.Generic;
 using TACHYON.Auditing;
+using TACHYON.BackgroundWorkers.ShippingRequests;
 using TACHYON.Configuration;
 using TACHYON.Documents;
 using TACHYON.EntityFrameworkCore;
+using TACHYON.Invoices;
 using TACHYON.MultiTenancy;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Web.Startup.ExternalLoginInfoProviders;
@@ -66,6 +69,8 @@ namespace TACHYON.Web.Startup
             {
                 workManager.Add(IocManager.Resolve<SubscriptionExpirationCheckWorker>());
                 workManager.Add(IocManager.Resolve<SubscriptionExpireEmailNotifierWorker>());
+
+            
             }
 
             if (Configuration.Auditing.IsEnabled && ExpiredAuditLogDeleterWorker.IsEnabled)
@@ -81,10 +86,23 @@ namespace TACHYON.Web.Startup
                 Configuration.Auditing.SaveReturnValues = false;
             }
 
+
+            using (IocManager.Resolve<IUnitOfWorkManager>().Begin())
+            {
+                IocManager.Resolve<InvoiceManager>().RunAllJobs();
+                IocManager.Resolve<ExpiredDocumentsReportDomainService>().RunJob();
+            }
+
+
             //register worker start, end Bids requests
             workManager.Add(IocManager.Resolve<TrackBidEndDateWorker>());
 
             workManager.Add(IocManager.Resolve<ExpiredDocumentFileWorker>());
+
+            //workManager.Add(IocManager.Resolve<SendShipmentCodeToReceiverWorker>());
+            workManager.Add(IocManager.Resolve<DriverTripReminderWorker>());
+            workManager.Add(IocManager.Resolve<ShipperReminderToCompelteTripsWroker>());
+            workManager.Add(IocManager.Resolve<TripReminderMissingAcceptWorker>());
             ConfigureExternalAuthProviders();
         }
 

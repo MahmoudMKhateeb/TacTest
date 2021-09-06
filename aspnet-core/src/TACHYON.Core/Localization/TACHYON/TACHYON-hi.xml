@@ -142,6 +142,7 @@
      <text name="Delivered">डिलीवर किया गया</text>
     <text name="AddIncident">घटना जोड़ें</text>
     <text name="ReSendAfter">के बाद फिर से भेजें</text>
+    <text name="No">नहीं</text>
     <!--<text name="StartOffloading"></text>
     <text name="ReceiverConfirmed"></text>
     <text name="DeliveryConfirmation"></text>-->

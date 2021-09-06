@@ -11,6 +11,10 @@ namespace TACHYON.Documents.DocumentFiles.Dtos
     {
         public void AddValidationErrors(CustomValidationContext context)
         {
+            if (DocumentTypeDto == null)
+            {
+                return;
+            }
             if (!DocumentTypeDto.HasNumber)
             {
                 return;

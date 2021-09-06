@@ -4,7 +4,12 @@
       <div role="actions">
         <button
           (click)="MakePaid()"
-          *ngIf="!Data.isPaid && permission.isGranted('Pages.Administration.Host.Invoices.MakePaid')"
+          *ngIf="
+            !Data.isPaid &&
+            permission.isGranted('Pages.Administration.Host.Invoices.MakePaid') &&
+            !feature.isEnabled('App.Shipper') &&
+            !feature.isEnabled('App.Carrier')
+          "
           class="btn btn-success"
         >
           <i class="fa fa-file-excel"></i> {{ l('MakePaid') }}
@@ -19,7 +24,7 @@
       </div>
     </sub-header>
     <!--    <invoice-template [Data]="Data" [Items]="Items"></invoice-template>-->
-    <div style="height: 80vh;">
+    <div style="height: 80vh">
       <ng2-pdfjs-viewer #pdfViewerAutoLoad></ng2-pdfjs-viewer>
     </div>
   </div>

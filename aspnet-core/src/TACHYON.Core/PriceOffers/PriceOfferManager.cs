@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using TACHYON.Configuration;
 using TACHYON.Features;
 using TACHYON.Invoices.Balances;
+using TACHYON.MultiTenancy;
 using TACHYON.Notifications;
 using TACHYON.PriceOffers.Dto;
 using TACHYON.Shipping.DirectRequests;
@@ -32,8 +33,9 @@ namespace TACHYON.PriceOffers
         private readonly IAbpSession _abpSession;
         private readonly BalanceManager _balanceManager;
         private ShippingRequestDirectRequest _directRequest;
+        private readonly TenantManager TenantManager;
 
-        public PriceOfferManager(IAppNotifier appNotifier, ISettingManager settingManager, IFeatureChecker featureChecker, IRepository<ShippingRequest, long> shippingRequestsRepository, IAbpSession abpSession, BalanceManager balanceManager, IRepository<ShippingRequestDirectRequest, long> shippingRequestDirectRequestRepository, IRepository<PriceOffer, long> priceOfferRepository)
+        public PriceOfferManager(IAppNotifier appNotifier, ISettingManager settingManager, IFeatureChecker featureChecker, IRepository<ShippingRequest, long> shippingRequestsRepository, IAbpSession abpSession, BalanceManager balanceManager, IRepository<ShippingRequestDirectRequest, long> shippingRequestDirectRequestRepository, IRepository<PriceOffer, long> priceOfferRepository, TenantManager tenantManager)
         {
             _appNotifier = appNotifier;
             _settingManager = settingManager;
@@ -43,6 +45,7 @@ namespace TACHYON.PriceOffers
             _balanceManager = balanceManager;
             _shippingRequestDirectRequestRepository = shippingRequestDirectRequestRepository;
             _priceOfferRepository = priceOfferRepository;
+            TenantManager = tenantManager;
         }
         /// <summary>
         /// Create Or Edit Offer
@@ -751,6 +754,14 @@ namespace TACHYON.PriceOffers
         }
         #endregion
         #endregion
+
+        protected virtual Tenant GetCurrentTenant(IAbpSession abpSession)
+        {
+            using (CurrentUnitOfWork.SetTenantId(null))
+            {
+                return TenantManager.GetById(abpSession.GetTenantId());
+            }
+        }
 
         #endregion
     }

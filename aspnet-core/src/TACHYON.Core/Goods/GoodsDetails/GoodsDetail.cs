@@ -41,6 +41,12 @@ namespace TACHYON.Goods.GoodsDetails
         [StringLength(GoodsDetailConsts.MaxDangerousGoodsCodeLength, MinimumLength = GoodsDetailConsts.MinDangerousGoodsCodeLength)]
         public virtual string DangerousGoodsCode { get; set; }
 
+        public virtual int? DangerousGoodTypeId { get; set; }
+
+        [ForeignKey("DangerousGoodTypeId")]
+        public DangerousGoodType DangerousGoodTypeFk { get; set; }
+
+
         /// <summary>
         /// this category represents subcategory, which nested in base category that specefied in shipping request, subcategory is the one that has father category in GoodsCategory entity
         /// </summary>

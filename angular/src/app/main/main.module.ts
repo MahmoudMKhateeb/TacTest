@@ -1,7 +1,8 @@
-import { CommonModule } from '@angular/common';
+﻿import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
+import { DangerousGoodTypesComponent } from './goods/dangerousGoodTypes/dangerousGoodTypes.component';
 
 import { PackingTypesComponent } from './packingTypes/packingTypes/packingTypes.component';
 import { ViewPackingTypeModalComponent } from './packingTypes/packingTypes/view-packingType-modal.component';
@@ -300,6 +301,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     QuartzCronModule,
   ],
   declarations: [
+    DangerousGoodTypesComponent,
     TrucksTypesTranslationsComponent,
     ViewTrucksTypesTranslationModalComponent,
     CreateOrEditTrucksTypesTranslationModalComponent,

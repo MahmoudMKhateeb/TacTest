@@ -97,7 +97,7 @@
 					"content" : "            
 						<div class=\"form-group\">
 							<label for=\"{{nP_Name_Here}}\">@L(\"{{NP_Foreign_Entity_Name_Here}}\")</label>
-							@Html.DropDownList(\"{{nP_Name_Here}}\", new SelectList(Model.{{Entity_Name_Here}}{{NP_Foreign_Entity_Name_Here}}List,\"Id\",\"DisplayName\", (Model.IsEditMode ? Model.{{Entity_Name_Here}}.{{NP_Name_Here}}.ToString() : \"\")),@L(\"SelectA{{NP_Foreign_Entity_Name_Here}}\"), new { @class = \"form-control\"  {{NP_IsNullable_Required_Here_With_Comma_And_At}} })
+							@Html.DropDownList(\"{{nP_Name_Here}}\", new SelectList(Model.{{Entity_Name_Here}}{{NP_Foreign_Entity_Name_Here}}List,\"Id\",\"DisplayName\", (Model.IsEditMode ? Model.{{Entity_Name_Here}}.{{NP_Name_Here}}.ToString() : \"\")),@L(\"SelectA{{NP_Foreign_Entity_Name_Here}}\"), new { @class = \"form-control\" })
 						</div>
 "
 					}
@@ -149,11 +149,6 @@
 			"placeholder": "{{MinValue}}",
 			"condition": "{{Property_Is_Range_Set_Here}} == true",
 			"content": " min=\"@{{Namespace_Here}}.{{Namespace_Relative_Full_Here}}.{{Entity_Name_Here}}Consts.Min{{Property_Name_Here}}Value\""
-		},	
-		{
-			"placeholder": "{{NP_IsNullable_Required_Here_With_Comma_And_At}}",
-			"condition": "{{NP_IsNullable_Required_Here}} != ''",
-			"content": ", @required=\"required\""
 		}
 	]
 }

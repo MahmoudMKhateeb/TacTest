@@ -1052,7 +1052,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value />
+                <Value>=First(Fields!InvoiceNumber.Value, "SingleDropDataSet")</Value>
                 <Style>
                   <FontSize>8pt</FontSize>
                   <Color>#181818</Color>
@@ -1466,7 +1466,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>=First(Fields!StartTripDate.Value, "SingleDropDataSet")</Value>
+                <Value>=First(Fields!ActualPickupDate.Value, "SingleDropDataSet")</Value>
                 <Style>
                   <FontSize>8pt</FontSize>
                 </Style>
@@ -3955,7 +3955,6 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
-                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell>
@@ -5561,7 +5560,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=First(Fields!SenderContactName.Value, "SingleDropDataSet")</Value>
+                              <Value>=Fields!SenderContactName.Value</Value>
                               <Style>
                                 <FontSize>8pt</FontSize>
                               </Style>
@@ -5802,14 +5801,14 @@
                 </TablixCell>
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="Textbox174">
+                    <Textbox Name="SenderMobile">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=First(Fields!SenderMobile.Value, "SingleDropDataSet")</Value>
+                              <Value>=Fields!SenderMobile.Value</Value>
                               <Style>
                                 <FontSize>8pt</FontSize>
                               </Style>
@@ -5820,7 +5819,7 @@
                           </Style>
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>Textbox174</rd:DefaultName>
+                      <rd:DefaultName>SenderMobile</rd:DefaultName>
                       <Style>
                         <Border>
                           <Style>None</Style>
@@ -7779,10 +7778,14 @@
           <DataField>NeedsDeliveryNote</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="ActualPickupDate">
+          <DataField>ActualPickupDate</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
       </Fields>
       <rd:DataSetInfo>
         <rd:DataSetName>SingleDropDataSet</rd:DataSetName>
-        <rd:SchemaPath>C:\Users\DELL\source\repos\tachyon-core1\tachyon-core1\aspnet-core\src\TACHYON.Application\Waybills\Reports\SingleDropDataSet.xsd</rd:SchemaPath>
+        <rd:SchemaPath>C:\Users\DELL\source\repos\tachyon-core2\aspnet-core\src\TACHYON.Application\Waybills\Reports\SingleDropDataSet.xsd</rd:SchemaPath>
         <rd:TableName>DataTable1</rd:TableName>
         <rd:TableAdapterFillMethod />
         <rd:TableAdapterGetDataMethod />

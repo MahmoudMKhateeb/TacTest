@@ -47,6 +47,7 @@ export class RegisterTenantComponent extends AppComponentBase implements OnInit,
   isEmailValid = true;
   approvedHostTerms = false;
   isAvailableTermsAndConditons = false;
+  mobileNumber: number;
   constructor(
     injector: Injector,
     private _tenantRegistrationService: TenantRegistrationServiceProxy,
@@ -118,6 +119,7 @@ export class RegisterTenantComponent extends AppComponentBase implements OnInit,
     let recaptchaCallback = (token: string) => {
       this.saving = true;
       this.model.captchaResponse = token;
+      this.model.mobileNo = '966' + this.mobileNumber;
       this._tenantRegistrationService
         .registerTenant(this.model)
         .pipe(

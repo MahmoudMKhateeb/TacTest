@@ -591,6 +591,9 @@
                           [required]="!selectedVasesProperties[item.vasId]?.vasCountDisabled"
                           class="form-control"
                           name="Vas-Count{{ i }}"
+                          [min]="selectedVasesProperties[item.vasId]?.vasCountDisabled ? 0 : 1"
+                          [class.is-valid]="!selectedVasesProperties[item.vasId]?.vasCountDisabled && selectedVases[i].requestMaxCount > 0"
+                          [class.is-invalid]="!selectedVasesProperties[item.vasId]?.vasCountDisabled && selectedVases[i].requestMaxCount == 0"
                         />
                       </td>
                       <td>
@@ -600,9 +603,12 @@
                           id="VasAmount2{{ i }}"
                           [(ngModel)]="item.requestMaxAmount"
                           (keypress)="numberOnly($event)"
-                          [required]="!selectedVasesProperties[item.vasId]?.vasAmountDisabled"
                           class="form-control"
                           name="VasAmount2{{ i }}"
+                          [min]="selectedVasesProperties[item.vasId]?.vasAmountDisabled ? 0 : 1"
+                          [required]="!selectedVasesProperties[item.vasId]?.vasAmountDisabled"
+                          [class.is-valid]="!selectedVasesProperties[item.vasId]?.vasAmountDisabled && selectedVases[i].requestMaxAmount > 0"
+                          [class.is-invalid]="!selectedVasesProperties[item.vasId]?.vasAmountDisabled && selectedVases[i].requestMaxAmount == 0"
                         />
                       </td>
                       <td>
@@ -613,7 +619,11 @@
                           (keypress)="numberOnly($event)"
                           class="form-control"
                           name="numberOfTrips{{ i }}"
-                          required=""
+                          [min]="1"
+                          [class.is-valid]="selectedVases[i].numberOfTrips <= shippingRequest.numberOfTrips"
+                          [class.is-invalid]="!selectedVases[i].numberOfTrips || selectedVases[i].numberOfTrips > shippingRequest.numberOfTrips"
+                          [max]="shippingRequest.numberOfTrips"
+                          required
                         />
                       </td>
                     </tr>

@@ -1,4 +1,4 @@
-import { AbpHttpInterceptor, RefreshTokenService, AbpHttpConfigurationService } from 'abp-ng2-module';
+﻿import { AbpHttpInterceptor, RefreshTokenService, AbpHttpConfigurationService } from 'abp-ng2-module';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import * as ApiServiceProxies from './service-proxies';
@@ -8,6 +8,7 @@ import { TerminologieServiceProxy } from 'shared/service-proxies/terminologies-e
 
 @NgModule({
   providers: [
+    ApiServiceProxies.DangerousGoodTypesServiceProxy,
     ApiServiceProxies.TruckCapacitiesTranslationsServiceProxy,
     ApiServiceProxies.TruckStatusesTranslationsServiceProxy,
     ApiServiceProxies.CitiesTranslationsServiceProxy,

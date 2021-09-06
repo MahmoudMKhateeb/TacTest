@@ -11,9 +11,9 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public long SubWaybillNo { get; set; }
         public string Date { get; set; }
         public string ShippingRequestStatus { get; set; }
-        public int InvoiceNumber { get; set; }
+        public long? InvoiceNumber { get; set; }
         public string ShipperReference { get; set; }
-        public string StartTripDate { get; set; }
+        public DateTime? StartTripDate { get; set; }
         public DateTime? DeliveryDate { get; set; }
         public string CarrierName { get; set; }
         public string ClientName { get; set; }
