@@ -332,7 +332,7 @@ namespace TACHYON.Shipping.ShippingRequests
             //shippingRequest.IsDrafted = false;
         }
 
-        public async Task PublishShippingRequest(long id, int? CarrierTenantId)
+        public async Task PublishShippingRequest(long id)
         {
             ShippingRequest shippingRequest = await GetDraftedShippingRequest(id);
             if (shippingRequest.DraftStep < 4)
