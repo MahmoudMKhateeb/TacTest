@@ -41,11 +41,19 @@
             </div>
           </div>
           <div class="col-lg-6 form-group">
+            <label>{{ l('Sender') }}</label>
+            <div class="input-group">
+              <input type="text" class="form-control" name="originFacility" [(ngModel)]="pickUpPointSender" disabled />
+            </div>
+          </div>
+          <div class="col-lg-6 form-group">
             <label>{{ l('DestFacility') }}</label>
             <div class="input-group">
               <input type="text" class="form-control" name="destinationFacility" [(ngModel)]="trip.destinationFacility" disabled />
             </div>
           </div>
+          <div class="col-lg-6"></div>
+
           <!--  end:: Source Dest Facilitys  -->
           <!--  begin:: Trip start&End Dates-->
           <div class="col-lg-6">
