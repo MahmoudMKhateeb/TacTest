@@ -114,6 +114,7 @@ namespace TACHYON.Notifications
         Task RejectedSubmittedDocument(UserIdentifier argsUser, DocumentFile documentFile);
         Task NotifyShipperWhenTripUpdated(int tenantId, int tripId);
         Task NotifyCarrierWhenTripUpdated(int carrierTenantId, int tripId);
-        Task NotifyShipperAndCarrierWhenTripUpdated(int shipperTenantId, int carrierTenantId, int tripId);
+        Task NotifyShipperCarrierAndTachyonDealerWhenTripUpdated(int shipperTenantId, int carrierTenantId, int tripId);
+        Task NotifyTachyonDealWhenTripUpdated(int tripId);
     }
 }

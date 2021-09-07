@@ -8,6 +8,7 @@ using Abp.Events.Bus.Handlers;
 using Abp.Extensions;
 using Abp.Threading;
 using NPOI.HSSF.Record;
+using System;
 using System.Threading.Tasks;
 using TACHYON.BayanIntegration;
 using TACHYON.Firebases;
@@ -51,7 +52,7 @@ namespace TACHYON.Shipping.Trips
             }
         }
 
-
+        // todo add localization for notifications messages 
         private async Task NotifyTripUpdated(ShippingRequestTrip trip)
         {
             var shipperTenantId = trip.ShippingRequestFk.TenantId;
@@ -61,20 +62,21 @@ namespace TACHYON.Shipping.Trips
             if (carrierTenantId is null)
             {
                 await _appNotifier.NotifyShipperWhenTripUpdated(shipperTenantId, trip.Id);
+                await _appNotifier.NotifyTachyonDealWhenTripUpdated(trip.Id);
             }
             else
             {
-                await _appNotifier.NotifyShipperAndCarrierWhenTripUpdated
+                await _appNotifier.NotifyShipperCarrierAndTachyonDealerWhenTripUpdated
                     (shipperTenantId, carrierTenantId.Value, trip.Id);
 
                 var driverId = trip.AssignedDriverUserId;
-                if (driverId is null) return;
+                if (driverId is null || trip.DriverStatus != ShippingRequestTripDriverStatus.Accepted) return;
 
                 var driverIdentifier = new UserIdentifier(carrierTenantId, driverId.Value);
                 using (var unitOfWork = _unitOfWorkManager.Begin())
                 {
                     await _firebaseNotifier.TripChanged(driverIdentifier, trip.Id.ToString());
-                    unitOfWork.Complete();
+                    await unitOfWork.CompleteAsync();
                 }
             }
         }

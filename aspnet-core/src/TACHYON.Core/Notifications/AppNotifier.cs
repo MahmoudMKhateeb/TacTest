@@ -28,13 +28,15 @@ namespace TACHYON.Notifications
         private readonly INotificationSubscriptionManager _notificationSubscriptionManager;
         private readonly UserManager _userManager;
         private readonly IRepository<User, long> _userRepo;
+        private readonly IRepository<Tenant> _tenantsRepository;
 
-        public AppNotifier(INotificationPublisher notificationPublisher, INotificationSubscriptionManager notificationSubscriptionManager, UserManager userManager, IRepository<User, long> userRepo)
+        public AppNotifier(INotificationPublisher notificationPublisher, INotificationSubscriptionManager notificationSubscriptionManager, UserManager userManager, IRepository<User, long> userRepo, IRepository<Tenant> tenantsRepository)
         {
             _notificationPublisher = notificationPublisher;
             _notificationSubscriptionManager = notificationSubscriptionManager;
             _userManager = userManager;
             _userRepo = userRepo;
+            _tenantsRepository = tenantsRepository;
         }
 
         public async Task WelcomeToTheApplicationAsync(User user)
@@ -460,10 +462,26 @@ namespace TACHYON.Notifications
             await _notificationPublisher.PublishAsync(AppNotificationNames.NotifyCarrierWhenTripUpdated, notificationData, userIds: new[] { tenantAdmin });
         }
 
-        public async Task NotifyShipperAndCarrierWhenTripUpdated(int shipperTenantId, int carrierTenantId, int tripId)
+        public async Task NotifyTachyonDealWhenTripUpdated(int tripId)
+        {
+            var tenantAdmin = await GetAdminTachyonDealerAsync();
+
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    L("TachyonDealerTripUpdatedNotificationMessage"),
+                    TACHYONConsts.LocalizationSourceName))
+            {
+                Properties = new Dictionary<string, object>() { { "updatedTripId", tripId } }
+            };
+
+            await _notificationPublisher.PublishAsync(AppNotificationNames.NotifyTachyonDealWhenTripUpdated, notificationData, userIds: new[] { tenantAdmin });
+        }
+
+        public async Task NotifyShipperCarrierAndTachyonDealerWhenTripUpdated(int shipperTenantId, int carrierTenantId, int tripId)
         {
             await NotifyShipperWhenTripUpdated(shipperTenantId, tripId);
             await NotifyCarrierWhenTripUpdated(carrierTenantId, tripId);
+            await NotifyTachyonDealWhenTripUpdated(tripId);
         }
 
         #region Invoices
@@ -1030,6 +1048,13 @@ namespace TACHYON.Notifications
                         x.TenantId == tenantId && x.UserName.Equals(AbpUserBase.AdminUserName));
 
             return new UserIdentifier(tenantId, user.Id);
+        }
+
+        [UnitOfWork]
+        protected virtual async Task<UserIdentifier> GetAdminTachyonDealerAsync()
+        {
+            var tenant = await _tenantsRepository.FirstOrDefaultAsync(x => x.Edition.Name.ToLower() == AppConsts.TachyonEditionName.ToLower());
+            return await GetTenantAdminUser(tenant.Id);
         }
 
         #endregion
