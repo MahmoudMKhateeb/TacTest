@@ -81,7 +81,7 @@ namespace TACHYON.Shipping.ShippingRequests
             BidDomainService bidDomainService,
             IRepository<Capacity, int> capacityRepository, IRepository<TransportType, int> transportTypeRepository, IRepository<RoutPoint, long> routPointRepository,
             IRepository<ShippingRequestsCarrierDirectPricing> carrierDirectPricingRepository,
-            IRepository<ShippingRequestDirectRequest, long> shippingRequestDirectRequestRepository, PriceOfferManager priceOfferManager, IRepository<InvoiceTrip, long> invoiveTripRepository, ShippingRequestDirectRequestAppService shippingRequestDirectRequestAppService)
+            IRepository<ShippingRequestDirectRequest, long> shippingRequestDirectRequestRepository, PriceOfferManager priceOfferManager, IRepository<InvoiceTrip, long> invoiveTripRepository, ShippingRequestDirectRequestAppService shippingRequestDirectRequestAppService, ShippingRequestDirectRequestManager shippingRequestDirectRequestManager)
         {
             _vasPriceRepository = vasPriceRepository;
             _shippingRequestRepository = shippingRequestRepository;
@@ -108,6 +108,7 @@ namespace TACHYON.Shipping.ShippingRequests
             _priceOfferManager = priceOfferManager;
             _InvoiveTripRepository = invoiveTripRepository;
             _shippingRequestDirectRequestAppService = shippingRequestDirectRequestAppService;
+            _shippingRequestDirectRequestManager = shippingRequestDirectRequestManager;
         }
         private readonly IRepository<ShippingRequestsCarrierDirectPricing> _carrierDirectPricingRepository;
         private readonly IRepository<VasPrice> _vasPriceRepository;
@@ -135,6 +136,7 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly PriceOfferManager _priceOfferManager;
         private readonly IRepository<InvoiceTrip, long> _InvoiveTripRepository;
         private readonly ShippingRequestDirectRequestAppService _shippingRequestDirectRequestAppService;
+        private readonly ShippingRequestDirectRequestManager _shippingRequestDirectRequestManager;
         public async Task<GetAllShippingRequestsOutputDto> GetAll(GetAllShippingRequestsInput Input)
         {
             DisableTenancyFilters();
@@ -404,7 +406,7 @@ namespace TACHYON.Shipping.ShippingRequests
             if (shippingRequest.IsDirectRequest)
             {
                 var directRequestInput = new CreateShippingRequestDirectRequestInput();
-                directRequestInput.CarrierTenantId = shippingRequest.CarrierTenantId.Value;
+                directRequestInput.CarrierTenantId = shippingRequest.CarrierTenantIdForDirectRequest.Value;
                 directRequestInput.ShippingRequestId = shippingRequest.Id;
                 await _shippingRequestDirectRequestAppService.Create(directRequestInput);
             }
@@ -521,9 +523,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
         public async Task<List<CarriersForDropDownDto>> GetAllCarriersForDropDownAsync()
         {
-            return await _tenantRepository.GetAll()
-                .Where(x => x.Edition.Name == AppConsts.CarrierEditionName)
-                .Select(x => new CarriersForDropDownDto { Id = x.Id, DisplayName = x.TenancyName }).ToListAsync();
+            return await _shippingRequestDirectRequestManager.GetCarriersForDropDownByPermissionAsync();
         }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequests)]
