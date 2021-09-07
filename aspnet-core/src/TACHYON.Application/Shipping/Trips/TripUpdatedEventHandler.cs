@@ -2,6 +2,7 @@
 
 using Abp;
 using Abp.Dependency;
+using Abp.Domain.Uow;
 using Abp.Events.Bus.Entities;
 using Abp.Events.Bus.Handlers;
 using Abp.Extensions;
@@ -20,12 +21,14 @@ namespace TACHYON.Shipping.Trips
         private readonly BayanIntegrationManager _bayanIntegrationManager;
         private readonly IAppNotifier _appNotifier;
         private readonly IFirebaseNotifier _firebaseNotifier;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
 
-        public TripUpdatedEventHandler(BayanIntegrationManager bayanIntegrationManager, IAppNotifier appNotifier, IFirebaseNotifier firebaseNotifier)
+        public TripUpdatedEventHandler(BayanIntegrationManager bayanIntegrationManager, IAppNotifier appNotifier, IFirebaseNotifier firebaseNotifier, IUnitOfWorkManager unitOfWorkManager)
         {
             _bayanIntegrationManager = bayanIntegrationManager;
             _appNotifier = appNotifier;
             _firebaseNotifier = firebaseNotifier;
+            _unitOfWorkManager = unitOfWorkManager;
         }
 
         public void HandleEvent(EntityUpdatedEventData<ShippingRequestTrip> eventData)
@@ -68,7 +71,11 @@ namespace TACHYON.Shipping.Trips
                 if (driverId is null) return;
 
                 var driverIdentifier = new UserIdentifier(carrierTenantId, driverId.Value);
-                await _firebaseNotifier.TripChanged(driverIdentifier, trip.Id.ToString());
+                using (var unitOfWork = _unitOfWorkManager.Begin())
+                {
+                    await _firebaseNotifier.TripChanged(driverIdentifier, trip.Id.ToString());
+                    unitOfWork.Complete();
+                }
             }
         }
     }
