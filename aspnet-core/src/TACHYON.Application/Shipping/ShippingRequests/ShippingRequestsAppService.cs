@@ -342,9 +342,12 @@ namespace TACHYON.Shipping.ShippingRequests
                 throw new UserFriendlyException(L("YouMustCompleteWizardStepsFirst"));
             }
             await ValidateShippingRequestBeforePublish(shippingRequest);
-            await SendtoCarrierIfShippingRequestIsDirectRequest(shippingRequest);
             // _commissionManager.AddShippingRequestCommissionSettingInfo(shippingRequest);
             shippingRequest.IsDrafted = false;
+            //to make SR to non drafted .. 
+            CurrentUnitOfWork.SaveChanges();
+            await SendtoCarrierIfShippingRequestIsDirectRequest(shippingRequest);
+
         }
 
 
