@@ -43,7 +43,6 @@ import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { FormBuilder, Validators } from '@angular/forms';
 import * as moment from '@node_modules/moment';
-import { result } from 'lodash-es';
 
 @Component({
   templateUrl: './create-or-edit-shipping-request-wizard.component.html',
@@ -443,6 +442,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     });
     this.loadallVases();
   }
+  /* get all carriers for view in drop dawon */
   GetAllCarriersForDropDown() {
     this._shippingRequestsServiceProxy.getAllCarriersForDropDown().subscribe((result) => {
       this.allCarriers = result;
