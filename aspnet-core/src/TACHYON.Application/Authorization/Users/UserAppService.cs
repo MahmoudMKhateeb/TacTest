@@ -14,6 +14,7 @@ using Abp.Runtime.Session;
 using Abp.UI;
 using Abp.Zero.Configuration;
 using AutoMapper.QueryableExtensions;
+using Castle.Core.Internal;
 using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -344,6 +345,7 @@ namespace TACHYON.Authorization.Users
             //Update user properties
             ObjectMapper.Map(input.User, user); //Passwords is not mapped (see mapping configuration)
 
+
             CheckErrors(await UserManager.UpdateAsync(user));
 
             if (input.SetRandomPassword)
@@ -359,7 +361,12 @@ namespace TACHYON.Authorization.Users
             }
 
             //Update roles
-            CheckErrors(await UserManager.SetRolesAsync(user, input.AssignedRoleNames));
+
+
+            var userRoles = await UserManager.GetRolesAsync(user);
+            if (!input.AssignedRoleNames.Except(userRoles).IsNullOrEmpty()
+                || !userRoles.Except(input.AssignedRoleNames).IsNullOrEmpty())
+                CheckErrors(await UserManager.SetRolesAsync(user, input.AssignedRoleNames));
 
             //update organization units
             await UserManager.SetOrganizationUnitsAsync(user, input.OrganizationUnits.ToArray());
