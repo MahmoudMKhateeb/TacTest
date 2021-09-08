@@ -43,6 +43,7 @@ import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { FormBuilder, Validators } from '@angular/forms';
 import * as moment from '@node_modules/moment';
+import { result } from 'lodash-es';
 
 @Component({
   templateUrl: './create-or-edit-shipping-request-wizard.component.html',
@@ -90,6 +91,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   shippingRequestReview: GetShippingRequestForViewOutput = new GetShippingRequestForViewOutput();
   cleanedVases: CreateOrEditShippingRequestVasListDto[] = [];
   selectedVasesProperties = [];
+  public allCarriers: CarriersForDropDownDto[];
 
   constructor(
     injector: Injector,
@@ -112,6 +114,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   step1Form = this.fb.group({
     shippingRequestType: [{ value: '', disabled: false }, Validators.required],
     shippingType: [{ value: '', disabled: false }, Validators.required],
+    carrier: [''],
     tripsStartDate: [''],
     tripsEndDate: [''],
     biddingStartDate: [''],
@@ -146,6 +149,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   ngOnInit() {
     this.loadAllDropDownLists();
     this.allRoutTypes = this.enumToArray.transform(ShippingRequestRouteType);
+    this.GetAllCarriersForDropDown();
   }
 
   ngOnDestroy() {
@@ -439,7 +443,11 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     });
     this.loadallVases();
   }
-
+  GetAllCarriersForDropDown() {
+    this._shippingRequestsServiceProxy.getAllCarriersForDropDown().subscribe((result) => {
+      this.allCarriers = result;
+    });
+  }
   loadTruckandCapacityForEdit() {
     //Get these DD in Edit Only
     if (this.activeShippingRequestId && this.step3Dto.transportTypeId) {
