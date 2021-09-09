@@ -121,8 +121,7 @@ namespace TACHYON.Firebases
 
         public async Task TripUpdated(NotifyTripUpdatedInput input)
         {
-            string msgTitle = L("CarrierTripUpdatedNotificationMessage",
-                input.WaybillNumber, input.UpdatedBy);
+            string msgTitle = L("CarrierTripUpdatedNotificationMessage", input.WaybillNumber);
 
             var message = new Message()
             {

@@ -2145,5 +2145,8 @@
     <text name="ReceiverConfirmed"></text>
     <text name="DeliveryConfirmation"></text>-->
 		<text name="TripDataChanged">لديك رحلة بالمعرف {0} تم تغييرها ، يرجى مراجعة جميع تغييرات الرحلة</text>
+		<text name="ShipperTripUpdatedNotificationMessage">هناك بعض التغييرات في الرحلة برقم بوليصة الشحن {0}. لمزيد من التفاصيل، الرجاء الضغط هنا</text>
+		<text name="CarrierTripUpdatedNotificationMessage">هناك بعض التغييرات في الرحلة برقم بوليصة الشحن {0}. لمزيد من التفاصيل، الرجاء الضغط هنا</text>
+		<text name="TachyonDealerTripUpdatedNotificationMessage">هناك بعض التغييرات في الرحلة برقم بوليصة الشحن {0}. لمزيد من التفاصيل، الرجاء الضغط هنا</text>
 	</texts>
 </localizationDictionary>
