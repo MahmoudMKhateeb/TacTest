@@ -17,6 +17,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using TACHYON.Chat;
+using TACHYON.Documents;
 using TACHYON.Documents.DocumentFiles;
 using TACHYON.Documents.DocumentsEntities;
 using TACHYON.Editions;
@@ -39,6 +40,7 @@ namespace TACHYON.Authorization.Users
         private readonly ISettingManager _settingManager;
         private readonly EditionManager _editionManager;
         private readonly UserManager _userManager;
+        private readonly DocumentFilesManager _documentFilesManager;
 
         // used for styling action links on email messages.
         private const string EmailButtonStyle =
@@ -611,12 +613,13 @@ namespace TACHYON.Authorization.Users
         /// </summary>
         /// <param name="mailMessage"></param>
         /// <param name="files"></param>
-        private void BindDriverFilesTable(StringBuilder mailMessage, List<DocumentFile> files)
+        private async Task BindDriverFilesTable(StringBuilder mailMessage, List<DocumentFile> files)
         {
             mailMessage.AppendLine("<b>" + L("DriverDocuments") + "</b>");
             mailMessage.AppendLine("<table style=\"border-collapse: collapse; border: 1px solid black;\"> " +
                 "<tr>" +
                 " <th style=\"border: 1px solid black;  \">" + L("DriverName") + "</th> " +
+                " <th style=\"border: 1px solid black;  \">" + L("DriverId") + "</th> " +
                 "<th style=\"border: 1px solid black;  \"> " + L("DocumentName") + " </th> " +
                 "<th style=\"border: 1px solid black;  \"> " + L("ExpiredStatus") + "</th>" +
                 " <th style=\"border: 1px solid black;  \"> " + L("ExpiredDate") + " </th>" +
@@ -626,9 +629,10 @@ namespace TACHYON.Authorization.Users
             {
                 var expiredStatus = file.ExpirationDate != null ? (file.ExpirationDate.Value.Date < DateTime.Now.Date ? L("Expired") : L("Active")) : "Active";
                 //var documentType = file.TruckId != null ? L("Truck") : L("Driver");
-
+                var driverId=await _documentFilesManager.GetDriverIqamaActiveDocumentAsync(file.UserId.Value);
                 mailMessage.AppendLine("<tr>" +
                     "<td style=\"border: 1px solid black;  \">" + file.UserFk.Name + "</td>" +
+                    "<td style=\"border: 1px solid black;  \">" + driverId + "</td>" +
                     " <td style=\"border: 1px solid black;  \">" + file.Name + " </td> " +
                     "<td style=\"border: 1px solid black;  \">" + expiredStatus + " </td>" +
                     " <td style=\"border: 1px solid black;  \"> " + file.ExpirationDate + "</td>" +
