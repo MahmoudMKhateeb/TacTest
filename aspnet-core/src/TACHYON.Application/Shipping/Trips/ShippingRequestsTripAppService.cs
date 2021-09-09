@@ -340,7 +340,7 @@ namespace TACHYON.Shipping.Trips
                 {
                     await _documentFilesManager.UpdateDocumentFile(input.CreateOrEditDocumentFileDto);
                     //Notify Carrier with trip details
-                    await NotifyCarrierWithTripDetails(trip, request.CarrierTenantId, true, false);
+                    //  await NotifyCarrierWithTripDetails(trip, request.CarrierTenantId, true, false);
                 }
 
             }
@@ -350,9 +350,9 @@ namespace TACHYON.Shipping.Trips
             if (NeedseliveryNoteOldValue != input.NeedsDeliveryNote)
             {
                 //Notify Carrier with trip details
-                await NotifyCarrierWithTripDetails(trip, request.CarrierTenantId, false, true);
+                // await NotifyCarrierWithTripDetails(trip, request.CarrierTenantId, false, true);
             }
-            await _appNotifier.NotificationWhenTripDetailsChanged(trip, GetCurrentUser());
+            // await _appNotifier.NotificationWhenTripDetailsChanged(trip, GetCurrentUser());
         }
 
         private async Task NotifyCarrierWithTripDetails(ShippingRequestTrip trip, int? carrierTenantId, bool HasAttachmentNotification, bool NeedseliverNoteNotification)

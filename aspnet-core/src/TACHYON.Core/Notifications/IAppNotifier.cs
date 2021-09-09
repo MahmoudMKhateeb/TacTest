@@ -46,9 +46,14 @@ namespace TACHYON.Notifications
         Task ShippingRequestAsBidWithSameTruckAsync(UserIdentifier[] argsUser, long shippingRequestId);
         Task StartShippment(UserIdentifier argsUser, long TripId, string PickupFacilityName);
         Task ShipperShippingRequestFinish(UserIdentifier argsUser, ShippingRequest Request);
+
         #region Trips
+
         Task ShipperShippingRequestTripNotifyDriverWhenAssignTrip(UserIdentifier argsUser, ShippingRequestTrip Trip);
-        Task ShipperShippingRequestTripNotifyDriverWhenUnassignedTrip(UserIdentifier argsUser, ShippingRequestTrip Trip);
+
+        Task ShipperShippingRequestTripNotifyDriverWhenUnassignedTrip(UserIdentifier argsUser,
+            ShippingRequestTrip Trip);
+
         Task NotifyDriverWhenAssignToTrip(ShippingRequestTrip Trip);
         Task DriverRejectTrip(ShippingRequestTrip Trip, string driver);
         Task DriverAcceptTrip(ShippingRequestTrip Trip, string driver);
@@ -57,15 +62,20 @@ namespace TACHYON.Notifications
         Task NotifyCarrierWhenTripHasAttachment(int tripId, int? carrierTenantId);
         Task NotifyCarrierWhenTripNeedsDeliverNote(int tripId, int? carrierTenantId);
         Task NotificationWhenTripDetailsChanged(ShippingRequestTrip trip, User currentuser);
+
         #endregion
 
         #region Accident
+
         Task ShippingRequestAccidentsOccure(List<UserIdentifier> Users, Dictionary<string, object> data);
         Task ShippingRequestTripCancelByAccident(List<UserIdentifier> Users, ShippingRequestTrip trip, User UserCancel);
+
         #endregion
 
         #region ShippingRequest
+
         #region Offers
+
         Task ShippingRequestSendOfferWhenAddPrice(PriceOffer offer, string carrier);
         Task ShippingRequestSendOfferWhenUpdatePrice(PriceOffer offer, string carrier);
 
@@ -78,10 +88,15 @@ namespace TACHYON.Notifications
         Task DeclineDriectRequest(string FromTenant, int? ToTenant, long id);
 
         Task CancelShipment(long id, string reason, string cancelBy, UserIdentifier toUser);
+
         #endregion
+
         #endregion
+
         #endregion
+
         #region TachyonDeal
+
         Task SendDriectRequestForCarrier(int? TenantId, ShippingRequest Request);
         Task DriectRequestCarrierRespone(ShippingRequestsCarrierDirectPricing Pricing);
         Task TachyonDealerOfferCreated(TachyonPriceOffer offer, ShippingRequest request);
@@ -89,11 +104,14 @@ namespace TACHYON.Notifications
         Task TachyonDealOfferAccepByShipper(TachyonPriceOffer offer);
 
         #endregion
+
         #region Shipping Request
+
         Task ShippingRequestNotifyCarrirerWhenShipperAccepted(ShippingRequest shippingRequest);
         Task ShipperReminderToCompelteTrips(UserIdentifier user, ShippingRequest shippingRequest);
 
         #endregion
+
         Task WelcomeToTheApplicationAsync(User user);
 
         Task NewUserRegisteredAsync(User user);
@@ -102,9 +120,12 @@ namespace TACHYON.Notifications
 
         Task GdprDataPrepared(UserIdentifier user, Guid binaryObjectId);
 
-        Task SendMessageAsync(UserIdentifier user, string message, NotificationSeverity severity = NotificationSeverity.Info);
+        Task SendMessageAsync(UserIdentifier user, string message,
+            NotificationSeverity severity = NotificationSeverity.Info);
 
-        Task SendMessageAsync(UserIdentifier user, LocalizableString localizableMessage, IDictionary<string, object> localizableMessageData = null, NotificationSeverity severity = NotificationSeverity.Info);
+        Task SendMessageAsync(UserIdentifier user, LocalizableString localizableMessage,
+            IDictionary<string, object> localizableMessageData = null,
+            NotificationSeverity severity = NotificationSeverity.Info);
 
         Task TenantsMovedToEdition(UserIdentifier user, string sourceEditionName, string targetEditionName);
 
@@ -115,6 +136,7 @@ namespace TACHYON.Notifications
         Task RejectedSubmittedDocument(UserIdentifier argsUser, DocumentFile documentFile);
         Task NotifyShipperWhenTripUpdated(NotifyTripUpdatedInput input);
         Task NotifyCarrierWhenTripUpdated(NotifyTripUpdatedInput input);
+
         /// <summary>
         /// Notify All Users When Trip Updated
         /// <list type="bullet|number|table">
@@ -127,6 +149,9 @@ namespace TACHYON.Notifications
         /// <param name="input"></param>
         /// <returns></returns>
         Task NotifyAllWhenTripUpdated(NotifyTripUpdatedInput input);
+
         Task NotifyTachyonDealWhenTripUpdated(NotifyTripUpdatedInput input);
+
+        Task NotifyTripUpdated(ShippingRequestTrip trip);
     }
 }

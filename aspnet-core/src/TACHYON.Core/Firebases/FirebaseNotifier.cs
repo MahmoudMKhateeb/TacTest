@@ -15,7 +15,7 @@ using TACHYON.Shipping.Trips.Dto;
 
 namespace TACHYON.Firebases
 {
-    public class FirebaseNotifier : TACHYONServiceBase, IFirebaseNotifier
+    public class FirebaseNotifier : TACHYONDomainServiceBase, IFirebaseNotifier
     {
 
         public FirebaseMessaging messaging { get; set; }
