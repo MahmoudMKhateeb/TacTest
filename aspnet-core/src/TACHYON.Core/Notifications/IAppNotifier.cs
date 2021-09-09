@@ -13,6 +13,7 @@ using TACHYON.PriceOffers;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequests.TachyonDealer;
 using TACHYON.Shipping.ShippingRequestTrips;
+using TACHYON.Shipping.Trips.Dto;
 using TACHYON.TachyonPriceOffers;
 
 namespace TACHYON.Notifications
@@ -112,9 +113,20 @@ namespace TACHYON.Notifications
         Task DocumentFileExpiration(UserIdentifier argsUser, Guid documentFileId);
         Task AcceptedSubmittedDocument(UserIdentifier argsUser, DocumentFile documentFile);
         Task RejectedSubmittedDocument(UserIdentifier argsUser, DocumentFile documentFile);
-        Task NotifyShipperWhenTripUpdated(int tenantId, int tripId);
-        Task NotifyCarrierWhenTripUpdated(int carrierTenantId, int tripId);
-        Task NotifyShipperCarrierAndTachyonDealerWhenTripUpdated(int shipperTenantId, int carrierTenantId, int tripId);
-        Task NotifyTachyonDealWhenTripUpdated(int tripId);
+        Task NotifyShipperWhenTripUpdated(NotifyTripUpdatedInput input);
+        Task NotifyCarrierWhenTripUpdated(NotifyTripUpdatedInput input);
+        /// <summary>
+        /// Notify All Users When Trip Updated
+        /// <list type="bullet|number|table">
+        ///<item><term>1-Shipper</term></item>
+        ///<item><term>2-Carrier</term></item>
+        ///<item><term>3-TachyonDealer</term></item>
+        /// </list>
+        /// Note That Driver Not Notified By This Method
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task NotifyAllWhenTripUpdated(NotifyTripUpdatedInput input);
+        Task NotifyTachyonDealWhenTripUpdated(NotifyTripUpdatedInput input);
     }
 }

@@ -18,6 +18,7 @@ using TACHYON.PriceOffers;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequests.TachyonDealer;
 using TACHYON.Shipping.ShippingRequestTrips;
+using TACHYON.Shipping.Trips.Dto;
 using TACHYON.TachyonPriceOffers;
 
 namespace TACHYON.Notifications
@@ -432,56 +433,59 @@ namespace TACHYON.Notifications
             await _notificationPublisher.PublishAsync(AppNotificationNames.RejectedSubmittedDocument, notificationData, userIds: new[] { argsUser });
         }
 
-        public async Task NotifyShipperWhenTripUpdated(int shipperTenantId, int tripId)
+        public async Task NotifyShipperWhenTripUpdated(NotifyTripUpdatedInput input)
         {
-            var tenantAdmin = await GetTenantAdminUser(shipperTenantId);
+            var tenantAdmin = await GetTenantAdminUser(input.ShipperTenantId);
 
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(
-                L("ShipperTripUpdatedNotificationMessage"),
+                L("ShipperTripUpdatedNotificationMessage",
+                    input.WaybillNumber, input.UpdatedBy),
                 TACHYONConsts.LocalizationSourceName))
             {
-                Properties = new Dictionary<string, object>() { { "updatedTripId", tripId } }
+                Properties = new Dictionary<string, object>() { { "updatedTripId", input.TripId } }
             };
 
             await _notificationPublisher.PublishAsync(AppNotificationNames.NotifyShipperWhenTripUpdated, notificationData, userIds: new[] { tenantAdmin });
         }
 
-        public async Task NotifyCarrierWhenTripUpdated(int carrierTenantId, int tripId)
+        public async Task NotifyCarrierWhenTripUpdated(NotifyTripUpdatedInput input)
         {
-            var tenantAdmin = await GetTenantAdminUser(carrierTenantId);
+            var tenantAdmin = await GetTenantAdminUser(input.CarrierTenantId);
 
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(
-                    L("CarrierTripUpdatedNotificationMessage"),
+                    L("CarrierTripUpdatedNotificationMessage",
+            input.WaybillNumber, input.UpdatedBy),
                     TACHYONConsts.LocalizationSourceName))
             {
-                Properties = new Dictionary<string, object>() { { "updatedTripId", tripId } }
+                Properties = new Dictionary<string, object>() { { "updatedTripId", input.TripId } }
             };
 
             await _notificationPublisher.PublishAsync(AppNotificationNames.NotifyCarrierWhenTripUpdated, notificationData, userIds: new[] { tenantAdmin });
         }
 
-        public async Task NotifyTachyonDealWhenTripUpdated(int tripId)
+        public async Task NotifyTachyonDealWhenTripUpdated(NotifyTripUpdatedInput input)
         {
             var tenantAdmin = await GetAdminTachyonDealerAsync();
 
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(
-                    L("TachyonDealerTripUpdatedNotificationMessage"),
+                    L("TachyonDealerTripUpdatedNotificationMessage",
+                        input.WaybillNumber, input.UpdatedBy),
                     TACHYONConsts.LocalizationSourceName))
             {
-                Properties = new Dictionary<string, object>() { { "updatedTripId", tripId } }
+                Properties = new Dictionary<string, object>() { { "updatedTripId", input.TripId } }
             };
 
             await _notificationPublisher.PublishAsync(AppNotificationNames.NotifyTachyonDealWhenTripUpdated, notificationData, userIds: new[] { tenantAdmin });
         }
 
-        public async Task NotifyShipperCarrierAndTachyonDealerWhenTripUpdated(int shipperTenantId, int carrierTenantId, int tripId)
+        public async Task NotifyAllWhenTripUpdated(NotifyTripUpdatedInput input)
         {
-            await NotifyShipperWhenTripUpdated(shipperTenantId, tripId);
-            await NotifyCarrierWhenTripUpdated(carrierTenantId, tripId);
-            await NotifyTachyonDealWhenTripUpdated(tripId);
+            await NotifyShipperWhenTripUpdated(input);
+            await NotifyCarrierWhenTripUpdated(input);
+            await NotifyTachyonDealWhenTripUpdated(input);
         }
 
         #region Invoices

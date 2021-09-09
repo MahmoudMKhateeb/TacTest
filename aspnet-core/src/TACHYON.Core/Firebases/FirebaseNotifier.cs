@@ -11,6 +11,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using TACHYON.Mobile;
+using TACHYON.Shipping.Trips.Dto;
 
 namespace TACHYON.Firebases
 {
@@ -116,6 +117,26 @@ namespace TACHYON.Firebases
                 }
             };
             await SendMessage(user.UserId, message, "ViewtripchangedActivity");
+        }
+
+        public async Task TripUpdated(NotifyTripUpdatedInput input)
+        {
+            string msgTitle = L("CarrierTripUpdatedNotificationMessage",
+                input.WaybillNumber, input.UpdatedBy);
+
+            var message = new Message()
+            {
+                Notification = new Notification
+                {
+                    Title = msgTitle,
+                },
+                Data = new Dictionary<string, string>()
+                {
+                    ["id"] = input.TripId.ToString(),
+                    ["changed"] = "true"
+                }
+            };
+            await SendMessage(input.DriverIdentifier.UserId, message, "ViewtripchangedActivity");
         }
 
         #region Helper

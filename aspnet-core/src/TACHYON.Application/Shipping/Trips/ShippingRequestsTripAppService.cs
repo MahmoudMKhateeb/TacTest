@@ -232,7 +232,7 @@ namespace TACHYON.Shipping.Trips
                 //.Where(e => e.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
                 //.Where(e => e.Status != ShippingRequestTripStatus.Delivered)
                 .FirstOrDefaultAsync();
-             if (trip == null) throw new UserFriendlyException(L("NoTripToAssignDriver"));
+            if (trip == null) throw new UserFriendlyException(L("NoTripToAssignDriver"));
 
             long? oldAssignedDriverUserId = trip.AssignedDriverUserId;
             long? OldAssignedTruckId = input.AssignedTruckId;
@@ -262,7 +262,7 @@ namespace TACHYON.Shipping.Trips
 
             if (OldAssignedTruckId != trip.AssignedTruckId)
             {
-                 //todo send specific notification    
+                //todo send specific notification    
                 await _firebase.TripChanged(new UserIdentifier(trip.AssignedDriverUserFk.TenantId, trip.AssignedDriverUserId.Value), trip.Id.ToString());
             }
             await _appNotifier.ShipperShippingRequestTripNotifyDriverWhenAssignTrip(new UserIdentifier(AbpSession.TenantId, trip.AssignedDriverUserId.Value), trip);
@@ -330,8 +330,9 @@ namespace TACHYON.Shipping.Trips
             }
             var HasAttachmentOldValue = trip.HasAttachment;
             var NeedseliveryNoteOldValue = trip.NeedsDeliveryNote;
-            ObjectMapper.Map(input, trip);
 
+            ObjectMapper.Map(input, trip);
+            // await CurrentUnitOfWork.SaveChangesAsync();
 
             if (input.HasAttachment && input.CreateOrEditDocumentFileDto != null)
             {
