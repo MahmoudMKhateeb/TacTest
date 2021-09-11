@@ -1,0 +1,17 @@
+.checked {
+    color: orange;
+}
+.map-full-card-content {
+    height: 100% !important;
+    width: 100%;
+    margin: 0;
+
+    agm-map {
+        height: calc(100% - 12px) !important;
+        width: 100%;
+    }
+}
+.nav-link.active {
+    color: #ffffff !important;
+    background-color: #3699FF;
+}

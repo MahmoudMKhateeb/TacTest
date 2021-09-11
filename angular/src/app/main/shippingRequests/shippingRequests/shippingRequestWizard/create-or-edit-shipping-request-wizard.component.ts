@@ -336,6 +336,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
         this.step1Dto = res;
       });
   }
+
   loadStep2ForEdit() {
     this.loading = true;
     return this._shippingRequestsServiceProxy
