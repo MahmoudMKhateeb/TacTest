@@ -270,7 +270,7 @@ namespace TACHYON.Shipping.Trips
             trip.AssignedDriverUserId = input.AssignedDriverUserId;
             trip.AssignedTruckId = input.AssignedTruckId;
 
-            //todo new driver can accept ? 
+            //reset driver status when change 
             if (trip.DriverStatus != ShippingRequestTripDriverStatus.None)
             {
                 trip.DriverStatus = ShippingRequestTripDriverStatus.None;

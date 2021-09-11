@@ -472,7 +472,9 @@ namespace TACHYON.Shipping.Trips
                             .WhereIf(!user.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => x.ShippingRequestFk.IsTachyonDeal)
                             .WhereIf(user.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestFk.CarrierTenantId == user.TenantId.Value)
                             .WhereIf(user.IsDriver, x => x.AssignedDriverUserId == user.Id)
-                            .FirstOrDefaultAsync(t => t.DriverStatus == ShippingRequestTripDriverStatus.None && t.Status == ShippingRequestTripStatus.New);
+                            .FirstOrDefaultAsync(t => t.DriverStatus == ShippingRequestTripDriverStatus.None && (t.Status == ShippingRequestTripStatus.New ||
+                            // new driver "changed" can accept trip
+                            t.Status == ShippingRequestTripStatus.Intransit));
             if (trip == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
             return trip;
         }
