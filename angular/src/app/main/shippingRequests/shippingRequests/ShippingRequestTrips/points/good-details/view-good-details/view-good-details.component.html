@@ -1,0 +1,56 @@
+<!-- begin::ViewGoodModal   -->
+<!-- for non shippers -->
+<div #viewGoodDetail="bs-modal" aria-hidden="true" aria-labelledby="viewGoodDetail" bsModal class="modal fade" role="dialog" tabindex="-10010">
+  <div class="modal-dialog modal-lg">
+    <div *ngIf="active" class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          <span>{{ l('ViewGoodsDetails') }}</span>
+        </h4>
+        <button (click)="close()" aria-label="Close" class="close" type="button">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-lg-6 mt-4">
+            <label> {{ l('GoodSubCategory') }}</label>
+            <input [value]="goodDetails.goodCategory" class="form-control" name="goodsDetail.goodCategoryId" disabled />
+          </div>
+          <div class="col-lg-6 mt-4">
+            <label> {{ l('Weight') }}</label>
+            <input [value]="goodDetails.weight" class="form-control" name="goodDetails.weight" disabled />
+          </div>
+          <div class="col-lg-6 mt-4">
+            <label> {{ l('Quantity') }}</label>
+            <input [value]="goodDetails.amount" class="form-control" name="goodDetails.amount" disabled />
+          </div>
+          <div class="col-lg-6 mt-4">
+            <label> {{ l('UnitOfMeasure') }}</label>
+            <input [value]="goodDetails.unitOfMeasure" class="form-control" name="goodDetails.unitOfMeasureId" disabled />
+          </div>
+          <div class="col-lg-6 mt-4">
+            <label> {{ l('Description') }}</label>
+            <input [value]="goodDetails.description" class="form-control" name="goodDetails.description" disabled />
+          </div>
+          <div class="col-lg-6 mt-4">
+            <label> {{ l('Dimentions') }}</label>
+            <input [value]="goodDetails.dimentions" class="form-control" name="goodDetails.dimentions" disabled />
+          </div>
+          <div class="col-lg-6 mt-4" *ngIf="goodDetails.isDangerousGood">
+            <label> {{ l('DangerousGoodType') }}</label>
+            <input [value]="goodDetails.dangerousGoodType" class="form-control" name="goodDetails.dangerousGoodTypeId" disabled />
+          </div>
+          <div class="col-lg-6 mt-4" *ngIf="goodDetails.isDangerousGood">
+            <label> {{ l('DangerousGoodsCode') }}</label>
+            <input [value]="goodDetails.dangerousGoodsCode" class="form-control" name="goodDetails.dimentions" disabled />
+          </div>
+        </div>
+        <div class="modal-footer mt-6">
+          <button (click)="close()" class="btn btn-secondary" type="button">{{ l('Close') }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- End::ViewGoodModal   -->
+</div>

@@ -22,8 +22,8 @@ export class PointsService {
   private goodDetail = new BehaviorSubject<GoodsDetailDto>(new GoodsDetailDto());
   CurrentGoodDetail = this.goodDetail.asObservable();
 
-  // private goodDetailsList = new BehaviorSubject<CreateOrEditGoodsDetailDto[]>([]);
-  // currentGoodDetailsList = this.goodDetailsList.asObservable();
+  private usedIn = new BehaviorSubject<any>('view');
+  currentUsedIn = this.usedIn.asObservable();
 
   /**
    * Takes the single point as an input and updates it
@@ -43,10 +43,11 @@ export class PointsService {
   }
 
   /**
-   * updates the Goods List From Outside
-   * @param newList
+   * Detects witch Component is using Points Service/Component
+   * @param usedIn
    */
-  // updateGoodDetailsList(newList: CreateOrEditGoodsDetailDto[]) {
-  //  // this.goodDetailsList.next(newList);
-  // }
+  updateCurrentUsedIn(usedIn: 'view' | 'createOrEdit') {
+    console.log('mode is : ', usedIn);
+    this.usedIn.next(usedIn);
+  }
 }

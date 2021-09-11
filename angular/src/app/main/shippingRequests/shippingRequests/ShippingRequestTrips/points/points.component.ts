@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Injector, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import {
@@ -39,13 +39,14 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
   @ViewChild('createOrEditFacilityModal') public createOrEditFacilityModal: ModalDirective;
   @ViewChild('createRouteStepModal') public createRouteStepModal: ModalDirective;
   // @ViewChild('PointGoodDetailsComponent') public PointGoodDetailsComponent: GoodDetailsComponent;
+  @Input() usedIn: 'view' | 'createOrEdit';
+  @Output() SelectedWayPointsFromChild: EventEmitter<CreateOrEditRoutPointDto[]> = new EventEmitter<CreateOrEditRoutPointDto[]>();
 
   MainGoodsCategory: number;
   NumberOfDrops: number;
   sourceFacility: number;
   destFacility: number;
   activeTripId: number;
-  @Output() SelectedWayPointsFromChild: EventEmitter<CreateOrEditRoutPointDto[]> = new EventEmitter<CreateOrEditRoutPointDto[]>();
   RouteType: number;
   RouteTypes = ShippingRequestRouteType;
   wayPointsList: CreateOrEditRoutPointDto[] = [];
@@ -93,6 +94,8 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
         Swal.fire(this.l('GoodJob'), this.l('AllDropPointsAddedSuccessfully'), 'success');
       }
     });
+    //Tell the Service Where this Component is Being Used
+    this._PointsService.updateCurrentUsedIn(this.usedIn);
     //if action is edit trip get active Trip id
     this.currentActiveTripSubs$ = this._tripService.currentActiveTripId.subscribe((res) => (this.activeTripId = res));
     //get some Stuff from ShippingRequest Dto
@@ -108,6 +111,7 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
         this.drawPointForSingleDropTrip('pickup');
       }
     });
+
     //in case of the Shipping Request Route Type is Single Drop -- Create the Drop Point From Dest Trip Facility
     if (this.RouteType == ShippingRequestRouteType.SingleDrop) {
       //Take Trip Dest Facility From Trip Service

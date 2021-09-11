@@ -1,9 +1,15 @@
-import { Component, OnInit, Injector, ViewChild, OnDestroy } from '@angular/core';
-import { CreateOrEditGoodsDetailDto, CreateOrEditRoutPointDto, GoodsDetailsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { Component, OnInit, Injector, ViewChild, OnDestroy, Input } from '@angular/core';
+import {
+  CreateOrEditGoodsDetailDto,
+  CreateOrEditRoutPointDto,
+  GoodsDetailDto,
+  GoodsDetailsServiceProxy,
+} from '@shared/service-proxies/service-proxies';
 import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
 import { Subscription } from 'rxjs';
+import { first } from '@node_modules/rxjs/internal/operators';
 
 @Component({
   selector: 'PointGoodDetailsComponent',
@@ -19,33 +25,43 @@ export class GoodDetailsComponent extends AppComponentBase implements OnInit, On
   ) {
     super(injector);
   }
+  //inCase Of View Point
+  @Input() goodDetailsListForView: GoodsDetailDto[];
+  usedIn: 'view' | 'createOrEdit';
+  //For Create/Edit
   Point: CreateOrEditRoutPointDto;
   goodsDetailList: CreateOrEditGoodsDetailDto[];
   MainGoodsCategory: number;
   allSubGoodCategorys: any;
   allSubGoodCategorysLoading = true;
-
   tripServiceSubs$: Subscription;
   pointServiceSubs$: Subscription;
+  usedInSubs$: Subscription;
+
   ngOnDestroy() {
-    this.tripServiceSubs$.unsubscribe();
-    this.pointServiceSubs$.unsubscribe();
+    this.tripServiceSubs$?.unsubscribe();
+    this.pointServiceSubs$?.unsubscribe();
+    this.usedInSubs$.unsubscribe();
     console.log('Destroy From Good Details Component');
   }
 
   ngOnInit(): void {
-    //take the Good Category From the Shared Service and bind it
-    this.tripServiceSubs$ = this._TripService.currentShippingRequest.subscribe(
-      (res) => (this.MainGoodsCategory = res.shippingRequest.goodCategoryId)
-    );
+    this.usedInSubs$ = this._PointsService.currentUsedIn.subscribe((res) => (this.usedIn = res));
+    console.log(' this.usedIn:   ', this.usedIn);
+    if (this.usedIn !== 'view') {
+      //take the Good Category From the Shared Service and bind it
+      this.tripServiceSubs$ = this._TripService.currentShippingRequest.pipe(first()).subscribe((res) => {
+        this.MainGoodsCategory = res.shippingRequest.goodCategoryId;
+        this.loadGoodSubCategory(res.shippingRequest.goodCategoryId);
     //get the value of the single way point fron the Shared Service
-    this.pointServiceSubs$ = this._PointsService.currentSingleWayPoint.subscribe((res) => {
-      this.Point = res;
-      this.goodsDetailList = res.goodsDetailListDto || [];
-    });
-    //  this.goodsDetailList = [];
-
-    this.loadGoodSubCategory(this.MainGoodsCategory);
+      });
+      //get the value of the single way point fron the Shared Service
+      this.pointServiceSubs$ = this._PointsService.currentSingleWayPoint.subscribe((res) => {
+        this.Point = res;
+        this.goodsDetailList = res.goodsDetailListDto || [];
+      });
+      //  this.goodsDetailList = [];
+    }
   }
 
   getGoodSubDisplayname(id) {
