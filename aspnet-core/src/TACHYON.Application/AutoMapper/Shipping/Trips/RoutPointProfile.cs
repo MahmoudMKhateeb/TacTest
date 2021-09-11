@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using TACHYON.Goods.GoodsDetails;
@@ -12,7 +13,7 @@ using TACHYON.Shipping.Drivers.Dto;
 
 namespace TACHYON.AutoMapper.Shipping.Trips
 {
-   public class RoutPointProfile:Profile
+    public class RoutPointProfile : Profile
     {
         public RoutPointProfile()
         {
@@ -32,7 +33,18 @@ namespace TACHYON.AutoMapper.Shipping.Trips
             CreateMap<RoutPoint, DropOffPointDto>();
             CreateMap<UserOTP, UserOtpDto>();
             CreateMap<GoodsDetail, GoodsDetailDto>()
-            .ForPath(dest => dest.UnitOfMeasure, opt => opt.MapFrom(src => src.UnitOfMeasureFk != null ? src.UnitOfMeasureFk.DisplayName : string.Empty));
+                .ForPath(dest => dest.UnitOfMeasure,
+                    opt => opt.MapFrom(src =>
+                        src.UnitOfMeasureFk != null ? src.UnitOfMeasureFk.DisplayName : string.Empty))
+                .ForMember(dest => dest.GoodCategory,
+                    opt =>
+                        opt.MapFrom(src => src.GoodCategoryFk != null
+                            ? src.GoodCategoryFk.Translations.FirstOrDefault(x =>
+                                x.Language.Contains(CultureInfo.CurrentCulture.Name)).DisplayName
+                            : string.Empty))
+                .ForMember(dest => dest.DangerousGoodTypeName,
+                    opt => opt.MapFrom(src =>
+                        src.DangerousGoodTypeFk != null ? src.DangerousGoodTypeFk.Name : string.Empty));
             //.ForPath(dest => dest.GoodCategory, opt => opt.MapFrom(src => src.GoodCategoryFk != null ? src.GoodCategoryFk.DisplayName : string.Empty));
 
         }
