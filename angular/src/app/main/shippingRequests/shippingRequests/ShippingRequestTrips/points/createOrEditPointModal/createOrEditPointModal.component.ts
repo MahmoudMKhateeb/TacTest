@@ -15,6 +15,7 @@ import { ModalDirective } from '@node_modules/ngx-bootstrap/modal';
 import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
 import { GoodDetailsComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/good-details/good-details.component';
 import { NgForm } from '@angular/forms';
+import { pipe } from '@node_modules/rxjs';
 
 @Component({
   selector: 'createOrEditPointModal',
@@ -54,24 +55,27 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
   receiversLoading = false;
   isAdditionalReceiverEnabled: boolean;
   pointIdForEdit = null;
+  usedIn: 'view' | 'createOrEdit';
 
   tripServiceSubscription$: any;
   pointsServiceSubscription$: any;
+  usedInSubscription$: any;
   ngOnDestroy() {
     this.tripServiceSubscription$.unsubscribe();
     this.pointsServiceSubscription$.unsubscribe();
+    this.usedInSubscription$.unsubscribe();
     console.log('Unsubscribed/Destroid from CreateOrEdit Point Modal');
   }
 
   ngOnInit(): void {
     this.feature.isEnabled('App.Shipper') ? this.loadFacilities() : 0;
-
     //take the Route Type From the Shared Service
     this.tripServiceSubscription$ = this._tripService.currentShippingRequest.subscribe((res) => (this.RouteType = res.shippingRequest.routeTypeId));
     //take the PointsList From The Shared Service
-    this.pointsServiceSubscription$ = this._PointService.currentWayPointsList.subscribe((res) => {
-      this.wayPointsList = res;
-    });
+    this.pointsServiceSubscription$ = this._PointService.currentWayPointsList.subscribe((res) => (this.wayPointsList = res));
+    //Where the using of this Component is coming from
+    this.usedInSubscription$ = this._PointService.currentUsedIn.subscribe((res) => (this.usedIn = res));
+    console.log('used in from Create Or Edit Point ', this.usedIn);
 
     this._PointService.currentSingleWayPoint.subscribe((res) => {
       this.Point = res;
@@ -87,6 +91,8 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
   }
 
   show(id?) {
+    //if view disable the form otherwise enable it
+    // this.usedIn == 'view' ? this.createOrEditPintForm.form.disable() : this.createOrEditPintForm.form.enable();
     this.active = true;
     //this.singleWayPoint = new CreateOrEditRoutPointDto();
     if (id) {

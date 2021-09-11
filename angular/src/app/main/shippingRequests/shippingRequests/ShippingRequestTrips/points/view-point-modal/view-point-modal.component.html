@@ -1,0 +1,98 @@
+<!--begin::Create::RouteStepModal-->
+<div
+  class="modal fade"
+  bsModal
+  #viewPointDetailsModal="bs-modal"
+  [config]="{ backdrop: 'static' }"
+  role="dialog"
+  aria-labelledby="dialog-static-name"
+>
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          {{ l('ViewPointDetails') }}
+        </h4>
+      </div>
+      <form *ngIf="active" #createOrEditPintForm="ngForm" novalidate autocomplete="off">
+        <div class="modal-body">
+          <div class="row mb-4">
+            <!-- start:: map that draws the RouteStep::Route in CreateOrEditRouteStep-->
+            <div class="col-lg-12">
+              <agm-map [latitude]="Point.latitude || lat" [longitude]="Point.longitude || lng" [zoom]="zoom">
+                <agm-marker [latitude]="Point.latitude" [longitude]="Point.longitude"></agm-marker>
+              </agm-map>
+            </div>
+            <!-- END::map that draws the RouteStep::Route in CreateOrEditRouteStep-->
+          </div>
+          <div class="row p-0 mt-4">
+            <div class="col-lg-12 row">
+              <div class="form-group col-lg-6">
+                <label>{{ l('facility') }}</label>
+                <input name="facility" type="text" class="form-control" [(ngModel)]="Point.facility" disabled />
+              </div>
+              <!-- StartOf::Receiver -->
+              <div class="form-group col-lg-6">
+                <label>{{ l('Receiver') }}</label>
+                <input name="receiver" type="text" class="form-control" [(ngModel)]="Point.senderOrReceiverContactName" disabled />
+              </div>
+              <ng-template [ngIf]="Point.receiverFullName">
+                <div class="form-group col-lg-6">
+                  <label>{{ l('ReceiverFullName') }}</label>
+                  <input name="receiverFullName" type="text" [(ngModel)]="Point.receiverFullName" class="form-control" disabled />
+                </div>
+                <div class="form-group col-lg-6">
+                  <label for="userPhone"> {{ 'ReceiverEmailAddress' | localize }}</label>
+                  <input name="ReceiverEmailAddress" type="text" [(ngModel)]="Point.receiverEmailAddress" class="form-control" disabled />
+                </div>
+                <div class="form-group col-lg-6">
+                  <label for="userPhone"> {{ 'ReceiverPhoneNumber' | localize }}</label>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">+966</span>
+                    </div>
+                    <input
+                      style="text-align: left !important"
+                      id="userPhone"
+                      name="userPhone"
+                      placeholder="{{ '5XXXXXXXX' | localize }}"
+                      type="tel"
+                      [(ngModel)]="Point.receiverPhoneNumber"
+                      class="form-control"
+                      disabled
+                    />
+                  </div>
+                </div>
+                <div class="form-group col-lg-6">
+                  <label>{{ l('ReceiverId') }}</label>
+                  <div class="input-group">
+                    <div class="input-group-prepend input-group-solid">
+                      <span class="input-group-text">
+                        <i class="fa fa-id-card"></i>
+                      </span>
+                    </div>
+                    <input type="text" name="receiverId" class="form-control" [(ngModel)]="Point.receiverCardIdNumber" disabled />
+                  </div>
+                </div>
+              </ng-template>
+
+              <div class="form-group col-lg-12">
+                <label>{{ l('Notes') }}</label>
+                <div class="input-group">
+                  <textarea name="notes" class="form-control" [(ngModel)]="Point.note" disabled></textarea>
+                </div>
+              </div>
+              <!--   EndOf::receiver -->
+              <!--   Start::GoodDetails           -->
+              <PointGoodDetailsComponent [goodDetailsListForView]="Point.goodsDetailListDto"></PointGoodDetailsComponent>
+              <!--   End::GoodDetails           -->
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="close()">{{ l('Cancel') }}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

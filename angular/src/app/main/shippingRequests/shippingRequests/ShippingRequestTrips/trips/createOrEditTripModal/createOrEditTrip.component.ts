@@ -171,7 +171,6 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
         this.trip = res;
         this._PointsService.updateWayPoints(this.trip.routPoints);
         this.pickupPointSenderId = res.routPoints[0].receiverId;
-        console.table(res.routPoints[0].receiverId);
         this.loadReceivers(this.trip.originFacilityId);
         this.loading = false;
       });
@@ -189,14 +188,14 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       this._PointsService.updateWayPoints([]);
       this._TripService.currentShippingRequest.subscribe((res) => (this.trip.startTripDate = res.shippingRequest.startTripDate));
       this.loading = false;
-      this.trip.shippingRequestId = this.shippingRequest.id;
     }
 
     this.active = true;
     this.modal.show();
     this.initDocsUploader();
-    //this.cdref.detectChanges();
+    this.cdref.detectChanges();
   }
+
   close(): void {
     this.loading = true;
     this.active = false;
@@ -209,6 +208,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     //if there is a Validation issue in the Points do Not Proceed
     if (this.validatePointsBeforeAddTrip()) {
       this.trip.routPoints[0].receiverId = this.pickupPointSenderId;
+      this.trip.shippingRequestId = this.shippingRequest.id;
       this.saving = true;
       if (!this.trip.hasAttachment) {
         this.trip.createOrEditDocumentFileDto = null;

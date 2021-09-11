@@ -54,6 +54,7 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
   unitOfMeasureId: number;
   description: string;
   isDangerousGood: boolean;
+  dangerousGoodsTypeId: number;
   dangerousGoodsCode: string;
   dimentions: string;
   ngOnDestroy() {
@@ -95,10 +96,11 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
       this.description = this.myGoodsDetailList[id].description;
       this.isDangerousGood = this.myGoodsDetailList[id].isDangerousGood;
       this.dangerousGoodsCode = this.myGoodsDetailList[id].dangerousGoodsCode;
+      this.dangerousGoodsTypeId = this.myGoodsDetailList[id].dangerousGoodTypeId;
+
       this.dimentions = this.myGoodsDetailList[id].dimentions;
     }
     this.createOrEditGoodDetail.show();
-    this.loadAllDropDowns();
   }
   close() {
     this.active = false;
@@ -110,6 +112,7 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
     this.description = undefined;
     this.isDangerousGood = undefined;
     this.dangerousGoodsCode = undefined;
+    this.dangerousGoodsTypeId = undefined;
     this.dimentions = undefined;
     this.createOrEditGoodDetail.hide();
   }
@@ -122,6 +125,7 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
     this.goodsDetail.description = this.description;
     this.goodsDetail.isDangerousGood = this.isDangerousGood;
     this.goodsDetail.dimentions = this.dimentions;
+    this.goodsDetail.dangerousGoodTypeId = this.dangerousGoodsTypeId;
     this.goodsDetail.dangerousGoodsCode = this.dangerousGoodsCode;
     //inCase of Edit Update the Record Dont Create A new one
     if (typeof this.activeEditId !== 'undefined') {
