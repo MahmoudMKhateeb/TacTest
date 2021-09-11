@@ -56,6 +56,8 @@ namespace TACHYON.Shipping.ShippingRequests
         /// Is direct request Field
         /// </summary>
         public virtual bool IsDirectRequest { get; set; }
+        public Tenant CarrierTenantForDirectRequestFK { get; set; }
+        public int? CarrierTenantIdForDirectRequest { get; set; }
 
         public ShippingRequestRouteType? RouteTypeId { get; set; }
 

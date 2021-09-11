@@ -90,6 +90,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   shippingRequestReview: GetShippingRequestForViewOutput = new GetShippingRequestForViewOutput();
   cleanedVases: CreateOrEditShippingRequestVasListDto[] = [];
   selectedVasesProperties = [];
+  public allCarriers: CarriersForDropDownDto[];
 
   constructor(
     injector: Injector,
@@ -112,6 +113,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   step1Form = this.fb.group({
     shippingRequestType: [{ value: '', disabled: false }, Validators.required],
     shippingType: [{ value: '', disabled: false }, Validators.required],
+    carrier: [''],
     tripsStartDate: [''],
     tripsEndDate: [''],
     biddingStartDate: [''],
@@ -146,6 +148,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   ngOnInit() {
     this.loadAllDropDownLists();
     this.allRoutTypes = this.enumToArray.transform(ShippingRequestRouteType);
+    this.GetAllCarriersForDropDown();
   }
 
   ngOnDestroy() {
@@ -439,7 +442,12 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     });
     this.loadallVases();
   }
-
+  /* get all carriers for view in drop dawon */
+  GetAllCarriersForDropDown() {
+    this._shippingRequestsServiceProxy.getAllCarriersForDropDown().subscribe((result) => {
+      this.allCarriers = result;
+    });
+  }
   loadTruckandCapacityForEdit() {
     //Get these DD in Edit Only
     if (this.activeShippingRequestId && this.step3Dto.transportTypeId) {
