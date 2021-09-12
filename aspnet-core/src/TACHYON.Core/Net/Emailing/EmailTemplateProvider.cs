@@ -30,22 +30,19 @@ namespace TACHYON.Net.Emailing
             _defaultTemplates = new ConcurrentDictionary<string, string>();
         }
 
-        public string GetDefaultTemplate(int? tenantId)
+        public async Task<String> GetDefaultTemplate(int? tenantId)
         {
             var tenancyKey = tenantId.HasValue ? tenantId.Value.ToString() : "host";
 
-            return _defaultTemplates.GetOrAdd(tenancyKey, key =>
-            {
-                using (var stream = typeof(EmailTemplateProvider).GetAssembly().GetManifestResourceStream("TACHYON.Net.Emailing.EmailTemplates.EmailTemplate.html"))
-                {
-                    var bytes = stream.GetAllBytes();
-                    var template = Encoding.UTF8.GetString(bytes, 3, bytes.Length - 3);
-                    template = template.Replace("{THIS_YEAR}", DateTime.Now.Year.ToString());
-                    template = template.Replace("{EMAIL_LOGO_URL}", GetTenantLogoUrl(tenantId));
-                    template = template.Replace("{OUTLINE_LOGO_URL}", GetOutlineLogoUrl());
-                    return template;
-                }
-            });
+            await using var stream = typeof(EmailTemplateProvider).GetAssembly()
+                .GetManifestResourceStream("TACHYON.Net.Emailing.EmailTemplates.EmailTemplate.html");
+            StreamReader sr = new StreamReader(stream, Encoding.UTF8);
+            var template = await sr.ReadToEndAsync();
+            template = template.Replace("{THIS_YEAR}", DateTime.Now.Year.ToString());
+            template = template.Replace("{EMAIL_LOGO_URL}", GetTenantLogoUrl(tenantId));
+            template = template.Replace("{OUTLINE_LOGO_URL}", GetOutlineLogoUrl());
+
+            return _defaultTemplates.GetOrAdd(tenancyKey, key => template);
         }
 
 

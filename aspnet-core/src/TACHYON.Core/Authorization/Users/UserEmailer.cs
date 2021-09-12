@@ -99,7 +99,7 @@ namespace TACHYON.Authorization.Users
             link = EncryptQueryParameters(link);
 
             var tenancyName = GetTenancyNameOrNull(user.TenantId);
-            var emailTemplate = GetTitleAndSubTitle(user.TenantId, L("EmailActivation_Title"),
+            var emailTemplate = await GetTitleAndSubTitle(user.TenantId, L("EmailActivation_Title"),
                 L("EmailActivation_SubTitle"));
             var mailMessage = new StringBuilder();
 
@@ -127,7 +127,7 @@ namespace TACHYON.Authorization.Users
             // You Can Get Login Link From IAppUrlService And Method Name : GetTachyonPlatformLoginUrl()
 
             var adminUser = await _userManager.GetAdminByTenantIdAsync(tenant.Id);
-            var emailTemplate = GetTitleAndSubTitle(tenant.Id, L("ApprovedDocuments_Title"),
+            var emailTemplate = await GetTitleAndSubTitle(tenant.Id, L("ApprovedDocuments_Title"),
                 L("ApprovedDocuments_SubTitle"));
             var mailMessage = new StringBuilder();
 
@@ -152,7 +152,7 @@ namespace TACHYON.Authorization.Users
             var adminUser = await _userManager.GetAdminByTenantIdAsync(tenant.Id);
             var mailMessage = new StringBuilder();
             var tenantItem = await _tenantRepository.GetAsync(tenant.Id);
-            var emailTemplate = GetTitleAndSubTitle(tenant.Id, L("ExpiredDateDocuments_Title"), L("ExpiredDateDocuments_SubTitle"));
+            var emailTemplate = await GetTitleAndSubTitle(tenant.Id, L("ExpiredDateDocuments_Title"), L("ExpiredDateDocuments_SubTitle"));
 
             mailMessage.AppendLine("<b>" + L("TenancyName") + "</b>:" + tenantItem.TenancyName);
             mailMessage.AppendLine("<b>" + L("CompanyName") + "</b>:" + tenantItem.companyName);
@@ -175,7 +175,7 @@ namespace TACHYON.Authorization.Users
             var adminUser = await _userManager.GetAdminByTenantIdAsync(tenantId);
             var mailMessage = new StringBuilder();
             var tenantItem = await _tenantRepository.GetAsync(tenantId);
-            var emailTemplate = GetTitleAndSubTitle(tenantId, L("DocumentsExpiredInfo_Title"), L("DocumentsExpiredInfo_SubTitle"));
+            var emailTemplate = await GetTitleAndSubTitle(tenantId, L("DocumentsExpiredInfo_Title"), L("DocumentsExpiredInfo_SubTitle"));
 
             mailMessage.AppendLine("<b>" + L("TenancyName") + "</b>:" + tenantItem.TenancyName);
             mailMessage.AppendLine("<b>" + L("CompanyName") + "</b>:" + tenantItem.companyName);
@@ -219,7 +219,7 @@ namespace TACHYON.Authorization.Users
                 throw new Exception("PasswordResetCode should be set in order to send password reset link.");
 
             var tenancyName = GetTenancyNameOrNull(user.TenantId);
-            var emailTemplate = GetTitleAndSubTitle(user.TenantId,
+            var emailTemplate = await GetTitleAndSubTitle(user.TenantId,
                 L("PasswordResetEmail_Title"),
                 L("PasswordResetEmail_SubTitle"));
             var mailMessage = new StringBuilder("<div class=\"data\">");
@@ -260,7 +260,7 @@ namespace TACHYON.Authorization.Users
         {
             try
             {
-                var emailTemplate = GetTitleAndSubTitle(user.TenantId, L("NewChatMessageEmail_Title"), L("NewChatMessageEmail_SubTitle"));
+                var emailTemplate = await GetTitleAndSubTitle(user.TenantId, L("NewChatMessageEmail_Title"), L("NewChatMessageEmail_SubTitle"));
                 var mailMessage = new StringBuilder();
 
                 mailMessage.AppendLine("<b>" + L("Sender") + "</b>: " + senderTenancyName + "/" + senderUsername + "<br />");
@@ -278,7 +278,7 @@ namespace TACHYON.Authorization.Users
 
         public async Task SendPasswordUpdatedEmail(int? tenantId, string userEmail, string newPassword)
         {
-            var emailTemplate = GetTitleAndSubTitle(tenantId, L("PasswordUpdated_Title"), L("PasswordUpdated_SubTitle"));
+            var emailTemplate = await GetTitleAndSubTitle(tenantId, L("PasswordUpdated_Title"), L("PasswordUpdated_SubTitle"));
             var mailMessage = new StringBuilder("<div class=\"data\">");
             mailMessage.AppendLine("<p class=\"lead\" style=\"width: 65%; margin: 30px auto\">");
             mailMessage.AppendLine($"{L("YourPasswordChangedSuccessfully")} <br><br>");
@@ -293,7 +293,7 @@ namespace TACHYON.Authorization.Users
         {
             // See TAC-432 For Localization Strings And Email Content Messages
 
-            var emailTemplate = GetTitleAndSubTitle(tenant.Id,
+            var emailTemplate = await GetTitleAndSubTitle(tenant.Id,
                 L("WarningSuspendAccount_Title"), L("WarningSuspendAccount_SubTitle"));
             var adminUser = await _userManager.GetAdminByTenantIdAsync(tenant.Id);
             var mailMessage = new StringBuilder();
@@ -314,7 +314,7 @@ namespace TACHYON.Authorization.Users
         {
             // See TAC-432 For Localization Strings And Email Content Messages
 
-            var emailTemplate = GetTitleAndSubTitle(tenant.Id,
+            var emailTemplate = await GetTitleAndSubTitle(tenant.Id,
                 L("SuspendedAccount_Title"), L("SuspendedAccount_SubTitle"));
             var adminUser = await _userManager.GetAdminByTenantIdAsync(tenant.Id);
 
@@ -334,7 +334,7 @@ namespace TACHYON.Authorization.Users
         {
             // See TAC-432 For Localization Strings And Email Content Messages
 
-            var emailTemplate = GetTitleAndSubTitle(tenant.Id,
+            var emailTemplate = await GetTitleAndSubTitle(tenant.Id,
                 L("InvoiceDue_Title"), L("InvoiceDue_SubTitle"));
             var adminUser = await _userManager.GetAdminByTenantIdAsync(tenant.Id);
             var mailMessage = new StringBuilder();
@@ -355,7 +355,7 @@ namespace TACHYON.Authorization.Users
             // See TAC-432 For Localization Strings And Email Content Messages
             // You Can Get Invoice Url From IAppUrlService , Method Name: CreateInvoiceDetailsFormat()
 
-            var emailTemplate = GetTitleAndSubTitle(tenant.Id,
+            var emailTemplate = await GetTitleAndSubTitle(tenant.Id,
                 L("IssuedInvoice_Title"), L("IssuedInvoice_SubTitle"));
             var adminUser = await _userManager.GetAdminByTenantIdAsync(tenant.Id);
             var mailMessage = new StringBuilder();
@@ -391,7 +391,7 @@ namespace TACHYON.Authorization.Users
 
                         var hostAdminLanguage = _settingManager.GetSettingValueForUser(LocalizationSettingNames.DefaultLanguage, tenantAdmin.TenantId, tenantAdmin.Id);
                         var culture = CultureHelper.GetCultureInfoByChecking(hostAdminLanguage);
-                        var emailTemplate = GetTitleAndSubTitle(tenantId, L("SubscriptionExpire_Title"), L("SubscriptionExpire_SubTitle"));
+                        var emailTemplate = await GetTitleAndSubTitle(tenantId, L("SubscriptionExpire_Title"), L("SubscriptionExpire_SubTitle"));
                         var mailMessage = new StringBuilder();
 
                         mailMessage.AppendLine("<b>" + L("Message") + "</b>: " + L("SubscriptionExpire_Email_Body", culture, utcNow.ToString("yyyy-MM-dd") + " UTC") + "<br />");
@@ -424,7 +424,7 @@ namespace TACHYON.Authorization.Users
                         var hostAdminLanguage = _settingManager.GetSettingValueForUser(LocalizationSettingNames.DefaultLanguage, tenantAdmin.TenantId, tenantAdmin.Id);
                         var culture = CultureHelper.GetCultureInfoByChecking(hostAdminLanguage);
                         var expringEdition = await _editionManager.GetByIdAsync(expiringEditionId);
-                        var emailTemplate = GetTitleAndSubTitle(tenantId, L("SubscriptionExpire_Title"), L("SubscriptionExpire_SubTitle"));
+                        var emailTemplate = await GetTitleAndSubTitle(tenantId, L("SubscriptionExpire_Title"), L("SubscriptionExpire_SubTitle"));
                         var mailMessage = new StringBuilder();
 
                         mailMessage.AppendLine("<b>" + L("Message") + "</b>: " + L("SubscriptionAssignedToAnother_Email_Body", culture, expringEdition.DisplayName, utcNow.ToString("yyyy-MM-dd") + " UTC") + "<br />");
@@ -452,7 +452,7 @@ namespace TACHYON.Authorization.Users
 
                 var hostAdminLanguage = _settingManager.GetSettingValueForUser(LocalizationSettingNames.DefaultLanguage, hostAdmin.TenantId, hostAdmin.Id);
                 var culture = CultureHelper.GetCultureInfoByChecking(hostAdminLanguage);
-                var emailTemplate = GetTitleAndSubTitle(null, L("FailedSubscriptionTerminations_Title"), L("FailedSubscriptionTerminations_SubTitle"));
+                var emailTemplate = await GetTitleAndSubTitle(null, L("FailedSubscriptionTerminations_Title"), L("FailedSubscriptionTerminations_SubTitle"));
                 var mailMessage = new StringBuilder();
 
                 mailMessage.AppendLine("<b>" + L("Message") + "</b>: " + L("FailedSubscriptionTerminations_Email_Body", culture, string.Join(",", failedTenancyNames), utcNow.ToString("yyyy-MM-dd") + " UTC") + "<br />");
@@ -483,7 +483,7 @@ namespace TACHYON.Authorization.Users
                         var tenantAdminLanguage = _settingManager.GetSettingValueForUser(LocalizationSettingNames.DefaultLanguage, tenantAdmin.TenantId, tenantAdmin.Id);
                         var culture = CultureHelper.GetCultureInfoByChecking(tenantAdminLanguage);
 
-                        var emailTemplate = GetTitleAndSubTitle(null, L("SubscriptionExpiringSoon_Title"), L("SubscriptionExpiringSoon_SubTitle"));
+                        var emailTemplate = await GetTitleAndSubTitle(null, L("SubscriptionExpiringSoon_Title"), L("SubscriptionExpiringSoon_SubTitle"));
                         var mailMessage = new StringBuilder();
 
                         mailMessage.AppendLine("<b>" + L("Message") + "</b>: " + L("SubscriptionExpiringSoon_Email_Body", culture, dateToCheckRemainingDayCount.ToString("yyyy-MM-dd") + " UTC") + "<br />");
@@ -512,9 +512,9 @@ namespace TACHYON.Authorization.Users
             }
         }
 
-        private StringBuilder GetTitleAndSubTitle(int? tenantId, string title, string subTitle)
+        private async Task<StringBuilder> GetTitleAndSubTitle(int? tenantId, string title, string subTitle)
         {
-            var emailTemplate = new StringBuilder(_emailTemplateProvider.GetDefaultTemplate(tenantId));
+            var emailTemplate = new StringBuilder(await _emailTemplateProvider.GetDefaultTemplate(tenantId));
             emailTemplate.Replace("{EMAIL_TITLE}", title);
             emailTemplate.Replace("{EMAIL_SUB_TITLE}", subTitle);
 
