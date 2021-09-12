@@ -75,11 +75,11 @@ namespace TACHYON.Authorization.Users
         /// </summary>
         /// <param name="user">User</param>
         /// <param name="link">Email activation link</param>
-        /// <param name="plainPassword">
+        /// <param name="password">
         /// Can be set to user's plain password to include it in the email.
         /// </param>
         [UnitOfWork]
-        public virtual async Task SendEmailActivationLinkAsync(User user, string link, string plainPassword)
+        public virtual async Task SendEmailActivationLinkAsync(User user, string link, string password)
         {
             // TODO Please Ensure From Localization Strings
 
@@ -99,21 +99,19 @@ namespace TACHYON.Authorization.Users
             link = EncryptQueryParameters(link);
 
             var tenancyName = GetTenancyNameOrNull(user.TenantId);
-            var emailTemplate = GetTitleAndSubTitle(user.TenantId, L("EmailActivation_Title"), L("EmailActivation_SubTitle"));
-            var mailMessage = new StringBuilder(await _emailTemplateProvider.GetActivationTemplateBody());
+            var emailTemplate = GetTitleAndSubTitle(user.TenantId, L("EmailActivation_Title"),
+                L("EmailActivation_SubTitle"));
+            var mailMessage = new StringBuilder();
 
-            mailMessage = mailMessage.Replace("{NameSurname}", L("NameSurname"));
-            mailMessage = mailMessage.Replace("{name}", user.Name);
-            mailMessage = mailMessage.Replace("{CompanyFullLegalName}", L("CompanyFullLeagalName"));
-            mailMessage = mailMessage.Replace("{companyName}", tenancyName);
-            mailMessage = mailMessage.Replace("{Email}", L("Email"));
-            mailMessage = mailMessage.Replace("{email}", user.EmailAddress);
-            mailMessage = mailMessage.Replace("{Password}", L("Password"));
-            mailMessage = mailMessage.Replace("{password}", plainPassword);
-            mailMessage = mailMessage.Replace("{ClickTheButton}", L("EmailActivation_ClickTheLinkBelowToVerifyYourEmail"));
-            mailMessage = mailMessage.Replace("{ClickTheLink}", L("EmailMessage_CopyTheLinkBelowToYourBrowser"));
-            mailMessage = mailMessage.Replace("{link}", link);
-
+            mailMessage.AppendLine("<div class=\"data\"><ul>");
+            mailMessage.AppendLine($"<li><span class=\"first\">{L("Name")}</span><span class=\"last\">{user.FullName}</span></li>");
+            mailMessage.AppendLine($"<li><span class=\"first\">{L("CompanyName")}</span><span class=\"last\">{tenancyName}</span></li>");
+            mailMessage.AppendLine($"<li><span class=\"first\">{L("Email")}</span><span class=\"last\">{user.EmailAddress}</span></li>");
+            mailMessage.AppendLine($"<li><span class=\"first\">{L("Password")}</span><span class=\"last\">{password}</span></li>");
+            mailMessage.AppendLine($"</ul></div><p class=\"lead\">{L("ClickButtonMessage")}</p>");
+            mailMessage.AppendLine($"<button onclick=\"location.href='{link}';\" class=\"btn btn-red\">{L("Verify")}</button>");
+            mailMessage.AppendLine($"<p class=\"lead\">{L("CopyLinkMessage")}</p>");
+            mailMessage.AppendLine($"<p class=\"lead\">{link}</p>");
             await ReplaceBodyAndSend(user.EmailAddress, L("EmailActivation_Subject"), emailTemplate, mailMessage);
         }
 
@@ -124,23 +122,20 @@ namespace TACHYON.Authorization.Users
         /// <param name="tenant"></param>
         /// <returns></returns>
         [UnitOfWork]
-        public virtual async Task SendAllApprovedDocumentsAsync(Tenant tenant,string loginLink)
+        public virtual async Task SendAllApprovedDocumentsAsync(Tenant tenant, string loginLink)
         {
-
             // You Can Get Login Link From IAppUrlService And Method Name : GetTachyonPlatformLoginUrl()
 
-            // TODO Add Localization Strings, See TAC-432
+            var adminUser = await _userManager.GetAdminByTenantIdAsync(tenant.Id);
+            var emailTemplate = GetTitleAndSubTitle(tenant.Id, L("ApprovedDocuments_Title"),
+                L("ApprovedDocuments_SubTitle"));
+            var mailMessage = new StringBuilder();
 
-            var emailMsg = $"<div style=\"{DevStyle}\">" +
-                           "<div style=\"margin - top: 10px; \">" +
-                           $"<p style=\"color: black; \"> {L("DearsAt")} <b style=\"color: #da323e;\">{tenant.companyName}</b><br>"
-                           + L("ThisEmailSentToInformDocumentsApproved") + "<br><br>"+
-                           L("LoginLink")
-                           +$"<a href=\"{loginLink}\">{loginLink}</a></p></div></div>";
-
-            var adminUser=await _userManager.GetAdminByTenantIdAsync(tenant.Id);
-            var mailMessage = new StringBuilder(emailMsg);
-            var emailTemplate = GetTitleAndSubTitle(tenant.Id, L("ApprovedDocuments_Title"), L("ApprovedDocuments_SubTitle"));
+            mailMessage.AppendLine($"<div class=\"data\"><h2>{L("DearsAt")}");
+            mailMessage.AppendLine($"<span style=\"color: #d82631\">{tenant.companyName}</span></h2></div>");
+            mailMessage.AppendLine($"<p class=\"lead\" style=\"width: 65%; margin: 30px auto\">{L("ApprovalDocumentsEmailMessage")}</p>");
+            mailMessage.AppendLine($"<a href=\"{loginLink}\" class=\"lead\" target=\"blank\" ");
+            mailMessage.AppendLine($"style=\"width: 85%; margin: 30px auto\">{L("LoginLink")}</a>");
 
             await ReplaceBodyAndSend(adminUser.EmailAddress, L("DocumentsApproved"), emailTemplate, mailMessage);
         }
@@ -152,7 +147,7 @@ namespace TACHYON.Authorization.Users
         /// <param name="tenant"></param>
         /// <returns></returns>
         [UnitOfWork]
-        public virtual async Task SendExpiredDateDocumentsAsyn(Tenant tenant,string documentFileName)
+        public virtual async Task SendExpiredDateDocumentsAsyn(Tenant tenant, string documentFileName)
         {
             var adminUser = await _userManager.GetAdminByTenantIdAsync(tenant.Id);
             var mailMessage = new StringBuilder();
@@ -188,10 +183,10 @@ namespace TACHYON.Authorization.Users
 
             //Truck table
             //If exists Truck files
-            if (files.Any(x => x.DocumentTypeFk.DocumentsEntityId == (int)DocumentsEntitiesEnum.Truck ))
+            if (files.Any(x => x.DocumentTypeFk.DocumentsEntityId == (int)DocumentsEntitiesEnum.Truck))
             {
                 //bind html Trucks table
-                BindTruckFilesTable(mailMessage, 
+                BindTruckFilesTable(mailMessage,
                     files.Where(x => x.DocumentTypeFk.DocumentsEntityId == (int)DocumentsEntitiesEnum.Truck &&
                     x.TruckFk != null).ToList());
             }
@@ -201,8 +196,8 @@ namespace TACHYON.Authorization.Users
             else if (files.Any(x => x.DocumentTypeFk.DocumentsEntityId == (int)DocumentsEntitiesEnum.Driver))
             {
                 //bind html driver table
-                BindDriverFilesTable(mailMessage, 
-                    files.Where(x => x.DocumentTypeFk.DocumentsEntityId == (int)DocumentsEntitiesEnum.Driver && 
+                BindDriverFilesTable(mailMessage,
+                    files.Where(x => x.DocumentTypeFk.DocumentsEntityId == (int)DocumentsEntitiesEnum.Driver &&
                     x.UserFk != null).ToList());
             }
 
@@ -210,7 +205,7 @@ namespace TACHYON.Authorization.Users
             await ReplaceBodyAndSend(adminUser.EmailAddress, L("DocumentsExpiredInfo"), emailTemplate, mailMessage);
         }
 
-        
+
 
 
         /// <summary>
@@ -218,62 +213,45 @@ namespace TACHYON.Authorization.Users
         /// </summary>
         /// <param name="user">User</param>
         /// <param name="link">Reset link</param>
-        public async Task SendPasswordResetLinkAsync(User user, string link = null)
+        public async Task SendPasswordResetLinkAsync(User user, string link)
         {
             if (user.PasswordResetCode.IsNullOrEmpty())
-            {
                 throw new Exception("PasswordResetCode should be set in order to send password reset link.");
-            }
 
             var tenancyName = GetTenancyNameOrNull(user.TenantId);
             var emailTemplate = GetTitleAndSubTitle(user.TenantId,
                 L("PasswordResetEmail_Title"),
                 L("PasswordResetEmail_SubTitle"));
+            var mailMessage = new StringBuilder("<div class=\"data\">");
 
-            var mailMessageContent = $"<div style=\"{DevStyle}\"><div style=\"margin - top: 10px; \">"
-                                     + $"<p style=\"color: black; \"> {L("Dear")} <b style=\"color: #da323e;\">{user.FullName}</b> <br><br>" +
-                                     L(
-                                         "You are receiving this email because we received a password reset request for your account") +
-                                     $"<br><br></p> <div align=\"center\"> <a href=\"{link}\"" +
-                                     $" style=\"{EmailButtonStyle}\" bg-color=\"{EmailButtonColor}\">" +
-                                     L("ResetPassword") + "</a></div>" +
-                                     $"<p><br>{L("YourNewPasswordMust")}:</p>" +
-                                     $"<ul><li>{L("Contain 8-12 characters")}</li>" +
-                                     $"<li>{L("Contain at least 1 upper-case letter")}</li>" +
-                                     $"<li>{L("Contain at least 1 lower-case letter")}</li>" +
-                                     $"<li>{L("Contain at least 1 number")}</li></ul>"+
-                                     $"<p>{L("IfYouDidNotRequestPasswordReset,")}</p></div>";
-
-
-            var mailMessage = new StringBuilder(mailMessageContent);
-
-            if (!tenancyName.IsNullOrEmpty())
+            var passwordRequirements = new string[]
             {
-                mailMessage.AppendLine("<b>" + L("CompanyFullLeagalName") + "</b>: " + tenancyName + "<br />");
-            }
-
-
+                L("Contain8To12Characters"),
+                L("ContainAtLeast1UpperCaseLetter"),
+                L("ContainAtLeast1LowerCaseLetter"),
+                L("ContainAtLeast1Number"),
+            };
             if (!link.IsNullOrEmpty())
             {
                 link = link.Replace("{userId}", user.Id.ToString());
                 link = link.Replace("{resetCode}", Uri.EscapeDataString(user.PasswordResetCode));
-
                 if (user.TenantId.HasValue)
-                {
                     link = link.Replace("{tenantId}", user.TenantId.ToString());
-                }
 
                 link = EncryptQueryParameters(link);
-
-                mailMessage.AppendLine("<br />");
-                mailMessage.AppendLine(L("PasswordResetEmail_ClickTheLinkBelowToResetYourPassword") + "<br /><br />");
-                mailMessage.AppendLine("<a style=\"" + EmailButtonStyle + "\" bg-color=\"" + EmailButtonColor + "\" href=\"" + link + "\">" + L("Reset") + "</a>");
-                mailMessage.AppendLine("<br />");
-                mailMessage.AppendLine("<br />");
-                mailMessage.AppendLine("<br />");
-                mailMessage.AppendLine("<span style=\"font-size: 9pt;\">" + L("EmailMessage_CopyTheLinkBelowToYourBrowser") + "</span><br />");
-                mailMessage.AppendLine("<span style=\"font-size: 8pt;\">" + link + "</span>");
             }
+
+            if (!tenancyName.IsNullOrEmpty())
+                mailMessage.AppendLine($"<h2>{L("DearsAt")}<span style=\"color: #d82631\">{tenancyName}</span></h2>");
+            mailMessage.AppendLine($"<h2>{L("Dear")}<span style=\"color: #d82631\">{user.FullName}</span></h2></div>");
+            mailMessage.AppendLine("<p class=\"lead\" style=\"width: 65%; margin: 30px auto\">");
+            mailMessage.AppendLine($"{L("YouAreReceivingThisEmailBecauseWe")}</p>");
+            mailMessage.AppendLine($"<button onclick=\"location.href='{link}';\" class=\"btn btn-red\">{L("ResetPassword")}</button>");
+            mailMessage.AppendLine($"<p class=\"lead\">{L("YourNewPasswordMust")}</p><ul>");
+            foreach (string pr in passwordRequirements)
+                mailMessage.AppendLine($"<li style=\"font-size: 20px;padding: 10px;margin-bottom: 5px;\">&#8594; {pr}</li>");
+
+            mailMessage.AppendLine($"</ul><p class=\"lead\">{L("IfYouDidNotRequestPasswordReset")}</p></div>");
 
             await ReplaceBodyAndSend(user.EmailAddress, L("PasswordResetEmail_Subject"), emailTemplate, mailMessage);
         }
@@ -300,17 +278,14 @@ namespace TACHYON.Authorization.Users
 
         public async Task SendPasswordUpdatedEmail(int? tenantId, string userEmail, string newPassword)
         {
-            // TODO See TAC-432
-
             var emailTemplate = GetTitleAndSubTitle(tenantId, L("PasswordUpdated_Title"), L("PasswordUpdated_SubTitle"));
-            var templateContent = $"<div style=\"{DevStyle}\"><div style=\"margin - top: 10px; \">"
-                + $"<p style=\"color: black; \">{L("YourPasswordChangedSuccessfully")}<br>"
-                +$"{L("YourNewPasswordIs")} <b> {newPassword} </b> </p> </div> </div>";
+            var mailMessage = new StringBuilder("<div class=\"data\">");
+            mailMessage.AppendLine("<p class=\"lead\" style=\"width: 65%; margin: 30px auto\">");
+            mailMessage.AppendLine($"{L("YourPasswordChangedSuccessfully")} <br><br>");
+            mailMessage.AppendLine($"{L("YourNewPasswordIs")} <span style=\"color: #d82631\">{newPassword}</span>");
+            mailMessage.AppendLine("</p></div>");
 
-            var mailTemplate = new StringBuilder(templateContent);
-
-
-            await ReplaceBodyAndSend(userEmail, L("PasswordUpdated"), emailTemplate, mailTemplate);
+            await ReplaceBodyAndSend(userEmail, L("PasswordUpdated"), emailTemplate, mailMessage);
         }
 
         public async Task SendWarningSuspendAccountForExpiredDocumentEmail(Tenant tenant, string documentName,
@@ -321,17 +296,18 @@ namespace TACHYON.Authorization.Users
             var emailTemplate = GetTitleAndSubTitle(tenant.Id,
                 L("WarningSuspendAccount_Title"), L("WarningSuspendAccount_SubTitle"));
             var adminUser = await _userManager.GetAdminByTenantIdAsync(tenant.Id);
+            var mailMessage = new StringBuilder();
 
-            var templateContent = $"<div style=\"{DevStyle}\"><div style=\"margin - top: 10px; \">"
-                                  + $"<p style=\"color: black; \"> {L("DearsAt")} <b style=\"color: #da323e;\">{tenant.companyName}</b> <br><br>"
-                                  + $"{L("WeWouldLikeToInformYouThatTheCopyOfYour")} <b style=\"color: #da323e;\">" +
-                                  $"{documentName}</b> {L("DocumentUploadedTachyonPlatformWillBeExpiredSoonPleaseSubmitARenewalOneBefore")}" +
-                                  $"{documentExpireDate} {L(" ToPreventTheAccountFromBeingSuspended")}</p> </div> </div>";
+            mailMessage.AppendLine($"<div class=\"data\"><h2>{L("DearsAt")}");
+            mailMessage.AppendLine($"<span style=\"color: #d82631\">{tenant.companyName}</span></h2></div>");
+            mailMessage.AppendLine("<p class=\"lead\" style=\"width: 65%; margin: 30px auto\">" +
+                                   $"{L("WeWouldLikeToInformYouThatTheCopyOfYour")}</p>");
+            mailMessage.AppendLine($"<span style=\"color: #d82631\">{documentName}</span> ");
+            mailMessage.AppendLine(L("DocumentUploadedTachyonPlatformWillBeExpiredSoonPleaseSubmitARenewalOneBefore"));
+            mailMessage.AppendLine($"<span style=\"color: #d82631\">{documentExpireDate:MM/dd/yyyy}</span>");
+            mailMessage.AppendLine(L("ToPreventTheAccountFromBeingSuspended"));
 
-            var mailTemplate = new StringBuilder(templateContent);
-
-
-            await ReplaceBodyAndSend(adminUser.EmailAddress, L("WarningSuspendAccount"), emailTemplate, mailTemplate);
+            await ReplaceBodyAndSend(adminUser.EmailAddress, L("WarningSuspendAccount"), emailTemplate, mailMessage);
         }
 
         public async Task SendSuspendedAccountForExpiredDocumentEmail(Tenant tenant, string documentName)
@@ -342,15 +318,15 @@ namespace TACHYON.Authorization.Users
                 L("SuspendedAccount_Title"), L("SuspendedAccount_SubTitle"));
             var adminUser = await _userManager.GetAdminByTenantIdAsync(tenant.Id);
 
-            var templateContent = $"<div style=\"{DevStyle}\"><div style=\"margin - top: 10px; \">"
-                                  + $"<p style=\"color: black; \"> {L("DearsAt")} <b style=\"color: #da323e;\">{tenant.companyName}</b> <br><br>"
-                                  + $"{L("YourAccountIsCurrentlySuspendedDueToTheExpirationOfThe")} <b style=\"color: #da323e;\">" +
-                                  $"{documentName}</b> {L("DocumentPleaseSubmitARenewalOneToReactivateYourAccount")}</p> </div> </div>";
+            var mailMessage = new StringBuilder();
+            mailMessage.AppendLine($"<div class=\"data\"><h2>{L("DearsAt")}");
+            mailMessage.AppendLine($"<span style=\"color: #d82631\">{tenant.companyName}</span></h2></div>");
+            mailMessage.AppendLine("<p class=\"lead\" style=\"width: 65%; margin: 30px auto\">");
+            mailMessage.AppendLine(L("YourAccountIsCurrentlySuspendedDueToTheExpirationOfThe"));
+            mailMessage.AppendLine($"<span style=\"color: #d82631\">{documentName}</span> ");
+            mailMessage.AppendLine(L("DocumentPleaseSubmitARenewalOneToReactivateYourAccount") + "</p>");
 
-            var mailTemplate = new StringBuilder(templateContent);
-
-
-            await ReplaceBodyAndSend(adminUser.EmailAddress, L("WarningSuspendAccount"), emailTemplate, mailTemplate);
+            await ReplaceBodyAndSend(adminUser.EmailAddress, L("WarningSuspendAccount"), emailTemplate, mailMessage);
         }
 
         public async Task SendInvoiceDueEmail(Tenant tenant, string invoiceNumber, DateTime invoiceIssueDate,
@@ -361,17 +337,16 @@ namespace TACHYON.Authorization.Users
             var emailTemplate = GetTitleAndSubTitle(tenant.Id,
                 L("InvoiceDue_Title"), L("InvoiceDue_SubTitle"));
             var adminUser = await _userManager.GetAdminByTenantIdAsync(tenant.Id);
-            
-            var templateContent = $"<div style=\"{DevStyle}\"><div style=\"margin - top: 10px; \">"
-                                  + $"<p style=\"color: black; \"> {L("DearsAt")} <b style=\"color: #da323e;\">{tenant.companyName}</b> <br><br>"
-                                  + $"{L("ThisIsJustToRemindYouThatTheInvoice")} <b style=\"color: #da323e;\">" +
-                                  $"{invoiceNumber}</b> {L("WithATotalOf")}<b>{invoiceTotalAmount}</b>" +
-                                  $" {L("WeHaveSentToYouOn")} {invoiceIssueDate} {L("IsDueNow")} </p> </div> </div>";
+            var mailMessage = new StringBuilder();
 
-            var mailTemplate = new StringBuilder(templateContent);
+            mailMessage.AppendLine($"<div class=\"data\"><h2>{L("DearsAt")}");
+            mailMessage.AppendLine($"<span style=\"color: #d82631\">{tenant.companyName}</span></h2></div>");
+            mailMessage.AppendLine("<p class=\"lead\" style=\"width: 65%; margin: 30px auto\">");
+            mailMessage.AppendLine(L("ThisIsJustToRemindYouThatTheInvoice") + $" {invoiceNumber}");
+            mailMessage.AppendLine($"{L("WithATotalOf")} <span style=\"color: #d82631\">{invoiceTotalAmount}</span>");
+            mailMessage.AppendLine($"{L("IsDueNow")}</p>");
 
-
-            await ReplaceBodyAndSend(adminUser.EmailAddress, L("InvoiceDue"), emailTemplate, mailTemplate);
+            await ReplaceBodyAndSend(adminUser.EmailAddress, L("InvoiceDue"), emailTemplate, mailMessage);
         }
 
         public async Task SendIssuedInvoiceEmail(Tenant tenant, DateTime invoiceDueDate,
@@ -383,18 +358,21 @@ namespace TACHYON.Authorization.Users
             var emailTemplate = GetTitleAndSubTitle(tenant.Id,
                 L("IssuedInvoice_Title"), L("IssuedInvoice_SubTitle"));
             var adminUser = await _userManager.GetAdminByTenantIdAsync(tenant.Id);
+            var mailMessage = new StringBuilder();
 
-            var templateContent = $"<div style=\"{DevStyle}\"><div style=\"margin - top: 10px; \">"
-                                  + $"<p style=\"color: black; \"> {L("DearsAt")} <b style=\"color: #da323e;\">{tenant.companyName}</b> <br><br>"
-                                  + $"{L("ThankYouForYourBusinessPleaseFindAttachedTheInvoiceWithIssueDateOf")} <b style=\"color: #da323e;\">" +
-                                  $"{invoiceIssueDate}</b> {L("WithATotalOf")}<b>{invoiceTotalAmount}</b>" +
-                                  $" {L("DueOn")} <b>{invoiceDueDate}</b> " +
-                                  $" <a href=\"{invoiceUrl}\">{L("PleaseClickHereForMoreDetails")}</a> </p></div> </div>";
+            mailMessage.AppendLine($"<div class=\"data\"><h2>{L("DearsAt")}");
+            mailMessage.AppendLine($"<span style=\"color: #d82631\">{tenant.companyName}</span></h2></div>");
+            mailMessage.AppendLine("<p class=\"lead\" style=\"width: 65%; margin: 30px auto\">");
+            mailMessage.AppendLine($"{L("ThankYouForYourBusiness")} <br/>");
+            mailMessage.AppendLine(L("PleaseFindAttachedTheInvoiceWithIssueDateOf"));
+            mailMessage.AppendLine($"<span style=\"color: #d82631\">{invoiceIssueDate}</span> ,<br/>");
+            mailMessage.AppendLine($"{L("WithATotalOf")} <span style=\"color: #d82631\">{invoiceIssueDate}</span>");
+            mailMessage.AppendLine($"{L("DueOn")} <span style=\"color: #d82631\">{invoiceDueDate}</span> {L("Please")}");
+            mailMessage.AppendLine($"<a href=\"{invoiceUrl}\" target=\"blank\" style=\"display: inline;\">{L("ClickHere")}</a>");
+            mailMessage.AppendLine($"{L("ForMoreDetails")} </p>");
 
-            var mailTemplate = new StringBuilder(templateContent);
 
-
-            await ReplaceBodyAndSend(adminUser.EmailAddress, L("IssuedInvoice"), emailTemplate, mailTemplate);
+            await ReplaceBodyAndSend(adminUser.EmailAddress, L("IssuedInvoice"), emailTemplate, mailMessage);
         }
 
         public async Task TryToSendSubscriptionExpireEmail(int tenantId, DateTime utcNow)
