@@ -101,6 +101,7 @@ namespace TACHYON.Configuration
         public static class Email
         {
             public const string UseHostDefaultEmailSettings = "App.Email.UseHostDefaultEmailSettings";
+            public const string EmailLogoPath = "App.Email.EmailLogoPath";
         }
 
         public static class Recaptcha
