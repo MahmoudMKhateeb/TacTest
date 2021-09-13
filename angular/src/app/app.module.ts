@@ -189,5 +189,6 @@ import { BalanceTopbarComponent } from './shared/layout/topbar/balance-topbar/ba
     },
   ],
   entryComponents: [NgxSpinnerComponent],
+  exports: [ChangeProfilePictureModalComponent],
 })
 export class AppModule {}

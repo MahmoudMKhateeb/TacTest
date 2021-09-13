@@ -1,0 +1,60 @@
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+  <!--begin::Subheader-->
+  <div class="subheader py-2 py-lg-6 subheader-solid" id="kt_subheader">
+    <div class="container-fluid d-flex align-items-center justify-content-between flex-wrap flex-sm-nowrap">
+      <!--begin::Info-->
+      <div class="d-flex align-items-center flex-wrap mr-1">
+        <!--begin::Mobile Toggle-->
+        <button class="burger-icon burger-icon-left mr-4 d-inline-block d-lg-none" id="kt_subheader_mobile_toggle">
+          <span></span>
+        </button>
+        <!--end::Mobile Toggle-->
+        <!--begin::Page Heading-->
+        <div class="d-flex align-items-baseline flex-wrap mr-5">
+          <!--begin::Page Title-->
+          <h5 class="text-dark font-weight-bold my-1 mr-5">{{ 'ProfileTitle' }}</h5>
+          <!--end::Page Title-->
+          <!--begin::Breadcrumb-->
+          <!--          <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 my-2 font-size-sm">-->
+          <!--            <li class="breadcrumb-item text-muted">-->
+          <!--              <a href="" class="text-muted">Apps</a>-->
+          <!--            </li>-->
+          <!--            <li class="breadcrumb-item text-muted">-->
+          <!--              <a href="" class="text-muted">Profile</a>-->
+          <!--            </li>-->
+          <!--            <li class="breadcrumb-item text-muted">-->
+          <!--              <a href="" class="text-muted">Profile 1</a>-->
+          <!--            </li>-->
+          <!--            <li class="breadcrumb-item text-muted">-->
+          <!--              <a href="" class="text-muted">Personal Information</a>-->
+          <!--            </li>-->
+          <!--          </ul>-->
+          <!--end::Breadcrumb-->
+        </div>
+        <!--end::Page Heading-->
+      </div>
+      <!--end::Info-->
+    </div>
+  </div>
+  <!--end::Subheader-->
+  <!--begin::Entry-->
+  <div class="d-flex flex-column-fluid">
+    <!--begin::Container-->
+    <div class="container-fluid">
+      <!--begin::Profile Personal Information-->
+      <div class="d-flex flex-row">
+        <!--begin::Aside-->
+        <side-profile></side-profile>
+        <!--end::Aside-->
+        <!--begin::Content-->
+        <div class="container-fluid">
+          <router-outlet></router-outlet>
+        </div>
+        <!--end::Content-->
+      </div>
+      <!--end::Profile Personal Information-->
+    </div>
+    <!--end::Container-->
+  </div>
+  <!--end::Entry-->
+</div>
