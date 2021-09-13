@@ -319,6 +319,7 @@ namespace TACHYON.Shipping.Trips
             var docFileDto = input.CreateOrEditDocumentFileDto;
             if (trip.HasAttachment)
             {
+                docFileDto.Name = input.CreateOrEditDocumentFileDto.DocumentTypeDto.DisplayName + "_" + shippingRequestTripId;
                 docFileDto.ShippingRequestTripId = shippingRequestTripId;
                 await _documentFilesAppService.CreateOrEdit(docFileDto);
             }
