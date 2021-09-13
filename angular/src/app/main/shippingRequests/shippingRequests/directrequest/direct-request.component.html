@@ -3,7 +3,7 @@
     <h3 class="card-title">
       {{ l('DirectRequests') }}
     </h3>
-    <div class="card-toolbar">
+    <div class="card-toolbar" *ngIf="ShippingRequestStatus !== ShippingRequestStatuses.PostPrice">
       <button class="btn btn-danger" (click)="DirectRequestTenantModel.show()">
         <i class="flaticon2-paper-plane"></i> {{ l('sendDirectRequests') }}
       </button>
@@ -28,37 +28,37 @@
         >
           <ng-template pTemplate="header">
             <tr>
-              <th style="width: 150px;" pSortableColumn="carrierName">
+              <th style="width: 150px" pSortableColumn="carrierName">
                 {{ 'CarrierName' | localize }}
                 <p-sortIcon field="carrierName"></p-sortIcon>
               </th>
-              <th style="width: 100px;" pSortableColumn="statusTitle">
+              <th style="width: 100px" pSortableColumn="statusTitle">
                 {{ 'Status' | localize }}
                 <p-sortIcon field="statusTitle"></p-sortIcon>
               </th>
 
-              <th style="width: 150px;">
+              <th style="width: 150px">
                 {{ 'Actions' | localize }}
               </th>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-record="$implicit">
             <tr>
-              <td style="width: 150px;">
+              <td style="width: 150px">
                 <span class="ui-column-title"> {{ 'CarrierName' | localize }}</span>
                 <span>
                   {{ record.carrier }}
                 </span>
               </td>
 
-              <td style="width: 100px;">
+              <td style="width: 100px">
                 <span class="ui-column-title"> {{ 'StatusTitle' | localize }}</span>
                 <span>
                   {{ l(record.statusTitle) }}
                 </span>
               </td>
 
-              <td style="width: 150px;">
+              <td style="width: 150px">
                 <div *ngIf="record.status == 0 || record.status == 5" class="btn-group dropdown" dropdown container="body">
                   <div class="row ml-1">
                     <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
