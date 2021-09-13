@@ -30,8 +30,8 @@ export class TrucksTypesComponent extends AppComponentBase implements OnInit {
   @ViewChild('createOrEditTrucksTypeModal', { static: true }) createOrEditTrucksTypeModal: CreateOrEditTrucksTypeModalComponent;
   @ViewChild('viewTrucksTypeModalComponent', { static: true }) viewTrucksTypeModal: ViewTrucksTypeModalComponent;
 
-  @ViewChild('dataTable', { static: true }) dataTable: Table;
-  @ViewChild('paginator', { static: true }) paginator: Paginator;
+  // @ViewChild('dataTable', { static: true }) dataTable: Table;
+  // @ViewChild('paginator', { static: true }) paginator: Paginator;
 
   advancedFiltersAreShown = false;
   filterText = '';
@@ -73,6 +73,7 @@ export class TrucksTypesComponent extends AppComponentBase implements OnInit {
           .dxGetAll(Input)
           .toPromise()
           .then((response) => {
+            console.log(response.totalCount);
             return {
               data: response.data,
               totalCount: response.totalCount,
@@ -102,9 +103,9 @@ export class TrucksTypesComponent extends AppComponentBase implements OnInit {
     );
   }
 
-  reloadPage(): void {
-    this.paginator.changePage(this.paginator.getPage());
-  }
+  // reloadPage(): void {
+  //   this.paginator.changePage(this.paginator.getPage());
+  // }
 
   createTrucksType(): void {
     this.createOrEditTrucksTypeModal.show();

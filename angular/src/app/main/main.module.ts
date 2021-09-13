@@ -255,6 +255,7 @@ import { InvoiceTenantItemComponent } from '@app/main/Invoices/invoice-tenants/i
 import { QuartzCronModule } from '@node_modules/@sbzen/ng-cron';
 import { TranslationsTemplateComponent } from './packingTypes/packingTypeTranslations/translations-template/translations-template.component';
 import { ShippingTypesTranslationsComponent } from './shippingTypes/shipping-types-translations/shipping-types-translations.component';
+import { TrucksTypeTranslationTemplateComponent } from './trucksTypes/trucksTypes/trucks-type-translation-template/trucks-type-translation-template.component';
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
 @NgModule({
@@ -484,6 +485,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     InvoiceTenantItemComponent,
     TranslationsTemplateComponent,
     ShippingTypesTranslationsComponent,
+    TrucksTypeTranslationTemplateComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },

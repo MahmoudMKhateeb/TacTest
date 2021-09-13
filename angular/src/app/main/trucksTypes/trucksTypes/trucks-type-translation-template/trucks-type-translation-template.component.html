@@ -1,0 +1,23 @@
+<dx-data-grid
+  #grid
+  id="dataGrid"
+  [dataSource]="dataSource"
+  [remoteOperations]="true"
+  [showColumnLines]="true"
+  [showRowLines]="false"
+  [showBorders]="true"
+  [rowAlternationEnabled]="true"
+  (onRowUpdating)="updateRow($event)"
+  keyExpr="id"
+>
+  <dxo-filter-builder-popup></dxo-filter-builder-popup>
+  <dxo-editing mode="row" [allowUpdating]="true" [allowAdding]="true"> </dxo-editing>
+  <dxo-remote-operations [sorting]="true" [paging]="true" [filtering]="true"></dxo-remote-operations>
+  <dxo-paging [pageSize]="10"></dxo-paging>
+  <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20, 50, 200]"></dxo-pager>
+
+  <!--  <dxi-column dataField="translatedDisplayName" caption="{{ l('truckType') }}"></dxi-column>-->
+  <!--  <dxi-column dataField="transportTypeId" caption="{{ l('transportType') }}"></dxi-column>-->
+  <!--  <dxi-column dataField="isActive" caption="{{ l('IsActive') }}"></dxi-column>-->
+  <!--  <dxi-column dataField="language" caption="{{ l('language') }}"></dxi-column>-->
+</dx-data-grid>

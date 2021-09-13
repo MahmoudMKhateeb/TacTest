@@ -1,12 +1,6 @@
 ﻿<div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
-    <sub-header [title]="'TrucksTypes' | localize">
-      <div role="actions">
-        <button *ngIf="isGranted('Pages.TrucksTypes.Create')" (click)="createTrucksType()" class="btn btn-primary blue">
-          <i class="fa fa-plus"></i> {{ l('Create') }} {{ l('NewTrucksType') }}
-        </button>
-      </div>
-    </sub-header>
+    <sub-header [title]="'TrucksTypes' | localize"> </sub-header>
 
     <div [class]="containerClass">
       <div class="card card-custom gutter-b">
@@ -21,8 +15,8 @@
               [showRowLines]="false"
               [showBorders]="true"
               [rowAlternationEnabled]="true"
-              (onRowUpdating)="updateRow($event)"
               keyExpr="id"
+              (onRowUpdating)="updateRow($event)"
             >
               <dxo-editing mode="popup" [allowUpdating]="true" [allowAdding]="true"> </dxo-editing>
               <dxo-filter-row [visible]="true"></dxo-filter-row>
@@ -31,12 +25,12 @@
               <dxo-filter-builder-popup></dxo-filter-builder-popup>
               <dxo-master-detail [enabled]="true" template="translations"></dxo-master-detail>
               <div *dxTemplate="let options of 'translations'">
-                <app-translations-template [CoreId]="options.data.id"></app-translations-template>
+                <trucksType-translationsTemplate [CoreId]="options.data.id"></trucksType-translationsTemplate>
               </div>
               <dxo-remote-operations [sorting]="true" [paging]="true" [filtering]="true"></dxo-remote-operations>
               <dxo-paging [pageSize]="10"></dxo-paging>
-              <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20, 50, 200]"></dxo-pager>
-              <dxi-column dataField="translatedDisplayName" caption="{{ l('truckType') }}">
+              <dxo-pager [showPageSizeSelector]="true"></dxo-pager>
+              <dxi-column dataField="displayName" caption="{{ l('truckType') }}">
                 <dxi-validation-rule type="required"></dxi-validation-rule
               ></dxi-column>
 
