@@ -1,16 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CompleteProfileComponent } from '@app/main/profile/complete-profile/complete-profile.component';
-import { SideProfileComponent } from '@app/main/profile/side-profile/side-profile.component';
+import { TenantsProfileComponent } from '@app/main/profile/tenants-profile/tenants-profile.component';
+import { ProfileComponent } from '@app/main/profile/profile/profile.component';
 
 const routes: Routes = [
   {
-    path: '',
-    component: CompleteProfileComponent,
+    path: ':id',
+    component: ProfileComponent,
     children: [
-      { path: 'completeProfile', component: CompleteProfileComponent },
-      { path: '', redirectTo: 'overview', pathMatch: 'full' },
-      { path: '**', redirectTo: 'overview', pathMatch: 'full' },
+      { path: 'complete', component: CompleteProfileComponent },
+      { path: 'view', component: TenantsProfileComponent },
     ],
   },
 ];
