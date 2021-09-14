@@ -2388,6 +2388,9 @@
     <text name="FinishOffLoadShipment">Finish offloading</text>
     <text name="Delivered">Delivered</text>
     <text name="AddIncident">Add incident</text>
+    <text name="CompanyNameEmailTemplate">Company name</text>
+    
+    
     <!--<text name="StartOffloading"></text>
     <text name="ReceiverConfirmed"></text>
     <text name="DeliveryConfirmation"></text>-->

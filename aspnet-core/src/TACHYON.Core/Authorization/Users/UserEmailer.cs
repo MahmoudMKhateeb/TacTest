@@ -51,6 +51,8 @@ namespace TACHYON.Authorization.Users
         private const string DevStyle = "display: block; font-family: Arial, Helvetica, sans-serif;" +
                                         " color: black; font-size: 17px; margin-left: 130px;";
 
+        private bool currentCulture = CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft == false;
+
         public UserEmailer(
             IEmailTemplateProvider emailTemplateProvider,
             IEmailSender emailSender,
@@ -103,19 +105,20 @@ namespace TACHYON.Authorization.Users
             var emailTemplate = await GetTitleAndSubTitle(user.TenantId, L("EmailActivation_Title"),
                 L("EmailActivation_SubTitle"));
             var mailMessage = new StringBuilder();
-            var CurrentCulture = CultureInfo.CurrentCulture.DisplayName;
-            if (CurrentCulture == "English")
+            //var CurrentCulture = CultureInfo.CurrentUICulture.DisplayName;
+            if (currentCulture)
             {
                 mailMessage.AppendLine("<div class=\"data\"><ul>");
                 mailMessage.AppendLine($"<li><span class=\"first\">{L("Name")}</span><span class=\"last\">{user.FullName}</span></li>");
-                mailMessage.AppendLine($"<li><span class=\"first\">{L("CompanyName")}</span><span class=\"last\">{tenancyName}</span></li>");
+                mailMessage.AppendLine($"<li><span class=\"first\">{L("CompanyNameEmailTemplate")}</span><span class=\"last\">{tenancyName}</span></li>");
                 mailMessage.AppendLine($"<li><span class=\"first\">{L("Email")}</span><span class=\"last\">{user.EmailAddress}</span></li>");
                 mailMessage.AppendLine($"<li><span class=\"first\">{L("Password")}</span><span class=\"last\">{password}</span></li>");
             }
-            else {
+            else
+            {
                 mailMessage.AppendLine("<div class=\"data\"><ul>");
                 mailMessage.AppendLine($"<li><span class=\"first\">{user.FullName}</span><span class=\"last\">{L("Name")}</span></li>");
-                mailMessage.AppendLine($"<li><span class=\"first\">{tenancyName}</span><span class=\"last\">{L("CompanyName")}</span></li>");
+                mailMessage.AppendLine($"<li><span class=\"first\">{tenancyName}</span><span class=\"last\">{L("CompanyNameEmailTemplate")}</span></li>");
                 mailMessage.AppendLine($"<li><span class=\"first\">{user.EmailAddress}</span><span class=\"last\">{L("Email")}</span></li>");
                 mailMessage.AppendLine($"<li><span class=\"first\">{password}</span><span class=\"last\">{L("Password")}</span></li>");
             }
@@ -142,15 +145,13 @@ namespace TACHYON.Authorization.Users
                 L("ApprovedDocuments_SubTitle"));
 
             var mailMessage = new StringBuilder();
-
-            var CurrentCulture = CultureInfo.CurrentCulture.DisplayName;
-            if (CurrentCulture == "English")
+            if (currentCulture)
             {
                 mailMessage.AppendLine($"<div class=\"data\"><h2>{L("DearsAt")}");
                 mailMessage.AppendLine($"<span style=\"color: #d82631\">{tenant.companyName}</span></h2></div>");
             }
             else
-            {                
+            {
                 mailMessage.AppendLine($"<br><h2 style=\"text-align:center\"><span style=\"color:#d82631\">{tenant.companyName}</span>");
                 mailMessage.AppendLine($"<span class=\"data\">{L("DearsAt")}</span><h2>");
             }
@@ -174,12 +175,23 @@ namespace TACHYON.Authorization.Users
             var adminUser = await _userManager.GetAdminByTenantIdAsync(tenant.Id);
             var mailMessage = new StringBuilder();
             var tenantItem = await _tenantRepository.GetAsync(tenant.Id);
+
             var emailTemplate = await GetTitleAndSubTitle(tenant.Id, L("ExpiredDateDocuments_Title"), L("ExpiredDateDocuments_SubTitle"));
 
-            mailMessage.AppendLine("<b>" + L("TenancyName") + "</b>:" + tenantItem.TenancyName);
-            mailMessage.AppendLine("<b>" + L("CompanyName") + "</b>:" + tenantItem.companyName);
-            mailMessage.AppendLine("<b>" + L("Address") + "</b>:" + tenantItem.Address);
+            if (currentCulture)
+            {
+                mailMessage.AppendLine("<b>" + L("TenancyName") + "</b>:" + tenantItem.TenancyName);
+                mailMessage.AppendLine("<b>" + L("CompanyNameEmailTemplate") + "</b>:" + tenantItem.companyName);
+                mailMessage.AppendLine("<b>" + L("Address") + "</b>:" + tenantItem.Address);
+            }
+            else
+            {
+                mailMessage.AppendLine("<b>" + tenantItem.TenancyName + "</b>:" + L("TenancyName"));
 
+                mailMessage.AppendLine("<b>" + tenantItem.companyName + "</b>:" + L("CompanyNameEmailTemplate"));
+                mailMessage.AppendLine("<b>" + tenantItem.Address + "</b>:" + L("Address"));
+
+            }
             mailMessage.AppendLine(L(String.Format("Document File: {0} has been expired message", documentFileName)));
 
             await ReplaceBodyAndSend(adminUser.EmailAddress, L("ExpiredDocument"), emailTemplate, mailMessage);
@@ -198,11 +210,18 @@ namespace TACHYON.Authorization.Users
             var mailMessage = new StringBuilder();
             var tenantItem = await _tenantRepository.GetAsync(tenantId);
             var emailTemplate = await GetTitleAndSubTitle(tenantId, L("DocumentsExpiredInfo_Title"), L("DocumentsExpiredInfo_SubTitle"));
-
-            mailMessage.AppendLine("<b>" + L("TenancyName") + "</b>:" + tenantItem.TenancyName);
-            mailMessage.AppendLine("<b>" + L("CompanyName") + "</b>:" + tenantItem.companyName);
-            mailMessage.AppendLine("<b>" + L("Address") + "</b>:" + tenantItem.Address + "<br/>");
-
+            if (currentCulture)
+            {
+                mailMessage.AppendLine("<b>" + L("TenancyName") + "</b>:" + tenantItem.TenancyName);
+                mailMessage.AppendLine("<b>" + L("CompanyNameEmailTemplate") + "</b>:" + tenantItem.companyName);
+                mailMessage.AppendLine("<b>" + L("Address") + "</b>:" + tenantItem.Address + "<br/>");
+            }
+            else
+            {
+                mailMessage.AppendLine("<b>" + tenantItem.TenancyName + "</b>:" + L("TenancyName"));
+                mailMessage.AppendLine("<b>" + tenantItem.companyName + "</b>:" + L("CompanyNameEmailTemplate"));
+                mailMessage.AppendLine("<b>" + tenantItem.Address + "</b>:" + L("Address") + "<br/>");
+            }
             //Truck table
             //If exists Truck files
             if (files.Any(x => x.DocumentTypeFk.DocumentsEntityId == (int)DocumentsEntitiesEnum.Truck))
@@ -264,15 +283,32 @@ namespace TACHYON.Authorization.Users
             }
 
             if (!tenancyName.IsNullOrEmpty())
-                mailMessage.AppendLine($"<h2>{L("DearsAt")}<span style=\"color: #d82631\">{tenancyName}</span></h2>");
-            mailMessage.AppendLine($"<h2>{L("Dear")}<span style=\"color: #d82631\">{user.FullName}</span></h2></div>");
-            mailMessage.AppendLine("<p class=\"lead\" style=\"width: 65%; margin: 30px auto\">");
-            mailMessage.AppendLine($"{L("YouAreReceivingThisEmailBecauseWe")}</p>");
-            mailMessage.AppendLine($"<button onclick=\"location.href='{link}';\" class=\"btn btn-red\">{L("ResetPassword")}</button>");
-            mailMessage.AppendLine($"<p class=\"lead\">{L("YourNewPasswordMust")}</p><ul>");
-            foreach (string pr in passwordRequirements)
-                mailMessage.AppendLine($"<li style=\"font-size: 20px;padding: 10px;margin-bottom: 5px;\">&#8594; {pr}</li>");
 
+                if (currentCulture)
+                {
+                    mailMessage.AppendLine($"<h2>{L("DearsAt")}<span style=\"color: #d82631\">{tenancyName}</span></h2>");
+                    mailMessage.AppendLine($"<h2>{L("Dear")}<span style=\"color: #d82631\">{user.FullName}</span></h2></div>");
+                    mailMessage.AppendLine("<p class=\"lead\" style=\"width: 65%; margin: 30px auto\">");
+                    mailMessage.AppendLine($"{L("YouAreReceivingThisEmailBecauseWe")}</p>");
+                    mailMessage.AppendLine($"<button onclick=\"location.href='{link}';\" class=\"btn btn-red\">{L("ResetPassword")}</button>");
+                    mailMessage.AppendLine($"<p class=\"lead\">{L("YourNewPasswordMust")}</p><ul>");
+                    foreach (string pr in passwordRequirements)
+                        mailMessage.AppendLine($"<li style=\"font-size: 20px;padding: 10px;margin-bottom: 5px;\">&#8594; {pr}</li>");
+
+                }
+
+                else
+                {
+                    mailMessage.AppendLine($"<h2>{tenancyName}<span style=\"color: #d82631{L("DearsAt")}span></h2>");
+                    mailMessage.AppendLine($"<h2>{user.FullName}<span style=\"color: #d82631\">{L("Dear")}</span></h2></div>");
+                    mailMessage.AppendLine("<p class=\"lead\" style=\"width: 65%; margin: 30px auto\">");
+                    mailMessage.AppendLine($"{L("YouAreReceivingThisEmailBecauseWe")}</p>");
+                    mailMessage.AppendLine($"<button onclick=\"location.href='{link}';\" class=\"btn btn-red\">{L("ResetPassword")}</button>");
+                    mailMessage.AppendLine($"<p class=\"lead\">{L("YourNewPasswordMust")}</p><ul>");
+                    foreach (string pr in passwordRequirements)
+                        mailMessage.AppendLine($"<li style=\"font-size: 20px;padding: 10px;margin-bottom: 5px;\">&#8594; {pr}</li>");
+
+                }
             mailMessage.AppendLine($"</ul><p class=\"lead\">{L("IfYouDidNotRequestPasswordReset")}</p></div>");
 
             await ReplaceBodyAndSend(user.EmailAddress, L("PasswordResetEmail_Subject"), emailTemplate, mailMessage);
@@ -304,7 +340,9 @@ namespace TACHYON.Authorization.Users
             var mailMessage = new StringBuilder("<div class=\"data\">");
             mailMessage.AppendLine("<p class=\"lead\" style=\"width: 65%; margin: 30px auto\">");
             mailMessage.AppendLine($"{L("YourPasswordChangedSuccessfully")} <br><br>");
-            mailMessage.AppendLine($"{L("YourNewPasswordIs")} <span style=\"color: #d82631\">{newPassword}</span>");
+            if (currentCulture)
+                mailMessage.AppendLine($"{L("YourNewPasswordIs")} <span style=\"color: #d82631\">{newPassword}</span>");
+            else mailMessage.AppendLine($"{newPassword} <span style=\"color: #d82631\">{L("YourNewPasswordIs")}</span>");
             mailMessage.AppendLine("</p></div>");
 
             await ReplaceBodyAndSend(userEmail, L("PasswordUpdated"), emailTemplate, mailMessage);
@@ -321,6 +359,7 @@ namespace TACHYON.Authorization.Users
             var mailMessage = new StringBuilder();
 
             mailMessage.AppendLine($"<div class=\"data\"><h2>{L("DearsAt")}");
+
             mailMessage.AppendLine($"<span style=\"color: #d82631\">{tenant.companyName}</span></h2></div>");
             mailMessage.AppendLine("<p class=\"lead\" style=\"width: 65%; margin: 30px auto\">" +
                                    $"{L("WeWouldLikeToInformYouThatTheCopyOfYour")}</p>");
@@ -362,6 +401,7 @@ namespace TACHYON.Authorization.Users
             var mailMessage = new StringBuilder();
 
             mailMessage.AppendLine($"<div class=\"data\"><h2>{L("DearsAt")}");
+
             mailMessage.AppendLine($"<span style=\"color: #d82631\">{tenant.companyName}</span></h2></div>");
             mailMessage.AppendLine("<p class=\"lead\" style=\"width: 65%; margin: 30px auto\">");
             mailMessage.AppendLine(L("ThisIsJustToRemindYouThatTheInvoice") + $" {invoiceNumber}");
@@ -388,9 +428,18 @@ namespace TACHYON.Authorization.Users
             mailMessage.AppendLine($"{L("ThankYouForYourBusiness")} <br/>");
             mailMessage.AppendLine(L("PleaseFindAttachedTheInvoiceWithIssueDateOf"));
             mailMessage.AppendLine($"<span style=\"color: #d82631\">{invoiceIssueDate}</span> ,<br/>");
-            mailMessage.AppendLine($"{L("WithATotalOf")} <span style=\"color: #d82631\">{invoiceIssueDate}</span>");
-            mailMessage.AppendLine($"{L("DueOn")} <span style=\"color: #d82631\">{invoiceDueDate}</span> {L("Please")}");
-            mailMessage.AppendLine($"<a href=\"{invoiceUrl}\" target=\"blank\" style=\"display: inline;\">{L("ClickHere")}</a>");
+            if (currentCulture)
+            {
+                mailMessage.AppendLine($"{L("WithATotalOf")} <span style=\"color: #d82631\">{invoiceIssueDate}</span>");
+                mailMessage.AppendLine($"{L("DueOn")} <span style=\"color: #d82631\">{invoiceDueDate}</span> {L("Please")}");
+                mailMessage.AppendLine($"<a href=\"{invoiceUrl}\" target=\"blank\" style=\"display: inline;\">{L("ClickHere")}</a>");
+            }
+            else
+            {
+                mailMessage.AppendLine($"{invoiceIssueDate} <span style=\"color: #d82631\">{L("WithATotalOf")}</span>");
+                mailMessage.AppendLine($"{invoiceDueDate} <span style=\"color: #d82631\">{L("DueOn")}</span> {L("Please")}");
+                mailMessage.AppendLine($"<a href=\"{invoiceUrl}\" target=\"blank\" style=\"display: inline;\">{L("ClickHere")}</a>");
+            }    
             mailMessage.AppendLine($"{L("ForMoreDetails")} </p>");
 
 
