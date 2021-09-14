@@ -18,16 +18,39 @@ export class TenantsProfileComponent extends AppComponentBase implements OnInit 
   public email: string;
   public phone: number;
   profilePicture = AppConsts.appBaseUrl + '/assets/common/images/default-profile-picture.png';
+  //dummy data For Shipper Facilities Table
   shipperFacilities = [
     { id: 1, name: 'Amazon', City: 'Jeddah', long: 46.6791872, lat: 24.7429006 },
     { id: 2, name: 'Ebay', City: 'Riyadh', long: 50.2082971, lat: 26.3025915 },
     { id: 3, name: 'Google', City: 'Ajman', long: 50.2082971, lat: 26.3025915 },
     { id: 4, name: 'Youtube', City: 'Jeddah', long: 46.6791872, lat: 24.7429006 },
     { id: 5, name: 'Amazon', City: 'Jeddah', long: 50.2082971, lat: 26.3025915 },
-    { id: 6, name: 'Ebay', City: 'Riyadh', long: 46.6791872, lat: 24.7429006 },
-    { id: 7, name: 'Google', City: 'Ajman', long: 50.2082971, lat: 26.3025915 },
-    { id: 8, name: 'Youtube', City: 'Jeddah', long: 46.6791872, lat: 24.7429006 },
   ];
+
+  //Dummy data For Carrier Vases Table
+  carrierVases = [
+    { id: 1, vasName: 'Extra Driver', maxCount: 20, maxAmount: 6, price: 900 },
+    { id: 2, vasName: 'Extra Truck', maxCount: 20, maxAmount: 6, price: 900 },
+    { id: 3, vasName: 'Insurance', maxCount: 20, maxAmount: 6, price: 900 },
+    { id: 4, vasName: 'Extra Packing', maxCount: 20, maxAmount: 6, price: 900 },
+    { id: 5, vasName: 'Extra Driver', maxCount: 20, maxAmount: 6, price: 900 },
+    { id: 6, vasName: 'Extra Truck', maxCount: 20, maxAmount: 6, price: 900 },
+    { id: 7, vasName: 'Insurance', maxCount: 20, maxAmount: 6, price: 900 },
+    { id: 8, vasName: 'Extra Packing', maxCount: 20, maxAmount: 6, price: 900 },
+  ];
+  //Dummy Carrier Service Areas
+
+  carrierServiceAreas = [
+    { id: 1, areaName: 'Area 1' },
+    { id: 1, areaName: 'Area 2' },
+    { id: 1, areaName: 'Area 3' },
+    { id: 1, areaName: 'Area 4' },
+    { id: 1, areaName: 'Area 5' },
+    { id: 1, areaName: 'Area 1' },
+    { id: 1, areaName: 'Area 2' },
+    { id: 1, areaName: 'Area 3' },
+  ];
+
   selectedFacility: any;
   latitude: number;
   longitude: number;
@@ -45,18 +68,6 @@ export class TenantsProfileComponent extends AppComponentBase implements OnInit 
   ngOnInit(): void {
     this.getProfilePicture();
     this.getCurrentUserInfo();
-    // this._Activatedroute.params.subscribe((params) => {
-    //   console.log('The Tenants Profile Component: ', +params['id']);
-    //   console.log(+params['id']);
-    //   // (+) converts string 'id' to a number
-    //   // In a real app: dispatch action to load the details here.
-    // });
-    this._Activatedroute.params.subscribe((params) => {
-      console.log('The Tenants Profile Component: ', +params['id']);
-      console.log(+params['id']);
-      // (+) converts string 'id' to a number
-      // In a real app: dispatch action to load the details here.
-    });
   }
 
   /**

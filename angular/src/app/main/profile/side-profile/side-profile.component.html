@@ -47,8 +47,10 @@
           <span class="font-weight-bold mr-2">Location:</span>
           <span class="text-muted">unknown</span>
         </div>
-        <div *ngIf="!isCarrier" class="d-flex align-items-center justify-content-between">
-          <span class="font-weight-bold mr-2 text-hover-primary" routerLink="/app/main/shippingRequests/shippingRequests">Number Of Shipments:</span>
+        <div class="d-flex align-items-center justify-content-between">
+          <span class="font-weight-bold mr-2 text-hover-primary" routerLink="/app/main/shippingRequests/shippingRequests">{{
+            isCarrier ? 'Number Of Completed Shipments:' : 'Number Of Shipments'
+          }}</span>
           <a class="text-muted text-hover-primary" routerLink="/app/main/shippingRequests/shippingRequests">23</a>
         </div>
       </div>
