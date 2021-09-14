@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net.Mail;
 using System.Text;
@@ -129,10 +130,21 @@ namespace TACHYON.Authorization.Users
             var adminUser = await _userManager.GetAdminByTenantIdAsync(tenant.Id);
             var emailTemplate = await GetTitleAndSubTitle(tenant.Id, L("ApprovedDocuments_Title"),
                 L("ApprovedDocuments_SubTitle"));
+
             var mailMessage = new StringBuilder();
 
-            mailMessage.AppendLine($"<div class=\"data\"><h2>{L("DearsAt")}");
-            mailMessage.AppendLine($"<span style=\"color: #d82631\">{tenant.companyName}</span></h2></div>");
+            var CurrentCulture = CultureInfo.CurrentCulture.DisplayName;
+            if (CurrentCulture == "English")
+            {
+                mailMessage.AppendLine($"<div class=\"data\"><h2>{L("DearsAt")}");
+                mailMessage.AppendLine($"<span style=\"color: #d82631\">{tenant.companyName}</span></h2></div>");
+            }
+            else
+            {                
+                mailMessage.AppendLine($"<br><h2 style=\"text-align:center\"><span style=\"color:#d82631\">{tenant.companyName}</span>");
+                mailMessage.AppendLine($"<span class=\"data\">{L("DearsAt")}</span><h2>");
+            }
+
             mailMessage.AppendLine($"<p class=\"lead\" style=\"width: 65%; margin: 30px auto\">{L("ApprovalDocumentsEmailMessage")}</p>");
             mailMessage.AppendLine($"<a href=\"{loginLink}\" class=\"lead\" target=\"blank\" ");
             mailMessage.AppendLine($"style=\"width: 85%; margin: 30px auto\">{L("LoginLink")}</a>");
