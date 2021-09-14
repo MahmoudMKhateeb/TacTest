@@ -641,7 +641,7 @@
 		<text name="EmailAddress">عنوان البريد الإلكتروني</text>
 		<text name="EmailConfirm">تأكيد البريد الإلكتروني</text>
     
-    <text name="ClickButtonMessage">الرجاء النقر على الرابط أدناه للتحقق من عنوان بريدك الإلكتروني:</text>
+    <text name="ClickButtonMessage">:الرجاء النقر على الرابط أدناه للتحقق من عنوان بريدك الإلكتروني</text>
     <text name="CopyLinkMessage">إذا لم يعمل الزر أعلاه ، فالرجاء لصق الرابط أدناه في متصفحك</text>
     <text name="DearsAt">الأعزاء في</text>
     <text name="ApprovalDocumentsEmailMessage">تم إرسال هذا البريد  إليك لإبلاغك بأنه قد تم قبول مستنداتك ، ويمكنك الآن استخدام المنصة.</text>
@@ -2202,8 +2202,8 @@
     <text name="DueOn">مستحقة في</text>
     <text name="Please">مستحقة الرجاء</text>
     <text name="IssuedInvoice">إستحقاق فاتورة</text>
-    
-    
+    <text name="CompanyNameEmailTemplate">إسم الشركة</text>
+        
     <!--<text name="StartOffloading"></text>
     <text name="ReceiverConfirmed"></text>
     <text name="DeliveryConfirmation"></text>-->
