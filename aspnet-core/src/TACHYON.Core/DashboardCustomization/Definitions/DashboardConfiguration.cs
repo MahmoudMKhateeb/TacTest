@@ -149,14 +149,44 @@ namespace TACHYON.DashboardCustomization.Definitions
             #region DashboardDefinitions
 
             // Create dashboard
+            // tenant
             var defaultTenantDashboard = new DashboardDefinition(
                 TACHYONDashboardCustomizationConsts.DashboardNames.DefaultTenantDashboard,
                 new List<string>
                 {
                     generalStats.Id, dailySales.Id, profitShare.Id, memberActivity.Id, regionalStats.Id, topStats.Id, salesSummary.Id
                 });
-
             DashboardDefinitions.Add(defaultTenantDashboard);
+
+            //carrier
+            var defaultCarrierDashboard = new DashboardDefinition(
+                TACHYONDashboardCustomizationConsts.DashboardNames.DefaultCarrierDashboard,
+                new List<string>
+                {
+                    generalStats.Id, dailySales.Id
+                });
+            DashboardDefinitions.Add(defaultCarrierDashboard);
+
+            //shipper
+            var defaultShipperDashboard = new DashboardDefinition(
+                TACHYONDashboardCustomizationConsts.DashboardNames.DefaultShipperDashboard,
+                new List<string>
+                {
+                    profitShare.Id, memberActivity.Id
+                });
+            DashboardDefinitions.Add(defaultShipperDashboard);
+
+            //tachyonMangedService
+            var defaultTachyonMangedServiceDashboard = new DashboardDefinition(
+                TACHYONDashboardCustomizationConsts.DashboardNames.DefaultTachyonMangedServiceDashboard,
+                new List<string>
+                {
+                    regionalStats.Id, topStats.Id, salesSummary.Id
+                });
+            DashboardDefinitions.Add(defaultTachyonMangedServiceDashboard);
+
+
+            // host
 
             var defaultHostDashboard = new DashboardDefinition(
                 TACHYONDashboardCustomizationConsts.DashboardNames.DefaultHostDashboard,

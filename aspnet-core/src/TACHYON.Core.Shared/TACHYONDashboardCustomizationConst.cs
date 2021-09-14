@@ -40,8 +40,12 @@
         public class DashboardNames
         {
             public const string DefaultTenantDashboard = "TenantDashboard";
+            public const string DefaultHostDashboard = "HostDashboard"; 
 
-            public const string DefaultHostDashboard = "HostDashboard";
+
+            public const string DefaultCarrierDashboard = "CarrierDashboard";
+            public const string DefaultShipperDashboard = "ShipperDashboard";
+            public const string DefaultTachyonMangedServiceDashboard = "TachyonMangedServiceDashboard";
         }
 
         public class Applications

@@ -23,6 +23,9 @@ export class DashboardCustomizationConst {
   static dashboardNames = {
     defaultTenantDashboard: 'TenantDashboard',
     defaultHostDashboard: 'HostDashboard',
+    defaultCarrierDashboard: 'CarrierDashboard',
+    defaultShipperDashboard: 'ShipperDashboard',
+    defaultTachyonMangedServiceDashboard: 'TachyonMangedServiceDashboard',
   };
   static Applications = {
     Angular: 'Angular',
