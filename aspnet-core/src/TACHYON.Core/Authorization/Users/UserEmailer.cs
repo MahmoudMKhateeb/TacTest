@@ -103,12 +103,22 @@ namespace TACHYON.Authorization.Users
             var emailTemplate = await GetTitleAndSubTitle(user.TenantId, L("EmailActivation_Title"),
                 L("EmailActivation_SubTitle"));
             var mailMessage = new StringBuilder();
-
-            mailMessage.AppendLine("<div class=\"data\"><ul>");
-            mailMessage.AppendLine($"<li><span class=\"first\">{L("Name")}</span><span class=\"last\">{user.FullName}</span></li>");
-            mailMessage.AppendLine($"<li><span class=\"first\">{L("CompanyName")}</span><span class=\"last\">{tenancyName}</span></li>");
-            mailMessage.AppendLine($"<li><span class=\"first\">{L("Email")}</span><span class=\"last\">{user.EmailAddress}</span></li>");
-            mailMessage.AppendLine($"<li><span class=\"first\">{L("Password")}</span><span class=\"last\">{password}</span></li>");
+            var CurrentCulture = CultureInfo.CurrentCulture.DisplayName;
+            if (CurrentCulture == "English")
+            {
+                mailMessage.AppendLine("<div class=\"data\"><ul>");
+                mailMessage.AppendLine($"<li><span class=\"first\">{L("Name")}</span><span class=\"last\">{user.FullName}</span></li>");
+                mailMessage.AppendLine($"<li><span class=\"first\">{L("CompanyName")}</span><span class=\"last\">{tenancyName}</span></li>");
+                mailMessage.AppendLine($"<li><span class=\"first\">{L("Email")}</span><span class=\"last\">{user.EmailAddress}</span></li>");
+                mailMessage.AppendLine($"<li><span class=\"first\">{L("Password")}</span><span class=\"last\">{password}</span></li>");
+            }
+            else {
+                mailMessage.AppendLine("<div class=\"data\"><ul>");
+                mailMessage.AppendLine($"<li><span class=\"first\">{user.FullName}</span><span class=\"last\">{L("Name")}</span></li>");
+                mailMessage.AppendLine($"<li><span class=\"first\">{tenancyName}</span><span class=\"last\">{L("CompanyName")}</span></li>");
+                mailMessage.AppendLine($"<li><span class=\"first\">{user.EmailAddress}</span><span class=\"last\">{L("Email")}</span></li>");
+                mailMessage.AppendLine($"<li><span class=\"first\">{password}</span><span class=\"last\">{L("Password")}</span></li>");
+            }
             mailMessage.AppendLine($"</ul></div><p class=\"lead\">{L("ClickButtonMessage")}</p>");
             mailMessage.AppendLine($"<button onclick=\"location.href='{link}';\" class=\"btn btn-red\">{L("Verify")}</button>");
             mailMessage.AppendLine($"<p class=\"lead\">{L("CopyLinkMessage")}</p>");
