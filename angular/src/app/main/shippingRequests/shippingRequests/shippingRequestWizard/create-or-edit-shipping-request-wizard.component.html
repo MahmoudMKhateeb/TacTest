@@ -266,7 +266,7 @@
                       </div>
                       <div class="col-lg-6">
                         <div class="form-group">
-                          <label><span class="required-fileds">*</span> {{ l('DestinationCity') }}:</label>
+                          <label> {{ l('DestinationCity') }}<span class="required-fileds">*</span></label>
                           <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allCitys }">
                             <select
                               class="form-control"
@@ -602,7 +602,7 @@
                         <table class="table" *ngIf="selectedVasesProperties.length > 0">
                           <thead>
                             <tr class="table-active">
-                              <th scope="col">{{ l('Name') }}</th>
+                              <th scope="col">{{ l('VASType') }}</th>
                               <th scope="col">{{ l('Count') }}</th>
                               <th scope="col">{{ l('Amount') }}</th>
                               <th scope="col">{{ l('NumberOfTrips') }}</th>
@@ -728,7 +728,7 @@
                                 <th scope="col">{{ l('VasName') }}</th>
                                 <th scope="col">{{ l('VasAmount') }}</th>
                                 <th scope="col">{{ l('VasCount') }}</th>
-                                <th scope="col">{{ l('NumberOfTTrips') }}</th>
+                                <th scope="col">{{ l('NumberOfTrips') }}</th>
                               </tr>
                             </thead>
                             <tbody>

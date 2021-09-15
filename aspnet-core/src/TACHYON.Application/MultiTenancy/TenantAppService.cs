@@ -93,7 +93,7 @@ namespace TACHYON.MultiTenancy
                  input.IsActive,
                  input.EditionId,
                  input.ShouldChangePasswordOnNextLogin,
-                 input.SendActivationEmail,
+                 true,
                  input.SubscriptionEndDateUtc?.ToUniversalTime(),
                  input.IsInTrialPeriod,
                  AppUrlService.CreateEmailActivationUrlFormat(tenancyName),

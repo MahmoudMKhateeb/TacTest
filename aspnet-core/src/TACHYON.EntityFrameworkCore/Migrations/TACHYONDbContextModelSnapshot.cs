@@ -3983,6 +3983,9 @@ namespace TACHYON.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<DateTime?>("ActualPickupOrDeliveryDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Code")
                         .HasColumnType("nvarchar(max)");
 
@@ -4594,6 +4597,12 @@ namespace TACHYON.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<DateTime?>("ActualDeliveryDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("ActualPickupDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime?>("AssignedDriverTime")
                         .HasColumnType("datetime2");
 
@@ -4602,6 +4611,9 @@ namespace TACHYON.Migrations
 
                     b.Property<long?>("AssignedTruckId")
                         .HasColumnType("bigint");
+
+                    b.Property<string>("BayanId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("CommissionAmount")
                         .HasColumnType("decimal(18,2)");

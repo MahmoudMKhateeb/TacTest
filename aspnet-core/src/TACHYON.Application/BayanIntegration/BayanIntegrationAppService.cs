@@ -10,9 +10,9 @@ namespace TACHYON.BayanIntegration
 {
     public class BayanIntegrationAppService : TACHYONAppServiceBase
     {
-        private readonly BayanIntegrationService _bayanIntegrationService;
+        private readonly BayanIntegrationManager _bayanIntegrationService;
 
-        public BayanIntegrationAppService(BayanIntegrationService bayanIntegrationService)
+        public BayanIntegrationAppService(BayanIntegrationManager bayanIntegrationService)
         {
             _bayanIntegrationService = bayanIntegrationService;
         }

@@ -30,6 +30,7 @@ using TACHYON.Common;
 using TACHYON.Invoices;
 using TACHYON.Shipping.ShippingRequests;
 using Abp;
+using System;
 using TACHYON.Dto;
 using TACHYON.Shipping.Trips.Dto;
 
@@ -52,8 +53,9 @@ namespace TACHYON.Shipping.Trips
         private readonly ISmsSender _smsSender;
         private readonly InvoiceManager _invoiceManager;
         private readonly CommonManager _commonManager;
+        private readonly UserManager UserManager;
 
-        public ShippingRequestsTripManager(IRepository<ShippingRequestTrip> shippingRequestTrip, PriceOfferManager priceOfferManager, IAppNotifier appNotifier, ISettingManager settingManager, IFeatureChecker featureChecker, IAbpSession abpSession, IHubContext<AbpCommonHub> hubContext, IRepository<RoutPoint, long> routPointRepository, IRepository<ShippingRequestTripTransition> shippingRequestTripTransitionRepository, IRepository<RoutPointStatusTransition> routPointStatusTransitionRepository, FirebaseNotifier firebaseNotifier, ISmsSender smsSender, InvoiceManager invoiceManager, CommonManager commonManager, IRepository<RoutPointDocument, long> routPointDocumentRepository)
+        public ShippingRequestsTripManager(IRepository<ShippingRequestTrip> shippingRequestTrip, PriceOfferManager priceOfferManager, IAppNotifier appNotifier, ISettingManager settingManager, IFeatureChecker featureChecker, IAbpSession abpSession, IHubContext<AbpCommonHub> hubContext, IRepository<RoutPoint, long> routPointRepository, IRepository<ShippingRequestTripTransition> shippingRequestTripTransitionRepository, IRepository<RoutPointStatusTransition> routPointStatusTransitionRepository, FirebaseNotifier firebaseNotifier, ISmsSender smsSender, InvoiceManager invoiceManager, CommonManager commonManager, IRepository<RoutPointDocument, long> routPointDocumentRepository, UserManager userManager)
         {
             _shippingRequestTrip = shippingRequestTrip;
             _priceOfferManager = priceOfferManager;
@@ -70,6 +72,7 @@ namespace TACHYON.Shipping.Trips
             _invoiceManager = invoiceManager;
             _commonManager = commonManager;
             _routPointDocumentRepository = routPointDocumentRepository;
+            UserManager = userManager;
         }
 
         /// <summary>
@@ -661,6 +664,16 @@ namespace TACHYON.Shipping.Trips
         }
         #endregion
 
+        protected virtual async Task<User> GetCurrentUserAsync(IAbpSession abpSession)
+        {
+            var user = await UserManager.FindByIdAsync(abpSession.GetUserId().ToString());
+            if (user == null)
+            {
+                throw new Exception("There is no current user!");
+            }
+
+            return user;
+        }
     }
 }
 

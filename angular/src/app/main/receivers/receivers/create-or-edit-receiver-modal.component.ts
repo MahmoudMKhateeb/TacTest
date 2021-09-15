@@ -12,6 +12,7 @@ import * as moment from 'moment';
 export class CreateOrEditReceiverModalComponent extends AppComponentBase {
   @ViewChild('createOrEditModal', { static: true }) modal: ModalDirective;
   @Input() facilityIdFromTrips: number;
+  @Input() agentType: 'sender' | 'receiver';
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
   active = false;
   saving = false;

@@ -641,6 +641,7 @@
 		<text name="EditDocumentType">Edit document type</text>
 		<text name="EditDocumentTypeTranslation">Edit document type translation</text>
 		<text name="EditDriver">Edit driver information</text>
+		<text name="UserID">User Id</text>
 		<text name="EditEdition">Edit subscription type</text>
 		<text name="EditFacility">Edit Facility</text>
 		<text name="EditFacilityModal">Edit facility modal</text>
@@ -1202,6 +1203,7 @@
 		<text name="NumberOfDrops">Number of drops</text>
 		<text name="NumberOfPacking">Number of packing type</text>
 		<text name="NumberOfTrips">Number of trips</text>
+		<text name="SourceAndDestinationCantBeTheSame">Source and destination can't be the same</text>
 		<text name="TotalBids">Total bids</text>
 		<text name="NumbersOnly">Numbers only</text>
 		<text name="Object">Object</text>
@@ -1347,6 +1349,7 @@
 		<text name="PickupPointFacilityAndSourceTripFacilityareNotTheSame">Pickup point facility and source trip facilityare not the same</text>
 		<text name="PickUser">Select user</text>
 		<text name="PickVas">Select VAS</text>
+		<text name="VASType">VAS Type</text>
 		<text name="Pin">Pin</text>
 		<text name="Pink">Pink</text>
 		<text name="Place">Send</text>
@@ -1695,6 +1698,7 @@
 		<text name="Static">Static</text>
 		<text name="StaticRole_Tooltip">Static roles can not be deleted.</text>
 		<text name="Status">Status</text>
+		<text name="MissingDocumentFiles">Missingdocument files</text>
 		<text name="StatusName">status</text>
 		<text name="StatusTitle">Status title</text>
 		<text name="StopBiddingOnthisRequest">Stop pricing on this request</text>

@@ -78,6 +78,8 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         [StringLength(ShippingRequestTripConsts.MaxNoteLength)]
         public string Note { get; set; }
 
+        public DateTime? ActualPickupDate { get; set; }
+        public DateTime? ActualDeliveryDate { get; set; }
         #region Prices
         public bool IsShipperHaveInvoice { get; set; }
         public bool IsCarrierHaveInvoice { get; set; }
@@ -91,6 +93,8 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public PriceOfferCommissionType? CommissionType { get; set; }
         public decimal? CommissionPercentageOrAddValue { get; set; }
         public decimal? CommissionAmount { get; set; }
+        public string BayanId { get; set; }
+
         #endregion
     }
 }

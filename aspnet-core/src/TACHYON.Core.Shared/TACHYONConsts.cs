@@ -48,7 +48,7 @@
         public const int MaxDocumentFileBytesUserFriendlyValue = 5;
         public const string ShipperEdtionName = "shipper";
         public const string CarrierEdtionName = "carrier";
-        public const string TachyonDealerEdtionName = "Tachyon dealer";
+        public const string TachyonDealerEdtionName = "Tachyon";
 
         //BidStatus consts
         public const int ShippingRequestStatusStandBy = 1;
@@ -80,6 +80,8 @@
         public const string TruckInsuranceDocumentTypeSpecialConstant = "TruckInsurance";
 
         public const string DriverIqamaDocumentTypeSpecialConstant = "DriverIqama";
+
+        public const string TripAttachmentDocumentTypeSpecialConstant = "TripAttachment";
 
 
 

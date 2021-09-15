@@ -296,7 +296,7 @@ import { DriversSubmittedDocumentsComponent } from '@app/main/documentFiles/docu
           },
           { path: 'accidents/reasons', component: AccidentReasonComponent, data: { permission: 'Pages.ShippingRequestResoneAccidents' } },
           { path: 'trip/reject/reasons', component: TripRejectReasonComponent, data: { permission: 'Pages.ShippingRequestTrips.Reject.Reason' } },
-          { path: 'lanaguages/applocalizations', component: AppLocalizationComponent, data: { permission: 'Pages.AppLocalizations' } },
+          // { path: 'lanaguages/applocalizations', component: AppLocalizationComponent, data: { permission: 'Pages.AppLocalizations' } },
 
           { path: 'dashboard', component: DashboardComponent, data: { permission: 'Pages.Tenant.Dashboard' } },
           //TODO:// to be removed after menu Structure work is complete

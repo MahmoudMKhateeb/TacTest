@@ -6,5 +6,8 @@ namespace TACHYON.Authorization.Accounts.Dto
     {
         [Required]
         public string EmailAddress { get; set; }
+
+        [Required]
+        public string UserPassword { get; set; }
     }
 }

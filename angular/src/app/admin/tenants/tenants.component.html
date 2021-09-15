@@ -133,7 +133,10 @@
                       <a
                         href="javascript:;"
                         class="dropdown-item"
-                        *ngIf="isGranted('Pages.TenantCarrier') && options.data.editionId == 2"
+                        *ngIf="
+                          isGranted('Pages.TenantCarrier') &&
+                          options.data.editionDisplayName.trim().toLowerCase() == shipperEditionDisplayName.trim().toLowerCase()
+                        "
                         (click)="TenantCarriersModel.show(options.data.id)"
                       >
                         {{ 'Carriers' | localize }}

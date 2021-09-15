@@ -11,7 +11,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public long MasterWaybillNo { get; set; }
         public string Date { get; set; }
         public string ShippingRequestStatus { get; set; }
-        public int InvoiceNumber { get; set; }
+        public long? InvoiceNumber { get; set; }
         public string ShipperReference { get; set; }
         public double TotalWeight { get; set; }
 
@@ -39,7 +39,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public string CountryName { get; set; }
         public string CityName { get; set; }
         public string Area { get; set; }
-        public DateTime StartTripDate { get; set; }
+        public DateTime? StartTripDate { get; set; }
 
         //carrier name
         public string CarrierName { get; set; }

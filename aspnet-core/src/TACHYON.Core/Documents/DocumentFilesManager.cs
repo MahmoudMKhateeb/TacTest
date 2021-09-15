@@ -26,11 +26,12 @@ namespace TACHYON.Documents
     public class DocumentFilesManager : TACHYONDomainServiceBase
     {
         private const int MaxDocumentFileBytes = 5242880; //5MB
-
+        private readonly TenantManager TenantManager;
 
         public DocumentFilesManager(IRepository<DocumentFile, Guid> documentFileRepository, TenantManager tenantManager, IRepository<DocumentType, long> documentTypeRepository, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager, IUserEmailer userEmailer)
         {
             _documentFileRepository = documentFileRepository;
+            TenantManager = tenantManager;
             _tenantManager = tenantManager;
             _documentTypeRepository = documentTypeRepository;
             _tempFileCacheManager = tempFileCacheManager;
@@ -294,6 +295,15 @@ namespace TACHYON.Documents
             ObjectMapper.Map(input, documentFile);
             documentFile.RejectionReason = "";
 
+        }
+
+        public async Task DeleteDocumentFile(DocumentFile documentFile)
+        {
+            if (documentFile.BinaryObjectId != null)
+            {
+                await _binaryObjectManager.DeleteAsync(documentFile.BinaryObjectId.Value);
+            }
+            await _documentFileRepository.DeleteAsync(documentFile.Id);
         }
         //---R
 

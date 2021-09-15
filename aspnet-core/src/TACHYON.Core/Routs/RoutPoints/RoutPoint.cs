@@ -58,6 +58,7 @@ namespace TACHYON.Routs.RoutPoints
         //to do receiver attribute
 
         //If Receiver as user  in tachyon
+        //todo rename this field to SenderOrReceiverId, If pickup it is sender, if drop it is receiver
         public int? ReceiverId { get; set; }
         [ForeignKey("ReceiverId")]
         public Receiver ReceiverFk { get; set; }
@@ -70,6 +71,6 @@ namespace TACHYON.Routs.RoutPoints
         [CanBeNull] public string Note { get; set; }
         public bool IsDeliveryNoteUploaded { get; set; }
 
-
+        public DateTime? ActualPickupOrDeliveryDate { get; set; }
     }
 }

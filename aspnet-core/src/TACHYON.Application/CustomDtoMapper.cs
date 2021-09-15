@@ -243,7 +243,7 @@ namespace TACHYON
                     => x.MapFrom(i => i));
             configuration.CreateMap<Vas, CreateOrEditVasDto>();
             configuration.CreateMap<CreateOrEditVasDto, Vas>()
-                .ForMember(x => x.Translations, x => x.Ignore()); 
+                .ForMember(x => x.Translations, x => x.Ignore());
             configuration.CreateMap<VasDto, Vas>().ReverseMap();
             configuration.CreateMap<CreateOrEditReceiverDto, Receiver>().ReverseMap();
             configuration.CreateMap<ReceiverDto, Receiver>().ReverseMap();
@@ -284,8 +284,7 @@ namespace TACHYON
             configuration.CreateMap<DocumentFile, GetAllTenantsSubmittedDocumentsDto>()
                     .ForMember(dto => dto.DocumentTypeName,
                         conf => conf.MapFrom(ol =>
-                            ol.DocumentTypeFk.Translations
-                                .First(x => x.Language.Contains(CultureInfo.CurrentUICulture.Name)).Name))
+                            ol.DocumentTypeFk.Translations.FirstOrDefault(x => x.Language.Contains(CultureInfo.CurrentUICulture.Name)) == null ? ol.DocumentTypeFk.DisplayName : ol.DocumentTypeFk.Translations.FirstOrDefault(x => x.Language.Contains(CultureInfo.CurrentUICulture.Name)).Name))
                     .ForMember(dto => dto.SubmitterTenatTenancyName, opt => opt.MapFrom(src => src.TenantFk.TenancyName))
                     .ForMember(dto => dto.SubmitterTenatTenancyName, opt => opt.MapFrom(src => src.TenantFk.TenancyName))
                     .ReverseMap();
@@ -385,7 +384,8 @@ namespace TACHYON
                 .ForPath(dest => dest.FacilityFk.Location.X, opt => opt.MapFrom(src => src.Longitude))
                 .ForPath(dest => dest.FacilityFk.Location.Y, opt => opt.MapFrom(src => src.Latitude))
                 .ForPath(dest => dest.FacilityFk.Name, opt => opt.MapFrom(src => src.Facility))
-                 .ForPath(dest => dest.GoodsDetails, opt => opt.MapFrom(src => src.GoodsDetailListDto))
+                .ForPath(dest => dest.GoodsDetails, opt => opt.MapFrom(src => src.GoodsDetailListDto))
+                .ForPath(dest => dest.ReceiverFk.FullName, opt => opt.MapFrom(src => src.SenderOrReceiverContactName))
                 .ReverseMap();
 
             configuration.CreateMap<CreateOrEditRoutPointDto, RoutPoint>()

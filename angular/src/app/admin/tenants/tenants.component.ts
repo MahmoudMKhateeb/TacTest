@@ -55,6 +55,7 @@ export class TenantsComponent extends AppComponentBase implements OnInit {
   } = <any>{};
   dataSource: any = {};
   editions: ComboboxItemDto[] = [];
+  shipperEditionDisplayName = 'shipper';
 
   constructor(
     injector: Injector,

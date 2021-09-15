@@ -41,11 +41,12 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit {
   wayBillIsDownloading = false;
   isResetTripLoading = false;
   private TruckTypeId: number;
+  pickUpPointSender: string;
   constructor(
     injector: Injector,
     private _routStepsServiceProxy: RoutStepsServiceProxy,
     private _shippingRequestTripsService: ShippingRequestsTripServiceProxy,
-    private _fileDownloadService: FileDownloadService,
+    public _fileDownloadService: FileDownloadService,
     private _waybillsServiceProxy: WaybillsServiceProxy,
     private _trucksServiceProxy: TrucksServiceProxy,
     private _shippingRequestDriverServiceProxy: ShippingRequestDriverServiceProxy,
@@ -81,6 +82,7 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit {
         this.trip = res;
         //Get The Points From The View Service and send them to the Points Service To Draw Them
         this._PointsService.updateWayPoints(this.trip.routPoints);
+        this.pickUpPointSender = res.routPoints[0].senderOrReceiverContactName;
         this.assignDriverAndTruck.assignedTruckId = this.trip.assignedTruckId;
         this.assignDriverAndTruck.assignedDriverUserId = this.trip.assignedDriverUserId;
       });
