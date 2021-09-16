@@ -26,7 +26,7 @@ namespace TACHYON.Rating
         ShipperByCarrier =6,
 
         [Description("SystemRecalculateShipperTripRatingAfterEachPointRateInsert")]
-        ShipperTripPointsBySystem = 7,
+        ShipperTripBySystem = 7,
 
         [Description("SystemRecalculateCarrierTripRatingAfterEachPointOrTripRateInsert")]
         CarrierTripBySystem = 8

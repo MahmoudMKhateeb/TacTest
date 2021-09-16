@@ -16,6 +16,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using TACHYON.Authorization.Users;
 using TACHYON.MultiTenancy;
+using TACHYON.AddressBook;
 
 namespace TACHYON.Rating
 {
@@ -26,6 +27,7 @@ namespace TACHYON.Rating
         private readonly IRepository<RoutPoint, long> _routePointRepository;
         private readonly UserManager _userManager;
         private readonly TenantManager _tenantManager;
+        private readonly IRepository<Facility,long> _facilityRepository;
         public RatingAppService(IRepository<RatingLog, long> ratingRepository, IRepository<ShippingRequestTrip> shippingRequestTrip, IRepository<RoutPoint, long> routePointRepository, UserManager userManager, TenantManager tenantManager)
         {
             _ratingRepository = ratingRepository;
@@ -45,27 +47,15 @@ namespace TACHYON.Rating
             //await CheckIfRateBefore(rate);
             //await _ratingRepository.InsertAndGetIdAsync(rate);
             await ValidateAndCreateRating(input, RateType.CarrierByShipper);
-
-            //todo recaculating rating and 10 min ratings to do it.
         }
 
         public async Task CreateDriverRatingByReceiver(CreateDriverRatingByReceiverDto input)
         {
-            //var rate = ObjectMapper.Map<RatingLog>(input);
-            //rate.RateType = RateType.DriverByReceiver;
-
-            //await CheckIfRateBefore(rate);
-            //await _ratingRepository.InsertAndGetIdAsync(rate);
             await ValidateAndCreateRating(input, RateType.DriverByReceiver);
         }
 
         public async Task CreateDeliveryExpRatingByReceiver(CreateDeliveryExpRateByReceiverDto input)
         {
-            //var rate = ObjectMapper.Map<RatingLog>(input);
-            //rate.RateType = RateType.DEByReceiver;
-
-            //await CheckIfRateBefore(rate);
-            //await _ratingRepository.InsertAndGetIdAsync(rate);
             await ValidateAndCreateRating(input, RateType.DEByReceiver);
         }
         #endregion
@@ -128,7 +118,7 @@ namespace TACHYON.Rating
             await CheckIfRateBefore(rate);
             var rateId=await _ratingRepository.InsertAndGetIdAsync(rate);
 
-            await RecalculateRatingForTenantOrDriver(rateId);
+            await RecalculateRatingForTenantAndDriverAndFacility(rateId);
         }
 
         private async Task CheckIfDeliveredTrip(int tripId,RateType rateType)
@@ -150,7 +140,6 @@ namespace TACHYON.Rating
             DisableTenancyFilters();
             if (await _routePointRepository
                 .GetAll()
-               //.WhereIf(rateType == RateType.DEByReceiver, x => x.ReceiverId ==)
                .WhereIf(rateType == RateType.FacilityByDriver, x => x.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId)
                 .CountAsync(x => x.Id == pointId && x.Status < RoutePointStatus.FinishOffLoadShipment) == 0)
             {
@@ -168,7 +157,7 @@ namespace TACHYON.Rating
             }
         }
 
-        private async Task RecalculateRatingForTenantOrDriver(long rateId)
+        private async Task RecalculateRatingForTenantAndDriverAndFacility(long rateId)
         {
             var rate = await _ratingRepository.GetAll()
                 .Include(x=>x.RoutePointFk)
@@ -178,40 +167,28 @@ namespace TACHYON.Rating
                 .ThenInclude(x=>x.RoutPoints)
                 .FirstOrDefaultAsync(x=>x.Id== rateId);
 
+            //Recalculate Carrier rating
+            if (rate.RateType == RateType.CarrierByShipper || rate.RateType == RateType.DEByReceiver || rate.RateType == RateType.DriverByReceiver)
+            {
+                await ReCalculateCarrierOrDriverRating(rate);
+            }
+
+            //Recalculate Shipper rating
+            else if(rate.RateType == RateType.FacilityByDriver || rate.RateType == RateType.SEByDriver || rate.RateType == RateType.ShipperByCarrier)
+            {
+                await ReCalculateShipperAndFacilityRating(rate);
+            }
+
+        }
+
+        private async Task ReCalculateCarrierOrDriverRating(RatingLog rate)
+        {
             //recalculate driver rating
             if (rate.RateType == RateType.DriverByReceiver)
             {
                 await RecaculateDriverRating(rate);
             }
 
-            //Recalculate Carrier rating
-            else if (rate.RateType == RateType.CarrierByShipper || rate.RateType == RateType.DEByReceiver || rate.RateType == RateType.DriverByReceiver)
-            {
-                await ReCalculateCarrierRating(rate);
-            }
-
-            //Recalculate Shipper rating
-            else if(rate.RateType == RateType.FacilityByDriver || rate.RateType == RateType.SEByDriver || rate.RateType == RateType.ShipperByCarrier)
-            {
-
-            }
-
-        }
-
-        private async Task RecaculateDriverRating(RatingLog rate)
-        {
-            var allRatings = await _ratingRepository.GetAll().Where(x => x.DriverId == rate.DriverId).ToListAsync();
-            if (allRatings.Count() > 10)
-            {
-                var avgRate = allRatings.Sum(x => x.Rate) / allRatings.Count();
-
-                var user = await _userManager.GetUserByIdAsync(rate.DriverId.Value);
-                user.Rate = avgRate;
-            }
-        }
-
-        private async Task ReCalculateCarrierRating(RatingLog rate)
-        {
             var CarrierTripBySystem = await _ratingRepository
                                 .GetAll()
                                 .WhereIf(rate.TripId != null, x => x.TripId == rate.TripId)
@@ -219,13 +196,14 @@ namespace TACHYON.Rating
                                 .FirstOrDefaultAsync(x => x.RateType == RateType.CarrierTripBySystem);
 
             //recalculate For trip and trip points
+            var carrierId= rate.CarrierId != null ? rate.CarrierId : rate.PointId != null ? rate.RoutePointFk.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId : rate.TripFk.ShippingRequestFk.CarrierTenantId;
             if (CarrierTripBySystem == null)
             {
                 //insert
                 var newRate = new RatingLog();
                 newRate.RateType = RateType.CarrierTripBySystem;
                 newRate.TripId = rate.TripId != null ? rate.TripId : rate.RoutePointFk.ShippingRequestTripId;
-                newRate.CarrierId = rate.RoutePointFk.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId;
+                newRate.CarrierId = carrierId;
                 newRate.Rate = rate.Rate;
 
                 await _ratingRepository.InsertAndGetIdAsync(newRate);
@@ -233,15 +211,16 @@ namespace TACHYON.Rating
             else
             {
                 //recalculate and update
-                var tripId = rate.TripId != null ? rate.TripId : rate.RoutePointFk.ShippingRequestTripId;
+                var tripId = rate.TripId;
                 var tripPoints = new List<long>();
                 if (tripId != null)
                 {
+                    //trip points that rated in the system to calculate the trip rate with, in this case the rate is directly to trip
                     tripPoints = rate.TripFk.RoutPoints.Select(x => x.Id).ToList();
                 }
                 else
                 {
-                    tripId = rate.RoutePointFk.ShippingRequestTripId;
+                    //in this case the rate is to "point" (pointId not null).. so we will get the other points related to this point trip, to make recalculation
                     tripPoints = _routePointRepository.GetAll().Where(x => x.ShippingRequestTripId == rate.RoutePointFk.ShippingRequestTripId).Select(x => x.Id).ToList();
                 }
 
@@ -298,13 +277,6 @@ namespace TACHYON.Rating
 
             //recalculate Carrier
             //check minimum 10 ratings
-            var carrierId = rate.CarrierId;
-            if (carrierId == null)
-            {
-                carrierId = rate.RoutePointFk.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId;
-            }
-
-            //var allCarrierRatings =await _ratingRepository.GetAll().Where(x => x.TripId == tripId && x.CarrierId == carrierId).ToListAsync();
             var allCarrierRatings = await _ratingRepository.GetAll()
                 .Where(x => x.CarrierId == carrierId && x.RateType == RateType.CarrierTripBySystem)
                 .ToListAsync();
@@ -313,7 +285,149 @@ namespace TACHYON.Rating
                 var finalCarrierTripsRate = allCarrierRatings.Sum(x => x.Rate) / allCarrierRatings.Count();
 
                 var tenant = await _tenantManager.GetByIdAsync(carrierId.Value);
-                tenant.Rate = finalCarrierTripsRate; //(tenant.Rate + finalCurrentCarrierTripRate) / 2;
+                tenant.Rate = Convert.ToDecimal(finalCarrierTripsRate.ToString("0.0")); //(tenant.Rate + finalCurrentCarrierTripRate) / 2;
+            }
+        }
+
+        private async Task RecaculateDriverRating(RatingLog rate)
+        {
+            var allRatings = await _ratingRepository.GetAll().Where(x => x.DriverId == rate.DriverId).ToListAsync();
+            if (allRatings.Count() > 10)
+            {
+                var avgRate = allRatings.Sum(x => x.Rate) / allRatings.Count();
+
+                var user = await _userManager.GetUserByIdAsync(rate.DriverId.Value);
+                user.Rate = Convert.ToDecimal(avgRate.ToString("0.0"));
+            }
+        }
+
+        private async Task ReCalculateShipperAndFacilityRating(RatingLog rate)
+        {
+            //recalculate facility rating
+            await RecalculateFacilityRating(rate);
+
+            //recalculate shipper rating
+            var ShipperTripBySystem = await _ratingRepository
+                                .GetAll()
+                                .WhereIf(rate.TripId != null, x => x.TripId == rate.TripId)
+                                .WhereIf(rate.PointId != null, x => x.TripId == rate.RoutePointFk.ShippingRequestTripId)
+                                .FirstOrDefaultAsync(x => x.RateType == RateType.ShipperTripBySystem);
+
+            //recalculate For trip and trip points
+            var shipperId = rate.ShipperId != null ? rate.ShipperId : rate.PointId != null ? rate.RoutePointFk.ShippingRequestTripFk.ShippingRequestFk.TenantId : rate.TripFk.ShippingRequestFk.TenantId;
+            if (ShipperTripBySystem == null)
+            {
+                //insert
+                var newRate = new RatingLog();
+                newRate.RateType = RateType.ShipperTripBySystem;
+                newRate.TripId = rate.TripId != null ? rate.TripId : rate.RoutePointFk.ShippingRequestTripId;
+                newRate.ShipperId = shipperId;
+                newRate.Rate = rate.Rate;
+
+                await _ratingRepository.InsertAndGetIdAsync(newRate);
+            }
+            else
+            {
+                //recalculate and update
+                var tripId = rate.TripId;
+                var tripPoints = new List<long>();
+                if (tripId != null)
+                {
+                    //trip points that rated in the system to calculate the trip rate with, in this case the rate is directly to trip
+                    tripPoints = rate.TripFk.RoutPoints.Select(x => x.Id).ToList();
+                }
+                else
+                {
+                    //in this case the rate is to "point" (pointId not null).. so we will get the other points related to this point trip, to make recalculation
+                    tripPoints = _routePointRepository.GetAll().Where(x => x.ShippingRequestTripId == rate.RoutePointFk.ShippingRequestTripId).Select(x => x.Id).ToList();
+                }
+
+                //Get points ratings to calculate avg rating of points for each rateType seperatly
+                var allFacilityByDriverRatings = await _ratingRepository.GetAll()
+                    .Where(x => x.PointId != null && tripPoints.Contains(x.PointId.Value) &&
+                    (x.RateType == RateType.FacilityByDriver))
+                    .ToListAsync();
+
+
+                var allFacilityByDriverRatingsAvg = 0;
+                int counter = 0;
+                if (allFacilityByDriverRatings != null)
+                {
+                    allFacilityByDriverRatingsAvg = allFacilityByDriverRatings.Sum(x => x.Rate) / allFacilityByDriverRatings.Count();
+                    counter = counter + 1;
+                }
+
+                //Get Shipper rating for trip
+                //carrier by shipper
+                var CarrierRatingByShipperOrDriverInCurrentTripDB = await _ratingRepository.GetAll()
+                   .Where(x => (x.RateType == RateType.CarrierByShipper || x.RateType == RateType.SEByDriver) &&
+                   x.TripId == rate.TripId).ToListAsync();
+
+                var ShipperRatingByShipperInCurrentTrip = rate.RateType == RateType.CarrierByShipper ? rate.Rate : 0;
+                if (ShipperRatingByShipperInCurrentTrip == 0)
+                {
+                    var CarrierRatingByShipperInCurrentTripDB = CarrierRatingByShipperOrDriverInCurrentTripDB.FirstOrDefault(x => x.RateType == RateType.CarrierByShipper);
+
+                    if (CarrierRatingByShipperInCurrentTripDB != null)
+                    {
+                        ShipperRatingByShipperInCurrentTrip = CarrierRatingByShipperInCurrentTripDB.Rate;
+                        counter = counter + 1;
+                    }
+                }
+                else
+                {
+                    counter = counter + 1;
+                }
+
+
+                //Shipping Experience by driver
+                var SERatingByDriverInCurrentTrip = rate.RateType == RateType.SEByDriver ? rate.Rate : 0;
+                if (SERatingByDriverInCurrentTrip == 0)
+                {
+                    var CarrierRatingByShipperInCurrentTripDB = CarrierRatingByShipperOrDriverInCurrentTripDB
+                   .FirstOrDefault(x => x.RateType == RateType.SEByDriver);
+
+                    if (CarrierRatingByShipperInCurrentTripDB != null)
+                    {
+                        SERatingByDriverInCurrentTrip = CarrierRatingByShipperInCurrentTripDB.Rate;
+                        counter = counter + 1;
+                    }
+                }
+                else
+                {
+                    counter = counter + 1;
+                }
+
+                ShipperTripBySystem.Rate = (allFacilityByDriverRatingsAvg + ShipperRatingByShipperInCurrentTrip + SERatingByDriverInCurrentTrip) / counter;
+
+                CurrentUnitOfWork.SaveChanges();
+            }
+
+            //recalculate Shipper
+            //check minimum 10 ratings
+
+            var allShipperRatings = await _ratingRepository.GetAll()
+                .Where(x => x.ShipperId == shipperId && x.RateType == RateType.ShipperTripBySystem)
+                .ToListAsync();
+            if (allShipperRatings.Count() > 10)
+            {
+                var finalCarrierTripsRate = allShipperRatings.Sum(x => x.Rate) / allShipperRatings.Count();
+
+                var tenant = await _tenantManager.GetByIdAsync(shipperId.Value);
+                tenant.Rate = Convert.ToDecimal(finalCarrierTripsRate.ToString("0.0")); //(tenant.Rate + finalCurrentCarrierTripRate) / 2;
+            }
+        }
+
+        private async Task RecalculateFacilityRating(RatingLog rate)
+        {
+            if (rate.RateType == RateType.FacilityByDriver)
+            {
+                var facilityRatings = await _ratingRepository.GetAll()
+                    .Where(x => x.FacilityId == rate.FacilityId && x.RateType == RateType.FacilityByDriver)
+                    .ToListAsync();
+
+                var facility = await _facilityRepository.FirstOrDefaultAsync(rate.FacilityId.Value);
+                facility.Rate = Convert.ToDecimal((facilityRatings.Sum(x => x.Rate) / facilityRatings.Count()).ToString("0.0"));
             }
         }
         #endregion
