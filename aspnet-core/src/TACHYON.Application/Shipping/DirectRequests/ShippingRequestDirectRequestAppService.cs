@@ -27,10 +27,10 @@ namespace TACHYON.Shipping.DirectRequests
         private readonly ShippingRequestManager _shippingRequestManager;
         private readonly IAppNotifier _appNotifier;
         private readonly PriceOfferManager _priceOfferManager;
-        private readonly IRepository<RatingLog, long> _ratingLogRepository;
+        private readonly RatingLogManager _ratingLogManager;
 
 
-        public ShippingRequestDirectRequestAppService(IRepository<TenantCarrier, long> tenantCarrierRepository, IRepository<Tenant> tenantRepository, IRepository<ShippingRequestDirectRequest, long> shippingRequestDirectRequestRepository, ShippingRequestManager shippingRequestManager, IAppNotifier appNotifier, PriceOfferManager priceOfferManager, IRepository<RatingLog, long> ratingLogRepository)
+        public ShippingRequestDirectRequestAppService(IRepository<TenantCarrier, long> tenantCarrierRepository, IRepository<Tenant> tenantRepository, IRepository<ShippingRequestDirectRequest, long> shippingRequestDirectRequestRepository, ShippingRequestManager shippingRequestManager, IAppNotifier appNotifier, PriceOfferManager priceOfferManager, RatingLogManager ratingLogManager)
         {
             _tenantCarrierRepository = tenantCarrierRepository;
             _tenantRepository = tenantRepository;
@@ -38,7 +38,7 @@ namespace TACHYON.Shipping.DirectRequests
             _shippingRequestManager = shippingRequestManager;
             _appNotifier = appNotifier;
             _priceOfferManager = priceOfferManager;
-            _ratingLogRepository = ratingLogRepository;
+            _ratingLogManager = ratingLogManager;
         }
         [RequiresFeature(AppFeatures.SendDirectRequest)]
         public async Task<PagedResultDto<ShippingRequestDirectRequestListDto>> GetAll(ShippingRequestDirectRequestGetAllInput input)
@@ -53,7 +53,7 @@ namespace TACHYON.Shipping.DirectRequests
 
             var list = ObjectMapper.Map<List<ShippingRequestDirectRequestListDto>>(Result);
             //calculate each carrier rating count
-            var carriersRating=await _ratingLogRepository.GetAll().Where(x => x.RateType == RateType.CarrierTripBySystem).ToListAsync();
+            var carriersRating =await _ratingLogManager.GetAllCarriersRatingAsync();
             list.ForEach(x =>
             x.CarrierRateNumber = carriersRating.Count(x => x.CarrierId == x.CarrierId));
 
