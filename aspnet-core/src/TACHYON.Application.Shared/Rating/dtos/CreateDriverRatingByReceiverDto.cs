@@ -8,8 +8,6 @@ namespace TACHYON.Rating.dtos
     public class CreateDriverRatingByReceiverDto: IHasRating
     {
         [Required]
-        public int DriverId { get; set; }
-        [Required]
         [StringLength(6, MinimumLength = 6)]
         public string Code { get; set; }
         [Range(1, 5)]

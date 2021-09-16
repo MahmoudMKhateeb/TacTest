@@ -28,13 +28,14 @@ namespace TACHYON.Rating
         private readonly UserManager _userManager;
         private readonly TenantManager _tenantManager;
         private readonly IRepository<Facility,long> _facilityRepository;
-        public RatingAppService(IRepository<RatingLog, long> ratingRepository, IRepository<ShippingRequestTrip> shippingRequestTrip, IRepository<RoutPoint, long> routePointRepository, UserManager userManager, TenantManager tenantManager)
+        public RatingAppService(IRepository<RatingLog, long> ratingRepository, IRepository<ShippingRequestTrip> shippingRequestTrip, IRepository<RoutPoint, long> routePointRepository, UserManager userManager, TenantManager tenantManager, IRepository<Facility, long> facilityRepository)
         {
             _ratingRepository = ratingRepository;
             _shippingRequestTrip = shippingRequestTrip;
             _routePointRepository = routePointRepository;
             _userManager = userManager;
             _tenantManager = tenantManager;
+            _facilityRepository = facilityRepository;
         }
         #region CarrierRating
         [RequiresFeature(AppFeatures.Shipper)]
@@ -98,13 +99,15 @@ namespace TACHYON.Rating
                     break;
                 case RateType.DEByReceiver:
                 case RateType.DriverByReceiver:
-                    var point = await _routePointRepository.FirstOrDefaultAsync(x=>x.Code==rate.Code);
+                    var point = await _routePointRepository.GetAll().Include(x=>x.ShippingRequestTripFk)
+                        .FirstOrDefaultAsync(x=>x.Code==rate.Code);
                     if (point == null)
                     {
                         throw new UserFriendlyException(L("WrongReceiverCode"));
                     }
                     rate.ReceiverId=point.ReceiverId;
                     rate.PointId = point.Id;
+                    rate.DriverId = point.ShippingRequestTripFk.AssignedDriverUserId;
                     break;
             }
             if (rate.PointId != null)

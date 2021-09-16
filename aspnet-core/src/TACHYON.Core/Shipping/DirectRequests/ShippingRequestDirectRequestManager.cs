@@ -46,7 +46,8 @@ namespace TACHYON.Shipping.DirectRequests
                                 .Select(r => new CarriersForDropDownDto
                                 {
                                     Id = r.Id,
-                                    DisplayName = r.TenancyName
+                                    DisplayName = r.TenancyName,
+                                    Rate=r.Rate
                                 }).ToListAsync();
             }
             else if (await _featureChecker.IsEnabledAsync(AppFeatures.Shipper) && await _featureChecker.IsEnabledAsync(AppFeatures.SendDirectRequest))
@@ -58,7 +59,8 @@ namespace TACHYON.Shipping.DirectRequests
                                 .Select(r => new CarriersForDropDownDto
                                 {
                                     Id = r.CarrierTenantId,
-                                    DisplayName = r.CarrierShipper.TenancyName
+                                    DisplayName = r.CarrierShipper.TenancyName,
+                                    Rate=r.CarrierShipper.Rate
                                 }).ToListAsync();
             }
             else
