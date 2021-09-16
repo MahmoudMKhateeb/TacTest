@@ -75,6 +75,7 @@ using TACHYON.Trucks.TrucksTypes;
 using TACHYON.Trucks.TrucksTypes.TrucksTypesTranslations;
 using TACHYON.UnitOfMeasures;
 using TACHYON.Vases;
+using TACHYON.Rating;
 
 namespace TACHYON.EntityFrameworkCore
 {
@@ -248,6 +249,7 @@ namespace TACHYON.EntityFrameworkCore
         public virtual DbSet<RoutPoint> RoutPoints { get; set; }
         public virtual DbSet<RoutPointDocument> RoutPointDocuments { get; set; }
         public virtual DbSet<RoutPointStatusTransition> RoutPointStatusTransitions { get; set; }
+        public virtual DbSet<RatingLog> RatingLoogs { get; set; }
 
         public DbSet<TenantCarrier> TenantCarriers { get; set; }
 

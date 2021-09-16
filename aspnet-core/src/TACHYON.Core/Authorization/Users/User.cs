@@ -40,6 +40,10 @@ namespace TACHYON.Authorization.Users
         public virtual string ExperienceField { get; set; }
         public virtual DateTime? DateOfBirth { get; set; }
         public string HijriDateOfBirth { get; set; }
+        /// <summary>
+        /// This field is final rate for driver
+        /// </summary>
+        public decimal Rate { get; set; }
 
         public User()
         {
