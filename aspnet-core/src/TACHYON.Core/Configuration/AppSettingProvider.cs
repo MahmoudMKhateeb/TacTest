@@ -797,7 +797,7 @@ namespace TACHYON.Configuration
                     }
                 },
                 // carrier
-                                new Dashboard
+                new Dashboard
                 {
                     DashboardName = TACHYONDashboardCustomizationConsts.DashboardNames.DefaultCarrierDashboard,
                     Pages = new List<Page>
@@ -805,79 +805,13 @@ namespace TACHYON.Configuration
                         new Page
                         {
                             Name = TACHYONDashboardCustomizationConsts.DefaultPageName,
-                            Widgets = new List<Widget>
-                            {
-                                new Widget
-                                {
-                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Tenant
-                                        .TopStats, // Top Stats
-                                    Height = 4,
-                                    Width = 12,
-                                    PositionX = 0,
-                                    PositionY = 0
-                                },
-                                new Widget
-                                {
-                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Tenant
-                                        .SalesSummary, // Sales Summary
-                                    Height = 12,
-                                    Width = 6,
-                                    PositionX = 0,
-                                    PositionY = 4
-                                },
-                                new Widget
-                                {
-                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Tenant
-                                        .RegionalStats, // Regional Stats
-                                    Height = 12,
-                                    Width = 6,
-                                    PositionX = 6,
-                                    PositionY = 4
-                                },
-                                new Widget
-                                {
-                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Tenant
-                                        .GeneralStats, // General Stats
-                                    Height = 8,
-                                    Width = 6,
-                                    PositionX = 0,
-                                    PositionY = 16
-                                },
-                                new Widget
-                                {
-                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Tenant
-                                        .DailySales, // Daily Sales
-                                    Height = 8,
-                                    Width = 6,
-                                    PositionX = 6,
-                                    PositionY = 16
-                                },
-                                new Widget
-                                {
-                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Tenant
-                                        .ProfitShare, // Profit Share
-                                    Height = 11,
-                                    Width = 6,
-                                    PositionX = 0,
-                                    PositionY = 24
-                                },
-                                new Widget
-                                {
-                                    WidgetId =
-                                        TACHYONDashboardCustomizationConsts.Widgets.Tenant
-                                            .MemberActivity, // Member Activity
-                                    Height = 11,
-                                    Width = 6,
-                                    PositionX = 6,
-                                    PositionY = 24
-                                }
-                            }
+                            Widgets = new List<Widget>()
                         }
                     }
                 },
 
                 // shipper
-                                new Dashboard
+                new Dashboard
                 {
                     DashboardName = TACHYONDashboardCustomizationConsts.DashboardNames.DefaultShipperDashboard,
                     Pages = new List<Page>
@@ -885,153 +819,22 @@ namespace TACHYON.Configuration
                         new Page
                         {
                             Name = TACHYONDashboardCustomizationConsts.DefaultPageName,
-                            Widgets = new List<Widget>
-                            {
-                                new Widget
-                                {
-                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Tenant
-                                        .TopStats, // Top Stats
-                                    Height = 4,
-                                    Width = 12,
-                                    PositionX = 0,
-                                    PositionY = 0
-                                },
-                                new Widget
-                                {
-                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Tenant
-                                        .SalesSummary, // Sales Summary
-                                    Height = 12,
-                                    Width = 6,
-                                    PositionX = 0,
-                                    PositionY = 4
-                                },
-                                new Widget
-                                {
-                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Tenant
-                                        .RegionalStats, // Regional Stats
-                                    Height = 12,
-                                    Width = 6,
-                                    PositionX = 6,
-                                    PositionY = 4
-                                },
-                                new Widget
-                                {
-                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Tenant
-                                        .GeneralStats, // General Stats
-                                    Height = 8,
-                                    Width = 6,
-                                    PositionX = 0,
-                                    PositionY = 16
-                                },
-                                new Widget
-                                {
-                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Tenant
-                                        .DailySales, // Daily Sales
-                                    Height = 8,
-                                    Width = 6,
-                                    PositionX = 6,
-                                    PositionY = 16
-                                },
-                                new Widget
-                                {
-                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Tenant
-                                        .ProfitShare, // Profit Share
-                                    Height = 11,
-                                    Width = 6,
-                                    PositionX = 0,
-                                    PositionY = 24
-                                },
-                                new Widget
-                                {
-                                    WidgetId =
-                                        TACHYONDashboardCustomizationConsts.Widgets.Tenant
-                                            .MemberActivity, // Member Activity
-                                    Height = 11,
-                                    Width = 6,
-                                    PositionX = 6,
-                                    PositionY = 24
-                                }
-                            }
+                            Widgets = new List<Widget>()
                         }
                     }
                 },
 
                 // tachyonMangedService
-                                new Dashboard
+                new Dashboard
                 {
-                    DashboardName = TACHYONDashboardCustomizationConsts.DashboardNames.DefaultTachyonMangedServiceDashboard,
+                    DashboardName =
+                        TACHYONDashboardCustomizationConsts.DashboardNames.DefaultTachyonMangedServiceDashboard,
                     Pages = new List<Page>
                     {
                         new Page
                         {
                             Name = TACHYONDashboardCustomizationConsts.DefaultPageName,
-                            Widgets = new List<Widget>
-                            {
-                                new Widget
-                                {
-                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Tenant
-                                        .TopStats, // Top Stats
-                                    Height = 4,
-                                    Width = 12,
-                                    PositionX = 0,
-                                    PositionY = 0
-                                },
-                                new Widget
-                                {
-                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Tenant
-                                        .SalesSummary, // Sales Summary
-                                    Height = 12,
-                                    Width = 6,
-                                    PositionX = 0,
-                                    PositionY = 4
-                                },
-                                new Widget
-                                {
-                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Tenant
-                                        .RegionalStats, // Regional Stats
-                                    Height = 12,
-                                    Width = 6,
-                                    PositionX = 6,
-                                    PositionY = 4
-                                },
-                                new Widget
-                                {
-                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Tenant
-                                        .GeneralStats, // General Stats
-                                    Height = 8,
-                                    Width = 6,
-                                    PositionX = 0,
-                                    PositionY = 16
-                                },
-                                new Widget
-                                {
-                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Tenant
-                                        .DailySales, // Daily Sales
-                                    Height = 8,
-                                    Width = 6,
-                                    PositionX = 6,
-                                    PositionY = 16
-                                },
-                                new Widget
-                                {
-                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Tenant
-                                        .ProfitShare, // Profit Share
-                                    Height = 11,
-                                    Width = 6,
-                                    PositionX = 0,
-                                    PositionY = 24
-                                },
-                                new Widget
-                                {
-                                    WidgetId =
-                                        TACHYONDashboardCustomizationConsts.Widgets.Tenant
-                                            .MemberActivity, // Member Activity
-                                    Height = 11,
-                                    Width = 6,
-                                    PositionX = 6,
-                                    PositionY = 24
-                                }
-                            }
+                            Widgets = new List<Widget>()
                         }
                     }
                 },
