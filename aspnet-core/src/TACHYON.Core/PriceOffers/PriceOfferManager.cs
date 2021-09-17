@@ -147,7 +147,7 @@ namespace TACHYON.PriceOffers
 
             List<UserIdentifier> Users = new List<UserIdentifier>();
             /// Check if the offer send by TAD on market place
-            if (offer.Tenant.EditionId == AppConsts.TachyonEditionId && !offer.ShippingRequestFK.IsTachyonDeal)
+            if (offer.Tenant.EditionId == TachyonEditionId && !offer.ShippingRequestFK.IsTachyonDeal)
             {
                 offer.Status = PriceOfferStatus.AcceptedAndWaitingForCarrier;
                 request.IsBid = false;
@@ -225,7 +225,7 @@ namespace TACHYON.PriceOffers
                     var TADOffer = await _priceOfferRepository
                       .GetAll()
                       .Where(x => x.ShippingRequestId == offer.ShippingRequestId &&
-                      x.Tenant.EditionId == AppConsts.TachyonEditionId  &&
+                      x.Tenant.EditionId == TachyonEditionId  &&
                       (x.Status == PriceOfferStatus.New || x.Status == PriceOfferStatus.Rejected))
                      .FirstOrDefaultAsync();
 
@@ -396,7 +396,7 @@ namespace TACHYON.PriceOffers
         /// <returns></returns>
         public int GetTotalOffersByTMS(long requestId)
         {
-            return _priceOfferRepository.GetAll().Where(x => x.ShippingRequestId == requestId && x.Tenant.EditionId== AppConsts.TachyonEditionId ).Count();
+            return _priceOfferRepository.GetAll().Where(x => x.ShippingRequestId == requestId && x.Tenant.EditionId== TachyonEditionId ).Count();
         }
 
         /// <summary>

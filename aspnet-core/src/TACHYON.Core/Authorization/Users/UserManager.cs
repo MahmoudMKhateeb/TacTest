@@ -21,6 +21,7 @@ using Microsoft.EntityFrameworkCore;
 using TACHYON.Authorization.Roles;
 using TACHYON.Security;
 using Abp.Application.Editions;
+using TACHYON.Configuration;
 using TACHYON.MultiTenancy;
 
 namespace TACHYON.Authorization.Users
@@ -56,7 +57,7 @@ namespace TACHYON.Authorization.Users
             IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository,
             IOrganizationUnitSettings organizationUnitSettings,
             ISettingManager settingManager,
-            ILocalizationManager localizationManager, 
+            ILocalizationManager localizationManager,
             IRepository<User, long> userRepository,
             IRepository<Tenant> tenantsRepository)
             : base(
@@ -241,7 +242,7 @@ namespace TACHYON.Authorization.Users
 
             using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
             {
-                return await _userRepository.GetAll().FirstOrDefaultAsync(x => x.TenantId == TenantId && x.UserName== AbpUserBase.AdminUserName);
+                return await _userRepository.GetAll().FirstOrDefaultAsync(x => x.TenantId == TenantId && x.UserName == AbpUserBase.AdminUserName);
             }
 
         }
@@ -251,14 +252,15 @@ namespace TACHYON.Authorization.Users
 
             using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
             {
-                return await _userRepository.GetAll().FirstOrDefaultAsync(x => !x.TenantId.HasValue  && x.UserName == AbpUserBase.AdminUserName);
+                return await _userRepository.GetAll().FirstOrDefaultAsync(x => !x.TenantId.HasValue && x.UserName == AbpUserBase.AdminUserName);
             }
 
         }
 
         public async Task<User> GetAdminTachyonDealerAsync()
         {
-            var tenant = await _tenantsRepository.FirstOrDefaultAsync(x => x.Edition.Name.ToLower() == AppConsts.TachyonEditionName.ToLower());
+            var tachyonEditionId = Convert.ToInt32(await _settingManager.GetSettingValueAsync(AppSettings.Editions.TachyonEditionId));
+            var tenant = await _tenantsRepository.FirstOrDefaultAsync(x => x.Edition.Id == tachyonEditionId);
             return await GetAdminByTenantIdAsync(tenant.Id);
 
         }

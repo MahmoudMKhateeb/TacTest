@@ -177,7 +177,7 @@ namespace TACHYON.Invoices
 
             foreach (var tenant in tenants)
             {
-                if (tenant.EditionId == AppConsts.ShipperEditionId)
+                if (tenant.EditionId == ShipperEditionId)
                     await CollectTripsForShipper(tenant, period);
                 else
                     await BuildCarrierSubmitInvoice(tenant, period);
@@ -191,13 +191,13 @@ namespace TACHYON.Invoices
             List<Tenant> tenantsList = new List<Tenant>();
             var tenants = _tenant.GetAll()
                 .Where(
-                t => t.IsActive && (t.Edition.Name == AppConsts.ShipperEditionName || t.Edition.Name == AppConsts.CarrierEditionName));
+                t => t.IsActive && (t.Edition.Id == ShipperEditionId || t.Edition.Id == CarrierEditionId));
             //todo fix this please 
             foreach (var tenant in tenants)
             {
 
                 int value;
-                if (tenant.EditionId == AppConsts.ShipperEditionId)
+                if (tenant.EditionId == ShipperEditionId)
                 {
                     value = int.Parse(_featureChecker.GetValue(tenant.Id, AppFeatures.ShipperPeriods));
                 }
