@@ -747,13 +747,16 @@
     
 		<text name="YourAccountIsCurrentlySuspendedDueToTheExpirationOfThe">Your account is currently suspended due to the expiration of the</text>
 		<text name="DocumentPleaseSubmitARenewalOneToReactivateYourAccount">document please submit a renewal one to reactivate your account.</text>
+		<text name="SuspendedAccountDocumentExpired_Title">Expired date document and suspend your account</text>
+		<text name="SuspendedAccountDocumentExpired_SubTitle">Expired date document and suspend your account</text>
 		<text name="ExpiredDateDocuments_Title">Expired date document</text>
 		<text name="ExpiredDateDocuments_SubTitle">Expired date document</text>
 		<text name="Document File: {0} has been expired message">Document File: "{0}" has been expired message</text>
 		<text name="ExpiredDocument">Expired documents</text>
-		<text name="DocumentsExpiredInfo_Title">Documents expired information</text>
-		<text name="DocumentsExpiredInfo_SubTitle">Documents expired information</text>
-		<text name="DocumentsExpiredInfo">Documents expired information</text>
+		<text name="DocumentsExpirerationreminder_Title">Documents reminder information</text>
+		<text name="DocumentsExpirerationreminder_SubTitle">Documents reminder information</text>
+		<text name="DocumentsExpiredReminder">Documents reminder information</text>
+		<text name="ReminderDocumentsEmailMessage">We would like to inform you that the copy of your documents uploaded  Tachyon platform will be expired soon, please submit a renewal one before today to prevent the account from being suspended.</text>
     
 		<text name="EmailConfirmationRequiredForLogin">Email confirmation required for login.</text>
 		<text name="EmailMessage_CopyTheLinkBelowToYourBrowser">If the button above doesn't work, paste this into your browser:</text>
@@ -1320,7 +1323,7 @@
 			content that we shared with you.
 		</text>
 		<text name="PasswordResetEmail_Subject">TACHYON password reset</text>
-		<text name="PasswordResetEmail_SubTitle">You are receiving this email because we received a password reset request for your account.</text>
+		<text name="PasswordResetEmail_SubTitle">TACHYON password reset.</text>
 		<text name="PasswordResetEmail_Title">TACHYON password reset.</text>
 		<text name="PasswordResetMailSentMessage">A password reset link sent to your e-mail address. Please check your emails.</text>
 		<text name="Contain8To12Characters">Contain 8-12 characters</text>
