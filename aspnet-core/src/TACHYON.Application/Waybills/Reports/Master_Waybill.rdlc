@@ -2924,7 +2924,6 @@
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
-                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
@@ -6030,60 +6029,6 @@
                 <PaddingBottom>2pt</PaddingBottom>
               </Style>
             </Textbox>
-            <Textbox Name="Textbox79">
-              <CanGrow>true</CanGrow>
-              <KeepTogether>true</KeepTogether>
-              <Paragraphs>
-                <Paragraph>
-                  <TextRuns>
-                    <TextRun>
-                      <Value>=Globals!PageNumber</Value>
-                      <Style>
-                        <FontFamily>open Sans</FontFamily>
-                        <FontSize>8pt</FontSize>
-                        <Color>White</Color>
-                      </Style>
-                    </TextRun>
-                    <TextRun>
-                      <Value>/</Value>
-                      <Style>
-                        <FontFamily>open Sans</FontFamily>
-                        <FontSize>8pt</FontSize>
-                        <Color>White</Color>
-                      </Style>
-                    </TextRun>
-                    <TextRun>
-                      <Value>=Globals!TotalPages</Value>
-                      <Style>
-                        <FontFamily>open Sans</FontFamily>
-                        <FontSize>8pt</FontSize>
-                        <Color>White</Color>
-                      </Style>
-                    </TextRun>
-                  </TextRuns>
-                  <Style>
-                    <TextAlign>Center</TextAlign>
-                  </Style>
-                </Paragraph>
-              </Paragraphs>
-              <rd:DefaultName>Textbox79</rd:DefaultName>
-              <Top>0.43707in</Top>
-              <Left>6.58461in</Left>
-              <Height>0.35in</Height>
-              <Width>0.50561in</Width>
-              <ZIndex>3</ZIndex>
-              <Style>
-                <Border>
-                  <Style>None</Style>
-                </Border>
-                <BackgroundColor>#d82631</BackgroundColor>
-                <VerticalAlign>Middle</VerticalAlign>
-                <PaddingLeft>2pt</PaddingLeft>
-                <PaddingRight>2pt</PaddingRight>
-                <PaddingTop>2pt</PaddingTop>
-                <PaddingBottom>2pt</PaddingBottom>
-              </Style>
-            </Textbox>
             <Textbox Name="Textbox77">
               <CanGrow>true</CanGrow>
               <KeepTogether>true</KeepTogether>
@@ -6142,7 +6087,7 @@
               <Left>3.19931in</Left>
               <Height>0.50028in</Height>
               <Width>1.45083in</Width>
-              <ZIndex>4</ZIndex>
+              <ZIndex>3</ZIndex>
               <Style>
                 <Border>
                   <Style>None</Style>
@@ -6161,7 +6106,7 @@
               <Left>4.72458in</Left>
               <Height>0.14in</Height>
               <Width>0.14in</Width>
-              <ZIndex>5</ZIndex>
+              <ZIndex>4</ZIndex>
               <Style>
                 <Border>
                   <Style>None</Style>
@@ -6176,7 +6121,7 @@
               <Left>4.74264in</Left>
               <Height>0.14in</Height>
               <Width>0.14in</Width>
-              <ZIndex>6</ZIndex>
+              <ZIndex>5</ZIndex>
               <Style>
                 <Border>
                   <Style>None</Style>
@@ -6191,7 +6136,7 @@
               <Left>3.06385in</Left>
               <Height>0.14in</Height>
               <Width>0.14in</Width>
-              <ZIndex>7</ZIndex>
+              <ZIndex>6</ZIndex>
               <Style>
                 <Border>
                   <Style>None</Style>
@@ -6206,7 +6151,7 @@
               <Left>3.06385in</Left>
               <Height>0.14in</Height>
               <Width>0.14in</Width>
-              <ZIndex>8</ZIndex>
+              <ZIndex>7</ZIndex>
               <Style>
                 <Border>
                   <Style>None</Style>

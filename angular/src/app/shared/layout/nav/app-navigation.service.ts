@@ -557,8 +557,8 @@ export class AppNavigationService {
             '',
             undefined,
             [
-              new AppMenuItem('PlatformTerminologies', 'Pages.AppLocalizations', '', '/app/main/lanaguages/applocalizations'),
-              new AppMenuItem('Translations', 'Pages.AppLocalizations', '', '', undefined, [
+              // new AppMenuItem('PlatformTerminologies', 'Pages.AppLocalizations', 'flaticon-clipboard', '/app/main/lanaguages/applocalizations'),
+              new AppMenuItem('Translations', 'Pages.AppLocalizations', 'flaticon2-edit', '', undefined, [
                 new AppMenuItem(
                   'NationalityTranslations',
                   'Pages.NationalityTranslations',
