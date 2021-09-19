@@ -12,6 +12,8 @@ import { TableModule } from '@node_modules/primeng/table';
 import { NextInvoiceFrequancyDateComponent } from './shipper/next-invoice-frequancy-date/next-invoice-frequancy-date.component';
 import { InvoiceDueDateComponent } from './shipper/invoice-due-date/invoice-due-date.component';
 import { ShipperDueDateInDaysComponent } from './shipper/shipper-due-date-in-days/shipper-due-date-in-days.component';
+import { MostUsedOriginComponent } from './shipper/most-used-origin/most-used-origin.component';
+import { MostUsedDestinationsComponent } from './shipper/most-used-destinations/most-used-destinations.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +26,8 @@ import { ShipperDueDateInDaysComponent } from './shipper/shipper-due-date-in-day
     NextInvoiceFrequancyDateComponent,
     InvoiceDueDateComponent,
     ShipperDueDateInDaysComponent,
+    MostUsedOriginComponent,
+    MostUsedDestinationsComponent,
   ],
   imports: [CommonModule, ChartModule, NgApexchartsModule, TableModule],
   entryComponents: [CompletedTripsWidgetComponent, AcceptedVsRejecedRequestsComponent, CompletedTripVsPodComponent],
