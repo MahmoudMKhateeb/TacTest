@@ -21,6 +21,8 @@ import { InvoicesVsPaidInvoicesComponent } from '@app/shared/common/customizable
 import { MostWorkedWithCarriersComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/most-worked-with-carriers/most-worked-with-carriers.component';
 import { RequestsInMarketPlaceComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/requests-in-market-place/requests-in-market-place.component';
 import { NextInvoiceFrequancyDateComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/next-invoice-frequancy-date/next-invoice-frequancy-date.component';
+import { InvoiceDueDateComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/invoice-due-date/invoice-due-date.component';
+import { ShipperDueDateInDaysComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/shipper-due-date-in-days/shipper-due-date-in-days.component';
 
 @Injectable({
   providedIn: 'root',
@@ -111,6 +113,20 @@ export class DashboardViewConfigurationService {
       2,
       4
     );
+    //7
+    let invoiceDueDate = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Shipper.ShipperInvoiceDueDateInDaysWidget,
+      InvoiceDueDateComponent,
+      2,
+      4
+    );
+    //8
+    let dueDateInDays = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Shipper.ShipperDocumentDueDateInDaysWidget,
+      ShipperDueDateInDaysComponent,
+      2,
+      4
+    );
 
     //shipperPush
     this.WidgetViewDefinitions.push(completedTrips);
@@ -120,6 +136,8 @@ export class DashboardViewConfigurationService {
     this.WidgetViewDefinitions.push(mostWorkedWithCarriers);
     this.WidgetViewDefinitions.push(shippingRequestsInMarketPlace);
     this.WidgetViewDefinitions.push(nextInvoiceFrequancyDate);
+    this.WidgetViewDefinitions.push(invoiceDueDate);
+    this.WidgetViewDefinitions.push(dueDateInDays);
 
     this.WidgetViewDefinitions.push(generalStats);
     this.WidgetViewDefinitions.push(dailySales);
