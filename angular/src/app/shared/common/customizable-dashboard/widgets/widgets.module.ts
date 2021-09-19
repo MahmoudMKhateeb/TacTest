@@ -10,6 +10,8 @@ import { MostWorkedWithCarriersComponent } from '@app/shared/common/customizable
 import { RequestsInMarketPlaceComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/requests-in-market-place/requests-in-market-place.component';
 import { TableModule } from '@node_modules/primeng/table';
 import { NextInvoiceFrequancyDateComponent } from './shipper/next-invoice-frequancy-date/next-invoice-frequancy-date.component';
+import { InvoiceDueDateComponent } from './shipper/invoice-due-date/invoice-due-date.component';
+import { ShipperDueDateInDaysComponent } from './shipper/shipper-due-date-in-days/shipper-due-date-in-days.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +22,8 @@ import { NextInvoiceFrequancyDateComponent } from './shipper/next-invoice-frequa
     MostWorkedWithCarriersComponent,
     RequestsInMarketPlaceComponent,
     NextInvoiceFrequancyDateComponent,
+    InvoiceDueDateComponent,
+    ShipperDueDateInDaysComponent,
   ],
   imports: [CommonModule, ChartModule, NgApexchartsModule, TableModule],
   entryComponents: [CompletedTripsWidgetComponent, AcceptedVsRejecedRequestsComponent, CompletedTripVsPodComponent],
