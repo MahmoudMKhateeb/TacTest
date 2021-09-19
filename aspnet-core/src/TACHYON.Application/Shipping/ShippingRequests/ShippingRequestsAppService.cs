@@ -503,7 +503,7 @@ namespace TACHYON.Shipping.ShippingRequests
         public async Task<List<CarriersForDropDownDto>> GetAllCarriersForDropDownAsync()
         {
             return await _tenantRepository.GetAll()
-                .Where(x => x.Edition.Name == AppConsts.CarrierEditionName)
+                .Where(x => x.Edition.Id == CarrierEditionId)
                 .Select(x => new CarriersForDropDownDto { Id = x.Id, DisplayName = x.TenancyName }).ToListAsync();
         }
 

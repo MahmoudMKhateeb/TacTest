@@ -21,6 +21,7 @@ using DevExtreme.AspNet.Data.ResponseModel;
 using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
+using TACHYON.Configuration;
 
 namespace TACHYON
 {
@@ -36,6 +37,11 @@ namespace TACHYON
         public string CurrentLanguage { get; set; }
 
         protected IConfigurationProvider AutoMapperConfigurationProvider { get; set; }
+
+        protected int TachyonEditionId => Convert.ToInt32(SettingManager.GetSettingValue(AppSettings.Editions.TachyonEditionId));
+        protected int ShipperEditionId => Convert.ToInt32(SettingManager.GetSettingValue(AppSettings.Editions.ShipperEditionId));
+        protected int CarrierEditionId => Convert.ToInt32(SettingManager.GetSettingValue(AppSettings.Editions.CarrierEditionId));
+
         protected TACHYONAppServiceBase()
         {
             LocalizationSourceName = TACHYONConsts.LocalizationSourceName;
@@ -109,7 +115,7 @@ namespace TACHYON
         }
 
 
-        public  async Task<LoadResult> LoadResultAsync<T>(IQueryable<T> query, string filter)
+        public async Task<LoadResult> LoadResultAsync<T>(IQueryable<T> query, string filter)
         {
             DataSourceLoadOptionsBase dataSourceLoadOptionsBase = JsonConvert.DeserializeObject<DataSourceLoadOptionsBase>(filter);
             return await DataSourceLoader.LoadAsync(query, dataSourceLoadOptionsBase);

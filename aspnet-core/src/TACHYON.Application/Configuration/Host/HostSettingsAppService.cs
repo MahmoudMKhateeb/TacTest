@@ -64,7 +64,8 @@ namespace TACHYON.Configuration.Host
                 Billing = await GetBillingSettingsAsync(),
                 OtherSettings = await GetOtherSettingsAsync(),
                 ExternalLoginProviderSettings = await GetExternalLoginProviderSettings(),
-                SmsSettings = await GetSmsSettingsAsync()
+                SmsSettings = await GetSmsSettingsAsync(),
+                EditionSettings = await GetEditionsSettingsAsync()
             };
         }
 
@@ -359,6 +360,21 @@ namespace TACHYON.Configuration.Host
             return settings;
         }
 
+        private async Task<EditionSettingsDto> GetEditionsSettingsAsync()
+        {
+            var settings = new EditionSettingsDto
+            {
+                CarrierEditionId =
+                    await SettingManager.GetSettingValueAsync(AppSettings.Editions.CarrierEditionId),
+                ShipperEditionId =
+                    await SettingManager.GetSettingValueAsync(AppSettings.Editions.ShipperEditionId),
+                TachyonEditionId =
+                    await SettingManager.GetSettingValueAsync(AppSettings.Editions.TachyonEditionId)
+
+            };
+            return settings;
+        }
+
         #endregion
 
         #endregion
@@ -376,6 +392,7 @@ namespace TACHYON.Configuration.Host
             await UpdateOtherSettingsAsync(input.OtherSettings);
             await UpdateExternalLoginSettingsAsync(input.ExternalLoginProviderSettings);
             await UpdateSmsSettingsAsync(input.SmsSettings);
+            await UpdateEditionsSettingsAsync(input.EditionSettings);
         }
 
         private async Task UpdateOtherSettingsAsync(OtherSettingsEditDto input)
@@ -687,6 +704,23 @@ namespace TACHYON.Configuration.Host
             );
 
         }
+        private async Task UpdateEditionsSettingsAsync(EditionSettingsDto input)
+        {
+            await SettingManager.ChangeSettingForApplicationAsync(
+                AppSettings.Editions.CarrierEditionId,
+                input.CarrierEditionId
+            );
+            await SettingManager.ChangeSettingForApplicationAsync(
+                AppSettings.Editions.ShipperEditionId,
+                input.ShipperEditionId
+            );
+            await SettingManager.ChangeSettingForApplicationAsync(
+                AppSettings.Editions.TachyonEditionId,
+                input.TachyonEditionId
+            );
+        }
+
+
 
         public async Task<bool> TestUnifonicSms(TestUnifonicSmsInput testUnifonicSmsInput)
         {

@@ -275,7 +275,8 @@ namespace TACHYON.Invoices
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer);
             DisableTenancyFilters();
             var tenant = await TenantManager.GetByIdAsync(Id);
-            if (tenant == null || tenant.Name == AppConsts.ShipperEditionName) throw new UserFriendlyException(L("TheTenantSelectedIsNotShipper"));
+            
+           // if (tenant == null || tenant.Name == AppConsts.ShipperEditionName) throw new UserFriendlyException(L("TheTenantSelectedIsNotShipper"));
             await _invoiceManager.GenertateInvoiceOnDeman(tenant);
         }
         #region Reports

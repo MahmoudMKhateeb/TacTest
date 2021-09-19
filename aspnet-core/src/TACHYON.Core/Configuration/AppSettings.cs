@@ -149,6 +149,12 @@ namespace TACHYON.Configuration
             public const string ClientId = "App.BayanIntegration.ClientId";
         }
 
+        public static class Editions
+        {
+            public const string TachyonEditionId = "App.Editions.TachyonEditionId";
+            public const string ShipperEditionId = "App.Editions.ShipperEditionId";
+            public const string CarrierEditionId = "App.Editions.CarrierEditionId";
+        }
 
     }
 }

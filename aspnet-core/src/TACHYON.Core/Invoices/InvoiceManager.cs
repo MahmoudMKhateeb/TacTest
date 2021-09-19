@@ -93,7 +93,7 @@ namespace TACHYON.Invoices
 
             foreach (var period in results)
             {
-                await CreateTiggerAsync(period);
+                await CreateTriggerAsync(period);
             }
         }
         /// <summary>
@@ -101,7 +101,7 @@ namespace TACHYON.Invoices
         /// </summary>
         /// <param name="period"></param>
         /// <returns></returns>
-        public async Task CreateTiggerAsync(InvoicePeriod period)
+        public async Task CreateTriggerAsync(InvoicePeriod period)
         {
             string myJobKey = $"InvoiceJob.[{Enum.GetName(typeof(InvoicePeriodType), period.PeriodType)}].[{period.Id}]";
             string triggerKey = $"InvoiceTrigger.[{Enum.GetName(typeof(InvoicePeriodType), period.PeriodType)}].[{period.Id}]";
@@ -157,7 +157,7 @@ namespace TACHYON.Invoices
                 await RemoveTriggerAsync(period);
             else
             {
-                await CreateTiggerAsync(period);
+                await CreateTriggerAsync(period);
             }
 
         }
@@ -168,7 +168,7 @@ namespace TACHYON.Invoices
         public async Task GenerateInvoice(int periodId)
         {
             // get all tenants with this period
-            List<Tenant> tenants = GetTenentByFeatures(periodId);
+            List<Tenant> tenants = GetTenantByFeatures(periodId);
 
             var period = await _periodRepository.FirstOrDefaultAsync(x => x.Id == periodId);
 
@@ -177,7 +177,7 @@ namespace TACHYON.Invoices
 
             foreach (var tenant in tenants)
             {
-                if (tenant.EditionId == AppConsts.ShipperEditionId)
+                if (tenant.EditionId == ShipperEditionId)
                     await CollectTripsForShipper(tenant, period);
                 else
                     await BuildCarrierSubmitInvoice(tenant, period);
@@ -185,19 +185,19 @@ namespace TACHYON.Invoices
             }
         }
 
-        private List<Tenant> GetTenentByFeatures(int periodId)
+        private List<Tenant> GetTenantByFeatures(int periodId)
         {
 
             List<Tenant> tenantsList = new List<Tenant>();
             var tenants = _tenant.GetAll()
                 .Where(
-                t => t.IsActive && (t.Edition.Name == AppConsts.ShipperEditionName || t.Edition.Name == AppConsts.CarrierEditionName));
+                t => t.IsActive && (t.Edition.Id == ShipperEditionId || t.Edition.Id == CarrierEditionId));
             //todo fix this please 
             foreach (var tenant in tenants)
             {
 
                 int value;
-                if (tenant.EditionId == AppConsts.ShipperEditionId)
+                if (tenant.EditionId == ShipperEditionId)
                 {
                     value = int.Parse(_featureChecker.GetValue(tenant.Id, AppFeatures.ShipperPeriods));
                 }

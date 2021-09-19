@@ -135,7 +135,7 @@ namespace TACHYON.PriceOffers
                 .WhereIf(OfferId.HasValue,x=>x.Id== OfferId.Value)
                 .WhereIf(await IsEnabledAsync(AppFeatures.Carrier), x => x.TenantId == AbpSession.TenantId.Value && (x.Status == PriceOfferStatus.New || x.Status == PriceOfferStatus.Rejected))
                 .WhereIf(await IsEnabledAsync(AppFeatures.TachyonDealer),
-                x=> ((x.TenantId == AbpSession.TenantId.Value || x.ShippingRequestFK.IsTachyonDeal ) && (x.Status == PriceOfferStatus.New || (x.Status == PriceOfferStatus.Rejected && x.Tenant.EditionId== AppConsts.TachyonEditionId) || x.Status == PriceOfferStatus.Pending)))              
+                x=> ((x.TenantId == AbpSession.TenantId.Value || x.ShippingRequestFK.IsTachyonDeal ) && (x.Status == PriceOfferStatus.New || (x.Status == PriceOfferStatus.Rejected && x.Tenant.EditionId== TachyonEditionId) || x.Status == PriceOfferStatus.Pending)))              
                 .OrderBy(x=>x.Status)
                 //.OrderByDescending(x=>x.Id)
                 .FirstOrDefaultAsync();
