@@ -79,7 +79,7 @@ namespace TACHYON.Invoices.Periods
             await _PeriodRepository.InsertAsync(Period);
 
             if (Period.Enabled & Period.PeriodType != InvoicePeriodType.PayInAdvance && Period.PeriodType != InvoicePeriodType.PayuponDelivery)
-            await _invoiceManager.CreateTiggerAsync(Period);
+            await _invoiceManager.CreateTriggerAsync(Period);
 
         }
 
@@ -112,7 +112,7 @@ namespace TACHYON.Invoices.Periods
 
                 Period.Enabled = IsEnabled;
 
-                await _invoiceManager.CreateTiggerAsync(Period);
+                await _invoiceManager.CreateTriggerAsync(Period);
 
             }
         }

@@ -93,7 +93,7 @@ namespace TACHYON.Invoices
 
             foreach (var period in results)
             {
-                await CreateTiggerAsync(period);
+                await CreateTriggerAsync(period);
             }
         }
         /// <summary>
@@ -101,7 +101,7 @@ namespace TACHYON.Invoices
         /// </summary>
         /// <param name="period"></param>
         /// <returns></returns>
-        public async Task CreateTiggerAsync(InvoicePeriod period)
+        public async Task CreateTriggerAsync(InvoicePeriod period)
         {
             string myJobKey = $"InvoiceJob.[{Enum.GetName(typeof(InvoicePeriodType), period.PeriodType)}].[{period.Id}]";
             string triggerKey = $"InvoiceTrigger.[{Enum.GetName(typeof(InvoicePeriodType), period.PeriodType)}].[{period.Id}]";
@@ -157,7 +157,7 @@ namespace TACHYON.Invoices
                 await RemoveTriggerAsync(period);
             else
             {
-                await CreateTiggerAsync(period);
+                await CreateTriggerAsync(period);
             }
 
         }
@@ -168,7 +168,7 @@ namespace TACHYON.Invoices
         public async Task GenerateInvoice(int periodId)
         {
             // get all tenants with this period
-            List<Tenant> tenants = GetTenentByFeatures(periodId);
+            List<Tenant> tenants = GetTenantByFeatures(periodId);
 
             var period = await _periodRepository.FirstOrDefaultAsync(x => x.Id == periodId);
 
@@ -185,7 +185,7 @@ namespace TACHYON.Invoices
             }
         }
 
-        private List<Tenant> GetTenentByFeatures(int periodId)
+        private List<Tenant> GetTenantByFeatures(int periodId)
         {
 
             List<Tenant> tenantsList = new List<Tenant>();
