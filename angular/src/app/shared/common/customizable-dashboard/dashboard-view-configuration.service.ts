@@ -20,6 +20,7 @@ import { AcceptedVsRejecedRequestsComponent } from '@app/shared/common/customiza
 import { InvoicesVsPaidInvoicesComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/invoices-vs-paid-invoices/invoices-vs-paid-invoices.component';
 import { MostWorkedWithCarriersComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/most-worked-with-carriers/most-worked-with-carriers.component';
 import { RequestsInMarketPlaceComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/requests-in-market-place/requests-in-market-place.component';
+import { NextInvoiceFrequancyDateComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/next-invoice-frequancy-date/next-invoice-frequancy-date.component';
 
 @Injectable({
   providedIn: 'root',
@@ -103,6 +104,13 @@ export class DashboardViewConfigurationService {
       DashboardCustomizationConst.widgets.Shipper.ShipperRequestsInMarketplaceWidget,
       RequestsInMarketPlaceComponent
     );
+    //6
+    let nextInvoiceFrequancyDate = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Shipper.ShipperNextInvoiceFrequancyEndDateWidget,
+      NextInvoiceFrequancyDateComponent,
+      2,
+      4
+    );
 
     //shipperPush
     this.WidgetViewDefinitions.push(completedTrips);
@@ -111,6 +119,7 @@ export class DashboardViewConfigurationService {
     this.WidgetViewDefinitions.push(shipperInvoicesVsPaidInvoices);
     this.WidgetViewDefinitions.push(mostWorkedWithCarriers);
     this.WidgetViewDefinitions.push(shippingRequestsInMarketPlace);
+    this.WidgetViewDefinitions.push(nextInvoiceFrequancyDate);
 
     this.WidgetViewDefinitions.push(generalStats);
     this.WidgetViewDefinitions.push(dailySales);

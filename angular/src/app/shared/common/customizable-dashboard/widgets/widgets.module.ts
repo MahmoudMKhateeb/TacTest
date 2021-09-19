@@ -9,6 +9,7 @@ import { InvoicesVsPaidInvoicesComponent } from '@app/shared/common/customizable
 import { MostWorkedWithCarriersComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/most-worked-with-carriers/most-worked-with-carriers.component';
 import { RequestsInMarketPlaceComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/requests-in-market-place/requests-in-market-place.component';
 import { TableModule } from '@node_modules/primeng/table';
+import { NextInvoiceFrequancyDateComponent } from './shipper/next-invoice-frequancy-date/next-invoice-frequancy-date.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { TableModule } from '@node_modules/primeng/table';
     InvoicesVsPaidInvoicesComponent,
     MostWorkedWithCarriersComponent,
     RequestsInMarketPlaceComponent,
+    NextInvoiceFrequancyDateComponent,
   ],
   imports: [CommonModule, ChartModule, NgApexchartsModule, TableModule],
   entryComponents: [CompletedTripsWidgetComponent, AcceptedVsRejecedRequestsComponent, CompletedTripVsPodComponent],
