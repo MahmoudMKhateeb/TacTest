@@ -6050,60 +6050,6 @@
             <PaddingBottom>2pt</PaddingBottom>
           </Style>
         </Textbox>
-        <Textbox Name="Textbox79">
-          <CanGrow>true</CanGrow>
-          <KeepTogether>true</KeepTogether>
-          <Paragraphs>
-            <Paragraph>
-              <TextRuns>
-                <TextRun>
-                  <Value>=Globals!PageNumber</Value>
-                  <Style>
-                    <FontFamily>open Sans</FontFamily>
-                    <FontSize>8pt</FontSize>
-                    <Color>White</Color>
-                  </Style>
-                </TextRun>
-                <TextRun>
-                  <Value>/</Value>
-                  <Style>
-                    <FontFamily>open Sans</FontFamily>
-                    <FontSize>8pt</FontSize>
-                    <Color>White</Color>
-                  </Style>
-                </TextRun>
-                <TextRun>
-                  <Value>=Globals!TotalPages</Value>
-                  <Style>
-                    <FontFamily>open Sans</FontFamily>
-                    <FontSize>8pt</FontSize>
-                    <Color>White</Color>
-                  </Style>
-                </TextRun>
-              </TextRuns>
-              <Style>
-                <TextAlign>Center</TextAlign>
-              </Style>
-            </Paragraph>
-          </Paragraphs>
-          <rd:DefaultName>Textbox79</rd:DefaultName>
-          <Top>0.48276in</Top>
-          <Left>6.59679in</Left>
-          <Height>0.35in</Height>
-          <Width>0.44444in</Width>
-          <ZIndex>3</ZIndex>
-          <Style>
-            <Border>
-              <Style>None</Style>
-            </Border>
-            <BackgroundColor>#d82631</BackgroundColor>
-            <VerticalAlign>Middle</VerticalAlign>
-            <PaddingLeft>2pt</PaddingLeft>
-            <PaddingRight>2pt</PaddingRight>
-            <PaddingTop>2pt</PaddingTop>
-            <PaddingBottom>2pt</PaddingBottom>
-          </Style>
-        </Textbox>
         <Textbox Name="Textbox77">
           <CanGrow>true</CanGrow>
           <KeepTogether>true</KeepTogether>
@@ -6162,7 +6108,7 @@
           <Left>3.21149in</Left>
           <Height>0.50028in</Height>
           <Width>1.45083in</Width>
-          <ZIndex>4</ZIndex>
+          <ZIndex>3</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -6181,7 +6127,7 @@
           <Left>4.73676in</Left>
           <Height>0.14in</Height>
           <Width>0.14in</Width>
-          <ZIndex>5</ZIndex>
+          <ZIndex>4</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -6196,7 +6142,7 @@
           <Left>4.75482in</Left>
           <Height>0.14in</Height>
           <Width>0.14in</Width>
-          <ZIndex>6</ZIndex>
+          <ZIndex>5</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -6211,7 +6157,7 @@
           <Left>3.07603in</Left>
           <Height>0.14in</Height>
           <Width>0.14in</Width>
-          <ZIndex>7</ZIndex>
+          <ZIndex>6</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -6226,7 +6172,7 @@
           <Left>3.07603in</Left>
           <Height>0.14in</Height>
           <Width>0.14in</Width>
-          <ZIndex>8</ZIndex>
+          <ZIndex>7</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
