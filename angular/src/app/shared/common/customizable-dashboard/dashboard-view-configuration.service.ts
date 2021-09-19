@@ -14,6 +14,12 @@ import { WidgetSubscriptionExpiringTenantsComponent } from './widgets/widget-sub
 import { WidgetHostTopStatsComponent } from './widgets/widget-host-top-stats/widget-host-top-stats.component';
 import { FilterDateRangePickerComponent } from './filters/filter-date-range-picker/filter-date-range-picker.component';
 import { WidgetTopStatsComponent } from './widgets/widget-top-stats/widget-top-stats.component';
+import { CompletedTripsWidgetComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/completed-trips-widget/completed-trips-widget.component';
+import { CompletedTripVsPodComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/completed-trip-vs-pod/completed-trip-vs-pod.component';
+import { AcceptedVsRejecedRequestsComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/accepted-vs-rejeced-requests/accepted-vs-rejeced-requests.component';
+import { InvoicesVsPaidInvoicesComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/invoices-vs-paid-invoices/invoices-vs-paid-invoices.component';
+import { MostWorkedWithCarriersComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/most-worked-with-carriers/most-worked-with-carriers.component';
+import { RequestsInMarketPlaceComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/requests-in-market-place/requests-in-market-place.component';
 
 @Injectable({
   providedIn: 'root',
@@ -62,6 +68,49 @@ export class DashboardViewConfigurationService {
 
     let hostTopStats = new WidgetViewDefinition(DashboardCustomizationConst.widgets.host.topStats, WidgetHostTopStatsComponent);
     //add your host side widgets here
+
+    //Shipper
+    //1
+    let completedTrips = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Shipper.ShipperNumberOfCompletedTripsWidget,
+      CompletedTripsWidgetComponent
+    );
+    //2
+    let acceptedVsRejectedRequestsWidget = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Shipper.ShipperAcceptedVsRejectedRequestsWidget,
+      AcceptedVsRejecedRequestsComponent
+    );
+
+    //3
+    let shipperCompletedTripsVsPodWidget = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Shipper.ShipperCompletedTripsVsPodWidget,
+      CompletedTripVsPodComponent
+    );
+    //4
+    let shipperInvoicesVsPaidInvoices = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Shipper.ShipperInvoicesVsPaidInvoicesWidget,
+      InvoicesVsPaidInvoicesComponent
+    );
+
+    //5
+    let mostWorkedWithCarriers = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Shipper.ShipperMostWorkedWithCarriersWidget,
+      MostWorkedWithCarriersComponent
+    );
+
+    //5
+    let shippingRequestsInMarketPlace = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Shipper.ShipperRequestsInMarketplaceWidget,
+      RequestsInMarketPlaceComponent
+    );
+
+    //shipperPush
+    this.WidgetViewDefinitions.push(completedTrips);
+    this.WidgetViewDefinitions.push(acceptedVsRejectedRequestsWidget);
+    this.WidgetViewDefinitions.push(shipperCompletedTripsVsPodWidget);
+    this.WidgetViewDefinitions.push(shipperInvoicesVsPaidInvoices);
+    this.WidgetViewDefinitions.push(mostWorkedWithCarriers);
+    this.WidgetViewDefinitions.push(shippingRequestsInMarketPlace);
 
     this.WidgetViewDefinitions.push(generalStats);
     this.WidgetViewDefinitions.push(dailySales);
