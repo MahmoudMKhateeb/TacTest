@@ -9,6 +9,7 @@ using Abp.Net.Mail;
 using Abp.Runtime.Security;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -139,6 +140,36 @@ namespace TACHYON.Authorization.Users
             mailMessage.AppendLine($"style=\"width: 85%; margin: 30px auto\">{L("LoginLink")}</a>");
 
             await ReplaceBodyAndSend(adminUser.EmailAddress, L("DocumentsApproved"), emailTemplate, mailMessage);
+        }
+
+
+        [UnitOfWork]
+        public virtual async Task SendRejectedDocumentEmail(long userId, string rejectionReason)
+        {
+            var user = await _userManager.GetUserByIdAsync(userId);
+            if (user.TenantId == null) return;
+
+            var companyName = await _tenantRepository.GetAll().Where(x => x.Id == user.TenantId)
+                .Select(x => x.companyName).FirstOrDefaultAsync();
+
+            var emailTemplate = await GetTitleAndSubTitle(null, L("RejectedDocument_Title"),
+                L("RejectedDocument_SubTitle"));
+
+            var mailMessage = new StringBuilder();
+            if (currentCulture)
+            {
+                mailMessage.AppendLine($"<div class=\"data\"><h2>{L("DearsAt")}");
+                mailMessage.AppendLine($"<span style=\"color: #d82631\">{companyName}</span></h2></div>");
+            }
+            else
+            {
+                mailMessage.AppendLine($"<br><h2 style=\"text-align:center\"><span style=\"color:#d82631\">{companyName}</span>");
+                mailMessage.AppendLine($"<span class=\"data\">{L("DearsAt")}</span><h2>");
+            }
+
+            mailMessage.AppendLine($"<p class=\"lead\" style=\"width: 65%; margin: 30px auto\">{L("RejectedDocumentEmailMessage", rejectionReason)}</p>");
+
+            await ReplaceBodyAndSend(user.EmailAddress, L("RejectedDocument"), emailTemplate, mailMessage);
         }
 
         /// <summary>

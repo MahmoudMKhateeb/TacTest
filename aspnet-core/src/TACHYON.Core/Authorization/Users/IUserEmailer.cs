@@ -24,7 +24,7 @@ namespace TACHYON.Authorization.Users
         /// <param name="loginLink"></param>
         /// <param name="tenant"></param>
         /// <returns></returns>
-        Task SendAllApprovedDocumentsAsync(Tenant tenant,string loginLink);
+        Task SendAllApprovedDocumentsAsync(Tenant tenant, string loginLink);
         /// <summary>
         /// Send Email to admin tenant user when all documents approved by host
         /// </summary>
@@ -64,7 +64,7 @@ namespace TACHYON.Authorization.Users
         /// <param name="userEmail"></param>
         /// /// <param name="tenantId"></param>
         /// <returns></returns>
-        Task SendPasswordUpdatedEmail(int? tenantId, string userEmail, string newPassword); 
+        Task SendPasswordUpdatedEmail(int? tenantId, string userEmail, string newPassword);
 
         /// <summary>
         /// Send an Email To Warn User From Suspend Him Account Because That He Has Document Almost Expired
@@ -73,8 +73,8 @@ namespace TACHYON.Authorization.Users
         /// <param name="documentName"></param>
         /// <param name="documentExpireDate"></param>
         /// <returns></returns>
-        Task SendWarningSuspendAccountForExpiredDocumentEmail(Tenant tenant,string documentName,DateTime documentExpireDate); 
-       
+        Task SendWarningSuspendAccountForExpiredDocumentEmail(Tenant tenant, string documentName, DateTime documentExpireDate);
+
         /// <summary>
         /// Send an Email To Notify User That Him Account Was Suspended For Expired Document
         /// </summary>
@@ -104,7 +104,8 @@ namespace TACHYON.Authorization.Users
         /// <param name="invoiceLink"></param>
         /// <returns></returns>
         Task SendIssuedInvoiceEmail(Tenant tenant, DateTime invoiceDueDate,
-            DateTime invoiceIssueDate, decimal invoiceTotalAmount,string invoiceLink);
+            DateTime invoiceIssueDate, decimal invoiceTotalAmount, string invoiceLink);
 
+        Task SendRejectedDocumentEmail(long userId, string rejectionReason);
     }
 }
