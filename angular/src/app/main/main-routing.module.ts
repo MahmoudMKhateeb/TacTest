@@ -1,4 +1,4 @@
-﻿import { NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { DangerousGoodTypesComponent } from './goods/dangerousGoodTypes/dangerousGoodTypes.component';
 import { PackingTypesComponent } from './packingTypes/packingTypes/packingTypes.component';

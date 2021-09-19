@@ -36,6 +36,8 @@
     "@ng-bootstrap/ng-bootstrap": "^6.2.0",
     "@sbzen/ng-cron": "^1.0.5",
     "@swimlane/ngx-charts": "^13.0.2",
+    "ng-apexcharts": "^1.5.12",
+    "apexcharts": "^3.27.2",
     "@types/googlemaps": "^3.39.11",
     "abp-ng2-module": "^6.0.0",
     "abp-web-resources": "^5.2.0",
