@@ -41,24 +41,15 @@ namespace TACHYON.Rating
         [RequiresFeature(AppFeatures.Shipper)]
         public async Task CreateCarrierRatingByShipper(CreateCarrierRatingByShipperDto input)
         {
-            //var rate=ObjectMapper.Map<RatingLog>(input);
-            //rate.RateType = RateType.CarrierByShipper;
-            //rate.ShipperId = AbpSession.TenantId;
-
-            //await CheckIfRateBefore(rate);
-            //await _ratingRepository.InsertAndGetIdAsync(rate);
             await ValidateAndCreateRating(input, RateType.CarrierByShipper);
         }
 
-        public async Task CreateDriverRatingByReceiver(CreateDriverRatingByReceiverDto input)
+        public async Task CreateDriverAndDERatingByReceiver(CreateDriverAndDERatingByReceiverDto input)
         {
-            await ValidateAndCreateRating(input, RateType.DriverByReceiver);
+            await ValidateAndCreateRating(input.CreateDriverRatingByReceiverInput, RateType.DriverByReceiver);
+            await ValidateAndCreateRating(input.CreateDeliveryExpRateByReceiverInput, RateType.DEByReceiver);
         }
 
-        public async Task CreateDeliveryExpRatingByReceiver(CreateDeliveryExpRateByReceiverDto input)
-        {
-            await ValidateAndCreateRating(input, RateType.DEByReceiver);
-        }
         #endregion
 
         #region ShipperRating
@@ -72,7 +63,7 @@ namespace TACHYON.Rating
             await ValidateAndCreateRating(input, RateType.SEByDriver);
         }
 
-        [RequiresFeature(AppFeatures.Shipper)]
+        [RequiresFeature(AppFeatures.Carrier)]
         public async Task CreateShipperRatingByCarrier(CreateShipperRateByCarrierDto input)
         {
             await ValidateAndCreateRating(input, RateType.ShipperByCarrier);
@@ -136,13 +127,14 @@ namespace TACHYON.Rating
             var trip = new ShippingRequestTrip();
             if (rate.TripId != null)
             {
+                DisableTenancyFilters();
                 trip = await _shippingRequestTrip
                     .GetAllIncluding(x => x.ShippingRequestFk)
                     .WhereIf(rate.RateType == RateType.CarrierByShipper, x => x.ShippingRequestFk.TenantId == AbpSession.TenantId)
                     .WhereIf(rate.RateType == RateType.SEByDriver, x => x.AssignedDriverUserId == AbpSession.UserId)
                     .WhereIf(rate.RateType == RateType.ShipperByCarrier, x => x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
                     .FirstOrDefaultAsync(x => x.Id == rate.TripId 
-                    //&& x.Status == ShippingRequestTripStatus.Delivered
+                    && x.Status == ShippingRequestTripStatus.Delivered
                     );
 
                 if(trip== null)
@@ -174,7 +166,7 @@ namespace TACHYON.Rating
             if (await _routePointRepository
                 .GetAll()
                .WhereIf(rateType == RateType.FacilityByDriver, x => x.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId)
-                .CountAsync(x => x.Id == pointId && x.Status < RoutePointStatus.FinishOffLoadShipment) == 0)
+                .CountAsync(x => x.Id == pointId && x.Status >= RoutePointStatus.FinishOffLoadShipment) == 0)
             {
                 throw new UserFriendlyException(L("PointNotFound"));
             }
