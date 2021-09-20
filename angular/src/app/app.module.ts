@@ -90,6 +90,8 @@ import { AppBsModalModule } from '@shared/common/appBsModal/app-bs-modal.module'
 import { TrackingSignalrService } from './main/shippingRequests/shippingRequests/tracking/tacking-signalr.service';
 import { DxButtonModule } from '@node_modules/devextreme-angular';
 import { BalanceTopbarComponent } from './shared/layout/topbar/balance-topbar/balance-topbar.component';
+import { RatingPageComponent } from './rating-page/rating-page.component';
+import { RatingModule } from '@node_modules/primeng/rating';
 
 @NgModule({
   declarations: [
@@ -146,6 +148,7 @@ import { BalanceTopbarComponent } from './shared/layout/topbar/balance-topbar/ba
     MenuSearchBarComponent,
     ActiveDelegatedUsersComboComponent,
     BalanceTopbarComponent,
+    RatingPageComponent,
   ],
   imports: [
     CommonModule,
@@ -176,6 +179,7 @@ import { BalanceTopbarComponent } from './shared/layout/topbar/balance-topbar/ba
     NgxSpinnerModule,
     AppBsModalModule,
     DxButtonModule,
+    RatingModule,
   ],
   providers: [
     ImpersonationService,

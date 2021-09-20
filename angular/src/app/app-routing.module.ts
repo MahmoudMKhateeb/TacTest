@@ -7,6 +7,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { RequiredDocumentFilesComponent } from '@app/admin/required-document-files/required-document-files.component';
 import { RequiredDocumentsGuard } from '@app/shared/common/required-documents/required-documents.guard';
 import { NotRequiredDocumentFilesComponent } from '@app/admin/not-required-document-files/not-required-document-files.component';
+import { RatingPageComponent } from '@app/rating-page/rating-page.component';
 
 @NgModule({
   imports: [
