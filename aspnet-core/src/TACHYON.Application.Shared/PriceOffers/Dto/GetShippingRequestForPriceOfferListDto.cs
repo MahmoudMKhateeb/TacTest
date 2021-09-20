@@ -10,6 +10,8 @@ namespace TACHYON.PriceOffers.Dto
         public long? DirectRequestId { get; set; }
         public long? OfferId { get; set; }
         public string Name { get; set; }
+        public decimal ShipperRating { get; set; }
+        public int ShipperRatingNumber { get; set; }
         public string Carrier { get; set; }
         public DateTime? CreationTime { get; set; }
         public bool IsTachyonDeal { get; set; }

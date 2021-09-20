@@ -1,4 +1,5 @@
 ﻿using Abp.Domain.Repositories;
+using Abp.Linq.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -17,10 +18,36 @@ namespace TACHYON.Rating
             _ratingLogRepository = ratingLogRepository;
         }
 
-        public async Task<List<RatingLog>> GetAllCarriersRatingAsync()
+        public async Task<List<RatingLog>> GetAllCarriersRatingAsync(int? CarrierId)
         {
             return await _ratingLogRepository
-                .GetAll().Where(x => x.RateType == RateType.CarrierTripBySystem).ToListAsync();
+                .GetAll().Where(x => x.RateType == RateType.CarrierTripBySystem)
+                .WhereIf(CarrierId!=null, x=>x.CarrierId==CarrierId)
+                .ToListAsync();
+        }
+
+        public async Task<List<RatingLog>> GetAllShippersRatingAsync(int? ShipperId)
+        {
+            return await _ratingLogRepository
+                .GetAll().Where(x => x.RateType == RateType.ShipperTripBySystem)
+                .WhereIf(ShipperId != null, x => x.ShipperId == ShipperId)
+                .ToListAsync();
+        }
+
+        public async Task<int> GetShipperRatingCountAsync(int ShipperId)
+        {
+            return await _ratingLogRepository
+                .GetAll().Where(x => x.RateType == RateType.ShipperTripBySystem)
+                .Where(x => x.ShipperId == ShipperId)
+                .CountAsync();
+        }
+
+        public async Task<int> GetFacilityRatingCountAsync(long facilityId)
+        {
+            return await _ratingLogRepository
+                .GetAll().Where(x => x.RateType == RateType.FacilityByDriver)
+                .Where(x => x.FacilityId == facilityId)
+                .CountAsync();
         }
     }
 }

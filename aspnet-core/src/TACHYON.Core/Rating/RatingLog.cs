@@ -38,7 +38,7 @@ namespace TACHYON.Rating
         [ForeignKey("FacilityId")]
         public Facility FacilityFk { get; set; }
         public RateType RateType { get; set; }
-        public int Rate { get; set; }
+        public decimal Rate { get; set; }
         public string Note { get; set; }
         public DateTime CreationTime { get; set; }
         /// <summary>

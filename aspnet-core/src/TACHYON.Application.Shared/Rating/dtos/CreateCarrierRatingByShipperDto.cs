@@ -9,8 +9,8 @@ namespace TACHYON.Rating.dtos
     {
         [Required]
         public int TripId { get; set; }
-        [Required]
-        public int CarrierId { get; set; }
+        //[Required]
+        //public int CarrierId { get; set; }
         [Range(1,5)]
         public int Rate { get; set; }
         public string Note { get; set; }

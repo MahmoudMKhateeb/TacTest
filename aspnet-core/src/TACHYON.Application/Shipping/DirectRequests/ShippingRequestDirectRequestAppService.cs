@@ -53,7 +53,7 @@ namespace TACHYON.Shipping.DirectRequests
 
             var list = ObjectMapper.Map<List<ShippingRequestDirectRequestListDto>>(Result);
             //calculate each carrier rating count
-            var carriersRating =await _ratingLogManager.GetAllCarriersRatingAsync();
+            var carriersRating =await _ratingLogManager.GetAllCarriersRatingAsync(null);
             list.ForEach(x =>
             x.CarrierRateNumber = carriersRating.Count(x => x.CarrierId == x.CarrierId));
 
