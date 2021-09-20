@@ -29,5 +29,7 @@ namespace TACHYON.Configuration.Host.Dto
 
         [Required]
         public SmsSettingsEditDto SmsSettings { get; set; }
+        [Required]
+        public EditionSettingsDto EditionSettings { get; set; }
     }
 }
