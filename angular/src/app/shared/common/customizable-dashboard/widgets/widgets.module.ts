@@ -17,6 +17,8 @@ import { MostUsedDestinationsComponent } from './shipper/most-used-destinations/
 import { TrackingMapComponent } from './shipper/tracking-map/tracking-map.component';
 import { AgmCoreModule } from '@node_modules/@agm/core';
 import { AgmDirectionModule } from '@node_modules/agm-direction';
+import { NumberOfTotalCompletedTripsComponent } from './carrier/number-of-total-completed-trips/number-of-total-completed-trips.component';
+import { CarrierInvoicesVsPaidInvoicesComponent } from '@app/shared/common/customizable-dashboard/widgets/carrier/invoices-vs-paid-invoices/invoices-vs-paid-invoices.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +34,8 @@ import { AgmDirectionModule } from '@node_modules/agm-direction';
     MostUsedOriginComponent,
     MostUsedDestinationsComponent,
     TrackingMapComponent,
+    NumberOfTotalCompletedTripsComponent,
+    CarrierInvoicesVsPaidInvoicesComponent,
   ],
   imports: [CommonModule, ChartModule, NgApexchartsModule, TableModule, AgmCoreModule, AgmDirectionModule],
   entryComponents: [CompletedTripsWidgetComponent, AcceptedVsRejecedRequestsComponent, CompletedTripVsPodComponent],
