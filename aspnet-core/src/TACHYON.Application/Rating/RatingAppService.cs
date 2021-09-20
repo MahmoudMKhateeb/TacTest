@@ -41,24 +41,15 @@ namespace TACHYON.Rating
         [RequiresFeature(AppFeatures.Shipper)]
         public async Task CreateCarrierRatingByShipper(CreateCarrierRatingByShipperDto input)
         {
-            //var rate=ObjectMapper.Map<RatingLog>(input);
-            //rate.RateType = RateType.CarrierByShipper;
-            //rate.ShipperId = AbpSession.TenantId;
-
-            //await CheckIfRateBefore(rate);
-            //await _ratingRepository.InsertAndGetIdAsync(rate);
             await ValidateAndCreateRating(input, RateType.CarrierByShipper);
         }
 
-        public async Task CreateDriverRatingByReceiver(CreateDriverRatingByReceiverDto input)
+        public async Task CreateDriverAndDERatingByReceiver(CreateDriverAndDERatingByReceiverDto input)
         {
-            await ValidateAndCreateRating(input, RateType.DriverByReceiver);
+            await ValidateAndCreateRating(input.CreateDriverRatingByReceiverInput, RateType.DriverByReceiver);
+            await ValidateAndCreateRating(input.CreateDeliveryExpRateByReceiverInput, RateType.DEByReceiver);
         }
 
-        public async Task CreateDeliveryExpRatingByReceiver(CreateDeliveryExpRateByReceiverDto input)
-        {
-            await ValidateAndCreateRating(input, RateType.DEByReceiver);
-        }
         #endregion
 
         #region ShipperRating
