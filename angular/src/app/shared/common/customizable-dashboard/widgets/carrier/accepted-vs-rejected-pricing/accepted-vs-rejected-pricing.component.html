@@ -1,0 +1,25 @@
+<div class="row">
+  <div class="col-lg-12">
+    <!--begin::Card-->
+    <div class="card card-custom card-stretch">
+      <div class="card-header border-0">
+        <div class="card-title text-center">
+          <h3 class="card-label">Accepted vs Rejected Pricing</h3>
+        </div>
+      </div>
+      <div class="card-body p-1">
+        <div id="acceptedVsRejectedChart">
+          <apx-chart
+            [series]="chartOptions.series"
+            [chart]="chartOptions.chart"
+            [xaxis]="chartOptions.xaxis"
+            [stroke]="chartOptions.stroke"
+            [tooltip]="chartOptions.tooltip"
+            [dataLabels]="chartOptions.dataLabels"
+          ></apx-chart>
+        </div>
+      </div>
+    </div>
+    <!--end::Card-->
+  </div>
+</div>

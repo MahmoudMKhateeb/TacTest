@@ -27,6 +27,7 @@ import { MostUsedOriginComponent } from '@app/shared/common/customizable-dashboa
 import { MostUsedDestinationsComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/most-used-destinations/most-used-destinations.component';
 import { TrackingMapComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/tracking-map/tracking-map.component';
 import { CarrierInvoicesVsPaidInvoicesComponent } from '@app/shared/common/customizable-dashboard/widgets/carrier/invoices-vs-paid-invoices/invoices-vs-paid-invoices.component';
+import { AcceptedVsRejectedPricingComponent } from '@app/shared/common/customizable-dashboard/widgets/carrier/accepted-vs-rejected-pricing/accepted-vs-rejected-pricing.component';
 
 @Injectable({
   providedIn: 'root',
@@ -163,6 +164,13 @@ export class DashboardViewConfigurationService {
       4
     );
 
+    let carrierAcceptedVsRejected = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Carrier.CarrierAcceptedVsRejectedPricingWidget,
+      AcceptedVsRejectedPricingComponent,
+      4,
+      4
+    );
+
     //shipperPush
     this.WidgetViewDefinitions.push(completedTrips);
     this.WidgetViewDefinitions.push(acceptedVsRejectedRequestsWidget);
@@ -179,6 +187,7 @@ export class DashboardViewConfigurationService {
 
     //Carrier
     this.WidgetViewDefinitions.push(carrierInvoicesVsPaid);
+    this.WidgetViewDefinitions.push(carrierAcceptedVsRejected);
 
     this.WidgetViewDefinitions.push(generalStats);
     this.WidgetViewDefinitions.push(dailySales);
