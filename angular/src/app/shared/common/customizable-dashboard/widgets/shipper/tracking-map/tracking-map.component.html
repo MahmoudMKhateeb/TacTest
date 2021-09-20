@@ -1,0 +1,43 @@
+<!--begin::Body-->
+<div class="row bg-white p-2">
+  <div class="col-lg-12">
+    <agm-map minZoom="5" [zoom]="zoom" [latitude]="source1.lat" [longitude]="source1.lng" [scrollwheel]="false">
+      <agm-direction
+        [origin]="source1"
+        [destination]="dest1"
+        [waypoints]="waypoints1"
+        [renderOptions]="renderOptions1"
+        [markerOptions]="markerOptions"
+        [optimizeWaypoints]="false"
+      ></agm-direction>
+      <agm-direction
+        [origin]="source2"
+        [destination]="dest2"
+        [waypoints]="waypoints2"
+        [renderOptions]="renderOptions2"
+        [markerOptions]="markerOptions2"
+        [optimizeWaypoints]="false"
+      ></agm-direction>
+    </agm-map>
+  </div>
+  <div class="col-lg-12">
+    <p-table [value]="trips">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Source</th>
+          <th>Destination</th>
+          <th>status</th>
+          <th>WayBill Number</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-record>
+        <tr>
+          <td>{{ record.source }}</td>
+          <td>{{ record.dest }}</td>
+          <td>{{ record.status }}</td>
+          <td>{{ record.waybillNumber }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>

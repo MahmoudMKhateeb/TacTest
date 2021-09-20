@@ -23,6 +23,9 @@ import { RequestsInMarketPlaceComponent } from '@app/shared/common/customizable-
 import { NextInvoiceFrequancyDateComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/next-invoice-frequancy-date/next-invoice-frequancy-date.component';
 import { InvoiceDueDateComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/invoice-due-date/invoice-due-date.component';
 import { ShipperDueDateInDaysComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/shipper-due-date-in-days/shipper-due-date-in-days.component';
+import { MostUsedOriginComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/most-used-origin/most-used-origin.component';
+import { MostUsedDestinationsComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/most-used-destinations/most-used-destinations.component';
+import { TrackingMapComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/tracking-map/tracking-map.component';
 
 @Injectable({
   providedIn: 'root',
@@ -128,6 +131,29 @@ export class DashboardViewConfigurationService {
       4
     );
 
+    //9
+    let mostUsedOrigins = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Shipper.ShipperMostUsedOriginsWidget,
+      MostUsedOriginComponent,
+      4,
+      6
+    );
+
+    //9
+    let mostUsedDest = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Shipper.ShipperMostUsedDestinationsWidget,
+      MostUsedDestinationsComponent,
+      4,
+      6
+    );
+
+    let trackingMapOfShipper = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Shipper.ShipperTrackingMapWidget,
+      TrackingMapComponent,
+      8,
+      8
+    );
+
     //shipperPush
     this.WidgetViewDefinitions.push(completedTrips);
     this.WidgetViewDefinitions.push(acceptedVsRejectedRequestsWidget);
@@ -138,6 +164,9 @@ export class DashboardViewConfigurationService {
     this.WidgetViewDefinitions.push(nextInvoiceFrequancyDate);
     this.WidgetViewDefinitions.push(invoiceDueDate);
     this.WidgetViewDefinitions.push(dueDateInDays);
+    this.WidgetViewDefinitions.push(mostUsedOrigins);
+    this.WidgetViewDefinitions.push(mostUsedDest);
+    this.WidgetViewDefinitions.push(trackingMapOfShipper);
 
     this.WidgetViewDefinitions.push(generalStats);
     this.WidgetViewDefinitions.push(dailySales);

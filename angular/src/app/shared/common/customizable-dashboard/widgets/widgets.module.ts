@@ -14,6 +14,9 @@ import { InvoiceDueDateComponent } from './shipper/invoice-due-date/invoice-due-
 import { ShipperDueDateInDaysComponent } from './shipper/shipper-due-date-in-days/shipper-due-date-in-days.component';
 import { MostUsedOriginComponent } from './shipper/most-used-origin/most-used-origin.component';
 import { MostUsedDestinationsComponent } from './shipper/most-used-destinations/most-used-destinations.component';
+import { TrackingMapComponent } from './shipper/tracking-map/tracking-map.component';
+import { AgmCoreModule } from '@node_modules/@agm/core';
+import { AgmDirectionModule } from '@node_modules/agm-direction';
 
 @NgModule({
   declarations: [
@@ -28,8 +31,9 @@ import { MostUsedDestinationsComponent } from './shipper/most-used-destinations/
     ShipperDueDateInDaysComponent,
     MostUsedOriginComponent,
     MostUsedDestinationsComponent,
+    TrackingMapComponent,
   ],
-  imports: [CommonModule, ChartModule, NgApexchartsModule, TableModule],
+  imports: [CommonModule, ChartModule, NgApexchartsModule, TableModule, AgmCoreModule, AgmDirectionModule],
   entryComponents: [CompletedTripsWidgetComponent, AcceptedVsRejecedRequestsComponent, CompletedTripVsPodComponent],
 })
 export class WidgetsModule {}
