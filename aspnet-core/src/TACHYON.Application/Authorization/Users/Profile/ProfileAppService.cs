@@ -199,8 +199,13 @@ namespace TACHYON.Authorization.Users.Profile
         public async Task<GetTenantProfileInformationForViewDto> GetTenantProfileInformationForView(int tenantId)
          => await GetTenantProfileInformation(tenantId);
 
-        public async Task<GetTenantProfileInformationForEditDto> GetTenantProfileInformationForEdit(int tenantId)
-            => ObjectMapper.Map<GetTenantProfileInformationForEditDto>(await GetTenantProfileInformation(tenantId));
+        public async Task<GetTenantProfileInformationForEditDto> GetTenantProfileInformationForEdit()
+        {
+            if (!AbpSession.TenantId.HasValue)
+                throw new UserFriendlyException(L("YouDontHaveAccessToThisPage"));
+
+            return ObjectMapper.Map<GetTenantProfileInformationForEditDto>(await GetTenantProfileInformation(AbpSession.TenantId.Value));
+        }
 
         [AbpAuthorize(AppPermissions.Pages_Tenant_ProfileManagement)]
         public async Task UpdateTenantProfileInformation(UpdateTenantProfileInformationInputDto input)

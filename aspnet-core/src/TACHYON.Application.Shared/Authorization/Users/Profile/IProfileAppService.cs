@@ -40,7 +40,7 @@ namespace TACHYON.Authorization.Users.Profile
 
         Task<GetTenantProfileInformationForViewDto> GetTenantProfileInformationForView(int tenantId);
 
-        Task<GetTenantProfileInformationForEditDto> GetTenantProfileInformationForEdit(int tenantId);
+        Task<GetTenantProfileInformationForEditDto> GetTenantProfileInformationForEdit();
 
         Task UpdateTenantProfileInformation(UpdateTenantProfileInformationInputDto input);
 
