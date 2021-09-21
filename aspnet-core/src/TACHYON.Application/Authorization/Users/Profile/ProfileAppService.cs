@@ -545,6 +545,11 @@ namespace TACHYON.Authorization.Users.Profile
             );
         }
 
+        public async Task<bool> IsProfileCompleted(int tenantId)
+        {
+            var tenant = await TenantManager.GetByIdAsync(tenantId);
+            return (!tenant.Description.IsNullOrEmpty() && !tenant.Website.IsNullOrEmpty());
+        }
         private async Task<byte[]> GetProfilePictureByIdOrNull(Guid profilePictureId)
         {
             var file = await _binaryObjectManager.GetOrNullAsync(profilePictureId);
@@ -573,7 +578,6 @@ namespace TACHYON.Authorization.Users.Profile
             var profileInformation = ObjectMapper.Map<GetTenantProfileInformationForViewDto>(tenant);
             profileInformation.Rating = 4.5;
             profileInformation.CompanyEmailAddress = await GetCompanyEmailAddress(tenantId);
-            profileInformation.IsProfileCompleted = (!tenant.Website.IsNullOrEmpty() && !tenant.Description.IsNullOrEmpty());
             return profileInformation;
         }
 

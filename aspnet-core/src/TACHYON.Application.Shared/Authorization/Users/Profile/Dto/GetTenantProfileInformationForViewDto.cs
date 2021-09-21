@@ -4,6 +4,5 @@
     {
         public double? Rating { get; set; }
 
-        public bool IsProfileCompleted { get; set; }
     }
 }
