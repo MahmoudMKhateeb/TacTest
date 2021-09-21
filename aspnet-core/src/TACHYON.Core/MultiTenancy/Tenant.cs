@@ -47,8 +47,12 @@ namespace TACHYON.MultiTenancy
         [StringLength(12)]
         public string AccountNumber { get; set; }
         [StringLength(12)]
-        public string ContractNumber { get; set; } 
+        public string ContractNumber { get; set; }
         public SubscriptionPaymentType SubscriptionPaymentType { get; set; }
+
+        public string Website { get; set; }
+
+        public string Description { get; set; }
 
         protected Tenant()
         {
