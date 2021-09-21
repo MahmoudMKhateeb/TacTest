@@ -34,11 +34,18 @@ using TACHYON.Configuration;
 using TACHYON.Features;
 using TACHYON.Friendships;
 using TACHYON.Gdpr;
+using TACHYON.Invoices.PaymentMethods;
 using TACHYON.Net.Sms;
 using TACHYON.Security;
+using TACHYON.Shipping.ShippingRequestTrips;
+using TACHYON.Shipping.Trips;
 using TACHYON.Storage;
 using TACHYON.Timing;
 using TACHYON.Trucks;
+using TACHYON.Trucks.TrucksTypes;
+using TACHYON.Trucks.TrucksTypes.Dtos;
+using TACHYON.Vases;
+using TACHYON.Vases.Dtos;
 
 namespace TACHYON.Authorization.Users.Profile
 {
@@ -56,7 +63,12 @@ namespace TACHYON.Authorization.Users.Profile
         private readonly IBackgroundJobManager _backgroundJobManager;
         private readonly ProfileImageServiceFactory _profileImageServiceFactory;
         private readonly IRepository<User, long> _lookupUserRepository;
+        private readonly IRepository<ShippingRequestTrip> _lookupTripRepository;
+        private readonly IRepository<Facility, long> _lookupFacilityRepository;
+        private readonly IRepository<InvoicePaymentMethod> _lookupPaymentMethodRepository;
+        private readonly IRepository<TrucksType, long> _lookupTruckTypeRepository;
         private readonly IRepository<Truck, long> _lookupTruckRepository;
+        private readonly IRepository<VasPrice> _lookupVasPriceRepository;
 
         public ProfileAppService(
             IAppFolders appFolders,
@@ -70,6 +82,11 @@ namespace TACHYON.Authorization.Users.Profile
             IBackgroundJobManager backgroundJobManager,
             ProfileImageServiceFactory profileImageServiceFactory,
             IRepository<User, long> lookupUserRepository,
+            IRepository<ShippingRequestTrip> lookupTripRepository,
+            IRepository<Facility, long> lookupFacilityRepository,
+            IRepository<InvoicePaymentMethod> lookupPaymentMethodRepository,
+            IRepository<TrucksType, long> lookupTruckTypeRepository,
+            IRepository<VasPrice> lookupVasPriceRepository,
             IRepository<Truck, long> lookupTruckRepository)
         {
             _binaryObjectManager = binaryObjectManager;
@@ -82,7 +99,11 @@ namespace TACHYON.Authorization.Users.Profile
             _backgroundJobManager = backgroundJobManager;
             _profileImageServiceFactory = profileImageServiceFactory;
             _lookupUserRepository = lookupUserRepository;
+            _lookupTripRepository = lookupTripRepository;
+            _lookupFacilityRepository = lookupFacilityRepository;
+            _lookupPaymentMethodRepository = lookupPaymentMethodRepository;
             _lookupTruckTypeRepository = lookupTruckTypeRepository;
+            _lookupVasPriceRepository = lookupVasPriceRepository;
             _lookupTruckRepository = lookupTruckRepository;
         }
 
@@ -199,7 +220,116 @@ namespace TACHYON.Authorization.Users.Profile
 
             }
         }
+        public async Task<int> GetShipmentCount()
+        {  // Two In One Service
+            var isShipper = await IsEnabledAsync(AppFeatures.Shipper);
+            var isCarrier = await IsEnabledAsync(AppFeatures.Carrier);
+
+            if (!isShipper && !isCarrier)
+                throw new UserFriendlyException(L("YouDontHaveAccess"));
+
+            var numberOfCompletedShipments = await _lookupTripRepository.GetAll()
+                .Where(x => x.Status == ShippingRequestTripStatus.Intransit
+                            || x.Status == ShippingRequestTripStatus.Delivered)
+                .WhereIf(isShipper, x => x.ShippingRequestFk.TenantId == AbpSession.TenantId)
+                .WhereIf(isCarrier, x => x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
+                .CountAsync();
+
+            return numberOfCompletedShipments;
+        }
+
         #endregion
+
+        #region ShipperServicesOnly
+
+        [RequiresFeature(AppFeatures.Shipper)]
+        public async Task<PagedResultDto<FacilityLocationListDto>> GetFacilitiesInformation(GetFacilitiesInformationInput input)
+        {
+            var shipperFacilities = (from facility in _lookupFacilityRepository.GetAll()
+                                     where facility.TenantId == AbpSession.TenantId
+                                     select facility)
+                .OrderBy(input.Sorting ?? "Id desc").PageBy(input);
+
+            var pageResult = await shipperFacilities.Select(x => new FacilityLocationListDto()
+            { Id = x.Id, Latitude = x.Location.Y, Longitude = x.Location.X }).ToListAsync();
+
+            var totalCount = await shipperFacilities.CountAsync();
+
+            return new PagedResultDto<FacilityLocationListDto>() { Items = pageResult, TotalCount = totalCount };
+        }
+
+        [RequiresFeature(AppFeatures.Shipper)]
+        public async Task<InvoicingInformationDto> GetInvoicingInformation()
+        {
+            if (AbpSession.TenantId == null)
+                throw new UserFriendlyException(L("YouDontHavePermission"));
+
+            var tenant = await TenantManager.GetByIdAsync(AbpSession.TenantId.Value);
+
+            var creditLimit = await FeatureChecker.GetValueAsync(AbpSession.TenantId.Value,
+                AppFeatures.ShipperCreditLimit);
+            var currentBalance = tenant.Balance - tenant.ReservedBalance;
+
+            var paymentMethodId = int.Parse(await FeatureChecker.GetValueAsync(AbpSession.TenantId.Value,
+                AppFeatures.InvoicePaymentMethod));
+            var paymentMethod = await _lookupPaymentMethodRepository.FirstOrDefaultAsync(paymentMethodId);
+
+            return new InvoicingInformationDto()
+            {
+                CreditLimit = creditLimit,
+                CreditType = paymentMethod.DisplayName,
+                CurrentBalance = currentBalance.ToString(CultureInfo.CurrentUICulture),
+                InvoicingDuePeriod = paymentMethod.InvoiceDueDateDays
+            };
+        }
+
+        #endregion
+
+        #region CarrierServicesOnly
+
+        [RequiresFeature(AppFeatures.Carrier)]
+        public async Task<FleetInformationDto> GetFleetInformation(GetFleetInformationInputDto input)
+        {
+            var availableTrucks = _lookupTruckTypeRepository.GetAll()
+                .Where(x => x.Translations.FirstOrDefault(i => i.Language.Contains(CultureInfo.CurrentUICulture.Name)) != null)
+                .Select(x => new TruckTypeAvailableTrucksDto()
+                {
+                    TruckType = x.Translations.FirstOrDefault(i => i.Language.Contains(CultureInfo.CurrentUICulture.Name))
+                        .TranslatedDisplayName,
+                    Id = x.Id,
+                    AvailableTrucksCount = _lookupTruckRepository.GetAll()
+                        .Count(t => t.TrucksTypeId == x.Id && t.TenantId == input.TenantId)
+                }).OrderBy(input.Sorting ?? "Id desc");
+
+            var pageResult = await availableTrucks.PageBy(input).ToListAsync();
+            var totalCount = await availableTrucks.CountAsync();
+            var driversCount = await _lookupUserRepository.CountAsync(x => x.TenantId == input.TenantId && x.IsDriver);
+
+            return new FleetInformationDto()
+            {
+                AvailableTrucksDto = new PagedResultDto<TruckTypeAvailableTrucksDto>()
+                { Items = pageResult, TotalCount = totalCount },
+                TotalDrivers = driversCount
+            };
+        }
+
+        [RequiresFeature(AppFeatures.Carrier)]
+        public async Task<PagedResultDto<AvailableVasDto>> GetAvailableVases(GetAvailableVasesInputDto input)
+        {
+            // Ask if Need (Domain Service)
+            var availableVases = _lookupVasPriceRepository.GetAll()
+                .Where(x => x.TenantId == input.CarrierTenantId)
+                .Select(x => ObjectMapper.Map<AvailableVasDto>(x))
+                .OrderBy(input.Sorting ?? "Id desc");
+
+            var pageResult = await availableVases.PageBy(input).ToListAsync();
+            var totalCount = await availableVases.CountAsync();
+
+            return new PagedResultDto<AvailableVasDto>() { Items = pageResult, TotalCount = totalCount };
+        }
+
+        #endregion
+
         public async Task UpdateCurrentUserProfile(CurrentUserProfileEditDto input)
         {
             var user = await GetCurrentUserAsync();

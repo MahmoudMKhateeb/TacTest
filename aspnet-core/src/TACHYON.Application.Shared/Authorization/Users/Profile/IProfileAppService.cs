@@ -1,9 +1,10 @@
 ﻿using Abp.Application.Services;
-using System;
+using Abp.Application.Services.Dto;
 using System.Threading.Tasks;
+using TACHYON.AddressBook.Dtos;
 using TACHYON.Authorization.Users.Dto;
 using TACHYON.Authorization.Users.Profile.Dto;
-using TACHYON.Dto;
+using TACHYON.Vases.Dtos;
 
 namespace TACHYON.Authorization.Users.Profile
 {
@@ -42,5 +43,15 @@ namespace TACHYON.Authorization.Users.Profile
         Task<GetTenantProfileInformationForEditDto> GetTenantProfileInformationForEdit(int tenantId);
 
         Task UpdateTenantProfileInformation(UpdateTenantProfileInformationInputDto input);
+
+        Task<int> GetShipmentCount();
+
+        Task<PagedResultDto<FacilityLocationListDto>> GetFacilitiesInformation(GetFacilitiesInformationInput input);
+
+        Task<InvoicingInformationDto> GetInvoicingInformation();
+
+        Task<FleetInformationDto> GetFleetInformation(GetFleetInformationInputDto input);
+
+        Task<PagedResultDto<AvailableVasDto>> GetAvailableVases(GetAvailableVasesInputDto input);
     }
 }

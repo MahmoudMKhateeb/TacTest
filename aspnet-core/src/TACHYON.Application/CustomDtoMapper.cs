@@ -238,6 +238,16 @@ namespace TACHYON
             configuration.CreateMap<ShippingRequestVasDto, ShippingRequestVas>().ReverseMap();
             configuration.CreateMap<CreateOrEditVasPriceDto, VasPrice>().ReverseMap();
             configuration.CreateMap<VasPriceDto, VasPrice>().ReverseMap();
+            // Need To Improve The Way Of Get Translation
+            configuration.CreateMap<VasPrice, AvailableVasDto>()
+                .ForMember(x => x.VasName, x =>
+                    x.MapFrom(i =>
+                        i.VasFk.Translations.FirstOrDefault(t =>
+                            CultureInfo.CurrentUICulture.Name.Contains(t.Language)) != null
+                            ? i.VasFk.Translations
+                                .FirstOrDefault(t => CultureInfo.CurrentUICulture.Name.Contains(t.Language)).DisplayName
+                            : i.VasFk.Name));
+
             configuration.CreateMap<Vas, GetVasForEditOutput>()
                 .ForMember(x => x.Vas, x
                     => x.MapFrom(i => i));
