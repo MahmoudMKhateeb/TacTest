@@ -38,6 +38,7 @@ using TACHYON.Net.Sms;
 using TACHYON.Security;
 using TACHYON.Storage;
 using TACHYON.Timing;
+using TACHYON.Trucks;
 
 namespace TACHYON.Authorization.Users.Profile
 {
@@ -177,6 +178,27 @@ namespace TACHYON.Authorization.Users.Profile
         public async Task<GetTenantProfileInformationForViewDto> GetTenantProfileInformationForView(int tenantId)
          => await GetTenantProfileInformation(tenantId);
 
+        public async Task<GetTenantProfileInformationForEditDto> GetTenantProfileInformationForEdit(int tenantId)
+            => ObjectMapper.Map<GetTenantProfileInformationForEditDto>(await GetTenantProfileInformation(tenantId));
+
+        [AbpAuthorize(AppPermissions.Pages_Tenant_ProfileManagement)]
+        public async Task UpdateTenantProfileInformation(UpdateTenantProfileInformationInputDto input)
+        {
+            if (!AbpSession.TenantId.HasValue || AbpSession.TenantId != input.TenantId)
+                throw new UserFriendlyException(L("YouDontHaveAccessToThisPage"));
+
+            var tenant = await TenantManager.GetByIdAsync(input.TenantId);
+            var updatedTenant = ObjectMapper.Map(input, tenant);
+            await TenantManager.UpdateAsync(updatedTenant);
+            var oldEmail = await GetCompanyEmailAddress(input.TenantId);
+            if (!input.CompanyEmailAddress.Equals(oldEmail))
+            {
+                var user = await UserManager.GetUserByEmailAsync(oldEmail);
+                user.EmailAddress = input.CompanyEmailAddress;
+                user.IsEmailConfirmed = false;
+
+            }
+        }
         #endregion
         public async Task UpdateCurrentUserProfile(CurrentUserProfileEditDto input)
         {

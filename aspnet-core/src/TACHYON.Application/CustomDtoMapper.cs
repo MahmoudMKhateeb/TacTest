@@ -514,6 +514,15 @@ namespace TACHYON
                 .ForMember(x => x.CompanyEmailAddress, x => x.Ignore())
                 .ForMember(x => x.CompanySite, x => x.MapFrom(i => i.Website));
             configuration.CreateMap<GetTenantProfileInformationForViewDto, GetTenantProfileInformationForEditDto>();
+            configuration.CreateMap<UpdateTenantProfileInformationInputDto, Tenant>()
+                .ForMember(x => x.MobileNo, x =>
+                      x.MapFrom(i => i.CompanyPhone))
+                .ForMember(x => x.Website, x =>
+                      x.MapFrom(i => i.CompanySite))
+                .ForMember(x => x.Description, x =>
+                      x.MapFrom(i => i.CompanyInfo))
+                .ForMember(x => x.companyName, x =>
+                      x.MapFrom(i => i.CompanyName));
             configuration.CreateMap<TenantEditDto, Tenant>().ReverseMap();
             configuration.CreateMap<CurrentTenantInfoDto, Tenant>().ReverseMap();
 

@@ -1,4 +1,4 @@
-using Abp.Application.Services;
+﻿using Abp.Application.Services;
 using System;
 using System.Threading.Tasks;
 using TACHYON.Authorization.Users.Dto;
@@ -38,5 +38,9 @@ namespace TACHYON.Authorization.Users.Profile
         Task PrepareCollectedData();
 
         Task<GetTenantProfileInformationForViewDto> GetTenantProfileInformationForView(int tenantId);
+
+        Task<GetTenantProfileInformationForEditDto> GetTenantProfileInformationForEdit(int tenantId);
+
+        Task UpdateTenantProfileInformation(UpdateTenantProfileInformationInputDto input);
     }
 }
