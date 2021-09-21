@@ -1,9 +1,14 @@
 using Abp;
+using Abp.Application.Features;
+using Abp.Application.Services.Dto;
 using Abp.Auditing;
 using Abp.Authorization;
+using Abp.Authorization.Users;
 using Abp.BackgroundJobs;
 using Abp.Configuration;
+using Abp.Domain.Repositories;
 using Abp.Extensions;
+using Abp.Linq.Extensions;
 using Abp.Localization;
 using Abp.Runtime.Caching;
 using Abp.Runtime.Session;
@@ -11,15 +16,22 @@ using Abp.Timing;
 using Abp.UI;
 using Abp.Zero.Configuration;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
+using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using TACHYON.AddressBook;
+using TACHYON.AddressBook.Dtos;
 using TACHYON.Authentication.TwoFactor.Google;
 using TACHYON.Authorization.Users.Dto;
 using TACHYON.Authorization.Users.Profile.Cache;
 using TACHYON.Authorization.Users.Profile.Dto;
 using TACHYON.Configuration;
+using TACHYON.Features;
 using TACHYON.Friendships;
 using TACHYON.Gdpr;
 using TACHYON.Net.Sms;
@@ -42,6 +54,8 @@ namespace TACHYON.Authorization.Users.Profile
         private readonly ITempFileCacheManager _tempFileCacheManager;
         private readonly IBackgroundJobManager _backgroundJobManager;
         private readonly ProfileImageServiceFactory _profileImageServiceFactory;
+        private readonly IRepository<User, long> _lookupUserRepository;
+        private readonly IRepository<Truck, long> _lookupTruckRepository;
 
         public ProfileAppService(
             IAppFolders appFolders,
@@ -53,7 +67,9 @@ namespace TACHYON.Authorization.Users.Profile
             ICacheManager cacheManager,
             ITempFileCacheManager tempFileCacheManager,
             IBackgroundJobManager backgroundJobManager,
-            ProfileImageServiceFactory profileImageServiceFactory)
+            ProfileImageServiceFactory profileImageServiceFactory,
+            IRepository<User, long> lookupUserRepository,
+            IRepository<Truck, long> lookupTruckRepository)
         {
             _binaryObjectManager = binaryObjectManager;
             _timeZoneService = timezoneService;
@@ -64,6 +80,9 @@ namespace TACHYON.Authorization.Users.Profile
             _tempFileCacheManager = tempFileCacheManager;
             _backgroundJobManager = backgroundJobManager;
             _profileImageServiceFactory = profileImageServiceFactory;
+            _lookupUserRepository = lookupUserRepository;
+            _lookupTruckTypeRepository = lookupTruckTypeRepository;
+            _lookupTruckRepository = lookupTruckRepository;
         }
 
         [DisableAuditing]
@@ -154,6 +173,11 @@ namespace TACHYON.Authorization.Users.Profile
                 AbpSession.ToUserIdentifier());
         }
 
+        #region SharedServices_Shipper_And_Carrier
+        public async Task<GetTenantProfileInformationForViewDto> GetTenantProfileInformationForView(int tenantId)
+         => await GetTenantProfileInformation(tenantId);
+
+        #endregion
         public async Task UpdateCurrentUserProfile(CurrentUserProfileEditDto input)
         {
             var user = await GetCurrentUserAsync();
@@ -288,9 +312,20 @@ namespace TACHYON.Authorization.Users.Profile
         }
 
         [DisableAuditing]
-        public async Task<GetProfilePictureOutput> GetProfilePicture()
+        public async Task<GetProfilePictureOutput> GetProfilePicture(long? userId)
         {
-            using (var profileImageService = await _profileImageServiceFactory.Get(AbpSession.ToUserIdentifier()))
+            UserIdentifier userIdentifier;
+            if (!(userId is null))
+            {
+                var tenantId = await (from user in _lookupUserRepository.GetAll()
+                                      where user.Id == userId
+                                      select user.TenantId).FirstOrDefaultAsync();
+
+                userIdentifier = new UserIdentifier(tenantId, userId.Value);
+            }
+            else userIdentifier = AbpSession.ToUserIdentifier();
+
+            using (var profileImageService = await _profileImageServiceFactory.Get(userIdentifier))
             {
                 var profilePictureContent = await profileImageService.Object.GetProfilePictureContentForUser(
                     AbpSession.ToUserIdentifier()
@@ -378,6 +413,24 @@ namespace TACHYON.Authorization.Users.Profile
             }
 
             return new GetProfilePictureOutput(Convert.ToBase64String(bytes));
+        }
+
+        private async Task<GetTenantProfileInformationForViewDto> GetTenantProfileInformation(int tenantId)
+        {
+            var tenant = await TenantManager.GetByIdAsync(tenantId);
+            var profileInformation = ObjectMapper.Map<GetTenantProfileInformationForViewDto>(tenant);
+            profileInformation.Rating = 4.5;
+            profileInformation.CompanyEmailAddress = await GetCompanyEmailAddress(tenantId);
+            profileInformation.IsProfileCompleted = (!tenant.Website.IsNullOrEmpty() && !tenant.Description.IsNullOrEmpty());
+            return profileInformation;
+        }
+
+        private async Task<String> GetCompanyEmailAddress(int tenantId)
+        {
+            DisableTenancyFilters();
+            return await (from user in _lookupUserRepository.GetAll()
+                          where user.TenantId == tenantId && user.UserName == AbpUserBase.AdminUserName
+                          select user.EmailAddress).FirstOrDefaultAsync();
         }
     }
 }

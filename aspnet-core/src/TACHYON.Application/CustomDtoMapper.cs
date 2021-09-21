@@ -1,5 +1,3 @@
-﻿using TACHYON.Goods.Dtos;
-using TACHYON.Goods;
 using Abp.Application.Editions;
 using Abp.Application.Features;
 using Abp.Application.Services.Dto;
@@ -61,6 +59,8 @@ using TACHYON.Editions.Dto;
 using TACHYON.Friendships;
 using TACHYON.Friendships.Cache;
 using TACHYON.Friendships.Dto;
+using TACHYON.Goods;
+using TACHYON.Goods.Dtos;
 using TACHYON.Goods.GoodCategories;
 using TACHYON.Goods.GoodCategories.Dtos;
 using TACHYON.Goods.GoodsDetails;
@@ -506,6 +506,14 @@ namespace TACHYON
             configuration.CreateMap<Tenant, RecentTenant>();
             configuration.CreateMap<Tenant, TenantLoginInfoDto>();
             configuration.CreateMap<Tenant, TenantListDto>();
+            configuration.CreateMap<Tenant, GetTenantProfileInformationForViewDto>()
+                .ForMember(x => x.CompanyName, x => x.MapFrom(i => i.companyName))
+                .ForMember(x => x.CompanyInfo, x => x.MapFrom(i => i.Description))
+                .ForMember(x => x.CompanyPhone, x => x.MapFrom(i => i.MobileNo))
+                // .ForMember(x => x.Rating, x => x.MapFrom(i => i.Rate))
+                .ForMember(x => x.CompanyEmailAddress, x => x.Ignore())
+                .ForMember(x => x.CompanySite, x => x.MapFrom(i => i.Website));
+            configuration.CreateMap<GetTenantProfileInformationForViewDto, GetTenantProfileInformationForEditDto>();
             configuration.CreateMap<TenantEditDto, Tenant>().ReverseMap();
             configuration.CreateMap<CurrentTenantInfoDto, Tenant>().ReverseMap();
 

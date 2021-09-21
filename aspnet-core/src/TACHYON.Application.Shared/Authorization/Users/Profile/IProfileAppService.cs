@@ -1,4 +1,4 @@
-﻿using Abp.Application.Services;
+using Abp.Application.Services;
 using System;
 using System.Threading.Tasks;
 using TACHYON.Authorization.Users.Dto;
@@ -19,7 +19,7 @@ namespace TACHYON.Authorization.Users.Profile
 
         Task<GetPasswordComplexitySettingOutput> GetPasswordComplexitySetting();
 
-        Task<GetProfilePictureOutput> GetProfilePicture();
+        Task<GetProfilePictureOutput> GetProfilePicture(long? userId);
 
         Task<GetProfilePictureOutput> GetProfilePictureByUser(long userId);
 
@@ -36,5 +36,7 @@ namespace TACHYON.Authorization.Users.Profile
         Task VerifySmsCode(VerifySmsCodeInputDto input);
 
         Task PrepareCollectedData();
+
+        Task<GetTenantProfileInformationForViewDto> GetTenantProfileInformationForView(int tenantId);
     }
 }
