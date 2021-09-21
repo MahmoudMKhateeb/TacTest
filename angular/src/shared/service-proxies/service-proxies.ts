@@ -54364,6 +54364,50 @@ export interface ISmsSettingsEditDto {
     unifonicNotificationSenderId: string | undefined;
 }
 
+export class EditionSettingsDto implements IEditionSettingsDto {
+    tachyonEditionId!: string | undefined;
+    carrierEditionId!: string | undefined;
+    shipperEditionId!: string | undefined;
+
+    constructor(data?: IEditionSettingsDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.tachyonEditionId = _data["tachyonEditionId"];
+            this.carrierEditionId = _data["carrierEditionId"];
+            this.shipperEditionId = _data["shipperEditionId"];
+        }
+    }
+
+    static fromJS(data: any): EditionSettingsDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new EditionSettingsDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["tachyonEditionId"] = this.tachyonEditionId;
+        data["carrierEditionId"] = this.carrierEditionId;
+        data["shipperEditionId"] = this.shipperEditionId;
+        return data; 
+    }
+}
+
+export interface IEditionSettingsDto {
+    tachyonEditionId: string | undefined;
+    carrierEditionId: string | undefined;
+    shipperEditionId: string | undefined;
+}
+
 export class HostSettingsEditDto implements IHostSettingsEditDto {
     general!: GeneralSettingsEditDto;
     userManagement!: HostUserManagementSettingsEditDto;
@@ -54374,6 +54418,7 @@ export class HostSettingsEditDto implements IHostSettingsEditDto {
     otherSettings!: OtherSettingsEditDto;
     externalLoginProviderSettings!: ExternalLoginProviderSettingsEditDto;
     smsSettings!: SmsSettingsEditDto;
+    editionSettings!: EditionSettingsDto;
 
     constructor(data?: IHostSettingsEditDto) {
         if (data) {
@@ -54389,6 +54434,7 @@ export class HostSettingsEditDto implements IHostSettingsEditDto {
             this.tenantManagement = new TenantManagementSettingsEditDto();
             this.security = new SecuritySettingsEditDto();
             this.smsSettings = new SmsSettingsEditDto();
+            this.editionSettings = new EditionSettingsDto();
         }
     }
 
@@ -54403,6 +54449,7 @@ export class HostSettingsEditDto implements IHostSettingsEditDto {
             this.otherSettings = _data["otherSettings"] ? OtherSettingsEditDto.fromJS(_data["otherSettings"]) : <any>undefined;
             this.externalLoginProviderSettings = _data["externalLoginProviderSettings"] ? ExternalLoginProviderSettingsEditDto.fromJS(_data["externalLoginProviderSettings"]) : <any>undefined;
             this.smsSettings = _data["smsSettings"] ? SmsSettingsEditDto.fromJS(_data["smsSettings"]) : new SmsSettingsEditDto();
+            this.editionSettings = _data["editionSettings"] ? EditionSettingsDto.fromJS(_data["editionSettings"]) : new EditionSettingsDto();
         }
     }
 
@@ -54424,6 +54471,7 @@ export class HostSettingsEditDto implements IHostSettingsEditDto {
         data["otherSettings"] = this.otherSettings ? this.otherSettings.toJSON() : <any>undefined;
         data["externalLoginProviderSettings"] = this.externalLoginProviderSettings ? this.externalLoginProviderSettings.toJSON() : <any>undefined;
         data["smsSettings"] = this.smsSettings ? this.smsSettings.toJSON() : <any>undefined;
+        data["editionSettings"] = this.editionSettings ? this.editionSettings.toJSON() : <any>undefined;
         return data; 
     }
 }
@@ -54438,6 +54486,7 @@ export interface IHostSettingsEditDto {
     otherSettings: OtherSettingsEditDto;
     externalLoginProviderSettings: ExternalLoginProviderSettingsEditDto;
     smsSettings: SmsSettingsEditDto;
+    editionSettings: EditionSettingsDto;
 }
 
 export class TestUnifonicSmsInput implements ITestUnifonicSmsInput {

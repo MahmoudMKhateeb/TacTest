@@ -1,6 +1,7 @@
 ﻿using Abp.Auditing;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using Abp.Extensions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -96,6 +97,20 @@ namespace TACHYON.Trucks
         public PlateType PlateTypeFk { get; set; }
 
         public virtual ICollection<DocumentFile> DocumentFiles { get; set; }
+
+        #region Helper
+
+        /// <summary>
+        /// Get truck display name used in DDLs 
+        /// </summary>
+        /// <returns></returns>
+        public string GetDisplayName()
+        {
+            return PlateNumber + (ModelName.IsNullOrEmpty() ? "" : " _ " + ModelName)
+                               + (Capacity.IsNullOrEmpty() ? "" : " _ " + Capacity);
+        }
+
+        #endregion
 
 
     }

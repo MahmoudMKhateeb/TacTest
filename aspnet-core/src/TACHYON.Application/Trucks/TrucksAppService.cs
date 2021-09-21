@@ -409,11 +409,12 @@ namespace TACHYON.Trucks
         public async Task<List<SelectItemDto>> GetAllCarrierTrucksByTruckTypeForDropDown(long truckTypeId)
         {
             return await _truckRepository.GetAll()
-                .Where(x=> x.TrucksTypeId == truckTypeId).Select(x => new SelectItemDto
-            { 
-                DisplayName = x.PlateNumber + "-" + x.ModelName,
-                Id = x.Id.ToString()
-            }).ToListAsync();
+                .Where(x => x.TrucksTypeId == truckTypeId)
+                .Select(x => new SelectItemDto
+                {
+                    DisplayName = x.GetDisplayName(),
+                    Id = x.Id.ToString()
+                }).ToListAsync();
         }
 
         public async Task<List<SelectItemDto>> GetAllDriversForDropDown()
