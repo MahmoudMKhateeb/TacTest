@@ -15,7 +15,7 @@ export class AcceptedVsRejectedPricingComponent implements OnInit {
         {
           name: 'Rejected',
           data: [34, 52, 41, 28, 51, 11, 32, 45, 32, 42, 109, 100],
-          color: '#adad85',
+          color: '#78786c',
         },
         {
           name: 'Accepted',
@@ -35,7 +35,7 @@ export class AcceptedVsRejectedPricingComponent implements OnInit {
       },
       xaxis: {
         type: 'category',
-        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
+        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
       },
       tooltip: {
         x: {

@@ -2,25 +2,20 @@ import { Component, OnInit } from '@angular/core';
 import { ChartOptionsBars } from '@app/shared/common/customizable-dashboard/widgets/ApexInterfaces';
 
 @Component({
-  selector: 'app-invoices-vs-paid-invoices',
-  templateUrl: './invoices-vs-paid-invoices.component.html',
-  styleUrls: ['./invoices-vs-paid-invoices.component.css'],
+  selector: 'app-most-used-vases',
+  templateUrl: './most-used-vases.component.html',
+  styleUrls: ['./most-used-vases.component.css'],
 })
-export class CarrierInvoicesVsPaidInvoicesComponent implements OnInit {
+export class MostUsedVasesComponent implements OnInit {
   public chartOptions: Partial<ChartOptionsBars>;
 
   ngOnInit() {
     this.chartOptions = {
       series: [
         {
-          name: 'Invoices',
+          name: 'UseCount',
           data: [44, 55, 57, 56, 61, 58, 63, 60, 66],
-          color: '#78786c',
-        },
-        {
-          name: 'Paid Invoices',
-          data: [76, 85, 101, 98, 87, 105, 91, 114, 94],
-          color: '#BB2929D8',
+          color: 'rgba(187, 41, 41, 0.847)',
         },
       ],
       chart: {
@@ -42,22 +37,11 @@ export class CarrierInvoicesVsPaidInvoicesComponent implements OnInit {
         colors: ['transparent'],
       },
       xaxis: {
-        categories: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+        categories: ['VAS', 'VAS2', 'VAS3', 'VAS4', 'VAS5', 'VAS6', 'VAS8', 'VAS9', 'VAS10'],
       },
-      yaxis: {
-        title: {
-          text: '$ (thousands)',
-        },
-      },
+
       fill: {
         opacity: 1,
-      },
-      tooltip: {
-        y: {
-          formatter: function (val) {
-            return '$ ' + val + ' thousands';
-          },
-        },
       },
     };
   }

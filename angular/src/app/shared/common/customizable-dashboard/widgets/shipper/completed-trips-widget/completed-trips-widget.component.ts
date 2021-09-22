@@ -17,6 +17,7 @@ export class CompletedTripsWidgetComponent extends WidgetComponentBase {
         {
           name: 'Trips',
           data: [10, 41, 35, 51, 49, 62, 69, 91, 148],
+          color: '#801e1e',
         },
       ],
       chart: {
