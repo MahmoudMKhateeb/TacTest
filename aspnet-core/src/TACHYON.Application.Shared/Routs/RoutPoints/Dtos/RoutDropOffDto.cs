@@ -25,11 +25,11 @@ namespace TACHYON.Routs.RoutPoints.Dtos
         public string Note { get; set; }
         public bool IsDeliveryNoteUploaded { get; set; }
         public List<GoodsDetailDto> GoodsDetailListDto { get; set; }
+        public long? WaybillNumber { get; set; }
 
+        // public double TotalWeight { get; set; }
 
-       // public double TotalWeight { get; set; }
-
-       // public string UnitOfMeasure { get; set; } = "Kg";
+        // public string UnitOfMeasure { get; set; } = "Kg";
 
         //to do receiver attribute
     }
