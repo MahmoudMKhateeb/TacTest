@@ -363,10 +363,11 @@ namespace TACHYON.Authorization.Users
             //Update roles
 
 
-            var userRoles = await UserManager.GetRolesAsync(user);
-            if (!input.AssignedRoleNames.Except(userRoles).IsNullOrEmpty()
-                || !userRoles.Except(input.AssignedRoleNames).IsNullOrEmpty())
+            if (!user.IsDriver)
+            {
                 CheckErrors(await UserManager.SetRolesAsync(user, input.AssignedRoleNames));
+
+            }
 
             //update organization units
             await UserManager.SetOrganizationUnitsAsync(user, input.OrganizationUnits.ToArray());
