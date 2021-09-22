@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Injector, Input, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, Output, ViewChild } from '@angular/core';
 import { AppConsts } from '@shared/AppConsts';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import {
@@ -11,11 +11,9 @@ import {
   ProfileServiceProxy,
   SelectItemDto,
   UserEditDto,
-  UserRoleDto,
   UserServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { ModalDirective } from 'ngx-bootstrap/modal';
-import * as _ from 'lodash';
 import { finalize } from 'rxjs/operators';
 import { DateFormatterService } from '@app/shared/common/hijri-gregorian-datepicker/date-formatter.service';
 import { NgForm } from '@angular/forms';
@@ -59,9 +57,7 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
   isEmailValid = true;
   isPhoneNumberAvilable = true;
   user: UserEditDto = new UserEditDto();
-  roles: UserRoleDto[];
   sendActivationEmail = true;
-  setRandomPassword = true;
   passwordComplexityInfo = '';
   profilePicture: string;
   createOrEditDocumentFileDtos!: CreateOrEditDocumentFileDto[];
@@ -97,14 +93,12 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
   show(userId?: number): void {
     if (!userId) {
       this.active = true;
-      this.setRandomPassword = true;
       this.sendActivationEmail = true;
     }
     this.getDriverNationalites();
     this._userService.getUserForEdit(userId).subscribe((userResult) => {
       this.user = userResult.user;
       this.user.isDriver = this.creatDriver;
-      this.roles = userResult.roles;
       this.canChangeUserName = this.user.userName !== AppConsts.userManagement.defaultAdminUserName;
       this.allOrganizationUnits = userResult.allOrganizationUnits;
       this.memberedOrganizationUnits = userResult.memberedOrganizationUnits;
@@ -113,10 +107,6 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
 
       if (userId) {
         this.active = true;
-
-        setTimeout(() => {
-          this.setRandomPassword = true;
-        }, 0);
 
         this.sendActivationEmail = false;
         this.selectedDate = this.dateFormatterService.MomentToNgbDateStruct(userResult.user.dateOfBirth);
@@ -175,15 +165,8 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
     let input = new CreateOrUpdateUserInput();
 
     input.user = this.user;
-    input.setRandomPassword = this.setRandomPassword;
+    input.setRandomPassword = this.user.id == null;
     input.sendActivationEmail = this.sendActivationEmail;
-    input.assignedRoleNames = _.map(
-      _.filter(this.roles, {
-        isAssigned: true,
-        inheritedFromOrganizationUnit: false,
-      }),
-      (role) => role.roleName
-    );
     input.user.phoneNumber = input.user.userName;
     //#616
     if (!input.user.emailAddress) {
@@ -256,10 +239,6 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
         this.profilePicture = this.appRootUrl() + 'assets/common/images/default-profile-picture.png';
       }
     });
-  }
-
-  getAssignedRoleCount(): number {
-    return _.filter(this.roles, { isAssigned: true }).length;
   }
 
   CheckIfDriverPhoneNumberIsValid(phoneNumber: string, id: number) {
