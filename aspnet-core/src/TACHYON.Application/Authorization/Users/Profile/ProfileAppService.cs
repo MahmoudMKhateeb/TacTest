@@ -1,4 +1,5 @@
 using Abp;
+using Abp.Application.Editions;
 using Abp.Application.Features;
 using Abp.Application.Services.Dto;
 using Abp.Auditing;
@@ -30,6 +31,7 @@ using TACHYON.Authentication.TwoFactor.Google;
 using TACHYON.Authorization.Users.Dto;
 using TACHYON.Authorization.Users.Profile.Cache;
 using TACHYON.Authorization.Users.Profile.Dto;
+using TACHYON.Cities;
 using TACHYON.Configuration;
 using TACHYON.Features;
 using TACHYON.Friendships;
@@ -69,6 +71,8 @@ namespace TACHYON.Authorization.Users.Profile
         private readonly IRepository<TrucksType, long> _lookupTruckTypeRepository;
         private readonly IRepository<Truck, long> _lookupTruckRepository;
         private readonly IRepository<VasPrice> _lookupVasPriceRepository;
+        private readonly IRepository<Edition> _lookupEditionRepository;
+        private readonly IRepository<City> _lookupCityRepository;
 
         public ProfileAppService(
             IAppFolders appFolders,
@@ -87,7 +91,9 @@ namespace TACHYON.Authorization.Users.Profile
             IRepository<InvoicePaymentMethod> lookupPaymentMethodRepository,
             IRepository<TrucksType, long> lookupTruckTypeRepository,
             IRepository<VasPrice> lookupVasPriceRepository,
-            IRepository<Truck, long> lookupTruckRepository)
+            IRepository<Truck, long> lookupTruckRepository,
+            IRepository<Edition> lookupEditionRepository,
+            IRepository<City> lookupCityRepository)
         {
             _binaryObjectManager = binaryObjectManager;
             _timeZoneService = timezoneService;
@@ -105,6 +111,8 @@ namespace TACHYON.Authorization.Users.Profile
             _lookupTruckTypeRepository = lookupTruckTypeRepository;
             _lookupVasPriceRepository = lookupVasPriceRepository;
             _lookupTruckRepository = lookupTruckRepository;
+            _lookupEditionRepository = lookupEditionRepository;
+            _lookupCityRepository = lookupCityRepository;
         }
 
         [DisableAuditing]
@@ -196,27 +204,35 @@ namespace TACHYON.Authorization.Users.Profile
         }
 
         #region SharedServices_Shipper_And_Carrier
-        public async Task<GetTenantProfileInformationForViewDto> GetTenantProfileInformationForView(int tenantId)
-         => await GetTenantProfileInformation(tenantId);
+        public async Task<TenantProfileInformationForViewDto> GetTenantProfileInformationForView(int tenantId)
+        {
+            var profile = await GetTenantProfileInformation(tenantId);
+            var profileForView = ObjectMapper.Map<TenantProfileInformationForViewDto>(profile);
+            profileForView.TenancyName = await _lookupEditionRepository.GetAll()
+                .Where(x => x.Id == profile.EditionId)
+                .Select(x => x.DisplayName).FirstOrDefaultAsync();
+            profileForView.CityName = await GetCityNameAsync(profile.CityId);
+            profileForView.CountryName = await GetCountryNameAsync(profile.CountryId);
+            return profileForView;
+        }
 
-        public async Task<GetTenantProfileInformationForEditDto> GetTenantProfileInformationForEdit()
+        public async Task<UpdateTenantProfileInformationInputDto> GetTenantProfileInformationForEdit()
         {
             if (!AbpSession.TenantId.HasValue)
                 throw new UserFriendlyException(L("YouDontHaveAccessToThisPage"));
-
-            return ObjectMapper.Map<GetTenantProfileInformationForEditDto>(await GetTenantProfileInformation(AbpSession.TenantId.Value));
+            return ObjectMapper.Map<UpdateTenantProfileInformationInputDto>(await GetTenantProfileInformation(AbpSession.TenantId.Value));
         }
 
         [AbpAuthorize(AppPermissions.Pages_Tenant_ProfileManagement)]
         public async Task UpdateTenantProfileInformation(UpdateTenantProfileInformationInputDto input)
         {
-            if (!AbpSession.TenantId.HasValue || AbpSession.TenantId != input.TenantId)
+            if (!AbpSession.TenantId.HasValue || AbpSession.TenantId != input.Id)
                 throw new UserFriendlyException(L("YouDontHaveAccessToThisPage"));
 
-            var tenant = await TenantManager.GetByIdAsync(input.TenantId);
+            var tenant = await TenantManager.GetByIdAsync(input.Id);
             var updatedTenant = ObjectMapper.Map(input, tenant);
             await TenantManager.UpdateAsync(updatedTenant);
-            var oldEmail = await GetCompanyEmailAddress(input.TenantId);
+            var oldEmail = await GetCompanyEmailAddress(input.Id);
             if (!input.CompanyEmailAddress.Equals(oldEmail))
             {
                 var user = await UserManager.GetUserByEmailAsync(oldEmail);
@@ -577,15 +593,35 @@ namespace TACHYON.Authorization.Users.Profile
             return new GetProfilePictureOutput(Convert.ToBase64String(bytes));
         }
 
-        private async Task<GetTenantProfileInformationForViewDto> GetTenantProfileInformation(int tenantId)
+        private async Task<TenantProfileInformationDto> GetTenantProfileInformation(int tenantId)
         {
             var tenant = await TenantManager.GetByIdAsync(tenantId);
-            var profileInformation = ObjectMapper.Map<GetTenantProfileInformationForViewDto>(tenant);
-            profileInformation.Rating = 4.5;
+            var profileInformation = ObjectMapper.Map<TenantProfileInformationDto>(tenant);
             profileInformation.CompanyEmailAddress = await GetCompanyEmailAddress(tenantId);
+            profileInformation.Rating = 4.2;
             return profileInformation;
         }
 
+        private async Task<string> GetCityNameAsync(int cityId)
+        {
+            var cityName = await (from city in _lookupCityRepository.GetAll()
+                                  where city.Id == cityId
+                                  select city.Translations.FirstOrDefault(x => x.Language.Contains(CultureInfo.CurrentUICulture.Name)) != null ?
+                                      city.Translations.FirstOrDefault(x => x.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName
+                                  : city.DisplayName).FirstOrDefaultAsync();
+            return cityName;
+        }
+
+        private async Task<string> GetCountryNameAsync(int countryId)
+        {
+            var countryName = await (from city in _lookupCityRepository.GetAll()
+                                     where city.CountyId == countryId
+                                     select city.CountyFk.Translations.FirstOrDefault(x =>
+                                         x.Language.Contains(CultureInfo.CurrentUICulture.Name)) != null
+                                         ? city.CountyFk.Translations.FirstOrDefault(x => x.Language.Contains(CultureInfo.CurrentUICulture.Name))
+                                             .TranslatedDisplayName : city.CountyFk.DisplayName).FirstOrDefaultAsync();
+            return countryName;
+        }
         private async Task<String> GetCompanyEmailAddress(int tenantId)
         {
             DisableTenancyFilters();

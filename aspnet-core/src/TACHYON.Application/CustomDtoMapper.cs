@@ -1,4 +1,4 @@
-using Abp.Application.Editions;
+﻿using Abp.Application.Editions;
 using Abp.Application.Features;
 using Abp.Application.Services.Dto;
 using Abp.Auditing;
@@ -516,14 +516,14 @@ namespace TACHYON
             configuration.CreateMap<Tenant, RecentTenant>();
             configuration.CreateMap<Tenant, TenantLoginInfoDto>();
             configuration.CreateMap<Tenant, TenantListDto>();
-            configuration.CreateMap<Tenant, GetTenantProfileInformationForViewDto>()
+            configuration.CreateMap<Tenant, TenantProfileInformationDto>()
                 .ForMember(x => x.CompanyName, x => x.MapFrom(i => i.companyName))
                 .ForMember(x => x.CompanyInfo, x => x.MapFrom(i => i.Description))
                 .ForMember(x => x.CompanyPhone, x => x.MapFrom(i => i.MobileNo))
                 // .ForMember(x => x.Rating, x => x.MapFrom(i => i.Rate))
-                .ForMember(x => x.CompanyEmailAddress, x => x.Ignore())
                 .ForMember(x => x.CompanySite, x => x.MapFrom(i => i.Website));
-            configuration.CreateMap<GetTenantProfileInformationForViewDto, GetTenantProfileInformationForEditDto>();
+            configuration.CreateMap<TenantProfileInformationDto, UpdateTenantProfileInformationInputDto>();
+            configuration.CreateMap<TenantProfileInformationDto, TenantProfileInformationForViewDto>();
             configuration.CreateMap<UpdateTenantProfileInformationInputDto, Tenant>()
                 .ForMember(x => x.MobileNo, x =>
                       x.MapFrom(i => i.CompanyPhone))

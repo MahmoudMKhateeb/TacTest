@@ -38,9 +38,9 @@ namespace TACHYON.Authorization.Users.Profile
 
         Task PrepareCollectedData();
 
-        Task<GetTenantProfileInformationForViewDto> GetTenantProfileInformationForView(int tenantId);
+        Task<TenantProfileInformationForViewDto> GetTenantProfileInformationForView(int tenantId);
 
-        Task<GetTenantProfileInformationForEditDto> GetTenantProfileInformationForEdit();
+        Task<UpdateTenantProfileInformationInputDto> GetTenantProfileInformationForEdit();
 
         Task UpdateTenantProfileInformation(UpdateTenantProfileInformationInputDto input);
 
