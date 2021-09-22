@@ -19,6 +19,7 @@ using Abp.Zero.Configuration;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -266,17 +267,14 @@ namespace TACHYON.Authorization.Users.Profile
         [RequiresFeature(AppFeatures.Shipper)]
         public async Task<PagedResultDto<FacilityLocationListDto>> GetFacilitiesInformation(GetFacilitiesInformationInput input)
         {
-            var shipperFacilities = (from facility in _lookupFacilityRepository.GetAll()
-                                     where facility.TenantId == AbpSession.TenantId
-                                     select facility)
-                .OrderBy(input.Sorting ?? "Id desc").PageBy(input);
+            var shipperFacilities = _lookupFacilityRepository.GetAll()
+                .AsNoTracking().Include(x => x.CityFk)
+                .Where(x => x.TenantId == AbpSession.TenantId)
 
-            var pageResult = await shipperFacilities.Select(x => new FacilityLocationListDto()
-            { Id = x.Id, Latitude = x.Location.Y, Longitude = x.Location.X }).ToListAsync();
-
+                .OrderBy(input.Sorting ?? "Id desc");
+            var facilities = await shipperFacilities.PageBy(input).ToListAsync();
             var totalCount = await shipperFacilities.CountAsync();
-
-            return new PagedResultDto<FacilityLocationListDto>() { Items = pageResult, TotalCount = totalCount };
+            return new PagedResultDto<FacilityLocationListDto>() { Items = await ToFacilityLocationDto(facilities), TotalCount = totalCount };
         }
 
         [RequiresFeature(AppFeatures.Shipper)]
@@ -629,5 +627,22 @@ namespace TACHYON.Authorization.Users.Profile
                           where user.TenantId == tenantId && user.UserName == AbpUserBase.AdminUserName
                           select user.EmailAddress).FirstOrDefaultAsync();
         }
+
+        private async Task<List<FacilityLocationListDto>> ToFacilityLocationDto(List<Facility> facilities)
+        {
+            var pageResult = new List<FacilityLocationListDto>();
+
+            for (var i = 0; i < facilities.Count; i++)
+            {
+                var facility = facilities.ElementAt(i);
+                var dto = ObjectMapper.Map<FacilityLocationListDto>(facility);
+                dto.CityName = await GetCityNameAsync(facility.CityId);
+                dto.CountryName = await GetCityNameAsync(facility.CityFk.CountyId);
+                pageResult.Add(dto);
+            }
+
+            return pageResult;
+        }
+
     }
 }
