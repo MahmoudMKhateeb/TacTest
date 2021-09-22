@@ -28,6 +28,12 @@ import { MostUsedDestinationsComponent } from '@app/shared/common/customizable-d
 import { TrackingMapComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/tracking-map/tracking-map.component';
 import { CarrierInvoicesVsPaidInvoicesComponent } from '@app/shared/common/customizable-dashboard/widgets/carrier/invoices-vs-paid-invoices/invoices-vs-paid-invoices.component';
 import { AcceptedVsRejectedPricingComponent } from '@app/shared/common/customizable-dashboard/widgets/carrier/accepted-vs-rejected-pricing/accepted-vs-rejected-pricing.component';
+import { MostUsedVasesComponent } from '@app/shared/common/customizable-dashboard/widgets/carrier/most-used-vases/most-used-vases.component';
+import { MostWorkedWithShippersComponent } from '@app/shared/common/customizable-dashboard/widgets/carrier/most-worked-with-shippers/most-worked-with-shippers.component';
+import { MostUsedppComponent } from '@app/shared/common/customizable-dashboard/widgets/carrier/most-usedpp/most-usedpp.component';
+import { CarrierDocumentsDueDateinDaysComponent } from '@app/shared/common/customizable-dashboard/widgets/carrier/carrier-documents-due-datein-days/carrier-documents-due-datein-days.component';
+import { TucksActivityComponent } from '@app/shared/common/customizable-dashboard/widgets/carrier/tucks-activity/tucks-activity.component';
+import { DriversActivityComponent } from '@app/shared/common/customizable-dashboard/widgets/carrier/drivers-activity/drivers-activity.component';
 
 @Injectable({
   providedIn: 'root',
@@ -79,7 +85,7 @@ export class DashboardViewConfigurationService {
 
     //Shipper
     //1
-    let completedTrips = new WidgetViewDefinition(
+    let shippercompletedTrips = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.Shipper.ShipperNumberOfCompletedTripsWidget,
       CompletedTripsWidgetComponent
     );
@@ -170,9 +176,67 @@ export class DashboardViewConfigurationService {
       4,
       4
     );
+    let CarrierCompletedTrips = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Carrier.CarrierNumberOfCompletedTripsTotalMonthlyIncreaseWidget,
+      CompletedTripsWidgetComponent,
+      4,
+      4
+    );
 
+    let mostUsedVases = new WidgetViewDefinition(DashboardCustomizationConst.widgets.Carrier.CarrierMostUsedVasWidget, MostUsedVasesComponent, 4, 4);
+
+    let mostWorkedWithShippers = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Carrier.CarrierMostWorkedWithShipperWidget,
+      MostWorkedWithShippersComponent,
+      4,
+      4
+    );
+
+    let mostUsedPP = new WidgetViewDefinition(DashboardCustomizationConst.widgets.Carrier.CarrierMostUsedPpWidget, MostUsedppComponent, 4, 4);
+
+    let CarrierNextInvoice = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Carrier.CarrierNextInvoiceFrequenctEndDateWidget,
+      NextInvoiceFrequancyDateComponent,
+      4,
+      4
+    );
+
+    let CarrierDocumentsDueDate = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Carrier.CarrierDueDateInDaysWidget,
+      InvoiceDueDateComponent,
+      4,
+      4
+    );
+
+    let activeTrucks = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Carrier.CarrierTrucksActivityWidget,
+      TucksActivityComponent,
+      4,
+      4
+    );
+
+    let activeDrivers = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Carrier.CarrierDriversActivityWidget,
+      DriversActivityComponent,
+      4,
+      4
+    );
+
+    let nonActivTrucks = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Carrier.CarrierTrucksActivityWidget,
+      TucksActivityComponent,
+      4,
+      4
+    );
+
+    let nonActiveDrivers = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Carrier.CarrierDriversActivityWidget,
+      DriversActivityComponent,
+      4,
+      4
+    );
     //shipperPush
-    this.WidgetViewDefinitions.push(completedTrips);
+    this.WidgetViewDefinitions.push(shippercompletedTrips);
     this.WidgetViewDefinitions.push(acceptedVsRejectedRequestsWidget);
     this.WidgetViewDefinitions.push(shipperCompletedTripsVsPodWidget);
     this.WidgetViewDefinitions.push(shipperInvoicesVsPaidInvoices);
@@ -188,7 +252,18 @@ export class DashboardViewConfigurationService {
     //Carrier
     this.WidgetViewDefinitions.push(carrierInvoicesVsPaid);
     this.WidgetViewDefinitions.push(carrierAcceptedVsRejected);
+    this.WidgetViewDefinitions.push(CarrierCompletedTrips);
+    this.WidgetViewDefinitions.push(mostWorkedWithShippers);
+    this.WidgetViewDefinitions.push(mostUsedPP);
+    this.WidgetViewDefinitions.push(CarrierNextInvoice);
+    this.WidgetViewDefinitions.push(CarrierDocumentsDueDate);
+    this.WidgetViewDefinitions.push(activeTrucks);
+    this.WidgetViewDefinitions.push(activeDrivers);
+    this.WidgetViewDefinitions.push(nonActivTrucks);
+    this.WidgetViewDefinitions.push(nonActiveDrivers);
+    this.WidgetViewDefinitions.push(mostUsedVases);
 
+    //Host
     this.WidgetViewDefinitions.push(generalStats);
     this.WidgetViewDefinitions.push(dailySales);
     this.WidgetViewDefinitions.push(profitShare);

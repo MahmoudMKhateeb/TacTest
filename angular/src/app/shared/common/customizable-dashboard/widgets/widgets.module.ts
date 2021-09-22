@@ -20,6 +20,13 @@ import { AgmDirectionModule } from '@node_modules/agm-direction';
 import { NumberOfTotalCompletedTripsComponent } from './carrier/number-of-total-completed-trips/number-of-total-completed-trips.component';
 import { CarrierInvoicesVsPaidInvoicesComponent } from '@app/shared/common/customizable-dashboard/widgets/carrier/invoices-vs-paid-invoices/invoices-vs-paid-invoices.component';
 import { AcceptedVsRejectedPricingComponent } from './carrier/accepted-vs-rejected-pricing/accepted-vs-rejected-pricing.component';
+import { TucksActivityComponent } from './carrier/tucks-activity/tucks-activity.component';
+import { DriversActivityComponent } from './carrier/drivers-activity/drivers-activity.component';
+import { MostUsedppComponent } from './carrier/most-usedpp/most-usedpp.component';
+import { MostUsedVasesComponent } from './carrier/most-used-vases/most-used-vases.component';
+import { MostWorkedWithShippersComponent } from './carrier/most-worked-with-shippers/most-worked-with-shippers.component';
+import { CarrierNextInvoiceFrequenctEndComponent } from './carrier/carrier-next-invoice-frequenct-end/carrier-next-invoice-frequenct-end.component';
+import { CarrierDocumentsDueDateinDaysComponent } from './carrier/carrier-documents-due-datein-days/carrier-documents-due-datein-days.component';
 
 @NgModule({
   declarations: [
@@ -38,8 +45,38 @@ import { AcceptedVsRejectedPricingComponent } from './carrier/accepted-vs-reject
     NumberOfTotalCompletedTripsComponent,
     CarrierInvoicesVsPaidInvoicesComponent,
     AcceptedVsRejectedPricingComponent,
+    TucksActivityComponent,
+    DriversActivityComponent,
+    MostUsedppComponent,
+    MostUsedVasesComponent,
+    MostWorkedWithShippersComponent,
+    CarrierNextInvoiceFrequenctEndComponent,
+    CarrierDocumentsDueDateinDaysComponent,
   ],
   imports: [CommonModule, ChartModule, NgApexchartsModule, TableModule, AgmCoreModule, AgmDirectionModule],
-  entryComponents: [CompletedTripsWidgetComponent, AcceptedVsRejecedRequestsComponent, CompletedTripVsPodComponent],
+  entryComponents: [
+    CompletedTripsWidgetComponent,
+    CompletedTripVsPodComponent,
+    AcceptedVsRejecedRequestsComponent,
+    InvoicesVsPaidInvoicesComponent,
+    MostWorkedWithCarriersComponent,
+    RequestsInMarketPlaceComponent,
+    NextInvoiceFrequancyDateComponent,
+    InvoiceDueDateComponent,
+    ShipperDueDateInDaysComponent,
+    MostUsedOriginComponent,
+    MostUsedDestinationsComponent,
+    TrackingMapComponent,
+    NumberOfTotalCompletedTripsComponent,
+    CarrierInvoicesVsPaidInvoicesComponent,
+    AcceptedVsRejectedPricingComponent,
+    TucksActivityComponent,
+    DriversActivityComponent,
+    MostUsedppComponent,
+    MostUsedVasesComponent,
+    MostWorkedWithShippersComponent,
+    CarrierNextInvoiceFrequenctEndComponent,
+    CarrierDocumentsDueDateinDaysComponent,
+  ],
 })
 export class WidgetsModule {}
