@@ -44,11 +44,11 @@ namespace TACHYON.Authorization.Users.Profile
 
         Task UpdateTenantProfileInformation(UpdateTenantProfileInformationInputDto input);
 
-        Task<int> GetShipmentCount();
+        Task<int> GetShipmentCount(int tenantId);
 
         Task<PagedResultDto<FacilityLocationListDto>> GetFacilitiesInformation(GetFacilitiesInformationInput input);
 
-        Task<InvoicingInformationDto> GetInvoicingInformation();
+        Task<InvoicingInformationDto> GetInvoicingInformation(int tenantId);
 
         Task<FleetInformationDto> GetFleetInformation(GetFleetInformationInputDto input);
 

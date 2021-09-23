@@ -242,7 +242,7 @@ namespace TACHYON.Authorization.Users.Profile
 
             }
         }
-        public async Task<int> GetShipmentCount()
+        public async Task<int> GetShipmentCount(int tenantId)
         {  // Two In One Service
             var isShipper = await IsEnabledAsync(AppFeatures.Shipper);
             var isCarrier = await IsEnabledAsync(AppFeatures.Carrier);
@@ -253,8 +253,8 @@ namespace TACHYON.Authorization.Users.Profile
             var numberOfCompletedShipments = await _lookupTripRepository.GetAll()
                 .Where(x => x.Status == ShippingRequestTripStatus.Intransit
                             || x.Status == ShippingRequestTripStatus.Delivered)
-                .WhereIf(isShipper, x => x.ShippingRequestFk.TenantId == AbpSession.TenantId)
-                .WhereIf(isCarrier, x => x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
+                .WhereIf(isShipper, x => x.ShippingRequestFk.TenantId == tenantId)
+                .WhereIf(isCarrier, x => x.ShippingRequestFk.CarrierTenantId == tenantId)
                 .CountAsync();
 
             return numberOfCompletedShipments;
@@ -269,27 +269,25 @@ namespace TACHYON.Authorization.Users.Profile
         {
             var shipperFacilities = _lookupFacilityRepository.GetAll()
                 .AsNoTracking().Include(x => x.CityFk)
-                .Where(x => x.TenantId == AbpSession.TenantId)
-
+                .Where(x => x.TenantId == input.TenantId)
                 .OrderBy(input.Sorting ?? "Id desc");
+
             var facilities = await shipperFacilities.PageBy(input).ToListAsync();
             var totalCount = await shipperFacilities.CountAsync();
             return new PagedResultDto<FacilityLocationListDto>() { Items = await ToFacilityLocationDto(facilities), TotalCount = totalCount };
         }
 
         [RequiresFeature(AppFeatures.Shipper)]
-        public async Task<InvoicingInformationDto> GetInvoicingInformation()
+        public async Task<InvoicingInformationDto> GetInvoicingInformation(int tenantId)
         {
-            if (AbpSession.TenantId == null)
-                throw new UserFriendlyException(L("YouDontHavePermission"));
 
-            var tenant = await TenantManager.GetByIdAsync(AbpSession.TenantId.Value);
+            var tenant = await TenantManager.GetByIdAsync(tenantId);
 
-            var creditLimit = await FeatureChecker.GetValueAsync(AbpSession.TenantId.Value,
+            var creditLimit = await FeatureChecker.GetValueAsync(tenantId,
                 AppFeatures.ShipperCreditLimit);
             var currentBalance = tenant.Balance - tenant.ReservedBalance;
 
-            var paymentMethodId = int.Parse(await FeatureChecker.GetValueAsync(AbpSession.TenantId.Value,
+            var paymentMethodId = int.Parse(await FeatureChecker.GetValueAsync(tenantId,
                 AppFeatures.InvoicePaymentMethod));
             var paymentMethod = await _lookupPaymentMethodRepository.FirstOrDefaultAsync(paymentMethodId);
 
