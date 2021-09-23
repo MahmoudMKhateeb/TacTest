@@ -9,6 +9,7 @@ const routes: Routes = [
     path: ':id',
     component: ProfileComponent,
     children: [
+      { path: '', redirectTo: 'view', pathMatch: 'full' },
       { path: 'complete', component: CompleteProfileComponent },
       { path: 'view', component: TenantsProfileComponent },
     ],
