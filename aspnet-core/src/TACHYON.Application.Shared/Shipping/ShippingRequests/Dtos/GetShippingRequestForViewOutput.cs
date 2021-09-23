@@ -40,5 +40,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public decimal? CarrierPrice { get; set; }
         public string CarrierName { get; set; }
 
+        public int TenantId { get; set; }
+
     }
 }

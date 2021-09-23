@@ -36,7 +36,7 @@ namespace TACHYON.PriceOffers.Dto
         public string BidStatusTitle { get; set; }
         public string DirectRequestStatusTitle { get; set; }
         public ShippingRequestRouteType RouteTypeId { get; set; }
-        public string RouteType { get { return RouteTypeId.GetEnumDescription(); }}
+        public string RouteType { get { return RouteTypeId.GetEnumDescription(); } }
         public decimal? Price { get; set; }
 
         public string ReferenceNumber { get; set; }
@@ -45,6 +45,8 @@ namespace TACHYON.PriceOffers.Dto
         public string requestTypeTitle { get { return requestType.GetEnumDescription(); } }
 
         public bool IsDrafted { get; set; }
+
+        public int TenantId { get; set; }
     }
- 
+
 }
