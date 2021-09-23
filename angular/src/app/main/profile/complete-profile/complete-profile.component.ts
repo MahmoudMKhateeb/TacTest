@@ -29,4 +29,10 @@ export class CompleteProfileComponent implements OnInit {
       }
     });
   }
+  /**
+   * change Profile Picture
+   */
+  changeProfilePicture() {
+    abp.event.trigger('app.show.changeProfilePictureModal');
+  }
 }
