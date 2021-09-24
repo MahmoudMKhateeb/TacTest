@@ -4,12 +4,12 @@
     <!--begin::Header-->
     <div class="card-header py-3">
       <div class="card-title align-items-start flex-column">
-        <h3 class="card-label font-weight-bolder text-dark">Personal Information</h3>
+        <h3 class="card-label font-weight-bolder text-danger">{{ l('PersonalInformation') }}</h3>
         <span class="text-muted font-weight-bold font-size-sm mt-1">Update your personal informaiton</span>
       </div>
       <div class="card-toolbar">
-        <button type="submit" class="btn btn-success mr-2">Save Changes</button>
-        <button type="reset" class="btn btn-secondary" routerLink="/app/main/profile">Skip</button>
+        <button type="submit" class="btn btn-primary mr-2" (click)="save()" [buttonBusy]="saving">{{ l('SaveChanges') }}</button>
+        <button type="reset" class="btn btn-secondary" routerLink="/app/main/dashboard">{{ l('Skip') }}</button>
         <!--        <button class="btn btn-lg btn-primary fw-bolder" >Skip</button>-->
       </div>
     </div>
@@ -21,11 +21,11 @@
         <div class="row">
           <label class="col-xl-3"></label>
           <div class="col-lg-9 col-xl-6">
-            <h5 class="font-weight-bold mb-6">Customer Info</h5>
+            <h5 class="font-weight-bold mb-6 text-danger">{{ l('CustomerInfo') }}</h5>
           </div>
         </div>
         <div class="form-group row">
-          <label class="col-xl-3 col-lg-3 col-form-label">Avatar</label>
+          <label class="col-xl-3 col-lg-3 col-form-label">{{ l('Avatar') }}</label>
           <div class="col-lg-9 col-xl-6">
             <div class="image-input image-input-outline" id="kt_profile_avatar" style="background-image: url({{ profilePicture }})">
               <div class="image-input-wrapper" style="background-image: url({{ profilePicture }})"></div>
@@ -45,16 +45,22 @@
         </div>
 
         <div class="form-group row">
-          <label class="col-xl-3 col-lg-3 col-form-label">Company Name</label>
+          <label class="col-xl-3 col-lg-3 col-form-label">{{ l('CompanyName') }}</label>
           <div class="col-lg-9 col-xl-6">
-            <input class="form-control form-control-lg form-control-solid" type="text" value="Loop Inc." />
-            <span class="form-text text-muted">If you want your invoices addressed to a company. Leave blank to use your full name.</span>
+            <input class="form-control form-control-lg form-control-solid" type="text" [(ngModel)]="completeFiled.companyName" name="CompanyName" />
           </div>
         </div>
         <div class="form-group row">
-          <label class="col-xl-3 col-lg-3 col-form-label">Company Name</label>
+          <label class="col-xl-3 col-lg-3 col-form-label">{{ l('CompanyDescription') }}</label>
           <div class="col-lg-9 col-xl-6">
-            <textarea class="form-control form-control-lg form-control-solid" type="text" value="Loop Inc." cols="30" rows="10"></textarea>
+            <textarea
+              class="form-control form-control-lg form-control-solid"
+              type="text"
+              cols="30"
+              rows="10"
+              [(ngModel)]="completeFiled.companyInfo"
+              name="CompanyDescription"
+            ></textarea>
             <span class="form-text text-muted">a short description about the Company.</span>
           </div>
         </div>
@@ -62,11 +68,11 @@
         <div class="row">
           <label class="col-xl-3"></label>
           <div class="col-lg-9 col-xl-6">
-            <h5 class="font-weight-bold mt-10 mb-6">Contact Info</h5>
+            <h5 class="font-weight-bold mt-10 mb-6 text-danger">{{ l('ContactInfo') }}</h5>
           </div>
         </div>
         <div class="form-group row">
-          <label class="col-xl-3 col-lg-3 col-form-label">Contact Phone</label>
+          <label class="col-xl-3 col-lg-3 col-form-label">{{ l('ContactPhone') }}</label>
           <div class="col-lg-9 col-xl-6">
             <div class="input-group input-group-lg input-group-solid">
               <div class="input-group-prepend">
@@ -74,13 +80,18 @@
                   <i class="la la-phone"></i>
                 </span>
               </div>
-              <input type="text" class="form-control form-control-lg form-control-solid" value="+35278953712" placeholder="Phone" />
+              <input
+                type="text"
+                class="form-control form-control-lg form-control-solid"
+                placeholder="Phone"
+                name="ContactPhone"
+                [(ngModel)]="completeFiled.companyPhone"
+              />
             </div>
-            <span class="form-text text-muted">We'll never share your email with anyone else.</span>
           </div>
         </div>
         <div class="form-group row">
-          <label class="col-xl-3 col-lg-3 col-form-label">Email Address</label>
+          <label class="col-xl-3 col-lg-3 col-form-label">{{ l('EmailAddress') }}</label>
           <div class="col-lg-9 col-xl-6">
             <div class="input-group input-group-lg input-group-solid">
               <div class="input-group-prepend">
@@ -88,18 +99,27 @@
                   <i class="la la-at"></i>
                 </span>
               </div>
-              <input type="text" class="form-control form-control-lg form-control-solid" value="nick.bold@loop.com" placeholder="Email" />
+              <input
+                type="text"
+                class="form-control form-control-lg form-control-solid"
+                [(ngModel)]="completeFiled.companyEmailAddress"
+                placeholder="Email"
+                name="EmailAddress"
+              />
             </div>
           </div>
         </div>
         <div class="form-group row">
-          <label class="col-xl-3 col-lg-3 col-form-label">Company Site</label>
+          <label class="col-xl-3 col-lg-3 col-form-label">{{ l('CompanySite') }}</label>
           <div class="col-lg-9 col-xl-6">
             <div class="input-group input-group-lg input-group-solid">
-              <input type="text" class="form-control form-control-lg form-control-solid" placeholder="Username" value="loop" />
-              <div class="input-group-append">
-                <span class="input-group-text">.com</span>
-              </div>
+              <input
+                type="text"
+                class="form-control form-control-lg form-control-solid"
+                placeholder="Username"
+                [(ngModel)]="completeFiled.companySite"
+                name="CompanySite"
+              />
             </div>
           </div>
         </div>
