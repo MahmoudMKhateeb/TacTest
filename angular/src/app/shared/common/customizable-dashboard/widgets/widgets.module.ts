@@ -27,6 +27,20 @@ import { MostUsedVasesComponent } from './carrier/most-used-vases/most-used-vase
 import { MostWorkedWithShippersComponent } from './carrier/most-worked-with-shippers/most-worked-with-shippers.component';
 import { CarrierNextInvoiceFrequenctEndComponent } from './carrier/carrier-next-invoice-frequenct-end/carrier-next-invoice-frequenct-end.component';
 import { CarrierDocumentsDueDateinDaysComponent } from './carrier/carrier-documents-due-datein-days/carrier-documents-due-datein-days.component';
+import { NumberOfRegesterdTrucksComponent } from './host/number-of-regesterd-trucks/number-of-regesterd-trucks.component';
+import { NumberOfRegesterdDriversComponent } from './host/number-of-regesterd-drivers/number-of-regesterd-drivers.component';
+import { NumberOfRegesterdShippersComponent } from './host/number-of-regesterd-shippers/number-of-regesterd-shippers.component';
+import { OnGoingTripsComponent } from './host/on-going-trips/on-going-trips.component';
+import { DeleverdTripsComponent } from './host/deleverd-trips/deleverd-trips.component';
+import { NumberOfRegesterdCarriersComponent } from './host/number-of-regesterd-carriers/number-of-regesterd-carriers.component';
+import { HostNewAccountsChartComponent } from './host/host-new-accounts-chart/host-new-accounts-chart.component';
+import { HostNewTripsChartComponent } from './host/host-new-trips-chart/host-new-trips-chart.component';
+import { HostTruckTypeUsageChartComponent } from './host/host-truck-type-usage-chart/host-truck-type-usage-chart.component';
+import { HostGoodTypesUsageChartComponent } from './host/host-good-types-usage-chart/host-good-types-usage-chart.component';
+import { HostRouteTypeUsageChartComponent } from './host/host-route-type-usage-chart/host-route-type-usage-chart.component';
+import { HostRquestPricingMeterComponent } from './host/host-rquest-pricing-meter/host-rquest-pricing-meter.component';
+import { HostRquestAcceptanceMeterComponent } from './host/host-rquest-acceptance-meter/host-rquest-acceptance-meter.component';
+import { HostInvoicesMeterComponent } from './host/host-invoices-meter/host-invoices-meter.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +66,20 @@ import { CarrierDocumentsDueDateinDaysComponent } from './carrier/carrier-docume
     MostWorkedWithShippersComponent,
     CarrierNextInvoiceFrequenctEndComponent,
     CarrierDocumentsDueDateinDaysComponent,
+    NumberOfRegesterdTrucksComponent,
+    NumberOfRegesterdDriversComponent,
+    NumberOfRegesterdShippersComponent,
+    OnGoingTripsComponent,
+    DeleverdTripsComponent,
+    NumberOfRegesterdCarriersComponent,
+    HostNewAccountsChartComponent,
+    HostNewTripsChartComponent,
+    HostTruckTypeUsageChartComponent,
+    HostGoodTypesUsageChartComponent,
+    HostRouteTypeUsageChartComponent,
+    HostRquestPricingMeterComponent,
+    HostRquestAcceptanceMeterComponent,
+    HostInvoicesMeterComponent,
   ],
   imports: [CommonModule, ChartModule, NgApexchartsModule, TableModule, AgmCoreModule, AgmDirectionModule],
   entryComponents: [

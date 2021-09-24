@@ -10,6 +10,7 @@ import {
   ApexPlotOptions,
   ApexYAxis,
   ApexFill,
+  ApexNonAxisChartSeries,
   ApexLegend,
 } from '@node_modules/ng-apexcharts';
 
@@ -22,6 +23,15 @@ export interface ChartOptions {
   grid: ApexGrid;
   stroke: ApexStroke;
   title: ApexTitleSubtitle;
+}
+
+export interface MeterCharts {
+  series: ApexNonAxisChartSeries;
+  chart: ApexChart;
+  labels: string[];
+  plotOptions: ApexPlotOptions;
+  fill: ApexFill;
+  stroke: ApexStroke;
 }
 
 export interface ChartOptionsBars {

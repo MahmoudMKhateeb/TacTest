@@ -34,6 +34,18 @@ import { MostUsedppComponent } from '@app/shared/common/customizable-dashboard/w
 import { CarrierDocumentsDueDateinDaysComponent } from '@app/shared/common/customizable-dashboard/widgets/carrier/carrier-documents-due-datein-days/carrier-documents-due-datein-days.component';
 import { TucksActivityComponent } from '@app/shared/common/customizable-dashboard/widgets/carrier/tucks-activity/tucks-activity.component';
 import { DriversActivityComponent } from '@app/shared/common/customizable-dashboard/widgets/carrier/drivers-activity/drivers-activity.component';
+import { NumberOfRegesterdTrucksComponent } from '@app/shared/common/customizable-dashboard/widgets/host/number-of-regesterd-trucks/number-of-regesterd-trucks.component';
+import { NumberOfRegesterdShippersComponent } from '@app/shared/common/customizable-dashboard/widgets/host/number-of-regesterd-shippers/number-of-regesterd-shippers.component';
+import { OnGoingTripsComponent } from '@app/shared/common/customizable-dashboard/widgets/host/on-going-trips/on-going-trips.component';
+import { DeleverdTripsComponent } from '@app/shared/common/customizable-dashboard/widgets/host/deleverd-trips/deleverd-trips.component';
+import { NumberOfRegesterdCarriersComponent } from '@app/shared/common/customizable-dashboard/widgets/host/number-of-regesterd-carriers/number-of-regesterd-carriers.component';
+import { HostNewAccountsChartComponent } from '@app/shared/common/customizable-dashboard/widgets/host/host-new-accounts-chart/host-new-accounts-chart.component';
+import { HostNewTripsChartComponent } from '@app/shared/common/customizable-dashboard/widgets/host/host-new-trips-chart/host-new-trips-chart.component';
+import { HostTruckTypeUsageChartComponent } from '@app/shared/common/customizable-dashboard/widgets/host/host-truck-type-usage-chart/host-truck-type-usage-chart.component';
+import { HostGoodTypesUsageChartComponent } from '@app/shared/common/customizable-dashboard/widgets/host/host-good-types-usage-chart/host-good-types-usage-chart.component';
+import { HostRquestPricingMeterComponent } from '@app/shared/common/customizable-dashboard/widgets/host/host-rquest-pricing-meter/host-rquest-pricing-meter.component';
+import { HostRquestAcceptanceMeterComponent } from '@app/shared/common/customizable-dashboard/widgets/host/host-rquest-acceptance-meter/host-rquest-acceptance-meter.component';
+import { HostInvoicesMeterComponent } from '@app/shared/common/customizable-dashboard/widgets/host/host-invoices-meter/host-invoices-meter.component';
 
 @Injectable({
   providedIn: 'root',
@@ -69,19 +81,19 @@ export class DashboardViewConfigurationService {
     let topStats = new WidgetViewDefinition(DashboardCustomizationConst.widgets.tenant.topStats, WidgetTopStatsComponent);
     //add your tenant side widgets here
 
-    let incomeStatistics = new WidgetViewDefinition(DashboardCustomizationConst.widgets.host.incomeStatistics, WidgetIncomeStatisticsComponent);
-
+    // let incomeStatistics = new WidgetViewDefinition(DashboardCustomizationConst.widgets.host.incomeStatistics, WidgetIncomeStatisticsComponent);
+    //
     let editionStatistics = new WidgetViewDefinition(DashboardCustomizationConst.widgets.host.editionStatistics, WidgetEditionStatisticsComponent);
-
-    let recentTenants = new WidgetViewDefinition(DashboardCustomizationConst.widgets.host.recentTenants, WidgetRecentTenantsComponent);
-
-    let subscriptionExpiringTenants = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.host.subscriptionExpiringTenants,
-      WidgetSubscriptionExpiringTenantsComponent
-    );
-
-    let hostTopStats = new WidgetViewDefinition(DashboardCustomizationConst.widgets.host.topStats, WidgetHostTopStatsComponent);
-    //add your host side widgets here
+    //
+    // let recentTenants = new WidgetViewDefinition(DashboardCustomizationConst.widgets.host.recentTenants, WidgetRecentTenantsComponent);
+    //
+    // let subscriptionExpiringTenants = new WidgetViewDefinition(
+    //   DashboardCustomizationConst.widgets.host.subscriptionExpiringTenants,
+    //   WidgetSubscriptionExpiringTenantsComponent
+    // );
+    //
+    // let hostTopStats = new WidgetViewDefinition(DashboardCustomizationConst.widgets.host.topStats, WidgetHostTopStatsComponent);
+    // //add your host side widgets here
 
     //Shipper
     //1
@@ -235,6 +247,96 @@ export class DashboardViewConfigurationService {
       4,
       4
     );
+    //Host
+    let NumberOfRegisteredTrucks = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.TachyonDealerNumberOfRegisteredTrucksWidget,
+      NumberOfRegesterdTrucksComponent,
+      4,
+      4
+    );
+
+    let NumberOfRegisteredShippers = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.TachyonDealerNumberOfRegisteredShippersWidget,
+      NumberOfRegesterdShippersComponent,
+      4,
+      4
+    );
+
+    let onGoingTrips = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.TachyonDealerNumberOfOngoingTripsWidget,
+      OnGoingTripsComponent,
+      4,
+      4
+    );
+
+    let numberOfDeliveredTrips = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.TachyonDealerNumberOfDeliveredTripsWidget,
+      DeleverdTripsComponent,
+      4,
+      4
+    );
+
+    let numberOfRegisteredCarriers = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.TachyonDealerNumberOfRegisteredCarriersWidget,
+      NumberOfRegesterdCarriersComponent,
+      4,
+      4
+    );
+
+    let hostNewAccounts = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.TachyonDealerNewAccountsRegisteredWidget,
+      HostNewAccountsChartComponent,
+      4,
+      4
+    );
+    let hostNewTrips = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.TachyonDealerNewTripsWidget,
+      HostNewTripsChartComponent,
+      4,
+      4
+    );
+
+    let hostTruckTypesChart = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.TachyonDealerTruckTypeUsageWidget,
+      HostTruckTypeUsageChartComponent,
+      4,
+      4
+    );
+
+    let goodTypesUsage = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.TachyonDealerGoodTypesUsageWidget,
+      HostGoodTypesUsageChartComponent,
+      4,
+      4
+    );
+
+    let routeTypeUsage = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.TachyonDealerRouteTypesUsageWidget,
+      HostGoodTypesUsageChartComponent,
+      4,
+      4
+    );
+
+    let hostRequestPricedMeter = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.TachyonDealerRequestsPricingBeforeBidEndingWidget,
+      HostRquestPricingMeterComponent,
+      4,
+      4
+    );
+    let hostRequestAcceptanceMeter = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.TachyonDealerRequestsPriceAcceptanceWidget,
+      HostRquestAcceptanceMeterComponent,
+      4,
+      4
+    );
+
+    let hostInvoicePaidMeter = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.TachyonDealerInvoicesPaidBeforeDueDateWidget,
+      HostInvoicesMeterComponent,
+      4,
+      4
+    );
+
     //shipperPush
     this.WidgetViewDefinitions.push(shippercompletedTrips);
     this.WidgetViewDefinitions.push(acceptedVsRejectedRequestsWidget);
@@ -264,17 +366,25 @@ export class DashboardViewConfigurationService {
     this.WidgetViewDefinitions.push(mostUsedVases);
 
     //Host
-    this.WidgetViewDefinitions.push(generalStats);
-    this.WidgetViewDefinitions.push(dailySales);
-    this.WidgetViewDefinitions.push(profitShare);
-    this.WidgetViewDefinitions.push(memberActivity);
-    this.WidgetViewDefinitions.push(regionalStats);
-    this.WidgetViewDefinitions.push(salesSummary);
-    this.WidgetViewDefinitions.push(topStats);
-    this.WidgetViewDefinitions.push(incomeStatistics);
-    this.WidgetViewDefinitions.push(editionStatistics);
-    this.WidgetViewDefinitions.push(recentTenants);
-    this.WidgetViewDefinitions.push(subscriptionExpiringTenants);
-    this.WidgetViewDefinitions.push(hostTopStats);
+    //this.widgetFilterDefinitions.push(NumberOfRegisteredTrucks);
+    // this.WidgetViewDefinitions.push(topStats);
+    //this.WidgetViewDefinitions.push(editionStatistics);
+    this.WidgetViewDefinitions.push(NumberOfRegisteredTrucks);
+    this.WidgetViewDefinitions.push(NumberOfRegisteredShippers);
+    this.WidgetViewDefinitions.push(onGoingTrips);
+    this.WidgetViewDefinitions.push(numberOfDeliveredTrips);
+    this.WidgetViewDefinitions.push(numberOfRegisteredCarriers);
+
+    this.WidgetViewDefinitions.push(hostNewAccounts);
+    this.WidgetViewDefinitions.push(hostNewTrips);
+    this.WidgetViewDefinitions.push(hostTruckTypesChart);
+    this.WidgetViewDefinitions.push(goodTypesUsage);
+    this.WidgetViewDefinitions.push(routeTypeUsage);
+
+    this.WidgetViewDefinitions.push(hostRequestPricedMeter);
+    this.WidgetViewDefinitions.push(hostRequestAcceptanceMeter);
+    this.WidgetViewDefinitions.push(hostInvoicePaidMeter);
+    //console.log('WidgetViewDefinitions', this.WidgetViewDefinitions);
+    // this.widgetFilterDefinitions.push();
   }
 }

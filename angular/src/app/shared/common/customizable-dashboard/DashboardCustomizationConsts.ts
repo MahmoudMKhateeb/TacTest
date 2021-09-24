@@ -41,6 +41,38 @@ export class DashboardCustomizationConst {
     },
     //TachyonDealer Only Widgets
     TachyonDealer: {
+      // TachyonDealerNumberOfRegisteredTrucksWidget: 'Widgets_Tenant_TachyonDealer_NumberOfRegisteredTrucksWidget',
+      // TachyonDealerNumberOfRegisteredShippersWidget: 'Widgets_Tenant_TachyonDealer_NumberOfRegisteredShippersWidget',
+      // TachyonDealerNumberOfRegisteredCarriersWidget: 'Widgets_Tenant_TachyonDealer_NumberOfRegisteredCarriersWidget',
+      // TachyonDealerNewAccountsRegisteredWidget: 'Widgets_Tenant_TachyonDealer_NewAccountsRegisterdWidget',
+      // TachyonDealerNewTripsWidget: 'Widgets_Tenant_TachyonDealer_NewTripsWidget',
+      // TachyonDealerNumberOfDeliveredTripsWidget: 'Widgets_Tenant_TachyonDealer_NumberOfDeliverdTripsWidget',
+      // TachyonDealerNumberOfOngoingTripsWidget: 'Widgets_Tenant_TachyonDealer_NumberOfOngoingTripsWidget',
+      // TachyonDealerTruckTypeUsageWidget: 'Widgets_Tenant_TachyonDealer_TruckTypeUsageWidget',
+      // TachyonDealerGoodTypesUsageWidget: 'Widgets_Tenant_TachyonDealer_GoodTypesUsageWidget',
+      // TachyonDealerRouteTypesUsageWidget: 'Widgets_Tenant_TachyonDealer_RouteTypesUsageWidget',
+      // TachyonDealerMostRequestingShippersWidget: 'Widgets_Tenant_TachyonDealer_MostRequestingShippersWidget',
+      // TachyonDealerMostRequestedCarriersWidget: 'Widgets_Tenant_TachyonDealer_MostRequestedCarriersWidget',
+      // TachyonDealerTopRatedShippersWidget: 'Widgets_Tenant_TachyonDealer_TopRatedShippersWidget',
+      // TachyonDealerTopRatedCarriersWidget: 'Widgets_Tenant_TachyonDealer_TopRatedCarriersWidget',
+      // TachyonDealerWorstRatedShippersWidget: 'Widgets_Tenant_TachyonDealer_WorstRatedShippersWidget',
+      // TachyonDealerWorstRatedCarriersWidget: 'Widgets_Tenant_TachyonDealer_WorstRatedCarriersWidget',
+      // TachyonDealerUnPricedRequestsInMarketPlaceWidget: 'Widgets_Tenant_TachyonDealer_UnpricedRequestsInMarketPlaceWidget',
+      // TachyonDealerRequestsPricingBeforeBidEndingWidget: 'Widgets_Tenant_TachyonDealer_RequestsPricingBeforeBidEndingWidget',
+      // TachyonDealerRequestsPriceAcceptanceWidget: 'Widgets_Tenant_TachyonDealer_RequestsPriceAcceptanceWidget',
+      // TachyonDealerInvoicesPaidBeforeDueDateWidget: 'Widgets_Tenant_TachyonDealer_InvoicesPaidBeforeDureDateWidget',
+      // TachyonDealerNumberOfRequestsPerAreaOrCityWidget: 'Widgets_Tenant_TachyonDealer_NumberOfRequestsPerAreaOrCityWidget',
+      // TachyonDealerSearchableMapWidget: 'Widgets_Tenant_TachyonDealer_SearchableMapWidget',
+      // TachyonDealerRequestsHeatMapWidget: 'Widgets_Tenant_TachyonDealer_RequestsHeatMapWidget',
+      // TachyonDealerNormalVsRentalRequestsWidget: 'Widgets_Tenant_TachyonDealer_NormalVsRentalRequestsWidget',
+    },
+    //Widgets For Host Only
+    host: {
+      topStats: 'Widgets_Host_TopStats',
+      incomeStatistics: 'Widgets_Host_IncomeStatistics',
+      editionStatistics: 'Widgets_Host_EditionStatistics',
+      subscriptionExpiringTenants: 'Widgets_Host_SubscriptionExpiringTenants',
+      recentTenants: 'Widgets_Host_RecentTenants',
       TachyonDealerNumberOfRegisteredTrucksWidget: 'Widgets_Tenant_TachyonDealer_NumberOfRegisteredTrucksWidget',
       TachyonDealerNumberOfRegisteredShippersWidget: 'Widgets_Tenant_TachyonDealer_NumberOfRegisteredShippersWidget',
       TachyonDealerNumberOfRegisteredCarriersWidget: 'Widgets_Tenant_TachyonDealer_NumberOfRegisteredCarriersWidget',
@@ -66,21 +98,13 @@ export class DashboardCustomizationConst {
       TachyonDealerRequestsHeatMapWidget: 'Widgets_Tenant_TachyonDealer_RequestsHeatMapWidget',
       TachyonDealerNormalVsRentalRequestsWidget: 'Widgets_Tenant_TachyonDealer_NormalVsRentalRequestsWidget',
     },
-    //Widgets For Host Only
-    host: {
-      topStats: 'Widgets_Host_TopStats',
-      incomeStatistics: 'Widgets_Host_IncomeStatistics',
-      editionStatistics: 'Widgets_Host_EditionStatistics',
-      subscriptionExpiringTenants: 'Widgets_Host_SubscriptionExpiringTenants',
-      recentTenants: 'Widgets_Host_RecentTenants',
-    },
   };
   static filters = {
     filterDateRangePicker: 'Filters_DateRangePicker',
   };
   static dashboardNames = {
     defaultTenantDashboard: 'TenantDashboard',
-    defaultHostDashboard: 'HostDashboard',
+    defaultHostDashboard: 'HostDashboard', //was HostDashboard
     defaultCarrierDashboard: 'CarrierDashboard',
     defaultShipperDashboard: 'ShipperDashboard',
     defaultTachyonMangedServiceDashboard: 'TachyonMangedServiceDashboard',
