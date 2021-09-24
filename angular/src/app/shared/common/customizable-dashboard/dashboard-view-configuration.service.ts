@@ -14,6 +14,38 @@ import { WidgetSubscriptionExpiringTenantsComponent } from './widgets/widget-sub
 import { WidgetHostTopStatsComponent } from './widgets/widget-host-top-stats/widget-host-top-stats.component';
 import { FilterDateRangePickerComponent } from './filters/filter-date-range-picker/filter-date-range-picker.component';
 import { WidgetTopStatsComponent } from './widgets/widget-top-stats/widget-top-stats.component';
+import { CompletedTripsWidgetComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/completed-trips-widget/completed-trips-widget.component';
+import { CompletedTripVsPodComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/completed-trip-vs-pod/completed-trip-vs-pod.component';
+import { AcceptedVsRejecedRequestsComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/accepted-vs-rejeced-requests/accepted-vs-rejeced-requests.component';
+import { InvoicesVsPaidInvoicesComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/invoices-vs-paid-invoices/invoices-vs-paid-invoices.component';
+import { MostWorkedWithCarriersComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/most-worked-with-carriers/most-worked-with-carriers.component';
+import { RequestsInMarketPlaceComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/requests-in-market-place/requests-in-market-place.component';
+import { NextInvoiceFrequancyDateComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/next-invoice-frequancy-date/next-invoice-frequancy-date.component';
+import { InvoiceDueDateComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/invoice-due-date/invoice-due-date.component';
+import { ShipperDueDateInDaysComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/shipper-due-date-in-days/shipper-due-date-in-days.component';
+import { MostUsedOriginComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/most-used-origin/most-used-origin.component';
+import { MostUsedDestinationsComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/most-used-destinations/most-used-destinations.component';
+import { TrackingMapComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/tracking-map/tracking-map.component';
+import { CarrierInvoicesVsPaidInvoicesComponent } from '@app/shared/common/customizable-dashboard/widgets/carrier/invoices-vs-paid-invoices/invoices-vs-paid-invoices.component';
+import { AcceptedVsRejectedPricingComponent } from '@app/shared/common/customizable-dashboard/widgets/carrier/accepted-vs-rejected-pricing/accepted-vs-rejected-pricing.component';
+import { MostUsedVasesComponent } from '@app/shared/common/customizable-dashboard/widgets/carrier/most-used-vases/most-used-vases.component';
+import { MostWorkedWithShippersComponent } from '@app/shared/common/customizable-dashboard/widgets/carrier/most-worked-with-shippers/most-worked-with-shippers.component';
+import { MostUsedppComponent } from '@app/shared/common/customizable-dashboard/widgets/carrier/most-usedpp/most-usedpp.component';
+import { CarrierDocumentsDueDateinDaysComponent } from '@app/shared/common/customizable-dashboard/widgets/carrier/carrier-documents-due-datein-days/carrier-documents-due-datein-days.component';
+import { TucksActivityComponent } from '@app/shared/common/customizable-dashboard/widgets/carrier/tucks-activity/tucks-activity.component';
+import { DriversActivityComponent } from '@app/shared/common/customizable-dashboard/widgets/carrier/drivers-activity/drivers-activity.component';
+import { NumberOfRegesterdTrucksComponent } from '@app/shared/common/customizable-dashboard/widgets/host/number-of-regesterd-trucks/number-of-regesterd-trucks.component';
+import { NumberOfRegesterdShippersComponent } from '@app/shared/common/customizable-dashboard/widgets/host/number-of-regesterd-shippers/number-of-regesterd-shippers.component';
+import { OnGoingTripsComponent } from '@app/shared/common/customizable-dashboard/widgets/host/on-going-trips/on-going-trips.component';
+import { DeleverdTripsComponent } from '@app/shared/common/customizable-dashboard/widgets/host/deleverd-trips/deleverd-trips.component';
+import { NumberOfRegesterdCarriersComponent } from '@app/shared/common/customizable-dashboard/widgets/host/number-of-regesterd-carriers/number-of-regesterd-carriers.component';
+import { HostNewAccountsChartComponent } from '@app/shared/common/customizable-dashboard/widgets/host/host-new-accounts-chart/host-new-accounts-chart.component';
+import { HostNewTripsChartComponent } from '@app/shared/common/customizable-dashboard/widgets/host/host-new-trips-chart/host-new-trips-chart.component';
+import { HostTruckTypeUsageChartComponent } from '@app/shared/common/customizable-dashboard/widgets/host/host-truck-type-usage-chart/host-truck-type-usage-chart.component';
+import { HostGoodTypesUsageChartComponent } from '@app/shared/common/customizable-dashboard/widgets/host/host-good-types-usage-chart/host-good-types-usage-chart.component';
+import { HostRquestPricingMeterComponent } from '@app/shared/common/customizable-dashboard/widgets/host/host-rquest-pricing-meter/host-rquest-pricing-meter.component';
+import { HostRquestAcceptanceMeterComponent } from '@app/shared/common/customizable-dashboard/widgets/host/host-rquest-acceptance-meter/host-rquest-acceptance-meter.component';
+import { HostInvoicesMeterComponent } from '@app/shared/common/customizable-dashboard/widgets/host/host-invoices-meter/host-invoices-meter.component';
 
 @Injectable({
   providedIn: 'root',
@@ -49,31 +81,310 @@ export class DashboardViewConfigurationService {
     let topStats = new WidgetViewDefinition(DashboardCustomizationConst.widgets.tenant.topStats, WidgetTopStatsComponent);
     //add your tenant side widgets here
 
-    let incomeStatistics = new WidgetViewDefinition(DashboardCustomizationConst.widgets.host.incomeStatistics, WidgetIncomeStatisticsComponent);
-
+    // let incomeStatistics = new WidgetViewDefinition(DashboardCustomizationConst.widgets.host.incomeStatistics, WidgetIncomeStatisticsComponent);
+    //
     let editionStatistics = new WidgetViewDefinition(DashboardCustomizationConst.widgets.host.editionStatistics, WidgetEditionStatisticsComponent);
+    //
+    // let recentTenants = new WidgetViewDefinition(DashboardCustomizationConst.widgets.host.recentTenants, WidgetRecentTenantsComponent);
+    //
+    // let subscriptionExpiringTenants = new WidgetViewDefinition(
+    //   DashboardCustomizationConst.widgets.host.subscriptionExpiringTenants,
+    //   WidgetSubscriptionExpiringTenantsComponent
+    // );
+    //
+    // let hostTopStats = new WidgetViewDefinition(DashboardCustomizationConst.widgets.host.topStats, WidgetHostTopStatsComponent);
+    // //add your host side widgets here
 
-    let recentTenants = new WidgetViewDefinition(DashboardCustomizationConst.widgets.host.recentTenants, WidgetRecentTenantsComponent);
-
-    let subscriptionExpiringTenants = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.host.subscriptionExpiringTenants,
-      WidgetSubscriptionExpiringTenantsComponent
+    //Shipper
+    //1
+    let shippercompletedTrips = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Shipper.ShipperNumberOfCompletedTripsWidget,
+      CompletedTripsWidgetComponent
+    );
+    //2
+    let acceptedVsRejectedRequestsWidget = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Shipper.ShipperAcceptedVsRejectedRequestsWidget,
+      AcceptedVsRejecedRequestsComponent
     );
 
-    let hostTopStats = new WidgetViewDefinition(DashboardCustomizationConst.widgets.host.topStats, WidgetHostTopStatsComponent);
-    //add your host side widgets here
+    //3
+    let shipperCompletedTripsVsPodWidget = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Shipper.ShipperCompletedTripsVsPodWidget,
+      CompletedTripVsPodComponent
+    );
+    //4
+    let shipperInvoicesVsPaidInvoices = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Shipper.ShipperInvoicesVsPaidInvoicesWidget,
+      InvoicesVsPaidInvoicesComponent
+    );
 
-    this.WidgetViewDefinitions.push(generalStats);
-    this.WidgetViewDefinitions.push(dailySales);
-    this.WidgetViewDefinitions.push(profitShare);
-    this.WidgetViewDefinitions.push(memberActivity);
-    this.WidgetViewDefinitions.push(regionalStats);
-    this.WidgetViewDefinitions.push(salesSummary);
-    this.WidgetViewDefinitions.push(topStats);
-    this.WidgetViewDefinitions.push(incomeStatistics);
-    this.WidgetViewDefinitions.push(editionStatistics);
-    this.WidgetViewDefinitions.push(recentTenants);
-    this.WidgetViewDefinitions.push(subscriptionExpiringTenants);
-    this.WidgetViewDefinitions.push(hostTopStats);
+    //5
+    let mostWorkedWithCarriers = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Shipper.ShipperMostWorkedWithCarriersWidget,
+      MostWorkedWithCarriersComponent
+    );
+
+    //5
+    let shippingRequestsInMarketPlace = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Shipper.ShipperRequestsInMarketplaceWidget,
+      RequestsInMarketPlaceComponent
+    );
+    //6
+    let nextInvoiceFrequancyDate = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Shipper.ShipperNextInvoiceFrequancyEndDateWidget,
+      NextInvoiceFrequancyDateComponent,
+      2,
+      4
+    );
+    //7
+    let invoiceDueDate = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Shipper.ShipperInvoiceDueDateInDaysWidget,
+      InvoiceDueDateComponent,
+      2,
+      4
+    );
+    //8
+    let dueDateInDays = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Shipper.ShipperDocumentDueDateInDaysWidget,
+      ShipperDueDateInDaysComponent,
+      2,
+      4
+    );
+
+    //9
+    let mostUsedOrigins = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Shipper.ShipperMostUsedOriginsWidget,
+      MostUsedOriginComponent,
+      4,
+      6
+    );
+
+    //9
+    let mostUsedDest = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Shipper.ShipperMostUsedDestinationsWidget,
+      MostUsedDestinationsComponent,
+      4,
+      6
+    );
+
+    let trackingMapOfShipper = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Shipper.ShipperTrackingMapWidget,
+      TrackingMapComponent,
+      8,
+      8
+    );
+
+    //carrier Widgets
+    let carrierInvoicesVsPaid = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Carrier.CarrierInvoicesVsPaidInvoicesWidget,
+      CarrierInvoicesVsPaidInvoicesComponent,
+      4,
+      4
+    );
+
+    let carrierAcceptedVsRejected = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Carrier.CarrierAcceptedVsRejectedPricingWidget,
+      AcceptedVsRejectedPricingComponent,
+      4,
+      4
+    );
+    let CarrierCompletedTrips = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Carrier.CarrierNumberOfCompletedTripsTotalMonthlyIncreaseWidget,
+      CompletedTripsWidgetComponent,
+      4,
+      4
+    );
+
+    let mostUsedVases = new WidgetViewDefinition(DashboardCustomizationConst.widgets.Carrier.CarrierMostUsedVasWidget, MostUsedVasesComponent, 4, 4);
+
+    let mostWorkedWithShippers = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Carrier.CarrierMostWorkedWithShipperWidget,
+      MostWorkedWithShippersComponent,
+      4,
+      4
+    );
+
+    let mostUsedPP = new WidgetViewDefinition(DashboardCustomizationConst.widgets.Carrier.CarrierMostUsedPpWidget, MostUsedppComponent, 4, 4);
+
+    let CarrierNextInvoice = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Carrier.CarrierNextInvoiceFrequenctEndDateWidget,
+      NextInvoiceFrequancyDateComponent,
+      4,
+      4
+    );
+
+    let CarrierDocumentsDueDate = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Carrier.CarrierDueDateInDaysWidget,
+      InvoiceDueDateComponent,
+      4,
+      4
+    );
+
+    let activeTrucks = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Carrier.CarrierTrucksActivityWidget,
+      TucksActivityComponent,
+      4,
+      4
+    );
+
+    let activeDrivers = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Carrier.CarrierDriversActivityWidget,
+      DriversActivityComponent,
+      4,
+      4
+    );
+
+    let nonActivTrucks = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Carrier.CarrierTrucksActivityWidget,
+      TucksActivityComponent,
+      4,
+      4
+    );
+
+    let nonActiveDrivers = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Carrier.CarrierDriversActivityWidget,
+      DriversActivityComponent,
+      4,
+      4
+    );
+    //Host
+    let NumberOfRegisteredTrucks = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.TachyonDealerNumberOfRegisteredTrucksWidget,
+      NumberOfRegesterdTrucksComponent,
+      4,
+      4
+    );
+
+    let NumberOfRegisteredShippers = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.TachyonDealerNumberOfRegisteredShippersWidget,
+      NumberOfRegesterdShippersComponent,
+      4,
+      4
+    );
+
+    let onGoingTrips = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.TachyonDealerNumberOfOngoingTripsWidget,
+      OnGoingTripsComponent,
+      4,
+      4
+    );
+
+    let numberOfDeliveredTrips = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.TachyonDealerNumberOfDeliveredTripsWidget,
+      DeleverdTripsComponent,
+      4,
+      4
+    );
+
+    let numberOfRegisteredCarriers = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.TachyonDealerNumberOfRegisteredCarriersWidget,
+      NumberOfRegesterdCarriersComponent,
+      4,
+      4
+    );
+
+    let hostNewAccounts = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.TachyonDealerNewAccountsRegisteredWidget,
+      HostNewAccountsChartComponent,
+      4,
+      4
+    );
+    let hostNewTrips = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.TachyonDealerNewTripsWidget,
+      HostNewTripsChartComponent,
+      4,
+      4
+    );
+
+    let hostTruckTypesChart = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.TachyonDealerTruckTypeUsageWidget,
+      HostTruckTypeUsageChartComponent,
+      4,
+      4
+    );
+
+    let goodTypesUsage = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.TachyonDealerGoodTypesUsageWidget,
+      HostGoodTypesUsageChartComponent,
+      4,
+      4
+    );
+
+    let routeTypeUsage = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.TachyonDealerRouteTypesUsageWidget,
+      HostGoodTypesUsageChartComponent,
+      4,
+      4
+    );
+
+    let hostRequestPricedMeter = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.TachyonDealerRequestsPricingBeforeBidEndingWidget,
+      HostRquestPricingMeterComponent,
+      4,
+      4
+    );
+    let hostRequestAcceptanceMeter = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.TachyonDealerRequestsPriceAcceptanceWidget,
+      HostRquestAcceptanceMeterComponent,
+      4,
+      4
+    );
+
+    let hostInvoicePaidMeter = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.TachyonDealerInvoicesPaidBeforeDueDateWidget,
+      HostInvoicesMeterComponent,
+      4,
+      4
+    );
+
+    //shipperPush
+    this.WidgetViewDefinitions.push(shippercompletedTrips);
+    this.WidgetViewDefinitions.push(acceptedVsRejectedRequestsWidget);
+    this.WidgetViewDefinitions.push(shipperCompletedTripsVsPodWidget);
+    this.WidgetViewDefinitions.push(shipperInvoicesVsPaidInvoices);
+    this.WidgetViewDefinitions.push(mostWorkedWithCarriers);
+    this.WidgetViewDefinitions.push(shippingRequestsInMarketPlace);
+    this.WidgetViewDefinitions.push(nextInvoiceFrequancyDate);
+    this.WidgetViewDefinitions.push(invoiceDueDate);
+    this.WidgetViewDefinitions.push(dueDateInDays);
+    this.WidgetViewDefinitions.push(mostUsedOrigins);
+    this.WidgetViewDefinitions.push(mostUsedDest);
+    this.WidgetViewDefinitions.push(trackingMapOfShipper);
+
+    //Carrier
+    this.WidgetViewDefinitions.push(carrierInvoicesVsPaid);
+    this.WidgetViewDefinitions.push(carrierAcceptedVsRejected);
+    this.WidgetViewDefinitions.push(CarrierCompletedTrips);
+    this.WidgetViewDefinitions.push(mostWorkedWithShippers);
+    this.WidgetViewDefinitions.push(mostUsedPP);
+    this.WidgetViewDefinitions.push(CarrierNextInvoice);
+    this.WidgetViewDefinitions.push(CarrierDocumentsDueDate);
+    this.WidgetViewDefinitions.push(activeTrucks);
+    this.WidgetViewDefinitions.push(activeDrivers);
+    this.WidgetViewDefinitions.push(nonActivTrucks);
+    this.WidgetViewDefinitions.push(nonActiveDrivers);
+    this.WidgetViewDefinitions.push(mostUsedVases);
+
+    //Host
+    //this.widgetFilterDefinitions.push(NumberOfRegisteredTrucks);
+    // this.WidgetViewDefinitions.push(topStats);
+    //this.WidgetViewDefinitions.push(editionStatistics);
+    this.WidgetViewDefinitions.push(NumberOfRegisteredTrucks);
+    this.WidgetViewDefinitions.push(NumberOfRegisteredShippers);
+    this.WidgetViewDefinitions.push(onGoingTrips);
+    this.WidgetViewDefinitions.push(numberOfDeliveredTrips);
+    this.WidgetViewDefinitions.push(numberOfRegisteredCarriers);
+
+    this.WidgetViewDefinitions.push(hostNewAccounts);
+    this.WidgetViewDefinitions.push(hostNewTrips);
+    this.WidgetViewDefinitions.push(hostTruckTypesChart);
+    this.WidgetViewDefinitions.push(goodTypesUsage);
+    this.WidgetViewDefinitions.push(routeTypeUsage);
+
+    this.WidgetViewDefinitions.push(hostRequestPricedMeter);
+    this.WidgetViewDefinitions.push(hostRequestAcceptanceMeter);
+    this.WidgetViewDefinitions.push(hostInvoicePaidMeter);
+    //console.log('WidgetViewDefinitions', this.WidgetViewDefinitions);
+    // this.widgetFilterDefinitions.push();
   }
 }

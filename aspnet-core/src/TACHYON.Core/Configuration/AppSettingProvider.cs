@@ -722,6 +722,7 @@ namespace TACHYON.Configuration
             //It is the default dashboard view which your user will see if they don't do any customization.
             return new List<Dashboard>
             {
+                // tenants
                 new Dashboard
                 {
                     DashboardName = TACHYONDashboardCustomizationConsts.DashboardNames.DefaultTenantDashboard,
@@ -800,6 +801,49 @@ namespace TACHYON.Configuration
                         }
                     }
                 },
+                // carrier
+                new Dashboard
+                {
+                    DashboardName = TACHYONDashboardCustomizationConsts.DashboardNames.DefaultCarrierDashboard,
+                    Pages = new List<Page>
+                    {
+                        new Page
+                        {
+                            Name = TACHYONDashboardCustomizationConsts.DefaultPageName,
+                            Widgets = new List<Widget>()
+                        }
+                    }
+                },
+
+                // shipper
+                new Dashboard
+                {
+                    DashboardName = TACHYONDashboardCustomizationConsts.DashboardNames.DefaultShipperDashboard,
+                    Pages = new List<Page>
+                    {
+                        new Page
+                        {
+                            Name = TACHYONDashboardCustomizationConsts.DefaultPageName,
+                            Widgets = new List<Widget>()
+                        }
+                    }
+                },
+
+                // tachyonMangedService
+                new Dashboard
+                {
+                    DashboardName =
+                        TACHYONDashboardCustomizationConsts.DashboardNames.DefaultTachyonMangedServiceDashboard,
+                    Pages = new List<Page>
+                    {
+                        new Page
+                        {
+                            Name = TACHYONDashboardCustomizationConsts.DefaultPageName,
+                            Widgets = new List<Widget>()
+                        }
+                    }
+                },
+                // host
                 new Dashboard
                 {
                     DashboardName = TACHYONDashboardCustomizationConsts.DashboardNames.DefaultHostDashboard,

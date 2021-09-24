@@ -1,5 +1,6 @@
 export class DashboardCustomizationConst {
   static widgets = {
+    //Shared Between All Tenants
     tenant: {
       profitShare: 'Widgets_Tenant_ProfitShare',
       memberActivity: 'Widgets_Tenant_MemberActivity',
@@ -9,12 +10,93 @@ export class DashboardCustomizationConst {
       generalStats: 'Widgets_Tenant_GeneralStats',
       dailySales: 'Widgets_Tenant_DailySales',
     },
+    //Shipper Only Widgets
+    Shipper: {
+      ShipperNumberOfCompletedTripsWidget: 'Widgets_Tenant_shipper_NumberofcompletedTripsWidget',
+      ShipperAcceptedVsRejectedRequestsWidget: 'Widgets_Tenant_shipper_AcceptedVsRejectedRequestsWidget',
+      ShipperCompletedTripsVsPodWidget: 'Widgets_Tenant_shipper_CompletedTripsVsPodWidget',
+      ShipperInvoicesVsPaidInvoicesWidget: 'Widgets_Tenant_shipper_InvoicesVsPaidInvoicesWidget',
+      ShipperNextInvoiceFrequancyEndDateWidget: 'Widgets_Tenant_shipper_NextInvoiceFrequancyEndDateWidget',
+      ShipperInvoiceDueDateInDaysWidget: 'Widgets_Tenant_shipper_InvoiceDueDateInDaysWidget',
+      ShipperDocumentDueDateInDaysWidget: 'Widgets_Tenant_shipper_DocumentDueDateInDaysWidget',
+      ShipperMostWorkedWithCarriersWidget: 'Widgets_Tenant_shipper_MostWorkedWithCarriersWidget',
+      ShipperMostUsedOriginsWidget: 'Widgets_Tenant_shipper_MostUsedOriginsWidget',
+      ShipperMostUsedDestinationsWidget: 'Widgets_Tenant_shipper_MostUsedDestinationsWidget',
+      ShipperRequestsInMarketplaceWidget: 'Widgets_Tenant_shipper_RequestsInMarketplaceWidget',
+      ShipperTrackingMapWidget: 'Widgets_Tenant_shipper_TrackingMapWidget',
+    },
+    //Carrier Only Widgets
+    Carrier: {
+      CarrierDriversActivityWidget: 'Widgets_Tenant_carrier_DriversActivityWidget',
+      CarrierTrucksActivityWidget: 'Widgets_Tenant_carrier_TrucksActivityWidget',
+      CarrierAcceptedVsRejectedPricingWidget: 'Widgets_Tenant_carrier_AcceptedVsRejectedPricingWidget',
+      CarrierInvoicesVsPaidInvoicesWidget: 'Widgets_Tenant_carrier_InvoicesVsPaidInvoicesWidget',
+      CarrierMostUsedPpWidget: 'Widgets_Tenant_carrier_MostUsedPPWidget',
+      CarrierMostUsedVasWidget: 'Widgets_Tenant_carrier_MostUsedVasWidget',
+      CarrierNumberOfCompletedTripsTotalMonthlyIncreaseWidget: 'Widgets_Tenant_carrier_NumberOfCompletedTripsTotalMonthlyIncreaseWidget',
+      CarrierMostWorkedWithShipperWidget: 'Widgets_Tenant_carrier_MostWorkedWithShipperWidget',
+      CarrierNextInvoiceFrequenctEndDateWidget: 'Widgets_Tenant_carrier_NextInvoiceFrequenctEndDateWidget',
+      CarrierDueDateInDaysWidget: 'Widgets_Tenant_carrier_DueDateInDaysWidget',
+      CarrierTrackingMapWidget: 'Widgets_Tenant_carrier_TrackingMapWidget',
+    },
+    //TachyonDealer Only Widgets
+    TachyonDealer: {
+      // TachyonDealerNumberOfRegisteredTrucksWidget: 'Widgets_Tenant_TachyonDealer_NumberOfRegisteredTrucksWidget',
+      // TachyonDealerNumberOfRegisteredShippersWidget: 'Widgets_Tenant_TachyonDealer_NumberOfRegisteredShippersWidget',
+      // TachyonDealerNumberOfRegisteredCarriersWidget: 'Widgets_Tenant_TachyonDealer_NumberOfRegisteredCarriersWidget',
+      // TachyonDealerNewAccountsRegisteredWidget: 'Widgets_Tenant_TachyonDealer_NewAccountsRegisterdWidget',
+      // TachyonDealerNewTripsWidget: 'Widgets_Tenant_TachyonDealer_NewTripsWidget',
+      // TachyonDealerNumberOfDeliveredTripsWidget: 'Widgets_Tenant_TachyonDealer_NumberOfDeliverdTripsWidget',
+      // TachyonDealerNumberOfOngoingTripsWidget: 'Widgets_Tenant_TachyonDealer_NumberOfOngoingTripsWidget',
+      // TachyonDealerTruckTypeUsageWidget: 'Widgets_Tenant_TachyonDealer_TruckTypeUsageWidget',
+      // TachyonDealerGoodTypesUsageWidget: 'Widgets_Tenant_TachyonDealer_GoodTypesUsageWidget',
+      // TachyonDealerRouteTypesUsageWidget: 'Widgets_Tenant_TachyonDealer_RouteTypesUsageWidget',
+      // TachyonDealerMostRequestingShippersWidget: 'Widgets_Tenant_TachyonDealer_MostRequestingShippersWidget',
+      // TachyonDealerMostRequestedCarriersWidget: 'Widgets_Tenant_TachyonDealer_MostRequestedCarriersWidget',
+      // TachyonDealerTopRatedShippersWidget: 'Widgets_Tenant_TachyonDealer_TopRatedShippersWidget',
+      // TachyonDealerTopRatedCarriersWidget: 'Widgets_Tenant_TachyonDealer_TopRatedCarriersWidget',
+      // TachyonDealerWorstRatedShippersWidget: 'Widgets_Tenant_TachyonDealer_WorstRatedShippersWidget',
+      // TachyonDealerWorstRatedCarriersWidget: 'Widgets_Tenant_TachyonDealer_WorstRatedCarriersWidget',
+      // TachyonDealerUnPricedRequestsInMarketPlaceWidget: 'Widgets_Tenant_TachyonDealer_UnpricedRequestsInMarketPlaceWidget',
+      // TachyonDealerRequestsPricingBeforeBidEndingWidget: 'Widgets_Tenant_TachyonDealer_RequestsPricingBeforeBidEndingWidget',
+      // TachyonDealerRequestsPriceAcceptanceWidget: 'Widgets_Tenant_TachyonDealer_RequestsPriceAcceptanceWidget',
+      // TachyonDealerInvoicesPaidBeforeDueDateWidget: 'Widgets_Tenant_TachyonDealer_InvoicesPaidBeforeDureDateWidget',
+      // TachyonDealerNumberOfRequestsPerAreaOrCityWidget: 'Widgets_Tenant_TachyonDealer_NumberOfRequestsPerAreaOrCityWidget',
+      // TachyonDealerSearchableMapWidget: 'Widgets_Tenant_TachyonDealer_SearchableMapWidget',
+      // TachyonDealerRequestsHeatMapWidget: 'Widgets_Tenant_TachyonDealer_RequestsHeatMapWidget',
+      // TachyonDealerNormalVsRentalRequestsWidget: 'Widgets_Tenant_TachyonDealer_NormalVsRentalRequestsWidget',
+    },
+    //Widgets For Host Only
     host: {
       topStats: 'Widgets_Host_TopStats',
       incomeStatistics: 'Widgets_Host_IncomeStatistics',
       editionStatistics: 'Widgets_Host_EditionStatistics',
       subscriptionExpiringTenants: 'Widgets_Host_SubscriptionExpiringTenants',
       recentTenants: 'Widgets_Host_RecentTenants',
+      TachyonDealerNumberOfRegisteredTrucksWidget: 'Widgets_Tenant_TachyonDealer_NumberOfRegisteredTrucksWidget',
+      TachyonDealerNumberOfRegisteredShippersWidget: 'Widgets_Tenant_TachyonDealer_NumberOfRegisteredShippersWidget',
+      TachyonDealerNumberOfRegisteredCarriersWidget: 'Widgets_Tenant_TachyonDealer_NumberOfRegisteredCarriersWidget',
+      TachyonDealerNewAccountsRegisteredWidget: 'Widgets_Tenant_TachyonDealer_NewAccountsRegisterdWidget',
+      TachyonDealerNewTripsWidget: 'Widgets_Tenant_TachyonDealer_NewTripsWidget',
+      TachyonDealerNumberOfDeliveredTripsWidget: 'Widgets_Tenant_TachyonDealer_NumberOfDeliverdTripsWidget',
+      TachyonDealerNumberOfOngoingTripsWidget: 'Widgets_Tenant_TachyonDealer_NumberOfOngoingTripsWidget',
+      TachyonDealerTruckTypeUsageWidget: 'Widgets_Tenant_TachyonDealer_TruckTypeUsageWidget',
+      TachyonDealerGoodTypesUsageWidget: 'Widgets_Tenant_TachyonDealer_GoodTypesUsageWidget',
+      TachyonDealerRouteTypesUsageWidget: 'Widgets_Tenant_TachyonDealer_RouteTypesUsageWidget',
+      TachyonDealerMostRequestingShippersWidget: 'Widgets_Tenant_TachyonDealer_MostRequestingShippersWidget',
+      TachyonDealerMostRequestedCarriersWidget: 'Widgets_Tenant_TachyonDealer_MostRequestedCarriersWidget',
+      TachyonDealerTopRatedShippersWidget: 'Widgets_Tenant_TachyonDealer_TopRatedShippersWidget',
+      TachyonDealerTopRatedCarriersWidget: 'Widgets_Tenant_TachyonDealer_TopRatedCarriersWidget',
+      TachyonDealerWorstRatedShippersWidget: 'Widgets_Tenant_TachyonDealer_WorstRatedShippersWidget',
+      TachyonDealerWorstRatedCarriersWidget: 'Widgets_Tenant_TachyonDealer_WorstRatedCarriersWidget',
+      TachyonDealerUnPricedRequestsInMarketPlaceWidget: 'Widgets_Tenant_TachyonDealer_UnpricedRequestsInMarketPlaceWidget',
+      TachyonDealerRequestsPricingBeforeBidEndingWidget: 'Widgets_Tenant_TachyonDealer_RequestsPricingBeforeBidEndingWidget',
+      TachyonDealerRequestsPriceAcceptanceWidget: 'Widgets_Tenant_TachyonDealer_RequestsPriceAcceptanceWidget',
+      TachyonDealerInvoicesPaidBeforeDueDateWidget: 'Widgets_Tenant_TachyonDealer_InvoicesPaidBeforeDureDateWidget',
+      TachyonDealerNumberOfRequestsPerAreaOrCityWidget: 'Widgets_Tenant_TachyonDealer_NumberOfRequestsPerAreaOrCityWidget',
+      TachyonDealerSearchableMapWidget: 'Widgets_Tenant_TachyonDealer_SearchableMapWidget',
+      TachyonDealerRequestsHeatMapWidget: 'Widgets_Tenant_TachyonDealer_RequestsHeatMapWidget',
+      TachyonDealerNormalVsRentalRequestsWidget: 'Widgets_Tenant_TachyonDealer_NormalVsRentalRequestsWidget',
     },
   };
   static filters = {
@@ -22,7 +104,10 @@ export class DashboardCustomizationConst {
   };
   static dashboardNames = {
     defaultTenantDashboard: 'TenantDashboard',
-    defaultHostDashboard: 'HostDashboard',
+    defaultHostDashboard: 'HostDashboard', //was HostDashboard
+    defaultCarrierDashboard: 'CarrierDashboard',
+    defaultShipperDashboard: 'ShipperDashboard',
+    defaultTachyonMangedServiceDashboard: 'TachyonMangedServiceDashboard',
   };
   static Applications = {
     Angular: 'Angular',
