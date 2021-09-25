@@ -3,7 +3,7 @@
   <!--begin::Card-->
   <div class="card card-custom gutter-b">
     <!--begin::Body-->
-    <div class="card-body pt-4">
+    <div class="card-body pt-4" [busyIf]="loading">
       <!--begin::Toolbar-->
       <div class="d-flex justify-content-end">
         <div class="dropdown dropdown-inline">
@@ -24,11 +24,7 @@
           <a class="font-weight-bold font-size-h5 text-dark-75 text-hover-primary">{{ shownLoginName }}</a>
           <div class="text-muted">{{ isCarrier ? l('Carrier') : l('Shipper') }}</div>
           <div class="mt-2">
-            <span class="fa fa-1x fa-star checked"></span>
-            <span class="fa fa-1x fa-star checked"></span>
-            <span class="fa fa-1x fa-star checked"></span>
-            <span class="fa fa-1x fa-star"></span>
-            <span class="fa fa-1x fa-star"></span>
+            <p-rating [ngModel]="rating" readonly="true" stars="5" [cancel]="false"></p-rating>
           </div>
         </div>
       </div>
@@ -36,16 +32,16 @@
       <!--begin::Contact-->
       <div class="pt-8 pb-6">
         <div class="d-flex align-items-center justify-content-between mb-2">
-          <span class="font-weight-bold mr-2">Email:</span>
+          <span class="font-weight-bold mr-2">{{ l('Email:') }}</span>
           <a href="#" class="text-muted text-hover-primary">{{ email }}</a>
         </div>
         <div class="d-flex align-items-center justify-content-between mb-2">
           <span class="font-weight-bold mr-2">Phone:</span>
-          <span class="text-muted">44(76)34254578</span>
+          <span class="text-muted">{{ phone }}</span>
         </div>
-        <div class="d-flex align-items-center justify-content-between mb-2">
-          <span class="font-weight-bold mr-2">Location:</span>
-          <span class="text-muted">unknown</span>
+        <div class="d-flex align-items-center justify-content-between mb-2" [(ngModel)]="location">
+          <span class="font-weight-bold mr-2">{{ l('Location:') }}</span>
+          <span class="text-muted">{{ location }}</span>
         </div>
         <div class="d-flex align-items-center justify-content-between">
           <span class="font-weight-bold mr-2 text-hover-primary" routerLink="/app/main/shippingRequests/shippingRequests">{{
@@ -56,7 +52,7 @@
       </div>
       <!--end::Contact-->
       <!--begin::Contact-->
-      <div class="pb-9">Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical.</div>
+      <div class="pb-9">{{ companyInfo }}</div>
       <!--end::Contact-->
       <!--      <a routerLink="/app/main/profile/overview" class="btn btn-light-success font-weight-bold py-3 px-6 mb-2 text-center btn-block"-->
       <!--        >Profile Overview</a-->
@@ -131,7 +127,7 @@
                 <!--end::Svg Icon-->
               </span>
             </span>
-            <span class="navi-text font-size-lg">Account Information</span>
+            <span class="navi-text font-size-lg">{{ l('AccountInformation') }}</span>
           </a>
         </div>
         <div class="navi-item mb-2">
@@ -169,7 +165,7 @@
                 <!--end::Svg Icon-->
               </span>
             </span>
-            <span class="navi-text font-size-lg">Change Passwort</span>
+            <span class="navi-text font-size-lg">Change Password</span>
             <span class="navi-label">
               <span class="label label-light-danger label-rounded font-weight-bold">5</span>
             </span>
