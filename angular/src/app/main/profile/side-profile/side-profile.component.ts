@@ -1,25 +1,38 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, Injector, OnInit, ViewEncapsulation } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { AppConsts } from '@shared/AppConsts';
 import { ProfileServiceProxy } from '@shared/service-proxies/service-proxies';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from '@node_modules/rxjs/internal/operators';
+import { result } from 'lodash-es';
+import { any } from '@node_modules/codelyzer/util/function';
+import { finalize } from '@node_modules/rxjs/operators';
 
 @Component({
   selector: 'side-profile',
   templateUrl: './side-profile.component.html',
+  encapsulation: ViewEncapsulation.None,
 })
 export class SideProfileComponent extends AppComponentBase implements OnInit {
   public shownLoginName: string;
   public tenancyName: string;
   public userName: string;
   public email: string;
-  public phone: number;
+  public phone: string;
   profilePicture = AppConsts.appBaseUrl + '/assets/common/images/default-profile-picture.png';
   public givenId: number;
   public currentUserid: number;
+  rating: number;
+  loading = true;
+  location: string;
+  companyInfo: string;
 
-  constructor(injector: Injector, private _profileServiceProxy: ProfileServiceProxy, private _Activatedroute: ActivatedRoute) {
+  constructor(
+    injector: Injector,
+    private _profileServiceProxy: ProfileServiceProxy,
+    private _Activatedroute: ActivatedRoute,
+    private _router: Router
+  ) {
     super(injector);
   }
   get isCarrier(): boolean {
@@ -37,40 +50,45 @@ export class SideProfileComponent extends AppComponentBase implements OnInit {
   }
 
   ngOnInit(): void {
+    this.givenId = parseInt(this._Activatedroute.snapshot.paramMap.get('id'));
+    this.getProfilePicture();
+    this.getUserInfo();
+    this.currentUserid = this.appSession.tenantId;
     abp.event.on('profilePictureChanged', () => {
       this.getProfilePicture();
     });
-    this.getProfilePicture();
-    this.getCurrentUserInfo();
-    this.currentUserid = this.appSession.tenantId;
-
-    this.givenId = parseInt(this._Activatedroute.snapshot.paramMap.get('id'));
-    setInterval(() => {
-      console.log(this._Activatedroute.snapshot);
-      console.log(this.currentUserid, this.givenId);
-    }, 2000);
   }
 
   /**
    * get the Current User information Shipper/Carrier
    */
-  getCurrentUserInfo() {
-    console.log(this.isCarrier, this.isShipper);
-    if (this.isCarrier || this.isShipper) {
-      console.log('this is a Shipper || Carrier');
-      this.shownLoginName = this.appSession.getShownLoginName();
-      this.tenancyName = this.appSession.tenancyName;
-      this.userName = this.appSession.user.userName;
-      this.email = this.appSession.impersonatorUser.emailAddress;
-      this.phone = 2365523361;
-    }
+  getUserInfo() {
+    this._profileServiceProxy
+      .getTenantProfileInformationForView(this.givenId)
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+        })
+      )
+      .subscribe(
+        (result) => {
+          this.shownLoginName = result.companyName;
+          this.email = result.companyEmailAddress;
+          this.phone = result.companyPhone;
+          this.rating = result.rating;
+          this.companyInfo = result.companyInfo;
+        },
+        (error) => {
+          this._router.navigate(['/app/main/dashboard']);
+        }
+      );
   }
 
   /**
    * get User Profile Picture
    */
   getProfilePicture(): void {
-    this._profileServiceProxy.getProfilePicture().subscribe((result) => {
+    this._profileServiceProxy.getProfilePicture(this.givenId).subscribe((result) => {
       if (result && result.profilePicture) {
         this.profilePicture = 'data:image/jpeg;base64,' + result.profilePicture;
       }
