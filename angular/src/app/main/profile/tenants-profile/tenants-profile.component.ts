@@ -1,8 +1,13 @@
-import { Component, Injector, OnInit, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, Injector, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { AppConsts } from '@shared/AppConsts';
-import { ProfileServiceProxy } from '@shared/service-proxies/service-proxies';
-import { ActivatedRoute } from '@angular/router';
+import { InvoicingInformationDto, PagedResultDtoOfFacilityLocationListDto, ProfileServiceProxy } from '@shared/service-proxies/service-proxies';
+import { ActivatedRoute, Router } from '@angular/router';
+import { result } from 'lodash-es';
+import { Table } from '@node_modules/primeng/table';
+import { Paginator } from '@node_modules/primeng/paginator';
+import { LazyLoadEvent } from 'primeng/api';
+import { finalize } from '@node_modules/rxjs/operators';
 
 @Component({
   selector: 'tenants-profile',
@@ -10,22 +15,23 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./tenants-profile.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class TenantsProfileComponent extends AppComponentBase implements OnInit {
+export class TenantsProfileComponent extends AppComponentBase implements OnInit, AfterViewInit {
+  @ViewChild('dataTable', { static: false }) dataTable: Table;
+  @ViewChild('paginator', { static: false }) paginator: Paginator;
   public id: number;
+  public loading = true;
   public shownLoginName: string;
   public tenancyName: string;
   public userName: string;
   public email: string;
   public phone: number;
+  public givenId: number;
+  sorting: string;
+  skipCount: number;
+  maxResultCount: number;
+  shipperFacilities: any;
+  InvoicingInfo: InvoicingInformationDto = new InvoicingInformationDto();
   profilePicture = AppConsts.appBaseUrl + '/assets/common/images/default-profile-picture.png';
-  //dummy data For Shipper Facilities Table
-  shipperFacilities = [
-    { id: 1, name: 'Amazon', City: 'Jeddah', long: 46.6791872, lat: 24.7429006 },
-    { id: 2, name: 'Ebay', City: 'Riyadh', long: 50.2082971, lat: 26.3025915 },
-    { id: 3, name: 'Google', City: 'Ajman', long: 50.2082971, lat: 26.3025915 },
-    { id: 4, name: 'Youtube', City: 'Jeddah', long: 46.6791872, lat: 24.7429006 },
-    { id: 5, name: 'Amazon', City: 'Jeddah', long: 50.2082971, lat: 26.3025915 },
-  ];
 
   //Dummy data For Carrier Vases Table
   carrierVases = [
@@ -50,12 +56,18 @@ export class TenantsProfileComponent extends AppComponentBase implements OnInit 
     { id: 1, areaName: 'Area 2' },
     { id: 1, areaName: 'Area 3' },
   ];
-
+  private active = false;
   selectedFacility: any;
   latitude: number;
   longitude: number;
+  facilite: PagedResultDtoOfFacilityLocationListDto;
 
-  constructor(injector: Injector, private _profileServiceProxy: ProfileServiceProxy, private _Activatedroute: ActivatedRoute) {
+  constructor(
+    injector: Injector,
+    private _profileServiceProxy: ProfileServiceProxy,
+    private _Activatedroute: ActivatedRoute,
+    private _router: Router
+  ) {
     super(injector);
   }
   get isCarrier(): boolean {
@@ -66,42 +78,55 @@ export class TenantsProfileComponent extends AppComponentBase implements OnInit 
   }
 
   ngOnInit(): void {
-    this.getProfilePicture();
-    this.getCurrentUserInfo();
+    this.givenId = parseInt(this._Activatedroute.parent.snapshot.paramMap.get('id'));
+    console.log(this._Activatedroute.snapshot.paramMap);
+    this.getInvoicingInfo();
+  }
+  ngAfterViewInit() {
+    this.active = true;
+    this.getFacility();
   }
 
-  /**
-   * get the Current User information Shipper/Carrier
-   */
-  getCurrentUserInfo() {
-    console.log(this.isCarrier, this.isShipper);
-    if (this.isCarrier || this.isShipper) {
-      console.log('this is a Shipper || Carrier');
-      this.shownLoginName = this.appSession.getShownLoginName();
-      this.tenancyName = this.appSession.tenancyName;
-      this.userName = this.appSession.user.userName;
-      this.email = this.appSession.impersonatorUser.emailAddress;
-      this.phone = 2365523361;
+  getFacility(event?: LazyLoadEvent) {
+    if (this.primengTableHelper.shouldResetPaging(event)) {
+      this.paginator.changePage(0);
+      return;
     }
+
+    this.primengTableHelper.showLoadingIndicator();
+
+    this._profileServiceProxy
+      .getFacilitiesInformation(
+        this.givenId,
+        this.primengTableHelper.getSorting(this.dataTable),
+        this.primengTableHelper.getSkipCount(this.paginator, event),
+        this.primengTableHelper.getMaxResultCount(this.paginator, event)
+      )
+      .subscribe((result) => {
+        this.primengTableHelper.totalRecordsCount = result.totalCount;
+        this.primengTableHelper.records = result.items;
+        this.primengTableHelper.hideLoadingIndicator();
+      });
   }
 
-  /**
-   * get User Profile Picture
-   */
-  getProfilePicture(): void {
-    this._profileServiceProxy.getProfilePicture().subscribe((result) => {
-      if (result && result.profilePicture) {
-        this.profilePicture = 'data:image/jpeg;base64,' + result.profilePicture;
-      }
-    });
+  reloadPage(): void {
+    this.paginator.changePage(this.paginator.getPage());
   }
-
-  /**
-   *
-   * Show Facility Location On Map For Shipper
-   */
-  AllocateFacilityOnMap($event) {
-    this.longitude = $event.long;
-    this.latitude = $event.lat;
+  getInvoicingInfo() {
+    this._profileServiceProxy
+      .getInvoicingInformation(this.givenId)
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+        })
+      )
+      .subscribe(
+        (result) => {
+          this.InvoicingInfo = result;
+        },
+        (error) => {
+          // this._router.navigate(['/app/main/dashboard']);
+        }
+      );
   }
 }
