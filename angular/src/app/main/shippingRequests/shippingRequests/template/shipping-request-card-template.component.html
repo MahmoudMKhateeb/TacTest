@@ -24,7 +24,11 @@
               <div class="serialNumber">
                 <a href="javascript:void(0)">{{ item.referenceNumber }}</a>
               </div>
-              <a href="javascript:void(0)" class="companyName">
+              <a
+                href="javascript:void(0)"
+                class="companyName text-hover-primary"
+                [routerLink]="item.isTachyonDeal ? [] : ['/app/main/profile', item.tenantId, 'view']"
+              >
                 {{ setTitle(item) }}
               </a>
 

@@ -17,7 +17,7 @@
         <div class="detailsContent">
           <div>
             <div class="infoBasic">
-              <a href="javascript:void(0)" class="companyName">
+              <a href="javascript:void(0)" class="companyName" [routerLink]="['/app/main/profile', item.tenantId, 'view']">
                 {{ item.name }}
               </a>
               <a href="javascript:void(0)" (click)="showIncident()" class="infoHighLight {{ item.hasAccident ? ' red ' : ' green ' }}  stautsTruck">

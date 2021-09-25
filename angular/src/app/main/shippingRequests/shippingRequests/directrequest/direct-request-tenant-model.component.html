@@ -14,7 +14,7 @@
         <p class="modal-title">
           <span>{{ l('SendDirectRequest') }}</span>
         </p>
-        <button type="button" class="close" style="position: relative; z-index: 99999;" (click)="close()" aria-label="Close">
+        <button type="button" class="close" style="position: relative; z-index: 99999" (click)="close()" aria-label="Close">
           <i class="fas fa-times"></i>
         </button>
       </div>
@@ -59,7 +59,7 @@
                 <!-- <th style="width: 100px;">
                         {{ 'id' | localize }}
                       </th> -->
-                <th style="width: 150px;" pSortableColumn="name">
+                <th pSortableColumn="name">
                   {{ 'CarrierName' | localize }}
                   <p-sortIcon field="name"></p-sortIcon>
                 </th>
@@ -77,13 +77,13 @@
                           {{ record.id }}
                         </span>
                       </td> -->
-                <td style="width: 150px;">
+                <td>
                   <span class="ui-column-title"> {{ 'CarrierName' | localize }}</span>
-                  <span>
+                  <a class="text-dark text-hover-primary" [routerLink]="['/app/main/profile', record.id, 'view']">
                     {{ record.name }}
-                  </span>
+                  </a>
                 </td>
-                <td style="width: 100px;" class="justify-content-center">
+                <td class="justify-content-center">
                   <span class="ui-column-title"> {{ 'CarrierName' | localize }}</span>
                   <span>
                     <button
