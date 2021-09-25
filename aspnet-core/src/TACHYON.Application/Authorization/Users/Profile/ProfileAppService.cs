@@ -242,12 +242,21 @@ namespace TACHYON.Authorization.Users.Profile
 
             }
         }
+        [RequiresFeature(AppFeatures.Carrier, AppFeatures.Shipper, AppFeatures.TachyonDealer)]
         public async Task<int> GetShipmentCount(int tenantId)
         {  // Two In One Service
-            var isShipper = await IsEnabledAsync(AppFeatures.Shipper);
-            var isCarrier = await IsEnabledAsync(AppFeatures.Carrier);
 
-            if (!isShipper && !isCarrier)
+            var tenant = await TenantManager.GetByIdAsync(tenantId);
+            var editionName = await (from edition in _lookupEditionRepository.GetAll()
+                                     where tenant.EditionId == edition.Id
+                                     select edition.DisplayName).FirstOrDefaultAsync();
+
+            var isShipper = editionName.ToUpper().Contains("SHIPPER");
+            var isCarrier = editionName.ToUpper().Contains("CARRIER");
+
+            var haveAccess = (AbpSession.TenantId == tenantId && await IsEnabledAsync(AppFeatures.Carrier));
+
+            if ((!isShipper && !isCarrier) || !haveAccess)
                 throw new UserFriendlyException(L("YouDontHaveAccess"));
 
             var numberOfCompletedShipments = await _lookupTripRepository.GetAll()
