@@ -1,32 +1,26 @@
-import { Component, Injector, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Injector, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { AppConsts } from '@shared/AppConsts';
-import { ProfileServiceProxy } from '@shared/service-proxies/service-proxies';
+import { ProfileServiceProxy, TenantProfileInformationForViewDto } from '@shared/service-proxies/service-proxies';
 import { ActivatedRoute, Router } from '@angular/router';
-import { switchMap } from '@node_modules/rxjs/internal/operators';
-import { result } from 'lodash-es';
-import { any } from '@node_modules/codelyzer/util/function';
+
 import { finalize } from '@node_modules/rxjs/operators';
+import { BehaviorSubject, Subscription } from 'rxjs';
 
 @Component({
   selector: 'side-profile',
   templateUrl: './side-profile.component.html',
   encapsulation: ViewEncapsulation.None,
 })
-export class SideProfileComponent extends AppComponentBase implements OnInit {
-  public shownLoginName: string;
-  public tenancyName: string;
-  public userName: string;
-  public email: string;
-  public phone: string;
-  profilePicture = AppConsts.appBaseUrl + '/assets/common/images/default-profile-picture.png';
+export class SideProfileComponent extends AppComponentBase implements OnInit, OnDestroy {
   public givenId: number;
   public currentUserid: number;
-  rating: number;
-  loading = true;
-  location: string;
-  companyInfo: string;
+  public loading: boolean;
+  //side Profile Dto
+  sideProfileUserInfo: TenantProfileInformationForViewDto = new TenantProfileInformationForViewDto();
 
+  profilePicture = AppConsts.appBaseUrl + '/assets/common/images/default-profile-picture.png';
+  private routeParmSubscription$: Subscription;
   constructor(
     injector: Injector,
     private _profileServiceProxy: ProfileServiceProxy,
@@ -35,6 +29,11 @@ export class SideProfileComponent extends AppComponentBase implements OnInit {
   ) {
     super(injector);
   }
+
+  /**
+   * This One is to Determine the User Type Who Viewing the profile
+   */
+
   get isCarrier(): boolean {
     return this.feature.isEnabled('App.Carrier');
   }
@@ -50,9 +49,14 @@ export class SideProfileComponent extends AppComponentBase implements OnInit {
   }
 
   ngOnInit(): void {
-    this.givenId = parseInt(this._Activatedroute.snapshot.paramMap.get('id'));
-    this.getProfilePicture();
-    this.getUserInfo();
+    abp.event.on('tenantUpdatedHisProfileInformation', () => {
+      this.getUserInfo();
+    });
+    this.routeParmSubscription$ = this._Activatedroute.params.subscribe((params) => {
+      this.givenId = parseInt(params['id']);
+      this.getProfilePicture();
+      this.getUserInfo();
+    });
     this.currentUserid = this.appSession.tenantId;
     abp.event.on('profilePictureChanged', () => {
       this.getProfilePicture();
@@ -60,9 +64,18 @@ export class SideProfileComponent extends AppComponentBase implements OnInit {
   }
 
   /**
+   * Destroy the Component
+   */
+
+  ngOnDestroy() {
+    this.routeParmSubscription$.unsubscribe();
+  }
+
+  /**
    * get the Current User information Shipper/Carrier
    */
   getUserInfo() {
+    this.loading = true;
     this._profileServiceProxy
       .getTenantProfileInformationForView(this.givenId)
       .pipe(
@@ -72,18 +85,13 @@ export class SideProfileComponent extends AppComponentBase implements OnInit {
       )
       .subscribe(
         (result) => {
-          this.shownLoginName = result.companyName;
-          this.email = result.companyEmailAddress;
-          this.phone = result.companyPhone;
-          this.rating = result.rating;
-          this.companyInfo = result.companyInfo;
+          this.sideProfileUserInfo = result;
         },
         (error) => {
           this._router.navigate(['/app/main/dashboard']);
         }
       );
   }
-
   /**
    * get User Profile Picture
    */
