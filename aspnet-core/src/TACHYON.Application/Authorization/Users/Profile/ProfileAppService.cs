@@ -346,7 +346,7 @@ namespace TACHYON.Authorization.Users.Profile
             var availableVases = _lookupVasPriceRepository.GetAll()
                 .Include(x => x.VasFk)
                 .ThenInclude(x => x.Translations)
-                .Where(x => x.TenantId == input.CarrierTenantId)
+                .Where(x => x.TenantId == input.CarrierTenantId && !x.VasFk.IsDeleted)
                 .OrderBy(input.Sorting ?? "Id desc");
 
             var pageResult = await availableVases.PageBy(input).ToListAsync();
