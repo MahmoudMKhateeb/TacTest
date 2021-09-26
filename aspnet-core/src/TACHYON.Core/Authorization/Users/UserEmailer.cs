@@ -209,7 +209,7 @@ namespace TACHYON.Authorization.Users
             var adminUser = await _userManager.GetAdminByTenantIdAsync(tenantId);
             var mailMessage = new StringBuilder();
             var tenantItem = await _tenantRepository.GetAsync(tenantId);
-            var emailTemplate = await GetTitleAndSubTitle(tenantId, L("DocumentsExpirerationreminder_Title"), L("DocumentsExpirerationreminder_SubTitle"));    
+            var emailTemplate = await GetTitleAndSubTitle(tenantId, L("DocumentsExpirerationreminder_Title"), L("DocumentsExpirerationreminder_SubTitle"));
 
             if (currentCulture)
             {
@@ -226,7 +226,7 @@ namespace TACHYON.Authorization.Users
                 mailMessage.AppendLine($"<li><span class=\"first\">{tenantItem.Address}</span><span class=\"last\">{L("Address")}</span></li><br>");
                 mailMessage.AppendLine($"<p class=\"lead\" style=\"width: 65%; margin: 30px auto; text-align:Right\">{L("ReminderDocumentsEmailMessage")}</p>");
             }
-          
+
 
             //Truck table
             //If exists Truck files
@@ -292,7 +292,7 @@ namespace TACHYON.Authorization.Users
 
                 if (currentCulture)
                 {
-                    mailMessage.AppendLine($"<h2>{L("DearsAt")}<span style=\"color: #d82631\">{tenancyName}</span></h2>");
+                    mailMessage.AppendLine($"<h2>{L("DearsAt")}<span style=\"color: #d82631\"> {tenancyName}</span></h2>");
                     //mailMessage.AppendLine($"<h2>{L("Dear")}<span style=\"color: #d82631\">{user.FullName}</span></h2></div>");
                     mailMessage.AppendLine("<p class=\"lead\" style=\"width: 65%; margin: 30px auto\">");
                     mailMessage.AppendLine($"{L("YouAreReceivingThisEmailBecauseWe")}</p>");
@@ -305,7 +305,7 @@ namespace TACHYON.Authorization.Users
 
                 else
                 {
-                    mailMessage.AppendLine($"<h2>{tenancyName}<span style=\"color: #d82631{L("DearsAt")}span></h2>");
+                    mailMessage.AppendLine($"<h2> {tenancyName} <span style=\"color: #d82631{L("DearsAt")}span></h2>");
                     //mailMessage.AppendLine($"<h2>{user.FullName}<span style=\"color: #d82631\">{L("Dear")}</span></h2></div>");
                     mailMessage.AppendLine("<p class=\"lead\" style=\"width: 65%; margin: 30px auto\">");
                     mailMessage.AppendLine($"{L("YouAreReceivingThisEmailBecauseWe")}</p>");
