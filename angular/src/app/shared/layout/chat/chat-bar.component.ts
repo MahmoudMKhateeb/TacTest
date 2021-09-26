@@ -235,7 +235,7 @@ export class ChatBarComponent extends AppComponentBase implements OnInit, AfterV
   }
 
   getProfilePicture(): void {
-    this._profileService.getProfilePicture().subscribe((result) => {
+    this._profileService.getProfilePicture(null).subscribe((result) => {
       if (result && result.profilePicture) {
         this.profilePicture = 'data:image/jpeg;base64,' + result.profilePicture;
       }
