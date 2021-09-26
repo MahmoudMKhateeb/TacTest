@@ -344,14 +344,15 @@ namespace TACHYON.Authorization.Users.Profile
         {
             // Ask if Need (Domain Service)
             var availableVases = _lookupVasPriceRepository.GetAll()
+                .Include(x => x.VasFk)
+                .ThenInclude(x => x.Translations)
                 .Where(x => x.TenantId == input.CarrierTenantId)
-                .Select(x => ObjectMapper.Map<AvailableVasDto>(x))
                 .OrderBy(input.Sorting ?? "Id desc");
 
             var pageResult = await availableVases.PageBy(input).ToListAsync();
             var totalCount = await availableVases.CountAsync();
 
-            return new PagedResultDto<AvailableVasDto>() { Items = pageResult, TotalCount = totalCount };
+            return new PagedResultDto<AvailableVasDto>() { Items = ObjectMapper.Map<List<AvailableVasDto>>(pageResult), TotalCount = totalCount };
         }
 
         #endregion
