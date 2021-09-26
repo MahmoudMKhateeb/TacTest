@@ -18,6 +18,7 @@ using TACHYON.Features;
 using TACHYON.Goods.GoodCategories.Dtos;
 using TACHYON.Notifications;
 using TACHYON.PriceOffers.Dto;
+using TACHYON.Rating;
 using TACHYON.Shipping.DirectRequests;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequests.Dtos;
@@ -39,13 +40,14 @@ namespace TACHYON.PriceOffers
         private readonly IRepository<TrucksType, long> _trucksTypeRepository;
         private readonly IAppNotifier _appNotifier;
         private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepository;
+        private readonly RatingLogManager _ratingLogManager;
 
 
         private IRepository<VasPrice> _vasPriceRepository;
         public PriceOfferAppService(IRepository<ShippingRequestDirectRequest, long> shippingRequestDirectRequestRepository,
             IRepository<ShippingRequest, long> shippingRequestsRepository, PriceOfferManager priceOfferManager,
             IRepository<PriceOffer, long> priceOfferRepository, IRepository<VasPrice> vasPriceRepository,
-            IRepository<City> cityRepository, IRepository<TrucksType, long> trucksTypeRepository, IAppNotifier appNotifier, IRepository<ShippingRequestTrip> shippingRequestTripRepository)
+            IRepository<City> cityRepository, IRepository<TrucksType, long> trucksTypeRepository, IAppNotifier appNotifier, IRepository<ShippingRequestTrip> shippingRequestTripRepository, RatingLogManager ratingLogManager)
         {
             _shippingRequestDirectRequestRepository = shippingRequestDirectRequestRepository;
             _shippingRequestsRepository = shippingRequestsRepository;
@@ -56,6 +58,7 @@ namespace TACHYON.PriceOffers
             _trucksTypeRepository = trucksTypeRepository;
             _appNotifier = appNotifier;
             _shippingRequestTripRepository = shippingRequestTripRepository;
+            _ratingLogManager = ratingLogManager;
         }
         #region Services
 
@@ -77,12 +80,13 @@ namespace TACHYON.PriceOffers
                 .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper), x => x.ShippingRequestFK.TenantId == AbpSession.TenantId && (!x.ShippingRequestFK.IsTachyonDeal || x.Channel == PriceOfferChannel.TachyonManageService))
                 //.WhereIf(!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer), x => x.ShippingRequestFK.IsTachyonDeal)
                 .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Carrier), x => x.TenantId == AbpSession.TenantId)
-                .OrderBy(input.Sorting ?? "id desc")
-               ;
+                .OrderBy(input.Sorting ?? "id desc");
+
             var offers = query.PageBy(input);
 
             List<PriceOfferListDto> PriceOfferList = new List<PriceOfferListDto>();
-            foreach (var offer in offers)
+            var carrierRating =await _ratingLogManager.GetAllCarriersRatingAsync(null);
+            foreach (var offer in await offers.ToListAsync())
             {
                var price= ObjectMapper.Map<PriceOfferListDto>(offer);
                 if (AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper)) {
@@ -91,6 +95,8 @@ namespace TACHYON.PriceOffers
                         price.StatusTitle = PriceOfferStatus.New.GetEnumDescription();
                     else if(offer.Status == PriceOfferStatus.AcceptedAndWaitingForCarrier)
                         price.StatusTitle = PriceOfferStatus.Accepted.GetEnumDescription();
+                    price.CarrierRate = offer.Tenant.Rate;
+                    price.CarrierRateNumber = carrierRating.Count(x => x.CarrierId == offer.TenantId);
                 }
                 PriceOfferList.Add(price);
             }
@@ -514,7 +520,7 @@ namespace TACHYON.PriceOffers
                             .PageBy(input);
 
             List<GetShippingRequestForPriceOfferListDto> ShippingRequestForPriceOfferList = new List<GetShippingRequestForPriceOfferListDto>();
-
+            var shippersRating = await _ratingLogManager.GetAllShippersRatingAsync(null);
             foreach (var request in await directRequests.ToListAsync())
             {
                 var dto = ObjectMapper.Map<GetShippingRequestForPriceOfferListDto>(request.ShippingRequestFK);
@@ -537,6 +543,7 @@ namespace TACHYON.PriceOffers
                     dto.isPriced = true;
                     dto.OfferId = offer.Id;
                 }
+                dto.ShipperRatingNumber = shippersRating.Count(y => y.ShipperId == request.TenantId);
                 dto.DirectRequestId = request.Id;
                 dto.CreationTime = request.CreationTime;
                 dto.DirectRequestStatus = request.Status;
@@ -587,7 +594,7 @@ namespace TACHYON.PriceOffers
 
 
             List<GetShippingRequestForPriceOfferListDto> ShippingRequestForPriceOfferList = new List<GetShippingRequestForPriceOfferListDto>();
-
+            var shippersRating = await _ratingLogManager.GetAllShippersRatingAsync(null);
             foreach (var request in await query.ToListAsync())
             {
                 var dto = ObjectMapper.Map<GetShippingRequestForPriceOfferListDto>(request);
@@ -615,6 +622,7 @@ namespace TACHYON.PriceOffers
                     }
                     dto.StatusTitle = "";
                 }
+                dto.ShipperRatingNumber = shippersRating.Count(y => y.ShipperId == request.TenantId);
                 dto.CreationTime = request.BidStartDate;
                 dto.TruckType = ObjectMapper.Map<TrucksTypeDto>(request.TrucksTypeFk).TranslatedDisplayName;
                 dto.GoodsCategory = ObjectMapper.Map<GoodCategoryDto>(request.GoodCategoryFk).DisplayName;
@@ -668,14 +676,15 @@ namespace TACHYON.PriceOffers
                 //query = myDraftsOnly.Concat(withoutDrafts);
 
                 List<GetShippingRequestForPriceOfferListDto> ShippingRequestForPriceOfferList = new List<GetShippingRequestForPriceOfferListDto>();
+            var shippersRating = await _ratingLogManager.GetAllShippersRatingAsync(null);
 
-                foreach (var request in await query.ToListAsync())
+            foreach (var request in await query.ToListAsync())
                 {
                     var dto = ObjectMapper.Map<GetShippingRequestForPriceOfferListDto>(request);
                     dto.TruckType = ObjectMapper.Map<TrucksTypeDto>(request.TrucksTypeFk)?.TranslatedDisplayName;
                     dto.GoodsCategory = ObjectMapper.Map<GoodCategoryDto>(request.GoodCategoryFk)?.DisplayName;
                     dto.NumberOfCompletedTrips = await getCompletedRequestTripsCount(request);
-
+                    dto.ShipperRatingNumber = shippersRating.Count(y => y.ShipperId == request.TenantId);
                     if (AbpSession.TenantId.HasValue && (IsEnabled(AppFeatures.Carrier)))
                     {
 
@@ -735,6 +744,7 @@ namespace TACHYON.PriceOffers
                             .PageBy(input);
 
             List<GetShippingRequestForPriceOfferListDto> ShippingRequestForPriceOfferList = new List<GetShippingRequestForPriceOfferListDto>();
+            var shippersRating = await _ratingLogManager.GetAllShippersRatingAsync(null);
 
             foreach (var request in await offers.ToListAsync())
             {
@@ -760,9 +770,8 @@ namespace TACHYON.PriceOffers
                     dto.Price = request.TotalAmount;
                     if (request.Status == PriceOfferStatus.AcceptedAndWaitingForShipper)
                     dto.DirectRequestStatusTitle = PriceOfferStatus.Accepted.GetEnumDescription();
-
                 }
-             
+                dto.ShipperRatingNumber = shippersRating.Count(y => y.ShipperId == request.TenantId);
                 dto.isPriced = true;
                 dto.OfferId = request.Id;
                 dto.DirectRequestId = request.Id;

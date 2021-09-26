@@ -39,6 +39,7 @@ namespace TACHYON.AutoMapper.PriceOffers
 
             CreateMap<ShippingRequest, GetShippingRequestForPriceOfferListDto>()
              .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Tenant.Name))
+             .ForMember(dst => dst.ShipperRating, opt => opt.MapFrom(src => src.Tenant.Rate))
              .ForMember(dst => dst.Carrier, opt => opt.MapFrom(src => src.CarrierTenantFk.Name))
              .ForMember(dst => dst.OriginCity, opt => opt.MapFrom(src => src.OriginCityFk.DisplayName))
              .ForMember(dst => dst.DestinationCity, opt => opt.MapFrom(src => src.DestinationCityFk.DisplayName))

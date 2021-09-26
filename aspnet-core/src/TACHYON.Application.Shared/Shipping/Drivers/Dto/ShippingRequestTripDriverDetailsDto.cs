@@ -17,13 +17,18 @@ namespace TACHYON.Shipping.Drivers.Dto
         public string PackingType { get; set; }
         public string GoodsCategory { get; set; }
         public double TotalWeight { get; set; }
-
+        public string ShipperName { get; set; }
+        public decimal ShipperRating { get; set; }
+        public int ShipperRatingNumber { get; set; }
         public string UnitOfMeasure { get; set; } = "Kg";
         public string Note { get; set; }
 
         public string Source { get; set; }
+        public decimal SourceFacilityRating { get; set; }
+        public int SourceFacilityRatingNumber { get; set; }
         public string Distination { get; set; }
-
+        public decimal DestinationFacilityRating { get; set; }
+        public int DestinationFacilityRatingNumber { get; set; }
         public RoutePointStatus Status { get; set; }
         public ShippingRequestTripStatus TripStatus { get; set; }
         public string StatusTitle { get; set; }

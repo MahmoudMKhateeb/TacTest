@@ -13,6 +13,7 @@ using TACHYON.Features;
 using TACHYON.MultiTenancy;
 using TACHYON.Notifications;
 using TACHYON.PriceOffers;
+using TACHYON.Rating;
 using TACHYON.Shipping.DirectRequests.Dto;
 using TACHYON.Shipping.ShippingRequests;
 
@@ -26,9 +27,10 @@ namespace TACHYON.Shipping.DirectRequests
         private readonly ShippingRequestManager _shippingRequestManager;
         private readonly IAppNotifier _appNotifier;
         private readonly PriceOfferManager _priceOfferManager;
+        private readonly RatingLogManager _ratingLogManager;
 
 
-        public ShippingRequestDirectRequestAppService(IRepository<TenantCarrier, long> tenantCarrierRepository, IRepository<Tenant> tenantRepository, IRepository<ShippingRequestDirectRequest, long> shippingRequestDirectRequestRepository,  ShippingRequestManager shippingRequestManager, IAppNotifier appNotifier,  PriceOfferManager priceOfferManager)
+        public ShippingRequestDirectRequestAppService(IRepository<TenantCarrier, long> tenantCarrierRepository, IRepository<Tenant> tenantRepository, IRepository<ShippingRequestDirectRequest, long> shippingRequestDirectRequestRepository, ShippingRequestManager shippingRequestManager, IAppNotifier appNotifier, PriceOfferManager priceOfferManager, RatingLogManager ratingLogManager)
         {
             _tenantCarrierRepository = tenantCarrierRepository;
             _tenantRepository = tenantRepository;
@@ -36,6 +38,7 @@ namespace TACHYON.Shipping.DirectRequests
             _shippingRequestManager = shippingRequestManager;
             _appNotifier = appNotifier;
             _priceOfferManager = priceOfferManager;
+            _ratingLogManager = ratingLogManager;
         }
         [RequiresFeature(AppFeatures.SendDirectRequest)]
         public async Task<PagedResultDto<ShippingRequestDirectRequestListDto>> GetAll(ShippingRequestDirectRequestGetAllInput input)
@@ -47,10 +50,15 @@ namespace TACHYON.Shipping.DirectRequests
                 .OrderBy(input.Sorting ?? "id desc");
             var Result = await query.PageBy(input).ToListAsync();
             var totalCount = await query.CountAsync();
-            return new PagedResultDto<ShippingRequestDirectRequestListDto>(
-                totalCount,
-                ObjectMapper.Map<List<ShippingRequestDirectRequestListDto>>(Result)
-            );
+
+            var list = ObjectMapper.Map<List<ShippingRequestDirectRequestListDto>>(Result);
+            //calculate each carrier rating count
+            var carriersRating =await _ratingLogManager.GetAllCarriersRatingAsync(null);
+            list.ForEach(x =>
+            x.CarrierRateNumber = carriersRating.Count(x => x.CarrierId == x.CarrierId));
+
+
+            return new PagedResultDto<ShippingRequestDirectRequestListDto>(totalCount,list);
         }
         [RequiresFeature(AppFeatures.SendDirectRequest)]
         public async Task<PagedResultDto<ShippingRequestDirectRequestGetCarrirerListDto>> GetAllCarriers(ShippingRequestDirectRequestGetAllCarrirerInput input)

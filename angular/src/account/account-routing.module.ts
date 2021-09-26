@@ -24,6 +24,7 @@ import { StripePaymentResultComponent } from './payment/stripe/stripe-payment-re
 import { PaymentCompletedComponent } from './payment/payment-completed.component';
 import { SessionLockScreenComponent } from './login/session-lock-screen.component';
 import { TermAndConditionRegistrationComponent } from '@account/register/term-and-condition-registration/term-and-condition-registration.component';
+import { RatingPageComponent } from '@app/rating-page/rating-page.component';
 
 @NgModule({
   imports: [
@@ -55,7 +56,10 @@ import { TermAndConditionRegistrationComponent } from '@account/register/term-an
           { path: 'stripe-cancel-payment', component: StripeCancelPaymentComponent },
           { path: 'payment-completed', component: PaymentCompletedComponent },
           { path: 'session-locked', component: SessionLockScreenComponent },
-
+          {
+            path: 'RatingPage/:code',
+            component: RatingPageComponent,
+          },
           { path: '**', redirectTo: 'login' },
         ],
       },

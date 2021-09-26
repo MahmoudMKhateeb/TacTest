@@ -10,7 +10,8 @@ namespace TACHYON.AutoMapper.Shipping.DirectRequests
         {
             
             CreateMap<ShippingRequestDirectRequest, ShippingRequestDirectRequestListDto>()
-            .ForMember(dest => dest.Carrier, opt => opt.MapFrom(src => src.Carrier.Name));
+            .ForMember(dest => dest.Carrier, opt => opt.MapFrom(src => src.Carrier.Name))
+            .ForMember(dest => dest.CarrierRate, opt => opt.MapFrom(src => src.Carrier.Rate));
             CreateMap<CreateShippingRequestDirectRequestInput, ShippingRequestDirectRequest>();
 
         }

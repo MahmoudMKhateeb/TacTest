@@ -7,6 +7,8 @@ namespace TACHYON.PriceOffers.Dto
     {
         public long ShippingRequestId { get; set; }
         public string Name { get; set; }
+        public decimal CarrierRate { get; set; }
+        public decimal CarrierRateNumber { get; set; }
         public PriceOfferStatus Status { get; set; }
         public PriceOfferType PriceType { get; set; }
         public PriceOfferChannel Channel { get; set; }
