@@ -4,6 +4,7 @@ import { ProfileServiceProxy } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { finalize } from '@node_modules/rxjs/operators';
 import { UpdateTenantProfileInformationInputDto } from '@shared/service-proxies/service-proxies';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-complete-profile',
@@ -17,19 +18,21 @@ export class CompleteProfileComponent extends AppComponentBase implements OnInit
   saving = false;
   loading = true;
 
-  constructor(injector: Injector, private _profileServiceProxy: ProfileServiceProxy) {
+  constructor(injector: Injector, private _profileServiceProxy: ProfileServiceProxy, private _ActiveRoute: ActivatedRoute) {
     super(injector);
   }
 
   ngOnInit(): void {
     this._profileServiceProxy.getTenantProfileInformationForEdit().subscribe((result) => {
       this.completeFiled = result;
+      this.loading = false;
     });
 
     this.getProfilePicture();
     abp.event.on('profilePictureChanged', () => {
       this.getProfilePicture();
     });
+    console.log('log : ', this._ActiveRoute.snapshot.parent.paramMap.get('id'));
   }
 
   /**
@@ -42,13 +45,10 @@ export class CompleteProfileComponent extends AppComponentBase implements OnInit
       }
     });
   }
-  /**
-   * change Profile Picture
-   */
-  changeProfilePicture() {
-    abp.event.trigger('app.show.changeProfilePictureModal');
-  }
 
+  /**
+   * Save
+   */
   save(): void {
     this.saving = true;
     this._profileServiceProxy
@@ -56,16 +56,18 @@ export class CompleteProfileComponent extends AppComponentBase implements OnInit
       .pipe(
         finalize(() => {
           this.saving = false;
-        })
-      )
-
-      .pipe(
-        finalize(() => {
-          this.loading = false;
+          abp.event.trigger('tenantUpdatedHisProfileInformation');
         })
       )
       .subscribe(() => {
         this.notify.success(this.l('UpdateDoneSuccessfully'));
       });
+  }
+
+  /**
+   * change Profile Picture
+   */
+  changeProfilePicture() {
+    abp.event.trigger('app.show.changeProfilePictureModal');
   }
 }
