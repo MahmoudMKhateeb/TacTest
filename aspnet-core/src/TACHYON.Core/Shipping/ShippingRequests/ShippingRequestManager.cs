@@ -12,6 +12,8 @@ using TACHYON.Notifications;
 using TACHYON.Routs.RoutPoints;
 using System.Linq.Dynamic.Core;
 using Abp.Linq.Extensions;
+using TACHYON.Url;
+
 namespace TACHYON.Shipping.ShippingRequests
 {
     public class ShippingRequestManager : TACHYONDomainServiceBase
@@ -20,7 +22,7 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
         private readonly IFeatureChecker _featureChecker;
         private readonly IAbpSession _abpSession;
-
+        protected readonly IWebUrlService WebUrlService;
 
 
         private readonly ISmsSender _smsSender;
@@ -28,7 +30,7 @@ namespace TACHYON.Shipping.ShippingRequests
         public ShippingRequestManager(ISmsSender smsSender,
             IRepository<RoutPoint, long> routPointRepository,
             IAppNotifier appNotifier,
-            IRepository<ShippingRequest, long> shippingRequestRepository, IFeatureChecker featureChecker, IAbpSession abpSession)
+            IRepository<ShippingRequest, long> shippingRequestRepository, IFeatureChecker featureChecker, IAbpSession abpSession, IWebUrlService webUrlService)
         {
             _smsSender = smsSender;
             _routPointRepository = routPointRepository;
@@ -36,6 +38,7 @@ namespace TACHYON.Shipping.ShippingRequests
             _shippingRequestRepository = shippingRequestRepository;
             _featureChecker = featureChecker;
             _abpSession = abpSession;
+            WebUrlService = webUrlService;
         }
 
         /// <summary>
@@ -78,6 +81,7 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             string number = point.ReceiverPhoneNumber;
             string message = L(TACHYONConsts.SMSShippingRequestReceiverCode, point.Code);
+            message=message+" "+L("ClickToRate")+" "+WebUrlService.WebSiteRootAddressFormat +"account/RatingPage/"+point.Code;
             if (point.ReceiverFk != null)
             {
                 await _smsSender.SendAsync(point.ReceiverFk.PhoneNumber, message);
