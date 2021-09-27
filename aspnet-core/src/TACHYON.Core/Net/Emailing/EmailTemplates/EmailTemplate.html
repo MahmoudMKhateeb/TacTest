@@ -1,0 +1,208 @@
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Email</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Helvetica, sans-serif;
+        text-decoration: none;
+        outline: none;
+        list-style: none;
+      }
+      body {
+        overflow-x: hidden;
+      }
+      p {
+        font-size: 20px;
+        color: #757170;
+        text-transform: capitalize;
+      }
+      a {
+        font-size: 20px;
+        display: block;
+        width: 80%;
+        margin: 0 auto;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        overflow: auto;
+        padding: 0 40px;
+      }
+
+      header {
+        width: 100%;
+        background-color: #d82631;
+        position: relative;
+        left: 0;
+        top: 0;
+      }
+      header .logo {
+        display: block;
+        margin: 0 auto;
+        text-align: center;
+        padding: 24px 0;
+      }
+      main .icon-top {
+        padding: 50px 0;
+        text-align: center;
+      }
+      main .welcome-text {
+        text-align: center;
+      }
+      main .welcome-text h2 {
+        font-size: 45px;
+        color: #31333d;
+      }
+      main .welcome-text p {
+        margin-top: 20px;
+      }
+      main .data {
+        margin-top: 40px;
+        text-align: center;
+      }
+
+      main ul li {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        width: 560px;
+        margin: 0 auto;
+      }
+      @media (max-width: 767.98px) {
+        main ul li {
+          width: 100%;
+        }
+      }
+      main ul li .first {
+        color: black;
+        text-align: center;
+      }
+      main ul li .last {
+        color: #d82631;
+      }
+
+      main .lead {
+        text-align: center;
+        margin-top: 30px;
+        margin-bottom: 30px;
+      }
+      .btn {
+        display: block;
+        font-weight: 600;
+        line-height: 1.5;
+        color: #212529;
+        text-align: center;
+        text-decoration: none;
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+        background-color: transparent;
+        border: 1px solid transparent;
+        padding: 10px 50px;
+        font-size: 24px;
+        border-radius: 0.25rem;
+        transition: all 0.15s ease-in-out;
+      }
+      .btn-red {
+        background-color: #d82631;
+        color: #fff;
+        text-transform: uppercase;
+        border-radius: 50px;
+        margin: 0 auto;
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      footer {
+        margin-top: 80px;
+        background-color: #d82631;
+        color: #fff;
+        padding: 15px 0;
+      }
+      footer .data {
+        display: grid;
+        grid-template-columns: auto auto;
+        gap: 20px;
+        margin-top: 40px;
+        margin-bottom: 40px;
+      }
+      footer .first-col img {
+        margin-top: 20px;
+      }
+      footer .copy {
+        text-align: center;
+        border-top: 1px solid #fff;
+        padding: 20px 0 0 0;
+      }
+      footer .copy p {
+        font-size: 24px;
+      }
+      footer ul li {
+        font-size: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Start Header -->
+    <header>
+      <div class="navbar">
+        <div class="logo">
+          <img src="{EMAIL_LOGO_URL}" alt="logo" width="318px" />
+        </div>
+      </div>
+    </header>
+    <!-- Start Main -->
+    <main>
+      <div class="container">
+        <div class="icon-top">
+          <img src="{OUTLINE_LOGO_URL}" alt="email" width="153px" />
+        </div>
+        <div class="welcome-text">
+          <h2>{EMAIL_TITLE}</h2>
+          <p>{EMAIL_SUB_TITLE}</p>
+        </div>
+    
+        <div id="content">
+          {EMAIL_BODY}
+        </div>
+     
+      </div>
+    </main>
+    <!-- Start Footer -->
+    <footer style="direction: ltr">
+      <div class="container">
+        <div class="data">
+          <div class="col-6 first-col">
+            <ul>
+              <li>Regards</li>
+              <li>Tachyon Team</li>
+            </ul>
+            <img src="{EMAIL_LOGO_URL}" alt="" width="193px" />
+          </div>
+          <div class="col-6 last-col">
+            <ul>
+              <li>Phone : <span> +966920035543 </span></li>
+              <li>Email : <span> info@tachyonhub.com</span></li>
+              <li>Website : <span>www.tachyonhub.com</span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="copy">
+          <p style="color: #fff">{THIS_YEAR} © TACHYON</p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

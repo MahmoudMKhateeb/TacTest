@@ -640,7 +640,31 @@
 		<text name="EmailActivation_Title">مرحباً بك في تاكيون</text>
 		<text name="EmailAddress">عنوان البريد الإلكتروني</text>
 		<text name="EmailConfirm">تأكيد البريد الإلكتروني</text>
-		<text name="EmailConfirmationRequiredForLogin">مطلوب تأكيد البريد الإلكتروني لتسجيل الدخول</text>
+    
+    <text name="ClickButtonMessage">:الرجاء النقر على الرابط أدناه للتحقق من عنوان بريدك الإلكتروني</text>
+    <text name="CopyLinkMessage">إذا لم يعمل الزر أعلاه ، فالرجاء لصق الرابط أدناه في متصفحك</text>
+    <text name="DearsAt">الأعزاء في</text>
+    <text name="ApprovalDocumentsEmailMessage">تم إرسال هذا البريد  إليك لإبلاغك بأنه قد تم قبول مستنداتك ، ويمكنك الآن استخدام المنصة.</text>
+    <text name="DocumentsApproved">المستندات المعتمدة</text>
+    <text name="ApprovedDocuments_Title">المستندات المعتمدة</text>
+    <text name="ApprovedDocuments_SubTitle">المستندات المعتمدة</text>
+
+    <text name="SubscriptionExpiringSoon_Title">أبزيروتيمبلات إشعار انتهاء صلاحية الاشتراك</text>
+    <text name="SubscriptionExpiringSoon_Email_Body"></text>
+    <text name="SubscriptionExpiringSoon_Email_Subject"></text>
+    <text name="ThisIsJustToRemindYouThatTheInvoice">هذا فقط لتذكيرك بأن الفاتورة</text>
+    <text name="WithATotalOf">بإجمالي</text>
+    <text name="IsDueNow"> أصبحت مستحقة الآن.</text>
+
+    <text name="ThankYouForYourBusiness">شكرا لك على عملك.</text>
+    <text name="PleaseFindAttachedTheInvoiceWithIssueDateOf"> يرجى العثور على الفاتورة المرفقة مع تاريخ الإصدار </text>
+    <text name="ForMoreDetails"> لمزيد من التفاصيل.</text>
+
+    <text name="WeWouldLikeToInformYouThatTheCopyOfYour">نود إبلاغك بأن نسخة </text>
+    <text name="DocumentUploadedTachyonPlatformWillBeExpiredSoonPleaseSubmitARenewalOneBefore"> التي تم تحميلها على منصة Tachyon على وشك الانتهاء ، يرجى تقديم المستند الذي تم تجديده قبل تاريخ</text>
+    <text name="ToPreventTheAccountFromBeingSuspended"> لمنع تعليق الحساب</text>
+
+    <text name="EmailConfirmationRequiredForLogin">مطلوب تأكيد البريد الإلكتروني لتسجيل الدخول</text>
 		<text name="EmailMessage_CopyTheLinkBelowToYourBrowser">إذا لم يعمل الزر أعلاه ، فقم بنسخ الرابط في متصفح الانترنت:</text>
 		<text name="EmailSecurityCodeBody">رمز الأمان الخاص بك هو</text>
 		<text name="EmailSecurityCodeSubject">رمز الأمان</text>
@@ -1144,11 +1168,17 @@
 		<text name="PasswordRepeat">تأكيد كلمة المرور</text>
 		<text name="PasswordReset">إعادة تعيين كلمة المرور</text>
 		<text name="PasswordResetEmail_ClickTheLinkBelowToResetYourPassword">يرجى الضغط على الرابط بالأسفل لإعادة تعيين كلمة المرور.</text>
-		<text name="PasswordResetEmail_Subject">إعادة تعيين كلمة المرور TACHYON</text>
 		<text name="PasswordResetEmail_SubTitle">.تم إرسال هذا البريد الإلكتروني لك لإعادة تعيين كلمة المرور</text>
 		<text name="PasswordResetEmail_Title">إعادة تعيين كلمة المرور TACHYON</text>
 		<text name="PasswordResetMailSentMessage">رابط إعادة تعيين كلمة المرور تم إرساله إلى بريدك الإلكتروني. يرجى التحقق من رسائل بريدك الإلكتروني</text>
 		<text name="PasswordsDontMatch">كلمة المرور غير مطابقة!</text>
+
+    <text name="Contain8To12Characters">تتألف من 8 إلى 12 حرفًا</text>
+    <text name="ContainAtLeast1UpperCaseLetter">تحتوي على حرف واحد كبير على الأقل</text>
+    <text name="ContainAtLeast1LowerCaseLetter">تحتوي على حرف واحد صغير على الأقل</text>
+    <text name="ContainAtLeast1Number">تحتوي على رقم واحد على الأقل</text>
+    <text name="IfYouDidNotRequestPasswordReset">إذا لم تطلب إعادة تعيين كلمة المرور ، فلا داعي لاتخاذ أي إجراء آخر</text>
+    
 		<text name="PayInAdvance">الدفع مسبقاً</text>
 		<text name="Payment">دفعة</text>
 		<text name="PaymentCouldNotCompleted">تعذر إتمام الدفع</text>
@@ -1550,10 +1580,9 @@
 		<text name="SubscriptionExpire_SubTitle">يتم إرسال هذا البريد الإلكتروني إليك لإعلامك بانتهاء صلاحية الاشتراك</text>
 		<text name="SubscriptionExpire_Title">تنتهي صلاحية اشتراك أبزيروتيمبلات</text>
 		<text name="SubscriptionExpireNotification">سينتهي اشتراكك خلال {0} أيام.</text>
-		<text name="SubscriptionExpiringSoon_Email_Body">سوف تنتهي صلاحية اشتراك أبزيروتيمبلات في {0}.</text>
-		<text name="SubscriptionExpiringSoon_Email_Subject">إشعار انتهاء صلاحية اشتراك أبزيرتمبلات الخاص بك</text>
+		
 		<text name="SubscriptionExpiringSoon_SubTitle">يتم إرسال هذا البريد الإلكتروني إليك لإعلامك بانتهاء صلاحية الاشتراك.</text>
-		<text name="SubscriptionExpiringSoon_Title">أبزيروتيمبلات إشعار انتهاء صلاحية الاشتراك</text>
+	
 		<text name="SubscriptionExpiringTenants">عملاء بإشتراكات تنتهي</text>
 		<text name="SubscriptionInformation">معلومات الاشتراك</text>
 		<text name="SubscriptionPaymentGatewayType_Paypal">Paypal</text>
@@ -2145,6 +2174,36 @@
     <text name="StartedMovingToLoadingLocation"></text>
     <text name="AddIncident">الحادثة</text>
     <text name="ArriveToLoadingLocation">الوصول إلى موقع التحميل</text>
+    <text name="ExpiredDateDocuments_Title">المستندات منتهية الصلاحية</text>
+    <text name="ExpiredDateDocuments_SubTitle">المستندات منتهية الصلاحية</text>
+    <text name="Document File: {0} has been expired message">يوجد عدد "{0}" مستند منتهي الصلاحية</text>
+    <text name="ExpiredDocument">المستندات منتهية الصلاحية</text>
+    <text name="DocumentsExpiredInfo_Title">المستندات منتهية الصلاحية</text>
+    <text name="DocumentsExpiredInfo_SubTitle">المستندات منتهية الصلاحية</text>
+    <text name="DocumentsExpiredInfo">المستندات منتهية الصلاحية</text>
+    <text name="YouAreReceivingThisEmailBecauseWe">لقد تلقيت هذا البريد الإلكتروني لأننا تلقينا طلب إعادة تعيين كلمة المرور لحسابك.</text>
+    <text name="ResetPassword">إعادة تعيين كلمة المرور</text>
+    <text name="YourNewPasswordMust">كلمة المرور الجديدة الخاصة بك يجب أن:</text>
+    <text name="PasswordResetEmail_Subject">إعادة تعيين كلمة المرور</text>
+    
+    <text name="PasswordUpdated_Title">تحديث كلمة المرور</text>
+    <text name="PasswordUpdated_SubTitle">تحديث كلمة المرور</text>
+    <text name="YourPasswordChangedSuccessfully">تم تغيير كلمة المرور الخاصة بك بنجاح.</text>
+    <text name="YourNewPasswordIs">كلمة مرورك الجديدة هي</text>
+    <text name="PasswordUpdated">تحديث كلمة المرور</text>
+    <text name="WarningSuspendAccount_Title">تنبيه إنتهاء مستند</text>
+    <text name="WarningSuspendAccount_SubTitle">تنبيه إنتهاء مستند</text>
+    <text name="WarningSuspendAccount">تنبيه إنتهاء مستند</text>
+    <text name="InvoiceDue_Title">تذكير فاتورة</text>
+    <text name="InvoiceDue_SubTitle">إستحقاق فاتورة</text>
+    <text name="InvoiceDue">إستحقاق فاتورة</text>
+    <text name="IssuedInvoice_Title">إستحقاق فاتورة</text>
+    <text name="IssuedInvoice_SubTitle">إستحقاق فاتورة</text>
+    <text name="DueOn">مستحقة في</text>
+    <text name="Please">مستحقة الرجاء</text>
+    <text name="IssuedInvoice">إستحقاق فاتورة</text>
+    <text name="CompanyNameEmailTemplate">إسم الشركة</text>
+        
     <!--<text name="StartOffloading"></text>
     <text name="ReceiverConfirmed"></text>
     <text name="DeliveryConfirmation"></text>-->

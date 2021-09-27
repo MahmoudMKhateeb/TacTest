@@ -353,6 +353,7 @@ namespace TACHYON.Authorization.Users
                 var randomPassword = await _userManager.CreateRandomPassword();
                 user.Password = _passwordHasher.HashPassword(user, randomPassword);
                 input.User.Password = randomPassword;
+                await _userEmailer.SendPasswordUpdatedEmail(user.TenantId, user.EmailAddress, randomPassword);
             }
             else if (!input.User.Password.IsNullOrEmpty())
             {
@@ -372,7 +373,7 @@ namespace TACHYON.Authorization.Users
             //update organization units
             await UserManager.SetOrganizationUnitsAsync(user, input.OrganizationUnits.ToArray());
 
-            if (input.SendActivationEmail)
+            if (input.SendActivationEmail && !user.IsEmailConfirmed)
             {
                 user.SetNewEmailConfirmationCode();
                 await _userEmailer.SendEmailActivationLinkAsync(

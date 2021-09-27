@@ -33,6 +33,7 @@ namespace TACHYON.Documents
             _appNotifier = appNotifier;
             Timer.Period = CheckPeriodAsMilliseconds;
             _userEmailer = userEmailer;
+            timer.RunOnStart = true;
         }
 
         [UnitOfWork]

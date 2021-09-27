@@ -117,6 +117,10 @@ namespace TACHYON.Configuration
                 new SettingDefinition(AppSettings.Sms.UnifonicNotificationSenderId,
                     GetFromAppSettings(AppSettings.Sms.UnifonicNotificationSenderId, "TACHYON"), isVisibleToClients: true,
                     scopes: SettingScopes.Application),
+                // need to add this in settings dashboard 
+                new SettingDefinition(AppSettings.Email.EmailLogoPath,
+                    GetFromAppSettings(AppSettings.Email.EmailLogoPath, "Common/Images/EmailLogoOutline.png"), isVisibleToClients: true,
+                    scopes: SettingScopes.Application),
 
                 //Bayan Integration
                 //todo add this to host settings page
