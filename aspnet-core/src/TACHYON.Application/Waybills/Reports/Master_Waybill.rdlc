@@ -5837,7 +5837,7 @@
                       <Value>=First(Fields!MasterWaybillNo.Value, "DataSet1")</Value>
                       <Style>
                         <FontFamily>Free 3 of 9</FontFamily>
-                        <FontSize>22pt</FontSize>
+                        <FontSize>16pt</FontSize>
                         <Color>#282828</Color>
                       </Style>
                     </TextRun>
@@ -5848,9 +5848,9 @@
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Textbox3</rd:DefaultName>
-              <Left>5.8144in</Left>
+              <Left>5.62553in</Left>
               <Height>0.32633in</Height>
-              <Width>1.26209in</Width>
+              <Width>1.45096in</Width>
               <ZIndex>2</ZIndex>
               <Style>
                 <Border />

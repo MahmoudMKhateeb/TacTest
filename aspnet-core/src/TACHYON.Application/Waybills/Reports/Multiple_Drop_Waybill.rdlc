@@ -5856,7 +5856,7 @@
                   <Value>=First(Fields!SubWaybillNo.Value, "MultipleDropDataSet")</Value>
                   <Style>
                     <FontFamily>Free 3 of 9</FontFamily>
-                    <FontSize>22pt</FontSize>
+                    <FontSize>16pt</FontSize>
                     <Color>#282828</Color>
                   </Style>
                 </TextRun>
@@ -5867,9 +5867,9 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox3</rd:DefaultName>
-          <Left>5.82759in</Left>
+          <Left>5.55358in</Left>
           <Height>0.39833in</Height>
-          <Width>1.26209in</Width>
+          <Width>1.5361in</Width>
           <ZIndex>1</ZIndex>
           <Style>
             <Border />

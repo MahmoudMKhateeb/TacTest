@@ -3521,7 +3521,6 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
-                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell>
@@ -7027,7 +7026,7 @@
                   <Value>=First(Fields!MasterWaybillNo.Value, "SingleDropDataSet")</Value>
                   <Style>
                     <FontFamily>Free 3 of 9</FontFamily>
-                    <FontSize>22pt</FontSize>
+                    <FontSize>16pt</FontSize>
                     <Color>#282828</Color>
                   </Style>
                 </TextRun>
@@ -7039,9 +7038,9 @@
           </Paragraphs>
           <rd:DefaultName>Textbox3</rd:DefaultName>
           <Top>0.02356in</Top>
-          <Left>6.80535in</Left>
+          <Left>6.46368in</Left>
           <Height>0.32633in</Height>
-          <Width>1.26209in</Width>
+          <Width>1.60376in</Width>
           <ZIndex>1</ZIndex>
           <Style>
             <Border />
