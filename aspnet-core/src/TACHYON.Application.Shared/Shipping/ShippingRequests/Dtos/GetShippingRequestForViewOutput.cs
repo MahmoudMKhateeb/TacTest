@@ -11,6 +11,14 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
     {
 
         public string ReferenceNumber { get; set; }
+        /// <summary>
+        /// This reference shipper add it manually
+        /// </summary>
+        public string ShipperReference { get; set; }
+        /// <summary>
+        /// shipper add his invoice number manually
+        /// </summary>
+        public string ShipperInvoiceNo { get; set; }
 
         public ShippingRequestDto ShippingRequest { get; set; }
 

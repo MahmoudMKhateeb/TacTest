@@ -66,5 +66,10 @@ namespace TACHYON.Waybills.Reports
 {
 }
 
-public partial class MultipleDropDataSet {
+namespace TACHYON.Waybills.Reports
+{
+}
+
+public partial class MultipleDropDataSet
+{
 }

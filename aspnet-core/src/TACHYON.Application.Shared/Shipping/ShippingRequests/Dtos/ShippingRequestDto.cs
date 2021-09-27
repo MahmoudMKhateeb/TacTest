@@ -9,8 +9,8 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
     {
         //public decimal Vas { get; set; }
 
-        public  bool IsBid { get; set; }
-        public  bool IsTachyonDeal { get; set; }
+        public bool IsBid { get; set; }
+        public bool IsTachyonDeal { get; set; }
         public bool IsDirectRequest { get; set; }
         public ShippingRequestType RequestType { get; set; }
         public ShippingRequestRouteType? RouteTypeId { get; set; }
@@ -43,9 +43,18 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public string OtherGoodsCategoryName { get; set; }
         public string OtherTransportTypeName { get; set; }
         public string OtherTrucksTypeName { get; set; }
-        public string StatusTitle  
+
+        /// <summary>
+        /// This reference shipper add it manually
+        /// </summary>
+        public string ShipperReference { get; set; }
+        /// <summary>
+        /// shipper add his invoice number manually
+        /// </summary>
+        public string ShipperInvoiceNo { get; set; }
+        public string StatusTitle
         {
-            get { return Status.GetEnumDescription(); }  
+            get { return Status.GetEnumDescription(); }
         }
 
         public string BidStatusTitle

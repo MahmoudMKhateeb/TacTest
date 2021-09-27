@@ -3496,7 +3496,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value EvaluationMode="Constant" />
+                              <Value>=Fields!DriverIqamaNo.Value</Value>
                               <Style>
                                 <FontFamily>open Sans</FontFamily>
                                 <FontSize>8pt</FontSize>
@@ -3521,6 +3521,7 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
+                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell>
@@ -4682,6 +4683,12 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
+                              <Value>+966</Value>
+                              <Style>
+                                <FontSize>8pt</FontSize>
+                              </Style>
+                            </TextRun>
+                            <TextRun>
                               <Value>=First(Fields!ReceiverMobile.Value, "SingleDropDataSet")</Value>
                               <Style>
                                 <FontSize>8pt</FontSize>
@@ -5213,7 +5220,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>Area</Value>
+                              <Value>Location</Value>
                               <Style>
                                 <FontFamily>Open Sans</FontFamily>
                                 <FontSize>9pt</FontSize>
@@ -5503,7 +5510,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value />
+                <Value>=First(Fields!ShipperNotes.Value, "SingleDropDataSet")</Value>
                 <Style>
                   <FontStyle>Normal</FontStyle>
                   <FontFamily>Open Sans</FontFamily>
@@ -7017,7 +7024,7 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>132132332</Value>
+                  <Value>=First(Fields!MasterWaybillNo.Value, "SingleDropDataSet")</Value>
                   <Style>
                     <FontFamily>Free 3 of 9</FontFamily>
                     <FontSize>22pt</FontSize>
@@ -7591,6 +7598,10 @@
         </Field>
         <Field Name="ActualPickupDate">
           <DataField>ActualPickupDate</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ShipperNotes">
+          <DataField>ShipperNotes</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
