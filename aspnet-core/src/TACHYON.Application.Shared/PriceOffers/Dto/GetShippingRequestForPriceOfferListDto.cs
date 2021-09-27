@@ -5,6 +5,9 @@ using TACHYON.Shipping.ShippingRequests;
 
 namespace TACHYON.PriceOffers.Dto
 {
+    /// <summary>
+    /// mapped from ShippingRequest
+    /// </summary>
     public class GetShippingRequestForPriceOfferListDto : EntityDto<long>
     {
         public long? DirectRequestId { get; set; }
@@ -46,6 +49,9 @@ namespace TACHYON.PriceOffers.Dto
 
         public bool IsDrafted { get; set; }
 
+        /// <summary>
+        /// shipper Id 
+        /// </summary>
         public int TenantId { get; set; }
     }
 

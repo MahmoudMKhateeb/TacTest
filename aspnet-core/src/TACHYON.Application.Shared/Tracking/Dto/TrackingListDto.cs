@@ -35,6 +35,9 @@ namespace TACHYON.Tracking.Dto
 
         public string ReferenceNumber { get; set; }
 
+        /// <summary>
+        /// shipper Id
+        /// </summary>
         public int TenantId { get; set; }
     }
 }

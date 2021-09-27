@@ -7,6 +7,9 @@ namespace TACHYON.Shipping.DirectRequests.Dto
     {
         public string Carrier { get; set; }
 
+        /// <summary>
+        /// Carrier Id
+        /// </summary>
         public int TenantId { get; set; }
         public ShippingRequestDirectRequestStatus Status { get; set; }
         public string StatusTitle { get { return Status.GetEnumDescription(); } }

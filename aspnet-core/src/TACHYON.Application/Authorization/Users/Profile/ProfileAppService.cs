@@ -47,6 +47,7 @@ using TACHYON.Timing;
 using TACHYON.Trucks;
 using TACHYON.Trucks.TrucksTypes;
 using TACHYON.Trucks.TrucksTypes.Dtos;
+using TACHYON.Trucks.TrucksTypes.TrucksTypesTranslations;
 using TACHYON.Vases;
 using TACHYON.Vases.Dtos;
 
@@ -74,6 +75,7 @@ namespace TACHYON.Authorization.Users.Profile
         private readonly IRepository<VasPrice> _lookupVasPriceRepository;
         private readonly IRepository<Edition> _lookupEditionRepository;
         private readonly IRepository<City> _lookupCityRepository;
+        private readonly IRepository<TrucksTypesTranslation> _trucksTypesTranslationRepository;
 
         public ProfileAppService(
             IAppFolders appFolders,
@@ -94,7 +96,7 @@ namespace TACHYON.Authorization.Users.Profile
             IRepository<VasPrice> lookupVasPriceRepository,
             IRepository<Truck, long> lookupTruckRepository,
             IRepository<Edition> lookupEditionRepository,
-            IRepository<City> lookupCityRepository)
+            IRepository<City> lookupCityRepository, IRepository<TrucksTypesTranslation> trucksTypesTranslationRepository)
         {
             _binaryObjectManager = binaryObjectManager;
             _timeZoneService = timezoneService;
@@ -114,6 +116,7 @@ namespace TACHYON.Authorization.Users.Profile
             _lookupTruckRepository = lookupTruckRepository;
             _lookupEditionRepository = lookupEditionRepository;
             _lookupCityRepository = lookupCityRepository;
+            _trucksTypesTranslationRepository = trucksTypesTranslationRepository;
         }
 
         [DisableAuditing]
@@ -316,16 +319,32 @@ namespace TACHYON.Authorization.Users.Profile
         [RequiresFeature(AppFeatures.Carrier)]
         public async Task<FleetInformationDto> GetFleetInformation(GetFleetInformationInputDto input)
         {
-            var availableTrucks = _lookupTruckTypeRepository.GetAll()
-                .Where(x => x.Translations.FirstOrDefault(i => i.Language.Contains(CultureInfo.CurrentUICulture.Name)) != null)
-                .Select(x => new TruckTypeAvailableTrucksDto()
-                {
-                    TruckType = x.Translations.FirstOrDefault(i => i.Language.Contains(CultureInfo.CurrentUICulture.Name))
-                        .TranslatedDisplayName,
-                    Id = x.Id,
-                    AvailableTrucksCount = _lookupTruckRepository.GetAll()
-                        .Count(t => t.TrucksTypeId == x.Id && t.TenantId == input.TenantId)
-                }).OrderBy(input.Sorting ?? "Id desc");
+
+
+            var translationQuery = _trucksTypesTranslationRepository
+                .GetAll()
+                .Where(i => i.Language.Contains(CultureInfo.CurrentUICulture.Name));
+
+            var resultQuery = from t in _lookupTruckRepository.GetAll()
+                              join r in translationQuery.DefaultIfEmpty() on t.TrucksTypeId equals r.CoreId
+                              select new
+                              {
+                                  r.CoreId,
+                                  r.TranslatedDisplayName,
+                              };
+
+            var availableTrucks = resultQuery
+               .GroupBy(x => new { TrucksTypeId = x.CoreId, x.TranslatedDisplayName })
+               .Select(g => new TruckTypeAvailableTrucksDto
+               {
+                   Id = g.Key.TrucksTypeId,
+                   AvailableTrucksCount = g.Count(),
+                   TruckType = g.Key.TranslatedDisplayName
+
+               });
+
+
+            //var availableTrucks = 
 
             var pageResult = await availableTrucks.PageBy(input).ToListAsync();
             var totalCount = await availableTrucks.CountAsync();
