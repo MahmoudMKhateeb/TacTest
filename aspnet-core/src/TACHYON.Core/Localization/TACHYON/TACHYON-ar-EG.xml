@@ -1174,9 +1174,9 @@
 		<text name="PasswordsDontMatch">كلمة المرور غير مطابقة!</text>
 
     <text name="Contain8To12Characters">تتألف من 8 إلى 12 حرفًا</text>
-    <text name="ContainAtLeast1UpperCaseLetter">تحتوي على حرف واحد كبير على الأقل.</text>
-    <text name="ContainAtLeast1LowerCaseLetter">تحتوي على حرف واحد صغير على الأقل.</text>
-    <text name="ContainAtLeast1Number">تحتوي على رقم واحد على الأقل.</text>
+    <text name="ContainAtLeast1UpperCaseLetter">تحتوي على حرف واحد كبير على الأقل</text>
+    <text name="ContainAtLeast1LowerCaseLetter">تحتوي على حرف واحد صغير على الأقل</text>
+    <text name="ContainAtLeast1Number">تحتوي على رقم واحد على الأقل</text>
     <text name="IfYouDidNotRequestPasswordReset">إذا لم تطلب إعادة تعيين كلمة المرور ، فلا داعي لاتخاذ أي إجراء آخر</text>
     
 		<text name="PayInAdvance">الدفع مسبقاً</text>

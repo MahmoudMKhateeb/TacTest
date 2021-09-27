@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <localizationDictionary culture="en">
-	<texts>    <text name="Goods">Goods</text>
+	<texts>
+    <text name="Goods">Goods</text>
     <text name="DangerousGoodType">Dangerous good type</text>
     <text name="TACHYON.Goods.DangerousGoodType">DangerousGoodType</text>
     <text name="DangerousGoodTypesHeaderInfo">Dangerous good types header info</text>
@@ -1338,6 +1339,7 @@
 		
     <text name="PasswordUpdated_Title">Update password.</text>
     <text name="PasswordUpdated_SubTitle">Update password.</text>
+	<text name="PasswordUpdated">TACHYON Password Updated</text>
     <text name="YourPasswordChangedSuccessfully">Your Password has been changed successfully.</text>
     <text name="YourNewPasswordIs">Your new password is</text>
     
