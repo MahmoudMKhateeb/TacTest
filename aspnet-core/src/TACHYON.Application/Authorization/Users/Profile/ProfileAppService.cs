@@ -245,7 +245,7 @@ namespace TACHYON.Authorization.Users.Profile
 
             }
         }
-        [RequiresFeature(AppFeatures.Carrier, AppFeatures.Shipper, AppFeatures.TachyonDealer)]
+
         public async Task<int> GetShipmentCount(int tenantId)
         {  // Two In One Service
 
@@ -257,10 +257,8 @@ namespace TACHYON.Authorization.Users.Profile
             var isShipper = editionName.ToUpper().Contains("SHIPPER");
             var isCarrier = editionName.ToUpper().Contains("CARRIER");
 
-            var haveAccess = (AbpSession.TenantId == tenantId || await IsEnabledAsync(AppFeatures.TachyonDealer));
-
-            if ((!isShipper && !isCarrier) || !haveAccess)
-                throw new UserFriendlyException(L("YouDontHaveAccess"));
+            if (!isShipper && !isCarrier)
+                throw new UserFriendlyException(L("ThisTenantNotShipperOrCarrier"));
 
             var numberOfCompletedShipments = await _lookupTripRepository.GetAll()
                 .Where(x => x.Status == ShippingRequestTripStatus.Intransit
@@ -276,7 +274,7 @@ namespace TACHYON.Authorization.Users.Profile
 
         #region ShipperServicesOnly
 
-        [RequiresFeature(AppFeatures.Shipper)]
+
         public async Task<PagedResultDto<FacilityLocationListDto>> GetFacilitiesInformation(GetFacilitiesInformationInput input)
         {
             var shipperFacilities = _lookupFacilityRepository.GetAll()
@@ -289,7 +287,7 @@ namespace TACHYON.Authorization.Users.Profile
             return new PagedResultDto<FacilityLocationListDto>() { Items = await ToFacilityLocationDto(facilities), TotalCount = totalCount };
         }
 
-        [RequiresFeature(AppFeatures.Shipper)]
+
         public async Task<InvoicingInformationDto> GetInvoicingInformation(int tenantId)
         {
 
@@ -316,7 +314,7 @@ namespace TACHYON.Authorization.Users.Profile
 
         #region CarrierServicesOnly
 
-        [RequiresFeature(AppFeatures.Carrier)]
+
         public async Task<FleetInformationDto> GetFleetInformation(GetFleetInformationInputDto input)
         {
 
@@ -358,7 +356,7 @@ namespace TACHYON.Authorization.Users.Profile
             };
         }
 
-        [RequiresFeature(AppFeatures.Carrier)]
+
         public async Task<PagedResultDto<AvailableVasDto>> GetAvailableVases(GetAvailableVasesInputDto input)
         {
             // Ask if Need (Domain Service)
