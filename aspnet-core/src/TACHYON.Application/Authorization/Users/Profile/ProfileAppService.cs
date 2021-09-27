@@ -254,7 +254,7 @@ namespace TACHYON.Authorization.Users.Profile
             var isShipper = editionName.ToUpper().Contains("SHIPPER");
             var isCarrier = editionName.ToUpper().Contains("CARRIER");
 
-            var haveAccess = (AbpSession.TenantId == tenantId && await IsEnabledAsync(AppFeatures.Carrier));
+            var haveAccess = (AbpSession.TenantId == tenantId || await IsEnabledAsync(AppFeatures.TachyonDealer));
 
             if ((!isShipper && !isCarrier) || !haveAccess)
                 throw new UserFriendlyException(L("YouDontHaveAccess"));
