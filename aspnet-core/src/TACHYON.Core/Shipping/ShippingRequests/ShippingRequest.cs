@@ -1,14 +1,15 @@
 ﻿using Abp.Configuration;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using Abp.Timing;
 using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Abp.Timing;
 using System.Threading.Tasks;
 using TACHYON.Authorization.Users;
+using TACHYON.Cities;
 using TACHYON.Configuration;
 using TACHYON.Goods.GoodCategories;
 using TACHYON.Goods.GoodsDetails;
@@ -22,6 +23,8 @@ using TACHYON.Shipping.ShippingRequestBidStatuses;
 using TACHYON.Shipping.ShippingRequestStatuses;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.ShippingTypes;
+using TACHYON.ShippingRequestVases;
+using TACHYON.TachyonPriceOffers;
 using TACHYON.Trailers;
 using TACHYON.Trailers.TrailerTypes;
 using TACHYON.Trucks;
@@ -29,9 +32,6 @@ using TACHYON.Trucks.TruckCategories.TransportTypes;
 using TACHYON.Trucks.TruckCategories.TruckCapacities;
 using TACHYON.Trucks.TrucksTypes;
 using TACHYON.UnitOfMeasures;
-using TACHYON.ShippingRequestVases;
-using TACHYON.TachyonPriceOffers;
-using TACHYON.Cities;
 
 namespace TACHYON.Shipping.ShippingRequests
 {
@@ -39,6 +39,14 @@ namespace TACHYON.Shipping.ShippingRequests
     public class ShippingRequest : FullAuditedEntity<long>, IMustHaveTenant, IHasIsDrafted
     {
         public string ReferenceNumber { get; set; }
+        /// <summary>
+        /// This reference shipper add it manually
+        /// </summary>
+        public string ShipperReference { get; set; }
+        /// <summary>
+        /// shipper add his invoice number manually
+        /// </summary>
+        public string ShipperInvoiceNo { get; set; }
         public int TenantId { get; set; }
         [ForeignKey("TenantId")]
         public Tenant Tenant { get; set; }
@@ -246,7 +254,7 @@ namespace TACHYON.Shipping.ShippingRequests
         /// </summary>
         public decimal TotalCommission { get; set; }
         // profit of final price calculated after all commissions + base carrier price 
-       // public decimal TachyonDealerProfit { get; set; }
+        // public decimal TachyonDealerProfit { get; set; }
         //this field special to tachyonDealer,describes accepted carrier price coming from bidding or direct request, or other; the price source defines in TachyonPriceOffer
         public decimal CarrierPrice { get; set; }
         /// <summary>

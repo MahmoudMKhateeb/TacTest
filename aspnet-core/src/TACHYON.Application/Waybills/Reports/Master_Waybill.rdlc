@@ -123,10 +123,18 @@
           <DataField>CarrierName</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="ClientName">
+          <DataField>ClientName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ShipperNotes">
+          <DataField>ShipperNotes</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
       </Fields>
       <rd:DataSetInfo>
         <rd:DataSetName>DataSet1</rd:DataSetName>
-        <rd:SchemaPath>C:\Users\tasneem\source\repos\tachyonhub\tachyon-core\aspnet-core\src\TACHYON.Application\Waybills\Reports\DataSet1.xsd</rd:SchemaPath>
+        <rd:SchemaPath>C:\Users\DELL\source\repos\tachyon-core2\aspnet-core\src\TACHYON.Application\Waybills\Reports\DataSet1.xsd</rd:SchemaPath>
         <rd:TableName>Trucks</rd:TableName>
         <rd:TableAdapterFillMethod />
         <rd:TableAdapterGetDataMethod />
@@ -1631,7 +1639,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value />
+                    <Value>=First(Fields!ShipperNotes.Value, "DataSet1")</Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
                       <FontFamily>Open Sans</FontFamily>
@@ -2280,7 +2288,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>Shipper</Value>
+                    <Value>=First(Fields!ClientName.Value, "DataSet1")</Value>
                     <Style>
                       <FontSize>8pt</FontSize>
                       <Color>#404040</Color>
@@ -3516,7 +3524,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=First(Fields!DriverName.Value, "DataSet1")</Value>
+                                  <Value>=Fields!DriverIqamaNo.Value</Value>
                                   <Style>
                                     <FontFamily>open sans</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -4206,7 +4214,23 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>#Of:</Value>
+                                  <Value>#Of </Value>
+                                  <Style>
+                                    <FontFamily>Open Sans</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Normal</FontWeight>
+                                    <Color>#282828</Color>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
+                                  <Value>=First(Fields!PackingTypeDisplayName.Value, "DataSet1")</Value>
+                                  <Style>
+                                    <FontFamily>open sans</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
+                                  <Value>:</Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -5166,7 +5190,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Area</Value>
+                                  <Value>Location</Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -5810,10 +5834,10 @@
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>132132332</Value>
+                      <Value>=First(Fields!MasterWaybillNo.Value, "DataSet1")</Value>
                       <Style>
                         <FontFamily>Free 3 of 9</FontFamily>
-                        <FontSize>22pt</FontSize>
+                        <FontSize>16pt</FontSize>
                         <Color>#282828</Color>
                       </Style>
                     </TextRun>
@@ -5824,9 +5848,9 @@
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Textbox3</rd:DefaultName>
-              <Left>5.8144in</Left>
+              <Left>5.62553in</Left>
               <Height>0.32633in</Height>
-              <Width>1.26209in</Width>
+              <Width>1.45096in</Width>
               <ZIndex>2</ZIndex>
               <Style>
                 <Border />

@@ -38,6 +38,8 @@
               <xs:element name="PackingTypeDisplayName" msprop:Generator_ColumnVarNameInTable="columnPackingTypeDisplayName" msprop:Generator_ColumnPropNameInRow="PackingTypeDisplayName" msprop:Generator_ColumnPropNameInTable="PackingTypeDisplayNameColumn" msprop:Generator_UserColumnName="PackingTypeDisplayName" type="xs:string" minOccurs="0" />
               <xs:element name="NumberOfPacking" msprop:Generator_ColumnVarNameInTable="columnNumberOfPacking" msprop:Generator_ColumnPropNameInRow="NumberOfPacking" msprop:Generator_ColumnPropNameInTable="NumberOfPackingColumn" msprop:Generator_UserColumnName="NumberOfPacking" type="xs:string" minOccurs="0" />
               <xs:element name="CarrierName" msprop:Generator_ColumnVarNameInTable="columnCarrierName" msprop:Generator_ColumnPropNameInRow="CarrierName" msprop:Generator_ColumnPropNameInTable="CarrierNameColumn" msprop:Generator_UserColumnName="CarrierName" type="xs:string" minOccurs="0" />
+              <xs:element name="ClientName" msprop:Generator_ColumnVarNameInTable="columnClientName" msprop:Generator_ColumnPropNameInRow="ClientName" msprop:Generator_ColumnPropNameInTable="ClientNameColumn" msprop:Generator_UserColumnName="ClientName" type="xs:string" minOccurs="0" />
+              <xs:element name="ShipperNotes" msprop:Generator_ColumnVarNameInTable="columnShipperNotes" msprop:Generator_ColumnPropNameInRow="ShipperNotes" msprop:Generator_ColumnPropNameInTable="ShipperNotesColumn" msprop:Generator_UserColumnName="ShipperNotes" type="xs:string" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace TACHYON.Shipping.ShippingRequests.Dtos
 {
-   
+
 
     public class GetSingleDropWaybillOutput
     {
@@ -12,15 +12,16 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public long MasterWaybillNo { get; set; }
         public string Date { get; set; }
         public string ShippingRequestStatus { get; set; }
-        public long? InvoiceNumber { get; set; }
+        public string InvoiceNumber { get; set; }
         public string ShipperReference { get; set; }
-        public DateTime? StartTripDate { get; set; }
-        public DateTime? ActualPickupDate { get; set; }
-        public DateTime? DeliveryDate { get; set; }
+        public string StartTripDate { get; set; }
+        public string ActualPickupDate { get; set; }
+        public string DeliveryDate { get; set; }
         public double TotalWeight { get; set; }
         public string GoodsCategoryDisplayName { get; set; }
-        public bool HasAttachment { get; set; }
-        public bool NeedsDeliveryNote { get; set; }
+        public string HasAttachment { get; set; }
+        public string NeedsDeliveryNote { get; set; }
+        public string ShipperNotes { get; set; }
 
         //Sender Details Info
         public string SenderCompanyName { get; set; }
@@ -35,7 +36,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public string ReceiverContactName { get; set; }
         public string ReceiverMobile { get; set; }
         public string CarrierName { get; set; }
-    
+
         //Driver Details
         public string DriverName { get; set; }
         public string DriverIqamaNo { get; set; }

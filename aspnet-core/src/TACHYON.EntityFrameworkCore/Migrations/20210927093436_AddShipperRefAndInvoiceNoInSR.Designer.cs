@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using TACHYON.EntityFrameworkCore;
@@ -10,9 +11,10 @@ using TACHYON.EntityFrameworkCore;
 namespace TACHYON.Migrations
 {
     [DbContext(typeof(TACHYONDbContext))]
-    partial class TACHYONDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210927093436_AddShipperRefAndInvoiceNoInSR")]
+    partial class AddShipperRefAndInvoiceNoInSR
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3374,9 +3376,6 @@ namespace TACHYON.Migrations
                     b.Property<DateTime?>("DeletionTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int?>("EditionId")
                         .HasColumnType("int");
 
@@ -3428,9 +3427,6 @@ namespace TACHYON.Migrations
                         .HasMaxLength(64);
 
                     b.Property<string>("UserTitle")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Website")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("companyName")

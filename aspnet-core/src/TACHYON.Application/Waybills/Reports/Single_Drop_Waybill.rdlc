@@ -3496,7 +3496,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value EvaluationMode="Constant" />
+                              <Value>=Fields!DriverIqamaNo.Value</Value>
                               <Style>
                                 <FontFamily>open Sans</FontFamily>
                                 <FontSize>8pt</FontSize>
@@ -4682,6 +4682,12 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
+                              <Value>+966</Value>
+                              <Style>
+                                <FontSize>8pt</FontSize>
+                              </Style>
+                            </TextRun>
+                            <TextRun>
                               <Value>=First(Fields!ReceiverMobile.Value, "SingleDropDataSet")</Value>
                               <Style>
                                 <FontSize>8pt</FontSize>
@@ -5213,7 +5219,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>Area</Value>
+                              <Value>Location</Value>
                               <Style>
                                 <FontFamily>Open Sans</FontFamily>
                                 <FontSize>9pt</FontSize>
@@ -5503,7 +5509,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value />
+                <Value>=First(Fields!ShipperNotes.Value, "SingleDropDataSet")</Value>
                 <Style>
                   <FontStyle>Normal</FontStyle>
                   <FontFamily>Open Sans</FontFamily>
@@ -7017,10 +7023,10 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>132132332</Value>
+                  <Value>=First(Fields!MasterWaybillNo.Value, "SingleDropDataSet")</Value>
                   <Style>
                     <FontFamily>Free 3 of 9</FontFamily>
-                    <FontSize>22pt</FontSize>
+                    <FontSize>16pt</FontSize>
                     <Color>#282828</Color>
                   </Style>
                 </TextRun>
@@ -7032,9 +7038,9 @@
           </Paragraphs>
           <rd:DefaultName>Textbox3</rd:DefaultName>
           <Top>0.02356in</Top>
-          <Left>6.80535in</Left>
+          <Left>6.46368in</Left>
           <Height>0.32633in</Height>
-          <Width>1.26209in</Width>
+          <Width>1.60376in</Width>
           <ZIndex>1</ZIndex>
           <Style>
             <Border />
@@ -7591,6 +7597,10 @@
         </Field>
         <Field Name="ActualPickupDate">
           <DataField>ActualPickupDate</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ShipperNotes">
+          <DataField>ShipperNotes</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>

@@ -5,6 +5,7 @@ using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Linq.Extensions;
+using Abp.Threading;
 using Abp.Timing;
 using Abp.UI;
 using AutoMapper.QueryableExtensions;
@@ -12,12 +13,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Rest;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using TACHYON.AddressBook;
 using TACHYON.AddressBook.Ports;
 using TACHYON.Authorization;
+using TACHYON.Documents;
 using TACHYON.Dto;
 using TACHYON.Features;
 using TACHYON.Goods.GoodCategories;
@@ -81,7 +84,7 @@ namespace TACHYON.Shipping.ShippingRequests
             BidDomainService bidDomainService,
             IRepository<Capacity, int> capacityRepository, IRepository<TransportType, int> transportTypeRepository, IRepository<RoutPoint, long> routPointRepository,
             IRepository<ShippingRequestsCarrierDirectPricing> carrierDirectPricingRepository,
-            IRepository<ShippingRequestDirectRequest, long> shippingRequestDirectRequestRepository, PriceOfferManager priceOfferManager, IRepository<InvoiceTrip, long> invoiveTripRepository, ShippingRequestDirectRequestAppService shippingRequestDirectRequestAppService, ShippingRequestDirectRequestManager shippingRequestDirectRequestManager)
+            IRepository<ShippingRequestDirectRequest, long> shippingRequestDirectRequestRepository, PriceOfferManager priceOfferManager, IRepository<InvoiceTrip, long> invoiveTripRepository, ShippingRequestDirectRequestAppService shippingRequestDirectRequestAppService, ShippingRequestDirectRequestManager shippingRequestDirectRequestManager, DocumentFilesManager documentFilesManager)
         {
             _vasPriceRepository = vasPriceRepository;
             _shippingRequestRepository = shippingRequestRepository;
@@ -109,6 +112,7 @@ namespace TACHYON.Shipping.ShippingRequests
             _InvoiveTripRepository = invoiveTripRepository;
             _shippingRequestDirectRequestAppService = shippingRequestDirectRequestAppService;
             _shippingRequestDirectRequestManager = shippingRequestDirectRequestManager;
+            _documentFilesManager = documentFilesManager;
         }
         private readonly IRepository<ShippingRequestsCarrierDirectPricing> _carrierDirectPricingRepository;
         private readonly IRepository<VasPrice> _vasPriceRepository;
@@ -137,6 +141,7 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly IRepository<InvoiceTrip, long> _InvoiveTripRepository;
         private readonly ShippingRequestDirectRequestAppService _shippingRequestDirectRequestAppService;
         private readonly ShippingRequestDirectRequestManager _shippingRequestDirectRequestManager;
+        private readonly DocumentFilesManager _documentFilesManager;
         public async Task<GetAllShippingRequestsOutputDto> GetAll(GetAllShippingRequestsInput Input)
         {
             DisableTenancyFilters();
@@ -228,7 +233,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 {
                     throw new UserFriendlyException(L("feature SendDirectRequest not enabled"));
                 }
-               
+
 
             }
 
@@ -786,7 +791,7 @@ namespace TACHYON.Shipping.ShippingRequests
             return await _lookup_vasRepository.GetAll()
                 .Select(vas => new ShippingRequestVasListOutput
                 {
-                    VasName = vas.Translations.FirstOrDefault(t=> t.Language.Contains(CurrentLanguage)) != null ? vas.Translations.FirstOrDefault(t=> t.Language.Contains(CurrentLanguage)).DisplayName : vas.Name,
+                    VasName = vas.Translations.FirstOrDefault(t => t.Language.Contains(CurrentLanguage)) != null ? vas.Translations.FirstOrDefault(t => t.Language.Contains(CurrentLanguage)).DisplayName : vas.Name,
                     HasAmount = vas.HasAmount,
                     HasCount = vas.HasCount,
                     MaxAmount = 0,
@@ -896,12 +901,12 @@ namespace TACHYON.Shipping.ShippingRequests
                     .Include(e => e.ShippingRequestFk)
                     .Where(e => e.Id == shippingRequestTripId);
 
-                
+
 
                 string pickupFacility = GetFacilityPoint(shippingRequestTripId, null, PickingType.Pickup);
 
                 var SenderpickupPoint = GetSenderInfo(shippingRequestTripId);
-                var contactName = SenderpickupPoint!=null ?SenderpickupPoint.FullName :"";
+                var contactName = SenderpickupPoint != null ? SenderpickupPoint.FullName : "";
                 var mobileNo = SenderpickupPoint != null ? SenderpickupPoint.PhoneNumber : "";
 
                 var query = info.Select(x => new
@@ -911,12 +916,13 @@ namespace TACHYON.Shipping.ShippingRequests
                     //(x.AssignedDriverUserId != null && x.AssignedTruckId != null) ? "Final" : "Draft",
                     SenderCompanyName = pickupFacility,//.ShippingRequestFk.Tenant.companyName,
                     DriverName = x.AssignedDriverUserFk != null ? x.AssignedDriverUserFk.FullName : "",
-                    DriverIqamaNo = "",
+                    driverUserId = x.AssignedDriverUserId,
                     TruckTypeTranslationList = x.AssignedTruckFk.TrucksTypeFk.Translations,
-                    TruckTypeDisplayName =
+                    TruckTypeDisplayName = x.AssignedTruckFk == null ? "" : (
                     (x.AssignedTruckFk.TransportTypeFk == null ? "" : ObjectMapper.Map<TransportTypeDto>(x.AssignedTruckFk.TransportTypeFk).TranslatedDisplayName) + "-" + //o.TransportTypeFk.DisplayName) + " - " +
                              (x.AssignedTruckFk.TrucksTypeFk == null ? "" : ObjectMapper.Map<TrucksTypeDto>(x.AssignedTruckFk.TrucksTypeFk).TranslatedDisplayName) + " - " +
-                             (x.AssignedTruckFk.CapacityFk == null ? "" : ObjectMapper.Map<CapacityDto>(x.AssignedTruckFk.CapacityFk).DisplayName),
+                             (x.AssignedTruckFk.CapacityFk == null ? "" : ObjectMapper.Map<CapacityDto>(x.AssignedTruckFk.CapacityFk).DisplayName)
+                             ),
                     PlateNumber = x.AssignedTruckFk != null ? x.AssignedTruckFk.PlateNumber : "",
                     IsMultipDrops = x.ShippingRequestFk.NumberOfDrops > 1 ? true : false,
                     TotalDrops = x.ShippingRequestFk.NumberOfDrops,
@@ -925,7 +931,10 @@ namespace TACHYON.Shipping.ShippingRequests
                     PackingTypeDisplayName = x.ShippingRequestFk.PackingTypeFk.DisplayName,
                     NumberOfPacking = x.ShippingRequestFk.NumberOfPacking,
                     TotalWeight = x.ShippingRequestFk.TotalWeight,
-                    ShipperReference=x.ShippingRequestFk.ReferenceNumber
+                    ShipperReference = x.ShippingRequestFk.ShipperReference,
+                    ShipperInvoiceNo = x.ShippingRequestFk.ShipperInvoiceNo,
+                    ClientName = x.ShippingRequestFk.Tenant.TenancyName,
+                    ShipperNotes = x.Note
                 });
 
                 var pickup = GetPickupOrDropPointFacilityForTrip(shippingRequestTripId, PickingType.Pickup);
@@ -935,13 +944,13 @@ namespace TACHYON.Shipping.ShippingRequests
                     => new GetMasterWaybillOutput()
                     {
                         MasterWaybillNo = x.MasterWaybillNo,
-                        Date = Clock.Now.ToShortDateString(),
+                        Date = ToGregorianDate(Clock.Now),
                         ShippingRequestStatus = x.ShippingRequestStatus,
                         CompanyName = x.SenderCompanyName,
-                        ContactName=contactName,
-                        Mobile=mobileNo,
+                        ContactName = contactName,
+                        Mobile = mobileNo,
                         DriverName = x.DriverName,
-                        DriverIqamaNo = "",
+                        DriverIqamaNo = GetDriverIqamaNo(x.driverUserId),
                         TruckTypeDisplayName = x.TruckTypeDisplayName,
                         PlateNumber = x.PlateNumber,
                         IsMultipDrops = x.IsMultipDrops,
@@ -952,12 +961,14 @@ namespace TACHYON.Shipping.ShippingRequests
                         CountryName = pickup?.CityFk.CountyFk.DisplayName,
                         CityName = pickup?.CityFk.DisplayName,
                         Area = pickup?.Address,
-                        StartTripDate = x.StartTripDate,
+                        StartTripDate = ToGregorianDate(x.StartTripDate),//x.StartTripDate!=null? x.StartTripDate.Value.ToShortDateString().ToString() :"",
                         CarrierName = x.CarrierName,
                         TotalWeight = x.TotalWeight,
                         ShipperReference = x.ShipperReference,
-                        InvoiceNumber = GetInvoiceNumberByTripId(shippingRequestTripId)
-                    }) ;
+                        InvoiceNumber = x.ShipperInvoiceNo,//GetInvoiceNumberByTripId(shippingRequestTripId),
+                        ClientName = x.ClientName,
+                        ShipperNotes = x.ShipperNotes
+                    });
 
                 return finalOutput;
             }
@@ -979,27 +990,31 @@ namespace TACHYON.Shipping.ShippingRequests
                     ShippingRequestStatus = x.Status == Trips.ShippingRequestTripStatus.Delivered ? "Final" : "Draft",
                     //(x.AssignedDriverUserId != null && x.AssignedTruckId != null) ? "Final" : "Draft",
                     // SenderCompanyName = "",//x.ShippingRequestFk.Tenant.companyName,
-                    ClientName = x.ShippingRequestFk.Tenant.Name,
+                    ClientName = x.ShippingRequestFk.Tenant.TenancyName,
                     // ReceiverCompanyName = x.ShippingRequestFk.CarrierTenantFk != null ? x.ShippingRequestFk.CarrierTenantFk.companyName : "",
-                    CarrierName = x.ShippingRequestFk.CarrierTenantFk.Name,
+                    CarrierName = x.ShippingRequestFk.CarrierTenantFk.TenancyName,
                     DriverName = x.AssignedDriverUserFk != null ? x.AssignedDriverUserFk.FullName : "",
-                    DriverIqamaNo = "",
+                    driverUserId = x.AssignedDriverUserId,
                     TruckTypeTranslationList = x.AssignedTruckFk.TrucksTypeFk.Translations,
-                    TruckTypeDisplayName = (x.AssignedTruckFk.TransportTypeFk == null ? "" : ObjectMapper.Map<TransportTypeDto>(x.AssignedTruckFk.TransportTypeFk).TranslatedDisplayName) + "-" + //o.TransportTypeFk.DisplayName) + " - " +
+                    TruckTypeDisplayName = x.AssignedTruckFk == null ? "" : (
+                    (x.AssignedTruckFk.TransportTypeFk == null ? "" : ObjectMapper.Map<TransportTypeDto>(x.AssignedTruckFk.TransportTypeFk).TranslatedDisplayName) + "-" + //o.TransportTypeFk.DisplayName) + " - " +
                              (x.AssignedTruckFk.TrucksTypeFk == null ? "" : ObjectMapper.Map<TrucksTypeDto>(x.AssignedTruckFk.TrucksTypeFk).TranslatedDisplayName) + " - " +
-                             (x.AssignedTruckFk.CapacityFk == null ? "" : ObjectMapper.Map<CapacityDto>(x.AssignedTruckFk.CapacityFk).DisplayName),
+                             (x.AssignedTruckFk.CapacityFk == null ? "" : ObjectMapper.Map<CapacityDto>(x.AssignedTruckFk.CapacityFk).DisplayName)
+                             ),
                     PlateNumber = x.AssignedTruckFk != null ? x.AssignedTruckFk.PlateNumber : "",
                     PackingTypeDisplayName = x.ShippingRequestFk.PackingTypeFk.DisplayName,
                     NumberOfPacking = x.ShippingRequestFk.NumberOfPacking,
                     StartTripDate = x.StartTripDate,
-                    ActualPickupDate=x.ActualPickupDate,
+                    ActualPickupDate = x.ActualPickupDate,
                     DeliveryDate = x.ActualDeliveryDate,
                     TotalWeight = x.ShippingRequestFk.TotalWeight,
                     GoodCategoryTranslation = x.ShippingRequestFk.GoodCategoryFk.Translations,
                     GoodsCategoryDisplayName = x.ShippingRequestFk.GoodCategoryFk, //x.ShippingRequestFk.GoodCategoryFk.DisplayName,
-                    HasAttachment=x.HasAttachment,
-                    NeedDeliveryNote=x.NeedsDeliveryNote,
-                    ShipperReference=x.ShippingRequestFk.ReferenceNumber
+                    HasAttachment = x.HasAttachment ? "Yes" : "No",
+                    NeedDeliveryNote = x.NeedsDeliveryNote ? "Yes" : "No",
+                    ShipperReference = x.ShippingRequestFk.ShipperReference,
+                    ShipperInvoiceNo = x.ShippingRequestFk.ShipperInvoiceNo,
+                    ShipperNotes = x.Note
                 });
 
                 var pickup = GetPickupOrDropPointFacilityForTrip(shippingRequestTripId, PickingType.Pickup);
@@ -1014,16 +1029,16 @@ namespace TACHYON.Shipping.ShippingRequests
                     => new GetSingleDropWaybillOutput
                     {
                         MasterWaybillNo = x.MasterWaybillNo,
-                        Date = Clock.Now.ToShortDateString(),
+                        Date = ToGregorianDate(Clock.Now),
                         ShippingRequestStatus = x.ShippingRequestStatus,
                         SenderCompanyName = GetFacilityPoint(x.Id, null, PickingType.Pickup),// x.SenderCompanyName,
-                        SenderContactName=contactName,
-                        SenderMobile=mobileNo,
+                        SenderContactName = contactName,
+                        SenderMobile = mobileNo,
                         ReceiverCompanyName = GetFacilityPoint(x.Id, null, PickingType.Dropoff),
                         ReceiverContactName = GetReceiverName(null, x.Id),
                         ReceiverMobile = GetReceiverPhone(null, x.Id),
                         DriverName = x.DriverName,
-                        DriverIqamaNo = "",
+                        DriverIqamaNo = GetDriverIqamaNo(x.driverUserId),
                         TruckTypeDisplayName = x.TruckTypeDisplayName,
                         PlateNumber = x.PlateNumber,
                         PackingTypeDisplayName = x.PackingTypeDisplayName,
@@ -1032,21 +1047,22 @@ namespace TACHYON.Shipping.ShippingRequests
                         CountryName = pickup?.CityFk.CountyFk.DisplayName,
                         CityName = pickup?.CityFk.DisplayName,
                         Area = pickup?.Address,
-                        StartTripDate = x.StartTripDate,
-                        ActualPickupDate=x.ActualPickupDate,
+                        StartTripDate = ToGregorianDate(x.StartTripDate),
+                        ActualPickupDate = ToGregorianDate(x.ActualPickupDate),
                         DroppFacilityName = delivery?.Name,
                         DroppCountryName = delivery?.CityFk.CountyFk.DisplayName,
                         DroppCityName = delivery?.CityFk.DisplayName,
                         DroppArea = delivery?.Address,
-                        DeliveryDate = x.DeliveryDate,
+                        DeliveryDate = ToGregorianDate(x.DeliveryDate),
                         TotalWeight = x.TotalWeight,
                         ClientName = x.ClientName,
                         CarrierName = x.CarrierName,
                         GoodsCategoryDisplayName = ObjectMapper.Map<GoodCategoryDto>(x.GoodsCategoryDisplayName).DisplayName,
-                        HasAttachment=x.HasAttachment,
-                        NeedsDeliveryNote=x.NeedDeliveryNote,
-                        ShipperReference=x.ShipperReference,
-                        InvoiceNumber= GetInvoiceNumberByTripId(shippingRequestTripId)
+                        HasAttachment = x.HasAttachment,
+                        NeedsDeliveryNote = x.NeedDeliveryNote,
+                        ShipperReference = x.ShipperReference,
+                        InvoiceNumber = x.ShipperInvoiceNo,//GetInvoiceNumberByTripId(shippingRequestTripId),
+                        ShipperNotes = x.ShipperNotes
 
                     });
 
@@ -1095,19 +1111,21 @@ namespace TACHYON.Shipping.ShippingRequests
                     Id = x.Id,
                     MasterWaybillNo = x.WaybillNumber.Value,
                     SubWaybillNo = routPoint.WaybillNumber,
-                    ShippingRequestStatus = x.Status==Trips.ShippingRequestTripStatus.Delivered ?"Final" :"Draft",
+                    ShippingRequestStatus = x.Status == Trips.ShippingRequestTripStatus.Delivered ? "Final" : "Draft",
                     //(x.AssignedDriverUserId != null && x.AssignedTruckId != null) ? "Final" : "Draft",
-                    ClientName = x.ShippingRequestFk.Tenant.Name,
+                    ClientName = x.ShippingRequestFk.Tenant.TenancyName,
                     DriverName = x.AssignedDriverUserFk != null ? x.AssignedDriverUserFk.Name : "",
-                    DriverIqamaNo = "",
+                    driverUserId = x.AssignedDriverUserId,
                     TruckTypeTranslationList = x.AssignedTruckFk.TrucksTypeFk.Translations,
-                    TruckTypeDisplayName = (x.AssignedTruckFk.TransportTypeFk == null ? "" : ObjectMapper.Map<TransportTypeDto>(x.AssignedTruckFk.TransportTypeFk).TranslatedDisplayName) + "-" + //o.TransportTypeFk.DisplayName) + " - " +
+                    TruckTypeDisplayName = x.AssignedTruckFk == null ? "" : (
+                    (x.AssignedTruckFk.TransportTypeFk == null ? "" : ObjectMapper.Map<TransportTypeDto>(x.AssignedTruckFk.TransportTypeFk).TranslatedDisplayName) + "-" + //o.TransportTypeFk.DisplayName) + " - " +
                              (x.AssignedTruckFk.TrucksTypeFk == null ? "" : ObjectMapper.Map<TrucksTypeDto>(x.AssignedTruckFk.TrucksTypeFk).TranslatedDisplayName) + " - " +
-                             (x.AssignedTruckFk.CapacityFk == null ? "" : ObjectMapper.Map<CapacityDto>(x.AssignedTruckFk.CapacityFk).DisplayName),
+                             (x.AssignedTruckFk.CapacityFk == null ? "" : ObjectMapper.Map<CapacityDto>(x.AssignedTruckFk.CapacityFk).DisplayName)
+                             ),
                     PlateNumber = x.AssignedTruckFk != null ? x.AssignedTruckFk.PlateNumber : "",
                     PackingTypeDisplayName = x.ShippingRequestFk.PackingTypeFk.DisplayName,
                     NumberOfPacking = x.ShippingRequestFk.NumberOfPacking,
-                    StartTripDate =x.StartTripDate,
+                    StartTripDate = x.StartTripDate,
                     //(x.StartTripDate != null && x.StartTripDate.Year > 1)
                     //    ? x.StartTripDate.ToShortDateString()
                     //    : "",
@@ -1116,15 +1134,17 @@ namespace TACHYON.Shipping.ShippingRequests
                     DroppCountryName = routPoint.FacilityFk.CityFk.CountyFk.DisplayName,
                     DroppCityName = routPoint.FacilityFk.CityFk.DisplayName,
                     DroppArea = routPoint.FacilityFk.Address,
-                    CarrierName = x.ShippingRequestFk.CarrierTenantFk != null ? x.ShippingRequestFk.CarrierTenantFk.Name : "",
+                    CarrierName = x.ShippingRequestFk.CarrierTenantFk != null ? x.ShippingRequestFk.CarrierTenantFk.TenancyName : "",
                     TotalWeight = x.ShippingRequestFk.TotalWeight,
                     GoodsCategoryTranslation = x.ShippingRequestFk.GoodCategoryFk.Translations,
                     GoodsCategoryDisplayName = x.ShippingRequestFk.GoodCategoryFk,
                     DeliveryDate = x.ActualDeliveryDate,
-                    HasAttachment=x.HasAttachment,
-                    NeedsDeliveryNote=x.NeedsDeliveryNote,
-                    ShipperReference=x.ShippingRequestFk.ReferenceNumber
-                });;
+                    HasAttachment = x.HasAttachment ? "Yes" : "No",
+                    NeedsDeliveryNote = x.NeedsDeliveryNote ? "Yes" : "No",
+                    ShipperReference = x.ShippingRequestFk.ShipperReference,
+                    ShipperInvoiceNo = x.ShippingRequestFk.ShipperInvoiceNo,
+                    ShipperNotes = x.Note
+                }); ;
 
                 var SenderpickupPoint = GetSenderInfo(routPoint.ShippingRequestTripId);
                 var contactName = SenderpickupPoint != null ? SenderpickupPoint.FullName : "";
@@ -1135,21 +1155,21 @@ namespace TACHYON.Shipping.ShippingRequests
                     {
                         MasterWaybillNo = x.MasterWaybillNo,
                         SubWaybillNo = x.SubWaybillNo != null ? x.SubWaybillNo.Value : 0,
-                        Date = Clock.Now.ToShortDateString(),
+                        Date = ToGregorianDate(Clock.Now),
                         ShippingRequestStatus = x.ShippingRequestStatus,
                         SenderCompanyName = GetFacilityPoint(x.Id, null, PickingType.Pickup),
-                        SenderContactName=contactName,
-                        SenderMobile=mobileNo,
+                        SenderContactName = contactName,
+                        SenderMobile = mobileNo,
                         ReceiverCompanyName = GetFacilityPoint(null, routPointId, PickingType.Dropoff), //x.ReceiverCompanyName,
                         ReceiverContactName = GetReceiverName(routPointId, null),
                         ReceiverMobile = GetReceiverPhone(routPointId, null),
                         DriverName = x.DriverName,
-                        DriverIqamaNo = "",
+                        DriverIqamaNo = GetDriverIqamaNo(x.driverUserId),
                         TruckTypeDisplayName = x.TruckTypeDisplayName,
                         PlateNumber = x.PlateNumber,
                         PackingTypeDisplayName = x.PackingTypeDisplayName,
                         NumberOfPacking = x.NumberOfPacking,
-                        StartTripDate = x.StartTripDate,
+                        StartTripDate = ToGregorianDate(x.StartTripDate),
                         DroppFacilityName = x.DroppFacilityName,
                         DroppCountryName = x.DroppCountryName,
                         DroppCityName = x.DroppCityName,
@@ -1158,11 +1178,12 @@ namespace TACHYON.Shipping.ShippingRequests
                         ClientName = x.ClientName,
                         TotalWeight = x.TotalWeight,
                         GoodsCategoryDisplayName = ObjectMapper.Map<GoodCategoryDto>(x.GoodsCategoryDisplayName).DisplayName,// x.GoodsCategoryDisplayName,
-                        DeliveryDate = x.DeliveryDate,
-                        HasAttachment=x.HasAttachment,
-                        NeedsDeliveryNote=x.NeedsDeliveryNote,
-                        ShipperReference=x.ShipperReference,
-                        InvoiceNumber = GetInvoiceNumberByTripId(x.Id)
+                        DeliveryDate = ToGregorianDate(x.DeliveryDate),
+                        HasAttachment = x.HasAttachment,
+                        NeedsDeliveryNote = x.NeedsDeliveryNote,
+                        ShipperReference = x.ShipperReference,
+                        InvoiceNumber = x.ShipperInvoiceNo,//GetInvoiceNumberByTripId(x.Id),
+                        ShipperNotes = x.ShipperNotes
                     });
 
                 return finalOutput;
@@ -1248,6 +1269,34 @@ namespace TACHYON.Shipping.ShippingRequests
                     .Select(x => x.InvoiceFK.InvoiceNumber)
                     .FirstOrDefault();
             return invoiceNumber;
+        }
+
+        private string ToGregorianDate(DateTime? date)
+        {
+            //CultureInfo arCI = new CultureInfo("ar-SA");
+            //DateTime tempDate = DateTime.ParseExact(date.ToShortDateString(), "dd/MM/yy", arCI.DateTimeFormat, DateTimeStyles.AllowInnerWhite);
+            //var currentDate=Convert.ToDateTime(tempDate.ToString("dd/MM/yyyy"),);
+            if (date == null)
+                return "";
+            var currentDate = date.Value.ToString("dd/MM/yyyy");
+
+            var hijri = new UmAlQuraCalendar();
+            var cal = new GregorianCalendar();
+            var hijriDate = new DateTime(Convert.ToInt32(currentDate.Split('/')[2]), Convert.ToInt32(currentDate.Split('/')[1]), Convert.ToInt32(currentDate.Split('/')[0]), hijri);
+            var y = cal.GetYear(hijriDate);
+            var m = cal.GetMonth(hijriDate);
+            var d = cal.GetDayOfMonth(hijriDate);
+
+            var Gdate = d + "/" + m + "/" + y;
+            return Gdate;
+
+        }
+
+        private string GetDriverIqamaNo(long? UserId)
+        {
+            if (UserId == null)
+                return "";
+            return (AsyncHelper.RunSync(() => _documentFilesManager.GetDriverIqamaActiveDocumentAsync(UserId.Value)))?.Number;
         }
         #endregion
 
