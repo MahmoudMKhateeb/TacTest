@@ -193,5 +193,6 @@ import { RatingModule } from '@node_modules/primeng/rating';
     },
   ],
   entryComponents: [NgxSpinnerComponent],
+  exports: [ChangeProfilePictureModalComponent],
 })
 export class AppModule {}

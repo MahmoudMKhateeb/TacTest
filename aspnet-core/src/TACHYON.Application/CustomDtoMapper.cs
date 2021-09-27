@@ -1,6 +1,4 @@
-﻿using TACHYON.Goods.Dtos;
-using TACHYON.Goods;
-using Abp.Application.Editions;
+﻿using Abp.Application.Editions;
 using Abp.Application.Features;
 using Abp.Application.Services.Dto;
 using Abp.Auditing;
@@ -61,6 +59,8 @@ using TACHYON.Editions.Dto;
 using TACHYON.Friendships;
 using TACHYON.Friendships.Cache;
 using TACHYON.Friendships.Dto;
+using TACHYON.Goods;
+using TACHYON.Goods.Dtos;
 using TACHYON.Goods.GoodCategories;
 using TACHYON.Goods.GoodCategories.Dtos;
 using TACHYON.Goods.GoodsDetails;
@@ -238,6 +238,16 @@ namespace TACHYON
             configuration.CreateMap<ShippingRequestVasDto, ShippingRequestVas>().ReverseMap();
             configuration.CreateMap<CreateOrEditVasPriceDto, VasPrice>().ReverseMap();
             configuration.CreateMap<VasPriceDto, VasPrice>().ReverseMap();
+            // Need To Improve The Way Of Get Translation
+            configuration.CreateMap<VasPrice, AvailableVasDto>()
+                .ForMember(x => x.VasName, x =>
+                    x.MapFrom(i =>
+                        i.VasFk.Translations.FirstOrDefault(t =>
+                            CultureInfo.CurrentUICulture.Name.Contains(t.Language)) != null
+                            ? i.VasFk.Translations
+                                .FirstOrDefault(t => CultureInfo.CurrentUICulture.Name.Contains(t.Language)).DisplayName
+                            : i.VasFk.Name));
+
             configuration.CreateMap<Vas, GetVasForEditOutput>()
                 .ForMember(x => x.Vas, x
                     => x.MapFrom(i => i));
@@ -271,6 +281,9 @@ namespace TACHYON
             configuration.CreateMap<Facility, CreateOrEditFacilityDto>()
                 .ForMember(dst => dst.Longitude, opt => opt.MapFrom(src => src.Location.X))
                  .ForMember(dst => dst.Latitude, opt => opt.MapFrom(src => src.Location.Y));
+            configuration.CreateMap<Facility, FacilityLocationListDto>()
+                .ForMember(dst => dst.Longitude, opt => opt.MapFrom(src => src.Location.X))
+                .ForMember(dst => dst.Latitude, opt => opt.MapFrom(src => src.Location.Y));
             configuration.CreateMap<FacilityDto, Facility>()
                  .ForPath(dst => dst.Location.X, opt => opt.MapFrom(src => src.Longitude))
                  .ForPath(dst => dst.Location.Y, opt => opt.MapFrom(src => src.Latitude))
@@ -506,6 +519,23 @@ namespace TACHYON
             configuration.CreateMap<Tenant, RecentTenant>();
             configuration.CreateMap<Tenant, TenantLoginInfoDto>();
             configuration.CreateMap<Tenant, TenantListDto>();
+            configuration.CreateMap<Tenant, TenantProfileInformationDto>()
+                .ForMember(x => x.CompanyName, x => x.MapFrom(i => i.companyName))
+                .ForMember(x => x.CompanyInfo, x => x.MapFrom(i => i.Description))
+                .ForMember(x => x.CompanyPhone, x => x.MapFrom(i => i.MobileNo))
+                // .ForMember(x => x.Rating, x => x.MapFrom(i => i.Rate))
+                .ForMember(x => x.CompanySite, x => x.MapFrom(i => i.Website));
+            configuration.CreateMap<TenantProfileInformationDto, UpdateTenantProfileInformationInputDto>();
+            configuration.CreateMap<TenantProfileInformationDto, TenantProfileInformationForViewDto>();
+            configuration.CreateMap<UpdateTenantProfileInformationInputDto, Tenant>()
+                .ForMember(x => x.MobileNo, x =>
+                      x.MapFrom(i => i.CompanyPhone))
+                .ForMember(x => x.Website, x =>
+                      x.MapFrom(i => i.CompanySite))
+                .ForMember(x => x.Description, x =>
+                      x.MapFrom(i => i.CompanyInfo))
+                .ForMember(x => x.companyName, x =>
+                      x.MapFrom(i => i.CompanyName));
             configuration.CreateMap<TenantEditDto, Tenant>().ReverseMap();
             configuration.CreateMap<CurrentTenantInfoDto, Tenant>().ReverseMap();
 

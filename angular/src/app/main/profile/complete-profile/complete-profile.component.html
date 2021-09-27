@@ -1,0 +1,136 @@
+<div class="flex-row-fluid ml-lg-8">
+  <!--begin::Card-->
+  <div class="card card-custom card-stretch">
+    <!--begin::Header-->
+    <div class="card-header py-3">
+      <div class="card-title align-items-start flex-column">
+        <h3 class="card-label font-weight-bolder">{{ l('CompanyInformation') }}</h3>
+        <span class="text-muted font-weight-bold font-size-sm mt-1">{{ 'UpdateYourCompanyProfileInformation' | localize }}</span>
+      </div>
+      <div class="card-toolbar">
+        <button type="submit" class="btn btn-primary mr-2" (click)="save()" [buttonBusy]="saving">{{ l('SaveChanges') }}</button>
+        <button type="reset" class="btn btn-secondary" routerLink="/app/main/dashboard">{{ l('Skip') }}</button>
+        <!--        <button class="btn btn-lg btn-primary fw-bolder" >Skip</button>-->
+      </div>
+    </div>
+    <!--end::Header-->
+    <!--begin::Form-->
+    <form class="form">
+      <!--begin::Body-->
+      <div class="card-body" [busyIf]="loading">
+        <div class="row">
+          <label class="col-xl-3"></label>
+          <div class="col-lg-9 col-xl-6">
+            <h5 class="font-weight-bold mb-6">{{ l('CompanyInfo') }}</h5>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-xl-3 col-lg-3 col-form-label">{{ l('Avatar') }}</label>
+          <div class="col-lg-9 col-xl-6">
+            <div class="image-input image-input-outline" id="kt_profile_avatar" style="background-image: url({{ profilePicture }})">
+              <div class="image-input-wrapper" style="background-image: url({{ profilePicture }})"></div>
+              <label
+                class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                data-action="change"
+                data-toggle="tooltip"
+                title=""
+                data-original-title="Change avatar"
+                (click)="changeProfilePicture()"
+              >
+                <i class="fa fa-pen icon-sm text-muted"></i>
+              </label>
+            </div>
+            <span class="form-text text-muted">Allowed file types: png, jpg, jpeg.</span>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label class="col-xl-3 col-lg-3 col-form-label">{{ l('CompanyName') }}</label>
+          <div class="col-lg-9 col-xl-6">
+            <input class="form-control form-control-lg form-control-solid" type="text" [(ngModel)]="completeFiled.companyName" name="CompanyName" />
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-xl-3 col-lg-3 col-form-label">{{ l('CompanyDescription') }}</label>
+          <div class="col-lg-9 col-xl-6">
+            <textarea
+              class="form-control form-control-lg form-control-solid"
+              type="text"
+              cols="30"
+              rows="10"
+              [(ngModel)]="completeFiled.companyInfo"
+              name="CompanyDescription"
+            ></textarea>
+            <span class="form-text text-muted">a short description about the Company.</span>
+          </div>
+        </div>
+
+        <div class="row">
+          <label class="col-xl-3"></label>
+          <div class="col-lg-9 col-xl-6">
+            <h5 class="font-weight-bold mt-10 mb-6">{{ l('ContactInfo') }}</h5>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-xl-3 col-lg-3 col-form-label">{{ l('ContactPhone') }}</label>
+          <div class="col-lg-9 col-xl-6">
+            <div class="input-group input-group-lg input-group-solid">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  <i class="la la-phone"></i>
+                </span>
+              </div>
+              <input
+                type="text"
+                class="form-control form-control-lg form-control-solid"
+                placeholder="Phone"
+                name="ContactPhone"
+                [(ngModel)]="completeFiled.companyPhone"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-xl-3 col-lg-3 col-form-label">{{ l('EmailAddress') }}</label>
+          <div class="col-lg-9 col-xl-6">
+            <div class="input-group input-group-lg input-group-solid">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  <i class="la la-at"></i>
+                </span>
+              </div>
+              <input
+                type="text"
+                class="form-control form-control-lg form-control-solid"
+                [(ngModel)]="completeFiled.companyEmailAddress"
+                placeholder="Email"
+                name="EmailAddress"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-xl-3 col-lg-3 col-form-label">{{ l('CompanyWebsite') }}</label>
+          <div class="col-lg-9 col-xl-6">
+            <div class="input-group input-group-lg input-group-solid">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  <i class="la la-globe"></i>
+                </span>
+              </div>
+              <input
+                type="text"
+                class="form-control form-control-lg form-control-solid"
+                placeholder="site.com"
+                [(ngModel)]="completeFiled.companySite"
+                name="CompanySite"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--end::Body-->
+    </form>
+    <!--end::Form-->
+  </div>
+</div>

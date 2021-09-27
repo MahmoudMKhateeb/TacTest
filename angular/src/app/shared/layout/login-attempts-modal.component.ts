@@ -23,7 +23,7 @@ export class LoginAttemptsModalComponent extends AppComponentBase {
   show(): void {
     this._userLoginService.getRecentUserLoginAttempts().subscribe((result) => {
       this.userLoginAttempts = result.items;
-      this._profileService.getProfilePicture().subscribe((result) => {
+      this._profileService.getProfilePicture(null).subscribe((result) => {
         if (result && result.profilePicture) {
           this.profilePicture = 'data:image/jpeg;base64,' + result.profilePicture;
         }

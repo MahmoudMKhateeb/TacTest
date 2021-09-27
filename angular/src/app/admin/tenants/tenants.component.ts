@@ -1,5 +1,5 @@
 import { Component, Injector, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Route, Router } from '@angular/router';
 import { ImpersonationService } from '@app/admin/users/impersonation.service';
 import { CommonLookupModalComponent } from '@app/shared/common/lookup/common-lookup-modal.component';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
@@ -63,7 +63,8 @@ export class TenantsComponent extends AppComponentBase implements OnInit {
     private _activatedRoute: ActivatedRoute,
     private _commonLookupService: CommonLookupServiceProxy,
     private _impersonationService: ImpersonationService,
-    private _editionService: EditionServiceProxy
+    private _editionService: EditionServiceProxy,
+    private _router: Router
   ) {
     super(injector);
     this.setFiltersFromRoute();
@@ -233,5 +234,16 @@ export class TenantsComponent extends AppComponentBase implements OnInit {
           });
       },
     });
+  }
+
+  /**
+   * opens Tenant Profile View in a new tab
+   */
+  viewTenantProfile(tenantId: number) {
+    // Converts the route into a string that can be used
+    // with the window.open() function
+    const url = this._router.serializeUrl(this._router.createUrlTree([`/app/main/profile`, tenantId]));
+
+    window.open(url, '_blank');
   }
 }

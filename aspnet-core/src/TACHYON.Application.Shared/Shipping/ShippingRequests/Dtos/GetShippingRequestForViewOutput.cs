@@ -7,6 +7,9 @@ using TACHYON.Vases.Dtos;
 
 namespace TACHYON.Shipping.ShippingRequests.Dtos
 {
+    /// <summary>
+    /// mapped from ShippingRequest
+    /// </summary>
     public class GetShippingRequestForViewOutput
     {
 
@@ -39,6 +42,11 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         //this field special to tachyon user
         public decimal? CarrierPrice { get; set; }
         public string CarrierName { get; set; }
+
+        /// <summary>
+        /// shipper
+        /// </summary>
+        public int TenantId { get; set; }
 
     }
 }

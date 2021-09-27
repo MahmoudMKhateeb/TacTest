@@ -18,7 +18,12 @@
           <div class="detailsContent">
             <img *ngIf="request.isTachyonDeal" src="/assets/custom/imgs/mark.svg" class="markTachyon" alt="" />
             <div class="infoBasic">
-              <a href="javascript:void(0)" *ngIf="!feature.isEnabled('App.Shipper')" class="companyName">
+              <a
+                href="javascript:void(0)"
+                *ngIf="!feature.isEnabled('App.Shipper')"
+                class="companyName"
+                [routerLink]="request.isTachyonDeal ? [] : ['/app/main/profile', request.tenantId, 'view']"
+              >
                 {{ request.isTachyonDeal ? l('TachyonManageService') : request.shipper }}
               </a>
               <span class="infoHighLight green" *ngIf="shippingrequest.isPriced">

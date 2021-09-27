@@ -298,6 +298,12 @@ import { DriversSubmittedDocumentsComponent } from '@app/main/documentFiles/docu
           { path: 'trip/reject/reasons', component: TripRejectReasonComponent, data: { permission: 'Pages.ShippingRequestTrips.Reject.Reason' } },
           // { path: 'lanaguages/applocalizations', component: AppLocalizationComponent, data: { permission: 'Pages.AppLocalizations' } },
 
+          {
+            path: 'profile',
+            loadChildren: () => import('app/main/profile/profile.module').then((m) => m.ProfileModule), //Lazy load main module
+            data: { preload: true },
+          },
+
           { path: 'dashboard', component: DashboardComponent, data: { permission: 'Pages.Tenant.Dashboard' } },
           //TODO:// to be removed after menu Structure work is complete
           //

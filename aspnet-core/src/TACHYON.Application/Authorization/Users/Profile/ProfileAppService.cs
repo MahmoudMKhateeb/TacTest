@@ -1,9 +1,15 @@
 using Abp;
+using Abp.Application.Editions;
+using Abp.Application.Features;
+using Abp.Application.Services.Dto;
 using Abp.Auditing;
 using Abp.Authorization;
+using Abp.Authorization.Users;
 using Abp.BackgroundJobs;
 using Abp.Configuration;
+using Abp.Domain.Repositories;
 using Abp.Extensions;
+using Abp.Linq.Extensions;
 using Abp.Localization;
 using Abp.Runtime.Caching;
 using Abp.Runtime.Session;
@@ -11,21 +17,39 @@ using Abp.Timing;
 using Abp.UI;
 using Abp.Zero.Configuration;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
+using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using TACHYON.AddressBook;
+using TACHYON.AddressBook.Dtos;
 using TACHYON.Authentication.TwoFactor.Google;
 using TACHYON.Authorization.Users.Dto;
 using TACHYON.Authorization.Users.Profile.Cache;
 using TACHYON.Authorization.Users.Profile.Dto;
+using TACHYON.Cities;
 using TACHYON.Configuration;
+using TACHYON.Features;
 using TACHYON.Friendships;
 using TACHYON.Gdpr;
+using TACHYON.Invoices.PaymentMethods;
 using TACHYON.Net.Sms;
 using TACHYON.Security;
+using TACHYON.Shipping.ShippingRequestTrips;
+using TACHYON.Shipping.Trips;
 using TACHYON.Storage;
 using TACHYON.Timing;
+using TACHYON.Trucks;
+using TACHYON.Trucks.TrucksTypes;
+using TACHYON.Trucks.TrucksTypes.Dtos;
+using TACHYON.Trucks.TrucksTypes.TrucksTypesTranslations;
+using TACHYON.Vases;
+using TACHYON.Vases.Dtos;
 
 namespace TACHYON.Authorization.Users.Profile
 {
@@ -42,6 +66,16 @@ namespace TACHYON.Authorization.Users.Profile
         private readonly ITempFileCacheManager _tempFileCacheManager;
         private readonly IBackgroundJobManager _backgroundJobManager;
         private readonly ProfileImageServiceFactory _profileImageServiceFactory;
+        private readonly IRepository<User, long> _lookupUserRepository;
+        private readonly IRepository<ShippingRequestTrip> _lookupTripRepository;
+        private readonly IRepository<Facility, long> _lookupFacilityRepository;
+        private readonly IRepository<InvoicePaymentMethod> _lookupPaymentMethodRepository;
+        private readonly IRepository<TrucksType, long> _lookupTruckTypeRepository;
+        private readonly IRepository<Truck, long> _lookupTruckRepository;
+        private readonly IRepository<VasPrice> _lookupVasPriceRepository;
+        private readonly IRepository<Edition> _lookupEditionRepository;
+        private readonly IRepository<City> _lookupCityRepository;
+        private readonly IRepository<TrucksTypesTranslation> _trucksTypesTranslationRepository;
 
         public ProfileAppService(
             IAppFolders appFolders,
@@ -53,7 +87,16 @@ namespace TACHYON.Authorization.Users.Profile
             ICacheManager cacheManager,
             ITempFileCacheManager tempFileCacheManager,
             IBackgroundJobManager backgroundJobManager,
-            ProfileImageServiceFactory profileImageServiceFactory)
+            ProfileImageServiceFactory profileImageServiceFactory,
+            IRepository<User, long> lookupUserRepository,
+            IRepository<ShippingRequestTrip> lookupTripRepository,
+            IRepository<Facility, long> lookupFacilityRepository,
+            IRepository<InvoicePaymentMethod> lookupPaymentMethodRepository,
+            IRepository<TrucksType, long> lookupTruckTypeRepository,
+            IRepository<VasPrice> lookupVasPriceRepository,
+            IRepository<Truck, long> lookupTruckRepository,
+            IRepository<Edition> lookupEditionRepository,
+            IRepository<City> lookupCityRepository, IRepository<TrucksTypesTranslation> trucksTypesTranslationRepository)
         {
             _binaryObjectManager = binaryObjectManager;
             _timeZoneService = timezoneService;
@@ -64,6 +107,16 @@ namespace TACHYON.Authorization.Users.Profile
             _tempFileCacheManager = tempFileCacheManager;
             _backgroundJobManager = backgroundJobManager;
             _profileImageServiceFactory = profileImageServiceFactory;
+            _lookupUserRepository = lookupUserRepository;
+            _lookupTripRepository = lookupTripRepository;
+            _lookupFacilityRepository = lookupFacilityRepository;
+            _lookupPaymentMethodRepository = lookupPaymentMethodRepository;
+            _lookupTruckTypeRepository = lookupTruckTypeRepository;
+            _lookupVasPriceRepository = lookupVasPriceRepository;
+            _lookupTruckRepository = lookupTruckRepository;
+            _lookupEditionRepository = lookupEditionRepository;
+            _lookupCityRepository = lookupCityRepository;
+            _trucksTypesTranslationRepository = trucksTypesTranslationRepository;
         }
 
         [DisableAuditing]
@@ -153,6 +206,175 @@ namespace TACHYON.Authorization.Users.Profile
             await _backgroundJobManager.EnqueueAsync<UserCollectedDataPrepareJob, UserIdentifier>(
                 AbpSession.ToUserIdentifier());
         }
+
+        #region SharedServices_Shipper_And_Carrier
+        public async Task<TenantProfileInformationForViewDto> GetTenantProfileInformationForView(int tenantId)
+        {
+            var profile = await GetTenantProfileInformation(tenantId);
+            var profileForView = ObjectMapper.Map<TenantProfileInformationForViewDto>(profile);
+            profileForView.TenancyName = await _lookupEditionRepository.GetAll()
+                .Where(x => x.Id == profile.EditionId)
+                .Select(x => x.DisplayName).FirstOrDefaultAsync();
+            profileForView.CityName = await GetCityNameAsync(profile.CityId);
+            profileForView.CountryName = await GetCountryNameAsync(profile.CountryId);
+            return profileForView;
+        }
+
+        public async Task<UpdateTenantProfileInformationInputDto> GetTenantProfileInformationForEdit()
+        {
+            if (!AbpSession.TenantId.HasValue)
+                throw new UserFriendlyException(L("YouDontHaveAccessToThisPage"));
+            return ObjectMapper.Map<UpdateTenantProfileInformationInputDto>(await GetTenantProfileInformation(AbpSession.TenantId.Value));
+        }
+
+        [AbpAuthorize(AppPermissions.Pages_Tenant_ProfileManagement)]
+        public async Task UpdateTenantProfileInformation(UpdateTenantProfileInformationInputDto input)
+        {
+            if (!AbpSession.TenantId.HasValue || AbpSession.TenantId != input.Id)
+                throw new UserFriendlyException(L("YouDontHaveAccessToThisPage"));
+
+            var tenant = await TenantManager.GetByIdAsync(input.Id);
+            var updatedTenant = ObjectMapper.Map(input, tenant);
+            await TenantManager.UpdateAsync(updatedTenant);
+            var oldEmail = await GetCompanyEmailAddress(input.Id);
+            if (!input.CompanyEmailAddress.Equals(oldEmail))
+            {
+                var user = await UserManager.GetUserByEmailAsync(oldEmail);
+                user.EmailAddress = input.CompanyEmailAddress;
+                user.IsEmailConfirmed = false;
+
+            }
+        }
+        [RequiresFeature(AppFeatures.Carrier, AppFeatures.Shipper, AppFeatures.TachyonDealer)]
+        public async Task<int> GetShipmentCount(int tenantId)
+        {  // Two In One Service
+
+            var tenant = await TenantManager.GetByIdAsync(tenantId);
+            var editionName = await (from edition in _lookupEditionRepository.GetAll()
+                                     where tenant.EditionId == edition.Id
+                                     select edition.DisplayName).FirstOrDefaultAsync();
+
+            var isShipper = editionName.ToUpper().Contains("SHIPPER");
+            var isCarrier = editionName.ToUpper().Contains("CARRIER");
+
+            var haveAccess = (AbpSession.TenantId == tenantId || await IsEnabledAsync(AppFeatures.TachyonDealer));
+
+            if ((!isShipper && !isCarrier) || !haveAccess)
+                throw new UserFriendlyException(L("YouDontHaveAccess"));
+
+            var numberOfCompletedShipments = await _lookupTripRepository.GetAll()
+                .Where(x => x.Status == ShippingRequestTripStatus.Intransit
+                            || x.Status == ShippingRequestTripStatus.Delivered)
+                .WhereIf(isShipper, x => x.ShippingRequestFk.TenantId == tenantId)
+                .WhereIf(isCarrier, x => x.ShippingRequestFk.CarrierTenantId == tenantId)
+                .CountAsync();
+
+            return numberOfCompletedShipments;
+        }
+
+        #endregion
+
+        #region ShipperServicesOnly
+
+        [RequiresFeature(AppFeatures.Shipper)]
+        public async Task<PagedResultDto<FacilityLocationListDto>> GetFacilitiesInformation(GetFacilitiesInformationInput input)
+        {
+            var shipperFacilities = _lookupFacilityRepository.GetAll()
+                .AsNoTracking().Include(x => x.CityFk)
+                .Where(x => x.TenantId == input.TenantId)
+                .OrderBy(input.Sorting ?? "Id desc");
+
+            var facilities = await shipperFacilities.PageBy(input).ToListAsync();
+            var totalCount = await shipperFacilities.CountAsync();
+            return new PagedResultDto<FacilityLocationListDto>() { Items = await ToFacilityLocationDto(facilities), TotalCount = totalCount };
+        }
+
+        [RequiresFeature(AppFeatures.Shipper)]
+        public async Task<InvoicingInformationDto> GetInvoicingInformation(int tenantId)
+        {
+
+            var tenant = await TenantManager.GetByIdAsync(tenantId);
+
+            var creditLimit = await FeatureChecker.GetValueAsync(tenantId,
+                AppFeatures.ShipperCreditLimit);
+            var currentBalance = tenant.Balance - tenant.ReservedBalance;
+
+            var paymentMethodId = int.Parse(await FeatureChecker.GetValueAsync(tenantId,
+                AppFeatures.InvoicePaymentMethod));
+            var paymentMethod = await _lookupPaymentMethodRepository.FirstOrDefaultAsync(paymentMethodId);
+
+            return new InvoicingInformationDto()
+            {
+                CreditLimit = creditLimit,
+                CreditType = paymentMethod.DisplayName,
+                CurrentBalance = currentBalance.ToString(CultureInfo.CurrentUICulture),
+                InvoicingDuePeriod = paymentMethod.InvoiceDueDateDays
+            };
+        }
+
+        #endregion
+
+        #region CarrierServicesOnly
+
+        [RequiresFeature(AppFeatures.Carrier)]
+        public async Task<FleetInformationDto> GetFleetInformation(GetFleetInformationInputDto input)
+        {
+
+
+            var translationQuery = _trucksTypesTranslationRepository
+                .GetAll()
+                .Where(i => i.Language.Contains(CultureInfo.CurrentUICulture.Name));
+
+            var resultQuery = from t in _lookupTruckRepository.GetAll()
+                              join r in translationQuery.DefaultIfEmpty() on t.TrucksTypeId equals r.CoreId
+                              select new
+                              {
+                                  r.CoreId,
+                                  r.TranslatedDisplayName,
+                              };
+
+            var availableTrucks = resultQuery
+               .GroupBy(x => new { TrucksTypeId = x.CoreId, x.TranslatedDisplayName })
+               .Select(g => new TruckTypeAvailableTrucksDto
+               {
+                   Id = g.Key.TrucksTypeId,
+                   AvailableTrucksCount = g.Count(),
+                   TruckType = g.Key.TranslatedDisplayName
+
+               });
+
+
+            //var availableTrucks = 
+
+            var pageResult = await availableTrucks.PageBy(input).ToListAsync();
+            var totalCount = await availableTrucks.CountAsync();
+            var driversCount = await _lookupUserRepository.CountAsync(x => x.TenantId == input.TenantId && x.IsDriver);
+
+            return new FleetInformationDto()
+            {
+                AvailableTrucksDto = new PagedResultDto<TruckTypeAvailableTrucksDto>()
+                { Items = pageResult, TotalCount = totalCount },
+                TotalDrivers = driversCount
+            };
+        }
+
+        [RequiresFeature(AppFeatures.Carrier)]
+        public async Task<PagedResultDto<AvailableVasDto>> GetAvailableVases(GetAvailableVasesInputDto input)
+        {
+            // Ask if Need (Domain Service)
+            var availableVases = _lookupVasPriceRepository.GetAll()
+                .Include(x => x.VasFk)
+                .ThenInclude(x => x.Translations)
+                .Where(x => x.TenantId == input.CarrierTenantId && !x.VasFk.IsDeleted)
+                .OrderBy(input.Sorting ?? "Id desc");
+
+            var pageResult = await availableVases.PageBy(input).ToListAsync();
+            var totalCount = await availableVases.CountAsync();
+
+            return new PagedResultDto<AvailableVasDto>() { Items = ObjectMapper.Map<List<AvailableVasDto>>(pageResult), TotalCount = totalCount };
+        }
+
+        #endregion
 
         public async Task UpdateCurrentUserProfile(CurrentUserProfileEditDto input)
         {
@@ -288,9 +510,20 @@ namespace TACHYON.Authorization.Users.Profile
         }
 
         [DisableAuditing]
-        public async Task<GetProfilePictureOutput> GetProfilePicture()
+        public async Task<GetProfilePictureOutput> GetProfilePicture(long? userId)
         {
-            using (var profileImageService = await _profileImageServiceFactory.Get(AbpSession.ToUserIdentifier()))
+            UserIdentifier userIdentifier;
+            if (!(userId is null))
+            {
+                var tenantId = await (from user in _lookupUserRepository.GetAll()
+                                      where user.Id == userId
+                                      select user.TenantId).FirstOrDefaultAsync();
+
+                userIdentifier = new UserIdentifier(tenantId, userId.Value);
+            }
+            else userIdentifier = AbpSession.ToUserIdentifier();
+
+            using (var profileImageService = await _profileImageServiceFactory.Get(userIdentifier))
             {
                 var profilePictureContent = await profileImageService.Object.GetProfilePictureContentForUser(
                     AbpSession.ToUserIdentifier()
@@ -358,6 +591,11 @@ namespace TACHYON.Authorization.Users.Profile
             );
         }
 
+        public async Task<bool> IsProfileCompleted(int tenantId)
+        {
+            var tenant = await TenantManager.GetByIdAsync(tenantId);
+            return (!tenant.Description.IsNullOrEmpty() && !tenant.Website.IsNullOrEmpty());
+        }
         private async Task<byte[]> GetProfilePictureByIdOrNull(Guid profilePictureId)
         {
             var file = await _binaryObjectManager.GetOrNullAsync(profilePictureId);
@@ -379,5 +617,59 @@ namespace TACHYON.Authorization.Users.Profile
 
             return new GetProfilePictureOutput(Convert.ToBase64String(bytes));
         }
+
+        private async Task<TenantProfileInformationDto> GetTenantProfileInformation(int tenantId)
+        {
+            var tenant = await TenantManager.GetByIdAsync(tenantId);
+            var profileInformation = ObjectMapper.Map<TenantProfileInformationDto>(tenant);
+            profileInformation.CompanyEmailAddress = await GetCompanyEmailAddress(tenantId);
+            profileInformation.Rating = 4.2;
+            return profileInformation;
+        }
+
+        private async Task<string> GetCityNameAsync(int cityId)
+        {
+            var cityName = await (from city in _lookupCityRepository.GetAll()
+                                  where city.Id == cityId
+                                  select city.Translations.FirstOrDefault(x => x.Language.Contains(CultureInfo.CurrentUICulture.Name)) != null ?
+                                      city.Translations.FirstOrDefault(x => x.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName
+                                  : city.DisplayName).FirstOrDefaultAsync();
+            return cityName;
+        }
+
+        private async Task<string> GetCountryNameAsync(int countryId)
+        {
+            var countryName = await (from city in _lookupCityRepository.GetAll()
+                                     where city.CountyId == countryId
+                                     select city.CountyFk.Translations.FirstOrDefault(x =>
+                                         x.Language.Contains(CultureInfo.CurrentUICulture.Name)) != null
+                                         ? city.CountyFk.Translations.FirstOrDefault(x => x.Language.Contains(CultureInfo.CurrentUICulture.Name))
+                                             .TranslatedDisplayName : city.CountyFk.DisplayName).FirstOrDefaultAsync();
+            return countryName;
+        }
+        private async Task<String> GetCompanyEmailAddress(int tenantId)
+        {
+            DisableTenancyFilters();
+            return await (from user in _lookupUserRepository.GetAll()
+                          where user.TenantId == tenantId && user.UserName == AbpUserBase.AdminUserName
+                          select user.EmailAddress).FirstOrDefaultAsync();
+        }
+
+        private async Task<List<FacilityLocationListDto>> ToFacilityLocationDto(List<Facility> facilities)
+        {
+            var pageResult = new List<FacilityLocationListDto>();
+
+            for (var i = 0; i < facilities.Count; i++)
+            {
+                var facility = facilities.ElementAt(i);
+                var dto = ObjectMapper.Map<FacilityLocationListDto>(facility);
+                dto.CityName = await GetCityNameAsync(facility.CityId);
+                dto.CountryName = await GetCityNameAsync(facility.CityFk.CountyId);
+                pageResult.Add(dto);
+            }
+
+            return pageResult;
+        }
+
     }
 }

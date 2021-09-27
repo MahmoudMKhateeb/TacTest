@@ -4,7 +4,7 @@ using TACHYON.Shipping.Trips;
 
 namespace TACHYON.Tracking.Dto
 {
-    public  class TrackingListDto:EntityDto
+    public class TrackingListDto : EntityDto
     {
         public string Name { get; set; }
         public ShippingRequestTripStatus Status { get; set; }
@@ -22,10 +22,10 @@ namespace TACHYON.Tracking.Dto
         public string GoodsCategory { get; set; }
         public ShippingRequestRouteType RouteTypeId { get; set; }
         public string RouteType { get { return RouteTypeId.GetEnumDescription(); } set { } }
-        public string Reason { get; set; } 
+        public string Reason { get; set; }
         public bool IsAssign { get; set; }
         public bool CanStartTrip { get; set; }
-        public ShippingRequestType  RequestType { get; set; }
+        public ShippingRequestType RequestType { get; set; }
         public bool HasAccident { get; set; }
 
         public bool isApproveCancledByCarrier { get; set; }
@@ -35,6 +35,9 @@ namespace TACHYON.Tracking.Dto
 
         public string ReferenceNumber { get; set; }
 
-
+        /// <summary>
+        /// shipper Id
+        /// </summary>
+        public int TenantId { get; set; }
     }
 }

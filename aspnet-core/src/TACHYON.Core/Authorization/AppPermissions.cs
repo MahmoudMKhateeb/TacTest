@@ -26,7 +26,7 @@
         public const string Pages_TruckStatusesTranslations_Edit = "Pages.TruckStatusesTranslations.Edit";
         public const string Pages_TruckStatusesTranslations_Delete = "Pages.TruckStatusesTranslations.Delete";
 
-        public const string App_Shipper="App.Shipper";
+        public const string App_Shipper = "App.Shipper";
         public const string App_Carrier = "App.Carrier";
 
 
@@ -366,6 +366,7 @@
 
         public const string Pages_Administration_Host_Languages = "Pages.Administration.Host.Languages";
 
+        public const string Pages_Tenant_ProfileManagement = "Pages.Tenant.ProfileManagement";
         //HOST-SPECIFIC PERMISSIONS
 
         public const string Pages_Editions = "Pages.Editions";
@@ -402,7 +403,7 @@
         public const string Pages_Administration_Host_Invoices_PaymentMethod_Edit = "Pages.Administration.Host.Invoices.PaymentMethod.Edit";
         public const string Pages_Administration_Host_Invoices_PaymentMethod_Delete = "Pages.Administration.Host.Invoices.PaymentMethod.Delete";
 
-        
+
         public const string Pages_Invoices = "Pages.Invoices";
         public const string Pages_Administration_Host_Invoices_Delete = "Pages.Administration.Host.Invoices.Invoices.Delete";
         public const string Pages_Administration_Host_Invoices_MakePaid = "Pages.Administration.Host.Invoices.MakePaid";

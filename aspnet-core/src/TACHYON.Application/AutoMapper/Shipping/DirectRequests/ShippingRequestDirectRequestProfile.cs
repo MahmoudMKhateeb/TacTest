@@ -4,12 +4,13 @@ using TACHYON.Shipping.DirectRequests.Dto;
 
 namespace TACHYON.AutoMapper.Shipping.DirectRequests
 {
-    public class ShippingRequestDirectRequestProfile:Profile
+    public class ShippingRequestDirectRequestProfile : Profile
     {
         public ShippingRequestDirectRequestProfile()
         {
-            
+
             CreateMap<ShippingRequestDirectRequest, ShippingRequestDirectRequestListDto>()
+            .ForMember(dest => dest.TenantId, opt => opt.MapFrom(src => src.Carrier.Id))
             .ForMember(dest => dest.Carrier, opt => opt.MapFrom(src => src.Carrier.Name))
             .ForMember(dest => dest.CarrierRate, opt => opt.MapFrom(src => src.Carrier.Rate));
             CreateMap<CreateShippingRequestDirectRequestInput, ShippingRequestDirectRequest>();
@@ -17,4 +18,3 @@ namespace TACHYON.AutoMapper.Shipping.DirectRequests
         }
     }
 }
-
