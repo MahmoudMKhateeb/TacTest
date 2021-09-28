@@ -13,6 +13,8 @@ Preparation:
     - Copy-item -Force -Recurse -Verbose . -Destination C:\Users\Islam\Desktop\pureProject
     - Stop-WebSite 'Default Web Site' ## stopping FrontEnd Website
     - Stop-WebSite 'TachyonProdCore' ## stopping Backend Website
+  only:
+    - feature/CI-CD
 ### end of Preparation
 ### starting Build
 Backend:
@@ -51,3 +53,6 @@ release:
     - dir
     - Start-WebSite 'TachyonProdCore' ##start Backend Site
     - Start-WebSite 'Default Web Site' ##start fronend Site
+  only:
+    - feature/CI-CD
+
