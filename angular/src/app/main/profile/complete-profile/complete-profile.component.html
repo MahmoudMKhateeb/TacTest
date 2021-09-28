@@ -8,14 +8,16 @@
         <span class="text-muted font-weight-bold font-size-sm mt-1">{{ 'UpdateYourCompanyProfileInformation' | localize }}</span>
       </div>
       <div class="card-toolbar">
-        <button type="submit" class="btn btn-primary mr-2" (click)="save()" [buttonBusy]="saving">{{ l('SaveChanges') }}</button>
+        <button type="submit" class="btn btn-primary mr-2" (click)="save()" [buttonBusy]="saving" [disabled]="!profileForm.form.valid">
+          {{ l('SaveChanges') }}
+        </button>
         <button type="reset" class="btn btn-secondary" routerLink="/app/main/dashboard">{{ l('Skip') }}</button>
         <!--        <button class="btn btn-lg btn-primary fw-bolder" >Skip</button>-->
       </div>
     </div>
     <!--end::Header-->
     <!--begin::Form-->
-    <form class="form">
+    <form class="form" #profileForm="ngForm" autocomplete="off" novalidate>
       <!--begin::Body-->
       <div class="card-body" [busyIf]="loading">
         <div class="row">
@@ -47,20 +49,37 @@
         <div class="form-group row">
           <label class="col-xl-3 col-lg-3 col-form-label">{{ l('CompanyName') }}</label>
           <div class="col-lg-9 col-xl-6">
-            <input class="form-control form-control-lg form-control-solid" type="text" [(ngModel)]="completeFiled.companyName" name="CompanyName" />
+            <input
+              #companyName="ngModel"
+              class="form-control form-control-lg form-control-solid"
+              type="text"
+              [(ngModel)]="completeFiled.companyName"
+              name="CompanyName"
+              placeholder="{{ l('CompanyName') }}"
+              required
+              [class.is-invalid]="companyName.touched && !companyName.valid"
+              [class.is-valid]="companyName.touched && companyName.valid"
+            />
           </div>
         </div>
         <div class="form-group row">
           <label class="col-xl-3 col-lg-3 col-form-label">{{ l('CompanyDescription') }}</label>
           <div class="col-lg-9 col-xl-6">
             <textarea
+              #companyInfo="ngModel"
               class="form-control form-control-lg form-control-solid"
               type="text"
-              cols="30"
-              rows="10"
+              cols="15"
+              rows="5"
+              placeholder="{{ l('CompanyDescription') }}"
               [(ngModel)]="completeFiled.companyInfo"
               name="CompanyDescription"
-            ></textarea>
+              required
+              [class.is-invalid]="companyInfo.touched && !companyInfo.valid"
+              [class.is-valid]="companyInfo.touched && companyInfo.valid"
+            >
+            </textarea>
+
             <span class="form-text text-muted">a short description about the Company.</span>
           </div>
         </div>
@@ -81,11 +100,16 @@
                 </span>
               </div>
               <input
+                #companyPhone="ngModel"
                 type="text"
                 class="form-control form-control-lg form-control-solid"
-                placeholder="Phone"
+                placeholder="{{ l('Phone') }}"
                 name="ContactPhone"
                 [(ngModel)]="completeFiled.companyPhone"
+                required
+                (keypress)="numberOnly($event)"
+                [class.is-invalid]="companyPhone.touched && !companyPhone.valid"
+                [class.is-valid]="companyPhone.touched && companyPhone.valid"
               />
             </div>
           </div>
@@ -100,11 +124,16 @@
                 </span>
               </div>
               <input
+                #companyEmailAddress="ngModel"
                 type="text"
                 class="form-control form-control-lg form-control-solid"
                 [(ngModel)]="completeFiled.companyEmailAddress"
-                placeholder="Email"
+                placeholder="{{ l('EnterYourEmail') }}"
                 name="EmailAddress"
+                required
+                pattern="^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$"
+                [class.is-invalid]="companyEmailAddress.touched && !companyEmailAddress.valid"
+                [class.is-valid]="companyEmailAddress.touched && companyEmailAddress.valid"
               />
             </div>
           </div>
@@ -119,11 +148,15 @@
                 </span>
               </div>
               <input
+                #companySite="ngModel"
                 type="text"
                 class="form-control form-control-lg form-control-solid"
-                placeholder="site.com"
+                placeholder="{{ l('site.com') }}"
                 [(ngModel)]="completeFiled.companySite"
                 name="CompanySite"
+                required
+                [class.is-invalid]="companySite.touched && !companySite.valid"
+                [class.is-valid]="companySite.touched && companySite.valid"
               />
             </div>
           </div>
