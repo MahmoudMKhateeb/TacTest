@@ -18,6 +18,7 @@ namespace TACHYON.Routs.RoutPoints.Dtos
         public double Latitude { get; set; }
         public string PackagingType { get; set; }
         public int? Rating { get; set; }
+        public int RatingNumber { get; set; }
         public string ReceiverFullName { get; set; }
         public string ReceiverPhoneNumber { get; set; }
         public string ReceiverEmailAddress { get; set; }
