@@ -9,7 +9,7 @@ using TACHYON.ShippingRequestVases;
 
 namespace TACHYON.AutoMapper.PriceOffers
 {
-    public class PriceOfferProfile: Profile
+    public class PriceOfferProfile : Profile
     {
         public PriceOfferProfile()
         {
@@ -29,17 +29,18 @@ namespace TACHYON.AutoMapper.PriceOffers
                 .ForMember(dst => dst.ShippingRequestStatus, opt => opt.MapFrom(src => src.ShippingRequestFK.Status))
                 .ForMember(dst => dst.IsTachyonDeal, opt => opt.MapFrom(src => src.ShippingRequestFK.IsTachyonDeal))
                 .ForMember(dst => dst.Items, opt => opt.MapFrom(src => src.PriceOfferDetails));
-            
+
             CreateMap<ShippingRequestVas, PriceOfferItemDto>()
                 .ForMember(dst => dst.ItemId, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dst => dst.ParentItemId, opt => opt.MapFrom(src => src.VasId))
                 .ForMember(dst => dst.ItemName, opt => opt.MapFrom(src => src.VasFk.Name))
                 .ForMember(dst => dst.PriceType, opt => opt.MapFrom(src => PriceOfferType.Vas))
-                .ForMember(dst => dst.Quantity, opt => opt.MapFrom(src => src.RequestMaxCount>=1?src.RequestMaxCount:1));
+                .ForMember(dst => dst.Quantity, opt => opt.MapFrom(src => src.RequestMaxCount >= 1 ? src.RequestMaxCount : 1));
 
             CreateMap<ShippingRequest, GetShippingRequestForPriceOfferListDto>()
              .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Tenant.Name))
              .ForMember(dst => dst.ShipperRating, opt => opt.MapFrom(src => src.Tenant.Rate))
+             .ForMember(dst => dst.ShipperRatingNumber, opt => opt.MapFrom(src => src.Tenant.RateNumber))
              .ForMember(dst => dst.Carrier, opt => opt.MapFrom(src => src.CarrierTenantFk.Name))
              .ForMember(dst => dst.OriginCity, opt => opt.MapFrom(src => src.OriginCityFk.DisplayName))
              .ForMember(dst => dst.DestinationCity, opt => opt.MapFrom(src => src.DestinationCityFk.DisplayName))

@@ -10,9 +10,8 @@ namespace TACHYON.Rating
     {
         Task CreateCarrierRatingByShipper(CreateCarrierRatingByShipperDto input);
         Task CreateDriverAndDERatingByReceiver(CreateDriverAndDERatingByReceiverDto input);
-        //Task CreateDeliveryExpRatingByReceiver(CreateDeliveryExpRateByReceiverDto input);
-        Task CreateFacilityRatingByDriver(CreateFacilityRateByDriverDto input);
-        Task CreateShippingExpRatingByDriver(CreateShippingExpRateByDriverDto input);
+        // Task CreateFacilityRatingByDriver(CreateFacilityRateByDriverDto input);
+        // Task CreateShippingExpRatingByDriver(CreateShippingExpRateByDriverDto input);
         Task CreateShipperRatingByCarrier(CreateShipperRateByCarrierDto input);
     }
 }

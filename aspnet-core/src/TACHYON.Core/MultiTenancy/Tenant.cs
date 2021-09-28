@@ -52,6 +52,7 @@ namespace TACHYON.MultiTenancy
         /// This field is final rate for tenant "shipper or carrier"
         /// </summary>
         public decimal Rate { get; set; }
+        public int RateNumber { get; set; }
         public SubscriptionPaymentType SubscriptionPaymentType { get; set; }
 
         public string Website { get; set; }
