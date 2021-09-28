@@ -18,6 +18,7 @@ export class SideProfileComponent extends AppComponentBase implements OnInit, On
   public loading: boolean;
   //side Profile Dto
   sideProfileUserInfo: TenantProfileInformationForViewDto = new TenantProfileInformationForViewDto();
+  ShipmentCount: any;
 
   profilePicture = AppConsts.appBaseUrl + '/assets/common/images/default-profile-picture.png';
   private routeParmSubscription$: Subscription;
@@ -60,6 +61,9 @@ export class SideProfileComponent extends AppComponentBase implements OnInit, On
     this.currentUserid = this.appSession.tenantId;
     abp.event.on('profilePictureChanged', () => {
       this.getProfilePicture();
+    });
+    this._profileServiceProxy.getShipmentCount(this.givenId).subscribe((result) => {
+      this.ShipmentCount = result;
     });
   }
 
