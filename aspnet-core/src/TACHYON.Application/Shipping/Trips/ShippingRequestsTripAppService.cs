@@ -222,7 +222,7 @@ namespace TACHYON.Shipping.Trips
             if (request.TotalWeight > 0)
             {
                 var totalWeight = input.RoutPoints.Where(x => x.GoodsDetailListDto != null)
-                    .Sum(x => x.GoodsDetailListDto.Sum(g => g.Weight));
+                    .Sum(x => x.GoodsDetailListDto.Sum(g => g.Weight * g.Amount));
                 if (totalWeight > request.TotalWeight)
                 {
                     throw new UserFriendlyException(L("TheTotalWeightOfGoodsDetailsshouldNotBeGreaterThanShippingRequestWeight",
