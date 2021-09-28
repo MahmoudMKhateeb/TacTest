@@ -47,6 +47,9 @@ export class SideProfileComponent extends AppComponentBase implements OnInit, On
     return this.currentUserid === this.givenId;
     //return;
   }
+  get isTMS(): boolean {
+    return !this.isCarrier && !this.isShipper;
+  }
 
   ngOnInit(): void {
     abp.event.on('tenantUpdatedHisProfileInformation', () => {

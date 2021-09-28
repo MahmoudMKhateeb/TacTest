@@ -49,6 +49,19 @@ export class TenantsProfileComponent extends AppComponentBase implements OnInit 
     super(injector);
     this.givenId = parseInt(this._Activatedroute.parent.snapshot.paramMap.get('id'));
   }
+  /**
+   * This One is to Determine the User Type Who Viewing the profile
+   */
+
+  get isCarrier(): boolean {
+    return this.feature.isEnabled('App.Carrier');
+  }
+  get isShipper(): boolean {
+    return this.feature.isEnabled('App.Shipper');
+  }
+  get isTMS(): boolean {
+    return !this.isCarrier && !this.isShipper;
+  }
 
   ngOnInit(): void {
     this.getGiverUserEditionType();
