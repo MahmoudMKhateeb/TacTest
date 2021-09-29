@@ -367,7 +367,7 @@ namespace TACHYON.Shipping.Drivers
         /// The driver rate facility after drop finished
         /// </summary>
         /// <param name="input"></param>
-        public async Task SetRating(CreateFacilityRateByDriverDto input)
+        public async Task SetRating(long PointId, int Rate, string Note)
         {
             //DisableTenancyFilters();
             //var Point = await _RoutPointRepository.FirstOrDefaultAsync(x => x.Id == PointId && x.ShippingRequestTripFk.Status != ShippingRequestTripStatus.Canceled && x.IsComplete && x.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId && !x.Rating.HasValue);
@@ -375,6 +375,10 @@ namespace TACHYON.Shipping.Drivers
             //    Point.Rating = Rate;
             //    Point.ReceiverNote = Note;
             //} 
+            var input = new CreateFacilityRateByDriverDto();
+            input.PointId = PointId;
+            input.Rate = Rate;
+            input.Note = Note;
             await _ratingLogManager.ValidateAndCreateRating(input, RateType.FacilityByDriver);
         }
 
@@ -382,8 +386,12 @@ namespace TACHYON.Shipping.Drivers
         /// The driver rate shipping Experience after trip delivered
         /// </summary>
         /// <param name="input"></param>
-        public async Task SetShippingExpRating(CreateShippingExpRateByDriverDto input)
+        public async Task SetShippingExpRating(int tripId, int rate, string note)
         {
+            var input = new CreateShippingExpRateByDriverDto();
+            input.TripId = tripId;
+            input.Rate = rate;
+            input.Note = note;
             await _ratingLogManager.ValidateAndCreateRating(input, RateType.SEByDriver);
         }
 

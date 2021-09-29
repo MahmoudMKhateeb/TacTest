@@ -17,8 +17,8 @@ namespace TACHYON.Shipping.Drivers
         Task ChangeTripStatus();
         Task GotoNextLocation(long PointId);
         Task ConfirmReceiverCode(string Code);
-        Task SetRating(CreateFacilityRateByDriverDto input);
-        Task SetShippingExpRating(CreateShippingExpRateByDriverDto input);
+        Task SetRating(long PointId, int Rate, string Note);
+        Task SetShippingExpRating(int tripId, int rate, string note);
         Task Accepted(int TripId);
         //Task Rejected(CreateShippingRequestTripDriverRejectDto Input);
         Task Reset(int TripId);
