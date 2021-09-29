@@ -64,7 +64,7 @@ namespace TACHYON.Shipping.Trips.RejectReasons
                     throw new UserFriendlyException(L("DisplayNameCannotBeEmpty"));
                 }
                 var isDuplicateUserName = await _shippingRequestTripRejectReasonRepository
-                   .FirstOrDefaultAsync(x => x.Translations.Any(x => x.Name == transItem.Name) &&
+                   .FirstOrDefaultAsync(x => x.Translations.Any(i => i.Name == transItem.Name) &&
                    x.Id != input.Id);
                 if (isDuplicateUserName != null)
                 {
