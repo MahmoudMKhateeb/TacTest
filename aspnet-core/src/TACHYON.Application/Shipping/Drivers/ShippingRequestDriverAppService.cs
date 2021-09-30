@@ -312,6 +312,14 @@ namespace TACHYON.Shipping.Drivers
                         trip.ActualDeliveryDate = Clock.Now;
                     }
 
+                    //update completed status
+                    Point.CompletedStatus = RoutePointCompletedStatus.CompletedAndMissingReceiverCode;
+                    //check if all trip points completed, change the trip status from intransit to delivered and needs confirmation
+                    if (trip.RoutPoints.Where(x => x.Id != Point.Id).All(x => x.CompletedStatus > RoutePointCompletedStatus.NotCompleted))
+                    {
+                        trip.Status = ShippingRequestTripStatus.DeliveredAndNeedsConfirmation;
+                    }
+
                     break;
             }
 
@@ -343,18 +351,29 @@ namespace TACHYON.Shipping.Drivers
                     CurrentPoint.IsComplete = true;
                     CurrentPoint.EndTime = Clock.Now;
 
-                    await CurrentUnitOfWork.SaveChangesAsync();
                 }
+
+                if (CurrentPoint.PickingType == PickingType.Dropoff &&
+                    (trip.RoutePointStatus == RoutePointStatus.FinishOffLoadShipment ||
+                    trip.RoutePointStatus == RoutePointStatus.ReceiverConfirmed))
+                {
+                    //can go to next point if not confirming receiverd code nor uploading POD
+                    CurrentPoint.IsActive = false;
+                }
+
+                await CurrentUnitOfWork.SaveChangesAsync();
             }
             else
             {
+                // when we don't have current active point in same point trip??
                 trip = await _shippingRequestDriverManager.GetActiveTrip();
             }
 
             var Count = await _RoutPointRepository.GetAll()
              .Where(x => (
              (x.IsActive && x.PickingType == PickingType.Dropoff && x.Id != PointId) ||
-(x.Id == PointId && (x.IsComplete || x.IsActive))) &&
+             //check if the selected point is completed or active, wether it pickup or drop
+             (x.Id == PointId && (x.IsComplete || x.IsActive))) &&
              x.ShippingRequestTripId == trip.Id).CountAsync();
 
             if (Count > 0) throw new UserFriendlyException(L("ThereIsAnotherActivePointStillNotClose"));
@@ -364,7 +383,7 @@ namespace TACHYON.Shipping.Drivers
                 .Include(x => x.ShippingRequestTripFk)
                 .ThenInclude(x => x.ShippingRequestFk)
                 .FirstOrDefaultAsync(x => x.Id == PointId);
-            if (Newpoint == null) throw new UserFriendlyException(L("the trip is not exists"));
+            if (Newpoint == null) throw new UserFriendlyException(L("the point is not exists"));
             Newpoint.StartTime = Clock.Now;
             Newpoint.IsActive = true;
             trip.RoutePointStatus = RoutePointStatus.StartedMovingToOfLoadingLocation;
@@ -380,23 +399,28 @@ namespace TACHYON.Shipping.Drivers
         /// <param name="Code"></param>
         /// <returns></returns>
 
-        public async Task ConfirmReceiverCode(string Code)
+        public async Task ConfirmReceiverCode(string Code, long? PointId)
         {
             DisableTenancyFilters();
+            //get point that send, if null get active point
             var CurrentPoint = await _RoutPointRepository.GetAll()
                 .Include(t => t.ShippingRequestTripFk)
                     .ThenInclude(x => x.ShippingRequestTripVases)
                 .Include(x => x.ShippingRequestTripFk)
                     .ThenInclude(x => x.ShippingRequestFk)
                      .ThenInclude(x => x.Tenant)
+                .WhereIf(PointId == null, x => x.IsActive)
+                .WhereIf(PointId != null, x => x.Id == PointId)
                 .FirstOrDefaultAsync(
-                                    x => x.IsActive && x.ShippingRequestTripFk.RoutePointStatus == RoutePointStatus.FinishOffLoadShipment &&
+                                    x => x.ShippingRequestTripFk.RoutePointStatus == RoutePointStatus.FinishOffLoadShipment &&
                                     x.Code == Code &&
                                     x.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId
                                     );
             if (CurrentPoint == null) throw new UserFriendlyException(L("TheReceiverCodeIsIncorrect"));
 
             CurrentPoint.ShippingRequestTripFk.RoutePointStatus = RoutePointStatus.ReceiverConfirmed;
+            CurrentPoint.CompletedStatus = RoutePointCompletedStatus.CompletedAndMissingPOD;
+
             await _shippingRequestDriverManager.SetRoutStatusTransition(CurrentPoint, RoutePointStatus.ReceiverConfirmed);
             await _shippingRequestsTripManager.NotificationWhenPointChanged(CurrentPoint, GetCurrentUser());
         }
@@ -439,11 +463,6 @@ namespace TACHYON.Shipping.Drivers
         public async Task Accepted(int TripId)
         {
             await _shippingRequestsTripManager.Accepted(TripId);
-            //DisableTenancyFilters();
-            //var trip = await _shippingRequestDriverManager.GetTripWhenAccepedOrRejectedByDriver(TripId, AbpSession.UserId.Value);
-            //await _appNotifier.DriverAcceptTrip(trip, GetCurrentUser().FullName);
-            //trip.DriverStatus = ShippingRequestTripDriverStatus.Accepted;
-            //await _shippingRequestsTripManager.GeneratePrices(trip);
         }
 
         #region Location tracking

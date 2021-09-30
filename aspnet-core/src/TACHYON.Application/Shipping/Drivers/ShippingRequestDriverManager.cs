@@ -1,5 +1,7 @@
 ﻿using Abp;
+using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
+using Abp.Linq.Extensions;
 using Abp.Runtime.Session;
 using Abp.Timing;
 using Abp.UI;
@@ -62,7 +64,7 @@ namespace TACHYON.Shipping.Drivers
         /// <param name="receiverCode"></param>
         /// <returns></returns>
 
-        public async Task<bool> SetPointToDelivery(IHasDocument document)
+        public async Task<bool> SetPointToDelivery(IHasDocument document, long? pointId)
         {
             DisableTenancyFilters();
             var CurrentPoint = await _RoutPointRepository.GetAll().
@@ -71,7 +73,9 @@ namespace TACHYON.Shipping.Drivers
                 .Include(x => x.ShippingRequestTripFk)
                     .ThenInclude(x => x.ShippingRequestFk)
                      .ThenInclude(x => x.Tenant)
-                .FirstOrDefaultAsync(x => x.IsActive &&
+                .WhereIf(pointId == null, x => x.IsActive)
+                .WhereIf(pointId != null, x => x.Id == pointId)
+                .FirstOrDefaultAsync(x =>
                 x.ShippingRequestTripFk.RoutePointStatus == RoutePointStatus.ReceiverConfirmed &&
                 x.ShippingRequestTripFk.AssignedDriverUserId == _abpSession.UserId);
             if (CurrentPoint == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
@@ -91,9 +95,12 @@ namespace TACHYON.Shipping.Drivers
 
             CurrentPoint.IsActive = false;
             CurrentPoint.IsComplete = true;
+            CurrentPoint.CompletedStatus = RoutePointCompletedStatus.Completed;
             await SetRoutStatusTransition(CurrentPoint, RoutePointStatus.DeliveryConfirmation);
             var trip = CurrentPoint.ShippingRequestTripFk;
             trip.RoutePointStatus = RoutePointStatus.DeliveryConfirmation;
+
+            //check if all points finished, then set trip to delivered
             if (await _RoutPointRepository.GetAll().Where(x => x.ShippingRequestTripId == trip.Id && x.IsComplete == false && x.Id != CurrentPoint.Id).CountAsync() == 0)
             {
                 trip.Status = ShippingRequestTripStatus.Delivered;
@@ -115,7 +122,7 @@ namespace TACHYON.Shipping.Drivers
         }
 
 
-        public async Task<bool> UploadDeliveryNote(IHasDocument document)
+        public async Task<bool> UploadDeliveryNote(IHasDocument document, long? pointId)
         {
             DisableTenancyFilters();
             var CurrentPoint = await _RoutPointRepository.GetAll().
@@ -124,7 +131,9 @@ namespace TACHYON.Shipping.Drivers
                 .Include(x => x.ShippingRequestTripFk)
                     .ThenInclude(x => x.ShippingRequestFk)
                      .ThenInclude(x => x.Tenant)
-                .FirstOrDefaultAsync(x => x.IsActive &&
+                .WhereIf(pointId == null, x => x.IsActive)
+                .WhereIf(pointId != null, x => x.Id == pointId)
+                .FirstOrDefaultAsync(x =>
                 x.ShippingRequestTripFk.RoutePointStatus == RoutePointStatus.ReceiverConfirmed &&
                 x.ShippingRequestTripFk.AssignedDriverUserId == _abpSession.UserId);
             if (CurrentPoint == null) throw new UserFriendlyException(L("TheTripIsNotFound"));

@@ -262,7 +262,8 @@ namespace TACHYON.Authorization.Users.Profile
 
             var numberOfCompletedShipments = await _lookupTripRepository.GetAll()
                 .Where(x => x.Status == ShippingRequestTripStatus.Intransit
-                            || x.Status == ShippingRequestTripStatus.Delivered)
+                            || x.Status == ShippingRequestTripStatus.Delivered
+                            || x.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation)
                 .WhereIf(isShipper, x => x.ShippingRequestFk.TenantId == tenantId)
                 .WhereIf(isCarrier, x => x.ShippingRequestFk.CarrierTenantId == tenantId)
                 .CountAsync();

@@ -276,8 +276,9 @@ namespace TACHYON.Shipping.Trips
                                             x.Id == input.Id &&
                                             x.Status == RoutePointStatus.FinishOffLoadShipment &&
                                             x.Code == input.Code &&
-                                            x.ShippingRequestTripFk.Status == ShippingRequestTripStatus.Intransit &&
-                                            x.ShippingRequestTripFk.ShippingRequestFk.Status == ShippingRequests.ShippingRequestStatus.PostPrice
+                                            (x.ShippingRequestTripFk.Status == ShippingRequestTripStatus.Intransit ||
+                                            x.ShippingRequestTripFk.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation) &&
+                                            x.ShippingRequestTripFk.ShippingRequestFk.Status == ShippingRequestStatus.PostPrice
 
                                     )
                             .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => x.ShippingRequestTripFk.ShippingRequestFk.IsTachyonDeal)
@@ -316,7 +317,8 @@ namespace TACHYON.Shipping.Trips
                                         x =>
                                             x.Id == id &&
                                             x.Status == RoutePointStatus.ReceiverConfirmed &&
-                                            x.ShippingRequestTripFk.Status == ShippingRequestTripStatus.Intransit &&
+                                            (x.ShippingRequestTripFk.Status == ShippingRequestTripStatus.Intransit ||
+                                            x.ShippingRequestTripFk.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation) &&
                                             x.ShippingRequestTripFk.ShippingRequestFk.Status == ShippingRequests.ShippingRequestStatus.PostPrice
                                     )
                 .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => x.ShippingRequestTripFk.ShippingRequestFk.IsTachyonDeal)
@@ -597,7 +599,8 @@ namespace TACHYON.Shipping.Trips
                     x => x.ShippingRequestTripId == point.ShippingRequestTripId &&
                         x.Id != point.Id &&
                         x.Status != RoutePointStatus.StandBy &&
-                       !x.IsComplete
+                       //!x.IsComplete
+                       x.IsActive
                 )
                 .CountAsync();
 

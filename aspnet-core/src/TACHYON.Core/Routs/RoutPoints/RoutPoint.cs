@@ -41,6 +41,7 @@ namespace TACHYON.Routs.RoutPoints
         public ICollection<RoutPointDocument> RoutPointDocuments { get; set; }
         public string Code { get; set; }
         public RoutePointStatus Status { get; set; }
+        public RoutePointCompletedStatus CompletedStatus { get; set; }
         public DateTime? StartTime { get; set; }
         public DateTime? EndTime { get; set; }
         public bool IsActive { get; set; }
