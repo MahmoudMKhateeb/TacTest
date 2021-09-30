@@ -58,6 +58,7 @@ namespace TACHYON.Web.Controllers
         [DisableAuditing]
         public async Task<ActionResult> DownloadBinaryFile(Guid id, string contentType, string fileName)
         {
+            DisableTenancyFilters();
             var fileObject = await _binaryObjectManager.GetOrNullAsync(id);
             if (fileObject == null)
             {
