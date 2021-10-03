@@ -59,6 +59,8 @@
               required
               [class.is-invalid]="companyName.touched && !companyName.valid"
               [class.is-valid]="companyName.touched && companyName.valid"
+              minlength="2"
+              maxlength="80"
             />
           </div>
         </div>
