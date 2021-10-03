@@ -25,10 +25,11 @@ namespace TACHYON.AutoMapper.Shipping.Trips
                     //.ForPath(dest => dest.TotalWeight, opt => opt.MapFrom(src => src.GoodsDetails.Sum(x=>x.Weight)))
                     .ForPath(dest => dest.GoodsDetailListDto, opt => opt.MapFrom(src => src.GoodsDetails))
                     .ForPath(dest => dest.PackagingType, opt => opt.MapFrom(src => src.ShippingRequestTripFk.ShippingRequestFk.PackingTypeFk.DisplayName))
-                    .ForPath(dest => dest.ReceiverFullName, opt => opt.MapFrom(src => src.ReceiverFk != null ? src.ReceiverFk.FullName : src.ReceiverFullName))
+                    .ForPath(dest => dest.ReceiverDto, opt => opt.MapFrom(src => src.ReceiverFk))
+                    .ForPath(dest => dest.ReceiverFullName, opt => opt.MapFrom(src => src.ReceiverFullName))
                     //.ForPath(dest => dest.ReceiverEmailAddress, opt => opt.MapFrom(src => src.ReceiverFk != null ? src.ReceiverFk.EmailAddress : src.ReceiverEmailAddress))
-                    .ForPath(dest => dest.ReceiverPhoneNumber, opt => opt.MapFrom(src => src.ReceiverFk != null ? src.ReceiverFk.PhoneNumber : src.ReceiverPhoneNumber))
-                    .ForPath(dest => dest.ReceiverCardIdNumber, opt => opt.MapFrom(src => src.ReceiverFk != null ? src.ReceiverFk.Id.ToString() : src.ReceiverCardIdNumber));
+                    .ForPath(dest => dest.ReceiverPhoneNumber, opt => opt.MapFrom(src => src.ReceiverPhoneNumber))
+                    .ForPath(dest => dest.ReceiverCardIdNumber, opt => opt.MapFrom(src => src.ReceiverCardIdNumber));
 
             CreateMap<RoutPoint, DropOffPointDto>();
             CreateMap<UserOTP, UserOtpDto>();
