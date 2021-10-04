@@ -33,6 +33,7 @@ using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips.Dto;
 using TACHYON.Tracking.Dto;
+using PickingType = TACHYON.Routs.RoutPoints.PickingType;
 
 namespace TACHYON.Shipping.Trips
 {
@@ -167,6 +168,8 @@ namespace TACHYON.Shipping.Trips
                             .GetAll()
                              .Include(t => t.ShippingRequestTripFk)
                                  .ThenInclude(s => s.ShippingRequestFk)
+                            .Include(t => t.ShippingRequestTripFk)
+                                .ThenInclude(s => s.RoutPoints)
                             .Where
                             (
                                 x => x.Id == id &&
@@ -176,7 +179,9 @@ namespace TACHYON.Shipping.Trips
                             )
                             .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => x.ShippingRequestTripFk.ShippingRequestFk.IsTachyonDeal)
                             .WhereIf(currentUser.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == currentUser.TenantId.Value)
-                            .WhereIf(currentUser.IsDriver, x => x.ShippingRequestTripFk.AssignedDriverUserId == currentUser.Id)
+                            .WhereIf(currentUser.IsDriver, x => x.ShippingRequestTripFk.AssignedDriverUserId == currentUser.Id &&
+                            x.IsActive &&
+                            x.ShippingRequestTripFk.Status == ShippingRequestTripStatus.Intransit)
                             .FirstOrDefaultAsync();
 
             if (point == null) throw new UserFriendlyException(L("YouCanNotChangeTheStatus"));
@@ -198,6 +203,7 @@ namespace TACHYON.Shipping.Trips
                     point.IsComplete = true;
                     point.EndTime = Clock.Now;
                     point.Status = RoutePointStatus.FinishLoading;
+                    point.ActualPickupOrDeliveryDate = trip.ActualPickupDate = Clock.Now;
                     await SendSmsToReceivers(trip.Id);
                     break;
                 case RoutePointStatus.StartedMovingToOfLoadingLocation:
@@ -212,7 +218,18 @@ namespace TACHYON.Shipping.Trips
                 case RoutePointStatus.StartOffloading:
                     trip.RoutePointStatus = RoutePointStatus.FinishOffLoadShipment;
                     point.Status = RoutePointStatus.FinishOffLoadShipment;
+                    point.ActualPickupOrDeliveryDate = Clock.Now;
+                    if (!trip.RoutPoints.Any(x => x.ActualPickupOrDeliveryDate == null && x.Id != point.Id))
+                    {
+                        trip.ActualDeliveryDate = Clock.Now;
+                    }
 
+                    point.CompletedStatus = RoutePointCompletedStatus.CompletedAndMissingReceiverCode;
+                    //check if all trip points completed, change the trip status from intransit to delivered and needs confirmation
+                    if (trip.RoutPoints.Where(x => x.Id != point.Id).All(x => x.CompletedStatus > RoutePointCompletedStatus.NotCompleted))
+                    {
+                        trip.Status = ShippingRequestTripStatus.DeliveredAndNeedsConfirmation;
+                    }
                     break;
                 default:
                     throw new UserFriendlyException(L("YouCanNotChangeStatus"));
@@ -232,6 +249,7 @@ namespace TACHYON.Shipping.Trips
         {
             DisableTenancyFilters();
             var currentUser = await GetCurrentUserAsync(_abpSession);
+
             var currentpoint = await _routPointRepository
                 .GetAll()
                 .Include(x => x.ShippingRequestTripFk)
@@ -242,8 +260,32 @@ namespace TACHYON.Shipping.Trips
                 .WhereIf(currentUser.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == currentUser.TenantId.Value)
                 .WhereIf(currentUser.IsDriver, x => x.ShippingRequestTripFk.AssignedDriverUserId == currentUser.Id)
                 .FirstOrDefaultAsync();
+            var activePoint = await GetActivePointByTripAsyn(currentpoint.ShippingRequestTripId, currentUser);
             if (currentpoint == null) throw new UserFriendlyException(L("TheLocationSelectedIsNotFound"));
+            if (activePoint == null) throw new UserFriendlyException(L("NoActivePoint"));
 
+            // deactivate active point
+
+            var trip = activePoint.ShippingRequestTripFk;
+
+            if (activePoint.PickingType == PickingType.Pickup && trip.RoutePointStatus != RoutePointStatus.FinishLoading) throw new UserFriendlyException(L("TheTripIsNotFound"));
+
+            if (trip.RoutePointStatus == RoutePointStatus.FinishLoading || trip.RoutePointStatus == RoutePointStatus.DeliveryConfirmation)
+            {
+                activePoint.IsActive = false;
+                activePoint.IsComplete = true;
+                activePoint.EndTime = Clock.Now;
+
+            }
+
+            if (activePoint.PickingType == PickingType.Dropoff &&
+                (trip.RoutePointStatus == RoutePointStatus.FinishOffLoadShipment ||
+                trip.RoutePointStatus == RoutePointStatus.ReceiverConfirmed))
+            {
+                //can go to next point if not confirming receiverd code nor uploading POD
+                activePoint.IsActive = false;
+            }
+            //finish active point
             await CanGoToNextLocation(currentpoint);
 
             currentpoint.StartTime = Clock.Now;
@@ -253,6 +295,25 @@ namespace TACHYON.Shipping.Trips
 
             await ChangeTransition(currentpoint);
             await NotificationWhenPointChanged(currentpoint, currentUser);
+
+        }
+
+
+        private async Task<RoutPoint> GetActivePointByTripAsyn(int tripId, User currentUser)
+        {
+            return await _routPointRepository
+                .GetAll()
+                .Include(x => x.ShippingRequestTripFk)
+                     .ThenInclude(x => x.ShippingRequestFk)
+                .Include(x => x.FacilityFk)
+                .Where(x => x.IsActive &&
+                x.ShippingRequestTripFk.Status == ShippingRequestTripStatus.Intransit &&
+                x.ShippingRequestTripId == tripId)
+                .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => x.ShippingRequestTripFk.ShippingRequestFk.IsTachyonDeal)
+                .WhereIf(currentUser.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == currentUser.TenantId.Value)
+                .WhereIf(currentUser.IsDriver, x => x.ShippingRequestTripFk.AssignedDriverUserId == currentUser.Id)
+                .FirstOrDefaultAsync();
+
 
         }
 
@@ -337,6 +398,7 @@ namespace TACHYON.Shipping.Trips
             routePointDocument.DocumentContentType = "image/jpeg";
             routePointDocument.DocumentName = document.DocumentName;
             routePointDocument.DocumentId = document.DocumentId;
+            routePointDocument.RoutePointDocumentType = RoutePointDocumentType.POD;
             await _routPointDocumentRepository.InsertAsync(routePointDocument);
 
             CurrentPoint.IsActive = false;
@@ -597,10 +659,13 @@ namespace TACHYON.Shipping.Trips
                 .Where
                 (
                     x => x.ShippingRequestTripId == point.ShippingRequestTripId &&
-                        x.Id != point.Id &&
-                        x.Status != RoutePointStatus.StandBy &&
-                       //!x.IsComplete
-                       x.IsActive
+                       //x.Status != RoutePointStatus.StandBy 
+                       //check if another point in trip is active
+                       (x.Id != point.Id && x.IsActive && x.PickingType == PickingType.Dropoff ||
+             //check if the selected point is completed or active, wether it pickup or drop
+             (x.Id == point.Id && (x.IsComplete || x.IsActive)))
+                //!x.IsComplete
+                //x.IsActive
                 )
                 .CountAsync();
 
