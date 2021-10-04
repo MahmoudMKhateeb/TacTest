@@ -2203,7 +2203,7 @@
     <text name="Please">مستحقة الرجاء</text>
     <text name="IssuedInvoice">إستحقاق فاتورة</text>
     <text name="CompanyNameEmailTemplate">إسم الشركة</text>
-        
+    <text name="ClickToRate">اضغط هنا للتقييم </text>
     <!--<text name="StartOffloading"></text>
     <text name="ReceiverConfirmed"></text>
     <text name="DeliveryConfirmation"></text>-->
