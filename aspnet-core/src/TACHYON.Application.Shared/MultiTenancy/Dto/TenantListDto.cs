@@ -3,6 +3,8 @@ using Abp.Auditing;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using System;
+using System.ComponentModel.DataAnnotations;
+using TACHYON.Authorization.Users.Dto;
 
 namespace TACHYON.MultiTenancy.Dto
 {
@@ -28,6 +30,22 @@ namespace TACHYON.MultiTenancy.Dto
 
         public bool IsInTrialPeriod { get; set; }
         public string ContractNumber { get; set; }
+
+        //
+
+        public virtual string companyName { get; set; }
+
+        public virtual string MobileNo { get; set; }
+
+        public decimal Balance { get; set; } = 0;
+        public decimal ReservedBalance { get; set; } = 0;
+        public decimal CreditBalance { get; set; } = 0;
+
+
+
+
+
+
 
     }
 }
