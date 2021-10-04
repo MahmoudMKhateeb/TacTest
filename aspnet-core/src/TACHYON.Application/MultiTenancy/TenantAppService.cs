@@ -18,6 +18,7 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
+using TACHYON.Authorization.Users.Dto;
 using TACHYON.Cities;
 using TACHYON.Cities.Dtos;
 using TACHYON.Countries;
@@ -68,9 +69,18 @@ namespace TACHYON.MultiTenancy
 
         public async Task<LoadResult> GetAllTenants(string loadOptions)
         {
-            var query = TenantManager.Tenants.ProjectTo<TenantListDto>(AutoMapperConfigurationProvider);
+            DisableTenancyFiltersIfHost();
+
+            IQueryable<TenantListDto> tenantListDtos = TenantManager.Tenants.ProjectTo<TenantListDto>(AutoMapperConfigurationProvider);
+            IQueryable<UserListDto> userListDtos = UserManager.Users.Where(x => x.UserName.ToLower() == "admin").ProjectTo<UserListDto>(AutoMapperConfigurationProvider);
+
+            var query = from t in tenantListDtos
+                        join u in userListDtos
+                            on t.Id equals u.TenantId
+                        select new GetAllTenantsOutput { TenantListDto = t, UserListDto = u };
 
             return await LoadResultAsync(query, loadOptions);
+
         }
 
         [AbpAuthorize(AppPermissions.Pages_Tenants_Create)]

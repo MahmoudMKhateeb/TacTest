@@ -13,17 +13,21 @@
         <div class="card-body">
           <div class="row align-items-center">
             <dx-data-grid
+              class="col-12 padding-left-0 padding-right-0"
               style="height: 45vw"
               #grid
-              id="dataGrid"
+              id="gridContainer"
               [dataSource]="dataSource"
               [remoteOperations]="true"
               [showColumnLines]="true"
               [showRowLines]="false"
               [showBorders]="true"
               [rowAlternationEnabled]="true"
-              keyExpr="id"
+              keyExpr="tenantListDto.id"
               [wordWrapEnabled]="true"
+              [allowColumnReordering]="true"
+              [allowColumnResizing]="true"
+              [columnAutoWidth]="true"
             >
               <dxo-filter-row [visible]="true"></dxo-filter-row>
               <dxo-search-panel [visible]="true"></dxo-search-panel>
@@ -31,13 +35,13 @@
               <dxo-filter-builder-popup></dxo-filter-builder-popup>
               <dxo-scrolling mode="virtual"></dxo-scrolling>
               <dxo-group-panel [visible]="true"></dxo-group-panel>
-              <dxo-grouping #expand [autoExpandAll]="false" [contextMenuEnabled]="true"> ></dxo-grouping>
               <dxo-remote-operations [groupPaging]="true" [sorting]="true" [filtering]="true"> </dxo-remote-operations>
               <dxo-paging [pageSize]="20"></dxo-paging>
               <dxo-summary>
-                <dxi-group-item column="id" summaryType="count"> </dxi-group-item>
+                <dxi-group-item column="tenantListDto.id" summaryType="count"> </dxi-group-item>
               </dxo-summary>
-
+              <dxo-column-chooser [enabled]="true"></dxo-column-chooser>
+              <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
               <dxi-column
                 cellTemplate="cellTemplateActions"
                 [allowFiltering]="false"
@@ -45,46 +49,52 @@
                 [allowEditing]="false"
                 [editorOptions]="{ visible: false }"
                 [width]="50"
-                caption="{{ 'Actions' | localize }}"
+                [fixed]="true"
               ></dxi-column>
-              <dxi-column dataField="tenancyName" caption="{{ l('TenancyCodeName') }}"> </dxi-column>
-              <dxi-column dataField="name" caption="{{ l('TenantName') }}"> </dxi-column>
-              <dxi-column dataField="accountNumber" caption="{{ l('AccountNumber') }}"> </dxi-column>
-              <dxi-column dataField="contractNumber" caption="{{ l('ContractNumber') }}"> </dxi-column>
-              <dxi-column dataField="editionId" [groupIndex]="0" caption="{{ l('Edition') }}">
+              <dxi-column dataField="tenantListDto.companyName" caption="{{ l('companyName') }}" [fixed]="true"> </dxi-column>
+              <dxi-column dataField="tenantListDto.tenancyName" caption="{{ l('TenancyCodeName') }}"> </dxi-column>
+              <dxi-column dataField="tenantListDto.name" caption="{{ l('TenantName') }}"> </dxi-column>
+              <dxi-column dataField="tenantListDto.accountNumber" caption="{{ l('AccountNumber') }}"> </dxi-column>
+              <dxi-column dataField="tenantListDto.contractNumber" caption="{{ l('ContractNumber') }}"> </dxi-column>
+              <dxi-column dataField="tenantListDto.editionId" caption="{{ l('Edition') }}">
                 <dxo-lookup [dataSource]="editions" displayExpr="displayText" valueExpr="value"> </dxo-lookup>
               </dxi-column>
               <dxi-column
-                dataField="subscriptionEndDateUtc"
+                dataField="tenantListDto.subscriptionEndDateUtc"
                 caption="{{ l('SubscriptionEndDateUtc') }}"
                 cellTemplate="cellTemplateSubscriptionEndDateUtc"
                 dataType="date"
+                [visible]="false"
               >
               </dxi-column>
-              <dxi-column dataField="isActive" caption="{{ l('Active') }}" cellTemplate="cellTemplate_IsActive"> </dxi-column>
-              <dxi-column dataField="creationTime" dataType="date" caption="{{ l('CreationTime') }}"> </dxi-column>
+              <dxi-column dataField="tenantListDto.isActive" caption="{{ l('Active') }}" cellTemplate="cellTemplate_IsActive"> </dxi-column>
+              <dxi-column dataField="tenantListDto.creationTime" dataType="date" caption="{{ l('CreationTime') }}"> </dxi-column>
+              <dxi-column dataField="tenantListDto.mobileNo" caption="{{ l('MobileNo') }}"> </dxi-column>
+              <dxi-column dataField="tenantListDto.balance" caption="{{ l('balance') }}"> </dxi-column>
+              <dxi-column dataField="tenantListDto.creditBalance" caption="{{ l('CreditBalance') }}"> </dxi-column>
+              <dxi-column dataField="tenantListDto.reservedBalance" caption="{{ l('ReservedBalance') }}"> </dxi-column>
+
+              <dxi-column dataField="userListDto.emailAddress" dataType="text" caption="{{ l('Email') }}"> </dxi-column>
+              <dxi-column dataField="userListDto.isEmailConfirmed" caption="{{ l('IsEmailConfirmed') }}"> </dxi-column>
 
               <div *dxTemplate="let options of 'cellTemplate_IsActive'">
-                <span *ngIf="options.data.isActive" class="badge badge-success badge-inline">{{ 'Yes' | localize }}</span>
-                <span *ngIf="!options.data.isActive" class="badge badge-dark badge-inline">{{ 'No' | localize }}</span>
+                <span *ngIf="options.data.tenantListDto.isActive" class="badge badge-success badge-inline">{{ 'Yes' | localize }}</span>
+                <span *ngIf="!options.data.tenantListDto.isActive" class="badge badge-dark badge-inline">{{ 'No' | localize }}</span>
               </div>
 
               <div *dxTemplate="let options of 'cellTemplateSubscriptionEndDateUtc'">
-                {{ options.data.subscriptionEndDateUtc ? (options.data.subscriptionEndDateUtc | momentFormat: 'L') : 'Unlimited' }}
+                {{
+                  options.data.tenantListDto.subscriptionEndDateUtc
+                    ? (options.data.tenantListDto.subscriptionEndDateUtc | momentFormat: 'L')
+                    : 'Unlimited'
+                }}
               </div>
 
               <div *dxTemplate="let options of 'cellTemplateActions'">
                 <div class="btn-group dropdown" dropdown container="body">
                   <a href="javascript:;" class="btn btn-sm btn-clean btn-icon mr-2" dropdownToggle>
                     <span class="svg-icon svg-icon-md">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        xmlns:xlink="http://www.w3.org/1999/xlink"
-                        width="24px"
-                        height="24px"
-                        viewBox="0 0 24 24"
-                        version="1.1"
-                      >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                         <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                           <rect x="0" y="0" width="24" height="24"></rect>
                           <path
@@ -107,8 +117,8 @@
                         href="javascript:;"
                         class="dropdown-item"
                         *ngIf="'Pages.Tenants.Impersonation' | permission"
-                        [class.disabled]="!options.data.isActive"
-                        (click)="options.data.isActive && showUserImpersonateLookUpModal(options.data)"
+                        [class.disabled]="!options.data.tenantListDto.isActive"
+                        (click)="options.data.tenantListDto.isActive && showUserImpersonateLookUpModal(options.data.tenantListDto)"
                         >{{ 'LoginAsThisTenant' | localize }}</a
                       >
                     </li>
@@ -117,7 +127,7 @@
                         href="javascript:;"
                         class="dropdown-item"
                         *ngIf="'Pages.Tenants.Edit' | permission"
-                        (click)="editTenantModal.show(options.data.id)"
+                        (click)="editTenantModal.show(options.data.tenantListDto.id)"
                         >{{ 'Edit' | localize }}</a
                       >
                     </li>
@@ -126,12 +136,17 @@
                         href="javascript:;"
                         class="dropdown-item"
                         *ngIf="'Pages.Tenants.ChangeFeatures' | permission"
-                        (click)="tenantFeaturesModal.show(options.data.id, options.data.name)"
+                        (click)="tenantFeaturesModal.show(options.data.tenantListDto.id, options.data.tenantListDto.name)"
                         >{{ 'Features' | localize }}</a
                       >
                     </li>
                     <li>
-                      <a href="javascript:;" class="dropdown-item" *ngIf="'Pages.Tenants.Delete' | permission" (click)="deleteTenant(options.data)">
+                      <a
+                        href="javascript:;"
+                        class="dropdown-item"
+                        *ngIf="'Pages.Tenants.Delete' | permission"
+                        (click)="deleteTenant(options.data.tenantListDto)"
+                      >
                         {{ 'Delete' | localize }}
                       </a>
                     </li>
@@ -141,18 +156,18 @@
                         class="dropdown-item"
                         *ngIf="
                           isGranted('Pages.TenantCarrier') &&
-                          options.data.editionDisplayName.trim().toLowerCase() == shipperEditionDisplayName.trim().toLowerCase()
+                          options.data.tenantListDto.editionDisplayName.trim().toLowerCase() == shipperEditionDisplayName.trim().toLowerCase()
                         "
-                        (click)="TenantCarriersModel.show(options.data.id)"
+                        (click)="TenantCarriersModel.show(options.data.tenantListDto.id)"
                       >
                         {{ 'Carriers' | localize }}
                       </a>
                     </li>
                     <li>
-                      <a href="javascript:;" class="dropdown-item" (click)="unlockUser(options.data)">{{ 'Unlock' | localize }}</a>
+                      <a href="javascript:;" class="dropdown-item" (click)="unlockUser(options.data.tenantListDto)">{{ 'Unlock' | localize }}</a>
                     </li>
                     <li>
-                      <a href="javascript:;" *ngIf="entityHistoryEnabled" class="dropdown-item" (click)="showHistory(options.data)">
+                      <a href="javascript:;" *ngIf="entityHistoryEnabled" class="dropdown-item" (click)="showHistory(options.data.tenantListDto)">
                         {{ 'History' | localize }}
                       </a>
                     </li>

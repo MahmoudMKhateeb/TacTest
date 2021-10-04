@@ -8,6 +8,7 @@ namespace TACHYON.Authorization.Users.Dto
 {
     public class UserListDto : EntityDto<long>, IPassivable, IHasCreationTime
     {
+        public int? TenantId { get; set; }
         public string AccountNumber { get; set; }
         public string Name { get; set; }
 
