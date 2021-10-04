@@ -102,6 +102,13 @@
                   {{ item.numberOfTrips }}
                 </p>
               </div>
+              <div class="numOfTrips">
+                <p>
+                  {{ l('CompletedTrips/NoOfTrips') }}
+                </p>
+                <p class="isNum">{{ item.numberOfCompletedTrips }}/{{ item.numberOfTrips }}</p>
+              </div>
+
               <div class="routeType">
                 <p>
                   {{ l('routeType') }}
