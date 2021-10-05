@@ -35,6 +35,9 @@ namespace TACHYON
                 Configuration.Authorization.Providers.Add(provider);
             }
 
+            // Ignore Feature Checker For Host Users 
+            Configuration.MultiTenancy.IgnoreFeatureCheckForHostUsers = true;
+
             //Adding custom AutoMapper configuration
             Configuration.Modules.AbpAutoMapper().Configurators.Add(CustomDtoMapper.CreateMappings);
 
@@ -65,7 +68,7 @@ namespace TACHYON
             IocManager.Register(typeof(IExcelExporterManager<>), typeof(ExcelExporterManager<>), DependencyLifeStyle.Transient);
 
             IocManager.Register(typeof(IExcelImportManager<>), typeof(ExcelImportManager<>), DependencyLifeStyle.Transient);
-            
+
         }
         public override void PostInitialize()
         {
