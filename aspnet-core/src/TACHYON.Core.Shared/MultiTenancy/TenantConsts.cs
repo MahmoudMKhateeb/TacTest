@@ -9,5 +9,7 @@
         public const int MaxNameLength = 128;
 
         public const int DefaultTenantId = 1;
+
+        public const string MoiNumberRegex = @"^7\d{9}$";
     }
 }

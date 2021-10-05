@@ -26,12 +26,14 @@ namespace TACHYON.Trucks
 
         [Required]
         [StringLength(TruckConsts.MaxPlateNumberLength, MinimumLength = TruckConsts.MinPlateNumberLength)]
+        [RegularExpression(TruckConsts.PlateNumberRegularExpression)]
         public virtual string PlateNumber { get; set; }
 
         [StringLength(TruckConsts.MaxModelNameLength, MinimumLength = TruckConsts.MinModelNameLength)]
         public virtual string ModelName { get; set; }
 
         [StringLength(TruckConsts.MaxModelYearLength, MinimumLength = TruckConsts.MinModelYearLength)]
+        [RegularExpression(TruckConsts.ModelYearRegularExpression)]
         public virtual string ModelYear { get; set; }
 
         public virtual string Capacity { get; set; }

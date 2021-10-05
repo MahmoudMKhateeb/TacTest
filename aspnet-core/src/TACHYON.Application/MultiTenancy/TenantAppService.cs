@@ -108,7 +108,8 @@ namespace TACHYON.MultiTenancy
                  input.IsInTrialPeriod,
                  AppUrlService.CreateEmailActivationUrlFormat(tenancyName),
                  input.UserAdminFirstName,
-                 input.UserAdminSurname
+                 input.UserAdminSurname,
+                 input.MoiNumber
              );
 
             var tenant = await TenantManager.GetByIdAsync(tenantId);

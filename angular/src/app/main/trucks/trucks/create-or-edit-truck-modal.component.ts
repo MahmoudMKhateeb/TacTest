@@ -317,14 +317,14 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
     );
   }
 
-  plateNumberNoramlize() {
-    this.truck.plateNumber = this.truck.plateNumber
-      .replace(/\s/g, '')
-      .replace(/([A-Z])/g, ' $1')
-      .replace(/([a-z])/g, ' $1')
-      .replace(/([أ-ي])/g, ' $1')
-      .trim();
-  }
+  // plateNumberNoramlize() {
+  //   this.truck.plateNumber = this.truck.plateNumber
+  //     .replace(/\s/g, '')
+  //     .replace(/([A-Z])/g, ' $1')
+  //     .replace(/([a-z])/g, ' $1')
+  //     .replace(/([أ-ي])/g, ' $1')
+  //     .trim();
+  // }
 
   // validateModalYear() {
   //   console.log('Validator Modal Year Ran');

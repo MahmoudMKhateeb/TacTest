@@ -65,7 +65,7 @@
                   }"
                 >
                   <option [ngValue]="null">{{ l('Select') }} {{ l('TruckType') }}</option>
-                  <option *ngFor="let item of allTruckTypesByTransportType" value="{{ item.id }}"> {{ item.displayName }}</option>
+                  <option *ngFor="let item of allTruckTypesByTransportType" value="{{ item.id }}">{{ item.displayName }}</option>
                 </select>
                 <validation-messages [formCtrl]="trucksTypeId"></validation-messages>
                 <span class="form-text text-muted">{{ l('SelectTransportTypeToOpenTrucksType') }} </span>
@@ -93,7 +93,7 @@
                   }"
                 >
                   <option [ngValue]="null">{{ l('Select') }} {{ l('CapacityCategory') }}</option>
-                  <option *ngFor="let item of allTrucksCapByTruckTypeId" value="{{ item.id }}">{{ item.displayName }} </option>
+                  <option *ngFor="let item of allTrucksCapByTruckTypeId" value="{{ item.id }}">{{ item.displayName }}</option>
                 </select>
                 <validation-messages [formCtrl]="capacityId"></validation-messages>
                 <span class="form-text text-muted">{{ l('SelectTrucksTypeToOpenCapacity') }} </span>
@@ -151,7 +151,7 @@
                   'is-invalid': truckForm.submitted && TruckStatus.invalid
                 }"
               >
-                <option [ngValue]="null"> {{ l('Select') }} {{ l('TruckStatus') }}</option>
+                <option [ngValue]="null">{{ l('Select') }} {{ l('TruckStatus') }}</option>
                 <option *ngFor="let item of allTruckStatuss" value="{{ item.id }}">{{ item.displayName }}</option>
               </select>
               <validation-messages [formCtrl]="TruckStatus"></validation-messages>
@@ -170,7 +170,7 @@
                   'is-invalid': truckForm.submitted && PlateTypeId.invalid
                 }"
               >
-                <option [ngValue]="null"> {{ l('Select') }} {{ l('PlateType') }}</option>
+                <option [ngValue]="null">{{ l('Select') }} {{ l('PlateType') }}</option>
                 <option *ngFor="let item of allPlateTypes" value="{{ item.id }}">{{ item.displayName }}</option>
               </select>
               <validation-messages [formCtrl]="PlateTypeId"></validation-messages>
@@ -181,7 +181,7 @@
               <input
                 [(ngModel)]="truck.plateNumber"
                 #plateNumberInput="ngModel"
-                (keyup)="plateNumberNoramlize()"
+                pattern="^\d{4}\s[a-zA-Z\u0600-\u06FF]{1}\s[a-zA-Z\u0600-\u06FF]{1}\s[a-zA-Z\u0600-\u06FF]{1}$"
                 class="form-control"
                 id="Truck_PlateNumber"
                 maxlength="64"
@@ -195,6 +195,7 @@
                 }"
               />
               <validation-messages [formCtrl]="plateNumberInput"></validation-messages>
+              <span class="form-text text-muted">1234 a a a </span>
             </div>
 
             <div class="form-group col-md-6">
@@ -260,7 +261,7 @@
                 maxlength="256"
                 rows="1"
                 cols="12"
-                style="resize: none;"
+                style="resize: none"
                 minlength="0"
                 name="Note"
                 type="text"
