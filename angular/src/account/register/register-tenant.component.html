@@ -58,6 +58,33 @@
           <span class="form-text text-muted">{{ 'WillBeShownOnAllOfficialDocumentsLikeWaybillsAndInvoices' | localize }}.</span>
         </div>
       </div>
+
+      <div class="col-6">
+        <div class="form-group">
+          <label>{{ 'MoiNumber' | localize }}</label>
+          <input
+            #MoiNumber="ngModel"
+            class="form-control"
+            autoFocus
+            (change)="checkIfIsCompanyUniqueMoiNumber()"
+            [(ngModel)]="model.moiNumber"
+            name="MoiNumber"
+            required
+            style="width: 100% !important"
+            maxlength="10"
+            minlength="10"
+            pattern="^7\d{9}$"
+            placeholder="7_________"
+          />
+          <div>
+            <validation-messages [formCtrl]="MoiNumber"></validation-messages>
+            <span class="form-text text-muted">{{ l('NumbersOnly') }}</span>
+            <span *ngIf="!isMoiNumberAvailable && MoiNumber.valid" class="form-text text-danger text-left"
+              >{{ 'MoiNumber' | localize }} {{ 'AlreadyTaken' | localize }}</span
+            >
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="row text-left">

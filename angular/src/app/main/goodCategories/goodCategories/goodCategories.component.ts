@@ -1,9 +1,8 @@
-﻿import { Component, Injector, ViewEncapsulation, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { GoodCategoriesServiceProxy, GoodCategoryDto } from '@shared/service-proxies/service-proxies';
+﻿import { Component, Injector, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { GoodCategoriesServiceProxy, GoodCategoryDto, TokenAuthServiceProxy } from '@shared/service-proxies/service-proxies';
 import { NotifyService } from 'abp-ng2-module';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { TokenAuthServiceProxy } from '@shared/service-proxies/service-proxies';
 import { CreateOrEditGoodCategoryModalComponent } from './create-or-edit-goodCategory-modal.component';
 
 import { ViewGoodCategoryModalComponent } from './view-goodCategory-modal.component';
@@ -14,7 +13,8 @@ import { LazyLoadEvent } from 'primeng/api';
 import { FileDownloadService } from '@shared/utils/file-download.service';
 import { EntityTypeHistoryModalComponent } from '@app/shared/common/entityHistory/entity-type-history-modal.component';
 import * as _ from 'lodash';
-import * as moment from 'moment';
+import CustomStore from '@node_modules/devextreme/data/custom_store';
+import { LoadOptions } from '@node_modules/devextreme/data/load_options';
 
 @Component({
   templateUrl: './goodCategories.component.html',
@@ -35,6 +35,8 @@ export class GoodCategoriesComponent extends AppComponentBase {
 
   _entityTypeFullName = 'TACHYON.Goods.GoodCategories.GoodCategory';
   entityHistoryEnabled = false;
+  store: CustomStore;
+  dataSource: any = {};
 
   constructor(
     injector: Injector,
@@ -45,6 +47,8 @@ export class GoodCategoriesComponent extends AppComponentBase {
     private _fileDownloadService: FileDownloadService
   ) {
     super(injector);
+
+    this.getAll();
   }
 
   ngOnInit(): void {
@@ -115,5 +119,53 @@ export class GoodCategoriesComponent extends AppComponentBase {
     this._goodCategoriesServiceProxy.getGoodCategoriesToExcel(this.filterText, this.displayNameFilter).subscribe((result) => {
       this._fileDownloadService.downloadTempFile(result);
     });
+  }
+
+  getAll() {
+    let self = this;
+
+    this.dataSource = {};
+    this.dataSource.store = new CustomStore({
+      key: 'id',
+      load(loadOptions: LoadOptions) {
+        return self._goodCategoriesServiceProxy
+          .getAllDx(
+            loadOptions.requireTotalCount,
+            loadOptions.requireGroupCount,
+            undefined,
+            undefined,
+            loadOptions.skip,
+            loadOptions.take,
+            loadOptions.sort,
+            loadOptions.group,
+            loadOptions.filter,
+            loadOptions.totalSummary,
+            loadOptions.groupSummary,
+            loadOptions.select,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined
+          )
+          .toPromise()
+          .then((response) => {
+            return { data: response.data, totalCount: response.totalCount };
+          })
+          .catch((error) => {
+            console.log(error);
+            throw new Error('Data Loading Error');
+          });
+      },
+    });
+  }
+
+  updateRow(options) {
+    options.newData = { ...options.oldData, ...options.newData };
   }
 }

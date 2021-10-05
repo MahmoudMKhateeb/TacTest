@@ -22,17 +22,21 @@
         </div>
         <div class="modal-body">
           <div class="form-group">
-            <div class="col-md-12">
-              <label>{{ l('BayanPlateTypeId') }}</label>
+            <div class="col-md-6">
+              <label>{{ l('bayanIntegrationId') }}</label>
               <input
                 class="form-control"
                 type="text"
-                name="plateType.bayanPlatetypeId"
-                [(ngModel)]="plateType.bayanPlatetypeId"
+                name="plateType.bayanIntegrationId"
+                [(ngModel)]="plateType.bayanIntegrationId"
                 required
                 minLength="3"
                 maxlength="250"
               />
+            </div>
+            <div class="col-md-6">
+              <label>{{ l('name') }}</label>
+              <input class="form-control" type="text" name="plateType.name" [(ngModel)]="plateType.name" required minLength="3" maxlength="250" />
             </div>
           </div>
 

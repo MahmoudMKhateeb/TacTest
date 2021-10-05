@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using TACHYON.EntityFrameworkCore;
@@ -10,9 +11,10 @@ using TACHYON.EntityFrameworkCore;
 namespace TACHYON.Migrations
 {
     [DbContext(typeof(TACHYONDbContext))]
-    partial class TACHYONDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210929100732_add MoiNumber to tenant")]
+    partial class addMoiNumbertotenant
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1402,9 +1404,6 @@ namespace TACHYON.Migrations
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
-                    b.Property<decimal>("Rate")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<int?>("TenantId")
                         .HasColumnType("int");
 
@@ -1712,9 +1711,6 @@ namespace TACHYON.Migrations
 
                     b.Property<Guid?>("ProfilePictureId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal>("Rate")
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(128)")
@@ -2367,9 +2363,6 @@ namespace TACHYON.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("BayanIntegrationId")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
 
@@ -2398,11 +2391,6 @@ namespace TACHYON.Migrations
 
                     b.Property<long?>("LastModifierUserId")
                         .HasColumnType("bigint");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
 
                     b.HasKey("Id");
 
@@ -3382,9 +3370,6 @@ namespace TACHYON.Migrations
                     b.Property<DateTime?>("DeletionTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int?>("EditionId")
                         .HasColumnType("int");
 
@@ -3422,9 +3407,6 @@ namespace TACHYON.Migrations
                         .HasColumnType("nvarchar(128)")
                         .HasMaxLength(128);
 
-                    b.Property<decimal>("Rate")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<decimal>("ReservedBalance")
                         .HasColumnType("decimal(18,2)");
 
@@ -3440,9 +3422,6 @@ namespace TACHYON.Migrations
                         .HasMaxLength(64);
 
                     b.Property<string>("UserTitle")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Website")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("companyName")
@@ -3944,68 +3923,6 @@ namespace TACHYON.Migrations
                     b.HasIndex("PriceOfferId");
 
                     b.ToTable("PriceOfferDetails");
-                });
-
-            modelBuilder.Entity("TACHYON.Rating.RatingLog", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("CarrierId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Code")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("DriverId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("FacilityId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Note")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long?>("PointId")
-                        .HasColumnType("bigint");
-
-                    b.Property<decimal>("Rate")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<byte>("RateType")
-                        .HasColumnType("tinyint");
-
-                    b.Property<int?>("ReceiverId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ShipperId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("TripId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CarrierId");
-
-                    b.HasIndex("DriverId");
-
-                    b.HasIndex("FacilityId");
-
-                    b.HasIndex("PointId");
-
-                    b.HasIndex("ReceiverId");
-
-                    b.HasIndex("ShipperId");
-
-                    b.HasIndex("TripId");
-
-                    b.ToTable("RatingLogs");
                 });
 
             modelBuilder.Entity("TACHYON.Receivers.Receiver", b =>
@@ -5096,13 +5013,7 @@ namespace TACHYON.Migrations
                     b.Property<byte>("CarrierPriceType")
                         .HasColumnType("tinyint");
 
-                    b.Property<int?>("CarrierTenantForDirectRequestFKId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("CarrierTenantId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("CarrierTenantIdForDirectRequest")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("CloseBidDate")
@@ -5219,12 +5130,6 @@ namespace TACHYON.Migrations
                     b.Property<byte?>("RouteTypeId")
                         .HasColumnType("tinyint");
 
-                    b.Property<string>("ShipperInvoiceNo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ShipperReference")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("ShippingTypeId")
                         .HasColumnType("int");
 
@@ -5274,8 +5179,6 @@ namespace TACHYON.Migrations
                     b.HasIndex("AssignedTruckId");
 
                     b.HasIndex("CapacityId");
-
-                    b.HasIndex("CarrierTenantForDirectRequestFKId");
 
                     b.HasIndex("CarrierTenantId");
 
@@ -5993,8 +5896,8 @@ namespace TACHYON.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("BayanIntegrationId")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("BayanPlatetypeId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
@@ -6016,11 +5919,6 @@ namespace TACHYON.Migrations
 
                     b.Property<long?>("LastModifierUserId")
                         .HasColumnType("bigint");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(64)")
-                        .HasMaxLength(64);
 
                     b.HasKey("Id");
 
@@ -7359,37 +7257,6 @@ namespace TACHYON.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TACHYON.Rating.RatingLog", b =>
-                {
-                    b.HasOne("TACHYON.MultiTenancy.Tenant", "CarrierFk")
-                        .WithMany()
-                        .HasForeignKey("CarrierId");
-
-                    b.HasOne("TACHYON.Authorization.Users.User", "DriverFk")
-                        .WithMany()
-                        .HasForeignKey("DriverId");
-
-                    b.HasOne("TACHYON.AddressBook.Facility", "FacilityFk")
-                        .WithMany()
-                        .HasForeignKey("FacilityId");
-
-                    b.HasOne("TACHYON.Routs.RoutPoints.RoutPoint", "RoutePointFk")
-                        .WithMany()
-                        .HasForeignKey("PointId");
-
-                    b.HasOne("TACHYON.Receivers.Receiver", "ReceiverFk")
-                        .WithMany()
-                        .HasForeignKey("ReceiverId");
-
-                    b.HasOne("TACHYON.MultiTenancy.Tenant", "ShipperFk")
-                        .WithMany()
-                        .HasForeignKey("ShipperId");
-
-                    b.HasOne("TACHYON.Shipping.ShippingRequestTrips.ShippingRequestTrip", "TripFk")
-                        .WithMany()
-                        .HasForeignKey("TripId");
-                });
-
             modelBuilder.Entity("TACHYON.Receivers.Receiver", b =>
                 {
                     b.HasOne("TACHYON.AddressBook.Facility", "FacilityFk")
@@ -7623,10 +7490,6 @@ namespace TACHYON.Migrations
                     b.HasOne("TACHYON.Trucks.TruckCategories.TruckCapacities.Capacity", "CapacityFk")
                         .WithMany()
                         .HasForeignKey("CapacityId");
-
-                    b.HasOne("TACHYON.MultiTenancy.Tenant", "CarrierTenantForDirectRequestFK")
-                        .WithMany()
-                        .HasForeignKey("CarrierTenantForDirectRequestFKId");
 
                     b.HasOne("TACHYON.MultiTenancy.Tenant", "CarrierTenantFk")
                         .WithMany()

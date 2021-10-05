@@ -11,20 +11,21 @@ using Newtonsoft.Json;
 using RestSharp;
 using System;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using TACHYON.BayanIntegration.Jobs;
+using TACHYON.BayanIntegration.Modules;
+using TACHYON.Configuration;
 using TACHYON.Documents;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.ShippingRequestTripVases;
-using System.Net;
-using System.Net.Http.Headers;
-using TACHYON.BayanIntegration.Jobs;
-using TACHYON.BayanIntegration.Modules;
-using TACHYON.Configuration;
 
 namespace TACHYON.BayanIntegration
 {
@@ -189,14 +190,14 @@ namespace TACHYON.BayanIntegration
                         Name = x.ShippingRequestFk.Tenant.companyName,
                         //todo: must not be blank
                         //todo: must match \"\\+9665\\d{8}\
-                        Phone = "+966" + x.ShippingRequestFk.Tenant.MobileNo
+                        Phone = "+" + x.ShippingRequestFk.Tenant.MobileNo
                     },
                     Recipient = new Recipient()
                     {
                         Address = x.ShippingRequestFk.CarrierTenantFk.Address,
                         //todo: must not be blank 
                         //todo: must match \"\\+9665\\d{8}\
-                        Phone = "+966" + x.ShippingRequestFk.CarrierTenantFk.MobileNo,
+                        Phone = "+" + x.ShippingRequestFk.CarrierTenantFk.MobileNo,
                         Name = x.ShippingRequestFk.CarrierTenantFk.companyName,
                     },
                     PickUpLocation = new PickUpLocation()
@@ -237,10 +238,10 @@ namespace TACHYON.BayanIntegration
                         SequenceNumber = vehicleSequenceNumber,
                         VehiclePlate = new VehiclePlate()
                         {
-                            Number = x.AssignedTruckFk.PlateNumber.Replace(" ", "").Substring(3, 4),
-                            LeftLetter = x.AssignedTruckFk.PlateNumber.Replace(" ", "").Substring(0, 1),
-                            MiddleLetter = x.AssignedTruckFk.PlateNumber.Replace(" ", "").Substring(1, 1),
-                            RightLetter = x.AssignedTruckFk.PlateNumber.Replace(" ", "").Substring(2, 1)
+                            Number = Regex.Match(x.AssignedTruckFk.PlateNumber.Replace(" ", ""), @"\d+").Value,
+                            LeftLetter = x.AssignedTruckFk.PlateNumber.Replace(" ", "").Replace(Regex.Match(x.AssignedTruckFk.PlateNumber.Replace(" ", ""), @"\d+").Value, "").Substring(0, 1),
+                            MiddleLetter = x.AssignedTruckFk.PlateNumber.Replace(" ", "").Replace(Regex.Match(x.AssignedTruckFk.PlateNumber.Replace(" ", ""), @"\d+").Value, "").Substring(1, 1),
+                            RightLetter = x.AssignedTruckFk.PlateNumber.Replace(" ", "").Replace(Regex.Match(x.AssignedTruckFk.PlateNumber.Replace(" ", ""), @"\d+").Value, "").Substring(2, 1)
                         }
                     },
                     Driver = new Driver()
@@ -250,6 +251,11 @@ namespace TACHYON.BayanIntegration
                         IdentityNumber = driverIdentityNumber,
                         Mobile = x.AssignedDriverUserFk.PhoneNumber,
                         Name = x.AssignedDriverUserFk.Name
+                    },
+                    Carrier = new Carrier()
+                    {
+                        type = "COMPANY",
+                        moi = x.ShippingRequestFk.CarrierTenantFk.MoiNumber
                     },
                     TotalFare = Convert.ToInt32(x.VatAmountWithCommission),
                     //? estimated start date or start working date 
@@ -301,14 +307,14 @@ namespace TACHYON.BayanIntegration
                         Name = x.ShippingRequestFk.Tenant.companyName,
                         //todo: must not be blank
                         //todo: must match \"\\+9665\\d{8}\
-                        Phone = "+966" + x.ShippingRequestFk.Tenant.MobileNo
+                        Phone = "+" + x.ShippingRequestFk.Tenant.MobileNo
                     },
                     Recipient = new Recipient()
                     {
                         Address = x.ShippingRequestFk.CarrierTenantFk.Address,
                         //todo: must not be blank 
                         //todo: must match \"\\+9665\\d{8}\
-                        Phone = "+966" + x.ShippingRequestFk.CarrierTenantFk.MobileNo,
+                        Phone = "+" + x.ShippingRequestFk.CarrierTenantFk.MobileNo,
                         Name = x.ShippingRequestFk.CarrierTenantFk.companyName,
                     },
                     PickUpLocation = new PickUpLocation()
@@ -327,7 +333,7 @@ namespace TACHYON.BayanIntegration
                         .Select(g => new Item()
                         {
                             DangerousCode = g.DangerousGoodsCode,
-                            DangerousGoodTypeId = g.DangerousGoodTypeId,
+                            DangerousGoodTypeId = g.DangerousGoodTypeFk.BayanIntegrationId,
 
                             //?  goodsCatgoy or free text or Good Types Description
                             Description = g.Description,
@@ -343,7 +349,7 @@ namespace TACHYON.BayanIntegration
                         }).ToList(),
                     Vehicle = new Vehicle()
                     {
-                        PlateType = "1",
+                        PlateType = x.AssignedTruckFk.PlateTypeFk.BayanIntegrationId,
                         //? some trucks does not have vehicleSequenceNumber example excel imported trucks
                         // todo check it => can i take it if expired  ?
                         SequenceNumber = vehicleSequenceNumber,
@@ -362,6 +368,11 @@ namespace TACHYON.BayanIntegration
                         IdentityNumber = driverIdentityNumber,
                         Mobile = x.AssignedDriverUserFk.PhoneNumber,
                         Name = x.AssignedDriverUserFk.Name
+                    },
+                    Carrier = new Carrier()
+                    {
+                        type = "COMPANY",
+                        moi = x.ShippingRequestFk.CarrierTenantFk.MoiNumber
                     },
                     TotalFare = Convert.ToInt32(x.VatAmountWithCommission),
                     //? estimated start date or start working date 

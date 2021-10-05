@@ -1,5 +1,6 @@
 ﻿using Abp.MultiTenancy;
 using Abp.Timing;
+using Org.BouncyCastle.Asn1.Microsoft;
 using System;
 using System.ComponentModel.DataAnnotations;
 using TACHYON.Authorization.Users;
@@ -17,6 +18,7 @@ namespace TACHYON.MultiTenancy
     public class Tenant : AbpTenant<User>
     {
         public const int MaxLogoMimeTypeLength = 64;
+
 
         //Can add application specific tenant properties here
 
@@ -57,6 +59,13 @@ namespace TACHYON.MultiTenancy
         public string Website { get; set; }
 
         public string Description { get; set; }
+
+        /// <summary>
+        /// Moi number for company 
+        /// </summary>
+        [Required]
+        [RegularExpression(TenantConsts.MoiNumberRegex)]
+        public string MoiNumber { get; set; }
 
         protected Tenant()
         {

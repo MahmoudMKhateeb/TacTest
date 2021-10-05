@@ -423,7 +423,11 @@ namespace TACHYON
 
             configuration.CreateMap<CreateOrEditCountyDto, County>().ReverseMap();
             configuration.CreateMap<CountyDto, County>().ReverseMap();
-            configuration.CreateMap<GoodCategoryDto, GoodCategory>().ReverseMap();
+            configuration.CreateMap<GoodCategory, GoodCategoryDto>()
+                .ForMember(x => x.HasItems, x => x.MapFrom(i => i.GoodCategories.Any()))
+                .ForMember(x => x.DisplayName, x => x.MapFrom(i => i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)) == null ? i.Name : i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).DisplayName))
+                .ReverseMap();
+
             configuration.CreateMap<CreateOrEditTrailerDto, Trailer>().ReverseMap();
             configuration.CreateMap<TrailerDto, Trailer>().ReverseMap();
             configuration.CreateMap<CreateOrEditTrailerStatusDto, TrailerStatus>().ReverseMap();
@@ -746,8 +750,8 @@ namespace TACHYON
                 CreateMultiLingualMap<PlateType, PlateTypeTranslation, PlateTypeSelectItemDto>(context);
             configuration.
                 CreateMultiLingualMap<GoodCategory, GoodCategoryTranslation, GetAllGoodsCategoriesForDropDownOutput>(context);
-            configuration.
-                CreateMultiLingualMap<GoodCategory, GoodCategoryTranslation, GoodCategoryDto>(context);
+            //configuration.
+            //    CreateMultiLingualMap<GoodCategory, GoodCategoryTranslation, GoodCategoryDto>(context);
         }
 
         private static void AddOrUpdateShippingRequest(CreateOrEditShippingRequestDto dto, ShippingRequest Request)

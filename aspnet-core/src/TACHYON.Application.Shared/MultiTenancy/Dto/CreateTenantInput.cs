@@ -66,5 +66,9 @@ namespace TACHYON.MultiTenancy.Dto
         [StringLength(AbpUserBase.MaxSurnameLength)]
         public string UserAdminSurname { get; set; }
 
+        [Required]
+        [RegularExpression(TenantConsts.MoiNumberRegex)]
+        public string MoiNumber { get; set; }
+
     }
 }

@@ -10,5 +10,9 @@ namespace TACHYON.Goods.GoodCategories.Dtos
 
         public int? FatherId { get; set; }
         public bool IsActive { get; set; }
+        public string BayanIntegrationId { get; set; }
+
+        public bool HasItems { get; set; }
+
     }
 }
