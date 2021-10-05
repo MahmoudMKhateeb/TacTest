@@ -54,25 +54,41 @@
               </div>
             </div>
           </div>
-          <!-- <div class="col-12">
-              <div class="form-group">
-                <label for="GoodCategory_DisplayName">{{ l('DisplayName') }} *</label>
-                <input
-                  #DisplayName="ngModel"
-                  type="text"
-                  name="GoodCategory_DisplayName"
-                  id="GoodCategory_DisplayName"
-                  class="form-control"
-                  [(ngModel)]="goodCategory.displayName"
-                  name="DisplayName"
-                  minlength="0"
-                  maxlength="256"
-                  required
-                  [class.is-invalid]="DisplayName.touched && !DisplayName.valid"
-                />
-                <div class="invalid-feedback" *ngIf="DisplayName.touched && !DisplayName.valid">{{ l('thisFieldIsRequired') }}</div>
-              </div>
-            </div> -->
+          <div class="col-12">
+            <div class="form-group">
+              <label for="GoodCategory_Name">{{ l('name') }} *</label>
+              <input
+                #name="ngModel"
+                type="text"
+                name="GoodCategory_Name"
+                id="GoodCategory_Name"
+                class="form-control"
+                [(ngModel)]="goodCategory.name"
+                name="name"
+                minlength="0"
+                maxlength="256"
+                required
+                [class.is-invalid]="name.touched && !name.valid"
+              />
+              <div class="invalid-feedback" *ngIf="name.touched && !name.valid">{{ l('thisFieldIsRequired') }}</div>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="form-group">
+              <label for="GoodCategory_BayanIntegrationId">{{ l('bayanIntegrationId') }} *</label>
+              <input
+                #bayanIntegrationId="ngModel"
+                type="text"
+                name="GoodCategory_BayanIntegrationId"
+                id="GoodCategory_BayanIntegrationId"
+                class="form-control"
+                [(ngModel)]="goodCategory.bayanIntegrationId"
+                name="name"
+                minlength="0"
+                maxlength="256"
+              />
+            </div>
+          </div>
           <div class="row" *ngFor="let t of Translations; let i = index">
             <div class="form-group col-md-6">
               <span class="symbol symbol-20 mr-3">

@@ -1,25 +1,24 @@
-import { AfterViewInit, Component, Injector, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Injector, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppConsts } from '@shared/AppConsts';
 import { accountModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import {
+  EditionPaymentType,
   EditionSelectDto,
   PasswordComplexitySetting,
+  PaymentPeriodType,
   ProfileServiceProxy,
   RegisterTenantOutput,
-  TenantRegistrationServiceProxy,
-  PaymentPeriodType,
   SubscriptionPaymentGatewayType,
   SubscriptionStartType,
-  EditionPaymentType,
-  TenantCountryLookupTableDto,
   TenantCityLookupTableDto,
-  TenantServiceProxy,
+  TenantCountryLookupTableDto,
+  TenantRegistrationServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { RegisterTenantModel } from './register-tenant.model';
 import { TenantRegistrationHelperService } from './tenant-registration-helper.service';
-import { finalize, catchError } from 'rxjs/operators';
+import { finalize } from 'rxjs/operators';
 import { ReCaptchaV3Service } from 'ngx-captcha';
 import { NgForm } from '@angular/forms';
 
@@ -48,6 +47,7 @@ export class RegisterTenantComponent extends AppComponentBase implements OnInit,
   approvedHostTerms = false;
   isAvailableTermsAndConditons = false;
   mobileNumber: number;
+  isMoiNumberAvailable = true;
   constructor(
     injector: Injector,
     private _tenantRegistrationService: TenantRegistrationServiceProxy,
@@ -103,7 +103,7 @@ export class RegisterTenantComponent extends AppComponentBase implements OnInit,
   }
 
   save(registerForm: NgForm): void {
-    if (this.isEmailAvailable == false || this.isCompanyNameAvailable == false || this.isEmailValid == false) {
+    if (!this.isEmailAvailable || !this.isCompanyNameAvailable || !this.isEmailValid || !this.isMoiNumberAvailable) {
       this.notify.error('PleaseMakeSureYouProvideValidDetails!');
       return;
     }
@@ -202,5 +202,11 @@ export class RegisterTenantComponent extends AppComponentBase implements OnInit,
   }
   goToHome(): void {
     (window as any).location.href = '/';
+  }
+
+  checkIfIsCompanyUniqueMoiNumber() {
+    this._tenantRegistrationService
+      .isCompanyUniqueMoiNumber(this.model.moiNumber, undefined)
+      .subscribe((result) => (this.isMoiNumberAvailable = result));
   }
 }

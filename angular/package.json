@@ -52,6 +52,7 @@
     "core-js": "^3.6.4",
     "devextreme": "21.1.4",
     "devextreme-angular": "21.1.4",
+    "devextreme-aspnet-data-nojquery": "^2.8.6",
     "devextreme-schematics": "^1.2.18",
     "famfamfam-flags": "^1.0.0",
     "html2canvas": "^1.0.0-rc.7",

@@ -15,6 +15,8 @@ namespace TACHYON.BayanIntegration.Modules
         public List<Item> Items { get; set; }
         public Vehicle Vehicle { get; set; }
         public Driver Driver { get; set; }
+        public Carrier Carrier { get; set; }
+
         public int TotalFare { get; set; }
         public string PickUpDate { get; set; }
         public string PickUpAddress { get; set; }

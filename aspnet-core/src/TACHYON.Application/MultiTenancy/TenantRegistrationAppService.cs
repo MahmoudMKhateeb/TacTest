@@ -46,8 +46,8 @@ namespace TACHYON.MultiTenancy
         private readonly ILocalizationContext _localizationContext;
         private readonly TenantManager _tenantManager;
         private readonly ISubscriptionPaymentRepository _subscriptionPaymentRepository;
-        private readonly IRepository<County, int> _lookup_countryRepository;
-        private readonly IRepository<City, int> _lookup_cityRepository;
+        private readonly IRepository<County, int> _lookupCountryRepository;
+        private readonly IRepository<City, int> _lookupCityRepository;
         private readonly IRepository<TermAndCondition> _termAndConditionRepository;
 
         public TenantRegistrationAppService(
@@ -57,8 +57,8 @@ namespace TACHYON.MultiTenancy
             IAppNotifier appNotifier,
             ILocalizationContext localizationContext,
             TenantManager tenantManager,
-            IRepository<County, int> lookup_countryRepository,
-            IRepository<City, int> lookup_cityRepository,
+            IRepository<County, int> lookupCountryRepository,
+            IRepository<City, int> lookupCityRepository,
             IRepository<TermAndCondition> termAndConditionRepository,
             ISubscriptionPaymentRepository subscriptionPaymentRepository)
         {
@@ -69,8 +69,8 @@ namespace TACHYON.MultiTenancy
             _localizationContext = localizationContext;
             _tenantManager = tenantManager;
             _subscriptionPaymentRepository = subscriptionPaymentRepository;
-            _lookup_countryRepository = lookup_countryRepository;
-            _lookup_cityRepository = lookup_cityRepository;
+            _lookupCountryRepository = lookupCountryRepository;
+            _lookupCityRepository = lookupCityRepository;
             _termAndConditionRepository = termAndConditionRepository;
 
             AppUrlService = NullAppUrlService.Instance;
@@ -148,8 +148,8 @@ namespace TACHYON.MultiTenancy
                     isInTrialPeriod,
                     AppUrlService.CreateEmailActivationUrlFormat(tenancyName),
                     input.UserAdminFirstName,
-                    input.UserAdminSurname
-
+                    input.UserAdminSurname,
+                    input.MoiNumber
                 );
 
                 var tenant = await TenantManager.GetByIdAsync(tenantId);
@@ -201,7 +201,7 @@ namespace TACHYON.MultiTenancy
 
             var editions = (await _editionManager.GetAllAsync())
                 .Cast<SubscribableEdition>()
-                .Where(x=>!x.DisplayName.ToLower().Contains(TACHYONConsts.TachyonDealerEdtionName.ToLower()))
+                .Where(x => !x.DisplayName.ToLower().Contains(TACHYONConsts.TachyonDealerEdtionName.ToLower()))
                 .OrderBy(e => e.MonthlyPrice)
                 .ToList();
 
@@ -328,7 +328,7 @@ namespace TACHYON.MultiTenancy
 
         public async Task<List<TenantCountryLookupTableDto>> GetAllCountryForTableDropdown()
         {
-            List<County> countries = await _lookup_countryRepository
+            List<County> countries = await _lookupCountryRepository
                 .GetAllIncluding(x => x.Translations)
                 .OrderBy(x => x.DisplayName)
                 .ToListAsync();
@@ -339,7 +339,7 @@ namespace TACHYON.MultiTenancy
 
         public async Task<List<CountyDto>> GetAllCountriesWithCode()
         {
-            var countries = await _lookup_countryRepository
+            var countries = await _lookupCountryRepository
                 .GetAll().OrderBy(x => x.DisplayName)
                 .ToListAsync();
             var result = ObjectMapper.Map<List<CountyDto>>(countries);
@@ -347,7 +347,7 @@ namespace TACHYON.MultiTenancy
         }
         public async Task<List<TenantCityLookupTableDto>> GetAllCitiesForTableDropdown(int input)
         {
-            List<City> cities = await _lookup_cityRepository
+            List<City> cities = await _lookupCityRepository
                 .GetAllIncluding(x => x.Translations)
                 .Where(x => x.CountyFk.Id == input)
                 .OrderBy(x => x.DisplayName)
@@ -360,11 +360,11 @@ namespace TACHYON.MultiTenancy
 
 
 
-        public bool CheckIfCompanyUniqueNameisAvailable(string CompanyName)
+        public bool CheckIfCompanyUniqueNameisAvailable(string companyName)
         {
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant))
             {
-                var result = _tenantManager.FindByTenancyName(CompanyName);
+                var result = _tenantManager.FindByTenancyName(companyName);
                 if (result == null)
                 {
                     return true;
@@ -407,6 +407,11 @@ namespace TACHYON.MultiTenancy
                 return output;
             }
 
+        }
+
+        public async Task<bool> IsCompanyUniqueMoiNumber(string moiNumber, long? tenantId)
+        {
+            return await TenantManager.IsCompanyUniqueMoiNumber(moiNumber, tenantId);
         }
     }
 }

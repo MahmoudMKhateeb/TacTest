@@ -4,6 +4,7 @@ using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Extensions;
 using Abp.IdentityFramework;
+using Abp.Linq.Extensions;
 using Abp.Localization;
 using Abp.MultiTenancy;
 using Abp.Notifications;
@@ -11,6 +12,7 @@ using Abp.Runtime.Security;
 using Abp.Runtime.Session;
 using Abp.UI;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Diagnostics;
 using System.Linq;
@@ -97,7 +99,8 @@ namespace TACHYON.MultiTenancy
             bool isInTrialPeriod,
             string emailActivationLink,
             string userAdminFirstName,
-            string userAdminSurname)
+            string userAdminSurname,
+            string moiNumber)
         {
             int newTenantId;
             long newAdminId;
@@ -122,8 +125,9 @@ namespace TACHYON.MultiTenancy
                     EditionId = editionId,
                     SubscriptionEndDateUtc = subscriptionEndDate?.ToUniversalTime(),
                     IsInTrialPeriod = isInTrialPeriod,
-                    MobileNo=mobileNo,
-                    ConnectionString = connectionString.IsNullOrWhiteSpace() ? null : SimpleStringCipher.Instance.Encrypt(connectionString)
+                    MobileNo = mobileNo,
+                    ConnectionString = connectionString.IsNullOrWhiteSpace() ? null : SimpleStringCipher.Instance.Encrypt(connectionString),
+                    MoiNumber = moiNumber
                 };
 
                 await CreateAsync(tenant);
@@ -331,6 +335,14 @@ namespace TACHYON.MultiTenancy
             }
 
             return base.UpdateAsync(tenant);
+        }
+
+        public async Task<bool> IsCompanyUniqueMoiNumber(string moiNumber, long? tenantId)
+        {
+            var tenant = await TenantRepository.GetAll()
+                  .WhereIf(tenantId.HasValue, x => x.Id != tenantId)
+                  .FirstOrDefaultAsync(x => x.MoiNumber == moiNumber);
+            return tenant == null;
         }
     }
 }

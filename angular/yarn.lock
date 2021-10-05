@@ -3818,6 +3818,11 @@ devextreme-angular@21.1.4:
     devextreme-schematics latest
     tslib "^1.9.0"
 
+devextreme-aspnet-data-nojquery@^2.8.6:
+  version "2.8.6"
+  resolved "https://registry.yarnpkg.com/devextreme-aspnet-data-nojquery/-/devextreme-aspnet-data-nojquery-2.8.6.tgz#5ad6a6f5aa4d20696daa74fea5d3aad533b70525"
+  integrity sha512-ZQHrgMQwgJWgdEF7ulSQyLs2VvK7DPuVJPIrvXA3kA0UKt1sTS69ShTJt3xKKVXlceCMS8MrtFVxustlvxByLA==
+
 devextreme-quill@~1.1.2:
   version "1.1.4"
   resolved "https://registry.yarnpkg.com/devextreme-quill/-/devextreme-quill-1.1.4.tgz#95bf63a4c3dc58427a2244717fdb545c0575b1bf"

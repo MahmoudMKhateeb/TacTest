@@ -12,6 +12,7 @@ namespace TACHYON.Trucks.Dtos
 
         [Required]
         [StringLength(TruckConsts.MaxPlateNumberLength, MinimumLength = TruckConsts.MinPlateNumberLength)]
+        [RegularExpression(TruckConsts.PlateNumberRegularExpression)]
         public string PlateNumber { get; set; }
 
 
@@ -22,6 +23,7 @@ namespace TACHYON.Trucks.Dtos
 
         [Required]
         [StringLength(TruckConsts.MaxModelYearLength, MinimumLength = TruckConsts.MinModelYearLength)]
+        [RegularExpression(TruckConsts.ModelYearRegularExpression)]
         public string ModelYear { get; set; }
 
 
