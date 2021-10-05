@@ -1,16 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Abp.Domain.Repositories;
+﻿using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.Extensions;
 using Abp.Runtime.Session;
 using Abp.Specifications;
 using Abp.UI;
 using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using TACHYON.Authorization.Users;
 using TACHYON.Documents.DocumentFiles;
 using TACHYON.Documents.DocumentFiles.Dtos;
@@ -19,7 +20,6 @@ using TACHYON.Documents.DocumentTypes;
 using TACHYON.MultiTenancy;
 using TACHYON.Storage;
 using TACHYON.Trucks.Dtos;
-using Abp.Extensions;
 
 namespace TACHYON.Documents
 {
@@ -93,7 +93,7 @@ namespace TACHYON.Documents
 
             return await _documentTypeRepository.GetAll()
                 .Include(x => x.Translations)
-                .Where(x => x.EditionId == editionId || x.DocumentRelatedWithId == tenantId)
+                .Where(x => (x.EditionId == editionId && !x.DocumentRelatedWithId.HasValue) || x.DocumentRelatedWithId == tenantId)
                 .ToListAsync();
         }
 
