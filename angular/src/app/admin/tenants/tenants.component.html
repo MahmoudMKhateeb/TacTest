@@ -106,13 +106,13 @@
                     </span>
                   </a>
                   <ul class="dropdown-menu z-index-1000" *dropdownMenu>
-                    <li *ngIf="options.data.editionId == 2 || options.data.editionId == 3">
-                      <a href="javascript:;" class="dropdown-item" (click)="viewTenantProfile(options.data.id)">
+                    <li *ngIf="options.data.tenantListDto.editionId == 2 || options.data.tenantListDto.editionId == 3">
+                      <a href="javascript:;" class="dropdown-item" (click)="viewTenantProfile(options.data.tenantListDto.id)">
                         {{ 'ViewTenantProfile' | localize }}
                       </a>
                     </li>
 
-                    <li *ngIf="options.data.editionDisplayName != null" [class.disabled]="!options.data.isActive">
+                    <li *ngIf="options.data.tenantListDto.editionDisplayName != null" [class.disabled]="!options.data.tenantListDto.isActive">
                       <a
                         href="javascript:;"
                         class="dropdown-item"
