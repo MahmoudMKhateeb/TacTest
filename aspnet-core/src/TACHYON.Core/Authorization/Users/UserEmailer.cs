@@ -112,7 +112,7 @@ namespace TACHYON.Authorization.Users
             mailMessage.AppendLine($"<li><span class=\"first\">{L("Email")}</span><span class=\"last\">{user.EmailAddress}</span></li>");
             mailMessage.AppendLine($"<li><span class=\"first\">{L("Password")}</span><span class=\"last\">{password}</span></li>");
             mailMessage.AppendLine($"</ul></div><p class=\"lead\">{L("ClickButtonMessage")}</p>");
-            mailMessage.AppendLine($"<button onclick=\"location.href='{link}';\" class=\"btn btn-red\">{L("Verify")}</button>");
+            mailMessage.AppendLine($"<a href=\"{link}\" style=\"width: 200px\" class=\"btn btn-red\">{L("Verify")}</a>");
             mailMessage.AppendLine($"<p class=\"lead\">{L("CopyLinkMessage")}</p>");
             mailMessage.AppendLine($"<p class=\"lead\">{link}</p>");
             await ReplaceBodyAndSend(user.EmailAddress, L("EmailActivation_Subject"), emailTemplate, mailMessage);
@@ -271,7 +271,7 @@ namespace TACHYON.Authorization.Users
             mailMessage.AppendLine($"<h2>{L("DearsAt")} {IntoSpan(companyName)}</h2> <br>");
             mailMessage.AppendLine("<p class=\"lead\" style=\"width: 65%; margin: 30px auto\">");
             mailMessage.AppendLine($"{L("YouAreReceivingThisEmailBecauseWe")}</p>");
-            mailMessage.AppendLine($"<button onclick=\"location.href='{link}';\" class=\"btn btn-red\">{L("ResetPassword")}</button>");
+            mailMessage.AppendLine($"<a href=\"{link}\"class=\"btn btn-red\" style=\"width: {(isRTL ? 350 : 300)}\" >{L("ResetPassword")}</a>");
             mailMessage.AppendLine($"<p class=\"lead\">{L("YourNewPasswordMust")}</p><ul>");
             foreach (string pr in passwordRequirements)
                 mailMessage.AppendLine(
