@@ -79,10 +79,11 @@
               required
               [class.is-invalid]="companyInfo.touched && !companyInfo.valid"
               [class.is-valid]="companyInfo.touched && companyInfo.valid"
+              minlength="10"
+              maxlength="500"
             >
             </textarea>
-
-            <span class="form-text text-muted">a short description about the Company.</span>
+            <span class="form-text text-muted">{{ l('CompanyDescriptionMustBeAtLeast10Characters') }}.</span>
           </div>
         </div>
 
