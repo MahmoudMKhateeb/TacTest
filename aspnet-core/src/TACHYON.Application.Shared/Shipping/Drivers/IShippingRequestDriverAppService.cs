@@ -10,7 +10,7 @@ namespace TACHYON.Shipping.Drivers
     public interface IShippingRequestDriverAppService : IApplicationService
     {
         Task<PagedResultDto<ShippingRequestTripDriverListDto>> GetAll(ShippingRequestTripDriverFilterInput input);
-        Task<ShippingRequestTripDriverDetailsDto> GetDetail(long RequestId, bool IsAccepted);
+        Task<ShippingRequestTripDriverDetailsDto> GetDetail(int RequestId, bool IsAccepted);
         Task<RoutDropOffDto> GetDropOffDetail(long PointId);
 
         Task StartTrip(ShippingRequestTripDriverStartInputDto Input);

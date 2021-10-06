@@ -137,7 +137,7 @@ namespace TACHYON.Shipping.Drivers
         /// </summary>
         /// <param name="TripId"></param>
         /// <returns></returns>
-        public async Task<ShippingRequestTripDriverDetailsDto> GetDetail(long TripId, bool IsAccepted)
+        public async Task<ShippingRequestTripDriverDetailsDto> GetDetail(int TripId, bool IsAccepted)
         {
             DisableTenancyFilters();
             var trip = await _ShippingRequestTrip.GetAll()
@@ -150,6 +150,8 @@ namespace TACHYON.Shipping.Drivers
            .Include(i => i.ShippingRequestFk)
                .ThenInclude(p => p.GoodCategoryFk)
                .ThenInclude(p => p.Translations)
+            .Include(i => i.ShippingRequestFk)
+               .ThenInclude(p => p.Tenant)
            .Include(i => i.DestinationFacilityFk)
            .Include(i => i.OriginFacilityFk)
            .Include(i => i.RoutPoints)
@@ -189,6 +191,33 @@ namespace TACHYON.Shipping.Drivers
                     tripDto.ActionStatus = ShippingRequestTripDriverActionStatusDto.CanStartTrip;
             }
 
+            var rate = new RatingLog();
+
+
+            tripDto.IsShippingExpRated = await _ratingLogManager.IsRateDoneBefore(new RatingLog
+            {
+                DriverId = AbpSession.UserId,
+                TripId = TripId,
+                RateType = RateType.SEByDriver
+            });
+
+            foreach (var point in tripDto.RoutePoints)
+            {
+                point.IsFacilityRated = await _ratingLogManager.IsRateDoneBefore(new RatingLog
+                {
+                    DriverId = AbpSession.UserId,
+                    PointId = point.Id,
+                    RateType = RateType.SEByDriver
+                });
+            }
+            //tripDto.RoutePoints.ToList().ForEach(async x =>
+            //x.IsFacilityRated =( await _ratingLogManager.IsRateDoneBefore(new RatingLog
+            //{
+            //    DriverId = AbpSession.UserId,
+            //    PointId = x.Id,
+            //    RateType = RateType.SEByDriver
+            //})));
+
             //return good category name automatic from default language
             tripDto.GoodsCategory = ObjectMapper.Map<GoodCategoryDto>(trip.ShippingRequestFk.GoodCategoryFk).DisplayName;
 
@@ -215,7 +244,12 @@ namespace TACHYON.Shipping.Drivers
             if (Point == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
             var DropOff = ObjectMapper.Map<RoutDropOffDto>(Point);
 
-
+            DropOff.IsFacilityRated = await _ratingLogManager.IsRateDoneBefore(new RatingLog
+            {
+                DriverId = AbpSession.UserId,
+                PointId = PointId,
+                RateType = RateType.FacilityByDriver
+            });
             return DropOff;
         }
 

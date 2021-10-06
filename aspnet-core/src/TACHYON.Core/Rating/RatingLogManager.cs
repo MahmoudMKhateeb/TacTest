@@ -151,6 +151,17 @@ namespace TACHYON.Rating
             }
         }
 
+        public async Task<bool> IsRateDoneBefore(RatingLog rate)
+        {
+            if (await _ratingLogRepository.CountAsync(x => x.CarrierId == rate.CarrierId && x.DriverId == rate.DriverId &&
+             x.PointId == rate.PointId && x.ReceiverId == rate.ReceiverId && x.ShipperId == rate.ShipperId &&
+             x.TripId == rate.TripId && x.FacilityId == rate.FacilityId && x.RateType == rate.RateType) > 0)
+            {
+                return true;
+            }
+            return false;
+        }
+
         public async Task RecalculateRatingForTenantAndDriverAndFacility(long rateId)
         {
             var rate = await _ratingLogRepository.GetAll()
