@@ -9,22 +9,25 @@
               <Width>0.92151in</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>1.72451in</Width>
+              <Width>1.06336in</Width>
             </TablixColumn>
             <TablixColumn>
               <Width>1.26085in</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>0.84867in</Width>
+              <Width>0.5021in</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>1.01962in</Width>
+              <Width>0.57327in</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>1.45406in</Width>
             </TablixColumn>
             <TablixColumn>
               <Width>0.83356in</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>1.25772in</Width>
+              <Width>1.13035in</Width>
             </TablixColumn>
           </TablixColumns>
           <TablixRows>
@@ -217,6 +220,44 @@
                         </Paragraph>
                       </Paragraphs>
                       <rd:DefaultName>Textbox36</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>None</Style>
+                        </Border>
+                        <BackgroundColor>#e1e1e1</BackgroundColor>
+                        <VerticalAlign>Middle</VerticalAlign>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>4pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox3">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>Sub Category   النوع الفرعي</Value>
+                              <Style>
+                                <FontSize>8pt</FontSize>
+                                <FontWeight>Medium</FontWeight>
+                                <TextDecoration>None</TextDecoration>
+                                <Color>#404040</Color>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Right</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox3</rd:DefaultName>
                       <Style>
                         <Border>
                           <Color>LightGrey</Color>
@@ -437,6 +478,41 @@
                 <TablixCell />
                 <TablixCell>
                   <CellContents>
+                    <Textbox Name="SubCategory">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!SubCategory.Value</Value>
+                              <Style>
+                                <FontFamily>open Sans</FontFamily>
+                                <FontSize>8pt</FontSize>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>SubCategory</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>None</Style>
+                        </Border>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>4pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
                     <Textbox Name="UnitOfMeasureDisplayName2">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
@@ -485,6 +561,7 @@
             <TablixMember />
             <TablixMember />
             <TablixMember />
+            <TablixMember />
           </TablixMembers>
         </TablixColumnHierarchy>
         <TablixRowHierarchy>
@@ -503,7 +580,7 @@
         <Top>4.01526in</Top>
         <Left>0.20337in</Left>
         <Height>0.54188in</Height>
-        <Width>7.86644in</Width>
+        <Width>7.73906in</Width>
         <Style>
           <Border>
             <Style>None</Style>
@@ -4558,6 +4635,12 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
+                              <Value>+966</Value>
+                              <Style>
+                                <FontSize>8pt</FontSize>
+                              </Style>
+                            </TextRun>
+                            <TextRun>
                               <Value>=Fields!SenderMobile.Value</Value>
                               <Style>
                                 <FontSize>8pt</FontSize>
@@ -7679,10 +7762,14 @@
           <DataField>TotalWeight</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="SubCategory">
+          <DataField>SubCategory</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
       </Fields>
       <rd:DataSetInfo>
         <rd:DataSetName>SingleDropGoodsDetailsDataSet</rd:DataSetName>
-        <rd:SchemaPath>C:\Users\tasneem\source\repos\tachyonhub\tachyon-core\aspnet-core\src\TACHYON.Application\Waybills\Reports\SingleDropGoodsDetailsDataSet.xsd</rd:SchemaPath>
+        <rd:SchemaPath>C:\Users\DELL\source\repos\tachyon-core2\aspnet-core\src\TACHYON.Application\Waybills\Reports\SingleDropGoodsDetailsDataSet.xsd</rd:SchemaPath>
         <rd:TableName>DataTable1</rd:TableName>
         <rd:TableAdapterFillMethod />
         <rd:TableAdapterGetDataMethod />
