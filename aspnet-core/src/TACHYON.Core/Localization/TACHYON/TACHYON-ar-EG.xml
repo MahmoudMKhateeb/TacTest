@@ -1094,6 +1094,7 @@
 		<text name="NotificationSettings">إعدادات الإشعارات</text>
 		<text name="NotificationTypes">أنواع الإشعارات</text>
 		<text name="NotifyDriverWhenAssignToTrip">تم إسناد رحلة جديدة إليك</text>
+		<text name="NotifyDriverWhenUnassignedToTrip">لديك رحلة مع بوليصة الشحن رقم {0} تم إلغاء تعيينها لك</text>
 		<text name="NotImpersonatedLoginErrorMessage">هذا ليس تسجيل دخول ممثّل</text>
 		<text name="NotIsRequired">غير مطلوب</text>
 		<text name="NotSelected">لم يتم اختياره</text>

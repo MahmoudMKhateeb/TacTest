@@ -1230,6 +1230,7 @@
 		<text name="NotificationTypes">Notifications type</text>
 		<text name="NotificationWhenTripDetailsChanged">The shipment {waybillnumber} information has been changed.</text>
 		<text name="NotifyDriverWhenAssignToTrip">You have new trip assign to you</text>
+		<text name="NotifyDriverWhenUnassignedToTrip">You have trip with waybill no {0} Unassigned To You </text>
 		<text name="NotImpersonatedLoginErrorMessage">This is not an impersonated login!</text>
 		<text name="NotIsAttachable">Not is attachable</text>
 		<text name="NotIsDangerousGood">Not is dangerous good</text>
