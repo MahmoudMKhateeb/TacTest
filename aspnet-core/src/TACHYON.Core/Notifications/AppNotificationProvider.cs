@@ -96,14 +96,14 @@ namespace TACHYON.Notifications
                     featureDependency: new SimpleFeatureDependency(AppFeatures.Carrier)
                     )
                 );
-            
-                context.Manager.Add(
-                new NotificationDefinition(
-                    AppNotificationNames.TachyonDealOfferCreated,
-                    displayName: L("TachyonDealerOfferCreatedNotificationDefinition"),
-                    featureDependency: new SimpleFeatureDependency(AppFeatures.Carrier)
-                    )
-                );
+
+            context.Manager.Add(
+            new NotificationDefinition(
+                AppNotificationNames.TachyonDealOfferCreated,
+                displayName: L("TachyonDealerOfferCreatedNotificationDefinition"),
+                featureDependency: new SimpleFeatureDependency(AppFeatures.Carrier)
+                )
+            );
             context.Manager.Add(
                 new NotificationDefinition(
                     AppNotificationNames.DocumentFileBeforExpiration,
@@ -125,6 +125,10 @@ namespace TACHYON.Notifications
                permissionDependency: new SimplePermissionDependency(AppPermissions.Pages_Tenants)
               )
           );
+
+            //context.Manager.Add(
+            //    new NotificationDefinition(
+            //        ))
 
 
             #region Invoices
@@ -149,7 +153,7 @@ namespace TACHYON.Notifications
             context.Manager.Add(
                 new NotificationDefinition(
                     AppNotificationNames.StartShippment,
-                    displayName:L("StartShippmentNotificationDefinition")
+                    displayName: L("StartShippmentNotificationDefinition")
                     )
                 );
             context.Manager.Add(

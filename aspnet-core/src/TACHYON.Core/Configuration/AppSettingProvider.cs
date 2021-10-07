@@ -140,6 +140,9 @@ namespace TACHYON.Configuration
                     GetFromAppSettings(AppSettings.BayanIntegration.ClientId, "56beeab2-d96a-4afd-baed-e4a88894629e"), isVisibleToClients: true,
                     scopes: SettingScopes.Application),
 
+                new SettingDefinition(AppSettings.HostManagement.DriverLocationTrackingInterval,
+                GetFromAppSettings(AppSettings.HostManagement.DriverLocationTrackingInterval, "3"), isVisibleToClients: true,
+                    scopes: SettingScopes.Application),
                 // Editions
                  //todo add this to host settings page
                 new SettingDefinition(AppSettings.Editions.ShipperEditionId,GetFromAppSettings(AppSettings.Editions.ShipperEditionId,"1"),isVisibleToClients:true,scopes:SettingScopes.Application),

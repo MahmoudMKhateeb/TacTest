@@ -19,13 +19,13 @@ using TACHYON.Shipping.Trips;
 
 namespace TACHYON.Shipping.Drivers
 {
-    public  class ShippingRequestDriverManager: TACHYONDomainServiceBase
+    public class ShippingRequestDriverManager : TACHYONDomainServiceBase
     {
         private readonly IRepository<ShippingRequestTrip> _ShippingRequestTrip;
         private readonly IRepository<RoutPoint, long> _RoutPointRepository;
         private readonly IRepository<ShippingRequest, long> _ShippingRequestRepository;
         private readonly IRepository<RoutPointStatusTransition> _routPointStatusTransitionRepository;
-        private readonly IRepository<RoutPointDocument,long> _routPointDocumentRepository;
+        private readonly IRepository<RoutPointDocument, long> _routPointDocumentRepository;
 
         private readonly InvoiceManager _invoiceManager;
         private readonly UserManager _userManager;
@@ -66,17 +66,17 @@ namespace TACHYON.Shipping.Drivers
         {
             DisableTenancyFilters();
             var CurrentPoint = await _RoutPointRepository.GetAll().
-                Include(x=>x.ShippingRequestTripFk)
-                    .ThenInclude(x=>x.ShippingRequestTripVases)
+                Include(x => x.ShippingRequestTripFk)
+                    .ThenInclude(x => x.ShippingRequestTripVases)
                 .Include(x => x.ShippingRequestTripFk)
-                    .ThenInclude(x=>x.ShippingRequestFk)
-                     .ThenInclude(x=>x.Tenant)
+                    .ThenInclude(x => x.ShippingRequestFk)
+                     .ThenInclude(x => x.Tenant)
                 .FirstOrDefaultAsync(x => x.IsActive &&
                 x.ShippingRequestTripFk.RoutePointStatus == RoutePointStatus.ReceiverConfirmed &&
                 x.ShippingRequestTripFk.AssignedDriverUserId == _abpSession.UserId);
             if (CurrentPoint == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
 
-            if(CurrentPoint.ShippingRequestTripFk.NeedsDeliveryNote && !CurrentPoint.IsDeliveryNoteUploaded)
+            if (CurrentPoint.ShippingRequestTripFk.NeedsDeliveryNote && !CurrentPoint.IsDeliveryNoteUploaded)
             {
                 throw new UserFriendlyException(L("YouNeedToUploadDeliveryNoteBefore"));
             }
@@ -131,7 +131,7 @@ namespace TACHYON.Shipping.Drivers
 
             if (!CurrentPoint.ShippingRequestTripFk.NeedsDeliveryNote) throw new UserFriendlyException(L("TripDidnnotNeedsDeliveryNote"));
             CurrentPoint.IsDeliveryNoteUploaded = true;
-            await InsertRoutePointDocument(CurrentPoint.Id, document,RoutePointDocumentType.DeliveryNote);
+            await InsertRoutePointDocument(CurrentPoint.Id, document, RoutePointDocumentType.DeliveryNote);
 
             return true;
 
@@ -155,7 +155,7 @@ namespace TACHYON.Shipping.Drivers
         /// <returns></returns>
         public async Task<RoutPoint> GetActivePoint()
         {
-            var ActivePoint = await _RoutPointRepository.GetAll().Include(x=>x.ShippingRequestTripFk).ThenInclude(r=>r.ShippingRequestFk).FirstOrDefaultAsync(x => x.IsActive && x.ShippingRequestTripFk.Status != ShippingRequestTripStatus.Canceled && x.ShippingRequestTripFk.AssignedDriverUserId == _abpSession.UserId);
+            var ActivePoint = await _RoutPointRepository.GetAll().Include(x => x.ShippingRequestTripFk).ThenInclude(r => r.ShippingRequestFk).FirstOrDefaultAsync(x => x.IsActive && x.ShippingRequestTripFk.Status != ShippingRequestTripStatus.Canceled && x.ShippingRequestTripFk.AssignedDriverUserId == _abpSession.UserId);
             //if (ActivePoint == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
 
             return ActivePoint;
@@ -226,11 +226,11 @@ namespace TACHYON.Shipping.Drivers
 
 
 
-        public async Task<ShippingRequestTrip> GetTripWhenAccepedOrRejectedByDriver(int id,long userId)
+        public async Task<ShippingRequestTrip> GetTripWhenAccepedOrRejectedByDriver(int id, long userId)
         {
-            var trip= await _ShippingRequestTrip
-                .GetAllIncluding(o=>o.OriginFacilityFk,d=>d.DestinationFacilityFk,x=>x.ShippingRequestFk)
-                .Include(x=>x.ShippingRequestTripVases)
+            var trip = await _ShippingRequestTrip
+                .GetAllIncluding(o => o.OriginFacilityFk, d => d.DestinationFacilityFk, x => x.ShippingRequestFk)
+                .Include(x => x.ShippingRequestTripVases)
                                 .FirstOrDefaultAsync(t => t.Id == id &&
                                 t.DriverStatus == ShippingRequestTripDriverStatus.None &&
                                 t.Status == ShippingRequestTripStatus.New &&
@@ -244,11 +244,17 @@ namespace TACHYON.Shipping.Drivers
         {
             //await _invoiceManager.GenertateInvoiceWhenShipmintDelivery(routPoint.ShippingRequestTripFk);
             routPoint.Status = Status;
-            await _routPointStatusTransitionRepository.InsertAsync(new RoutPointStatusTransition 
-           { 
-           PointId= routPoint.Id,
-           Status= Status
-           });
+            await _routPointStatusTransitionRepository.InsertAsync(new RoutPointStatusTransition
+            {
+                PointId = routPoint.Id,
+                Status = Status
+            });
+        }
+
+        public async Task NotifyCarrierWithDriverGpsOff(User user)
+        {
+            var carrierAdminUser = await _userManager.GetAdminByTenantIdAsync(user.TenantId.Value);
+            await _appNotifier.NotifyCarrierWithDriverGpsOff(new UserIdentifier(user.TenantId, carrierAdminUser.Id), user);
         }
 
 
@@ -276,7 +282,7 @@ namespace TACHYON.Shipping.Drivers
 
         }
 
-        private async Task InsertRoutePointDocument(long PointId, IHasDocument document,RoutePointDocumentType documentType)
+        private async Task InsertRoutePointDocument(long PointId, IHasDocument document, RoutePointDocumentType documentType)
         {
             var routePointDocument = new RoutPointDocument();
             routePointDocument.RoutPointId = PointId;
