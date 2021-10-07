@@ -88,7 +88,44 @@
                       <label><span class="required-fileds"></span> {{ l('ShippingRequestType') }}</label>
                       <input class="form-control" type="text" name="ShippingRequestType" [value]="shipppingRequestType()" disabled />
                     </div>
-                    <div *ngIf="shippingRequestforView.shippingRequest.isBid" class="col-lg-3">
+                    <!--  Start::Shipping Type                 -->
+                    <div class="col-lg-6">
+                      <label><span class="required-fileds"></span> {{ l('ShippingType') }}</label>
+                      <input class="form-control" type="text" name="ShippingType" [value]="shippingRequestforView.shippingTypeDisplayName" disabled />
+                    </div>
+                    <!-- End::Shipping Type-->
+
+                    <div class="col-lg-3 mt-5">
+                      <div class="form-group">
+                        <label> {{ l('ShipperReference') }}</label>
+                        <div class="input-group date">
+                          <input
+                            [value]="shippingRequestforView.shippingRequest.shipperReference"
+                            class="form-control"
+                            type="ShipperReference"
+                            placeholder="{{ l('ShipperReference') }}"
+                            name="ShipperReference"
+                            disabled
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-lg-3 mt-5">
+                      <div class="form-group">
+                        <label> {{ l('ShipperInvoiceNumber') }}</label>
+                        <div class="input-group date">
+                          <input
+                            [value]="shippingRequestforView.shippingRequest.shipperInvoiceNo"
+                            class="form-control"
+                            type="ShipperInvoiceNumber"
+                            placeholder="{{ l('ShipperInvoiceNumber') }}"
+                            name="ShipperInvoiceNumber"
+                            disabled
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div *ngIf="shippingRequestforView.shippingRequest.isBid" class="col-lg-3 mt-5">
                       <div class="form-group">
                         <label>{{ l('DiddingStartDate') }}</label>
                         <div class="input-group date">
@@ -109,7 +146,7 @@
                         </div>
                       </div>
                     </div>
-                    <div *ngIf="shippingRequestforView.shippingRequest.isBid" class="col-lg-3">
+                    <div *ngIf="shippingRequestforView.shippingRequest.isBid" class="col-lg-3 mt-5">
                       <label> {{ l('BiddingEndDate') }}</label>
                       <div class="input-group date">
                         <input
@@ -128,12 +165,6 @@
                         </div>
                       </div>
                     </div>
-                    <!--  Start::Shipping Type                 -->
-                    <div class="col-lg-6">
-                      <label><span class="required-fileds"></span> {{ l('ShippingType') }}</label>
-                      <input class="form-control" type="text" name="ShippingType" [value]="shippingRequestforView.shippingTypeDisplayName" disabled />
-                    </div>
-                    <!-- End::Shipping Type-->
                   </div>
                 </div>
               </div>
