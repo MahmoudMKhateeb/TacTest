@@ -41,6 +41,7 @@ export class CreateTenantModalComponent extends AppComponentBase {
   isCompanyNameAvailable = true;
   isEmailAvailable = true;
   isEmailValid = true;
+  isMoiNumberAvailable = true;
   constructor(
     injector: Injector,
     private _tenantService: TenantServiceProxy,
@@ -235,5 +236,10 @@ export class CreateTenantModalComponent extends AppComponentBase {
       this.isEmailValid = true;
     }
     this.checkIfIsEmailAvailable();
+  }
+  checkIfIsCompanyUniqueMoiNumber() {
+    this._tenantRegistrationService
+      .isCompanyUniqueMoiNumber(this.tenant.moiNumber, undefined)
+      .subscribe((result) => (this.isMoiNumberAvailable = result));
   }
 }

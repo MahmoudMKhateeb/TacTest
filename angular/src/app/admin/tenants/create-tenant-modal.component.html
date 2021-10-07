@@ -108,7 +108,7 @@
                   required
                 >
                   <option [ngValue]="null">{{ l('Select') }} {{ l('Country') }}</option>
-                  <option *ngFor="let country of allCountries" value="{{ country.id }}">{{ country.displayName }} </option>
+                  <option *ngFor="let country of allCountries" value="{{ country.id }}">{{ country.displayName }}</option>
                 </select>
                 <!-- <span class="form-text text-danger" *ngIf="countrySelect.value == -2 && countrySelect.touched">Country is required</span> -->
                 <validation-messages [formCtrl]="countrySelect"></validation-messages>
@@ -136,8 +136,10 @@
           </div>
 
           <div class="row">
-            <div class="col-12">
+            <div class="col-6">
               <div class="form-group">
+                <label>{{ 'Address' | localize }}</label>
+
                 <input
                   #addressInput="ngModel"
                   class="form-control py-7 font-size-h6"
@@ -151,6 +153,32 @@
                 <validation-messages [formCtrl]="addressInput"></validation-messages>
                 <span class="form-text text-muted"> {{ l('Enter') }} {{ l('Address') }}</span>
                 <span class="form-text text-muted"> {{ l('Format') }} :{{ l('AddressFormat') }}</span>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group">
+                <label>{{ 'MoiNumber' | localize }}</label>
+                <input
+                  #MoiNumber="ngModel"
+                  class="form-control py-7 font-size-h6"
+                  autoFocus
+                  (change)="checkIfIsCompanyUniqueMoiNumber()"
+                  [(ngModel)]="tenant.moiNumber"
+                  name="MoiNumber"
+                  required
+                  style="width: 100% !important"
+                  maxlength="10"
+                  minlength="10"
+                  pattern="^7\d{9}$"
+                  placeholder="7_________"
+                />
+                <div>
+                  <validation-messages [formCtrl]="MoiNumber"></validation-messages>
+                  <span class="form-text text-muted">{{ l('NumbersOnly') }}</span>
+                  <span *ngIf="!isMoiNumberAvailable && MoiNumber.valid" class="form-text text-danger text-left"
+                    >{{ 'MoiNumber' | localize }} {{ 'AlreadyTaken' | localize }}</span
+                  >
+                </div>
               </div>
             </div>
           </div>
@@ -345,7 +373,7 @@
           <div class="form-group">
             <label for="edition">{{ 'Edition' | localize }}</label>
             <select id="edition" name="edition" class="form-control" [(ngModel)]="tenant.editionId" (change)="onEditionChange()">
-              <option *ngFor="let edition of editions" [value]="edition.value">{{ edition.displayText }} </option>
+              <option *ngFor="let edition of editions" [value]="edition.value">{{ edition.displayText }}</option>
             </select>
           </div>
 
