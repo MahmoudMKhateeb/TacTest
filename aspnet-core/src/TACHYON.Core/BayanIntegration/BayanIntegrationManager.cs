@@ -249,7 +249,7 @@ namespace TACHYON.BayanIntegration
                         //? some drivers does not have driverIdentityNumber example excel drivers 
                         // todo check it 
                         IdentityNumber = driverIdentityNumber,
-                        Mobile = x.AssignedDriverUserFk.PhoneNumber,
+                        Mobile = "+966" + x.AssignedDriverUserFk.PhoneNumber,
                         Name = x.AssignedDriverUserFk.Name
                     },
                     Carrier = new Carrier()
@@ -366,7 +366,7 @@ namespace TACHYON.BayanIntegration
                         //? some drivers does not have driverIdentityNumber example excel drivers 
                         // todo check it 
                         IdentityNumber = driverIdentityNumber,
-                        Mobile = x.AssignedDriverUserFk.PhoneNumber,
+                        Mobile = "+966" + x.AssignedDriverUserFk.PhoneNumber,
                         Name = x.AssignedDriverUserFk.Name
                     },
                     Carrier = new Carrier()
