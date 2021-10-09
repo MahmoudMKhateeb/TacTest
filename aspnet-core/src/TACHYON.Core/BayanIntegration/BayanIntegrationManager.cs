@@ -216,7 +216,7 @@ namespace TACHYON.BayanIntegration
                         .Select(g => new Item()
                         {
                             DangerousCode = g.DangerousGoodsCode,
-                            DangerousGoodTypeId = g.DangerousGoodTypeId,
+                            DangerousGoodTypeId = g.DangerousGoodTypeFk.BayanIntegrationId,
 
                             //?  goodsCatgoy or free text or Good Types Description
                             Description = g.Description,
@@ -232,7 +232,7 @@ namespace TACHYON.BayanIntegration
                         }).ToList(),
                     Vehicle = new Vehicle()
                     {
-                        PlateType = "1",
+                        PlateType = x.AssignedTruckFk.PlateTypeFk.BayanIntegrationId,
                         //? some trucks does not have vehicleSequenceNumber example excel imported trucks
                         // todo check it => can i take it if expired  ?
                         SequenceNumber = vehicleSequenceNumber,
