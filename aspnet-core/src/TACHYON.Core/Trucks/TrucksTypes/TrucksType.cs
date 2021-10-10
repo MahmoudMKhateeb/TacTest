@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using TACHYON.Common;
 using TACHYON.Trucks.TruckCategories.TransportTypes;
 using TACHYON.Trucks.TrucksTypes.TrucksTypesTranslations;
 
@@ -12,7 +13,7 @@ namespace TACHYON.Trucks.TrucksTypes
 {
     [Table("TrucksTypes")]
     [Audited]
-    public class TrucksType : FullAuditedEntity<long>, IMultiLingualEntity<TrucksTypesTranslation>
+    public class TrucksType : FullAuditedEntity<long>, IMultiLingualEntity<TrucksTypesTranslation>, IHasDisplayName
     {
 
         [Required]

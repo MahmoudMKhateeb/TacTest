@@ -150,7 +150,7 @@ namespace TACHYON.Goods.GoodsDetails
             var unitOfMeasure = await _lookup_UnitOfMeasureRepository.GetAll()
                 .SingleAsync(x => x.Id == input.UnitOfMeasureId);
 
-            if (unitOfMeasure.DisplayName.ToLowerContains(AppConsts.OthersDisplayName)
+            if (unitOfMeasure.DisplayName.ToLowerContains(TACHYONConsts.OthersDisplayName)
                 && input.OtherUnitOfMeasureName.IsNullOrEmpty())
                 throw new UserFriendlyException(L("OtherNameIsRequired"));
 

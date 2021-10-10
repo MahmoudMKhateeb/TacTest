@@ -877,7 +877,7 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             var list = await _lookup_trucksTypeRepository.GetAll()
                 .Include(x => x.Translations)
-                .Where(x => x.TransportTypeId == transportTypeId || x.DisplayName.ToLowerContains(AppConsts.OthersDisplayName))
+                .Where(x => x.TransportTypeId == transportTypeId || x.DisplayName.ToLowerContains(TACHYONConsts.OthersDisplayName))
                 .Where(x => x.IsActive)
                 .ToListAsync();
             return ObjectMapper.Map<List<TrucksTypeSelectItemDto>>(list);
@@ -891,7 +891,7 @@ namespace TACHYON.Shipping.ShippingRequests
         public async Task<List<SelectItemDto>> GetAllTuckCapacitiesByTuckTypeIdForDropdown(int truckTypeId)
         {
             return await _capacityRepository.GetAll()
-                .Where(x => x.TrucksTypeId == truckTypeId || x.DisplayName.ToLowerContains(AppConsts.OthersDisplayName))
+                .Where(x => x.TrucksTypeId == truckTypeId || x.DisplayName.ToLowerContains(TACHYONConsts.OthersDisplayName))
                 .Select(x => new SelectItemDto()
                 {
                     Id = x.Id.ToString(),
@@ -1401,7 +1401,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 var goodCategory = await _lookup_goodCategoryRepository
                     .FirstOrDefaultAsync(input.GoodCategoryId.Value);
 
-                if (goodCategory.Key.ToLowerContains(AppConsts.OthersDisplayName) &&
+                if (goodCategory.Key.ToLowerContains(TACHYONConsts.OthersDisplayName) &&
                     input.OtherGoodsCategoryName.IsNullOrEmpty())
                     throw new UserFriendlyException(L("GoodCategoryCanNotBeOtherAndEmptyAtSameTime"));
             }
@@ -1415,7 +1415,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 var transportType = await _transportTypeRepository
                     .FirstOrDefaultAsync(input.TransportTypeId.Value);
 
-                if (transportType.DisplayName.ToLowerContains(AppConsts.OthersDisplayName) &&
+                if (transportType.DisplayName.ToLowerContains(TACHYONConsts.OthersDisplayName) &&
                     input.OtherTransportTypeName.IsNullOrEmpty())
                     throw new UserFriendlyException(L("TransportTypeCanNotBeOtherAndEmptyAtSameTime"));
             }
@@ -1428,7 +1428,7 @@ namespace TACHYON.Shipping.ShippingRequests
             var trucksType = await _lookup_trucksTypeRepository
                 .FirstOrDefaultAsync(input.TrucksTypeId);
 
-            if (trucksType.DisplayName.ToLowerContains(AppConsts.OthersDisplayName) &&
+            if (trucksType.DisplayName.ToLowerContains(TACHYONConsts.OthersDisplayName) &&
                 input.OtherTrucksTypeName.IsNullOrEmpty())
                 throw new UserFriendlyException(L("TrucksTypeCanNotBeOtherAndEmptyAtSameTime"));
 

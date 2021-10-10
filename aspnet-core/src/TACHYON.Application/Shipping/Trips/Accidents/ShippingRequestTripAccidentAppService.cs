@@ -361,7 +361,7 @@ namespace TACHYON.Shipping.Trips.Accidents
                 var reason = await _shippingRequestReasonAccidentRepository
                     .FirstOrDefaultAsync(input.ReasoneId.Value);
 
-                if (reason.Name.ToLowerContains(AppConsts.OthersDisplayName) && input.OtherReasonName.IsNullOrEmpty())
+                if (reason.Name.ToLowerContains(TACHYONConsts.OthersDisplayName) && input.OtherReasonName.IsNullOrEmpty())
                     throw new UserFriendlyException(L("AccidentReasonConNotBeOtherAndEmptyAtTheSameTime"));
             }
         }

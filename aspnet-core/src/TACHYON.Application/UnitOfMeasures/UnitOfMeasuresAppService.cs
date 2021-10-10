@@ -106,8 +106,8 @@ namespace TACHYON.UnitOfMeasures
         {
             var unitOfMeasure = await _unitOfMeasureRepository.FirstOrDefaultAsync((int)input.Id);
 
-            if (unitOfMeasure.DisplayName.ToLowerContains(AppConsts.OthersDisplayName)
-                && !input.DisplayName.ToLowerContains(AppConsts.OthersDisplayName))
+            if (unitOfMeasure.DisplayName.ToLowerContains(TACHYONConsts.OthersDisplayName)
+                && !input.DisplayName.ToLowerContains(TACHYONConsts.OthersDisplayName))
                 throw new UserFriendlyException(L("OtherUnitOfMeasureMustContainTheOtherWord"));
 
             ObjectMapper.Map(input, unitOfMeasure);
@@ -118,7 +118,7 @@ namespace TACHYON.UnitOfMeasures
         {
             var unitOfMeasure = await _unitOfMeasureRepository.SingleAsync(x => x.Id == input.Id);
 
-            if (unitOfMeasure.DisplayName.ToLowerContains(AppConsts.OthersDisplayName))
+            if (unitOfMeasure.DisplayName.ToLowerContains(TACHYONConsts.OthersDisplayName))
                 throw new UserFriendlyException(L("OtherUnitOfMeasureNotRemovable"));
 
             await _unitOfMeasureRepository.DeleteAsync(unitOfMeasure);

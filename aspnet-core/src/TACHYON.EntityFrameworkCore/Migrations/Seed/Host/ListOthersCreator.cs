@@ -1,10 +1,12 @@
-﻿using System;
+﻿using Abp.Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
+using TACHYON.Common;
 using TACHYON.Documents.DocumentTypes;
 using TACHYON.EntityFrameworkCore;
-using TACHYON.Extension;
 using TACHYON.Goods.GoodCategories;
 using TACHYON.Shipping.Accidents;
 using TACHYON.Trucks.TruckCategories.TransportTypes;
@@ -42,23 +44,24 @@ namespace TACHYON.Migrations.Seed.Host
                 IsDeleted = false,
             };
 
-            if (_dbContext.UnitOfMeasures.FirstOrDefault(x => x.DisplayName.ToLowerContains(AppConsts.OthersDisplayName)) == null)
+
+            if (!_dbContext.UnitOfMeasures.Any(OthersExpressions.ContainsOthersDisplayNameExpression))
             {
                 _dbContext.UnitOfMeasures.Add(otherUnitOfMeasure);
             }
 
 
-            var otherGoodsCategory = new GoodCategory() { CreationTime = DateTime.Now, IsDeleted = false, IsActive = true, Key = AppConsts.OthersDisplayName.ToLower() };
+            var otherGoodsCategory = new GoodCategory() { CreationTime = DateTime.Now, IsDeleted = false, IsActive = true, Key = TACHYONConsts.OthersDisplayName.ToLower() };
 
-            if (_dbContext.GoodCategories.FirstOrDefault(x => x.Key.ToLowerContains(AppConsts.OthersDisplayName)) == null)
+            if (!_dbContext.GoodCategories.Any(OthersExpressions.ContainsOthersKeyExpression))
             {
                 _dbContext.GoodCategories.Add(otherGoodsCategory);
             }
 
 
-            var otherVas = new Vas() { CreationTime = DateTime.Now, IsDeleted = false, Name = AppConsts.OthersDisplayName.ToLower(), HasAmount = false, HasCount = true };
+            var otherVas = new Vas() { CreationTime = DateTime.Now, IsDeleted = false, Name = TACHYONConsts.OthersDisplayName.ToLower(), HasAmount = false, HasCount = true };
 
-            if (_dbContext.Vases.FirstOrDefault(x => x.Name.ToLowerContains(AppConsts.OthersDisplayName)) == null)
+            if (!_dbContext.Vases.Any(OthersExpressions.ContainsOthersNameExpression))
             {
                 _dbContext.Vases.Add(otherVas);
             }
@@ -67,12 +70,12 @@ namespace TACHYON.Migrations.Seed.Host
             var otherTransportType = new TransportType()
             {
                 CreationTime = DateTime.Now,
-                DisplayName = AppConsts.OthersDisplayName,
+                DisplayName = TACHYONConsts.OthersDisplayName,
                 IsDeleted = false
             };
 
 
-            if (_dbContext.TransportTypes.FirstOrDefault(x => x.DisplayName.ToLowerContains(AppConsts.OthersDisplayName)) == null)
+            if (!_dbContext.TransportTypes.Any(OthersExpressions.ContainsOthersDisplayNameExpression))
             {
                 _dbContext.TransportTypes.Add(otherTransportType);
             }
@@ -85,10 +88,10 @@ namespace TACHYON.Migrations.Seed.Host
                 CreationTime = DateTime.Now,
                 IsDeleted = true,
                 IsActive = true,
-                DisplayName = AppConsts.OthersDisplayName
+                DisplayName = TACHYONConsts.OthersDisplayName
             };
 
-            if (_dbContext.TrucksTypes.FirstOrDefault(x => x.DisplayName.ToLowerContains(AppConsts.OthersDisplayName)) == null)
+            if (!_dbContext.TrucksTypes.Any(OthersExpressions.ContainsOthersDisplayNameExpression))
             {
                 _dbContext.TrucksTypes.Add(otherTruckType);
             }
@@ -98,11 +101,11 @@ namespace TACHYON.Migrations.Seed.Host
             var otherReasonAccident = new ShippingRequestReasonAccident()
             {
                 CreationTime = DateTime.Now,
-                Key = AppConsts.OthersDisplayName,
+                Key = TACHYONConsts.OthersDisplayName,
                 IsDeleted = false
             };
 
-            if (_dbContext.ShippingRequestReasonAccidents.FirstOrDefault(x => x.Key.ToLowerContains(AppConsts.OthersDisplayName)) == null)
+            if (!_dbContext.ShippingRequestReasonAccidents.Any(OthersExpressions.ContainsOthersKeyExpression))
             {
                 _dbContext.ShippingRequestReasonAccidents.Add(otherReasonAccident);
             }
@@ -113,4 +116,6 @@ namespace TACHYON.Migrations.Seed.Host
             _dbContext.SaveChanges();
         }
     }
+
+
 }

@@ -111,8 +111,8 @@ namespace TACHYON.Trucks.TruckCategories.TransportTypes
         {
             var transportType = await _transportTypeRepository.FirstOrDefaultAsync((int)input.Id);
 
-            if (transportType.DisplayName.ToLowerContains(AppConsts.OthersDisplayName)
-                && !input.DisplayName.ToLowerContains(AppConsts.OthersDisplayName))
+            if (transportType.DisplayName.ToLowerContains(TACHYONConsts.OthersDisplayName)
+                && !input.DisplayName.ToLowerContains(TACHYONConsts.OthersDisplayName))
                 throw new UserFriendlyException(L("OtherTransportTypeMustContainOther"));
 
             ObjectMapper.Map(input, transportType);
@@ -122,7 +122,7 @@ namespace TACHYON.Trucks.TruckCategories.TransportTypes
         public async Task Delete(EntityDto input)
         {
             var transportType = await _transportTypeRepository.SingleAsync(x => x.Id == input.Id);
-            if (transportType.DisplayName.ToLowerContains(AppConsts.OthersDisplayName))
+            if (transportType.DisplayName.ToLowerContains(TACHYONConsts.OthersDisplayName))
                 throw new UserFriendlyException(L("OtherTransportTypeNotRemovable"));
 
             await _transportTypeRepository.DeleteAsync(transportType);

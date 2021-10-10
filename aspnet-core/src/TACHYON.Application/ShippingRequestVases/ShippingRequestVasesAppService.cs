@@ -148,7 +148,7 @@ namespace TACHYON.ShippingRequestVases
         {
             var vas = await _lookup_vasRepository.FirstOrDefaultAsync(input.VasId);
 
-            if (vas.Name.ToLowerContains(AppConsts.OthersDisplayName) && input.OtherVasName.IsNullOrEmpty())
+            if (vas.Name.ToLowerContains(TACHYONConsts.OthersDisplayName) && input.OtherVasName.IsNullOrEmpty())
                 throw new UserFriendlyException(L("OtherVasNameMustBeNotEmpty"));
         }
 

@@ -102,5 +102,9 @@
         #endregion
         #endregion
 
+
+        public const string OthersDisplayName = "Others";
+
+
     }
 }

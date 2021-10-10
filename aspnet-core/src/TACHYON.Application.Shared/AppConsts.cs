@@ -77,6 +77,5 @@ namespace TACHYON
         }
 
 
-        public const string OthersDisplayName = "Others";
     }
 }

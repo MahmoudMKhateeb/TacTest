@@ -5,12 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using TACHYON.Common;
 
 namespace TACHYON.Goods.GoodCategories
 {
     [Table("GoodCategories")]
     [Audited]
-    public class GoodCategory : FullAuditedEntity, IMultiLingualEntity<GoodCategoryTranslation>
+    public class GoodCategory : FullAuditedEntity, IMultiLingualEntity<GoodCategoryTranslation>, IHasKey
     {
         // This Column Contain Original DisplayName Value
         [Required]
