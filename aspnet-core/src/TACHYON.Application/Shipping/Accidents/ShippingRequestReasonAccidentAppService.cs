@@ -2,6 +2,7 @@
 using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
+using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ using TACHYON.Authorization;
 using TACHYON.Common.Dto;
 using TACHYON.Dto;
 using TACHYON.Exporting;
+using TACHYON.Extension;
 using TACHYON.Shipping.Accidents.Dto;
 
 namespace TACHYON.Shipping.Accidents
@@ -40,8 +42,8 @@ namespace TACHYON.Shipping.Accidents
         }
         public async Task<CreateOrEditShippingRequestReasonAccidentDto> GetForEdit(EntityDto input)
         {
-            return ObjectMapper.Map<CreateOrEditShippingRequestReasonAccidentDto>(await 
-                _ShippingRequestReasonAccidentRepository.GetAllIncluding(x=>x.Translations)
+            return ObjectMapper.Map<CreateOrEditShippingRequestReasonAccidentDto>(await
+                _ShippingRequestReasonAccidentRepository.GetAllIncluding(x => x.Translations)
                 .FirstOrDefaultAsync(e => e.Id == input.Id));
         }
         public async Task CreateOrEdit(CreateOrEditShippingRequestReasonAccidentDto input)
@@ -68,7 +70,7 @@ namespace TACHYON.Shipping.Accidents
 
         private async Task Update(CreateOrEditShippingRequestReasonAccidentDto input)
         {
-            var ReasonAccident = await _ShippingRequestReasonAccidentRepository.GetAllIncluding(x=>x.Translations).SingleAsync(e => e.Id == input.Id);
+            var ReasonAccident = await _ShippingRequestReasonAccidentRepository.GetAllIncluding(x => x.Translations).SingleAsync(e => e.Id == input.Id);
             ReasonAccident.Translations.Clear();
             ObjectMapper.Map(input, ReasonAccident);
 
@@ -89,7 +91,13 @@ namespace TACHYON.Shipping.Accidents
 
         public async Task Delete(EntityDto input)
         {
-            await _ShippingRequestReasonAccidentRepository.DeleteAsync(input.Id);
+            var reasonAccident = await _ShippingRequestReasonAccidentRepository
+                .SingleAsync(x => x.Id == input.Id);
+
+            if (reasonAccident.Key.ToLowerContains(AppConsts.OthersDisplayName))
+                throw new UserFriendlyException(L("OtherReasonAccidentNotRemovable"));
+
+            await _ShippingRequestReasonAccidentRepository.DeleteAsync(reasonAccident);
         }
 
         #region Helper
@@ -99,7 +107,7 @@ namespace TACHYON.Shipping.Accidents
                 .GetAllIncluding(x => x.Translations)
                 .AsNoTracking()
                 .WhereIf(!string.IsNullOrWhiteSpace(Input.Filter), e => e.Translations.Any(x => x.Name.Contains(Input.Filter.Trim())))
-                .OrderBy(!string.IsNullOrEmpty(Input.Sorting)? Input.Sorting: "id asc");
+                .OrderBy(!string.IsNullOrEmpty(Input.Sorting) ? Input.Sorting : "id asc");
         }
         #endregion
     }

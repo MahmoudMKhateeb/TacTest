@@ -1,15 +1,18 @@
-﻿using TACHYON.Vases;
+﻿using Abp.Application.Services.Dto;
+using Abp.Authorization;
+using Abp.Domain.Repositories;
+using Abp.Linq.Extensions;
+using Abp.UI;
+using Castle.Core.Internal;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
-using Abp.Linq.Extensions;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Abp.Domain.Repositories;
-using TACHYON.ShippingRequestVases.Dtos;
-using Abp.Application.Services.Dto;
 using TACHYON.Authorization;
-using Abp.Authorization;
-using Microsoft.EntityFrameworkCore;
+using TACHYON.Extension;
+using TACHYON.ShippingRequestVases.Dtos;
+using TACHYON.Vases;
 using TACHYON.Vases.Dtos;
 
 namespace TACHYON.ShippingRequestVases
@@ -34,7 +37,7 @@ namespace TACHYON.ShippingRequestVases
                         .AsNoTracking().Include(e => e.VasFk)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.Filter),
                             e => false)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.VasNameFilter), 
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.VasNameFilter),
                             e => e.VasFk != null && e.VasFk.Name == input.VasNameFilter)
                         .OrderBy(input.Sorting ?? "id asc");
 
@@ -63,8 +66,8 @@ namespace TACHYON.ShippingRequestVases
         public async Task<ShippingRequestVasDto> GetShippingRequestVasForView(long id)
         {
             var shippingRequestVas = await _shippingRequestVasRepository
-                .GetAll().AsNoTracking().Include(x=> x.VasFk)
-                .ThenInclude(x=> x.Translations).FirstOrDefaultAsync(x=> x.Id == id);
+                .GetAll().AsNoTracking().Include(x => x.VasFk)
+                .ThenInclude(x => x.Translations).FirstOrDefaultAsync(x => x.Id == id);
 
             return new ShippingRequestVasDto()
             {
@@ -95,6 +98,9 @@ namespace TACHYON.ShippingRequestVases
 
         public async Task CreateOrEdit(CreateOrEditShippingRequestVasDto input)
         {
+
+            await ValidateOtherVasName(input);
+
             if (input.Id == null)
             {
                 await Create(input);
@@ -135,6 +141,18 @@ namespace TACHYON.ShippingRequestVases
                     DisplayName = vas == null || vas.Name == null ? "" : vas.Name.ToString()
                 }).ToListAsync();
         }
+
+        #region Helpers
+
+        private async Task ValidateOtherVasName(CreateOrEditShippingRequestVasDto input)
+        {
+            var vas = await _lookup_vasRepository.FirstOrDefaultAsync(input.VasId);
+
+            if (vas.Name.ToLowerContains(AppConsts.OthersDisplayName) && input.OtherVasName.IsNullOrEmpty())
+                throw new UserFriendlyException(L("OtherVasNameMustBeNotEmpty"));
+        }
+
+        #endregion
 
     }
 }

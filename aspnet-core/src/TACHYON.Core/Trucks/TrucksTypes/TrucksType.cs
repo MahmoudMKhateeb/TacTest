@@ -15,12 +15,13 @@ namespace TACHYON.Trucks.TrucksTypes
     public class TrucksType : FullAuditedEntity<long>, IMultiLingualEntity<TrucksTypesTranslation>
     {
 
-       // [Required]
-        //[StringLength(TrucksTypeConsts.MaxDisplayNameLength, MinimumLength = TrucksTypeConsts.MinDisplayNameLength)]
-       // public virtual string DisplayName { get; set; }
+        [Required]
+        [StringLength(TrucksTypeConsts.MaxDisplayNameLength,
+            MinimumLength = TrucksTypeConsts.MinDisplayNameLength)]
+        public virtual string DisplayName { get; set; }
 
         public int? TransportTypeId { get; set; }
-        
+
         [ForeignKey("TransportTypeId")]
         public TransportType TransportTypeFk { get; set; }
 

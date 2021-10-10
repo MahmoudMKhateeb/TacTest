@@ -9,8 +9,11 @@ using System.Text;
 namespace TACHYON.Shipping.Accidents
 {
     [Table("ShippingRequestReasonAccidents")]
-    public class ShippingRequestReasonAccident: FullAuditedEntity, IMultiLingualEntity<ShippingRequestReasonAccidentTranslation>
+    public class ShippingRequestReasonAccident : FullAuditedEntity, IMultiLingualEntity<ShippingRequestReasonAccidentTranslation>
     {
+        [Required]
+        [StringLength(60, MinimumLength = 3)]
+        public string Key { get; set; }
         public ICollection<ShippingRequestReasonAccidentTranslation> Translations { get; set; }
     }
 }

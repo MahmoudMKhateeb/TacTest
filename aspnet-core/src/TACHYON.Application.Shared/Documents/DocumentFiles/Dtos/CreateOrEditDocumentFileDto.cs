@@ -1,7 +1,8 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using Abp.Application.Services.Dto;
+﻿using Abp.Application.Services.Dto;
 using Abp.Runtime.Validation;
+using Castle.Core.Internal;
+using System;
+using System.ComponentModel.DataAnnotations;
 using TACHYON.Documents.DocumentsEntities;
 using TACHYON.Documents.DocumentTypes.Dtos;
 
@@ -30,6 +31,12 @@ namespace TACHYON.Documents.DocumentFiles.Dtos
                 context.Results.Add(new ValidationResult("Number digits must be greater than or equal " + DocumentTypeDto.NumberMinDigits));
             }
 
+            if (IsAccepted && IsRejected)
+                context.Results.Add(new ValidationResult("document cant be accepted and rejected at same time "));
+
+            //? FYI DisplayName Mapped From Core Entity and Not From Translation Entity
+            if (DocumentTypeDto.DisplayName.ToUpper().Contains("OTHER") && OtherDocumentTypeName.IsNullOrEmpty())
+                context.Results.Add(new ValidationResult("Document Type Can't Be Other And Empty"));
         }
 
         public DocumentTypeDto DocumentTypeDto { get; set; }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Dynamic.Core;
-using System.Threading.Tasks;
-using Abp;
+﻿using Abp;
 using Abp.Application.Editions;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
@@ -16,6 +11,11 @@ using Abp.UI;
 using AutoMapper.QueryableExtensions;
 using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Dynamic.Core;
+using System.Threading.Tasks;
 using TACHYON.Authorization;
 using TACHYON.Authorization.Users;
 using TACHYON.Documents.DocumentFiles.Dtos;
@@ -185,11 +185,7 @@ namespace TACHYON.Documents.DocumentFiles
         //todo add this action to domain service -- trucksServers used it
         public async Task CreateOrEdit(CreateOrEditDocumentFileDto input)
         {
-            //todo convert this to custom validation
-            if (input.IsAccepted && input.IsRejected)
-            {
-                throw new UserFriendlyException(L("document cant be accepted and rejected at same time "));
-            }
+            //x todo convert this to custom validation
 
 
             //NumberUnique
@@ -386,7 +382,7 @@ namespace TACHYON.Documents.DocumentFiles
 
             var documentFile = ObjectMapper.Map<DocumentFile>(input);
 
-            if (input.DocumentTypeDto!=null && input.DocumentTypeDto.IsNumberUnique)
+            if (input.DocumentTypeDto != null && input.DocumentTypeDto.IsNumberUnique)
             //if(input.DocumentTypeDto.IsNumberUnique)
             {
                 var count = await _documentFileRepository.CountAsync(x => x.Number == input.Number && x.DocumentTypeId == input.DocumentTypeId);

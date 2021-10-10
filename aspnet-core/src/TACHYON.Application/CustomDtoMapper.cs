@@ -425,7 +425,7 @@ namespace TACHYON
             configuration.CreateMap<CountyDto, County>().ReverseMap();
             configuration.CreateMap<GoodCategory, GoodCategoryDto>()
                 .ForMember(x => x.HasItems, x => x.MapFrom(i => i.GoodCategories.Any()))
-                .ForMember(x => x.DisplayName, x => x.MapFrom(i => i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)) == null ? i.Name : i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).DisplayName))
+                .ForMember(x => x.DisplayName, x => x.MapFrom(i => i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)) == null ? i.Key : i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).DisplayName))
                 .ReverseMap();
 
             configuration.CreateMap<CreateOrEditTrailerDto, Trailer>().ReverseMap();

@@ -1,22 +1,23 @@
-﻿using System.Linq;
-using System.Linq.Dynamic.Core;
-using Abp.Linq.Extensions;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Abp.Domain.Repositories;
-using TACHYON.Vases.Exporting;
-using TACHYON.Vases.Dtos;
-using TACHYON.Dto;
-using Abp.Application.Services.Dto;
-using TACHYON.Authorization;
-using Abp.Extensions;
+﻿using Abp.Application.Services.Dto;
 using Abp.Authorization;
-using Microsoft.EntityFrameworkCore;
+using Abp.Domain.Repositories;
+using Abp.Extensions;
+using Abp.Linq.Extensions;
 using Abp.UI;
 using AutoMapper.QueryableExtensions;
 using DevExtreme.AspNet.Data.ResponseModel;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Dynamic.Core;
+using System.Threading.Tasks;
+using TACHYON.Authorization;
+using TACHYON.Dto;
+using TACHYON.Extension;
 using TACHYON.Packing.PackingTypes;
+using TACHYON.Vases.Dtos;
+using TACHYON.Vases.Exporting;
 
 namespace TACHYON.Vases
 {
@@ -90,20 +91,30 @@ namespace TACHYON.Vases
         protected virtual async Task Update(CreateOrEditVasDto input)
         {
             var vas = await _vasRepository.FirstOrDefaultAsync((input.Id.Value));
+
+            if (vas.Name.ToLowerContains(AppConsts.OthersDisplayName) && !input.Name.ToLowerContains(AppConsts.OthersDisplayName))
+                throw new UserFriendlyException(L("OtherVasNameMustContainOther"));
+
             ObjectMapper.Map(input, vas);
         }
 
         [AbpAuthorize(AppPermissions.Pages_Administration_Vases_Delete)]
         public async Task Delete(EntityDto input)
         {
-            await _vasRepository.DeleteAsync(input.Id);
+
+            var vas = await _vasRepository.SingleAsync(x => x.Id == input.Id);
+
+            if (vas.Name.ToLowerContains(AppConsts.OthersDisplayName))
+                throw new UserFriendlyException(L("OtherVasNotRemovable"));
+
+            await _vasRepository.DeleteAsync(vas);
         }
 
         public async Task<FileDto> GetVasesToExcel(GetAllVasesForExcelInput input)
         {
 
             var filteredVases = _vasRepository.GetAll()
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Name.Contains(input.Filter) )
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Name.Contains(input.Filter))
                         .WhereIf(input.HasAmountFilter.HasValue && input.HasAmountFilter > -1, e => (input.HasAmountFilter == 1 && e.HasAmount) || (input.HasAmountFilter == 0 && !e.HasAmount))
                         .WhereIf(input.HasCountFilter.HasValue && input.HasCountFilter > -1, e => (input.HasCountFilter == 1 && e.HasCount) || (input.HasCountFilter == 0 && !e.HasCount));
 

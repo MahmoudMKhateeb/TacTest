@@ -75,5 +75,8 @@ namespace TACHYON
         {
             public const string NotFoundRecord = "TheRecordNotFound";
         }
+
+
+        public const string OthersDisplayName = "Others";
     }
 }

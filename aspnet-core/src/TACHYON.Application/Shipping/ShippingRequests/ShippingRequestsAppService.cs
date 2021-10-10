@@ -9,6 +9,7 @@ using Abp.Threading;
 using Abp.Timing;
 using Abp.UI;
 using AutoMapper.QueryableExtensions;
+using Castle.Core.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Rest;
 using System;
@@ -22,6 +23,7 @@ using TACHYON.AddressBook.Ports;
 using TACHYON.Authorization;
 using TACHYON.Documents;
 using TACHYON.Dto;
+using TACHYON.Extension;
 using TACHYON.Features;
 using TACHYON.Goods.GoodCategories;
 using TACHYON.Goods.GoodCategories.Dtos;
@@ -280,6 +282,9 @@ namespace TACHYON.Shipping.ShippingRequests
         /// <returns></returns>
         public async Task EditStep3(EditShippingRequestStep3Dto input)
         {
+
+            await OthersNameValidation(input);
+
             var shippingRequest = await GetDraftedShippingRequest(input.Id);
             if (shippingRequest.DraftStep < 3)
             {
@@ -426,6 +431,9 @@ namespace TACHYON.Shipping.ShippingRequests
         [RequiresFeature(AppFeatures.ShippingRequest)]
         public async Task CreateOrEdit(CreateOrEditShippingRequestDto input)
         {
+
+            await OthersNameValidation(input);
+
             if (input.IsTachyonDeal)
             {
                 if (!await IsEnabledAsync(AppFeatures.SendTachyonDealShippingRequest))
@@ -869,7 +877,9 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             var list = await _lookup_trucksTypeRepository.GetAll()
                 .Include(x => x.Translations)
-                .Where(x => x.TransportTypeId == transportTypeId && x.IsActive).ToListAsync();
+                .Where(x => x.TransportTypeId == transportTypeId || x.DisplayName.ToLowerContains(AppConsts.OthersDisplayName))
+                .Where(x => x.IsActive)
+                .ToListAsync();
             return ObjectMapper.Map<List<TrucksTypeSelectItemDto>>(list);
             //.Select(x => new SelectItemDto()
             //{
@@ -881,7 +891,7 @@ namespace TACHYON.Shipping.ShippingRequests
         public async Task<List<SelectItemDto>> GetAllTuckCapacitiesByTuckTypeIdForDropdown(int truckTypeId)
         {
             return await _capacityRepository.GetAll()
-                .Where(x => x.TrucksTypeId == truckTypeId)
+                .Where(x => x.TrucksTypeId == truckTypeId || x.DisplayName.ToLowerContains(AppConsts.OthersDisplayName))
                 .Select(x => new SelectItemDto()
                 {
                     Id = x.Id.ToString(),
@@ -1367,6 +1377,63 @@ namespace TACHYON.Shipping.ShippingRequests
                     }
                 }
             }
+        }
+        /// <summary>
+        /// 
+        /// <list type="bullet|number|table">
+        /// <listheader>This Method Used For Validate</listheader>
+        ///    <item>1-OtherGoodsCategoryName</item>
+        ///    <item>2-OtherTransportTypeName</item>
+        ///    <item>3-OtherTrucksTypeName</item>
+        /// </list>
+        /// See <see cref="CreateOrEditShippingRequestDto"/>
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        private async Task OthersNameValidation(IShippingRequestDtoHaveOthersName input)
+        {
+
+
+            #region Validate GoodCategory
+
+            if (input.GoodCategoryId != null)
+            {
+                var goodCategory = await _lookup_goodCategoryRepository
+                    .FirstOrDefaultAsync(input.GoodCategoryId.Value);
+
+                if (goodCategory.Key.ToLowerContains(AppConsts.OthersDisplayName) &&
+                    input.OtherGoodsCategoryName.IsNullOrEmpty())
+                    throw new UserFriendlyException(L("GoodCategoryCanNotBeOtherAndEmptyAtSameTime"));
+            }
+
+            #endregion
+
+            #region Validate TransportType
+
+            if (input.TransportTypeId != null)
+            {
+                var transportType = await _transportTypeRepository
+                    .FirstOrDefaultAsync(input.TransportTypeId.Value);
+
+                if (transportType.DisplayName.ToLowerContains(AppConsts.OthersDisplayName) &&
+                    input.OtherTransportTypeName.IsNullOrEmpty())
+                    throw new UserFriendlyException(L("TransportTypeCanNotBeOtherAndEmptyAtSameTime"));
+            }
+
+            #endregion
+
+            #region Validate TrucksType
+
+            //? FYI TrucksTypeId Not Nullable 
+            var trucksType = await _lookup_trucksTypeRepository
+                .FirstOrDefaultAsync(input.TrucksTypeId);
+
+            if (trucksType.DisplayName.ToLowerContains(AppConsts.OthersDisplayName) &&
+                input.OtherTrucksTypeName.IsNullOrEmpty())
+                throw new UserFriendlyException(L("TrucksTypeCanNotBeOtherAndEmptyAtSameTime"));
+
+            #endregion
+
         }
 
         private Facility GetPickupOrDropPointFacilityForTrip(int id, PickingType type)

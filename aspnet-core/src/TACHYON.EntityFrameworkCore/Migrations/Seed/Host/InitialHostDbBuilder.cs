@@ -22,6 +22,7 @@ namespace TACHYON.Migrations.Seed.Host
             //new ShippingRequestBidStatusesCreator(_context).Create();
             new CountriesAndCitiesCreator(_context).Create();
             new TransportTypesAndTheirChildrenCreator(_context).Create();
+            new ListOthersCreator(_context).Create();
             _context.SaveChanges();
         }
     }

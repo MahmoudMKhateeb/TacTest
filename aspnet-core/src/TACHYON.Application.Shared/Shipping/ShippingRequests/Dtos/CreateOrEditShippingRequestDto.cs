@@ -14,7 +14,7 @@ using TACHYON.Vases.Dtos;
 
 namespace TACHYON.Shipping.ShippingRequests.Dtos
 {
-    public class CreateOrEditShippingRequestDto : EntityDto<long?>, ICustomValidate
+    public class CreateOrEditShippingRequestDto : EntityDto<long?>, ICustomValidate, IShippingRequestDtoHaveOthersName
     {
         public virtual bool IsBid { get; set; }
         //Add Bid details If IsBid equals True
@@ -86,14 +86,14 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
 
             switch (this.RouteTypeId)
             {
-                case  ShippingRequestRouteType.SingleDrop:
+                case ShippingRequestRouteType.SingleDrop:
                     this.NumberOfDrops = 1;
-                break;
+                    break;
                 //case ShippingRequestRouteType.TwoWay:
                 //    this.NumberOfDrops = 2;
                 //    break;
-                default :
-                    if (this.NumberOfDrops<2)
+                default:
+                    if (this.NumberOfDrops < 2)
                     {
 
                         var errorMessage = localization.GetString(
