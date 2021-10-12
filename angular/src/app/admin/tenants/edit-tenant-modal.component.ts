@@ -3,7 +3,10 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import {
   CommonLookupServiceProxy,
   SubscribableEditionComboboxItemDto,
+  TenantCityLookupTableDto,
+  TenantCountryLookupTableDto,
   TenantEditDto,
+  TenantRegistrationServiceProxy,
   TenantServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import * as _ from 'lodash';
@@ -32,7 +35,17 @@ export class EditTenantModalComponent extends AppComponentBase {
   editions: SubscribableEditionComboboxItemDto[] = [];
   isSubscriptionFieldsVisible = false;
 
-  constructor(injector: Injector, private _tenantService: TenantServiceProxy, private _commonLookupService: CommonLookupServiceProxy) {
+  isCountySelected = false;
+  allCities: TenantCityLookupTableDto[];
+  allCountries: TenantCountryLookupTableDto[];
+  isMoiNumberAvailable = true;
+
+  constructor(
+    injector: Injector,
+    private _tenantService: TenantServiceProxy,
+    private _commonLookupService: CommonLookupServiceProxy,
+    private _tenantRegistrationService: TenantRegistrationServiceProxy
+  ) {
     super(injector);
   }
 
@@ -56,6 +69,7 @@ export class EditTenantModalComponent extends AppComponentBase {
         this.toggleSubscriptionFields();
       });
     });
+    this.GetAllCountries();
   }
 
   onShown(): void {
@@ -141,5 +155,29 @@ export class EditTenantModalComponent extends AppComponentBase {
     } else {
       this.isSubscriptionFieldsVisible = false;
     }
+  }
+
+  CountryChanged(event) {
+    if (event.target.value == -2) {
+      this.isCountySelected = false;
+    } else {
+      this.isCountySelected = true;
+    }
+
+    this._tenantService.getAllCitiesForTableDropdown(event.target.value).subscribe((result) => {
+      this.allCities = result;
+    });
+  }
+
+  checkIfIsCompanyUniqueMoiNumber() {
+    this._tenantRegistrationService
+      .isCompanyUniqueMoiNumber(this.tenant.moiNumber, undefined)
+      .subscribe((result) => (this.isMoiNumberAvailable = result));
+  }
+
+  GetAllCountries() {
+    this._tenantService.getAllCountryForTableDropdown().subscribe((result) => {
+      this.allCountries = result;
+    });
   }
 }

@@ -12,6 +12,13 @@ namespace TACHYON.MultiTenancy.Dto
         [StringLength(AbpTenantBase.MaxTenancyNameLength)]
         public string TenancyName { get; set; }
 
+
+        [Required]
+        [StringLength(AbpTenantBase.MaxTenancyNameLength)]
+        [RegularExpression(TenantConsts.TenancyNameRegex)]
+        public string companyName { get; set; }
+
+
         [Required]
         [StringLength(TenantConsts.MaxNameLength)]
         public string Name { get; set; }
@@ -34,5 +41,10 @@ namespace TACHYON.MultiTenancy.Dto
         public DateTime? SubscriptionEndDateUtc { get; set; }
 
         public bool IsInTrialPeriod { get; set; }
+
+        [Required]
+        [RegularExpression(TenantConsts.MoiNumberRegex)]
+        public string MoiNumber { get; set; }
+
     }
 }
