@@ -1361,20 +1361,27 @@ namespace TACHYON.Shipping.ShippingRequests
             foreach (var item in input.ShippingRequestVasList)
             {
                 var vasItem = vasesItems.FirstOrDefault(x => x.Id == item.VasId);
-                if (vasItem != null && vasItem.HasAmount)
+
+                if (item.NumberOfTrips > input.NumberOfTrips)
                 {
-                    if (item.RequestMaxAmount < 1)
-                    {
-                        throw new ValidationException(L("Vas Amount must have value"));
-                    }
+                    throw new ValidationException(
+                        L("NumberOfTripsForVasCanNotBeGreaterThanShippingRequestNumberOfTrips"));
                 }
 
-                if (vasItem != null && vasItem.HasCount)
+                if (vasItem == null) continue;
+
+                if (vasItem.HasAmount && item.RequestMaxAmount < 1)
                 {
-                    if (item.RequestMaxCount < 1)
-                    {
-                        throw new ValidationException(L("Vas Count must have value"));
-                    }
+
+                    throw new ValidationException(L("Vas Amount must have value"));
+
+                }
+
+                if (vasItem.HasCount && item.RequestMaxCount < 1)
+                {
+
+                    throw new ValidationException(L("Vas Count must have value"));
+
                 }
             }
         }
