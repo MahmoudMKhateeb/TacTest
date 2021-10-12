@@ -639,7 +639,7 @@ namespace TACHYON.Notifications
         {
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(
-                    L(AppNotificationNames.ShipperShippingRequestTripNotifyDriverWhenAssignTrip),
+                    L("NotifyDriverWhenAssignToTrip"),
                     TACHYONConsts.LocalizationSourceName
                 )
             );
@@ -649,10 +649,10 @@ namespace TACHYON.Notifications
         }
 
         public async Task ShipperShippingRequestTripNotifyDriverWhenUnassignedTrip(UserIdentifier argsUser, ShippingRequestTrip Trip)
-        { // Need To Add Localization Message String
+        {
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(
-                    L(AppNotificationNames.ShipperShippingRequestTripNotifyDriverWhenUnassignedTrip),
+                    L("NotifyDriverWhenUnassignedToTrip", Trip.WaybillNumber),
                     TACHYONConsts.LocalizationSourceName
                 )
             )
