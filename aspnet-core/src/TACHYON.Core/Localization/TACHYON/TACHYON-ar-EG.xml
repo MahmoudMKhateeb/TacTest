@@ -647,22 +647,13 @@
     <text name="ApprovalDocumentsEmailMessage">تم إرسال هذا البريد  إليك لإبلاغك بأنه قد تم قبول مستنداتك ، ويمكنك الآن استخدام المنصة.</text>
     <text name="DocumentsApproved">المستندات المعتمدة</text>
     <text name="ApprovedDocuments_Title">المستندات المعتمدة</text>
-    <text name="ApprovedDocuments_SubTitle">المستندات المعتمدة</text>
 
     <text name="SubscriptionExpiringSoon_Title">أبزيروتيمبلات إشعار انتهاء صلاحية الاشتراك</text>
     <text name="SubscriptionExpiringSoon_Email_Body"></text>
     <text name="SubscriptionExpiringSoon_Email_Subject"></text>
-    <text name="ThisIsJustToRemindYouThatTheInvoice">هذا فقط لتذكيرك بأن الفاتورة</text>
-    <text name="WithATotalOf">بإجمالي</text>
-    <text name="IsDueNow"> أصبحت مستحقة الآن.</text>
-
-    <text name="ThankYouForYourBusiness">شكرا لك على عملك.</text>
-    <text name="PleaseFindAttachedTheInvoiceWithIssueDateOf"> يرجى العثور على الفاتورة المرفقة مع تاريخ الإصدار </text>
-    <text name="ForMoreDetails"> لمزيد من التفاصيل.</text>
-
-    <text name="WeWouldLikeToInformYouThatTheCopyOfYour">نود إبلاغك بأن نسخة </text>
-    <text name="DocumentUploadedTachyonPlatformWillBeExpiredSoonPleaseSubmitARenewalOneBefore"> التي تم تحميلها على منصة Tachyon على وشك الانتهاء ، يرجى تقديم المستند الذي تم تجديده قبل تاريخ</text>
-    <text name="ToPreventTheAccountFromBeingSuspended"> لمنع تعليق الحساب</text>
+	<text name="IssuedInvoiceMessage">شكرا لك على عملك . {0} يرجى العثور على الفاتورة المرفقة مع تاريخ الإصدار {1} بإجمالي {2} مستحقة في {3} الرجاء {4} لمزيد من التفاصيل</text>
+	<text name="DueInvoiceMessage">هذا فقط لتذكيرك بأن الفتورة {0} بأجمالي {1} اصبحت مستحقة الأن</text>
+	<text name="DocumentExpirationReminderMessage">نود إبلاغك بأن نسخة المستند {0} على وشك الانتهاء ، يرجي تقديم المستند الذي تم تجديده قبل تاريخ {1} التي  تم تحميلها على منصة تاكيون لمنع تعليق الحساب</text>
 
     <text name="EmailConfirmationRequiredForLogin">مطلوب تأكيد البريد الإلكتروني لتسجيل الدخول</text>
 		<text name="EmailMessage_CopyTheLinkBelowToYourBrowser">إذا لم يعمل الزر أعلاه ، فقم بنسخ الرابط في متصفح الانترنت:</text>
@@ -2176,11 +2167,9 @@
     <text name="AddIncident">الحادثة</text>
     <text name="ArriveToLoadingLocation">الوصول إلى موقع التحميل</text>
     <text name="ExpiredDateDocuments_Title">المستندات منتهية الصلاحية</text>
-    <text name="ExpiredDateDocuments_SubTitle">المستندات منتهية الصلاحية</text>
     <text name="Document File: {0} has been expired message">يوجد عدد "{0}" مستند منتهي الصلاحية</text>
     <text name="ExpiredDocument">المستندات منتهية الصلاحية</text>
     <text name="DocumentsExpiredInfo_Title">المستندات منتهية الصلاحية</text>
-    <text name="DocumentsExpiredInfo_SubTitle">المستندات منتهية الصلاحية</text>
     <text name="DocumentsExpiredInfo">المستندات منتهية الصلاحية</text>
     <text name="YouAreReceivingThisEmailBecauseWe">لقد تلقيت هذا البريد الإلكتروني لأننا تلقينا طلب إعادة تعيين كلمة المرور لحسابك.</text>
     <text name="ResetPassword">إعادة تعيين كلمة المرور</text>
@@ -2188,23 +2177,23 @@
     <text name="PasswordResetEmail_Subject">إعادة تعيين كلمة المرور</text>
     
     <text name="PasswordUpdated_Title">تحديث كلمة المرور</text>
-    <text name="PasswordUpdated_SubTitle">تحديث كلمة المرور</text>
     <text name="YourPasswordChangedSuccessfully">تم تغيير كلمة المرور الخاصة بك بنجاح.</text>
     <text name="YourNewPasswordIs">كلمة مرورك الجديدة هي</text>
     <text name="PasswordUpdated">تحديث كلمة المرور</text>
     <text name="WarningSuspendAccount_Title">تنبيه إنتهاء مستند</text>
-    <text name="WarningSuspendAccount_SubTitle">تنبيه إنتهاء مستند</text>
     <text name="WarningSuspendAccount">تنبيه إنتهاء مستند</text>
     <text name="InvoiceDue_Title">تذكير فاتورة</text>
-    <text name="InvoiceDue_SubTitle">إستحقاق فاتورة</text>
     <text name="InvoiceDue">إستحقاق فاتورة</text>
     <text name="IssuedInvoice_Title">إستحقاق فاتورة</text>
-    <text name="IssuedInvoice_SubTitle">إستحقاق فاتورة</text>
-    <text name="DueOn">مستحقة في</text>
     <text name="Please">مستحقة الرجاء</text>
     <text name="IssuedInvoice">إستحقاق فاتورة</text>
     <text name="CompanyNameEmailTemplate">إسم الشركة</text>
     <text name="ClickToRate">اضغط هنا للتقييم </text>
+	<text name="SuspendedAccountDocumentExpired_Title">مستند منتهي الصلاحية وحسابك معلق</text>
+	<text name="SuspendedAccountForExpiredDocumentMessage">تم تعليق حسابك حاليًا بسبب انتهاء صلاحية مستند {0} ، يرجى إرسال تجديد للمستند لإعادة تنشيط حسابك</text>
+    <text name="LoginLink">تسجيل الدخول</text>
+	<text name="RejectedDocument_Title">مستند مرفوض</text>    
+	<text name="RejectedDocumentEmailMessage">تم إرسال هذا البريد الإلكتروني إليك لإبلاغك بأنه تم رفض المستند {0} بسبب {1} إذا كانت لديك أية أسئلة ، فيرجى الاتصال بفريق الدعم.</text>    
     <!--<text name="StartOffloading"></text>
     <text name="ReceiverConfirmed"></text>
     <text name="DeliveryConfirmation"></text>-->

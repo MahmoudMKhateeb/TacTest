@@ -552,7 +552,7 @@ namespace TACHYON.Documents.DocumentFiles
 
             if (await IsAllRequiredDocumentsApproved(documentFile.TenantId.Value))
             {
-                await _userEmailer.SendAllApprovedDocumentsAsync(documentFile.TenantFk, _appUrlService.GetTachyonPlatformLoginUrl());
+                await _userEmailer.SendAllApprovedDocumentsAsync(documentFile.TenantId.Value, _appUrlService.GetTachyonPlatformLoginUrl());
             }
 
         }
@@ -571,6 +571,7 @@ namespace TACHYON.Documents.DocumentFiles
             documentFile.RejectionReason = reason;
             if (documentFile.CreatorUserId != null)
             {
+                await _userEmailer.SendRejectedDocumentEmail(documentFile.TenantId.Value, documentFile.Name, reason);
                 await _appNotifier.RejectedSubmittedDocument(new UserIdentifier(documentFile.TenantId, documentFile.CreatorUserId.Value), documentFile);
             }
         }
