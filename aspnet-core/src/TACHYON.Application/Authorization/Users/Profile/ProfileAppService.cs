@@ -621,7 +621,7 @@ namespace TACHYON.Authorization.Users.Profile
             var tenant = await TenantManager.GetByIdAsync(tenantId);
             var profileInformation = ObjectMapper.Map<TenantProfileInformationDto>(tenant);
             profileInformation.CompanyEmailAddress = await GetCompanyEmailAddress(tenantId);
-            profileInformation.Rating = 4.2;
+            profileInformation.Rating = tenant.Rate;
             return profileInformation;
         }
 

@@ -16,6 +16,7 @@ import { CarrierVasesComponent } from './tenants-profile/carrier-vases/carrier-v
 import { CarrierFleetInformationComponent } from './tenants-profile/carrier-fleet-information/carrier-fleet-information.component';
 import { ShipperFacilitiesComponent } from './tenants-profile/shipper-facilities/shipper-facilities.component';
 import { ShipperInvoicingComponent } from './tenants-profile/shipper-invoicing/shipper-invoicing.component';
+import { NgbRatingModule } from '@node_modules/@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,17 @@ import { ShipperInvoicingComponent } from './tenants-profile/shipper-invoicing/s
     ShipperFacilitiesComponent,
     ShipperInvoicingComponent,
   ],
-  imports: [CommonModule, ProfileRoutingModule, AgmCoreModule, AppModule, TableModule, FormsModule, RatingModule, UtilsModule, PaginatorModule],
+  imports: [
+    CommonModule,
+    ProfileRoutingModule,
+    AgmCoreModule,
+    AppModule,
+    TableModule,
+    FormsModule,
+    RatingModule,
+    UtilsModule,
+    PaginatorModule,
+    NgbRatingModule,
+  ],
 })
 export class ProfileModule {}

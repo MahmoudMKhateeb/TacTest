@@ -10,7 +10,7 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 @Component({
   selector: 'side-profile',
   templateUrl: './side-profile.component.html',
-  encapsulation: ViewEncapsulation.None,
+  styleUrls: ['./side-profile.component.css'],
 })
 export class SideProfileComponent extends AppComponentBase implements OnInit, OnDestroy {
   public givenId: number;

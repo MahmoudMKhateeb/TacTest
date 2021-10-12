@@ -13,8 +13,12 @@
         <div>
           <a class="font-weight-bold font-size-h5 text-dark-75 text-hover-primary">{{ sideProfileUserInfo.companyName }}</a>
           <div class="text-muted text-capitalize">{{ sideProfileUserInfo.tenancyName }}</div>
-          <div class="mt-2">
-            <p-rating [ngModel]="sideProfileUserInfo.rating" readonly="true" stars="5" [cancel]="false"></p-rating>
+
+          <div class="mt-1">
+            <ng-template #t let-fill="fill">
+              <span class="star p-0" [class.full]="fill === 100"> <span class="half" [style.width.%]="fill">&#9733;</span>&#9733;</span>
+            </ng-template>
+            <ngb-rating [(rate)]="sideProfileUserInfo.rating" [starTemplate]="t" [readonly]="true" [max]="5"></ngb-rating>
           </div>
         </div>
       </div>
