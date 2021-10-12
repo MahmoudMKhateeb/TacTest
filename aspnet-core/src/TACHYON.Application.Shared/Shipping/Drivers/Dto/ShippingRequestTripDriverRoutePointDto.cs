@@ -8,7 +8,7 @@ using TACHYON.Routs.RoutPoints;
 
 namespace TACHYON.Shipping.Drivers.Dto
 {
-   public class ShippingRequestTripDriverRoutePointDto:EntityDto<long>
+    public class ShippingRequestTripDriverRoutePointDto : EntityDto<long>
     {
 
         public int ShippingRequestTripId { get; set; }
@@ -18,8 +18,11 @@ namespace TACHYON.Shipping.Drivers.Dto
         public string StatusTitle { get { return Status.GetEnumDescription(); } set { } }
         public string NextStatus { get; set; }
         public string ReceiverFullName { get; set; }
+        public long FacilityId { get; set; }
         public string Facility { get; set; }
-
+        public decimal FacilityRating { get; set; }
+        public int FacilityRatingNumber { get; set; }
+        public bool IsFacilityRated { get; set; }
         public string Address { get; set; }
         public string Note { get; set; }
 
@@ -30,7 +33,6 @@ namespace TACHYON.Shipping.Drivers.Dto
         public bool IsActive { get; set; }
         public bool IsComplete { get; set; }
         public bool IsDeliveryNoteUploaded { get; set; }
-        public double? Rating { get; set; }
         public List<GoodsDetailDto> GoodsDetails { get; set; }
         public bool IsShow
         {

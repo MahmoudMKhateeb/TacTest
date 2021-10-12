@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using TACHYON.EntityFrameworkCore;
@@ -10,9 +11,10 @@ using TACHYON.EntityFrameworkCore;
 namespace TACHYON.Migrations
 {
     [DbContext(typeof(TACHYONDbContext))]
-    partial class TACHYONDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210928115749_RemoveRatingAndDocumentFromPoint")]
+    partial class RemoveRatingAndDocumentFromPoint
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2276,34 +2278,6 @@ namespace TACHYON.Migrations
                     b.ToTable("DocumentsEntities");
                 });
 
-            modelBuilder.Entity("TACHYON.DriverLocationLogs.DriverLocationLog", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<Point>("Location")
-                        .HasColumnType("geography");
-
-                    b.Property<int?>("TripId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatorUserId");
-
-                    b.HasIndex("TripId");
-
-                    b.ToTable("DriverLocationLogs");
-                });
-
             modelBuilder.Entity("TACHYON.Friendships.Friendship", b =>
                 {
                     b.Property<long>("Id")
@@ -2401,9 +2375,6 @@ namespace TACHYON.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("BayanIntegrationId")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
 
@@ -2426,11 +2397,6 @@ namespace TACHYON.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
-
-                    b.Property<string>("Key")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
 
                     b.Property<DateTime?>("LastModificationTime")
                         .HasColumnType("datetime2");
@@ -3445,10 +3411,6 @@ namespace TACHYON.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("MobileNo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MoiNumber")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -4466,11 +4428,6 @@ namespace TACHYON.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
-
-                    b.Property<string>("Key")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(60)")
-                        .HasMaxLength(60);
 
                     b.Property<DateTime?>("LastModificationTime")
                         .HasColumnType("datetime2");
@@ -6023,8 +5980,8 @@ namespace TACHYON.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("BayanIntegrationId")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("BayanPlatetypeId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
@@ -6046,11 +6003,6 @@ namespace TACHYON.Migrations
 
                     b.Property<long?>("LastModifierUserId")
                         .HasColumnType("bigint");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(64)")
-                        .HasMaxLength(64);
 
                     b.HasKey("Id");
 
@@ -6455,11 +6407,6 @@ namespace TACHYON.Migrations
 
                     b.Property<DateTime?>("DeletionTime")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("DisplayName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
 
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
@@ -7052,21 +6999,10 @@ namespace TACHYON.Migrations
                         .HasForeignKey("EditionId");
                 });
 
-            modelBuilder.Entity("TACHYON.DriverLocationLogs.DriverLocationLog", b =>
-                {
-                    b.HasOne("TACHYON.Authorization.Users.User", "CreatorUserFk")
-                        .WithMany()
-                        .HasForeignKey("CreatorUserId");
-
-                    b.HasOne("TACHYON.Shipping.ShippingRequestTrips.ShippingRequestTrip", "ShippingRequestTripFk")
-                        .WithMany()
-                        .HasForeignKey("TripId");
-                });
-
             modelBuilder.Entity("TACHYON.Goods.GoodCategories.GoodCategory", b =>
                 {
                     b.HasOne("TACHYON.Goods.GoodCategories.GoodCategory", "FatherFk")
-                        .WithMany("GoodCategories")
+                        .WithMany()
                         .HasForeignKey("FatherId");
                 });
 

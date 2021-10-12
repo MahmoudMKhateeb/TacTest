@@ -1,10 +1,10 @@
-﻿using TACHYON.Countries;
-using TACHYON.Cities;
+﻿using Abp.Domain.Entities;
+using Abp.Domain.Entities.Auditing;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Abp.Domain.Entities.Auditing;
-using Abp.Domain.Entities;
+using TACHYON.Cities;
+using TACHYON.Countries;
 
 namespace TACHYON.AddressBook
 {
@@ -18,5 +18,6 @@ namespace TACHYON.AddressBook
         /// final rate of the facility
         /// </summary>
         public decimal Rate { get; set; }
+        public int RateNumber { get; set; }
     }
 }

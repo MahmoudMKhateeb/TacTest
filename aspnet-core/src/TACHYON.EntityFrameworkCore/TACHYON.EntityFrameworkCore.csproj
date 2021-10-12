@@ -35,6 +35,8 @@
     <Compile Remove="Migrations\20210822104223_test.Designer.cs" />
     <Compile Remove="Migrations\20210822193521_Production_v1.cs" />
     <Compile Remove="Migrations\20210822193521_Production_v1.Designer.cs" />
+    <Compile Remove="Migrations\20210928115506_RemoveRatingFromPoint.cs" />
+    <Compile Remove="Migrations\20210928115506_RemoveRatingFromPoint.Designer.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.5" />

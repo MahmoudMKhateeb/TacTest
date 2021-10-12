@@ -1,14 +1,14 @@
-﻿using System;
+﻿using Abp.Application.Services.Dto;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
-using Abp.Application.Services.Dto;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.Trips;
 
 namespace TACHYON.Shipping.Drivers.Dto
 {
-    public class ShippingRequestTripDriverDetailsDto: EntityDto<long>
+    public class ShippingRequestTripDriverDetailsDto : EntityDto<long>
     {
         public ICollection<ShippingRequestTripDriverRoutePointDto> RoutePoints { get; set; }
         public string StartTripDate { get; set; }
@@ -19,6 +19,7 @@ namespace TACHYON.Shipping.Drivers.Dto
         public double TotalWeight { get; set; }
         public string ShipperName { get; set; }
         public decimal ShipperRating { get; set; }
+        public bool IsShippingExpRated { get; set; }
         public int ShipperRatingNumber { get; set; }
         public string UnitOfMeasure { get; set; } = "Kg";
         public string Note { get; set; }

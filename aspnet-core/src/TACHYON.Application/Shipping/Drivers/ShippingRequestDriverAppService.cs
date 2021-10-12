@@ -19,6 +19,7 @@ using TACHYON.Goods.GoodCategories.Dtos;
 using TACHYON.Mobile;
 using TACHYON.Notifications;
 using TACHYON.Rating;
+using TACHYON.Rating.dtos;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Routs.RoutPoints.Dtos;
 using TACHYON.Shipping.Drivers.Dto;
@@ -140,7 +141,7 @@ namespace TACHYON.Shipping.Drivers
         /// </summary>
         /// <param name="TripId"></param>
         /// <returns></returns>
-        public async Task<ShippingRequestTripDriverDetailsDto> GetDetail(long TripId, bool IsAccepted)
+        public async Task<ShippingRequestTripDriverDetailsDto> GetDetail(int TripId, bool IsAccepted)
         {
             DisableTenancyFilters();
             var trip = await _ShippingRequestTrip.GetAll()
@@ -153,6 +154,8 @@ namespace TACHYON.Shipping.Drivers
            .Include(i => i.ShippingRequestFk)
                .ThenInclude(p => p.GoodCategoryFk)
                .ThenInclude(p => p.Translations)
+            .Include(i => i.ShippingRequestFk)
+               .ThenInclude(p => p.Tenant)
            .Include(i => i.DestinationFacilityFk)
            .Include(i => i.OriginFacilityFk)
            .Include(i => i.RoutPoints)
@@ -192,12 +195,36 @@ namespace TACHYON.Shipping.Drivers
                     tripDto.ActionStatus = ShippingRequestTripDriverActionStatusDto.CanStartTrip;
             }
 
+            var rate = new RatingLog();
+
+
+            tripDto.IsShippingExpRated = await _ratingLogManager.IsRateDoneBefore(new RatingLog
+            {
+                DriverId = AbpSession.UserId,
+                TripId = TripId,
+                RateType = RateType.SEByDriver
+            });
+
+            foreach (var point in tripDto.RoutePoints)
+            {
+                point.IsFacilityRated = await _ratingLogManager.IsRateDoneBefore(new RatingLog
+                {
+                    DriverId = AbpSession.UserId,
+                    PointId = point.Id,
+                    RateType = RateType.SEByDriver
+                });
+            }
+            //tripDto.RoutePoints.ToList().ForEach(async x =>
+            //x.IsFacilityRated =( await _ratingLogManager.IsRateDoneBefore(new RatingLog
+            //{
+            //    DriverId = AbpSession.UserId,
+            //    PointId = x.Id,
+            //    RateType = RateType.SEByDriver
+            //})));
+
             //return good category name automatic from default language
             tripDto.GoodsCategory = ObjectMapper.Map<GoodCategoryDto>(trip.ShippingRequestFk.GoodCategoryFk).DisplayName;
-            tripDto.ShipperRatingNumber = await _ratingLogManager.GetShipperRatingCountAsync(trip.ShippingRequestFk.TenantId);
 
-            tripDto.SourceFacilityRatingNumber = await _ratingLogManager.GetFacilityRatingCountAsync(trip.OriginFacilityId.Value);
-            tripDto.DestinationFacilityRatingNumber = await _ratingLogManager.GetFacilityRatingCountAsync(trip.DestinationFacilityId.Value);
             return tripDto;
 
         }
@@ -221,7 +248,12 @@ namespace TACHYON.Shipping.Drivers
             if (Point == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
             var DropOff = ObjectMapper.Map<RoutDropOffDto>(Point);
 
-
+            DropOff.IsFacilityRated = await _ratingLogManager.IsRateDoneBefore(new RatingLog
+            {
+                DriverId = AbpSession.UserId,
+                PointId = PointId,
+                RateType = RateType.FacilityByDriver
+            });
             return DropOff;
         }
 
@@ -233,40 +265,6 @@ namespace TACHYON.Shipping.Drivers
         public async Task StartTrip(ShippingRequestTripDriverStartInputDto Input)
         {
             await _shippingRequestsTripManager.Start(Input);
-            //DisableTenancyFilters();
-            //var trip = await _ShippingRequestTrip
-            //   .FirstOrDefaultAsync(
-            //        t => t.Id == Input.Id && 
-            //        t.AssignedDriverUserId == AbpSession.UserId && 
-            //        t.Status == ShippingRequestTripStatus.New && 
-            //        t.ShippingRequestFk.StartTripDate.Value.Date <= Clock.Now.Date &&
-            //        t.DriverStatus == ShippingRequestTripDriverStatus.Accepted);
-
-            //if (trip == null) throw new UserFriendlyException(L("YouCannotStartWithTheTripSelected"));
-
-            //if (!_ShippingRequestTrip.GetAll().Any(x => 
-            //x.Id != trip.Id &&
-            //x.Status == ShippingRequestTripStatus.Intransit && 
-            //x.AssignedDriverUserId == AbpSession.UserId
-            //))
-            //{
-            //    var RouteStart = await _RoutPointRepository.GetAll().Include(x => x.FacilityFk).SingleAsync(x => x.ShippingRequestTripId == trip.Id && x.PickingType == PickingType.Pickup);
-
-            //    RouteStart.StartTime = Clock.Now;
-            //    RouteStart.IsActive = true;
-            //    trip.Status = ShippingRequestTripStatus.Intransit;
-            //    trip.RoutePointStatus = RoutePointStatus.StartedMovingToLoadingLocation;
-
-            //    trip.StartTripDate = Clock.Now;
-            //    await _shippingRequestDriverManager.StartTransition(RouteStart, new Point(Input.lat, Input.lng));
-            //}
-            //else
-            //{
-            //    throw new UserFriendlyException(L("YouCanNotStartNewTripWhenYouHaveAnotherTripStillNotFinish"));
-            //}
-
-
-
         }
 
         /// <summary>
@@ -404,23 +402,48 @@ namespace TACHYON.Shipping.Drivers
         }
 
         /// <summary>
-        /// The driver ask receiver to rate the trip
+        /// The driver rate facility after drop finished
         /// </summary>
-        /// <param name="PointId"></param>
-        /// <param name="Rate"></param>
-        public async Task SetRating(long PointId, double Rate, string Note)
+        /// <param name="input"></param>
+        public async Task SetRating(long PointId, int Rate, string Note)
         {
-            DisableTenancyFilters();
-            var Point = await _RoutPointRepository.FirstOrDefaultAsync(x => x.Id == PointId && x.ShippingRequestTripFk.Status != ShippingRequestTripStatus.Canceled && x.IsComplete && x.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId && !x.Rating.HasValue);
-            if (Point != null)
-            {
-                Point.Rating = Rate;
-                Point.ReceiverNote = Note;
-            }
+            //DisableTenancyFilters();
+            //var Point = await _RoutPointRepository.FirstOrDefaultAsync(x => x.Id == PointId && x.ShippingRequestTripFk.Status != ShippingRequestTripStatus.Canceled && x.IsComplete && x.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId && !x.Rating.HasValue);
+            //if (Point != null) {
+            //    Point.Rating = Rate;
+            //    Point.ReceiverNote = Note;
+            //} 
+            var input = new CreateFacilityRateByDriverDto();
+            input.PointId = PointId;
+            input.Rate = Rate;
+            input.Note = Note;
+            await _ratingLogManager.ValidateAndCreateRating(input, RateType.FacilityByDriver);
         }
+
+        /// <summary>
+        /// The driver rate shipping Experience after trip delivered
+        /// </summary>
+        /// <param name="input"></param>
+        public async Task SetShippingExpRating(int tripId, int rate, string note)
+        {
+            var input = new CreateShippingExpRateByDriverDto();
+            input.TripId = tripId;
+            input.Rate = rate;
+            input.Note = note;
+            await _ratingLogManager.ValidateAndCreateRating(input, RateType.SEByDriver);
+        }
+
+
+
+
         public async Task Accepted(int TripId)
         {
             await _shippingRequestsTripManager.Accepted(TripId);
+            //DisableTenancyFilters();
+            //var trip = await _shippingRequestDriverManager.GetTripWhenAccepedOrRejectedByDriver(TripId, AbpSession.UserId.Value);
+            //await _appNotifier.DriverAcceptTrip(trip, GetCurrentUser().FullName);
+            //trip.DriverStatus = ShippingRequestTripDriverStatus.Accepted;
+            //await _shippingRequestsTripManager.GeneratePrices(trip);
         }
 
         #region Location tracking

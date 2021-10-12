@@ -12,7 +12,7 @@ using TACHYON.Shipping.ShippingRequestTrips;
 namespace TACHYON.Routs.RoutPoints
 {
     [Table("RoutPoints")]
-    public class RoutPoint: FullAuditedEntity<long>
+    public class RoutPoint : FullAuditedEntity<long>
     {
         public long? WaybillNumber { get; set; }
         public string DisplayName { get; set; }
@@ -43,17 +43,17 @@ namespace TACHYON.Routs.RoutPoints
         public RoutePointStatus Status { get; set; }
         public DateTime? StartTime { get; set; }
         public DateTime? EndTime { get; set; }
-        public bool IsActive { get; set; } 
+        public bool IsActive { get; set; }
         public bool IsComplete { get; set; }
 
         //todo will be removed
-        public Guid? DocumentId { get; set; }
+        //public Guid? DocumentId { get; set; }
         //todo will be removed
-        public string DocumentName { get; set; }
+        //public string DocumentName { get; set; }
         //todo will be removed
-        public string DocumentContentType { get; set; }
-        
-        public double? Rating { get; set; }
+        //public string DocumentContentType { get; set; }
+
+        //public double? Rating { get; set; }
         [CanBeNull] public string ReceiverNote { get; set; }
         //to do receiver attribute
 
@@ -66,7 +66,7 @@ namespace TACHYON.Routs.RoutPoints
         [CanBeNull] public string ReceiverFullName { get; set; }
         [DataType(DataType.PhoneNumber)] [CanBeNull] public string ReceiverPhoneNumber { get; set; }
         [CanBeNull] public string ReceiverCardIdNumber { get; set; }
-         [CanBeNull] public string ReceiverEmailAddress { get; set; }
+        [CanBeNull] public string ReceiverEmailAddress { get; set; }
         //Shipper Note
         [CanBeNull] public string Note { get; set; }
         public bool IsDeliveryNoteUploaded { get; set; }

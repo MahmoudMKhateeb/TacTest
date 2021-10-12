@@ -10,7 +10,7 @@ using TACHYON.Routs.RoutSteps;
 
 namespace TACHYON.Routs.RoutPoints.Dtos
 {
-    public class RoutPointDto: EntityDto<long>
+    public class RoutPointDto : EntityDto<long>
     {
         public long? WaybillNumber { get; set; }
         public string DisplayName { get; set; }
@@ -32,7 +32,6 @@ namespace TACHYON.Routs.RoutPoints.Dtos
         public string DocumentName { get; set; }
         public string DocumentContentType { get; set; }
 
-        public int? Rating { get; set; }
         public int? ReceiverId { get; set; }
         //receiver or sender full name, binded to sender or receiver cantact name in waybills
         public string SenderOrReceiverContactName { get; set; }

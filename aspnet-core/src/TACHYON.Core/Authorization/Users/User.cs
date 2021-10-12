@@ -44,6 +44,7 @@ namespace TACHYON.Authorization.Users
         /// This field is final rate for driver
         /// </summary>
         public decimal Rate { get; set; }
+        public int RateNumber { get; set; }
 
         public User()
         {

@@ -28,6 +28,8 @@ namespace TACHYON.AutoMapper.Shipping.Trips
                     .ForPath(dest => dest.ReceiverFullName, opt => opt.MapFrom(src => src.ReceiverFk != null ? src.ReceiverFk.FullName : src.ReceiverFullName))
                     //.ForPath(dest => dest.ReceiverEmailAddress, opt => opt.MapFrom(src => src.ReceiverFk != null ? src.ReceiverFk.EmailAddress : src.ReceiverEmailAddress))
                     .ForPath(dest => dest.ReceiverPhoneNumber, opt => opt.MapFrom(src => src.ReceiverFk != null ? src.ReceiverFk.PhoneNumber : src.ReceiverPhoneNumber))
+                    .ForPath(dest => dest.Rating, opt => opt.MapFrom(src => src.FacilityFk.Rate))
+                    .ForPath(dest => dest.RatingNumber, opt => opt.MapFrom(src => src.FacilityFk.RateNumber))
                     .ForPath(dest => dest.ReceiverCardIdNumber, opt => opt.MapFrom(src => src.ReceiverFk != null ? src.ReceiverFk.Id.ToString() : src.ReceiverCardIdNumber));
 
             CreateMap<RoutPoint, DropOffPointDto>();
