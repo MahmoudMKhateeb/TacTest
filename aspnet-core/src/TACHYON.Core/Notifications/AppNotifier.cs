@@ -1,4 +1,7 @@
 using Abp;
+using Abp.Authorization.Users;
+using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Abp.Localization;
 using Abp.Notifications;
 using System;
@@ -7,6 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TACHYON.Authorization.Users;
 using TACHYON.Documents.DocumentFiles;
+using TACHYON.Firebases;
 using TACHYON.Invoices;
 using TACHYON.Invoices.Groups;
 using TACHYON.Invoices.SubmitInvoices;
@@ -15,6 +19,8 @@ using TACHYON.PriceOffers;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequests.TachyonDealer;
 using TACHYON.Shipping.ShippingRequestTrips;
+using TACHYON.Shipping.Trips;
+using TACHYON.Shipping.Trips.Dto;
 using TACHYON.TachyonPriceOffers;
 
 namespace TACHYON.Notifications
@@ -24,12 +30,19 @@ namespace TACHYON.Notifications
         private readonly INotificationPublisher _notificationPublisher;
         private readonly INotificationSubscriptionManager _notificationSubscriptionManager;
         private readonly UserManager _userManager;
+        private readonly IRepository<User, long> _userRepo;
+        private readonly IRepository<Tenant> _tenantsRepository;
+        private readonly IFirebaseNotifier _firebaseNotifier;
 
-        public AppNotifier(INotificationPublisher notificationPublisher, INotificationSubscriptionManager notificationSubscriptionManager, UserManager userManager)
+
+        public AppNotifier(INotificationPublisher notificationPublisher, INotificationSubscriptionManager notificationSubscriptionManager, UserManager userManager, IRepository<User, long> userRepo, IRepository<Tenant> tenantsRepository, IFirebaseNotifier firebaseNotifier)
         {
             _notificationPublisher = notificationPublisher;
             _notificationSubscriptionManager = notificationSubscriptionManager;
             _userManager = userManager;
+            _userRepo = userRepo;
+            _tenantsRepository = tenantsRepository;
+            _firebaseNotifier = firebaseNotifier;
         }
 
         public async Task WelcomeToTheApplicationAsync(User user)
@@ -439,6 +452,102 @@ namespace TACHYON.Notifications
             await _notificationPublisher.PublishAsync(AppNotificationNames.RejectedSubmittedDocument, notificationData, userIds: new[] { argsUser });
         }
 
+        public async Task NotifyShipperWhenTripUpdated(NotifyTripUpdatedInput input)
+        {
+            var tenantAdmin = await GetTenantAdminUser(input.ShipperTenantId);
+
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                L("ShipperTripUpdatedNotificationMessage",
+                    input.WaybillNumber),
+                TACHYONConsts.LocalizationSourceName))
+            {
+                Properties = new Dictionary<string, object>() { { "updatedTripId", input.TripId } }
+            };
+
+            await _notificationPublisher.PublishAsync(AppNotificationNames.NotifyShipperWhenTripUpdated, notificationData, userIds: new[] { tenantAdmin });
+        }
+
+        public async Task NotifyCarrierWhenTripUpdated(NotifyTripUpdatedInput input)
+        {
+            var tenantAdmin = await GetTenantAdminUser(input.CarrierTenantId);
+
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    L("CarrierTripUpdatedNotificationMessage",
+            input.WaybillNumber),
+                    TACHYONConsts.LocalizationSourceName))
+            {
+                Properties = new Dictionary<string, object>() { { "updatedTripId", input.TripId } }
+            };
+
+            await _notificationPublisher.PublishAsync(AppNotificationNames.NotifyCarrierWhenTripUpdated, notificationData, userIds: new[] { tenantAdmin });
+        }
+
+        public async Task NotifyTachyonDealWhenTripUpdated(NotifyTripUpdatedInput input)
+        {
+            var tenantAdmin = await GetAdminTachyonDealerAsync();
+
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    L("TachyonDealerTripUpdatedNotificationMessage",
+                        input.WaybillNumber),
+                    TACHYONConsts.LocalizationSourceName))
+            {
+                Properties = new Dictionary<string, object>() { { "updatedTripId", input.TripId } }
+            };
+
+            await _notificationPublisher.PublishAsync(AppNotificationNames.NotifyTachyonDealWhenTripUpdated, notificationData, userIds: new[] { tenantAdmin });
+        }
+
+        public async Task NotifyAllWhenTripUpdated(NotifyTripUpdatedInput input)
+        {
+            await NotifyShipperWhenTripUpdated(input);
+            await NotifyCarrierWhenTripUpdated(input);
+            await NotifyTachyonDealWhenTripUpdated(input);
+        }
+
+
+
+        public async Task NotifyTripUpdated(ShippingRequestTrip trip)
+        {
+            #region AllRequiredData
+
+            var shipperTenantId = trip.ShippingRequestFk.TenantId;
+            var carrierTenantId = trip.ShippingRequestFk.CarrierTenantId;
+            var waybillNo = trip.WaybillNumber;
+
+            var input = new NotifyTripUpdatedInput()
+            {
+                ShipperTenantId = shipperTenantId,
+                TripId = trip.Id,
+                WaybillNumber = waybillNo.ToString()
+            };
+
+            #endregion
+
+            if (carrierTenantId is null)
+            {
+                await NotifyShipperWhenTripUpdated(input);
+                await NotifyTachyonDealWhenTripUpdated(input);
+            }
+            else
+            {
+                input.CarrierTenantId = carrierTenantId.Value;
+
+                await NotifyAllWhenTripUpdated(input);
+
+                var driverId = trip.AssignedDriverUserId;
+                if (driverId is null || trip.DriverStatus != ShippingRequestTripDriverStatus.Accepted) return;
+
+                var driverIdentifier = new UserIdentifier(carrierTenantId, driverId.Value);
+
+                input.DriverIdentifier = driverIdentifier;
+                await _firebaseNotifier.TripUpdated(input);
+
+            }
+        }
+
         #region Invoices
         public async Task NewInvoiceShipperGenerated(Invoice invoice)
         {
@@ -700,6 +809,8 @@ namespace TACHYON.Notifications
                 await _notificationPublisher.PublishAsync(AppNotificationNames.TripNeedsDeliveryNote, notificationData, userIds: new[] { new UserIdentifier(carrierTenantId, user.Id) });
             }
         }
+
+
 
         #endregion
         #region Accident
@@ -988,8 +1099,30 @@ namespace TACHYON.Notifications
         private async Task<UserIdentifier> GetAdminUser(int? TenantId)
         {
             var user = await _userManager.GetAdminByTenantIdAsync(TenantId.Value);
-            return new UserIdentifier(TenantId, user.Id);
+            var identifier = new UserIdentifier(TenantId, user.Id);
+
+            return identifier;
         }
+
+        [UnitOfWork]
+        protected virtual async Task<UserIdentifier> GetTenantAdminUser(int tenantId)
+        {
+
+            DisableTenancyFilters();
+
+            var user = await _userRepo.FirstOrDefaultAsync(x =>
+                        x.TenantId == tenantId && x.UserName.Equals(AbpUserBase.AdminUserName));
+
+            return new UserIdentifier(tenantId, user.Id);
+        }
+
+        [UnitOfWork]
+        protected virtual async Task<UserIdentifier> GetAdminTachyonDealerAsync()
+        {
+            var tenant = await _tenantsRepository.FirstOrDefaultAsync(x => x.Edition.Name.ToLower() == AppConsts.TachyonEditionName.ToLower());
+            return await GetTenantAdminUser(tenant.Id);
+        }
+
         #endregion
     }
 }

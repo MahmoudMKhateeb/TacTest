@@ -354,17 +354,13 @@ namespace TACHYON.Shipping.Trips
                     await _documentFilesManager.DeleteDocumentFile(documentFile);
                 }
 
-                await NotifyCarrierWithTripDetails(trip, request.CarrierTenantId, true, false, false);
             }
 
             var needseliveryNoteOldValue = trip.NeedsDeliveryNote;
 
             if (needseliveryNoteOldValue != input.NeedsDeliveryNote)
             {
-                //Notify Carrier with trip details
-                await NotifyCarrierWithTripDetails(trip, request.CarrierTenantId, false, true, false);
             }
-            await _appNotifier.NotificationWhenTripDetailsChanged(trip, GetCurrentUser());
 
             ObjectMapper.Map(input, trip);
         }

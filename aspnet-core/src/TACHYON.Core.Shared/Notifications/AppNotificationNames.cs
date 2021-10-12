@@ -59,6 +59,9 @@ namespace TACHYON.Notifications
         public const string TripHasAttachment = "App.TripHasAttachment";
         public const string TripNeedsDeliveryNote = "App.NeedsDeliveryNote";
         public const string NotificationWhenTripDetailsChanged = "App.NotificationWhenTripDetailsChanged";
+        public const string NotifyShipperWhenTripUpdated = "App.NotifyShipperWhenTripUpdated";
+        public const string NotifyCarrierWhenTripUpdated = "App.NotifyCarrierWhenTripUpdated";
+        public const string NotifyTachyonDealWhenTripUpdated = "App.NotifyTachyonDealWhenTripUpdated";
 
         #endregion
         #region Accident

@@ -1,19 +1,21 @@
-﻿using Abp.Domain.Repositories;
+﻿using Abp;
+using Abp.Configuration;
+using Abp.Domain.Repositories;
+using Abp.Localization;
+using Abp.Timing;
 using FirebaseAdmin.Messaging;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 using TACHYON.Mobile;
-using System.Linq;
-using Abp.Timing;
-using Abp.Localization;
-using System;
-using Abp.Configuration;
-using Abp;
-using System.Globalization;
+using TACHYON.Shipping.Trips.Dto;
 
 namespace TACHYON.Firebases
 {
-    public  class FirebaseNotifier: TACHYONServiceBase, IFirebaseNotifier
+    public class FirebaseNotifier : TACHYONDomainServiceBase, IFirebaseNotifier
     {
 
         public FirebaseMessaging messaging { get; set; }
@@ -52,7 +54,7 @@ namespace TACHYON.Firebases
         /// <param name="TripId"></param>
         /// <param name="wayBillNumber"></param>
         /// <returns></returns>
-        public async Task PushNotificationToDriverWhenAssignTrip(UserIdentifier user, string TripId,string wayBillNumber)
+        public async Task PushNotificationToDriverWhenAssignTrip(UserIdentifier user, string TripId, string wayBillNumber)
         {
             string Title = L("NewTripAssign", GetCulture(user), wayBillNumber);
             var message = new Message()
@@ -101,7 +103,7 @@ namespace TACHYON.Firebases
         /// <returns></returns>
         public async Task TripChanged(UserIdentifier user, string TripId)
         {
-            string Title = L("TripDataChanged");
+            string Title = L("TripDataChanged", TripId);
             var message = new Message()
             {
                 Notification = new Notification
@@ -117,10 +119,32 @@ namespace TACHYON.Firebases
             await SendMessage(user.UserId, message, "ViewtripchangedActivity");
         }
 
-        #region Helper
-        private async Task SendMessage(long UserId, Message message,string ClickAction)
+        public async Task TripUpdated(NotifyTripUpdatedInput input)
         {
-            foreach (var device in await GetUserDevices(UserId))
+            string msgTitle = L("CarrierTripUpdatedNotificationMessage", input.WaybillNumber);
+
+            var message = new Message()
+            {
+                Notification = new Notification
+                {
+                    Title = msgTitle,
+                },
+                Data = new Dictionary<string, string>()
+                {
+                    ["id"] = input.TripId.ToString(),
+                    ["changed"] = "true"
+                }
+            };
+            await SendMessage(input.DriverIdentifier.UserId, message, "ViewtripchangedActivity");
+        }
+
+        #region Helper
+        private async Task SendMessage(long UserId, Message message, string ClickAction)
+        {
+
+            var devices = await GetUserDevices(UserId);
+
+            foreach (var device in devices)
             {
                 try
                 {
@@ -139,20 +163,25 @@ namespace TACHYON.Firebases
                     };
                     await messaging.SendAsync(message);
                 }
-                catch 
+                catch
                 {
                     // todo add log here 
                 }
             }
         }
 
-        private Task<IQueryable<UserDeviceToken>> GetUserDevices(long UserId)
+        private async Task<List<UserDeviceToken>> GetUserDevices(long UserId)
         {
-            return Task.FromResult(_userDeviceToken.GetAll().Where(x => x.UserId == UserId && (!x.ExpireDate.HasValue || x.ExpireDate >= Clock.Now)));
+            var devices = await _userDeviceToken.GetAll()
+                .Where(x => x.UserId == UserId
+                            && (!x.ExpireDate.HasValue
+                                || x.ExpireDate >= Clock.Now)).ToListAsync();
+            return devices;
         }
-        private  CultureInfo GetCulture(UserIdentifier user)
+
+        private CultureInfo GetCulture(UserIdentifier user)
         {
-           return new CultureInfo(_settingManager.GetSettingValueForUser(LocalizationSettingNames.DefaultLanguage, user.TenantId, user.UserId, true)) ;
+            return new CultureInfo(_settingManager.GetSettingValueForUser(LocalizationSettingNames.DefaultLanguage, user.TenantId, user.UserId, true));
         }
         #endregion
     }
