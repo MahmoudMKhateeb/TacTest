@@ -89,8 +89,8 @@ namespace TACHYON.Shipping.Drivers
        .Include(i => i.OriginFacilityFk)
        .Include(i => i.DestinationFacilityFk)
            .Where(t => t.AssignedDriverUserId == AbpSession.UserId && t.Status != ShippingRequestTripStatus.Canceled && t.DriverStatus != ShippingRequestTripDriverStatus.Rejected)
-        .WhereIf(input.Status.HasValue && input.Status == ShippingRequestTripDriverLoadStatusDto.Current, e => e.StartTripDate.Date <= Clock.Now.Date && e.Status != ShippingRequestTripStatus.Delivered)
-        .WhereIf(input.Status.HasValue && input.Status == ShippingRequestTripDriverLoadStatusDto.Past, e => e.Status == ShippingRequestTripStatus.Delivered)
+        .WhereIf(input.Status.HasValue && input.Status == ShippingRequestTripDriverLoadStatusDto.Current, e => e.StartTripDate.Date <= Clock.Now.Date && e.Status != ShippingRequestTripStatus.Delivered && e.Status != ShippingRequestTripStatus.DeliveredAndNeedsConfirmation)
+        .WhereIf(input.Status.HasValue && input.Status == ShippingRequestTripDriverLoadStatusDto.Past, e => (e.Status == ShippingRequestTripStatus.Delivered || e.Status != ShippingRequestTripStatus.DeliveredAndNeedsConfirmation))
         .WhereIf(input.Status.HasValue && input.Status == ShippingRequestTripDriverLoadStatusDto.Comming, e => e.StartTripDate.Date > Clock.Now.Date)
         .OrderBy(input.Sorting ?? "Status asc");
 
@@ -181,7 +181,7 @@ namespace TACHYON.Shipping.Drivers
             }
 
             if (trip.AssignedTruckFk != null) tripDto.TruckType = ObjectMapper.Map<TrucksTypeDto>(trip.AssignedTruckFk.TrucksTypeFk).TranslatedDisplayName;
-            if (tripDto.TripStatus == ShippingRequestTripStatus.Intransit)
+            if (tripDto.TripStatus == ShippingRequestTripStatus.Intransit || tripDto.TripStatus == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation)
             {
                 tripDto.ActionStatus = ShippingRequestTripDriverActionStatusDto.ContinueTrip;
             }
@@ -350,6 +350,7 @@ namespace TACHYON.Shipping.Drivers
                     CurrentPoint.IsActive = false;
                     CurrentPoint.IsComplete = true;
                     CurrentPoint.EndTime = Clock.Now;
+                    CurrentPoint.CompletedStatus = RoutePointCompletedStatus.Completed;
 
                 }
 
@@ -562,6 +563,7 @@ namespace TACHYON.Shipping.Drivers
                     item.IsDeliveryNoteUploaded = false;
                     item.RoutPointDocuments.Clear();
                     item.ActualPickupOrDeliveryDate = null;
+                    item.CompletedStatus = RoutePointCompletedStatus.NotCompleted;
                     //item.ShippingRequestTripAccidents.Clear();
                     //item.ShippingRequestTripTransitions.Clear();
                 });

@@ -153,7 +153,7 @@ namespace TACHYON.Shipping.Drivers
         /// <returns></returns>
         public async Task<ShippingRequestTrip> GetActiveTrip()
         {
-            var trip = await _ShippingRequestTrip
+            var trip = await _ShippingRequestTrip.GetAllIncluding(x => x.RoutPoints)
                             .FirstOrDefaultAsync(t => t.AssignedDriverUserId == _abpSession.UserId && t.Status == ShippingRequestTripStatus.Intransit);
             if (trip == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
             return trip;
