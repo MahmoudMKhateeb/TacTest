@@ -1,5 +1,4 @@
 ﻿using Abp.Events.Bus.Entities;
-using TACHYON.Goods;
 using Abp.IdentityServer4;
 using Abp.Zero.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -21,8 +20,10 @@ using TACHYON.Documents.DocumentFiles;
 using TACHYON.Documents.DocumentsEntities;
 using TACHYON.Documents.DocumentTypes;
 using TACHYON.Documents.DocumentTypeTranslations;
+using TACHYON.DriverLocationLogs;
 using TACHYON.Editions;
 using TACHYON.Friendships;
+using TACHYON.Goods;
 using TACHYON.Goods.GoodCategories;
 using TACHYON.Goods.GoodsDetails;
 using TACHYON.Invoices;
@@ -41,6 +42,7 @@ using TACHYON.Nationalities.NationalitiesTranslation;
 using TACHYON.Offers;
 using TACHYON.Packing.PackingTypes;
 using TACHYON.PriceOffers;
+using TACHYON.Rating;
 using TACHYON.Receivers;
 using TACHYON.Routs;
 using TACHYON.Routs.RoutPoints;
@@ -75,7 +77,6 @@ using TACHYON.Trucks.TrucksTypes;
 using TACHYON.Trucks.TrucksTypes.TrucksTypesTranslations;
 using TACHYON.UnitOfMeasures;
 using TACHYON.Vases;
-using TACHYON.Rating;
 
 namespace TACHYON.EntityFrameworkCore
 {
@@ -252,6 +253,7 @@ namespace TACHYON.EntityFrameworkCore
         public virtual DbSet<RatingLog> RatingLoogs { get; set; }
 
         public DbSet<TenantCarrier> TenantCarriers { get; set; }
+        public DbSet<DriverLocationLog> DriverLocationLogs { get; set; }
 
         protected virtual bool CurrentIsCanceled => true;
         protected virtual bool CurrentIsDrafted => false;
