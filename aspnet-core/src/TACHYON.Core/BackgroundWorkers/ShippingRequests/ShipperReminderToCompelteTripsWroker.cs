@@ -14,10 +14,10 @@ using TACHYON.Shipping.ShippingRequests;
 
 namespace TACHYON.BackgroundWorkers.ShippingRequests
 {
-    public  class ShipperReminderToCompelteTripsWroker : PeriodicBackgroundWorkerBase, ISingletonDependency
+    public class ShipperReminderToCompelteTripsWroker : PeriodicBackgroundWorkerBase, ISingletonDependency
     {
         private const int runEvery = 1 * 60 * 60 * 1000 * 24; //1 day
-        private readonly IRepository<ShippingRequest,long> _shippingRequestRepository;
+        private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
         private readonly IFirebaseNotifier _firebaseNotifier;
         private readonly IAppNotifier _appNotifier;
         public ShipperReminderToCompelteTripsWroker(
@@ -27,6 +27,7 @@ namespace TACHYON.BackgroundWorkers.ShippingRequests
             IAppNotifier appNotifier) : base(timer)
         {
             Timer.Period = runEvery;
+            Timer.RunOnStart = true;
             _shippingRequestRepository = shippingRequestRepository;
             _firebaseNotifier = firebaseNotifier;
             _appNotifier = appNotifier;
@@ -43,8 +44,8 @@ namespace TACHYON.BackgroundWorkers.ShippingRequests
                     Where
                     (
                             x => x.Status == Shipping.ShippingRequests.ShippingRequestStatus.PostPrice &&
-                            x.TotalsTripsAddByShippier<x.NumberOfTrips &&
-                            EF.Functions.DateDiffDay(Clock.Now.Date, x.EndTripDate.Value.Date) >=-5/* before 5 days*/
+                            x.TotalsTripsAddByShippier < x.NumberOfTrips &&
+                            EF.Functions.DateDiffDay(Clock.Now.Date, x.EndTripDate.Value.Date) >= -5/* before 5 days*/
                     ).ToList();
 
                 request.ForEach(r =>
@@ -55,18 +56,17 @@ namespace TACHYON.BackgroundWorkers.ShippingRequests
                         () => _firebaseNotifier.General
                             (
                                 user,
-                                new System.Collections.Generic.Dictionary<string, string>() { ["id"]=r.Id.ToString() },
+                                new System.Collections.Generic.Dictionary<string, string>() { ["id"] = r.Id.ToString() },
                                 "",
                                 "ShipperReminderToCompelteTrips"
                             )
 
                     );
                     AsyncHelper.RunSync(() => _appNotifier.ShipperReminderToCompelteTrips(user, r));
-                   
+
                 });
             }
 
         }
     }
 }
-

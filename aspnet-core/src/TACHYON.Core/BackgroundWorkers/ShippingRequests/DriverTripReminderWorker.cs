@@ -18,7 +18,7 @@ namespace TACHYON.BackgroundWorkers.ShippingRequests
 /// </summary>
     public class DriverTripReminderWorker : PeriodicBackgroundWorkerBase, ISingletonDependency
     {
-        private const int runEvery =  1 * 60 * 60 * 1000 * 24; //1 day
+        private const int runEvery = 1 * 60 * 60 * 1000 * 24; //1 day
         private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepository;
         private readonly IFirebaseNotifier _firebaseNotifier;
         public DriverTripReminderWorker(
@@ -27,6 +27,7 @@ namespace TACHYON.BackgroundWorkers.ShippingRequests
             IFirebaseNotifier firebaseNotifier) : base(timer)
         {
             Timer.Period = runEvery;
+            Timer.RunOnStart = true;
             _shippingRequestTripRepository = shippingRequestTripRepository;
             _firebaseNotifier = firebaseNotifier;
         }
@@ -38,11 +39,11 @@ namespace TACHYON.BackgroundWorkers.ShippingRequests
             {
                 var Trips = _shippingRequestTripRepository.
                     GetAll().
-                    Include(d=>d.AssignedDriverUserFk).
+                    Include(d => d.AssignedDriverUserFk).
                     AsNoTracking().
                     Where(x => x.ShippingRequestFk.Status == Shipping.ShippingRequests.ShippingRequestStatus.PostPrice &&
                     x.Status == Shipping.Trips.ShippingRequestTripStatus.New &&
-                    x.DriverStatus== Shipping.Trips.ShippingRequestTripDriverStatus.Accepted &&
+                    x.DriverStatus == Shipping.Trips.ShippingRequestTripDriverStatus.Accepted &&
                     EF.Functions.DateDiffDay(Clock.Now.Date, x.StartTripDate.Date) == -1).ToList();
 
                 Trips.ForEach(t =>

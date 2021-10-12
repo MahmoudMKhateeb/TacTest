@@ -1,8 +1,11 @@
-﻿using Abp.Domain.Repositories;
+﻿using Abp;
+using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.Extensions;
 using Abp.Extensions;
 using Abp.Runtime.Session;
 using Abp.Specifications;
+using Abp.Timing;
 using Abp.UI;
 using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +21,7 @@ using TACHYON.Documents.DocumentFiles.Dtos;
 using TACHYON.Documents.DocumentsEntities;
 using TACHYON.Documents.DocumentTypes;
 using TACHYON.MultiTenancy;
+using TACHYON.Notifications;
 using TACHYON.Storage;
 using TACHYON.Trucks.Dtos;
 
@@ -27,8 +31,10 @@ namespace TACHYON.Documents
     {
         private const int MaxDocumentFileBytes = 5242880; //5MB
         private readonly TenantManager TenantManager;
+        private readonly IAppNotifier _appNotifier;
 
-        public DocumentFilesManager(IRepository<DocumentFile, Guid> documentFileRepository, TenantManager tenantManager, IRepository<DocumentType, long> documentTypeRepository, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager, IUserEmailer userEmailer)
+
+        public DocumentFilesManager(IRepository<DocumentFile, Guid> documentFileRepository, TenantManager tenantManager, IRepository<DocumentType, long> documentTypeRepository, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager, IUserEmailer userEmailer, IAppNotifier appNotifier)
         {
             _documentFileRepository = documentFileRepository;
             TenantManager = tenantManager;
@@ -38,6 +44,7 @@ namespace TACHYON.Documents
             _binaryObjectManager = binaryObjectManager;
             _userEmailer = userEmailer;
             AbpSession = NullAbpSession.Instance;
+            _appNotifier = appNotifier;
         }
 
         private readonly IRepository<DocumentFile, Guid> _documentFileRepository;
@@ -305,6 +312,61 @@ namespace TACHYON.Documents
             }
             await _documentFileRepository.DeleteAsync(documentFile.Id);
         }
+
+
+        public async Task NotifyExpiredDocumentFile()
+        {
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant))
+            {
+
+                var docs = _documentFileRepository.GetAll()
+                    .Include(x => x.DocumentTypeFk)
+                    .Include(x => x.TenantFk)
+                    .Where(x => x.DocumentTypeFk.HasExpirationDate)
+                    .Where(x => x.IsAccepted)
+                    .ToList();
+
+
+
+
+                foreach (DocumentFile documentFile in docs)
+                {
+                    if (documentFile.ExpirationDate == null)
+                    {
+                        continue;
+                    }
+
+                    //AlertDays 
+                    var expirationAlertDays = documentFile.DocumentTypeFk.ExpirationAlertDays;
+                    if (expirationAlertDays != null)
+                    {
+                        var alertDate = documentFile.ExpirationDate.Value.AddDays(-1 * expirationAlertDays.Value).Date;
+                        if (alertDate == Clock.Now.Date)
+                        {
+
+                            var user = new UserIdentifier(documentFile.TenantId, documentFile.CreatorUserId.Value);
+                            await _appNotifier.DocumentFileBeforExpiration(user, documentFile.Id, expirationAlertDays.Value);
+
+                        }
+                    }
+
+                    //Expiration
+                    if (documentFile.ExpirationDate.Value.Date == Clock.Now.Date)
+                    {
+                        var user = new UserIdentifier(documentFile.TenantId, documentFile.CreatorUserId.Value);
+                        await _appNotifier.DocumentFileExpiration(user, documentFile.Id);
+                        Logger.Info(documentFile + "ExpiredDocumentFileWorker logger.");
+
+                        //Send email with expired documents
+                        await _userEmailer.SendExpiredDateDocumentsAsyn(documentFile.TenantFk, documentFile.Name);
+                    }
+
+                }
+
+
+                CurrentUnitOfWork.SaveChanges();
+            }
+        }
         //---R
 
         /// <summary>
@@ -320,6 +382,9 @@ namespace TACHYON.Documents
                             && (x.IsAccepted);
             }
         }
+
+
+
 
     }
 }
