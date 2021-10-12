@@ -1119,7 +1119,7 @@ namespace TACHYON.Notifications
         [UnitOfWork]
         protected virtual async Task<UserIdentifier> GetAdminTachyonDealerAsync()
         {
-            var tenant = await _tenantsRepository.FirstOrDefaultAsync(x => x.Edition.Name.ToLower() == AppConsts.TachyonEditionName.ToLower());
+            var tenant = await _tenantsRepository.FirstOrDefaultAsync(x => x.Edition.Id == TachyonEditionId);
             return await GetTenantAdminUser(tenant.Id);
         }
 

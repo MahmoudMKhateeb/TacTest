@@ -2,6 +2,7 @@
 using Abp.Application.Services.Dto;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using TACHYON.DriverLocationLogs.dtos;
 using TACHYON.Rating.dtos;
 using TACHYON.Routs.RoutPoints.Dtos;
 using TACHYON.Shipping.Drivers.Dto;

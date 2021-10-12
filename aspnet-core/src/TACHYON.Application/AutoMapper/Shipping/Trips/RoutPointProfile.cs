@@ -18,20 +18,22 @@ namespace TACHYON.AutoMapper.Shipping.Trips
         public RoutPointProfile()
         {
             CreateMap<RoutPoint, RoutDropOffDto>()
-                    .ForPath(dest => dest.Facility, opt => opt.MapFrom(src => src.FacilityFk.Name))
-                    .ForPath(dest => dest.Address, opt => opt.MapFrom(src => $"{src.FacilityFk.CityFk.DisplayName}-{src.FacilityFk.Address}"))
-                    .ForPath(dest => dest.Latitude, opt => opt.MapFrom(src => src.FacilityFk.Location.Y))
-                    .ForPath(dest => dest.Longitude, opt => opt.MapFrom(src => src.FacilityFk.Location.X))
-                    //.ForPath(dest => dest.TotalWeight, opt => opt.MapFrom(src => src.GoodsDetails.Sum(x=>x.Weight)))
-                    .ForPath(dest => dest.GoodsDetailListDto, opt => opt.MapFrom(src => src.GoodsDetails))
-                    .ForPath(dest => dest.PackagingType, opt => opt.MapFrom(src => src.ShippingRequestTripFk.ShippingRequestFk.PackingTypeFk.DisplayName))
-                    .ForPath(dest => dest.ReceiverDto, opt => opt.MapFrom(src => src.ReceiverFk))
-                    .ForPath(dest => dest.ReceiverFullName, opt => opt.MapFrom(src => src.ReceiverFullName))
-                    //.ForPath(dest => dest.ReceiverEmailAddress, opt => opt.MapFrom(src => src.ReceiverFk != null ? src.ReceiverFk.EmailAddress : src.ReceiverEmailAddress))
-                    .ForPath(dest => dest.ReceiverPhoneNumber, opt => opt.MapFrom(src => src.ReceiverPhoneNumber))
-                    .ForPath(dest => dest.ReceiverCardIdNumber, opt => opt.MapFrom(src => src.ReceiverCardIdNumber));
-                    .ForPath(dest => dest.Rating, opt => opt.MapFrom(src => src.FacilityFk.Rate))
-                    .ForPath(dest => dest.RatingNumber, opt => opt.MapFrom(src => src.FacilityFk.RateNumber))
+                .ForPath(dest => dest.Facility, opt => opt.MapFrom(src => src.FacilityFk.Name))
+                .ForPath(dest => dest.Address,
+                    opt => opt.MapFrom(src => $"{src.FacilityFk.CityFk.DisplayName}-{src.FacilityFk.Address}"))
+                .ForPath(dest => dest.Latitude, opt => opt.MapFrom(src => src.FacilityFk.Location.Y))
+                .ForPath(dest => dest.Longitude, opt => opt.MapFrom(src => src.FacilityFk.Location.X))
+                //.ForPath(dest => dest.TotalWeight, opt => opt.MapFrom(src => src.GoodsDetails.Sum(x=>x.Weight)))
+                .ForPath(dest => dest.GoodsDetailListDto, opt => opt.MapFrom(src => src.GoodsDetails))
+                .ForPath(dest => dest.PackagingType,
+                    opt => opt.MapFrom(src => src.ShippingRequestTripFk.ShippingRequestFk.PackingTypeFk.DisplayName))
+                .ForPath(dest => dest.ReceiverDto, opt => opt.MapFrom(src => src.ReceiverFk))
+                .ForPath(dest => dest.ReceiverFullName, opt => opt.MapFrom(src => src.ReceiverFullName))
+                //.ForPath(dest => dest.ReceiverEmailAddress, opt => opt.MapFrom(src => src.ReceiverFk != null ? src.ReceiverFk.EmailAddress : src.ReceiverEmailAddress))
+                .ForPath(dest => dest.ReceiverPhoneNumber, opt => opt.MapFrom(src => src.ReceiverPhoneNumber))
+                .ForPath(dest => dest.ReceiverCardIdNumber, opt => opt.MapFrom(src => src.ReceiverCardIdNumber))
+                .ForPath(dest => dest.Rating, opt => opt.MapFrom(src => src.FacilityFk.Rate))
+                .ForPath(dest => dest.RatingNumber, opt => opt.MapFrom(src => src.FacilityFk.RateNumber));
 
             CreateMap<RoutPoint, DropOffPointDto>();
             CreateMap<UserOTP, UserOtpDto>();
