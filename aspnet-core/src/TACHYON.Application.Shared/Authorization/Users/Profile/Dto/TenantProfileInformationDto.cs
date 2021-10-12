@@ -20,6 +20,6 @@ namespace TACHYON.Authorization.Users.Profile.Dto
 
         public int CityId { get; set; }
 
-        public double Rating { get; set; }
+        public decimal Rating { get; set; }
     }
 }
