@@ -148,6 +148,12 @@ namespace TACHYON.Configuration
                 new SettingDefinition(AppSettings.Editions.ShipperEditionId,GetFromAppSettings(AppSettings.Editions.ShipperEditionId,"1"),isVisibleToClients:true,scopes:SettingScopes.Application),
                 new SettingDefinition(AppSettings.Editions.TachyonEditionId,GetFromAppSettings(AppSettings.Editions.TachyonEditionId,"3"),isVisibleToClients:true,scopes:SettingScopes.Application),
                 new SettingDefinition(AppSettings.Editions.CarrierEditionId,GetFromAppSettings(AppSettings.Editions.CarrierEditionId,"2"),isVisibleToClients:true,scopes:SettingScopes.Application)
+                new SettingDefinition(AppSettings.Links.AndroidAppLink,
+                    GetFromAppSettings(AppSettings.Links.AndroidAppLink, TACHYONConsts.AndroidAppLink),isVisibleToClients:true,
+                    scopes:SettingScopes.Application),
+                new SettingDefinition(AppSettings.Links.IosAppLink,
+                    GetFromAppSettings(AppSettings.Links.IosAppLink, TACHYONConsts.IOSAppLink),isVisibleToClients:true,
+                    scopes:SettingScopes.Application)
             };
         }
 

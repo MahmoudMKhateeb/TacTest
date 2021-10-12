@@ -105,6 +105,12 @@ namespace TACHYON.Configuration
             public const string EmailLogoPath = "App.Email.EmailLogoPath";
         }
 
+        public static class Links
+        {
+            public const string AndroidAppLink = "App.Links.AndroidAppLink";
+            public const string IosAppLink = "App.Links.IosAppLink";
+        }
+
         public static class Recaptcha
         {
             public const string SiteKey = "Recaptcha.SiteKey";

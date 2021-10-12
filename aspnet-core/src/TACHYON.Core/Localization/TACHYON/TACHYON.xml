@@ -1690,7 +1690,12 @@
 		<text name="ShippingRequestPrice">Shipping request price</text>
 		<text name="ShippingRequestPricingResponse">Shipping Request Pricing Response</text>
 		<text name="ShippingRequestProperties">Shipping Request Properties</text>
-		<text name="ShippingRequestReceiverCode">Your Shipping code is {0}</text>
+		<text name="ShippingRequestReceiverCode">
+			Welcome from TACHYON \n
+			Please note that shipment {0} on its way. And expected to arrive on {1}, please give this code to
+			the driver when the delivery is completed.\n\n
+			Your shipping code:{2}
+		</text>
 		<text name="ShippingRequests">Shipping Requests</text>
 		<text name="MyShippingRequests">My Shipping Requests</text>
 		<text name="ShippingRequestsCreate">Create Shipping Request</text>
@@ -1725,7 +1730,9 @@
 		<text name="SignUp">Sign up</text>
 		<text name="SingleDrop">Single drop</text>
 		<text name="Sms">SMS</text>
-		<text name="SMSOTP">Your one-time password is code:{0}</text>
+		<text name="SMSOTP">
+			Please use the code below to login.\n
+			Code:{0}</text>
 		<text name="SmsSecurityCodeMessage">Your security code is: {0}</text>
 		<text name="SMSSettings">SMS Settings</text>
 		<text name="SmsVerificationEnabled">Phone number verification enabled (via SMS)</text>
@@ -2277,6 +2284,13 @@
 		<text name="WeeklyPrice">Weekly price</text>
 		<text name="Weight">Weight</text>
 		<text name="WelcomePage_Info">Welcome to the application. You can use the menu to start using the application. If you don't see any menu item, probably you don't have permission to see any page. Consider asking a system administrator for permissions.</text>
+		<text name="DriverWelcomeMessageRegistrationNotification">
+			Dear {0},\n
+			Your account has been created in Tachyon Driver application. Your username is your mobile number.\n
+			You can install the application using the following links\n
+			Android App Link: {1}\n
+			IOS App Link:{2}
+		</text>
 		<text name="WelcomePage_Title">Welcome!</text>
 		<text name="WelcomeToTheApplicationNotificationMessage">Welcome to TACHYON! Notification system is used to inform you for intended events. You can select which type of notifications you want to receive from the notification settings.</text>
 		<text name="WeWillSendYouCodeToVerfiyYourEmailPleaseCheckYourInbox">We will send you code to verify your e-mail, please check your Inbox</text>

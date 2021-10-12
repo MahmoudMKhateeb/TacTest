@@ -22,6 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
@@ -30,10 +31,12 @@ using TACHYON.Authorization.Permissions.Dto;
 using TACHYON.Authorization.Roles;
 using TACHYON.Authorization.Users.Dto;
 using TACHYON.Authorization.Users.Exporting;
+using TACHYON.Configuration;
 using TACHYON.Documents.DocumentFiles;
 using TACHYON.Documents.DocumentsEntities;
 using TACHYON.Documents.DocumentTypes;
 using TACHYON.Dto;
+using TACHYON.Net.Sms;
 using TACHYON.Notifications;
 using TACHYON.Organizations.Dto;
 using TACHYON.Url;
@@ -66,6 +69,7 @@ namespace TACHYON.Authorization.Users
         private readonly DocumentFilesAppService _documentFilesAppService;
         private readonly IRepository<DocumentType, long> _documentTypeRepository;
         private readonly IRepository<DocumentFile, Guid> _documentFileRepository;
+        private readonly ISmsSender _smsSender;
         public UserAppService(
 
             IRepository<DocumentFile, Guid> documentFileRepository,
@@ -86,7 +90,9 @@ namespace TACHYON.Authorization.Users
             IRoleManagementConfig roleManagementConfig,
             UserManager userManager,
             IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository,
-            IRepository<OrganizationUnitRole, long> organizationUnitRoleRepository, DocumentFilesAppService documentFilesAppService)
+            IRepository<OrganizationUnitRole, long> organizationUnitRoleRepository,
+            DocumentFilesAppService documentFilesAppService,
+            ISmsSender smsSender)
         {
             _documentFileRepository = documentFileRepository;
             _documentTypeRepository = documentTypeRepository;
@@ -107,6 +113,7 @@ namespace TACHYON.Authorization.Users
             _userOrganizationUnitRepository = userOrganizationUnitRepository;
             _organizationUnitRoleRepository = organizationUnitRoleRepository;
             _documentFilesAppService = documentFilesAppService;
+            _smsSender = smsSender;
             _roleRepository = roleRepository;
 
             AppUrlService = NullAppUrlService.Instance;
@@ -459,6 +466,14 @@ namespace TACHYON.Authorization.Users
                     item.Name = item.Name + "_" + user.Id.ToString();
                     await _documentFilesAppService.CreateOrEdit(item);
                 }
+
+                var iosLink = await SettingManager.GetSettingValueAsync(AppSettings.Links.IosAppLink);
+                var androidLink = await SettingManager.GetSettingValueAsync(AppSettings.Links.AndroidAppLink);
+
+                await _smsSender.SendAsync(user.PhoneNumber,
+                    L(TACHYONConsts.DriverWelcomeMessage,
+                        user.FullName, androidLink
+                        , iosLink));
             }
 
 

@@ -1,24 +1,24 @@
 ﻿using Abp.Application.Features;
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
+using Abp.Linq.Extensions;
 using Abp.Runtime.Session;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using TACHYON.Features;
 using TACHYON.Net.Sms;
 using TACHYON.Notifications;
 using TACHYON.Routs.RoutPoints;
-using System.Linq.Dynamic.Core;
-using Abp.Linq.Extensions;
 using TACHYON.Url;
 
 namespace TACHYON.Shipping.ShippingRequests
 {
     public class ShippingRequestManager : TACHYONDomainServiceBase
     {
-        private readonly IRepository<RoutPoint,long> _routPointRepository;
+        private readonly IRepository<RoutPoint, long> _routPointRepository;
         private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
         private readonly IFeatureChecker _featureChecker;
         private readonly IAbpSession _abpSession;
@@ -54,17 +54,18 @@ namespace TACHYON.Shipping.ShippingRequests
         }
 
 
-  
+
         /// <summary>
         /// Send shipment code to receiver
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
-        public async  void SendSmsToReceiver(RoutPoint point,string Culture)
+        public async void SendSmsToReceiver(RoutPoint point, string Culture)
         {
-            string number= point.ReceiverPhoneNumber;
-            string message = L(TACHYONConsts.SMSShippingRequestReceiverCode, new CultureInfo(Culture) , point.Code);
-           if (point.ReceiverFk !=null)
+            string number = point.ReceiverPhoneNumber;
+            string message = L(TACHYONConsts.SMSShippingRequestReceiverCode, new CultureInfo(Culture),
+                point.WaybillNumber, point.EndTime, point.Code);
+            if (point.ReceiverFk != null)
             {
                 number = point.ReceiverFk.PhoneNumber;
             }
@@ -81,12 +82,12 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             string number = point.ReceiverPhoneNumber;
             string message = L(TACHYONConsts.SMSShippingRequestReceiverCode, point.Code);
-            message=message+" "+L("ClickToRate")+" "+WebUrlService.WebSiteRootAddressFormat +"account/RatingPage/"+point.Code;
+            message = message + " " + L("ClickToRate") + " " + WebUrlService.WebSiteRootAddressFormat + "account/RatingPage/" + point.Code;
             if (point.ReceiverFk != null)
             {
                 await _smsSender.SendAsync(point.ReceiverFk.PhoneNumber, message);
             }
-              if (!string.IsNullOrEmpty(number)) await _smsSender.SendAsync(number, message);
+            if (!string.IsNullOrEmpty(number)) await _smsSender.SendAsync(number, message);
 
         }
 
@@ -97,7 +98,7 @@ namespace TACHYON.Shipping.ShippingRequests
         /// <returns></returns>
         public async Task SendSmsToReceivers(int tripId)
         {
-            var RoutePoints = await _routPointRepository.GetAll().Include(r=>r.ReceiverFk).Where(x => x.ShippingRequestTripId == tripId && x.PickingType == PickingType.Dropoff).ToListAsync();
+            var RoutePoints = await _routPointRepository.GetAll().Include(r => r.ReceiverFk).Where(x => x.ShippingRequestTripId == tripId && x.PickingType == PickingType.Dropoff).ToListAsync();
             RoutePoints.ForEach(async p =>
             {
                 await SendSmsToReceiver(p);
@@ -112,7 +113,7 @@ namespace TACHYON.Shipping.ShippingRequests
             return await _shippingRequestRepository
                                         .GetAll()
                                         .WhereIf(await _featureChecker.IsEnabledAsync(AppFeatures.Shipper), x => x.TenantId == _abpSession.TenantId && !x.IsTachyonDeal)
-                                        .FirstOrDefaultAsync(r => r.Id == ShippingRequestId && (r.Status == ShippingRequestStatus.NeedsAction || r.Status == ShippingRequestStatus.PrePrice || r.Status== ShippingRequestStatus.AcceptedAndWaitingCarrier));
+                                        .FirstOrDefaultAsync(r => r.Id == ShippingRequestId && (r.Status == ShippingRequestStatus.NeedsAction || r.Status == ShippingRequestStatus.PrePrice || r.Status == ShippingRequestStatus.AcceptedAndWaitingCarrier));
         }
     }
 }

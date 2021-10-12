@@ -535,6 +535,12 @@
 		<text name="DriverCreationDateAndTime">تاريخ و وقت الإنشاء</text>
 		<text name="DriverDocuments">مستندات السائق</text>
 		<text name="DriverInformations">معلومات السائق</text>
+		<text name="DriverWelcomeMessageRegistrationNotification">
+			عزيزي {0} لقد تم انشاء حسابك في تطبيق تاكيون للسائقين ,اسم المستخدم الخاص بك هو رقم جوالك يمكنك تحميل التطبيق من خلال الروابط التالية : /n
+			رابط تطبيق اندرويد {1}
+			رابط تطبيق اي او اس {2}
+
+		</text>
 		<text name="DriverName">اسم السائق</text>
 		<text name="DriverRejectTrip">
 			<a href="/app/main/shippingRequests/shippingRequests/view?id={id}">السائق {driver} لقد رفض الرحلة من {source} إلى {destination}</a>
@@ -1495,7 +1501,11 @@
 		</text>
 		<text name="ShippingRequestPrice">سعر طلب الشحن</text>
 		<text name="ShippingRequestProperties">خصائص طلب الشحن</text>
-		<text name="ShippingRequestReceiverCode">رقم الشحنة الخاصة بك هي:{0}</text>
+		<text name="ShippingRequestReceiverCode">
+			مرحباً من تاكيون \n\n
+			الشحنة رقم {0} في طريقها . ومن المتوقع ان تصل في {1} ، يرجى إعطاء الرمز للسائق عند اكتمال التسليم\n
+			الرمز:{2}
+		</text>
 		<text name="ShippingRequests">طلبات الشحن</text>
 		<text name="ShippingRequestsCreate">إنشاء طلب شحن</text>
 		<text name="ShippingRequestsEdit">تعديل طلب الشحن</text>
@@ -1526,8 +1536,8 @@
 		<text name="SingleDrop">ذهاب فقط</text>
 		<text name="Sms">SMS - رسائل قصيرة</text>
 		<text name="SMSOTP">
-			رمز كلمة المرور المؤقتة هو
-			رمز:{0}
+			الرجاء استخدام الرمز التالي لتسجيل الدخول
+			الرمز:{0}
 		</text>
 		<text name="SmsSecurityCodeMessage">رمز الأمان الخاص بك هو</text>
 		<text name="SMSSettings">إعدادات الرسائل النصية</text>
