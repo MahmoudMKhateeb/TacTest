@@ -119,7 +119,7 @@ namespace TACHYON.Goods.GoodCategories
                     throw new UserFriendlyException(L("DisplayNameCannotBeEmpty"));
                 }
                 var isDuplicateUserName = await _goodCategoryRepository
-                   .FirstOrDefaultAsync(x => x.Translations.Any(x => x.DisplayName == transItem.DisplayName) &&
+                   .FirstOrDefaultAsync(x => x.Translations.Any(i => i.DisplayName == transItem.DisplayName) &&
                    x.FatherId == input.FatherId &&
                    x.Id != input.Id);
                 if (isDuplicateUserName != null)

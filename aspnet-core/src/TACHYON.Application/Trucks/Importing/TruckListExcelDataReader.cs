@@ -1,14 +1,14 @@
-﻿using System;
+﻿using Abp.Domain.Repositories;
+using Abp.Extensions;
+using Abp.Localization;
+using Abp.Localization.Sources;
+using NPOI.SS.UserModel;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlTypes;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using Abp.Domain.Repositories;
-using Abp.Extensions;
-using Abp.Localization;
-using Abp.Localization.Sources;
-using NPOI.SS.UserModel;
 using TACHYON.DataExporting.Excel;
 using TACHYON.DataExporting.Excel.NPOI;
 using TACHYON.Documents.DocumentFiles.Dtos;
@@ -301,7 +301,7 @@ namespace TACHYON.Trucks.Importing
             }
 
             // get truckType English 
-            TrucksType trucksType = _trucksTypeRepository.GetAllIncluding(x=>x.Translations).FirstOrDefault(x => x.Translations.Any(x=>x.TranslatedDisplayName.ToLower() == text.ToLower()));
+            TrucksType trucksType = _trucksTypeRepository.GetAllIncluding(x => x.Translations).FirstOrDefault(x => x.Translations.Any(i => i.TranslatedDisplayName.ToLower() == text.ToLower()));
             if (trucksType == null)
             {
                 //Translated name 

@@ -99,7 +99,7 @@ namespace TACHYON.Trucks.TrucksTypes
                     throw new UserFriendlyException(L("DisplayNameCannotBeEmpty"));
                 }
                 var isDuplicateUserName = await _trucksTypeRepository
-                   .FirstOrDefaultAsync(x => x.Translations.Any(x => x.TranslatedDisplayName == transItem.TranslatedDisplayName) &&
+                   .FirstOrDefaultAsync(x => x.Translations.Any(i => i.TranslatedDisplayName == transItem.TranslatedDisplayName) &&
                    x.TransportTypeId == input.TransportTypeId &&
                    x.Id != input.Id);
                 if (isDuplicateUserName != null)
