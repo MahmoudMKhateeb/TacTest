@@ -38,10 +38,10 @@ namespace TACHYON.Authorization
 
 
 
-            var receivers = pages.CreateChildPermission(AppPermissions.Pages_Receivers, L("Receivers"), multiTenancySides: MultiTenancySides.Tenant);
-            receivers.CreateChildPermission(AppPermissions.Pages_Receivers_Create, L("CreateNewReceiver"), multiTenancySides: MultiTenancySides.Tenant);
-            receivers.CreateChildPermission(AppPermissions.Pages_Receivers_Edit, L("EditReceiver"), multiTenancySides: MultiTenancySides.Tenant);
-            receivers.CreateChildPermission(AppPermissions.Pages_Receivers_Delete, L("DeleteReceiver"), multiTenancySides: MultiTenancySides.Tenant);
+            var receivers = pages.CreateChildPermission(AppPermissions.Pages_Receivers, L("Receivers"));
+            receivers.CreateChildPermission(AppPermissions.Pages_Receivers_Create, L("CreateNewReceiver"));
+            receivers.CreateChildPermission(AppPermissions.Pages_Receivers_Edit, L("EditReceiver"));
+            receivers.CreateChildPermission(AppPermissions.Pages_Receivers_Delete, L("DeleteReceiver"));
 
             var citiesTranslations = pages.CreateChildPermission(AppPermissions.Pages_CitiesTranslations, L("CitiesTranslations"), multiTenancySides: MultiTenancySides.Host);
             citiesTranslations.CreateChildPermission(AppPermissions.Pages_CitiesTranslations_Create, L("CreateNewCitiesTranslation"), multiTenancySides: MultiTenancySides.Host);
