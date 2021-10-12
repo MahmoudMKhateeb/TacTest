@@ -22,99 +22,149 @@
         </div>
 
         <div class="modal-body">
-          <div class="form-group">
-            <label for="Name">{{ 'TenantName' | localize }} *</label>
-            <input
-              id="Name"
-              #nameInput="ngModel"
-              type="text"
-              name="Name"
-              class="form-control"
-              [ngClass]="{ edited: tenant.name }"
-              [(ngModel)]="tenant.name"
-              required
-              maxlength="128"
-            />
-            <validation-messages [formCtrl]="nameInput"></validation-messages>
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group">
+                <label for="companyName">{{ 'CompanyUniqueName' | localize }}</label>
+                <input
+                  #companyName="ngModel"
+                  id="companyName"
+                  type="text"
+                  placeholder="{{ 'CompanyUniqueName' | localize }}"
+                  name="companyName"
+                  class="form-control"
+                  [(ngModel)]="tenant.companyName"
+                  maxlength="32"
+                  required
+                />
+                <span class="form-text text-muted">{{ l('Enter') }} {{ l('companyName') }}</span>
+                <validation-messages [formCtrl]="companyName"></validation-messages>
+              </div>
+            </div>
+
+            <div class="col-6">
+              <div class="form-group">
+                <label for="Name">{{ 'CompanyFullLeagalName' | localize }} *</label>
+                <input
+                  id="Name"
+                  #nameInput="ngModel"
+                  type="text"
+                  placeholder="{{ 'CompanyFullLeagalName' | localize }}"
+                  name="Name"
+                  class="form-control"
+                  [ngClass]="{ edited: tenant.name }"
+                  [(ngModel)]="tenant.name"
+                  required
+                  maxlength="128"
+                />
+                <div>
+                  <span class="form-text text-muted">{{ l('Enter') }} {{ l('CompanyFullLeagalName') }}</span>
+                </div>
+                <validation-messages [formCtrl]="nameInput"></validation-messages>
+              </div>
+            </div>
           </div>
 
-          <div class="form-group" *ngIf="currentConnectionString">
-            <label for="DatabaseConnectionString">{{ 'DatabaseConnectionString' | localize }} *</label>
-            <input
-              id="DatabaseConnectionString"
-              #connectionStringInput="ngModel"
-              type="text"
-              name="ConnectionString"
-              class="form-control"
-              [(ngModel)]="tenant.connectionString"
-              required
-              maxlength="1024"
-            />
-            <validation-messages [formCtrl]="connectionStringInput"></validation-messages>
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group">
+                <select
+                  (change)="CountryChanged($event)"
+                  #countrySelect="ngModel"
+                  class="form-control form-control-lg custom-select mr-sm-2"
+                  name="tenant.countryId"
+                  [(ngModel)]="tenant.countryId"
+                  required
+                >
+                  <option [ngValue]="null">{{ l('Select') }} {{ l('Country') }}</option>
+                  <option *ngFor="let country of allCountries" value="{{ country.id }}">{{ country.displayName }}</option>
+                </select>
+                <!-- <span class="form-text text-danger" *ngIf="countrySelect.value == -2 && countrySelect.touched">Country is required</span> -->
+                <validation-messages [formCtrl]="countrySelect"></validation-messages>
+              </div>
+            </div>
+
+            <div class="col-6">
+              <div class="form-group">
+                <select
+                  [disabled]="!isCountySelected"
+                  #citySelect="ngModel"
+                  class="form-control form-control-lg custom-select mr-sm-2"
+                  name="tenant.cityId"
+                  [(ngModel)]="tenant.cityId"
+                  required
+                >
+                  <option [ngValue]="null">{{ l('Select') }} {{ l('City') }}</option>
+                  <option *ngFor="let city of allCities" value="{{ city.id }}">{{ city.displayName }}</option>
+                  <option value="-1">{{ l('Other') }}</option>
+                </select>
+                <!-- <span class="form-text text-danger" *ngIf="citySelect.value == -2 && citySelect.touched">City is required</span> -->
+                <validation-messages [formCtrl]="citySelect"></validation-messages>
+              </div>
+            </div>
           </div>
 
-          <div *ngIf="currentConnectionString">
-            <span class="help-block text-warning">{{ 'TenantDatabaseConnectionStringChangeWarningMessage' | localize }}</span>
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group">
+                <label>{{ 'Address' | localize }}</label>
+
+                <input
+                  #addressInput="ngModel"
+                  class="form-control py-7 font-size-h6"
+                  type="Address"
+                  placeholder="{{ 'AddressFormat' | localize }} *"
+                  [(ngModel)]="tenant.address"
+                  name="Address"
+                  required
+                  maxlength="128"
+                />
+                <validation-messages [formCtrl]="addressInput"></validation-messages>
+                <span class="form-text text-muted"> {{ l('Enter') }} {{ l('Address') }}</span>
+                <span class="form-text text-muted"> {{ l('Format') }} :{{ l('AddressFormat') }}</span>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group">
+                <label>{{ 'MoiNumber' | localize }}</label>
+                <input
+                  #MoiNumber="ngModel"
+                  class="form-control py-7 font-size-h6"
+                  autoFocus
+                  (change)="checkIfIsCompanyUniqueMoiNumber()"
+                  [(ngModel)]="tenant.moiNumber"
+                  name="MoiNumber"
+                  required
+                  style="width: 100% !important"
+                  maxlength="10"
+                  minlength="10"
+                  pattern="^7\d{9}$"
+                  placeholder="7_________"
+                />
+                <div>
+                  <validation-messages [formCtrl]="MoiNumber"></validation-messages>
+                  <span class="form-text text-muted">{{ l('NumbersOnly') }}</span>
+                  <span *ngIf="!isMoiNumberAvailable && MoiNumber.valid" class="form-text text-danger text-left"
+                    >{{ 'MoiNumber' | localize }} {{ 'AlreadyTaken' | localize }}</span
+                  >
+                </div>
+              </div>
+            </div>
           </div>
+
+          <!--          <div class="checkbox-list">-->
+          <!--            <label class="checkbox">-->
+          <!--              <input id="CreateTenant_UseHostDb" type="checkbox" name="UseHostDb" [(ngModel)]="useHostDb" />-->
+          <!--              {{ 'UseHostDatabase' | localize }}-->
+          <!--              <span></span>-->
+          <!--            </label>-->
+          <!--          </div>-->
 
           <div class="form-group">
             <label for="edition">{{ 'Edition' | localize }}</label>
             <select id="edition" name="edition" class="form-control" [(ngModel)]="tenant.editionId" (change)="onEditionChange()">
-              <option *ngFor="let edition of editions" [value]="edition.value">{{ edition.displayText }} </option>
+              <option *ngFor="let edition of editions" [value]="edition.value">{{ edition.displayText }}</option>
             </select>
-          </div>
-
-          <div [hidden]="!isSubscriptionFieldsVisible" class="checkbox-list margin-bottom-15">
-            <label class="checkbox">
-              <input
-                id="CreateTenant_IsUnlimited"
-                type="checkbox"
-                name="IsUnlimited"
-                [(ngModel)]="isUnlimited"
-                (ngModelChange)="onUnlimitedChange()"
-              />
-              {{ 'UnlimitedTimeSubscription' | localize }}
-              <span class="ml-2 mt-1"></span>
-            </label>
-          </div>
-          <div [hidden]="isUnlimited || !isSubscriptionFieldsVisible" class="form-group" [ngClass]="{ 'has-error': !subscriptionEndDateUtcIsValid }">
-            <label for="SubscriptionEndDateUtc">{{ 'SubscriptionEndDateUtc' | localize }}</label>
-            <div class="input-group date">
-              <input
-                type="datetime"
-                id="SubscriptionEndDateUtc"
-                #SubscriptionEndDateUtc
-                name="SubscriptionEndDateUtc"
-                class="form-control"
-                bsDatepicker
-                datePickerMomentModifier
-                (dateChange)="subscriptionEndDateChange($event)"
-                [(date)]="tenant.subscriptionEndDateUtc"
-                [bsConfig]="{ adaptivePosition: true }"
-                [required]="!isUnlimited"
-                readonly
-                placeholder="Select date"
-                [minDate]="today"
-              />
-              <div class="input-group-append">
-                <span class="input-group-text">
-                  <i class="la la-calendar-check-o"></i>
-                </span>
-              </div>
-            </div>
-          </div>
-          <div [hidden]="isUnlimited || !isSubscriptionFieldsVisible" class="checkbox-list margin-bottom-15">
-            <label class="checkbox">
-              <input
-                id="CreateTenant_IsInTrialPeriod"
-                type="checkbox"
-                name="IsInTrialPeriod"
-                [disabled]="!selectedEditionIsFree()"
-                [(ngModel)]="tenant.isInTrialPeriod"
-              />
-              {{ 'IsInTrialPeriod' | localize }}
-              <span class="ml-2 mt-1"></span>
-            </label>
           </div>
 
           <div class="checkbox-list margin-bottom-15">
@@ -125,6 +175,7 @@
             </label>
           </div>
         </div>
+
         <div class="modal-footer">
           <button type="button" [disabled]="saving" class="btn btn-light-primary font-weight-bold" (click)="close()">
             {{ 'Cancel' | localize }}

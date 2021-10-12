@@ -37,6 +37,12 @@
     <Compile Remove="Migrations\20210822193521_Production_v1.Designer.cs" />
     <Compile Remove="Migrations\20210928115506_RemoveRatingFromPoint.cs" />
     <Compile Remove="Migrations\20210928115506_RemoveRatingFromPoint.Designer.cs" />
+    <Compile Remove="Migrations\20210929100732_add MoiNumber to tenant.cs" />
+    <Compile Remove="Migrations\20210929100732_add MoiNumber to tenant.Designer.cs" />
+    <Compile Remove="Migrations\20211001130927_change bayanPlateTypeId to string in PlateType table.cs" />
+    <Compile Remove="Migrations\20211001130927_change bayanPlateTypeId to string in PlateType table.Designer.cs" />
+    <Compile Remove="Migrations\20211001134011_update GoodCatgories table.cs" />
+    <Compile Remove="Migrations\20211001134011_update GoodCatgories table.Designer.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.5" />

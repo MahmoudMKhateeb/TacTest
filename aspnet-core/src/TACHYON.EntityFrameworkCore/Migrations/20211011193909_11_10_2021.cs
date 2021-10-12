@@ -2,7 +2,7 @@
 
 namespace TACHYON.Migrations
 {
-    public partial class changebayanPlateTypeIdtostringinPlateTypetable : Migration
+    public partial class _11_10_2021 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -21,6 +21,24 @@ namespace TACHYON.Migrations
                 maxLength: 64,
                 nullable: false,
                 defaultValue: "");
+
+            migrationBuilder.AddColumn<string>(
+                name: "BayanIntegrationId",
+                table: "GoodCategories",
+                nullable: true);
+
+            migrationBuilder.AddColumn<string>(
+                name: "Name",
+                table: "GoodCategories",
+                maxLength: 256,
+                nullable: false,
+                defaultValue: "");
+
+            migrationBuilder.AddColumn<string>(
+                name: "MoiNumber",
+                table: "AbpTenants",
+                nullable: false,
+                defaultValue: "");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -32,6 +50,18 @@ namespace TACHYON.Migrations
             migrationBuilder.DropColumn(
                 name: "Name",
                 table: "PlateTypes");
+
+            migrationBuilder.DropColumn(
+                name: "BayanIntegrationId",
+                table: "GoodCategories");
+
+            migrationBuilder.DropColumn(
+                name: "Name",
+                table: "GoodCategories");
+
+            migrationBuilder.DropColumn(
+                name: "MoiNumber",
+                table: "AbpTenants");
 
             migrationBuilder.AddColumn<int>(
                 name: "BayanPlatetypeId",
