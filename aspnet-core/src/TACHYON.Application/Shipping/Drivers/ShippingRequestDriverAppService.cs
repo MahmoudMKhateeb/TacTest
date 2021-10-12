@@ -552,6 +552,13 @@ namespace TACHYON.Shipping.Drivers
                 await _shippingRequestTripTransitionRepository.DeleteAsync(x => x.ToPoint.ShippingRequestTripId == trip.Id);
 
                 trip.HasAccident = false;
+                //to save current trip incident
+                await CurrentUnitOfWork.SaveChangesAsync();
+
+                if (await CheckRequestTripsHasNoIncidents(request))
+                {
+                    request.HasAccident = false;
+                }
                 await _shippingRequestTripAccidentRepository.DeleteAsync(x => x.RoutPointFK.ShippingRequestTripId == trip.Id);
 
             }
@@ -559,6 +566,11 @@ namespace TACHYON.Shipping.Drivers
             {
                 throw new UserFriendlyException(L("TripCannotFound"));
             }
+        }
+
+        private async Task<bool> CheckRequestTripsHasNoIncidents(ShippingRequest request)
+        {
+            return await _ShippingRequestTrip.CountAsync(x => x.ShippingRequestId == request.Id && x.HasAccident) == 0;
         }
 
         public async Task PushNotification(int id)
