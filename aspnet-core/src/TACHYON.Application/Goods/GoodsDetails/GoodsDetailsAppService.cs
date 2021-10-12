@@ -252,6 +252,8 @@ namespace TACHYON.Goods.GoodsDetails
                 x.ShippingRequestTripId == shippingRequestTripId && x.PickingType == PickingType.Dropoff);
 
             var goods = _goodsDetailRepository.GetAll()
+                .Include(x => x.GoodCategoryFk)
+                .ThenInclude(x => x.Translations)
                 .Where(x => x.RoutPointId == dropPoint.Id);
 
             var query = goods.Select(x => new
@@ -259,7 +261,8 @@ namespace TACHYON.Goods.GoodsDetails
                 Description = x.Description,
                 TotalAmount = x.Amount,
                 Weight = x.Weight,
-                UnitOfMeasureDisplayName = x.UnitOfMeasureFk.DisplayName
+                UnitOfMeasureDisplayName = x.UnitOfMeasureFk.DisplayName,
+                SubCategory = x.GoodCategoryFk
             });
 
             var output = query.ToList().Select(e =>
@@ -268,6 +271,8 @@ namespace TACHYON.Goods.GoodsDetails
                     UnitOfMeasureDisplayName = e.UnitOfMeasureDisplayName,
                     TotalAmount = e.TotalAmount,
                     Description = e.Description,
+                    SubCategory = ObjectMapper.Map<GoodCategoryDto>(e.SubCategory)?.DisplayName
+
                 });
             return output;
         }
@@ -275,6 +280,8 @@ namespace TACHYON.Goods.GoodsDetails
         public IEnumerable<GetGoodsDetailsForWaybillsOutput> GetShippingrequestGoodsDetailsForMultipleDropWaybill(long RoutPointId)
         {
             var goods = _goodsDetailRepository.GetAll()
+                .Include(x => x.GoodCategoryFk)
+                .ThenInclude(x => x.Translations)
                 .Where(x => x.RoutPointId == RoutPointId);
 
             var query = goods.Select(x => new
@@ -282,7 +289,8 @@ namespace TACHYON.Goods.GoodsDetails
                 Description = x.Description,
                 //Amount which will be dropped
                 TotalAmount = x.Amount,
-                UnitOfMeasureDisplayName = x.UnitOfMeasureFk.DisplayName
+                UnitOfMeasureDisplayName = x.UnitOfMeasureFk.DisplayName,
+                SubCategory = x.GoodCategoryFk
             });
 
             var output = query.ToList().Select(e =>
@@ -291,6 +299,7 @@ namespace TACHYON.Goods.GoodsDetails
                     UnitOfMeasureDisplayName = e.UnitOfMeasureDisplayName,
                     TotalAmount = e.TotalAmount,
                     Description = e.Description,
+                    SubCategory = ObjectMapper.Map<GoodCategoryDto>(e.SubCategory)?.DisplayName
                 });
             return output;
         }

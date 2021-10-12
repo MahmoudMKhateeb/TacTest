@@ -11,5 +11,6 @@ namespace TACHYON.Goods.GoodsDetails.Dtos
         public int TotalAmount { get; set; }
 
         public string UnitOfMeasureDisplayName { get; set; }
+        public string SubCategory { get; set; }
     }
 }

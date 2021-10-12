@@ -2907,6 +2907,12 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
+                                  <Value>+966</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
                                   <Value>=Fields!Mobile.Value</Value>
                                   <Style>
                                     <FontSize>8pt</FontSize>

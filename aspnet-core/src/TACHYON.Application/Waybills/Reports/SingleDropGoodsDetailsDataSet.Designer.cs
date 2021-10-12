@@ -295,6 +295,8 @@ namespace TACHYON.Waybills.Reports {
             
             private global::System.Data.DataColumn columnTotalWeight;
             
+            private global::System.Data.DataColumn columnSubCategory;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public DataTable1DataTable() {
@@ -394,6 +396,14 @@ namespace TACHYON.Waybills.Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn SubCategoryColumn {
+                get {
+                    return this.columnSubCategory;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -429,7 +439,7 @@ namespace TACHYON.Waybills.Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public DataTable1Row AddDataTable1Row(string Name, string Description, string TotalAmount, string GoodCategoryDisplayName, string UnitOfMeasureDisplayName, string PackingType, string NumberOfPacking, string TotalWeight) {
+            public DataTable1Row AddDataTable1Row(string Name, string Description, string TotalAmount, string GoodCategoryDisplayName, string UnitOfMeasureDisplayName, string PackingType, string NumberOfPacking, string TotalWeight, string SubCategory) {
                 DataTable1Row rowDataTable1Row = ((DataTable1Row)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         Name,
@@ -439,7 +449,8 @@ namespace TACHYON.Waybills.Reports {
                         UnitOfMeasureDisplayName,
                         PackingType,
                         NumberOfPacking,
-                        TotalWeight};
+                        TotalWeight,
+                        SubCategory};
                 rowDataTable1Row.ItemArray = columnValuesArray;
                 this.Rows.Add(rowDataTable1Row);
                 return rowDataTable1Row;
@@ -470,6 +481,7 @@ namespace TACHYON.Waybills.Reports {
                 this.columnPackingType = base.Columns["PackingType"];
                 this.columnNumberOfPacking = base.Columns["NumberOfPacking"];
                 this.columnTotalWeight = base.Columns["TotalWeight"];
+                this.columnSubCategory = base.Columns["SubCategory"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -491,6 +503,8 @@ namespace TACHYON.Waybills.Reports {
                 base.Columns.Add(this.columnNumberOfPacking);
                 this.columnTotalWeight = new global::System.Data.DataColumn("TotalWeight", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnTotalWeight);
+                this.columnSubCategory = new global::System.Data.DataColumn("SubCategory", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnSubCategory);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -761,6 +775,22 @@ namespace TACHYON.Waybills.Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string SubCategory {
+                get {
+                    try {
+                        return ((string)(this[this.tableDataTable1.SubCategoryColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'SubCategory\' in table \'DataTable1\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableDataTable1.SubCategoryColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public bool IsNameNull() {
                 return this.IsNull(this.tableDataTable1.NameColumn);
             }
@@ -853,6 +883,18 @@ namespace TACHYON.Waybills.Reports {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public void SetTotalWeightNull() {
                 this[this.tableDataTable1.TotalWeightColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsSubCategoryNull() {
+                return this.IsNull(this.tableDataTable1.SubCategoryColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetSubCategoryNull() {
+                this[this.tableDataTable1.SubCategoryColumn] = global::System.Convert.DBNull;
             }
         }
         
