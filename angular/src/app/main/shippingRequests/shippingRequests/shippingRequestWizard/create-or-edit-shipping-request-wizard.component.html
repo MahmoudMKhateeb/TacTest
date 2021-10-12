@@ -255,6 +255,34 @@
                           </div>
                         </div>
                       </div>
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <label>{{ l('ShipperReference') }} </label>
+                          <div class="input-group date">
+                            <input
+                              formControlName="ShipperReference"
+                              class="form-control"
+                              type="text"
+                              name="ShipperReference"
+                              [(ngModel)]="step1Dto.shipperReference"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <label>{{ l(' ShipperInvoiceNumber') }}</label>
+                          <div class="input-group date">
+                            <input
+                              formControlName="ShipperInvoiceNumber"
+                              class="form-control"
+                              type="text"
+                              name="ShipperInvoiceNumber"
+                              [(ngModel)]="step1Dto.shipperInvoiceNo"
+                            />
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <!--end: Form Wizard Step 1-->
