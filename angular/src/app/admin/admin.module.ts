@@ -138,6 +138,7 @@ import { NotRequiredDocumentFilesComponent } from '@app/admin/not-required-docum
 import { DevExtremeModule } from '@node_modules/devextreme-angular';
 import { TruckStatusesTranslationsTemplateComponent } from './trucks/truckStatuses/truck-statuses-translations-template/truck-statuses-translations-template.component';
 import { VasesTranslationsTemplateComponent } from './vases/vases/vases-translations-template/vases-translations-template.component';
+import { RatingModule } from '@node_modules/primeng/rating';
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   // suppressScrollX: true
 };
@@ -175,6 +176,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     AppBsModalModule,
     NgbModule,
     DevExtremeModule,
+    RatingModule,
   ],
   declarations: [
     VasesComponent,

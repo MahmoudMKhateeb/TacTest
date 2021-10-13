@@ -7,7 +7,7 @@ namespace TACHYON.Authorization.Users.Profile.Dto
     public class UpdateTenantProfileInformationInputDto : EntityDto
     {
         [Required]
-        [StringLength(80, MinimumLength = 5)]
+        [StringLength(80, MinimumLength = 2)]
         public string CompanyName { get; set; }
         [Required]
         [StringLength(500, MinimumLength = 10)]
