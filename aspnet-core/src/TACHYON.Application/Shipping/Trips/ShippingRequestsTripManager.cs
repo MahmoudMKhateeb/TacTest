@@ -42,7 +42,6 @@ namespace TACHYON.Shipping.Trips
         private readonly IRepository<ShippingRequestTrip> _shippingRequestTrip;
         private readonly PriceOfferManager _priceOfferManager;
         private readonly IAppNotifier _appNotifier;
-        private readonly ISettingManager _settingManager;
         private readonly IFeatureChecker _featureChecker;
         private readonly IAbpSession _abpSession;
         private readonly IHubContext<AbpCommonHub> _hubContext;
@@ -56,12 +55,11 @@ namespace TACHYON.Shipping.Trips
         private readonly CommonManager _commonManager;
         private readonly UserManager UserManager;
 
-        public ShippingRequestsTripManager(IRepository<ShippingRequestTrip> shippingRequestTrip, PriceOfferManager priceOfferManager, IAppNotifier appNotifier, ISettingManager settingManager, IFeatureChecker featureChecker, IAbpSession abpSession, IHubContext<AbpCommonHub> hubContext, IRepository<RoutPoint, long> routPointRepository, IRepository<ShippingRequestTripTransition> shippingRequestTripTransitionRepository, IRepository<RoutPointStatusTransition> routPointStatusTransitionRepository, FirebaseNotifier firebaseNotifier, ISmsSender smsSender, InvoiceManager invoiceManager, CommonManager commonManager, IRepository<RoutPointDocument, long> routPointDocumentRepository, UserManager userManager)
+        public ShippingRequestsTripManager(IRepository<ShippingRequestTrip> shippingRequestTrip, PriceOfferManager priceOfferManager, IAppNotifier appNotifier, IFeatureChecker featureChecker, IAbpSession abpSession, IHubContext<AbpCommonHub> hubContext, IRepository<RoutPoint, long> routPointRepository, IRepository<ShippingRequestTripTransition> shippingRequestTripTransitionRepository, IRepository<RoutPointStatusTransition> routPointStatusTransitionRepository, FirebaseNotifier firebaseNotifier, ISmsSender smsSender, InvoiceManager invoiceManager, CommonManager commonManager, IRepository<RoutPointDocument, long> routPointDocumentRepository, UserManager userManager)
         {
             _shippingRequestTrip = shippingRequestTrip;
             _priceOfferManager = priceOfferManager;
             _appNotifier = appNotifier;
-            _settingManager = settingManager;
             _featureChecker = featureChecker;
             _abpSession = abpSession;
             _hubContext = hubContext;
