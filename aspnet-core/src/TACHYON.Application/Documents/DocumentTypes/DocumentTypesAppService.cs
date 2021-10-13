@@ -1,16 +1,19 @@
-﻿using Abp.Application.Services.Dto;
+﻿using Abp.Application.Editions;
+using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Abp.UI;
+using AutoMapper.QueryableExtensions;
+using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Rest;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Abp.Application.Editions;
-using Microsoft.Rest;
 using TACHYON.Authorization;
 using TACHYON.Documents.DocumentsEntities;
 using TACHYON.Documents.DocumentTypes.Dtos;
@@ -18,11 +21,8 @@ using TACHYON.Documents.DocumentTypes.Exporting;
 using TACHYON.Documents.DocumentTypeTranslations;
 using TACHYON.Documents.DocumentTypeTranslations.Dtos;
 using TACHYON.Dto;
-using TACHYON.Storage;
-using Abp.Domain.Uow;
-using AutoMapper.QueryableExtensions;
-using DevExtreme.AspNet.Data.ResponseModel;
 using TACHYON.MultiTenancy;
+using TACHYON.Storage;
 
 namespace TACHYON.Documents.DocumentTypes
 {
@@ -273,14 +273,14 @@ namespace TACHYON.Documents.DocumentTypes
         private bool ValidateDisplayNameDuplication(string documentTypeName, long? id)
         {
             var result = _documentTypeRepository
-                .FirstOrDefault(x => x.DisplayName.Trim().ToLower() == documentTypeName.Trim().ToLower() && x.Id != id);
+                .FirstOrDefault(x => x.DisplayName.Trim().ToLower() == documentTypeName.Trim().ToLower() && x.Id != id && x.DocumentRelatedWithId == null);
 
             if (result == null)
             {
                 return true;
             }
 
-            throw new ValidationException(L("DuplicateDocumentTypeName"));
+            throw new UserFriendlyException(L("DuplicateDocumentTypeName"));
         }
 
         [AbpAllowAnonymous]
