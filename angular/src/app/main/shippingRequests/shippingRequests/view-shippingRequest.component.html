@@ -360,7 +360,10 @@
       <!--  start:: DirectOffers      -->
 
       <ng-template [ngIf]="canSeeDirectRequests()">
-        <direct-request [shippingRequestId]="activeShippingRequestId"></direct-request>
+        <direct-request
+          [shippingRequestId]="activeShippingRequestId"
+          [ShippingRequestStatus]="shippingRequestforView.shippingRequest.status"
+        ></direct-request>
       </ng-template>
       <!--  end:: DirectOffers        -->
 
