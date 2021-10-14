@@ -164,6 +164,11 @@ namespace TACHYON
         {
             configuration.CreateMap<CreateOrEditDangerousGoodTypeDto, DangerousGoodType>().ReverseMap();
             configuration.CreateMap<DangerousGoodTypeDto, DangerousGoodType>().ReverseMap();
+            configuration.CreateMap<DangerousGoodTypeTranslation, DangerousGoodTypeTranslationDto>()
+                .ForMember(dest => dest.Name,
+                    dest =>
+                        dest.MapFrom(src => src.TranslatedName));
+            configuration.CreateMap<CreateOrEditDangerousGoodTypeTranslationDto, DangerousGoodTypeTranslation>();
             configuration.CreateMap<CreateOrEditCitiesTranslationDto, CitiesTranslation>().ReverseMap();
             configuration.CreateMap<CitiesTranslationDto, CitiesTranslation>().ReverseMap();
             configuration.CreateMap<CreateOrEditCountriesTranslationDto, CountriesTranslation>().ReverseMap();

@@ -83,6 +83,7 @@ namespace TACHYON.EntityFrameworkCore
     public class TACHYONDbContext : AbpZeroDbContext<Tenant, Role, User, TACHYONDbContext>, IAbpPersistedGrantDbContext
     {
         public virtual DbSet<DangerousGoodType> DangerousGoodTypes { get; set; }
+        public virtual DbSet<DangerousGoodTypeTranslation> DangerousGoodTypeTranslations { get; set; }
 
         public virtual DbSet<CitiesTranslation> CitiesTranslations { get; set; }
 
