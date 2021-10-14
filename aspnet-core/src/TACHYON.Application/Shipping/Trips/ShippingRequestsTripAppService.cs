@@ -9,6 +9,7 @@ using Abp.Linq.Extensions;
 using Abp.Timing;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
+using MimeKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,7 @@ using TACHYON.Documents.DocumentFiles;
 using TACHYON.Documents.DocumentFiles.Dtos;
 using TACHYON.Documents.DocumentTypes;
 using TACHYON.Documents.DocumentTypes.Dtos;
+using TACHYON.Dto;
 using TACHYON.Features;
 using TACHYON.Firebases;
 using TACHYON.Goods.GoodCategories;
@@ -33,6 +35,8 @@ using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips.Dto;
 using TACHYON.Shipping.Trips.RejectReasons.Dtos;
 using TACHYON.ShippingRequestTripVases;
+using TACHYON.Storage;
+
 namespace TACHYON.Shipping.Trips
 {
     [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips)]
@@ -52,6 +56,10 @@ namespace TACHYON.Shipping.Trips
         private readonly IRepository<DocumentFile, Guid> _documentFileRepository;
         private readonly DocumentFilesManager _documentFilesManager;
         private readonly IRepository<DocumentType, long> _documentTypeRepository;
+        private readonly IBinaryObjectManager _binaryObjectManager;
+        private readonly ITempFileCacheManager _tempFileCacheManager;
+
+
 
 
         public ShippingRequestsTripAppService(
@@ -63,7 +71,7 @@ namespace TACHYON.Shipping.Trips
             UserManager userManager,
             IAppNotifier appNotifier,
             IFirebaseNotifier firebase,
-            ShippingRequestManager shippingRequestManager, DocumentFilesAppService documentFilesAppService, IRepository<GoodCategory> goodCategoryRepository, IRepository<DocumentFile, Guid> documentFileRepository, DocumentFilesManager documentFilesManager, IRepository<DocumentType, long> documentTypeRepository)
+            ShippingRequestManager shippingRequestManager, DocumentFilesAppService documentFilesAppService, IRepository<GoodCategory> goodCategoryRepository, IRepository<DocumentFile, Guid> documentFileRepository, DocumentFilesManager documentFilesManager, IRepository<DocumentType, long> documentTypeRepository, IBinaryObjectManager binaryObjectManager, ITempFileCacheManager tempFileCacheManager)
         {
             _shippingRequestTripRepository = shippingRequestTripRepository;
             _shippingRequestRepository = shippingRequestRepository;
@@ -79,6 +87,8 @@ namespace TACHYON.Shipping.Trips
             _documentFileRepository = documentFileRepository;
             _documentFilesManager = documentFilesManager;
             this._documentTypeRepository = documentTypeRepository;
+            _binaryObjectManager = binaryObjectManager;
+            _tempFileCacheManager = tempFileCacheManager;
         }
 
 
@@ -215,6 +225,33 @@ namespace TACHYON.Shipping.Trips
             }
 
 
+        }
+
+
+        public async Task<FileDto> GetTripAttachmentFileDto(int id)
+        {
+            DisableTenancyFilters();
+            var documentFile = new DocumentFile();
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant))
+            {
+                var user = await _userManager.FindByIdAsync(AbpSession.UserId.ToString());
+                documentFile = await _documentFileRepository.GetAll()
+                   .WhereIf(IsEnabled(AppFeatures.Shipper), x => x.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId)
+                   .WhereIf(IsEnabled(AppFeatures.Carrier), x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
+                   .WhereIf(user.IsDriver, x => x.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId)
+                   .FirstOrDefaultAsync(x => x.ShippingRequestTripId == id && x.ShippingRequestTripFk.HasAttachment);
+            }
+            if (documentFile == null)
+            {
+                throw new UserFriendlyException(L("TheFileIsNotFound"));
+            }
+
+            var binaryObject = await _binaryObjectManager.GetOrNullAsync(documentFile.BinaryObjectId.Value);
+            var file = new FileDto(documentFile.Name, documentFile.Extn);
+
+            _tempFileCacheManager.SetFile(file.FileToken, binaryObject.Bytes);
+
+            return file;
         }
 
         private void ValidateTotalweight(CreateOrEditShippingRequestTripDto input, ShippingRequest request)
