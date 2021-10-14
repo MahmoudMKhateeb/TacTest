@@ -134,7 +134,6 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     if (this.trip.originFacilityId == this.trip.destinationFacilityId) {
       this.shippingRequestTripsForm.controls['sourceFacility'].setErrors({ invalid: true });
       this.shippingRequestTripsForm.controls['destFacility'].setErrors({ invalid: true });
-      this.notify.error(this.l('OriginFacilityAndDestinationFacilityCantBeTheSame'));
     } else {
       this.shippingRequestTripsForm.controls['sourceFacility'].setErrors(null);
       this.shippingRequestTripsForm.controls['destFacility'].setErrors(null);
