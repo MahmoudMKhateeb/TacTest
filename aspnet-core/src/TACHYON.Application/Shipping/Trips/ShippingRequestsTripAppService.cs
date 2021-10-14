@@ -387,7 +387,7 @@ namespace TACHYON.Shipping.Trips
         }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Acident_Cancel)]
-        public async Task CancelByAccident(long id)
+        public async Task CancelByAccident(long id, bool isForce)
         {
             DisableTenancyFilters();
             var trip = await _shippingRequestTripRepository.GetAll().Include(x => x.ShippingRequestFk)
@@ -411,8 +411,15 @@ namespace TACHYON.Shipping.Trips
                 }
                 else if (IsEnabled(AppFeatures.TachyonDealer))
                 {
-                    trip.IsApproveCancledByShipper = true;
-                    trip.IsApproveCancledByCarrier = true;
+                    if (isForce)
+                    {
+                        trip.IsApproveCancledByTachyonDealer = true;
+                        trip.IsForcedCanceledByTachyonDealer = true;
+                    }
+                    else
+                    {
+                        trip.IsApproveCancledByTachyonDealer = true;
+                    }
                     userIdentifiers.Add(await GetAdminTenant((int)trip.ShippingRequestFk.CarrierTenantId));
                     userIdentifiers.Add(new UserIdentifier(trip.ShippingRequestFk.TenantId, (long)trip.ShippingRequestFk.CreatorUserId));
 
@@ -421,9 +428,10 @@ namespace TACHYON.Shipping.Trips
                 //send notification to tachyon dealer in every request canceled
                 userIdentifiers.Add(await _userManager.GetTachyonDealerUserIdentifierAsync());
 
-                if (trip.IsApproveCancledByShipper && trip.IsApproveCancledByCarrier)
+                if ((!trip.ShippingRequestFk.IsTachyonDeal && trip.IsApproveCancledByShipper && trip.IsApproveCancledByCarrier) ||
+                    (trip.IsForcedCanceledByTachyonDealer) ||
+                (!trip.IsForcedCanceledByTachyonDealer && trip.ShippingRequestFk.IsTachyonDeal && trip.IsApproveCancledByShipper && trip.IsApproveCancledByCarrier && trip.IsApproveCancledByTachyonDealer))
                 {
-
                     if (!_shippingRequestTripRepository.GetAll().Any(x => x.Id != trip.Id && x.HasAccident))
                     {
                         var request = trip.ShippingRequestFk;
