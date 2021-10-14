@@ -30,6 +30,7 @@ namespace TACHYON.PriceOffers.Dto
         public int NumberOfDrops { get; set; }
         public int NumberOfTrips { get; set; }
         public int NumberOfCompletedTrips { get; set; }
+        public int TotalsTripsAddByShippier { get; set; }
         public string GoodsCategory { get; set; }
         public double TotalWeight { get; set; }
         public int TotalOffers { get; set; }

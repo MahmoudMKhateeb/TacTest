@@ -102,6 +102,18 @@
                   {{ item.numberOfTrips }}
                 </p>
               </div>
+              <div>
+                <p>
+                  {{ l('CompletedTrips/NoOfTrips') }}
+                </p>
+                <p class="isNum">{{ item.numberOfCompletedTrips }}/{{ item.numberOfTrips }}</p>
+              </div>
+              <div>
+                <p>
+                  {{ l('CreatedTrips/NoOfTrips') }}
+                </p>
+                <p class="isNum">{{ item.totalsTripsAddByShippier }}/{{ item.numberOfTrips }}</p>
+              </div>
               <div class="routeType">
                 <p>
                   {{ l('routeType') }}
