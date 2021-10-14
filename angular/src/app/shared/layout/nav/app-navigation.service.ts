@@ -463,7 +463,7 @@ export class AppNavigationService {
         '',
         [],
         [
-          new AppMenuItem('ShippingTypes', 'Pages.ShippingTypes', '', '/app/main/shippingTypes/shippingTypes'),
+          // new AppMenuItem('ShippingTypes', 'Pages.ShippingTypes', '', '/app/main/shippingTypes/shippingTypes'),
           new AppMenuItem('Routes', 'Pages.RoutTypes', '', '/app/main/routs/routes'),
           new AppMenuItem('GoodCategories', 'Pages.GoodCategories', '', '/app/main/goodCategories/goodCategories'),
           new AppMenuItem('DangerousGoodTypes', 'Pages.DangerousGoodTypes', '', '/app/main/goods/dangerousGoodTypes'),
