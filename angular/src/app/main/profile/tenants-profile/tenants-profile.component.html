@@ -27,19 +27,20 @@
   <div class="row">
     <!--    section Facilities Table - 6-->
     <profile-shipper-facilities
-      *ngIf="giveUserEditionType == 2"
+      *ngIf="giveUserEditionType == 2 && (isTMS || isShipper)"
       [giverUserId]="givenId"
       (emitFacilityCordinates)="drawCoordinates($event)"
     ></profile-shipper-facilities>
 
     <!-- section invoicing Table - 6  -->
     <div class="col-lg-12">
-      <profile-shipper-invoicing *ngIf="giveUserEditionType == 2" [giverUserId]="givenId"></profile-shipper-invoicing>
+      <profile-shipper-invoicing *ngIf="giveUserEditionType == 2 && (isTMS || isShipper)" [giverUserId]="givenId"></profile-shipper-invoicing>
     </div>
 
     <!--  section Carrier Vases    -->
-    <profile-carrier-vases *ngIf="giveUserEditionType == 3" [giverUserId]="givenId"></profile-carrier-vases>
+    <profile-carrier-vases *ngIf="giveUserEditionType == 3 && (isTMS || isCarrier)" [giverUserId]="givenId"></profile-carrier-vases>
 
-    <profile-carrier-fleet-information *ngIf="giveUserEditionType == 3" [giverUserId]="givenId"> </profile-carrier-fleet-information>
+    <profile-carrier-fleet-information *ngIf="giveUserEditionType == 3 && (isTMS || isCarrier)" [giverUserId]="givenId">
+    </profile-carrier-fleet-information>
   </div>
 </div>
