@@ -1,4 +1,5 @@
 ﻿using Abp;
+using Abp.Application.Editions;
 using Abp.Authorization;
 using Abp.Authorization.Users;
 using Abp.Configuration;
@@ -11,18 +12,17 @@ using Abp.Threading;
 using Abp.UI;
 using Abp.Zero.Configuration;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using TACHYON.Authorization.Roles;
-using TACHYON.Security;
-using Abp.Application.Editions;
 using TACHYON.Configuration;
 using TACHYON.MultiTenancy;
+using TACHYON.Security;
 
 namespace TACHYON.Authorization.Users
 {
@@ -263,6 +263,15 @@ namespace TACHYON.Authorization.Users
             var tenant = await _tenantsRepository.FirstOrDefaultAsync(x => x.Edition.Id == tachyonEditionId);
             return await GetAdminByTenantIdAsync(tenant.Id);
 
+        }
+
+        public async Task<UserIdentifier> GetTachyonDealerUserIdentifierAsync()
+        {
+            var tachyonEditionId = Convert.ToInt32(await _settingManager.GetSettingValueAsync(AppSettings.Editions.TachyonEditionId));
+            var tenant = await _tenantsRepository.FirstOrDefaultAsync(x => x.Edition.Id == tachyonEditionId);
+            var user = await GetAdminByTenantIdAsync(tenant.Id);
+
+            return new UserIdentifier(tenant.Id, user.Id);
         }
     }
 }

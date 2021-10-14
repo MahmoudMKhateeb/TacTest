@@ -417,6 +417,10 @@ namespace TACHYON.Shipping.Trips
                     userIdentifiers.Add(new UserIdentifier(trip.ShippingRequestFk.TenantId, (long)trip.ShippingRequestFk.CreatorUserId));
 
                 }
+
+                //send notification to tachyon dealer in every request canceled
+                userIdentifiers.Add(await _userManager.GetTachyonDealerUserIdentifierAsync());
+
                 if (trip.IsApproveCancledByShipper && trip.IsApproveCancledByCarrier)
                 {
 
