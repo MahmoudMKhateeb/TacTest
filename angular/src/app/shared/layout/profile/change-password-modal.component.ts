@@ -3,6 +3,7 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import { ChangePasswordInput, PasswordComplexitySetting, ProfileServiceProxy } from '@shared/service-proxies/service-proxies';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
+import { AppAuthService } from '@app/shared/common/auth/app-auth.service';
 
 @Component({
   selector: 'changePasswordModal',
@@ -17,11 +18,10 @@ export class ChangePasswordModalComponent extends AppComponentBase {
   currentPassword: string;
   password: string;
   confirmPassword: string;
-
   saving = false;
   active = false;
 
-  constructor(injector: Injector, private _profileService: ProfileServiceProxy) {
+  constructor(injector: Injector, private _profileService: ProfileServiceProxy, private _appAuthService: AppAuthService) {
     super(injector);
   }
 
@@ -62,6 +62,8 @@ export class ChangePasswordModalComponent extends AppComponentBase {
       .subscribe(() => {
         this.notify.info(this.l('YourPasswordHasChangedSuccessfully'));
         this.close();
+
+        this._appAuthService.logout(true);
       });
   }
 }
