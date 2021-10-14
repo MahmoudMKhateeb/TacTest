@@ -13,12 +13,14 @@ namespace TACHYON.Trucks.TrucksTypes
 {
     [Table("TrucksTypes")]
     [Audited]
-    public class TrucksType : FullAuditedEntity<long>, IMultiLingualEntity<TrucksTypesTranslation>, IHasDisplayName
+    public class TrucksType : FullAuditedEntity<long>, IMultiLingualEntity<TrucksTypesTranslation>, IHasKey
     {
+        public virtual string DisplayName { get; set; }
 
         [Required]
-        [StringLength(TrucksTypeConsts.MaxDisplayNameLength, MinimumLength = TrucksTypeConsts.MinDisplayNameLength)]
-        public virtual string DisplayName { get; set; }
+        [StringLength(TrucksTypeConsts.MaxDisplayNameLength,
+            MinimumLength = TrucksTypeConsts.MinDisplayNameLength)]
+        public virtual string Key { get; set; }
 
         public int? TransportTypeId { get; set; }
 
