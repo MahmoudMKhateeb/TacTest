@@ -44,14 +44,14 @@ export class AppRouteGuard implements CanActivate, CanActivateChild, CanLoad {
       return sessionObservable;
     }
 
-    // if (this._sessionService.isTenantHasMissingRequiredDocuments()) {
-    //   console.log('this._sessionService.tenant.missingRequiredDocumentTypes.length data', data['permission']);
-    //   let sessionObservable = new Subject<any>();
-    //   sessionObservable.next(false);
-    //   sessionObservable.complete();
-    //   this._router.navigate(['/tenantRequiredDocuments/tenantRequiredDocuments']);
-    //   return sessionObservable;
-    // }
+    if (this._sessionService.isTenantHasMissingRequiredDocuments()) {
+      console.log('this._sessionService.tenant.missingRequiredDocumentTypes.length data', data['permission']);
+      let sessionObservable = new Subject<any>();
+      sessionObservable.next(false);
+      sessionObservable.complete();
+      this._router.navigate(['/tenantRequiredDocuments/tenantRequiredDocuments']);
+      return sessionObservable;
+    }
 
     if (!data || !data['permission']) {
       return of(true);
