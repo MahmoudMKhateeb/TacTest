@@ -50,11 +50,13 @@
                 {{ l(item.statusTitle) }}
               </b>
             </div>
+
             <div class="detailsRoad">
               <div class="from">
                 <p class="pickup">{{ l('Origin') }}</p>
                 <p>{{ item.originCity }}</p>
               </div>
+
               <div class="to">
                 <p class="delivery">{{ l('Destination') }}</p>
                 <p>{{ item.destinationCity }}</p>
@@ -108,6 +110,14 @@
                 </p>
                 <p>
                   {{ l(item.routeType) }}
+                </p>
+              </div>
+              <div>
+                <p>
+                  {{ l('Carrier') }}
+                </p>
+                <p>
+                  {{ l(item.carrier) }}
                 </p>
               </div>
             </div>
