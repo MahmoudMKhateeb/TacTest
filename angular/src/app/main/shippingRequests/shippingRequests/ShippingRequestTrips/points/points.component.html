@@ -68,7 +68,11 @@
                     <tr>
                       <td>
                         <div class="btn-group dropdown" container="body" dropdown>
-                          <a class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
+                          <a
+                            class="dropdown-toggle btn btn-sm btn-primary"
+                            dropdownToggle
+                            [class.disabled]="record.pickingType == PickingType.Pickup"
+                          >
                             <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
                           </a>
                           <ul *dropdownMenu class="dropdown-menu">
