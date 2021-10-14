@@ -17,15 +17,21 @@
               keyExpr="id"
               (onRowUpdating)="updateRow($event)"
             >
-              <dxo-editing mode="row" [allowUpdating]="true" [allowAdding]="true" [allowDeleting]="true"> </dxo-editing>
+              <dxo-editing mode="popup" [allowUpdating]="true" [allowAdding]="true" [allowDeleting]="true"> </dxo-editing>
               <dxo-filter-row [visible]="true"></dxo-filter-row>
               <dxo-search-panel [visible]="true"></dxo-search-panel>
               <dxo-filter-panel [visible]="true"></dxo-filter-panel>
               <dxo-filter-builder-popup></dxo-filter-builder-popup>
-
+              <dxo-master-detail [enabled]="true" template="translations"></dxo-master-detail>
+              <div *dxTemplate="let options of 'translations'">
+                <app-translations-template [CoreId]="options.data.id"></app-translations-template>
+              </div>
               <dxo-remote-operations [sorting]="true" [paging]="true" [filtering]="true"></dxo-remote-operations>
               <dxo-paging [pageSize]="10"></dxo-paging>
               <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20, 50, 200]"></dxo-pager>
+              <dxi-column dataField="name" caption="{{ l('DisplayName') }}">
+                <dxi-validation-rule type="required"></dxi-validation-rule>
+              </dxi-column>
             </dx-data-grid>
           </div>
         </div>
