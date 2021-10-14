@@ -45,7 +45,7 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit {
   constructor(
     injector: Injector,
     private _routStepsServiceProxy: RoutStepsServiceProxy,
-    private _shippingRequestTripsService: ShippingRequestsTripServiceProxy,
+    public _shippingRequestTripsService: ShippingRequestsTripServiceProxy,
     public _fileDownloadService: FileDownloadService,
     private _waybillsServiceProxy: WaybillsServiceProxy,
     private _trucksServiceProxy: TrucksServiceProxy,
@@ -95,6 +95,12 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit {
     //this.wayPointsComponent.wayPointsList = [];
     this.loading = true;
     this.modal.hide();
+  }
+
+  downloadAttachment(id: number) {
+    this._shippingRequestTripsService.getTripAttachmentFileDto(id).subscribe((result) => {
+      this._fileDownloadService.downloadTempFile(result);
+    });
   }
 
   DownloadSingleDropWaybillPdf(id: number): void {
