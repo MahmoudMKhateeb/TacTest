@@ -2,6 +2,7 @@
 using Abp.Application.Features;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
+using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Extensions;
@@ -29,7 +30,9 @@ using TACHYON.Documents.DocumentFiles.Dtos;
 using TACHYON.Documents.DocumentsEntities;
 using TACHYON.Documents.DocumentTypes;
 using TACHYON.Dto;
+using TACHYON.Editions;
 using TACHYON.Features;
+using TACHYON.MultiTenancy;
 using TACHYON.Notifications;
 using TACHYON.Storage;
 using TACHYON.Trucks;
@@ -67,11 +70,18 @@ namespace TACHYON.Trucks
         private readonly IRepository<TransportType, int> _transportTypeRepository;
         private readonly IRepository<Capacity, int> _capacityRepository;
         private readonly IRepository<PlateType> _plateTypesRepository;
+        private readonly IRepository<Tenant> _lookupTenantRepository;
 
 
 
 
-        public TrucksAppService(IRepository<DocumentType, long> documentTypeRepository, IRepository<DocumentFile, Guid> documentFileRepository, IRepository<Truck, long> truckRepository, ITrucksExcelExporter trucksExcelExporter, IRepository<TrucksType, long> lookup_trucksTypeRepository, IRepository<TruckStatus, long> lookup_truckStatusRepository, IRepository<User, long> lookup_userRepository, IAppNotifier appNotifier, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager, DocumentFilesAppService documentFilesAppService, IRepository<TransportType, int> transportTypeRepository, IRepository<Capacity, int> capacityRepository, IRepository<PlateType> PlateTypesRepository)
+        public TrucksAppService(IRepository<DocumentType, long> documentTypeRepository, IRepository<DocumentFile, Guid> documentFileRepository,
+            IRepository<Truck, long> truckRepository, ITrucksExcelExporter trucksExcelExporter,
+            IRepository<TrucksType, long> lookup_trucksTypeRepository, IRepository<TruckStatus, long> lookup_truckStatusRepository,
+            IRepository<User, long> lookup_userRepository, IAppNotifier appNotifier, ITempFileCacheManager tempFileCacheManager,
+            IBinaryObjectManager binaryObjectManager, DocumentFilesAppService documentFilesAppService,
+            IRepository<TransportType, int> transportTypeRepository, IRepository<Capacity, int> capacityRepository,
+            IRepository<PlateType> PlateTypesRepository, IRepository<Tenant> lookupTenantRepository)
         {
             _documentFileRepository = documentFileRepository;
             _documentTypeRepository = documentTypeRepository;
@@ -87,10 +97,14 @@ namespace TACHYON.Trucks
             _transportTypeRepository = transportTypeRepository;
             _capacityRepository = capacityRepository;
             _plateTypesRepository = PlateTypesRepository;
+            _lookupTenantRepository = lookupTenantRepository;
         }
 
         public async Task<LoadResult> GetAll(GetAllTrucksInput input)
         {
+
+            await DisableTenancyFilterIfTachyonDeal();
+
             var query = _truckRepository.GetAll()
                 .ProjectTo<TruckDto>(AutoMapperConfigurationProvider);
 
@@ -552,6 +566,24 @@ namespace TACHYON.Trucks
             //        Id = x.Id.ToString(),
             //        DisplayName = x.DisplayName
             //    }).ToListAsync();
+        }
+
+        #endregion
+
+        #region Helpers
+
+        private async Task DisableTenancyFilterIfTachyonDeal()
+        {
+            if (!AbpSession.TenantId.HasValue) return;
+
+            var currentTenantEdition = await (from tenant in _lookupTenantRepository.GetAll()
+                                              where tenant.Id == AbpSession.TenantId
+                                              select tenant.Edition.DisplayName).FirstOrDefaultAsync();
+
+            currentTenantEdition = currentTenantEdition.Replace(" ", "").ToLower();
+
+            if (currentTenantEdition.Contains(AppConsts.TachyonDealEditionName.ToLower()))
+                CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant);
         }
 
         #endregion
