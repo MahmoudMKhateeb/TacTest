@@ -65,7 +65,7 @@ namespace TACHYON
 
         public const string DateTimeOffsetFormat = "yyyy-MM-ddTHH:mm:sszzz";
 
-
+        public const string TachyonDealEditionName = "TachyonDealer";
         public const string TMS = "TachyonManageService";
         public class Message
         {
