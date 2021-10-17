@@ -178,7 +178,7 @@ namespace TACHYON.Shipping.Drivers
             }
 
             if (trip.AssignedTruckFk != null) tripDto.TruckType = ObjectMapper.Map<TrucksTypeDto>(trip.AssignedTruckFk.TrucksTypeFk).TranslatedDisplayName;
-            if (tripDto.TripStatus == ShippingRequestTripStatus.Intransit || tripDto.TripStatus == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation)
+            if (tripDto.TripStatus == ShippingRequestTripStatus.Intransit)
             {
                 tripDto.ActionStatus = ShippingRequestTripDriverActionStatusDto.ContinueTrip;
             }
