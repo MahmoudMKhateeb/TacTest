@@ -228,4 +228,13 @@ export abstract class AppComponentBase {
 
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
   }
+  get isCarrier(): boolean {
+    return this.feature.isEnabled('App.Carrier');
+  }
+  get isShipper(): boolean {
+    return this.feature.isEnabled('App.Shipper');
+  }
+  get isTachyonDealer(): boolean {
+    return !this.isCarrier && !this.isShipper;
+  }
 }

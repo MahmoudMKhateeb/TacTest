@@ -35,21 +35,12 @@ export class SideProfileComponent extends AppComponentBase implements OnInit, On
    * This One is to Determine the User Type Who Viewing the profile
    */
 
-  get isCarrier(): boolean {
-    return this.feature.isEnabled('App.Carrier');
-  }
-  get isShipper(): boolean {
-    return this.feature.isEnabled('App.Shipper');
-  }
   get canSeeSideMenu(): boolean {
     //if tenant id is the same as the requested on in view        /he is viewing his owin profile
     //true
     // console.log('currentUser', this.currentUserid === this.givenId, 'Given Id', this.givenId);
     return this.currentUserid === this.givenId;
     //return;
-  }
-  get isTMS(): boolean {
-    return !this.isCarrier && !this.isShipper;
   }
 
   ngOnInit(): void {
