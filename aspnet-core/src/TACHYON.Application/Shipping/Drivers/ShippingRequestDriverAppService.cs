@@ -87,7 +87,7 @@ namespace TACHYON.Shipping.Drivers
        .Include(i => i.DestinationFacilityFk)
            .Where(t => t.AssignedDriverUserId == AbpSession.UserId && t.Status != ShippingRequestTripStatus.Canceled && t.DriverStatus != ShippingRequestTripDriverStatus.Rejected)
         .WhereIf(input.Status.HasValue && input.Status == ShippingRequestTripDriverLoadStatusDto.Current, e => e.StartTripDate.Date <= Clock.Now.Date && e.Status != ShippingRequestTripStatus.Delivered && e.Status != ShippingRequestTripStatus.DeliveredAndNeedsConfirmation)
-        .WhereIf(input.Status.HasValue && input.Status == ShippingRequestTripDriverLoadStatusDto.Past, e => (e.Status == ShippingRequestTripStatus.Delivered || e.Status != ShippingRequestTripStatus.DeliveredAndNeedsConfirmation))
+        .WhereIf(input.Status.HasValue && input.Status == ShippingRequestTripDriverLoadStatusDto.Past, e => (e.Status == ShippingRequestTripStatus.Delivered || e.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation))
         .WhereIf(input.Status.HasValue && input.Status == ShippingRequestTripDriverLoadStatusDto.Comming, e => e.StartTripDate.Date > Clock.Now.Date)
         .OrderBy(input.Sorting ?? "Status asc");
 
@@ -208,7 +208,8 @@ namespace TACHYON.Shipping.Drivers
                 {
                     DriverId = AbpSession.UserId,
                     PointId = point.Id,
-                    RateType = RateType.SEByDriver
+                    RateType = RateType.SEByDriver,
+                    FacilityId = point.FacilityId
                 });
             }
             //tripDto.RoutePoints.ToList().ForEach(async x =>
@@ -249,7 +250,8 @@ namespace TACHYON.Shipping.Drivers
             {
                 DriverId = AbpSession.UserId,
                 PointId = PointId,
-                RateType = RateType.FacilityByDriver
+                RateType = RateType.FacilityByDriver,
+                FacilityId = Point.FacilityId
             });
             return DropOff;
         }
@@ -314,6 +316,7 @@ namespace TACHYON.Shipping.Drivers
                     //check if all trip points completed, change the trip status from intransit to delivered and needs confirmation
                     if (trip.RoutPoints.Where(x => x.Id != Point.Id).All(x => x.CompletedStatus > RoutePointCompletedStatus.NotCompleted))
                     {
+                        Point.IsActive = false;
                         trip.Status = ShippingRequestTripStatus.DeliveredAndNeedsConfirmation;
                     }
 
@@ -410,7 +413,7 @@ namespace TACHYON.Shipping.Drivers
                 .WhereIf(PointId == null, x => x.IsActive)
                 .WhereIf(PointId != null, x => x.Id == PointId)
                 .FirstOrDefaultAsync(
-                                    x => x.ShippingRequestTripFk.RoutePointStatus == RoutePointStatus.FinishOffLoadShipment &&
+                                    x => x.Status == RoutePointStatus.FinishOffLoadShipment &&
                                     x.Code == Code &&
                                     x.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId
                                     );
@@ -512,6 +515,9 @@ namespace TACHYON.Shipping.Drivers
                 .Include(x => x.ShippingRequestFk)
                 .Include(x => x.RoutPoints)
                 .ThenInclude(x => x.RoutPointDocuments)
+                .Include(x => x.RatingLogs)
+                .Include(x => x.RoutPoints)
+                .ThenInclude(x => x.RatingLogs)
                 .FirstOrDefaultAsync(x => x.Id == TripId);
             await ResetTripStatus(trip);
 
@@ -537,6 +543,9 @@ namespace TACHYON.Shipping.Drivers
                 .Include(x => x.ShippingRequestFk)
                 .Include(x => x.RoutPoints)
                 .ThenInclude(x => x.RoutPointDocuments)
+                .Include(x => x.RoutPoints)
+                .ThenInclude(x => x.RatingLogs)
+                .Include(x => x.RatingLogs)
                 .FirstOrDefaultAsync(x => x.Id == TripId);
 
             await ResetTripStatus(trip);
@@ -552,6 +561,7 @@ namespace TACHYON.Shipping.Drivers
                 trip.RejectedReason = string.Empty;
                 trip.RejectReasonId = default(int?);
                 trip.ActualDeliveryDate = trip.ActualPickupDate = null;
+                // trip.RatingLogs.Where(x => x.RateType != RateType.CarrierTripBySystem && x.RateType != RateType.ShipperTripBySystem).ToList().Clear();
                 trip.RoutPoints.ToList().ForEach(item =>
                 {
                     item.IsActive = false;
@@ -561,6 +571,7 @@ namespace TACHYON.Shipping.Drivers
                     item.RoutPointDocuments.Clear();
                     item.ActualPickupOrDeliveryDate = null;
                     item.CompletedStatus = RoutePointCompletedStatus.NotCompleted;
+                    //item.RatingLogs.Where(x => x.RateType != RateType.CarrierTripBySystem && x.RateType != RateType.ShipperTripBySystem).ToList().Clear();
                     //item.ShippingRequestTripAccidents.Clear();
                     //item.ShippingRequestTripTransitions.Clear();
                 });
@@ -579,6 +590,28 @@ namespace TACHYON.Shipping.Drivers
                 }
                 await _shippingRequestTripAccidentRepository.DeleteAsync(x => x.RoutPointFK.ShippingRequestTripId == trip.Id);
 
+                //delete ratings
+                var tripRate = trip.RatingLogs.FirstOrDefault();
+
+                if (tripRate == null)
+                {
+                    tripRate = trip.RoutPoints.FirstOrDefault().RatingLogs.FirstOrDefault();
+                }
+
+                //tripRate may by trip Id or point Id, which is rated .. we need to delete all trip rates and its points and then recalculate,
+                //check if trip has rating, to delete and recalculate
+                if (tripRate != null)
+                {
+                    //var CarrierId = trip.RatingLogs.Where(x => x.RateType == RateType.CarrierTripBySystem).FirstOrDefault().CarrierId;
+                    //var ShipperId = trip.RatingLogs.Where(x => x.RateType == RateType.ShipperTripBySystem).FirstOrDefault().ShipperId;
+                    //var DriverId = trip.RatingLogs.Where(x => x.RateType == RateType.DriverByReceiver).FirstOrDefault().DriverId;
+                    //var FacilityId = trip.RatingLogs.Where(x => x.RateType == RateType.FacilityByDriver).FirstOrDefault().FacilityId;
+
+                    await _ratingLogManager.DeleteAllTripAndPointsRatingAsync(tripRate);
+
+                    //todo recalculate rating
+
+                }
             }
             else
             {
