@@ -493,6 +493,7 @@ namespace TACHYON.Shipping.Drivers
             var output = await _driverLocationLogRepository.GetAll()
                 .WhereIf(input.DateFilter != null, x => x.CreationTime.Date == input.DateFilter.Value.Date)
                 .WhereIf(AbpSession.TenantId != null, x => x.CreatorUserId == input.DriverId && x.CreatorUserFk.TenantId == AbpSession.TenantId)
+                .Where(x => x.TripId == input.TripId)
                 .ToListAsync();
 
             var result = ObjectMapper.Map<List<DriverLocationLogDto>>(output);

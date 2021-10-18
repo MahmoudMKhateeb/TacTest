@@ -8,5 +8,6 @@ namespace TACHYON.DriverLocationLogs.dtos
     {
         public DateTime? DateFilter { get; set; }
         public long DriverId { get; set; }
+        public int? TripId { get; set; }
     }
 }
