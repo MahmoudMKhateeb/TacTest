@@ -41,6 +41,7 @@ namespace TACHYON.AutoMapper.Shipping.Trips
                 .ForMember(dst => dst.StartDate, opt => opt.MapFrom(src => src.StartTripDate))
                 .ForMember(dst => dst.EndDate, opt => opt.MapFrom(src => src.EndTripDate))
                 .ForMember(dst => dst.StatusTitle, opt => opt.MapFrom(src => Enum.GetName(typeof(RoutePointStatus), src.RoutePointStatus)))
+                .ForMember(dst => dst.TripStatusTitle, opt => opt.MapFrom(src => Enum.GetName(typeof(ShippingRequestTripStatus), src.Status)))
                 .ForMember(dst => dst.DriverLoadStatus, opt => opt.MapFrom(src => GetMobileTripStatus(src)));
 
 
@@ -72,6 +73,8 @@ namespace TACHYON.AutoMapper.Shipping.Trips
 
             CreateMap<RoutPoint, ShippingRequestTripDriverRoutePointDto>()
                 .ForMember(dst => dst.Address, opt => opt.MapFrom(src => src.FacilityFk.Address))
+                .ForMember(dst => dst.Status, opt => opt.MapFrom(src => Enum.GetName(typeof(RoutePointStatus), src.Status)))
+                .ForMember(dst => dst.CompletedStatus, opt => opt.MapFrom(src => Enum.GetName(typeof(RoutePointCompletedStatus), src.CompletedStatus)))
                 .ForMember(dst => dst.FacilityId, opt => opt.MapFrom(src => src.FacilityId))
                 .ForMember(dst => dst.Facility, opt => opt.MapFrom(src => src.FacilityFk.Name))
                 .ForMember(dst => dst.FacilityRating, opt => opt.MapFrom(src => src.FacilityFk.Rate))
@@ -90,9 +93,9 @@ namespace TACHYON.AutoMapper.Shipping.Trips
 
         private static ShippingRequestTripDriverLoadStatusDto GetMobileTripStatus(ShippingRequestTrip trip)
         {
-            if (trip.StartTripDate.Date <= Clock.Now.Date && trip.Status != ShippingRequestTripStatus.Delivered)
+            if (trip.StartTripDate.Date <= Clock.Now.Date && trip.Status != ShippingRequestTripStatus.Delivered && trip.Status != ShippingRequestTripStatus.DeliveredAndNeedsConfirmation)
                 return ShippingRequestTripDriverLoadStatusDto.Current;
-            if (trip.Status == ShippingRequestTripStatus.Delivered)
+            if (trip.Status == ShippingRequestTripStatus.Delivered || trip.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation)
                 return ShippingRequestTripDriverLoadStatusDto.Past;
             return ShippingRequestTripDriverLoadStatusDto.Comming;
         }

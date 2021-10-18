@@ -124,7 +124,7 @@ namespace TACHYON.Tracking
             await _shippingRequestsTripManager.Start(new ShippingRequestTripDriverStartInputDto { Id = id });
         }
 
-        public async Task ChangeStatus(long id)
+        public async Task ChangeStatus(int id)
         {
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier);
             await _shippingRequestsTripManager.ChangeStatus(id);

@@ -15,6 +15,7 @@ namespace TACHYON.Shipping.Drivers.Dto
         public PickingType PickingType { get; set; }
 
         public RoutePointStatus Status { get; set; }
+        public RoutePointCompletedStatus CompletedStatus { get; set; }
         public string StatusTitle { get { return Status.GetEnumDescription(); } set { } }
         public string NextStatus { get; set; }
         public string ReceiverFullName { get; set; }

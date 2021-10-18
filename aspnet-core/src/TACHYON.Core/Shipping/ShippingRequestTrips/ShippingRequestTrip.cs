@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using TACHYON.AddressBook;
 using TACHYON.Authorization.Users;
 using TACHYON.PriceOffers;
+using TACHYON.Rating;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.Trips;
@@ -61,6 +62,7 @@ namespace TACHYON.Shipping.ShippingRequestTrips
 
         public ICollection<RoutPoint> RoutPoints { get; set; }
         public ICollection<ShippingRequestTripVas> ShippingRequestTripVases { get; set; }
+        public ICollection<RatingLog> RatingLogs { get; set; }
         public ShippingRequestTripDriverStatus DriverStatus { get; set; }
         public int? RejectReasonId { get; set; }
         [ForeignKey("RejectReasonId")]
