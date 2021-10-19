@@ -94,7 +94,7 @@ namespace TACHYON.Shipping.Accidents
             var reasonAccident = await _ShippingRequestReasonAccidentRepository
                 .SingleAsync(x => x.Id == input.Id);
 
-            if (reasonAccident.Key.ToLowerContains(TACHYONConsts.OthersDisplayName))
+            if (reasonAccident.Key.ToLower().Contains(TACHYONConsts.OthersDisplayName))
                 throw new UserFriendlyException(L("OtherReasonAccidentNotRemovable"));
 
             await _ShippingRequestReasonAccidentRepository.DeleteAsync(reasonAccident);

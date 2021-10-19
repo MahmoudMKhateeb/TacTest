@@ -92,7 +92,7 @@ namespace TACHYON.Vases
         {
             var vas = await _vasRepository.FirstOrDefaultAsync((input.Id.Value));
 
-            if (vas.Name.ToLowerContains(TACHYONConsts.OthersDisplayName) && !input.Name.ToLowerContains(TACHYONConsts.OthersDisplayName))
+            if (vas.Name.ToLower().Contains(TACHYONConsts.OthersDisplayName) && !input.Name.ToLower().Contains(TACHYONConsts.OthersDisplayName))
                 throw new UserFriendlyException(L("OtherVasNameMustContainOther"));
 
             ObjectMapper.Map(input, vas);
@@ -104,7 +104,7 @@ namespace TACHYON.Vases
 
             var vas = await _vasRepository.SingleAsync(x => x.Id == input.Id);
 
-            if (vas.Name.ToLowerContains(TACHYONConsts.OthersDisplayName))
+            if (vas.Name.ToLower().Contains(TACHYONConsts.OthersDisplayName))
                 throw new UserFriendlyException(L("OtherVasNotRemovable"));
 
             await _vasRepository.DeleteAsync(vas);
