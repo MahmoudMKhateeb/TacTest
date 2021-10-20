@@ -39,7 +39,7 @@
                         [class.is-invalid]="subgoodsDetail.touched && !subgoodsDetail.valid"
                         [class.is-valid]="subgoodsDetail.touched && subgoodsDetail.valid"
                       >
-                        <option value="">{{ l('SelectAGoodSubCategory') }}</option>
+                        <option value="undefined">{{ l('SelectAGoodSubCategory') }}</option>
                         <option *ngFor="let item of allSubGoodCategorys" [value]="item.id">{{ item.displayName }}</option>
                       </select>
                     </div>
@@ -103,7 +103,7 @@
                         [class.is-invalid]="GoodsUnitOfMeasure.touched && !GoodsUnitOfMeasure.valid"
                         required
                       >
-                        <option value="">{{ l('selectAUnitOfMeasure') }}</option>
+                        <option value="undefined">{{ l('selectAUnitOfMeasure') }}</option>
                         <option *ngFor="let item of allUnitOfMeasure" [value]="item.id">{{ item.displayName }}</option>
                       </select>
                     </div>
@@ -162,7 +162,7 @@
                         [class.is-valid]="DangerousGoodTypes.touched && DangerousGoodTypes.valid"
                         [required]="goodsDetail.isDangerousGood"
                       >
-                        <option value="">{{ l('SelectADangeroudGoodType') }}</option>
+                        <option value="undefined">{{ l('SelectADangeroudGoodType') }}</option>
                         <option *ngFor="let item of allDangerousGoodTypes" [value]="item.id">{{ item.displayName }}</option>
                       </select>
                     </div>
