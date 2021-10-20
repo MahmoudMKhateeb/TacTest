@@ -239,7 +239,8 @@ namespace TACHYON.Goods.GoodsDetails
 
             var list = await _lookup_goodCategoryRepository.GetAll()
                 .Include(x => x.Translations)
-                .Where(x => x.FatherId == fatherId)
+                .WhereIf(fatherId == null, x => x.GoodCategories.Where(e => e.GoodCategories != null).Any())
+                .WhereIf(fatherId != null, x => x.FatherId == fatherId)
                 .ToListAsync();
 
             return ObjectMapper.Map<List<GetAllGoodsCategoriesForDropDownOutput>>(list);
