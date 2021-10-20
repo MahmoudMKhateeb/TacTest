@@ -1,9 +1,9 @@
-import { Component, Injector, ViewChild, ViewEncapsulation, AfterViewInit } from '@angular/core';
+import { AfterViewInit, Component, Injector, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AppConsts } from '@shared/AppConsts';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { EntityDtoOfInt64, UserListDto, UserServiceProxy, PermissionServiceProxy, FlatPermissionDto } from '@shared/service-proxies/service-proxies';
+import { EntityDtoOfInt64, UserListDto, UserServiceProxy } from '@shared/service-proxies/service-proxies';
 import { FileDownloadService } from '@shared/utils/file-download.service';
 import { LazyLoadEvent } from 'primeng/api';
 import { Paginator } from 'primeng/paginator';
@@ -16,7 +16,6 @@ import { FileUpload } from 'primeng/fileupload';
 import { finalize } from 'rxjs/operators';
 import { PermissionTreeModalComponent } from '../shared/permission-tree-modal.component';
 import { ManageEntityDynamicParameterValuesModalComponent } from '@app/admin/dynamic-entity-parameters/entity-dynamic-parameter/entity-dynamic-parameter-value/manage-entity-dynamic-parameter-values-modal.component';
-import { UtilsService } from 'abp-ng2-module';
 import { LocalStorageService } from '@shared/utils/local-storage.service';
 
 @Component({
@@ -137,7 +136,7 @@ export class UsersComponent extends AppComponentBase implements AfterViewInit {
         this.onlyLockedUsers,
         this.onlyDrivers,
         this.onlyUsers,
-        this.primengTableHelper.getSorting(this.dataTable)
+        undefined
       )
       .subscribe((result) => {
         this._fileDownloadService.downloadTempFile(result);
