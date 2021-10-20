@@ -635,7 +635,8 @@ namespace TACHYON.Shipping.Trips
         public async Task SendSmsToReceiver(RoutPoint point)
         {
             string number = point.ReceiverPhoneNumber;
-            string message = L(TACHYONConsts.SMSShippingRequestReceiverCode, point.WaybillNumber, point.EndTime, point.Code);
+            string formattedDate = point.EndTime?.ToString("dd/MM/yyyy");
+            string message = L(TACHYONConsts.SMSShippingRequestReceiverCode, point.WaybillNumber, formattedDate ?? L("NotSet"), point.Code);
             if (point.ReceiverFk != null)
             {
                 number = point.ReceiverFk.PhoneNumber;

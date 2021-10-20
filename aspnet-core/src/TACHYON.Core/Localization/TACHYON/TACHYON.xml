@@ -1691,9 +1691,9 @@
 		<text name="ShippingRequestPricingResponse">Shipping Request Pricing Response</text>
 		<text name="ShippingRequestProperties">Shipping Request Properties</text>
 		<text name="ShippingRequestReceiverCode">
-			Welcome from TACHYON \n
+			Welcome from TACHYON &#xA;
 			Please note that shipment {0} on its way. And expected to arrive on {1}, please give this code to
-			the driver when the delivery is completed.\n\n
+			the driver when the delivery is completed.&#xA; &#xA;
 			Your shipping code:{2}
 		</text>
 		<text name="ShippingRequests">Shipping Requests</text>
@@ -1731,7 +1731,7 @@
 		<text name="SingleDrop">Single drop</text>
 		<text name="Sms">SMS</text>
 		<text name="SMSOTP">
-			Please use the code below to login.\n
+			Please use the code below to login.&#xA;
 			Code:{0}</text>
 		<text name="SmsSecurityCodeMessage">Your security code is: {0}</text>
 		<text name="SMSSettings">SMS Settings</text>
@@ -2285,10 +2285,10 @@
 		<text name="Weight">Weight</text>
 		<text name="WelcomePage_Info">Welcome to the application. You can use the menu to start using the application. If you don't see any menu item, probably you don't have permission to see any page. Consider asking a system administrator for permissions.</text>
 		<text name="DriverWelcomeMessageRegistrationNotification">
-			Dear {0},\n
-			Your account has been created in Tachyon Driver application. Your username is your mobile number.\n
-			You can install the application using the following links\n
-			Android App Link: {1}\n
+			Dear {0},&#xA;
+			Your account has been created in Tachyon Driver application. Your username is your mobile number.&#xA;
+			You can install the application using the following links&#xA;
+			Android App Link: {1}&#xA;
 			IOS App Link:{2}
 		</text>
 		<text name="WelcomePage_Title">Welcome!</text>
@@ -2407,5 +2407,6 @@
 		<text name="ShipperTripUpdatedNotificationMessage">There are some changes on trip with waybill No {0} . For more details please click here</text>
 		<text name="CarrierTripUpdatedNotificationMessage">There are some changes on trip with waybill No {0} . For more details please click here</text>
 		<text name="TachyonDealerTripUpdatedNotificationMessage">There are some changes on trip with waybill No {0} . For more details please click here</text>
+		<text name="NotSet">Not Set</text>
 	</texts>
 </localizationDictionary>

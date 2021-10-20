@@ -536,7 +536,7 @@
 		<text name="DriverDocuments">مستندات السائق</text>
 		<text name="DriverInformations">معلومات السائق</text>
 		<text name="DriverWelcomeMessageRegistrationNotification">
-			عزيزي {0} لقد تم انشاء حسابك في تطبيق تاكيون للسائقين ,اسم المستخدم الخاص بك هو رقم جوالك يمكنك تحميل التطبيق من خلال الروابط التالية : /n
+			عزيزي {0} لقد تم انشاء حسابك في تطبيق تاكيون للسائقين ,اسم المستخدم الخاص بك هو رقم جوالك يمكنك تحميل التطبيق من خلال الروابط التالية : &#xA;
 			رابط تطبيق اندرويد {1}
 			رابط تطبيق اي او اس {2}
 
@@ -1502,8 +1502,8 @@
 		<text name="ShippingRequestPrice">سعر طلب الشحن</text>
 		<text name="ShippingRequestProperties">خصائص طلب الشحن</text>
 		<text name="ShippingRequestReceiverCode">
-			مرحباً من تاكيون \n\n
-			الشحنة رقم {0} في طريقها . ومن المتوقع ان تصل في {1} ، يرجى إعطاء الرمز للسائق عند اكتمال التسليم\n
+			مرحباً من تاكيون &#xA;&#xA;
+			الشحنة رقم {0} في طريقها . ومن المتوقع ان تصل في {1} ، يرجى إعطاء الرمز للسائق عند اكتمال التسليم&#xA;
 			الرمز:{2}
 		</text>
 		<text name="ShippingRequests">طلبات الشحن</text>
@@ -1756,7 +1756,7 @@
 		<text name="TheShipperSelectedIsNotFound">الشاحن المحدد غير موجود</text>
 		<text name="TheShippingIsNotFound">الشحنة غير متوفره</text>
 		<text name="TheShippingRequestNotFound">لا يوجد شحنة</text>
-		<text name="TheTotalWeightOfGoodsDetailsshouldNotBeGreaterThanShippingRequestWeight">مجموع الأوزان للبضائع يجب أن لا تكون أكبر من وزن الشحنة {0}</text>
+		<text name="TheTotalWeightOfGoodsDetailsshouldNotBeGreaterThanShippingRequestWeight">مجموع الأوزان للبضائع يجب أن لا يكون أكبر من وزن الشحنة {0}</text>
 		<text name="ThisEditionIsUsedAsAnExpiringEdition">يتم استخدام هذه النسخة كنسخة تنتهي صلاحيتها لنسخة أخرى. إذا كنت تريد جعل هذه النسخة مدفوعة، يجب عليك أولا إزالتها من النسخ الأخرى.</text>
 		<text name="ThisFieldIsRequired">هذا الحقل مطلوب</text>
 		<text name="ThisInvoiceIsNotYours">هذه الفاتورة ليست لك!</text>
@@ -2211,5 +2211,6 @@
 		<text name="ShipperTripUpdatedNotificationMessage">هناك بعض التغييرات في الرحلة برقم بوليصة الشحن {0}. لمزيد من التفاصيل، الرجاء الضغط هنا</text>
 		<text name="CarrierTripUpdatedNotificationMessage">هناك بعض التغييرات في الرحلة برقم بوليصة الشحن {0}. لمزيد من التفاصيل، الرجاء الضغط هنا</text>
 		<text name="TachyonDealerTripUpdatedNotificationMessage">هناك بعض التغييرات في الرحلة برقم بوليصة الشحن {0}. لمزيد من التفاصيل، الرجاء الضغط هنا</text>
+		<text name="NotSet">غير محدد</text>
 	</texts>
 </localizationDictionary>
