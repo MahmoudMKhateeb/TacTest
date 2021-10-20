@@ -64,7 +64,7 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             string number = point.ReceiverPhoneNumber;
             string message = L(TACHYONConsts.SMSShippingRequestReceiverCode, new CultureInfo(Culture),
-                point.WaybillNumber, point.StartTime, point.Code);
+                point.WaybillNumber, point.StartTime, point.Code, WebUrlService.WebSiteRootAddressFormat + "account/RatingPage/" + point.Code);
             if (point.ReceiverFk != null)
             {
                 number = point.ReceiverFk.PhoneNumber;
@@ -81,8 +81,8 @@ namespace TACHYON.Shipping.ShippingRequests
         public async Task SendSmsToReceiver(RoutPoint point)
         {
             string number = point.ReceiverPhoneNumber;
-            string message = L(TACHYONConsts.SMSShippingRequestReceiverCode, point.WaybillNumber, point.StartTime, point.Code);
-            message = message + "\n" + L("ClickToRate") + " " + WebUrlService.WebSiteRootAddressFormat + "account/RatingPage/" + point.Code;
+            string message = L(TACHYONConsts.SMSShippingRequestReceiverCode, point.WaybillNumber, point.ShippingRequestTripFk.ActualPickupDate, point.Code, WebUrlService.WebSiteRootAddressFormat + "account/RatingPage/" + point.Code);
+            // message = message + "\n" + L("ClickToRate") + " " + WebUrlService.WebSiteRootAddressFormat + "account/RatingPage/" + point.Code;
             if (point.ReceiverFk != null)
             {
                 await _smsSender.SendAsync(point.ReceiverFk.PhoneNumber, message);
@@ -98,7 +98,7 @@ namespace TACHYON.Shipping.ShippingRequests
         /// <returns></returns>
         public async Task SendSmsToReceivers(int tripId)
         {
-            var RoutePoints = await _routPointRepository.GetAll().Include(r => r.ReceiverFk).Where(x => x.ShippingRequestTripId == tripId && x.PickingType == PickingType.Dropoff).ToListAsync();
+            var RoutePoints = await _routPointRepository.GetAll().Include(r => r.ReceiverFk).Include(x => x.ShippingRequestTripFk).Where(x => x.ShippingRequestTripId == tripId && x.PickingType == PickingType.Dropoff).ToListAsync();
             RoutePoints.ForEach(async p =>
             {
                 await SendSmsToReceiver(p);

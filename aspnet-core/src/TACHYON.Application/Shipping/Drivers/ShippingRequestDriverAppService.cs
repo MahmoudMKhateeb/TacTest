@@ -571,6 +571,7 @@ namespace TACHYON.Shipping.Drivers
                     item.RoutPointDocuments.Clear();
                     item.ActualPickupOrDeliveryDate = null;
                     item.CompletedStatus = RoutePointCompletedStatus.NotCompleted;
+                    item.StartTime = item.EndTime = null;
                     //item.RatingLogs.Where(x => x.RateType != RateType.CarrierTripBySystem && x.RateType != RateType.ShipperTripBySystem).ToList().Clear();
                     //item.ShippingRequestTripAccidents.Clear();
                     //item.ShippingRequestTripTransitions.Clear();
