@@ -207,7 +207,7 @@ namespace TACHYON.Rating
             //recalculate driver rating
             if (rate.RateType == RateType.DriverByReceiver)
             {
-                await RecaculateDriverRating(rate);
+                await RecaculateDriverRating(rate.DriverId.Value);
             }
 
             var CarrierTripBySystem = await _ratingLogRepository
@@ -298,25 +298,30 @@ namespace TACHYON.Rating
 
             //recalculate Carrier
             //check minimum 10 ratings
+            await RecalculateCarrierRatingByCarrierTenantId(carrierId.Value);
+        }
+
+        public async Task RecalculateCarrierRatingByCarrierTenantId(int carrierId)
+        {
             var allCarrierRatings = await GetAllCarriersRatingAsync(carrierId);
             if (allCarrierRatings.Count() > 10)
             {
                 var finalCarrierTripsRate = allCarrierRatings.Sum(x => x.Rate) / allCarrierRatings.Count();
 
-                var tenant = await _tenantManager.GetByIdAsync(carrierId.Value);
+                var tenant = await _tenantManager.GetByIdAsync(carrierId);
                 tenant.Rate = Convert.ToDecimal(finalCarrierTripsRate.ToString("0.0")); //(tenant.Rate + finalCurrentCarrierTripRate) / 2;
                 tenant.RateNumber = allCarrierRatings.Count();
             }
         }
 
-        public async Task RecaculateDriverRating(RatingLog rate)
+        public async Task RecaculateDriverRating(long driverId)
         {
-            var allRatings = await _ratingLogRepository.GetAll().Where(x => x.DriverId == rate.DriverId).ToListAsync();
+            var allRatings = await _ratingLogRepository.GetAll().Where(x => x.DriverId == driverId).ToListAsync();
             if (allRatings.Count() > 10)
             {
                 var avgRate = allRatings.Sum(x => x.Rate) / allRatings.Count();
 
-                var user = await _userManager.GetUserByIdAsync(rate.DriverId.Value);
+                var user = await _userManager.GetUserByIdAsync(driverId);
                 user.Rate = Convert.ToDecimal(avgRate.ToString("0.0"));
                 user.RateNumber = allRatings.Count();
             }
@@ -325,7 +330,10 @@ namespace TACHYON.Rating
         public async Task ReCalculateShipperAndFacilityRating(RatingLog rate)
         {
             //recalculate facility rating
-            await RecalculateFacilityRating(rate);
+            if (rate.RateType == RateType.FacilityByDriver)
+            {
+                await RecalculateFacilityRating(rate.FacilityId.Value);
+            }
 
             //recalculate shipper rating
             var ShipperTripBySystem = await _ratingLogRepository
@@ -427,32 +435,32 @@ namespace TACHYON.Rating
             }
 
             //recalculate Shipper
-            //check minimum 10 ratings
+            await RecalculateShipperRatingByShipperTenantId(shipperId.Value);
+        }
 
+        public async Task RecalculateShipperRatingByShipperTenantId(int shipperId)
+        {
             var allShipperRatings = await GetAllShippersRatingAsync(shipperId);
             if (allShipperRatings.Count() > 10)
             {
                 //recalculate for shipper
                 var finalShipperTripsRate = allShipperRatings.Sum(x => x.Rate) / allShipperRatings.Count();
 
-                var tenant = await _tenantManager.GetByIdAsync(shipperId.Value);
+                var tenant = await _tenantManager.GetByIdAsync(shipperId);
                 tenant.Rate = Convert.ToDecimal(finalShipperTripsRate.ToString("0.0"));
                 tenant.RateNumber = allShipperRatings.Count();
             }
         }
 
-        public async Task RecalculateFacilityRating(RatingLog rate)
+        public async Task RecalculateFacilityRating(long facilityId)
         {
-            if (rate.RateType == RateType.FacilityByDriver)
-            {
-                var facilityRatings = await GetAllFacilityRatingAsync(rate.FacilityId);
+            var facilityRatings = await GetAllFacilityRatingAsync(facilityId);
 
-                if (facilityRatings.Count() > 10)
-                {
-                    var facility = await _facilityRepository.FirstOrDefaultAsync(rate.FacilityId.Value);
-                    facility.Rate = Convert.ToDecimal((facilityRatings.Sum(x => x.Rate) / facilityRatings.Count()).ToString("0.0"));
-                    facility.RateNumber = facilityRatings.Count();
-                }
+            if (facilityRatings.Count() > 10)
+            {
+                var facility = await _facilityRepository.FirstOrDefaultAsync(facilityId);
+                facility.Rate = Convert.ToDecimal((facilityRatings.Sum(x => x.Rate) / facilityRatings.Count()).ToString("0.0"));
+                facility.RateNumber = facilityRatings.Count();
             }
         }
 
