@@ -13,7 +13,8 @@
           [hidden]="activeTripId"
           (click)="createOrEditPointModal.show(RouteType == 1 ? 1 : undefined)"
         >
-          <i class="fa {{ RouteType == 1 ? 'flaticon-delete-2' : 'fa-plus' }}"></i>
+          <i class="fa fa-plus"></i>
+
           {{ RouteType == 1 ? l('CompleteDropPointSetup') : l('AddDrop') }}
         </button>
       </div>
