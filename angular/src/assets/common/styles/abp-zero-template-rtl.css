@@ -111,3 +111,7 @@ nav.m-menu__submenu--right span.m-menu__arrow {
 .not-drop {
   transform: translate3d(-60px, 1px, 0);
 }
+
+.input-group-btn button {
+  border-radius: 0.42rem 0 0 0.42rem !important;
+}
