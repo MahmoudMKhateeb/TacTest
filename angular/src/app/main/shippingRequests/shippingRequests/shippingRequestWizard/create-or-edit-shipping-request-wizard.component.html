@@ -691,13 +691,18 @@
                               </td>
                               <td>
                                 <input
+                                  #numberOfTrips="ngModel"
                                   type="number"
                                   id="numberOfTrips{{ i }}"
                                   [(ngModel)]="item.numberOfTrips"
                                   (keypress)="numberOnly($event)"
                                   class="form-control"
                                   name="numberOfTrips{{ i }}"
-                                  required=""
+                                  required
+                                  [class.is-invalid]="numberOfTrips.touched && !numberOfTrips.valid"
+                                  [class.is-valid]="numberOfTrips.touched && numberOfTrips.valid"
+                                  [max]="step2Dto.numberOfTrips"
+                                  min="0"
                                 />
                               </td>
                             </tr>
