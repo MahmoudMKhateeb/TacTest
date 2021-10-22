@@ -1,37 +1,39 @@
-﻿using Abp.Application.Services.Dto;
+﻿using Abp.Application.Features;
+using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Microsoft.EntityFrameworkCore;
+using NUglify.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
-using Abp.Domain.Uow;
 using TACHYON.AddressBook;
+using TACHYON.AddressBook.Dtos;
 using TACHYON.Authorization;
 using TACHYON.Cities;
 using TACHYON.Dto;
+using TACHYON.Features;
 using TACHYON.Goods.GoodsDetails;
 using TACHYON.Goods.GoodsDetails.Dtos;
 using TACHYON.Routs;
+using TACHYON.Routs.RoutPoints.Dtos;
 using TACHYON.Routs.RoutSteps.Dtos;
 using TACHYON.Routs.RoutSteps.Exporting;
+using TACHYON.Shipping.ShippingRequestBids;
+using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Trailers.TrailerTypes;
 using TACHYON.Trucks.TrucksTypes;
-using TACHYON.Routs.RoutPoints.Dtos;
-using NUglify.Helpers;
-using Abp.Application.Features;
-using TACHYON.Features;
-using TACHYON.AddressBook.Dtos;
 using TACHYON.Trucks.TrucksTypes.Dtos;
 
 namespace TACHYON.Routs.RoutSteps
 {
     [AbpAuthorize(AppPermissions.Pages_RoutSteps)]
-    [RequiresFeature(AppFeatures.Shipper)]
+    [RequiresFeature(AppFeatures.Shipper, AppFeatures.TachyonDealer)]
     public class RoutStepsAppService : TACHYONAppServiceBase, IRoutStepsAppService
     {
         private readonly IRepository<RoutStep, long> _routStepRepository;
@@ -42,9 +44,10 @@ namespace TACHYON.Routs.RoutSteps
         private readonly IRepository<TrucksType, long> _lookup_trucksTypeRepository;
         private readonly IRepository<TrailerType, int> _lookup_trailerTypeRepository;
         private readonly IRepository<GoodsDetail, long> _lookup_goodsDetailRepository;
+        private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
 
 
-        public RoutStepsAppService(IRepository<RoutStep, long> routStepRepository, IRoutStepsExcelExporter routStepsExcelExporter, IRepository<City, int> lookup_cityRepository, IRepository<Route, int> lookup_routeRepository, IRepository<Facility, long> lookupFacilityRepository, IRepository<GoodsDetail, long> lookupGoodsDetailRepository, IRepository<TrailerType, int> lookupTrailerTypeRepository, IRepository<TrucksType, long> lookupTrucksTypeRepository)
+        public RoutStepsAppService(IRepository<RoutStep, long> routStepRepository, IRoutStepsExcelExporter routStepsExcelExporter, IRepository<City, int> lookup_cityRepository, IRepository<Route, int> lookup_routeRepository, IRepository<Facility, long> lookupFacilityRepository, IRepository<GoodsDetail, long> lookupGoodsDetailRepository, IRepository<TrailerType, int> lookupTrailerTypeRepository, IRepository<TrucksType, long> lookupTrucksTypeRepository, IRepository<ShippingRequest, long> shippingRequestRepository)
         {
             _routStepRepository = routStepRepository;
             _routStepsExcelExporter = routStepsExcelExporter;
@@ -54,6 +57,7 @@ namespace TACHYON.Routs.RoutSteps
             _lookup_goodsDetailRepository = lookupGoodsDetailRepository;
             _lookup_trailerTypeRepository = lookupTrailerTypeRepository;
             _lookup_trucksTypeRepository = lookupTrucksTypeRepository;
+            _shippingRequestRepository = shippingRequestRepository;
         }
 
         public async Task<PagedResultDto<GetRoutStepForViewOutput>> GetAll(GetAllRoutStepsInput input)
@@ -354,10 +358,22 @@ namespace TACHYON.Routs.RoutSteps
                 }).ToListAsync();
         }
 
-
-        public async Task<List<FacilityForDropdownDto>> GetAllFacilitiesForDropdown()
+        public async Task<List<FacilityForDropdownDto>> GetAllFacilitiesForDropdown(long? shippingRequestId)
         {
+            int? shipperId = null;
+            // TMS can see any shipper facility in order to select it in Create Trip action 
+            if (await FeatureChecker.IsEnabledAsync(AppFeatures.TachyonDealer))
+            {
+
+                if (shippingRequestId != null)
+                {
+                    DisableTenancyFilters();
+                    var sr = await _shippingRequestRepository.GetAsync(shippingRequestId.Value);
+                    shipperId = sr.TenantId;
+                }
+            }
             return await _lookup_FacilityRepository.GetAll()
+                .WhereIf(shipperId.HasValue, x => x.TenantId == shipperId.Value)
                 .Select(x => new FacilityForDropdownDto
                 {
                     Id = x.Id,

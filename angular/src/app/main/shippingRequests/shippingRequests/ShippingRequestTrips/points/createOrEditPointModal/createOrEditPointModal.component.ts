@@ -1,21 +1,18 @@
-import { Component, Injector, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
+/* tslint:disable:triple-equals */
+import { Component, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   CreateOrEditRoutPointDto,
-  FacilityForDropdownDto,
-  GoodsDetailDto,
   PickingType,
   ReceiverFacilityLookupTableDto,
   ReceiversServiceProxy,
   RoutStepsServiceProxy,
   ShippingRequestRouteType,
 } from '@shared/service-proxies/service-proxies';
-import { DropDownMenu, TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
+import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ModalDirective } from '@node_modules/ngx-bootstrap/modal';
 import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
-import { GoodDetailsComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/good-details/good-details.component';
 import { NgForm } from '@angular/forms';
-import { pipe } from '@node_modules/rxjs';
 
 @Component({
   selector: 'createOrEditPointModal',
@@ -25,7 +22,7 @@ import { pipe } from '@node_modules/rxjs';
 export class CreateOrEditPointModalComponent extends AppComponentBase implements OnInit, OnDestroy {
   constructor(
     injector: Injector,
-    private _tripService: TripService,
+    public _tripService: TripService,
     private _PointService: PointsService,
     private _receiversServiceProxy: ReceiversServiceProxy,
     private _routStepsServiceProxy: RoutStepsServiceProxy
@@ -36,7 +33,7 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
   // @ViewChild('PointGoodDetailsComponent') public PointGoodDetailsComponent: GoodDetailsComponent;
   @ViewChild('createOrEditPintForm') public createOrEditPintForm: NgForm;
 
-  allFacilities: FacilityForDropdownDto[];
+  //allFacilities: FacilityForDropdownDto[];
   allReceivers: ReceiverFacilityLookupTableDto[];
 
   RouteType: number; //filled in onInit from the Trip Shared Service
@@ -143,8 +140,8 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
    * Extracts Facility Coordinates for single Point (Map Drawing)
    */
   RouteStepCordSetter() {
-    this.Point.latitude = this.allFacilities.find((x) => x.id == this.Point.facilityId)?.lat;
-    this.Point.longitude = this.allFacilities.find((x) => x.id == this.Point.facilityId)?.long;
+    this.Point.latitude = this._tripService.currentFacilitiesItems.find((x) => x.id == this.Point.facilityId)?.lat;
+    this.Point.longitude = this._tripService.currentFacilitiesItems.find((x) => x.id == this.Point.facilityId)?.long;
   }
 
   /**
@@ -168,10 +165,10 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
   loadFacilities() {
     this.facilityLoading = true;
     // this._shippingRequestDDService.allFacilities.subscribe((res) => (this.allFacilities = res));
-    this._tripService.currentFacilitiesItems.subscribe((res: DropDownMenu) => {
-      this.facilityLoading = res.isLoading;
-      this.allFacilities = res.items;
-    });
+    // this._tripService.currentFacilitiesItems.subscribe((res: DropDownMenu) => {
+    //   this.facilityLoading = res.isLoading;
+    //   this.allFacilities = res.items;
+    // });
   }
 
   /**

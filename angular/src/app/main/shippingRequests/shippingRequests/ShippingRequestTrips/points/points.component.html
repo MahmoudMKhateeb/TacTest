@@ -5,7 +5,7 @@
         {{ l('waypoints') }}
       </h3>
       <!-- if the user us shipper and this is create trip not edit and the route Type is not single Drop show the toolbar       -->
-      <div class="card-toolbar" *ngIf="feature.isEnabled('App.Shipper')">
+      <div class="card-toolbar" *ngIf="feature.isEnabled('App.Shipper') || feature.isEnabled('App.TachyonDealer')">
         <button
           type="button"
           class="btn btn-primary blue"

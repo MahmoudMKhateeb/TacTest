@@ -9,8 +9,13 @@ using System.Text;
 
 namespace TACHYON.Shipping.ShippingRequests.Dtos
 {
-    public class CreateOrEditShippingRequestStep1Dto : EntityDto<long?> , ICustomValidate
+    public class CreateOrEditShippingRequestStep1Dto : EntityDto<long?>, ICustomValidate
     {
+        /// <summary>
+        /// TAC-1937
+        /// Tachyon Create Services Can select shipper
+        /// </summary>
+        public int? ShipperId { get; set; }
         public virtual bool IsBid { get; set; }
         //Add Bid details If IsBid equals True
         public DateTime? BidStartDate { get; set; }
@@ -29,9 +34,9 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public ShippingRequestType RequestType { get; set; }
         public void AddValidationErrors(CustomValidationContext context)
         {
-            if(this.StartTripDate.Date < Clock.Now.Date)
+            if (this.StartTripDate.Date < Clock.Now.Date)
             {
-                 context.Results.Add(new ValidationResult("Start trip date cannot be before today"));
+                context.Results.Add(new ValidationResult("Start trip date cannot be before today"));
             }
             if (EndTripDate.HasValue && StartTripDate.Date > EndTripDate.Value.Date)
             {

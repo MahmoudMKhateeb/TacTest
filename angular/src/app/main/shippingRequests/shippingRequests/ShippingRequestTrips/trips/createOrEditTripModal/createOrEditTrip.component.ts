@@ -1,37 +1,20 @@
-import {
-  Component,
-  ViewChild,
-  Injector,
-  Output,
-  EventEmitter,
-  Input,
-  OnInit,
-  ChangeDetectorRef,
-  OnChanges,
-  SimpleChanges,
-  OnDestroy,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Injector, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import {
-  FacilityForDropdownDto,
-  RoutStepsServiceProxy,
-  ShippingRequestsTripServiceProxy,
-  CreateOrEditShippingRequestTripDto,
-  CreateOrEditRoutPointDto,
-  ShippingRequestDto,
-  CreateOrEditShippingRequestTripVasDto,
-  GetShippingRequestVasForViewDto,
-  WaybillsServiceProxy,
   CreateOrEditDocumentFileDto,
-  UpdateDocumentFileInput,
-  DocumentFilesServiceProxy,
-  DocumentTypeDto,
-  ShippingRequestRouteType,
+  CreateOrEditRoutPointDto,
+  CreateOrEditShippingRequestTripDto,
+  CreateOrEditShippingRequestTripVasDto,
+  FacilityForDropdownDto,
+  GetShippingRequestVasForViewDto,
   ReceiverFacilityLookupTableDto,
   ReceiversServiceProxy,
-  ShippingRequestTripVasDto,
-  DocumentTypesServiceProxy,
-  FileDto,
+  RoutStepsServiceProxy,
+  ShippingRequestDto,
+  ShippingRequestRouteType,
+  ShippingRequestsTripServiceProxy,
+  UpdateDocumentFileInput,
+  WaybillsServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { finalize } from '@node_modules/rxjs/operators';
@@ -42,7 +25,7 @@ import { FileDownloadService } from '@shared/utils/file-download.service';
 import { FileItem, FileUploader, FileUploaderOptions } from '@node_modules/ng2-file-upload';
 import { AppConsts } from '@shared/AppConsts';
 import { IAjaxResponse, TokenService } from '@node_modules/abp-ng2-module';
-import { DropDownMenu, TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
+import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
 import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
 import { FormControl, NgForm, Validators } from '@angular/forms';
 
@@ -65,7 +48,6 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   tripStartDate = new FormControl('', Validators.required);
   endTripDate = new FormControl('');
 
-  allFacilities: FacilityForDropdownDto[];
   trip = new CreateOrEditShippingRequestTripDto();
   facilityLoading = false;
   saving = false;
@@ -97,7 +79,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     public _fileDownloadService: FileDownloadService,
     private _waybillsServiceProxy: WaybillsServiceProxy,
     private cdref: ChangeDetectorRef,
-    private _TripService: TripService,
+    public _TripService: TripService,
     private _PointsService: PointsService,
     private _tokenService: TokenService,
     private _receiversServiceProxy: ReceiversServiceProxy
@@ -246,17 +228,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     });
   }
   refreshOrGetFacilities(facility: FacilityForDropdownDto | undefined) {
-    if (facility) {
-      this.allFacilities.push(facility);
-      this.trip.originFacilityId = facility.id;
-    } else {
-      this.facilityLoading = true;
-      // this._shippingRequestDDService.allFacilities.subscribe((res) => (this.allFacilities = res));
-      this._TripService.currentFacilitiesItems.subscribe((res: DropDownMenu) => {
-        this.facilityLoading = res.isLoading;
-        this.allFacilities = res.items;
-      });
-    }
+    this._TripService.GetOrRefreshFacilities(this.shippingRequest.id);
   }
 
   /**

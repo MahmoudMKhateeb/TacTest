@@ -1,27 +1,26 @@
-﻿using TACHYON.AddressBook;
-
+﻿using Abp.Application.Features;
+using Abp.Application.Services.Dto;
+using Abp.Authorization;
+using Abp.Domain.Repositories;
+using Abp.Extensions;
+using Abp.Linq.Extensions;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
-using Abp.Linq.Extensions;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Abp.Domain.Repositories;
-using TACHYON.Receivers.Exporting;
-using TACHYON.Receivers.Dtos;
-using TACHYON.Dto;
-using Abp.Application.Services.Dto;
+using TACHYON.AddressBook;
 using TACHYON.Authorization;
-using Abp.Extensions;
-using Abp.Authorization;
-using Microsoft.EntityFrameworkCore;
-using Abp.Application.Features;
+using TACHYON.Dto;
 using TACHYON.Features;
+using TACHYON.Receivers.Dtos;
+using TACHYON.Receivers.Exporting;
 
 namespace TACHYON.Receivers
 {
     [AbpAuthorize(AppPermissions.Pages_Receivers)]
-    [RequiresFeature(AppFeatures.Shipper)]
+    [RequiresFeature(AppFeatures.Shipper, AppFeatures.TachyonDealer)]
     public class ReceiversAppService : TACHYONAppServiceBase, IReceiversAppService
     {
         private readonly IRepository<Receiver> _receiverRepository;
@@ -67,7 +66,7 @@ namespace TACHYON.Receivers
                                     Id = o.Id
                                 },
                                 FacilityName = s1 == null || s1.Name == null ? "" : s1.Name.ToString(),
-                                CreationTime=o.CreationTime
+                                CreationTime = o.CreationTime
                             };
 
             var totalCount = await filteredReceivers.CountAsync();
@@ -198,6 +197,11 @@ namespace TACHYON.Receivers
 
         public async Task<List<ReceiverFacilityLookupTableDto>> GetAllReceiversByFacilityForTableDropdown(long facilityId)
         {
+
+            if (await FeatureChecker.IsEnabledAsync(AppFeatures.TachyonDealer))
+            {
+                DisableTenancyFilters();
+            }
             return await _receiverRepository.GetAll()
                 .Where(x => x.FacilityId == facilityId)
                 .Select(r => new ReceiverFacilityLookupTableDto

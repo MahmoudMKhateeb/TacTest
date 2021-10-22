@@ -184,7 +184,7 @@ namespace TACHYON.Shipping.Trips
                 new CreateOrEditShippingRequestTripDto
                 {
                     CreateOrEditDocumentFileDto = new CreateOrEditDocumentFileDto()
-                    
+
                 };
             //Fill documentType  
             var documentType = await _documentTypeRepository.SingleAsync(x => x.SpecialConstant.Contains(TACHYONConsts.TripAttachmentDocumentTypeSpecialConstant));
@@ -196,6 +196,7 @@ namespace TACHYON.Shipping.Trips
 
         public async Task CreateOrEdit(CreateOrEditShippingRequestTripDto input)
         {
+            await DisableTenancyFiltersIfTachyonDealer();
             var request = await GetShippingRequestByPermission(input.ShippingRequestId);
 
             ValidateTripDates(input, request);
@@ -468,8 +469,8 @@ namespace TACHYON.Shipping.Trips
                 .Include(x => x.RoutPoints)
                    .ThenInclude(r => r.GoodsDetails)
                     .ThenInclude(c => c.GoodCategoryFk)
-                .Include(x=>x.RoutPoints)
-                    .ThenInclude(c=>c.ReceiverFk)
+                .Include(x => x.RoutPoints)
+                    .ThenInclude(c => c.ReceiverFk)
                 .Include(x => x.ShippingRequestTripVases)
                   .ThenInclude(v => v.ShippingRequestVasFk)
                     .ThenInclude(v => v.VasFk)
