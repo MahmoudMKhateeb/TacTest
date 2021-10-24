@@ -571,6 +571,7 @@ namespace TACHYON.Shipping.Drivers
                     item.RoutPointDocuments.Clear();
                     item.ActualPickupOrDeliveryDate = null;
                     item.CompletedStatus = RoutePointCompletedStatus.NotCompleted;
+                    item.StartTime = item.EndTime = null;
                     //item.RatingLogs.Where(x => x.RateType != RateType.CarrierTripBySystem && x.RateType != RateType.ShipperTripBySystem).ToList().Clear();
                     //item.ShippingRequestTripAccidents.Clear();
                     //item.ShippingRequestTripTransitions.Clear();
@@ -602,15 +603,21 @@ namespace TACHYON.Shipping.Drivers
                 //check if trip has rating, to delete and recalculate
                 if (tripRate != null)
                 {
-                    //var CarrierId = trip.RatingLogs.Where(x => x.RateType == RateType.CarrierTripBySystem).FirstOrDefault().CarrierId;
-                    //var ShipperId = trip.RatingLogs.Where(x => x.RateType == RateType.ShipperTripBySystem).FirstOrDefault().ShipperId;
-                    //var DriverId = trip.RatingLogs.Where(x => x.RateType == RateType.DriverByReceiver).FirstOrDefault().DriverId;
-                    //var FacilityId = trip.RatingLogs.Where(x => x.RateType == RateType.FacilityByDriver).FirstOrDefault().FacilityId;
+                    var DriverId = trip.RatingLogs.Where(x => x.RateType == RateType.DriverByReceiver).FirstOrDefault().DriverId;
+                    var FacilityId = trip.RatingLogs.Where(x => x.RateType == RateType.FacilityByDriver).FirstOrDefault().FacilityId;
 
                     await _ratingLogManager.DeleteAllTripAndPointsRatingAsync(tripRate);
 
-                    //todo recalculate rating
+                    await CurrentUnitOfWork.SaveChangesAsync();
 
+                    //recalculate rating
+                    await _ratingLogManager.RecalculateCarrierRatingByCarrierTenantId(trip.ShippingRequestFk.CarrierTenantId.Value);
+                    await _ratingLogManager.RecalculateShipperRatingByShipperTenantId(trip.ShippingRequestFk.TenantId);
+                    if (DriverId != null)
+                        await _ratingLogManager.RecaculateDriverRating(DriverId.Value);
+
+                    if (FacilityId != null)
+                        await _ratingLogManager.RecalculateFacilityRating(FacilityId.Value);
                 }
             }
             else
