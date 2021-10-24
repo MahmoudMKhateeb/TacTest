@@ -121,8 +121,8 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     biddingStartDate: [''],
     biddingEndDate: [''],
     Shipper: [''],
-    ShipperReference: ['', Validators.required],
-    ShipperInvoiceNumber: ['', Validators.required],
+    ShipperReference: [''],
+    ShipperInvoiceNumber: [''],
   });
   step2Form = this.fb.group({
     origin: ['', Validators.required],

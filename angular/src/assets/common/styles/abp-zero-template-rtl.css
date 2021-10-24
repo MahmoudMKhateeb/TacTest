@@ -111,3 +111,9 @@ nav.m-menu__submenu--right span.m-menu__arrow {
 .not-drop {
   transform: translate3d(-60px, 1px, 0);
 }
+.p-datatable .p-datatable-thead > tr > th {
+  text-align: right !important;
+}
+.p-datatable .p-datatable-tbody > tr > td {
+  text-align: right !important;
+}
