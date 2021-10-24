@@ -237,7 +237,7 @@ namespace TACHYON.Authorization
             trailerTypes.CreateChildPermission(AppPermissions.Pages_TrailerTypes_Edit, L("EditTrailerType"), multiTenancySides: MultiTenancySides.Host);
             trailerTypes.CreateChildPermission(AppPermissions.Pages_TrailerTypes_Delete, L("DeleteTrailerType"), multiTenancySides: MultiTenancySides.Host);
 
-            var trucks = pages.CreateChildPermission(AppPermissions.Pages_Trucks, L("Trucks"), multiTenancySides: MultiTenancySides.Tenant);
+            var trucks = pages.CreateChildPermission(AppPermissions.Pages_Trucks, L("Trucks"));
             trucks.CreateChildPermission(AppPermissions.Pages_Trucks_Create, L("CreateNewTruck"), multiTenancySides: MultiTenancySides.Tenant);
             trucks.CreateChildPermission(AppPermissions.Pages_Trucks_Edit, L("EditTruck"), multiTenancySides: MultiTenancySides.Tenant);
             trucks.CreateChildPermission(AppPermissions.Pages_Trucks_Delete, L("DeleteTruck"), multiTenancySides: MultiTenancySides.Tenant);

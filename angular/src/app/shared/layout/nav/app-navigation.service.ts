@@ -269,12 +269,12 @@ export class AppNavigationService {
             undefined,
             undefined,
             undefined,
-            () => this.isEnabled('App.Carrier')
+            () => this.isEnabled('App.Carrier') || this.isEnabled('App.TachyonDealer') || !this._appSessionService.tenantId
           ),
         ],
         undefined,
         undefined,
-        () => this.isEnabled('App.Carrier')
+        () => this.isEnabled('App.Carrier') || this.isEnabled('App.TachyonDealer')
       ),
 
       //TODO: not all of these are visable to the TachyonDealer Need to Fix the Permisions in order for it to work
