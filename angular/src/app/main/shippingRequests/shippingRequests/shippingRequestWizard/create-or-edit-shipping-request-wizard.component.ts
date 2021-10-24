@@ -16,23 +16,24 @@ import KTWizard from '@metronic/common/js/components/wizard';
 
 import {
   CarriersForDropDownDto,
-  FacilitiesServiceProxy,
-  FacilityForDropdownDto,
-  GetAllGoodsCategoriesForDropDownOutput,
-  GoodsDetailsServiceProxy,
-  ISelectItemDto,
-  RoutStepCityLookupTableDto,
-  SelectItemDto,
-  ShippingRequestsServiceProxy,
-  CreateOrEditShippingRequestVasListDto,
-  ShippingRequestVasListOutput,
-  RoutStepsServiceProxy,
-  ShippingRequestRouteType,
   CreateOrEditShippingRequestStep1Dto,
+  CreateOrEditShippingRequestVasListDto,
   EditShippingRequestStep2Dto,
   EditShippingRequestStep3Dto,
   EditShippingRequestStep4Dto,
+  FacilitiesServiceProxy,
+  FacilityForDropdownDto,
+  GetAllGoodsCategoriesForDropDownOutput,
   GetShippingRequestForViewOutput,
+  GoodsDetailsServiceProxy,
+  ISelectItemDto,
+  RoutStepCityLookupTableDto,
+  RoutStepsServiceProxy,
+  SelectItemDto,
+  ShippersForDropDownDto,
+  ShippingRequestRouteType,
+  ShippingRequestsServiceProxy,
+  ShippingRequestVasListOutput,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -90,6 +91,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   shippingRequestReview: GetShippingRequestForViewOutput = new GetShippingRequestForViewOutput();
   cleanedVases: CreateOrEditShippingRequestVasListDto[] = [];
   selectedVasesProperties = [];
+  AllShippers: ShippersForDropDownDto[];
   public allCarriers: CarriersForDropDownDto[];
 
   constructor(
@@ -118,6 +120,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     tripsEndDate: [''],
     biddingStartDate: [''],
     biddingEndDate: [''],
+    Shipper: [''],
     ShipperReference: ['', Validators.required],
     ShipperInvoiceNumber: ['', Validators.required],
   });
@@ -416,6 +419,9 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   }
 
   loadAllDropDownLists(): void {
+    this._shippingRequestsServiceProxy.getAllShippersForDropDown().subscribe((result) => {
+      this.AllShippers = result;
+    });
     this._goodsDetailsServiceProxy.getAllGoodCategoryForTableDropdown(undefined).subscribe((result) => {
       this.allGoodCategorys = result;
     });
@@ -440,9 +446,9 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
           this.allRoutTypes = result;
         });*/
 
-    this._routStepsServiceProxy.getAllFacilitiesForDropdown().subscribe((result) => {
-      this.allFacilities = result;
-    });
+    // this._routStepsServiceProxy.getAllFacilitiesForDropdown().subscribe((result) => {
+    //   this.allFacilities = result;
+    // });
     this.loadallVases();
   }
   /* get all carriers for view in drop dawon */

@@ -226,7 +226,7 @@ namespace TACHYON.Shipping.ShippingRequests
             {
                 if (!await IsEnabledAsync(AppFeatures.SendTachyonDealShippingRequest))
                 {
-                    throw new UserFriendlyException(L("feature SendTachyonDealShippingRequest not enabled"));
+                    // throw new UserFriendlyException(L("feature SendTachyonDealShippingRequest not enabled"));
                 }
             }
             else if (input.IsDirectRequest)
@@ -262,12 +262,17 @@ namespace TACHYON.Shipping.ShippingRequests
         /// <returns></returns>
         public async Task EditStep2(EditShippingRequestStep2Dto input)
         {
+            if (await FeatureChecker.IsEnabledAsync(AppFeatures.TachyonDealer))
+            {
+                DisableTenancyFilters();
+            }
             var shippingRequest = await GetDraftedShippingRequest(input.Id);
             if (shippingRequest.DraftStep < 2)
             {
                 shippingRequest.DraftStep = 2;
             }
             ObjectMapper.Map(input, shippingRequest);
+
         }
 
         public async Task<EditShippingRequestStep2Dto> GetStep2ForEdit(EntityDto<long> entity)
@@ -282,6 +287,10 @@ namespace TACHYON.Shipping.ShippingRequests
         /// <returns></returns>
         public async Task EditStep3(EditShippingRequestStep3Dto input)
         {
+            if (await FeatureChecker.IsEnabledAsync(AppFeatures.TachyonDealer))
+            {
+                DisableTenancyFilters();
+            }
 
             await OthersNameValidation(input);
 
@@ -308,6 +317,10 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             using (CurrentUnitOfWork.DisableFilter("IHasIsDrafted"))
             {
+                if (await FeatureChecker.IsEnabledAsync(AppFeatures.TachyonDealer))
+                {
+                    DisableTenancyFilters();
+                }
                 ShippingRequest shippingRequest = await _shippingRequestRepository.GetAll()
                .Include(x => x.ShippingRequestVases)
                  .Where(x => x.Id == input.Id && x.IsDrafted == true)
@@ -346,6 +359,10 @@ namespace TACHYON.Shipping.ShippingRequests
 
         public async Task PublishShippingRequest(long id)
         {
+            if (await FeatureChecker.IsEnabledAsync(AppFeatures.TachyonDealer))
+            {
+                DisableTenancyFilters();
+            }
             ShippingRequest shippingRequest = await GetDraftedShippingRequest(id);
             if (shippingRequest.DraftStep < 4)
             {
@@ -376,6 +393,10 @@ namespace TACHYON.Shipping.ShippingRequests
         private async Task<long> CreateStep1(CreateOrEditShippingRequestStep1Dto input)
         {
             ShippingRequest shippingRequest = ObjectMapper.Map<ShippingRequest>(input);
+            if (input.ShipperId.HasValue)
+            {
+                shippingRequest.TenantId = input.ShipperId.Value;
+            }
             //ValidateStep1(shippingRequest);
             shippingRequest.IsDrafted = true;
             shippingRequest.DraftStep = 1;
@@ -540,6 +561,12 @@ namespace TACHYON.Shipping.ShippingRequests
         public async Task<List<CarriersForDropDownDto>> GetAllCarriersForDropDownAsync()
         {
             return await _shippingRequestDirectRequestManager.GetCarriersForDropDownByPermissionAsync();
+        }
+        public async Task<List<ShippersForDropDownDto>> GetAllShippersForDropDownAsync()
+        {
+            return await _tenantRepository.GetAll()
+                .Where(x => x.Edition.Id == ShipperEditionId)
+                .Select(x => new ShippersForDropDownDto { Id = x.Id, DisplayName = x.TenancyName }).ToListAsync();
         }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequests)]

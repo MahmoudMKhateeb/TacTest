@@ -206,6 +206,7 @@ namespace TACHYON.Shipping.Trips
 
         public async Task CreateOrEdit(CreateOrEditShippingRequestTripDto input)
         {
+            await DisableTenancyFiltersIfTachyonDealer();
             var request = await GetShippingRequestByPermission(input.ShippingRequestId);
 
             ValidateTripDates(input, request);

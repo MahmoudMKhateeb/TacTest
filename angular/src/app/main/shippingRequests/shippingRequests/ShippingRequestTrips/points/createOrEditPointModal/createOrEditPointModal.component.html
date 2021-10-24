@@ -36,7 +36,11 @@
                       [required]="RouteType == RouteTypes.MultipleDrops"
                     >
                       <option [value]="" disabled selected>{{ l('SelectAFacility') }}</option>
-                      <option *ngFor="let item of allFacilities" [value]="item.id" [disabled]="item.id == wayPointsList[0].facilityId">
+                      <option
+                        *ngFor="let item of _tripService.currentFacilitiesItems"
+                        [value]="item.id"
+                        [disabled]="item.id == wayPointsList[0].facilityId"
+                      >
                         {{ item.displayName }}
                       </option>
                     </select>
