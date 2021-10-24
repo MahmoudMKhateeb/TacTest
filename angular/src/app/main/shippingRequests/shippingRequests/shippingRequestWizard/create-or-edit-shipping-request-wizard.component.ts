@@ -139,6 +139,9 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     transportType: [null, Validators.required],
     truckType: [null, Validators.required],
     capacity: [null, Validators.required],
+    otherTransportTypeName: [null],
+    otherTrucksTypeName: [null],
+    otherGoodsCategoryName: [null],
   });
   step4Form = this.fb.group({});
 
@@ -202,6 +205,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
             this.notify.error(this.l('PleaseCompleteMissingFields'));
           } else {
             this.createOrEditStep3();
+            console.log('transportTypeId : ', this.step3Dto.transportTypeId);
             wizardObj.goNext();
           }
           //statements;

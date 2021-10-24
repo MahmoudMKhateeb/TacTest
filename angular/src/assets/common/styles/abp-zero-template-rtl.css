@@ -117,3 +117,7 @@ nav.m-menu__submenu--right span.m-menu__arrow {
 .p-datatable .p-datatable-tbody > tr > td {
   text-align: right !important;
 }
+
+.input-group-btn button {
+  border-radius: 0.42rem 0 0 0.42rem !important;
+}

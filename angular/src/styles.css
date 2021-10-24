@@ -531,3 +531,7 @@ card-body {
   right: 0px;
   transform: translate3d(64px, 1px, 0);
 }
+
+.input-group-btn button {
+  border-radius: 0 0.42rem 0.42rem 0 !important;
+}
