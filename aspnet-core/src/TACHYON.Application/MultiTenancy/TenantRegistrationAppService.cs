@@ -129,28 +129,12 @@ namespace TACHYON.MultiTenancy
                     }
                 }
 
+                var createInput = ObjectMapper.Map<CreateTenantInput>(input);
+                createInput.ShouldChangePasswordOnNextLogin = false;
+                createInput.SubscriptionEndDateUtc = subscriptionEndDate;
+                createInput.IsInTrialPeriod = isInTrialPeriod;
                 var tenantId = await _tenantManager.CreateWithAdminUserAsync(
-                    input.companyName,
-                    input.MobileNo,
-                    tenancyName,
-                    input.Name,
-                    input.Address,
-                    input.CityId,
-                    input.CountryId,
-                    input.AdminPassword,
-                    input.AdminEmailAddress,
-                    null,
-                    isActive,
-                    input.EditionId,
-                    shouldChangePasswordOnNextLogin: false,
-                    sendActivationEmail: true,
-                    subscriptionEndDate,
-                    isInTrialPeriod,
-                    AppUrlService.CreateEmailActivationUrlFormat(tenancyName),
-                    input.UserAdminFirstName,
-                    input.UserAdminSurname,
-                    input.MoiNumber
-                );
+                    createInput, AppUrlService.CreateEmailActivationUrlFormat(tenancyName));
 
                 var tenant = await TenantManager.GetByIdAsync(tenantId);
                 await _appNotifier.NewTenantRegisteredAsync(tenant);

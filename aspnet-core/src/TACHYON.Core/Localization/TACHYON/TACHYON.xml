@@ -2407,5 +2407,7 @@
 		<text name="ShipperTripUpdatedNotificationMessage">There are some changes on trip with waybill No {0} . For more details please click here</text>
 		<text name="CarrierTripUpdatedNotificationMessage">There are some changes on trip with waybill No {0} . For more details please click here</text>
 		<text name="TachyonDealerTripUpdatedNotificationMessage">There are some changes on trip with waybill No {0} . For more details please click here</text>
+	
+	<text name="CompanyNameIsAlreadyTaken"> Company name {0} is already taken </text>
 	</texts>
 </localizationDictionary>

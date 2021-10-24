@@ -547,6 +547,7 @@ namespace TACHYON
                       x.MapFrom(i => i.CompanyName));
             configuration.CreateMap<TenantEditDto, Tenant>().ReverseMap();
             configuration.CreateMap<CurrentTenantInfoDto, Tenant>().ReverseMap();
+            configuration.CreateMap<RegisterTenantInput, CreateTenantInput>().ReverseMap();
 
             //User
             configuration.CreateMap<User, UserEditDto>()
