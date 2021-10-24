@@ -269,7 +269,7 @@ export class AppNavigationService {
             undefined,
             undefined,
             undefined,
-            () => this.isEnabled('App.Carrier') || this.isEnabled('App.TachyonDealer') || this._appSessionService.tenantId
+            () => this.isEnabled('App.Carrier') || this.isEnabled('App.TachyonDealer') || !this._appSessionService.tenantId
           ),
         ],
         undefined,

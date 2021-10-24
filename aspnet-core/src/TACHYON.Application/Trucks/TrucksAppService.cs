@@ -103,7 +103,9 @@ namespace TACHYON.Trucks
         public async Task<LoadResult> GetAll(GetAllTrucksInput input)
         {
 
-            await DisableTenancyFilterIfTachyonDeal();
+            DisableTenancyFiltersIfHost();
+            await DisableTenancyFiltersIfTachyonDealer();
+
 
             var query = _truckRepository.GetAll()
                 .ProjectTo<TruckDto>(AutoMapperConfigurationProvider);
@@ -572,19 +574,6 @@ namespace TACHYON.Trucks
 
         #region Helpers
 
-        private async Task DisableTenancyFilterIfTachyonDeal()
-        {
-            if (!AbpSession.TenantId.HasValue) return;
-
-            var currentTenantEdition = await (from tenant in _lookupTenantRepository.GetAll()
-                                              where tenant.Id == AbpSession.TenantId
-                                              select tenant.Edition.DisplayName).FirstOrDefaultAsync();
-
-            currentTenantEdition = currentTenantEdition.Replace(" ", "").ToLower();
-
-            if (currentTenantEdition.Contains(AppConsts.TachyonDealEditionName.ToLower()))
-                CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant);
-        }
 
         #endregion
     }
