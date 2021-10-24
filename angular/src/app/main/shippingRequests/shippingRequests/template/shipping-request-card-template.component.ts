@@ -1,4 +1,4 @@
-import { Component, OnInit, Injector, Input, ViewChild } from '@angular/core';
+import { Component, Injector, Input, OnInit, ViewChild } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import {
   GetShippingRequestForPriceOfferListDto,
@@ -12,10 +12,10 @@ import {
 
 import * as _ from 'lodash';
 import { ScrollPagnationComponentBase } from '@shared/common/scroll/scroll-pagination-component-base';
-import { log } from 'util';
 import { ShippingRequestForPriceOfferGetAllInput } from '../../../../shared/common/search/ShippingRequestForPriceOfferGetAllInput';
 import { Router } from '@angular/router';
 import { ShippingrequestsDetailsModelComponent } from '../details/shippingrequests-details-model.component';
+
 @Component({
   templateUrl: './shipping-request-card-template.component.html',
   // styleUrls: ['/assets/custom/css/style.scss'],
@@ -175,5 +175,9 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
       }
     }
     this.modalMore.show(item);
+  }
+
+  createNewRequest() {
+    this.router.navigateByUrl('/app/main/shippingRequests/shippingRequestWizard');
   }
 }

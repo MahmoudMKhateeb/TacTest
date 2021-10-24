@@ -162,6 +162,20 @@ namespace TACHYON.Rating
             return false;
         }
 
+        public async Task DeleteAllTripAndPointsRatingAsync(RatingLog rate)
+        {
+            var ratePoints = rate.TripFk.RoutPoints.Select(y => y.Id).ToList();
+            var ratings = await _ratingLogRepository.GetAll()
+                .WhereIf(rate.TripId != null, x => x.TripId == rate.TripId || ratePoints.Contains(x.PointId.Value))
+                .WhereIf(rate.PointId != null, x => x.PointId == rate.PointId || x.TripId == rate.RoutePointFk.ShippingRequestTripId)
+                .ToListAsync();
+
+            foreach (var rateItem in ratings)
+            {
+                await _ratingLogRepository.DeleteAsync(rateItem);
+            }
+        }
+
         public async Task RecalculateRatingForTenantAndDriverAndFacility(long rateId)
         {
             var rate = await _ratingLogRepository.GetAll()

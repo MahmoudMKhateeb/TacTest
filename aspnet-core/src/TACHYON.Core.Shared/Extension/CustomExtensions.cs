@@ -12,11 +12,11 @@ namespace TACHYON.Extension
 
         #region String
 
-        public static bool ToLowerContains(this String str, string s)
-        {
-            return str.ToLower().Contains(s.ToLower());
+        //public static bool ToLowerContains(this String str, string s)
+        //{
+        //    return str.ToLower().Contains(s.ToLower());
 
-        }
+        //}
 
         #endregion
 

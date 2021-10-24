@@ -76,6 +76,28 @@
                 <div class="form" id="kt_form">
                   <!--begin: Form Wizard Step 1-->
                   <div class="pb-5" [formGroup]="step1Form" data-wizard-type="step-content" data-wizard-state="current">
+                    <div *ngIf="this.feature.isEnabled('App.TachyonDealer')" class="form-group">
+                      <label>{{ l('Shipper') }} <span class="required-fileds">*</span></label>
+                      <div
+                        [ngClass]="{
+                          'spinner spinner-success spinner-right mr-1 ml-1': !AllShippers
+                        }"
+                      >
+                        <select
+                          class="form-control"
+                          name="Shipper"
+                          formControlName="Shipper"
+                          [(ngModel)]="step1Dto.shipperId"
+                          (change)="shippingRequestType = 'tachyondeal'"
+                          required
+                        >
+                          <option [value]="undefined">{{ l('SelectShipper') }}</option>
+                          <option *ngFor="let item of AllShippers" value="{{ item.id }}">{{ item.displayName }}</option>
+                        </select>
+                      </div>
+                      <span class="form-text text-muted">{{ l('SelectShipper') }} {{ step1Dto.shipperId }}</span>
+                    </div>
+
                     <div class="form-group">
                       <label>{{ l('ShippingRequestType') }} <span class="required-fileds">*</span></label>
                       <select
@@ -93,6 +115,7 @@
                         "
                         required
                         readonly="readonly"
+                        [attr.disabled]="step1Dto.shipperId > 0 ? true : null"
                       >
                         <option value="" selected>{{ l('select') }}</option>
                         <option [value]="'bidding'">{{ l('Marketplace') }}</option>

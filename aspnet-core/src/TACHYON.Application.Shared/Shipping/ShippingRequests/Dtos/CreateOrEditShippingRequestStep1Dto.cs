@@ -11,6 +11,11 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
 {
     public class CreateOrEditShippingRequestStep1Dto : EntityDto<long?>, ICustomValidate
     {
+        /// <summary>
+        /// TAC-1937
+        /// Tachyon Create Services Can select shipper
+        /// </summary>
+        public int? ShipperId { get; set; }
         public virtual bool IsBid { get; set; }
         //Add Bid details If IsBid equals True
         public DateTime? BidStartDate { get; set; }

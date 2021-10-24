@@ -48,9 +48,9 @@
                   required
                 >
                   <option value="" selected>{{ l('SelectaFacility') }}</option>
-                  <option *ngFor="let item of allFacilities" value="{{ item.id }}">{{ item.displayName }}</option>
+                  <option *ngFor="let item of _TripService.currentFacilitiesItems" value="{{ item.id }}">{{ item.displayName }}</option>
                 </select>
-                <div class="input-group-btn">
+                <div *ngIf="this.feature.isEnabled('App.Shipper')" class="input-group-btn">
                   <button class="btn btn-primary" [disabled]="facilityLoading" (click)="createOrEditFacilityModal.show()">
                     <i class="flaticon-plus"></i>{{ l('AddNew') }}
                   </button>
@@ -75,7 +75,7 @@
                     <option value="">{{ l('SelectAPickUpAgent') }}</option>
                     <option *ngFor="let item of allReceivers" [ngValue]="item.id">{{ item.displayName }}</option>
                   </select>
-                  <div class="input-group-btn">
+                  <div *ngIf="this.feature.isEnabled('App.Shipper')" class="input-group-btn">
                     <button class="btn btn-primary" [disabled]="receiversLoading" (click)="createOrEditReceiverModal.show()">
                       <i class="flaticon-plus"></i>{{ l('New') }}
                     </button>
@@ -100,9 +100,9 @@
                   required
                 >
                   <option value="" selected>{{ l('SelectaFacility') }}</option>
-                  <option *ngFor="let item of allFacilities" value="{{ item.id }}">{{ item.displayName }}</option>
+                  <option *ngFor="let item of _TripService.currentFacilitiesItems" value="{{ item.id }}">{{ item.displayName }}</option>
                 </select>
-                <div class="input-group-btn">
+                <div *ngIf="this.feature.isEnabled('App.Shipper')" class="input-group-btn">
                   <button class="btn btn-primary" [disabled]="facilityLoading" (click)="createOrEditFacilityModal.show()">
                     <i class="flaticon-plus"></i>{{ l('AddNew') }}
                   </button>

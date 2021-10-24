@@ -2,26 +2,27 @@
 using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
 using Abp.Dependency;
+using Abp.Domain.Uow;
 using Abp.IdentityFramework;
 using Abp.MultiTenancy;
 using Abp.Runtime.Session;
 using Abp.Threading;
-using Microsoft.AspNetCore.Identity;
-using System;
-using System.Threading.Tasks;
-using Abp.Domain.Uow;
-using TACHYON.Authorization.Users;
-using TACHYON.MultiTenancy;
-using System.Globalization;
-using System.Linq;
 using Abp.UI;
 using AutoMapper;
 using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Data.ResponseModel;
+using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Threading.Tasks;
+using TACHYON.Authorization.Users;
 using TACHYON.Configuration;
+using TACHYON.Features;
+using TACHYON.MultiTenancy;
 
 namespace TACHYON
 {
@@ -91,7 +92,14 @@ namespace TACHYON
         {
             if (!AbpSession.TenantId.HasValue)
             {
-                CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant);
+                DisableTenancyFilters(); ;
+            }
+        }
+        protected virtual async Task DisableTenancyFiltersIfTachyonDealer()
+        {
+            if (await FeatureChecker.IsEnabledAsync(AppFeatures.TachyonDealer))
+            {
+                DisableTenancyFilters();
             }
         }
 
@@ -100,6 +108,8 @@ namespace TACHYON
             CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant);
 
         }
+
+
 
         /// <summary>
         /// Because host need to access the service by services

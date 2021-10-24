@@ -1,10 +1,10 @@
+/* tslint:disable:triple-equals */
 import { Component, EventEmitter, Injector, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import {
   CreateOrEditRoutPointDto,
   FacilitiesServiceProxy,
-  FacilityForDropdownDto,
   PickingType,
   RoutesServiceProxy,
   RoutStepsServiceProxy,
@@ -13,9 +13,8 @@ import {
 } from '@shared/service-proxies/service-proxies';
 import Swal from 'sweetalert2';
 import { FileDownloadService } from '@shared/utils/file-download.service';
-import { TripService, DropDownMenu } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
+import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
 import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
-import { GoodDetailsComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/good-details/good-details.component';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -31,7 +30,7 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
     private _routStepsServiceProxy: RoutStepsServiceProxy,
     private _fileDownloadService: FileDownloadService,
     private _waybillsServiceProxy: WaybillsServiceProxy,
-    private _tripService: TripService,
+    public _tripService: TripService,
     private _PointsService: PointsService
   ) {
     super(injector);
@@ -51,7 +50,7 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
   RouteTypes = ShippingRequestRouteType;
   wayPointsList: CreateOrEditRoutPointDto[] = [];
 
-  allFacilities: FacilityForDropdownDto[];
+  //allFacilities: FacilityForDropdownDto[];
   PickingType = PickingType;
   active = false;
   saving = false;
@@ -146,8 +145,12 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
     }
     this.Point.pickingType = pointType == 'drop' ? PickingType.Dropoff : PickingType.Pickup;
     this.Point.facilityId = pointType == 'drop' ? this.destFacility : this.sourceFacility;
-    this.Point.latitude = this.allFacilities.find((x) => (pointType == 'drop' ? x.id == this.destFacility : x.id == this.sourceFacility))?.lat;
-    this.Point.longitude = this.allFacilities.find((x) => (pointType == 'drop' ? x.id == this.destFacility : x.id == this.sourceFacility))?.long;
+    this.Point.latitude = this._tripService.currentFacilitiesItems.find((x) =>
+      pointType == 'drop' ? x.id == this.destFacility : x.id == this.sourceFacility
+    )?.lat;
+    this.Point.longitude = this._tripService.currentFacilitiesItems.find((x) =>
+      pointType == 'drop' ? x.id == this.destFacility : x.id == this.sourceFacility
+    )?.long;
     //sets the long and lat of the point
     this.wayPointsList[pointType == 'drop' ? 1 : 0] = this.Point;
     //sync points list with the cloud
@@ -165,19 +168,10 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
   loadFacilities() {
     console.log('Facilites Loaded From Points');
     this.facilityLoading = true;
-    // this._shippingRequestDDService.allFacilities.subscribe((res) => (this.allFacilities = res));
-    // this._routStepsServiceProxy.getAllFacilitiesForDropdown().subscribe((result) => {
-    //   this.allFacilities = result;
-    //   this.facilityLoading = false;
-    // });
-    this._tripService.currentFacilitiesItems.subscribe((res: DropDownMenu) => {
-      this.facilityLoading = res.isLoading;
-      this.allFacilities = res.items;
-    });
   }
 
   getFacilityNameByid(id: number) {
-    return this.allFacilities?.find((x) => x.id == id)?.displayName;
+    return this._tripService.currentFacilitiesItems?.find((x) => x.id == id)?.displayName;
   }
 
   wayPointsSetter() {

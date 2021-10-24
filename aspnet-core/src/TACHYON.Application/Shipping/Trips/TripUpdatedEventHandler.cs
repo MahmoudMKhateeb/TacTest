@@ -28,35 +28,35 @@ namespace TACHYON.Shipping.Trips
         private readonly BayanIntegrationManager _bayanIntegrationManager;
         private readonly IAppNotifier _appNotifier;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
-        private readonly IRepository<User, long> _lookupUserRepo;
-        private readonly IRepository<Tenant> _lookupTenantRepo;
 
-        public TripUpdatedEventHandler(BayanIntegrationManager bayanIntegrationManager, IAppNotifier appNotifier, IUnitOfWorkManager unitOfWorkManager,
-            IRepository<User, long> lookupUserRepo, IRepository<Tenant> lookupTenantRepo)
+
+        public TripUpdatedEventHandler(BayanIntegrationManager bayanIntegrationManager, IAppNotifier appNotifier, IUnitOfWorkManager unitOfWorkManager)
         {
             _bayanIntegrationManager = bayanIntegrationManager;
             _appNotifier = appNotifier;
             _unitOfWorkManager = unitOfWorkManager;
-            _lookupUserRepo = lookupUserRepo;
-            _lookupTenantRepo = lookupTenantRepo;
         }
 
         public void HandleEvent(EntityUpdatedEventData<ShippingRequestTrip> eventData)
         {
             //todo send notification for driver and shipper and carrier using eventBus
-            AsyncHelper.RunSync(async () => await _appNotifier.NotifyTripUpdated(eventData.Entity));
-
-            // Add BayanIntegration Jobs To the Queue
-            if (eventData.Entity.AssignedDriverUserId.HasValue && eventData.Entity.AssignedTruckId.HasValue)
+            using (var unitOfWork = _unitOfWorkManager.Begin())
             {
-                if (eventData.Entity.BayanId.IsNullOrEmpty())
+                AsyncHelper.RunSync(() => _appNotifier.NotifyTripUpdated(eventData.Entity));
+
+                // Add BayanIntegration Jobs To the Queue
+                if (eventData.Entity.AssignedDriverUserId.HasValue && eventData.Entity.AssignedTruckId.HasValue)
                 {
-                    AsyncHelper.RunSync(() => _bayanIntegrationManager.QueueCreateConsignmentNote(eventData.Entity.Id));
+                    if (eventData.Entity.BayanId.IsNullOrEmpty())
+                    {
+                        AsyncHelper.RunSync(() => _bayanIntegrationManager.QueueCreateConsignmentNote(eventData.Entity.Id));
+                    }
+                    else
+                    {
+                        AsyncHelper.RunSync(() => _bayanIntegrationManager.QueueEditConsignmentNote(eventData.Entity.Id));
+                    }
                 }
-                else
-                {
-                    AsyncHelper.RunSync(() => _bayanIntegrationManager.QueueEditConsignmentNote(eventData.Entity.Id));
-                }
+                unitOfWork.Complete();
             }
         }
 

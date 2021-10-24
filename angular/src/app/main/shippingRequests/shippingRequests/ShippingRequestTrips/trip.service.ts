@@ -25,11 +25,13 @@ export class TripService {
   private destFacility = new BehaviorSubject<number>(null);
   currentDestFacility = this.destFacility.asObservable();
 
-  private FacilitiesItems: BehaviorSubject<any> = new BehaviorSubject(new Array<DropDownMenu>());
-  currentFacilitiesItems = this.FacilitiesItems.asObservable();
+  //private FacilitiesItems: BehaviorSubject<any> = new BehaviorSubject(new Array<DropDownMenu>());
+  public currentFacilitiesItems: FacilityForDropdownDto[];
+
+  public islam = 1987;
 
   constructor(private _routStepsServiceProxy: RoutStepsServiceProxy, private feature: FeatureCheckerService) {
-    this.GetOrRefreshFacilities();
+    //  this.GetOrRefreshFacilities(undefined);
   }
 
   updateShippingRequest(shippingRequest: GetShippingRequestForViewOutput) {
@@ -50,12 +52,10 @@ export class TripService {
     this.destFacility.next(id);
   }
   //Loads All facilities
-  GetOrRefreshFacilities() {
-    if (this.feature.isEnabled('App.Shipper')) {
-      console.log('Facilities Loaded/Refreshed Only For Shipper From Trip Shared Service');
-      this.FacilitiesItems.next({ isLoading: true, items: null });
-      this._routStepsServiceProxy.getAllFacilitiesForDropdown().subscribe((result) => {
-        this.FacilitiesItems.next({ isLoading: false, items: result });
+  GetOrRefreshFacilities(shippingRequestId: number) {
+    if (this.feature.isEnabled('App.Shipper') || this.feature.isEnabled('App.TachyonDealer')) {
+      this._routStepsServiceProxy.getAllFacilitiesForDropdown(shippingRequestId).subscribe((result) => {
+        this.currentFacilitiesItems = result;
       });
     }
   }

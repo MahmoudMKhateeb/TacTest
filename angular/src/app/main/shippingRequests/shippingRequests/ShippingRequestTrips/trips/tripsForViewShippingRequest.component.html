@@ -3,7 +3,7 @@
     <h3 class="card-title">
       {{ l('shippingRequestTrips') }}
     </h3>
-    <div class="card-toolbar" *ngIf="feature.isEnabled('App.Shipper')">
+    <div class="card-toolbar" *ngIf="feature.isEnabled('App.Shipper') || feature.isEnabled('App.TachyonDealer')">
       <button
         class="btn btn-primary"
         (click)="AddNewTripModal.show()"
@@ -157,7 +157,7 @@
 </div>
 
 <AddNewTripModal
-  *ngIf="feature.isEnabled('App.Shipper')"
+  *ngIf="feature.isEnabled('App.Shipper') || feature.isEnabled('App.TachyonDealer')"
   #AddNewTripModal
   (modalSave)="reloadPage()"
   [shippingRequest]="ShippingRequest"

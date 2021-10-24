@@ -1,27 +1,27 @@
-﻿using Abp.AspNetZeroCore.Net;
+﻿using Abp.AspNetCore.Mvc.Authorization;
+using Abp.AspNetZeroCore.Net;
+using Abp.BackgroundJobs;
 using Abp.Extensions;
 using Abp.IO.Extensions;
+using Abp.Runtime.Session;
 using Abp.UI;
 using Abp.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Abp.AspNetCore.Mvc.Authorization;
-using Abp.BackgroundJobs;
-using Abp.Runtime.Session;
 using TACHYON.Authorization;
+using TACHYON.Common;
 using TACHYON.Documents.DocumentFiles.Dtos;
 using TACHYON.Dto;
+using TACHYON.Localization.Importing;
+using TACHYON.Shipping.Drivers;
+using TACHYON.Shipping.Drivers.Dto;
+using TACHYON.Shipping.Trips;
 using TACHYON.Storage;
 using TACHYON.Trucks;
 using TACHYON.Trucks.Dtos;
 using TACHYON.Trucks.Importing.Dto;
-using TACHYON.Shipping.Drivers.Dto;
-using TACHYON.Shipping.Drivers;
-using TACHYON.Common;
-using TACHYON.Localization.Importing;
-using TACHYON.Shipping.Trips;
 
 namespace TACHYON.Web.Controllers
 {
@@ -126,7 +126,7 @@ namespace TACHYON.Web.Controllers
                 {
                     fileBytes = stream.GetAllBytes();
                 }
-                
+
                 var tenantId = AbpSession.TenantId;
                 var fileObject = new BinaryObject(tenantId, fileBytes);
 
@@ -184,40 +184,9 @@ namespace TACHYON.Web.Controllers
 
         [HttpPost]
         [AbpMvcAuthorize()]
-       // [Produces("application/json")]
-        [Route("/api/services/app/ShippingRequestDriver/UploadPointDeliveryDocument")]
-        public async Task<JsonResult> SetDropOffPointToDelivery()
-        {
-            try
-            {
-                var file = Request.Form.Files.First();
-                //Input.Document = file;
-                if (file.Length==0)
-                {
-                    throw new UserFriendlyException(L("File_Empty_Error"));
-                }
-
-                if (file.Length > 1048576 * 100) //100 MB
-                {
-                    throw new UserFriendlyException(L("File_SizeLimit_Error"));
-                }
-
-              var document=  await  _commonManager.UploadDocument(file, AbpSession.TenantId);
-
-                await _shippingRequestDriverManager.SetPointToDelivery(document);
-                return Json(new AjaxResponse(new { }));
-            }
-            catch (UserFriendlyException ex)
-            {
-                return Json(new AjaxResponse(new ErrorInfo(ex.Message)));
-            }
-        }
-
-        [HttpPost]
-        [AbpMvcAuthorize()]
         // [Produces("application/json")]
-        [Route("/api/services/app/ShippingRequestDriver/UploadDeliveryNoteDocument")]
-        public async Task<JsonResult> UploadDeliveryNoteDocument()
+        [Route("/api/services/app/ShippingRequestDriver/UploadPointDeliveryDocument")]
+        public async Task<JsonResult> SetDropOffPointToDelivery(long? pointId)
         {
             try
             {
@@ -234,7 +203,38 @@ namespace TACHYON.Web.Controllers
                 }
 
                 var document = await _commonManager.UploadDocument(file, AbpSession.TenantId);
-                await _shippingRequestDriverManager.UploadDeliveryNote(document);
+
+                await _shippingRequestDriverManager.SetPointToDelivery(document, pointId);
+                return Json(new AjaxResponse(new { }));
+            }
+            catch (UserFriendlyException ex)
+            {
+                return Json(new AjaxResponse(new ErrorInfo(ex.Message)));
+            }
+        }
+
+        [HttpPost]
+        [AbpMvcAuthorize()]
+        // [Produces("application/json")]
+        [Route("/api/services/app/ShippingRequestDriver/UploadDeliveryNoteDocument")]
+        public async Task<JsonResult> UploadDeliveryNoteDocument(long? pointId)
+        {
+            try
+            {
+                var file = Request.Form.Files.First();
+                //Input.Document = file;
+                if (file.Length == 0)
+                {
+                    throw new UserFriendlyException(L("File_Empty_Error"));
+                }
+
+                if (file.Length > 1048576 * 100) //100 MB
+                {
+                    throw new UserFriendlyException(L("File_SizeLimit_Error"));
+                }
+
+                var document = await _commonManager.UploadDocument(file, AbpSession.TenantId);
+                await _shippingRequestDriverManager.UploadDeliveryNote(document, pointId);
 
                 return Json(new AjaxResponse(new { }));
             }

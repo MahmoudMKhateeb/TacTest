@@ -64,7 +64,7 @@ namespace TACHYON.Documents.DocumentTypes
 
         public async Task<LoadResult> GetAll(GetAllDocumentTypesInput input)
         {
-            var filteredDocumentFiles = _documentTypeRepository
+            IQueryable<DocumentTypeDto> filteredDocumentFiles = _documentTypeRepository
                 .GetAll()
                 .ProjectTo<DocumentTypeDto>(AutoMapperConfigurationProvider); // goto:#Mapper_DocumentType_DocumentTypeDto
 
