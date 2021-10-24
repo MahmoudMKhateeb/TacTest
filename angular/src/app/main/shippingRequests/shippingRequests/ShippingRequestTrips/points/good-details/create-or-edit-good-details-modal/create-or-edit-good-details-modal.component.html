@@ -162,7 +162,7 @@
                         [class.is-valid]="DangerousGoodTypes.touched && DangerousGoodTypes.valid"
                         [required]="goodsDetail.isDangerousGood"
                       >
-                        <option value="">{{ l('SelectADangeroudGoodType') }}</option>
+                        <option value="">{{ l('SelectADangerousGoodType') }}</option>
                         <option *ngFor="let item of allDangerousGoodTypes" [value]="item.id">{{ item.displayName }}</option>
                       </select>
                     </div>

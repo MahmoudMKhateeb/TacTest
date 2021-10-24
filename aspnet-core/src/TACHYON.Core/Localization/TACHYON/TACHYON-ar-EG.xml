@@ -1756,7 +1756,7 @@
 		<text name="TheShipperSelectedIsNotFound">الشاحن المحدد غير موجود</text>
 		<text name="TheShippingIsNotFound">الشحنة غير متوفره</text>
 		<text name="TheShippingRequestNotFound">لا يوجد شحنة</text>
-		<text name="TheTotalWeightOfGoodsDetailsshouldNotBeGreaterThanShippingRequestWeight">مجموع الأوزان للبضائع يجب أن لا تكون أكبر من وزن الشحنة {0}</text>
+		<text name="TheTotalWeightOfGoodsDetailsshouldNotBeGreaterThanShippingRequestWeight">مجموع الأوزان للبضائع يجب أن لا يكون أكبر من وزن الشحنة {0}</text>
 		<text name="ThisEditionIsUsedAsAnExpiringEdition">يتم استخدام هذه النسخة كنسخة تنتهي صلاحيتها لنسخة أخرى. إذا كنت تريد جعل هذه النسخة مدفوعة، يجب عليك أولا إزالتها من النسخ الأخرى.</text>
 		<text name="ThisFieldIsRequired">هذا الحقل مطلوب</text>
 		<text name="ThisInvoiceIsNotYours">هذه الفاتورة ليست لك!</text>
@@ -2211,5 +2211,9 @@
 		<text name="ShipperTripUpdatedNotificationMessage">هناك بعض التغييرات في الرحلة برقم بوليصة الشحن {0}. لمزيد من التفاصيل، الرجاء الضغط هنا</text>
 		<text name="CarrierTripUpdatedNotificationMessage">هناك بعض التغييرات في الرحلة برقم بوليصة الشحن {0}. لمزيد من التفاصيل، الرجاء الضغط هنا</text>
 		<text name="TachyonDealerTripUpdatedNotificationMessage">هناك بعض التغييرات في الرحلة برقم بوليصة الشحن {0}. لمزيد من التفاصيل، الرجاء الضغط هنا</text>
+		<text name="PickupFacilityAndDropOffFacilityCantBeTheSame">المنشأة لا يمكن أن تكون منشأة تحميل وتنزيل في ذات الوقت</text>
+	    <text name="CreateOrEditPoint">أضافة أو تعديل موقع تنزيل</text>
+	    <text name="SelectADangerousGoodType">أختر نوع البضائع الخطرة</text>
+		<text name="DangerousGoodType">نوع البضائع الخطرة</text>
 	</texts>
 </localizationDictionary>
