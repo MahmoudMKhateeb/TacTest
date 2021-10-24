@@ -41,6 +41,8 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public bool HasAccident { get; set; }
         public bool IsApproveCancledByShipper { get; set; }
         public bool IsApproveCancledByCarrier { get; set; }
+        public bool IsApproveCancledByTachyonDealer { get; set; }
+        public bool IsForcedCanceledByTachyonDealer { get; set; }
         public long? AssignedTruckId { get; set; }
         [ForeignKey("AssignedTruckId")]
         public Truck AssignedTruckFk { get; set; }
