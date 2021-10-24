@@ -1695,6 +1695,8 @@
 			Please note that shipment {0} on its way. And expected to arrive on {1}, please give this code to
 			the driver when the delivery is completed.\n\n
 			Your shipping code:{2}
+      \n
+      Click here to rate after finish offloading {3}
 		</text>
 		<text name="ShippingRequests">Shipping Requests</text>
 		<text name="MyShippingRequests">My Shipping Requests</text>
@@ -2407,6 +2409,8 @@
 		<text name="ShipperTripUpdatedNotificationMessage">There are some changes on trip with waybill No {0} . For more details please click here</text>
 		<text name="CarrierTripUpdatedNotificationMessage">There are some changes on trip with waybill No {0} . For more details please click here</text>
 		<text name="TachyonDealerTripUpdatedNotificationMessage">There are some changes on trip with waybill No {0} . For more details please click here</text>
+	
+	<text name="CompanyNameIsAlreadyTaken"> Company name {0} is already taken </text>
 		<text name="PickupFacilityAndDropOffFacilityCantBeTheSame">Pickup facility and drop off facility can't be the same</text>
 		<text name="CreateOrEditPoint">Create or Edit Point</text>
 		<text name="SelectADangerousGoodType">Select a Dangerous Good Type</text>

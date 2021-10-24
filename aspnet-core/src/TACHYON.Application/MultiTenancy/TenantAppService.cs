@@ -9,11 +9,16 @@ using Abp.Events.Bus;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Abp.Runtime.Security;
+using Abp.Runtime.Validation;
 using Abp.Timing;
+using Abp.UI;
 using AutoMapper.QueryableExtensions;
 using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
+
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
@@ -88,31 +93,8 @@ namespace TACHYON.MultiTenancy
         public async Task CreateTenant(CreateTenantInput input)
         {
             var tenancyName = input.companyName.Trim().Replace(" ", "_");
-
-            var tenantId = await TenantManager.CreateWithAdminUserAsync(
-                 input.companyName,
-                 input.MobileNo,
-                 tenancyName,
-                 input.Name,
-                 input.Address,
-                 input.CountryId,
-                 input.CityId,
-                 input.AdminPassword,
-                 input.AdminEmailAddress,
-                 input.ConnectionString,
-                 input.IsActive,
-                 input.EditionId,
-                 input.ShouldChangePasswordOnNextLogin,
-                 true,
-                 input.SubscriptionEndDateUtc?.ToUniversalTime(),
-                 input.IsInTrialPeriod,
-                 AppUrlService.CreateEmailActivationUrlFormat(tenancyName),
-                 input.UserAdminFirstName,
-                 input.UserAdminSurname,
-                 input.MoiNumber
-             );
-
-            var tenant = await TenantManager.GetByIdAsync(tenantId);
+            var tenantId = await TenantManager.CreateWithAdminUserAsync(input, AppUrlService.CreateEmailActivationUrlFormat(tenancyName));
+            await TenantManager.GetByIdAsync(tenantId);
         }
 
         [AbpAuthorize(AppPermissions.Pages_Tenants_Edit)]

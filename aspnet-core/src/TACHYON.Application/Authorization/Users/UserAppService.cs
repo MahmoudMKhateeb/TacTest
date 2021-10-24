@@ -380,7 +380,7 @@ namespace TACHYON.Authorization.Users
             //update organization units
             await UserManager.SetOrganizationUnitsAsync(user, input.OrganizationUnits.ToArray());
 
-            if (input.SendActivationEmail && !user.IsEmailConfirmed)
+            if (input.SendActivationEmail && !user.IsEmailConfirmed && !user.IsDriver)
             {
                 user.SetNewEmailConfirmationCode();
                 await _userEmailer.SendEmailActivationLinkAsync(
@@ -474,6 +474,7 @@ namespace TACHYON.Authorization.Users
                     L(TACHYONConsts.DriverWelcomeMessage,
                         user.FullName, androidLink
                         , iosLink));
+                user.IsEmailConfirmed = true;
             }
 
 
@@ -485,7 +486,7 @@ namespace TACHYON.Authorization.Users
             await UserManager.SetOrganizationUnitsAsync(user, input.OrganizationUnits.ToArray());
 
             //Send activation email
-            if (input.SendActivationEmail)
+            if (input.SendActivationEmail && !user.IsDriver)
             {
                 user.SetNewEmailConfirmationCode();
                 await _userEmailer.SendEmailActivationLinkAsync(

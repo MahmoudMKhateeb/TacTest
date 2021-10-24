@@ -13,6 +13,9 @@ agm-map {
   background-color: #1bc5bd !important;
   border-color: #1bc5bd !important;
 }
+.cancelHint{
+  background-color: #a6d5fa;
+}
 
 ::ng-deep .modal-backdrop.fade.in {
   z-index: 999 !important;

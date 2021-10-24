@@ -6,7 +6,7 @@ using TACHYON.ShippingRequestTripVases.Dtos;
 
 namespace TACHYON.Shipping.Trips.Dto
 {
-    public class ShippingRequestsTripListDto: EntityDto<long>
+    public class ShippingRequestsTripListDto : EntityDto<long>
     {
         public DateTime StartTripDate { get; set; }
         public DateTime? EndTripDate { get; set; }
@@ -16,11 +16,12 @@ namespace TACHYON.Shipping.Trips.Dto
         public bool HasAttachment { get; set; }
         public bool NeedsDeliveryNote { get; set; }
 
-        public string StatusTitle 
-        { 
-            get {
-                    return Enum.GetName(typeof(ShippingRequestTripStatus), Status);
-                }
+        public string StatusTitle
+        {
+            get
+            {
+                return Enum.GetName(typeof(ShippingRequestTripStatus), Status);
+            }
         }
         public string Driver { get; set; }
         public string Truck { get; set; }
@@ -29,6 +30,7 @@ namespace TACHYON.Shipping.Trips.Dto
         public bool HasAccident { get; set; }
         public bool IsApproveCancledByShipper { get; set; }
         public bool IsApproveCancledByCarrier { get; set; }
+        public bool IsApproveCancledByTachyonDealer { get; set; }
 
         public ShippingRequestTripDriverStatus DriverStatus { get; set; }
         public string DriverStatusTitle { get; set; }
