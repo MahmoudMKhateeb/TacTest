@@ -10,12 +10,12 @@
 >
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
-      <form #createFacilityForm="ngForm" novalidate (ngSubmit)="save()">
+      <form #createFacilityForm="ngForm" novalidate autocomplete="off" (ngSubmit)="save()">
         <div class="modal-header">
           <h4 class="modal-title">
             <!--                <span *ngIf="routStep.id">{{l("EditRoutStep")}}</span>-->
             <!--                <span *ngIf="!routStep.id">{{l("CreateNewRoutStep")}}</span>-->
-            <span>{{ facility.id ? l('EditFacility') : l('CreateNewFacility') }}</span>
+            <span>{{ facility?.id ? l('EditFacility') : l('CreateNewFacility') }}</span>
           </h4>
           <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
             <span aria-hidden="true">&times;</span>
@@ -52,9 +52,9 @@
                   [(ngModel)]="selectedCountryId"
                   [class.is-invalid]="country.touched && !country.valid"
                   [class.is-valid]="country.touched && country.valid"
-                  (change)="loadCitiesByCountryId()"
+                  (change)="loadCitiesByCountryId(selectedCountryId)"
                 >
-                  <option value="">{{ l('SelectACounty') }}</option>
+                  <option value="" selected disabled>{{ l('SelectACounty') }}</option>
                   <option *ngFor="let item of countries" value="{{ item.id }}">{{ item.displayName }}</option>
                 </select>
               </div>
@@ -72,7 +72,7 @@
                   [class.is-invalid]="city.touched && !city.valid"
                   [class.is-valid]="city.touched && city.valid"
                 >
-                  <option value="">{{ l('SelectACity') }}</option>
+                  <option value="" selected disabled>{{ l('SelectACity') }}</option>
                   <option *ngFor="let item of allCities" value="{{ item.id }}">{{ item.displayName }}</option>
                 </select>
               </div>

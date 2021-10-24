@@ -34,6 +34,7 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
   citiesLoading: boolean;
   selectedCountryId: number;
   selectedCountryCode = 'SA';
+  data: CreateOrEditFacilityDto = new CreateOrEditFacilityDto();
 
   constructor(
     injector: Injector,
@@ -46,21 +47,23 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
   }
   ngOnInit() {
     this.loadMapApi();
+    this.loadAllCountries();
     this.facility.latitude = 24.67911662122269;
     this.facility.longitude = 46.6355543345471;
   }
 
   show(facilityId?: number): void {
-    this.loadAllCountries();
     if (!facilityId) {
       this.facility = new CreateOrEditFacilityDto();
       this.facility.id = facilityId;
-
       this.active = true;
       this.modal.show();
     } else {
       this._facilitiesServiceProxy.getFacilityForEdit(facilityId).subscribe((result) => {
         this.facility = result.facility;
+        this.selectedCountryId = result.countryId;
+        this.loadCitiesByCountryId(result.countryId);
+        this.data = result.facility;
         this.active = true;
         this.modal.show();
       });
@@ -97,6 +100,8 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
   }
 
   close(): void {
+    // this.facility = new CreateOrEditFacilityDto();
+    this.facility.cityId = null;
     this.active = false;
     this.modal.hide();
   }
@@ -165,6 +170,7 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
    * Loads All Countires for Facilities CRUD
    */
   loadAllCountries() {
+    console.log('Countries Loaded');
     this.countriesLoading = true;
     this._countriesServiceProxy.getAllCountriesWithCode().subscribe((res) => {
       this.countries = res;
@@ -177,13 +183,20 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
    * @Input selectedCountryId
    */
 
-  loadCitiesByCountryId() {
+  loadCitiesByCountryId(countryId): any {
     this.selectedCountryCode = this.countries.find((x) => x.id == this.selectedCountryId).code;
     this.loadMapApi();
     this.citiesLoading = true;
-    this._countriesServiceProxy.getAllCitiesForTableDropdown(this.selectedCountryId).subscribe((res) => {
-      this.allCities = res;
-      this.citiesLoading = false;
-    });
+    this._countriesServiceProxy
+      .getAllCitiesForTableDropdown(countryId)
+      .pipe(
+        finalize(() => {
+          this.facility = this.data;
+        })
+      )
+      .subscribe((res) => {
+        this.allCities = res;
+        this.citiesLoading = false;
+      });
   }
 }

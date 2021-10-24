@@ -37,8 +37,8 @@ namespace TACHYON.AddressBook
 
             var filteredFacilities = _facilityRepository.GetAll()
                         .Include(e => e.CityFk)
-                         .ThenInclude(c=>c.CountyFk)
-                          .ThenInclude(t=>t.Translations)
+                         .ThenInclude(c => c.CountyFk)
+                          .ThenInclude(t => t.Translations)
                         .WhereIf(input.FromDate.HasValue && input.ToDate.HasValue, i => i.CreationTime >= input.FromDate && i.CreationTime <= input.ToDate)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Name.Contains(input.Filter) || e.Address.Contains(input.Filter))
                         .WhereIf(!string.IsNullOrWhiteSpace(input.NameFilter), e => e.Name == input.NameFilter)
@@ -59,13 +59,13 @@ namespace TACHYON.AddressBook
                                  {
                                      Name = o.Name,
                                      Address = o.Address,
-                                     Longitude= o.Location.X,
-                                     Latitude= o.Location.Y,
-                                     Id = o.Id                                 
+                                     Longitude = o.Location.X,
+                                     Latitude = o.Location.Y,
+                                     Id = o.Id
                                  },
                                  CityDisplayName = s2 == null || s2.DisplayName == null ? "" : s2.DisplayName.ToString(),
-                                 Country = o.CityFk.CountyFk.DisplayName?? "",
-                                 CreationTime=o.CreationTime
+                                 Country = o.CityFk.CountyFk.DisplayName ?? "",
+                                 CreationTime = o.CreationTime
                              };
 
             var totalCount = await filteredFacilities.CountAsync();
@@ -102,8 +102,14 @@ namespace TACHYON.AddressBook
 
             if (output.Facility.CityId != null)
             {
-                var _lookupCity = await _lookup_cityRepository.FirstOrDefaultAsync((int)output.Facility.CityId);
+                var _lookupCity = await _lookup_cityRepository
+                    .GetAll().Where(x => x.Id == (int)output.Facility.CityId)
+                    .Include(x => x.CountyFk)
+                    .FirstOrDefaultAsync();
                 output.CityDisplayName = _lookupCity?.DisplayName?.ToString();
+                output.CountryId = _lookupCity?.CountyId;
+                output.CountryDisplayName = _lookupCity?.CountyFk?.DisplayName;
+                output.CountryCode = _lookupCity?.CountyFk?.Code;
             }
 
             return output;
@@ -113,11 +119,11 @@ namespace TACHYON.AddressBook
         {
             if (input.Id == null)
             {
-              return  await Create(input);
+                return await Create(input);
             }
             else
             {
-              return  await Update(input);
+                return await Update(input);
             }
         }
 
@@ -139,7 +145,7 @@ namespace TACHYON.AddressBook
             }
 
 
-          return  await _facilityRepository.InsertAndGetIdAsync(facility);
+            return await _facilityRepository.InsertAndGetIdAsync(facility);
         }
 
         [AbpAuthorize(AppPermissions.Pages_Facilities_Edit)]
@@ -176,8 +182,8 @@ namespace TACHYON.AddressBook
                              {
                                  Name = o.Name,
                                  Address = o.Address,
-                                 Longitude= o.Location.X,
-                                 Latitude= o.Location.Y,
+                                 Longitude = o.Location.X,
+                                 Latitude = o.Location.Y,
                                  Id = o.Id
                              },
                              CityDisplayName = s2 == null || s2.DisplayName == null ? "" : s2.DisplayName.ToString()
