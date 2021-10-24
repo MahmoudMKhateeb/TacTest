@@ -83,8 +83,8 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             string number = point.ReceiverPhoneNumber;
             string formattedDate = point.EndTime?.ToString("dd/MM/yyyy");
-            string message = L(TACHYONConsts.SMSShippingRequestReceiverCode, point.WaybillNumber, formattedDate ?? L("NotSet"), point.Code);
-            message = message + " " + L("ClickToRate") + " " + WebUrlService.WebSiteRootAddressFormat + "account/RatingPage/" + point.Code;
+            string message = L(TACHYONConsts.SMSShippingRequestReceiverCode, point.WaybillNumber, formattedDate ?? L("NotSet"), point.Code, "account/RatingPage/" + point.Code);
+            // message = message + " " + L("ClickToRate") + " " + WebUrlService.WebSiteRootAddressFormat + "account/RatingPage/" + point.Code;
             if (point.ReceiverFk != null)
             {
                 await _smsSender.SendAsync(point.ReceiverFk.PhoneNumber, message);
