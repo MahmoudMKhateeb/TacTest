@@ -33,6 +33,7 @@ using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips.Dto;
 using TACHYON.Tracking.Dto;
+using TACHYON.Url;
 using PickingType = TACHYON.Routs.RoutPoints.PickingType;
 
 namespace TACHYON.Shipping.Trips
@@ -54,8 +55,9 @@ namespace TACHYON.Shipping.Trips
         private readonly InvoiceManager _invoiceManager;
         private readonly CommonManager _commonManager;
         private readonly UserManager UserManager;
+        protected readonly IWebUrlService WebUrlService;
 
-        public ShippingRequestsTripManager(IRepository<ShippingRequestTrip> shippingRequestTrip, PriceOfferManager priceOfferManager, IAppNotifier appNotifier, IFeatureChecker featureChecker, IAbpSession abpSession, IHubContext<AbpCommonHub> hubContext, IRepository<RoutPoint, long> routPointRepository, IRepository<ShippingRequestTripTransition> shippingRequestTripTransitionRepository, IRepository<RoutPointStatusTransition> routPointStatusTransitionRepository, FirebaseNotifier firebaseNotifier, ISmsSender smsSender, InvoiceManager invoiceManager, CommonManager commonManager, IRepository<RoutPointDocument, long> routPointDocumentRepository, UserManager userManager)
+        public ShippingRequestsTripManager(IRepository<ShippingRequestTrip> shippingRequestTrip, PriceOfferManager priceOfferManager, IAppNotifier appNotifier, IFeatureChecker featureChecker, IAbpSession abpSession, IHubContext<AbpCommonHub> hubContext, IRepository<RoutPoint, long> routPointRepository, IRepository<ShippingRequestTripTransition> shippingRequestTripTransitionRepository, IRepository<RoutPointStatusTransition> routPointStatusTransitionRepository, FirebaseNotifier firebaseNotifier, ISmsSender smsSender, InvoiceManager invoiceManager, CommonManager commonManager, IRepository<RoutPointDocument, long> routPointDocumentRepository, UserManager userManager, IWebUrlService webUrlService)
         {
             _shippingRequestTrip = shippingRequestTrip;
             _priceOfferManager = priceOfferManager;
@@ -72,6 +74,7 @@ namespace TACHYON.Shipping.Trips
             _commonManager = commonManager;
             _routPointDocumentRepository = routPointDocumentRepository;
             UserManager = userManager;
+            WebUrlService = webUrlService;
         }
 
         /// <summary>
@@ -637,7 +640,7 @@ namespace TACHYON.Shipping.Trips
         {
             string number = point.ReceiverPhoneNumber;
             string formattedDate = point.EndTime?.ToString("dd/MM/yyyy");
-            string message = L(TACHYONConsts.SMSShippingRequestReceiverCode, point.WaybillNumber, formattedDate ?? L("NotSet"), point.Code);
+            string message = L(TACHYONConsts.SMSShippingRequestReceiverCode, point.WaybillNumber, formattedDate ?? L("NotSet"), point.Code, WebUrlService.WebSiteRootAddressFormat + "account/RatingPage/" + point.Code);
             if (point.ReceiverFk != null)
             {
                 number = point.ReceiverFk.PhoneNumber;
