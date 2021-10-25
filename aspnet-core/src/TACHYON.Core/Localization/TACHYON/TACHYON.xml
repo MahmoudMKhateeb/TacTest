@@ -1695,7 +1695,7 @@
 			Please note that shipment {0} on its way. And expected to arrive on {1}, please give this code to
 			the driver when the delivery is completed.&#xA; &#xA;
 			Your shipping code:{2}
-      \n
+			&#xA;
       Click here to rate after finish offloading {3}
 		</text>
 		<text name="ShippingRequests">Shipping Requests</text>
