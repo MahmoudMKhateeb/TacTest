@@ -603,8 +603,8 @@ namespace TACHYON.Shipping.Drivers
                 //check if trip has rating, to delete and recalculate
                 if (tripRate != null)
                 {
-                    var DriverId = trip.RatingLogs.Where(x => x.RateType == RateType.DriverByReceiver).FirstOrDefault().DriverId;
-                    var FacilityId = trip.RatingLogs.Where(x => x.RateType == RateType.FacilityByDriver).FirstOrDefault().FacilityId;
+                    var DriverId = trip.RatingLogs.Where(x => x.RateType == RateType.DriverByReceiver).FirstOrDefault()?.DriverId;
+                    var FacilityId = trip.RatingLogs.Where(x => x.RateType == RateType.FacilityByDriver).FirstOrDefault()?.FacilityId;
 
                     await _ratingLogManager.DeleteAllTripAndPointsRatingAsync(tripRate);
 
