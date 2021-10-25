@@ -225,6 +225,7 @@ namespace TACHYON.Shipping.Trips
                     //check if all trip points completed, change the trip status from intransit to delivered and needs confirmation
                     if (trip.RoutPoints.Where(x => x.Id != activePoint.Id).All(x => x.CompletedStatus > RoutePointCompletedStatus.NotCompleted))
                     {
+                        activePoint.IsActive = false;
                         trip.Status = ShippingRequestTripStatus.DeliveredAndNeedsConfirmation;
                     }
                     break;
@@ -272,7 +273,7 @@ namespace TACHYON.Shipping.Trips
                 activePoint.IsActive = false;
                 activePoint.IsComplete = true;
                 activePoint.EndTime = Clock.Now;
-
+                activePoint.CompletedStatus = RoutePointCompletedStatus.Completed;
             }
 
             if (activePoint.PickingType == PickingType.Dropoff &&
