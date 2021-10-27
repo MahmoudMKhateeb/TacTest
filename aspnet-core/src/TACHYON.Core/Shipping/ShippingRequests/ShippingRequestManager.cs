@@ -63,9 +63,10 @@ namespace TACHYON.Shipping.ShippingRequests
         public async void SendSmsToReceiver(RoutPoint point, string Culture)
         {
             string number = point.ReceiverPhoneNumber;
-            string formattedDate = point.EndTime?.ToString("dd/MM/yyyy");
+            string formattedDate = point.EndTime?.ToString("dd/MM/yyyy hh:mm");
+            var ratingLink = $"{L("ClickToRate")} {WebUrlService.WebSiteRootAddressFormat}account/RatingPage/{point.Code}";
             string message = L(TACHYONConsts.SMSShippingRequestReceiverCode, new CultureInfo(Culture),
-                point.WaybillNumber, formattedDate ?? L("NotSet", new CultureInfo(Culture)), point.Code);
+                point.WaybillNumber, point.Code, ratingLink);
             if (point.ReceiverFk != null)
             {
                 number = point.ReceiverFk.PhoneNumber;
@@ -82,9 +83,10 @@ namespace TACHYON.Shipping.ShippingRequests
         public async Task SendSmsToReceiver(RoutPoint point)
         {
             string number = point.ReceiverPhoneNumber;
-            string formattedDate = point.EndTime?.ToString("dd/MM/yyyy");
-            string message = L(TACHYONConsts.SMSShippingRequestReceiverCode, point.WaybillNumber, formattedDate ?? L("NotSet"), point.Code, "account/RatingPage/" + point.Code);
-            // message = message + " " + L("ClickToRate") + " " + WebUrlService.WebSiteRootAddressFormat + "account/RatingPage/" + point.Code;
+            string formattedDate = point.EndTime?.ToString("dd/MM/yyyy hh:mm");
+            var ratingLink =
+                $"{L("ClickToRate")} {WebUrlService.WebSiteRootAddressFormat}account/RatingPage/{point.Code}";
+            string message = L(TACHYONConsts.SMSShippingRequestReceiverCode, point.WaybillNumber, point.Code, ratingLink);
             if (point.ReceiverFk != null)
             {
                 await _smsSender.SendAsync(point.ReceiverFk.PhoneNumber, message);
