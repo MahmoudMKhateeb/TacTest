@@ -106,6 +106,7 @@ namespace TACHYON.EntityFrameworkCore
         public virtual DbSet<ShippingRequestReasonAccident> ShippingRequestReasonAccidents { get; set; }
         public DbSet<ShippingRequestReasonAccidentTranslation> ShippingRequestReasonAccidentTranslations { get; set; }
         public virtual DbSet<ShippingRequestTripAccident> ShippingRequestTripAccidents { get; set; }
+        public virtual DbSet<ShippingRequestTripAccidentComment> ShippingRequestTripAccidentComments { get; set; }
         public virtual DbSet<ShippingRequestTripAccidentResolve> ShippingRequestTripAccidentResolves { get; set; }
 
 

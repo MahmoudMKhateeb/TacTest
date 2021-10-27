@@ -260,6 +260,8 @@ import { ProfileModule } from '@app/main/profile/profile.module';
 import { ViewGoodDetailsComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/points/good-details/view-good-details/view-good-details.component';
 import { ViewPointModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/points/view-point-modal/view-point-modal.component';
 import { DangerousCoodTypesTranslationsComponent } from './goods/dangerous-cood-types-translations/dangerous-cood-types-translations.component';
+import { ViewDetailsAccidentModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/accident/view-details-accident-modal.component';
+import { AddAccidentCommentModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/accident/accident-comment/add-accident-comment-modal.component';
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
 @NgModule({
@@ -494,6 +496,8 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ViewGoodDetailsComponent,
     ViewPointModalComponent,
     DangerousCoodTypesTranslationsComponent,
+    ViewDetailsAccidentModalComponent,
+    AddAccidentCommentModalComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },

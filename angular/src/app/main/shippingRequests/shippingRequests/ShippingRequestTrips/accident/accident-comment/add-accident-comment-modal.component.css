@@ -1,0 +1,16 @@
+.txtColor {
+  background-color: #e7e7e7 !important;
+  color: #464444 !important;
+}
+
+.ps {
+  overflow-y: scroll !important;
+}
+
+.p-0 {
+  padding: 10px 9px 5px 10px !important;
+}
+
+textarea {
+  border: 1px solid #a09797 !important;
+}

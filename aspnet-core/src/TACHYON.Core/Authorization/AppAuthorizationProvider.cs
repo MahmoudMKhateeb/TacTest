@@ -107,6 +107,11 @@ namespace TACHYON.Authorization
             shippingRequestVases.CreateChildPermission(AppPermissions.Pages_ShippingRequestVases_Edit, L("EditShippingRequestVas"), multiTenancySides: MultiTenancySides.Tenant);
             shippingRequestVases.CreateChildPermission(AppPermissions.Pages_ShippingRequestVases_Delete, L("DeleteShippingRequestVas"), multiTenancySides: MultiTenancySides.Tenant);
 
+            var shippingRequestTripAccidentComments = pages.CreateChildPermission(AppPermissions.Pages_ShippingRequestTrip_Accident_Comments, L("ShippingRequestTrip_Accident_Comments"), multiTenancySides: MultiTenancySides.Tenant);
+            shippingRequestTripAccidentComments.CreateChildPermission(AppPermissions.Pages_ShippingRequest_Accidents_Comments_Create, L("ShippingRequest_Accidents_Comments_CreateOrEdit"), multiTenancySides: MultiTenancySides.Tenant);
+            shippingRequestTripAccidentComments.CreateChildPermission(AppPermissions.Pages_ShippingRequest_Accidents_Comments_Edit, L("ShippingRequest_Accidents_Comments_Edit"), multiTenancySides: MultiTenancySides.Tenant);
+            shippingRequestTripAccidentComments.CreateChildPermission(AppPermissions.Pages_ShippingRequest_Accidents_Comments_Delete, L("ShippingRequest_Accidents_Comments_Delete"), multiTenancySides: MultiTenancySides.Tenant);
+
             var vasPrices = pages.CreateChildPermission(AppPermissions.Pages_VasPrices, L("VasPrices"), multiTenancySides: MultiTenancySides.Tenant);
             vasPrices.CreateChildPermission(AppPermissions.Pages_VasPrices_Create, L("CreateNewVasPrice"), multiTenancySides: MultiTenancySides.Tenant);
             vasPrices.CreateChildPermission(AppPermissions.Pages_VasPrices_Edit, L("EditVasPrice"), multiTenancySides: MultiTenancySides.Tenant);

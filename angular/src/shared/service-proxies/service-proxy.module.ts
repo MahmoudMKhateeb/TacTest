@@ -144,6 +144,7 @@ import { RatingServiceProxy } from './service-proxies';
     ApiServiceProxies.TrackingServiceProxy,
     ApiServiceProxies.RatingServiceProxy,
     ApiServiceProxies.ShippingRequestDriverServiceProxy,
+    ApiServiceProxies.ShippingRequestTripAccidentCommentsServiceProxy,
     TerminologieServiceProxy,
     { provide: RefreshTokenService, useClass: ZeroRefreshTokenService },
     { provide: AbpHttpConfigurationService, useClass: ZeroTemplateHttpConfigurationService },

@@ -61,10 +61,16 @@
         public const string Pages_ShippingRequestResoneAccidents_Delete = "Pages.ShippingRequestResoneAccidents.Delete";
 
         public const string Pages_ShippingRequest_Accidents = "Pages.ShippingRequest.Accidents";
+        public const string Pages_ShippingRequest_Accidents_Get = "Pages.ShippingRequest.Accidents.Get";
         public const string Pages_ShippingRequest_Accidents_Create = "Pages.ShippingRequest.Accidents.Create";
         public const string Pages_ShippingRequest_Accidents_Edit = "Pages.ShippingRequest.Accidents.Edit";
         public const string Pages_ShippingRequest_Accidents_Resolve_Create = "Pages.ShippingRequest.Accidents.Resolve.Create";
         public const string Pages_ShippingRequest_Accidents_Resolve_Edit = "Pages.ShippingRequest.Accidents.Resolve.Edit";
+
+        public const string Pages_ShippingRequestTrip_Accident_Comments = "Pages.ShippingRequestTrip.Accident.Comments";
+        public const string Pages_ShippingRequest_Accidents_Comments_Create = "Pages.ShippingRequest.Accidents.Comments.Create";
+        public const string Pages_ShippingRequest_Accidents_Comments_Edit = "Pages.ShippingRequest.Accidents.Comments.Edit";
+        public const string Pages_ShippingRequest_Accidents_Comments_Delete = "Pages.ShippingRequest.Accidents.Comments.Delete";
         #endregion
         #region "Reject Reason Trip"
         public const string Pages_ShippingRequestTrips_Reject_Reason = "Pages.ShippingRequestTrips.Reject.Reason";

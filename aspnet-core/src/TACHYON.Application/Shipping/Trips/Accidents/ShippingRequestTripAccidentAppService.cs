@@ -114,6 +114,7 @@ namespace TACHYON.Shipping.Trips.Accidents
             var query = await _ShippingRequestTripAccidentRepository
               .GetAll()
               .Include(x => x.RoutPointFK)
+              .Include(r => r.ResoneFK)
               .AsNoTracking()
                   .Where(x => x.Id == input.Id)
                   .WhereIf(IsEnabled(AppFeatures.Carrier), x => x.RoutPointFK.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
@@ -122,6 +123,31 @@ namespace TACHYON.Shipping.Trips.Accidents
                   .WhereIf(GetCurrentUser().IsDriver, x => x.RoutPointFK.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId).FirstOrDefaultAsync();
 
             return ObjectMapper.Map<CreateOrEditShippingRequestTripAccidentDto>(query);
+
+        }
+        //[AbpAuthorize(AppPermissions.Pages_ShippingRequest_Accidents_Get)]
+        public async Task<ViewShippingRequestTripAccidentDto> Get(EntityDto input)
+        {
+            DisableTenancyFilters();
+            var query = await _ShippingRequestTripAccidentRepository
+              .GetAll()
+              .Include(x => x.RoutPointFK)
+              .Include(r => r.ResoneFK)
+              .ThenInclude(t => t.Translations)
+              .AsNoTracking()
+                  .Where(x => x.Id == input.Id)
+                  .WhereIf(IsEnabled(AppFeatures.Carrier), x => x.RoutPointFK.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
+                  .WhereIf(IsEnabled(AppFeatures.Shipper), x => x.RoutPointFK.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId)
+                  .WhereIf(IsEnabled(AppFeatures.TachyonDealer), x => x.RoutPointFK.ShippingRequestTripFk.ShippingRequestFk.IsTachyonDeal)
+                  .WhereIf(GetCurrentUser().IsDriver, x => x.RoutPointFK.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId)
+                  .FirstOrDefaultAsync();
+
+            if (query.ResoneFK != null)
+            {
+                var reasone = ObjectMapper.Map<ShippingRequestReasonAccidentListDto>(query.ResoneFK);
+                query.OtherReasonName = reasone.Name;
+            }
+            return ObjectMapper.Map<ViewShippingRequestTripAccidentDto>(query);
 
         }
 

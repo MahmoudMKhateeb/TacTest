@@ -535,3 +535,7 @@ card-body {
 .input-group-btn button {
   border-radius: 0 0.42rem 0.42rem 0 !important;
 }
+
+a {
+  cursor: pointer !important;
+}

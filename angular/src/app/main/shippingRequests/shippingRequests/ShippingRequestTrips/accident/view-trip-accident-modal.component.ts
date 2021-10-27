@@ -25,8 +25,9 @@ export class ViewTripAccidentModelComponent extends AppComponentBase {
   Trip: ShippingRequestsTripListDto = new ShippingRequestsTripListDto();
   active: boolean = false;
   IsStartSearch = false;
+  allReasons: any;
   CancelationStatus: string =
-    this.feature.isEnabled('App.Shipper') || this.feature.isEnabled('App.Carrier') ? this.l('ApproveCancel') : this.l('Cancel');
+    this.feature.isEnabled('App.Shipper') || this.feature.isEnabled('App.Carrier') ? this.l('Cancel') : this.l('ApproveCancel');
 
   constructor(
     injector: Injector,

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using TACHYON.EntityFrameworkCore;
@@ -10,9 +11,10 @@ using TACHYON.EntityFrameworkCore;
 namespace TACHYON.Migrations
 {
     [DbContext(typeof(TACHYONDbContext))]
-    partial class TACHYONDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211027080531_addAccidentIdForTripCommentsTbl")]
+    partial class addAccidentIdForTripCommentsTbl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -5034,8 +5036,6 @@ namespace TACHYON.Migrations
 
                     b.HasIndex("AccidentId");
 
-                    b.HasIndex("TenantId");
-
                     b.ToTable("ShippingRequestTripAccidentComments");
                 });
 
@@ -7740,12 +7740,6 @@ namespace TACHYON.Migrations
                     b.HasOne("TACHYON.Shipping.ShippingRequestTrips.ShippingRequestTripAccident", "AccidentFK")
                         .WithMany()
                         .HasForeignKey("AccidentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TACHYON.MultiTenancy.Tenant", "TenantFK")
-                        .WithMany()
-                        .HasForeignKey("TenantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

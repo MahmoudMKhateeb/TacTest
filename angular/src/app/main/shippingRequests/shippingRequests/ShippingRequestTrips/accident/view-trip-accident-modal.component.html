@@ -83,6 +83,14 @@
                                   >
                                 </li>
                                 <li>
+                                  <a href="javascript:;" class="dropdown-item" (click)="AddTripAccidentCommentModal.show(record.id)">{{
+                                    l('Comments')
+                                  }}</a>
+                                </li>
+                                <li>
+                                  <a href="javascript:;" class="dropdown-item" (click)="viewAccidentDetails.show(record.id)">{{ l('View') }}</a>
+                                </li>
+                                <li>
                                   <a
                                     href="javascript:;"
                                     *ngIf="
@@ -164,5 +172,7 @@
     </div>
   </div>
   <trip-accident-modal #EditTripAccidentModal (modalSave)="getAll(Trip)" [Trip]="Trip"></trip-accident-modal>
+  <app-view-details-accident-modal #viewAccidentDetails [allReasons]="allReasons"></app-view-details-accident-modal>
+  <app-add-accident-comment-modal #AddTripAccidentCommentModal></app-add-accident-comment-modal>
   <trip-resolve-modal #TripResolveModal (modalSave)="getAll(Trip)" [Trip]="Trip"></trip-resolve-modal>
 </div>
