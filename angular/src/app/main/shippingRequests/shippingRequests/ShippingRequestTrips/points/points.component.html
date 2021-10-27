@@ -61,6 +61,9 @@
                         {{ l('Facility') }}
                       </th>
                       <th>
+                        {{ l('WayBillNumber') }}
+                      </th>
+                      <th>
                         {{ l('DatatablePickingType') }}
                       </th>
                     </tr>
@@ -116,7 +119,10 @@
                         <span class="ui-column-title"> {{ l('facilityName') }}</span>
                         {{ record.facility ? record.facility : getFacilityNameByid(record.facilityId) }}
                       </td>
-
+                      <td>
+                        <span class="ui-column-title"> {{ l('WayBillNumber') }}</span>
+                        {{ record.waybillNumber }}
+                      </td>
                       <td>
                         <span *ngIf="record.pickingType == 1" class="label label-success label-dot mr-2"></span>
                         <span *ngIf="record.pickingType == 1" class="font-weight-bold text-success">{{ l('pickup') }}</span>
