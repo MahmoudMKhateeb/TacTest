@@ -2148,6 +2148,8 @@
 		<text name="UnblockUser">Unblock</text>
 		<text name="UnClaim">Un claim</text>
 		<text name="UnDemand">Un demand</text>
+		<text name="AddRating">Add Rating</text>
+		<text name="Rating">Rating</text>
 		<text name="UnderReview">Under review</text>
 		<text name="UnifonicAppSid">Unifonic AppSid</text>
 		<text name="UnitOfMeasure">Unit Of Measure</text>

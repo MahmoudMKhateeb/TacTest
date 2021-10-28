@@ -1,0 +1,16 @@
+.p-rating .p-rating-icon.pi-star {
+  color: #ffca08 !important;
+}
+.p-rating .p-rating-icon {
+  font-size: 2rem !important;
+}
+.p-rating .p-rating-icon.pi-star {
+  color: #f9fc0c !important;
+}
+.control-label {
+  font-size: 15px !important;
+}
+.modal-footer {
+  padding: 1rem !important;
+  border-top: none !important;
+}
