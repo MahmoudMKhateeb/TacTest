@@ -140,7 +140,14 @@ namespace TACHYON.Configuration
                  //todo add this to host settings page
                 new SettingDefinition(AppSettings.Editions.ShipperEditionId,GetFromAppSettings(AppSettings.Editions.ShipperEditionId,"1"),isVisibleToClients:true,scopes:SettingScopes.Application),
                 new SettingDefinition(AppSettings.Editions.TachyonEditionId,GetFromAppSettings(AppSettings.Editions.TachyonEditionId,"3"),isVisibleToClients:true,scopes:SettingScopes.Application),
-                new SettingDefinition(AppSettings.Editions.CarrierEditionId,GetFromAppSettings(AppSettings.Editions.CarrierEditionId,"2"),isVisibleToClients:true,scopes:SettingScopes.Application)
+                new SettingDefinition(AppSettings.Editions.CarrierEditionId,GetFromAppSettings(AppSettings.Editions.CarrierEditionId,"2"),isVisibleToClients:true,scopes:SettingScopes.Application),
+
+                // Host Invoice Settings 
+                new SettingDefinition(AppSettings.Invoice.BankNameEnglish,GetFromAppSettings(AppSettings.Invoice.BankNameEnglish,"Riyad Bank"),isVisibleToClients:true,scopes:SettingScopes.Application),
+                new SettingDefinition(AppSettings.Invoice.BankNameArabic,GetFromAppSettings(AppSettings.Invoice.BankNameArabic,"بنك الرياض"),isVisibleToClients:true,scopes:SettingScopes.Application),
+                new SettingDefinition(AppSettings.Invoice.IBAN,GetFromAppSettings(AppSettings.Invoice.IBAN,"1391708819940"),isVisibleToClients:true,scopes:SettingScopes.Application),
+                new SettingDefinition(AppSettings.Invoice.Account,GetFromAppSettings(AppSettings.Invoice.Account,"SA6420000001391708819940"),isVisibleToClients:true,scopes:SettingScopes.Application),
+
             };
         }
 
