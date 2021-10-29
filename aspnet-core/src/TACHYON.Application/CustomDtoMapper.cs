@@ -608,7 +608,7 @@ namespace TACHYON
                 .ForMember(dto => dto.Period, options => options.MapFrom(entity => entity.InvoicePeriodsFK.DisplayName));
 
             configuration.CreateMap<Invoice, InvoiceInfoDto>()
-                .ForMember(dto => dto.ClientName, options => options.MapFrom(entity => entity.Tenant.companyName))
+                .ForMember(dto => dto.ClientName, options => options.MapFrom(entity => entity.Tenant.Name))
                 .ForMember(dto => dto.Attn, options => options.MapFrom(entity => entity.Tenant.Name))
                 .ForMember(dto => dto.ContractNo, options => options.MapFrom(entity => entity.Tenant.ContractNumber))
                 .ForMember(dto => dto.Address, options => options.MapFrom(entity => entity.Tenant.Address))

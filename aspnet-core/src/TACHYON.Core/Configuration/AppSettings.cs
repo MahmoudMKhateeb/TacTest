@@ -1,4 +1,4 @@
-namespace TACHYON.Configuration
+﻿namespace TACHYON.Configuration
 {
     /// <summary>
     /// Defines string constants for setting names in the application.
@@ -164,5 +164,12 @@ namespace TACHYON.Configuration
             public const string CarrierEditionId = "App.Editions.CarrierEditionId";
         }
 
+        public static class Invoice
+        {
+            public const string BankNameEnglish = "App.Invoice.BankNameEnglish";
+            public const string BankNameArabic = "App.Invoice.BankNameArabic";
+            public const string IBAN = "App.Invoice.IBAN";
+            public const string Account = "App.Invoice.Account";
+        }
     }
 }

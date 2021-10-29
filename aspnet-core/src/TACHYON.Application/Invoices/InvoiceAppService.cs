@@ -4,6 +4,8 @@ using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
 using Abp.Threading;
 using Abp.UI;
+using AutoMapper.QueryableExtensions;
+using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -14,6 +16,7 @@ using TACHYON.Authorization;
 using TACHYON.Authorization.Users;
 using TACHYON.Cities.Dtos;
 using TACHYON.Common;
+using TACHYON.Configuration;
 using TACHYON.Documents.DocumentFiles;
 using TACHYON.Dto;
 using TACHYON.Exporting;
@@ -24,8 +27,6 @@ using TACHYON.Invoices.Periods;
 using TACHYON.Invoices.Transactions;
 using TACHYON.ShippingRequestVases;
 using TACHYON.Trucks.TrucksTypes.Dtos;
-using AutoMapper.QueryableExtensions;
-using DevExtreme.AspNet.Data.ResponseModel;
 
 
 namespace TACHYON.Invoices
@@ -275,31 +276,38 @@ namespace TACHYON.Invoices
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer);
             DisableTenancyFilters();
             var tenant = await TenantManager.GetByIdAsync(Id);
-            
-           // if (tenant == null || tenant.Name == AppConsts.ShipperEditionName) throw new UserFriendlyException(L("TheTenantSelectedIsNotShipper"));
+
+            // if (tenant == null || tenant.Name == AppConsts.ShipperEditionName) throw new UserFriendlyException(L("TheTenantSelectedIsNotShipper"));
             await _invoiceManager.GenertateInvoiceOnDeman(tenant);
         }
         #region Reports
         public IEnumerable<InvoiceInfoDto> GetInvoiceReportInfo(long invoiceId)
         {
+
+            var bankNameArabic = SettingManager.GetSettingValue(AppSettings.Invoice.BankNameArabic);
+            var bankNameEnglish = SettingManager.GetSettingValue(AppSettings.Invoice.BankNameEnglish);
+
             DisableTenancyFilters();
-            var invoice = AsyncHelper.RunSync(() => _invoiceRepository
-                            .GetAll()
-                            .Include(i => i.InvoicePeriodsFK)
-                            .Include(i => i.Tenant)
-                            .Where(i => i.Id == invoiceId)
-                            .ToListAsync());
+            var invoice = _invoiceRepository
+                .GetAll()
+                .Include(i => i.InvoicePeriodsFK)
+                .Include(i => i.Tenant)
+                .FirstOrDefault(i => i.Id == invoiceId);
 
             if (invoice == null) throw new UserFriendlyException(L("TheInvoiceNotFound"));
 
-            var invoiceDto = ObjectMapper.Map<List<InvoiceInfoDto>>(invoice);
-            var Admin = AsyncHelper.RunSync(() => _userManager.GetAdminByTenantIdAsync(invoice.FirstOrDefault().TenantId));
-            invoiceDto.FirstOrDefault().Phone = Admin.PhoneNumber;
-            invoiceDto.FirstOrDefault().Email = Admin.EmailAddress;
-            DisableTenancyFilters();
-            var documnet = AsyncHelper.RunSync(() => _documentFileRepository.FirstOrDefaultAsync(x => x.TenantId == invoice.FirstOrDefault().TenantId && x.DocumentTypeId == 14));
-            if (documnet != null) invoiceDto.FirstOrDefault().CR = documnet.Number;
-            return invoiceDto;
+            var invoiceDto = ObjectMapper.Map<InvoiceInfoDto>(invoice);
+
+            var admin = AsyncHelper.RunSync(() => _userManager.GetAdminByTenantIdAsync(invoice.TenantId));
+
+            invoiceDto.Phone = admin.PhoneNumber;
+            invoiceDto.Email = admin.EmailAddress;
+            invoiceDto.Attn = admin.FullName;
+            invoiceDto.BankNameArabic = bankNameArabic;
+            invoiceDto.BankNameEnglish = bankNameEnglish;
+            var document = AsyncHelper.RunSync(() => _documentFileRepository.FirstOrDefaultAsync(x => x.TenantId == invoice.TenantId && x.DocumentTypeId == 14));
+            if (document != null) invoiceDto.CR = document.Number;
+            return new List<InvoiceInfoDto>() { invoiceDto };
         }
 
         public IEnumerable<InvoiceItemDto> GetInvoiceShippingRequestsReportInfo(long invoiceId)
