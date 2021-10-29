@@ -6,7 +6,7 @@ using System.Text;
 
 namespace TACHYON.Invoices.Dto
 {
-  public class InvoiceInfoDto : EntityDto<long>, IHasCreationTime
+    public class InvoiceInfoDto : EntityDto<long>, IHasCreationTime
     {
         public string ClientName { get; set; }
         public string Email { get; set; }
@@ -29,6 +29,16 @@ namespace TACHYON.Invoices.Dto
         public decimal TaxVat { get; set; }
         public long InvoiceNumber { get; set; }
         public List<InvoiceItemDto> Items { get; set; }
+
+        /// <summary>
+        /// Shown in PDF 
+        /// </summary>
+        public string BankNameArabic { get; set; }
+
+        /// <summary>
+        /// Shown in PDF 
+        /// </summary>
+        public string BankNameEnglish { get; set; }
     }
 
 }
