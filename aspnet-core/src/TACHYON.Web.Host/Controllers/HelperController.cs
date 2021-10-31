@@ -252,29 +252,30 @@ namespace TACHYON.Web.Controllers
 
         [HttpPost]
         [AbpMvcAuthorize()]
-        // [Produces("application/json")]
         [Route("/api/services/app/ShippingRequestDriver/AddIncidentReport")]
         public async Task<JsonResult> AddIncidentReport(CreateOrEditShippingRequestTripAccidentDto input)
         {
             try
             {
                 var file = Request.Form.Files.First();
-                //Input.Document = file;
-                if (file.Length == 0)
+                if (file != null)
                 {
-                    throw new UserFriendlyException(L("File_Empty_Error"));
+                    //Input.Document = file;
+                    if (file.Length == 0)
+                    {
+                        throw new UserFriendlyException(L("File_Empty_Error"));
+                    }
+
+                    if (file.Length > 1048576 * 100) //100 MB
+                    {
+                        throw new UserFriendlyException(L("File_SizeLimit_Error"));
+                    }
+
+                    var document = await _commonManager.UploadDocument(file, AbpSession.TenantId);
+                    input.DocumentName = document.DocumentName;
+                    input.DocumentContentType = "image/jpeg";
+                    input.DocumentId = document.DocumentId;
                 }
-
-                if (file.Length > 1048576 * 100) //100 MB
-                {
-                    throw new UserFriendlyException(L("File_SizeLimit_Error"));
-                }
-
-                var document = await _commonManager.UploadDocument(file, AbpSession.TenantId);
-                input.DocumentName = document.DocumentName;
-                input.DocumentContentType = document.DocumentContentType;
-                input.DocumentId = document.DocumentId;
-
                 await _shippingRequestTripAccidentAppService.CreateOrEdit(input);
 
                 return Json(new AjaxResponse(new { }));
