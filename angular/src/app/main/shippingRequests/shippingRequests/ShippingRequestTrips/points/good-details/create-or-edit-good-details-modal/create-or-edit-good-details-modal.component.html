@@ -160,7 +160,7 @@
                         [disabled]="!allSubGoodCategorys"
                         [class.is-invalid]="DangerousGoodTypes.touched && !DangerousGoodTypes.valid"
                         [class.is-valid]="DangerousGoodTypes.touched && DangerousGoodTypes.valid"
-                        [required]="goodsDetail.isDangerousGood"
+                        required
                       >
                         <option value="undefined">{{ l('SelectADangeroudGoodType') }}</option>
                         <option *ngFor="let item of allDangerousGoodTypes" [value]="item.id">{{ item.displayName }}</option>
