@@ -96,14 +96,28 @@ namespace TACHYON.Shipping.Drivers
 
             //.PageBy(input);
             var pageingitem = query.PageBy(input);
+            var result = ObjectMapper.Map<List<ShippingRequestTripDriverListDto>>(pageingitem.ToList());
+
+            var incidents = _shippingRequestTripAccidentRepository.GetAll().Where(x => result.Select(y => y.Id).Contains(x.RoutPointFK.ShippingRequestTripId)).ToList();
+
+            foreach (var item in result)
+            {
+                item.HasIncident = await HasIncident(item.Id);
+            }
+
             var totalCount = await query.CountAsync();
             return new PagedResultDto<ShippingRequestTripDriverListDto>(
-                totalCount,
-                ObjectMapper.Map<List<ShippingRequestTripDriverListDto>>(pageingitem)
+                totalCount, result
+
 
             );
 
 
+        }
+
+        private async Task<bool> HasIncident(long id)
+        {
+            return await _shippingRequestTripAccidentRepository.CountAsync(x => x.RoutPointFK.ShippingRequestTripId == id) > 0;
         }
         /// <summary>
         /// This api is for mobile deveopment team
