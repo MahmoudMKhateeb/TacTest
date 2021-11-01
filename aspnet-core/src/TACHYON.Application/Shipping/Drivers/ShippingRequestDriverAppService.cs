@@ -238,7 +238,8 @@ namespace TACHYON.Shipping.Drivers
                 {
                     //var reasone = await _shippingRequestReasonAccidentRepository.FirstOrDefaultAsync(x=>x.Language== CurrentLanguage || x.Language== TACHYONConsts.DefaultLanguage);
                     var reasone = ObjectMapper.Map<ShippingRequestReasonAccidentListDto>(q.ResoneFK);
-                    q.Description = reasone.Name;
+                    //q.Description = reasone.Name;
+                    q.OtherReasonName = reasone.Name;
                 }
             });
 
