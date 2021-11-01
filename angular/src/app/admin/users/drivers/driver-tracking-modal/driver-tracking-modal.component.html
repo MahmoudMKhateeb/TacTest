@@ -1,0 +1,98 @@
+<div
+  bsModal
+  #DriverTrackingModal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="createOrEditModal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div>
+        <div class="modal-header">
+          <h4 class="modal-title">
+            <!--                <span *ngIf="routStep.id">{{l("EditRoutStep")}}</span>-->
+            <!--                <span *ngIf="!routStep.id">{{l("CreateNewRoutStep")}}</span>-->
+            <span>{{ l('DriverTracking') }}</span>
+          </h4>
+          <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <div class="col-lg-6">
+            <div class="form-group">
+              <label>{{ l(' Date ') }}</label>
+              <div class="input-group date">
+                <input
+                  bsDatepicker
+                  datePickerMomentModifier
+                  class="form-control"
+                  type="datetime"
+                  name="startdate"
+                  placeholder="{{ l('EnterTheDate') }}"
+                  (dateChange)="dateFilter ? show(this.driverId, this.tripId) : ''"
+                  [(date)]="dateFilter"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="form-group col-md-12">
+            <agm-map style="height: 350px" [latitude]="driverLocations[0]?.latitude" [longitude]="driverLocations[0]?.longitude" [zoom]="zoom">
+              <agm-marker
+                *ngFor="let location of driverLocations"
+                [latitude]="location.latitude"
+                [longitude]="location.longitude"
+                [markerDraggable]="false"
+              ></agm-marker>
+            </agm-map>
+          </div>
+        </div>
+        <div [class]="containerClass">
+          <div class="card card-custom gutter-b">
+            <div class="card-body">
+              <div class="row align-items-center">
+                <dx-data-grid
+                  #grid
+                  id="dataGrid"
+                  [dataSource]="dataSource"
+                  [remoteOperations]="true"
+                  [showColumnLines]="true"
+                  [showRowLines]="false"
+                  [showRowLines]="false"
+                  [showBorders]="true"
+                  [rowAlternationEnabled]="true"
+                  keyExpr="id"
+                  (onRowUpdating)="updateRow($event)"
+                >
+                  <dxo-editing mode="popup" [allowUpdating]="true" [allowAdding]="true" [allowDeleting]="true"> </dxo-editing>
+                  <dxo-filter-row [visible]="true"></dxo-filter-row>
+                  <dxo-search-panel [visible]="true"></dxo-search-panel>
+                  <dxo-filter-panel [visible]="true"></dxo-filter-panel>
+                  <dxo-filter-builder-popup></dxo-filter-builder-popup>
+
+                  <dxo-remote-operations [sorting]="false" [paging]="true" [filtering]="false"></dxo-remote-operations>
+                  <dxo-paging [pageSize]="10"></dxo-paging>
+                  <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20, 50, 200]"></dxo-pager>
+
+                  <dxi-column dataField="latitude" caption="{{ l('latitude') }}">
+                    <dxi-validation-rule type="required"></dxi-validation-rule>
+                  </dxi-column>
+                  <dxi-column dataField="longitude" caption="{{ l('longitude') }}"></dxi-column>
+                  <dxi-column dataField="longitude" caption="{{ l('Time') }}"></dxi-column>
+                </dx-data-grid>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
