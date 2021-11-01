@@ -286,6 +286,7 @@ namespace TACHYON.Shipping.Trips
                 //can go to next point if not confirming receiverd code nor uploading POD
                 activePoint.IsActive = false;
             }
+            CurrentUnitOfWork.SaveChanges();
             //finish active point
             await CanGoToNextLocation(currentpoint);
 
