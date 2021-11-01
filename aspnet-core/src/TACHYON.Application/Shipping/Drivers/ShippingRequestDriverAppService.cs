@@ -248,13 +248,14 @@ namespace TACHYON.Shipping.Drivers
 
             query.ForEach(q =>
             {
-                if (q.ResoneFK != null)
+                if (!q.ResoneFK.Key.Contains(TACHYONConsts.OthersDisplayName))
                 {
                     //var reasone = await _shippingRequestReasonAccidentRepository.FirstOrDefaultAsync(x=>x.Language== CurrentLanguage || x.Language== TACHYONConsts.DefaultLanguage);
                     var reasone = ObjectMapper.Map<ShippingRequestReasonAccidentListDto>(q.ResoneFK);
                     //q.Description = reasone.Name;
                     q.OtherReasonName = reasone.Name;
                 }
+
             });
 
             tripDto.ShippingRequestTripAccidentList = ObjectMapper.Map<List<ShippingRequestTripAccidentListDto>>(query);
