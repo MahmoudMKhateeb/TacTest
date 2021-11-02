@@ -248,7 +248,7 @@ namespace TACHYON.Shipping.Drivers
 
             query.ForEach(q =>
             {
-                if (!q.ResoneFK.Key.Contains(TACHYONConsts.OthersDisplayName))
+                if (q.ResoneFK != null && !q.ResoneFK.Key.Contains(TACHYONConsts.OthersDisplayName))
                 {
                     //var reasone = await _shippingRequestReasonAccidentRepository.FirstOrDefaultAsync(x=>x.Language== CurrentLanguage || x.Language== TACHYONConsts.DefaultLanguage);
                     var reasone = ObjectMapper.Map<ShippingRequestReasonAccidentListDto>(q.ResoneFK);
