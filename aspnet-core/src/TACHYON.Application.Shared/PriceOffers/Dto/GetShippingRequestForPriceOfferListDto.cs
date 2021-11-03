@@ -16,6 +16,8 @@ namespace TACHYON.PriceOffers.Dto
         public decimal ShipperRating { get; set; }
         public int ShipperRatingNumber { get; set; }
         public string Carrier { get; set; }
+        public double Longitude { get; set; }
+        public double Latitude { get; set; }
         public DateTime? CreationTime { get; set; }
         public bool IsTachyonDeal { get; set; }
         public string OriginCity { get; set; }

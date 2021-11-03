@@ -260,6 +260,7 @@ import { ProfileModule } from '@app/main/profile/profile.module';
 import { ViewGoodDetailsComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/points/good-details/view-good-details/view-good-details.component';
 import { ViewPointModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/points/view-point-modal/view-point-modal.component';
 import { DangerousCoodTypesTranslationsComponent } from './goods/dangerous-cood-types-translations/dangerous-cood-types-translations.component';
+import { NgbCollapseModule } from '@node_modules/@ng-bootstrap/ng-bootstrap';
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
 @NgModule({
@@ -304,6 +305,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     InputNumberModule,
     QuartzCronModule,
     ProfileModule,
+    NgbCollapseModule,
   ],
   declarations: [
     DangerousGoodTypesComponent,

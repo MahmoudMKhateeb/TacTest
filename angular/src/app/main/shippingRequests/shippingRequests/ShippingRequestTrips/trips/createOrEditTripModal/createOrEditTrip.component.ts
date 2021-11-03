@@ -133,15 +133,17 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
    * takes the Vas List From the Shipping Request And Cleans them to use them in Trips Modal
    */
   vasesHandler() {
-    this.VasListFromFather.forEach((x) => {
-      //Get the Vase List From Father And Attach Them to new Array
-      const vas: CreateOrEditShippingRequestTripVasDto = new CreateOrEditShippingRequestTripVasDto();
-      vas.id = undefined; // vas id in shipping Request trip (Required for edit trip)
-      vas.shippingRequestTripId = this.activeTripId || undefined; //the trip id
-      vas.shippingRequestVasId = x.shippingRequestVas.id; //vas id in shipping request
-      vas.name = x.vasName; //vas Name
-      this.cleanVasesList.push(vas);
-    });
+    if (this.VasListFromFather) {
+      this.VasListFromFather.forEach((x) => {
+        //Get the Vase List From Father And Attach Them to new Array
+        const vas: CreateOrEditShippingRequestTripVasDto = new CreateOrEditShippingRequestTripVasDto();
+        vas.id = undefined; // vas id in shipping Request trip (Required for edit trip)
+        vas.shippingRequestTripId = this.activeTripId || undefined; //the trip id
+        vas.shippingRequestVasId = x.shippingRequestVas.id; //vas id in shipping request
+        vas.name = x.vasName; //vas Name
+        this.cleanVasesList.push(vas);
+      });
+    }
   }
 
   show(record?: CreateOrEditShippingRequestTripDto): void {

@@ -99,9 +99,11 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
     this.currentActiveTripSubs$ = this._tripService.currentActiveTripId.subscribe((res) => (this.activeTripId = res));
     //get some Stuff from ShippingRequest Dto
     this.tripSourceFacilitySub$ = this._tripService.currentShippingRequest.subscribe((res) => {
-      this.RouteType = res.shippingRequest.routeTypeId;
-      this.NumberOfDrops = res.shippingRequest.numberOfDrops;
-      this.MainGoodsCategory = res.shippingRequest.goodCategoryId;
+      if (res.shippingRequest) {
+        this.RouteType = res.shippingRequest.routeTypeId;
+        this.NumberOfDrops = res.shippingRequest.numberOfDrops;
+        this.MainGoodsCategory = res.shippingRequest.goodCategoryId;
+      }
     });
     //Take Trip Source Facility From Trip Service
     this.tripSourceFacilitySub$ = this._tripService.currentSourceFacility.subscribe((res) => {
