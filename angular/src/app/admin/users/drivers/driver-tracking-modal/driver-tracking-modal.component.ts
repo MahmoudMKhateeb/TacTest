@@ -5,6 +5,8 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import { result } from 'lodash-es';
 import CustomStore from '@node_modules/devextreme/data/custom_store';
 import { LoadOptions } from '@node_modules/devextreme/data/load_options';
+import DevExpress from '@node_modules/devextreme';
+import data = DevExpress.data;
 
 @Component({
   selector: 'app-driver-tracking-modal',
@@ -15,21 +17,22 @@ export class DriverTrackingModalComponent extends AppComponentBase implements On
   dataSource: any = {};
   @ViewChild('DriverTrackingModal', { static: true }) modal: ModalDirective;
   driverId: number;
+  trackDriver = { longitude: 1, latitude: 1 };
   tripId: number;
   constructor(injector: Injector, private _ShippingRequestDriver: ShippingRequestDriverServiceProxy) {
     super(injector);
   }
   zoom = 3;
   saving = false;
-  filter: string;
+  filter: any;
   dateFilter: any;
   driverLocations: any;
-
   active = false;
   ngOnInit(): void {
-    this.GetAllDriverLocationLogs();
+    // this.GetAllDriverLocationLogs(this.dateFilter, this.driverId, this.filter, this.tripId);
+    // this.GetAllDriverLocationLogs(this.dateFilter, 130, [], null);
   }
-  GetAllDriverLocationLogs() {
+  GetAllDriverLocationLogs(driverId: number, tripId: number, dateFillter: any) {
     let self = this;
     this.dataSource = {};
     this.dataSource.store = new CustomStore({
@@ -37,7 +40,7 @@ export class DriverTrackingModalComponent extends AppComponentBase implements On
 
       load(loadOptions: LoadOptions) {
         return self._ShippingRequestDriver
-          .getAllDriverLocationLogs(this.dateFilter, this.driverId, this.filter, this.tripId)
+          .getAllDriverLocationLogs(dateFillter, 130, JSON.stringify(loadOptions), tripId)
           .toPromise()
           .then((response) => {
             return {
@@ -57,22 +60,16 @@ export class DriverTrackingModalComponent extends AppComponentBase implements On
     this.active = true;
     this.driverId = driverId;
     this.tripId = tripId;
-    this._ShippingRequestDriver.getAllDriverLocationLogs(this.dateFilter, this.driverId, this.filter, this.tripId).subscribe((result) => {
-      console.log('result', result);
-      this.driverLocations = result;
-      this.modal.show();
-
-      // if (result.length == 0) {
-      //   this.notify.info(this.l('NoRecordFound'));
-      // }
-    });
+    this.modal.show();
+    this.GetAllDriverLocationLogs(driverId, tripId, this.dateFilter);
   }
 
   close(): void {
     this.active = false;
     this.modal.hide();
   }
-  updateRow(options) {
-    options.newData = { ...options.oldData, ...options.newData };
+  trackOnclick(longitude, latitude) {
+    this.trackDriver.longitude = longitude;
+    this.trackDriver.latitude = latitude;
   }
 }
