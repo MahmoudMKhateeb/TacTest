@@ -535,3 +535,12 @@ card-body {
 .input-group-btn button {
   border-radius: 0 0.42rem 0.42rem 0 !important;
 }
+
+.incidentDev {
+  width: 100%;
+  float: right;
+  justify-content: end;
+  margin-right: 3%;
+  position: relative;
+  top: 7px;
+}
