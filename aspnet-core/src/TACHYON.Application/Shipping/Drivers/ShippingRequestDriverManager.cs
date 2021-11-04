@@ -134,8 +134,10 @@ namespace TACHYON.Shipping.Drivers
                 .WhereIf(pointId == null, x => x.IsActive)
                 .WhereIf(pointId != null, x => x.Id == pointId)
                 .FirstOrDefaultAsync(x =>
-                x.ShippingRequestTripFk.RoutePointStatus == RoutePointStatus.ReceiverConfirmed &&
-                x.ShippingRequestTripFk.AssignedDriverUserId == _abpSession.UserId);
+                x.ShippingRequestTripFk.RoutePointStatus == RoutePointStatus.ReceiverConfirmed
+                //&&
+                //x.ShippingRequestTripFk.AssignedDriverUserId == _abpSession.UserId
+                );
             if (CurrentPoint == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
 
             if (!CurrentPoint.ShippingRequestTripFk.NeedsDeliveryNote) throw new UserFriendlyException(L("TripDidnnotNeedsDeliveryNote"));
