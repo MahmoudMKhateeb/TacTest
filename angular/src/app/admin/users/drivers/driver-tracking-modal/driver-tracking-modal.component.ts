@@ -2,11 +2,8 @@ import { Component, Injector, OnInit, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { ShippingRequestDriverServiceProxy } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { result } from 'lodash-es';
 import CustomStore from '@node_modules/devextreme/data/custom_store';
 import { LoadOptions } from '@node_modules/devextreme/data/load_options';
-import DevExpress from '@node_modules/devextreme';
-import data = DevExpress.data;
 
 @Component({
   selector: 'app-driver-tracking-modal',
@@ -32,7 +29,7 @@ export class DriverTrackingModalComponent extends AppComponentBase implements On
     // this.GetAllDriverLocationLogs(this.dateFilter, this.driverId, this.filter, this.tripId);
     // this.GetAllDriverLocationLogs(this.dateFilter, 130, [], null);
   }
-  GetAllDriverLocationLogs(driverId: number, tripId: number, dateFillter: any) {
+  GetAllDriverLocationLogs(driverId: number) {
     let self = this;
     this.dataSource = {};
     this.dataSource.store = new CustomStore({
@@ -40,9 +37,10 @@ export class DriverTrackingModalComponent extends AppComponentBase implements On
 
       load(loadOptions: LoadOptions) {
         return self._ShippingRequestDriver
-          .getAllDriverLocationLogs(dateFillter, 130, JSON.stringify(loadOptions), tripId)
+          .getAllDriverLocationLogs(driverId, JSON.stringify(loadOptions), undefined)
           .toPromise()
           .then((response) => {
+            self.driverLocations = response.data;
             return {
               data: response.data,
               totalCount: response.totalCount,
@@ -61,15 +59,12 @@ export class DriverTrackingModalComponent extends AppComponentBase implements On
     this.driverId = driverId;
     this.tripId = tripId;
     this.modal.show();
-    this.GetAllDriverLocationLogs(driverId, tripId, this.dateFilter);
+    this.GetAllDriverLocationLogs(driverId);
   }
 
   close(): void {
     this.active = false;
+    this.dataSource = {};
     this.modal.hide();
-  }
-  trackOnclick(longitude, latitude) {
-    this.trackDriver.longitude = longitude;
-    this.trackDriver.latitude = latitude;
   }
 }

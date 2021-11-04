@@ -492,10 +492,12 @@ namespace TACHYON.Shipping.Drivers
 
         public async Task<LoadResult> GetAllDriverLocationLogs(GetAllDriverLocationLogsInput input)
         {
+
+            DisableTenancyFiltersIfHost();
+
             var filteredLocations = _driverLocationLogRepository.GetAll()
-                .WhereIf(input.DateFilter != null, x => x.CreationTime.Date == input.DateFilter.Value.Date)
-                .WhereIf(AbpSession.TenantId != null, x => x.CreatorUserId == input.DriverId && x.CreatorUserFk.TenantId == AbpSession.TenantId)
-                .Where(x => x.TripId == input.TripId)
+                .WhereIf(AbpSession.TenantId != null, x => x.CreatorUserId == input.DriverId || x.CreatorUserFk.TenantId == AbpSession.TenantId)
+                .WhereIf(input.TripId.HasValue, x => x.TripId == input.TripId)
                 .ProjectTo<DriverLocationLogDto>(AutoMapperConfigurationProvider);
 
             var result = await LoadResultAsync(filteredLocations, input.Filter);
