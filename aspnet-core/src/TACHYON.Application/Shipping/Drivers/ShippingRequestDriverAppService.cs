@@ -496,7 +496,7 @@ namespace TACHYON.Shipping.Drivers
             DisableTenancyFiltersIfHost();
 
             var filteredLocations = _driverLocationLogRepository.GetAll()
-                .WhereIf(AbpSession.TenantId != null, x => x.CreatorUserId == input.DriverId || x.CreatorUserFk.TenantId == AbpSession.TenantId)
+                .Where(x => x.CreatorUserId == input.DriverId)
                 .WhereIf(input.TripId.HasValue, x => x.TripId == input.TripId)
                 .ProjectTo<DriverLocationLogDto>(AutoMapperConfigurationProvider);
 
