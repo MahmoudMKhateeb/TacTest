@@ -10,5 +10,6 @@ namespace TACHYON.DriverLocationLogs.dtos
         public int? TripId { get; set; }
         public double Longitude { get; set; }
         public double Latitude { get; set; }
+        public DateTime CreationTime { get; set; }
     }
 }
