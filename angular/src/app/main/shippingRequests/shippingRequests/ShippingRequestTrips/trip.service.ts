@@ -29,6 +29,7 @@ export class TripService {
   public currentFacilitiesItems: FacilityForDropdownDto[];
 
   public islam = 1987;
+  facilitiesLodaing: boolean;
 
   constructor(private _routStepsServiceProxy: RoutStepsServiceProxy, private feature: FeatureCheckerService) {
     //  this.GetOrRefreshFacilities(undefined);
@@ -53,9 +54,11 @@ export class TripService {
   }
   //Loads All facilities
   GetOrRefreshFacilities(shippingRequestId: number) {
+    this.facilitiesLodaing = true;
     if (this.feature.isEnabled('App.Shipper') || this.feature.isEnabled('App.TachyonDealer')) {
       this._routStepsServiceProxy.getAllFacilitiesForDropdown(shippingRequestId).subscribe((result) => {
         this.currentFacilitiesItems = result;
+        this.facilitiesLodaing = false;
       });
     }
   }
