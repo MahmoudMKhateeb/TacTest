@@ -94,7 +94,16 @@ export class AppNavigationService {
         [],
         [
           new AppMenuItem('TachyonManageService', 'Pages', '', '/app/main/tms/shippingRequests'),
-          new AppMenuItem('Marketplace', 'Pages', '', '/app/main/marketplace/list'),
+          new AppMenuItem(
+            'Marketplace',
+            'Pages',
+            '',
+            '/app/main/marketplace/list',
+            undefined,
+            undefined,
+            undefined,
+            () => this.isEnabled('App.MarketPlace') || !this._appSessionService.tenantId
+          ),
           new AppMenuItem('Offers', 'Pages', '', '/app/main/offers'),
           new AppMenuItem('ShipmentTracking', 'Pages', '', '/app/main/tracking'),
           new AppMenuItem('Requests', 'Pages', '', '/app/main/shippingRequests/shippingRequests'),
@@ -139,7 +148,7 @@ export class AppNavigationService {
           ),
           new AppMenuItem('MyShippingRequests', 'Pages.ShippingRequests', '', '/app/main/shippingRequests/shippingRequests'),
           new AppMenuItem('Marketplace', '', '', '/app/main/marketplace/list', undefined, undefined, undefined, undefined, () =>
-            this.isEnabled('App.Carrier')
+            this.isEnabled('App.MarketPlace')
           ),
           new AppMenuItem(
             'Offers',
@@ -185,16 +194,8 @@ export class AppNavigationService {
             () => this.isEnabled('App.Shipper')
           ),
           new AppMenuItem('MyShippingRequests', 'Pages.ShippingRequests', '', '/app/main/shippingRequests/shippingRequests'),
-          new AppMenuItem(
-            'Marketplace',
-            '',
-            '',
-            '/app/main/marketplace/list',
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            () => this.isEnabled('App.Carrier') || this.isEnabled('App.Shipper')
+          new AppMenuItem('Marketplace', '', '', '/app/main/marketplace/list', undefined, undefined, undefined, undefined, () =>
+            this.isEnabled('App.MarketPlace')
           ),
           new AppMenuItem(
             'Offers',
