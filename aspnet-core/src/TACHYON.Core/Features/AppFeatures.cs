@@ -19,14 +19,15 @@
         public const string Receiver = "App.Receiver";
         public const string TachyonDealer = "App.TachyonDealer";
         public const string ShippingRequest = "App.shippingRequest";
+        public const string MarketPlace = "App.MarketPlace";
         public const string OffersMarketPlace = "App.OffersMarketPlace";
         public const string SendDirectRequest = "App.SendDirectRequest";
         public const string SendTachyonDealShippingRequest = "App.SendTachyonDealShippingRequest";
         public const string ShipperCreditLimit = "App.Shipper.CreditLimit";
         public const string ShipperPeriods = "App.Shipper.Periods";
         public const string CarrierPeriods = "App.Carrier.Periods";
-        
-        
+
+
         public const string BiddingCommissionPercentage = "App.Shipper.BiddingCommissionPercentage";
         public const string BiddingCommissionValue = "App.Shipper.BiddingCommissionValue";
         public const string BiddingMinValueCommission = "App.Shipper.BiddingMinValueCommission";

@@ -177,6 +177,15 @@ namespace TACHYON.Features
                 TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f"
             };
 
+
+            //<see href="https://tachyonhub.atlassian.net/browse/TAC-1336">here</see>
+            var marketPlace = context.Create(
+                AppFeatures.MarketPlace,
+                "true",
+                L("MarketPlace"), // todo add localization here
+                inputType: new CheckboxInputType()
+            );
+
             var OffersMarketPlace = context.Create(
                 AppFeatures.OffersMarketPlace,
                 "false",
