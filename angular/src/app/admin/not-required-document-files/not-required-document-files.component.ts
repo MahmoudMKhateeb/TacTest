@@ -53,6 +53,17 @@ export class NotRequiredDocumentFilesComponent extends AppComponentBase {
     this.getAllsubmittedDocumentsStatusList();
     this.createOrEditDocumentFileDtos = [];
   }
+  /**
+   * Getter That Checks if All Documents Are Accepted
+   * @constructor
+   */
+  get IsAllDocumentsAccepted(): boolean {
+    let i = 0;
+    this.submittedDocumentsList.forEach((x) => {
+      if (x.isAccepted) i++;
+    });
+    return i === this.submittedDocumentsList.length ? true : false;
+  }
 
   public saveInternal() {
     this.createOrEditDocumentFileDtos.forEach((element) => {
