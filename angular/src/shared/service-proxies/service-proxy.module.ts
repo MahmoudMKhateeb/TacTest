@@ -4,7 +4,6 @@ import { NgModule } from '@angular/core';
 import * as ApiServiceProxies from './service-proxies';
 import { ZeroRefreshTokenService } from '@account/auth/zero-refresh-token.service';
 import { ZeroTemplateHttpConfigurationService } from './zero-template-http-configuration.service';
-import { TerminologieServiceProxy } from 'shared/service-proxies/terminologies-ervice-proxy';
 import { RatingServiceProxy } from './service-proxies';
 
 @NgModule({
@@ -144,7 +143,6 @@ import { RatingServiceProxy } from './service-proxies';
     ApiServiceProxies.TrackingServiceProxy,
     ApiServiceProxies.RatingServiceProxy,
     ApiServiceProxies.ShippingRequestDriverServiceProxy,
-    TerminologieServiceProxy,
     { provide: RefreshTokenService, useClass: ZeroRefreshTokenService },
     { provide: AbpHttpConfigurationService, useClass: ZeroTemplateHttpConfigurationService },
     { provide: HTTP_INTERCEPTORS, useClass: AbpHttpInterceptor, multi: true },
