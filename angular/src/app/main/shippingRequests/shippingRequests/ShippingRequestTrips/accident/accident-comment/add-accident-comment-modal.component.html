@@ -18,7 +18,7 @@
         </div>
         <!--end::Header-->
         <!--begin::Body-->
-        <div class="card-body" id="comments" [busyIf]="primengTableHelper.isLoading">
+        <div class="card-body" [busyIf]="primengTableHelper.isLoading">
           <!--begin::Scroll-->
           <div class="scroll scroll-pull ps ps--active-y" data-height="375" data-mobile-height="300" style="height: 375px; overflow: hidden">
             <!--begin::Messages-->
@@ -72,9 +72,7 @@
             ></textarea>
             <div class="d-flex align-items-center justify-content-between mt-5">
               <div>
-                <button [disabled]="saving" type="button" class="btn btn-secondary" (click)="scrollToDirectRequests('comments')">
-                  {{ 'Cancel' | localize }}
-                </button>
+                <button [disabled]="saving" type="button" class="btn btn-secondary" (click)="close()">{{ 'Cancel' | localize }}</button>
                 <button
                   type="submit"
                   class="btn btn-primary btn-md text-uppercase font-weight-bold chat-send py-2 px-6"
