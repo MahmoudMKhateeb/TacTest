@@ -13,6 +13,7 @@ using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
 using TACHYON.Authorization.Users;
+using TACHYON.Authorization.Users.Profile;
 using TACHYON.Common;
 using TACHYON.Dto;
 using TACHYON.Extension;
@@ -34,14 +35,15 @@ namespace TACHYON.Shipping.Trips.Accidents.Comments
     public class ShippingRequestTripAccidentCommentsAppService : TACHYONAppServiceBase, IShippingRequestTripAccidentCommentAppService
     {
         private readonly IRepository<ShippingRequestTripAccidentComment> _ShippingRequestTripAccidentCommentRepository;
-
+        private readonly ProfileAppService _ProfileAppService;
 
         public ShippingRequestTripAccidentCommentsAppService(
+            ProfileAppService ProfileAppService,
             IRepository<ShippingRequestTripAccidentComment> ShippingRequestTripAccidentCommentRepository
             )
         {
             _ShippingRequestTripAccidentCommentRepository = ShippingRequestTripAccidentCommentRepository;
-
+            _ProfileAppService = ProfileAppService;
         }
         public ListResultDto<ShippingRequestTripAccidentCommentListDto> GetAll(GetAllForShippingRequestTripAccidentCommentFilterInput Input)
         {
@@ -55,7 +57,14 @@ namespace TACHYON.Shipping.Trips.Accidents.Comments
               .Where(r => r.AccidentFK.Id == Input.AccidentId)
               .OrderBy(Input.Sorting ?? "id asc").ToList();
 
-            return new ListResultDto<ShippingRequestTripAccidentCommentListDto>(ObjectMapper.Map<List<ShippingRequestTripAccidentCommentListDto>>(query));
+            var list = ObjectMapper.Map<List<ShippingRequestTripAccidentCommentListDto>>(query);
+            list.ForEach(e =>
+            {
+                var date64 = _ProfileAppService.GetProfilePictureByUser(e.CreatorUserId).Result.ProfilePicture;
+                e.TenantImage = String.IsNullOrEmpty(date64) ? null : "data:image/jpeg;base64," + date64;
+            });
+
+            return new ListResultDto<ShippingRequestTripAccidentCommentListDto>(list);
         }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequest_Accidents_Comments_Edit)]

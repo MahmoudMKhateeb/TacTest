@@ -4,6 +4,7 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 import {
   CreateOrEditShippingRequestTripAccidentCommentDto,
   CreateOrEditShippingRequestTripAccidentDto,
+  ProfileServiceProxy,
   ShippingRequestTripAccidentCommentListDto,
   ShippingRequestTripAccidentCommentsServiceProxy,
 } from '@shared/service-proxies/service-proxies';
@@ -23,7 +24,11 @@ export class AddAccidentCommentModalComponent extends AppComponentBase implement
   comments: CreateOrEditShippingRequestTripAccidentCommentDto;
   accidentComments: ShippingRequestTripAccidentCommentListDto[] = undefined;
   @Input() allReasons: any;
-  constructor(injector: Injector, private _shippingRequestTripAccidentComment: ShippingRequestTripAccidentCommentsServiceProxy) {
+  constructor(
+    injector: Injector,
+    private _profileServiceProxy: ProfileServiceProxy,
+    private _shippingRequestTripAccidentComment: ShippingRequestTripAccidentCommentsServiceProxy
+  ) {
     super(injector);
   }
 
@@ -34,6 +39,7 @@ export class AddAccidentCommentModalComponent extends AppComponentBase implement
 
     this._shippingRequestTripAccidentComment.getAll(accidentId, undefined).subscribe((result) => {
       this.accidentComments = result.items;
+      console.log('log ', this.accidentComments);
       this.comments.accidentId = accidentId;
       this.primengTableHelper.hideLoadingIndicator();
       this.active = true;
@@ -45,6 +51,7 @@ export class AddAccidentCommentModalComponent extends AppComponentBase implement
     this.comments = new CreateOrEditShippingRequestTripAccidentCommentDto();
     this.comments.accidentId = accidentId;
     this.getAll(accidentId);
+    //this.scrollToDirectRequests("comments");
   }
 
   save(): void {

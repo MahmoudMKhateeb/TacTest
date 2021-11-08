@@ -18,7 +18,7 @@
         </div>
         <!--end::Header-->
         <!--begin::Body-->
-        <div class="card-body" [busyIf]="primengTableHelper.isLoading">
+        <div class="card-body" id="comments" [busyIf]="primengTableHelper.isLoading">
           <!--begin::Scroll-->
           <div class="scroll scroll-pull ps ps--active-y" data-height="375" data-mobile-height="300" style="height: 375px; overflow: hidden">
             <!--begin::Messages-->
@@ -26,14 +26,13 @@
               <!--begin::Message In-->
               <div *ngFor="let item of accidentComments" class="d-flex flex-column mb-5 align-items-start">
                 <div class="d-flex align-items-center">
-                  <div class="symbol symbol-circle symbol-40 mr-3" *ngIf="item.tenantImage == null">
+                  <div class="symbol symbol-circle symbol-40 mr-3">
                     <img
+                      *ngIf="item.tenantImage == null"
                       alt="Pic"
                       src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Placeholder_no_text.svg/1200px-Placeholder_no_text.svg.png"
                     />
-                  </div>
-                  <div class="symbol symbol-circle symbol-40 mr-3" *ngIf="item.tenantImage != null">
-                    <img alt="Pic" src="item.tenantImage" />
+                    <img *ngIf="item.tenantImage != null" alt="Pic" src="{{ item.tenantImage }}" />
                   </div>
                   <div>
                     <a href="#" class="text-dark-75 text-hover-primary font-weight-bold font-size-h6">{{ item.tenantName }}</a>
@@ -73,7 +72,9 @@
             ></textarea>
             <div class="d-flex align-items-center justify-content-between mt-5">
               <div>
-                <button [disabled]="saving" type="button" class="btn btn-secondary" (click)="close()">{{ 'Cancel' | localize }}</button>
+                <button [disabled]="saving" type="button" class="btn btn-secondary" (click)="scrollToDirectRequests('comments')">
+                  {{ 'Cancel' | localize }}
+                </button>
                 <button
                   type="submit"
                   class="btn btn-primary btn-md text-uppercase font-weight-bold chat-send py-2 px-6"
