@@ -39,7 +39,7 @@ namespace TACHYON.Common
             _Tenant = Tenant;
             _PeriodRepository = PeriodRepository;
             _ReasonAccidentRepository = ReasonAccidentRepository;
-    }
+        }
 
         public async Task<ListResultDto<SubscribableEditionComboboxItemDto>> GetEditionsForCombobox(bool onlyFreeItems = false)
         {
@@ -71,7 +71,7 @@ namespace TACHYON.Common
                             u.UserName.Contains(input.Filter) ||
                             u.EmailAddress.Contains(input.Filter)
                     ).WhereIf(input.ExcludeCurrentUser, u => u.Id != AbpSession.GetUserId())
-                    .WhereIf(input.ExcludeDrivers, u => !u.IsDriver );
+                    .WhereIf(input.ExcludeDrivers, u => !u.IsDriver);
 
                 var userCount = await query.CountAsync();
                 var users = await query
@@ -100,11 +100,11 @@ namespace TACHYON.Common
             };
         }
 
-        public IEnumerable<ISelectItemDto> GetAutoCompleteTenants(string name,string EdtionName)
+        public IEnumerable<ISelectItemDto> GetAutoCompleteTenants(string name, string EdtionName)
         {
             name = name.ToLower().Trim();
             var query =
-                _Tenant.GetAll().              
+                _Tenant.GetAll().
                 Where(t => t.IsActive && (t.Name.ToLower().Contains(name) || t.TenancyName.ToLower().Contains(name)) && (string.IsNullOrEmpty(EdtionName) || t.Edition.DisplayName.ToLower().Contains(EdtionName.ToLower().Trim())))
                 .Select(t => new SelectItemDto { DisplayName = t.Name, Id = t.Id.ToString() }).Take(20).ToList();
 
@@ -117,19 +117,19 @@ namespace TACHYON.Common
             _CurrentUser = GetCurrentUser();
 
             var query = await _PeriodRepository.GetAll()
-                .WhereIf(_CurrentUser.TenantId.HasValue && FeatureChecker.IsEnabled(AppFeatures.Carrier),p=> p.ShipperOnlyUsed==false)
+                .WhereIf(_CurrentUser.TenantId.HasValue && FeatureChecker.IsEnabled(AppFeatures.Carrier), p => p.ShipperOnlyUsed == false)
                 .Where(p => p.Enabled == true)
                 .Select(t => new SelectItemDto { DisplayName = t.DisplayName, Id = t.Id.ToString() }).ToListAsync();
             return query;
         }
 
-        public  Task<List<SelectItemDto>> GetAccidentReason()
+        public Task<List<ShippingRequestAccidentReasonLookupDto>> GetAccidentReason()
         {
-            var query=  _ReasonAccidentRepository
+            var query = _ReasonAccidentRepository
                 .GetAllIncluding(x => x.Translations)
                 .AsNoTracking();
-            return Task.FromResult(ObjectMapper.Map<List<ShippingRequestReasonAccidentListDto>>(query).Select(t => new SelectItemDto { DisplayName = t.Name, Id = t.Id.ToString() }).ToList());
-            
+            return Task.FromResult(ObjectMapper.Map<List<ShippingRequestReasonAccidentListDto>>(query).Select(t => new ShippingRequestAccidentReasonLookupDto { DisplayName = t.Name, Id = t.Id, Key = t.Key }).ToList());
+
         }
     }
 }

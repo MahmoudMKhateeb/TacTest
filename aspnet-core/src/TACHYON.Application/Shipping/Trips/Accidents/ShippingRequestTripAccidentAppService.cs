@@ -190,8 +190,12 @@ namespace TACHYON.Shipping.Trips.Accidents
         private async Task Create(CreateOrEditShippingRequestTripAccidentDto input, RoutPoint routPoint)
         {
             DisableTenancyFilters();
-            var document = await _CommonManager.UploadDocumentAsBase64(ObjectMapper.Map<DocumentUpload>(input), AbpSession.TenantId);
-            ObjectMapper.Map(document, input);
+            //entered from web
+            if (!GetCurrentUser().IsDriver)
+            {
+                var document = await _CommonManager.UploadDocumentAsBase64(ObjectMapper.Map<DocumentUpload>(input), AbpSession.TenantId);
+                ObjectMapper.Map(document, input);
+            }
 
             var Accident = ObjectMapper.Map<ShippingRequestTripAccident>(input);
             if (input.lat.HasValue && input.lng.HasValue)
@@ -212,8 +216,12 @@ namespace TACHYON.Shipping.Trips.Accidents
         private async Task Update(CreateOrEditShippingRequestTripAccidentDto input)
         {
             var Accident = await GetAccident(input.Id);
-            var document = await _CommonManager.UploadDocumentAsBase64(ObjectMapper.Map<DocumentUpload>(input), AbpSession.TenantId);
-            ObjectMapper.Map(document, input);
+            //entered from web
+            if (!GetCurrentUser().IsDriver)
+            {
+                var document = await _CommonManager.UploadDocumentAsBase64(ObjectMapper.Map<DocumentUpload>(input), AbpSession.TenantId);
+                ObjectMapper.Map(document, input);
+            }
             ObjectMapper.Map(input, Accident);
 
         }
@@ -361,7 +369,7 @@ namespace TACHYON.Shipping.Trips.Accidents
                 var reason = await _shippingRequestReasonAccidentRepository
                     .FirstOrDefaultAsync(x => x.CoreId == input.ReasoneId.Value);
 
-                if (reason.Name.ToLower().Contains(TACHYONConsts.OthersDisplayName) && input.OtherReasonName.IsNullOrEmpty())
+                if (reason.Name.ToLower().Contains(TACHYONConsts.OthersDisplayName.ToLower()) && input.OtherReasonName.IsNullOrEmpty())
                     throw new UserFriendlyException(L("AccidentReasonConNotBeOtherAndEmptyAtTheSameTime"));
             }
         }

@@ -32,11 +32,13 @@ namespace TACHYON.Web.Controllers
         private readonly IRepository<DocumentFile, Guid> _documentFileRepository;
         private readonly WaybillsManager _waybillsManager;
         private readonly IRepository<RoutPointDocument, long> _routPointDocumentRepository;
+        private readonly IRepository<ShippingRequestTripAccident> _shippingRequestTripAccidentRepository;
+
 
         public FileController(
             ITempFileCacheManager tempFileCacheManager,
             IBinaryObjectManager binaryObjectManager
-, IRepository<RoutPoint, long> routPointRepository, WaybillsManager waybillsManager, IRepository<DocumentFile, Guid> documentFileRepository, IRepository<RoutPointDocument, long> routPointDocumentRepository, IRepository<ShippingRequestTrip> shippingRequestTripRepository, UserManager userManager)
+, IRepository<RoutPoint, long> routPointRepository, WaybillsManager waybillsManager, IRepository<DocumentFile, Guid> documentFileRepository, IRepository<RoutPointDocument, long> routPointDocumentRepository, IRepository<ShippingRequestTrip> shippingRequestTripRepository, UserManager userManager, IRepository<ShippingRequestTripAccident> shippingRequestTripAccidentRepository)
         {
             _tempFileCacheManager = tempFileCacheManager;
             _binaryObjectManager = binaryObjectManager;
@@ -46,6 +48,7 @@ namespace TACHYON.Web.Controllers
             _routPointDocumentRepository = routPointDocumentRepository;
             _shippingRequestTripRepository = shippingRequestTripRepository;
             _userManager = userManager;
+            _shippingRequestTripAccidentRepository = shippingRequestTripAccidentRepository;
         }
 
         [DisableAuditing]
@@ -126,6 +129,29 @@ namespace TACHYON.Web.Controllers
             file.FileName = file.FileName + "." + exten;
             return File(binaryObject.Bytes, file.FileType, file.FileName);
         }
+
+
+        [DisableAuditing]
+        [AbpMvcAuthorize()]
+        public async Task<ActionResult> DownloadTripIncidentFile(int id)
+        {
+            var Accident = await _shippingRequestTripAccidentRepository
+   .GetAll()
+           .Where(x => x.Id == id)
+           .Where(x => x.RoutPointFK.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId)
+   .FirstOrDefaultAsync();
+            if (Accident == null) throw new UserFriendlyException(L("NoRecoredFound"));
+
+            var binaryObject = await _binaryObjectManager.GetOrNullAsync(Accident.DocumentId.Value);
+            var file = new FileDto(Accident.DocumentName, Accident.DocumentContentType);
+
+            MimeTypes.TryGetExtension(file.FileType, out var exten);
+
+            file.FileName = file.FileName + "." + exten;
+            return File(binaryObject.Bytes, file.FileType, file.FileName);
+
+        }
+
         [AbpMvcAuthorize()]
         public ActionResult waybill(int id)
         {

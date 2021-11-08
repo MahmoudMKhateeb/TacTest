@@ -1,10 +1,11 @@
 ﻿using Abp.Application.Services;
 using Abp.Application.Services.Dto;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using TACHYON.Common.Dto;
-using TACHYON.Editions.Dto;
-using System.Collections.Generic;
 using TACHYON.Dto;
+using TACHYON.Editions.Dto;
+using TACHYON.Shipping.Accidents.Dto;
 
 namespace TACHYON.Common
 {
@@ -20,7 +21,7 @@ namespace TACHYON.Common
 
         Task<List<SelectItemDto>> GetPeriods();
 
-        Task<List<SelectItemDto>> GetAccidentReason();
+        Task<List<ShippingRequestAccidentReasonLookupDto>> GetAccidentReason();
 
     }
 }

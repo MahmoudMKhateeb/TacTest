@@ -18,6 +18,8 @@ using TACHYON.Localization.Importing;
 using TACHYON.Shipping.Drivers;
 using TACHYON.Shipping.Drivers.Dto;
 using TACHYON.Shipping.Trips;
+using TACHYON.Shipping.Trips.Accidents;
+using TACHYON.Shipping.Trips.Accidents.Dto;
 using TACHYON.Storage;
 using TACHYON.Trucks;
 using TACHYON.Trucks.Dtos;
@@ -38,9 +40,10 @@ namespace TACHYON.Web.Controllers
         private ShippingRequestDriverManager _shippingRequestDriverManager;
         private ShippingRequestsTripManager _shippingRequestTripManger;
         private CommonManager _commonManager;
+        private IShippingRequestTripAccidentAppService _shippingRequestTripAccidentAppService;
         public HelperController(TrucksAppService trucksAppService, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager, IBackgroundJobManager backgroundJobManager,
             ShippingRequestDriverManager shippingRequestDriverManager,
-            CommonManager commonManager, ShippingRequestsTripManager shippingRequestTripManger)
+            CommonManager commonManager, ShippingRequestsTripManager shippingRequestTripManger, IShippingRequestTripAccidentAppService shippingRequestTripAccidentAppService)
         {
             _trucksAppService = trucksAppService;
             _tempFileCacheManager = tempFileCacheManager;
@@ -49,6 +52,7 @@ namespace TACHYON.Web.Controllers
             _shippingRequestDriverManager = shippingRequestDriverManager;
             _commonManager = commonManager;
             _shippingRequestTripManger = shippingRequestTripManger;
+            _shippingRequestTripAccidentAppService = shippingRequestTripAccidentAppService;
         }
 
         public async Task<FileResult> GetTruckPictureByTruckId(long truckId)
@@ -235,6 +239,44 @@ namespace TACHYON.Web.Controllers
 
                 var document = await _commonManager.UploadDocument(file, AbpSession.TenantId);
                 await _shippingRequestDriverManager.UploadDeliveryNote(document, pointId);
+
+                return Json(new AjaxResponse(new { }));
+            }
+            catch (UserFriendlyException ex)
+            {
+                return Json(new AjaxResponse(new ErrorInfo(ex.Message)));
+            }
+        }
+
+
+
+        [HttpPost]
+        [AbpMvcAuthorize()]
+        [Route("/api/services/app/ShippingRequestDriver/AddIncidentReport")]
+        public async Task<JsonResult> AddIncidentReport(CreateOrEditShippingRequestTripAccidentDto input)
+        {
+            try
+            {
+                var file = Request.Form.Files.First();
+                if (file != null)
+                {
+                    //Input.Document = file;
+                    if (file.Length == 0)
+                    {
+                        throw new UserFriendlyException(L("File_Empty_Error"));
+                    }
+
+                    if (file.Length > 1048576 * 100) //100 MB
+                    {
+                        throw new UserFriendlyException(L("File_SizeLimit_Error"));
+                    }
+
+                    var document = await _commonManager.UploadDocument(file, AbpSession.TenantId);
+                    input.DocumentName = document.DocumentName;
+                    input.DocumentContentType = "image/jpeg";
+                    input.DocumentId = document.DocumentId;
+                }
+                await _shippingRequestTripAccidentAppService.CreateOrEdit(input);
 
                 return Json(new AjaxResponse(new { }));
             }
