@@ -11,8 +11,8 @@ using TACHYON.EntityFrameworkCore;
 namespace TACHYON.Migrations
 {
     [DbContext(typeof(TACHYONDbContext))]
-    [Migration("20211027080531_addAccidentIdForTripCommentsTbl")]
-    partial class addAccidentIdForTripCommentsTbl
+    [Migration("20211108110457_Add_ShippingRequestTripAccidentComment_Table")]
+    partial class Add_ShippingRequestTripAccidentComment_Table
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -5036,6 +5036,8 @@ namespace TACHYON.Migrations
 
                     b.HasIndex("AccidentId");
 
+                    b.HasIndex("TenantId");
+
                     b.ToTable("ShippingRequestTripAccidentComments");
                 });
 
@@ -7740,6 +7742,12 @@ namespace TACHYON.Migrations
                     b.HasOne("TACHYON.Shipping.ShippingRequestTrips.ShippingRequestTripAccident", "AccidentFK")
                         .WithMany()
                         .HasForeignKey("AccidentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TACHYON.MultiTenancy.Tenant", "TenantFK")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
