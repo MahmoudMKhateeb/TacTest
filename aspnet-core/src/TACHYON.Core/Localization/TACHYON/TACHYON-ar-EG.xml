@@ -2208,5 +2208,18 @@
 	    <text name="CreateOrEditPoint">أضافة أو تعديل موقع تنزيل</text>
 	    <text name="SelectADangerousGoodType">أختر نوع البضائع الخطرة</text>
 		<text name="DangerousGoodType">نوع البضائع الخطرة</text>
+
+		<text name="StartMovingToLoadingLocation">بدء التحرك الى موقع التحميل</text>
+<!--		<text name="ArriveToLoadingLocation">الوصول الى موقع التحميل</text>   Already Exist -->
+<!--		<text name="FinishLoading">انتهاء التحميل</text>  Already Exist -->
+		<text name="StartMovingToOffloadingLocation">بدء التحرك الى موقع التنزيل</text>
+		<text name="ArrivedToOffloadingLocation">الوصول الى موقع التنزيل</text>
+		<text name="StartOffloadingShipment">بدء تنزيل الشحنة</text>
+		<text name="FinishOffloadingShipment">انتهاء تحميل الشخنة</text>
+		<text name="DeliveryConfirmed">تأكيد التسليم</text>
+		<text name="DriverIsChanged">تم تغيير السائق</text>
+		<text name="TruckIsChanged">تم تعيير الشاحنة</text>
+		<text name="IncidentHappened">حصول حادث</text>
+		
 	</texts>
 </localizationDictionary>

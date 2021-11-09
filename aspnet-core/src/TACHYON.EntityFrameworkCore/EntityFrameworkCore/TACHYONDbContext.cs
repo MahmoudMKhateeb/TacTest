@@ -22,6 +22,7 @@ using TACHYON.Documents.DocumentTypes;
 using TACHYON.Documents.DocumentTypeTranslations;
 using TACHYON.DriverLocationLogs;
 using TACHYON.Editions;
+using TACHYON.EntityLogs;
 using TACHYON.Friendships;
 using TACHYON.Goods;
 using TACHYON.Goods.GoodCategories;
@@ -59,6 +60,7 @@ using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.ShippingTypes;
 using TACHYON.ShippingRequestTripVases;
 using TACHYON.ShippingRequestVases;
+using TACHYON.SmartEnums;
 using TACHYON.Storage;
 using TACHYON.TachyonPriceOffers;
 using TACHYON.TermsAndConditions;
@@ -256,6 +258,8 @@ namespace TACHYON.EntityFrameworkCore
         public DbSet<TenantCarrier> TenantCarriers { get; set; }
         public DbSet<DriverLocationLog> DriverLocationLogs { get; set; }
 
+        public DbSet<EntityLog> EntityLogs { get; set; }
+
         protected virtual bool CurrentIsCanceled => true;
         protected virtual bool CurrentIsDrafted => false;
         protected virtual bool IsCanceledFilterEnabled => CurrentUnitOfWorkProvider?.Current?.IsFilterEnabled("IHasIsCanceled") == true;
@@ -451,6 +455,12 @@ namespace TACHYON.EntityFrameworkCore
             modelBuilder.Entity<ShippingRequest>()
             .HasIndex(e => e.ReferenceNumber)
             .IsUnique();
+
+            modelBuilder.Entity<EntityLog>()
+                .Property(x => x.LogTransaction)
+                .HasConversion(x => x.Value,
+                    x => SmartEnum.FromValue<EntityLogTransaction>(x));
+
             modelBuilder.ConfigurePersistedGrantEntity();
         }
 

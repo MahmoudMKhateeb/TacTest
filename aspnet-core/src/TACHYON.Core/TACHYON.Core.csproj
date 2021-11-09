@@ -51,4 +51,8 @@
 		<Folder Include="Authorization\Permissions\Shipping\ShippingRequests\" />
 		<Folder Include="Shipping\ShippingRequests\TachyonDealer\" />
 	</ItemGroup>
+	<ItemGroup>
+	  <Compile Remove="EntityLogs\EntityLogProvider.cs" />
+	  <Compile Remove="EntityLogs\LogUseCase.cs" />
+	</ItemGroup>
 </Project>
