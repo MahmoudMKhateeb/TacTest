@@ -5,6 +5,7 @@ import {
   TrackingServiceProxy,
   ShippingRequestTripStatus,
   ShippingRequestsTripListDto,
+  ShippingRequestTripDriverRoutePointDto,
 } from '@shared/service-proxies/service-proxies';
 
 import * as _ from 'lodash';
@@ -14,10 +15,11 @@ import { LocalStorageService } from '@shared/utils/local-storage.service';
 import { AppConsts } from '@shared/AppConsts';
 import { TrackingSignalrService } from './tacking-signalr.service';
 import { ViewTripAccidentModelComponent } from '../ShippingRequestTrips/accident/View-trip-accident-modal.component';
+import { finalize } from '@node_modules/rxjs/operators';
 
 @Component({
   templateUrl: './tracking.component.html',
-  // styleUrls: ['/assets/custom/css/style.scss'],
+  styleUrls: ['./tracking.component.scss'],
   animations: [appModuleAnimation()],
 })
 export class TrackingComponent extends ScrollPagnationComponentBase implements OnInit {
@@ -27,6 +29,11 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
   direction = 'ltr';
   _zone: NgZone;
   searchInput: TrackingSearchInput = new TrackingSearchInput();
+  pointsIsLoading = false;
+  routePoints: ShippingRequestTripDriverRoutePointDto[];
+  // isCollapsed = true;
+  activePanelId: number;
+
   constructor(
     injector: Injector,
     private _currentServ: TrackingServiceProxy,
@@ -69,6 +76,21 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
       });
   }
 
+  /**
+   * get a Trip Points Details For View
+   */
+  getForView(id) {
+    this._currentServ
+      .getForView(id)
+      .pipe(
+        finalize(() => {
+          this.pointsIsLoading = false;
+        })
+      )
+      .subscribe((result) => {
+        this.routePoints = result.items;
+      });
+  }
   search(): void {
     this.IsLoading = true;
     this.skipCount = 0;

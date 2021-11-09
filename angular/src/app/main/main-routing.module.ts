@@ -64,10 +64,11 @@ import { TripRejectReasonComponent } from '@app/main/shippingRequests/shippingRe
 import { AppLocalizationComponent } from '@app/main/applocalizations/applocalization.component';
 import { ComingSoonComponent } from '@app/main/commingSoon/comingSoon.component';
 import { CreateOrEditShippingRequestWizardComponent } from '@app/main/shippingRequests/shippingRequests/shippingRequestWizard/create-or-edit-shipping-request-wizard.component';
-import { TrackingComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tacking.component';
+import { TrackingComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tracking.component';
 import { TMSRequestListComponent } from '@app/main/tms/tms-request-list.component';
 import { TrucksSubmittedDocumentsComponent } from '@app/main/documentFiles/documentFiles/trucks-submitted-documents/trucks-submitted-documents.component';
 import { DriversSubmittedDocumentsComponent } from '@app/main/documentFiles/documentFiles/drivers-submitted-documents/drivers-submitted-documents.component';
+import { NewTrackingConponentComponent } from '@app/main/shippingRequests/shippingRequests/tracking/new-tracking-conponent/new-tracking-conponent.component';
 
 @NgModule({
   imports: [
@@ -246,6 +247,7 @@ import { DriversSubmittedDocumentsComponent } from '@app/main/documentFiles/docu
           { path: 'shippingRequests/shippingRequests/view', component: ViewShippingRequestComponent, data: { permission: 'Pages.ShippingRequests' } },
           { path: 'marketplace/list', component: MarketPlaceListComponent },
           { path: 'tracking', component: TrackingComponent },
+          { path: 'newTracking', component: NewTrackingConponentComponent },
           { path: 'directrequest/list', component: DirectRequestViewComponent },
           { path: 'offers', component: OffersListComponent },
           { path: 'routSteps/routSteps', component: RoutStepsComponent, data: { permission: 'Pages.RoutSteps' } },

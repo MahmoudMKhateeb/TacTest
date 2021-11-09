@@ -9,11 +9,11 @@
     <!--end::Subheader-->
     <!--begin::Entry-->
 
-    <div class="container-fluid">
+    <div class="container-fluid" [busyIf]="IsLoading">
       <div class="row">
         <div class="col-12 mb-7" *ngFor="let item of Items">
           <!--begin::Card-->
-          <div class="card card-custom">
+          <div class="card card-custom gutter-b">
             <div class="card-header ribbon ribbon-top">
               <a class="ribbon-target bg-danger" style="top: -1px; right: 20px">
                 {{ item.statusTitle | localize }}
@@ -157,103 +157,43 @@
                   <p>{{ item.destination }}</p>
                 </div>
               </div>
+              <div id="collapseBasic" class="row" [collapse]="activePanelId == null" [isAnimated]="true">
+                <div class="col-lg-12" *ngIf="activePanelId == item.id">
+                  <new-tracking-conponent [trip]="item"></new-tracking-conponent>
+                </div>
+              </div>
             </div>
-            <div class="card-footer d-flex justify-content-between p-5">
-              <a href="javascript:void(0)" (click)="Model.show(item)" class="btn btn-outline-danger btn-sm"> {{ l('More') }}</a>
+            <div class="card-footer p-5">
+              <a
+                *ngIf="!activePanelId || activePanelId != item.id"
+                href="javascript:void(0)"
+                (click)="activePanelId = item.id"
+                [attr.aria-expanded]="activePanelId == item.id"
+                aria-controls="collapseBasics"
+                class="btn btn-outline-danger btn-sm"
+              >
+                {{ l('More') }}</a
+              >
+              <a
+                *ngIf="activePanelId == item.id"
+                href="javascript:void(0)"
+                (click)="activePanelId = null"
+                [attr.aria-expanded]="activePanelId == item.id"
+                aria-controls="collapseBasics"
+                class="btn btn-outline-danger btn-sm"
+              >
+                {{ l('Less') }}</a
+              >
             </div>
           </div>
           <!--end::Card-->
         </div>
       </div>
-      <!--      <div class="row">-->
-      <!--        <div class="col-12 mb-4" *ngFor="let item of Items">-->
-      <!--          <div class="shipCard {{ item.requestType ? 'tachyonDialer' : '' }} {{ direction == 'rtl' ? ' rtl' : '' }}">-->
-      <!--            <img class="markTachyon" src="/assets/custom/imgs/mark.svg" alt="" />-->
-      <!--            <div class="infoBasic">-->
-      <!--              <a href="javascript:void(0)" class="companyName">-->
-      <!--                {{ item.name }}-->
-      <!--              </a>-->
-      <!--              <a-->
-      <!--                href="javascript:void(0)"-->
-      <!--                (click)="showIncident(item)"-->
-      <!--                class="infoHighLight {{ item.hasAccident ? ' red ' : ' green ' }}  stautsTruck"-->
-      <!--              >-->
-      <!--                <img *ngIf="item.hasAccident" src="/assets/custom/imgs/incident.svg" class="mr-1" width="16" alt="" />-->
-      <!--                {{ item.statusTitle }}-->
-      <!--              </a>-->
-      <!--            </div>-->
-      <!--            <div class="detailsRoad">-->
-      <!--              <div class="from">-->
-      <!--                <p class="pickup">{{ l('CityOrigin') }}</p>-->
-      <!--                <p>{{ item.origin }}</p>-->
-      <!--              </div>-->
-      <!--              <div class="to">-->
-      <!--                <p class="delivery">{{ l('DestinationDelivery') }}</p>-->
-      <!--                <p>{{ item.destination }}</p>-->
-      <!--              </div>-->
-      <!--            </div>-->
-      <!--            <div class="divirCard"></div>-->
-      <!--            <div class="moreDetails">-->
-      <!--              <div class="goodCategory">-->
-      <!--                <p>-->
-      <!--                  <img src="/assets/custom/imgs/box.svg" width="16" alt="" />-->
-      <!--                  {{ l('GoodCategory') }}-->
-      <!--                </p>-->
-      <!--                <p>-->
-      <!--                  {{ item.goodsCategory }}-->
-      <!--                </p>-->
-      <!--              </div>-->
-      <!--              <div class="driverName">-->
-      <!--                <p>-->
-      <!--                  <i class="fas fa-user"></i>-->
-      <!--                  {{ l('DriverName') }}-->
-      <!--                </p>-->
-      <!--                <p>-->
-      <!--                  <img class="userDriver" src="{{ item.profilePictureUrl }}" alt="" />-->
-      <!--                  {{ item.driver }}-->
-      <!--                </p>-->
-      <!--              </div>-->
-      <!--              <div class="truckType">-->
-      <!--                <p>-->
-      <!--                  <i class="fas fa-truck"></i>-->
-      <!--                  {{ l('TruckType') }}-->
-      <!--                </p>-->
-      <!--                <p>-->
-      <!--                  {{ item.truckType }}-->
-      <!--                </p>-->
-      <!--              </div>-->
-      <!--              <div class="routeType">-->
-      <!--                <p>-->
-      <!--                  <i class="fas fa-road"></i>-->
-      <!--                  {{ l('routeType') }}-->
-      <!--                </p>-->
-      <!--                <p>-->
-      <!--                  {{ l(item.routeType) }}-->
-      <!--                </p>-->
-      <!--              </div>-->
-      <!--            </div>-->
-      <!--            <div class="actionsShip">-->
-      <!--              <div>-->
-      <!--                {{ item.waybillNumber }}-->
-      <!--              </div>-->
-
-      <!--              <div class="actions">-->
-      <!--                <a href="javascript:void(0)" (click)="Model.show(item)" class="red">-->
-      <!--                  {{ l('More') }}-->
-      <!--                </a>-->
-      <!--              </div>-->
-      <!--            </div>-->
-      <!--          </div>-->
-      <!--        </div>-->
-
-      <!--        <div *ngIf="IsLoading" class="col-12 loadingRow text-center my-3">-->
-      <!--          <span></span>-->
-      <!--        </div>-->
-      <!--      </div>-->
     </div>
   </div>
 </div>
 
 <tacking-search-model #ModelSearch (modalsearch)="search()"></tacking-search-model>
-<tacking-model #Model></tacking-model>
+<!--<tacking-model #Model (onCloseModel)="search()"></tacking-model>-->
+<!--<new-tracking #newModel></new-tracking>-->
 <view-trip-accident-modal #ModelIncident></view-trip-accident-modal>
