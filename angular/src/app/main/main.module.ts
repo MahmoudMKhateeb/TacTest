@@ -235,9 +235,9 @@ import { ApplocalizationModalComponent } from '@app/main/applocalizations/create
 import { ViewApplocalizationModalComponent } from '@app/main/applocalizations/view-applocalization-modal.component';
 import { ComingSoonComponent } from '@app/main/commingSoon/comingSoon.component';
 import { CreateOrEditShippingRequestWizardComponent } from '@app/main/shippingRequests/shippingRequests/shippingRequestWizard/create-or-edit-shipping-request-wizard.component';
-import { TrackingComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tacking.component';
+import { TrackingComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tracking.component';
 import { TrackinSearchModelComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tacking-search-model.component';
-import { TrackingModelComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tacking-model.component';
+// import { TrackingModelComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tacking-model.component';
 import { TrackingConfirmModalComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tacking-confirm-code-model.component';
 import { TrackingPODModalComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tacking-pod-model.component';
 import { TMSRequestListComponent } from '@app/main/tms/tms-request-list.component';
@@ -260,6 +260,12 @@ import { ProfileModule } from '@app/main/profile/profile.module';
 import { ViewGoodDetailsComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/points/good-details/view-good-details/view-good-details.component';
 import { ViewPointModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/points/view-point-modal/view-point-modal.component';
 import { DangerousCoodTypesTranslationsComponent } from './goods/dangerous-cood-types-translations/dangerous-cood-types-translations.component';
+import { NewTrackingConponent } from './shippingRequests/shippingRequests/tracking/new-tracking/new-tracking-conponent';
+import { CollapseModule } from '@node_modules/ngx-bootstrap/collapse';
+import { NgxSkeletonLoaderModule } from '@node_modules/ngx-skeleton-loader';
+import { CompleteTrackingPointDetailsComponent } from './shippingRequests/shippingRequests/tracking/complete-tracking-point-details/complete-tracking-point-details.component';
+import { NgbAccordionModule, NgbNavModule } from '@node_modules/@ng-bootstrap/ng-bootstrap';
+import { UploadDeliveryNoteDocumentModelComponent } from './shippingRequests/shippingRequests/tracking/upload-delivery-note-document-model/upload-delivery-note-document-model.component';
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
 @NgModule({
@@ -304,6 +310,10 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     InputNumberModule,
     QuartzCronModule,
     ProfileModule,
+    CollapseModule,
+    NgxSkeletonLoaderModule,
+    NgbAccordionModule,
+    NgbNavModule,
   ],
   declarations: [
     DangerousGoodTypesComponent,
@@ -478,7 +488,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ComingSoonComponent,
     TrackingComponent,
     TrackinSearchModelComponent,
-    TrackingModelComponent,
+    // TrackingModelComponent,
     TrackingConfirmModalComponent,
     TrackingPODModalComponent,
     TMSRequestListComponent,
@@ -494,6 +504,9 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ViewGoodDetailsComponent,
     ViewPointModalComponent,
     DangerousCoodTypesTranslationsComponent,
+    NewTrackingConponent,
+    CompleteTrackingPointDetailsComponent,
+    UploadDeliveryNoteDocumentModelComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },
