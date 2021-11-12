@@ -551,7 +551,7 @@ namespace TACHYON.PriceOffers
                   request.ShippingRequestFK.DestinationCityFk.Location.X : 0);
                 dto.Latitude = (request.ShippingRequestFK.DestinationCityFk.Location != null ?
                     request.ShippingRequestFK.DestinationCityFk.Location.Y : 0);
-
+                dto.GoodCategoryId = request.ShippingRequestFK.GoodCategoryId;
                 ShippingRequestForPriceOfferList.Add(dto);
 
             }
@@ -781,6 +781,8 @@ namespace TACHYON.PriceOffers
                 dto.BidStatusTitle = string.Empty;
                 dto.TruckType = ObjectMapper.Map<TrucksTypeDto>(request.ShippingRequestFK.TrucksTypeFk).TranslatedDisplayName;
                 dto.GoodsCategory = ObjectMapper.Map<GoodCategoryDto>(request.ShippingRequestFK.GoodCategoryFk).DisplayName;
+                dto.GoodCategoryId = request.ShippingRequestFK.GoodCategoryId;
+
                 ShippingRequestForPriceOfferList.Add(dto);
 
             }
