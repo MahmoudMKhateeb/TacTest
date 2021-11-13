@@ -26,8 +26,8 @@ namespace TACHYON.AutoMapper.PriceOffers
             CreateMap<PriceOffer, PriceOfferViewDto>()
                 .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Tenant.Name))
                 .ForMember(dst => dst.EditionId, opt => opt.MapFrom(src => src.Tenant.EditionId))
-                .ForMember(dst => dst.ShippingRequestStatus, opt => opt.MapFrom(src => src.ShippingRequestFK.Status))
-                .ForMember(dst => dst.IsTachyonDeal, opt => opt.MapFrom(src => src.ShippingRequestFK.IsTachyonDeal))
+                .ForMember(dst => dst.ShippingRequestStatus, opt => opt.MapFrom(src => src.ShippingRequestFk.Status))
+                .ForMember(dst => dst.IsTachyonDeal, opt => opt.MapFrom(src => src.ShippingRequestFk.IsTachyonDeal))
                 .ForMember(dst => dst.Items, opt => opt.MapFrom(src => src.PriceOfferDetails));
             
             CreateMap<ShippingRequestVas, PriceOfferItemDto>()

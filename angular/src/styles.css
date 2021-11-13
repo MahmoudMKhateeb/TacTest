@@ -531,3 +531,9 @@ card-body {
   right: 0px;
   transform: translate3d(64px, 1px, 0);
 }
+
+.verticaltext{
+    width:1px;
+    word-wrap: break-word;
+    white-space:pre-wrap;
+}

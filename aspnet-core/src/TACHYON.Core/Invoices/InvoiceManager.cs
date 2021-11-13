@@ -440,7 +440,7 @@ namespace TACHYON.Invoices
             var invoice = await GetInvoiceInfo(invoiceId);
             if (invoice == null) return;
 
-            if (!IsCarrier(invoice.TenantId))
+            if (!IsTenantCarrier(invoice.TenantId))
             {
                 if (invoice.IsPaid) await _balanceManager.AddBalanceToShipper(invoice.TenantId, -invoice.TotalAmount);
                 invoice.Trips.ToList().ForEach(t =>
@@ -467,7 +467,7 @@ namespace TACHYON.Invoices
                                .FirstOrDefaultAsync(i => i.Id == invoiceId);
         }
 
-        public bool IsCarrier(int tenantId)
+        public bool IsTenantCarrier(int tenantId)
         {
             return _featureChecker.IsEnabled(tenantId, AppFeatures.Carrier);
         }

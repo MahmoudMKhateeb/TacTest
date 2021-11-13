@@ -2,26 +2,27 @@
 using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
 using Abp.Dependency;
+using Abp.Domain.Uow;
 using Abp.IdentityFramework;
 using Abp.MultiTenancy;
 using Abp.Runtime.Session;
 using Abp.Threading;
-using Microsoft.AspNetCore.Identity;
-using System;
-using System.Threading.Tasks;
-using Abp.Domain.Uow;
-using TACHYON.Authorization.Users;
-using TACHYON.MultiTenancy;
-using System.Globalization;
-using System.Linq;
 using Abp.UI;
 using AutoMapper;
 using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Data.ResponseModel;
+using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Threading.Tasks;
+using TACHYON.Authorization.Users;
 using TACHYON.Configuration;
+using TACHYON.Features;
+using TACHYON.MultiTenancy;
 
 namespace TACHYON
 {
@@ -150,6 +151,21 @@ namespace TACHYON
             public new IEnumerable<T> data { get; set; }
 
 
+        }
+
+
+        protected async Task<bool> IsCarrier()
+        {
+            return await IsEnabledAsync(AppFeatures.Carrier);
+        }
+        protected async Task<bool> IsShipper()
+        {
+            return await IsEnabledAsync(AppFeatures.Shipper);
+        }
+
+        protected async Task<bool> IsTachyonDealer()
+        {
+            return await IsEnabledAsync(AppFeatures.TachyonDealer);
         }
     }
 }

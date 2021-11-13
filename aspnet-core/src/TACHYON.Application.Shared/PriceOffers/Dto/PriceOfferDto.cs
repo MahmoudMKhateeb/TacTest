@@ -22,6 +22,23 @@ namespace TACHYON.PriceOffers.Dto
         public decimal ItemTotalAmountWithCommission { get; set; }
         #endregion
         #region Pricing Totals of Items and Details
+        public decimal ItemsTotalPricePreCommissionPreVat { get; set; }
+
+        public decimal ItemsTotalVatAmountPreCommission { get; set; }
+        public decimal ItemsTotalCommission { get; set; }
+        public decimal ItemsTotalPricePostCommissionPreVat { get; set; }
+        public decimal ItemsTotalVatPostCommission { get; set; }
+
+        public decimal DetailsTotalPricePreCommissionPreVat { get; set; }
+
+        public decimal DetailsTotalVatAmountPreCommission { get; set; }
+        public decimal DetailsTotalCommission { get; set; }
+
+        public decimal DetailsTotalPricePostCommissionPreVat { get; set; }
+
+        public decimal DetailsTotalVatPostCommission { get; set; }
+
+
         public decimal TotalAmount { get; set; }
         public decimal SubTotalAmount { get; set; }
         public decimal VatAmount { get; set; }
@@ -52,9 +69,9 @@ namespace TACHYON.PriceOffers.Dto
         /// </summary>
         public string RejectedReason { get; set; }
 
-        public PriceOfferTenantCommssionSettings CommssionSettings { get; set; }
+        public PriceOfferTenantCommissionSettings CommissionSettings { get; set; }
     }
-    public class PriceOfferTenantCommssionSettings
+    public class PriceOfferTenantCommissionSettings
     {
         public PriceOfferCommissionType ItemCommissionType { get; set; }
         public decimal ItemCommissionPercentage { get; set; }

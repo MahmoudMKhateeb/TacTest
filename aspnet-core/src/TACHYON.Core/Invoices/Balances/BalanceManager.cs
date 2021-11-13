@@ -61,16 +61,16 @@ namespace TACHYON.Invoices.Balances
         public async Task ShipperCanAcceptOffer(PriceOffer offer)
         {
 
-            var PeriodType = (InvoicePeriodType)byte.Parse(await _featureChecker.GetValueAsync(offer.ShippingRequestFK.TenantId, AppFeatures.ShipperPeriods));
-            var Tenant = offer.ShippingRequestFK.Tenant;
+            var PeriodType = (InvoicePeriodType)byte.Parse(await _featureChecker.GetValueAsync(offer.ShippingRequestFk.TenantId, AppFeatures.ShipperPeriods));
+            var Tenant = offer.ShippingRequestFk.Tenant;
             if (PeriodType == InvoicePeriodType.PayInAdvance)
             {
-                if (!await CheckShipperCanPaidFromBalance(offer.ShippingRequestFK.TenantId, offer.TotalAmount)) throw new UserFriendlyException(L("NoEnoughBalance"));
+                if (!await CheckShipperCanPaidFromBalance(offer.ShippingRequestFk.TenantId, offer.TotalAmount)) throw new UserFriendlyException(L("NoEnoughBalance"));
                 await ShipperWhenCanAcceptPrice(offer, PeriodType);
             }
             else
             {
-                decimal CreditLimit = decimal.Parse(await _featureChecker.GetValueAsync(offer.ShippingRequestFK.TenantId, AppFeatures.ShipperCreditLimit)) * -1;
+                decimal CreditLimit = decimal.Parse(await _featureChecker.GetValueAsync(offer.ShippingRequestFk.TenantId, AppFeatures.ShipperCreditLimit)) * -1;
                 decimal CreditBalance = Tenant.CreditBalance - offer.TotalAmount;
                 if (!(CreditBalance > CreditLimit)) throw new UserFriendlyException(L("YouDoNotHaveEnoughCreditInYourCreditCard"));
             }
@@ -83,11 +83,11 @@ namespace TACHYON.Invoices.Balances
         /// <returns></returns>
         private async Task ShipperWhenCanAcceptPrice(PriceOffer offer, InvoicePeriodType periodType)
         {
-            var Tenant = offer.ShippingRequestFK.Tenant;
+            var Tenant = offer.ShippingRequestFk.Tenant;
 
             if (periodType == InvoicePeriodType.PayInAdvance)
             {
-                offer.ShippingRequestFK.IsPrePayed = true;
+                offer.ShippingRequestFk.IsPrePayed = true;
                 await _InvoicesProformarepository.InsertAsync(new InvoiceProforma // Generate Invoice proforma when the shipper billing interval is pay in advance
                 {
                     TenantId = Tenant.Id,

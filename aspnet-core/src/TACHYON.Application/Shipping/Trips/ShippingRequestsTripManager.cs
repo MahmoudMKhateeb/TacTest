@@ -427,7 +427,7 @@ namespace TACHYON.Shipping.Trips
         public async Task GeneratePrices(ShippingRequestTrip trip)
         {
             DisableTenancyFilters();
-            var offer = await _priceOfferManager.GetOffercceptedByShippingRequestId(trip.ShippingRequestId);
+            var offer = await _priceOfferManager.GetOfferAcceptedByShippingRequestId(trip.ShippingRequestId);
 
             trip.CommissionType = offer.CommissionType;
             trip.SubTotalAmount = offer.ItemPrice;

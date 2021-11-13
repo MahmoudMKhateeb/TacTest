@@ -14,6 +14,7 @@
         public decimal? ItemVatAmountWithCommission { get; set; }
         public decimal? ItemTotalAmountWithCommission { get; set; }
 
+        public decimal ItemsTotalPricePreCommissionPreVat { get; set; }
 
         public decimal? TotalAmount { get; set; }
         public decimal? SubTotalAmount { get; set; }

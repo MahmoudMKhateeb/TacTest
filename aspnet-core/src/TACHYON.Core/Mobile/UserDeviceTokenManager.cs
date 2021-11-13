@@ -12,8 +12,8 @@ namespace TACHYON.Mobile
     public class UserDeviceTokenManager : TACHYONDomainServiceBase
     {
         private readonly IRepository<UserDeviceToken> _userDeviceTokenRepository;
-        private readonly TachyonMobileAppSession _mobileAppSession;
-        public UserDeviceTokenManager(IRepository<UserDeviceToken> userDeviceTokenRepository, TachyonMobileAppSession mobileAppSession)
+        private readonly TachyonAppSession _mobileAppSession;
+        public UserDeviceTokenManager(IRepository<UserDeviceToken> userDeviceTokenRepository, TachyonAppSession mobileAppSession)
         {
             _userDeviceTokenRepository = userDeviceTokenRepository;
             _mobileAppSession = mobileAppSession;
