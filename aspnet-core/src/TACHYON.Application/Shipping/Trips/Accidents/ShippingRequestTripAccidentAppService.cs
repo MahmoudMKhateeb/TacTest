@@ -131,7 +131,7 @@ namespace TACHYON.Shipping.Trips.Accidents
             CheckIfCanAccessService(true, AppFeatures.Carrier, AppFeatures.TachyonDealer, AppFeatures.Shipper);
 
             DisableTenancyFilters();
-            if (input.ReasoneId.HasValue && input.ReasoneId.Value == 0) input.ReasoneId = default(int?);
+            //if (input.ReasoneId.HasValue && input.ReasoneId.Value == 0) input.ReasoneId = default(int?);
 
             await ValidateOtherReason(input);
 
@@ -367,7 +367,7 @@ namespace TACHYON.Shipping.Trips.Accidents
             if (input.ReasoneId != null)
             {
                 var reason = await _shippingRequestReasonAccidentRepository
-                    .FirstOrDefaultAsync(x => x.CoreId == input.ReasoneId.Value);
+                    .FirstOrDefaultAsync(x => x.CoreId == input.ReasoneId);
 
                 if (reason.Name.ToLower().Contains(TACHYONConsts.OthersDisplayName.ToLower()) && input.OtherReasonName.IsNullOrEmpty())
                     throw new UserFriendlyException(L("AccidentReasonConNotBeOtherAndEmptyAtTheSameTime"));
