@@ -4,17 +4,20 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace TACHYON.PriceOffers
 {
     [Table("PriceOfferDetails")]
-   public class PriceOfferDetail:Entity<long>
+    public class PriceOfferDetail : Entity<long>
     {
         public long PriceOfferId { get; set; }
 
         [ForeignKey(nameof(PriceOfferId))]
-        public PriceOffer PriceOfferFK { get; set; }
+        public PriceOffer PriceOfferFk { get; set; }
 
         public long? SourceId { get; set; }
         public PriceOfferType PriceType { get; set; }
         public decimal ItemPrice { get; set; }
         public decimal ItemVatAmount { get; set; }
+
+        public decimal ItemsTotalPricePreCommissionPreVat { get; set; }
+
         public decimal ItemTotalAmount { get; set; }
 
 

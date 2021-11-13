@@ -161,5 +161,20 @@ namespace TACHYON
 
 
         }
+
+
+        protected async Task<bool> IsCarrier()
+        {
+            return await IsEnabledAsync(AppFeatures.Carrier);
+        }
+        protected async Task<bool> IsShipper()
+        {
+            return await IsEnabledAsync(AppFeatures.Shipper);
+        }
+
+        protected async Task<bool> IsTachyonDealer()
+        {
+            return await IsEnabledAsync(AppFeatures.TachyonDealer);
+        }
     }
 }

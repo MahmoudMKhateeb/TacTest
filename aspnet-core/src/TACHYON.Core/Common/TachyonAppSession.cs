@@ -1,5 +1,6 @@
 ﻿using Abp.Configuration.Startup;
 using Abp.Dependency;
+using Abp.Extensions;
 using Abp.MultiTenancy;
 using Abp.Runtime;
 using Abp.Runtime.Session;
@@ -13,9 +14,9 @@ namespace TACHYON.Common
 
     //Define your own session and add your custom field to it
     //Then, you can inject MyAppSession and use it's new property in your project.
-    public class TachyonMobileAppSession : ClaimsAbpSession, ITransientDependency
+    public class TachyonAppSession : ClaimsAbpSession, ITransientDependency
     {
-        public TachyonMobileAppSession(
+        public TachyonAppSession(
             IPrincipalAccessor principalAccessor,
             IMultiTenancyConfig multiTenancy,
             ITenantResolver tenantResolver,
@@ -50,6 +51,20 @@ namespace TACHYON.Common
                 }
 
                 return mobileDeviceTokenClaim.Value;
+            }
+        }
+
+        public int? EditionId
+        {
+            get
+            {
+                var claim = PrincipalAccessor.Principal?.Claims.FirstOrDefault(c => c.Type == AppConsts.UserEditionId);
+                if (string.IsNullOrEmpty(claim?.Value))
+                {
+                    return null;
+                }
+
+                return claim.Value.To<int>();
             }
         }
     }

@@ -45,12 +45,28 @@
         public const string TripCommissionValue = "App.Shipper.TripCommissionValue";
         public const string TripMinValueCommission = "App.Shipper.TripMinValueCommission";
         public const string TripCommissionType = "App.Shipper.TripCommissionType";
+
+        public static string DirectRequestCommissionPercentage = "App.Shipper.DirectRequestCommissionPercentage";
+        public static string DirectRequestCommissionValue = "App.Shipper.DirectRequestCommissionValue";
+        public static string DirectRequestCommissionType = "App.Shipper.DirectRequestCommissionType";
+        public static string DirectRequestCommissionMinValue = "App.Shipper.DirectRequestCommissionMinValue";
+
+
+
         #endregion
         #region Vas Comission
         public const string VasCommissionPercentage = "App.Shipper.VasCommissionPercentage";
         public const string VasCommissionValue = "App.Shipper.VasCommissionValue";
         public const string VasMinValueCommission = "App.Shipper.VasMinValueCommission";
         public const string VasCommissionType = "App.Shipper.VasCommissionType";
+
+
+
+        public static string DirectRequestVasCommissionType = "App.Shipper.DirectRequestVASCommissionType";
+        public static string DirectRequestVasCommissionPercentage = "App.Shipper.DirectRequestVASCommissionPercentage";
+        public static string DirectRequestVasCommissionValue = "App.Shipper.DirectRequestVASCommissionValue";
+        public static string DirectRequestVasCommissionMinValue = "App.Shipper.DirectRequestVASCommissionMinValue";
+
         #endregion
         #endregion
         #region TachyonDealer
