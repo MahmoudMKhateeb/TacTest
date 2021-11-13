@@ -5,12 +5,14 @@ using System.Collections.ObjectModel;
 using System.Text;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.Trips;
+using TACHYON.Shipping.Trips.Accidents.Dto;
 
 namespace TACHYON.Shipping.Drivers.Dto
 {
     public class ShippingRequestTripDriverDetailsDto : EntityDto<long>
     {
         public ICollection<ShippingRequestTripDriverRoutePointDto> RoutePoints { get; set; }
+        public List<ShippingRequestTripAccidentListDto> ShippingRequestTripAccidentList { get; set; }
         public string StartTripDate { get; set; }
         public string EndTripDate { get; set; }
         public string TravelTime { get; set; }

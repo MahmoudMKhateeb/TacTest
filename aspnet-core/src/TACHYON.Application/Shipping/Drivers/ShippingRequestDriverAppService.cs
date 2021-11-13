@@ -22,10 +22,12 @@ using TACHYON.Rating;
 using TACHYON.Rating.dtos;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Routs.RoutPoints.Dtos;
+using TACHYON.Shipping.Accidents.Dto;
 using TACHYON.Shipping.Drivers.Dto;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips;
+using TACHYON.Shipping.Trips.Accidents.Dto;
 using TACHYON.Trucks.TrucksTypes.Dtos;
 
 namespace TACHYON.Shipping.Drivers
@@ -45,6 +47,7 @@ namespace TACHYON.Shipping.Drivers
         private readonly IRepository<UserOTP> _userOtpRepository;
         private readonly RatingLogManager _ratingLogManager;
         private readonly IRepository<DriverLocationLog, long> _driverLocationLogRepository;
+
         public ShippingRequestDriverAppService(
             IRepository<ShippingRequestTrip> ShippingRequestTrip,
             IRepository<RoutPoint, long> RoutPointRepository,
@@ -93,14 +96,28 @@ namespace TACHYON.Shipping.Drivers
 
             //.PageBy(input);
             var pageingitem = query.PageBy(input);
+            var result = ObjectMapper.Map<List<ShippingRequestTripDriverListDto>>(pageingitem.ToList());
+
+            var incidents = _shippingRequestTripAccidentRepository.GetAll().Where(x => result.Select(y => y.Id).Contains(x.RoutPointFK.ShippingRequestTripId)).ToList();
+
+            foreach (var item in result)
+            {
+                item.HasIncident = await HasIncident(item.Id);
+            }
+
             var totalCount = await query.CountAsync();
             return new PagedResultDto<ShippingRequestTripDriverListDto>(
-                totalCount,
-                ObjectMapper.Map<List<ShippingRequestTripDriverListDto>>(pageingitem)
+                totalCount, result
+
 
             );
 
 
+        }
+
+        private async Task<bool> HasIncident(long id)
+        {
+            return await _shippingRequestTripAccidentRepository.CountAsync(x => x.RoutPointFK.ShippingRequestTripId == id) > 0;
         }
         /// <summary>
         /// This api is for mobile deveopment team
@@ -212,6 +229,37 @@ namespace TACHYON.Shipping.Drivers
                     FacilityId = point.FacilityId
                 });
             }
+
+
+            //fill incidents
+            var query = _shippingRequestTripAccidentRepository
+              .GetAll()
+              .AsNoTracking()
+              .Include(t => t.RoutPointFK)
+               .ThenInclude(f => f.FacilityFk)
+                .ThenInclude(c => c.CityFk)
+              .Include(r => r.ResoneFK)
+               .ThenInclude(t => t.Translations)
+                      .Where(x => x.RoutPointFK.ShippingRequestTripId == TripId)
+                      .WhereIf(AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Carrier), x => x.RoutPointFK.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
+                      .WhereIf(AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Shipper), x => x.RoutPointFK.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId)
+                      .WhereIf(!AbpSession.TenantId.HasValue || IsEnabled(AppFeatures.TachyonDealer), x => true)
+                      .WhereIf(GetCurrentUser().IsDriver, x => x.RoutPointFK.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId).ToList();
+
+            query.ForEach(q =>
+            {
+                if (q.ResoneFK != null && !q.ResoneFK.Key.Contains(TACHYONConsts.OthersDisplayName))
+                {
+                    //var reasone = await _shippingRequestReasonAccidentRepository.FirstOrDefaultAsync(x=>x.Language== CurrentLanguage || x.Language== TACHYONConsts.DefaultLanguage);
+                    var reasone = ObjectMapper.Map<ShippingRequestReasonAccidentListDto>(q.ResoneFK);
+                    //q.Description = reasone.Name;
+                    q.OtherReasonName = reasone.Name;
+                }
+
+            });
+
+            tripDto.ShippingRequestTripAccidentList = ObjectMapper.Map<List<ShippingRequestTripAccidentListDto>>(query);
+
             //tripDto.RoutePoints.ToList().ForEach(async x =>
             //x.IsFacilityRated =( await _ratingLogManager.IsRateDoneBefore(new RatingLog
             //{

@@ -7,8 +7,8 @@ import {
   CreateOrEditShippingRequestTripAccidentDto,
   CommonLookupServiceProxy,
   CreateOrEditShippingRequestTripDto,
-  ISelectItemDto,
   ShippingRequestsTripListDto,
+  ShippingRequestAccidentReasonLookupDto,
 } from '@shared/service-proxies/service-proxies';
 
 @Component({
@@ -21,7 +21,7 @@ export class CreateOrEditTripAccidentModalComponent extends AppComponentBase imp
   @ViewChild('modal', { static: false }) modal: ModalDirective;
 
   accident: CreateOrEditShippingRequestTripAccidentDto;
-  reasons: ISelectItemDto[];
+  reasons: ShippingRequestAccidentReasonLookupDto[];
   active: boolean = false;
   saving: boolean = false;
   reasonId: any = '';

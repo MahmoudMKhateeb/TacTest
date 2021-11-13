@@ -11,6 +11,8 @@
 		<text name="Abp.Organizations.OrganizationUnit">الوحدة التنظيمية</text>
 		<text name="Accept">قبول</text>
 		<text name="AcceptBid" />
+		<text name="AddRating">أضف تقييم</text>
+		<text name="Rating">التقييم</text>
 		<text name="Accepted">مقبول</text>
 		<text name="AcceptedAndWaitingForCarrier">بإنتظار الموافقة على ناقل</text>
 		<text name="AcceptedAndWaitingForShipper">بإنتظار موافقة الشاحن</text>
@@ -535,12 +537,7 @@
 		<text name="DriverCreationDateAndTime">تاريخ و وقت الإنشاء</text>
 		<text name="DriverDocuments">مستندات السائق</text>
 		<text name="DriverInformations">معلومات السائق</text>
-		<text name="DriverWelcomeMessageRegistrationNotification">
-			عزيزي {0} لقد تم انشاء حسابك في تطبيق تاكيون للسائقين ,اسم المستخدم الخاص بك هو رقم جوالك يمكنك تحميل التطبيق من خلال الروابط التالية : &#xA;
-			رابط تطبيق اندرويد {1}
-			رابط تطبيق اي او اس {2}
-
-		</text>
+		<text name="DriverWelcomeMessageRegistrationNotification">عزيزي {0} لقد تم انشاء حسابك في تطبيق تاكيون للسائقين ,اسم المستخدم الخاص بك هو رقم جوالك يمكنك تحميل التطبيق من خلال الروابط التالية : &#xA;رابط تطبيق اندرويد {1}&#xA;رابط تطبيق اي او اس {2}</text>
 		<text name="DriverName">اسم السائق</text>
 		<text name="DriverRejectTrip">
 			<a href="/app/main/shippingRequests/shippingRequests/view?id={id}">السائق {driver} لقد رفض الرحلة من {source} إلى {destination}</a>
@@ -1501,13 +1498,7 @@
 		</text>
 		<text name="ShippingRequestPrice">سعر طلب الشحن</text>
 		<text name="ShippingRequestProperties">خصائص طلب الشحن</text>
-		<text name="ShippingRequestReceiverCode">
-			مرحباً من تاكيون &#xA;&#xA;
-			الشحنة رقم {0} في طريقها . ومن المتوقع ان تصل في {1} ، يرجى إعطاء الرمز للسائق عند اكتمال التسليم&#xA;
-			الرمز:{2}
-			&#xA;
-      اضغط هنا للتقييم بعد انتهاء التحميل {3}
-		</text>
+		<text name="ShippingRequestReceiverCode">مرحباً من تاكيون &#xA;&#xA;الشحنة رقم {0} في طريقها . يرجى إعطاء الرمز للسائق عند اكتمال التسليم&#xA;الرمز:{1}&#xA;اضغط هنا للتقييم بعد انتهاء التحميل {2}</text>
 		<text name="ShippingRequests">طلبات الشحن</text>
 		<text name="ShippingRequestsCreate">إنشاء طلب شحن</text>
 		<text name="ShippingRequestsEdit">تعديل طلب الشحن</text>
@@ -1537,10 +1528,7 @@
 		<text name="SignUp">تسجيل</text>
 		<text name="SingleDrop">ذهاب فقط</text>
 		<text name="Sms">SMS - رسائل قصيرة</text>
-		<text name="SMSOTP">
-			الرجاء استخدام الرمز التالي لتسجيل الدخول
-			الرمز:{0}
-		</text>
+		<text name="SMSOTP">الرجاء استخدام الرمز التالي لتسجيل الدخول&#xA;الرمز:{0}</text>
 		<text name="SmsSecurityCodeMessage">رمز الأمان الخاص بك هو</text>
 		<text name="SMSSettings">إعدادات الرسائل النصية</text>
 		<text name="SmsVerificationEnabled">تم تمكين التحقق من رقم الهاتف (عبر الرسائل القصيرة )</text>

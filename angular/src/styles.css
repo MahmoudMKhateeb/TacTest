@@ -541,3 +541,13 @@ card-body {
 .input-group-btn button {
   border-radius: 0 0.42rem 0.42rem 0 !important;
 }
+
+.p-rating .p-rating-icon.pi-star {
+  color: #ffca08 !important;
+}
+.p-rating .p-rating-icon {
+  font-size: 1.7rem !important;
+}
+.p-rating .p-rating-icon:focus {
+  box-shadow: none !important;
+}

@@ -110,7 +110,7 @@ namespace TACHYON.AutoMapper.Shipping.Trips
                 case RoutePointStatus.StartedMovingToLoadingLocation:
                     return Enum.GetName(typeof(RoutePointStatus), RoutePointStatus.ArriveToLoadingLocation);
                 case RoutePointStatus.ArriveToLoadingLocation:
-                    return Enum.GetName(typeof(RoutePointStatus), RoutePointStatus.StartLoading + 1);
+                    return Enum.GetName(typeof(RoutePointStatus), RoutePointStatus.StartLoading);
                 case RoutePointStatus.StartLoading:
                     return Enum.GetName(typeof(RoutePointStatus), RoutePointStatus.FinishLoading);
                 case RoutePointStatus.StartedMovingToOfLoadingLocation:
