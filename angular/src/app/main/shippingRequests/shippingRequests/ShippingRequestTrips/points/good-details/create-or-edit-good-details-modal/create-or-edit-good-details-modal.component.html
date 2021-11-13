@@ -158,8 +158,8 @@
                         class="form-control"
                         name="goodsDetail.dangerousGoodTypeId"
                         [disabled]="!allSubGoodCategorys"
-                        [class.is-invalid]="DangerousGoodTypes.touched && !DangerousGoodTypes.valid"
-                        [class.is-valid]="DangerousGoodTypes.touched && DangerousGoodTypes.valid"
+                        [class.is-invalid]="DangerousGoodTypes.touched && (!DangerousGoodTypes.valid || dangerousGoodsTypeId === undefined)"
+                        [class.is-valid]="DangerousGoodTypes.touched && DangerousGoodTypes.valid && dangerousGoodsTypeId !== undefined"
                         required
                       >
                         <option value="undefined">{{ l('SelectADangeroudGoodType') }}</option>

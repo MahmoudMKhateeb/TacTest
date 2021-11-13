@@ -580,7 +580,11 @@ namespace TACHYON.PriceOffers
                 dto.TruckType = ObjectMapper.Map<TrucksTypeDto>(request.ShippingRequestFK.TrucksTypeFk).TranslatedDisplayName;
                 dto.GoodsCategory = ObjectMapper.Map<GoodCategoryDto>(request.ShippingRequestFK.GoodCategoryFk).DisplayName;
                 dto.NumberOfCompletedTrips = await getCompletedRequestTripsCount(request.ShippingRequestFK);
-
+                dto.Longitude = (request.ShippingRequestFK.DestinationCityFk.Location != null ?
+                  request.ShippingRequestFK.DestinationCityFk.Location.X : 0);
+                dto.Latitude = (request.ShippingRequestFK.DestinationCityFk.Location != null ?
+                    request.ShippingRequestFK.DestinationCityFk.Location.Y : 0);
+                dto.GoodCategoryId = request.ShippingRequestFK.GoodCategoryId;
                 ShippingRequestForPriceOfferList.Add(dto);
 
             }
@@ -654,7 +658,8 @@ namespace TACHYON.PriceOffers
                 dto.TruckType = ObjectMapper.Map<TrucksTypeDto>(request.TrucksTypeFk).TranslatedDisplayName;
                 dto.GoodsCategory = ObjectMapper.Map<GoodCategoryDto>(request.GoodCategoryFk).DisplayName;
                 dto.NumberOfCompletedTrips = await getCompletedRequestTripsCount(request);
-
+                dto.Longitude = (double)(request.DestinationCityFk.Location?.X);
+                dto.Latitude = (double)(request.DestinationCityFk.Location?.Y);
                 ShippingRequestForPriceOfferList.Add(dto);
 
             }
@@ -723,6 +728,8 @@ namespace TACHYON.PriceOffers
                     }
                 }
 
+                dto.Longitude = (request.DestinationCityFk.Location != null ? request.DestinationCityFk.Location.X : 0);
+                dto.Latitude = (request.DestinationCityFk.Location != null ? request.DestinationCityFk.Location.Y : 0);
                 ShippingRequestForPriceOfferList.Add(dto);
 
             }
@@ -800,9 +807,15 @@ namespace TACHYON.PriceOffers
                 dto.DirectRequestId = request.Id;
                 dto.CreationTime = request.CreationTime;
                 dto.OfferStatus = request.Status;
+                dto.Longitude = (request.ShippingRequestFK.DestinationCityFk.Location != null ?
+                    request.ShippingRequestFK.DestinationCityFk.Location.X : 0);
+                dto.Latitude = (request.ShippingRequestFK.DestinationCityFk.Location != null ?
+                    request.ShippingRequestFK.DestinationCityFk.Location.Y : 0);
                 dto.BidStatusTitle = string.Empty;
-                dto.TruckType = ObjectMapper.Map<TrucksTypeDto>(request.ShippingRequestFk.TrucksTypeFk).TranslatedDisplayName;
-                dto.GoodsCategory = ObjectMapper.Map<GoodCategoryDto>(request.ShippingRequestFk.GoodCategoryFk).DisplayName;
+                dto.TruckType = ObjectMapper.Map<TrucksTypeDto>(request.ShippingRequestFK.TrucksTypeFk).TranslatedDisplayName;
+                dto.GoodsCategory = ObjectMapper.Map<GoodCategoryDto>(request.ShippingRequestFK.GoodCategoryFk).DisplayName;
+                dto.GoodCategoryId = request.ShippingRequestFK.GoodCategoryId;
+
                 ShippingRequestForPriceOfferList.Add(dto);
 
             }

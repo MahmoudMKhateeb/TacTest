@@ -2,6 +2,7 @@ import { Component, Injector, Input, OnInit, ViewChild } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import {
   GetShippingRequestForPriceOfferListDto,
+  GetShippingRequestForViewOutput,
   PriceOfferChannel,
   PriceOfferServiceProxy,
   ShippingRequestDirectRequestServiceProxy,
@@ -24,6 +25,7 @@ import { ShippingrequestsDetailsModelComponent } from '../details/shippingreques
 })
 export class ShippingRequestCardTemplateComponent extends ScrollPagnationComponentBase implements OnInit {
   @ViewChild('Model', { static: false }) modalMore: ShippingrequestsDetailsModelComponent;
+  shippingRequestforView: GetShippingRequestForViewOutput;
 
   Items: GetShippingRequestForPriceOfferListDto[] = [];
   searchInput: ShippingRequestForPriceOfferGetAllInput = new ShippingRequestForPriceOfferGetAllInput();
@@ -32,6 +34,11 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
   @Input() Title: string;
   @Input() ShippingRequestId: number | null | undefined = undefined;
   direction = 'ltr';
+  openCardId: number;
+  bidsloading = false;
+  zoom: Number = 13; //map zoom
+  lat: Number = 24.717942;
+  lng: Number = 46.675761;
   constructor(
     injector: Injector,
     private _currentServ: PriceOfferServiceProxy,
@@ -81,8 +88,6 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
         this.Items.push(...result.items);
         console.log('LoadingMore Date .....');
       });
-    console.log(`channed is : `, this.searchInput.channel);
-    console.log(`Title is : `, this.Title);
   }
   canDeleteDirectRequest(input: GetShippingRequestForPriceOfferListDto) {
     if (
@@ -95,6 +100,18 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
     }
     return false;
   }
+  canSeeShippingRequestTrips() {
+    //if there is no carrierTenantId  and the current user in not a carrier Hide Trips Section
+    if (this.feature.isEnabled('App.Carrier') && !this.shippingRequestforView.shippingRequest.carrierTenantId) {
+      return false;
+    } else if (this.feature.isEnabled('App.TachyonDealer')) {
+      //if Tachyon Dealer
+      return true;
+    }
+    //By Default
+    return true;
+  }
+
   delete(input: GetShippingRequestForPriceOfferListDto): void {
     this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
       if (isConfirmed) {

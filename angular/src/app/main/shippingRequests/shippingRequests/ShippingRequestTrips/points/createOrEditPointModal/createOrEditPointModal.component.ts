@@ -67,7 +67,11 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
   ngOnInit(): void {
     this.feature.isEnabled('App.Shipper') ? this.loadFacilities() : 0;
     //take the Route Type From the Shared Service
-    this.tripServiceSubscription$ = this._tripService.currentShippingRequest.subscribe((res) => (this.RouteType = res.shippingRequest.routeTypeId));
+    this.tripServiceSubscription$ = this._tripService.currentShippingRequest.subscribe((res) => {
+      if (res.shippingRequest) {
+        this.RouteType = res.shippingRequest.routeTypeId;
+      }
+    });
     //take the PointsList From The Shared Service
     this.pointsServiceSubscription$ = this._PointService.currentWayPointsList.subscribe((res) => (this.wayPointsList = res));
     //Where the using of this Component is coming from
