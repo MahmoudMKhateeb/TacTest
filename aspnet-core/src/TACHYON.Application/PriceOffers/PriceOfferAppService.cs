@@ -807,14 +807,14 @@ namespace TACHYON.PriceOffers
                 dto.DirectRequestId = request.Id;
                 dto.CreationTime = request.CreationTime;
                 dto.OfferStatus = request.Status;
-                dto.Longitude = (request.ShippingRequestFK.DestinationCityFk.Location != null ?
-                    request.ShippingRequestFK.DestinationCityFk.Location.X : 0);
-                dto.Latitude = (request.ShippingRequestFK.DestinationCityFk.Location != null ?
-                    request.ShippingRequestFK.DestinationCityFk.Location.Y : 0);
+                dto.Longitude = (request.ShippingRequestFk.DestinationCityFk.Location != null ?
+                    request.ShippingRequestFk.DestinationCityFk.Location.X : 0);
+                dto.Latitude = (request.ShippingRequestFk.DestinationCityFk.Location != null ?
+                    request.ShippingRequestFk.DestinationCityFk.Location.Y : 0);
                 dto.BidStatusTitle = string.Empty;
-                dto.TruckType = ObjectMapper.Map<TrucksTypeDto>(request.ShippingRequestFK.TrucksTypeFk).TranslatedDisplayName;
-                dto.GoodsCategory = ObjectMapper.Map<GoodCategoryDto>(request.ShippingRequestFK.GoodCategoryFk).DisplayName;
-                dto.GoodCategoryId = request.ShippingRequestFK.GoodCategoryId;
+                dto.TruckType = ObjectMapper.Map<TrucksTypeDto>(request.ShippingRequestFk.TrucksTypeFk).TranslatedDisplayName;
+                dto.GoodsCategory = ObjectMapper.Map<GoodCategoryDto>(request.ShippingRequestFk.GoodCategoryFk).DisplayName;
+                dto.GoodCategoryId = request.ShippingRequestFk.GoodCategoryId;
 
                 ShippingRequestForPriceOfferList.Add(dto);
 
