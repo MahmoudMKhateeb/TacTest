@@ -131,7 +131,7 @@ namespace TACHYON.Shipping.Trips.Accidents
             CheckIfCanAccessService(true, AppFeatures.Carrier, AppFeatures.TachyonDealer, AppFeatures.Shipper);
 
             DisableTenancyFilters();
-            if (input.ReasoneId.HasValue && input.ReasoneId.Value == 0) input.ReasoneId = default(int?);
+            //if (input.ReasoneId.HasValue && input.ReasoneId.Value == 0) input.ReasoneId = default(int?);
 
             await ValidateOtherReason(input);
 
@@ -190,8 +190,12 @@ namespace TACHYON.Shipping.Trips.Accidents
         private async Task Create(CreateOrEditShippingRequestTripAccidentDto input, RoutPoint routPoint)
         {
             DisableTenancyFilters();
-            var document = await _CommonManager.UploadDocumentAsBase64(ObjectMapper.Map<DocumentUpload>(input), AbpSession.TenantId);
-            ObjectMapper.Map(document, input);
+            //entered from web
+            if (!GetCurrentUser().IsDriver)
+            {
+                var document = await _CommonManager.UploadDocumentAsBase64(ObjectMapper.Map<DocumentUpload>(input), AbpSession.TenantId);
+                ObjectMapper.Map(document, input);
+            }
 
             var Accident = ObjectMapper.Map<ShippingRequestTripAccident>(input);
             if (input.lat.HasValue && input.lng.HasValue)
@@ -212,8 +216,12 @@ namespace TACHYON.Shipping.Trips.Accidents
         private async Task Update(CreateOrEditShippingRequestTripAccidentDto input)
         {
             var Accident = await GetAccident(input.Id);
-            var document = await _CommonManager.UploadDocumentAsBase64(ObjectMapper.Map<DocumentUpload>(input), AbpSession.TenantId);
-            ObjectMapper.Map(document, input);
+            //entered from web
+            if (!GetCurrentUser().IsDriver)
+            {
+                var document = await _CommonManager.UploadDocumentAsBase64(ObjectMapper.Map<DocumentUpload>(input), AbpSession.TenantId);
+                ObjectMapper.Map(document, input);
+            }
             ObjectMapper.Map(input, Accident);
 
         }
@@ -359,9 +367,9 @@ namespace TACHYON.Shipping.Trips.Accidents
             if (input.ReasoneId != null)
             {
                 var reason = await _shippingRequestReasonAccidentRepository
-                    .FirstOrDefaultAsync(x => x.CoreId == input.ReasoneId.Value);
+                    .FirstOrDefaultAsync(x => x.CoreId == input.ReasoneId);
 
-                if (reason.Name.ToLower().Contains(TACHYONConsts.OthersDisplayName) && input.OtherReasonName.IsNullOrEmpty())
+                if (reason.Name.ToLower().Contains(TACHYONConsts.OthersDisplayName.ToLower()) && input.OtherReasonName.IsNullOrEmpty())
                     throw new UserFriendlyException(L("AccidentReasonConNotBeOtherAndEmptyAtTheSameTime"));
             }
         }

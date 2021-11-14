@@ -47,6 +47,7 @@ namespace TACHYON
         public static string UserIdentifier = "user_identifier";
         public static string MobileDeviceToken = "Mobile_DeviceToken";
         public static string MobileDeviceId = "Mobile_DeviceId";
+        public static string UserEditionId = "user_editionId";
 
         public const string ThemeDefault = "default";
         public const string Theme2 = "theme2";

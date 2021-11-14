@@ -209,7 +209,7 @@ namespace TACHYON.Invoices
             {
                 return await _commonManager.ExecuteMethodIfHostOrTenantUsers(async () =>
                 {
-                    if (!_invoiceManager.IsCarrier(Invoice.TenantId))
+                    if (!_invoiceManager.IsTenantCarrier(Invoice.TenantId))
                     {
 
                         if (await _balanceManager.CheckShipperCanPaidFromBalance(Invoice.TenantId, Invoice.TotalAmount))
@@ -252,7 +252,7 @@ namespace TACHYON.Invoices
             if (Invoice != null && Invoice.IsPaid)
             {
 
-                if (!_invoiceManager.IsCarrier(Invoice.TenantId))
+                if (!_invoiceManager.IsTenantCarrier(Invoice.TenantId))
                 {
                     await _balanceManager.AddBalanceToShipper(Invoice.TenantId, Invoice.TotalAmount);
                     if ((InvoicePeriodType)Invoice.PeriodId != InvoicePeriodType.PayInAdvance)

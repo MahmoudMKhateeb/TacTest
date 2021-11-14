@@ -934,9 +934,9 @@ namespace TACHYON.Notifications
             notificationData["id"] = offer.ShippingRequestId;
             notificationData["carrier"] = carrier;
             List<UserIdentifier> users = new List<UserIdentifier>();
-            if (!offer.ShippingRequestFK.IsTachyonDeal)
+            if (!offer.ShippingRequestFk.IsTachyonDeal)
             {
-                users.Add(new UserIdentifier(offer.ShippingRequestFK.TenantId, offer.ShippingRequestFK.CreatorUserId.Value));
+                users.Add(new UserIdentifier(offer.ShippingRequestFk.TenantId, offer.ShippingRequestFk.CreatorUserId.Value));
             }
             else
             {
@@ -959,9 +959,9 @@ namespace TACHYON.Notifications
             notificationData["id"] = offer.ShippingRequestId;
             notificationData["carrier"] = carrier;
             List<UserIdentifier> users = new List<UserIdentifier>();
-            if (!offer.ShippingRequestFK.IsTachyonDeal)
+            if (!offer.ShippingRequestFk.IsTachyonDeal)
             {
-                users.Add(new UserIdentifier(offer.ShippingRequestFK.TenantId, offer.ShippingRequestFK.CreatorUserId.Value));
+                users.Add(new UserIdentifier(offer.ShippingRequestFk.TenantId, offer.ShippingRequestFk.CreatorUserId.Value));
             }
             else
             {
@@ -978,7 +978,7 @@ namespace TACHYON.Notifications
                                     TACHYONConsts.LocalizationSourceName));
             notificationData["offerid"] = offer.Id;
             notificationData["id"] = offer.ShippingRequestId;
-            notificationData["shipper"] = offer.ShippingRequestFK.Tenant.Name;
+            notificationData["shipper"] = offer.ShippingRequestFk.Tenant.Name;
             List<UserIdentifier> users = new List<UserIdentifier>();
             users.Add(new UserIdentifier(offer.TenantId, offer.CreatorUserId.Value));
 

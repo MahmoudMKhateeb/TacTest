@@ -177,6 +177,15 @@ namespace TACHYON.Features
                 TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f"
             };
 
+
+            //<see href="https://tachyonhub.atlassian.net/browse/TAC-1336">here</see>
+            var marketPlace = context.Create(
+                AppFeatures.MarketPlace,
+                "true",
+                L("MarketPlace"), // todo add localization here
+                inputType: new CheckboxInputType()
+            );
+
             var OffersMarketPlace = context.Create(
                 AppFeatures.OffersMarketPlace,
                 "false",
@@ -378,7 +387,68 @@ namespace TACHYON.Features
                 "false",
                 L("TachyonDealerMinValueCommission"),
                 inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
-            //        #endregion
+
+
+            // direct request commission 
+            shipperFeature.CreateChildFeature(
+                AppFeatures.DirectRequestCommissionType,
+                "false",
+                L("DirectRequestCommissionType"),
+                inputType: new ComboboxInputType(new StaticLocalizableComboboxItemSource(CommissionTypes.ToArray())));
+
+            shipperFeature.CreateChildFeature(
+                AppFeatures.DirectRequestCommissionPercentage,
+                "false",
+                L("DirectRequestCommissionPercentage"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, 100)));
+
+            shipperFeature.CreateChildFeature(
+                AppFeatures.DirectRequestCommissionValue,
+                "false",
+                L("DirectRequestCommissionValue"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+
+
+            shipperFeature.CreateChildFeature(
+                AppFeatures.DirectRequestCommissionMinValue,
+                "false",
+                L("DirectDirectRequestCommissionMinValue"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+
+
+            shipperFeature.CreateChildFeature(
+                AppFeatures.DirectRequestVasCommissionType,
+                "false",
+                L("DirectRequestVASCommissionType"),
+                inputType: new ComboboxInputType(new StaticLocalizableComboboxItemSource(CommissionTypes.ToArray())));
+
+
+
+            shipperFeature.CreateChildFeature(
+                AppFeatures.DirectRequestVasCommissionPercentage,
+                "false",
+                L("DirectRequestVASCommissionPercentage"),
+               inputType: new SingleLineStringInputType(new NumericValueValidator(0, 100)));
+
+
+
+            shipperFeature.CreateChildFeature(
+                AppFeatures.DirectRequestVasCommissionValue,
+                "false",
+                L("DirectRequestVASCommissionValue"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+
+            shipperFeature.CreateChildFeature(
+                AppFeatures.DirectRequestVasCommissionMinValue,
+                "false",
+                L("DirectRequestVASCommissionMinValue"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+
+
             #endregion
 
             var chatFeature = context.Create(

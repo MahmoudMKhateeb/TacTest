@@ -1,6 +1,6 @@
 ﻿namespace TACHYON.PriceOffers.Dto
 {
-    public class PriceOfferItem 
+    public class PriceOfferItem
     {
         public long? SourceId { get; set; }
         public PriceOfferType PriceType { get; set; }
@@ -14,6 +14,7 @@
         public decimal? ItemVatAmountWithCommission { get; set; }
         public decimal? ItemTotalAmountWithCommission { get; set; }
 
+        public decimal ItemsTotalPricePreCommissionPreVat { get; set; }
 
         public decimal? TotalAmount { get; set; }
         public decimal? SubTotalAmount { get; set; }

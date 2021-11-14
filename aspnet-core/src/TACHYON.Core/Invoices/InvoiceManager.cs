@@ -1,30 +1,30 @@
-﻿using Abp.Collections.Extensions;
+﻿using Abp.Application.Features;
+using Abp.Collections.Extensions;
+using Abp.Configuration;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
+using Abp.Net.Mail;
 using Abp.Quartz;
 using Abp.Timing;
+using Microsoft.EntityFrameworkCore;
 using Quartz;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TACHYON.Core.Invoices.Jobs;
-using TACHYON.Invoices.Periods;
-using TACHYON.Invoices.Groups;
-using TACHYON.MultiTenancy;
-using TACHYON.Shipping.ShippingRequests;
-using System.Collections.Generic;
-using Abp.Net.Mail;
-using TACHYON.Notifications;
-using Abp.Configuration;
 using TACHYON.Configuration;
-using Abp.Application.Features;
+using TACHYON.Core.Invoices.Jobs;
 using TACHYON.Features;
-using Abp.Domain.Uow;
-using Microsoft.EntityFrameworkCore;
 using TACHYON.Invoices.Balances;
-using TACHYON.Invoices.Transactions;
-using TACHYON.Shipping.ShippingRequestTrips;
+using TACHYON.Invoices.Groups;
 using TACHYON.Invoices.PaymentMethods;
+using TACHYON.Invoices.Periods;
 using TACHYON.Invoices.SubmitInvoices;
+using TACHYON.Invoices.Transactions;
+using TACHYON.MultiTenancy;
+using TACHYON.Notifications;
+using TACHYON.Shipping.ShippingRequests;
+using TACHYON.Shipping.ShippingRequestTrips;
 
 namespace TACHYON.Invoices
 {
@@ -440,7 +440,7 @@ namespace TACHYON.Invoices
             var invoice = await GetInvoiceInfo(invoiceId);
             if (invoice == null) return;
 
-            if (!IsCarrier(invoice.TenantId))
+            if (!IsTenantCarrier(invoice.TenantId))
             {
                 if (invoice.IsPaid) await _balanceManager.AddBalanceToShipper(invoice.TenantId, -invoice.TotalAmount);
                 invoice.Trips.ToList().ForEach(t =>
@@ -467,7 +467,7 @@ namespace TACHYON.Invoices
                                .FirstOrDefaultAsync(i => i.Id == invoiceId);
         }
 
-        public bool IsCarrier(int tenantId)
+        public bool IsTenantCarrier(int tenantId)
         {
             return _featureChecker.IsEnabled(tenantId, AppFeatures.Carrier);
         }

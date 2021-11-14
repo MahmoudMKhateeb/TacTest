@@ -4,9 +4,15 @@ import { Table } from '@node_modules/primeng/table';
 import { Paginator } from '@node_modules/primeng/paginator';
 import { LazyLoadEvent } from 'primeng/api';
 
-import { GetShippingRequestVasForViewDto, ShippingRequestDto, ShippingRequestsTripServiceProxy } from '@shared/service-proxies/service-proxies';
+import {
+  GetShippingRequestVasForViewDto,
+  ShippingRequestDto,
+  ShippingRequestsServiceProxy,
+  ShippingRequestsTripServiceProxy,
+} from '@shared/service-proxies/service-proxies';
 import { CreateOrEditTripComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/createOrEditTripModal/createOrEditTrip.component';
 import { ViewTripModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/viewTripModal/viewTripModal.component';
+import { TripService } from '../trip.service';
 
 @Component({
   selector: 'TripsForViewShippingRequest',
@@ -22,6 +28,8 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   @Input() VasListFromFather: GetShippingRequestVasForViewDto[];
   constructor(
     injector: Injector,
+    private _TripService: TripService,
+    private _shippingRequestsServiceProxy: ShippingRequestsServiceProxy,
     private changeDetectorRef: ChangeDetectorRef,
     private _shippingRequestTripsService: ShippingRequestsTripServiceProxy
   ) {
@@ -54,6 +62,12 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
     this.paginator.changePage(this.paginator.getPage());
   }
   ngAfterViewInit(): void {
+    // update Trip Service and send vases list to trip component
+    this._shippingRequestsServiceProxy.getShippingRequestForView(this.ShippingRequest.id).subscribe((result) => {
+      this.VasListFromFather = result.shippingRequestVasDtoList;
+      this._TripService.updateShippingRequest(result);
+    });
+
     this.primengTableHelper.adjustScroll(this.dataTable);
   }
 }
