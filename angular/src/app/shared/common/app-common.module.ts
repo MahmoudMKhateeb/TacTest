@@ -73,6 +73,7 @@ import { RequestsInMarketPlaceComponent } from './customizable-dashboard/widgets
 import { NgApexchartsModule } from '@node_modules/ng-apexcharts';
 import { WidgetsModule } from '@app/shared/common/customizable-dashboard/widgets/widgets.module';
 import { EntityLogComponent } from './entity-log/entity-log.component';
+import { CollapseModule } from '@node_modules/ngx-bootstrap/collapse';
 // import { FileUploadModule } from '@node_modules/primeng';
 
 @NgModule({
@@ -100,6 +101,7 @@ import { EntityLogComponent } from './entity-log/entity-log.component';
     ChartModule,
     NgApexchartsModule,
     WidgetsModule,
+    CollapseModule,
   ],
   declarations: [
     TimeZoneComboComponent,

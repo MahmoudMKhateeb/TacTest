@@ -7,6 +7,9 @@
       <!--          <i class="fa fa-money-bill"></i> {{ l('sendPricingOfferToShipper') }}-->
       <!--        </button>-->
       <!--      </div>-->
+      <div role="actions">
+        <a class="btn btn-outline-success" (click)="appEntityLog.show()"> <i class="flaticon-notes"></i> {{ 'Activity Log' }} </a>
+      </div>
     </sub-header>
 
     <div [class]="containerClass">
@@ -381,7 +384,7 @@
       <!--  End of the First Container      -->
     </div>
 
-    <app-entity-log [entityType]="1" [entityId]="945"></app-entity-log>
+    <app-entity-log #appEntityLog [entityType]="3" [entityId]="shippingRequestforView.shippingRequest.id"></app-entity-log>
   </div>
   <!--  <sendDirectRequestsModal #sendDirectRequestsModal [shippingRequestId]="activeShippingRequestId"></sendDirectRequestsModal>-->
   <tachyonDealToBiddingModal #tachyonDealToBiddingModal (modalsave)="reloadCurrentPage()"></tachyonDealToBiddingModal>
