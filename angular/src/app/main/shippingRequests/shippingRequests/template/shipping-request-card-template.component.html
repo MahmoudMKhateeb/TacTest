@@ -234,7 +234,7 @@
                           </shipping-request-offers-list>
                         </div>
 
-                        <div *ngIf="canSeeShippingRequestTrips()">
+                        <div *ngIf="feature.isEnabled('App.Shipper') || feature.isEnabled('App.TachyonDealer')">
                           <TripsForViewShippingRequest
                             *ngIf="item.id && bidsloading == false"
                             [ShippingRequest]="item"
