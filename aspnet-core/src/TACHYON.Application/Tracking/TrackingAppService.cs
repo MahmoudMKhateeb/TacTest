@@ -18,6 +18,7 @@ using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips;
 using TACHYON.Shipping.Trips.RejectReasons.Dtos;
 using TACHYON.Tracking.Dto;
+using TACHYON.Tracking.Dto.WorkFlow;
 using TACHYON.Trucks.TrucksTypes.Dtos;
 
 namespace TACHYON.Tracking
@@ -29,15 +30,16 @@ namespace TACHYON.Tracking
         private readonly IRepository<ShippingRequestTrip> _shippingRequestTrip;
 
         private readonly ShippingRequestsTripManager _shippingRequestsTripManager;
+        private readonly WorkFlowProvider _workFlowProvider;
 
-        public TrackingAppService(IRepository<ShippingRequestTrip> shippingRequestTripRepository, IRepository<RoutPoint, long> routPointRepository, ShippingRequestsTripManager shippingRequestsTripManager, IRepository<ShippingRequestTrip> shippingRequestTrip)
+        public TrackingAppService(WorkFlowProvider workFlowProvider, IRepository<ShippingRequestTrip> shippingRequestTripRepository, IRepository<RoutPoint, long> routPointRepository, ShippingRequestsTripManager shippingRequestsTripManager, IRepository<ShippingRequestTrip> shippingRequestTrip)
         {
             _ShippingRequestTripRepository = shippingRequestTripRepository;
             _routPointRepository = routPointRepository;
             _shippingRequestsTripManager = shippingRequestsTripManager;
             _shippingRequestTrip = shippingRequestTrip;
+            _workFlowProvider = workFlowProvider;
         }
-
         public async Task<PagedResultDto<TrackingListDto>> GetAll(TrackingSearchInputDto input)
         {
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier, AppFeatures.Shipper);
@@ -91,16 +93,16 @@ namespace TACHYON.Tracking
 
             );
         }
-
         public async Task<ListResultDto<ShippingRequestTripDriverRoutePointDto>> GetForView(long id)
         {
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier, AppFeatures.Shipper);
             DisableTenancyFilters();
-            var routes = await _routPointRepository.GetAll()
+            var routes = _routPointRepository.GetAll()
+            .Include(t => t.RoutPointStatusTransitions)
             .Include(r => r.FacilityFk)
             .Include(r => r.GoodsDetails)
              .ThenInclude(c => c.GoodCategoryFk)
-              .ThenInclude(t => t.Translations)
+             .ThenInclude(t => t.Translations)
             .Include(g => g.GoodsDetails)
              .ThenInclude(u => u.UnitOfMeasureFk)
                             .Where(x => x.ShippingRequestTripFk.Id == id && x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId.HasValue)
@@ -110,43 +112,47 @@ namespace TACHYON.Tracking
             if (routes == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
             return new ListResultDto<ShippingRequestTripDriverRoutePointDto>(ObjectMapper.Map<List<ShippingRequestTripDriverRoutePointDto>>(routes));
         }
+        public async Task<ListResultDto<PointTransactionDto>> GetAvailableTransactions(long id)
+        {
+            CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier);
+            var point = await _routPointRepository
+                            .GetAll()
+                            .Where(x => x.Id == id)
+                            .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper), x => x.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId)
+                            .WhereIf(!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer), x => true)
+                            .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
+                            .FirstOrDefaultAsync();
+            if (point == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
 
-
+            var transactions = _workFlowProvider.GetAvailableTransactions(point.WorkFlowVersion, point.Status);
+            return new ListResultDto<PointTransactionDto>(ObjectMapper.Map<List<PointTransactionDto>>(transactions));
+        }
         public async Task Accept(int id)
         {
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier);
             await _shippingRequestsTripManager.Accepted(id);
         }
-
         public async Task Start(int id)
         {
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier);
             await _shippingRequestsTripManager.Start(new ShippingRequestTripDriverStartInputDto { Id = id });
         }
-
-        public async Task ChangeStatus(int id)
+        public async Task InvokeStatus(InvokeStatusInputDto input)
         {
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier);
-            await _shippingRequestsTripManager.ChangeStatus(id);
+            await _shippingRequestsTripManager.InvokeStatus(input);
         }
-
         public async Task NextLocation(long id)
         {
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier);
             await _shippingRequestsTripManager.GotoNextLocation(id);
         }
-
-        public async Task ConfirmReceiverCode(ConfirmReceiverCodeInput input)
-        {
-            CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier);
-            await _shippingRequestsTripManager.ConfirmReceiverCode(input);
-        }
-
         public async Task<FileDto> POD(long id)
         {
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier, AppFeatures.Shipper);
             return await _shippingRequestsTripManager.GetPOD(id);
         }
+
         #region Helper
         private TrackingListDto GetMap(ShippingRequestTrip trip)
         {
@@ -178,7 +184,6 @@ namespace TACHYON.Tracking
             }
             return dto;
         }
-        #endregion
         private bool CanStartTrip(ShippingRequestTrip trip)
         {
             if (trip.Status == ShippingRequestTripStatus.Intransit || !trip.AssignedDriverUserId.HasValue)
@@ -197,5 +202,6 @@ namespace TACHYON.Tracking
 
             return false;
         }
+        #endregion
     }
 }

@@ -21,6 +21,7 @@ using TACHYON.Shipping.Trips;
 using TACHYON.Shipping.Trips.Accidents;
 using TACHYON.Shipping.Trips.Accidents.Dto;
 using TACHYON.Storage;
+using TACHYON.Tracking.Dto;
 using TACHYON.Trucks;
 using TACHYON.Trucks.Dtos;
 using TACHYON.Trucks.Importing.Dto;
@@ -291,7 +292,7 @@ namespace TACHYON.Web.Controllers
         [AbpMvcAuthorize()]
         // [Produces("application/json")]
         [Route("/api/services/app/DropOffPointToDelivery")]
-        public async Task<JsonResult> DropOffPointToDelivery(long id)
+        public async Task<JsonResult> DropOffPointToDelivery(InvokeStatusInputDto input)
         {
             try
             {
@@ -308,7 +309,7 @@ namespace TACHYON.Web.Controllers
                 }
 
                 var document = await _commonManager.UploadDocument(file, AbpSession.TenantId);
-                await _shippingRequestTripManger.ConfirmPointToDelivery(document, id);
+                await _shippingRequestTripManger.ConfirmPointToDelivery(document, input);
                 return Json(new AjaxResponse(new { }));
             }
             catch (UserFriendlyException ex)

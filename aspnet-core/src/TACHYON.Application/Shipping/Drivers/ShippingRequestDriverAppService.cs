@@ -279,7 +279,6 @@ namespace TACHYON.Shipping.Drivers
 
         }
 
-
         public async Task<RoutDropOffDto> GetDropOffDetail(long PointId)
         {
             DisableTenancyFilters();
@@ -509,9 +508,6 @@ namespace TACHYON.Shipping.Drivers
             input.Note = note;
             await _ratingLogManager.ValidateAndCreateRating(input, RateType.SEByDriver);
         }
-
-
-
 
         public async Task Accepted(int TripId)
         {

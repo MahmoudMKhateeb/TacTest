@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using TACHYON.Goods.GoodsDetails.Dtos;
 using TACHYON.Routs.RoutPoints;
+using TACHYON.Tracking.Dto.WorkFlow;
 
 namespace TACHYON.Shipping.Drivers.Dto
 {
@@ -26,6 +27,7 @@ namespace TACHYON.Shipping.Drivers.Dto
         public bool IsFacilityRated { get; set; }
         public string Address { get; set; }
         public string Note { get; set; }
+        public int WorkFlowVersion { get; set; }
 
         public double lat { get; set; }
         public double lng { get; set; }
@@ -35,6 +37,7 @@ namespace TACHYON.Shipping.Drivers.Dto
         public bool IsComplete { get; set; }
         public bool IsDeliveryNoteUploaded { get; set; }
         public List<GoodsDetailDto> GoodsDetails { get; set; }
+        public List<PointTransactionDto> AvailableTransaction { get; set; }
         public bool IsShow
         {
             get

@@ -35,13 +35,17 @@ using TACHYON.Shipping.RoutPoints;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips.Dto;
+using TACHYON.Tracking;
 using TACHYON.Tracking.Dto;
+using TACHYON.Tracking.WorkFlows;
+using TACHYON.Url;
 using PickingType = TACHYON.Routs.RoutPoints.PickingType;
 
 namespace TACHYON.Shipping.Trips
 {
     public class ShippingRequestsTripManager : TACHYONDomainServiceBase
     {
+        #region Constractor
         private readonly IRepository<ShippingRequestTrip> _shippingRequestTrip;
         private readonly PriceOfferManager _priceOfferManager;
         private readonly IAppNotifier _appNotifier;
@@ -57,10 +61,13 @@ namespace TACHYON.Shipping.Trips
         private readonly InvoiceManager _invoiceManager;
         private readonly CommonManager _commonManager;
         private readonly UserManager UserManager;
-        private readonly IEntityChangeSetReasonProvider _reasonProvider;
+        private readonly IWebUrlService _webUrlService;
+        private readonly WorkFlowProvider _workFlowProvider;
 
-        public ShippingRequestsTripManager(IRepository<ShippingRequestTrip> shippingRequestTrip, PriceOfferManager priceOfferManager, IAppNotifier appNotifier, IFeatureChecker featureChecker, IAbpSession abpSession, IHubContext<AbpCommonHub> hubContext, IRepository<RoutPoint, long> routPointRepository, IRepository<ShippingRequestTripTransition> shippingRequestTripTransitionRepository, IRepository<RoutPointStatusTransition> routPointStatusTransitionRepository, FirebaseNotifier firebaseNotifier, ISmsSender smsSender, InvoiceManager invoiceManager, CommonManager commonManager, IRepository<RoutPointDocument, long> routPointDocumentRepository, UserManager userManager, IEntityChangeSetReasonProvider reasonProvider)
+
+        public ShippingRequestsTripManager(WorkFlowProvider workFlowProvider, IRepository<ShippingRequestTrip> shippingRequestTrip, PriceOfferManager priceOfferManager, IAppNotifier appNotifier, IFeatureChecker featureChecker, IAbpSession abpSession, IHubContext<AbpCommonHub> hubContext, IRepository<RoutPoint, long> routPointRepository, IRepository<ShippingRequestTripTransition> shippingRequestTripTransitionRepository, IRepository<RoutPointStatusTransition> routPointStatusTransitionRepository, FirebaseNotifier firebaseNotifier, ISmsSender smsSender, InvoiceManager invoiceManager, CommonManager commonManager, IRepository<RoutPointDocument, long> routPointDocumentRepository, UserManager userManager, IWebUrlService webUrlService)
         {
+            _workFlowProvider = workFlowProvider;
             _shippingRequestTrip = shippingRequestTrip;
             _priceOfferManager = priceOfferManager;
             _appNotifier = appNotifier;
@@ -78,7 +85,9 @@ namespace TACHYON.Shipping.Trips
             UserManager = userManager;
             _reasonProvider = reasonProvider;
         }
+        #endregion
 
+        #region Main Functions
         /// <summary>
         /// Accept trip when assign to driver
         /// </summary>
@@ -96,7 +105,6 @@ namespace TACHYON.Shipping.Trips
             await _hubContext.Clients.Users(await GetUsersHubNotification(trip, currentUser)).SendAsync("tracking", TACHYONConsts.TriggerTrackingAccepted, ObjectMapper.Map<TrackingListDto>(trip));
 
         }
-
         /// <summary>
         /// start new trip
         /// </summary>
@@ -161,103 +169,32 @@ namespace TACHYON.Shipping.Trips
             }
 
         }
-
         /// <summary>
-        /// Change trip status per point
+        /// Change point status per action
         /// </summary>
-        /// <param name="id"> trip id</param>
+        /// <param name="pointId"> point id</param>
+        /// <param name="action"> action for change status</param>
         /// <returns></returns>
-        public virtual async Task ChangeStatus(int id)
+        public async Task InvokeStatus(InvokeStatusInputDto input)
         {
-            var changeReason = nameof(RoutPointStep2);
-
-            DisableTenancyFilters();
             var currentUser = await GetCurrentUserAsync(_abpSession);
-            var activePoint = await _routPointRepository
-                            .GetAll()
-                             .Include(t => t.ShippingRequestTripFk)
-                                 .ThenInclude(s => s.ShippingRequestFk)
-                            .Include(t => t.ShippingRequestTripFk)
-                                .ThenInclude(s => s.RoutPoints)
-                            .Where
-                            (
-                                x => x.Id == id
+            var point = await GetRoutPointForAction(input.Id, currentUser);
+            if (point == null) throw new UserFriendlyException(L("YouCanNotChangeTheStatus"));
+            var transaction = CheckIfTransactionIsExist(point, input.Action);
 
-                            )
-                            .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => x.ShippingRequestTripFk.ShippingRequestFk.IsTachyonDeal)
-                            .WhereIf(currentUser.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == currentUser.TenantId.Value)
-                            .WhereIf(currentUser.IsDriver, x => x.ShippingRequestTripFk.AssignedDriverUserId == currentUser.Id)
-                            .FirstOrDefaultAsync();
+            if (!string.IsNullOrEmpty(input.Code) && point.Code != input.Code)
+                throw new UserFriendlyException(L("TheReceiverCodeIsIncorrect"));
 
-            if (activePoint == null) throw new UserFriendlyException(L("YouCanNotChangeTheStatus"));
-            var trip = activePoint.ShippingRequestTripFk;
+            var trip = point.ShippingRequestTripFk;
+            transaction.Func(point, trip);
 
-            switch (trip.RoutePointStatus)
-            {
-                case RoutePointStatus.StartedMovingToLoadingLocation:
-
-                    trip.RoutePointStatus = RoutePointStatus.ArriveToLoadingLocation;
-                    activePoint.Status = RoutePointStatus.ArriveToLoadingLocation;
-                    break;
-                case RoutePointStatus.ArriveToLoadingLocation:
-                    changeReason = nameof(RoutPointStep3);
-                    trip.RoutePointStatus = RoutePointStatus.StartLoading;
-                    activePoint.Status = RoutePointStatus.StartLoading;
-                    break;
-                case RoutePointStatus.StartLoading:
-                    changeReason = nameof(RoutPointStep4);
-                    trip.RoutePointStatus = RoutePointStatus.FinishLoading;
-                    //point.IsActive = false;
-                    activePoint.IsComplete = true;
-                    activePoint.EndTime = Clock.Now;
-                    activePoint.Status = RoutePointStatus.FinishLoading;
-                    activePoint.ActualPickupOrDeliveryDate = trip.ActualPickupDate = Clock.Now;
-                    await SendSmsToReceivers(trip.Id);
-                    break;
-                case RoutePointStatus.StartedMovingToOfLoadingLocation:
-                    changeReason = nameof(RoutPointStep5);
-                    trip.RoutePointStatus = RoutePointStatus.ArrivedToDestination;
-                    activePoint.Status = RoutePointStatus.ArrivedToDestination;
-                    break;
-                case RoutePointStatus.ArrivedToDestination:
-                    changeReason = nameof(RoutPointStep6);
-                    trip.RoutePointStatus = RoutePointStatus.StartOffloading;
-                    activePoint.Status = RoutePointStatus.StartOffloading;
-
-                    break;
-                case RoutePointStatus.StartOffloading:
-                    changeReason = nameof(RoutPointStep7);
-                    trip.RoutePointStatus = RoutePointStatus.FinishOffLoadShipment;
-                    activePoint.Status = RoutePointStatus.FinishOffLoadShipment;
-                    activePoint.ActualPickupOrDeliveryDate = Clock.Now;
-                    if (!trip.RoutPoints.Any(x => x.ActualPickupOrDeliveryDate == null && x.Id != activePoint.Id))
-                    {
-                        trip.ActualDeliveryDate = Clock.Now;
-                    }
-
-                    activePoint.CompletedStatus = RoutePointCompletedStatus.CompletedAndMissingReceiverCode;
-                    //check if all trip points completed, change the trip status from intransit to delivered and needs confirmation
-                    if (trip.RoutPoints.Where(x => x.Id != activePoint.Id).All(x => x.CompletedStatus > RoutePointCompletedStatus.NotCompleted))
-                    {
-                        activePoint.IsActive = false;
-                        trip.Status = ShippingRequestTripStatus.DeliveredAndNeedsConfirmation;
-                    }
-                    break;
-                default:
-                    throw new UserFriendlyException(L("YouCanNotChangeStatus"));
-
-            }
-            await SetRoutStatusTransition(activePoint);
-
-            await NotificationWhenPointChanged(activePoint, currentUser);
-            _reasonProvider.Use(changeReason);
+            await SetRoutStatusTransition(point);
+            await NotificationWhenPointChanged(point, currentUser);
         }
-
         /// <summary>
         /// Set new active dropoff point for trip
         /// </summary>
         /// <param name="PointId">Dropoff point id</param>
-
         public async Task GotoNextLocation(long id)
         {
             DisableTenancyFilters();
@@ -314,116 +251,44 @@ namespace TACHYON.Shipping.Trips
             await NotificationWhenPointChanged(currentpoint, currentUser);
 
         }
-
-
-        private async Task<RoutPoint> GetActivePointByTripAsyn(int tripId, User currentUser)
-        {
-            return await _routPointRepository
-                .GetAll()
-                .Include(x => x.ShippingRequestTripFk)
-                     .ThenInclude(x => x.ShippingRequestFk)
-                .Include(x => x.FacilityFk)
-                .Where(x => x.IsActive &&
-                x.ShippingRequestTripFk.Status == ShippingRequestTripStatus.Intransit &&
-                x.ShippingRequestTripId == tripId)
-                .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => x.ShippingRequestTripFk.ShippingRequestFk.IsTachyonDeal)
-                .WhereIf(currentUser.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == currentUser.TenantId.Value)
-                .WhereIf(currentUser.IsDriver, x => x.ShippingRequestTripFk.AssignedDriverUserId == currentUser.Id)
-                .FirstOrDefaultAsync();
-
-
-        }
-
-        /// <summary>
-        /// Driver confirm the receiver code 
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="Code"></param>
-        /// <returns></returns>
-        public async Task ConfirmReceiverCode(ConfirmReceiverCodeInput input)
-        {
-            DisableTenancyFilters();
-            var currentUser = await GetCurrentUserAsync(_abpSession);
-            var CurrentPoint = await _routPointRepository
-                            .GetAll()
-                             .Include(t => t.ShippingRequestTripFk)
-                                 .ThenInclude(s => s.ShippingRequestFk)
-                            .Where
-                                    (
-                                        x =>
-                                            x.Id == input.Id &&
-                                            x.Status == RoutePointStatus.FinishOffLoadShipment &&
-                                            x.Code == input.Code &&
-                                            (x.ShippingRequestTripFk.Status == ShippingRequestTripStatus.Intransit ||
-                                            x.ShippingRequestTripFk.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation) &&
-                                            x.ShippingRequestTripFk.ShippingRequestFk.Status == ShippingRequestStatus.PostPrice
-
-                                    )
-                            .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => x.ShippingRequestTripFk.ShippingRequestFk.IsTachyonDeal)
-                            .WhereIf(currentUser.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == currentUser.TenantId.Value)
-                            .WhereIf(currentUser.IsDriver, x => x.ShippingRequestTripFk.AssignedDriverUserId == currentUser.Id)
-                            .FirstOrDefaultAsync();
-
-            if (CurrentPoint == null) throw new UserFriendlyException(L("TheReceiverCodeIsIncorrect"));
-
-            CurrentPoint.ShippingRequestTripFk.RoutePointStatus = RoutePointStatus.ReceiverConfirmed;
-            CurrentPoint.Status = RoutePointStatus.ReceiverConfirmed;
-            await SetRoutStatusTransition(CurrentPoint);
-            await NotificationWhenPointChanged(CurrentPoint, currentUser);
-        }
-
         /// <summary>
         /// driver confirm the trip has finished 
         /// </summary>
         /// <param name="document"> attachment</param>
         /// <param name="id">route point id</param>
         /// <returns></returns>
-
-        public async Task<bool> ConfirmPointToDelivery(IHasDocument document, long id)
+        public async Task<bool> ConfirmPointToDelivery(IHasDocument document, InvokeStatusInputDto input)
         {
             DisableTenancyFilters();
             var currentUser = await GetCurrentUserAsync(_abpSession);
 
-            var CurrentPoint = await _routPointRepository.GetAll().
-                Include(x => x.ShippingRequestTripFk)
-                    .ThenInclude(x => x.ShippingRequestTripVases)
-                .Include(x => x.ShippingRequestTripFk)
-                    .ThenInclude(x => x.ShippingRequestFk)
-                     .ThenInclude(x => x.Tenant)
-                .Where
-                                    (
-                                        x =>
-                                            x.Id == id &&
-                                            x.Status == RoutePointStatus.ReceiverConfirmed &&
-                                            (x.ShippingRequestTripFk.Status == ShippingRequestTripStatus.Intransit ||
-                                            x.ShippingRequestTripFk.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation) &&
-                                            x.ShippingRequestTripFk.ShippingRequestFk.Status == ShippingRequests.ShippingRequestStatus.PostPrice
-                                    )
-                .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => x.ShippingRequestTripFk.ShippingRequestFk.IsTachyonDeal)
-                .WhereIf(currentUser.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == currentUser.TenantId.Value)
-                .WhereIf(currentUser.IsDriver, x => x.ShippingRequestTripFk.AssignedDriverUserId == currentUser.Id)
-                .FirstOrDefaultAsync();
-            if (CurrentPoint == null) throw new UserFriendlyException(L("TheRoutePointIsNotFound"));
+            var currentPoint = await GetRoutPointForAction(input.Id, currentUser);
+            if (currentPoint == null) throw new UserFriendlyException(L("TheRoutePointIsNotFound"));
+            var transction = CheckIfTransactionIsExist(currentPoint, input.Action);
 
-            CurrentPoint.EndTime = Clock.Now;
-
-            //CurrentPoint.DocumentContentType = "image/jpeg";
-            //CurrentPoint.DocumentName = document.DocumentName;
-            //CurrentPoint.DocumentId = document.DocumentId;
             var routePointDocument = new RoutPointDocument();
-            routePointDocument.RoutPointId = CurrentPoint.Id;
+            routePointDocument.RoutPointId = currentPoint.Id;
             routePointDocument.DocumentContentType = "image/jpeg";
             routePointDocument.DocumentName = document.DocumentName;
             routePointDocument.DocumentId = document.DocumentId;
             routePointDocument.RoutePointDocumentType = RoutePointDocumentType.POD;
             await _routPointDocumentRepository.InsertAsync(routePointDocument);
+            var isCompleted = CheckIfPointIsCompleted(currentPoint);
+            if (isCompleted)
+            {
+                currentPoint.IsActive = false;
+                currentPoint.IsComplete = true;
+                currentPoint.EndTime = Clock.Now;
+            }
 
-            CurrentPoint.IsActive = false;
-            CurrentPoint.IsComplete = true;
-            CurrentPoint.Status = RoutePointStatus.DeliveryConfirmation;
-            await SetRoutStatusTransition(CurrentPoint);
-            var trip = CurrentPoint.ShippingRequestTripFk;
-            if (await _routPointRepository.GetAll().Where(x => x.ShippingRequestTripId == trip.Id && x.IsComplete == false && x.Id != CurrentPoint.Id).CountAsync() == 0)
+            currentPoint.Status = transction.ToStatus;
+            await SetRoutStatusTransition(currentPoint);
+
+            var trip = currentPoint.ShippingRequestTripFk;
+            var allPointsCompleted = await _routPointRepository.GetAll()
+                .Where(x => x.ShippingRequestTripId == trip.Id && x.IsComplete == false && x.Id != currentPoint.Id)
+                .CountAsync() == 0;
+            if (isCompleted && allPointsCompleted)
             {
                 trip.Status = ShippingRequestTripStatus.Delivered;
                 trip.RoutePointStatus = RoutePointStatus.Delivered;
@@ -431,20 +296,16 @@ namespace TACHYON.Shipping.Trips
 
                 await Done(trip);
                 await _invoiceManager.GenertateInvoiceWhenShipmintDelivery(trip);
-                await NotificationWhenShipmentDelivered(CurrentPoint, currentUser);
+                await NotificationWhenShipmentDelivered(currentPoint, currentUser);
             }
             else
             {
-                trip.RoutePointStatus = RoutePointStatus.DeliveryConfirmation;
-                await NotificationWhenPointChanged(CurrentPoint, currentUser);
+                trip.RoutePointStatus = transction.ToStatus;
+                await NotificationWhenPointChanged(currentPoint, currentUser);
             }
 
-
             return true;
-
-
         }
-
         /// <summary>
         /// Get Currrent driver trip dto
         /// </summary>
@@ -484,7 +345,73 @@ namespace TACHYON.Shipping.Trips
 
 
         }
-        #region Helper
+        #endregion
+
+        #region Helpers
+        private async Task<RoutPoint> GetActivePointByTripAsyn(int tripId, User currentUser)
+        {
+            return await _routPointRepository
+                .GetAll()
+                .Include(x => x.ShippingRequestTripFk)
+                     .ThenInclude(x => x.ShippingRequestFk)
+                .Include(x => x.FacilityFk)
+                .Where(x => x.IsActive &&
+                x.ShippingRequestTripFk.Status == ShippingRequestTripStatus.Intransit &&
+                x.ShippingRequestTripId == tripId)
+                .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => x.ShippingRequestTripFk.ShippingRequestFk.IsTachyonDeal)
+                .WhereIf(currentUser.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == currentUser.TenantId.Value)
+                .WhereIf(currentUser.IsDriver, x => x.ShippingRequestTripFk.AssignedDriverUserId == currentUser.Id)
+                .FirstOrDefaultAsync();
+
+
+        }
+
+        /// <summary>
+        /// get Rout Point for take action
+        /// </summary>
+        /// <param name="pointId"> point id</param>
+        /// <param name="currentUser">current User login</param>
+        private async Task<RoutPoint> GetRoutPointForAction(long pointId, User currentUser)
+        {
+            DisableTenancyFilters();
+            return await _routPointRepository
+                          .GetAll()
+                           .Include(t => t.ShippingRequestTripFk)
+                               .ThenInclude(s => s.ShippingRequestFk)
+                          .Include(t => t.ShippingRequestTripFk)
+                              .ThenInclude(s => s.RoutPoints)
+                          .Where
+                          (
+                              x => x.Id == pointId &&
+                              x.ShippingRequestTripFk.ShippingRequestFk.Status == ShippingRequests.ShippingRequestStatus.PostPrice &&
+                             !x.IsComplete &&
+                              x.Status != RoutePointStatus.StandBy
+                          )
+                          .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => x.ShippingRequestTripFk.ShippingRequestFk.IsTachyonDeal)
+                          .WhereIf(currentUser.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == currentUser.TenantId.Value)
+                          .WhereIf(currentUser.IsDriver, x => x.ShippingRequestTripFk.AssignedDriverUserId == currentUser.Id)
+                          .FirstOrDefaultAsync(x => x.IsActive &&
+                          x.ShippingRequestTripFk.Status == ShippingRequestTripStatus.Intransit);
+        }
+        private bool CheckIfPointIsCompleted(RoutPoint point)
+        {
+            var statuses = _workFlowProvider.GetTransactionsByType(point.WorkFlowVersion, point.PickingType)
+                .Select(x => x.ToStatus);
+            var transitions = _routPointStatusTransitionRepository.GetAll().Where(x => x.PointId == point.Id)
+                .Select(c => c.Status).ToList();
+            return !statuses.Except(transitions).Any();
+        }
+
+        private PointTransaction CheckIfTransactionIsExist(RoutPoint point, string action)
+        {
+            var workFlow = _workFlowProvider.WorkFlows.FirstOrDefault(w => w.Version == point.WorkFlowVersion);
+            if (workFlow == null) throw new UserFriendlyException(L("YouCanNotChangeTheStatus"));
+            // check if the transction is exist and is available for currnet point status
+            var transaction = workFlow.Transactions.FirstOrDefault(c => c.Action.Equals(action) && c.FromStatus == point.Status);
+            if (transaction == null) throw new UserFriendlyException(L("YouCanNotChangeTheStatus"));
+            return transaction;
+        }
+
         /// <summary>
         /// Get list of users can send notification by SignalR to update the data if any of users tracking the trip
         /// </summary>
@@ -538,7 +465,6 @@ namespace TACHYON.Shipping.Trips
 
         }
 
-
         /// <summary>
         /// Check the trip can accpted or not by status
         /// </summary>
@@ -559,7 +485,6 @@ namespace TACHYON.Shipping.Trips
             if (trip == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
             return trip;
         }
-
 
         /// <summary>
         /// When start pikup way
@@ -603,21 +528,6 @@ namespace TACHYON.Shipping.Trips
             await SetRoutStatusTransition(routPoint);
 
         }
-        /// <summary>
-        /// Set up route point transition
-        /// </summary>
-        /// <param name="routPoint"></param>
-        /// <param name="Status"></param>
-        /// <returns></returns>
-        private async Task SetRoutStatusTransition(RoutPoint routPoint)
-        {
-            await _routPointStatusTransitionRepository.InsertAsync(new RoutPointStatusTransition
-            {
-                PointId = routPoint.Id,
-                Status = routPoint.Status
-            });
-        }
-
 
         /// <summary>
         /// Get the last transition for trip is not complete
@@ -630,7 +540,6 @@ namespace TACHYON.Shipping.Trips
 
         }
 
-
         /// <summary>
         /// Send shipment code to receivers
         /// </summary>
@@ -638,14 +547,15 @@ namespace TACHYON.Shipping.Trips
         /// <returns></returns>
         public async Task SendSmsToReceivers(int tripId)
         {
-            var RoutePoints = await _routPointRepository.GetAll().Include(x => x.ReceiverFk).Where(x => x.ShippingRequestTripId == tripId && x.PickingType == Routs.RoutPoints.PickingType.Dropoff).ToListAsync();
+            var RoutePoints = await _routPointRepository.GetAll().Include(x => x.ReceiverFk)
+                .Where(x => x.ShippingRequestTripId == tripId && x.PickingType == Routs.RoutPoints.PickingType.Dropoff)
+                .ToListAsync();
             RoutePoints.ForEach(async p =>
             {
                 await SendSmsToReceiver(p);
             });
 
         }
-
 
         /// <summary>
         /// Send shipment code to receiver
@@ -716,8 +626,6 @@ namespace TACHYON.Shipping.Trips
             if (!currentUser.IsDriver) await _firebaseNotifier.TripChanged(new Abp.UserIdentifier(trip.ShippingRequestFk.CarrierTenantId.Value, trip.AssignedDriverUserId.Value), trip.Id.ToString());
         }
 
-
-
         /// <summary>
         /// Call when the trip is finish
         /// </summary>
@@ -729,7 +637,6 @@ namespace TACHYON.Shipping.Trips
             await ChangeShippingRequestStatusIfAllTripsDone(trip);
             await CloseLastTransitionInComplete(trip.Id);
         }
-
         public async Task ChangeShippingRequestStatusIfAllTripsDone(ShippingRequestTrip trip)
         {
             if (!_shippingRequestTrip.GetAll().Any(x => x.Status != ShippingRequestTripStatus.Delivered && x.ShippingRequestId == trip.ShippingRequestId))
@@ -750,8 +657,20 @@ namespace TACHYON.Shipping.Trips
             if (Last != null) Last.IsComplete = true;
 
         }
-        #endregion
-
+        /// <summary>
+        /// Set up route point transition
+        /// </summary>
+        /// <param name="routPoint"></param>
+        /// <param name="Status"></param>
+        /// <returns></returns>
+        private async Task SetRoutStatusTransition(RoutPoint routPoint)
+        {
+            await _routPointStatusTransitionRepository.InsertAsync(new RoutPointStatusTransition
+            {
+                PointId = routPoint.Id,
+                Status = routPoint.Status
+            });
+        }
         protected virtual async Task<User> GetCurrentUserAsync(IAbpSession abpSession)
         {
             var user = await UserManager.FindByIdAsync(abpSession.GetUserId().ToString());
@@ -762,5 +681,6 @@ namespace TACHYON.Shipping.Trips
 
             return user;
         }
+        #endregion
     }
 }
