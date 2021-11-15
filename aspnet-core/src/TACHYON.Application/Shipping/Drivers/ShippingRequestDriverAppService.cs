@@ -556,21 +556,6 @@ namespace TACHYON.Shipping.Drivers
             await ResetTripStatus(trip);
         }
 
-        [UseCase(Description = nameof(RoutPointStep1))]
-        public virtual async Task ResetTripForHost(int TripId)
-        {
-            DisableTenancyFiltersIfHost();
-            var trip = await _ShippingRequestTrip.GetAll()
-                .Include(x => x.ShippingRequestFk)
-                .Include(x => x.RoutPoints)
-                .ThenInclude(x => x.RoutPointDocuments)
-                .Include(x => x.RoutPoints)
-                .ThenInclude(x => x.RatingLogs)
-                .Include(x => x.RatingLogs)
-                .Where(x => x.Id == TripId).FirstOrDefaultAsync();
-
-            await ResetTripStatus(trip);
-        }
         private async Task ResetTripStatus(ShippingRequestTrip trip)
         {
             if (trip != null)

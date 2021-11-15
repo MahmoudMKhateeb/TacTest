@@ -49,6 +49,7 @@ namespace TACHYON.EntityLogs
         {
             const string userId = "UserId", tenantId = "TenantId", reason = "Reason"; // Just Used As Flag
 
+            DisableTenancyFilters();
             var additionalLogData = await (from changeSet in _lookupChangeSetRepository.GetAll()
                                            where changeSet.Id == entityChange.EntityChangeSetId
                                            select new Dictionary<string, object>()

@@ -16,7 +16,9 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using TACHYON.Authorization.Users;
 using TACHYON.EntityLogs.Dto;
+using TACHYON.PriceOffers;
 using TACHYON.Routs.RoutPoints;
+using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
 
 namespace TACHYON.EntityLogs
@@ -52,10 +54,10 @@ namespace TACHYON.EntityLogs
                     logs = _logManager.GetAllEntityLogs<ShippingRequestTrip, int>(typeof(ShippingRequestTrip).ToString(), input.EntityId);
                     break;
                 case EntityLogType.ShippingRequest:
-                    logs = _logManager.GetAllEntityLogs<RoutPoint, long>(typeof(RoutPoint).ToString(), input.EntityId);
+                    logs = _logManager.GetAllEntityLogs<RoutPoint, long>(typeof(ShippingRequest).ToString(), input.EntityId);
                     break;
                 case EntityLogType.ShippingRequestPriceOffer:
-                    logs = _logManager.GetAllEntityLogs<RoutPoint, long>(typeof(RoutPoint).ToString(), input.EntityId);
+                    logs = _logManager.GetAllEntityLogs<RoutPoint, long>(typeof(PriceOffer).ToString(), input.EntityId);
                     break;
                 default:
                     throw new AbpValidationException("Don't Play With Me...Go To Hell"); // Test Msg todo add localization here

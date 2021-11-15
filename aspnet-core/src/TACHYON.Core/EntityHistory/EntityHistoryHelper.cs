@@ -46,7 +46,7 @@ namespace TACHYON.EntityHistory
             // typeof(DocumentFile),
             // //typeof(RoutStep),
              typeof(RoutPoint),
-             //typeof(ShippingRequest),
+             typeof(ShippingRequest),
             // typeof(Trailer),
             // typeof(Truck),
             // typeof(TrucksType),
