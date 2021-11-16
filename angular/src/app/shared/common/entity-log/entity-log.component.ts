@@ -25,7 +25,6 @@ export class EntityLogComponent extends AppComponentBase implements OnInit {
 
   constructor(injector: Injector, private _entityLogService: EntityLogServiceProxy) {
     super(injector);
-    this.getEntityLogs();
   }
 
   ngOnInit(): void {
@@ -50,7 +49,7 @@ export class EntityLogComponent extends AppComponentBase implements OnInit {
   }
 
   getEntityLogs() {
-    this._entityLogService.getAllEntityLogs(1, '945', '', 10, 0).subscribe((result) => {
+    this._entityLogService.getAllEntityLogs(this.entityType, this.entityId.toString(), '', 10, 0).subscribe((result) => {
       for (let dto of result.items) {
         this.entityLogs.push(this.toEntityLogForView(dto));
       }
