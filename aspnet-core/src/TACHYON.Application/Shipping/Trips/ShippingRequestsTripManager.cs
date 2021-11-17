@@ -199,57 +199,29 @@ namespace TACHYON.Shipping.Trips
         {
             DisableTenancyFilters();
             var currentUser = await GetCurrentUserAsync(_abpSession);
-
             var currentpoint = await _routPointRepository
                 .GetAll()
-                .Include(x => x.ShippingRequestTripFk)
-                     .ThenInclude(x => x.ShippingRequestFk)
-                .Include(x => x.FacilityFk)
-                .Where(x => x.Id == id && x.Status == RoutePointStatus.StandBy && x.ShippingRequestTripFk.Status == ShippingRequestTripStatus.Intransit && x.PickingType == Routs.RoutPoints.PickingType.Dropoff)
+                .Where(x => x.Id == id && x.Status == RoutePointStatus.StandBy
+                && x.ShippingRequestTripFk.Status == ShippingRequestTripStatus.Intransit
+                && x.PickingType == Routs.RoutPoints.PickingType.Dropoff)
                 .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => x.ShippingRequestTripFk.ShippingRequestFk.IsTachyonDeal)
                 .WhereIf(currentUser.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == currentUser.TenantId.Value)
                 .WhereIf(currentUser.IsDriver, x => x.ShippingRequestTripFk.AssignedDriverUserId == currentUser.Id)
                 .FirstOrDefaultAsync();
-
+            var activePoint = await GetActivePointByTripAsyn(id, currentUser);
             if (currentpoint == null) throw new UserFriendlyException(L("TheLocationSelectedIsNotFound"));
-
-            var activePoint = await GetActivePointByTripAsyn(currentpoint.ShippingRequestTripId, currentUser);
-
             if (activePoint == null) throw new UserFriendlyException(L("NoActivePoint"));
-
             // deactivate active point
-
-            var trip = activePoint.ShippingRequestTripFk;
-
-            if (activePoint.PickingType == PickingType.Pickup && trip.RoutePointStatus != RoutePointStatus.FinishLoading) throw new UserFriendlyException(L("TheTripIsNotFound"));
-
-            if (trip.RoutePointStatus == RoutePointStatus.FinishLoading || trip.RoutePointStatus == RoutePointStatus.DeliveryConfirmation)
+            if (activePoint.IsComplete)
             {
                 activePoint.IsActive = false;
-                activePoint.IsComplete = true;
                 activePoint.EndTime = Clock.Now;
-                activePoint.CompletedStatus = RoutePointCompletedStatus.Completed;
             }
-
-            if (activePoint.PickingType == PickingType.Dropoff &&
-                (trip.RoutePointStatus == RoutePointStatus.FinishOffLoadShipment ||
-                trip.RoutePointStatus == RoutePointStatus.ReceiverConfirmed))
-            {
-                //can go to next point if not confirming receiverd code nor uploading POD
-                activePoint.IsActive = false;
-            }
-            CurrentUnitOfWork.SaveChanges();
-            //finish active point
-            await CanGoToNextLocation(currentpoint);
-
             currentpoint.StartTime = Clock.Now;
             currentpoint.IsActive = true;
-            currentpoint.Status = RoutePointStatus.StartedMovingToOfLoadingLocation;
-            currentpoint.ShippingRequestTripFk.RoutePointStatus = RoutePointStatus.StartedMovingToOfLoadingLocation;
 
             await ChangeTransition(currentpoint);
             await NotificationWhenPointChanged(currentpoint, currentUser);
-
         }
         /// <summary>
         /// driver confirm the trip has finished 
@@ -280,7 +252,6 @@ namespace TACHYON.Shipping.Trips
                 currentPoint.IsComplete = true;
                 currentPoint.EndTime = Clock.Now;
             }
-
             currentPoint.Status = transction.ToStatus;
             await SetRoutStatusTransition(currentPoint);
 
@@ -348,16 +319,13 @@ namespace TACHYON.Shipping.Trips
         #endregion
 
         #region Helpers
-        private async Task<RoutPoint> GetActivePointByTripAsyn(int tripId, User currentUser)
+        private async Task<RoutPoint> GetActivePointByTripAsyn(long pointId, User currentUser)
         {
             return await _routPointRepository
                 .GetAll()
-                .Include(x => x.ShippingRequestTripFk)
-                     .ThenInclude(x => x.ShippingRequestFk)
-                .Include(x => x.FacilityFk)
-                .Where(x => x.IsActive &&
+                .Where(x => x.IsActive && x.IsResolve &&
                 x.ShippingRequestTripFk.Status == ShippingRequestTripStatus.Intransit &&
-                x.ShippingRequestTripId == tripId)
+                x.Id == pointId)
                 .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => x.ShippingRequestTripFk.ShippingRequestFk.IsTachyonDeal)
                 .WhereIf(currentUser.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == currentUser.TenantId.Value)
                 .WhereIf(currentUser.IsDriver, x => x.ShippingRequestTripFk.AssignedDriverUserId == currentUser.Id)

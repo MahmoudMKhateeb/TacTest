@@ -48,6 +48,7 @@ namespace TACHYON.Routs.RoutPoints
         public RoutePointCompletedStatus CompletedStatus { get; set; }
         public DateTime? StartTime { get; set; }
         public DateTime? EndTime { get; set; }
+        public bool IsResolve { get; set; }
         public bool IsActive { get; set; }
         public bool IsComplete { get; set; }
         public int WorkFlowVersion { get; set; }
