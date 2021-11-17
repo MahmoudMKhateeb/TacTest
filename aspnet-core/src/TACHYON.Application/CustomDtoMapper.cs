@@ -682,7 +682,7 @@ namespace TACHYON
             /* ADD YOUR OWN CUSTOM AUTOMAPPER MAPPINGS HERE */
             configuration.CreateMap(typeof(TACHYONAppServiceBase.TachyonLoadResult<>), typeof(LoadResult)).ReverseMap();
 
-            configuration.CreateMap<PointTransaction, PointTransactionDto>();
+            configuration.CreateMap<WorkflowTransaction, PointTransactionDto>();
         }
         /// <summary>
         /// MultiLingualMapping configuration 

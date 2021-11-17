@@ -1,5 +1,9 @@
 ﻿using Abp.Dependency;
+using Abp.Domain.Repositories;
+using Abp.Domain.Services;
+using Abp.Domain.Uow;
 using Abp.Timing;
+using Microsoft.AspNetCore.Mvc.Diagnostics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,22 +11,56 @@ using System.Text;
 using System.Threading.Tasks;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.ShippingRequestTrips;
+using TACHYON.Shipping.Trips;
 using TACHYON.Tracking.WorkFlows;
 
 namespace TACHYON.Tracking
 {
-    public class WorkFlowProvider : ITransientDependency
+    public class PointTransactionArgs
     {
-        public List<WorkFlow> WorkFlows;
-        public WorkFlowProvider()
+        public ShippingRequestTrip Trip { get; set; }
+        public RoutPoint Point { get; set; }
+
+        public string ConfirmationCode { get; set; }
+
+    }
+
+    public class TripTransactionArgs
+    {
+        public ShippingRequestTrip Trip { get; set; }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TArgs">transaction args object warper</typeparam>
+    /// <typeparam name="TEnum">statuses Enum</typeparam>
+    public interface IWorkFlow<TArgs, TEnum> : IDomainService where TEnum : Enum
+    {
+
+        List<WorkFlow<TArgs, TEnum>> Flows { get; set; }
+
+        List<WorkflowTransaction<TArgs, TEnum>> GetTransactionsByStatus(int workFlowVersion);
+
+        List<WorkflowTransaction<TArgs, TEnum>> GetAvailableTransactions(int workFlowVersion, TEnum statusesEnum);
+    }
+
+
+    //point
+    public class ShippingRequestPointWorkFlowProvider : TACHYONDomainServiceBase, IWorkFlow<PointTransactionArgs, RoutePointStatus>
+    {
+        public List<WorkFlow<PointTransactionArgs, RoutePointStatus>> Flows { get; set; }
+
+
+        public ShippingRequestPointWorkFlowProvider()
         {
-            WorkFlows = new List<WorkFlow>
+            Flows = new List<WorkFlow<PointTransactionArgs, RoutePointStatus>>
         {
-            new WorkFlow
+            new WorkFlow<PointTransactionArgs,RoutePointStatus>
                 {
                 Version = 0,
-                Transactions = new List<PointTransaction>{
-               new PointTransaction
+                Transactions = new List<WorkflowTransaction<PointTransactionArgs,RoutePointStatus>>{
+               new WorkflowTransaction<PointTransactionArgs,RoutePointStatus>
                {
                    Action =  WorkFlowActionConst.StartedMovingToLoadingLocation,
                    IsOptional = false,
@@ -31,7 +69,7 @@ namespace TACHYON.Tracking
                    Func = StartedMovingToLoadingLocation,
                    PickingType = PickingType.Pickup
                },
-               new PointTransaction
+               new WorkflowTransaction<PointTransactionArgs,RoutePointStatus>
                {
                    Action =  WorkFlowActionConst.ArriveToLoadingLocation,
                    IsOptional = false,
@@ -40,7 +78,7 @@ namespace TACHYON.Tracking
                    Func = ArriveToLoadingLocation,
                    PickingType = PickingType.Pickup
                },
-               new PointTransaction
+               new WorkflowTransaction<PointTransactionArgs,RoutePointStatus>
                {
                    Action =  WorkFlowActionConst.StartLoading,
                    IsOptional = false,
@@ -49,7 +87,7 @@ namespace TACHYON.Tracking
                    Func = StartLoading,
                    PickingType = PickingType.Pickup
                },
-               new PointTransaction
+               new WorkflowTransaction<PointTransactionArgs,RoutePointStatus>
                {
                    Action =  WorkFlowActionConst.FinishLoading,
                    IsOptional = false,
@@ -58,7 +96,7 @@ namespace TACHYON.Tracking
                    Func = FinishLoading,
                    PickingType = PickingType.Pickup
                },
-               new PointTransaction
+               new WorkflowTransaction<PointTransactionArgs,RoutePointStatus>
                {
                    Action =  WorkFlowActionConst.StartedMovingToOfLoadingLocation,
                    IsOptional = false,
@@ -67,7 +105,7 @@ namespace TACHYON.Tracking
                    Func = StartedMovingToOfLoadingLocation,
                    PickingType = PickingType.Dropoff
                },
-               new PointTransaction
+               new WorkflowTransaction<PointTransactionArgs,RoutePointStatus>
                {
                    Action =  WorkFlowActionConst.ArrivedToDestination,
                    IsOptional = false,
@@ -77,7 +115,7 @@ namespace TACHYON.Tracking
                    PickingType = PickingType.Dropoff
 
                },
-               new PointTransaction
+               new WorkflowTransaction<PointTransactionArgs,RoutePointStatus>
                {
                    Action =  WorkFlowActionConst.StartOffloading,
                    IsOptional = false,
@@ -86,7 +124,7 @@ namespace TACHYON.Tracking
                    Func = StartOffloading,
                    PickingType = PickingType.Dropoff
                },
-               new PointTransaction
+               new WorkflowTransaction<PointTransactionArgs,RoutePointStatus>
                {
                    Action =  WorkFlowActionConst.FinishOffLoadShipment,
                    IsOptional = false,
@@ -96,7 +134,7 @@ namespace TACHYON.Tracking
                    Func = FinishOffLoadShipment,
                    PickingType = PickingType.Dropoff
                },
-               new PointTransaction
+               new WorkflowTransaction<PointTransactionArgs,RoutePointStatus>
                {
                    Action =  WorkFlowActionConst.ReceiverConfirmed,
                    IsOptional = true,
@@ -105,7 +143,7 @@ namespace TACHYON.Tracking
                    Func = ReceiverConfirmed,
                    PickingType = PickingType.Dropoff
                },
-               new PointTransaction
+               new WorkflowTransaction<PointTransactionArgs,RoutePointStatus>
                {
                    Action =  WorkFlowActionConst.DeliveryConfirmation,
                    IsOptional = true,
@@ -114,7 +152,7 @@ namespace TACHYON.Tracking
                    Func = ReceiverConfirmed,
                    PickingType = PickingType.Dropoff
                },
-               new PointTransaction
+               new WorkflowTransaction<PointTransactionArgs,RoutePointStatus>
                {
                    Action =  WorkFlowActionConst.DeliveryConfirmation,
                    IsOptional = true,
@@ -123,7 +161,7 @@ namespace TACHYON.Tracking
                    Func = DeliveryConfirmation,
                    PickingType = PickingType.Dropoff
                },
-               new PointTransaction
+               new WorkflowTransaction<PointTransactionArgs,RoutePointStatus>
                {
                    Action =  WorkFlowActionConst.DeliveryConfirmation,
                    IsOptional = true,
@@ -138,88 +176,175 @@ namespace TACHYON.Tracking
         };
         }
 
+
+
         #region Transactions Functions
-        private static void StartedMovingToLoadingLocation(RoutPoint point, ShippingRequestTrip trip)
+        private void StartedMovingToLoadingLocation(PointTransactionArgs args)
         {
+
             var status = RoutePointStatus.StartedMovingToLoadingLocation;
-            point.Status = status;
-            trip.RoutePointStatus = status;
+            args.Point.Status = status;
+            args.Trip.RoutePointStatus = status;
         }
-        private static void ArriveToLoadingLocation(RoutPoint point, ShippingRequestTrip trip)
+        private void ArriveToLoadingLocation(PointTransactionArgs args)
         {
             var status = RoutePointStatus.ArriveToLoadingLocation;
-            point.Status = status;
-            trip.RoutePointStatus = status;
+            args.Point.Status = status;
+            args.Trip.RoutePointStatus = status;
         }
-        private static void StartLoading(RoutPoint point, ShippingRequestTrip trip)
+        private void StartLoading(PointTransactionArgs args)
         {
             var status = RoutePointStatus.StartLoading;
-            point.Status = status;
-            trip.RoutePointStatus = status;
+            args.Point.Status = status;
+            args.Trip.RoutePointStatus = status;
         }
-        private static void FinishLoading(RoutPoint point, ShippingRequestTrip trip)
+        private void FinishLoading(PointTransactionArgs args)
         {
             var status = RoutePointStatus.FinishLoading;
-            point.Status = status;
-            trip.RoutePointStatus = status;
-            point.IsComplete = true;
-            point.IsResolve = true;
-            point.EndTime = Clock.Now;
-            point.ActualPickupOrDeliveryDate = trip.ActualPickupDate = Clock.Now;
+            args.Point.Status = status;
+            args.Trip.RoutePointStatus = status;
+            args.Point.IsComplete = true;
+            args.Point.IsResolve = true;
+            args.Point.EndTime = Clock.Now;
+            args.Point.ActualPickupOrDeliveryDate = args.Trip.ActualPickupDate = Clock.Now;
             //await SendSmsToReceivers(trip.Id);
         }
-        private static void StartedMovingToOfLoadingLocation(RoutPoint point, ShippingRequestTrip trip)
+        private void StartedMovingToOfLoadingLocation(PointTransactionArgs args)
         {
             var status = RoutePointStatus.StartedMovingToOfLoadingLocation;
-            point.Status = status;
-            trip.RoutePointStatus = status;
+            args.Point.Status = status;
+            args.Trip.RoutePointStatus = status;
         }
-        private static void ArrivedToDestination(RoutPoint point, ShippingRequestTrip trip)
+        private void ArrivedToDestination(PointTransactionArgs args)
         {
             var status = RoutePointStatus.ArrivedToDestination;
-            point.Status = status;
-            trip.RoutePointStatus = status;
+            args.Point.Status = status;
+            args.Trip.RoutePointStatus = status;
         }
-        private static void StartOffloading(RoutPoint point, ShippingRequestTrip trip)
+        private void StartOffloading(PointTransactionArgs args)
         {
             var status = RoutePointStatus.StartOffloading;
-            point.Status = status;
-            trip.RoutePointStatus = status;
+            args.Point.Status = status;
+            args.Trip.RoutePointStatus = status;
         }
-        private static void FinishOffLoadShipment(RoutPoint point, ShippingRequestTrip trip)
+        private void FinishOffLoadShipment(PointTransactionArgs args)
         {
             var status = RoutePointStatus.FinishOffLoadShipment;
-            point.Status = status;
-            trip.RoutePointStatus = status;
-            point.ActualPickupOrDeliveryDate = Clock.Now;
-            if (!trip.RoutPoints.Any(x => x.ActualPickupOrDeliveryDate == null && x.Id != point.Id))
-                trip.ActualDeliveryDate = Clock.Now;
+            args.Point.Status = status;
+            args.Trip.RoutePointStatus = status;
+            args.Point.ActualPickupOrDeliveryDate = Clock.Now;
+            if (!args.Trip.RoutPoints.Any(x => x.ActualPickupOrDeliveryDate == null && x.Id != args.Point.Id))
+                args.Trip.ActualDeliveryDate = Clock.Now;
         }
-        private static void ReceiverConfirmed(RoutPoint point, ShippingRequestTrip trip)
+        private void ReceiverConfirmed(PointTransactionArgs args)
         {
+            var code = args.ConfirmationCode;
             var status = RoutePointStatus.ReceiverConfirmed;
-            point.Status = status;
-            trip.RoutePointStatus = status;
+            args.Point.Status = status;
+            args.Trip.RoutePointStatus = status;
         }
-        private static void DeliveryConfirmation(RoutPoint point, ShippingRequestTrip trip)
+        private void DeliveryConfirmation(PointTransactionArgs args)
         {
             var status = RoutePointStatus.DeliveryConfirmation;
-            point.Status = status;
-            trip.RoutePointStatus = status;
+            args.Point.Status = status;
+            args.Trip.RoutePointStatus = status;
         }
         #endregion
 
-        public List<PointTransaction> GetTransactionsByType(int workFlowVersion, PickingType pickingType)
+        public List<WorkflowTransaction<PointTransactionArgs, RoutePointStatus>> GetTransactionsByStatus(int workFlowVersion)
         {
-            return WorkFlows.FirstOrDefault(c => c.Version == workFlowVersion)
-                .Transactions.Where(x => x.PickingType == pickingType).ToList();
+            return Flows
+                .FirstOrDefault(c => c.Version == workFlowVersion)
+                .Transactions
+                // .Where(x => x.PickingType == pickingType)
+                .ToList();
 
         }
-        public List<PointTransaction> GetAvailableTransactions(int workFlowVersion, RoutePointStatus status, PickingType pickingType)
+        public List<WorkflowTransaction<PointTransactionArgs, RoutePointStatus>> GetAvailableTransactions(int workFlowVersion, RoutePointStatus status)
         {
-            return WorkFlows.FirstOrDefault(c => c.Version == workFlowVersion)
-                .Transactions.Where(x => x.FromStatus == status && x.PickingType == pickingType).ToList();
+            return Flows
+                .FirstOrDefault(c => c.Version == workFlowVersion)
+                .Transactions
+                //.Where(x => x.FromStatus == status && x.PickingType == pickingType)
+                .ToList();
+
+        }
+
+        [UnitOfWork]
+        public void Invoke(WorkflowTransaction<PointTransactionArgs, RoutePointStatus> transaction, PointTransactionArgs args)
+        {
+
+            //get transaction 
+
+            //trans
+            transaction.Func(args);
+
+
+
+
+
 
         }
     }
+
+
+
+
+    //trip
+    public class ShippingRequestTripWorkFlowProvider : IWorkFlow<TripTransactionArgs, ShippingRequestTripDriverStatus>
+    {
+        public List<WorkFlow<TripTransactionArgs, ShippingRequestTripDriverStatus>> Flows { get; set; }
+
+        public ShippingRequestTripWorkFlowProvider()
+        {
+            Flows = new List<WorkFlow<TripTransactionArgs, ShippingRequestTripDriverStatus>>
+            {
+                new WorkFlow<TripTransactionArgs, ShippingRequestTripDriverStatus>
+                {
+                    Version = 0,
+                    Transactions =
+                        new List<WorkflowTransaction<TripTransactionArgs, ShippingRequestTripDriverStatus>>
+                        {
+                            new WorkflowTransaction<TripTransactionArgs, ShippingRequestTripDriverStatus>
+                            {
+                                Action = WorkFlowActionConst.StartedMovingToLoadingLocation,
+                                IsOptional = false,
+                                FromStatus = ShippingRequestTripDriverStatus.Accepted,
+                                ToStatus = ShippingRequestTripDriverStatus.Rejected,
+                                Func = TripTransactionTest,
+                                PickingType = PickingType.Pickup
+                            }
+                        },
+                },
+            };
+        }
+
+
+        public List<WorkflowTransaction<TripTransactionArgs, ShippingRequestTripDriverStatus>> GetTransactionsByStatus(int workFlowVersion)
+        {
+            return Flows.FirstOrDefault(c => c.Version == workFlowVersion).Transactions.ToList();
+        }
+
+        public List<WorkflowTransaction<TripTransactionArgs, ShippingRequestTripDriverStatus>> GetAvailableTransactions(int workFlowVersion, ShippingRequestTripDriverStatus statusenum)
+        {
+            return Flows.FirstOrDefault(c => c.Version == workFlowVersion)
+                .Transactions.Where(x => x.FromStatus == statusenum)
+                .ToList();
+        }
+
+
+
+        #region Transactions Functions
+
+        private static void TripTransactionTest(TripTransactionArgs args)
+        {
+            var trip = args.Trip;
+        }
+
+        #endregion
+    }
+
+
+
+
 }

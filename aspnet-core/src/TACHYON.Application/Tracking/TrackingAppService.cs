@@ -30,9 +30,9 @@ namespace TACHYON.Tracking
         private readonly IRepository<ShippingRequestTrip> _shippingRequestTrip;
 
         private readonly ShippingRequestsTripManager _shippingRequestsTripManager;
-        private readonly WorkFlowProvider _workFlowProvider;
+        private readonly ShippingRequestPointWorkFlowProvider _workFlowProvider;
 
-        public TrackingAppService(WorkFlowProvider workFlowProvider, IRepository<ShippingRequestTrip> shippingRequestTripRepository, IRepository<RoutPoint, long> routPointRepository, ShippingRequestsTripManager shippingRequestsTripManager, IRepository<ShippingRequestTrip> shippingRequestTrip)
+        public TrackingAppService(ShippingRequestPointWorkFlowProvider workFlowProvider, IRepository<ShippingRequestTrip> shippingRequestTripRepository, IRepository<RoutPoint, long> routPointRepository, ShippingRequestsTripManager shippingRequestsTripManager, IRepository<ShippingRequestTrip> shippingRequestTrip)
         {
             _ShippingRequestTripRepository = shippingRequestTripRepository;
             _routPointRepository = routPointRepository;

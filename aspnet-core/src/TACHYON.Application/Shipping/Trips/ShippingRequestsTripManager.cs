@@ -62,10 +62,10 @@ namespace TACHYON.Shipping.Trips
         private readonly CommonManager _commonManager;
         private readonly UserManager UserManager;
         private readonly IWebUrlService _webUrlService;
-        private readonly WorkFlowProvider _workFlowProvider;
+        private readonly ShippingRequestPointWorkFlowProvider _workFlowProvider;
 
 
-        public ShippingRequestsTripManager(WorkFlowProvider workFlowProvider, IRepository<ShippingRequestTrip> shippingRequestTrip, PriceOfferManager priceOfferManager, IAppNotifier appNotifier, IFeatureChecker featureChecker, IAbpSession abpSession, IHubContext<AbpCommonHub> hubContext, IRepository<RoutPoint, long> routPointRepository, IRepository<ShippingRequestTripTransition> shippingRequestTripTransitionRepository, IRepository<RoutPointStatusTransition> routPointStatusTransitionRepository, FirebaseNotifier firebaseNotifier, ISmsSender smsSender, InvoiceManager invoiceManager, CommonManager commonManager, IRepository<RoutPointDocument, long> routPointDocumentRepository, UserManager userManager, IWebUrlService webUrlService)
+        public ShippingRequestsTripManager(ShippingRequestPointWorkFlowProvider workFlowProvider, IRepository<ShippingRequestTrip> shippingRequestTrip, PriceOfferManager priceOfferManager, IAppNotifier appNotifier, IFeatureChecker featureChecker, IAbpSession abpSession, IHubContext<AbpCommonHub> hubContext, IRepository<RoutPoint, long> routPointRepository, IRepository<ShippingRequestTripTransition> shippingRequestTripTransitionRepository, IRepository<RoutPointStatusTransition> routPointStatusTransitionRepository, FirebaseNotifier firebaseNotifier, ISmsSender smsSender, InvoiceManager invoiceManager, CommonManager commonManager, IRepository<RoutPointDocument, long> routPointDocumentRepository, UserManager userManager, IWebUrlService webUrlService)
         {
             _workFlowProvider = workFlowProvider;
             _shippingRequestTrip = shippingRequestTrip;
@@ -177,6 +177,7 @@ namespace TACHYON.Shipping.Trips
         /// <returns></returns>
         public async Task InvokeStatus(InvokeStatusInputDto input)
         {
+            var args = new PointTransactionArgs();
             var currentUser = await GetCurrentUserAsync(_abpSession);
             var point = await GetRoutPointForAction(input.Id, currentUser);
             if (point == null) throw new UserFriendlyException(L("YouCanNotChangeTheStatus"));
@@ -186,7 +187,10 @@ namespace TACHYON.Shipping.Trips
                 throw new UserFriendlyException(L("TheReceiverCodeIsIncorrect"));
 
             var trip = point.ShippingRequestTripFk;
-            transaction.Func(point, trip);
+
+            args.Point = point;
+            args.Trip = trip;
+            transaction.Func(args);
 
             await SetRoutStatusTransition(point);
             await NotificationWhenPointChanged(point, currentUser);
@@ -366,16 +370,16 @@ namespace TACHYON.Shipping.Trips
         }
         private bool CheckIfPointIsCompleted(RoutPoint point)
         {
-            var statuses = _workFlowProvider.GetTransactionsByType(point.WorkFlowVersion, point.PickingType)
+            var statuses = _workFlowProvider.GetTransactionsByStatus(point.WorkFlowVersion)
                 .Select(x => x.ToStatus);
             var transitions = _routPointStatusTransitionRepository.GetAll().Where(x => x.PointId == point.Id)
                 .Select(c => c.Status).ToList();
             return !statuses.Except(transitions).Any();
         }
 
-        private PointTransaction CheckIfTransactionIsExist(RoutPoint point, string action)
+        private WorkflowTransaction<PointTransactionArgs, RoutePointStatus> CheckIfTransactionIsExist(RoutPoint point, string action)
         {
-            var workFlow = _workFlowProvider.WorkFlows.FirstOrDefault(w => w.Version == point.WorkFlowVersion);
+            var workFlow = _workFlowProvider.Flows.FirstOrDefault(w => w.Version == point.WorkFlowVersion);
             if (workFlow == null) throw new UserFriendlyException(L("YouCanNotChangeTheStatus"));
             // check if the transction is exist and is available for currnet point status
             var transaction = workFlow.Transactions.FirstOrDefault(c => c.Action.Equals(action) && c.FromStatus == point.Status);
