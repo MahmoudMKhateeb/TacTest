@@ -20,8 +20,17 @@ namespace TACHYON.Tracking
         {
             new WorkFlow
                 {
-                Version = 1,
+                Version = 0,
                 Transactions = new List<PointTransaction>{
+               new PointTransaction
+               {
+                   Action =  WorkFlowActionConst.StartedMovingToLoadingLocation,
+                   IsOptional = false,
+                   FromStatus = RoutePointStatus.StandBy,
+                   ToStatus = RoutePointStatus.StartedMovingToLoadingLocation,
+                   Func = StartedMovingToLoadingLocation,
+                   PickingType = PickingType.Pickup
+               },
                new PointTransaction
                {
                    Action =  WorkFlowActionConst.ArriveToLoadingLocation,
@@ -53,7 +62,7 @@ namespace TACHYON.Tracking
                {
                    Action =  WorkFlowActionConst.StartedMovingToOfLoadingLocation,
                    IsOptional = false,
-                   FromStatus = RoutePointStatus.FinishLoading,
+                   FromStatus = RoutePointStatus.StandBy,
                    ToStatus = RoutePointStatus.StartedMovingToOfLoadingLocation,
                    Func = StartedMovingToOfLoadingLocation,
                    PickingType = PickingType.Dropoff
@@ -130,6 +139,12 @@ namespace TACHYON.Tracking
         }
 
         #region Transactions Functions
+        private static void StartedMovingToLoadingLocation(RoutPoint point, ShippingRequestTrip trip)
+        {
+            var status = RoutePointStatus.StartedMovingToLoadingLocation;
+            point.Status = status;
+            trip.RoutePointStatus = status;
+        }
         private static void ArriveToLoadingLocation(RoutPoint point, ShippingRequestTrip trip)
         {
             var status = RoutePointStatus.ArriveToLoadingLocation;
@@ -148,6 +163,7 @@ namespace TACHYON.Tracking
             point.Status = status;
             trip.RoutePointStatus = status;
             point.IsComplete = true;
+            point.IsResolve = true;
             point.EndTime = Clock.Now;
             point.ActualPickupOrDeliveryDate = trip.ActualPickupDate = Clock.Now;
             //await SendSmsToReceivers(trip.Id);
@@ -199,10 +215,10 @@ namespace TACHYON.Tracking
                 .Transactions.Where(x => x.PickingType == pickingType).ToList();
 
         }
-        public List<PointTransaction> GetAvailableTransactions(int workFlowVersion, RoutePointStatus status)
+        public List<PointTransaction> GetAvailableTransactions(int workFlowVersion, RoutePointStatus status, PickingType pickingType)
         {
-            return WorkFlows.FirstOrDefault(c => c.Version == 1)
-                .Transactions.Where(x => x.FromStatus == status).ToList();
+            return WorkFlows.FirstOrDefault(c => c.Version == workFlowVersion)
+                .Transactions.Where(x => x.FromStatus == status && x.PickingType == pickingType).ToList();
 
         }
     }

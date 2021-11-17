@@ -105,6 +105,7 @@ namespace TACHYON.Tracking
              .ThenInclude(t => t.Translations)
             .Include(g => g.GoodsDetails)
              .ThenInclude(u => u.UnitOfMeasureFk)
+             .Include(t => t.RoutPointStatusTransitions)
                             .Where(x => x.ShippingRequestTripFk.Id == id && x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId.HasValue)
                             .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper), x => x.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId)
                             .WhereIf(!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer), x => true)
@@ -115,16 +116,19 @@ namespace TACHYON.Tracking
         public async Task<ListResultDto<PointTransactionDto>> GetAvailableTransactions(long id)
         {
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier);
+            DisableTenancyFilters();
+            var currentUser = GetCurrentUser();
             var point = await _routPointRepository
                             .GetAll()
                             .Where(x => x.Id == id)
                             .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper), x => x.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId)
                             .WhereIf(!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer), x => true)
                             .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
+                            .WhereIf(currentUser.IsDriver, x => x.ShippingRequestTripFk.AssignedDriverUserId == currentUser.Id)
                             .FirstOrDefaultAsync();
             if (point == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
 
-            var transactions = _workFlowProvider.GetAvailableTransactions(point.WorkFlowVersion, point.Status);
+            var transactions = _workFlowProvider.GetAvailableTransactions(point.WorkFlowVersion, point.Status, point.PickingType);
             return new ListResultDto<PointTransactionDto>(ObjectMapper.Map<List<PointTransactionDto>>(transactions));
         }
         public async Task Accept(int id)

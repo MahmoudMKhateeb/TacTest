@@ -6,6 +6,7 @@ namespace TACHYON.Tracking
 {
     public class WorkFlowActionConst
     {
+        public const string StartedMovingToLoadingLocation = "StartedMovingToLoadingLocation";
         public const string ArriveToLoadingLocation = "ArriveToLoadingLocation";
         public const string StartLoading = "StartLoading";
         public const string FinishLoading = "FinishLoading";

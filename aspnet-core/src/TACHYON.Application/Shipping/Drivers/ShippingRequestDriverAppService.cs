@@ -31,6 +31,7 @@ using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips;
 using TACHYON.Shipping.Trips.Accidents.Dto;
+using TACHYON.Tracking.Dto;
 using TACHYON.Trucks.TrucksTypes.Dtos;
 
 namespace TACHYON.Shipping.Drivers
@@ -148,7 +149,6 @@ namespace TACHYON.Shipping.Drivers
             return DropOff;
         }
 
-
         public async Task<List<UserOtpDto>> GetUserOtps(long userId)
         {
             var otps = await _userOtpRepository.GetAll().Where(x => x.UserId == userId).ToListAsync();
@@ -182,6 +182,8 @@ namespace TACHYON.Shipping.Drivers
              .Include(x => x.AssignedTruckFk)
               .ThenInclude(t => t.TrucksTypeFk)
                .ThenInclude(t => t.Translations)
+               .Include(i => i.RoutPoints)
+               .ThenInclude(t => t.RoutPointStatusTransitions)
              .WhereIf(IsAccepted, t => t.DriverStatus == ShippingRequestTripDriverStatus.Accepted)
             .SingleOrDefaultAsync(t => t.Id == TripId && t.Status != ShippingRequestTripStatus.Canceled && t.AssignedDriverUserId == AbpSession.UserId);
 
@@ -278,7 +280,6 @@ namespace TACHYON.Shipping.Drivers
             return tripDto;
 
         }
-
         public async Task<RoutDropOffDto> GetDropOffDetail(long PointId)
         {
             DisableTenancyFilters();
@@ -318,163 +319,12 @@ namespace TACHYON.Shipping.Drivers
         }
 
         /// <summary>
-        /// Change trip status for each points
-        /// </summary>
-        public async Task ChangeTripStatus()
-        {
-            DisableTenancyFilters();
-            var trip = await _shippingRequestDriverManager.GetActiveTrip();
-            if (trip.RoutePointStatus == RoutePointStatus.FinishOffLoadShipment) throw new UserFriendlyException(L("TripNotFound"));
-            var Point = await _RoutPointRepository.GetAll().Include(t => t.ShippingRequestTripFk).ThenInclude(r => r.ShippingRequestFk).FirstOrDefaultAsync(x => x.ShippingRequestTripId == trip.Id && x.IsActive == true);
-            switch (trip.RoutePointStatus)
-            {
-                case RoutePointStatus.StartedMovingToLoadingLocation:
-                    trip.RoutePointStatus = RoutePointStatus.ArriveToLoadingLocation;
-                    break;
-                case RoutePointStatus.ArriveToLoadingLocation:
-                    trip.RoutePointStatus = RoutePointStatus.StartLoading;
-                    break;
-                case RoutePointStatus.StartLoading:
-                    trip.RoutePointStatus = RoutePointStatus.FinishLoading;
-                    await _shippingRequestManager.SendSmsToReceivers(trip.Id);
-                    if (Point.PickingType == PickingType.Pickup)
-                    {
-                        Point.ActualPickupOrDeliveryDate = trip.ActualPickupDate = Clock.Now;
-                    }
-                    break;
-                case RoutePointStatus.StartedMovingToOfLoadingLocation:
-                    trip.RoutePointStatus = RoutePointStatus.ArrivedToDestination;
-                    break;
-                case RoutePointStatus.ArrivedToDestination:
-                    trip.RoutePointStatus = RoutePointStatus.StartOffloading;
-
-                    break;
-                case RoutePointStatus.StartOffloading:
-                    trip.RoutePointStatus = RoutePointStatus.FinishOffLoadShipment;
-                    if (Point.PickingType == PickingType.Dropoff)
-                    {
-                        Point.ActualPickupOrDeliveryDate = Clock.Now;
-                    }
-
-                    //if all points delivered, actual delivery date of last point will be stored in trip
-                    if (!trip.RoutPoints.Any(x => x.ActualPickupOrDeliveryDate == null && x.Id != Point.Id))
-                    {
-                        trip.ActualDeliveryDate = Clock.Now;
-                    }
-
-                    //update completed status
-                    Point.CompletedStatus = RoutePointCompletedStatus.CompletedAndMissingReceiverCode;
-                    //check if all trip points completed, change the trip status from intransit to delivered and needs confirmation
-                    if (trip.RoutPoints.Where(x => x.Id != Point.Id).All(x => x.CompletedStatus > RoutePointCompletedStatus.NotCompleted))
-                    {
-                        Point.IsActive = false;
-                        trip.Status = ShippingRequestTripStatus.DeliveredAndNeedsConfirmation;
-                    }
-
-                    break;
-            }
-
-            await _shippingRequestDriverManager.SetRoutStatusTransition(Point, trip.RoutePointStatus);
-            await _shippingRequestsTripManager.NotificationWhenPointChanged(Point, GetCurrentUser());
-
-
-        }
-
-        /// <summary>
         /// Set new active dropoff point for trip
         /// </summary>
         /// <param name="PointId">Dropoff point id</param>
-
-        public async Task GotoNextLocation(long PointId)
+        public async Task GotoNextLocation(long pointId)
         {
-            DisableTenancyFilters();
-            var CurrentPoint = await _shippingRequestDriverManager.GetActivePoint();
-            ShippingRequestTrip trip = default;
-            if (CurrentPoint != null)
-            {
-                trip = CurrentPoint.ShippingRequestTripFk;
-
-                if (CurrentPoint.PickingType == PickingType.Pickup && trip.RoutePointStatus != RoutePointStatus.FinishLoading) throw new UserFriendlyException(L("TheTripIsNotFound"));
-
-                if (trip.RoutePointStatus == RoutePointStatus.FinishLoading || trip.RoutePointStatus == RoutePointStatus.DeliveryConfirmation)
-                {
-                    CurrentPoint.IsActive = false;
-                    CurrentPoint.IsComplete = true;
-                    CurrentPoint.EndTime = Clock.Now;
-                    CurrentPoint.CompletedStatus = RoutePointCompletedStatus.Completed;
-
-                }
-
-                if (CurrentPoint.PickingType == PickingType.Dropoff &&
-                    (trip.RoutePointStatus == RoutePointStatus.FinishOffLoadShipment ||
-                    trip.RoutePointStatus == RoutePointStatus.ReceiverConfirmed))
-                {
-                    //can go to next point if not confirming receiverd code nor uploading POD
-                    CurrentPoint.IsActive = false;
-                }
-
-                await CurrentUnitOfWork.SaveChangesAsync();
-            }
-            else
-            {
-                // when we don't have current active point in same point trip??
-                trip = await _shippingRequestDriverManager.GetActiveTrip();
-            }
-
-            var Count = await _RoutPointRepository.GetAll()
-             .Where(x => (
-             (x.IsActive && x.PickingType == PickingType.Dropoff && x.Id != PointId) ||
-             //check if the selected point is completed or active, wether it pickup or drop
-             (x.Id == PointId && (x.IsComplete || x.IsActive))) &&
-             x.ShippingRequestTripId == trip.Id).CountAsync();
-
-            if (Count > 0) throw new UserFriendlyException(L("ThereIsAnotherActivePointStillNotClose"));
-
-
-            var Newpoint = await _RoutPointRepository.GetAll().Include(x => x.FacilityFk)
-                .Include(x => x.ShippingRequestTripFk)
-                .ThenInclude(x => x.ShippingRequestFk)
-                .FirstOrDefaultAsync(x => x.Id == PointId);
-            if (Newpoint == null) throw new UserFriendlyException(L("the point is not exists"));
-            Newpoint.StartTime = Clock.Now;
-            Newpoint.IsActive = true;
-            trip.RoutePointStatus = RoutePointStatus.StartedMovingToOfLoadingLocation;
-
-            await _shippingRequestDriverManager.ChangeTransition(Newpoint, RoutePointStatus.StartedMovingToOfLoadingLocation);
-            await _shippingRequestsTripManager.NotificationWhenPointChanged(Newpoint, GetCurrentUser());
-
-
-        }
-        /// <summary>
-        ///  confirm receiving the shipment
-        /// </summary>
-        /// <param name="Code"></param>
-        /// <returns></returns>
-
-        public async Task ConfirmReceiverCode(string Code, long? PointId)
-        {
-            DisableTenancyFilters();
-            //get point that send, if null get active point
-            var CurrentPoint = await _RoutPointRepository.GetAll()
-                .Include(t => t.ShippingRequestTripFk)
-                    .ThenInclude(x => x.ShippingRequestTripVases)
-                .Include(x => x.ShippingRequestTripFk)
-                    .ThenInclude(x => x.ShippingRequestFk)
-                     .ThenInclude(x => x.Tenant)
-                .WhereIf(PointId == null, x => x.IsActive)
-                .WhereIf(PointId != null, x => x.Id == PointId)
-                .FirstOrDefaultAsync(
-                                    x => x.Status == RoutePointStatus.FinishOffLoadShipment &&
-                                    x.Code == Code &&
-                                    x.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId
-                                    );
-            if (CurrentPoint == null) throw new UserFriendlyException(L("TheReceiverCodeIsIncorrect"));
-
-            CurrentPoint.ShippingRequestTripFk.RoutePointStatus = RoutePointStatus.ReceiverConfirmed;
-            CurrentPoint.CompletedStatus = RoutePointCompletedStatus.CompletedAndMissingPOD;
-
-            await _shippingRequestDriverManager.SetRoutStatusTransition(CurrentPoint, RoutePointStatus.ReceiverConfirmed);
-            await _shippingRequestsTripManager.NotificationWhenPointChanged(CurrentPoint, GetCurrentUser());
+            await _shippingRequestsTripManager.GotoNextLocation(pointId);
         }
 
         /// <summary>
@@ -508,7 +358,11 @@ namespace TACHYON.Shipping.Drivers
             input.Note = note;
             await _ratingLogManager.ValidateAndCreateRating(input, RateType.SEByDriver);
         }
-
+        public async Task InvokeStatus(InvokeStatusInputDto input)
+        {
+            CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier);
+            await _shippingRequestsTripManager.InvokeStatus(input);
+        }
         public async Task Accepted(int TripId)
         {
             await _shippingRequestsTripManager.Accepted(TripId);
@@ -566,6 +420,8 @@ namespace TACHYON.Shipping.Drivers
                 .Include(x => x.RatingLogs)
                 .Include(x => x.RoutPoints)
                 .ThenInclude(x => x.RatingLogs)
+                 .Include(x => x.RoutPoints)
+                .ThenInclude(x => x.RoutPointStatusTransitions)
                 .FirstOrDefaultAsync(x => x.Id == TripId);
             await ResetTripStatus(trip);
 
@@ -620,6 +476,7 @@ namespace TACHYON.Shipping.Drivers
                     item.ActualPickupOrDeliveryDate = null;
                     item.CompletedStatus = RoutePointCompletedStatus.NotCompleted;
                     item.StartTime = item.EndTime = null;
+                    item.RoutPointStatusTransitions.Clear();
                     //item.RatingLogs.Where(x => x.RateType != RateType.CarrierTripBySystem && x.RateType != RateType.ShipperTripBySystem).ToList().Clear();
                     //item.ShippingRequestTripAccidents.Clear();
                     //item.ShippingRequestTripTransitions.Clear();

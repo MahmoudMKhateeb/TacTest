@@ -151,11 +151,11 @@ namespace TACHYON.Shipping.Trips
 
                 RouteStart.StartTime = Clock.Now;
                 RouteStart.IsActive = true;
-                RouteStart.Status = RoutePointStatus.StartedMovingToLoadingLocation;
+                //RouteStart.Status = RoutePointStatus.StartedMovingToLoadingLocation;
 
 
                 trip.Status = ShippingRequestTripStatus.Intransit;
-                trip.RoutePointStatus = RoutePointStatus.StartedMovingToLoadingLocation;
+                //trip.RoutePointStatus = RoutePointStatus.StartedMovingToLoadingLocation;
                 trip.StartTripDate = Clock.Now;
                 await StartTransition(RouteStart, new Point(Input.lat, Input.lng));
 
@@ -201,7 +201,10 @@ namespace TACHYON.Shipping.Trips
             var currentUser = await GetCurrentUserAsync(_abpSession);
             var currentpoint = await _routPointRepository
                 .GetAll()
-                .Where(x => x.Id == id && x.Status == RoutePointStatus.StandBy
+                .Include(c => c.ShippingRequestTripFk)
+                .ThenInclude(s => s.ShippingRequestFk)
+                .Include(x => x.FacilityFk)
+                .Where(x => x.Status == RoutePointStatus.StandBy
                 && x.ShippingRequestTripFk.Status == ShippingRequestTripStatus.Intransit
                 && x.PickingType == Routs.RoutPoints.PickingType.Dropoff)
                 .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => x.ShippingRequestTripFk.ShippingRequestFk.IsTachyonDeal)
@@ -352,8 +355,8 @@ namespace TACHYON.Shipping.Trips
                           (
                               x => x.Id == pointId &&
                               x.ShippingRequestTripFk.ShippingRequestFk.Status == ShippingRequests.ShippingRequestStatus.PostPrice &&
-                             !x.IsComplete &&
-                              x.Status != RoutePointStatus.StandBy
+                             !x.IsComplete
+                          //&& x.Status != RoutePointStatus.StandBy
                           )
                           .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => x.ShippingRequestTripFk.ShippingRequestFk.IsTachyonDeal)
                           .WhereIf(currentUser.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == currentUser.TenantId.Value)

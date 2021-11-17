@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using TACHYON.Goods.GoodsDetails.Dtos;
+using TACHYON.Routs.Dtos;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Tracking.Dto.WorkFlow;
 
@@ -37,7 +38,7 @@ namespace TACHYON.Shipping.Drivers.Dto
         public bool IsComplete { get; set; }
         public bool IsDeliveryNoteUploaded { get; set; }
         public List<GoodsDetailDto> GoodsDetails { get; set; }
-        public List<PointTransactionDto> AvailableTransaction { get; set; }
+        public List<RoutPointStatusTransitionDto> RoutPointStatusTransitions { get; set; }
         public bool IsShow
         {
             get
