@@ -378,8 +378,8 @@ namespace TACHYON.Shipping.Trips
                           .GetAll()
                            .Include(t => t.ShippingRequestTripFk)
                                .ThenInclude(s => s.ShippingRequestFk)
-                          .Include(t => t.ShippingRequestTripFk)
-                              .ThenInclude(s => s.RoutPoints)
+                          //.Include(t => t.ShippingRequestTripFk)
+                          //    .ThenInclude(s => s.RoutPoints)
                           .Where
                           (
                               x => x.Id == pointId &&
