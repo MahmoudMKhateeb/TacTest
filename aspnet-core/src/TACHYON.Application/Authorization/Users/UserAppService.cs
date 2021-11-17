@@ -475,6 +475,7 @@ namespace TACHYON.Authorization.Users
                         user.FullName, androidLink
                         , iosLink));
                 user.IsEmailConfirmed = true;
+                user.DriverStatus = UserDriverStatus.Available; // Init Value
             }
 
 
