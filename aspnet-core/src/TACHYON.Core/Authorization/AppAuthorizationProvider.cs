@@ -36,7 +36,7 @@ namespace TACHYON.Authorization
             dangerousGoodTypes.CreateChildPermission(AppPermissions.Pages_DangerousGoodTypes_Edit, L("EditDangerousGoodType"), multiTenancySides: MultiTenancySides.Host);
             dangerousGoodTypes.CreateChildPermission(AppPermissions.Pages_DangerousGoodTypes_Delete, L("DeleteDangerousGoodType"), multiTenancySides: MultiTenancySides.Host);
 
-
+            var hostDashboard = pages.CreateChildPermission(AppPermissions.Pages_HostDashboard, L("HostDashboard"));
 
             var receivers = pages.CreateChildPermission(AppPermissions.Pages_Receivers, L("Receivers"));
             receivers.CreateChildPermission(AppPermissions.Pages_Receivers_Create, L("CreateNewReceiver"));

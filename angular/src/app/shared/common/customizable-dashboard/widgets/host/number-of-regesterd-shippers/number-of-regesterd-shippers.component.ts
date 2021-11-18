@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { HostDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-number-of-regesterd-shippers',
@@ -6,7 +7,12 @@ import { Component, OnInit } from '@angular/core';
   styles: [],
 })
 export class NumberOfRegesterdShippersComponent implements OnInit {
-  constructor() {}
+  shippersCount: number;
+  constructor(private _hostDashboardServiceProxy: HostDashboardServiceProxy) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this._hostDashboardServiceProxy.getShippersCount().subscribe((result) => {
+      this.shippersCount = result;
+    });
+  }
 }
