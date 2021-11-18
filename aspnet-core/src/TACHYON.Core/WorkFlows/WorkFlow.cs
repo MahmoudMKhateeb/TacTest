@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace TACHYON.Tracking.WorkFlows
+namespace TACHYON.WorkFlows
 {
     public class WorkFlow<TArgs, TEnum> where TEnum : Enum
     {

@@ -39,6 +39,7 @@ namespace TACHYON.Shipping.Drivers.Dto
         public bool IsDeliveryNoteUploaded { get; set; }
         public List<GoodsDetailDto> GoodsDetails { get; set; }
         public List<RoutPointStatusTransitionDto> RoutPointStatusTransitions { get; set; }
+        public List<PointTransactionDto> Transactions { get; set; }
         public bool IsShow
         {
             get

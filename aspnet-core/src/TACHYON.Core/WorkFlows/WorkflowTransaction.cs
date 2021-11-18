@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.ShippingRequestTrips;
 
-namespace TACHYON.Tracking.WorkFlows
+namespace TACHYON.WorkFlows
 {
     public class WorkflowTransaction<TArgs, TEnum> where TEnum : Enum
     {
@@ -14,9 +14,6 @@ namespace TACHYON.Tracking.WorkFlows
         public string Name { get; set; }
         public TEnum FromStatus { get; set; }
         public TEnum ToStatus { get; set; }
-        public bool IsOptional { get; set; }
-        public bool IsResolved { get; set; }
-        public PickingType PickingType { get; set; }
         public Action<TArgs> Func { get; set; }
 
     }

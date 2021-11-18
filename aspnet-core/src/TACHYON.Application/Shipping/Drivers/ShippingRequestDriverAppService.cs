@@ -31,7 +31,9 @@ using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips;
 using TACHYON.Shipping.Trips.Accidents.Dto;
+using TACHYON.Tracking;
 using TACHYON.Tracking.Dto;
+using TACHYON.Tracking.Dto.WorkFlow;
 using TACHYON.Trucks.TrucksTypes.Dtos;
 
 namespace TACHYON.Shipping.Drivers
@@ -51,7 +53,8 @@ namespace TACHYON.Shipping.Drivers
         private readonly IRepository<UserOTP> _userOtpRepository;
         private readonly RatingLogManager _ratingLogManager;
         private readonly IRepository<DriverLocationLog, long> _driverLocationLogRepository;
-        private readonly EntityLogManager _logManager;
+        private readonly ShippingRequestPointWorkFlowProvider _workFlowProvider;
+
         public ShippingRequestDriverAppService(
             IRepository<ShippingRequestTrip> ShippingRequestTrip,
             IRepository<RoutPoint, long> RoutPointRepository,
@@ -59,7 +62,8 @@ namespace TACHYON.Shipping.Drivers
             ShippingRequestDriverManager shippingRequestDriverManager,
             ShippingRequestManager shippingRequestManager,
             IFirebaseNotifier firebaseNotifier,
-            ShippingRequestsTripManager shippingRequestsTripManager, IRepository<UserOTP> userOtpRepository, IRepository<ShippingRequestTripAccident> shippingRequestTripAccidentRepository, RatingLogManager ratingLogManager, IRepository<DriverLocationLog, long> driverLocationLogRepository, EntityLogManager logManager)
+            ShippingRequestPointWorkFlowProvider workFlowProvider,
+            ShippingRequestsTripManager shippingRequestsTripManager, IRepository<UserOTP> userOtpRepository, IRepository<ShippingRequestTripAccident> shippingRequestTripAccidentRepository, RatingLogManager ratingLogManager, IRepository<DriverLocationLog, long> driverLocationLogRepository)
         {
             _ShippingRequestTrip = ShippingRequestTrip;
             _RoutPointRepository = RoutPointRepository;
@@ -72,7 +76,7 @@ namespace TACHYON.Shipping.Drivers
             _shippingRequestTripAccidentRepository = shippingRequestTripAccidentRepository;
             _ratingLogManager = ratingLogManager;
             _driverLocationLogRepository = driverLocationLogRepository;
-            _logManager = logManager;
+            _workFlowProvider = workFlowProvider;
         }
         /// <summary>
         /// list all trips realted with drivers
@@ -206,7 +210,6 @@ namespace TACHYON.Shipping.Drivers
                 tripDto.ActionStatus = ShippingRequestTripDriverActionStatusDto.ContinueTrip;
             }
 
-
             else if (trip.StartTripDate.Date <= Clock.Now.Date && trip.Status == ShippingRequestTripStatus.New && trip.DriverStatus == ShippingRequestTripDriverStatus.Accepted)
             {
                 //Check there any trip the driver still working on or not
@@ -234,6 +237,15 @@ namespace TACHYON.Shipping.Drivers
                     RateType = RateType.SEByDriver,
                     FacilityId = point.FacilityId
                 });
+                point.Transactions = _workFlowProvider.GetTransactions(point.WorkFlowVersion)
+                        .Select(c => new PointTransactionDto
+                        {
+                            Name = c.Name,
+                            Action = c.Action,
+                            FromStatus = c.FromStatus,
+                            ToStatus = c.ToStatus,
+                            IsDone = point.RoutPointStatusTransitions.Any(x => x.Status == c.FromStatus),
+                        }).ToList();
             }
 
 

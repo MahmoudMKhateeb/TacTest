@@ -28,15 +28,12 @@ namespace TACHYON.Tracking
         private readonly IRepository<ShippingRequestTrip> _ShippingRequestTripRepository;
         private readonly IRepository<RoutPoint, long> _routPointRepository;
         private readonly IRepository<ShippingRequestTrip> _shippingRequestTrip;
-
-        private readonly ShippingRequestsTripManager _shippingRequestsTripManager;
         private readonly ShippingRequestPointWorkFlowProvider _workFlowProvider;
 
-        public TrackingAppService(ShippingRequestPointWorkFlowProvider workFlowProvider, IRepository<ShippingRequestTrip> shippingRequestTripRepository, IRepository<RoutPoint, long> routPointRepository, ShippingRequestsTripManager shippingRequestsTripManager, IRepository<ShippingRequestTrip> shippingRequestTrip)
+        public TrackingAppService(ShippingRequestPointWorkFlowProvider workFlowProvider, IRepository<ShippingRequestTrip> shippingRequestTripRepository, IRepository<RoutPoint, long> routPointRepository, IRepository<ShippingRequestTrip> shippingRequestTrip)
         {
             _ShippingRequestTripRepository = shippingRequestTripRepository;
             _routPointRepository = routPointRepository;
-            _shippingRequestsTripManager = shippingRequestsTripManager;
             _shippingRequestTrip = shippingRequestTrip;
             _workFlowProvider = workFlowProvider;
         }
@@ -111,7 +108,20 @@ namespace TACHYON.Tracking
                             .WhereIf(!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer), x => true)
                             .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId).ToListAsync();
             if (routes == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
-            return new ListResultDto<ShippingRequestTripDriverRoutePointDto>(ObjectMapper.Map<List<ShippingRequestTripDriverRoutePointDto>>(routes));
+            var mappedRoutes = ObjectMapper.Map<List<ShippingRequestTripDriverRoutePointDto>>(routes);
+            foreach (var rout in mappedRoutes)
+            {
+                rout.Transactions = _workFlowProvider.GetTransactions(rout.WorkFlowVersion)
+                    .Select(c => new PointTransactionDto
+                    {
+                        Name = c.Name,
+                        Action = c.Action,
+                        FromStatus = c.FromStatus,
+                        ToStatus = c.ToStatus,
+                        IsDone = rout.RoutPointStatusTransitions.Any(x => x.Status == c.FromStatus),
+                    }).ToList();
+            }
+            return new ListResultDto<ShippingRequestTripDriverRoutePointDto>(mappedRoutes);
         }
         public async Task<ListResultDto<PointTransactionDto>> GetAvailableTransactions(long id)
         {
@@ -128,33 +138,33 @@ namespace TACHYON.Tracking
                             .FirstOrDefaultAsync();
             if (point == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
 
-            var transactions = _workFlowProvider.GetAvailableTransactions(point.WorkFlowVersion, point.Status, point.PickingType);
+            var transactions = _workFlowProvider.GetAvailableTransactions(point.WorkFlowVersion, point.Status);
             return new ListResultDto<PointTransactionDto>(ObjectMapper.Map<List<PointTransactionDto>>(transactions));
         }
         public async Task Accept(int id)
         {
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier);
-            await _shippingRequestsTripManager.Accepted(id);
+            await _workFlowProvider.Accepted(id);
         }
         public async Task Start(int id)
         {
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier);
-            await _shippingRequestsTripManager.Start(new ShippingRequestTripDriverStartInputDto { Id = id });
+            await _workFlowProvider.Start(new ShippingRequestTripDriverStartInputDto { Id = id });
         }
         public async Task InvokeStatus(InvokeStatusInputDto input)
         {
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier);
-            await _shippingRequestsTripManager.InvokeStatus(input);
+            await _workFlowProvider.Invoke(input);
         }
         public async Task NextLocation(long id)
         {
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier);
-            await _shippingRequestsTripManager.GotoNextLocation(id);
+            await _workFlowProvider.GotoNextLocation(id);
         }
         public async Task<FileDto> POD(long id)
         {
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier, AppFeatures.Shipper);
-            return await _shippingRequestsTripManager.GetPOD(id);
+            return await _workFlowProvider.GetPOD(id);
         }
 
         #region Helper

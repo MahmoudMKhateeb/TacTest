@@ -121,8 +121,8 @@ using TACHYON.ShippingRequestVases;
 using TACHYON.ShippingRequestVases.Dtos;
 using TACHYON.TermsAndConditions;
 using TACHYON.TermsAndConditions.Dtos;
+using TACHYON.Tracking;
 using TACHYON.Tracking.Dto.WorkFlow;
-using TACHYON.Tracking.WorkFlows;
 using TACHYON.Trailers;
 using TACHYON.Trailers.Dtos;
 using TACHYON.Trailers.PayloadMaxWeights;
@@ -155,6 +155,7 @@ using TACHYON.UnitOfMeasures.Dtos;
 using TACHYON.Vases;
 using TACHYON.Vases.Dtos;
 using TACHYON.WebHooks.Dto;
+using TACHYON.WorkFlows;
 
 namespace TACHYON
 {
@@ -682,7 +683,7 @@ namespace TACHYON
             /* ADD YOUR OWN CUSTOM AUTOMAPPER MAPPINGS HERE */
             configuration.CreateMap(typeof(TACHYONAppServiceBase.TachyonLoadResult<>), typeof(LoadResult)).ReverseMap();
 
-            configuration.CreateMap<WorkflowTransaction, PointTransactionDto>();
+            configuration.CreateMap<WorkflowTransaction<PointTransactionArgs, RoutePointStatus>, PointTransactionDto>();
         }
         /// <summary>
         /// MultiLingualMapping configuration 

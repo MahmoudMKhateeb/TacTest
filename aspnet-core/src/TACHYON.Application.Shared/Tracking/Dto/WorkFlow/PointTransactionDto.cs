@@ -11,8 +11,6 @@ namespace TACHYON.Tracking.Dto.WorkFlow
         public string Name { get; set; }
         public RoutePointStatus FromStatus { get; set; }
         public RoutePointStatus ToStatus { get; set; }
-        public bool IsOptional { get; set; }
-        public bool IsResolved { get; set; }
-        public PickingType PickingType { get; set; }
+        public bool IsDone { get; set; }
     }
 }
