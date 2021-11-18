@@ -1,30 +1,30 @@
-﻿using Abp.Collections.Extensions;
+﻿using Abp.Application.Features;
+using Abp.Collections.Extensions;
+using Abp.Configuration;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
+using Abp.Net.Mail;
 using Abp.Quartz;
 using Abp.Timing;
+using Microsoft.EntityFrameworkCore;
 using Quartz;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TACHYON.Core.Invoices.Jobs;
-using TACHYON.Invoices.Periods;
-using TACHYON.Invoices.Groups;
-using TACHYON.MultiTenancy;
-using TACHYON.Shipping.ShippingRequests;
-using System.Collections.Generic;
-using Abp.Net.Mail;
-using TACHYON.Notifications;
-using Abp.Configuration;
 using TACHYON.Configuration;
-using Abp.Application.Features;
+using TACHYON.Core.Invoices.Jobs;
 using TACHYON.Features;
-using Abp.Domain.Uow;
-using Microsoft.EntityFrameworkCore;
 using TACHYON.Invoices.Balances;
-using TACHYON.Invoices.Transactions;
-using TACHYON.Shipping.ShippingRequestTrips;
+using TACHYON.Invoices.Groups;
 using TACHYON.Invoices.PaymentMethods;
+using TACHYON.Invoices.Periods;
 using TACHYON.Invoices.SubmitInvoices;
+using TACHYON.Invoices.Transactions;
+using TACHYON.MultiTenancy;
+using TACHYON.Notifications;
+using TACHYON.Shipping.ShippingRequests;
+using TACHYON.Shipping.ShippingRequestTrips;
 
 namespace TACHYON.Invoices
 {
@@ -191,7 +191,8 @@ namespace TACHYON.Invoices
             List<Tenant> tenantsList = new List<Tenant>();
             var tenants = _tenant.GetAll()
                 .Where(
-                t => t.IsActive && (t.Edition.Id == ShipperEditionId || t.Edition.Id == CarrierEditionId));
+                t => t.IsActive && (t.Edition.Id == ShipperEditionId || t.Edition.Id == CarrierEditionId))
+                .ToList();
             //todo fix this please 
             foreach (var tenant in tenants)
             {
@@ -243,8 +244,13 @@ namespace TACHYON.Invoices
         private async Task BuildCarrierSubmitInvoice(Tenant tenant, InvoicePeriod period)
         {
 
-            var trips = _shippingRequestTrip.GetAll().Include(v => v.ShippingRequestTripVases).Where(x => x.ShippingRequestFk.CarrierTenantId == tenant.Id
-                && x.Status == Shipping.Trips.ShippingRequestTripStatus.Delivered && !x.IsCarrierHaveInvoice).ToList();
+            var trips = _shippingRequestTrip
+                .GetAll()
+                .Include(v => v.ShippingRequestTripVases)
+                .Where(x => x.ShippingRequestFk.CarrierTenantId == tenant.Id
+                            && x.Status == Shipping.Trips.ShippingRequestTripStatus.Delivered
+                            && !x.IsCarrierHaveInvoice)
+                .ToList();
             if (trips.Count == 0) return;
             decimal totalAmount = (decimal)trips.Sum(r => r.TotalAmount + r.ShippingRequestTripVases.Sum(v => v.TotalAmount));
             decimal vatAmount = (decimal)trips.Sum(r => r.VatAmount + r.ShippingRequestTripVases.Sum(v => v.VatAmount));
@@ -257,7 +263,7 @@ namespace TACHYON.Invoices
                 TotalAmount = totalAmount,
                 VatAmount = vatAmount,
                 SubTotalAmount = subTotalAmount,
-                TaxVat = trips.Where(x => x.TaxVat.HasValue).FirstOrDefault().TaxVat.Value,
+                TaxVat = trips.FirstOrDefault(x => x.TaxVat.HasValue).TaxVat.Value,
                 Channel = InvoiceChannel.Trip,
                 Trips = trips.Select(
                r => new SubmitInvoiceTrip()
