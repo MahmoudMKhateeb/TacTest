@@ -300,6 +300,9 @@ namespace TACHYON.Tracking
                 .ThenInclude(s => s.ShippingRequestFk)
                 .Include(x => x.FacilityFk)
                 .Where(x => x.Status == RoutePointStatus.StandBy
+                && !x.IsActive
+                && !x.IsResolve
+                && !x.IsComplete
                 && x.ShippingRequestTripFk.Status == ShippingRequestTripStatus.Intransit
                 && x.PickingType == Routs.RoutPoints.PickingType.Dropoff)
                 .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => x.ShippingRequestTripFk.ShippingRequestFk.IsTachyonDeal)
