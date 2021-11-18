@@ -16,7 +16,7 @@ using TACHYON.PriceOffers;
 
 namespace TACHYON.Invoices.Balances
 {
-    public  class BalanceManager : TACHYONDomainServiceBase
+    public class BalanceManager : TACHYONDomainServiceBase
     {
         private decimal TaxVat;
         private readonly ISettingManager _settingManager;
@@ -25,29 +25,31 @@ namespace TACHYON.Invoices.Balances
         private readonly IAppNotifier _appNotifier;
         private readonly IEmailTemplateProvider _emailTemplateProvider;
         private readonly IEmailSender _emailSender;
-        private readonly IRepository<InvoiceProforma,long> _InvoicesProformarepository;
+        private readonly IRepository<InvoiceProforma, long> _InvoicesProformarepository;
+        private readonly IRepository<InvoicePeriod> _invoicePeriodRepository;
         private readonly UserManager _userManager;
 
 
         public BalanceManager(
             ISettingManager settingManager,
-            IRepository<Tenant> Tenant, 
+            IRepository<Tenant> Tenant,
             IFeatureChecker featureChecker,
             IAppNotifier appNotifier,
             IEmailTemplateProvider emailTemplateProvider,
              IEmailSender emailSender,
              IRepository<InvoiceProforma, long> InvoicesProformarepository,
-             UserManager userManager)
+             UserManager userManager, IRepository<InvoicePeriod> invoicePeriodRepository)
         {
             _settingManager = settingManager;
             _Tenant = Tenant;
             _featureChecker = featureChecker;
-            TaxVat =  _settingManager.GetSettingValue<decimal>(AppSettings.HostManagement.TaxVat);
+            TaxVat = _settingManager.GetSettingValue<decimal>(AppSettings.HostManagement.TaxVat);
             _appNotifier = appNotifier;
             _emailTemplateProvider = emailTemplateProvider;
             _emailSender = emailSender;
             _InvoicesProformarepository = InvoicesProformarepository;
             _userManager = userManager;
+            _invoicePeriodRepository = invoicePeriodRepository;
         }
         #region Shipper
 
@@ -60,21 +62,29 @@ namespace TACHYON.Invoices.Balances
         /// <returns></returns>
         public async Task ShipperCanAcceptOffer(PriceOffer offer)
         {
-
-            var PeriodType = (InvoicePeriodType)byte.Parse(await _featureChecker.GetValueAsync(offer.ShippingRequestFK.TenantId, AppFeatures.ShipperPeriods));
-            var Tenant = offer.ShippingRequestFK.Tenant;
-            if (PeriodType == InvoicePeriodType.PayInAdvance)
+            InvoicePeriodType periodType = await GetTenantPeriodType(offer.ShippingRequestFK.TenantId);
+            var tenant = offer.ShippingRequestFK.Tenant;
+            if (periodType == InvoicePeriodType.PayInAdvance)
             {
                 if (!await CheckShipperCanPaidFromBalance(offer.ShippingRequestFK.TenantId, offer.TotalAmount)) throw new UserFriendlyException(L("NoEnoughBalance"));
-                await ShipperWhenCanAcceptPrice(offer, PeriodType);
+                await ShipperWhenCanAcceptPrice(offer, periodType);
             }
             else
             {
-                decimal CreditLimit = decimal.Parse(await _featureChecker.GetValueAsync(offer.ShippingRequestFK.TenantId, AppFeatures.ShipperCreditLimit)) * -1;
-                decimal CreditBalance = Tenant.CreditBalance - offer.TotalAmount;
-                if (!(CreditBalance > CreditLimit)) throw new UserFriendlyException(L("YouDoNotHaveEnoughCreditInYourCreditCard"));
+                decimal creditLimit = decimal.Parse(await _featureChecker.GetValueAsync(offer.ShippingRequestFK.TenantId, AppFeatures.ShipperCreditLimit)) * -1;
+                decimal creditBalance = tenant.CreditBalance - offer.TotalAmount;
+                if (!(creditBalance > creditLimit)) throw new UserFriendlyException(L("YouDoNotHaveEnoughCreditInYourCreditCard"));
             }
         }
+
+        private async Task<InvoicePeriodType> GetTenantPeriodType(int tenantId)
+        {
+            byte shipperPeriodId = byte.Parse(await _featureChecker.GetValueAsync(tenantId, AppFeatures.ShipperPeriods));
+            var preiod = await _invoicePeriodRepository.GetAsync(shipperPeriodId);
+            var periodType = preiod.PeriodType;
+            return periodType;
+        }
+
         /// <summary>
         /// If shipper can accept offer then create invoices proformare
         /// </summary>
@@ -92,9 +102,9 @@ namespace TACHYON.Invoices.Balances
                 {
                     TenantId = Tenant.Id,
                     Amount = offer.SubTotalAmountWithCommission,
-                    TotalAmount= offer.TotalAmountWithCommission,
-                    VatAmount= offer.VatAmountWithCommission,
-                    TaxVat= offer.TaxVat,
+                    TotalAmount = offer.TotalAmountWithCommission,
+                    VatAmount = offer.VatAmountWithCommission,
+                    TaxVat = offer.TaxVat,
                     RequestId = offer.ShippingRequestId
                 });
                 Tenant.ReservedBalance += offer.TotalAmount;
@@ -116,14 +126,14 @@ namespace TACHYON.Invoices.Balances
             if (Tenant.CreditBalance < 0)
             {
                 decimal CurrentBalance = Tenant.CreditBalance * -1;
-               
+
                 decimal ShipperCreditLimit = decimal.Parse(await _featureChecker.GetValueAsync(Tenant.Id, AppFeatures.ShipperCreditLimit));
-                var percentge =(int) Math.Ceiling((CurrentBalance / ShipperCreditLimit) * 100);
-                if (percentge>70)
+                var percentge = (int)Math.Ceiling((CurrentBalance / ShipperCreditLimit) * 100);
+                if (percentge > 70)
                 {
-                  var user = await _userManager.GetAdminByTenantIdAsync(Tenant.Id);
-                  await  _appNotifier.ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage(Tenant.Id, percentge);
-                  await  _emailSender.SendAsync(user.EmailAddress, L("EmailSubjectShipperCreditLimit"), _emailTemplateProvider.ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage(Tenant.Id, percentge), true);
+                    var user = await _userManager.GetAdminByTenantIdAsync(Tenant.Id);
+                    await _appNotifier.ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage(Tenant.Id, percentge);
+                    await _emailSender.SendAsync(user.EmailAddress, L("EmailSubjectShipperCreditLimit"), _emailTemplateProvider.ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage(Tenant.Id, percentge), true);
                 }
 
             }
