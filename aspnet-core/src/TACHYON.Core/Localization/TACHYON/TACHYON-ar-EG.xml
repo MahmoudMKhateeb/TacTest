@@ -2208,5 +2208,7 @@
 	    <text name="CreateOrEditPoint">أضافة أو تعديل موقع تنزيل</text>
 	    <text name="SelectADangerousGoodType">أختر نوع البضائع الخطرة</text>
 		<text name="DangerousGoodType">نوع البضائع الخطرة</text>
+		<text name="NotAccepted">غير مقبول</text>
+		<text name="NotRejected">غير مرفوض</text>
 	</texts>
 </localizationDictionary>

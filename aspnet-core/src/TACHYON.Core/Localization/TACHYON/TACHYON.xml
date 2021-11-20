@@ -2402,6 +2402,7 @@
 		<text name="PickupFacilityAndDropOffFacilityCantBeTheSame">Pickup facility and drop off facility can't be the same</text>
 		<text name="CreateOrEditPoint">Create or Edit Point</text>
 		<text name="SelectADangerousGoodType">Select a Dangerous Good Type</text>
-
+		<text name="NotAccepted">Not Accepted</text>
+		<text name="NotRejected">Not Rejected</text>
 	</texts>
 </localizationDictionary>
