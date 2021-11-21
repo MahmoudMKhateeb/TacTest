@@ -64,8 +64,7 @@ namespace TACHYON.AutoMapper.Shipping.Trips
                 .ForMember(dst => dst.RoutePoints, opt => opt.MapFrom(src => src.RoutPoints.OrderBy(x => x.PickingType)))
                 .ForMember(dst => dst.StatusTitle, opt => opt.MapFrom(src => Enum.GetName(typeof(RoutePointStatus), src.RoutePointStatus)))
                 .ForMember(dst => dst.TripStatus, opt => opt.MapFrom(src => Enum.GetName(typeof(ShippingRequestTripStatus), src.Status)))
-                .ForMember(dst => dst.Status, opt => opt.MapFrom(src => src.RoutePointStatus))
-                .ForMember(dst => dst.ChangeStatusButtonTitle, opt => opt.MapFrom(src => GetMobileTripChangeStatusButtonTitle(src.RoutePointStatus)));
+                .ForMember(dst => dst.Status, opt => opt.MapFrom(src => src.RoutePointStatus));
 
 
 
@@ -81,8 +80,7 @@ namespace TACHYON.AutoMapper.Shipping.Trips
                 .ForMember(dst => dst.FacilityRatingNumber, opt => opt.MapFrom(src => src.FacilityFk.RateNumber))
                 .ForMember(dst => dst.lat, opt => opt.MapFrom(src => src.FacilityFk.Location.Y))
                 .ForMember(dst => dst.lng, opt => opt.MapFrom(src => src.FacilityFk.Location.X))
-                .ForMember(dst => dst.GoodsDetails, opt => opt.MapFrom(src => src.GoodsDetails))
-                .ForMember(dst => dst.NextStatus, opt => opt.MapFrom(src => GetMobileTripChangeStatusButtonTitle(src.Status)));
+                .ForMember(dst => dst.GoodsDetails, opt => opt.MapFrom(src => src.GoodsDetails));
 
             CreateMap<ShippingRequestTrip, CreateOrEditShippingRequestTripDto>()
                 .ForMember(dest => dest.RoutPoints, opt => opt.MapFrom(src => src.RoutPoints))
@@ -99,35 +97,5 @@ namespace TACHYON.AutoMapper.Shipping.Trips
                 return ShippingRequestTripDriverLoadStatusDto.Past;
             return ShippingRequestTripDriverLoadStatusDto.Comming;
         }
-
-
-        private static string GetMobileTripChangeStatusButtonTitle(RoutePointStatus Status)
-        {
-            switch (Status)
-            {
-                case RoutePointStatus.StandBy:
-                    return Enum.GetName(typeof(RoutePointStatus), RoutePointStatus.StartedMovingToLoadingLocation);
-                case RoutePointStatus.StartedMovingToLoadingLocation:
-                    return Enum.GetName(typeof(RoutePointStatus), RoutePointStatus.ArriveToLoadingLocation);
-                case RoutePointStatus.ArriveToLoadingLocation:
-                    return Enum.GetName(typeof(RoutePointStatus), RoutePointStatus.StartLoading);
-                case RoutePointStatus.StartLoading:
-                    return Enum.GetName(typeof(RoutePointStatus), RoutePointStatus.FinishLoading);
-                case RoutePointStatus.StartedMovingToOfLoadingLocation:
-                    return Enum.GetName(typeof(RoutePointStatus), RoutePointStatus.ArrivedToDestination);
-                case RoutePointStatus.ArrivedToDestination:
-                    return Enum.GetName(typeof(RoutePointStatus), RoutePointStatus.StartOffloading);
-                case RoutePointStatus.StartOffloading:
-                    return Enum.GetName(typeof(RoutePointStatus), RoutePointStatus.FinishOffLoadShipment);
-                case RoutePointStatus.FinishOffLoadShipment:
-                    return Enum.GetName(typeof(RoutePointStatus), RoutePointStatus.ReceiverConfirmed);
-                case RoutePointStatus.ReceiverConfirmed:
-                    return Enum.GetName(typeof(RoutePointStatus), RoutePointStatus.DeliveryConfirmation);
-                default:
-                    return "";
-            }
-
-        }
     }
-
 }

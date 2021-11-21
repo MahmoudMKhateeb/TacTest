@@ -49,7 +49,6 @@ namespace TACHYON.Shipping.Drivers
         private readonly ShippingRequestDriverManager _shippingRequestDriverManager;
         private readonly ShippingRequestManager _shippingRequestManager;
         private readonly IFirebaseNotifier _firebaseNotifier;
-        private readonly ShippingRequestsTripManager _shippingRequestsTripManager;
         private readonly IRepository<UserOTP> _userOtpRepository;
         private readonly RatingLogManager _ratingLogManager;
         private readonly IRepository<DriverLocationLog, long> _driverLocationLogRepository;
@@ -62,8 +61,7 @@ namespace TACHYON.Shipping.Drivers
             ShippingRequestDriverManager shippingRequestDriverManager,
             ShippingRequestManager shippingRequestManager,
             IFirebaseNotifier firebaseNotifier,
-            ShippingRequestPointWorkFlowProvider workFlowProvider,
-            ShippingRequestsTripManager shippingRequestsTripManager, IRepository<UserOTP> userOtpRepository, IRepository<ShippingRequestTripAccident> shippingRequestTripAccidentRepository, RatingLogManager ratingLogManager, IRepository<DriverLocationLog, long> driverLocationLogRepository)
+            ShippingRequestPointWorkFlowProvider workFlowProvider, IRepository<UserOTP> userOtpRepository, IRepository<ShippingRequestTripAccident> shippingRequestTripAccidentRepository, RatingLogManager ratingLogManager, IRepository<DriverLocationLog, long> driverLocationLogRepository)
         {
             _ShippingRequestTrip = ShippingRequestTrip;
             _RoutPointRepository = RoutPointRepository;
@@ -71,7 +69,6 @@ namespace TACHYON.Shipping.Drivers
             _shippingRequestDriverManager = shippingRequestDriverManager;
             _shippingRequestManager = shippingRequestManager;
             _firebaseNotifier = firebaseNotifier;
-            _shippingRequestsTripManager = shippingRequestsTripManager;
             _userOtpRepository = userOtpRepository;
             _shippingRequestTripAccidentRepository = shippingRequestTripAccidentRepository;
             _ratingLogManager = ratingLogManager;
@@ -237,17 +234,10 @@ namespace TACHYON.Shipping.Drivers
                     RateType = RateType.SEByDriver,
                     FacilityId = point.FacilityId
                 });
-                point.Transactions = _workFlowProvider.GetTransactions(point.WorkFlowVersion)
-                        .Select(c => new PointTransactionDto
-                        {
-                            Name = c.Name,
-                            Action = c.Action,
-                            FromStatus = c.FromStatus,
-                            ToStatus = c.ToStatus,
-                            IsDone = point.RoutPointStatusTransitions.Any(x => x.Status == c.FromStatus),
-                        }).ToList();
+                point.Statues = _workFlowProvider.GetStatuses(point);
+                point.AvailableTransactions = _workFlowProvider.GetTransactionsByStatus(point.WorkFlowVersion, point.Status)
+                    .Where(c => !point.RoutPointStatusTransitions.Any(x => x.Status == c.ToStatus)).ToList();
             }
-
 
             //fill incidents
             var query = _shippingRequestTripAccidentRepository
@@ -327,7 +317,7 @@ namespace TACHYON.Shipping.Drivers
         /// <returns></returns>
         public async Task StartTrip(ShippingRequestTripDriverStartInputDto Input)
         {
-            await _shippingRequestsTripManager.Start(Input);
+            await _workFlowProvider.Start(Input);
         }
 
         /// <summary>
@@ -336,7 +326,7 @@ namespace TACHYON.Shipping.Drivers
         /// <param name="PointId">Dropoff point id</param>
         public async Task GotoNextLocation(long pointId)
         {
-            await _shippingRequestsTripManager.GotoNextLocation(pointId);
+            await _workFlowProvider.GotoNextLocation(pointId);
         }
 
         /// <summary>
@@ -373,11 +363,11 @@ namespace TACHYON.Shipping.Drivers
         public async Task InvokeStatus(InvokeStatusInputDto input)
         {
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier);
-            await _shippingRequestsTripManager.InvokeStatus(input);
+            await _workFlowProvider.Invoke(input);
         }
         public async Task Accepted(int TripId)
         {
-            await _shippingRequestsTripManager.Accepted(TripId);
+            await _workFlowProvider.Accepted(TripId);
         }
 
         #region Location tracking

@@ -21,6 +21,7 @@ using TACHYON.Shipping.Trips;
 using TACHYON.Shipping.Trips.Accidents;
 using TACHYON.Shipping.Trips.Accidents.Dto;
 using TACHYON.Storage;
+using TACHYON.Tracking;
 using TACHYON.Tracking.Dto;
 using TACHYON.Trucks;
 using TACHYON.Trucks.Dtos;
@@ -39,12 +40,12 @@ namespace TACHYON.Web.Controllers
         private const int MaxDocumentFilePictureSize = 5242880; //5MB
 
         private ShippingRequestDriverManager _shippingRequestDriverManager;
-        private ShippingRequestsTripManager _shippingRequestTripManger;
+        private ShippingRequestPointWorkFlowProvider _workFlowProvider;
         private CommonManager _commonManager;
         private IShippingRequestTripAccidentAppService _shippingRequestTripAccidentAppService;
         public HelperController(TrucksAppService trucksAppService, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager, IBackgroundJobManager backgroundJobManager,
             ShippingRequestDriverManager shippingRequestDriverManager,
-            CommonManager commonManager, ShippingRequestsTripManager shippingRequestTripManger, IShippingRequestTripAccidentAppService shippingRequestTripAccidentAppService)
+            CommonManager commonManager, ShippingRequestPointWorkFlowProvider workFlowProvider, IShippingRequestTripAccidentAppService shippingRequestTripAccidentAppService)
         {
             _trucksAppService = trucksAppService;
             _tempFileCacheManager = tempFileCacheManager;
@@ -52,7 +53,7 @@ namespace TACHYON.Web.Controllers
             BackgroundJobManager = backgroundJobManager;
             _shippingRequestDriverManager = shippingRequestDriverManager;
             _commonManager = commonManager;
-            _shippingRequestTripManger = shippingRequestTripManger;
+            _workFlowProvider = workFlowProvider;
             _shippingRequestTripAccidentAppService = shippingRequestTripAccidentAppService;
         }
 
@@ -187,36 +188,36 @@ namespace TACHYON.Web.Controllers
             }
         }
 
-        [HttpPost]
-        [AbpMvcAuthorize()]
-        // [Produces("application/json")]
-        [Route("/api/services/app/ShippingRequestDriver/UploadPointDeliveryDocument")]
-        public async Task<JsonResult> SetDropOffPointToDelivery(long? pointId)
-        {
-            try
-            {
-                var file = Request.Form.Files.First();
-                //Input.Document = file;
-                if (file.Length == 0)
-                {
-                    throw new UserFriendlyException(L("File_Empty_Error"));
-                }
+        //[HttpPost]
+        //[AbpMvcAuthorize()]
+        //// [Produces("application/json")]
+        //[Route("/api/services/app/ShippingRequestDriver/UploadPointDeliveryDocument")]
+        //public async Task<JsonResult> SetDropOffPointToDelivery(long? pointId)
+        //{
+        //    try
+        //    {
+        //        var file = Request.Form.Files.First();
+        //        //Input.Document = file;
+        //        if (file.Length == 0)
+        //        {
+        //            throw new UserFriendlyException(L("File_Empty_Error"));
+        //        }
 
-                if (file.Length > 1048576 * 100) //100 MB
-                {
-                    throw new UserFriendlyException(L("File_SizeLimit_Error"));
-                }
+        //        if (file.Length > 1048576 * 100) //100 MB
+        //        {
+        //            throw new UserFriendlyException(L("File_SizeLimit_Error"));
+        //        }
 
-                var document = await _commonManager.UploadDocument(file, AbpSession.TenantId);
+        //        var document = await _commonManager.UploadDocument(file, AbpSession.TenantId);
 
-                await _shippingRequestDriverManager.SetPointToDelivery(document, pointId);
-                return Json(new AjaxResponse(new { }));
-            }
-            catch (UserFriendlyException ex)
-            {
-                return Json(new AjaxResponse(new ErrorInfo(ex.Message)));
-            }
-        }
+        //        await _shippingRequestDriverManager.SetPointToDelivery(document, pointId);
+        //        return Json(new AjaxResponse(new { }));
+        //    }
+        //    catch (UserFriendlyException ex)
+        //    {
+        //        return Json(new AjaxResponse(new ErrorInfo(ex.Message)));
+        //    }
+        //}
 
         [HttpPost]
         [AbpMvcAuthorize()]
@@ -309,7 +310,7 @@ namespace TACHYON.Web.Controllers
                 }
 
                 var document = await _commonManager.UploadDocument(file, AbpSession.TenantId);
-                await _shippingRequestTripManger.ConfirmPointToDelivery(document, input);
+                await _workFlowProvider.ConfirmPointToDelivery(document, input);
                 return Json(new AjaxResponse(new { }));
             }
             catch (UserFriendlyException ex)

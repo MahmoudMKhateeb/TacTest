@@ -45,6 +45,7 @@ using TACHYON.Net.Sms;
 using TACHYON.Notifications;
 using TACHYON.Security.Recaptcha;
 using TACHYON.Shipping.Trips;
+using TACHYON.Tracking;
 using TACHYON.Web.Authentication.External;
 using TACHYON.Web.Authentication.JwtBearer;
 using TACHYON.Web.Authentication.TwoFactor;
@@ -85,7 +86,7 @@ namespace TACHYON.Web.Controllers
         private readonly IUserDelegationManager _userDelegationManager;
         private readonly UserDeviceTokenManager _userDeviceTokenManager;
         private readonly MobileManager _mobileManager;
-        private readonly ShippingRequestsTripManager _shippingRequestsTripManager;
+        private readonly ShippingRequestPointWorkFlowProvider _workFlowProvider;
         public TokenAuthController(
             LogInManager logInManager,
             ITenantCache tenantCache,
@@ -110,7 +111,7 @@ namespace TACHYON.Web.Controllers
             AbpUserClaimsPrincipalFactory<User, Role> claimsPrincipalFactory,
             IUserDelegationManager userDelegationManager, TenantManager tenantManager,
             UserDeviceTokenManager userDeviceTokenManager,
-           MobileManager mobileManager, ShippingRequestsTripManager shippingRequestsTripManager)
+           MobileManager mobileManager, ShippingRequestPointWorkFlowProvider workFlowProvider)
         {
             _logInManager = logInManager;
             _tenantCache = tenantCache;
@@ -138,6 +139,7 @@ namespace TACHYON.Web.Controllers
             _tenantManager = tenantManager;
             _userDeviceTokenManager = userDeviceTokenManager;
             _mobileManager = mobileManager;
+            _workFlowProvider = workFlowProvider;
             _shippingRequestsTripManager = shippingRequestsTripManager;
             _testMobiles = new List<string>()
             {
@@ -374,7 +376,7 @@ namespace TACHYON.Web.Controllers
                 RefreshTokenExpireInSeconds = (int)_configuration.RefreshTokenExpiration.TotalSeconds,
                 EncryptedAccessToken = GetEncryptedAccessToken(accessToken),
                 UserId = loginResult.User.Id,
-                TripDto = await _shippingRequestsTripManager.GetCurrentDriverTrip(loginResult.User.Id)
+                TripDto = await _workFlowProvider.GetCurrentDriverTrip(loginResult.User.Id)
             };
         }
 

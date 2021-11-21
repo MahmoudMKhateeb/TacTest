@@ -16,5 +16,7 @@ namespace TACHYON.Tracking
         public const string FinishOffLoadShipment = "FinishOffLoadShipment";
         public const string ReceiverConfirmed = "ReceiverConfirmed";
         public const string DeliveryConfirmation = "DeliveryConfirmation";
+        public const string FinishOffLoadShipmentDeliveryConfirmation = "FinishOffLoadShipmentDeliveryConfirmation";
+        public const string DeliveryConfirmationReceiverConfirmed = "DeliveryConfirmationReceiverConfirmed";
     }
 }

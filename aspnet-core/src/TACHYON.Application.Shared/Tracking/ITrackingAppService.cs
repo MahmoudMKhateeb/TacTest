@@ -17,6 +17,5 @@ namespace TACHYON.Tracking
         Task InvokeStatus(InvokeStatusInputDto input);
         Task NextLocation(long id);
         Task<FileDto> POD(long id);
-        Task<ListResultDto<PointTransactionDto>> GetAvailableTransactions(long id);
     }
 }

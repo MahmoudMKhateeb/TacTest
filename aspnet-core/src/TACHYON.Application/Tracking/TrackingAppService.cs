@@ -111,35 +111,11 @@ namespace TACHYON.Tracking
             var mappedRoutes = ObjectMapper.Map<List<ShippingRequestTripDriverRoutePointDto>>(routes);
             foreach (var rout in mappedRoutes)
             {
-                rout.Transactions = _workFlowProvider.GetTransactions(rout.WorkFlowVersion)
-                    .Select(c => new PointTransactionDto
-                    {
-                        Name = c.Name,
-                        Action = c.Action,
-                        FromStatus = c.FromStatus,
-                        ToStatus = c.ToStatus,
-                        IsDone = rout.RoutPointStatusTransitions.Any(x => x.Status == c.FromStatus),
-                    }).ToList();
+                rout.Statues = _workFlowProvider.GetStatuses(rout);
+                rout.AvailableTransactions = _workFlowProvider.GetTransactionsByStatus(rout.WorkFlowVersion, rout.Status)
+                    .Where(c => !rout.RoutPointStatusTransitions.Any(x => x.Status == c.ToStatus)).ToList();
             }
             return new ListResultDto<ShippingRequestTripDriverRoutePointDto>(mappedRoutes);
-        }
-        public async Task<ListResultDto<PointTransactionDto>> GetAvailableTransactions(long id)
-        {
-            CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier);
-            DisableTenancyFilters();
-            var currentUser = GetCurrentUser();
-            var point = await _routPointRepository
-                            .GetAll()
-                            .Where(x => x.Id == id)
-                            .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper), x => x.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId)
-                            .WhereIf(!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer), x => true)
-                            .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
-                            .WhereIf(currentUser.IsDriver, x => x.ShippingRequestTripFk.AssignedDriverUserId == currentUser.Id)
-                            .FirstOrDefaultAsync();
-            if (point == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
-
-            var transactions = _workFlowProvider.GetAvailableTransactions(point.WorkFlowVersion, point.Status);
-            return new ListResultDto<PointTransactionDto>(ObjectMapper.Map<List<PointTransactionDto>>(transactions));
         }
         public async Task Accept(int id)
         {

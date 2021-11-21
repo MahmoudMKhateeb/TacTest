@@ -18,7 +18,7 @@ namespace TACHYON.Tracking.Dto
 
         public void Initialize()
         {
-            if (Action == "ReceiverConfirmed")
+            if (Action == WorkFlowActionConst.ReceiverConfirmed || Action == WorkFlowActionConst.DeliveryConfirmationReceiverConfirmed)
             {
                 if (Code.IsNullOrEmpty())
                 {
