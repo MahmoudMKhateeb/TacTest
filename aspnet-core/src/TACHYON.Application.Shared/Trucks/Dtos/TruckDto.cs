@@ -32,7 +32,9 @@ namespace TACHYON.Trucks.Dtos
         #endregion
 
         public bool IsMissingDocumentFiles { get; set; }
-
+        public string CompanyName { get; set; }
+        //document file Number
+        public string IstmaraNumber { get; set; }
 
     }
 }

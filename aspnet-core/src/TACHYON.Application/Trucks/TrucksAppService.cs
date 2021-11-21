@@ -105,11 +105,31 @@ namespace TACHYON.Trucks
 
             DisableTenancyFiltersIfHost();
             await DisableTenancyFiltersIfTachyonDealer();
+            var documentQuery = _documentFileRepository.GetAll()
+                                               .Where(x => x.DocumentTypeFk.SpecialConstant == TACHYONConsts.TruckIstimaraDocumentTypeSpecialConstant.ToLower());
+            var query = from truck in _truckRepository.GetAll()
+                        join tenant in _lookupTenantRepository.GetAll() on truck.TenantId equals tenant.Id
+                        join document in documentQuery on truck.Id equals document.TruckId
 
-
-            var query = _truckRepository.GetAll()
-                .ProjectTo<TruckDto>(AutoMapperConfigurationProvider);
-
+                        select new TruckDto()
+                        {
+                            CompanyName = tenant.companyName,
+                            Capacity = truck.Capacity,
+                            CapacityDisplayName = truck.CapacityFk != null ? truck.CapacityFk.DisplayName : "",
+                            ModelName = truck.ModelName,
+                            ModelYear = truck.ModelYear,
+                            Length = truck.Length,
+                            TruckStatusDisplayName = truck.TruckStatusFk != null ? truck.TruckStatusFk.DisplayName : "",
+                            TransportTypeDisplayName = truck.TransportTypeFk != null ? truck.TransportTypeFk.DisplayName : "",
+                            PlateNumber = truck.PlateNumber,
+                            Note = truck.Note,
+                            TransportTypeId = truck.TransportTypeId,
+                            TrucksTypeDisplayName = truck.TrucksTypeFk != null ? truck.TrucksTypeFk.DisplayName : "",
+                            CapacityId = truck.CapacityId,
+                            Id = truck.Id,
+                            TrucksTypeId = truck.TrucksTypeId,
+                            IstmaraNumber = document.Number
+                        };
 
             var result = await LoadResultAsync(query, input.Filter);
             await FillIsMissingDocumentFiles(result);
