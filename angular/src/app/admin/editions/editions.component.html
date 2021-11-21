@@ -25,7 +25,7 @@
               >
                 <ng-template pTemplate="header">
                   <tr>
-                    <th style="width: 130px;" [hidden]="!(['Pages.Editions.Edit', 'Pages.Editions.Delete'] | permissionAny)">
+                    <th style="width: 130px" [hidden]="!(['Pages.Editions.Edit', 'Pages.Editions.Delete'] | permissionAny)">
                       {{ 'Actions' | localize }}
                     </th>
                     <th>
@@ -47,7 +47,7 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-record="$implicit">
                   <tr>
-                    <td style="width: 130px; text-align: center;">
+                    <td style="width: 130px; text-align: center">
                       <div class="btn-group dropdown" dropdown>
                         <button dropdownToggle class="dropdown-toggle btn btn-sm btn-primary">
                           <i class="fa fa-cog"></i><span class="caret"></span>
@@ -130,6 +130,9 @@
             </div>
             <!--<Primeng-TurboTable-End>-->
           </div>
+          <span class="total-records-count">
+            {{ l('TotalRecordsCount', primengTableHelper.totalRecordsCount) }}
+          </span>
         </div>
       </div>
     </div>
