@@ -3,16 +3,19 @@ import { ModalDirective } from '@node_modules/ngx-bootstrap/modal';
 import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
 import {
   CreateOrEditGoodsDetailDto,
+  CreateOrEditRoutPointDto,
   DangerousGoodTypesServiceProxy,
   GetAllGoodsCategoriesForDropDownOutput,
   GoodsDetailDto,
   GoodsDetailsServiceProxy,
+  PickingType,
   SelectItemDto,
   ShippingRequestsServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
 import { Subscription } from '@node_modules/rxjs';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'createOrEditGoodDetailsModal',
@@ -20,6 +23,7 @@ import { Subscription } from '@node_modules/rxjs';
   styleUrls: ['./create-or-edit-good-details-modal.component.css'],
 })
 export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase implements OnInit, OnDestroy {
+  @Output() canAddMoreGoods: EventEmitter<boolean> = new EventEmitter<boolean>();
   @ViewChild('createOrEditGoodDetail', { static: false }) public createOrEditGoodDetail: ModalDirective;
 
   active = false;
@@ -57,6 +61,7 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
   dangerousGoodsTypeId: number;
   dangerousGoodsCode: string;
   dimentions: string;
+  AllowedWeight: number;
   ngOnDestroy() {
     this.tripServiceSubs$.unsubscribe();
     // this.pointServiceSubs$.unsubscribe();
@@ -100,7 +105,17 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
 
       this.dimentions = this.myGoodsDetailList[id].dimentions;
     }
-    this.createOrEditGoodDetail.show();
+    if (this.weightValidation()) {
+      this.createOrEditGoodDetail.show();
+    } else {
+      this.active = false;
+      // this.notify.info('YouCantAddMoreGoodsLimitReached');
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: this.l('WeightLimitReached'),
+      });
+    }
   }
   close() {
     this.active = false;
@@ -159,5 +174,42 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
       this.isDangerousGoodLoading = false;
       this.allDangerousGoodTypes = res;
     });
+  }
+
+  /**
+   * validates Good Details Weight and Amount
+   */
+  weightValidation(): boolean {
+    let shippingRequestWeight: number;
+    let totalWeightGoodDetails: number = 0;
+    let wayPointList: CreateOrEditRoutPointDto[];
+    let allowedeight: number;
+
+    //get the Total Allowed Weight From the Shipping Request
+    this._TripService.currentShippingRequest.subscribe((res) => {
+      return (shippingRequestWeight = res.shippingRequest.totalWeight);
+    });
+    //get the Way Points from the shared service
+    this._PointsService.currentWayPointsList.subscribe((res) => {
+      return (wayPointList = res);
+    });
+    //get the sum of total Added Goods by looping through each drop point and extract the amount * weight
+    wayPointList.forEach((point) => {
+      if (point.pickingType === PickingType.Dropoff) {
+        if (!point.goodsDetailListDto) {
+          this.AllowedWeight = allowedeight = shippingRequestWeight;
+          // this.AllowedWeight;
+          return true;
+        }
+        point.goodsDetailListDto.forEach((dropPoint) => {
+          totalWeightGoodDetails += dropPoint.amount * dropPoint.weight;
+        });
+      }
+    });
+    //allowed weight is how much weight is left for the user
+    allowedeight = shippingRequestWeight - (totalWeightGoodDetails - (this.weight === undefined ? 0 : this.weight));
+    this.AllowedWeight = allowedeight;
+    this.canAddMoreGoods.emit(allowedeight === 0 ? false : true); // let the other components know
+    return allowedeight === 0 ? false : true;
   }
 }

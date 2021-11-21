@@ -12,7 +12,7 @@
           type="button"
           class="btn btn-primary blue"
           (click)="createOrEditGoodDetail.show()"
-          [disabled]="!MainGoodsCategory"
+          [disabled]="!MainGoodsCategory || !canAddMoreGoods"
         >
           <i class="fa fa-plus"></i>
           {{ l('AddNewGoodDetails') }}
@@ -104,6 +104,7 @@
 <createOrEditGoodDetailsModal
   #createOrEditGoodDetail
   [GoodDetailsListInput]="goodsDetailList"
+  (canAddMoreGoods)="canAddMoreGoods = $event"
   (modalSave)="Point.goodsDetailListDto = goodsDetailList = $event"
 ></createOrEditGoodDetailsModal>
 
