@@ -1,5 +1,6 @@
 ﻿using Abp;
 using Abp.Application.Features;
+using Abp.Authorization;
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
@@ -14,6 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using TACHYON.Authorization;
 using TACHYON.Authorization.Users;
 using TACHYON.Common;
 using TACHYON.Dto;
@@ -45,7 +47,7 @@ namespace TACHYON.Tracking
     {
         public List<WorkFlow<PointTransactionArgs, RoutePointStatus>> Flows { get; set; }
         private readonly IRepository<RoutPoint, long> _routPointRepository;
-        private readonly IRepository<ShippingRequestTrip> _shippingRequestTrip;
+        private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepository;
         private readonly PriceOfferManager _priceOfferManager;
         private readonly IAppNotifier _appNotifier;
         private readonly IFeatureChecker _featureChecker;
@@ -59,12 +61,14 @@ namespace TACHYON.Tracking
         private readonly CommonManager _commonManager;
         private readonly UserManager UserManager;
         private readonly IWebUrlService _webUrlService;
+        private readonly IPermissionChecker _permissionChecker;
+
 
         #region Constractor
-        public ShippingRequestPointWorkFlowProvider(IRepository<RoutPoint, long> routPointRepository, IRepository<ShippingRequestTrip> shippingRequestTrip, PriceOfferManager priceOfferManager, IAppNotifier appNotifier, IFeatureChecker featureChecker, IAbpSession abpSession, IRepository<RoutPointDocument, long> routPointDocumentRepository, IRepository<ShippingRequestTripTransition> shippingRequestTripTransitionRepository, IRepository<RoutPointStatusTransition> routPointStatusTransitionRepository, FirebaseNotifier firebaseNotifier, ISmsSender smsSender, InvoiceManager invoiceManager, CommonManager commonManager, UserManager userManager, IWebUrlService webUrlService)
+        public ShippingRequestPointWorkFlowProvider(IRepository<RoutPoint, long> routPointRepository, IRepository<ShippingRequestTrip> shippingRequestTrip, PriceOfferManager priceOfferManager, IAppNotifier appNotifier, IFeatureChecker featureChecker, IAbpSession abpSession, IRepository<RoutPointDocument, long> routPointDocumentRepository, IRepository<ShippingRequestTripTransition> shippingRequestTripTransitionRepository, IRepository<RoutPointStatusTransition> routPointStatusTransitionRepository, FirebaseNotifier firebaseNotifier, ISmsSender smsSender, InvoiceManager invoiceManager, CommonManager commonManager, UserManager userManager, IWebUrlService webUrlService, IPermissionChecker permissionChecker)
         {
             _routPointRepository = routPointRepository;
-            _shippingRequestTrip = shippingRequestTrip;
+            _shippingRequestTripRepository = shippingRequestTrip;
             _priceOfferManager = priceOfferManager;
             _appNotifier = appNotifier;
             _featureChecker = featureChecker;
@@ -78,6 +82,7 @@ namespace TACHYON.Tracking
             _commonManager = commonManager;
             UserManager = userManager;
             _webUrlService = webUrlService;
+            _permissionChecker = permissionChecker;
             Flows = new List<WorkFlow<PointTransactionArgs, RoutePointStatus>>
             {
             new WorkFlow<PointTransactionArgs,RoutePointStatus>
@@ -256,7 +261,7 @@ namespace TACHYON.Tracking
         {
             DisableTenancyFilters();
             var currentUser = await GetCurrentUserAsync(_abpSession);
-            var trip = await _shippingRequestTrip
+            var trip = await _shippingRequestTripRepository
                             .GetAll()
                             .Include(s => s.ShippingRequestFk)
                             .Where
@@ -273,7 +278,7 @@ namespace TACHYON.Tracking
 
             if (trip == null) throw new UserFriendlyException(L("YouCannotStartWithTheTripSelected"));
             /// Check if the driver already working on another trip
-            if (!_shippingRequestTrip
+            if (!_shippingRequestTripRepository
                 .GetAll()
                 .Any
                 (x =>
@@ -308,15 +313,22 @@ namespace TACHYON.Tracking
             if (point == null) throw new UserFriendlyException(L("YouCanNotChangeTheStatus"));
             var transaction = CheckIfTransactionIsExist(point, input.Action);
 
-            if (!string.IsNullOrEmpty(input.Code) && point.Code != input.Code)
-                throw new UserFriendlyException(L("TheReceiverCodeIsIncorrect"));
+            if (!_permissionChecker.IsGranted(false, transaction.Permissions?.ToArray()))
+            {
+                throw new AbpAuthorizationException("You are not authorized to " + transaction.Name);
+            }
+
+
 
             var trip = point.ShippingRequestTripFk;
             var args = new PointTransactionArgs
             {
                 Point = point,
                 Trip = trip,
+                PointId = input.Id,
+                Code = input.Code
             };
+
 
             transaction.Func(args);
 
@@ -424,7 +436,7 @@ namespace TACHYON.Tracking
         /// <returns></returns>
         public async Task<ShippingRequestTripDto> GetCurrentDriverTrip(long UserId)
         {
-            var CurrentTrip = await _shippingRequestTrip.GetAll()
+            var CurrentTrip = await _shippingRequestTripRepository.GetAll()
                     .Where(x => x.AssignedDriverUserId == UserId && x.Status == ShippingRequestTripStatus.Intransit).FirstOrDefaultAsync();
             return ObjectMapper.Map<ShippingRequestTripDto>(CurrentTrip);
         }
@@ -447,68 +459,96 @@ namespace TACHYON.Tracking
         #endregion
 
         #region Transactions Functions
+
+        //Driver => mobile
+        //Carrier => web 
         private void StartedMovingToLoadingLocation(PointTransactionArgs args)
         {
             var status = RoutePointStatus.StartedMovingToLoadingLocation;
-            args.Point.Status = status;
-            args.Trip.RoutePointStatus = status;
+            var point = _routPointRepository.Get(args.PointId);
+            point.Status = status;
+            point.ShippingRequestTripFk.RoutePointStatus = status;
         }
         private void ArriveToLoadingLocation(PointTransactionArgs args)
         {
             var status = RoutePointStatus.ArriveToLoadingLocation;
-            args.Point.Status = status;
-            args.Trip.RoutePointStatus = status;
+            var point = _routPointRepository.Get(args.PointId);
+            point.Status = status;
+            point.ShippingRequestTripFk.RoutePointStatus = status;
         }
         private void StartLoading(PointTransactionArgs args)
         {
             var status = RoutePointStatus.StartLoading;
-            args.Point.Status = status;
-            args.Trip.RoutePointStatus = status;
+            var point = _routPointRepository.Get(args.PointId);
+            point.Status = status;
+            point.ShippingRequestTripFk.RoutePointStatus = status;
+
         }
         private void FinishLoading(PointTransactionArgs args)
         {
             var status = RoutePointStatus.FinishLoading;
-            args.Point.Status = status;
-            args.Trip.RoutePointStatus = status;
-            args.Point.IsComplete = true;
-            args.Point.IsResolve = true;
-            args.Point.EndTime = Clock.Now;
-            args.Point.ActualPickupOrDeliveryDate = args.Trip.ActualPickupDate = Clock.Now;
+            var point = _routPointRepository.Get(args.PointId);
+            point.Status = status;
+            point.ShippingRequestTripFk.RoutePointStatus = status;
+            point.IsComplete = true;
+            point.IsResolve = true;
+            point.EndTime = Clock.Now;
+            point.ActualPickupOrDeliveryDate = point.ShippingRequestTripFk.ActualPickupDate = Clock.Now;
+
             Task.Run(async () => await SendSmsToReceivers(args.Trip.Id)).Wait();
         }
         private void StartedMovingToOfLoadingLocation(PointTransactionArgs args)
         {
             var status = RoutePointStatus.StartedMovingToOfLoadingLocation;
-            args.Point.Status = status;
-            args.Trip.RoutePointStatus = status;
+            var point = _routPointRepository.Get(args.PointId);
+            point.Status = status;
+            point.ShippingRequestTripFk.RoutePointStatus = status;
+
         }
         private void ArrivedToDestination(PointTransactionArgs args)
         {
             var status = RoutePointStatus.ArrivedToDestination;
-            args.Point.Status = status;
-            args.Trip.RoutePointStatus = status;
+            var point = _routPointRepository.Get(args.PointId);
+            point.Status = status;
+            point.ShippingRequestTripFk.RoutePointStatus = status;
+
         }
         private void StartOffloading(PointTransactionArgs args)
         {
             var status = RoutePointStatus.StartOffloading;
-            args.Point.Status = status;
-            args.Trip.RoutePointStatus = status;
+            var point = _routPointRepository.Get(args.PointId);
+            point.Status = status;
+            point.ShippingRequestTripFk.RoutePointStatus = status;
+
         }
         private void FinishOffLoadShipment(PointTransactionArgs args)
         {
             var status = RoutePointStatus.FinishOffLoadShipment;
-            args.Point.Status = status;
-            args.Trip.RoutePointStatus = status;
-            args.Point.ActualPickupOrDeliveryDate = Clock.Now;
-            if (!args.Trip.RoutPoints.Any(x => x.ActualPickupOrDeliveryDate == null && x.Id != args.Point.Id))
-                args.Trip.ActualDeliveryDate = Clock.Now;
+            var point = _routPointRepository.Get(args.PointId);
+            point.Status = status;
+            point.ShippingRequestTripFk.RoutePointStatus = status;
+            point.ActualPickupOrDeliveryDate = Clock.Now;
+
+            // todo trace this 
+            var otherPoints = _routPointRepository.GetAll()
+                .Where(x => x.ShippingRequestTripId == point.ShippingRequestTripId)
+                .Where(x => x.Id != point.Id)
+                .ToList();
+
+            if (otherPoints.All(x => x.ActualPickupOrDeliveryDate.HasValue))
+                point.ShippingRequestTripFk.ActualDeliveryDate = Clock.Now;
         }
         private void ReceiverConfirmed(PointTransactionArgs args)
         {
-            var code = args.ConfirmationCode;
             var status = RoutePointStatus.ReceiverConfirmed;
-            args.Point.Status = status;
-            args.Trip.RoutePointStatus = status;
+            var point = _routPointRepository.Get(args.PointId);
+
+            //validate Code
+            if (!string.IsNullOrEmpty(args.Code) && point.Code != args.Code)
+                throw new UserFriendlyException(L("TheReceiverCodeIsIncorrect"));
+
+            point.Status = status;
+            point.ShippingRequestTripFk.RoutePointStatus = status;
             Task.Run(async () => await HandlePointDelivery(args.Point, args.Trip)).Wait();
         }
         #endregion
@@ -538,10 +578,10 @@ namespace TACHYON.Tracking
             return await _routPointRepository
                           .GetAll()
                           .Include(t => t.ShippingRequestTripFk)
-                          .ThenInclude(s => s.ShippingRequestFk)
-                          .ThenInclude(p => p.Tenant)
+                            .ThenInclude(s => s.ShippingRequestFk)
+                                    .ThenInclude(p => p.Tenant)
                           .Include(t => t.ShippingRequestTripFk)
-                          .ThenInclude(v => v.ShippingRequestTripVases)
+                            .ThenInclude(v => v.ShippingRequestTripVases)
 
                           .Where(
                               x => x.Id == pointId &&
@@ -615,7 +655,7 @@ namespace TACHYON.Tracking
         /// <returns></returns>
         private async Task<ShippingRequestTrip> CheckIfCanAccepted(int id, User user)
         {
-            var trip = await _shippingRequestTrip
+            var trip = await _shippingRequestTripRepository
                             .GetAllIncluding(o => o.OriginFacilityFk, d => d.DestinationFacilityFk, x => x.ShippingRequestFk, x => x.ShippingRequestTripVases)
                             .Where(x => x.Id == id && x.ShippingRequestFk.CarrierTenantId.HasValue && x.ShippingRequestFk.Status != ShippingRequestStatus.Cancled && x.AssignedDriverUserId.HasValue)
                             .WhereIf(!user.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => x.ShippingRequestFk.IsTachyonDeal)
@@ -727,7 +767,7 @@ namespace TACHYON.Tracking
         }
         public async Task ChangeShippingRequestStatusIfAllTripsDone(ShippingRequestTrip trip)
         {
-            if (!_shippingRequestTrip.GetAll().Any(x => x.Status != ShippingRequestTripStatus.Delivered && x.ShippingRequestId == trip.ShippingRequestId))
+            if (!_shippingRequestTripRepository.GetAll().Any(x => x.Status != ShippingRequestTripStatus.Delivered && x.ShippingRequestId == trip.ShippingRequestId))
             {
                 trip.ShippingRequestFk.Status = ShippingRequestStatus.Completed;
                 await _appNotifier.ShipperShippingRequestFinish(new UserIdentifier(trip.ShippingRequestFk.TenantId, trip.ShippingRequestFk.CreatorUserId.Value), trip.ShippingRequestFk);
