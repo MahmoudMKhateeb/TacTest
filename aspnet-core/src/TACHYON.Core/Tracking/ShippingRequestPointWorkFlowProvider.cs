@@ -6,6 +6,7 @@ using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Linq.Extensions;
 using Abp.Runtime.Session;
+using Abp.Specifications;
 using Abp.Timing;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
 using TACHYON.Authorization.Users;
@@ -301,26 +303,22 @@ namespace TACHYON.Tracking
             }
         }
         [UnitOfWork]
-        public async Task Invoke(InvokeStatusInputDto input)
+        public async Task Invoke(PointTransactionArgs args, string action)
         {
-            var currentUser = await GetCurrentUserAsync(_abpSession);
-            var point = await GetRoutPointForAction(input.Id, currentUser);
+
+            var point = await _routPointRepository.GetAsync(args.PointId);
             if (point == null) throw new UserFriendlyException(L("YouCanNotChangeTheStatus"));
-            var transaction = CheckIfTransactionIsExist(point, input.Action);
+
+            var transaction = CheckIfTransactionIsExist(point, action);
 
             if (!_permissionChecker.IsGranted(false, transaction.Permissions?.ToArray()))
                 throw new AbpAuthorizationException("You are not authorized to " + transaction.Name);
 
-            var trip = point.ShippingRequestTripFk;
-            var args = new PointTransactionArgs
-            {
-                PointId = input.Id,
-                Code = input.Code
-            };
+
             transaction.Func(args);
 
-            await SetRoutStatusTransition(point);
-            await NotificationWhenPointChanged(point, currentUser);
+            await SetRoutStatusTransitionLog(point);
+            await NotificationWhenPointChanged(point);
         }
         public async Task GotoNextLocation(long id)
         {
@@ -355,7 +353,7 @@ namespace TACHYON.Tracking
             currentPoint.IsActive = true;
 
             await ChangeTransition(currentPoint);
-            await NotificationWhenPointChanged(currentPoint, currentUser);
+            await NotificationWhenPointChanged(currentPoint);
         }
 
         /// <summary>
@@ -382,13 +380,13 @@ namespace TACHYON.Tracking
             await _routPointDocumentRepository.InsertAsync(routePointDocument);
 
             currentPoint.Status = transction.ToStatus;
-            await SetRoutStatusTransition(currentPoint);
+            await SetRoutStatusTransitionLog(currentPoint);
             var trip = currentPoint.ShippingRequestTripFk;
             var result = await HandlePointDelivery(currentPoint, trip);
             if (!result)
             {
                 trip.RoutePointStatus = transction.ToStatus;
-                await NotificationWhenPointChanged(currentPoint, currentUser);
+                await NotificationWhenPointChanged(currentPoint);
             }
             return true;
         }
@@ -697,7 +695,7 @@ namespace TACHYON.Tracking
             tripTransition.ToPointId = routPoint.Id;
             tripTransition.ToLocation = routPoint.FacilityFk.Location;
             await _shippingRequestTripTransitionRepository.InsertAsync(tripTransition);
-            await SetRoutStatusTransition(routPoint);
+            await SetRoutStatusTransitionLog(routPoint);
         }
 
         /// <summary>
@@ -810,7 +808,7 @@ namespace TACHYON.Tracking
         /// <param name="routPoint"></param>
         /// <param name="Status"></param>
         /// <returns></returns>
-        private async Task SetRoutStatusTransition(RoutPoint routPoint)
+        private async Task SetRoutStatusTransitionLog(RoutPoint routPoint)
         {
             await _routPointStatusTransitionRepository.InsertAsync(new RoutPointStatusTransition
             {
@@ -844,10 +842,19 @@ namespace TACHYON.Tracking
         /// <param name="point"></param>
         /// <param name="currentUser"></param>
         /// <returns></returns>
-        public async Task NotificationWhenPointChanged(RoutPoint point, User currentUser)
+        public async Task NotificationWhenPointChanged(RoutPoint point)
         {
-            var trip = point.ShippingRequestTripFk;
-            if (!currentUser.IsDriver) await _firebaseNotifier.TripChanged(new Abp.UserIdentifier(trip.ShippingRequestFk.CarrierTenantId.Value, trip.AssignedDriverUserId.Value), trip.Id.ToString());
+            var currentUser = await GetCurrentUserAsync(_abpSession);
+
+            var trip = await _shippingRequestTripRepository
+                .GetAllIncluding(x => x.ShippingRequestFk)
+                .SingleAsync(x => x.Id == point.ShippingRequestTripId);
+
+            if (!currentUser.IsDriver)
+            {
+                // todo use appNotifier
+                await _firebaseNotifier.TripChanged(new Abp.UserIdentifier(trip.ShippingRequestFk.CarrierTenantId.Value, trip.AssignedDriverUserId.Value), trip.Id.ToString());
+            }
         }
 
         /// <summary>

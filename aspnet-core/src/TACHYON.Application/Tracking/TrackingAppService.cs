@@ -130,7 +130,12 @@ namespace TACHYON.Tracking
         public async Task InvokeStatus(InvokeStatusInputDto input)
         {
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier);
-            await _workFlowProvider.Invoke(input);
+            var args = new PointTransactionArgs
+            {
+                PointId = input.Id,
+                Code = input.Code
+            };
+            await _workFlowProvider.Invoke(args, input.Action);
         }
         public async Task NextLocation(long id)
         {

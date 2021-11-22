@@ -16,6 +16,7 @@ namespace TACHYON.Tracking.Dto
 
         public string Code { get; set; }
 
+
         public void Initialize()
         {
             if (Action == WorkFlowActionConst.ReceiverConfirmed || Action == WorkFlowActionConst.DeliveryConfirmationReceiverConfirmed)
