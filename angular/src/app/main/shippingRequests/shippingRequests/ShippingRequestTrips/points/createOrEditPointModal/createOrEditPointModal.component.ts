@@ -13,6 +13,7 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import { ModalDirective } from '@node_modules/ngx-bootstrap/modal';
 import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
 import { NgForm } from '@angular/forms';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'createOrEditPointModal',
@@ -167,7 +168,13 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
    * loads Facilities
    */
   loadFacilities() {
-    this.facilityLoading = true;
+    // this.facilityLoading = false;
+    let shippingRequestId: number;
+    let shippingRequestSub = this._tripService.currentShippingRequest.pipe(take(1)).subscribe((res) => {
+      shippingRequestId = res.shippingRequest.id;
+    });
+
+    this._tripService.GetOrRefreshFacilities(shippingRequestId);
     // this._shippingRequestDDService.allFacilities.subscribe((res) => (this.allFacilities = res));
     // this._tripService.currentFacilitiesItems.subscribe((res: DropDownMenu) => {
     //   this.facilityLoading = res.isLoading;
