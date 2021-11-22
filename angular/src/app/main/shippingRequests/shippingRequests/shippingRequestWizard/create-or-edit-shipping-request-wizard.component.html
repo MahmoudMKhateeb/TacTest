@@ -469,9 +469,8 @@
                             <!--                            <option [ngValue]="undefined" disabled selected>{{ l('SelectAGoodCategory') }}</option>-->
                             <option *ngFor="let item of allGoodCategorys" value="{{ item.id }}">{{ item.displayName }}</option>
                           </select>
+                          <span class="form-text text-muted">{{ l('SelectaGoodCategory') }}</span>
                         </div>
-
-                        <span class="form-text text-muted">{{ l('SelectaGoodCategory') }}</span>
                       </div>
 
                       <div class="col-lg-6">

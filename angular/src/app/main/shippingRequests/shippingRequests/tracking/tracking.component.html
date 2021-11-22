@@ -15,35 +15,41 @@
           <!--begin::Card-->
           <div class="card card-custom">
             <div class="card-header ribbon ribbon-top">
-              <a class="ribbon-target bg-danger" style="top: -1px; right: 20px">
-                {{ item.statusTitle | localize }}
-              </a>
-              <a
-                (click)="showIncident(item)"
-                class="ribbon-target bg-warning"
-                *ngIf="item.hasAccident"
-                style="top: -1px; right: 104px; margin-left: 84px"
-                type="submit"
-              >
-                <span class="svg-icon svg-icon-light svg-icon-1.5x"
-                  ><!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-05-14-112058/theme/html/demo1/dist/../src/media/svg/icons/Code/Warning-1-circle.svg--><svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    xmlns:xlink="http://www.w3.org/1999/xlink"
-                    width="24px"
-                    height="24px"
-                    viewBox="0 0 24 24"
-                    version="1.1"
+              <div class="d-flex align-items-center incidentDev">
+                <div class="d-flex align-items-center">
+                  <a
+                    (click)="showIncident(item)"
+                    class="ribbon-target bg-warning"
+                    *ngIf="item.hasAccident"
+                    style="position: inherit; margin-top: -8px"
+                    type="submit"
                   >
-                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                      <rect x="0" y="0" width="24" height="24" />
-                      <circle fill="#000000" opacity="0.3" cx="12" cy="12" r="10" />
-                      <rect fill="#000000" x="11" y="7" width="2" height="8" rx="1" />
-                      <rect fill="#000000" x="11" y="16" width="2" height="2" rx="1" />
-                    </g></svg
-                  ><!--end::Svg Icon--></span
-                >
-                {{ l('Incident') }}
-              </a>
+                    <span class="svg-icon svg-icon-light svg-icon-1.5x"
+                      ><!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-05-14-112058/theme/html/demo1/dist/../src/media/svg/icons/Code/Warning-1-circle.svg--><svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        xmlns:xlink="http://www.w3.org/1999/xlink"
+                        width="24px"
+                        height="24px"
+                        viewBox="0 0 24 24"
+                        version="1.1"
+                      >
+                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                          <rect x="0" y="0" width="24" height="24" />
+                          <circle fill="#000000" opacity="0.3" cx="12" cy="12" r="10" />
+                          <rect fill="#000000" x="11" y="7" width="2" height="8" rx="1" />
+                          <rect fill="#000000" x="11" y="16" width="2" height="2" rx="1" />
+                        </g></svg
+                    ></span>
+                    {{ l('Incident') }}
+                  </a>
+                </div>
+                <div class="d-flex align-items-center pr-5" style="right: -1%; position: relative">
+                  <a class="ribbon-target bg-danger" style="position: inherit; margin-top: -8px">
+                    {{ item.statusTitle | localize }}
+                  </a>
+                </div>
+              </div>
+
               <div class="d-flex align-items-center">
                 <!--begin::Symbol-->
                 <div class="symbol symbol-45 symbol-light mr-5">
