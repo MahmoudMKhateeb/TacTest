@@ -1,0 +1,49 @@
+<!-- begin::ViewAccidentModal   -->
+<div
+  #viewAccidentDetails="bs-modal"
+  aria-hidden="true"
+  aria-labelledby="viewAccidentDetails"
+  bsModal
+  class="modal fade"
+  role="dialog"
+  tabindex="-10010"
+>
+  <div class="modal-dialog modal-lg">
+    <div *ngIf="active" class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          <span>{{ l('viewAccidentDetails') }}</span>
+        </h4>
+        <button (click)="close()" aria-label="Close" class="close" type="button">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-lg-6 mt-4">
+            <label> {{ l('Reason') }}</label>
+            <input [value]="accidentDetails.otherReasonName" class="form-control" name="accidentDetails.reasoneId" disabled />
+          </div>
+          <div class="col-lg-6 mt-4">
+            <label> {{ l('Description') }}</label>
+            <input [value]="accidentDetails.description" class="form-control" name="accidentDetails.description" disabled />
+          </div>
+          <div class="col-lg-6 mt-4">
+            <label> {{ l('CreationTime') }}</label>
+            <input [value]="accidentDetails.creationTime" class="form-control" name="accidentDetails.creationTime" disabled />
+          </div>
+          <div class="col-lg-6 mt-4">
+            <label> {{ l('Document') }}</label>
+            <a *ngIf="accidentDetails.documentName" (click)="downloadDocument(accidentDetails.id)">
+              <i class="flaticon-download"></i>
+            </a>
+          </div>
+        </div>
+        <div class="modal-footer mt-6">
+          <button (click)="close()" class="btn btn-secondary" type="button">{{ l('Close') }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End::ViewAccidentModal   -->

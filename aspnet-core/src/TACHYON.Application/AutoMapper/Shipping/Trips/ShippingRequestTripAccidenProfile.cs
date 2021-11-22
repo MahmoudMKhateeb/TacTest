@@ -18,7 +18,8 @@ namespace TACHYON.AutoMapper.Shipping.Trips
             CreateMap<ShippingRequestTripAccident, CreateOrEditShippingRequestTripAccidentDto>()
             .ForMember(dst => dst.lat, opt => opt.MapFrom(src => src.Location != null ? src.Location.X : default(double?)))
             .ForMember(dst => dst.lng, opt => opt.MapFrom(src => src.Location != null ? src.Location.Y : default(double?)));
-            CreateMap<CreateOrEditShippingRequestTripAccidentDto, ShippingRequestTripAccident>();
+
+            CreateMap<ShippingRequestTripAccident, ViewShippingRequestTripAccidentDto>();
 
             CreateMap<CreateOrEditShippingRequestTripAccidentDto, DocumentUpload>().ReverseMap();
 

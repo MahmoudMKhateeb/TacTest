@@ -110,6 +110,7 @@ using TACHYON.Shipping.ShippingRequestStatuses.Dtos;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.ShippingTypes;
 using TACHYON.Shipping.ShippingTypes.Dtos;
+using TACHYON.Shipping.Trips.Accidents.Dto;
 using TACHYON.Shipping.Trips.Dto;
 using TACHYON.Shipping.Trips.RejectReasons.Dtos;
 using TACHYON.ShippingRequestTripVases;
@@ -745,6 +746,8 @@ namespace TACHYON
 
             configuration.
                 CreateMultiLingualMap<ShippingRequestReasonAccident, ShippingRequestReasonAccidentTranslation, ShippingRequestReasonAccidentListDto>(context);
+            configuration.
+              CreateMultiLingualMap<ShippingRequestReasonAccident, ShippingRequestReasonAccidentTranslation, ViewShippingRequestTripAccidentDto>(context);
             configuration.
                 CreateMultiLingualMap<ShippingRequestTripRejectReason, ShippingRequestTripRejectReasonTranslation, ShippingRequestTripRejectReasonListDto>(context);
             configuration.

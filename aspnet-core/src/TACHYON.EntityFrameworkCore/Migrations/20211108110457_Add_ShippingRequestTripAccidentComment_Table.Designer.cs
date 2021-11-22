@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using TACHYON.EntityFrameworkCore;
@@ -10,9 +11,10 @@ using TACHYON.EntityFrameworkCore;
 namespace TACHYON.Migrations
 {
     [DbContext(typeof(TACHYONDbContext))]
-    partial class TACHYONDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211108110457_Add_ShippingRequestTripAccidentComment_Table")]
+    partial class Add_ShippingRequestTripAccidentComment_Table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3863,21 +3865,6 @@ namespace TACHYON.Migrations
                     b.Property<DateTime?>("DeletionTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<decimal>("DetailsTotalCommission")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("DetailsTotalPricePostCommissionPreVat")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("DetailsTotalPricePreCommissionPreVat")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("DetailsTotalVatAmountPreCommission")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("DetailsTotalVatPostCommission")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -3903,21 +3890,6 @@ namespace TACHYON.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ItemVatAmountWithCommission")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("ItemsTotalCommission")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("ItemsTotalPricePostCommissionPreVat")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("ItemsTotalPricePreCommissionPreVat")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("ItemsTotalVatAmountPreCommission")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("ItemsTotalVatPostCommission")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime?>("LastModificationTime")
@@ -4020,9 +3992,6 @@ namespace TACHYON.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ItemVatAmountWithCommission")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("ItemsTotalPricePreCommissionPreVat")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<long>("PriceOfferId")

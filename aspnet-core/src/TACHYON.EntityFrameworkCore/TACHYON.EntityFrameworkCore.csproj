@@ -43,6 +43,12 @@
     <Compile Remove="Migrations\20211001130927_change bayanPlateTypeId to string in PlateType table.Designer.cs" />
     <Compile Remove="Migrations\20211001134011_update GoodCatgories table.cs" />
     <Compile Remove="Migrations\20211001134011_update GoodCatgories table.Designer.cs" />
+    <Compile Remove="Migrations\20211025200555_AddShippingRequestAccidentComments_Table.cs" />
+    <Compile Remove="Migrations\20211025200555_AddShippingRequestAccidentComments_Table.Designer.cs" />
+    <Compile Remove="Migrations\20211027080531_addAccidentIdForTripCommentsTbl.cs" />
+    <Compile Remove="Migrations\20211027080531_addAccidentIdForTripCommentsTbl.Designer.cs" />
+    <Compile Remove="Migrations\20211027085020_addTenantRelationForTripCommentsTbl.cs" />
+    <Compile Remove="Migrations\20211027085020_addTenantRelationForTripCommentsTbl.Designer.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.5" />

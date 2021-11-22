@@ -542,6 +542,10 @@ card-body {
   border-radius: 0 0.42rem 0.42rem 0 !important;
 }
 
+a {
+  cursor: pointer !important;
+}
+
 .p-rating .p-rating-icon.pi-star {
   color: #ffca08 !important;
 }

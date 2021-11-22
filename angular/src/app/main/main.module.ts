@@ -260,6 +260,8 @@ import { ProfileModule } from '@app/main/profile/profile.module';
 import { ViewGoodDetailsComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/points/good-details/view-good-details/view-good-details.component';
 import { ViewPointModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/points/view-point-modal/view-point-modal.component';
 import { DangerousCoodTypesTranslationsComponent } from './goods/dangerous-cood-types-translations/dangerous-cood-types-translations.component';
+import { ViewDetailsAccidentModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/accident/view-details-accident-modal.component';
+import { AddAccidentCommentModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/accident/accident-comment/add-accident-comment-modal.component';
 import { NgbCollapseModule } from '@node_modules/@ng-bootstrap/ng-bootstrap';
 import { ShippingRequestRatingModalComponent } from './shippingRequests/shippingRequests/rating/shipping-request-rating-modal.component';
 import { RatingModule } from '@node_modules/primeng/rating';
@@ -499,6 +501,8 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ViewGoodDetailsComponent,
     ViewPointModalComponent,
     DangerousCoodTypesTranslationsComponent,
+    ViewDetailsAccidentModalComponent,
+    AddAccidentCommentModalComponent,
     ShippingRequestRatingModalComponent,
   ],
   providers: [

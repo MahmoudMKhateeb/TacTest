@@ -16,6 +16,7 @@ namespace TACHYON.Shipping.Trips.Accidents
 
         Task CreateOrEdit(CreateOrEditShippingRequestTripAccidentDto input);
         Task<CreateOrEditShippingRequestTripAccidentDto> GetForEdit(EntityDto input);
+        Task<ViewShippingRequestTripAccidentDto> Get(EntityDto input);
 
         Task CreateOrEditResolve(CreateOrEditShippingRequestTripAccidentResolveDto input);
 
