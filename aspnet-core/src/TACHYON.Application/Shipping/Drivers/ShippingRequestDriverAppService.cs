@@ -1,4 +1,5 @@
-﻿using Abp.Application.Services.Dto;
+﻿using Abp;
+using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
@@ -42,7 +43,7 @@ namespace TACHYON.Shipping.Drivers
         private readonly IRepository<ShippingRequestTripAccident> _shippingRequestTripAccidentRepository;
         private readonly ShippingRequestDriverManager _shippingRequestDriverManager;
         private readonly ShippingRequestManager _shippingRequestManager;
-        private readonly IFirebaseNotifier _firebaseNotifier;
+        private readonly IAppNotifier _appNotifier;
         private readonly ShippingRequestsTripManager _shippingRequestsTripManager;
         private readonly IRepository<UserOTP> _userOtpRepository;
         private readonly RatingLogManager _ratingLogManager;
@@ -54,15 +55,19 @@ namespace TACHYON.Shipping.Drivers
             IRepository<ShippingRequestTripTransition> shippingRequestTripTransitionRepository,
             ShippingRequestDriverManager shippingRequestDriverManager,
             ShippingRequestManager shippingRequestManager,
-            IFirebaseNotifier firebaseNotifier,
-            ShippingRequestsTripManager shippingRequestsTripManager, IRepository<UserOTP> userOtpRepository, IRepository<ShippingRequestTripAccident> shippingRequestTripAccidentRepository, RatingLogManager ratingLogManager, IRepository<DriverLocationLog, long> driverLocationLogRepository)
+            IAppNotifier appNotifier,
+            ShippingRequestsTripManager shippingRequestsTripManager,
+            IRepository<UserOTP> userOtpRepository,
+            IRepository<ShippingRequestTripAccident> shippingRequestTripAccidentRepository,
+            RatingLogManager ratingLogManager,
+            IRepository<DriverLocationLog, long> driverLocationLogRepository)
         {
             _ShippingRequestTrip = ShippingRequestTrip;
             _RoutPointRepository = RoutPointRepository;
             _shippingRequestTripTransitionRepository = shippingRequestTripTransitionRepository;
             _shippingRequestDriverManager = shippingRequestDriverManager;
             _shippingRequestManager = shippingRequestManager;
-            _firebaseNotifier = firebaseNotifier;
+            _appNotifier = appNotifier;
             _shippingRequestsTripManager = shippingRequestsTripManager;
             _userOtpRepository = userOtpRepository;
             _shippingRequestTripAccidentRepository = shippingRequestTripAccidentRepository;
@@ -679,10 +684,11 @@ namespace TACHYON.Shipping.Drivers
             return await _ShippingRequestTrip.CountAsync(x => x.ShippingRequestId == request.Id && x.HasAccident) == 0;
         }
 
-        public async Task PushNotification(int id)
+        public async Task PushNotification(int id,string waybillNumber)
         {
-
-            await _firebaseNotifier.TripChanged(new Abp.UserIdentifier(AbpSession.TenantId, AbpSession.UserId.Value), id.ToString());
+            if (AbpSession.UserId != null ) 
+                await _appNotifier.NotifyDriverOnlyWhenTripUpdated(id,waybillNumber,
+                    new UserIdentifier(AbpSession.TenantId, AbpSession.UserId.Value));
         }
 
 

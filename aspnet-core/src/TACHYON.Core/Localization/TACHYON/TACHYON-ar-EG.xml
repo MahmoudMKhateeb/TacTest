@@ -1481,7 +1481,7 @@
 		</text>
 		<text name="ShipperName">اسم الشاحن</text>
 		<text name="ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage">لقد استخدمت أكثر من 70% من حدك الإئتماني</text>
-		<text name="ShipperReminderToCompelteTrips">
+		<text name="ShipperReminderToCompleteTrips">
 			<a href="/app/main/shippingRequests/shippingRequests/view?id={id}">لديك شحنة لم تكمل الرحلات الخاصة بها</a>
 		</text>
 		<text name="ShippingNote">ملاحظات الشاحن</text>

@@ -48,13 +48,12 @@ namespace TACHYON.Notifications
         Task ShipperShippingRequestFinish(UserIdentifier argsUser, ShippingRequest Request);
 
         #region Trips
+        
 
-        Task ShipperShippingRequestTripNotifyDriverWhenAssignTrip(UserIdentifier argsUser, ShippingRequestTrip Trip);
+        Task NotifyDriverWhenAssignTrip(int tripId, params UserIdentifier[] drivers);
 
-        Task ShipperShippingRequestTripNotifyDriverWhenUnassignedTrip(UserIdentifier argsUser,
-            ShippingRequestTrip Trip);
-
-        Task NotifyDriverWhenAssignToTrip(ShippingRequestTrip Trip);
+        Task NotifyDriverWhenUnassignedTrip(int tripId, string waybillNumber, params UserIdentifier[] drivers);
+        
         Task DriverRejectTrip(ShippingRequestTrip Trip, string driver);
         Task DriverAcceptTrip(ShippingRequestTrip Trip, string driver);
         Task CarrierTripNeedAccept(ShippingRequestTrip Trip);
@@ -106,7 +105,7 @@ namespace TACHYON.Notifications
         #region Shipping Request
 
         Task ShippingRequestNotifyCarrirerWhenShipperAccepted(ShippingRequest shippingRequest);
-        Task ShipperReminderToCompelteTrips(UserIdentifier user, ShippingRequest shippingRequest);
+        Task ShipperReminderToCompleteTrips(long shippingRequestId, UserIdentifier userIds);
 
         #endregion
 
@@ -151,5 +150,9 @@ namespace TACHYON.Notifications
         Task NotifyTachyonDealWhenTripUpdated(NotifyTripUpdatedInput input);
 
         Task NotifyTripUpdated(ShippingRequestTrip trip);
+
+        Task DriverReminderForTrip(UserIdentifier user, string tripId);
+
+        Task NotifyDriverOnlyWhenTripUpdated(int tripId, string waybillNumber, params UserIdentifier[] drivers);
     }
 }

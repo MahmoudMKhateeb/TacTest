@@ -3,7 +3,6 @@ using Abp.Application.Services.Dto;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TACHYON.DriverLocationLogs.dtos;
-using TACHYON.Rating.dtos;
 using TACHYON.Routs.RoutPoints.Dtos;
 using TACHYON.Shipping.Drivers.Dto;
 
@@ -24,7 +23,7 @@ namespace TACHYON.Shipping.Drivers
         Task Accepted(int TripId);
         //Task Rejected(CreateShippingRequestTripDriverRejectDto Input);
         Task Reset(int TripId);
-        Task PushNotification(int id);
+        Task PushNotification(int id,string waybillNumber);
         Task<List<DriverLocationLogDto>> GetAllDriverLocationLogs(GetAllDriverLocationLogsInput input);
 
 

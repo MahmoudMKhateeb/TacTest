@@ -49,8 +49,8 @@ namespace TACHYON.Notifications
         public const string DriverGpsOff = "App.DriverGpsOff";
 
         #region Trip
-        public const string ShipperShippingRequestTripNotifyDriverWhenAssignTrip = "App.ShipperShippingRequestTripNotifyDriverWhenAssignTrip";
-        public const string ShipperShippingRequestTripNotifyDriverWhenUnassignedTrip = "App.ShipperShippingRequestTripNotifyDriverWhenUnassignedTrip";
+        public const string NotifyDriverWhenAssignTrip = "App.ShipperShippingRequestTripNotifyDriverWhenAssignTrip";
+        public const string NotifyDriverWhenUnassignedTrip = "App.ShipperShippingRequestTripNotifyDriverWhenUnassignedTrip";
         public const string NotifyDriverWhenAssignToTrip = "App.NotifyDriverWhenAssignToTrip";
         public const string DriverRejectTrip = "App.DriverRejectTrip";
         public const string DriverAcceptTrip = "App.DriverAcceptTrip";
@@ -78,7 +78,7 @@ namespace TACHYON.Notifications
         #endregion
         #region Shipping Request
         public const string ShippingRequestNotifyCarrirerWhenShipperAccepted = "App.ShippingRequestNotifyCarrirerWhenShipperAccepted";
-        public const string ShipperReminderToCompelteTrips = "App.ShipperReminderToCompelteTrips";
+        public const string ShipperReminderToCompleteTrips = "App.ShipperReminderToCompleteTrips";  
         #region Offer
         public const string ShippingRequestSendOfferWhenAddPrice = "App.ShippingRequestSendOfferWhenAddPrice";
         public const string ShippingRequestSendOfferWhenUpdatePrice = "App.ShippingRequestSendOfferWhenUpdatePrice";
@@ -93,6 +93,12 @@ namespace TACHYON.Notifications
         public const string RejectedOffer = "App.RejectedOffer";
         public const string PendingOffer = "App.PendingOffer";
         #endregion
+        #endregion
+
+        #region Mobile
+
+        public const string DriverTripReminder = "App.DriverTripReminder";
+
         #endregion
         #endregion
 
