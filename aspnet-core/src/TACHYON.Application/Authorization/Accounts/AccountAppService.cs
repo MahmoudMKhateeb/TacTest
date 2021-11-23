@@ -147,7 +147,7 @@ namespace TACHYON.Authorization.Accounts
             return new ResetPasswordOutput
             {
                 CanLogin = user.IsActive,
-                UserName = user.UserName
+                UserName = user.EmailAddress
             };
         }
 

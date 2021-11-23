@@ -124,7 +124,7 @@ namespace TACHYON.Authorization.Users
         /// <param name="tenant"></param>
         /// <returns></returns>
         [UnitOfWork]
-        public virtual async Task SendAllApprovedDocumentsAsync(Tenant tenant,string loginLink)
+        public virtual async Task SendAllApprovedDocumentsAsync(Tenant tenant, string loginLink)
         {
 
             // You Can Get Login Link From IAppUrlService And Method Name : GetTachyonPlatformLoginUrl()
@@ -134,11 +134,11 @@ namespace TACHYON.Authorization.Users
             var emailMsg = $"<div style=\"{DevStyle}\">" +
                            "<div style=\"margin - top: 10px; \">" +
                            $"<p style=\"color: black; \"> {L("DearsAt")} <b style=\"color: #da323e;\">{tenant.companyName}</b><br>"
-                           + L("ThisEmailSentToInformDocumentsApproved") + "<br><br>"+
+                           + L("ThisEmailSentToInformDocumentsApproved") + "<br><br>" +
                            L("LoginLink")
-                           +$"<a href=\"{loginLink}\">{loginLink}</a></p></div></div>";
+                           + $"<a href=\"{loginLink}\">{loginLink}</a></p></div></div>";
 
-            var adminUser=await _userManager.GetAdminByTenantIdAsync(tenant.Id);
+            var adminUser = await _userManager.GetAdminByTenantIdAsync(tenant.Id);
             var mailMessage = new StringBuilder(emailMsg);
             var emailTemplate = GetTitleAndSubTitle(tenant.Id, L("ApprovedDocuments_Title"), L("ApprovedDocuments_SubTitle"));
 
@@ -152,7 +152,7 @@ namespace TACHYON.Authorization.Users
         /// <param name="tenant"></param>
         /// <returns></returns>
         [UnitOfWork]
-        public virtual async Task SendExpiredDateDocumentsAsyn(Tenant tenant,string documentFileName)
+        public virtual async Task SendExpiredDateDocumentsAsyn(Tenant tenant, string documentFileName)
         {
             var adminUser = await _userManager.GetAdminByTenantIdAsync(tenant.Id);
             var mailMessage = new StringBuilder();
@@ -188,10 +188,10 @@ namespace TACHYON.Authorization.Users
 
             //Truck table
             //If exists Truck files
-            if (files.Any(x => x.DocumentTypeFk.DocumentsEntityId == (int)DocumentsEntitiesEnum.Truck ))
+            if (files.Any(x => x.DocumentTypeFk.DocumentsEntityId == (int)DocumentsEntitiesEnum.Truck))
             {
                 //bind html Trucks table
-                BindTruckFilesTable(mailMessage, 
+                BindTruckFilesTable(mailMessage,
                     files.Where(x => x.DocumentTypeFk.DocumentsEntityId == (int)DocumentsEntitiesEnum.Truck &&
                     x.TruckFk != null).ToList());
             }
@@ -201,8 +201,8 @@ namespace TACHYON.Authorization.Users
             else if (files.Any(x => x.DocumentTypeFk.DocumentsEntityId == (int)DocumentsEntitiesEnum.Driver))
             {
                 //bind html driver table
-                BindDriverFilesTable(mailMessage, 
-                    files.Where(x => x.DocumentTypeFk.DocumentsEntityId == (int)DocumentsEntitiesEnum.Driver && 
+                BindDriverFilesTable(mailMessage,
+                    files.Where(x => x.DocumentTypeFk.DocumentsEntityId == (int)DocumentsEntitiesEnum.Driver &&
                     x.UserFk != null).ToList());
             }
 
@@ -210,7 +210,7 @@ namespace TACHYON.Authorization.Users
             await ReplaceBodyAndSend(adminUser.EmailAddress, L("DocumentsExpiredInfo"), emailTemplate, mailMessage);
         }
 
-        
+
 
 
         /// <summary>
@@ -226,32 +226,18 @@ namespace TACHYON.Authorization.Users
             }
 
             var tenancyName = GetTenancyNameOrNull(user.TenantId);
-            var emailTemplate = GetTitleAndSubTitle(user.TenantId,
-                L("PasswordResetEmail_Title"),
-                L("PasswordResetEmail_SubTitle"));
+            var emailTemplate = GetTitleAndSubTitle(user.TenantId, L("PasswordResetEmail_Title"), L("PasswordResetEmail_SubTitle"));
+            var mailMessage = new StringBuilder();
 
-            var mailMessageContent = $"<div style=\"{DevStyle}\"><div style=\"margin - top: 10px; \">"
-                                     + $"<p style=\"color: black; \"> {L("Dear")} <b style=\"color: #da323e;\">{user.FullName}</b> <br><br>" +
-                                     L(
-                                         "You are receiving this email because we received a password reset request for your account") +
-                                     $"<br><br></p> <div align=\"center\"> <a href=\"{link}\"" +
-                                     $" style=\"{EmailButtonStyle}\" bg-color=\"{EmailButtonColor}\">" +
-                                     L("ResetPassword") + "</a></div>" +
-                                     $"<p><br>{L("YourNewPasswordMust")}:</p>" +
-                                     $"<ul><li>{L("Contain 8-12 characters")}</li>" +
-                                     $"<li>{L("Contain at least 1 upper-case letter")}</li>" +
-                                     $"<li>{L("Contain at least 1 lower-case letter")}</li>" +
-                                     $"<li>{L("Contain at least 1 number")}</li></ul>"+
-                                     $"<p>{L("IfYouDidNotRequestPasswordReset,")}</p></div>";
-
-
-            var mailMessage = new StringBuilder(mailMessageContent);
+            mailMessage.AppendLine("<b>" + L("NameSurname") + "</b>: " + user.Name + " " + user.Surname + "<br />");
 
             if (!tenancyName.IsNullOrEmpty())
             {
-                mailMessage.AppendLine("<b>" + L("CompanyFullLeagalName") + "</b>: " + tenancyName + "<br />");
+                mailMessage.AppendLine("<b>" + L("TenancyName") + "</b>: " + tenancyName + "<br />");
             }
 
+            mailMessage.AppendLine("<b>" + L("UserName") + "</b>: " + user.UserName + "<br />");
+            mailMessage.AppendLine("<b>" + L("ResetCode") + "</b>: " + user.PasswordResetCode + "<br />");
 
             if (!link.IsNullOrEmpty())
             {
@@ -267,7 +253,7 @@ namespace TACHYON.Authorization.Users
 
                 mailMessage.AppendLine("<br />");
                 mailMessage.AppendLine(L("PasswordResetEmail_ClickTheLinkBelowToResetYourPassword") + "<br /><br />");
-                mailMessage.AppendLine("<a style=\"" + EmailButtonStyle + "\" bg-color=\"" + EmailButtonColor + "\" href=\"" + link + "\">" + L("Reset") + "</a>");
+                mailMessage.AppendLine("<a style=\"" + "" + "\" bg-color=\"" + "" + "\" href=\"" + link + "\">" + L("Reset") + "</a>");
                 mailMessage.AppendLine("<br />");
                 mailMessage.AppendLine("<br />");
                 mailMessage.AppendLine("<br />");
@@ -277,6 +263,7 @@ namespace TACHYON.Authorization.Users
 
             await ReplaceBodyAndSend(user.EmailAddress, L("PasswordResetEmail_Subject"), emailTemplate, mailMessage);
         }
+
 
         public async Task TryToSendChatMessageMail(User user, string senderUsername, string senderTenancyName, ChatMessage chatMessage)
         {
@@ -305,7 +292,7 @@ namespace TACHYON.Authorization.Users
             var emailTemplate = GetTitleAndSubTitle(tenantId, L("PasswordUpdated_Title"), L("PasswordUpdated_SubTitle"));
             var templateContent = $"<div style=\"{DevStyle}\"><div style=\"margin - top: 10px; \">"
                 + $"<p style=\"color: black; \">{L("YourPasswordChangedSuccessfully")}<br>"
-                +$"{L("YourNewPasswordIs")} <b> {newPassword} </b> </p> </div> </div>";
+                + $"{L("YourNewPasswordIs")} <b> {newPassword} </b> </p> </div> </div>";
 
             var mailTemplate = new StringBuilder(templateContent);
 
@@ -361,7 +348,7 @@ namespace TACHYON.Authorization.Users
             var emailTemplate = GetTitleAndSubTitle(tenant.Id,
                 L("InvoiceDue_Title"), L("InvoiceDue_SubTitle"));
             var adminUser = await _userManager.GetAdminByTenantIdAsync(tenant.Id);
-            
+
             var templateContent = $"<div style=\"{DevStyle}\"><div style=\"margin - top: 10px; \">"
                                   + $"<p style=\"color: black; \"> {L("DearsAt")} <b style=\"color: #da323e;\">{tenant.companyName}</b> <br><br>"
                                   + $"{L("ThisIsJustToRemindYouThatTheInvoice")} <b style=\"color: #da323e;\">" +
