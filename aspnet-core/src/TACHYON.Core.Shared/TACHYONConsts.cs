@@ -110,9 +110,11 @@
         #endregion
         #endregion
 
-
         public const string OthersDisplayName = "Others";
 
-
+        #region WorkFlow Const
+        public const int PickUpRoutPointWorkflowVersion = 1;
+        public const int DropOfRoutPointWorkflowVersion = 0;
+        #endregion
     }
 }

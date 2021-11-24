@@ -217,7 +217,7 @@ namespace TACHYON.Tracking
                      {
                          Status = x.Key,
                          IsDone = rout.RoutPointStatusTransitions.Any(g => g.Status == x.Key && (resetTransaction == null || g.CreationTime > resetTransaction.CreationTime)),
-                         Name = ""
+                         Name = x.Key.ToString()
                      }).ToList();
         }
         public List<PointTransactionDto> GetTransactionsByStatus(int workFlowVersion, RoutePointStatus? status = null)
