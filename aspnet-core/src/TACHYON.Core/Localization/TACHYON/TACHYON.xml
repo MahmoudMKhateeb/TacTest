@@ -2417,7 +2417,9 @@
 		<text name="FinishOffLoadShipmentDeliveryConfirmation">Delivery Confirmation after Finish Off Load Shipment</text>
 		<text name="DeliveryConfirmation">Delivery Confirmation</text>
 		<text name="DeliveryConfirmationReceiverConfirmed">Receiver Confirmed after DeliveryConfirmation</text>
--->
+		-->
+		<text name="WorkFlowNotExist">WorkFlow for current point does not exist</text>
+		<text name="TransactionNotExist">Transaction does not exist</text>
 		<text name="FinishOffLoadShipmentDeliveryConfirmation">Delivery Confirmation after Finish Off Load Shipment</text>
 		<text name="DeliveryConfirmationReceiverConfirmed">Receiver Confirmed after DeliveryConfirmation</text>
 

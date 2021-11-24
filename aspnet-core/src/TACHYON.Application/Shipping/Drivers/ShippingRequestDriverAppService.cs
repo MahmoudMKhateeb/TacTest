@@ -27,6 +27,7 @@ using TACHYON.Routs.RoutPoints.Dtos;
 using TACHYON.Routs.RoutPoints.RoutPointSmartEnum;
 using TACHYON.Shipping.Accidents.Dto;
 using TACHYON.Shipping.Drivers.Dto;
+using TACHYON.Shipping.RoutPoints;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips;
@@ -44,10 +45,10 @@ namespace TACHYON.Shipping.Drivers
 
         private readonly IRepository<ShippingRequestTrip> _ShippingRequestTrip;
         private readonly IRepository<RoutPoint, long> _RoutPointRepository;
+        private readonly IRepository<RoutPointStatusTransition> _routPointStatusTransitionRepository;
         private readonly IRepository<ShippingRequestTripTransition> _shippingRequestTripTransitionRepository;
         private readonly IRepository<ShippingRequestTripAccident> _shippingRequestTripAccidentRepository;
         private readonly ShippingRequestDriverManager _shippingRequestDriverManager;
-        private readonly ShippingRequestManager _shippingRequestManager;
         private readonly IFirebaseNotifier _firebaseNotifier;
         private readonly IRepository<UserOTP> _userOtpRepository;
         private readonly RatingLogManager _ratingLogManager;
@@ -59,21 +60,20 @@ namespace TACHYON.Shipping.Drivers
             IRepository<RoutPoint, long> RoutPointRepository,
             IRepository<ShippingRequestTripTransition> shippingRequestTripTransitionRepository,
             ShippingRequestDriverManager shippingRequestDriverManager,
-            ShippingRequestManager shippingRequestManager,
             IFirebaseNotifier firebaseNotifier,
-            ShippingRequestPointWorkFlowProvider workFlowProvider, IRepository<UserOTP> userOtpRepository, IRepository<ShippingRequestTripAccident> shippingRequestTripAccidentRepository, RatingLogManager ratingLogManager, IRepository<DriverLocationLog, long> driverLocationLogRepository)
+            ShippingRequestPointWorkFlowProvider workFlowProvider, IRepository<UserOTP> userOtpRepository, IRepository<ShippingRequestTripAccident> shippingRequestTripAccidentRepository, RatingLogManager ratingLogManager, IRepository<DriverLocationLog, long> driverLocationLogRepository, IRepository<RoutPointStatusTransition> routPointStatusTransitionRepository)
         {
             _ShippingRequestTrip = ShippingRequestTrip;
             _RoutPointRepository = RoutPointRepository;
             _shippingRequestTripTransitionRepository = shippingRequestTripTransitionRepository;
             _shippingRequestDriverManager = shippingRequestDriverManager;
-            _shippingRequestManager = shippingRequestManager;
             _firebaseNotifier = firebaseNotifier;
             _userOtpRepository = userOtpRepository;
             _shippingRequestTripAccidentRepository = shippingRequestTripAccidentRepository;
             _ratingLogManager = ratingLogManager;
             _driverLocationLogRepository = driverLocationLogRepository;
             _workFlowProvider = workFlowProvider;
+            _routPointStatusTransitionRepository = routPointStatusTransitionRepository;
         }
         /// <summary>
         /// list all trips realted with drivers
@@ -326,7 +326,7 @@ namespace TACHYON.Shipping.Drivers
         /// <param name="PointId">Dropoff point id</param>
         public async Task GotoNextLocation(long pointId)
         {
-            await _workFlowProvider.GotoNextLocation(pointId);
+            await _workFlowProvider.GoToNextLocation(pointId);
         }
 
         /// <summary>
@@ -473,17 +473,22 @@ namespace TACHYON.Shipping.Drivers
                 trip.RejectReasonId = default(int?);
                 trip.ActualDeliveryDate = trip.ActualPickupDate = null;
                 // trip.RatingLogs.Where(x => x.RateType != RateType.CarrierTripBySystem && x.RateType != RateType.ShipperTripBySystem).ToList().Clear();
-                trip.RoutPoints.ToList().ForEach(item =>
+                trip.RoutPoints.ToList().ForEach(async item =>
                 {
                     item.IsActive = false;
                     item.IsComplete = false;
+                    item.IsResolve = false;
                     item.Status = RoutePointStatus.StandBy;
                     item.IsDeliveryNoteUploaded = false;
                     item.RoutPointDocuments.Clear();
                     item.ActualPickupOrDeliveryDate = null;
                     item.CompletedStatus = RoutePointCompletedStatus.NotCompleted;
                     item.StartTime = item.EndTime = null;
-                    item.RoutPointStatusTransitions.Clear();
+                    await _routPointStatusTransitionRepository.InsertAsync(new RoutPointStatusTransition
+                    {
+                        PointId = item.Id,
+                        Status = RoutePointStatus.Reset
+                    });
                     //item.RatingLogs.Where(x => x.RateType != RateType.CarrierTripBySystem && x.RateType != RateType.ShipperTripBySystem).ToList().Clear();
                     //item.ShippingRequestTripAccidents.Clear();
                     //item.ShippingRequestTripTransitions.Clear();

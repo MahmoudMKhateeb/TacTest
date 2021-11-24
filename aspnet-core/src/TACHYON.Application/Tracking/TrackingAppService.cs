@@ -95,7 +95,6 @@ namespace TACHYON.Tracking
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier, AppFeatures.Shipper);
             DisableTenancyFilters();
             var routes = _routPointRepository.GetAll()
-            .Include(t => t.RoutPointStatusTransitions)
             .Include(r => r.FacilityFk)
             .Include(r => r.GoodsDetails)
              .ThenInclude(c => c.GoodCategoryFk)
@@ -111,9 +110,12 @@ namespace TACHYON.Tracking
             var mappedRoutes = ObjectMapper.Map<List<ShippingRequestTripDriverRoutePointDto>>(routes);
             foreach (var rout in mappedRoutes)
             {
+                var resetStatues = rout.RoutPointStatusTransitions.OrderByDescending(c => c.CreationTime)
+                    .FirstOrDefault(x => x.Status == RoutePointStatus.Reset);
                 rout.Statues = _workFlowProvider.GetStatuses(rout);
                 rout.AvailableTransactions = _workFlowProvider.GetTransactionsByStatus(rout.WorkFlowVersion, rout.Status)
-                    .Where(c => !rout.RoutPointStatusTransitions.Any(x => x.Status == c.ToStatus)).ToList();
+                    .Where(c => !rout.RoutPointStatusTransitions.Any(x => x.Status == c.ToStatus
+                    && (resetStatues == null || x.CreationTime > resetStatues.CreationTime))).ToList();
             }
             return new ListResultDto<ShippingRequestTripDriverRoutePointDto>(mappedRoutes);
         }
@@ -140,7 +142,7 @@ namespace TACHYON.Tracking
         public async Task NextLocation(long id)
         {
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier);
-            await _workFlowProvider.GotoNextLocation(id);
+            await _workFlowProvider.GoToNextLocation(id);
         }
         public async Task<FileDto> POD(long id)
         {

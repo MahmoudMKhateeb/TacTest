@@ -397,20 +397,12 @@ namespace TACHYON.Invoices
             InvoicePeriod period = default;
             ///If the shipemnt pay in advance get the period entity for pay in advance else get from the features
             if (trip.ShippingRequestFk.IsPrePayed.HasValue && trip.ShippingRequestFk.IsPrePayed.Value)
-            {
                 period = await _periodRepository.FirstOrDefaultAsync(x => x.PeriodType == InvoicePeriodType.PayInAdvance);
-
-            }
             else
-            {
                 period = await _periodRepository.FirstOrDefaultAsync(x => x.Id == int.Parse(_featureChecker.GetValue(tenant.Id, AppFeatures.ShipperPeriods)));
 
-            }
-
             if (period.PeriodType == InvoicePeriodType.PayuponDelivery || period.PeriodType == InvoicePeriodType.PayInAdvance)
-            {
                 await GenerateShipperInvoice(tenant, new List<ShippingRequestTrip>() { trip }, period);
-            }
         }
 
 
