@@ -690,7 +690,7 @@ namespace TACHYON.Notifications
                     L("NotifyDriverWhenUnassignedToTrip", waybillNumber), TACHYONConsts.LocalizationSourceName))
             {["id"] = tripId};
 
-            await _firebaseNotifier.PushNotification(AppNotificationNames.NotifyDriverWhenAssignTrip,
+            await _firebaseNotifier.PushNotification(AppNotificationNames.NotifyDriverWhenUnassignedTrip,
                 notificationData, drivers.Select(x => x.UserId).ToArray());
             await _notificationPublisher.PublishAsync(AppNotificationNames.NotifyDriverWhenUnassignedTrip, notificationData, userIds: drivers);
         }
