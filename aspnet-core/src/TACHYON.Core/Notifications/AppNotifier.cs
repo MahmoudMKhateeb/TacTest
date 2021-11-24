@@ -91,10 +91,10 @@ namespace TACHYON.Notifications
         {
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(
-                    "DriverTripReminder",
+                    L("DriverTripReminder"),
                     TACHYONConsts.LocalizationSourceName
                 )
-            ) {["tripId"] = tripId};
+            ) {["id"] = tripId};
 
             await _notificationPublisher.PublishAsync(AppNotificationNames.DriverTripReminder,
                 notificationData,userIds: new []{user});
@@ -494,7 +494,7 @@ namespace TACHYON.Notifications
             input.WaybillNumber),
                     TACHYONConsts.LocalizationSourceName))
             {
-                Properties = new Dictionary<string, object>() { { "updatedTripId", input.TripId } }
+                Properties = new Dictionary<string, object>() { { "id", input.TripId } }
             };
 
             var notifiedUsers = new List<UserIdentifier>(){tenantAdmin};
@@ -514,7 +514,7 @@ namespace TACHYON.Notifications
                 new LocalizableString(
                     L("CarrierTripUpdatedNotificationMessage", waybillNumber),
                     TACHYONConsts.LocalizationSourceName))
-            {[ "updatedTripId"] = tripId};
+            {[ "id"] = tripId};
             await _firebaseNotifier.PushNotification(AppNotificationNames.NotifyCarrierWhenTripUpdated,
                 notificationData, drivers.Select(x=> x.UserId).ToArray());
             

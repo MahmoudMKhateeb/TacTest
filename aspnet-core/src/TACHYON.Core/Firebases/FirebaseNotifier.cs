@@ -38,7 +38,16 @@ namespace TACHYON.Firebases
             foreach (string token in tokens)
             {
 
-                Message message = new Message {Token = token};
+                Message message = new Message
+                {
+                    Token = token,
+                    Notification = new Notification()
+                    {
+                        Title = data?.Properties["Message"].ToString(),
+                        Body = notificationName,
+                    },
+                    Data = data?.Properties.ToDictionary(x=> x.Key,x=> x.Value.ToString())
+                };
                 message.Android = new AndroidConfig()
                 {
                     Priority = Priority.High,
