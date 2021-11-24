@@ -18,7 +18,9 @@ namespace TACHYON.Authorization.Users.Profile.Dto
         public string CompanyEmailAddress { get; set; }
         [Required]
         public string CompanySite { get; set; }
+        
         [Required]
+        [StringLength(20)]
         public string CompanyPhone { get; set; }
     }
 }
