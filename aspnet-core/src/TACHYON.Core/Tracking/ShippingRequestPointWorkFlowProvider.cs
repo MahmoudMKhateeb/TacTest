@@ -98,7 +98,9 @@ namespace TACHYON.Tracking
                             FromStatus = RoutePointStatus.StandBy,
                             ToStatus = RoutePointStatus.StartedMovingToOfLoadingLocation,
                             Func = StartedMovingToOfLoadingLocation,
-                            Name = L("StartedMovingToOfLoadingLocation")
+                            Name = L("StartedMovingToOfLoadingLocation"),
+                            Permissions = new List<string>{},
+                            Features = new List<string>{},
                         },
                         new WorkflowTransaction<PointTransactionArgs,RoutePointStatus>
                         {
@@ -106,7 +108,9 @@ namespace TACHYON.Tracking
                             FromStatus = RoutePointStatus.StartedMovingToOfLoadingLocation,
                             ToStatus = RoutePointStatus.ArrivedToDestination,
                             Func = ArrivedToDestination,
-                            Name = L("ArrivedToDestination")
+                            Name = L("ArrivedToDestination"),
+                            Permissions = new List<string>{},
+                            Features = new List<string>{},
                         },
                         new WorkflowTransaction<PointTransactionArgs,RoutePointStatus>
                         {
@@ -114,7 +118,9 @@ namespace TACHYON.Tracking
                             FromStatus = RoutePointStatus.ArrivedToDestination,
                             ToStatus = RoutePointStatus.StartOffloading,
                             Func = StartOffloading,
-                            Name = L("StartOffloading")
+                            Name = L("StartOffloading"),
+                            Permissions = new List<string>{},
+                            Features = new List<string>{},
                         },
                         new WorkflowTransaction<PointTransactionArgs,RoutePointStatus>
                         {
@@ -122,7 +128,9 @@ namespace TACHYON.Tracking
                             FromStatus = RoutePointStatus.StartOffloading,
                             ToStatus = RoutePointStatus.FinishOffLoadShipment,
                             Func = FinishOffLoadShipment,
-                            Name = L("FinishOffLoadShipment")
+                            Name = L("FinishOffLoadShipment"),
+                            Permissions = new List<string>{},
+                            Features = new List<string>{},
                         },
                         new WorkflowTransaction<PointTransactionArgs,RoutePointStatus>
                         {
@@ -130,21 +138,27 @@ namespace TACHYON.Tracking
                             FromStatus = RoutePointStatus.FinishOffLoadShipment,
                             ToStatus = RoutePointStatus.ReceiverConfirmed,
                             Func = ReceiverConfirmed,
-                            Name = L("ReceiverConfirmed")
+                            Name = L("ReceiverConfirmed"),
+                            Permissions = new List<string>{},
+                            Features = new List<string>{},
                         },
                         new WorkflowTransaction<PointTransactionArgs,RoutePointStatus>
                         {
                             Action =  WorkFlowActionConst.FinishOffLoadShipmentDeliveryConfirmation,
                             FromStatus = RoutePointStatus.FinishOffLoadShipment,
                             ToStatus = RoutePointStatus.DeliveryConfirmation,
-                            Name = L("FinishOffLoadShipmentDeliveryConfirmation")
+                            Name = L("FinishOffLoadShipmentDeliveryConfirmation"),
+                            Permissions = new List<string>{},
+                            Features = new List<string>{},
                         },
                         new WorkflowTransaction<PointTransactionArgs,RoutePointStatus>
                         {
                             Action =  WorkFlowActionConst.DeliveryConfirmation,
                             FromStatus = RoutePointStatus.ReceiverConfirmed,
                             ToStatus = RoutePointStatus.DeliveryConfirmation,
-                            Name = L("DeliveryConfirmation")
+                            Name = L("DeliveryConfirmation"),
+                            Permissions = new List<string>{},
+                            Features = new List<string>{},
                         },
                         new WorkflowTransaction<PointTransactionArgs,RoutePointStatus>
                         {
@@ -152,7 +166,9 @@ namespace TACHYON.Tracking
                             FromStatus = RoutePointStatus.DeliveryConfirmation,
                             ToStatus = RoutePointStatus.ReceiverConfirmed,
                             Func = ReceiverConfirmed,
-                            Name = L("DeliveryConfirmationReceiverConfirmed")
+                            Name = L("DeliveryConfirmationReceiverConfirmed"),
+                            Permissions = new List<string>{},
+                            Features = new List<string>{},
                         },
                     },
                 },
@@ -167,7 +183,9 @@ namespace TACHYON.Tracking
                             FromStatus = RoutePointStatus.StandBy,
                             ToStatus = RoutePointStatus.StartedMovingToLoadingLocation,
                             Func = StartedMovingToLoadingLocation,
-                            Name = L("StartedMovingToLoadingLocation")
+                            Name = L("StartedMovingToLoadingLocation"),
+                            Permissions = new List<string>{},
+                            Features = new List<string>{},
                         },
                         new WorkflowTransaction<PointTransactionArgs,RoutePointStatus>
                         {
@@ -175,7 +193,9 @@ namespace TACHYON.Tracking
                             FromStatus = RoutePointStatus.StartedMovingToLoadingLocation,
                             ToStatus = RoutePointStatus.ArriveToLoadingLocation,
                             Func = ArriveToLoadingLocation,
-                            Name = L("ArriveToLoadingLocation")
+                            Name = L("ArriveToLoadingLocation"),
+                            Permissions = new List<string>{},
+                            Features = new List<string>{},
                         },
                         new WorkflowTransaction<PointTransactionArgs,RoutePointStatus>
                         {
@@ -183,7 +203,9 @@ namespace TACHYON.Tracking
                             FromStatus = RoutePointStatus.ArriveToLoadingLocation,
                             ToStatus = RoutePointStatus.StartLoading,
                             Func = StartLoading,
-                            Name = L("StartLoading")
+                            Name = L("StartLoading"),
+                            Permissions = new List<string>{},
+                            Features = new List<string>{},
                         },
                         new WorkflowTransaction<PointTransactionArgs,RoutePointStatus>
                         {
@@ -191,7 +213,9 @@ namespace TACHYON.Tracking
                             FromStatus = RoutePointStatus.StartLoading,
                             ToStatus = RoutePointStatus.FinishLoading,
                             Func =  FinishLoading,
-                            Name = L("FinishLoading")
+                            Name = L("FinishLoading"),
+                            Permissions = new List<string>{},
+                            Features = new List<string>{},
                         },
                     },
                 },
@@ -312,10 +336,11 @@ namespace TACHYON.Tracking
             if (point == null) throw new UserFriendlyException(L("YouCanNotChangeTheStatus"));
 
             var transaction = CheckIfTransactionIsExist(point, action);
-
-            if (!_permissionChecker.IsGranted(false, transaction.Permissions?.ToArray()))
-                throw new AbpAuthorizationException("You are not authorized to " + transaction.Name);
-
+            foreach (var item in transaction.Features)
+            {
+                if (!await _permissionChecker.IsGrantedAsync(false, transaction.Permissions?.ToArray()) || await _featureChecker.IsEnabledAsync(item))
+                    throw new AbpAuthorizationException("You are not authorized to " + transaction.Name);
+            }
             transaction.Func(args);
 
             await SetRoutStatusTransitionLog(point);

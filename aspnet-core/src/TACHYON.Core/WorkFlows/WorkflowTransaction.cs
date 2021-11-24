@@ -15,8 +15,7 @@ namespace TACHYON.WorkFlows
         public TEnum FromStatus { get; set; }
         public TEnum ToStatus { get; set; }
         public Action<TArgs> Func { get; set; }
-
         public List<string> Permissions { get; set; }
-
+        public List<string> Features { get; set; }
     }
 }
