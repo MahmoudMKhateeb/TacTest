@@ -1,9 +1,10 @@
 ﻿using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
-using Abp.EntityHistory;
 using Abp.Linq.Extensions;
 using Microsoft.EntityFrameworkCore;
+using Abp.EntityHistory;
+using Abp.Linq.Extensions;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -102,6 +103,9 @@ namespace TACHYON.Routs.RoutPoints
         private async Task Create(CreateOrEditRoutPointDto input)
         {
             var routPoint = ObjectMapper.Map<RoutPoint>(input);
+            routPoint.WorkFlowVersion = routPoint.PickingType == PickingType.Pickup
+                ? TACHYONConsts.PickUpRoutPointWorkflowVersion
+                : TACHYONConsts.DropOfRoutPointWorkflowVersion;
             await _routPointsRepository.InsertAsync(routPoint);
         }
 
