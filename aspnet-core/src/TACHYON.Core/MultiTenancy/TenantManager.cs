@@ -114,7 +114,7 @@ namespace TACHYON.MultiTenancy
                     IsInTrialPeriod = input.IsInTrialPeriod,
                     MobileNo = input.MobileNo,
                     ConnectionString = input.ConnectionString.IsNullOrWhiteSpace() ? null : SimpleStringCipher.Instance.Encrypt(input.ConnectionString),
-                    MoiNumber = input.MobileNo
+                    MoiNumber = input.MoiNumber
                 };
 
                 try
