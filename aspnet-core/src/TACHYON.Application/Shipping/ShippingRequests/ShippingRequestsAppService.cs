@@ -5,6 +5,7 @@ using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Linq.Extensions;
+using Abp.Runtime.Validation;
 using Abp.Threading;
 using Abp.Timing;
 using Abp.UI;
@@ -326,6 +327,7 @@ namespace TACHYON.Shipping.ShippingRequests
                  .Where(x => x.Id == input.Id && x.IsDrafted == true)
                  .FirstOrDefaultAsync();
 
+                await ShippingRequestVasListValidate(input, shippingRequest.NumberOfTrips);
                 //delete vases
                 foreach (var vas in shippingRequest.ShippingRequestVases)
                 {
@@ -471,7 +473,7 @@ namespace TACHYON.Shipping.ShippingRequests
             }
 
             // Vas validation
-            await ShippingRequestVasListValidate(input);
+            await ShippingRequestVasListValidate(input, input.NumberOfTrips);
 
             //Check create or edit
             if (input.Id == null)
@@ -1379,7 +1381,7 @@ namespace TACHYON.Shipping.ShippingRequests
         #endregion
 
 
-        private async Task ShippingRequestVasListValidate(CreateOrEditShippingRequestDto input)
+        private async Task ShippingRequestVasListValidate(IHasVasListDto input, int numberOfTrips)
         {
             if (input.ShippingRequestVasList.Count <= 0) return;
 
@@ -1389,9 +1391,9 @@ namespace TACHYON.Shipping.ShippingRequests
             {
                 var vasItem = vasesItems.FirstOrDefault(x => x.Id == item.VasId);
 
-                if (item.NumberOfTrips > input.NumberOfTrips)
+                if (item.NumberOfTrips > numberOfTrips)
                 {
-                    throw new ValidationException(
+                    throw new AbpValidationException(
                         L("NumberOfTripsForVasCanNotBeGreaterThanShippingRequestNumberOfTrips"));
                 }
 
