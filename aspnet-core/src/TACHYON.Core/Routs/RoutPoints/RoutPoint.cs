@@ -51,6 +51,7 @@ namespace TACHYON.Routs.RoutPoints
         public bool IsResolve { get; set; }
         public bool IsActive { get; set; }
         public bool IsComplete { get; set; }
+        public bool CanGoToNextLocation { get; set; }
         public int WorkFlowVersion { get; set; }
         //todo will be removed
         //public Guid? DocumentId { get; set; }
