@@ -351,10 +351,12 @@ namespace TACHYON.Tracking
             DisableTenancyFilters();
             var currentUser = await GetCurrentUserAsync(_abpSession);
 
-            var nextPoint = await GetNextRoutPoint(currentUser);
+            var nextPoint = await GetNextRoutPoint(id, currentUser);
             if (nextPoint == null) throw new UserFriendlyException(L("TheLocationSelectedIsNotFound"));
 
-            var activePoint = await GetActivePointByTripAsyn(id, currentUser);
+            var activePointId = await GetLastTransitionInComplete(nextPoint.ShippingRequestTripId);
+
+            var activePoint = await GetActivePointByTripAsyn(activePointId.ToPointId, currentUser);
             if (activePoint == null) throw new UserFriendlyException(L("NoActivePoint"));
 
             // deactivate active point 
@@ -510,6 +512,7 @@ namespace TACHYON.Tracking
             point.Status = status;
             point.ShippingRequestTripFk.RoutePointStatus = status;
             point.ActualPickupOrDeliveryDate = Clock.Now;
+            point.IsResolve = true;
 
             // todo trace this 
             var otherPoints = _routPointRepository.GetAll()
@@ -589,14 +592,16 @@ namespace TACHYON.Tracking
                 .WhereIf(currentUser.IsDriver, x => x.ShippingRequestTripFk.AssignedDriverUserId == currentUser.Id)
                 .FirstOrDefaultAsync();
         }
-        private async Task<RoutPoint> GetNextRoutPoint(User currentUser)
+        private async Task<RoutPoint> GetNextRoutPoint(long id, User currentUser)
         {
             return await _routPointRepository
                 .GetAll()
                 .Include(c => c.ShippingRequestTripFk)
                 .ThenInclude(s => s.ShippingRequestFk)
                 .Include(x => x.FacilityFk)
-                .Where(x => x.Status == RoutePointStatus.StandBy
+                .Where(x =>
+                x.Id == id
+                && x.Status == RoutePointStatus.StandBy
                 && !x.IsActive
                 && !x.IsResolve
                 && !x.IsComplete
@@ -771,7 +776,6 @@ namespace TACHYON.Tracking
         private async Task<ShippingRequestTripTransition> GetLastTransitionInComplete(int TripId)
         {
             return await _shippingRequestTripTransitionRepository.FirstOrDefaultAsync(x => x.ToPoint.ShippingRequestTripId == TripId && !x.IsComplete);
-
         }
 
         /// <summary>
