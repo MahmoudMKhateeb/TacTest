@@ -78,7 +78,7 @@
           />
           <div>
             <validation-messages [formCtrl]="MoiNumber"></validation-messages>
-            <span class="form-text text-muted">{{ l('NumbersOnly') }}</span>
+            <span class="form-text text-muted">{{ l('TheNumberInTheTopOfTheCRThatStartsWithSeven') }}</span>
             <span *ngIf="!isMoiNumberAvailable && MoiNumber.valid" class="form-text text-danger text-left"
               >{{ 'MoiNumber' | localize }} {{ 'AlreadyTaken' | localize }}</span
             >
