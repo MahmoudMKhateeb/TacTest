@@ -633,4 +633,28 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
       }
     );
   }
+
+  isOthersGoodCategoryId(goodCategoryId: number): boolean {
+    const t = this.allGoodCategorys?.find((x) => x.id == goodCategoryId);
+    const r = t?.displayName.toLowerCase().includes('others');
+    if (r) {
+      this.step3Form?.controls?.otherGoodsCategoryName?.setValidators([Validators.required]);
+    } else {
+      this.step3Form?.controls?.otherGoodsCategoryName?.clearValidators();
+    }
+    this.step3Form?.controls?.otherGoodsCategoryName?.updateValueAndValidity();
+    return r;
+  }
+
+  isOthersTrucksTypeId(trucksTypeId: number): boolean {
+    const t = this.allTrucksTypes?.find((x) => x.id == trucksTypeId?.toString());
+    const r = t?.displayName.toLowerCase().includes('others');
+    if (r) {
+      this.step3Form?.controls?.otherTrucksTypeName?.setValidators([Validators.required]);
+    } else {
+      this.step3Form?.controls?.otherTrucksTypeName?.clearValidators();
+    }
+    this.step3Form?.controls?.otherTrucksTypeName?.updateValueAndValidity();
+    return r;
+  }
 }
