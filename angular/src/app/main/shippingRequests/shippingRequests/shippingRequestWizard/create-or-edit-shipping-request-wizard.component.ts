@@ -206,17 +206,12 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
         }
         case 4: {
           console.log('step 4');
-          if (this.checkIfVasValid()) {
-            this.createOrEditStep4();
-            wizardObj.goNext();
-            this.reviewAndSubmit();
-          } else {
-            wizardObj.stop();
-            this.step4Form.markAllAsTouched();
-            this.notify.error(this.l('PleaseFixValidationErrors'));
-          }
+          this.createOrEditStep4();
+          wizardObj.goNext();
           //statements;
           //if step 4 passed load the review&submit
+          this.reviewAndSubmit();
+
           break;
         }
       }
@@ -629,41 +624,4 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
       }
     );
   }
-
-  /**
-   * checks if number of trips is valid on vas
-   * @param numberOfTrips
-   */
-  checkIfVasValid(): boolean {
-    for (let i = 0; i < this.selectedVases.length; i++) {
-      console.log('this.selectedVases', this.selectedVases);
-      console.log('i', i);
-      console.log('this.selectedVases[i]', this.selectedVases[i]);
-      if (this.selectedVases[i].numberOfTrips > this.step2Dto.numberOfTrips) {
-        console.log('invalid');
-        return false;
-        break;
-      } else {
-        return true;
-      }
-      //
-    }
-    // return true;
-  }
-  // console.log();
-
-  //   this.selectedVases.forEach((x) => {
-  //     // console.log('selectedVases => :', this.selectedVases, this.step2Dto.numberOfTrips);
-  //     //console.log('x.numberOfTrips => :', x.numberOfTrips, this.step2Dto.numberOfTrips ? false : true, this.step2Dto.numberOfTrips);
-  //     // status = x.numberOfTrips > this.step2Dto.numberOfTrips;
-  //     if ((status = x.numberOfTrips < this.step2Dto.numberOfTrips)) {
-  //       return true;
-  //     } else {
-  //       return false;
-  //     }
-  //     break;
-  //   });
-  //
-  //   // return status;
-  // }
 }
