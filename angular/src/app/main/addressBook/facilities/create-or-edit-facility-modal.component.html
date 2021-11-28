@@ -40,7 +40,7 @@
               />
             </div>
 
-            <div class="form-group col-md-2">
+            <div class="form-group col-md-6">
               <label>{{ l('selectaCountry') }} <span class="required-fileds">*</span></label>
               <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': countriesLoading }">
                 <select
@@ -59,7 +59,7 @@
                 </select>
               </div>
             </div>
-            <div class="form-group col-md-2">
+            <div class="form-group col-md-6">
               <label>{{ l('SelectaCity') }}<span class="required-fileds">*</span></label>
               <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': citiesLoading }">
                 <select
@@ -77,7 +77,15 @@
                 </select>
               </div>
             </div>
-            <div class="form-group col-md-8">
+            <div class="form-group col-md-6">
+              <label>{{ l('longitute') }}</label>
+              <input type="number" name="long" placeholder="long" class="form-control" [(ngModel)]="facility.longitude" (change)="manualCords()" />
+            </div>
+            <div class="form-group col-md-6">
+              <label>{{ l('latitute') }}</label>
+              <input type="number" name="lat" placeholder="long" class="form-control" [(ngModel)]="facility.latitude" (change)="manualCords()" />
+            </div>
+            <div class="form-group col-md-12">
               <label>{{ l('Address') }} <span class="required-fileds">*</span></label>
               <input
                 #search

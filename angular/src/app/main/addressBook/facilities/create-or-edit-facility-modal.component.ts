@@ -138,11 +138,23 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
    * @param latitude
    * @param longitude
    */
-  getAddress(latitude, longitude) {
+  getAddress(latitude: number, longitude: number) {
     this.geoCoder.geocode({ location: { lat: latitude, lng: longitude } }, (results, status) => {
       if (status === 'OK') {
         if (results[0]) {
           this.zoom = 14;
+          let address = results[0].formatted_address;
+          let pin = results[0].address_components[results[0].address_components.length - 1].long_name;
+          let country = results[0].address_components[results[0].address_components.length - 2].long_name;
+          let state = results[0].address_components[results[0].address_components.length - 3].long_name;
+          let city = results[0].address_components[results[0].address_components.length - 4].long_name;
+          this.facility.cityId = null;
+          this.selectedCountryId = null;
+          console.log('address : ', address);
+          console.log('pin : ', pin);
+          console.log('country : ', country);
+          console.log('state : ', state);
+          console.log('city : ', city);
           this.facility.address = results[0].formatted_address;
         } else {
           window.alert('No results found');
@@ -155,15 +167,24 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
 
   /**
    * Getting The Map Marker Cordinates from The Click
-   * @param $event: MouseEvent
+   * @param $event
    */
-  mapClicked($event: MouseEvent) {
+  mapClicked($event) {
     // @ts-ignore
     this.facility.latitude = $event.coords.lat;
     // @ts-ignore
     this.facility.longitude = $event.coords.lng;
     // @ts-ignore
-    this.getAddress($event.coords.lat, $event.coords.lng);
+    this.getAddress(Number(this.facility.latitude), Number(this.facility.longitude));
+  }
+
+  /**
+   * Allow the User To Add Cord Manulay
+   * @param $event
+   */
+  manualCords() {
+    // @ts-ignore
+    this.getAddress(Number(this.facility.latitude), Number(this.facility.longitude));
   }
 
   /**
