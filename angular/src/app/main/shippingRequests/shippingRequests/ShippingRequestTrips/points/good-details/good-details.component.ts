@@ -37,6 +37,7 @@ export class GoodDetailsComponent extends AppComponentBase implements OnInit, On
   tripServiceSubs$: Subscription;
   pointServiceSubs$: Subscription;
   usedInSubs$: Subscription;
+  canAddMoreGoods = true;
 
   ngOnDestroy() {
     this.tripServiceSubs$?.unsubscribe();
@@ -53,7 +54,7 @@ export class GoodDetailsComponent extends AppComponentBase implements OnInit, On
       this.tripServiceSubs$ = this._TripService.currentShippingRequest.pipe(first()).subscribe((res) => {
         this.MainGoodsCategory = res.shippingRequest.goodCategoryId;
         this.loadGoodSubCategory(res.shippingRequest.goodCategoryId);
-    //get the value of the single way point fron the Shared Service
+        //get the value of the single way point fron the Shared Service
       });
       //get the value of the single way point fron the Shared Service
       this.pointServiceSubs$ = this._PointsService.currentSingleWayPoint.subscribe((res) => {
