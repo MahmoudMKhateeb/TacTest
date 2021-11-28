@@ -86,7 +86,7 @@
                                 <a
                                   class="dropdown-item"
                                   [hidden]="usedIn == 'view'"
-                                  *ngIf="feature.isEnabled('App.Shipper')"
+                                  *ngIf="isTachyonDealer || isShipper"
                                   (click)="createOrEditPointModal.show(i)"
                                   >{{ l('Edit') }}</a
                                 >
