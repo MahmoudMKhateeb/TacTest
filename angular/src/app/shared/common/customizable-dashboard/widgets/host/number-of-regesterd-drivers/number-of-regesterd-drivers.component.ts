@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { HostDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-number-of-regesterd-drivers',
@@ -6,7 +7,12 @@ import { Component, OnInit } from '@angular/core';
   styles: [],
 })
 export class NumberOfRegesterdDriversComponent implements OnInit {
-  constructor() {}
+  driversCount: number;
+  constructor(private _hostDashboardServiceProxy: HostDashboardServiceProxy) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this._hostDashboardServiceProxy.getDriversCount().subscribe((result) => {
+      this.driversCount = result;
+    });
+  }
 }

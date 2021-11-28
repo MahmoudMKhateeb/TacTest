@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { HostDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-on-going-trips',
@@ -6,7 +7,12 @@ import { Component, OnInit } from '@angular/core';
   styles: [],
 })
 export class OnGoingTripsComponent implements OnInit {
-  constructor() {}
+  tripsCount: number;
+  constructor(private _hostDashboardServiceProxy: HostDashboardServiceProxy) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this._hostDashboardServiceProxy.getOngoingTripsCount().subscribe((result) => {
+      this.tripsCount = result;
+    });
+  }
 }

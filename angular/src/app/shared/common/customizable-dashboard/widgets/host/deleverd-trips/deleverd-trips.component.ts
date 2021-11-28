@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { HostDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-deleverd-trips',
@@ -6,7 +7,12 @@ import { Component, OnInit } from '@angular/core';
   styles: [],
 })
 export class DeleverdTripsComponent implements OnInit {
-  constructor() {}
+  deliveredTripsCount: number;
+  constructor(private _hostDashboardServiceProxy: HostDashboardServiceProxy) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this._hostDashboardServiceProxy.getDeliveredTripsCount().subscribe((result) => {
+      this.deliveredTripsCount = result;
+    });
+  }
 }

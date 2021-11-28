@@ -29,6 +29,8 @@
         public const string App_Shipper = "App.Shipper";
         public const string App_Carrier = "App.Carrier";
 
+        public const string Pages_HostDashboard = "Pages.HostDashboard";
+
 
         public const string Pages_CitiesTranslations = "Pages.CitiesTranslations";
         public const string Pages_CitiesTranslations_Create = "Pages.CitiesTranslations.Create";

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ChartOptionsBars } from '@app/shared/common/customizable-dashboard/widgets/ApexInterfaces';
+import { HostDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-host-truck-type-usage-chart',
@@ -7,15 +8,28 @@ import { ChartOptionsBars } from '@app/shared/common/customizable-dashboard/widg
   styles: [],
 })
 export class HostTruckTypeUsageChartComponent implements OnInit {
-  constructor() {}
+  x: string[];
+  y: number[];
+
+  constructor(private _hostDashboardServiceProxy: HostDashboardServiceProxy) {}
 
   public chartOptions: Partial<ChartOptionsBars>;
   ngOnInit() {
+    this.x = [];
+    this.y = [];
+
+    this._hostDashboardServiceProxy.getTrucksTypeCount().subscribe((result) => {
+      result.forEach((element) => {
+        this.x.push(element.truckType);
+        this.y.push(element.availableTrucksCount);
+      });
+    });
+
     this.chartOptions = {
       series: [
         {
-          name: 'Trips',
-          data: [14, 15, 36, 63, 64, 73, 85, 89, 91, 93, 9],
+          name: 'Requests',
+          data: this.y,
           color: '#b10303',
         },
       ],
@@ -38,7 +52,7 @@ export class HostTruckTypeUsageChartComponent implements OnInit {
         colors: ['transparent'],
       },
       xaxis: {
-        categories: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+        categories: this.x,
       },
 
       fill: {

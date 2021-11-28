@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ChartOptionsBars } from '@app/shared/common/customizable-dashboard/widgets/ApexInterfaces';
+import { HostDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-host-good-types-usage-chart',
@@ -7,13 +8,27 @@ import { ChartOptionsBars } from '@app/shared/common/customizable-dashboard/widg
   styles: [],
 })
 export class HostGoodTypesUsageChartComponent implements OnInit {
+  x: string[];
+  y: number[];
+
+  constructor(private _hostDashboardServiceProxy: HostDashboardServiceProxy) {}
+
   public chartOptions: Partial<ChartOptionsBars>;
   ngOnInit() {
+    this.x = [];
+    this.y = [];
+
+    this._hostDashboardServiceProxy.getGoodTypeCountPerMonth().subscribe((result) => {
+      result.forEach((element) => {
+        this.x.push(element.goodType);
+        this.y.push(element.availableGoodTypesCount);
+      });
+    });
     this.chartOptions = {
       series: [
         {
-          name: 'Accounts',
-          data: [12, 14, 15, 26, 29, 42, 45, 58, 81, 83, 86, 94],
+          name: 'Category',
+          data: this.y,
           color: '#b10303',
         },
       ],
@@ -36,7 +51,7 @@ export class HostGoodTypesUsageChartComponent implements OnInit {
         colors: ['transparent'],
       },
       xaxis: {
-        categories: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+        categories: this.x,
       },
 
       fill: {
