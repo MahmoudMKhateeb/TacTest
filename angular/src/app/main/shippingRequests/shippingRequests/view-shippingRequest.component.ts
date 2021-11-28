@@ -14,6 +14,7 @@ import { BreadcrumbItem } from '@app/shared/common/sub-header/sub-header.compone
 import { filter } from '@node_modules/rxjs/internal/operators';
 import { DOCUMENT } from '@angular/common';
 import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
+import { DirectRequestComponent } from '@app/main/shippingRequests/shippingRequests/directrequest/direct-request.component';
 
 @Component({
   templateUrl: './view-shippingRequest.component.html',
@@ -21,6 +22,7 @@ import { TripService } from '@app/main/shippingRequests/shippingRequests/Shippin
   animations: [appModuleAnimation()],
 })
 export class ViewShippingRequestComponent extends AppComponentBase implements OnInit, AfterViewChecked {
+  @ViewChild('directRequestComponent') public directRequestComponent: DirectRequestComponent;
   active = false;
   saving = false;
   loading = true;
@@ -173,7 +175,7 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
     let el = document.getElementById('directRequests');
     el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
     setTimeout(() => {
-      // this.GetAllDirectRequestsTable.sendDirectRequestsModal.show();
+      this.directRequestComponent.DirectRequestTenantModel.show();
     }, 1000);
   }
 }
