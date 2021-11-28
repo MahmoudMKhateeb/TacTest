@@ -14,7 +14,8 @@ using TACHYON.Vases.Dtos;
 
 namespace TACHYON.Shipping.ShippingRequests.Dtos
 {
-    public class CreateOrEditShippingRequestDto : EntityDto<long?>, ICustomValidate, IShippingRequestDtoHaveOthersName
+    public class CreateOrEditShippingRequestDto : EntityDto<long?>, ICustomValidate, IHasVasListDto,
+        IShippingRequestDtoHaveOthersName
     {
         public virtual bool IsBid { get; set; }
         //Add Bid details If IsBid equals True

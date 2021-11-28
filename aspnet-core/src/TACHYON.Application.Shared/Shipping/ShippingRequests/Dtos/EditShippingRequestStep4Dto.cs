@@ -6,7 +6,7 @@ using TACHYON.Vases.Dtos;
 
 namespace TACHYON.Shipping.ShippingRequests.Dtos
 {
-    public class EditShippingRequestStep4Dto : EntityDto<long>
+    public class EditShippingRequestStep4Dto : EntityDto<long>, IHasVasListDto
     {
         public List<CreateOrEditShippingRequestVasListDto> ShippingRequestVasList { get; set; }
         public bool IsDrafted { get; set; }
