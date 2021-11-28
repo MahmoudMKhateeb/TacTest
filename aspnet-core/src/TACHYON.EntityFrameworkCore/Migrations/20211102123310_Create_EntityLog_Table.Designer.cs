@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using TACHYON.EntityFrameworkCore;
@@ -10,9 +11,10 @@ using TACHYON.EntityFrameworkCore;
 namespace TACHYON.Migrations
 {
     [DbContext(typeof(TACHYONDbContext))]
-    partial class TACHYONDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211102123310_Create_EntityLog_Table")]
+    partial class Create_EntityLog_Table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3913,21 +3915,6 @@ namespace TACHYON.Migrations
                     b.Property<DateTime?>("DeletionTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<decimal>("DetailsTotalCommission")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("DetailsTotalPricePostCommissionPreVat")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("DetailsTotalPricePreCommissionPreVat")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("DetailsTotalVatAmountPreCommission")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("DetailsTotalVatPostCommission")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -3953,21 +3940,6 @@ namespace TACHYON.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ItemVatAmountWithCommission")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("ItemsTotalCommission")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("ItemsTotalPricePostCommissionPreVat")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("ItemsTotalPricePreCommissionPreVat")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("ItemsTotalVatAmountPreCommission")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("ItemsTotalVatPostCommission")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime?>("LastModificationTime")
@@ -4070,9 +4042,6 @@ namespace TACHYON.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ItemVatAmountWithCommission")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("ItemsTotalPricePreCommissionPreVat")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<long>("PriceOfferId")
@@ -5074,52 +5043,6 @@ namespace TACHYON.Migrations
                     b.HasIndex("ReasoneId");
 
                     b.ToTable("ShippingRequestTripAccidents");
-                });
-
-            modelBuilder.Entity("TACHYON.Shipping.ShippingRequestTrips.ShippingRequestTripAccidentComment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("AccidentId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Comment")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("DeleterUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("DeletionTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("LastModifierUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("TenantId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AccidentId");
-
-                    b.HasIndex("TenantId");
-
-                    b.ToTable("ShippingRequestTripAccidentComments");
                 });
 
             modelBuilder.Entity("TACHYON.Shipping.ShippingRequestTrips.ShippingRequestTripAccidentResolve", b =>
@@ -7816,21 +7739,6 @@ namespace TACHYON.Migrations
                     b.HasOne("TACHYON.Shipping.Accidents.ShippingRequestReasonAccident", "ResoneFK")
                         .WithMany()
                         .HasForeignKey("ReasoneId");
-                });
-
-            modelBuilder.Entity("TACHYON.Shipping.ShippingRequestTrips.ShippingRequestTripAccidentComment", b =>
-                {
-                    b.HasOne("TACHYON.Shipping.ShippingRequestTrips.ShippingRequestTripAccident", "AccidentFK")
-                        .WithMany()
-                        .HasForeignKey("AccidentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TACHYON.MultiTenancy.Tenant", "TenantFK")
-                        .WithMany()
-                        .HasForeignKey("TenantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("TACHYON.Shipping.ShippingRequestTrips.ShippingRequestTripAccidentResolve", b =>

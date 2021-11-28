@@ -1,4 +1,5 @@
-﻿using Abp.Domain.Entities.Auditing;
+﻿using Abp.Auditing;
+using Abp.Domain.Entities.Auditing;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -15,6 +16,7 @@ using TACHYON.Trucks;
 
 namespace TACHYON.Shipping.ShippingRequestTrips
 {
+    [Audited]
     [Table("ShippingRequestTrips")]
     public class ShippingRequestTrip : FullAuditedEntity
     {

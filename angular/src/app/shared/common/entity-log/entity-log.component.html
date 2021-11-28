@@ -1,0 +1,88 @@
+<div
+  appBsModal
+  #modal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="modal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <span>{{ 'ActivityLog' | localize }}</span>
+        </h5>
+        <button type="button" class="close" (click)="close()" [attr.aria-label]="l('Close')" [disabled]="false">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="" *ngIf="active">
+          <div class="timeline timeline-3">
+            <div class="timeline-items">
+              <div class="timeline-item" *ngFor="let log of entityLogs">
+                <div class="timeline-media">
+                  <!-- Need Add Check For Transaction Icon -->
+                  <!--                  <i class="flaticon2-user-outline-symbol text-success"></i>-->
+                  <img alt="Pic" src="https://preview.keenthemes.com/metronic/theme/html/demo1/dist/assets/media/users/300_25.jpg" />
+                </div>
+                <div
+                  class="timeline-content"
+                  [ngClass]="{ active: isCollapsed }"
+                  (click)="activeId = 1"
+                  [attr.aria-expanded]="activeId == 1"
+                  aria-controls="collapseExample"
+                >
+                  <div class="d-flex align-items-center justify-content-between mb-3">
+                    <div class="mr-2">
+                      <a class="text-dark-75 font-weight-bold">{{ log.transaction }}</a>
+                      <span class="text-muted ml-2">{{ log.modificationTime }}</span>
+                      <span class="label label-inline label-light-primary label-bold font-weight-bold ml-2">{{ log.modifierUserName }}</span>
+                      <!--                        <span class="label label-light-danger font-weight-bolder label-inline ml-2"></span>-->
+                    </div>
+                    <!--                    <div class="dropdown ml-2" data-toggle="tooltip" title="Quick actions" data-placement="left">-->
+                    <!--                      <a-->
+                    <!--                        href="#"-->
+                    <!--                        class="btn btn-hover-light-primary btn-sm btn-icon"-->
+                    <!--                        data-toggle="dropdown"-->
+                    <!--                        aria-haspopup="true"-->
+                    <!--                        aria-expanded="false"-->
+                    <!--                      >-->
+                    <!--                        <i class="ki ki-more-hor font-size-lg text-primary"></i>-->
+                    <!--                      </a>-->
+                    <!--                      <div class="dropdown-menu p-0 m-0 dropdown-menu-md dropdown-menu-right">...</div>-->
+                    <!--                    </div>-->
+                  </div>
+                  <div class="p-0">
+                    <!--                    <button class="btn btn-danger btn-sm" (click)="getEntityLogs()">Click me</button>-->
+                    <!--                    <h5>{{ log.transaction }}</h5>-->
+                    <!--                    <a class="text-success font-weight-bold"></a>-->
+                    <div class="d-flex flex-column flex-grow-1 py-2">
+                      <div #collapse="ngbCollapse" [(ngbCollapse)]="!active">
+                        <div *ngFor="let z of log.changesData | keyvalue">
+                          <p class="font-weight-bold mt-2">
+                            <a class="text-primary font-weight-bold">{{ z.key }}</a> :
+                            {{ objectToArray(z.value)[0] ? objectToArray(z.value)[0] : 'null ' }}
+                            <i class="flaticon2-fast-next text-success mx-2"></i>
+                            {{ objectToArray(z.value)[1] ? objectToArray(z.value)[1] : ' null' }}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light-primary font-weight-bold" (click)="close()">{{ 'Cancel' | localize }}</button>
+      </div>
+    </div>
+  </div>
+</div>

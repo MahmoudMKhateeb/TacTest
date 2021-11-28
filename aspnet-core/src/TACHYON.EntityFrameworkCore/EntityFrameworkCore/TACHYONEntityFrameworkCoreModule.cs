@@ -41,14 +41,14 @@ namespace TACHYON.EntityFrameworkCore
             }
 
             // Set this setting to true for enabling entity history.
-            Configuration.EntityHistory.IsEnabled = false;
+            Configuration.EntityHistory.IsEnabled = true;
 
             Configuration.UnitOfWork.RegisterFilter("IHasIsCanceled", true);
             Configuration.UnitOfWork.RegisterFilter("IHasIsDrafted", true);
 
             // Uncomment below line to write change logs for the entities below:
-            // Configuration.EntityHistory.Selectors.Add("TACHYONEntities", EntityHistoryHelper.TrackedTypes);
-            // Configuration.CustomConfigProviders.Add(new EntityHistoryConfigProvider(Configuration));
+            Configuration.EntityHistory.Selectors.Add("TACHYONEntities", EntityHistoryHelper.TrackedTypes);
+            Configuration.CustomConfigProviders.Add(new EntityHistoryConfigProvider(Configuration));
         }
 
         public override void Initialize()

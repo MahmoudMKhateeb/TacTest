@@ -2,6 +2,7 @@
 using Abp.Authorization;
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
+using Abp.EntityHistory;
 using Abp.Linq.Extensions;
 using Abp.Timing;
 using Abp.UI;
@@ -13,6 +14,7 @@ using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using TACHYON.DriverLocationLogs;
 using TACHYON.DriverLocationLogs.dtos;
+using TACHYON.EntityLogs;
 using TACHYON.Features;
 using TACHYON.Firebases;
 using TACHYON.Goods.GoodCategories.Dtos;
@@ -22,6 +24,7 @@ using TACHYON.Rating;
 using TACHYON.Rating.dtos;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Routs.RoutPoints.Dtos;
+using TACHYON.Routs.RoutPoints.RoutPointSmartEnum;
 using TACHYON.Shipping.Accidents.Dto;
 using TACHYON.Shipping.Drivers.Dto;
 using TACHYON.Shipping.ShippingRequests;
@@ -47,7 +50,7 @@ namespace TACHYON.Shipping.Drivers
         private readonly IRepository<UserOTP> _userOtpRepository;
         private readonly RatingLogManager _ratingLogManager;
         private readonly IRepository<DriverLocationLog, long> _driverLocationLogRepository;
-
+        private readonly EntityLogManager _logManager;
         public ShippingRequestDriverAppService(
             IRepository<ShippingRequestTrip> ShippingRequestTrip,
             IRepository<RoutPoint, long> RoutPointRepository,
@@ -55,7 +58,7 @@ namespace TACHYON.Shipping.Drivers
             ShippingRequestDriverManager shippingRequestDriverManager,
             ShippingRequestManager shippingRequestManager,
             IFirebaseNotifier firebaseNotifier,
-            ShippingRequestsTripManager shippingRequestsTripManager, IRepository<UserOTP> userOtpRepository, IRepository<ShippingRequestTripAccident> shippingRequestTripAccidentRepository, RatingLogManager ratingLogManager, IRepository<DriverLocationLog, long> driverLocationLogRepository)
+            ShippingRequestsTripManager shippingRequestsTripManager, IRepository<UserOTP> userOtpRepository, IRepository<ShippingRequestTripAccident> shippingRequestTripAccidentRepository, RatingLogManager ratingLogManager, IRepository<DriverLocationLog, long> driverLocationLogRepository, EntityLogManager logManager)
         {
             _ShippingRequestTrip = ShippingRequestTrip;
             _RoutPointRepository = RoutPointRepository;
@@ -68,6 +71,7 @@ namespace TACHYON.Shipping.Drivers
             _shippingRequestTripAccidentRepository = shippingRequestTripAccidentRepository;
             _ratingLogManager = ratingLogManager;
             _driverLocationLogRepository = driverLocationLogRepository;
+            _logManager = logManager;
         }
         /// <summary>
         /// list all trips realted with drivers
