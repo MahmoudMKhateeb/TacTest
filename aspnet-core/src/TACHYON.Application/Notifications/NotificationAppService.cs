@@ -52,6 +52,9 @@ namespace TACHYON.Notifications
             await _userNotificationManager.UpdateAllUserNotificationStatesAsync(AbpSession.ToUserIdentifier(), UserNotificationState.Read);
         }
 
+        public async Task<int> GetUnreadNotificationCount()
+        => await _userNotificationManager.GetUserNotificationCountAsync(AbpSession.ToUserIdentifier(),
+            UserNotificationState.Unread);
         public async Task SetNotificationAsRead(EntityDto<Guid> input)
         {
             var userNotification = await _userNotificationManager.GetUserNotificationAsync(AbpSession.TenantId, input.Id);
