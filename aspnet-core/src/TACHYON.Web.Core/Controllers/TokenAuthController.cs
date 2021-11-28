@@ -80,7 +80,7 @@ namespace TACHYON.Web.Controllers
         private readonly IJwtSecurityStampHandler _securityStampHandler;
         private readonly AbpUserClaimsPrincipalFactory<User, Role> _claimsPrincipalFactory;
         private readonly TenantManager _tenantManager;
-        private string MobileTest = "500679773";
+        private List<string> _testMobiles;
         public IRecaptchaValidator RecaptchaValidator { get; set; }
         private readonly IUserDelegationManager _userDelegationManager;
         private readonly UserDeviceTokenManager _userDeviceTokenManager;
@@ -139,6 +139,11 @@ namespace TACHYON.Web.Controllers
             _userDeviceTokenManager = userDeviceTokenManager;
             _mobileManager = mobileManager;
             _shippingRequestsTripManager = shippingRequestsTripManager;
+            _testMobiles = new List<string>()
+            {
+                "599925326",
+                "500679773"
+            };
         }
 
         [HttpPost]
@@ -283,7 +288,7 @@ namespace TACHYON.Web.Controllers
             if (string.IsNullOrEmpty(Username)) throw new AbpAuthorizationException(L("InvalidMobileNumber"));
             var user = await _userManager.GetUserByDriverPhoneNumberAsync(Username);
             if (user == null) throw new AbpAuthorizationException(L("InvalidMobileNumber"));
-            if (MobileTest == Username) return;
+            if (_testMobiles.Contains(Username)) return;
             await _mobileManager.CreateOTP(user, Language);
         }
         [HttpPost]
@@ -299,7 +304,7 @@ namespace TACHYON.Web.Controllers
             {
                 throw new AbpAuthorizationException(L("InvalidMobileNumber"));
             }
-            if (MobileTest != model.Username)
+            if (!_testMobiles.Contains(model.Username))
                 await _mobileManager.OTPValidate(user.Id, model.OTP);
 
             //  get tenantId from UserName
