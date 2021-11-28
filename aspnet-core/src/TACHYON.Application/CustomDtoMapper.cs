@@ -565,8 +565,12 @@ namespace TACHYON
             //User
             configuration.CreateMap<User, UserEditDto>()
                 .ForMember(dto => dto.Password, options => options.Ignore())
-                .ReverseMap()
-                .ForMember(user => user.Password, options => options.Ignore());
+                .ForMember(dto => dto.IsAvailable,
+                    dto => dto.MapFrom(user => user.DriverStatus == UserDriverStatus.Available));
+            configuration.CreateMap<UserEditDto, User>()
+                .ForMember(user => user.Password, options => options.Ignore())
+                .ForMember(user => user.DriverStatus, user =>
+                      user.MapFrom(dto => dto.IsAvailable ? UserDriverStatus.Available : UserDriverStatus.NotAvailable));
             configuration.CreateMap<User, UserLoginInfoDto>();
             configuration.CreateMap<User, UserListDto>();
             configuration.CreateMap<User, DriverListDto>();

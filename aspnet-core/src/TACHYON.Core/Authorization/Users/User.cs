@@ -32,6 +32,8 @@ namespace TACHYON.Authorization.Users
         //Can add application specific user properties here
         public virtual bool IsDriver { get; set; }
 
+        public UserDriverStatus? DriverStatus { get; set; }
+
         public virtual string Address { get; set; }
         public virtual int? NationalityId { get; set; }
 

@@ -47,6 +47,7 @@ namespace TACHYON.Authorization.Users.Dto
 
         public virtual bool IsLockoutEnabled { get; set; }
 
+        public bool IsAvailable { get; set; }
 
         #region Tachyon details
         public virtual bool IsDriver { get; set; }

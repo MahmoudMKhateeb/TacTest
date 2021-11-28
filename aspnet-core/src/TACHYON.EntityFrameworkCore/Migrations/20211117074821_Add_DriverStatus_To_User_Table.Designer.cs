@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using TACHYON.EntityFrameworkCore;
@@ -10,9 +11,10 @@ using TACHYON.EntityFrameworkCore;
 namespace TACHYON.Migrations
 {
     [DbContext(typeof(TACHYONDbContext))]
-    partial class TACHYONDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211117074821_Add_DriverStatus_To_User_Table")]
+    partial class Add_DriverStatus_To_User_Table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2305,56 +2307,6 @@ namespace TACHYON.Migrations
                     b.HasIndex("TripId");
 
                     b.ToTable("DriverLocationLogs");
-                });
-
-            modelBuilder.Entity("TACHYON.EntityLogs.EntityLog", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("ChangeTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Core")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CoreId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Data")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long?>("DeleterUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("DeletionTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("LastModifierUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int?>("LogTransaction")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("TenantId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("EntityHistoryLog");
                 });
 
             modelBuilder.Entity("TACHYON.Friendships.Friendship", b =>
@@ -5079,52 +5031,6 @@ namespace TACHYON.Migrations
                     b.ToTable("ShippingRequestTripAccidents");
                 });
 
-            modelBuilder.Entity("TACHYON.Shipping.ShippingRequestTrips.ShippingRequestTripAccidentComment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("AccidentId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Comment")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("DeleterUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("DeletionTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("LastModifierUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("TenantId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AccidentId");
-
-                    b.HasIndex("TenantId");
-
-                    b.ToTable("ShippingRequestTripAccidentComments");
-                });
-
             modelBuilder.Entity("TACHYON.Shipping.ShippingRequestTrips.ShippingRequestTripAccidentResolve", b =>
                 {
                     b.Property<int>("Id")
@@ -7819,21 +7725,6 @@ namespace TACHYON.Migrations
                     b.HasOne("TACHYON.Shipping.Accidents.ShippingRequestReasonAccident", "ResoneFK")
                         .WithMany()
                         .HasForeignKey("ReasoneId");
-                });
-
-            modelBuilder.Entity("TACHYON.Shipping.ShippingRequestTrips.ShippingRequestTripAccidentComment", b =>
-                {
-                    b.HasOne("TACHYON.Shipping.ShippingRequestTrips.ShippingRequestTripAccident", "AccidentFK")
-                        .WithMany()
-                        .HasForeignKey("AccidentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TACHYON.MultiTenancy.Tenant", "TenantFK")
-                        .WithMany()
-                        .HasForeignKey("TenantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("TACHYON.Shipping.ShippingRequestTrips.ShippingRequestTripAccidentResolve", b =>

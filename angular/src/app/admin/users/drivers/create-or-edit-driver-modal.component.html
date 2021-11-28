@@ -80,7 +80,7 @@
                     <div class="form-group col-6">
                       <label for="EmailAddress">{{ 'EmailAddress' | localize }} <span class="required-fileds"> *</span></label>
                       <input
-                        style="text-align: left !important;"
+                        style="text-align: left !important"
                         id="EmailAddress"
                         #emailAddressInput="ngModel"
                         type="email"
@@ -103,7 +103,7 @@
                           <span class="input-group-text">+966</span>
                         </div>
                         <input
-                          style="text-align: left !important;"
+                          style="text-align: left !important"
                           (input)="CheckIfDriverPhoneNumberIsValid(userNameInput.value, user.id)"
                           id="UserName"
                           #userNameInput="ngModel"
@@ -251,6 +251,12 @@
                 <label *ngIf="isLockoutEnabled" for="EditUser_IsLockoutEnabled" class="checkbox">
                   <input id="EditUser_IsLockoutEnabled" type="checkbox" name="IsLockoutEnabled" [(ngModel)]="user.isLockoutEnabled" />
                   {{ 'IsLockoutEnabled' | localize }}
+                  <span></span>
+                </label>
+
+                <label *ngIf="user.id !== null" for="EditUser_IsAvailable" class="checkbox">
+                  <input id="EditUser_IsAvailable" type="checkbox" name="IsAvailable" [(ngModel)]="user.isAvailable" />
+                  {{ 'Available' | localize }}
                   <span></span>
                 </label>
               </div>

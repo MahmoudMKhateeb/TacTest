@@ -326,8 +326,10 @@ namespace TACHYON.Shipping.Trips
                     //todo send specific notification    
                     await _firebase.TripChanged(new UserIdentifier(trip.AssignedDriverUserFk.TenantId, oldAssignedDriverUserId.Value), trip.Id.ToString());
                     await _appNotifier.ShipperShippingRequestTripNotifyDriverWhenUnassignedTrip(new UserIdentifier(AbpSession.TenantId, oldAssignedDriverUserId.Value), trip);
+                    await UserManager.UpdateUserDriverStatus(oldAssignedDriverUserId.Value, UserDriverStatus.Available);
                 }
             }
+            await UserManager.UpdateUserDriverStatus(input.AssignedDriverUserId, UserDriverStatus.NotAvailable);
 
             if (oldAssignedTruckId != trip.AssignedTruckId)
             {

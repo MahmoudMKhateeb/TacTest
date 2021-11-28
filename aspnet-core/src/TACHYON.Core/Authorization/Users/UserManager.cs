@@ -237,6 +237,18 @@ namespace TACHYON.Authorization.Users
 
         }
 
+        public async Task UpdateUserDriverStatus(long userId, UserDriverStatus driverStatus)
+        {
+            // At The Moment I don't need disable tenancy filter you must know why
+            // because carrier or any tenant admin can't change driver status of driver in anther tenant
+            var driverUser = await (from user in _userRepository.GetAll().AsNoTracking()
+                                    where user.Id == userId
+&& user.DriverStatus != driverStatus
+                                    select user).FirstOrDefaultAsync();
+            if (driverUser != null)
+                driverUser.DriverStatus = driverStatus;
+        }
+
         public async Task<User> GetAdminByTenantIdAsync(int TenantId)
         {
 
