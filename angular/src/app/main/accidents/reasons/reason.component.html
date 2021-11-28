@@ -59,13 +59,13 @@
                 <ng-template pTemplate="header">
                   <tr>
                     <th
-                      style="width: 130px;"
+                      style="width: 130px"
                       [hidden]="!isGrantedAny('Pages.ShippingRequestResoneAccidents.Edit', 'Pages.ShippingRequestResoneAccidents.Delete')"
                     >
                       {{ l('Actions') }}
                     </th>
 
-                    <th style="width: 150px;">
+                    <th style="width: 150px">
                       {{ l('DisplayName') }}
                     </th>
                   </tr>
@@ -73,7 +73,7 @@
                 <ng-template pTemplate="body" let-record="$implicit">
                   <tr>
                     <td
-                      style="width: 130px;"
+                      style="width: 130px"
                       [hidden]="!isGrantedAny('Pages.ShippingRequestResoneAccidents.Edit', 'Pages.ShippingRequestResoneAccidents.Delete')"
                     >
                       <div class="btn-group dropdown" dropdown container="body">
@@ -103,7 +103,7 @@
                       </div>
                     </td>
 
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('DisplayName') }}</span>
                       {{ record.name }}
                     </td>
@@ -113,9 +113,13 @@
               <div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0 && IsStartSearch">
                 {{ l('NoData') }}
               </div>
+              <div class="ui-table-footer"></div>
             </div>
             <!--<Primeng-Datatable-End>-->
           </div>
+          <span class="total-records-count">
+            {{ l('TotalRecordsCount', primengTableHelper.totalRecordsCount) }}
+          </span>
         </div>
       </div>
     </div>
