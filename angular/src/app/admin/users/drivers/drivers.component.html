@@ -188,6 +188,7 @@
               <div *dxTemplate="let options of 'cellRatingTemplate'" class="d-flex justify-content-center">
                 <p-rating [ngModel]="options.data.rate" readonly="true" stars="5" [cancel]="false"></p-rating>
               </div>
+              <dxo-summary> <dxi-total-item column="userName" summaryType="count"> </dxi-total-item> </dxo-summary>
             </dx-data-grid>
           </div>
         </div>

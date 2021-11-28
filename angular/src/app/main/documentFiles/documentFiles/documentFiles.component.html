@@ -1,4 +1,4 @@
-﻿<div [@routerTransition]>
+<div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
     <sub-header [title]="'SubmittedDocuments' | localize"> </sub-header>
     <!-- <sub-header [title]="'DocumentFiles' | localize" [description]="'DocumentFilesHeaderInfo' | localize"> </sub-header> -->
@@ -131,6 +131,7 @@
                   </ul>
                 </div>
               </div>
+              <dxo-summary> <dxi-total-item column="submitterTenatTenancyName" summaryType="count"> </dxi-total-item> </dxo-summary>
             </dx-data-grid>
           </div>
         </div>
