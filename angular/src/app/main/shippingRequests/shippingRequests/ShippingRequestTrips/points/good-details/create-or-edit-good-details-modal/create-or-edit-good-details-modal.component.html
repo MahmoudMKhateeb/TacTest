@@ -39,7 +39,7 @@
                         [class.is-invalid]="subgoodsDetail.touched && !subgoodsDetail.valid"
                         [class.is-valid]="subgoodsDetail.touched && subgoodsDetail.valid"
                       >
-                        <option value="undefined">{{ l('SelectAGoodSubCategory') }}</option>
+                        <option [ngValue]="null" selected>{{ l('SelectAGoodSubCategory') }}</option>
                         <option *ngFor="let item of allSubGoodCategorys" [value]="item.id">{{ item.displayName }}</option>
                       </select>
                     </div>
@@ -103,7 +103,7 @@
                         [class.is-invalid]="GoodsUnitOfMeasure.touched && !GoodsUnitOfMeasure.valid"
                         required
                       >
-                        <option value="undefined">{{ l('selectAUnitOfMeasure') }}</option>
+                        <option [ngValue]="null" selected>{{ l('selectAUnitOfMeasure') }}</option>
                         <option *ngFor="let item of allUnitOfMeasure" [value]="item.id">{{ item.displayName }}</option>
                       </select>
                     </div>
@@ -148,7 +148,7 @@
                     </label>
                   </div>
                 </div>
-                <div class="col-lg-6" [hidden]="!isDangerousGood">
+                <div class="col-lg-6" *ngIf="isDangerousGood">
                   <div class="form-group">
                     <label> {{ l('DangerousGoodType') }} <span class="required-fileds">*</span> </label>
                     <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': isDangerousGoodLoading }">
@@ -160,17 +160,18 @@
                         [disabled]="!allSubGoodCategorys"
                         [class.is-invalid]="DangerousGoodTypes.touched && (!DangerousGoodTypes.valid || dangerousGoodsTypeId === undefined)"
                         [class.is-valid]="DangerousGoodTypes.touched && DangerousGoodTypes.valid && dangerousGoodsTypeId !== undefined"
-                        required
+                        [required]="isDangerousGood"
+                        [disabled]="!isDangerousGood"
                       >
-                        <option value="undefined">{{ l('SelectADangeroudGoodType') }}</option>
+                        <option [ngValue]="null" selected>{{ l('SelectADangeroudGoodType') }}</option>
                         <option *ngFor="let item of allDangerousGoodTypes" [value]="item.id">{{ item.displayName }}</option>
                       </select>
                     </div>
                   </div>
                 </div>
 
-                <div class="col-lg-6">
-                  <div class="form-group" [hidden]="!isDangerousGood">
+                <div class="col-lg-6" *ngIf="isDangerousGood">
+                  <div class="form-group">
                     <label for="GoodsDetail_DangerousGoodsCode">{{ l('DangerousGoodsCode') }} <span class="required-fileds">*</span> </label>
                     <input
                       #DangerousGoods="ngModel"
@@ -180,6 +181,7 @@
                       name="DangerousGoodsCode"
                       type="text"
                       [required]="isDangerousGood"
+                      [disabled]="!isDangerousGood"
                       [class.is-invalid]="DangerousGoods.touched && !DangerousGoods.valid"
                       [class.is-valid]="DangerousGoods.touched && DangerousGoods.valid"
                     />
