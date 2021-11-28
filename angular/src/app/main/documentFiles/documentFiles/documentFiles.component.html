@@ -34,7 +34,7 @@
 
               <dxi-column cellTemplate="cellTemplateActions" [allowFiltering]="false" [allowSorting]="false" [width]="50"></dxi-column>
               <dxi-column *ngIf="!appSession.tenantId" dataField="submitterTenatTenancyName" caption="{{ l('SubmitterTenant') }}"></dxi-column>
-              <dxi-column dataField="creationTime" caption="{{ l('SubmittingTime') }}" dataType="datetime"></dxi-column>
+              <dxi-column dataField="creationTime" caption="{{ l('SubmittingTime') }}" dataType="date"></dxi-column>
               <dxi-column dataField="documentTypeName" caption="{{ l('DatatableDocumentName') }}" [allowGrouping]="false"></dxi-column>
               <dxi-column
                 dataField="expirationDate"
