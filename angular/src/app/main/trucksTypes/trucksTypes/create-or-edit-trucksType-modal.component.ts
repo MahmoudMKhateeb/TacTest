@@ -43,7 +43,6 @@ export class CreateOrEditTrucksTypeModalComponent extends AppComponentBase imple
     } else {
       this._trucksTypesServiceProxy.getTrucksTypeForEdit(trucksTypeId).subscribe((result) => {
         this.trucksType = result.trucksType;
-        this.PopulateTranslations(result.trucksType.translations);
         this.active = true;
         this.modal.show();
       });
@@ -66,7 +65,6 @@ export class CreateOrEditTrucksTypeModalComponent extends AppComponentBase imple
 
   save(): void {
     this.saving = true;
-    this.trucksType.translations = this.Translations;
     if (this.trucksType.transportTypeId == -1) {
       this.notify.error(this.l('PleaseChooseATransportType'));
       return;

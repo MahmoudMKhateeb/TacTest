@@ -1,5 +1,5 @@
-﻿using System;
-using Abp.Application.Services.Dto;
+﻿using Abp.Application.Services.Dto;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace TACHYON.Trucks.TrucksTypes.TrucksTypesTranslations.Dtos
@@ -8,11 +8,13 @@ namespace TACHYON.Trucks.TrucksTypes.TrucksTypesTranslations.Dtos
     {
 
         [Required]
-        [StringLength(TrucksTypesTranslationConsts.MaxTranslatedDisplayNameLength, MinimumLength = TrucksTypesTranslationConsts.MinTranslatedDisplayNameLength)]
+        [StringLength(TrucksTypesTranslationConsts.MaxTranslatedDisplayNameLength,
+            MinimumLength = TrucksTypesTranslationConsts.MinTranslatedDisplayNameLength)]
         public string TranslatedDisplayName { get; set; }
 
         [Required]
-        [StringLength(TrucksTypesTranslationConsts.MaxLanguageLength, MinimumLength = TrucksTypesTranslationConsts.MinLanguageLength)]
+        [StringLength(TrucksTypesTranslationConsts.MaxLanguageLength,
+            MinimumLength = TrucksTypesTranslationConsts.MinLanguageLength)]
         public string Language { get; set; }
 
         public long CoreId { get; set; }

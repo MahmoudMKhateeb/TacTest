@@ -459,11 +459,23 @@ namespace TACHYON
                 .ForMember(dest => dest.TruckStatusDisplayName, opt => opt.MapFrom(src => src.TruckStatusFk.DisplayName));
 
             configuration.CreateMap<CreateOrEditTrucksTypeDto, TrucksType>()
-                .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations))
+                //.ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations))
                 .ReverseMap();
-            configuration.CreateMap<TrucksTypeDto, TrucksType>().ReverseMap();
+
+            configuration.CreateMap<TrucksTypesTranslation, GetTrucksTypesTranslationForViewDto>()
+                .ForMember(x => x.TrucksTypeDisplayName, x => x.MapFrom(i => i.TranslatedDisplayName))
+                .ForMember(x => x.TrucksTypesTranslation, x => x.MapFrom(i => i));
+
+            configuration.CreateMap<TrucksTypeDto, TrucksType>().ReverseMap()
+                .ForMember(x => x.TranslatedDisplayName, x => x.MapFrom(
+                    i => i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)) != null ? i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName : "Translation Not Found"));
             configuration.CreateMap<CreateOrEditTruckStatusDto, TruckStatus>()
                 .ForMember(x => x.Translations, x => x.Ignore());
+
+            configuration.CreateMap<TrucksType, GetTrucksTypeForViewDto>()
+                .ForMember(x => x.TransportTypeDisplayName, x =>
+                      x.MapFrom(i => i.TransportTypeFk.DisplayName))
+                .ForMember(x => x.TrucksType, x => x.MapFrom(i => i));
 
             configuration.CreateMap<CreateOrEditTruckStatusDto, TruckStatus>();
 
@@ -730,14 +742,14 @@ namespace TACHYON
                 .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
                 .ReverseMap();
 
-            configuration.CreateMultiLingualMap<TrucksType, long, TrucksTypesTranslation, TrucksTypeDto>(context)
-                .EntityMap
-                .ReverseMap();
+            //configuration.CreateMultiLingualMap<TrucksType, long, TrucksTypesTranslation, TrucksTypeDto>(context)
+            //    .EntityMap
+            //    .ReverseMap();
 
-            configuration.CreateMultiLingualMap<TrucksType, long, TrucksTypesTranslation, TrucksTypeSelectItemDto>(context)
-                .EntityMap
-                .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
-                .ReverseMap();
+            //configuration.CreateMultiLingualMap<TrucksType, long, TrucksTypesTranslation, TrucksTypeSelectItemDto>(context)
+            //    .EntityMap
+            //    .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
+            //    .ReverseMap();
 
             //configuration.CreateMultiLingualMap<Vas, VasTranslation, VasDto>(context)
             //    .EntityMap.ForMember(x => x.VasTranslation,
