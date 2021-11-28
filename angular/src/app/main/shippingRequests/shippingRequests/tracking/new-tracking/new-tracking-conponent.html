@@ -1,0 +1,175 @@
+<div class="card card-custom gutter-b card-stretch">
+  <!--begin::Body-->
+  <div class="card-body">
+    <!--begin::Row-->
+    <div class="row mt-0 mb-4">
+      <div class="col px-8 py-6">
+        <div class="font-size-sm text-muted font-weight-bold">
+          <img src="/assets/custom/imgs/box.svg" width="16" alt="" /> {{ l('GoodCategory') }}
+        </div>
+        <div class="font-size-h5 font-weight-bolder">{{ trip.goodsCategory }}</div>
+      </div>
+      <div class="col px-8 py-6">
+        <div class="font-size-sm text-muted font-weight-bold"><i class="flaticon-user-ok"></i> {{ l('DriverName') }}</div>
+        <div class="font-size-h5 font-weight-bolder">{{ trip.driver }}</div>
+      </div>
+      <div class="col px-8 py-6">
+        <div class="font-size-sm text-muted font-weight-bold"><i class="flaticon-truck"></i> {{ l('TruckType') }}</div>
+        <div class="font-size-h5 font-weight-bolder">{{ trip.truckType }}</div>
+      </div>
+      <div class="col px-8 py-6">
+        <div class="font-size-sm text-muted font-weight-bold"><i class="flaticon-map-location"></i> {{ l('routeType') }}</div>
+        <div class="font-size-h5 font-weight-bolder">{{ trip.routeType }}</div>
+      </div>
+    </div>
+    <!--end::Row-->
+    <!--begin::Content-->
+    <div class="d-flex flex-wrap">
+      <!--      <input type="number" name="zoom" [(ngModel)]="zoom" />-->
+      <agm-map [zoom]="zoom" [longitude]="markerLong || 46.675761" [latitude]="markerLat || 24.717942">
+        <agm-direction
+          *ngIf="destination.lat && !markerLong"
+          [origin]="{ lat: origin.lat, lng: origin.lng }"
+          [destination]="{ lat: destination.lat, lng: destination.lng }"
+          [travelMode]="'DRIVING'"
+        ></agm-direction>
+        <agm-marker *ngIf="markerLong" [longitude]="markerLong" [latitude]="markerLat">
+          <agm-info-window>{{ markerFacilityName }}</agm-info-window>
+        </agm-marker>
+      </agm-map>
+    </div>
+
+    <!--end::Content-->
+    <!--begin::Text-->
+    <p class="text-dark text-hover-primary font-weight-bold font-size-h4 mb-7 mt-3">{{ l('pointsDetails') }}</p>
+    <!--end::Text-->
+    <!--begin::Blog-->
+    <div class="d-flex flex-column flex-grow-1">
+      <!--begin::Head-->
+      <div class="card card-custom gutter-b">
+        <!--begin::Body-->
+        <!--end::Body-->
+      </div>
+      <!--end::Head-->
+      <!--begin::Row-->
+      <div class="row d-flex justify-content-center">
+        <div class="col-xl-11">
+          <!--begin::Card-->
+          <div class="card card-custom card-stretch" id="kt_todo_list">
+            <!--begin::Body-->
+            <div class="card-body p-0">
+              <!--begin::Responsive container-->
+              <div class="table-responsive">
+                <!--begin::Items-->
+                <div class="timeline timeline-3">
+                  <ngx-skeleton-loader
+                    count="3"
+                    *ngIf="routePoints.length == 0 || pointsIsLoading"
+                    [animation]="'pulse'"
+                    [theme]="{ 'border-radius': '0', height: '100px' }"
+                  ></ngx-skeleton-loader>
+
+                  <div class="timeline-items">
+                    <div *ngFor="let point of routePoints; let i = index" class="timeline-item">
+                      <div class="timeline-media pulse pulse-{{ point.pickingType == 1 ? 'primary' : 'danger' }}">
+                        <i
+                          class="flaticon2-{{ point.pickingType == 1 ? 'up' : 'down' }}  {{
+                            point.pickingType == 1 ? 'text-success' : 'text-danger'
+                          }}"
+                        ></i>
+                        <span class="pulse-ring"></span>
+                      </div>
+                      <div class="timeline-content" [ngClass]="{ active: item === point.id }" (click)="timeLinePanelClick(point)">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                          <div class="mr-2">
+                            <a href="#" class="text-dark-75 text-hover-primary font-weight-bold">
+                              {{ point.pickingType == 1 ? 'Pickup location' : 'Drop Of Location' }}.</a
+                            >
+                            <span class="label label-light-danger font-weight-bolder label-inline ml-2">{{ point.statusTitle }}</span>
+                          </div>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between">
+                          <p class="p-0">{{ point.address }}</p>
+                          <div class="btn-group">
+                            <!--                          <p-steps [model]="pointStepsMaker(3)"></p-steps>-->
+                            <button
+                              *ngIf="point.pickingType == 1 && this.trip.driverStatus == 0 && this.trip.canStartTrip"
+                              class="btn btn-success mx-2 1"
+                              (click)="accept()"
+                              [buttonBusy]="saving"
+                            >
+                              {{ 'Acknowledge' }}
+                            </button>
+                            <button
+                              class="btn btn-success mx-2 2"
+                              *ngIf="
+                                point.pickingType == 1 &&
+                                !this.saving &&
+                                this.trip.driverStatus == 1 &&
+                                this.trip.isAssign &&
+                                point.status != 4 &&
+                                point.nextStatus !== ''
+                              "
+                              (click)="changeStatus(point)"
+                              [buttonBusy]="saving"
+                            >
+                              {{ point.nextStatus == '' ? 'null Title' : point.nextStatus }}
+                            </button>
+                            <!--                            for Drop Points-->
+                            <button
+                              class="btn btn-success mx-2 3"
+                              *ngIf="
+                                this.routePoints[0].status == 4 &&
+                                !this.saving &&
+                                this.trip.isAssign &&
+                                point.pickingType == 2 &&
+                                point.nextStatus != '' &&
+                                !canUploadDeliveryNote(point)
+                              "
+                              (click)="changeStatus(point)"
+                              [buttonBusy]="saving"
+                            >
+                              {{ point.nextStatus }}
+                            </button>
+                            <button *ngIf="canUploadDeliveryNote(point)" class="btn btn-success mx-2 4" (click)="modelDeliveryNote.show(point.id)">
+                              <!--                              - Complete File Upload and pod and other stuff-->
+                              {{ l('uploadDeliveryNoteDocument') }}
+                            </button>
+                            <!--                                                         - skip and go to next -->
+                            <button
+                              class="btn btn-success mx-2 5"
+                              (click)="nextLocation(routePoints[i + 1])"
+                              [buttonBusy]="saving"
+                              *ngIf="canGoNext(point, i)"
+                            >
+                              {{ l('GoToNext') }}
+                            </button>
+                            <div *ngIf="saving" class="spinner spinner-track spinner-danger spinner-lg mr-15"></div>
+                            <!--                            <a href="javascript:void(0)" *ngIf="saving"> {{ l('loading') }} ... </a>-->
+                            <!--                            <button class="btn btn-danger btn-sm" *ngIf="saving" [buttonBusy]="saving">{{ l('loading') }}</button>-->
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!--end::Items-->
+              </div>
+              <!--end::Responsive container-->
+            </div>
+            <!--end::Body-->
+          </div>
+          <!--end::Card-->
+        </div>
+      </div>
+      <!--end::Row-->
+    </div>
+    <!--end::Blog-->
+  </div>
+  <!--end::Body-->
+</div>
+<tacking-confirm-code-model #modelconfirm (modalConfirm)="getForView()"></tacking-confirm-code-model>
+<complete-tracking-point-details #completeTrackingPointDetails></complete-tracking-point-details>
+<tacking-pod-model #modelpod (modalConfirm)="getForView()"></tacking-pod-model>
+<upload-delivery-note-document-model #modelDeliveryNote (modalConfirm)="getForView()"></upload-delivery-note-document-model>

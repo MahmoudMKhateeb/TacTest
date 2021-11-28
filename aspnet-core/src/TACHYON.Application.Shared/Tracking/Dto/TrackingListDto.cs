@@ -17,6 +17,7 @@ namespace TACHYON.Tracking.Dto
         public string DriverImageProfile { get; set; }
         public string Origin { get; set; }
         public string Destination { get; set; }
+        public bool NeedsDeliveryNote { get; set; }
 
         public string TruckType { get; set; }
         public string GoodsCategory { get; set; }

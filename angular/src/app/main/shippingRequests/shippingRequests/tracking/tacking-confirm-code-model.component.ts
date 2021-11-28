@@ -22,7 +22,7 @@ export class TrackingConfirmModalComponent extends AppComponentBase {
   }
 
   public show(id: number): void {
-    this.input = new ConfirmReceiverCodeInput();
+    //this.input = ;
     this.input.id = id;
     this.active = true;
     this.modal.show();

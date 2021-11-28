@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+﻿import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
@@ -235,9 +235,9 @@ import { ApplocalizationModalComponent } from '@app/main/applocalizations/create
 import { ViewApplocalizationModalComponent } from '@app/main/applocalizations/view-applocalization-modal.component';
 import { ComingSoonComponent } from '@app/main/commingSoon/comingSoon.component';
 import { CreateOrEditShippingRequestWizardComponent } from '@app/main/shippingRequests/shippingRequests/shippingRequestWizard/create-or-edit-shipping-request-wizard.component';
-import { TrackingComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tacking.component';
+import { TrackingComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tracking.component';
 import { TrackinSearchModelComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tacking-search-model.component';
-import { TrackingModelComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tacking-model.component';
+// import { TrackingModelComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tacking-model.component';
 import { TrackingConfirmModalComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tacking-confirm-code-model.component';
 import { TrackingPODModalComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tacking-pod-model.component';
 import { TMSRequestListComponent } from '@app/main/tms/tms-request-list.component';
@@ -253,18 +253,23 @@ import { TrucksSubmittedDocumentsComponent } from '@app/main/documentFiles/docum
 import { DriversSubmittedDocumentsComponent } from '@app/main/documentFiles/documentFiles/drivers-submitted-documents/drivers-submitted-documents.component';
 import { ViweTruckDocumentsModalComponent } from '@app/main/trucks/trucks/viwe-truck-documents-modal/viwe-truck-documents-modal.component';
 import { InvoiceTenantItemComponent } from '@app/main/Invoices/invoice-tenants/invoice-tenant-item/invoice-tenant-item.component';
-import { QuartzCronModule } from '@node_modules/@sbzen/ng-cron';
 import { TranslationsTemplateComponent } from './packingTypes/packingTypeTranslations/translations-template/translations-template.component';
 import { ShippingTypesTranslationsComponent } from './shippingTypes/shipping-types-translations/shipping-types-translations.component';
 import { ProfileModule } from '@app/main/profile/profile.module';
 import { ViewGoodDetailsComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/points/good-details/view-good-details/view-good-details.component';
 import { ViewPointModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/points/view-point-modal/view-point-modal.component';
 import { DangerousCoodTypesTranslationsComponent } from './goods/dangerous-cood-types-translations/dangerous-cood-types-translations.component';
+import { NewTrackingConponent } from './shippingRequests/shippingRequests/tracking/new-tracking/new-tracking-conponent';
+import { CollapseModule } from '@node_modules/ngx-bootstrap/collapse';
+import { NgxSkeletonLoaderModule } from '@node_modules/ngx-skeleton-loader';
+import { CompleteTrackingPointDetailsComponent } from './shippingRequests/shippingRequests/tracking/complete-tracking-point-details/complete-tracking-point-details.component';
+import { NgbAccordionModule, NgbCollapseModule, NgbNavModule } from '@node_modules/@ng-bootstrap/ng-bootstrap';
+import { UploadDeliveryNoteDocumentModelComponent } from './shippingRequests/shippingRequests/tracking/upload-delivery-note-document-model/upload-delivery-note-document-model.component';
 import { ViewDetailsAccidentModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/accident/view-details-accident-modal.component';
 import { AddAccidentCommentModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/accident/accident-comment/add-accident-comment-modal.component';
-import { NgbCollapseModule } from '@node_modules/@ng-bootstrap/ng-bootstrap';
 import { ShippingRequestRatingModalComponent } from './shippingRequests/shippingRequests/rating/shipping-request-rating-modal.component';
 import { RatingModule } from '@node_modules/primeng/rating';
+
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
 @NgModule({
@@ -307,8 +312,11 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     DevExtremeModule,
     PdfJsViewerModule,
     InputNumberModule,
-    QuartzCronModule,
     ProfileModule,
+    CollapseModule,
+    NgxSkeletonLoaderModule,
+    NgbAccordionModule,
+    NgbNavModule,
     NgbCollapseModule,
     RatingModule,
   ],
@@ -485,7 +493,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ComingSoonComponent,
     TrackingComponent,
     TrackinSearchModelComponent,
-    TrackingModelComponent,
+    // TrackingModelComponent,
     TrackingConfirmModalComponent,
     TrackingPODModalComponent,
     TMSRequestListComponent,
@@ -501,6 +509,9 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ViewGoodDetailsComponent,
     ViewPointModalComponent,
     DangerousCoodTypesTranslationsComponent,
+    NewTrackingConponent,
+    CompleteTrackingPointDetailsComponent,
+    UploadDeliveryNoteDocumentModelComponent,
     ViewDetailsAccidentModalComponent,
     AddAccidentCommentModalComponent,
     ShippingRequestRatingModalComponent,

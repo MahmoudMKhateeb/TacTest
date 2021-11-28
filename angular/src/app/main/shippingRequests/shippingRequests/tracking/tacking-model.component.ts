@@ -30,7 +30,7 @@ export class TrackingModelComponent extends AppComponentBase implements OnInit {
   @ViewChild('modelconfirm', { static: false }) modelConfirm: TrackingConfirmModalComponent;
   @ViewChild('modelpod', { static: false }) modelpod: TrackingPODModalComponent;
   @ViewChild('ModelIncident', { static: false }) modelIncident: ViewTripAccidentModelComponent;
-
+  @Output() onCloseModel: EventEmitter<any> = new EventEmitter<any>();
   _zone: NgZone;
   item: TrackingListDto = new TrackingListDto();
   routePoints: ShippingRequestTripDriverRoutePointDto[] = [];
@@ -50,11 +50,7 @@ export class TrackingModelComponent extends AppComponentBase implements OnInit {
     this.registerToEvents();
   }
 
-  show(trip: TrackingListDto): void {
-    this.direction = document.getElementsByTagName('html')[0].getAttribute('dir');
-    this.item = trip;
-    this.getCordinatesByCityName(this.item.origin, 'source');
-    this.getCordinatesByCityName(this.item.destination, 'destanation');
+  getForView() {
     this._CurrentServ.getForView(this.item.id).subscribe((result) => {
       this.routePoints = result.items;
       this.getPickup();
@@ -64,8 +60,17 @@ export class TrackingModelComponent extends AppComponentBase implements OnInit {
       console.log(this.routePoints);
     });
   }
+  show(trip: TrackingListDto): void {
+    console.log('the Trip :', trip);
+    this.direction = document.getElementsByTagName('html')[0].getAttribute('dir');
+    this.item = trip;
+    this.getCordinatesByCityName(this.item.origin, 'source');
+    this.getCordinatesByCityName(this.item.destination, 'destanation');
+    this.getForView();
+  }
   close(): void {
     this.active = false;
+    this.onCloseModel.emit('');
     this.modal.hide();
   }
   canChangeDropStatus(drop: ShippingRequestTripDriverRoutePointDto) {
@@ -94,7 +99,15 @@ export class TrackingModelComponent extends AppComponentBase implements OnInit {
         this.saving = true;
         this._CurrentServ
           .accept(this.item.id)
-          .pipe(finalize(() => (this.saving = false)))
+          .pipe(
+            finalize(() => {
+              this.saving = false;
+              //Refresh The Data After Status Change
+              setTimeout(() => {
+                this.getForView();
+              }, 3000);
+            })
+          )
           .subscribe((result) => {
             this.notify.info(this.l('SuccessfullyAccepted'));
           });
@@ -127,7 +140,12 @@ export class TrackingModelComponent extends AppComponentBase implements OnInit {
   start(): void {
     this._CurrentServ
       .start(this.item.id)
-      .pipe(finalize(() => (this.saving = false)))
+      .pipe(
+        finalize(() => {
+          this.saving = false;
+          this.getForView();
+        })
+      )
       .subscribe(() => {
         this.notify.info(this.l('SuccessfullyStarted'));
       });
@@ -136,15 +154,25 @@ export class TrackingModelComponent extends AppComponentBase implements OnInit {
   nextLocation(point: ShippingRequestTripDriverRoutePointDto): void {
     this._CurrentServ
       .nextLocation(point.id)
-      .pipe(finalize(() => (this.saving = false)))
+      .pipe(
+        finalize(() => {
+          this.saving = false;
+          this.getForView();
+        })
+      )
       .subscribe(() => {
         this.notify.info(this.l('SuccessfullyChanged'));
       });
   }
   change(point: ShippingRequestTripDriverRoutePointDto): void {
     this._CurrentServ
-      .changeStatus(point.id)
-      .pipe(finalize(() => (this.saving = false)))
+      .changeStatus(point.shippingRequestTripId)
+      .pipe(
+        finalize(() => {
+          this.saving = false;
+          this.getForView();
+        })
+      )
       .subscribe(() => {
         this.notify.info(this.l('SuccessfullyChanged'));
       });

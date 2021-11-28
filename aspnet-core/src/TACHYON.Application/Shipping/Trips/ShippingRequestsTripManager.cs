@@ -228,6 +228,7 @@ namespace TACHYON.Shipping.Trips
                     //check if all trip points completed, change the trip status from intransit to delivered and needs confirmation
                     if (trip.RoutPoints.Where(x => x.Id != activePoint.Id).All(x => x.CompletedStatus > RoutePointCompletedStatus.NotCompleted))
                     {
+                        activePoint.IsActive = false;
                         trip.Status = ShippingRequestTripStatus.DeliveredAndNeedsConfirmation;
                     }
                     break;
@@ -260,8 +261,11 @@ namespace TACHYON.Shipping.Trips
                 .WhereIf(currentUser.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == currentUser.TenantId.Value)
                 .WhereIf(currentUser.IsDriver, x => x.ShippingRequestTripFk.AssignedDriverUserId == currentUser.Id)
                 .FirstOrDefaultAsync();
-            var activePoint = await GetActivePointByTripAsyn(currentpoint.ShippingRequestTripId, currentUser);
+
             if (currentpoint == null) throw new UserFriendlyException(L("TheLocationSelectedIsNotFound"));
+
+            var activePoint = await GetActivePointByTripAsyn(currentpoint.ShippingRequestTripId, currentUser);
+
             if (activePoint == null) throw new UserFriendlyException(L("NoActivePoint"));
 
             // deactivate active point
@@ -275,7 +279,7 @@ namespace TACHYON.Shipping.Trips
                 activePoint.IsActive = false;
                 activePoint.IsComplete = true;
                 activePoint.EndTime = Clock.Now;
-
+                activePoint.CompletedStatus = RoutePointCompletedStatus.Completed;
             }
 
             if (activePoint.PickingType == PickingType.Dropoff &&
@@ -285,6 +289,7 @@ namespace TACHYON.Shipping.Trips
                 //can go to next point if not confirming receiverd code nor uploading POD
                 activePoint.IsActive = false;
             }
+            CurrentUnitOfWork.SaveChanges();
             //finish active point
             await CanGoToNextLocation(currentpoint);
 
