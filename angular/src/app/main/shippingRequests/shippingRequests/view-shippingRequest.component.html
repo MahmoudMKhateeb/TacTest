@@ -361,6 +361,7 @@
 
       <ng-template [ngIf]="canSeeDirectRequests()">
         <direct-request
+          #directRequestComponent
           [shippingRequestId]="activeShippingRequestId"
           [ShippingRequestStatus]="shippingRequestforView.shippingRequest.status"
         ></direct-request>
