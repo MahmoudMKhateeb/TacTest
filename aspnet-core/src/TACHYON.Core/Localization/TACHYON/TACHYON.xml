@@ -2402,6 +2402,8 @@
 		<text name="PickupFacilityAndDropOffFacilityCantBeTheSame">Pickup facility and drop off facility can't be the same</text>
 		<text name="CreateOrEditPoint">Create or Edit Point</text>
 		<text name="SelectADangerousGoodType">Select a Dangerous Good Type</text>
+		<text name="NotAccepted">Not Accepted</text>
+		<text name="NotRejected">Not Rejected</text>
 		
 		<text name="StartMovingToLoadingLocation">Start Moving To Loading Location</text>
 <!--		<text name="ArriveToLoadingLocation">Arrive To Loading Location</text>  Already Exist -->
