@@ -94,7 +94,7 @@ namespace TACHYON.Tracking
         {
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier, AppFeatures.Shipper);
             DisableTenancyFilters();
-            var routes = _routPointRepository.GetAll()
+            var routes = await _routPointRepository.GetAll()
             .Include(r => r.FacilityFk)
             .Include(r => r.GoodsDetails)
              .ThenInclude(c => c.GoodCategoryFk)
