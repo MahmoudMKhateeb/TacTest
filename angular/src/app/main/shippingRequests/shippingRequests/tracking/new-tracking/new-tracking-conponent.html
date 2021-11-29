@@ -98,52 +98,53 @@
                               (click)="accept()"
                               [buttonBusy]="saving"
                             >
-                              {{ 'Acknowledge' }}
+                              {{ 'Accept' }}
                             </button>
-                            <button
-                              class="btn btn-success mx-2 2"
-                              *ngIf="
-                                point.pickingType == 1 &&
-                                !this.saving &&
-                                this.trip.driverStatus == 1 &&
-                                this.trip.isAssign &&
-                                point.status != 4 &&
-                                point.nextStatus !== ''
-                              "
-                              (click)="changeStatus(point)"
-                              [buttonBusy]="saving"
-                            >
-                              {{ point.nextStatus == '' ? 'null Title' : point.nextStatus }}
-                            </button>
-                            <!--                            for Drop Points-->
-                            <button
-                              class="btn btn-success mx-2 3"
-                              *ngIf="
-                                this.routePoints[0].status == 4 &&
-                                !this.saving &&
-                                this.trip.isAssign &&
-                                point.pickingType == 2 &&
-                                point.nextStatus != '' &&
-                                !canUploadDeliveryNote(point)
-                              "
-                              (click)="changeStatus(point)"
-                              [buttonBusy]="saving"
-                            >
-                              {{ point.nextStatus }}
-                            </button>
-                            <button *ngIf="canUploadDeliveryNote(point)" class="btn btn-success mx-2 4" (click)="modelDeliveryNote.show(point.id)">
-                              <!--                              - Complete File Upload and pod and other stuff-->
-                              {{ l('uploadDeliveryNoteDocument') }}
-                            </button>
-                            <!--                                                         - skip and go to next -->
-                            <button
-                              class="btn btn-success mx-2 5"
-                              (click)="nextLocation(routePoints[i + 1])"
-                              [buttonBusy]="saving"
-                              *ngIf="canGoNext(point, i)"
-                            >
-                              {{ l('GoToNext') }}
-                            </button>
+
+                            <!--                            <button-->
+                            <!--                              class="btn btn-success mx-2 2"-->
+                            <!--                              *ngIf="-->
+                            <!--                                point.pickingType == 1 &&-->
+                            <!--                                !this.saving &&-->
+                            <!--                                this.trip.driverStatus == 1 &&-->
+                            <!--                                this.trip.isAssign &&-->
+                            <!--                                point.status != 4 &&-->
+                            <!--                                point.nextStatus !== ''-->
+                            <!--                              "-->
+                            <!--                              (click)="changeStatus(point)"-->
+                            <!--                              [buttonBusy]="saving"-->
+                            <!--                            >-->
+                            <!--                              {{ point.nextStatus == '' ? 'null Title' : point.nextStatus }}-->
+                            <!--                            </button>-->
+                            <!--                            &lt;!&ndash;                            for Drop Points&ndash;&gt;-->
+                            <!--                            <button-->
+                            <!--                              class="btn btn-success mx-2 3"-->
+                            <!--                              *ngIf="-->
+                            <!--                                this.routePoints[0].status == 4 &&-->
+                            <!--                                !this.saving &&-->
+                            <!--                                this.trip.isAssign &&-->
+                            <!--                                point.pickingType == 2 &&-->
+                            <!--                                point.nextStatus != '' &&-->
+                            <!--                                !canUploadDeliveryNote(point)-->
+                            <!--                              "-->
+                            <!--                              (click)="changeStatus(point)"-->
+                            <!--                              [buttonBusy]="saving"-->
+                            <!--                            >-->
+                            <!--                              {{ point.nextStatus }}-->
+                            <!--                            </button>-->
+                            <!--                            <button *ngIf="canUploadDeliveryNote(point)" class="btn btn-success mx-2 4" (click)="modelDeliveryNote.show(point.id)">-->
+                            <!--                              &lt;!&ndash;                              - Complete File Upload and pod and other stuff&ndash;&gt;-->
+                            <!--                              {{ l('uploadDeliveryNoteDocument') }}-->
+                            <!--                            </button>-->
+                            <!--                            &lt;!&ndash;                                                         - skip and go to next &ndash;&gt;-->
+                            <!--                            <button-->
+                            <!--                              class="btn btn-success mx-2 5"-->
+                            <!--                              (click)="nextLocation(routePoints[i + 1])"-->
+                            <!--                              [buttonBusy]="saving"-->
+                            <!--                              *ngIf="canGoNext(point, i)"-->
+                            <!--                            >-->
+                            <!--                              {{ l('GoToNext') }}-->
+                            <!--                            </button>-->
                             <div *ngIf="saving" class="spinner spinner-track spinner-danger spinner-lg mr-15"></div>
                             <!--                            <a href="javascript:void(0)" *ngIf="saving"> {{ l('loading') }} ... </a>-->
                             <!--                            <button class="btn btn-danger btn-sm" *ngIf="saving" [buttonBusy]="saving">{{ l('loading') }}</button>-->

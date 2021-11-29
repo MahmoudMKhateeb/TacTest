@@ -220,17 +220,17 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
    * @param point
    */
   change(point: ShippingRequestTripDriverRoutePointDto): void {
-    this._trackingServiceProxy
-      .changeStatus(point.shippingRequestTripId)
-      .pipe(
-        finalize(() => {
-          this.saving = false;
-          this.getForView();
-        })
-      )
-      .subscribe(() => {
-        this.notify.info(this.l('SuccessfullyChanged'));
-      });
+    // this._trackingServiceProxy
+    //   .changeStatus(point.shippingRequestTripId)
+    //   .pipe(
+    //     finalize(() => {
+    //       this.saving = false;
+    //       this.getForView();
+    //     })
+    //   )
+    //   .subscribe(() => {
+    //     this.notify.info(this.l('SuccessfullyChanged'));
+    //   });
   }
 
   /**
