@@ -583,7 +583,7 @@ namespace TACHYON.Tracking
             }
             return isCompleted;
         }
-        private async Task<RoutPoint> GetActivePointByTripAsyn( User currentUser)
+        private async Task<RoutPoint> GetActivePointByTripAsyn(User currentUser)
         {
             return await _routPointRepository
                 .GetAll()
@@ -680,7 +680,7 @@ namespace TACHYON.Tracking
         private async Task GeneratePrices(ShippingRequestTrip trip)
         {
             DisableTenancyFilters();
-            var offer = await _priceOfferManager.GetOffercceptedByShippingRequestId(trip.ShippingRequestId);
+            var offer = await _priceOfferManager.GetOfferAcceptedByShippingRequestId(trip.ShippingRequestId);
 
             trip.CommissionType = offer.CommissionType;
             trip.SubTotalAmount = offer.ItemPrice;

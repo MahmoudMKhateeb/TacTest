@@ -140,7 +140,6 @@ namespace TACHYON.Web.Controllers
             _userDeviceTokenManager = userDeviceTokenManager;
             _mobileManager = mobileManager;
             _workFlowProvider = workFlowProvider;
-            _shippingRequestsTripManager = shippingRequestsTripManager;
             _testMobiles = new List<string>()
             {
                 "599925326",
