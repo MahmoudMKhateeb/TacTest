@@ -1,6 +1,7 @@
 ﻿using Abp.Authorization;
 using Abp.Configuration;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Abp.Extensions;
 using Abp.Runtime.Security;
 using Abp.Runtime.Session;
@@ -130,11 +131,20 @@ namespace TACHYON.Authorization.Accounts
 
         public async Task<ResetPasswordOutput> ResetPassword(ResetPasswordInput input)
         {
-            var user = await UserManager.GetUserByIdAsync(input.UserId);
+            User user;
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant))
+            {
+                user = await UserManager.GetUserByIdAsync(input.UserId);
+            }
+
+
             if (user == null || user.PasswordResetCode.IsNullOrEmpty() || user.PasswordResetCode != input.ResetCode)
             {
                 throw new UserFriendlyException(L("InvalidPasswordResetCode"), L("InvalidPasswordResetCode_Detail"));
             }
+
+            CurrentUnitOfWork.SetTenantId(user.TenantId);
+
 
             await UserManager.InitializeOptionsAsync(AbpSession.TenantId);
             CheckErrors(await UserManager.ChangePasswordAsync(user, input.Password));
@@ -149,6 +159,8 @@ namespace TACHYON.Authorization.Accounts
                 CanLogin = user.IsActive,
                 UserName = user.EmailAddress
             };
+
+
         }
 
         public async Task SendEmailActivationLink(SendEmailActivationLinkInput input)
