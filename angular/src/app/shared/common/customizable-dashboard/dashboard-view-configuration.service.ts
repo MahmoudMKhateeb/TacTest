@@ -46,6 +46,13 @@ import { HostGoodTypesUsageChartComponent } from '@app/shared/common/customizabl
 import { HostRquestPricingMeterComponent } from '@app/shared/common/customizable-dashboard/widgets/host/host-rquest-pricing-meter/host-rquest-pricing-meter.component';
 import { HostRquestAcceptanceMeterComponent } from '@app/shared/common/customizable-dashboard/widgets/host/host-rquest-acceptance-meter/host-rquest-acceptance-meter.component';
 import { HostInvoicesMeterComponent } from '@app/shared/common/customizable-dashboard/widgets/host/host-invoices-meter/host-invoices-meter.component';
+import { WorstRatedCarriersComponent } from './widgets/host/worst-rated-carriers/worst-rated-carriers.component';
+import { UnpricedRequestsInMarketplaceComponent } from './widgets/host/unpriced-requests-in-marketplace/unpriced-requests-in-marketplace.component';
+import { WorstRatedShippersComponent } from './widgets/host/worst-rated-shippers/worst-rated-shippers.component';
+import { TopRatedCarriersComponent } from './widgets/host/top-rated-carriers/top-rated-carriers.component';
+import { TopRatedShippersComponent } from './widgets/host/top-rated-shippers/top-rated-shippers.component';
+import { TopThreeCarriersHaveRequestsComponent } from './widgets/host/top-three-carriers-have-requests/top-three-carriers-have-requests.component';
+import { TopThreeShippersHaveRequestsComponent } from './widgets/host/top-three-shippers-have-requests/top-three-shippers-have-requests.component';
 
 @Injectable({
   providedIn: 'root',
@@ -269,6 +276,55 @@ export class DashboardViewConfigurationService {
       4
     );
 
+    let TopThreeShippersHaveRequests = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.TachyonDealerMostRequestingShippersWidget,
+      TopThreeShippersHaveRequestsComponent,
+      4,
+      6
+    );
+
+    let TopThreeCarriersHaveRequests = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.TachyonDealerMostRequestedCarriersWidget,
+      TopThreeCarriersHaveRequestsComponent,
+      4,
+      6
+    );
+
+    let topRatedShippersWidget = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.TachyonDealerTopRatedShippersWidget,
+      TopRatedShippersComponent,
+      4,
+      8
+    );
+
+    let topRatedCarriersWidget = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.TachyonDealerTopRatedCarriersWidget,
+      TopRatedCarriersComponent,
+      4,
+      8
+    );
+
+    let worstRatedShippersWidget = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.TachyonDealerWorstRatedShippersWidget,
+      WorstRatedShippersComponent,
+      4,
+      8
+    );
+
+    let worstRatedCarriersWidget = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.TachyonDealerWorstRatedCarriersWidget,
+      WorstRatedCarriersComponent,
+      4,
+      8
+    );
+
+    let unPricedShippingRequestsWidget = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.TachyonDealerUnPricedRequestsInMarketPlaceWidget,
+      UnpricedRequestsInMarketplaceComponent,
+      4,
+      8
+    );
+
     let numberOfDeliveredTrips = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.host.TachyonDealerNumberOfDeliveredTripsWidget,
       DeleverdTripsComponent,
@@ -384,6 +440,13 @@ export class DashboardViewConfigurationService {
     this.WidgetViewDefinitions.push(hostRequestPricedMeter);
     this.WidgetViewDefinitions.push(hostRequestAcceptanceMeter);
     this.WidgetViewDefinitions.push(hostInvoicePaidMeter);
+    this.WidgetViewDefinitions.push(TopThreeShippersHaveRequests);
+    this.WidgetViewDefinitions.push(TopThreeCarriersHaveRequests);
+    this.WidgetViewDefinitions.push(topRatedShippersWidget);
+    this.WidgetViewDefinitions.push(topRatedCarriersWidget);
+    this.WidgetViewDefinitions.push(worstRatedShippersWidget);
+    this.WidgetViewDefinitions.push(worstRatedCarriersWidget);
+    this.WidgetViewDefinitions.push(unPricedShippingRequestsWidget);
     //console.log('WidgetViewDefinitions', this.WidgetViewDefinitions);
     // this.widgetFilterDefinitions.push();
   }

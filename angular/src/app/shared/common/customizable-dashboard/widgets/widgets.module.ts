@@ -41,6 +41,17 @@ import { HostRouteTypeUsageChartComponent } from './host/host-route-type-usage-c
 import { HostRquestPricingMeterComponent } from './host/host-rquest-pricing-meter/host-rquest-pricing-meter.component';
 import { HostRquestAcceptanceMeterComponent } from './host/host-rquest-acceptance-meter/host-rquest-acceptance-meter.component';
 import { HostInvoicesMeterComponent } from './host/host-invoices-meter/host-invoices-meter.component';
+import { TopThreeShippersHaveRequestsComponent } from './host/top-three-shippers-have-requests/top-three-shippers-have-requests.component';
+import { TopThreeCarriersHaveRequestsComponent } from './host/top-three-carriers-have-requests/top-three-carriers-have-requests.component';
+import { TopRatedCarriersComponent } from './host/top-rated-carriers/top-rated-carriers.component';
+import { TopRatedShippersComponent } from './host/top-rated-shippers/top-rated-shippers.component';
+import { WorstRatedShippersComponent } from './host/worst-rated-shippers/worst-rated-shippers.component';
+import { WorstRatedCarriersComponent } from './host/worst-rated-carriers/worst-rated-carriers.component';
+import { NumberOfRequestsForEachCityComponent } from './host/number-of-requests-for-each-city/number-of-requests-for-each-city.component';
+import { UnpricedRequestsInMarketplaceComponent } from './host/unpriced-requests-in-marketplace/unpriced-requests-in-marketplace.component';
+import { PaginatorModule } from '@node_modules/primeng/paginator';
+import { UtilsModule } from '@shared/utils/utils.module';
+import { BsDatepickerModule } from '@node_modules/ngx-bootstrap/datepicker';
 
 @NgModule({
   declarations: [
@@ -80,8 +91,26 @@ import { HostInvoicesMeterComponent } from './host/host-invoices-meter/host-invo
     HostRquestPricingMeterComponent,
     HostRquestAcceptanceMeterComponent,
     HostInvoicesMeterComponent,
+    TopThreeShippersHaveRequestsComponent,
+    TopThreeCarriersHaveRequestsComponent,
+    TopRatedCarriersComponent,
+    TopRatedShippersComponent,
+    WorstRatedShippersComponent,
+    WorstRatedCarriersComponent,
+    NumberOfRequestsForEachCityComponent,
+    UnpricedRequestsInMarketplaceComponent,
   ],
-  imports: [CommonModule, ChartModule, NgApexchartsModule, TableModule, AgmCoreModule, AgmDirectionModule],
+  imports: [
+    CommonModule,
+    ChartModule,
+    NgApexchartsModule,
+    TableModule,
+    AgmCoreModule,
+    AgmDirectionModule,
+    PaginatorModule,
+    UtilsModule,
+    BsDatepickerModule,
+  ],
   entryComponents: [
     CompletedTripsWidgetComponent,
     CompletedTripVsPodComponent,
