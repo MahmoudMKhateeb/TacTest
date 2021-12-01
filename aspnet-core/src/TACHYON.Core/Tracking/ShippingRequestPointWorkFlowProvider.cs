@@ -336,11 +336,10 @@ namespace TACHYON.Tracking
             if (point == null) throw new UserFriendlyException(L("YouCanNotChangeTheStatus"));
 
             var transaction = CheckIfTransactionIsExist(point, action);
-            foreach (var item in transaction.Features)
-            {
-                if (!await _permissionChecker.IsGrantedAsync(false, transaction.Permissions?.ToArray()) || await _featureChecker.IsEnabledAsync(item))
-                    throw new AbpAuthorizationException("You are not authorized to " + transaction.Name);
-            }
+
+            if (!_permissionChecker.IsGranted(false, transaction.Permissions?.ToArray()) || (transaction.Features.Any() && transaction.Features.Any(x => _featureChecker.IsEnabled(x))))
+                throw new AbpAuthorizationException("You are not authorized to " + transaction.Name);
+
             transaction.Func(args);
 
             await SetRoutStatusTransitionLog(point);
