@@ -335,6 +335,7 @@ namespace TACHYON.Shipping.Trips
             routePointDocument.DocumentContentType = "image/jpeg";
             routePointDocument.DocumentName = document.DocumentName;
             routePointDocument.DocumentId = document.DocumentId;
+            routePointDocument.RoutePointDocumentType = RoutePointDocumentType.POD;
             await _routPointDocumentRepository.InsertAsync(routePointDocument);
 
             CurrentPoint.IsActive = false;
