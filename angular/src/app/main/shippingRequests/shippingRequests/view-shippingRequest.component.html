@@ -128,6 +128,18 @@
                         </div>
                       </div>
                     </div>
+                    <div class="col-lg-3 mt-5">
+                      <div class="form-group">
+                        <label> {{ l('shipperRating') }}</label>
+                        <span *ngIf="feature.isEnabled('App.Carrier') || feature.isEnabled('App.TachyonDealer')">
+                          <app-view-rating
+                            [rate]="shippingRequestforView.shipperRating"
+                            [max]="5"
+                            [rateNumber]="shippingRequestforView.shipperRatingNumber"
+                          ></app-view-rating>
+                        </span>
+                      </div>
+                    </div>
                     <div *ngIf="shippingRequestforView.shippingRequest.isBid" class="col-lg-3 mt-5">
                       <div class="form-group">
                         <label>{{ l('DiddingStartDate') }}</label>
