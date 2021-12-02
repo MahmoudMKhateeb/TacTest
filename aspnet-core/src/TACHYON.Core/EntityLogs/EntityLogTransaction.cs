@@ -12,14 +12,17 @@ namespace TACHYON.EntityLogs
     public abstract class EntityLogTransaction : SmartEnum
     {
 
-        public static readonly EntityLogTransaction RoutPointStep1 = new RoutPointStep1(nameof(RoutPointStep1), 1);
-        public static readonly EntityLogTransaction RoutPointStep2 = new RoutPointStep1(nameof(RoutPointStep2), 2);
-        public static readonly EntityLogTransaction RoutPointStep3 = new RoutPointStep1(nameof(RoutPointStep3), 3);
-        public static readonly EntityLogTransaction RoutPointStep4 = new RoutPointStep1(nameof(RoutPointStep4), 4);
-        public static readonly EntityLogTransaction RoutPointStep5 = new RoutPointStep1(nameof(RoutPointStep5), 5);
-        public static readonly EntityLogTransaction RoutPointStep6 = new RoutPointStep1(nameof(RoutPointStep6), 6);
-        public static readonly EntityLogTransaction RoutPointStep7 = new RoutPointStep1(nameof(RoutPointStep7), 7);
-        public static readonly EntityLogTransaction RoutPointStep8 = new RoutPointStep1(nameof(RoutPointStep8), 8);
+        public static readonly EntityLogTransaction RoutPointPickUpStep1 = new RoutPointPickUpStep1(nameof(RoutPointPickUpStep1), (int)RoutePointStatus.StartedMovingToLoadingLocation);
+        public static readonly EntityLogTransaction RoutPointPickUpStep2 = new RoutPointPickUpStep2(nameof(RoutPointPickUpStep2), (int)RoutePointStatus.ArriveToLoadingLocation);
+        public static readonly EntityLogTransaction RoutPointPickUpStep3 = new RoutPointPickUpStep3(nameof(RoutPointPickUpStep3), (int)RoutePointStatus.StartLoading);
+        public static readonly EntityLogTransaction RoutPointPickUpStep4 = new RoutPointPickUpStep4(nameof(RoutPointPickUpStep4), (int)RoutePointStatus.FinishLoading);
+
+        public static readonly EntityLogTransaction RoutPointDropOffStep1 = new RoutPointDropOffStep1(nameof(RoutPointDropOffStep1), (int)RoutePointStatus.StartedMovingToOffLoadingLocation);
+        public static readonly EntityLogTransaction RoutPointDropOffStep2 = new RoutPointDropOffStep2(nameof(RoutPointDropOffStep2), (int)RoutePointStatus.ArrivedToDestination);
+        public static readonly EntityLogTransaction RoutPointDropOffStep3 = new RoutPointDropOffStep3(nameof(RoutPointDropOffStep3), (int)RoutePointStatus.StartOffloading);
+        public static readonly EntityLogTransaction RoutPointDropOffStep4 = new RoutPointDropOffStep4(nameof(RoutPointDropOffStep4), (int)RoutePointStatus.FinishOffLoadShipment);
+        public static readonly EntityLogTransaction RoutPointDropOffStep5 = new RoutPointDropOffStep5(nameof(RoutPointDropOffStep5), (int)RoutePointStatus.ReceiverConfirmed);
+        public static readonly EntityLogTransaction RoutPointDropOffStep6 = new RoutPointDropOffStep6(nameof(RoutPointDropOffStep6), (int)RoutePointStatus.DeliveryConfirmation);
 
         public static readonly EntityLogTransaction RoutPointAction1 = new RoutPointAction1(nameof(RoutPointAction1), 9);
         public static readonly EntityLogTransaction RoutPointAction2 = new RoutPointAction2(nameof(RoutPointAction2), 10);
@@ -34,9 +37,6 @@ namespace TACHYON.EntityLogs
         {
         }
     }
-
-
-
     public class DefaultLogTransaction : EntityLogTransaction
     {
         public DefaultLogTransaction() : base(nameof(DefaultLogTransaction), -1)

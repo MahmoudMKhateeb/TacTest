@@ -310,7 +310,8 @@ namespace TACHYON.Web.Controllers
                 }
 
                 var document = await _commonManager.UploadDocument(file, AbpSession.TenantId);
-                await _workFlowProvider.ConfirmPointToDelivery(document, input);
+                var args = new PointTransactionArgs { PointId = input.Id, Document = document };
+                await _workFlowProvider.Invoke(args, input.Action);
                 return Json(new AjaxResponse(new { }));
             }
             catch (UserFriendlyException ex)

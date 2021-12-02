@@ -7,7 +7,7 @@
         ArriveToLoadingLocation = 2,
         StartLoading = 3,
         FinishLoading = 4,
-        StartedMovingToOfLoadingLocation = 5,
+        StartedMovingToOffLoadingLocation = 5,
         ArrivedToDestination = 6,
         StartOffloading = 7,
         FinishOffLoadShipment = 8,

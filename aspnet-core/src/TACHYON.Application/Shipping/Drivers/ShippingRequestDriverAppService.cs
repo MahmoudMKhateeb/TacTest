@@ -360,6 +360,7 @@ namespace TACHYON.Shipping.Drivers
             input.Note = note;
             await _ratingLogManager.ValidateAndCreateRating(input, RateType.SEByDriver);
         }
+
         public async Task InvokeStatus(InvokeStatusInputDto input)
         {
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier);
