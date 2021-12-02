@@ -21,7 +21,8 @@
 		<text name="Accept">Accept</text>
 		<text name="AcceptBid">Accept price</text>
 		<text name="Accepted">Accepted</text>
-		<text name="AcceptedAndWaitingForCarrier">Waiting for carrier approval</text>
+    <text name="PleaseTryAgainIn5Minutes">Please Try Again In 5 Minutes</text>
+    <text name="AcceptedAndWaitingForCarrier">Waiting for carrier approval</text>
 		<text name="AcceptedAndWaitingForShipper">Waiting approve by shipper</text>
 		<text name="AcceptedDate">Accepted date</text>
 		<text name="AcceptPrice">Accept price</text>
