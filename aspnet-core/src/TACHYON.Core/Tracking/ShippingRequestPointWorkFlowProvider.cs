@@ -531,7 +531,7 @@ namespace TACHYON.Tracking
         {
             DisableTenancyFilters();
 
-            var status = RoutePointStatus.ReceiverConfirmed;
+            var status = RoutePointStatus.DeliveryConfirmation;
             var point = _routPointRepository.GetAllIncluding(x => x.ShippingRequestTripFk)
                  .FirstOrDefault(x => x.Id == args.PointId);
 
