@@ -284,6 +284,32 @@ namespace TACHYON.Shipping.Drivers
             return tripDto;
 
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id">TripId</param>
+        /// <returns></returns>
+        public async Task<List<RoutPointsMobileDto>> GetRoutPointForMobile(long id)
+        {
+            DisableTenancyFilters();
+            var routes = await _RoutPointRepository.GetAll()
+             .Include(t => t.RoutPointStatusTransitions)
+             .Where(x => x.ShippingRequestTripId == id)
+             .ToListAsync();
+            if (routes == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
+            var mappedRoutes = ObjectMapper.Map<List<RoutPointsMobileDto>>(routes);
+            foreach (var rout in mappedRoutes)
+            {
+                rout.StatusTitle = L(rout.Status.ToString());
+                var resetStatues = rout.RoutPointStatusTransitions.OrderByDescending(c => c.CreationTime)
+                    .FirstOrDefault(x => x.Status == RoutePointStatus.Reset);
+                if (rout.IsActive)
+                    rout.AvailableTransactions = _workFlowProvider.GetTransactionsByStatus(rout.WorkFlowVersion, rout.Status)
+                        .Where(c => !rout.RoutPointStatusTransitions.Any(x => x.Status == c.ToStatus
+                         && (resetStatues == null || x.CreationTime > resetStatues.CreationTime))).ToList();
+            }
+            return mappedRoutes;
+        }
         public async Task<RoutDropOffDto> GetDropOffDetail(long PointId)
         {
             DisableTenancyFilters();
