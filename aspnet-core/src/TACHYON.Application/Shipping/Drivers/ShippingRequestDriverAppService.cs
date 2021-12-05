@@ -234,9 +234,11 @@ namespace TACHYON.Shipping.Drivers
                     RateType = RateType.SEByDriver,
                     FacilityId = point.FacilityId
                 });
+                var resetStatues = point.RoutPointStatusTransitions.OrderByDescending(c => c.CreationTime)
+                               .FirstOrDefault(x => x.Status == RoutePointStatus.Reset);
                 point.Statues = _workFlowProvider.GetStatuses(point);
                 point.AvailableTransactions = _workFlowProvider.GetTransactionsByStatus(point.WorkFlowVersion, point.Status)
-                    .Where(c => !point.RoutPointStatusTransitions.Any(x => x.Status == c.ToStatus)).ToList();
+                    .Where(c => !point.RoutPointStatusTransitions.Any(x => x.Status == c.ToStatus && (resetStatues == null || x.CreationTime > resetStatues.CreationTime))).ToList();
             }
 
             //fill incidents
@@ -485,6 +487,7 @@ namespace TACHYON.Shipping.Drivers
                     item.ActualPickupOrDeliveryDate = null;
                     item.CompletedStatus = RoutePointCompletedStatus.NotCompleted;
                     item.StartTime = item.EndTime = null;
+                    item.CanGoToNextLocation = false;
                     await _routPointStatusTransitionRepository.InsertAsync(new RoutPointStatusTransition
                     {
                         PointId = item.Id,
