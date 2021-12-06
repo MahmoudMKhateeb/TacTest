@@ -64,6 +64,12 @@
                   <p-sortIcon field="name"></p-sortIcon>
                 </th>
 
+                <th *ngIf="isTachyonDealer || isShipper">
+                  {{ 'Rate' | localize }}
+                </th>
+                <th *ngIf="isTachyonDealer || isShipper">
+                  {{ 'NumberOfRate' | localize }}
+                </th>
                 <th>
                   {{ 'Actions' | localize }}
                 </th>
@@ -83,7 +89,20 @@
                     {{ record.name }}
                   </a>
                 </td>
-                <td class="justify-content-center">
+                <td *ngIf="isTachyonDealer || isShipper">
+                  <ng-template #t let-fill="fill">
+                    <span class="star p-0" [class.full]="fill === 100"> <span class="half" [style.width.%]="fill">&#9733;</span>&#9733;</span>
+                  </ng-template>
+                  <ngb-rating [(rate)]="record.carrierRate" [starTemplate]="t" [readonly]="true" [max]="5"></ngb-rating>
+                </td>
+
+                <td *ngIf="isTachyonDealer || isShipper">
+                  <span>
+                    <span>{{ record.carrierRateNumber }}</span>
+                  </span>
+                </td>
+
+                <td>
                   <span class="ui-column-title"> {{ 'CarrierName' | localize }}</span>
                   <span>
                     <button
