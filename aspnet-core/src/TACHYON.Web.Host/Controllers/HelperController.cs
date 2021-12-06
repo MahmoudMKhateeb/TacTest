@@ -297,20 +297,15 @@ namespace TACHYON.Web.Controllers
         {
             try
             {
-                var file = Request.Form.Files.First();
-                //Input.Document = file;
-                if (file.Length == 0)
-                {
+                var files = Request.Form.Files;
+                if (files.Any(f => f.Length == 0))
                     throw new UserFriendlyException(L("File_Empty_Error"));
-                }
 
-                if (file.Length > 1048576 * 100) //100 MB
-                {
+                if (files.Any(f => f.Length > 1048576 * 100)) //100 MB
                     throw new UserFriendlyException(L("File_SizeLimit_Error"));
-                }
 
-                var document = await _commonManager.UploadDocument(file, AbpSession.TenantId);
-                var args = new PointTransactionArgs { PointId = input.Id, Document = document };
+                var documents = await _commonManager.UploadDocuments(files, AbpSession.TenantId);
+                var args = new PointTransactionArgs { PointId = input.Id, Documents = documents };
                 await _workFlowProvider.Invoke(args, input.Action);
                 return Json(new AjaxResponse(new { }));
             }

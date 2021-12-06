@@ -11,6 +11,6 @@ namespace TACHYON.Routs.Dtos
         public long PointId { get; set; }
         public RoutePointStatus Status { get; set; }
         public DateTime CreationTime { get; set; }
-
+        public bool IsReset { get; set; }
     }
 }

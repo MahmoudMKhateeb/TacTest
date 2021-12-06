@@ -8,6 +8,7 @@ using Abp.Timing;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite.Geometries;
+using NUglify.Helpers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
@@ -183,8 +184,6 @@ namespace TACHYON.Shipping.Drivers
              .Include(x => x.AssignedTruckFk)
               .ThenInclude(t => t.TrucksTypeFk)
                .ThenInclude(t => t.Translations)
-               .Include(i => i.RoutPoints)
-               .ThenInclude(t => t.RoutPointStatusTransitions)
              .WhereIf(IsAccepted, t => t.DriverStatus == ShippingRequestTripDriverStatus.Accepted)
             .SingleOrDefaultAsync(t => t.Id == TripId && t.Status != ShippingRequestTripStatus.Canceled && t.AssignedDriverUserId == AbpSession.UserId);
 
@@ -234,11 +233,6 @@ namespace TACHYON.Shipping.Drivers
                     RateType = RateType.SEByDriver,
                     FacilityId = point.FacilityId
                 });
-                var resetStatues = point.RoutPointStatusTransitions.OrderByDescending(c => c.CreationTime)
-                               .FirstOrDefault(x => x.Status == RoutePointStatus.Reset);
-                point.Statues = _workFlowProvider.GetStatuses(point);
-                point.AvailableTransactions = _workFlowProvider.GetTransactionsByStatus(point.WorkFlowVersion, point.Status)
-                    .Where(c => !point.RoutPointStatusTransitions.Any(x => x.Status == c.ToStatus && (resetStatues == null || x.CreationTime > resetStatues.CreationTime))).ToList();
             }
 
             //fill incidents
@@ -295,21 +289,21 @@ namespace TACHYON.Shipping.Drivers
             var routes = await _RoutPointRepository.GetAll()
              .Include(t => t.RoutPointStatusTransitions)
              .Where(x => x.ShippingRequestTripId == id)
-             .ToListAsync();
+             .Select(x => new RoutPointsMobileDto
+             {
+                 Id = x.Id,
+                 ShippingRequestTripId = x.ShippingRequestTripId,
+                 CanGoToNextLocation = x.CanGoToNextLocation,
+                 IsActive = x.IsActive,
+                 IsComplete = x.IsComplete,
+                 Status = x.Status,
+                 AvailableTransactions = !x.IsActive ? new List<PointTransactionDto>() : _workFlowProvider.GetTransactionsByStatus(x.WorkFlowVersion, x.RoutPointStatusTransitions.Where(c => !c.IsReset).Select(v => v.Status).ToList(), x.Status)
+             }).ToListAsync();
             if (routes == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
-            var mappedRoutes = ObjectMapper.Map<List<RoutPointsMobileDto>>(routes);
-            foreach (var rout in mappedRoutes)
-            {
-                rout.StatusTitle = L(rout.Status.ToString());
-                var resetStatues = rout.RoutPointStatusTransitions.OrderByDescending(c => c.CreationTime)
-                    .FirstOrDefault(x => x.Status == RoutePointStatus.Reset);
-                if (rout.IsActive)
-                    rout.AvailableTransactions = _workFlowProvider.GetTransactionsByStatus(rout.WorkFlowVersion, rout.Status)
-                        .Where(c => !rout.RoutPointStatusTransitions.Any(x => x.Status == c.ToStatus
-                         && (resetStatues == null || x.CreationTime > resetStatues.CreationTime))).ToList();
-            }
-            return mappedRoutes;
+            routes.ForEach(x => x.StatusTitle = L(x.Status.ToString()));
+            return routes;
         }
+
         public async Task<RoutDropOffDto> GetDropOffDetail(long PointId)
         {
             DisableTenancyFilters();
@@ -483,6 +477,8 @@ namespace TACHYON.Shipping.Drivers
                 .Include(x => x.ShippingRequestFk)
                 .Include(x => x.RoutPoints)
                 .ThenInclude(x => x.RoutPointDocuments)
+                 .Include(x => x.RoutPoints)
+                .ThenInclude(x => x.RoutPointStatusTransitions)
                 .Include(x => x.RoutPoints)
                 .ThenInclude(x => x.RatingLogs)
                 .Include(x => x.RatingLogs)
@@ -502,7 +498,7 @@ namespace TACHYON.Shipping.Drivers
                 trip.RejectReasonId = default(int?);
                 trip.ActualDeliveryDate = trip.ActualPickupDate = null;
                 // trip.RatingLogs.Where(x => x.RateType != RateType.CarrierTripBySystem && x.RateType != RateType.ShipperTripBySystem).ToList().Clear();
-                trip.RoutPoints.ToList().ForEach(async item =>
+                trip.RoutPoints.ToList().ForEach(item =>
                 {
                     item.IsActive = false;
                     item.IsComplete = false;
@@ -514,11 +510,7 @@ namespace TACHYON.Shipping.Drivers
                     item.CompletedStatus = RoutePointCompletedStatus.NotCompleted;
                     item.StartTime = item.EndTime = null;
                     item.CanGoToNextLocation = false;
-                    await _routPointStatusTransitionRepository.InsertAsync(new RoutPointStatusTransition
-                    {
-                        PointId = item.Id,
-                        Status = RoutePointStatus.Reset
-                    });
+                    item.RoutPointStatusTransitions.Where(s => !s.IsReset).ForEach(x => x.IsReset = true);
                     //item.RatingLogs.Where(x => x.RateType != RateType.CarrierTripBySystem && x.RateType != RateType.ShipperTripBySystem).ToList().Clear();
                     //item.ShippingRequestTripAccidents.Clear();
                     //item.ShippingRequestTripTransitions.Clear();

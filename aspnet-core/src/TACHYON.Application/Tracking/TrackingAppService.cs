@@ -109,39 +109,14 @@ namespace TACHYON.Tracking
                             .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId).ToListAsync();
             if (routes == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
             var mappedRoutes = ObjectMapper.Map<List<ShippingRequestTripDriverRoutePointDto>>(routes);
-
+            // need to use select function when finish frontend changes 
+            // may be want to change the reternd dto based on front end data
             foreach (var rout in mappedRoutes)
             {
-                var resetStatues = rout.RoutPointStatusTransitions.OrderByDescending(c => c.CreationTime)
-                    .FirstOrDefault(x => x.Status == RoutePointStatus.Reset);
-                rout.Statues = _workFlowProvider.GetStatuses(rout);
-                rout.AvailableTransactions = _workFlowProvider.GetTransactionsByStatus(rout.WorkFlowVersion, rout.Status)
-                    .Where(c => !rout.RoutPointStatusTransitions.Any(x => x.Status == c.ToStatus
-                    && (resetStatues == null || x.CreationTime > resetStatues.CreationTime))).ToList();
+                rout.Statues = _workFlowProvider.GetStatuses(rout.WorkFlowVersion, rout.RoutPointStatusTransitions.Where(x => !x.IsReset).Select(x => x.Status).ToList());
+                rout.AvailableTransactions = !rout.IsActive ? new List<PointTransactionDto>() : _workFlowProvider.GetTransactionsByStatus(rout.WorkFlowVersion, rout.RoutPointStatusTransitions.Where(c => !c.IsReset).Select(v => v.Status).ToList(), rout.Status);
             }
             return new ListResultDto<ShippingRequestTripDriverRoutePointDto>(mappedRoutes);
-        }
-        public async Task<ShippingRequestTripDriverRoutePointDto> GetRoutPoint(long id)
-        {
-            CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier, AppFeatures.Shipper);
-            DisableTenancyFilters();
-            var rout = await _routPointRepository.GetAll()
-             .Include(t => t.RoutPointStatusTransitions)
-                            .Where(x => x.Id == id && x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId.HasValue)
-                            .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper), x => x.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId)
-                            .WhereIf(!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer), x => true)
-                            .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
-                            .FirstOrDefaultAsync();
-            if (rout == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
-            var mappedRoute = ObjectMapper.Map<ShippingRequestTripDriverRoutePointDto>(rout);
-
-            var resetStatues = rout.RoutPointStatusTransitions.OrderByDescending(c => c.CreationTime)
-                .FirstOrDefault(x => x.Status == RoutePointStatus.Reset);
-            mappedRoute.Statues = _workFlowProvider.GetStatuses(mappedRoute);
-            mappedRoute.AvailableTransactions = _workFlowProvider.GetTransactionsByStatus(mappedRoute.WorkFlowVersion, mappedRoute.Status)
-                .Where(c => !rout.RoutPointStatusTransitions.Any(x => x.Status == c.ToStatus
-                && (resetStatues == null || x.CreationTime > resetStatues.CreationTime))).ToList();
-            return mappedRoute;
         }
         public async Task Accept(int id)
         {
@@ -169,7 +144,7 @@ namespace TACHYON.Tracking
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier);
             await _workFlowProvider.GoToNextLocation(id);
         }
-        public async Task<FileDto> POD(long id)
+        public async Task<List<FileDto>> POD(long id)
         {
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier, AppFeatures.Shipper);
             return await _workFlowProvider.GetPOD(id);

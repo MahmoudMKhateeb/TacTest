@@ -11,6 +11,6 @@ namespace TACHYON.Tracking
     {
         public long PointId { get; set; }
         public string Code { get; set; }
-        public IHasDocument Document { get; set; }
+        public List<IHasDocument> Documents { get; set; }
     }
 }
