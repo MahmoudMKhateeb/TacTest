@@ -612,6 +612,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
                 ShippingRequest shippingRequest = await _shippingRequestRepository.GetAll()
                     .Where(e => e.Id == id)
+                    .Include(e => e.Tenant)
                     .Include(e => e.ShippingRequestBids)
                     .Include(e => e.OriginCityFk)
                     .Include(e => e.DestinationCityFk)
@@ -694,10 +695,12 @@ namespace TACHYON.Shipping.ShippingRequests
                     ObjectMapper.Map<GetShippingRequestForViewOutput>(shippingRequest);
                 output.ShippingRequestBidDtoList = shippingRequestBidDtoList;
                 output.ShippingRequestVasDtoList = shippingRequestVasList;
-
+                output.ShipperRating = shippingRequest.Tenant.Rate;
+                output.ShipperRatingNumber = shippingRequest.Tenant.RateNumber;
                 //return translated good category name by default language
                 output.GoodsCategoryName =
                     ObjectMapper.Map<GoodCategoryDto>(shippingRequest.GoodCategoryFk).DisplayName;
+
 
                 //return translated truck type by default language
                 output.TruckTypeDisplayName =
