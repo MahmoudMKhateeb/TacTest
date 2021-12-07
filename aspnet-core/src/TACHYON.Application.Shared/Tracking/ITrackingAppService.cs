@@ -12,7 +12,7 @@ namespace TACHYON.Tracking
     public interface ITrackingAppService : IApplicationService
     {
         Task<PagedResultDto<TrackingListDto>> GetAll(TrackingSearchInputDto Input);
-        Task<ListResultDto<ShippingRequestTripDriverRoutePointDto>> GetForView(long id);
+        Task<TrackingShippingRequestTripDto> GetForView(long id);
         Task Accept(int id);
         Task Start(int id);
         Task InvokeStatus(InvokeStatusInputDto input);
