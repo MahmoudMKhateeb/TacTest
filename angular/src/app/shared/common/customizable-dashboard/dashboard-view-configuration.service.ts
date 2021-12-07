@@ -46,6 +46,7 @@ import { HostGoodTypesUsageChartComponent } from '@app/shared/common/customizabl
 import { HostRquestPricingMeterComponent } from '@app/shared/common/customizable-dashboard/widgets/host/host-rquest-pricing-meter/host-rquest-pricing-meter.component';
 import { HostRquestAcceptanceMeterComponent } from '@app/shared/common/customizable-dashboard/widgets/host/host-rquest-acceptance-meter/host-rquest-acceptance-meter.component';
 import { HostInvoicesMeterComponent } from '@app/shared/common/customizable-dashboard/widgets/host/host-invoices-meter/host-invoices-meter.component';
+import { HostRouteTypeUsageChartComponent } from './widgets/host/host-route-type-usage-chart/host-route-type-usage-chart.component';
 
 @Injectable({
   providedIn: 'root',
@@ -312,7 +313,7 @@ export class DashboardViewConfigurationService {
 
     let routeTypeUsage = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.host.TachyonDealerRouteTypesUsageWidget,
-      HostGoodTypesUsageChartComponent,
+      HostRouteTypeUsageChartComponent,
       4,
       4
     );
