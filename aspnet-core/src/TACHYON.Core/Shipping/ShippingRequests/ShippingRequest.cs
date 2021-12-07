@@ -214,7 +214,10 @@ namespace TACHYON.Shipping.ShippingRequests
         /// This field describes if the shipping request is draft or not, draft means incomplete request
         /// </summary>
         public bool IsDrafted { get; set; }
-
+        /// <summary>
+        /// when TachyonDealer create a shipping request
+        /// </summary>
+        public bool CreatedByTachyonDealer { get; set; }
         public int DraftStep { get; set; }
         [StringLength(500)]
         public string CancelReason { get; set; }

@@ -400,6 +400,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 shippingRequest.TenantId = input.ShipperId.Value;
             }
             //ValidateStep1(shippingRequest);
+            shippingRequest.CreatedByTachyonDealer = await FeatureChecker.IsEnabledAsync(AppFeatures.TachyonDealer);
             shippingRequest.IsDrafted = true;
             shippingRequest.DraftStep = 1;
             await _shippingRequestRepository.InsertAndGetIdAsync(shippingRequest);

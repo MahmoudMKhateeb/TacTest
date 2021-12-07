@@ -15,7 +15,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public bool HasAccident { get; set; }
         public int TotalsTripsAddByShippier { get; set; }
         public ShippingRequestStatus Status { get; set; }
-
+        public bool CreatedByTachyonDealer { get; set; }
         public string OthersGoodsCategory { get; set; }
         public string OthersTransportType { get; set; }
         public string OthersTrucksType { get; set; }
