@@ -288,7 +288,8 @@ namespace TACHYON.Web.Controllers
             if (string.IsNullOrEmpty(Username)) throw new AbpAuthorizationException(L("InvalidMobileNumber"));
             var user = await _userManager.GetUserByDriverPhoneNumberAsync(Username);
             if (user == null) throw new AbpAuthorizationException(L("InvalidMobileNumber"));
-            if (_testMobiles.Contains(Username)) return;
+            // if the number in test numbers  or there is exsist OTP not expired for the number should go to "enter OTP screen"
+            if (_testMobiles.Contains(Username) || await _mobileManager.CheckIsExistOTP(user.Id)) return;
             await _mobileManager.CreateOTP(user, Language);
         }
         [HttpPost]
