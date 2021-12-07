@@ -91,32 +91,40 @@ namespace TACHYON.Tracking
 
             );
         }
-        public async Task<ListResultDto<ShippingRequestTripDriverRoutePointDto>> GetForView(long id)
+        public async Task<TrackingShippingRequestTripDto> GetForView(long id)
         {
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier, AppFeatures.Shipper);
             DisableTenancyFilters();
-            var routes = await _routPointRepository.GetAll()
-            .Include(r => r.FacilityFk)
-            .Include(r => r.GoodsDetails)
-             .ThenInclude(c => c.GoodCategoryFk)
-             .ThenInclude(t => t.Translations)
-            .Include(g => g.GoodsDetails)
-             .ThenInclude(u => u.UnitOfMeasureFk)
-             .Include(t => t.RoutPointStatusTransitions)
-                            .Where(x => x.ShippingRequestTripFk.Id == id && x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId.HasValue)
-                            .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper), x => x.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId)
+
+            var trip =
+                 await _ShippingRequestTripRepository.GetAll()
+                 .Include(p => p.RoutPoints)
+                 .ThenInclude(r => r.FacilityFk)
+                 .Include(p => p.RoutPoints)
+                 .ThenInclude(r => r.GoodsDetails)
+                 .ThenInclude(c => c.GoodCategoryFk)
+                 .ThenInclude(t => t.Translations)
+                 .Include(p => p.RoutPoints)
+                 .ThenInclude(g => g.GoodsDetails)
+                 .ThenInclude(u => u.UnitOfMeasureFk)
+                 .Include(p => p.RoutPoints)
+                 .ThenInclude(t => t.RoutPointStatusTransitions)
+                            .Where(x => x.Id == id && x.ShippingRequestFk.CarrierTenantId.HasValue)
+                            .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper), x => x.ShippingRequestFk.TenantId == AbpSession.TenantId)
                             .WhereIf(!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer), x => true)
-                            .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId).ToListAsync();
-            if (routes == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
-            var mappedRoutes = ObjectMapper.Map<List<ShippingRequestTripDriverRoutePointDto>>(routes);
+                            .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
+                            .FirstOrDefaultAsync();
+
+            if (trip == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
+            var mappedTrip = ObjectMapper.Map<TrackingShippingRequestTripDto>(trip);
             // need to use select function when finish frontend changes 
             // may be want to change the reternd dto based on front end data
-            foreach (var rout in mappedRoutes)
+            foreach (var rout in mappedTrip.RoutPoints)
             {
                 rout.Statues = _workFlowProvider.GetStatuses(rout.WorkFlowVersion, rout.RoutPointStatusTransitions.Where(x => !x.IsReset).Select(x => x.Status).ToList());
                 rout.AvailableTransactions = !rout.IsActive ? new List<PointTransactionDto>() : _workFlowProvider.GetTransactionsByStatus(rout.WorkFlowVersion, rout.RoutPointStatusTransitions.Where(c => !c.IsReset).Select(v => v.Status).ToList(), rout.Status);
             }
-            return new ListResultDto<ShippingRequestTripDriverRoutePointDto>(mappedRoutes);
+            return mappedTrip;
         }
         public async Task Accept(int id)
         {

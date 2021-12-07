@@ -122,6 +122,7 @@ using TACHYON.ShippingRequestVases.Dtos;
 using TACHYON.TermsAndConditions;
 using TACHYON.TermsAndConditions.Dtos;
 using TACHYON.Tracking;
+using TACHYON.Tracking.Dto;
 using TACHYON.Tracking.Dto.WorkFlow;
 using TACHYON.Trailers;
 using TACHYON.Trailers.Dtos;
@@ -369,7 +370,7 @@ namespace TACHYON
                 .ForMember(d => d.RoutPoints, opt => opt.Ignore())
                 .ForMember(d => d.ShippingRequestTripVases, opt => opt.Ignore())
                 .AfterMap(AddOrUpdateShippingRequestTrip);
-
+            configuration.CreateMap<ShippingRequestTrip, TrackingShippingRequestTripDto>();
 
 
             configuration.CreateMap<ShippingRequestTripVas, CreateOrEditShippingRequestTripVasDto>()
