@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using TACHYON.Routs.Dtos;
 using TACHYON.Routs.RoutPoints;
+using TACHYON.Shipping.Trips;
 using TACHYON.Tracking.Dto.WorkFlow;
 
 namespace TACHYON.Tracking
@@ -13,13 +14,13 @@ namespace TACHYON.Tracking
     {
         public int ShippingRequestTripId { get; set; }
         public RoutePointStatus Status { get; set; }
+        public ShippingRequestTripStatus TripStatus { get; set; }
         public PickingType PickingType { get; set; }
         public string StatusTitle { get; set; }
         public bool IsActive { get; set; }
         public bool IsComplete { get; set; }
         public bool CanGoToNextLocation { get; set; }
         public List<PointTransactionDto> AvailableTransactions { get; set; }
-
 
     }
 }
