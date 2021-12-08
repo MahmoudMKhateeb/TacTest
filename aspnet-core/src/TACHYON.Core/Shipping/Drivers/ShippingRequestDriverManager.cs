@@ -149,6 +149,28 @@ namespace TACHYON.Shipping.Drivers
 
         }
 
+        /**
+         * upload picture of the delivered goods
+         */
+        public async Task<bool> UploadDeliveredGoodPicture(IHasDocument document, long? pointId)
+        {
+            DisableTenancyFilters();
+            var CurrentPoint = await _RoutPointRepository.GetAll().
+                Include(x => x.ShippingRequestTripFk)
+                    .ThenInclude(x => x.ShippingRequestTripVases)
+                .Include(x => x.ShippingRequestTripFk)
+                    .ThenInclude(x => x.ShippingRequestFk)
+                     .ThenInclude(x => x.Tenant)
+                .WhereIf(pointId == null, x => x.IsActive)
+                .WhereIf(pointId != null, x => x.Id == pointId)
+                .FirstOrDefaultAsync();
+            if (CurrentPoint == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
+
+            await InsertRoutePointDocument(CurrentPoint.Id, document, RoutePointDocumentType.DeliveryGood);
+
+            return true;
+        }
+
         /// <summary>
         /// Get current active trip for driver
         /// </summary>
