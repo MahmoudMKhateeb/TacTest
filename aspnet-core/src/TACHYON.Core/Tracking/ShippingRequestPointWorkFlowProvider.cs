@@ -93,6 +93,55 @@ namespace TACHYON.Tracking
             _reasonProvider = reasonProvider;
             Flows = new List<WorkFlow<PointTransactionArgs, RoutePointStatus>>
             {
+            // Pick up workflow 
+            new WorkFlow<PointTransactionArgs,RoutePointStatus>
+                {
+                    Version = 1,
+                    Transactions = new List<WorkflowTransaction<PointTransactionArgs,RoutePointStatus>>
+                    {
+                        new WorkflowTransaction<PointTransactionArgs,RoutePointStatus>
+                        {
+                            Action =  WorkFlowActionConst.StartedMovingToLoadingLocation,
+                            FromStatus = RoutePointStatus.StandBy,
+                            ToStatus = RoutePointStatus.StartedMovingToLoadingLocation,
+                            Func = StartedMovingToLoadingLocation,
+                            Name = L("StartedMovingToLoadingLocation"),
+                            Permissions = new List<string>{},
+                            Features = new List<string>{},
+                        },
+                        new WorkflowTransaction<PointTransactionArgs,RoutePointStatus>
+                        {
+                            Action =  WorkFlowActionConst.ArriveToLoadingLocation,
+                            FromStatus = RoutePointStatus.StartedMovingToLoadingLocation,
+                            ToStatus = RoutePointStatus.ArriveToLoadingLocation,
+                            Func = ArriveToLoadingLocation,
+                            Name = L("ArriveToLoadingLocation"),
+                            Permissions = new List<string>{},
+                            Features = new List<string>{},
+                        },
+                        new WorkflowTransaction<PointTransactionArgs,RoutePointStatus>
+                        {
+                            Action =  WorkFlowActionConst.StartLoading,
+                            FromStatus = RoutePointStatus.ArriveToLoadingLocation,
+                            ToStatus = RoutePointStatus.StartLoading,
+                            Func =  StartLoading,
+                            Name = L("StartLoading"),
+                            Permissions = new List<string>{},
+                            Features = new List<string>{},
+                        },
+                        new WorkflowTransaction<PointTransactionArgs,RoutePointStatus>
+                        {
+                            Action =  WorkFlowActionConst.FinishLoading,
+                            FromStatus = RoutePointStatus.StartLoading,
+                            ToStatus = RoutePointStatus.FinishLoading,
+                            Func =  FinishLoading,
+                            Name = L("FinishLoading"),
+                            Permissions = new List<string>{},
+                            Features = new List<string>{},
+                        },
+                    },
+                },
+            // Drop Off workflow without uplode delivery note
             new WorkFlow<PointTransactionArgs,RoutePointStatus>
                 {
                     Version = 0,
@@ -180,48 +229,99 @@ namespace TACHYON.Tracking
                         },
                     },
                 },
+            // Drop Off workflow with uplode delivery note
             new WorkFlow<PointTransactionArgs,RoutePointStatus>
                 {
-                    Version = 1,
+                    Version = 2,
                     Transactions = new List<WorkflowTransaction<PointTransactionArgs,RoutePointStatus>>
                     {
                         new WorkflowTransaction<PointTransactionArgs,RoutePointStatus>
                         {
-                            Action =  WorkFlowActionConst.StartedMovingToLoadingLocation,
+                            Action =  WorkFlowActionConst.StartedMovingToOfLoadingLocation,
                             FromStatus = RoutePointStatus.StandBy,
-                            ToStatus = RoutePointStatus.StartedMovingToLoadingLocation,
-                            Func = StartedMovingToLoadingLocation,
-                            Name = L("StartedMovingToLoadingLocation"),
+                            ToStatus = RoutePointStatus.StartedMovingToOffLoadingLocation,
+                            Func = StartedMovingToOfLoadingLocation,
+                            Name = L("StartedMovingToOfLoadingLocation"),
                             Permissions = new List<string>{},
                             Features = new List<string>{},
                         },
                         new WorkflowTransaction<PointTransactionArgs,RoutePointStatus>
                         {
-                            Action =  WorkFlowActionConst.ArriveToLoadingLocation,
-                            FromStatus = RoutePointStatus.StartedMovingToLoadingLocation,
-                            ToStatus = RoutePointStatus.ArriveToLoadingLocation,
-                            Func = ArriveToLoadingLocation,
-                            Name = L("ArriveToLoadingLocation"),
+                            Action =  WorkFlowActionConst.ArrivedToDestination,
+                            FromStatus = RoutePointStatus.StartedMovingToOffLoadingLocation,
+                            ToStatus = RoutePointStatus.ArrivedToDestination,
+                            Func = ArrivedToDestination,
+                            Name = L("ArrivedToDestination"),
                             Permissions = new List<string>{},
                             Features = new List<string>{},
                         },
                         new WorkflowTransaction<PointTransactionArgs,RoutePointStatus>
                         {
-                            Action =  WorkFlowActionConst.StartLoading,
-                            FromStatus = RoutePointStatus.ArriveToLoadingLocation,
-                            ToStatus = RoutePointStatus.StartLoading,
-                            Func =  StartLoading,
-                            Name = L("StartLoading"),
+                            Action =  WorkFlowActionConst.StartOffloading,
+                            FromStatus = RoutePointStatus.ArrivedToDestination,
+                            ToStatus = RoutePointStatus.StartOffloading,
+                            Func = StartOffloading,
+                            Name = L("StartOffloading"),
                             Permissions = new List<string>{},
                             Features = new List<string>{},
                         },
                         new WorkflowTransaction<PointTransactionArgs,RoutePointStatus>
                         {
-                            Action =  WorkFlowActionConst.FinishLoading,
-                            FromStatus = RoutePointStatus.StartLoading,
-                            ToStatus = RoutePointStatus.FinishLoading,
-                            Func =  FinishLoading,
-                            Name = L("FinishLoading"),
+                            Action =  WorkFlowActionConst.FinishOffLoadShipment,
+                            FromStatus = RoutePointStatus.StartOffloading,
+                            ToStatus = RoutePointStatus.FinishOffLoadShipment,
+                            Func = FinishOffLoadShipment,
+                            Name = L("FinishOffLoadShipment"),
+                            Permissions = new List<string>{},
+                            Features = new List<string>{},
+                        },
+                        new WorkflowTransaction<PointTransactionArgs,RoutePointStatus>
+                        {
+                            Action =  WorkFlowActionConst.UplodeDeliveryNote,
+                            FromStatus = RoutePointStatus.FinishOffLoadShipment,
+                            ToStatus = RoutePointStatus.DeliveryNoteUploded,
+                            Func = DeliveryNoteUploded,
+                            Name = L("UplodeDeliveryNote"),
+                            Permissions = new List<string>{},
+                            Features = new List<string>{},
+                        },
+                        new WorkflowTransaction<PointTransactionArgs,RoutePointStatus>
+                        {
+                            Action =  WorkFlowActionConst.ReceiverConfirmed,
+                            FromStatus = RoutePointStatus.DeliveryNoteUploded,
+                            ToStatus = RoutePointStatus.ReceiverConfirmed,
+                            Func = ReceiverConfirmed,
+                            Name = L("ReceiverConfirmed"),
+                            Permissions = new List<string>{},
+                            Features = new List<string>{},
+                        },
+                        new WorkflowTransaction<PointTransactionArgs,RoutePointStatus>
+                        {
+                            Action =  WorkFlowActionConst.UplodeDeliveryNoteDeliveryConfirmation,
+                            FromStatus = RoutePointStatus.DeliveryNoteUploded,
+                            ToStatus = RoutePointStatus.DeliveryConfirmation,
+                            Func = DeliveryConfirmation,
+                            Name = L("UplodeDeliveryNoteDeliveryConfirmation"),
+                            Permissions = new List<string>{},
+                            Features = new List<string>{},
+                        },
+                        new WorkflowTransaction<PointTransactionArgs,RoutePointStatus>
+                        {
+                            Action =  WorkFlowActionConst.DeliveryConfirmation,
+                            FromStatus = RoutePointStatus.ReceiverConfirmed,
+                            ToStatus = RoutePointStatus.DeliveryConfirmation,
+                            Func = DeliveryConfirmation,
+                            Name = L("DeliveryConfirmation"),
+                            Permissions = new List<string>{},
+                            Features = new List<string>{},
+                        },
+                        new WorkflowTransaction<PointTransactionArgs,RoutePointStatus>
+                        {
+                            Action =  WorkFlowActionConst.DeliveryConfirmationReceiverConfirmed,
+                            FromStatus = RoutePointStatus.DeliveryConfirmation,
+                            ToStatus = RoutePointStatus.ReceiverConfirmed,
+                            Func = ReceiverConfirmed,
+                            Name = L("DeliveryConfirmationReceiverConfirmed"),
                             Permissions = new List<string>{},
                             Features = new List<string>{},
                         },
@@ -366,7 +466,36 @@ namespace TACHYON.Tracking
             await ChangeTransition(nextPoint);
             await NotificationWhenPointChanged(nextPoint);
         }
+        /// <summary>
+        /// driver confirm the trip has finished 
+        /// </summary>
+        /// <param name="document"></param>
+        /// <param name="pointId"></param>
+        /// <returns></returns>
+        public async Task<bool> UploadDeliveryNote(IHasDocument document, long pointId)
+        {
+            var currentUser = await GetCurrentUserAsync(_abpSession);
+            DisableTenancyFilters();
+            var CurrentPoint = await _routPointRepository.GetAll().
+                Include(x => x.ShippingRequestTripFk)
+                    .ThenInclude(x => x.ShippingRequestTripVases)
+                .Include(x => x.ShippingRequestTripFk)
+                    .ThenInclude(x => x.ShippingRequestFk)
+                     .ThenInclude(x => x.Tenant)
+                .Where(x => x.Id == pointId)
+                .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => x.ShippingRequestTripFk.ShippingRequestFk.IsTachyonDeal)
+                .WhereIf(currentUser.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == currentUser.TenantId.Value)
+                .WhereIf(currentUser.IsDriver, x => x.ShippingRequestTripFk.AssignedDriverUserId == currentUser.Id)
+                                .FirstOrDefaultAsync();
+            if (CurrentPoint == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
 
+            if (!CurrentPoint.ShippingRequestTripFk.NeedsDeliveryNote) throw new UserFriendlyException(L("TripDidnnotNeedsDeliveryNote"));
+            CurrentPoint.IsDeliveryNoteUploaded = true;
+            await InsertRoutePointDocument(CurrentPoint.Id, document, RoutePointDocumentType.DeliveryNote);
+            return true;
+
+
+        }
         /// <summary>
         /// Get Currrent driver trip dto
         /// </summary>
@@ -540,6 +669,35 @@ namespace TACHYON.Tracking
             var isComplete = await HandlePointDelivery(args.PointId);
             return nameof(RoutPointDropOffStep1);
         }
+        public async Task<string> DeliveryNoteUploded(PointTransactionArgs args)
+        {
+            DisableTenancyFilters();
+
+            var status = RoutePointStatus.DeliveryNoteUploded;
+            var point = await _routPointRepository.GetAllIncluding(x => x.ShippingRequestTripFk)
+                 .FirstOrDefaultAsync(x => x.Id == args.PointId);
+
+            if (args.Documents != null && !args.Documents.Any())
+                throw new UserFriendlyException(L("File_Empty_Error"));
+
+            foreach (var document in args.Documents)
+            {
+                _routPointDocumentRepository.Insert(new RoutPointDocument
+                {
+                    RoutPointId = point.Id,
+                    DocumentContentType = "image/jpeg",
+                    DocumentName = document.DocumentName,
+                    DocumentId = document.DocumentId,
+                    RoutePointDocumentType = RoutePointDocumentType.DeliveryNote
+                });
+            }
+
+            point.IsDeliveryNoteUploaded = true;
+            point.Status = status;
+            point.ShippingRequestTripFk.RoutePointStatus = status;
+
+            return nameof(RoutPointDropOffStep1);
+        }
 
         #endregion
 
@@ -604,6 +762,16 @@ namespace TACHYON.Tracking
                 .WhereIf(currentUser.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == currentUser.TenantId.Value)
                 .WhereIf(currentUser.IsDriver, x => x.ShippingRequestTripFk.AssignedDriverUserId == currentUser.Id)
                 .FirstOrDefaultAsync();
+        }
+        private async Task InsertRoutePointDocument(long PointId, IHasDocument document, RoutePointDocumentType documentType)
+        {
+            var routePointDocument = new RoutPointDocument();
+            routePointDocument.RoutPointId = PointId;
+            routePointDocument.RoutePointDocumentType = documentType;
+            routePointDocument.DocumentContentType = "image/jpeg";
+            routePointDocument.DocumentName = document.DocumentName;
+            routePointDocument.DocumentId = document.DocumentId;
+            await _routPointDocumentRepository.InsertAsync(routePointDocument);
         }
 
         private async Task<RoutPoint> GetNextRoutPoint(long id, User currentUser)

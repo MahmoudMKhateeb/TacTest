@@ -8,6 +8,7 @@ using TACHYON.AddressBook.Dtos;
 using TACHYON.Goods.GoodsDetails.Dtos;
 using TACHYON.Receivers.Dtos;
 using TACHYON.Routs.RoutSteps;
+using TACHYON.Tracking.Dto.WorkFlow;
 
 namespace TACHYON.Routs.RoutPoints.Dtos
 {
@@ -43,6 +44,7 @@ namespace TACHYON.Routs.RoutPoints.Dtos
         public List<GoodsDetailDto> GoodsDetailListDto { get; set; }
         public long? WaybillNumber { get; set; }
         public RoutePointCompletedStatus CompletedStatus { get; set; }
+        public List<PointTransactionDto> AvailableTransactions { get; set; }
 
         // public double TotalWeight { get; set; }
 

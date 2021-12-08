@@ -15,6 +15,6 @@
         DeliveryConfirmation = 10,
         Delivered = 11,
         Issue = 12,
-        Reset = 13
+        DeliveryNoteUploded = 13,
     }
 }

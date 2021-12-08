@@ -223,7 +223,7 @@ namespace TACHYON.Web.Controllers
         [AbpMvcAuthorize()]
         // [Produces("application/json")]
         [Route("/api/services/app/ShippingRequestDriver/UploadDeliveryNoteDocument")]
-        public async Task<JsonResult> UploadDeliveryNoteDocument(long? pointId)
+        public async Task<JsonResult> UploadDeliveryNoteDocument(long pointId)
         {
             try
             {
@@ -240,7 +240,7 @@ namespace TACHYON.Web.Controllers
                 }
 
                 var document = await _commonManager.UploadDocument(file, AbpSession.TenantId);
-                await _shippingRequestDriverManager.UploadDeliveryNote(document, pointId);
+                await _workFlowProvider.UploadDeliveryNote(document, pointId);
 
                 return Json(new AjaxResponse(new { }));
             }

@@ -57,34 +57,7 @@ namespace TACHYON.Shipping.Drivers
             _routPointDocumentRepository = routPointDocumentRepository;
         }
 
-        /// <summary>
-        /// driver confirm the trip has finished 
-        /// </summary>
-        /// <param name="document"></param>
-        /// <param name="receiverCode"></param>
-        /// <returns></returns>
-        public async Task<bool> UploadDeliveryNote(IHasDocument document, long? pointId)
-        {
-            DisableTenancyFilters();
-            var CurrentPoint = await _RoutPointRepository.GetAll().
-                Include(x => x.ShippingRequestTripFk)
-                    .ThenInclude(x => x.ShippingRequestTripVases)
-                .Include(x => x.ShippingRequestTripFk)
-                    .ThenInclude(x => x.ShippingRequestFk)
-                     .ThenInclude(x => x.Tenant)
-                .WhereIf(pointId == null, x => x.IsActive)
-                .WhereIf(pointId != null, x => x.Id == pointId)
-                .FirstOrDefaultAsync(x =>
-                x.ShippingRequestTripFk.AssignedDriverUserId == _abpSession.UserId);
-            if (CurrentPoint == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
 
-            if (!CurrentPoint.ShippingRequestTripFk.NeedsDeliveryNote) throw new UserFriendlyException(L("TripDidnnotNeedsDeliveryNote"));
-            CurrentPoint.IsDeliveryNoteUploaded = true;
-            await InsertRoutePointDocument(CurrentPoint.Id, document, RoutePointDocumentType.DeliveryNote);
-            return true;
-
-
-        }
         public async Task SetRoutStatusTransition(RoutPoint routPoint, RoutePointStatus Status)
         {
             //await _invoiceManager.GenertateInvoiceWhenShipmintDelivery(routPoint.ShippingRequestTripFk);
@@ -99,16 +72,6 @@ namespace TACHYON.Shipping.Drivers
         {
             var carrierAdminUser = await _userManager.GetAdminByTenantIdAsync(user.TenantId.Value);
             await _appNotifier.NotifyCarrierWithDriverGpsOff(new UserIdentifier(user.TenantId, carrierAdminUser.Id), user);
-        }
-        private async Task InsertRoutePointDocument(long PointId, IHasDocument document, RoutePointDocumentType documentType)
-        {
-            var routePointDocument = new RoutPointDocument();
-            routePointDocument.RoutPointId = PointId;
-            routePointDocument.RoutePointDocumentType = documentType;
-            routePointDocument.DocumentContentType = "image/jpeg";
-            routePointDocument.DocumentName = document.DocumentName;
-            routePointDocument.DocumentId = document.DocumentId;
-            await _routPointDocumentRepository.InsertAsync(routePointDocument);
         }
     }
 }

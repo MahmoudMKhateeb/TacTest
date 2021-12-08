@@ -274,9 +274,7 @@ namespace TACHYON.Shipping.Drivers
 
             //return good category name automatic from default language
             tripDto.GoodsCategory = ObjectMapper.Map<GoodCategoryDto>(trip.ShippingRequestFk.GoodCategoryFk).DisplayName;
-
             return tripDto;
-
         }
         /// <summary>
         /// 
@@ -311,16 +309,22 @@ namespace TACHYON.Shipping.Drivers
             var Point = await _RoutPointRepository.GetAll()
                 .Include(t => t.ShippingRequestTripFk)
                  .ThenInclude(r => r.ShippingRequestFk)
-                    .ThenInclude(p => p.PackingTypeFk)
+                 .ThenInclude(p => p.PackingTypeFk)
                 .Include(t => t.RoutPointDocuments)
-            .Include(i => i.FacilityFk)
-               .ThenInclude(c => c.CityFk)
-           .Include(i => i.ReceiverFk)
-           .Include(i => i.GoodsDetails)
-            .ThenInclude(i => i.UnitOfMeasureFk)
+                .Include(i => i.FacilityFk)
+                 .ThenInclude(c => c.CityFk)
+                .Include(i => i.ReceiverFk)
+                .Include(i => i.GoodsDetails)
+                 .ThenInclude(i => i.UnitOfMeasureFk)
             .SingleOrDefaultAsync(t => t.Id == PointId && t.ShippingRequestTripFk.Status != ShippingRequestTripStatus.Canceled && t.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId && t.ShippingRequestTripFk.DriverStatus != ShippingRequestTripDriverStatus.Rejected);
+
             if (Point == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
+
             var DropOff = ObjectMapper.Map<RoutDropOffDto>(Point);
+
+            var statuses = await _routPointStatusTransitionRepository.GetAll()
+                .Where(x => x.PointId == PointId && !x.IsReset)
+                .Select(s => s.Status).ToListAsync();
 
             DropOff.IsFacilityRated = await _ratingLogManager.IsRateDoneBefore(new RatingLog
             {
@@ -329,6 +333,9 @@ namespace TACHYON.Shipping.Drivers
                 RateType = RateType.FacilityByDriver,
                 FacilityId = Point.FacilityId
             });
+            DropOff.AvailableTransactions = !Point.IsActive ? new List<PointTransactionDto>()
+                : _workFlowProvider.GetTransactionsByStatus(Point.WorkFlowVersion, statuses, Point.Status);
+
             return DropOff;
         }
 
@@ -486,7 +493,6 @@ namespace TACHYON.Shipping.Drivers
 
             await ResetTripStatus(trip);
         }
-
         private async Task ResetTripStatus(ShippingRequestTrip trip)
         {
             if (trip != null)
@@ -564,18 +570,15 @@ namespace TACHYON.Shipping.Drivers
                 throw new UserFriendlyException(L("TripCannotFound"));
             }
         }
-
         private async Task<bool> CheckRequestTripsHasNoIncidents(ShippingRequest request)
         {
             return await _ShippingRequestTrip.CountAsync(x => x.ShippingRequestId == request.Id && x.HasAccident) == 0;
         }
-
         public async Task PushNotification(int id)
         {
 
             await _firebaseNotifier.TripChanged(new Abp.UserIdentifier(AbpSession.TenantId, AbpSession.UserId.Value), id.ToString());
         }
-
 
     }
 }
