@@ -295,6 +295,7 @@ namespace TACHYON.Shipping.Drivers
                  IsActive = x.IsActive,
                  IsComplete = x.IsComplete,
                  Status = x.Status,
+                 PickingType = x.PickingType,
                  AvailableTransactions = !x.IsActive ? new List<PointTransactionDto>() : _workFlowProvider.GetTransactionsByStatus(x.WorkFlowVersion, x.RoutPointStatusTransitions.Where(c => !c.IsReset).Select(v => v.Status).ToList(), x.Status)
              }).ToListAsync();
             if (routes == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
