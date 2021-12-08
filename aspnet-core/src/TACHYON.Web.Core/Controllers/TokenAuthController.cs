@@ -36,6 +36,7 @@ using TACHYON.Authorization.Delegation;
 using TACHYON.Authorization.Impersonation;
 using TACHYON.Authorization.Roles;
 using TACHYON.Authorization.Users;
+using TACHYON.Authorization.Users.Dto;
 using TACHYON.Configuration;
 using TACHYON.Identity;
 using TACHYON.Mobile;
@@ -283,14 +284,21 @@ namespace TACHYON.Web.Controllers
         }
 
         [HttpPost]
-        public async Task MobileAuthenticate(string Username, string Language)
+        public async Task<OtpCreatedDto> MobileAuthenticate(string Username, string Language)
         {
             if (string.IsNullOrEmpty(Username)) throw new AbpAuthorizationException(L("InvalidMobileNumber"));
             var user = await _userManager.GetUserByDriverPhoneNumberAsync(Username);
             if (user == null) throw new AbpAuthorizationException(L("InvalidMobileNumber"));
-            // if the number in test numbers  or there is exsist OTP not expired for the number should go to "enter OTP screen"
-            if (_testMobiles.Contains(Username) || await _mobileManager.CheckIsExistOTP(user.Id)) return;
-            await _mobileManager.CreateOTP(user, Language);
+
+            if (_testMobiles.Contains(Username)) return new OtpCreatedDto(60);
+
+            var oldOTPSeconds = await _mobileManager.CheckIsExistOTP(user.Id);
+            if (oldOTPSeconds.HasValue)
+                return new OtpCreatedDto(oldOTPSeconds.Value);
+
+            var totalSeconds = await _mobileManager.CreateOTP(user, Language);
+            return new OtpCreatedDto(totalSeconds);
+
         }
         [HttpPost]
 
