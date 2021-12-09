@@ -15,6 +15,7 @@ namespace TACHYON.Invoices.Dto
         public string FaxNo { get; set; }
         public string Attn { get; set; }
         public string CR { get; set; }
+        public string TenantVatNumber { get; set; }
         public string ContractNo { get; set; }
         public string ProjectName { get; set; }
         public string Period { get; set; }

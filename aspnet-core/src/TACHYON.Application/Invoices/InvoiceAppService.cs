@@ -307,6 +307,8 @@ namespace TACHYON.Invoices
             invoiceDto.BankNameEnglish = bankNameEnglish;
             var document = AsyncHelper.RunSync(() => _documentFileRepository.FirstOrDefaultAsync(x => x.TenantId == invoice.TenantId && x.DocumentTypeId == 14));
             if (document != null) invoiceDto.CR = document.Number;
+            var documentVat = AsyncHelper.RunSync(() => _documentFileRepository.FirstOrDefaultAsync(x => x.TenantId == invoice.TenantId && x.DocumentTypeId == 15));
+            if (document != null) invoiceDto.TenantVatNumber = documentVat.Number;
             return new List<InvoiceInfoDto>() { invoiceDto };
         }
 
