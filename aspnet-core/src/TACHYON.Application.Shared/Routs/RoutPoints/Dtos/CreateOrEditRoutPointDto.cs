@@ -23,7 +23,7 @@ namespace TACHYON.Routs.RoutPoints.Dtos
         /// is for UI helpping only and will be ignored in mapping
         /// </summary>
         public double Longitude { get; set; }
-        public int WorkflowVersion { get; set; }
+        public int? WorkflowVersion { get; set; }
 
         /// <summary>
         /// is for UI helpping only and will be ignored in mapping
