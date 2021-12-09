@@ -568,10 +568,10 @@
                   <Width>1.8023cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.19474cm</Width>
+                  <Width>1.40729cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>3.45603cm</Width>
+                  <Width>3.24346cm</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>1.64744cm</Width>
@@ -1931,7 +1931,7 @@
             <Top>0.21555cm</Top>
             <Left>0.55771cm</Left>
             <Height>2.98528cm</Height>
-            <Width>19.93244cm</Width>
+            <Width>19.93242cm</Width>
             <ZIndex>4</ZIndex>
             <Style>
               <Border>
