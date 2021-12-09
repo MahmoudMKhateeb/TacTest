@@ -146,7 +146,7 @@
     <text name="NotAttached">अपलोड नहीं किया गया</text>
     <text name="CardNumberId">प्राप्तकर्ता आईडी</text>
     <text name="AdditionalReceiver">दूसरा रिसीवर</text>
-    <text name="RateLoadingFacility">लोड करने की सुविधा को रेटिंग दें</text>
+
     <text name="RateOffloadingFacility">लोडिंग सुविधा को रेट करें</text>
     <text name="ClickToRateFacility">सुविधा का मूल्यांकन करने के लिए कृपया यहां क्लिक करें</text>
     <text name="StartOffloading">उतारना शुरू करें</text>

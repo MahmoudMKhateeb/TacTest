@@ -2439,7 +2439,7 @@
 		<text name="NotAttached">Not uploaded yet</text>
 		<text name="CardNumberId">Receiver ID</text>
 		<text name="AdditionalReceiver">Additional Receiver</text>
-		<text name="RateLoadingFacility">Rate loading facility</text>
+
 		<text name="RateOffloadingFacility">Rate offloading facility</text>
 		<text name="ClickToRateFacility">Please click here to rate the facility</text>
 		<text name="StartOffloading">Start offloading</text>

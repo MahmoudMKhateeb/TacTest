@@ -1275,7 +1275,7 @@
 		<text name="Quantity">الكمية</text>
 		<text name="QuickNav">الإنتقال السريع</text>
 		<text name="QuickThemeSelection">الاختيار السريع للتصميم</text>
-		<text name="RateLoadingFacility">تقييم موقع التحميل </text>
+		<text name="RateLoadingFacility">تقييم منشأة التحميل </text>
 		<text name="RateOffloadingAdditionalNote">الرجاء إضافة ملاحظاتك</text>
 		<text name="RateOffloadingRateFacility">قيم المنشأة</text>
 		<text name="Read">مقروء</text>
@@ -2209,7 +2209,7 @@
 		<text name="NotAttached">لم يتم تحميله</text>
 		<text name="CardNumberId">هوية المستلم</text>
 		<text name="AdditionalReceiver">المستلم الثاني</text>
-		<text name="RateLoadingFacility">تقييم منشأة التحميل</text>
+
 		<text name="RateOffloadingFacility">تقييم منشأة التنزيل</text>
 		<text name="ClickToRateFacility">الرجاء الضغط هنا لتقييم المنشأة</text>
 		<text name="StartOffloading">بدء التنزيل </text>
