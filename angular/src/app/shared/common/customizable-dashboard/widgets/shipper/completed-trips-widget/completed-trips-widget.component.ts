@@ -27,6 +27,7 @@ export class CompletedTripsWidgetComponent extends AppComponentBase implements O
         this.months.push(element.month);
         this.trips.push(element.count);
       });
+
       this.chartOptions = {
         series: [
           {
@@ -58,7 +59,6 @@ export class CompletedTripsWidgetComponent extends AppComponentBase implements O
           categories: this.months,
         },
       };
-
       this.loading = true;
     });
   }
