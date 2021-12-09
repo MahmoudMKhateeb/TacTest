@@ -1116,7 +1116,7 @@
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>7pt</FontSize>
-                                    <Format>dd/MM/yyyy</Format>
+                                    <Format>dd/MM/yyyy HH:mm</Format>
                                     <Color>#181818</Color>
                                   </Style>
                                 </TextRun>
