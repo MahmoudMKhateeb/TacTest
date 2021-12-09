@@ -4,10 +4,10 @@
     <div class="card card-custom card-stretch">
       <div class="card-header border-0">
         <div class="card-title text-center">
-          <h3 class="card-label">Invoices Vs Paid Invoices</h3>
+          <h3 class="card-label">{{ l('InvoicesVsPaidInvoices') }}</h3>
         </div>
       </div>
-      <div class="card-body p-0">
+      <div class="card-body p-0" *ngIf="loading">
         <div id="chart">
           <apx-chart
             [series]="chartOptions.series"

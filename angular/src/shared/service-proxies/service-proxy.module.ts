@@ -147,6 +147,7 @@ import { EntityLogServiceProxy, RatingServiceProxy } from './service-proxies';
     ApiServiceProxies.ShippingRequestTripAccidentCommentsServiceProxy,
     TerminologieServiceProxy,
     ApiServiceProxies.EntityLogServiceProxy,
+    ApiServiceProxies.ShipperDashboardServiceProxy,
     { provide: RefreshTokenService, useClass: ZeroRefreshTokenService },
     { provide: AbpHttpConfigurationService, useClass: ZeroTemplateHttpConfigurationService },
     { provide: HTTP_INTERCEPTORS, useClass: AbpHttpInterceptor, multi: true },

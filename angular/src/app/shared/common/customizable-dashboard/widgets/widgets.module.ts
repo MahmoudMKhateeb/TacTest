@@ -41,6 +41,7 @@ import { HostRouteTypeUsageChartComponent } from './host/host-route-type-usage-c
 import { HostRquestPricingMeterComponent } from './host/host-rquest-pricing-meter/host-rquest-pricing-meter.component';
 import { HostRquestAcceptanceMeterComponent } from './host/host-rquest-acceptance-meter/host-rquest-acceptance-meter.component';
 import { HostInvoicesMeterComponent } from './host/host-invoices-meter/host-invoices-meter.component';
+import { UtilsModule } from '@shared/utils/utils.module';
 
 @NgModule({
   declarations: [
@@ -81,7 +82,7 @@ import { HostInvoicesMeterComponent } from './host/host-invoices-meter/host-invo
     HostRquestAcceptanceMeterComponent,
     HostInvoicesMeterComponent,
   ],
-  imports: [CommonModule, ChartModule, NgApexchartsModule, TableModule, AgmCoreModule, AgmDirectionModule],
+  imports: [CommonModule, ChartModule, NgApexchartsModule, TableModule, AgmCoreModule, AgmDirectionModule, UtilsModule],
   entryComponents: [
     CompletedTripsWidgetComponent,
     CompletedTripVsPodComponent,

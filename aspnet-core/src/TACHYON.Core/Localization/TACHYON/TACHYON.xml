@@ -9,8 +9,18 @@
     <text name="EditDangerousGoodType">Edit dangerous good type</text>
     <text name="DeleteDangerousGoodType">Delete dangerous good type</text>
     <text name="DangerousGoodTypes">Dangerous good types</text>
-
-		<text name="{0}IsInvalid">"{0}" is invalid</text>
+    
+    <text name="MostWorkedWithCarriers">Most Worked With Carriers</text>
+    <text name="CompletedTrips">Completed Trips</text>
+    <text name="AcceptedVsRejectedRequests">Accepted vs Rejected Requests</text>
+    <text name="DocumentsHasDueDateIn6Days">Documents has there Due Date in less than 6 Days</text>
+    <text name="InvoiceDueDateIn6Days">Invoice Due Date is In 6 Days</text>
+    <text name="RequestsInMarketPlace">Requests In MarketPlace</text>
+    <text name="MostUsedOrigins">Most Used Origins</text>
+    <text name="CompletedTripsvsPod">Completed Trips vs Proof of delivary</text>
+    <text name="MostUsedDestantions">Most Used Destantions</text>
+    <text name="InvoicesVsPaidInvoices">Invoices Vs Paid Invoices</text>
+    <text name="{0}IsInvalid">"{0}" is invalid</text>
 		<text name="{0}IsRequired">{0} is required.</text>
 		<text name="{0}UserCannotBeDeleted">{0} user can not be deleted.</text>
 		<text name="3rdPartyInsurancecoverage">3rd Party Insurance Coverage</text>

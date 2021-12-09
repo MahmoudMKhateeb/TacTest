@@ -4,10 +4,10 @@
     <div class="card card-custom card-stretch">
       <div class="card-header border-0">
         <div class="card-title text-center">
-          <h3 class="card-label">Completed Trips</h3>
+          <h3 class="card-label">{{ l('CompletedTrips') }}</h3>
         </div>
       </div>
-      <div class="card-body p-0">
+      <div class="card-body p-0" *ngIf="loading">
         <!--The content below is only a placeholder and can be replaced.-->
         <div id="CompletedTripsChart">
           <apx-chart
