@@ -744,7 +744,7 @@ namespace TACHYON.Tracking
         {
             return await _routPointRepository
                 .GetAll()
-                .Where(x => x.IsActive && x.IsResolve &&
+                .Where(x => x.IsResolve &&
                 x.ShippingRequestTripFk.Status == ShippingRequestTripStatus.Intransit &&
                 x.CanGoToNextLocation)
                 .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => x.ShippingRequestTripFk.ShippingRequestFk.IsTachyonDeal)
