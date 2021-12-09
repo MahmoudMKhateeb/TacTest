@@ -2387,10 +2387,6 @@
     <text name="LoginLink">Login Link</text>
     <text name="RejectedDocument_Title">Rejected Document</text>
     <text name="RejectedDocumentEmailMessage">This email is sent to you to inform you that your document {0} have been rejected with reason {1} if you have any questions, please contact with support team.</text>
-    
-    <!--<text name="StartOffloading"></text>
-    <text name="ReceiverConfirmed"></text>
-    <text name="DeliveryConfirmation"></text>-->
 		
 	 	<text name="TripDataChanged">You Have Trip With Waybill No {0} Changed Please Review All Of Trip Changes</text> 
 		<text name="ShipperTripUpdatedNotificationMessage">There are some changes on trip with waybill No {0} . For more details please click here</text>
@@ -2406,8 +2402,6 @@
 		<text name="NotRejected">Not Rejected</text>
 		
 		<text name="StartMovingToLoadingLocation">Start Moving To Loading Location</text>
-<!--		<text name="ArriveToLoadingLocation">Arrive To Loading Location</text>  Already Exist -->
-<!--		<text name="FinishLoading">Finish Loading</text>  Already Exist -->
 		<text name="StartMovingToOffloadingLocation">Start Moving To Offloading Location</text>
 		<text name="ArrivedToOffloadingLocation">Arrived To Offloading Location</text>
 		<text name="StartOffloadingShipment">Start Offloading Shipment</text>
@@ -2416,6 +2410,41 @@
 		<text name="DriverIsChanged">Driver Is Changed</text>
 		<text name="TruckIsChanged">Truck Is Changed</text>
 		<text name="IncidentHappened">Incident Happened</text>
+		
+		<text name="MoiNumber">Moi Number</text>
+		<text name="ViewTenantProfile">View Tenant Profile</text>
+		<text name="NumberOfVases">Number of Vases</text>
+		<text name="NameOfVas">Vas Name</text>
+		<text name="AvailableVases">Available Vases</text>
+		<text name="FleetInformation">Fleet Information</text>
+		<text name="NumberOfDrivers">Number of Drivers</text>
+		<text name="NumberOfTrucks">Number of Trucks</text>
+		<text name="ProfileTitle">Tenant Profile</text>
+		<text name="Location">Location</text> 
+		<text name="NumberOfCompletedShipments">Number of Completed Shipments</text> 
+		<text name="NumberOfRequestedShipments">Number of Requested Shipments</text>
+		<text name="NumberOfFacilities">Number of Facilities</text>
+		<text name="InvoicingInformation">Invoicing Information</text>
+		<text name="CreditLimit">Credit Limit</text>
+		<text name="CurrentBalance">Current Balance</text>
+		<text name="InvoicingFrequency">Invoicing Frequency</text>
+		<text name="InvoicingDuePeriod">Invoicing Due Period</text>
+		<text name="CreditType">Credit Type</text>
+		<text name="ReceiverConfirmed">Receiver Confirmed</text>
+		<text name="CompletedTripsFromTotal">Completed Trips / No of Trips</text>
+		<text name="CreatedTripsFromTotal">Created Trips / No of Trips</text>
+		<text name="RateForDriver">Rate for Driver</text>
+		<text name="RateForExperience">Rate for Experience</text>
+		
+		<text name="NotAttached">Not uploaded yet</text>
+		<text name="CardNumberId">Receiver ID</text>
+		<text name="AdditionalReceiver">Additional Receiver</text>
+		<text name="RateLoadingFacility">Rate loading facility</text>
+		<text name="RateOffloadingFacility">Rate offloading facility</text>
+		<text name="ClickToRateFacility">Please click here to rate the facility</text>
+		<text name="StartOffloading">Start offloading</text>
+		<text name="DeliveredAndNeedsConfirmation">Delivered/needs action</text>
+		<text name="Enter9DigitsNumber">Mobile NO. 9 digits, start with 5 </text>
 		
 	</texts>
 </localizationDictionary>
