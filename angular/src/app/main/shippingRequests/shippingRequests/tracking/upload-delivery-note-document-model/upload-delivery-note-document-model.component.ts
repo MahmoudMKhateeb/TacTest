@@ -13,7 +13,6 @@ import { finalize } from '@node_modules/rxjs/operators';
   styleUrls: ['./upload-delivery-note-document-model.component.css'],
 })
 export class UploadDeliveryNoteDocumentModelComponent extends AppComponentBase {
-  @Output() modalConfirm: EventEmitter<any> = new EventEmitter<any>();
   @ViewChild('modal', { static: false }) modal: ModalDirective;
   @ViewChild('FileUpload', { static: false }) fileUpload: FileUpload;
 
@@ -37,7 +36,6 @@ export class UploadDeliveryNoteDocumentModelComponent extends AppComponentBase {
 
   close(): void {
     this.modal.hide();
-    this.modalConfirm.emit(null);
     this.active = false;
   }
 
@@ -52,6 +50,7 @@ export class UploadDeliveryNoteDocumentModelComponent extends AppComponentBase {
       .subscribe((response) => {
         if (response.success) {
           this.notify.success(this.l('SuccessfullyUpload'));
+          abp.event.trigger('tripDeliveryNotesUploadSuccess');
           this.close();
         } else if (response.error != null) {
           this.notify.error(this.l('UploadFailed'));

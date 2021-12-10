@@ -16,11 +16,18 @@ import { AppConsts } from '@shared/AppConsts';
 import { TrackingSignalrService } from './tacking-signalr.service';
 import { ViewTripAccidentModelComponent } from '../ShippingRequestTrips/accident/View-trip-accident-modal.component';
 import { finalize } from '@node_modules/rxjs/operators';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
   templateUrl: './tracking.component.html',
   styleUrls: ['./tracking.component.scss'],
-  animations: [appModuleAnimation()],
+  animations: [
+    appModuleAnimation(),
+    trigger('grow', [
+      transition(':enter', [style({ height: '0', overflow: 'hidden' }), animate(300, style({ height: '*' }))]),
+      transition(':leave', [animate(200, style({ height: 0, overflow: 'hidden' }))]),
+    ]),
+  ],
 })
 export class TrackingComponent extends ScrollPagnationComponentBase implements OnInit {
   @ViewChild('ModelIncident', { static: false }) modelIncident: ViewTripAccidentModelComponent;
@@ -76,21 +83,21 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
       });
   }
 
-  /**
-   * get a Trip Points Details For View
-   */
-  getForView(id) {
-    this._currentServ
-      .getForView(id)
-      .pipe(
-        finalize(() => {
-          this.pointsIsLoading = false;
-        })
-      )
-      .subscribe((result) => {
-        this.routePoints = result.items;
-      });
-  }
+  // /**
+  //  * get a Trip Points Details For View
+  //  */
+  // getForView(id) {
+  //   this._currentServ
+  //     .getForView(id)
+  //     .pipe(
+  //       finalize(() => {
+  //         this.pointsIsLoading = false;
+  //       })
+  //     )
+  //     .subscribe((result) => {
+  //       this.routePoints = result.items;
+  //     });
+  // }
   search(): void {
     this.IsLoading = true;
     this.skipCount = 0;
@@ -143,5 +150,11 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
         currentitem.statusTitle = ShippingRequestTripStatus[ShippingRequestTripStatus.Intransit];
       }
     });
+  }
+
+  expandCollapse(activePanelId, id) {
+    return setTimeout(() => {
+      return activePanelId === id;
+    }, 1500);
   }
 }

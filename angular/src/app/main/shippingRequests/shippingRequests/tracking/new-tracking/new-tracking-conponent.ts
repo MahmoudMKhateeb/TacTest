@@ -1,10 +1,24 @@
-import { Component, Injector, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { AppComponentBase } from '@shared/common/app-component-base';
-import { ModalDirective } from '@node_modules/ngx-bootstrap/modal';
 import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  Injector,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
+import { AppComponentBase } from '@shared/common/app-component-base';
+import {
+  InvokeStatusInputDto,
   PickingType,
+  PointTransactionDto,
   RoutePointStatus,
+  RoutPointTransactionDto,
+  ShippingRequestRouteType,
   ShippingRequestTripDriverRoutePointDto,
+  ShippingRequestTripDriverStatus,
   ShippingRequestTripStatus,
   TrackingListDto,
   TrackingServiceProxy,
@@ -13,14 +27,18 @@ import { finalize } from 'rxjs/operators';
 import { TrackingConfirmModalComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tacking-confirm-code-model.component';
 import { TrackingPODModalComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tacking-pod-model.component';
 import { UploadDeliveryNoteDocumentModelComponent } from '@app/main/shippingRequests/shippingRequests/tracking/upload-delivery-note-document-model/upload-delivery-note-document-model.component';
+import { NgbDropdownConfig } from '@node_modules/@ng-bootstrap/ng-bootstrap';
+import { appModuleAnimation } from '@shared/animations/routerTransition';
 
 @Component({
   selector: 'new-tracking-conponent',
   templateUrl: './new-tracking-conponent.html',
   styleUrls: ['./new-tracking-conponent.css'],
+  providers: [NgbDropdownConfig],
+  animations: [appModuleAnimation()],
 })
 export class NewTrackingConponent extends AppComponentBase implements OnChanges {
-  @ViewChild('modelconfirm', { static: false }) modelConfirm: TrackingConfirmModalComponent;
+  @ViewChild('modelconfirm', { static: false }) modelConfirmCode: TrackingConfirmModalComponent;
   @ViewChild('modelpod', { static: false }) modelpod: TrackingPODModalComponent;
   @ViewChild('modelDeliveryNote', { static: false }) modelDeliveryNote: UploadDeliveryNoteDocumentModelComponent;
   @Input() trip: TrackingListDto = new TrackingListDto();
@@ -29,7 +47,7 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
   origin = { lat: null, lng: null };
   destination = { lat: null, lng: null };
   routePoints: ShippingRequestTripDriverRoutePointDto[];
-  pointsIsLoading = true;
+  pointsIsLoading = false;
   distance: string;
   duration: string;
   readonly zoom: number = 15;
@@ -37,9 +55,17 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
   markerLong: number;
   markerLat: number;
   markerFacilityName: string;
+  activeIndex: number = 1;
+  driverStatusesEnum = ShippingRequestTripDriverStatus;
+  tripStatusesEnum = ShippingRequestTripStatus;
+  pickingTypeEnum = PickingType;
+  routeTypeEnum = ShippingRequestRouteType;
+  canStartAnotherPoint = false;
 
-  constructor(injector: Injector, private _trackingServiceProxy: TrackingServiceProxy) {
+  constructor(injector: Injector, private elRef: ElementRef, private _trackingServiceProxy: TrackingServiceProxy, config: NgbDropdownConfig) {
     super(injector);
+    config.autoClose = true;
+    config.container = 'body';
   }
 
   /**
@@ -50,6 +76,7 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
     this.getForView();
     this.getCordinatesByCityName(this.trip.origin, 'source');
     this.getCordinatesByCityName(this.trip.destination, 'destanation');
+    console.log('Changes happening \n');
   }
 
   /**
@@ -64,6 +91,7 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
   }
 
   getForView() {
+    this.pointsIsLoading = true;
     this._trackingServiceProxy
       .getForView(this.trip.id)
       .pipe(
@@ -72,11 +100,18 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
         })
       )
       .subscribe((result) => {
-        this.routePoints = result.items;
+        this.trip.status = result.status;
+        this.trip.driverStatus = result.driverStatus;
+        this.routePoints = result.routPoints;
+        this.handleCanGoNextLocation(result.routPoints);
       });
   }
 
+  /**
+   * starts a trip
+   */
   start(): void {
+    this.saving = true;
     this._trackingServiceProxy
       .start(this.trip.id)
       .pipe(
@@ -156,11 +191,8 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
           .accept(this.trip.id)
           .pipe(
             finalize(() => {
-              //Refresh The Data After Status Change
-              setTimeout(() => {
-                this.getForView();
-                this.saving = false;
-              }, 5000);
+              this.saving = false;
+              this.getForView();
             })
           )
           .subscribe((result) => {
@@ -168,83 +200,6 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
           });
       }
     });
-  }
-
-  /**
-   * changes Point Status To the Next Status
-   * @param point
-   */
-  changeStatus(point: ShippingRequestTripDriverRoutePointDto): void {
-    if (point.status == RoutePointStatus.FinishOffLoadShipment) {
-      this.modelConfirm.show(point.id);
-      return;
-    } else if (point.status == RoutePointStatus.ReceiverConfirmed) {
-      this.modelpod.show(point.id);
-      return;
-    }
-
-    this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
-      if (isConfirmed) {
-        this.saving = true;
-        if (point.pickingType == PickingType.Pickup && point.status == RoutePointStatus.StandBy) {
-          this.start();
-        } else if (point.pickingType == PickingType.Dropoff && point.status == RoutePointStatus.StandBy) {
-          this.nextLocation(point);
-        } else {
-          this.change(point);
-        }
-      }
-    });
-  }
-
-  /**
-   * go to next Location
-   * @param point
-   */
-  nextLocation(point: ShippingRequestTripDriverRoutePointDto): void {
-    this._trackingServiceProxy
-      .nextLocation(point.id)
-      .pipe(
-        finalize(() => {
-          this.saving = false;
-          this.getForView();
-        })
-      )
-      .subscribe(() => {
-        this.notify.info(this.l('SuccessfullyChanged'));
-      });
-  }
-
-  /**
-   * change Status
-   * @param point
-   */
-  change(point: ShippingRequestTripDriverRoutePointDto): void {
-    // this._trackingServiceProxy
-    //   .changeStatus(point.shippingRequestTripId)
-    //   .pipe(
-    //     finalize(() => {
-    //       this.saving = false;
-    //       this.getForView();
-    //     })
-    //   )
-    //   .subscribe(() => {
-    //     this.notify.info(this.l('SuccessfullyChanged'));
-    //   });
-  }
-
-  /**
-   * checks if the Current Point is Allowed to go to the next one
-   * @param point
-   * @param index
-   */
-  canGoNext(point: ShippingRequestTripDriverRoutePointDto, index: number) {
-    //if its the last Point hide the Go next Button
-    if (index == this.routePoints.length - 1) return false;
-    if (point.pickingType == 2 && point.status == 8 && this.routePoints[index + 1]?.status < 4) {
-      return true;
-    }
-    return false;
   }
 
   /**
@@ -273,5 +228,139 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
       return true;
     }
     return false;
+  }
+
+  // TODO - change this methoud param to point id only if needed
+  handleUploadPod(point: ShippingRequestTripDriverRoutePointDto, transaction: PointTransactionDto) {
+    this.modelpod.show(point.id, transaction.action);
+    abp.event.on('PodUploadedSuccess', () => {
+      this.getForView();
+    });
+  }
+
+  /**
+   * handles the Trip Confirmation code process
+   * opens the modal the send a request with the code to the invoke service and if code is correct refresh the data (getforView)
+   * @param point
+   * @param transaction
+   */
+  handleDeliveryConfirmationCode(point: ShippingRequestTripDriverRoutePointDto, transaction: PointTransactionDto) {
+    //show the modal
+    this.modelConfirmCode.show(point.id, transaction.action);
+    abp.event.on('trackingConfirmCodeSubmitted', () => {
+      this.getForView();
+    });
+  }
+
+  /**
+   * handels the upload proccess of a delivery note for the points
+   * @param point
+   * @param transaction
+   * @private
+   */
+  private handleUploadDeliveryNotes(point: ShippingRequestTripDriverRoutePointDto, transaction: PointTransactionDto) {
+    this.modelpod.show(point.id, transaction.action);
+    abp.event.on('tripDeliveryNotesUploadSuccess', () => {
+      this.getForView();
+    });
+  }
+
+  invokeStatus(point: ShippingRequestTripDriverRoutePointDto, transaction: PointTransactionDto) {
+    this.saving = true;
+    const invokeRequestBody = new InvokeStatusInputDto();
+    invokeRequestBody.id = point.id;
+    invokeRequestBody.action = transaction.action;
+    //TODO  - Dont Forget to take the secound acound that requires pod for karam
+    if (transaction.action === 'FinishOffLoadShipmentDeliveryConfirmation' || transaction.action === 'DeliveryConfirmation') {
+      //handle upload Pod
+      this.saving = false;
+      return this.handleUploadPod(point, transaction);
+    }
+    if (transaction.action === 'UplodeDeliveryNote') {
+      this.saving = false;
+      return this.handleUploadDeliveryNotes(point, transaction);
+    }
+    if (transaction.action === 'ReceiverConfirmed' || transaction.action === 'DeliveryConfirmationReceiverConfirmed') {
+      this.saving = false;
+      return this.handleDeliveryConfirmationCode(point, transaction);
+    }
+
+    this._trackingServiceProxy
+      .invokeStatus(invokeRequestBody)
+      .pipe(
+        finalize(() => {
+          this.saving = false;
+          console.log(point, transaction);
+        })
+      )
+      .toPromise()
+      .then(() => {
+        this.getForView();
+      });
+    console.log('invoke was Clicked for point ', point);
+  }
+
+  /**
+   * check if the Current User can start a trip and the trip is startable
+   * @param point
+   * @param trip
+   */
+  canStartTrip(point: ShippingRequestTripDriverRoutePointDto, trip: TrackingListDto): boolean {
+    return point.pickingType == 1 && trip.driverStatus == 0 && trip.canStartTrip ? true : false;
+  }
+
+  getStepperSteps(statues: RoutPointTransactionDto[]): {} {
+    let items = [];
+    //TODO change active index back to null
+    this.activeIndex = null;
+    for (let i = 0; i < statues.length; i++) {
+      items.push({
+        label: statues[i].name,
+        styleClass: 'completed',
+      });
+      if (statues[i].isDone) {
+        this.activeIndex = i;
+      }
+    }
+
+    return items;
+  }
+
+  /**
+   * go to next Location
+   * @param point
+   */
+  nextLocation(point: ShippingRequestTripDriverRoutePointDto): void {
+    this.saving = true;
+    this._trackingServiceProxy
+      .nextLocation(point.id)
+      .pipe(
+        finalize(() => {
+          this.saving = false;
+          this.getForView();
+        })
+      )
+      .subscribe(() => {
+        this.notify.info(this.l('SuccessfullyChanged'));
+      });
+  }
+
+  private handleCanGoNextLocation(routPoints: ShippingRequestTripDriverRoutePointDto[]): boolean {
+    const singleDrop = this.routeTypeEnum.SingleDrop;
+    const MultipleDrops = this.routeTypeEnum.MultipleDrops;
+    const canStartAnotherPoint = routPoints.find((item) => item.canGoToNextLocation === true) ? true : false;
+    //single Drop
+    if (this.trip.routeTypeId === singleDrop && canStartAnotherPoint) {
+      this.saving = true;
+      this.nextLocation(this.routePoints[1]);
+      this.notify.info('CanGoNextForSingleDrop');
+    }
+    //for Multible Drops
+    if (this.trip.routeTypeId === MultipleDrops && canStartAnotherPoint) {
+      this.notify.info('CanGoNext');
+      console.log('can Go Next For MultiDrops');
+      this.canStartAnotherPoint = routPoints.find((item) => item.canGoToNextLocation === true) ? true : false;
+    }
+    return (this.canStartAnotherPoint = canStartAnotherPoint);
   }
 }

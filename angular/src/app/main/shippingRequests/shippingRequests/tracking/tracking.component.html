@@ -154,24 +154,49 @@
             </div>
             <div class="card-body">
               <div class="row">
-                <div class="col-6">
+                <div class="col-4">
                   <p class="text-muted">{{ l('Source') }}</p>
                   <p>{{ item.origin }}</p>
                 </div>
-                <div class="col-6">
+                <div class="col-4">
                   <p class="text-muted">{{ l('DestinationDelivery') }}</p>
                   <p>{{ item.destination }}</p>
                 </div>
+                <div class="col-4">
+                  <div class="font-size-sm text-muted font-weight-bold">
+                    <img src="/assets/custom/imgs/box.svg" width="16" alt="" /> {{ l('GoodCategory') }}
+                  </div>
+                  <div class="font-size-h5 font-weight-bolder">{{ item.goodsCategory }}</div>
+                </div>
+                <div class="col-4">
+                  <div class="font-size-sm text-muted font-weight-bold"><i class="flaticon-user-ok"></i> {{ l('DriverName') }}</div>
+                  <div class="font-size-h5 font-weight-bolder">{{ item.driver }}</div>
+                </div>
+                <div class="col-4">
+                  <div class="font-size-sm text-muted font-weight-bold"><i class="flaticon-truck"></i> {{ l('TruckType') }}</div>
+                  <div class="font-size-h5 font-weight-bolder">{{ item.truckType }}</div>
+                </div>
+                <div class="col-4">
+                  <div class="font-size-sm text-muted font-weight-bold"><i class="flaticon-map-location"></i> {{ l('routeType') }}</div>
+                  <div class="font-size-h5 font-weight-bolder">{{ item.routeType }}</div>
+                </div>
               </div>
-              <div id="collapseBasic" class="row" [collapse]="activePanelId == null" [isAnimated]="true">
-                <div class="col-lg-12" *ngIf="activePanelId == item.id">
+              <div>
+                <div
+                  *ngIf="activePanelId === item.id"
+                  id="{{ item.id }}"
+                  class="container-fluid"
+                  [collapse]="activePanelId !== item.id"
+                  [isAnimated]="true"
+                >
+                  <!--                  <ngx-skeleton-loader count="4" [animation]="'pulse'" [theme]="{ 'border-radius': '0', height: '100px' }"></ngx-skeleton-loader>-->
                   <new-tracking-conponent [trip]="item"></new-tracking-conponent>
                 </div>
               </div>
             </div>
             <div class="card-footer p-5">
               <a
-                *ngIf="!activePanelId || activePanelId != item.id"
+                *ngIf="item.driver && (!activePanelId || activePanelId != item.id)"
                 href="javascript:void(0)"
                 (click)="activePanelId = item.id"
                 [attr.aria-expanded]="activePanelId == item.id"

@@ -1,19 +1,44 @@
 agm-map {
-  height: 500px;
+  height: 350px;
   width: 100% !important;
 }
 
 .active {
-  background-color: #e4e6ef !important;
+  background-color: #f3f6f9 !important;
   cursor: pointer;
 }
 
 .timeline.timeline-3 .timeline-items .timeline-item:hover .timeline-content:hover {
-  background-color: #ddebf9 !important;
+  background-color: #f3f6f9 !important;
 }
 
 ::ng-deep .p-menuitem-link {
   background-color: TRANSPARENT !important;
   padding-right: 12px;
   margin-bottom: 3px;
+}
+
+::ng-deep .dropdown-menu {
+  right: auto !important;
+  left: auto !important;
+}
+
+/*.customstepper .ui-steps p-steps {*/
+/*    color: green;*/
+/*    background-color: red;*/
+/*}*/
+::ng-deep .p-steps-number {
+  color: white !important;
+  width: 2.5rem !important;
+  height: 2.5rem !important;
+  background-color: #f64e60 !important;
+  /*background: url(https://img.icons8.com/dusk/64/000000/shipped--v2.gif) no-repeat 80% 0% !important;*/
+}
+::ng-deep .p-steps-item:before {
+  border-top: 1px solid rgba(0, 0, 0, 0.11) !important;
+}
+
+::ng-deep .p-steps-title {
+  color: #3f4254 !important;
+  font-weight: 500 !important;
 }
