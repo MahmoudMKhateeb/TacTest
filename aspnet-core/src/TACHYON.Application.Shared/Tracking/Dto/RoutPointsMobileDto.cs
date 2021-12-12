@@ -14,7 +14,6 @@ namespace TACHYON.Tracking
     {
         public int ShippingRequestTripId { get; set; }
         public RoutePointStatus Status { get; set; }
-        public ShippingRequestTripStatus TripStatus { get; set; }
         public PickingType PickingType { get; set; }
         public string StatusTitle { get; set; }
         public bool IsActive { get; set; }
