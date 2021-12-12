@@ -533,7 +533,7 @@ namespace TACHYON.Tracking
             point.ShippingRequestTripFk.RoutePointStatus = status;
             point.ActualPickupOrDeliveryDate = Clock.Now;
 
-            point.CanGoToNextLocation = await _routPointRepository.GetAll().AnyAsync(x => !x.IsActive && !x.IsComplete && !x.IsResolve && x.ShippingRequestTripId == point.ShippingRequestTripId);
+            point.CanGoToNextLocation = await _routPointRepository.GetAll().AnyAsync(x => !x.IsComplete && !x.IsResolve && x.ShippingRequestTripId == point.ShippingRequestTripId);
 
             // todo trace this 
             var otherPoints = await _routPointRepository.GetAll()
