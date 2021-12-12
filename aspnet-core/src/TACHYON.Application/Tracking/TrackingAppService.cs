@@ -120,6 +120,7 @@ namespace TACHYON.Tracking
                 rout.Statues = _workFlowProvider.GetStatuses(rout.WorkFlowVersion, rout.RoutPointStatusTransitions.Where(x => !x.IsReset).Select(x => x.Status).ToList());
                 rout.AvailableTransactions = !rout.IsActive ? new List<PointTransactionDto>() : _workFlowProvider.GetTransactionsByStatus(rout.WorkFlowVersion, rout.RoutPointStatusTransitions.Where(c => !c.IsReset).Select(v => v.Status).ToList(), rout.Status);
             }
+            mappedTrip.CanStartTrip = CanStartTrip(trip);
             return mappedTrip;
         }
         public async Task Accept(int id)

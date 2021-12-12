@@ -12,5 +12,6 @@ namespace TACHYON.Tracking.Dto
         public ShippingRequestTripDriverStatus DriverStatus { get; set; }
         public ShippingRequestTripStatus Status { get; set; }
         public List<ShippingRequestTripDriverRoutePointDto> RoutPoints { get; set; }
+        public bool CanStartTrip { get; set; }
     }
 }
