@@ -85,6 +85,13 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
         if (result.items.length < this.maxResultCount) {
           this.StopLoading = true;
         }
+        result.items.forEach((r) => {
+          if (this.feature.isEnabled('App.Shipper')) {
+            if (r.requestTypeTitle == 'TachyonManageService' && r.statusTitle == 'NeedsAction') {
+              r.statusTitle = 'New';
+            }
+          }
+        });
         this.Items.push(...result.items);
         console.log('LoadingMore Date .....');
       });
