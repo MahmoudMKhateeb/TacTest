@@ -196,26 +196,18 @@ namespace TACHYON.Shipping.Drivers
                     .Where(x => x.AssignedDriverUserId == AbpSession.UserId && x.Status == ShippingRequestTripStatus.Intransit).FirstOrDefaultAsync();
 
             if (CurrentTrip != null)
-            {
                 tripDto.CurrentTripId = CurrentTrip.Id;
-            }
 
-            if (trip.AssignedTruckFk != null) tripDto.TruckType = ObjectMapper.Map<TrucksTypeDto>(trip.AssignedTruckFk.TrucksTypeFk).TranslatedDisplayName;
+            if (trip.AssignedTruckFk != null)
+                tripDto.TruckType = ObjectMapper.Map<TrucksTypeDto>(trip.AssignedTruckFk.TrucksTypeFk).TranslatedDisplayName;
+
             if (tripDto.TripStatus == ShippingRequestTripStatus.Intransit)
-            {
                 tripDto.ActionStatus = ShippingRequestTripDriverActionStatusDto.ContinueTrip;
-            }
 
             else if (trip.StartTripDate.Date <= Clock.Now.Date && trip.Status == ShippingRequestTripStatus.New && trip.DriverStatus == ShippingRequestTripDriverStatus.Accepted)
-            {
-                //Check there any trip the driver still working on or not
-                await _RoutPointRepository.GetAll().Where(x => x.IsActive && x.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId).CountAsync();
-                if (CurrentTrip == null)
-                    tripDto.ActionStatus = ShippingRequestTripDriverActionStatusDto.CanStartTrip;
-            }
+                tripDto.ActionStatus = ShippingRequestTripDriverActionStatusDto.CanStartTrip;
 
             var rate = new RatingLog();
-
 
             tripDto.IsShippingExpRated = await _ratingLogManager.IsRateDoneBefore(new RatingLog
             {

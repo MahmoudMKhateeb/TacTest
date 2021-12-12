@@ -27,15 +27,11 @@ namespace TACHYON.Tracking
     public class TrackingAppService : TACHYONAppServiceBase, ITrackingAppService
     {
         private readonly IRepository<ShippingRequestTrip> _ShippingRequestTripRepository;
-        private readonly IRepository<RoutPoint, long> _routPointRepository;
-        private readonly IRepository<ShippingRequestTrip> _shippingRequestTrip;
         private readonly ShippingRequestPointWorkFlowProvider _workFlowProvider;
 
-        public TrackingAppService(ShippingRequestPointWorkFlowProvider workFlowProvider, IRepository<ShippingRequestTrip> shippingRequestTripRepository, IRepository<RoutPoint, long> routPointRepository, IRepository<ShippingRequestTrip> shippingRequestTrip)
+        public TrackingAppService(ShippingRequestPointWorkFlowProvider workFlowProvider, IRepository<ShippingRequestTrip> shippingRequestTripRepository)
         {
             _ShippingRequestTripRepository = shippingRequestTripRepository;
-            _routPointRepository = routPointRepository;
-            _shippingRequestTrip = shippingRequestTrip;
             _workFlowProvider = workFlowProvider;
         }
         public async Task<PagedResultDto<TrackingListDto>> GetAll(TrackingSearchInputDto input)
@@ -191,19 +187,10 @@ namespace TACHYON.Tracking
         }
         private bool CanStartTrip(ShippingRequestTrip trip)
         {
-            if (trip.Status == ShippingRequestTripStatus.Intransit || !trip.AssignedDriverUserId.HasValue)
-            {
-                return false;
-            }
-            else if (trip.StartTripDate.Date <= Clock.Now.Date && trip.Status == ShippingRequestTripStatus.New)
-            {
-
-                //Check there any trip the driver still working on or not
-                var Count = _shippingRequestTrip.GetAll()
-                    .Where(x => x.AssignedDriverUserId == trip.AssignedDriverUserId && x.Status == ShippingRequestTripStatus.Intransit).Count();
-                if (Count == 0)
-                    return true;
-            }
+            if (trip.StartTripDate.Date <= Clock.Now.Date
+               && trip.Status == ShippingRequestTripStatus.New
+               && trip.DriverStatus == ShippingRequestTripDriverStatus.Accepted)
+                return true;
 
             return false;
         }
