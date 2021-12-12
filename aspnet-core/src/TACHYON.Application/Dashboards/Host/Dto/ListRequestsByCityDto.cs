@@ -11,6 +11,8 @@ namespace TACHYON.Dashboards.Host.Dto
         public int? Id { get; set; }
         public string CityName { get; set; }
         public int NumberOfRequests { get; set; }
+        public int minimumValueOfRequests { get; set; }
+        public int maximumValueOfRequests { get; set; }
     }
 
 }

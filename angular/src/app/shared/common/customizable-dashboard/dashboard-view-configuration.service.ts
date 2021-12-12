@@ -53,6 +53,7 @@ import { TopRatedCarriersComponent } from './widgets/host/top-rated-carriers/top
 import { TopRatedShippersComponent } from './widgets/host/top-rated-shippers/top-rated-shippers.component';
 import { TopThreeCarriersHaveRequestsComponent } from './widgets/host/top-three-carriers-have-requests/top-three-carriers-have-requests.component';
 import { TopThreeShippersHaveRequestsComponent } from './widgets/host/top-three-shippers-have-requests/top-three-shippers-have-requests.component';
+import { NumberOfRequestsForEachCityComponent } from './widgets/host/number-of-requests-for-each-city/number-of-requests-for-each-city.component';
 
 @Injectable({
   providedIn: 'root',
@@ -393,6 +394,13 @@ export class DashboardViewConfigurationService {
       4
     );
 
+    let hostRequestsPerAreaOrCity = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.TachyonDealerNumberOfRequestsPerAreaOrCityWidget,
+      NumberOfRequestsForEachCityComponent,
+      8,
+      6
+    );
+
     //shipperPush
     this.WidgetViewDefinitions.push(shippercompletedTrips);
     this.WidgetViewDefinitions.push(acceptedVsRejectedRequestsWidget);
@@ -447,6 +455,7 @@ export class DashboardViewConfigurationService {
     this.WidgetViewDefinitions.push(worstRatedShippersWidget);
     this.WidgetViewDefinitions.push(worstRatedCarriersWidget);
     this.WidgetViewDefinitions.push(unPricedShippingRequestsWidget);
+    this.WidgetViewDefinitions.push(hostRequestsPerAreaOrCity);
     //console.log('WidgetViewDefinitions', this.WidgetViewDefinitions);
     // this.widgetFilterDefinitions.push();
   }
