@@ -289,7 +289,7 @@ namespace TACHYON.Shipping.Drivers
                  IsComplete = x.IsComplete,
                  Status = x.Status,
                  PickingType = x.PickingType,
-                 AvailableTransactions = !x.IsActive ? new List<PointTransactionDto>() : _workFlowProvider.GetTransactionsByStatus(x.WorkFlowVersion, x.RoutPointStatusTransitions.Where(c => !c.IsReset).Select(v => v.Status).ToList(), x.Status)
+                 AvailableTransactions = !x.IsResolve ? new List<PointTransactionDto>() : _workFlowProvider.GetTransactionsByStatus(x.WorkFlowVersion, x.RoutPointStatusTransitions.Where(c => !c.IsReset).Select(v => v.Status).ToList(), x.Status)
              }).ToListAsync();
             if (routes == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
             routes.ForEach(x => x.StatusTitle = L(x.Status.ToString()));
@@ -331,7 +331,7 @@ namespace TACHYON.Shipping.Drivers
                 RateType = RateType.FacilityByDriver,
                 FacilityId = Point.FacilityId
             });
-            DropOff.AvailableTransactions = !Point.IsActive ? new List<PointTransactionDto>()
+            DropOff.AvailableTransactions = !Point.IsResolve ? new List<PointTransactionDto>()
                 : _workFlowProvider.GetTransactionsByStatus(Point.WorkFlowVersion, statuses, Point.Status);
 
             return DropOff;
