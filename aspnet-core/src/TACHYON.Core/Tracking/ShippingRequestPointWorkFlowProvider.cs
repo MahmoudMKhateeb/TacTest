@@ -375,7 +375,7 @@ namespace TACHYON.Tracking
             var routeStart = await GetPickUpPointToStart(trip.Id);
             routeStart.StartTime = Clock.Now;
             routeStart.IsActive = true;
-
+            routeStart.IsResolve = true;
             trip.Status = ShippingRequestTripStatus.Intransit;
             trip.StartTripDate = Clock.Now;
 
@@ -412,16 +412,16 @@ namespace TACHYON.Tracking
             var activePoint = await GetResolvedPointInTrip(nextPoint.ShippingRequestTripId);
             if (activePoint == null) throw new UserFriendlyException(L("NoActivePoint"));
 
-            // deactivate active point if Completed
             if (activePoint.IsComplete)
-            {
-                activePoint.IsActive = false;
                 activePoint.EndTime = Clock.Now;
-            }
+
+            // deactivate active point if Completed
+            activePoint.IsActive = false;
             activePoint.CanGoToNextLocation = false;
             // activate new point 
-            nextPoint.StartTime = Clock.Now;
             nextPoint.IsActive = true;
+            nextPoint.IsResolve = true;
+            nextPoint.StartTime = Clock.Now;
 
             await ChangeTransition(nextPoint);
             await NotificationWhenPointChanged(nextPoint);
@@ -490,7 +490,6 @@ namespace TACHYON.Tracking
             point.Status = status;
             point.ShippingRequestTripFk.RoutePointStatus = status;
             point.IsComplete = true;
-            point.IsResolve = true;
             point.EndTime = Clock.Now;
             point.ActualPickupOrDeliveryDate = point.ShippingRequestTripFk.ActualPickupDate = Clock.Now;
             point.CanGoToNextLocation = true;
@@ -533,7 +532,6 @@ namespace TACHYON.Tracking
             point.Status = status;
             point.ShippingRequestTripFk.RoutePointStatus = status;
             point.ActualPickupOrDeliveryDate = Clock.Now;
-            point.IsResolve = true;
 
             point.CanGoToNextLocation = await _routPointRepository.GetAll().AnyAsync(x => !x.IsActive && !x.IsComplete && !x.IsResolve && x.ShippingRequestTripId == point.ShippingRequestTripId);
 
@@ -707,7 +705,7 @@ namespace TACHYON.Tracking
         {
             var currentUser = await GetCurrentUserAsync();
             return await _routPointRepository
-                .GetAll().Where(x => x.IsActive && x.Id == pointId)
+                .GetAll().Where(x => x.IsResolve && !x.IsComplete && x.Id == pointId)
                 .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => x.ShippingRequestTripFk.ShippingRequestFk.IsTachyonDeal)
                 .WhereIf(currentUser.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == currentUser.TenantId.Value)
                 .WhereIf(currentUser.IsDriver, x => x.ShippingRequestTripFk.AssignedDriverUserId == currentUser.Id)

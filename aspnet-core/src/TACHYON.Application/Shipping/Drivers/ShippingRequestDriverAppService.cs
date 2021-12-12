@@ -285,6 +285,7 @@ namespace TACHYON.Shipping.Drivers
                  ShippingRequestTripId = x.ShippingRequestTripId,
                  CanGoToNextLocation = x.CanGoToNextLocation,
                  IsActive = x.IsActive,
+                 IsResolve = x.IsResolve,
                  IsComplete = x.IsComplete,
                  Status = x.Status,
                  PickingType = x.PickingType,

@@ -18,6 +18,7 @@ namespace TACHYON.Tracking
         public string StatusTitle { get; set; }
         public bool IsActive { get; set; }
         public bool IsComplete { get; set; }
+        public bool IsResolve { get; set; }
         public bool CanGoToNextLocation { get; set; }
         public List<PointTransactionDto> AvailableTransactions { get; set; }
 
