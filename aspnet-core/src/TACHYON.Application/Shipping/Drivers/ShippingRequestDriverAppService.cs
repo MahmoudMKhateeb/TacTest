@@ -277,9 +277,8 @@ namespace TACHYON.Shipping.Drivers
         {
             DisableTenancyFilters();
             var routes = await _RoutPointRepository.GetAll()
-             .Include(t => t.FacilityFk)
-             .ThenInclude(t => t.Location)
              .Include(t => t.RoutPointStatusTransitions)
+             .Include(z => z.FacilityFk)
              .Where(x => x.ShippingRequestTripId == id)
              .Select(x => new RoutPointsMobileDto
              {
