@@ -77,6 +77,7 @@ namespace TACHYON.Routs.RoutPoints
         //Shipper Note
         [CanBeNull] public string Note { get; set; }
         public bool IsDeliveryNoteUploaded { get; set; }
+        public bool IsPodploaded { get; set; }
 
         public DateTime? ActualPickupOrDeliveryDate { get; set; }
     }

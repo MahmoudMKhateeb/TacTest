@@ -39,6 +39,7 @@ namespace TACHYON.Shipping.Drivers.Dto
         public bool IsResolve { get; set; }
         public bool CanGoToNextLocation { get; set; }
         public bool IsDeliveryNoteUploaded { get; set; }
+        public long? WaybillNumber { get; set; }
         public List<GoodsDetailDto> GoodsDetails { get; set; }
         [JsonIgnore]
         public List<RoutPointStatusTransitionDto> RoutPointStatusTransitions { get; set; }

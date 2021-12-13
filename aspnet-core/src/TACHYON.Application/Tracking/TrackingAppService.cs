@@ -6,10 +6,12 @@ using Abp.Linq.Extensions;
 using Abp.Timing;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using TACHYON.Authorization.Users.Profile;
 using TACHYON.Dto;
 using TACHYON.Features;
 using TACHYON.Goods.GoodCategories.Dtos;
@@ -28,11 +30,13 @@ namespace TACHYON.Tracking
     {
         private readonly IRepository<ShippingRequestTrip> _ShippingRequestTripRepository;
         private readonly ShippingRequestPointWorkFlowProvider _workFlowProvider;
+        private readonly ProfileAppService _ProfileAppService;
 
-        public TrackingAppService(ShippingRequestPointWorkFlowProvider workFlowProvider, IRepository<ShippingRequestTrip> shippingRequestTripRepository)
+        public TrackingAppService(ShippingRequestPointWorkFlowProvider workFlowProvider, IRepository<ShippingRequestTrip> shippingRequestTripRepository, ProfileAppService profileAppService)
         {
             _ShippingRequestTripRepository = shippingRequestTripRepository;
             _workFlowProvider = workFlowProvider;
+            _ProfileAppService = profileAppService;
         }
         public async Task<PagedResultDto<TrackingListDto>> GetAll(TrackingSearchInputDto input)
         {
@@ -159,6 +163,11 @@ namespace TACHYON.Tracking
         private TrackingListDto GetMap(ShippingRequestTrip trip)
         {
             var dto = ObjectMapper.Map<TrackingListDto>(trip);
+
+            var date64 = _ProfileAppService.GetProfilePictureByUser((long)trip.CreatorUserId).Result.ProfilePicture;
+            dto.profilePictureUrl = String.IsNullOrEmpty(date64) ? null : "data:image/jpeg;base64," + date64;
+
+            dto.NumberOfDrops = _ShippingRequestTripRepository.GetAll().Where(x => x.Id == trip.Id).Select(x => x.RoutPoints.Where(x => x.PickingType == PickingType.Dropoff)).Count();
             if (trip.AssignedTruckFk != null) dto.TruckType = ObjectMapper.Map<TrucksTypeDto>(trip.AssignedTruckFk.TrucksTypeFk)?.TranslatedDisplayName ?? "";
             dto.GoodsCategory = ObjectMapper.Map<GoodCategoryDto>(trip.ShippingRequestFk.GoodCategoryFk)?.DisplayName;
             if (trip.ShippingRequestTripRejectReason != null)
@@ -184,6 +193,7 @@ namespace TACHYON.Tracking
                 }
                 dto.Name = $"{trip.ShippingRequestFk?.Tenant?.Name}-{trip.ShippingRequestFk?.CarrierTenantFk?.Name}";
             }
+
             return dto;
         }
         private bool CanStartTrip(ShippingRequestTrip trip)

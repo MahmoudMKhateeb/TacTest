@@ -292,6 +292,7 @@ namespace TACHYON.Shipping.Drivers
                  lat = x.FacilityFk.Location.Y,
                  lng = x.FacilityFk.Location.X,
                  PickingType = x.PickingType,
+                 IsPodploaded = x.IsPodploaded,
                  AvailableTransactions = !x.IsResolve ? new List<PointTransactionDto>() : _workFlowProvider.GetTransactionsByStatus(x.WorkFlowVersion, x.RoutPointStatusTransitions.Where(c => !c.IsReset).Select(v => v.Status).ToList(), x.Status)
              }).ToListAsync();
             if (routes == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
@@ -518,6 +519,7 @@ namespace TACHYON.Shipping.Drivers
                     item.StartTime = item.EndTime = null;
                     item.CanGoToNextLocation = false;
                     item.RoutPointStatusTransitions.Where(s => !s.IsReset).ForEach(x => x.IsReset = true);
+                    item.IsPodploaded = false;
                     //item.RatingLogs.Where(x => x.RateType != RateType.CarrierTripBySystem && x.RateType != RateType.ShipperTripBySystem).ToList().Clear();
                     //item.ShippingRequestTripAccidents.Clear();
                     //item.ShippingRequestTripTransitions.Clear();

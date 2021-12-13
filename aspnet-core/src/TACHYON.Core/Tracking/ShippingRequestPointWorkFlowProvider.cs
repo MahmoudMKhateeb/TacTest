@@ -573,6 +573,7 @@ namespace TACHYON.Tracking
             if (args.Documents != null && !args.Documents.Any())
                 throw new UserFriendlyException(L("File_Empty_Error"));
 
+
             foreach (var document in args.Documents)
             {
                 _routPointDocumentRepository.Insert(new RoutPointDocument
@@ -587,7 +588,7 @@ namespace TACHYON.Tracking
 
             point.Status = status;
             point.ShippingRequestTripFk.RoutePointStatus = status;
-
+            point.IsPodploaded = true;
             await HandlePointDelivery(args.PointId);
             return nameof(RoutPointDropOffStep6);
         }
