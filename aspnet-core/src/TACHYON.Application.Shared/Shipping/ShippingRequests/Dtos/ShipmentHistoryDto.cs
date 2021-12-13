@@ -9,7 +9,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
     {
         public int? CarrierTenantId { get; set; }
         public int ShipperId { get; set; }
-        public string ShipperReference { get; set; }
+        public string ReferenceNumber { get; set; }
         public string StatusTitle { get; set; }
         public string RequestType { get; set; }
         public string CarrierName { get; set; }
