@@ -4,7 +4,7 @@ using TACHYON.Shipping.Trips;
 
 namespace TACHYON.Tracking.Dto
 {
-    public class TrackingListDto : EntityDto<long>
+    public class TrackingListDto : EntityDto
     {
         public string Name { get; set; }
         public ShippingRequestTripStatus Status { get; set; }
@@ -19,6 +19,7 @@ namespace TACHYON.Tracking.Dto
         public string Destination { get; set; }
         public bool NeedsDeliveryNote { get; set; }
         public int NumberOfDrops { get; set; }
+        public int RequestId { get; set; }
         public string TruckType { get; set; }
         public string GoodsCategory { get; set; }
         public ShippingRequestRouteType RouteTypeId { get; set; }
