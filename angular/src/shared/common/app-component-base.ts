@@ -235,6 +235,9 @@ export abstract class AppComponentBase {
     return this.feature.isEnabled('App.Shipper');
   }
   get isTachyonDealer(): boolean {
-    return !this.isCarrier && !this.isShipper;
+    return this.feature.isEnabled('App.TachyonDealer');
+  }
+  get isTachyonDealerOrHost(): boolean {
+    return this.isTachyonDealer || !this.appSession.tenantId;
   }
 }
