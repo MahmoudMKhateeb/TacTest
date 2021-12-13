@@ -1,0 +1,46 @@
+import { Component, Injector, OnInit } from '@angular/core';
+import { AppComponentBase } from '@shared/common/app-component-base';
+import CustomStore from '@node_modules/devextreme/data/custom_store';
+import { LoadOptions } from '@node_modules/devextreme/data/load_options';
+import { LoadOptionsInput, ShippingRequestsServiceProxy } from '@shared/service-proxies/service-proxies';
+
+@Component({
+  selector: 'app-shipment-history',
+  templateUrl: './shipment-history.component.html',
+  styleUrls: ['./shipment-history.component.css'],
+})
+export class ShipmentHistoryComponent extends AppComponentBase implements OnInit {
+  dataSource: any = {};
+
+  constructor(injector: Injector, private _shippingRequestService: ShippingRequestsServiceProxy) {
+    super(injector);
+  }
+
+  ngOnInit(): void {
+    this.getAll();
+  }
+
+  getAll() {
+    let self = this;
+
+    this.dataSource = {};
+    this.dataSource.store = new CustomStore({
+      key: 'id',
+      load(loadOptions: LoadOptions) {
+        return self._shippingRequestService
+          .getAllShippingRequstHistory(JSON.stringify(loadOptions))
+          .toPromise()
+          .then((response) => {
+            return {
+              data: response.data,
+              totalCount: response.totalCount,
+            };
+          })
+          .catch((error) => {
+            console.log(error);
+            throw new Error('Data Loading Error');
+          });
+      },
+    });
+  }
+}

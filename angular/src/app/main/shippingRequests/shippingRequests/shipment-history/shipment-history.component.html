@@ -1,0 +1,52 @@
+<div [@routerTransition]>
+  <div class="content d-flex flex-column flex-column-fluid">
+    <sub-header [title]="'PackingTypes' | localize" [description]="'' | localize"> </sub-header>
+
+    <div [class]="containerClass">
+      <div class="card card-custom gutter-b">
+        <div class="card-body">
+          <div class="row align-items-center">
+            <dx-data-grid
+              #grid
+              id="dataGrid"
+              [dataSource]="dataSource"
+              [remoteOperations]="true"
+              [showColumnLines]="true"
+              [showRowLines]="false"
+              [showBorders]="true"
+              [rowAlternationEnabled]="true"
+              keyExpr="id"
+            >
+              <dxo-editing mode="popup" [allowUpdating]="true" [allowAdding]="true" [allowDeleting]="true"> </dxo-editing>
+              <dxo-filter-row [visible]="true"></dxo-filter-row>
+              <dxo-search-panel [visible]="true"></dxo-search-panel>
+              <dxo-filter-panel [visible]="true"></dxo-filter-panel>
+              <dxo-filter-builder-popup></dxo-filter-builder-popup>
+              <dxo-master-detail [enabled]="true" template="translations"></dxo-master-detail>
+              <div *dxTemplate="let options of 'translations'">
+                <app-translations-template [CoreId]="options.data.id"></app-translations-template>
+              </div>
+              <dxo-remote-operations [sorting]="true" [paging]="true" [filtering]="true"></dxo-remote-operations>
+              <dxo-paging [pageSize]="10"></dxo-paging>
+              <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20, 50, 200]"></dxo-pager>
+
+              <dxi-column dataField="carrierName" caption="{{ l('CarrierName') }}"> </dxi-column>
+              <dxi-column dataField="carrierTenantId" caption="{{ l('CarrierId') }}"></dxi-column>
+              <dxi-column dataField="shipperName" caption="{{ l('ShipperName') }}"></dxi-column>
+              <dxi-column dataField="shipperId" caption="{{ l('ShipperId') }}"></dxi-column>
+              <dxi-column dataField="statusTitle" caption="{{ l('ShippingRequestStatus') }}"></dxi-column>
+              <dxi-column dataField="referenceNumber" caption="{{ l('ShippingRequestReference') }}" cellTemplate="cellShipmentTemplate"></dxi-column>
+              <dxi-column dataField="id" caption="{{ l('ShippingRequestId') }}"></dxi-column>
+              <dxi-column dataField="requestType" caption="{{ l('ShippingRequestType') }}"></dxi-column>
+              <div *dxTemplate="let options of 'cellShipmentTemplate'" class="d-flex justify-content-center">
+                <a [routerLink]="['/app/main/shippingRequests/shippingRequests/view']" [queryParams]="{ id: options.data.id }">{{
+                  options.data.referenceNumber
+                }}</a>
+              </div>
+            </dx-data-grid>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
