@@ -23,6 +23,7 @@ using System.Threading.Tasks;
 using TACHYON.AddressBook;
 using TACHYON.AddressBook.Ports;
 using TACHYON.Authorization;
+using TACHYON.Common;
 using TACHYON.Documents;
 using TACHYON.Dto;
 using TACHYON.Extension;
@@ -65,7 +66,7 @@ using TACHYON.Vases.Dtos;
 
 namespace TACHYON.Shipping.ShippingRequests
 {
-    [AbpAuthorize(AppPermissions.Pages_ShippingRequests)]
+    //[AbpAuthorize(AppPermissions.Pages_ShippingRequests)]
     public class ShippingRequestsAppService : TACHYONAppServiceBase, IShippingRequestsAppService
     {
         public ShippingRequestsAppService(
@@ -194,16 +195,16 @@ namespace TACHYON.Shipping.ShippingRequests
             };
             // }
         }
-        public async Task<LoadResult> GetAllShippingRequstHistory(string filter)
+        public async Task<LoadResult> GetAllShippingRequstHistory(LoadOptionsInput input)
         {
-            DisableTenancyFilters();
+
             var query = _shippingRequestRepository
-           .GetAll()
+           .GetAll().AsNoTracking()
                .Include(t => t.Tenant)
                .Include(x => x.CarrierTenantFk)
                .Where(x => x.Status == ShippingRequestStatus.Completed || x.Status == ShippingRequestStatus.Cancled)
-               .ProjectTo<ShipmentHistoryDto>(AutoMapperConfigurationProvider).AsNoTracking();
-            return await LoadResultAsync<ShipmentHistoryDto>(query, filter);
+               .ProjectTo<ShipmentHistoryDto>(AutoMapperConfigurationProvider);
+            return await LoadResultAsync(query, input.LoadOptions);
         }
 
         public async Task<GetShippingRequestForViewOutput> GetShippingRequestForView(long id)
