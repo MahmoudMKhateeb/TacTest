@@ -1,4 +1,4 @@
-﻿import { CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
@@ -263,9 +263,7 @@ import { DangerousCoodTypesTranslationsComponent } from './goods/dangerous-cood-
 import { NewTrackingConponent } from './shippingRequests/shippingRequests/tracking/new-tracking/new-tracking-conponent';
 import { CollapseModule } from '@node_modules/ngx-bootstrap/collapse';
 import { NgxSkeletonLoaderModule } from '@node_modules/ngx-skeleton-loader';
-import { CompleteTrackingPointDetailsComponent } from './shippingRequests/shippingRequests/tracking/complete-tracking-point-details/complete-tracking-point-details.component';
 import { NgbAccordionModule, NgbCollapseModule, NgbDropdownModule, NgbNavModule } from '@node_modules/@ng-bootstrap/ng-bootstrap';
-import { UploadDeliveryNoteDocumentModelComponent } from './shippingRequests/shippingRequests/tracking/upload-delivery-note-document-model/upload-delivery-note-document-model.component';
 import { ViewDetailsAccidentModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/accident/view-details-accident-modal.component';
 import { AddAccidentCommentModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/accident/accident-comment/add-accident-comment-modal.component';
 import { ShippingRequestRatingModalComponent } from './shippingRequests/shippingRequests/rating/shipping-request-rating-modal.component';
@@ -515,8 +513,6 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ViewPointModalComponent,
     DangerousCoodTypesTranslationsComponent,
     NewTrackingConponent,
-    CompleteTrackingPointDetailsComponent,
-    UploadDeliveryNoteDocumentModelComponent,
     ViewDetailsAccidentModalComponent,
     AddAccidentCommentModalComponent,
     ShippingRequestRatingModalComponent,

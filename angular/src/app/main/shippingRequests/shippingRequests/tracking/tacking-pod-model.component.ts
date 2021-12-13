@@ -20,6 +20,7 @@ export class TrackingPODModalComponent extends AppComponentBase {
   id: number;
   Specifiedtime: Date = new Date();
   action: string;
+  loading = false;
   constructor(injector: Injector, private _Service: TrackingServiceProxy, private _httpClient: HttpClient) {
     super(injector);
   }
@@ -41,6 +42,7 @@ export class TrackingPODModalComponent extends AppComponentBase {
   }
 
   upload(data: { files: File }): void {
+    this.loading = true;
     const formData: FormData = new FormData();
     const file = data.files[0];
     formData.append('file', file, file.name);
@@ -48,7 +50,12 @@ export class TrackingPODModalComponent extends AppComponentBase {
     formData.append('id', this.id.toString());
     this._httpClient
       .post<any>(AppConsts.remoteServiceBaseUrl + '/api/services/app/DropOffPointToDelivery', formData)
-      .pipe(finalize(() => this.fileUpload.clear()))
+      .pipe(
+        finalize(() => {
+          this.fileUpload.clear();
+          this.loading = false;
+        })
+      )
       .subscribe((response) => {
         if (response.success) {
           this.notify.success(this.l('SuccessfullyUpload'));

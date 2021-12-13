@@ -1,5 +1,5 @@
 agm-map {
-  height: 350px;
+  height: 650px;
   width: 100% !important;
 }
 
@@ -41,4 +41,25 @@ agm-map {
 ::ng-deep .p-steps-title {
   color: #3f4254 !important;
   font-weight: 500 !important;
+}
+
+.text-gray-400 {
+  color: #b5b5c3 !important;
+}
+.fw-bold {
+  font-weight: 500 !important;
+}
+.fs-7 {
+  font-size: 0.95rem !important;
+}
+
+.text-gray-800 {
+  color: #3f4254 !important;
+}
+
+.fw-bolder {
+  font-weight: 600 !important;
+}
+.fs-6 {
+  font-size: 1.075rem !important;
 }

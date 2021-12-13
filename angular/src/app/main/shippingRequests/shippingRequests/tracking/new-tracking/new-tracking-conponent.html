@@ -3,8 +3,6 @@
   <div class="card-body">
     <!--begin::Content-->
     <div class="d-flex flex-wrap">
-      <!--      <input type="number" name="zoom" [(ngModel)]="zoom" />-->
-      <!--      <ngx-skeleton-loader count="1" [animation]="'pulse'" [theme]="{ 'border-radius': '0', height: '300px' }"></ngx-skeleton-loader>-->
       <agm-map [zoom]="zoom" [longitude]="markerLong || 46.675761" [latitude]="markerLat || 24.717942">
         <agm-direction
           *ngIf="destination.lat && !markerLong"
@@ -12,9 +10,9 @@
           [destination]="{ lat: destination.lat, lng: destination.lng }"
           [travelMode]="'DRIVING'"
         ></agm-direction>
-        <!--        <agm-marker *ngIf="markerLong" [longitude]="markerLong" [latitude]="markerLat">-->
-        <!--          <agm-info-window>{{ markerFacilityName }}</agm-info-window>-->
-        <!--        </agm-marker>-->
+        <agm-marker *ngIf="markerLong" [longitude]="markerLong" [latitude]="markerLat">
+          <agm-info-window>{{ markerFacilityName }}</agm-info-window>
+        </agm-marker>
       </agm-map>
       <!--      <agm-map></agm-map>-->
     </div>
@@ -43,15 +41,25 @@
                 <!--begin::Items-->
                 <div class="timeline timeline-3">
                   <ngx-skeleton-loader
-                    count="2"
+                    count="4"
                     *ngIf="!routePoints"
                     [animation]="'pulse'"
                     [theme]="{ 'border-radius': '0', height: '100px' }"
                   ></ngx-skeleton-loader>
-
                   <div class="timeline-items">
                     <div *ngFor="let point of routePoints; let i = index" class="timeline-item ribbon ribbon-top">
-                      <div *ngIf="point.isComplete" class="ribbon-target bg-success" style="top: -2px; right: 20px">{{ l('Completed')}}</div>
+                      <div *ngIf="point.isComplete" class="ribbon-target bg-success" style="top: -2px; right: 3%">{{ l('Completed')}}</div>
+                      <a
+                        (click)="downloadMultiDropPointWaybill(point.id)"
+                        [buttonBusy]="dropWaybillLoadingId == point.id"
+                        *ngIf="trip.routeTypeId === routeTypeEnum.MultipleDrops"
+                        class="ribbon-target bg-danger"
+                        style="top: -2px; right: 12%; background-color: #6c757d !important"
+                      >
+                        <i class="fas fa-download text-white mr-2 mb-1"></i>
+                        {{ point.waybillNumber}}
+                      </a>
+
                       <div class="timeline-media pulse pulse-{{ point.pickingType == 1 ? 'primary' : 'danger' }}">
                         <i
                           class="flaticon2-{{ point.pickingType == 1 ? 'up' : 'down' }}  {{
@@ -61,80 +69,53 @@
                         <span class="pulse-ring"></span>
                       </div>
                       <div class="timeline-content" [ngClass]="{ active: item === point.id }" (click)="timeLinePanelClick(point)">
-                        <div class="d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center justify-content-between mb-3 mt-1">
                           <div class="mr-2">
-                            <a href="#" class="text-dark-75 text-hover-primary font-weight-bold">
-                              {{ point.pickingType == 1 ? 'Pickup location' : 'Drop Of Location' }} .</a
+                            <a href="#" class="text-dark-75 text-hover-primary font-weight-bold"
+                              >{{ point.pickingType === pickingTypeEnum.Pickup ? l('Pickup') : l('Drop') }}</a
                             >
+                            <span class="text-muted ml-2" *ngIf="point.startTime">{{point.startTime | momentFormat: 'L'}}</span>
+                            <span *ngIf="point.endTime"> -</span>
+                            <span class="text-muted ml-2" *ngIf="point.endTime">{{point.endTime | momentFormat: 'L'}}</span>
                           </div>
-                        </div>
-                        <div class="d-flex justify-content-end">
-                          <!--                          <div class="mt-2">-->
-                          <!--                            <p>{{ point.address }}</p>-->
-                          <!--                          </div>-->
-                          <!--                 point info           -->
-                          <!--                          <div class="row d-flex justify-content-between flex-nowrap mb-6">-->
-                          <!--                            &lt;!&ndash;begin::Info&ndash;&gt;-->
-                          <!--                            <div class="col-6 col-md-4">-->
-                          <!--                              <div class="mb-8 d-flex flex-column">-->
-                          <!--                                <span class="text-dark font-weight-bold mb-4">Brand</span>-->
-                          <!--                                <span class="text-muted font-weight-bolder font-size-lg">Nike Horizon</span>-->
-                          <!--                              </div>-->
-                          <!--                            </div>-->
-                          <!--                            <div class="col-6 col-md-4">-->
-                          <!--                              <div class="mb-8 d-flex flex-column">-->
-                          <!--                                <span class="text-dark font-weight-bold mb-4">SKU</span>-->
-                          <!--                                <span class="text-muted font-weight-bolder font-size-lg">NF3535345</span>-->
-                          <!--                              </div>-->
-                          <!--                            </div>-->
-                          <!--                            <div class="col-6 col-md-4">-->
-                          <!--                              <div class="mb-8 d-flex flex-column">-->
-                          <!--                                <span class="text-dark font-weight-bold mb-4">Color</span>-->
-                          <!--                                <span class="text-muted font-weight-bolder font-size-lg">Pure White</span>-->
-                          <!--                              </div>-->
-                          <!--                            </div>-->
 
-                          <!--                            &lt;!&ndash;end::Info&ndash;&gt;-->
-                          <!--                          </div>-->
                           <div class="btn-group">
                             <!--    trip actions-->
                             <div
-                              class="d-inline-block mt-8"
+                              class="d-inline-block"
                               ngbDropdown
-                              *ngIf="point.pickingType == pickingTypeEnum.Pickup &&  trip.status === tripStatusesEnum.New  "
+                              *ngIf="(isCarrier || isTachyonDealer) && point.pickingType == pickingTypeEnum.Pickup &&  trip.status === tripStatusesEnum.New"
                             >
-                              <button class="btn btn-sm btn-success" ngbDropdownToggle [buttonBusy]="saving">{{l('Actions')}}</button>
+                              <button class="btn btn-sm btn-danger" ngbDropdownToggle [buttonBusy]="saving">{{l('TripActions')}}</button>
 
                               <div ngbDropdownMenu aria-labelledby="dropdownManual" dropdownConfig>
                                 <button ngbDropdownItem (click)="accept()" *ngIf="trip.driverStatus === driverStatusesEnum.None">
                                   {{ l('AcceptTrip') }}
                                 </button>
-                                <button
-                                  ngbDropdownItem
-                                  (click)="start()"
-                                  *ngIf="trip.canStartTrip && trip.status === tripStatusesEnum.New && trip.driverStatus === driverStatusesEnum.Accepted"
-                                >
-                                  {{ l('StartTrip') }}
-                                </button>
+                                <button ngbDropdownItem (click)="start()" *ngIf="trip.canStartTrip">{{ l('StartTrip') }}</button>
                               </div>
                             </div>
                             <!--                      points DropDown Actions      -->
-                            <div class="d-inline-block mt-8" ngbDropdown *ngIf=" !point.isComplete && trip.status !== tripStatusesEnum.New">
+                            <div
+                              class="d-inline-block"
+                              ngbDropdown
+                              *ngIf="(isCarrier || isTachyonDealer) && !point.isComplete && trip.status !== tripStatusesEnum.New"
+                            >
                               <button
-                                class="btn btn-sm btn-success"
+                                class="btn btn-sm btn-danger"
                                 id="dropdownConfig"
                                 ngbDropdownToggle
-                                [buttonBusy]="saving"
-                                [disabled]="!canStartAnotherPoint  && !point.isActive "
+                                [buttonBusy]="busyPointId == point.id"
+                                [disabled]="!canStartAnotherPoint  && !point.isResolve || trip.routeTypeId === routeTypeEnum.SingleDrop && point.availableTransactions.length === 0  "
                               >
                                 <!--     || (point.pickingType == 2 && !point.isActive || point.availableTransactions.length === 0)-->
-                                {{l('Actions')}}
+                                {{l('PointsActions')}}
                               </button>
                               <div ngbDropdownMenu aria-labelledby="dropdownManual" dropdownConfig>
                                 <button
                                   ngbDropdownItem
                                   (click)="nextLocation(point)"
-                                  *ngIf="!point.isActive && !point.isComplete && canStartAnotherPoint"
+                                  *ngIf="trip.routeTypeId === routeTypeEnum.MultipleDrops && !point.isResolve && !point.isComplete && canStartAnotherPoint"
                                 >
                                   {{ l('StartDropPoint') }}
                                 </button>
@@ -149,34 +130,29 @@
                             </div>
                           </div>
                         </div>
-                        <div class="d-flex flex-column justify-content-between mt-4">
-                          <p-steps
-                            [model]="getStepperSteps(point.statues)"
-                            [(activeIndex)]="activeIndex"
-                            [readonly]="true"
-                            [busyIf]="pointsIsLoading"
-                          ></p-steps>
+                        <div class="d-flex flex-column">
+                          <p class="p-0">{{l('Address')}} : {{point.address}}</p>
+                          <p class="p-0">{{l('Receiver')}} : {{point.receiverFullName}}</p>
+                          <p-steps [model]="getStepperSteps(point.statues)" [(activeIndex)]="activeIndex" [readonly]="true"></p-steps>
                         </div>
                       </div>
                     </div>
                   </div>
+                  <!--end::Items-->
                 </div>
-                <!--end::Items-->
+                <!--end::Responsive container-->
               </div>
-              <!--end::Responsive container-->
+              <!--end::Body-->
             </div>
-            <!--end::Body-->
+            <!--end::Card-->
           </div>
-          <!--end::Card-->
         </div>
+        <!--end::Row-->
       </div>
-      <!--end::Row-->
+      <!--end::Blog-->
     </div>
-    <!--end::Blog-->
+    <!--end::Body-->
   </div>
-  <!--end::Body-->
+  <tacking-confirm-code-model #modelconfirm (modalConfirm)="getForView()"></tacking-confirm-code-model>
+  <tacking-pod-model #modelpod (modalConfirm)="getForView()"></tacking-pod-model>
 </div>
-<tacking-confirm-code-model #modelconfirm (modalConfirm)="getForView()"></tacking-confirm-code-model>
-<complete-tracking-point-details #completeTrackingPointDetails></complete-tracking-point-details>
-<tacking-pod-model #modelpod (modalConfirm)="getForView()"></tacking-pod-model>
-<upload-delivery-note-document-model #modelDeliveryNote></upload-delivery-note-document-model>
