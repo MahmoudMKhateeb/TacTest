@@ -5,13 +5,13 @@ using System.Text;
 
 namespace TACHYON.Shipping.ShippingRequests.Dtos
 {
-    public class ShipmentHistoryDto : EntityDto<long>
+    public class ShipmentHistoryDto : EntityDto
     {
+        public int Id { get; set; }
         public int? CarrierTenantId { get; set; }
         public int ShipperId { get; set; }
         public string ReferenceNumber { get; set; }
         public string RequestStatusTitle { get; set; }
-
         public string RequestTypeTitle { get; set; }
 
         public ShippingRequestStatus RequestStatus { get; set; }
