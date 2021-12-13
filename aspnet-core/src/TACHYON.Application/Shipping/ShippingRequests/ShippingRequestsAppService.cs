@@ -11,6 +11,7 @@ using Abp.Timing;
 using Abp.UI;
 using AutoMapper.QueryableExtensions;
 using Castle.Core.Internal;
+using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Rest;
 using System;
@@ -192,6 +193,17 @@ namespace TACHYON.Shipping.ShippingRequests
                 NoOfPostPriceWithoutTrips = IsEnabled(AppFeatures.Shipper) ? _shippingRequestRepository.GetAll().Where(r => r.Status == ShippingRequestStatus.PostPrice && r.TotalsTripsAddByShippier == 0 && r.TenantId == AbpSession.TenantId).Count() : 0
             };
             // }
+        }
+        public async Task<LoadResult> GetAllShippingRequstHistory(string filter)
+        {
+            DisableTenancyFilters();
+            var query = _shippingRequestRepository
+           .GetAll()
+               .Include(t => t.Tenant)
+               .Include(x => x.CarrierTenantFk)
+               .Where(x => x.Status == ShippingRequestStatus.Completed || x.Status == ShippingRequestStatus.Cancled)
+               .ProjectTo<ShipmentHistoryDto>(AutoMapperConfigurationProvider).AsNoTracking();
+            return await LoadResultAsync<ShipmentHistoryDto>(query, filter);
         }
 
         public async Task<GetShippingRequestForViewOutput> GetShippingRequestForView(long id)

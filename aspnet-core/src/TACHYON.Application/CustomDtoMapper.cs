@@ -667,6 +667,16 @@ namespace TACHYON
   .ForMember(dto => dto.Source, options => options.MapFrom(entity => entity.ShippingRequests.OriginCityFk.DisplayName))
   .ForMember(dto => dto.Destination, options => options.MapFrom(entity => entity.ShippingRequests.DestinationCityFk));
 
+            configuration.CreateMap<ShippingRequest, ShipmentHistoryDto>()
+               .ForMember(x => x.ShipperName, z => z.MapFrom(x => x.Tenant.Name))
+               .ForMember(x => x.ShipperId, z => z.MapFrom(x => x.Tenant.Id))
+               .ForMember(x => x.CarrierName, z => z.MapFrom(x => x.CarrierTenantFk.Name))
+               .ForMember(x => x.StatusTitle, opt => opt.MapFrom(src => src.Status.GetEnumDescription()))
+               .ForMember(x => x.RequestType, opt => opt.MapFrom(x => x.RequestType.GetEnumDescription()));
+
+
+
+
 
             configuration.CreateMap<TACHYON.Invoices.Transactions.Transaction, TransactionListDto>()
                 .ForMember(dto => dto.ClientName, options => options.MapFrom(entity => entity.Tenant.Name))
