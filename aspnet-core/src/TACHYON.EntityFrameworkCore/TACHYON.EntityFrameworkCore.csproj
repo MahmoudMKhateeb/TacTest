@@ -49,6 +49,16 @@
     <Compile Remove="Migrations\20211027080531_addAccidentIdForTripCommentsTbl.Designer.cs" />
     <Compile Remove="Migrations\20211027085020_addTenantRelationForTripCommentsTbl.cs" />
     <Compile Remove="Migrations\20211027085020_addTenantRelationForTripCommentsTbl.Designer.cs" />
+    <Compile Remove="Migrations\20211115122623_add_WorkFlowVersion_to_RoutPoint.cs" />
+    <Compile Remove="Migrations\20211115122623_add_WorkFlowVersion_to_RoutPoint.Designer.cs" />
+    <Compile Remove="Migrations\20211125072731_add_CanGoToNextLocation_toRoutPoin.cs" />
+    <Compile Remove="Migrations\20211125072731_add_CanGoToNextLocation_toRoutPoin.Designer.cs" />
+    <Compile Remove="Migrations\20211205214543_add_isReset_toRoutPointTransioin.cs" />
+    <Compile Remove="Migrations\20211205214543_add_isReset_toRoutPointTransioin.Designer.cs" />
+    <Compile Remove="Migrations\20211213113100_add_IsPodUploded_In_RoutPoint.cs" />
+    <Compile Remove="Migrations\20211213113100_add_IsPodUploded_In_RoutPoint.Designer.cs" />
+    <Compile Remove="Migrations\20211213201109_Rename-Pod.cs" />
+    <Compile Remove="Migrations\20211213201109_Rename-Pod.Designer.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.5" />

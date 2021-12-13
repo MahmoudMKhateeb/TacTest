@@ -19,7 +19,7 @@ namespace TACHYON.Tracking
         public bool IsActive { get; set; }
         public bool IsComplete { get; set; }
         public bool IsResolve { get; set; }
-        public bool IsPodploaded { get; set; }
+        public bool IsPodUploaded { get; set; }
         public bool CanGoToNextLocation { get; set; }
         public double lat { get; set; }
         public double lng { get; set; }
