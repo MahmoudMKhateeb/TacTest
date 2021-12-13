@@ -771,13 +771,17 @@ namespace TACHYON.Tracking
 
                 var allPointsCompleted = !await _routPointRepository.GetAll()
                .AnyAsync(x => x.ShippingRequestTripId == point.ShippingRequestTripId && !x.IsComplete && x.Id != point.Id);
+                var allPointsResolved = !await _routPointRepository.GetAll()
+                    .AnyAsync(x => x.ShippingRequestTripId == point.ShippingRequestTripId && !x.IsResolve && x.Id != point.Id);
+
+                var trip = await _shippingRequestTripRepository
+                    .GetAllIncluding(d => d.ShippingRequestTripVases)
+                    .Include(x => x.ShippingRequestFk).ThenInclude(c => c.Tenant)
+                    .FirstOrDefaultAsync(t => t.Id == point.ShippingRequestTripId);
+
                 //if current point is completed and all another point in trip is completed the trip statues should be Delivered
                 if (allPointsCompleted)
                 {
-                    var trip = await _shippingRequestTripRepository
-                        .GetAllIncluding(d => d.ShippingRequestTripVases)
-                        .Include(x => x.ShippingRequestFk).ThenInclude(c => c.Tenant)
-                        .FirstOrDefaultAsync(t => t.Id == point.ShippingRequestTripId);
 
                     trip.Status = ShippingRequestTripStatus.Delivered;
                     trip.EndTripDate = Clock.Now;
@@ -785,6 +789,10 @@ namespace TACHYON.Tracking
                     await CloseLastTransitionInComplete(trip.Id);
                     await _invoiceManager.GenertateInvoiceWhenShipmintDelivery(trip);
                     await NotificationWhenShipmentDelivered(point, currentUser);
+                }
+                else if (allPointsResolved && trip.Status == ShippingRequestTripStatus.Intransit)
+                {
+                    trip.Status = ShippingRequestTripStatus.DeliveredAndNeedsConfirmation;
                 }
             }
         }
