@@ -668,7 +668,6 @@ namespace TACHYON
   .ForMember(dto => dto.Destination, options => options.MapFrom(entity => entity.ShippingRequests.DestinationCityFk));
 
             configuration.CreateMap<ShippingRequest, ShipmentHistoryDto>()
-               .ForMember(x => x.Id, z => z.MapFrom(x => x.Id))
                .ForMember(x => x.ShipperName, z => z.MapFrom(x => x.Tenant.Name))
                .ForMember(x => x.ShipperId, z => z.MapFrom(x => x.Tenant.Id))
                .ForMember(x => x.CarrierName, z => z.MapFrom(x => x.CarrierTenantFk.Name))
