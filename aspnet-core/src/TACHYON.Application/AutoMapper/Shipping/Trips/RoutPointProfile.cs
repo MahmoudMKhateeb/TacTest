@@ -33,7 +33,9 @@ namespace TACHYON.AutoMapper.Shipping.Trips
                 .ForPath(dest => dest.ReceiverPhoneNumber, opt => opt.MapFrom(src => src.ReceiverPhoneNumber))
                 .ForPath(dest => dest.ReceiverCardIdNumber, opt => opt.MapFrom(src => src.ReceiverCardIdNumber))
                 .ForPath(dest => dest.Rating, opt => opt.MapFrom(src => src.FacilityFk.Rate))
-                .ForPath(dest => dest.RatingNumber, opt => opt.MapFrom(src => src.FacilityFk.RateNumber));
+                .ForPath(dest => dest.RatingNumber, opt => opt.MapFrom(src => src.FacilityFk.RateNumber))
+                .ForMember(dest => dest.IsPodUploaded, opt => opt.MapFrom(src => src.IsPodploaded))
+;
 
             CreateMap<RoutPoint, DropOffPointDto>();
             CreateMap<UserOTP, UserOtpDto>();
