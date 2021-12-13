@@ -43,6 +43,7 @@ namespace TACHYON.Routs.RoutPoints.Dtos
         public bool IsDeliveryNoteUploaded { get; set; }
         public List<GoodsDetailDto> GoodsDetailListDto { get; set; }
         public long? WaybillNumber { get; set; }
+        public bool IsPodUploaded { get; set; }
         public RoutePointCompletedStatus CompletedStatus { get; set; }
         public List<PointTransactionDto> AvailableTransactions { get; set; }
 
