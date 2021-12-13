@@ -165,7 +165,7 @@ namespace TACHYON.Tracking
             var dto = ObjectMapper.Map<TrackingListDto>(trip);
 
             var date64 = _ProfileAppService.GetProfilePictureByUser((long)trip.CreatorUserId).Result.ProfilePicture;
-            dto.profilePictureUrl = String.IsNullOrEmpty(date64) ? null : date64;
+            dto.TenantPhoto = String.IsNullOrEmpty(date64) ? null : date64;
             dto.NumberOfDrops = trip.ShippingRequestFk.NumberOfDrops;
             if (trip.AssignedTruckFk != null) dto.TruckType = ObjectMapper.Map<TrucksTypeDto>(trip.AssignedTruckFk.TrucksTypeFk)?.TranslatedDisplayName ?? "";
             dto.GoodsCategory = ObjectMapper.Map<GoodCategoryDto>(trip.ShippingRequestFk.GoodCategoryFk)?.DisplayName;

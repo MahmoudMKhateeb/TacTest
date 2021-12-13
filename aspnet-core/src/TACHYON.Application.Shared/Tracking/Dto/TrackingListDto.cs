@@ -1,4 +1,5 @@
 ﻿using Abp.Application.Services.Dto;
+using TACHYON.Authorization.Users.Profile.Dto;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.Trips;
 
@@ -13,7 +14,7 @@ namespace TACHYON.Tracking.Dto
         public ShippingRequestTripDriverStatus DriverStatus { get; set; }
         public string DriverStatusTitle { get { return DriverStatus.GetEnumDescription(); } set { } }
         public long? AssignedDriverUserId { get; set; }
-        public string profilePictureUrl { get; set; }
+        public string TenantPhoto { get; set; }
         public string DriverImageProfile { get; set; }
         public string Origin { get; set; }
         public string Destination { get; set; }
