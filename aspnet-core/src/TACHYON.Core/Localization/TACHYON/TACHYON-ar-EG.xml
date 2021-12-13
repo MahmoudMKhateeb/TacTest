@@ -10,7 +10,8 @@
 		<text name="AboutUs">من نحن</text>
 		<text name="Abp.Organizations.OrganizationUnit">الوحدة التنظيمية</text>
 		<text name="Accept">قبول</text>
-		<text name="AcceptBid" />
+    <text name="ShipmentHistory">تأريخ الشحن</text>
+    <text name="AcceptBid" />
 		<text name="AddRating">أضف تقييم</text>
 		<text name="Rating">التقييم</text>
 		<text name="Accepted">مقبول</text>

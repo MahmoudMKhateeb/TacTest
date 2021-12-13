@@ -9,7 +9,7 @@
     <text name="EditDangerousGoodType">Edit dangerous good type</text>
     <text name="DeleteDangerousGoodType">Delete dangerous good type</text>
     <text name="DangerousGoodTypes">Dangerous good types</text>
-
+    <text name="ShipmentHistory">Shipment History</text>
 		<text name="{0}IsInvalid">"{0}" is invalid</text>
 		<text name="{0}IsRequired">{0} is required.</text>
 		<text name="{0}UserCannotBeDeleted">{0} user can not be deleted.</text>

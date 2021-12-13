@@ -66,7 +66,7 @@ using TACHYON.Vases.Dtos;
 
 namespace TACHYON.Shipping.ShippingRequests
 {
-    //[AbpAuthorize(AppPermissions.Pages_ShippingRequests)]
+    [AbpAuthorize(AppPermissions.Pages_ShippingRequests)]
     public class ShippingRequestsAppService : TACHYONAppServiceBase, IShippingRequestsAppService
     {
         public ShippingRequestsAppService(
@@ -203,6 +203,8 @@ namespace TACHYON.Shipping.ShippingRequests
                .Include(t => t.Tenant)
                .Include(x => x.CarrierTenantFk)
                .Where(x => x.Status == ShippingRequestStatus.Completed || x.Status == ShippingRequestStatus.Cancled)
+               .WhereIf(IsEnabled(AppFeatures.Carrier), e => e.CarrierTenantId == AbpSession.TenantId) //if the user is carrier
+               .WhereIf(IsEnabled(AppFeatures.Shipper), e => e.TenantId == AbpSession.TenantId) //if the user is shipper
                .ProjectTo<ShipmentHistoryDto>(AutoMapperConfigurationProvider);
             return await LoadResultAsync(query, input.LoadOptions);
         }

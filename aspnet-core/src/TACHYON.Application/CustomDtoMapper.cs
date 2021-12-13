@@ -671,8 +671,9 @@ namespace TACHYON
                .ForMember(x => x.ShipperName, z => z.MapFrom(x => x.Tenant.Name))
                .ForMember(x => x.ShipperId, z => z.MapFrom(x => x.Tenant.Id))
                .ForMember(x => x.CarrierName, z => z.MapFrom(x => x.CarrierTenantFk.Name))
-               .ForMember(x => x.StatusTitle, opt => opt.MapFrom(src => src.Status.GetEnumDescription()))
-               .ForMember(x => x.RequestType, opt => opt.MapFrom(x => x.RequestType.GetEnumDescription()));
+               .ForMember(x => x.CarrierTenantId, z => z.MapFrom(x => x.CarrierTenantId))
+               .ForMember(x => x.RequestStatusTitle, opt => opt.MapFrom(src => src.Status.GetEnumDescription()))
+               .ForMember(x => x.RequestTypeTitle, opt => opt.MapFrom(x => x.RequestType.GetEnumDescription()));
 
 
 
