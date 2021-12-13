@@ -87,6 +87,9 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
     // this.modal.show();
   }
 
+  /**
+   * get the trip for view
+   */
   getForView() {
     this.pointsIsLoading = true;
     this._trackingServiceProxy
@@ -257,6 +260,12 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
     });
   }
 
+  /**
+   * the core function of the tracking
+   * its used to send the transaction selected by user in point action dropdown
+   * @param point
+   * @param transaction
+   */
   invokeStatus(point: ShippingRequestTripDriverRoutePointDto, transaction: PointTransactionDto) {
     this.saving = true;
     this.busyPointId = point.id;
