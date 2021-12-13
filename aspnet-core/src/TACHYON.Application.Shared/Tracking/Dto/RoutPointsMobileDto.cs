@@ -20,6 +20,8 @@ namespace TACHYON.Tracking
         public bool IsComplete { get; set; }
         public bool IsResolve { get; set; }
         public bool CanGoToNextLocation { get; set; }
+        public double lat { get; set; }
+        public double lng { get; set; }
         public List<PointTransactionDto> AvailableTransactions { get; set; }
 
     }

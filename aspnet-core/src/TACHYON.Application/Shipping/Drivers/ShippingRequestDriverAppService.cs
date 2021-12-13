@@ -277,6 +277,8 @@ namespace TACHYON.Shipping.Drivers
         {
             DisableTenancyFilters();
             var routes = await _RoutPointRepository.GetAll()
+             .Include(t => t.FacilityFk)
+             .ThenInclude(t => t.Location)
              .Include(t => t.RoutPointStatusTransitions)
              .Where(x => x.ShippingRequestTripId == id)
              .Select(x => new RoutPointsMobileDto
@@ -288,6 +290,8 @@ namespace TACHYON.Shipping.Drivers
                  IsResolve = x.IsResolve,
                  IsComplete = x.IsComplete,
                  Status = x.Status,
+                 lat = x.FacilityFk.Location.Y,
+                 lng = x.FacilityFk.Location.X,
                  PickingType = x.PickingType,
                  AvailableTransactions = !x.IsResolve ? new List<PointTransactionDto>() : _workFlowProvider.GetTransactionsByStatus(x.WorkFlowVersion, x.RoutPointStatusTransitions.Where(c => !c.IsReset).Select(v => v.Status).ToList(), x.Status)
              }).ToListAsync();
