@@ -4286,7 +4286,7 @@ namespace TACHYON.Migrations
                     b.Property<bool>("IsDeliveryNoteUploaded")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsPodploaded")
+                    b.Property<bool>("IsPodUploaded")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsResolve")

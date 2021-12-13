@@ -493,7 +493,7 @@ namespace TACHYON.Tracking
             point.EndTime = Clock.Now;
             point.ActualPickupOrDeliveryDate = point.ShippingRequestTripFk.ActualPickupDate = Clock.Now;
             point.CanGoToNextLocation = true;
-            //await SendSmsToReceivers(point.ShippingRequestTripId);
+            await SendSmsToReceivers(point.ShippingRequestTripId);
             return nameof(RoutPointPickUpStep4);
         }
         private async Task<string> StartedMovingToOfLoadingLocation(PointTransactionArgs args)
@@ -588,7 +588,7 @@ namespace TACHYON.Tracking
 
             point.Status = status;
             point.ShippingRequestTripFk.RoutePointStatus = status;
-            point.IsPodploaded = true;
+            point.IsPodUploaded = true;
             await HandlePointDelivery(args.PointId);
             return nameof(RoutPointDropOffStep6);
         }
