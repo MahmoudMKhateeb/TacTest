@@ -86,7 +86,7 @@
                               ngbDropdown
                               *ngIf="(isCarrier || isTachyonDealer) && point.pickingType == pickingTypeEnum.Pickup &&  trip.status === tripStatusesEnum.New"
                             >
-                              <button class="btn btn-sm btn-danger" ngbDropdownToggle [buttonBusy]="saving">{{l('TripActions')}}</button>
+                              <button class="btn btn-sm btn-danger" ngbDropdownToggle [buttonBusy]="saving">{{l('Actions')}}</button>
 
                               <div ngbDropdownMenu aria-labelledby="dropdownManual" dropdownConfig>
                                 <button ngbDropdownItem (click)="accept()" *ngIf="trip.driverStatus === driverStatusesEnum.None">
@@ -109,7 +109,7 @@
                                 [disabled]="!canStartAnotherPoint  && !point.isResolve || trip.routeTypeId === routeTypeEnum.SingleDrop && point.availableTransactions.length === 0  "
                               >
                                 <!--     || (point.pickingType == 2 && !point.isActive || point.availableTransactions.length === 0)-->
-                                {{l('PointsActions')}}
+                                {{l('Actions')}}
                               </button>
                               <div ngbDropdownMenu aria-labelledby="dropdownManual" dropdownConfig>
                                 <button
