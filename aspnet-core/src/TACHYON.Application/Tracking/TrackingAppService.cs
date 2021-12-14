@@ -111,6 +111,8 @@ namespace TACHYON.Tracking
                  .ThenInclude(u => u.UnitOfMeasureFk)
                  .Include(p => p.RoutPoints)
                  .ThenInclude(t => t.RoutPointStatusTransitions)
+                 .Include(p => p.RoutPoints)
+                 .ThenInclude(t => t.ReceiverFk)
                             .Where(x => x.Id == id && x.ShippingRequestFk.CarrierTenantId.HasValue)
                             .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper), x => x.ShippingRequestFk.TenantId == AbpSession.TenantId)
                             .WhereIf(!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer), x => true)

@@ -81,7 +81,8 @@ namespace TACHYON.AutoMapper.Shipping.Trips
                 .ForMember(dst => dst.FacilityRatingNumber, opt => opt.MapFrom(src => src.FacilityFk.RateNumber))
                 .ForMember(dst => dst.lat, opt => opt.MapFrom(src => src.FacilityFk.Location.Y))
                 .ForMember(dst => dst.lng, opt => opt.MapFrom(src => src.FacilityFk.Location.X))
-                .ForMember(dst => dst.GoodsDetails, opt => opt.MapFrom(src => src.GoodsDetails));
+                .ForMember(dst => dst.GoodsDetails, opt => opt.MapFrom(src => src.GoodsDetails))
+                .ForMember(dst => dst.ReceiverFullName, opt => opt.MapFrom(src => src.ReceiverFk != null ? src.ReceiverFk.FullName : src.ReceiverFullName));
 
             CreateMap<ShippingRequestTrip, CreateOrEditShippingRequestTripDto>()
                 .ForMember(dest => dest.RoutPoints, opt => opt.MapFrom(src => src.RoutPoints))
