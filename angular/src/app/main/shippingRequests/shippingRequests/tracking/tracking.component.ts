@@ -66,6 +66,7 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
   }
   ngOnInit(): void {
     this.direction = document.getElementsByTagName('html')[0].getAttribute('dir');
+    this.syncTrip();
     this.LoadData();
   }
   LoadData() {
@@ -189,8 +190,20 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
           .pipe(finalize(() => {}))
           .subscribe((result) => {
             this.notify.info(this.l('SuccessfullyAccepted'));
+            abp.event.trigger('TripAccepted');
           });
       }
+    });
+  }
+
+  /**
+   * syncs trips From Child Component
+   * @private
+   */
+  private syncTrip() {
+    abp.event.on('TripDataChanged', function (incomingTrip: TrackingListDto) {
+      const index = this.Items.findIndex((trip) => trip.id === incomingTrip.id);
+      this.Items[index] = incomingTrip;
     });
   }
 }
