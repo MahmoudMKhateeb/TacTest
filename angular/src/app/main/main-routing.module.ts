@@ -232,12 +232,17 @@ import { ShipmentHistoryComponent } from '@app/main/shippingRequests/shippingReq
           },
           { path: 'documentTypes/documentTypes', component: DocumentTypesComponent, data: { permission: 'Pages.DocumentTypes' } },
           { path: 'shippingRequests/shippingRequests', component: ShippingRequestsListComponent },
-          { path: 'shippingRequests/ShipmentHistory', component: ShipmentHistoryComponent },
+          {
+            path: 'shippingRequests/ShipmentHistory',
+            component: ShipmentHistoryComponent,
+
+            data: { permission: 'Pages.ShippingRequests' },
+          },
           { path: 'tms/shippingRequests', component: TMSRequestListComponent },
           {
             path: 'shippingRequests/shippingRequests/createOrEdit',
             component: CreateOrEditShippingRequestComponent,
-            data: { permission: 'Pages.ShippingRequests.Create' },
+            data: { permission: 'Pages.ShippingRequests' },
           },
           {
             path: 'shippingRequests/shippingRequestWizard',
