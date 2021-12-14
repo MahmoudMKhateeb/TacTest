@@ -88,6 +88,14 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
   }
 
   /**
+   * syncs the currents Trip Status with Father Component
+   */
+  syncTripInGetForView(trip: TrackingListDto) {
+    abp.event.on('TripAccepted', () => this.getForView());
+    abp.event.trigger('TripDataChanged', trip);
+  }
+
+  /**
    * get the trip for view
    */
   getForView() {
@@ -104,6 +112,7 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
         this.trip.canStartTrip = result.canStartTrip;
         this.trip.driverStatus = result.driverStatus;
         this.routePoints = result.routPoints;
+        this.syncTripInGetForView(this.trip);
         this.handleCanGoNextLocation(result.routPoints);
       });
   }
