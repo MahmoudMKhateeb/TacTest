@@ -26,10 +26,22 @@
               <div *dxTemplate="let options of 'translations'">
                 <app-translations-template [CoreId]="options.data.id"></app-translations-template>
               </div>
-              <dxo-remote-operations [sorting]="false" [paging]="true" [filtering]="true"></dxo-remote-operations>
+              <dxo-remote-operations [groupPaging]="true" [sorting]="true" [filtering]="true"> </dxo-remote-operations>
               <dxo-paging [pageSize]="5"></dxo-paging>
               <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20, 50, 200]"></dxo-pager>
+              <dxi-column dataField="requestType" caption="{{ l('ShippingRequestType') }}">
+                <dxo-lookup [dataSource]="requestTypeData" displayExpr="value" valueExpr="key"> </dxo-lookup>
+              </dxi-column>
+              <dxi-column dataField="requestStatus" caption=" {{ l('ShippingRequestStatus') }}">
+                <dxo-lookup [dataSource]="statusData" displayExpr="value" valueExpr="key"> </dxo-lookup>
+              </dxi-column>
 
+              <dxi-column
+                cellTemplate="cellreferenceNumberTemplate"
+                dataField="referenceNumber"
+                caption="{{ l('ShippingRequestReference') }}"
+              ></dxi-column>
+              <dxi-column dataField="id" caption="{{ l('ShippingRequestId') }}"></dxi-column>
               <dxi-column
                 *ngIf="isTachyonDealer || isShipper"
                 cellTemplate="cellcarrierNameTemplate"
@@ -43,16 +55,7 @@
                 dataField="shipperName"
                 caption="{{ l('ShipperName') }}"
               ></dxi-column>
-              <dxi-column dataField="requestStatusTitle" caption="{{ l('ShippingRequestStatus') }}"> </dxi-column>
-              <dxi-column
-                cellTemplate="cellreferenceNumberTemplate"
-                dataField="referenceNumber"
-                caption="{{ l('ShippingRequestReference') }}"
-              ></dxi-column>
-              <dxi-column dataField="id" caption="{{ l('ShippingRequestId') }}"></dxi-column>
-              <dxi-column dataField="requestType" caption="{{ l('ShippingRequestType') }}">
-                <dxo-lookup [dataSource]="requestTypeData" displayExpr="value" valueExpr="key"> </dxo-lookup>
-              </dxi-column>
+
               <div *dxTemplate="let options of 'cellreferenceNumberTemplate'" class="d-flex justify-content-center">
                 <a [routerLink]="['/app/main/shippingRequests/shippingRequests/view']" [queryParams]="{ id: options.data.id }">{{
                   options.data.referenceNumber
@@ -65,6 +68,7 @@
               <div *dxTemplate="let options of 'cellcarrierNameTemplate'" class="d-flex justify-content-center">
                 <a [routerLink]="['/app/main/profile', options.data.carrierTenantId, 'view']">{{ options.data.carrierName }}</a>
               </div>
+              <dxo-summary> <dxi-total-item column="requestType" summaryType="count"> </dxi-total-item> </dxo-summary>
             </dx-data-grid>
           </div>
         </div>
