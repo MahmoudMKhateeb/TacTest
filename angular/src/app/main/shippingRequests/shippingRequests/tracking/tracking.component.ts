@@ -174,7 +174,7 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
     }).then((result) => {
       if (result.value) {
         this._shippingRequestDriverServiceProxy.reset(tripId).subscribe(() => {
-          this.notify.info(this.l('SuccessfullyReseated'));
+          this.notify.success(this.l('SuccessfullyReseated'));
           this.search();
         });
       } //end of if
@@ -189,10 +189,13 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
       if (isConfirmed) {
         this._trackingServiceProxy
           .accept(tripId)
-          .pipe(finalize(() => {}))
+          .pipe(
+            finalize(() => {
+              abp.event.trigger('TripAccepted');
+            })
+          )
           .subscribe((result) => {
-            this.notify.info(this.l('SuccessfullyAccepted'));
-            abp.event.trigger('TripAccepted');
+            this.notify.success(this.l('SuccessfullyAccepted'));
           });
       }
     });
@@ -203,11 +206,13 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
    * @private
    */
   private syncTrip() {
-    abp.event.on('TripDataChanged', function (incomingTrip: TrackingListDto) {
-      if (this.Items) {
-        const index = this.Items.findIndex((trip) => trip.id === incomingTrip.id);
-        this.Items[index] = incomingTrip;
-      }
-    });
+    if (this.activePanelId) {
+      abp.event.on('TripDataChanged', function (incomingTrip: TrackingListDto) {
+        if (this.Items) {
+          const index = this.Items.findIndex((trip) => trip.id === incomingTrip.id);
+          this.Items[index] = incomingTrip;
+        }
+      });
+    }
   }
 }
