@@ -582,12 +582,6 @@ namespace TACHYON.Trucks
                 .ToListAsync();
 
             return ObjectMapper.Map<List<PlateTypeSelectItemDto>>(plateTypes);
-            //return await _plateTypesRepository.GetAll()
-            //    .Select(x => new SelectItemDto()
-            //    {
-            //        Id = x.Id.ToString(),
-            //        DisplayName = x.DisplayName
-            //    }).ToListAsync();
         }
 
         #endregion

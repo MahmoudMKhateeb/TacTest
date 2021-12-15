@@ -23,7 +23,8 @@ namespace TACHYON.Extension
             return str.ToLower().Contains(s.ToLower());
 
         }
-
+        public static bool ContainsOther(this IHasKey entityHasKey)
+         => entityHasKey.Key.ToLower().Contains(TACHYONConsts.OthersDisplayName.ToLower());
         #endregion
 
 
@@ -44,7 +45,7 @@ namespace TACHYON.Extension
             where TTranslation : class, IEntityTranslation<TEntity, TKey>, IHasDisplayName, new()
             where TKey : IComparable<TKey>
         {
-            var entityWithoutTranslation = context.Include(x => x.Translations)
+            var entityWithoutTranslation = context
                     .FirstOrDefault(x => x.Key.ToLower().Contains(TACHYONConsts.OthersDisplayName.ToLower()));
             if (entityWithoutTranslation == null) return;
             var translations = new List<TTranslation>()

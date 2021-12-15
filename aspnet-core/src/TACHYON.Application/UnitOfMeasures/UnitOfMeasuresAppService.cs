@@ -130,7 +130,8 @@ namespace TACHYON.UnitOfMeasures
                 .Select(x => new SelectItemDto()
                 {
                     Id = x.Id.ToString(),
-                    DisplayName = x.DisplayName
+                    DisplayName = x.DisplayName,
+                    IsOther = x.ContainsOther()
                 }).ToListAsync();
         }
 

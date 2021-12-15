@@ -836,7 +836,8 @@ namespace TACHYON.Shipping.ShippingRequests
                     HasCount = vas.HasCount,
                     MaxAmount = 0,
                     MaxCount = 0,
-                    Id = vas.Id
+                    Id = vas.Id,
+                    IsOther = vas.ContainsOther()
                 }).ToListAsync();
         }
 
@@ -1351,7 +1352,8 @@ namespace TACHYON.Shipping.ShippingRequests
                 .Select(x => new SelectItemDto()
                 {
                     Id = x.Id.ToString(),
-                    DisplayName = x.DisplayName
+                    DisplayName = x.DisplayName,
+                    IsOther = x.ContainsOther()
                 }).ToListAsync();
         }
 

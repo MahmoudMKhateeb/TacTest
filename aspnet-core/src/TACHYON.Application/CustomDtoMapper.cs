@@ -56,6 +56,7 @@ using TACHYON.Drivers.importing.Dto;
 using TACHYON.DynamicEntityParameters.Dto;
 using TACHYON.Editions;
 using TACHYON.Editions.Dto;
+using TACHYON.Extension;
 using TACHYON.Friendships;
 using TACHYON.Friendships.Cache;
 using TACHYON.Friendships.Dto;
@@ -705,6 +706,7 @@ namespace TACHYON
             configuration.CreateMultiLingualMap<TransportType, TransportTypesTranslation, TransportTypeSelectItemDto>(context)
                   .EntityMap
                   .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
+                  .ForMember(dst => dst.IsOther, opt => opt.MapFrom(src => src.ContainsOther()))
                   .ReverseMap();
 
             configuration.CreateMultiLingualMap<County, CountriesTranslation, CountyDto>(context)
@@ -779,7 +781,8 @@ namespace TACHYON
             configuration.
                 CreateMultiLingualMap<PlateType, PlateTypeTranslation, PlateTypeSelectItemDto>(context);
             configuration.
-                CreateMultiLingualMap<GoodCategory, GoodCategoryTranslation, GetAllGoodsCategoriesForDropDownOutput>(context);
+                CreateMultiLingualMap<GoodCategory, GoodCategoryTranslation, GetAllGoodsCategoriesForDropDownOutput>(context)
+                .EntityMap.ForMember(x => x.IsOther, x => x.MapFrom(i => i.ContainsOther()));
             //configuration.
             //    CreateMultiLingualMap<GoodCategory, GoodCategoryTranslation, GoodCategoryDto>(context);
         }

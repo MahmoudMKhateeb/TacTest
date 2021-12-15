@@ -1,6 +1,6 @@
 ﻿namespace TACHYON.Dto
 {
-    public class SelectItemDto :ISelectItemDto
+    public class SelectItemDto : ISelectItemDto
     {
         private string _displayName;
 
@@ -15,6 +15,8 @@
         }
 
         public string Id { get; set; }
+
+        public bool IsOther { get; set; }
 
         public string DisplayName
         {
