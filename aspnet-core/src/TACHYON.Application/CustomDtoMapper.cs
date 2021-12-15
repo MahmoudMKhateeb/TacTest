@@ -749,6 +749,7 @@ namespace TACHYON
                 .ReverseMap();
 
             configuration.CreateMap<TrucksType, TrucksTypeSelectItemDto>()
+                .ForMember(x => x.IsOther, x => x.MapFrom(i => i.ContainsOther()))
                 .ForMember(x => x.Id, x => x.MapFrom(i => i.Id.ToString()))
                 .ForMember(x => x.TranslatedDisplayName, x =>
                     x.MapFrom(i => i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)) != null ? i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName : i.DisplayName))
