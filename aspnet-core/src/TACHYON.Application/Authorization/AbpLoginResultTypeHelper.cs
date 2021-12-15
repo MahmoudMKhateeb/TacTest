@@ -1,5 +1,6 @@
 ﻿using Abp.Authorization;
 using Abp.Dependency;
+using Abp.Zero.Configuration;
 using System;
 
 namespace TACHYON.Authorization
@@ -24,7 +25,11 @@ namespace TACHYON.Authorization
                 case AbpLoginResultType.UserEmailIsNotConfirmed:
                     return new AbpAuthorizationException(L("UserEmailIsNotConfirmedAndCanNotLogin"));
                 case AbpLoginResultType.LockedOut:
-                    return new AbpAuthorizationException(L("UserLockedOutMessage"));
+                    var lockoutSeconds = SettingManager.GetSettingValue(AbpZeroSettingNames.UserManagement.UserLockOut.DefaultAccountLockoutSeconds);
+                    var maxFailedAttempts = SettingManager.GetSettingValue(AbpZeroSettingNames.UserManagement.UserLockOut
+                        .MaxFailedAccessAttemptsBeforeLockout);
+
+                    return new AbpAuthorizationException(L("UserLockedOutMessage", maxFailedAttempts, lockoutSeconds));
                 default: //Can not fall to default actually. But other result types can be added in the future and we may forget to handle it
                     Logger.Warn("Unhandled login fail reason: " + result);
                     return new AbpAuthorizationException(L("LoginFailed"));
