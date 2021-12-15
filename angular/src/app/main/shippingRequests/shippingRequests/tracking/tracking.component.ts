@@ -7,6 +7,7 @@ import {
   ShippingRequestTripDriverRoutePointDto,
   ShippingRequestTripDriverStatus,
   ShippingRequestTripStatus,
+  ShippingRequestType,
   TrackingListDto,
   TrackingServiceProxy,
   WaybillsServiceProxy,
@@ -49,6 +50,7 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
   routeTypeEnum = ShippingRequestRouteType;
   ShippingRequestTripStatusEnum = ShippingRequestTripStatus;
   DriverStatusEnum = ShippingRequestTripDriverStatus;
+  ShippingRequestTypeEnum = ShippingRequestType;
   downloadingForItem: number;
   defaultProfilePic = AppConsts.appBaseUrl + '/assets/common/images/carrier-default-pic.jpg';
 
@@ -202,8 +204,10 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
    */
   private syncTrip() {
     abp.event.on('TripDataChanged', function (incomingTrip: TrackingListDto) {
-      const index = this.Items.findIndex((trip) => trip.id === incomingTrip.id);
-      this.Items[index] = incomingTrip;
+      if (this.Items) {
+        const index = this.Items.findIndex((trip) => trip.id === incomingTrip.id);
+        this.Items[index] = incomingTrip;
+      }
     });
   }
 }

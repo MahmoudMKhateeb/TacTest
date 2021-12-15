@@ -9,7 +9,9 @@ import {
   ShippingRequestTripDriverRoutePointDto,
   ShippingRequestTripDriverStatus,
   ShippingRequestTripStatus,
+  ShippingRequestType,
   TrackingListDto,
+  TrackingRoutePointDto,
   TrackingServiceProxy,
   WaybillsServiceProxy,
 } from '@shared/service-proxies/service-proxies';
@@ -35,7 +37,7 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
   item: number;
   origin = { lat: null, lng: null };
   destination = { lat: null, lng: null };
-  routePoints: ShippingRequestTripDriverRoutePointDto[];
+  routePoints: TrackingRoutePointDto[];
   pointsIsLoading = true;
   distance: string;
   duration: string;
@@ -49,6 +51,7 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
   tripStatusesEnum = ShippingRequestTripStatus;
   pickingTypeEnum = PickingType;
   routeTypeEnum = ShippingRequestRouteType;
+  ShippingRequestTypeEnum = ShippingRequestType;
   canStartAnotherPoint = false;
   dropWaybillLoadingId: number;
   busyPointId: number;
@@ -105,6 +108,7 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
       .pipe(
         finalize(() => {
           this.pointsIsLoading = false;
+          this.busyPointId = null;
         })
       )
       .subscribe((result) => {
@@ -123,6 +127,8 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
    */
   start(): void {
     this.saving = true;
+    this.busyPointId = this.routePoints[0].id;
+
     this._trackingServiceProxy
       .start(this.trip.id)
       .pipe(
@@ -195,6 +201,7 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
    * accepts the trip
    */
   accept(tripId?: number): void {
+    this.busyPointId = this.routePoints[0].id;
     this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
       if (isConfirmed) {
         this.saving = true;
@@ -278,7 +285,6 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
    */
   invokeStatus(point: ShippingRequestTripDriverRoutePointDto, transaction: PointTransactionDto) {
     this.saving = true;
-    this.busyPointId = point.id;
     const invokeRequestBody = new InvokeStatusInputDto();
     invokeRequestBody.id = point.id;
     invokeRequestBody.action = transaction.action;
@@ -289,28 +295,29 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
       transaction.action === 'UplodeDeliveryNoteDeliveryConfirmation'
     ) {
       //handle upload Pod
-      this.busyPointId = null;
+      //this.busyPointId = null;
 
       return this.handleUploadPod(point, transaction);
     }
     if (transaction.action === 'UplodeDeliveryNote') {
       // this.saving = false;
-      this.busyPointId = null;
+      // this.busyPointId = null;
 
       return this.handleUploadDeliveryNotes(point, transaction);
     }
     if (transaction.action === 'ReceiverConfirmed' || transaction.action === 'DeliveryConfirmationReceiverConfirmed') {
       // this.saving = false;
-      this.busyPointId = null;
+      // this.busyPointId = null;
       return this.handleDeliveryConfirmationCode(point, transaction);
     }
+    this.busyPointId = point.id;
 
     this._trackingServiceProxy
       .invokeStatus(invokeRequestBody)
       .pipe(
         finalize(() => {
           this.saving = false;
-          this.busyPointId = null;
+          //this.busyPointId = null;
         })
       )
       .subscribe(() => {
@@ -343,8 +350,9 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
    * go to next Location
    * @param point
    */
-  nextLocation(point: ShippingRequestTripDriverRoutePointDto): void {
+  nextLocation(point: TrackingRoutePointDto): void {
     this.saving = true;
+    this.busyPointId = point.id;
     this._trackingServiceProxy
       .nextLocation(point.id)
       .pipe(
@@ -358,18 +366,26 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
       });
   }
 
-  private handleCanGoNextLocation(routPoints: ShippingRequestTripDriverRoutePointDto[]): boolean {
+  private handleCanGoNextLocation(routPoints: TrackingRoutePointDto[]): boolean {
     const singleDrop = this.routeTypeEnum.SingleDrop;
     const MultipleDrops = this.routeTypeEnum.MultipleDrops;
     const canStartAnotherPoint = routPoints.find((item) => item.canGoToNextLocation === true) ? true : false;
+    console.log(
+      'routPoints.find((item) => item.canGoToNextLocation)',
+      routPoints.find((item) => item.canGoToNextLocation)
+    );
+    console.log('routPoints', routPoints);
+    console.log('canStartAnotherPoint', canStartAnotherPoint);
     //single Drop
     if (this.trip.routeTypeId === singleDrop && canStartAnotherPoint) {
+      console.log('should go next');
+
       this.saving = true;
       this.nextLocation(this.routePoints[1]);
       this.notify.info('CanGoNextForSingleDrop');
     }
     //for Multible Drops
-    if (this.trip.routeTypeId === MultipleDrops && canStartAnotherPoint) {
+    if (this.trip.routeTypeId === MultipleDrops && canStartAnotherPoint && routPoints[0].isComplete) {
       this.notify.info('CanGoNext');
       console.log('can Go Next For MultiDrops');
       this.canStartAnotherPoint = canStartAnotherPoint;
@@ -387,5 +403,22 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
       this._fileDownloadService.downloadTempFile(result);
       this.dropWaybillLoadingId = null;
     });
+  }
+
+  canDoActionsOnPoints(point: TrackingRoutePointDto): boolean {
+    //singleDrop and there is available transactions
+    if (this.trip.routeTypeId === this.routeTypeEnum.SingleDrop && point.availableTransactions.length !== 0) {
+      return true;
+    }
+
+    if (this.trip.routeTypeId === this.routeTypeEnum.MultipleDrops && this.trip.status !== this.tripStatusesEnum.New) {
+      if (point.availableTransactions.length !== 0 || this.canStartAnotherPoint) {
+        return true;
+      }
+    }
+
+    //multiDrops
+    //return false;
+    // if (!this.canStartAnotherPoint &&  this.trip.routeTypeId === this.routeTypeEnum.MultipleDrops) && !point.isResolve || this.trip.routeTypeId === this.routeTypeEnum.SingleDrop && this.routePoints[1].availableTransactions.length === 0)
   }
 }

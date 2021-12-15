@@ -79,12 +79,15 @@
                             <span class="text-muted ml-2" *ngIf="point.endTime">{{point.endTime | momentFormat: 'L'}}</span>
                           </div>
 
-                          <div class="btn-group">
+                          <div
+                            class="btn-group mt-2"
+                            *ngIf="trip.driver && (isCarrier || isTachyonDealer && trip.requestType === ShippingRequestTypeEnum.TachyonManageService)"
+                          >
                             <!--    trip actions-->
                             <div
                               class="d-inline-block"
                               ngbDropdown
-                              *ngIf="(isCarrier || isTachyonDealer) && point.pickingType == pickingTypeEnum.Pickup &&  trip.status === tripStatusesEnum.New"
+                              *ngIf="point.pickingType == pickingTypeEnum.Pickup &&  trip.status === tripStatusesEnum.New"
                             >
                               <button class="btn btn-sm btn-danger" ngbDropdownToggle [buttonBusy]="saving">{{l('Actions')}}</button>
 
@@ -96,20 +99,16 @@
                               </div>
                             </div>
                             <!--                      points DropDown Actions      -->
-                            <div
-                              class="d-inline-block"
-                              ngbDropdown
-                              *ngIf="(isCarrier || isTachyonDealer) && !point.isComplete && trip.status !== tripStatusesEnum.New"
-                            >
+                            <div *ngIf="!point.isComplete && trip.status !== tripStatusesEnum.New" class="d-inline-block" ngbDropdown>
                               <button
+                                [disabled]="!canDoActionsOnPoints(point)"
                                 class="btn btn-sm btn-danger"
                                 id="dropdownConfig"
                                 ngbDropdownToggle
                                 [buttonBusy]="busyPointId == point.id"
-                                [disabled]="!canStartAnotherPoint  && !point.isResolve || trip.routeTypeId === routeTypeEnum.SingleDrop && point.availableTransactions.length === 0  "
                               >
                                 <!--     || (point.pickingType == 2 && !point.isActive || point.availableTransactions.length === 0)-->
-                                {{l('Actions')}}
+                                {{l('PointsActions')}}
                               </button>
                               <div ngbDropdownMenu aria-labelledby="dropdownManual" dropdownConfig>
                                 <button
@@ -133,7 +132,12 @@
                         <div class="d-flex flex-column">
                           <p class="p-0">{{l('Address')}} : {{point.address}}</p>
                           <p class="p-0">{{l('Receiver')}} : {{point.receiverFullName}}</p>
-                          <p-steps [model]="getStepperSteps(point.statues)" [(activeIndex)]="activeIndex" [readonly]="true"></p-steps>
+                          <p-steps
+                            [model]="getStepperSteps(point.statues)"
+                            [(activeIndex)]="activeIndex"
+                            [readonly]="true"
+                            [busyIf]="busyPointId == point.id"
+                          ></p-steps>
                         </div>
                       </div>
                     </div>
