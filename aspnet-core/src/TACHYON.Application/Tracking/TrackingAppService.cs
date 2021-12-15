@@ -31,14 +31,16 @@ namespace TACHYON.Tracking
     public class TrackingAppService : TACHYONAppServiceBase, ITrackingAppService
     {
         private readonly IRepository<ShippingRequestTrip> _ShippingRequestTripRepository;
+        private readonly IRepository<RoutPoint, long> _RoutPointRepository;
         private readonly ShippingRequestPointWorkFlowProvider _workFlowProvider;
         private readonly ProfileAppService _ProfileAppService;
 
-        public TrackingAppService(ShippingRequestPointWorkFlowProvider workFlowProvider, IRepository<ShippingRequestTrip> shippingRequestTripRepository, ProfileAppService profileAppService)
+        public TrackingAppService(ShippingRequestPointWorkFlowProvider workFlowProvider, IRepository<ShippingRequestTrip> shippingRequestTripRepository, ProfileAppService profileAppService, IRepository<RoutPoint, long> routPointRepository)
         {
             _ShippingRequestTripRepository = shippingRequestTripRepository;
             _workFlowProvider = workFlowProvider;
             _ProfileAppService = profileAppService;
+            _RoutPointRepository = routPointRepository;
         }
         public async Task<PagedResultDto<TrackingListDto>> GetAll(TrackingSearchInputDto input)
         {
@@ -100,19 +102,6 @@ namespace TACHYON.Tracking
 
             var trip =
                  await _ShippingRequestTripRepository.GetAll()
-                 .Include(p => p.RoutPoints)
-                 .ThenInclude(r => r.FacilityFk)
-                 .Include(p => p.RoutPoints)
-                 .ThenInclude(r => r.GoodsDetails)
-                 .ThenInclude(c => c.GoodCategoryFk)
-                 .ThenInclude(t => t.Translations)
-                 .Include(p => p.RoutPoints)
-                 .ThenInclude(g => g.GoodsDetails)
-                 .ThenInclude(u => u.UnitOfMeasureFk)
-                 .Include(p => p.RoutPoints)
-                 .ThenInclude(t => t.RoutPointStatusTransitions)
-                 .Include(p => p.RoutPoints)
-                 .ThenInclude(t => t.ReceiverFk)
                             .Where(x => x.Id == id && x.ShippingRequestFk.CarrierTenantId.HasValue)
                             .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper), x => x.ShippingRequestFk.TenantId == AbpSession.TenantId)
                             .WhereIf(!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer), x => true)
@@ -121,13 +110,31 @@ namespace TACHYON.Tracking
 
             if (trip == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
             var mappedTrip = ObjectMapper.Map<TrackingShippingRequestTripDto>(trip);
-            // need to use select function when finish frontend changes 
-            // may be want to change the reternd dto based on front end data
-            foreach (var rout in mappedTrip.RoutPoints)
-            {
-                rout.Statues = _workFlowProvider.GetStatuses(rout.WorkFlowVersion, rout.RoutPointStatusTransitions.Where(x => !x.IsReset).Select(x => x.Status).ToList());
-                rout.AvailableTransactions = !rout.IsResolve ? new List<PointTransactionDto>() : _workFlowProvider.GetTransactionsByStatus(rout.WorkFlowVersion, rout.RoutPointStatusTransitions.Where(c => !c.IsReset).Select(v => v.Status).ToList(), rout.Status);
-            }
+
+            mappedTrip.RoutPoints = await _RoutPointRepository.GetAll()
+                .Where(x => x.ShippingRequestTripId == id)
+                .Select(x => new TrackingRoutePointDto
+                {
+                    Id = x.Id,
+                    ShippingRequestTripId = x.ShippingRequestTripId,
+                    PickingType = x.PickingType,
+                    Status = x.Status,
+                    ReceiverFullName = x.ReceiverFk != null ? x.ReceiverFk.FullName : x.ReceiverFullName,
+                    Address = x.FacilityFk.Address,
+                    lat = x.FacilityFk.Location.X,
+                    lng = x.FacilityFk.Location.Y,
+                    StartTime = x.StartTime,
+                    EndTime = x.EndTime,
+                    IsActive = x.IsActive,
+                    IsComplete = x.IsComplete,
+                    IsResolve = x.IsResolve,
+                    CanGoToNextLocation = x.CanGoToNextLocation,
+                    IsDeliveryNoteUploaded = x.IsDeliveryNoteUploaded,
+                    WaybillNumber = x.WaybillNumber,
+                    Statues = _workFlowProvider.GetStatuses(x.WorkFlowVersion, x.RoutPointStatusTransitions.Where(x => !x.IsReset).Select(x => x.Status).ToList()),
+                    AvailableTransactions = !x.IsResolve ? new List<PointTransactionDto>() : _workFlowProvider.GetTransactionsByStatus(x.WorkFlowVersion, x.RoutPointStatusTransitions.Where(c => !c.IsReset).Select(v => v.Status).ToList(), x.Status),
+                }).ToListAsync();
+
             mappedTrip.CanStartTrip = CanStartTrip(trip);
             return mappedTrip;
         }

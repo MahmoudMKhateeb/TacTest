@@ -12,7 +12,7 @@ namespace TACHYON.Tracking.Dto
         public ShippingRequestTripDriverStatus DriverStatus { get; set; }
         public ShippingRequestTripStatus Status { get; set; }
         public string StatusTitle { get { return Status.GetEnumDescription(); } set { } }
-        public List<ShippingRequestTripDriverRoutePointDto> RoutPoints { get; set; }
+        public List<TrackingRoutePointDto> RoutPoints { get; set; }
         public bool CanStartTrip { get; set; }
     }
 }
