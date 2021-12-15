@@ -8,6 +8,7 @@ using Abp.Authorization.Users;
 using Abp.BackgroundJobs;
 using Abp.Configuration;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Abp.Localization;
@@ -511,6 +512,10 @@ namespace TACHYON.Authorization.Users.Profile
         [DisableAuditing]
         public async Task<GetProfilePictureOutput> GetProfilePicture(long? userId)
         {
+            // We need it to view picture from host and tms users 
+            DisableTenancyFiltersIfHost();
+            await DisableTenancyFiltersIfTachyonDealer();
+
             UserIdentifier userIdentifier;
             if (!(userId is null))
             {
@@ -573,7 +578,14 @@ namespace TACHYON.Authorization.Users.Profile
         [AbpAllowAnonymous]
         public async Task<GetProfilePictureOutput> GetProfilePictureByUser(long userId)
         {
-            var userIdentifier = new UserIdentifier(AbpSession.TenantId, userId);
+            int? tenantId;
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
+            {
+                tenantId = await (from user in _lookupUserRepository.GetAll().AsNoTracking()
+                                  where user.Id == userId
+                                  select user.TenantId).FirstOrDefaultAsync();
+            }
+            var userIdentifier = new UserIdentifier(tenantId, userId);
             using (var profileImageService = await _profileImageServiceFactory.Get(userIdentifier))
             {
                 var profileImage = await profileImageService.Object.GetProfilePictureContentForUser(userIdentifier);

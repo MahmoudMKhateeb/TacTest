@@ -80,7 +80,7 @@
                     <div class="form-group col-6">
                       <label for="EmailAddress">{{ 'EmailAddress' | localize }} <span class="required-fileds"> *</span></label>
                       <input
-                        style="text-align: left !important;"
+                        style="text-align: left !important"
                         id="EmailAddress"
                         #emailAddressInput="ngModel"
                         type="email"
@@ -103,7 +103,7 @@
                           <span class="input-group-text">+966</span>
                         </div>
                         <input
-                          style="text-align: left !important;"
+                          style="text-align: left !important"
                           (input)="CheckIfDriverPhoneNumberIsValid(userNameInput.value, user.id)"
                           id="UserName"
                           #userNameInput="ngModel"
@@ -141,6 +141,26 @@
                       >
                       <span class="help-block" *ngIf="!canChangeUserName">{{ 'CanNotChangeAdminUserName' | localize }}</span>
                     </div>
+                  </div>
+                </div>
+                <div class="col-sm-12" *ngIf="isUserTenantRequired">
+                  <div class="form-group">
+                    <label>{{ 'Carrier' | localize }}<span class="text-danger">*</span> </label>
+                    <select
+                      #DriverTenantId="ngModel"
+                      class="form-control"
+                      name="DriverTenantId"
+                      id="DriverTenantId"
+                      [(ngModel)]="user.tenantId"
+                      [ngClass]="{
+                        'is-valid': DriverTenantId.touched && DriverTenantId.valid,
+                        'is-invalid': DriverTenantId.touched && !DriverTenantId.valid
+                      }"
+                      [required]="isUserTenantRequired"
+                    >
+                      <option [ngValue]="null" selected disabled>{{ l('SelectACarrier') }}</option>
+                      <option *ngFor="let item of carriers" value="{{ item.id }}">{{ item.displayName }}</option>
+                    </select>
                   </div>
                 </div>
               </div>

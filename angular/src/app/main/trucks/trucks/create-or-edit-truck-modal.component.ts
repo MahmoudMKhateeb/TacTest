@@ -3,11 +3,13 @@ import { ChangeDetectorRef, Component, EventEmitter, Injector, Output, ViewChild
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
 import {
+  CarriersForDropDownDto,
   CreateOrEditTruckDto,
   DocumentFileDto,
   DocumentFilesServiceProxy,
   ISelectItemDto,
   SelectItemDto,
+  ShippingRequestsServiceProxy,
   TrucksServiceProxy,
   TruckTruckStatusLookupTableDto,
 } from '@shared/service-proxies/service-proxies';
@@ -29,6 +31,7 @@ import { EntityTypeHistoryModalComponent } from '@app/shared/common/entityHistor
 import * as moment from '@node_modules/moment';
 import { RequiredDocumentFormChildComponent } from '@app/shared/common/required-document-form-child/required-document-form-child.component';
 import { NgForm } from '@angular/forms';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'createOrEditTruckModal',
@@ -82,6 +85,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
   public temporaryPictureUrl: string;
   profilePicture = '';
   fileFormateIsInvalideIndexList: boolean[] = [];
+  carriers: CarriersForDropDownDto[] = [];
 
   selectedDateTypeHijri = DateType.Hijri; // or DateType.Gregorian
   selectedDateTypeGregorian = DateType.Gregorian; // or DateType.Gregorian
@@ -106,7 +110,8 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
     private _localStorageService: LocalStorageService,
     private _documentFilesServiceProxy: DocumentFilesServiceProxy,
     private _fileDownloadService: FileDownloadService,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private _shippingRequestsService: ShippingRequestsServiceProxy
   ) {
     super(injector);
   }
@@ -129,6 +134,8 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
       this._trucksServiceProxy.getAllTruckStatusForTableDropdown().subscribe((result) => {
         this.allTruckStatuss = result;
       });
+
+      this._shippingRequestsService.getAllCarriersForDropDown().subscribe((result) => (this.carriers = result));
 
       this._trucksServiceProxy.getAllPlateTypeIdForDropdown().subscribe((result) => {
         this.allPlateTypes = result;
@@ -174,6 +181,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
   } //end of show
 
   createOrEditTruck() {
+    this.truck.modelYear = formatDate(this.truck.modelYear, 'yyyy', this.localization.currentLanguage.name);
     this._trucksServiceProxy
       .createOrEdit(this.truck)
       .pipe(
@@ -232,6 +240,9 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
   imageCroppedFile(event: ImageCroppedEvent) {
     this.uploader.clearQueue();
     this.uploader.addToQueue([<File>base64ToFile(event.base64)]);
+  }
+  get isTruckTenantRequired(): boolean {
+    return this.feature.isEnabled('App.TachyonDealer') && !this.truck?.id;
   }
 
   getTruckPictureUrl(truckId: number): void {

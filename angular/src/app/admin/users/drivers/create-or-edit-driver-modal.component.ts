@@ -2,6 +2,7 @@ import { Component, EventEmitter, Injector, Input, Output, ViewChild } from '@an
 import { AppConsts } from '@shared/AppConsts';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import {
+  CarriersForDropDownDto,
   CreateOrEditDocumentFileDto,
   CreateOrUpdateUserInput,
   DocumentFilesServiceProxy,
@@ -10,6 +11,7 @@ import {
   PasswordComplexitySetting,
   ProfileServiceProxy,
   SelectItemDto,
+  ShippingRequestsServiceProxy,
   UserEditDto,
   UserServiceProxy,
 } from '@shared/service-proxies/service-proxies';
@@ -33,7 +35,8 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
     private _userService: UserServiceProxy,
     private _profileService: ProfileServiceProxy,
     private _nationalitiesServiceProxy: NationalitiesServiceProxy,
-    private _documentFilesServiceProxy: DocumentFilesServiceProxy
+    private _documentFilesServiceProxy: DocumentFilesServiceProxy,
+    private _shippingRequestServiceProxy: ShippingRequestsServiceProxy
   ) {
     super(injector);
     this.getDriverRequiredDocumentFiles();
@@ -65,6 +68,7 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
   datesInValidList: boolean[] = [];
 
   nationalities: SelectItemDto[] = [];
+  carriers: CarriersForDropDownDto[] = [];
   allOrganizationUnits: OrganizationUnitDto[];
   memberedOrganizationUnits: string[];
   userPasswordRepeat = '';
@@ -111,6 +115,7 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
         this.sendActivationEmail = false;
         this.selectedDate = this.dateFormatterService.MomentToNgbDateStruct(userResult.user.dateOfBirth);
       }
+      this._shippingRequestServiceProxy.getAllCarriersForDropDown().subscribe((result) => (this.carriers = result));
 
       this._profileService.getPasswordComplexitySetting().subscribe((passwordComplexityResult) => {
         this.passwordComplexitySetting = passwordComplexityResult.setting;
@@ -165,6 +170,7 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
     let input = new CreateOrUpdateUserInput();
 
     input.user = this.user;
+    console.log(input);
     input.setRandomPassword = this.user.id == null;
     input.sendActivationEmail = this.sendActivationEmail;
     input.user.phoneNumber = input.user.userName;
@@ -286,7 +292,9 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
       this.nationalities = res;
     });
   }
-
+  get isUserTenantRequired(): boolean {
+    return this.feature.isEnabled('App.TachyonDealer') && !this.user.id;
+  }
   /**
    * do not delete the function dateSelected() below >
    */

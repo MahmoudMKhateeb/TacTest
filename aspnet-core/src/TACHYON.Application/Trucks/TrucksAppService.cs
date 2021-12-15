@@ -8,6 +8,7 @@ using Abp.Domain.Uow;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Abp.Runtime.Session;
+using Abp.Runtime.Validation;
 using Abp.UI;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -179,6 +180,7 @@ namespace TACHYON.Trucks
         [AbpAuthorize(AppPermissions.Pages_Trucks_Edit)]
         public async Task<GetTruckForEditOutput> GetTruckForEdit(EntityDto<long> input)
         {
+            await DisableTenancyFiltersIfTachyonDealer();
             var truck = await _truckRepository.FirstOrDefaultAsync(input.Id);
 
             var output = new GetTruckForEditOutput { Truck = ObjectMapper.Map<CreateOrEditTruckDto>(truck) };
@@ -248,6 +250,15 @@ namespace TACHYON.Trucks
                 truck.TenantId = (int)AbpSession.TenantId;
             }
 
+            if (await IsEnabledAsync(AppFeatures.TachyonDealer))
+            {
+                // Use AbpValidationException to return Status Code => 400 Bad Request
+                if (input.TenantId == null) throw new AbpValidationException(L("YouMustSetTenant"));
+                if (!await FeatureChecker.IsEnabledAsync(input.TenantId.Value, AppFeatures.Carrier))
+                    throw new AbpValidationException(L("TheTenantMustBeCarrier"));
+                truck.TenantId = input.TenantId.Value;
+            }
+
             var requiredDocs = await _documentFilesAppService.GetTruckRequiredDocumentFiles("");
             if (requiredDocs.Count > 0)
             {
@@ -302,12 +313,13 @@ namespace TACHYON.Trucks
         [AbpAuthorize(AppPermissions.Pages_Trucks_Edit)]
         protected virtual async Task Update(CreateOrEditTruckDto input)
         {
+            await DisableTenancyFiltersIfTachyonDealer();
             var truck = await _truckRepository.FirstOrDefaultAsync(input.Id.Value);
             //if (input.Driver1UserId.HasValue && input.Driver1UserId != truck.Driver1UserId)
             //{
             //    await _appNotifier.AssignDriverToTruck(new UserIdentifier(AbpSession.TenantId, input.Driver1UserId.Value), truck.Id);
             //}
-
+            input.TenantId = truck.TenantId;
 
             ObjectMapper.Map(input, truck);
 

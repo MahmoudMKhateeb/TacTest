@@ -11,6 +11,7 @@ using Abp.Linq.Extensions;
 using Abp.Notifications;
 using Abp.Organizations;
 using Abp.Runtime.Session;
+using Abp.Runtime.Validation;
 using Abp.UI;
 using Abp.Zero.Configuration;
 using AutoMapper.QueryableExtensions;
@@ -36,6 +37,7 @@ using TACHYON.Documents.DocumentFiles;
 using TACHYON.Documents.DocumentsEntities;
 using TACHYON.Documents.DocumentTypes;
 using TACHYON.Dto;
+using TACHYON.Features;
 using TACHYON.Net.Sms;
 using TACHYON.Notifications;
 using TACHYON.Organizations.Dto;
@@ -205,6 +207,10 @@ namespace TACHYON.Authorization.Users
         [AbpAuthorize(AppPermissions.Pages_Administration_Users_Create, AppPermissions.Pages_Administration_Users_Edit)]
         public async Task<GetUserForEditOutput> GetUserForEdit(NullableIdDto<long> input)
         {
+
+            if (input.Id.HasValue)
+                await TenantImpersonationIfTms(input.Id.Value);
+
             //Getting all available roles
             var userRoleDtos = await _roleManager.Roles
                 .OrderBy(r => r.DisplayName)
@@ -268,6 +274,21 @@ namespace TACHYON.Authorization.Users
             return output;
         }
 
+        private async Task TenantImpersonationIfTms(long userId)
+        {
+            if (await IsEnabledAsync(AppFeatures.TachyonDealer))
+            {
+                int? userTenantId;
+                using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
+                {
+                    userTenantId = await (from user in _usersRepository.GetAll().AsNoTracking()
+                                          where user.Id == userId && user.IsDriver
+                                          select user.TenantId).FirstOrDefaultAsync();
+                }
+
+                CurrentUnitOfWork.SetTenantId(userTenantId ?? AbpSession.TenantId);
+            }
+        }
 
 
         private List<string> GetAllRoleNamesOfUsersOrganizationUnits(long userId)
@@ -331,13 +352,23 @@ namespace TACHYON.Authorization.Users
                 throw new UserFriendlyException(L("YouCanNotDeleteOwnAccount"));
             }
 
-            var user = await UserManager.GetUserByIdAsync(input.Id);
+            User user;
+            if (await IsEnabledAsync(AppFeatures.TachyonDealer))
+            {
+                using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
+                {
+                    user = await UserManager.GetUserByIdAsync(input.Id);
+                }
+            }
+            else user = await UserManager.GetUserByIdAsync(input.Id);
+
             CheckErrors(await UserManager.DeleteAsync(user));
         }
 
         [AbpAuthorize(AppPermissions.Pages_Administration_Users_Unlock)]
         public async Task UnlockUser(EntityDto<long> input)
         {
+            await DisableTenancyFiltersIfTachyonDealer();
             var user = await UserManager.GetUserByIdAsync(input.Id);
             user.Unlock();
         }
@@ -349,6 +380,7 @@ namespace TACHYON.Authorization.Users
 
             var user = await UserManager.FindByIdAsync(input.User.Id.Value.ToString());
 
+            input.User.TenantId = user.TenantId;
             //Update user properties
             ObjectMapper.Map(input.User, user); //Passwords is not mapped (see mapping configuration)
 
@@ -405,6 +437,14 @@ namespace TACHYON.Authorization.Users
             //required Docs
             if (input.User.IsDriver)
             {
+                if (await IsEnabledAsync(AppFeatures.TachyonDealer))
+                {
+                    if (input.User?.TenantId == null) throw new AbpValidationException(L("YouMustSetTenant"));
+                    if (!await FeatureChecker.IsEnabledAsync(input.User.TenantId.Value, AppFeatures.Carrier))
+                        throw new AbpValidationException(L("TheTenantMustBeCarrier"));
+                    user.TenantId = input.User.TenantId.Value;
+                }
+
                 //get requiredDocs
                 var requiredDocs = await _documentFilesAppService.GetDriverRequiredDocumentFiles("");
                 if (requiredDocs.Count > 0)

@@ -24,6 +24,27 @@
           <!-- <h3 class="font-size-lg text-dark-75 font-weight-bold mb-10">{{ l('TruckTypeDetails') }}</h3> -->
 
           <div class="row">
+            <div class="col-sm-12" *ngIf="isTruckTenantRequired">
+              <div class="form-group">
+                <label>{{ 'Carrier' | localize }}<span class="text-danger">*</span> </label>
+                <select
+                  #TruckTenantId="ngModel"
+                  class="form-control"
+                  name="TruckTenantId"
+                  id="TruckTenantId"
+                  [(ngModel)]="truck.tenantId"
+                  [ngClass]="{
+                    'is-valid': TruckTenantId.touched && TruckTenantId.valid,
+                    'is-invalid': TruckTenantId.touched && !TruckTenantId.valid
+                  }"
+                  [required]="isTruckTenantRequired"
+                >
+                  <option [ngValue]="null" selected disabled>{{ l('SelectACarrier') }}</option>
+                  <option *ngFor="let item of carriers" value="{{ item.id }}">{{ item.displayName }}</option>
+                </select>
+              </div>
+            </div>
+
             <div class="col-md-6">
               <div class="form-group m-form__group">
                 <label for="transportTypeId">{{ l('TransportType') }}<span class="text-danger">*</span> </label>

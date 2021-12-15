@@ -125,6 +125,7 @@ namespace TACHYON.Documents.DocumentFiles
         {
 
             DisableTenancyFiltersIfHost();
+            await DisableTenancyFiltersIfTachyonDealer();
 
             var filteredDocumentFiles = _documentFileRepository.GetAll()
                 .Where(e => e.DocumentTypeFk.DocumentsEntityId == (int)DocumentsEntitiesEnum.Driver)
