@@ -18,5 +18,6 @@ namespace TACHYON.Dashboards.Shipper
         Task<List<MostUsedOriginsDto>> GetMostUsedDestinatiions();
         Task<long> GetDocumentsDueDateInDays();
         Task<long> GetInvoiceDueDateInDays();
+        Task<List<TrackingMapDto>> GetTrackingMap();
     }
 }

@@ -4,6 +4,7 @@ using Abp.Linq.Extensions;
 using Abp.Runtime.Session;
 using Abp.Timing;
 using Abp.UI;
+using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -276,9 +277,44 @@ namespace TACHYON.Dashboards.Shipper
 
         }
 
+        // Tracking Map
+        public async Task<List<TrackingMapDto>> GetTrackingMap()
+        {
+            return await _shippingRequestTripRepository.GetAll().AsNoTracking()
+            .Include(r => r.ShippingRequestFk)
+            .ThenInclude(r => r.Tenant)
+            .Include(r => r.RoutPoints)
+            .ThenInclude(r => r.FacilityFk)
+            .Include(x => x.OriginFacilityFk)
+            .ThenInclude(x => x.CityFk)
+            .Include(x => x.DestinationFacilityFk)
+            .ThenInclude(x => x.CityFk)
+            .WhereIf(IsEnabled(AppFeatures.Carrier), x => x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
+            .WhereIf(IsEnabled(AppFeatures.Shipper), x => x.ShippingRequestFk.TenantId == AbpSession.TenantId)
+            .Where(r => r.Status == ShippingRequestTripStatus.Intransit)
+            .Select(s => new TrackingMapDto()
+            {
+                DestinationCity = s.DestinationFacilityFk.Name,
+                OriginCity = s.OriginFacilityFk.Name,
+                DestinationLongitude = (s.DestinationFacilityFk.Location != null ? s.DestinationFacilityFk.Location.X : 0),
+                DestinationLatitude = (s.DestinationFacilityFk.Location != null ? s.DestinationFacilityFk.Location.Y : 0),
+                OriginLongitude = (s.OriginFacilityFk.Location != null ? s.OriginFacilityFk.Location.X : 0),
+                OriginLatitude = (s.OriginFacilityFk.Location != null ? s.OriginFacilityFk.Location.Y : 0),
+                Id = s.Id,
+                TripStatus = s.Status,
+                WayBillNumber = s.WaybillNumber.ToString(),
+                RoutPoints = s.RoutPoints.Select(rp => new RoutePointsTripDto()
+                {
+                    Id = rp.Id,
+                    Facility = rp.FacilityFk.Name,
+                    PickingType = rp.PickingType.GetEnumDescription(),
+                    WaybillNumber = rp.WaybillNumber,
+                    Longitude = (rp.FacilityFk.Location != null ? rp.FacilityFk.Location.X : 0),
+                    Latitude = (rp.FacilityFk.Location != null ? rp.FacilityFk.Location.Y : 0)
+                }).ToList()
 
-
-
-
+            })
+            .ToListAsync();
+        }
     }
 }
