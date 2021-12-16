@@ -22,6 +22,7 @@ namespace TACHYON.Tracking.Dto
         public bool IsResolve { get; set; }
         public bool CanGoToNextLocation { get; set; }
         public bool IsDeliveryNoteUploaded { get; set; }
+        public bool IsPodUploaded { get; set; }
         public long? WaybillNumber { get; set; }
         public List<RoutPointTransactionDto> Statues { get; set; }
         public List<PointTransactionDto> AvailableTransactions { get; set; }
