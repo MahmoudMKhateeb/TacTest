@@ -26,6 +26,7 @@ namespace TACHYON.Invoices.Balances
         private readonly IEmailTemplateProvider _emailTemplateProvider;
         private readonly IEmailSender _emailSender;
         private readonly IRepository<InvoiceProforma, long> _InvoicesProformarepository;
+        private readonly IRepository<InvoicePeriod> _invoicePeriodRepository;
         private readonly UserManager _userManager;
 
 
@@ -37,7 +38,7 @@ namespace TACHYON.Invoices.Balances
             IEmailTemplateProvider emailTemplateProvider,
              IEmailSender emailSender,
              IRepository<InvoiceProforma, long> InvoicesProformarepository,
-             UserManager userManager)
+             UserManager userManager, IRepository<InvoicePeriod> invoicePeriodRepository)
         {
             _settingManager = settingManager;
             _Tenant = Tenant;
@@ -48,6 +49,7 @@ namespace TACHYON.Invoices.Balances
             _emailSender = emailSender;
             _InvoicesProformarepository = InvoicesProformarepository;
             _userManager = userManager;
+            _invoicePeriodRepository = invoicePeriodRepository;
         }
         #region Shipper
 
@@ -60,21 +62,29 @@ namespace TACHYON.Invoices.Balances
         /// <returns></returns>
         public async Task ShipperCanAcceptOffer(PriceOffer offer)
         {
-
-            var PeriodType = (InvoicePeriodType)byte.Parse(await _featureChecker.GetValueAsync(offer.ShippingRequestFk.TenantId, AppFeatures.ShipperPeriods));
-            var Tenant = offer.ShippingRequestFk.Tenant;
-            if (PeriodType == InvoicePeriodType.PayInAdvance)
+            InvoicePeriodType periodType = await GetTenantPeriodType(offer.ShippingRequestFK.TenantId);
+            var tenant = offer.ShippingRequestFK.Tenant;
+            if (periodType == InvoicePeriodType.PayInAdvance)
             {
-                if (!await CheckShipperCanPaidFromBalance(offer.ShippingRequestFk.TenantId, offer.TotalAmount)) throw new UserFriendlyException(L("NoEnoughBalance"));
-                await ShipperWhenCanAcceptPrice(offer, PeriodType);
+                if (!await CheckShipperCanPaidFromBalance(offer.ShippingRequestFK.TenantId, offer.TotalAmount)) throw new UserFriendlyException(L("NoEnoughBalance"));
+                await ShipperWhenCanAcceptPrice(offer, periodType);
             }
             else
             {
-                decimal CreditLimit = decimal.Parse(await _featureChecker.GetValueAsync(offer.ShippingRequestFk.TenantId, AppFeatures.ShipperCreditLimit)) * -1;
-                decimal CreditBalance = Tenant.CreditBalance - offer.TotalAmount;
-                if (!(CreditBalance > CreditLimit)) throw new UserFriendlyException(L("YouDoNotHaveEnoughCreditInYourCreditCard"));
+                decimal creditLimit = decimal.Parse(await _featureChecker.GetValueAsync(offer.ShippingRequestFK.TenantId, AppFeatures.ShipperCreditLimit)) * -1;
+                decimal creditBalance = tenant.CreditBalance - offer.TotalAmount;
+                if (!(creditBalance > creditLimit)) throw new UserFriendlyException(L("YouDoNotHaveEnoughCreditInYourCreditCard"));
             }
         }
+
+        private async Task<InvoicePeriodType> GetTenantPeriodType(int tenantId)
+        {
+            byte shipperPeriodId = byte.Parse(await _featureChecker.GetValueAsync(tenantId, AppFeatures.ShipperPeriods));
+            var preiod = await _invoicePeriodRepository.GetAsync(shipperPeriodId);
+            var periodType = preiod.PeriodType;
+            return periodType;
+        }
+
         /// <summary>
         /// If shipper can accept offer then create invoices proformare
         /// </summary>
