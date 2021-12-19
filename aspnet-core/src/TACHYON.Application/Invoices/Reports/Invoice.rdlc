@@ -2311,8 +2311,8 @@
                                   </Style>
                                 </TextRun>
                                 <TextRun>
-                                  <Value> %)
-ضريبة القيمة المضافة</Value>
+                                  <Value> %) SAR
+قيمة الضريبة المضافة ر.س</Value>
                                   <Style>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
@@ -2360,7 +2360,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Total</Value>
+                                  <Value>Total SAR</Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>7pt</FontSize>
@@ -2376,7 +2376,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>الإجمالي</Value>
+                                  <Value>الإجمالي ر.س</Value>
                                   <Style>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
@@ -2946,7 +2946,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Invoice Subtotal</Value>
+                                  <Value>Invoice Subtotal SAR</Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -3038,7 +3038,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>مجموع الفاتورة</Value>
+                                  <Value>مجموع الفاتورة ر.س </Value>
                                   <Style>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
@@ -3090,12 +3090,19 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>VAT Amount (</Value>
+                                  <Value>VAT Amount </Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <Color>#282828</Color>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
+                                  <Value>(%</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Normal</FontWeight>
                                   </Style>
                                 </TextRun>
                                 <TextRun>
@@ -3106,12 +3113,35 @@
                                   </Style>
                                 </TextRun>
                                 <TextRun>
-                                  <Value>%)</Value>
+                                  <Value xml:space="preserve"> </Value>
+                                  <Style>
+                                    <FontFamily>Open Sans</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Normal</FontWeight>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
+                                  <Value>)</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Normal</FontWeight>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
+                                  <Value xml:space="preserve"> </Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <Color>#282828</Color>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
+                                  <Value>SAR</Value>
+                                  <Style>
+                                    <FontFamily>Open Sans</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Normal</FontWeight>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -3188,7 +3218,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>(%</Value>
+                                  <Value> قيمة الضريبة المضافة (%</Value>
                                   <Style>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
@@ -3210,7 +3240,7 @@
                                   </Style>
                                 </TextRun>
                                 <TextRun>
-                                  <Value>) قيمة الضريبة المضافة</Value>
+                                  <Value>) ر.س</Value>
                                   <Style>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
@@ -3256,7 +3286,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Due Amount </Value>
+                                  <Value> Due Amount SAR </Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -3298,7 +3328,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=First(Fields!VatAmount.Value, "GetInvoiceReportInfoDataset") + First(Fields!SubTotalAmount.Value, "GetInvoiceReportInfoDataset")</Value>
+                                  <Value>=First(Fields!TotalAmount.Value, "GetInvoiceReportInfoDataset")</Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -3340,7 +3370,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>المبلغ المستحق</Value>
+                                  <Value>المبلغ المستحق ر.س</Value>
                                   <Style>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
