@@ -42,7 +42,7 @@ namespace TACHYON.Authorization
             receivers.CreateChildPermission(AppPermissions.Pages_Receivers_Create, L("CreateNewReceiver"), multiTenancySides: MultiTenancySides.Tenant);
             receivers.CreateChildPermission(AppPermissions.Pages_Receivers_Edit, L("EditReceiver"), multiTenancySides: MultiTenancySides.Tenant);
             receivers.CreateChildPermission(AppPermissions.Pages_Receivers_Delete, L("DeleteReceiver"), multiTenancySides: MultiTenancySides.Tenant);
-    
+
             var citiesTranslations = pages.CreateChildPermission(AppPermissions.Pages_CitiesTranslations, L("CitiesTranslations"), multiTenancySides: MultiTenancySides.Host);
             citiesTranslations.CreateChildPermission(AppPermissions.Pages_CitiesTranslations_Create, L("CreateNewCitiesTranslation"), multiTenancySides: MultiTenancySides.Host);
             citiesTranslations.CreateChildPermission(AppPermissions.Pages_CitiesTranslations_Edit, L("EditCitiesTranslation"), multiTenancySides: MultiTenancySides.Host);
@@ -71,7 +71,7 @@ namespace TACHYON.Authorization
             truckStatusesTranslations.CreateChildPermission(AppPermissions.Pages_TruckStatusesTranslations_Edit, L("EditTruckStatusesTranslation"), multiTenancySides: MultiTenancySides.Host);
             truckStatusesTranslations.CreateChildPermission(AppPermissions.Pages_TruckStatusesTranslations_Delete, L("DeleteTruckStatusesTranslation"), multiTenancySides: MultiTenancySides.Host);
 
-         
+
             var countriesTranslations = pages.CreateChildPermission(AppPermissions.Pages_CountriesTranslations, L("CountriesTranslations"), multiTenancySides: MultiTenancySides.Host);
             countriesTranslations.CreateChildPermission(AppPermissions.Pages_CountriesTranslations_Create, L("CreateNewCountriesTranslation"), multiTenancySides: MultiTenancySides.Host);
             countriesTranslations.CreateChildPermission(AppPermissions.Pages_CountriesTranslations_Edit, L("EditCountriesTranslation"), multiTenancySides: MultiTenancySides.Host);
@@ -165,9 +165,9 @@ namespace TACHYON.Authorization
             shippingRequests.CreateChildPermission(AppPermissions.Pages_ShippingRequests_Edit, L("EditShippingRequest"), multiTenancySides: MultiTenancySides.Tenant);
             shippingRequests.CreateChildPermission(AppPermissions.Pages_ShippingRequests_Delete, L("DeleteShippingRequest"), multiTenancySides: MultiTenancySides.Tenant);
 
-           // new AppAuthorizationTripsProvider(pages);
+            // new AppAuthorizationTripsProvider(pages);
 
-                        var ShippingRequestBis = pages.CreateChildPermission(AppPermissions.Pages_ShippingRequestBids, L("ShippingRerquestBids"), multiTenancySides: MultiTenancySides.Tenant);
+            var ShippingRequestBis = pages.CreateChildPermission(AppPermissions.Pages_ShippingRequestBids, L("ShippingRerquestBids"), multiTenancySides: MultiTenancySides.Tenant);
             ShippingRequestBis.CreateChildPermission(AppPermissions.Pages_ShippingRequestBids_Create, L("CreateNewShippingRequestBid"), multiTenancySides: MultiTenancySides.Tenant);
             ShippingRequestBis.CreateChildPermission(AppPermissions.Pages_ShippingRequestBids_Edit, L("EditNewShippingRequestBid"), multiTenancySides: MultiTenancySides.Tenant);
             ShippingRequestBis.CreateChildPermission(AppPermissions.Pages_ShippingRequestBids_Delete, L("DeleteNewShippingRequestBid"), multiTenancySides: MultiTenancySides.Tenant);
@@ -248,6 +248,7 @@ namespace TACHYON.Authorization
             trucksTypes.CreateChildPermission(AppPermissions.Pages_TrucksTypes_Delete, L("DeleteTrucksType"), multiTenancySides: MultiTenancySides.Host);
 
             pages.CreateChildPermission(AppPermissions.Pages_DemoUiComponents, L("DemoUiComponents"));
+            pages.CreateChildPermission(AppPermissions.Pages_Tracking_ReceiverCode, L("TrackingReceiverCode"), multiTenancySides: MultiTenancySides.Host);
 
             var administration = pages.CreateChildPermission(AppPermissions.Pages_Administration, L("Administration"));
 
@@ -371,11 +372,11 @@ namespace TACHYON.Authorization
             administration.CreateChildPermission(AppPermissions.Pages_Administration_Host_Dashboard, L("Dashboard"), multiTenancySides: MultiTenancySides.Host);
 
 
- 
 
 
 
-   
+
+
         }
 
         private static ILocalizableString L(string name)
