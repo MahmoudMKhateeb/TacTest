@@ -550,10 +550,8 @@ namespace TACHYON.Documents.DocumentFiles
                 await _appNotifier.AcceptedSubmittedDocument(new UserIdentifier(documentFile.TenantId, documentFile.CreatorUserId.Value), documentFile);
             }
 
-            if (await IsAllRequiredDocumentsApproved(documentFile.TenantId.Value))
-            {
-                await _userEmailer.SendAllApprovedDocumentsAsync(documentFile.TenantId.Value, _appUrlService.GetTachyonPlatformLoginUrl());
-            }
+            await _userEmailer.SendAllApprovedDocumentsAsync(documentFile.TenantFk, _appUrlService.GetTachyonPlatformLoginUrl());
+
 
         }
 
