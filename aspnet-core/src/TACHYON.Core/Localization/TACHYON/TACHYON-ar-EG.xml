@@ -1972,7 +1972,7 @@
 		<text name="UserIsAlreadyInTheOrganizationUnit">هذا المستخدم موجود في الوحدة التنظيمية !</text>
 		<text name="UserIsBlocked">المستخدم محظور.</text>
 		<text name="UserIsNotActiveAndCanNotLogin">العضو {0} غير نشط ولا يمكن تسجيل الدخول</text>
-		<text name="UserLockedOutMessage">تم قفل حساب المستخدم. الرجاء معاودة المحاولة في وقت لاحق.</text>
+		<text name="UserLockedOutMessage">تم قفل حساب المستخدم بعد {0} محاولات خاطئة . الرجاء معاودة المحاولة بعد {1} .</text>
 		<text name="UserLockOut">قفل المستخدم</text>
 		<text name="UserManagement">إدارة المستخدمين</text>
 		<text name="UserName">الاسم</text>

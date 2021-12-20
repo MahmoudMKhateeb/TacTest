@@ -2198,7 +2198,7 @@
 		<text name="UserIsAlreadyInTheOrganizationUnit">This user is already in the organization unit!</text>
 		<text name="UserIsBlocked">User is blocked.</text>
 		<text name="UserIsNotActiveAndCanNotLogin">User {0} is not active and can not log in.</text>
-		<text name="UserLockedOutMessage">The user account has been locked out. Please try again later.</text>
+		<text name="UserLockedOutMessage">The user account has been locked out after {0} wrong attempts. Please try again after {1} seconds</text>
 		<text name="UserLockOut">User lock out</text>
 		<text name="UserManagement">User management</text>
 		<text name="UserName">Name</text>
