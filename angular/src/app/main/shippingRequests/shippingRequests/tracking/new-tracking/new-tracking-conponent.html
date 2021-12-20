@@ -80,9 +80,31 @@
                           </div>
 
                           <div
-                            class="btn-group mt-2"
+                            class="btn-group mt-6"
                             *ngIf="trip.driver && (isCarrier || isTachyonDealer && trip.requestType === ShippingRequestTypeEnum.TachyonManageService)"
                           >
+                            <!--   POD       -->
+                            <div class="d-inline-block" ngbDropdown *ngIf="point.isPodUploaded">
+                              <button
+                                class="btn btn-sm btn-danger mx-2"
+                                ngbDropdownToggle
+                                [buttonBusy]="loadPodForPointId == point.id"
+                                (click)="getPodListForPoint(point)"
+                              >
+                                {{l('POD')}}
+                              </button>
+                              <div ngbDropdownMenu aria-labelledby="dropdownManual" dropdownConfig>
+                                <button
+                                  ngbDropdownItem
+                                  class="overflow-hidden"
+                                  *ngFor="let pod of pointPodList; let x = index"
+                                  (click)="downloadPOD(pod)"
+                                >
+                                  {{ pod.fileName | slice:0:20 }}{{ '...'}}
+                                </button>
+                              </div>
+                            </div>
+
                             <!--    trip actions-->
                             <div
                               class="d-inline-block"

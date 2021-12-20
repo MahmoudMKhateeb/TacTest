@@ -1,6 +1,7 @@
 import { Component, ElementRef, Injector, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import {
+  FileDto,
   InvokeStatusInputDto,
   PickingType,
   PointTransactionDto,
@@ -55,6 +56,8 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
   canStartAnotherPoint = false;
   dropWaybillLoadingId: number;
   busyPointId: number;
+  loadPodForPointId: number;
+  pointPodList: FileDto[];
 
   constructor(
     injector: Injector,
@@ -424,5 +427,32 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
     //multiDrops
     //return false;
     // if (!this.canStartAnotherPoint &&  this.trip.routeTypeId === this.routeTypeEnum.MultipleDrops) && !point.isResolve || this.trip.routeTypeId === this.routeTypeEnum.SingleDrop && this.routePoints[1].availableTransactions.length === 0)
+  }
+
+  /**
+   * gets the Pod List For a specific Point
+   * @param point
+   */
+  getPodListForPoint(point: TrackingRoutePointDto): void {
+    this.loadPodForPointId = point.id;
+    this.pointPodList = null;
+    this._trackingServiceProxy
+      .pOD(point.id)
+      .pipe(
+        finalize(() => {
+          this.loadPodForPointId = null;
+        })
+      )
+      .subscribe((res) => {
+        this.pointPodList = res;
+      });
+  }
+
+  /**
+   * download a pod file
+   * @param pod
+   */
+  downloadPOD(pod: FileDto): void {
+    this._fileDownloadService.downloadTempFile(pod);
   }
 }
