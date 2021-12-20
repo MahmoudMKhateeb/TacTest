@@ -52,9 +52,9 @@ export class CreateOrEditTermAndConditionModalComponent extends AppComponentBase
 
   save(): void {
     this.saving = true;
-    if (this.termAndCondition.content == null) {
-      this.notify.error('please make sure you compleate all needed data!');
-    }
+    //   if (this.termAndCondition.content == null) {
+    //    this.notify.error('please make sure you compleate all needed data!');
+    //  }
     this._termAndConditionsServiceProxy
       .createOrEdit(this.termAndCondition)
       .pipe(
