@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Dynamic.Core;
-using System.Threading.Tasks;
-using Abp;
+﻿using Abp;
 using Abp.Application.Editions;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
@@ -16,6 +11,11 @@ using Abp.UI;
 using AutoMapper.QueryableExtensions;
 using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Dynamic.Core;
+using System.Threading.Tasks;
 using TACHYON.Authorization;
 using TACHYON.Authorization.Users;
 using TACHYON.Documents.DocumentFiles.Dtos;
@@ -386,7 +386,7 @@ namespace TACHYON.Documents.DocumentFiles
 
             var documentFile = ObjectMapper.Map<DocumentFile>(input);
 
-            if (input.DocumentTypeDto!=null && input.DocumentTypeDto.IsNumberUnique)
+            if (input.DocumentTypeDto != null && input.DocumentTypeDto.IsNumberUnique)
             //if(input.DocumentTypeDto.IsNumberUnique)
             {
                 var count = await _documentFileRepository.CountAsync(x => x.Number == input.Number && x.DocumentTypeId == input.DocumentTypeId);
@@ -554,10 +554,8 @@ namespace TACHYON.Documents.DocumentFiles
                 await _appNotifier.AcceptedSubmittedDocument(new UserIdentifier(documentFile.TenantId, documentFile.CreatorUserId.Value), documentFile);
             }
 
-            if (await IsAllRequiredDocumentsApproved(documentFile.TenantId.Value))
-            {
-                await _userEmailer.SendAllApprovedDocumentsAsync(documentFile.TenantFk, _appUrlService.GetTachyonPlatformLoginUrl());
-            }
+            await _userEmailer.SendAllApprovedDocumentsAsync(documentFile.TenantFk, _appUrlService.GetTachyonPlatformLoginUrl());
+
 
         }
 
