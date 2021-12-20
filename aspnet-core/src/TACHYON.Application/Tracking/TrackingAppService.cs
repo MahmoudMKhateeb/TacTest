@@ -132,6 +132,7 @@ namespace TACHYON.Tracking
                     IsDeliveryNoteUploaded = x.IsDeliveryNoteUploaded,
                     WaybillNumber = x.WaybillNumber,
                     IsPodUploaded = x.IsPodUploaded,
+                    FacilityRate = x.FacilityFk.Rate,
                     Statues = _workFlowProvider.GetStatuses(x.WorkFlowVersion, x.RoutPointStatusTransitions.Where(x => !x.IsReset).Select(x => x.Status).ToList()),
                     AvailableTransactions = !x.IsResolve ? new List<PointTransactionDto>() : _workFlowProvider.GetTransactionsByStatus(x.WorkFlowVersion, x.RoutPointStatusTransitions.Where(c => !c.IsReset).Select(v => v.Status).ToList(), x.Status),
                 }).ToListAsync();
