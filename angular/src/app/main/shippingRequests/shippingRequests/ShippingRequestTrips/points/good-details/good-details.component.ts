@@ -66,7 +66,7 @@ export class GoodDetailsComponent extends AppComponentBase implements OnInit, On
   }
 
   getGoodSubDisplayname(id) {
-    return this.allSubGoodCategorys ? this.allSubGoodCategorys.find((x) => x.id == id)?.displayName : 0;
+    return this.allSubGoodCategorys ? this.allSubGoodCategorys.find((x) => x.id == id)?.displayName : '';
   }
 
   /**
