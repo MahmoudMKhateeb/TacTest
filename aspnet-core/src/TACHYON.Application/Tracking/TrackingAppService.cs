@@ -1,4 +1,5 @@
 ﻿using Abp.Application.Services.Dto;
+using Abp.Authorization;
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
@@ -22,6 +23,8 @@ using TACHYON.Trucks.TrucksTypes.Dtos;
 
 namespace TACHYON.Tracking
 {
+    //to do add permission for best practice 
+    [AbpAuthorize()]
     public class TrackingAppService : TACHYONAppServiceBase, ITrackingAppService
     {
         private readonly IRepository<ShippingRequestTrip> _ShippingRequestTripRepository;
