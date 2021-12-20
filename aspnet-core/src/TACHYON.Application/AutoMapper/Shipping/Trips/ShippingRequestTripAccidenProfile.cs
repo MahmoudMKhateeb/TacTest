@@ -17,7 +17,8 @@ namespace TACHYON.AutoMapper.Shipping.Trips
             .ForMember(dst => dst.PickingType, opt => opt.MapFrom(src => Enum.GetName(typeof(PickingType), src.RoutPointFK.PickingType)));
             CreateMap<ShippingRequestTripAccident, CreateOrEditShippingRequestTripAccidentDto>()
             .ForMember(dst => dst.lat, opt => opt.MapFrom(src => src.Location != null ? src.Location.X : default(double?)))
-            .ForMember(dst => dst.lng, opt => opt.MapFrom(src => src.Location != null ? src.Location.Y : default(double?)));
+            .ForMember(dst => dst.lng, opt => opt.MapFrom(src => src.Location != null ? src.Location.Y : default(double?)))
+            .ReverseMap();
 
             CreateMap<ShippingRequestTripAccident, ViewShippingRequestTripAccidentDto>();
 
