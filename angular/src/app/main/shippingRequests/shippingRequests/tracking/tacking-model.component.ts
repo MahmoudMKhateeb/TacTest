@@ -18,6 +18,7 @@ import {
 } from '@shared/service-proxies/service-proxies';
 import { finalize } from 'rxjs/operators';
 import { ViewTripAccidentModelComponent } from '../ShippingRequestTrips/accident/View-trip-accident-modal.component';
+import { MapsAPILoader } from '@node_modules/@agm/core';
 
 @Component({
   templateUrl: './tacking-model.component.html',
@@ -43,13 +44,31 @@ export class TrackingModelComponent extends AppComponentBase implements OnInit {
   distance: string;
   duration: string;
   direction: string;
-  constructor(injector: Injector, private _CurrentServ: TrackingServiceProxy, private _fileDownloadService: FileDownloadService) {
+  private bounds: google.maps.LatLngBounds;
+  constructor(
+    injector: Injector,
+    private _CurrentServ: TrackingServiceProxy,
+    private _fileDownloadService: FileDownloadService,
+    private mapsAPILoader: MapsAPILoader
+  ) {
     super(injector);
   }
   ngOnInit(): void {
     this.registerToEvents();
+    this.initMap();
   }
 
+  /**
+   * map initialization
+   */
+  initMap() {
+    this.mapsAPILoader.load().then(() => {
+      this.bounds = new google.maps.LatLngBounds(
+        new google.maps.LatLng(51.130739, -0.868052), // SW
+        new google.maps.LatLng(51.891257, 0.559417) // NE
+      );
+    });
+  }
   show(trip: TrackingListDto): void {
     this.direction = document.getElementsByTagName('html')[0].getAttribute('dir');
     this.item = trip;
