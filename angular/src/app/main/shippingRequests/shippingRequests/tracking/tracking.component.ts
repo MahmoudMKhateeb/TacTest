@@ -41,7 +41,7 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
   @ViewChild('NewTrackingComponent', { static: false }) newTrackingComponent: NewTrackingConponent;
   @ViewChild('ViewTripModal', { static: false }) ViewTripModal: ViewTripModalComponent;
 
-  Items: TrackingListDto[] = [];
+  public Items: TrackingListDto[] = [];
   direction = 'ltr';
   searchInput: TrackingSearchInput = new TrackingSearchInput();
   pointsIsLoading = false;
@@ -53,6 +53,7 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
   ShippingRequestTypeEnum = ShippingRequestType;
   downloadingForItem: number;
   defaultProfilePic = AppConsts.appBaseUrl + '/assets/common/images/carrier-default-pic.jpg';
+  loadingTripId: number;
 
   constructor(
     injector: Injector,
@@ -70,6 +71,7 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
     this.direction = document.getElementsByTagName('html')[0].getAttribute('dir');
     this.syncTrip();
     this.LoadData();
+    this.handleTripIncidentReport();
   }
   LoadData() {
     this._currentServ
@@ -173,7 +175,9 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
       cancelButtonText: this.l('No'),
     }).then((result) => {
       if (result.value) {
+        this.loadingTripId = tripId;
         this._shippingRequestDriverServiceProxy.reset(tripId).subscribe(() => {
+          this.loadingTripId = null;
           this.notify.success(this.l('SuccessfullyReseated'));
           this.search();
         });
@@ -184,13 +188,16 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
   /**
    * accepts the trip
    */
-  accept(tripId?: number): void {
+  accept(trip?: TrackingListDto): void {
+    this.loadingTripId = trip.id;
     this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
       if (isConfirmed) {
         this._trackingServiceProxy
-          .accept(tripId)
+          .accept(trip.id)
           .pipe(
             finalize(() => {
+              this.loadingTripId = null;
+              trip.driverStatus = ShippingRequestTripDriverStatus.Accepted;
               abp.event.trigger('TripAccepted');
             })
           )
@@ -214,5 +221,31 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
         }
       });
     }
+  }
+
+  /**
+   * checks if the tenant can report an Accident to the current trip
+   */
+  canCreateAccident(trip: TrackingListDto) {
+    if (trip.status === ShippingRequestTripStatus.Intransit) {
+      if (!this.appSession.tenantId || this.feature.isEnabled('App.TachyonDealer')) {
+        //if tachyon dealer and is assign return true
+        return trip.isAssign;
+      }
+      //inTransit return true too
+      return true;
+    }
+    //not in transit return false
+    return false;
+  }
+
+  /**
+   * handels incident Report From Modal
+   */
+  handleTripIncidentReport() {
+    abp.event.on('TripReportedAccident', (tripId: number) => {
+      const tripIndex = this.Items.findIndex((trip) => trip.id === tripId);
+      this.Items[tripIndex].hasAccident = true;
+    });
   }
 }

@@ -13,7 +13,7 @@
       <div class="row">
         <div class="col-12 mb-7" *ngFor="let item of Items">
           <div>
-            <div class="card card-custom">
+            <div class="card card-custom" [busyIf]="loadingTripId === item.id">
               <div class="card-body ribbon ribbon-top">
                 <!--                <div class="ribbon-target bg-danger" style="top: -2px; right: 20px">Ribbon</div>-->
                 <div class="d-flex justify-content-between">
@@ -33,7 +33,7 @@
                     [ngClass]="{
                       'bg-danger': item.status === ShippingRequestTripStatusEnum.Delivered,
                       'bg-info': item.status === ShippingRequestTripStatusEnum.Canceled,
-                      'bg-warning': item.status === ShippingRequestTripStatusEnum.Intransit,
+                      'bg-success': item.status === ShippingRequestTripStatusEnum.Intransit,
                       'bg-secondary': item.status === ShippingRequestTripStatusEnum.DeliveredAndNeedsConfirmation,
                       'bg-primary': item.status === ShippingRequestTripStatusEnum.New
                     }"
@@ -114,8 +114,11 @@
                             {{ l('Actions') }}
                           </a>
                           <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                            <button ngbDropdownItem *ngIf="item.driverStatus == DriverStatusEnum.None" (click)="accept(item.id)">
+                            <button ngbDropdownItem *ngIf="item.driverStatus == DriverStatusEnum.None" (click)="accept(item)">
                               {{ l('Accept') }}
+                            </button>
+                            <button ngbDropdownItem *ngIf="canCreateAccident(item)" (click)="TripAccidentModal.show(item.id, null)">
+                              {{ l('CreateAccident') }}
                             </button>
                             <button
                               ngbDropdownItem
@@ -270,3 +273,4 @@
 
 <tacking-search-model #ModelSearch (modalsearch)="search()"></tacking-search-model>
 <view-trip-accident-modal #ModelIncident></view-trip-accident-modal>
+<trip-accident-modal #TripAccidentModal></trip-accident-modal>

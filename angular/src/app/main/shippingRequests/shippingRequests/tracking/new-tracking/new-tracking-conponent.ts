@@ -224,7 +224,7 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
    * time line Panel Click
    * @param $event
    */
-  timeLinePanelClick(point: ShippingRequestTripDriverRoutePointDto) {
+  timeLinePanelClick(point: TrackingRoutePointDto) {
     this.item = point.id;
     if (this.markerLong == point.lng && this.markerLat == point.lat) {
       this.markerLong = null;
@@ -234,7 +234,7 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
     }
     this.markerLong = point.lng;
     this.markerLat = point.lat;
-    this.markerFacilityName = point.facility;
+    this.markerFacilityName = '';
   }
 
   /**
@@ -243,7 +243,7 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
    * @param transaction
    * @private
    */
-  private handleUploadPod(point: ShippingRequestTripDriverRoutePointDto, transaction: PointTransactionDto) {
+  private handleUploadPod(point: TrackingRoutePointDto, transaction: PointTransactionDto) {
     this.modelpod.show(point.id, transaction.action);
     abp.event.on('PodUploadedSuccess', () => {
       this.getForView();
@@ -256,7 +256,7 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
    * @param point
    * @param transaction
    */
-  private handleDeliveryConfirmationCode(point: ShippingRequestTripDriverRoutePointDto, transaction: PointTransactionDto) {
+  private handleDeliveryConfirmationCode(point: TrackingRoutePointDto, transaction: PointTransactionDto) {
     //show the modal
     this.modelConfirmCode.show(point.id, transaction.action);
     abp.event.on('trackingConfirmCodeSubmitted', () => {
@@ -270,7 +270,7 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
    * @param transaction
    * @private
    */
-  private handleUploadDeliveryNotes(point: ShippingRequestTripDriverRoutePointDto, transaction: PointTransactionDto) {
+  private handleUploadDeliveryNotes(point: TrackingRoutePointDto, transaction: PointTransactionDto) {
     this.modelpod.show(point.id, transaction.action);
     abp.event.on('tripDeliveryNotesUploadSuccess', () => {
       this.getForView();
@@ -283,7 +283,7 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
    * @param point
    * @param transaction
    */
-  invokeStatus(point: ShippingRequestTripDriverRoutePointDto, transaction: PointTransactionDto) {
+  invokeStatus(point: TrackingRoutePointDto, transaction: PointTransactionDto) {
     this.saving = true;
     const invokeRequestBody = new InvokeStatusInputDto();
     invokeRequestBody.id = point.id;
@@ -406,6 +406,10 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
   }
 
   canDoActionsOnPoints(point: TrackingRoutePointDto): boolean {
+    //prevent any Points Actions if the trip hasAccident
+    if (this.trip.hasAccident) {
+      return false;
+    }
     //singleDrop and there is available transactions
     if (this.trip.routeTypeId === this.routeTypeEnum.SingleDrop && point.availableTransactions.length !== 0) {
       return true;
