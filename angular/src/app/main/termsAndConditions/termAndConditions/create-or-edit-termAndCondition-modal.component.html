@@ -77,12 +77,12 @@
             >
           </textarea>
         </div> -->
-          <div>
-            <!-- <p-editor name="Content" [(ngModel)]="termAndCondition.content" [style]="{ height: '320px' }">
+          <!-- <div>
+           <p-editor name="Content" [(ngModel)]="termAndCondition.content" [style]="{ height: '320px' }">
             <p-header> </p-header>
-          </p-editor> -->
+          </p-editor> 
 
-            <label for="TermAndCondition_Content">{{ l('Content') }} *</label>
+          <label for="TermAndCondition_Content">{{ l('Content') }} *</label>
             <p-editor required name="Content" [(ngModel)]="termAndCondition.content" [style]="{ height: '320px' }" #editor>
               <p-header>
                 <span class="ql-formats">
@@ -93,7 +93,7 @@
                     <option value="huge">huge</option>
                   </select>
                 </span>
-                <!-- <span class="ql-formats">
+                 <span class="ql-formats">
                   <select class="ql-size">
                     <option value="8px">8</option>
                     <option value="9px">9</option>
@@ -107,7 +107,7 @@
                     <option value="24px">24</option>
                     <option value="26px">26</option>
                   </select>
-                </span> -->
+                </span> 
                 <span class="ql-formats">
                   <button class="ql-bold" aria-label="Bold"></button>
                   <button class="ql-italic" aria-label="Italic"></button>
@@ -142,7 +142,7 @@
                 </span>
               </p-header>
             </p-editor>
-          </div>
+          </div>-->
         </div>
         <div class="modal-footer">
           <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
