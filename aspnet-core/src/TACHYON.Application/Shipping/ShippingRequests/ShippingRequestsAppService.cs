@@ -931,6 +931,23 @@ namespace TACHYON.Shipping.ShippingRequests
                     DisplayName = x.DisplayName
                 }).ToListAsync();
         }
+
+        public async Task<IEnumerable<ISelectItemDto>> GetAllCapacitiesForDropdown()
+        {
+            List<Capacity> capacity = await _capacityRepository
+                .GetAllIncluding(x => x.Translations)
+                .ToListAsync();
+
+            List<Capacity> filteredCapacity = new List<Capacity>();
+            foreach (var c in capacity)
+            {
+                if (filteredCapacity.Find(x => x.DisplayName.ToLower().TrimEnd().TrimStart() ==
+                                               c.DisplayName.ToLower().TrimEnd().TrimStart()) == null)
+                    filteredCapacity.Add(c);
+            }
+            return ObjectMapper.Map<List<CapacitySelectItemDto>>(filteredCapacity);
+        }
+
         #endregion
 
         #region Waybills

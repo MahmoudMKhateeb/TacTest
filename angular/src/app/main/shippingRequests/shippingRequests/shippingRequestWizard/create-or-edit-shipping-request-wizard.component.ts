@@ -163,6 +163,11 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     this.wizard = undefined;
   }
 
+  IfOther(items, id) {
+    if (id != undefined) return items?.find((x) => x.id == id).isOther;
+    else return false;
+  }
+
   ngAfterViewInit() {
     // Initialize form wizard
     this.wizard = new KTWizard(this.el.nativeElement, {
@@ -479,6 +484,13 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   trucksTypeSelectChange(trucksTypeId?: number) {
     if (trucksTypeId > 0) {
       this.capacityLoading = true;
+      if (this.IfOther(this.allTrucksTypes, trucksTypeId)) {
+        this._shippingRequestsServiceProxy.getAllCapacitiesForDropdown().subscribe((result) => {
+          this.allCapacities = result;
+          this.step3Dto.capacityId = null;
+          this.capacityLoading = false;
+        });
+      }
       this._shippingRequestsServiceProxy.getAllTuckCapacitiesByTuckTypeIdForDropdown(trucksTypeId).subscribe((result) => {
         this.allCapacities = result;
         this.step3Dto.capacityId = null;
