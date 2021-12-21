@@ -35,15 +35,13 @@
 
 
         public string TranslatedDisplayName { get; set; }
-
-
     }
 
     public interface ISelectItemDto
     {
         string Id { get; set; }
         string DisplayName { get; set; }
-        bool IsOther { get; set; }
+        bool? IsOther { get; set; }
 
 
     }

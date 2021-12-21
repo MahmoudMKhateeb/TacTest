@@ -702,12 +702,12 @@ namespace TACHYON
                 .EntityMap
                 .ReverseMap();
 
-            // #Map_TransportType_TransportTypeSelectItemDto
-            configuration.CreateMultiLingualMap<TransportType, TransportTypesTranslation, TransportTypeSelectItemDto>(context)
-                  .EntityMap
-                  .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
+            configuration.CreateMap<TransportType, TransportTypeSelectItemDto>()
+                .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
                   .ForMember(dst => dst.IsOther, opt => opt.MapFrom(src => src.ContainsOther()))
-                  .ReverseMap();
+                .ForMember(x => x.DisplayName, x =>
+                    x.MapFrom(i => i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)) != null
+                     ? i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName : i.Key));
 
             configuration.CreateMultiLingualMap<County, CountriesTranslation, CountyDto>(context)
                 .EntityMap
@@ -752,9 +752,12 @@ namespace TACHYON
                 .ForMember(x => x.IsOther, x => x.MapFrom(i => i.ContainsOther()))
                 .ForMember(x => x.Id, x => x.MapFrom(i => i.Id.ToString()))
                 .ForMember(x => x.IsOther, x => x.MapFrom(i => i.ContainsOther()))
-                .ForMember(x => x.TranslatedDisplayName, x =>
-                    x.MapFrom(i => i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)) != null ? i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName : i.DisplayName))
-                .ForMember(x => x.DisplayName, x => x.MapFrom(i => i.DisplayName));
+               .ForMember(x => x.TranslatedDisplayName, x =>
+                    x.MapFrom(i => i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)) != null
+                    ? i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName : i.Key))
+                .ForMember(x => x.DisplayName, x =>
+                    x.MapFrom(i => i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)) != null
+                     ? i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName : i.Key));
             //configuration.CreateMultiLingualMap<TrucksType, long, TrucksTypesTranslation, TrucksTypeDto>(context)
             //    .EntityMap
             //    .ReverseMap();
