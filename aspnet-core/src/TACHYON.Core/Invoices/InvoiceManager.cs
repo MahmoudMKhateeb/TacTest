@@ -358,7 +358,7 @@ namespace TACHYON.Invoices
 
             DateTime dueDate = Clock.Now;
 
-            var paymentType = await _invoicePaymentMethodRepository.FirstOrDefaultAsync(x => x.Id == int.Parse(_featureChecker.GetValue(submit.Tenant.Id, AppFeatures.InvoicePaymentMethod)));
+            var paymentType = await _invoicePaymentMethodRepository.FirstOrDefaultAsync(x => x.Id == int.Parse(_featureChecker.GetValue(submit.Tenant.Id, AppFeatures.InvoicePaymentMethodCrarrier)));
             if (paymentType.PaymentType == PaymentMethod.InvoicePaymentType.Days)
             {
                 dueDate = Clock.Now.AddDays(paymentType.InvoiceDueDateDays);
