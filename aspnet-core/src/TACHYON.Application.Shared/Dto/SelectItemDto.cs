@@ -17,7 +17,7 @@
 
         public string Id { get; set; }
 
-        public bool IsOther { get; set; }
+        public bool? IsOther { get; set; }
 
         public string DisplayName
         {
