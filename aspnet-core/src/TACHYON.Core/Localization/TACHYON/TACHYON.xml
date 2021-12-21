@@ -720,10 +720,6 @@
 		<text name="DearsAt">Dears at</text>	
 		<text name="ApprovalDocumentsEmailMessage">This email is sent to you to inform you that your documents have been accepted, and now you can use the platform.</text>
 		<text name="DocumentsApproved">Documents Approved</text>
-    
-		<text name="SubscriptionExpiringSoon_Title">TTACHYON subscription expiration notice</text>
-		<text name="SubscriptionExpiringSoon_Email_Body">Your TACHYON subscription will expire at {0}.</text>
-		<text name="SubscriptionExpiringSoon_Email_Subject">Your TACHYON subscription expiration notice</text>
 		<text name="InvoiceDue_Title">Invoice Reminder</text>
 		<text name="InvoiceDue">Invoice Due</text>
 		<text name="IssuedInvoice_Title">Invoice</text>

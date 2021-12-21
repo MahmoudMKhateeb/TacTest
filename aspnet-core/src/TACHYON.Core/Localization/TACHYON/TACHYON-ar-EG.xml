@@ -647,10 +647,6 @@
     <text name="ApprovalDocumentsEmailMessage">تم إرسال هذا البريد  إليك لإبلاغك بأنه قد تم قبول مستنداتك ، ويمكنك الآن استخدام المنصة.</text>
     <text name="DocumentsApproved">المستندات المعتمدة</text>
     <text name="ApprovedDocuments_Title">المستندات المعتمدة</text>
-
-    <text name="SubscriptionExpiringSoon_Title">أبزيروتيمبلات إشعار انتهاء صلاحية الاشتراك</text>
-    <text name="SubscriptionExpiringSoon_Email_Body"></text>
-    <text name="SubscriptionExpiringSoon_Email_Subject"></text>
 	<text name="IssuedInvoiceMessage">شكرا لك على عملك . {0} يرجى العثور على الفاتورة المرفقة مع تاريخ الإصدار {1} بإجمالي {2} مستحقة في {3} الرجاء {4} لمزيد من التفاصيل</text>
 	<text name="DueInvoiceMessage">هذا فقط لتذكيرك بأن الفتورة {0} بأجمالي {1} اصبحت مستحقة الأن</text>
 	<text name="DocumentExpirationReminderMessage">نود إبلاغك بأن نسخة المستند {0} على وشك الانتهاء ، يرجي تقديم المستند الذي تم تجديده قبل تاريخ {1} التي  تم تحميلها على منصة تاكيون لمنع تعليق الحساب</text>
@@ -2168,7 +2164,6 @@
     <text name="YouAreReceivingThisEmailBecauseWe">لقد تلقيت هذا البريد الإلكتروني لأننا تلقينا طلب إعادة تعيين كلمة المرور لحسابك.</text>
     <text name="ResetPassword">إعادة تعيين كلمة المرور</text>
     <text name="YourNewPasswordMust">كلمة المرور الجديدة الخاصة بك يجب أن:</text>
-    <text name="PasswordResetEmail_Subject">إعادة تعيين كلمة المرور</text>
     
     <text name="PasswordUpdated_Title">تحديث كلمة المرور</text>
     <text name="YourPasswordChangedSuccessfully">تم تغيير كلمة المرور الخاصة بك بنجاح.</text>

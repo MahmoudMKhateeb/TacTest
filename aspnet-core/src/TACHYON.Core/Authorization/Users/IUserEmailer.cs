@@ -17,7 +17,7 @@ namespace TACHYON.Authorization.Users
         /// <param name="plainPassword">
         /// Can be set to user's plain password to include it in the email.
         /// </param>
-        Task SendEmailActivationLinkAsync(User user, string link, string plainPassword = null);
+        Task SendEmailActivationLinkAsync(User user, string link, string plainPassword);
 
         /// <summary>
         /// Send Email to admin tenant user when all documents approved by host
