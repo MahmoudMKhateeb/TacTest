@@ -711,9 +711,42 @@
 		<text name="EmailActivation_ClickTheLinkBelowToVerifyYourEmail">Please click the link below to verify your email address:</text>
 		<text name="EmailActivation_Subject">TACHYON account email activation</text>
 		<text name="EmailActivation_SubTitle">This email is sent you to verify your email.</text>
-		<text name="EmailActivation_Title">Welcome to TACHYON.</text>
+		<text name="EmailActivation_Title">Welcome to TACHYON</text>
 		<text name="EmailAddress">Email address</text>
 		<text name="EmailConfirm">Email confirm</text>
+    
+		<text name="ClickButtonMessage">Please click the link below to verify your email address:</text>
+		<text name="CopyLinkMessage">If the button above doesn't work, please paste below link in your browser</text>
+		<text name="DearsAt">Dears at</text>	
+		<text name="ApprovalDocumentsEmailMessage">This email is sent to you to inform you that your documents have been accepted, and now you can use the platform.</text>
+		<text name="DocumentsApproved">Documents Approved</text>
+    
+		<text name="SubscriptionExpiringSoon_Title">TTACHYON subscription expiration notice</text>
+		<text name="SubscriptionExpiringSoon_Email_Body">Your TACHYON subscription will expire at {0}.</text>
+		<text name="SubscriptionExpiringSoon_Email_Subject">Your TACHYON subscription expiration notice</text>
+		<text name="InvoiceDue_Title">Invoice Reminder</text>
+		<text name="InvoiceDue">Invoice Due</text>
+		<text name="IssuedInvoice_Title">Invoice</text>
+		<text name="IssuedInvoice">Issued invoice</text>
+
+		<text name="IssuedInvoiceMessage">Thank you for your business. {0} Please find attached the invoice with issue date of {1} ,
+			with a total of {2} Due on {3} Please {4} for more details. </text>
+
+		<text name="DueInvoiceMessage">This is just to remind you that the invoice {0} with a total of {1} is due now</text>
+
+		<text name="DocumentExpirationReminderMessage">We would like to inform you that the copy of your {0} document uploaded Tachyon platform will be expired soon, please submit a renewal one before {1} to prevent the account from being suspended.</text>
+		
+		<text name="WarningSuspendAccount">Document Expiration Reminder</text>
+		<text name="WarningSuspendAccount_Title">Expiration document reminder</text>
+		<text name="SuspendedAccountForExpiredDocumentMessage">Your account is currently suspended due to the expiration of the {0} document please submit a renewal one to reactivate your account.</text>
+		<text name="SuspendedAccountDocumentExpired_Title">Expired date document and suspend your account</text>
+		<text name="ExpiredDateDocuments_Title">Expired date document</text>
+		<text name="Document File: {0} has been expired message">Document File: "{0}" has been expired message</text>
+		<text name="ExpiredDocument">Expired documents</text>
+		<text name="DocumentsExpirerationreminder_Title">Documents reminder information</text>
+		<text name="DocumentsExpiredReminder">Documents reminder information</text>
+		<text name="ReminderDocumentsEmailMessage">We would like to inform you that the copy of your documents uploaded  Tachyon platform will be expired soon, please submit a renewal one before today to prevent the account from being suspended.</text>
+    
 		<text name="EmailConfirmationRequiredForLogin">Email confirmation required for login.</text>
 		<text name="EmailMessage_CopyTheLinkBelowToYourBrowser">If the button above doesn't work, paste this into your browser:</text>
 		<text name="EmailSecurityCodeBody">Your security code is: {0}</text>
@@ -1279,10 +1312,25 @@
 			content that we shared with you.
 		</text>
 		<text name="PasswordResetEmail_Subject">TACHYON password reset</text>
-		<text name="PasswordResetEmail_SubTitle">This email is sent you to reset and re-create your password.</text>
-		<text name="PasswordResetEmail_Title">TACHYON password reset.</text>
+		<text name="PasswordResetEmail_Title">TACHYON password reset</text>
 		<text name="PasswordResetMailSentMessage">A password reset link sent to your e-mail address. Please check your emails.</text>
+		<text name="Contain8To12Characters">Contain 8-12 characters</text>
+		<text name="ContainAtLeast1UpperCaseLetter">Contain at least 1 upper-case letter</text>
+		<text name="ContainAtLeast1LowerCaseLetter">Contain at least 1 lower-case letter</text>
+		<text name="ContainAtLeast1Number">Contain at least 1 number</text>
+		<text name="IfYouDidNotRequestPasswordReset">If you did not request Password reset, not further action is required.</text>
+		<text name="YouAreReceivingThisEmailBecauseWe">You are receiving this email because we received a password reset request for your account.</text>
+		<text name="ResetPassword">Reset Password</text>
+		<text name="YourNewPasswordMust">your new Password must:</text>
 		<text name="PasswordsDontMatch">Passwords do not match!</text>
+		
+    <text name="PasswordUpdated_Title">Update password</text>
+	<text name="PasswordUpdated">TACHYON Password Updated</text>
+    <text name="YourPasswordChangedSuccessfully">Your Password has been changed successfully.</text>
+    <text name="YourNewPasswordIs">Your new password is</text>
+    
+    <text name="ApprovedDocuments_Title">Approved documents</text>
+    
 		<text name="PayInAdvance">Pay in advance</text>
 		<text name="PayloadMaxWeight">Payload max weight</text>
 		<text name="PayloadMaxWeightDisplayName">Payload max weight display name</text>
@@ -2332,6 +2380,12 @@
     <text name="FinishOffLoadShipment">Finish offloading</text>
     <text name="Delivered">Delivered</text>
     <text name="AddIncident">Add incident</text>
+    <text name="CompanyNameEmailTemplate">Company name</text>
+    <text name="LoginLink">Login Link</text>
+    <text name="RejectedDocument_Title">Rejected Document</text>
+    <text name="RejectedDocumentEmailMessage">This email is sent to you to inform you that your document {0} have been rejected with reason {1} if you have any questions, please contact with support team.</text>
+    
+    
     <!--<text name="StartOffloading"></text>
     <text name="ReceiverConfirmed"></text>
     <text name="DeliveryConfirmation"></text>-->
