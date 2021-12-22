@@ -764,7 +764,7 @@ namespace TACHYON.Shipping.ShippingRequests
             return await _lookup_vasRepository.GetAll()
                 .Select(vas => new ShippingRequestVasListOutput
                 {
-                    VasName = vas.Translations.FirstOrDefault(t=> t.Language.Contains(CurrentLanguage)) != null ? vas.Translations.FirstOrDefault(t=> t.Language.Contains(CurrentLanguage)).DisplayName : vas.Name,
+                    VasName = vas.Translations.FirstOrDefault(t => t.Language.Contains(CurrentLanguage)) != null ? vas.Translations.FirstOrDefault(t => t.Language.Contains(CurrentLanguage)).DisplayName : vas.Name,
                     HasAmount = vas.HasAmount,
                     HasCount = vas.HasCount,
                     MaxAmount = 0,
@@ -874,12 +874,12 @@ namespace TACHYON.Shipping.ShippingRequests
                     .Include(e => e.ShippingRequestFk)
                     .Where(e => e.Id == shippingRequestTripId);
 
-                
+
 
                 string pickupFacility = GetFacilityPoint(shippingRequestTripId, null, PickingType.Pickup);
 
                 var SenderpickupPoint = GetSenderInfo(shippingRequestTripId);
-                var contactName = SenderpickupPoint!=null ?SenderpickupPoint.FullName :"";
+                var contactName = SenderpickupPoint != null ? SenderpickupPoint.FullName : "";
                 var mobileNo = SenderpickupPoint != null ? SenderpickupPoint.PhoneNumber : "";
 
                 var query = info.Select(x => new
@@ -903,7 +903,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     PackingTypeDisplayName = x.ShippingRequestFk.PackingTypeFk.DisplayName,
                     NumberOfPacking = x.ShippingRequestFk.NumberOfPacking,
                     TotalWeight = x.ShippingRequestFk.TotalWeight,
-                    ShipperReference=x.ShippingRequestFk.ReferenceNumber
+                    ShipperReference = x.ShippingRequestFk.ReferenceNumber
                 });
 
                 var pickup = GetPickupOrDropPointFacilityForTrip(shippingRequestTripId, PickingType.Pickup);
@@ -916,8 +916,8 @@ namespace TACHYON.Shipping.ShippingRequests
                         Date = Clock.Now.ToShortDateString(),
                         ShippingRequestStatus = x.ShippingRequestStatus,
                         CompanyName = x.SenderCompanyName,
-                        ContactName=contactName,
-                        Mobile=mobileNo,
+                        ContactName = contactName,
+                        Mobile = mobileNo,
                         DriverName = x.DriverName,
                         DriverIqamaNo = "",
                         TruckTypeDisplayName = x.TruckTypeDisplayName,
@@ -930,12 +930,12 @@ namespace TACHYON.Shipping.ShippingRequests
                         CountryName = pickup?.CityFk.CountyFk.DisplayName,
                         CityName = pickup?.CityFk.DisplayName,
                         Area = pickup?.Address,
-                        StartTripDate = x.StartTripDate,
+                        StartTripDate = x.StartTripDate.HasValue ? ClockProviders.Local.Normalize(x.StartTripDate.Value) : x.StartTripDate,
                         CarrierName = x.CarrierName,
                         TotalWeight = x.TotalWeight,
                         ShipperReference = x.ShipperReference,
                         InvoiceNumber = GetInvoiceNumberByTripId(shippingRequestTripId)
-                    }) ;
+                    });
 
                 return finalOutput;
             }
@@ -970,14 +970,14 @@ namespace TACHYON.Shipping.ShippingRequests
                     PackingTypeDisplayName = x.ShippingRequestFk.PackingTypeFk.DisplayName,
                     NumberOfPacking = x.ShippingRequestFk.NumberOfPacking,
                     StartTripDate = x.StartTripDate,
-                    ActualPickupDate=x.ActualPickupDate,
+                    ActualPickupDate = x.ActualPickupDate,
                     DeliveryDate = x.ActualDeliveryDate,
                     TotalWeight = x.ShippingRequestFk.TotalWeight,
                     GoodCategoryTranslation = x.ShippingRequestFk.GoodCategoryFk.Translations,
                     GoodsCategoryDisplayName = x.ShippingRequestFk.GoodCategoryFk, //x.ShippingRequestFk.GoodCategoryFk.DisplayName,
-                    HasAttachment=x.HasAttachment,
-                    NeedDeliveryNote=x.NeedsDeliveryNote,
-                    ShipperReference=x.ShippingRequestFk.ReferenceNumber
+                    HasAttachment = x.HasAttachment,
+                    NeedDeliveryNote = x.NeedsDeliveryNote,
+                    ShipperReference = x.ShippingRequestFk.ReferenceNumber
                 });
 
                 var pickup = GetPickupOrDropPointFacilityForTrip(shippingRequestTripId, PickingType.Pickup);
@@ -995,8 +995,8 @@ namespace TACHYON.Shipping.ShippingRequests
                         Date = Clock.Now.ToShortDateString(),
                         ShippingRequestStatus = x.ShippingRequestStatus,
                         SenderCompanyName = GetFacilityPoint(x.Id, null, PickingType.Pickup),// x.SenderCompanyName,
-                        SenderContactName=contactName,
-                        SenderMobile=mobileNo,
+                        SenderContactName = contactName,
+                        SenderMobile = mobileNo,
                         ReceiverCompanyName = GetFacilityPoint(x.Id, null, PickingType.Dropoff),
                         ReceiverContactName = GetReceiverName(null, x.Id),
                         ReceiverMobile = GetReceiverPhone(null, x.Id),
@@ -1010,21 +1010,21 @@ namespace TACHYON.Shipping.ShippingRequests
                         CountryName = pickup?.CityFk.CountyFk.DisplayName,
                         CityName = pickup?.CityFk.DisplayName,
                         Area = pickup?.Address,
-                        StartTripDate = x.StartTripDate,
-                        ActualPickupDate=x.ActualPickupDate,
+                        StartTripDate = ClockProviders.Local.Normalize(x.StartTripDate),
+                        ActualPickupDate = x.ActualPickupDate != null ? ClockProviders.Local.Normalize(x.ActualPickupDate.Value) : x.ActualPickupDate,
                         DroppFacilityName = delivery?.Name,
                         DroppCountryName = delivery?.CityFk.CountyFk.DisplayName,
                         DroppCityName = delivery?.CityFk.DisplayName,
                         DroppArea = delivery?.Address,
-                        DeliveryDate = x.DeliveryDate,
+                        DeliveryDate = x.DeliveryDate != null ? ClockProviders.Local.Normalize(x.DeliveryDate.Value) : x.DeliveryDate,
                         TotalWeight = x.TotalWeight,
                         ClientName = x.ClientName,
                         CarrierName = x.CarrierName,
                         GoodsCategoryDisplayName = ObjectMapper.Map<GoodCategoryDto>(x.GoodsCategoryDisplayName).DisplayName,
-                        HasAttachment=x.HasAttachment,
-                        NeedsDeliveryNote=x.NeedDeliveryNote,
-                        ShipperReference=x.ShipperReference,
-                        InvoiceNumber= GetInvoiceNumberByTripId(shippingRequestTripId)
+                        HasAttachment = x.HasAttachment,
+                        NeedsDeliveryNote = x.NeedDeliveryNote,
+                        ShipperReference = x.ShipperReference,
+                        InvoiceNumber = GetInvoiceNumberByTripId(shippingRequestTripId)
 
                     });
 
@@ -1065,7 +1065,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
                 var info = _shippingRequestTripRepository.GetAll()
                     .Include(e => e.ShippingRequestFk)
-                    .Where(e => e.ShippingRequestFk.TenantId == AbpSession.TenantId)
+                    //.Where(e => e.ShippingRequestFk.TenantId == AbpSession.TenantId)
                     .Where(e => e.Id == routPoint.ShippingRequestTripId);
 
                 var query = info.Select(x => new
@@ -1073,7 +1073,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     Id = x.Id,
                     MasterWaybillNo = x.WaybillNumber.Value,
                     SubWaybillNo = routPoint.WaybillNumber,
-                    ShippingRequestStatus = x.Status==Trips.ShippingRequestTripStatus.Delivered ?"Final" :"Draft",
+                    ShippingRequestStatus = x.Status == Trips.ShippingRequestTripStatus.Delivered ? "Final" : "Draft",
                     //(x.AssignedDriverUserId != null && x.AssignedTruckId != null) ? "Final" : "Draft",
                     ClientName = x.ShippingRequestFk.Tenant.Name,
                     DriverName = x.AssignedDriverUserFk != null ? x.AssignedDriverUserFk.Name : "",
@@ -1085,7 +1085,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     PlateNumber = x.AssignedTruckFk != null ? x.AssignedTruckFk.PlateNumber : "",
                     PackingTypeDisplayName = x.ShippingRequestFk.PackingTypeFk.DisplayName,
                     NumberOfPacking = x.ShippingRequestFk.NumberOfPacking,
-                    StartTripDate =x.StartTripDate,
+                    StartTripDate = x.StartTripDate,
                     //(x.StartTripDate != null && x.StartTripDate.Year > 1)
                     //    ? x.StartTripDate.ToShortDateString()
                     //    : "",
@@ -1099,10 +1099,10 @@ namespace TACHYON.Shipping.ShippingRequests
                     GoodsCategoryTranslation = x.ShippingRequestFk.GoodCategoryFk.Translations,
                     GoodsCategoryDisplayName = x.ShippingRequestFk.GoodCategoryFk,
                     DeliveryDate = x.ActualDeliveryDate,
-                    HasAttachment=x.HasAttachment,
-                    NeedsDeliveryNote=x.NeedsDeliveryNote,
-                    ShipperReference=x.ShippingRequestFk.ReferenceNumber
-                });;
+                    HasAttachment = x.HasAttachment,
+                    NeedsDeliveryNote = x.NeedsDeliveryNote,
+                    ShipperReference = x.ShippingRequestFk.ReferenceNumber
+                }); ;
 
                 var SenderpickupPoint = GetSenderInfo(routPoint.ShippingRequestTripId);
                 var contactName = SenderpickupPoint != null ? SenderpickupPoint.FullName : "";
@@ -1116,8 +1116,8 @@ namespace TACHYON.Shipping.ShippingRequests
                         Date = Clock.Now.ToShortDateString(),
                         ShippingRequestStatus = x.ShippingRequestStatus,
                         SenderCompanyName = GetFacilityPoint(x.Id, null, PickingType.Pickup),
-                        SenderContactName=contactName,
-                        SenderMobile=mobileNo,
+                        SenderContactName = contactName,
+                        SenderMobile = mobileNo,
                         ReceiverCompanyName = GetFacilityPoint(null, routPointId, PickingType.Dropoff), //x.ReceiverCompanyName,
                         ReceiverContactName = GetReceiverName(routPointId, null),
                         ReceiverMobile = GetReceiverPhone(routPointId, null),
@@ -1127,7 +1127,7 @@ namespace TACHYON.Shipping.ShippingRequests
                         PlateNumber = x.PlateNumber,
                         PackingTypeDisplayName = x.PackingTypeDisplayName,
                         NumberOfPacking = x.NumberOfPacking,
-                        StartTripDate = x.StartTripDate,
+                        StartTripDate = ClockProviders.Local.Normalize(x.StartTripDate),
                         DroppFacilityName = x.DroppFacilityName,
                         DroppCountryName = x.DroppCountryName,
                         DroppCityName = x.DroppCityName,
@@ -1136,10 +1136,10 @@ namespace TACHYON.Shipping.ShippingRequests
                         ClientName = x.ClientName,
                         TotalWeight = x.TotalWeight,
                         GoodsCategoryDisplayName = ObjectMapper.Map<GoodCategoryDto>(x.GoodsCategoryDisplayName).DisplayName,// x.GoodsCategoryDisplayName,
-                        DeliveryDate = x.DeliveryDate,
-                        HasAttachment=x.HasAttachment,
-                        NeedsDeliveryNote=x.NeedsDeliveryNote,
-                        ShipperReference=x.ShipperReference,
+                        DeliveryDate = x.DeliveryDate != null ? ClockProviders.Local.Normalize(x.DeliveryDate.Value) : x.DeliveryDate,
+                        HasAttachment = x.HasAttachment,
+                        NeedsDeliveryNote = x.NeedsDeliveryNote,
+                        ShipperReference = x.ShipperReference,
                         InvoiceNumber = GetInvoiceNumberByTripId(x.Id)
                     });
 
