@@ -933,7 +933,7 @@ namespace TACHYON.Shipping.ShippingRequests
                         StartTripDate = x.StartTripDate.HasValue ? ClockProviders.Local.Normalize(x.StartTripDate.Value) : x.StartTripDate,
                         CarrierName = x.CarrierName,
                         TotalWeight = x.TotalWeight,
-                        ShipperReference = x.ShipperReference,
+                        ShipperReference = "", /*x.ShipperReference,TAC-2181 || 22/12/2021 || need to display it as an empty on production*/
                         InvoiceNumber = GetInvoiceNumberByTripId(shippingRequestTripId)
                     });
 
@@ -1023,7 +1023,7 @@ namespace TACHYON.Shipping.ShippingRequests
                         GoodsCategoryDisplayName = ObjectMapper.Map<GoodCategoryDto>(x.GoodsCategoryDisplayName).DisplayName,
                         HasAttachment = x.HasAttachment,
                         NeedsDeliveryNote = x.NeedDeliveryNote,
-                        ShipperReference = x.ShipperReference,
+                        ShipperReference = "", /*x.ShipperReference,TAC-2181 || 22/12/2021 || need to display it as an empty on production*/
                         InvoiceNumber = GetInvoiceNumberByTripId(shippingRequestTripId)
 
                     });
@@ -1102,7 +1102,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     HasAttachment = x.HasAttachment,
                     NeedsDeliveryNote = x.NeedsDeliveryNote,
                     ShipperReference = x.ShippingRequestFk.ReferenceNumber
-                }); ;
+                });
 
                 var SenderpickupPoint = GetSenderInfo(routPoint.ShippingRequestTripId);
                 var contactName = SenderpickupPoint != null ? SenderpickupPoint.FullName : "";
@@ -1139,7 +1139,7 @@ namespace TACHYON.Shipping.ShippingRequests
                         DeliveryDate = x.DeliveryDate != null ? ClockProviders.Local.Normalize(x.DeliveryDate.Value) : x.DeliveryDate,
                         HasAttachment = x.HasAttachment,
                         NeedsDeliveryNote = x.NeedsDeliveryNote,
-                        ShipperReference = x.ShipperReference,
+                        ShipperReference = "", /*x.ShipperReference,TAC-2181 || 22/12/2021 || need to display it as an empty on production*/
                         InvoiceNumber = GetInvoiceNumberByTripId(x.Id)
                     });
 
