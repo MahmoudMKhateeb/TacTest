@@ -15,6 +15,7 @@ namespace TACHYON.Trucks.PlateTypes.Dtos
         //return displayName bt current user language
         public string DisplayName { get; set; }
 
+        public bool IsDefault { get; set; }
 
     }
 }
