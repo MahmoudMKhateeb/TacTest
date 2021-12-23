@@ -933,7 +933,7 @@ namespace TACHYON.Shipping.ShippingRequests
                         StartTripDate = x.StartTripDate.HasValue ? ClockProviders.Local.Normalize(x.StartTripDate.Value) : x.StartTripDate,
                         CarrierName = x.CarrierName,
                         TotalWeight = x.TotalWeight,
-                        ShipperReference = "", /*x.ShipperReference,TAC-2181 || 22/12/2021 || need to display it as an empty on production*/
+                        ShipperReference = "", /*x.ShipperReference, TAC-2181 || 22/12/2021 || need to display it as an empty on production*/
                         InvoiceNumber = GetInvoiceNumberByTripId(shippingRequestTripId)
                     });
 
@@ -1011,12 +1011,12 @@ namespace TACHYON.Shipping.ShippingRequests
                         CityName = pickup?.CityFk.DisplayName,
                         Area = pickup?.Address,
                         StartTripDate = ClockProviders.Local.Normalize(x.StartTripDate),
-                        ActualPickupDate = x.ActualPickupDate != null ? ClockProviders.Local.Normalize(x.ActualPickupDate.Value) : x.ActualPickupDate,
+                        ActualPickupDate = x.ActualPickupDate.HasValue ? ClockProviders.Local.Normalize(x.ActualPickupDate.Value) : x.ActualPickupDate,
                         DroppFacilityName = delivery?.Name,
                         DroppCountryName = delivery?.CityFk.CountyFk.DisplayName,
                         DroppCityName = delivery?.CityFk.DisplayName,
                         DroppArea = delivery?.Address,
-                        DeliveryDate = x.DeliveryDate != null ? ClockProviders.Local.Normalize(x.DeliveryDate.Value) : x.DeliveryDate,
+                        DeliveryDate = x.DeliveryDate.HasValue ? ClockProviders.Local.Normalize(x.DeliveryDate.Value) : x.DeliveryDate,
                         TotalWeight = x.TotalWeight,
                         ClientName = x.ClientName,
                         CarrierName = x.CarrierName,
@@ -1136,7 +1136,7 @@ namespace TACHYON.Shipping.ShippingRequests
                         ClientName = x.ClientName,
                         TotalWeight = x.TotalWeight,
                         GoodsCategoryDisplayName = ObjectMapper.Map<GoodCategoryDto>(x.GoodsCategoryDisplayName).DisplayName,// x.GoodsCategoryDisplayName,
-                        DeliveryDate = x.DeliveryDate != null ? ClockProviders.Local.Normalize(x.DeliveryDate.Value) : x.DeliveryDate,
+                        DeliveryDate = x.DeliveryDate.HasValue ? ClockProviders.Local.Normalize(x.DeliveryDate.Value) : x.DeliveryDate,
                         HasAttachment = x.HasAttachment,
                         NeedsDeliveryNote = x.NeedsDeliveryNote,
                         ShipperReference = "", /*x.ShipperReference,TAC-2181 || 22/12/2021 || need to display it as an empty on production*/
