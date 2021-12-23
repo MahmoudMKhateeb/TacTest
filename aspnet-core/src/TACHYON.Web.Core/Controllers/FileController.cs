@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MimeKit;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -80,25 +81,29 @@ namespace TACHYON.Web.Controllers
 
         [DisableAuditing]
         [AbpMvcAuthorize()]
-
-
-        public async Task<ActionResult> DownloadPDOFile(long id)
+        public async Task<ActionResult> DownloadPODFile(long id)
         {
             DisableTenancyFilters();
-            // var Point = await _routPointRepository.GetAll().Include(e=>e.RoutPointDocuments).FirstOrDefaultAsync(x => x.Id == id && x.IsComplete && x.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId);
-            var POD = await _routPointDocumentRepository.FirstOrDefaultAsync(x => x.RoutePointDocumentType == RoutePointDocumentType.POD && x.RoutPointId == id && x.RoutPointFk.IsComplete && x.RoutPointFk.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId);
-            if (POD == null)
-            {
+            var POD = await _routPointDocumentRepository.GetAll().Where(x =>
+            x.RoutePointDocumentType == RoutePointDocumentType.POD
+            && x.RoutPointId == id
+            && x.RoutPointFk.IsPodUploaded
+            && x.RoutPointFk.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId).ToListAsync();
+            if (!POD.Any())
                 throw new UserFriendlyException(L("ThePODDocumentIsNotFound"));
 
+            var list = new List<FileContentResult>();
+
+            foreach (var item in POD)
+            {
+                var binaryObject = await _binaryObjectManager.GetOrNullAsync(item.DocumentId.Value);
+                var file = new FileDto(item.DocumentName, item.DocumentContentType);
+                MimeTypes.TryGetExtension(file.FileType, out var exten);
+                file.FileName = file.FileName + "." + exten;
+                var fielss = File(binaryObject.Bytes, file.FileType, file.FileName);
+                list.Add(fielss);
             }
-            var binaryObject = await _binaryObjectManager.GetOrNullAsync(POD.DocumentId.Value);
-            var file = new FileDto(POD.DocumentName, POD.DocumentContentType);
-
-            MimeTypes.TryGetExtension(file.FileType, out var exten);
-
-            file.FileName = file.FileName + "." + exten;
-            return File(binaryObject.Bytes, file.FileType, file.FileName);
+            return Ok(list);
         }
 
         [DisableAuditing]
