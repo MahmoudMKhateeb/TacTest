@@ -14,6 +14,7 @@ import { BreadcrumbItem } from '@app/shared/common/sub-header/sub-header.compone
 import { filter } from '@node_modules/rxjs/internal/operators';
 import { DOCUMENT } from '@angular/common';
 import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
+import { retry } from 'rxjs/operators';
 
 @Component({
   templateUrl: './view-shippingRequest.component.html',
@@ -62,14 +63,17 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
   }
 
   show(shippingRequestId: number): void {
-    this._shippingRequestsServiceProxy.getShippingRequestForView(shippingRequestId).subscribe((result) => {
-      this.shippingRequestforView = result;
-      this.vases = result.shippingRequestVasDtoList;
-      this.breadcrumbs.push(new BreadcrumbItem('' + result.referenceNumber));
-      this.activeShippingRequestId = this.shippingRequestforView.shippingRequest.id;
-      this.active = true;
-      this.loading = false;
-    });
+    this._shippingRequestsServiceProxy
+      .getShippingRequestForView(shippingRequestId)
+      .pipe(retry(3))
+      .subscribe((result) => {
+        this.shippingRequestforView = result;
+        this.vases = result.shippingRequestVasDtoList;
+        this.breadcrumbs.push(new BreadcrumbItem('' + result.referenceNumber));
+        this.activeShippingRequestId = this.shippingRequestforView.shippingRequest.id;
+        this.active = true;
+        this.loading = false;
+      });
   }
 
   reloadCurrentPage() {
