@@ -390,6 +390,13 @@ namespace TACHYON.Features
             //        #endregion
             #endregion
 
+            var BayanIntegration = context.Create(
+                AppFeatures.BayanIntegration,
+                "true",
+                L("BayanIntegration"),
+                inputType: new CheckboxInputType()
+            );
+
             var chatFeature = context.Create(
                 AppFeatures.ChatFeature,
                 "false",
