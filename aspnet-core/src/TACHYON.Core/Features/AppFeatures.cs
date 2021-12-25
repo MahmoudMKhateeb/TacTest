@@ -84,6 +84,7 @@
         #endregion
         #endregion
         #endregion
+         public const string BayanIntegration = "App.BayanIntegration";
         #endregion
 
 

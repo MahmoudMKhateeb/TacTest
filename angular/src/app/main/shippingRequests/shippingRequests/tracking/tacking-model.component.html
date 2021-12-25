@@ -9,7 +9,7 @@
   [config]="{ backdrop: 'static' }"
 >
   <div class="modal-dialog modal-xl">
-    <div class="modal-content">
+    <div *ngIf="active" class="modal-content">
       <div class="modal-body">
         <button type="button" class="close closeModal" data-dismiss="modal" (click)="close()" aria-label="Close">
           <i class="fas fa-times"></i>
