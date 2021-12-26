@@ -233,7 +233,7 @@
                   {{ drop.note }}
                 </p>
               </div>
-              <div class="actions mt-0" *ngIf="canChangeDropStatus(drop)">
+              <div class="actions mt-0" *ngIf="canChangeDropStatus(drop) && !item.hasAccident">
                 <a href="javascript:void(0)" *ngIf="!saving" (click)="changeStatus(drop)">
                   {{ drop.nextStatus }}
                 </a>
