@@ -62,16 +62,16 @@ namespace TACHYON.Invoices.Balances
         /// <returns></returns>
         public async Task ShipperCanAcceptOffer(PriceOffer offer)
         {
-            InvoicePeriodType periodType = await GetTenantPeriodType(offer.ShippingRequestFK.TenantId);
-            var tenant = offer.ShippingRequestFK.Tenant;
+            InvoicePeriodType periodType = await GetTenantPeriodType(offer.ShippingRequestFk.TenantId);
+            var tenant = offer.ShippingRequestFk.Tenant;
             if (periodType == InvoicePeriodType.PayInAdvance)
             {
-                if (!await CheckShipperCanPaidFromBalance(offer.ShippingRequestFK.TenantId, offer.TotalAmount)) throw new UserFriendlyException(L("NoEnoughBalance"));
+                if (!await CheckShipperCanPaidFromBalance(offer.ShippingRequestFk.TenantId, offer.TotalAmount)) throw new UserFriendlyException(L("NoEnoughBalance"));
                 await ShipperWhenCanAcceptPrice(offer, periodType);
             }
             else
             {
-                decimal creditLimit = decimal.Parse(await _featureChecker.GetValueAsync(offer.ShippingRequestFK.TenantId, AppFeatures.ShipperCreditLimit)) * -1;
+                decimal creditLimit = decimal.Parse(await _featureChecker.GetValueAsync(offer.ShippingRequestFk.TenantId, AppFeatures.ShipperCreditLimit)) * -1;
                 decimal creditBalance = tenant.CreditBalance - offer.TotalAmount;
                 if (!(creditBalance > creditLimit)) throw new UserFriendlyException(L("YouDoNotHaveEnoughCreditInYourCreditCard"));
             }
