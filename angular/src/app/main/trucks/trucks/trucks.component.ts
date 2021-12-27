@@ -73,7 +73,8 @@ export class TrucksComponent extends AppComponentBase implements OnInit, AfterVi
   ngOnInit(): void {
     this.entityHistoryEnabled = this.setIsEntityHistoryEnabled();
     this.isArabic = abp.localization.currentLanguage.name.startsWith('ar');
-    this.getAllTrucks();
+    var filter = this._activatedRoute.snapshot.queryParams['Active'];
+    this.getAllTrucks(filter);
   }
 
   ngAfterViewInit(): void {}
@@ -160,13 +161,15 @@ export class TrucksComponent extends AppComponentBase implements OnInit, AfterVi
     this.truckUserLookupTableModal.show();
   }
 
-  getAllTrucks() {
+  getAllTrucks(filter) {
     let self = this;
-
     this.dataSource = {};
     this.dataSource.store = new CustomStore({
       load(loadOptions: LoadOptions) {
-        console.log(JSON.stringify(loadOptions));
+        if (!loadOptions.filter) {
+          loadOptions.filter = [];
+          (loadOptions.filter as any[]).push(['truckStatusDisplayName', 'contains', filter]);
+        }
         return self._trucksServiceProxy
           .getAll(JSON.stringify(loadOptions))
           .toPromise()

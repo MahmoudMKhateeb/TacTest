@@ -145,6 +145,7 @@ import { EntityLogServiceProxy, RatingServiceProxy } from './service-proxies';
     ApiServiceProxies.RatingServiceProxy,
     ApiServiceProxies.ShippingRequestDriverServiceProxy,
     ApiServiceProxies.ShippingRequestTripAccidentCommentsServiceProxy,
+    ApiServiceProxies.CarrierDashboardServiceProxy,
     TerminologieServiceProxy,
     ApiServiceProxies.EntityLogServiceProxy,
     { provide: RefreshTokenService, useClass: ZeroRefreshTokenService },

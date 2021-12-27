@@ -4,7 +4,7 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { ImpersonationService } from '@app/admin/users/impersonation.service';
 import { DocumentsEntitiesEnum, UserServiceProxy } from '@shared/service-proxies/service-proxies';
 import { FileDownloadService } from '@shared/utils/file-download.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { LocalStorageService } from '@shared/utils/local-storage.service';
 import { AppConsts } from '@shared/AppConsts';
@@ -48,12 +48,15 @@ export class DriversComponent extends UsersComponent implements AfterViewInit, O
     this.viewOrEditEntityDocumentsModal.show(driverId, DocumentsEntitiesEnum.Driver);
   }
 
-  getDrivers() {
+  getDrivers(filter) {
     let self = this;
-
     this.dataSource = {};
     this.dataSource.store = new CustomStore({
       load(loadOptions: LoadOptions) {
+        if (!loadOptions.filter) {
+          loadOptions.filter = [];
+          (loadOptions.filter as any[]).push(['isActive', '=', filter]);
+        }
         return self._userServiceProxy
           .getDrivers(JSON.stringify(loadOptions))
           .toPromise()
@@ -74,6 +77,7 @@ export class DriversComponent extends UsersComponent implements AfterViewInit, O
   }
 
   ngOnInit(): void {
-    this.getDrivers();
+    var filter = this._activatedRoute.snapshot.queryParams['isActive'];
+    this.getDrivers(filter);
   }
 }
