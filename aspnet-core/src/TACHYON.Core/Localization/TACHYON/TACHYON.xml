@@ -2332,6 +2332,8 @@
     <text name="FinishOffLoadShipment">Finish offloading</text>
     <text name="Delivered">Delivered</text>
     <text name="AddIncident">Add incident</text>
+    <text name="CompanyNamePatternError">Company name is longer than 3 characters, only English letters, numbers, dash and underscore are allowed</text>
+    <text name="CompanyLegalNamePatternError">Company legal name is longer than 3 characters, only English and Arabic letters, numbers, dash and underscores are allowed</text>
     <!--<text name="StartOffloading"></text>
     <text name="ReceiverConfirmed"></text>
     <text name="DeliveryConfirmation"></text>-->

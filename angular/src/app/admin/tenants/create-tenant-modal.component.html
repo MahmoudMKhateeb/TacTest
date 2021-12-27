@@ -32,13 +32,19 @@
                   type="text"
                   placeholder="{{ 'CompanyUniqueName' | localize }}"
                   name="companyName"
+                  pattern="^[a-zA-Z][ a-zA-Z0-9_-]{3,}$"
                   class="form-control"
                   [(ngModel)]="tenant.companyName"
                   maxlength="32"
                   required
                 />
+
+                <div *ngIf="companyName.touched && companyName.errors?.pattern" class="form-control-feedback">
+                  {{ l('CompanyNamePatternError') }}
+                </div>
+
+                <validation-messages *ngIf="!companyName.errors?.pattern" [formCtrl]="companyName"></validation-messages>
                 <span class="form-text text-muted">{{ l('Enter') }} {{ l('companyName') }}</span>
-                <validation-messages [formCtrl]="companyName"></validation-messages>
               </div>
             </div>
 
@@ -82,16 +88,23 @@
                   type="text"
                   placeholder="{{ 'CompanyFullLeagalName' | localize }}"
                   name="Name"
+                  pattern="^[\u0600-\u06FFa-zA-Z\d\-_\s]{3,}$"
                   class="form-control"
                   [ngClass]="{ edited: tenant.name }"
                   [(ngModel)]="tenant.name"
                   required
                   maxlength="128"
                 />
+
+                <div *ngIf="nameInput.touched && nameInput.errors?.pattern" class="form-control-feedback">
+                  {{ l('CompanyLegalNamePatternError') }}
+                </div>
+
+                <validation-messages *ngIf="!nameInput.errors?.pattern" [formCtrl]="nameInput"></validation-messages>
+
                 <div>
                   <span class="form-text text-muted">{{ l('Enter') }} {{ l('CompanyFullLeagalName') }}</span>
                 </div>
-                <validation-messages [formCtrl]="nameInput"></validation-messages>
               </div>
             </div>
           </div>
