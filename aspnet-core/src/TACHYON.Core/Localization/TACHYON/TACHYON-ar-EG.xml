@@ -10,6 +10,7 @@
 		<text name="AboutUs">من نحن</text>
     <text name="Abp.Organizations.OrganizationUnit">الوحدة التنظيمية</text>
 		<text name="Accept">قبول</text>
+    <text name="AcceptedVSRejectedPricing">طلبات التسعير المقبولة مقابل المرفوضة</text>
     <text name="MostWorkedWithCarriers">الناقل الأكثر تفاعلا</text>
     <text name="CompletedTrips">الرحلات المكتمله</text>
     <text name="AcceptedVsRejectedRequests">الطلبات المقبولة او المرفوضة</text>

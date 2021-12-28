@@ -9,7 +9,7 @@
     <text name="EditDangerousGoodType">Edit dangerous good type</text>
     <text name="DeleteDangerousGoodType">Delete dangerous good type</text>
     <text name="DangerousGoodTypes">Dangerous good types</text>
-    
+    <text name="AcceptedVSRejectedPricing">Accepted VS Rejected Pricing Requests</text>
     <text name="MostWorkedWithCarriers">Most Worked With Carriers</text>
     <text name="CompletedTrips">Completed Trips</text>
     <text name="AcceptedVsRejectedRequests">Accepted vs Rejected Requests</text>
