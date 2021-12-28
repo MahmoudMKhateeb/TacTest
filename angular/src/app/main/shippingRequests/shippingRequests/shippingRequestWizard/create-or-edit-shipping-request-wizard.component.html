@@ -802,8 +802,8 @@
                                   class="form-control"
                                   name="numberOfTrips{{ i }}"
                                   required
-                                  [class.is-invalid]="numberOfTrips.touched && !numberOfTrips.valid"
-                                  [class.is-valid]="numberOfTrips.touched && numberOfTrips.valid"
+                                  [class.is-invalid]="numberOfTrips.touched && !numberOfTrips.valid && step2Dto.numberOfTrips < item.numberOfTrips"
+                                  [class.is-valid]="numberOfTrips.touched && numberOfTrips.valid && step2Dto.numberOfTrips >= item.numberOfTrips"
                                   [max]="step2Dto.numberOfTrips"
                                   min="0"
                                 />
