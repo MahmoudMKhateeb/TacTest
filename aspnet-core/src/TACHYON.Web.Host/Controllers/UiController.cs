@@ -5,6 +5,9 @@ using Abp.Configuration.Startup;
 using Abp.UI;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Stripe;
+using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
 using TACHYON.Authorization.Accounts;
@@ -61,12 +64,19 @@ namespace TACHYON.Web.Controllers
             return View(model);
         }
 
-        public IActionResult OpenApiHome()
+        public async Task<IActionResult> OpenApiHome()
         {
             var configuration = _environment.GetAppConfiguration();
 
-            ViewBag.SwaggerUrl = configuration["App:ServerRootAddress"] + configuration["App:SwaggerEndPoint"];
-            ViewBag.SwaggerUrl = ViewBag.SwaggerUrl.Replace("//s", "/s");
+            ViewBag.BaseUrl = configuration["App:ServerRootAddress"];
+
+            var docFilePath = Path.Combine(_environment.WebRootPath, "Common/Static/documentation.txt");
+            var text = await System.IO.File.ReadAllTextAsync(docFilePath, Encoding.UTF8);
+            if (text.Contains("TachyonHubLogoUrlPath"))
+            {
+                text = text.Replace("TachyonHubLogoUrlPath", $"{ViewBag.BaseUrl}Common/Static/logo.png");
+                await System.IO.File.WriteAllTextAsync(docFilePath, text, Encoding.UTF8);
+            }
 
             return View("Redoc");
         }
