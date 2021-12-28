@@ -4,22 +4,20 @@
     <div class="card card-custom card-stretch">
       <div class="card-header border-0">
         <div class="card-title text-center">
-          <h3 class="card-label">invoices Vs Paid Invoices</h3>
+          <h3 class="card-label">{{ l('CompletedTrips') }}</h3>
         </div>
       </div>
-      <div class="card-body p-1">
-        <div id="invoicesVsPaidInvoices">
+      <div class="card-body p-0" [busyIf]="!loading">
+        <!--The content below is only a placeholder and can be replaced.-->
+        <div id="CompletedTripsChart">
           <apx-chart
             [series]="chartOptions.series"
             [chart]="chartOptions.chart"
-            [dataLabels]="chartOptions.dataLabels"
-            [plotOptions]="chartOptions.plotOptions"
-            [yaxis]="chartOptions.yaxis"
-            [legend]="chartOptions.legend"
-            [fill]="chartOptions.fill"
-            [stroke]="chartOptions.stroke"
-            [tooltip]="chartOptions.tooltip"
             [xaxis]="chartOptions.xaxis"
+            [dataLabels]="chartOptions.dataLabels"
+            [grid]="chartOptions.grid"
+            [stroke]="chartOptions.stroke"
+            [title]="chartOptions.title"
           ></apx-chart>
         </div>
       </div>

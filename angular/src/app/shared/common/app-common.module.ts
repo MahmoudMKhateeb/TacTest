@@ -63,11 +63,11 @@ import { ViewDocumentFileModalComponent } from '@app/main/documentFiles/document
 import { RejectionReasonModalComponent } from '@app/main/documentFiles/documentFiles/rejectionReason-modal.component';
 import { ViewRejectionReasonModalComponent } from '@app/admin/required-document-files/view-rejection-reason-modal.component';
 import { TruckSubmitedDocumentsListComponent } from '@app/main/documentFiles/documentFiles/trucks-submitted-documents/truck-submited-documents-list/truck-submited-documents-list.component';
-import { CompletedTripsWidgetComponent } from './customizable-dashboard/widgets/shipper/completed-trips-widget/completed-trips-widget.component';
+import { CompletedTripsWidgetComponent } from './customizable-dashboard/widgets/shared_widgets/completed-trips-widget/completed-trips-widget.component';
 import { ChartModule } from '@node_modules/primeng/chart';
 import { CompletedTripVsPodComponent } from './customizable-dashboard/widgets/shipper/completed-trip-vs-pod/completed-trip-vs-pod.component';
 import { AcceptedVsRejecedRequestsComponent } from './customizable-dashboard/widgets/shipper/accepted-vs-rejeced-requests/accepted-vs-rejeced-requests.component';
-import { InvoicesVsPaidInvoicesComponent } from './customizable-dashboard/widgets/shipper/invoices-vs-paid-invoices/invoices-vs-paid-invoices.component';
+import { InvoicesVsPaidInvoicesComponent } from './customizable-dashboard/widgets/shared_widgets/invoices-vs-paid-invoices/invoices-vs-paid-invoices.component';
 import { MostWorkedWithCarriersComponent } from './customizable-dashboard/widgets/shipper/most-worked-with-carriers/most-worked-with-carriers.component';
 import { RequestsInMarketPlaceComponent } from './customizable-dashboard/widgets/shipper/requests-in-market-place/requests-in-market-place.component';
 import { NgApexchartsModule } from '@node_modules/ng-apexcharts';

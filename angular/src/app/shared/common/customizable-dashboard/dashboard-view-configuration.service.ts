@@ -14,24 +14,22 @@ import { WidgetSubscriptionExpiringTenantsComponent } from './widgets/widget-sub
 import { WidgetHostTopStatsComponent } from './widgets/widget-host-top-stats/widget-host-top-stats.component';
 import { FilterDateRangePickerComponent } from './filters/filter-date-range-picker/filter-date-range-picker.component';
 import { WidgetTopStatsComponent } from './widgets/widget-top-stats/widget-top-stats.component';
-import { CompletedTripsWidgetComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/completed-trips-widget/completed-trips-widget.component';
+import { CompletedTripsWidgetComponent } from '@app/shared/common/customizable-dashboard/widgets/shared_widgets/completed-trips-widget/completed-trips-widget.component';
 import { CompletedTripVsPodComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/completed-trip-vs-pod/completed-trip-vs-pod.component';
 import { AcceptedVsRejecedRequestsComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/accepted-vs-rejeced-requests/accepted-vs-rejeced-requests.component';
-import { InvoicesVsPaidInvoicesComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/invoices-vs-paid-invoices/invoices-vs-paid-invoices.component';
+import { InvoicesVsPaidInvoicesComponent } from '@app/shared/common/customizable-dashboard/widgets/shared_widgets/invoices-vs-paid-invoices/invoices-vs-paid-invoices.component';
 import { MostWorkedWithCarriersComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/most-worked-with-carriers/most-worked-with-carriers.component';
 import { RequestsInMarketPlaceComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/requests-in-market-place/requests-in-market-place.component';
 import { NextInvoiceFrequancyDateComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/next-invoice-frequancy-date/next-invoice-frequancy-date.component';
 import { InvoiceDueDateComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/invoice-due-date/invoice-due-date.component';
-import { ShipperDueDateInDaysComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/shipper-due-date-in-days/shipper-due-date-in-days.component';
+import { ShipperDueDateInDaysComponent } from '@app/shared/common/customizable-dashboard/widgets/shared_widgets/shipper-due-date-in-days/shipper-due-date-in-days.component';
 import { MostUsedOriginComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/most-used-origin/most-used-origin.component';
 import { MostUsedDestinationsComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/most-used-destinations/most-used-destinations.component';
 import { TrackingMapComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/tracking-map/tracking-map.component';
-import { CarrierInvoicesVsPaidInvoicesComponent } from '@app/shared/common/customizable-dashboard/widgets/carrier/invoices-vs-paid-invoices/invoices-vs-paid-invoices.component';
 import { AcceptedVsRejectedPricingComponent } from '@app/shared/common/customizable-dashboard/widgets/carrier/accepted-vs-rejected-pricing/accepted-vs-rejected-pricing.component';
 import { MostUsedVasesComponent } from '@app/shared/common/customizable-dashboard/widgets/carrier/most-used-vases/most-used-vases.component';
 import { MostWorkedWithShippersComponent } from '@app/shared/common/customizable-dashboard/widgets/carrier/most-worked-with-shippers/most-worked-with-shippers.component';
 import { MostUsedppComponent } from '@app/shared/common/customizable-dashboard/widgets/carrier/most-usedpp/most-usedpp.component';
-import { CarrierDocumentsDueDateinDaysComponent } from '@app/shared/common/customizable-dashboard/widgets/carrier/carrier-documents-due-datein-days/carrier-documents-due-datein-days.component';
 import { TucksActivityComponent } from '@app/shared/common/customizable-dashboard/widgets/carrier/tucks-activity/tucks-activity.component';
 import { DriversActivityComponent } from '@app/shared/common/customizable-dashboard/widgets/carrier/drivers-activity/drivers-activity.component';
 import { NumberOfRegesterdTrucksComponent } from '@app/shared/common/customizable-dashboard/widgets/host/number-of-regesterd-trucks/number-of-regesterd-trucks.component';
@@ -177,7 +175,7 @@ export class DashboardViewConfigurationService {
     //carrier Widgets
     let carrierInvoicesVsPaid = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.Carrier.CarrierInvoicesVsPaidInvoicesWidget,
-      CarrierInvoicesVsPaidInvoicesComponent,
+      InvoicesVsPaidInvoicesComponent,
       4,
       4
     );
@@ -215,7 +213,7 @@ export class DashboardViewConfigurationService {
 
     let CarrierDocumentsDueDate = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.Carrier.CarrierDueDateInDaysWidget,
-      InvoiceDueDateComponent,
+      ShipperDueDateInDaysComponent,
       4,
       4
     );

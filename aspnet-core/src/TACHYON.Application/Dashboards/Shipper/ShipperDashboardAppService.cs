@@ -265,6 +265,7 @@ namespace TACHYON.Dashboards.Shipper
             var query = _invoiceRepository.GetAll().AsNoTracking()
             .Include(r => r.Tenant)
             .WhereIf(IsEnabled(AppFeatures.Shipper), x => x.TenantId == AbpSession.TenantId)
+            .WhereIf(IsEnabled(AppFeatures.Carrier), x => x.TenantId == AbpSession.TenantId)
             .Where(r => r.IsPaid == false
                     && r.DueDate != null
                     && r.DueDate.Date > Clock.Now.Date);
