@@ -150,6 +150,7 @@ namespace TACHYON.Tracking
         #region Helper
         private TrackingListDto GetMap(ShippingRequestTrip trip)
         {
+            var workingOnAnotherTrip = WorkingInAnotherTrip(trip);
             var dto = ObjectMapper.Map<TrackingListDto>(trip);
             if (trip.AssignedTruckFk != null) dto.TruckType = ObjectMapper.Map<TrucksTypeDto>(trip.AssignedTruckFk.TrucksTypeFk)?.TranslatedDisplayName ?? "";
             dto.GoodsCategory = ObjectMapper.Map<GoodCategoryDto>(trip.ShippingRequestFk.GoodCategoryFk)?.DisplayName;
@@ -163,7 +164,7 @@ namespace TACHYON.Tracking
                 {
                     dto.Name = trip.ShippingRequestFk.Tenant.Name;
                     dto.IsAssign = true;
-                    dto.CanStartTrip = CanStartTrip(trip);
+                    dto.CanStartTrip = CanStartTrip(trip, workingOnAnotherTrip);
                 }
 
             }
@@ -171,31 +172,70 @@ namespace TACHYON.Tracking
             {
                 if (trip.ShippingRequestFk.IsTachyonDeal)
                 {
-                    dto.CanStartTrip = CanStartTrip(trip);
+                    dto.CanStartTrip = CanStartTrip(trip, workingOnAnotherTrip);
                     dto.IsAssign = true;
                 }
                 dto.Name = $"{trip.ShippingRequestFk?.Tenant?.Name}-{trip.ShippingRequestFk?.CarrierTenantFk?.Name}";
             }
+
+            dto.CanAcceptTrip = CanAcceptTrip(trip, workingOnAnotherTrip);
+            if (!dto.CanAcceptTrip)
+                dto.NoActionReason = CanNotAcceptReason(trip, workingOnAnotherTrip);
+            if (trip.Status == ShippingRequestTripStatus.New && trip.DriverStatus == ShippingRequestTripDriverStatus.Accepted && !dto.CanStartTrip)
+                dto.NoActionReason = CanNotStartReason(trip, workingOnAnotherTrip); ;
+
             return dto;
         }
         #endregion
-        private bool CanStartTrip(ShippingRequestTrip trip)
+        private bool CanStartTrip(ShippingRequestTrip trip, bool workingOnAnotherTrip)
         {
             if (trip.Status == ShippingRequestTripStatus.Intransit || !trip.AssignedDriverUserId.HasValue)
             {
                 return false;
             }
-            else if (trip.StartTripDate.Date <= Clock.Now.Date && trip.Status == ShippingRequestTripStatus.New)
+            else if (trip.ShippingRequestFk.StartTripDate <= Clock.Now.Date && trip.Status == ShippingRequestTripStatus.New)
             {
-
                 //Check there any trip the driver still working on or not
-                var Count = _shippingRequestTrip.GetAll()
-                    .Where(x => x.AssignedDriverUserId == trip.AssignedDriverUserId && x.Status == ShippingRequestTripStatus.Intransit).Count();
-                if (Count == 0)
-                    return true;
+                return !workingOnAnotherTrip;
             }
 
             return false;
+        }
+        private bool CanAcceptTrip(ShippingRequestTrip trip, bool workingOnAnotherTrip)
+        {
+            if (trip.DriverStatus == ShippingRequestTripDriverStatus.None && trip.Status == ShippingRequestTripStatus.Intransit && trip.AssignedDriverUserId.HasValue)
+                return !workingOnAnotherTrip;
+            else if (trip.DriverStatus == ShippingRequestTripDriverStatus.None && trip.Status == ShippingRequestTripStatus.New && trip.AssignedDriverUserId.HasValue)
+                return true;
+            return false;
+        }
+        private string CanNotAcceptReason(ShippingRequestTrip trip, bool workingOnAnotherTrip)
+        {
+            if (!trip.AssignedDriverUserId.HasValue)
+                return L("ThereIsNoDriverAssingdToTrip");
+
+            if (trip.DriverStatus == ShippingRequestTripDriverStatus.None && workingOnAnotherTrip)
+                return L("TheDriverAlreadyWorkingOnAnotherTrip");
+
+            return null;
+        }
+        private string CanNotStartReason(ShippingRequestTrip trip, bool workingOnAnotherTrip)
+        {
+            if (!trip.AssignedDriverUserId.HasValue)
+                return L("ThereIsNoDriverAssingdToTrip");
+
+            if (trip.ShippingRequestFk.StartTripDate > Clock.Now)
+                return L("TheStartDateOfTripNotCome");
+
+
+            if (workingOnAnotherTrip)
+                return L("TheDriverAlreadyWorkingOnAnotherTrip");
+
+            return null;
+        }
+        private bool WorkingInAnotherTrip(ShippingRequestTrip trip)
+        {
+            return _shippingRequestTrip.GetAll().Any(x => x.AssignedDriverUserId == trip.AssignedDriverUserId && x.DriverStatus == ShippingRequestTripDriverStatus.Accepted && x.Status == ShippingRequestTripStatus.Intransit);
         }
     }
 }

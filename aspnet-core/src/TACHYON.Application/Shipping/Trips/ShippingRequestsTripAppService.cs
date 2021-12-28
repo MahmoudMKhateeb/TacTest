@@ -184,7 +184,7 @@ namespace TACHYON.Shipping.Trips
                 new CreateOrEditShippingRequestTripDto
                 {
                     CreateOrEditDocumentFileDto = new CreateOrEditDocumentFileDto()
-                    
+
                 };
             //Fill documentType  
             var documentType = await _documentTypeRepository.SingleAsync(x => x.SpecialConstant.Contains(TACHYONConsts.TripAttachmentDocumentTypeSpecialConstant));
@@ -277,6 +277,9 @@ namespace TACHYON.Shipping.Trips
                 trip.RejectedReason = string.Empty;
                 trip.RejectReasonId = default(int?);
             }
+
+            if (trip.Status == ShippingRequestTripStatus.Intransit && await CheckIfDriverWorkingOnAnotherTrip(input.AssignedDriverUserId))
+                throw new UserFriendlyException(L("TheDriverAreadyWorkingOnAnotherTrip"));
 
             if (oldAssignedDriverUserId != trip.AssignedDriverUserId)
             {
@@ -468,8 +471,8 @@ namespace TACHYON.Shipping.Trips
                 .Include(x => x.RoutPoints)
                    .ThenInclude(r => r.GoodsDetails)
                     .ThenInclude(c => c.GoodCategoryFk)
-                .Include(x=>x.RoutPoints)
-                    .ThenInclude(c=>c.ReceiverFk)
+                .Include(x => x.RoutPoints)
+                    .ThenInclude(c => c.ReceiverFk)
                 .Include(x => x.ShippingRequestTripVases)
                   .ThenInclude(v => v.ShippingRequestVasFk)
                     .ThenInclude(v => v.VasFk)
@@ -594,7 +597,13 @@ namespace TACHYON.Shipping.Trips
                 await _appNotifier.NotifyCarrierWhenTripNeedsDeliverNote(trip.Id, carrierTenantId);
             }
         }
-
+        private async Task<bool> CheckIfDriverWorkingOnAnotherTrip(long assignedDriverUserId)
+        {
+            return await _shippingRequestTripRepository.GetAll()
+                .AnyAsync(x => x.AssignedDriverUserId == assignedDriverUserId
+                            && x.Status == ShippingRequestTripStatus.Intransit
+                            && x.DriverStatus == ShippingRequestTripDriverStatus.Accepted);
+        }
         #endregion
     }
 }

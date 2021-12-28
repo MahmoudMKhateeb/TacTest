@@ -85,12 +85,24 @@ namespace TACHYON.Shipping.Trips
             DisableTenancyFilters();
             var currentUser = await GetCurrentUserAsync(_abpSession);
             var trip = await CheckIfCanAccepted(id, currentUser);
+
+            if (trip.Status == ShippingRequestTripStatus.Intransit && await CheckIfDriverWorkingOnAnotherTrip(trip.AssignedDriverUserId.Value))
+                throw new UserFriendlyException(L("TheDriverAreadyWorkingOnAnotherTrip"));
+
             trip.DriverStatus = ShippingRequestTripDriverStatus.Accepted;
             await GeneratePrices(trip);
             if (currentUser.IsDriver) await _appNotifier.DriverAcceptTrip(trip, currentUser.FullName);
 
             await _hubContext.Clients.Users(await GetUsersHubNotification(trip, currentUser)).SendAsync("tracking", TACHYONConsts.TriggerTrackingAccepted, ObjectMapper.Map<TrackingListDto>(trip));
 
+        }
+
+        private async Task<bool> CheckIfDriverWorkingOnAnotherTrip(long assignedDriverUserId)
+        {
+            return await _shippingRequestTrip.GetAll()
+                .AnyAsync(x => x.AssignedDriverUserId == assignedDriverUserId
+                            && x.Status == ShippingRequestTripStatus.Intransit
+                            && x.DriverStatus == ShippingRequestTripDriverStatus.Accepted);
         }
 
         /// <summary>
@@ -473,7 +485,8 @@ namespace TACHYON.Shipping.Trips
                             .WhereIf(!user.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => x.ShippingRequestFk.IsTachyonDeal)
                             .WhereIf(user.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestFk.CarrierTenantId == user.TenantId.Value)
                             .WhereIf(user.IsDriver, x => x.AssignedDriverUserId == user.Id)
-                            .FirstOrDefaultAsync(t => t.DriverStatus == ShippingRequestTripDriverStatus.None && t.Status == ShippingRequestTripStatus.New);
+                            .FirstOrDefaultAsync(t => t.DriverStatus == ShippingRequestTripDriverStatus.None
+                            && (t.Status == ShippingRequestTripStatus.New || t.Status == ShippingRequestTripStatus.Intransit));
             if (trip == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
             return trip;
         }

@@ -64,14 +64,13 @@
                 </p>
               </div>
             </div>
+            <div *ngIf="item.noActionReason" class="textStautsNow">
+              <span>
+                {{ item.noActionReason }}
+              </span>
+            </div>
             <div class="actions">
-              <a
-                href="javascript:void(0)"
-                class="red"
-                (click)="accept()"
-                *ngIf="item.driverStatus == 0 && item.status == 0 && item.canStartTrip"
-                [buttonBusy]="saving"
-              >
+              <a href="javascript:void(0)" class="red" (click)="accept()" *ngIf="item.canAcceptTrip" [buttonBusy]="saving">
                 {{ l('Acknowledge') }}
               </a>
               <a href="javascript:void(0)" class="red" (click)="TripAccidentModal.show(item.id, null)" *ngIf="canCreateAccident()">
@@ -136,7 +135,10 @@
                   {{ pickup.note }}
                 </p>
               </div>
-              <div class="actions mt-0" *ngIf="!pickup.isComplete && item.driverStatus == 1">
+              <div
+                class="actions mt-0"
+                *ngIf="!pickup.isComplete && item.driverStatus == 1 && (item.status == 1 || (item.status == 0 && item.canStartTrip))"
+              >
                 <a href="javascript:void(0)" *ngIf="!saving && item.isAssign" (click)="changeStatus(pickup)">
                   {{ pickup.nextStatus }}
                 </a>
@@ -233,7 +235,7 @@
                   {{ drop.note }}
                 </p>
               </div>
-              <div class="actions mt-0" *ngIf="canChangeDropStatus(drop)">
+              <div class="actions mt-0" *ngIf="canChangeDropStatus(drop) && item.driverStatus == 1">
                 <a href="javascript:void(0)" *ngIf="!saving" (click)="changeStatus(drop)">
                   {{ drop.nextStatus }}
                 </a>
