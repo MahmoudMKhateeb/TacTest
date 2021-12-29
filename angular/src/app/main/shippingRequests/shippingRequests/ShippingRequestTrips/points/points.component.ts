@@ -55,6 +55,7 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
   active = false;
   saving = false;
   facilityLoading = false;
+  loading = false;
   zoom: Number = 13; //map zoom
   //this dir is for Single Route Step Map Route Draw
   lat: Number = 24.717942;
@@ -63,6 +64,7 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
   wayPoints = [];
   wayPointMapSource = undefined;
   wayPointMapDest = undefined;
+  id: number;
   Point: CreateOrEditRoutPointDto;
   private pointsServiceSubscription$: Subscription;
   private tripDestFacilitySub$: Subscription;
@@ -205,8 +207,11 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
   }
 
   downloadDropWayBill(i: number) {
+    this.id = i;
+    this.loading = true;
     this._waybillsServiceProxy.getMultipleDropWaybillPdf(i).subscribe((result) => {
       this._fileDownloadService.downloadTempFile(result);
+      this.loading = false;
     });
   }
 }
