@@ -9,7 +9,16 @@
     <text name="EditDangerousGoodType">Edit dangerous good type</text>
     <text name="DeleteDangerousGoodType">Delete dangerous good type</text>
     <text name="DangerousGoodTypes">Dangerous good types</text>
-
+    <text name="NumberOfRequests">Number Of Requests</text>
+    <text name="NumberOfDeliveredTrips">Number Of Delivered Trips</text>
+    <text name="MostShippersRequests">Most Shippers Requests</text>
+    <text name="MostCarriersRequests">Most Carriers Requests</text>
+    <text name="TopRatedShippers">Top Rated Shippers</text>
+    <text name="TopRatedCarriers">Top Rated Carriers</text>
+    <text name="RequestBeingPricedBeforeBidEndDate">Request Being Priced before bid end date</text>
+    <text name="RequestAcceptancePercentage">Request Acceptance Percentage</text>
+    <text name="InvoicesPaidBeforeDueDatePercentage">Invoices Paid Before Due Date Percentage</text>
+    <text name="UnPricedShippingRequests">UnPriced Shipping Requests</text>
 		<text name="{0}IsInvalid">"{0}" is invalid</text>
 		<text name="{0}IsRequired">{0} is required.</text>
 		<text name="{0}UserCannotBeDeleted">{0} user can not be deleted.</text>

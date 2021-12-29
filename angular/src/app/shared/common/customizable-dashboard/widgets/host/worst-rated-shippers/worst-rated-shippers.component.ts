@@ -3,19 +3,20 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import { HostDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
 
 @Component({
-  selector: 'app-deleverd-trips',
-  templateUrl: './deleverd-trips.component.html',
-  styles: [],
+  selector: 'app-worst-rated-shippers',
+  templateUrl: './worst-rated-shippers.component.html',
+  styleUrls: ['./worst-rated-shippers.component.css'],
 })
-export class DeleverdTripsComponent extends AppComponentBase implements OnInit {
-  deliveredTripsCount: number;
+export class WorstRatedShippersComponent extends AppComponentBase implements OnInit {
+  worstRatedShippers: any;
+
   constructor(private injector: Injector, private _hostDashboardServiceProxy: HostDashboardServiceProxy) {
     super(injector);
   }
 
   ngOnInit(): void {
-    this._hostDashboardServiceProxy.getDeliveredTripsCount().subscribe((result) => {
-      this.deliveredTripsCount = result;
+    this._hostDashboardServiceProxy.getWorstRatedShippers().subscribe((result) => {
+      this.worstRatedShippers = result;
     });
   }
 }
