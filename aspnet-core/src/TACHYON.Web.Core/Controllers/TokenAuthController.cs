@@ -140,9 +140,10 @@ namespace TACHYON.Web.Controllers
             _mobileManager = mobileManager;
             _shippingRequestsTripManager = shippingRequestsTripManager;
             _testMobiles = new List<string>()
-            {
-                "599925326",
-                "500679773"
+            { // to do => it's a good idea if we bind mobile numbers from settings (use ui)
+                "599925326", // Aiman
+                "500679773", // Esraa
+                "551337923"  // Lujain
             };
         }
 
