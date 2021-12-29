@@ -271,6 +271,7 @@ import { AddAccidentCommentModalComponent } from './shippingRequests/shippingReq
 import { ShippingRequestRatingModalComponent } from './shippingRequests/shippingRequests/rating/shipping-request-rating-modal.component';
 import { RatingModule } from '@node_modules/primeng/rating';
 import { ViewRatingComponent } from './shippingRequests/shippingRequests/rating/view-rating/view-rating.component';
+import { ShipmentHistoryComponent } from './shippingRequests/shippingRequests/shipment-history/shipment-history.component';
 
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
@@ -521,6 +522,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     AddAccidentCommentModalComponent,
     ShippingRequestRatingModalComponent,
     ViewRatingComponent,
+    ShipmentHistoryComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },

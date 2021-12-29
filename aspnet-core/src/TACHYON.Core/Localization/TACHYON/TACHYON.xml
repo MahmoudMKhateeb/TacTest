@@ -31,6 +31,7 @@
     <text name="MostUsedDestantions">Most Used Destantions</text>
     <text name="InvoicesVsPaidInvoices">Invoices Vs Paid Invoices</text>
     <text name="{0}IsInvalid">"{0}" is invalid</text>
+    <text name="ShipmentHistory">Shipment History</text>
 		<text name="{0}IsRequired">{0} is required.</text>
 		<text name="{0}UserCannotBeDeleted">{0} user can not be deleted.</text>
 		<text name="3rdPartyInsurancecoverage">3rd Party Insurance Coverage</text>
