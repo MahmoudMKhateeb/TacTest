@@ -34,8 +34,6 @@ namespace TACHYON.MultiTenancy.Dto
         [DisableAuditing]
         public string ConnectionString { get; set; }
 
-        public int? EditionId { get; set; }
-
         public bool IsActive { get; set; }
 
         public DateTime? SubscriptionEndDateUtc { get; set; }
