@@ -1,4 +1,5 @@
-﻿using Abp.Application.Services;
+﻿using Abp.Application.Features;
+using Abp.Application.Services;
 using Abp.AutoMapper;
 using Abp.BackgroundJobs;
 using Abp.Configuration;
@@ -22,6 +23,7 @@ using TACHYON.BayanIntegration.Jobs;
 using TACHYON.BayanIntegration.Modules;
 using TACHYON.Configuration;
 using TACHYON.Documents;
+using TACHYON.Features;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
@@ -40,6 +42,9 @@ namespace TACHYON.BayanIntegration
         private readonly DocumentFilesManager _documentFilesManager;
         private readonly ISettingManager _settingManager;
         private readonly IBackgroundJobManager _backgroundJobManager;
+        /// <summary>Reference to the feature checker.</summary>
+        public IFeatureChecker FeatureChecker { protected get; set; }
+
 
         public BayanIntegrationManager(IRepository<ShippingRequest, long> shippingRequestRepository, IRepository<ShippingRequestTrip> shippingRequestTripTripRepository, DocumentFilesManager documentFilesManager, IRepository<ShippingRequestTripVas, long> shippingRequestTripVasRepository, ISettingManager settingManager, IBackgroundJobManager backgroundJobManager)
         {
@@ -65,58 +70,21 @@ namespace TACHYON.BayanIntegration
 
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
             {
-                //try
-                //{
-                Tuple<RootForCreate, ShippingRequestTrip> tuple = await GetRootForCreate(id);
-                string body = ToJsonLowerCaseFirstLetter(tuple.Item1);
+                var trip = await _shippingRequestTripTripRepository
+                    .GetAllIncluding(x => x.ShippingRequestFk)
+                    .Where(x => x.Id == id)
+                    .FirstOrDefaultAsync();
+                var carrierId = trip.ShippingRequestFk.CarrierTenantId;
+                var shipperId = trip.ShippingRequestFk.TenantId;
 
-                var client = new RestClient(await Url + "consignment-notes");
-                client.Timeout = -1;
-                var request = new RestRequest(Method.POST);
-                request.AddHeader("app_id", await AppId);
-                request.AddHeader("app_key", await AppKey);
-                request.AddHeader("Content-Type", "application/json");
-                request.AddHeader("client_id", await ClientId);
-                request.AddParameter("application/json", body, ParameterType.RequestBody);
-                IRestResponse response = await client.ExecuteAsync(request);
-                if (response.StatusCode != HttpStatusCode.OK)
+                if (carrierId != null &&
+                    await FeatureChecker.IsEnabledAsync(carrierId.Value, AppFeatures.BayanIntegration) &&
+                    await FeatureChecker.IsEnabledAsync(shipperId, AppFeatures.BayanIntegration))
                 {
-                    Logger.Error("BayanIntegrationManager.CreateConsignmentNote" + response.Content);
-                }
-                else
-                {
-                    Logger.Trace("BayanIntegrationManager.CreateConsignmentNote" + response.Content);
-                    tuple.Item2.BayanId = response.Content;
-                }
+                    //try
+                    //{
+                    Tuple<RootForCreate, ShippingRequestTrip> tuple = await GetRootForCreate(id);
 
-                //}
-                //catch (Exception e)
-                //{
-                //    Logger.Error("BayanIntegrationManager.CreateConsignmentNote" + e.Message);
-                //}
-
-
-
-            }
-
-
-        }
-
-        public async Task QueueCreateConsignmentNote(int tripId)
-        {
-            await _backgroundJobManager.EnqueueAsync<CreateConsignmentNoteJob, int>(tripId);
-        }
-
-        /// <summary>
-        /// This is service shall be utilized by Electronic Freight Forwarders to allows their systems to  update Consignment note in Bayan system 
-        /// </summary>
-        public async Task EditConsignmentNote(int tripId)
-        {
-            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
-            {
-                try
-                {
-                    Tuple<RootForEdit, ShippingRequestTrip> tuple = await GetRootForEdit(tripId);
                     string body = ToJsonLowerCaseFirstLetter(tuple.Item1);
 
                     var client = new RestClient(await Url + "consignment-notes");
@@ -130,18 +98,87 @@ namespace TACHYON.BayanIntegration
                     IRestResponse response = await client.ExecuteAsync(request);
                     if (response.StatusCode != HttpStatusCode.OK)
                     {
-                        Logger.Error("BayanIntegrationManager.EditConsignmentNote" + response);
+                        Logger.Error("BayanIntegrationManager.CreateConsignmentNote" + response.Content);
                     }
                     else
                     {
-                        Logger.Trace("BayanIntegrationManager.EditConsignmentNote" + response);
+                        Logger.Trace("BayanIntegrationManager.CreateConsignmentNote" + response.Content);
+                        tuple.Item2.BayanId = response.Content;
+                    }
 
+                    //}
+                    //catch (Exception e)
+                    //{
+                    //    Logger.Error("BayanIntegrationManager.CreateConsignmentNote" + e.Message);
+                    //}
+                }
+
+
+
+
+            }
+
+
+
+
+        }
+
+        public async Task QueueCreateConsignmentNote(int tripId)
+        {
+
+            await _backgroundJobManager.EnqueueAsync<CreateConsignmentNoteJob, int>(tripId);
+
+
+        }
+
+        /// <summary>
+        /// This is service shall be utilized by Electronic Freight Forwarders to allows their systems to  update Consignment note in Bayan system 
+        /// </summary>
+        public async Task EditConsignmentNote(int tripId)
+        {
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
+            {
+                var trip = await _shippingRequestTripTripRepository
+                    .GetAllIncluding(x => x.ShippingRequestFk)
+                    .Where(x => x.Id == tripId)
+                    .FirstOrDefaultAsync();
+                var carrierId = trip.ShippingRequestFk.CarrierTenantId;
+                var shipperId = trip.ShippingRequestFk.TenantId;
+
+                if (carrierId != null &&
+                    await FeatureChecker.IsEnabledAsync(carrierId.Value, AppFeatures.BayanIntegration) &&
+                    await FeatureChecker.IsEnabledAsync(shipperId, AppFeatures.BayanIntegration))
+                {
+                    try
+                    {
+                        Tuple<RootForEdit, ShippingRequestTrip> tuple = await GetRootForEdit(tripId);
+                        string body = ToJsonLowerCaseFirstLetter(tuple.Item1);
+
+                        var client = new RestClient(await Url + "consignment-notes");
+                        client.Timeout = -1;
+                        var request = new RestRequest(Method.POST);
+                        request.AddHeader("app_id", await AppId);
+                        request.AddHeader("app_key", await AppKey);
+                        request.AddHeader("Content-Type", "application/json");
+                        request.AddHeader("client_id", await ClientId);
+                        request.AddParameter("application/json", body, ParameterType.RequestBody);
+                        IRestResponse response = await client.ExecuteAsync(request);
+                        if (response.StatusCode != HttpStatusCode.OK)
+                        {
+                            Logger.Error("BayanIntegrationManager.EditConsignmentNote" + response);
+                        }
+                        else
+                        {
+                            Logger.Trace("BayanIntegrationManager.EditConsignmentNote" + response);
+
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Error("BayanIntegrationManager.EditConsignmentNote" + e.Message);
                     }
                 }
-                catch (Exception e)
-                {
-                    Logger.Error("BayanIntegrationManager.EditConsignmentNote" + e.Message);
-                }
+
 
 
 
@@ -150,7 +187,10 @@ namespace TACHYON.BayanIntegration
 
         public async Task QueueEditConsignmentNote(int tripId)
         {
+
             await _backgroundJobManager.EnqueueAsync<EditConsignmentNoteJob, int>(tripId);
+
+
         }
 
         /// <summary>
@@ -163,6 +203,7 @@ namespace TACHYON.BayanIntegration
 
         private async Task<Tuple<RootForCreate, ShippingRequestTrip>> GetRootForCreate(int id)
         {
+
 
             ShippingRequestTrip trip = await _shippingRequestTripTripRepository.GetAsync(id);
 

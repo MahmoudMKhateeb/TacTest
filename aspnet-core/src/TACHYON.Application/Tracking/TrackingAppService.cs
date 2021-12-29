@@ -1,14 +1,17 @@
 ﻿using Abp.Application.Services.Dto;
+using Abp.Authorization;
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
 using Abp.Timing;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
+using NUglify.Helpers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using TACHYON.Authorization;
 using TACHYON.Dto;
 using TACHYON.Features;
 using TACHYON.Goods.GoodCategories.Dtos;
@@ -22,6 +25,8 @@ using TACHYON.Trucks.TrucksTypes.Dtos;
 
 namespace TACHYON.Tracking
 {
+    //to do add permission for best practice 
+    [AbpAuthorize()]
     public class TrackingAppService : TACHYONAppServiceBase, ITrackingAppService
     {
         private readonly IRepository<ShippingRequestTrip> _ShippingRequestTripRepository;
@@ -96,7 +101,7 @@ namespace TACHYON.Tracking
         {
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier, AppFeatures.Shipper);
             DisableTenancyFilters();
-            var routes = _routPointRepository.GetAll()
+            var routes = await _routPointRepository.GetAll()
             .Include(r => r.FacilityFk)
             .Include(r => r.GoodsDetails)
              .ThenInclude(c => c.GoodCategoryFk)
@@ -106,9 +111,26 @@ namespace TACHYON.Tracking
                             .Where(x => x.ShippingRequestTripFk.Id == id && x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId.HasValue)
                             .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper), x => x.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId)
                             .WhereIf(!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer), x => true)
-                            .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId);
-            if (routes == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
-            return new ListResultDto<ShippingRequestTripDriverRoutePointDto>(ObjectMapper.Map<List<ShippingRequestTripDriverRoutePointDto>>(routes));
+                            .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
+            .ToListAsync();
+            if (routes.IsNullOrEmpty()) throw new UserFriendlyException(L("TheTripIsNotFound"));
+
+            if (AbpSession.TenantId.HasValue || !await IsGrantedAsync(AppPermissions.Pages_Tracking_ReceiverCode))
+            {
+                return new ListResultDto<ShippingRequestTripDriverRoutePointDto>()
+                {
+                    Items = ObjectMapper.Map<List<ShippingRequestTripDriverRoutePointDto>>(routes)
+                };
+            }
+
+            var items = new List<ShippingRequestTripDriverRoutePointDto>();
+            foreach (RoutPoint point in routes)
+            {
+                var dto = ObjectMapper.Map<ShippingRequestTripDriverRoutePointDto>(point);
+                dto.ReceiverCode = point.Code;
+                items.Add(dto);
+            }
+            return new ListResultDto<ShippingRequestTripDriverRoutePointDto>(items);
         }
 
 
