@@ -17,6 +17,7 @@ using TACHYON.Features;
 using TACHYON.Goods.GoodCategories.Dtos;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.Drivers.Dto;
+using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips;
 using TACHYON.Shipping.Trips.RejectReasons.Dtos;
@@ -68,6 +69,7 @@ namespace TACHYON.Tracking
              .ThenInclude(c => c.CarrierTenantFk)
                             //TAC-1509
                             //.Where(x => x.ShippingRequestFk.CarrierTenantId.HasValue)
+                            .Where(x => x.ShippingRequestFk.Status == ShippingRequestStatus.PostPrice)
                             .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper), x => x.ShippingRequestFk.TenantId == AbpSession.TenantId)
                             .WhereIf(!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer), x => true)
                             .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
