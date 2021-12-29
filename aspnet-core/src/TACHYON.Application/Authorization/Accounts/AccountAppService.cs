@@ -183,7 +183,6 @@ namespace TACHYON.Authorization.Accounts
             {
                 user = await UserManager.GetUserByIdAsync(input.UserId);
             }
-
             if (user != null && user.IsEmailConfirmed)
             {
                 return;
@@ -193,7 +192,7 @@ namespace TACHYON.Authorization.Accounts
             {
                 throw new UserFriendlyException(L("InvalidEmailConfirmationCode"), L("InvalidEmailConfirmationCode_Detail"));
             }
-
+            CurrentUnitOfWork.SetTenantId(user.TenantId);
             user.IsEmailConfirmed = true;
             user.EmailConfirmationCode = null;
 
