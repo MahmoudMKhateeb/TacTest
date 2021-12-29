@@ -1,4 +1,5 @@
 ﻿using Abp.Application.Features;
+using Abp.Configuration;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Localization;
@@ -7,8 +8,10 @@ using Abp.UI.Inputs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TACHYON.Configuration;
 using TACHYON.Invoices.PaymentMethods;
 using TACHYON.Invoices.Periods;
+using TACHYON.MultiTenancy;
 using TACHYON.PriceOffers;
 
 namespace TACHYON.Features
@@ -16,12 +19,16 @@ namespace TACHYON.Features
     public class AppFeatureProvider : FeatureProvider
     {
         private IRepository<InvoicePeriod> _PeriodRepository;
+        private IRepository<Tenant> _tenantRepository;
         private readonly IRepository<InvoicePaymentMethod> _invoicePaymentMethodRepository;
+        public ISettingManager SettingManager { get; set; }
 
-        public AppFeatureProvider(IRepository<InvoicePeriod> periodRepository, IRepository<InvoicePaymentMethod> invoicePaymentMethodRepository)
+
+        public AppFeatureProvider(IRepository<InvoicePeriod> periodRepository, IRepository<InvoicePaymentMethod> invoicePaymentMethodRepository, IRepository<Tenant> tenantRepository)
         {
             _PeriodRepository = periodRepository;
             _invoicePaymentMethodRepository = invoicePaymentMethodRepository;
+            _tenantRepository = tenantRepository;
         }
 
         [UnitOfWork]
@@ -451,6 +458,13 @@ namespace TACHYON.Features
 
             #endregion
 
+            var BayanIntegration = context.Create(
+                AppFeatures.BayanIntegration,
+                "true",
+                L("BayanIntegration"),
+                inputType: new CheckboxInputType()
+            );
+
             var chatFeature = context.Create(
                 AppFeatures.ChatFeature,
                 "false",
@@ -472,6 +486,27 @@ namespace TACHYON.Features
                 inputType: new CheckboxInputType()
             );
 
+
+            var carrierEditionId = Convert.ToInt32(SettingManager.GetSettingValue(AppSettings.Editions.CarrierEditionId));
+            ILocalizableComboboxItem[] tenants = _tenantRepository.GetAll()
+                .Where(x=> x.EditionId == carrierEditionId)
+                .Select(i => new LocalizableComboboxItem(i.Id.ToString(), L(i.TenancyName +" - "+i.AccountNumber))).ToArray();
+
+          var saasFeature =   shipperFeature.CreateChildFeature(
+                AppFeatures.Saas,
+                defaultValue: "false",
+                displayName: L(AppFeatures.Saas),
+                inputType: new CheckboxInputType()
+            );
+                saasFeature.CreateChildFeature(
+                    AppFeatures.SaasRelatedCarrier,
+                    defaultValue: "false",
+                    displayName: L(AppFeatures.SaasRelatedCarrier),
+                    inputType: new ComboboxInputType(
+                        new StaticLocalizableComboboxItemSource(tenants)
+                    )
+                );
+            
 
         }
 

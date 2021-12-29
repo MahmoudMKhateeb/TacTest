@@ -215,7 +215,7 @@ export class CreateTenantModalComponent extends AppComponentBase {
   }
 
   checkIfIsCompanyUniqueName() {
-    this._tenantRegistrationService.checkIfCompanyUniqueNameisAvailable(this.tenant.tenancyName).subscribe((result) => {
+    this._tenantRegistrationService.checkIfCompanyUniqueNameisAvailable(this.tenant.companyName).subscribe((result) => {
       this.isCompanyNameAvailable = result;
     });
   }

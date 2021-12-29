@@ -121,7 +121,14 @@
                       </td>
                       <td>
                         <span class="ui-column-title"> {{ l('WayBillNumber') }}</span>
-                        {{ record.waybillNumber }}
+                        <a
+                          class="blueColor"
+                          [busyText]="l('downloadDocument')"
+                          [buttonBusy]="loading && id == record.id"
+                          (click)="downloadDropWayBill(record.id)"
+                        >
+                          {{ record.waybillNumber }}
+                        </a>
                       </td>
                       <td>
                         <span *ngIf="record.pickingType == 1" class="label label-success label-dot mr-2"></span>

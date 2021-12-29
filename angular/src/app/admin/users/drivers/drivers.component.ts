@@ -11,6 +11,7 @@ import { AppConsts } from '@shared/AppConsts';
 import { ViewOrEditEntityDocumentsModalComponent } from '@app/main/documentFiles/documentFiles/documentFilesViewComponents/view-or-edit-entity-documents-modal.componant';
 import CustomStore from '@node_modules/devextreme/data/custom_store';
 import { LoadOptions } from '@node_modules/devextreme/data/load_options';
+import { DriverTrackingModalComponent } from '@app/admin/users/drivers/driver-tracking-modal/driver-tracking-modal.component';
 
 @Component({
   selector: 'app-drivers',
@@ -20,8 +21,11 @@ import { LoadOptions } from '@node_modules/devextreme/data/load_options';
   animations: [appModuleAnimation()],
 })
 export class DriversComponent extends UsersComponent implements AfterViewInit, OnInit {
+  @ViewChild('DriverTrackingModal') DriverTrackingModal: DriverTrackingModalComponent;
   @ViewChild('viewOrEditEntityDocumentsModal', { static: true }) viewOrEditEntityDocumentsModal: ViewOrEditEntityDocumentsModalComponent;
   isArabic = false;
+  driverId: number;
+  tripId: number;
   documentsEntitiesEnum = DocumentsEntitiesEnum;
   dataSource: any = {};
 

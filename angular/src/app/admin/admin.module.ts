@@ -139,6 +139,9 @@ import { DevExtremeModule } from '@node_modules/devextreme-angular';
 import { TruckStatusesTranslationsTemplateComponent } from './trucks/truckStatuses/truck-statuses-translations-template/truck-statuses-translations-template.component';
 import { VasesTranslationsTemplateComponent } from './vases/vases/vases-translations-template/vases-translations-template.component';
 import { RatingModule } from '@node_modules/primeng/rating';
+import { DriverTrackingModalComponent } from './users/drivers/driver-tracking-modal/driver-tracking-modal.component';
+import { AgmCoreModule } from '@node_modules/@agm/core';
+
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   // suppressScrollX: true
 };
@@ -177,6 +180,11 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     NgbModule,
     DevExtremeModule,
     RatingModule,
+    AgmCoreModule,
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyDKKZqDW_xX5azTqBV2oXSb6P3nwCAzOpw',
+      libraries: ['places'],
+    }),
   ],
   declarations: [
     VasesComponent,
@@ -281,6 +289,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     VasesTranslationsTemplateComponent,
     VasesTranslationsTemplateComponent,
     TruckStatusesTranslationsTemplateComponent,
+    DriverTrackingModalComponent,
   ],
 
   exports: [AddMemberModalComponent, AddRoleModalComponent, ViewOrEditEntityDocumentsModalComponent],

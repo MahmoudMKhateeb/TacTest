@@ -106,6 +106,17 @@ export class AppNavigationService {
           ),
           new AppMenuItem('Offers', 'Pages', '', '/app/main/offers'),
           new AppMenuItem('ShipmentTracking', 'Pages', '', '/app/main/tracking'),
+          new AppMenuItem(
+            'ShipmentHistory',
+            'Pages.ShippingRequests',
+            '',
+            '/app/main/shippingRequests/ShipmentHistory',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            () => this.isEnabled('App.TachyonDealer')
+          ),
           new AppMenuItem('Requests', 'Pages', '', '/app/main/shippingRequests/shippingRequests'),
           new AppMenuItem(
             'DirectShippingRequests',
@@ -147,6 +158,17 @@ export class AppNavigationService {
             () => this.isEnabled('App.Shipper')
           ),
           new AppMenuItem('MyShippingRequests', 'Pages.ShippingRequests', '', '/app/main/shippingRequests/shippingRequests'),
+          new AppMenuItem(
+            'ShipmentHistory',
+            'Pages.ShippingRequests',
+            '',
+            '/app/main/shippingRequests/ShipmentHistory',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            () => this.isEnabled('App.Carrier') || this.isEnabled('App.Shipper')
+          ),
           new AppMenuItem('Marketplace', '', '', '/app/main/marketplace/list', undefined, undefined, undefined, undefined, () =>
             this.isEnabled('App.MarketPlace')
           ),
@@ -197,6 +219,18 @@ export class AppNavigationService {
           new AppMenuItem('Marketplace', '', '', '/app/main/marketplace/list', undefined, undefined, undefined, undefined, () =>
             this.isEnabled('App.MarketPlace')
           ),
+          new AppMenuItem(
+            'ShipmentHistory',
+            'Pages',
+            '',
+            '/app/main/shippingRequests/ShipmentHistory',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            () => this.isEnabled('App.Carrier')
+          ),
+
           new AppMenuItem(
             'Offers',
             '',

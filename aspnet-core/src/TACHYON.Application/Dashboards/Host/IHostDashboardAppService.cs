@@ -19,5 +19,17 @@ namespace TACHYON.Dashboards.Host
         Task<long> GetTrucksCount();
         Task<List<GoodTypeAvailableDto>> GetGoodTypeCountPerMonth();
         Task<List<RouteTypeAvailableDto>> GetRouteTypeCountPerMonth();
+        Task<List<ListUsersHaveMostRequests>> GetShippersHaveMostRequests();
+        Task<List<ListUsersHaveMostRequests>> GetCarriersHaveMostRequests();
+        Task<List<ListUsersHaveMostRequests>> GetTopRatedShippers();
+        Task<List<ListUsersHaveMostRequests>> GetTopRatedCarriers();
+        Task<List<ListUsersHaveMostRequests>> GetWorstRatedShippers();
+        Task<List<ListRequestsByCityDto>> GetNumberOfRequestsForEachCity();
+        Task<List<ListRequestsUnPricedMarketPlace>> GetUnpricedRequestsInMarketplace(GetUnpricedRequestsInMarketplaceInput input);
+        Task<List<ListUsersHaveMostRequests>> GetWorstRatedCarriers();
+        Task<long> GetRequestBeingPricedBeforeBidEndDateCount();
+        Task<long> GetRequestsPricingAcceptedCount();
+        Task<long> GetInvoicesPaidBeforeDueDatePercentageCount();
+
     }
 }

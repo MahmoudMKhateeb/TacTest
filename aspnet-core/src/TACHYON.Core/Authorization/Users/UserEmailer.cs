@@ -283,6 +283,7 @@ namespace TACHYON.Authorization.Users
             await ReplaceBodyAndSend(user.EmailAddress, L("PasswordResetEmail_Subject"), emailTemplate, mailMessage);
         }
 
+
         public async Task TryToSendChatMessageMail(User user, string senderUsername, string senderTenancyName, ChatMessage chatMessage)
         {
             try

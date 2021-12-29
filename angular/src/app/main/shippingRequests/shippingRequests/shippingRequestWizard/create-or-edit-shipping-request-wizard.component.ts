@@ -223,6 +223,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
           //statements;
           //if step 4 passed load the review&submit
           this.reviewAndSubmit();
+
           break;
         }
       }

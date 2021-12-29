@@ -5331,6 +5331,9 @@ namespace TACHYON.Migrations
                     b.Property<decimal>("CommissionValueSetting")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<bool>("CreatedByTachyonDealer")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
 
@@ -6717,8 +6720,8 @@ namespace TACHYON.Migrations
 
                     b.Property<string>("Language")
                         .IsRequired()
-                        .HasColumnType("nvarchar(32)")
-                        .HasMaxLength(32);
+                        .HasColumnType("nvarchar(5)")
+                        .HasMaxLength(5);
 
                     b.Property<DateTime?>("LastModificationTime")
                         .HasColumnType("datetime2");

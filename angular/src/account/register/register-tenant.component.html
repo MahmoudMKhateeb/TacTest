@@ -99,7 +99,7 @@
             [(ngModel)]="model.countryId"
             required
           >
-            <option [value]="undefined">{{ l('Select') }} {{ l('Country') }}</option>
+            <option value="">{{ l('Select') }} {{ l('Country') }}</option>
             <option *ngFor="let country of allCountries" value="{{ country.id }}">{{ country.displayName }}</option>
           </select>
           <validation-messages [formCtrl]="countrySelect"></validation-messages>
