@@ -280,8 +280,8 @@ namespace TACHYON.Shipping.Trips
         private void ValidateTripDates(CreateOrEditShippingRequestTripDto input, ShippingRequest request)
         {
             if (
-                input.StartTripDate.Date > request.EndTripDate?.Date ||
-                input.StartTripDate.Date < request.StartTripDate?.Date ||
+                input.StartTripDate?.Date > request.EndTripDate?.Date ||
+                input.StartTripDate?.Date < request.StartTripDate?.Date ||
                 (input.EndTripDate != null && input.EndTripDate.Value.Date > request.EndTripDate?.Date) ||
                 (input.EndTripDate != null && input.EndTripDate.Value.Date < request.StartTripDate?.Date)
             )
