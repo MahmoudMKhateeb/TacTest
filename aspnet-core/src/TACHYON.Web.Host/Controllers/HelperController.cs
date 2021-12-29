@@ -252,6 +252,36 @@ namespace TACHYON.Web.Controllers
 
         [HttpPost]
         [AbpMvcAuthorize()]
+        [Route("/api/services/app/ShippingRequestDriver/UploadDeliveredGoodPicture")]
+        public async Task<JsonResult> UploadDeliveredGoodPicture(long? pointId)
+        {
+            try
+            {
+                var file = Request.Form.Files.First();
+                if (file.Length == 0)
+                {
+                    throw new UserFriendlyException(L("File_Empty_Error"));
+                }
+
+                if (file.Length > 1048576 * 100) //100 MB
+                {
+                    throw new UserFriendlyException(L("File_SizeLimit_Error"));
+                }
+
+                var document = await _commonManager.UploadDocument(file, AbpSession.TenantId);
+                await _shippingRequestDriverManager.UploadDeliveredGoodPicture(document, pointId);
+
+                return Json(new AjaxResponse(new { }));
+            }
+            catch (UserFriendlyException ex)
+            {
+                return Json(new AjaxResponse(new ErrorInfo(ex.Message)));
+            }
+        }
+
+
+        [HttpPost]
+        [AbpMvcAuthorize()]
         [Route("/api/services/app/ShippingRequestDriver/AddIncidentReport")]
         public async Task<JsonResult> AddIncidentReport(CreateOrEditShippingRequestTripAccidentDto input)
         {
@@ -260,7 +290,6 @@ namespace TACHYON.Web.Controllers
                 var file = Request.Form.Files.First();
                 if (file != null)
                 {
-                    //Input.Document = file;
                     if (file.Length == 0)
                     {
                         throw new UserFriendlyException(L("File_Empty_Error"));
