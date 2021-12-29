@@ -154,6 +154,9 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
         this._trucksServiceProxy.getAllTransportTypesForDropdown().subscribe((result) => {
           this.allTransportTypes = result;
         });
+        this._trucksServiceProxy.getAllPlateTypeIdForDropdown().subscribe((result) => {
+          this.allPlateTypes = result;
+        });
         this._trucksServiceProxy.getAllTruckTypesByTransportTypeIdForDropdown(this.truck.transportTypeId).subscribe((result) => {
           this.allTruckTypesByTransportType = result;
         });
