@@ -193,7 +193,7 @@ namespace TACHYON.Tracking
             {
                 return false;
             }
-            else if (trip.ShippingRequestFk.StartTripDate <= Clock.Now.Date && trip.Status == ShippingRequestTripStatus.New)
+            else if (trip.ShippingRequestFk.StartTripDate.Value.Date <= Clock.Now.Date && trip.Status == ShippingRequestTripStatus.New)
             {
                 //Check there any trip the driver still working on or not
                 return !workingOnAnotherTrip;
@@ -224,7 +224,7 @@ namespace TACHYON.Tracking
             if (!trip.AssignedDriverUserId.HasValue)
                 return L("ThereIsNoDriverAssingdToTrip");
 
-            if (trip.ShippingRequestFk.StartTripDate > Clock.Now)
+            if (trip.ShippingRequestFk.StartTripDate.Value.Date > Clock.Now.Date)
                 return L("TheStartDateOfTripNotCome");
 
 
