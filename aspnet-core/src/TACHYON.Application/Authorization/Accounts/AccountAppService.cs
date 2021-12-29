@@ -178,8 +178,12 @@ namespace TACHYON.Authorization.Accounts
 
         public async Task ActivateEmail(ActivateEmailInput input)
         {
-            DisableTenancyFilters();
-            var user = await UserManager.GetUserByIdAsync(input.UserId);
+            User user;
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
+            {
+                user = await UserManager.GetUserByIdAsync(input.UserId);
+            }
+
             if (user != null && user.IsEmailConfirmed)
             {
                 return;
@@ -193,6 +197,7 @@ namespace TACHYON.Authorization.Accounts
             user.IsEmailConfirmed = true;
             user.EmailConfirmationCode = null;
 
+            CurrentUnitOfWork.SetTenantId(user.TenantId);
             await UserManager.UpdateAsync(user);
         }
 
