@@ -668,17 +668,6 @@ namespace TACHYON
   .ForMember(dto => dto.Source, options => options.MapFrom(entity => entity.ShippingRequests.OriginCityFk.DisplayName))
   .ForMember(dto => dto.Destination, options => options.MapFrom(entity => entity.ShippingRequests.DestinationCityFk));
 
-            configuration.CreateMap<ShippingRequest, ShipmentHistoryDto>()
-               .ForMember(x => x.ShipperName, z => z.MapFrom(x => x.Tenant.Name))
-               .ForMember(x => x.ShipperId, z => z.MapFrom(x => x.Tenant.Id))
-               .ForMember(x => x.CarrierName, z => z.MapFrom(x => x.CarrierTenantFk.Name))
-               .ForMember(x => x.CarrierTenantId, z => z.MapFrom(x => x.CarrierTenantId))
-               .ForMember(x => x.RequestStatus, opt => opt.MapFrom(src => src.Status))
-               .ForMember(x => x.RequestType, opt => opt.MapFrom(x => x.RequestType));
-
-
-
-
 
             configuration.CreateMap<TACHYON.Invoices.Transactions.Transaction, TransactionListDto>()
                 .ForMember(dto => dto.ClientName, options => options.MapFrom(entity => entity.Tenant.Name))
@@ -713,12 +702,12 @@ namespace TACHYON
                 .EntityMap
                 .ReverseMap();
 
-            configuration.CreateMap<TransportType, TransportTypeSelectItemDto>()
-                .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
+            // #Map_TransportType_TransportTypeSelectItemDto
+            configuration.CreateMultiLingualMap<TransportType, TransportTypesTranslation, TransportTypeSelectItemDto>(context)
+                  .EntityMap
+                  .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
                   .ForMember(dst => dst.IsOther, opt => opt.MapFrom(src => src.ContainsOther()))
-                .ForMember(x => x.DisplayName, x =>
-                    x.MapFrom(i => i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)) != null
-                     ? i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName : i.Key));
+                  .ReverseMap();
 
             configuration.CreateMultiLingualMap<County, CountriesTranslation, CountyDto>(context)
                 .EntityMap
@@ -760,23 +749,26 @@ namespace TACHYON
                 .ReverseMap();
 
             configuration.CreateMap<TrucksType, TrucksTypeSelectItemDto>()
-                .ForMember(x => x.IsOther, x => x.MapFrom(i => i.ContainsOther()))
                 .ForMember(x => x.Id, x => x.MapFrom(i => i.Id.ToString()))
-                .ForMember(x => x.IsOther, x => x.MapFrom(i => i.ContainsOther()))
-               .ForMember(x => x.TranslatedDisplayName, x =>
-                    x.MapFrom(i => i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)) != null
-                    ? i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName : i.Key))
-                .ForMember(x => x.DisplayName, x =>
-                    x.MapFrom(i => i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)) != null
-                     ? i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName : i.Key));
+                .ForMember(x => x.TranslatedDisplayName, x =>
+                    x.MapFrom(i => i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)) != null ? i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName : i.DisplayName))
+                .ForMember(x => x.DisplayName, x => x.MapFrom(i => i.DisplayName));
             //configuration.CreateMultiLingualMap<TrucksType, long, TrucksTypesTranslation, TrucksTypeDto>(context)
             //    .EntityMap
             //    .ReverseMap();
 
+<<<<<<< HEAD
             //configuration.CreateMultiLingualMap<TrucksType, long, TrucksTypesTranslation, TrucksTypeSelectItemDto>(context)
             //    .EntityMap
             //    .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
             //    .ReverseMap();
+=======
+            configuration.CreateMultiLingualMap<TrucksType, long, TrucksTypesTranslation, TrucksTypeSelectItemDto>(context)
+                .EntityMap
+                .ForMember(x => x.IsOther, x => x.MapFrom(i => i.ContainsOther()))
+                .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
+                .ReverseMap();
+>>>>>>> 5bd41e83 (TAC-2077 Return IsOther in all Dropdown actions (where contain other))
 
             //configuration.CreateMultiLingualMap<Vas, VasTranslation, VasDto>(context)
             //    .EntityMap.ForMember(x => x.VasTranslation,

@@ -8,13 +8,15 @@ using TACHYON.Common;
 namespace TACHYON.UnitOfMeasures
 {
     [Table("UnitOfMeasures")]
-    public class UnitOfMeasure : FullAuditedEntity, IHasDisplayName
+    public class UnitOfMeasure : FullAuditedEntity, IHasKey
     {
         // todo Setup This Entity To Be MultiLingual Entity
-        [Required]
+
         [StringLength(UnitOfMeasureConsts.MaxDisplayNameLength, MinimumLength = UnitOfMeasureConsts.MinDisplayNameLength)]
         public virtual string DisplayName { get; set; }
 
-
+        [Required]
+        [StringLength(UnitOfMeasureConsts.MaxDisplayNameLength, MinimumLength = UnitOfMeasureConsts.MinDisplayNameLength)]
+        public virtual string Key { get; set; }
     }
 }

@@ -15,8 +15,4 @@ namespace TACHYON.Common
     {
         string DisplayName { get; set; }
     }
-    public interface IHasName
-    {
-        string Name { get; set; }
-    }
 }

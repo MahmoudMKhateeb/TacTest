@@ -7,5 +7,7 @@ namespace TACHYON.ShippingRequestVases.Dtos
         public int Id { get; set; }
 
         public string DisplayName { get; set; }
+
+        public bool IsOther { get; set; }
     }
 }

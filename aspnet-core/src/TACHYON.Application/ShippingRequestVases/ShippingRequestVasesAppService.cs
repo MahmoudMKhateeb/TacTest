@@ -138,7 +138,8 @@ namespace TACHYON.ShippingRequestVases
                 .Select(vas => new ShippingRequestVasVasLookupTableDto
                 {
                     Id = vas.Id,
-                    DisplayName = vas == null || vas.Name == null ? "" : vas.Name.ToString()
+                    DisplayName = vas == null || vas.Name == null ? "" : vas.Name.ToString(),
+                    IsOther = vas.ContainsOther()
                 }).ToListAsync();
         }
 

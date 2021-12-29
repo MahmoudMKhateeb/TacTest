@@ -18,9 +18,14 @@ namespace TACHYON.Trucks.TrucksTypes
         public virtual string DisplayName { get; set; }
 
         [Required]
+<<<<<<< HEAD
+        [StringLength(TrucksTypeConsts.MaxDisplayNameLength, MinimumLength = TrucksTypeConsts.MinDisplayNameLength)]
+        public virtual string DisplayName { get; set; }
+=======
         [StringLength(TrucksTypeConsts.MaxDisplayNameLength,
             MinimumLength = TrucksTypeConsts.MinDisplayNameLength)]
         public virtual string Key { get; set; }
+>>>>>>> 1667d0ed (TAC-1897 Improve Entities&Translations (Has List Others) Seeding)
 
         public int? TransportTypeId { get; set; }
 

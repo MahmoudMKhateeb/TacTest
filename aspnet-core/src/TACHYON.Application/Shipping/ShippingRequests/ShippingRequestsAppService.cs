@@ -852,7 +852,8 @@ namespace TACHYON.Shipping.ShippingRequests
                     HasCount = vas.HasCount,
                     MaxAmount = 0,
                     MaxCount = 0,
-                    Id = vas.Id
+                    Id = vas.Id,
+                    IsOther = vas.ContainsOther()
                 }).ToListAsync();
         }
 
@@ -946,6 +947,23 @@ namespace TACHYON.Shipping.ShippingRequests
                     DisplayName = x.DisplayName
                 }).ToListAsync();
         }
+
+        public async Task<IEnumerable<ISelectItemDto>> GetAllCapacitiesForDropdown()
+        {
+            List<Capacity> capacity = await _capacityRepository
+                .GetAllIncluding(x => x.Translations)
+                .ToListAsync();
+
+            List<Capacity> filteredCapacity = new List<Capacity>();
+            foreach (var c in capacity)
+            {
+                if (filteredCapacity.Find(x => x.DisplayName.ToLower().TrimEnd().TrimStart() ==
+                                               c.DisplayName.ToLower().TrimEnd().TrimStart()) == null)
+                    filteredCapacity.Add(c);
+            }
+            return ObjectMapper.Map<List<CapacitySelectItemDto>>(filteredCapacity);
+        }
+
         #endregion
 
         #region Waybills
@@ -1367,7 +1385,8 @@ namespace TACHYON.Shipping.ShippingRequests
                 .Select(x => new SelectItemDto()
                 {
                     Id = x.Id.ToString(),
-                    DisplayName = x.DisplayName
+                    DisplayName = x.DisplayName,
+                    IsOther = x.ContainsOther()
                 }).ToListAsync();
         }
 

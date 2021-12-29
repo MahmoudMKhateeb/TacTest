@@ -7,5 +7,7 @@ namespace TACHYON.Trucks.TrucksTypes.TrucksTypesTranslations.Dtos
         public long Id { get; set; }
 
         public string DisplayName { get; set; }
+
+        public bool IsOther { get; set; }
     }
 }
