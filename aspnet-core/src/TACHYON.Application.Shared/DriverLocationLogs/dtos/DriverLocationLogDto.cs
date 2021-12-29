@@ -7,8 +7,9 @@ namespace TACHYON.DriverLocationLogs.dtos
 {
     public class DriverLocationLogDto : EntityDto<long>
     {
-        public long? TripId { get; set; }
+        public int? TripId { get; set; }
         public double Longitude { get; set; }
         public double Latitude { get; set; }
+        public DateTime CreationTime { get; set; }
     }
 }

@@ -280,8 +280,8 @@ namespace TACHYON.Shipping.Trips
         private void ValidateTripDates(CreateOrEditShippingRequestTripDto input, ShippingRequest request)
         {
             if (
-                input.StartTripDate.Date > request.EndTripDate?.Date ||
-                input.StartTripDate.Date < request.StartTripDate?.Date ||
+                input.StartTripDate?.Date > request.EndTripDate?.Date ||
+                input.StartTripDate?.Date < request.StartTripDate?.Date ||
                 (input.EndTripDate != null && input.EndTripDate.Value.Date > request.EndTripDate?.Date) ||
                 (input.EndTripDate != null && input.EndTripDate.Value.Date < request.StartTripDate?.Date)
             )
@@ -516,14 +516,8 @@ namespace TACHYON.Shipping.Trips
                    .ThenInclude(r => r.FacilityFk)
                 .Include(x => x.RoutPoints)
                    .ThenInclude(r => r.GoodsDetails)
-                     .ThenInclude(c => c.GoodCategoryFk)
-                       .ThenInclude(t => t.Translations)
-                .Include(x => x.RoutPoints)
-                  .ThenInclude(i => i.GoodsDetails)
-                    .ThenInclude(p => p.UnitOfMeasureFk)
-                .Include(x => x.RoutPoints)
-                    .ThenInclude(i => i.GoodsDetails)
-                      .ThenInclude(p => p.DangerousGoodTypeFk)
+                    .ThenInclude(c => c.GoodCategoryFk)
+                    .ThenInclude(r => r.Translations)
                 .Include(x => x.RoutPoints)
                     .ThenInclude(c => c.ReceiverFk)
                 .Include(x => x.ShippingRequestTripVases)

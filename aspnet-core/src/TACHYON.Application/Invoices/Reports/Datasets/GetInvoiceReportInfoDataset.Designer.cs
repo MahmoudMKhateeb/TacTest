@@ -325,6 +325,8 @@ namespace TACHYON.Invoices.Reports.Datasets {
             
             private global::System.Data.DataColumn columnBankNameEnglish;
             
+            private global::System.Data.DataColumn columnTenantVatNumber;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public DataTable1DataTable() {
@@ -544,6 +546,14 @@ namespace TACHYON.Invoices.Reports.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn TenantVatNumberColumn {
+                get {
+                    return this.columnTenantVatNumber;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -602,7 +612,8 @@ namespace TACHYON.Invoices.Reports.Datasets {
                         string TotalAmount, 
                         string TaxVat, 
                         string BankNameArabic, 
-                        string BankNameEnglish) {
+                        string BankNameEnglish, 
+                        string TenantVatNumber) {
                 DataTable1Row rowDataTable1Row = ((DataTable1Row)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         InvoiceNumber,
@@ -627,7 +638,8 @@ namespace TACHYON.Invoices.Reports.Datasets {
                         TotalAmount,
                         TaxVat,
                         BankNameArabic,
-                        BankNameEnglish};
+                        BankNameEnglish,
+                        TenantVatNumber};
                 rowDataTable1Row.ItemArray = columnValuesArray;
                 this.Rows.Add(rowDataTable1Row);
                 return rowDataTable1Row;
@@ -673,6 +685,7 @@ namespace TACHYON.Invoices.Reports.Datasets {
                 this.columnTaxVat = base.Columns["TaxVat"];
                 this.columnBankNameArabic = base.Columns["BankNameArabic"];
                 this.columnBankNameEnglish = base.Columns["BankNameEnglish"];
+                this.columnTenantVatNumber = base.Columns["TenantVatNumber"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -724,6 +737,8 @@ namespace TACHYON.Invoices.Reports.Datasets {
                 base.Columns.Add(this.columnBankNameArabic);
                 this.columnBankNameEnglish = new global::System.Data.DataColumn("BankNameEnglish", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnBankNameEnglish);
+                this.columnTenantVatNumber = new global::System.Data.DataColumn("TenantVatNumber", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnTenantVatNumber);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1234,6 +1249,22 @@ namespace TACHYON.Invoices.Reports.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string TenantVatNumber {
+                get {
+                    try {
+                        return ((string)(this[this.tableDataTable1.TenantVatNumberColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'TenantVatNumber\' in table \'DataTable1\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableDataTable1.TenantVatNumberColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public bool IsInvoiceNumberNull() {
                 return this.IsNull(this.tableDataTable1.InvoiceNumberColumn);
             }
@@ -1506,6 +1537,18 @@ namespace TACHYON.Invoices.Reports.Datasets {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public void SetBankNameEnglishNull() {
                 this[this.tableDataTable1.BankNameEnglishColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsTenantVatNumberNull() {
+                return this.IsNull(this.tableDataTable1.TenantVatNumberColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetTenantVatNumberNull() {
+                this[this.tableDataTable1.TenantVatNumberColumn] = global::System.Convert.DBNull;
             }
         }
         

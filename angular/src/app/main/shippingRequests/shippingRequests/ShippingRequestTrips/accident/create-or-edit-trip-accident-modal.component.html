@@ -23,11 +23,10 @@
           <div class="form-group">
             <label>{{ 'AccidentReasonName' | localize }}</label>
             <select name="reasonId" [(ngModel)]="reasonId" (change)="onChangeReason($event.target.value)" class="form-control" required>
-              <option value="">{{ l('SelectReason') }}</option>
+              <option value="null" selected hidden>{{ l('SelectReason') }}</option>
               <option [value]="reason.id" *ngFor="let reason of reasons">
                 {{ reason.displayName }}
               </option>
-              <option value="0">{{ l('Other') }}</option>
             </select>
           </div>
           <div class="form-group">

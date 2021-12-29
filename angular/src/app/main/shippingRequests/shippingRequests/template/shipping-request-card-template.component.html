@@ -107,13 +107,13 @@
               </div>
               <div>
                 <p>
-                  {{ l('CompletedTrips/NoOfTrips') }}
+                  {{ l('CompletedTripsFromTotal') }}
                 </p>
                 <p class="isNum">{{ item.numberOfCompletedTrips }}/{{ item.numberOfTrips }}</p>
               </div>
               <div>
                 <p>
-                  {{ l('CreatedTrips/NoOfTrips') }}
+                  {{ l('CreatedTripsFromTotal') }}
                 </p>
                 <p class="isNum">{{ item.totalsTripsAddByShippier }}/{{ item.numberOfTrips }}</p>
               </div>
@@ -136,6 +136,9 @@
             </div>
             <div class="actionsShip">
               <div>
+                <a *ngIf="(!Channel || Channel == 3) && item.createdByTachyonDealer" href="javascript:void(0)" class="infoHighLight blue">
+                  {{ l('CreatedByTachyonDealer') }}
+                </a>
                 <a *ngIf="feature.isEnabled('App.Shipper')" href="javascript:void(0)" class="infoHighLight blue">
                   {{ l(item.requestTypeTitle) }}
                 </a>

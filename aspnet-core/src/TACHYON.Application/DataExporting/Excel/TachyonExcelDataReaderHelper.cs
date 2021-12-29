@@ -1,14 +1,14 @@
-﻿using System;
+﻿using Abp.Dependency;
+using Abp.Extensions;
+using Abp.Localization;
+using Abp.Localization.Sources;
+using NPOI.SS.UserModel;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Abp.Dependency;
-using Abp.Extensions;
-using Abp.Localization;
-using Abp.Localization.Sources;
-using NPOI.SS.UserModel;
 
 namespace TACHYON.DataExporting.Excel
 {
@@ -109,11 +109,17 @@ namespace TACHYON.DataExporting.Excel
                     case CellType.Numeric:
                         if (DateUtil.IsCellDateFormatted(cell))
                         {
-                            DateTime date = cell.DateCellValue;
-                            ICellStyle style = cell.CellStyle;
-                            // Excel uses lowercase m for month whereas .Net uses uppercase
-                            string format = style.GetDataFormatString();
-                            return date.ToString("d/M/yyyy");
+
+                            try
+                            {
+                                string formattedCellValue = cell.DateCellValue.ToString("d/M/yyyy");
+                                return formattedCellValue;
+                            }
+                            catch (NullReferenceException)
+                            {
+                                string formattedCellValue = DateTime.FromOADate(cell.NumericCellValue).ToString("d/M/yyyy");
+                                return formattedCellValue;
+                            }
                         }
                         else
                         {

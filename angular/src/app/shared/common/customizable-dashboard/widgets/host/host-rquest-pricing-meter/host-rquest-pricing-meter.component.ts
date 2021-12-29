@@ -1,57 +1,69 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Injector, OnInit } from '@angular/core';
 import { ChartOptions, MeterCharts } from '@app/shared/common/customizable-dashboard/widgets/ApexInterfaces';
+import { AppComponentBase } from '@shared/common/app-component-base';
+import { HostDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-host-rquest-pricing-meter',
   templateUrl: './host-rquest-pricing-meter.component.html',
   styles: [],
 })
-export class HostRquestPricingMeterComponent {
+export class HostRquestPricingMeterComponent extends AppComponentBase implements OnInit {
   public chartOptions: Partial<MeterCharts>;
+  loading: boolean = false;
 
-  constructor() {
-    this.chartOptions = {
-      series: [67],
+  constructor(private injector: Injector, private _hostDashboardServiceProxy: HostDashboardServiceProxy) {
+    super(injector);
+  }
 
-      chart: {
-        height: 350,
-        type: 'radialBar',
-        offsetY: -10,
-      },
+  ngOnInit() {
+    this._hostDashboardServiceProxy.getRequestBeingPricedBeforeBidEndDateCount().subscribe((result) => {
+      if (result) {
+        this.chartOptions = {
+          series: [result],
 
-      plotOptions: {
-        radialBar: {
-          startAngle: -135,
-          endAngle: 135,
-          dataLabels: {
-            name: {
-              fontSize: '16px',
-              color: undefined,
-              offsetY: 120,
-            },
-            value: {
-              offsetY: 76,
-              fontSize: '22px',
-              color: undefined,
+          chart: {
+            height: 350,
+            type: 'radialBar',
+            offsetY: -10,
+          },
+
+          plotOptions: {
+            radialBar: {
+              startAngle: -135,
+              endAngle: 135,
+              dataLabels: {
+                name: {
+                  fontSize: '16px',
+                  color: undefined,
+                  offsetY: 120,
+                },
+                value: {
+                  offsetY: 76,
+                  fontSize: '22px',
+                  color: undefined,
+                },
+              },
             },
           },
-        },
-      },
-      fill: {
-        type: 'gradient',
-        gradient: {
-          shade: 'dark',
-          shadeIntensity: 0.15,
-          inverseColors: false,
-          opacityFrom: 1,
-          opacityTo: 1,
-          stops: [0, 50, 65, 91],
-        },
-      },
-      stroke: {
-        dashArray: 4,
-      },
-      labels: ['Median Ratio'],
-    };
+          fill: {
+            type: 'gradient',
+            gradient: {
+              shade: 'dark',
+              shadeIntensity: 0.15,
+              inverseColors: false,
+              opacityFrom: 1,
+              opacityTo: 1,
+              stops: [0, 50, 65, 91],
+            },
+          },
+          stroke: {
+            dashArray: 4,
+          },
+          labels: ['RequestBeingPricedBeforeBidEndDate'],
+        };
+        this.loading = true;
+      }
+    });
   }
 }

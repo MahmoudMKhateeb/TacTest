@@ -26,14 +26,14 @@
           </div> -->
           <div class="col-6 mb-3">
             <h6>{{ l('PlateNumber') }} :</h6>
-            {{ item.truck.plateNumber }}
+            {{ item.plateNumber }}
           </div>
         </div>
 
         <div class="row">
           <div class="col-6 mb-3">
             <h6>{{ l('ModelYear') }} :</h6>
-            {{ item.truck.modelYear }}
+            {{ item.modelYear | date: 'yyyy' }}
           </div>
           <!-- <div class="col-6 mb-3">
             <h6>{{ l('IsAttachable') }} :</h6>
@@ -42,7 +42,7 @@
           </div> -->
           <div class="col-6 mb-3">
             <h6>{{ l('ModelName') }} :</h6>
-            {{ item.truck.modelName }}
+            {{ item.modelName }}
           </div>
         </div>
 
@@ -63,7 +63,7 @@
         <div class="row">
           <div class="col-12 mb-3">
             <h6>{{ l('Note') }} :</h6>
-            {{ item.truck.note }}
+            {{ item.note }}
           </div>
         </div>
       </div>

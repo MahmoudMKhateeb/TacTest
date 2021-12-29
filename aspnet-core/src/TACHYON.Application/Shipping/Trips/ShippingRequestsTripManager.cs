@@ -638,7 +638,8 @@ namespace TACHYON.Shipping.Trips
         /// <returns></returns>
         public async Task SendSmsToReceivers(int tripId)
         {
-            var RoutePoints = await _routPointRepository.GetAll().Include(x => x.ReceiverFk).Where(x => x.ShippingRequestTripId == tripId && x.PickingType == Routs.RoutPoints.PickingType.Dropoff).ToListAsync();
+            var RoutePoints = await _routPointRepository.GetAllIncluding(x => x.ReceiverFk)
+                .Where(x => x.ShippingRequestTripId == tripId && x.PickingType == Routs.RoutPoints.PickingType.Dropoff).ToListAsync();
             RoutePoints.ForEach(async p =>
             {
                 await SendSmsToReceiver(p);

@@ -47,7 +47,7 @@
                   (change)="SyncFacilitiesWithService(); loadReceivers(trip.originFacilityId)"
                   required
                 >
-                  <option value="undefined" selected>{{ l('SelectaFacility') }}</option>
+                  <option value="undefined" disabled selected>{{ l('SelectaFacility') }}</option>
                   <option *ngFor="let item of _TripService.currentFacilitiesItems" value="{{ item.id }}">{{ item.displayName }}</option>
                 </select>
                 <div *ngIf="this.feature.isEnabled('App.Shipper')" class="input-group-btn">
@@ -72,7 +72,7 @@
                     [disabled]="receiversLoading || !trip.originFacilityId"
                     required
                   >
-                    <option value="undefined">{{ l('SelectAPickUpAgent') }}</option>
+                    <option value="undefined" disabled selected>{{ l('SelectAPickUpAgent') }}</option>
                     <option *ngFor="let item of allReceivers" [ngValue]="item.id">{{ item.displayName }}</option>
                   </select>
                   <div *ngIf="this.feature.isEnabled('App.Shipper')" class="input-group-btn">
@@ -99,7 +99,7 @@
                   (change)="SyncFacilitiesWithService()"
                   required
                 >
-                  <option value="undefined" selected>{{ l('SelectaFacility') }}</option>
+                  <option value="undefined" disabled selected>{{ l('SelectaFacility') }}</option>
                   <option *ngFor="let item of _TripService.currentFacilitiesItems" value="{{ item.id }}">{{ item.displayName }}</option>
                 </select>
                 <div *ngIf="this.feature.isEnabled('App.Shipper')" class="input-group-btn">
