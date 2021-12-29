@@ -1,20 +1,26 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Injector, OnInit } from '@angular/core';
+import { AppComponentBase } from '@shared/common/app-component-base';
+import { ShipperDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-most-used-destinations',
   templateUrl: './most-used-destinations.component.html',
   styleUrls: ['./most-used-destinations.component.css'],
 })
-export class MostUsedDestinationsComponent implements OnInit {
-  data = [
-    { city: 'Jeddah', numberOfRequests: 22 },
-    { city: 'Jeddah', numberOfRequests: 23 },
-    { city: 'Jeddah', numberOfRequests: 24 },
-    { city: 'Jeddah', numberOfRequests: 25 },
-    { city: 'Jeddah', numberOfRequests: 26 },
-  ];
+export class MostUsedDestinationsComponent extends AppComponentBase implements OnInit {
+  data: any;
 
-  constructor() {}
+  constructor(private injector: Injector, private _shipperDashboardServiceProxy: ShipperDashboardServiceProxy) {
+    super(injector);
+  }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.getDestinations();
+  }
+
+  getDestinations() {
+    this._shipperDashboardServiceProxy.getMostUsedDestinatiions().subscribe((result) => {
+      this.data = result;
+    });
+  }
 }

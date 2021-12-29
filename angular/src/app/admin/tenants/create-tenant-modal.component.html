@@ -36,8 +36,10 @@
                   [(ngModel)]="tenant.companyName"
                   maxlength="32"
                   required
+                  (change)="checkIfIsCompanyUniqueName()"
                 />
                 <span class="form-text text-muted">{{ l('Enter') }} {{ l('companyName') }}</span>
+                <span *ngIf="!isCompanyNameAvailable" class="form-text text-danger">{{ l('CompanyName') }} {{ 'AlreadyTaken' | localize }}</span>
                 <validation-messages [formCtrl]="companyName"></validation-messages>
               </div>
             </div>

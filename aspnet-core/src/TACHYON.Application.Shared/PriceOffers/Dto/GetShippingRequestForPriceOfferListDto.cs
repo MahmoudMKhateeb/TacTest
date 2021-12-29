@@ -21,6 +21,7 @@ namespace TACHYON.PriceOffers.Dto
         public double Latitude { get; set; }
         public DateTime? CreationTime { get; set; }
         public bool IsTachyonDeal { get; set; }
+        public bool CreatedByTachyonDealer { get; set; }
         public string OriginCity { get; set; }
         public string DestinationCity { get; set; }
         public string TruckType { get; set; }

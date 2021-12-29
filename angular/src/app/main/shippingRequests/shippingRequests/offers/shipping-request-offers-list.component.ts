@@ -8,6 +8,7 @@ import { Paginator } from '@node_modules/primeng/paginator';
 
 @Component({
   selector: 'shipping-request-offers-list',
+  styleUrls: ['./shipping-request-offers-list.component.scss'],
   templateUrl: './shipping-request-offers-list.component.html',
 })
 export class ShippingRequestOffersList extends AppComponentBase {

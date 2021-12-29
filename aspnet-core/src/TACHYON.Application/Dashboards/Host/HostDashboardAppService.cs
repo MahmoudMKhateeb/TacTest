@@ -1,7 +1,9 @@
 ﻿using Abp.Authorization;
 using Abp.Domain.Repositories;
+using Abp.Linq.Extensions;
 using Abp.MultiTenancy;
 using Abp.Runtime.Session;
+using Abp.Timing;
 using Abp.UI;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -12,8 +14,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
 using TACHYON.Authorization.Users;
+using TACHYON.Cities;
 using TACHYON.Dashboards.Host.Dto;
 using TACHYON.Goods.GoodCategories;
+using TACHYON.Invoices;
 using TACHYON.MultiTenancy;
 using TACHYON.Routs.RoutTypes;
 using TACHYON.Shipping.ShippingRequests;
@@ -36,6 +40,8 @@ namespace TACHYON.Dashboards.Host
         private readonly IRepository<Truck, long> _trucksRepository;
         private readonly IRepository<GoodCategory> _goodTypesRepository;
         private readonly IRepository<RoutType> _routeTypeRepository;
+        private readonly IRepository<City> _lookup_citiesRepository;
+        private readonly IRepository<Invoice, long> _invoicesRepository;
 
         public HostDashboardAppService(
              IRepository<ShippingRequest, long> shippingRequestRepository,
@@ -45,7 +51,10 @@ namespace TACHYON.Dashboards.Host
              IRepository<Tenant> tenantRepository,
              IRepository<Truck, long> trucksRepository,
              IRepository<GoodCategory> goodTypesRepository,
-             IRepository<RoutType> routeTypeRepository
+             IRepository<RoutType> routeTypeRepository,
+             IRepository<City> lookup_citiesRepository,
+             IRepository<Invoice, long> invoicesRepository
+
             )
         {
             _lookup_trucksTypeRepository = lookup_trucksTypeRepository;
@@ -56,6 +65,9 @@ namespace TACHYON.Dashboards.Host
             _trucksRepository = trucksRepository;
             _goodTypesRepository = goodTypesRepository;
             _routeTypeRepository = routeTypeRepository;
+            _lookup_citiesRepository = lookup_citiesRepository;
+            _invoicesRepository = invoicesRepository;
+
         }
 
         public async Task<List<TruckTypeAvailableTrucksDto>> GetTrucksTypeCount()
@@ -197,6 +209,174 @@ namespace TACHYON.Dashboards.Host
             return await _trucksRepository.CountAsync();
         }
 
+        public async Task<List<ListUsersHaveMostRequests>> GetShippersHaveMostRequests()
+        {
+            DisableTenancyFiltersIfHost();
+
+            return await _tenantRepository.GetAll().AsNoTracking().Include(r => r.Edition).Where(r => r.Edition.DisplayName.Contains("shipper"))
+            .Select(tenant => new ListUsersHaveMostRequests()
+            {
+                Id = tenant.Id,
+                Name = tenant.Name,
+                Rating = tenant.Rate,
+                NumberOfRequests = _shippingRequestRepository.GetAll().AsNoTracking().Include(r => r.Tenant).AsNoTracking().Where(r => r.TenantId == tenant.Id && r.Status == ShippingRequestStatus.Completed).Count()
+            }).Where(r => r.NumberOfRequests > 0).OrderByDescending(r => r.NumberOfRequests).Take(3).ToListAsync();
+        }
+
+        public async Task<List<ListUsersHaveMostRequests>> GetCarriersHaveMostRequests()
+        {
+            DisableTenancyFiltersIfHost();
+
+            return await _tenantRepository.GetAll().AsNoTracking().Include(r => r.Edition).Where(r => r.Edition.DisplayName.Contains("carrier"))
+           .Select(tenant => new ListUsersHaveMostRequests()
+           {
+               Id = tenant.Id,
+               Name = tenant.Name,
+               Rating = tenant.Rate,
+               NumberOfRequests = _shippingRequestRepository.GetAll().AsNoTracking().Include(r => r.Tenant).AsNoTracking().Where(r => r.TenantId == tenant.Id && r.Status == ShippingRequestStatus.Completed).Count()
+           }).Where(r => r.NumberOfRequests > 0).OrderByDescending(r => r.NumberOfRequests).Take(3).ToListAsync();
+        }
+
+        public async Task<List<ListUsersHaveMostRequests>> GetTopRatedShippers()
+        {
+            DisableTenancyFiltersIfHost();
+
+            return await _tenantRepository.GetAll().AsNoTracking().Include(r => r.Edition).Where(r => r.Edition.DisplayName.Contains("shipper"))
+            .Select(tenant => new ListUsersHaveMostRequests()
+            {
+                Id = tenant.Id,
+                Name = tenant.Name,
+                Rating = tenant.Rate,
+                NumberOfRequests = _shippingRequestRepository.GetAll().AsNoTracking().Include(r => r.Tenant).AsNoTracking().Where(r => r.TenantId == tenant.Id).Count()
+            }).Where(r => r.Rating > 0).OrderByDescending(r => r.Rating).Take(5).ToListAsync();
+        }
+
+        public async Task<List<ListUsersHaveMostRequests>> GetTopRatedCarriers()
+        {
+            DisableTenancyFiltersIfHost();
+
+            return await _tenantRepository.GetAll().AsNoTracking().Include(r => r.Edition).Where(r => r.Edition.DisplayName.Contains("carrier"))
+            .Select(tenant => new ListUsersHaveMostRequests()
+            {
+                Id = tenant.Id,
+                Name = tenant.Name,
+                Rating = tenant.Rate,
+                NumberOfRequests = _shippingRequestRepository.GetAll().AsNoTracking().Include(r => r.Tenant).AsNoTracking().Where(r => r.TenantId == tenant.Id).Count()
+            }).Where(r => r.Rating > 0).OrderByDescending(r => r.Rating).Take(5).ToListAsync();
+        }
+
+        public async Task<List<ListUsersHaveMostRequests>> GetWorstRatedShippers()
+        {
+            DisableTenancyFiltersIfHost();
+
+            return await _tenantRepository.GetAll().AsNoTracking().Include(r => r.Edition).Where(r => r.Edition.DisplayName.Contains("shipper"))
+            .Select(tenant => new ListUsersHaveMostRequests()
+            {
+                Id = tenant.Id,
+                Name = tenant.Name,
+                Rating = tenant.Rate,
+                NumberOfRequests = _shippingRequestRepository.GetAll().AsNoTracking().Include(r => r.Tenant).AsNoTracking().Where(r => r.TenantId == tenant.Id).Count()
+            }).OrderBy(r => r.Rating).Take(5).ToListAsync();
+        }
+
+        public async Task<List<ListUsersHaveMostRequests>> GetWorstRatedCarriers()
+        {
+            DisableTenancyFiltersIfHost();
+
+            return await _tenantRepository.GetAll().AsNoTracking().Include(r => r.Edition).Where(r => r.Edition.DisplayName.Contains("carrier"))
+            .Select(tenant => new ListUsersHaveMostRequests()
+            {
+                Id = tenant.Id,
+                Name = tenant.Name,
+                Rating = tenant.Rate,
+                NumberOfRequests = _shippingRequestRepository.GetAll().AsNoTracking().Include(r => r.Tenant).AsNoTracking().Where(r => r.TenantId == tenant.Id).Count()
+            }).OrderBy(r => r.Rating).Take(5).ToListAsync();
+        }
+
+        public async Task<List<ListRequestsUnPricedMarketPlace>> GetUnpricedRequestsInMarketplace(GetUnpricedRequestsInMarketplaceInput input)
+        {
+            DisableTenancyFiltersIfHost();
+
+            var t = await _shippingRequestRepository.GetAll().AsNoTracking().Include(r => r.Tenant).Where(r => r.RequestType == ShippingRequestType.Marketplace
+                                                                                           && r.Status == ShippingRequestStatus.PrePrice
+                                                                                           && r.BidEndDate != null
+                                                                                           && r.BidEndDate.Value.Date <= Clock.Now.Date)
+                                                                                   .WhereIf(input.StartDate != null && input.EndDate != null, r => r.BidStartDate >= input.StartDate && r.BidEndDate <= input.EndDate)
+            .Select(request => new ListRequestsUnPricedMarketPlace()
+            {
+                Id = request.Id,
+                ShipperName = request.Tenant.Name,
+                BiddingEndDate = request.BidEndDate,
+                RequestReference = request.ReferenceNumber
+            }).OrderBy(r => r.BiddingEndDate).Take(10).ToListAsync();
+            return t;
+        }
+
+        public async Task<List<ListRequestsByCityDto>> GetNumberOfRequestsForEachCity()
+        {
+            DisableTenancyFiltersIfHost();
+
+            var result = await _shippingRequestRepository.GetAll().AsNoTracking().Include(r => r.DestinationCityFk)
+                        .GroupBy(p => p.DestinationCityId,
+                        (k, c) => new ListRequestsByCityDto()
+                        {
+                            Id = k,
+                            NumberOfRequests = c.Count(),
+                            CityName = _lookup_citiesRepository.GetAll().AsNoTracking().Where(e => e.Id == k.Value).FirstOrDefault().DisplayName
+                        }
+                        ).ToListAsync();
+
+            result.ForEach(x =>
+            {
+                x.minimumValueOfRequests = result.Select(x => x.NumberOfRequests).Min();
+                x.maximumValueOfRequests = result.Select(x => x.NumberOfRequests).Max();
+            });
+
+            return result;
+        }
+
+        /**
+        * Get Count of Request Being Priced before bid end date
+        **/
+        public async Task<long> GetRequestBeingPricedBeforeBidEndDateCount()
+        {
+            DisableTenancyFiltersIfHost();
+            await DisableTenancyFiltersIfTachyonDealer();
+
+            return await _shippingRequestRepository.GetAll().AsNoTracking()
+                .Where(x => x.Status == ShippingRequestStatus.PostPrice
+                         && x.BidEndDate != null
+                         && x.BidEndDate.Value.Date <= Clock.Now.Date)
+                .CountAsync();
+        }
+
+        /**
+         * Get Count of Requests pricings that were Aceepted 
+         */
+        public async Task<long> GetRequestsPricingAcceptedCount()
+        {
+            DisableTenancyFiltersIfHost();
+            await DisableTenancyFiltersIfTachyonDealer();
+
+            return await _shippingRequestRepository.GetAll().AsNoTracking()
+                .Where(x => x.Status == ShippingRequestStatus.PostPrice)
+                .CountAsync();
+        }
+
+        /**
+         * Get Count of Invoices Paid by Shippers before thier due date. 
+         */
+        public async Task<long> GetInvoicesPaidBeforeDueDatePercentageCount()
+        {
+            DisableTenancyFiltersIfHost();
+            await DisableTenancyFiltersIfTachyonDealer();
+
+            return await _invoicesRepository.GetAll().AsNoTracking()
+                .Where(x => x.AccountType == InvoiceAccountType.AccountReceivable
+                         && x.IsPaid == true
+                         && x.DueDate.Date > Clock.Now.Date)
+                .CountAsync();
+        }
 
 
     }

@@ -4,9 +4,10 @@ using System.Text;
 
 namespace TACHYON.Routs.RoutPoints
 {
-    public enum RoutePointDocumentType:byte
+    public enum RoutePointDocumentType : byte
     {
-        POD=1,
-        DeliveryNote=2
+        POD = 1,
+        DeliveryNote = 2,
+        DeliveryGood = 3
     }
 }

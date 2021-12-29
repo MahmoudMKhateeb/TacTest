@@ -264,13 +264,14 @@ import { NewTrackingConponent } from './shippingRequests/shippingRequests/tracki
 import { CollapseModule } from '@node_modules/ngx-bootstrap/collapse';
 import { NgxSkeletonLoaderModule } from '@node_modules/ngx-skeleton-loader';
 import { CompleteTrackingPointDetailsComponent } from './shippingRequests/shippingRequests/tracking/complete-tracking-point-details/complete-tracking-point-details.component';
-import { NgbAccordionModule, NgbCollapseModule, NgbNavModule, NgbRatingModule } from '@node_modules/@ng-bootstrap/ng-bootstrap';
+import { NgbAccordionModule, NgbCollapseModule, NgbNavModule, NgbRatingModule, NgbModule } from '@node_modules/@ng-bootstrap/ng-bootstrap';
 import { UploadDeliveryNoteDocumentModelComponent } from './shippingRequests/shippingRequests/tracking/upload-delivery-note-document-model/upload-delivery-note-document-model.component';
 import { ViewDetailsAccidentModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/accident/view-details-accident-modal.component';
 import { AddAccidentCommentModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/accident/accident-comment/add-accident-comment-modal.component';
 import { ShippingRequestRatingModalComponent } from './shippingRequests/shippingRequests/rating/shipping-request-rating-modal.component';
 import { RatingModule } from '@node_modules/primeng/rating';
 import { ViewRatingComponent } from './shippingRequests/shippingRequests/rating/view-rating/view-rating.component';
+import { ShipmentHistoryComponent } from './shippingRequests/shippingRequests/shipment-history/shipment-history.component';
 
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
@@ -322,6 +323,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     NgbCollapseModule,
     RatingModule,
     NgbRatingModule,
+    NgbModule,
   ],
   declarations: [
     DangerousGoodTypesComponent,
@@ -520,6 +522,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     AddAccidentCommentModalComponent,
     ShippingRequestRatingModalComponent,
     ViewRatingComponent,
+    ShipmentHistoryComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },

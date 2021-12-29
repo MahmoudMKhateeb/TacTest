@@ -1,108 +1,87 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Injector, OnInit } from '@angular/core';
+import { AppComponentBase } from '@shared/common/app-component-base';
+import { ShipperDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-tracking-map',
   templateUrl: './tracking-map.component.html',
   styleUrls: ['./tracking-map.component.scss'],
 })
-export class TrackingMapComponent {
+export class TrackingMapComponent extends AppComponentBase implements OnInit {
+  route1: any;
+  waypoints1: any;
+  source1: any;
+  dest1: any;
+  trips: any;
+  renderOptions1: any;
+  option: any;
+  items: any[];
+  loading: boolean = false;
   zoom: 12;
-  public markerOptions = {
-    origin: {
-      icon: 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=•|2e5daa',
-    },
-    destination: {
-      icon: 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=•|2e5daa',
-    },
-    waypoints: { icon: 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=•|2e5daa' },
-  };
-  public markerOptions2 = {
-    origin: {
-      icon: 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=•|9604f3|2',
-    },
-    destination: {
-      icon: 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=•|9604f3|2',
-    },
-    waypoints: { icon: 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=•|9604f3|2' },
-  };
-  route2 = [
-    { latitude: 24.6925674, longitude: 46.6694302 },
-    { latitude: 24.7429006, longitude: 46.6791872 },
-    { latitude: 24.6754904, longitude: 46.6680345 },
-    { latitude: 24.6773488, longitude: 46.7443408 },
-    { latitude: 24.806488, longitude: 46.61516179999999 },
-  ];
-  route1 = [
-    { latitude: 24.7429006, longitude: 46.6791872 },
-    { latitude: 24.6925674, longitude: 46.6694302 },
-    { latitude: 24.6966132, longitude: 46.7019495 },
-    { latitude: 24.6925674, longitude: 46.6694302 },
-  ];
-  waypoints1 = [];
-  waypoints2 = [];
-  source1 = {
-    lat: this.route1[0].latitude || undefined,
-    lng: this.route1[0]?.longitude || undefined,
-  };
-  source2 = {
-    lat: this.route2[0].latitude || undefined,
-    lng: this.route2[0]?.longitude || undefined,
-  };
-  dest1 = {
-    lat: this.route1[this.route1.length - 1].latitude || undefined,
-    lng: this.route1[this.route1.length - 1]?.longitude || undefined,
-  };
-  dest2 = {
-    lat: this.route2[this.route2.length - 1].latitude || undefined,
-    lng: this.route2[this.route2.length - 1]?.longitude || undefined,
-  };
-  constructor() {
-    for (let i = 1; i < this.route1.length - 1; i++) {
-      this.waypoints1.push({
-        location: {
-          lat: this.route1[i].latitude,
-          lng: this.route1[i].longitude,
-        },
-      });
-    }
-    for (let i = 1; i < this.route1.length - 1; i++) {
-      this.waypoints2.push({
-        location: {
-          lat: this.route2[i].latitude,
-          lng: this.route2[i].longitude,
-        },
-      });
-    }
-  }
-  activeTrips = [
-    {
-      id: 1,
-      origin: 'Riyadh',
-      Dest: 'Riyadh',
-      status: 'In Transit',
-      waybillNumber: '2322132Fake121231',
-    },
-    {
-      id: 2,
-      origin: 'Riyadh',
-      Dest: 'Riyadh',
-      status: 'In Transit',
-      waybillNumber: '2322132Fake121231',
-    },
-  ];
+  colors: any = ['#9604f3', '#0f0', '#0ff', '#dec', '#f0f', '#ff0', '#f99', '#000', '#233', '#dff', '747', '944', '833'];
+  colors2: any[];
+  public markerOptions: any;
 
-  trips = [
-    { id: 1, source: 'Riyadh', dest: 'Riyadh', status: 'in Transit', waybillNumber: 23322112325589 },
-    { id: 2, source: 'Riyadh', dest: 'Riyadh', status: 'in Transit', waybillNumber: 23322112325589 },
-    { id: 3, source: 'Riyadh', dest: 'Riyadh', status: 'in Transit', waybillNumber: 23322112325589 },
-    { id: 4, source: 'Riyadh', dest: 'Riyadh', status: 'in Transit', waybillNumber: 23322112325589 },
-    { id: 5, source: 'Riyadh', dest: 'Riyadh', status: 'in Transit', waybillNumber: 23322112325589 },
-    { id: 6, source: 'Riyadh', dest: 'Riyadh', status: 'in Transit', waybillNumber: 23322112325589 },
-    { id: 7, source: 'Riyadh', dest: 'Riyadh', status: 'in Transit', waybillNumber: 23322112325589 },
-    { id: 8, source: 'Riyadh', dest: 'Riyadh', status: 'in Transit', waybillNumber: 23322112325589 },
-    { id: 9, source: 'Riyadh', dest: 'Riyadh', status: 'in Transit', waybillNumber: 23322112325589 },
-    { id: 10, source: 'Riyadh', dest: 'Riyadh', status: 'in Transit', waybillNumber: 23322112325589 },
-  ];
-  renderOptions1: { polylineOptions: { strokeColor: '#9604f3' } };
-  renderOptions2: { polylineOptions: { strokeColor: '#0f0e15' } };
+  constructor(private injector: Injector, private _shipperDashboardServiceProxy: ShipperDashboardServiceProxy) {
+    super(injector);
+  }
+
+  ngOnInit(): void {
+    this._shipperDashboardServiceProxy.getTrackingMap().subscribe((result) => {
+      this.items = [];
+      this.colors2 = this.colors;
+      result.forEach((r) => {
+        this.waypoints1 = [];
+
+        this.source1 = {
+          lat: r.originLatitude || undefined,
+          lng: r.originLongitude || undefined,
+        };
+
+        this.dest1 = {
+          lat: r.destinationLatitude || undefined,
+          lng: r.destinationLongitude || undefined,
+        };
+        var t = r.routPoints;
+        for (let i = 0; i < t.length; i++) {
+          this.waypoints1.push({
+            location: {
+              lat: r.routPoints[i].latitude,
+              lng: r.routPoints[i].longitude,
+            },
+          });
+        }
+
+        var item = this.colors2[Math.floor(Math.random() * this.colors2.length)];
+        var index: number = this.colors2.indexOf(item);
+
+        if (index !== -1) {
+          this.colors2.splice(index, 1);
+        }
+
+        this.renderOptions1 = { polylineOptions: { strokeColor: item || '#344440' } };
+
+        this.markerOptions = {
+          origin: {
+            icon: 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=•|' + item + '|2',
+          },
+          destination: {
+            icon: 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=•|9604f3|2',
+          },
+          waypoints: { icon: 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=•|f75|2' },
+        };
+
+        this.option = {
+          source: this.source1,
+          destination: this.dest1,
+          waybill: this.waypoints1,
+          renderOption: this.renderOptions1,
+          markerOptions: this.markerOptions,
+        };
+        this.trips = result;
+        this.items.push(this.option);
+      });
+      this.loading = true;
+    });
+  }
 }

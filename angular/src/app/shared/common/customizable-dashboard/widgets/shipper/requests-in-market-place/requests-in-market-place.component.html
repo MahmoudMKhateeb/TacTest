@@ -4,22 +4,22 @@
     <div class="card card-custom card-stretch">
       <div class="card-header border-0">
         <div class="card-title text-center">
-          <h3 class="card-label">Requests In Market Place</h3>
+          <h3 class="card-label">{{ l('RequestsInMarketPlace') }}</h3>
         </div>
       </div>
       <div class="card-body">
-        <p-table [value]="Requests">
+        <p-table [value]="Requests" (onLazyLoad)="getRequests()">
           <ng-template pTemplate="header">
             <tr>
-              <th>Referance Number</th>
-              <th>End Date</th>
-              <th>Number Of Offers</th>
+              <th>{{ l('ReferanceNumber') }}</th>
+              <th>{{ l('EndDate') }}</th>
+              <th>{{ l('NumberOfOffers') }}</th>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-record>
             <tr>
-              <td>{{ record.ref }}</td>
-              <td>{{ record.endDate }}</td>
+              <td>{{ record.requestReference }}</td>
+              <td>{{ record.biddingEndDate | momentFormat: 'YYYY-MM-DD HH:mm:ss' }}</td>
               <td>{{ record.numberOfOffers }}</td>
             </tr>
           </ng-template>

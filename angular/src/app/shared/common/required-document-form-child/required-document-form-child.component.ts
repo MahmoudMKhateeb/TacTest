@@ -73,7 +73,15 @@ export class RequiredDocumentFormChildComponent extends AppComponentBase impleme
   DocFileChangeEvent(event: any, item: CreateOrEditDocumentFileDto, index: number): void {
     item.extn = event.target.files[0].type;
     item.name = event.target.files[0].name;
-
+    const ValidFileNameRegex = /^(?!.{66})[\w+\s-]+(?:\.[\w+\s-]+)?$/;
+    //name validation
+    console.log(item.name);
+    if (!ValidFileNameRegex.test(item.name)) {
+      this.fileFormateIsInvalideIndexList.push(index);
+      this.message.warn(this.l('DocumentFileNameError'));
+      item.name = '';
+      return;
+    }
     //size validation
     if (event.target.files[0].size > 5242880) {
       //5MB

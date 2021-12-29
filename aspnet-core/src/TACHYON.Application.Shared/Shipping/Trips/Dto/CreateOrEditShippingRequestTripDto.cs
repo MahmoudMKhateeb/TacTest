@@ -17,7 +17,7 @@ namespace TACHYON.Shipping.Trips.Dto
     public class CreateOrEditShippingRequestTripDto : EntityDto<int?>, ICustomValidate, IShouldNormalize
     {
         [Required]
-        public DateTime StartTripDate { get; set; }
+        public DateTime? StartTripDate { get; set; }
 
         public DateTime? EndTripDate { get; set; }
 
@@ -49,7 +49,7 @@ namespace TACHYON.Shipping.Trips.Dto
 
 
 
-            if (EndTripDate != null && StartTripDate.Date > EndTripDate.Value.Date)
+            if (EndTripDate != null && StartTripDate?.Date > EndTripDate.Value.Date)
             {
                 context.Results.Add(new ValidationResult("The start date must be or equal to end date."));
             }
