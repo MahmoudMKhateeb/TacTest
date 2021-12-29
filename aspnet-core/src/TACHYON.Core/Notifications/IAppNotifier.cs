@@ -33,7 +33,7 @@ namespace TACHYON.Notifications
         Task SubmitInvoiceOnAccepted(UserIdentifier User, SubmitInvoice submitInvoice);
         Task SubmitInvoiceOnRejected(UserIdentifier User, SubmitInvoice submitInvoice);
         Task ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage(int? TenantId, int Percentage);
-
+        Task NewBalanceAddedToShippper(int ShipperTenantId, decimal Amount);
 
         Task SomeTrucksCouldntBeImported(UserIdentifier user, string fileToken, string fileType, string fileName);
         Task CreateBidRequest(UserIdentifier argsUser, long shippingRequestBidId);

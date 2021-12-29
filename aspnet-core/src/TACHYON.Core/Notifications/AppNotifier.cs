@@ -564,7 +564,18 @@ namespace TACHYON.Notifications
 
         }
 
+        public async Task NewBalanceAddedToShippper(int ShipperTenantId, decimal Amount)
+        {
+            var tenantAdmin = await GetTenantAdminUser(ShipperTenantId);
 
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                L("NewBalanceAddedToShippper",
+                    Amount),
+                TACHYONConsts.LocalizationSourceName));
+
+            await _notificationPublisher.PublishAsync(AppNotificationNames.NewBalanceAddedToShippper, notificationData, userIds: new[] { tenantAdmin });
+        }
 
 
         public async Task NewSubmitInvoiceGenerated(SubmitInvoice submitInvoice)
