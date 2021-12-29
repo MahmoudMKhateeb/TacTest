@@ -316,7 +316,7 @@ namespace TACHYON.Dashboards.Host
         {
             DisableTenancyFiltersIfHost();
 
-            return await _shippingRequestRepository.GetAll().AsNoTracking().Include(r => r.DestinationCityFk)
+            var result = await _shippingRequestRepository.GetAll().AsNoTracking().Include(r => r.DestinationCityFk)
                         .GroupBy(p => p.DestinationCityId,
                         (k, c) => new ListRequestsByCityDto()
                         {
@@ -325,6 +325,14 @@ namespace TACHYON.Dashboards.Host
                             CityName = _lookup_citiesRepository.GetAll().AsNoTracking().Where(e => e.Id == k.Value).FirstOrDefault().DisplayName
                         }
                         ).ToListAsync();
+
+            result.ForEach(x =>
+            {
+                x.minimumValueOfRequests = result.Select(x => x.NumberOfRequests).Min();
+                x.maximumValueOfRequests = result.Select(x => x.NumberOfRequests).Max();
+            });
+
+            return result;
         }
 
         /**
