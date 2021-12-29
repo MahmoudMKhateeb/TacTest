@@ -33,3 +33,26 @@
 agm-map {
   height: 300px;
 }
+::ng-deep .myCarrierInput {
+    width:100% !important;
+    height: 27px !important;
+    border:none;
+    padding:0 !important;
+    box-shadow: none !important;
+}
+
+.star {
+    position: relative;
+    display: inline-block;
+    font-size: 2rem;
+    color: #d3d3d3;
+}
+.full {
+    color: #ffca08;
+}
+.half {
+    position: absolute;
+    display: inline-block;
+    overflow: hidden;
+    color: #ffca08;
+}
