@@ -7,6 +7,7 @@ import {
   DocumentFileDto,
   DocumentFilesServiceProxy,
   ISelectItemDto,
+  PlateTypeSelectItemDto,
   SelectItemDto,
   TrucksServiceProxy,
   TruckTruckStatusLookupTableDto,
@@ -94,7 +95,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
    */
   private _DocsUploaderOptions: FileUploaderOptions = {};
 
-  allPlateTypes: SelectItemDto[];
+  allPlateTypes: PlateTypeSelectItemDto[];
 
   truckModelMaxYear = new Date();
   //truckModelMinYear = new Date();
