@@ -47,28 +47,26 @@ namespace TACHYON.Mobile
             ClientInfoProvider = NullClientInfoProvider.Instance;
             _smsSender = smsSender;
         }
-        public async Task CreateOTP(User user, string Language)
+        public async Task<double> CreateOTP(User user, string Language)
         {
-            await CheckIsExistOTP(user.Id);
             var userOTP = new UserOTP(user.Id);
             await _userOTPRepository.InsertAsync(userOTP);
             await _smsSender.SendAsync(user.PhoneNumber, L(TACHYONConsts.SMSOTP, new CultureInfo(Language), userOTP.OTP));
+            return (userOTP.ExpireTime - Clock.Now).TotalSeconds;
         }
 
-        private async Task CheckIsExistOTP(long userId)
+        public async Task<double?> CheckIsExistOTP(long userId)
         {
-            if (await _userOTPRepository.GetAll().AnyAsync(x => x.UserId == userId && x.ExpireTime >= Clock.Now))
-            {
-                throw new UserFriendlyException(L("TheIsAlreadyHaveOTPSentToYou,PleaseWaitToReceiveTheSMS"));
-            }
             var current = Clock.Now;
-            var oldDate = Clock.Now.Subtract(new TimeSpan(0, 0, 5, 0, 0));
+            var userOtp = await _userOTPRepository.GetAll().FirstOrDefaultAsync(x => x.UserId == userId && x.ExpireTime >= current);
+            if (userOtp != null)
+                return (userOtp.ExpireTime - current).TotalSeconds;
 
+            var oldDate = Clock.Now.Subtract(new TimeSpan(0, 0, 5, 0, 0));
             var CountAttempts = await _userOTPRepository.GetAll().Where(x => x.UserId == userId && x.CreationTime > oldDate).CountAsync();
             if (CountAttempts >= 5)
-            {
                 throw new UserFriendlyException(L("InvalidOTPNumberORExpired"));
-            }
+            return null;
         }
 
         public async Task OTPValidate(long userId, string OTP)
