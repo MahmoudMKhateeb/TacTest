@@ -144,9 +144,15 @@
     <text name="ReSendAfter">کے بعد دوبارہ بھیجیں</text>
     <text name="TruckType">ٹرک کی قسم</text>
     <text name="No">نہیں</text>
-    <!--<text name="StartOffloading"></text>
-    <text name="ReceiverConfirmed"></text>
-    <text name="DeliveryConfirmation"></text>-->
+    <text name="NotAttached">اب تک اپلوڈ نھیں ہوا</text>
+    <text name="CardNumberId">وصول کنندہ کی آئی ڈی</text>
+    <text name="AdditionalReceiver">اضافی وصول کنندہ</text>
+
+    <text name="RateOffloadingFacility">آف لوڈنگ کی سہولت کو ریٹنگ دیں</text>
+    <text name="ClickToRateFacility">براہ کرم سہولت کی درجہ بندی کرنے کے لیے یہاں کلک کریں۔</text>
+    <text name="StartOffloading">آف لوڈنگ شروع کریں۔</text>
+    <text name="DeliveredAndNeedsConfirmation">موصول شدہ/ کارروائی کی ضرورت ہے۔</text>
+    <text name="Enter9DigitsNumber">موبائل فون کانمبر. 9 ہندسے، 5 سے شروع کریں۔</text>
 
   </texts>
 </localizationDictionary>
