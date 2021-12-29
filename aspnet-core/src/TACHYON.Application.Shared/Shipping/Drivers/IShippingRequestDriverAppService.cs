@@ -1,5 +1,6 @@
 ﻿using Abp.Application.Services;
 using Abp.Application.Services.Dto;
+using DevExtreme.AspNet.Data.ResponseModel;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TACHYON.DriverLocationLogs.dtos;
@@ -25,7 +26,7 @@ namespace TACHYON.Shipping.Drivers
         //Task Rejected(CreateShippingRequestTripDriverRejectDto Input);
         Task Reset(int TripId);
         Task PushNotification(int id);
-        Task<List<DriverLocationLogDto>> GetAllDriverLocationLogs(GetAllDriverLocationLogsInput input);
+        Task<LoadResult> GetAllDriverLocationLogs(GetAllDriverLocationLogsInput input);
 
 
 

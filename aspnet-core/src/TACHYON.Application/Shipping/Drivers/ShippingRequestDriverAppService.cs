@@ -6,6 +6,8 @@ using Abp.EntityHistory;
 using Abp.Linq.Extensions;
 using Abp.Timing;
 using Abp.UI;
+using AutoMapper.QueryableExtensions;
+using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite.Geometries;
 using System.Collections.Generic;
@@ -540,14 +542,18 @@ namespace TACHYON.Shipping.Drivers
         }
 
 
-        public async Task<List<DriverLocationLogDto>> GetAllDriverLocationLogs(GetAllDriverLocationLogsInput input)
+        public async Task<LoadResult> GetAllDriverLocationLogs(GetAllDriverLocationLogsInput input)
         {
-            var output = await _driverLocationLogRepository.GetAll()
-                .WhereIf(input.DateFilter != null, x => x.CreationTime.Date == input.DateFilter.Value.Date)
-                .WhereIf(AbpSession.TenantId != null, x => x.CreatorUserId == input.DriverId && x.CreatorUserFk.TenantId == AbpSession.TenantId)
-                .ToListAsync();
 
-            var result = ObjectMapper.Map<List<DriverLocationLogDto>>(output);
+            DisableTenancyFiltersIfHost();
+
+            var filteredLocations = _driverLocationLogRepository.GetAll()
+                .Where(x => x.CreatorUserId == input.DriverId)
+                .WhereIf(input.TripId.HasValue, x => x.TripId == input.TripId)
+                .ProjectTo<DriverLocationLogDto>(AutoMapperConfigurationProvider);
+
+            var result = await LoadResultAsync(filteredLocations, input.Filter);
+
             return result;
         }
 

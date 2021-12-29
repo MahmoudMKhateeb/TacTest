@@ -113,6 +113,13 @@
               <dxi-column dataField="isActive" caption="{{ 'Status' | localize }}"></dxi-column>
               <dxi-column dataField="creationTime" caption="{{ 'DriverCreationDateAndTime' | localize }}" dataType="datetime"></dxi-column>
               <dxi-column
+                cellTemplate="cellDriverTrackingTemplate"
+                dataField="DriverTracking"
+                dataType="string"
+                cellTemplate="cellTrackingTemplate"
+                caption="{{ 'DriverTracking' | localize }}"
+              ></dxi-column>
+              <dxi-column
                 dataField="isMissingDocumentFiles"
                 caption="{{ 'MissingDocumentFiles' | localize }}"
                 [allowFiltering]="false"
@@ -188,7 +195,13 @@
               <div *dxTemplate="let options of 'cellRatingTemplate'" class="d-flex justify-content-center">
                 <p-rating [ngModel]="options.data.rate" readonly="true" stars="5" [cancel]="false"></p-rating>
               </div>
-              <dxo-summary> <dxi-total-item column="userName" summaryType="count"> </dxi-total-item> </dxo-summary>
+              <div *dxTemplate="let options of 'cellTrackingTemplate'" class="d-flex justify-content-center">
+                <i
+                  (click)="DriverTrackingModal.show(options.data.id, null)"
+                  class="icon-2x text-dark-50 flaticon-placeholder-3"
+                  style="cursor: pointer"
+                ></i>
+              </div>
             </dx-data-grid>
           </div>
         </div>
@@ -197,5 +210,6 @@
     <viewOrEditEntityDocumentsModal #viewOrEditEntityDocumentsModal></viewOrEditEntityDocumentsModal>
     <createOrEditDriverModal [creatDriver]="true" #createOrEditUserModal (modalSave)="getUsers()"> </createOrEditDriverModal>
     <editUserPermissionsModal #editUserPermissionsModal></editUserPermissionsModal>
+    <app-driver-tracking-modal #DriverTrackingModal></app-driver-tracking-modal>
   </div>
 </div>
