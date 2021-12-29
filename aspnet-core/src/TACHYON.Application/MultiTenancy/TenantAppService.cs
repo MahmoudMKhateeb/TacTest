@@ -126,20 +126,20 @@ namespace TACHYON.MultiTenancy
         [AbpAuthorize(AppPermissions.Pages_Tenants_Edit)]
         public async Task UpdateTenant(TenantEditDto input)
         {
-            await TenantManager.CheckEditionAsync(input.EditionId, input.IsInTrialPeriod);
 
             input.ConnectionString = SimpleStringCipher.Instance.Encrypt(input.ConnectionString);
             var tenant = await TenantManager.GetByIdAsync(input.Id);
 
-            if (tenant.EditionId != input.EditionId)
-            {
-                EventBus.Trigger(new TenantEditionChangedEventData
-                {
-                    TenantId = input.Id,
-                    OldEditionId = tenant.EditionId,
-                    NewEditionId = input.EditionId
-                });
-            }
+            await TenantManager.CheckEditionAsync(tenant.EditionId, input.IsInTrialPeriod);
+            // if (tenant.EditionId != input.EditionId)
+            // {
+            //     EventBus.Trigger(new TenantEditionChangedEventData
+            //     {
+            //         TenantId = input.Id,
+            //         OldEditionId = tenant.EditionId,
+            //         NewEditionId = input.EditionId
+            //     });
+            // }
 
             ObjectMapper.Map(input, tenant);
             tenant.SubscriptionEndDateUtc = tenant.SubscriptionEndDateUtc?.ToUniversalTime();

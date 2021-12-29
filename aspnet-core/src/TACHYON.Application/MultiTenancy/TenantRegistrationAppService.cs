@@ -1,6 +1,7 @@
 ﻿using Abp.Application.Features;
 using Abp.Application.Services.Dto;
 using Abp.Authorization.Users;
+using Abp.BackgroundJobs;
 using Abp.Configuration;
 using Abp.Configuration.Startup;
 using Abp.Domain.Repositories;
@@ -49,6 +50,7 @@ namespace TACHYON.MultiTenancy
         private readonly IRepository<County, int> _lookupCountryRepository;
         private readonly IRepository<City, int> _lookupCityRepository;
         private readonly IRepository<TermAndCondition> _termAndConditionRepository;
+        private readonly IBackgroundJobManager _jobManager;
 
         public TenantRegistrationAppService(
             IMultiTenancyConfig multiTenancyConfig,
@@ -60,7 +62,8 @@ namespace TACHYON.MultiTenancy
             IRepository<County, int> lookupCountryRepository,
             IRepository<City, int> lookupCityRepository,
             IRepository<TermAndCondition> termAndConditionRepository,
-            ISubscriptionPaymentRepository subscriptionPaymentRepository)
+            ISubscriptionPaymentRepository subscriptionPaymentRepository,
+            IBackgroundJobManager jobManager)
         {
             _multiTenancyConfig = multiTenancyConfig;
             _recaptchaValidator = recaptchaValidator;
@@ -69,6 +72,7 @@ namespace TACHYON.MultiTenancy
             _localizationContext = localizationContext;
             _tenantManager = tenantManager;
             _subscriptionPaymentRepository = subscriptionPaymentRepository;
+            _jobManager = jobManager;
             _lookupCountryRepository = lookupCountryRepository;
             _lookupCityRepository = lookupCityRepository;
             _termAndConditionRepository = termAndConditionRepository;
@@ -153,7 +157,7 @@ namespace TACHYON.MultiTenancy
                 );
 
                 var tenant = await TenantManager.GetByIdAsync(tenantId);
-                await _appNotifier.NewTenantRegisteredAsync(tenant);
+                await _jobManager.EnqueueAsync<NewTenantRegisteredJob, string>(tenant.TenancyName);
 
                 return new RegisterTenantOutput
                 {
