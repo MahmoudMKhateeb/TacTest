@@ -47,7 +47,7 @@ namespace TACHYON.Mobile
             ClientInfoProvider = NullClientInfoProvider.Instance;
             _smsSender = smsSender;
         }
-        public async Task CreateOTP(User user,string Language)
+        public async Task CreateOTP(User user, string Language)
         {
             await CheckIsExistOTP(user.Id);
             var userOTP = new UserOTP(user.Id);
@@ -62,12 +62,12 @@ namespace TACHYON.Mobile
                 throw new UserFriendlyException(L("TheIsAlreadyHaveOTPSentToYou,PleaseWaitToReceiveTheSMS"));
             }
             var current = Clock.Now;
-            var oldDate = Clock.Now.Subtract(new TimeSpan(0, 1, 0, 0, 0));
+            var oldDate = Clock.Now.Subtract(new TimeSpan(0, 0, 5, 0, 0));
 
-            var CountAttempts = await _userOTPRepository.GetAll().Where(x => x.UserId == userId && x.CreationTime> oldDate).CountAsync();
-            if (CountAttempts >= 3)
+            var CountAttempts = await _userOTPRepository.GetAll().Where(x => x.UserId == userId && x.CreationTime > oldDate).CountAsync();
+            if (CountAttempts >= 5)
             {
-                throw new UserFriendlyException(L("PleaseTryAgainInAnHour"));
+                throw new UserFriendlyException(L("InvalidOTPNumberORExpired"));
             }
         }
 
@@ -79,7 +79,7 @@ namespace TACHYON.Mobile
                 await _userOTPRepository.DeleteAsync(userOTP);
             }
             else
-            throw new AbpAuthorizationException(L("InvalidOTPNumberORExpired"));
+                throw new AbpAuthorizationException(L("InvalidOTPNumberORExpired"));
         }
 
 
