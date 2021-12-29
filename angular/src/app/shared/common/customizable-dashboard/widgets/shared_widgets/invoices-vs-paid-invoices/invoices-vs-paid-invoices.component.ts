@@ -4,31 +4,31 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import { RequestsListPerMonthDto, ShipperDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
 
 @Component({
-  selector: 'app-completed-trip-vs-pod',
-  templateUrl: './completed-trip-vs-pod.component.html',
-  styleUrls: ['./completed-trip-vs-pod.component.css'],
+  selector: 'app-invoices-vs-paid-invoices',
+  templateUrl: './invoices-vs-paid-invoices.component.html',
+  styleUrls: ['./invoices-vs-paid-invoices.component.css'],
 })
-export class CompletedTripVsPodComponent extends AppComponentBase implements OnInit {
+export class InvoicesVsPaidInvoicesComponent extends AppComponentBase implements OnInit {
   public chartOptions: Partial<ChartOptions>;
   months: string[] = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  completedTrips: number[];
-  POD: number[];
+  invoices: number[];
+  paidInvoices: number[];
   loading: boolean = false;
   constructor(injector: Injector, private _shipperDashboardServiceProxy: ShipperDashboardServiceProxy) {
     super(injector);
   }
 
   ngOnInit(): void {
-    this.completedTrips = [];
-    this.POD = [];
+    this.invoices = [];
+    this.paidInvoices = [];
 
-    this._shipperDashboardServiceProxy.getCompletedTripVsPod().subscribe((result) => {
+    this._shipperDashboardServiceProxy.getInvoicesVSPaidInvoices().subscribe((result) => {
       this.months.forEach((d) => {
         let i = this.months.indexOf(d) + 1;
         let year = new Date().getFullYear();
-        const foundAcceptElement = result.completedTrips.some((el) => el.month === i);
-        if (!foundAcceptElement) {
-          result.completedTrips.push(
+        const foundInvoicesElement = result.shipperInvoices.some((el) => el.month === i);
+        if (!foundInvoicesElement) {
+          result.shipperInvoices.push(
             new RequestsListPerMonthDto({
               count: 0,
               month: i,
@@ -36,9 +36,9 @@ export class CompletedTripVsPodComponent extends AppComponentBase implements OnI
             })
           );
         }
-        const foundRejectElement = result.podTrips.some((el) => el.month === i);
-        if (!foundRejectElement) {
-          result.podTrips.push(
+        const foundPaidInvoicesElement = result.paidInvoices.some((el) => el.month === i);
+        if (!foundPaidInvoicesElement) {
+          result.paidInvoices.push(
             new RequestsListPerMonthDto({
               count: 0,
               month: i,
@@ -47,28 +47,28 @@ export class CompletedTripVsPodComponent extends AppComponentBase implements OnI
           );
         }
       });
-      result.completedTrips.sort(function (a, b) {
+      result.shipperInvoices.sort(function (a, b) {
         return a.month - b.month;
       });
-      result.completedTrips.forEach((element) => {
-        this.completedTrips.push(element.count);
+      result.shipperInvoices.forEach((element) => {
+        this.invoices.push(element.count);
       });
-      result.podTrips.sort(function (a, b) {
+      result.paidInvoices.sort(function (a, b) {
         return a.month - b.month;
       });
-      result.podTrips.forEach((element) => {
-        this.POD.push(element.count);
+      result.paidInvoices.forEach((element) => {
+        this.paidInvoices.push(element.count);
       });
 
       this.chartOptions = {
         series: [
           {
-            name: 'Completed',
-            data: this.completedTrips,
+            name: 'Invoices',
+            data: this.invoices,
           },
           {
-            name: 'Pod',
-            data: this.POD,
+            name: 'Paid Invoices',
+            data: this.paidInvoices,
           },
         ],
         chart: {
