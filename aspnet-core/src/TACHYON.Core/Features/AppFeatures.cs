@@ -23,6 +23,7 @@
         public const string OffersMarketPlace = "App.OffersMarketPlace";
         public const string SendDirectRequest = "App.SendDirectRequest";
         public const string SendTachyonDealShippingRequest = "App.SendTachyonDealShippingRequest";
+        public const string AddTripsByTachyonDeal = "App.Shipper.AddTripsByTachyonDeal";
         public const string ShipperCreditLimit = "App.Shipper.CreditLimit";
         public const string ShipperPeriods = "App.Shipper.Periods";
         public const string CarrierPeriods = "App.Carrier.Periods";

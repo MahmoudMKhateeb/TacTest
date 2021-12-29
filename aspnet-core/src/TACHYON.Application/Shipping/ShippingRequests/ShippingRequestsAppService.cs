@@ -693,6 +693,8 @@ namespace TACHYON.Shipping.ShippingRequests
 
                 GetShippingRequestForViewOutput output =
                     ObjectMapper.Map<GetShippingRequestForViewOutput>(shippingRequest);
+                output.ShippingRequest.AddTripsByTmsEnabled =
+                    await FeatureChecker.IsEnabledAsync(shippingRequest.TenantId, AppFeatures.AddTripsByTachyonDeal);
                 output.ShippingRequestBidDtoList = shippingRequestBidDtoList;
                 output.ShippingRequestVasDtoList = shippingRequestVasList;
                 output.ShipperRating = shippingRequest.Tenant.Rate;
