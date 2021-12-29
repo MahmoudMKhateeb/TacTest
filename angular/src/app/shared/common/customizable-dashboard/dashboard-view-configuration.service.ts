@@ -53,6 +53,7 @@ import { TopRatedCarriersComponent } from './widgets/host/top-rated-carriers/top
 import { TopRatedShippersComponent } from './widgets/host/top-rated-shippers/top-rated-shippers.component';
 import { TopThreeCarriersHaveRequestsComponent } from './widgets/host/top-three-carriers-have-requests/top-three-carriers-have-requests.component';
 import { TopThreeShippersHaveRequestsComponent } from './widgets/host/top-three-shippers-have-requests/top-three-shippers-have-requests.component';
+import { HostRouteTypeUsageChartComponent } from './widgets/host/host-route-type-usage-chart/host-route-type-usage-chart.component';
 
 @Injectable({
   providedIn: 'root',
@@ -368,7 +369,7 @@ export class DashboardViewConfigurationService {
 
     let routeTypeUsage = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.host.TachyonDealerRouteTypesUsageWidget,
-      HostGoodTypesUsageChartComponent,
+      HostRouteTypeUsageChartComponent,
       4,
       4
     );
