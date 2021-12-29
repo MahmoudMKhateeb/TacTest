@@ -174,6 +174,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
   } //end of show
 
   createOrEditTruck() {
+    this.truck.modelYear = moment(this.truck.modelYear).locale('en').format('YYYY');
     this._trucksServiceProxy
       .createOrEdit(this.truck)
       .pipe(
