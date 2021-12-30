@@ -138,6 +138,17 @@ namespace TACHYON.Features
                 }
 
             }
+            var invoicePaymentMethodsCrarrier = _invoicePaymentMethodRepository.GetAll()
+               .Select(x => new LocalizableComboboxItem(x.Id.ToString(), L(x.DisplayName))).ToArray();
+            if (invoicePaymentMethodsCrarrier.Length > 0)
+            {
+                carrierFeature.CreateChildFeature(
+                    AppFeatures.InvoicePaymentMethodCrarrier,
+                    "false",
+                    L("InvoicePaymentMethod"),
+                    inputType: new ComboboxInputType(new StaticLocalizableComboboxItemSource
+                        (invoicePaymentMethodsCrarrier)));
+            }
 
 
 

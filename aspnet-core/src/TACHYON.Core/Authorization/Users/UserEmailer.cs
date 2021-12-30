@@ -47,7 +47,7 @@ namespace TACHYON.Authorization.Users
         private readonly DocumentFilesManager _documentFilesManager;
         private readonly IRepository<User, long> _lookupUserRepository;
 
-        private bool isRTL = CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft;
+        private bool isRTL = CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft; // to improve this use it as local variable 
 
         public UserEmailer(
             IEmailTemplateProvider emailTemplateProvider,
@@ -282,7 +282,6 @@ namespace TACHYON.Authorization.Users
 
             await ReplaceBodyAndSend(user.EmailAddress, L("PasswordResetEmail_Subject"), emailTemplate, mailMessage);
         }
-
 
         public async Task TryToSendChatMessageMail(User user, string senderUsername, string senderTenancyName, ChatMessage chatMessage)
         {

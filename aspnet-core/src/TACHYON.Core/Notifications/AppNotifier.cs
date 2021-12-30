@@ -72,7 +72,7 @@ namespace TACHYON.Notifications
                 tenantIds: new[] { user.TenantId });
         }
 
-        public async Task NewTenantRegisteredAsync(Tenant tenant)
+        public async Task NewTenantRegisteredAsync(string tenancyName)
         {
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(
@@ -81,7 +81,7 @@ namespace TACHYON.Notifications
                 )
             );
 
-            notificationData["tenancyName"] = tenant.TenancyName;
+            notificationData["tenancyName"] = tenancyName;
             await _notificationPublisher.PublishAsync(AppNotificationNames.NewTenantRegistered, notificationData);
         }
 

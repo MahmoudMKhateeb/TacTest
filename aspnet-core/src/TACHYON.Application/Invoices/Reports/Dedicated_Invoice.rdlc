@@ -4068,7 +4068,7 @@
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>Invoice</Value>
+                      <Value>Tax Invoice</Value>
                       <Style>
                         <FontStyle>Normal</FontStyle>
                         <FontFamily>Open Sans Semibold</FontFamily>
@@ -4112,7 +4112,7 @@
                       </Style>
                     </TextRun>
                     <TextRun>
-                      <Value>فاتورة</Value>
+                      <Value>فاتورة ضريبية</Value>
                       <Style>
                         <FontStyle>Normal</FontStyle>
                         <FontFamily>arial</FontFamily>

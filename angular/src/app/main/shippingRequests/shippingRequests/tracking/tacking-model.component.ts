@@ -78,6 +78,8 @@ export class TrackingModelComponent extends AppComponentBase implements OnInit {
   }
   close(): void {
     this.active = false;
+    this.origin = { lat: null, lng: null };
+    this.destination = { lat: null, lng: null };
     this.onCloseModel.emit('');
     this.modal.hide();
   }
