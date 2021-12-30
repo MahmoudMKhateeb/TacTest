@@ -233,10 +233,9 @@
                   {{ drop.note }}
                 </p>
               </div>
+              <div class="actions mt-0" *ngIf="canChangeDropStatus(drop) && !item.hasAccident"></div>
+              <p>{{ l('ReceiverCode') }}: {{ drop.receiverCode }}</p>
               <div class="shipperNote" *ngIf="isGranted('Pages.Shipment.Tracking.ReceiverCode')">
-                <p>{{ l('ReceiverCode') }}: {{ drop.receiverCode }}</p>
-              </div>
-              <div class="actions mt-0" *ngIf="canChangeDropStatus(drop)">
                 <a href="javascript:void(0)" *ngIf="!saving" (click)="changeStatus(drop)">
                   {{ drop.nextStatus }}
                 </a>
