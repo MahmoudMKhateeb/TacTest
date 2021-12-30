@@ -2382,7 +2382,8 @@
     <text name="RejectedDocumentEmailMessage">This email is sent to you to inform you that your document {0} have been rejected with reason {1} if you have any questions, please contact with support team.</text>
     
     
-    <!--<text name="StartOffloading"></text>
+	<text name="NeedAccept">Need Accept</text>
+		<!--<text name="StartOffloading"></text>
     <text name="ReceiverConfirmed"></text>
     <text name="DeliveryConfirmation"></text>-->
 	</texts>

@@ -20,7 +20,8 @@ namespace TACHYON.AutoMapper.Shipping.Trips
                  .ForMember(dst => dst.DestinationCity, opt => opt.MapFrom(src => src.DestinationFacilityFk != null ? src.DestinationFacilityFk.CityFk.DisplayName : ""))
                  .ForMember(dst => dst.Truck, opt => opt.MapFrom(src => src.AssignedTruckFk != null ? src.AssignedTruckFk.ModelName : string.Empty))
                  .ForMember(dst => dst.Driver, opt => opt.MapFrom(src => src.AssignedDriverUserFk != null ? src.AssignedDriverUserFk.Name : string.Empty))
-                 .ForMember(dst => dst.DriverStatusTitle, opt => opt.MapFrom(src => Enum.GetName(typeof(ShippingRequestTripDriverStatus), src.DriverStatus)));
+                 .ForMember(dst => dst.DriverStatusTitle, opt => opt.MapFrom(src => src.DriverStatus == ShippingRequestTripDriverStatus.None
+                  && src.AssignedDriverUserFk != null ? "NeedAccept" : Enum.GetName(typeof(ShippingRequestTripDriverStatus), src.DriverStatus)));
 
             CreateMap<ShippingRequestTrip, ShippingRequestsTripForViewDto>()
                .ForMember(dst => dst.OriginFacility, opt => opt.MapFrom(src => src.OriginFacilityFk != null ? $"{src.OriginFacilityFk.Name} - {src.OriginFacilityFk.Address}" : ""))
@@ -49,7 +50,7 @@ namespace TACHYON.AutoMapper.Shipping.Trips
                 .ForMember(dst => dst.Source, opt => opt.MapFrom(src => $"{src.ShippingRequestFk.OriginCityFk.DisplayName} - {src.OriginFacilityFk.Address}"))
                 .ForMember(dst => dst.Distination, opt => opt.MapFrom(src => $"{src.ShippingRequestFk.DestinationCityFk.DisplayName} - {src.DestinationFacilityFk.Address}"))
                 .ForMember(dst => dst.StartTripDate, opt => opt.MapFrom(src => src.StartTripDate == null ? "" : src.StartTripDate.ToString("dd,MMM,yyyy")))
-                .ForMember(dst => dst.EndTripDate, opt => opt.MapFrom(src => src.EndTripDate == null ? "" : src.EndTripDate!=null ?src.EndTripDate.Value.ToString("dd,MMM,yyyy") :""))
+                .ForMember(dst => dst.EndTripDate, opt => opt.MapFrom(src => src.EndTripDate == null ? "" : src.EndTripDate != null ? src.EndTripDate.Value.ToString("dd,MMM,yyyy") : ""))
                 .ForMember(dst => dst.TravelTime, opt => opt.MapFrom(src => src.StartWorking == null ? "" : ((DateTime)src.StartWorking).ToString("hh:mm")))
                 .ForMember(dst => dst.TotalWeight, opt => opt.MapFrom(src => src.ShippingRequestFk.TotalWeight))
                 .ForMember(dst => dst.PackingType, opt => opt.MapFrom(src => src.ShippingRequestFk.PackingTypeFk.DisplayName))
@@ -98,7 +99,7 @@ namespace TACHYON.AutoMapper.Shipping.Trips
                 case RoutePointStatus.StartedMovingToLoadingLocation:
                     return Enum.GetName(typeof(RoutePointStatus), RoutePointStatus.ArriveToLoadingLocation);
                 case RoutePointStatus.ArriveToLoadingLocation:
-                    return Enum.GetName(typeof(RoutePointStatus), RoutePointStatus.StartLoading+1);
+                    return Enum.GetName(typeof(RoutePointStatus), RoutePointStatus.StartLoading + 1);
                 case RoutePointStatus.StartLoading:
                     return Enum.GetName(typeof(RoutePointStatus), RoutePointStatus.FinishLoading);
                 case RoutePointStatus.StartedMovingToOfLoadingLocation:
