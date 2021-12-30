@@ -2,17 +2,16 @@ import { ComponentFactoryResolver, Directive, Injector, Input, OnChanges, Simple
 import { NgxSpinnerComponent, NgxSpinnerService } from 'ngx-spinner';
 
 @Directive({
-  selector: '[busyIf]',
+  selector: '[busyIfFullscreen]',
 })
-export class BusyIfDirective implements OnChanges {
+export class BusyIfFullscreenDirective implements OnChanges {
   constructor(private _viewContainer: ViewContainerRef, private _componentFactoryResolver: ComponentFactoryResolver, private _injector: Injector) {
     this.ngxSpinnerService = _injector.get(NgxSpinnerService);
     this.loadComponent();
   }
 
   private static index = 0;
-  @Input() busyIf: boolean;
-
+  @Input() busyIfFullscreen: boolean;
   ngxSpinnerService: NgxSpinnerService;
   private spinnerName = '';
 
@@ -28,24 +27,25 @@ export class BusyIfDirective implements OnChanges {
       } else {
         this.ngxSpinnerService.hide(this.spinnerName);
       }
-    }, 1000);
+    }, 10);
   }
 
   loadComponent() {
     const componentFactory = this._componentFactoryResolver.resolveComponentFactory(NgxSpinnerComponent);
     const componentRef = this._viewContainer.createComponent(componentFactory);
-    this.spinnerName = 'busyIfSpinner-' + BusyIfDirective.index++ + '-' + Math.floor(Math.random() * 1000000); // generate random name
+    this.spinnerName = 'BusyIfFullscreenSpinner-' + BusyIfFullscreenDirective.index++ + '-' + Math.floor(Math.random() * 1000000); // generate random name
     let component = <NgxSpinnerComponent>componentRef.instance;
     component.name = this.spinnerName;
-    component.fullScreen = false;
+    component.fullScreen = true;
     component.type = 'ball-clip-rotate';
     component.size = 'medium';
     component.color = '#dc3545';
+    // console.log('component', component);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.busyIf) {
-      this.isBusy = changes.busyIf.currentValue;
+    if (changes.busyIfFullscreen) {
+      this.isBusy = changes.busyIfFullscreen.currentValue;
       this.refreshState();
     }
   }

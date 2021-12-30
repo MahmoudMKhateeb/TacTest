@@ -23,6 +23,7 @@ import { PermissionAllPipe } from '@shared/common/pipes/permission-all.pipe';
 import { FeatureCheckerPipe } from '@shared/common/pipes/feature-checker.pipe';
 import { DatePickerMomentModifierDirective } from './date-picker-moment-modifier.directive';
 import { DateRangePickerMomentModifierDirective } from './date-range-picker-moment-modifier.directive';
+import { BusyIfFullscreenDirective } from './busy-if-fullscreen.directive';
 
 @NgModule({
   imports: [CommonModule],
@@ -33,6 +34,7 @@ import { DateRangePickerMomentModifierDirective } from './date-range-picker-mome
     ButtonBusyDirective,
     AutoFocusDirective,
     BusyIfDirective,
+    BusyIfFullscreenDirective,
     FriendProfilePictureComponent,
     MomentFormatPipe,
     MomentFromNowPipe,
@@ -52,6 +54,7 @@ import { DateRangePickerMomentModifierDirective } from './date-range-picker-mome
     ButtonBusyDirective,
     AutoFocusDirective,
     BusyIfDirective,
+    BusyIfFullscreenDirective,
     FriendProfilePictureComponent,
     MomentFormatPipe,
     MomentFromNowPipe,
