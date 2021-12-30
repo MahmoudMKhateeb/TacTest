@@ -1,5 +1,5 @@
 <!--suppress XmlInvalidId -->
-<div [@routerTransition] [busyIf]="loading">
+<div [@routerTransition] [busyIfFullscreen]="loading || !shippingRequestforView.shippingRequest.id">
   <div class="content d-flex flex-column flex-column-fluid">
     <sub-header [breadcrumbs]="breadcrumbs" [title]="'ShippingRequestsView' | localize">
       <!--      <div role="actions" *ngIf="feature.isEnabled('App.TachyonDealer')">-->
