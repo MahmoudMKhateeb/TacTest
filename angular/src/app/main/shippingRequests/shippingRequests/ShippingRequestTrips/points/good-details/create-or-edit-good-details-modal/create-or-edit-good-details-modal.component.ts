@@ -13,6 +13,7 @@ import {
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
 import { Subscription } from '@node_modules/rxjs';
+import { retry } from '@node_modules/rxjs/internal/operators';
 
 @Component({
   selector: 'createOrEditGoodDetailsModal',
@@ -144,9 +145,12 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
   loadGoodSubCategory(FatherID) {
     //Get All Sub-Good Category
     if (FatherID) {
-      this._goodsDetailsServiceProxy.getAllGoodCategoryForTableDropdown(FatherID).subscribe((result) => {
-        this.allSubGoodCategorys = result;
-      });
+      this._goodsDetailsServiceProxy
+        .getAllGoodCategoryForTableDropdown(FatherID)
+        .pipe(retry(3))
+        .subscribe((result) => {
+          this.allSubGoodCategorys = result;
+        });
     }
   }
 

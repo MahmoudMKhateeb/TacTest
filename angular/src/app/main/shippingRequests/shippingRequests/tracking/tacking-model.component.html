@@ -246,13 +246,8 @@
           </form>
         </div>
         <div class="map">
-          <agm-map [latitude]="24.717942" [longitude]="46.675761" [zoom]="10">
-            <agm-direction
-              *ngIf="destination.lat"
-              [origin]="{ lat: origin.lat, lng: origin.lng }"
-              [destination]="{ lat: destination.lat, lng: destination.lng }"
-              [travelMode]="'DRIVING'"
-            ></agm-direction>
+          <agm-map>
+            <agm-direction *ngIf="destination.lat" [origin]="origin" [destination]="destination" [travelMode]="'DRIVING'"></agm-direction>
           </agm-map>
         </div>
       </div>

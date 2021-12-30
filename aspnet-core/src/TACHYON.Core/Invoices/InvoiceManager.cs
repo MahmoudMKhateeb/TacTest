@@ -230,7 +230,7 @@ namespace TACHYON.Invoices
                 .Where(trip => !trip.IsShipperHaveInvoice)
                 .Where(trip => trip.Status == Shipping.Trips.ShippingRequestTripStatus.Delivered)
                 .ToList();
-            foreach (ShippingRequestTrip trip in trips)
+            foreach (ShippingRequestTrip trip in trips.ToList())
             {
                 var shipperId = trip.ShippingRequestFk.TenantId;
                 var carrierId = trip.ShippingRequestFk.CarrierTenantId;
@@ -268,7 +268,7 @@ namespace TACHYON.Invoices
                             && !x.IsCarrierHaveInvoice)
                 .ToList();
 
-            foreach (ShippingRequestTrip trip in trips)
+            foreach (ShippingRequestTrip trip in trips.ToList())
             {
                 var shipperId = trip.ShippingRequestFk.TenantId;
                 var carrierId = trip.ShippingRequestFk.CarrierTenantId;
@@ -390,7 +390,7 @@ namespace TACHYON.Invoices
 
             DateTime dueDate = Clock.Now;
 
-            var paymentType = await _invoicePaymentMethodRepository.FirstOrDefaultAsync(x => x.Id == int.Parse(_featureChecker.GetValue(submit.Tenant.Id, AppFeatures.InvoicePaymentMethod)));
+            var paymentType = await _invoicePaymentMethodRepository.FirstOrDefaultAsync(x => x.Id == int.Parse(_featureChecker.GetValue(submit.Tenant.Id, AppFeatures.InvoicePaymentMethodCrarrier)));
             if (paymentType.PaymentType == PaymentMethod.InvoicePaymentType.Days)
             {
                 dueDate = Clock.Now.AddDays(paymentType.InvoiceDueDateDays);

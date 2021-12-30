@@ -1,11 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace TACHYON.Net.Emailing
 {
     public interface IEmailTemplateProvider
     {
-        string GetDefaultTemplate(int? tenantId);
-        Task<string> GetActivationTemplateBody();
+        Task<String> GetDefaultTemplate(int? tenantId);
 
         string ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage(int? TenantId, int Percentage);
     }
