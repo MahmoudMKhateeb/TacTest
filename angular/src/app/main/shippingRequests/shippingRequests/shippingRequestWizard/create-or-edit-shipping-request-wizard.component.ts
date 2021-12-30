@@ -322,7 +322,6 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     this._shippingRequestsServiceProxy.getShippingRequestForView(this.activeShippingRequestId).subscribe((res) => {
       this.shippingRequestReview = res;
       this.getRequestType(res.shippingRequest.isBid, res.shippingRequest.isDirectRequest);
-      console.log('conn ', res);
       this.loading = false;
       this.getCordinatesByCityName(res.originalCityName, 'source');
       this.getCordinatesByCityName(res.destinationCityName, 'destanation');
