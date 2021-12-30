@@ -48,6 +48,10 @@ namespace TACHYON.Shipping.Trips.Dto
                 context.Results.Add(new ValidationResult("document missing: " + CreateOrEditDocumentFileDto?.Name));
 
 
+            if (!OriginFacilityId.HasValue)
+                context.Results.Add(new ValidationResult("You Must Select Origin Facility"));
+            if (!DestinationFacilityId.HasValue)
+                context.Results.Add(new ValidationResult("You Must Select Destination Facility"));
 
             if (EndTripDate != null && StartTripDate?.Date > EndTripDate.Value.Date)
             {
