@@ -1,6 +1,6 @@
 ﻿using Abp.AspNetZeroCore.Net;
 using Abp.Dependency;
-using AspNetCore.Reporting;
+using Microsoft.Reporting.NETCore;
 using System.Collections;
 using System.IO;
 using System.Reflection;
@@ -25,38 +25,22 @@ namespace TACHYON.DataExporting
 
         public FileDto CreateRdlcPdfPackageFromList(string fileName, string reportPath, ArrayList dsNameArray, ArrayList DTArray)
         {
-            reportPath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + reportPath;
-
-            LocalReport localReport = new LocalReport(reportPath);
-
-            for (int i = 0; i < dsNameArray.Count; i++)
-            {
-                localReport.AddDataSource((string)dsNameArray[i], (IEnumerable)DTArray[i]);
-            }
-
-
-            byte[] bytes = localReport.Execute(RenderType.Pdf).MainStream;
-
+            byte[] pdf = GetRdlcPdfPackageAsBinaryData(reportPath, dsNameArray, DTArray);
             var file = new FileDto(fileName, MimeTypeNames.ApplicationPdf);
-
-            Save(bytes, file);
-
-
+            Save(pdf, file);
             return file;
         }
 
-        public byte[] GetRdlcPdfPackageAsBinaryData(string fileName, string reportPath, ArrayList dsNameArray, ArrayList DTArray)
+        public byte[] GetRdlcPdfPackageAsBinaryData(string reportPath, ArrayList dsNameArray, ArrayList DTArray)
         {
             reportPath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + reportPath;
+            LocalReport report = new LocalReport();
+            report.ReportPath = reportPath;
 
-            LocalReport localReport = new LocalReport(reportPath);
+            for (int i = 0; i < DTArray.Count; i++)
+                report.DataSources.Add(new ReportDataSource((string)dsNameArray[i], (IEnumerable)DTArray[i]));
 
-            for (int i = 0; i < dsNameArray.Count; i++)
-            {
-                localReport.AddDataSource((string)dsNameArray[i], (IEnumerable)DTArray[i]);
-            }
-
-            return localReport.Execute(RenderType.Pdf).MainStream;
+            return report.Render("PDF");
 
         }
     }

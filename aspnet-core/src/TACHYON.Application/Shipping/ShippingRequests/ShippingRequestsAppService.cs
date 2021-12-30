@@ -1037,7 +1037,7 @@ namespace TACHYON.Shipping.ShippingRequests
                         CountryName = pickup?.CityFk.CountyFk.DisplayName,
                         CityName = pickup?.CityFk.DisplayName,
                         Area = pickup?.Address,
-                        StartTripDate = ToGregorianDate(x.StartTripDate),//x.StartTripDate!=null? x.StartTripDate.Value.ToShortDateString().ToString() :"",
+                        StartTripDate = x.StartTripDate.HasValue ? ClockProviders.Local.Normalize(x.StartTripDate.Value) : x.StartTripDate,
                         CarrierName = x.CarrierName,
                         TotalWeight = x.TotalWeight,
                         ShipperReference = x.ShipperReference,
@@ -1123,22 +1123,21 @@ namespace TACHYON.Shipping.ShippingRequests
                         CountryName = pickup?.CityFk.CountyFk.DisplayName,
                         CityName = pickup?.CityFk.DisplayName,
                         Area = pickup?.Address,
-                        StartTripDate = ToGregorianDate(x.StartTripDate),
-                        ActualPickupDate = ToGregorianDate(x.ActualPickupDate),
+                        StartTripDate = ClockProviders.Local.Normalize(x.StartTripDate),
+                        ActualPickupDate = x.ActualPickupDate.HasValue ? ClockProviders.Local.Normalize(x.ActualPickupDate.Value) : x.ActualPickupDate,
                         DroppFacilityName = delivery?.Name,
                         DroppCountryName = delivery?.CityFk.CountyFk.DisplayName,
                         DroppCityName = delivery?.CityFk.DisplayName,
                         DroppArea = delivery?.Address,
-                        DeliveryDate = ToGregorianDate(x.DeliveryDate),
+                        DeliveryDate = x.DeliveryDate.HasValue ? ClockProviders.Local.Normalize(x.DeliveryDate.Value) : x.DeliveryDate,
                         TotalWeight = x.TotalWeight,
                         ClientName = x.ClientName,
                         CarrierName = x.CarrierName,
                         GoodsCategoryDisplayName = ObjectMapper.Map<GoodCategoryDto>(x.GoodsCategoryDisplayName).DisplayName,
                         HasAttachment = x.HasAttachment,
                         NeedsDeliveryNote = x.NeedDeliveryNote,
-                        ShipperReference = x.ShipperReference,
-                        InvoiceNumber = x.ShipperInvoiceNo,//GetInvoiceNumberByTripId(shippingRequestTripId),
-                        ShipperNotes = x.ShipperNotes
+                        ShipperReference = "", /*x.ShipperReference,TAC-2181 || 22/12/2021 || need to display it as an empty on production*/
+                        InvoiceNumber = GetInvoiceNumberByTripId(shippingRequestTripId)
 
                     });
 
@@ -1179,7 +1178,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
                 var info = _shippingRequestTripRepository.GetAll()
                     .Include(e => e.ShippingRequestFk)
-                    .Where(e => e.ShippingRequestFk.TenantId == AbpSession.TenantId)
+                    //.Where(e => e.ShippingRequestFk.TenantId == AbpSession.TenantId)
                     .Where(e => e.Id == routPoint.ShippingRequestTripId);
 
                 var query = info.Select(x => new
@@ -1245,7 +1244,7 @@ namespace TACHYON.Shipping.ShippingRequests
                         PlateNumber = x.PlateNumber,
                         PackingTypeDisplayName = x.PackingTypeDisplayName,
                         NumberOfPacking = x.NumberOfPacking,
-                        StartTripDate = ToGregorianDate(x.StartTripDate),
+                        StartTripDate = ClockProviders.Local.Normalize(x.StartTripDate),
                         DroppFacilityName = x.DroppFacilityName,
                         DroppCountryName = x.DroppCountryName,
                         DroppCityName = x.DroppCityName,
@@ -1254,12 +1253,11 @@ namespace TACHYON.Shipping.ShippingRequests
                         ClientName = x.ClientName,
                         TotalWeight = x.TotalWeight,
                         GoodsCategoryDisplayName = ObjectMapper.Map<GoodCategoryDto>(x.GoodsCategoryDisplayName).DisplayName,// x.GoodsCategoryDisplayName,
-                        DeliveryDate = ToGregorianDate(x.DeliveryDate),
+                        DeliveryDate = x.DeliveryDate.HasValue ? ClockProviders.Local.Normalize(x.DeliveryDate.Value) : x.DeliveryDate,
                         HasAttachment = x.HasAttachment,
                         NeedsDeliveryNote = x.NeedsDeliveryNote,
-                        ShipperReference = x.ShipperReference,
-                        InvoiceNumber = x.ShipperInvoiceNo,//GetInvoiceNumberByTripId(x.Id),
-                        ShipperNotes = x.ShipperNotes
+                        ShipperReference = "", /*x.ShipperReference,TAC-2181 || 22/12/2021 || need to display it as an empty on production*/
+                        InvoiceNumber = GetInvoiceNumberByTripId(x.Id)
                     });
 
                 return finalOutput;
