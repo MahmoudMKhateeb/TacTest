@@ -4166,7 +4166,7 @@
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>Invoice</Value>
+                      <Value>Tax Invoice</Value>
                       <Style>
                         <FontStyle>Normal</FontStyle>
                         <FontFamily>open Sans</FontFamily>
@@ -4177,7 +4177,7 @@
                       </Style>
                     </TextRun>
                     <TextRun>
-                      <Value> | </Value>
+                      <Value>| فاتورة ضريبية</Value>
                       <Style>
                         <FontStyle>Normal</FontStyle>
                         <FontFamily>arial</FontFamily>
@@ -4185,17 +4185,6 @@
                         <FontWeight>Bold</FontWeight>
                         <TextDecoration>None</TextDecoration>
                         <Color>#181818</Color>
-                      </Style>
-                    </TextRun>
-                    <TextRun>
-                      <Value>فاتورة</Value>
-                      <Style>
-                        <FontStyle>Normal</FontStyle>
-                        <FontSize>11pt</FontSize>
-                        <FontWeight>Bold</FontWeight>
-                        <TextDecoration>None</TextDecoration>
-                        <Color>#181818</Color>
-                        <Language>ar-SA</Language>
                       </Style>
                     </TextRun>
                   </TextRuns>
