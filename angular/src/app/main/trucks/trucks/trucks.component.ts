@@ -143,9 +143,9 @@ export class TrucksComponent extends AppComponentBase implements OnInit, AfterVi
       .pipe(finalize(() => this.excelFileUpload.clear()))
       .subscribe((response) => {
         if (response.success) {
-          this.notify.success(this.l('ImportUsersProcessStart'));
+          this.notify.success(this.l('ImportTrucksProcessStart'));
         } else if (response.error != null) {
-          this.notify.error(this.l('ImportUsersUploadFailed'));
+          this.notify.error(this.l('ImportTrucksUploadFailed'));
         }
       });
   }

@@ -2145,6 +2145,8 @@
     <text name="StartedMovingToLoadingLocation"></text>
     <text name="AddIncident">الحادثة</text>
     <text name="ArriveToLoadingLocation">الوصول إلى موقع التحميل</text>
+    <text name="ImportTrucksProcessStart">بدأت عملية استيراد الشاحنات</text>
+	<text name="ImportTrucksUploadFailed">فشلت عملية استيراد الشاحنات.</text>
     <!--<text name="StartOffloading"></text>
     <text name="ReceiverConfirmed"></text>
     <text name="DeliveryConfirmation"></text>-->
