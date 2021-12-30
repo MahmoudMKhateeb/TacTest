@@ -185,6 +185,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     this.modal.hide();
     this.trip = new CreateOrEditShippingRequestTripDto();
     this.fileToken = undefined;
+    this.pickupPointSenderId = undefined;
   }
 
   createOrEditTrip() {
