@@ -14,7 +14,7 @@ using TACHYON.Shipping.ShippingRequestTrips;
 
 namespace TACHYON.Waybills
 {
-  public  class WaybillsManager: TACHYONDomainServiceBase
+    public class WaybillsManager : TACHYONDomainServiceBase
     {
         private readonly ShippingRequestsAppService _shippingRequestAppService;
         private readonly RoutPointsAppService _routPointAppService;
@@ -64,7 +64,7 @@ namespace TACHYON.Waybills
             names.Add("MultipleDropsVasDataSet");
             data.Add(_shippingRequestAppService.GetShippingRequestVasesForMultipleDropWaybill(id));
 
-            return _pdfExporterBase.GetRdlcPdfPackageAsBinaryData("Multiple_Drop_Waybill", reportPath, names, data);
+            return _pdfExporterBase.GetRdlcPdfPackageAsBinaryData(reportPath, names, data);
         }
 
         private byte[] GetMasterWaybillPdf(int shippingRequestTripId)
@@ -83,7 +83,7 @@ namespace TACHYON.Waybills
 
             names.Add("SingleDropVasDataSet");
             data.Add(_shippingRequestAppService.GetShippingRequestVasesForSingleDropWaybill(shippingRequestTripId));
-            return _pdfExporterBase.GetRdlcPdfPackageAsBinaryData("Master_Waybill", reportPath, names, data);
+            return _pdfExporterBase.GetRdlcPdfPackageAsBinaryData(reportPath, names, data);
         }
 
         private byte[] GetSingleDropWaybillPdf(int shippingRequestTripId)
@@ -103,7 +103,7 @@ namespace TACHYON.Waybills
             names.Add("SingleDropVasDataSet");
             data.Add(_shippingRequestAppService.GetShippingRequestVasesForSingleDropWaybill(shippingRequestTripId));
 
-            return _pdfExporterBase.GetRdlcPdfPackageAsBinaryData("Single_Drop_Waybill", reportPath, names, data);
+            return _pdfExporterBase.GetRdlcPdfPackageAsBinaryData(reportPath, names, data);
         }
 
 
