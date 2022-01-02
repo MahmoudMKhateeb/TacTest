@@ -855,8 +855,7 @@
                       <div class="border-bottom mb-5 pb-5">
                         <div class="font-weight-bolder text-primary mb-3">{{ l('BasicDetails') }}:</div>
                         <div class="font-size-base line-height-xl">
-                          {{ l('ShippingRequestType') }} :
-                          {{ shippingRequestReview?.shippingRequest?.isBid ? l('Marketplace') : l('TachyonManageService') }}
+                          {{ l('ShippingRequestType') }} : {{ requestType }}
                           <br />
                           {{ l('BiddingRange') }} : {{ shippingRequestReview?.shippingRequest?.bidStartDate | momentFormat: 'L' }} -
                           {{ shippingRequestReview?.shippingRequest?.bidEndDate | momentFormat: 'L' }}
