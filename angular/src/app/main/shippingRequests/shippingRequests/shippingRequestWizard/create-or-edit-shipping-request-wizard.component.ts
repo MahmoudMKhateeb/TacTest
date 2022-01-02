@@ -218,13 +218,25 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
         }
         case 4: {
           console.log('step 4');
-          this.createOrEditStep4();
-          wizardObj.goNext();
-          //statements;
-          //if step 4 passed load the review&submit
-          this.reviewAndSubmit();
-
-          break;
+          let isVaild = true;
+          this.selectedVases.forEach((element) => {
+            if (this.step2Dto.numberOfTrips < element.numberOfTrips) {
+              isVaild = false;
+              return;
+            }
+          });
+          if (isVaild) {
+            this.createOrEditStep4();
+            wizardObj.goNext();
+            //statements;
+            //if step 4 passed load the review&submit
+            this.reviewAndSubmit();
+            break;
+          } else {
+            wizardObj.stop();
+            this.step3Form.markAllAsTouched();
+            this.notify.error(this.l('PleaseConfirmVasesFields'));
+          }
         }
       }
     });
