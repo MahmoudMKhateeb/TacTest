@@ -2388,5 +2388,7 @@
     <!--<text name="StartOffloading"></text>
     <text name="ReceiverConfirmed"></text>
     <text name="DeliveryConfirmation"></text>-->
-	</texts>
+    <text name="ImportTrucksProcessStart">The process of importing Trucks has begun</text>
+    <text name="ImportTrucksUploadFailed">Trucks import process has failed.</text>
+  </texts>
 </localizationDictionary>
