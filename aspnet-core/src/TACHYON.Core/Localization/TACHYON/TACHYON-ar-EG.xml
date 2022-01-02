@@ -2182,6 +2182,8 @@
     <text name="LoginLink">تسجيل الدخول</text>
 	<text name="RejectedDocument_Title">مستند مرفوض</text>    
 	<text name="RejectedDocumentEmailMessage">تم إرسال هذا البريد الإلكتروني إليك لإبلاغك بأنه تم رفض المستند {0} بسبب {1} إذا كانت لديك أية أسئلة ، فيرجى الاتصال بفريق الدعم.</text>    
+		<text name="CompanyNamePatternError">اسم الشركة اطول من 3 احرف ,الاحرف الانجليزية والارقام والشَرطة و الشَرطة السفلية مسموحة فقط</text>
+		<text name="CompanyLegalNamePatternError">الأسم القانوني للشركة اطول من 3 احرف ,الاحرف الانجليزية والعربية والارقام والشَرطة و الشَرطة السفلية مسموحة فقط</text>
     <!--<text name="StartOffloading"></text>
     <text name="ReceiverConfirmed"></text>
     <text name="DeliveryConfirmation"></text>-->
