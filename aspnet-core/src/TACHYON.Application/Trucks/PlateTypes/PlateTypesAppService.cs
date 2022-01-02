@@ -3,6 +3,7 @@ using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
+using Abp.Runtime.Validation;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -79,6 +80,7 @@ namespace TACHYON.Trucks.PlateTypes
         public async Task CreateOrEdit(CreateOrEditPlateTypeDto input)
         {
             await CheckIfNameExists(input);
+            if (input.IsDefault) await CheckDefaultDuplication(input.Id);
             if (input.Id == null)
             {
                 await Create(input);
@@ -103,6 +105,13 @@ namespace TACHYON.Trucks.PlateTypes
             await _plateTypeRepository.InsertAsync(plateType);
         }
 
+        private async Task CheckDefaultDuplication(int? plateTypeId = null)
+        {
+            var isDefaultDuplicated = await _plateTypeRepository.GetAll().AsNoTracking()
+                .WhereIf(plateTypeId.HasValue, x => x.Id != plateTypeId).AnyAsync(x => x.IsDefault);
+            if (isDefaultDuplicated) throw new AbpValidationException(L("DefaultPlateTypeCanNotBeMultiple"));
+        }
+
         [AbpAuthorize(AppPermissions.Pages_PlateTypes_Edit)]
         protected virtual async Task Update(CreateOrEditPlateTypeDto input)
         {
@@ -116,8 +125,8 @@ namespace TACHYON.Trucks.PlateTypes
             foreach (var item in input.Translations)
             {
                 var nameExists = await _plateTypeRepository.FirstOrDefaultAsync(x =>
-                x.Translations.Any(i => i.Language == item.Language &&
-                i.DisplayName.ToLower().Equals(item.DisplayName.ToLower())) &&
+                x.Translations.Any(x => x.Language == item.Language &&
+                x.DisplayName.ToLower() == item.DisplayName.ToLower()) &&
                 x.Id != input.Id);
                 if (nameExists != null)
                 {

@@ -7,6 +7,7 @@ import {
   DocumentFileDto,
   DocumentFilesServiceProxy,
   ISelectItemDto,
+  PlateTypeSelectItemDto,
   SelectItemDto,
   TrucksServiceProxy,
   TruckTruckStatusLookupTableDto,
@@ -94,7 +95,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
    */
   private _DocsUploaderOptions: FileUploaderOptions = {};
 
-  allPlateTypes: SelectItemDto[];
+  allPlateTypes: PlateTypeSelectItemDto[];
 
   truckModelMaxYear = new Date();
   //truckModelMinYear = new Date();
@@ -153,6 +154,9 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
         // dropDowns
         this._trucksServiceProxy.getAllTransportTypesForDropdown().subscribe((result) => {
           this.allTransportTypes = result;
+        });
+        this._trucksServiceProxy.getAllPlateTypeIdForDropdown().subscribe((result) => {
+          this.allPlateTypes = result;
         });
         this._trucksServiceProxy.getAllTruckTypesByTransportTypeIdForDropdown(this.truck.transportTypeId).subscribe((result) => {
           this.allTruckTypesByTransportType = result;

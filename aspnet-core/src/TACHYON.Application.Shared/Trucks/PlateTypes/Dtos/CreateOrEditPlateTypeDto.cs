@@ -13,6 +13,7 @@ namespace TACHYON.Trucks.PlateTypes.Dtos
         public virtual string Name { get; set; }
         public string BayanIntegrationId { get; set; }
 
+        public bool IsDefault { get; set; }
         public ICollection<PlateTypeTranslationDto> Translations { get; set; }
     }
 }

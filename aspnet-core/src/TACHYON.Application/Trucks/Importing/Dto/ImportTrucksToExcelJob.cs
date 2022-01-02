@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Abp.BackgroundJobs;
+﻿using Abp.BackgroundJobs;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
@@ -13,12 +8,19 @@ using Abp.ObjectMapping;
 using Abp.Threading;
 using Abp.UI;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using TACHYON.Authorization.Roles;
 using TACHYON.Documents.DocumentFiles;
 using TACHYON.Documents.DocumentFiles.Dtos;
 using TACHYON.Notifications;
 using TACHYON.Storage;
 using TACHYON.Trucks.Dtos;
+using TACHYON.Trucks.PlateTypes;
 
 namespace TACHYON.Trucks.Importing.Dto
 {
@@ -26,6 +28,7 @@ namespace TACHYON.Trucks.Importing.Dto
     {
         private readonly ITruckListExcelDataReader _truckListExcelDataReader;
         private readonly IRepository<Truck, long> _truckRepository;
+        private readonly IRepository<PlateType> _plateTypeRepository;
         private readonly IInvalidTruckExporter _invalidTruckExporter;
         private readonly IAppNotifier _appNotifier;
         private readonly IBinaryObjectManager _binaryObjectManager;
@@ -38,7 +41,13 @@ namespace TACHYON.Trucks.Importing.Dto
             IAppNotifier appNotifier,
             IBinaryObjectManager binaryObjectManager,
             IObjectMapper objectMapper,
-            IUnitOfWorkManager unitOfWorkManager, ITruckListExcelDataReader truckListExcelDataReader, IRepository<Truck, long> truckRepository, IInvalidTruckExporter invalidTruckExporter, IRepository<DocumentFile, Guid> documentFileRepository, TruckManager truckManager)
+            IUnitOfWorkManager unitOfWorkManager,
+            ITruckListExcelDataReader truckListExcelDataReader,
+            IRepository<Truck, long> truckRepository,
+            IInvalidTruckExporter invalidTruckExporter,
+            IRepository<DocumentFile, Guid> documentFileRepository,
+            IRepository<PlateType> plateTypeRepository,
+            TruckManager truckManager)
         {
             _appNotifier = appNotifier;
             _binaryObjectManager = binaryObjectManager;
@@ -49,6 +58,7 @@ namespace TACHYON.Trucks.Importing.Dto
             _invalidTruckExporter = invalidTruckExporter;
             _documentFileRepository = documentFileRepository;
             _truckManager = truckManager;
+            _plateTypeRepository = plateTypeRepository;
         }
 
         public override void Execute(ImportTrucksFromExcelJobArgs args)
@@ -156,6 +166,10 @@ namespace TACHYON.Trucks.Importing.Dto
                 documentFile.TenantId = tenantId;
                 truck.DocumentFiles.Add(documentFile);
             }
+
+            truck.PlateTypeId = await _plateTypeRepository.GetAll()
+                .AsNoTracking().Where(x => x.IsDefault)
+                .Select(x => x.Id).FirstOrDefaultAsync();
 
             await _truckManager.CreateAsync(truck);
 
