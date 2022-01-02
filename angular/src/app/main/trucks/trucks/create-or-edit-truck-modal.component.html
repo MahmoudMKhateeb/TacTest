@@ -171,7 +171,13 @@
                 }"
               >
                 <option [ngValue]="null">{{ l('Select') }} {{ l('PlateType') }}</option>
-                <option *ngFor="let item of allPlateTypes" value="{{ item.id }}">{{ item.displayName }}</option>
+                <option
+                  *ngFor="let item of allPlateTypes"
+                  value="{{ item.id }}"
+                  [selected]="item.isDefault && (!truck.plateTypeId || truck.plateTypeId == item.id)"
+                >
+                  {{ item.displayName }}
+                </option>
               </select>
               <validation-messages [formCtrl]="PlateTypeId"></validation-messages>
             </div>

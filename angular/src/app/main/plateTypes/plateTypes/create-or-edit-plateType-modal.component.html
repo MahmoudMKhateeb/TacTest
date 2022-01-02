@@ -38,6 +38,14 @@
               <label>{{ l('name') }}</label>
               <input class="form-control" type="text" name="plateType.name" [(ngModel)]="plateType.name" required minLength="3" maxlength="250" />
             </div>
+
+            <div class="col-md-6 checkbox-inline">
+              <label for="isDefault" class="checkbox">
+                <input id="isDefault" type="checkbox" name="isDefault" [(ngModel)]="plateType.isDefault" />
+                {{ l('IsDefault') }}
+                <span></span>
+              </label>
+            </div>
           </div>
 
           <div class="row" *ngFor="let t of Translations; let i = index">
