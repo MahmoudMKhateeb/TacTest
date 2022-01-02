@@ -516,6 +516,7 @@ namespace TACHYON.Shipping.Trips
             {
                 var trip = await _shippingRequestTripRepository
                 .GetAll()
+                .AsNoTracking()
                 .Include(x => x.ShippingRequestFk)
                 .Include(x => x.OriginFacilityFk)
                 .Include(x => x.DestinationFacilityFk)
@@ -528,6 +529,9 @@ namespace TACHYON.Shipping.Trips
                    .ThenInclude(r => r.GoodsDetails)
                     .ThenInclude(c => c.GoodCategoryFk)
                     .ThenInclude(r => r.Translations)
+                .Include(x => x.RoutPoints)
+                    .ThenInclude(r => r.GoodsDetails)
+                    .ThenInclude(c => c.UnitOfMeasureFk)
                 .Include(x => x.RoutPoints)
                     .ThenInclude(c => c.ReceiverFk)
                 .Include(x => x.ShippingRequestTripVases)
