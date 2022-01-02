@@ -578,6 +578,7 @@ namespace TACHYON.Invoices
 
         private async Task<Invoice> GetInvoice(long invoiceId)
         {
+            DisableTenancyFilters();
             return await _invoiceRepository
                   .GetAll()
                   .WhereIf(AbpSession.TenantId.HasValue && !await IsEnabledAsync(AppFeatures.TachyonDealer), e => e.TenantId == AbpSession.TenantId.Value)
