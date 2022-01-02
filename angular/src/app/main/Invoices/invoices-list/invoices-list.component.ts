@@ -1,17 +1,13 @@
-import { Component, OnInit, Injector, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, Injector, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
-import { Table } from 'primeng/table';
-import { Paginator } from 'primeng/paginator';
-import { LazyLoadEvent } from 'primeng/api';
-import * as _ from 'lodash';
 import {
+  CommonLookupServiceProxy,
+  InvoiceAccountType,
+  InvoiceFilterInput,
+  InvoiceReportServiceServiceProxy,
   InvoiceServiceProxy,
   ISelectItemDto,
-  CommonLookupServiceProxy,
-  InvoiceFilterInput,
-  InvoiceAccountType,
-  InvoiceReportServiceServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import * as moment from 'moment';
 import { FileDownloadService } from '@shared/utils/file-download.service';
@@ -19,6 +15,7 @@ import { InvoiceTenantItemsDetailsComponent } from 'app/main/invoices/invoice-te
 import { Router } from '@angular/router';
 import CustomStore from '@node_modules/devextreme/data/custom_store';
 import { LoadOptions } from '@node_modules/devextreme/data/load_options';
+import { DxDataGridComponent } from '@node_modules/devextreme-angular';
 
 @Component({
   templateUrl: './invoices-list.component.html',
@@ -27,9 +24,8 @@ import { LoadOptions } from '@node_modules/devextreme/data/load_options';
   animations: [appModuleAnimation()],
 })
 export class InvoicesListComponent extends AppComponentBase implements OnInit {
-  @ViewChild('dataTable', { static: true }) dataTable: Table;
-  @ViewChild('paginator', { static: true }) paginator: Paginator;
   @ViewChild('InvoiceDetailsModel', { static: true }) InvoiceDetailsModel: InvoiceTenantItemsDetailsComponent;
+  @ViewChild('dataGrid', { static: true }) dataGrid: DxDataGridComponent;
 
   IsStartSearch = false;
   PaidStatus: boolean | null | undefined;
@@ -70,54 +66,9 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
     });
     this.getAllInvoices();
   }
-  getAll(event?: LazyLoadEvent): void {
-    // if (this.primengTableHelper.shouldResetPaging(event)) {
-    //   this.paginator.changePage(0);
-    //   return;
-    // }
-    //
-    // this.primengTableHelper.showLoadingIndicator();
-    //
-    // if (this.creationDateRangeActive) {
-    //   this.fromDate = moment(this.creationDateRange[0]);
-    //   this.toDate = moment(this.creationDateRange[1]);
-    // } else {
-    //   this.fromDate = null;
-    //   this.toDate = null;
-    // }
-    //
-    // if (this.duteDateRangeActive) {
-    //   this.dueFromDate = moment(this.dueDateRange[0]);
-    //   this.dueToDate = moment(this.dueDateRange[1]);
-    // } else {
-    //   this.dueFromDate = null;
-    //   this.dueToDate = null;
-    // }
-    // this._InvoiceServiceProxy
-    //   .getAll(
-    //     this.Tenant ? parseInt(this.Tenant.id) : undefined,
-    //     this.periodId,
-    //     this.PaidStatus,
-    //     this.accountType,
-    //     this.fromDate,
-    //     this.toDate,
-    //     this.dueFromDate,
-    //     this.dueToDate,
-    //     this.primengTableHelper.getSorting(this.dataTable),
-    //     this.primengTableHelper.getSkipCount(this.paginator, event),
-    //     this.primengTableHelper.getMaxResultCount(this.paginator, event)
-    //   )
-    //   .subscribe((result) => {
-    //     this.IsStartSearch = true;
-    //     this.primengTableHelper.totalRecordsCount = result.totalCount;
-    //     this.primengTableHelper.records = result.items;
-    //     this.primengTableHelper.hideLoadingIndicator();
-    //     console.log(result.items);
-    //   });
-  }
 
   reloadPage(): void {
-    this.paginator.changePage(this.paginator.getPage());
+    this.refreshDataGrid();
   }
 
   MakePaid(invoice: any): void {
@@ -162,7 +113,6 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
     data.toDate = this.toDate;
     data.dueFromDate = this.fromDate;
     data.dueToDate = this.toDate;
-    data.sorting = this.primengTableHelper.getSorting(this.dataTable);
     this._InvoiceServiceProxy.exports(data).subscribe((result) => {
       this._fileDownloadService.downloadTempFile(result);
     });
@@ -207,5 +157,16 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
           });
       },
     });
+  }
+
+  refreshDataGrid() {
+    this.dataGrid.instance
+      .refresh()
+      .then(function () {
+        // ...
+      })
+      .catch(function (error) {
+        // ...
+      });
   }
 }
