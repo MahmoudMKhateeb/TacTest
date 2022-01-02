@@ -31,6 +31,7 @@
 
         public const string Pages_HostDashboard = "Pages.HostDashboard";
         public const string Pages_ShipperDashboard = "Pages.ShipperDashboard";
+        public const string Pages_CarrierDashboard = "Pages.CarrierDashboard";
 
         public const string Pages_CitiesTranslations = "Pages.CitiesTranslations";
         public const string Pages_CitiesTranslations_Create = "Pages.CitiesTranslations.Create";
