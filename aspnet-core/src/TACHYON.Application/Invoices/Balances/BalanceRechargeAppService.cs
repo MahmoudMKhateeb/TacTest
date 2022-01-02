@@ -17,6 +17,7 @@ using TACHYON.Invoices.Balances.Dto;
 using TACHYON.Invoices.Balances.Exporting;
 using TACHYON.Invoices.Transactions;
 using TACHYON.MultiTenancy;
+using TACHYON.Notifications;
 
 namespace TACHYON.Invoices.Balances
 {
@@ -27,18 +28,20 @@ namespace TACHYON.Invoices.Balances
         private readonly IBalanceRechargeExcelExporter _BalanceRechargeExcelExporter;
         private readonly TransactionManager _transactionManager;
         private readonly IRepository<Tenant> _tenantsRepository;
+        private readonly IAppNotifier _appNotifier;
 
         public BalanceRechargeAppService(
             IRepository<BalanceRecharge> Repository,
             BalanceManager balanceManager,
             IBalanceRechargeExcelExporter BalanceRechargeExcelExporter,
-            TransactionManager transactionManager, IRepository<Tenant> tenantsRepository)
+            TransactionManager transactionManager, IRepository<Tenant> tenantsRepository, IAppNotifier appNotifier)
         {
             _Repository = Repository;
             _balanceManager = balanceManager;
             _BalanceRechargeExcelExporter = BalanceRechargeExcelExporter;
             _transactionManager = transactionManager;
             _tenantsRepository = tenantsRepository;
+            _appNotifier = appNotifier;
         }
 
         [AbpAuthorize(AppPermissions.Pages_Administration_Host_Invoices_Balances)]
@@ -64,6 +67,7 @@ namespace TACHYON.Invoices.Balances
                 TenantId = Recharge.TenantId,
                 SourceId = id,
             });
+            await _appNotifier.NewBalanceAddedToShippper(Recharge.TenantId, Recharge.Amount);
         }
 
         [AbpAuthorize(AppPermissions.Pages_Administration_Host_Invoices_Balances_Delete)]

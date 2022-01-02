@@ -2412,6 +2412,7 @@
 		
 	 	<text name="TripDataChanged">You Have Trip With Waybill No {0} Changed Please Review All Of Trip Changes</text> 
 		<text name="ShipperTripUpdatedNotificationMessage">There are some changes on trip with waybill No {0} . For more details please click here</text>
+		<text name="NewBalanceAddedToShippper">New Balance Added Value {0}</text>
 		<text name="CarrierTripUpdatedNotificationMessage">There are some changes on trip with waybill No {0} . For more details please click here</text>
 		<text name="TachyonDealerTripUpdatedNotificationMessage">There are some changes on trip with waybill No {0} . For more details please click here</text>
 		<text name="NotSet">Not Set</text>
