@@ -37,6 +37,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TACHYON.Web.Core\TACHYON.Web.Core.csproj" />
+    <EmbeddedResource Include="wwwroot\Comoon\Static\*" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Abp.Castle.Log4Net" Version="5.10.1" />

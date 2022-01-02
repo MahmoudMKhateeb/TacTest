@@ -1,0 +1,121 @@
+﻿swagger: '2.0'
+schemes:
+  - http
+  - https
+host: tachyonhub.com
+basePath: /v1
+
+info:
+  description: |
+    # Introduction
+    <strong class="tac">Tachyon</strong> is a **Logistics cloud-based platform** that enables its users to manage their transport & logistics operations, whether its inhouse or outsourced operations we got your back.<br> Benefit from the totally digital solution, improve your quality of service, save time as well as cost.<br><br>
+    Our initiatives and cutting-edge platform are designed to deliver real values to our stakeholders, we prioritize on convenience, security & timeliness.
+    Whether you are a Shipper, Carrier or a Broker you can benefit from a one-stop-shop solution powered by technology, we aid in process improvement and dramatically reduce operational costs, as well as time.
+    # How it Works
+    <p class="s18"><strong class="tac">Tachyon</strong> is designed to provide a seamless user experience and enable its users to monitor their shipments’ entire lifecycles from a single platform. Using <strong class="tac">Tachyon</strong> is easier than a breeze; here’s <strong>how it works:</strong></p>
+    <p class="s15">Once registered, the shipper can book a trip directly through the platform. Our machine learning algorithms assess the freight specs and assign the order to the most appropriate transporter. The shipment is then assigned automatically to a specific truck, all while the shipper receives regular, real-time status updates. Once the shipment has been loaded onto the truck, all necessary documentation is generated electronically. Complete transparency over the shipment lifecycle means shippers also receive proof of delivery, invoices, and payment in real-time. Once the order is completed, all the stakeholders (Shipper, Carrier & Driver) can rate their experience, keeping the platform safe and secure.</p>
+  version: V1.0.2
+  title: TACHYON API Documentation
+  contact:
+    email: apiteam@tachyonhub.com
+    url: https://developer.tachyonhub.com/docs
+  termsOfService: 'https://tachyonhub.com/terms/'
+  x-logo:
+    url: 'https://localhost:44301/Common/Static/logo.png'
+    altText: TACHYON HUB
+
+tags:
+  - name: &var1 What is TACHYON API
+    description:
+  - name: &var2 Authentication Requirements
+    description: |
+     ****Petstore offers two forms of authentication:****
+      - API Key
+      - OAuth2
+
+     OAuth2 - an open protocol to allow secure authorization in a simple
+     and standard method from web, mobile and desktop applications.
+  - name: &var3 Simple Request Example
+    description:
+  - name: &var4 How To Use
+    description:
+  - name: &var5 Errors 
+    description: |
+     <div class="column">
+      <div class="card">
+      <table>
+      <thead>
+      <tr><th>Response Status Code<th>Description</th></tr>
+      </thead>
+      <tbody>
+      <tr><td class="green">200 - OK</td><td>Everything worked as expected.</td></tr>
+      <tr><td class="orange">400 - Bad Request</td><td>The request was unacceptable,<br> often due to missing a required parameter.</td></tr>
+      <tr><td class="orange">401 - Unauthorized</td><td>No valid API key provided.</td></tr>
+      <tr><td class="orange">402 - Request Failed</td><td>The parameters were valid but the request failed</td></tr>
+      <tr><td class="orange">403 - Forbidden</td><td>The API key doesn't have permissions to perform the request.</td></tr>
+      <tr><td class="orange">404 - Not Found	</td><td>The requested resource doesn't exist.</td></tr>
+      <tr><td class="orange">409 - Conflict</td><td>The request conflicts with another request<br> (perhaps due to using the same idempotent key).</td></tr>
+      <tr><td class="orange">429 - Too Many Requests</td><td>Too many requests hit the API too quickly.<br> We recommend an exponential backoff of your requests.</td></tr>
+      <tr><td class="red">500, 502, 503, 504 - Server Errors</td><td>Something went wrong on Stripe's end. (These are rare.)</td></tr>
+      </tbody>
+      </table>
+      </div>
+      </div>
+
+ 
+
+
+x-tagGroups: 
+  - name: Intro
+    tags:
+      - *var1
+      - *var2
+
+  - name: Quick Start
+    tags:
+       - *var3
+       - *var4
+       - *var5
+
+paths:
+  /​api​/TokenAuth​/Authenticate:
+    post:
+      tags:
+        - *var3
+      summary: Login to The Platform
+      description: Login With Email and Password To Tachyon Platfrom
+      operationId: addPet
+      consumes:
+        - application/json
+        - application/xml
+      produces:
+        - application/xml
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Pet object that needs to be added to the store
+          required: true
+      responses:
+        '405':
+          description: Invalid input
+      x-code-samples:
+        - lang: 'C#'
+          source: |
+            PetStore.v1.Pet pet = new PetStore.v1.Pet();
+            pet.setApiKey("your api key");
+            pet.petType = PetStore.v1.Pet.TYPE_DOG;
+            pet.name = "Rex";
+            // set other fields
+            PetStoreResponse response = pet.create();
+            if (response.statusCode == HttpStatusCode.Created)
+            {
+              // Successfully created
+            }
+            else
+            {
+              // Something wrong -- check response for errors
+              Console.WriteLine(response.getRawResponse());
+            }
+        - lang: PHP
+          source: "$form = new \\PetStore\\Entities\\Pet();\n$form->setPetType(\"Dog\");\n$form->setName(\"Rex\");\n// set other fields\ntry {\n    $pet = $client->pets()->create($form);\n} catch (UnprocessableEntityException $e) {\n    var_dump($e->getErrors());\n}\n"
