@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Abp.Authorization.Users;
+﻿using Abp.Authorization.Users;
 using Abp.BackgroundJobs;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
@@ -14,6 +10,11 @@ using Abp.ObjectMapping;
 using Abp.Threading;
 using Abp.UI;
 using Microsoft.AspNetCore.Identity;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using TACHYON.Authorization.Roles;
 using TACHYON.Authorization.Users;
 using TACHYON.Authorization.Users.Dto;
@@ -180,7 +181,8 @@ namespace TACHYON.Drivers.importing
             //email address
             if (input.EmailAddress.IsNullOrEmpty())
             {
-                driver.EmailAddress = driver.PhoneNumber + "@" + tenancyName + ".com";
+                var formattedTenancyName = Regex.Replace(tenancyName, "[-_ ]", "").ToLower();
+                driver.EmailAddress = driver.PhoneNumber + "@" + formattedTenancyName + ".com";
 
             }
             //is driver
