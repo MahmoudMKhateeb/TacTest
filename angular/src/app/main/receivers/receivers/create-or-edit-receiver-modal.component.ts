@@ -30,21 +30,17 @@ export class CreateOrEditReceiverModalComponent extends AppComponentBase {
     if (!receiverId) {
       this.receiver = new CreateOrEditReceiverDto();
       this.receiver.id = receiverId;
-      if (receiverId) {
-        this.active = true;
-        this.modal.show();
-      } else {
-        this._receiversServiceProxy.getReceiverForEdit(receiverId).subscribe((result) => {
-          this.receiver = result.receiver;
-        });
-      }
-      this._receiversServiceProxy.getAllFacilityForTableDropdown().subscribe((result) => {
-        this.allFacilitys = result;
-        this.receiver.facilityId = this.facilityIdFromTrips;
+    } else {
+      this._receiversServiceProxy.getReceiverForEdit(receiverId).subscribe((result) => {
+        this.receiver = result.receiver;
       });
-      this.active = true;
-      this.modal.show();
     }
+    this._receiversServiceProxy.getAllFacilityForTableDropdown().subscribe((result) => {
+      this.allFacilitys = result;
+      this.receiver.facilityId = this.facilityIdFromTrips;
+    });
+    this.active = true;
+    this.modal.show();
   }
 
   save(): void {
