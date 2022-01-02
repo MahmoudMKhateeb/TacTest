@@ -265,6 +265,9 @@ namespace TACHYON.Shipping.Trips
                 .FirstOrDefaultAsync();
             if (trip == null) throw new UserFriendlyException(L("NoTripToAssignDriver"));
 
+            if (trip.Status == ShippingRequestTripStatus.Intransit && await CheckIfDriverWorkingOnAnotherTrip(input.AssignedDriverUserId))
+                throw new UserFriendlyException(L("TheDriverAreadyWorkingOnAnotherTrip"));
+
             long? oldAssignedDriverUserId = trip.AssignedDriverUserId;
             long? oldAssignedTruckId = input.AssignedTruckId;
             trip.AssignedDriverUserId = input.AssignedDriverUserId;
@@ -277,9 +280,6 @@ namespace TACHYON.Shipping.Trips
                 trip.RejectedReason = string.Empty;
                 trip.RejectReasonId = default(int?);
             }
-
-            if (trip.Status == ShippingRequestTripStatus.Intransit && await CheckIfDriverWorkingOnAnotherTrip(input.AssignedDriverUserId))
-                throw new UserFriendlyException(L("TheDriverAreadyWorkingOnAnotherTrip"));
 
             if (oldAssignedDriverUserId != trip.AssignedDriverUserId)
             {

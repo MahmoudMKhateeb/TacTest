@@ -103,6 +103,7 @@ namespace TACHYON.Tracking
               .ThenInclude(t => t.Translations)
             .Include(g => g.GoodsDetails)
              .ThenInclude(u => u.UnitOfMeasureFk)
+             .Include(v => v.ReceiverFk)
                             .Where(x => x.ShippingRequestTripFk.Id == id && x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId.HasValue)
                             .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper), x => x.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId)
                             .WhereIf(!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer), x => true)
@@ -158,32 +159,18 @@ namespace TACHYON.Tracking
             {
                 dto.Reason = ObjectMapper.Map<ShippingRequestTripRejectReasonListDto>(trip.ShippingRequestTripRejectReason).Name ?? "";
             }
-            if (AbpSession.TenantId.HasValue && !IsEnabled(AppFeatures.TachyonDealer))
+            var tenantId = AbpSession.TenantId;
+            if (!tenantId.HasValue || (tenantId.HasValue && !IsEnabled(AppFeatures.Shipper)))
             {
-                if (!IsEnabled(AppFeatures.Shipper))
-                {
-                    dto.Name = trip.ShippingRequestFk.Tenant.Name;
-                    dto.IsAssign = true;
-                    dto.CanStartTrip = CanStartTrip(trip, workingOnAnotherTrip);
-                }
-
+                dto.Name = tenantId.HasValue && IsEnabled(AppFeatures.Carrier) ? trip.ShippingRequestFk.Tenant.Name : dto.Name = $"{trip.ShippingRequestFk?.Tenant?.Name}-{trip.ShippingRequestFk?.CarrierTenantFk?.Name}";
+                dto.IsAssign = true;
+                dto.CanStartTrip = CanStartTrip(trip, workingOnAnotherTrip);
+                dto.CanAcceptTrip = CanAcceptTrip(trip, workingOnAnotherTrip);
+                if (!dto.CanAcceptTrip)
+                    dto.NoActionReason = CanNotAcceptReason(trip, workingOnAnotherTrip);
+                if (trip.Status == ShippingRequestTripStatus.New && trip.DriverStatus == ShippingRequestTripDriverStatus.Accepted && !dto.CanStartTrip)
+                    dto.NoActionReason = CanNotStartReason(trip, workingOnAnotherTrip);
             }
-            else
-            {
-                if (trip.ShippingRequestFk.IsTachyonDeal)
-                {
-                    dto.CanStartTrip = CanStartTrip(trip, workingOnAnotherTrip);
-                    dto.IsAssign = true;
-                }
-                dto.Name = $"{trip.ShippingRequestFk?.Tenant?.Name}-{trip.ShippingRequestFk?.CarrierTenantFk?.Name}";
-            }
-
-            dto.CanAcceptTrip = CanAcceptTrip(trip, workingOnAnotherTrip);
-            if (!dto.CanAcceptTrip)
-                dto.NoActionReason = CanNotAcceptReason(trip, workingOnAnotherTrip);
-            if (trip.Status == ShippingRequestTripStatus.New && trip.DriverStatus == ShippingRequestTripDriverStatus.Accepted && !dto.CanStartTrip)
-                dto.NoActionReason = CanNotStartReason(trip, workingOnAnotherTrip); ;
-
             return dto;
         }
         #endregion

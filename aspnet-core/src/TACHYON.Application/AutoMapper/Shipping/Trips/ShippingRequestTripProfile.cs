@@ -49,7 +49,7 @@ namespace TACHYON.AutoMapper.Shipping.Trips
                 .ForMember(dst => dst.Source, opt => opt.MapFrom(src => $"{src.ShippingRequestFk.OriginCityFk.DisplayName} - {src.OriginFacilityFk.Address}"))
                 .ForMember(dst => dst.Distination, opt => opt.MapFrom(src => $"{src.ShippingRequestFk.DestinationCityFk.DisplayName} - {src.DestinationFacilityFk.Address}"))
                 .ForMember(dst => dst.StartTripDate, opt => opt.MapFrom(src => src.StartTripDate == null ? "" : src.StartTripDate.ToString("dd,MMM,yyyy")))
-                .ForMember(dst => dst.EndTripDate, opt => opt.MapFrom(src => src.EndTripDate == null ? "" : src.EndTripDate!=null ?src.EndTripDate.Value.ToString("dd,MMM,yyyy") :""))
+                .ForMember(dst => dst.EndTripDate, opt => opt.MapFrom(src => src.EndTripDate == null ? "" : src.EndTripDate != null ? src.EndTripDate.Value.ToString("dd,MMM,yyyy") : ""))
                 .ForMember(dst => dst.TravelTime, opt => opt.MapFrom(src => src.StartWorking == null ? "" : ((DateTime)src.StartWorking).ToString("hh:mm")))
                 .ForMember(dst => dst.TotalWeight, opt => opt.MapFrom(src => src.ShippingRequestFk.TotalWeight))
                 .ForMember(dst => dst.PackingType, opt => opt.MapFrom(src => src.ShippingRequestFk.PackingTypeFk.DisplayName))
@@ -70,6 +70,7 @@ namespace TACHYON.AutoMapper.Shipping.Trips
                 .ForMember(dst => dst.lat, opt => opt.MapFrom(src => src.FacilityFk.Location.Y))
                 .ForMember(dst => dst.lng, opt => opt.MapFrom(src => src.FacilityFk.Location.X))
                 .ForMember(dst => dst.GoodsDetails, opt => opt.MapFrom(src => src.GoodsDetails))
+                .ForMember(dst => dst.ReceiverFullName, opt => opt.MapFrom(src => !string.IsNullOrEmpty(src.ReceiverFullName) ? src.ReceiverFullName : src.ReceiverFk != null ? src.ReceiverFk.FullName : ""))
                 .ForMember(dst => dst.NextStatus, opt => opt.MapFrom(src => GetMobileTripChangeStatusButtonTitle(src.Status)));
 
             CreateMap<ShippingRequestTrip, CreateOrEditShippingRequestTripDto>()
@@ -98,7 +99,7 @@ namespace TACHYON.AutoMapper.Shipping.Trips
                 case RoutePointStatus.StartedMovingToLoadingLocation:
                     return Enum.GetName(typeof(RoutePointStatus), RoutePointStatus.ArriveToLoadingLocation);
                 case RoutePointStatus.ArriveToLoadingLocation:
-                    return Enum.GetName(typeof(RoutePointStatus), RoutePointStatus.StartLoading+1);
+                    return Enum.GetName(typeof(RoutePointStatus), RoutePointStatus.StartLoading + 1);
                 case RoutePointStatus.StartLoading:
                     return Enum.GetName(typeof(RoutePointStatus), RoutePointStatus.FinishLoading);
                 case RoutePointStatus.StartedMovingToOfLoadingLocation:

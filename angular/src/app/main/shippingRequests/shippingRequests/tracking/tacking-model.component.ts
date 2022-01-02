@@ -81,6 +81,9 @@ export class TrackingModelComponent extends AppComponentBase implements OnInit {
     }
     return false;
   }
+  canSeeDropStatus(drop: ShippingRequestTripDriverRoutePointDto) {
+    return this.pickup.status == RoutePointStatus.FinishLoading && this.drops.findIndex((x) => x.isActive && x.id != drop.id) == -1 ? true : false;
+  }
   getPickup() {
     this.pickup = this.routePoints.find((x) => x.pickingType == PickingType.Pickup);
   }
@@ -209,7 +212,7 @@ export class TrackingModelComponent extends AppComponentBase implements OnInit {
 
   dropOffStep(point: ShippingRequestTripDriverRoutePointDto): number {
     if (point.status == RoutePointStatus.DeliveryConfirmation) return 7;
-    if (!this.canChangeDropStatus(point)) return 0;
+    if (!this.canSeeDropStatus(point)) return 0;
     switch (point.status) {
       case RoutePointStatus.StandBy:
         return 1;
