@@ -2241,6 +2241,8 @@
 		
 		<text name="CompanyNamePatternError">اسم الشركة اطول من 3 احرف ,الاحرف الانجليزية والارقام والشَرطة و الشَرطة السفلية مسموحة فقط</text>
 		<text name="CompanyLegalNamePatternError">الأسم القانوني للشركة اطول من 3 احرف ,الاحرف الانجليزية والعربية والارقام والشَرطة و الشَرطة السفلية مسموحة فقط</text>
+    <text name="ImportTrucksProcessStart">بدأت عملية استيراد الشاحنات</text>
+	<text name="ImportTrucksUploadFailed">فشلت عملية استيراد الشاحنات.</text>
     <!--<text name="StartOffloading"></text>
     <text name="ReceiverConfirmed"></text>
     <text name="DeliveryConfirmation"></text>-->
