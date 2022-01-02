@@ -2239,5 +2239,10 @@
 		<text name="DeliveredAndNeedsConfirmation">تم الاستلام / بحاجة إلى اكمال المستندات</text>
 		<text name="Enter9DigitsNumber">رقم الجوال . 9 أرقام تبدأ بخمسة </text>
 		
+		<text name="CompanyNamePatternError">اسم الشركة اطول من 3 احرف ,الاحرف الانجليزية والارقام والشَرطة و الشَرطة السفلية مسموحة فقط</text>
+		<text name="CompanyLegalNamePatternError">الأسم القانوني للشركة اطول من 3 احرف ,الاحرف الانجليزية والعربية والارقام والشَرطة و الشَرطة السفلية مسموحة فقط</text>
+    <!--<text name="StartOffloading"></text>
+    <text name="ReceiverConfirmed"></text>
+    <text name="DeliveryConfirmation"></text>-->
 	</texts>
 </localizationDictionary>
