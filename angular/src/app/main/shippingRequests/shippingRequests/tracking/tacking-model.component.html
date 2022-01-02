@@ -9,7 +9,7 @@
   [config]="{ backdrop: 'static' }"
 >
   <div class="modal-dialog modal-xl">
-    <div class="modal-content">
+    <div *ngIf="active" class="modal-content">
       <div class="modal-body">
         <button type="button" class="close closeModal" data-dismiss="modal" (click)="close()" aria-label="Close">
           <i class="fas fa-times"></i>
@@ -233,7 +233,9 @@
                   {{ drop.note }}
                 </p>
               </div>
-              <div class="actions mt-0" *ngIf="canChangeDropStatus(drop)">
+              <div class="actions mt-0" *ngIf="canChangeDropStatus(drop) && !item.hasAccident"></div>
+              <p>{{ l('ReceiverCode') }}: {{ drop.receiverCode }}</p>
+              <div class="shipperNote" *ngIf="isGranted('Pages.Shipment.Tracking.ReceiverCode')">
                 <a href="javascript:void(0)" *ngIf="!saving" (click)="changeStatus(drop)">
                   {{ drop.nextStatus }}
                 </a>
@@ -243,13 +245,8 @@
           </form>
         </div>
         <div class="map">
-          <agm-map [latitude]="24.717942" [longitude]="46.675761" [zoom]="10">
-            <agm-direction
-              *ngIf="destination.lat"
-              [origin]="{ lat: origin.lat, lng: origin.lng }"
-              [destination]="{ lat: destination.lat, lng: destination.lng }"
-              [travelMode]="'DRIVING'"
-            ></agm-direction>
+          <agm-map>
+            <agm-direction *ngIf="destination.lat" [origin]="origin" [destination]="destination" [travelMode]="'DRIVING'"></agm-direction>
           </agm-map>
         </div>
       </div>

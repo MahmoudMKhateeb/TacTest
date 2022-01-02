@@ -1,19 +1,19 @@
-﻿using TACHYON.Trucks.TruckCategories.TransportTypes;
-
+﻿using Abp.Application.Services.Dto;
+using Abp.Authorization;
+using Abp.Domain.Repositories;
+using Abp.Extensions;
+using Abp.Linq.Extensions;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
-using Abp.Linq.Extensions;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Abp.Domain.Repositories;
-using TACHYON.Trucks.TruckCategories.TransportTypes.TransportTypesTranslations.Dtos;
-using TACHYON.Dto;
-using Abp.Application.Services.Dto;
 using TACHYON.Authorization;
-using Abp.Extensions;
-using Abp.Authorization;
-using Microsoft.EntityFrameworkCore;
+using TACHYON.Dto;
+using TACHYON.Extension;
+using TACHYON.Trucks.TruckCategories.TransportTypes;
+using TACHYON.Trucks.TruckCategories.TransportTypes.TransportTypesTranslations.Dtos;
 
 namespace TACHYON.Trucks.TruckCategories.TransportTypes.TransportTypesTranslations
 {
@@ -137,7 +137,8 @@ namespace TACHYON.Trucks.TruckCategories.TransportTypes.TransportTypesTranslatio
                 .Select(transportType => new TransportTypesTranslationTransportTypeLookupTableDto
                 {
                     Id = transportType.Id,
-                    TranslatedDisplayName = transportType == null || transportType.DisplayName == null ? "" : transportType.DisplayName.ToString()
+                    TranslatedDisplayName = transportType == null || transportType.DisplayName == null ? "" : transportType.DisplayName.ToString(),
+                    IsOther = transportType.ContainsOther()
                 }).ToListAsync();
         }
 

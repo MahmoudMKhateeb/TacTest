@@ -3,8 +3,8 @@
     public class UnitOfMeasureConsts
     {
 
-		public const int MinDisplayNameLength = 0;
-		public const int MaxDisplayNameLength = 256;
-						
+        public const int MinDisplayNameLength = 3;
+        public const int MaxDisplayNameLength = 256;
+
     }
 }

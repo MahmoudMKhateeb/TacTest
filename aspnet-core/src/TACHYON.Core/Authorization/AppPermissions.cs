@@ -30,7 +30,8 @@
         public const string App_Carrier = "App.Carrier";
 
         public const string Pages_HostDashboard = "Pages.HostDashboard";
-
+        public const string Pages_ShipperDashboard = "Pages.ShipperDashboard";
+        public const string Pages_CarrierDashboard = "Pages.CarrierDashboard";
 
         public const string Pages_CitiesTranslations = "Pages.CitiesTranslations";
         public const string Pages_CitiesTranslations_Create = "Pages.CitiesTranslations.Create";
@@ -435,6 +436,7 @@
         #region shpping
 
         public const string Pages_Tracking = "Pages.shipment.Tracking";
+        public const string Pages_Tracking_ReceiverCode = "Pages.Shipment.Tracking.ReceiverCode";
 
 
         #endregion

@@ -177,9 +177,9 @@
         </div>
       </div>
     </div>
-    <createOrEditTruckModal #createOrEditTruckModal (modalSave)="getAllTrucks()"></createOrEditTruckModal>
+    <createOrEditTruckModal #createOrEditTruckModal (modalSave)="getAllTrucks(undefined)"></createOrEditTruckModal>
     <viewTruckModal #viewTruckModal></viewTruckModal>
-    <app-viwe-truck-documents-modal #viewOrEditEntityDocumentsModal (modalSave)="getAllTrucks()"> </app-viwe-truck-documents-modal>
+    <app-viwe-truck-documents-modal #viewOrEditEntityDocumentsModal (modalSave)="getAllTrucks(undefined)"> </app-viwe-truck-documents-modal>
     <entityTypeHistoryModal #entityTypeHistoryModal></entityTypeHistoryModal>
   </div>
 </div>

@@ -8,10 +8,14 @@ using TACHYON.Common;
 namespace TACHYON.Vases
 {
     [Table("Vases")]
-    public class Vas : FullAuditedEntity, IMultiLingualEntity<VasTranslation>, IHasName
+    public class Vas : FullAuditedEntity, IMultiLingualEntity<VasTranslation>, IHasKey
     {
-        [StringLength(VasConsts.MaxNameLength, MinimumLength = VasConsts.MinNameLength)]
+
         public virtual string Name { get; set; }
+
+        [Required]
+        [StringLength(VasConsts.MaxNameLength, MinimumLength = VasConsts.MinNameLength)]
+        public virtual string Key { get; set; }
 
         public virtual bool HasAmount { get; set; }
 

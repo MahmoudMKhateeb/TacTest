@@ -116,6 +116,10 @@
           <DataField>BankNameEnglish</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="TenantVatNumber">
+          <DataField>TenantVatNumber</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
       </Fields>
       <rd:DataSetInfo>
         <rd:DataSetName>GetInvoiceReportInfoDataset</rd:DataSetName>
@@ -564,13 +568,13 @@
                   <Width>1.8023cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.19474cm</Width>
+                  <Width>1.40729cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>3.45603cm</Width>
+                  <Width>3.24346cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.77445cm</Width>
+                  <Width>1.64744cm</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>2.07582cm</Width>
@@ -1116,7 +1120,7 @@
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>7pt</FontSize>
-                                    <Format>dd/MM/yyyy</Format>
+                                    <Format>dd/MM/yyyy HH:mm</Format>
                                     <Color>#181818</Color>
                                   </Style>
                                 </TextRun>
@@ -1552,18 +1556,130 @@
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
-                  <Height>0.6cm</Height>
+                  <Height>0.92071cm</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox181">
+                        <Textbox Name="Textbox142">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Contract #:</Value>
+                                  <Value>VAT:</Value>
+                                  <Style>
+                                    <FontStyle>Normal</FontStyle>
+                                    <FontFamily>Open Sans</FontFamily>
+                                    <FontSize>7pt</FontSize>
+                                    <FontWeight>Normal</FontWeight>
+                                    <TextDecoration>None</TextDecoration>
+                                    <Color>#181818</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox140</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <BackgroundColor>White</BackgroundColor>
+                            <VerticalAlign>Middle</VerticalAlign>
+                            <PaddingLeft>3pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="TenantVatNumber">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=First(Fields!TenantVatNumber.Value)</Value>
+                                  <Style>
+                                    <FontFamily>Open Sans</FontFamily>
+                                    <FontSize>7pt</FontSize>
+                                    <Color>#181818</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>TenantVatNumber</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <BackgroundColor>White</BackgroundColor>
+                            <VerticalAlign>Middle</VerticalAlign>
+                            <PaddingTop>4pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox196">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>:رقم السجل الضريبي</Value>
+                                  <Style>
+                                    <FontSize>7pt</FontSize>
+                                    <Color>#181818</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Right</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox186</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>White</Color>
+                              <Style>None</Style>
+                            </Border>
+                            <BackgroundColor>White</BackgroundColor>
+                            <VerticalAlign>Middle</VerticalAlign>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>3pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox192">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Contract Number:</Value>
                                   <Style>
                                     <FontStyle>Normal</FontStyle>
                                     <FontFamily>Open Sans</FontFamily>
@@ -1627,12 +1743,8 @@
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
-                        <ColSpan>4</ColSpan>
                       </CellContents>
                     </TablixCell>
-                    <TablixCell />
-                    <TablixCell />
-                    <TablixCell />
                     <TablixCell>
                       <CellContents>
                         <Textbox Name="Textbox186">
@@ -1818,8 +1930,8 @@
             <DataSetName>GetInvoiceReportInfoDataset</DataSetName>
             <Top>0.21555cm</Top>
             <Left>0.55771cm</Left>
-            <Height>2.66457cm</Height>
-            <Width>20.05945cm</Width>
+            <Height>2.98528cm</Height>
+            <Width>19.93242cm</Width>
             <ZIndex>4</ZIndex>
             <Style>
               <Border>
@@ -2311,8 +2423,8 @@
                                   </Style>
                                 </TextRun>
                                 <TextRun>
-                                  <Value> %)
-ضريبة القيمة المضافة</Value>
+                                  <Value> %) SAR
+قيمة الضريبة المضافة ر.س</Value>
                                   <Style>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
@@ -2360,7 +2472,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Total</Value>
+                                  <Value>Total SAR</Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>7pt</FontSize>
@@ -2376,7 +2488,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>الإجمالي</Value>
+                                  <Value>الإجمالي ر.س</Value>
                                   <Style>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
@@ -2946,7 +3058,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Invoice Subtotal</Value>
+                                  <Value>Invoice Subtotal SAR</Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -3038,7 +3150,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>مجموع الفاتورة</Value>
+                                  <Value>مجموع الفاتورة ر.س </Value>
                                   <Style>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
@@ -3090,12 +3202,19 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>VAT Amount (</Value>
+                                  <Value>VAT Amount </Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <Color>#282828</Color>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
+                                  <Value>(%</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Normal</FontWeight>
                                   </Style>
                                 </TextRun>
                                 <TextRun>
@@ -3106,12 +3225,35 @@
                                   </Style>
                                 </TextRun>
                                 <TextRun>
-                                  <Value>%)</Value>
+                                  <Value xml:space="preserve"> </Value>
+                                  <Style>
+                                    <FontFamily>Open Sans</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Normal</FontWeight>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
+                                  <Value>)</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Normal</FontWeight>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
+                                  <Value xml:space="preserve"> </Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <Color>#282828</Color>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
+                                  <Value>SAR</Value>
+                                  <Style>
+                                    <FontFamily>Open Sans</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Normal</FontWeight>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -3188,7 +3330,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>(%</Value>
+                                  <Value> قيمة الضريبة المضافة (%</Value>
                                   <Style>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
@@ -3210,7 +3352,7 @@
                                   </Style>
                                 </TextRun>
                                 <TextRun>
-                                  <Value>) قيمة الضريبة المضافة</Value>
+                                  <Value>) ر.س</Value>
                                   <Style>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
@@ -3256,7 +3398,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Due Amount </Value>
+                                  <Value> Due Amount SAR </Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -3298,7 +3440,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=First(Fields!VatAmount.Value, "GetInvoiceReportInfoDataset") + First(Fields!SubTotalAmount.Value, "GetInvoiceReportInfoDataset")</Value>
+                                  <Value>=First(Fields!TotalAmount.Value, "GetInvoiceReportInfoDataset")</Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -3340,7 +3482,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>المبلغ المستحق</Value>
+                                  <Value>المبلغ المستحق ر.س</Value>
                                   <Style>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
@@ -4024,7 +4166,7 @@
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>Invoice</Value>
+                      <Value>Tax Invoice</Value>
                       <Style>
                         <FontStyle>Normal</FontStyle>
                         <FontFamily>open Sans</FontFamily>
@@ -4035,7 +4177,7 @@
                       </Style>
                     </TextRun>
                     <TextRun>
-                      <Value> | </Value>
+                      <Value>| فاتورة ضريبية</Value>
                       <Style>
                         <FontStyle>Normal</FontStyle>
                         <FontFamily>arial</FontFamily>
@@ -4043,17 +4185,6 @@
                         <FontWeight>Bold</FontWeight>
                         <TextDecoration>None</TextDecoration>
                         <Color>#181818</Color>
-                      </Style>
-                    </TextRun>
-                    <TextRun>
-                      <Value>فاتورة</Value>
-                      <Style>
-                        <FontStyle>Normal</FontStyle>
-                        <FontSize>11pt</FontSize>
-                        <FontWeight>Bold</FontWeight>
-                        <TextDecoration>None</TextDecoration>
-                        <Color>#181818</Color>
-                        <Language>ar-SA</Language>
                       </Style>
                     </TextRun>
                   </TextRuns>

@@ -11,6 +11,7 @@ using Abp.Timing;
 using Abp.UI;
 using AutoMapper.QueryableExtensions;
 using Castle.Core.Internal;
+using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Rest;
 using System;
@@ -22,6 +23,7 @@ using System.Threading.Tasks;
 using TACHYON.AddressBook;
 using TACHYON.AddressBook.Ports;
 using TACHYON.Authorization;
+using TACHYON.Common;
 using TACHYON.Documents;
 using TACHYON.Dto;
 using TACHYON.Extension;
@@ -192,6 +194,19 @@ namespace TACHYON.Shipping.ShippingRequests
                 NoOfPostPriceWithoutTrips = IsEnabled(AppFeatures.Shipper) ? _shippingRequestRepository.GetAll().Where(r => r.Status == ShippingRequestStatus.PostPrice && r.TotalsTripsAddByShippier == 0 && r.TenantId == AbpSession.TenantId).Count() : 0
             };
             // }
+        }
+        public async Task<LoadResult> GetAllShippingRequstHistory(LoadOptionsInput input)
+        {
+
+            var query = _shippingRequestRepository
+           .GetAll().AsNoTracking()
+               .Include(t => t.Tenant)
+               .Include(x => x.CarrierTenantFk)
+               .Where(x => x.Status == ShippingRequestStatus.Completed || x.Status == ShippingRequestStatus.Cancled)
+               .WhereIf(IsEnabled(AppFeatures.Carrier), e => e.CarrierTenantId == AbpSession.TenantId) //if the user is carrier
+               .WhereIf(IsEnabled(AppFeatures.Shipper), e => e.TenantId == AbpSession.TenantId) //if the user is shipper
+               .ProjectTo<ShipmentHistoryDto>(AutoMapperConfigurationProvider);
+            return await LoadResultAsync(query, input.LoadOptions);
         }
 
         public async Task<GetShippingRequestForViewOutput> GetShippingRequestForView(long id)
@@ -400,6 +415,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 shippingRequest.TenantId = input.ShipperId.Value;
             }
             //ValidateStep1(shippingRequest);
+            shippingRequest.CreatedByTachyonDealer = await FeatureChecker.IsEnabledAsync(AppFeatures.TachyonDealer);
             shippingRequest.IsDrafted = true;
             shippingRequest.DraftStep = 1;
             await _shippingRequestRepository.InsertAndGetIdAsync(shippingRequest);
@@ -612,6 +628,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
                 ShippingRequest shippingRequest = await _shippingRequestRepository.GetAll()
                     .Where(e => e.Id == id)
+                    .Include(e => e.Tenant)
                     .Include(e => e.ShippingRequestBids)
                     .Include(e => e.OriginCityFk)
                     .Include(e => e.DestinationCityFk)
@@ -694,10 +711,12 @@ namespace TACHYON.Shipping.ShippingRequests
                     ObjectMapper.Map<GetShippingRequestForViewOutput>(shippingRequest);
                 output.ShippingRequestBidDtoList = shippingRequestBidDtoList;
                 output.ShippingRequestVasDtoList = shippingRequestVasList;
-
+                output.ShipperRating = shippingRequest.Tenant.Rate;
+                output.ShipperRatingNumber = shippingRequest.Tenant.RateNumber;
                 //return translated good category name by default language
                 output.GoodsCategoryName =
                     ObjectMapper.Map<GoodCategoryDto>(shippingRequest.GoodCategoryFk).DisplayName;
+
 
                 //return translated truck type by default language
                 output.TruckTypeDisplayName =
@@ -833,7 +852,8 @@ namespace TACHYON.Shipping.ShippingRequests
                     HasCount = vas.HasCount,
                     MaxAmount = 0,
                     MaxCount = 0,
-                    Id = vas.Id
+                    Id = vas.Id,
+                    IsOther = vas.ContainsOther()
                 }).ToListAsync();
         }
 
@@ -927,6 +947,23 @@ namespace TACHYON.Shipping.ShippingRequests
                     DisplayName = x.DisplayName
                 }).ToListAsync();
         }
+
+        public async Task<IEnumerable<ISelectItemDto>> GetAllCapacitiesForDropdown()
+        {
+            List<Capacity> capacity = await _capacityRepository
+                .GetAllIncluding(x => x.Translations)
+                .ToListAsync();
+
+            List<Capacity> filteredCapacity = new List<Capacity>();
+            foreach (var c in capacity)
+            {
+                if (filteredCapacity.Find(x => x.DisplayName.ToLower().TrimEnd().TrimStart() ==
+                                               c.DisplayName.ToLower().TrimEnd().TrimStart()) == null)
+                    filteredCapacity.Add(c);
+            }
+            return ObjectMapper.Map<List<CapacitySelectItemDto>>(filteredCapacity);
+        }
+
         #endregion
 
         #region Waybills
@@ -1000,7 +1037,7 @@ namespace TACHYON.Shipping.ShippingRequests
                         CountryName = pickup?.CityFk.CountyFk.DisplayName,
                         CityName = pickup?.CityFk.DisplayName,
                         Area = pickup?.Address,
-                        StartTripDate = ToGregorianDate(x.StartTripDate),//x.StartTripDate!=null? x.StartTripDate.Value.ToShortDateString().ToString() :"",
+                        StartTripDate = x.StartTripDate.HasValue ? ClockProviders.Local.Normalize(x.StartTripDate.Value) : x.StartTripDate,
                         CarrierName = x.CarrierName,
                         TotalWeight = x.TotalWeight,
                         ShipperReference = x.ShipperReference,
@@ -1086,22 +1123,21 @@ namespace TACHYON.Shipping.ShippingRequests
                         CountryName = pickup?.CityFk.CountyFk.DisplayName,
                         CityName = pickup?.CityFk.DisplayName,
                         Area = pickup?.Address,
-                        StartTripDate = ToGregorianDate(x.StartTripDate),
-                        ActualPickupDate = ToGregorianDate(x.ActualPickupDate),
+                        StartTripDate = ClockProviders.Local.Normalize(x.StartTripDate),
+                        ActualPickupDate = x.ActualPickupDate.HasValue ? ClockProviders.Local.Normalize(x.ActualPickupDate.Value) : x.ActualPickupDate,
                         DroppFacilityName = delivery?.Name,
                         DroppCountryName = delivery?.CityFk.CountyFk.DisplayName,
                         DroppCityName = delivery?.CityFk.DisplayName,
                         DroppArea = delivery?.Address,
-                        DeliveryDate = ToGregorianDate(x.DeliveryDate),
+                        DeliveryDate = x.DeliveryDate.HasValue ? ClockProviders.Local.Normalize(x.DeliveryDate.Value) : x.DeliveryDate,
                         TotalWeight = x.TotalWeight,
                         ClientName = x.ClientName,
                         CarrierName = x.CarrierName,
                         GoodsCategoryDisplayName = ObjectMapper.Map<GoodCategoryDto>(x.GoodsCategoryDisplayName).DisplayName,
                         HasAttachment = x.HasAttachment,
                         NeedsDeliveryNote = x.NeedDeliveryNote,
-                        ShipperReference = x.ShipperReference,
-                        InvoiceNumber = x.ShipperInvoiceNo,//GetInvoiceNumberByTripId(shippingRequestTripId),
-                        ShipperNotes = x.ShipperNotes
+                        ShipperReference = "", /*x.ShipperReference,TAC-2181 || 22/12/2021 || need to display it as an empty on production*/
+                        InvoiceNumber = GetInvoiceNumberByTripId(shippingRequestTripId)
 
                     });
 
@@ -1142,7 +1178,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
                 var info = _shippingRequestTripRepository.GetAll()
                     .Include(e => e.ShippingRequestFk)
-                    .Where(e => e.ShippingRequestFk.TenantId == AbpSession.TenantId)
+                    //.Where(e => e.ShippingRequestFk.TenantId == AbpSession.TenantId)
                     .Where(e => e.Id == routPoint.ShippingRequestTripId);
 
                 var query = info.Select(x => new
@@ -1208,7 +1244,7 @@ namespace TACHYON.Shipping.ShippingRequests
                         PlateNumber = x.PlateNumber,
                         PackingTypeDisplayName = x.PackingTypeDisplayName,
                         NumberOfPacking = x.NumberOfPacking,
-                        StartTripDate = ToGregorianDate(x.StartTripDate),
+                        StartTripDate = ClockProviders.Local.Normalize(x.StartTripDate),
                         DroppFacilityName = x.DroppFacilityName,
                         DroppCountryName = x.DroppCountryName,
                         DroppCityName = x.DroppCityName,
@@ -1217,12 +1253,11 @@ namespace TACHYON.Shipping.ShippingRequests
                         ClientName = x.ClientName,
                         TotalWeight = x.TotalWeight,
                         GoodsCategoryDisplayName = ObjectMapper.Map<GoodCategoryDto>(x.GoodsCategoryDisplayName).DisplayName,// x.GoodsCategoryDisplayName,
-                        DeliveryDate = ToGregorianDate(x.DeliveryDate),
+                        DeliveryDate = x.DeliveryDate.HasValue ? ClockProviders.Local.Normalize(x.DeliveryDate.Value) : x.DeliveryDate,
                         HasAttachment = x.HasAttachment,
                         NeedsDeliveryNote = x.NeedsDeliveryNote,
-                        ShipperReference = x.ShipperReference,
-                        InvoiceNumber = x.ShipperInvoiceNo,//GetInvoiceNumberByTripId(x.Id),
-                        ShipperNotes = x.ShipperNotes
+                        ShipperReference = "", /*x.ShipperReference,TAC-2181 || 22/12/2021 || need to display it as an empty on production*/
+                        InvoiceNumber = GetInvoiceNumberByTripId(x.Id)
                     });
 
                 return finalOutput;
@@ -1348,7 +1383,8 @@ namespace TACHYON.Shipping.ShippingRequests
                 .Select(x => new SelectItemDto()
                 {
                     Id = x.Id.ToString(),
-                    DisplayName = x.DisplayName
+                    DisplayName = x.DisplayName,
+                    IsOther = x.ContainsOther()
                 }).ToListAsync();
         }
 

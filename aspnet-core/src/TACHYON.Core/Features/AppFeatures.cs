@@ -37,6 +37,7 @@
         public const string TachyonDealerCommissionType = "App.Shipper.TachyonDealerCommissionType";
 
         public const string InvoicePaymentMethod = "App.Shipper.Invoice.Payment.Method";
+        public const string InvoicePaymentMethodCrarrier = "App.Shipper.Invoice.Payment.MethodCrarrier";
 
         #region Comission
         #region Shipper between carrier
@@ -84,6 +85,10 @@
         #endregion
         #endregion
         #endregion
+         public const string BayanIntegration = "App.BayanIntegration";
+        public const string SaasRelatedCarrier = "App.Shipper.SaaSCarrier";
+        public const string Saas = "App.Shipper.Saas";
+
         #endregion
 
 

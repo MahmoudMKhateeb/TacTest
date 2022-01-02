@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild, Injector, Output, EventEmitter, Input } from '@angular/core';
+import { Component, ViewChild, Injector, Output, EventEmitter, Input } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
 import { ReceiversServiceProxy, CreateOrEditReceiverDto, ReceiverFacilityLookupTableDto } from '@shared/service-proxies/service-proxies';
@@ -20,7 +20,7 @@ export class CreateOrEditReceiverModalComponent extends AppComponentBase {
   isPhoneNumberAvilable = true;
 
   receiver: CreateOrEditReceiverDto = new CreateOrEditReceiverDto();
-  facilityName = '';
+  // facilityName = '';
   allFacilitys: ReceiverFacilityLookupTableDto[];
   constructor(injector: Injector, private _receiversServiceProxy: ReceiversServiceProxy) {
     super(injector);
@@ -30,24 +30,21 @@ export class CreateOrEditReceiverModalComponent extends AppComponentBase {
     if (!receiverId) {
       this.receiver = new CreateOrEditReceiverDto();
       this.receiver.id = receiverId;
-      this.facilityName = '';
-
-      this.active = true;
-      this.modal.show();
-    } else {
-      this._receiversServiceProxy.getReceiverForEdit(receiverId).subscribe((result) => {
-        this.receiver = result.receiver;
-
-        this.facilityName = result.facilityName;
-
+      if (receiverId) {
         this.active = true;
         this.modal.show();
+      } else {
+        this._receiversServiceProxy.getReceiverForEdit(receiverId).subscribe((result) => {
+          this.receiver = result.receiver;
+        });
+      }
+      this._receiversServiceProxy.getAllFacilityForTableDropdown().subscribe((result) => {
+        this.allFacilitys = result;
+        this.receiver.facilityId = this.facilityIdFromTrips;
       });
+      this.active = true;
+      this.modal.show();
     }
-    this._receiversServiceProxy.getAllFacilityForTableDropdown().subscribe((result) => {
-      this.allFacilitys = result;
-    });
-    this.receiver.facilityId = this.facilityIdFromTrips;
   }
 
   save(): void {

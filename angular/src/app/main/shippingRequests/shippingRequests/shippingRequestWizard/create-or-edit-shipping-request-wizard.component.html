@@ -131,19 +131,42 @@
                           'spinner spinner-success spinner-right mr-1 ml-1': !allCarriers
                         }"
                       >
-                        <select
-                          class="form-control dropdown"
-                          name="carrier"
-                          formControlName="carrier"
+                        <p-dropdown
+                          [options]="allCarriers"
+                          class="form-control"
                           [(ngModel)]="step1Dto.carrierTenantIdForDirectRequest"
-                          [required]="shippingRequestType == 'directrequest'"
-                          [class.is-valid]="step1Form.get('carrier').valid && (step1Form.get('carrier').dirty || step1Form.get('carrier').touched)"
-                          [class.is-invalid]="
-                            step1Form.get('carrier').invalid && (step1Form.get('carrier').dirty || step1Form.get('carrier').touched)
-                          "
+                          placeholder="Select a Carrier"
+                          optionLabel="displayName"
+                          [showClear]="true"
+                          [styleClass]="'myCarrierInput'"
                         >
-                          <option *ngFor="let item of allCarriers" value="{{ item.id }}">{{ item.displayName }}</option>
-                        </select>
+                          <ng-template let-carrier pTemplate="item">
+                            <div class="country-item">
+                              <span style="float: left; margin-right: 10px; width: 45%">{{ carrier.displayName }}</span>
+                              <span style="float: left; width: 50%">
+                                <ng-template #t let-fill="fill">
+                                  <span class="star p-0" [class.full]="fill === 100">
+                                    <span class="half" [style.width.%]="fill">&#9733;</span>&#9733;</span
+                                  >
+                                </ng-template>
+                                <ngb-rating [(rate)]="carrier.rate" [starTemplate]="t" [readonly]="true" [max]="5"></ngb-rating>
+                              </span>
+                            </div>
+                          </ng-template>
+                        </p-dropdown>
+                        <!--                        <select-->
+                        <!--                          class="form-control dropdown"-->
+                        <!--                          name="carrier"-->
+                        <!--                          formControlName="carrier"-->
+                        <!--                          [(ngModel)]="step1Dto.carrierTenantIdForDirectRequest"-->
+                        <!--                          [required]="shippingRequestType == 'directrequest'"-->
+                        <!--                          [class.is-valid]="step1Form.get('carrier').valid && (step1Form.get('carrier').dirty || step1Form.get('carrier').touched)"-->
+                        <!--                          [class.is-invalid]="-->
+                        <!--                            step1Form.get('carrier').invalid && (step1Form.get('carrier').dirty || step1Form.get('carrier').touched)-->
+                        <!--                          "-->
+                        <!--                        >-->
+                        <!--                          <option *ngFor="let item of allCarriers" value="{{ item.id }}">{{ item.displayName }}</option>-->
+                        <!--                        </select>-->
                       </div>
                       <span class="form-text text-muted">{{ l('SelectAShippingType') }}</span>
                     </div>
@@ -497,7 +520,7 @@
                         <span class="form-text text-muted">{{ l('TotalWeightofGoodsinKG') }}</span>
                       </div>
 
-                      <div class="col-lg-12 mt-4" *ngIf="isOthersGoodCategoryId(step3Dto.goodCategoryId)">
+                      <div class="col-lg-12 mt-4" *ngIf="IfOther(allGoodCategorys, step3Dto.goodCategoryId)">
                         <label>{{ l('Other') }} <span class="required-fileds">*</span></label>
                         <div>
                           <div class="input-group">
@@ -516,6 +539,7 @@
                                 step3Form.get('otherGoodsCategoryName').invalid &&
                                 (step3Form.get('otherGoodsCategoryName').dirty || step3Form.get('otherGoodsCategoryName').touched)
                               "
+                              [required]="step3Form.get('goodCategory').valid"
                             />
                           </div>
                         </div>
@@ -599,8 +623,7 @@
                         </div>
                         <span class="form-text text-muted">{{ l('SelectaTransportType') }}</span>
 
-                        <!-- TODO : For Others Free Text By Id Until finish from BE-->
-                        <div class="form-group" *ngIf="step3Dto.transportTypeId == 3">
+                        <div class="form-group" *ngIf="IfOther(allTransportTypes, step3Dto.transportTypeId)">
                           <label>{{ l('Other') }} <span class="required-fileds">*</span></label>
                           <div>
                             <div class="input-group">
@@ -665,8 +688,7 @@
 
                         <span class="form-text text-muted">{{ l('SelectaTruckType') }}</span>
 
-                        <!-- TODO : For Others Free Text By Id Until finish from BE-->
-                        <div class="form-group" *ngIf="isOthersTrucksTypeId(step3Dto.trucksTypeId)">
+                        <div class="form-group" *ngIf="IfOther(allTrucksTypes, step3Dto.trucksTypeId)">
                           <label>{{ l('Other') }} <span class="required-fileds">*</span></label>
                           <div>
                             <div class="input-group">
@@ -675,7 +697,6 @@
                                 name="otherTrucksTypeName"
                                 formControlName="otherTrucksTypeName"
                                 class="form-control"
-                                (change)="isOthersTrucksTypeId(step3Dto.trucksTypeId)"
                                 [(ngModel)]="step3Dto.otherTrucksTypeName"
                                 [class.is-valid]="
                                   step3Form.get('otherTrucksTypeName').valid &&

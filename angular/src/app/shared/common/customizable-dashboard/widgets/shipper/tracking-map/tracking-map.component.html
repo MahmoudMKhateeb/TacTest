@@ -1,21 +1,14 @@
 <!--begin::Body-->
 <div class="row bg-white p-2">
-  <div class="col-lg-12">
-    <agm-map minZoom="5" [zoom]="zoom" [latitude]="source1.lat" [longitude]="source1.lng" [scrollwheel]="false">
+  <div class="col-lg-12" *ngIf="loading">
+    <agm-map minZoom="5" [zoom]="zoom" [longitude]="source1.lng || 46.675761" [latitude]="source1.lat || 24.717942" [scrollwheel]="false">
       <agm-direction
-        [origin]="source1"
-        [destination]="dest1"
-        [waypoints]="waypoints1"
-        [renderOptions]="renderOptions1"
-        [markerOptions]="markerOptions"
-        [optimizeWaypoints]="false"
-      ></agm-direction>
-      <agm-direction
-        [origin]="source2"
-        [destination]="dest2"
-        [waypoints]="waypoints2"
-        [renderOptions]="renderOptions2"
-        [markerOptions]="markerOptions2"
+        *ngFor="let item of items"
+        [origin]="item.source"
+        [destination]="item.destination"
+        [waypoints]="item.waybill"
+        [renderOptions]="item.renderOption"
+        [markerOptions]="item.markerOptions"
         [optimizeWaypoints]="false"
       ></agm-direction>
     </agm-map>
@@ -24,18 +17,18 @@
     <p-table [value]="trips">
       <ng-template pTemplate="header">
         <tr>
-          <th>Source</th>
-          <th>Destination</th>
-          <th>status</th>
-          <th>WayBill Number</th>
+          <th>{{ l('Source') }}</th>
+          <th>{{ l('Destination') }}</th>
+          <th>{{ l('status') }}</th>
+          <th>{{ l('WayBillNumber') }}</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-record>
         <tr>
-          <td>{{ record.source }}</td>
-          <td>{{ record.dest }}</td>
-          <td>{{ record.status }}</td>
-          <td>{{ record.waybillNumber }}</td>
+          <td>{{ record.originCity }}</td>
+          <td>{{ record.destinationCity }}</td>
+          <td>{{ record.statusTitle }}</td>
+          <td>{{ record.wayBillNumber }}</td>
         </tr>
       </ng-template>
     </p-table>

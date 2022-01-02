@@ -22,7 +22,8 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         /// shipper add his invoice number manually
         /// </summary>
         public string ShipperInvoiceNo { get; set; }
-
+        public decimal ShipperRating { get; set; }
+        public int ShipperRatingNumber { get; set; }
         public ShippingRequestDto ShippingRequest { get; set; }
 
         public List<ShippingRequestBidDto> ShippingRequestBidDtoList { get; set; }

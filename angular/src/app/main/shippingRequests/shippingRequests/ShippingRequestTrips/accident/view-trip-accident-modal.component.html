@@ -49,13 +49,17 @@
                             {{ l('Actions') }}
                           </th>
 
-                          <th pSortableColumn="ReasonId">
-                            {{ l('Reason') }}
-                            <p-sortIcon field="ReasonId"></p-sortIcon>
-                          </th>
                           <th pSortableColumn="CreationTime">
                             {{ l('CreationTime') }}
                             <p-sortIcon field="CreationTime"></p-sortIcon>
+                          </th>
+                          <th pSortableColumn="Description">
+                            {{ l('Description') }}
+                            <p-sortIcon field="Description"></p-sortIcon>
+                          </th>
+                          <th pSortableColumn="ReasonId">
+                            {{ l('Reason') }}
+                            <p-sortIcon field="ReasonId"></p-sortIcon>
                           </th>
                         </tr>
                       </ng-template>
@@ -106,15 +110,19 @@
                           </td>
 
                           <td>
+                            <span class="ui-column-title"> {{ l('CreationTime') }}</span>
+                            <span>{{ record.creationTime | momentFormat: 'L' }}</span>
+                          </td>
+                          <td>
+                            <span class="ui-column-title"> {{ l('Description') }}</span>
+                            <span>{{ record.description }}</span>
+                          </td>
+                          <td>
                             <span class="ui-column-title"> {{ l('Reason') }}</span>
                             {{ record.reason }}
                             <a *ngIf="record.documentName" (click)="downloadDocument(record.id)">
-                              <i class="flaticon-download"></i>
+                              <i class="flaticon-download justify-content-center"></i>
                             </a>
-                          </td>
-                          <td>
-                            <span class="ui-column-title"> {{ l('CreationTime') }}</span>
-                            <span>{{ record.creationTime | momentFormat: 'L' }}</span>
                           </td>
                         </tr>
                       </ng-template>

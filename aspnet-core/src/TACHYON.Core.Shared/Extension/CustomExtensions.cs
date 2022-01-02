@@ -1,4 +1,9 @@
-﻿using System;
+﻿using Abp.Collections.Extensions;
+using Abp.Domain.Entities;
+using Abp.Domain.Entities.Auditing;
+using Abp.Extensions;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -13,13 +18,44 @@ namespace TACHYON.Extension
 
         #region String
 
-        //public static bool ToLowerContains(this String str, string s)
-        //{
-        //    return str.ToLower().Contains(s.ToLower());
+        public static bool ToLowerContains(this String str, string s)
+        {
+            return str.ToLower().Contains(s.ToLower());
 
-        //}
-
+        }
+        public static bool ContainsOther(this IHasKey entityHasKey)
+         => entityHasKey.Key.ToLower().Contains(TACHYONConsts.OthersDisplayName.ToLower());
         #endregion
+
+
+
+        public static void SeedEntity<TEntity>(this DbSet<TEntity> context)
+            where TEntity : FullAuditedEntity, IHasKey, new()
+        {
+            if (context.Any(OthersExpressions.ContainsOthersKeyExpression)) return;
+            var entity = new TEntity()
+            { CreationTime = DateTime.Now, IsDeleted = false, Key = TACHYONConsts.OthersDisplayName };
+            context.Add(entity);
+        }
+
+
+        public static void CheckTranslation<TEntity, TTranslation, TKey>(this DbSet<TEntity> context, DbSet<TTranslation> transContext
+            , TKey key)
+            where TEntity : FullAuditedEntity<TKey>, IHasKey, IMultiLingualEntity<TTranslation>
+            where TTranslation : class, IEntityTranslation<TEntity, TKey>, IHasDisplayName, new()
+            where TKey : IComparable<TKey>
+        {
+            var entityWithoutTranslation = context
+                    .FirstOrDefault(x => x.Key.ToLower().Contains(TACHYONConsts.OthersDisplayName.ToLower()));
+            if (entityWithoutTranslation == null) return;
+            var translations = new List<TTranslation>()
+            {
+                new TTranslation() {DisplayName = "Others",Language = "en",CoreId = entityWithoutTranslation.Id},
+                new TTranslation() {DisplayName = "أخرى",Language = "ar-EG",CoreId = entityWithoutTranslation.Id}
+            };
+            transContext.AddRange(translations);
+        }
+    
 
         public static List<FieldInfo> GetAllPublicConstants(this Type type)
         {
@@ -53,7 +89,8 @@ namespace TACHYON.Extension
 
             return propInfo.GetValue(obj)?.ToString();
         }
-    }
 
+
+    }
 
 }

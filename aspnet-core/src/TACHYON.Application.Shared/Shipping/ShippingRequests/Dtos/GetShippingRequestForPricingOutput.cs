@@ -12,6 +12,8 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
     {
         public long OfferId { get; set; }
         public string Shipper { get; set; }
+        public decimal ShipperRating { get; set; }
+        public int ShipperRatingNumber { get; set; }
         public DateTime CreationTime { get; set; }
         public bool IsTachyonDeal { get; set; }
         public string OriginCity { get; set; }

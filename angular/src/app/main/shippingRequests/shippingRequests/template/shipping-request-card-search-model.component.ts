@@ -101,6 +101,7 @@ export class ShippingRequestCardSearchModelComponent extends AppComponentBase im
   }
 
   getRequestStatus() {
+    this.statusData = [];
     if (this.input.channel == PriceOfferChannel.MarketPlace) {
       if (this.feature.isEnabled('App.Shipper') || this.feature.isEnabled('App.TachyonDealer') || !this.appSession.tenantId) {
         this.statusData.push(

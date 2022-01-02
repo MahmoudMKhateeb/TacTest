@@ -4,13 +4,14 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { ImpersonationService } from '@app/admin/users/impersonation.service';
 import { DocumentsEntitiesEnum, UserServiceProxy } from '@shared/service-proxies/service-proxies';
 import { FileDownloadService } from '@shared/utils/file-download.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { LocalStorageService } from '@shared/utils/local-storage.service';
 import { AppConsts } from '@shared/AppConsts';
 import { ViewOrEditEntityDocumentsModalComponent } from '@app/main/documentFiles/documentFiles/documentFilesViewComponents/view-or-edit-entity-documents-modal.componant';
 import CustomStore from '@node_modules/devextreme/data/custom_store';
 import { LoadOptions } from '@node_modules/devextreme/data/load_options';
+import { DriverTrackingModalComponent } from '@app/admin/users/drivers/driver-tracking-modal/driver-tracking-modal.component';
 
 @Component({
   selector: 'app-drivers',
@@ -20,8 +21,11 @@ import { LoadOptions } from '@node_modules/devextreme/data/load_options';
   animations: [appModuleAnimation()],
 })
 export class DriversComponent extends UsersComponent implements AfterViewInit, OnInit {
+  @ViewChild('DriverTrackingModal') DriverTrackingModal: DriverTrackingModalComponent;
   @ViewChild('viewOrEditEntityDocumentsModal', { static: true }) viewOrEditEntityDocumentsModal: ViewOrEditEntityDocumentsModalComponent;
   isArabic = false;
+  driverId: number;
+  tripId: number;
   documentsEntitiesEnum = DocumentsEntitiesEnum;
   dataSource: any = {};
 
@@ -48,12 +52,15 @@ export class DriversComponent extends UsersComponent implements AfterViewInit, O
     this.viewOrEditEntityDocumentsModal.show(driverId, DocumentsEntitiesEnum.Driver);
   }
 
-  getDrivers() {
+  getDrivers(filter) {
     let self = this;
-
     this.dataSource = {};
     this.dataSource.store = new CustomStore({
       load(loadOptions: LoadOptions) {
+        if (!loadOptions.filter) {
+          loadOptions.filter = [];
+          (loadOptions.filter as any[]).push(['isActive', '=', filter]);
+        }
         return self._userServiceProxy
           .getDrivers(JSON.stringify(loadOptions))
           .toPromise()
@@ -74,6 +81,7 @@ export class DriversComponent extends UsersComponent implements AfterViewInit, O
   }
 
   ngOnInit(): void {
-    this.getDrivers();
+    var filter = this._activatedRoute.snapshot.queryParams['isActive'];
+    this.getDrivers(filter);
   }
 }

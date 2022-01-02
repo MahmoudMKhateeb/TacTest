@@ -4,10 +4,14 @@
     <div class="card card-custom card-stretch">
       <div class="card-header d-flex justify-content-center">
         <div class="card-title">
-          <h3 class="card-label">Currently Active Drivers</h3>
+          <h3 class="card-label">{{ l('CurrentlyActiveDrivers') }}</h3>
         </div>
       </div>
-      <div class="card-body w-100 d-flex justify-content-center"><h5 class="text-dark font-weight-bold">5</h5></div>
+      <a (click)="getDriversPageByFilter(true)"
+        ><div class="card-body w-100 d-flex justify-content-center">
+          <h5 class="text-dark font-weight-bold">{{ activeDriversCount }}</h5>
+        </div></a
+      >
     </div>
     <!--end::Card-->
   </div>
@@ -16,10 +20,14 @@
     <div class="card card-custom card-stretch">
       <div class="card-header d-flex justify-content-center">
         <div class="card-title">
-          <h3 class="card-label">Currently NON Active Drivers</h3>
+          <h3 class="card-label">{{ l('CurrentlyNonActiveDrivers') }}</h3>
         </div>
       </div>
-      <div class="card-body w-100 d-flex justify-content-center"><h5 class="text-dark font-weight-bold">5</h5></div>
+      <a (click)="getDriversPageByFilter(false)"
+        ><div class="card-body w-100 d-flex justify-content-center">
+          <h5 class="text-dark font-weight-bold">{{ notActiveDriversCount }}</h5>
+        </div></a
+      >
     </div>
     <!--end::Card-->
   </div>

@@ -9,7 +9,7 @@ import { TripService } from '@app/main/shippingRequests/shippingRequests/Shippin
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
 import { Subscription } from 'rxjs';
-import { first } from '@node_modules/rxjs/internal/operators';
+import { first, retry } from '@node_modules/rxjs/internal/operators';
 
 @Component({
   selector: 'PointGoodDetailsComponent',
@@ -66,7 +66,7 @@ export class GoodDetailsComponent extends AppComponentBase implements OnInit, On
   }
 
   getGoodSubDisplayname(id) {
-    return this.allSubGoodCategorys ? this.allSubGoodCategorys.find((x) => x.id == id)?.displayName : 0;
+    return this.allSubGoodCategorys ? this.allSubGoodCategorys.find((x) => x.id == id)?.displayName : '';
   }
 
   /**
@@ -86,10 +86,13 @@ export class GoodDetailsComponent extends AppComponentBase implements OnInit, On
     //Get All Sub-Good Category
     if (FatherID) {
       this.allSubGoodCategorysLoading = true;
-      this._goodsDetailsServiceProxy.getAllGoodCategoryForTableDropdown(FatherID).subscribe((result) => {
-        this.allSubGoodCategorys = result;
-        this.allSubGoodCategorysLoading = false;
-      });
+      this._goodsDetailsServiceProxy
+        .getAllGoodCategoryForTableDropdown(FatherID)
+        .pipe(retry(3))
+        .subscribe((result) => {
+          this.allSubGoodCategorys = result;
+          this.allSubGoodCategorysLoading = false;
+        });
     }
   }
 }

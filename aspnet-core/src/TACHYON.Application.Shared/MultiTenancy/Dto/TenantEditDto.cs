@@ -10,17 +10,19 @@ namespace TACHYON.MultiTenancy.Dto
     {
         [Required]
         [StringLength(AbpTenantBase.MaxTenancyNameLength)]
+        [RegularExpression(TenantConsts.TenancyNameRegex)]
         public string TenancyName { get; set; }
 
 
         [Required]
         [StringLength(AbpTenantBase.MaxTenancyNameLength)]
-        [RegularExpression(TenantConsts.TenancyNameRegex)]
+        [RegularExpression(TenantConsts.TenancyLegalNameRegex)]
         public string companyName { get; set; }
 
 
         [Required]
         [StringLength(TenantConsts.MaxNameLength)]
+        [RegularExpression(TenantConsts.TenancyLegalNameRegex)]
         public string Name { get; set; }
 
         public string MobileNo { get; set; }
@@ -33,8 +35,6 @@ namespace TACHYON.MultiTenancy.Dto
 
         [DisableAuditing]
         public string ConnectionString { get; set; }
-
-        public int? EditionId { get; set; }
 
         public bool IsActive { get; set; }
 

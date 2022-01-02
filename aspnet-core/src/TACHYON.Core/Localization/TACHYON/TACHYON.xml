@@ -9,8 +9,29 @@
     <text name="EditDangerousGoodType">Edit dangerous good type</text>
     <text name="DeleteDangerousGoodType">Delete dangerous good type</text>
     <text name="DangerousGoodTypes">Dangerous good types</text>
-
-		<text name="{0}IsInvalid">"{0}" is invalid</text>
+    <text name="NumberOfRequests">Number Of Requests</text>
+    <text name="NumberOfDeliveredTrips">Number Of Delivered Trips</text>
+    <text name="MostShippersRequests">Most Shippers Requests</text>
+    <text name="MostCarriersRequests">Most Carriers Requests</text>
+    <text name="TopRatedShippers">Top Rated Shippers</text>
+    <text name="TopRatedCarriers">Top Rated Carriers</text>
+    <text name="RequestBeingPricedBeforeBidEndDate">Request Being Priced before bid end date</text>
+    <text name="RequestAcceptancePercentage">Request Acceptance Percentage</text>
+    <text name="InvoicesPaidBeforeDueDatePercentage">Invoices Paid Before Due Date Percentage</text>
+    <text name="UnPricedShippingRequests">UnPriced Shipping Requests</text>
+    <text name="AcceptedVSRejectedPricing">Accepted VS Rejected Pricing Requests</text>
+    <text name="MostWorkedWithCarriers">Most Worked With Carriers</text>
+    <text name="CompletedTrips">Completed Trips</text>
+    <text name="AcceptedVsRejectedRequests">Accepted vs Rejected Requests</text>
+    <text name="DocumentsHasDueDateIn6Days">Documents has there Due Date in less than 6 Days</text>
+    <text name="InvoiceDueDateIn6Days">Invoice Due Date is In 6 Days</text>
+    <text name="RequestsInMarketPlace">Requests In MarketPlace</text>
+    <text name="MostUsedOrigins">Most Used Origins</text>
+    <text name="CompletedTripsvsPod">Completed Trips vs Proof of delivary</text>
+    <text name="MostUsedDestantions">Most Used Destantions</text>
+    <text name="InvoicesVsPaidInvoices">Invoices Vs Paid Invoices</text>
+    <text name="{0}IsInvalid">"{0}" is invalid</text>
+    <text name="ShipmentHistory">Shipment History</text>
 		<text name="{0}IsRequired">{0} is required.</text>
 		<text name="{0}UserCannotBeDeleted">{0} user can not be deleted.</text>
 		<text name="3rdPartyInsurancecoverage">3rd Party Insurance Coverage</text>
@@ -21,7 +42,8 @@
 		<text name="Accept">Accept</text>
 		<text name="AcceptBid">Accept price</text>
 		<text name="Accepted">Accepted</text>
-		<text name="AcceptedAndWaitingForCarrier">Waiting for carrier approval</text>
+    <text name="PleaseTryAgainIn5Minutes">Please Try Again In 5 Minutes</text>
+    <text name="AcceptedAndWaitingForCarrier">Waiting for carrier approval</text>
 		<text name="AcceptedAndWaitingForShipper">Waiting approve by shipper</text>
 		<text name="AcceptedDate">Accepted date</text>
 		<text name="AcceptPrice">Accept price</text>
@@ -2198,7 +2220,7 @@
 		<text name="UserIsAlreadyInTheOrganizationUnit">This user is already in the organization unit!</text>
 		<text name="UserIsBlocked">User is blocked.</text>
 		<text name="UserIsNotActiveAndCanNotLogin">User {0} is not active and can not log in.</text>
-		<text name="UserLockedOutMessage">The user account has been locked out. Please try again later.</text>
+		<text name="UserLockedOutMessage">The user account has been locked out after {0} wrong attempts. Please try again after {1} seconds</text>
 		<text name="UserLockOut">User lock out</text>
 		<text name="UserManagement">User management</text>
 		<text name="UserName">Name</text>
@@ -2387,10 +2409,6 @@
     <text name="LoginLink">Login Link</text>
     <text name="RejectedDocument_Title">Rejected Document</text>
     <text name="RejectedDocumentEmailMessage">This email is sent to you to inform you that your document {0} have been rejected with reason {1} if you have any questions, please contact with support team.</text>
-    
-    <!--<text name="StartOffloading"></text>
-    <text name="ReceiverConfirmed"></text>
-    <text name="DeliveryConfirmation"></text>-->
 		
 	 	<text name="TripDataChanged">You Have Trip With Waybill No {0} Changed Please Review All Of Trip Changes</text> 
 		<text name="ShipperTripUpdatedNotificationMessage">There are some changes on trip with waybill No {0} . For more details please click here</text>
@@ -2406,8 +2424,6 @@
 		<text name="NotRejected">Not Rejected</text>
 		
 		<text name="StartMovingToLoadingLocation">Start Moving To Loading Location</text>
-<!--		<text name="ArriveToLoadingLocation">Arrive To Loading Location</text>  Already Exist -->
-<!--		<text name="FinishLoading">Finish Loading</text>  Already Exist -->
 		<text name="StartMovingToOffloadingLocation">Start Moving To Offloading Location</text>
 		<text name="ArrivedToOffloadingLocation">Arrived To Offloading Location</text>
 		<text name="StartOffloadingShipment">Start Offloading Shipment</text>
@@ -2417,5 +2433,45 @@
 		<text name="TruckIsChanged">Truck Is Changed</text>
 		<text name="IncidentHappened">Incident Happened</text>
 		
+		<text name="MoiNumber">Moi Number</text>
+		<text name="ViewTenantProfile">View Tenant Profile</text>
+		<text name="NumberOfVases">Number of Vases</text>
+		<text name="NameOfVas">Vas Name</text>
+		<text name="AvailableVases">Available Vases</text>
+		<text name="FleetInformation">Fleet Information</text>
+		<text name="NumberOfDrivers">Number of Drivers</text>
+		<text name="NumberOfTrucks">Number of Trucks</text>
+		<text name="ProfileTitle">Tenant Profile</text>
+		<text name="Location">Location</text> 
+		<text name="NumberOfCompletedShipments">Number of Completed Shipments</text> 
+		<text name="NumberOfRequestedShipments">Number of Requested Shipments</text>
+		<text name="NumberOfFacilities">Number of Facilities</text>
+		<text name="InvoicingInformation">Invoicing Information</text>
+		<text name="CreditLimit">Credit Limit</text>
+		<text name="CurrentBalance">Current Balance</text>
+		<text name="InvoicingFrequency">Invoicing Frequency</text>
+		<text name="InvoicingDuePeriod">Invoicing Due Period</text>
+		<text name="CreditType">Credit Type</text>
+		<text name="ReceiverConfirmed">Receiver Confirmed</text>
+		<text name="CompletedTripsFromTotal">Completed Trips / No of Trips</text>
+		<text name="CreatedTripsFromTotal">Created Trips / No of Trips</text>
+		<text name="RateForDriver">Rate for Driver</text>
+		<text name="RateForExperience">Rate for Experience</text>
+		
+		<text name="NotAttached">Not uploaded yet</text>
+		<text name="CardNumberId">Receiver ID</text>
+		<text name="AdditionalReceiver">Additional Receiver</text>
+
+		<text name="RateOffloadingFacility">Rate offloading facility</text>
+		<text name="ClickToRateFacility">Please click here to rate the facility</text>
+		<text name="StartOffloading">Start offloading</text>
+		<text name="DeliveredAndNeedsConfirmation">Delivered/needs action</text>
+		<text name="Enter9DigitsNumber">Mobile NO. 9 digits, start with 5 </text>
+		
+    <text name="CompanyNamePatternError">Company name is longer than 3 characters, only English letters, numbers, dash and underscore are allowed</text>
+    <text name="CompanyLegalNamePatternError">Company legal name is longer than 3 characters, only English and Arabic letters, numbers, dash and underscores are allowed</text>
+    <!--<text name="StartOffloading"></text>
+    <text name="ReceiverConfirmed"></text>
+    <text name="DeliveryConfirmation"></text>-->
 	</texts>
 </localizationDictionary>

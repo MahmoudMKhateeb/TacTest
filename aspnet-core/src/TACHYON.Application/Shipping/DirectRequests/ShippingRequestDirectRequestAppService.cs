@@ -136,7 +136,9 @@ namespace TACHYON.Shipping.DirectRequests
                                 .Select(r => new ShippingRequestDirectRequestGetCarrirerListDto
                                 {
                                     Id = r.Id,
-                                    Name = r.Name
+                                    Name = r.Name,
+                                    CarrierRate = r.Rate,
+                                    CarrierRateNumber = r.RateNumber
                                 });
             }
             else if (IsEnabled(AppFeatures.Shipper))
@@ -155,7 +157,9 @@ namespace TACHYON.Shipping.DirectRequests
                                 .Select(r => new ShippingRequestDirectRequestGetCarrirerListDto
                                 {
                                     Id = r.CarrierTenantId,
-                                    Name = r.CarrierShipper.Name
+                                    Name = r.CarrierShipper.Name,
+                                    CarrierRate = r.CarrierShipper.Rate,
+                                    CarrierRateNumber = r.CarrierShipper.RateNumber
                                 });
             }
             else

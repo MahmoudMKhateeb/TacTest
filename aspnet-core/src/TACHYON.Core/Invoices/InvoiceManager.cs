@@ -191,7 +191,8 @@ namespace TACHYON.Invoices
             List<Tenant> tenantsList = new List<Tenant>();
             var tenants = _tenant.GetAll()
                 .Where(
-                t => t.IsActive && (t.Edition.Id == ShipperEditionId || t.Edition.Id == CarrierEditionId));
+                t => t.IsActive && (t.Edition.Id == ShipperEditionId || t.Edition.Id == CarrierEditionId))
+                .ToList();
             //todo fix this please 
             foreach (var tenant in tenants)
             {
@@ -224,10 +225,25 @@ namespace TACHYON.Invoices
         {
             var trips = _shippingRequestTrip.GetAll()
                 .Include(trip => trip.ShippingRequestTripVases)
+                .Include(trip => trip.ShippingRequestFk)
                 .Where(trip => trip.ShippingRequestFk.TenantId == tenant.Id)
                 .Where(trip => !trip.IsShipperHaveInvoice)
                 .Where(trip => trip.Status == Shipping.Trips.ShippingRequestTripStatus.Delivered)
                 .ToList();
+            foreach (ShippingRequestTrip trip in trips.ToList())
+            {
+                var shipperId = trip.ShippingRequestFk.TenantId;
+                var carrierId = trip.ShippingRequestFk.CarrierTenantId;
+                if (!await _featureChecker.IsEnabledAsync(shipperId, AppFeatures.Saas))
+                {
+                    continue;
+                }
+                var relatedCarrierId =int.Parse(await _featureChecker.GetValueAsync(shipperId, AppFeatures.SaasRelatedCarrier));
+                if (carrierId == relatedCarrierId)
+                {
+                    trips.Remove(trip);
+                }
+            }
 
             if (trips.Any())
                 await GenerateShipperInvoice(tenant, trips, period);
@@ -243,8 +259,30 @@ namespace TACHYON.Invoices
         private async Task BuildCarrierSubmitInvoice(Tenant tenant, InvoicePeriod period)
         {
 
-            var trips = _shippingRequestTrip.GetAll().Include(v => v.ShippingRequestTripVases).Where(x => x.ShippingRequestFk.CarrierTenantId == tenant.Id
-                && x.Status == Shipping.Trips.ShippingRequestTripStatus.Delivered && !x.IsCarrierHaveInvoice).ToList();
+            var trips = _shippingRequestTrip
+                .GetAll()
+                .Include(v => v.ShippingRequestTripVases)
+                .Include(v => v.ShippingRequestFk)
+                .Where(x => x.ShippingRequestFk.CarrierTenantId == tenant.Id
+                            && x.Status == Shipping.Trips.ShippingRequestTripStatus.Delivered
+                            && !x.IsCarrierHaveInvoice)
+                .ToList();
+
+            foreach (ShippingRequestTrip trip in trips.ToList())
+            {
+                var shipperId = trip.ShippingRequestFk.TenantId;
+                var carrierId = trip.ShippingRequestFk.CarrierTenantId;
+                if (! await _featureChecker.IsEnabledAsync(shipperId,AppFeatures.Saas))
+                {
+                    continue;
+                }
+                var relatedCarrierId = int.Parse(await _featureChecker.GetValueAsync(shipperId, AppFeatures.SaasRelatedCarrier));
+                if (carrierId == relatedCarrierId)
+                {
+                    trips.Remove(trip);
+                }
+            }
+
             if (trips.Count == 0) return;
             decimal totalAmount = (decimal)trips.Sum(r => r.TotalAmount + r.ShippingRequestTripVases.Sum(v => v.TotalAmount));
             decimal vatAmount = (decimal)trips.Sum(r => r.VatAmount + r.ShippingRequestTripVases.Sum(v => v.VatAmount));
@@ -257,7 +295,7 @@ namespace TACHYON.Invoices
                 TotalAmount = totalAmount,
                 VatAmount = vatAmount,
                 SubTotalAmount = subTotalAmount,
-                TaxVat = trips.Where(x => x.TaxVat.HasValue).FirstOrDefault().TaxVat.Value,
+                TaxVat = trips.FirstOrDefault(x => x.TaxVat.HasValue).TaxVat.Value,
                 Channel = InvoiceChannel.Trip,
                 Trips = trips.Select(
                r => new SubmitInvoiceTrip()
@@ -352,7 +390,7 @@ namespace TACHYON.Invoices
 
             DateTime dueDate = Clock.Now;
 
-            var paymentType = await _invoicePaymentMethodRepository.FirstOrDefaultAsync(x => x.Id == int.Parse(_featureChecker.GetValue(submit.Tenant.Id, AppFeatures.InvoicePaymentMethod)));
+            var paymentType = await _invoicePaymentMethodRepository.FirstOrDefaultAsync(x => x.Id == int.Parse(_featureChecker.GetValue(submit.Tenant.Id, AppFeatures.InvoicePaymentMethodCrarrier)));
             if (paymentType.PaymentType == PaymentMethod.InvoicePaymentType.Days)
             {
                 dueDate = Clock.Now.AddDays(paymentType.InvoiceDueDateDays);

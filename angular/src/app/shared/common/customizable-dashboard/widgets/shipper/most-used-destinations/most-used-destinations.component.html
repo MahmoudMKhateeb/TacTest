@@ -4,22 +4,22 @@
     <div class="card card-custom card-stretch">
       <div class="card-header border-0">
         <div class="card-title text-center">
-          <h3 class="card-label">Most Used Destantions</h3>
+          <h3 class="card-label">{{ l('MostUsedDestantions') }}</h3>
         </div>
       </div>
       <div class="card-body p-0">
         <!--begin::Body-->
         <div class="card-body pt-2">
-          <p-table [value]="data">
+          <p-table [value]="data" (onLazyLoad)="getDestinations()">
             <ng-template pTemplate="header">
               <tr>
-                <th>Area/City Name</th>
-                <th>Number Of Requests</th>
+                <th>{{ l('CityName') }}</th>
+                <th>{{ l('NumberOfRequests') }}</th>
               </tr>
             </ng-template>
             <ng-template pTemplate="body" let-record>
               <tr>
-                <td>{{ record.city }}</td>
+                <td>{{ record.cityName }}</td>
                 <td>{{ record.numberOfRequests }}</td>
               </tr>
             </ng-template>

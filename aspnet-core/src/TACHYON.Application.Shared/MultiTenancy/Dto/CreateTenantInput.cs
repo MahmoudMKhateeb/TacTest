@@ -21,6 +21,7 @@ namespace TACHYON.MultiTenancy.Dto
         public string MobileNo { get; set; }
         [Required]
         [StringLength(TenantConsts.MaxNameLength)]
+        [RegularExpression(TenantConsts.TenancyLegalNameRegex)]
         public string Name { get; set; }
 
 

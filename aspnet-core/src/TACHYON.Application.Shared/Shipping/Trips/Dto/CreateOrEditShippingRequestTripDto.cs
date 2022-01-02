@@ -17,7 +17,7 @@ namespace TACHYON.Shipping.Trips.Dto
     public class CreateOrEditShippingRequestTripDto : EntityDto<int?>, ICustomValidate, IShouldNormalize
     {
         [Required]
-        public DateTime StartTripDate { get; set; }
+        public DateTime? StartTripDate { get; set; }
 
         public DateTime? EndTripDate { get; set; }
 
@@ -48,8 +48,12 @@ namespace TACHYON.Shipping.Trips.Dto
                 context.Results.Add(new ValidationResult("document missing: " + CreateOrEditDocumentFileDto?.Name));
 
 
+            if (!OriginFacilityId.HasValue)
+                context.Results.Add(new ValidationResult("You Must Select Origin Facility"));
+            if (!DestinationFacilityId.HasValue)
+                context.Results.Add(new ValidationResult("You Must Select Destination Facility"));
 
-            if (EndTripDate != null && StartTripDate.Date > EndTripDate.Value.Date)
+            if (EndTripDate != null && StartTripDate?.Date > EndTripDate.Value.Date)
             {
                 context.Results.Add(new ValidationResult("The start date must be or equal to end date."));
             }

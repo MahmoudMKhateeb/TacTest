@@ -37,6 +37,8 @@ namespace TACHYON.Authorization
             dangerousGoodTypes.CreateChildPermission(AppPermissions.Pages_DangerousGoodTypes_Delete, L("DeleteDangerousGoodType"), multiTenancySides: MultiTenancySides.Host);
 
             var hostDashboard = pages.CreateChildPermission(AppPermissions.Pages_HostDashboard, L("HostDashboard"));
+            var shipperDashboard = pages.CreateChildPermission(AppPermissions.Pages_ShipperDashboard, L("ShipperDashboard"), multiTenancySides: MultiTenancySides.Tenant);
+            var CarrierDashboard = pages.CreateChildPermission(AppPermissions.Pages_CarrierDashboard, L("CarrierDashboard"), multiTenancySides: MultiTenancySides.Tenant);
 
             var receivers = pages.CreateChildPermission(AppPermissions.Pages_Receivers, L("Receivers"));
             receivers.CreateChildPermission(AppPermissions.Pages_Receivers_Create, L("CreateNewReceiver"));
@@ -253,6 +255,7 @@ namespace TACHYON.Authorization
             trucksTypes.CreateChildPermission(AppPermissions.Pages_TrucksTypes_Delete, L("DeleteTrucksType"), multiTenancySides: MultiTenancySides.Host);
 
             pages.CreateChildPermission(AppPermissions.Pages_DemoUiComponents, L("DemoUiComponents"));
+            pages.CreateChildPermission(AppPermissions.Pages_Tracking_ReceiverCode, L("TrackingReceiverCode"), multiTenancySides: MultiTenancySides.Host);
 
             var administration = pages.CreateChildPermission(AppPermissions.Pages_Administration, L("Administration"));
 

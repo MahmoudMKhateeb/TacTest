@@ -165,18 +165,13 @@ namespace TACHYON.Invoices.Groups
 
         [AbpAuthorize(AppPermissions.Pages_Invoices_SubmitInvoices)]
         public async Task<FileDto> GetFileDto(long GroupId)
-
         {
-            DisableTenancyFiltersIfHost();
+            DisableTenancyFilters();
             var documentFile = await _SubmitInvoiceRepository.FirstOrDefaultAsync(g => g.Id == GroupId && g.Status != SubmitInvoices.SubmitInvoiceStatus.New);
             if (documentFile == null)
-            {
                 throw new UserFriendlyException(L("TheRequestNotFound"));
 
-            }
-
             return await _commonManager.GetDocument(ObjectMapper.Map<IHasDocument>(documentFile));
-
         }
 
         public async Task<FileDto> Exports(SubmitInvoiceFilterInput input)
@@ -296,7 +291,7 @@ namespace TACHYON.Invoices.Groups
                     TruckType = ObjectMapper.Map<TrucksTypeDto>(trip.ShippingRequestTripFK.AssignedTruckFk.TrucksTypeFk).TranslatedDisplayName,
                     Source = ObjectMapper.Map<CityDto>(trip.ShippingRequestTripFK.ShippingRequestFk.OriginCityFk)?.TranslatedDisplayName ?? trip.ShippingRequestTripFK.ShippingRequestFk.OriginCityFk.DisplayName,
                     Destination = ObjectMapper.Map<CityDto>(trip.ShippingRequestTripFK.ShippingRequestFk.DestinationCityFk)?.TranslatedDisplayName ?? trip.ShippingRequestTripFK.ShippingRequestFk.DestinationCityFk.DisplayName,
-                    DateWork = trip.ShippingRequestTripFK.ShippingRequestFk.EndTripDate.HasValue ? trip.ShippingRequestTripFK.ShippingRequestFk.EndTripDate.Value.ToString("dd MMM, yyyy") : "",
+                    DateWork = trip.ShippingRequestTripFK.EndTripDate.HasValue ? trip.ShippingRequestTripFK.EndTripDate.Value.ToString("dd MMM, yyyy") : "",
                     Remarks = trip.ShippingRequestTripFK.ShippingRequestFk.RouteTypeId == Shipping.ShippingRequests.ShippingRequestRouteType.MultipleDrops ?
                     L("TotalOfDrop", trip.ShippingRequestTripFK.ShippingRequestFk.NumberOfDrops) : ""
                 });

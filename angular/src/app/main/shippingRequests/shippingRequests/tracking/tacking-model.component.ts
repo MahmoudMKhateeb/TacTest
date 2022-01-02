@@ -18,6 +18,7 @@ import {
 } from '@shared/service-proxies/service-proxies';
 import { finalize } from 'rxjs/operators';
 import { ViewTripAccidentModelComponent } from '../ShippingRequestTrips/accident/View-trip-accident-modal.component';
+import { MapsAPILoader } from '@node_modules/@agm/core';
 
 @Component({
   templateUrl: './tacking-model.component.html',
@@ -43,11 +44,18 @@ export class TrackingModelComponent extends AppComponentBase implements OnInit {
   distance: string;
   duration: string;
   direction: string;
-  constructor(injector: Injector, private _CurrentServ: TrackingServiceProxy, private _fileDownloadService: FileDownloadService) {
+  private bounds: google.maps.LatLngBounds;
+  constructor(
+    injector: Injector,
+    private _CurrentServ: TrackingServiceProxy,
+    private _fileDownloadService: FileDownloadService,
+    private mapsAPILoader: MapsAPILoader
+  ) {
     super(injector);
   }
   ngOnInit(): void {
     this.registerToEvents();
+    this.initMap();
   }
 
   getForView() {
@@ -70,6 +78,8 @@ export class TrackingModelComponent extends AppComponentBase implements OnInit {
   }
   close(): void {
     this.active = false;
+    this.origin = { lat: null, lng: null };
+    this.destination = { lat: null, lng: null };
     this.onCloseModel.emit('');
     this.modal.hide();
   }

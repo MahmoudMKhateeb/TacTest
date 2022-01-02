@@ -114,7 +114,7 @@ namespace TACHYON.Notifications
 
         Task NewUserRegisteredAsync(User user);
 
-        Task NewTenantRegisteredAsync(Tenant tenant);
+        Task NewTenantRegisteredAsync(string tenancyName);
 
         Task GdprDataPrepared(UserIdentifier user, Guid binaryObjectId);
 

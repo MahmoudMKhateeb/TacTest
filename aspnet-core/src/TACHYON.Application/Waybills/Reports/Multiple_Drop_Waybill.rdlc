@@ -4010,7 +4010,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>#Of </Value>
+                              <Value>Number of packing:</Value>
                               <Style>
                                 <FontFamily>Open Sans</FontFamily>
                                 <FontSize>8pt</FontSize>
@@ -4083,7 +4083,7 @@
                         </Border>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>8pt</PaddingTop>
+                        <PaddingTop>2pt</PaddingTop>
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
@@ -4174,14 +4174,16 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!HasAttachment.Value</Value>
+                              <Value>=IIf(Fields!HasAttachment.Value = true, "Yes", "No")</Value>
                               <Style>
                                 <FontFamily>Open Sans</FontFamily>
                                 <FontSize>8pt</FontSize>
                               </Style>
                             </TextRun>
                           </TextRuns>
-                          <Style />
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
                         </Paragraph>
                       </Paragraphs>
                       <rd:DefaultName>Textbox112</rd:DefaultName>
@@ -4288,14 +4290,16 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!NeedsDeliveryNote.Value</Value>
+                              <Value>=IIf(Fields!NeedsDeliveryNote.Value = true, "Yes", "No")</Value>
                               <Style>
                                 <FontFamily>Open Sans</FontFamily>
                                 <FontSize>8pt</FontSize>
                               </Style>
                             </TextRun>
                           </TextRuns>
-                          <Style />
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
                         </Paragraph>
                       </Paragraphs>
                       <rd:DefaultName>NeedsDeliveryNote</rd:DefaultName>
@@ -4417,7 +4421,7 @@
                         </Border>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>8pt</PaddingTop>
+                        <PaddingTop>2pt</PaddingTop>
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
@@ -6109,8 +6113,8 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox75</rd:DefaultName>
-          <Top>0.3411in</Top>
-          <Left>0.26648in</Left>
+          <Top>0.19625in</Top>
+          <Left>0.23432in</Left>
           <Height>0.50028in</Height>
           <Width>2.65061in</Width>
           <ZIndex>1</ZIndex>
@@ -6178,8 +6182,8 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox75</rd:DefaultName>
-          <Top>0.39195in</Top>
-          <Left>4.90871in</Left>
+          <Top>0.20708in</Top>
+          <Left>4.87655in</Left>
           <Height>0.50028in</Height>
           <Width>1.63252in</Width>
           <ZIndex>2</ZIndex>
@@ -6247,8 +6251,8 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox75</rd:DefaultName>
-          <Top>0.38112in</Top>
-          <Left>3.21149in</Left>
+          <Top>0.19625in</Top>
+          <Left>3.17933in</Left>
           <Height>0.50028in</Height>
           <Width>1.45083in</Width>
           <ZIndex>3</ZIndex>
@@ -6266,8 +6270,8 @@
           <Source>Embedded</Source>
           <Value>MaskGroup1</Value>
           <Sizing>FitProportional</Sizing>
-          <Top>0.69276in</Top>
-          <Left>4.73676in</Left>
+          <Top>0.50789in</Top>
+          <Left>4.7046in</Left>
           <Height>0.14in</Height>
           <Width>0.14in</Width>
           <ZIndex>4</ZIndex>
@@ -6281,8 +6285,8 @@
           <Source>Embedded</Source>
           <Value>MaskGroup3</Value>
           <Sizing>FitProportional</Sizing>
-          <Top>0.39195in</Top>
-          <Left>4.75482in</Left>
+          <Top>0.20708in</Top>
+          <Left>4.72266in</Left>
           <Height>0.14in</Height>
           <Width>0.14in</Width>
           <ZIndex>5</ZIndex>
@@ -6296,8 +6300,8 @@
           <Source>Embedded</Source>
           <Value>MaskGroup4</Value>
           <Sizing>FitProportional</Sizing>
-          <Top>0.38472in</Top>
-          <Left>3.07603in</Left>
+          <Top>0.19985in</Top>
+          <Left>3.04387in</Left>
           <Height>0.14in</Height>
           <Width>0.14in</Width>
           <ZIndex>6</ZIndex>
@@ -6311,8 +6315,8 @@
           <Source>Embedded</Source>
           <Value>MaskGroup5</Value>
           <Sizing>FitProportional</Sizing>
-          <Top>0.675in</Top>
-          <Left>3.07603in</Left>
+          <Top>0.49013in</Top>
+          <Left>3.04387in</Left>
           <Height>0.14in</Height>
           <Width>0.14in</Width>
           <ZIndex>7</ZIndex>
@@ -6322,6 +6326,40 @@
             </Border>
           </Style>
         </Image>
+        <Textbox Name="Textbox9">
+          <CanGrow>true</CanGrow>
+          <KeepTogether>true</KeepTogether>
+          <Paragraphs>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>=Globals!PageNumber</Value>
+                  <Style>
+                    <FontSize>9pt</FontSize>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style>
+                <TextAlign>Center</TextAlign>
+              </Style>
+            </Paragraph>
+          </Paragraphs>
+          <rd:DefaultName>Textbox3</rd:DefaultName>
+          <Top>1.94558cm</Top>
+          <Left>8.15718cm</Left>
+          <Height>0.6cm</Height>
+          <Width>2.1825cm</Width>
+          <ZIndex>8</ZIndex>
+          <Style>
+            <Border>
+              <Style>None</Style>
+            </Border>
+            <PaddingLeft>2pt</PaddingLeft>
+            <PaddingRight>2pt</PaddingRight>
+            <PaddingTop>2pt</PaddingTop>
+            <PaddingBottom>2pt</PaddingBottom>
+          </Style>
+        </Textbox>
       </ReportItems>
       <Style>
         <Border>
@@ -6855,7 +6893,7 @@ Mhggf1ijspwTpannADNIaXfnGSw0x3KR/Sim/YnEh5HDqiiNSYUmINbkA4YRpixYYFWbUkWWI0hhEePc
       <ImageData>iVBORw0KGgoAAAANSUhEUgAAACEAAAAhCAYAAABX5MJvAAAABHNCSVQICAgIfAhkiAAAAh9JREFUWEetV4ExBEEQbBEgAj4CLwIjAkLwEXgRIAJEgAgQgRaBl8F/BIiAarWqzt3O7O69qbqiamdne7tnZuc30GhmZgCOAEzTtwXgA8Aiffck9X+1bdR6psPPAQhEyQjgkqT+Fq0KhJldAzgtRhs6XJM8K+0rgjCzx0R/KZa3fkdyFm0OQazBQP/MG5JzD4gLIuXA89jrZ/YdejkSgVBSHQQgVgAklSpDFXIMYCfwF4bD3HoWhJmp/F6DgFl6K+Tbz5WvByKqhieSunXWComcBe+BiKTYJikJPBCS5t1ZfiE56DMeiKWjbzZI/0Az8y6xJDnp+3sgvpybhFL87okkITk40wMhujczQBYk90tla2Z6O/YyfiuSu7VMRDmRzfAOC1FlNeXEBQA9VjkL2QhYUKwzkqq8Pza2T4juWbfmU2+5Tc+7p9iEpJK+DEIeZuZVSDeAfPRJ54HWvbPeSEqqgUVtWw/OVSkJG9bF3F0rCDUd3TJXJQ1n/7h+klS8rJWe8ihBW4BoylKsUSD+gw29ttOo1ddMVuuy4ebCLy01IMSGSjKaFTym3YrobiiCSOWqp/uhJQmSrztNNYNIQFoH3nCuHAtCzUiy1JRsMRlHgUhsnABQay5ZlQzVidk/reJ3SLUM64CIekeTDKNBJFk0J+Z+k4SzxqiOGQlvZv0mlp0VSsmj9ao+4QXq5EfV7PnvTCRZlB+alObR21Bi4xsVM94ip2aWSgAAAABJRU5ErkJggg==</ImageData>
     </EmbeddedImage>
   </EmbeddedImages>
-  <Language>ar-SA</Language>
+  <Language>ar-EG</Language>
   <rd:ReportUnitType>Cm</rd:ReportUnitType>
   <rd:ReportID>485ecc51-3ef2-4c73-920b-69bd7491ea49</rd:ReportID>
 </Report>

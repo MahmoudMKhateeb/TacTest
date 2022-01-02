@@ -1,5 +1,5 @@
-import { Directive, Input, ComponentFactoryResolver, ViewContainerRef, Injector, SimpleChanges, OnChanges } from '@angular/core';
-import { NgxSpinnerService, NgxSpinnerComponent } from 'ngx-spinner';
+import { ComponentFactoryResolver, Directive, Injector, Input, OnChanges, SimpleChanges, ViewContainerRef } from '@angular/core';
+import { NgxSpinnerComponent, NgxSpinnerService } from 'ngx-spinner';
 
 @Directive({
   selector: '[busyIf]',
@@ -38,10 +38,9 @@ export class BusyIfDirective implements OnChanges {
     let component = <NgxSpinnerComponent>componentRef.instance;
     component.name = this.spinnerName;
     component.fullScreen = false;
-
     component.type = 'ball-clip-rotate';
     component.size = 'medium';
-    component.color = '#5ba7ea';
+    component.color = '#dc3545';
   }
 
   ngOnChanges(changes: SimpleChanges): void {

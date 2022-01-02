@@ -25,7 +25,7 @@
         <div class="modal-body">
           <div class="form-row">
             <div class="form-group col-md-6">
-              <label for="FacilityName"><span class="required-fileds"> *</span>{{ l('Facility') }}</label>
+              <label><span class="required-fileds"> *</span>{{ l('Facility') }}</label>
               <select name="receiver.facilityId" [(ngModel)]="receiver.facilityId" class="form-control" required [disabled]="facilityIdFromTrips">
                 <option [value]="" disabled>{{ l('SelectAFacility') }}</option>
                 <option *ngFor="let item of allFacilitys" [value]="item.id">{{ item.displayName }}</option>

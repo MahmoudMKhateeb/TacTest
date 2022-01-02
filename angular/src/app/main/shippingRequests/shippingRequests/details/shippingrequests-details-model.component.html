@@ -26,6 +26,12 @@
               >
                 {{ request.isTachyonDeal ? l('TachyonManageService') : request.shipper }}
               </a>
+
+              <!-- Shipper Rate -->
+              <span *ngIf="feature.isEnabled('App.Carrier') || feature.isEnabled('App.TachyonDealer')">
+                <app-view-rating [rate]="request.shipperRating" [max]="5" [rateNumber]="request.shipperRatingNumber"></app-view-rating>
+              </span>
+
               <span class="infoHighLight green" *ngIf="shippingrequest.isPriced">
                 {{ l('Priced') }}
               </span>

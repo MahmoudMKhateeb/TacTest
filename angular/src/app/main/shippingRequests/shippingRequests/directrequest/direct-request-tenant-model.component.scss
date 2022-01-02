@@ -32,3 +32,23 @@
   font-size: 18px;
   color: #fff;
 }
+
+td,th {
+    text-align: center !important
+}
+.star {
+    position: relative;
+    display: inline-block;
+    font-size: 2rem;
+    color: #d3d3d3;
+}
+.full {
+    color: #ffca08;
+}
+.half {
+    position: absolute;
+    display: inline-block;
+    overflow: hidden;
+    color: #ffca08;
+}
+

@@ -1,19 +1,19 @@
-﻿using TACHYON.Trucks.TrucksTypes;
-
+﻿using Abp.Application.Services.Dto;
+using Abp.Authorization;
+using Abp.Domain.Repositories;
+using Abp.Extensions;
+using Abp.Linq.Extensions;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
-using Abp.Linq.Extensions;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Abp.Domain.Repositories;
-using TACHYON.Trucks.TrucksTypes.TrucksTypesTranslations.Dtos;
-using TACHYON.Dto;
-using Abp.Application.Services.Dto;
 using TACHYON.Authorization;
-using Abp.Extensions;
-using Abp.Authorization;
-using Microsoft.EntityFrameworkCore;
+using TACHYON.Dto;
+using TACHYON.Extension;
+using TACHYON.Trucks.TrucksTypes;
+using TACHYON.Trucks.TrucksTypes.TrucksTypesTranslations.Dtos;
 
 namespace TACHYON.Trucks.TrucksTypes.TrucksTypesTranslations
 {
@@ -38,7 +38,7 @@ namespace TACHYON.Trucks.TrucksTypes.TrucksTypesTranslations
                         .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.TranslatedDisplayName.Contains(input.Filter) || e.Language.Contains(input.Filter))
                         .WhereIf(!string.IsNullOrWhiteSpace(input.TranslatedDisplayNameFilter), e => e.TranslatedDisplayName == input.TranslatedDisplayNameFilter)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.LanguageFilter), e => e.Language == input.LanguageFilter);
-                        //.WhereIf(!string.IsNullOrWhiteSpace(input.TrucksTypeDisplayNameFilter), e => e.Core != null && e.Core.DisplayName == input.TrucksTypeDisplayNameFilter);
+            //.WhereIf(!string.IsNullOrWhiteSpace(input.TrucksTypeDisplayNameFilter), e => e.Core != null && e.Core.DisplayName == input.TrucksTypeDisplayNameFilter);
 
             var pagedAndFilteredTrucksTypesTranslations = filteredTrucksTypesTranslations
                 .OrderBy(input.Sorting ?? "id asc")
@@ -56,7 +56,7 @@ namespace TACHYON.Trucks.TrucksTypes.TrucksTypesTranslations
                                                   Language = o.Language,
                                                   Id = o.Id
                                               },
-                                             // TrucksTypeDisplayName = s1 == null || s1.DisplayName == null ? "" : s1.DisplayName.ToString()
+                                              // TrucksTypeDisplayName = s1 == null || s1.DisplayName == null ? "" : s1.DisplayName.ToString()
                                           };
 
             var totalCount = await filteredTrucksTypesTranslations.CountAsync();
@@ -92,7 +92,7 @@ namespace TACHYON.Trucks.TrucksTypes.TrucksTypesTranslations
             if (output.TrucksTypesTranslation.CoreId != null)
             {
                 var _lookupTrucksType = await _lookup_trucksTypeRepository.FirstOrDefaultAsync((long)output.TrucksTypesTranslation.CoreId);
-               // output.TrucksTypeDisplayName = _lookupTrucksType?.DisplayName?.ToString();
+                // output.TrucksTypeDisplayName = _lookupTrucksType?.DisplayName?.ToString();
             }
 
             return output;
@@ -137,7 +137,8 @@ namespace TACHYON.Trucks.TrucksTypes.TrucksTypesTranslations
                 .Select(trucksType => new TrucksTypesTranslationTrucksTypeLookupTableDto
                 {
                     Id = trucksType.Id,
-                  ////  DisplayName = trucksType == null || trucksType.DisplayName == null ? "" : trucksType.DisplayName.ToString()
+                    IsOther = trucksType.ContainsOther()
+                    ////  DisplayName = trucksType == null || trucksType.DisplayName == null ? "" : trucksType.DisplayName.ToString()
                 }).ToListAsync();
         }
 

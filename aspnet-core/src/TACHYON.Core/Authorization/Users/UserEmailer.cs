@@ -47,7 +47,7 @@ namespace TACHYON.Authorization.Users
         private readonly DocumentFilesManager _documentFilesManager;
         private readonly IRepository<User, long> _lookupUserRepository;
 
-        private bool isRTL = CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft;
+        private bool isRTL = CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft; // to improve this use it as local variable 
 
         public UserEmailer(
             IEmailTemplateProvider emailTemplateProvider,

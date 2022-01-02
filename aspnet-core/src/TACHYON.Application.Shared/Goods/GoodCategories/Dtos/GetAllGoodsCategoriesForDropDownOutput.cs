@@ -8,5 +8,6 @@ namespace TACHYON.Goods.GoodCategories.Dtos
     {
         public string DisplayName { get; set; }
         public int Id { get; set; }
+        public bool IsOther { get; set; }
     }
 }
