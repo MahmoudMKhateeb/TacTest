@@ -151,6 +151,10 @@ namespace TACHYON.Features
             }
 
 
+            shipperFeature.CreateChildFeature(AppFeatures.AddTripsByTachyonDeal,
+                "false",
+                L(AppFeatures.AddTripsByTachyonDeal),
+                inputType: new CheckboxInputType());
 
 
             var broker = context.Create(

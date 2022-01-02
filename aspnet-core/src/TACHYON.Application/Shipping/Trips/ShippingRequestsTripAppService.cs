@@ -1,4 +1,5 @@
 ﻿using Abp;
+using Abp.Application.Features;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Collections.Extensions;
@@ -6,6 +7,7 @@ using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
+using Abp.Runtime.Validation;
 using Abp.Timing;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
@@ -209,6 +211,8 @@ namespace TACHYON.Shipping.Trips
             await DisableTenancyFiltersIfTachyonDealer();
             var request = await GetShippingRequestByPermission(input.ShippingRequestId);
 
+            if (!await FeatureChecker.IsEnabledAsync(request.TenantId, AppFeatures.AddTripsByTachyonDeal))
+                throw new AbpValidationException(L("AddTripsByTachyonDealIsNotEnabledFromShipper"));
             ValidateTripDates(input, request);
             ValidateNumberOfDrops(input, request);
             ValidateTotalweight(input, request);
@@ -228,7 +232,13 @@ namespace TACHYON.Shipping.Trips
 
         }
 
-
+        [RequiresFeature(AppFeatures.Shipper)]
+        public async Task ChangeAddTripsByTmsFeature()
+        {
+            if (!AbpSession.TenantId.HasValue) return;
+            await TenantManager.SetFeatureValueAsync(AbpSession.TenantId.Value, AppFeatures.AddTripsByTachyonDeal,
+                await IsEnabledAsync(AppFeatures.AddTripsByTachyonDeal) ? "false" : "true");
+        }
         public async Task<FileDto> GetTripAttachmentFileDto(int id)
         {
             DisableTenancyFilters();
@@ -539,9 +549,9 @@ namespace TACHYON.Shipping.Trips
         private async Task<ShippingRequest> GetShippingRequestByPermission(long shippingRequestId)
         {
             var request = await _shippingRequestRepository.GetAll()
-                          .WhereIf(IsEnabled(AppFeatures.Carrier), x => x.CarrierTenantId == AbpSession.TenantId)
-                          .WhereIf(IsEnabled(AppFeatures.Shipper), x => x.TenantId == AbpSession.TenantId)
-                          .WhereIf(IsEnabled(AppFeatures.TachyonDealer), x => x.IsTachyonDeal)
+                          .WhereIf(await IsEnabledAsync(AppFeatures.Carrier), x => x.CarrierTenantId == AbpSession.TenantId)
+                          .WhereIf(await IsEnabledAsync(AppFeatures.Shipper), x => x.TenantId == AbpSession.TenantId)
+                          .WhereIf(await IsEnabledAsync(AppFeatures.TachyonDealer), x => x.IsTachyonDeal)
                 .FirstOrDefaultAsync(x => x.Id == shippingRequestId);
             if (request == null)
             {

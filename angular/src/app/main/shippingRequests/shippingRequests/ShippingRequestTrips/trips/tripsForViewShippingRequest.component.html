@@ -6,8 +6,18 @@
     <div class="card-toolbar" *ngIf="feature.isEnabled('App.Shipper') || feature.isEnabled('App.TachyonDealer')">
       <button
         class="btn btn-primary"
+        *ngIf="ShippingRequest.isTachyonDeal && feature.isEnabled('App.Shipper')"
+        (click)="updateAddTripsByTmsFeature()"
+        [disabled]="saving"
+      >
+        <i [class]="tripsByTmsEnabled ? 'fas fa-lock' : 'fas fa-lock-open'"></i>
+        {{ tripsByTmsEnabled ? l('DisableAddTripsByTms') : l('EnableAddTripsByTms') }}
+      </button>
+      <button
+        class="btn btn-primary"
         (click)="AddNewTripModal.show()"
         [disabled]="primengTableHelper.totalRecordsCount >= ShippingRequest.numberOfTrips"
+        *ngIf="!(feature.isEnabled('App.TachyonDealer') && !ShippingRequest.addTripsByTmsEnabled)"
       >
         <i class="flaticon-plus"></i> {{ l('AddATrip') }}
       </button>

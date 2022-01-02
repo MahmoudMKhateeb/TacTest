@@ -13,6 +13,8 @@ import {
 import { CreateOrEditTripComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/createOrEditTripModal/createOrEditTrip.component';
 import { ViewTripModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/viewTripModal/viewTripModal.component';
 import { TripService } from '../trip.service';
+import Swal from 'sweetalert2';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'TripsForViewShippingRequest',
@@ -26,6 +28,8 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   @ViewChild('ViewTripModal', { static: false }) ViewTripModal: ViewTripModalComponent;
   @Input() ShippingRequest: ShippingRequestDto;
   @Input() VasListFromFather: GetShippingRequestVasForViewDto[];
+  tripsByTmsEnabled: boolean;
+  saving = false;
   constructor(
     injector: Injector,
     private _TripService: TripService,
@@ -58,6 +62,24 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
       });
   }
 
+  updateAddTripsByTmsFeature() {
+    Swal.fire({
+      title: this.l('areYouSure'),
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: this.l('Yes'),
+      cancelButtonText: this.l('No'),
+    }).then((result) => {
+      if (result.value) {
+        this.saving = true;
+        this._shippingRequestTripsService.changeAddTripsByTmsFeature().subscribe(() => {
+          this.tripsByTmsEnabled = !this.tripsByTmsEnabled;
+          this.saving = false;
+        });
+      } //end of if
+    });
+  }
+
   reloadPage(): void {
     this.paginator.changePage(this.paginator.getPage());
   }
@@ -69,5 +91,6 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
     });
 
     this.primengTableHelper.adjustScroll(this.dataTable);
+    this.tripsByTmsEnabled = this.ShippingRequest.addTripsByTmsEnabled;
   }
 }
