@@ -90,6 +90,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   shippingRequestReview: GetShippingRequestForViewOutput = new GetShippingRequestForViewOutput();
   cleanedVases: CreateOrEditShippingRequestVasListDto[] = [];
   selectedVasesProperties = [];
+  requestType: any;
 
   constructor(
     injector: Injector,
@@ -150,6 +151,12 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
 
   ngOnDestroy() {
     this.wizard = undefined;
+  }
+
+  getRequestType(isBid, isDirectRequest) {
+    if (isBid) this.requestType = this.l('Marketplace');
+    else if (isDirectRequest) this.requestType = this.l('DirectRequest');
+    else this.requestType = this.l('TachyonManageService');
   }
 
   ngAfterViewInit() {
@@ -314,6 +321,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     this.updateRoutingQueries(this.activeShippingRequestId, 5);
     this._shippingRequestsServiceProxy.getShippingRequestForView(this.activeShippingRequestId).subscribe((res) => {
       this.shippingRequestReview = res;
+      this.getRequestType(res.shippingRequest.isBid, res.shippingRequest.isDirectRequest);
       this.loading = false;
       this.getCordinatesByCityName(res.originalCityName, 'source');
       this.getCordinatesByCityName(res.destinationCityName, 'destanation');
