@@ -331,7 +331,7 @@ namespace TACHYON.Shipping.Trips
                                             x.ShippingRequestTripFk.Status == ShippingRequestTripStatus.Intransit &&
                                             x.ShippingRequestTripFk.ShippingRequestFk.Status == ShippingRequests.ShippingRequestStatus.PostPrice
                                     )
-                .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => x.ShippingRequestTripFk.ShippingRequestFk.IsTachyonDeal)
+                .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => true)
                 .WhereIf(currentUser.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == currentUser.TenantId.Value)
                 .WhereIf(currentUser.IsDriver, x => x.ShippingRequestTripFk.AssignedDriverUserId == currentUser.Id)
                 .FirstOrDefaultAsync();
