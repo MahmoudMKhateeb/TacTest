@@ -24,6 +24,7 @@ using TACHYON.Shipping.DirectRequests;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequests.Dtos;
 using TACHYON.Shipping.ShippingRequestTrips;
+using TACHYON.Shipping.Trips;
 using TACHYON.Trucks.TrucksTypes;
 using TACHYON.Trucks.TrucksTypes.Dtos;
 using TACHYON.Vases;
@@ -828,8 +829,18 @@ namespace TACHYON.PriceOffers
 
         private async Task<int> getCompletedRequestTripsCount(ShippingRequest request)
         {
-            return await _shippingRequestTripRepository.CountAsync(x => x.ShippingRequestId == request.Id && x.Status == Shipping.Trips.ShippingRequestTripStatus.Delivered);
+            return await _shippingRequestTripRepository.CountAsync(x => x.ShippingRequestId == request.Id && x.Status == ShippingRequestTripStatus.Delivered);
         }
+
+        private async Task CancelTrips(long Id)
+        {
+            var trips = await _shippingRequestTripRepository.GetAll().Where(x => x.ShippingRequestId == Id && x.Status == ShippingRequestTripStatus.New).ToListAsync();
+            trips.ForEach(t =>
+            {
+                t.Status = ShippingRequestTripStatus.Canceled;
+            });
+        }
+
         public async Task CancelShipment(CancelShippingRequestInput input)
         {
             DisableTenancyFilters();
