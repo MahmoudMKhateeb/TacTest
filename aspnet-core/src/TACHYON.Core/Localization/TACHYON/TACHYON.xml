@@ -1699,7 +1699,7 @@
 		<text name="ShipperName">Shipper name</text>
 		<text name="ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage">You have used more than 70% of your credit limit</text>
 		<text name="ShipperOnlyUsed">Shipper only used</text>
-		<text name="ShipperReminderToCompelteTrips">You have a shipment that has not completed its journeys</text>
+		<text name="ShipperReminderToCompleteTrips">You have a shipment that has not completed its journeys</text>
 		<text name="ShipperShippingRequestFinishNotificationMessage">all shippments are completed for shipping request</text>
 		<text name="ShippingNote">Shipper notes</text>
 		<text name="ShippingRequest">Shipping request</text>

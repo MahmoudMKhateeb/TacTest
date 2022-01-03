@@ -1,17 +1,13 @@
-﻿using Abp;
-using Abp.Configuration;
+﻿using Abp.Configuration;
 using Abp.Domain.Repositories;
-using Abp.Localization;
+using Abp.Notifications;
 using Abp.Timing;
 using FirebaseAdmin.Messaging;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using TACHYON.Mobile;
-using TACHYON.Shipping.Trips.Dto;
 
 namespace TACHYON.Firebases
 {
@@ -28,160 +24,64 @@ namespace TACHYON.Firebases
             _settingManager = settingManager;
 
         }
-        public async Task General
-            (
-                UserIdentifier user,
-                Dictionary<string, string> data,
-                string clickAction,
-                string localizeKey
-            )
+    
+       
+        
+        public async Task PushNotification(
+            string notificationName,
+            NotificationData data = null,
+            params long[] userIds)
         {
-            string Title = L(localizeKey, GetCulture(user));
-            var message = new Message()
+            
+            var tokens = await GetUsersDevices(userIds);
+            List<Message> msgList = new List<Message>();
+            foreach (string token in tokens)
             {
-                Notification = new Notification
-                {
-                    Title = Title,
-                },
-                Data = data
-            };
-            await SendMessage(user.UserId, message, clickAction);
-        }
-        /// <summary>
-        /// Send notification to driver when the carrier assign new trip
-        /// </summary>
-        /// <param name="user"></param>
-        /// <param name="TripId"></param>
-        /// <param name="wayBillNumber"></param>
-        /// <returns></returns>
-        public async Task PushNotificationToDriverWhenAssignTrip(UserIdentifier user, string TripId, string wayBillNumber)
-        {
-            string Title = L("NewTripAssign", GetCulture(user), wayBillNumber);
-            var message = new Message()
-            {
-                Notification = new Notification
-                {
-                    Title = Title,
-                },
-                Data = new Dictionary<string, string>()
-                {
-                    ["id"] = TripId,
-                    ["tripId"] = TripId
-                }
-            };
-            await SendMessage(user.UserId, message, "ViewComingLoadInfoActivity");
-        }
-        /// <summary>
-        /// Reminder the driver before one day 
-        /// </summary>
-        /// <param name="user"></param>
-        /// <param name="TripId"></param>
-        /// <returns></returns>
-        public async Task ReminderDriverForTrip(UserIdentifier user, string TripId)
-        {
-            string Title = L("DriverTripReminder", GetCulture(user));
-            var message = new Message()
-            {
-                Notification = new Notification
-                {
-                    Title = Title,
-                },
-                Data = new Dictionary<string, string>()
-                {
-                    ["id"] = TripId,
-                    ["tripId"] = TripId
-                }
-            };
-            await SendMessage(user.UserId, message, "ViewComingLoadInfoActivity");
-        }
 
-        /// <summary>
-        /// Reminder the driver before one day 
-        /// </summary>
-        /// <param name="user"></param>
-        /// <param name="TripId"></param>
-        /// <returns></returns>
-        public async Task TripChanged(UserIdentifier user, string TripId)
-        {
-            string Title = L("TripDataChanged", TripId);
-            var message = new Message()
-            {
-                Notification = new Notification
+                Message message = new Message
                 {
-                    Title = Title,
-                },
-                Data = new Dictionary<string, string>()
-                {
-                    ["id"] = TripId,
-                    ["changed"] = "true"
-                }
-            };
-            await SendMessage(user.UserId, message, "ViewtripchangedActivity");
-        }
-
-        public async Task TripUpdated(NotifyTripUpdatedInput input)
-        {
-            string msgTitle = L("CarrierTripUpdatedNotificationMessage", input.WaybillNumber);
-
-            var message = new Message()
-            {
-                Notification = new Notification
-                {
-                    Title = msgTitle,
-                },
-                Data = new Dictionary<string, string>()
-                {
-                    ["id"] = input.TripId.ToString(),
-                    ["changed"] = "true"
-                }
-            };
-            await SendMessage(input.DriverIdentifier.UserId, message, "ViewtripchangedActivity");
-        }
-
-        #region Helper
-        private async Task SendMessage(long UserId, Message message, string ClickAction)
-        {
-
-            var devices = await GetUserDevices(UserId);
-
-            foreach (var device in devices)
-            {
-                try
-                {
-                    message.Token = device.Token;
-                    message.Android = new AndroidConfig()
+                    Token = token,
+                    Notification = new Notification()
                     {
-                        Priority = Priority.High,
-                        Notification = new AndroidNotification
-                        {
-                            Title = message.Notification.Title,
-                            Body = message.Notification.Body,
-                            ClickAction = ClickAction
-
-                        },
-                        Data = message.Data
-                    };
-                    await messaging.SendAsync(message);
-                }
-                catch
+                        Title = data?.Properties["Message"].ToString(),
+                        Body = notificationName,
+                    },
+                    Data = data?.Properties.ToDictionary(x=> x.Key,x=> x.Value.ToString())
+                };
+                message.Android = new AndroidConfig()
                 {
-                    // todo add log here 
-                }
+                    Priority = Priority.High,
+                    Notification = new AndroidNotification()
+                    {
+                        Title = message.Notification.Title,
+                        Body = notificationName,
+
+                    },
+                    Data = data?.Properties.ToDictionary(x=> x.Key,x=> x.Value.ToString())
+                };
+                msgList.Add(message);
+            }
+
+            try
+            {
+               await messaging.SendAllAsync(msgList);
+            }
+            catch (FirebaseMessagingException ex)
+            {
+                Logger.Error("Error When Send Notification",ex);
             }
         }
+        
+        #region Helper
 
-        private async Task<List<UserDeviceToken>> GetUserDevices(long UserId)
+        private async Task<string[]> GetUsersDevices(params long[] userIds)
         {
             var devices = await _userDeviceToken.GetAll()
-                .Where(x => x.UserId == UserId
+                .Where(x => userIds.Contains(x.UserId)
                             && (!x.ExpireDate.HasValue
-                                || x.ExpireDate >= Clock.Now)).ToListAsync();
+                                || x.ExpireDate >= Clock.Now))
+                .Select(x=> x.Token).ToArrayAsync();
             return devices;
-        }
-
-        private CultureInfo GetCulture(UserIdentifier user)
-        {
-            return new CultureInfo(_settingManager.GetSettingValueForUser(LocalizationSettingNames.DefaultLanguage, user.TenantId, user.UserId, true));
         }
         #endregion
     }

@@ -1,8 +1,6 @@
 ﻿using Abp;
 using Abp.Application.Features;
 using Abp.AspNetCore.SignalR.Hubs;
-using Abp.Collections.Extensions;
-using Abp.Configuration;
 using Abp.Domain.Repositories;
 using Abp.EntityHistory;
 using Abp.Linq.Extensions;
@@ -15,18 +13,15 @@ using NetTopologySuite.Geometries;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using TACHYON.Authorization.Users;
 using TACHYON.Common;
 using TACHYON.Dto;
 using TACHYON.EntityLogs;
 using TACHYON.Features;
-using TACHYON.Firebases;
 using TACHYON.Invoices;
 using TACHYON.Net.Sms;
 using TACHYON.Notifications;
-using TACHYON.PickingTypes;
 using TACHYON.PriceOffers;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Routs.RoutPoints.RoutPointSmartEnum;
@@ -52,14 +47,25 @@ namespace TACHYON.Shipping.Trips
         private readonly IRepository<RoutPointDocument, long> _routPointDocumentRepository;
         private readonly IRepository<ShippingRequestTripTransition> _shippingRequestTripTransitionRepository;
         private readonly IRepository<RoutPointStatusTransition> _routPointStatusTransitionRepository;
-        private readonly FirebaseNotifier _firebaseNotifier;
         private readonly ISmsSender _smsSender;
         private readonly InvoiceManager _invoiceManager;
         private readonly CommonManager _commonManager;
         private readonly UserManager UserManager;
         private readonly IEntityChangeSetReasonProvider _reasonProvider;
 
-        public ShippingRequestsTripManager(IRepository<ShippingRequestTrip> shippingRequestTrip, PriceOfferManager priceOfferManager, IAppNotifier appNotifier, IFeatureChecker featureChecker, IAbpSession abpSession, IHubContext<AbpCommonHub> hubContext, IRepository<RoutPoint, long> routPointRepository, IRepository<ShippingRequestTripTransition> shippingRequestTripTransitionRepository, IRepository<RoutPointStatusTransition> routPointStatusTransitionRepository, FirebaseNotifier firebaseNotifier, ISmsSender smsSender, InvoiceManager invoiceManager, CommonManager commonManager, IRepository<RoutPointDocument, long> routPointDocumentRepository, UserManager userManager, IEntityChangeSetReasonProvider reasonProvider)
+        public ShippingRequestsTripManager(IRepository<ShippingRequestTrip> shippingRequestTrip,
+            PriceOfferManager priceOfferManager,
+            IAppNotifier appNotifier, IFeatureChecker featureChecker, 
+            IAbpSession abpSession, IHubContext<AbpCommonHub> hubContext,
+            IRepository<RoutPoint, long> routPointRepository, 
+            IRepository<ShippingRequestTripTransition> shippingRequestTripTransitionRepository,
+            IRepository<RoutPointStatusTransition> routPointStatusTransitionRepository,
+            ISmsSender smsSender, InvoiceManager invoiceManager,
+            CommonManager commonManager,
+            IRepository<RoutPointDocument, long> routPointDocumentRepository,
+            UserManager userManager,
+             IEntityChangeSetReasonProvider reasonProvider,
+             IWebUrlService webUrlService)
         {
             _shippingRequestTrip = shippingRequestTrip;
             _priceOfferManager = priceOfferManager;
@@ -70,13 +76,13 @@ namespace TACHYON.Shipping.Trips
             _routPointRepository = routPointRepository;
             _shippingRequestTripTransitionRepository = shippingRequestTripTransitionRepository;
             _routPointStatusTransitionRepository = routPointStatusTransitionRepository;
-            _firebaseNotifier = firebaseNotifier;
             _smsSender = smsSender;
             _invoiceManager = invoiceManager;
             _commonManager = commonManager;
             _routPointDocumentRepository = routPointDocumentRepository;
             UserManager = userManager;
             _reasonProvider = reasonProvider;
+            _webUrlService = webUrlService;
         }
 
         /// <summary>
@@ -126,7 +132,7 @@ namespace TACHYON.Shipping.Trips
                             .FirstOrDefaultAsync();
 
             if (trip == null) throw new UserFriendlyException(L("YouCannotStartWithTheTripSelected"));
-            /// Check if the driver already working on another trip
+            // Check if the driver already working on another trip
             if (!_shippingRequestTrip
                 .GetAll()
                 .Any
@@ -153,7 +159,9 @@ namespace TACHYON.Shipping.Trips
 
                 await _hubContext.Clients.Users(await GetUsersHubNotification(trip, currentUser)).SendAsync("tracking", TACHYONConsts.TriggerTrackingStarted, ObjectMapper.Map<TrackingListDto>(trip));
 
-                if (!currentUser.IsDriver) await _firebaseNotifier.TripChanged(new Abp.UserIdentifier(trip.ShippingRequestFk.CarrierTenantId.Value, trip.AssignedDriverUserId.Value), trip.Id.ToString());
+                if (!currentUser.IsDriver && trip.AssignedDriverUserId != null)
+                    await _appNotifier.NotifyDriverOnlyWhenTripUpdated(trip.Id, trip.WaybillNumber.ToString(), 
+          new UserIdentifier(trip.ShippingRequestFk?.CarrierTenantId, trip.AssignedDriverUserId.Value));
             }
             else
             {
@@ -701,7 +709,9 @@ namespace TACHYON.Shipping.Trips
         {
             var trip = point.ShippingRequestTripFk;
             await _hubContext.Clients.Users(await GetUsersHubNotification(trip, currentUser)).SendAsync("tracking", TACHYONConsts.TriggerTrackingChanged, ObjectMapper.Map<ShippingRequestTripDriverRoutePointDto>(point));
-            if (!currentUser.IsDriver) await _firebaseNotifier.TripChanged(new Abp.UserIdentifier(trip.ShippingRequestFk.CarrierTenantId.Value, trip.AssignedDriverUserId.Value), trip.Id.ToString());
+            if (!currentUser.IsDriver && trip.ShippingRequestFk.CarrierTenantId != null && trip.AssignedDriverUserId != null) 
+                await _appNotifier.NotifyDriverOnlyWhenTripUpdated(trip.Id,trip.WaybillNumber.ToString(),
+                    new UserIdentifier(trip.ShippingRequestFk.CarrierTenantId.Value, trip.AssignedDriverUserId.Value));
         }
 
         /// <summary>
@@ -714,7 +724,10 @@ namespace TACHYON.Shipping.Trips
         {
             var trip = point.ShippingRequestTripFk;
             await _hubContext.Clients.Users(await GetUsersHubNotification(trip, currentUser)).SendAsync("tracking", TACHYONConsts.TriggerTrackingShipmentDelivered, ObjectMapper.Map<ShippingRequestTripDriverRoutePointDto>(point));
-            if (!currentUser.IsDriver) await _firebaseNotifier.TripChanged(new Abp.UserIdentifier(trip.ShippingRequestFk.CarrierTenantId.Value, trip.AssignedDriverUserId.Value), trip.Id.ToString());
+            
+            if (!currentUser.IsDriver && trip.ShippingRequestFk.CarrierTenantId != null && trip.AssignedDriverUserId != null) 
+                await _appNotifier.NotifyDriverOnlyWhenTripUpdated(trip.Id,trip.WaybillNumber.ToString(),
+            new UserIdentifier(trip.ShippingRequestFk.CarrierTenantId.Value, trip.AssignedDriverUserId.Value));
         }
 
 

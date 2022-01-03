@@ -52,7 +52,6 @@ namespace TACHYON.Shipping.Trips
         private readonly IRepository<GoodCategory> _goodCategoryRepository;
         private readonly UserManager _userManager;
         private readonly IAppNotifier _appNotifier;
-        private readonly IFirebaseNotifier _firebase;
         private readonly ShippingRequestManager _shippingRequestManager;
         private readonly DocumentFilesAppService _documentFilesAppService;
         private readonly IRepository<DocumentFile, Guid> _documentFileRepository;
@@ -72,7 +71,6 @@ namespace TACHYON.Shipping.Trips
             IRepository<GoodsDetail, long> goodsDetailRepository,
             UserManager userManager,
             IAppNotifier appNotifier,
-            IFirebaseNotifier firebase,
             ShippingRequestManager shippingRequestManager, DocumentFilesAppService documentFilesAppService, IRepository<GoodCategory> goodCategoryRepository, IRepository<DocumentFile, Guid> documentFileRepository, DocumentFilesManager documentFilesManager, IRepository<DocumentType, long> documentTypeRepository, IBinaryObjectManager binaryObjectManager, ITempFileCacheManager tempFileCacheManager)
         {
             _shippingRequestTripRepository = shippingRequestTripRepository;
@@ -82,7 +80,6 @@ namespace TACHYON.Shipping.Trips
             _goodsDetailRepository = goodsDetailRepository;
             _userManager = userManager;
             _appNotifier = appNotifier;
-            _firebase = firebase;
             _shippingRequestManager = shippingRequestManager;
             _documentFilesAppService = documentFilesAppService;
             _goodCategoryRepository = goodCategoryRepository;
@@ -302,15 +299,20 @@ namespace TACHYON.Shipping.Trips
 
         public async Task AssignDriverAndTruckToShippmentByCarrier(AssignDriverAndTruckToShippmentByCarrierInput input)
         {
-            DisableTenancyFilters();
-            var trip = await _shippingRequestTripRepository.
-                GetAll().
-                Include(e => e.ShippingRequestFk)
-                .Include(d => d.AssignedDriverUserFk)
-                .Where(e => e.Id == input.Id)
-                //.Where(e => e.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
-                //.Where(e => e.Status != ShippingRequestTripStatus.Delivered)
-                .FirstOrDefaultAsync();
+            ShippingRequestTrip trip;
+
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant,AbpDataFilters.MustHaveTenant))
+            {
+                trip = await _shippingRequestTripRepository.
+                    GetAll().
+                    Include(e => e.ShippingRequestFk)
+                    .Include(d => d.AssignedDriverUserFk)
+                    .Where(e => e.Id == input.Id)
+                    //.Where(e => e.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
+                    //.Where(e => e.Status != ShippingRequestTripStatus.Delivered)
+                    .FirstOrDefaultAsync();
+            }
+             
             if (trip == null) throw new UserFriendlyException(L("NoTripToAssignDriver"));
 
             long? oldAssignedDriverUserId = trip.AssignedDriverUserId;
@@ -329,27 +331,33 @@ namespace TACHYON.Shipping.Trips
             if (oldAssignedDriverUserId != trip.AssignedDriverUserId)
             {
                 trip.AssignedDriverTime = Clock.Now;
-                await _appNotifier.NotifyDriverWhenAssignToTrip(trip);
-                await _firebase.PushNotificationToDriverWhenAssignTrip(new UserIdentifier(trip.AssignedDriverUserFk.TenantId, trip.AssignedDriverUserId.Value), trip.Id.ToString(), trip.WaybillNumber.ToString());
+                // Send Notification To New Driver
                 if (oldAssignedDriverUserId.HasValue)
-                {
-                    //todo send specific notification    
-                    await _firebase.TripChanged(new UserIdentifier(trip.AssignedDriverUserFk.TenantId, oldAssignedDriverUserId.Value), trip.Id.ToString());
-                    await _appNotifier.ShipperShippingRequestTripNotifyDriverWhenUnassignedTrip(new UserIdentifier(AbpSession.TenantId, oldAssignedDriverUserId.Value), trip);
+                    await _appNotifier.NotifyDriverWhenUnassignedTrip(trip.Id,trip.WaybillNumber.ToString(),
+                        new UserIdentifier(AbpSession.TenantId, oldAssignedDriverUserId.Value));
+                
                     await UserManager.UpdateUserDriverStatus(oldAssignedDriverUserId.Value, UserDriverStatus.Available);
-                }
             }
             await UserManager.UpdateUserDriverStatus(input.AssignedDriverUserId, UserDriverStatus.NotAvailable);
 
-            if (oldAssignedTruckId != trip.AssignedTruckId)
+            if (oldAssignedTruckId != trip.AssignedTruckId && trip.ShippingRequestFk.CarrierTenantId != null)
             {
-                //todo send specific notification    
-                await _firebase.TripChanged(new UserIdentifier(trip.AssignedDriverUserFk.TenantId, trip.AssignedDriverUserId.Value), trip.Id.ToString());
+                var notifyTripInput = new NotifyTripUpdatedInput()
+                {
+                    CarrierTenantId = trip.ShippingRequestFk.CarrierTenantId.Value,
+                    TripId = trip.Id,
+                    WaybillNumber = trip.WaybillNumber.ToString(),
+                    DriverIdentifier = new UserIdentifier(trip.AssignedDriverUserFk.TenantId,
+                        trip.AssignedDriverUserId.Value)};
+                
+                await _appNotifier.NotifyCarrierWhenTripUpdated(notifyTripInput);
             }
-            await _appNotifier.ShipperShippingRequestTripNotifyDriverWhenAssignTrip(new UserIdentifier(AbpSession.TenantId, trip.AssignedDriverUserId.Value), trip);
-
-
-            await _appNotifier.NotificationWhenTripDetailsChanged(trip, await GetCurrentUserAsync());
+            // Send Notification To New Driver
+            await _appNotifier.NotifyDriverWhenAssignTrip(trip.Id,
+                new UserIdentifier(trip.ShippingRequestFk.CarrierTenantId, trip.AssignedDriverUserId.Value));
+            
+            // No Need For This Already Notify All in Event Handler
+           // await _appNotifier.NotificationWhenTripDetailsChanged(trip, await GetCurrentUserAsync());
 
         }
 

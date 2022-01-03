@@ -1,5 +1,4 @@
 ﻿using Abp;
-using Abp.Configuration;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
@@ -8,8 +7,8 @@ using Abp.Threading.BackgroundWorkers;
 using Abp.Threading.Timers;
 using Abp.Timing;
 using Microsoft.EntityFrameworkCore;
+using NUglify.Helpers;
 using System.Linq;
-using TACHYON.Firebases;
 using TACHYON.Notifications;
 using TACHYON.Shipping.ShippingRequestTrips;
 
@@ -19,17 +18,15 @@ namespace TACHYON.BackgroundWorkers.ShippingRequests
     {
         private const int runEvery = 60 * 60 * 1000; //1 hour
         private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepository;
-        private readonly IFirebaseNotifier _firebaseNotifier;
         private readonly IAppNotifier _appNotifier;
         public TripReminderMissingAcceptWorker(
             AbpTimer timer,
             IRepository<ShippingRequestTrip> shippingRequestTripRepository,
-            IFirebaseNotifier firebaseNotifier, IAppNotifier appNotifier) : base(timer)
+            IAppNotifier appNotifier) : base(timer)
         {
             Timer.Period = runEvery;
             Timer.RunOnStart = true;
             _shippingRequestTripRepository = shippingRequestTripRepository;
-            _firebaseNotifier = firebaseNotifier;
             _appNotifier = appNotifier;
         }
 
@@ -48,16 +45,17 @@ namespace TACHYON.BackgroundWorkers.ShippingRequests
                     x.Status == Shipping.Trips.ShippingRequestTripStatus.New &&
                     x.DriverStatus == Shipping.Trips.ShippingRequestTripDriverStatus.None &&
                     x.AssignedDriverTime.HasValue &&
+                    x.AssignedDriverUserId != null &&
                     EF.Functions.DateDiffHour(x.AssignedDriverTime, Clock.Now) <= 11).ToList();
 
-                Trips.ForEach(t =>
+                Trips.Where(x=> x.AssignedDriverUserId != null).ForEach(t =>
                 {
                     var totalDiffHour = EF.Functions.DateDiffHour(t.AssignedDriverTime, Clock.Now);
                     if (totalDiffHour <= 3) // driver
                     {
 
 
-                        AsyncHelper.RunSync(() => _firebaseNotifier.PushNotificationToDriverWhenAssignTrip(new UserIdentifier(t.AssignedDriverUserFk.TenantId, t.AssignedDriverUserId.Value), t.Id.ToString(), t.WaybillNumber.ToString()));
+                        AsyncHelper.RunSync(() => _appNotifier.NotifyDriverWhenAssignTrip(t.Id,new UserIdentifier(t.AssignedDriverUserFk.TenantId, t.AssignedDriverUserId.Value)));
 
                     }
                     // carrier
