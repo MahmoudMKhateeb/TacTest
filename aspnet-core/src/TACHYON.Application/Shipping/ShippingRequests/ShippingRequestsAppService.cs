@@ -884,8 +884,6 @@ namespace TACHYON.Shipping.ShippingRequests
             return await result.ToListAsync();
         }
 
-
-
         public async Task<ShippingRequestPricingOutputforView> GetAllShippingRequestPricingForView(long shippingRequestId)
         {
             var pricedShippingRequest = new ShippingRequestPricingOutputforView();
@@ -1022,7 +1020,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     => new GetMasterWaybillOutput()
                     {
                         MasterWaybillNo = x.MasterWaybillNo,
-                        Date = ToGregorianDate(Clock.Now),
+                        Date = NormalizeDateTimeToClientTime(Clock.Now),
                         ShippingRequestStatus = x.ShippingRequestStatus,
                         CompanyName = x.SenderCompanyName,
                         ContactName = contactName,
@@ -1039,7 +1037,7 @@ namespace TACHYON.Shipping.ShippingRequests
                         CountryName = pickup?.CityFk.CountyFk.DisplayName,
                         CityName = pickup?.CityFk.DisplayName,
                         Area = pickup?.Address,
-                        StartTripDate = x.StartTripDate.HasValue ? ClockProviders.Local.Normalize(x.StartTripDate.Value) : x.StartTripDate,
+                        StartTripDate = NormalizeDateTimeToClientTime(x.StartTripDate),
                         CarrierName = x.CarrierName,
                         TotalWeight = x.TotalWeight,
                         ShipperReference = x.ShipperReference,
@@ -1051,8 +1049,6 @@ namespace TACHYON.Shipping.ShippingRequests
                 return finalOutput;
             }
         }
-
-
         //Single Drop Waybill
         public IEnumerable<GetSingleDropWaybillOutput> GetSingleDropWaybill(int shippingRequestTripId)
         {
@@ -1088,8 +1084,8 @@ namespace TACHYON.Shipping.ShippingRequests
                     TotalWeight = x.ShippingRequestFk.TotalWeight,
                     GoodCategoryTranslation = x.ShippingRequestFk.GoodCategoryFk.Translations,
                     GoodsCategoryDisplayName = x.ShippingRequestFk.GoodCategoryFk, //x.ShippingRequestFk.GoodCategoryFk.DisplayName,
-                    HasAttachment = x.HasAttachment ? "Yes" : "No",
-                    NeedDeliveryNote = x.NeedsDeliveryNote ? "Yes" : "No",
+                    HasAttachment = x.HasAttachment,
+                    NeedDeliveryNote = x.NeedsDeliveryNote,
                     ShipperReference = x.ShippingRequestFk.ShipperReference,
                     ShipperInvoiceNo = x.ShippingRequestFk.ShipperInvoiceNo,
                     ShipperNotes = x.Note
@@ -1107,7 +1103,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     => new GetSingleDropWaybillOutput
                     {
                         MasterWaybillNo = x.MasterWaybillNo,
-                        Date = ToGregorianDate(Clock.Now),
+                        Date = NormalizeDateTimeToClientTime(Clock.Now),
                         ShippingRequestStatus = x.ShippingRequestStatus,
                         SenderCompanyName = GetFacilityPoint(x.Id, null, PickingType.Pickup),// x.SenderCompanyName,
                         SenderContactName = contactName,
@@ -1125,47 +1121,27 @@ namespace TACHYON.Shipping.ShippingRequests
                         CountryName = pickup?.CityFk.CountyFk.DisplayName,
                         CityName = pickup?.CityFk.DisplayName,
                         Area = pickup?.Address,
-                        StartTripDate = ClockProviders.Local.Normalize(x.StartTripDate),
-                        ActualPickupDate = x.ActualPickupDate.HasValue ? ClockProviders.Local.Normalize(x.ActualPickupDate.Value) : x.ActualPickupDate,
+                        StartTripDate = NormalizeDateTimeToClientTime(x.StartTripDate),
+                        ActualPickupDate = NormalizeDateTimeToClientTime(x.ActualPickupDate),
                         DroppFacilityName = delivery?.Name,
                         DroppCountryName = delivery?.CityFk.CountyFk.DisplayName,
                         DroppCityName = delivery?.CityFk.DisplayName,
                         DroppArea = delivery?.Address,
-                        DeliveryDate = x.DeliveryDate.HasValue ? ClockProviders.Local.Normalize(x.DeliveryDate.Value) : x.DeliveryDate,
+                        DeliveryDate = NormalizeDateTimeToClientTime(x.DeliveryDate),
                         TotalWeight = x.TotalWeight,
                         ClientName = x.ClientName,
                         CarrierName = x.CarrierName,
                         GoodsCategoryDisplayName = ObjectMapper.Map<GoodCategoryDto>(x.GoodsCategoryDisplayName).DisplayName,
                         HasAttachment = x.HasAttachment,
                         NeedsDeliveryNote = x.NeedDeliveryNote,
-                        ShipperReference = "", /*x.ShipperReference,TAC-2181 || 22/12/2021 || need to display it as an empty on production*/
-                        InvoiceNumber = GetInvoiceNumberByTripId(shippingRequestTripId)
+                        ShipperReference = x.ShipperReference, /*TAC-2181 || 22/12/2021 || need to display it as an empty on production*/
+                        InvoiceNumber = GetInvoiceNumberByTripId(shippingRequestTripId).ToString()
 
                     });
 
                 return finalOutput;
             }
         }
-
-        public IEnumerable<GetAllShippingRequestVasesOutput> GetShippingRequestVasesForSingleDropWaybill(int shippingRequestTripId)
-        {
-            var vases = _shippingRequestTripVasRepository.GetAll()
-                .Include(x => x.ShippingRequestVasFk)
-                .Include(x => x.ShippingRequestVasFk.VasFk)
-                .Where(x => x.ShippingRequestTripId == shippingRequestTripId)
-                .ToList();
-
-            var output = vases.Select(x => new GetAllShippingRequestVasesOutput
-            {
-                VasName = x.ShippingRequestVasFk.VasFk.Name,
-                Amount = x.ShippingRequestVasFk.RequestMaxAmount,
-                Count = x.ShippingRequestVasFk.RequestMaxCount
-            });
-
-            return output;
-        }
-        //End Single Drop
-
         //Multiple Drops 
         public IEnumerable<GetMultipleDropWaybillOutput> GetMultipleDropWaybill(long routPointId)
         {
@@ -1216,8 +1192,8 @@ namespace TACHYON.Shipping.ShippingRequests
                     GoodsCategoryTranslation = x.ShippingRequestFk.GoodCategoryFk.Translations,
                     GoodsCategoryDisplayName = x.ShippingRequestFk.GoodCategoryFk,
                     DeliveryDate = x.ActualDeliveryDate,
-                    HasAttachment = x.HasAttachment ? "Yes" : "No",
-                    NeedsDeliveryNote = x.NeedsDeliveryNote ? "Yes" : "No",
+                    HasAttachment = x.HasAttachment,
+                    NeedsDeliveryNote = x.NeedsDeliveryNote,
                     ShipperReference = x.ShippingRequestFk.ShipperReference,
                     ShipperInvoiceNo = x.ShippingRequestFk.ShipperInvoiceNo,
                     ShipperNotes = x.Note
@@ -1232,7 +1208,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     {
                         MasterWaybillNo = x.MasterWaybillNo,
                         SubWaybillNo = x.SubWaybillNo != null ? x.SubWaybillNo.Value : 0,
-                        Date = ToGregorianDate(Clock.Now),
+                        Date = NormalizeDateTimeToClientTime(Clock.Now),
                         ShippingRequestStatus = x.ShippingRequestStatus,
                         SenderCompanyName = GetFacilityPoint(x.Id, null, PickingType.Pickup),
                         SenderContactName = contactName,
@@ -1246,7 +1222,7 @@ namespace TACHYON.Shipping.ShippingRequests
                         PlateNumber = x.PlateNumber,
                         PackingTypeDisplayName = x.PackingTypeDisplayName,
                         NumberOfPacking = x.NumberOfPacking,
-                        StartTripDate = ClockProviders.Local.Normalize(x.StartTripDate),
+                        StartTripDate = NormalizeDateTimeToClientTime(x.StartTripDate),
                         DroppFacilityName = x.DroppFacilityName,
                         DroppCountryName = x.DroppCountryName,
                         DroppCityName = x.DroppCityName,
@@ -1255,15 +1231,32 @@ namespace TACHYON.Shipping.ShippingRequests
                         ClientName = x.ClientName,
                         TotalWeight = x.TotalWeight,
                         GoodsCategoryDisplayName = ObjectMapper.Map<GoodCategoryDto>(x.GoodsCategoryDisplayName).DisplayName,// x.GoodsCategoryDisplayName,
-                        DeliveryDate = x.DeliveryDate.HasValue ? ClockProviders.Local.Normalize(x.DeliveryDate.Value) : x.DeliveryDate,
+                        DeliveryDate = NormalizeDateTimeToClientTime(x.DeliveryDate),
                         HasAttachment = x.HasAttachment,
                         NeedsDeliveryNote = x.NeedsDeliveryNote,
-                        ShipperReference = "", /*x.ShipperReference,TAC-2181 || 22/12/2021 || need to display it as an empty on production*/
-                        InvoiceNumber = GetInvoiceNumberByTripId(x.Id)
+                        ShipperReference = x.ShipperReference,/*TAC-2181 || 22/12/2021 || need to display it as an empty on production*/
+                        InvoiceNumber = GetInvoiceNumberByTripId(x.Id).ToString()
                     });
 
                 return finalOutput;
             }
+        }
+        public IEnumerable<GetAllShippingRequestVasesOutput> GetShippingRequestVasesForSingleDropWaybill(int shippingRequestTripId)
+        {
+            var vases = _shippingRequestTripVasRepository.GetAll()
+                .Include(x => x.ShippingRequestVasFk)
+                .Include(x => x.ShippingRequestVasFk.VasFk)
+                .Where(x => x.ShippingRequestTripId == shippingRequestTripId)
+                .ToList();
+
+            var output = vases.Select(x => new GetAllShippingRequestVasesOutput
+            {
+                VasName = x.ShippingRequestVasFk.VasFk.Name,
+                Amount = x.ShippingRequestVasFk.RequestMaxAmount,
+                Count = x.ShippingRequestVasFk.RequestMaxCount
+            });
+
+            return output;
         }
 
         public IEnumerable<GetAllShippingRequestVasesOutput> GetShippingRequestVasesForMultipleDropWaybill(long RoutPointId)
@@ -1299,8 +1292,11 @@ namespace TACHYON.Shipping.ShippingRequests
                 return point.FacilityFk.Name;
             return "";
         }
-
-
+        // convert date time from UTC to client date time
+        private string NormalizeDateTimeToClientTime(DateTime? serverDateTime)
+        {
+            return serverDateTime.HasValue ? ClockProviders.Local.Normalize(serverDateTime.Value).ToString() : "";
+        }
         private string GetReceiverName(long? PointId, int? tripId)
         {
             var point = _routPointRepository.GetAll()
@@ -1345,27 +1341,6 @@ namespace TACHYON.Shipping.ShippingRequests
                     .Select(x => x.InvoiceFK.InvoiceNumber)
                     .FirstOrDefault();
             return invoiceNumber;
-        }
-
-        private string ToGregorianDate(DateTime? date)
-        {
-            //CultureInfo arCI = new CultureInfo("ar-SA");
-            //DateTime tempDate = DateTime.ParseExact(date.ToShortDateString(), "dd/MM/yy", arCI.DateTimeFormat, DateTimeStyles.AllowInnerWhite);
-            //var currentDate=Convert.ToDateTime(tempDate.ToString("dd/MM/yyyy"),);
-            if (date == null)
-                return "";
-            var currentDate = date.Value.ToString("dd/MM/yyyy");
-
-            var hijri = new UmAlQuraCalendar();
-            var cal = new GregorianCalendar();
-            var hijriDate = new DateTime(Convert.ToInt32(currentDate.Split('/')[2]), Convert.ToInt32(currentDate.Split('/')[1]), Convert.ToInt32(currentDate.Split('/')[0]), hijri);
-            var y = cal.GetYear(hijriDate);
-            var m = cal.GetMonth(hijriDate);
-            var d = cal.GetDayOfMonth(hijriDate);
-
-            var Gdate = d + "/" + m + "/" + y;
-            return Gdate;
-
         }
 
         private string GetDriverIqamaNo(long? UserId)
