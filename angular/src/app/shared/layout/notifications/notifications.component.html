@@ -95,14 +95,25 @@
                     <td>
                       <span class="ui-column-title">{{ 'Notification' | localize }}</span>
                       <a *ngIf="record.formattedNotification.url" href="{{ record.formattedNotification.url }}" class="{{ getRowClass(record) }}">{{
-                        truncateString(record.formattedNotification.text, 120)
+                        truncateString(record.formattedNotification.text, 50)
                       }}</a>
                       <span
-                        *ngIf="!record.formattedNotification.url"
+                        *ngIf="openId != record.id && !record.formattedNotification.url"
                         title="{{ record.formattedNotification.text }}"
                         class="{{ getRowClass(record) }}"
-                        >{{ truncateString(record.formattedNotification.text, 120) }}</span
+                        >{{ truncateString(record.formattedNotification.text, 50) }}
+                        <span *ngIf="(openId != record.id || !openId) && record.formattedNotification.text.length > 50" (click)="openId = record.id"
+                          >[...]</span
+                        ></span
                       >
+                      <span class="cell-breakAll" *ngIf="openId == record.id">
+                        <span
+                          *ngIf="!record.formattedNotification.url"
+                          title="{{ record.formattedNotification.text }}"
+                          class="{{ getRowClass(record) }}"
+                          >{{ record.formattedNotification.text }}
+                        </span>
+                      </span>
                     </td>
                     <td>
                       <span title="{{ record.notification.creationTime | momentFormat: 'llll' }}" class="{{ getRowClass(record) }}">
