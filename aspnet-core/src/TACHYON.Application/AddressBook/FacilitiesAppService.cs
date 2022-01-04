@@ -2,6 +2,7 @@
 using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
+using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite.Geometries;
 using System.Collections.Generic;
@@ -115,8 +116,18 @@ namespace TACHYON.AddressBook
             return output;
         }
 
+        public async Task ValidateFacilityName(CreateOrEditFacilityDto input)
+        {
+            var ExsistItem = await _facilityRepository.GetAll().AsNoTracking().FirstOrDefaultAsync(e => e.Name.Equals(input.Name) && e.TenantId == AbpSession.TenantId);
+            if (input.Id != null)
+                ExsistItem = await _facilityRepository.GetAll().AsNoTracking().FirstOrDefaultAsync(e => e.Name.Equals(input.Name) && e.Id != input.Id && e.TenantId == AbpSession.TenantId);
+            if (ExsistItem != null)
+                throw new UserFriendlyException(L("facilityNameIsAlreadyExistsForThisTenant"));
+        }
+
         public async Task<long> CreateOrEdit(CreateOrEditFacilityDto input)
         {
+            await ValidateFacilityName(input);
             if (input.Id == null)
             {
                 return await Create(input);

@@ -2223,5 +2223,6 @@
 		<text name="TruckIsChanged">تم تعيير الشاحنة</text>
 		<text name="IncidentHappened">حصول حادث</text>
 		
-	</texts>
+    <text name="facilityNameIsAlreadyExistsForThisTenant">اسم المنشأة موجود بالفعل لهذا المستأجر</text>
+  </texts>
 </localizationDictionary>

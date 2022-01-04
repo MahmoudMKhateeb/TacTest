@@ -2417,5 +2417,6 @@
 		<text name="TruckIsChanged">Truck Is Changed</text>
 		<text name="IncidentHappened">Incident Happened</text>
 		
+    <text name="facilityNameIsAlreadyExistsForThisTenant">Facility Name Is Already Exists For This Tenant</text>
 	</texts>
 </localizationDictionary>
