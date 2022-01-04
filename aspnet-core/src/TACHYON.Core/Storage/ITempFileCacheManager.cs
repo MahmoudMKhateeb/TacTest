@@ -10,6 +10,7 @@ namespace TACHYON.Storage
     {
         void SetFile(string token, byte[] content);
         byte[] GetFile(string token);
+        void ClearCache(string token);
         void SetPods(string key, List<FileDto> files);
         List<FileDto> GetPods(string key);
         List<GetAllFileByteDto> GetFiles(List<string> tokens);

@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using TACHYON.Documents.DocumentFiles;
 using TACHYON.DriverLocationLogs;
 using TACHYON.DriverLocationLogs.dtos;
 using TACHYON.EntityLogs;
@@ -33,6 +34,7 @@ using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips;
 using TACHYON.Shipping.Trips.Accidents.Dto;
+using TACHYON.Storage;
 using TACHYON.Tracking;
 using TACHYON.Tracking.Dto;
 using TACHYON.Tracking.Dto.WorkFlow;
@@ -55,6 +57,7 @@ namespace TACHYON.Shipping.Drivers
         private readonly RatingLogManager _ratingLogManager;
         private readonly IRepository<DriverLocationLog, long> _driverLocationLogRepository;
         private readonly ShippingRequestPointWorkFlowProvider _workFlowProvider;
+        private readonly ITempFileCacheManager _tempFileCacheManager;
 
         public ShippingRequestDriverAppService(
             IRepository<ShippingRequestTrip> ShippingRequestTrip,
@@ -62,7 +65,7 @@ namespace TACHYON.Shipping.Drivers
             IRepository<ShippingRequestTripTransition> shippingRequestTripTransitionRepository,
             ShippingRequestDriverManager shippingRequestDriverManager,
             IFirebaseNotifier firebaseNotifier,
-            ShippingRequestPointWorkFlowProvider workFlowProvider, IRepository<UserOTP> userOtpRepository, IRepository<ShippingRequestTripAccident> shippingRequestTripAccidentRepository, RatingLogManager ratingLogManager, IRepository<DriverLocationLog, long> driverLocationLogRepository, IRepository<RoutPointStatusTransition> routPointStatusTransitionRepository)
+            ShippingRequestPointWorkFlowProvider workFlowProvider, IRepository<UserOTP> userOtpRepository, IRepository<ShippingRequestTripAccident> shippingRequestTripAccidentRepository, RatingLogManager ratingLogManager, IRepository<DriverLocationLog, long> driverLocationLogRepository, IRepository<RoutPointStatusTransition> routPointStatusTransitionRepository, ITempFileCacheManager tempFileCacheManager)
         {
             _ShippingRequestTrip = ShippingRequestTrip;
             _RoutPointRepository = RoutPointRepository;
@@ -75,6 +78,7 @@ namespace TACHYON.Shipping.Drivers
             _driverLocationLogRepository = driverLocationLogRepository;
             _workFlowProvider = workFlowProvider;
             _routPointStatusTransitionRepository = routPointStatusTransitionRepository;
+            _tempFileCacheManager = tempFileCacheManager;
         }
         /// <summary>
         /// list all trips realted with drivers
@@ -520,6 +524,7 @@ namespace TACHYON.Shipping.Drivers
                     item.CanGoToNextLocation = false;
                     item.RoutPointStatusTransitions.Where(s => !s.IsReset).ForEach(x => x.IsReset = true);
                     item.IsPodUploaded = false;
+                    _tempFileCacheManager.ClearCache(string.Format(DocumentFileConsts.KeyCashes, item.Id));
                     //item.RatingLogs.Where(x => x.RateType != RateType.CarrierTripBySystem && x.RateType != RateType.ShipperTripBySystem).ToList().Clear();
                     //item.ShippingRequestTripAccidents.Clear();
                     //item.ShippingRequestTripTransitions.Clear();
@@ -567,6 +572,7 @@ namespace TACHYON.Shipping.Drivers
                     if (FacilityId != null)
                         await _ratingLogManager.RecalculateFacilityRating(FacilityId.Value);
                 }
+
             }
             else
             {
