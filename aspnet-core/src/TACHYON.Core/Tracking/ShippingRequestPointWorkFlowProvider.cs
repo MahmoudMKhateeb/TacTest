@@ -456,7 +456,7 @@ namespace TACHYON.Tracking
                 .WhereIf(currentUser.IsDriver, x => x.RoutPointFk.ShippingRequestTripFk.AssignedDriverUserId == currentUser.Id)
                 .ToListAsync();
 
-            if (documents == null) throw new UserFriendlyException(L("TheRoutePointIsNotFound"));
+            if (!documents.Any()) throw new UserFriendlyException(L("TheRoutePointIsNotFound"));
             var files = await _commonManager.GetDocuments(ObjectMapper.Map<List<IHasDocument>>(documents));
             _tempFileCacheManager.SetPods(key, files);
             return files;

@@ -84,15 +84,6 @@ namespace TACHYON.Web.Controllers
         [AbpMvcAuthorize()]
         public async Task<ActionResult> DownloadPODFile(long id)
         {
-            DisableTenancyFilters();
-            var POD = await _routPointDocumentRepository.GetAll().Where(x =>
-            x.RoutePointDocumentType == RoutePointDocumentType.POD
-            && x.RoutPointId == id
-            && x.RoutPointFk.IsPodUploaded
-            && x.RoutPointFk.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId).ToListAsync();
-            if (!POD.Any())
-                throw new UserFriendlyException(L("ThePODDocumentIsNotFound"));
-
             var files = await _workflow.GetPOD(id);
             var fileBytes = _tempFileCacheManager.GetFiles(files.Select(x => x.FileToken).ToList());
             if (fileBytes == null) return NotFound(L("RequestedFileDoesNotExists"));
@@ -104,7 +95,6 @@ namespace TACHYON.Web.Controllers
             });
             return Ok(res);
         }
-
         [DisableAuditing]
         [AbpMvcAuthorize()]
         public async Task<ActionResult> DownloadTripAttachmentFile(int id)
