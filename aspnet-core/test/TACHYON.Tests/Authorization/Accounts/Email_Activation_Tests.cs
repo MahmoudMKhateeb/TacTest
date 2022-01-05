@@ -1,12 +1,12 @@
-﻿using System.Linq;
+﻿using Castle.MicroKernel.Registration;
+using NSubstitute;
+using Shouldly;
+using System.Linq;
 using System.Threading.Tasks;
-using Castle.MicroKernel.Registration;
 using TACHYON.Authorization.Accounts;
 using TACHYON.Authorization.Accounts.Dto;
 using TACHYON.Authorization.Users;
 using TACHYON.Test.Base;
-using NSubstitute;
-using Shouldly;
 using Xunit;
 
 namespace TACHYON.Tests.Authorization.Accounts
@@ -33,13 +33,13 @@ namespace TACHYON.Tests.Authorization.Accounts
 
             var fakeUserEmailer = Substitute.For<IUserEmailer>();
             var localUser = user;
-            fakeUserEmailer.SendEmailActivationLinkAsync(Arg.Any<User>(), Arg.Any<string>(),"").Returns(callInfo =>
-            {
-                var calledUser = callInfo.Arg<User>();
-                calledUser.EmailAddress.ShouldBe(localUser.EmailAddress);
-                confirmationCode = calledUser.EmailConfirmationCode; //Getting the confirmation code sent to the email address
+            fakeUserEmailer.SendEmailActivationLinkAsync(Arg.Any<User>(), Arg.Any<string>(), Arg.Any<string>()).Returns(callInfo =>
+             {
+                 var calledUser = callInfo.Arg<User>();
+                 calledUser.EmailAddress.ShouldBe(localUser.EmailAddress);
+                 confirmationCode = calledUser.EmailConfirmationCode; //Getting the confirmation code sent to the email address
                 return Task.CompletedTask;
-            });
+             });
 
             LocalIocManager.IocContainer.Register(Component.For<IUserEmailer>().Instance(fakeUserEmailer).IsDefault());
 
