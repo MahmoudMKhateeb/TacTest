@@ -95,14 +95,14 @@
                     <td>
                       <span class="ui-column-title">{{ 'Notification' | localize }}</span>
                       <a *ngIf="record.formattedNotification.url" href="{{ record.formattedNotification.url }}" class="{{ getRowClass(record) }}">{{
-                        truncateString(record.formattedNotification.text, 50)
+                        truncateString(record.formattedNotification.text, 120)
                       }}</a>
                       <span
                         *ngIf="openId != record.id && !record.formattedNotification.url"
                         title="{{ record.formattedNotification.text }}"
                         class="{{ getRowClass(record) }}"
-                        >{{ truncateString(record.formattedNotification.text, 50) }}
-                        <span *ngIf="(openId != record.id || !openId) && record.formattedNotification.text.length > 50" (click)="openId = record.id"
+                        >{{ truncateString(record.formattedNotification.text, 120) }}
+                        <span *ngIf="(openId != record.id || !openId) && record.formattedNotification.text.length > 120" (click)="openId = record.id"
                           >[...]</span
                         ></span
                       >
