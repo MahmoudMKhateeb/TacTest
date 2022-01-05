@@ -49,7 +49,6 @@ import { UnpricedRequestsInMarketplaceComponent } from './host/unpriced-requests
 import { PaginatorModule } from '@node_modules/primeng/paginator';
 import { UtilsModule } from '@shared/utils/utils.module';
 import { BsDatepickerModule } from '@node_modules/ngx-bootstrap/datepicker';
-import { UtilsModule } from '@shared/utils/utils.module';
 
 @NgModule({
   declarations: [
