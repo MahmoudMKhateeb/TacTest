@@ -590,7 +590,7 @@ namespace TACHYON.Tracking
                 _routPointDocumentRepository.Insert(new RoutPointDocument
                 {
                     RoutPointId = point.Id,
-                    DocumentContentType = "image/jpeg",
+                    DocumentContentType = document.DocumentContentType,
                     DocumentName = document.DocumentName,
                     DocumentId = document.DocumentId,
                     RoutePointDocumentType = RoutePointDocumentType.POD
