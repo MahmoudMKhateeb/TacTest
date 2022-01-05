@@ -150,17 +150,17 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
           let city = results[0].address_components[results[0].address_components.length - 4].long_name;
           this.facility.cityId = null;
           this.selectedCountryId = null;
-          console.log('address : ', address);
-          console.log('pin : ', pin);
-          console.log('country : ', country);
-          console.log('state : ', state);
-          console.log('city : ', city);
+          // console.log('address : ', address);
+          // console.log('pin : ', pin);
+          // console.log('country : ', country);
+          // console.log('state : ', state);
+          // console.log('city : ', city);
           this.facility.address = results[0].formatted_address;
         } else {
-          window.alert('No results found');
+          //window.alert('No results found');
         }
       } else {
-        window.alert('Geocoder failed due to: ' + status);
+        //window.alert('Geocoder failed due to: ' + status);
       } //
     });
   }
