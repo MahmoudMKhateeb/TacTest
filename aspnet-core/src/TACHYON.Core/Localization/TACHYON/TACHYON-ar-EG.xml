@@ -2246,5 +2246,6 @@
     <!--<text name="StartOffloading"></text>
     <text name="ReceiverConfirmed"></text>
     <text name="DeliveryConfirmation"></text>-->
-	</texts>
+    <text name="facilityNameIsAlreadyExistsForThisTenant">اسم المنشأة موجود بالفعل لهذا المستأجر</text>
+  </texts>
 </localizationDictionary>

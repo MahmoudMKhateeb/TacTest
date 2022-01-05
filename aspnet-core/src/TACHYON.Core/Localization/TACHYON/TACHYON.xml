@@ -2476,5 +2476,6 @@
     <text name="DeliveryConfirmation"></text>-->
     <text name="ImportTrucksProcessStart">The process of importing Trucks has begun</text>
     <text name="ImportTrucksUploadFailed">Trucks import process has failed.</text>
-  </texts>
+    <text name="facilityNameIsAlreadyExistsForThisTenant">Facility Name Is Already Exists For This Tenant</text>
+	</texts>
 </localizationDictionary>
