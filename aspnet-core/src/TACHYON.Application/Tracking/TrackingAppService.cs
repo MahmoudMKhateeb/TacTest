@@ -150,7 +150,6 @@ namespace TACHYON.Tracking
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier);
             await _workFlowProvider.Start(new ShippingRequestTripDriverStartInputDto { Id = id });
         }
-
         public async Task InvokeStatus(InvokeStatusInputDto input)
         {
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier);
@@ -171,7 +170,6 @@ namespace TACHYON.Tracking
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier, AppFeatures.Shipper);
             return await _workFlowProvider.GetPOD(id);
         }
-
         #region Helper
         private TrackingListDto GetMap(ShippingRequestTrip trip)
         {

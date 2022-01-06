@@ -17,6 +17,7 @@ using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using TACHYON.Authorization.Users;
 using TACHYON.Common;
+using TACHYON.Documents.DocumentFiles;
 using TACHYON.Dto;
 using TACHYON.Features;
 using TACHYON.Firebases;
@@ -32,6 +33,7 @@ using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips;
 using TACHYON.Shipping.Trips.Dto;
+using TACHYON.Storage;
 using TACHYON.Tracking.Dto;
 using TACHYON.Tracking.Dto.WorkFlow;
 using TACHYON.Url;
@@ -63,9 +65,11 @@ namespace TACHYON.Tracking
         private readonly IWebUrlService _webUrlService;
         private readonly IPermissionChecker _permissionChecker;
         private readonly IEntityChangeSetReasonProvider _reasonProvider;
+        private readonly ITempFileCacheManager _tempFileCacheManager;
+
 
         #region Constractor
-        public ShippingRequestPointWorkFlowProvider(IRepository<RoutPoint, long> routPointRepository, IRepository<ShippingRequestTrip> shippingRequestTrip, PriceOfferManager priceOfferManager, IAppNotifier appNotifier, IFeatureChecker featureChecker, IAbpSession abpSession, IRepository<RoutPointDocument, long> routPointDocumentRepository, IRepository<ShippingRequestTripTransition> shippingRequestTripTransitionRepository, IRepository<RoutPointStatusTransition> routPointStatusTransitionRepository, FirebaseNotifier firebaseNotifier, ISmsSender smsSender, InvoiceManager invoiceManager, CommonManager commonManager, UserManager userManager, IWebUrlService webUrlService, IPermissionChecker permissionChecker, IEntityChangeSetReasonProvider reasonProvider)
+        public ShippingRequestPointWorkFlowProvider(IRepository<RoutPoint, long> routPointRepository, IRepository<ShippingRequestTrip> shippingRequestTrip, PriceOfferManager priceOfferManager, IAppNotifier appNotifier, IFeatureChecker featureChecker, IAbpSession abpSession, IRepository<RoutPointDocument, long> routPointDocumentRepository, IRepository<ShippingRequestTripTransition> shippingRequestTripTransitionRepository, IRepository<RoutPointStatusTransition> routPointStatusTransitionRepository, FirebaseNotifier firebaseNotifier, ISmsSender smsSender, InvoiceManager invoiceManager, CommonManager commonManager, UserManager userManager, IWebUrlService webUrlService, IPermissionChecker permissionChecker, IEntityChangeSetReasonProvider reasonProvider, ITempFileCacheManager tempFileCacheManager)
         {
             _routPointRepository = routPointRepository;
             _shippingRequestTripRepository = shippingRequestTrip;
@@ -84,6 +88,7 @@ namespace TACHYON.Tracking
             _webUrlService = webUrlService;
             _permissionChecker = permissionChecker;
             _reasonProvider = reasonProvider;
+            _tempFileCacheManager = tempFileCacheManager;
             Flows = new List<WorkFlow<PointTransactionArgs, RoutePointStatus>>
             {
             // Pick up workflow 
@@ -438,9 +443,12 @@ namespace TACHYON.Tracking
         }
         public async Task<List<FileDto>> GetPOD(long id)
         {
+            var key = string.Format(DocumentFileConsts.KeyCashes, id);
+            if (_tempFileCacheManager.GetPods(key) != null)
+                return _tempFileCacheManager.GetPods(key);
+
             DisableTenancyFilters();
             var currentUser = await GetCurrentUserAsync();
-
             var documents = await _routPointDocumentRepository.GetAll()
                 .Where(x => x.RoutPointId == id && x.RoutePointDocumentType == RoutePointDocumentType.POD)
                 .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => true)
@@ -448,9 +456,12 @@ namespace TACHYON.Tracking
                 .WhereIf(currentUser.IsDriver, x => x.RoutPointFk.ShippingRequestTripFk.AssignedDriverUserId == currentUser.Id)
                 .ToListAsync();
 
-            if (documents == null) throw new UserFriendlyException(L("TheRoutePointIsNotFound"));
-            return await _commonManager.GetDocuments(ObjectMapper.Map<List<IHasDocument>>(documents));
+            if (!documents.Any()) throw new UserFriendlyException(L("TheRoutePointIsNotFound"));
+            var files = await _commonManager.GetDocuments(ObjectMapper.Map<List<IHasDocument>>(documents));
+            _tempFileCacheManager.SetPods(key, files);
+            return files;
         }
+
         #endregion
 
         #region Transactions Functions
@@ -579,7 +590,7 @@ namespace TACHYON.Tracking
                 _routPointDocumentRepository.Insert(new RoutPointDocument
                 {
                     RoutPointId = point.Id,
-                    DocumentContentType = "image/jpeg",
+                    DocumentContentType = document.DocumentContentType,
                     DocumentName = document.DocumentName,
                     DocumentId = document.DocumentId,
                     RoutePointDocumentType = RoutePointDocumentType.POD
@@ -921,7 +932,6 @@ namespace TACHYON.Tracking
             return user;
         }
         #endregion
-
         #region Notfications
         /// <summary>
         /// Singlar notifcation when the route point status changed
