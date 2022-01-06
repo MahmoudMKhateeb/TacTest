@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace TACHYON.Rating.dtos
 {
-    public class CreateDriverRatingByReceiverDto: IHasRating
+    public class CreateDriverRatingDtoByReceiverDto: IRatingDto
     {
         [Required]
         [StringLength(6, MinimumLength = 6)]

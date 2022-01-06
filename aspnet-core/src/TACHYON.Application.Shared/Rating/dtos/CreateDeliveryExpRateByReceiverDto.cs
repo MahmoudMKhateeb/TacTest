@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TACHYON.Rating.dtos
 {
-    public class CreateDeliveryExpRateByReceiverDto: IHasRating
+    public class CreateDeliveryExpRateByReceiverDto: IRatingDto
     {
         [Required]
         [StringLength(6, MinimumLength = 6)]

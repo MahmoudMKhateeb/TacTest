@@ -1,13 +1,5 @@
 ﻿using Abp.Application.Features;
-using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
-using Abp.Linq.Extensions;
-using Abp.UI;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using TACHYON.AddressBook;
 using TACHYON.Authorization.Users;
@@ -16,7 +8,6 @@ using TACHYON.MultiTenancy;
 using TACHYON.Rating.dtos;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.ShippingRequestTrips;
-using TACHYON.Shipping.Trips;
 
 namespace TACHYON.Rating
 {
@@ -48,7 +39,7 @@ namespace TACHYON.Rating
 
         public async Task CreateDriverAndDERatingByReceiver(CreateDriverAndDERatingByReceiverDto input)
         {
-            await _ratingLogManager.ValidateAndCreateRating(input.CreateDriverRatingByReceiverInput, RateType.DriverByReceiver);
+            await _ratingLogManager.ValidateAndCreateRating(input.CreateDriverRatingDtoByReceiverInput, RateType.DriverByReceiver);
             await _ratingLogManager.ValidateAndCreateRating(input.CreateDeliveryExpRateByReceiverInput, RateType.DEByReceiver);
         }
 

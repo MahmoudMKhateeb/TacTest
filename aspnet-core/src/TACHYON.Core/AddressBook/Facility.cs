@@ -1,15 +1,11 @@
 ﻿using Abp.Domain.Entities;
-using Abp.Domain.Entities.Auditing;
-using System;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using TACHYON.Cities;
-using TACHYON.Countries;
+using TACHYON.Rating;
 
 namespace TACHYON.AddressBook
 {
     [Table("Facilities")]
-    public class Facility : AddressBaseFullAuditedEntity, IMayHaveTenant
+    public class Facility : AddressBaseFullAuditedEntity, IMayHaveTenant, IHasRating
     {
         public int? TenantId { get; set; }
 

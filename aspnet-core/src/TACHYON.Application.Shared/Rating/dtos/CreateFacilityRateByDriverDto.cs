@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace TACHYON.Rating.dtos
 {
-    public class CreateFacilityRateByDriverDto : IHasRating
+    public class CreateFacilityRateByDriverDto : IRatingDto
     {
         [Required]
         public long PointId { get; set; }

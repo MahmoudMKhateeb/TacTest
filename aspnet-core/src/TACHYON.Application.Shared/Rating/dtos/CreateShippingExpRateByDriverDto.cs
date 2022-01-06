@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace TACHYON.Rating.dtos
 {
-    public class CreateShippingExpRateByDriverDto : IHasRating
+    public class CreateShippingExpRateByDriverDto : IRatingDto
     {
         [Required]
         public int TripId { get; set; }

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TACHYON.Rating
 {
-    public interface IHasRating
+    public interface IRatingDto
     {
         [Range(1, 5)]
         int Rate { get; set; }
