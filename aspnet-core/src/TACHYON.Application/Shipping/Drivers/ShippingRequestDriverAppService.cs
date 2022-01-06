@@ -222,7 +222,7 @@ namespace TACHYON.Shipping.Drivers
                 {
                     DriverId = AbpSession.UserId,
                     PointId = point.Id,
-                    RateType = RateType.SEByDriver,
+                    RateType = RateType.FacilityByDriver,
                     FacilityId = point.FacilityId
                 });
             }

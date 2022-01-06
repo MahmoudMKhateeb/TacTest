@@ -22,6 +22,7 @@ namespace TACHYON.Routs.RoutPoints.Dtos
         public int? Rating { get; set; }
         public int RatingNumber { get; set; }
         public bool IsFacilityRated { get; set; }
+        public bool IsComplete { get; set; }
         public ReceiverDto ReceiverDto { get; set; }
         /// <summary>
         /// Additional receiver full name

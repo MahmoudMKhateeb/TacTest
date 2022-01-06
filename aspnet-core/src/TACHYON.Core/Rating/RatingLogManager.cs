@@ -134,8 +134,8 @@ namespace TACHYON.Rating
             DisableTenancyFilters();
             if (await _routePointRepository
                 .GetAll()
-               .WhereIf(rateType == RateType.FacilityByDriver, x => x.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId)
-                .CountAsync(x => x.Id == pointId && x.Status >= RoutePointStatus.FinishOffLoadShipment) == 0)
+                .WhereIf(rateType == RateType.FacilityByDriver, x => x.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId)
+                .CountAsync(x => x.Id == pointId && x.IsComplete) == 0)
             {
                 throw new UserFriendlyException(L("PointNotFoundOrNotFinished"));
             }
