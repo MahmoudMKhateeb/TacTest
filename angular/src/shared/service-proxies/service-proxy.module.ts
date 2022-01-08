@@ -1,4 +1,4 @@
-﻿import { AbpHttpInterceptor, RefreshTokenService, AbpHttpConfigurationService } from 'abp-ng2-module';
+﻿import { AbpHttpConfigurationService, AbpHttpInterceptor, RefreshTokenService } from 'abp-ng2-module';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import * as ApiServiceProxies from './service-proxies';
@@ -8,6 +8,7 @@ import { TerminologieServiceProxy } from 'shared/service-proxies/terminologies-e
 
 @NgModule({
   providers: [
+    ApiServiceProxies.DriverLicenseTypesServiceProxy,
     ApiServiceProxies.DangerousGoodTypesServiceProxy,
     ApiServiceProxies.TruckCapacitiesTranslationsServiceProxy,
     ApiServiceProxies.TruckStatusesTranslationsServiceProxy,
@@ -142,6 +143,7 @@ import { TerminologieServiceProxy } from 'shared/service-proxies/terminologies-e
     ApiServiceProxies.InvoicesProformaServiceProxy,
     ApiServiceProxies.TrackingServiceProxy,
     ApiServiceProxies.ShippingRequestDriverServiceProxy,
+    ApiServiceProxies.DriverLicenseTypesServiceProxy,
     TerminologieServiceProxy,
     { provide: RefreshTokenService, useClass: ZeroRefreshTokenService },
     { provide: AbpHttpConfigurationService, useClass: ZeroTemplateHttpConfigurationService },

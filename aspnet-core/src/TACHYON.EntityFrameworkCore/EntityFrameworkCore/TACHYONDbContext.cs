@@ -1,5 +1,4 @@
 ﻿using Abp.Events.Bus.Entities;
-using TACHYON.Goods;
 using Abp.IdentityServer4;
 using Abp.Zero.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -21,8 +20,10 @@ using TACHYON.Documents.DocumentFiles;
 using TACHYON.Documents.DocumentsEntities;
 using TACHYON.Documents.DocumentTypes;
 using TACHYON.Documents.DocumentTypeTranslations;
+using TACHYON.DriverLicenseTypes;
 using TACHYON.Editions;
 using TACHYON.Friendships;
+using TACHYON.Goods;
 using TACHYON.Goods.GoodCategories;
 using TACHYON.Goods.GoodsDetails;
 using TACHYON.Invoices;
@@ -80,6 +81,8 @@ namespace TACHYON.EntityFrameworkCore
 {
     public class TACHYONDbContext : AbpZeroDbContext<Tenant, Role, User, TACHYONDbContext>, IAbpPersistedGrantDbContext
     {
+        public virtual DbSet<DriverLicenseType> DriverLicenseTypes { get; set; }
+
         public virtual DbSet<DangerousGoodType> DangerousGoodTypes { get; set; }
 
         public virtual DbSet<CitiesTranslation> CitiesTranslations { get; set; }

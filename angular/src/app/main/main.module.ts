@@ -1,7 +1,10 @@
-import { CommonModule } from '@angular/common';
+﻿import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
+import { DriverLicenseTypesComponent } from './driverLicenseTypes/driverLicenseTypes/driverLicenseTypes.component';
+import { CreateOrEditDriverLicenseTypeModalComponent } from './driverLicenseTypes/driverLicenseTypes/create-or-edit-driverLicenseType-modal.component';
+
 import { DangerousGoodTypesComponent } from './goods/dangerousGoodTypes/dangerousGoodTypes.component';
 
 import { PackingTypesComponent } from './packingTypes/packingTypes/packingTypes.component';
@@ -255,7 +258,7 @@ import { ViweTruckDocumentsModalComponent } from '@app/main/trucks/trucks/viwe-t
 import { InvoiceTenantItemComponent } from '@app/main/Invoices/invoice-tenants/invoice-tenant-item/invoice-tenant-item.component';
 import { QuartzCronModule } from '@node_modules/@sbzen/ng-cron';
 import { TranslationsTemplateComponent } from './packingTypes/packingTypeTranslations/translations-template/translations-template.component';
-import { ShippingTypesTranslationsComponent } from './shippingTypes/shipping-types-translations/shipping-types-translations.component';;
+import { ShippingTypesTranslationsComponent } from './shippingTypes/shipping-types-translations/shipping-types-translations.component';
 import { ViewGoodDetailsComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/points/good-details/view-good-details/view-good-details.component';
 import { ViewPointModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/points/view-point-modal/view-point-modal.component';
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
@@ -303,6 +306,8 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     QuartzCronModule,
   ],
   declarations: [
+    DriverLicenseTypesComponent,
+    CreateOrEditDriverLicenseTypeModalComponent,
     DangerousGoodTypesComponent,
     TrucksTypesTranslationsComponent,
     ViewTrucksTypesTranslationModalComponent,

@@ -5,6 +5,7 @@ import {
   CreateOrEditDocumentFileDto,
   CreateOrUpdateUserInput,
   DocumentFilesServiceProxy,
+  DriverLicenseTypesServiceProxy,
   NationalitiesServiceProxy,
   OrganizationUnitDto,
   PasswordComplexitySetting,
@@ -33,7 +34,8 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
     private _userService: UserServiceProxy,
     private _profileService: ProfileServiceProxy,
     private _nationalitiesServiceProxy: NationalitiesServiceProxy,
-    private _documentFilesServiceProxy: DocumentFilesServiceProxy
+    private _documentFilesServiceProxy: DocumentFilesServiceProxy,
+    private _driverLicenseTypesServiceProxy: DriverLicenseTypesServiceProxy
   ) {
     super(injector);
     this.getDriverRequiredDocumentFiles();
@@ -72,6 +74,8 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
   isWaintingUserNameValidation = false;
   CheckingIfDriverPhoneNumberIsValid = false;
 
+  driverLicenseTypes: SelectItemDto[] = [];
+
   // CheckIfDriverMobileNumberIsValid(mobileNumber: string) {
   //   this.isWaintingUserNameValidation = true;
   //   this._userService.checkIfPhoneNumberValid(mobileNumber, this.user.id).subscribe((res) => {
@@ -96,6 +100,7 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
       this.sendActivationEmail = true;
     }
     this.getDriverNationalites();
+    this.GetDriverLicenseTypes();
     this._userService.getUserForEdit(userId).subscribe((userResult) => {
       this.user = userResult.user;
       this.user.isDriver = this.creatDriver;
@@ -284,6 +289,11 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
   getDriverNationalites() {
     this._nationalitiesServiceProxy.getAllNationalityForDropdown().subscribe((res) => {
       this.nationalities = res;
+    });
+  }
+  GetDriverLicenseTypes() {
+    this._driverLicenseTypesServiceProxy.getForDropDownList().subscribe((res) => {
+      this.driverLicenseTypes = res;
     });
   }
 

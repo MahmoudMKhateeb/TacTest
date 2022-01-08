@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using TACHYON.DriverLicenseTypes;
 using TACHYON.Nationalities;
 
 namespace TACHYON.Authorization.Users
@@ -40,6 +41,10 @@ namespace TACHYON.Authorization.Users
         public virtual string ExperienceField { get; set; }
         public virtual DateTime? DateOfBirth { get; set; }
         public string HijriDateOfBirth { get; set; }
+        public int? DriverLicenseTypeId { get; set; }
+
+        [ForeignKey("DriverLicenseTypeId")]
+        public DriverLicenseType DriverLicenseTypeFk { get; set; }
 
         public User()
         {

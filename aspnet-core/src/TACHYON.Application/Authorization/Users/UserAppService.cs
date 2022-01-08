@@ -34,6 +34,7 @@ using TACHYON.Documents.DocumentFiles;
 using TACHYON.Documents.DocumentsEntities;
 using TACHYON.Documents.DocumentTypes;
 using TACHYON.Dto;
+using TACHYON.Integration.WaslIntegration;
 using TACHYON.Notifications;
 using TACHYON.Organizations.Dto;
 using TACHYON.Url;
@@ -66,6 +67,7 @@ namespace TACHYON.Authorization.Users
         private readonly DocumentFilesAppService _documentFilesAppService;
         private readonly IRepository<DocumentType, long> _documentTypeRepository;
         private readonly IRepository<DocumentFile, Guid> _documentFileRepository;
+        private readonly WaslIntegrationManager _waslIntegrationManager;
         public UserAppService(
 
             IRepository<DocumentFile, Guid> documentFileRepository,
@@ -86,7 +88,7 @@ namespace TACHYON.Authorization.Users
             IRoleManagementConfig roleManagementConfig,
             UserManager userManager,
             IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository,
-            IRepository<OrganizationUnitRole, long> organizationUnitRoleRepository, DocumentFilesAppService documentFilesAppService)
+            IRepository<OrganizationUnitRole, long> organizationUnitRoleRepository, DocumentFilesAppService documentFilesAppService, WaslIntegrationManager waslIntegrationManager)
         {
             _documentFileRepository = documentFileRepository;
             _documentTypeRepository = documentTypeRepository;
@@ -107,6 +109,7 @@ namespace TACHYON.Authorization.Users
             _userOrganizationUnitRepository = userOrganizationUnitRepository;
             _organizationUnitRoleRepository = organizationUnitRoleRepository;
             _documentFilesAppService = documentFilesAppService;
+            _waslIntegrationManager = waslIntegrationManager;
             _roleRepository = roleRepository;
 
             AppUrlService = NullAppUrlService.Instance;
@@ -314,7 +317,10 @@ namespace TACHYON.Authorization.Users
             {
                 await CreateUserAsync(input);
             }
+
+
         }
+
 
         [AbpAuthorize(AppPermissions.Pages_Administration_Users_Delete)]
         public async Task DeleteUser(EntityDto<long> input)
@@ -326,6 +332,8 @@ namespace TACHYON.Authorization.Users
 
             var user = await UserManager.GetUserByIdAsync(input.Id);
             CheckErrors(await UserManager.DeleteAsync(user));
+            //Wasl integration 
+            await _waslIntegrationManager.QueueDriverDeleteJob(user);
         }
 
         [AbpAuthorize(AppPermissions.Pages_Administration_Users_Unlock)]
@@ -361,8 +369,6 @@ namespace TACHYON.Authorization.Users
             }
 
             //Update roles
-
-
             if (!user.IsDriver)
             {
                 CheckErrors(await UserManager.SetRolesAsync(user, input.AssignedRoleNames));
@@ -381,6 +387,10 @@ namespace TACHYON.Authorization.Users
                     input.User.Password
                 );
             }
+
+            //Wasl Integration
+            await _waslIntegrationManager.QueueDriverRegistrationJob(user);
+
         }
 
         [AbpAuthorize(AppPermissions.Pages_Administration_Users_Create)]
@@ -460,7 +470,6 @@ namespace TACHYON.Authorization.Users
                 }
             }
 
-
             //Notifications
             await _notificationSubscriptionManager.SubscribeToAllAvailableNotificationsAsync(user.ToUserIdentifier());
             await _appNotifier.WelcomeToTheApplicationAsync(user);
@@ -479,7 +488,11 @@ namespace TACHYON.Authorization.Users
                 );
             }
 
+
+            //Wasl Integration
+            await _waslIntegrationManager.QueueDriverRegistrationJob(user);
         }
+
 
         private async Task FillRoleNames(IReadOnlyCollection<UserListDto> userListDtos)
         {

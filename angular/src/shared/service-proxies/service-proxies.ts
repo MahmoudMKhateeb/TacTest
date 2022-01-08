@@ -10458,6 +10458,360 @@ export class DriverServiceProxy {
 }
 
 @Injectable()
+export class DriverLicenseTypesServiceProxy {
+  private http: HttpClient;
+  private baseUrl: string;
+  protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+  constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+    this.http = http;
+    this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : '';
+  }
+
+  /**
+   * @param filter (optional)
+   * @param sorting (optional)
+   * @param skipCount (optional)
+   * @param maxResultCount (optional)
+   * @return Success
+   */
+  getAll(
+    filter: string | null | undefined,
+    sorting: string | null | undefined,
+    skipCount: number | undefined,
+    maxResultCount: number | undefined
+  ): Observable<PagedResultDtoOfGetDriverLicenseTypeForViewDto> {
+    let url_ = this.baseUrl + '/api/services/app/DriverLicenseTypes/GetAll?';
+    if (filter !== undefined && filter !== null) url_ += 'Filter=' + encodeURIComponent('' + filter) + '&';
+    if (sorting !== undefined && sorting !== null) url_ += 'Sorting=' + encodeURIComponent('' + sorting) + '&';
+    if (skipCount === null) throw new Error("The parameter 'skipCount' cannot be null.");
+    else if (skipCount !== undefined) url_ += 'SkipCount=' + encodeURIComponent('' + skipCount) + '&';
+    if (maxResultCount === null) throw new Error("The parameter 'maxResultCount' cannot be null.");
+    else if (maxResultCount !== undefined) url_ += 'MaxResultCount=' + encodeURIComponent('' + maxResultCount) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAll(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAll(<any>response_);
+            } catch (e) {
+              return <Observable<PagedResultDtoOfGetDriverLicenseTypeForViewDto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<PagedResultDtoOfGetDriverLicenseTypeForViewDto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAll(response: HttpResponseBase): Observable<PagedResultDtoOfGetDriverLicenseTypeForViewDto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = PagedResultDtoOfGetDriverLicenseTypeForViewDto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<PagedResultDtoOfGetDriverLicenseTypeForViewDto>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
+  getDriverLicenseTypeForEdit(id: number | undefined): Observable<GetDriverLicenseTypeForEditOutput> {
+    let url_ = this.baseUrl + '/api/services/app/DriverLicenseTypes/GetDriverLicenseTypeForEdit?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'Id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetDriverLicenseTypeForEdit(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetDriverLicenseTypeForEdit(<any>response_);
+            } catch (e) {
+              return <Observable<GetDriverLicenseTypeForEditOutput>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<GetDriverLicenseTypeForEditOutput>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetDriverLicenseTypeForEdit(response: HttpResponseBase): Observable<GetDriverLicenseTypeForEditOutput> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = GetDriverLicenseTypeForEditOutput.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<GetDriverLicenseTypeForEditOutput>(<any>null);
+  }
+
+  /**
+   * @param body (optional)
+   * @return Success
+   */
+  createOrEdit(body: CreateOrEditDriverLicenseTypeDto | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/DriverLicenseTypes/CreateOrEdit';
+    url_ = url_.replace(/[?&]$/, '');
+
+    const content_ = JSON.stringify(body);
+
+    let options_: any = {
+      body: content_,
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processCreateOrEdit(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processCreateOrEdit(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processCreateOrEdit(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
+  delete(id: number | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/DriverLicenseTypes/Delete?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'Id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({}),
+    };
+
+    return this.http
+      .request('delete', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processDelete(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processDelete(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processDelete(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @return Success
+   */
+  getForDropDownList(): Observable<SelectItemDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/DriverLicenseTypes/GetForDropDownList';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetForDropDownList(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetForDropDownList(<any>response_);
+            } catch (e) {
+              return <Observable<SelectItemDto[]>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<SelectItemDto[]>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetForDropDownList(response: HttpResponseBase): Observable<SelectItemDto[]> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          if (Array.isArray(resultData200)) {
+            result200 = [] as any;
+            for (let item of resultData200) result200!.push(SelectItemDto.fromJS(item));
+          } else {
+            result200 = <any>null;
+          }
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<SelectItemDto[]>(<any>null);
+  }
+}
+
+@Injectable()
 export class DynamicEntityParameterDefinitionServiceProxy {
   private http: HttpClient;
   private baseUrl: string;
@@ -14159,6 +14513,193 @@ export class GoodCategoriesServiceProxy {
       );
     }
     return _observableOf<GetAllGoodsCategoriesForDropDownOutput[]>(<any>null);
+  }
+
+  /**
+   * @param requireTotalCount (optional)
+   * @param requireGroupCount (optional)
+   * @param isCountQuery (optional)
+   * @param isSummaryQuery (optional)
+   * @param skip (optional)
+   * @param take (optional)
+   * @param sort (optional)
+   * @param group (optional)
+   * @param filter (optional)
+   * @param totalSummary (optional)
+   * @param groupSummary (optional)
+   * @param select (optional)
+   * @param preSelect (optional)
+   * @param remoteSelect (optional)
+   * @param remoteGrouping (optional)
+   * @param expandLinqSumType (optional)
+   * @param primaryKey (optional)
+   * @param defaultSort (optional)
+   * @param stringToLower (optional)
+   * @param paginateViaPrimaryKey (optional)
+   * @param sortByPrimaryKey (optional)
+   * @param allowAsyncOverSync (optional)
+   * @return Success
+   */
+  getAllDx(
+    requireTotalCount: boolean | undefined,
+    requireGroupCount: boolean | undefined,
+    isCountQuery: boolean | undefined,
+    isSummaryQuery: boolean | undefined,
+    skip: number | undefined,
+    take: number | undefined,
+    sort: SortingInfo[] | null | undefined,
+    group: GroupingInfo[] | null | undefined,
+    filter: any[] | null | undefined,
+    totalSummary: SummaryInfo[] | null | undefined,
+    groupSummary: SummaryInfo[] | null | undefined,
+    select: string[] | null | undefined,
+    preSelect: string[] | null | undefined,
+    remoteSelect: boolean | null | undefined,
+    remoteGrouping: boolean | null | undefined,
+    expandLinqSumType: boolean | null | undefined,
+    primaryKey: string[] | null | undefined,
+    defaultSort: string | null | undefined,
+    stringToLower: boolean | null | undefined,
+    paginateViaPrimaryKey: boolean | null | undefined,
+    sortByPrimaryKey: boolean | null | undefined,
+    allowAsyncOverSync: boolean | undefined
+  ): Observable<LoadResult> {
+    let url_ = this.baseUrl + '/api/services/app/GoodCategories/GetAllDx?';
+    if (requireTotalCount === null) throw new Error("The parameter 'requireTotalCount' cannot be null.");
+    else if (requireTotalCount !== undefined) url_ += 'RequireTotalCount=' + encodeURIComponent('' + requireTotalCount) + '&';
+    if (requireGroupCount === null) throw new Error("The parameter 'requireGroupCount' cannot be null.");
+    else if (requireGroupCount !== undefined) url_ += 'RequireGroupCount=' + encodeURIComponent('' + requireGroupCount) + '&';
+    if (isCountQuery === null) throw new Error("The parameter 'isCountQuery' cannot be null.");
+    else if (isCountQuery !== undefined) url_ += 'IsCountQuery=' + encodeURIComponent('' + isCountQuery) + '&';
+    if (isSummaryQuery === null) throw new Error("The parameter 'isSummaryQuery' cannot be null.");
+    else if (isSummaryQuery !== undefined) url_ += 'IsSummaryQuery=' + encodeURIComponent('' + isSummaryQuery) + '&';
+    if (skip === null) throw new Error("The parameter 'skip' cannot be null.");
+    else if (skip !== undefined) url_ += 'Skip=' + encodeURIComponent('' + skip) + '&';
+    if (take === null) throw new Error("The parameter 'take' cannot be null.");
+    else if (take !== undefined) url_ += 'Take=' + encodeURIComponent('' + take) + '&';
+    if (sort !== undefined && sort !== null)
+      sort &&
+        sort.forEach((item, index) => {
+          for (let attr in item)
+            if (item.hasOwnProperty(attr)) {
+              url_ += 'Sort[' + index + '].' + attr + '=' + encodeURIComponent('' + (<any>item)[attr]) + '&';
+            }
+        });
+    if (group !== undefined && group !== null)
+      group &&
+        group.forEach((item, index) => {
+          for (let attr in item)
+            if (item.hasOwnProperty(attr)) {
+              url_ += 'Group[' + index + '].' + attr + '=' + encodeURIComponent('' + (<any>item)[attr]) + '&';
+            }
+        });
+    if (filter !== undefined && filter !== null)
+      filter &&
+        filter.forEach((item, index) => {
+          for (let attr in item)
+            if (item.hasOwnProperty(attr)) {
+              url_ += 'Filter[' + index + '].' + attr + '=' + encodeURIComponent('' + (<any>item)[attr]) + '&';
+            }
+        });
+    if (totalSummary !== undefined && totalSummary !== null)
+      totalSummary &&
+        totalSummary.forEach((item, index) => {
+          for (let attr in item)
+            if (item.hasOwnProperty(attr)) {
+              url_ += 'TotalSummary[' + index + '].' + attr + '=' + encodeURIComponent('' + (<any>item)[attr]) + '&';
+            }
+        });
+    if (groupSummary !== undefined && groupSummary !== null)
+      groupSummary &&
+        groupSummary.forEach((item, index) => {
+          for (let attr in item)
+            if (item.hasOwnProperty(attr)) {
+              url_ += 'GroupSummary[' + index + '].' + attr + '=' + encodeURIComponent('' + (<any>item)[attr]) + '&';
+            }
+        });
+    if (select !== undefined && select !== null)
+      select &&
+        select.forEach((item) => {
+          url_ += 'Select=' + encodeURIComponent('' + item) + '&';
+        });
+    if (preSelect !== undefined && preSelect !== null)
+      preSelect &&
+        preSelect.forEach((item) => {
+          url_ += 'PreSelect=' + encodeURIComponent('' + item) + '&';
+        });
+    if (remoteSelect !== undefined && remoteSelect !== null) url_ += 'RemoteSelect=' + encodeURIComponent('' + remoteSelect) + '&';
+    if (remoteGrouping !== undefined && remoteGrouping !== null) url_ += 'RemoteGrouping=' + encodeURIComponent('' + remoteGrouping) + '&';
+    if (expandLinqSumType !== undefined && expandLinqSumType !== null)
+      url_ += 'ExpandLinqSumType=' + encodeURIComponent('' + expandLinqSumType) + '&';
+    if (primaryKey !== undefined && primaryKey !== null)
+      primaryKey &&
+        primaryKey.forEach((item) => {
+          url_ += 'PrimaryKey=' + encodeURIComponent('' + item) + '&';
+        });
+    if (defaultSort !== undefined && defaultSort !== null) url_ += 'DefaultSort=' + encodeURIComponent('' + defaultSort) + '&';
+    if (stringToLower !== undefined && stringToLower !== null) url_ += 'StringToLower=' + encodeURIComponent('' + stringToLower) + '&';
+    if (paginateViaPrimaryKey !== undefined && paginateViaPrimaryKey !== null)
+      url_ += 'PaginateViaPrimaryKey=' + encodeURIComponent('' + paginateViaPrimaryKey) + '&';
+    if (sortByPrimaryKey !== undefined && sortByPrimaryKey !== null) url_ += 'SortByPrimaryKey=' + encodeURIComponent('' + sortByPrimaryKey) + '&';
+    if (allowAsyncOverSync === null) throw new Error("The parameter 'allowAsyncOverSync' cannot be null.");
+    else if (allowAsyncOverSync !== undefined) url_ += 'AllowAsyncOverSync=' + encodeURIComponent('' + allowAsyncOverSync) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAllDx(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAllDx(<any>response_);
+            } catch (e) {
+              return <Observable<LoadResult>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<LoadResult>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAllDx(response: HttpResponseBase): Observable<LoadResult> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = LoadResult.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<LoadResult>(<any>null);
   }
 }
 
@@ -39272,7 +39813,7 @@ export class TenantRegistrationServiceProxy {
    */
   checkIfCompanyUniqueNameisAvailable(companyName: string | null | undefined): Observable<boolean> {
     let url_ = this.baseUrl + '/api/services/app/TenantRegistration/CheckIfCompanyUniqueNameisAvailable?';
-    if (companyName !== undefined && companyName !== null) url_ += 'CompanyName=' + encodeURIComponent('' + companyName) + '&';
+    if (companyName !== undefined && companyName !== null) url_ += 'companyName=' + encodeURIComponent('' + companyName) + '&';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -39462,6 +40003,74 @@ export class TenantRegistrationServiceProxy {
       );
     }
     return _observableOf<GetTermAndConditionForViewDto>(<any>null);
+  }
+
+  /**
+   * @param moiNumber (optional)
+   * @param tenantId (optional)
+   * @return Success
+   */
+  isCompanyUniqueMoiNumber(moiNumber: string | null | undefined, tenantId: number | null | undefined): Observable<boolean> {
+    let url_ = this.baseUrl + '/api/services/app/TenantRegistration/IsCompanyUniqueMoiNumber?';
+    if (moiNumber !== undefined && moiNumber !== null) url_ += 'moiNumber=' + encodeURIComponent('' + moiNumber) + '&';
+    if (tenantId !== undefined && tenantId !== null) url_ += 'tenantId=' + encodeURIComponent('' + tenantId) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processIsCompanyUniqueMoiNumber(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processIsCompanyUniqueMoiNumber(<any>response_);
+            } catch (e) {
+              return <Observable<boolean>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<boolean>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processIsCompanyUniqueMoiNumber(response: HttpResponseBase): Observable<boolean> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = resultData200 !== undefined ? resultData200 : <any>null;
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<boolean>(<any>null);
   }
 }
 
@@ -59081,6 +59690,215 @@ export interface IUserDeviceTokenDto {
   expireDate: moment.Moment | undefined;
 }
 
+export class DriverLicenseTypeDto implements IDriverLicenseTypeDto {
+  name!: string | undefined;
+  wasIIntegrationId!: number;
+  applicableforWaslRegistration!: boolean;
+  id!: number;
+
+  constructor(data?: IDriverLicenseTypeDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.name = _data['name'];
+      this.wasIIntegrationId = _data['wasIIntegrationId'];
+      this.applicableforWaslRegistration = _data['applicableforWaslRegistration'];
+      this.id = _data['id'];
+    }
+  }
+
+  static fromJS(data: any): DriverLicenseTypeDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new DriverLicenseTypeDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['name'] = this.name;
+    data['wasIIntegrationId'] = this.wasIIntegrationId;
+    data['applicableforWaslRegistration'] = this.applicableforWaslRegistration;
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+export interface IDriverLicenseTypeDto {
+  name: string | undefined;
+  wasIIntegrationId: number;
+  applicableforWaslRegistration: boolean;
+  id: number;
+}
+
+export class GetDriverLicenseTypeForViewDto implements IGetDriverLicenseTypeForViewDto {
+  driverLicenseType!: DriverLicenseTypeDto;
+
+  constructor(data?: IGetDriverLicenseTypeForViewDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.driverLicenseType = _data['driverLicenseType'] ? DriverLicenseTypeDto.fromJS(_data['driverLicenseType']) : <any>undefined;
+    }
+  }
+
+  static fromJS(data: any): GetDriverLicenseTypeForViewDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new GetDriverLicenseTypeForViewDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['driverLicenseType'] = this.driverLicenseType ? this.driverLicenseType.toJSON() : <any>undefined;
+    return data;
+  }
+}
+
+export interface IGetDriverLicenseTypeForViewDto {
+  driverLicenseType: DriverLicenseTypeDto;
+}
+
+export class PagedResultDtoOfGetDriverLicenseTypeForViewDto implements IPagedResultDtoOfGetDriverLicenseTypeForViewDto {
+  totalCount!: number;
+  items!: GetDriverLicenseTypeForViewDto[] | undefined;
+
+  constructor(data?: IPagedResultDtoOfGetDriverLicenseTypeForViewDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.totalCount = _data['totalCount'];
+      if (Array.isArray(_data['items'])) {
+        this.items = [] as any;
+        for (let item of _data['items']) this.items!.push(GetDriverLicenseTypeForViewDto.fromJS(item));
+      }
+    }
+  }
+
+  static fromJS(data: any): PagedResultDtoOfGetDriverLicenseTypeForViewDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new PagedResultDtoOfGetDriverLicenseTypeForViewDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['totalCount'] = this.totalCount;
+    if (Array.isArray(this.items)) {
+      data['items'] = [];
+      for (let item of this.items) data['items'].push(item.toJSON());
+    }
+    return data;
+  }
+}
+
+export interface IPagedResultDtoOfGetDriverLicenseTypeForViewDto {
+  totalCount: number;
+  items: GetDriverLicenseTypeForViewDto[] | undefined;
+}
+
+export class CreateOrEditDriverLicenseTypeDto implements ICreateOrEditDriverLicenseTypeDto {
+  name!: string;
+  wasIIntegrationId!: number;
+  applicableforWaslRegistration!: boolean;
+  id!: number | undefined;
+
+  constructor(data?: ICreateOrEditDriverLicenseTypeDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.name = _data['name'];
+      this.wasIIntegrationId = _data['wasIIntegrationId'];
+      this.applicableforWaslRegistration = _data['applicableforWaslRegistration'];
+      this.id = _data['id'];
+    }
+  }
+
+  static fromJS(data: any): CreateOrEditDriverLicenseTypeDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new CreateOrEditDriverLicenseTypeDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['name'] = this.name;
+    data['wasIIntegrationId'] = this.wasIIntegrationId;
+    data['applicableforWaslRegistration'] = this.applicableforWaslRegistration;
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+export interface ICreateOrEditDriverLicenseTypeDto {
+  name: string;
+  wasIIntegrationId: number;
+  applicableforWaslRegistration: boolean;
+  id: number | undefined;
+}
+
+export class GetDriverLicenseTypeForEditOutput implements IGetDriverLicenseTypeForEditOutput {
+  driverLicenseType!: CreateOrEditDriverLicenseTypeDto;
+
+  constructor(data?: IGetDriverLicenseTypeForEditOutput) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.driverLicenseType = _data['driverLicenseType'] ? CreateOrEditDriverLicenseTypeDto.fromJS(_data['driverLicenseType']) : <any>undefined;
+    }
+  }
+
+  static fromJS(data: any): GetDriverLicenseTypeForEditOutput {
+    data = typeof data === 'object' ? data : {};
+    let result = new GetDriverLicenseTypeForEditOutput();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['driverLicenseType'] = this.driverLicenseType ? this.driverLicenseType.toJSON() : <any>undefined;
+    return data;
+  }
+}
+
+export interface IGetDriverLicenseTypeForEditOutput {
+  driverLicenseType: CreateOrEditDriverLicenseTypeDto;
+}
+
 export class DynamicParameterDto implements IDynamicParameterDto {
   parameterName!: string | undefined;
   inputType!: string | undefined;
@@ -60873,6 +61691,8 @@ export class GoodCategoryDto implements IGoodCategoryDto {
   displayName!: string | undefined;
   fatherId!: number | undefined;
   isActive!: boolean;
+  bayanIntegrationId!: string | undefined;
+  hasItems!: boolean;
   id!: number;
 
   constructor(data?: IGoodCategoryDto) {
@@ -60888,6 +61708,8 @@ export class GoodCategoryDto implements IGoodCategoryDto {
       this.displayName = _data['displayName'];
       this.fatherId = _data['fatherId'];
       this.isActive = _data['isActive'];
+      this.bayanIntegrationId = _data['bayanIntegrationId'];
+      this.hasItems = _data['hasItems'];
       this.id = _data['id'];
     }
   }
@@ -60904,6 +61726,8 @@ export class GoodCategoryDto implements IGoodCategoryDto {
     data['displayName'] = this.displayName;
     data['fatherId'] = this.fatherId;
     data['isActive'] = this.isActive;
+    data['bayanIntegrationId'] = this.bayanIntegrationId;
+    data['hasItems'] = this.hasItems;
     data['id'] = this.id;
     return data;
   }
@@ -60913,6 +61737,8 @@ export interface IGoodCategoryDto {
   displayName: string | undefined;
   fatherId: number | undefined;
   isActive: boolean;
+  bayanIntegrationId: string | undefined;
+  hasItems: boolean;
   id: number;
 }
 
@@ -61052,9 +61878,11 @@ export interface IGoodCategoryTranslationDto {
 }
 
 export class CreateOrEditGoodCategoryDto implements ICreateOrEditGoodCategoryDto {
+  name!: string;
   fatherId!: number | undefined;
   translations!: GoodCategoryTranslationDto[] | undefined;
   isActive!: boolean;
+  bayanIntegrationId!: string | undefined;
   id!: number | undefined;
 
   constructor(data?: ICreateOrEditGoodCategoryDto) {
@@ -61067,12 +61895,14 @@ export class CreateOrEditGoodCategoryDto implements ICreateOrEditGoodCategoryDto
 
   init(_data?: any) {
     if (_data) {
+      this.name = _data['name'];
       this.fatherId = _data['fatherId'];
       if (Array.isArray(_data['translations'])) {
         this.translations = [] as any;
         for (let item of _data['translations']) this.translations!.push(GoodCategoryTranslationDto.fromJS(item));
       }
       this.isActive = _data['isActive'];
+      this.bayanIntegrationId = _data['bayanIntegrationId'];
       this.id = _data['id'];
     }
   }
@@ -61086,21 +61916,25 @@ export class CreateOrEditGoodCategoryDto implements ICreateOrEditGoodCategoryDto
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
+    data['name'] = this.name;
     data['fatherId'] = this.fatherId;
     if (Array.isArray(this.translations)) {
       data['translations'] = [];
       for (let item of this.translations) data['translations'].push(item.toJSON());
     }
     data['isActive'] = this.isActive;
+    data['bayanIntegrationId'] = this.bayanIntegrationId;
     data['id'] = this.id;
     return data;
   }
 }
 
 export interface ICreateOrEditGoodCategoryDto {
+  name: string;
   fatherId: number | undefined;
   translations: GoodCategoryTranslationDto[] | undefined;
   isActive: boolean;
+  bayanIntegrationId: string | undefined;
   id: number | undefined;
 }
 
@@ -61176,6 +62010,131 @@ export class GetAllGoodsCategoriesForDropDownOutput implements IGetAllGoodsCateg
 export interface IGetAllGoodsCategoriesForDropDownOutput {
   displayName: string | undefined;
   id: number;
+}
+
+export class SortingInfo implements ISortingInfo {
+  selector!: string | undefined;
+  desc!: boolean;
+
+  constructor(data?: ISortingInfo) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.selector = _data['selector'];
+      this.desc = _data['desc'];
+    }
+  }
+
+  static fromJS(data: any): SortingInfo {
+    data = typeof data === 'object' ? data : {};
+    let result = new SortingInfo();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['selector'] = this.selector;
+    data['desc'] = this.desc;
+    return data;
+  }
+}
+
+export interface ISortingInfo {
+  selector: string | undefined;
+  desc: boolean;
+}
+
+export class GroupingInfo implements IGroupingInfo {
+  groupInterval!: string | undefined;
+  isExpanded!: boolean | undefined;
+  selector!: string | undefined;
+  desc!: boolean;
+
+  constructor(data?: IGroupingInfo) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.groupInterval = _data['groupInterval'];
+      this.isExpanded = _data['isExpanded'];
+      this.selector = _data['selector'];
+      this.desc = _data['desc'];
+    }
+  }
+
+  static fromJS(data: any): GroupingInfo {
+    data = typeof data === 'object' ? data : {};
+    let result = new GroupingInfo();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['groupInterval'] = this.groupInterval;
+    data['isExpanded'] = this.isExpanded;
+    data['selector'] = this.selector;
+    data['desc'] = this.desc;
+    return data;
+  }
+}
+
+export interface IGroupingInfo {
+  groupInterval: string | undefined;
+  isExpanded: boolean | undefined;
+  selector: string | undefined;
+  desc: boolean;
+}
+
+export class SummaryInfo implements ISummaryInfo {
+  selector!: string | undefined;
+  summaryType!: string | undefined;
+
+  constructor(data?: ISummaryInfo) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.selector = _data['selector'];
+      this.summaryType = _data['summaryType'];
+    }
+  }
+
+  static fromJS(data: any): SummaryInfo {
+    data = typeof data === 'object' ? data : {};
+    let result = new SummaryInfo();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['selector'] = this.selector;
+    data['summaryType'] = this.summaryType;
+    return data;
+  }
+}
+
+export interface ISummaryInfo {
+  selector: string | undefined;
+  summaryType: string | undefined;
 }
 
 export class GoodsDetailDto implements IGoodsDetailDto {
@@ -63533,6 +64492,8 @@ export class InvoiceInfoDto implements IInvoiceInfoDto {
   taxVat!: number;
   invoiceNumber!: number;
   items!: InvoiceItemDto[] | undefined;
+  bankNameArabic!: string | undefined;
+  bankNameEnglish!: string | undefined;
   id!: number;
 
   constructor(data?: IInvoiceInfoDto) {
@@ -63569,6 +64530,8 @@ export class InvoiceInfoDto implements IInvoiceInfoDto {
         this.items = [] as any;
         for (let item of _data['items']) this.items!.push(InvoiceItemDto.fromJS(item));
       }
+      this.bankNameArabic = _data['bankNameArabic'];
+      this.bankNameEnglish = _data['bankNameEnglish'];
       this.id = _data['id'];
     }
   }
@@ -63606,6 +64569,8 @@ export class InvoiceInfoDto implements IInvoiceInfoDto {
       data['items'] = [];
       for (let item of this.items) data['items'].push(item.toJSON());
     }
+    data['bankNameArabic'] = this.bankNameArabic;
+    data['bankNameEnglish'] = this.bankNameEnglish;
     data['id'] = this.id;
     return data;
   }
@@ -63633,6 +64598,8 @@ export interface IInvoiceInfoDto {
   taxVat: number;
   invoiceNumber: number;
   items: InvoiceItemDto[] | undefined;
+  bankNameArabic: string | undefined;
+  bankNameEnglish: string | undefined;
   id: number;
 }
 
@@ -67889,7 +68856,8 @@ export interface IGetPickingTypeForEditOutput {
 }
 
 export class PlateTypeDto implements IPlateTypeDto {
-  bayanPlatetypeId!: number | undefined;
+  name!: string | undefined;
+  bayanIntegrationId!: string | undefined;
   displayName!: string | undefined;
   id!: number;
 
@@ -67903,7 +68871,8 @@ export class PlateTypeDto implements IPlateTypeDto {
 
   init(_data?: any) {
     if (_data) {
-      this.bayanPlatetypeId = _data['bayanPlatetypeId'];
+      this.name = _data['name'];
+      this.bayanIntegrationId = _data['bayanIntegrationId'];
       this.displayName = _data['displayName'];
       this.id = _data['id'];
     }
@@ -67918,7 +68887,8 @@ export class PlateTypeDto implements IPlateTypeDto {
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data['bayanPlatetypeId'] = this.bayanPlatetypeId;
+    data['name'] = this.name;
+    data['bayanIntegrationId'] = this.bayanIntegrationId;
     data['displayName'] = this.displayName;
     data['id'] = this.id;
     return data;
@@ -67926,7 +68896,8 @@ export class PlateTypeDto implements IPlateTypeDto {
 }
 
 export interface IPlateTypeDto {
-  bayanPlatetypeId: number | undefined;
+  name: string | undefined;
+  bayanIntegrationId: string | undefined;
   displayName: string | undefined;
   id: number;
 }
@@ -67978,6 +68949,8 @@ export interface IPagedResultDtoOfPlateTypeDto {
 
 export class GetPlateTypeForViewDto implements IGetPlateTypeForViewDto {
   plateType!: PlateTypeDto;
+  name!: string | undefined;
+  bayanIntegrationId!: string | undefined;
 
   constructor(data?: IGetPlateTypeForViewDto) {
     if (data) {
@@ -67990,6 +68963,8 @@ export class GetPlateTypeForViewDto implements IGetPlateTypeForViewDto {
   init(_data?: any) {
     if (_data) {
       this.plateType = _data['plateType'] ? PlateTypeDto.fromJS(_data['plateType']) : <any>undefined;
+      this.name = _data['name'];
+      this.bayanIntegrationId = _data['bayanIntegrationId'];
     }
   }
 
@@ -68003,12 +68978,16 @@ export class GetPlateTypeForViewDto implements IGetPlateTypeForViewDto {
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
     data['plateType'] = this.plateType ? this.plateType.toJSON() : <any>undefined;
+    data['name'] = this.name;
+    data['bayanIntegrationId'] = this.bayanIntegrationId;
     return data;
   }
 }
 
 export interface IGetPlateTypeForViewDto {
   plateType: PlateTypeDto;
+  name: string | undefined;
+  bayanIntegrationId: string | undefined;
 }
 
 export class PlateTypeTranslationDto implements IPlateTypeTranslationDto {
@@ -68059,7 +69038,8 @@ export interface IPlateTypeTranslationDto {
 }
 
 export class CreateOrEditPlateTypeDto implements ICreateOrEditPlateTypeDto {
-  bayanPlatetypeId!: number | undefined;
+  name!: string;
+  bayanIntegrationId!: string | undefined;
   translations!: PlateTypeTranslationDto[] | undefined;
   id!: number | undefined;
 
@@ -68073,7 +69053,8 @@ export class CreateOrEditPlateTypeDto implements ICreateOrEditPlateTypeDto {
 
   init(_data?: any) {
     if (_data) {
-      this.bayanPlatetypeId = _data['bayanPlatetypeId'];
+      this.name = _data['name'];
+      this.bayanIntegrationId = _data['bayanIntegrationId'];
       if (Array.isArray(_data['translations'])) {
         this.translations = [] as any;
         for (let item of _data['translations']) this.translations!.push(PlateTypeTranslationDto.fromJS(item));
@@ -68091,7 +69072,8 @@ export class CreateOrEditPlateTypeDto implements ICreateOrEditPlateTypeDto {
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data['bayanPlatetypeId'] = this.bayanPlatetypeId;
+    data['name'] = this.name;
+    data['bayanIntegrationId'] = this.bayanIntegrationId;
     if (Array.isArray(this.translations)) {
       data['translations'] = [];
       for (let item of this.translations) data['translations'].push(item.toJSON());
@@ -68102,7 +69084,8 @@ export class CreateOrEditPlateTypeDto implements ICreateOrEditPlateTypeDto {
 }
 
 export interface ICreateOrEditPlateTypeDto {
-  bayanPlatetypeId: number | undefined;
+  name: string;
+  bayanIntegrationId: string | undefined;
   translations: PlateTypeTranslationDto[] | undefined;
   id: number | undefined;
 }
@@ -78621,6 +79604,7 @@ export class CreateTenantInput implements ICreateTenantInput {
   isInTrialPeriod!: boolean;
   userAdminFirstName!: string;
   userAdminSurname!: string;
+  moiNumber!: string;
 
   constructor(data?: ICreateTenantInput) {
     if (data) {
@@ -78650,6 +79634,7 @@ export class CreateTenantInput implements ICreateTenantInput {
       this.isInTrialPeriod = _data['isInTrialPeriod'];
       this.userAdminFirstName = _data['userAdminFirstName'];
       this.userAdminSurname = _data['userAdminSurname'];
+      this.moiNumber = _data['moiNumber'];
     }
   }
 
@@ -78680,6 +79665,7 @@ export class CreateTenantInput implements ICreateTenantInput {
     data['isInTrialPeriod'] = this.isInTrialPeriod;
     data['userAdminFirstName'] = this.userAdminFirstName;
     data['userAdminSurname'] = this.userAdminSurname;
+    data['moiNumber'] = this.moiNumber;
     return data;
   }
 }
@@ -78703,10 +79689,12 @@ export interface ICreateTenantInput {
   isInTrialPeriod: boolean;
   userAdminFirstName: string;
   userAdminSurname: string;
+  moiNumber: string;
 }
 
 export class TenantEditDto implements ITenantEditDto {
   tenancyName!: string;
+  companyName!: string;
   name!: string;
   mobileNo!: string | undefined;
   address!: string;
@@ -78717,6 +79705,7 @@ export class TenantEditDto implements ITenantEditDto {
   isActive!: boolean;
   subscriptionEndDateUtc!: moment.Moment | undefined;
   isInTrialPeriod!: boolean;
+  moiNumber!: string;
   id!: number;
 
   constructor(data?: ITenantEditDto) {
@@ -78730,6 +79719,7 @@ export class TenantEditDto implements ITenantEditDto {
   init(_data?: any) {
     if (_data) {
       this.tenancyName = _data['tenancyName'];
+      this.companyName = _data['companyName'];
       this.name = _data['name'];
       this.mobileNo = _data['mobileNo'];
       this.address = _data['address'];
@@ -78740,6 +79730,7 @@ export class TenantEditDto implements ITenantEditDto {
       this.isActive = _data['isActive'];
       this.subscriptionEndDateUtc = _data['subscriptionEndDateUtc'] ? moment(_data['subscriptionEndDateUtc'].toString()) : <any>undefined;
       this.isInTrialPeriod = _data['isInTrialPeriod'];
+      this.moiNumber = _data['moiNumber'];
       this.id = _data['id'];
     }
   }
@@ -78754,6 +79745,7 @@ export class TenantEditDto implements ITenantEditDto {
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
     data['tenancyName'] = this.tenancyName;
+    data['companyName'] = this.companyName;
     data['name'] = this.name;
     data['mobileNo'] = this.mobileNo;
     data['address'] = this.address;
@@ -78764,6 +79756,7 @@ export class TenantEditDto implements ITenantEditDto {
     data['isActive'] = this.isActive;
     data['subscriptionEndDateUtc'] = this.subscriptionEndDateUtc ? this.subscriptionEndDateUtc.toISOString() : <any>undefined;
     data['isInTrialPeriod'] = this.isInTrialPeriod;
+    data['moiNumber'] = this.moiNumber;
     data['id'] = this.id;
     return data;
   }
@@ -78771,6 +79764,7 @@ export class TenantEditDto implements ITenantEditDto {
 
 export interface ITenantEditDto {
   tenancyName: string;
+  companyName: string;
   name: string;
   mobileNo: string | undefined;
   address: string;
@@ -78781,6 +79775,7 @@ export interface ITenantEditDto {
   isActive: boolean;
   subscriptionEndDateUtc: moment.Moment | undefined;
   isInTrialPeriod: boolean;
+  moiNumber: string;
   id: number;
 }
 
@@ -79721,6 +80716,7 @@ export class RegisterTenantInput implements IRegisterTenantInput {
   cityId!: number;
   userAdminFirstName!: string;
   userAdminSurname!: string;
+  moiNumber!: string;
 
   constructor(data?: IRegisterTenantInput) {
     if (data) {
@@ -79746,6 +80742,7 @@ export class RegisterTenantInput implements IRegisterTenantInput {
       this.cityId = _data['cityId'];
       this.userAdminFirstName = _data['userAdminFirstName'];
       this.userAdminSurname = _data['userAdminSurname'];
+      this.moiNumber = _data['moiNumber'];
     }
   }
 
@@ -79772,6 +80769,7 @@ export class RegisterTenantInput implements IRegisterTenantInput {
     data['cityId'] = this.cityId;
     data['userAdminFirstName'] = this.userAdminFirstName;
     data['userAdminSurname'] = this.userAdminSurname;
+    data['moiNumber'] = this.moiNumber;
     return data;
   }
 }
@@ -79791,6 +80789,7 @@ export interface IRegisterTenantInput {
   cityId: number;
   userAdminFirstName: string;
   userAdminSurname: string;
+  moiNumber: string;
 }
 
 export class RegisterTenantOutput implements IRegisterTenantOutput {
@@ -84958,6 +85957,7 @@ export class UserEditDto implements IUserEditDto {
   experienceField!: string | undefined;
   dateOfBirth!: moment.Moment | undefined;
   hijriDateOfBirth!: string | undefined;
+  driverLicenseTypeId!: number | undefined;
 
   constructor(data?: IUserEditDto) {
     if (data) {
@@ -84986,6 +85986,7 @@ export class UserEditDto implements IUserEditDto {
       this.experienceField = _data['experienceField'];
       this.dateOfBirth = _data['dateOfBirth'] ? moment(_data['dateOfBirth'].toString()) : <any>undefined;
       this.hijriDateOfBirth = _data['hijriDateOfBirth'];
+      this.driverLicenseTypeId = _data['driverLicenseTypeId'];
     }
   }
 
@@ -85015,6 +86016,7 @@ export class UserEditDto implements IUserEditDto {
     data['experienceField'] = this.experienceField;
     data['dateOfBirth'] = this.dateOfBirth ? this.dateOfBirth.toISOString() : <any>undefined;
     data['hijriDateOfBirth'] = this.hijriDateOfBirth;
+    data['driverLicenseTypeId'] = this.driverLicenseTypeId;
     return data;
   }
 }
@@ -85037,6 +86039,7 @@ export interface IUserEditDto {
   experienceField: string | undefined;
   dateOfBirth: moment.Moment | undefined;
   hijriDateOfBirth: string | undefined;
+  driverLicenseTypeId: number | undefined;
 }
 
 export class UserRoleDto implements IUserRoleDto {

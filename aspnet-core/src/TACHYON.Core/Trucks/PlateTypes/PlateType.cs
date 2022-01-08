@@ -18,6 +18,7 @@ namespace TACHYON.Trucks.PlateTypes
         /// This field is for Bayan Integration system
         /// </summary>
         public string BayanIntegrationId { get; set; }
+        public int WaslIntegrationId { get; set; }
         public ICollection<PlateTypeTranslation> Translations { get; set; }
     }
 }
