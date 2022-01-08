@@ -80,7 +80,7 @@
                     <div class="form-group col-6">
                       <label for="EmailAddress">{{ 'EmailAddress' | localize }} <span class="required-fileds"> *</span></label>
                       <input
-                        style="text-align: left !important;"
+                        style="text-align: left !important"
                         id="EmailAddress"
                         #emailAddressInput="ngModel"
                         type="email"
@@ -103,7 +103,7 @@
                           <span class="input-group-text">+966</span>
                         </div>
                         <input
-                          style="text-align: left !important;"
+                          style="text-align: left !important"
                           (input)="CheckIfDriverPhoneNumberIsValid(userNameInput.value, user.id)"
                           id="UserName"
                           #userNameInput="ngModel"
@@ -221,6 +221,26 @@
                       [(ngModel)]="user.experienceField"
                       maxlength="256"
                     />
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="driverLicenseTypeId"> {{ 'driverLicenseType' | localize }}<span class="text-danger">*</span> </label>
+                    <select
+                      id="driverLicenseTypeId"
+                      #driverLicenseTypeId="ngModel"
+                      name="driverLicenseTypeId"
+                      [(ngModel)]="user.driverLicenseTypeId"
+                      required
+                      class="form-control form-control-lg custom-select mr-sm-2"
+                      [ngClass]="{
+                        'is-valid': userForm.submitted && driverLicenseTypeId.valid,
+                        'is-invalid': userForm.submitted && !driverLicenseTypeId.valid
+                      }"
+                    >
+                      <option *ngFor="let item of driverLicenseTypes" [value]="item.id">{{ item.displayName }}</option>
+                    </select>
+                    <validation-messages [formCtrl]="driverLicenseTypeId"></validation-messages>
                   </div>
                 </div>
               </div>

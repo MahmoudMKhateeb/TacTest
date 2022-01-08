@@ -1,0 +1,80 @@
+﻿<div
+  bsModal
+  #createOrEditModal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="createOrEditModal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form *ngIf="active" #driverLicenseTypeForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            <span *ngIf="driverLicenseType.id">{{ l('EditDriverLicenseType') }}</span>
+            <span *ngIf="!driverLicenseType.id">{{ l('CreateNewDriverLicenseType') }}</span>
+          </h4>
+          <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="DriverLicenseType_Name">{{ l('Name') }} *</label>
+            <input
+              type="text"
+              id="DriverLicenseType_Name"
+              class="form-control"
+              [(ngModel)]="driverLicenseType.name"
+              name="Name"
+              minlength="0"
+              maxlength="256"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="DriverLicenseType_WasIIntegrationId">{{ l('WasIIntegrationId') }}</label>
+            <input
+              type="number"
+              id="DriverLicenseType_WasIIntegrationId"
+              class="form-control"
+              [(ngModel)]="driverLicenseType.wasIIntegrationId"
+              name="WasIIntegrationId"
+              min="1"
+              max="1000"
+            />
+          </div>
+
+          <br />
+          <div class="m-checkbox-list">
+            <label for="DriverLicenseType_ApplicableforWaslRegistration" class="kt-checkbox">
+              <input
+                id="DriverLicenseType_ApplicableforWaslRegistration"
+                type="checkbox"
+                name="ApplicableforWaslRegistration"
+                [(ngModel)]="driverLicenseType.applicableforWaslRegistration"
+              />
+              {{ l('ApplicableforWaslRegistration') }}
+              <span></span>
+            </label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
+          <button
+            type="submit"
+            class="btn btn-primary blue"
+            [disabled]="!driverLicenseTypeForm.form.valid"
+            [buttonBusy]="saving"
+            [busyText]="l('SavingWithThreeDot')"
+          >
+            <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

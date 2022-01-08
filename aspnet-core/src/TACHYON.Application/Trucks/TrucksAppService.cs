@@ -30,6 +30,7 @@ using TACHYON.Documents.DocumentsEntities;
 using TACHYON.Documents.DocumentTypes;
 using TACHYON.Dto;
 using TACHYON.Features;
+using TACHYON.Integration.WaslIntegration;
 using TACHYON.Notifications;
 using TACHYON.Storage;
 using TACHYON.Trucks;
@@ -48,8 +49,8 @@ using GetAllForLookupTableInput = TACHYON.Trucks.Dtos.GetAllForLookupTableInput;
 
 namespace TACHYON.Trucks
 {
-    [AbpAuthorize(AppPermissions.Pages_Trucks)]
-    [RequiresFeature(AppFeatures.Carrier, AppFeatures.TachyonDealer)]
+    //[AbpAuthorize(AppPermissions.Pages_Trucks)]
+    //[RequiresFeature(AppFeatures.Carrier, AppFeatures.TachyonDealer)]
     public class TrucksAppService : TACHYONAppServiceBase, ITrucksAppService
     {
         private const int MaxTruckPictureBytes = 5242880; //5MB
@@ -67,11 +68,12 @@ namespace TACHYON.Trucks
         private readonly IRepository<TransportType, int> _transportTypeRepository;
         private readonly IRepository<Capacity, int> _capacityRepository;
         private readonly IRepository<PlateType> _plateTypesRepository;
+        private readonly WaslIntegrationManager _waslIntegrationManager;
 
 
 
 
-        public TrucksAppService(IRepository<DocumentType, long> documentTypeRepository, IRepository<DocumentFile, Guid> documentFileRepository, IRepository<Truck, long> truckRepository, ITrucksExcelExporter trucksExcelExporter, IRepository<TrucksType, long> lookup_trucksTypeRepository, IRepository<TruckStatus, long> lookup_truckStatusRepository, IRepository<User, long> lookup_userRepository, IAppNotifier appNotifier, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager, DocumentFilesAppService documentFilesAppService, IRepository<TransportType, int> transportTypeRepository, IRepository<Capacity, int> capacityRepository, IRepository<PlateType> PlateTypesRepository)
+        public TrucksAppService(IRepository<DocumentType, long> documentTypeRepository, IRepository<DocumentFile, Guid> documentFileRepository, IRepository<Truck, long> truckRepository, ITrucksExcelExporter trucksExcelExporter, IRepository<TrucksType, long> lookup_trucksTypeRepository, IRepository<TruckStatus, long> lookup_truckStatusRepository, IRepository<User, long> lookup_userRepository, IAppNotifier appNotifier, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager, DocumentFilesAppService documentFilesAppService, IRepository<TransportType, int> transportTypeRepository, IRepository<Capacity, int> capacityRepository, IRepository<PlateType> PlateTypesRepository, WaslIntegrationManager waslIntegrationManager)
         {
             _documentFileRepository = documentFileRepository;
             _documentTypeRepository = documentTypeRepository;
@@ -87,6 +89,7 @@ namespace TACHYON.Trucks
             _transportTypeRepository = transportTypeRepository;
             _capacityRepository = capacityRepository;
             _plateTypesRepository = PlateTypesRepository;
+            _waslIntegrationManager = waslIntegrationManager;
         }
 
         public async Task<LoadResult> GetAll(GetAllTrucksInput input)
@@ -251,19 +254,6 @@ namespace TACHYON.Trucks
 
 
             var truckId = await _truckRepository.InsertAndGetIdAsync(truck);
-            //if (input.Driver1UserId != null)
-            //{
-            //    try
-            //    {
-            //    await _appNotifier.AssignDriverToTruck(new UserIdentifier(AbpSession.TenantId, input.Driver1UserId.Value), truckId);
-
-            //    }
-            //    catch (Exception ex)
-            //    {
-
-            //        throw;
-            //    }
-            //}
 
 
             if (input.UpdateTruckPictureInput != null && !input.UpdateTruckPictureInput.FileToken.IsNullOrEmpty())
@@ -280,37 +270,29 @@ namespace TACHYON.Trucks
             }
 
 
-
+            //Wasl Integration
+            await _waslIntegrationManager.QueueVehicleRegistrationJob(truck);
         }
 
         [AbpAuthorize(AppPermissions.Pages_Trucks_Edit)]
         protected virtual async Task Update(CreateOrEditTruckDto input)
         {
             var truck = await _truckRepository.FirstOrDefaultAsync(input.Id.Value);
-            //if (input.Driver1UserId.HasValue && input.Driver1UserId != truck.Driver1UserId)
-            //{
-            //    await _appNotifier.AssignDriverToTruck(new UserIdentifier(AbpSession.TenantId, input.Driver1UserId.Value), truck.Id);
-            //}
-
 
             ObjectMapper.Map(input, truck);
 
-            //if (!input.UpdateTruckPictureInput.FileToken.IsNullOrEmpty())
-            //{
-            //    if (truck.PictureId.HasValue)
-            //    {
-            //        await _binaryObjectManager.DeleteAsync(truck.PictureId.Value);
-            //    }
-
-            //    truck.PictureId = await AddOrUpdateTruckPicture(input.UpdateTruckPictureInput);
-            //}
-
+            //Wasl Integration
+            await _waslIntegrationManager.QueueVehicleRegistrationJob(truck);
         }
 
         [AbpAuthorize(AppPermissions.Pages_Trucks_Delete)]
         public async Task Delete(EntityDto<long> input)
         {
+            var truck = await _truckRepository.FirstOrDefaultAsync(input.Id);
             await _truckRepository.DeleteAsync(input.Id);
+
+            //Wasl Integration
+            await _waslIntegrationManager.QueueVehicleDeleteJob(truck);
         }
 
         public async Task<FileDto> GetTrucksToExcel(GetAllTrucksForExcelInput input)
@@ -555,5 +537,17 @@ namespace TACHYON.Trucks
         }
 
         #endregion
+
+        public async Task Wasl_VehicleRegistration(long id)
+        {
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
+            {
+                var truck = await _truckRepository.GetAllIncluding(x=> x.PlateTypeFk)
+                    .FirstOrDefaultAsync(x=> x.Id == id);
+                //Wasl Integration
+                await _waslIntegrationManager.QueueVehicleRegistrationJob(truck);
+            }
+
+        }
     }
 }
