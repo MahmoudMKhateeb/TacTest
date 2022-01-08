@@ -1,6 +1,15 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <localizationDictionary culture="en">
-	<texts>
+	<texts>    <text name="DriverLicenseTypes">Driver license types</text>
+    <text name="DriverLicenseType">Driver license type</text>
+    <text name="TACHYON.DriverLicenseTypes.DriverLicenseType">DriverLicenseType</text>
+    <text name="WasIIntegrationId">Was i integration id</text>
+    <text name="ApplicableforWaslRegistration">Applicablefor wasl registration</text>
+    <text name="NotApplicableforWaslRegistration">Not applicablefor wasl registration</text>
+    <text name="DriverLicenseTypesHeaderInfo">Driver license types header info</text>
+    <text name="CreateNewDriverLicenseType">Create new driver license type</text>
+    <text name="EditDriverLicenseType">Edit driver license type</text>
+    <text name="DeleteDriverLicenseType">Delete driver license type</text>
     <text name="Goods">Goods</text>
     <text name="DangerousGoodType">Dangerous good type</text>
     <text name="TACHYON.Goods.DangerousGoodType">DangerousGoodType</text>

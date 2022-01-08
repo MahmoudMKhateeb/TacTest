@@ -20,6 +20,7 @@ namespace TACHYON.Trucks.PlateTypes
         public string BayanIntegrationId { get; set; }
 
         public bool IsDefault { get; set; }
+        public int WaslIntegrationId { get; set; }
         public ICollection<PlateTypeTranslation> Translations { get; set; }
     }
 }

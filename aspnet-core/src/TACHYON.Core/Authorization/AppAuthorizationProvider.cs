@@ -31,6 +31,13 @@ namespace TACHYON.Authorization
 
             var pages = context.GetPermissionOrNull(AppPermissions.Pages) ?? context.CreatePermission(AppPermissions.Pages, L("Pages"));
 
+            var driverLicenseTypes = pages.CreateChildPermission(AppPermissions.Pages_DriverLicenseTypes, L("DriverLicenseTypes"), multiTenancySides: MultiTenancySides.Host);
+            driverLicenseTypes.CreateChildPermission(AppPermissions.Pages_DriverLicenseTypes_Create, L("CreateNewDriverLicenseType"), multiTenancySides: MultiTenancySides.Host);
+            driverLicenseTypes.CreateChildPermission(AppPermissions.Pages_DriverLicenseTypes_Edit, L("EditDriverLicenseType"), multiTenancySides: MultiTenancySides.Host);
+            driverLicenseTypes.CreateChildPermission(AppPermissions.Pages_DriverLicenseTypes_Delete, L("DeleteDriverLicenseType"), multiTenancySides: MultiTenancySides.Host);
+
+
+
             var dangerousGoodTypes = pages.CreateChildPermission(AppPermissions.Pages_DangerousGoodTypes, L("DangerousGoodTypes"), multiTenancySides: MultiTenancySides.Host);
             dangerousGoodTypes.CreateChildPermission(AppPermissions.Pages_DangerousGoodTypes_Create, L("CreateNewDangerousGoodType"), multiTenancySides: MultiTenancySides.Host);
             dangerousGoodTypes.CreateChildPermission(AppPermissions.Pages_DangerousGoodTypes_Edit, L("EditDangerousGoodType"), multiTenancySides: MultiTenancySides.Host);
