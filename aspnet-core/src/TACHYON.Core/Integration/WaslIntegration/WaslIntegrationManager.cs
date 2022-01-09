@@ -256,7 +256,7 @@ namespace TACHYON.Integration.WaslIntegration
                 var root = new WaslVehicleRoot()
                 {
                     Plate = TranslatePlateNumber(input.PlateNumber),
-                    PlateType = input.PlateTypeFk.WaslIntegrationId,
+                    PlateType = 2,
                     SequenceNumber = vehicleSequenceNumber.ToString()
                 };
                 await _backgroundJobManager.EnqueueAsync<VehicleRegistrationJob, WaslVehicleRoot>(root);
@@ -268,7 +268,7 @@ namespace TACHYON.Integration.WaslIntegration
             var root = new WaslVehicleRoot()
             {
                 Plate = input.PlateNumber,
-                PlateType = input.PlateTypeFk.WaslIntegrationId,
+                PlateType = 2,
                 SequenceNumber = input.Id.ToString()
             };
             await _backgroundJobManager.EnqueueAsync<VehicleDeleteJob, WaslVehicleRoot>(root);
