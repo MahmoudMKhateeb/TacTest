@@ -1,8 +1,10 @@
 ﻿using Abp.BackgroundJobs;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.Json;
 using Microsoft.EntityFrameworkCore;
 using RestSharp;
+using System;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -39,7 +41,7 @@ namespace TACHYON.Integration.WaslIntegration
         /// <returns></returns>
         public async Task VehicleRegistration(WaslVehicleRoot input)
         {
-          var response =  await Vehicle(input, Method.POST);
+            var response = await Vehicle(input, Method.POST);
         }
 
         /// <summary>
@@ -91,14 +93,15 @@ namespace TACHYON.Integration.WaslIntegration
                 request.AddHeader("client-id", "52efa1c2-5623-43e2-aacf-b1b9d7ddf8f5");
                 string body = ToJsonLowerCaseFirstLetter(input);
                 var client = new RestClient("https://wasl.api.elm.sa/api/eff/v1/vehicles");
-               // client.Timeout = -1;
-                
+                // client.Timeout = -1;
+
 
                 request.AddParameter("application/json", body, ParameterType.RequestBody);
                 IRestResponse response = await client.ExecuteAsync(request);
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
                     Logger.Error("WaslIntegrationManager.Vehicle" + response.Content);
+                    throw new Exception(response.Content);
                 }
                 else
                 {
@@ -129,6 +132,7 @@ namespace TACHYON.Integration.WaslIntegration
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
                     Logger.Error("WaslIntegrationManager.Drivers" + response.Content);
+                    throw new Exception(response.Content);
                 }
                 else
                 {
@@ -184,10 +188,12 @@ namespace TACHYON.Integration.WaslIntegration
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
                     Logger.Error("WaslIntegrationManager.TripRegistration" + response.Content);
-                    trip.IsWaslIntegrated = true;
+
+                    throw new Exception(response.Content);
                 }
                 else
                 {
+                    trip.IsWaslIntegrated = true;
                     Logger.Trace("WaslIntegrationManager.TripRegistration" + response.Content);
                 }
 
@@ -228,6 +234,7 @@ namespace TACHYON.Integration.WaslIntegration
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
                     Logger.Error("WaslIntegrationManager.TripRegistration" + response.Content);
+                    throw new Exception(response.Content);
                 }
                 else
                 {

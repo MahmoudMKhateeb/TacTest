@@ -24,6 +24,7 @@
     <PackageReference Include="Abp.Quartz" Version="5.10.0" />
     <PackageReference Include="Atlassian.SDK" Version="12.4.0" />
     <PackageReference Include="FirebaseAdmin" Version="2.0.0" />
+    <PackageReference Include="Hangfire.Core" Version="1.7.11" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="3.1.5" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.5" />
     <PackageReference Include="Microsoft.Extensions.Configuration.AzureKeyVault" Version="3.1.5" />

@@ -4,6 +4,7 @@ using Abp.BackgroundJobs;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.Threading;
+using Hangfire;
 
 namespace TACHYON.Integration.BayanIntegration.Jobs
 {
@@ -17,6 +18,7 @@ namespace TACHYON.Integration.BayanIntegration.Jobs
         }
 
         [UnitOfWork]
+        [AutomaticRetry(Attempts = 2)]
         public override void Execute(int tripId)
         {
             AsyncHelper.RunSync(() => _bayanIntegrationManager.EditConsignmentNote(tripId));
