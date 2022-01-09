@@ -64,14 +64,13 @@
                 </p>
               </div>
             </div>
+            <div *ngIf="item.noActionReason" class="textStautsNow">
+              <span>
+                {{ item.noActionReason }}
+              </span>
+            </div>
             <div class="actions">
-              <a
-                href="javascript:void(0)"
-                class="red"
-                (click)="accept()"
-                *ngIf="item.driverStatus == 0 && item.status == 0 && item.canStartTrip"
-                [buttonBusy]="saving"
-              >
+              <a href="javascript:void(0)" class="red" (click)="accept()" *ngIf="item.canAcceptTrip" [buttonBusy]="saving">
                 {{ l('Acknowledge') }}
               </a>
               <a href="javascript:void(0)" class="red" (click)="TripAccidentModal.show(item.id, null)" *ngIf="canCreateAccident()">
@@ -100,7 +99,7 @@
                 </p>
               </div>
               <!-- attr step for steps work .. for 10 step .. 0 => if no step .. 1 => if one step .. 5 => if num steps is 4, and the 4 step is complete -->
-              <div *ngIf="item.driverStatus == 1" class="pointsRoad" [attr.step]="pickup.status + 1">
+              <div *ngIf="(item.status == 1 && item.driverStatus == 0) || item.driverStatus == 1" class="pointsRoad" [attr.step]="pickup.status + 1">
                 <span title="{{ l('StartedMovingToLoadingLocation') }}">
                   <i class="done fas fa-check"></i>
                   <i class="now fas fa-truck"></i>
@@ -121,7 +120,7 @@
                   <i class="now fas fa-truck"></i>
                 </span>
               </div>
-              <div class="textStautsNow" *ngIf="pickup.status != 0">
+              <div class="textStautsNow" *ngIf="(pickup.statusTitle && item.status == 1 && item.driverStatus == 0) || item.driverStatus == 1">
                 <span>
                   {{ pickup.statusTitle }}
                 </span>
@@ -136,7 +135,10 @@
                   {{ pickup.note }}
                 </p>
               </div>
-              <div class="actions mt-0" *ngIf="!pickup.isComplete && item.driverStatus == 1">
+              <div
+                class="actions mt-0"
+                *ngIf="!pickup.isComplete && item.driverStatus == 1 && (item.status == 1 || (item.status == 0 && item.canStartTrip))"
+              >
                 <a href="javascript:void(0)" *ngIf="!saving && item.isAssign" (click)="changeStatus(pickup)">
                   {{ pickup.nextStatus }}
                 </a>
@@ -167,38 +169,38 @@
                 </p>
               </div>
               <!-- attr step for steps work .. for 10 step .. 0 => if no step .. 1 => if one step .. 5 => if num steps is 4, and the 4 step is complete -->
-              <div *ngIf="pickup.isComplete" class="pointsRoad" [attr.step]="dropOffStep(drop)">
-                <span>
+              <div *ngIf="(item.status == 1 && item.driverStatus == 0) || item.driverStatus == 1" class="pointsRoad" [attr.step]="dropOffStep(drop)">
+                <span title="{{ l('StartedMovingToOfLoadingLocation') }}">
                   <i class="done fas fa-check"></i>
                   <i class="now fas fa-truck"></i>
                 </span>
                 <b></b>
-                <span>
+                <span title="{{ l('ArrivedToDestination') }}">
                   <i class="done fas fa-check"></i>
                   <i class="now fas fa-truck"></i>
                 </span>
                 <b></b>
-                <span>
+                <span title="{{ l('StartOffloading') }}">
                   <i class="done fas fa-check"></i>
                   <i class="now fas fa-truck"></i>
                 </span>
                 <b></b>
-                <span>
+                <span title="{{ l('FinishOffLoadShipment') }}">
                   <i class="done fas fa-check"></i>
                   <i class="now fas fa-truck"></i>
                 </span>
                 <b></b>
-                <span>
+                <span title="{{ l('ReceiverConfirmed') }}">
                   <i class="done fas fa-check"></i>
                   <i class="now fas fa-truck"></i>
                 </span>
                 <b></b>
-                <span>
+                <span title="{{ l('DeliveryConfirmation') }}">
                   <i class="done fas fa-check"></i>
                   <i class="now fas fa-truck"></i>
                 </span>
               </div>
-              <div *ngIf="drop.statusTitle" class="textStautsNow">
+              <div *ngIf="(drop.statusTitle && item.status == 1 && item.driverStatus == 0) || item.driverStatus == 1" class="textStautsNow">
                 <span>
                   {{ drop.statusTitle }}
                 </span>
@@ -212,7 +214,7 @@
                 </span>
               </div>
               <div class="receiver">
-                <p>
+                <p *ngIf="drop.receiverFullName">
                   <i class="far fa-user"></i>
                   <span> {{ l('Receiver') }}: </span>
                   <b>
@@ -233,7 +235,7 @@
                   {{ drop.note }}
                 </p>
               </div>
-              <div class="actions mt-0" *ngIf="canChangeDropStatus(drop) && !item.hasAccident"></div>
+              <div class="actions mt-0" *ngIf="canChangeDropStatus(drop) && !item.hasAccident && item.driverStatus == 1"></div>
               <p>{{ l('ReceiverCode') }}: {{ drop.receiverCode }}</p>
               <div class="shipperNote" *ngIf="isGranted('Pages.Shipment.Tracking.ReceiverCode')">
                 <a href="javascript:void(0)" *ngIf="!saving" (click)="changeStatus(drop)">

@@ -2471,6 +2471,9 @@
 		
     <text name="CompanyNamePatternError">Company name is longer than 3 characters, only English letters, numbers, dash and underscore are allowed</text>
     <text name="CompanyLegalNamePatternError">Company legal name is longer than 3 characters, only English and Arabic letters, numbers, dash and underscores are allowed</text>
+    <text name="ThereIsNoDriverAssingdToTrip">There Is No Driver Assingd To Trip</text>
+    <text name="TheDriverAlreadyWorkingOnAnotherTrip">The Driver Already Working On Another Trip</text>
+    <text name="TheStartDateOfTripNotCome">The Start Date Of Trip NotC ome</text>
     <!--<text name="StartOffloading"></text>
     <text name="ReceiverConfirmed"></text>
     <text name="DeliveryConfirmation"></text>-->
