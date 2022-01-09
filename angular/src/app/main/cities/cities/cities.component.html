@@ -9,211 +9,55 @@
         </button>
       </div>
     </sub-header>
-
     <div [class]="containerClass">
       <div class="card card-custom gutter-b">
         <div class="card-body">
-          <form class="form" autocomplete="off">
-            <div>
-              <div class="row align-items-center">
-                <div class="col-xl-12">
-                  <div class="form-group m-form__group align-items-center">
-                    <div class="input-group">
-                      <input
-                        [(ngModel)]="filterText"
-                        name="filterText"
-                        autoFocus
-                        class="form-control m-input"
-                        [placeholder]="l('SearchWithThreeDot')"
-                        type="text"
-                      />
-                      <span class="input-group-btn">
-                        <button (click)="getCities()" class="btn btn-primary" type="submit"><i class="flaticon-search-1"></i></button>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="row" [hidden]="!advancedFiltersAreShown">
-                <div class="col-md-12">
-                  <div class="kt-separator kt-separator--border-dashed"></div>
-                </div>
-
-                <div class="col-md-3">
-                  <div class="form-group">
-                    <label for="DisplayNameFilter">{{ l('DisplayName') }}</label>
-                    <input type="text" class="form-control" id="DisplayNameFilter" name="displayNameFilter" [(ngModel)]="displayNameFilter" />
-                  </div>
-                </div>
-                <div class="col-md-3">
-                  <div class="form-group">
-                    <label for="CodeFilter">{{ l('Code') }}</label>
-                    <input type="text" class="form-control" id="CodeFilter" name="codeFilter" [(ngModel)]="codeFilter" />
-                  </div>
-                </div>
-                <div class="col-md-3">
-                  <div class="form-group">
-                    <label for="LatitudeFilter">{{ l('Latitude') }}</label>
-                    <input type="text" class="form-control" id="LatitudeFilter" name="latitudeFilter" [(ngModel)]="latitudeFilter" />
-                  </div>
-                </div>
-                <div class="col-md-3">
-                  <div class="form-group">
-                    <label for="LongitudeFilter">{{ l('Longitude') }}</label>
-                    <input type="text" class="form-control" id="LongitudeFilter" name="longitudeFilter" [(ngModel)]="longitudeFilter" />
-                  </div>
-                </div>
-                <div class="col-md-3">
-                  <div class="form-group">
-                    <label for="CountyDisplayNameFilter">({{ l('County') }}) {{ l('DisplayName') }}</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="CountyDisplayNameFilter"
-                      name="countyDisplayNameFilter"
-                      [(ngModel)]="countyDisplayNameFilter"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div class="row mb-2">
-                <div class="col-sm-12">
-                  <span
-                    class="clickable-item text-muted"
-                    *ngIf="!advancedFiltersAreShown"
-                    (click)="advancedFiltersAreShown = !advancedFiltersAreShown"
-                    ><i class="fa fa-angle-down"></i> {{ l('ShowAdvancedFilters') }}</span
-                  >
-                  <span class="clickable-item text-muted" *ngIf="advancedFiltersAreShown" (click)="advancedFiltersAreShown = !advancedFiltersAreShown"
-                    ><i class="fa fa-angle-up"></i> {{ l('HideAdvancedFilters') }}</span
-                  >
-                </div>
-              </div>
-            </div>
-          </form>
-
           <div class="row align-items-center">
-            <!--<Primeng-Datatable-Start>-->
-            <div class="primeng-datatable-container col-12" [busyIf]="primengTableHelper.isLoading">
-              <p-table
-                #dataTable
-                (onLazyLoad)="getCities($event)"
-                [value]="primengTableHelper.records"
-                rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"
-                [paginator]="false"
-                [lazy]="true"
-                [scrollable]="true"
-                ScrollWidth="100%"
-                [responsive]="primengTableHelper.isResponsive"
-                [resizableColumns]="primengTableHelper.resizableColumns"
-              >
-                <ng-template pTemplate="header">
-                  <tr>
-                    <th style="width: 130px;" [hidden]="!isGrantedAny('Pages.Cities.Edit', 'Pages.Cities.Delete')">{{ l('Actions') }}</th>
-                    <th style="width: 150px;" pSortableColumn="countyFk.displayName">
-                      {{ l('DisplayName') }}
-                      <p-sortIcon field="countyDisplayName"></p-sortIcon>
-                    </th>
-                    <th style="width: 150px;" pSortableColumn="displayName">
-                      {{ l('DisplayName') }}
-                      <p-sortIcon field="city.displayName"></p-sortIcon>
-                    </th>
-                    <th style="width: 150px;" pSortableColumn="code">
-                      {{ l('Code') }}
-                      <p-sortIcon field="city.code"></p-sortIcon>
-                    </th>
-                    <th style="width: 150px;" pSortableColumn="latitude">
-                      {{ l('Latitude') }}
-                      <p-sortIcon field="city.latitude"></p-sortIcon>
-                    </th>
-                    <th style="width: 150px;" pSortableColumn="longitude">
-                      {{ l('Longitude') }}
-                      <p-sortIcon field="city.longitude"></p-sortIcon>
-                    </th>
-                  </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-record="$implicit">
-                  <tr>
-                    <td style="width: 130px;" [hidden]="!isGrantedAny('Pages.Cities.Edit', 'Pages.Cities.Delete')">
-                      <div class="btn-group dropdown" dropdown container="body">
-                        <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
-                          <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
-                        </button>
-                        <ul class="dropdown-menu" *dropdownMenu>
-                          <li>
-                            <a href="javascript:;" class="dropdown-item" (click)="viewCityModal.show(record)">{{ l('View') }}</a>
-                          </li>
-                          <li>
-                            <a
-                              href="javascript:;"
-                              *ngIf="permission.isGranted('Pages.Cities.Edit')"
-                              class="dropdown-item"
-                              (click)="createOrEditCityModal.show(record.city.id)"
-                              >{{ l('Edit') }}</a
-                            >
-                          </li>
-                          <li>
-                            <a
-                              class="dropdown-item"
-                              href="javascript:;"
-                              *ngIf="permission.isGranted('Pages.Cities.Delete')"
-                              (click)="deleteCity(record.city)"
-                              >{{ l('Delete') }}</a
-                            >
-                          </li>
-                          <li>
-                            <a href="javascript:;" *ngIf="entityHistoryEnabled" (click)="showHistory(record.city)">{{ l('History') }}</a>
-                          </li>
-                        </ul>
-                      </div>
-                    </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('DisplayName') }}</span>
-                      {{ record.countyDisplayName }}
-                    </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('DisplayName') }}</span>
-                      {{ record.city.displayName }}
-                    </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('Code') }}</span>
-                      {{ record.city.code }}
-                    </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('Latitude') }}</span>
-                      {{ record.city.latitude }}
-                    </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('Longitude') }}</span>
-                      {{ record.city.longitude }}
-                    </td>
-                  </tr>
-                </ng-template>
-              </p-table>
-              <div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">
-                {{ l('NoData') }}
+            <dx-data-grid
+              #grid
+              id="dataGrid"
+              [dataSource]="dataSource"
+              [remoteOperations]="true"
+              [showColumnLines]="true"
+              [showRowLines]="false"
+              [showBorders]="true"
+              [rowAlternationEnabled]="true"
+              keyExpr="id"
+              (onRowUpdating)="updateRow($event)"
+            >
+              <dxo-editing mode="popup" [allowUpdating]="true" [allowDeleting]="true"> </dxo-editing>
+              <dxo-filter-row [visible]="true"></dxo-filter-row>
+              <dxo-search-panel [visible]="true"></dxo-search-panel>
+              <dxo-filter-panel [visible]="true"></dxo-filter-panel>
+              <dxo-filter-builder-popup></dxo-filter-builder-popup>
+              <dxo-master-detail [enabled]="true" template="translations"></dxo-master-detail>
+              <div *dxTemplate="let options of 'translations'">
+                <cities-translations-template [CoreId]="options.data.id"></cities-translations-template>
               </div>
-              <div class="primeng-paging-container">
-                <p-paginator
-                  [rows]="primengTableHelper.defaultRecordsCountPerPage"
-                  #paginator
-                  (onPageChange)="getCities($event)"
-                  [totalRecords]="primengTableHelper.totalRecordsCount"
-                  [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
-                >
-                </p-paginator>
-                <span class="total-records-count">
-                  {{ l('TotalRecordsCount', primengTableHelper.totalRecordsCount) }}
-                </span>
-              </div>
-            </div>
-            <!--<Primeng-Datatable-End>-->
+              <dxo-remote-operations [sorting]="true" [paging]="true" [filtering]="true"></dxo-remote-operations>
+              <dxo-paging [pageSize]="10"></dxo-paging>
+              <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20, 50, 200]"></dxo-pager>
+
+              <dxi-column dataField="displayName" caption="{{ l('DisplayName') }}">
+                <dxi-validation-rule type="required"></dxi-validation-rule>
+              </dxi-column>
+              <dxi-column dataField="code" caption="{{ l('Code') }}"> </dxi-column>
+              <!-- <dxi-column dataField="latitude" caption="{{ l('Latitude') }}">
+              </dxi-column>
+              <dxi-column dataField="longitude" caption="{{ l('Longitude') }}">
+              </dxi-column> -->
+
+              <dxi-column dataField="countyId" caption="{{ l('CountryName') }}">
+                <dxi-validation-rule type="required"></dxi-validation-rule>
+                <dxo-lookup [dataSource]="countries" displayExpr="displayName" valueExpr="id"> </dxo-lookup>
+              </dxi-column>
+              <dxi-column dataField="isActive" caption="{{ l('IsActive') }}"></dxi-column>
+            </dx-data-grid>
           </div>
         </div>
       </div>
     </div>
-    <createOrEditCityModal #createOrEditCityModal (modalSave)="getCities()"></createOrEditCityModal>
-    <viewCityModal #viewCityModal></viewCityModal>
-    <entityTypeHistoryModal #entityTypeHistoryModal></entityTypeHistoryModal>
   </div>
 </div>
+
+<createOrEditCityModal #createOrEditCityModal (modalSave)="getCities()"></createOrEditCityModal>

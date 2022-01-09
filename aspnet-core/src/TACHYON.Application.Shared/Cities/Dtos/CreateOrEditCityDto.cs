@@ -24,6 +24,7 @@ namespace TACHYON.Cities.Dtos
         //[StringLength(CityConsts.MaxLongitudeLength, MinimumLength = CityConsts.MinLongitudeLength)]
         public double Longitude { get; set; }
 
+        public bool IsActive { get; set; } = true;
 
         public int CountyId { get; set; }
 

@@ -422,10 +422,30 @@ namespace TACHYON
             configuration.CreateMap<City, CreateOrEditCityDto>()
                 .ForPath(dst => dst.Longitude, opt => opt.MapFrom(src => src.Location.X))
                  .ForPath(dst => dst.Latitude, opt => opt.MapFrom(src => src.Location.Y));
+
             configuration.CreateMap<CityDto, City>()
                 .ForPath(dst => dst.Location.X, opt => opt.MapFrom(src => src.Longitude))
                  .ForPath(dst => dst.Location.Y, opt => opt.MapFrom(src => src.Latitude))
                  .ReverseMap();
+
+            configuration.CreateMap<CitiesTranslation, GetCitiesTranslationForViewDto>()
+                .ForMember(x => x.CityDisplayName, x => x.MapFrom(i => i.TranslatedDisplayName));
+
+            configuration.CreateMap<CitiesTranslation, CitiesTranslationDto>().ReverseMap();
+
+
+            configuration.CreateMap<CitiesTranslation, CitiesTranslationDto>().ReverseMap();
+
+            configuration.CreateMap<CreateOrEditCityDto, City>().ForMember(x => x.Translations, x => x.Ignore());
+
+            configuration.CreateMap<City, CityDto>()
+            .ForMember(x => x.DisplayName, x => x.MapFrom(i => i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)) == null ? i.DisplayName : i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName))
+            .ForMember(x => x.CountyId, x => x.MapFrom(i => i.CountyId))
+            .ForMember(x => x.Code, x => x.MapFrom(i => i.Code))
+            .ForMember(x => x.TranslatedDisplayName, x => x.MapFrom(i => i.CountyFk.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)) == null ? i.DisplayName : i.CountyFk.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName))
+            .ForMember(x => x.Latitude, x => x.MapFrom(i => i.Location.Y))
+            .ForMember(x => x.Longitude, x => x.MapFrom(i => i.Location.X)).ReverseMap();
+
 
             configuration.CreateMap<CreateOrEditCountyDto, County>().ReverseMap();
             configuration.CreateMap<CountyDto, County>().ReverseMap();
@@ -716,10 +736,10 @@ namespace TACHYON
                 .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
                 .ReverseMap();
 
-            configuration.CreateMultiLingualMap<City, CitiesTranslation, CityDto>(context)
-                .EntityMap
-                .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
-                .ReverseMap();
+            //configuration.CreateMultiLingualMap<City, CitiesTranslation, CityDto>(context)
+            //    .EntityMap
+            //    .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
+            //    .ReverseMap();
 
             configuration.CreateMultiLingualMap<City, CitiesTranslation, TenantCityLookupTableDto>(context)
                 .EntityMap

@@ -34,6 +34,7 @@ namespace TACHYON.Cities
 
         [ForeignKey("CountyId")]
         public County CountyFk { get; set; }
+        public bool IsActive { get; set; } = true;
 
         public ICollection<CitiesTranslation> Translations { get; set; }
 

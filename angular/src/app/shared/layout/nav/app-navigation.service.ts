@@ -568,7 +568,7 @@ export class AppNavigationService {
                 ),
 
                 new AppMenuItem('CountriesTranslations', 'Pages.CountriesTranslations', '', '/app/main/countriesTranslations/countriesTranslations'),
-                new AppMenuItem('CitiesTranslations', 'Pages.CitiesTranslations', '', '/app/main/citiesTranslations/citiesTranslations'),
+                // new AppMenuItem('CitiesTranslations', 'Pages.CitiesTranslations', '', '/app/main/citiesTranslations/citiesTranslations'),
                 new AppMenuItem(
                   'TermAndConditionTranslations',
                   'Pages.Administration.TermAndConditionTranslations',
