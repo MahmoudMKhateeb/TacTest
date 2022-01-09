@@ -355,7 +355,7 @@ namespace TACHYON.Documents.DocumentFiles
                 {
                     var doc = input.FirstOrDefault(x => x.DocumentTypeId == documentType.DocumentTypeId);
 
-                    if (doc.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
+                    if (doc == null)
                     {
                         throw new UserFriendlyException(L("document missing msg :" + documentType.DocumentTypeDto.DisplayName));
                     }
