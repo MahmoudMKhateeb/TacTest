@@ -65,7 +65,8 @@ namespace TACHYON.Shipping.Drivers
             IRepository<UserOTP> userOtpRepository,
             IRepository<ShippingRequestTripAccident> shippingRequestTripAccidentRepository,
             RatingLogManager ratingLogManager,
-            IRepository<DriverLocationLog, long> driverLocationLogRepository)
+            IRepository<DriverLocationLog, long> driverLocationLogRepository,
+            EntityLogManager logManager)
         {
             _ShippingRequestTrip = ShippingRequestTrip;
             _RoutPointRepository = RoutPointRepository;

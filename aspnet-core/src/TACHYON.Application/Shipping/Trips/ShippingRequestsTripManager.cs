@@ -31,6 +31,7 @@ using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips.Dto;
 using TACHYON.Tracking.Dto;
+using TACHYON.Url;
 using PickingType = TACHYON.Routs.RoutPoints.PickingType;
 
 namespace TACHYON.Shipping.Trips
@@ -52,12 +53,13 @@ namespace TACHYON.Shipping.Trips
         private readonly CommonManager _commonManager;
         private readonly UserManager UserManager;
         private readonly IEntityChangeSetReasonProvider _reasonProvider;
+        private readonly IWebUrlService _webUrlService;
 
         public ShippingRequestsTripManager(IRepository<ShippingRequestTrip> shippingRequestTrip,
             PriceOfferManager priceOfferManager,
-            IAppNotifier appNotifier, IFeatureChecker featureChecker, 
+            IAppNotifier appNotifier, IFeatureChecker featureChecker,
             IAbpSession abpSession, IHubContext<AbpCommonHub> hubContext,
-            IRepository<RoutPoint, long> routPointRepository, 
+            IRepository<RoutPoint, long> routPointRepository,
             IRepository<ShippingRequestTripTransition> shippingRequestTripTransitionRepository,
             IRepository<RoutPointStatusTransition> routPointStatusTransitionRepository,
             ISmsSender smsSender, InvoiceManager invoiceManager,
@@ -160,7 +162,7 @@ namespace TACHYON.Shipping.Trips
                 await _hubContext.Clients.Users(await GetUsersHubNotification(trip, currentUser)).SendAsync("tracking", TACHYONConsts.TriggerTrackingStarted, ObjectMapper.Map<TrackingListDto>(trip));
 
                 if (!currentUser.IsDriver && trip.AssignedDriverUserId != null)
-                    await _appNotifier.NotifyDriverOnlyWhenTripUpdated(trip.Id, trip.WaybillNumber.ToString(), 
+                    await _appNotifier.NotifyDriverOnlyWhenTripUpdated(trip.Id, trip.WaybillNumber.ToString(),
           new UserIdentifier(trip.ShippingRequestFk?.CarrierTenantId, trip.AssignedDriverUserId.Value));
             }
             else
@@ -709,8 +711,8 @@ namespace TACHYON.Shipping.Trips
         {
             var trip = point.ShippingRequestTripFk;
             await _hubContext.Clients.Users(await GetUsersHubNotification(trip, currentUser)).SendAsync("tracking", TACHYONConsts.TriggerTrackingChanged, ObjectMapper.Map<ShippingRequestTripDriverRoutePointDto>(point));
-            if (!currentUser.IsDriver && trip.ShippingRequestFk.CarrierTenantId != null && trip.AssignedDriverUserId != null) 
-                await _appNotifier.NotifyDriverOnlyWhenTripUpdated(trip.Id,trip.WaybillNumber.ToString(),
+            if (!currentUser.IsDriver && trip.ShippingRequestFk.CarrierTenantId != null && trip.AssignedDriverUserId != null)
+                await _appNotifier.NotifyDriverOnlyWhenTripUpdated(trip.Id, trip.WaybillNumber.ToString(),
                     new UserIdentifier(trip.ShippingRequestFk.CarrierTenantId.Value, trip.AssignedDriverUserId.Value));
         }
 
@@ -724,9 +726,9 @@ namespace TACHYON.Shipping.Trips
         {
             var trip = point.ShippingRequestTripFk;
             await _hubContext.Clients.Users(await GetUsersHubNotification(trip, currentUser)).SendAsync("tracking", TACHYONConsts.TriggerTrackingShipmentDelivered, ObjectMapper.Map<ShippingRequestTripDriverRoutePointDto>(point));
-            
-            if (!currentUser.IsDriver && trip.ShippingRequestFk.CarrierTenantId != null && trip.AssignedDriverUserId != null) 
-                await _appNotifier.NotifyDriverOnlyWhenTripUpdated(trip.Id,trip.WaybillNumber.ToString(),
+
+            if (!currentUser.IsDriver && trip.ShippingRequestFk.CarrierTenantId != null && trip.AssignedDriverUserId != null)
+                await _appNotifier.NotifyDriverOnlyWhenTripUpdated(trip.Id, trip.WaybillNumber.ToString(),
             new UserIdentifier(trip.ShippingRequestFk.CarrierTenantId.Value, trip.AssignedDriverUserId.Value));
         }
 
