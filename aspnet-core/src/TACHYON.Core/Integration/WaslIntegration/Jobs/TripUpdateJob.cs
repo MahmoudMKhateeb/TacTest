@@ -2,6 +2,7 @@
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.Threading;
+using Hangfire;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,7 @@ namespace TACHYON.Integration.WaslIntegration.Jobs
         }
 
         [UnitOfWork]
+        [AutomaticRetry(Attempts = 2)]
         public override void Execute(int TripId)
         {
             AsyncHelper.RunSync(() => _waslIntegrationManager.TripUpdate(TripId));
