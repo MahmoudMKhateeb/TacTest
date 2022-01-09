@@ -85,12 +85,24 @@ namespace TACHYON.Shipping.Trips
             DisableTenancyFilters();
             var currentUser = await GetCurrentUserAsync(_abpSession);
             var trip = await CheckIfCanAccepted(id, currentUser);
+
+            if (trip.Status == ShippingRequestTripStatus.Intransit && await CheckIfDriverWorkingOnAnotherTrip(trip.AssignedDriverUserId.Value))
+                throw new UserFriendlyException(L("TheDriverAreadyWorkingOnAnotherTrip"));
+
             trip.DriverStatus = ShippingRequestTripDriverStatus.Accepted;
             await GeneratePrices(trip);
             if (currentUser.IsDriver) await _appNotifier.DriverAcceptTrip(trip, currentUser.FullName);
 
             await _hubContext.Clients.Users(await GetUsersHubNotification(trip, currentUser)).SendAsync("tracking", TACHYONConsts.TriggerTrackingAccepted, ObjectMapper.Map<TrackingListDto>(trip));
 
+        }
+
+        private async Task<bool> CheckIfDriverWorkingOnAnotherTrip(long assignedDriverUserId)
+        {
+            return await _shippingRequestTrip.GetAll()
+                .AnyAsync(x => x.AssignedDriverUserId == assignedDriverUserId
+                            && x.Status == ShippingRequestTripStatus.Intransit
+                            && x.DriverStatus == ShippingRequestTripDriverStatus.Accepted);
         }
 
         /// <summary>
@@ -112,7 +124,7 @@ namespace TACHYON.Shipping.Trips
                                 x.DriverStatus == ShippingRequestTripDriverStatus.Accepted &&
                                 x.ShippingRequestFk.StartTripDate.Value.Date <= Clock.Now.Date
                             )
-                            .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => x.ShippingRequestFk.IsTachyonDeal)
+                            .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => true)
                             .WhereIf(currentUser.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestFk.CarrierTenantId == currentUser.TenantId.Value)
                             .WhereIf(currentUser.IsDriver, x => x.AssignedDriverUserId == currentUser.Id)
                             .FirstOrDefaultAsync();
@@ -174,7 +186,7 @@ namespace TACHYON.Shipping.Trips
                                !x.IsComplete &&
                                 x.Status != RoutePointStatus.StandBy
                             )
-                            .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => x.ShippingRequestTripFk.ShippingRequestFk.IsTachyonDeal)
+                            .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => true)
                             .WhereIf(currentUser.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == currentUser.TenantId.Value)
                             .WhereIf(currentUser.IsDriver, x => x.ShippingRequestTripFk.AssignedDriverUserId == currentUser.Id)
                             .FirstOrDefaultAsync();
@@ -238,7 +250,7 @@ namespace TACHYON.Shipping.Trips
                      .ThenInclude(x => x.ShippingRequestFk)
                 .Include(x => x.FacilityFk)
                 .Where(x => x.Id == id && x.Status == RoutePointStatus.StandBy && x.ShippingRequestTripFk.Status == ShippingRequestTripStatus.Intransit && x.PickingType == Routs.RoutPoints.PickingType.Dropoff)
-                .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => x.ShippingRequestTripFk.ShippingRequestFk.IsTachyonDeal)
+                .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => true)
                 .WhereIf(currentUser.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == currentUser.TenantId.Value)
                 .WhereIf(currentUser.IsDriver, x => x.ShippingRequestTripFk.AssignedDriverUserId == currentUser.Id)
                 .FirstOrDefaultAsync();
@@ -280,7 +292,7 @@ namespace TACHYON.Shipping.Trips
                                             x.ShippingRequestTripFk.ShippingRequestFk.Status == ShippingRequests.ShippingRequestStatus.PostPrice
 
                                     )
-                            .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => x.ShippingRequestTripFk.ShippingRequestFk.IsTachyonDeal)
+                            .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => true)
                             .WhereIf(currentUser.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == currentUser.TenantId.Value)
                             .WhereIf(currentUser.IsDriver, x => x.ShippingRequestTripFk.AssignedDriverUserId == currentUser.Id)
                             .FirstOrDefaultAsync();
@@ -319,7 +331,7 @@ namespace TACHYON.Shipping.Trips
                                             x.ShippingRequestTripFk.Status == ShippingRequestTripStatus.Intransit &&
                                             x.ShippingRequestTripFk.ShippingRequestFk.Status == ShippingRequests.ShippingRequestStatus.PostPrice
                                     )
-                .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => x.ShippingRequestTripFk.ShippingRequestFk.IsTachyonDeal)
+                .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => true)
                 .WhereIf(currentUser.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == currentUser.TenantId.Value)
                 .WhereIf(currentUser.IsDriver, x => x.ShippingRequestTripFk.AssignedDriverUserId == currentUser.Id)
                 .FirstOrDefaultAsync();
@@ -470,10 +482,11 @@ namespace TACHYON.Shipping.Trips
             var trip = await _shippingRequestTrip
                             .GetAllIncluding(o => o.OriginFacilityFk, d => d.DestinationFacilityFk, x => x.ShippingRequestFk, x => x.ShippingRequestTripVases)
                             .Where(x => x.Id == id && x.ShippingRequestFk.CarrierTenantId.HasValue && x.ShippingRequestFk.Status != ShippingRequests.ShippingRequestStatus.Cancled && x.AssignedDriverUserId.HasValue)
-                            .WhereIf(!user.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => x.ShippingRequestFk.IsTachyonDeal)
+                            .WhereIf(!user.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => true)
                             .WhereIf(user.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestFk.CarrierTenantId == user.TenantId.Value)
                             .WhereIf(user.IsDriver, x => x.AssignedDriverUserId == user.Id)
-                            .FirstOrDefaultAsync(t => t.DriverStatus == ShippingRequestTripDriverStatus.None && t.Status == ShippingRequestTripStatus.New);
+                            .FirstOrDefaultAsync(t => t.DriverStatus == ShippingRequestTripDriverStatus.None
+                            && (t.Status == ShippingRequestTripStatus.New || t.Status == ShippingRequestTripStatus.Intransit));
             if (trip == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
             return trip;
         }

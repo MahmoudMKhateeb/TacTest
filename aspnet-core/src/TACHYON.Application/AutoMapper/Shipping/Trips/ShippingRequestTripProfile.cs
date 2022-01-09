@@ -71,6 +71,7 @@ namespace TACHYON.AutoMapper.Shipping.Trips
                 .ForMember(dst => dst.lat, opt => opt.MapFrom(src => src.FacilityFk.Location.Y))
                 .ForMember(dst => dst.lng, opt => opt.MapFrom(src => src.FacilityFk.Location.X))
                 .ForMember(dst => dst.GoodsDetails, opt => opt.MapFrom(src => src.GoodsDetails))
+                .ForMember(dst => dst.ReceiverFullName, opt => opt.MapFrom(src => !string.IsNullOrEmpty(src.ReceiverFullName) ? src.ReceiverFullName : src.ReceiverFk != null ? src.ReceiverFk.FullName : ""))
                 .ForMember(dst => dst.NextStatus, opt => opt.MapFrom(src => GetMobileTripChangeStatusButtonTitle(src.Status)));
 
             CreateMap<ShippingRequestTrip, CreateOrEditShippingRequestTripDto>()

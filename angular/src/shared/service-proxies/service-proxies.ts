@@ -47247,6 +47247,68 @@ export class TrucksServiceProxy {
     }
     return _observableOf<PlateTypeSelectItemDto[]>(<any>null);
   }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
+  wasl_VehicleRegistration(id: number | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/Trucks/Wasl_VehicleRegistration?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({}),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processWasl_VehicleRegistration(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processWasl_VehicleRegistration(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processWasl_VehicleRegistration(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
 }
 
 @Injectable()
@@ -64478,6 +64540,7 @@ export class InvoiceInfoDto implements IInvoiceInfoDto {
   faxNo!: string | undefined;
   attn!: string | undefined;
   cr!: string | undefined;
+  tenantVatNumber!: string | undefined;
   contractNo!: string | undefined;
   projectName!: string | undefined;
   period!: string | undefined;
@@ -64513,6 +64576,7 @@ export class InvoiceInfoDto implements IInvoiceInfoDto {
       this.faxNo = _data['faxNo'];
       this.attn = _data['attn'];
       this.cr = _data['cr'];
+      this.tenantVatNumber = _data['tenantVatNumber'];
       this.contractNo = _data['contractNo'];
       this.projectName = _data['projectName'];
       this.period = _data['period'];
@@ -64552,6 +64616,7 @@ export class InvoiceInfoDto implements IInvoiceInfoDto {
     data['faxNo'] = this.faxNo;
     data['attn'] = this.attn;
     data['cr'] = this.cr;
+    data['tenantVatNumber'] = this.tenantVatNumber;
     data['contractNo'] = this.contractNo;
     data['projectName'] = this.projectName;
     data['period'] = this.period;
@@ -64584,6 +64649,7 @@ export interface IInvoiceInfoDto {
   faxNo: string | undefined;
   attn: string | undefined;
   cr: string | undefined;
+  tenantVatNumber: string | undefined;
   contractNo: string | undefined;
   projectName: string | undefined;
   period: string | undefined;
@@ -68859,6 +68925,7 @@ export class PlateTypeDto implements IPlateTypeDto {
   name!: string | undefined;
   bayanIntegrationId!: string | undefined;
   displayName!: string | undefined;
+  isDefault!: boolean;
   id!: number;
 
   constructor(data?: IPlateTypeDto) {
@@ -68874,6 +68941,7 @@ export class PlateTypeDto implements IPlateTypeDto {
       this.name = _data['name'];
       this.bayanIntegrationId = _data['bayanIntegrationId'];
       this.displayName = _data['displayName'];
+      this.isDefault = _data['isDefault'];
       this.id = _data['id'];
     }
   }
@@ -68890,6 +68958,7 @@ export class PlateTypeDto implements IPlateTypeDto {
     data['name'] = this.name;
     data['bayanIntegrationId'] = this.bayanIntegrationId;
     data['displayName'] = this.displayName;
+    data['isDefault'] = this.isDefault;
     data['id'] = this.id;
     return data;
   }
@@ -68899,6 +68968,7 @@ export interface IPlateTypeDto {
   name: string | undefined;
   bayanIntegrationId: string | undefined;
   displayName: string | undefined;
+  isDefault: boolean;
   id: number;
 }
 
@@ -69040,6 +69110,7 @@ export interface IPlateTypeTranslationDto {
 export class CreateOrEditPlateTypeDto implements ICreateOrEditPlateTypeDto {
   name!: string;
   bayanIntegrationId!: string | undefined;
+  isDefault!: boolean;
   translations!: PlateTypeTranslationDto[] | undefined;
   id!: number | undefined;
 
@@ -69055,6 +69126,7 @@ export class CreateOrEditPlateTypeDto implements ICreateOrEditPlateTypeDto {
     if (_data) {
       this.name = _data['name'];
       this.bayanIntegrationId = _data['bayanIntegrationId'];
+      this.isDefault = _data['isDefault'];
       if (Array.isArray(_data['translations'])) {
         this.translations = [] as any;
         for (let item of _data['translations']) this.translations!.push(PlateTypeTranslationDto.fromJS(item));
@@ -69074,6 +69146,7 @@ export class CreateOrEditPlateTypeDto implements ICreateOrEditPlateTypeDto {
     data = typeof data === 'object' ? data : {};
     data['name'] = this.name;
     data['bayanIntegrationId'] = this.bayanIntegrationId;
+    data['isDefault'] = this.isDefault;
     if (Array.isArray(this.translations)) {
       data['translations'] = [];
       for (let item of this.translations) data['translations'].push(item.toJSON());
@@ -69086,6 +69159,7 @@ export class CreateOrEditPlateTypeDto implements ICreateOrEditPlateTypeDto {
 export interface ICreateOrEditPlateTypeDto {
   name: string;
   bayanIntegrationId: string | undefined;
+  isDefault: boolean;
   translations: PlateTypeTranslationDto[] | undefined;
   id: number | undefined;
 }
@@ -74902,6 +74976,7 @@ export class ShippingRequestTripDriverRoutePointDto implements IShippingRequestT
   isComplete!: boolean;
   isDeliveryNoteUploaded!: boolean;
   rating!: number | undefined;
+  receiverCode!: string | undefined;
   goodsDetails!: GoodsDetailDto[] | undefined;
   isShow!: boolean;
   id!: number;
@@ -74933,6 +75008,7 @@ export class ShippingRequestTripDriverRoutePointDto implements IShippingRequestT
       this.isComplete = _data['isComplete'];
       this.isDeliveryNoteUploaded = _data['isDeliveryNoteUploaded'];
       this.rating = _data['rating'];
+      this.receiverCode = _data['receiverCode'];
       if (Array.isArray(_data['goodsDetails'])) {
         this.goodsDetails = [] as any;
         for (let item of _data['goodsDetails']) this.goodsDetails!.push(GoodsDetailDto.fromJS(item));
@@ -74968,6 +75044,7 @@ export class ShippingRequestTripDriverRoutePointDto implements IShippingRequestT
     data['isComplete'] = this.isComplete;
     data['isDeliveryNoteUploaded'] = this.isDeliveryNoteUploaded;
     data['rating'] = this.rating;
+    data['receiverCode'] = this.receiverCode;
     if (Array.isArray(this.goodsDetails)) {
       data['goodsDetails'] = [];
       for (let item of this.goodsDetails) data['goodsDetails'].push(item.toJSON());
@@ -74996,6 +75073,7 @@ export interface IShippingRequestTripDriverRoutePointDto {
   isComplete: boolean;
   isDeliveryNoteUploaded: boolean;
   rating: number | undefined;
+  receiverCode: string | undefined;
   goodsDetails: GoodsDetailDto[] | undefined;
   isShow: boolean;
   id: number;
@@ -79701,7 +79779,6 @@ export class TenantEditDto implements ITenantEditDto {
   countryId!: number;
   cityId!: number;
   connectionString!: string | undefined;
-  editionId!: number | undefined;
   isActive!: boolean;
   subscriptionEndDateUtc!: moment.Moment | undefined;
   isInTrialPeriod!: boolean;
@@ -79726,7 +79803,6 @@ export class TenantEditDto implements ITenantEditDto {
       this.countryId = _data['countryId'];
       this.cityId = _data['cityId'];
       this.connectionString = _data['connectionString'];
-      this.editionId = _data['editionId'];
       this.isActive = _data['isActive'];
       this.subscriptionEndDateUtc = _data['subscriptionEndDateUtc'] ? moment(_data['subscriptionEndDateUtc'].toString()) : <any>undefined;
       this.isInTrialPeriod = _data['isInTrialPeriod'];
@@ -79752,7 +79828,6 @@ export class TenantEditDto implements ITenantEditDto {
     data['countryId'] = this.countryId;
     data['cityId'] = this.cityId;
     data['connectionString'] = this.connectionString;
-    data['editionId'] = this.editionId;
     data['isActive'] = this.isActive;
     data['subscriptionEndDateUtc'] = this.subscriptionEndDateUtc ? this.subscriptionEndDateUtc.toISOString() : <any>undefined;
     data['isInTrialPeriod'] = this.isInTrialPeriod;
@@ -79771,7 +79846,6 @@ export interface ITenantEditDto {
   countryId: number;
   cityId: number;
   connectionString: string | undefined;
-  editionId: number | undefined;
   isActive: boolean;
   subscriptionEndDateUtc: moment.Moment | undefined;
   isInTrialPeriod: boolean;
@@ -81491,7 +81565,6 @@ export interface IPagedResultDtoOfGetTermAndConditionForViewDto {
 
 export class CreateOrEditTermAndConditionDto implements ICreateOrEditTermAndConditionDto {
   title!: string;
-  content!: string;
   version!: number;
   editionId!: number | undefined;
   isActive!: boolean;
@@ -81508,7 +81581,6 @@ export class CreateOrEditTermAndConditionDto implements ICreateOrEditTermAndCond
   init(_data?: any) {
     if (_data) {
       this.title = _data['title'];
-      this.content = _data['content'];
       this.version = _data['version'];
       this.editionId = _data['editionId'];
       this.isActive = _data['isActive'];
@@ -81526,7 +81598,6 @@ export class CreateOrEditTermAndConditionDto implements ICreateOrEditTermAndCond
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
     data['title'] = this.title;
-    data['content'] = this.content;
     data['version'] = this.version;
     data['editionId'] = this.editionId;
     data['isActive'] = this.isActive;
@@ -81537,7 +81608,6 @@ export class CreateOrEditTermAndConditionDto implements ICreateOrEditTermAndCond
 
 export interface ICreateOrEditTermAndConditionDto {
   title: string;
-  content: string;
   version: number;
   editionId: number | undefined;
   isActive: boolean;
@@ -82541,6 +82611,8 @@ export class TrackingListDto implements ITrackingListDto {
   canStartTrip!: boolean;
   requestType!: ShippingRequestType;
   hasAccident!: boolean;
+  noActionReason!: string | undefined;
+  canAcceptTrip!: boolean;
   isApproveCancledByCarrier!: boolean;
   isApproveCancledByShipper!: boolean;
   waybillNumber!: number | undefined;
@@ -82577,6 +82649,8 @@ export class TrackingListDto implements ITrackingListDto {
       this.canStartTrip = _data['canStartTrip'];
       this.requestType = _data['requestType'];
       this.hasAccident = _data['hasAccident'];
+      this.noActionReason = _data['noActionReason'];
+      this.canAcceptTrip = _data['canAcceptTrip'];
       this.isApproveCancledByCarrier = _data['isApproveCancledByCarrier'];
       this.isApproveCancledByShipper = _data['isApproveCancledByShipper'];
       this.waybillNumber = _data['waybillNumber'];
@@ -82614,6 +82688,8 @@ export class TrackingListDto implements ITrackingListDto {
     data['canStartTrip'] = this.canStartTrip;
     data['requestType'] = this.requestType;
     data['hasAccident'] = this.hasAccident;
+    data['noActionReason'] = this.noActionReason;
+    data['canAcceptTrip'] = this.canAcceptTrip;
     data['isApproveCancledByCarrier'] = this.isApproveCancledByCarrier;
     data['isApproveCancledByShipper'] = this.isApproveCancledByShipper;
     data['waybillNumber'] = this.waybillNumber;
@@ -82644,6 +82720,8 @@ export interface ITrackingListDto {
   canStartTrip: boolean;
   requestType: ShippingRequestType;
   hasAccident: boolean;
+  noActionReason: string | undefined;
+  canAcceptTrip: boolean;
   isApproveCancledByCarrier: boolean;
   isApproveCancledByShipper: boolean;
   waybillNumber: number | undefined;
@@ -84724,6 +84802,7 @@ export interface IPagedResultDtoOfTruckUserLookupTableDto {
 }
 
 export class PlateTypeSelectItemDto implements IPlateTypeSelectItemDto {
+  isDefault!: boolean;
   id!: string | undefined;
   displayName!: string | undefined;
   translatedDisplayName!: string | undefined;
@@ -84738,6 +84817,7 @@ export class PlateTypeSelectItemDto implements IPlateTypeSelectItemDto {
 
   init(_data?: any) {
     if (_data) {
+      this.isDefault = _data['isDefault'];
       this.id = _data['id'];
       this.displayName = _data['displayName'];
       this.translatedDisplayName = _data['translatedDisplayName'];
@@ -84753,6 +84833,7 @@ export class PlateTypeSelectItemDto implements IPlateTypeSelectItemDto {
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
+    data['isDefault'] = this.isDefault;
     data['id'] = this.id;
     data['displayName'] = this.displayName;
     data['translatedDisplayName'] = this.translatedDisplayName;
@@ -84761,6 +84842,7 @@ export class PlateTypeSelectItemDto implements IPlateTypeSelectItemDto {
 }
 
 export interface IPlateTypeSelectItemDto {
+  isDefault: boolean;
   id: string | undefined;
   displayName: string | undefined;
   translatedDisplayName: string | undefined;
