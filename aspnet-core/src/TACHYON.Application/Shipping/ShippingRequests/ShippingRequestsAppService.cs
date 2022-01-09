@@ -569,9 +569,18 @@ namespace TACHYON.Shipping.ShippingRequests
         [RequiresFeature(AppFeatures.ShippingRequest)]
         public async Task Delete(EntityDto<long> input)
         {
-            using (CurrentUnitOfWork.DisableFilter("IHasIsDrafted"))
+            //Disable Tenancy filter to allow to Tachyon Dealer to delete the Drafted Requests | TAC-2331
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant, nameof(IHasIsDrafted)))
             {
-                var shippingRequest = await _shippingRequestRepository.GetAll().Where(x => x.IsDrafted == true).FirstOrDefaultAsync();
+                var tenantId = AbpSession.TenantId;
+                var shippingRequest = await _shippingRequestRepository.GetAll()
+                    // allow to shipper to delete his drafted requests  and to carrier if he is a Shipping request Creator
+                    .WhereIf(tenantId.HasValue && !IsEnabled(AppFeatures.TachyonDealer), x => x.TenantId == tenantId)
+                    .WhereIf(!tenantId.HasValue || IsEnabled(AppFeatures.TachyonDealer), x => true)
+                    .Where(x => x.Id == input.Id && x.IsDrafted == true).FirstOrDefaultAsync();
+
+                if (shippingRequest == null) throw new UserFriendlyException(L("TheShippingRequestDoesNotExits"));
+
                 await _shippingRequestRepository.DeleteAsync(shippingRequest);
             }
         }

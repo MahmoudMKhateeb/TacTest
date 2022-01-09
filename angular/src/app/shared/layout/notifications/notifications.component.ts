@@ -22,6 +22,7 @@ export class NotificationsComponent extends AppComponentBase {
   readStateFilter = 'ALL';
   dateRange: Date[] = [moment().startOf('day').toDate(), moment().endOf('day').toDate()];
   loading = false;
+  openId: any;
 
   constructor(injector: Injector, private _notificationService: NotificationServiceProxy, private _userNotificationHelper: UserNotificationHelper) {
     super(injector);

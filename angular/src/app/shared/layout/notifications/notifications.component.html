@@ -98,11 +98,22 @@
                         truncateString(record.formattedNotification.text, 120)
                       }}</a>
                       <span
-                        *ngIf="!record.formattedNotification.url"
+                        *ngIf="openId != record.id && !record.formattedNotification.url"
                         title="{{ record.formattedNotification.text }}"
                         class="{{ getRowClass(record) }}"
-                        >{{ truncateString(record.formattedNotification.text, 120) }}</span
+                        >{{ truncateString(record.formattedNotification.text, 120) }}
+                        <span *ngIf="(openId != record.id || !openId) && record.formattedNotification.text.length > 120" (click)="openId = record.id"
+                          >[...]</span
+                        ></span
                       >
+                      <span class="cell-breakAll" *ngIf="openId == record.id">
+                        <span
+                          *ngIf="!record.formattedNotification.url"
+                          title="{{ record.formattedNotification.text }}"
+                          class="{{ getRowClass(record) }}"
+                          >{{ record.formattedNotification.text }}
+                        </span>
+                      </span>
                     </td>
                     <td>
                       <span title="{{ record.notification.creationTime | momentFormat: 'llll' }}" class="{{ getRowClass(record) }}">
