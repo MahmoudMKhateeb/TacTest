@@ -76,8 +76,10 @@ namespace TACHYON.Integration.BayanIntegration
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
                     Logger.Error("BayanIntegrationManager.CreateConsignmentNote" + response.Content);
-                
-                    throw new Exception(response.Content);
+
+                    throw new Exception("Content: " + response.Content + " , body: " + body);
+
+
                 }
                 else
                 {
@@ -98,10 +100,10 @@ namespace TACHYON.Integration.BayanIntegration
 
         }
 
-     
+
         public async Task QueueCreateConsignmentNote(int tripId)
         {
-          var queueCreateConsignmentNoteJobId =   await _backgroundJobManager.EnqueueAsync<CreateConsignmentNoteJob, int>(tripId);
+            var queueCreateConsignmentNoteJobId = await _backgroundJobManager.EnqueueAsync<CreateConsignmentNoteJob, int>(tripId);
         }
 
         /// <summary>
@@ -112,29 +114,30 @@ namespace TACHYON.Integration.BayanIntegration
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
             {
 
-                    Tuple<RootForEdit, ShippingRequestTrip> tuple = await GetRootForEdit(tripId);
-                    string body = ToJsonLowerCaseFirstLetter(tuple.Item1);
+                Tuple<RootForEdit, ShippingRequestTrip> tuple = await GetRootForEdit(tripId);
+                string body = ToJsonLowerCaseFirstLetter(tuple.Item1);
 
-                    var client = new RestClient(await Url + "consignment-notes");
-                    client.Timeout = -1;
-                    var request = new RestRequest(Method.POST);
-                    request.AddHeader("app_id", await AppId);
-                    request.AddHeader("app_key", await AppKey);
-                    request.AddHeader("Content-Type", "application/json");
-                    request.AddHeader("client_id", await ClientId);
-                    request.AddParameter("application/json", body, ParameterType.RequestBody);
-                    IRestResponse response = await client.ExecuteAsync(request);
-                    if (response.StatusCode != HttpStatusCode.OK)
-                    {
-                        Logger.Error("BayanIntegrationManager.EditConsignmentNote" + response);
-                        throw new Exception(response.Content);
-                    }
-                    else
-                    {
-                        Logger.Trace("BayanIntegrationManager.EditConsignmentNote" + response);
+                var client = new RestClient(await Url + "consignment-notes");
+                client.Timeout = -1;
+                var request = new RestRequest(Method.POST);
+                request.AddHeader("app_id", await AppId);
+                request.AddHeader("app_key", await AppKey);
+                request.AddHeader("Content-Type", "application/json");
+                request.AddHeader("client_id", await ClientId);
+                request.AddParameter("application/json", body, ParameterType.RequestBody);
+                IRestResponse response = await client.ExecuteAsync(request);
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    Logger.Error("BayanIntegrationManager.EditConsignmentNote" + response);
+                    throw new Exception("Content: " + response.Content + " , body: " + body);
 
-                    }
-          
+                }
+                else
+                {
+                    Logger.Trace("BayanIntegrationManager.EditConsignmentNote" + response);
+
+                }
+
 
 
 

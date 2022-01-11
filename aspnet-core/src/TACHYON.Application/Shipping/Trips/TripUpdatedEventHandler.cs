@@ -46,11 +46,12 @@ namespace TACHYON.Shipping.Trips
                 //wasl integration
                 if (eventData.Entity.StartWorking.HasValue)
                 {
-                    if (!eventData.Entity.IsWaslIntegrated)
-                    {
-                        AsyncHelper.RunSync(() => _waslIntegrationManager.QueueTripRegistrationJob(eventData.Entity.Id));
+                    //! moved to ShippingRequestDriverAppService.ChangeTripStatus
+                    //if (!eventData.Entity.IsWaslIntegrated)
+                    //{
+                    //    AsyncHelper.RunSync(() => _waslIntegrationManager.QueueTripRegistrationJob(eventData.Entity.Id));
 
-                    }
+                    //}
                     if (eventData.Entity.ActualDeliveryDate.HasValue)
                     {
                         AsyncHelper.RunSync(() => _waslIntegrationManager.QueueTripUpdateJob(eventData.Entity.Id));

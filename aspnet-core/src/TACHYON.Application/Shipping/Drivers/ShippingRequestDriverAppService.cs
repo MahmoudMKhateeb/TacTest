@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using TACHYON.Features;
 using TACHYON.Firebases;
 using TACHYON.Goods.GoodCategories.Dtos;
+using TACHYON.Integration.WaslIntegration;
 using TACHYON.Mobile;
 using TACHYON.Notifications;
 using TACHYON.Routs.RoutPoints;
@@ -40,6 +41,7 @@ namespace TACHYON.Shipping.Drivers
         private readonly IFirebaseNotifier _firebaseNotifier;
         private readonly ShippingRequestsTripManager _shippingRequestsTripManager;
         private readonly IRepository<UserOTP> _userOtpRepository;
+         private readonly WaslIntegrationManager _waslIntegrationManager;
         public ShippingRequestDriverAppService(
             IRepository<ShippingRequestTrip> ShippingRequestTrip,
             IRepository<RoutPoint, long> RoutPointRepository,
@@ -48,7 +50,7 @@ namespace TACHYON.Shipping.Drivers
             ShippingRequestManager shippingRequestManager,
             IAppNotifier appNotifier,
             IFirebaseNotifier firebaseNotifier,
-            ShippingRequestsTripManager shippingRequestsTripManager, IRepository<UserOTP> userOtpRepository, IRepository<ShippingRequestTripAccident> shippingRequestTripAccidentRepository)
+            ShippingRequestsTripManager shippingRequestsTripManager, IRepository<UserOTP> userOtpRepository, IRepository<ShippingRequestTripAccident> shippingRequestTripAccidentRepository, WaslIntegrationManager waslIntegrationManager)
         {
             _ShippingRequestTrip = ShippingRequestTrip;
             _RoutPointRepository = RoutPointRepository;
@@ -60,6 +62,7 @@ namespace TACHYON.Shipping.Drivers
             _shippingRequestsTripManager = shippingRequestsTripManager;
             _userOtpRepository = userOtpRepository;
             _shippingRequestTripAccidentRepository = shippingRequestTripAccidentRepository;
+            _waslIntegrationManager = waslIntegrationManager;
         }
         /// <summary>
         /// list all trips realted with drivers
@@ -271,6 +274,7 @@ namespace TACHYON.Shipping.Drivers
             {
                 case RoutePointStatus.StartedMovingToLoadingLocation:
                     trip.RoutePointStatus = RoutePointStatus.ArriveToLoadingLocation;
+                    await _waslIntegrationManager.QueueTripRegistrationJob(trip.Id);
                     break;
                 case RoutePointStatus.ArriveToLoadingLocation:
                     trip.RoutePointStatus = RoutePointStatus.StartLoading;
