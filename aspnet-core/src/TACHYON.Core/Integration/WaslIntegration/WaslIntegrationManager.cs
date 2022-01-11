@@ -101,7 +101,8 @@ namespace TACHYON.Integration.WaslIntegration
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
                     Logger.Error("WaslIntegrationManager.Vehicle" + response.Content);
-                    throw new Exception(response.Content);
+                    throw new Exception("Content: " + response.Content + " , body: " + body);
+
                 }
                 else
                 {
@@ -132,7 +133,8 @@ namespace TACHYON.Integration.WaslIntegration
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
                     Logger.Error("WaslIntegrationManager.Drivers" + response.Content);
-                    throw new Exception(response.Content);
+                    throw new Exception("Content: " + response.Content + " , body: " + body);
+
                 }
                 else
                 {
@@ -189,7 +191,8 @@ namespace TACHYON.Integration.WaslIntegration
                 {
                     Logger.Error("WaslIntegrationManager.TripRegistration" + response.Content);
 
-                    throw new Exception(response.Content);
+                    throw new Exception("Content: " + response.Content + " , body: " + body);
+
                 }
                 else
                 {
@@ -234,10 +237,11 @@ namespace TACHYON.Integration.WaslIntegration
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
                     Logger.Error("WaslIntegrationManager.TripRegistration" + response.Content);
-                    throw new Exception(response.Content);
+                    throw new Exception("Content: " + response.Content + " , body: " + body);
                 }
                 else
                 {
+                    trip.IsWaslIntegrated = true;
                     Logger.Trace("WaslIntegrationManager.TripRegistration" + response.Content);
                 }
 
