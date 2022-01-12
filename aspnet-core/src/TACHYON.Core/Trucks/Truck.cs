@@ -100,6 +100,8 @@ namespace TACHYON.Trucks
 
         public virtual ICollection<DocumentFile> DocumentFiles { get; set; }
 
+
+
         #region Helper
 
         /// <summary>

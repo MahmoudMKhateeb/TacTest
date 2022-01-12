@@ -39,9 +39,22 @@ namespace TACHYON.Integration.WaslIntegration
         /// also utilized for cases that requires reregistration/updating information.        /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public async Task VehicleRegistration(WaslVehicleRoot input)
+        public async Task VehicleRegistration(Truck input)
         {
-            var response = await Vehicle(input, Method.POST);
+            var vehicleSequenceNumber = (await _documentFilesManager.GetTruckIstimaraActiveDocumentAsync(input.Id))?.Number;
+
+            if (vehicleSequenceNumber != null)
+            {
+                var root = new WaslVehicleRoot()
+                {
+                    Plate = NormalizePlateNumber(input.PlateNumber),
+                    PlateType = 2,
+                    SequenceNumber = vehicleSequenceNumber.ToString()
+                };
+                var response = await Vehicle(root, Method.POST);
+            }
+
+
         }
 
         /// <summary>
@@ -253,18 +266,8 @@ namespace TACHYON.Integration.WaslIntegration
 
         public async Task QueueVehicleRegistrationJob(Truck input)
         {
-            var vehicleSequenceNumber = (await _documentFilesManager.GetTruckIstimaraActiveDocumentAsync(input.Id))?.Number;
 
-            if (vehicleSequenceNumber != null)
-            {
-                var root = new WaslVehicleRoot()
-                {
-                    Plate = TranslatePlateNumber(input.PlateNumber),
-                    PlateType = 2,
-                    SequenceNumber = vehicleSequenceNumber.ToString()
-                };
-                await _backgroundJobManager.EnqueueAsync<VehicleRegistrationJob, WaslVehicleRoot>(root);
-            }
+            await _backgroundJobManager.EnqueueAsync<VehicleRegistrationJob, Truck>(input);
         }
 
         public async Task QueueVehicleDeleteJob(Truck input)
@@ -324,10 +327,10 @@ namespace TACHYON.Integration.WaslIntegration
         /// </summary>
         /// <param name="plateNumber"></param>
         /// <returns></returns>
-        private string TranslatePlateNumber(string plateNumber)
+        private string NormalizePlateNumber(string plateNumber)
         {
 
-            return plateNumber.ToUpper()
+            var plate = plateNumber.ToUpper()
                 .Replace("A", "ا")
                 .Replace("أ", "ا")
                 .Replace("إ", "ا")
@@ -347,6 +350,22 @@ namespace TACHYON.Integration.WaslIntegration
                .Replace("H", "ه")
                .Replace("U", "و")
                .Replace("V", "ى");
+
+            plate = plate.Replace(" ", "");
+            plate = plate.Replace("-", "");
+
+            var numbers = String.Join("", plate.Take(4));
+            var letters = String.Join("", plate.Skip(4).Take(3));
+            plate = letters + numbers;
+
+
+            plate = plate.Insert(1, " ");
+            plate = plate.Insert(3, " ");
+            plate = plate.Insert(5, " ");
+
+            return plate;
+
+
         }
     }
 }

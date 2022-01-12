@@ -16,6 +16,7 @@ using TACHYON.Configuration;
 using TACHYON.Documents;
 using TACHYON.Integration.BayanIntegration.Jobs;
 using TACHYON.Integration.BayanIntegration.Modules;
+using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.ShippingRequestTripVases;
@@ -186,14 +187,14 @@ namespace TACHYON.Integration.BayanIntegration
                         Name = x.ShippingRequestFk.Tenant.companyName,
                         //todo: must not be blank
                         //todo: must match \"\\+9665\\d{8}\
-                        Phone = "+" + x.ShippingRequestFk.Tenant.MobileNo
+                        Phone = "+966" + x.RoutPoints.FirstOrDefault(x => x.PickingType == PickingType.Pickup).ReceiverFk.PhoneNumber
                     },
                     Recipient = new Recipient()
                     {
                         Address = x.ShippingRequestFk.CarrierTenantFk.Address,
                         //todo: must not be blank 
                         //todo: must match \"\\+9665\\d{8}\
-                        Phone = "+" + x.ShippingRequestFk.CarrierTenantFk.MobileNo,
+                        Phone = "+966" + x.RoutPoints.FirstOrDefault(x => x.PickingType == PickingType.Dropoff).ReceiverFk.PhoneNumber,
                         Name = x.ShippingRequestFk.CarrierTenantFk.companyName,
                     },
                     PickUpLocation = new PickUpLocation()
@@ -304,14 +305,14 @@ namespace TACHYON.Integration.BayanIntegration
                         Name = x.ShippingRequestFk.Tenant.companyName,
                         //todo: must not be blank
                         //todo: must match \"\\+9665\\d{8}\
-                        Phone = "+" + x.ShippingRequestFk.Tenant.MobileNo
+                        Phone = "+966" + x.RoutPoints.FirstOrDefault(x => x.PickingType == PickingType.Pickup).ReceiverFk.PhoneNumber
                     },
                     Recipient = new Recipient()
                     {
                         Address = x.ShippingRequestFk.CarrierTenantFk.Address,
                         //todo: must not be blank 
                         //todo: must match \"\\+9665\\d{8}\
-                        Phone = "+" + x.ShippingRequestFk.CarrierTenantFk.MobileNo,
+                        Phone = "+966" + x.RoutPoints.FirstOrDefault(x => x.PickingType == PickingType.Dropoff).ReceiverFk.PhoneNumber,
                         Name = x.ShippingRequestFk.CarrierTenantFk.companyName,
                     },
                     PickUpLocation = new PickUpLocation()
