@@ -125,6 +125,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
       this.truck.trucksTypeId = null;
       this.truck.capacityId = null;
       this.truck.plateTypeId = null;
+      this.truck.capacity = null;
 
       this.initTransportDropDownList();
       this._trucksServiceProxy.getAllTruckStatusForTableDropdown().subscribe((result) => {
