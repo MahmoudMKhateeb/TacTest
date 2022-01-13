@@ -5,10 +5,10 @@ using System.Text;
 
 namespace TACHYON.Rating
 {
-    public interface IRatingDto
+    public abstract class RatingDto
     {
         [Range(1, 5)]
-        int Rate { get; set; }
-        string Note { get; set; }
+        public int Rate { get; set; }
+        public string Note { get; set; }
     }
 }

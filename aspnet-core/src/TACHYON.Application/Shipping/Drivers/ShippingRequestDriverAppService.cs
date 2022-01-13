@@ -1,9 +1,11 @@
-﻿using Abp.Application.Services.Dto;
+﻿using Abp.Application.Features;
+using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using Abp.EntityHistory;
 using Abp.Linq.Extensions;
+using Abp.Runtime.Validation;
 using Abp.Timing;
 using Abp.UI;
 using AutoMapper.QueryableExtensions;
@@ -14,6 +16,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using TACHYON.AddressBook;
+using TACHYON.Authorization.Users;
 using TACHYON.DriverLocationLogs;
 using TACHYON.DriverLocationLogs.dtos;
 using TACHYON.EntityLogs;
@@ -21,6 +25,7 @@ using TACHYON.Features;
 using TACHYON.Firebases;
 using TACHYON.Goods.GoodCategories.Dtos;
 using TACHYON.Mobile;
+using TACHYON.MultiTenancy;
 using TACHYON.Notifications;
 using TACHYON.Rating;
 using TACHYON.Rating.dtos;
@@ -34,6 +39,7 @@ using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips;
 using TACHYON.Shipping.Trips.Accidents.Dto;
 using TACHYON.Trucks.TrucksTypes.Dtos;
+using Z.EntityFramework.Plus;
 
 namespace TACHYON.Shipping.Drivers
 {
@@ -52,7 +58,7 @@ namespace TACHYON.Shipping.Drivers
         private readonly IRepository<UserOTP> _userOtpRepository;
         private readonly RatingLogManager _ratingLogManager;
         private readonly IRepository<DriverLocationLog, long> _driverLocationLogRepository;
-        private readonly EntityLogManager _logManager;
+        private readonly IRepository<User, long> _userRepository;
         public ShippingRequestDriverAppService(
             IRepository<ShippingRequestTrip> ShippingRequestTrip,
             IRepository<RoutPoint, long> RoutPointRepository,
@@ -60,7 +66,7 @@ namespace TACHYON.Shipping.Drivers
             ShippingRequestDriverManager shippingRequestDriverManager,
             ShippingRequestManager shippingRequestManager,
             IFirebaseNotifier firebaseNotifier,
-            ShippingRequestsTripManager shippingRequestsTripManager, IRepository<UserOTP> userOtpRepository, IRepository<ShippingRequestTripAccident> shippingRequestTripAccidentRepository, RatingLogManager ratingLogManager, IRepository<DriverLocationLog, long> driverLocationLogRepository, EntityLogManager logManager)
+            ShippingRequestsTripManager shippingRequestsTripManager, IRepository<UserOTP> userOtpRepository, IRepository<ShippingRequestTripAccident> shippingRequestTripAccidentRepository, RatingLogManager ratingLogManager, IRepository<DriverLocationLog, long> driverLocationLogRepository,  IRepository<User, long> userRepository)
         {
             _ShippingRequestTrip = ShippingRequestTrip;
             _RoutPointRepository = RoutPointRepository;
@@ -73,7 +79,7 @@ namespace TACHYON.Shipping.Drivers
             _shippingRequestTripAccidentRepository = shippingRequestTripAccidentRepository;
             _ratingLogManager = ratingLogManager;
             _driverLocationLogRepository = driverLocationLogRepository;
-            _logManager = logManager;
+            _userRepository = userRepository;
         }
         /// <summary>
         /// list all trips realted with drivers
@@ -225,6 +231,7 @@ namespace TACHYON.Shipping.Drivers
                 RateType = RateType.SEByDriver
             });
 
+            //  Need Review This 
             foreach (var point in tripDto.RoutePoints)
             {
                 point.IsFacilityRated = await _ratingLogManager.IsRateDoneBefore(new RatingLog
@@ -483,33 +490,42 @@ namespace TACHYON.Shipping.Drivers
         /// <summary>
         /// The driver rate facility after drop finished
         /// </summary>
-        /// <param name="input"></param>
-        public async Task SetRating(long PointId, int Rate, string Note)
+        /// <param name="pointId"></param>
+        /// <param name="rate"></param>
+        /// <param name="note"></param>
+        [RequiresFeature(AppFeatures.Carrier)]
+        public async Task SetRating(long pointId, int rate, string note)
         {
-            //DisableTenancyFilters();
-            //var Point = await _RoutPointRepository.FirstOrDefaultAsync(x => x.Id == PointId && x.ShippingRequestTripFk.Status != ShippingRequestTripStatus.Canceled && x.IsComplete && x.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId && !x.Rating.HasValue);
-            //if (Point != null) {
-            //    Point.Rating = Rate;
-            //    Point.ReceiverNote = Note;
-            //} 
-            var input = new CreateFacilityRateByDriverDto();
-            input.PointId = PointId;
-            input.Rate = Rate;
-            input.Note = Note;
-            await _ratingLogManager.ValidateAndCreateRating(input, RateType.FacilityByDriver);
+            await CheckCurrentUserIsDriver();
+
+            var ratingLog = new RatingLog() {PointId = pointId, Rate = rate, Note = note};
+            var pointFacilityId = await _RoutPointRepository.GetAll().AsNoTracking()
+                .Where(x => x.Id == ratingLog.PointId)
+                .Select(x => x.FacilityId).FirstOrDefaultAsync();
+            ratingLog.DriverId = AbpSession.UserId;
+            ratingLog.FacilityId = pointFacilityId;
+            ratingLog.RateType = RateType.FacilityByDriver;
+            
+            await _ratingLogManager.CreateRating(ratingLog);
+        }
+
+        private async Task CheckCurrentUserIsDriver()
+        {
+            bool isCurrentUserDriver = await _userRepository.GetAll().AsNoTracking()
+                .AnyAsync(x => x.IsDriver && x.Id == AbpSession.UserId);
+            if (!isCurrentUserDriver)
+                throw new AbpValidationException(L("YouMustBeDriverToRateFacility"));
         }
 
         /// <summary>
         /// The driver rate shipping Experience after trip delivered
         /// </summary>
-        /// <param name="input"></param>
+        [RequiresFeature(AppFeatures.Carrier)]
         public async Task SetShippingExpRating(int tripId, int rate, string note)
         {
-            var input = new CreateShippingExpRateByDriverDto();
-            input.TripId = tripId;
-            input.Rate = rate;
-            input.Note = note;
-            await _ratingLogManager.ValidateAndCreateRating(input, RateType.SEByDriver);
+            await CheckCurrentUserIsDriver();
+            var input = new RatingLog() {TripId = tripId,RateType = RateType.SEByDriver, Rate = rate, Note = note,DriverId = AbpSession.UserId};
+            await _ratingLogManager.CreateRating(input);
         }
 
 
@@ -661,21 +677,28 @@ namespace TACHYON.Shipping.Drivers
                 //check if trip has rating, to delete and recalculate
                 if (tripRate != null)
                 {
-                    var DriverId = trip.RatingLogs.Where(x => x.RateType == RateType.DriverByReceiver).FirstOrDefault()?.DriverId;
-                    var FacilityId = trip.RatingLogs.Where(x => x.RateType == RateType.FacilityByDriver).FirstOrDefault()?.FacilityId;
+                    var driverId = trip.RatingLogs.FirstOrDefault(x => x.RateType == RateType.DriverByReceiver)?.DriverId;
+                    var facilityId = trip.RatingLogs.FirstOrDefault(x => x.RateType == RateType.FacilityByDriver)?.FacilityId;
 
                     await _ratingLogManager.DeleteAllTripAndPointsRatingAsync(tripRate);
 
                     await CurrentUnitOfWork.SaveChangesAsync();
 
-                    //recalculate rating
-                    await _ratingLogManager.RecalculateCarrierRatingByCarrierTenantId(trip.ShippingRequestFk.CarrierTenantId.Value);
-                    await _ratingLogManager.RecalculateShipperRatingByShipperTenantId(trip.ShippingRequestFk.TenantId);
-                    if (DriverId != null)
-                        await _ratingLogManager.RecaculateDriverRating(DriverId.Value);
+                    // recalculate rating For Shipper
+                    await _ratingLogManager.RecalculateRatingById(trip.ShippingRequestFk.TenantId,typeof(Tenant));
+                    
+                    // recalculate rating For Carrier
+                    if (trip.ShippingRequestFk.CarrierTenantId.HasValue)
+                        await _ratingLogManager.RecalculateRatingById(trip.ShippingRequestFk.CarrierTenantId.Value,typeof(Tenant));
+                    
+                    // recalculate rating For Driver
+                    if (driverId != null)
+                        await _ratingLogManager.RecalculateRatingById(driverId.Value,typeof(User));
+                    
+                    // recalculate rating For Facility
+                    if (facilityId != null)
+                        await _ratingLogManager.RecalculateRatingById(facilityId.Value,typeof(Facility));
 
-                    if (FacilityId != null)
-                        await _ratingLogManager.RecalculateFacilityRating(FacilityId.Value);
                 }
             }
             else

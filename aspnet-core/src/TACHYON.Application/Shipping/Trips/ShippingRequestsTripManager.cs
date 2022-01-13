@@ -181,7 +181,7 @@ namespace TACHYON.Shipping.Trips
                                 .ThenInclude(s => s.RoutPoints)
                             .Where
                             (
-                                x => x.Id == id
+                                x => x.ShippingRequestTripId == id
 
                             )
                             .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => x.ShippingRequestTripFk.ShippingRequestFk.IsTachyonDeal)

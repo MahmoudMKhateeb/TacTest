@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using TACHYON.Common;
+using TACHYON.Rating;
 
 namespace TACHYON.Extension
 {
@@ -86,11 +87,16 @@ namespace TACHYON.Extension
             var baseType = Enum.GetUnderlyingType(propInfo.PropertyType);
             val = Convert.ChangeType(val, baseType);
             propInfo.SetValue(obj, val);
-
             return propInfo.GetValue(obj)?.ToString();
         }
 
-
+        public static decimal GetEntityRatingAverage(this IEnumerable<Tuple<decimal,RateType>> ratingLogs,Func<Tuple<decimal,RateType>,bool> selector)
+        {
+            var entityRatingLogs = ratingLogs.Where(selector).ToList();
+            if (!entityRatingLogs.Any()) return 0;
+            
+            return entityRatingLogs.Sum(x => x.Item1) / entityRatingLogs.Count;
+        }
     }
 
 }

@@ -2,13 +2,10 @@
 
 namespace TACHYON.Rating.dtos
 {
-    public class CreateShippingExpRateByDriverDto : IRatingDto
+    public class CreateShippingExpRateByDriverDto : RatingDto
     {
         [Required]
         public int TripId { get; set; }
-
-        [Range(1, 5)]
-        public int Rate { get; set; }
-        public string Note { get; set; }
+        
     }
 }
