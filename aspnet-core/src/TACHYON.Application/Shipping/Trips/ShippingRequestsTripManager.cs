@@ -332,7 +332,7 @@ namespace TACHYON.Shipping.Trips
             //CurrentPoint.DocumentId = document.DocumentId;
             var routePointDocument = new RoutPointDocument();
             routePointDocument.RoutPointId = CurrentPoint.Id;
-            routePointDocument.DocumentContentType = "image/jpeg";
+            routePointDocument.DocumentContentType = document.DocumentContentType;
             routePointDocument.DocumentName = document.DocumentName;
             routePointDocument.DocumentId = document.DocumentId;
             routePointDocument.RoutePointDocumentType = RoutePointDocumentType.POD;
