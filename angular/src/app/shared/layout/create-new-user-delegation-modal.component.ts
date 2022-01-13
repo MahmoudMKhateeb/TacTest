@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Injector, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, Output, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import {
   CreateUserDelegationDto,
@@ -11,6 +11,9 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 import { CommonLookupModalComponent } from '@app/shared/common/lookup/common-lookup-modal.component';
 import { finalize } from 'rxjs/operators';
 import * as moment from 'moment';
+import { DateType } from '../common/hijri-gregorian-datepicker/consts';
+import { NgForm } from '@angular/forms';
+import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'createNewUserDelegation',
@@ -24,6 +27,15 @@ export class CreateNewUserDelegationModalComponent extends AppComponentBase {
   active = false;
   saving = false;
   selectedUsername = '';
+  startTime: any;
+  endTime: any;
+  selectedDateType: DateType = DateType.Hijri; // or DateType.Gregorian
+  @Input() parentForm: NgForm;
+  @ViewChild('userForm', { static: false }) userForm: NgForm;
+  minGreg: NgbDateStruct;
+  minHijri: NgbDateStruct;
+  maxGreg: NgbDateStruct;
+  maxHijri: NgbDateStruct;
 
   userDelegation: CreateUserDelegationDto = new CreateUserDelegationDto();
 
@@ -33,6 +45,17 @@ export class CreateNewUserDelegationModalComponent extends AppComponentBase {
     private _commonLookupService: CommonLookupServiceProxy
   ) {
     super(injector);
+  }
+
+  validateDates($event: NgbDateStruct, type) {
+    if (type == 'startTime') this.startTime = $event;
+    if (type == 'endTime') this.endTime = $event;
+
+    this.minGreg = this.dateFormatterService.ToGregorianDateStruct(this.startTime, 'D/M/YYYY');
+    this.minHijri = this.dateFormatterService.ToHijriDateStruct(this.startTime, 'D/M/YYYY');
+
+    this.maxGreg = this.dateFormatterService.ToGregorianDateStruct(this.endTime, 'D/M/YYYY');
+    this.maxHijri = this.dateFormatterService.ToHijriDateStruct(this.endTime, 'D/M/YYYY');
   }
 
   show(): void {
@@ -69,8 +92,10 @@ export class CreateNewUserDelegationModalComponent extends AppComponentBase {
 
     let input = new CreateUserDelegationDto();
     input.targetUserId = this.userDelegation.targetUserId;
-    input.startTime = moment(this.userDelegation.startTime).startOf('day');
+    //input.startTime = moment(this.userDelegation.startTime).startOf('day');
     input.endTime = moment(this.userDelegation.endTime).endOf('day');
+    if (this.startTime != null && this.startTime != undefined)
+      input.startTime = this.GetGregorianAndhijriFromDatepickerChange(this.startTime).GregorianDate.startOf('day');
 
     this._userDelegationService
       .delegateNewUser(input)

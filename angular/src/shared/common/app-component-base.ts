@@ -29,6 +29,10 @@ const capitalize = (s) => {
   return s.charAt(0).toUpperCase() + s.slice(1);
 };
 
+export class DatesFormats {
+  hijriDate: string | undefined;
+  GregorianDate!: moment.Moment | undefined;
+}
 export abstract class AppComponentBase {
   localizationSourceName = AppConsts.localization.defaultLocalizationSourceName;
 
@@ -184,6 +188,19 @@ export abstract class AppComponentBase {
     }
   }
 
+  GetGregorianAndhijriFromDatepickerChange($event: NgbDateStruct) {
+    var item = new DatesFormats();
+    if ($event != null && $event.year < 1900) {
+      const ngDate = this.dateFormatterService.ToGregorian($event);
+      item.GregorianDate = this.dateFormatterService.NgbDateStructToMoment(ngDate);
+      item.hijriDate = this.dateFormatterService.ToString($event);
+    } else if ($event != null && $event.year > 1900) {
+      item.GregorianDate = this.dateFormatterService.NgbDateStructToMoment($event);
+      const ngDate = this.dateFormatterService.ToHijri($event);
+      item.hijriDate = this.dateFormatterService.ToString(ngDate);
+    }
+    return item;
+  }
   toBase64 = (file) =>
     new Promise((resolve, reject) => {
       const reader = new FileReader();

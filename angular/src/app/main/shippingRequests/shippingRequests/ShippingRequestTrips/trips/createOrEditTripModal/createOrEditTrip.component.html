@@ -115,58 +115,38 @@
             <!--  begin:: Trip start&End Dates-->
             <div class="col-lg-6">
               <div class="form-group">
-                <label>{{ l('TripsStartDate') }} <span class="required-fileds">*</span> </label>
-                <div class="input-group date">
-                  <input
-                    id="tripStartDate"
-                    [formControl]="tripStartDate"
-                    type="text"
-                    class="form-control"
-                    name="tripStartDate"
-                    bsDatepicker
-                    datePickerMomentModifier
-                    [class.is-valid]="tripStartDate.valid && tripStartDate.value"
-                    [(date)]="trip.startTripDate"
-                    [minDate]="shippingRequest.startTripDate"
-                    [maxDate]="shippingRequest.startTripDate"
-                    [bsConfig]="{ adaptivePosition: true }"
-                    readonly="readonly"
-                    required
-                  />
-                  <div class="input-group-append">
-                    <span class="input-group-text">
-                      <i class="la la-calendar-check-o"></i>
-                    </span>
-                  </div>
-                </div>
+                <hijri-gregorian-datepicker-test
+                  [parentForm]="parentForm"
+                  [label]="l('TripsStartDate')"
+                  class="m-input"
+                  [readonly]="true"
+                  [isRequired]="true"
+                  [minHijri]="minTripDateAsHijri"
+                  [minGreg]="minTripDateAsGrorg"
+                  [maxHijri]="maxTripDateAsHijri"
+                  [maxGreg]="maxTripDateAsGrorg"
+                  [selectedDate]="startTripdate"
+                  (selectedDateChange)="GetSelectedstartDateChange($event, 'start')"
+                >
+                </hijri-gregorian-datepicker-test>
               </div>
             </div>
             <div class="col-lg-6">
               <div class="form-group">
-                <label> {{ l('TripsEndDate') }} </label>
-                <div class="input-group date">
-                  <input
-                    id="endTripDate"
-                    [formControl]="endTripDate"
-                    type="text"
-                    class="form-control"
-                    name="endTripDate"
-                    bsDatepicker
-                    datePickerMomentModifier
-                    [class.is-invalid]="trip.endTripDate && endTripDate.touched && !endTripDate.valid"
-                    [class.is-valid]="trip.endTripDate && endTripDate.touched && endTripDate.valid"
-                    [(date)]="trip.endTripDate"
-                    [minDate]="trip.startTripDate"
-                    [maxDate]="shippingRequest.endTripDate"
-                    [bsConfig]="{ adaptivePosition: true }"
-                    readonly="readonly"
-                  />
-                  <div class="input-group-append">
-                    <span class="input-group-text">
-                      <i class="la la-calendar-check-o"></i>
-                    </span>
-                  </div>
-                </div>
+                <hijri-gregorian-datepicker-test
+                  [parentForm]="parentForm"
+                  [label]="l('TripsEndDate')"
+                  class="m-input"
+                  [readonly]="true"
+                  [isRequired]="true"
+                  [minHijri]="minTripDateAsHijri"
+                  [minGreg]="minTripDateAsGrorg"
+                  [maxHijri]="maxTripDateAsHijri"
+                  [maxGreg]="maxTripDateAsGrorg"
+                  [selectedDate]="endTripdate"
+                  (selectedDateChange)="GetSelectedstartDateChange($event, 'end')"
+                >
+                </hijri-gregorian-datepicker-test>
               </div>
             </div>
             <!--  end:: Trip start&End Dates-->

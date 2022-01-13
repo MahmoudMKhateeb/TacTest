@@ -37,38 +37,32 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="StartTime">{{ 'StartTime' | localize }}</label>
-            <input
-              id="StartTime"
-              type="text"
-              name="StartTime"
-              class="form-control"
-              bsDatepicker
-              datePickerMomentModifier
-              [(date)]="userDelegation.startTime"
-              [(ngModel)]="userDelegation.startTime"
-              [maxDate]="userDelegation.endTime"
-              [bsConfig]="{ adaptivePosition: true }"
-              autocomplete="new-password"
-              required
-            />
+            <hijri-gregorian-datepicker-test
+              [parentForm]="parentForm"
+              [label]="l('StartTime')"
+              class="m-input"
+              [readonly]="true"
+              [isRequired]="true"
+              [maxHijri]="maxHijri"
+              [maxGreg]="maxGreg"
+              [selectedDate]="startTime"
+              (selectedDateChange)="validateDates($event, 'startTime')"
+            >
+            </hijri-gregorian-datepicker-test>
           </div>
           <div class="form-group">
-            <label for="EndTime">{{ 'EndTime' | localize }}</label>
-            <input
-              id="EndTime"
-              type="text"
-              name="EndTime"
-              class="form-control"
-              bsDatepicker
-              datePickerMomentModifier
-              [(date)]="userDelegation.endTime"
-              [(ngModel)]="userDelegation.endTime"
-              [minDate]="userDelegation.startTime"
-              [bsConfig]="{ adaptivePosition: true }"
-              autocomplete="new-password"
-              required
-            />
+            <hijri-gregorian-datepicker-test
+              [parentForm]="parentForm"
+              [label]="l('EndTime')"
+              class="m-input"
+              [readonly]="true"
+              [isRequired]="true"
+              [minHijri]="minHijri"
+              [minGreg]="minGreg"
+              [selectedDate]="endTime"
+              (selectedDateChange)="validateDates($event, 'endTime')"
+            >
+            </hijri-gregorian-datepicker-test>
           </div>
         </div>
         <div class="modal-footer">
