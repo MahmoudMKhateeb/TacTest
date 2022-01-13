@@ -4244,6 +4244,9 @@ namespace TACHYON.Migrations
                     b.Property<DateTime?>("ActualPickupOrDeliveryDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("CanGoToNextLocation")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Code")
                         .HasColumnType("nvarchar(max)");
 
@@ -4281,6 +4284,12 @@ namespace TACHYON.Migrations
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsDeliveryNoteUploaded")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsPodUploaded")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsResolve")
                         .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastModificationTime")
@@ -4324,6 +4333,9 @@ namespace TACHYON.Migrations
 
                     b.Property<long?>("WaybillNumber")
                         .HasColumnType("bigint");
+
+                    b.Property<int>("WorkFlowVersion")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -4710,6 +4722,9 @@ namespace TACHYON.Migrations
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsReset")
+                        .HasColumnType("bit");
 
                     b.Property<long>("PointId")
                         .HasColumnType("bigint");
@@ -7789,7 +7804,7 @@ namespace TACHYON.Migrations
             modelBuilder.Entity("TACHYON.Shipping.RoutPoints.RoutPointStatusTransition", b =>
                 {
                     b.HasOne("TACHYON.Routs.RoutPoints.RoutPoint", "RoutPointFK")
-                        .WithMany()
+                        .WithMany("RoutPointStatusTransitions")
                         .HasForeignKey("PointId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

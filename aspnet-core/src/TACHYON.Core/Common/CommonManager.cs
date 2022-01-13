@@ -5,6 +5,7 @@ using Abp.Runtime.Session;
 using Abp.UI;
 using Microsoft.AspNetCore.Http;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using TACHYON.Dto;
@@ -55,17 +56,17 @@ namespace TACHYON.Common
             {
                 throw new UserFriendlyException(L("YouDontHaveThisPermission"));
             }
-            
+
         }
 
-/// <summary>
-/// by angular sent file upload as base64
-/// </summary>
-/// <param name="document">document object</param>
-/// <param name="TenantId">Tenant id for user upload file</param>
-/// <returns></returns>
-        public async Task<IHasDocument> UploadDocumentAsBase64(IDocumentUpload document,int? TenantId)
-        {    
+        /// <summary>
+        /// by angular sent file upload as base64
+        /// </summary>
+        /// <param name="document">document object</param>
+        /// <param name="TenantId">Tenant id for user upload file</param>
+        /// <returns></returns>
+        public async Task<IHasDocument> UploadDocumentAsBase64(IDocumentUpload document, int? TenantId)
+        {
             if (document.DocumentBase64 != null && !string.IsNullOrEmpty(document.DocumentBase64.ToString().Trim()))
             {
                 var fileBytes = Convert.FromBase64String(document.DocumentBase64.Split(',')[1]);
@@ -86,7 +87,7 @@ namespace TACHYON.Common
         public async Task<IHasDocument> UploadDocument(IFormFile File, int? TenantId)
         {
             IHasDocument document = new HasDocument();
-            if (File.Length>0)
+            if (File.Length > 0)
             {
                 byte[] fileBytes;
                 using (var stream = File.OpenReadStream())
@@ -101,7 +102,31 @@ namespace TACHYON.Common
             }
             return document;
         }
-        
+        public async Task<List<IHasDocument>> UploadDocuments(IFormFileCollection files, int? tenantId)
+        {
+            var documents = new List<IHasDocument>();
+            foreach (var file in files)
+            {
+                IHasDocument document = new HasDocument();
+                if (file.Length > 0)
+                {
+                    byte[] fileBytes;
+                    using (var stream = file.OpenReadStream())
+                    {
+                        fileBytes = stream.GetAllBytes();
+                    }
+                    var fileObject = new BinaryObject(tenantId, fileBytes);
+                    await _binaryObjectManager.SaveAsync(fileObject);
+                    document.DocumentId = fileObject.Id;
+                    document.DocumentContentType = file.ContentType;
+                    document.DocumentName = Path.GetFileName(file.FileName).Split(".")[0];
+                    documents.Add(document);
+                }
+            }
+            return documents;
+        }
+
+
         /// <summary>
         /// Delete file attachment from database
         /// </summary>
@@ -128,6 +153,18 @@ namespace TACHYON.Common
             _tempFileCacheManager.SetFile(file.FileToken, binaryObject.Bytes);
 
             return file;
+        }
+        public async Task<List<FileDto>> GetDocuments(List<IHasDocument> documents)
+        {
+            var files = new List<FileDto>();
+            foreach (var document in documents)
+            {
+                var binaryObject = await _binaryObjectManager.GetOrNullAsync(document.DocumentId.Value);
+                var file = new FileDto(document.DocumentName, document.DocumentContentType);
+                _tempFileCacheManager.SetFile(file.FileToken, binaryObject.Bytes);
+                files.Add(file);
+            }
+            return files;
         }
     }
 }

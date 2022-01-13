@@ -8,6 +8,7 @@ using TACHYON.AddressBook;
 using TACHYON.Goods.GoodsDetails;
 using TACHYON.Rating;
 using TACHYON.Receivers;
+using TACHYON.Shipping.RoutPoints;
 using TACHYON.Shipping.ShippingRequestTrips;
 
 namespace TACHYON.Routs.RoutPoints
@@ -41,14 +42,17 @@ namespace TACHYON.Routs.RoutPoints
         public ICollection<GoodsDetail> GoodsDetails { get; set; }
         public ICollection<RoutPointDocument> RoutPointDocuments { get; set; }
         public ICollection<RatingLog> RatingLogs { get; set; }
+        public ICollection<RoutPointStatusTransition> RoutPointStatusTransitions { get; set; }
         public string Code { get; set; }
         public RoutePointStatus Status { get; set; }
         public RoutePointCompletedStatus CompletedStatus { get; set; }
         public DateTime? StartTime { get; set; }
         public DateTime? EndTime { get; set; }
+        public bool IsResolve { get; set; }
         public bool IsActive { get; set; }
         public bool IsComplete { get; set; }
-
+        public bool CanGoToNextLocation { get; set; }
+        public int WorkFlowVersion { get; set; }
         //todo will be removed
         //public Guid? DocumentId { get; set; }
         //todo will be removed
@@ -73,7 +77,7 @@ namespace TACHYON.Routs.RoutPoints
         //Shipper Note
         [CanBeNull] public string Note { get; set; }
         public bool IsDeliveryNoteUploaded { get; set; }
-
+        public bool IsPodUploaded { get; set; }
         public DateTime? ActualPickupOrDeliveryDate { get; set; }
     }
 }

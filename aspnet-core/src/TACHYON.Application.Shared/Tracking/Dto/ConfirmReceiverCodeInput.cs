@@ -3,9 +3,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TACHYON.Tracking.Dto
 {
-    public class ConfirmReceiverCodeInput:EntityDto<long>
+    public class ConfirmReceiverCodeInput : EntityDto<long>
     {
         [Required]
         public string Code { get; set; }
+        public string Action { get; set; }
+
     }
 }

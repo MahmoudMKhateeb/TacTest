@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+﻿import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { DangerousGoodTypesComponent } from './goods/dangerousGoodTypes/dangerousGoodTypes.component';
 import { PackingTypesComponent } from './packingTypes/packingTypes/packingTypes.component';
@@ -24,10 +24,8 @@ import { PortsComponent } from './ports/ports/ports.component';
 import { FacilitiesComponent } from './addressBook/facilities/facilities.component';
 import { DocumentFilesComponent } from './documentFiles/documentFiles/documentFiles.component';
 import { DocumentTypesComponent } from './documentTypes/documentTypes/documentTypes.component';
-import { ShippingRequestsComponent } from './shippingRequests/shippingRequests/shippingRequests.component';
 import { CreateOrEditShippingRequestComponent } from './shippingRequests/shippingRequests/create-or-edit-shippingRequest.component';
 import { ViewShippingRequestComponent } from './shippingRequests/shippingRequests/view-shippingRequest.component';
-import { GoodsDetailsComponent } from './goodsDetails/goodsDetails/goodsDetails.component';
 //import { OffersComponent } from './offers/offers/offers.component';
 import { RoutStepsComponent } from './routSteps/routSteps/routSteps.component';
 import { RoutesComponent } from './routs/routes/routes.component';
@@ -61,14 +59,13 @@ import { InvoiceTenantDetailsService } from '@app/main/invoices/invoice-tenants/
 import { ProformaListComponent } from '@app/main/invoices/proformas/proforma-list.component';
 import { AccidentReasonComponent } from '@app/main/accidents/reasons/reason.component';
 import { TripRejectReasonComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/rejectreason/trip-reject-reason.component';
-import { AppLocalizationComponent } from '@app/main/applocalizations/applocalization.component';
 import { ComingSoonComponent } from '@app/main/commingSoon/comingSoon.component';
 import { CreateOrEditShippingRequestWizardComponent } from '@app/main/shippingRequests/shippingRequests/shippingRequestWizard/create-or-edit-shipping-request-wizard.component';
-import { TrackingComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tracking.component';
 import { TMSRequestListComponent } from '@app/main/tms/tms-request-list.component';
 import { TrucksSubmittedDocumentsComponent } from '@app/main/documentFiles/documentFiles/trucks-submitted-documents/trucks-submitted-documents.component';
 import { DriversSubmittedDocumentsComponent } from '@app/main/documentFiles/documentFiles/drivers-submitted-documents/drivers-submitted-documents.component';
 import { ShipmentHistoryComponent } from '@app/main/shippingRequests/shippingRequests/shipment-history/shipment-history.component';
+import { TrackingComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tracking.component';
 
 @NgModule({
   imports: [

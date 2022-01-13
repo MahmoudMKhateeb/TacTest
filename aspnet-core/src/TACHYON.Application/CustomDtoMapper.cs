@@ -96,6 +96,7 @@ using TACHYON.Packing.PackingTypes;
 using TACHYON.Packing.PackingTypes.Dtos;
 using TACHYON.Receivers;
 using TACHYON.Receivers.Dtos;
+using TACHYON.Routs.Dtos;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Routs.RoutPoints.Dtos;
 using TACHYON.Routs.RoutSteps;
@@ -103,6 +104,7 @@ using TACHYON.Routs.RoutSteps.Dtos;
 using TACHYON.Sessions.Dto;
 using TACHYON.Shipping.Accidents;
 using TACHYON.Shipping.Accidents.Dto;
+using TACHYON.Shipping.RoutPoints;
 using TACHYON.Shipping.ShippingRequestBids;
 using TACHYON.Shipping.ShippingRequestBids.Dtos;
 using TACHYON.Shipping.ShippingRequests;
@@ -120,6 +122,9 @@ using TACHYON.ShippingRequestVases;
 using TACHYON.ShippingRequestVases.Dtos;
 using TACHYON.TermsAndConditions;
 using TACHYON.TermsAndConditions.Dtos;
+using TACHYON.Tracking;
+using TACHYON.Tracking.Dto;
+using TACHYON.Tracking.Dto.WorkFlow;
 using TACHYON.Trailers;
 using TACHYON.Trailers.Dtos;
 using TACHYON.Trailers.PayloadMaxWeights;
@@ -152,6 +157,7 @@ using TACHYON.UnitOfMeasures.Dtos;
 using TACHYON.Vases;
 using TACHYON.Vases.Dtos;
 using TACHYON.WebHooks.Dto;
+using TACHYON.WorkFlows;
 
 namespace TACHYON
 {
@@ -365,7 +371,7 @@ namespace TACHYON
                 .ForMember(d => d.RoutPoints, opt => opt.Ignore())
                 .ForMember(d => d.ShippingRequestTripVases, opt => opt.Ignore())
                 .AfterMap(AddOrUpdateShippingRequestTrip);
-
+            configuration.CreateMap<ShippingRequestTrip, TrackingShippingRequestTripDto>();
 
 
             configuration.CreateMap<ShippingRequestTripVas, CreateOrEditShippingRequestTripVasDto>()
@@ -660,7 +666,7 @@ namespace TACHYON
                 .ForMember(dto => dto.ContractNo, options => options.MapFrom(entity => entity.Tenant.ContractNumber))
                 .ForMember(dto => dto.Address, options => options.MapFrom(entity => entity.Tenant.Address))
                 .ForMember(dto => dto.Period, options => options.MapFrom(entity => entity.InvoicePeriodsFK.DisplayName));
-
+            configuration.CreateMap<RoutPointStatusTransition, RoutPointStatusTransitionDto>();
 
             configuration.CreateMap<GroupShippingRequests, SubmitInvoiceShippingRequestDto>()
   .ForMember(dto => dto.Price, options => options.MapFrom(entity => entity.ShippingRequests.Price))
@@ -689,6 +695,8 @@ namespace TACHYON
 
             /* ADD YOUR OWN CUSTOM AUTOMAPPER MAPPINGS HERE */
             configuration.CreateMap(typeof(TACHYONAppServiceBase.TachyonLoadResult<>), typeof(LoadResult)).ReverseMap();
+
+            configuration.CreateMap<WorkflowTransaction<PointTransactionArgs, RoutePointStatus>, PointTransactionDto>();
         }
         /// <summary>
         /// MultiLingualMapping configuration 

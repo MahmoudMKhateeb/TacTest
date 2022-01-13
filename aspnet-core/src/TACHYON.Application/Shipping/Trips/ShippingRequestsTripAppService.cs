@@ -213,7 +213,6 @@ namespace TACHYON.Shipping.Trips
             ValidateTripDates(input, request);
             ValidateNumberOfDrops(input, request);
             ValidateTotalweight(input, request);
-
             if (!input.Id.HasValue)
             {
                 int requestNumberOfTripsAdd = await _shippingRequestTripRepository.GetAll().Where(x => x.ShippingRequestId == input.ShippingRequestId).CountAsync() + 1;
@@ -372,6 +371,7 @@ namespace TACHYON.Shipping.Trips
             await ValidateGoodsCategory(input.RoutPoints, request.GoodCategoryId);
 
             ShippingRequestTrip trip = ObjectMapper.Map<ShippingRequestTrip>(input);
+            AssignWorkFlowVersionToRoutPoints(trip);
 
             //insert trip 
             var shippingRequestTripId = await _shippingRequestTripRepository.InsertAndGetIdAsync(trip);
@@ -387,6 +387,20 @@ namespace TACHYON.Shipping.Trips
 
             //Notify Carrier with trip details
             await NotifyCarrierWithTripDetails(trip, request.CarrierTenantId, true, true, true);
+
+        }
+
+        private void AssignWorkFlowVersionToRoutPoints(ShippingRequestTrip trip)
+        {
+            if (trip.RoutPoints != null && trip.RoutPoints.Any())
+            {
+                foreach (var point in trip.RoutPoints)
+                {
+                    point.WorkFlowVersion = point.PickingType == PickingType.Pickup ? TACHYONConsts.PickUpRoutPointWorkflowVersion
+                        : trip.NeedsDeliveryNote ? TACHYONConsts.DropOfWithDeliveryNoteRoutPointWorkflowVersion
+                        : TACHYONConsts.DropOfRoutPointWorkflowVersion;
+                }
+            }
 
         }
 

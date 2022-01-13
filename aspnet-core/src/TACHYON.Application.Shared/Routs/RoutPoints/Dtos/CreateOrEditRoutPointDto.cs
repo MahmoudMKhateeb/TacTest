@@ -47,7 +47,7 @@ namespace TACHYON.Routs.RoutPoints.Dtos
 
             if (PickingType == PickingType.Pickup) return;
             //additional receiver must provided
-            if (!ReceiverId.HasValue && ReceiverPhoneNumber.IsNullOrEmpty() )
+            if (!ReceiverId.HasValue && ReceiverPhoneNumber.IsNullOrEmpty())
             {
                 context.Results.Add(new ValidationResult("AtLeastOneReceiverShouldBeProvided"));
             }

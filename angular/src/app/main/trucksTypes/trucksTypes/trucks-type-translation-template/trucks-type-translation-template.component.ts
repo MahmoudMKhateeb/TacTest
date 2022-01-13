@@ -7,6 +7,7 @@ import { TrucksTypesServiceProxy } from '@shared/service-proxies/service-proxies
 @Component({
   selector: 'trucksType-translationsTemplate',
   templateUrl: './trucks-type-translation-template.component.html',
+  // styleUrls: ['./trucks-type-translation-template.component.css'],
 })
 export class TrucksTypeTranslationTemplateComponent extends AppComponentBase implements OnInit {
   dataSource: any = {};

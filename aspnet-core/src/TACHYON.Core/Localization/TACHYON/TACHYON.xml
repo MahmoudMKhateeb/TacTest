@@ -2421,6 +2421,27 @@
 		<text name="PickupFacilityAndDropOffFacilityCantBeTheSame">Pickup facility and drop off facility can't be the same</text>
 		<text name="CreateOrEditPoint">Create or Edit Point</text>
 		<text name="SelectADangerousGoodType">Select a Dangerous Good Type</text>
+
+
+		<!--
+		<text name="StartedMovingToLoadingLocation">Started moving to loading location</text>
+		<text name="ArriveToLoadingLocation">Arrive To Loading Location</text>
+		<text name="StartLoading">Start Loading</text>
+		<text name="FinishLoading">Finish Loading</text>
+		<text name="StartedMovingToOfLoadingLocation">Started Moving To Off Loading Location</text>
+		<text name="ArrivedToDestination">Arrived To Destination</text>
+		<text name="StartOffloading">Start Off loading</text>
+		<text name="FinishOffLoadShipment">Finish Off Load Shipment</text>
+		<text name="ReceiverConfirmed">Receiver Confirmed</text>
+		<text name="FinishOffLoadShipmentDeliveryConfirmation">Delivery Confirmation after Finish Off Load Shipment</text>
+		<text name="DeliveryConfirmation">Delivery Confirmation</text>
+		<text name="DeliveryConfirmationReceiverConfirmed">Receiver Confirmed after DeliveryConfirmation</text>
+		-->
+		<text name="WorkFlowNotExist">WorkFlow for current point does not exist</text>
+		<text name="TransactionNotExist">Transaction does not exist</text>
+		<text name="FinishOffLoadShipmentDeliveryConfirmation">Delivery Confirmation after Finish Off Load Shipment</text>
+		<text name="DeliveryConfirmationReceiverConfirmed">Receiver Confirmed after DeliveryConfirmation</text>
+
 		<text name="NotAccepted">Not Accepted</text>
 		<text name="NotRejected">Not Rejected</text>
 		

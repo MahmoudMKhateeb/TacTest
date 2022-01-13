@@ -286,11 +286,13 @@ export class TrackingModelComponent extends AppComponentBase implements OnInit {
   canCreateAccident() {
     if (this.item.status == ShippingRequestTripStatus.Intransit) {
       if (!this.appSession.tenantId || this.feature.isEnabled('App.TachyonDealer')) {
+        //if tachyon dealer and is assign return true
         return this.item.isAssign;
       }
-
+      //inTransit return true too
       return true;
     }
+    //not in transit return false
     return false;
   }
   accidentCallBack(): void {

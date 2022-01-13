@@ -263,15 +263,21 @@ import { DangerousCoodTypesTranslationsComponent } from './goods/dangerous-cood-
 import { NewTrackingConponent } from './shippingRequests/shippingRequests/tracking/new-tracking/new-tracking-conponent';
 import { CollapseModule } from '@node_modules/ngx-bootstrap/collapse';
 import { NgxSkeletonLoaderModule } from '@node_modules/ngx-skeleton-loader';
-import { CompleteTrackingPointDetailsComponent } from './shippingRequests/shippingRequests/tracking/complete-tracking-point-details/complete-tracking-point-details.component';
-import { NgbAccordionModule, NgbCollapseModule, NgbNavModule, NgbRatingModule, NgbModule } from '@node_modules/@ng-bootstrap/ng-bootstrap';
-import { UploadDeliveryNoteDocumentModelComponent } from './shippingRequests/shippingRequests/tracking/upload-delivery-note-document-model/upload-delivery-note-document-model.component';
+import {
+  NgbAccordionModule,
+  NgbCollapseModule,
+  NgbDropdownModule,
+  NgbModule,
+  NgbNavModule,
+  NgbRatingModule,
+} from '@node_modules/@ng-bootstrap/ng-bootstrap';
 import { ViewDetailsAccidentModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/accident/view-details-accident-modal.component';
 import { AddAccidentCommentModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/accident/accident-comment/add-accident-comment-modal.component';
 import { ShippingRequestRatingModalComponent } from './shippingRequests/shippingRequests/rating/shipping-request-rating-modal.component';
 import { RatingModule } from '@node_modules/primeng/rating';
-import { ViewRatingComponent } from './shippingRequests/shippingRequests/rating/view-rating/view-rating.component';
-import { ShipmentHistoryComponent } from './shippingRequests/shippingRequests/shipment-history/shipment-history.component';
+import { StepsModule } from '@node_modules/primeng/steps';
+import { ViewRatingComponent } from '@app/main/shippingRequests/shippingRequests/rating/view-rating/view-rating.component';
+import { ShipmentHistoryComponent } from '@app/main/shippingRequests/shippingRequests/shipment-history/shipment-history.component';
 
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
@@ -324,6 +330,8 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     RatingModule,
     NgbRatingModule,
     NgbModule,
+    NgbDropdownModule,
+    StepsModule,
   ],
   declarations: [
     DangerousGoodTypesComponent,
@@ -516,8 +524,6 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ViewPointModalComponent,
     DangerousCoodTypesTranslationsComponent,
     NewTrackingConponent,
-    CompleteTrackingPointDetailsComponent,
-    UploadDeliveryNoteDocumentModelComponent,
     ViewDetailsAccidentModalComponent,
     AddAccidentCommentModalComponent,
     ShippingRequestRatingModalComponent,

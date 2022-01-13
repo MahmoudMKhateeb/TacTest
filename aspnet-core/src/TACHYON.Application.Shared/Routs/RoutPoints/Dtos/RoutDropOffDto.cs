@@ -8,6 +8,7 @@ using TACHYON.AddressBook.Dtos;
 using TACHYON.Goods.GoodsDetails.Dtos;
 using TACHYON.Receivers.Dtos;
 using TACHYON.Routs.RoutSteps;
+using TACHYON.Tracking.Dto.WorkFlow;
 
 namespace TACHYON.Routs.RoutPoints.Dtos
 {
@@ -21,6 +22,7 @@ namespace TACHYON.Routs.RoutPoints.Dtos
         public int? Rating { get; set; }
         public int RatingNumber { get; set; }
         public bool IsFacilityRated { get; set; }
+        public bool IsComplete { get; set; }
         public ReceiverDto ReceiverDto { get; set; }
         /// <summary>
         /// Additional receiver full name
@@ -42,7 +44,9 @@ namespace TACHYON.Routs.RoutPoints.Dtos
         public bool IsDeliveryNoteUploaded { get; set; }
         public List<GoodsDetailDto> GoodsDetailListDto { get; set; }
         public long? WaybillNumber { get; set; }
+        public bool IsPodUploaded { get; set; }
         public RoutePointCompletedStatus CompletedStatus { get; set; }
+        public List<PointTransactionDto> AvailableTransactions { get; set; }
 
         // public double TotalWeight { get; set; }
 

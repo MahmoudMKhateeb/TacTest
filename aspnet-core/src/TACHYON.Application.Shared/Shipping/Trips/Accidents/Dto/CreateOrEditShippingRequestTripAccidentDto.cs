@@ -11,7 +11,7 @@ namespace TACHYON.Shipping.Trips.Accidents.Dto
     public class CreateOrEditShippingRequestTripAccidentDto : EntityDto, IDocumentUpload
     {
         public int? TripId { get; set; }
-        public int ReasoneId { get; set; }
+        public int? ReasoneId { get; set; }
         public string OtherReasonName { get; set; }
         [StringLength(500)]
         public string Description { get; set; }

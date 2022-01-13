@@ -166,7 +166,6 @@ namespace TACHYON.Shipping.ShippingRequests
             .WhereIf(IsEnabled(AppFeatures.Shipper), e => e.TenantId == AbpSession.TenantId) //if the user is shipper
             .OrderBy(Input.Sorting ?? "id desc");
 
-
             //var myDraftsOnly = query.Where(x => x.TenantId == AbpSession.TenantId)
             //             .Where(x => x.IsDrafted);
 
@@ -174,7 +173,7 @@ namespace TACHYON.Shipping.ShippingRequests
             ////concat all requests without draft with my draft requests
             //var allWithMyDraftsOnly = myDraftsOnly.Concat(withoutDrafts);
 
-            //var ResultPage = allWithMyDraftsOnly.PageBy(Input);
+            //var ResultPage = allWithMyDraftsOnly.PageBy(Input)
             //var totalCount = await allWithMyDraftsOnly.CountAsync();
             var totalCount = await query.CountAsync();
 
