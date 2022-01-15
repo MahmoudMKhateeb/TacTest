@@ -203,9 +203,9 @@ namespace TACHYON.Rating
                 _ => null
             };
 
-            if (allRatings == null || allRatings.Count() < 10) return;
-            ratingEntity.Rate = Convert.ToDecimal((allRatings.Sum() / allRatings.Count()).ToString("0.0"));
-            ratingEntity.RateNumber = allRatings.Count();
+            if (allRatings == null || allRatings.Count < 10) return;
+            ratingEntity.Rate = Convert.ToDecimal((allRatings.Sum() / allRatings.Count).ToString("0.0"));
+            ratingEntity.RateNumber = allRatings.Count;
         }
         
         #endregion
