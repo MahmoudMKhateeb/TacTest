@@ -254,6 +254,13 @@ export class DashboardViewConfigurationService {
       4,
       4
     );
+
+    let trackingMapOfCarrier = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Carrier.CarrierTrackingMapWidget,
+      TrackingMapComponent,
+      8,
+      8
+    );
     //Host
     let NumberOfRegisteredTrucks = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.host.TachyonDealerNumberOfRegisteredTrucksWidget,
@@ -427,6 +434,7 @@ export class DashboardViewConfigurationService {
     this.WidgetViewDefinitions.push(nonActivTrucks);
     this.WidgetViewDefinitions.push(nonActiveDrivers);
     this.WidgetViewDefinitions.push(mostUsedVases);
+    this.WidgetViewDefinitions.push(trackingMapOfCarrier);
 
     //Host
     //this.widgetFilterDefinitions.push(NumberOfRegisteredTrucks);
