@@ -144,16 +144,6 @@
                       <a
                         href="javascript:;"
                         class="dropdown-item"
-                        *ngIf="'Pages.Tenants.Delete' | permission"
-                        (click)="deleteTenant(options.data.tenantListDto)"
-                      >
-                        {{ 'Delete' | localize }}
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="javascript:;"
-                        class="dropdown-item"
                         *ngIf="
                           isGranted('Pages.TenantCarrier') &&
                           options.data.tenantListDto.editionDisplayName.trim().toLowerCase() == shipperEditionDisplayName.trim().toLowerCase()

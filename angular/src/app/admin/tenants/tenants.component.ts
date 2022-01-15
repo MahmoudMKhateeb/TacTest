@@ -187,16 +187,16 @@ export class TenantsComponent extends AppComponentBase implements OnInit {
     this.createTenantModal.show();
   }
 
-  deleteTenant(tenant: TenantListDto): void {
-    this.message.confirm(this.l('TenantDeleteWarningMessage', tenant.tenancyName), this.l('AreYouSure'), (isConfirmed) => {
-      if (isConfirmed) {
-        this._tenantService.deleteTenant(tenant.id).subscribe(() => {
-          this.reloadPage();
-          this.notify.success(this.l('SuccessfullyDeleted'));
-        });
-      }
-    });
-  }
+  // deleteTenant(tenant: TenantListDto): void {
+  //   this.message.confirm(this.l('TenantDeleteWarningMessage', tenant.tenancyName), this.l('AreYouSure'), (isConfirmed) => {
+  //     if (isConfirmed) {
+  //       this._tenantService.deleteTenant(tenant.id).subscribe(() => {
+  //         this.reloadPage();
+  //         this.notify.success(this.l('SuccessfullyDeleted'));
+  //       });
+  //     }
+  //   });
+  // } $$## This is Added By Mahmoud ##$$
 
   showHistory(tenant: TenantListDto): void {
     this.entityTypeHistoryModal.show({
