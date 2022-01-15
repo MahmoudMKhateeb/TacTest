@@ -4,8 +4,11 @@ using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Abp.UI;
+using AutoMapper.QueryableExtensions;
+using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite.Geometries;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.Generic;
@@ -13,8 +16,10 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
+using TACHYON.Cities.CitiesTranslations.Dtos;
 using TACHYON.Cities.Dtos;
 using TACHYON.Cities.Exporting;
+using TACHYON.Common;
 using TACHYON.Countries;
 using TACHYON.Dto;
 
@@ -36,45 +41,12 @@ namespace TACHYON.Cities
 
         }
 
-        public async Task<PagedResultDto<GetCityForViewDto>> GetAll(GetAllCitiesInput input)
+        public async Task<LoadResult> DxGetAll(LoadOptionsInput input)
         {
 
-            var filteredCities = _cityRepository.GetAll()
-                        .Include(e => e.CountyFk)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter) || e.Code.Contains(input.Filter) )//|| e.Latitude.Contains(input.Filter) || e.Longitude.Contains(input.Filter))
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.DisplayName == input.DisplayNameFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.CodeFilter), e => e.Code == input.CodeFilter)
-                       // .WhereIf(!string.IsNullOrWhiteSpace(input.LatitudeFilter), e => e.Location.Y == input.LatitudeFilter)
-                       // .WhereIf(!string.IsNullOrWhiteSpace(input.LongitudeFilter), e => e.Longitude == input.LongitudeFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.CountyDisplayNameFilter), e => e.CountyFk != null && e.CountyFk.DisplayName == input.CountyDisplayNameFilter);
-
-            var pagedAndFilteredCities = filteredCities
-                .OrderBy(input.Sorting ?? "id asc")
-                .PageBy(input);
-
-            var cities = from o in pagedAndFilteredCities
-                         join o1 in _lookup_countyRepository.GetAll() on o.CountyId equals o1.Id into j1
-                         from s1 in j1.DefaultIfEmpty()
-
-                         select new GetCityForViewDto()
-                         {
-                             City = new CityDto
-                             {
-                                 DisplayName = o.DisplayName,
-                                 Code = o.Code,
-                                 Latitude = o.Location.Y,
-                                 Longitude = o.Location.X,
-                                 Id = o.Id
-                             },
-                             CountyDisplayName = s1 == null || s1.DisplayName == null ? "" : s1.DisplayName.ToString()
-                         };
-
-            var totalCount = await filteredCities.CountAsync();
-
-            return new PagedResultDto<GetCityForViewDto>(
-                totalCount,
-                await cities.ToListAsync()
-            );
+            var filteredCities = _cityRepository.GetAll().AsNoTracking()
+                                                .ProjectTo<CityDto>(AutoMapperConfigurationProvider);
+            return await LoadResultAsync(filteredCities, input.LoadOptions);
         }
 
         public async Task<GetCityForViewDto> GetCityForView(int id)
@@ -124,11 +96,11 @@ namespace TACHYON.Cities
 
         private async Task CheckCityValidation(CreateOrEditCityDto input)
         {
-            if (string.IsNullOrWhiteSpace(input.DisplayName))
+            if (string.IsNullOrWhiteSpace(input.DisplayName) || string.IsNullOrEmpty(input.DisplayName))
             {
                 throw new UserFriendlyException(L("CannotCreateEmptyName"));
             }
-            if (await _cityRepository.FirstOrDefaultAsync(x => x.DisplayName.ToLower() == input.DisplayName.ToLower() && x.CountyId == input.CountyId && x.Id!=input.Id) != null)
+            if (await _cityRepository.FirstOrDefaultAsync(x => x.DisplayName.ToLower() == input.DisplayName.ToLower() && x.CountyId == input.CountyId && x.Id != input.Id) != null)
             {
                 throw new UserFriendlyException(L("CityIsAlreadyExistsForThisCountry"));
             }
@@ -152,8 +124,8 @@ namespace TACHYON.Cities
         [AbpAuthorize(AppPermissions.Pages_Cities_Edit)]
         protected virtual async Task Update(CreateOrEditCityDto input)
         {
-            var city = await _cityRepository.FirstOrDefaultAsync((int)input.Id);
-            if( (city.Location?.X!=input.Longitude || city.Location?.Y!=input.Latitude))
+            var city = await _cityRepository.FirstOrDefaultAsync(x => x.Id == input.Id.Value);
+            if ((city.Location?.X != input.Longitude || city.Location?.Y != input.Latitude))
             {
                 var point = new Point
                 (input.Longitude, input.Latitude)
@@ -163,6 +135,9 @@ namespace TACHYON.Cities
 
                 city.Location = point;
             }
+            if (city.Translations != null)
+                city.Translations.Clear();
+
             ObjectMapper.Map(input, city);
         }
 
@@ -180,7 +155,7 @@ namespace TACHYON.Cities
                         .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter) || e.Code.Contains(input.Filter))// || e.Latitude.Contains(input.Filter) || e.Longitude.Contains(input.Filter))
                         .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.DisplayName == input.DisplayNameFilter)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.CodeFilter), e => e.Code == input.CodeFilter)
-                       // .WhereIf(!string.IsNullOrWhiteSpace(input.LatitudeFilter), e => e.Latitude == input.LatitudeFilter)
+                        // .WhereIf(!string.IsNullOrWhiteSpace(input.LatitudeFilter), e => e.Latitude == input.LatitudeFilter)
                         //.WhereIf(!string.IsNullOrWhiteSpace(input.LongitudeFilter), e => e.Longitude == input.LongitudeFilter)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.CountyDisplayNameFilter), e => e.CountyFk != null && e.CountyFk.DisplayName == input.CountyDisplayNameFilter);
 
