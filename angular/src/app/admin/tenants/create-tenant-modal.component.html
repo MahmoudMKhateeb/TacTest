@@ -401,20 +401,17 @@
             </label>
           </div>
 
-          <div [hidden]="isUnlimited || !isSubscriptionFieldsVisible" class="form-group" [ngClass]="{ 'has-error': !subscriptionEndDateIsValid() }">
-            <label for="SubscriptionEndDate">{{ 'SubscriptionEndDate' | localize }}</label>
-            <input
-              id="SubscriptionEndDate"
-              type="text"
-              #SubscriptionEndDateUtc
-              name="SubscriptionEndDateUtc"
-              class="form-control"
-              bsDatepicker
-              datePickerMomentModifier
-              [(date)]="tenant.subscriptionEndDateUtc"
-              [bsConfig]="{ adaptivePosition: true }"
-              autocomplete="new-password"
-            />
+          <div class="form-group" [ngClass]="{ 'has-error': !subscriptionEndDateIsValid() }">
+            <hijri-gregorian-datepicker-test
+              [parentForm]="userForm"
+              [label]="l('SubscriptionEndDate')"
+              class="m-input"
+              [readonly]="true"
+              [minGreg]="minGreg"
+              [minHijri]="minHijri"
+              [selectedDate]="subscriptionEndDateUtc1"
+            >
+            </hijri-gregorian-datepicker-test>
           </div>
 
           <div [hidden]="isUnlimited || !isSubscriptionFieldsVisible" class="checkbox-list">

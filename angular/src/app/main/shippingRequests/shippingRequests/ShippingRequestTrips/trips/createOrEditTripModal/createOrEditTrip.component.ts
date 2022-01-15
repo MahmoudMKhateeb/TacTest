@@ -28,11 +28,16 @@ import { IAjaxResponse, TokenService } from '@node_modules/abp-ng2-module';
 import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
 import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
 import { FormControl, NgForm, Validators } from '@angular/forms';
+import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { DateType } from '@app/shared/common/hijri-gregorian-datepicker/consts';
+import * as moment from 'moment';
+import { DateFormatterService } from '@app/shared/common/hijri-gregorian-datepicker/date-formatter.service';
 
 @Component({
   selector: 'AddNewTripModal',
   styleUrls: ['./createOrEditTrip.component.css'],
   templateUrl: './createOrEditTrip.component.html',
+  providers: [DateFormatterService],
 })
 export class CreateOrEditTripComponent extends AppComponentBase implements OnInit, OnDestroy {
   @ViewChild('shippingRequestTripsForm') shippingRequestTripsForm: NgForm;
@@ -44,9 +49,22 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
   @Input() shippingRequest: ShippingRequestDto;
   @Input() VasListFromFather: GetShippingRequestVasForViewDto[];
-
+  startTripdate: any;
+  endTripdate: any;
+  minTripDate: any;
   tripStartDate = new FormControl('', Validators.required);
   endTripDate = new FormControl('');
+  selectedDateType: DateType = DateType.Hijri; // or DateType.Gregorian
+  @Input() parentForm: NgForm;
+  @ViewChild('userForm', { static: false }) userForm: NgForm;
+  minGreg: NgbDateStruct = { day: 1, month: 1, year: 1900 };
+  minHijri: NgbDateStruct = { day: 1, month: 1, year: 1342 };
+  todayGregorian = this.dateFormatterService.GetTodayGregorian();
+  todayHijri = this.dateFormatterService.ToHijri(this.todayGregorian);
+  minTripDateAsGrorg: NgbDateStruct;
+  minTripDateAsHijri: NgbDateStruct;
+  maxTripDateAsGrorg: NgbDateStruct;
+  maxTripDateAsHijri: NgbDateStruct;
 
   trip = new CreateOrEditShippingRequestTripDto();
   facilityLoading = false;
@@ -147,11 +165,20 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   }
 
   show(record?: CreateOrEditShippingRequestTripDto): void {
+    if (this.shippingRequest) {
+      this.setStartTripDate(this.shippingRequest.startTripDate);
+      const EndDateGregorian = moment(this.shippingRequest.endTripDate).locale('en').format('D/M/YYYY');
+      this.maxTripDateAsGrorg = this.dateFormatterService.ToGregorianDateStruct(EndDateGregorian, 'D/M/YYYY');
+      this.maxTripDateAsHijri = this.dateFormatterService.ToHijriDateStruct(EndDateGregorian, 'D/M/YYYY');
+    }
     if (record) {
       this.activeTripId = record.id;
       this._TripService.updateActiveTripId(this.activeTripId);
       this._shippingRequestTripsService.getShippingRequestTripForEdit(record.id).subscribe((res) => {
         this.trip = res;
+        //this.startTripdate = this.dateFormatterService.MomentToNgbDateStruct(res.startTripDate);
+        if (res.endTripDate != null && res.endTripDate != undefined)
+          this.endTripdate = this.dateFormatterService.MomentToNgbDateStruct(res.endTripDate);
         this._PointsService.updateWayPoints(this.trip.routPoints);
         this.pickupPointSenderId = res.routPoints[0].receiverId;
         this.loadReceivers(this.trip.originFacilityId);
@@ -169,7 +196,13 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       this._TripService.updateActiveTripId(null);
       this._PointsService.updateSinglePoint(new CreateOrEditRoutPointDto());
       this._PointsService.updateWayPoints([]);
-      this._TripService.currentShippingRequest.subscribe((res) => (this.trip.startTripDate = res.shippingRequest.startTripDate));
+      this.loading = true;
+      this._TripService.currentShippingRequest.subscribe((res) => {
+        if (this.loading == true) {
+          this.setStartTripDate(res.shippingRequest.startTripDate);
+        }
+        this.loading = false;
+      });
       this.loading = false;
     }
 
@@ -177,6 +210,13 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     this.modal.show();
     this.initDocsUploader();
     this.cdref.detectChanges();
+  }
+
+  setStartTripDate(startTripDate) {
+    const todayGregorian = moment(startTripDate).locale('en').format('D/M/YYYY');
+    this.minTripDateAsGrorg = this.dateFormatterService.ToGregorianDateStruct(todayGregorian, 'D/M/YYYY');
+    this.minTripDateAsHijri = this.dateFormatterService.ToHijriDateStruct(todayGregorian, 'D/M/YYYY');
+    this.startTripdate = this.minTripDateAsGrorg;
   }
 
   close(): void {
@@ -209,6 +249,19 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
           this.modalSave.emit(null);
           this.notify.info(this.l('SuccessfullySaved'));
         });
+    }
+  }
+
+  GetSelectedstartDateChange($event: NgbDateStruct, type) {
+    if ($event != null && $event.year < 1900) {
+      const ngDate = this.dateFormatterService.ToGregorian($event);
+      var date = this.dateFormatterService.NgbDateStructToMoment(ngDate);
+      if (type == 'start') this.trip.startTripDate = date;
+      if (type == 'end') this.trip.endTripDate = date;
+    } else if ($event != null && $event.year > 1900) {
+      var fromHijriDate = this.dateFormatterService.NgbDateStructToMoment($event);
+      if (type == 'start') this.trip.startTripDate = fromHijriDate;
+      if (type == 'end') this.trip.endTripDate = fromHijriDate;
     }
   }
 

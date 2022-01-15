@@ -32,10 +32,7 @@ export class ViewDocumentFileModalComponent extends AppComponentBase implements 
     //this.todayMoment = ;
   }
   ngOnInit() {
-    setInterval(() => {
-      console.log(`item`, this.item.expirationDate);
-      console.log(this.todayMoment);
-    }, 10000);
+    setInterval(() => {}, 10000);
   }
 
   show(item: any, entityType: DocumentsEntitiesEnum, isHost: boolean): void {
