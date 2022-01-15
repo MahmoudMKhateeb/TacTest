@@ -121,7 +121,7 @@ namespace TACHYON.Trucks
                              PlateNumber = truck.PlateNumber,
                              Note = truck.Note,
                              TransportTypeId = truck.TransportTypeId,
-                             IsMissingDocumentFiles = Convert.ToBoolean(truck.IsAttachable),
+                             IsMissingDocumentFiles = true,
                              TrucksTypeDisplayName = truck.TrucksTypeFk != null ? truck.TrucksTypeFk.DisplayName : "",
                              CapacityId = truck.CapacityId,
                              Id = truck.Id,
