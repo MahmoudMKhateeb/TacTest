@@ -83,8 +83,6 @@ namespace TACHYON.Shipping.Drivers
             IRepository<DriverLocationLog, long> driverLocationLogRepository,
             EntityLogManager logManager,
             IFirebaseNotifier firebaseNotifier,
-            ITempFileCacheManager tempFileCacheManager,
-            IRepository<User, long> userRepository)
             ShippingRequestPointWorkFlowProvider workFlowProvider,
             IRepository<RoutPointStatusTransition> routPointStatusTransitionRepository,
             ITempFileCacheManager tempFileCacheManager,
