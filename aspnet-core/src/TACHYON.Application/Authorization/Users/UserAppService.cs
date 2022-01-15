@@ -147,6 +147,9 @@ namespace TACHYON.Authorization.Users
 
         public async Task<LoadResult> GetDrivers(GetDriversInput input)
         {
+            DisableTenancyFiltersIfHost();
+            await DisableTenancyFiltersIfTachyonDealer();
+
             var query = UserManager.Users
                 .Where(u => u.IsDriver)
                 .ProjectTo<DriverListDto>(AutoMapperConfigurationProvider);
