@@ -1,5 +1,4 @@
-﻿using Abp.Auditing;
-using Abp.Authorization.Users;
+﻿using Abp.Authorization.Users;
 using Abp.Extensions;
 using Abp.Timing;
 using System;
@@ -7,13 +6,14 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using TACHYON.Nationalities;
+using TACHYON.Rating;
 
 namespace TACHYON.Authorization.Users
 {
     /// <summary>
     /// Represents a user in the system.
     /// </summary>
-    public class User : AbpUser<User>
+    public class User : AbpUser<User>, IHasRating
     {
         [StringLength(12)]
         public string AccountNumber { get; set; }

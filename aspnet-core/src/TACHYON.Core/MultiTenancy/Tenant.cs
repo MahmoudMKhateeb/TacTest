@@ -7,6 +7,7 @@ using TACHYON.Authorization.Users;
 using TACHYON.Editions;
 using TACHYON.Invoices.Periods;
 using TACHYON.MultiTenancy.Payments;
+using TACHYON.Rating;
 
 namespace TACHYON.MultiTenancy
 {
@@ -15,7 +16,7 @@ namespace TACHYON.MultiTenancy
     /// A tenant is a isolated customer for the application
     /// which has it's own users, roles and other application entities.
     /// </summary>
-    public class Tenant : AbpTenant<User>
+    public class Tenant : AbpTenant<User>, IHasRating
     {
         public const int MaxLogoMimeTypeLength = 64;
 

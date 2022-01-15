@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace TACHYON.Rating.dtos
+﻿namespace TACHYON.Rating.dtos
 {
     public class CreateDriverAndDERatingByReceiverDto
     {
-        public CreateDriverRatingByReceiverDto CreateDriverRatingByReceiverInput { get; set; }
+        public CreateDriverRatingDtoByReceiverDto CreateDriverRatingDtoByReceiverInput { get; set; }
         public CreateDeliveryExpRateByReceiverDto CreateDeliveryExpRateByReceiverInput { get; set; }
     }
 }

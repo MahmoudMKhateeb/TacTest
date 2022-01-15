@@ -1,13 +1,12 @@
 ﻿using Abp.Application.Features;
-using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
+using Abp.Runtime.Validation;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using TACHYON.AddressBook;
 using TACHYON.Authorization.Users;
@@ -43,34 +42,85 @@ namespace TACHYON.Rating
         [RequiresFeature(AppFeatures.Shipper)]
         public async Task CreateCarrierRatingByShipper(CreateCarrierRatingByShipperDto input)
         {
-            await _ratingLogManager.ValidateAndCreateRating(input, RateType.CarrierByShipper);
+            var createdRatingLog = ObjectMapper.Map<RatingLog>(input);
+            createdRatingLog.ShipperId = AbpSession.TenantId;
+            createdRatingLog.RateType = RateType.CarrierByShipper;
+            createdRatingLog.CarrierId = await GetTripAsync(createdRatingLog, x => x.ShippingRequestFk.CarrierTenantId);;
+            await _ratingLogManager.CreateRating(createdRatingLog);
         }
 
         public async Task CreateDriverAndDERatingByReceiver(CreateDriverAndDERatingByReceiverDto input)
         {
-            await _ratingLogManager.ValidateAndCreateRating(input.CreateDriverRatingByReceiverInput, RateType.DriverByReceiver);
-            await _ratingLogManager.ValidateAndCreateRating(input.CreateDeliveryExpRateByReceiverInput, RateType.DEByReceiver);
+            await CreateDriverByReceiverRating(input.CreateDriverRatingDtoByReceiverInput);
+            var deliveryRatingByReceiver = ObjectMapper.Map<RatingLog>(input.CreateDeliveryExpRateByReceiverInput);
+            deliveryRatingByReceiver.RateType = RateType.DEByReceiver;
+            await _ratingLogManager.CreateRating(deliveryRatingByReceiver);
+        }
+
+        private async Task CreateDriverByReceiverRating(CreateDriverRatingDtoByReceiverDto input)
+        {
+            var driverByReceiverRating = ObjectMapper.Map<RatingLog>(input);
+            var point = await _routePointRepository
+                .GetAllIncluding(x => x.ShippingRequestTripFk).AsNoTracking()
+                .Where(x => x.Code == driverByReceiverRating.Code).Select(x => new
+                {
+                    x.ReceiverId, x.Id, DriverId = x.ShippingRequestTripFk.AssignedDriverUserId
+                })
+                .FirstOrDefaultAsync();
+            if (point == null) throw new AbpValidationException(L("WrongReceiverCode"));
+
+            driverByReceiverRating.ReceiverId = point.ReceiverId;
+            driverByReceiverRating.PointId = point.Id;
+            driverByReceiverRating.DriverId = point.DriverId;
+            driverByReceiverRating.RateType = RateType.DriverByReceiver;
+            await _ratingLogManager.CreateRating(driverByReceiverRating);
         }
 
         #endregion
 
         #region ShipperRating
-        //this funct transfered in shippingRequestDriverAppService "SetRating"
-        //public async Task CreateFacilityRatingByDriver(CreateFacilityRateByDriverDto input)
-        //{
-        //    await _ratingLogManager.ValidateAndCreateRating(input, RateType.FacilityByDriver);
-        //}
-
-        //this funct transfered in shippingRequestDriverAppService "SetShippingExpRating"
-        //public async Task CreateShippingExpRatingByDriver(CreateShippingExpRateByDriverDto input)
-        //{
-        //    await _ratingLogManager.ValidateAndCreateRating(input, RateType.SEByDriver);
-        //}
 
         [RequiresFeature(AppFeatures.Carrier)]
         public async Task CreateShipperRatingByCarrier(CreateShipperRateByCarrierDto input)
         {
-            await _ratingLogManager.ValidateAndCreateRating(input, RateType.ShipperByCarrier);
+            var shipperRating = ObjectMapper.Map<RatingLog>(input);
+            shipperRating.RateType = RateType.ShipperByCarrier;
+            shipperRating.CarrierId = AbpSession.TenantId;
+            shipperRating.ShipperId = await GetTripAsync(shipperRating, x => x.ShippingRequestFk.TenantId);
+            
+            await _ratingLogManager.CreateRating(shipperRating);
+        }
+
+        #endregion
+
+        #region Helpers
+
+        /// <summary>
+        /// With This Method Get what you want from ShippingRequestTrip<br/> Without load all of Trip object
+        /// Note That this method not track ShippingRequestTrip Entity (For Read Data Only)
+        /// </summary>
+        /// <param name="rate"></param>
+        /// <param name="selector"></param>
+        /// <typeparam name="TResult"></typeparam>
+        /// <returns></returns>
+        /// <exception cref="UserFriendlyException"></exception>
+        private async Task<TResult> GetTripAsync<TResult>(RatingLog rate,
+            Expression<Func<ShippingRequestTrip, TResult>> selector)
+        {
+            DisableTenancyFilters();
+            var trip = await _shippingRequestTrip
+                .GetAllIncluding(x => x.ShippingRequestFk).AsNoTracking()
+                .Where(x => x.Id == rate.TripId && x.Status == ShippingRequestTripStatus.Delivered)
+                .WhereIf(rate.RateType == RateType.CarrierByShipper,
+                    x => x.ShippingRequestFk.TenantId == AbpSession.TenantId)
+                .WhereIf(rate.RateType == RateType.SEByDriver, x => x.AssignedDriverUserId == AbpSession.UserId)
+                .WhereIf(rate.RateType == RateType.ShipperByCarrier,
+                    x => x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
+                .Select(selector).FirstOrDefaultAsync();
+
+            if (trip != null) return trip;
+
+            throw new AbpValidationException(L("TripNotFoundOrNotDelivered"));
         }
 
         #endregion
