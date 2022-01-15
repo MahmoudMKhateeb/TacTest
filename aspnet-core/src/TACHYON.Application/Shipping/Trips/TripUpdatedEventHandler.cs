@@ -52,10 +52,10 @@ namespace TACHYON.Shipping.Trips
                     //    AsyncHelper.RunSync(() => _waslIntegrationManager.QueueTripRegistrationJob(eventData.Entity.Id));
 
                     //}
-                    if (eventData.Entity.ActualDeliveryDate.HasValue)
-                    {
-                        AsyncHelper.RunSync(() => _waslIntegrationManager.QueueTripUpdateJob(eventData.Entity.Id));
-                    }
+                    //if (eventData.Entity.ActualDeliveryDate.HasValue)
+                    //{
+                    //    AsyncHelper.RunSync(() => _waslIntegrationManager.QueueTripUpdateJob(eventData.Entity.Id));
+                    //}
                 }
             }
         }

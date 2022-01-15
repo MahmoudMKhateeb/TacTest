@@ -99,5 +99,7 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         //integrations
         public string BayanId { get; set; }
         public bool IsWaslIntegrated { get; set; }
+        public string WaslIntegrationErrorMsg { get; set; }
+
     }
 }

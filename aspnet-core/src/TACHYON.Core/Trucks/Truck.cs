@@ -100,6 +100,9 @@ namespace TACHYON.Trucks
 
         public virtual ICollection<DocumentFile> DocumentFiles { get; set; }
 
+        public bool IsWaslIntegrated { get; set; }
+        public string WaslIntegrationErrorMsg { get; set; }
+
 
 
         #region Helper

@@ -8,11 +8,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TACHYON.Authorization.Users;
 using TACHYON.Integration.WaslIntegration.Modules;
 
 namespace TACHYON.Integration.WaslIntegration.Jobs
 {
-    public class DriverRegistrationJob : BackgroundJob<WaslDriversRoot>, ITransientDependency
+    public class DriverRegistrationJob : BackgroundJob<User>, ITransientDependency
     {
         private readonly WaslIntegrationManager _waslIntegrationManager;
 
@@ -23,7 +24,7 @@ namespace TACHYON.Integration.WaslIntegration.Jobs
 
         [UnitOfWork]
         [AutomaticRetry(Attempts = 2)]
-        public override void Execute(WaslDriversRoot args)
+        public override void Execute(User args)
         {
             AsyncHelper.RunSync(() => _waslIntegrationManager.DriverRegistration(args));
         }

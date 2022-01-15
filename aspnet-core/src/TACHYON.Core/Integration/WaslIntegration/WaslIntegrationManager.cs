@@ -2,9 +2,11 @@
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Json;
+using Abp.Timing;
 using Microsoft.EntityFrameworkCore;
 using RestSharp;
 using System;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -41,20 +43,7 @@ namespace TACHYON.Integration.WaslIntegration
         /// <returns></returns>
         public async Task VehicleRegistration(Truck input)
         {
-            var vehicleSequenceNumber = (await _documentFilesManager.GetTruckIstimaraActiveDocumentAsync(input.Id))?.Number;
-
-            if (vehicleSequenceNumber != null)
-            {
-                var root = new WaslVehicleRoot()
-                {
-                    Plate = NormalizePlateNumber(input.PlateNumber),
-                    PlateType = 2,
-                    SequenceNumber = vehicleSequenceNumber.ToString()
-                };
-                var response = await Vehicle(root, Method.POST);
-            }
-
-
+            var response = await Vehicle(input, Method.POST);
         }
 
         /// <summary>
@@ -64,9 +53,9 @@ namespace TACHYON.Integration.WaslIntegration
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public async Task VehicleDelete(WaslVehicleRoot input)
+        public async Task VehicleDelete(Truck input)
         {
-            await Vehicle(input, Method.DELETE);
+            var response = await Vehicle(input, Method.DELETE);
         }
 
         /// <summary>
@@ -77,7 +66,7 @@ namespace TACHYON.Integration.WaslIntegration
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public async Task DriverRegistration(WaslDriversRoot input)
+        public async Task DriverRegistration(User input)
         {
             await Drivers(input, Method.POST);
         }
@@ -89,22 +78,30 @@ namespace TACHYON.Integration.WaslIntegration
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public async Task DriverDelete(WaslDriversRoot input)
+        public async Task DriverDelete(User input)
         {
             await Drivers(input, Method.DELETE);
         }
 
 
-        private async Task<IRestResponse> Vehicle(WaslVehicleRoot input, Method method)
+        private async Task<IRestResponse> Vehicle(Truck input, Method method)
         {
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
             {
-                var request = new RestRequest(Method.POST);
+                var vehicleSequenceNumber = (await _documentFilesManager.GetTruckIstimaraActiveDocumentAsync(input.Id))?.Number;
+                var root = new WaslVehicleRoot()
+                {
+                    Plate = NormalizePlateNumber(input.PlateNumber),
+                    PlateType = 2,
+                    SequenceNumber = vehicleSequenceNumber.ToString()
+                };
+
+                var request = new RestRequest(method);
                 request.AddHeader("app-id", "4b785cf2");
                 request.AddHeader("app-key", "d3a2ad0d2467412384459ebf29b86788");
                 request.AddHeader("Content-Type", "application/json");
                 request.AddHeader("client-id", "52efa1c2-5623-43e2-aacf-b1b9d7ddf8f5");
-                string body = ToJsonLowerCaseFirstLetter(input);
+                string body = ToJsonLowerCaseFirstLetter(root);
                 var client = new RestClient("https://wasl.api.elm.sa/api/eff/v1/vehicles");
                 // client.Timeout = -1;
 
@@ -114,12 +111,15 @@ namespace TACHYON.Integration.WaslIntegration
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
                     Logger.Error("WaslIntegrationManager.Vehicle" + response.Content);
+                    input.WaslIntegrationErrorMsg = response.Content;
                     throw new Exception("Content: " + response.Content + " , body: " + body);
 
                 }
                 else
                 {
                     Logger.Trace("WaslIntegrationManager.Vehicle" + response.Content);
+
+                    input.IsWaslIntegrated = (method == Method.POST);
                 }
                 return response;
 
@@ -127,10 +127,21 @@ namespace TACHYON.Integration.WaslIntegration
         }
 
 
-        private async Task Drivers(WaslDriversRoot input, Method method)
+        private async Task Drivers(User input, Method method)
         {
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
             {
+
+                WaslDriversRoot root = new WaslDriversRoot()
+                {
+                    DateOfBirthGregorian = input.DateOfBirth.Value.ToString("yyyy-MM-dd"),
+                    DateOfBirthHijri = "",
+                    Email = input.EmailAddress,
+                    IdentityNumber = (await _documentFilesManager.GetDriverIqamaActiveDocumentAsync(input.Id))?.Number,
+                    MobileNumber = "+966" + input.PhoneNumber
+                };
+
+
 
                 var client = new RestClient("https://wasl.api.elm.sa/api/eff/v1/drivers");
                 client.Timeout = -1;
@@ -139,7 +150,7 @@ namespace TACHYON.Integration.WaslIntegration
                 request.AddHeader("app_key", "d3a2ad0d2467412384459ebf29b86788");
                 request.AddHeader("Content-Type", "application/json");
                 request.AddHeader("client_id", "52efa1c2-5623-43e2-aacf-b1b9d7ddf8f5");
-                string body = ToJsonLowerCaseFirstLetter(input);
+                string body = ToJsonLowerCaseFirstLetter(root);
 
                 request.AddParameter("application/json", body, ParameterType.RequestBody);
                 IRestResponse response = await client.ExecuteAsync(request);
@@ -165,55 +176,59 @@ namespace TACHYON.Integration.WaslIntegration
         /// <returns></returns>
         public async Task TripRegistration(int tripId)
         {
-            ShippingRequestTrip trip = await _shippingRequestTripRepository.GetAsync(tripId);
-
-            var root = await _shippingRequestTripRepository.GetAll()
-                .Where(x => x.Id == tripId)
-                .Select(trip => new WaslTripRoot()
-                {
-                    DepartedWhen = UtcToArabiaStandardTime(trip.StartWorking.Value).ToString("O"),
-                    DepartureLatitude = trip.OriginFacilityFk.Location.Y,
-                    DepartureLongitude = trip.OriginFacilityFk.Location.X,
-                    ExpectedDestinationLatitude = trip.DestinationFacilityFk.Location.Y,
-                    ExpectedDestinationLongitude = trip.DestinationFacilityFk.Location.X,
-                    TripNumber = tripId.ToString()
-                }).FirstOrDefaultAsync();
-
-            //fill driver and truck numbers
-            root.DriverIdentityNumber = (await _documentFilesManager.GetDriverIqamaActiveDocumentAsync(trip.AssignedDriverUserId.Value))?.Number;
-            root.VehicleSequenceNumber = (await _documentFilesManager.GetTruckIstimaraActiveDocumentAsync(trip.AssignedTruckId.Value))?.Number;
-
-
-
-
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
             {
+                ShippingRequestTrip trip = await _shippingRequestTripRepository.GetAsync(tripId);
 
-                var client = new RestClient("https://wasl.api.elm.sa/api/eff/v1/trips");
-                client.Timeout = -1;
-                var request = new RestRequest(Method.POST);
-                request.AddHeader("app_id", "4b785cf2");
-                request.AddHeader("app_key", "d3a2ad0d2467412384459ebf29b86788");
-                request.AddHeader("Content-Type", "application/json");
-                request.AddHeader("client_id", "52efa1c2-5623-43e2-aacf-b1b9d7ddf8f5");
-                string body = ToJsonLowerCaseFirstLetter(root);
+                var root = await _shippingRequestTripRepository.GetAll()
+                    .Where(x => x.Id == tripId)
+                    .Select(trip => new WaslTripRoot
+                    {
+                        DepartedWhen = trip.StartWorking.HasValue ? trip.StartWorking.Value.ToString("yyyy-MM-ddTHH:mm:ss") : DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss"),
+                        DepartureLatitude = trip.OriginFacilityFk.Location.Y,
+                        DepartureLongitude = trip.OriginFacilityFk.Location.X,
+                        ExpectedDestinationLatitude = trip.DestinationFacilityFk.Location.Y,
+                        ExpectedDestinationLongitude = trip.DestinationFacilityFk.Location.X,
+                        TripNumber = tripId.ToString()
+                    }).FirstOrDefaultAsync();
 
-                request.AddParameter("application/json", body, ParameterType.RequestBody);
-                IRestResponse response = await client.ExecuteAsync(request);
-                if (response.StatusCode != HttpStatusCode.OK)
+
+                //fill driver and truck numbers
+                root.DriverIdentityNumber = (await _documentFilesManager.GetDriverIqamaActiveDocumentAsync(trip.AssignedDriverUserId.Value))?.Number;
+                root.VehicleSequenceNumber = (await _documentFilesManager.GetTruckIstimaraActiveDocumentAsync(trip.AssignedTruckId.Value))?.Number;
+
+                using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
                 {
-                    Logger.Error("WaslIntegrationManager.TripRegistration" + response.Content);
 
-                    throw new Exception("Content: " + response.Content + " , body: " + body);
+                    var client = new RestClient("https://wasl.api.elm.sa/api/eff/v1/trips");
+                    client.Timeout = -1;
+                    var request = new RestRequest(Method.POST);
+                    request.AddHeader("app-id", "4b785cf2");
+                    request.AddHeader("app-key", "d3a2ad0d2467412384459ebf29b86788");
+                    request.AddHeader("Content-Type", "application/json");
+                    request.AddHeader("client-id", "52efa1c2-5623-43e2-aacf-b1b9d7ddf8f5");
+                    string body = ToJsonLowerCaseFirstLetter(root);
+
+                    request.AddParameter("application/json", body, ParameterType.RequestBody);
+                    IRestResponse response = await client.ExecuteAsync(request);
+                    if (response.StatusCode != HttpStatusCode.OK)
+                    {
+                        Logger.Error("WaslIntegrationManager.TripRegistration" + response.Content);
+                        trip.WaslIntegrationErrorMsg = response.Content;
+
+                        throw new Exception("Content: " + response.Content + " , body: " + body);
+
+                    }
+                    else
+                    {
+                        trip.IsWaslIntegrated = true;
+                        Logger.Trace("WaslIntegrationManager.TripRegistration" + response.Content);
+                    }
 
                 }
-                else
-                {
-                    trip.IsWaslIntegrated = true;
-                    Logger.Trace("WaslIntegrationManager.TripRegistration" + response.Content);
-                }
-
             }
+
+
         }
 
         /// <summary>
@@ -229,7 +244,7 @@ namespace TACHYON.Integration.WaslIntegration
             {
                 ActualDestinationLatitude = trip.DestinationFacilityFk.Location.Y,
                 ActualDestinationLongitude = trip.DestinationFacilityFk.Location.X,
-                ArrivedWhen = UtcToArabiaStandardTime(trip.ActualDeliveryDate.Value).ToString("O")
+                ArrivedWhen = trip.ActualDeliveryDate.Value.ToString("yyyy-MM-ddTHH:mm:ss")
             };
 
 
@@ -239,10 +254,10 @@ namespace TACHYON.Integration.WaslIntegration
                 var client = new RestClient("https://wasl.api.elm.sa/api/eff/v1/trips/" + tripId.ToString());
                 client.Timeout = -1;
                 var request = new RestRequest(Method.PATCH);
-                request.AddHeader("app_id", "4b785cf2");
-                request.AddHeader("app_key", "d3a2ad0d2467412384459ebf29b86788");
+                request.AddHeader("app-id", "4b785cf2");
+                request.AddHeader("app-key", "d3a2ad0d2467412384459ebf29b86788");
                 request.AddHeader("Content-Type", "application/json");
-                request.AddHeader("client_id", "52efa1c2-5623-43e2-aacf-b1b9d7ddf8f5");
+                request.AddHeader("client-id", "52efa1c2-5623-43e2-aacf-b1b9d7ddf8f5");
                 string body = ToJsonLowerCaseFirstLetter(root);
 
                 request.AddParameter("application/json", body, ParameterType.RequestBody);
@@ -250,6 +265,7 @@ namespace TACHYON.Integration.WaslIntegration
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
                     Logger.Error("WaslIntegrationManager.TripRegistration" + response.Content);
+                    trip.WaslIntegrationErrorMsg = response.Content;
                     throw new Exception("Content: " + response.Content + " , body: " + body);
                 }
                 else
@@ -272,43 +288,20 @@ namespace TACHYON.Integration.WaslIntegration
 
         public async Task QueueVehicleDeleteJob(Truck input)
         {
-            var root = new WaslVehicleRoot()
-            {
-                Plate = input.PlateNumber,
-                PlateType = 2,
-                SequenceNumber = input.Id.ToString()
-            };
-            await _backgroundJobManager.EnqueueAsync<VehicleDeleteJob, WaslVehicleRoot>(root);
+
+            await _backgroundJobManager.EnqueueAsync<VehicleDeleteJob, Truck>(input);
         }
         public async Task QueueDriverRegistrationJob(User user)
         {
             //just for drivers
             if (!user.IsDriver) return;
-            WaslDriversRoot root = new WaslDriversRoot()
-            {
-                DateOfBirthGregorian = user.DateOfBirth.Value.ToString("yyyy-MM-dd"),
-                DateOfBirthHijri = user.HijriDateOfBirth.ToString(),
-                Email = user.EmailAddress,
-                IdentityNumber = user.Id.ToString(),
-                MobileNumber = "+966" + user.PhoneNumber
-            };
-
-            await _backgroundJobManager.EnqueueAsync<DriverRegistrationJob, WaslDriversRoot>(root);
+            await _backgroundJobManager.EnqueueAsync<DriverRegistrationJob, User>(user);
         }
         public async Task QueueDriverDeleteJob(User user)
         {
             //just for drivers
             if (!user.IsDriver) return;
-            WaslDriversRoot root = new WaslDriversRoot()
-            {
-                DateOfBirthGregorian = user.DateOfBirth.Value.ToString("yyyy-MM-dd"),
-                DateOfBirthHijri = user.HijriDateOfBirth.ToString(),
-                Email = user.EmailAddress,
-                IdentityNumber = user.Id.ToString(),
-                MobileNumber = "+966" + user.PhoneNumber
-            };
-
-            await _backgroundJobManager.EnqueueAsync<DriverDeleteJob, WaslDriversRoot>(root);
+            await _backgroundJobManager.EnqueueAsync<DriverDeleteJob, User>(user);
         }
         public async Task QueueTripRegistrationJob(int tripId)
         {
@@ -367,5 +360,6 @@ namespace TACHYON.Integration.WaslIntegration
 
 
         }
+
     }
 }
