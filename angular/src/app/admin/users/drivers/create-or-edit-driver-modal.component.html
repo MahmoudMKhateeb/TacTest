@@ -143,6 +143,26 @@
                     </div>
                   </div>
                 </div>
+                <div class="col-sm-12" *ngIf="isUserTenantRequired">
+                  <div class="form-group">
+                    <label>{{ 'Carrier' | localize }}<span class="text-danger">*</span> </label>
+                    <select
+                      #DriverTenantId="ngModel"
+                      class="form-control"
+                      name="DriverTenantId"
+                      id="DriverTenantId"
+                      [(ngModel)]="user.tenantId"
+                      [ngClass]="{
+                        'is-valid': DriverTenantId.touched && DriverTenantId.valid,
+                        'is-invalid': DriverTenantId.touched && !DriverTenantId.valid
+                      }"
+                      [required]="isUserTenantRequired"
+                    >
+                      <option [ngValue]="null" selected disabled>{{ l('SelectACarrier') }}</option>
+                      <option *ngFor="let item of carriers" value="{{ item.id }}">{{ item.displayName }}</option>
+                    </select>
+                  </div>
+                </div>
               </div>
 
               <div class="row">

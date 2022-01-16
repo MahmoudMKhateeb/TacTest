@@ -39,6 +39,7 @@ namespace TACHYON.Authorization.Users.Dto
         [DisableAuditing]
         public string Password { get; set; }
 
+        public int? TenantId { get; set; }
         public bool IsActive { get; set; }
 
         public bool ShouldChangePasswordOnNextLogin { get; set; }
