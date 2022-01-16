@@ -18,6 +18,7 @@ namespace TACHYON.AutoMapper.PriceOffers
             CreateMap<PriceOfferDetail, PriceOfferItem>();
             CreateMap<PriceOffer, PriceOfferListDto>()
                 .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Tenant.Name))
+                .ForMember(dto => dto.CarrierTenantId, dto => dto.MapFrom(src => src.TenantId))
                 .ForMember(dst => dst.StatusTitle, opt => opt.MapFrom(src => src.Status.GetEnumDescription()));
 
 

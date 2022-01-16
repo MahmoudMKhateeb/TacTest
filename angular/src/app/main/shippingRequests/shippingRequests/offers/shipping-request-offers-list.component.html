@@ -63,7 +63,8 @@
               </td>
               <td>
                 <span class="ui-column-title"> {{ l('Name') }}</span>
-                {{ record.channel != 3 ? record.name : l('TachyonManageService') }}
+                <a *ngIf="record.channel != 3" [routerLink]="['/app/main/profile', record.carrierTenantId, 'view']">{{ record.name }}</a>
+                <span *ngIf="record.channel == 3">{{ l('TachyonManageService') }}</span>
               </td>
 
               <td>

@@ -21,5 +21,7 @@ namespace TACHYON.Authorization.Users.Profile.Dto
         public int CityId { get; set; }
 
         public decimal Rating { get; set; }
+        
+        public int RateNumber { get; set; }
     }
 }
