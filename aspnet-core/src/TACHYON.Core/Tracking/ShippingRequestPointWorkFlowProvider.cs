@@ -405,7 +405,7 @@ namespace TACHYON.Tracking
             await SetRoutStatusTransitionLog(point);
             await NotificationWhenPointChanged(point);
             //we need to use save changes in invoke to save the reason in entity change set its does not take it when complete uow transuction
-            //await CurrentUnitOfWork.SaveChangesAsync();
+            await CurrentUnitOfWork.SaveChangesAsync(); // need to get alternative 
         }
         public async Task GoToNextLocation(long nextPointId)
         {

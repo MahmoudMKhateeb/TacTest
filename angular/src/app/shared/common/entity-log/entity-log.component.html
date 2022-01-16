@@ -63,11 +63,11 @@
                     <div class="d-flex flex-column flex-grow-1 py-2">
                       <div #collapse="ngbCollapse" [(ngbCollapse)]="!active">
                         <div *ngFor="let z of log.changesData | keyvalue">
-                          <p class="font-weight-bold mt-2">
+                          <p class="font-weight-bold mt-2" *ngIf="!z.key.includes('LastModifi')">
                             <a class="text-primary font-weight-bold">{{ z.key }}</a> :
-                            {{ objectToArray(z.value)[0] ? objectToArray(z.value)[0] : 'null ' }}
+                            {{ objectToArray(z.value)[1] ? objectToArray(z.value)[1] : 'null ' }}
                             <i class="flaticon2-fast-next text-success mx-2"></i>
-                            {{ objectToArray(z.value)[1] ? objectToArray(z.value)[1] : ' null' }}
+                            {{ objectToArray(z.value)[0] ? objectToArray(z.value)[0] : ' null' }}
                           </p>
                         </div>
                       </div>
