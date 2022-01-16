@@ -19,6 +19,7 @@ namespace TACHYON.PriceOffers.Dto
 
         public string ChannelTitle { get { return Channel.GetEnumDescription(); } }
 
+        public int CarrierTenantId { get; set; }
 
     }
 }

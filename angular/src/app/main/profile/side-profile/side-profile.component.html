@@ -36,6 +36,10 @@
           <span class="font-weight-bold mr-2">{{ l('Location') }}:</span>
           <span class="text-muted">{{ sideProfileUserInfo.cityName }} - {{ sideProfileUserInfo.countryName }}</span>
         </div>
+        <div class="d-flex align-items-center justify-content-between mb-2">
+          <span class="font-weight-bold mr-2">{{ l('NumberOfRating') }}:</span>
+          <span class="text-muted">{{ sideProfileUserInfo.rateNumber }}</span>
+        </div>
         <div class="d-flex align-items-center justify-content-between">
           <span class="font-weight-bold mr-2 text-hover-primary" routerLink="/app/main/shippingRequests/shippingRequests">
             {{ isCarrier ? l('NumberOfCompletedShipments') : l('NumberOfRequestedShipments') }} :</span
