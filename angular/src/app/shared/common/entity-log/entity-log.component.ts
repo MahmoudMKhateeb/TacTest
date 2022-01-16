@@ -45,6 +45,7 @@ export class EntityLogComponent extends AppComponentBase implements OnInit {
    */
   close() {
     this.active = false;
+    this.entityLogs = [];
     this.modal.hide();
   }
 

@@ -105,6 +105,8 @@
                               </div>
                             </div>
 
+                            <!--                              <div  class="ribbon-target" style="top: -2px; right: 3%"></div>-->
+                            <button (click)="showPointLog(point.id)" class="btn btn-sm btn-danger mr-1 ml-1">{{ l('ActivityLogs') }}</button>
                             <!--    trip actions-->
                             <div
                               class="d-inline-block"
@@ -180,5 +182,6 @@
     <!--end::Body-->
   </div>
   <tacking-confirm-code-model #modelconfirm (modalConfirm)="getForView()"></tacking-confirm-code-model>
+  <app-entity-log #appEntityLog [entityType]="1"></app-entity-log>
   <tacking-pod-model #modelpod (modalConfirm)="getForView()"></tacking-pod-model>
 </div>
