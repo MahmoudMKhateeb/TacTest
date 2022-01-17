@@ -13,6 +13,7 @@ import {
   ShippingRequestType,
   TrackingListDto,
   TrackingRoutePointDto,
+  RoutePointStatus,
   TrackingServiceProxy,
   WaybillsServiceProxy,
 } from '@shared/service-proxies/service-proxies';
@@ -57,6 +58,7 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
   dropWaybillLoadingId: number;
   busyPointId: number;
   loadPodForPointId: number;
+  deliveryGoodPictureId: number;
   pointPodList: FileDto[];
 
   constructor(
@@ -247,8 +249,21 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
    * @private
    */
   private handleUploadPod(point: TrackingRoutePointDto, transaction: PointTransactionDto) {
-    this.modelpod.show(point.id, transaction.action);
+    this.modelpod.show(point.id, transaction.action, 'UplodePOD', transaction.toStatus);
     abp.event.on('PodUploadedSuccess', () => {
+      this.getForView();
+    });
+  }
+
+  /**
+   * handels Good Picture Uploading Process
+   * @param point
+   * @param transaction
+   * @private
+   */
+  private handleUplodeGoodPicture(point: TrackingRoutePointDto, transaction: PointTransactionDto) {
+    this.modelpod.show(point.id, transaction.action, 'UplodeGoodPicture', transaction.toStatus);
+    abp.event.on('DeliveryGoodUploadedSuccess', () => {
       this.getForView();
     });
   }
@@ -274,7 +289,7 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
    * @private
    */
   private handleUploadDeliveryNotes(point: TrackingRoutePointDto, transaction: PointTransactionDto) {
-    this.modelpod.show(point.id, transaction.action);
+    this.modelpod.show(point.id, transaction.action, 'UploadDeliveryNotes', transaction.toStatus);
     abp.event.on('tripDeliveryNotesUploadSuccess', () => {
       this.getForView();
     });
@@ -292,27 +307,29 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
     invokeRequestBody.id = point.id;
     invokeRequestBody.action = transaction.action;
     //TODO  - Dont Forget to take the secound acound that requires pod for karam
-    if (
-      transaction.action === 'FinishOffLoadShipmentDeliveryConfirmation' ||
-      transaction.action === 'DeliveryConfirmation' ||
-      transaction.action === 'UplodeDeliveryNoteDeliveryConfirmation'
-    ) {
+    if (transaction.toStatus === RoutePointStatus.DeliveryConfirmation) {
       //handle upload Pod
       //this.busyPointId = null;
 
       return this.handleUploadPod(point, transaction);
     }
-    if (transaction.action === 'UplodeDeliveryNote') {
+    if (transaction.toStatus === RoutePointStatus.DeliveryNoteUploded) {
       // this.saving = false;
       // this.busyPointId = null;
 
       return this.handleUploadDeliveryNotes(point, transaction);
     }
-    if (transaction.action === 'ReceiverConfirmed' || transaction.action === 'DeliveryConfirmationReceiverConfirmed') {
+    if (transaction.toStatus === RoutePointStatus.ReceiverConfirmed) {
       // this.saving = false;
       // this.busyPointId = null;
       return this.handleDeliveryConfirmationCode(point, transaction);
     }
+    if (transaction.toStatus === RoutePointStatus.UplodeGoodPicture) {
+      // this.saving = false;
+      // this.busyPointId = null;
+      return this.handleUplodeGoodPicture(point, transaction);
+    }
+
     this.busyPointId = point.id;
 
     this._trackingServiceProxy
@@ -446,6 +463,17 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
       .subscribe((res) => {
         this.pointPodList = res;
       });
+  }
+  /**
+   * downloads the wayBill For MultiDrops Points
+   * @param id
+   */
+  downloadDeliveryGoodPicture(id: number) {
+    this.deliveryGoodPictureId = id;
+    this._trackingServiceProxy.getDeliveryGoodPicture(id).subscribe((result) => {
+      this._fileDownloadService.downloadFileByBinaryId(result.documentName, result.documentId);
+      this.deliveryGoodPictureId = null;
+    });
   }
 
   /**

@@ -1931,7 +1931,6 @@
 		<text name="UploadDocumentMsg">الرجاء تقديم الملفات التالية حتى يتم إكمال عملية إنشاء الحساب</text>
 		<text name="UploadedFile">الملف الذي تم رفعه</text>
 		<text name="UploadLogo_Info">إختر ملف JPG / JPEG / PNG / GIF  بحجم 30 KB  كحد أقصى و 139X35  بكسل.</text>
-		<text name="UploadPOD">فع ملف اثبات التسليم</text>
 		<text name="UploadPODLbl">رفع ملف اثبات التسليم</text>
 		<text name="UploadPODProofOfDelivery">الرجاء رفع ملف إثبات التسليم</text>
 		<text name="Urdu">اردو</text>
@@ -2248,5 +2247,8 @@
     <text name="ReceiverConfirmed"></text>
     <text name="DeliveryConfirmation"></text>-->
     <text name="facilityNameIsAlreadyExistsForThisTenant">اسم المنشأة موجود بالفعل لهذا المستأجر</text>
+		<text name="UploadGoodPicture">رفع صورة البضاعة</text>
+		<text name="UploadPOD">رفع اثبات التسليم</text>
+		<text name="UploadDeliveryNotes">رفع ملاحظات التوصيل</text>
   </texts>
 </localizationDictionary>

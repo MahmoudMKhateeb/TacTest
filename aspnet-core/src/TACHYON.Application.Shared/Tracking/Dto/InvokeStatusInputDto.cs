@@ -19,7 +19,7 @@ namespace TACHYON.Tracking.Dto
 
         public void Initialize()
         {
-            if (Action == WorkFlowActionConst.ReceiverConfirmed || Action == WorkFlowActionConst.DeliveryConfirmationReceiverConfirmed)
+            if (Action == WorkFlowActionConst.ReceiverConfirmed || Action == WorkFlowActionConst.UplodeGoodPictureReceiverConfirmed)
             {
                 if (Code.IsNullOrEmpty())
                 {

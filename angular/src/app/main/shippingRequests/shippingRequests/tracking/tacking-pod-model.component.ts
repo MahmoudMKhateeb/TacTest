@@ -2,7 +2,7 @@ import { Component, ViewChild, Injector, Output, EventEmitter, OnInit, ElementRe
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { TrackingServiceProxy } from '@shared/service-proxies/service-proxies';
+import { RoutePointStatus, TrackingServiceProxy } from '@shared/service-proxies/service-proxies';
 import { HttpClient } from '@angular/common/http';
 import { FileUpload } from '@node_modules/primeng/fileupload';
 import { AppConsts } from '@shared/AppConsts';
@@ -20,15 +20,19 @@ export class TrackingPODModalComponent extends AppComponentBase {
   id: number;
   Specifiedtime: Date = new Date();
   action: string;
+  title: string;
   loading = false;
+  toStatus: RoutePointStatus;
   constructor(injector: Injector, private _Service: TrackingServiceProxy, private _httpClient: HttpClient) {
     super(injector);
   }
 
-  public show(pointId: number, action: string): void {
+  public show(pointId: number, action: string, title: string, toStatus: RoutePointStatus): void {
     this.id = pointId;
     this.action = action;
+    this.title = title;
     this.active = true;
+    this.toStatus = toStatus;
     this.modal.show();
   }
 
@@ -59,7 +63,13 @@ export class TrackingPODModalComponent extends AppComponentBase {
       .subscribe((response) => {
         if (response.success) {
           this.notify.success(this.l('SuccessfullyUpload'));
-          this.action === 'UplodeDeliveryNote' ? abp.event.trigger('tripDeliveryNotesUploadSuccess') : abp.event.trigger('PodUploadedSuccess');
+          //check what the toStatus to set the event trigger
+          this.toStatus === RoutePointStatus.DeliveryNoteUploded
+            ? abp.event.trigger('tripDeliveryNotesUploadSuccess')
+            : this.toStatus === RoutePointStatus.DeliveryConfirmation
+            ? abp.event.trigger('PodUploadedSuccess')
+            : abp.event.trigger('DeliveryGoodUploadedSuccess');
+
           this.close();
         } else if (response.error != null) {
           this.notify.error(this.l('UploadFailed'));

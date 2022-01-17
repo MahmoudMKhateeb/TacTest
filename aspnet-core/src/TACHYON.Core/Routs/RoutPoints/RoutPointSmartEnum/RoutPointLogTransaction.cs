@@ -85,6 +85,13 @@ namespace TACHYON.Routs.RoutPoints.RoutPointSmartEnum
         public sealed override string Transaction { get => RoutPointConsts.DropOffStep7; }
     }
 
+    public class RoutPointDropOffStep8 : EntityLogTransaction
+    {
+        public RoutPointDropOffStep8(string displayName, int value) : base(displayName, value)
+        {
+        }
+        public sealed override string Transaction { get => RoutPointConsts.DropOffStep8; }
+    }
     #endregion
 
     public class RoutPointAction1 : EntityLogTransaction

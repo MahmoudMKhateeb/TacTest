@@ -59,6 +59,16 @@
                         <i class="fas fa-download text-white mr-2 mb-1"></i>
                         {{ point.waybillNumber}}
                       </a>
+                      <a
+                        (click)="downloadDeliveryGoodPicture(point.id)"
+                        [buttonBusy]="deliveryGoodPictureId == point.id"
+                        *ngIf="point.isGoodPictureUploaded"
+                        class="ribbon-target bg-warning"
+                        style="top: -2px; right: 26%"
+                      >
+                        <i class="fas fa-download text-white mr-2 mb-1"></i>
+                        {{ l('GoodPicture')}}
+                      </a>
 
                       <div class="timeline-media pulse pulse-{{ point.pickingType == 1 ? 'primary' : 'danger' }}">
                         <i
