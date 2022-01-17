@@ -75699,6 +75699,7 @@ export class PriceOfferListDto implements IPriceOfferListDto {
   statusTitle!: string | undefined;
   readonly priceTypeTitle!: string | undefined;
   readonly channelTitle!: string | undefined;
+  carrierTenantId!: number;
   id!: number;
 
   constructor(data?: IPriceOfferListDto) {
@@ -75723,6 +75724,7 @@ export class PriceOfferListDto implements IPriceOfferListDto {
       this.statusTitle = _data['statusTitle'];
       (<any>this).priceTypeTitle = _data['priceTypeTitle'];
       (<any>this).channelTitle = _data['channelTitle'];
+      this.carrierTenantId = _data['carrierTenantId'];
       this.id = _data['id'];
     }
   }
@@ -75748,6 +75750,7 @@ export class PriceOfferListDto implements IPriceOfferListDto {
     data['statusTitle'] = this.statusTitle;
     data['priceTypeTitle'] = this.priceTypeTitle;
     data['channelTitle'] = this.channelTitle;
+    data['carrierTenantId'] = this.carrierTenantId;
     data['id'] = this.id;
     return data;
   }
@@ -75766,6 +75769,7 @@ export interface IPriceOfferListDto {
   statusTitle: string | undefined;
   priceTypeTitle: string | undefined;
   channelTitle: string | undefined;
+  carrierTenantId: number;
   id: number;
 }
 
@@ -76794,6 +76798,7 @@ export class TenantProfileInformationForViewDto implements ITenantProfileInforma
   cityName!: string | undefined;
   countryName!: string | undefined;
   rating!: number;
+  rateNumber!: number;
   editionId!: number;
   id!: number;
 
@@ -76816,6 +76821,7 @@ export class TenantProfileInformationForViewDto implements ITenantProfileInforma
       this.cityName = _data['cityName'];
       this.countryName = _data['countryName'];
       this.rating = _data['rating'];
+      this.rateNumber = _data['rateNumber'];
       this.editionId = _data['editionId'];
       this.id = _data['id'];
     }
@@ -76839,6 +76845,7 @@ export class TenantProfileInformationForViewDto implements ITenantProfileInforma
     data['cityName'] = this.cityName;
     data['countryName'] = this.countryName;
     data['rating'] = this.rating;
+    data['rateNumber'] = this.rateNumber;
     data['editionId'] = this.editionId;
     data['id'] = this.id;
     return data;
@@ -76855,6 +76862,7 @@ export interface ITenantProfileInformationForViewDto {
   cityName: string | undefined;
   countryName: string | undefined;
   rating: number;
+  rateNumber: number;
   editionId: number;
   id: number;
 }
