@@ -22,6 +22,7 @@ import { TrackingPODModalComponent } from '@app/main/shippingRequests/shippingRe
 import { NgbDropdownConfig } from '@node_modules/@ng-bootstrap/ng-bootstrap';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { FileDownloadService } from '@shared/utils/file-download.service';
+import { EntityLogComponent } from '@app/shared/common/entity-log/entity-log.component';
 
 @Component({
   selector: 'new-tracking-conponent',
@@ -33,6 +34,7 @@ import { FileDownloadService } from '@shared/utils/file-download.service';
 export class NewTrackingConponent extends AppComponentBase implements OnChanges {
   @ViewChild('modelconfirm', { static: false }) modelConfirmCode: TrackingConfirmModalComponent;
   @ViewChild('modelpod', { static: false }) modelpod: TrackingPODModalComponent;
+  @ViewChild('appEntityLog', { static: false }) activityLogModal: EntityLogComponent;
   @Input() trip: TrackingListDto = new TrackingListDto();
   active = false;
   item: number;
@@ -454,5 +456,10 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
    */
   downloadPOD(pod: FileDto): void {
     this._fileDownloadService.downloadTempFile(pod);
+  }
+
+  showPointLog(pointId: number) {
+    this.activityLogModal.entityId = pointId;
+    this.activityLogModal.show();
   }
 }

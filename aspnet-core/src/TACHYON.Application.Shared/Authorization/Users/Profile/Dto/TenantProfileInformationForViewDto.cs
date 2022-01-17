@@ -21,6 +21,8 @@ namespace TACHYON.Authorization.Users.Profile.Dto
         public string CountryName { get; set; }
 
         public double Rating { get; set; }
+        
+        public int RateNumber { get; set; }
 
         public int EditionId { get; set; }
     }
