@@ -1,11 +1,9 @@
-﻿import { AbpHttpInterceptor, RefreshTokenService, AbpHttpConfigurationService } from 'abp-ng2-module';
+﻿import { AbpHttpConfigurationService, AbpHttpInterceptor, RefreshTokenService } from 'abp-ng2-module';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import * as ApiServiceProxies from './service-proxies';
 import { ZeroRefreshTokenService } from '@account/auth/zero-refresh-token.service';
 import { ZeroTemplateHttpConfigurationService } from './zero-template-http-configuration.service';
-import { TerminologieServiceProxy } from 'shared/service-proxies/terminologies-ervice-proxy';
-import { EntityLogServiceProxy, RatingServiceProxy } from './service-proxies';
 
 @NgModule({
   providers: [
@@ -146,7 +144,6 @@ import { EntityLogServiceProxy, RatingServiceProxy } from './service-proxies';
     ApiServiceProxies.ShippingRequestDriverServiceProxy,
     ApiServiceProxies.ShippingRequestTripAccidentCommentsServiceProxy,
     ApiServiceProxies.CarrierDashboardServiceProxy,
-    TerminologieServiceProxy,
     ApiServiceProxies.EntityLogServiceProxy,
     ApiServiceProxies.ShipperDashboardServiceProxy,
     { provide: RefreshTokenService, useClass: ZeroRefreshTokenService },

@@ -284,7 +284,7 @@ namespace TACHYON.Authorization.Users
                 int? userTenantId;
                 using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
                 {
-                    userTenantId = await (from user in _usersRepository.GetAll().AsNoTracking()
+                    userTenantId = await (from user in UserManager.Users.AsNoTracking()
                                           where user.Id == userId && user.IsDriver
                                           select user.TenantId).FirstOrDefaultAsync();
                 }

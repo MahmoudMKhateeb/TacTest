@@ -3363,73 +3363,46 @@ export class CitiesServiceProxy {
   }
 
   /**
-   * @param filter (optional)
-   * @param displayNameFilter (optional)
-   * @param codeFilter (optional)
-   * @param latitudeFilter (optional)
-   * @param longitudeFilter (optional)
-   * @param countyDisplayNameFilter (optional)
-   * @param sorting (optional)
-   * @param skipCount (optional)
-   * @param maxResultCount (optional)
+   * @param body (optional)
    * @return Success
    */
-  getAll(
-    filter: string | null | undefined,
-    displayNameFilter: string | null | undefined,
-    codeFilter: string | null | undefined,
-    latitudeFilter: string | null | undefined,
-    longitudeFilter: string | null | undefined,
-    countyDisplayNameFilter: string | null | undefined,
-    sorting: string | null | undefined,
-    skipCount: number | undefined,
-    maxResultCount: number | undefined
-  ): Observable<PagedResultDtoOfGetCityForViewDto> {
-    let url_ = this.baseUrl + '/api/services/app/Cities/GetAll?';
-    if (filter !== undefined && filter !== null) url_ += 'Filter=' + encodeURIComponent('' + filter) + '&';
-    if (displayNameFilter !== undefined && displayNameFilter !== null)
-      url_ += 'DisplayNameFilter=' + encodeURIComponent('' + displayNameFilter) + '&';
-    if (codeFilter !== undefined && codeFilter !== null) url_ += 'CodeFilter=' + encodeURIComponent('' + codeFilter) + '&';
-    if (latitudeFilter !== undefined && latitudeFilter !== null) url_ += 'LatitudeFilter=' + encodeURIComponent('' + latitudeFilter) + '&';
-    if (longitudeFilter !== undefined && longitudeFilter !== null) url_ += 'LongitudeFilter=' + encodeURIComponent('' + longitudeFilter) + '&';
-    if (countyDisplayNameFilter !== undefined && countyDisplayNameFilter !== null)
-      url_ += 'CountyDisplayNameFilter=' + encodeURIComponent('' + countyDisplayNameFilter) + '&';
-    if (sorting !== undefined && sorting !== null) url_ += 'Sorting=' + encodeURIComponent('' + sorting) + '&';
-    if (skipCount === null) throw new Error("The parameter 'skipCount' cannot be null.");
-    else if (skipCount !== undefined) url_ += 'SkipCount=' + encodeURIComponent('' + skipCount) + '&';
-    if (maxResultCount === null) throw new Error("The parameter 'maxResultCount' cannot be null.");
-    else if (maxResultCount !== undefined) url_ += 'MaxResultCount=' + encodeURIComponent('' + maxResultCount) + '&';
+  dxGetAll(body: LoadOptionsInput | undefined): Observable<LoadResult> {
+    let url_ = this.baseUrl + '/api/services/app/Cities/DxGetAll';
     url_ = url_.replace(/[?&]$/, '');
 
+    const content_ = JSON.stringify(body);
+
     let options_: any = {
+      body: content_,
       observe: 'response',
       responseType: 'blob',
       headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
         Accept: 'text/plain',
       }),
     };
 
     return this.http
-      .request('get', url_, options_)
+      .request('post', url_, options_)
       .pipe(
         _observableMergeMap((response_: any) => {
-          return this.processGetAll(response_);
+          return this.processDxGetAll(response_);
         })
       )
       .pipe(
         _observableCatch((response_: any) => {
           if (response_ instanceof HttpResponseBase) {
             try {
-              return this.processGetAll(<any>response_);
+              return this.processDxGetAll(<any>response_);
             } catch (e) {
-              return <Observable<PagedResultDtoOfGetCityForViewDto>>(<any>_observableThrow(e));
+              return <Observable<LoadResult>>(<any>_observableThrow(e));
             }
-          } else return <Observable<PagedResultDtoOfGetCityForViewDto>>(<any>_observableThrow(response_));
+          } else return <Observable<LoadResult>>(<any>_observableThrow(response_));
         })
       );
   }
 
-  protected processGetAll(response: HttpResponseBase): Observable<PagedResultDtoOfGetCityForViewDto> {
+  protected processDxGetAll(response: HttpResponseBase): Observable<LoadResult> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -3444,7 +3417,7 @@ export class CitiesServiceProxy {
         _observableMergeMap((_responseText) => {
           let result200: any = null;
           let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
-          result200 = PagedResultDtoOfGetCityForViewDto.fromJS(resultData200);
+          result200 = LoadResult.fromJS(resultData200);
           return _observableOf(result200);
         })
       );
@@ -3455,7 +3428,7 @@ export class CitiesServiceProxy {
         })
       );
     }
-    return _observableOf<PagedResultDtoOfGetCityForViewDto>(<any>null);
+    return _observableOf<LoadResult>(<any>null);
   }
 
   /**
@@ -3886,36 +3859,14 @@ export class CitiesTranslationsServiceProxy {
   }
 
   /**
-   * @param filter (optional)
-   * @param translatedDisplayNameFilter (optional)
-   * @param languageFilter (optional)
-   * @param cityDisplayNameFilter (optional)
-   * @param sorting (optional)
-   * @param skipCount (optional)
-   * @param maxResultCount (optional)
+   * @param loadOptions (optional)
+   * @param coreId (optional)
    * @return Success
    */
-  getAll(
-    filter: string | null | undefined,
-    translatedDisplayNameFilter: string | null | undefined,
-    languageFilter: string | null | undefined,
-    cityDisplayNameFilter: string | null | undefined,
-    sorting: string | null | undefined,
-    skipCount: number | undefined,
-    maxResultCount: number | undefined
-  ): Observable<PagedResultDtoOfGetCitiesTranslationForViewDto> {
+  getAll(loadOptions: string | null | undefined, coreId: string | null | undefined): Observable<LoadResult> {
     let url_ = this.baseUrl + '/api/services/app/CitiesTranslations/GetAll?';
-    if (filter !== undefined && filter !== null) url_ += 'Filter=' + encodeURIComponent('' + filter) + '&';
-    if (translatedDisplayNameFilter !== undefined && translatedDisplayNameFilter !== null)
-      url_ += 'TranslatedDisplayNameFilter=' + encodeURIComponent('' + translatedDisplayNameFilter) + '&';
-    if (languageFilter !== undefined && languageFilter !== null) url_ += 'LanguageFilter=' + encodeURIComponent('' + languageFilter) + '&';
-    if (cityDisplayNameFilter !== undefined && cityDisplayNameFilter !== null)
-      url_ += 'CityDisplayNameFilter=' + encodeURIComponent('' + cityDisplayNameFilter) + '&';
-    if (sorting !== undefined && sorting !== null) url_ += 'Sorting=' + encodeURIComponent('' + sorting) + '&';
-    if (skipCount === null) throw new Error("The parameter 'skipCount' cannot be null.");
-    else if (skipCount !== undefined) url_ += 'SkipCount=' + encodeURIComponent('' + skipCount) + '&';
-    if (maxResultCount === null) throw new Error("The parameter 'maxResultCount' cannot be null.");
-    else if (maxResultCount !== undefined) url_ += 'MaxResultCount=' + encodeURIComponent('' + maxResultCount) + '&';
+    if (loadOptions !== undefined && loadOptions !== null) url_ += 'LoadOptions=' + encodeURIComponent('' + loadOptions) + '&';
+    if (coreId !== undefined && coreId !== null) url_ += 'CoreId=' + encodeURIComponent('' + coreId) + '&';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -3939,14 +3890,14 @@ export class CitiesTranslationsServiceProxy {
             try {
               return this.processGetAll(<any>response_);
             } catch (e) {
-              return <Observable<PagedResultDtoOfGetCitiesTranslationForViewDto>>(<any>_observableThrow(e));
+              return <Observable<LoadResult>>(<any>_observableThrow(e));
             }
-          } else return <Observable<PagedResultDtoOfGetCitiesTranslationForViewDto>>(<any>_observableThrow(response_));
+          } else return <Observable<LoadResult>>(<any>_observableThrow(response_));
         })
       );
   }
 
-  protected processGetAll(response: HttpResponseBase): Observable<PagedResultDtoOfGetCitiesTranslationForViewDto> {
+  protected processGetAll(response: HttpResponseBase): Observable<LoadResult> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -3961,7 +3912,7 @@ export class CitiesTranslationsServiceProxy {
         _observableMergeMap((_responseText) => {
           let result200: any = null;
           let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
-          result200 = PagedResultDtoOfGetCitiesTranslationForViewDto.fromJS(resultData200);
+          result200 = LoadResult.fromJS(resultData200);
           return _observableOf(result200);
         })
       );
@@ -3972,7 +3923,72 @@ export class CitiesTranslationsServiceProxy {
         })
       );
     }
-    return _observableOf<PagedResultDtoOfGetCitiesTranslationForViewDto>(<any>null);
+    return _observableOf<LoadResult>(<any>null);
+  }
+
+  /**
+   * @param body (optional)
+   * @return Success
+   */
+  createOrEdit(body: CreateOrEditCitiesTranslationDto | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/CitiesTranslations/CreateOrEdit';
+    url_ = url_.replace(/[?&]$/, '');
+
+    const content_ = JSON.stringify(body);
+
+    let options_: any = {
+      body: content_,
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processCreateOrEdit(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processCreateOrEdit(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processCreateOrEdit(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
   }
 
   /**
@@ -4107,71 +4123,6 @@ export class CitiesTranslationsServiceProxy {
       );
     }
     return _observableOf<GetCitiesTranslationForEditOutput>(<any>null);
-  }
-
-  /**
-   * @param body (optional)
-   * @return Success
-   */
-  createOrEdit(body: CreateOrEditCitiesTranslationDto | undefined): Observable<void> {
-    let url_ = this.baseUrl + '/api/services/app/CitiesTranslations/CreateOrEdit';
-    url_ = url_.replace(/[?&]$/, '');
-
-    const content_ = JSON.stringify(body);
-
-    let options_: any = {
-      body: content_,
-      observe: 'response',
-      responseType: 'blob',
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json-patch+json',
-      }),
-    };
-
-    return this.http
-      .request('post', url_, options_)
-      .pipe(
-        _observableMergeMap((response_: any) => {
-          return this.processCreateOrEdit(response_);
-        })
-      )
-      .pipe(
-        _observableCatch((response_: any) => {
-          if (response_ instanceof HttpResponseBase) {
-            try {
-              return this.processCreateOrEdit(<any>response_);
-            } catch (e) {
-              return <Observable<void>>(<any>_observableThrow(e));
-            }
-          } else return <Observable<void>>(<any>_observableThrow(response_));
-        })
-      );
-  }
-
-  protected processCreateOrEdit(response: HttpResponseBase): Observable<void> {
-    const status = response.status;
-    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-    let _headers: any = {};
-    if (response.headers) {
-      for (let key of response.headers.keys()) {
-        _headers[key] = response.headers.get(key);
-      }
-    }
-    if (status === 200) {
-      return blobToText(responseBlob).pipe(
-        _observableMergeMap((_responseText) => {
-          return _observableOf<void>(<any>null);
-        })
-      );
-    } else if (status !== 200 && status !== 204) {
-      return blobToText(responseBlob).pipe(
-        _observableMergeMap((_responseText) => {
-          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
-        })
-      );
-    }
-    return _observableOf<void>(<any>null);
   }
 
   /**
@@ -16267,10 +16218,10 @@ export class ShippingRequestDriverServiceProxy {
   setRating(pointId: number | undefined, rate: number | undefined, note: string | null | undefined): Observable<void> {
     let url_ = this.baseUrl + '/api/services/app/ShippingRequestDriver/SetRating?';
     if (pointId === null) throw new Error("The parameter 'pointId' cannot be null.");
-    else if (pointId !== undefined) url_ += 'PointId=' + encodeURIComponent('' + pointId) + '&';
+    else if (pointId !== undefined) url_ += 'pointId=' + encodeURIComponent('' + pointId) + '&';
     if (rate === null) throw new Error("The parameter 'rate' cannot be null.");
-    else if (rate !== undefined) url_ += 'Rate=' + encodeURIComponent('' + rate) + '&';
-    if (note !== undefined && note !== null) url_ += 'Note=' + encodeURIComponent('' + note) + '&';
+    else if (rate !== undefined) url_ += 'rate=' + encodeURIComponent('' + rate) + '&';
+    if (note !== undefined && note !== null) url_ += 'note=' + encodeURIComponent('' + note) + '&';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -60974,12 +60925,48 @@ export interface IMarkAllUnreadMessagesOfUserAsReadInput {
   userId: number;
 }
 
+export class LoadOptionsInput implements ILoadOptionsInput {
+  loadOptions!: string | undefined;
+
+  constructor(data?: ILoadOptionsInput) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.loadOptions = _data['loadOptions'];
+    }
+  }
+
+  static fromJS(data: any): LoadOptionsInput {
+    data = typeof data === 'object' ? data : {};
+    let result = new LoadOptionsInput();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['loadOptions'] = this.loadOptions;
+    return data;
+  }
+}
+
+export interface ILoadOptionsInput {
+  loadOptions: string | undefined;
+}
+
 export class CityDto implements ICityDto {
   displayName!: string | undefined;
   code!: string | undefined;
   latitude!: number;
   longitude!: number;
   countyId!: number;
+  isActive!: boolean;
   translatedDisplayName!: string | undefined;
   id!: number;
 
@@ -60998,6 +60985,7 @@ export class CityDto implements ICityDto {
       this.latitude = _data['latitude'];
       this.longitude = _data['longitude'];
       this.countyId = _data['countyId'];
+      this.isActive = _data['isActive'];
       this.translatedDisplayName = _data['translatedDisplayName'];
       this.id = _data['id'];
     }
@@ -61017,6 +61005,7 @@ export class CityDto implements ICityDto {
     data['latitude'] = this.latitude;
     data['longitude'] = this.longitude;
     data['countyId'] = this.countyId;
+    data['isActive'] = this.isActive;
     data['translatedDisplayName'] = this.translatedDisplayName;
     data['id'] = this.id;
     return data;
@@ -61029,6 +61018,7 @@ export interface ICityDto {
   latitude: number;
   longitude: number;
   countyId: number;
+  isActive: boolean;
   translatedDisplayName: string | undefined;
   id: number;
 }
@@ -61072,56 +61062,12 @@ export interface IGetCityForViewDto {
   countyDisplayName: string | undefined;
 }
 
-export class PagedResultDtoOfGetCityForViewDto implements IPagedResultDtoOfGetCityForViewDto {
-  totalCount!: number;
-  items!: GetCityForViewDto[] | undefined;
-
-  constructor(data?: IPagedResultDtoOfGetCityForViewDto) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(_data?: any) {
-    if (_data) {
-      this.totalCount = _data['totalCount'];
-      if (Array.isArray(_data['items'])) {
-        this.items = [] as any;
-        for (let item of _data['items']) this.items!.push(GetCityForViewDto.fromJS(item));
-      }
-    }
-  }
-
-  static fromJS(data: any): PagedResultDtoOfGetCityForViewDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new PagedResultDtoOfGetCityForViewDto();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['totalCount'] = this.totalCount;
-    if (Array.isArray(this.items)) {
-      data['items'] = [];
-      for (let item of this.items) data['items'].push(item.toJSON());
-    }
-    return data;
-  }
-}
-
-export interface IPagedResultDtoOfGetCityForViewDto {
-  totalCount: number;
-  items: GetCityForViewDto[] | undefined;
-}
-
 export class CreateOrEditCityDto implements ICreateOrEditCityDto {
   displayName!: string;
   code!: string | undefined;
   latitude!: number;
   longitude!: number;
+  isActive!: boolean;
   countyId!: number;
   id!: number | undefined;
 
@@ -61139,6 +61085,7 @@ export class CreateOrEditCityDto implements ICreateOrEditCityDto {
       this.code = _data['code'];
       this.latitude = _data['latitude'];
       this.longitude = _data['longitude'];
+      this.isActive = _data['isActive'];
       this.countyId = _data['countyId'];
       this.id = _data['id'];
     }
@@ -61157,6 +61104,7 @@ export class CreateOrEditCityDto implements ICreateOrEditCityDto {
     data['code'] = this.code;
     data['latitude'] = this.latitude;
     data['longitude'] = this.longitude;
+    data['isActive'] = this.isActive;
     data['countyId'] = this.countyId;
     data['id'] = this.id;
     return data;
@@ -61168,6 +61116,7 @@ export interface ICreateOrEditCityDto {
   code: string | undefined;
   latitude: number;
   longitude: number;
+  isActive: boolean;
   countyId: number;
   id: number | undefined;
 }
@@ -61250,137 +61199,6 @@ export interface ICityCountyLookupTableDto {
   displayName: string | undefined;
 }
 
-export class CitiesTranslationDto implements ICitiesTranslationDto {
-  translatedDisplayName!: string | undefined;
-  language!: string | undefined;
-  coreId!: number;
-  id!: number;
-
-  constructor(data?: ICitiesTranslationDto) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(_data?: any) {
-    if (_data) {
-      this.translatedDisplayName = _data['translatedDisplayName'];
-      this.language = _data['language'];
-      this.coreId = _data['coreId'];
-      this.id = _data['id'];
-    }
-  }
-
-  static fromJS(data: any): CitiesTranslationDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new CitiesTranslationDto();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['translatedDisplayName'] = this.translatedDisplayName;
-    data['language'] = this.language;
-    data['coreId'] = this.coreId;
-    data['id'] = this.id;
-    return data;
-  }
-}
-
-export interface ICitiesTranslationDto {
-  translatedDisplayName: string | undefined;
-  language: string | undefined;
-  coreId: number;
-  id: number;
-}
-
-export class GetCitiesTranslationForViewDto implements IGetCitiesTranslationForViewDto {
-  citiesTranslation!: CitiesTranslationDto;
-  cityDisplayName!: string | undefined;
-
-  constructor(data?: IGetCitiesTranslationForViewDto) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(_data?: any) {
-    if (_data) {
-      this.citiesTranslation = _data['citiesTranslation'] ? CitiesTranslationDto.fromJS(_data['citiesTranslation']) : <any>undefined;
-      this.cityDisplayName = _data['cityDisplayName'];
-    }
-  }
-
-  static fromJS(data: any): GetCitiesTranslationForViewDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new GetCitiesTranslationForViewDto();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['citiesTranslation'] = this.citiesTranslation ? this.citiesTranslation.toJSON() : <any>undefined;
-    data['cityDisplayName'] = this.cityDisplayName;
-    return data;
-  }
-}
-
-export interface IGetCitiesTranslationForViewDto {
-  citiesTranslation: CitiesTranslationDto;
-  cityDisplayName: string | undefined;
-}
-
-export class PagedResultDtoOfGetCitiesTranslationForViewDto implements IPagedResultDtoOfGetCitiesTranslationForViewDto {
-  totalCount!: number;
-  items!: GetCitiesTranslationForViewDto[] | undefined;
-
-  constructor(data?: IPagedResultDtoOfGetCitiesTranslationForViewDto) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(_data?: any) {
-    if (_data) {
-      this.totalCount = _data['totalCount'];
-      if (Array.isArray(_data['items'])) {
-        this.items = [] as any;
-        for (let item of _data['items']) this.items!.push(GetCitiesTranslationForViewDto.fromJS(item));
-      }
-    }
-  }
-
-  static fromJS(data: any): PagedResultDtoOfGetCitiesTranslationForViewDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new PagedResultDtoOfGetCitiesTranslationForViewDto();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['totalCount'] = this.totalCount;
-    if (Array.isArray(this.items)) {
-      data['items'] = [];
-      for (let item of this.items) data['items'].push(item.toJSON());
-    }
-    return data;
-  }
-}
-
-export interface IPagedResultDtoOfGetCitiesTranslationForViewDto {
-  totalCount: number;
-  items: GetCitiesTranslationForViewDto[] | undefined;
-}
-
 export class CreateOrEditCitiesTranslationDto implements ICreateOrEditCitiesTranslationDto {
   translatedDisplayName!: string;
   language!: string;
@@ -61426,6 +61244,92 @@ export interface ICreateOrEditCitiesTranslationDto {
   language: string;
   coreId: number;
   id: number | undefined;
+}
+
+export class CitiesTranslationDto implements ICitiesTranslationDto {
+  translatedDisplayName!: string;
+  language!: string;
+  coreId!: number;
+  id!: number;
+
+  constructor(data?: ICitiesTranslationDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.translatedDisplayName = _data['translatedDisplayName'];
+      this.language = _data['language'];
+      this.coreId = _data['coreId'];
+      this.id = _data['id'];
+    }
+  }
+
+  static fromJS(data: any): CitiesTranslationDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new CitiesTranslationDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['translatedDisplayName'] = this.translatedDisplayName;
+    data['language'] = this.language;
+    data['coreId'] = this.coreId;
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+export interface ICitiesTranslationDto {
+  translatedDisplayName: string;
+  language: string;
+  coreId: number;
+  id: number;
+}
+
+export class GetCitiesTranslationForViewDto implements IGetCitiesTranslationForViewDto {
+  citiesTranslation!: CitiesTranslationDto;
+  cityDisplayName!: string | undefined;
+
+  constructor(data?: IGetCitiesTranslationForViewDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.citiesTranslation = _data['citiesTranslation'] ? CitiesTranslationDto.fromJS(_data['citiesTranslation']) : <any>undefined;
+      this.cityDisplayName = _data['cityDisplayName'];
+    }
+  }
+
+  static fromJS(data: any): GetCitiesTranslationForViewDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new GetCitiesTranslationForViewDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['citiesTranslation'] = this.citiesTranslation ? this.citiesTranslation.toJSON() : <any>undefined;
+    data['cityDisplayName'] = this.cityDisplayName;
+    return data;
+  }
+}
+
+export interface IGetCitiesTranslationForViewDto {
+  citiesTranslation: CitiesTranslationDto;
+  cityDisplayName: string | undefined;
 }
 
 export class GetCitiesTranslationForEditOutput implements IGetCitiesTranslationForEditOutput {
@@ -77589,12 +77493,12 @@ export interface ICreateCarrierRatingByShipperDto {
   note: string | undefined;
 }
 
-export class CreateDriverRatingByReceiverDto implements ICreateDriverRatingByReceiverDto {
+export class CreateDriverRatingDtoByReceiverDto implements ICreateDriverRatingDtoByReceiverDto {
   code!: string;
   rate!: number;
   note!: string | undefined;
 
-  constructor(data?: ICreateDriverRatingByReceiverDto) {
+  constructor(data?: ICreateDriverRatingDtoByReceiverDto) {
     if (data) {
       for (var property in data) {
         if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
@@ -77610,9 +77514,9 @@ export class CreateDriverRatingByReceiverDto implements ICreateDriverRatingByRec
     }
   }
 
-  static fromJS(data: any): CreateDriverRatingByReceiverDto {
+  static fromJS(data: any): CreateDriverRatingDtoByReceiverDto {
     data = typeof data === 'object' ? data : {};
-    let result = new CreateDriverRatingByReceiverDto();
+    let result = new CreateDriverRatingDtoByReceiverDto();
     result.init(data);
     return result;
   }
@@ -77626,7 +77530,7 @@ export class CreateDriverRatingByReceiverDto implements ICreateDriverRatingByRec
   }
 }
 
-export interface ICreateDriverRatingByReceiverDto {
+export interface ICreateDriverRatingDtoByReceiverDto {
   code: string;
   rate: number;
   note: string | undefined;
@@ -77676,7 +77580,7 @@ export interface ICreateDeliveryExpRateByReceiverDto {
 }
 
 export class CreateDriverAndDERatingByReceiverDto implements ICreateDriverAndDERatingByReceiverDto {
-  createDriverRatingByReceiverInput!: CreateDriverRatingByReceiverDto;
+  createDriverRatingDtoByReceiverInput!: CreateDriverRatingDtoByReceiverDto;
   createDeliveryExpRateByReceiverInput!: CreateDeliveryExpRateByReceiverDto;
 
   constructor(data?: ICreateDriverAndDERatingByReceiverDto) {
@@ -77689,8 +77593,8 @@ export class CreateDriverAndDERatingByReceiverDto implements ICreateDriverAndDER
 
   init(_data?: any) {
     if (_data) {
-      this.createDriverRatingByReceiverInput = _data['createDriverRatingByReceiverInput']
-        ? CreateDriverRatingByReceiverDto.fromJS(_data['createDriverRatingByReceiverInput'])
+      this.createDriverRatingDtoByReceiverInput = _data['createDriverRatingDtoByReceiverInput']
+        ? CreateDriverRatingDtoByReceiverDto.fromJS(_data['createDriverRatingDtoByReceiverInput'])
         : <any>undefined;
       this.createDeliveryExpRateByReceiverInput = _data['createDeliveryExpRateByReceiverInput']
         ? CreateDeliveryExpRateByReceiverDto.fromJS(_data['createDeliveryExpRateByReceiverInput'])
@@ -77707,8 +77611,8 @@ export class CreateDriverAndDERatingByReceiverDto implements ICreateDriverAndDER
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data['createDriverRatingByReceiverInput'] = this.createDriverRatingByReceiverInput
-      ? this.createDriverRatingByReceiverInput.toJSON()
+    data['createDriverRatingDtoByReceiverInput'] = this.createDriverRatingDtoByReceiverInput
+      ? this.createDriverRatingDtoByReceiverInput.toJSON()
       : <any>undefined;
     data['createDeliveryExpRateByReceiverInput'] = this.createDeliveryExpRateByReceiverInput
       ? this.createDeliveryExpRateByReceiverInput.toJSON()
@@ -77718,7 +77622,7 @@ export class CreateDriverAndDERatingByReceiverDto implements ICreateDriverAndDER
 }
 
 export interface ICreateDriverAndDERatingByReceiverDto {
-  createDriverRatingByReceiverInput: CreateDriverRatingByReceiverDto;
+  createDriverRatingDtoByReceiverInput: CreateDriverRatingDtoByReceiverDto;
   createDeliveryExpRateByReceiverInput: CreateDeliveryExpRateByReceiverDto;
 }
 
@@ -91926,6 +91830,7 @@ export class CreateOrEditTruckDto implements ICreateOrEditTruckDto {
   capacityId!: number | undefined;
   length!: number | undefined;
   plateTypeId!: number;
+  tenantId!: number | undefined;
   id!: number | undefined;
 
   constructor(data?: ICreateOrEditTruckDto) {
@@ -91957,6 +91862,7 @@ export class CreateOrEditTruckDto implements ICreateOrEditTruckDto {
       this.capacityId = _data['capacityId'];
       this.length = _data['length'];
       this.plateTypeId = _data['plateTypeId'];
+      this.tenantId = _data['tenantId'];
       this.id = _data['id'];
     }
   }
@@ -91987,6 +91893,7 @@ export class CreateOrEditTruckDto implements ICreateOrEditTruckDto {
     data['capacityId'] = this.capacityId;
     data['length'] = this.length;
     data['plateTypeId'] = this.plateTypeId;
+    data['tenantId'] = this.tenantId;
     data['id'] = this.id;
     return data;
   }
@@ -92007,6 +91914,7 @@ export interface ICreateOrEditTruckDto {
   capacityId: number | undefined;
   length: number | undefined;
   plateTypeId: number;
+  tenantId: number | undefined;
   id: number | undefined;
 }
 
@@ -92680,41 +92588,6 @@ export class PagedResultDtoOfGetTrucksTypeForViewDto implements IPagedResultDtoO
 export interface IPagedResultDtoOfGetTrucksTypeForViewDto {
   totalCount: number;
   items: GetTrucksTypeForViewDto[] | undefined;
-}
-
-export class LoadOptionsInput implements ILoadOptionsInput {
-  loadOptions!: string | undefined;
-
-  constructor(data?: ILoadOptionsInput) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(_data?: any) {
-    if (_data) {
-      this.loadOptions = _data['loadOptions'];
-    }
-  }
-
-  static fromJS(data: any): LoadOptionsInput {
-    data = typeof data === 'object' ? data : {};
-    let result = new LoadOptionsInput();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['loadOptions'] = this.loadOptions;
-    return data;
-  }
-}
-
-export interface ILoadOptionsInput {
-  loadOptions: string | undefined;
 }
 
 export class CreateOrEditTrucksTypeDto implements ICreateOrEditTrucksTypeDto {
@@ -93449,6 +93322,7 @@ export class UserEditDto implements IUserEditDto {
   emailAddress!: string;
   phoneNumber!: string | undefined;
   password!: string | undefined;
+  tenantId!: number | undefined;
   isActive!: boolean;
   shouldChangePasswordOnNextLogin!: boolean;
   isTwoFactorEnabled!: boolean;
@@ -93478,6 +93352,7 @@ export class UserEditDto implements IUserEditDto {
       this.emailAddress = _data['emailAddress'];
       this.phoneNumber = _data['phoneNumber'];
       this.password = _data['password'];
+      this.tenantId = _data['tenantId'];
       this.isActive = _data['isActive'];
       this.shouldChangePasswordOnNextLogin = _data['shouldChangePasswordOnNextLogin'];
       this.isTwoFactorEnabled = _data['isTwoFactorEnabled'];
@@ -93508,6 +93383,7 @@ export class UserEditDto implements IUserEditDto {
     data['emailAddress'] = this.emailAddress;
     data['phoneNumber'] = this.phoneNumber;
     data['password'] = this.password;
+    data['tenantId'] = this.tenantId;
     data['isActive'] = this.isActive;
     data['shouldChangePasswordOnNextLogin'] = this.shouldChangePasswordOnNextLogin;
     data['isTwoFactorEnabled'] = this.isTwoFactorEnabled;
@@ -93531,6 +93407,7 @@ export interface IUserEditDto {
   emailAddress: string;
   phoneNumber: string | undefined;
   password: string | undefined;
+  tenantId: number | undefined;
   isActive: boolean;
   shouldChangePasswordOnNextLogin: boolean;
   isTwoFactorEnabled: boolean;
