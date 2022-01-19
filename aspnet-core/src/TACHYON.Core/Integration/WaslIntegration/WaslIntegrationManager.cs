@@ -97,10 +97,7 @@ namespace TACHYON.Integration.WaslIntegration
                 };
 
                 var request = new RestRequest(method);
-                request.AddHeader("app-id", "4b785cf2");
-                request.AddHeader("app-key", "d3a2ad0d2467412384459ebf29b86788");
-                request.AddHeader("Content-Type", "application/json");
-                request.AddHeader("client-id", "52efa1c2-5623-43e2-aacf-b1b9d7ddf8f5");
+                WaslRequestAddheaders(request);
                 string body = ToJsonLowerCaseFirstLetter(root);
                 var client = new RestClient("https://wasl.api.elm.sa/api/eff/v1/vehicles");
                 // client.Timeout = -1;
@@ -127,6 +124,7 @@ namespace TACHYON.Integration.WaslIntegration
         }
 
 
+
         private async Task Drivers(User input, Method method)
         {
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
@@ -146,10 +144,7 @@ namespace TACHYON.Integration.WaslIntegration
                 var client = new RestClient("https://wasl.api.elm.sa/api/eff/v1/drivers");
                 client.Timeout = -1;
                 var request = new RestRequest(method);
-                request.AddHeader("app_id", "4b785cf2");
-                request.AddHeader("app_key", "d3a2ad0d2467412384459ebf29b86788");
-                request.AddHeader("Content-Type", "application/json");
-                request.AddHeader("client_id", "52efa1c2-5623-43e2-aacf-b1b9d7ddf8f5");
+                WaslRequestAddheaders(request);
                 string body = ToJsonLowerCaseFirstLetter(root);
 
                 request.AddParameter("application/json", body, ParameterType.RequestBody);
@@ -203,10 +198,7 @@ namespace TACHYON.Integration.WaslIntegration
                     var client = new RestClient("https://wasl.api.elm.sa/api/eff/v1/trips");
                     client.Timeout = -1;
                     var request = new RestRequest(Method.POST);
-                    request.AddHeader("app-id", "4b785cf2");
-                    request.AddHeader("app-key", "d3a2ad0d2467412384459ebf29b86788");
-                    request.AddHeader("Content-Type", "application/json");
-                    request.AddHeader("client-id", "52efa1c2-5623-43e2-aacf-b1b9d7ddf8f5");
+                    WaslRequestAddheaders(request);
                     string body = ToJsonLowerCaseFirstLetter(root);
 
                     request.AddParameter("application/json", body, ParameterType.RequestBody);
@@ -254,10 +246,7 @@ namespace TACHYON.Integration.WaslIntegration
                 var client = new RestClient("https://wasl.api.elm.sa/api/eff/v1/trips/" + tripId.ToString());
                 client.Timeout = -1;
                 var request = new RestRequest(Method.PATCH);
-                request.AddHeader("app-id", "4b785cf2");
-                request.AddHeader("app-key", "d3a2ad0d2467412384459ebf29b86788");
-                request.AddHeader("Content-Type", "application/json");
-                request.AddHeader("client-id", "52efa1c2-5623-43e2-aacf-b1b9d7ddf8f5");
+                WaslRequestAddheaders(request);
                 string body = ToJsonLowerCaseFirstLetter(root);
 
                 request.AddParameter("application/json", body, ParameterType.RequestBody);
@@ -282,6 +271,7 @@ namespace TACHYON.Integration.WaslIntegration
 
         public async Task QueueVehicleRegistrationJob(Truck input)
         {
+            // stop json loop Using 
 
             await _backgroundJobManager.EnqueueAsync<VehicleRegistrationJob, Truck>(input);
         }
@@ -360,6 +350,15 @@ namespace TACHYON.Integration.WaslIntegration
 
 
         }
+
+        private void WaslRequestAddheaders(RestRequest request)
+        {
+            request.AddHeader("app-id", "4b785cf2");
+            request.AddHeader("app-key", "d3a2ad0d2467412384459ebf29b86788");
+            request.AddHeader("Content-Type", "application/json");
+            request.AddHeader("client-id", "52efa1c2-5623-43e2-aacf-b1b9d7ddf8f5");
+        }
+
 
     }
 }
