@@ -19,6 +19,7 @@ namespace TACHYON.Trucks
 {
     [Table("Trucks")]
     [Audited]
+    [Serializable]
     public class Truck : FullAuditedEntity<long>, IMustHaveTenant
     {
         public int TenantId { get; set; }

@@ -153,6 +153,7 @@ namespace TACHYON.Web.Startup
                 services.AddHangfire(config =>
                 {
                     config.UseSqlServerStorage(_appConfiguration.GetConnectionString("Default"));
+                    config.UseSerializerSettings(new JsonSerializerSettings() { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
                 });
                 GlobalConfiguration.Configuration.UseSqlServerStorage(_appConfiguration.GetConnectionString("Default"));
             }
