@@ -43,7 +43,7 @@ namespace TACHYON.Rating
 
         public async Task CreateRating(RatingLog ratingLog)
         {
-            if (ratingLog.PointId != null) await CheckIfFinishOffLoadingPoint(ratingLog);
+            if (ratingLog.PointId != null) await CheckIfPointCompleted(ratingLog);
 
             if (await IsRateDoneBefore(ratingLog)) throw new UserFriendlyException(L("RateDoneBefore"));
             await _ratingLogRepository.InsertAndGetIdAsync(ratingLog);
@@ -164,11 +164,9 @@ namespace TACHYON.Rating
             {
                 var tripId = await _routePointRepository.GetAll().Where(x => x.Id == rate.PointId).Select(x => x.ShippingRequestTripId).FirstOrDefaultAsync();
                 tenantTripRating = await _ratingLogRepository.GetAll().Where(x =>
-                   x.RateType == tenantRatingType && x.TripId == tripId)
-               .Select(x => x.Rate)
-               .FirstOrDefaultAsync();
-            }
-
+                        x.RateType == tenantRatingType && x.TripId == rate.RoutePointFk.ShippingRequestTripId)
+                    .Select(x => x.Rate)
+                    .FirstOrDefaultAsync();
 
             counter += tenantTripRating <= 0 ? 0 : 1;
 
@@ -234,16 +232,16 @@ namespace TACHYON.Rating
             => await _ratingLogRepository.GetAll().AsNoTracking()
                 .AnyAsync(RatingLogEquals(rate));
 
-        private async Task CheckIfFinishOffLoadingPoint(RatingLog log)
+        private async Task CheckIfPointCompleted(RatingLog log)
         {
             DisableTenancyFilters();
-            var isRoutPointFinished = await _routePointRepository.GetAll().AsNoTracking()
+            var isRoutPointCompleted = await _routePointRepository.GetAll().AsNoTracking()
                 .WhereIf(log.RateType == RateType.FacilityByDriver,
                     x => x.ShippingRequestTripFk.AssignedDriverUserId == log.DriverId)
-                .AnyAsync(x => x.Id == log.PointId && x.Status >= RoutePointStatus.FinishOffLoadShipment);
+                .AnyAsync(x => x.Id == log.PointId && x.IsComplete);
 
-            if (isRoutPointFinished) return;
-            throw new UserFriendlyException(L("PointNotFoundOrNotFinished"));
+            if (isRoutPointCompleted) return;
+            throw new UserFriendlyException(L("PointNotFoundOrNotCompleted"));
         }
 
         private async Task<int?> GetTenantIdForRate(RatingLog log)
