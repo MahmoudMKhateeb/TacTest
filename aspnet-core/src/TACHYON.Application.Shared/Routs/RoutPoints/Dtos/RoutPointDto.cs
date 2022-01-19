@@ -18,6 +18,8 @@ namespace TACHYON.Routs.RoutPoints.Dtos
         public PickingType PickingType { get; set; }
         public long FacilityId { get; set; }
         public string Facility { get; set; }
+
+        public decimal FacilityRate { get; set; }
         public double Longitude { get; set; }
         public double Latitude { get; set; }
         public virtual int ShippingRequestTripId { get; set; }

@@ -410,6 +410,7 @@ namespace TACHYON
                 .ForPath(dest => dest.FacilityFk.Location.X, opt => opt.MapFrom(src => src.Longitude))
                 .ForPath(dest => dest.FacilityFk.Location.Y, opt => opt.MapFrom(src => src.Latitude))
                 .ForPath(dest => dest.FacilityFk.Name, opt => opt.MapFrom(src => src.Facility))
+                .ForPath(dest => dest.FacilityFk.Rate, opt => opt.MapFrom(src => src.FacilityRate))
                 .ForPath(dest => dest.GoodsDetails, opt => opt.MapFrom(src => src.GoodsDetailListDto))
                 .ForPath(dest => dest.ReceiverFk.FullName, opt => opt.MapFrom(src => src.SenderOrReceiverContactName))
                 .ReverseMap();

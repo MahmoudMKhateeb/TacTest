@@ -76457,6 +76457,8 @@ export class GetShippingRequestForPricingOutput implements IGetShippingRequestFo
   offerId!: number;
   shipper!: string | undefined;
   shipperRating!: number;
+  facilitiesRatingAverage!: number;
+  facilitiesRatingCount!: number;
   shipperRatingNumber!: number;
   creationTime!: moment.Moment;
   isTachyonDeal!: boolean;
@@ -76492,6 +76494,8 @@ export class GetShippingRequestForPricingOutput implements IGetShippingRequestFo
       this.offerId = _data['offerId'];
       this.shipper = _data['shipper'];
       this.shipperRating = _data['shipperRating'];
+      this.facilitiesRatingAverage = _data['facilitiesRatingAverage'];
+      this.facilitiesRatingCount = _data['facilitiesRatingCount'];
       this.shipperRatingNumber = _data['shipperRatingNumber'];
       this.creationTime = _data['creationTime'] ? moment(_data['creationTime'].toString()) : <any>undefined;
       this.isTachyonDeal = _data['isTachyonDeal'];
@@ -76528,6 +76532,8 @@ export class GetShippingRequestForPricingOutput implements IGetShippingRequestFo
     data['offerId'] = this.offerId;
     data['shipper'] = this.shipper;
     data['shipperRating'] = this.shipperRating;
+    data['facilitiesRatingAverage'] = this.facilitiesRatingAverage;
+    data['facilitiesRatingCount'] = this.facilitiesRatingCount;
     data['shipperRatingNumber'] = this.shipperRatingNumber;
     data['creationTime'] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
     data['isTachyonDeal'] = this.isTachyonDeal;
@@ -76554,6 +76560,8 @@ export interface IGetShippingRequestForPricingOutput {
   offerId: number;
   shipper: string | undefined;
   shipperRating: number;
+  facilitiesRatingAverage: number;
+  facilitiesRatingCount: number;
   shipperRatingNumber: number;
   creationTime: moment.Moment;
   isTachyonDeal: boolean;
@@ -78530,6 +78538,7 @@ export class RoutPointDto implements IRoutPointDto {
   pickingType!: PickingType;
   facilityId!: number;
   facility!: string | undefined;
+  facilityRate!: number;
   longitude!: number;
   latitude!: number;
   shippingRequestTripId!: number;
@@ -78566,6 +78575,7 @@ export class RoutPointDto implements IRoutPointDto {
       this.pickingType = _data['pickingType'];
       this.facilityId = _data['facilityId'];
       this.facility = _data['facility'];
+      this.facilityRate = _data['facilityRate'];
       this.longitude = _data['longitude'];
       this.latitude = _data['latitude'];
       this.shippingRequestTripId = _data['shippingRequestTripId'];
@@ -78606,6 +78616,7 @@ export class RoutPointDto implements IRoutPointDto {
     data['pickingType'] = this.pickingType;
     data['facilityId'] = this.facilityId;
     data['facility'] = this.facility;
+    data['facilityRate'] = this.facilityRate;
     data['longitude'] = this.longitude;
     data['latitude'] = this.latitude;
     data['shippingRequestTripId'] = this.shippingRequestTripId;
@@ -78639,6 +78650,7 @@ export interface IRoutPointDto {
   pickingType: PickingType;
   facilityId: number;
   facility: string | undefined;
+  facilityRate: number;
   longitude: number;
   latitude: number;
   shippingRequestTripId: number;
