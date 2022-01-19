@@ -189,9 +189,9 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
    * accepts the trip
    */
   accept(trip?: TrackingListDto): void {
-    this.loadingTripId = trip.id;
     this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
       if (isConfirmed) {
+        this.loadingTripId = trip.id;
         this._trackingServiceProxy
           .accept(trip.id)
           .pipe(
