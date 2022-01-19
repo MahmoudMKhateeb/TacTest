@@ -2248,5 +2248,7 @@
     <text name="ReceiverConfirmed"></text>
     <text name="DeliveryConfirmation"></text>-->
     <text name="facilityNameIsAlreadyExistsForThisTenant">اسم المنشأة موجود بالفعل لهذا المستأجر</text>
-  </texts>
+		<text name="PointNotFoundOrNotCompleted">الرحلة غير متوفرة او غير مكتملة</text>
+
+	</texts>
 </localizationDictionary>

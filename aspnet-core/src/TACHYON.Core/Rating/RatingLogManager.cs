@@ -40,13 +40,13 @@ namespace TACHYON.Rating
             _facilityRepository = facilityRepository;
             _tripRepository = tripRepository;
         }
-        
+
         public async Task CreateRating(RatingLog ratingLog)
         {
-            if (ratingLog.PointId != null) await CheckIfFinishOffLoadingPoint(ratingLog);
+            if (ratingLog.PointId != null) await CheckIfPointCompleted(ratingLog);
 
             if (await IsRateDoneBefore(ratingLog)) throw new UserFriendlyException(L("RateDoneBefore"));
-             await _ratingLogRepository.InsertAndGetIdAsync(ratingLog);
+            await _ratingLogRepository.InsertAndGetIdAsync(ratingLog);
 
             await ReCalculateTenantOrEntityRating(ratingLog);
         }
@@ -75,26 +75,26 @@ namespace TACHYON.Rating
             //recalculate Entity rating (Driver/Facility)
             if (rate.RateType == RateType.DriverByReceiver && rate.DriverId.HasValue)
                 await RecalculateRatingById(rate.DriverId.Value, typeof(User));
-             
+
             if (rate.RateType == RateType.FacilityByDriver && rate.FacilityId.HasValue)
-                await RecalculateRatingById(rate.FacilityId.Value,typeof(Facility));
-            
+                await RecalculateRatingById(rate.FacilityId.Value, typeof(Facility));
+
             // Recalculate Tenant Rating (Shipper/Carrier)
             if (rate.RateType <= RateType.CarrierByShipper)
             {
                 await ReCalculateTenantRating(rate, RateType.CarrierTripBySystem);
                 return;
             }
-            
+
             await ReCalculateTenantRating(rate, RateType.ShipperTripBySystem);
         }
-        private async Task ReCalculateTenantRating(RatingLog log,RateType tenantType)
+        private async Task ReCalculateTenantRating(RatingLog log, RateType tenantType)
         {
             // Here RateType Must Be CarrierTripBySystem or ShipperTripBySystem and not any other values
             if (tenantType < RateType.ShipperTripBySystem) return;
-            
+
             var tenantTripBySystem = await GetTripRating(log.RateType, log.TripId, log.PointId);
-            
+
             var tenantId = await GetTenantIdForRate(log);
 
             // Create If Not Exists
@@ -105,72 +105,72 @@ namespace TACHYON.Rating
                     RateType = log.RateType,
                     TripId = log.TripId,
                     PointId = log.PointId,
-                    CarrierId = tenantType == RateType.CarrierTripBySystem? tenantId: null,
-                    ShipperId = tenantType == RateType.ShipperTripBySystem? tenantId: null,
+                    CarrierId = tenantType == RateType.CarrierTripBySystem ? tenantId : null,
+                    ShipperId = tenantType == RateType.ShipperTripBySystem ? tenantId : null,
                     Rate = log.Rate
                 };
 
                 await _ratingLogRepository.InsertAndGetIdAsync(newRate);
-               
+
             }
             else // Need To Check Save Change or Not
                 tenantTripBySystem.Rate = await UpdateAndRecalculateTenantTripRating(log);
-            
+
 
             if (tenantId.HasValue)
                 await RecalculateRatingById(tenantId.Value, typeof(Tenant));
         }
-        
-        private async Task<decimal> UpdateAndRecalculateTenantTripRating(RatingLog rate)
-         {
-             RateType entityRatingType, experienceRatingType, tenantRatingType;
-             if (rate.RateType <= RateType.CarrierByShipper )
-             {
-                 entityRatingType = RateType.DriverByReceiver;
-                 experienceRatingType = RateType.DEByReceiver;
-                 tenantRatingType = RateType.CarrierByShipper;
-             }
-             else
-             {
-                 entityRatingType = RateType.FacilityByDriver;
-                 experienceRatingType = RateType.SEByDriver;
-                 tenantRatingType = RateType.ShipperByCarrier;
-             }
 
-             List<long> tripPoints = await GetPointsIds(rate.TripId, rate.PointId);
-            
+        private async Task<decimal> UpdateAndRecalculateTenantTripRating(RatingLog rate)
+        {
+            RateType entityRatingType, experienceRatingType, tenantRatingType;
+            if (rate.RateType <= RateType.CarrierByShipper)
+            {
+                entityRatingType = RateType.DriverByReceiver;
+                experienceRatingType = RateType.DEByReceiver;
+                tenantRatingType = RateType.CarrierByShipper;
+            }
+            else
+            {
+                entityRatingType = RateType.FacilityByDriver;
+                experienceRatingType = RateType.SEByDriver;
+                tenantRatingType = RateType.ShipperByCarrier;
+            }
+
+            List<long> tripPoints = await GetPointsIds(rate.TripId, rate.PointId);
+
             //Get points ratings
             List<Tuple<decimal, RateType>> pointsRatings = await _ratingLogRepository.GetAll()
                 .Where(x => x.PointId != null && tripPoints.Contains(x.PointId.Value) &&
                             (x.RateType == entityRatingType || x.RateType == experienceRatingType))
                 .Select(x => new Tuple<decimal, RateType>(x.Rate, x.RateType))
                 .ToListAsync();
-            
+
             decimal experienceRatingAverage = pointsRatings
                 .GetEntityRatingAverage(x => x.Item2 == experienceRatingType);
-            
+
             int counter = experienceRatingAverage <= 0 ? 0 : 1;
-            
+
             decimal entityRatingAverage = pointsRatings
                 .GetEntityRatingAverage(x => x.Item2 == entityRatingType);
-            
+
             counter += entityRatingAverage <= 0 ? 0 : 1;
-            
+
             decimal tenantTripRating = rate.Rate;
-            
+
             // if rating log type is not carrier by shipper that's mean
             // we need to get carrier rating from the correct rating log
             if (rate.RateType != tenantRatingType)
                 tenantTripRating = await _ratingLogRepository.GetAll().Where(x =>
                         x.RateType == tenantRatingType && x.TripId == rate.RoutePointFk.ShippingRequestTripId)
                     .Select(x => x.Rate)
-                    .FirstOrDefaultAsync(); 
-            
+                    .FirstOrDefaultAsync();
+
             counter += tenantTripRating <= 0 ? 0 : 1;
-            
-            decimal rateSum = experienceRatingAverage + entityRatingAverage + tenantTripRating; 
+
+            decimal rateSum = experienceRatingAverage + entityRatingAverage + tenantTripRating;
             return Convert.ToDecimal((rateSum / counter).ToString("0.00"));
-         }
+        }
 
         public async Task RecalculateRatingById<TRatingEntityId>(TRatingEntityId id, Type type)
             where TRatingEntityId : IComparable
@@ -199,7 +199,7 @@ namespace TACHYON.Rating
             {
                 User user => await GetAllRatingAsync(driverId: user.Id),
                 Facility facility => await GetAllRatingAsync(RateType.FacilityByDriver, facility.Id),
-                Tenant tenant => await GetAllRatingByTenantEdition(tenant.Id,tenant.EditionId),
+                Tenant tenant => await GetAllRatingByTenantEdition(tenant.Id, tenant.EditionId),
                 _ => null
             };
 
@@ -207,7 +207,7 @@ namespace TACHYON.Rating
             ratingEntity.Rate = Convert.ToDecimal((allRatings.Sum() / allRatings.Count).ToString("0.0"));
             ratingEntity.RateNumber = allRatings.Count;
         }
-        
+
         #endregion
 
         #region helper
@@ -225,21 +225,21 @@ namespace TACHYON.Rating
                 .Select(x => x.Rate)
                 .ToListAsync();
         }
-        
+
         public async Task<bool> IsRateDoneBefore(RatingLog rate)
             => await _ratingLogRepository.GetAll().AsNoTracking()
                 .AnyAsync(RatingLogEquals(rate));
 
-        private async Task CheckIfFinishOffLoadingPoint(RatingLog log)
+        private async Task CheckIfPointCompleted(RatingLog log)
         {
             DisableTenancyFilters();
-            var isRoutPointFinished = await _routePointRepository.GetAll().AsNoTracking()
+            var isRoutPointCompleted = await _routePointRepository.GetAll().AsNoTracking()
                 .WhereIf(log.RateType == RateType.FacilityByDriver,
                     x => x.ShippingRequestTripFk.AssignedDriverUserId == log.DriverId)
-                .AnyAsync(x => x.Id == log.PointId && x.Status >= RoutePointStatus.FinishOffLoadShipment);
+                .AnyAsync(x => x.Id == log.PointId && x.IsComplete);
 
-            if (isRoutPointFinished) return;
-            throw new UserFriendlyException(L("PointNotFoundOrNotFinished"));
+            if (isRoutPointCompleted) return;
+            throw new UserFriendlyException(L("PointNotFoundOrNotCompleted"));
         }
 
         private async Task<int?> GetTenantIdForRate(RatingLog log)
@@ -256,20 +256,20 @@ namespace TACHYON.Rating
                     RateType.CarrierTripBySystem when log.CarrierId.HasValue => log.CarrierId,
                     _ => null
                 };
-            
+
 
             if (!log.PointId.HasValue && !log.TripId.HasValue) return null;
             return await _tripRepository.GetAll().AsNoTracking()
-                .WhereIf(log.TripId.HasValue,x => x.Id == log.TripId)
-                .WhereIf(log.PointId.HasValue,x => x.RoutPoints.Any(i => i.Id == log.PointId))
+                .WhereIf(log.TripId.HasValue, x => x.Id == log.TripId)
+                .WhereIf(log.PointId.HasValue, x => x.RoutPoints.Any(i => i.Id == log.PointId))
                 .Select(x => type == RateType.ShipperTripBySystem
                     ? x.ShippingRequestFk.TenantId
                     : x.ShippingRequestFk.CarrierTenantId)
                 .FirstOrDefaultAsync();
 
         }
-        
-        private async Task<RatingLog> GetTripRating(RateType type ,int? tripId ,long? pointId)
+
+        private async Task<RatingLog> GetTripRating(RateType type, int? tripId, long? pointId)
         {
             if (tripId == null && pointId == null) return null;
             return await _ratingLogRepository
@@ -278,20 +278,20 @@ namespace TACHYON.Rating
                 .WhereIf(pointId != null, x => x.TripId == tripId)
                 .FirstOrDefaultAsync(x => x.RateType == type);
         }
-        
-        private async Task<List<long>> GetPointsIds(int? tripId,long? pointId = null)
+
+        private async Task<List<long>> GetPointsIds(int? tripId, long? pointId = null)
         {
             if (!tripId.HasValue && !pointId.HasValue) return null;
             tripId ??= await _routePointRepository.GetAll().AsNoTracking()
                 .Where(x => x.Id == pointId)
                 .Select(x => x.ShippingRequestTripId)
                 .FirstOrDefaultAsync();
-             
+
             return await _routePointRepository.GetAll().AsNoTracking()
                 .Where(x => x.ShippingRequestTripId == tripId)
                 .Select(x => x.Id).ToListAsync();
         }
-        
+
         private async Task<List<decimal>> GetAllRatingByTenantEdition(int tenantId, int? editionId)
         {
             var shipper = await SettingManager.GetSettingValueAsync(AppSettings.Editions.ShipperEditionId);
@@ -299,16 +299,16 @@ namespace TACHYON.Rating
             if (editionId == int.Parse(shipper))
                 return await GetAllRatingAsync(RateType.ShipperTripBySystem, shipperId: tenantId);
             if (editionId == int.Parse(carrier))
-                return  await GetAllRatingAsync(RateType.CarrierTripBySystem, carrierId: tenantId);
-            
+                return await GetAllRatingAsync(RateType.CarrierTripBySystem, carrierId: tenantId);
+
             return null;
         }
 
-        private static Expression<Func<RatingLog,bool>> RatingLogEquals(RatingLog log) =>
-            ratingLog => log != null && ratingLog.CarrierId == log.CarrierId && 
-                         ratingLog.DriverId == log.DriverId && 
+        private static Expression<Func<RatingLog, bool>> RatingLogEquals(RatingLog log) =>
+            ratingLog => log != null && ratingLog.CarrierId == log.CarrierId &&
+                         ratingLog.DriverId == log.DriverId &&
                          ratingLog.ReceiverId == log.ReceiverId && ratingLog.PointId == log.PointId &&
-                         ratingLog.ShipperId == log.ShipperId && ratingLog.TripId == log.TripId && 
+                         ratingLog.ShipperId == log.ShipperId && ratingLog.TripId == log.TripId &&
                          ratingLog.FacilityId == log.FacilityId && ratingLog.RateType == log.RateType;
 
         #endregion
