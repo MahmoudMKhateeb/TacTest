@@ -146,8 +146,24 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
     }
     this.Point.pickingType = pointType == 'drop' ? PickingType.Dropoff : PickingType.Pickup;
     this.Point.facilityId = pointType == 'drop' ? this.destFacility : this.sourceFacility;
-    this.Point.latitude = this.allFacilities.find((x) => (pointType == 'drop' ? x.id == this.destFacility : x.id == this.sourceFacility))?.lat;
-    this.Point.longitude = this.allFacilities.find((x) => (pointType == 'drop' ? x.id == this.destFacility : x.id == this.sourceFacility))?.long;
+    // this.Point.latitude = this.allFacilities.find((x) => (pointType == 'drop' ? x.id == this.destFacility : x.id == this.sourceFacility))?.lat;
+    // this.Point.longitude = this.allFacilities.find((x) => (pointType == 'drop' ? x.id == this.destFacility : x.id == this.sourceFacility))?.long;
+    this.Point.latitude =
+      this._tripService.currentSourceFacilitiesItems.find((x) => (pointType == 'drop' ? x.id == this.destFacility : x.id == this.sourceFacility))
+        ?.lat == null
+        ? this._tripService.currentDestinationFacilitiesItems.find((x) =>
+            pointType == 'drop' ? x.id == this.destFacility : x.id == this.sourceFacility
+          )?.lat
+        : this._tripService.currentSourceFacilitiesItems.find((x) => (pointType == 'drop' ? x.id == this.destFacility : x.id == this.sourceFacility))
+            ?.lat;
+    this.Point.longitude =
+      this._tripService.currentSourceFacilitiesItems.find((x) => (pointType == 'drop' ? x.id == this.destFacility : x.id == this.sourceFacility))
+        ?.long == null
+        ? this._tripService.currentDestinationFacilitiesItems.find((x) =>
+            pointType == 'drop' ? x.id == this.destFacility : x.id == this.sourceFacility
+          )?.long
+        : this._tripService.currentSourceFacilitiesItems.find((x) => (pointType == 'drop' ? x.id == this.destFacility : x.id == this.sourceFacility))
+            ?.long;
     //sets the long and lat of the point
     this.wayPointsList[pointType == 'drop' ? 1 : 0] = this.Point;
     //sync points list with the cloud
@@ -165,19 +181,12 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
   loadFacilities() {
     console.log('Facilites Loaded From Points');
     this.facilityLoading = true;
-    // this._shippingRequestDDService.allFacilities.subscribe((res) => (this.allFacilities = res));
-    // this._routStepsServiceProxy.getAllFacilitiesForDropdown().subscribe((result) => {
-    //   this.allFacilities = result;
-    //   this.facilityLoading = false;
-    // });
-    this._tripService.currentFacilitiesItems.subscribe((res: DropDownMenu) => {
-      this.facilityLoading = res.isLoading;
-      this.allFacilities = res.items;
-    });
   }
 
   getFacilityNameByid(id: number) {
-    return this.allFacilities?.find((x) => x.id == id)?.displayName;
+    return this._tripService.currentSourceFacilitiesItems?.find((x) => x.id == id) == null
+      ? this._tripService.currentDestinationFacilitiesItems?.find((x) => x.id == id)?.displayName
+      : this._tripService.currentSourceFacilitiesItems?.find((x) => x.id == id)?.displayName;
   }
 
   wayPointsSetter() {

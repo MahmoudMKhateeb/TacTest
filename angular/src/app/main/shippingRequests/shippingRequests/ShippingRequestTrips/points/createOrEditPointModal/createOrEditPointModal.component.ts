@@ -7,6 +7,7 @@ import {
   ReceiverFacilityLookupTableDto,
   ReceiversServiceProxy,
   RoutStepsServiceProxy,
+  FacilitiesServiceProxy,
   ShippingRequestRouteType,
 } from '@shared/service-proxies/service-proxies';
 import { DropDownMenu, TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
@@ -16,6 +17,7 @@ import { PointsService } from '@app/main/shippingRequests/shippingRequests/Shipp
 import { GoodDetailsComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/good-details/good-details.component';
 import { NgForm } from '@angular/forms';
 import { pipe } from '@node_modules/rxjs';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'createOrEditPointModal',
@@ -25,8 +27,9 @@ import { pipe } from '@node_modules/rxjs';
 export class CreateOrEditPointModalComponent extends AppComponentBase implements OnInit, OnDestroy {
   constructor(
     injector: Injector,
-    private _tripService: TripService,
+    public _tripService: TripService,
     private _PointService: PointsService,
+    private _facilitiesServiceProxy: FacilitiesServiceProxy,
     private _receiversServiceProxy: ReceiversServiceProxy,
     private _routStepsServiceProxy: RoutStepsServiceProxy
   ) {
@@ -53,6 +56,9 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
   active = false;
   facilityLoading = false;
   receiversLoading = false;
+  shippingRequestId: number;
+  citySourceId: number;
+  cityDestId: number;
   isAdditionalReceiverEnabled: boolean;
   pointIdForEdit = null;
   usedIn: 'view' | 'createOrEdit';
@@ -68,14 +74,18 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
   }
 
   ngOnInit(): void {
-    this.feature.isEnabled('App.Shipper') ? this.loadFacilities() : 0;
     //take the Route Type From the Shared Service
-    this.tripServiceSubscription$ = this._tripService.currentShippingRequest.subscribe((res) => (this.RouteType = res.shippingRequest.routeTypeId));
+    this.tripServiceSubscription$ = this._tripService.currentShippingRequest.subscribe((res) => {
+      this.RouteType = res.shippingRequest.routeTypeId;
+      this.shippingRequestId = res.shippingRequest.id;
+    });
     //take the PointsList From The Shared Service
     this.pointsServiceSubscription$ = this._PointService.currentWayPointsList.subscribe((res) => (this.wayPointsList = res));
     //Where the using of this Component is coming from
     this.usedInSubscription$ = this._PointService.currentUsedIn.subscribe((res) => (this.usedIn = res));
     console.log('used in from Create Or Edit Point ', this.usedIn);
+
+    this.feature.isEnabled('App.Shipper') ? this.loadFacilities() : 0;
 
     this._PointService.currentSingleWayPoint.subscribe((res) => {
       this.Point = res;
@@ -100,6 +110,8 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
       //this is edit point action
       this.Point = this.wayPointsList[id];
     }
+    this.loadFacilities();
+
     //tell the service that i have this SinglePoint Active Right Now
     this.isAdditionalReceiverEnabled = this.Point.receiverFullName ? true : false;
 
@@ -143,8 +155,14 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
    * Extracts Facility Coordinates for single Point (Map Drawing)
    */
   RouteStepCordSetter() {
-    this.Point.latitude = this.allFacilities.find((x) => x.id == this.Point.facilityId)?.lat;
-    this.Point.longitude = this.allFacilities.find((x) => x.id == this.Point.facilityId)?.long;
+    this.Point.latitude =
+      this._tripService.currentSourceFacilitiesItems.find((x) => x.id == this.Point.facilityId)?.lat == undefined
+        ? this._tripService.currentDestinationFacilitiesItems.find((x) => x.id == this.Point.facilityId)?.lat
+        : this._tripService.currentSourceFacilitiesItems.find((x) => x.id == this.Point.facilityId)?.lat;
+    this.Point.longitude =
+      this._tripService.currentSourceFacilitiesItems.find((x) => x.id == this.Point.facilityId)?.long == undefined
+        ? this._tripService.currentDestinationFacilitiesItems.find((x) => x.id == this.Point.facilityId)?.long
+        : this._tripService.currentSourceFacilitiesItems.find((x) => x.id == this.Point.facilityId)?.long;
   }
 
   /**
@@ -167,11 +185,35 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
    */
   loadFacilities() {
     this.facilityLoading = true;
-    // this._shippingRequestDDService.allFacilities.subscribe((res) => (this.allFacilities = res));
-    this._tripService.currentFacilitiesItems.subscribe((res: DropDownMenu) => {
-      this.facilityLoading = res.isLoading;
-      this.allFacilities = res.items;
-    });
+    if (this.shippingRequestId != null) {
+      this._tripService.currentShippingRequest.subscribe((res) => {
+        this.citySourceId = res.originalCityId;
+        this.cityDestId = res.destinationCityId;
+      });
+    }
+
+    if (this.wayPointsList.length > 0) {
+      this.wayPointsList.forEach((element) => {
+        this._facilitiesServiceProxy.getFacilityForView(element.facilityId).subscribe((r) => {
+          if (r.facility.cityId != null)
+            if (r.facility.cityId == this.cityDestId) this.getFacilities(true);
+            else this.getFacilities(false);
+        });
+      });
+      this.facilityLoading = false;
+    }
+  }
+
+  getFacilities(hideSource: boolean) {
+    if (this.shippingRequestId != null) {
+      this._routStepsServiceProxy.getAllFacilitiesByCityAndTenantForDropdown(this.shippingRequestId).subscribe((result) => {
+        if (hideSource) {
+          this.allFacilities = result.filter((r) => r.cityId != this.citySourceId);
+        } else {
+          this.allFacilities = result;
+        }
+      });
+    }
   }
 
   /**
