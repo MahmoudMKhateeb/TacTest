@@ -41,6 +41,7 @@ namespace TACHYON.Caching
             var caches = _cacheManager.GetAllCaches();
             foreach (var cache in caches)
             {
+                //await cache.ClearAsync();
                 await cache.ClearAsync();
             }
         }
