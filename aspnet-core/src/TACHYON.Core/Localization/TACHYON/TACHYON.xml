@@ -1521,7 +1521,7 @@
 		<text name="RegisterFormUserNameInvalidMessage">Please do not enter your email address as a username.</text>
 		<text name="Reject">Reject</text>
 		<text name="Rejected">Rejected</text>
-		<text name="RejectedOffer"><![CDATA[You offer has been rejected by {rejectedby}]]></text>
+		<text name="RejectedOffer">You offer has been rejected by {rejectedby}</text>
 		<text name="RejectedReason">Rejected reason</text>
 		<text name="RejectionReason">Rejection reason</text>
 		<text name="RejectOffer">Reject</text>
@@ -1718,7 +1718,7 @@
 		<text name="ShippingRequestsCreate">Create Shipping Request</text>
 		<text name="ShippingRequestsEdit">Edit Shipping Request</text>
 		<text name="ShippingRequestSendOfferWhenAddPrice">A new offer has been added to the shipment.</text>
-		<text name="ShippingRequestSendOfferWhenUpdatePrice"><![CDATA[The price has been updated by the carrier {carrier} of the shipment]]></text>
+		<text name="ShippingRequestSendOfferWhenUpdatePrice">The price has been updated by the carrier {carrier} of the shipment</text>
 		<text name="ShippingRequestsHeaderInfo">Shipping requests header info</text>
 		<text name="ShippingRequestStatus">Shipping request status</text>
 		<text name="ShippingRequestStatuses">Shipping request statuses</text>
@@ -2421,22 +2421,6 @@
 		<text name="PickupFacilityAndDropOffFacilityCantBeTheSame">Pickup facility and drop off facility can't be the same</text>
 		<text name="CreateOrEditPoint">Create or Edit Point</text>
 		<text name="SelectADangerousGoodType">Select a Dangerous Good Type</text>
-
-
-		<!--
-		<text name="StartedMovingToLoadingLocation">Started moving to loading location</text>
-		<text name="ArriveToLoadingLocation">Arrive To Loading Location</text>
-		<text name="StartLoading">Start Loading</text>
-		<text name="FinishLoading">Finish Loading</text>
-		<text name="StartedMovingToOfLoadingLocation">Started Moving To Off Loading Location</text>
-		<text name="ArrivedToDestination">Arrived To Destination</text>
-		<text name="StartOffloading">Start Off loading</text>
-		<text name="FinishOffLoadShipment">Finish Off Load Shipment</text>
-		<text name="ReceiverConfirmed">Receiver Confirmed</text>
-		<text name="FinishOffLoadShipmentDeliveryConfirmation">Delivery Confirmation after Finish Off Load Shipment</text>
-		<text name="DeliveryConfirmation">Delivery Confirmation</text>
-		<text name="DeliveryConfirmationReceiverConfirmed">Receiver Confirmed after DeliveryConfirmation</text>
-		-->
 		<text name="WorkFlowNotExist">WorkFlow for current point does not exist</text>
 		<text name="TransactionNotExist">Transaction does not exist</text>
 		<text name="FinishOffLoadShipmentDeliveryConfirmation">Delivery Confirmation after Finish Off Load Shipment</text>
@@ -2494,10 +2478,7 @@
     <text name="CompanyLegalNamePatternError">Company legal name is longer than 3 characters, only English and Arabic letters, numbers, dash and underscores are allowed</text>
     <text name="ThereIsNoDriverAssingdToTrip">There Is No Driver Assingd To Trip</text>
     <text name="TheDriverAlreadyWorkingOnAnotherTrip">The Driver Already Working On Another Trip</text>
-    <text name="TheStartDateOfTripNotCome">The Start Date Of Trip NotC ome</text>
-    <!--<text name="StartOffloading"></text>
-    <text name="ReceiverConfirmed"></text>
-    <text name="DeliveryConfirmation"></text>-->
+    <text name="TheStartDateOfTripNotCome">The Start Date Of Trip Not Come</text>
     <text name="ImportTrucksProcessStart">The process of importing Trucks has begun</text>
     <text name="ImportTrucksUploadFailed">Trucks import process has failed.</text>
     <text name="facilityNameIsAlreadyExistsForThisTenant">Facility Name Is Already Exists For This Tenant</text>
