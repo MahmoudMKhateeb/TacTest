@@ -5,6 +5,7 @@ using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Linq.Extensions;
+using Abp.Runtime.Validation;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -288,6 +289,8 @@ namespace TACHYON.PriceOffers
         public async Task<ListResultDto<GetShippingRequestForPriceOfferListDto>> GetAllShippingRequest(ShippingRequestForPriceOfferGetAllInput input)
         {
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier, AppFeatures.Shipper);
+            await CheckMarketplaceAccess(input.Channel);  
+            
             DisableTenancyFilters();
             List<GetShippingRequestForPriceOfferListDto> query = new List<GetShippingRequestForPriceOfferListDto>();
             if (!input.Channel.HasValue)
@@ -307,6 +310,14 @@ namespace TACHYON.PriceOffers
                 query = await GetFromOffers(input);
             }
             return new ListResultDto<GetShippingRequestForPriceOfferListDto>(query);
+        }
+
+        private async Task CheckMarketplaceAccess(PriceOfferChannel? channel)
+        {
+            if (channel != PriceOfferChannel.MarketPlace) return ;
+            if (AbpSession.TenantId.HasValue && !await FeatureChecker.IsEnabledAsync(AppFeatures.MarketPlace))
+                // return response code => 403,Forbidden
+                throw new AbpAuthorizationException(L("YouDonNotHavePermission"));
         }
 
 
