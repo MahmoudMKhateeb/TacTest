@@ -7,6 +7,7 @@ using Abp.Localization;
 using Abp.ObjectMapping;
 using Abp.Threading;
 using Abp.UI;
+using Hangfire;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -61,6 +62,8 @@ namespace TACHYON.Trucks.Importing.Dto
             _plateTypeRepository = plateTypeRepository;
         }
 
+
+        [AutomaticRetry(Attempts = 1)]
         public override void Execute(ImportTrucksFromExcelJobArgs args)
         {
             var trucks = GetTruckListFromExcelOrNull(args);
@@ -146,7 +149,6 @@ namespace TACHYON.Trucks.Importing.Dto
 
         private async Task CreateTruckAsync(ImportTruckDto input)
         {
-
             var tenantId = CurrentUnitOfWork.GetTenantId();
 
 
@@ -172,10 +174,10 @@ namespace TACHYON.Trucks.Importing.Dto
                 .Select(x => x.Id).FirstOrDefaultAsync();
 
             await _truckManager.CreateAsync(truck);
-
         }
 
-        private async Task ProcessImportTrucksResultAsync(ImportTrucksFromExcelJobArgs args, List<ImportTruckDto> invalidTrucks)
+        private async Task ProcessImportTrucksResultAsync(ImportTrucksFromExcelJobArgs args,
+            List<ImportTruckDto> invalidTrucks)
         {
             if (invalidTrucks.Any())
             {
@@ -184,10 +186,10 @@ namespace TACHYON.Trucks.Importing.Dto
             }
             else
             {
-
                 await _appNotifier.SendMessageAsync(
                     args.User,
-                    new LocalizableString("AllTrucksSuccessfullyImportedFromExcel,PleaseUploadAllMissingDocuments", TACHYONConsts.LocalizationSourceName),
+                    new LocalizableString("AllTrucksSuccessfullyImportedFromExcel,PleaseUploadAllMissingDocuments",
+                        TACHYONConsts.LocalizationSourceName),
                     null,
                     Abp.Notifications.NotificationSeverity.Success);
             }
@@ -205,9 +207,9 @@ namespace TACHYON.Trucks.Importing.Dto
                         null,
                         Abp.Notifications.NotificationSeverity.Warn));
                 }
+
                 uow.Complete();
             }
         }
-
     }
 }
