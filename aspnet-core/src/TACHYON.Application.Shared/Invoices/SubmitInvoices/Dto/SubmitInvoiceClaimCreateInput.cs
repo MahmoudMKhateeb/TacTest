@@ -6,7 +6,7 @@ using TACHYON.CustomValidation;
 
 namespace TACHYON.Invoices.SubmitInvoices.Dto
 {
-    public  class SubmitInvoiceClaimCreateInput:Entity<long>, IDocumentUpload
+    public class SubmitInvoiceClaimCreateInput : Entity<long>, IDocumentUpload
     {
         [Required]
         [UploadBase64File(MaxLength = 1048576 * 100)]

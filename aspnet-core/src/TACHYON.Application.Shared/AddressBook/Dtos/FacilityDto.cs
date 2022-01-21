@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using Abp.Application.Services.Dto;
 using NetTopologySuite.Geometries;
 
@@ -16,7 +15,5 @@ namespace TACHYON.AddressBook.Dtos
         public double Latitude { get; set; }
 
         public int CityId { get; set; }
-
-
     }
 }

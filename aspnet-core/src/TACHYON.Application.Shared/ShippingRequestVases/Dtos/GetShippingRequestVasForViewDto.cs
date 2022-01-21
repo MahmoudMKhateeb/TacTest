@@ -5,6 +5,5 @@
         public ShippingRequestVasDto ShippingRequestVas { get; set; }
 
         public string VasName { get; set; }
-
     }
 }

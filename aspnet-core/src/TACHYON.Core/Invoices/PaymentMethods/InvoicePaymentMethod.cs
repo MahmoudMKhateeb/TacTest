@@ -8,11 +8,9 @@ namespace TACHYON.Invoices.PaymentMethods
     [Table("InvoicePaymentMethods")]
     public class InvoicePaymentMethod : FullAuditedEntity<int>
     {
-        [StringLength(250)]
-        public string DisplayName { get; set; }
+        [StringLength(250)] public string DisplayName { get; set; }
         public InvoicePaymentType PaymentType { get; set; }
 
         public int InvoiceDueDateDays { get; set; }
-
     }
 }

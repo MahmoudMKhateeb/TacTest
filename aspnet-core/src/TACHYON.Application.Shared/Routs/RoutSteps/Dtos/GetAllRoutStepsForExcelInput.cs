@@ -22,7 +22,5 @@ namespace TACHYON.Routs.RoutSteps.Dtos
         public string CityDisplayName2Filter { get; set; }
 
         public string RouteDisplayNameFilter { get; set; }
-
-
     }
 }

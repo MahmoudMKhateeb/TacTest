@@ -7,23 +7,21 @@ using Abp.Domain.Entities;
 
 namespace TACHYON.Vases
 {
-	[Table("VasPrices")]
-    public class VasPrice : FullAuditedEntity , IMustHaveTenant
+    [Table("VasPrices")]
+    public class VasPrice : FullAuditedEntity, IMustHaveTenant
     {
-			public int TenantId { get; set; }
-			
+        public int TenantId { get; set; }
 
-		public virtual double? Price { get; set; }
-		
-		public virtual int? MaxAmount { get; set; }
-		
-		public virtual int? MaxCount { get; set; }
-		
 
-		public virtual int VasId { get; set; }
-		
-        [ForeignKey("VasId")]
-		public Vas VasFk { get; set; }
-		
+        public virtual double? Price { get; set; }
+
+        public virtual int? MaxAmount { get; set; }
+
+        public virtual int? MaxCount { get; set; }
+
+
+        public virtual int VasId { get; set; }
+
+        [ForeignKey("VasId")] public Vas VasFk { get; set; }
     }
 }

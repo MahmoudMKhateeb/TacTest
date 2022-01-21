@@ -103,18 +103,22 @@ namespace TACHYON.Authorization.Impersonation
                 throw new UserFriendlyException(L("NotImpersonatedLoginErrorMessage"));
             }
 
-            return GenerateImpersonationTokenAsync(AbpSession.ImpersonatorTenantId, AbpSession.ImpersonatorUserId.Value, true);
+            return GenerateImpersonationTokenAsync(AbpSession.ImpersonatorTenantId, AbpSession.ImpersonatorUserId.Value,
+                true);
         }
 
         private void CheckCurrentTenant(int? tenantId)
         {
             if (AbpSession.TenantId != tenantId)
             {
-                throw new Exception($"Current tenant is different than given tenant. AbpSession.TenantId: {AbpSession.TenantId}, given tenantId: {tenantId}");
+                throw new Exception(
+                    $"Current tenant is different than given tenant. AbpSession.TenantId: {AbpSession.TenantId}, given tenantId: {tenantId}");
             }
         }
 
-        private async Task<string> GenerateImpersonationTokenAsync(int? tenantId, long userId, bool isBackToImpersonator)
+        private async Task<string> GenerateImpersonationTokenAsync(int? tenantId,
+            long userId,
+            bool isBackToImpersonator)
         {
             //Create a cache item
             var cacheItem = new ImpersonationCacheItem(

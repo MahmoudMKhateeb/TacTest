@@ -21,11 +21,8 @@ namespace TACHYON.Caching
         public ListResultDto<CacheDto> GetAllCaches()
         {
             var caches = _cacheManager.GetAllCaches()
-                                        .Select(cache => new CacheDto
-                                        {
-                                            Name = cache.Name
-                                        })
-                                        .ToList();
+                .Select(cache => new CacheDto { Name = cache.Name })
+                .ToList();
 
             return new ListResultDto<CacheDto>(caches);
         }

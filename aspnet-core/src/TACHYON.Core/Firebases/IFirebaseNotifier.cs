@@ -9,8 +9,9 @@ namespace TACHYON.Firebases
     public interface IFirebaseNotifier : ITransientDependency
     {
         FirebaseMessaging messaging { get; set; }
-        Task PushNotification(string notificationName, NotificationData data, params long[] userIds);
 
-
+        Task PushNotification(string notificationName,
+            NotificationData data,
+            params long[] userIds);
     }
 }

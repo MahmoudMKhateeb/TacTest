@@ -20,7 +20,6 @@ namespace TACHYON.Authorization.Roles
                 roleRepository,
                 rolePermissionSettingRepository)
         {
-
         }
     }
 }

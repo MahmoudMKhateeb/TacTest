@@ -19,6 +19,5 @@ namespace TACHYON.Shipping.ShippingTypes
         //Task CreateOrEdit(CreateOrEditShippingTypeDto input);
 
         //Task Delete(EntityDto input);
-
     }
 }

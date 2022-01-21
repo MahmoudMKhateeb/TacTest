@@ -15,7 +15,6 @@ namespace TACHYON.Cities
     [Audited]
     public class City : FullAuditedEntity, IMultiLingualEntity<CitiesTranslation>
     {
-
         [Required]
         [StringLength(CityConsts.MaxDisplayNameLength, MinimumLength = CityConsts.MinDisplayNameLength)]
         public virtual string DisplayName { get; set; }
@@ -32,12 +31,9 @@ namespace TACHYON.Cities
         public Point Location { get; set; }
         public virtual int CountyId { get; set; }
 
-        [ForeignKey("CountyId")]
-        public County CountyFk { get; set; }
+        [ForeignKey("CountyId")] public County CountyFk { get; set; }
         public bool IsActive { get; set; } = true;
 
         public ICollection<CitiesTranslation> Translations { get; set; }
-
-
     }
 }

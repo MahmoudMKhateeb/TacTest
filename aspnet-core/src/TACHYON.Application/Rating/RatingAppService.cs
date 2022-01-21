@@ -28,7 +28,14 @@ namespace TACHYON.Rating
         private readonly TenantManager _tenantManager;
         private readonly IRepository<Facility, long> _facilityRepository;
         private readonly RatingLogManager _ratingLogManager;
-        public RatingAppService(IRepository<RatingLog, long> ratingRepository, IRepository<ShippingRequestTrip> shippingRequestTrip, IRepository<RoutPoint, long> routePointRepository, UserManager userManager, TenantManager tenantManager, IRepository<Facility, long> facilityRepository, RatingLogManager ratingLogManager)
+
+        public RatingAppService(IRepository<RatingLog, long> ratingRepository,
+            IRepository<ShippingRequestTrip> shippingRequestTrip,
+            IRepository<RoutPoint, long> routePointRepository,
+            UserManager userManager,
+            TenantManager tenantManager,
+            IRepository<Facility, long> facilityRepository,
+            RatingLogManager ratingLogManager)
         {
             _ratingRepository = ratingRepository;
             _shippingRequestTrip = shippingRequestTrip;
@@ -38,14 +45,17 @@ namespace TACHYON.Rating
             _facilityRepository = facilityRepository;
             _ratingLogManager = ratingLogManager;
         }
+
         #region CarrierRating
+
         [RequiresFeature(AppFeatures.Shipper)]
         public async Task CreateCarrierRatingByShipper(CreateCarrierRatingByShipperDto input)
         {
             var createdRatingLog = ObjectMapper.Map<RatingLog>(input);
             createdRatingLog.ShipperId = AbpSession.TenantId;
             createdRatingLog.RateType = RateType.CarrierByShipper;
-            createdRatingLog.CarrierId = await GetTripAsync(createdRatingLog, x => x.ShippingRequestFk.CarrierTenantId);;
+            createdRatingLog.CarrierId = await GetTripAsync(createdRatingLog, x => x.ShippingRequestFk.CarrierTenantId);
+            ;
             await _ratingLogManager.CreateRating(createdRatingLog);
         }
 
@@ -87,7 +97,7 @@ namespace TACHYON.Rating
             shipperRating.RateType = RateType.ShipperByCarrier;
             shipperRating.CarrierId = AbpSession.TenantId;
             shipperRating.ShipperId = await GetTripAsync(shipperRating, x => x.ShippingRequestFk.TenantId);
-            
+
             await _ratingLogManager.CreateRating(shipperRating);
         }
 

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
-
 using NetTopologySuite.Geometries;
 using Abp.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -11,18 +10,16 @@ namespace TACHYON.Routs.RoutPoints
 {
     public class RouteTransitionManager : TACHYONDomainServiceBase
     {
-
         private readonly IRepository<RoutePointTransition> _RoutePointTransitionRepository;
-        private readonly IRepository<RoutPoint,long> _RoutPointRepository;
+        private readonly IRepository<RoutPoint, long> _RoutPointRepository;
 
 
         List<RoutPoint> RoutPoints;
+
         public RouteTransitionManager(IRepository<RoutePointTransition> RoutePointTransitionRepository)
         {
             _RoutePointTransitionRepository = RoutePointTransitionRepository;
         }
-
-        
 
 
         //public void Start(long RequestId)
@@ -47,7 +44,7 @@ namespace TACHYON.Routs.RoutPoints
                 BuildTransition(PointTo);
             }
 
-           await _RoutePointTransitionRepository.InsertAsync(PointTransition);
+            await _RoutePointTransitionRepository.InsertAsync(PointTransition);
         }
 
         private RoutPoint FindClosestPoint(RoutPoint p)
@@ -63,8 +60,10 @@ namespace TACHYON.Routs.RoutPoints
                     ClosestPoint = point;
                 }
             }
+
             return ClosestPoint;
         }
+
         private double DistanceTo(RoutPoint p1, RoutPoint p2)
         {
             double rlat1 = Math.PI * p1.FacilityFk.Location.X / 180;
@@ -81,7 +80,4 @@ namespace TACHYON.Routs.RoutPoints
             return dist;
         }
     }
-
 }
-
-

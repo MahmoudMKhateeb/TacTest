@@ -39,20 +39,25 @@ namespace TACHYON.Web.Startup.ExternalLoginInfoProviders
 
         protected override bool TenantHasSettings()
         {
-            var settingValue = _settingManager.GetSettingValueForTenant(AppSettings.ExternalLoginProvider.Tenant.Microsoft, _abpSession.TenantId.Value);
+            var settingValue =
+                _settingManager.GetSettingValueForTenant(AppSettings.ExternalLoginProvider.Tenant.Microsoft,
+                    _abpSession.TenantId.Value);
             return !settingValue.IsNullOrWhiteSpace();
         }
 
         protected override ExternalLoginProviderInfo GetTenantInformation()
         {
-            string settingValue = _settingManager.GetSettingValueForTenant(AppSettings.ExternalLoginProvider.Tenant.Microsoft, _abpSession.TenantId.Value);
+            string settingValue =
+                _settingManager.GetSettingValueForTenant(AppSettings.ExternalLoginProvider.Tenant.Microsoft,
+                    _abpSession.TenantId.Value);
             var settings = settingValue.FromJsonString<MicrosoftExternalLoginProviderSettings>();
             return CreateExternalLoginInfo(settings);
         }
 
         protected override ExternalLoginProviderInfo GetHostInformation()
         {
-            string settingValue = _settingManager.GetSettingValueForApplication(AppSettings.ExternalLoginProvider.Host.Microsoft);
+            string settingValue =
+                _settingManager.GetSettingValueForApplication(AppSettings.ExternalLoginProvider.Host.Microsoft);
             var settings = settingValue.FromJsonString<MicrosoftExternalLoginProviderSettings>();
             return CreateExternalLoginInfo(settings);
         }

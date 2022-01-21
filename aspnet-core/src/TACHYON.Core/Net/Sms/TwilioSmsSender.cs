@@ -29,8 +29,14 @@ namespace TACHYON.Net.Sms
             return true;
         }
 
-        public Task<bool> SendReceiverSmsAsync(string number, DateTime date, string shipperName, string driverName,
-            string driverPhone, string waybillNumber, string code, string link)
+        public Task<bool> SendReceiverSmsAsync(string number,
+            DateTime date,
+            string shipperName,
+            string driverName,
+            string driverPhone,
+            string waybillNumber,
+            string code,
+            string link)
         {
             /* Implement this service to send SMS to users (can be used for two factor auth). */
 

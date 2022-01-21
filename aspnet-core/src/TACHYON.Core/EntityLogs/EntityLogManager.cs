@@ -27,7 +27,8 @@ namespace TACHYON.EntityLogs
         private readonly IRepository<EntityChangeSet, long> _lookupChangeSetRepository;
 
         public EntityLogManager(IEntitySnapshotManager snapshotManager,
-            IRepository<EntityLog, Guid> logRepository, IEntityChangeSetReasonProvider reasonProvider,
+            IRepository<EntityLog, Guid> logRepository,
+            IEntityChangeSetReasonProvider reasonProvider,
             IRepository<EntityChange, long> lookupEntityChangeRepository,
             IRepository<EntityChangeSet, long> lookupChangeSetRepository)
         {
@@ -44,20 +45,16 @@ namespace TACHYON.EntityLogs
         // todo Publish Entity Log When Created // InProgress
 
 
-
         public async Task CreateEntityLog(EntityChange entityChange)
         {
             const string userId = "UserId", tenantId = "TenantId", reason = "Reason"; // Just Used As Flag
 
             DisableTenancyFilters();
             var additionalLogData = await (from changeSet in _lookupChangeSetRepository.GetAll()
-                                           where changeSet.Id == entityChange.EntityChangeSetId
-                                           select new Dictionary<string, object>()
+                where changeSet.Id == entityChange.EntityChangeSetId
+                select new Dictionary<string, object>()
                 {
-                    {tenantId,changeSet.TenantId},
-                    {userId,changeSet.UserId},
-                    {reason,changeSet.Reason},
-
+                    { tenantId, changeSet.TenantId }, { userId, changeSet.UserId }, { reason, changeSet.Reason },
                 }).FirstOrDefaultAsync();
 
             EntityLogTransaction logTransaction;
@@ -66,7 +63,8 @@ namespace TACHYON.EntityLogs
                 logTransaction = SmartEnum.FromName<EntityLogTransaction>(additionalLogData[reason].ToString());
             }
             catch (InvalidOperationException e)
-            { // We Need To Handle The Exception And Get The Default Value
+            {
+                // We Need To Handle The Exception And Get The Default Value
                 logTransaction = EntityLogTransaction.DefaultLogTransaction;
             }
 
@@ -80,16 +78,17 @@ namespace TACHYON.EntityLogs
                 CreatorUserId = (long?)additionalLogData[userId],
                 TenantId = (int?)additionalLogData[tenantId],
                 LogTransaction = logTransaction,
-                Data = FormatChangedPropertiesData(entityChange.PropertyChanges, Type.GetType(entityChange.EntityTypeFullName))
+                Data = FormatChangedPropertiesData(entityChange.PropertyChanges,
+                    Type.GetType(entityChange.EntityTypeFullName))
             };
 
             await _logRepository.InsertAsync(log);
 
             await CurrentUnitOfWork.SaveChangesAsync();
-
         }
 
-        private static string FormatChangedPropertiesData(IEnumerable<EntityPropertyChange> propertyChanges, Type entityType)
+        private static string FormatChangedPropertiesData(IEnumerable<EntityPropertyChange> propertyChanges,
+            Type entityType)
         {
             var data = new Dictionary<string, Dictionary<string, string>>();
 
@@ -105,8 +104,13 @@ namespace TACHYON.EntityLogs
                     data.Add(propertyChange.PropertyName, subData);
                     continue;
                 }
-                var mNewValue = entityType.AssemblyQualifiedName.GetStringOfPropertyValue(propertyChange.PropertyName, propertyChange.NewValue);
-                var mOriginalValue = entityType.AssemblyQualifiedName.GetStringOfPropertyValue(propertyChange.PropertyName, propertyChange.OriginalValue);
+
+                var mNewValue =
+                    entityType.AssemblyQualifiedName.GetStringOfPropertyValue(propertyChange.PropertyName,
+                        propertyChange.NewValue);
+                var mOriginalValue =
+                    entityType.AssemblyQualifiedName.GetStringOfPropertyValue(propertyChange.PropertyName,
+                        propertyChange.OriginalValue);
                 subData.Add(nameof(propertyChange.NewValue), mNewValue);
                 subData.Add(nameof(propertyChange.OriginalValue), mOriginalValue);
                 data.Add(propertyChange.PropertyName, subData);
@@ -117,14 +121,10 @@ namespace TACHYON.EntityLogs
 
         // Don't Use it In Foreach loop Plz..
         public IQueryable<EntityLog> GetAllEntityLogs<TEntity, TKey>(string coreType, string coreId)
-        where TEntity : FullAuditedEntity<TKey>
+            where TEntity : FullAuditedEntity<TKey>
             => _logRepository.GetAll().AsNoTracking()
                 .Where(x => x.Core.Equals(coreType)
                             && x.CoreId.Equals(coreId))
                 .OrderByDescending(x => x.CreationTime);
-
-
-
     }
-
 }

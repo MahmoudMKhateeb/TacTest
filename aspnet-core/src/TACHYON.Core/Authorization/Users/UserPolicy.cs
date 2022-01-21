@@ -29,7 +29,8 @@ namespace TACHYON.Authorization.Users
             var currentUserCount = await _userRepository.CountAsync();
             if (currentUserCount >= maxUserCount)
             {
-                throw new UserFriendlyException(L("MaximumUserCount_Error_Message"), L("MaximumUserCount_Error_Detail", maxUserCount));
+                throw new UserFriendlyException(L("MaximumUserCount_Error_Message"),
+                    L("MaximumUserCount_Error_Detail", maxUserCount));
             }
         }
     }

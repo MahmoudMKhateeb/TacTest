@@ -6,9 +6,8 @@ using TACHYON.Invoices.Balances.Dto;
 
 namespace TACHYON.Invoices.Balances.Exporting
 {
-   public interface IBalanceRechargeExcelExporter
+    public interface IBalanceRechargeExcelExporter
     {
         FileDto ExportToFile(List<BalanceRechargeListDto> balanceRecharges);
-
     }
 }

@@ -14,6 +14,7 @@ using TACHYON.Common.Dto;
 using TACHYON.Dto;
 using TACHYON.Invoices.Periods.Dto;
 using TACHYON.Invoices.Periods.Exporting;
+
 namespace TACHYON.Invoices.Periods
 {
     [AbpAuthorize(AppPermissions.Pages_Invoices)]
@@ -23,6 +24,7 @@ namespace TACHYON.Invoices.Periods
         private readonly IInvoicePeriodExport _export;
         private readonly InvoiceManager _invoiceManager;
         private readonly IHostApplicationLifetime _appLifetime;
+
         public InvoicePeriodAppService(
             IRepository<InvoicePeriod> PeriodRepository,
             IInvoicePeriodExport export,
@@ -34,35 +36,37 @@ namespace TACHYON.Invoices.Periods
             _invoiceManager = invoiceManager;
             _appLifetime = appLifetime;
         }
-        [AbpAuthorize(AppPermissions.Pages_Administration_Host_Invoices_Periods)]
 
+        [AbpAuthorize(AppPermissions.Pages_Administration_Host_Invoices_Periods)]
         public ListResultDto<InvoicePeriodDto> GetAll(FilterInput input)
         {
-
-
             return new ListResultDto<InvoicePeriodDto>(GetData(input));
         }
 
         public PeriodCommonDto GetAllCommon()
         {
-            return new PeriodCommonDto { Months = Dates.DateHeleper.MonthNamesList(), Weeks = Dates.DateHeleper.WeeksDayNamesList() };
-
+            return new PeriodCommonDto
+            {
+                Months = Dates.DateHeleper.MonthNamesList(), Weeks = Dates.DateHeleper.WeeksDayNamesList()
+            };
         }
 
         [AbpAuthorize(AppPermissions.Pages_Administration_Host_Invoices_Periods)]
-
         public async Task CreateEdit(InvoicePeriodDto input)
         {
-            var Period = await _PeriodRepository.FirstOrDefaultAsync(x => (!input.Id.HasValue || x.Id != (int)input.Id) && x.DisplayName.ToLower() == input.DisplayName.Trim().ToLower());
+            var Period = await _PeriodRepository.FirstOrDefaultAsync(x =>
+                (!input.Id.HasValue || x.Id != (int)input.Id) &&
+                x.DisplayName.ToLower() == input.DisplayName.Trim().ToLower());
             if (Period != null)
             {
                 throw new UserFriendlyException(L("DisplayNameExists"));
             }
+
             if (!input.Id.HasValue)
             {
                 await Create(input);
 
-                await Task.Run(() => {_appLifetime.StopApplication();});
+                await Task.Run(() => { _appLifetime.StopApplication(); });
             }
             else
             {
@@ -71,20 +75,18 @@ namespace TACHYON.Invoices.Periods
         }
 
         [AbpAuthorize(AppPermissions.Pages_Administration_Host_Invoices_Period_Create)]
-
         public async Task Create(InvoicePeriodDto input)
         {
             var Period = ObjectMapper.Map<InvoicePeriod>(input);
 
             await _PeriodRepository.InsertAsync(Period);
 
-            if (Period.Enabled & Period.PeriodType != InvoicePeriodType.PayInAdvance && Period.PeriodType != InvoicePeriodType.PayuponDelivery)
-            await _invoiceManager.CreateTriggerAsync(Period);
-
+            if (Period.Enabled & Period.PeriodType != InvoicePeriodType.PayInAdvance &&
+                Period.PeriodType != InvoicePeriodType.PayuponDelivery)
+                await _invoiceManager.CreateTriggerAsync(Period);
         }
 
         [AbpAuthorize(AppPermissions.Pages_Administration_Host_Invoices_Period_Edit)]
-
         protected async Task Update(InvoicePeriodDto input)
         {
             var Period = await _PeriodRepository.FirstOrDefaultAsync((int)input.Id);
@@ -92,7 +94,6 @@ namespace TACHYON.Invoices.Periods
             ObjectMapper.Map(input, Period);
 
             await _invoiceManager.UpdateTriggerAsync(Period);
-
         }
 
         [AbpAuthorize(AppPermissions.Pages_Administration_Host_Invoices_Period_Delete)]
@@ -102,20 +103,18 @@ namespace TACHYON.Invoices.Periods
         }
 
 
-
         [AbpAuthorize(AppPermissions.Pages_Administration_Host_Invoices_Period_Enabled)]
         public async Task Enabled(int PeriodId, bool IsEnabled)
         {
             var Period = await _PeriodRepository.FirstOrDefaultAsync(PeriodId);
             if (Period != null)
             {
-
                 Period.Enabled = IsEnabled;
 
                 await _invoiceManager.CreateTriggerAsync(Period);
-
             }
         }
+
         [AbpAuthorize(AppPermissions.Pages_Administration_Host_Invoices_Periods)]
         public FileDto ExportToExcel(FilterInput input)
         {
@@ -126,14 +125,11 @@ namespace TACHYON.Invoices.Periods
         private List<InvoicePeriodDto> GetData(FilterInput input)
         {
             var Results = _PeriodRepository
-                            .GetAll()
-                            .WhereIf(!input.Filter.IsNullOrEmpty(), p => p.DisplayName.Contains(input.Filter))
-                            .OrderBy(p => p.PeriodType);
+                .GetAll()
+                .WhereIf(!input.Filter.IsNullOrEmpty(), p => p.DisplayName.Contains(input.Filter))
+                .OrderBy(p => p.PeriodType);
 
             return ObjectMapper.Map<List<InvoicePeriodDto>>(Results);
         }
-
-
-  
     }
 }

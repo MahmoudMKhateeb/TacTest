@@ -6,8 +6,6 @@ namespace TACHYON.Shipping.ShippingRequestBids
 {
     public interface IHasIsCanceled
     {
-         bool IsCancled { get; set; }
-
-
+        bool IsCancled { get; set; }
     }
 }

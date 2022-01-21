@@ -6,7 +6,7 @@ using TACHYON.Localization.Dto;
 
 namespace TACHYON.Localization
 {
-    public interface IAppLocalizationAppService: IApplicationService
+    public interface IAppLocalizationAppService : IApplicationService
     {
         Task<PagedResultDto<AppLocalizationListDto>> GetAll(AppLocalizationFilterInput Input);
         Task<AppLocalizationForViewDto> GetForView(EntityDto input);
@@ -18,6 +18,5 @@ namespace TACHYON.Localization
         Task Restore();
         Task Generate();
         Task CreateOrUpdateKeyLog(TerminologieMonitorInput input);
-
     }
 }

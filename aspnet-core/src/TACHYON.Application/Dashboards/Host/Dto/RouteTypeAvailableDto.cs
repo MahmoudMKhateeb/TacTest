@@ -11,7 +11,5 @@ namespace TACHYON.Dashboards.Host.Dto
         public string RouteType { get; set; }
 
         public int AvailableRouteTypesCount { get; set; }
-
     }
-
 }

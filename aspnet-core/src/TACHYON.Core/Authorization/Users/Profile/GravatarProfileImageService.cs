@@ -28,7 +28,8 @@ namespace TACHYON.Authorization.Users.Profile
             var user = await _userManager.GetUserAsync(userIdentifier);
             using (var client = new HttpClient())
             {
-                using (var response = await client.GetAsync($"https://www.gravatar.com/avatar/{GetMd5Hash(user.EmailAddress)}"))
+                using (var response =
+                       await client.GetAsync($"https://www.gravatar.com/avatar/{GetMd5Hash(user.EmailAddress)}"))
                 {
                     var imageBytes = await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
                     return Convert.ToBase64String(imageBytes);

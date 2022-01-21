@@ -10,19 +10,18 @@ namespace TACHYON.Trucks.TruckStatusesTranslations
     [Table("TruckStatusesTranslations")]
     public class TruckStatusesTranslation : FullAuditedEntity, IEntityTranslation<TruckStatus, long>
     {
-
         [Required]
-        [StringLength(TruckStatusesTranslationConsts.MaxTranslatedDisplayNameLength, MinimumLength = TruckStatusesTranslationConsts.MinTranslatedDisplayNameLength)]
+        [StringLength(TruckStatusesTranslationConsts.MaxTranslatedDisplayNameLength,
+            MinimumLength = TruckStatusesTranslationConsts.MinTranslatedDisplayNameLength)]
         public virtual string TranslatedDisplayName { get; set; }
 
         [Required]
-        [StringLength(TruckStatusesTranslationConsts.MaxLanguageLength, MinimumLength = TruckStatusesTranslationConsts.MinLanguageLength)]
+        [StringLength(TruckStatusesTranslationConsts.MaxLanguageLength,
+            MinimumLength = TruckStatusesTranslationConsts.MinLanguageLength)]
         public virtual string Language { get; set; }
 
         public virtual long CoreId { get; set; }
 
-        [ForeignKey("CoreId")]
-        public TruckStatus Core { get; set; }
-
+        [ForeignKey("CoreId")] public TruckStatus Core { get; set; }
     }
 }

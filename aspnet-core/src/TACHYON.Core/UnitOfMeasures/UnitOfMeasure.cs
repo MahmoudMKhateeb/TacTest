@@ -12,11 +12,13 @@ namespace TACHYON.UnitOfMeasures
     {
         // todo Setup This Entity To Be MultiLingual Entity
 
-        [StringLength(UnitOfMeasureConsts.MaxDisplayNameLength, MinimumLength = UnitOfMeasureConsts.MinDisplayNameLength)]
+        [StringLength(UnitOfMeasureConsts.MaxDisplayNameLength,
+            MinimumLength = UnitOfMeasureConsts.MinDisplayNameLength)]
         public virtual string DisplayName { get; set; }
 
         [Required]
-        [StringLength(UnitOfMeasureConsts.MaxDisplayNameLength, MinimumLength = UnitOfMeasureConsts.MinDisplayNameLength)]
+        [StringLength(UnitOfMeasureConsts.MaxDisplayNameLength,
+            MinimumLength = UnitOfMeasureConsts.MinDisplayNameLength)]
         public virtual string Key { get; set; }
     }
 }

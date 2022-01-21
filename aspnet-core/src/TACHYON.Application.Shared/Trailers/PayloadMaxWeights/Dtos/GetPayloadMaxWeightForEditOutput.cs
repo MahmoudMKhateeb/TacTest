@@ -3,7 +3,5 @@
     public class GetPayloadMaxWeightForEditOutput
     {
         public CreateOrEditPayloadMaxWeightDto PayloadMaxWeight { get; set; }
-
-
     }
 }

@@ -18,7 +18,5 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public string GoodsDetailNameFilter { get; set; }
 
         public string RouteDisplayNameFilter { get; set; }
-
-
     }
 }

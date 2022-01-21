@@ -12,7 +12,6 @@ namespace TACHYON.Invoices.SubmitInvoices.Dto
 
         public DateTime? ToDate { get; set; }
         public SubmitInvoiceStatus? Status { get; set; }
-
     }
 
     public class GetAllSubmitInvoicesInput

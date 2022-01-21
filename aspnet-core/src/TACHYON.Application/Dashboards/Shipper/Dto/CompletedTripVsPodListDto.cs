@@ -12,7 +12,5 @@ namespace TACHYON.Dashboards.Shipper.Dto
     {
         public List<RequestsListPerMonthDto> CompletedTrips { get; set; }
         public List<RequestsListPerMonthDto> PODTrips { get; set; }
-
     }
-
 }

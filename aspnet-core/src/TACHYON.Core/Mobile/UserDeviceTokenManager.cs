@@ -8,19 +8,22 @@ using TACHYON.Mobile.Dtos;
 
 namespace TACHYON.Mobile
 {
-
     public class UserDeviceTokenManager : TACHYONDomainServiceBase
     {
         private readonly IRepository<UserDeviceToken> _userDeviceTokenRepository;
         private readonly TachyonAppSession _mobileAppSession;
-        public UserDeviceTokenManager(IRepository<UserDeviceToken> userDeviceTokenRepository, TachyonAppSession mobileAppSession)
+
+        public UserDeviceTokenManager(IRepository<UserDeviceToken> userDeviceTokenRepository,
+            TachyonAppSession mobileAppSession)
         {
             _userDeviceTokenRepository = userDeviceTokenRepository;
             _mobileAppSession = mobileAppSession;
         }
+
         public async Task CreateOrEdit(UserDeviceTokenDto Input)
         {
-            var token = await _userDeviceTokenRepository.FirstOrDefaultAsync(x => x.UserId == Input.UserId && x.DeviceId == Input.DeviceId);
+            var token = await _userDeviceTokenRepository.FirstOrDefaultAsync(x =>
+                x.UserId == Input.UserId && x.DeviceId == Input.DeviceId);
             if (token != null)
                 ObjectMapper.Map(Input, token);
             else
@@ -38,11 +41,10 @@ namespace TACHYON.Mobile
             if (deviceId.IsNullOrEmpty() || deviceToken.IsNullOrEmpty())
                 return;
 
-            var token = await _userDeviceTokenRepository.FirstOrDefaultAsync(x => x.DeviceId == deviceId && x.Token == deviceToken);
+            var token = await _userDeviceTokenRepository.FirstOrDefaultAsync(x =>
+                x.DeviceId == deviceId && x.Token == deviceToken);
             if (token != null)
                 await _userDeviceTokenRepository.DeleteAsync(token);
-
         }
-
     }
 }

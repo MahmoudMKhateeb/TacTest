@@ -1,5 +1,4 @@
-﻿
-using Abp.Application.Services.Dto;
+﻿using Abp.Application.Services.Dto;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -7,7 +6,6 @@ namespace TACHYON.Routs.Dtos
 {
     public class CreateOrEditRouteDto : EntityDto<int?>
     {
-
         [StringLength(RouteConsts.MaxDisplayNameLength, MinimumLength = RouteConsts.MinDisplayNameLength)]
         public string DisplayName { get; set; }
 
@@ -22,10 +20,7 @@ namespace TACHYON.Routs.Dtos
         public virtual long? OriginPortId { get; set; }
 
         public virtual long? DestinationPortId { get; set; }
-        [Required]
-        public virtual int OriginCityId { get; set; }
-        [Required]
-        public virtual int DestinationCityId { get; set; }
-
+        [Required] public virtual int OriginCityId { get; set; }
+        [Required] public virtual int DestinationCityId { get; set; }
     }
 }

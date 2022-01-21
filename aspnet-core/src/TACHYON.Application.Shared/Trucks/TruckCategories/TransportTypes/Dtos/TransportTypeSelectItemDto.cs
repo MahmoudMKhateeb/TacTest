@@ -6,6 +6,5 @@ namespace TACHYON.Trucks.TruckCategories.TransportTypes.Dtos
 
     public class TransportTypeSelectItemDto : SelectItemDto, ISelectItemDto
     {
-
     }
 }

@@ -12,6 +12,5 @@ namespace TACHYON.Trucks
 {
     public interface ITrucksAppService : IApplicationService
     {
-
     }
 }

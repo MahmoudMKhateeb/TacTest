@@ -1,5 +1,4 @@
-﻿
-using Abp.Application.Services.Dto;
+﻿using Abp.Application.Services.Dto;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -12,6 +11,5 @@ namespace TACHYON.Trucks.Dtos
         [Required]
         [StringLength(TruckStatusConsts.MaxDisplayNameLength, MinimumLength = TruckStatusConsts.MinDisplayNameLength)]
         public string DisplayName { get; set; }
-
     }
 }

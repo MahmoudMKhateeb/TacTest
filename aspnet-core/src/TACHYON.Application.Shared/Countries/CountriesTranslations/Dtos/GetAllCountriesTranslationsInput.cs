@@ -12,6 +12,5 @@ namespace TACHYON.Countries.CountriesTranslations.Dtos
         public string LanguageFilter { get; set; }
 
         public string CountyDisplayNameFilter { get; set; }
-
     }
 }

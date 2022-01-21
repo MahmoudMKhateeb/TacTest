@@ -4,8 +4,6 @@ using System.Text;
 
 namespace TACHYON.Shipping.ShippingRequests.Dtos
 {
-
-
     public class GetSingleDropWaybillOutput
     {
         //Base Info
@@ -27,10 +25,12 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public string SenderCompanyName { get; set; }
         public string SenderContactName { get; set; }
         public string SenderMobile { get; set; }
+
         /// <summary>
         /// إسم العميل
         /// </summary>
         public string ClientName { get; set; }
+
         // Receiver Details info
         public string ReceiverCompanyName { get; set; }
         public string ReceiverContactName { get; set; }

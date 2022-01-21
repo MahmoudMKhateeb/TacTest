@@ -18,7 +18,8 @@ namespace TACHYON.Web.Security.Recaptcha
         private readonly IreCAPTCHASiteVerifyV3 _reCAPTCHASiteVerifyV3;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public RecaptchaValidator(IreCAPTCHASiteVerifyV3 reCAPTCHASiteVerifyV3, IHttpContextAccessor httpContextAccessor)
+        public RecaptchaValidator(IreCAPTCHASiteVerifyV3 reCAPTCHASiteVerifyV3,
+            IHttpContextAccessor httpContextAccessor)
         {
             _reCAPTCHASiteVerifyV3 = reCAPTCHASiteVerifyV3;
             _httpContextAccessor = httpContextAccessor;

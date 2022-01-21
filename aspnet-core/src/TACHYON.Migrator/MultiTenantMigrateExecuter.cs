@@ -38,12 +38,15 @@ namespace TACHYON.Migrator
 
         public void Run(bool skipConnVerification, bool isDockerEnabled = false)
         {
-            var hostConnStr = _connectionStringResolver.GetNameOrConnectionString(new ConnectionStringResolveArgs(MultiTenancySides.Host));
+            var hostConnStr =
+                _connectionStringResolver.GetNameOrConnectionString(
+                    new ConnectionStringResolveArgs(MultiTenancySides.Host));
             if (hostConnStr.IsNullOrWhiteSpace())
             {
                 Log.Write("Configuration file should contain a connection string named 'Default'");
                 return;
             }
+
             Log.Write("Host database: " + ConnectionStringHelper.GetConnectionString(hostConnStr));
 
             if (!skipConnVerification && !isDockerEnabled)
@@ -102,7 +105,8 @@ namespace TACHYON.Migrator
                 }
                 else
                 {
-                    Log.Write("This database has already migrated before (you have more than one tenant in same database). Skipping it....");
+                    Log.Write(
+                        "This database has already migrated before (you have more than one tenant in same database). Skipping it....");
                 }
 
                 Log.Write(string.Format("Tenant database migration completed. ({0} / {1})", (i + 1), tenants.Count));

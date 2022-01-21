@@ -19,6 +19,7 @@ namespace TACHYON.BackgroundWorkers.ShippingRequests
         private const int runEvery = 60 * 60 * 1000; //1 hour
         private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepository;
         private readonly IAppNotifier _appNotifier;
+
         public TripReminderMissingAcceptWorker(
             AbpTimer timer,
             IRepository<ShippingRequestTrip> shippingRequestTripRepository,
@@ -39,40 +40,35 @@ namespace TACHYON.BackgroundWorkers.ShippingRequests
                     .GetAll()
                     .Include(d => d.AssignedDriverUserFk)
                     .Include(r => r.ShippingRequestFk)
-                        .ThenInclude(c => c.CarrierTenantFk)
+                    .ThenInclude(c => c.CarrierTenantFk)
                     .AsNoTracking()
-                    .Where(x => x.ShippingRequestFk.Status == Shipping.ShippingRequests.ShippingRequestStatus.PostPrice &&
-                    x.Status == Shipping.Trips.ShippingRequestTripStatus.New &&
-                    x.DriverStatus == Shipping.Trips.ShippingRequestTripDriverStatus.None &&
-                    x.AssignedDriverTime.HasValue &&
-                    x.AssignedDriverUserId != null &&
-                    EF.Functions.DateDiffHour(x.AssignedDriverTime, Clock.Now) <= 11).ToList();
+                    .Where(x =>
+                        x.ShippingRequestFk.Status == Shipping.ShippingRequests.ShippingRequestStatus.PostPrice &&
+                        x.Status == Shipping.Trips.ShippingRequestTripStatus.New &&
+                        x.DriverStatus == Shipping.Trips.ShippingRequestTripDriverStatus.None &&
+                        x.AssignedDriverTime.HasValue &&
+                        x.AssignedDriverUserId != null &&
+                        EF.Functions.DateDiffHour(x.AssignedDriverTime, Clock.Now) <= 11).ToList();
 
-                Trips.Where(x=> x.AssignedDriverUserId != null).ForEach(t =>
+                Trips.Where(x => x.AssignedDriverUserId != null).ForEach(t =>
                 {
                     var totalDiffHour = EF.Functions.DateDiffHour(t.AssignedDriverTime, Clock.Now);
                     if (totalDiffHour <= 3) // driver
                     {
-
-
-                        AsyncHelper.RunSync(() => _appNotifier.NotifyDriverWhenAssignTrip(t.Id,new UserIdentifier(t.AssignedDriverUserFk.TenantId, t.AssignedDriverUserId.Value)));
-
+                        AsyncHelper.RunSync(() => _appNotifier.NotifyDriverWhenAssignTrip(t.Id,
+                            new UserIdentifier(t.AssignedDriverUserFk.TenantId, t.AssignedDriverUserId.Value)));
                     }
                     // carrier
                     else if (totalDiffHour <= 5 || totalDiffHour <= 7 || totalDiffHour <= 9)
                     {
-
                         AsyncHelper.RunSync(() => _appNotifier.CarrierTripNeedAccept(t));
-
                     } //TMS
                     else if (totalDiffHour > 9)
                     {
                         AsyncHelper.RunSync(() => _appNotifier.TMSTripNeedAccept(t));
-
                     }
                 });
             }
-
         }
     }
 }

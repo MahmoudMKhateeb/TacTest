@@ -3,7 +3,7 @@ using TACHYON.PriceOffers;
 
 namespace TACHYON.Shipping.ShippingRequests.Dtos
 {
-    public class ShippingRequestCarrierPricingDto:EntityDto<long>
+    public class ShippingRequestCarrierPricingDto : EntityDto<long>
     {
         public decimal ItemPrice { get; set; }
         public decimal ItemVatAmount { get; set; }

@@ -18,18 +18,18 @@ namespace TACHYON.Trucks.TruckStatusesTranslations
         private readonly IRepository<TruckStatusesTranslation> _truckStatusesTranslationRepository;
         private readonly IRepository<TruckStatus, long> _lookup_truckStatusRepository;
 
-        public TruckStatusesTranslationsAppService(IRepository<TruckStatusesTranslation> truckStatusesTranslationRepository, IRepository<TruckStatus, long> lookup_truckStatusRepository)
+        public TruckStatusesTranslationsAppService(
+            IRepository<TruckStatusesTranslation> truckStatusesTranslationRepository,
+            IRepository<TruckStatus, long> lookup_truckStatusRepository)
         {
             _truckStatusesTranslationRepository = truckStatusesTranslationRepository;
             _lookup_truckStatusRepository = lookup_truckStatusRepository;
-
         }
 
         public async Task<LoadResult> GetAll(GetAllTruckStatusesTranslationsInput input)
         {
-
             var truckStatusTranslations = _truckStatusesTranslationRepository.GetAll()
-                .Where(x=> x.CoreId == input.CoreId)
+                .Where(x => x.CoreId == input.CoreId)
                 .AsNoTracking().ProjectTo<GetTruckStatusesTranslationForViewDto>
                     (AutoMapperConfigurationProvider);
 
@@ -40,11 +40,16 @@ namespace TACHYON.Trucks.TruckStatusesTranslations
         {
             var truckStatusesTranslation = await _truckStatusesTranslationRepository.GetAsync(id);
 
-            var output = new GetTruckStatusesTranslationForViewDto { TruckStatusesTranslation = ObjectMapper.Map<TruckStatusesTranslationDto>(truckStatusesTranslation) };
+            var output = new GetTruckStatusesTranslationForViewDto
+            {
+                TruckStatusesTranslation = ObjectMapper.Map<TruckStatusesTranslationDto>(truckStatusesTranslation)
+            };
 
             if (output.TruckStatusesTranslation.CoreId != null)
             {
-                var _lookupTruckStatus = await _lookup_truckStatusRepository.FirstOrDefaultAsync((long)output.TruckStatusesTranslation.CoreId);
+                var _lookupTruckStatus =
+                    await _lookup_truckStatusRepository.FirstOrDefaultAsync(
+                        (long)output.TruckStatusesTranslation.CoreId);
                 output.TruckStatusDisplayName = _lookupTruckStatus?.DisplayName?.ToString();
             }
 
@@ -56,11 +61,17 @@ namespace TACHYON.Trucks.TruckStatusesTranslations
         {
             var truckStatusesTranslation = await _truckStatusesTranslationRepository.FirstOrDefaultAsync(input.Id);
 
-            var output = new GetTruckStatusesTranslationForEditOutput { TruckStatusesTranslation = ObjectMapper.Map<CreateOrEditTruckStatusesTranslationDto>(truckStatusesTranslation) };
+            var output = new GetTruckStatusesTranslationForEditOutput
+            {
+                TruckStatusesTranslation =
+                    ObjectMapper.Map<CreateOrEditTruckStatusesTranslationDto>(truckStatusesTranslation)
+            };
 
             if (output.TruckStatusesTranslation.CoreId != null)
             {
-                var _lookupTruckStatus = await _lookup_truckStatusRepository.FirstOrDefaultAsync((long)output.TruckStatusesTranslation.CoreId);
+                var _lookupTruckStatus =
+                    await _lookup_truckStatusRepository.FirstOrDefaultAsync(
+                        (long)output.TruckStatusesTranslation.CoreId);
                 output.TruckStatusDisplayName = _lookupTruckStatus?.DisplayName?.ToString();
             }
 
@@ -99,6 +110,7 @@ namespace TACHYON.Trucks.TruckStatusesTranslations
         {
             await _truckStatusesTranslationRepository.DeleteAsync(input.Id);
         }
+
         [AbpAuthorize(AppPermissions.Pages_TruckStatusesTranslations)]
         public async Task<List<TruckStatusesTranslationTruckStatusLookupTableDto>> GetAllTruckStatusForTableDropdown()
         {
@@ -106,9 +118,10 @@ namespace TACHYON.Trucks.TruckStatusesTranslations
                 .Select(truckStatus => new TruckStatusesTranslationTruckStatusLookupTableDto
                 {
                     Id = truckStatus.Id,
-                    DisplayName = truckStatus == null || truckStatus.DisplayName == null ? "" : truckStatus.DisplayName.ToString()
+                    DisplayName = truckStatus == null || truckStatus.DisplayName == null
+                        ? ""
+                        : truckStatus.DisplayName.ToString()
                 }).ToListAsync();
         }
-
     }
 }

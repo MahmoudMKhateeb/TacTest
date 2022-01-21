@@ -1,6 +1,6 @@
 ﻿namespace TACHYON.Invoices.SubmitInvoices
 {
-    public  enum SubmitInvoiceStatus:byte
+    public enum SubmitInvoiceStatus : byte
     {
         New,
         Claim,

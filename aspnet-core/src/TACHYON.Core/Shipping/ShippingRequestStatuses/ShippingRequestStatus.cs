@@ -6,14 +6,12 @@ using Abp.Domain.Entities;
 
 namespace TACHYON.Shipping.ShippingRequestStatuses
 {
-	[Table("ShippingRequestStatuses")]
-    public class ShippingRequestStatus : FullAuditedEntity 
+    [Table("ShippingRequestStatuses")]
+    public class ShippingRequestStatus : FullAuditedEntity
     {
-
-		[Required]
-		[StringLength(ShippingRequestStatusConsts.MaxDisplayNameLength, MinimumLength = ShippingRequestStatusConsts.MinDisplayNameLength)]
-		public virtual string DisplayName { get; set; }
-		
-
+        [Required]
+        [StringLength(ShippingRequestStatusConsts.MaxDisplayNameLength,
+            MinimumLength = ShippingRequestStatusConsts.MinDisplayNameLength)]
+        public virtual string DisplayName { get; set; }
     }
 }

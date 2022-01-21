@@ -52,12 +52,11 @@ namespace TACHYON.Web.Controllers
 
                 await BinaryObjectManager.SaveAsync(fileObject);
 
-                await BackgroundJobManager.EnqueueAsync<ImportDriversToExcelJob, ImportDriversFromExcelJobArgs>(new ImportDriversFromExcelJobArgs
-                {
-                    TenantId = tenantId,
-                    BinaryObjectId = fileObject.Id,
-                    User = AbpSession.ToUserIdentifier()
-                });
+                await BackgroundJobManager.EnqueueAsync<ImportDriversToExcelJob, ImportDriversFromExcelJobArgs>(
+                    new ImportDriversFromExcelJobArgs
+                    {
+                        TenantId = tenantId, BinaryObjectId = fileObject.Id, User = AbpSession.ToUserIdentifier()
+                    });
 
                 return Json(new AjaxResponse(new { }));
             }
@@ -66,6 +65,5 @@ namespace TACHYON.Web.Controllers
                 return Json(new AjaxResponse(new ErrorInfo(ex.Message)));
             }
         }
-
     }
 }

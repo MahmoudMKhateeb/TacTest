@@ -10,7 +10,7 @@ namespace TACHYON.ShippingRequestVases
     {
         Task<PagedResultDto<ShippingRequestVasDto>> GetAll(GetAllShippingRequestVasesInput input);
 
-        Task<ShippingRequestVasDto> GetShippingRequestVasForView(long id); 
+        Task<ShippingRequestVasDto> GetShippingRequestVasForView(long id);
 
         Task<GetShippingRequestVasForEditOutput> GetShippingRequestVasForEdit(EntityDto<long> input);
 
@@ -19,6 +19,5 @@ namespace TACHYON.ShippingRequestVases
         Task Delete(EntityDto<long> input);
 
         Task<List<ShippingRequestVasVasLookupTableDto>> GetAllVasForTableDropdown();
-
     }
 }

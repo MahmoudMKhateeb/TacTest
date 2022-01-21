@@ -7,7 +7,12 @@ namespace TACHYON.Chat
 {
     public interface IChatMessageManager : IDomainService
     {
-        Task SendMessageAsync(UserIdentifier sender, UserIdentifier receiver, string message, string senderTenancyName, string senderUserName, Guid? senderProfilePictureId);
+        Task SendMessageAsync(UserIdentifier sender,
+            UserIdentifier receiver,
+            string message,
+            string senderTenancyName,
+            string senderUserName,
+            Guid? senderProfilePictureId);
 
         long Save(ChatMessage message);
 

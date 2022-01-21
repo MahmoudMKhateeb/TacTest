@@ -24,9 +24,12 @@ namespace TACHYON.Tests.Authorization.Users
         [Fact]
         public async Task Should_Create_User_With_Random_Password_For_Tenant()
         {
-            await _settingManager.ChangeSettingForApplicationAsync(AbpZeroSettingNames.UserManagement.PasswordComplexity.RequireUppercase, "true");
-            await _settingManager.ChangeSettingForApplicationAsync(AbpZeroSettingNames.UserManagement.PasswordComplexity.RequireNonAlphanumeric, "true");
-            await _settingManager.ChangeSettingForApplicationAsync(AbpZeroSettingNames.UserManagement.PasswordComplexity.RequiredLength, "25");
+            await _settingManager.ChangeSettingForApplicationAsync(
+                AbpZeroSettingNames.UserManagement.PasswordComplexity.RequireUppercase, "true");
+            await _settingManager.ChangeSettingForApplicationAsync(
+                AbpZeroSettingNames.UserManagement.PasswordComplexity.RequireNonAlphanumeric, "true");
+            await _settingManager.ChangeSettingForApplicationAsync(
+                AbpZeroSettingNames.UserManagement.PasswordComplexity.RequiredLength, "25");
 
             var randomPassword = await _userManager.CreateRandomPassword();
 

@@ -22,7 +22,8 @@ namespace TACHYON.Tests.Authorization.Users
             LoginAsHostAdmin();
 
             await CreateUserAndTestAsync("jnash", "John", "Nash", "jnsh2000@testdomain.com", null);
-            await CreateUserAndTestAsync("adams_d", "Douglas", "Adams", "adams_d@gmail.com", null, StaticRoleNames.Host.Admin);
+            await CreateUserAndTestAsync("adams_d", "Douglas", "Adams", "adams_d@gmail.com", null,
+                StaticRoleNames.Host.Admin);
         }
 
         [Fact]
@@ -30,7 +31,8 @@ namespace TACHYON.Tests.Authorization.Users
         {
             var defaultTenantId = (await GetTenantAsync(AbpTenantBase.DefaultTenantName)).Id;
             await CreateUserAndTestAsync("jnash", "John", "Nash", "jnsh2000@testdomain.com", defaultTenantId);
-            await CreateUserAndTestAsync("adams_d", "Douglas", "Adams", "adams_d@gmail.com", defaultTenantId, StaticRoleNames.Tenants.Admin);
+            await CreateUserAndTestAsync("adams_d", "Douglas", "Adams", "adams_d@gmail.com", defaultTenantId,
+                StaticRoleNames.Tenants.Admin);
         }
 
         [Fact]
@@ -46,18 +48,23 @@ namespace TACHYON.Tests.Authorization.Users
                         new CreateOrUpdateUserInput
                         {
                             User = new UserEditDto
-                                   {
-                                       EmailAddress = "john@nash.com",
-                                       Name = "John",
-                                       Surname = "Nash",
-                                       UserName = "jnash", //Same username is added before (in CreateTestUsers)
-                                       Password = "123qwe"
-                                   },
+                            {
+                                EmailAddress = "john@nash.com",
+                                Name = "John",
+                                Surname = "Nash",
+                                UserName = "jnash", //Same username is added before (in CreateTestUsers)
+                                Password = "123qwe"
+                            },
                             AssignedRoleNames = new string[0]
                         }));
         }
 
-        private async Task CreateUserAndTestAsync(string userName, string name, string surname, string emailAddress, int? tenantId, params string[] roleNames)
+        private async Task CreateUserAndTestAsync(string userName,
+            string name,
+            string surname,
+            string emailAddress,
+            int? tenantId,
+            params string[] roleNames)
         {
             //Arrange
             AbpSession.TenantId = tenantId;
@@ -82,7 +89,8 @@ namespace TACHYON.Tests.Authorization.Users
             await UsingDbContextAsync(async context =>
             {
                 //Get created user
-                var createdUser = await context.Users.Include(u => u.Roles).FirstOrDefaultAsync(u => u.UserName == userName);
+                var createdUser = await context.Users.Include(u => u.Roles)
+                    .FirstOrDefaultAsync(u => u.UserName == userName);
                 createdUser.ShouldNotBe(null);
 
                 //Check some properties

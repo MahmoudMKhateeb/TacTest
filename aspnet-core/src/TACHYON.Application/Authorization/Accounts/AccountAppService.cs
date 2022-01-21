@@ -72,7 +72,8 @@ namespace TACHYON.Authorization.Accounts
                 return new IsTenantAvailableOutput(TenantAvailabilityState.InActive);
             }
 
-            return new IsTenantAvailableOutput(TenantAvailabilityState.Available, tenant.Id, _webUrlService.GetServerRootAddress(input.TenancyName));
+            return new IsTenantAvailableOutput(TenantAvailabilityState.Available, tenant.Id,
+                _webUrlService.GetServerRootAddress(input.TenancyName));
         }
 
         public Task<int?> ResolveTenantId(ResolveTenantIdInput input)
@@ -111,7 +112,9 @@ namespace TACHYON.Authorization.Accounts
                 AppUrlService.CreateEmailActivationUrlFormat(AbpSession.TenantId)
             );
 
-            var isEmailConfirmationRequiredForLogin = await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.IsEmailConfirmationRequiredForLogin);
+            var isEmailConfirmationRequiredForLogin =
+                await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement
+                    .IsEmailConfirmationRequiredForLogin);
 
             return new RegisterOutput
             {
@@ -126,7 +129,7 @@ namespace TACHYON.Authorization.Accounts
             await _userEmailer.SendPasswordResetLinkAsync(
                 user,
                 AppUrlService.CreatePasswordResetUrlFormat(AbpSession.TenantId)
-                );
+            );
         }
 
         public async Task<ResetPasswordOutput> ResetPassword(ResetPasswordInput input)
@@ -156,13 +159,7 @@ namespace TACHYON.Authorization.Accounts
             CurrentUnitOfWork.EnableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant);
             await UserManager.UpdateAsync(user);
 
-            return new ResetPasswordOutput
-            {
-                CanLogin = user.IsActive,
-                UserName = user.EmailAddress
-            };
-
-
+            return new ResetPasswordOutput { CanLogin = user.IsActive, UserName = user.EmailAddress };
         }
 
         public async Task SendEmailActivationLink(SendEmailActivationLinkInput input)
@@ -183,15 +180,19 @@ namespace TACHYON.Authorization.Accounts
             {
                 user = await UserManager.GetUserByIdAsync(input.UserId);
             }
+
             if (user != null && user.IsEmailConfirmed)
             {
                 return;
             }
 
-            if (user == null || user.EmailConfirmationCode.IsNullOrEmpty() || user.EmailConfirmationCode != input.ConfirmationCode)
+            if (user == null || user.EmailConfirmationCode.IsNullOrEmpty() ||
+                user.EmailConfirmationCode != input.ConfirmationCode)
             {
-                throw new UserFriendlyException(L("InvalidEmailConfirmationCode"), L("InvalidEmailConfirmationCode_Detail"));
+                throw new UserFriendlyException(L("InvalidEmailConfirmationCode"),
+                    L("InvalidEmailConfirmationCode_Detail"));
             }
+
             CurrentUnitOfWork.SetTenantId(user.TenantId);
             user.IsEmailConfirmed = true;
             user.EmailConfirmationCode = null;
@@ -205,7 +206,8 @@ namespace TACHYON.Authorization.Accounts
         {
             return new ImpersonateOutput
             {
-                ImpersonationToken = await _impersonationManager.GetImpersonationToken(input.UserId, input.TenantId),
+                ImpersonationToken =
+                    await _impersonationManager.GetImpersonationToken(input.UserId, input.TenantId),
                 TenancyName = await GetTenancyNameOrNullAsync(input.TenantId)
             };
         }
@@ -220,7 +222,9 @@ namespace TACHYON.Authorization.Accounts
 
             return new ImpersonateOutput
             {
-                ImpersonationToken = await _impersonationManager.GetImpersonationToken(userDelegation.SourceUserId, userDelegation.TenantId),
+                ImpersonationToken =
+                    await _impersonationManager.GetImpersonationToken(userDelegation.SourceUserId,
+                        userDelegation.TenantId),
                 TenancyName = await GetTenancyNameOrNullAsync(userDelegation.TenantId)
             };
         }
@@ -243,7 +247,8 @@ namespace TACHYON.Authorization.Accounts
 
             return new SwitchToLinkedAccountOutput
             {
-                SwitchAccountToken = await _userLinkManager.GetAccountSwitchToken(input.TargetUserId, input.TargetTenantId),
+                SwitchAccountToken =
+                    await _userLinkManager.GetAccountSwitchToken(input.TargetUserId, input.TargetTenantId),
                 TenancyName = await GetTenancyNameOrNullAsync(input.TargetTenantId)
             };
         }

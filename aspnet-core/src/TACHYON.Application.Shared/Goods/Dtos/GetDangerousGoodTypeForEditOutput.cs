@@ -6,8 +6,6 @@ namespace TACHYON.Goods.Dtos
 {
     public class GetDangerousGoodTypeForEditOutput
     {
-		public CreateOrEditDangerousGoodTypeDto DangerousGoodType { get; set; }
-
-
+        public CreateOrEditDangerousGoodTypeDto DangerousGoodType { get; set; }
     }
 }

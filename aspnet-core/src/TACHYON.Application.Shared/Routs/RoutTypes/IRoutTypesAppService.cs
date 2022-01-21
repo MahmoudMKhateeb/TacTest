@@ -21,7 +21,5 @@ namespace TACHYON.Routs.RoutTypes
         Task Delete(EntityDto input);
 
         Task<FileDto> GetRoutTypesToExcel(GetAllRoutTypesForExcelInput input);
-
-
     }
 }

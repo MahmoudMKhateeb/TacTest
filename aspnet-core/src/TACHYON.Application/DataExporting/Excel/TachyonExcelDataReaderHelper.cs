@@ -21,17 +21,27 @@ namespace TACHYON.DataExporting.Excel
             _localizationSource = localizationManager.GetSource(TACHYONConsts.LocalizationSourceName);
         }
 
-        public T GetRequiredValueFromRowOrNull<T>(ISheet worksheet, int row, int column, string columnName, StringBuilder exceptionMessage)
+        public T GetRequiredValueFromRowOrNull<T>(ISheet worksheet,
+            int row,
+            int column,
+            string columnName,
+            StringBuilder exceptionMessage)
         {
             var value = GetValueFromRowOrNull<T>(worksheet, row, column, columnName, exceptionMessage);
             if (value != null)
             {
                 return value;
             }
+
             exceptionMessage.Append(GetLocalizedExceptionMessagePart(columnName));
             return default(T);
         }
-        public T GetValueFromRowOrNull<T>(ISheet worksheet, int row, int column, string columnName, StringBuilder exceptionMessage)
+
+        public T GetValueFromRowOrNull<T>(ISheet worksheet,
+            int row,
+            int column,
+            string columnName,
+            StringBuilder exceptionMessage)
         {
             var value = _GetStringValueFromRowOrNull(worksheet, row, column, columnName, exceptionMessage);
 
@@ -40,6 +50,7 @@ namespace TACHYON.DataExporting.Excel
             {
                 return default(T);
             }
+
             if (typeof(T) == typeof(DateTime))
             {
                 object r = DateTime.ParseExact(value, "d/M/yyyy", null);
@@ -47,7 +58,6 @@ namespace TACHYON.DataExporting.Excel
             }
             else if (typeof(T) == typeof(DateTime?))
             {
-
                 var d = DateTime.ParseExact(value, "d/M/yyyy", null);
                 DateTime? dt = d;
 
@@ -56,11 +66,16 @@ namespace TACHYON.DataExporting.Excel
 
                 return (T)Convert.ChangeType(dt, type);
             }
+
             return (T)Convert.ChangeType(value, typeof(T));
         }
 
 
-        private string _GetStringValueFromRowOrNull(ISheet worksheet, int row, int column, string columnName, StringBuilder exceptionMessage)
+        private string _GetStringValueFromRowOrNull(ISheet worksheet,
+            int row,
+            int column,
+            string columnName,
+            StringBuilder exceptionMessage)
         {
             IRow _row = worksheet.GetRow(row);
             List<ICell> cells = _row.Cells;
@@ -71,6 +86,7 @@ namespace TACHYON.DataExporting.Excel
             string cellValue = GetFormattedCellValue(cell);
             return cellValue.IsNullOrEmpty() ? null : cellValue;
         }
+
         public string GetLocalizedExceptionMessagePart(string parameter)
         {
             return _localizationSource.GetString("{0}IsInvalid", _localizationSource.GetString(parameter)) + "; ";
@@ -91,6 +107,7 @@ namespace TACHYON.DataExporting.Excel
             var sa = CultureInfo.CreateSpecificCulture("ar-SA");
             return DateTime.ParseExact(dateString, "d/M/yyyy", sa);
         }
+
         public string GetHijriDateStringFromGregorian(DateTime date)
         {
             var sa = CultureInfo.CreateSpecificCulture("ar-SA");
@@ -109,7 +126,6 @@ namespace TACHYON.DataExporting.Excel
                     case CellType.Numeric:
                         if (DateUtil.IsCellDateFormatted(cell))
                         {
-
                             try
                             {
                                 string formattedCellValue = cell.DateCellValue.ToString("d/M/yyyy");
@@ -117,7 +133,8 @@ namespace TACHYON.DataExporting.Excel
                             }
                             catch (NullReferenceException)
                             {
-                                string formattedCellValue = DateTime.FromOADate(cell.NumericCellValue).ToString("d/M/yyyy");
+                                string formattedCellValue =
+                                    DateTime.FromOADate(cell.NumericCellValue).ToString("d/M/yyyy");
                                 return formattedCellValue;
                             }
                         }
@@ -139,10 +156,9 @@ namespace TACHYON.DataExporting.Excel
                         return FormulaError.ForInt(cell.ErrorCellValue).String;
                 }
             }
+
             // null or blank cell, or unknown cell type
             return string.Empty;
         }
-
-
     }
 }

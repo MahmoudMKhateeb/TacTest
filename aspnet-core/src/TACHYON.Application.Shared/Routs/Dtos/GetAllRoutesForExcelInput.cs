@@ -11,7 +11,5 @@ namespace TACHYON.Routs.Dtos
 
 
         public string RoutTypeDisplayNameFilter { get; set; }
-
-
     }
 }

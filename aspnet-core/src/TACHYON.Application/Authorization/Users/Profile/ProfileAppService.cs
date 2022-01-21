@@ -97,7 +97,8 @@ namespace TACHYON.Authorization.Users.Profile
             IRepository<VasPrice> lookupVasPriceRepository,
             IRepository<Truck, long> lookupTruckRepository,
             IRepository<Edition> lookupEditionRepository,
-            IRepository<City> lookupCityRepository, IRepository<TrucksTypesTranslation> trucksTypesTranslationRepository)
+            IRepository<City> lookupCityRepository,
+            IRepository<TrucksTypesTranslation> trucksTypesTranslationRepository)
         {
             _binaryObjectManager = binaryObjectManager;
             _timeZoneService = timezoneService;
@@ -209,6 +210,7 @@ namespace TACHYON.Authorization.Users.Profile
         }
 
         #region SharedServices_Shipper_And_Carrier
+
         public async Task<TenantProfileInformationForViewDto> GetTenantProfileInformationForView(int tenantId)
         {
             var profile = await GetTenantProfileInformation(tenantId);
@@ -225,7 +227,8 @@ namespace TACHYON.Authorization.Users.Profile
         {
             if (!AbpSession.TenantId.HasValue)
                 throw new UserFriendlyException(L("YouDontHaveAccessToThisPage"));
-            return ObjectMapper.Map<UpdateTenantProfileInformationInputDto>(await GetTenantProfileInformation(AbpSession.TenantId.Value));
+            return ObjectMapper.Map<UpdateTenantProfileInformationInputDto>(
+                await GetTenantProfileInformation(AbpSession.TenantId.Value));
         }
 
         [AbpAuthorize(AppPermissions.Pages_Tenant_ProfileManagement)]
@@ -243,17 +246,17 @@ namespace TACHYON.Authorization.Users.Profile
                 var user = await UserManager.GetUserByEmailAsync(oldEmail);
                 user.EmailAddress = input.CompanyEmailAddress;
                 user.IsEmailConfirmed = false;
-
             }
         }
 
         public async Task<int> GetShipmentCount(int tenantId)
-        {  // Two In One Service
+        {
+            // Two In One Service
 
             var tenant = await TenantManager.GetByIdAsync(tenantId);
             var editionName = await (from edition in _lookupEditionRepository.GetAll()
-                                     where tenant.EditionId == edition.Id
-                                     select edition.DisplayName).FirstOrDefaultAsync();
+                where tenant.EditionId == edition.Id
+                select edition.DisplayName).FirstOrDefaultAsync();
 
             var isShipper = editionName.ToUpper().Contains("SHIPPER");
             var isCarrier = editionName.ToUpper().Contains("CARRIER");
@@ -276,8 +279,8 @@ namespace TACHYON.Authorization.Users.Profile
 
         #region ShipperServicesOnly
 
-
-        public async Task<PagedResultDto<FacilityLocationListDto>> GetFacilitiesInformation(GetFacilitiesInformationInput input)
+        public async Task<PagedResultDto<FacilityLocationListDto>> GetFacilitiesInformation(
+            GetFacilitiesInformationInput input)
         {
             var shipperFacilities = _lookupFacilityRepository.GetAll()
                 .AsNoTracking().Include(x => x.CityFk)
@@ -286,13 +289,15 @@ namespace TACHYON.Authorization.Users.Profile
 
             var facilities = await shipperFacilities.PageBy(input).ToListAsync();
             var totalCount = await shipperFacilities.CountAsync();
-            return new PagedResultDto<FacilityLocationListDto>() { Items = await ToFacilityLocationDto(facilities), TotalCount = totalCount };
+            return new PagedResultDto<FacilityLocationListDto>()
+            {
+                Items = await ToFacilityLocationDto(facilities), TotalCount = totalCount
+            };
         }
 
 
         public async Task<InvoicingInformationDto> GetInvoicingInformation(int tenantId)
         {
-
             var tenant = await TenantManager.GetByIdAsync(tenantId);
 
             var creditLimit = await FeatureChecker.GetValueAsync(tenantId,
@@ -316,32 +321,24 @@ namespace TACHYON.Authorization.Users.Profile
 
         #region CarrierServicesOnly
 
-
         public async Task<FleetInformationDto> GetFleetInformation(GetFleetInformationInputDto input)
         {
-
-
             var translationQuery = _trucksTypesTranslationRepository
                 .GetAll()
                 .Where(i => i.Language.Contains(CultureInfo.CurrentUICulture.Name));
 
             var resultQuery = from t in _lookupTruckRepository.GetAll()
-                              join r in translationQuery.DefaultIfEmpty() on t.TrucksTypeId equals r.CoreId
-                              select new
-                              {
-                                  r.CoreId,
-                                  r.TranslatedDisplayName,
-                              };
+                join r in translationQuery.DefaultIfEmpty() on t.TrucksTypeId equals r.CoreId
+                select new { r.CoreId, r.TranslatedDisplayName, };
 
             var availableTrucks = resultQuery
-               .GroupBy(x => new { TrucksTypeId = x.CoreId, x.TranslatedDisplayName })
-               .Select(g => new TruckTypeAvailableTrucksDto
-               {
-                   Id = g.Key.TrucksTypeId,
-                   AvailableTrucksCount = g.Count(),
-                   TruckType = g.Key.TranslatedDisplayName
-
-               });
+                .GroupBy(x => new { TrucksTypeId = x.CoreId, x.TranslatedDisplayName })
+                .Select(g => new TruckTypeAvailableTrucksDto
+                {
+                    Id = g.Key.TrucksTypeId,
+                    AvailableTrucksCount = g.Count(),
+                    TruckType = g.Key.TranslatedDisplayName
+                });
 
 
             //var availableTrucks = 
@@ -353,7 +350,9 @@ namespace TACHYON.Authorization.Users.Profile
             return new FleetInformationDto()
             {
                 AvailableTrucksDto = new PagedResultDto<TruckTypeAvailableTrucksDto>()
-                { Items = pageResult, TotalCount = totalCount },
+                {
+                    Items = pageResult, TotalCount = totalCount
+                },
                 TotalDrivers = driversCount
             };
         }
@@ -371,7 +370,10 @@ namespace TACHYON.Authorization.Users.Profile
             var pageResult = await availableVases.PageBy(input).ToListAsync();
             var totalCount = await availableVases.CountAsync();
 
-            return new PagedResultDto<AvailableVasDto>() { Items = ObjectMapper.Map<List<AvailableVasDto>>(pageResult), TotalCount = totalCount };
+            return new PagedResultDto<AvailableVasDto>()
+            {
+                Items = ObjectMapper.Map<List<AvailableVasDto>>(pageResult), TotalCount = totalCount
+            };
         }
 
         #endregion
@@ -420,10 +422,7 @@ namespace TACHYON.Authorization.Users.Profile
             }
             else
             {
-                CheckErrors(IdentityResult.Failed(new IdentityError
-                {
-                    Description = "Incorrect password."
-                }));
+                CheckErrors(IdentityResult.Failed(new IdentityError { Description = "Incorrect password." }));
             }
         }
 
@@ -503,10 +502,7 @@ namespace TACHYON.Authorization.Users.Profile
                         .RequiredLength)
             };
 
-            return new GetPasswordComplexitySettingOutput
-            {
-                Setting = passwordComplexitySetting
-            };
+            return new GetPasswordComplexitySettingOutput { Setting = passwordComplexitySetting };
         }
 
         [DisableAuditing]
@@ -520,8 +516,8 @@ namespace TACHYON.Authorization.Users.Profile
             if (!(userId is null))
             {
                 var tenantId = await (from user in _lookupUserRepository.GetAll()
-                                      where user.Id == userId
-                                      select user.TenantId).FirstOrDefaultAsync();
+                    where user.Id == userId
+                    select user.TenantId).FirstOrDefaultAsync();
 
                 userIdentifier = new UserIdentifier(tenantId, userId.Value);
             }
@@ -582,9 +578,10 @@ namespace TACHYON.Authorization.Users.Profile
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
             {
                 tenantId = await (from user in _lookupUserRepository.GetAll().AsNoTracking()
-                                  where user.Id == userId
-                                  select user.TenantId).FirstOrDefaultAsync();
+                    where user.Id == userId
+                    select user.TenantId).FirstOrDefaultAsync();
             }
+
             var userIdentifier = new UserIdentifier(tenantId, userId);
             using (var profileImageService = await _profileImageServiceFactory.Get(userIdentifier))
             {
@@ -607,6 +604,7 @@ namespace TACHYON.Authorization.Users.Profile
             var tenant = await TenantManager.GetByIdAsync(tenantId);
             return (!tenant.Description.IsNullOrEmpty() && !tenant.Website.IsNullOrEmpty());
         }
+
         private async Task<byte[]> GetProfilePictureByIdOrNull(Guid profilePictureId)
         {
             var file = await _binaryObjectManager.GetOrNullAsync(profilePictureId);
@@ -641,29 +639,34 @@ namespace TACHYON.Authorization.Users.Profile
         private async Task<string> GetCityNameAsync(int cityId)
         {
             var cityName = await (from city in _lookupCityRepository.GetAll()
-                                  where city.Id == cityId
-                                  select city.Translations.FirstOrDefault(x => x.Language.Contains(CultureInfo.CurrentUICulture.Name)) != null ?
-                                      city.Translations.FirstOrDefault(x => x.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName
-                                  : city.DisplayName).FirstOrDefaultAsync();
+                where city.Id == cityId
+                select city.Translations.FirstOrDefault(x => x.Language.Contains(CultureInfo.CurrentUICulture.Name)) !=
+                       null
+                    ? city.Translations.FirstOrDefault(x => x.Language.Contains(CultureInfo.CurrentUICulture.Name))
+                        .TranslatedDisplayName
+                    : city.DisplayName).FirstOrDefaultAsync();
             return cityName;
         }
 
         private async Task<string> GetCountryNameAsync(int countryId)
         {
             var countryName = await (from city in _lookupCityRepository.GetAll()
-                                     where city.CountyId == countryId
-                                     select city.CountyFk.Translations.FirstOrDefault(x =>
-                                         x.Language.Contains(CultureInfo.CurrentUICulture.Name)) != null
-                                         ? city.CountyFk.Translations.FirstOrDefault(x => x.Language.Contains(CultureInfo.CurrentUICulture.Name))
-                                             .TranslatedDisplayName : city.CountyFk.DisplayName).FirstOrDefaultAsync();
+                where city.CountyId == countryId
+                select city.CountyFk.Translations.FirstOrDefault(x =>
+                    x.Language.Contains(CultureInfo.CurrentUICulture.Name)) != null
+                    ? city.CountyFk.Translations
+                        .FirstOrDefault(x => x.Language.Contains(CultureInfo.CurrentUICulture.Name))
+                        .TranslatedDisplayName
+                    : city.CountyFk.DisplayName).FirstOrDefaultAsync();
             return countryName;
         }
+
         private async Task<String> GetCompanyEmailAddress(int tenantId)
         {
             DisableTenancyFilters();
             return await (from user in _lookupUserRepository.GetAll()
-                          where user.TenantId == tenantId && user.UserName == AbpUserBase.AdminUserName
-                          select user.EmailAddress).FirstOrDefaultAsync();
+                where user.TenantId == tenantId && user.UserName == AbpUserBase.AdminUserName
+                select user.EmailAddress).FirstOrDefaultAsync();
         }
 
         private async Task<List<FacilityLocationListDto>> ToFacilityLocationDto(List<Facility> facilities)
@@ -681,6 +684,5 @@ namespace TACHYON.Authorization.Users.Profile
 
             return pageResult;
         }
-
     }
 }

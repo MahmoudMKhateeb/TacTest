@@ -35,9 +35,9 @@ namespace TACHYON.Dashboards.Carrier
 
 
         public CarrierDashboardAppService(
-             IRepository<User, long> usersRepository,
-             IRepository<Truck, long> trucksRepository
-            )
+            IRepository<User, long> usersRepository,
+            IRepository<Truck, long> trucksRepository
+        )
         {
             _usersRepository = usersRepository;
             _trucksRepository = trucksRepository;
@@ -47,7 +47,7 @@ namespace TACHYON.Dashboards.Carrier
         {
             DisableTenancyFilters();
             var drivers = _usersRepository.GetAll().AsNoTracking()
-                 .Where(r => r.IsDriver);
+                .Where(r => r.IsDriver);
             return new ActivityItemsDto()
             {
                 ActiveItems = await drivers.Where(r => r.IsActive).CountAsync(),
@@ -65,9 +65,5 @@ namespace TACHYON.Dashboards.Carrier
                 NotActiveItems = await trucks.Where(r => r.TruckStatusId == 2).CountAsync()
             };
         }
-
-
-
-
     }
 }

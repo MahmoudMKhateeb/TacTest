@@ -29,17 +29,17 @@ namespace TACHYON.Waybills
         public WaybillsAppService(PdfExporterBase pdfExporterBase,
             IRepository<ShippingRequestTrip> shippingRequestTripRepository,
             ShippingRequestsAppService shippingRequestAppService,
-                GoodsDetailsAppService goodsDetailsAppService,
+            GoodsDetailsAppService goodsDetailsAppService,
             RoutPointsAppService routPointAppService)
         {
             _pdfExporterBase = pdfExporterBase;
-            _shippingRequestTripRepository=shippingRequestTripRepository;
+            _shippingRequestTripRepository = shippingRequestTripRepository;
             _shippingRequestAppService = shippingRequestAppService;
             _goodsDetailsAppService = goodsDetailsAppService;
             _routPointAppService = routPointAppService;
         }
-        
-        
+
+
         public FileDto GetMultipleDropWaybillPdf(long RoutPointId)
         {
             DisableTenancyFilters();
@@ -47,25 +47,27 @@ namespace TACHYON.Waybills
             {
                 throw new UserFriendlyException(L("Cannot download drop waybill for single drop shipping request"));
             }
-             var reportPath = "/Waybills/Reports/Multiple_Drop_Waybill.rdlc";
 
-             ArrayList names = new ArrayList();
-             ArrayList data = new ArrayList();
+            var reportPath = "/Waybills/Reports/Multiple_Drop_Waybill.rdlc";
 
-             names.Add("MultipleDropDataSet");
-             data.Add(_shippingRequestAppService.GetMultipleDropWaybill(RoutPointId));
+            ArrayList names = new ArrayList();
+            ArrayList data = new ArrayList();
+
+            names.Add("MultipleDropDataSet");
+            data.Add(_shippingRequestAppService.GetMultipleDropWaybill(RoutPointId));
 
             names.Add("MultipleDropsGoodsDetailsDataSet");
             data.Add(_goodsDetailsAppService.GetShippingrequestGoodsDetailsForMultipleDropWaybill(RoutPointId));
 
             names.Add("MultipleDropsVasDataSet");
-             data.Add(_shippingRequestAppService.GetShippingRequestVasesForMultipleDropWaybill(RoutPointId));
+            data.Add(_shippingRequestAppService.GetShippingRequestVasesForMultipleDropWaybill(RoutPointId));
 
 
-            return _pdfExporterBase.CreateRdlcPdfPackageFromList(GetTripWaybilNo(null,RoutPointId), reportPath, names, data);
+            return _pdfExporterBase.CreateRdlcPdfPackageFromList(GetTripWaybilNo(null, RoutPointId), reportPath, names,
+                data);
         }
 
-        
+
         public FileDto GetSingleDropOrMasterWaybillPdf(int shippingRequestTripId)
         {
             DisableTenancyFilters();
@@ -80,14 +82,14 @@ namespace TACHYON.Waybills
         }
 
         #region Helper
-        
+
         private bool IsSingleDropShippingRequest(int shippingRequestTripId)
         {
-            var item=_shippingRequestTripRepository
+            var item = _shippingRequestTripRepository
                 .GetAll()
                 .Include(e => e.ShippingRequestFk)
                 .FirstOrDefault(e => e.Id == shippingRequestTripId);
-            return item.ShippingRequestFk.RouteTypeId ==  ShippingRequestRouteType.SingleDrop;
+            return item.ShippingRequestFk.RouteTypeId == ShippingRequestRouteType.SingleDrop;
         }
 
         private bool IsSingleDropShippingRequest(long routPointId)
@@ -95,8 +97,8 @@ namespace TACHYON.Waybills
             var item = _shippingRequestTripRepository
                 .GetAll()
                 .Include(e => e.ShippingRequestFk)
-                .Include(e=>e.RoutPoints)
-                .FirstOrDefault(e => e.RoutPoints.Any(x=>x.Id== routPointId));
+                .Include(e => e.RoutPoints)
+                .FirstOrDefault(e => e.RoutPoints.Any(x => x.Id == routPointId));
 
             return item.ShippingRequestFk.RouteTypeId == ShippingRequestRouteType.SingleDrop;
         }
@@ -117,7 +119,8 @@ namespace TACHYON.Waybills
 
             names.Add("SingleDropVasDataSet");
             data.Add(_shippingRequestAppService.GetShippingRequestVasesForSingleDropWaybill(shippingRequestTripId));
-            return _pdfExporterBase.CreateRdlcPdfPackageFromList(GetTripWaybilNo(shippingRequestTripId,null), reportPath, names, data);
+            return _pdfExporterBase.CreateRdlcPdfPackageFromList(GetTripWaybilNo(shippingRequestTripId, null),
+                reportPath, names, data);
         }
 
         /// <summary>
@@ -142,23 +145,22 @@ namespace TACHYON.Waybills
             names.Add("SingleDropVasDataSet");
             data.Add(_shippingRequestAppService.GetShippingRequestVasesForSingleDropWaybill(shippingRequestTripId));
 
-            return _pdfExporterBase.CreateRdlcPdfPackageFromList(GetTripWaybilNo(shippingRequestTripId,null), reportPath, names, data);
+            return _pdfExporterBase.CreateRdlcPdfPackageFromList(GetTripWaybilNo(shippingRequestTripId, null),
+                reportPath, names, data);
         }
 
         private string GetTripWaybilNo(int? tripId, long? pointId)
         {
             var item = _shippingRequestTripRepository
-               .GetAll()
-               .Include(x=>x.RoutPoints)
-               .WhereIf(tripId!=null,e => e.Id==tripId)
-               .WhereIf(pointId!=null, e=> e.RoutPoints.Any(x => x.Id == pointId))
-               .FirstOrDefault();
+                .GetAll()
+                .Include(x => x.RoutPoints)
+                .WhereIf(tripId != null, e => e.Id == tripId)
+                .WhereIf(pointId != null, e => e.RoutPoints.Any(x => x.Id == pointId))
+                .FirstOrDefault();
 
             return item.WaybillNumber?.ToString();
         }
 
-
         #endregion
-
     }
 }

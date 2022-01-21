@@ -40,25 +40,26 @@ namespace TACHYON.Tests.MultiTenancy
         [InlineData(PaymentPeriodType.Daily, 99.99, 199.99, 25, 104.17)]
         [InlineData(PaymentPeriodType.Daily, 99.99, 199.99, 47, 195.83)]
         [InlineData(PaymentPeriodType.Daily, 99.99, 199.99, 12, 50.00)]
-
         [InlineData(PaymentPeriodType.Weekly, 99.99, 199.99, 1, 0.60)]
         [InlineData(PaymentPeriodType.Weekly, 99.99, 199.99, 167, 99.40)]
         [InlineData(PaymentPeriodType.Weekly, 99.99, 199.99, 169, 100.60)]
         [InlineData(PaymentPeriodType.Weekly, 99.99, 199.99, 335, 199.40)]
         [InlineData(PaymentPeriodType.Weekly, 99.99, 199.99, 84, 50.00)]
-
         [InlineData(PaymentPeriodType.Monthly, 99.99, 199.99, 1, 0.14)]
         [InlineData(PaymentPeriodType.Monthly, 99.99, 199.99, 719, 99.86)]
         [InlineData(PaymentPeriodType.Monthly, 99.99, 199.99, 721, 100.14)]
         [InlineData(PaymentPeriodType.Monthly, 99.99, 199.99, 1439, 199.86)]
         [InlineData(PaymentPeriodType.Monthly, 99.99, 199.99, 360, 50.00)]
-
         [InlineData(PaymentPeriodType.Annual, 99.99, 199.99, 1, 0.01)]
         [InlineData(PaymentPeriodType.Annual, 99.99, 199.99, 8759, 99.99)]
         [InlineData(PaymentPeriodType.Annual, 99.99, 199.99, 8761, 100.01)]
         [InlineData(PaymentPeriodType.Annual, 99.99, 199.99, 17519, 199.99)]
         [InlineData(PaymentPeriodType.Annual, 99.99, 199.99, 4380, 50.00)]
-        public void Calculate_Upgrade_To_Edition_Price(PaymentPeriodType paymentPeriodType, decimal currentEditionPrice, decimal targetEditionPrice, int remainingHoursCount, decimal upgradePrice)
+        public void Calculate_Upgrade_To_Edition_Price(PaymentPeriodType paymentPeriodType,
+            decimal currentEditionPrice,
+            decimal targetEditionPrice,
+            int remainingHoursCount,
+            decimal upgradePrice)
         {
             // Used same price for easily testing upgrade price calculation.
             var currentEdition = new SubscribableEdition
@@ -81,7 +82,8 @@ namespace TACHYON.Tests.MultiTenancy
                 AnnualPrice = targetEditionPrice
             };
 
-            var price = _tenantManager.GetUpgradePrice(currentEdition, targetEdition, remainingHoursCount, paymentPeriodType);
+            var price = _tenantManager.GetUpgradePrice(currentEdition, targetEdition, remainingHoursCount,
+                paymentPeriodType);
 
             price.ToString("N2").ShouldBe(upgradePrice.ToString("N2"));
         }
@@ -97,7 +99,8 @@ namespace TACHYON.Tests.MultiTenancy
             var subscriptionEndDate = DateTime.Today.ToUniversalTime().AddDays(10);
             var updatedSubscriptionEndDate = subscriptionEndDate;
 
-            await CreateUpdateTenant(paymentPeriodType, editionPaymentType, subscriptionEndDate, updatedSubscriptionEndDate);
+            await CreateUpdateTenant(paymentPeriodType, editionPaymentType, subscriptionEndDate,
+                updatedSubscriptionEndDate);
         }
 
         [MultiTenantTheory]
@@ -110,7 +113,8 @@ namespace TACHYON.Tests.MultiTenancy
         {
             var updatedSubscriptionEndDate = Clock.Now.ToUniversalTime().AddDays((int)paymentPeriodType);
 
-            await CreateUpdateTenant(paymentPeriodType, editionPaymentType, subscriptionEndDate: null, updatedSubscriptionEndDate);
+            await CreateUpdateTenant(paymentPeriodType, editionPaymentType, subscriptionEndDate: null,
+                updatedSubscriptionEndDate);
         }
 
         [MultiTenantTheory]
@@ -124,7 +128,8 @@ namespace TACHYON.Tests.MultiTenancy
             var subscriptionEndDate = DateTime.Today.ToUniversalTime().AddDays(10);
             var updatedSubscriptionEndDate = subscriptionEndDate.AddDays((int)paymentPeriodType);
 
-            await CreateUpdateTenant(paymentPeriodType, editionPaymentType, subscriptionEndDate, updatedSubscriptionEndDate);
+            await CreateUpdateTenant(paymentPeriodType, editionPaymentType, subscriptionEndDate,
+                updatedSubscriptionEndDate);
         }
 
         [Fact]
@@ -132,14 +137,8 @@ namespace TACHYON.Tests.MultiTenancy
         {
             //Act
             var utcNow = Clock.Now.ToUniversalTime();
-            var freeEdition = new SubscribableEdition
-            {
-                DisplayName = "Free Edition"
-            };
-            var standard = new SubscribableEdition
-            {
-                DisplayName = "Standard Edition"
-            };
+            var freeEdition = new SubscribableEdition { DisplayName = "Free Edition" };
+            var standard = new SubscribableEdition { DisplayName = "Standard Edition" };
 
             await UsingDbContextAsync(async context =>
             {
@@ -150,8 +149,7 @@ namespace TACHYON.Tests.MultiTenancy
 
             var tenant = new Tenant("AbpProjectName", "AbpProjectName")
             {
-                EditionId = standard.Id,
-                SubscriptionEndDateUtc = utcNow.AddDays(-1)
+                EditionId = standard.Id, SubscriptionEndDateUtc = utcNow.AddDays(-1)
             };
 
             await UsingDbContextAsync(async context =>
@@ -177,14 +175,8 @@ namespace TACHYON.Tests.MultiTenancy
         {
             //Act
             var utcNow = Clock.Now.ToUniversalTime();
-            var freeEdition = new SubscribableEdition
-            {
-                DisplayName = "Free Edition"
-            };
-            var standard = new SubscribableEdition
-            {
-                DisplayName = "Standard Edition",
-            };
+            var freeEdition = new SubscribableEdition { DisplayName = "Free Edition" };
+            var standard = new SubscribableEdition { DisplayName = "Standard Edition", };
 
             await UsingDbContextAsync(async context =>
             {
@@ -198,8 +190,7 @@ namespace TACHYON.Tests.MultiTenancy
 
             var tenant = new Tenant("AbpProjectName", "AbpProjectName")
             {
-                EditionId = standard.Id,
-                SubscriptionEndDateUtc = utcNow.AddDays(-1)
+                EditionId = standard.Id, SubscriptionEndDateUtc = utcNow.AddDays(-1)
             };
 
             await UsingDbContextAsync(async context =>
@@ -227,14 +218,8 @@ namespace TACHYON.Tests.MultiTenancy
         {
             //Act
             var utcNow = Clock.Now.ToUniversalTime();
-            var freeEdition = new SubscribableEdition
-            {
-                DisplayName = "Free Edition"
-            };
-            var standard = new SubscribableEdition
-            {
-                DisplayName = "Standard Edition",
-            };
+            var freeEdition = new SubscribableEdition { DisplayName = "Free Edition" };
+            var standard = new SubscribableEdition { DisplayName = "Standard Edition", };
 
             await UsingDbContextAsync(async context =>
             {
@@ -247,8 +232,7 @@ namespace TACHYON.Tests.MultiTenancy
 
             var tenant = new Tenant("AbpProjectName", "AbpProjectName")
             {
-                EditionId = standard.Id,
-                SubscriptionEndDateUtc = utcNow.AddDays(10)
+                EditionId = standard.Id, SubscriptionEndDateUtc = utcNow.AddDays(10)
             };
 
             await UsingDbContextAsync(async context =>
@@ -257,7 +241,8 @@ namespace TACHYON.Tests.MultiTenancy
                 await context.SaveChangesAsync();
             });
 
-            await Assert.ThrowsAsync<Exception>(async () => await _tenantManager.EndSubscriptionAsync(tenant, standard, utcNow));
+            await Assert.ThrowsAsync<Exception>(async () =>
+                await _tenantManager.EndSubscriptionAsync(tenant, standard, utcNow));
 
             UsingDbContext(context =>
             {
@@ -270,20 +255,14 @@ namespace TACHYON.Tests.MultiTenancy
         }
 
         [Fact]
-        public async Task Dont_Mark_Tenant_As_Passive_If_WaitingDayAfterExpire_Is_Not_Passed_And_Tenant_NotIsInTrialPeriod()
+        public async Task
+            Dont_Mark_Tenant_As_Passive_If_WaitingDayAfterExpire_Is_Not_Passed_And_Tenant_NotIsInTrialPeriod()
         {
             //Act
             var utcNow = Clock.Now.ToUniversalTime();
-            var freeEdition = new SubscribableEdition
-            {
-                DisplayName = "Free Edition"
-            };
+            var freeEdition = new SubscribableEdition { DisplayName = "Free Edition" };
 
-            var standard = new SubscribableEdition
-            {
-                DisplayName = "Standard Edition",
-                WaitingDayAfterExpire = 10
-            };
+            var standard = new SubscribableEdition { DisplayName = "Standard Edition", WaitingDayAfterExpire = 10 };
 
             await UsingDbContextAsync(async context =>
             {
@@ -296,8 +275,7 @@ namespace TACHYON.Tests.MultiTenancy
 
             var tenant = new Tenant("AbpProjectName", "AbpProjectName")
             {
-                EditionId = standard.Id,
-                SubscriptionEndDateUtc = utcNow.AddDays(-1)
+                EditionId = standard.Id, SubscriptionEndDateUtc = utcNow.AddDays(-1)
             };
 
             await UsingDbContextAsync(async context =>
@@ -306,7 +284,8 @@ namespace TACHYON.Tests.MultiTenancy
                 await context.SaveChangesAsync();
             });
 
-            await Assert.ThrowsAsync<Exception>(async () => await _tenantManager.EndSubscriptionAsync(tenant, standard, utcNow));
+            await Assert.ThrowsAsync<Exception>(async () =>
+                await _tenantManager.EndSubscriptionAsync(tenant, standard, utcNow));
 
             UsingDbContext(context =>
             {
@@ -323,16 +302,9 @@ namespace TACHYON.Tests.MultiTenancy
         {
             //Act
             var utcNow = Clock.Now.ToUniversalTime();
-            var freeEdition = new SubscribableEdition
-            {
-                DisplayName = "Free Edition"
-            };
+            var freeEdition = new SubscribableEdition { DisplayName = "Free Edition" };
 
-            var standard = new SubscribableEdition
-            {
-                DisplayName = "Standard Edition",
-                WaitingDayAfterExpire = 10
-            };
+            var standard = new SubscribableEdition { DisplayName = "Standard Edition", WaitingDayAfterExpire = 10 };
 
             await UsingDbContextAsync(async context =>
             {
@@ -345,9 +317,7 @@ namespace TACHYON.Tests.MultiTenancy
 
             var tenant = new Tenant("AbpProjectName", "AbpProjectName")
             {
-                EditionId = standard.Id,
-                SubscriptionEndDateUtc = utcNow.AddDays(-1),
-                IsInTrialPeriod = true
+                EditionId = standard.Id, SubscriptionEndDateUtc = utcNow.AddDays(-1), IsInTrialPeriod = true
             };
 
             await UsingDbContextAsync(async context =>
@@ -374,16 +344,9 @@ namespace TACHYON.Tests.MultiTenancy
         {
             //Act
             var utcNow = Clock.Now.ToUniversalTime();
-            var freeEdition = new SubscribableEdition
-            {
-                DisplayName = "Free Edition"
-            };
+            var freeEdition = new SubscribableEdition { DisplayName = "Free Edition" };
 
-            var standard = new SubscribableEdition
-            {
-                DisplayName = "Standard Edition",
-                WaitingDayAfterExpire = 10
-            };
+            var standard = new SubscribableEdition { DisplayName = "Standard Edition", WaitingDayAfterExpire = 10 };
 
             await UsingDbContextAsync(async context =>
             {
@@ -396,8 +359,7 @@ namespace TACHYON.Tests.MultiTenancy
 
             var tenant = new Tenant("AbpProjectName", "AbpProjectName")
             {
-                EditionId = standard.Id,
-                SubscriptionEndDateUtc = utcNow.AddDays(-11)
+                EditionId = standard.Id, SubscriptionEndDateUtc = utcNow.AddDays(-11)
             };
 
             await UsingDbContextAsync(async context =>
@@ -429,18 +391,19 @@ namespace TACHYON.Tests.MultiTenancy
             result.Items[1].DayCount.ShouldBe(29);
         }
 
-        private async Task CreateUpdateTenant(PaymentPeriodType paymentPeriodType, EditionPaymentType editionPaymentType, DateTime? subscriptionEndDate, DateTime updatedSubscriptionEndDate)
+        private async Task CreateUpdateTenant(PaymentPeriodType paymentPeriodType,
+            EditionPaymentType editionPaymentType,
+            DateTime? subscriptionEndDate,
+            DateTime updatedSubscriptionEndDate)
         {
             await _editionManager.CreateAsync(new SubscribableEdition
             {
-                Name = "CurrentEdition",
-                DisplayName = "Current Edition"
+                Name = "CurrentEdition", DisplayName = "Current Edition"
             });
 
             await _editionManager.CreateAsync(new SubscribableEdition
             {
-                Name = "TargetEdition",
-                DisplayName = "Target Edition"
+                Name = "TargetEdition", DisplayName = "Target Edition"
             });
 
             var currentEditionId = (await _editionManager.FindByNameAsync("CurrentEdition")).Id;

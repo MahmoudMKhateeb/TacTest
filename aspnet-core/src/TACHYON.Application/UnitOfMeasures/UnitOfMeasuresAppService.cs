@@ -25,29 +25,24 @@ namespace TACHYON.UnitOfMeasures
         public UnitOfMeasuresAppService(IRepository<UnitOfMeasure> unitOfMeasureRepository)
         {
             _unitOfMeasureRepository = unitOfMeasureRepository;
-
         }
 
         public async Task<PagedResultDto<GetUnitOfMeasureForViewDto>> GetAll(GetAllUnitOfMeasuresInput input)
         {
-
             var filteredUnitOfMeasures = _unitOfMeasureRepository.GetAll()
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter))
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.DisplayName == input.DisplayNameFilter);
+                .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter))
+                .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter),
+                    e => e.DisplayName == input.DisplayNameFilter);
 
             var pagedAndFilteredUnitOfMeasures = filteredUnitOfMeasures
                 .OrderBy(input.Sorting ?? "id asc")
                 .PageBy(input);
 
             var unitOfMeasures = from o in pagedAndFilteredUnitOfMeasures
-                                 select new GetUnitOfMeasureForViewDto()
-                                 {
-                                     UnitOfMeasure = new UnitOfMeasureDto
-                                     {
-                                         DisplayName = o.DisplayName,
-                                         Id = o.Id
-                                     }
-                                 };
+                select new GetUnitOfMeasureForViewDto()
+                {
+                    UnitOfMeasure = new UnitOfMeasureDto { DisplayName = o.DisplayName, Id = o.Id }
+                };
 
             var totalCount = await filteredUnitOfMeasures.CountAsync();
 
@@ -61,7 +56,8 @@ namespace TACHYON.UnitOfMeasures
         {
             var unitOfMeasure = await _unitOfMeasureRepository.GetAsync(id);
 
-            var output = new GetUnitOfMeasureForViewDto { UnitOfMeasure = ObjectMapper.Map<UnitOfMeasureDto>(unitOfMeasure) };
+            var output =
+                new GetUnitOfMeasureForViewDto { UnitOfMeasure = ObjectMapper.Map<UnitOfMeasureDto>(unitOfMeasure) };
 
             return output;
         }
@@ -71,14 +67,16 @@ namespace TACHYON.UnitOfMeasures
         {
             var unitOfMeasure = await _unitOfMeasureRepository.FirstOrDefaultAsync(input.Id);
 
-            var output = new GetUnitOfMeasureForEditOutput { UnitOfMeasure = ObjectMapper.Map<CreateOrEditUnitOfMeasureDto>(unitOfMeasure) };
+            var output = new GetUnitOfMeasureForEditOutput
+            {
+                UnitOfMeasure = ObjectMapper.Map<CreateOrEditUnitOfMeasureDto>(unitOfMeasure)
+            };
 
             return output;
         }
 
         public async Task CreateOrEdit(CreateOrEditUnitOfMeasureDto input)
         {
-
             await IsUintOfMeasureNameDuplicatedOrEmpty(input.DisplayName);
 
             if (input.Id == null)
@@ -95,7 +93,6 @@ namespace TACHYON.UnitOfMeasures
         protected virtual async Task Create(CreateOrEditUnitOfMeasureDto input)
         {
             var unitOfMeasure = ObjectMapper.Map<UnitOfMeasure>(input);
-
 
 
             await _unitOfMeasureRepository.InsertAsync(unitOfMeasure);
@@ -129,9 +126,7 @@ namespace TACHYON.UnitOfMeasures
             return await _unitOfMeasureRepository.GetAll()
                 .Select(x => new SelectItemDto()
                 {
-                    Id = x.Id.ToString(),
-                    DisplayName = x.DisplayName,
-                    IsOther = x.ContainsOther()
+                    Id = x.Id.ToString(), DisplayName = x.DisplayName, IsOther = x.ContainsOther()
                 }).ToListAsync();
         }
 
@@ -147,6 +142,5 @@ namespace TACHYON.UnitOfMeasures
             if (isDuplicated)
                 throw new UserFriendlyException(L("UintOfMeasureNameCanNotBeDuplicated"));
         }
-
     }
 }

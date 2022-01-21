@@ -8,6 +8,5 @@ namespace TACHYON.Nationalities.Dtos
         public string Filter { get; set; }
 
         public string NameFilter { get; set; }
-
     }
 }

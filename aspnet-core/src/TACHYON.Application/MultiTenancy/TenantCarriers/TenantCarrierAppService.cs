@@ -13,14 +13,14 @@ using TACHYON.MultiTenancy.TenantCarriers.Dto;
 namespace TACHYON.MultiTenancy.TenantCarriers
 {
     [AbpAuthorize(AppPermissions.Pages_TenantCarrier)]
-
-    public class TenantCarrierAppService : TACHYONAppServiceBase,ITenantCarrierAppService
+    public class TenantCarrierAppService : TACHYONAppServiceBase, ITenantCarrierAppService
     {
-        private readonly IRepository<TenantCarrier,long> _tenantCarrierRepository;
+        private readonly IRepository<TenantCarrier, long> _tenantCarrierRepository;
         private readonly IRepository<Tenant> _tenantRepository;
 
 
-        public TenantCarrierAppService(IRepository<TenantCarrier, long> tenantCarrierRepository, IRepository<Tenant> tenantRepository)
+        public TenantCarrierAppService(IRepository<TenantCarrier, long> tenantCarrierRepository,
+            IRepository<Tenant> tenantRepository)
         {
             _tenantCarrierRepository = tenantCarrierRepository;
             _tenantRepository = tenantRepository;
@@ -30,9 +30,7 @@ namespace TACHYON.MultiTenancy.TenantCarriers
         {
             DisableTenancyFilters();
             var query = _tenantCarrierRepository
-                .GetAll().
-                AsNoTracking().
-                Include(x => x.CarrierShipper)
+                .GetAll().AsNoTracking().Include(x => x.CarrierShipper)
                 .Where(c => c.TenantId == input.Id);
             var ResultPage = await query.PageBy(input).ToListAsync();
 
@@ -40,35 +38,40 @@ namespace TACHYON.MultiTenancy.TenantCarriers
             return new PagedResultDto<TenantCarriersListDto>(
                 totalCount,
                 ObjectMapper.Map<List<TenantCarriersListDto>>(ResultPage)
-
             );
         }
+
         [AbpAuthorize(AppPermissions.Pages_TenantCarrier_Create)]
         public async Task Create(CreateTenantCarrierInput input)
         {
-            if (!await _tenantRepository.GetAll().AnyAsync(x=>x.Id== input.CarrierTenantId && x.Edition.DisplayName.ToLower()== TACHYONConsts.CarrierEdtionName))
+            if (!await _tenantRepository.GetAll().AnyAsync(x =>
+                    x.Id == input.CarrierTenantId &&
+                    x.Edition.DisplayName.ToLower() == TACHYONConsts.CarrierEdtionName))
             {
                 throw new UserFriendlyException(L("TheCarrierSelectedIsNotFound"));
             }
-            if (!await _tenantRepository.GetAll().AnyAsync(x => x.Id == input.TenantId && x.Edition.DisplayName.ToLower() == TACHYONConsts.ShipperEdtionName))
+
+            if (!await _tenantRepository.GetAll().AnyAsync(x =>
+                    x.Id == input.TenantId && x.Edition.DisplayName.ToLower() == TACHYONConsts.ShipperEdtionName))
             {
                 throw new UserFriendlyException(L("TheShipperSelectedIsNotFound"));
             }
-            if (await _tenantCarrierRepository.GetAll().AnyAsync(x => x.TenantId == input.TenantId && x.CarrierTenantId == input.CarrierTenantId))
+
+            if (await _tenantCarrierRepository.GetAll().AnyAsync(x =>
+                    x.TenantId == input.TenantId && x.CarrierTenantId == input.CarrierTenantId))
             {
                 throw new UserFriendlyException(L("TheCarrierAlreadyAddToTheSipperSelected"));
             }
 
             TenantCarrier tenantCarrier = ObjectMapper.Map<TenantCarrier>(input);
-            await  _tenantCarrierRepository.InsertAsync(tenantCarrier);
+            await _tenantCarrierRepository.InsertAsync(tenantCarrier);
         }
+
         [AbpAuthorize(AppPermissions.Pages_TenantCarrier_Delete)]
         public async Task Delete(EntityDto input)
         {
             DisableTenancyFilters();
-           await _tenantCarrierRepository.DeleteAsync(input.Id);
+            await _tenantCarrierRepository.DeleteAsync(input.Id);
         }
-
-
     }
 }

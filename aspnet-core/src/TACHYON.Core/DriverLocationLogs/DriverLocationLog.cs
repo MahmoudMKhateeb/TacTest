@@ -14,13 +14,10 @@ namespace TACHYON.DriverLocationLogs
     public class DriverLocationLog : Entity<long>, ICreationAudited
     {
         public long? CreatorUserId { set; get; }
-        [ForeignKey("CreatorUserId")]
-        public User CreatorUserFk { get; set; }
+        [ForeignKey("CreatorUserId")] public User CreatorUserFk { get; set; }
         public DateTime CreationTime { set; get; }
         public int? TripId { get; set; }
-        [ForeignKey("TripId")]
-        public ShippingRequestTrip ShippingRequestTripFk { get; set; }
+        [ForeignKey("TripId")] public ShippingRequestTrip ShippingRequestTripFk { get; set; }
         public Point Location { get; set; }
-
     }
 }

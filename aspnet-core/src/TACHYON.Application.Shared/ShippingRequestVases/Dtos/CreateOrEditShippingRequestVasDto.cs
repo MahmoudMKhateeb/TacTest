@@ -9,7 +9,5 @@ namespace TACHYON.ShippingRequestVases.Dtos
         public virtual int RequestMaxCount { get; set; }
         public int NumberOfTrips { get; set; }
         public string OtherVasName { get; set; }
-
-
     }
 }

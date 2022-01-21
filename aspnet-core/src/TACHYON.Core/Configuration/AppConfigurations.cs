@@ -14,7 +14,9 @@ namespace TACHYON.Configuration
             ConfigurationCache = new ConcurrentDictionary<string, IConfigurationRoot>();
         }
 
-        public static IConfigurationRoot Get(string path, string environmentName = null, bool addUserSecrets = false)
+        public static IConfigurationRoot Get(string path,
+            string environmentName = null,
+            bool addUserSecrets = false)
         {
             var cacheKey = path + "#" + environmentName + "#" + addUserSecrets;
             return ConfigurationCache.GetOrAdd(
@@ -23,7 +25,9 @@ namespace TACHYON.Configuration
             );
         }
 
-        private static IConfigurationRoot BuildConfiguration(string path, string environmentName = null, bool addUserSecrets = false)
+        private static IConfigurationRoot BuildConfiguration(string path,
+            string environmentName = null,
+            bool addUserSecrets = false)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(path)

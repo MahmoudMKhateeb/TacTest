@@ -6,17 +6,17 @@ using TACHYON.Shipping.DirectRequests.Dto;
 
 namespace TACHYON.Shipping.DirectRequests
 {
-    public  interface IShippingRequestDirectRequestAppService: IApplicationService
+    public interface IShippingRequestDirectRequestAppService : IApplicationService
     {
         Task<PagedResultDto<ShippingRequestDirectRequestListDto>> GetAll(ShippingRequestDirectRequestGetAllInput input);
 
-        Task<PagedResultDto<ShippingRequestDirectRequestGetCarrirerListDto>> GetAllCarriers(ShippingRequestDirectRequestGetAllCarrirerInput input);
+        Task<PagedResultDto<ShippingRequestDirectRequestGetCarrirerListDto>> GetAllCarriers(
+            ShippingRequestDirectRequestGetAllCarrirerInput input);
 
         Task Create(CreateShippingRequestDirectRequestInput input);
         Task Delete(EntityDto<long> input);
         Task Decline(long id);
 
         Task Reject(RejectShippingRequestDirectRequestInput input);
-        
     }
 }

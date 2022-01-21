@@ -33,13 +33,15 @@ namespace TACHYON.Tests.Authorization.Accounts
 
             var fakeUserEmailer = Substitute.For<IUserEmailer>();
             var localUser = user;
-            fakeUserEmailer.SendEmailActivationLinkAsync(Arg.Any<User>(), Arg.Any<string>(), Arg.Any<string>()).Returns(callInfo =>
-             {
-                 var calledUser = callInfo.Arg<User>();
-                 calledUser.EmailAddress.ShouldBe(localUser.EmailAddress);
-                 confirmationCode = calledUser.EmailConfirmationCode; //Getting the confirmation code sent to the email address
-                return Task.CompletedTask;
-             });
+            fakeUserEmailer.SendEmailActivationLinkAsync(Arg.Any<User>(), Arg.Any<string>(), Arg.Any<string>()).Returns(
+                callInfo =>
+                {
+                    var calledUser = callInfo.Arg<User>();
+                    calledUser.EmailAddress.ShouldBe(localUser.EmailAddress);
+                    confirmationCode =
+                        calledUser.EmailConfirmationCode; //Getting the confirmation code sent to the email address
+                    return Task.CompletedTask;
+                });
 
             LocalIocManager.IocContainer.Register(Component.For<IUserEmailer>().Instance(fakeUserEmailer).IsDefault());
 
@@ -48,18 +50,11 @@ namespace TACHYON.Tests.Authorization.Accounts
             //Act
 
             await accountAppService.SendEmailActivationLink(
-                new SendEmailActivationLinkInput
-                {
-                    EmailAddress = user.EmailAddress
-                }
+                new SendEmailActivationLinkInput { EmailAddress = user.EmailAddress }
             );
 
             await accountAppService.ActivateEmail(
-                new ActivateEmailInput
-                {
-                    UserId = user.Id,
-                    ConfirmationCode = confirmationCode
-                }
+                new ActivateEmailInput { UserId = user.Id, ConfirmationCode = confirmationCode }
             );
 
             //Assert

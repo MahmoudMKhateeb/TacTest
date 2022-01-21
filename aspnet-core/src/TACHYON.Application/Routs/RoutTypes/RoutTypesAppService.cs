@@ -1,6 +1,4 @@
-﻿
-
-using Abp.Application.Services.Dto;
+﻿using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
@@ -25,34 +23,33 @@ namespace TACHYON.Routs.RoutTypes
         private readonly IRoutTypesExcelExporter _routTypesExcelExporter;
 
 
-        public RoutTypesAppService(IRepository<RoutType> routTypeRepository, IRoutTypesExcelExporter routTypesExcelExporter)
+        public RoutTypesAppService(IRepository<RoutType> routTypeRepository,
+            IRoutTypesExcelExporter routTypesExcelExporter)
         {
             _routTypeRepository = routTypeRepository;
             _routTypesExcelExporter = routTypesExcelExporter;
-
         }
 
         public async Task<PagedResultDto<GetRoutTypeForViewDto>> GetAll(GetAllRoutTypesInput input)
         {
-
             var filteredRoutTypes = _routTypeRepository.GetAll()
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter) || e.Description.Contains(input.Filter))
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.DisplayName == input.DisplayNameFilter);
+                .WhereIf(!string.IsNullOrWhiteSpace(input.Filter),
+                    e => false || e.DisplayName.Contains(input.Filter) || e.Description.Contains(input.Filter))
+                .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter),
+                    e => e.DisplayName == input.DisplayNameFilter);
 
             var pagedAndFilteredRoutTypes = filteredRoutTypes
                 .OrderBy(input.Sorting ?? "id asc")
                 .PageBy(input);
 
             var routTypes = from o in pagedAndFilteredRoutTypes
-                            select new GetRoutTypeForViewDto()
-                            {
-                                RoutType = new RoutTypeDto
-                                {
-                                    DisplayName = o.DisplayName,
-                                    Description = o.Description,
-                                    Id = o.Id
-                                }
-                            };
+                select new GetRoutTypeForViewDto()
+                {
+                    RoutType = new RoutTypeDto
+                    {
+                        DisplayName = o.DisplayName, Description = o.Description, Id = o.Id
+                    }
+                };
 
             var totalCount = await filteredRoutTypes.CountAsync();
 
@@ -76,7 +73,8 @@ namespace TACHYON.Routs.RoutTypes
         {
             var routType = await _routTypeRepository.FirstOrDefaultAsync(input.Id);
 
-            var output = new GetRoutTypeForEditOutput { RoutType = ObjectMapper.Map<CreateOrEditRoutTypeDto>(routType) };
+            var output =
+                new GetRoutTypeForEditOutput { RoutType = ObjectMapper.Map<CreateOrEditRoutTypeDto>(routType) };
 
             return output;
         }
@@ -99,7 +97,6 @@ namespace TACHYON.Routs.RoutTypes
             var routType = ObjectMapper.Map<RoutType>(input);
 
 
-
             await _routTypeRepository.InsertAsync(routType);
         }
 
@@ -118,28 +115,25 @@ namespace TACHYON.Routs.RoutTypes
 
         public async Task<FileDto> GetRoutTypesToExcel(GetAllRoutTypesForExcelInput input)
         {
-
             var filteredRoutTypes = _routTypeRepository.GetAll()
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter) || e.Description.Contains(input.Filter))
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.DisplayName == input.DisplayNameFilter);
+                .WhereIf(!string.IsNullOrWhiteSpace(input.Filter),
+                    e => false || e.DisplayName.Contains(input.Filter) || e.Description.Contains(input.Filter))
+                .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter),
+                    e => e.DisplayName == input.DisplayNameFilter);
 
             var query = (from o in filteredRoutTypes
-                         select new GetRoutTypeForViewDto()
-                         {
-                             RoutType = new RoutTypeDto
-                             {
-                                 DisplayName = o.DisplayName,
-                                 Description = o.Description,
-                                 Id = o.Id
-                             }
-                         });
+                select new GetRoutTypeForViewDto()
+                {
+                    RoutType = new RoutTypeDto
+                    {
+                        DisplayName = o.DisplayName, Description = o.Description, Id = o.Id
+                    }
+                });
 
 
             var routTypeListDtos = await query.ToListAsync();
 
             return _routTypesExcelExporter.ExportToFile(routTypeListDtos);
         }
-
-
     }
 }

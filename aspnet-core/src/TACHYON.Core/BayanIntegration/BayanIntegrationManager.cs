@@ -33,20 +33,23 @@ namespace TACHYON.BayanIntegration
 {
     public class BayanIntegrationManager : TACHYONDomainServiceBase
     {
-
-
-
         private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
         private readonly IRepository<ShippingRequestTrip> _shippingRequestTripTripRepository;
         private readonly IRepository<ShippingRequestTripVas, long> _shippingRequestTripVasRepository;
         private readonly DocumentFilesManager _documentFilesManager;
         private readonly ISettingManager _settingManager;
         private readonly IBackgroundJobManager _backgroundJobManager;
+
         /// <summary>Reference to the feature checker.</summary>
         public IFeatureChecker FeatureChecker { protected get; set; }
 
 
-        public BayanIntegrationManager(IRepository<ShippingRequest, long> shippingRequestRepository, IRepository<ShippingRequestTrip> shippingRequestTripTripRepository, DocumentFilesManager documentFilesManager, IRepository<ShippingRequestTripVas, long> shippingRequestTripVasRepository, ISettingManager settingManager, IBackgroundJobManager backgroundJobManager)
+        public BayanIntegrationManager(IRepository<ShippingRequest, long> shippingRequestRepository,
+            IRepository<ShippingRequestTrip> shippingRequestTripTripRepository,
+            DocumentFilesManager documentFilesManager,
+            IRepository<ShippingRequestTripVas, long> shippingRequestTripVasRepository,
+            ISettingManager settingManager,
+            IBackgroundJobManager backgroundJobManager)
         {
             _shippingRequestRepository = shippingRequestRepository;
             _shippingRequestTripTripRepository = shippingRequestTripTripRepository;
@@ -67,7 +70,6 @@ namespace TACHYON.BayanIntegration
         /// </summary>
         public async Task CreateConsignmentNote(int id)
         {
-
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
             {
                 var trip = await _shippingRequestTripTripRepository
@@ -112,23 +114,12 @@ namespace TACHYON.BayanIntegration
                     //    Logger.Error("BayanIntegrationManager.CreateConsignmentNote" + e.Message);
                     //}
                 }
-
-
-
-
             }
-
-
-
-
         }
 
         public async Task QueueCreateConsignmentNote(int tripId)
         {
-
             await _backgroundJobManager.EnqueueAsync<CreateConsignmentNoteJob, int>(tripId);
-
-
         }
 
         /// <summary>
@@ -170,7 +161,6 @@ namespace TACHYON.BayanIntegration
                         else
                         {
                             Logger.Trace("BayanIntegrationManager.EditConsignmentNote" + response);
-
                         }
                     }
                     catch (Exception e)
@@ -178,19 +168,12 @@ namespace TACHYON.BayanIntegration
                         Logger.Error("BayanIntegrationManager.EditConsignmentNote" + e.Message);
                     }
                 }
-
-
-
-
             }
         }
 
         public async Task QueueEditConsignmentNote(int tripId)
         {
-
             await _backgroundJobManager.EnqueueAsync<EditConsignmentNoteJob, int>(tripId);
-
-
         }
 
         /// <summary>
@@ -198,25 +181,24 @@ namespace TACHYON.BayanIntegration
         /// </summary>
         public void CloseConsignmentNote()
         {
-
         }
 
         private async Task<Tuple<RootForCreate, ShippingRequestTrip>> GetRootForCreate(int id)
         {
-
-
             ShippingRequestTrip trip = await _shippingRequestTripTripRepository.GetAsync(id);
 
 
+            var driverIdentityNumber =
+                (await _documentFilesManager.GetDriverIqamaActiveDocumentAsync(trip.AssignedDriverUserId.Value))
+                ?.Number;
 
-            var driverIdentityNumber = (await _documentFilesManager.GetDriverIqamaActiveDocumentAsync(trip.AssignedDriverUserId.Value))?.Number;
-
-            var vehicleSequenceNumber = (await _documentFilesManager.GetTruckIstimaraActiveDocumentAsync(trip.AssignedTruckId.Value))?.Number;
+            var vehicleSequenceNumber =
+                (await _documentFilesManager.GetTruckIstimaraActiveDocumentAsync(trip.AssignedTruckId.Value))?.Number;
 
 
             var extraCharges = (await _shippingRequestTripVasRepository.GetAll()
-                .Where(x => x.ShippingRequestTripId == trip.Id)
-                .SumAsync(x => x.TotalAmountWithCommission))
+                    .Where(x => x.ShippingRequestTripId == trip.Id)
+                    .SumAsync(x => x.TotalAmountWithCommission))
                 .ToString();
 
 
@@ -241,11 +223,12 @@ namespace TACHYON.BayanIntegration
                         Phone = "+" + x.ShippingRequestFk.CarrierTenantFk.MobileNo,
                         Name = x.ShippingRequestFk.CarrierTenantFk.companyName,
                     },
-                    PickUpLocation = new PickUpLocation()
-                    {
-                        CityName = x.DestinationFacilityFk.CityFk.DisplayName,
-                        RegionName = x.DestinationFacilityFk.CityFk.CountyFk.DisplayName
-                    },
+                    PickUpLocation =
+                        new PickUpLocation()
+                        {
+                            CityName = x.DestinationFacilityFk.CityFk.DisplayName,
+                            RegionName = x.DestinationFacilityFk.CityFk.CountyFk.DisplayName
+                        },
                     DropOffLocation = new DropOffLocation()
                     {
                         CityName = x.OriginFacilityFk.CityFk.DisplayName,
@@ -269,7 +252,6 @@ namespace TACHYON.BayanIntegration
                             Price = 1,
                             Quantity = g.Amount,
                             Weight = g.Weight
-
                         }).ToList(),
                     Vehicle = new Vehicle()
                     {
@@ -280,9 +262,19 @@ namespace TACHYON.BayanIntegration
                         VehiclePlate = new VehiclePlate()
                         {
                             Number = Regex.Match(x.AssignedTruckFk.PlateNumber.Replace(" ", ""), @"\d+").Value,
-                            LeftLetter = x.AssignedTruckFk.PlateNumber.Replace(" ", "").Replace(Regex.Match(x.AssignedTruckFk.PlateNumber.Replace(" ", ""), @"\d+").Value, "").Substring(0, 1),
-                            MiddleLetter = x.AssignedTruckFk.PlateNumber.Replace(" ", "").Replace(Regex.Match(x.AssignedTruckFk.PlateNumber.Replace(" ", ""), @"\d+").Value, "").Substring(1, 1),
-                            RightLetter = x.AssignedTruckFk.PlateNumber.Replace(" ", "").Replace(Regex.Match(x.AssignedTruckFk.PlateNumber.Replace(" ", ""), @"\d+").Value, "").Substring(2, 1)
+                            LeftLetter =
+                                x.AssignedTruckFk.PlateNumber.Replace(" ", "")
+                                    .Replace(
+                                        Regex.Match(x.AssignedTruckFk.PlateNumber.Replace(" ", ""), @"\d+").Value,
+                                        "").Substring(0, 1),
+                            MiddleLetter =
+                                x.AssignedTruckFk.PlateNumber.Replace(" ", "")
+                                    .Replace(
+                                        Regex.Match(x.AssignedTruckFk.PlateNumber.Replace(" ", ""), @"\d+").Value,
+                                        "").Substring(1, 1),
+                            RightLetter = x.AssignedTruckFk.PlateNumber.Replace(" ", "")
+                                .Replace(Regex.Match(x.AssignedTruckFk.PlateNumber.Replace(" ", ""), @"\d+").Value,
+                                    "").Substring(2, 1)
                         }
                     },
                     Driver = new Driver()
@@ -293,11 +285,7 @@ namespace TACHYON.BayanIntegration
                         Mobile = "+966" + x.AssignedDriverUserFk.PhoneNumber,
                         Name = x.AssignedDriverUserFk.Name
                     },
-                    Carrier = new Carrier()
-                    {
-                        type = "COMPANY",
-                        moi = x.ShippingRequestFk.CarrierTenantFk.MoiNumber
-                    },
+                    Carrier = new Carrier() { type = "COMPANY", moi = x.ShippingRequestFk.CarrierTenantFk.MoiNumber },
                     TotalFare = Convert.ToInt32(x.VatAmountWithCommission),
                     //? estimated start date or start working date 
                     // ::info "The pickup date must be not earlier than today"
@@ -306,33 +294,37 @@ namespace TACHYON.BayanIntegration
                     //? estimated end date or end working date  ?
                     //? (dropOffDate) must not be null
                     // todo  DropOffDate??:DropOffDate:PickUpDate + 1day
-                    DropOffDate = x.EndTripDate.HasValue ? x.EndTripDate.Value.Date.ToString() : x.StartTripDate.Date.AddDays(1).ToString(),
+                    DropOffDate =
+                        x.EndTripDate.HasValue
+                            ? x.EndTripDate.Value.Date.ToString()
+                            : x.StartTripDate.Date.AddDays(1).ToString(),
                     DropOffAddress = x.DestinationFacilityFk.Address,
                     Tradable = false,
                     ExtraCharges = extraCharges.IsNullOrEmpty() ? "0" : extraCharges,
                     PaymentMethod = "",
                     PaymentComment = "",
                     PaidBy = "Sender"
-
                 }).FirstOrDefaultAsync();
 
             return new Tuple<RootForCreate, ShippingRequestTrip>(root, trip);
         }
+
         private async Task<Tuple<RootForEdit, ShippingRequestTrip>> GetRootForEdit(int id)
         {
-
             ShippingRequestTrip trip = await _shippingRequestTripTripRepository.GetAsync(id);
 
 
+            var driverIdentityNumber =
+                (await _documentFilesManager.GetDriverIqamaActiveDocumentAsync(trip.AssignedDriverUserId.Value))
+                ?.Number;
 
-            var driverIdentityNumber = (await _documentFilesManager.GetDriverIqamaActiveDocumentAsync(trip.AssignedDriverUserId.Value))?.Number;
-
-            var vehicleSequenceNumber = (await _documentFilesManager.GetTruckIstimaraActiveDocumentAsync(trip.AssignedTruckId.Value))?.Number;
+            var vehicleSequenceNumber =
+                (await _documentFilesManager.GetTruckIstimaraActiveDocumentAsync(trip.AssignedTruckId.Value))?.Number;
 
 
             var extraCharges = (await _shippingRequestTripVasRepository.GetAll()
-                .Where(x => x.ShippingRequestTripId == trip.Id)
-                .SumAsync(x => x.TotalAmountWithCommission))
+                    .Where(x => x.ShippingRequestTripId == trip.Id)
+                    .SumAsync(x => x.TotalAmountWithCommission))
                 .ToString();
 
 
@@ -358,11 +350,12 @@ namespace TACHYON.BayanIntegration
                         Phone = "+" + x.ShippingRequestFk.CarrierTenantFk.MobileNo,
                         Name = x.ShippingRequestFk.CarrierTenantFk.companyName,
                     },
-                    PickUpLocation = new PickUpLocation()
-                    {
-                        CityName = x.DestinationFacilityFk.CityFk.DisplayName,
-                        RegionName = x.DestinationFacilityFk.CityFk.CountyFk.DisplayName
-                    },
+                    PickUpLocation =
+                        new PickUpLocation()
+                        {
+                            CityName = x.DestinationFacilityFk.CityFk.DisplayName,
+                            RegionName = x.DestinationFacilityFk.CityFk.CountyFk.DisplayName
+                        },
                     DropOffLocation = new DropOffLocation()
                     {
                         CityName = x.OriginFacilityFk.CityFk.DisplayName,
@@ -386,7 +379,6 @@ namespace TACHYON.BayanIntegration
                             Price = 1,
                             Quantity = g.Amount,
                             Weight = g.Weight
-
                         }).ToList(),
                     Vehicle = new Vehicle()
                     {
@@ -410,11 +402,7 @@ namespace TACHYON.BayanIntegration
                         Mobile = "+966" + x.AssignedDriverUserFk.PhoneNumber,
                         Name = x.AssignedDriverUserFk.Name
                     },
-                    Carrier = new Carrier()
-                    {
-                        type = "COMPANY",
-                        moi = x.ShippingRequestFk.CarrierTenantFk.MoiNumber
-                    },
+                    Carrier = new Carrier() { type = "COMPANY", moi = x.ShippingRequestFk.CarrierTenantFk.MoiNumber },
                     TotalFare = Convert.ToInt32(x.VatAmountWithCommission),
                     //? estimated start date or start working date 
                     // ::info "The pickup date must be not earlier than today"
@@ -423,14 +411,16 @@ namespace TACHYON.BayanIntegration
                     //? estimated end date or end working date  ?
                     //? (dropOffDate) must not be null
                     // todo  DropOffDate??:DropOffDate:PickUpDate + 1day
-                    DropOffDate = x.EndTripDate.HasValue ? x.EndTripDate.Value.Date.ToString() : x.StartTripDate.Date.AddDays(1).ToString(),
+                    DropOffDate =
+                        x.EndTripDate.HasValue
+                            ? x.EndTripDate.Value.Date.ToString()
+                            : x.StartTripDate.Date.AddDays(1).ToString(),
                     DropOffAddress = x.DestinationFacilityFk.Address,
                     Tradable = false,
                     ExtraCharges = extraCharges.IsNullOrEmpty() ? "0" : extraCharges,
                     PaymentMethod = "",
                     PaymentComment = "",
                     PaidBy = "Sender"
-
                 }).FirstOrDefaultAsync();
 
             return new Tuple<RootForEdit, ShippingRequestTrip>(root, trip);
@@ -439,12 +429,12 @@ namespace TACHYON.BayanIntegration
 
         private static string ToJsonLowerCaseFirstLetter(object root)
         {
-            var body = Newtonsoft.Json.JsonConvert.SerializeObject(root, new JsonSerializerSettings
-            { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() });
+            var body = Newtonsoft.Json.JsonConvert.SerializeObject(root,
+                new JsonSerializerSettings
+                {
+                    ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver()
+                });
             return body;
         }
-
-
-
     }
 }

@@ -27,14 +27,14 @@ namespace TACHYON.Test.Base.TestData
             CreateEdition("Paid Edition 3", "PaidEdition3", 30, 300);
         }
 
-        private void CreateEdition(string displayName, string name, decimal? monthlyPrice, decimal? annualPrice)
+        private void CreateEdition(string displayName,
+            string name,
+            decimal? monthlyPrice,
+            decimal? annualPrice)
         {
             var edition = new SubscribableEdition
             {
-                DisplayName = displayName,
-                Name = name,
-                MonthlyPrice = monthlyPrice,
-                AnnualPrice = annualPrice
+                DisplayName = displayName, Name = name, MonthlyPrice = monthlyPrice, AnnualPrice = annualPrice
             };
 
             _context.SubscribableEditions.Add(edition);

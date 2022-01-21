@@ -10,7 +10,6 @@ namespace TACHYON.Trucks.Exporting
 {
     public class TrucksExcelExporter : NpoiExcelExporterBase, ITrucksExcelExporter
     {
-
         private readonly ITimeZoneConverter _timeZoneConverter;
         private readonly IAbpSession _abpSession;
 
@@ -18,7 +17,7 @@ namespace TACHYON.Trucks.Exporting
             ITimeZoneConverter timeZoneConverter,
             IAbpSession abpSession,
             ITempFileCacheManager tempFileCacheManager) :
-    base(tempFileCacheManager)
+            base(tempFileCacheManager)
         {
             _timeZoneConverter = timeZoneConverter;
             _abpSession = abpSession;
@@ -30,31 +29,29 @@ namespace TACHYON.Trucks.Exporting
                 "Trucks.xlsx",
                 excelPackage =>
                 {
-
                     var sheet = excelPackage.CreateSheet(L("Trucks"));
 
                     AddHeader(
                         sheet,
                         L("PlateNumber"),
-                       // L("Driver"),
+                        // L("Driver"),
                         L("TrucksType"),
                         L("ModelName"),
                         L("ModelYear"),
-                        L("TruckStatus") ,
+                        L("TruckStatus"),
                         L("Note")
-                        );
+                    );
 
                     AddObjects(
                         sheet, 2, trucks,
                         _ => _.Truck.PlateNumber,
-                       // _ => _.UserName,
+                        // _ => _.UserName,
                         _ => _.TrucksTypeDisplayName,
                         _ => _.Truck.ModelName,
                         _ => _.Truck.ModelYear,
                         _ => _.TruckStatusDisplayName,
                         _ => _.Truck.Note
-
-                        );
+                    );
 
 
                     //for (var i = 1; i <= trucks.Count; i++)

@@ -25,11 +25,13 @@ namespace TACHYON.Dashboards.Host
         Task<List<ListUsersHaveMostRequests>> GetTopRatedCarriers();
         Task<List<ListUsersHaveMostRequests>> GetWorstRatedShippers();
         Task<List<ListRequestsByCityDto>> GetNumberOfRequestsForEachCity();
-        Task<List<ListRequestsUnPricedMarketPlace>> GetUnpricedRequestsInMarketplace(GetUnpricedRequestsInMarketplaceInput input);
+
+        Task<List<ListRequestsUnPricedMarketPlace>> GetUnpricedRequestsInMarketplace(
+            GetUnpricedRequestsInMarketplaceInput input);
+
         Task<List<ListUsersHaveMostRequests>> GetWorstRatedCarriers();
         Task<long> GetRequestBeingPricedBeforeBidEndDateCount();
         Task<long> GetRequestsPricingAcceptedCount();
         Task<long> GetInvoicesPaidBeforeDueDatePercentageCount();
-
     }
 }

@@ -11,7 +11,5 @@ namespace TACHYON.Dashboards.Host.Dto
         public string GoodType { get; set; }
 
         public int AvailableGoodTypesCount { get; set; }
-
     }
-
 }

@@ -9,6 +9,5 @@ namespace TACHYON.Trucks.TruckCategories.TruckCapacities.Dtos
 
     public class CapacitySelectItemDto : SelectItemDto, ISelectItemDto
     {
-
     }
 }

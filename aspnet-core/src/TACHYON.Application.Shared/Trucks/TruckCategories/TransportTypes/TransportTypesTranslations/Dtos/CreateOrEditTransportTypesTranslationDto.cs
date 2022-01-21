@@ -6,16 +6,16 @@ namespace TACHYON.Trucks.TruckCategories.TransportTypes.TransportTypesTranslatio
 {
     public class CreateOrEditTransportTypesTranslationDto : EntityDto<int?>
     {
-
         [Required]
-        [StringLength(TransportTypesTranslationConsts.MaxDisplayNameLength, MinimumLength = TransportTypesTranslationConsts.MinDisplayNameLength)]
+        [StringLength(TransportTypesTranslationConsts.MaxDisplayNameLength,
+            MinimumLength = TransportTypesTranslationConsts.MinDisplayNameLength)]
         public string TranslatedDisplayName { get; set; }
 
         [Required]
-        [StringLength(TransportTypesTranslationConsts.MaxLanguageLength, MinimumLength = TransportTypesTranslationConsts.MinLanguageLength)]
+        [StringLength(TransportTypesTranslationConsts.MaxLanguageLength,
+            MinimumLength = TransportTypesTranslationConsts.MinLanguageLength)]
         public string Language { get; set; }
 
         public int CoreId { get; set; }
-
     }
 }

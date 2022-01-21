@@ -40,21 +40,20 @@ namespace TACHYON.MultiTenancy
 
         public virtual Guid? LogoId { get; set; }
 
-        [MaxLength(MaxLogoMimeTypeLength)]
-        public virtual string LogoFileType { get; set; }
+        [MaxLength(MaxLogoMimeTypeLength)] public virtual string LogoFileType { get; set; }
 
         public decimal Balance { get; set; } = 0;
         public decimal ReservedBalance { get; set; } = 0;
         public decimal CreditBalance { get; set; } = 0;
 
-        [StringLength(12)]
-        public string AccountNumber { get; set; }
-        [StringLength(12)]
-        public string ContractNumber { get; set; }
+        [StringLength(12)] public string AccountNumber { get; set; }
+        [StringLength(12)] public string ContractNumber { get; set; }
+
         /// <summary>
         /// This field is final rate for tenant "shipper or carrier"
         /// </summary>
         public decimal Rate { get; set; }
+
         public int RateNumber { get; set; }
         public SubscriptionPaymentType SubscriptionPaymentType { get; set; }
 
@@ -71,13 +70,11 @@ namespace TACHYON.MultiTenancy
 
         protected Tenant()
         {
-
         }
 
         public Tenant(string tenancyName, string name)
             : base(tenancyName, name)
         {
-
         }
 
         public virtual bool HasLogo()
@@ -91,7 +88,8 @@ namespace TACHYON.MultiTenancy
             LogoFileType = null;
         }
 
-        public void UpdateSubscriptionDateForPayment(PaymentPeriodType paymentPeriodType, EditionPaymentType editionPaymentType)
+        public void UpdateSubscriptionDateForPayment(PaymentPeriodType paymentPeriodType,
+            EditionPaymentType editionPaymentType)
         {
             switch (editionPaymentType)
             {
@@ -109,6 +107,7 @@ namespace TACHYON.MultiTenancy
                     {
                         SubscriptionEndDateUtc = Clock.Now.ToUniversalTime().AddDays((int)paymentPeriodType);
                     }
+
                     break;
                 default:
                     throw new ArgumentException();
@@ -138,7 +137,8 @@ namespace TACHYON.MultiTenancy
         public int CalculateRemainingHoursCount()
         {
             return SubscriptionEndDateUtc != null
-                ? (int)(SubscriptionEndDateUtc.Value - Clock.Now.ToUniversalTime()).TotalHours //converting it to int is not a problem since max value ((DateTime.MaxValue - DateTime.MinValue).TotalHours = 87649416) is in range of integer.
+                ? (int)(SubscriptionEndDateUtc.Value - Clock.Now.ToUniversalTime())
+                .TotalHours //converting it to int is not a problem since max value ((DateTime.MaxValue - DateTime.MinValue).TotalHours = 87649416) is in range of integer.
                 : 0;
         }
 

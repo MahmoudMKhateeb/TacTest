@@ -2,8 +2,8 @@
 {
     public enum ShippingRequestType : byte
     {
-        Marketplace=1,
-        DirectRequest=2,
+        Marketplace = 1,
+        DirectRequest = 2,
         TachyonManageService
     }
 }

@@ -6,8 +6,6 @@ namespace TACHYON.Trucks.TruckCategories.TransportTypes.Dtos
 {
     public class GetTransportTypeForEditOutput
     {
-		public CreateOrEditTransportTypeDto TransportType { get; set; }
-
-
+        public CreateOrEditTransportTypeDto TransportType { get; set; }
     }
 }

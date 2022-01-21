@@ -8,7 +8,12 @@ namespace TACHYON.Tenants.Dashboard
     {
         private const string DateFormat = "yyyy-MM-dd";
         private static readonly Random Random;
-        public static string[] CountryNames = { "Argentina", "China", "France", "Italy", "Japan", "Netherlands", "Russia", "Spain", "Turkey", "United States" };
+
+        public static string[] CountryNames =
+        {
+            "Argentina", "China", "France", "Italy", "Japan", "Netherlands", "Russia", "Spain", "Turkey",
+            "United States"
+        };
 
         static DashboardRandomDataGenerator()
         {
@@ -20,7 +25,9 @@ namespace TACHYON.Tenants.Dashboard
             return Random.Next(min, max);
         }
 
-        public static int[] GetRandomArray(int size, int min, int max)
+        public static int[] GetRandomArray(int size,
+            int min,
+            int max)
         {
             var array = new int[size];
             for (var i = 0; i < size; i++)
@@ -51,7 +58,8 @@ namespace TACHYON.Tenants.Dashboard
             return array;
         }
 
-        public static List<SalesSummaryData> GenerateSalesSummaryData(SalesSummaryDatePeriod inputSalesSummaryDatePeriod)
+        public static List<SalesSummaryData> GenerateSalesSummaryData(
+            SalesSummaryDatePeriod inputSalesSummaryDatePeriod)
         {
             List<SalesSummaryData> data = null;
 
@@ -112,16 +120,17 @@ namespace TACHYON.Tenants.Dashboard
         {
             return new List<MemberActivity>
             {
-                new MemberActivity("Brain", TACHYONConsts.CurrencySign + GetRandomInt(100, 500), GetRandomInt(10, 100), GetRandomInt(10, 150),
+                new MemberActivity("Brain", TACHYONConsts.CurrencySign + GetRandomInt(100, 500), GetRandomInt(10, 100),
+                    GetRandomInt(10, 150),
                     GetRandomInt(10, 99) + "%"),
-
-                new MemberActivity("Jane", TACHYONConsts.CurrencySign + GetRandomInt(100, 500), GetRandomInt(10, 100), GetRandomInt(10, 150),
+                new MemberActivity("Jane", TACHYONConsts.CurrencySign + GetRandomInt(100, 500), GetRandomInt(10, 100),
+                    GetRandomInt(10, 150),
                     GetRandomInt(10, 99) + "%"),
-
-                new MemberActivity("Tim", TACHYONConsts.CurrencySign + GetRandomInt(100, 500), GetRandomInt(10, 100), GetRandomInt(10, 150),
+                new MemberActivity("Tim", TACHYONConsts.CurrencySign + GetRandomInt(100, 500), GetRandomInt(10, 100),
+                    GetRandomInt(10, 150),
                     GetRandomInt(10, 99) + "%"),
-
-                new MemberActivity("Kate", TACHYONConsts.CurrencySign + GetRandomInt(100, 500), GetRandomInt(10, 100), GetRandomInt(10, 150),
+                new MemberActivity("Kate", TACHYONConsts.CurrencySign + GetRandomInt(100, 500), GetRandomInt(10, 100),
+                    GetRandomInt(10, 150),
                     GetRandomInt(10, 99) + "%")
             };
         }

@@ -22,7 +22,7 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         private const int CheckPeriodAsMilliseconds = 1 * 60 * 60 * 1000 * 24; //1 day
         private readonly IAppNotifier _appNotifier;
         private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepository;
-        private readonly IRepository<RoutPoint,long> _routPointRepository;
+        private readonly IRepository<RoutPoint, long> _routPointRepository;
 
 
         public ShippmentStartWorker(
@@ -74,6 +74,5 @@ namespace TACHYON.Shipping.ShippingRequestTrips
                 CurrentUnitOfWork.SaveChanges();
             }
         }
-
     }
 }

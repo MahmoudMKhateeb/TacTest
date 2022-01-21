@@ -14,6 +14,5 @@ namespace TACHYON.Receivers.Dtos
         public string PhoneNumberFilter { get; set; }
 
         public string FacilityNameFilter { get; set; }
-
     }
 }

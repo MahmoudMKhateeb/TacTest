@@ -4,5 +4,4 @@
     {
         public string LoadOptions { get; set; }
     }
-
 }

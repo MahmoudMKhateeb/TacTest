@@ -10,7 +10,6 @@ namespace TACHYON.Documents.DocumentTypes.Exporting
 {
     public class DocumentTypesExcelExporter : NpoiExcelExporterBase, IDocumentTypesExcelExporter
     {
-
         private readonly ITimeZoneConverter _timeZoneConverter;
         private readonly IAbpSession _abpSession;
 
@@ -18,7 +17,7 @@ namespace TACHYON.Documents.DocumentTypes.Exporting
             ITimeZoneConverter timeZoneConverter,
             IAbpSession abpSession,
             ITempFileCacheManager tempFileCacheManager) :
-    base(tempFileCacheManager)
+            base(tempFileCacheManager)
         {
             _timeZoneConverter = timeZoneConverter;
             _abpSession = abpSession;
@@ -30,7 +29,6 @@ namespace TACHYON.Documents.DocumentTypes.Exporting
                 "DocumentTypes.xlsx",
                 excelPackage =>
                 {
-
                     var sheet = excelPackage.CreateSheet(L("DocumentTypes"));
 
                     AddHeader(
@@ -47,7 +45,7 @@ namespace TACHYON.Documents.DocumentTypes.Exporting
                         L("IsNumberUnique"),
                         L("HasHijriExpirationDate"),
                         L("HasNotes")
-                        );
+                    );
 
                     AddObjects(
                         sheet, 2, documentTypes,
@@ -63,13 +61,14 @@ namespace TACHYON.Documents.DocumentTypes.Exporting
                         _ => _.DocumentType.IsNumberUnique,
                         _ => _.DocumentType.HasHijriExpirationDate,
                         _ => _.DocumentType.HasNotes
-                        );
+                    );
 
 
                     for (var i = 1; i <= documentTypes.Count; i++)
                     {
                         //SetCellDataFormat(sheet.GetRow(i).Cells[3], "yyyy-mm-dd");
                     }
+
                     sheet.AutoSizeColumn(3);
                 });
         }

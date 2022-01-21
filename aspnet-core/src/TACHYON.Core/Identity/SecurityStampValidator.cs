@@ -54,20 +54,24 @@ namespace TACHYON.Identity
                 return;
             }
 
-            var impersonatorTenant = context.Principal.Claims.FirstOrDefault(c => c.Type == AbpClaimTypes.ImpersonatorTenantId);
+            var impersonatorTenant =
+                context.Principal.Claims.FirstOrDefault(c => c.Type == AbpClaimTypes.ImpersonatorTenantId);
             var user = context.Principal.Claims.FirstOrDefault(c => c.Type == AbpClaimTypes.UserId);
-            var impersonatorUser = context.Principal.Claims.FirstOrDefault(c => c.Type == AbpClaimTypes.ImpersonatorUserId);
+            var impersonatorUser =
+                context.Principal.Claims.FirstOrDefault(c => c.Type == AbpClaimTypes.ImpersonatorUserId);
 
             if (impersonatorUser == null || user == null)
             {
                 return;
             }
 
-            var impersonatorTenantId = impersonatorTenant == null ? null : impersonatorTenant.Value.IsNullOrEmpty() ? (int?)null : Convert.ToInt32(impersonatorTenant.Value);
+            var impersonatorTenantId = impersonatorTenant == null ? null :
+                impersonatorTenant.Value.IsNullOrEmpty() ? (int?)null : Convert.ToInt32(impersonatorTenant.Value);
             var sourceUserId = Convert.ToInt64(user.Value);
             var targetUserId = Convert.ToInt64(impersonatorUser.Value);
 
-            if (_permissionChecker.IsGranted(new UserIdentifier(impersonatorTenantId, targetUserId), AppPermissions.Pages_Administration_Users_Impersonation))
+            if (_permissionChecker.IsGranted(new UserIdentifier(impersonatorTenantId, targetUserId),
+                    AppPermissions.Pages_Administration_Users_Impersonation))
             {
                 return;
             }

@@ -6,6 +6,7 @@ using System.Text;
 using TACHYON.Common;
 using TACHYON.CustomValidation;
 using TACHYON.Routs.RoutPoints.Dtos;
+
 namespace TACHYON.Shipping.Trips.Accidents.Dto
 {
     public class CreateOrEditShippingRequestTripAccidentCommentDto : EntityDto

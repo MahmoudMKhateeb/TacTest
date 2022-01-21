@@ -1,5 +1,4 @@
-﻿
-using Abp.Application.Services.Dto;
+﻿using Abp.Application.Services.Dto;
 using System;
 
 namespace TACHYON.Trailers.Dtos
@@ -36,7 +35,5 @@ namespace TACHYON.Trailers.Dtos
         public int PayloadMaxWeightId { get; set; }
 
         public long? HookedTruckId { get; set; }
-
-
     }
 }

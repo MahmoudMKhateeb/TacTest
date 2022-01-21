@@ -101,7 +101,6 @@ namespace TACHYON.Web.Startup
                         .AllowAnyHeader()
                         .SetIsOriginAllowed(origin => true) // allow any origin
                         .AllowCredentials(); // allow credentials
-
                 });
             });
 
@@ -117,12 +116,10 @@ namespace TACHYON.Web.Startup
             if (bool.Parse(_appConfiguration["IdentityServer:IsEnabled"]))
             {
                 IdentityServerRegistrar.Register(services, _appConfiguration, options =>
-                     options.UserInteraction = new UserInteractionOptions()
-                     {
-                         LoginUrl = "/UI/Login",
-                         LogoutUrl = "/UI/LogOut",
-                         ErrorUrl = "/Error"
-                     });
+                    options.UserInteraction = new UserInteractionOptions()
+                    {
+                        LoginUrl = "/UI/Login", LogoutUrl = "/UI/LogOut", ErrorUrl = "/Error"
+                    });
             }
 
             if (WebConsts.SwaggerUiEnabled)
@@ -184,15 +181,18 @@ namespace TACHYON.Web.Startup
                 //Configure Log4Net logging
                 options.IocManager.IocContainer.AddFacility<LoggingFacility>(
                     f => f.UseAbpLog4Net().WithConfig(_hostingEnvironment.IsDevelopment()
-                            ? "log4net.config"
-                            : "log4net.Production.config")
+                        ? "log4net.config"
+                        : "log4net.Production.config")
                 );
 
-                options.PlugInSources.AddFolder(Path.Combine(_hostingEnvironment.WebRootPath, "Plugins"), SearchOption.AllDirectories);
+                options.PlugInSources.AddFolder(Path.Combine(_hostingEnvironment.WebRootPath, "Plugins"),
+                    SearchOption.AllDirectories);
             });
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app,
+            IWebHostEnvironment env,
+            ILoggerFactory loggerFactory)
         {
             //Initializes ABP framework.
             app.UseAbp(options =>
@@ -229,7 +229,8 @@ namespace TACHYON.Web.Startup
 
             using (var scope = app.ApplicationServices.CreateScope())
             {
-                if (scope.ServiceProvider.GetService<DatabaseCheckHelper>().Exist(_appConfiguration["ConnectionStrings:Default"]))
+                if (scope.ServiceProvider.GetService<DatabaseCheckHelper>()
+                    .Exist(_appConfiguration["ConnectionStrings:Default"]))
                 {
                     app.UseAbpRequestLocalization();
                 }
@@ -238,10 +239,15 @@ namespace TACHYON.Web.Startup
             if (WebConsts.HangfireDashboardEnabled)
             {
                 //Hangfire dashboard &server(Enable to use Hangfire instead of default job manager)
-                app.UseHangfireDashboard(WebConsts.HangfireDashboardEndPoint, new DashboardOptions
-                {
-                    Authorization = new[] { new AbpHangfireAuthorizationFilter(AppPermissions.Pages_Administration_HangfireDashboard) }
-                });
+                app.UseHangfireDashboard(WebConsts.HangfireDashboardEndPoint,
+                    new DashboardOptions
+                    {
+                        Authorization = new[]
+                        {
+                            new AbpHangfireAuthorizationFilter(AppPermissions
+                                .Pages_Administration_HangfireDashboard)
+                        }
+                    });
                 app.UseHangfireServer();
             }
 
@@ -271,11 +277,11 @@ namespace TACHYON.Web.Startup
 
                 if (bool.Parse(_appConfiguration["HealthChecks:HealthChecksEnabled"]))
                 {
-                    endpoints.MapHealthChecks("/health", new HealthCheckOptions()
-                    {
-                        Predicate = _ => true,
-                        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-                    });
+                    endpoints.MapHealthChecks("/health",
+                        new HealthCheckOptions()
+                        {
+                            Predicate = _ => true, ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                        });
                 }
             });
 
@@ -303,9 +309,7 @@ namespace TACHYON.Web.Startup
             }
 
 
-
             app.UseCrystalQuartz(() => StdSchedulerFactory.GetDefaultScheduler().Result);
-
         }
 
         private void ConfigureKestrel(IServiceCollection services)
@@ -317,11 +321,9 @@ namespace TACHYON.Web.Startup
                     {
                         var certPassword = _appConfiguration.GetValue<string>("Kestrel:Certificates:Default:Password");
                         var certPath = _appConfiguration.GetValue<string>("Kestrel:Certificates:Default:Path");
-                        var cert = new System.Security.Cryptography.X509Certificates.X509Certificate2(certPath, certPassword);
-                        listenOptions.UseHttps(new HttpsConnectionAdapterOptions()
-                        {
-                            ServerCertificate = cert
-                        });
+                        var cert = new System.Security.Cryptography.X509Certificates.X509Certificate2(certPath,
+                            certPassword);
+                        listenOptions.UseHttps(new HttpsConnectionAdapterOptions() { ServerCertificate = cert });
                     });
             });
         }

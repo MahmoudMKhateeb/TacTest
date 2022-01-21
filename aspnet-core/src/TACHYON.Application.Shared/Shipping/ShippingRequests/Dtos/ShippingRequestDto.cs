@@ -1,5 +1,4 @@
-﻿
-using Abp.Application.Services.Dto;
+﻿using Abp.Application.Services.Dto;
 using System;
 
 
@@ -50,10 +49,12 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         /// This reference shipper add it manually
         /// </summary>
         public string ShipperReference { get; set; }
+
         /// <summary>
         /// shipper add his invoice number manually
         /// </summary>
         public string ShipperInvoiceNo { get; set; }
+
         public string StatusTitle
         {
             get { return Status.GetEnumDescription(); }

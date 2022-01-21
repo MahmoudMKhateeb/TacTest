@@ -7,6 +7,5 @@ namespace TACHYON.Packing.PackingTypes.Dtos
     public class GetPackingTypeForEditOutput
     {
         public CreateOrEditPackingTypeDto PackingType { get; set; }
-
     }
 }

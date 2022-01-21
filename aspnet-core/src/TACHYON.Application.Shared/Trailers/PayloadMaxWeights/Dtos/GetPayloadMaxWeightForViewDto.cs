@@ -3,7 +3,5 @@
     public class GetPayloadMaxWeightForViewDto
     {
         public PayloadMaxWeightDto PayloadMaxWeight { get; set; }
-
-
     }
 }

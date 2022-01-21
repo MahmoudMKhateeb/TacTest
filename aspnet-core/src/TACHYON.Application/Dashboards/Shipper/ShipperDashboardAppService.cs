@@ -38,14 +38,13 @@ namespace TACHYON.Dashboards.Shipper
         private readonly IRepository<Invoice, long> _invoiceRepository;
 
         public ShipperDashboardAppService(
-             IRepository<ShippingRequest, long> shippingRequestRepository,
-             IRepository<ShippingRequestTrip> shippingRequestTripRepository,
-             IRepository<InvoiceTrip, long> invoiceTripsRepository,
-             IRepository<RoutPointDocument, long> routePointDocumentRepository,
-             IRepository<DocumentFile, Guid> documentFileRepository,
-             IRepository<Invoice, long> invoiceRepository
-
-            )
+            IRepository<ShippingRequest, long> shippingRequestRepository,
+            IRepository<ShippingRequestTrip> shippingRequestTripRepository,
+            IRepository<InvoiceTrip, long> invoiceTripsRepository,
+            IRepository<RoutPointDocument, long> routePointDocumentRepository,
+            IRepository<DocumentFile, Guid> documentFileRepository,
+            IRepository<Invoice, long> invoiceRepository
+        )
         {
             _shippingRequestRepository = shippingRequestRepository;
             _shippingRequestTripRepository = shippingRequestTripRepository;
@@ -61,12 +60,17 @@ namespace TACHYON.Dashboards.Shipper
             DisableTenancyFilters();
             var groupedTrips = await _shippingRequestTripRepository.GetAll().AsNoTracking()
                 .Where(x => x.Status == ShippingRequestTripStatus.Delivered)
-                .WhereIf(IsEnabled(AppFeatures.Carrier), x => x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
+                .WhereIf(IsEnabled(AppFeatures.Carrier),
+                    x => x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
                 .WhereIf(IsEnabled(AppFeatures.Shipper), x => x.ShippingRequestFk.TenantId == AbpSession.TenantId)
                 .GroupBy(r => new { r.CreationTime.Year, r.CreationTime.Month })
-                .Select(g => new ListPerMonthDto() { Year = DateTime.Now.Year, Month = g.Key.Month.ToString(), Count = g.Count() })
+                .Select(g =>
+                    new ListPerMonthDto()
+                    {
+                        Year = DateTime.Now.Year, Month = g.Key.Month.ToString(), Count = g.Count()
+                    })
                 .OrderBy(x => x.Year).ThenBy(x => x.Month)
-             .ToListAsync();
+                .ToListAsync();
 
             groupedTrips.ForEach(r =>
             {
@@ -88,18 +92,20 @@ namespace TACHYON.Dashboards.Shipper
                 .WhereIf(IsEnabled(AppFeatures.Carrier), x => x.CarrierTenantId == AbpSession.TenantId)
                 .WhereIf(IsEnabled(AppFeatures.Shipper), x => x.TenantId == AbpSession.TenantId)
                 .GroupBy(r => new { r.CreationTime.Year, r.CreationTime.Month })
-                .Select(g => new RequestsListPerMonthDto() { Year = DateTime.Now.Year, Month = g.Key.Month, Count = g.Count() })
+                .Select(g =>
+                    new RequestsListPerMonthDto() { Year = DateTime.Now.Year, Month = g.Key.Month, Count = g.Count() })
                 .OrderBy(x => x.Year).ThenBy(x => x.Month)
-             .ToListAsync();
+                .ToListAsync();
 
             var rejectedRequests = await _shippingRequestRepository.GetAll().AsNoTracking()
                 .Where(x => x.Status == ShippingRequestStatus.Cancled || x.Status == ShippingRequestStatus.Expired)
                 .WhereIf(IsEnabled(AppFeatures.Carrier), x => x.CarrierTenantId == AbpSession.TenantId)
                 .WhereIf(IsEnabled(AppFeatures.Shipper), x => x.TenantId == AbpSession.TenantId)
                 .GroupBy(r => new { r.CreationTime.Year, r.CreationTime.Month })
-                .Select(g => new RequestsListPerMonthDto() { Year = DateTime.Now.Year, Month = g.Key.Month, Count = g.Count() })
+                .Select(g =>
+                    new RequestsListPerMonthDto() { Year = DateTime.Now.Year, Month = g.Key.Month, Count = g.Count() })
                 .OrderBy(x => x.Year).ThenBy(x => x.Month)
-             .ToListAsync();
+                .ToListAsync();
 
             list.AcceptedRequests = acceptedPricedRequests;
             list.RejectedRequests = rejectedRequests;
@@ -120,11 +126,12 @@ namespace TACHYON.Dashboards.Shipper
                     Id = carrier.Key.CarrierTenantId,
                     CarrierName = carrier.Key.Name,
                     CarrierRating = carrier.Key.Rate,
-                    NumberOfTrips = _shippingRequestTripRepository.GetAll().AsNoTracking().Where(r => r.ShippingRequestFk.TenantId == AbpSession.TenantId && r.ShippingRequestFk.CarrierTenantId == carrier.Key.CarrierTenantId).Count(),
+                    NumberOfTrips = _shippingRequestTripRepository.GetAll().AsNoTracking().Where(r =>
+                        r.ShippingRequestFk.TenantId == AbpSession.TenantId &&
+                        r.ShippingRequestFk.CarrierTenantId == carrier.Key.CarrierTenantId).Count(),
                     Count = carrier.Count()
                 })
                 .OrderByDescending(r => r.Count).Take(5).ToListAsync();
-
         }
 
         public async Task<CompletedTripVsPodListDto> GetCompletedTripVsPod()
@@ -137,21 +144,24 @@ namespace TACHYON.Dashboards.Shipper
                 .Where(x => x.Status == ShippingRequestTripStatus.Delivered)
                 .WhereIf(IsEnabled(AppFeatures.Shipper), x => x.ShippingRequestFk.TenantId == AbpSession.TenantId)
                 .GroupBy(r => new { r.CreationTime.Year, r.CreationTime.Month })
-                .Select(g => new RequestsListPerMonthDto() { Year = DateTime.Now.Year, Month = g.Key.Month, Count = g.Count() })
+                .Select(g =>
+                    new RequestsListPerMonthDto() { Year = DateTime.Now.Year, Month = g.Key.Month, Count = g.Count() })
                 .OrderBy(x => x.Year).ThenBy(x => x.Month)
-             .ToListAsync();
+                .ToListAsync();
 
             var podTrips = await _routePointDocumentRepository.GetAll().AsNoTracking()
                 .Include(r => r.RoutPointFk)
                 .ThenInclude(r => r.ShippingRequestTripFk)
                 .ThenInclude(r => r.ShippingRequestFk)
                 .ThenInclude(r => r.Tenant)
-                .Where(r => r.RoutPointFk.Status == RoutePointStatus.DeliveryConfirmation && r.RoutePointDocumentType == RoutePointDocumentType.POD)
+                .Where(r => r.RoutPointFk.Status == RoutePointStatus.DeliveryConfirmation &&
+                            r.RoutePointDocumentType == RoutePointDocumentType.POD)
                 .Where(x => x.RoutPointFk.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId)
                 .GroupBy(r => new { r.CreationTime.Year, r.CreationTime.Month })
-                .Select(g => new RequestsListPerMonthDto() { Year = DateTime.Now.Year, Month = g.Key.Month, Count = g.Count() })
+                .Select(g =>
+                    new RequestsListPerMonthDto() { Year = DateTime.Now.Year, Month = g.Key.Month, Count = g.Count() })
                 .OrderBy(x => x.Year).ThenBy(x => x.Month)
-             .ToListAsync();
+                .ToListAsync();
 
             list.CompletedTrips = completedTrips;
             list.PODTrips = podTrips;
@@ -168,18 +178,20 @@ namespace TACHYON.Dashboards.Shipper
                 .Include(x => x.InvoiceFK)
                 .Where(x => x.InvoiceFK.TenantId == AbpSession.TenantId)
                 .GroupBy(r => new { r.InvoiceFK.CreationTime.Year, r.InvoiceFK.CreationTime.Month })
-                .Select(g => new RequestsListPerMonthDto() { Year = DateTime.Now.Year, Month = g.Key.Month, Count = g.Count() })
+                .Select(g =>
+                    new RequestsListPerMonthDto() { Year = DateTime.Now.Year, Month = g.Key.Month, Count = g.Count() })
                 .OrderBy(x => x.Year).ThenBy(x => x.Month)
-             .ToListAsync();
+                .ToListAsync();
 
             var paidInvoices = await _invoiceTripsRepository.GetAll().AsNoTracking()
                 .Include(x => x.InvoiceFK)
                 .Where(x => x.InvoiceFK.TenantId == AbpSession.TenantId)
                 .Where(x => x.InvoiceFK.IsPaid == true)
                 .GroupBy(r => new { r.InvoiceFK.CreationTime.Year, r.InvoiceFK.CreationTime.Month })
-                .Select(g => new RequestsListPerMonthDto() { Year = DateTime.Now.Year, Month = g.Key.Month, Count = g.Count() })
+                .Select(g =>
+                    new RequestsListPerMonthDto() { Year = DateTime.Now.Year, Month = g.Key.Month, Count = g.Count() })
                 .OrderBy(x => x.Year).ThenBy(x => x.Month)
-             .ToListAsync();
+                .ToListAsync();
 
             list.ShipperInvoices = invoices;
             list.PaidInvoices = paidInvoices;
@@ -191,17 +203,17 @@ namespace TACHYON.Dashboards.Shipper
             DisableTenancyFilters();
 
             return await _shippingRequestRepository.GetAll().AsNoTracking()
-                                                             .Where(r => r.RequestType == ShippingRequestType.Marketplace
-                                                                      && r.TenantId == AbpSession.TenantId
-                                                                      && r.CarrierTenantId == null
-                                                                      && r.BidEndDate != null
-                                                                      && r.BidEndDate.Value.Date <= Clock.Now.Date)
-                                                              .Select(request => new RequestsInMarketpalceDto()
-                                                              {
-                                                                  RequestReference = request.ReferenceNumber,
-                                                                  BiddingEndDate = request.BidEndDate,
-                                                                  NumberOfOffers = request.TotalOffers
-                                                              }).OrderBy(r => r.BiddingEndDate).ToListAsync();
+                .Where(r => r.RequestType == ShippingRequestType.Marketplace
+                            && r.TenantId == AbpSession.TenantId
+                            && r.CarrierTenantId == null
+                            && r.BidEndDate != null
+                            && r.BidEndDate.Value.Date <= Clock.Now.Date)
+                .Select(request => new RequestsInMarketpalceDto()
+                {
+                    RequestReference = request.ReferenceNumber,
+                    BiddingEndDate = request.BidEndDate,
+                    NumberOfOffers = request.TotalOffers
+                }).OrderBy(r => r.BiddingEndDate).ToListAsync();
         }
 
 
@@ -215,8 +227,7 @@ namespace TACHYON.Dashboards.Shipper
                 .GroupBy(r => new { r.OriginCityId, r.OriginCityFk.DisplayName })
                 .Select(res => new MostUsedOriginsDto()
                 {
-                    CityName = res.Key.DisplayName,
-                    NumberOfRequests = res.Count()
+                    CityName = res.Key.DisplayName, NumberOfRequests = res.Count()
                 })
                 .OrderByDescending(r => r.NumberOfRequests).Take(5).ToListAsync();
         }
@@ -231,8 +242,7 @@ namespace TACHYON.Dashboards.Shipper
                 .GroupBy(r => new { r.DestinationCityId, r.DestinationCityFk.DisplayName })
                 .Select(res => new MostUsedOriginsDto()
                 {
-                    CityName = res.Key.DisplayName,
-                    NumberOfRequests = res.Count()
+                    CityName = res.Key.DisplayName, NumberOfRequests = res.Count()
                 })
                 .OrderByDescending(r => r.NumberOfRequests).Take(5).ToListAsync();
         }
@@ -243,18 +253,17 @@ namespace TACHYON.Dashboards.Shipper
             DisableTenancyFilters();
 
             var query = _documentFileRepository.GetAll().AsNoTracking()
-            .Include(r => r.TenantFk)
-            .WhereIf(IsEnabled(AppFeatures.Shipper), x => x.TenantId == AbpSession.TenantId)
-            .Where(r => (r.IsAccepted == false || r.IsRejected == true)
-                    && r.ExpirationDate != null
-                    && r.ExpirationDate.Value.Date > Clock.Now.Date);
+                .Include(r => r.TenantFk)
+                .WhereIf(IsEnabled(AppFeatures.Shipper), x => x.TenantId == AbpSession.TenantId)
+                .Where(r => (r.IsAccepted == false || r.IsRejected == true)
+                            && r.ExpirationDate != null
+                            && r.ExpirationDate.Value.Date > Clock.Now.Date);
 
             return (await query.ToListAsync()).Select(t => new
-            {
-                days = t.ExpirationDate.Value.Date.Subtract(Clock.Now.Date).TotalDays
-            }).Where(r => r.days <= 5)
-           .Count();
-
+                {
+                    days = t.ExpirationDate.Value.Date.Subtract(Clock.Now.Date).TotalDays
+                }).Where(r => r.days <= 5)
+                .Count();
         }
 
 
@@ -263,59 +272,60 @@ namespace TACHYON.Dashboards.Shipper
             DisableTenancyFilters();
 
             var query = _invoiceRepository.GetAll().AsNoTracking()
-            .Include(r => r.Tenant)
-            .WhereIf(IsEnabled(AppFeatures.Shipper), x => x.TenantId == AbpSession.TenantId)
-            .WhereIf(IsEnabled(AppFeatures.Carrier), x => x.TenantId == AbpSession.TenantId)
-            .Where(r => r.IsPaid == false
-                    && r.DueDate != null
-                    && r.DueDate.Date > Clock.Now.Date);
+                .Include(r => r.Tenant)
+                .WhereIf(IsEnabled(AppFeatures.Shipper), x => x.TenantId == AbpSession.TenantId)
+                .WhereIf(IsEnabled(AppFeatures.Carrier), x => x.TenantId == AbpSession.TenantId)
+                .Where(r => r.IsPaid == false
+                            && r.DueDate != null
+                            && r.DueDate.Date > Clock.Now.Date);
 
             return (await query.ToListAsync()).Select(t => new
-            {
-                days = t.DueDate.Date.Subtract(Clock.Now.Date).TotalDays
-            }).Where(r => r.days <= 5)
-           .Count();
-
+                {
+                    days = t.DueDate.Date.Subtract(Clock.Now.Date).TotalDays
+                }).Where(r => r.days <= 5)
+                .Count();
         }
 
         // Tracking Map
         public async Task<List<TrackingMapDto>> GetTrackingMap()
         {
             return await _shippingRequestTripRepository.GetAll().AsNoTracking()
-            .Include(r => r.ShippingRequestFk)
-            .ThenInclude(r => r.Tenant)
-            .Include(r => r.RoutPoints)
-            .ThenInclude(r => r.FacilityFk)
-            .Include(x => x.OriginFacilityFk)
-            .ThenInclude(x => x.CityFk)
-            .Include(x => x.DestinationFacilityFk)
-            .ThenInclude(x => x.CityFk)
-            .WhereIf(IsEnabled(AppFeatures.Carrier), x => x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
-            .WhereIf(IsEnabled(AppFeatures.Shipper), x => x.ShippingRequestFk.TenantId == AbpSession.TenantId)
-            .Where(r => r.Status == ShippingRequestTripStatus.Intransit)
-            .Select(s => new TrackingMapDto()
-            {
-                DestinationCity = s.DestinationFacilityFk.Name,
-                OriginCity = s.OriginFacilityFk.Name,
-                DestinationLongitude = (s.DestinationFacilityFk.Location != null ? s.DestinationFacilityFk.Location.X : 0),
-                DestinationLatitude = (s.DestinationFacilityFk.Location != null ? s.DestinationFacilityFk.Location.Y : 0),
-                OriginLongitude = (s.OriginFacilityFk.Location != null ? s.OriginFacilityFk.Location.X : 0),
-                OriginLatitude = (s.OriginFacilityFk.Location != null ? s.OriginFacilityFk.Location.Y : 0),
-                Id = s.Id,
-                TripStatus = s.Status,
-                WayBillNumber = s.WaybillNumber.ToString(),
-                RoutPoints = s.RoutPoints.Select(rp => new RoutePointsTripDto()
+                .Include(r => r.ShippingRequestFk)
+                .ThenInclude(r => r.Tenant)
+                .Include(r => r.RoutPoints)
+                .ThenInclude(r => r.FacilityFk)
+                .Include(x => x.OriginFacilityFk)
+                .ThenInclude(x => x.CityFk)
+                .Include(x => x.DestinationFacilityFk)
+                .ThenInclude(x => x.CityFk)
+                .WhereIf(IsEnabled(AppFeatures.Carrier),
+                    x => x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
+                .WhereIf(IsEnabled(AppFeatures.Shipper), x => x.ShippingRequestFk.TenantId == AbpSession.TenantId)
+                .Where(r => r.Status == ShippingRequestTripStatus.Intransit)
+                .Select(s => new TrackingMapDto()
                 {
-                    Id = rp.Id,
-                    Facility = rp.FacilityFk.Name,
-                    PickingType = rp.PickingType.GetEnumDescription(),
-                    WaybillNumber = rp.WaybillNumber,
-                    Longitude = (rp.FacilityFk.Location != null ? rp.FacilityFk.Location.X : 0),
-                    Latitude = (rp.FacilityFk.Location != null ? rp.FacilityFk.Location.Y : 0)
-                }).ToList()
-
-            })
-            .ToListAsync();
+                    DestinationCity = s.DestinationFacilityFk.Name,
+                    OriginCity = s.OriginFacilityFk.Name,
+                    DestinationLongitude =
+                        (s.DestinationFacilityFk.Location != null ? s.DestinationFacilityFk.Location.X : 0),
+                    DestinationLatitude =
+                        (s.DestinationFacilityFk.Location != null ? s.DestinationFacilityFk.Location.Y : 0),
+                    OriginLongitude = (s.OriginFacilityFk.Location != null ? s.OriginFacilityFk.Location.X : 0),
+                    OriginLatitude = (s.OriginFacilityFk.Location != null ? s.OriginFacilityFk.Location.Y : 0),
+                    Id = s.Id,
+                    TripStatus = s.Status,
+                    WayBillNumber = s.WaybillNumber.ToString(),
+                    RoutPoints = s.RoutPoints.Select(rp => new RoutePointsTripDto()
+                    {
+                        Id = rp.Id,
+                        Facility = rp.FacilityFk.Name,
+                        PickingType = rp.PickingType.GetEnumDescription(),
+                        WaybillNumber = rp.WaybillNumber,
+                        Longitude = (rp.FacilityFk.Location != null ? rp.FacilityFk.Location.X : 0),
+                        Latitude = (rp.FacilityFk.Location != null ? rp.FacilityFk.Location.Y : 0)
+                    }).ToList()
+                })
+                .ToListAsync();
         }
     }
 }

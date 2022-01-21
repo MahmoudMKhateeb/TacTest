@@ -11,7 +11,5 @@ namespace TACHYON.Dashboards.Host.Dto
         public int Year { get; set; }
         public string Month { get; set; }
         public int Count { get; set; }
-
     }
-
 }

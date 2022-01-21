@@ -16,6 +16,6 @@ namespace TACHYON.MultiTenancy
         }
 
         protected override async Task ExecuteAsync(string tenancyName)
-         => await _notifier.NewTenantRegisteredAsync(tenancyName);
+            => await _notifier.NewTenantRegisteredAsync(tenancyName);
     }
 }

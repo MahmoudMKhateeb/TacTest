@@ -7,7 +7,7 @@ using TACHYON.Invoices.SubmitInvoices.Dto;
 
 namespace TACHYON.Invoices.SubmitInvoices
 {
-    public interface ISubmitInvoiceAppService:IApplicationService
+    public interface ISubmitInvoiceAppService : IApplicationService
     {
         Task<SubmitInvoiceInfoDto> GetById(EntityDto input);
 

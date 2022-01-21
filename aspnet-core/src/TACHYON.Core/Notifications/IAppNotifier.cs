@@ -20,11 +20,14 @@ namespace TACHYON.Notifications
 {
     public interface IAppNotifier
     {
-
         #region Tachyon notifications
 
         Task AssignDriverToTruck(UserIdentifier argsUser, long truckId);
-        Task UpdateShippingRequestPrice(UserIdentifier argsUser, long shippingRequestId, decimal price);
+
+        Task UpdateShippingRequestPrice(UserIdentifier argsUser,
+            long shippingRequestId,
+            decimal price);
+
         Task AcceptShippingRequestPrice(long shippingRequestId, bool isAccepted);
         Task RejectShippingRequest(UserIdentifier argsUser, long shippingRequestId);
         Task NewInvoiceShipperGenerated(Invoice invoice);
@@ -35,44 +38,65 @@ namespace TACHYON.Notifications
         Task ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage(int? TenantId, int Percentage);
         Task NewBalanceAddedToShippper(int ShipperTenantId, decimal Amount);
 
-        Task SomeTrucksCouldntBeImported(UserIdentifier user, string fileToken, string fileType, string fileName);
+        Task SomeTrucksCouldntBeImported(UserIdentifier user,
+            string fileToken,
+            string fileType,
+            string fileName);
+
         Task CreateBidRequest(UserIdentifier argsUser, long shippingRequestBidId);
         Task UpdateBidRequest(UserIdentifier argsUser, long shippingRequestBidId);
         Task TenantDocumentFileUpdate(DocumentFile documentFile);
 
-        Task CancelBidRequest(UserIdentifier argsUser, long shippingRequestId, long shippingRequestBidId);
+        Task CancelBidRequest(UserIdentifier argsUser,
+            long shippingRequestId,
+            long shippingRequestBidId);
 
         Task AcceptShippingRequestBid(UserIdentifier argsUser, long shippingRequestBidId);
         Task ShippingRequestAsBidWithSameTruckAsync(UserIdentifier[] argsUser, long shippingRequestId);
-        Task StartShippment(UserIdentifier argsUser, long TripId, string PickupFacilityName);
+
+        Task StartShippment(UserIdentifier argsUser,
+            long TripId,
+            string PickupFacilityName);
+
         Task ShipperShippingRequestFinish(UserIdentifier argsUser, ShippingRequest Request);
 
         #region Trips
-        
 
         Task NotifyDriverWhenAssignTrip(int tripId, params UserIdentifier[] drivers);
 
-        Task NotifyDriverWhenUnassignedTrip(int tripId, string waybillNumber, params UserIdentifier[] drivers);
-        
+        Task NotifyDriverWhenUnassignedTrip(int tripId,
+            string waybillNumber,
+            params UserIdentifier[] drivers);
+
         Task DriverRejectTrip(ShippingRequestTrip Trip, string driver);
         Task DriverAcceptTrip(ShippingRequestTrip Trip, string driver);
         Task CarrierTripNeedAccept(ShippingRequestTrip Trip);
         Task TMSTripNeedAccept(ShippingRequestTrip Trip);
-        Task NotifyCarrierWhenTripHasAttachment(int tripId, int? carrierTenantId, bool hasAttachment);
+
+        Task NotifyCarrierWhenTripHasAttachment(int tripId,
+            int? carrierTenantId,
+            bool hasAttachment);
+
         Task NotifyCarrierWhenTripNeedsDeliverNote(int tripId, int? carrierTenantId);
         Task NotificationWhenTripDetailsChanged(ShippingRequestTrip trip, User currentuser);
         Task NotifyCarrierWithDriverGpsOff(UserIdentifier argsUser, User driver);
+
         #endregion
 
         #region Accident
 
         Task ShippingRequestAccidentsOccure(List<UserIdentifier> Users, Dictionary<string, object> data);
-        Task ShippingRequestTripCancelByAccident(List<UserIdentifier> Users, ShippingRequestTrip trip, User UserCancel);
+
+        Task ShippingRequestTripCancelByAccident(List<UserIdentifier> Users,
+            ShippingRequestTrip trip,
+            User UserCancel);
+
         #endregion
 
         #region ShippingRequest
 
         #region Offers
+
         Task ShippingRequestSendOfferWhenAddPrice(PriceOffer offer, string carrier);
         Task ShippingRequestSendOfferWhenUpdatePrice(PriceOffer offer, string carrier);
 
@@ -82,10 +106,18 @@ namespace TACHYON.Notifications
         Task RejectedOffer(PriceOffer offer, string RejectedBy);
         Task PendingOffer(PriceOffer offer);
 
-        Task SendDriectRequest(string FromTenant, int? ToTenant, long id);
-        Task DeclineDriectRequest(string FromTenant, int? ToTenant, long id);
+        Task SendDriectRequest(string FromTenant,
+            int? ToTenant,
+            long id);
 
-        Task CancelShipment(long id, string reason, string cancelBy, UserIdentifier toUser);
+        Task DeclineDriectRequest(string FromTenant,
+            int? ToTenant,
+            long id);
+
+        Task CancelShipment(long id,
+            string reason,
+            string cancelBy,
+            UserIdentifier toUser);
 
         #endregion
 
@@ -94,6 +126,7 @@ namespace TACHYON.Notifications
         #endregion
 
         #region TachyonDeal
+
         Task SendDriectRequestForCarrier(int? TenantId, ShippingRequest Request);
         Task DriectRequestCarrierRespone(ShippingRequestsCarrierDirectPricing Pricing);
         Task TachyonDealerOfferCreated(TachyonPriceOffer offer, ShippingRequest request);
@@ -117,17 +150,28 @@ namespace TACHYON.Notifications
 
         Task GdprDataPrepared(UserIdentifier user, Guid binaryObjectId);
 
-        Task SendMessageAsync(UserIdentifier user, string message,
+        Task SendMessageAsync(UserIdentifier user,
+            string message,
             NotificationSeverity severity = NotificationSeverity.Info);
 
-        Task SendMessageAsync(UserIdentifier user, LocalizableString localizableMessage,
+        Task SendMessageAsync(UserIdentifier user,
+            LocalizableString localizableMessage,
             IDictionary<string, object> localizableMessageData = null,
             NotificationSeverity severity = NotificationSeverity.Info);
 
-        Task TenantsMovedToEdition(UserIdentifier user, string sourceEditionName, string targetEditionName);
+        Task TenantsMovedToEdition(UserIdentifier user,
+            string sourceEditionName,
+            string targetEditionName);
 
-        Task SomeUsersCouldntBeImported(UserIdentifier user, string fileToken, string fileType, string fileName);
-        Task DocumentFileBeforExpiration(UserIdentifier argsUser, Guid documentFileId, int expirationAlertDays);
+        Task SomeUsersCouldntBeImported(UserIdentifier user,
+            string fileToken,
+            string fileType,
+            string fileName);
+
+        Task DocumentFileBeforExpiration(UserIdentifier argsUser,
+            Guid documentFileId,
+            int expirationAlertDays);
+
         Task DocumentFileExpiration(UserIdentifier argsUser, Guid documentFileId);
         Task AcceptedSubmittedDocument(UserIdentifier argsUser, DocumentFile documentFile);
         Task RejectedSubmittedDocument(UserIdentifier argsUser, DocumentFile documentFile);
@@ -153,6 +197,8 @@ namespace TACHYON.Notifications
 
         Task DriverReminderForTrip(UserIdentifier user, string tripId);
 
-        Task NotifyDriverOnlyWhenTripUpdated(int tripId, string waybillNumber, params UserIdentifier[] drivers);
+        Task NotifyDriverOnlyWhenTripUpdated(int tripId,
+            string waybillNumber,
+            params UserIdentifier[] drivers);
     }
 }

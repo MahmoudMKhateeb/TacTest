@@ -5,7 +5,9 @@ namespace TACHYON.Queries.Container
 {
     public sealed class QueryContainer : ObjectGraphType, ITransientDependency
     {
-        public QueryContainer(RoleQuery roleQuery, UserQuery userQuery, OrganizationUnitQuery organizationUnitQuery)
+        public QueryContainer(RoleQuery roleQuery,
+            UserQuery userQuery,
+            OrganizationUnitQuery organizationUnitQuery)
         {
             AddField(roleQuery.GetFieldType());
 

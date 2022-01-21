@@ -4,7 +4,7 @@ using System.Text;
 
 namespace TACHYON.Common
 {
-   public interface IDocumentUpload: IHasDocument
+    public interface IDocumentUpload : IHasDocument
     {
         string DocumentBase64 { get; set; }
     }

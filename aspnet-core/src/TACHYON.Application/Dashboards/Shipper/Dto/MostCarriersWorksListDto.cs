@@ -14,6 +14,4 @@ namespace TACHYON.Dashboards.Shipper.Dto
         public decimal CarrierRating { get; set; }
         public int Count { get; set; }
     }
-
-
 }

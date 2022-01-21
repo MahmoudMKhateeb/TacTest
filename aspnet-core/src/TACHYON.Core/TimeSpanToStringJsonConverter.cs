@@ -7,7 +7,9 @@ namespace TACHYON
 {
     public class TimeSpanToJsonStringConverter : JsonConverter
     {
-        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer,
+            object? value,
+            JsonSerializer serializer)
         {
             if (value != null)
             {
@@ -15,7 +17,10 @@ namespace TACHYON
             }
         }
 
-        public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
+        public override object? ReadJson(JsonReader reader,
+            Type objectType,
+            object? existingValue,
+            JsonSerializer serializer)
         {
             if (reader.Value == null)
             {

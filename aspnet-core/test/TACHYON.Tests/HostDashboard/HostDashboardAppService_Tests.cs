@@ -46,46 +46,46 @@ namespace TACHYON.Tests.HostDashboard
                     context.SubscribableEditions.Add(specialEdition);
                     context.SaveChanges();
 
-                    CreatePaidPayment(context, new SubscriptionPayment
-                    {
-                        Amount = 100,
-                        DayCount = 365,
-                        EditionId = specialEdition.Id,
-                        CreationTime = now.AddDays(-3),
-                        TenantId = 1
-                    });
+                    CreatePaidPayment(context,
+                        new SubscriptionPayment
+                        {
+                            Amount = 100,
+                            DayCount = 365,
+                            EditionId = specialEdition.Id,
+                            CreationTime = now.AddDays(-3),
+                            TenantId = 1
+                        });
 
-                    CreatePaidPayment(context, new SubscriptionPayment
-                    {
-                        Amount = 200,
-                        DayCount = 365,
-                        EditionId = specialEdition.Id,
-                        CreationTime = now.AddDays(-3),
-                        TenantId = 1
-                    });
+                    CreatePaidPayment(context,
+                        new SubscriptionPayment
+                        {
+                            Amount = 200,
+                            DayCount = 365,
+                            EditionId = specialEdition.Id,
+                            CreationTime = now.AddDays(-3),
+                            TenantId = 1
+                        });
 
-                    CreatePaidPayment(context, new SubscriptionPayment
-                    {
-                        Amount = 200,
-                        DayCount = 730,
-                        EditionId = specialEdition.Id,
-                        CreationTime = now.AddDays(-1),
-                        TenantId = 1
-                    });
+                    CreatePaidPayment(context,
+                        new SubscriptionPayment
+                        {
+                            Amount = 200,
+                            DayCount = 730,
+                            EditionId = specialEdition.Id,
+                            CreationTime = now.AddDays(-1),
+                            TenantId = 1
+                        });
 
                     context.Tenants.Add(new Tenant("MyTenant", "My Tenant")
                     {
-                        SubscriptionEndDateUtc = utcNow.AddDays(1),
-                        CreationTime = now.AddMinutes(-1)
+                        SubscriptionEndDateUtc = utcNow.AddDays(1), CreationTime = now.AddMinutes(-1)
                     });
                 });
 
             //Act
             var output = await _hostDashboardService.GetIncomeStatistics(new GetIncomeStatisticsDataInput
             {
-                StartDate = now.AddDays(-4),
-                EndDate = now,
-                IncomeStatisticsDateInterval = ChartDateInterval.Daily
+                StartDate = now.AddDays(-4), EndDate = now, IncomeStatisticsDateInterval = ChartDateInterval.Daily
             });
 
             output.IncomeStatistics.Count.ShouldBe(5);
@@ -125,37 +125,36 @@ namespace TACHYON.Tests.HostDashboard
                     context.SubscribableEditions.Add(specialEdition);
                     context.SaveChanges();
 
-                    CreatePaidPayment(context, new SubscriptionPayment
-                    {
-                        Amount = 100,
-                        DayCount = 365,
-                        EditionId = specialEdition.Id,
-                        CreationTime = now.AddDays(-2),
-                        TenantId = 1
-                    });
+                    CreatePaidPayment(context,
+                        new SubscriptionPayment
+                        {
+                            Amount = 100,
+                            DayCount = 365,
+                            EditionId = specialEdition.Id,
+                            CreationTime = now.AddDays(-2),
+                            TenantId = 1
+                        });
 
-                    CreatePaidPayment(context, new SubscriptionPayment
-                    {
-                        Amount = 200,
-                        DayCount = 730,
-                        EditionId = specialEdition.Id,
-                        CreationTime = now.AddDays(-1),
-                        TenantId = 1
-                    });
+                    CreatePaidPayment(context,
+                        new SubscriptionPayment
+                        {
+                            Amount = 200,
+                            DayCount = 730,
+                            EditionId = specialEdition.Id,
+                            CreationTime = now.AddDays(-1),
+                            TenantId = 1
+                        });
 
                     context.Tenants.Add(new Tenant("MyTenant", "My Tenant")
                     {
-                        SubscriptionEndDateUtc = utcNow.AddDays(1),
-                        CreationTime = now.AddMinutes(-1)
+                        SubscriptionEndDateUtc = utcNow.AddDays(1), CreationTime = now.AddMinutes(-1)
                     });
                 });
 
             //Act
             var output = await _hostDashboardService.GetIncomeStatistics(new GetIncomeStatisticsDataInput
             {
-                StartDate = now.AddDays(-3),
-                EndDate = now,
-                IncomeStatisticsDateInterval = ChartDateInterval.Daily
+                StartDate = now.AddDays(-3), EndDate = now, IncomeStatisticsDateInterval = ChartDateInterval.Daily
             });
 
             output.IncomeStatistics.Count.ShouldBe(4);
@@ -174,17 +173,11 @@ namespace TACHYON.Tests.HostDashboard
                 {
                     context.SubscribableEditions.RemoveRange(context.SubscribableEditions);
 
-                    var newSpecialEdition = new SubscribableEdition
-                    {
-                        DisplayName = "Special Edition"
-                    };
+                    var newSpecialEdition = new SubscribableEdition { DisplayName = "Special Edition" };
 
                     context.SubscribableEditions.Add(newSpecialEdition);
 
-                    var newPremiumEdition = new SubscribableEdition
-                    {
-                        DisplayName = "Premium Edition"
-                    };
+                    var newPremiumEdition = new SubscribableEdition { DisplayName = "Premium Edition" };
 
                     context.SubscribableEditions.Add(newPremiumEdition);
                     context.SaveChanges();
@@ -207,8 +200,7 @@ namespace TACHYON.Tests.HostDashboard
             //Act
             var output = await _hostDashboardService.GetEditionTenantStatistics(new GetEditionTenantStatisticsInput
             {
-                StartDate = now.AddDays(-1),
-                EndDate = now
+                StartDate = now.AddDays(-1), EndDate = now
             });
 
 
@@ -240,34 +232,20 @@ namespace TACHYON.Tests.HostDashboard
                 context =>
                 {
                     var standardEdition = context.SubscribableEditions.First();
-                    CreatePaidPayment(context, new SubscriptionPayment
-                    {
-                        Amount = 100,
-                        EditionId = standardEdition.Id,
-                        CreationTime = date1
-                    });
+                    CreatePaidPayment(context,
+                        new SubscriptionPayment { Amount = 100, EditionId = standardEdition.Id, CreationTime = date1 });
 
-                    CreatePaidPayment(context, new SubscriptionPayment
-                    {
-                        Amount = 200,
-                        EditionId = standardEdition.Id,
-                        CreationTime = date2
-                    });
+                    CreatePaidPayment(context,
+                        new SubscriptionPayment { Amount = 200, EditionId = standardEdition.Id, CreationTime = date2 });
 
-                    CreatePaidPayment(context, new SubscriptionPayment
-                    {
-                        Amount = 300,
-                        EditionId = standardEdition.Id,
-                        CreationTime = date3
-                    });
+                    CreatePaidPayment(context,
+                        new SubscriptionPayment { Amount = 300, EditionId = standardEdition.Id, CreationTime = date3 });
                 });
 
             //Act
             var output = await _hostDashboardService.GetIncomeStatistics(new GetIncomeStatisticsDataInput
             {
-                StartDate = date1,
-                EndDate = date4,
-                IncomeStatisticsDateInterval = ChartDateInterval.Daily
+                StartDate = date1, EndDate = date4, IncomeStatisticsDateInterval = ChartDateInterval.Daily
             });
 
             output.IncomeStatistics.Count.ShouldBe(4);
@@ -298,35 +276,29 @@ namespace TACHYON.Tests.HostDashboard
                 context =>
                 {
                     var standardEdition = context.SubscribableEditions.First();
-                    CreatePaidPayment(context, new SubscriptionPayment
-                    {
-                        Amount = 100,
-                        EditionId = standardEdition.Id,
-                        CreationTime = firstWeek
-                    });
+                    CreatePaidPayment(context,
+                        new SubscriptionPayment
+                        {
+                            Amount = 100, EditionId = standardEdition.Id, CreationTime = firstWeek
+                        });
 
-                    CreatePaidPayment(context, new SubscriptionPayment
-                    {
-                        Amount = 200,
-                        EditionId = standardEdition.Id,
-                        CreationTime = secondWeek
-                    });
+                    CreatePaidPayment(context,
+                        new SubscriptionPayment
+                        {
+                            Amount = 200, EditionId = standardEdition.Id, CreationTime = secondWeek
+                        });
 
-                    CreatePaidPayment(context, new SubscriptionPayment
-                    {
-                        Amount = 300,
-                        EditionId = standardEdition.Id,
-                        CreationTime = thirdWeek
-                    });
-
+                    CreatePaidPayment(context,
+                        new SubscriptionPayment
+                        {
+                            Amount = 300, EditionId = standardEdition.Id, CreationTime = thirdWeek
+                        });
                 });
 
             //Act
             var output = await _hostDashboardService.GetIncomeStatistics(new GetIncomeStatisticsDataInput
             {
-                StartDate = firstWeek,
-                EndDate = thirdWeek,
-                IncomeStatisticsDateInterval = ChartDateInterval.Weekly
+                StartDate = firstWeek, EndDate = thirdWeek, IncomeStatisticsDateInterval = ChartDateInterval.Weekly
             });
 
             output.IncomeStatistics.Count.ShouldBe(3);
@@ -351,35 +323,29 @@ namespace TACHYON.Tests.HostDashboard
                 context =>
                 {
                     var standardEdition = context.SubscribableEditions.First();
-                    CreatePaidPayment(context, new SubscriptionPayment
-                    {
-                        Amount = 100,
-                        EditionId = standardEdition.Id,
-                        CreationTime = firstWeek
-                    });
+                    CreatePaidPayment(context,
+                        new SubscriptionPayment
+                        {
+                            Amount = 100, EditionId = standardEdition.Id, CreationTime = firstWeek
+                        });
 
-                    CreatePaidPayment(context, new SubscriptionPayment
-                    {
-                        Amount = 200,
-                        EditionId = standardEdition.Id,
-                        CreationTime = secondWeek
-                    });
+                    CreatePaidPayment(context,
+                        new SubscriptionPayment
+                        {
+                            Amount = 200, EditionId = standardEdition.Id, CreationTime = secondWeek
+                        });
 
-                    CreatePaidPayment(context, new SubscriptionPayment
-                    {
-                        Amount = 300,
-                        EditionId = standardEdition.Id,
-                        CreationTime = thirdWeek
-                    });
-
+                    CreatePaidPayment(context,
+                        new SubscriptionPayment
+                        {
+                            Amount = 300, EditionId = standardEdition.Id, CreationTime = thirdWeek
+                        });
                 });
 
             //Act
             var output = await _hostDashboardService.GetIncomeStatistics(new GetIncomeStatisticsDataInput
             {
-                StartDate = firstWeek,
-                EndDate = thirdWeek,
-                IncomeStatisticsDateInterval = ChartDateInterval.Weekly
+                StartDate = firstWeek, EndDate = thirdWeek, IncomeStatisticsDateInterval = ChartDateInterval.Weekly
             });
 
             output.IncomeStatistics.Count.ShouldBe(3);
@@ -399,27 +365,23 @@ namespace TACHYON.Tests.HostDashboard
                 context =>
                 {
                     var standardEdition = context.SubscribableEditions.First();
-                    CreatePaidPayment(context, new SubscriptionPayment
-                    {
-                        Amount = 100,
-                        EditionId = standardEdition.Id,
-                        CreationTime = new DateTime(2017, 5, 4)
-                    });
+                    CreatePaidPayment(context,
+                        new SubscriptionPayment
+                        {
+                            Amount = 100, EditionId = standardEdition.Id, CreationTime = new DateTime(2017, 5, 4)
+                        });
 
-                    CreatePaidPayment(context, new SubscriptionPayment
-                    {
-                        Amount = 200,
-                        EditionId = standardEdition.Id,
-                        CreationTime = new DateTime(2017, 5, 11)
-                    });
+                    CreatePaidPayment(context,
+                        new SubscriptionPayment
+                        {
+                            Amount = 200, EditionId = standardEdition.Id, CreationTime = new DateTime(2017, 5, 11)
+                        });
 
-                    CreatePaidPayment(context, new SubscriptionPayment
-                    {
-                        Amount = 300,
-                        EditionId = standardEdition.Id,
-                        CreationTime = new DateTime(2017, 5, 18)
-                    });
-
+                    CreatePaidPayment(context,
+                        new SubscriptionPayment
+                        {
+                            Amount = 300, EditionId = standardEdition.Id, CreationTime = new DateTime(2017, 5, 18)
+                        });
                 });
 
             //Act

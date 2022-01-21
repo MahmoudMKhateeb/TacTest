@@ -34,7 +34,7 @@ namespace TACHYON.Auditing
             AbpTimer timer,
             IRepository<AuditLog, long> auditLogRepository,
             IRepository<Tenant> tenantRepository
-            )
+        )
             : base(timer)
         {
             _auditLogRepository = auditLogRepository;
@@ -106,7 +106,8 @@ namespace TACHYON.Auditing
             }
             catch (Exception e)
             {
-                Logger.Log(LogSeverity.Error, $"An error occured while deleting audit log for tenant. TenantId: {tenantId}", e);
+                Logger.Log(LogSeverity.Error,
+                    $"An error occured while deleting audit log for tenant. TenantId: {tenantId}", e);
             }
         }
 
@@ -121,7 +122,8 @@ namespace TACHYON.Auditing
 
             if (expiredEntryCount > MaxDeletionCount)
             {
-                var deleteStartId = _auditLogRepository.GetAll().OrderBy(l => l.Id).Skip(MaxDeletionCount).Select(x => x.Id).First();
+                var deleteStartId = _auditLogRepository.GetAll().OrderBy(l => l.Id).Skip(MaxDeletionCount)
+                    .Select(x => x.Id).First();
 
                 AsyncHelper.RunSync(() => _auditLogRepository.BatchDeleteAsync(l => l.Id < deleteStartId));
             }

@@ -46,8 +46,7 @@ namespace TACHYON.Trucks
 
         public virtual long? TruckStatusId { get; set; }
 
-        [ForeignKey("TruckStatusId")]
-        public TruckStatus TruckStatusFk { get; set; }
+        [ForeignKey("TruckStatusId")] public TruckStatus TruckStatusFk { get; set; }
 
         // public virtual long? Driver1UserId { get; set; }
 
@@ -70,23 +69,17 @@ namespace TACHYON.Trucks
         #region Truck Categories
 
         public virtual int? TransportTypeId { get; set; }
-        [ForeignKey("TransportTypeId")]
-        public TransportType TransportTypeFk { get; set; }
-
+        [ForeignKey("TransportTypeId")] public TransportType TransportTypeFk { get; set; }
 
 
         public virtual long? TrucksTypeId { get; set; }
 
 
-        [ForeignKey("TrucksTypeId")]
-        public TrucksType TrucksTypeFk { get; set; }
-
-
+        [ForeignKey("TrucksTypeId")] public TrucksType TrucksTypeFk { get; set; }
 
 
         public virtual int? CapacityId { get; set; }
-        [ForeignKey("CapacityId")]
-        public Capacity CapacityFk { get; set; }
+        [ForeignKey("CapacityId")] public Capacity CapacityFk { get; set; }
 
         #endregion
 
@@ -95,8 +88,7 @@ namespace TACHYON.Trucks
 
         public virtual int? PlateTypeId { get; set; }
 
-        [ForeignKey("PlateTypeId")]
-        public PlateType PlateTypeFk { get; set; }
+        [ForeignKey("PlateTypeId")] public PlateType PlateTypeFk { get; set; }
 
         public virtual ICollection<DocumentFile> DocumentFiles { get; set; }
 
@@ -113,7 +105,5 @@ namespace TACHYON.Trucks
         }
 
         #endregion
-
-
     }
 }

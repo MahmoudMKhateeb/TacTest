@@ -11,7 +11,6 @@ namespace TACHYON.Shipping.Trips.Accidents
 {
     public interface IShippingRequestTripAccidentAppService
     {
-
         ListResultDto<ShippingRequestTripAccidentListDto> GetAll(GetAllForShippingRequestTripAccidentFilterInput Input);
 
         Task CreateOrEdit(CreateOrEditShippingRequestTripAccidentDto input);
@@ -21,6 +20,5 @@ namespace TACHYON.Shipping.Trips.Accidents
         Task CreateOrEditResolve(CreateOrEditShippingRequestTripAccidentResolveDto input);
 
         Task<FileDto> GetFile(int Id);
-
     }
 }

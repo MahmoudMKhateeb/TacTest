@@ -10,15 +10,14 @@ namespace TACHYON.Documents.DocumentTypeTranslations.Exporting
 {
     public class DocumentTypeTranslationsExcelExporter : NpoiExcelExporterBase, IDocumentTypeTranslationsExcelExporter
     {
-
         private readonly ITimeZoneConverter _timeZoneConverter;
         private readonly IAbpSession _abpSession;
 
         public DocumentTypeTranslationsExcelExporter(
             ITimeZoneConverter timeZoneConverter,
             IAbpSession abpSession,
-			ITempFileCacheManager tempFileCacheManager) :  
-	base(tempFileCacheManager)
+            ITempFileCacheManager tempFileCacheManager) :
+            base(tempFileCacheManager)
         {
             _timeZoneConverter = timeZoneConverter;
             _abpSession = abpSession;
@@ -30,7 +29,6 @@ namespace TACHYON.Documents.DocumentTypeTranslations.Exporting
                 "DocumentTypeTranslations.xlsx",
                 excelPackage =>
                 {
-                    
                     var sheet = excelPackage.CreateSheet(L("DocumentTypeTranslations"));
 
                     AddHeader(
@@ -38,17 +36,14 @@ namespace TACHYON.Documents.DocumentTypeTranslations.Exporting
                         L("Name"),
                         L("Language"),
                         (L("DocumentType")) + L("DisplayName")
-                        );
+                    );
 
                     AddObjects(
                         sheet, 2, documentTypeTranslations,
                         _ => _.DocumentTypeTranslation.Name,
                         _ => _.DocumentTypeTranslation.Language,
                         _ => _.DocumentTypeDisplayName
-                        );
-
-					
-					
+                    );
                 });
         }
     }

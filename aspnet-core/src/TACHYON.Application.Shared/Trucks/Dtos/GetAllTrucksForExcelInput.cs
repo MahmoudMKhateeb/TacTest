@@ -25,10 +25,8 @@ namespace TACHYON.Trucks.Dtos
 
         public string TruckStatusDisplayNameFilter { get; set; }
 
-       // public string UserNameFilter { get; set; }
+        // public string UserNameFilter { get; set; }
 
         //public string UserName2Filter { get; set; }
-
-
     }
 }

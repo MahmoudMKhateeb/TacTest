@@ -1,5 +1,4 @@
-﻿
-using Abp.Application.Services.Dto;
+﻿using Abp.Application.Services.Dto;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -10,7 +9,7 @@ namespace TACHYON.Routs.RoutSteps.Dtos
         public string DisplayName { get; set; }
         public int Order { get; set; }
 
-        public  long ShippingRequestId { get; set; }
+        public long ShippingRequestId { get; set; }
 
         public long AssignedDriverUserId { get; set; }
 

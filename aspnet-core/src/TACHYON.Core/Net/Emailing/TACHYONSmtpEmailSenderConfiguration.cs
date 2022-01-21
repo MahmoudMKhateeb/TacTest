@@ -9,9 +9,9 @@ namespace TACHYON.Net.Emailing
     {
         public TACHYONSmtpEmailSenderConfiguration(ISettingManager settingManager) : base(settingManager)
         {
-
         }
 
-        public override string Password => SimpleStringCipher.Instance.Decrypt(GetNotEmptySettingValue(EmailSettingNames.Smtp.Password));
+        public override string Password =>
+            SimpleStringCipher.Instance.Decrypt(GetNotEmptySettingValue(EmailSettingNames.Smtp.Password));
     }
 }

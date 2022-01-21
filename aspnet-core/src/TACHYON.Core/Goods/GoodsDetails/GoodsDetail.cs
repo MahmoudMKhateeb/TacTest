@@ -35,16 +35,15 @@ namespace TACHYON.Goods.GoodsDetails
         [StringLength(GoodsDetailConsts.MaxDimentionsLength, MinimumLength = GoodsDetailConsts.MinDimentionsLength)]
         public virtual string Dimentions { get; set; } //todo  x y z 
 
-        [Required]
-        public virtual bool IsDangerousGood { get; set; }
+        [Required] public virtual bool IsDangerousGood { get; set; }
 
-        [StringLength(GoodsDetailConsts.MaxDangerousGoodsCodeLength, MinimumLength = GoodsDetailConsts.MinDangerousGoodsCodeLength)]
+        [StringLength(GoodsDetailConsts.MaxDangerousGoodsCodeLength,
+            MinimumLength = GoodsDetailConsts.MinDangerousGoodsCodeLength)]
         public virtual string DangerousGoodsCode { get; set; }
 
         public virtual int? DangerousGoodTypeId { get; set; }
 
-        [ForeignKey("DangerousGoodTypeId")]
-        public DangerousGoodType DangerousGoodTypeFk { get; set; }
+        [ForeignKey("DangerousGoodTypeId")] public DangerousGoodType DangerousGoodTypeFk { get; set; }
 
 
         /// <summary>
@@ -53,8 +52,7 @@ namespace TACHYON.Goods.GoodsDetails
         [Required]
         public virtual int GoodCategoryId { get; set; }
 
-        [ForeignKey("GoodCategoryId")]
-        public GoodCategory GoodCategoryFk { get; set; }
+        [ForeignKey("GoodCategoryId")] public GoodCategory GoodCategoryFk { get; set; }
         public string OtherGoodsCategoryName { get; set; }
 
         /// <summary>
@@ -63,19 +61,15 @@ namespace TACHYON.Goods.GoodsDetails
         [Required]
         public int UnitOfMeasureId { get; set; }
 
-        [ForeignKey("UnitOfMeasureId")]
-        public UnitOfMeasure UnitOfMeasureFk { get; set; }
+        [ForeignKey("UnitOfMeasureId")] public UnitOfMeasure UnitOfMeasureFk { get; set; }
+
         /// <summary>
         /// IF Goods category refers to others, this field should be filled
         /// </summary>
         public string OtherUnitOfMeasureName { get; set; }
 
-        [Required]
-        public long RoutPointId { get; set; }
+        [Required] public long RoutPointId { get; set; }
 
-        [ForeignKey("RoutPointId")]
-        public RoutPoint RoutPointFk { get; set; }
-
-
+        [ForeignKey("RoutPointId")] public RoutPoint RoutPointFk { get; set; }
     }
 }

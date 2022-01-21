@@ -19,7 +19,8 @@ namespace TACHYON.Web.Authentication.External
             return userInfo.EmailAddress.ToMd5();
         }
 
-        public (string name, string surname) GetNameAndSurnameFromClaims(List<Claim> claims, IdentityOptions identityOptions)
+        public (string name, string surname) GetNameAndSurnameFromClaims(List<Claim> claims,
+            IdentityOptions identityOptions)
         {
             string name = null;
             string surname = null;

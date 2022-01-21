@@ -49,7 +49,12 @@ namespace TACHYON.Chat
             _chatFeatureChecker = chatFeatureChecker;
         }
 
-        public async Task SendMessageAsync(UserIdentifier sender, UserIdentifier receiver, string message, string senderTenancyName, string senderUserName, Guid? senderProfilePictureId)
+        public async Task SendMessageAsync(UserIdentifier sender,
+            UserIdentifier receiver,
+            string message,
+            string senderTenancyName,
+            string senderUserName,
+            Guid? senderProfilePictureId)
         {
             CheckReceiverExists(receiver);
 
@@ -65,7 +70,8 @@ namespace TACHYON.Chat
 
             await HandleSenderToReceiverAsync(sender, receiver, message, sharedMessageId);
             await HandleReceiverToSenderAsync(sender, receiver, message, sharedMessageId);
-            await HandleSenderUserInfoChangeAsync(sender, receiver, senderTenancyName, senderUserName, senderProfilePictureId);
+            await HandleSenderUserInfoChangeAsync(sender, receiver, senderTenancyName, senderUserName,
+                senderProfilePictureId);
         }
 
         private void CheckReceiverExists(UserIdentifier receiver)
@@ -103,9 +109,13 @@ namespace TACHYON.Chat
             return await _chatMessageRepository.FirstOrDefaultAsync(m => m.Id == id && m.UserId == userId);
         }
 
-        private async Task HandleSenderToReceiverAsync(UserIdentifier senderIdentifier, UserIdentifier receiverIdentifier, string message, Guid sharedMessageId)
+        private async Task HandleSenderToReceiverAsync(UserIdentifier senderIdentifier,
+            UserIdentifier receiverIdentifier,
+            string message,
+            Guid sharedMessageId)
         {
-            var friendshipState = (await _friendshipManager.GetFriendshipOrNullAsync(senderIdentifier, receiverIdentifier))?.State;
+            var friendshipState =
+                (await _friendshipManager.GetFriendshipOrNullAsync(senderIdentifier, receiverIdentifier))?.State;
             if (friendshipState == null)
             {
                 friendshipState = FriendshipState.Accepted;
@@ -147,18 +157,22 @@ namespace TACHYON.Chat
             await _chatCommunicator.SendMessageToClient(
                 _onlineClientManager.GetAllByUserId(senderIdentifier),
                 sentMessage
-                );
+            );
         }
 
-        private async Task HandleReceiverToSenderAsync(UserIdentifier senderIdentifier, UserIdentifier receiverIdentifier, string message, Guid sharedMessageId)
+        private async Task HandleReceiverToSenderAsync(UserIdentifier senderIdentifier,
+            UserIdentifier receiverIdentifier,
+            string message,
+            Guid sharedMessageId)
         {
-            var friendshipState = (await _friendshipManager.GetFriendshipOrNullAsync(receiverIdentifier, senderIdentifier))?.State;
+            var friendshipState =
+                (await _friendshipManager.GetFriendshipOrNullAsync(receiverIdentifier, senderIdentifier))?.State;
 
             if (friendshipState == null)
             {
-                var senderTenancyName = senderIdentifier.TenantId.HasValue ?
-                    _tenantCache.Get(senderIdentifier.TenantId.Value).TenancyName :
-                    null;
+                var senderTenancyName = senderIdentifier.TenantId.HasValue
+                    ? _tenantCache.Get(senderIdentifier.TenantId.Value).TenancyName
+                    : null;
 
                 var senderUser = _userManager.GetUser(senderIdentifier);
                 await _friendshipManager.CreateFriendshipAsync(
@@ -180,14 +194,14 @@ namespace TACHYON.Chat
             }
 
             var sentMessage = new ChatMessage(
-                    receiverIdentifier,
-                    senderIdentifier,
-                    ChatSide.Receiver,
-                    message,
-                    ChatMessageReadState.Unread,
-                    sharedMessageId,
-                    ChatMessageReadState.Read
-                );
+                receiverIdentifier,
+                senderIdentifier,
+                ChatSide.Receiver,
+                message,
+                ChatMessageReadState.Unread,
+                sharedMessageId,
+                ChatMessageReadState.Read
+            );
 
             Save(sentMessage);
 
@@ -198,24 +212,29 @@ namespace TACHYON.Chat
             }
             else if (GetUnreadMessageCount(senderIdentifier, receiverIdentifier) == 1)
             {
-                var senderTenancyName = senderIdentifier.TenantId.HasValue ?
-                    _tenantCache.Get(senderIdentifier.TenantId.Value).TenancyName :
-                    null;
+                var senderTenancyName = senderIdentifier.TenantId.HasValue
+                    ? _tenantCache.Get(senderIdentifier.TenantId.Value).TenancyName
+                    : null;
 
                 await _userEmailer.TryToSendChatMessageMail(
-                      _userManager.GetUser(receiverIdentifier),
-                      _userManager.GetUser(senderIdentifier).UserName,
-                      senderTenancyName,
-                      sentMessage
-                  );
+                    _userManager.GetUser(receiverIdentifier),
+                    _userManager.GetUser(senderIdentifier).UserName,
+                    senderTenancyName,
+                    sentMessage
+                );
             }
         }
 
-        private async Task HandleSenderUserInfoChangeAsync(UserIdentifier sender, UserIdentifier receiver, string senderTenancyName, string senderUserName, Guid? senderProfilePictureId)
+        private async Task HandleSenderUserInfoChangeAsync(UserIdentifier sender,
+            UserIdentifier receiver,
+            string senderTenancyName,
+            string senderUserName,
+            Guid? senderProfilePictureId)
         {
             var receiverCacheItem = _userFriendsCache.GetCacheItemOrNull(receiver);
 
-            var senderAsFriend = receiverCacheItem?.Friends.FirstOrDefault(f => f.FriendTenantId == sender.TenantId && f.FriendUserId == sender.UserId);
+            var senderAsFriend = receiverCacheItem?.Friends.FirstOrDefault(f =>
+                f.FriendTenantId == sender.TenantId && f.FriendUserId == sender.UserId);
             if (senderAsFriend == null)
             {
                 return;

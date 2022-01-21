@@ -23,6 +23,7 @@ namespace TACHYON.Shipping.Trips.Dto
                 return Enum.GetName(typeof(ShippingRequestTripStatus), Status);
             }
         }
+
         public string Driver { get; set; }
         public string Truck { get; set; }
         public string OriginCity { get; set; }
@@ -36,6 +37,5 @@ namespace TACHYON.Shipping.Trips.Dto
         public string DriverStatusTitle { get; set; }
         public string RejectedReason { get; set; }
         public long? WaybillNumber { get; set; }
-
     }
 }

@@ -20,13 +20,11 @@ namespace TACHYON.Goods.GoodCategories
 
         public int? FatherId { get; set; }
 
-        [ForeignKey("FatherId")]
-        public GoodCategory FatherFk { get; set; }
+        [ForeignKey("FatherId")] public GoodCategory FatherFk { get; set; }
         public ICollection<GoodCategoryTranslation> Translations { get; set; }
         public bool IsActive { get; set; } = true;
         public string BayanIntegrationId { get; set; }
 
         public ICollection<GoodCategory> GoodCategories { get; set; }
-
     }
 }

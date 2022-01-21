@@ -12,7 +12,5 @@ namespace TACHYON.Dashboards.Shipper.Dto
     {
         public List<RequestsListPerMonthDto> AcceptedRequests { get; set; }
         public List<RequestsListPerMonthDto> RejectedRequests { get; set; }
-
     }
-
 }

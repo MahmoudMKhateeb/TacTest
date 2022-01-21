@@ -11,6 +11,7 @@ namespace TACHYON.Vases
     {
         [StringLength(VasConsts.MaxDisplayNameLength, MinimumLength = VasConsts.MinDisplayNameLength)]
         public virtual string DisplayName { get; set; }
+
         public string Language { get; set; }
         public Vas Core { get; set; }
         public int CoreId { get; set; }

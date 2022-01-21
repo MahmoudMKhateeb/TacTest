@@ -17,6 +17,7 @@ namespace TACHYON.DynamicEntityParameters
 
         Task Delete(int id);
 
-        Task<GetAllEntityDynamicParameterValuesOutput> GetAllEntityDynamicParameterValues(GetAllEntityDynamicParameterValuesInput input);
+        Task<GetAllEntityDynamicParameterValuesOutput> GetAllEntityDynamicParameterValues(
+            GetAllEntityDynamicParameterValuesInput input);
     }
 }

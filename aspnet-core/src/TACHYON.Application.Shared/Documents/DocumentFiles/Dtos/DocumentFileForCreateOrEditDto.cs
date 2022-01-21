@@ -8,7 +8,6 @@ namespace TACHYON.Documents.DocumentFiles.Dtos
 {
     public class DocumentFileForCreateOrEditDto : EntityDto<Guid?>
     {
-
         public void AddValidationErrors(CustomValidationContext context)
         {
             if (!DocumentTypeDto.HasNumber)
@@ -18,15 +17,17 @@ namespace TACHYON.Documents.DocumentFiles.Dtos
 
             if (DocumentTypeDto.NumberMaxDigits != 0 && Number.ToString().Length > DocumentTypeDto.NumberMaxDigits)
             {
-                context.Results.Add(new ValidationResult("Number digits must be less than or equal " + DocumentTypeDto.NumberMaxDigits));
+                context.Results.Add(new ValidationResult("Number digits must be less than or equal " +
+                                                         DocumentTypeDto.NumberMaxDigits));
             }
 
             if (DocumentTypeDto.NumberMinDigits != 0 && Number.ToString().Length < DocumentTypeDto.NumberMinDigits)
             {
-                context.Results.Add(new ValidationResult("Number digits must be greater than or equal " + DocumentTypeDto.NumberMinDigits));
+                context.Results.Add(new ValidationResult("Number digits must be greater than or equal " +
+                                                         DocumentTypeDto.NumberMinDigits));
             }
-
         }
+
         public DocumentTypeDto DocumentTypeDto { get; set; }
 
 
@@ -68,7 +69,5 @@ namespace TACHYON.Documents.DocumentFiles.Dtos
 
         public string EntityId { get; set; }
         public string EntityType { get; set; }
-
-
     }
 }

@@ -2,7 +2,7 @@
 
 namespace TACHYON.Documents.DocumentFiles.Dtos
 {
-    public class UploadDocumentFileOutput :ErrorInfo
+    public class UploadDocumentFileOutput : ErrorInfo
     {
         public string FileName { get; set; }
 
@@ -12,7 +12,6 @@ namespace TACHYON.Documents.DocumentFiles.Dtos
 
         public UploadDocumentFileOutput()
         {
-
         }
 
         public UploadDocumentFileOutput(ErrorInfo error)

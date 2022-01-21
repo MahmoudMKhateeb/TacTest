@@ -12,6 +12,5 @@ namespace TACHYON.Trucks.TruckCategories.TruckCapacities.TruckCapacitiesTranslat
         public string LanguageFilter { get; set; }
 
         public string CapacityDisplayNameFilter { get; set; }
-
     }
 }

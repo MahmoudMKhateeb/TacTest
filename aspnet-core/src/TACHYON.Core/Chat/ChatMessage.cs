@@ -64,7 +64,6 @@ namespace TACHYON.Chat
 
         protected ChatMessage()
         {
-
         }
 
         public void ChangeReceiverReadState(ChatMessageReadState newState)

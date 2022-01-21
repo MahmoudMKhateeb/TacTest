@@ -20,36 +20,34 @@ namespace TACHYON.Trailers.PayloadMaxWeights
         private readonly IPayloadMaxWeightsExcelExporter _payloadMaxWeightsExcelExporter;
 
 
-        public PayloadMaxWeightsAppService(IRepository<PayloadMaxWeight> payloadMaxWeightRepository, IPayloadMaxWeightsExcelExporter payloadMaxWeightsExcelExporter)
+        public PayloadMaxWeightsAppService(IRepository<PayloadMaxWeight> payloadMaxWeightRepository,
+            IPayloadMaxWeightsExcelExporter payloadMaxWeightsExcelExporter)
         {
             _payloadMaxWeightRepository = payloadMaxWeightRepository;
             _payloadMaxWeightsExcelExporter = payloadMaxWeightsExcelExporter;
-
         }
 
         public async Task<PagedResultDto<GetPayloadMaxWeightForViewDto>> GetAll(GetAllPayloadMaxWeightsInput input)
         {
-
             var filteredPayloadMaxWeights = _payloadMaxWeightRepository.GetAll()
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter))
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.DisplayName == input.DisplayNameFilter)
-                        .WhereIf(input.MinMaxWeightFilter != null, e => e.MaxWeight >= input.MinMaxWeightFilter)
-                        .WhereIf(input.MaxMaxWeightFilter != null, e => e.MaxWeight <= input.MaxMaxWeightFilter);
+                .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter))
+                .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter),
+                    e => e.DisplayName == input.DisplayNameFilter)
+                .WhereIf(input.MinMaxWeightFilter != null, e => e.MaxWeight >= input.MinMaxWeightFilter)
+                .WhereIf(input.MaxMaxWeightFilter != null, e => e.MaxWeight <= input.MaxMaxWeightFilter);
 
             var pagedAndFilteredPayloadMaxWeights = filteredPayloadMaxWeights
                 .OrderBy(input.Sorting ?? "id asc")
                 .PageBy(input);
 
             var payloadMaxWeights = from o in pagedAndFilteredPayloadMaxWeights
-                                    select new GetPayloadMaxWeightForViewDto()
-                                    {
-                                        PayloadMaxWeight = new PayloadMaxWeightDto
-                                        {
-                                            DisplayName = o.DisplayName,
-                                            MaxWeight = o.MaxWeight,
-                                            Id = o.Id
-                                        }
-                                    };
+                select new GetPayloadMaxWeightForViewDto()
+                {
+                    PayloadMaxWeight = new PayloadMaxWeightDto
+                    {
+                        DisplayName = o.DisplayName, MaxWeight = o.MaxWeight, Id = o.Id
+                    }
+                };
 
             var totalCount = await filteredPayloadMaxWeights.CountAsync();
 
@@ -63,7 +61,10 @@ namespace TACHYON.Trailers.PayloadMaxWeights
         {
             var payloadMaxWeight = await _payloadMaxWeightRepository.GetAsync(id);
 
-            var output = new GetPayloadMaxWeightForViewDto { PayloadMaxWeight = ObjectMapper.Map<PayloadMaxWeightDto>(payloadMaxWeight) };
+            var output = new GetPayloadMaxWeightForViewDto
+            {
+                PayloadMaxWeight = ObjectMapper.Map<PayloadMaxWeightDto>(payloadMaxWeight)
+            };
 
             return output;
         }
@@ -73,7 +74,10 @@ namespace TACHYON.Trailers.PayloadMaxWeights
         {
             var payloadMaxWeight = await _payloadMaxWeightRepository.FirstOrDefaultAsync(input.Id);
 
-            var output = new GetPayloadMaxWeightForEditOutput { PayloadMaxWeight = ObjectMapper.Map<CreateOrEditPayloadMaxWeightDto>(payloadMaxWeight) };
+            var output = new GetPayloadMaxWeightForEditOutput
+            {
+                PayloadMaxWeight = ObjectMapper.Map<CreateOrEditPayloadMaxWeightDto>(payloadMaxWeight)
+            };
 
             return output;
         }
@@ -96,7 +100,6 @@ namespace TACHYON.Trailers.PayloadMaxWeights
             var payloadMaxWeight = ObjectMapper.Map<PayloadMaxWeight>(input);
 
 
-
             await _payloadMaxWeightRepository.InsertAsync(payloadMaxWeight);
         }
 
@@ -115,30 +118,26 @@ namespace TACHYON.Trailers.PayloadMaxWeights
 
         public async Task<FileDto> GetPayloadMaxWeightsToExcel(GetAllPayloadMaxWeightsForExcelInput input)
         {
-
             var filteredPayloadMaxWeights = _payloadMaxWeightRepository.GetAll()
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter))
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.DisplayName == input.DisplayNameFilter)
-                        .WhereIf(input.MinMaxWeightFilter != null, e => e.MaxWeight >= input.MinMaxWeightFilter)
-                        .WhereIf(input.MaxMaxWeightFilter != null, e => e.MaxWeight <= input.MaxMaxWeightFilter);
+                .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter))
+                .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter),
+                    e => e.DisplayName == input.DisplayNameFilter)
+                .WhereIf(input.MinMaxWeightFilter != null, e => e.MaxWeight >= input.MinMaxWeightFilter)
+                .WhereIf(input.MaxMaxWeightFilter != null, e => e.MaxWeight <= input.MaxMaxWeightFilter);
 
             var query = (from o in filteredPayloadMaxWeights
-                         select new GetPayloadMaxWeightForViewDto()
-                         {
-                             PayloadMaxWeight = new PayloadMaxWeightDto
-                             {
-                                 DisplayName = o.DisplayName,
-                                 MaxWeight = o.MaxWeight,
-                                 Id = o.Id
-                             }
-                         });
+                select new GetPayloadMaxWeightForViewDto()
+                {
+                    PayloadMaxWeight = new PayloadMaxWeightDto
+                    {
+                        DisplayName = o.DisplayName, MaxWeight = o.MaxWeight, Id = o.Id
+                    }
+                });
 
 
             var payloadMaxWeightListDtos = await query.ToListAsync();
 
             return _payloadMaxWeightsExcelExporter.ExportToFile(payloadMaxWeightListDtos);
         }
-
-
     }
 }

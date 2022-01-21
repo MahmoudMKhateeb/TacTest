@@ -10,14 +10,14 @@ namespace TACHYON.Goods
     [Table("DangerousGoodTypes")]
     public class DangerousGoodType : FullAuditedEntity, IMultiLingualEntity<DangerousGoodTypeTranslation>
     {
-
         [Required]
         [StringLength(DangerousGoodTypeConsts.MaxNameLength, MinimumLength = DangerousGoodTypeConsts.MinNameLength)]
         public virtual string Name { get; set; }
+
         /// <summary>
         /// for Bayan integration mapping Dangerous Good Types
         /// </summary>
-		public virtual int? BayanIntegrationId { get; set; }
+        public virtual int? BayanIntegrationId { get; set; }
 
         public ICollection<DangerousGoodTypeTranslation> Translations { get; set; }
     }

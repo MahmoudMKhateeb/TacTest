@@ -21,6 +21,5 @@ namespace TACHYON.Trucks.TrucksTypes.TrucksTypesTranslations
         Task Delete(EntityDto input);
 
         Task<List<TrucksTypesTranslationTrucksTypeLookupTableDto>> GetAllTrucksTypeForTableDropdown();
-
     }
 }

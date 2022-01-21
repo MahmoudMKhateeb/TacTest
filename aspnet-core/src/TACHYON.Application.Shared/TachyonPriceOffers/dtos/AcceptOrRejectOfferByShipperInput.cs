@@ -14,9 +14,9 @@ namespace TACHYON.TachyonPriceOffers.dtos
 
         public void AddValidationErrors(CustomValidationContext context)
         {
-           // RejectedReason = RejectedReason.Trim();
-            if (!IsAccepted && string.IsNullOrEmpty(RejectedReason) )
-            context.Results.Add(new ValidationResult("TheRejectedReasonIsRequired"));
+            // RejectedReason = RejectedReason.Trim();
+            if (!IsAccepted && string.IsNullOrEmpty(RejectedReason))
+                context.Results.Add(new ValidationResult("TheRejectedReasonIsRequired"));
         }
     }
 }

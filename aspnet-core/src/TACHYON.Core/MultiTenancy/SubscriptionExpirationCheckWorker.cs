@@ -61,7 +61,6 @@ namespace TACHYON.MultiTenancy
 
                 try
                 {
-
                     var edition = _editionRepository.Get(tenant.EditionId.Value);
 
                     Debug.Assert(tenant.SubscriptionEndDateUtc != null, "tenant.SubscriptionEndDateUtc != null");
@@ -72,7 +71,8 @@ namespace TACHYON.MultiTenancy
                         continue;
                     }
 
-                    var endSubscriptionResult = AsyncHelper.RunSync(() => _tenantManager.EndSubscriptionAsync(tenant, edition, utcNow));
+                    var endSubscriptionResult =
+                        AsyncHelper.RunSync(() => _tenantManager.EndSubscriptionAsync(tenant, edition, utcNow));
 
                     if (endSubscriptionResult == EndSubscriptionResult.TenantSetInActive)
                     {
@@ -80,13 +80,16 @@ namespace TACHYON.MultiTenancy
                     }
                     else if (endSubscriptionResult == EndSubscriptionResult.AssignedToAnotherEdition)
                     {
-                        AsyncHelper.RunSync(() => _userEmailer.TryToSendSubscriptionAssignedToAnotherEmail(tenant.Id, utcNow, edition.ExpiringEditionId.Value));
+                        AsyncHelper.RunSync(() =>
+                            _userEmailer.TryToSendSubscriptionAssignedToAnotherEmail(tenant.Id, utcNow,
+                                edition.ExpiringEditionId.Value));
                     }
                 }
                 catch (Exception exception)
                 {
                     failedTenancyNames.Add(tenant.TenancyName);
-                    Logger.Error($"Subscription of tenant {tenant.TenancyName} has been expired but tenant couldn't be made passive !");
+                    Logger.Error(
+                        $"Subscription of tenant {tenant.TenancyName} has been expired but tenant couldn't be made passive !");
                     Logger.Error(exception.Message, exception);
                 }
             }
@@ -96,7 +99,8 @@ namespace TACHYON.MultiTenancy
                 return;
             }
 
-            AsyncHelper.RunSync(() => _userEmailer.TryToSendFailedSubscriptionTerminationsEmail(failedTenancyNames, utcNow));
+            AsyncHelper.RunSync(() =>
+                _userEmailer.TryToSendFailedSubscriptionTerminationsEmail(failedTenancyNames, utcNow));
         }
     }
 }

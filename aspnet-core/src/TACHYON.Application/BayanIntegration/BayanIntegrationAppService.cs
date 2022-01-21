@@ -23,13 +23,9 @@ namespace TACHYON.BayanIntegration
         //    {
         //      //  var r = await _bayanIntegrationService.CreateConsignmentNote(shippingRequestTripId);
 
-             
+
         //    }
 
         //}
-
     }
-
-
-
 }

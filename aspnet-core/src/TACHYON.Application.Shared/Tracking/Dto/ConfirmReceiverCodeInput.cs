@@ -5,9 +5,7 @@ namespace TACHYON.Tracking.Dto
 {
     public class ConfirmReceiverCodeInput : EntityDto<long>
     {
-        [Required]
-        public string Code { get; set; }
+        [Required] public string Code { get; set; }
         public string Action { get; set; }
-
     }
 }

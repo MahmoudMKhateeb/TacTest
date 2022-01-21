@@ -15,7 +15,7 @@ namespace TACHYON.EntityFrameworkCore
         typeof(AbpZeroCoreEntityFrameworkCoreModule),
         typeof(TACHYONCoreModule),
         typeof(AbpZeroCoreIdentityServerEntityFrameworkCoreModule)
-        )]
+    )]
     public class TACHYONEntityFrameworkCoreModule : AbpModule
     {
         /* Used it tests to skip dbcontext registration, in order to use in-memory database of EF Core */
@@ -62,7 +62,8 @@ namespace TACHYON.EntityFrameworkCore
 
             using (var scope = IocManager.CreateScope())
             {
-                if (!SkipDbSeed && scope.Resolve<DatabaseCheckHelper>().Exist(configurationAccessor.Configuration["ConnectionStrings:Default"]))
+                if (!SkipDbSeed && scope.Resolve<DatabaseCheckHelper>()
+                        .Exist(configurationAccessor.Configuration["ConnectionStrings:Default"]))
                 {
                     SeedHelper.SeedHostDb(IocManager);
                 }

@@ -61,8 +61,6 @@ namespace TACHYON.Shipping.Trips
         private readonly ITempFileCacheManager _tempFileCacheManager;
 
 
-
-
         public ShippingRequestsTripAppService(
             IRepository<ShippingRequestTrip> shippingRequestTripRepository,
             IRepository<ShippingRequest, long> shippingRequestRepository,
@@ -71,7 +69,14 @@ namespace TACHYON.Shipping.Trips
             IRepository<GoodsDetail, long> goodsDetailRepository,
             UserManager userManager,
             IAppNotifier appNotifier,
-            ShippingRequestManager shippingRequestManager, DocumentFilesAppService documentFilesAppService, IRepository<GoodCategory> goodCategoryRepository, IRepository<DocumentFile, Guid> documentFileRepository, DocumentFilesManager documentFilesManager, IRepository<DocumentType, long> documentTypeRepository, IBinaryObjectManager binaryObjectManager, ITempFileCacheManager tempFileCacheManager)
+            ShippingRequestManager shippingRequestManager,
+            DocumentFilesAppService documentFilesAppService,
+            IRepository<GoodCategory> goodCategoryRepository,
+            IRepository<DocumentFile, Guid> documentFileRepository,
+            DocumentFilesManager documentFilesManager,
+            IRepository<DocumentType, long> documentTypeRepository,
+            IBinaryObjectManager binaryObjectManager,
+            ITempFileCacheManager tempFileCacheManager)
         {
             _shippingRequestTripRepository = shippingRequestTripRepository;
             _shippingRequestRepository = shippingRequestRepository;
@@ -91,25 +96,24 @@ namespace TACHYON.Shipping.Trips
         }
 
 
-
         public async Task<PagedResultDto<ShippingRequestsTripListDto>> GetAll(ShippingRequestTripFilterInput input)
         {
             DisableTenancyFilters();
             var request = await GetShippingRequestByPermission(input.RequestId);
             var query = _shippingRequestTripRepository
-        .GetAll()
-        .AsNoTracking()
-            .Include(x => x.OriginFacilityFk)
-            .ThenInclude(x => x.CityFk)
-            .Include(x => x.DestinationFacilityFk)
-            .ThenInclude(x => x.CityFk)
-            .Include(x => x.AssignedTruckFk)
-            .Include(x => x.AssignedDriverUserFk)
-            .Include(x => x.ShippingRequestTripRejectReason)
+                .GetAll()
+                .AsNoTracking()
+                .Include(x => x.OriginFacilityFk)
+                .ThenInclude(x => x.CityFk)
+                .Include(x => x.DestinationFacilityFk)
+                .ThenInclude(x => x.CityFk)
+                .Include(x => x.AssignedTruckFk)
+                .Include(x => x.AssignedDriverUserFk)
+                .Include(x => x.ShippingRequestTripRejectReason)
                 .ThenInclude(t => t.Translations)
-        .Where(x => x.ShippingRequestId == request.Id)
-        .WhereIf(input.Status.HasValue, e => e.Status == input.Status)
-        .OrderBy(input.Sorting ?? "Status asc");
+                .Where(x => x.ShippingRequestId == request.Id)
+                .WhereIf(input.Status.HasValue, e => e.Status == input.Status)
+                .OrderBy(input.Sorting ?? "Status asc");
 
 
             var resultPage = await query.PageBy(input).ToListAsync();
@@ -117,7 +121,8 @@ namespace TACHYON.Shipping.Trips
             {
                 if (r.ShippingRequestTripRejectReason != null)
                 {
-                    var reasone = ObjectMapper.Map<ShippingRequestTripRejectReasonListDto>(r.ShippingRequestTripRejectReason);
+                    var reasone =
+                        ObjectMapper.Map<ShippingRequestTripRejectReasonListDto>(r.ShippingRequestTripRejectReason);
                     if (reasone != null)
                     {
                         if (!string.IsNullOrEmpty(r.RejectedReason))
@@ -129,27 +134,23 @@ namespace TACHYON.Shipping.Trips
                             r.RejectedReason = reasone.Name;
                         }
                     }
-
                 }
-
             });
 
             var totalCount = await query.CountAsync();
             return new PagedResultDto<ShippingRequestsTripListDto>(
                 totalCount,
                 ObjectMapper.Map<List<ShippingRequestsTripListDto>>(resultPage)
-
             );
-
         }
 
         public async Task<ShippingRequestsTripForViewDto> GetShippingRequestTripForView(int id)
         {
-
             var shippingRequestTrip = await GetShippingRequestTripForMapper<ShippingRequestsTripForViewDto>(id);
             if (shippingRequestTrip.HasAttachment)
             {
-                var documentFile = await _documentFileRepository.FirstOrDefaultAsync(x => x.ShippingRequestTripId == id);
+                var documentFile =
+                    await _documentFileRepository.FirstOrDefaultAsync(x => x.ShippingRequestTripId == id);
                 if (documentFile != null)
                 {
                     shippingRequestTrip.DocumentFile = ObjectMapper.Map<DocumentFileDto>(documentFile);
@@ -162,42 +163,47 @@ namespace TACHYON.Shipping.Trips
 
         public async Task<CreateOrEditShippingRequestTripDto> GetShippingRequestTripForEdit(EntityDto input)
         {
-
-            var shippingRequestTrip = await GetShippingRequestTripForMapper<CreateOrEditShippingRequestTripDto>(input.Id);
+            var shippingRequestTrip =
+                await GetShippingRequestTripForMapper<CreateOrEditShippingRequestTripDto>(input.Id);
 
             // fill Attachment file
             if (shippingRequestTrip.HasAttachment)
             {
-                var documentFile = await _documentFileRepository.FirstOrDefaultAsync(x => x.ShippingRequestTripId == input.Id);
+                var documentFile =
+                    await _documentFileRepository.FirstOrDefaultAsync(x => x.ShippingRequestTripId == input.Id);
                 if (documentFile != null)
                 {
-                    shippingRequestTrip.CreateOrEditDocumentFileDto = ObjectMapper.Map<CreateOrEditDocumentFileDto>(documentFile);
+                    shippingRequestTrip.CreateOrEditDocumentFileDto =
+                        ObjectMapper.Map<CreateOrEditDocumentFileDto>(documentFile);
                 }
             }
             else
             {
-                var documentType = await _documentTypeRepository.SingleAsync(x => x.SpecialConstant.Contains(TACHYONConsts.TripAttachmentDocumentTypeSpecialConstant));
+                var documentType = await _documentTypeRepository.SingleAsync(x =>
+                    x.SpecialConstant.Contains(TACHYONConsts.TripAttachmentDocumentTypeSpecialConstant));
                 shippingRequestTrip.CreateOrEditDocumentFileDto = new CreateOrEditDocumentFileDto
                 {
                     ShippingRequestTripId = shippingRequestTrip.Id
                 };
-                shippingRequestTrip.CreateOrEditDocumentFileDto.DocumentTypeDto = ObjectMapper.Map<DocumentTypeDto>(documentType);
-
+                shippingRequestTrip.CreateOrEditDocumentFileDto.DocumentTypeDto =
+                    ObjectMapper.Map<DocumentTypeDto>(documentType);
             }
+
             return shippingRequestTrip;
         }
+
         public async Task<CreateOrEditShippingRequestTripDto> GetShippingRequestTripForCreate()
         {
-
             var shippingRequestTrip =
                 new CreateOrEditShippingRequestTripDto
                 {
                     CreateOrEditDocumentFileDto = new CreateOrEditDocumentFileDto()
-
                 };
             //Fill documentType  
-            var documentType = await _documentTypeRepository.SingleAsync(x => x.SpecialConstant.Contains(TACHYONConsts.TripAttachmentDocumentTypeSpecialConstant));
-            shippingRequestTrip.CreateOrEditDocumentFileDto.DocumentTypeDto = ObjectMapper.Map<DocumentTypeDto>(documentType);
+            var documentType = await _documentTypeRepository.SingleAsync(x =>
+                x.SpecialConstant.Contains(TACHYONConsts.TripAttachmentDocumentTypeSpecialConstant));
+            shippingRequestTrip.CreateOrEditDocumentFileDto.DocumentTypeDto =
+                ObjectMapper.Map<DocumentTypeDto>(documentType);
 
 
             return shippingRequestTrip;
@@ -215,8 +221,10 @@ namespace TACHYON.Shipping.Trips
             ValidateTotalweight(input, request);
             if (!input.Id.HasValue)
             {
-                int requestNumberOfTripsAdd = await _shippingRequestTripRepository.GetAll().Where(x => x.ShippingRequestId == input.ShippingRequestId).CountAsync() + 1;
-                if (requestNumberOfTripsAdd > request.NumberOfTrips) throw new UserFriendlyException(L("The number of trips " + request.NumberOfTrips));
+                int requestNumberOfTripsAdd = await _shippingRequestTripRepository.GetAll()
+                    .Where(x => x.ShippingRequestId == input.ShippingRequestId).CountAsync() + 1;
+                if (requestNumberOfTripsAdd > request.NumberOfTrips)
+                    throw new UserFriendlyException(L("The number of trips " + request.NumberOfTrips));
                 await Create(input, request);
                 request.TotalsTripsAddByShippier += 1;
             }
@@ -224,8 +232,6 @@ namespace TACHYON.Shipping.Trips
             {
                 await Update(input, request);
             }
-
-
         }
 
         [RequiresFeature(AppFeatures.Shipper)]
@@ -235,6 +241,7 @@ namespace TACHYON.Shipping.Trips
             await TenantManager.SetFeatureValueAsync(AbpSession.TenantId.Value, AppFeatures.AddTripsByTachyonDeal,
                 await IsEnabledAsync(AppFeatures.AddTripsByTachyonDeal) ? "false" : "true");
         }
+
         public async Task<FileDto> GetTripAttachmentFileDto(int id)
         {
             DisableTenancyFilters();
@@ -243,11 +250,14 @@ namespace TACHYON.Shipping.Trips
             {
                 var user = await _userManager.FindByIdAsync(AbpSession.UserId.ToString());
                 documentFile = await _documentFileRepository.GetAll()
-                   .WhereIf(IsEnabled(AppFeatures.Shipper), x => x.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId)
-                   .WhereIf(IsEnabled(AppFeatures.Carrier), x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
-                   .WhereIf(user.IsDriver, x => x.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId)
-                   .FirstOrDefaultAsync(x => x.ShippingRequestTripId == id && x.ShippingRequestTripFk.HasAttachment);
+                    .WhereIf(IsEnabled(AppFeatures.Shipper),
+                        x => x.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId)
+                    .WhereIf(IsEnabled(AppFeatures.Carrier),
+                        x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
+                    .WhereIf(user.IsDriver, x => x.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId)
+                    .FirstOrDefaultAsync(x => x.ShippingRequestTripId == id && x.ShippingRequestTripFk.HasAttachment);
             }
+
             if (documentFile == null)
             {
                 throw new UserFriendlyException(L("TheFileIsNotFound"));
@@ -269,7 +279,8 @@ namespace TACHYON.Shipping.Trips
                     .Sum(x => x.GoodsDetailListDto.Sum(g => g.Weight * g.Amount));
                 if (totalWeight > request.TotalWeight)
                 {
-                    throw new UserFriendlyException(L("TheTotalWeightOfGoodsDetailsshouldNotBeGreaterThanShippingRequestWeight",
+                    throw new UserFriendlyException(L(
+                        "TheTotalWeightOfGoodsDetailsshouldNotBeGreaterThanShippingRequestWeight",
                         request.TotalWeight));
                 }
             }
@@ -300,21 +311,20 @@ namespace TACHYON.Shipping.Trips
         {
             ShippingRequestTrip trip;
 
-            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant,AbpDataFilters.MustHaveTenant))
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
             {
-                trip = await _shippingRequestTripRepository.
-                    GetAll().
-                    Include(e => e.ShippingRequestFk)
+                trip = await _shippingRequestTripRepository.GetAll().Include(e => e.ShippingRequestFk)
                     .Include(d => d.AssignedDriverUserFk)
                     .Where(e => e.Id == input.Id)
                     //.Where(e => e.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
                     //.Where(e => e.Status != ShippingRequestTripStatus.Delivered)
                     .FirstOrDefaultAsync();
             }
-             
+
             if (trip == null) throw new UserFriendlyException(L("NoTripToAssignDriver"));
 
-            if (trip.Status == ShippingRequestTripStatus.Intransit && await CheckIfDriverWorkingOnAnotherTrip(input.AssignedDriverUserId))
+            if (trip.Status == ShippingRequestTripStatus.Intransit &&
+                await CheckIfDriverWorkingOnAnotherTrip(input.AssignedDriverUserId))
                 throw new UserFriendlyException(L("TheDriverAreadyWorkingOnAnotherTrip"));
 
             long? oldAssignedDriverUserId = trip.AssignedDriverUserId;
@@ -335,11 +345,12 @@ namespace TACHYON.Shipping.Trips
                 trip.AssignedDriverTime = Clock.Now;
                 // Send Notification To New Driver
                 if (oldAssignedDriverUserId.HasValue)
-                    await _appNotifier.NotifyDriverWhenUnassignedTrip(trip.Id,trip.WaybillNumber.ToString(),
+                    await _appNotifier.NotifyDriverWhenUnassignedTrip(trip.Id, trip.WaybillNumber.ToString(),
                         new UserIdentifier(AbpSession.TenantId, oldAssignedDriverUserId.Value));
-                
-                    await UserManager.UpdateUserDriverStatus(oldAssignedDriverUserId.Value, UserDriverStatus.Available);
+
+                await UserManager.UpdateUserDriverStatus(oldAssignedDriverUserId.Value, UserDriverStatus.Available);
             }
+
             await UserManager.UpdateUserDriverStatus(input.AssignedDriverUserId, UserDriverStatus.NotAvailable);
 
             if (oldAssignedTruckId != trip.AssignedTruckId && trip.ShippingRequestFk.CarrierTenantId != null)
@@ -350,17 +361,18 @@ namespace TACHYON.Shipping.Trips
                     TripId = trip.Id,
                     WaybillNumber = trip.WaybillNumber.ToString(),
                     DriverIdentifier = new UserIdentifier(trip.AssignedDriverUserFk.TenantId,
-                        trip.AssignedDriverUserId.Value)};
-                
+                        trip.AssignedDriverUserId.Value)
+                };
+
                 await _appNotifier.NotifyCarrierWhenTripUpdated(notifyTripInput);
             }
+
             // Send Notification To New Driver
             await _appNotifier.NotifyDriverWhenAssignTrip(trip.Id,
                 new UserIdentifier(trip.ShippingRequestFk.CarrierTenantId, trip.AssignedDriverUserId.Value));
-            
-            // No Need For This Already Notify All in Event Handler
-           // await _appNotifier.NotificationWhenTripDetailsChanged(trip, await GetCurrentUserAsync());
 
+            // No Need For This Already Notify All in Event Handler
+            // await _appNotifier.NotificationWhenTripDetailsChanged(trip, await GetCurrentUserAsync());
         }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Create)]
@@ -380,14 +392,14 @@ namespace TACHYON.Shipping.Trips
             var docFileDto = input.CreateOrEditDocumentFileDto;
             if (trip.HasAttachment)
             {
-                docFileDto.Name = input.CreateOrEditDocumentFileDto.DocumentTypeDto.DisplayName + "_" + shippingRequestTripId;
+                docFileDto.Name = input.CreateOrEditDocumentFileDto.DocumentTypeDto.DisplayName + "_" +
+                                  shippingRequestTripId;
                 docFileDto.ShippingRequestTripId = shippingRequestTripId;
                 await _documentFilesAppService.CreateOrEdit(docFileDto);
             }
 
             //Notify Carrier with trip details
             await NotifyCarrierWithTripDetails(trip, request.CarrierTenantId, true, true, true);
-
         }
 
         private void AssignWorkFlowVersionToRoutPoints(ShippingRequestTrip trip)
@@ -396,12 +408,13 @@ namespace TACHYON.Shipping.Trips
             {
                 foreach (var point in trip.RoutPoints)
                 {
-                    point.WorkFlowVersion = point.PickingType == PickingType.Pickup ? TACHYONConsts.PickUpRoutPointWorkflowVersion
-                        : trip.NeedsDeliveryNote ? TACHYONConsts.DropOfWithDeliveryNoteRoutPointWorkflowVersion
-                        : TACHYONConsts.DropOfRoutPointWorkflowVersion;
+                    point.WorkFlowVersion = point.PickingType == PickingType.Pickup
+                        ? TACHYONConsts.PickUpRoutPointWorkflowVersion
+                        : trip.NeedsDeliveryNote
+                            ? TACHYONConsts.DropOfWithDeliveryNoteRoutPointWorkflowVersion
+                            : TACHYONConsts.DropOfRoutPointWorkflowVersion;
                 }
             }
-
         }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Edit)]
@@ -423,12 +436,12 @@ namespace TACHYON.Shipping.Trips
             else
             {
                 //remove file if exists
-                var documentFile = await _documentFileRepository.FirstOrDefaultAsync(x => x.ShippingRequestTripId == trip.Id);
+                var documentFile =
+                    await _documentFileRepository.FirstOrDefaultAsync(x => x.ShippingRequestTripId == trip.Id);
                 if (documentFile != null)
                 {
                     await _documentFilesManager.DeleteDocumentFile(documentFile);
                 }
-
             }
 
             var needseliveryNoteOldValue = trip.NeedsDeliveryNote;
@@ -444,12 +457,9 @@ namespace TACHYON.Shipping.Trips
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Delete)]
         public async Task Delete(EntityDto input)
         {
-
-            var trip = await _shippingRequestTripRepository.
-                FirstOrDefaultAsync(
+            var trip = await _shippingRequestTripRepository.FirstOrDefaultAsync(
                 x => x.Id == input.Id &&
-                x.Status == ShippingRequestTripStatus.New);
-
+                     x.Status == ShippingRequestTripStatus.New);
 
 
             if (trip != null)
@@ -466,9 +476,12 @@ namespace TACHYON.Shipping.Trips
         {
             DisableTenancyFilters();
             var trip = await _shippingRequestTripRepository.GetAll().Include(x => x.ShippingRequestFk)
-                     .WhereIf(IsEnabled(AppFeatures.Carrier), x => x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId && !x.IsApproveCancledByCarrier)
-                     .WhereIf(IsEnabled(AppFeatures.Shipper), x => x.ShippingRequestFk.TenantId == AbpSession.TenantId && !x.IsApproveCancledByShipper)
-                     .WhereIf(IsEnabled(AppFeatures.TachyonDealer), x => !x.IsApproveCancledByShipper || !x.IsApproveCancledByCarrier)
+                .WhereIf(IsEnabled(AppFeatures.Carrier),
+                    x => x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId && !x.IsApproveCancledByCarrier)
+                .WhereIf(IsEnabled(AppFeatures.Shipper),
+                    x => x.ShippingRequestFk.TenantId == AbpSession.TenantId && !x.IsApproveCancledByShipper)
+                .WhereIf(IsEnabled(AppFeatures.TachyonDealer),
+                    x => !x.IsApproveCancledByShipper || !x.IsApproveCancledByCarrier)
                 .FirstOrDefaultAsync(x => x.Id == id && x.HasAccident);
             if (trip != null)
             {
@@ -481,8 +494,8 @@ namespace TACHYON.Shipping.Trips
                 else if (IsEnabled(AppFeatures.Carrier))
                 {
                     trip.IsApproveCancledByCarrier = true;
-                    userIdentifiers.Add(new UserIdentifier(trip.ShippingRequestFk.TenantId, (long)trip.ShippingRequestFk.CreatorUserId));
-
+                    userIdentifiers.Add(new UserIdentifier(trip.ShippingRequestFk.TenantId,
+                        (long)trip.ShippingRequestFk.CreatorUserId));
                 }
                 else if (IsEnabled(AppFeatures.TachyonDealer))
                 {
@@ -495,31 +508,38 @@ namespace TACHYON.Shipping.Trips
                     {
                         trip.IsApproveCancledByTachyonDealer = true;
                     }
-                    userIdentifiers.Add(await GetAdminTenant((int)trip.ShippingRequestFk.CarrierTenantId));
-                    userIdentifiers.Add(new UserIdentifier(trip.ShippingRequestFk.TenantId, (long)trip.ShippingRequestFk.CreatorUserId));
 
+                    userIdentifiers.Add(await GetAdminTenant((int)trip.ShippingRequestFk.CarrierTenantId));
+                    userIdentifiers.Add(new UserIdentifier(trip.ShippingRequestFk.TenantId,
+                        (long)trip.ShippingRequestFk.CreatorUserId));
                 }
 
                 //send notification to tachyon dealer in every request canceled
                 userIdentifiers.Add(await _userManager.GetTachyonDealerUserIdentifierAsync());
 
-                if ((!trip.ShippingRequestFk.IsTachyonDeal && trip.IsApproveCancledByShipper && trip.IsApproveCancledByCarrier) ||
+                if ((!trip.ShippingRequestFk.IsTachyonDeal && trip.IsApproveCancledByShipper &&
+                     trip.IsApproveCancledByCarrier) ||
                     (trip.IsForcedCanceledByTachyonDealer) ||
-                (!trip.IsForcedCanceledByTachyonDealer && trip.ShippingRequestFk.IsTachyonDeal && trip.IsApproveCancledByShipper && trip.IsApproveCancledByCarrier && trip.IsApproveCancledByTachyonDealer))
+                    (!trip.IsForcedCanceledByTachyonDealer && trip.ShippingRequestFk.IsTachyonDeal &&
+                     trip.IsApproveCancledByShipper && trip.IsApproveCancledByCarrier &&
+                     trip.IsApproveCancledByTachyonDealer))
                 {
                     if (!_shippingRequestTripRepository.GetAll().Any(x => x.Id != trip.Id && x.HasAccident))
                     {
                         var request = trip.ShippingRequestFk;
                         request.HasAccident = false;
                     }
+
                     trip.Status = ShippingRequestTripStatus.Canceled;
                 }
+
                 await _appNotifier.ShippingRequestTripCancelByAccident(userIdentifiers, trip, GetCurrentUser());
             }
             //await _shippingRequestRepository.DeleteAsync(input.Id);
         }
 
         #region Heleper
+
         /// <summary>
         /// Check can delete or edit trip if trip on stand by status
         /// </summary>
@@ -530,65 +550,62 @@ namespace TACHYON.Shipping.Trips
             if (trip.Status != ShippingRequestTripStatus.New)
             {
                 throw new UserFriendlyException(L("CanNotEditOrDeleteTrip"));
-
             }
-
-
         }
+
         private async Task<ShippingRequestTrip> GetTrip(int tripid, long? requestId = null)
         {
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant))
             {
                 var trip = await _shippingRequestTripRepository
-                .GetAll()
-                .AsNoTracking()
-                .Include(x => x.ShippingRequestFk)
-                .Include(x => x.OriginFacilityFk)
-                .Include(x => x.DestinationFacilityFk)
-                .Include(x => x.AssignedTruckFk)
-                .Include(x => x.AssignedDriverUserFk)
-                .Include(x => x.ShippingRequestTripRejectReason)
-                .Include(x => x.RoutPoints)
-                   .ThenInclude(r => r.FacilityFk)
-                .Include(x => x.RoutPoints)
-                   .ThenInclude(r => r.GoodsDetails)
+                    .GetAll()
+                    .AsNoTracking()
+                    .Include(x => x.ShippingRequestFk)
+                    .Include(x => x.OriginFacilityFk)
+                    .Include(x => x.DestinationFacilityFk)
+                    .Include(x => x.AssignedTruckFk)
+                    .Include(x => x.AssignedDriverUserFk)
+                    .Include(x => x.ShippingRequestTripRejectReason)
+                    .Include(x => x.RoutPoints)
+                    .ThenInclude(r => r.FacilityFk)
+                    .Include(x => x.RoutPoints)
+                    .ThenInclude(r => r.GoodsDetails)
                     .ThenInclude(c => c.GoodCategoryFk)
                     .ThenInclude(r => r.Translations)
-                .Include(x => x.RoutPoints)
+                    .Include(x => x.RoutPoints)
                     .ThenInclude(r => r.GoodsDetails)
                     .ThenInclude(c => c.UnitOfMeasureFk)
-                .Include(x => x.RoutPoints)
+                    .Include(x => x.RoutPoints)
                     .ThenInclude(c => c.ReceiverFk)
-                .Include(x => x.ShippingRequestTripVases)
-                  .ThenInclude(v => v.ShippingRequestVasFk)
+                    .Include(x => x.ShippingRequestTripVases)
+                    .ThenInclude(v => v.ShippingRequestVasFk)
                     .ThenInclude(v => v.VasFk)
-                .WhereIf(requestId.HasValue, x => x.ShippingRequestId == requestId)
-                 .FirstOrDefaultAsync(x => x.Id == tripid);
+                    .WhereIf(requestId.HasValue, x => x.ShippingRequestId == requestId)
+                    .FirstOrDefaultAsync(x => x.Id == tripid);
                 if (trip == null) throw new UserFriendlyException(L("ShippingRequestTripIsNotFound"));
                 return trip;
             }
-
         }
+
         /// <summary>
         /// Return Request when the user loging as shipper or host or carrier 
         /// </summary>
         /// <param name="shippingRequestId"></param>
         /// <returns></returns>
-
         private async Task<ShippingRequest> GetShippingRequestByPermission(long shippingRequestId)
         {
             var request = await _shippingRequestRepository.GetAll()
-                          .WhereIf(await IsEnabledAsync(AppFeatures.Carrier), x => x.CarrierTenantId == AbpSession.TenantId)
-                          .WhereIf(await IsEnabledAsync(AppFeatures.Shipper), x => x.TenantId == AbpSession.TenantId)
-                          .WhereIf(await IsEnabledAsync(AppFeatures.TachyonDealer), x => x.IsTachyonDeal)
+                .WhereIf(await IsEnabledAsync(AppFeatures.Carrier), x => x.CarrierTenantId == AbpSession.TenantId)
+                .WhereIf(await IsEnabledAsync(AppFeatures.Shipper), x => x.TenantId == AbpSession.TenantId)
+                .WhereIf(await IsEnabledAsync(AppFeatures.TachyonDealer), x => x.IsTachyonDeal)
                 .FirstOrDefaultAsync(x => x.Id == shippingRequestId);
             if (request == null)
             {
                 throw new UserFriendlyException(L("ShippingRequestIsNotFound"));
             }
+
             return request;
         }
-
 
 
         /// <summary>
@@ -611,16 +628,15 @@ namespace TACHYON.Shipping.Trips
             return new UserIdentifier(tenantId, (await _userManager.GetAdminByTenantIdAsync(tenantId)).Id);
         }
 
-        private async Task ValidateGoodsCategory(IEnumerable<CreateOrEditRoutPointDto> routPoints, int? shippingRequestGoodCategoryId)
+        private async Task ValidateGoodsCategory(IEnumerable<CreateOrEditRoutPointDto> routPoints,
+            int? shippingRequestGoodCategoryId)
         {
-
             var goodsCategories = await _goodCategoryRepository.GetAllListAsync();
 
             // todo Add Localized String Here
-            foreach (var goodsDetail in routPoints.Where(x => x.GoodsDetailListDto != null).SelectMany(routPoint => routPoint.GoodsDetailListDto))
+            foreach (var goodsDetail in routPoints.Where(x => x.GoodsDetailListDto != null)
+                         .SelectMany(routPoint => routPoint.GoodsDetailListDto))
             {
-
-
                 if (goodsDetail.GoodCategoryId != null)
                 {
                     if (shippingRequestGoodCategoryId == null)
@@ -634,8 +650,6 @@ namespace TACHYON.Shipping.Trips
 
                     if (goodCategory.FatherId != shippingRequestGoodCategoryId)
                         throw new UserFriendlyException(L("GoodsCategoryMustBeSubOfShippingRequestGoodCategory"));
-
-
                 }
                 else throw new UserFriendlyException(L("GoodsCategoryIsRequired"));
             }
@@ -661,6 +675,7 @@ namespace TACHYON.Shipping.Trips
                 {
                     await _routPointRepository.DeleteAsync(point);
                 }
+
                 foreach (var g in point.GoodsDetails.Where(x => x.Id != 0))
                 {
                     if (!input.RoutPoints.Any(x => x.GoodsDetailListDto.Any(d => d.Id == g.Id)))
@@ -671,25 +686,32 @@ namespace TACHYON.Shipping.Trips
             }
         }
 
-        private async Task NotifyCarrierWithTripDetails(ShippingRequestTrip trip, int? carrierTenantId, bool hasAttachmentNotification, bool needseliverNoteNotification, bool hasAttachment)
+        private async Task NotifyCarrierWithTripDetails(ShippingRequestTrip trip,
+            int? carrierTenantId,
+            bool hasAttachmentNotification,
+            bool needseliverNoteNotification,
+            bool hasAttachment)
         {
             //Notify carrier when trip has attachment or needs delivery note
             if (trip.ShippingRequestFk.CarrierTenantId != null && trip.HasAttachment && hasAttachmentNotification)
             {
                 await _appNotifier.NotifyCarrierWhenTripHasAttachment(trip.Id, carrierTenantId, hasAttachment);
             }
+
             if (trip.ShippingRequestFk.CarrierTenantId != null && trip.NeedsDeliveryNote && needseliverNoteNotification)
             {
                 await _appNotifier.NotifyCarrierWhenTripNeedsDeliverNote(trip.Id, carrierTenantId);
             }
         }
+
         private async Task<bool> CheckIfDriverWorkingOnAnotherTrip(long assignedDriverUserId)
         {
             return await _shippingRequestTripRepository.GetAll()
                 .AnyAsync(x => x.AssignedDriverUserId == assignedDriverUserId
-                            && x.Status == ShippingRequestTripStatus.Intransit
-                            && x.DriverStatus == ShippingRequestTripDriverStatus.Accepted);
+                               && x.Status == ShippingRequestTripStatus.Intransit
+                               && x.DriverStatus == ShippingRequestTripDriverStatus.Accepted);
         }
+
         #endregion
     }
 }

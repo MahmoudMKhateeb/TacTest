@@ -31,6 +31,7 @@ namespace TACHYON.Invoices
     public class InvoiceManager : TACHYONDomainServiceBase
     {
         #region property
+
         private readonly IRepository<InvoicePeriod> _periodRepository;
         private readonly IRepository<ShippingRequestTrip> _shippingRequestTrip;
         private readonly IRepository<InvoicePaymentMethod> _invoicePaymentMethodRepository;
@@ -50,6 +51,7 @@ namespace TACHYON.Invoices
         private readonly TransactionManager _transactionManager;
 
         #endregion
+
         public InvoiceManager(
             IRepository<InvoicePeriod> periodRepository,
             IRepository<Invoice, long> invoiceRepository,
@@ -61,9 +63,12 @@ namespace TACHYON.Invoices
             IRepository<GroupPeriod, long> groupRepository,
             IFeatureChecker featureChecker,
             IRepository<Tenant> tenant,
-             BalanceManager balanceManager,
-             IUnitOfWorkManager unitOfWorkManager,
-             TransactionManager transactionManager, IRepository<ShippingRequestTrip> shippingRequestTrip, IRepository<InvoicePaymentMethod> invoicePaymentMethodRepository, IRepository<SubmitInvoice, long> submitInvoiceRepository)
+            BalanceManager balanceManager,
+            IUnitOfWorkManager unitOfWorkManager,
+            TransactionManager transactionManager,
+            IRepository<ShippingRequestTrip> shippingRequestTrip,
+            IRepository<InvoicePaymentMethod> invoicePaymentMethodRepository,
+            IRepository<SubmitInvoice, long> submitInvoiceRepository)
         {
             _periodRepository = periodRepository;
             _invoiceRepository = invoiceRepository;
@@ -86,16 +91,18 @@ namespace TACHYON.Invoices
 
         public async void RunAllJobs()
         {
-
             var results = _periodRepository
                 .GetAll()
-                .WhereIf(true, p => p.Enabled && p.PeriodType != InvoicePeriodType.PayInAdvance && p.PeriodType != InvoicePeriodType.PayuponDelivery);
+                .WhereIf(true,
+                    p => p.Enabled && p.PeriodType != InvoicePeriodType.PayInAdvance &&
+                         p.PeriodType != InvoicePeriodType.PayuponDelivery);
 
             foreach (var period in results)
             {
                 await CreateTriggerAsync(period);
             }
         }
+
         /// <summary>
         /// Create job worker for each period in invoice
         /// </summary>
@@ -103,64 +110,68 @@ namespace TACHYON.Invoices
         /// <returns></returns>
         public async Task CreateTriggerAsync(InvoicePeriod period)
         {
-            string myJobKey = $"InvoiceJob.[{Enum.GetName(typeof(InvoicePeriodType), period.PeriodType)}].[{period.Id}]";
-            string triggerKey = $"InvoiceTrigger.[{Enum.GetName(typeof(InvoicePeriodType), period.PeriodType)}].[{period.Id}]";
+            string myJobKey =
+                $"InvoiceJob.[{Enum.GetName(typeof(InvoicePeriodType), period.PeriodType)}].[{period.Id}]";
+            string triggerKey =
+                $"InvoiceTrigger.[{Enum.GetName(typeof(InvoicePeriodType), period.PeriodType)}].[{period.Id}]";
             try
             {
                 await _jobManager.ScheduleAsync<InvoiceJob>(
-                         job =>
-                         {
-                             job.WithIdentity(myJobKey)
-                                 .WithDescription("A job to simply write logs.")
-                                 .UsingJobData("PeriodType", (int)period.PeriodType)
-                                 .UsingJobData("PeriodId", period.Id)
-                                 .StoreDurably();
-
-                         },
-                         trigger =>
-                         {
-                             trigger.StartNow()
-                             .WithIdentity(triggerKey)
-                             .UsingJobData("PeriodType", (int)period.PeriodType)
-                             .UsingJobData("PeriodId", period.Id)
-                             .WithCronSchedule(period.Cronexpression)
-                             .ForJob(myJobKey);
-                         });
+                    job =>
+                    {
+                        job.WithIdentity(myJobKey)
+                            .WithDescription("A job to simply write logs.")
+                            .UsingJobData("PeriodType", (int)period.PeriodType)
+                            .UsingJobData("PeriodId", period.Id)
+                            .StoreDurably();
+                    },
+                    trigger =>
+                    {
+                        trigger.StartNow()
+                            .WithIdentity(triggerKey)
+                            .UsingJobData("PeriodType", (int)period.PeriodType)
+                            .UsingJobData("PeriodId", period.Id)
+                            .WithCronSchedule(period.Cronexpression)
+                            .ForJob(myJobKey);
+                    });
             }
             catch
-            { // If Exists before just update the Schedule
+            {
+                // If Exists before just update the Schedule
                 await _jobManager.RescheduleAsync(new TriggerKey(triggerKey),
-                         trigger =>
-                         {
-                             trigger.StartNow()
-                             .WithIdentity(triggerKey)
-                             .UsingJobData("PeriodType", (int)period.PeriodType)
-                             .UsingJobData("PeriodId", period.Id)
-                             .WithCronSchedule(period.Cronexpression)
-                             .ForJob(myJobKey);
-                         });
+                    trigger =>
+                    {
+                        trigger.StartNow()
+                            .WithIdentity(triggerKey)
+                            .UsingJobData("PeriodType", (int)period.PeriodType)
+                            .UsingJobData("PeriodId", period.Id)
+                            .WithCronSchedule(period.Cronexpression)
+                            .ForJob(myJobKey);
+                    });
             }
-
         }
 
         public async Task RemoveTriggerAsync(InvoicePeriod period)
         {
-            var triggerKey = new TriggerKey($"InvoiceTrigger.[{Enum.GetName(typeof(InvoicePeriodType), period.PeriodType)}].[{period.Id}]");
+            var triggerKey =
+                new TriggerKey(
+                    $"InvoiceTrigger.[{Enum.GetName(typeof(InvoicePeriodType), period.PeriodType)}].[{period.Id}]");
             await _jobManager.UnscheduleAsync(triggerKey);
         }
 
 
         public async Task UpdateTriggerAsync(InvoicePeriod period)
         {
-            if (period.Enabled & period.PeriodType == InvoicePeriodType.PayInAdvance || period.PeriodType == InvoicePeriodType.PayuponDelivery)
+            if (period.Enabled & period.PeriodType == InvoicePeriodType.PayInAdvance ||
+                period.PeriodType == InvoicePeriodType.PayuponDelivery)
 
                 await RemoveTriggerAsync(period);
             else
             {
                 await CreateTriggerAsync(period);
             }
-
         }
+
         /// <summary>
         /// Generate invoices for shipper and submitinvoices for carrirer by period
         /// </summary>
@@ -173,30 +184,25 @@ namespace TACHYON.Invoices
             var period = await _periodRepository.FirstOrDefaultAsync(x => x.Id == periodId);
 
 
-
-
             foreach (var tenant in tenants)
             {
                 if (tenant.EditionId == ShipperEditionId)
                     await CollectTripsForShipper(tenant, period);
                 else
                     await BuildCarrierSubmitInvoice(tenant, period);
-
             }
         }
 
         private List<Tenant> GetTenantByFeatures(int periodId)
         {
-
             List<Tenant> tenantsList = new List<Tenant>();
             var tenants = _tenant.GetAll()
                 .Where(
-                t => t.IsActive && (t.Edition.Id == ShipperEditionId || t.Edition.Id == CarrierEditionId))
+                    t => t.IsActive && (t.Edition.Id == ShipperEditionId || t.Edition.Id == CarrierEditionId))
                 .ToList();
             //todo fix this please 
             foreach (var tenant in tenants)
             {
-
                 int value;
                 if (tenant.EditionId == ShipperEditionId)
                 {
@@ -212,6 +218,7 @@ namespace TACHYON.Invoices
                     tenantsList.Add(tenant);
                 }
             }
+
             return tenantsList;
         }
 
@@ -238,7 +245,9 @@ namespace TACHYON.Invoices
                 {
                     continue;
                 }
-                var relatedCarrierId =int.Parse(await _featureChecker.GetValueAsync(shipperId, AppFeatures.SaasRelatedCarrier));
+
+                var relatedCarrierId =
+                    int.Parse(await _featureChecker.GetValueAsync(shipperId, AppFeatures.SaasRelatedCarrier));
                 if (carrierId == relatedCarrierId)
                 {
                     trips.Remove(trip);
@@ -247,7 +256,6 @@ namespace TACHYON.Invoices
 
             if (trips.Any())
                 await GenerateShipperInvoice(tenant, trips, period);
-
         }
 
 
@@ -258,7 +266,6 @@ namespace TACHYON.Invoices
         /// <param name="PeriodId"></param>
         private async Task BuildCarrierSubmitInvoice(Tenant tenant, InvoicePeriod period)
         {
-
             var trips = _shippingRequestTrip
                 .GetAll()
                 .Include(v => v.ShippingRequestTripVases)
@@ -272,11 +279,13 @@ namespace TACHYON.Invoices
             {
                 var shipperId = trip.ShippingRequestFk.TenantId;
                 var carrierId = trip.ShippingRequestFk.CarrierTenantId;
-                if (! await _featureChecker.IsEnabledAsync(shipperId,AppFeatures.Saas))
+                if (!await _featureChecker.IsEnabledAsync(shipperId, AppFeatures.Saas))
                 {
                     continue;
                 }
-                var relatedCarrierId = int.Parse(await _featureChecker.GetValueAsync(shipperId, AppFeatures.SaasRelatedCarrier));
+
+                var relatedCarrierId =
+                    int.Parse(await _featureChecker.GetValueAsync(shipperId, AppFeatures.SaasRelatedCarrier));
                 if (carrierId == relatedCarrierId)
                 {
                     trips.Remove(trip);
@@ -284,9 +293,11 @@ namespace TACHYON.Invoices
             }
 
             if (trips.Count == 0) return;
-            decimal totalAmount = (decimal)trips.Sum(r => r.TotalAmount + r.ShippingRequestTripVases.Sum(v => v.TotalAmount));
+            decimal totalAmount =
+                (decimal)trips.Sum(r => r.TotalAmount + r.ShippingRequestTripVases.Sum(v => v.TotalAmount));
             decimal vatAmount = (decimal)trips.Sum(r => r.VatAmount + r.ShippingRequestTripVases.Sum(v => v.VatAmount));
-            decimal subTotalAmount = (decimal)trips.Sum(r => r.SubTotalAmount + r.ShippingRequestTripVases.Sum(v => v.SubTotalAmount));
+            decimal subTotalAmount = (decimal)trips.Sum(r =>
+                r.SubTotalAmount + r.ShippingRequestTripVases.Sum(v => v.SubTotalAmount));
 
             var submitInvoice = new SubmitInvoice
             {
@@ -298,10 +309,7 @@ namespace TACHYON.Invoices
                 TaxVat = trips.FirstOrDefault(x => x.TaxVat.HasValue).TaxVat.Value,
                 Channel = InvoiceChannel.Trip,
                 Trips = trips.Select(
-               r => new SubmitInvoiceTrip()
-               {
-                   TripId = r.Id
-               }).ToList()
+                    r => new SubmitInvoiceTrip() { TripId = r.Id }).ToList()
             };
             submitInvoice.Id = await _submitInvoiceRepository.InsertAndGetIdAsync(submitInvoice);
 
@@ -319,24 +327,29 @@ namespace TACHYON.Invoices
         /// <param name="tenant"></param>
         /// <param name="trips"></param>
         /// <param name="period"></param>
-        public async Task GenerateShipperInvoice(Tenant tenant, List<ShippingRequestTrip> trips, InvoicePeriod period)
+        public async Task GenerateShipperInvoice(Tenant tenant,
+            List<ShippingRequestTrip> trips,
+            InvoicePeriod period)
         {
-            decimal totalAmount = (decimal)trips.Sum(r => r.TotalAmountWithCommission + r.ShippingRequestTripVases.Sum(v => v.TotalAmountWithCommission));
-            decimal vatAmount = (decimal)trips.Sum(r => r.VatAmountWithCommission + r.ShippingRequestTripVases.Sum(v => v.VatAmountWithCommission));
-            decimal subTotalAmount = (decimal)trips.Sum(r => r.SubTotalAmountWithCommission + r.ShippingRequestTripVases.Sum(v => v.SubTotalAmountWithCommission));
+            decimal totalAmount = (decimal)trips.Sum(r =>
+                r.TotalAmountWithCommission + r.ShippingRequestTripVases.Sum(v => v.TotalAmountWithCommission));
+            decimal vatAmount = (decimal)trips.Sum(r =>
+                r.VatAmountWithCommission + r.ShippingRequestTripVases.Sum(v => v.VatAmountWithCommission));
+            decimal subTotalAmount = (decimal)trips.Sum(r =>
+                r.SubTotalAmountWithCommission + r.ShippingRequestTripVases.Sum(v => v.SubTotalAmountWithCommission));
 
 
             DateTime dueDate = Clock.Now;
 
             if (period.PeriodType != InvoicePeriodType.PayInAdvance)
             {
-                var paymentType = await _invoicePaymentMethodRepository.FirstOrDefaultAsync(x => x.Id == int.Parse(_featureChecker.GetValue(tenant.Id, AppFeatures.InvoicePaymentMethod)));
+                var paymentType = await _invoicePaymentMethodRepository.FirstOrDefaultAsync(x =>
+                    x.Id == int.Parse(_featureChecker.GetValue(tenant.Id, AppFeatures.InvoicePaymentMethod)));
                 if (paymentType.PaymentType == PaymentMethod.InvoicePaymentType.Days)
                 {
                     dueDate = Clock.Now.AddDays(paymentType.InvoiceDueDateDays);
                 }
             }
-
 
 
             var invoice = new Invoice
@@ -351,10 +364,7 @@ namespace TACHYON.Invoices
                 TaxVat = trips.Where(x => x.TaxVat.HasValue).FirstOrDefault().TaxVat.Value,
                 AccountType = InvoiceAccountType.AccountReceivable,
                 Channel = InvoiceChannel.Trip,
-                Trips = trips.Select(r => new InvoiceTrip()
-                {
-                    TripId = r.Id
-                }).ToList()
+                Trips = trips.Select(r => new InvoiceTrip() { TripId = r.Id }).ToList()
             };
             invoice.Id = await _invoiceRepository.InsertAndGetIdAsync(invoice);
 
@@ -367,13 +377,11 @@ namespace TACHYON.Invoices
             {
                 tenant.Balance -= totalAmount;
                 tenant.ReservedBalance -= totalAmount;
-
             }
             else
             {
                 tenant.CreditBalance -= totalAmount;
             }
-
 
 
             await _balanceManager.CheckShipperOverLimit(tenant);
@@ -387,10 +395,11 @@ namespace TACHYON.Invoices
         /// <returns></returns>
         public async Task GenerateCarrirInvoice(SubmitInvoice submit)
         {
-
             DateTime dueDate = Clock.Now;
 
-            var paymentType = await _invoicePaymentMethodRepository.FirstOrDefaultAsync(x => x.Id == int.Parse(_featureChecker.GetValue(submit.Tenant.Id, AppFeatures.InvoicePaymentMethodCrarrier)));
+            var paymentType = await _invoicePaymentMethodRepository.FirstOrDefaultAsync(x =>
+                x.Id == int.Parse(_featureChecker.GetValue(submit.Tenant.Id,
+                    AppFeatures.InvoicePaymentMethodCrarrier)));
             if (paymentType.PaymentType == PaymentMethod.InvoicePaymentType.Days)
             {
                 dueDate = Clock.Now.AddDays(paymentType.InvoiceDueDateDays);
@@ -409,21 +418,20 @@ namespace TACHYON.Invoices
                 AccountType = InvoiceAccountType.AccountPayable,
                 Channel = InvoiceChannel.Trip,
                 Trips = submit.Trips.Select(
-               r => new InvoiceTrip()
-               {
-                   TripId = r.TripId
-               }).ToList()
+                    r => new InvoiceTrip() { TripId = r.TripId }).ToList()
             };
 
             foreach (var trip in submit.Trips)
             {
                 trip.ShippingRequestTripFK.IsCarrierHaveInvoice = true;
             }
+
             invoice.Id = await _invoiceRepository.InsertAndGetIdAsync(invoice);
 
 
             submit.Tenant.Balance += submit.TotalAmount;
         }
+
         /// <summary>
         /// When the shipper billing interval  after delivry run this method to generate invoice
         /// </summary>
@@ -435,31 +443,38 @@ namespace TACHYON.Invoices
             InvoicePeriod period = default;
             ///If the shipemnt pay in advance get the period entity for pay in advance else get from the features
             if (trip.ShippingRequestFk.IsPrePayed.HasValue && trip.ShippingRequestFk.IsPrePayed.Value)
-                period = await _periodRepository.FirstOrDefaultAsync(x => x.PeriodType == InvoicePeriodType.PayInAdvance);
+                period = await _periodRepository.FirstOrDefaultAsync(
+                    x => x.PeriodType == InvoicePeriodType.PayInAdvance);
             else
-                period = await _periodRepository.FirstOrDefaultAsync(x => x.Id == int.Parse(_featureChecker.GetValue(tenant.Id, AppFeatures.ShipperPeriods)));
+                period = await _periodRepository.FirstOrDefaultAsync(x =>
+                    x.Id == int.Parse(_featureChecker.GetValue(tenant.Id, AppFeatures.ShipperPeriods)));
 
-            if (period.PeriodType == InvoicePeriodType.PayuponDelivery || period.PeriodType == InvoicePeriodType.PayInAdvance)
+            if (period.PeriodType == InvoicePeriodType.PayuponDelivery ||
+                period.PeriodType == InvoicePeriodType.PayInAdvance)
                 await GenerateShipperInvoice(tenant, new List<ShippingRequestTrip>() { trip }, period);
         }
 
 
         public async Task GenertateInvoiceOnDeman(Tenant tenant)
         {
-            InvoicePeriod period = await _periodRepository.FirstOrDefaultAsync(x => x.Id == int.Parse(_featureChecker.GetValue(tenant.Id, AppFeatures.ShipperPeriods)));
+            InvoicePeriod period = await _periodRepository.FirstOrDefaultAsync(x =>
+                x.Id == int.Parse(_featureChecker.GetValue(tenant.Id, AppFeatures.ShipperPeriods)));
 
 
-            if (period.PeriodType != InvoicePeriodType.PayuponDelivery && period.PeriodType != InvoicePeriodType.PayInAdvance)
+            if (period.PeriodType != InvoicePeriodType.PayuponDelivery &&
+                period.PeriodType != InvoicePeriodType.PayInAdvance)
             {
-                var trips = _shippingRequestTrip.GetAll().Include(x => x.ShippingRequestTripVases).Where(x => x.ShippingRequestFk.TenantId == tenant.Id && !x.IsShipperHaveInvoice
-                && x.Status == Shipping.Trips.ShippingRequestTripStatus.Delivered);
+                var trips = _shippingRequestTrip.GetAll().Include(x => x.ShippingRequestTripVases).Where(x =>
+                    x.ShippingRequestFk.TenantId == tenant.Id && !x.IsShipperHaveInvoice
+                                                              && x.Status == Shipping.Trips.ShippingRequestTripStatus
+                                                                  .Delivered);
                 if (trips != null && trips.Count() > 0)
                 {
                     await GenerateShipperInvoice(tenant, trips.ToList(), period);
-
                 }
             }
         }
+
         /// <summary>
         /// remove invoice from shipping request when delete invoice
         /// </summary>
@@ -477,24 +492,23 @@ namespace TACHYON.Invoices
                 {
                     t.ShippingRequestTripFK.IsShipperHaveInvoice = false;
                 });
-
             }
             else
             {
                 if (invoice.IsPaid) await _balanceManager.AddBalanceToCarrier(invoice.TenantId, -invoice.TotalAmount);
             }
+
             await _invoiceRepository.DeleteAsync(invoice);
         }
-
 
 
         public async Task<Invoice> GetInvoiceInfo(long invoiceId)
         {
             return await _invoiceRepository
-                               .GetAll()
-                               .Include(i => i.Trips)
-                                .ThenInclude(t => t.ShippingRequestTripFK)
-                               .FirstOrDefaultAsync(i => i.Id == invoiceId);
+                .GetAll()
+                .Include(i => i.Trips)
+                .ThenInclude(t => t.ShippingRequestTripFK)
+                .FirstOrDefaultAsync(i => i.Id == invoiceId);
         }
 
         public bool IsTenantCarrier(int tenantId)
@@ -506,7 +520,5 @@ namespace TACHYON.Invoices
         {
             return _settingManager.GetSettingValue<decimal>(AppSettings.HostManagement.TaxVat);
         }
-
-
     }
 }

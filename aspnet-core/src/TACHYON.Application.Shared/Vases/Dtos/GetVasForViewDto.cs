@@ -3,6 +3,5 @@
     public class GetVasForViewDto
     {
         public VasDto Vas { get; set; }
-
     }
 }

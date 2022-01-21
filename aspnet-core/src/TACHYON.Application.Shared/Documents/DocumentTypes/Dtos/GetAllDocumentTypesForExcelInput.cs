@@ -16,8 +16,5 @@ namespace TACHYON.Documents.DocumentTypes.Dtos
         public int HasExpirationDateFilter { get; set; }
 
         public DocumentsEntitiesEnum? RequiredFromFilter { get; set; }
-
-
-
     }
 }

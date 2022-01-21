@@ -8,7 +8,6 @@ namespace TACHYON.Url
 
         private NullAppUrlService()
         {
-
         }
 
         public string CreateEmailActivationUrlFormat(int? tenantId)

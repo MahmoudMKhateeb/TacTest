@@ -12,7 +12,5 @@ namespace TACHYON.Dashboards.Host.Dto
         public string ShipperName { get; set; }
         public string RequestReference { get; set; }
         public DateTime? BiddingEndDate { get; set; }
-
     }
-
 }

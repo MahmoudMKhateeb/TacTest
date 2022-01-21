@@ -8,6 +8,6 @@ namespace TACHYON.Shipping.ShippingRequestBids
 {
     public interface IBidDomainService
     {
-         Task<UserIdentifier[]> GetCarriersByTruckTypeArrayAsync(long trucksTypeId);
+        Task<UserIdentifier[]> GetCarriersByTruckTypeArrayAsync(long trucksTypeId);
     }
 }

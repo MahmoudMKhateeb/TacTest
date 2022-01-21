@@ -18,6 +18,5 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
 
         public string CarrierName { get; set; }
         public string ShipperName { get; set; }
-
     }
 }

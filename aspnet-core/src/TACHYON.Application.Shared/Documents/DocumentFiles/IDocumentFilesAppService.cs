@@ -12,7 +12,6 @@ namespace TACHYON.Documents.DocumentFiles
 {
     public interface IDocumentFilesAppService : IApplicationService
     {
-
         Task<GetDocumentFileForViewDto> GetDocumentFileForView(Guid id);
 
         Task<GetDocumentFileForEditOutput> GetDocumentFileForEdit(EntityDto<Guid> input);
@@ -44,6 +43,5 @@ namespace TACHYON.Documents.DocumentFiles
         Task<List<CreateOrEditDocumentFileDto>> GetTruckRequiredDocumentFiles(string truckId);
 
         //bool GetIsCurrentTenantHost();
-
     }
 }

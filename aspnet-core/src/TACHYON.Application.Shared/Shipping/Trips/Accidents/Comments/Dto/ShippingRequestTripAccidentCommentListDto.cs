@@ -11,6 +11,5 @@ namespace TACHYON.Shipping.Trips.Accidents.Dto
         public long TenantId { get; set; }
         public string TenantName { get; set; }
         public string TenantImage { get; set; }
-
     }
 }

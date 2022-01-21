@@ -11,7 +11,6 @@ namespace TACHYON.Countries
     [Table("Counties")]
     public class County : FullAuditedEntity, IMultiLingualEntity<CountriesTranslation>
     {
-
         [Required]
         [StringLength(CountyConsts.MaxDisplayNameLength, MinimumLength = CountyConsts.MinDisplayNameLength)]
         public virtual string DisplayName { get; set; }
@@ -21,6 +20,5 @@ namespace TACHYON.Countries
         public virtual string Code { get; set; }
 
         public ICollection<CountriesTranslation> Translations { get; set; }
-
     }
 }

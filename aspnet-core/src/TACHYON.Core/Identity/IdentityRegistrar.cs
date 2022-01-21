@@ -17,7 +17,8 @@ namespace TACHYON.Identity
 
             return services.AddAbpIdentity<Tenant, User, Role>(options =>
                 {
-                    options.Tokens.ProviderMap[GoogleAuthenticatorProvider.Name] = new TokenProviderDescriptor(typeof(GoogleAuthenticatorProvider));
+                    options.Tokens.ProviderMap[GoogleAuthenticatorProvider.Name] =
+                        new TokenProviderDescriptor(typeof(GoogleAuthenticatorProvider));
                 })
                 .AddAbpTenantManager<TenantManager>()
                 .AddAbpUserManager<UserManager>()

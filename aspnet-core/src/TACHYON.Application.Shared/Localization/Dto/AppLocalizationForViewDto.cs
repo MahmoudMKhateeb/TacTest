@@ -3,7 +3,7 @@ using TACHYON.Terminologies;
 
 namespace TACHYON.Localization.Dto
 {
-    public  class AppLocalizationForViewDto
+    public class AppLocalizationForViewDto
     {
         public string MasterKey { get; set; }
         public string MasterValue { get; set; }
@@ -22,8 +22,5 @@ namespace TACHYON.Localization.Dto
         public string AppVersionTitle { get { return AppVersion.GetEnumDescription(); } }
         public string VersionTitle { get { return Version.GetEnumDescription(); } }
         public string SectionTitle { get { return Section.GetEnumDescription(); } }
-
-
-
     }
 }

@@ -14,7 +14,7 @@ namespace TACHYON.Authorization.Roles
                     StaticRoleNames.Host.Admin,
                     MultiTenancySides.Host,
                     grantAllPermissionsByDefault: true)
-                );
+            );
 
             //Static tenant roles
 
@@ -23,13 +23,13 @@ namespace TACHYON.Authorization.Roles
                     StaticRoleNames.Tenants.Admin,
                     MultiTenancySides.Tenant,
                     grantAllPermissionsByDefault: true)
-                );
+            );
 
             roleManagementConfig.StaticRoles.Add(
                 new StaticRoleDefinition(
                     StaticRoleNames.Tenants.User,
                     MultiTenancySides.Tenant)
-                );
+            );
         }
     }
 }

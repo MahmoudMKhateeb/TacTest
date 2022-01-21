@@ -10,7 +10,7 @@ namespace TACHYON.Invoices.Jobs
 {
     public class InvoiceBackgroundJob : BackgroundJob<int>, ITransientDependency
     {
-        private  InvoiceManager _InvoiceManager { get; set; }
+        private InvoiceManager _InvoiceManager { get; set; }
 
         public InvoiceBackgroundJob(InvoiceManager InvoiceManager)
         {
@@ -18,12 +18,9 @@ namespace TACHYON.Invoices.Jobs
         }
 
         [UnitOfWork]
-        public  override void Execute(int args)
+        public override void Execute(int args)
         {
-           
-            AsyncHelper.RunSync(() =>  _InvoiceManager.GenerateInvoice(args));
-
-          
+            AsyncHelper.RunSync(() => _InvoiceManager.GenerateInvoice(args));
         }
     }
 }

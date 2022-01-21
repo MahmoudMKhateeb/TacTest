@@ -4,7 +4,6 @@ namespace TACHYON.Rating.dtos
 {
     public class CreateFacilityRateByDriverDto : RatingDto
     {
-        [Required]
-        public long PointId { get; set; }
+        [Required] public long PointId { get; set; }
     }
 }

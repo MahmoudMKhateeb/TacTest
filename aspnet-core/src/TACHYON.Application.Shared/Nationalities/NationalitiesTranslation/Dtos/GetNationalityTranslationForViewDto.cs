@@ -5,6 +5,5 @@
         public NationalityTranslationDto NationalityTranslation { get; set; }
 
         public string NationalityName { get; set; }
-
     }
 }

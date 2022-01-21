@@ -48,7 +48,8 @@ namespace TACHYON.Web.Controllers
 
                 if (profilePictureFile.Length > MaxProfilePictureSize)
                 {
-                    throw new UserFriendlyException(L("ProfilePicture_Warn_SizeLimit", AppConsts.MaxProfilPictureBytesUserFriendlyValue));
+                    throw new UserFriendlyException(L("ProfilePicture_Warn_SizeLimit",
+                        AppConsts.MaxProfilPictureBytesUserFriendlyValue));
                 }
 
                 byte[] fileBytes;
@@ -57,7 +58,8 @@ namespace TACHYON.Web.Controllers
                     fileBytes = stream.GetAllBytes();
                 }
 
-                if (!ImageFormatHelper.GetRawImageFormat(fileBytes).IsIn(ImageFormat.Jpeg, ImageFormat.Png, ImageFormat.Gif))
+                if (!ImageFormatHelper.GetRawImageFormat(fileBytes)
+                        .IsIn(ImageFormat.Jpeg, ImageFormat.Png, ImageFormat.Gif))
                 {
                     throw new Exception(L("IncorrectImageFormat"));
                 }
@@ -82,7 +84,7 @@ namespace TACHYON.Web.Controllers
             }
         }
 
-   
+
         [AllowAnonymous]
         public FileResult GetDefaultProfilePicture()
         {

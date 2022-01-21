@@ -51,23 +51,18 @@ namespace TACHYON.Trailers
 
         public virtual int TrailerStatusId { get; set; }
 
-        [ForeignKey("TrailerStatusId")]
-        public TrailerStatus TrailerStatusFk { get; set; }
+        [ForeignKey("TrailerStatusId")] public TrailerStatus TrailerStatusFk { get; set; }
 
         public virtual int TrailerTypeId { get; set; }
 
-        [ForeignKey("TrailerTypeId")]
-        public TrailerType TrailerTypeFk { get; set; }
+        [ForeignKey("TrailerTypeId")] public TrailerType TrailerTypeFk { get; set; }
 
         public virtual int PayloadMaxWeightId { get; set; }
 
-        [ForeignKey("PayloadMaxWeightId")]
-        public PayloadMaxWeight PayloadMaxWeightFk { get; set; }
+        [ForeignKey("PayloadMaxWeightId")] public PayloadMaxWeight PayloadMaxWeightFk { get; set; }
 
         public virtual long? HookedTruckId { get; set; }
 
-        [ForeignKey("HookedTruckId")]
-        public Truck HookedTruckFk { get; set; }
-
+        [ForeignKey("HookedTruckId")] public Truck HookedTruckFk { get; set; }
     }
 }

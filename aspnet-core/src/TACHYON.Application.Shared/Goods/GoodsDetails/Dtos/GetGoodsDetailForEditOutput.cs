@@ -9,7 +9,5 @@ namespace TACHYON.Goods.GoodsDetails.Dtos
         public CreateOrEditGoodsDetailDto GoodsDetail { get; set; }
 
         public string GoodCategoryDisplayName { get; set; }
-
-
     }
 }

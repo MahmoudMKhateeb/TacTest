@@ -21,7 +21,8 @@ namespace TACHYON.Authorization.Users.Profile
 
         public async Task<IDisposableDependencyObjectWrapper<IProfileImageService>> Get(UserIdentifier userIdentifier)
         {
-            if (await _settingManager.GetSettingValueForUserAsync<bool>(AppSettings.UserManagement.UseGravatarProfilePicture, userIdentifier))
+            if (await _settingManager.GetSettingValueForUserAsync<bool>(
+                    AppSettings.UserManagement.UseGravatarProfilePicture, userIdentifier))
             {
                 return _iocResolver.ResolveAsDisposable<GravatarProfileImageService>();
             }

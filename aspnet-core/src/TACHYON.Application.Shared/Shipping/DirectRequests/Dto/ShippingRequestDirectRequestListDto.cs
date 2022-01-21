@@ -11,6 +11,7 @@ namespace TACHYON.Shipping.DirectRequests.Dto
         /// Carrier Id
         /// </summary>
         public int TenantId { get; set; }
+
         public decimal CarrierRate { get; set; }
         public int CarrierRateNumber { get; set; }
         public ShippingRequestDirectRequestStatus Status { get; set; }

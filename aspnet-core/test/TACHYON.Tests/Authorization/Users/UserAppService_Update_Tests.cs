@@ -77,14 +77,14 @@ namespace TACHYON.Tests.Authorization.Users
                     new CreateOrUpdateUserInput
                     {
                         User = new UserEditDto
-                               {
-                                   Id = jnashUser.Id,
-                                   EmailAddress = "jnsh2000@testdomain.com",
-                                   Name = "John",
-                                   Surname = "Nash",
-                                   UserName = "adams_d", //Changed user name to an existing user
-                                   Password = "123qwE*"
-                               },
+                        {
+                            Id = jnashUser.Id,
+                            EmailAddress = "jnsh2000@testdomain.com",
+                            Name = "John",
+                            Surname = "Nash",
+                            UserName = "adams_d", //Changed user name to an existing user
+                            Password = "123qwE*"
+                        },
                         AssignedRoleNames = new string[0]
                     }));
 
@@ -96,14 +96,14 @@ namespace TACHYON.Tests.Authorization.Users
                     new CreateOrUpdateUserInput
                     {
                         User = new UserEditDto
-                               {
-                                   Id = jnashUser.Id,
-                                   EmailAddress = "adams_d@gmail.com", //Changed email to an existing user
-                                   Name = "John",
-                                   Surname = "Nash",
-                                   UserName = "jnash",
-                                   Password = "123qwE*"
-                               },
+                        {
+                            Id = jnashUser.Id,
+                            EmailAddress = "adams_d@gmail.com", //Changed email to an existing user
+                            Name = "John",
+                            Surname = "Nash",
+                            UserName = "jnash",
+                            Password = "123qwE*"
+                        },
                         AssignedRoleNames = new string[0]
                     }));
 
@@ -136,7 +136,7 @@ namespace TACHYON.Tests.Authorization.Users
                         UserName = adminUser.UserName,
                         Password = null
                     },
-                    AssignedRoleNames = new[]{ StaticRoleNames.Host.Admin } //Just deleting all roles expect admin
+                    AssignedRoleNames = new[] { StaticRoleNames.Host.Admin } //Just deleting all roles expect admin
                 });
 
             //Assert
@@ -149,7 +149,8 @@ namespace TACHYON.Tests.Authorization.Users
 
         protected Role CreateRole(string roleName)
         {
-            return UsingDbContext(context => context.Roles.Add(new Role(AbpSession.TenantId, roleName, roleName)).Entity);
+            return UsingDbContext(
+                context => context.Roles.Add(new Role(AbpSession.TenantId, roleName, roleName)).Entity);
         }
     }
 }

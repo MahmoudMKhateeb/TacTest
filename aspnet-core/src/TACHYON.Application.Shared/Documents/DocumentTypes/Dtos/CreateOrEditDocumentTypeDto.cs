@@ -37,13 +37,13 @@ namespace TACHYON.Documents.DocumentTypes.Dtos
         public string TemplateName { get; set; }
         public string TemplateContentType { get; set; }
         public string TemplateExt { get; set; }
+
         public Guid? TemplateId { get; set; }
+
         /* public int? TenantId { get; set; }*/
         public int? DocumentRelatedWithId { get; set; }
         public SelectItemDto DocumentRelatedWith { get; set; }
 
-        [MaxLength(400)]
-        public string FileToken { get; set; }
-
+        [MaxLength(400)] public string FileToken { get; set; }
     }
 }

@@ -148,13 +148,13 @@
 //               .Where(x => x.BidStatus == ShippingRequestBidStatus.OnGoing)
 //               .FirstOrDefaultAsync(x => x.Id == input.ShippingRequestId);
 //            }
-           
+
 
 //            if (item==null)
 //            {
 //                ThrowShippingRequestIsNotOngoingError();
 //            }
-            
+
 
 //            if (input.Id == null)
 //            {
@@ -260,7 +260,7 @@
 //            return await _shippingRequestsRepository.FirstOrDefaultAsync(id);
 //        }
 
-       
+
 //        //#541
 //        //todo add paging and sorting here 
 //        [RequiresFeature(AppFeatures.Carrier)]
@@ -331,7 +331,7 @@
 //        public  async Task<PagedResultDto<GetAllBidShippingRequestsForCarrierOutput>> GetAllBidShippingRequestsForCarrier(GetAllBidsShippingRequestForCarrierInput input)
 //        {
 //            DisableTenancyFilters();
-      
+
 //                IQueryable<ShippingRequest> filterBidShippingRequests = _shippingRequestsRepository.GetAll()
 //                    .Include(x => x.TrucksTypeFk)
 //                    .ThenInclude(x=>x.Translations)
@@ -376,7 +376,6 @@
 //                    .OrderBy(input.Sorting ?? "id asc")
 //                    .PageBy(input).ToListAsync();
 
-          
 
 //            List<GetAllBidShippingRequestsForCarrierOutput> shippingRequestBids=new List<GetAllBidShippingRequestsForCarrierOutput>();
 //            pagedAndFilteredBidShippingRequests.ForEach(   o =>
@@ -402,18 +401,17 @@
 //            });
 
 
-
 //                int totalCount = await filterBidShippingRequests.CountAsync();
 
 //                return new PagedResultDto<GetAllBidShippingRequestsForCarrierOutput>(totalCount, shippingRequestBids.ToList());
-            
+
 //        }
 //        private ShippingRequestBid GetCarrirerBid(long ShippingRequestId)
 //        {
 //            if (!IsEnabled(AppFeatures.Carrier)) return null;
 //            return  _shippingRequestBidsRepository.FirstOrDefault(x => x.TenantId == AbpSession.TenantId && x.ShippingRequestId == ShippingRequestId);
 //        }
-   
+
 //        //#538
 //        [RequiresFeature(AppFeatures.Carrier)]
 //        [AbpAuthorize(AppPermissions.Pages_ShippingRequestBids_Create)]
@@ -433,7 +431,7 @@
 //                shippingRequestBid.TenantId = (int)AbpSession.TenantId;
 //            }
 
-            
+
 //            await _commissionManager.AddCommissionInfoAfterCarrierBid(shippingRequestBid);
 //            await _shippingRequestBidsRepository.InsertAndGetIdAsync(shippingRequestBid);
 //            shippingRequest.TotalBids += 1;
@@ -507,6 +505,6 @@
 //        }
 
 
-
 //    }
 //}
+

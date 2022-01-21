@@ -9,7 +9,6 @@ namespace TACHYON.Localization.Dto
 
         public GetLanguagesOutput()
         {
-
         }
 
         public GetLanguagesOutput(IReadOnlyList<ApplicationLanguageListDto> items, string defaultLanguageName)

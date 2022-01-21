@@ -17,7 +17,8 @@ namespace TACHYON.EntityFrameworkCore
                 addUserSecrets: true
             );
 
-            TACHYONDbContextConfigurer.Configure(builder, configuration.GetConnectionString(TACHYONConsts.ConnectionStringName));
+            TACHYONDbContextConfigurer.Configure(builder,
+                configuration.GetConnectionString(TACHYONConsts.ConnectionStringName));
 
             return new TACHYONDbContext(builder.Options);
         }

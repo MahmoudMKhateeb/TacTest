@@ -12,7 +12,10 @@ namespace TACHYON.DashboardCustomization.Dto
 
         public List<WidgetFilterOutput> Filters { get; set; }
 
-        public WidgetOutput(string id, string name, string description, List<WidgetFilterOutput> filters = null)
+        public WidgetOutput(string id,
+            string name,
+            string description,
+            List<WidgetFilterOutput> filters = null)
         {
             Id = id;
             Name = name;

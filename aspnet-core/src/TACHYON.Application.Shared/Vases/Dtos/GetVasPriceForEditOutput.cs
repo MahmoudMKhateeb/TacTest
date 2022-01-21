@@ -6,8 +6,8 @@ namespace TACHYON.Vases.Dtos
 {
     public class GetVasPriceForEditOutput
     {
-		public CreateOrEditVasPriceDto VasPrice { get; set; }
+        public CreateOrEditVasPriceDto VasPrice { get; set; }
 
-		public string VasName { get; set;}
+        public string VasName { get; set; }
     }
 }

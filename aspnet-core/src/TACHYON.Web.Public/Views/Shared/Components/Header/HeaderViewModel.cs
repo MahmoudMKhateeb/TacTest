@@ -47,7 +47,8 @@ namespace TACHYON.Web.Public.Views.Shared.Components.Header
                 return appPath + "Common/Images/app-logo-on-light.svg";
             }
 
-            return AdminWebSiteRootAddress.EnsureEndsWith('/') + "TenantCustomization/GetLogo?tenantId=" + LoginInformations?.Tenant?.Id;
+            return AdminWebSiteRootAddress.EnsureEndsWith('/') + "TenantCustomization/GetLogo?tenantId=" +
+                   LoginInformations?.Tenant?.Id;
         }
     }
 }

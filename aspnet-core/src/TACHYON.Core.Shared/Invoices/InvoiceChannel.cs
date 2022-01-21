@@ -1,8 +1,8 @@
 ﻿namespace TACHYON.Invoices
 {
-    public enum InvoiceChannel:byte
+    public enum InvoiceChannel : byte
     {
-        Trip=1,
-        Dedicated=2
+        Trip = 1,
+        Dedicated = 2
     }
 }

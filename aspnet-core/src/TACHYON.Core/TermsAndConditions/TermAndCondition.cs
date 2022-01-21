@@ -12,7 +12,6 @@ namespace TACHYON.TermsAndConditions
     public class TermAndCondition : CreationAuditedEntity, IMultiLingualEntity<TermAndConditionTranslation>
 
     {
-
         [Required]
         [StringLength(TermAndConditionConsts.MaxTitleLength, MinimumLength = TermAndConditionConsts.MinTitleLength)]
         public virtual string Title { get; set; }
@@ -24,10 +23,9 @@ namespace TACHYON.TermsAndConditions
 
         public virtual int? EditionId { get; set; }
 
-        [ForeignKey("EditionId")]
-        public Edition EditionFk { get; set; }
+        [ForeignKey("EditionId")] public Edition EditionFk { get; set; }
 
         public virtual bool IsActive { get; set; }
-        public  ICollection<TermAndConditionTranslation> Translations { get; set; }
+        public ICollection<TermAndConditionTranslation> Translations { get; set; }
     }
 }

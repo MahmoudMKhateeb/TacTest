@@ -9,7 +9,7 @@
         string CreateEmailActivationUrlFormat(string tenancyName);
 
         string CreatePasswordResetUrlFormat(string tenancyName);
-        string CreateInvoiceDetailsFormat(long invoiceId); 
-        string GetTachyonPlatformLoginUrl(); 
+        string CreateInvoiceDetailsFormat(long invoiceId);
+        string GetTachyonPlatformLoginUrl();
     }
 }

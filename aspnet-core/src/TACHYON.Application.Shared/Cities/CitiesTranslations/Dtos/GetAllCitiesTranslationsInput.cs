@@ -8,6 +8,5 @@ namespace TACHYON.Cities.CitiesTranslations.Dtos
     {
         public string LoadOptions { get; set; }
         public string CoreId { get; set; }
-
     }
 }

@@ -20,7 +20,7 @@ namespace TACHYON.ConsoleApiClient
     class Program
     {
         private const string ServerUrlBase = "https://localhost:44302/";
-        
+
         // If you have changed "Configuration.MultiTenancy.TenantIdResolveKey" in your web app, use the same value here. 
         private const string TenantIdResolveKey = "Abp.TenantId";
 
@@ -46,16 +46,13 @@ namespace TACHYON.ConsoleApiClient
                 throw new Exception(disco.Error);
             }
 
-            client.DefaultRequestHeaders.Add("Abp.TenantId", "1");  //Set TenantId
+            client.DefaultRequestHeaders.Add("Abp.TenantId", "1"); //Set TenantId
             var tokenResponse = await client.RequestPasswordTokenAsync(new PasswordTokenRequest
             {
                 Address = disco.TokenEndpoint,
-
                 ClientId = "client",
                 ClientSecret = "def2edf7-5d42-4edc-a84a-30136c340e13",
-
                 Scope = "default-api",
-
                 UserName = "admin",
                 Password = "123qwe"
             });

@@ -10,6 +10,5 @@ namespace TACHYON.BayanIntegration.Modules
     {
         public string type { get; set; }
         public string moi { get; set; }
-
     }
 }

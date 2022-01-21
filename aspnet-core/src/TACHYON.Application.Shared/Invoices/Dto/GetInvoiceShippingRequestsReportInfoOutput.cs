@@ -6,7 +6,7 @@ namespace TACHYON.Invoices.Dto
 {
     public class GetInvoiceShippingRequestsReportInfoOutput
     {
-        public DateTime Date { get;set; } 
+        public DateTime Date { get; set; }
         public string WaybillNo { get; set; }
         public string OriginCityName { get; set; }
         public string DestinationCityName { get; set; }

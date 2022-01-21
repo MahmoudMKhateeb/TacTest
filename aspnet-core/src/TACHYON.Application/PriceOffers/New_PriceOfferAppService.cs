@@ -43,10 +43,17 @@ namespace TACHYON.PriceOffers
         private readonly IAppNotifier _appNotifier;
         private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepository;
         private readonly IRepository<VasPrice> _vasPriceRepository;
-        public New_PriceOfferAppService(IRepository<ShippingRequestDirectRequest, long> shippingRequestDirectRequestRepository,
-            IRepository<ShippingRequest, long> shippingRequestsRepository, PriceOfferManager priceOfferManager,
-            IRepository<PriceOffer, long> priceOfferRepository, IRepository<VasPrice> vasPriceRepository,
-            IRepository<City> cityRepository, IRepository<TrucksType, long> trucksTypeRepository, IAppNotifier appNotifier, IRepository<ShippingRequestTrip> shippingRequestTripRepository)
+
+        public New_PriceOfferAppService(
+            IRepository<ShippingRequestDirectRequest, long> shippingRequestDirectRequestRepository,
+            IRepository<ShippingRequest, long> shippingRequestsRepository,
+            PriceOfferManager priceOfferManager,
+            IRepository<PriceOffer, long> priceOfferRepository,
+            IRepository<VasPrice> vasPriceRepository,
+            IRepository<City> cityRepository,
+            IRepository<TrucksType, long> trucksTypeRepository,
+            IAppNotifier appNotifier,
+            IRepository<ShippingRequestTrip> shippingRequestTripRepository)
         {
             _shippingRequestDirectRequestRepository = shippingRequestDirectRequestRepository;
             _shippingRequestsRepository = shippingRequestsRepository;
@@ -76,7 +83,8 @@ namespace TACHYON.PriceOffers
                 .ThenInclude(v => v.VasFk)
                 .FirstOrDefaultAsync(x => x.Id == shippingRequestId);
 
-            if (!shippingRequest.Status.IsIn(ShippingRequestStatus.PrePrice, ShippingRequestStatus.NeedsAction, ShippingRequestStatus.AcceptedAndWaitingCarrier))
+            if (!shippingRequest.Status.IsIn(ShippingRequestStatus.PrePrice, ShippingRequestStatus.NeedsAction,
+                    ShippingRequestStatus.AcceptedAndWaitingCarrier))
                 throw new UserFriendlyException(L("YouCantCreateOrAddPriceForThisShipment"));
 
             if (shippingRequest == null)
@@ -109,10 +117,12 @@ namespace TACHYON.PriceOffers
 
                 if (await IsTachyonDealer())
                 {
-                    if (createOrEditPriceOffer.PriceOfferDto.Items != null && createOrEditPriceOffer.PriceOfferDto.Items.Count > 0)
+                    if (createOrEditPriceOffer.PriceOfferDto.Items != null &&
+                        createOrEditPriceOffer.PriceOfferDto.Items.Count > 0)
                     {
                         var item = createOrEditPriceOffer.PriceOfferDto.Items.FirstOrDefault();
-                        createOrEditPriceOffer.PriceOfferDto.VasCommissionPercentageOrAddValue = item.CommissionPercentageOrAddValue.Value;
+                        createOrEditPriceOffer.PriceOfferDto.VasCommissionPercentageOrAddValue =
+                            item.CommissionPercentageOrAddValue.Value;
                         createOrEditPriceOffer.PriceOfferDto.VasCommissionType = item.CommissionType;
                     }
 
@@ -138,7 +148,8 @@ namespace TACHYON.PriceOffers
 
             if (await IsTachyonDealer())
             {
-                createOrEditPriceOffer.PriceOfferDto.CommissionSettings = GetPriceOfferTenantCommissionSettings(shippingRequest.TenantId);
+                createOrEditPriceOffer.PriceOfferDto.CommissionSettings =
+                    GetPriceOfferTenantCommissionSettings(shippingRequest.TenantId);
             }
 
             return createOrEditPriceOffer;
@@ -186,9 +197,9 @@ namespace TACHYON.PriceOffers
 
                 items.Add(item);
             }
+
             return items;
         }
-
 
 
         /// <summary>
@@ -201,28 +212,34 @@ namespace TACHYON.PriceOffers
                 return;
             }
 
-            offer.CommissionType = (await FeatureChecker.GetValueAsync(tenantId, AppFeatures.TachyonDealerTripCommissionType)).To<PriceOfferCommissionType>();
+            offer.CommissionType =
+                (await FeatureChecker.GetValueAsync(tenantId, AppFeatures.TachyonDealerTripCommissionType))
+                .To<PriceOfferCommissionType>();
             if (offer.CommissionType == PriceOfferCommissionType.CommissionPercentage)
             {
-                offer.CommissionPercentageOrAddValue = Convert.ToDecimal(await FeatureChecker.GetValueAsync(tenantId, AppFeatures.TachyonDealerTripCommissionPercentage));
+                offer.CommissionPercentageOrAddValue = Convert.ToDecimal(
+                    await FeatureChecker.GetValueAsync(tenantId, AppFeatures.TachyonDealerTripCommissionPercentage));
             }
             else
             {
-                offer.CommissionPercentageOrAddValue = Convert.ToDecimal(await FeatureChecker.GetValueAsync(tenantId, AppFeatures.TachyonDealerTripCommissionValue));
-
+                offer.CommissionPercentageOrAddValue = Convert.ToDecimal(
+                    await FeatureChecker.GetValueAsync(tenantId, AppFeatures.TachyonDealerTripCommissionValue));
             }
-            offer.VasCommissionType = (await FeatureChecker.GetValueAsync(tenantId, AppFeatures.TachyonDealerVasCommissionType)).To<PriceOfferCommissionType>();
+
+            offer.VasCommissionType =
+                (await FeatureChecker.GetValueAsync(tenantId, AppFeatures.TachyonDealerVasCommissionType))
+                .To<PriceOfferCommissionType>();
 
             if (offer.VasCommissionType == PriceOfferCommissionType.CommissionPercentage)
             {
-                offer.VasCommissionPercentageOrAddValue = Convert.ToDecimal(await FeatureChecker.GetValueAsync(tenantId, AppFeatures.TachyonDealerVasCommissionPercentage));
+                offer.VasCommissionPercentageOrAddValue = Convert.ToDecimal(
+                    await FeatureChecker.GetValueAsync(tenantId, AppFeatures.TachyonDealerVasCommissionPercentage));
             }
             else
             {
-                offer.VasCommissionPercentageOrAddValue = Convert.ToDecimal(await FeatureChecker.GetValueAsync(tenantId, AppFeatures.TachyonDealerVasCommissionValue));
-
+                offer.VasCommissionPercentageOrAddValue = Convert.ToDecimal(
+                    await FeatureChecker.GetValueAsync(tenantId, AppFeatures.TachyonDealerVasCommissionValue));
             }
-
         }
 
         private PriceOfferTenantCommissionSettings GetPriceOfferTenantCommissionSettings(int tenantId)
@@ -230,14 +247,29 @@ namespace TACHYON.PriceOffers
             PriceOfferTenantCommissionSettings commissionSettings =
                 new PriceOfferTenantCommissionSettings()
                 {
-                    ItemCommissionType = (PriceOfferCommissionType)Convert.ToByte(FeatureChecker.GetValue(tenantId, AppFeatures.TachyonDealerTripCommissionType)),
-                    ItemCommissionPercentage = Convert.ToDecimal(FeatureChecker.GetValue(tenantId, AppFeatures.TachyonDealerTripCommissionPercentage)),
-                    ItemCommissionValue = Convert.ToDecimal(FeatureChecker.GetValue(tenantId, AppFeatures.TachyonDealerTripCommissionValue)),
-                    ItemMinValueCommission = Convert.ToDecimal(FeatureChecker.GetValue(tenantId, AppFeatures.TachyonDealerTripMinValueCommission)),
-                    VasCommissionType = (PriceOfferCommissionType)Convert.ToByte(FeatureChecker.GetValue(tenantId, AppFeatures.TachyonDealerVasCommissionType)),
-                    VasCommissionPercentage = Convert.ToDecimal(FeatureChecker.GetValue(tenantId, AppFeatures.TachyonDealerVasCommissionPercentage)),
-                    VasCommissionValue = Convert.ToDecimal(FeatureChecker.GetValue(tenantId, AppFeatures.TachyonDealerVasCommissionValue)),
-                    VasMinValueCommission = Convert.ToDecimal(FeatureChecker.GetValue(tenantId, AppFeatures.TachyonDealerVasMinValueCommission))
+                    ItemCommissionType =
+                        (PriceOfferCommissionType)Convert.ToByte(FeatureChecker.GetValue(tenantId,
+                            AppFeatures.TachyonDealerTripCommissionType)),
+                    ItemCommissionPercentage =
+                        Convert.ToDecimal(FeatureChecker.GetValue(tenantId,
+                            AppFeatures.TachyonDealerTripCommissionPercentage)),
+                    ItemCommissionValue =
+                        Convert.ToDecimal(FeatureChecker.GetValue(tenantId,
+                            AppFeatures.TachyonDealerTripCommissionValue)),
+                    ItemMinValueCommission =
+                        Convert.ToDecimal(FeatureChecker.GetValue(tenantId,
+                            AppFeatures.TachyonDealerTripMinValueCommission)),
+                    VasCommissionType =
+                        (PriceOfferCommissionType)Convert.ToByte(FeatureChecker.GetValue(tenantId,
+                            AppFeatures.TachyonDealerVasCommissionType)),
+                    VasCommissionPercentage =
+                        Convert.ToDecimal(FeatureChecker.GetValue(tenantId,
+                            AppFeatures.TachyonDealerVasCommissionPercentage)),
+                    VasCommissionValue =
+                        Convert.ToDecimal(FeatureChecker.GetValue(tenantId,
+                            AppFeatures.TachyonDealerVasCommissionValue)),
+                    VasMinValueCommission = Convert.ToDecimal(FeatureChecker.GetValue(tenantId,
+                        AppFeatures.TachyonDealerVasMinValueCommission))
                 };
 
             return commissionSettings;
@@ -252,7 +284,5 @@ namespace TACHYON.PriceOffers
             var dto = ObjectMapper.Map<PriceOfferDto>(offer);
             return dto;
         }
-
-
     }
 }

@@ -46,13 +46,15 @@ namespace TACHYON.Friendships
 
             foreach (var friend in cacheItem.Friends)
             {
-                var friendUserClients = _onlineClientManager.GetAllByUserId(new UserIdentifier(friend.FriendTenantId, friend.FriendUserId));
+                var friendUserClients =
+                    _onlineClientManager.GetAllByUserId(new UserIdentifier(friend.FriendTenantId, friend.FriendUserId));
                 if (!friendUserClients.Any())
                 {
                     continue;
                 }
 
-                AsyncHelper.RunSync(() => _chatCommunicator.SendUserConnectionChangeToClients(friendUserClients, user, isConnected));
+                AsyncHelper.RunSync(() =>
+                    _chatCommunicator.SendUserConnectionChangeToClients(friendUserClients, user, isConnected));
             }
         }
     }

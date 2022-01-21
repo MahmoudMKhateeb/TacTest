@@ -24,12 +24,15 @@ namespace TACHYON.Migrations.Seed.Tenants
         {
             //Default tenant
 
-            var defaultTenant = _context.Tenants.IgnoreQueryFilters().FirstOrDefault(t => t.TenancyName == MultiTenancy.Tenant.DefaultTenantName);
+            var defaultTenant = _context.Tenants.IgnoreQueryFilters()
+                .FirstOrDefault(t => t.TenancyName == MultiTenancy.Tenant.DefaultTenantName);
             if (defaultTenant == null)
             {
-                defaultTenant = new MultiTenancy.Tenant(AbpTenantBase.DefaultTenantName, AbpTenantBase.DefaultTenantName);
+                defaultTenant =
+                    new MultiTenancy.Tenant(AbpTenantBase.DefaultTenantName, AbpTenantBase.DefaultTenantName);
 
-                var defaultEdition = _context.Editions.IgnoreQueryFilters().FirstOrDefault(e => e.Name == EditionManager.DefaultEditionName);
+                var defaultEdition = _context.Editions.IgnoreQueryFilters()
+                    .FirstOrDefault(e => e.Name == EditionManager.DefaultEditionName);
                 if (defaultEdition != null)
                 {
                     defaultTenant.EditionId = defaultEdition.Id;

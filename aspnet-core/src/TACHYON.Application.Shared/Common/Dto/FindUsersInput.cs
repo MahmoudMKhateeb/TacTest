@@ -8,6 +8,5 @@ namespace TACHYON.Common.Dto
 
         public bool ExcludeCurrentUser { get; set; }
         public bool ExcludeDrivers { get; set; }
-
     }
 }

@@ -29,6 +29,7 @@ namespace TACHYON.Web.Configuration
             {
                 throw new UserFriendlyException("appsettings.json file does not exist");
             }
+
             Writenternal("appsettings.json", key, value);
 
             if (File.Exists($"appsettings.{_webHostEnvironment.EnvironmentName}.json"))
@@ -37,7 +38,9 @@ namespace TACHYON.Web.Configuration
             }
         }
 
-        protected virtual void Writenternal(string filename, string key, string value)
+        protected virtual void Writenternal(string filename,
+            string key,
+            string value)
         {
             Check.NotNullOrWhiteSpace(key, nameof(key));
             Check.NotNull(value, nameof(value));

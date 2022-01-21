@@ -24,7 +24,7 @@ namespace TACHYON.WebHooks
             IAppWebhookPublisher appWebhookPublisher,
             IWebhookDefinitionManager webhookDefinitionManager,
             ILocalizationContext localizationContext
-            )
+        )
         {
             _webHookSubscriptionManager = webHookSubscriptionManager;
             _appWebhookPublisher = appWebhookPublisher;
@@ -43,13 +43,13 @@ namespace TACHYON.WebHooks
             var subscriptions = await _webHookSubscriptionManager.GetAllSubscriptionsAsync(AbpSession.TenantId);
             return new ListResultDto<GetAllSubscriptionsOutput>(
                 ObjectMapper.Map<List<GetAllSubscriptionsOutput>>(subscriptions)
-                );
+            );
         }
 
         [AbpAuthorize(
-            AppPermissions.Pages_Administration_WebhookSubscription_Create,
-            AppPermissions.Pages_Administration_WebhookSubscription_Edit,
-            AppPermissions.Pages_Administration_WebhookSubscription_Detail
+                AppPermissions.Pages_Administration_WebhookSubscription_Create,
+                AppPermissions.Pages_Administration_WebhookSubscription_Edit,
+                AppPermissions.Pages_Administration_WebhookSubscription_Detail
             )
         ]
         public async Task<WebhookSubscription> GetSubscription(string subscriptionId)
@@ -89,9 +89,12 @@ namespace TACHYON.WebHooks
             return await _webHookSubscriptionManager.IsSubscribedAsync(AbpSession.TenantId, webhookName);
         }
 
-        public async Task<ListResultDto<GetAllSubscriptionsOutput>> GetAllSubscriptionsIfFeaturesGranted(string webhookName)
+        public async Task<ListResultDto<GetAllSubscriptionsOutput>> GetAllSubscriptionsIfFeaturesGranted(
+            string webhookName)
         {
-            var subscriptions = await _webHookSubscriptionManager.GetAllSubscriptionsIfFeaturesGrantedAsync(AbpSession.TenantId, webhookName);
+            var subscriptions =
+                await _webHookSubscriptionManager.GetAllSubscriptionsIfFeaturesGrantedAsync(AbpSession.TenantId,
+                    webhookName);
             return new ListResultDto<GetAllSubscriptionsOutput>(
                 ObjectMapper.Map<List<GetAllSubscriptionsOutput>>(subscriptions)
             );

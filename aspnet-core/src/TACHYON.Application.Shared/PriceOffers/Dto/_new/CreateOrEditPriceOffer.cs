@@ -9,6 +9,5 @@ namespace TACHYON.PriceOffers.Dto._new
     public class CreateOrEditPriceOffer
     {
         public PriceOfferDto PriceOfferDto { get; set; }
-
     }
 }

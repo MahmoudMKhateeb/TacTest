@@ -6,6 +6,6 @@ namespace TACHYON.Shipping.ShippingRequests
 {
     public interface IHasIsDrafted
     {
-         bool IsDrafted { get; set; }
+        bool IsDrafted { get; set; }
     }
 }

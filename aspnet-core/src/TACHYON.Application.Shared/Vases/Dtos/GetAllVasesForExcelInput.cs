@@ -10,6 +10,5 @@ namespace TACHYON.Vases.Dtos
         public int? HasAmountFilter { get; set; }
 
         public int? HasCountFilter { get; set; }
-
     }
 }

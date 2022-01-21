@@ -16,7 +16,8 @@ namespace TACHYON.Web.Public.Startup
     {
         private readonly IConfigurationRoot _appConfiguration;
 
-        public TACHYONWebFrontEndModule(IWebHostEnvironment env, TACHYONEntityFrameworkCoreModule abpZeroTemplateEntityFrameworkCoreModule)
+        public TACHYONWebFrontEndModule(IWebHostEnvironment env,
+            TACHYONEntityFrameworkCoreModule abpZeroTemplateEntityFrameworkCoreModule)
         {
             _appConfiguration = env.GetAppConfiguration();
             abpZeroTemplateEntityFrameworkCoreModule.SkipDbSeed = true;
@@ -24,7 +25,8 @@ namespace TACHYON.Web.Public.Startup
 
         public override void PreInitialize()
         {
-            Configuration.Modules.AbpWebCommon().MultiTenancy.DomainFormat = _appConfiguration["App:WebSiteRootAddress"] ?? "https://localhost:44303/";
+            Configuration.Modules.AbpWebCommon().MultiTenancy.DomainFormat =
+                _appConfiguration["App:WebSiteRootAddress"] ?? "https://localhost:44303/";
             Configuration.Modules.AspNetZero().LicenseCode = _appConfiguration["AbpZeroLicenseCode"];
 
             //Changed AntiForgery token/cookie names to not conflict to the main application while redirections.

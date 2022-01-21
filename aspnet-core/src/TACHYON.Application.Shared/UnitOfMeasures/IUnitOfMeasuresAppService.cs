@@ -8,18 +8,16 @@ using TACHYON.Dto;
 
 namespace TACHYON.UnitOfMeasures
 {
-    public interface IUnitOfMeasuresAppService : IApplicationService 
+    public interface IUnitOfMeasuresAppService : IApplicationService
     {
         Task<PagedResultDto<GetUnitOfMeasureForViewDto>> GetAll(GetAllUnitOfMeasuresInput input);
 
         Task<GetUnitOfMeasureForViewDto> GetUnitOfMeasureForView(int id);
 
-		Task<GetUnitOfMeasureForEditOutput> GetUnitOfMeasureForEdit(EntityDto input);
+        Task<GetUnitOfMeasureForEditOutput> GetUnitOfMeasureForEdit(EntityDto input);
 
-		Task CreateOrEdit(CreateOrEditUnitOfMeasureDto input);
+        Task CreateOrEdit(CreateOrEditUnitOfMeasureDto input);
 
-		Task Delete(EntityDto input);
-
-		
+        Task Delete(EntityDto input);
     }
 }

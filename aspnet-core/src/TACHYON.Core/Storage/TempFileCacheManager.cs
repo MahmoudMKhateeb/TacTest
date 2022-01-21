@@ -18,26 +18,34 @@ namespace TACHYON.Storage
         {
             _cacheManager = cacheManager;
         }
+
         public void SetFile(string token, byte[] content)
         {
-            _cacheManager.GetCache(TempFileCacheName).Set(token, content, new TimeSpan(0, 0, 20, 0)); // expire time is 1 min by default
+            _cacheManager.GetCache(TempFileCacheName)
+                .Set(token, content, new TimeSpan(0, 0, 20, 0)); // expire time is 1 min by default
         }
+
         public void ClearCache(string token)
         {
             _cacheManager.GetCache(TempFileCacheName).Remove(token);
         }
+
         public void SetPods(string key, List<FileDto> files)
         {
-            _cacheManager.GetCache(TempFileCacheName).Set(key, files, new TimeSpan(0, 0, 20, 0)); // expire time is 1 min by default
+            _cacheManager.GetCache(TempFileCacheName)
+                .Set(key, files, new TimeSpan(0, 0, 20, 0)); // expire time is 1 min by default
         }
+
         public List<FileDto> GetPods(string key)
         {
             return _cacheManager.GetCache(TempFileCacheName).Get(key, ep => ep) as List<FileDto>;
         }
+
         public byte[] GetFile(string token)
         {
             return _cacheManager.GetCache(TempFileCacheName).Get(token, ep => ep) as byte[];
         }
+
         public List<GetAllFileByteDto> GetFiles(List<string> tokens)
         {
             return tokens.Select(x => new GetAllFileByteDto { File = GetFile(x), Token = x }).ToList();

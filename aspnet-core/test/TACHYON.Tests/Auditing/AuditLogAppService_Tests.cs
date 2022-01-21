@@ -54,8 +54,7 @@ namespace TACHYON.Tests.Auditing
             //Act
             var output = await _auditLogAppService.GetAuditLogs(new GetAuditLogsInput
             {
-                StartDate = Clock.Now.AddMinutes(-10),
-                EndDate = Clock.Now.AddMinutes(10)
+                StartDate = Clock.Now.AddMinutes(-10), EndDate = Clock.Now.AddMinutes(10)
             });
 
             output.TotalCount.ShouldBe(2);
@@ -94,8 +93,7 @@ namespace TACHYON.Tests.Auditing
             //Act
             var entityChangeList = await _auditLogAppService.GetEntityChanges(new GetEntityChangeInput
             {
-                StartDate = Clock.Now.AddMinutes(-10),
-                EndDate = Clock.Now.AddMinutes(10)
+                StartDate = Clock.Now.AddMinutes(-10), EndDate = Clock.Now.AddMinutes(10)
             });
 
             entityChangeList.TotalCount.ShouldBe(2);

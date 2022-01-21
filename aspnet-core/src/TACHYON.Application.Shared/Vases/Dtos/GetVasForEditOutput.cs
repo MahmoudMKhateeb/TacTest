@@ -7,6 +7,5 @@ namespace TACHYON.Vases.Dtos
     public class GetVasForEditOutput
     {
         public CreateOrEditVasDto Vas { get; set; }
-
     }
 }

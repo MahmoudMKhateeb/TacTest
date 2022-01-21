@@ -10,19 +10,18 @@ using TACHYON.Trucks.TrucksTypes.Dtos;
 
 namespace TACHYON.Trucks.TruckCategories.TruckCapacities
 {
-    public interface ICapacitiesAppService : IApplicationService 
+    public interface ICapacitiesAppService : IApplicationService
     {
         Task<PagedResultDto<GetCapacityForViewDto>> GetAll(GetAllCapacitiesInput input);
 
         Task<GetCapacityForViewDto> GetCapacityForView(int id);
 
-		Task<GetCapacityForEditOutput> GetCapacityForEdit(EntityDto input);
+        Task<GetCapacityForEditOutput> GetCapacityForEdit(EntityDto input);
 
-		Task CreateOrEdit(CreateOrEditCapacityDto input);
+        Task CreateOrEdit(CreateOrEditCapacityDto input);
 
-		Task Delete(EntityDto input);
+        Task Delete(EntityDto input);
 
         Task<IEnumerable<ISelectItemDto>> GetAllTruckTypeForTableDropdown();
-		
     }
 }

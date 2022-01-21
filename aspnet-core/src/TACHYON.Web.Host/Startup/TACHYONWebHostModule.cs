@@ -45,7 +45,8 @@ namespace TACHYON.Web.Startup
 
         public override void PreInitialize()
         {
-            Configuration.Modules.AbpWebCommon().MultiTenancy.DomainFormat = _appConfiguration["App:ServerRootAddress"] ?? "https://localhost:44301/";
+            Configuration.Modules.AbpWebCommon().MultiTenancy.DomainFormat =
+                _appConfiguration["App:ServerRootAddress"] ?? "https://localhost:44301/";
             Configuration.Modules.AspNetZero().LicenseCode = _appConfiguration["AbpZeroLicenseCode"];
         }
 
@@ -69,8 +70,6 @@ namespace TACHYON.Web.Startup
             {
                 workManager.Add(IocManager.Resolve<SubscriptionExpirationCheckWorker>());
                 workManager.Add(IocManager.Resolve<SubscriptionExpireEmailNotifierWorker>());
-
-            
             }
 
             if (Configuration.Auditing.IsEnabled && ExpiredAuditLogDeleterWorker.IsEnabled)
@@ -114,7 +113,8 @@ namespace TACHYON.Web.Startup
             {
                 if (bool.Parse(_appConfiguration["Authentication:AllowSocialLoginSettingsPerTenant"]))
                 {
-                    externalAuthConfiguration.ExternalLoginInfoProviders.Add(IocManager.Resolve<TenantBasedOpenIdConnectExternalLoginInfoProvider>());
+                    externalAuthConfiguration.ExternalLoginInfoProviders.Add(
+                        IocManager.Resolve<TenantBasedOpenIdConnectExternalLoginInfoProvider>());
                 }
                 else
                 {
@@ -138,7 +138,8 @@ namespace TACHYON.Web.Startup
             {
                 if (bool.Parse(_appConfiguration["Authentication:AllowSocialLoginSettingsPerTenant"]))
                 {
-                    externalAuthConfiguration.ExternalLoginInfoProviders.Add(IocManager.Resolve<TenantBasedWsFederationExternalLoginInfoProvider>());
+                    externalAuthConfiguration.ExternalLoginInfoProviders.Add(
+                        IocManager.Resolve<TenantBasedWsFederationExternalLoginInfoProvider>());
                 }
                 else
                 {
@@ -161,7 +162,8 @@ namespace TACHYON.Web.Startup
             {
                 if (bool.Parse(_appConfiguration["Authentication:AllowSocialLoginSettingsPerTenant"]))
                 {
-                    externalAuthConfiguration.ExternalLoginInfoProviders.Add(IocManager.Resolve<TenantBasedFacebookExternalLoginInfoProvider>());
+                    externalAuthConfiguration.ExternalLoginInfoProviders.Add(
+                        IocManager.Resolve<TenantBasedFacebookExternalLoginInfoProvider>());
                 }
                 else
                 {
@@ -176,7 +178,8 @@ namespace TACHYON.Web.Startup
             {
                 if (bool.Parse(_appConfiguration["Authentication:AllowSocialLoginSettingsPerTenant"]))
                 {
-                    externalAuthConfiguration.ExternalLoginInfoProviders.Add(IocManager.Resolve<TenantBasedGoogleExternalLoginInfoProvider>());
+                    externalAuthConfiguration.ExternalLoginInfoProviders.Add(
+                        IocManager.Resolve<TenantBasedGoogleExternalLoginInfoProvider>());
                 }
                 else
                 {
@@ -194,7 +197,8 @@ namespace TACHYON.Web.Startup
             {
                 if (bool.Parse(_appConfiguration["Authentication:AllowSocialLoginSettingsPerTenant"]))
                 {
-                    externalAuthConfiguration.ExternalLoginInfoProviders.Add(IocManager.Resolve<TenantBasedMicrosoftExternalLoginInfoProvider>());
+                    externalAuthConfiguration.ExternalLoginInfoProviders.Add(
+                        IocManager.Resolve<TenantBasedMicrosoftExternalLoginInfoProvider>());
                 }
                 else
                 {

@@ -43,7 +43,8 @@ namespace TACHYON.Shipping.Drivers
             InvoiceManager invoiceManager,
             UserManager userManager,
             IAppNotifier appNotifier,
-            IAbpSession abpSession, IRepository<RoutPointDocument, long> routPointDocumentRepository)
+            IAbpSession abpSession,
+            IRepository<RoutPointDocument, long> routPointDocumentRepository)
         {
             _ShippingRequestTrip = ShippingRequestTrip;
             _ShippingRequestRepository = ShippingRequestRepository;
@@ -64,14 +65,15 @@ namespace TACHYON.Shipping.Drivers
             routPoint.Status = Status;
             await _routPointStatusTransitionRepository.InsertAsync(new RoutPointStatusTransition
             {
-                PointId = routPoint.Id,
-                Status = Status
+                PointId = routPoint.Id, Status = Status
             });
         }
+
         public async Task NotifyCarrierWithDriverGpsOff(User user)
         {
             var carrierAdminUser = await _userManager.GetAdminByTenantIdAsync(user.TenantId.Value);
-            await _appNotifier.NotifyCarrierWithDriverGpsOff(new UserIdentifier(user.TenantId, carrierAdminUser.Id), user);
+            await _appNotifier.NotifyCarrierWithDriverGpsOff(new UserIdentifier(user.TenantId, carrierAdminUser.Id),
+                user);
         }
     }
 }

@@ -14,12 +14,9 @@ namespace TACHYON.Localization.Dto
         public TerminologySection Section { get; set; }
 
 
-
         public string PlatFormTitle { get { return PlatForm.GetEnumDescription(); } }
         public string AppVersionTitle { get { return AppVersion.GetEnumDescription(); } }
         public string VersionTitle { get { return Version.GetEnumDescription(); } }
         public string SectionTitle { get { return Section.GetEnumDescription(); } }
-
-
     }
 }

@@ -7,7 +7,5 @@ namespace TACHYON.Documents.DocumentTypes.Dtos
     public class GetDocumentTypeForEditOutput
     {
         public CreateOrEditDocumentTypeDto DocumentType { get; set; }
-
-
     }
 }

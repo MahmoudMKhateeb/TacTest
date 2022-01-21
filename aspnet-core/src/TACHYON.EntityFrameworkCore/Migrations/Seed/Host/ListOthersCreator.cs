@@ -26,7 +26,6 @@ namespace TACHYON.Migrations.Seed.Host
 {
     public class ListOthersCreator
     {
-
         private readonly TACHYONDbContext _dbContext;
 
         public ListOthersCreator(TACHYONDbContext dbContext)
@@ -36,7 +35,6 @@ namespace TACHYON.Migrations.Seed.Host
 
         public void Create()
         {
-
             _dbContext.UnitOfMeasures.SeedEntity();
             _dbContext.GoodCategories.SeedEntity();
             _dbContext.Vases.SeedEntity();
@@ -45,10 +43,8 @@ namespace TACHYON.Migrations.Seed.Host
 
             #region TruckTypeSeeding
 
-
             if (!_dbContext.TrucksTypes.Any(OthersExpressions.ContainsOthersKeyExpression))
             {
-
                 var otherTruckType = new TrucksType()
                 {
                     CreationTime = DateTime.Now,
@@ -59,7 +55,6 @@ namespace TACHYON.Migrations.Seed.Host
                 };
 
                 _dbContext.TrucksTypes.Add(otherTruckType);
-
             }
 
             #endregion
@@ -71,12 +66,11 @@ namespace TACHYON.Migrations.Seed.Host
             _dbContext.GoodCategories.CheckTranslation(_dbContext.GoodCategoryTranslations, 1);
             _dbContext.Vases.CheckTranslation(_dbContext.VasTranslations, 1);
             _dbContext.TransportTypes.CheckTranslation(_dbContext.TransportTypesTranslations, 1);
-            _dbContext.ShippingRequestReasonAccidents.CheckTranslation(_dbContext.ShippingRequestReasonAccidentTranslations, 1);
+            _dbContext.ShippingRequestReasonAccidents.CheckTranslation(
+                _dbContext.ShippingRequestReasonAccidentTranslations, 1);
             _dbContext.TrucksTypes.CheckTranslation(_dbContext.TrucksTypesTranslations, 1L);
 
             _dbContext.SaveChanges();
         }
     }
-
-
 }

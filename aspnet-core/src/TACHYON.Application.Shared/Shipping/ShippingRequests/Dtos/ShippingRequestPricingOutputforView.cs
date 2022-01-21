@@ -9,6 +9,5 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
     {
         public decimal ShippingRequestPrice { get; set; }
         public List<ShippingRequestVasPriceDto> PricedVasesList { get; set; }
-
     }
 }

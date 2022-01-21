@@ -2,7 +2,6 @@
 {
     public class DocumentFileConsts
     {
-
         public const int MinNameLength = 0;
         public const int MaxNameLength = 100;
 
@@ -10,7 +9,5 @@
         public const int MaxExtnLength = 100;
 
         public const string KeyCashes = "RoutPointFile_{0}";
-
-
     }
 }

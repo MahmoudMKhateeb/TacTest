@@ -21,7 +21,5 @@ namespace TACHYON.Countries
         Task Delete(EntityDto input);
 
         Task<FileDto> GetCountiesToExcel(GetAllCountiesForExcelInput input);
-
-
     }
 }

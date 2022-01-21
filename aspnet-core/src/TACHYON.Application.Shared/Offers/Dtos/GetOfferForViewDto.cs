@@ -11,7 +11,5 @@
         public string GoodCategoryDisplayName { get; set; }
 
         public string RouteDisplayName { get; set; }
-
-
     }
 }

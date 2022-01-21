@@ -32,16 +32,22 @@ namespace TACHYON.Migrations.Seed.Host
         {
             //Admin role for host
 
-            var adminRoleForHost = _context.Roles.IgnoreQueryFilters().FirstOrDefault(r => r.TenantId == null && r.Name == StaticRoleNames.Host.Admin);
+            var adminRoleForHost = _context.Roles.IgnoreQueryFilters()
+                .FirstOrDefault(r => r.TenantId == null && r.Name == StaticRoleNames.Host.Admin);
             if (adminRoleForHost == null)
             {
-                adminRoleForHost = _context.Roles.Add(new Role(null, StaticRoleNames.Host.Admin, StaticRoleNames.Host.Admin) { IsStatic = true, IsDefault = true }).Entity;
+                adminRoleForHost = _context.Roles
+                    .Add(new Role(null, StaticRoleNames.Host.Admin, StaticRoleNames.Host.Admin)
+                    {
+                        IsStatic = true, IsDefault = true
+                    }).Entity;
                 _context.SaveChanges();
             }
 
             //admin user for host
 
-            var adminUserForHost = _context.Users.IgnoreQueryFilters().FirstOrDefault(u => u.TenantId == null && u.UserName == AbpUserBase.AdminUserName);
+            var adminUserForHost = _context.Users.IgnoreQueryFilters()
+                .FirstOrDefault(u => u.TenantId == null && u.UserName == AbpUserBase.AdminUserName);
             if (adminUserForHost == null)
             {
                 var user = new User
@@ -78,8 +84,12 @@ namespace TACHYON.Migrations.Seed.Host
                 _context.SaveChanges();
 
                 //Notification subscriptions
-                _context.NotificationSubscriptions.Add(new NotificationSubscriptionInfo(SequentialGuidGenerator.Instance.Create(), null, adminUserForHost.Id, AppNotificationNames.NewTenantRegistered));
-                _context.NotificationSubscriptions.Add(new NotificationSubscriptionInfo(SequentialGuidGenerator.Instance.Create(), null, adminUserForHost.Id, AppNotificationNames.NewUserRegistered));
+                _context.NotificationSubscriptions.Add(new NotificationSubscriptionInfo(
+                    SequentialGuidGenerator.Instance.Create(), null, adminUserForHost.Id,
+                    AppNotificationNames.NewTenantRegistered));
+                _context.NotificationSubscriptions.Add(new NotificationSubscriptionInfo(
+                    SequentialGuidGenerator.Instance.Create(), null, adminUserForHost.Id,
+                    AppNotificationNames.NewUserRegistered));
 
                 _context.SaveChanges();
             }

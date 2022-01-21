@@ -22,7 +22,8 @@ namespace TACHYON.DataExporting.Excel.NPOI
 
         protected FileDto CreateExcelPackage(string fileName, Action<XSSFWorkbook> creator)
         {
-            var file = new FileDto(fileName, MimeTypeNames.ApplicationVndOpenxmlformatsOfficedocumentSpreadsheetmlSheet);
+            var file = new FileDto(fileName,
+                MimeTypeNames.ApplicationVndOpenxmlformatsOfficedocumentSpreadsheetmlSheet);
             var workbook = new XSSFWorkbook();
 
             creator(workbook);
@@ -47,7 +48,9 @@ namespace TACHYON.DataExporting.Excel.NPOI
             }
         }
 
-        protected void AddHeader(ISheet sheet, int columnIndex, string headerText)
+        protected void AddHeader(ISheet sheet,
+            int columnIndex,
+            string headerText)
         {
             var cell = sheet.GetRow(0).CreateCell(columnIndex);
             cell.SetCellValue(headerText);
@@ -59,7 +62,10 @@ namespace TACHYON.DataExporting.Excel.NPOI
             cell.CellStyle = cellStyle;
         }
 
-        protected void AddObjects<T>(ISheet sheet, int startRowIndex, IList<T> items, params Func<T, object>[] propertySelectors)
+        protected void AddObjects<T>(ISheet sheet,
+            int startRowIndex,
+            IList<T> items,
+            params Func<T, object>[] propertySelectors)
         {
             if (items.IsNullOrEmpty() || propertySelectors.IsNullOrEmpty())
             {

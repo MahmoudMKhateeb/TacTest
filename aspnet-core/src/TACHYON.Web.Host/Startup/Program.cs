@@ -3,7 +3,7 @@ using System.IO;
 using TACHYON.Web.Helpers;
 
 namespace TACHYON.Web.Startup
-{   
+{
     public class Program
     {
         public static void Main(string[] args)
@@ -20,7 +20,6 @@ namespace TACHYON.Web.Startup
                     opt.AddServerHeader = false;
                     opt.Limits.MaxRequestLineSize = 16 * 1024;
                     opt.AllowSynchronousIO = true;
-
                 })
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIIS()

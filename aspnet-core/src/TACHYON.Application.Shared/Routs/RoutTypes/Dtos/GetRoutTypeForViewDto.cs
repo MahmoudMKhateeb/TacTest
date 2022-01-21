@@ -3,7 +3,5 @@
     public class GetRoutTypeForViewDto
     {
         public RoutTypeDto RoutType { get; set; }
-
-
     }
 }

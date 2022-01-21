@@ -72,8 +72,8 @@ namespace TACHYON.Authorization.Users
         private readonly IRepository<DocumentType, long> _documentTypeRepository;
         private readonly IRepository<DocumentFile, Guid> _documentFileRepository;
         private readonly ISmsSender _smsSender;
-        public UserAppService(
 
+        public UserAppService(
             IRepository<DocumentFile, Guid> documentFileRepository,
             IRepository<DocumentType, long> documentTypeRepository,
             RoleManager roleManager,
@@ -130,20 +130,18 @@ namespace TACHYON.Authorization.Users
             var userListDtos = new List<UserListDto>();
 
             users = await query
-            .OrderBy(input.Sorting)
-            .PageBy(input)
-            .ToListAsync();
+                .OrderBy(input.Sorting)
+                .PageBy(input)
+                .ToListAsync();
 
             userListDtos = ObjectMapper.Map<List<UserListDto>>(users);
             await FillRoleNames(userListDtos);
 
 
             return new PagedResultDto<UserListDto>(
-              userCount,
-              userListDtos
-              );
-
-
+                userCount,
+                userListDtos
+            );
         }
 
 
@@ -160,6 +158,7 @@ namespace TACHYON.Authorization.Users
             await FillIsMissingDocumentFiles(result);
             return result;
         }
+
         private async Task FillIsMissingDocumentFiles(LoadResult pagedResultDto)
         {
             var ids = pagedResultDto.data.ToDynamicList<DriverListDto>().Select(x => x.Id);
@@ -210,19 +209,13 @@ namespace TACHYON.Authorization.Users
         [AbpAuthorize(AppPermissions.Pages_Administration_Users_Create, AppPermissions.Pages_Administration_Users_Edit)]
         public async Task<GetUserForEditOutput> GetUserForEdit(NullableIdDto<long> input)
         {
-
             if (input.Id.HasValue)
                 await TenantImpersonationIfTms(input.Id.Value);
 
             //Getting all available roles
             var userRoleDtos = await _roleManager.Roles
                 .OrderBy(r => r.DisplayName)
-                .Select(r => new UserRoleDto
-                {
-                    RoleId = r.Id,
-                    RoleName = r.Name,
-                    RoleDisplayName = r.DisplayName
-                })
+                .Select(r => new UserRoleDto { RoleId = r.Id, RoleName = r.Name, RoleDisplayName = r.DisplayName })
                 .ToArrayAsync();
 
             var allOrganizationUnits = await _organizationUnitRepository.GetAllListAsync();
@@ -241,8 +234,12 @@ namespace TACHYON.Authorization.Users
                 {
                     IsActive = true,
                     ShouldChangePasswordOnNextLogin = true,
-                    IsTwoFactorEnabled = await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsEnabled),
-                    IsLockoutEnabled = await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.UserLockOut.IsEnabled)
+                    IsTwoFactorEnabled =
+                        await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement
+                            .TwoFactorLogin.IsEnabled),
+                    IsLockoutEnabled =
+                        await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement
+                            .UserLockOut.IsEnabled)
                 };
 
                 foreach (var defaultRole in await _roleManager.Roles.Where(r => r.IsDefault).ToListAsync())
@@ -270,7 +267,8 @@ namespace TACHYON.Authorization.Users
                 foreach (var userRoleDto in userRoleDtos)
                 {
                     userRoleDto.IsAssigned = await UserManager.IsInRoleAsync(user, userRoleDto.RoleName);
-                    userRoleDto.InheritedFromOrganizationUnit = allRolesOfUsersOrganizationUnits.Contains(userRoleDto.RoleName);
+                    userRoleDto.InheritedFromOrganizationUnit =
+                        allRolesOfUsersOrganizationUnits.Contains(userRoleDto.RoleName);
                 }
             }
 
@@ -285,8 +283,8 @@ namespace TACHYON.Authorization.Users
                 using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
                 {
                     userTenantId = await (from user in UserManager.Users.AsNoTracking()
-                                          where user.Id == userId && user.IsDriver
-                                          select user.TenantId).FirstOrDefaultAsync();
+                        where user.Id == userId && user.IsDriver
+                        select user.TenantId).FirstOrDefaultAsync();
                 }
 
                 CurrentUnitOfWork.SetTenantId(userTenantId ?? AbpSession.TenantId);
@@ -297,11 +295,11 @@ namespace TACHYON.Authorization.Users
         private List<string> GetAllRoleNamesOfUsersOrganizationUnits(long userId)
         {
             return (from userOu in _userOrganizationUnitRepository.GetAll()
-                    join roleOu in _organizationUnitRoleRepository.GetAll() on userOu.OrganizationUnitId equals roleOu
-                        .OrganizationUnitId
-                    join userOuRoles in _roleRepository.GetAll() on roleOu.RoleId equals userOuRoles.Id
-                    where userOu.UserId == userId
-                    select userOuRoles.Name).ToList();
+                join roleOu in _organizationUnitRoleRepository.GetAll() on userOu.OrganizationUnitId equals roleOu
+                    .OrganizationUnitId
+                join userOuRoles in _roleRepository.GetAll() on roleOu.RoleId equals userOuRoles.Id
+                where userOu.UserId == userId
+                select userOuRoles.Name).ToList();
         }
 
         [AbpAuthorize(AppPermissions.Pages_Administration_Users_ChangePermissions)]
@@ -313,7 +311,8 @@ namespace TACHYON.Authorization.Users
 
             return new GetUserPermissionsForEditOutput
             {
-                Permissions = ObjectMapper.Map<List<FlatPermissionDto>>(permissions).OrderBy(p => p.DisplayName).ToList(),
+                Permissions =
+                    ObjectMapper.Map<List<FlatPermissionDto>>(permissions).OrderBy(p => p.DisplayName).ToList(),
                 GrantedPermissionNames = grantedPermissions.Select(p => p.Name).ToList()
             };
         }
@@ -329,7 +328,8 @@ namespace TACHYON.Authorization.Users
         public async Task UpdateUserPermissions(UpdateUserPermissionsInput input)
         {
             var user = await UserManager.GetUserByIdAsync(input.Id);
-            var grantedPermissions = PermissionManager.GetPermissionsFromNamesByValidating(input.GrantedPermissionNames);
+            var grantedPermissions =
+                PermissionManager.GetPermissionsFromNamesByValidating(input.GrantedPermissionNames);
             await UserManager.SetGrantedPermissionsAsync(user, grantedPermissions);
         }
 
@@ -409,7 +409,6 @@ namespace TACHYON.Authorization.Users
             if (!user.IsDriver)
             {
                 CheckErrors(await UserManager.SetRolesAsync(user, input.AssignedRoleNames));
-
             }
 
             //update organization units
@@ -454,7 +453,8 @@ namespace TACHYON.Authorization.Users
                 {
                     foreach (var item in requiredDocs)
                     {
-                        var doc = input.CreateOrEditDocumentFileDtos.FirstOrDefault(x => x.DocumentTypeId == item.DocumentTypeId);
+                        var doc = input.CreateOrEditDocumentFileDtos.FirstOrDefault(x =>
+                            x.DocumentTypeId == item.DocumentTypeId);
 
                         if (doc.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
                         {
@@ -464,7 +464,6 @@ namespace TACHYON.Authorization.Users
                         doc.Name = item.Name;
                     }
                 }
-
             }
 
 
@@ -539,7 +538,6 @@ namespace TACHYON.Authorization.Users
                     input.User.Password
                 );
             }
-
         }
 
         private async Task FillRoleNames(IReadOnlyCollection<UserListDto> userListDtos)
@@ -587,7 +585,8 @@ namespace TACHYON.Authorization.Users
         {
             var query = UserManager.Users
                 .WhereIf(input.Role.HasValue, u => u.Roles.Any(r => r.RoleId == input.Role.Value))
-                .WhereIf(input.OnlyLockedUsers, u => u.LockoutEndDateUtc.HasValue && u.LockoutEndDateUtc.Value > DateTime.UtcNow)
+                .WhereIf(input.OnlyLockedUsers,
+                    u => u.LockoutEndDateUtc.HasValue && u.LockoutEndDateUtc.Value > DateTime.UtcNow)
                 .WhereIf(input.OnlyDrivers, u => u.IsDriver)
                 .WhereIf(input.OnlyUsers, u => u.IsDriver == false)
                 .WhereIf(
@@ -609,21 +608,22 @@ namespace TACHYON.Authorization.Users
                 input.Permissions = input.Permissions.Where(p => !string.IsNullOrEmpty(p)).ToList();
 
                 query = from user in query
-                        join ur in _userRoleRepository.GetAll() on user.Id equals ur.UserId into urJoined
-                        from ur in urJoined.DefaultIfEmpty()
-                        join urr in _roleRepository.GetAll() on ur.RoleId equals urr.Id into urrJoined
-                        from urr in urrJoined.DefaultIfEmpty()
-                        join up in _userPermissionRepository.GetAll()
-                            .Where(userPermission => input.Permissions.Contains(userPermission.Name)) on user.Id equals up.UserId into upJoined
-                        from up in upJoined.DefaultIfEmpty()
-                        join rp in _rolePermissionRepository.GetAll()
+                    join ur in _userRoleRepository.GetAll() on user.Id equals ur.UserId into urJoined
+                    from ur in urJoined.DefaultIfEmpty()
+                    join urr in _roleRepository.GetAll() on ur.RoleId equals urr.Id into urrJoined
+                    from urr in urrJoined.DefaultIfEmpty()
+                    join up in _userPermissionRepository.GetAll()
+                            .Where(userPermission => input.Permissions.Contains(userPermission.Name)) on user.Id equals
+                        up.UserId into upJoined
+                    from up in upJoined.DefaultIfEmpty()
+                    join rp in _rolePermissionRepository.GetAll()
                             .Where(rolePermission => input.Permissions.Contains(rolePermission.Name)) on
-                            new { RoleId = ur == null ? 0 : ur.RoleId } equals new { rp.RoleId } into rpJoined
-                        from rp in rpJoined.DefaultIfEmpty()
-                        where (up != null && up.IsGranted) ||
-                              (up == null && rp != null && rp.IsGranted) ||
-                              (up == null && rp == null && staticRoleNames.Contains(urr.Name))
-                        select user;
+                        new { RoleId = ur == null ? 0 : ur.RoleId } equals new { rp.RoleId } into rpJoined
+                    from rp in rpJoined.DefaultIfEmpty()
+                    where (up != null && up.IsGranted) ||
+                          (up == null && rp != null && rp.IsGranted) ||
+                          (up == null && rp == null && staticRoleNames.Contains(urr.Name))
+                    select user;
             }
 
             return query;
@@ -631,7 +631,8 @@ namespace TACHYON.Authorization.Users
 
         public async Task<bool> CheckIfPhoneNumberValid(string phoneNumber, long? driverId)
         {
-            var result = await _userManager.Users.FirstOrDefaultAsync(x => x.PhoneNumber == phoneNumber && x.Id != driverId);
+            var result =
+                await _userManager.Users.FirstOrDefaultAsync(x => x.PhoneNumber == phoneNumber && x.Id != driverId);
             return (result == null);
         }
 
@@ -863,7 +864,6 @@ namespace TACHYON.Authorization.Users
             nationalites.Add(new SelectItemDto("Zimbabweans", "Zimbabweans"));
 
 
-
             return nationalites;
         }
 
@@ -872,6 +872,7 @@ namespace TACHYON.Authorization.Users
             var result = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName && x.Id != userId);
             return (result == null);
         }
+
         public async Task<bool> CheckIfEmailisAvailable(string email)
         {
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant))
@@ -886,7 +887,6 @@ namespace TACHYON.Authorization.Users
                     return false;
                 }
             }
-
         }
 
         private void CheckIfDriverPhoneNumberExists(CreateOrUpdateUserInput input)
@@ -894,7 +894,8 @@ namespace TACHYON.Authorization.Users
             if (input.User.IsDriver)
             {
                 DisableTenancyFilters();
-                var userDB = _userManager.Users.FirstOrDefault(x => x.IsDriver == true && x.PhoneNumber == input.User.PhoneNumber && x.Id != input.User.Id);
+                var userDB = _userManager.Users.FirstOrDefault(x =>
+                    x.IsDriver == true && x.PhoneNumber == input.User.PhoneNumber && x.Id != input.User.Id);
                 if (userDB != null)
                 {
                     throw new UserFriendlyException(L("DriverPhoneNumberAlreadyExists"));

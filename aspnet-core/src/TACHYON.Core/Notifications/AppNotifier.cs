@@ -35,8 +35,10 @@ namespace TACHYON.Notifications
 
 
         public AppNotifier(INotificationPublisher notificationPublisher,
-            INotificationSubscriptionManager notificationSubscriptionManager, UserManager userManager,
-            IRepository<User, long> userRepo, IRepository<Tenant> tenantsRepository,
+            INotificationSubscriptionManager notificationSubscriptionManager,
+            UserManager userManager,
+            IRepository<User, long> userRepo,
+            IRepository<Tenant> tenantsRepository,
             IFirebaseNotifier firebaseNotifier)
         {
             _notificationPublisher = notificationPublisher;
@@ -94,15 +96,15 @@ namespace TACHYON.Notifications
                     L("DriverTripReminder"),
                     TACHYONConsts.LocalizationSourceName
                 )
-            ) {["id"] = tripId};
+            ) { ["id"] = tripId };
 
             await _notificationPublisher.PublishAsync(AppNotificationNames.DriverTripReminder,
-                notificationData,userIds: new []{user});
+                notificationData, userIds: new[] { user });
 
             await _firebaseNotifier.PushNotification(AppNotificationNames.DriverTripReminder, notificationData,
                 user.UserId);
         }
-        
+
         public async Task GdprDataPrepared(UserIdentifier user, Guid binaryObjectId)
         {
             var notificationData = new LocalizableMessageNotificationData(
@@ -110,14 +112,15 @@ namespace TACHYON.Notifications
                     "GdprDataPreparedNotificationMessage",
                     TACHYONConsts.LocalizationSourceName
                 )
-            ) {["binaryObjectId"] = binaryObjectId};
+            ) { ["binaryObjectId"] = binaryObjectId };
 
             await _notificationPublisher.PublishAsync(AppNotificationNames.GdprDataPrepared, notificationData,
                 userIds: new[] { user });
         }
 
         //This is for test purposes
-        public async Task SendMessageAsync(UserIdentifier user, string message,
+        public async Task SendMessageAsync(UserIdentifier user,
+            string message,
             NotificationSeverity severity = NotificationSeverity.Info)
         {
             await _notificationPublisher.PublishAsync(
@@ -128,7 +131,8 @@ namespace TACHYON.Notifications
             );
         }
 
-        public Task SendMessageAsync(UserIdentifier user, LocalizableString localizableMessage,
+        public Task SendMessageAsync(UserIdentifier user,
+            LocalizableString localizableMessage,
             IDictionary<string, object> localizableMessageData = null,
             NotificationSeverity severity = NotificationSeverity.Info)
         {
@@ -136,8 +140,10 @@ namespace TACHYON.Notifications
                 localizableMessageData, severity);
         }
 
-        protected async Task SendNotificationAsync(string notificationName, UserIdentifier user,
-            LocalizableString localizableMessage, IDictionary<string, object> localizableMessageData = null,
+        protected async Task SendNotificationAsync(string notificationName,
+            UserIdentifier user,
+            LocalizableString localizableMessage,
+            IDictionary<string, object> localizableMessageData = null,
             NotificationSeverity severity = NotificationSeverity.Info)
         {
             var notificationData = new LocalizableMessageNotificationData(localizableMessage);
@@ -153,7 +159,9 @@ namespace TACHYON.Notifications
                 userIds: new[] { user });
         }
 
-        public Task TenantsMovedToEdition(UserIdentifier user, string sourceEditionName, string targetEditionName)
+        public Task TenantsMovedToEdition(UserIdentifier user,
+            string sourceEditionName,
+            string targetEditionName)
         {
             return SendNotificationAsync(AppNotificationNames.TenantsMovedToEdition, user,
                 new LocalizableString(
@@ -162,18 +170,21 @@ namespace TACHYON.Notifications
                 ),
                 new Dictionary<string, object>
                 {
-                    {"sourceEditionName", sourceEditionName},
-                    {"targetEditionName", targetEditionName}
+                    { "sourceEditionName", sourceEditionName }, { "targetEditionName", targetEditionName }
                 });
         }
 
-        public Task<TResult> TenantsMovedToEdition<TResult>(UserIdentifier argsUser, int sourceEditionId,
+        public Task<TResult> TenantsMovedToEdition<TResult>(UserIdentifier argsUser,
+            int sourceEditionId,
             int targetEditionId)
         {
             throw new NotImplementedException();
         }
 
-        public Task SomeUsersCouldntBeImported(UserIdentifier user, string fileToken, string fileType, string fileName)
+        public Task SomeUsersCouldntBeImported(UserIdentifier user,
+            string fileToken,
+            string fileType,
+            string fileName)
         {
             return SendNotificationAsync(AppNotificationNames.DownloadInvalidImportUsers, user,
                 new LocalizableString(
@@ -182,12 +193,9 @@ namespace TACHYON.Notifications
                 ),
                 new Dictionary<string, object>
                 {
-                    { "fileToken", fileToken },
-                    { "fileType", fileType },
-                    { "fileName", fileName }
+                    { "fileToken", fileToken }, { "fileType", fileType }, { "fileName", fileName }
                 });
         }
-
 
 
         #region Tachyon Notifications
@@ -202,13 +210,14 @@ namespace TACHYON.Notifications
             );
 
             notificationData["truckId"] = truckId;
-            await _notificationPublisher.PublishAsync(AppNotificationNames.AssignDriverToTruck, notificationData, userIds: new[] { argsUser });
+            await _notificationPublisher.PublishAsync(AppNotificationNames.AssignDriverToTruck, notificationData,
+                userIds: new[] { argsUser });
         }
 
 
-
-
-        public async Task UpdateShippingRequestPrice(UserIdentifier argsUser, long shippingRequestId, decimal price)
+        public async Task UpdateShippingRequestPrice(UserIdentifier argsUser,
+            long shippingRequestId,
+            decimal price)
         {
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(
@@ -219,13 +228,17 @@ namespace TACHYON.Notifications
 
             notificationData["shippingRequestId"] = shippingRequestId;
             notificationData["price"] = price;
-            await _notificationPublisher.PublishAsync(AppNotificationNames.UpdateShippingRequestPrice, notificationData, userIds: new[] { argsUser });
+            await _notificationPublisher.PublishAsync(AppNotificationNames.UpdateShippingRequestPrice, notificationData,
+                userIds: new[] { argsUser });
         }
 
         public async Task AcceptShippingRequestPrice(long shippingRequestId, bool isAccepted)
         {
-            var subscriptions = await _notificationSubscriptionManager.GetSubscriptionsAsync(AppNotificationNames.AcceptShippingRequestPrice);
-            var userIds = subscriptions.Select(subscription => new UserIdentifier(subscription.TenantId, subscription.UserId)).ToArray();
+            var subscriptions =
+                await _notificationSubscriptionManager.GetSubscriptionsAsync(AppNotificationNames
+                    .AcceptShippingRequestPrice);
+            var userIds = subscriptions
+                .Select(subscription => new UserIdentifier(subscription.TenantId, subscription.UserId)).ToArray();
 
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(
@@ -236,7 +249,8 @@ namespace TACHYON.Notifications
 
             notificationData["shippingRequestId"] = shippingRequestId;
             notificationData["isAccepted"] = isAccepted;
-            await _notificationPublisher.PublishAsync(AppNotificationNames.AcceptShippingRequestPrice, notificationData, userIds: userIds);
+            await _notificationPublisher.PublishAsync(AppNotificationNames.AcceptShippingRequestPrice, notificationData,
+                userIds: userIds);
         }
 
         public async Task RejectShippingRequest(UserIdentifier argsUser, long shippingRequestId)
@@ -249,9 +263,14 @@ namespace TACHYON.Notifications
             );
 
             notificationData["shippingRequestId"] = shippingRequestId;
-            await _notificationPublisher.PublishAsync(AppNotificationNames.RejectShippingRequest, notificationData, userIds: new[] { argsUser });
+            await _notificationPublisher.PublishAsync(AppNotificationNames.RejectShippingRequest, notificationData,
+                userIds: new[] { argsUser });
         }
-        public Task SomeTrucksCouldntBeImported(UserIdentifier user, string fileToken, string fileType, string fileName)
+
+        public Task SomeTrucksCouldntBeImported(UserIdentifier user,
+            string fileToken,
+            string fileType,
+            string fileName)
         {
             return SendNotificationAsync(AppNotificationNames.DownloadInvalidImportUsers, user,
                 new LocalizableString(
@@ -260,19 +279,18 @@ namespace TACHYON.Notifications
                 ),
                 new Dictionary<string, object>
                 {
-                    { "fileToken", fileToken },
-                    { "fileType", fileType },
-                    { "fileName", fileName }
+                    { "fileToken", fileToken }, { "fileType", fileType }, { "fileName", fileName }
                 });
         }
+
         public async Task CreateBidRequest(UserIdentifier argsUser, long shippingRequestBidId)
         {
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(
                     L("CreateBidRequestNotificationMessage"),
                     TACHYONConsts.LocalizationSourceName
-                    )
-                );
+                )
+            );
             notificationData["shippingRequestBidId"] = shippingRequestBidId;
             await _notificationPublisher.PublishAsync(AppNotificationNames.CreateShippingRequestBid,
                 notificationData,
@@ -285,41 +303,44 @@ namespace TACHYON.Notifications
                 new LocalizableString(
                     L("UpdateBidRequestNotificationMessage"),
                     TACHYONConsts.LocalizationSourceName
-                    )
-                );
+                )
+            );
             notificationData["shippingRequestBidId"] = shippingRequestBidId;
             await _notificationPublisher.PublishAsync(AppNotificationNames.UpdateShippingRequestBid,
                 notificationData,
                 userIds: new[] { argsUser });
         }
-        public async Task CancelBidRequest(UserIdentifier argsUser, long shippingRequestId, long shippingRequestBidId)
+
+        public async Task CancelBidRequest(UserIdentifier argsUser,
+            long shippingRequestId,
+            long shippingRequestBidId)
         {
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(
                     L("CancelBidRequestNotificationMessage"),
                     TACHYONConsts.LocalizationSourceName
-                    )
-                );
+                )
+            );
             notificationData["shippingRequestId"] = shippingRequestId;
             notificationData["shippingRequestBidId"] = shippingRequestBidId;
             await _notificationPublisher.PublishAsync(AppNotificationNames.CancelShippingRequestBid,
                 notificationData,
                 userIds: new[] { argsUser });
         }
+
         public async Task AcceptShippingRequestBid(UserIdentifier argsUser, long shippingRequestId)
         {
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(
                     L("AcceptShippingRequestNotificationMessage"),
                     TACHYONConsts.LocalizationSourceName
-                    )
-                );
+                )
+            );
             notificationData["shippingRequestId"] = shippingRequestId;
             await _notificationPublisher.PublishAsync(AppNotificationNames.AcceptShippingRequestBid,
                 notificationData,
                 severity: NotificationSeverity.Success,
                 userIds: new[] { argsUser });
-
         }
 
         public async Task ShippingRequestAsBidWithSameTruckAsync(UserIdentifier[] argsUser, long shippingRequestId)
@@ -328,15 +349,17 @@ namespace TACHYON.Notifications
                 new LocalizableString(
                     L("ShippingRequestAsBidWithSameTruckNotificationMessage"),
                     TACHYONConsts.LocalizationSourceName
-                    )
-                );
+                )
+            );
             notificationData["shippingRequestId"] = shippingRequestId;
             await _notificationPublisher.PublishAsync(AppNotificationNames.ShippingRequestAsBidWithSameTruck,
                 notificationData,
                 userIds: argsUser);
         }
 
-        public async Task StartShippment(UserIdentifier argsUser, long TripId, string PickupFacilityName)
+        public async Task StartShippment(UserIdentifier argsUser,
+            long TripId,
+            string PickupFacilityName)
         {
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(
@@ -390,7 +413,9 @@ namespace TACHYON.Notifications
         /// <param name="documentFileId"></param>
         /// <param name="expirationAlertDays">number of days remaining befor expiration date</param>
         /// <returns></returns>
-        public async Task DocumentFileBeforExpiration(UserIdentifier argsUser, Guid documentFileId, int expirationAlertDays)
+        public async Task DocumentFileBeforExpiration(UserIdentifier argsUser,
+            Guid documentFileId,
+            int expirationAlertDays)
         {
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(
@@ -401,7 +426,8 @@ namespace TACHYON.Notifications
 
             notificationData["documentFileId"] = documentFileId;
             notificationData["expirationAlertDays"] = expirationAlertDays;
-            await _notificationPublisher.PublishAsync(AppNotificationNames.DocumentFileBeforExpiration, notificationData, userIds: new[] { argsUser });
+            await _notificationPublisher.PublishAsync(AppNotificationNames.DocumentFileBeforExpiration,
+                notificationData, userIds: new[] { argsUser });
         }
 
 
@@ -420,7 +446,8 @@ namespace TACHYON.Notifications
             );
 
             notificationData["documentFileId"] = documentFileId;
-            await _notificationPublisher.PublishAsync(AppNotificationNames.DocumentFileExpiration, notificationData, userIds: new[] { argsUser });
+            await _notificationPublisher.PublishAsync(AppNotificationNames.DocumentFileExpiration, notificationData,
+                userIds: new[] { argsUser });
         }
 
 
@@ -451,7 +478,8 @@ namespace TACHYON.Notifications
 
             notificationData["documentFileId"] = documentFile.Id;
             notificationData["documentFileName"] = documentFile.Name;
-            await _notificationPublisher.PublishAsync(AppNotificationNames.AcceptedSubmittedDocument, notificationData, userIds: new[] { argsUser });
+            await _notificationPublisher.PublishAsync(AppNotificationNames.AcceptedSubmittedDocument, notificationData,
+                userIds: new[] { argsUser });
         }
 
         public async Task RejectedSubmittedDocument(UserIdentifier argsUser, DocumentFile documentFile)
@@ -465,7 +493,8 @@ namespace TACHYON.Notifications
 
             notificationData["documentFileId"] = documentFile.Id;
             notificationData["documentFileName"] = documentFile.Name;
-            await _notificationPublisher.PublishAsync(AppNotificationNames.RejectedSubmittedDocument, notificationData, userIds: new[] { argsUser });
+            await _notificationPublisher.PublishAsync(AppNotificationNames.RejectedSubmittedDocument, notificationData,
+                userIds: new[] { argsUser });
         }
 
         public async Task NotifyShipperWhenTripUpdated(NotifyTripUpdatedInput input)
@@ -474,14 +503,15 @@ namespace TACHYON.Notifications
 
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(
-                L("ShipperTripUpdatedNotificationMessage",
-                    input.WaybillNumber),
-                TACHYONConsts.LocalizationSourceName))
+                    L("ShipperTripUpdatedNotificationMessage",
+                        input.WaybillNumber),
+                    TACHYONConsts.LocalizationSourceName))
             {
                 Properties = new Dictionary<string, object>() { { "updatedTripId", input.TripId } }
             };
 
-            await _notificationPublisher.PublishAsync(AppNotificationNames.NotifyShipperWhenTripUpdated, notificationData, userIds: new[] { tenantAdmin });
+            await _notificationPublisher.PublishAsync(AppNotificationNames.NotifyShipperWhenTripUpdated,
+                notificationData, userIds: new[] { tenantAdmin });
         }
 
         public async Task NotifyCarrierWhenTripUpdated(NotifyTripUpdatedInput input)
@@ -491,33 +521,35 @@ namespace TACHYON.Notifications
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(
                     L("CarrierTripUpdatedNotificationMessage",
-            input.WaybillNumber),
+                        input.WaybillNumber),
                     TACHYONConsts.LocalizationSourceName))
             {
                 Properties = new Dictionary<string, object>() { { "id", input.TripId } }
             };
 
-            var notifiedUsers = new List<UserIdentifier>(){tenantAdmin};
+            var notifiedUsers = new List<UserIdentifier>() { tenantAdmin };
             if (input.DriverIdentifier != null)
             {
                 await _firebaseNotifier.PushNotification(AppNotificationNames.NotifyCarrierWhenTripUpdated,
                     notificationData, input.DriverIdentifier.UserId);
                 notifiedUsers.Add(input.DriverIdentifier);
             }
-            
-            await _notificationPublisher.PublishAsync(AppNotificationNames.NotifyCarrierWhenTripUpdated, notificationData, userIds: notifiedUsers.ToArray());
+
+            await _notificationPublisher.PublishAsync(AppNotificationNames.NotifyCarrierWhenTripUpdated,
+                notificationData, userIds: notifiedUsers.ToArray());
         }
 
-        public async Task NotifyDriverOnlyWhenTripUpdated(int tripId, string waybillNumber, params UserIdentifier[] drivers)
+        public async Task NotifyDriverOnlyWhenTripUpdated(int tripId,
+            string waybillNumber,
+            params UserIdentifier[] drivers)
         {
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(
                     L("CarrierTripUpdatedNotificationMessage", waybillNumber),
-                    TACHYONConsts.LocalizationSourceName))
-            {[ "id"] = tripId};
+                    TACHYONConsts.LocalizationSourceName)) { ["id"] = tripId };
             await _firebaseNotifier.PushNotification(AppNotificationNames.NotifyCarrierWhenTripUpdated,
-                notificationData, drivers.Select(x=> x.UserId).ToArray());
-            
+                notificationData, drivers.Select(x => x.UserId).ToArray());
+
             await _notificationPublisher.PublishAsync(AppNotificationNames.NotifyCarrierWhenTripUpdated,
                 notificationData, userIds: drivers);
         }
@@ -535,7 +567,8 @@ namespace TACHYON.Notifications
                 Properties = new Dictionary<string, object>() { { "updatedTripId", input.TripId } }
             };
 
-            await _notificationPublisher.PublishAsync(AppNotificationNames.NotifyTachyonDealWhenTripUpdated, notificationData, userIds: new[] { tenantAdmin });
+            await _notificationPublisher.PublishAsync(AppNotificationNames.NotifyTachyonDealWhenTripUpdated,
+                notificationData, userIds: new[] { tenantAdmin });
         }
 
         public async Task NotifyAllWhenTripUpdated(NotifyTripUpdatedInput input)
@@ -544,7 +577,6 @@ namespace TACHYON.Notifications
             await NotifyCarrierWhenTripUpdated(input);
             await NotifyTachyonDealWhenTripUpdated(input);
         }
-
 
 
         public async Task NotifyTripUpdated(ShippingRequestTrip trip)
@@ -557,9 +589,7 @@ namespace TACHYON.Notifications
 
             var input = new NotifyTripUpdatedInput()
             {
-                ShipperTenantId = shipperTenantId,
-                TripId = trip.Id,
-                WaybillNumber = waybillNo.ToString()
+                ShipperTenantId = shipperTenantId, TripId = trip.Id, WaybillNumber = waybillNo.ToString()
             };
 
             #endregion
@@ -577,11 +607,11 @@ namespace TACHYON.Notifications
 
                 await NotifyAllWhenTripUpdated(input);
                 // await _firebaseNotifier.TripUpdated(input);
-
             }
         }
 
         #region Invoices
+
         public async Task NewInvoiceShipperGenerated(Invoice invoice)
         {
             var notificationData = new LocalizableMessageNotificationData(
@@ -594,7 +624,6 @@ namespace TACHYON.Notifications
 
             await _notificationPublisher.PublishAsync(AppNotificationNames.InvoiceShipperGenerated, notificationData,
                 userIds: new[] { await GetAdminUser(invoice.TenantId) });
-
         }
 
         public async Task NewBalanceAddedToShippper(int ShipperTenantId, decimal Amount)
@@ -603,11 +632,12 @@ namespace TACHYON.Notifications
 
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(
-                L("NewBalanceAddedToShippper",
-                    Amount),
-                TACHYONConsts.LocalizationSourceName));
+                    L("NewBalanceAddedToShippper",
+                        Amount),
+                    TACHYONConsts.LocalizationSourceName));
 
-            await _notificationPublisher.PublishAsync(AppNotificationNames.NewBalanceAddedToShippper, notificationData, userIds: new[] { tenantAdmin });
+            await _notificationPublisher.PublishAsync(AppNotificationNames.NewBalanceAddedToShippper, notificationData,
+                userIds: new[] { tenantAdmin });
         }
 
 
@@ -620,7 +650,8 @@ namespace TACHYON.Notifications
                 )
             );
             notificationData["id"] = submitInvoice.Id;
-            UserIdentifier user = new UserIdentifier(submitInvoice.TenantId, _userManager.GetAdminByTenantIdAsync(submitInvoice.TenantId).Id);
+            UserIdentifier user = new UserIdentifier(submitInvoice.TenantId,
+                _userManager.GetAdminByTenantIdAsync(submitInvoice.TenantId).Id);
 
             await _notificationPublisher.PublishAsync(AppNotificationNames.SubmitInvoiceGenerated, notificationData,
                 userIds: new[] { user });
@@ -636,7 +667,8 @@ namespace TACHYON.Notifications
             );
             notificationData["id"] = submitInvoice.Id;
 
-            await _notificationPublisher.PublishAsync(AppNotificationNames.SubmitInvoiceOnClaim, notificationData, userIds: new[] { User });
+            await _notificationPublisher.PublishAsync(AppNotificationNames.SubmitInvoiceOnClaim, notificationData,
+                userIds: new[] { User });
         }
 
         public async Task SubmitInvoiceOnAccepted(UserIdentifier User, SubmitInvoice submitInvoice)
@@ -649,8 +681,10 @@ namespace TACHYON.Notifications
             );
             notificationData["id"] = submitInvoice.Id;
 
-            await _notificationPublisher.PublishAsync(AppNotificationNames.SubmitInvoiceOnAccepted, notificationData, userIds: new[] { User });
+            await _notificationPublisher.PublishAsync(AppNotificationNames.SubmitInvoiceOnAccepted, notificationData,
+                userIds: new[] { User });
         }
+
         public async Task SubmitInvoiceOnRejected(UserIdentifier User, SubmitInvoice submitInvoice)
         {
             var notificationData = new LocalizableMessageNotificationData(
@@ -661,8 +695,10 @@ namespace TACHYON.Notifications
             );
             notificationData["id"] = submitInvoice.Id;
             notificationData["reason"] = submitInvoice.RejectedReason;
-            await _notificationPublisher.PublishAsync(AppNotificationNames.SubmitInvoiceOnRejected, notificationData, userIds: new[] { User });
+            await _notificationPublisher.PublishAsync(AppNotificationNames.SubmitInvoiceOnRejected, notificationData,
+                userIds: new[] { User });
         }
+
         public async Task ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage(int? TenantId, int Percentage)
         {
             var notificationData = new LocalizableMessageNotificationData(
@@ -674,19 +710,23 @@ namespace TACHYON.Notifications
             notificationData["Percentage"] = Percentage;
             UserIdentifier user = new UserIdentifier(TenantId, _userManager.GetAdminByTenantIdAsync(TenantId.Value).Id);
 
-            await _notificationPublisher.PublishAsync(AppNotificationNames.ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage, notificationData, userIds: new[] { user });
+            await _notificationPublisher.PublishAsync(
+                AppNotificationNames.ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage, notificationData,
+                userIds: new[] { user });
         }
+
         #endregion
 
         #region Trips
-        public async Task NotifyDriverWhenAssignTrip(int tripId,params UserIdentifier[] drivers)
+
+        public async Task NotifyDriverWhenAssignTrip(int tripId, params UserIdentifier[] drivers)
         {
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(
                     L("NotifyDriverWhenAssignToTrip"),
                     TACHYONConsts.LocalizationSourceName
                 )
-            ) {["id"] = tripId};
+            ) { ["id"] = tripId };
 
             await _firebaseNotifier.PushNotification(AppNotificationNames.NotifyDriverWhenAssignTrip,
                 notificationData, drivers.Select(x => x.UserId).ToArray());
@@ -694,16 +734,21 @@ namespace TACHYON.Notifications
                 userIds: drivers);
         }
 
-        public async Task NotifyDriverWhenUnassignedTrip(int tripId,string waybillNumber,params UserIdentifier[] drivers)
+        public async Task NotifyDriverWhenUnassignedTrip(int tripId,
+            string waybillNumber,
+            params UserIdentifier[] drivers)
         {
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(
                     L("NotifyDriverWhenUnassignedToTrip", waybillNumber), TACHYONConsts.LocalizationSourceName))
-            {["id"] = tripId};
+            {
+                ["id"] = tripId
+            };
 
             await _firebaseNotifier.PushNotification(AppNotificationNames.NotifyDriverWhenUnassignedTrip,
                 notificationData, drivers.Select(x => x.UserId).ToArray());
-            await _notificationPublisher.PublishAsync(AppNotificationNames.NotifyDriverWhenUnassignedTrip, notificationData, userIds: drivers);
+            await _notificationPublisher.PublishAsync(AppNotificationNames.NotifyDriverWhenUnassignedTrip,
+                notificationData, userIds: drivers);
         }
 
 
@@ -721,7 +766,8 @@ namespace TACHYON.Notifications
             notificationData["source"] = Trip.OriginFacilityFk.Address;
             notificationData["destination"] = Trip.DestinationFacilityFk.Address;
 
-            await _notificationPublisher.PublishAsync(AppNotificationNames.DriverRejectTrip, notificationData, userIds: new[] { await GetAdminUser(Trip.ShippingRequestFk.CarrierTenantId) });
+            await _notificationPublisher.PublishAsync(AppNotificationNames.DriverRejectTrip, notificationData,
+                userIds: new[] { await GetAdminUser(Trip.ShippingRequestFk.CarrierTenantId) });
         }
 
         public async Task DriverAcceptTrip(ShippingRequestTrip Trip, string driver)
@@ -737,8 +783,10 @@ namespace TACHYON.Notifications
             notificationData["driver"] = driver;
             notificationData["source"] = Trip.OriginFacilityFk.Address;
             notificationData["destination"] = Trip.DestinationFacilityFk.Address;
-            await _notificationPublisher.PublishAsync(AppNotificationNames.DriverAcceptTrip, notificationData, userIds: new[] { await GetAdminUser(Trip.ShippingRequestFk.CarrierTenantId) });
+            await _notificationPublisher.PublishAsync(AppNotificationNames.DriverAcceptTrip, notificationData,
+                userIds: new[] { await GetAdminUser(Trip.ShippingRequestFk.CarrierTenantId) });
         }
+
         public async Task CarrierTripNeedAccept(ShippingRequestTrip Trip)
         {
             var notificationData = new LocalizableMessageNotificationData(
@@ -752,8 +800,10 @@ namespace TACHYON.Notifications
             notificationData["driver"] = Trip.AssignedDriverUserFk.FullName;
             //notificationData["source"] = Trip.OriginFacilityFk.Address;
             // notificationData["destination"] = Trip.DestinationFacilityFk.Address;
-            await _notificationPublisher.PublishAsync(AppNotificationNames.CarrierTripNeedAccept, notificationData, userIds: new[] { await GetAdminUser(Trip.AssignedDriverUserFk.TenantId) });
+            await _notificationPublisher.PublishAsync(AppNotificationNames.CarrierTripNeedAccept, notificationData,
+                userIds: new[] { await GetAdminUser(Trip.AssignedDriverUserFk.TenantId) });
         }
+
         public async Task TMSTripNeedAccept(ShippingRequestTrip Trip)
         {
             var notificationData = new LocalizableMessageNotificationData(
@@ -769,8 +819,10 @@ namespace TACHYON.Notifications
             // notificationData["source"] = Trip.OriginFacilityFk.Address;
             //notificationData["destination"] = Trip.DestinationFacilityFk.Address;
             var tmsUser = await _userManager.GetAdminTachyonDealerAsync();
-            await _notificationPublisher.PublishAsync(AppNotificationNames.TMSTripNeedAccept, notificationData, userIds: new[] { new UserIdentifier(tmsUser.TenantId, tmsUser.Id) });
+            await _notificationPublisher.PublishAsync(AppNotificationNames.TMSTripNeedAccept, notificationData,
+                userIds: new[] { new UserIdentifier(tmsUser.TenantId, tmsUser.Id) });
         }
+
         // We Need to remove it .. duplicated with NotifyTripUpdated()
         public async Task NotificationWhenTripDetailsChanged(ShippingRequestTrip trip, User currentuser)
         {
@@ -787,9 +839,12 @@ namespace TACHYON.Notifications
 
             if (trip.ShippingRequestFk.CreatorUserId != currentuser.Id)
             {
-                users.Add(new UserIdentifier(trip.ShippingRequestFk.TenantId, trip.ShippingRequestFk.CreatorUserId.Value));
+                users.Add(new UserIdentifier(trip.ShippingRequestFk.TenantId,
+                    trip.ShippingRequestFk.CreatorUserId.Value));
             }
-            if (trip.ShippingRequestFk.CarrierTenantId.HasValue && trip.ShippingRequestFk.CarrierTenantId != currentuser.TenantId)
+
+            if (trip.ShippingRequestFk.CarrierTenantId.HasValue &&
+                trip.ShippingRequestFk.CarrierTenantId != currentuser.TenantId)
             {
                 var carrier = await _userManager.GetAdminByTenantIdAsync(trip.ShippingRequestFk.CarrierTenantId.Value);
                 users.Add(new UserIdentifier(carrier.TenantId, carrier.Id));
@@ -801,14 +856,17 @@ namespace TACHYON.Notifications
                     users.Add(new UserIdentifier(tms.TenantId.Value, tms.Id));
             }
 
-            await _notificationPublisher.PublishAsync(AppNotificationNames.NotificationWhenTripDetailsChanged, notificationData, userIds: users.ToArray());
+            await _notificationPublisher.PublishAsync(AppNotificationNames.NotificationWhenTripDetailsChanged,
+                notificationData, userIds: users.ToArray());
         }
 
-        public async Task NotifyCarrierWhenTripHasAttachment(int tripId, int? carrierTenantId, bool hasAttachment)
+        public async Task NotifyCarrierWhenTripHasAttachment(int tripId,
+            int? carrierTenantId,
+            bool hasAttachment)
         {
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(
-                   hasAttachment ? L("TripHasAttachment") : L("TripAttachmentRemoved"),
+                    hasAttachment ? L("TripHasAttachment") : L("TripAttachmentRemoved"),
                     TACHYONConsts.LocalizationSourceName
                 )
             );
@@ -817,7 +875,8 @@ namespace TACHYON.Notifications
             if (carrierTenantId != null)
             {
                 var user = await _userManager.GetAdminByTenantIdAsync(carrierTenantId.Value);
-                await _notificationPublisher.PublishAsync(AppNotificationNames.TripHasAttachment, notificationData, userIds: new[] { new UserIdentifier(carrierTenantId, user.Id) });
+                await _notificationPublisher.PublishAsync(AppNotificationNames.TripHasAttachment, notificationData,
+                    userIds: new[] { new UserIdentifier(carrierTenantId, user.Id) });
             }
         }
 
@@ -834,14 +893,15 @@ namespace TACHYON.Notifications
             if (carrierTenantId != null)
             {
                 var user = await _userManager.GetAdminByTenantIdAsync(carrierTenantId.Value);
-                await _notificationPublisher.PublishAsync(AppNotificationNames.TripNeedsDeliveryNote, notificationData, userIds: new[] { new UserIdentifier(carrierTenantId, user.Id) });
+                await _notificationPublisher.PublishAsync(AppNotificationNames.TripNeedsDeliveryNote, notificationData,
+                    userIds: new[] { new UserIdentifier(carrierTenantId, user.Id) });
             }
         }
 
-
-
         #endregion
+
         #region Accident
+
         public async Task ShippingRequestAccidentsOccure(List<UserIdentifier> Users, Dictionary<string, object> data)
         {
             var notificationData = new LocalizableMessageNotificationData(
@@ -855,10 +915,13 @@ namespace TACHYON.Notifications
                 notificationData[d.Key] = d.Value;
             }
 
-            await _notificationPublisher.PublishAsync(AppNotificationNames.ShippingRequestAccidents, notificationData, userIds: Users.ToArray());
+            await _notificationPublisher.PublishAsync(AppNotificationNames.ShippingRequestAccidents, notificationData,
+                userIds: Users.ToArray());
         }
 
-        public async Task ShippingRequestTripCancelByAccident(List<UserIdentifier> Users, ShippingRequestTrip trip, User UserCancel)
+        public async Task ShippingRequestTripCancelByAccident(List<UserIdentifier> Users,
+            ShippingRequestTrip trip,
+            User UserCancel)
         {
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(
@@ -868,11 +931,14 @@ namespace TACHYON.Notifications
             );
             notificationData["id"] = trip.Id;
 
-            await _notificationPublisher.PublishAsync(AppNotificationNames.ShippingRequestCancelByTripAccidents, notificationData, userIds: Users.ToArray());
+            await _notificationPublisher.PublishAsync(AppNotificationNames.ShippingRequestCancelByTripAccidents,
+                notificationData, userIds: Users.ToArray());
         }
+
         #endregion
 
         #region TachyonDeal
+
         public async Task SendDriectRequestForCarrier(int? TenantId, ShippingRequest Request)
         {
             var notificationData = new LocalizableMessageNotificationData(
@@ -883,8 +949,10 @@ namespace TACHYON.Notifications
             );
             notificationData["id"] = Request.Id;
 
-            await _notificationPublisher.PublishAsync(AppNotificationNames.SendDriectRequestForCarrier, notificationData, tenantIds: new[] { TenantId });
+            await _notificationPublisher.PublishAsync(AppNotificationNames.SendDriectRequestForCarrier,
+                notificationData, tenantIds: new[] { TenantId });
         }
+
         public async Task DriectRequestCarrierRespone(ShippingRequestsCarrierDirectPricing Pricing)
         {
             var notificationData = new LocalizableMessageNotificationData(
@@ -896,7 +964,8 @@ namespace TACHYON.Notifications
             notificationData["id"] = Pricing.RequestId;
             notificationData["clientname"] = Pricing.Carrier.companyName;
             var user = new UserIdentifier(Pricing.TenantId, Pricing.CreatorUserId.Value);
-            await _notificationPublisher.PublishAsync(AppNotificationNames.DriectRequestCarrierRespone, notificationData, userIds: new[] { user });
+            await _notificationPublisher.PublishAsync(AppNotificationNames.DriectRequestCarrierRespone,
+                notificationData, userIds: new[] { user });
         }
 
         public async Task TachyonDealerOfferCreated(TachyonPriceOffer offer, ShippingRequest request)
@@ -911,9 +980,10 @@ namespace TACHYON.Notifications
             notificationData["offerid"] = offer.Id;
             var user = new UserIdentifier(request.TenantId, request.CreatorUserId.Value);
 
-            await _notificationPublisher.PublishAsync(AppNotificationNames.TachyonDealOfferCreated, notificationData, userIds: new[] { user });
-
+            await _notificationPublisher.PublishAsync(AppNotificationNames.TachyonDealOfferCreated, notificationData,
+                userIds: new[] { user });
         }
+
         public async Task TachyonDealOfferRejectedByShipper(TachyonPriceOffer offer)
         {
             var notificationData = new LocalizableMessageNotificationData(
@@ -927,7 +997,8 @@ namespace TACHYON.Notifications
 
             var user = new UserIdentifier(offer.TenantId, offer.CreatorUserId.Value);
 
-            await _notificationPublisher.PublishAsync(AppNotificationNames.TachyonDealOfferRejectedByShipper, notificationData, userIds: new[] { user });
+            await _notificationPublisher.PublishAsync(AppNotificationNames.TachyonDealOfferRejectedByShipper,
+                notificationData, userIds: new[] { user });
         }
 
         public async Task TachyonDealOfferAccepByShipper(TachyonPriceOffer offer)
@@ -942,13 +1013,16 @@ namespace TACHYON.Notifications
             notificationData["clientname"] = offer.ShippingRequestFk.Tenant.companyName;
             var user = new UserIdentifier(offer.TenantId, offer.CreatorUserId.Value);
 
-            await _notificationPublisher.PublishAsync(AppNotificationNames.TachyonDealOfferAcceptedByShipper, notificationData, userIds: new[] { user });
+            await _notificationPublisher.PublishAsync(AppNotificationNames.TachyonDealOfferAcceptedByShipper,
+                notificationData, userIds: new[] { user });
         }
 
         #endregion
 
         #region ShippingRequest
+
         #region Offers
+
         public async Task ShippingRequestSendOfferWhenAddPrice(PriceOffer offer, string carrier)
         {
             var notificationData = new LocalizableMessageNotificationData(
@@ -964,14 +1038,17 @@ namespace TACHYON.Notifications
             List<UserIdentifier> users = new List<UserIdentifier>();
             if (!offer.ShippingRequestFk.IsTachyonDeal)
             {
-                users.Add(new UserIdentifier(offer.ShippingRequestFk.TenantId, offer.ShippingRequestFk.CreatorUserId.Value));
+                users.Add(new UserIdentifier(offer.ShippingRequestFk.TenantId,
+                    offer.ShippingRequestFk.CreatorUserId.Value));
             }
             else
             {
                 var user = await _userManager.GetAdminTachyonDealerAsync();
                 users.Add(new UserIdentifier(user.TenantId.Value, user.Id));
             }
-            await _notificationPublisher.PublishAsync(AppNotificationNames.ShippingRequestSendOfferWhenAddPrice, notificationData, userIds: users.ToArray());
+
+            await _notificationPublisher.PublishAsync(AppNotificationNames.ShippingRequestSendOfferWhenAddPrice,
+                notificationData, userIds: users.ToArray());
         }
 
 
@@ -989,35 +1066,39 @@ namespace TACHYON.Notifications
             List<UserIdentifier> users = new List<UserIdentifier>();
             if (!offer.ShippingRequestFk.IsTachyonDeal)
             {
-                users.Add(new UserIdentifier(offer.ShippingRequestFk.TenantId, offer.ShippingRequestFk.CreatorUserId.Value));
+                users.Add(new UserIdentifier(offer.ShippingRequestFk.TenantId,
+                    offer.ShippingRequestFk.CreatorUserId.Value));
             }
             else
             {
                 var user = await _userManager.GetAdminTachyonDealerAsync();
                 users.Add(new UserIdentifier(user.TenantId.Value, user.Id));
             }
-            await _notificationPublisher.PublishAsync(AppNotificationNames.ShippingRequestSendOfferWhenUpdatePrice, notificationData, userIds: users.ToArray());
+
+            await _notificationPublisher.PublishAsync(AppNotificationNames.ShippingRequestSendOfferWhenUpdatePrice,
+                notificationData, userIds: users.ToArray());
         }
 
         public async Task ShipperAcceptedOffer(PriceOffer offer)
         {
             var notificationData = new LocalizableMessageNotificationData(
-                                    new LocalizableString(L("ShipperAcceptedOffers"),
-                                    TACHYONConsts.LocalizationSourceName));
+                new LocalizableString(L("ShipperAcceptedOffers"),
+                    TACHYONConsts.LocalizationSourceName));
             notificationData["offerid"] = offer.Id;
             notificationData["id"] = offer.ShippingRequestId;
             notificationData["shipper"] = offer.ShippingRequestFk.Tenant.Name;
             List<UserIdentifier> users = new List<UserIdentifier>();
             users.Add(new UserIdentifier(offer.TenantId, offer.CreatorUserId.Value));
 
-            await _notificationPublisher.PublishAsync(AppNotificationNames.ShipperAcceptedOffer, notificationData, userIds: users.ToArray());
-
+            await _notificationPublisher.PublishAsync(AppNotificationNames.ShipperAcceptedOffer, notificationData,
+                userIds: users.ToArray());
         }
+
         public async Task TMSAcceptedOffer(PriceOffer offer)
         {
             var notificationData = new LocalizableMessageNotificationData(
-                                    new LocalizableString(L("TMSAcceptedOffer"),
-                                    TACHYONConsts.LocalizationSourceName));
+                new LocalizableString(L("TMSAcceptedOffer"),
+                    TACHYONConsts.LocalizationSourceName));
             notificationData["offerid"] = offer.Id;
             notificationData["id"] = offer.ShippingRequestId;
             notificationData["name"] = L("TachyonManageService");
@@ -1025,11 +1106,13 @@ namespace TACHYON.Notifications
             users.Add(new UserIdentifier(offer.TenantId, offer.CreatorUserId.Value));
 
 
-            await _notificationPublisher.PublishAsync(AppNotificationNames.TMSAcceptedOffer, notificationData, userIds: users.ToArray());
-
+            await _notificationPublisher.PublishAsync(AppNotificationNames.TMSAcceptedOffer, notificationData,
+                userIds: users.ToArray());
         }
 
-        public async Task SendDriectRequest(string FromTenant, int? ToTenant, long id)
+        public async Task SendDriectRequest(string FromTenant,
+            int? ToTenant,
+            long id)
         {
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(
@@ -1039,9 +1122,13 @@ namespace TACHYON.Notifications
             );
             notificationData["id"] = id;
             notificationData["client"] = FromTenant;
-            await _notificationPublisher.PublishAsync(AppNotificationNames.SendDriectRequest, notificationData, userIds: new[] { await GetAdminUser(ToTenant) });
+            await _notificationPublisher.PublishAsync(AppNotificationNames.SendDriectRequest, notificationData,
+                userIds: new[] { await GetAdminUser(ToTenant) });
         }
-        public async Task DeclineDriectRequest(string FromTenant, int? ToTenant, long id)
+
+        public async Task DeclineDriectRequest(string FromTenant,
+            int? ToTenant,
+            long id)
         {
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(
@@ -1051,9 +1138,14 @@ namespace TACHYON.Notifications
             );
             notificationData["id"] = id;
             notificationData["client"] = FromTenant;
-            await _notificationPublisher.PublishAsync(AppNotificationNames.DeclineDriectRequest, notificationData, userIds: new[] { await GetAdminUser(ToTenant) });
+            await _notificationPublisher.PublishAsync(AppNotificationNames.DeclineDriectRequest, notificationData,
+                userIds: new[] { await GetAdminUser(ToTenant) });
         }
-        public async Task CancelShipment(long id, string reason, string cancelBy, UserIdentifier toUser)
+
+        public async Task CancelShipment(long id,
+            string reason,
+            string cancelBy,
+            UserIdentifier toUser)
         {
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(
@@ -1063,14 +1155,15 @@ namespace TACHYON.Notifications
             );
             notificationData["id"] = id;
             notificationData["cancelby"] = cancelBy;
-            await _notificationPublisher.PublishAsync(AppNotificationNames.CancelShipment, notificationData, userIds: new[] { toUser });
+            await _notificationPublisher.PublishAsync(AppNotificationNames.CancelShipment, notificationData,
+                userIds: new[] { toUser });
         }
 
         public async Task RejectedOffer(PriceOffer offer, string RejectedBy)
         {
             var notificationData = new LocalizableMessageNotificationData(
-                                    new LocalizableString(L("RejectedOffer"),
-                                    TACHYONConsts.LocalizationSourceName));
+                new LocalizableString(L("RejectedOffer"),
+                    TACHYONConsts.LocalizationSourceName));
             notificationData["id"] = offer.Id;
             //notificationData["id"] = offer.ShippingRequestId;
             notificationData["reason"] = offer.RejectedReason;
@@ -1078,24 +1171,29 @@ namespace TACHYON.Notifications
             List<UserIdentifier> users = new List<UserIdentifier>();
             users.Add(new UserIdentifier(offer.TenantId, offer.CreatorUserId.Value));
 
-            await _notificationPublisher.PublishAsync(AppNotificationNames.RejectedOffer, notificationData, userIds: users.ToArray());
+            await _notificationPublisher.PublishAsync(AppNotificationNames.RejectedOffer, notificationData,
+                userIds: users.ToArray());
         }
+
         public async Task PendingOffer(PriceOffer offer)
         {
             var notificationData = new LocalizableMessageNotificationData(
-                                    new LocalizableString(L("PendingOffer"),
-                                    TACHYONConsts.LocalizationSourceName));
+                new LocalizableString(L("PendingOffer"),
+                    TACHYONConsts.LocalizationSourceName));
             notificationData["id"] = offer.Id;
             List<UserIdentifier> users = new List<UserIdentifier>();
             users.Add(new UserIdentifier(offer.TenantId, offer.CreatorUserId.Value));
             //L("TachyonManageService")
-            await _notificationPublisher.PublishAsync(AppNotificationNames.PendingOffer, notificationData, userIds: users.ToArray());
+            await _notificationPublisher.PublishAsync(AppNotificationNames.PendingOffer, notificationData,
+                userIds: users.ToArray());
         }
 
         #endregion
+
         #endregion
 
         #region Shipping Request
+
         public async Task ShippingRequestNotifyCarrirerWhenShipperAccepted(ShippingRequest shippingRequest)
         {
             var notificationData = new LocalizableMessageNotificationData(
@@ -1107,8 +1205,11 @@ namespace TACHYON.Notifications
             notificationData["id"] = shippingRequest.Id;
             notificationData["clientname"] = shippingRequest.Tenant.companyName;
 
-            await _notificationPublisher.PublishAsync(AppNotificationNames.ShippingRequestNotifyCarrirerWhenShipperAccepted, notificationData, userIds: new[] { await GetAdminUser(shippingRequest.CarrierTenantId) });
+            await _notificationPublisher.PublishAsync(
+                AppNotificationNames.ShippingRequestNotifyCarrirerWhenShipperAccepted, notificationData,
+                userIds: new[] { await GetAdminUser(shippingRequest.CarrierTenantId) });
         }
+
         public async Task ShipperReminderToCompleteTrips(long shippingRequestId, UserIdentifier userId)
         {
             var notificationData = new LocalizableMessageNotificationData(
@@ -1116,15 +1217,20 @@ namespace TACHYON.Notifications
                     L("ShipperReminderToCompleteTrips"),
                     TACHYONConsts.LocalizationSourceName
                 )
-            ) {["id"] = shippingRequestId};
+            ) { ["id"] = shippingRequestId };
 
-            await _firebaseNotifier.PushNotification(AppNotificationNames.ShipperReminderToCompleteTrips, notificationData, userId.UserId);
-            await _notificationPublisher.PublishAsync(AppNotificationNames.ShipperReminderToCompleteTrips, notificationData, userIds: new []{userId});
+            await _firebaseNotifier.PushNotification(AppNotificationNames.ShipperReminderToCompleteTrips,
+                notificationData, userId.UserId);
+            await _notificationPublisher.PublishAsync(AppNotificationNames.ShipperReminderToCompleteTrips,
+                notificationData, userIds: new[] { userId });
         }
+
         #endregion
+
         #endregion
 
         #region Helper
+
         private async Task<UserIdentifier> GetAdminUser(int? TenantId)
         {
             var user = await _userManager.GetAdminByTenantIdAsync(TenantId.Value);
@@ -1136,11 +1242,10 @@ namespace TACHYON.Notifications
         [UnitOfWork]
         protected virtual async Task<UserIdentifier> GetTenantAdminUser(int tenantId)
         {
-
             DisableTenancyFilters();
 
             var user = await _userRepo.FirstOrDefaultAsync(x =>
-                        x.TenantId == tenantId && x.UserName.Equals(AbpUserBase.AdminUserName));
+                x.TenantId == tenantId && x.UserName.Equals(AbpUserBase.AdminUserName));
 
             return new UserIdentifier(tenantId, user.Id);
         }

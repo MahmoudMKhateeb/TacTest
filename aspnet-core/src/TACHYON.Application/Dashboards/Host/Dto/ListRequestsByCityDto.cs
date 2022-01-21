@@ -14,5 +14,4 @@ namespace TACHYON.Dashboards.Host.Dto
         public int minimumValueOfRequests { get; set; }
         public int maximumValueOfRequests { get; set; }
     }
-
 }

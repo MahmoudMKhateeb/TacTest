@@ -23,7 +23,10 @@ namespace TACHYON.DataExporting
             _tempFileCacheManager.SetFile(file.FileToken, bytes);
         }
 
-        public FileDto CreateRdlcPdfPackageFromList(string fileName, string reportPath, ArrayList dsNameArray, ArrayList DTArray)
+        public FileDto CreateRdlcPdfPackageFromList(string fileName,
+            string reportPath,
+            ArrayList dsNameArray,
+            ArrayList DTArray)
         {
             byte[] pdf = GetRdlcPdfPackageAsBinaryData(reportPath, dsNameArray, DTArray);
             var file = new FileDto(fileName, MimeTypeNames.ApplicationPdf);
@@ -31,7 +34,9 @@ namespace TACHYON.DataExporting
             return file;
         }
 
-        public byte[] GetRdlcPdfPackageAsBinaryData(string reportPath, ArrayList dsNameArray, ArrayList DTArray)
+        public byte[] GetRdlcPdfPackageAsBinaryData(string reportPath,
+            ArrayList dsNameArray,
+            ArrayList DTArray)
         {
             reportPath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + reportPath;
             LocalReport report = new LocalReport();
@@ -41,7 +46,6 @@ namespace TACHYON.DataExporting
                 report.DataSources.Add(new ReportDataSource((string)dsNameArray[i], (IEnumerable)DTArray[i]));
 
             return report.Render("PDF");
-
         }
     }
 }

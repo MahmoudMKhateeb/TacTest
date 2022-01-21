@@ -18,6 +18,5 @@ namespace TACHYON.Trucks.PlateTypes
         Task CreateOrEdit(CreateOrEditPlateTypeDto input);
 
         Task Delete(EntityDto input);
-
     }
 }

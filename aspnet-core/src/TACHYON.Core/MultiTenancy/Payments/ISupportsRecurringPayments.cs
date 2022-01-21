@@ -7,6 +7,5 @@ namespace TACHYON.MultiTenancy.Payments
         IEventHandler<RecurringPaymentsEnabledEventData>,
         IEventHandler<TenantEditionChangedEventData>
     {
-
     }
 }

@@ -23,7 +23,7 @@ namespace TACHYON.Tests.Authorization.Users
 
             //Act
             var output = await UserAppService.GetUserPermissionsForEdit(new EntityDto<long>(admin.Id));
-            
+
             //Assert
             output.GrantedPermissionNames.ShouldNotBe(null);
             output.Permissions.ShouldNotBe(null);
@@ -38,13 +38,12 @@ namespace TACHYON.Tests.Authorization.Users
                 .GetAllPermissions()
                 .Where(p => p.MultiTenancySides.HasFlag(AbpSession.MultiTenancySide))
                 .ToList();
-            
+
             //Act
             await UserAppService.UpdateUserPermissions(
                 new UpdateUserPermissionsInput
                 {
-                    Id = admin.Id,
-                    GrantedPermissionNames = permissions.Select(p => p.Name).ToList()
+                    Id = admin.Id, GrantedPermissionNames = permissions.Select(p => p.Name).ToList()
                 });
 
             //Assert
@@ -74,7 +73,8 @@ namespace TACHYON.Tests.Authorization.Users
             await UserAppService.ResetUserSpecificPermissions(new EntityDto<long>(admin.Id));
 
             //Assert
-            (await UsingDbContextAsync(context => context.UserPermissions.CountAsync(p => p.UserId == admin.Id))).ShouldBe(0);
+            (await UsingDbContextAsync(context => context.UserPermissions.CountAsync(p => p.UserId == admin.Id)))
+                .ShouldBe(0);
         }
     }
 }

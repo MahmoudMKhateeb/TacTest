@@ -4,10 +4,10 @@ using System.Text;
 
 namespace TACHYON.Common
 {
-   public interface IHasDocument
+    public interface IHasDocument
     {
-         Guid? DocumentId { get; set; }
-         string DocumentName { get; set; }
-         string DocumentContentType { get; set; }
+        Guid? DocumentId { get; set; }
+        string DocumentName { get; set; }
+        string DocumentContentType { get; set; }
     }
 }

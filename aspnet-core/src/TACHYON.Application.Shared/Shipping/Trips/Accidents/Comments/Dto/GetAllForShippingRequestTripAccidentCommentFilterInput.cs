@@ -9,6 +9,5 @@ namespace TACHYON.Shipping.Trips.Accidents.Comments.Dto
     {
         public long AccidentId { get; set; }
         public string Sorting { get; set; }
-
     }
 }

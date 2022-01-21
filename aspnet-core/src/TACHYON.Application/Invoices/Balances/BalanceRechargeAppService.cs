@@ -34,7 +34,9 @@ namespace TACHYON.Invoices.Balances
             IRepository<BalanceRecharge> Repository,
             BalanceManager balanceManager,
             IBalanceRechargeExcelExporter BalanceRechargeExcelExporter,
-            TransactionManager transactionManager, IRepository<Tenant> tenantsRepository, IAppNotifier appNotifier)
+            TransactionManager transactionManager,
+            IRepository<Tenant> tenantsRepository,
+            IAppNotifier appNotifier)
         {
             _Repository = Repository;
             _balanceManager = balanceManager;
@@ -54,6 +56,7 @@ namespace TACHYON.Invoices.Balances
                 return await LoadResultAsync(query, input.LoadOptions);
             }
         }
+
         [AbpAuthorize(AppPermissions.Pages_Administration_Host_Invoices_Balances_Create)]
         public async Task Create(CreateBalanceRechargeInput input)
         {
@@ -93,7 +96,6 @@ namespace TACHYON.Invoices.Balances
                 var data = ObjectMapper.Map<List<BalanceRechargeListDto>>(query);
                 return Task.FromResult(_BalanceRechargeExcelExporter.ExportToFile(data));
             }
-
         }
 
         public async Task<decimal> GetTenantBalance()
@@ -107,6 +109,5 @@ namespace TACHYON.Invoices.Balances
 
             return await Task.FromResult(decimal.Zero);
         }
-
     }
 }

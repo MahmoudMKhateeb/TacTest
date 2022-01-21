@@ -22,11 +22,11 @@ using TACHYON.Web.Helpers;
 namespace TACHYON.Web.Controllers
 {
     [Authorize]
-  
     public class ProfileController : ProfileControllerBase
     {
         private readonly IBinaryObjectManager _binaryObjectManager;
         private readonly UserManager _userManager;
+
         public ProfileController(
             ITempFileCacheManager tempFileCacheManager,
             IProfileAppService profileAppService,
@@ -37,7 +37,6 @@ namespace TACHYON.Web.Controllers
             _binaryObjectManager = binaryObjectManager;
             _userManager = userManager;
         }
-
 
 
         [AbpMvcAuthorize()]
@@ -71,7 +70,8 @@ namespace TACHYON.Web.Controllers
 
                 if (profilePictureFile.Length > MaxProfilePictureSize)
                 {
-                    throw new UserFriendlyException(L("ProfilePicture_Warn_SizeLimit", AppConsts.MaxProfilPictureBytesUserFriendlyValue));
+                    throw new UserFriendlyException(L("ProfilePicture_Warn_SizeLimit",
+                        AppConsts.MaxProfilPictureBytesUserFriendlyValue));
                 }
 
                 var extarr = new string[] { ".jpeg", ".jpg", ".png" };
@@ -80,6 +80,7 @@ namespace TACHYON.Web.Controllers
                 {
                     throw new Exception(L("IncorrectImageFormat"));
                 }
+
                 byte[] fileBytes;
                 using (var stream = profilePictureFile.OpenReadStream())
                 {

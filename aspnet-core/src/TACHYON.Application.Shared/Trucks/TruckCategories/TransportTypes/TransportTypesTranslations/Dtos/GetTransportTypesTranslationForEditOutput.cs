@@ -9,6 +9,5 @@ namespace TACHYON.Trucks.TruckCategories.TransportTypes.TransportTypesTranslatio
         public CreateOrEditTransportTypesTranslationDto TransportTypesTranslation { get; set; }
 
         public string TransportTypeDisplayName { get; set; }
-
     }
 }

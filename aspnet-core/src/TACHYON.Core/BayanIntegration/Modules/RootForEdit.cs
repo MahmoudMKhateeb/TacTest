@@ -8,6 +8,7 @@ namespace TACHYON.BayanIntegration.Modules
         /// we send id "trip.bayanId" for edit 
         /// </summary>
         public string Id { get; set; }
+
         public Sender Sender { get; set; }
         public Recipient Recipient { get; set; }
         public PickUpLocation PickUpLocation { get; set; }
@@ -27,11 +28,14 @@ namespace TACHYON.BayanIntegration.Modules
         /// always will be False
         /// </summary>
         public bool Tradable { get; set; } = false;
+
         public string ExtraCharges { get; set; }
+
         /// <summary>
         /// Not Required
         /// </summary>
         public string PaymentMethod { get; set; }
+
         /// <summary>
         /// Not Required
         /// </summary>

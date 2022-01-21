@@ -271,7 +271,7 @@ namespace TACHYON.Localization
                 famfamFlagName.LastIndexOf(
                     " ",
                     StringComparison.OrdinalIgnoreCase) + 1
-                );
+            );
         }
     }
 }

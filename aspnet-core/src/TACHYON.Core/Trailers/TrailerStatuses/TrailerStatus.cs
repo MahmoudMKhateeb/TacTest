@@ -11,11 +11,9 @@ namespace TACHYON.Trailers.TrailerStatuses
     [Audited]
     public class TrailerStatus : FullAuditedEntity
     {
-
         [Required]
-        [StringLength(TrailerStatusConsts.MaxDisplayNameLength, MinimumLength = TrailerStatusConsts.MinDisplayNameLength)]
+        [StringLength(TrailerStatusConsts.MaxDisplayNameLength,
+            MinimumLength = TrailerStatusConsts.MinDisplayNameLength)]
         public virtual string DisplayName { get; set; }
-
-
     }
 }

@@ -27,6 +27,5 @@ namespace TACHYON.Trucks
         Task CreateOrEditTranslation(CreateOrEditTruckStatusesTranslationDto input);
 
         Task DeleteTranslation(EntityDto input);
-
     }
 }

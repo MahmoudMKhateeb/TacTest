@@ -9,14 +9,12 @@ namespace TACHYON
     {
         #region Tachyon consts
 
-
         /// <summary>
         /// for documentType Required from entity
         /// </summary>
         //public const string TruckDocumentsEntityName = "Truck";
         //public const string TenantDocumentsEntityName = "Tenant";
         //public const string DriverDocumentsEntityName = "Driver";
-
 
         #endregion
 
@@ -68,11 +66,10 @@ namespace TACHYON
 
         public const string TachyonDealEditionName = "TachyonDealer";
         public const string TMS = "TachyonManageService";
+
         public class Message
         {
             public const string NotFoundRecord = "TheRecordNotFound";
         }
-
-
     }
 }

@@ -6,10 +6,8 @@ namespace TACHYON.Trucks.TruckCategories.TruckCapacities.Dtos
 {
     public class GetCapacityForEditOutput
     {
-		public CreateOrEditCapacityDto Capacity { get; set; }
+        public CreateOrEditCapacityDto Capacity { get; set; }
 
-		public string TruckTypeDisplayName { get; set;}
-
-
+        public string TruckTypeDisplayName { get; set; }
     }
 }

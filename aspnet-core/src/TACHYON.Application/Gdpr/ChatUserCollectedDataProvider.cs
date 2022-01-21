@@ -52,7 +52,8 @@ namespace TACHYON.Gdpr
             using (_unitOfWorkManager.Current.SetTenantId(null))
             {
                 var tenantIds = conversations.Select(c => c.Key.TenantId);
-                relatedTenancyNames = _tenantRepository.GetAll().Where(t => tenantIds.Contains(t.Id)).ToDictionary(t => t.Id, t => t.TenancyName);
+                relatedTenancyNames = _tenantRepository.GetAll().Where(t => tenantIds.Contains(t.Id))
+                    .ToDictionary(t => t.Id, t => t.TenancyName);
                 relatedUsernames = GetFriendUsernames(conversations.Select(c => c.Key).ToList());
             }
 
@@ -66,7 +67,8 @@ namespace TACHYON.Gdpr
                         ? relatedTenancyNames[message.TargetTenantId.Value]
                         : ".";
 
-                    message.TargetUserName = relatedUsernames[new UserIdentifier(message.TargetTenantId, message.TargetUserId)];
+                    message.TargetUserName =
+                        relatedUsernames[new UserIdentifier(message.TargetTenantId, message.TargetUserId)];
                 }
 
                 var messages = conversation.Value.OrderBy(m => m.CreationTime).ToList();
@@ -89,16 +91,15 @@ namespace TACHYON.Gdpr
             {
                 var userList = _userAccountRepository.GetAllList(predicate).Select(ua => new
                 {
-                    ua.TenantId,
-                    ua.UserId,
-                    ua.UserName
+                    ua.TenantId, ua.UserId, ua.UserName
                 }).Distinct();
 
                 return userList.ToDictionary(ua => new UserIdentifier(ua.TenantId, ua.UserId), ua => ua.UserName);
             }
         }
 
-        private async Task<Dictionary<UserIdentifier, List<ChatMessageExportDto>>> GetUserChatMessages(int? tenantId, long userId)
+        private async Task<Dictionary<UserIdentifier, List<ChatMessageExportDto>>> GetUserChatMessages(int? tenantId,
+            long userId)
         {
             var conversations = (await _chatMessageRepository.GetAll()
                     .Where(message => message.UserId == userId && message.TenantId == tenantId)
@@ -112,7 +113,8 @@ namespace TACHYON.Gdpr
                     Messages = messageGrouped
                 }).ToList();
 
-            return conversations.ToDictionary(c => new UserIdentifier(c.TargetTenantId, c.TargetUserId), c => _objectMapper.Map<List<ChatMessageExportDto>>(c.Messages));
+            return conversations.ToDictionary(c => new UserIdentifier(c.TargetTenantId, c.TargetUserId),
+                c => _objectMapper.Map<List<ChatMessageExportDto>>(c.Messages));
         }
     }
 }

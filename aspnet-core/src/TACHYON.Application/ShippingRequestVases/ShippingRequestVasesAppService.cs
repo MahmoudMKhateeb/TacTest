@@ -23,23 +23,22 @@ namespace TACHYON.ShippingRequestVases
         private readonly IRepository<ShippingRequestVas, long> _shippingRequestVasRepository;
         private readonly IRepository<Vas, int> _lookup_vasRepository;
 
-        public ShippingRequestVasesAppService(IRepository<ShippingRequestVas, long> shippingRequestVasRepository, IRepository<Vas, int> lookup_vasRepository)
+        public ShippingRequestVasesAppService(IRepository<ShippingRequestVas, long> shippingRequestVasRepository,
+            IRepository<Vas, int> lookup_vasRepository)
         {
             _shippingRequestVasRepository = shippingRequestVasRepository;
             _lookup_vasRepository = lookup_vasRepository;
-
         } // TO DO ADD ALL MAPPING CONFIGURATION => done
 
         public async Task<PagedResultDto<ShippingRequestVasDto>> GetAll(GetAllShippingRequestVasesInput input)
         {
-
             var shippingRequestVases = _shippingRequestVasRepository.GetAll()
-                        .AsNoTracking().Include(e => e.VasFk)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter),
-                            e => false)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.VasNameFilter),
-                            e => e.VasFk != null && e.VasFk.Name == input.VasNameFilter)
-                        .OrderBy(input.Sorting ?? "id asc");
+                .AsNoTracking().Include(e => e.VasFk)
+                .WhereIf(!string.IsNullOrWhiteSpace(input.Filter),
+                    e => false)
+                .WhereIf(!string.IsNullOrWhiteSpace(input.VasNameFilter),
+                    e => e.VasFk != null && e.VasFk.Name == input.VasNameFilter)
+                .OrderBy(input.Sorting ?? "id asc");
 
             var pageResult = await shippingRequestVases.PageBy(input).ToListAsync();
 
@@ -56,11 +55,7 @@ namespace TACHYON.ShippingRequestVases
                     Vas = ObjectMapper.Map<VasDto>(x.VasFk)
                 }).ToList();
 
-            return new PagedResultDto<ShippingRequestVasDto>()
-            {
-                Items = items,
-                TotalCount = totalCount
-            };
+            return new PagedResultDto<ShippingRequestVasDto>() { Items = items, TotalCount = totalCount };
         }
 
         public async Task<ShippingRequestVasDto> GetShippingRequestVasForView(long id)
@@ -85,7 +80,10 @@ namespace TACHYON.ShippingRequestVases
         {
             var shippingRequestVas = await _shippingRequestVasRepository.FirstOrDefaultAsync(input.Id);
 
-            var output = new GetShippingRequestVasForEditOutput { ShippingRequestVas = ObjectMapper.Map<CreateOrEditShippingRequestVasDto>(shippingRequestVas) };
+            var output = new GetShippingRequestVasForEditOutput
+            {
+                ShippingRequestVas = ObjectMapper.Map<CreateOrEditShippingRequestVasDto>(shippingRequestVas)
+            };
 
             if (output.ShippingRequestVas.VasId != null)
             {
@@ -98,7 +96,6 @@ namespace TACHYON.ShippingRequestVases
 
         public async Task CreateOrEdit(CreateOrEditShippingRequestVasDto input)
         {
-
             await ValidateOtherVasName(input);
 
             if (input.Id == null)
@@ -131,6 +128,7 @@ namespace TACHYON.ShippingRequestVases
         {
             await _shippingRequestVasRepository.DeleteAsync(input.Id);
         }
+
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestVases)]
         public async Task<List<ShippingRequestVasVasLookupTableDto>> GetAllVasForTableDropdown()
         {
@@ -154,6 +152,5 @@ namespace TACHYON.ShippingRequestVases
         }
 
         #endregion
-
     }
 }

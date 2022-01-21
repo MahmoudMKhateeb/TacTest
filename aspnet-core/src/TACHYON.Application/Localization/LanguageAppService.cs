@@ -39,9 +39,10 @@ namespace TACHYON.Localization
 
         public async Task<GetLanguagesOutput> GetLanguages()
         {
-            var languages = (await _applicationLanguageManager.GetLanguagesAsync(AbpSession.TenantId)).OrderBy(l => l.DisplayName);
+            var languages =
+                (await _applicationLanguageManager.GetLanguagesAsync(AbpSession.TenantId)).OrderBy(l => l.DisplayName);
             var defaultLanguage = await _applicationLanguageManager.GetDefaultLanguageOrNullAsync(AbpSession.TenantId);
-            var ApplicationLanguageListDto= ObjectMapper.Map<List<ApplicationLanguageListDto>>(languages);
+            var ApplicationLanguageListDto = ObjectMapper.Map<List<ApplicationLanguageListDto>>(languages);
             ApplicationLanguageListDto.ForEach(lang =>
             {
                 lang.IsRTL = new CultureInfo(lang.Name).TextInfo.IsRightToLeft;
@@ -50,10 +51,11 @@ namespace TACHYON.Localization
             return new GetLanguagesOutput(
                 ApplicationLanguageListDto,
                 defaultLanguage?.Name
-                );
+            );
         }
 
-        [AbpAuthorize(AppPermissions.Pages_Administration_Languages_Create, AppPermissions.Pages_Administration_Languages_Edit)]
+        [AbpAuthorize(AppPermissions.Pages_Administration_Languages_Create,
+            AppPermissions.Pages_Administration_Languages_Edit)]
         public async Task<GetLanguageForEditOutput> GetLanguageForEdit(NullableIdDto input)
         {
             ApplicationLanguage language = null;
@@ -72,14 +74,22 @@ namespace TACHYON.Localization
             //Language names
             output.LanguageNames = _applicationCulturesProvider
                 .GetAllCultures()
-                .Select(c => new ComboboxItemDto(c.Name, c.EnglishName + " (" + c.Name + ")") { IsSelected = output.Language.Name == c.Name })
+                .Select(c =>
+                    new ComboboxItemDto(c.Name, c.EnglishName + " (" + c.Name + ")")
+                    {
+                        IsSelected = output.Language.Name == c.Name
+                    })
                 .ToList();
 
             //Flags
             output.Flags = FamFamFamFlagsHelper
                 .FlagClassNames
                 .OrderBy(f => f)
-                .Select(f => new ComboboxItemDto(f, FamFamFamFlagsHelper.GetCountryCode(f)) { IsSelected = output.Language.Icon == f })
+                .Select(f =>
+                    new ComboboxItemDto(f, FamFamFamFlagsHelper.GetCountryCode(f))
+                    {
+                        IsSelected = output.Language.Icon == f
+                    })
                 .ToList();
 
             return output;
@@ -107,8 +117,8 @@ namespace TACHYON.Localization
         {
             await _applicationLanguageManager.SetDefaultLanguageAsync(
                 AbpSession.TenantId,
-               CultureHelper.GetCultureInfoByChecking(input.Name).Name
-                );
+                CultureHelper.GetCultureInfoByChecking(input.Name).Name
+            );
         }
 
         [AbpAuthorize(AppPermissions.Pages_Administration_Languages_ChangeTexts)]
@@ -120,10 +130,12 @@ namespace TACHYON.Localization
             //Normalize base language name
             if (input.BaseLanguageName.IsNullOrEmpty())
             {
-                var defaultLanguage = await _applicationLanguageManager.GetDefaultLanguageOrNullAsync(AbpSession.TenantId);
+                var defaultLanguage =
+                    await _applicationLanguageManager.GetDefaultLanguageOrNullAsync(AbpSession.TenantId);
                 if (defaultLanguage == null)
                 {
-                    defaultLanguage = (await _applicationLanguageManager.GetLanguagesAsync(AbpSession.TenantId)).FirstOrDefault();
+                    defaultLanguage = (await _applicationLanguageManager.GetLanguagesAsync(AbpSession.TenantId))
+                        .FirstOrDefault();
                     if (defaultLanguage == null)
                     {
                         throw new Exception("No language found in the application!");
@@ -144,7 +156,9 @@ namespace TACHYON.Localization
                 targetCulture, allStrings.Select(x => x.Name).ToList());
 
             var languageTexts = allStrings.Select((t, i) => new LanguageTextListDto
-            { Key = t.Name, BaseValue = baseValues[i], TargetValue = targetValues[i] }).AsQueryable();
+            {
+                Key = t.Name, BaseValue = baseValues[i], TargetValue = targetValues[i]
+            }).AsQueryable();
 
             //Filters
             if (input.TargetValueFilter == "EMPTY")
@@ -155,10 +169,13 @@ namespace TACHYON.Localization
             if (!input.FilterText.IsNullOrEmpty())
             {
                 languageTexts = languageTexts.Where(
-                    l => (l.Key != null && l.Key.IndexOf(input.FilterText, StringComparison.CurrentCultureIgnoreCase) >= 0) ||
-                         (l.BaseValue != null && l.BaseValue.IndexOf(input.FilterText, StringComparison.CurrentCultureIgnoreCase) >= 0) ||
-                         (l.TargetValue != null && l.TargetValue.IndexOf(input.FilterText, StringComparison.CurrentCultureIgnoreCase) >= 0)
-                    );
+                    l => (l.Key != null &&
+                          l.Key.IndexOf(input.FilterText, StringComparison.CurrentCultureIgnoreCase) >= 0) ||
+                         (l.BaseValue != null &&
+                          l.BaseValue.IndexOf(input.FilterText, StringComparison.CurrentCultureIgnoreCase) >= 0) ||
+                         (l.TargetValue != null &&
+                          l.TargetValue.IndexOf(input.FilterText, StringComparison.CurrentCultureIgnoreCase) >= 0)
+                );
             }
 
             var totalCount = languageTexts.Count();
@@ -183,14 +200,15 @@ namespace TACHYON.Localization
             return new PagedResultDto<LanguageTextListDto>(
                 totalCount,
                 languageTexts.ToList()
-                );
+            );
         }
 
         public async Task UpdateLanguageText(UpdateLanguageTextInput input)
         {
             var culture = CultureHelper.GetCultureInfoByChecking(input.LanguageName);
             var source = LocalizationManager.GetSource(input.SourceName);
-            await _applicationLanguageTextManager.UpdateStringAsync(AbpSession.TenantId, source.Name, culture, input.Key, input.Value);
+            await _applicationLanguageTextManager.UpdateStringAsync(AbpSession.TenantId, source.Name, culture,
+                input.Key, input.Value);
         }
 
         [AbpAuthorize(AppPermissions.Pages_Administration_Languages_Create)]
@@ -211,10 +229,7 @@ namespace TACHYON.Localization
                     culture.Name,
                     culture.DisplayName,
                     input.Language.Icon
-                )
-                {
-                    IsDisabled = !input.Language.IsEnabled
-                }
+                ) { IsDisabled = !input.Language.IsEnabled }
             );
         }
 

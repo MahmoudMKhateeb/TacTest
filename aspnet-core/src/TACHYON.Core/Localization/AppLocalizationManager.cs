@@ -14,12 +14,12 @@ namespace TACHYON.Localization
 {
     public class AppLocalizationManager : TACHYONDomainServiceBase
     {
-
         private readonly IBackgroundJobManager _backgroundJobManager;
         private readonly IRepository<AppLocalization> _appLocalizationRepository;
         private readonly IRepository<ApplicationLanguage> _languageRepository;
 
         private string directory;
+
         public AppLocalizationManager(IBackgroundJobManager backgroundJobManager,
             IRepository<AppLocalization> appLocalizationRepository,
             IRepository<ApplicationLanguage> languageRepository)
@@ -28,11 +28,10 @@ namespace TACHYON.Localization
             _appLocalizationRepository = appLocalizationRepository;
             _languageRepository = languageRepository;
             directory = GetDirectory();
-
         }
- 
 
-        public  void Restore()
+
+        public void Restore()
         {
             _backgroundJobManager.Enqueue<AppLocalizationJob, string>(GetDirectory());
         }
@@ -40,28 +39,33 @@ namespace TACHYON.Localization
         public async Task Generate()
         {
             var Languages = await _appLocalizationRepository
-             .GetAllIncluding(x => x.Translations)
-              .AsNoTracking()
-              .ToListAsync();
+                .GetAllIncluding(x => x.Translations)
+                .AsNoTracking()
+                .ToListAsync();
 
-             await GenerateXml(Languages,"en", $"{directory}/TACHYON.xml");
+            await GenerateXml(Languages, "en", $"{directory}/TACHYON.xml");
             foreach (var lang in _languageRepository.GetAll().Where(x => !x.IsDisabled && x.Name != "en"))
             {
-                await GenerateXml(await GetLanguageLocalization(Languages, lang.Name), lang.Name, $"{directory}/TACHYON-{lang.Name}.xml");
+                await GenerateXml(await GetLanguageLocalization(Languages, lang.Name), lang.Name,
+                    $"{directory}/TACHYON-{lang.Name}.xml");
             }
-
         }
-        private  Task<List<AppLocalization>> GetLanguageLocalization(List<AppLocalization> languages,string lang)
+
+        private Task<List<AppLocalization>> GetLanguageLocalization(List<AppLocalization> languages, string lang)
         {
             List<AppLocalization> Translations = new List<AppLocalization>();
-            languages.ForEach( l =>
+            languages.ForEach(l =>
             {
-                var t =  l.Translations.FirstOrDefault(x => x.Language == lang);
-                if (t != null) Translations.Add(new AppLocalization() { MasterKey = l.MasterKey, MasterValue = t.Value });
+                var t = l.Translations.FirstOrDefault(x => x.Language == lang);
+                if (t != null)
+                    Translations.Add(new AppLocalization() { MasterKey = l.MasterKey, MasterValue = t.Value });
             });
             return Task.FromResult(Translations);
         }
-        public Task GenerateXml(List<AppLocalization> languages,string language,string path)
+
+        public Task GenerateXml(List<AppLocalization> languages,
+            string language,
+            string path)
         {
             XmlDocument doc = new XmlDocument();
             XmlDeclaration xmlDeclaration = doc.CreateXmlDeclaration("1.0", "UTF-8", null);
@@ -73,14 +77,13 @@ namespace TACHYON.Localization
 
             XmlElement texts = doc.CreateElement(string.Empty, "texts", string.Empty);
             localizationDictionary.AppendChild(texts);
-            foreach (var lang in languages.OrderBy(x=>x.MasterKey))
+            foreach (var lang in languages.OrderBy(x => x.MasterKey))
             {
                 XmlElement text = doc.CreateElement(string.Empty, "text", string.Empty);
                 text.SetAttribute("name", lang.MasterKey);
                 try
                 {
-
-                    text.InnerXml = lang.MasterValue;//.Trim().Replace("<br>", "<br/>").Replace("&", "&amp;");
+                    text.InnerXml = lang.MasterValue; //.Trim().Replace("<br>", "<br/>").Replace("&", "&amp;");
                     texts.AppendChild(text);
                 }
                 catch (Exception e)
@@ -96,11 +99,12 @@ namespace TACHYON.Localization
                         var data = lang.MasterValue.Trim();
                     }
                 }
-
             }
+
             doc.Save(path);
             return Task.CompletedTask;
         }
+
         private string GetDirectory()
         {
             UriBuilder uri = new UriBuilder(Directory.GetCurrentDirectory());

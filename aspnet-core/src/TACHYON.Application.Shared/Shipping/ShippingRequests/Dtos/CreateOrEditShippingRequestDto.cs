@@ -1,5 +1,4 @@
-﻿
-using Abp.Application.Services.Dto;
+﻿using Abp.Application.Services.Dto;
 using Abp.Localization;
 using Abp.Runtime.Validation;
 using Newtonsoft.Json;
@@ -18,14 +17,14 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         IShippingRequestDtoHaveOthersName
     {
         public virtual bool IsBid { get; set; }
+
         //Add Bid details If IsBid equals True
         public DateTime? BidStartDate { get; set; }
         public DateTime? BidEndDate { get; set; }
 
         public virtual bool IsTachyonDeal { get; set; }
         public bool IsDirectRequest { get; set; }
-        [JsonIgnore]
-        public ShippingRequestType RequestType { get; set; }
+        [JsonIgnore] public ShippingRequestType RequestType { get; set; }
 
         /// <summary>
         /// if we clone request
@@ -44,17 +43,14 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public virtual int? CapacityId { get; set; }
 
         public int? GoodCategoryId { get; set; }
-        [Range(1, 20)]
-        public int? NumberOfDrops { get; set; }
+        [Range(1, 20)] public int? NumberOfDrops { get; set; }
         public bool StageOneFinish { get; set; }
         public bool StageTowFinish { get; set; }
         public bool StageThreeFinish { get; set; }
 
-        [Required]
-        public DateTime StartTripDate { get; set; }
+        [Required] public DateTime StartTripDate { get; set; }
         public DateTime? EndTripDate { get; set; }
-        [Range(1, 1000)]
-        public int NumberOfTrips { get; set; }
+        [Range(1, 1000)] public int NumberOfTrips { get; set; }
         public int PackingTypeId { get; set; }
         public int NumberOfPacking { get; set; }
         public double TotalWeight { get; set; }
@@ -66,11 +62,8 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public ShippingRequestRouteType RouteTypeId { get; set; }
 
 
-
-        [Required]
-        public virtual int OriginCityId { get; set; }
-        [Required]
-        public virtual int DestinationCityId { get; set; }
+        [Required] public virtual int OriginCityId { get; set; }
+        [Required] public virtual int DestinationCityId { get; set; }
 
         public string OtherGoodsCategoryName { get; set; }
         public string OtherTransportTypeName { get; set; }
@@ -83,7 +76,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public void AddValidationErrors(CustomValidationContext context)
         {
             var localization = context.IocResolver
-             .Resolve<ILocalizationManager>();
+                .Resolve<ILocalizationManager>();
 
             switch (this.RouteTypeId)
             {
@@ -96,7 +89,6 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
                 default:
                     if (this.NumberOfDrops < 2)
                     {
-
                         var errorMessage = localization.GetString(
                             TACHYONConsts.LocalizationSourceName,
                             "TheNumberOfDropsMustHigerOrEqualTwo");
@@ -118,7 +110,6 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
             {
                 RequestType = ShippingRequestType.DirectRequest;
             }
-
         }
     }
 }

@@ -12,6 +12,5 @@ namespace TACHYON.Trucks.TrucksTypes.TrucksTypesTranslations.Dtos
         //public long CoreId { get; set; }
         public string LanguageDisplayName { get; set; }
         public string icon { get; set; }
-
     }
 }

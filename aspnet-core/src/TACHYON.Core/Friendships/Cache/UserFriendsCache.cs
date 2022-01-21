@@ -67,9 +67,9 @@ namespace TACHYON.Friendships.Cache
             lock (_syncObj)
             {
                 var friend = user.Friends.FirstOrDefault(
-                     f => f.FriendUserId == friendIdentifier.UserId &&
-                     f.FriendTenantId == friendIdentifier.TenantId
-                 );
+                    f => f.FriendUserId == friendIdentifier.UserId &&
+                         f.FriendTenantId == friendIdentifier.TenantId
+                );
 
                 if (friend == null)
                 {
@@ -82,7 +82,9 @@ namespace TACHYON.Friendships.Cache
         }
 
         [UnitOfWork]
-        public virtual void IncreaseUnreadMessageCount(UserIdentifier userIdentifier, UserIdentifier friendIdentifier, int change)
+        public virtual void IncreaseUnreadMessageCount(UserIdentifier userIdentifier,
+            UserIdentifier friendIdentifier,
+            int change)
         {
             var user = GetCacheItemOrNull(userIdentifier);
             if (user == null)
@@ -93,8 +95,8 @@ namespace TACHYON.Friendships.Cache
             lock (_syncObj)
             {
                 var friend = user.Friends.FirstOrDefault(
-                     f => f.FriendUserId == friendIdentifier.UserId &&
-                     f.FriendTenantId == friendIdentifier.TenantId
+                    f => f.FriendUserId == friendIdentifier.UserId &&
+                         f.FriendTenantId == friendIdentifier.TenantId
                 );
 
                 if (friend == null)
@@ -155,7 +157,7 @@ namespace TACHYON.Friendships.Cache
             {
                 var existingFriendIndex = user.Friends.FindIndex(
                     f => f.FriendUserId == friend.FriendUserId &&
-                    f.FriendTenantId == friend.FriendTenantId
+                         f.FriendTenantId == friend.FriendTenantId
                 );
 
                 if (existingFriendIndex >= 0)
@@ -185,12 +187,13 @@ namespace TACHYON.Friendships.Cache
                         FriendUserName = friendship.FriendUserName,
                         FriendTenancyName = friendship.FriendTenancyName,
                         FriendProfilePictureId = friendship.FriendProfilePictureId,
-                        UnreadMessageCount = _chatMessageRepository.GetAll().Count(cm => cm.ReadState == ChatMessageReadState.Unread &&
-                                                               cm.UserId == userIdentifier.UserId &&
-                                                               cm.TenantId == userIdentifier.TenantId &&
-                                                               cm.TargetUserId == friendship.FriendUserId &&
-                                                               cm.TargetTenantId == friendship.FriendTenantId &&
-                                                               cm.Side == ChatSide.Receiver)
+                        UnreadMessageCount = _chatMessageRepository.GetAll().Count(cm =>
+                            cm.ReadState == ChatMessageReadState.Unread &&
+                            cm.UserId == userIdentifier.UserId &&
+                            cm.TenantId == userIdentifier.TenantId &&
+                            cm.TargetUserId == friendship.FriendUserId &&
+                            cm.TargetTenantId == friendship.FriendTenantId &&
+                            cm.Side == ChatSide.Receiver)
                     }).ToList();
 
                 var user = AsyncHelper.RunSync(() => _userManager.FindByIdAsync(userIdentifier.UserId.ToString()));

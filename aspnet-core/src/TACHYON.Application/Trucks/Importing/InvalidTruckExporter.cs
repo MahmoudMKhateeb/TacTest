@@ -9,7 +9,7 @@ namespace TACHYON.Trucks.Importing
 {
     public class InvalidTruckExporter : NpoiExcelExporterBase, IInvalidTruckExporter, ITransientDependency
     {
-        public InvalidTruckExporter(ITempFileCacheManager tempFileCacheManager): base(tempFileCacheManager)
+        public InvalidTruckExporter(ITempFileCacheManager tempFileCacheManager) : base(tempFileCacheManager)
         {
         }
 

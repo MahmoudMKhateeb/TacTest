@@ -3,7 +3,7 @@ using System;
 
 namespace TACHYON.Invoices.Transactions.Dto
 {
-    public class TransactionFilterInput 
+    public class TransactionFilterInput
     {
         public string LoadOptions { get; set; }
         //public ChannelType? channelType { get; set; }
@@ -18,7 +18,5 @@ namespace TACHYON.Invoices.Transactions.Dto
         //public decimal? maxLongitude { get; set; }
 
         //public int? EditionId { get; set; }
-
-
     }
 }

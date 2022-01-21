@@ -30,7 +30,7 @@ namespace TACHYON.Tests.MultiTenancy
             {
                 var invoiceNo = await _invoiceNumberGenerator.GetNewInvoiceNumber();
                 invoiceNo.ShouldNotBeNullOrEmpty();
-                invoiceNo.Length.ShouldBe(11);//Should be YYYYMM00001
+                invoiceNo.Length.ShouldBe(11); //Should be YYYYMM00001
 
                 _invoiceRepository.Insert(new Invoice
                 {

@@ -4,7 +4,6 @@ namespace TACHYON.Rating.dtos
 {
     public class CreateShipperRateByCarrierDto : RatingDto
     {
-        [Required]
-        public int TripId { get; set; }
+        [Required] public int TripId { get; set; }
     }
 }

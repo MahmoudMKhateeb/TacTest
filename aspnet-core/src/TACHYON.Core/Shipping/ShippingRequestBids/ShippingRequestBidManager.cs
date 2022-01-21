@@ -43,7 +43,7 @@
 //                AssignShippingRequestInfo(bid.ShippingRequestFk, bid);
 //                await _shippingRequestManager.SetToPostPrice(bid.ShippingRequestFk);
 //            }
-            
+
 //            //Reject the other bids of this shipping request by background job
 //            await _backgroundJobManager.EnqueueAsync<RejectOtherBidsJob, RejectOtherBidsJobArgs>
 //                (new RejectOtherBidsJobArgs { AcceptedBidId = bid.Id, ShippingReuquestId = bid.ShippingRequestId });
@@ -67,3 +67,4 @@
 
 //    }
 //}
+

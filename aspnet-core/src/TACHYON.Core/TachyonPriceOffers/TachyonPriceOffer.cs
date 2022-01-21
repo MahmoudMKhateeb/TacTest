@@ -12,41 +12,45 @@ using TACHYON.Shipping.ShippingRequests.TachyonDealer;
 namespace TACHYON.TachyonPriceOffers
 {
     [Table("TachyonPriceOffers")]
-    public class TachyonPriceOffer : FullAuditedEntity,IMustHaveTenant
+    public class TachyonPriceOffer : FullAuditedEntity, IMustHaveTenant
     {
         public int TenantId { get; set; }
 
         public int? CarrirerTenantId { get; set; }
-        [ForeignKey("CarrirerTenantId")]
-        public Tenant CarrirerTenant { get; set; }
+        [ForeignKey("CarrirerTenantId")] public Tenant CarrirerTenant { get; set; }
         public virtual long ShippingRequestId { get; set; }
-        [ForeignKey("ShippingRequestId")]
-        public ShippingRequest ShippingRequestFk { get; set; }
+        [ForeignKey("ShippingRequestId")] public ShippingRequest ShippingRequestFk { get; set; }
         public long? ShippingRequestBidId { get; set; }
-        [ForeignKey("ShippingRequestBidId")]
-        public ShippingRequestBid ShippingRequestBidFk { get; set; }
+        [ForeignKey("ShippingRequestBidId")] public ShippingRequestBid ShippingRequestBidFk { get; set; }
         public int? ShippingRequestCarrierDirectPricingId { get; set; }
+
         [ForeignKey("ShippingRequestCarrierDirectPricingId")]
         public ShippingRequestsCarrierDirectPricing ShippingRequestCarrierDirectPricingFk { get; set; }
+
         public OfferStatus OfferStatus { get; set; }
+
         /// <summary>
         /// If shipper reject offer, will place reason of rejected
         /// </summary>
         public string RejectedReason { get; set; }
+
         /// <summary>
         /// Type of price that tachyon dealer send to shipper, if there is existing accepted price; ex:bidding the type will be bidding
         /// </summary>
         public PriceType PriceType { get; set; }
 
         public decimal? CarrierPrice { get; set; }
+
         /// <summary>
         /// Price without vat amount
         /// </summary>
         public decimal? SubTotalAmount { get; set; }
+
         /// <summary>
         /// Total price include vat amount
         /// </summary>
         public decimal TotalAmount { get; set; }
+
         public decimal? VatAmount { get; set; }
         public decimal? TotalCommission { get; set; }
 
@@ -60,6 +64,5 @@ namespace TACHYON.TachyonPriceOffers
         public decimal? ActualPercentCommission { get; set; }
 
         public decimal? ActualMinCommissionValue { get; set; }
-
     }
 }

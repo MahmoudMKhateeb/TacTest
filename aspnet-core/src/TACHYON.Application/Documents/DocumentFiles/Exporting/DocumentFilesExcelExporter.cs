@@ -10,7 +10,6 @@ namespace TACHYON.Documents.DocumentFiles.Exporting
 {
     public class DocumentFilesExcelExporter : NpoiExcelExporterBase, IDocumentFilesExcelExporter
     {
-
         private readonly ITimeZoneConverter _timeZoneConverter;
         private readonly IAbpSession _abpSession;
 
@@ -18,7 +17,7 @@ namespace TACHYON.Documents.DocumentFiles.Exporting
             ITimeZoneConverter timeZoneConverter,
             IAbpSession abpSession,
             ITempFileCacheManager tempFileCacheManager) :
-    base(tempFileCacheManager)
+            base(tempFileCacheManager)
         {
             _timeZoneConverter = timeZoneConverter;
             _abpSession = abpSession;
@@ -30,7 +29,6 @@ namespace TACHYON.Documents.DocumentFiles.Exporting
                 "DocumentFiles.xlsx",
                 excelPackage =>
                 {
-
                     var sheet = excelPackage.CreateSheet(L("DocumentFiles"));
 
                     AddHeader(
@@ -40,30 +38,32 @@ namespace TACHYON.Documents.DocumentFiles.Exporting
                         L("BinaryObjectId"),
                         L("ExpirationDate"),
                         L("IsAccepted"),
-                       // (L("DocumentType")) + L("DisplayName"),
+                        // (L("DocumentType")) + L("DisplayName"),
                         (L("Truck")) + L("PlateNumber"),
                         (L("Trailer")) + L("TrailerCode"),
                         (L("User")) + L("Name")
-                        );
+                    );
 
                     AddObjects(
                         sheet, 2, documentFiles,
                         _ => _.DocumentFile.Name,
                         _ => _.DocumentFile.Extn,
                         _ => _.DocumentFile.BinaryObjectId,
-                        _ => _timeZoneConverter.Convert(_.DocumentFile.ExpirationDate, _abpSession.TenantId, _abpSession.GetUserId()),
+                        _ => _timeZoneConverter.Convert(_.DocumentFile.ExpirationDate, _abpSession.TenantId,
+                            _abpSession.GetUserId()),
                         _ => _.DocumentFile.IsAccepted,
-                       // _ => _.DocumentTypeDisplayName,
+                        // _ => _.DocumentTypeDisplayName,
                         _ => _.TruckId,
                         _ => _.TrailerTrailerCode,
                         _ => _.UserName
-                        );
+                    );
 
 
                     for (var i = 1; i <= documentFiles.Count; i++)
                     {
                         SetCellDataFormat(sheet.GetRow(i).Cells[4], "yyyy-mm-dd");
                     }
+
                     sheet.AutoSizeColumn(4);
                 });
         }

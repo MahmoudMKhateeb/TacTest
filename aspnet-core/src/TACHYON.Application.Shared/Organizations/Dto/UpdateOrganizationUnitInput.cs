@@ -5,8 +5,7 @@ namespace TACHYON.Organizations.Dto
 {
     public class UpdateOrganizationUnitInput
     {
-        [Range(1, long.MaxValue)]
-        public long Id { get; set; }
+        [Range(1, long.MaxValue)] public long Id { get; set; }
 
         [Required]
         [StringLength(OrganizationUnit.MaxDisplayNameLength)]

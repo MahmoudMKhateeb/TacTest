@@ -25,11 +25,13 @@ namespace TACHYON.Localization.Importing
             _appLocalizationRepository = appLocalizationRepository;
             _unitOfWorkManager = unitOfWorkManager;
         }
+
         public override void Execute(byte[] args)
         {
             var Terminologies = _excelImportManager.ImportFromFile(args);
             Migration(Terminologies);
         }
+
         private void Migration(List<TerminologyDto> Terminologies)
         {
             Terminologies.ForEach(t =>
@@ -37,7 +39,8 @@ namespace TACHYON.Localization.Importing
                 if (string.IsNullOrEmpty(t.Masterkey)) return;
                 using (var uow = _unitOfWorkManager.Begin())
                 {
-                    var Terminology = _appLocalizationRepository.GetAll().Include(x => x.Translations).FirstOrDefault(x => x.MasterKey == t.Masterkey);
+                    var Terminology = _appLocalizationRepository.GetAll().Include(x => x.Translations)
+                        .FirstOrDefault(x => x.MasterKey == t.Masterkey);
                     if (Terminology != null)
                     {
                         if (!string.IsNullOrEmpty(t.CorrectEnglish)) t.English = t.CorrectEnglish;
@@ -52,19 +55,18 @@ namespace TACHYON.Localization.Importing
                             else
                             {
                                 Terminology.Translations = new Collection<AppLocalizationTranslation>();
-                                Terminology.Translations.Add(new AppLocalizationTranslation() { Value = t.Arabic, Language = "ar-EG" });
+                                Terminology.Translations.Add(
+                                    new AppLocalizationTranslation() { Value = t.Arabic, Language = "ar-EG" });
                             }
                         }
-
-
                     }
+
                     uow.Complete();
                 }
-
-
             });
         }
     }
+
     public class TerminologyDto
     {
         public string Masterkey { get; set; }

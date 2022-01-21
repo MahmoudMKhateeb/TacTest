@@ -10,26 +10,28 @@ namespace TACHYON.PriceOffers.Base
         public long? SourceId { get; set; }
 
         public PriceOfferType PriceType { get; set; }
+
         #region Invoice
 
-
         #region Single  pricing for carrier
+
         public decimal ItemPrice { get; set; }
+
         /// <summary>
         /// ItemPrice * TaxVat
         /// </summary>
         public decimal ItemVatAmount { get; set; }
+
         /// <summary>
         ///  ItemPrice + ItemVatAmount;
         /// </summary>
         public decimal ItemTotalAmount { get; set; }
 
-
-
         #endregion
 
 
         #region Single item  pricing with commission for shipper or tachyon dealer
+
         /// <summary>
         /// ItemPrice + ItemCommissionAmount
         /// </summary>
@@ -45,10 +47,12 @@ namespace TACHYON.PriceOffers.Base
         /// (ItemPrice + ItemCommissionAmount) + ((ItemPrice + ItemCommissionAmount) * TaxVat)
         /// </summary>
         public decimal ItemTotalAmountWithCommission { get; set; }
+
         #endregion
 
 
         #region Pricing Totals of Items and Details
+
         /// <summary>
         /// Price Per trip * Number of Trips.
         /// </summary>
@@ -85,15 +89,18 @@ namespace TACHYON.PriceOffers.Base
         /// (ItemVatAmountWithCommission *  Quantity) + PriceOfferDetails.Sum(x => x.VatAmountWithCommission)
         /// </summary>
         public decimal VatAmountWithCommission { get; set; }
+
         #endregion
 
         #endregion
 
         #region Commission
+
         /// <summary>
         /// set of predefined settings for the Commission that is applied to Shippers according to their subscriptions type.
         /// </summary>
         public PriceOfferCommissionType CommissionType { get; set; }
+
         public decimal ItemCommissionAmount { get; set; }
         public decimal CommissionPercentageOrAddValue { get; set; }
 
@@ -101,12 +108,12 @@ namespace TACHYON.PriceOffers.Base
         /// ( ItemCommissionAmount *  Quantity) + PriceOfferDetails.Sum(x => x.CommissionAmount)
         /// </summary>
         public decimal CommissionAmount { get; set; }
+
         #endregion
 
         /// <summary>
         /// shippingRequest.NumberOfTrips
         /// </summary>
         public int Quantity { get; set; } = 1;
-
     }
 }

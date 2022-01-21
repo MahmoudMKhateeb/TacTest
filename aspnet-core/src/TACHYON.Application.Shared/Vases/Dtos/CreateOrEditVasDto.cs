@@ -9,13 +9,11 @@ namespace TACHYON.Vases.Dtos
     public class CreateOrEditVasDto : EntityDto<int?>
     {
         [Required]
-        [StringLength(VasConsts.MaxNameLength,MinimumLength = VasConsts.MinNameLength)]
+        [StringLength(VasConsts.MaxNameLength, MinimumLength = VasConsts.MinNameLength)]
         public string Name { get; set; }
 
         public bool HasAmount { get; set; }
 
         public bool HasCount { get; set; }
-
-
     }
 }

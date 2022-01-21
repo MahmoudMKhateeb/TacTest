@@ -53,7 +53,8 @@ namespace TACHYON.MultiTenancy.Payments
 
             if (payment.Status != SubscriptionPaymentStatus.NotPaid)
             {
-                throw new ApplicationException($"Invalid payment status {payment.Status}, cannot create a charge on stripe !");
+                throw new ApplicationException(
+                    $"Invalid payment status {payment.Status}, cannot create a charge on stripe !");
             }
 
             payment.Gateway = SubscriptionPaymentGatewayType.Stripe;
@@ -73,7 +74,8 @@ namespace TACHYON.MultiTenancy.Payments
             }
             else
             {
-                throw new ApplicationException($"Unexpected session mode {session.Mode}. 'payment' or 'subscription' expected");
+                throw new ApplicationException(
+                    $"Unexpected session mode {session.Mode}. 'payment' or 'subscription' expected");
             }
 
             payment.SetAsPaid();
@@ -111,28 +113,27 @@ namespace TACHYON.MultiTenancy.Payments
                     await _paymentAppService.NewRegistrationSucceed(paymentId);
                     break;
                 default:
-                    throw new ApplicationException($"Unhandled payment type: {payment.EditionPaymentType}. payment(id: {paymentId}) could not be completed.");
+                    throw new ApplicationException(
+                        $"Unhandled payment type: {payment.EditionPaymentType}. payment(id: {paymentId}) could not be completed.");
             }
-
         }
 
         public StripeConfigurationDto GetConfiguration()
         {
-            return new StripeConfigurationDto
-            {
-                PublishableKey = _stripePaymentGatewayConfiguration.PublishableKey
-            };
+            return new StripeConfigurationDto { PublishableKey = _stripePaymentGatewayConfiguration.PublishableKey };
         }
 
         public async Task<SubscriptionPaymentDto> GetPaymentAsync(StripeGetPaymentInput input)
         {
-            var paymentId = await _subscriptionPaymentExtensionDataRepository.GetPaymentIdOrNullAsync(StripeGatewayManager.StripeSessionIdSubscriptionPaymentExtensionDataKey, input.StripeSessionId);
+            var paymentId = await _subscriptionPaymentExtensionDataRepository.GetPaymentIdOrNullAsync(
+                StripeGatewayManager.StripeSessionIdSubscriptionPaymentExtensionDataKey, input.StripeSessionId);
             if (!paymentId.HasValue)
             {
                 throw new ApplicationException($"Cannot find any payment with sessionId {input.StripeSessionId}");
             }
 
-            return ObjectMapper.Map<SubscriptionPaymentDto>(await _subscriptionPaymentRepository.GetAsync(paymentId.Value));
+            return ObjectMapper.Map<SubscriptionPaymentDto>(
+                await _subscriptionPaymentRepository.GetAsync(paymentId.Value));
         }
 
         public async Task<string> CreatePaymentSession(StripeCreatePaymentSessionInput input)
@@ -143,7 +144,9 @@ namespace TACHYON.MultiTenancy.Payments
             var sessionCreateOptions = new SessionCreateOptions
             {
                 PaymentMethodTypes = paymentTypes,
-                SuccessUrl = input.SuccessUrl + (input.SuccessUrl.Contains("?") ? "&" : "?") + "sessionId={CHECKOUT_SESSION_ID}",
+                SuccessUrl =
+                    input.SuccessUrl + (input.SuccessUrl.Contains("?") ? "&" : "?") +
+                    "sessionId={CHECKOUT_SESSION_ID}",
                 CancelUrl = input.CancelUrl,
             };
 
@@ -155,10 +158,7 @@ namespace TACHYON.MultiTenancy.Payments
                 {
                     Items = new List<SessionSubscriptionDataItemOptions>
                     {
-                        new SessionSubscriptionDataItemOptions
-                        {
-                            Plan = plan.Id,
-                        }
+                        new SessionSubscriptionDataItemOptions { Plan = plan.Id, }
                     }
                 };
             }
@@ -168,7 +168,7 @@ namespace TACHYON.MultiTenancy.Payments
                 {
                     new SessionLineItemOptions
                     {
-                        Amount = (long) _stripeGatewayManager.ConvertToStripePrice(payment.Amount),
+                        Amount = (long)_stripeGatewayManager.ConvertToStripePrice(payment.Amount),
                         Name = StripeGatewayManager.ProductName,
                         Currency = TACHYONConsts.Currency,
                         Description = payment.Description,
@@ -192,7 +192,8 @@ namespace TACHYON.MultiTenancy.Payments
         public async Task<StripePaymentResultOutput> GetPaymentResult(StripePaymentResultInput input)
         {
             var payment = await _subscriptionPaymentRepository.GetAsync(input.PaymentId);
-            var sessionId = await _subscriptionPaymentExtensionDataRepository.GetExtensionDataAsync(input.PaymentId, StripeGatewayManager.StripeSessionIdSubscriptionPaymentExtensionDataKey);
+            var sessionId = await _subscriptionPaymentExtensionDataRepository.GetExtensionDataAsync(input.PaymentId,
+                StripeGatewayManager.StripeSessionIdSubscriptionPaymentExtensionDataKey);
 
             if (string.IsNullOrEmpty(sessionId))
             {
@@ -201,16 +202,10 @@ namespace TACHYON.MultiTenancy.Payments
 
             if (payment.Status == SubscriptionPaymentStatus.Completed)
             {
-                return new StripePaymentResultOutput
-                {
-                    PaymentDone = true
-                };
+                return new StripePaymentResultOutput { PaymentDone = true };
             }
 
-            return new StripePaymentResultOutput
-            {
-                PaymentDone = false
-            };
+            return new StripePaymentResultOutput { PaymentDone = false };
         }
     }
 }

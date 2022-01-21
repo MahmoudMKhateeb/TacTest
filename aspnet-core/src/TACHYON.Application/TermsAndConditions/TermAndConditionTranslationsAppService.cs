@@ -1,5 +1,4 @@
 ﻿using TACHYON.TermsAndConditions;
-
 using System;
 using System.Linq;
 using System.Linq.Dynamic.Core;
@@ -23,39 +22,38 @@ namespace TACHYON.TermsAndConditions
         private readonly IRepository<TermAndConditionTranslation> _termAndConditionTranslationRepository;
         private readonly IRepository<TermAndCondition, int> _lookup_termAndConditionRepository;
 
-        public TermAndConditionTranslationsAppService(IRepository<TermAndConditionTranslation> termAndConditionTranslationRepository, IRepository<TermAndCondition, int> lookup_termAndConditionRepository)
+        public TermAndConditionTranslationsAppService(
+            IRepository<TermAndConditionTranslation> termAndConditionTranslationRepository,
+            IRepository<TermAndCondition, int> lookup_termAndConditionRepository)
         {
             _termAndConditionTranslationRepository = termAndConditionTranslationRepository;
             _lookup_termAndConditionRepository = lookup_termAndConditionRepository;
-
         }
 
-        public async Task<PagedResultDto<GetTermAndConditionTranslationForViewDto>> GetAll(GetAllTermAndConditionTranslationsInput input)
+        public async Task<PagedResultDto<GetTermAndConditionTranslationForViewDto>> GetAll(
+            GetAllTermAndConditionTranslationsInput input)
         {
-
             var filteredTermAndConditionTranslations = _termAndConditionTranslationRepository.GetAll()
-                        .Include(e => e.Core)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Content.Contains(input.Filter) || e.Language.Contains(input.Filter))
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.LanguageFilter), e => e.Language == input.LanguageFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.TermAndConditionTitleFilter), e => e.Core != null && e.Core.Title == input.TermAndConditionTitleFilter);
+                .Include(e => e.Core)
+                .WhereIf(!string.IsNullOrWhiteSpace(input.Filter),
+                    e => false || e.Content.Contains(input.Filter) || e.Language.Contains(input.Filter))
+                .WhereIf(!string.IsNullOrWhiteSpace(input.LanguageFilter), e => e.Language == input.LanguageFilter)
+                .WhereIf(!string.IsNullOrWhiteSpace(input.TermAndConditionTitleFilter),
+                    e => e.Core != null && e.Core.Title == input.TermAndConditionTitleFilter);
 
             var pagedAndFilteredTermAndConditionTranslations = filteredTermAndConditionTranslations
                 .OrderBy(input.Sorting ?? "id asc")
                 .PageBy(input);
 
             var termAndConditionTranslations = from o in pagedAndFilteredTermAndConditionTranslations
-                                               join o1 in _lookup_termAndConditionRepository.GetAll() on o.CoreId equals o1.Id into j1
-                                               from s1 in j1.DefaultIfEmpty()
-
-                                               select new GetTermAndConditionTranslationForViewDto()
-                                               {
-                                                   TermAndConditionTranslation = new TermAndConditionTranslationDto
-                                                   {
-                                                       Language = o.Language,
-                                                       Id = o.Id
-                                                   },
-                                                   TermAndConditionTitle = s1 == null || s1.Title == null ? "" : s1.Title.ToString()
-                                               };
+                join o1 in _lookup_termAndConditionRepository.GetAll() on o.CoreId equals o1.Id into j1
+                from s1 in j1.DefaultIfEmpty()
+                select new GetTermAndConditionTranslationForViewDto()
+                {
+                    TermAndConditionTranslation =
+                        new TermAndConditionTranslationDto { Language = o.Language, Id = o.Id },
+                    TermAndConditionTitle = s1 == null || s1.Title == null ? "" : s1.Title.ToString()
+                };
 
             var totalCount = await filteredTermAndConditionTranslations.CountAsync();
 
@@ -69,11 +67,17 @@ namespace TACHYON.TermsAndConditions
         {
             var termAndConditionTranslation = await _termAndConditionTranslationRepository.GetAsync(id);
 
-            var output = new GetTermAndConditionTranslationForViewDto { TermAndConditionTranslation = ObjectMapper.Map<TermAndConditionTranslationDto>(termAndConditionTranslation) };
+            var output = new GetTermAndConditionTranslationForViewDto
+            {
+                TermAndConditionTranslation =
+                    ObjectMapper.Map<TermAndConditionTranslationDto>(termAndConditionTranslation)
+            };
 
             if (output.TermAndConditionTranslation.CoreId != null)
             {
-                var _lookupTermAndCondition = await _lookup_termAndConditionRepository.FirstOrDefaultAsync((int)output.TermAndConditionTranslation.CoreId);
+                var _lookupTermAndCondition =
+                    await _lookup_termAndConditionRepository.FirstOrDefaultAsync((int)output.TermAndConditionTranslation
+                        .CoreId);
                 output.TermAndConditionTitle = _lookupTermAndCondition?.Title?.ToString();
             }
 
@@ -81,15 +85,23 @@ namespace TACHYON.TermsAndConditions
         }
 
         [AbpAuthorize(AppPermissions.Pages_Administration_TermAndConditionTranslations_Edit)]
-        public async Task<GetTermAndConditionTranslationForEditOutput> GetTermAndConditionTranslationForEdit(EntityDto input)
+        public async Task<GetTermAndConditionTranslationForEditOutput> GetTermAndConditionTranslationForEdit(
+            EntityDto input)
         {
-            var termAndConditionTranslation = await _termAndConditionTranslationRepository.FirstOrDefaultAsync(input.Id);
+            var termAndConditionTranslation =
+                await _termAndConditionTranslationRepository.FirstOrDefaultAsync(input.Id);
 
-            var output = new GetTermAndConditionTranslationForEditOutput { TermAndConditionTranslation = ObjectMapper.Map<CreateOrEditTermAndConditionTranslationDto>(termAndConditionTranslation) };
+            var output = new GetTermAndConditionTranslationForEditOutput
+            {
+                TermAndConditionTranslation =
+                    ObjectMapper.Map<CreateOrEditTermAndConditionTranslationDto>(termAndConditionTranslation)
+            };
 
             if (output.TermAndConditionTranslation.CoreId != null)
             {
-                var _lookupTermAndCondition = await _lookup_termAndConditionRepository.FirstOrDefaultAsync((int)output.TermAndConditionTranslation.CoreId);
+                var _lookupTermAndCondition =
+                    await _lookup_termAndConditionRepository.FirstOrDefaultAsync((int)output.TermAndConditionTranslation
+                        .CoreId);
                 output.TermAndConditionTitle = _lookupTermAndCondition?.Title?.ToString();
             }
 
@@ -119,7 +131,8 @@ namespace TACHYON.TermsAndConditions
         [AbpAuthorize(AppPermissions.Pages_Administration_TermAndConditionTranslations_Edit)]
         protected virtual async Task Update(CreateOrEditTermAndConditionTranslationDto input)
         {
-            var termAndConditionTranslation = await _termAndConditionTranslationRepository.FirstOrDefaultAsync((int)input.Id);
+            var termAndConditionTranslation =
+                await _termAndConditionTranslationRepository.FirstOrDefaultAsync((int)input.Id);
             ObjectMapper.Map(input, termAndConditionTranslation);
         }
 
@@ -128,16 +141,19 @@ namespace TACHYON.TermsAndConditions
         {
             await _termAndConditionTranslationRepository.DeleteAsync(input.Id);
         }
+
         [AbpAuthorize(AppPermissions.Pages_Administration_TermAndConditionTranslations)]
-        public async Task<List<TermAndConditionTranslationTermAndConditionLookupTableDto>> GetAllTermAndConditionForTableDropdown()
+        public async Task<List<TermAndConditionTranslationTermAndConditionLookupTableDto>>
+            GetAllTermAndConditionForTableDropdown()
         {
             return await _lookup_termAndConditionRepository.GetAll()
                 .Select(termAndCondition => new TermAndConditionTranslationTermAndConditionLookupTableDto
                 {
                     Id = termAndCondition.Id,
-                    DisplayName = termAndCondition == null || termAndCondition.Title == null ? "" : termAndCondition.Title.ToString()
+                    DisplayName = termAndCondition == null || termAndCondition.Title == null
+                        ? ""
+                        : termAndCondition.Title.ToString()
                 }).ToListAsync();
         }
-
     }
 }

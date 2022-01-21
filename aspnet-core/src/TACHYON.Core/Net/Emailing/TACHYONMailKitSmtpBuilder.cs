@@ -8,14 +8,17 @@ namespace TACHYON.Net.Emailing
     {
         public TACHYONMailKitSmtpBuilder(
             ISmtpEmailSenderConfiguration smtpEmailSenderConfiguration,
-            IAbpMailKitConfiguration abpMailKitConfiguration) : base(smtpEmailSenderConfiguration, abpMailKitConfiguration)
+            IAbpMailKitConfiguration abpMailKitConfiguration) : base(smtpEmailSenderConfiguration,
+            abpMailKitConfiguration)
         {
-
         }
 
         protected override void ConfigureClient(SmtpClient client)
         {
-            client.ServerCertificateValidationCallback = (sender, certificate, chain, errors) => true;
+            client.ServerCertificateValidationCallback = (sender,
+                certificate,
+                chain,
+                errors) => true;
             base.ConfigureClient(client);
         }
     }

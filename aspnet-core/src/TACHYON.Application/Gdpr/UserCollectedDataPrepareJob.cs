@@ -40,7 +40,9 @@ namespace TACHYON.Gdpr
         {
             using (UnitOfWorkManager.Current.SetTenantId(args.TenantId))
             {
-                var userLanguage = AsyncHelper.RunSync(() => _settingManager.GetSettingValueForUserAsync(LocalizationSettingNames.DefaultLanguage, args.TenantId, args.UserId));
+                var userLanguage = AsyncHelper.RunSync(() =>
+                    _settingManager.GetSettingValueForUserAsync(LocalizationSettingNames.DefaultLanguage, args.TenantId,
+                        args.UserId));
                 var culture = CultureHelper.GetCultureInfoByChecking(userLanguage);
 
                 using (CultureInfoHelper.Use(culture))
@@ -60,11 +62,7 @@ namespace TACHYON.Gdpr
                         }
                     }
 
-                    var zipFile = new BinaryObject
-                    {
-                        TenantId = args.TenantId,
-                        Bytes = CompressFiles(files)
-                    };
+                    var zipFile = new BinaryObject { TenantId = args.TenantId, Bytes = CompressFiles(files) };
 
                     // Save zip file to object manager.
                     AsyncHelper.RunSync(() => _binaryObjectManager.SaveAsync(zipFile));
@@ -97,6 +95,5 @@ namespace TACHYON.Gdpr
                 return outputZipFileStream.ToArray();
             }
         }
-
     }
 }

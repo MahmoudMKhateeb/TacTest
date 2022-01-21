@@ -2,9 +2,9 @@
 {
     public enum PriceOfferChannel : byte
     {
-        MarketPlace=1,
-        DirectRequest=2,
-        TachyonManageService=3,
-        Offers=10
+        MarketPlace = 1,
+        DirectRequest = 2,
+        TachyonManageService = 3,
+        Offers = 10
     }
 }

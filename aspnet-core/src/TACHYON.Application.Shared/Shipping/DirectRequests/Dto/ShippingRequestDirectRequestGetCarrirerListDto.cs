@@ -8,6 +8,5 @@ namespace TACHYON.Shipping.DirectRequests.Dto
         public bool IsRequestSent { get; set; }
         public decimal CarrierRate { get; set; }
         public int CarrierRateNumber { get; set; }
-
     }
 }

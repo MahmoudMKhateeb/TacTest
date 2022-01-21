@@ -7,8 +7,5 @@ namespace TACHYON.Trailers.PayloadMaxWeights.Dtos
         public string DisplayName { get; set; }
 
         public int MaxWeight { get; set; }
-
-
-
     }
 }

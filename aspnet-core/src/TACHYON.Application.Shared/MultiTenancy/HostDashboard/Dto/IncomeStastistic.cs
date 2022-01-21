@@ -10,8 +10,6 @@ namespace TACHYON.MultiTenancy.HostDashboard.Dto
 
         public IncomeStastistic()
         {
-
-
         }
 
         public IncomeStastistic(DateTime date)

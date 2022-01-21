@@ -7,7 +7,5 @@ namespace TACHYON.Routs.RoutTypes.Dtos
     public class GetRoutTypeForEditOutput
     {
         public CreateOrEditRoutTypeDto RoutType { get; set; }
-
-
     }
 }

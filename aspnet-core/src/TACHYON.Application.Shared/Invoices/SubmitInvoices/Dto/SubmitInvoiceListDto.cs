@@ -4,7 +4,7 @@ using System;
 
 namespace TACHYON.Invoices.SubmitInvoices.Dto
 {
-    public class SubmitInvoiceListDto: EntityDto<long>, IHasCreationTime
+    public class SubmitInvoiceListDto : EntityDto<long>, IHasCreationTime
     {
         public long? ReferencNumber { get; set; }
         public string TenantName { get; set; }

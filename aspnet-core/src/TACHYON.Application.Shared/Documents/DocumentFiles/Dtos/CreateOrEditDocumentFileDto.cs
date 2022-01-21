@@ -16,6 +16,7 @@ namespace TACHYON.Documents.DocumentFiles.Dtos
             {
                 return;
             }
+
             if (!DocumentTypeDto.HasNumber)
             {
                 return;
@@ -23,12 +24,14 @@ namespace TACHYON.Documents.DocumentFiles.Dtos
 
             if (DocumentTypeDto.NumberMaxDigits != 0 && Number.ToString().Length > DocumentTypeDto.NumberMaxDigits)
             {
-                context.Results.Add(new ValidationResult("Number digits must be less than or equal " + DocumentTypeDto.NumberMaxDigits));
+                context.Results.Add(new ValidationResult("Number digits must be less than or equal " +
+                                                         DocumentTypeDto.NumberMaxDigits));
             }
 
             if (DocumentTypeDto.NumberMinDigits != 0 && Number.ToString().Length < DocumentTypeDto.NumberMinDigits)
             {
-                context.Results.Add(new ValidationResult("Number digits must be greater than or equal " + DocumentTypeDto.NumberMinDigits));
+                context.Results.Add(new ValidationResult("Number digits must be greater than or equal " +
+                                                         DocumentTypeDto.NumberMinDigits));
             }
 
             if (IsAccepted && IsRejected)
@@ -78,6 +81,5 @@ namespace TACHYON.Documents.DocumentFiles.Dtos
         //Entity ID is the id of the :truck, user,trailer, shipment or any other entity
         public string EntityId { get; set; }
         public DocumentsEntitiesEnum EntityType { get; set; }
-
     }
 }

@@ -19,10 +19,11 @@ namespace TACHYON.Authorization.Impersonation
 
         public ImpersonationCacheItem()
         {
-
         }
 
-        public ImpersonationCacheItem(int? targetTenantId, long targetUserId, bool isBackToImpersonator)
+        public ImpersonationCacheItem(int? targetTenantId,
+            long targetUserId,
+            bool isBackToImpersonator)
         {
             TargetTenantId = targetTenantId;
             TargetUserId = targetUserId;

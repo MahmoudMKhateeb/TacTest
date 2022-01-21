@@ -24,6 +24,5 @@ namespace TACHYON.Goods.GoodsDetails.Dtos
 
         public string GoodCategoryDisplayNameFilter { get; set; }
         public long RoutPointId { get; set; }
-
     }
 }

@@ -11,7 +11,6 @@ namespace TACHYON.Localization
     {
         public string PageUrl { get; set; }
         public int TerminologieId { get; set; }
-        [ForeignKey(nameof(TerminologieId))]
-        public AppLocalization Terminologie { get; set; }
+        [ForeignKey(nameof(TerminologieId))] public AppLocalization Terminologie { get; set; }
     }
 }

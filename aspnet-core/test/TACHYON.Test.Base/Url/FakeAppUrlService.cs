@@ -31,7 +31,7 @@ namespace TACHYON.Test.Base.Url
 
         public string GetTachyonPlatformLoginUrl()
         {
-           return "http://test.com/";
+            return "http://test.com/";
         }
     }
 }

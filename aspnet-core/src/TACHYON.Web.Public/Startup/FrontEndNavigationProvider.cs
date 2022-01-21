@@ -21,53 +21,53 @@ namespace TACHYON.Web.Public.Startup
 
                 //HOME
                 .AddItem(new MenuItemDefinition(
-                    FrontEndPageNames.Home,
-                    L("HomePage"),
-                    url: ""
+                        FrontEndPageNames.Home,
+                        L("HomePage"),
+                        url: ""
                     )
 
-                //ABOUT
+                    //ABOUT
                 ).AddItem(new MenuItemDefinition(
-                    FrontEndPageNames.About,
-                    L("AboutUs"),
-                    url: "About"
+                        FrontEndPageNames.About,
+                        L("AboutUs"),
+                        url: "About"
                     )
 
-                //MULTI-LEVEL MENU (JUST FOR EXAMPLE)
-                //).AddItem(new MenuItemDefinition(
-                //    "MultiLevelMenu",
-                //    new FixedLocalizableString("Multi level menu")
-                //    ).AddItem(new MenuItemDefinition(
-                //        "MultiLevelMenu.1",
-                //        new FixedLocalizableString("Sub menu item 1")
-                //        )
-                //    ).AddItem(new MenuItemDefinition(
-                //        "MultiLevelMenu.2",
-                //        new FixedLocalizableString("Sub menu item 2")
-                //        ).AddItem(new MenuItemDefinition(
-                //            "MultiLevelMenu.2.1",
-                //            new FixedLocalizableString("Sub menu item 2.1")
-                //            )
-                //        ).AddItem(new MenuItemDefinition(
-                //            "MultiLevelMenu.2.2",
-                //            new FixedLocalizableString("Sub menu item 2.2")
-                //            )
-                //        ).AddItem(new MenuItemDefinition(
-                //            "MultiLevelMenu.2.3",
-                //            new FixedLocalizableString("Sub menu item 2.3")
-                //            ).AddItem(new MenuItemDefinition(
-                //                "MultiLevelMenu.2.3.1",
-                //                new FixedLocalizableString("ASP.NET Boilerplate"),
-                //                url: "http://aspnetboilerplate.com"
-                //                )
-                //            ).AddItem(new MenuItemDefinition(
-                //                "MultiLevelMenu.2.3.2",
-                //                new FixedLocalizableString("aspnet"),
-                //                url: "https://AspnetZero.com/"
-                //                )
-                //            )
-                //        )
-                //    )
+                    //MULTI-LEVEL MENU (JUST FOR EXAMPLE)
+                    //).AddItem(new MenuItemDefinition(
+                    //    "MultiLevelMenu",
+                    //    new FixedLocalizableString("Multi level menu")
+                    //    ).AddItem(new MenuItemDefinition(
+                    //        "MultiLevelMenu.1",
+                    //        new FixedLocalizableString("Sub menu item 1")
+                    //        )
+                    //    ).AddItem(new MenuItemDefinition(
+                    //        "MultiLevelMenu.2",
+                    //        new FixedLocalizableString("Sub menu item 2")
+                    //        ).AddItem(new MenuItemDefinition(
+                    //            "MultiLevelMenu.2.1",
+                    //            new FixedLocalizableString("Sub menu item 2.1")
+                    //            )
+                    //        ).AddItem(new MenuItemDefinition(
+                    //            "MultiLevelMenu.2.2",
+                    //            new FixedLocalizableString("Sub menu item 2.2")
+                    //            )
+                    //        ).AddItem(new MenuItemDefinition(
+                    //            "MultiLevelMenu.2.3",
+                    //            new FixedLocalizableString("Sub menu item 2.3")
+                    //            ).AddItem(new MenuItemDefinition(
+                    //                "MultiLevelMenu.2.3.1",
+                    //                new FixedLocalizableString("ASP.NET Boilerplate"),
+                    //                url: "http://aspnetboilerplate.com"
+                    //                )
+                    //            ).AddItem(new MenuItemDefinition(
+                    //                "MultiLevelMenu.2.3.2",
+                    //                new FixedLocalizableString("aspnet"),
+                    //                url: "https://AspnetZero.com/"
+                    //                )
+                    //            )
+                    //        )
+                    //    )
                 );
         }
 

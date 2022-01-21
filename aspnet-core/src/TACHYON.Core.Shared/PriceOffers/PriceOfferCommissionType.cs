@@ -11,16 +11,14 @@ namespace TACHYON.PriceOffers
         /// Percentage/Number.
         /// Default Value = 30%
         /// </summary>
-        [Description("CommissionPercentage")]
-        CommissionPercentage = 1,
+        [Description("CommissionPercentage")] CommissionPercentage = 1,
 
         /// <summary>
         /// Market Place Request Commission Value
         /// Floating number, up to two decimal places.
         ///  Default Value = 100
         /// </summary>
-        [Description("CommissionValue")]
-        CommissionValue = 2,
+        [Description("CommissionValue")] CommissionValue = 2,
 
         /// <summary>
         /// Market Place Request Commission Min Value

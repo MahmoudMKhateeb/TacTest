@@ -5,6 +5,5 @@
         public TruckCapacitiesTranslationDto TruckCapacitiesTranslation { get; set; }
 
         public string CapacityDisplayName { get; set; }
-
     }
 }

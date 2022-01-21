@@ -7,8 +7,7 @@ namespace TACHYON.Documents.DocumentFiles.Dtos
 {
     public class UpdateDocumentFileInput : ICustomValidate
     {
-        [MaxLength(400)]
-        public string FileToken { get; set; }
+        [MaxLength(400)] public string FileToken { get; set; }
 
 
         public void AddValidationErrors(CustomValidationContext context)

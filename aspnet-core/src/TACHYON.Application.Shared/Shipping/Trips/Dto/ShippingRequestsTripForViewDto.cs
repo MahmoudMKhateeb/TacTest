@@ -9,7 +9,6 @@ namespace TACHYON.Shipping.Trips.Dto
 {
     public class ShippingRequestsTripForViewDto
     {
-
         public DateTime StartTripDate { get; set; }
         public DateTime? EndTripDate { get; set; }
         public DateTime? StartWorking { get; set; }

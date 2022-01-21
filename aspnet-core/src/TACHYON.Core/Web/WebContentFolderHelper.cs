@@ -36,7 +36,8 @@ namespace TACHYON.Web
                 return webMvcFolder;
             }
 
-            var webHostFolder = Path.Combine(directoryInfo.FullName, $"src{Path.DirectorySeparatorChar}TACHYON.Web.Host");
+            var webHostFolder =
+                Path.Combine(directoryInfo.FullName, $"src{Path.DirectorySeparatorChar}TACHYON.Web.Host");
             if (Directory.Exists(webHostFolder))
             {
                 return webHostFolder;

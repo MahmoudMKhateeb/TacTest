@@ -1,6 +1,6 @@
 ﻿namespace TACHYON.Invoices.Dto
 {
-    public  class InvoiceItemDto
+    public class InvoiceItemDto
     {
         public string Sequence { get; set; }
         public string WayBillNumber { get; set; }
@@ -12,8 +12,5 @@
         public string Destination { get; set; }
         public string DateWork { get; set; }
         public string Remarks { get; set; }
-
-
-
     }
 }

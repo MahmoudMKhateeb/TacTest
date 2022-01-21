@@ -10,6 +10,5 @@ namespace TACHYON.Countries.CountriesTranslations.Dtos
         public string Language { get; set; }
 
         public int CoreId { get; set; }
-
     }
 }

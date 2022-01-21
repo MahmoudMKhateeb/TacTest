@@ -13,16 +13,14 @@ namespace TACHYON.PriceOffers
     {
         public long? ReferenceNumber { get; set; }
         public long? ParentId { get; set; }
-        [ForeignKey(nameof(ParentId))]
-        public PriceOffer PriceOfferFk { get; set; }
+        [ForeignKey(nameof(ParentId))] public PriceOffer PriceOfferFk { get; set; }
         public long ShippingRequestId { get; set; }
 
         [ForeignKey(nameof(ShippingRequestId))]
         public ShippingRequest ShippingRequestFk { get; set; }
 
         public int TenantId { get; set; }
-        [ForeignKey(nameof(TenantId))]
-        public Tenant Tenant { get; set; }
+        [ForeignKey(nameof(TenantId))] public Tenant Tenant { get; set; }
 
         public PriceOfferChannel Channel { get; set; }
         public PriceOfferStatus Status { get; set; }
@@ -31,6 +29,7 @@ namespace TACHYON.PriceOffers
         #region Invoice
 
         #region Pricing Totals of Items and Details
+
         /// <summary>
         /// ItemsTotalPricePreCommissionPreVat * TaxVat
         /// </summary>
@@ -76,28 +75,26 @@ namespace TACHYON.PriceOffers
         /// </summary>
         public decimal DetailsTotalVatPostCommission { get; set; }
 
-
         #endregion
 
         /// <summary>
         /// AppSettings.HostManagement.TaxVat
         /// </summary>
         public decimal TaxVat { get; set; }
+
         #endregion
 
 
         public ICollection<PriceOfferDetail> PriceOfferDetails { get; set; } = new List<PriceOfferDetail>();
+
         /// <summary>
         /// If shipper reject offer, will place reason of rejected
         /// </summary>
         public string RejectedReason { get; set; }
+
         /// <summary>
         /// If the shipper or TAD view this pricing,Help us when the carrier edit the price to check if the is view sent notification to stachholder the the carrier update price else sent there new price add.
         /// </summary>
         public bool IsView { get; set; }
-
-
-
-
     }
 }

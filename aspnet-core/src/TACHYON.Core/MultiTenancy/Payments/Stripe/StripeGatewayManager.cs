@@ -31,7 +31,9 @@ namespace TACHYON.MultiTenancy.Payments.Stripe
             _editionManager = editionManager;
         }
 
-        public async Task UpdateSubscription(int newEditionId, int tenantId, bool isProrateCharged = false)
+        public async Task UpdateSubscription(int newEditionId,
+            int tenantId,
+            bool isProrateCharged = false)
         {
             var lastPayment = await _subscriptionPaymentRepository.GetLastCompletedPaymentOrDefaultAsync(
                 tenantId: tenantId,
@@ -43,7 +45,8 @@ namespace TACHYON.MultiTenancy.Payments.Stripe
 
             using (CurrentUnitOfWork.SetTenantId(null))
             {
-                var edition = (SubscribableEdition)AsyncHelper.RunSync(() => _editionManager.GetByIdAsync(newEditionId));
+                var edition =
+                    (SubscribableEdition)AsyncHelper.RunSync(() => _editionManager.GetByIdAsync(newEditionId));
                 newPlanId = GetPlanId(edition.Name, lastPayment.GetPaymentPeriodType());
                 newPlanAmount = edition.GetPaymentAmount(lastPayment.PaymentPeriodType);
             }
@@ -61,24 +64,27 @@ namespace TACHYON.MultiTenancy.Payments.Stripe
             await UpdateSubscription(lastPayment.ExternalPaymentId, newPlanId, isProrateCharged);
         }
 
-        private async Task UpdateSubscription(string subscriptionId, string newPlanId, bool isProrateCharged = false)
+        private async Task UpdateSubscription(string subscriptionId,
+            string newPlanId,
+            bool isProrateCharged = false)
         {
             var subscriptionService = new SubscriptionService();
             var subscription = await subscriptionService.GetAsync(subscriptionId);
 
-            await subscriptionService.UpdateAsync(subscriptionId, new SubscriptionUpdateOptions
-            {
-                CancelAtPeriodEnd = false,
-                Items = new List<SubscriptionItemOptions> {
-                    new SubscriptionItemOptions {
-                        Id = subscription.Items.Data[0].Id,
-                        Plan = newPlanId
-                    }
-                },
-                Prorate = !isProrateCharged
-            });
+            await subscriptionService.UpdateAsync(subscriptionId,
+                new SubscriptionUpdateOptions
+                {
+                    CancelAtPeriodEnd = false,
+                    Items = new List<SubscriptionItemOptions>
+                    {
+                        new SubscriptionItemOptions { Id = subscription.Items.Data[0].Id, Plan = newPlanId }
+                    },
+                    Prorate = !isProrateCharged
+                });
 
-            var lastRecurringPayment = await _subscriptionPaymentRepository.GetByGatewayAndPaymentIdAsync(SubscriptionPaymentGatewayType.Stripe, subscriptionId);
+            var lastRecurringPayment =
+                await _subscriptionPaymentRepository.GetByGatewayAndPaymentIdAsync(
+                    SubscriptionPaymentGatewayType.Stripe, subscriptionId);
             var payment = await _subscriptionPaymentRepository.GetLastPaymentOrDefaultAsync(
                 tenantId: lastRecurringPayment.TenantId,
                 SubscriptionPaymentGatewayType.Stripe,
@@ -115,17 +121,17 @@ namespace TACHYON.MultiTenancy.Payments.Stripe
             }
         }
 
-        public async Task<StripeIdResponse> GetOrCreatePlanAsync(string planId, decimal amount, string interval, string productId)
+        public async Task<StripeIdResponse> GetOrCreatePlanAsync(string planId,
+            decimal amount,
+            string interval,
+            string productId)
         {
             try
             {
                 var planService = new PlanService();
                 var plan = await planService.GetAsync(planId);
 
-                return new StripeIdResponse
-                {
-                    Id = plan.Id
-                };
+                return new StripeIdResponse { Id = plan.Id };
             }
             catch (StripeException)
             {
@@ -140,10 +146,7 @@ namespace TACHYON.MultiTenancy.Payments.Stripe
                 var productService = new ProductService();
                 var product = await productService.GetAsync(productId);
 
-                return new StripeIdResponse
-                {
-                    Id = product.Id
-                };
+                return new StripeIdResponse { Id = product.Id };
             }
             catch (StripeException exception)
             {
@@ -182,17 +185,17 @@ namespace TACHYON.MultiTenancy.Payments.Stripe
 
             using (CurrentUnitOfWork.SetTenantId(null))
             {
-                var edition = (SubscribableEdition)AsyncHelper.RunSync(() => _editionManager.GetByIdAsync(eventData.EditionId));
+                var edition =
+                    (SubscribableEdition)AsyncHelper.RunSync(() => _editionManager.GetByIdAsync(eventData.EditionId));
                 daysUntilDue = edition.WaitingDayAfterExpire ?? 3;
             }
 
             var subscriptionService = new SubscriptionService();
-            subscriptionService.Update(subscriptionPayment.ExternalPaymentId, new SubscriptionUpdateOptions
-            {
-                CancelAtPeriodEnd = false,
-                CollectionMethod = "send_invoice",
-                DaysUntilDue = daysUntilDue
-            });
+            subscriptionService.Update(subscriptionPayment.ExternalPaymentId,
+                new SubscriptionUpdateOptions
+                {
+                    CancelAtPeriodEnd = false, CollectionMethod = "send_invoice", DaysUntilDue = daysUntilDue
+                });
         }
 
         public void HandleEvent(RecurringPaymentsEnabledEventData eventData)
@@ -205,11 +208,8 @@ namespace TACHYON.MultiTenancy.Payments.Stripe
             }
 
             var subscriptionService = new SubscriptionService();
-            subscriptionService.Update(subscriptionPayment.ExternalPaymentId, new SubscriptionUpdateOptions
-            {
-                CancelAtPeriodEnd = false,
-                CollectionMethod = "charge_automatically"
-            });
+            subscriptionService.Update(subscriptionPayment.ExternalPaymentId,
+                new SubscriptionUpdateOptions { CancelAtPeriodEnd = false, CollectionMethod = "charge_automatically" });
         }
 
         public void HandleEvent(TenantEditionChangedEventData eventData)
@@ -238,7 +238,8 @@ namespace TACHYON.MultiTenancy.Payments.Stripe
 
             using (CurrentUnitOfWork.SetTenantId(null))
             {
-                var edition = (SubscribableEdition)AsyncHelper.RunSync(() => _editionManager.GetByIdAsync(eventData.NewEditionId.Value));
+                var edition = (SubscribableEdition)AsyncHelper.RunSync(() =>
+                    _editionManager.GetByIdAsync(eventData.NewEditionId.Value));
                 newPlanId = GetPlanId(edition.Name, subscriptionPayment.GetPaymentPeriodType());
                 newPlanAmount = edition.GetPaymentAmountOrNull(subscriptionPayment.PaymentPeriodType);
             }
@@ -267,7 +268,8 @@ namespace TACHYON.MultiTenancy.Payments.Stripe
 
             if (!AsyncHelper.RunSync(() => DoesPlanExistAsync(newPlanId)))
             {
-                AsyncHelper.RunSync(() => CreatePlanAsync(newPlanId, newPlanAmount.Value, GetPlanInterval(subscriptionPayment.PaymentPeriodType), ProductName));
+                AsyncHelper.RunSync(() => CreatePlanAsync(newPlanId, newPlanAmount.Value,
+                    GetPlanInterval(subscriptionPayment.PaymentPeriodType), ProductName));
             }
 
             AsyncHelper.RunSync(() => UpdateSubscription(subscriptionPayment.ExternalPaymentId, newPlanId));
@@ -348,7 +350,10 @@ namespace TACHYON.MultiTenancy.Payments.Stripe
                 .FirstOrDefault();
         }
 
-        private async Task<StripeIdResponse> CreatePlanAsync(string planId, decimal amount, string interval, string productId)
+        private async Task<StripeIdResponse> CreatePlanAsync(string planId,
+            decimal amount,
+            string interval,
+            string productId)
         {
             var planService = new PlanService();
             var plan = await planService.CreateAsync(new PlanCreateOptions
@@ -360,10 +365,7 @@ namespace TACHYON.MultiTenancy.Payments.Stripe
                 Currency = TACHYONConsts.Currency
             });
 
-            return new StripeIdResponse
-            {
-                Id = plan.Id
-            };
+            return new StripeIdResponse { Id = plan.Id };
         }
 
         private async Task<StripeIdResponse> CreateProductAsync(string name)
@@ -371,15 +373,10 @@ namespace TACHYON.MultiTenancy.Payments.Stripe
             var productService = new ProductService();
             var product = await productService.CreateAsync(new ProductCreateOptions
             {
-                Id = name,
-                Name = name,
-                Type = "service"
+                Id = name, Name = name, Type = "service"
             });
 
-            return new StripeIdResponse
-            {
-                Id = product.Id
-            };
+            return new StripeIdResponse { Id = product.Id };
         }
 
         public async Task<StripeIdResponse> GetOrCreatePlanForPayment(long paymentId)

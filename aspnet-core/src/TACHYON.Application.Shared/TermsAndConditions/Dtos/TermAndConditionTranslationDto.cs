@@ -8,6 +8,5 @@ namespace TACHYON.TermsAndConditions.Dtos
         public string Language { get; set; }
 
         public int? CoreId { get; set; }
-
     }
 }

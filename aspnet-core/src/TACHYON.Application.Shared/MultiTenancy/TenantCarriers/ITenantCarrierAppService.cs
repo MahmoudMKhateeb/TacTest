@@ -5,7 +5,7 @@ using TACHYON.MultiTenancy.TenantCarriers.Dto;
 
 namespace TACHYON.MultiTenancy.TenantCarriers
 {
-    public interface ITenantCarrierAppService: IApplicationService
+    public interface ITenantCarrierAppService : IApplicationService
     {
         Task<PagedResultDto<TenantCarriersListDto>> GetAll(GetAllForTenantCarrierInput input);
         Task Create(CreateTenantCarrierInput input);

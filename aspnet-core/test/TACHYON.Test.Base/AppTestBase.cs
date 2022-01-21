@@ -119,7 +119,8 @@ namespace TACHYON.Test.Base
             return result;
         }
 
-        protected async Task<TResult> UsingDbContextAsync<TResult>(int? tenantId, Func<TACHYONDbContext, Task<TResult>> func)
+        protected async Task<TResult> UsingDbContextAsync<TResult>(int? tenantId,
+            Func<TACHYONDbContext, Task<TResult>> func)
         {
             TResult result;
 
@@ -151,7 +152,8 @@ namespace TACHYON.Test.Base
         {
             AbpSession.TenantId = null;
 
-            var user = UsingDbContext(context => context.Users.FirstOrDefault(u => u.TenantId == AbpSession.TenantId && u.UserName == userName));
+            var user = UsingDbContext(context =>
+                context.Users.FirstOrDefault(u => u.TenantId == AbpSession.TenantId && u.UserName == userName));
             if (user == null)
             {
                 throw new Exception("There is no user: " + userName + " for host.");
@@ -172,7 +174,8 @@ namespace TACHYON.Test.Base
 
             AbpSession.TenantId = tenant.Id;
 
-            var user = UsingDbContext(context => context.Users.FirstOrDefault(u => u.TenantId == AbpSession.TenantId && u.UserName == userName));
+            var user = UsingDbContext(context =>
+                context.Users.FirstOrDefault(u => u.TenantId == AbpSession.TenantId && u.UserName == userName));
             if (user == null)
             {
                 throw new Exception("There is no user: " + userName + " for tenant: " + tenancyName);
@@ -240,7 +243,8 @@ namespace TACHYON.Test.Base
 
         protected async Task<Tenant> GetTenantAsync(string tenancyName)
         {
-            return await UsingDbContext(null, async context => await context.Tenants.SingleAsync(t => t.TenancyName == tenancyName));
+            return await UsingDbContext(null,
+                async context => await context.Tenants.SingleAsync(t => t.TenancyName == tenancyName));
         }
 
         protected Tenant GetTenantOrNull(string tenancyName)
@@ -250,7 +254,8 @@ namespace TACHYON.Test.Base
 
         protected async Task<Tenant> GetTenantOrNullAsync(string tenancyName)
         {
-            return await UsingDbContext(null, async context => await context.Tenants.FirstOrDefaultAsync(t => t.TenancyName == tenancyName));
+            return await UsingDbContext(null,
+                async context => await context.Tenants.FirstOrDefaultAsync(t => t.TenancyName == tenancyName));
         }
 
         #endregion
@@ -259,12 +264,14 @@ namespace TACHYON.Test.Base
 
         protected Role GetRole(string roleName)
         {
-            return UsingDbContext(context => context.Roles.Single(r => r.Name == roleName && r.TenantId == AbpSession.TenantId));
+            return UsingDbContext(context =>
+                context.Roles.Single(r => r.Name == roleName && r.TenantId == AbpSession.TenantId));
         }
 
         protected async Task<Role> GetRoleAsync(string roleName)
         {
-            return await UsingDbContext(async context => await context.Roles.SingleAsync(r => r.Name == roleName && r.TenantId == AbpSession.TenantId));
+            return await UsingDbContext(async context =>
+                await context.Roles.SingleAsync(r => r.Name == roleName && r.TenantId == AbpSession.TenantId));
         }
 
         #endregion
@@ -299,7 +306,7 @@ namespace TACHYON.Test.Base
                 context.Users.FirstOrDefault(u =>
                     u.UserName == userName &&
                     u.TenantId == AbpSession.TenantId
-                    ));
+                ));
         }
 
         protected async Task<User> GetUserByUserNameOrNullAsync(string userName, bool includeRoles = false)
@@ -308,8 +315,8 @@ namespace TACHYON.Test.Base
                 await context.Users
                     .IncludeIf(includeRoles, u => u.Roles)
                     .FirstOrDefaultAsync(u =>
-                            u.UserName == userName &&
-                            u.TenantId == AbpSession.TenantId
+                        u.UserName == userName &&
+                        u.TenantId == AbpSession.TenantId
                     ));
         }
 

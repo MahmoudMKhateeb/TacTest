@@ -27,10 +27,14 @@ namespace TACHYON.Shipping.ShippingRequests
 
         private readonly ISmsSender _smsSender;
         private readonly IAppNotifier _appNotifier;
+
         public ShippingRequestManager(ISmsSender smsSender,
             IRepository<RoutPoint, long> routPointRepository,
             IAppNotifier appNotifier,
-            IRepository<ShippingRequest, long> shippingRequestRepository, IFeatureChecker featureChecker, IAbpSession abpSession, IWebUrlService webUrlService)
+            IRepository<ShippingRequest, long> shippingRequestRepository,
+            IFeatureChecker featureChecker,
+            IAbpSession abpSession,
+            IWebUrlService webUrlService)
         {
             _smsSender = smsSender;
             _routPointRepository = routPointRepository;
@@ -46,13 +50,11 @@ namespace TACHYON.Shipping.ShippingRequests
         /// </summary>
         /// <param name="shippingRequest"></param>
         /// <returns></returns>
-
         public async Task SetToPostPrice(ShippingRequest shippingRequest)
         {
             shippingRequest.Status = ShippingRequestStatus.PostPrice;
             await _appNotifier.ShippingRequestNotifyCarrirerWhenShipperAccepted(shippingRequest);
         }
-
 
 
         /// <summary>
@@ -64,15 +66,16 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             string number = point.ReceiverPhoneNumber;
             string formattedDate = point.EndTime?.ToString("dd/MM/yyyy hh:mm");
-            var ratingLink = $"{L("ClickToRate")} {WebUrlService.WebSiteRootAddressFormat}account/RatingPage/{point.Code}";
+            var ratingLink =
+                $"{L("ClickToRate")} {WebUrlService.WebSiteRootAddressFormat}account/RatingPage/{point.Code}";
             string message = L(TACHYONConsts.SMSShippingRequestReceiverCode, new CultureInfo(Culture),
                 point.WaybillNumber, point.Code, ratingLink);
             if (point.ReceiverFk != null)
             {
                 number = point.ReceiverFk.PhoneNumber;
             }
-            await _smsSender.SendAsync(number, message);
 
+            await _smsSender.SendAsync(number, message);
         }
 
         /// <summary>
@@ -86,13 +89,14 @@ namespace TACHYON.Shipping.ShippingRequests
             string formattedDate = point.EndTime?.ToString("dd/MM/yyyy hh:mm");
             var ratingLink =
                 $"{L("ClickToRate")} {WebUrlService.WebSiteRootAddressFormat}account/RatingPage/{point.Code}";
-            string message = L(TACHYONConsts.SMSShippingRequestReceiverCode, point.WaybillNumber, point.Code, ratingLink);
+            string message = L(TACHYONConsts.SMSShippingRequestReceiverCode, point.WaybillNumber, point.Code,
+                ratingLink);
             if (point.ReceiverFk != null)
             {
                 await _smsSender.SendAsync(point.ReceiverFk.PhoneNumber, message);
             }
-            if (!string.IsNullOrEmpty(number)) await _smsSender.SendAsync(number, message);
 
+            if (!string.IsNullOrEmpty(number)) await _smsSender.SendAsync(number, message);
         }
 
         /// <summary>
@@ -102,22 +106,26 @@ namespace TACHYON.Shipping.ShippingRequests
         /// <returns></returns>
         public async Task SendSmsToReceivers(int tripId)
         {
-            var RoutePoints = await _routPointRepository.GetAll().Include(r => r.ReceiverFk).Include(x => x.ShippingRequestTripFk).Where(x => x.ShippingRequestTripId == tripId && x.PickingType == PickingType.Dropoff).ToListAsync();
+            var RoutePoints = await _routPointRepository.GetAll().Include(r => r.ReceiverFk)
+                .Include(x => x.ShippingRequestTripFk)
+                .Where(x => x.ShippingRequestTripId == tripId && x.PickingType == PickingType.Dropoff).ToListAsync();
             RoutePoints.ForEach(async p =>
             {
                 await SendSmsToReceiver(p);
             });
-
         }
 
 
         public async Task<ShippingRequest> GetShippingRequestWhenNormalStatus(long ShippingRequestId)
         {
-
             return await _shippingRequestRepository
-                                        .GetAll()
-                                        .WhereIf(await _featureChecker.IsEnabledAsync(AppFeatures.Shipper), x => x.TenantId == _abpSession.TenantId && !x.IsTachyonDeal)
-                                        .FirstOrDefaultAsync(r => r.Id == ShippingRequestId && (r.Status == ShippingRequestStatus.NeedsAction || r.Status == ShippingRequestStatus.PrePrice || r.Status == ShippingRequestStatus.AcceptedAndWaitingCarrier));
+                .GetAll()
+                .WhereIf(await _featureChecker.IsEnabledAsync(AppFeatures.Shipper),
+                    x => x.TenantId == _abpSession.TenantId && !x.IsTachyonDeal)
+                .FirstOrDefaultAsync(r => r.Id == ShippingRequestId && (r.Status == ShippingRequestStatus.NeedsAction ||
+                                                                        r.Status == ShippingRequestStatus.PrePrice ||
+                                                                        r.Status == ShippingRequestStatus
+                                                                            .AcceptedAndWaitingCarrier));
         }
     }
 }

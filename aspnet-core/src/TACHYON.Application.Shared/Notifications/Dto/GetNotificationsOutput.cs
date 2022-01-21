@@ -8,7 +8,9 @@ namespace TACHYON.Notifications.Dto
     {
         public int UnreadCount { get; set; }
 
-        public GetNotificationsOutput(int totalCount, int unreadCount, List<UserNotification> notifications)
+        public GetNotificationsOutput(int totalCount,
+            int unreadCount,
+            List<UserNotification> notifications)
             : base(totalCount, notifications)
         {
             UnreadCount = unreadCount;

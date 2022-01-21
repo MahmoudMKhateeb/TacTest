@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TACHYON.Shipping.ShippingRequests.Dtos
 {
-   public class GetAllShippingRequestsOutputDto
+    public class GetAllShippingRequestsOutputDto
     {
         public PagedResultDto<ShippingRequestListDto> Data { get; set; }
         public int NoOfPostPriceWithoutTrips { get; set; }

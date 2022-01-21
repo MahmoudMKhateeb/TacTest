@@ -9,22 +9,21 @@ using System.Collections.Generic;
 
 namespace TACHYON.AddressBook.Ports
 {
-    public interface IPortsAppService : IApplicationService 
+    public interface IPortsAppService : IApplicationService
     {
         Task<PagedResultDto<GetPortForViewDto>> GetAll(GetAllPortsInput input);
 
         Task<GetPortForViewDto> GetPortForView(long id);
 
-		Task<GetPortForEditOutput> GetPortForEdit(EntityDto<long> input);
+        Task<GetPortForEditOutput> GetPortForEdit(EntityDto<long> input);
 
-		Task CreateOrEdit(CreateOrEditPortDto input);
+        Task CreateOrEdit(CreateOrEditPortDto input);
 
-		Task Delete(EntityDto<long> input);
+        Task Delete(EntityDto<long> input);
 
-		Task<FileDto> GetPortsToExcel(GetAllPortsForExcelInput input);
+        Task<FileDto> GetPortsToExcel(GetAllPortsForExcelInput input);
 
-		
-		Task<List<PortCityLookupTableDto>> GetAllCityForTableDropdown();
-		
+
+        Task<List<PortCityLookupTableDto>> GetAllCityForTableDropdown();
     }
 }

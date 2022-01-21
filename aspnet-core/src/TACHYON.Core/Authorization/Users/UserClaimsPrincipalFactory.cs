@@ -12,14 +12,16 @@ namespace TACHYON.Authorization.Users
     public class UserClaimsPrincipalFactory : AbpUserClaimsPrincipalFactory<User, Role>
     {
         private readonly TenantManager _tenantManager;
+
         public UserClaimsPrincipalFactory(
             UserManager userManager,
             RoleManager roleManager,
-            IOptions<IdentityOptions> optionsAccessor, TenantManager tenantManager)
+            IOptions<IdentityOptions> optionsAccessor,
+            TenantManager tenantManager)
             : base(
-                  userManager,
-                  roleManager,
-                  optionsAccessor)
+                userManager,
+                roleManager,
+                optionsAccessor)
         {
             _tenantManager = tenantManager;
         }
@@ -36,6 +38,5 @@ namespace TACHYON.Authorization.Users
 
             return claim;
         }
-
     }
 }

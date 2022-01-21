@@ -75,7 +75,9 @@ namespace TACHYON.Web.Public.Startup
             });
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app,
+            IWebHostEnvironment env,
+            ILoggerFactory loggerFactory)
         {
             app.UseAbp(); //Initializes ABP framework.
 
@@ -105,11 +107,11 @@ namespace TACHYON.Web.Public.Startup
 
             if (bool.Parse(_appConfiguration["HealthChecks:HealthChecksEnabled"]))
             {
-                app.UseHealthChecks("/health", new HealthCheckOptions()
-                {
-                    Predicate = _ => true,
-                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-                });
+                app.UseHealthChecks("/health",
+                    new HealthCheckOptions()
+                    {
+                        Predicate = _ => true, ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                    });
 
                 if (bool.Parse(_appConfiguration["HealthChecks:HealthChecksUI:HealthChecksUIEnabled"]))
                 {
@@ -127,11 +129,9 @@ namespace TACHYON.Web.Public.Startup
                     {
                         var certPassword = _appConfiguration.GetValue<string>("Kestrel:Certificates:Default:Password");
                         var certPath = _appConfiguration.GetValue<string>("Kestrel:Certificates:Default:Path");
-                        var cert = new System.Security.Cryptography.X509Certificates.X509Certificate2(certPath, certPassword);
-                        listenOptions.UseHttps(new HttpsConnectionAdapterOptions()
-                        {
-                            ServerCertificate = cert
-                        });
+                        var cert = new System.Security.Cryptography.X509Certificates.X509Certificate2(certPath,
+                            certPassword);
+                        listenOptions.UseHttps(new HttpsConnectionAdapterOptions() { ServerCertificate = cert });
                     });
             });
         }

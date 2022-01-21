@@ -20,7 +20,6 @@ namespace TACHYON.Packing.PackingTypes
 {
     public class GetAllTranslationsInput
     {
-
         public string LoadOptions { get; set; }
         public string CoreId { get; set; }
     }
@@ -31,7 +30,8 @@ namespace TACHYON.Packing.PackingTypes
         private readonly IRepository<PackingType> _packingTypeRepository;
         private readonly IRepository<PackingTypeTranslation> _packingTypeTranslationRepository;
 
-        public PackingTypesAppService(IRepository<PackingType> packingTypeRepository, IRepository<PackingTypeTranslation> packingTypeTranslationRepository)
+        public PackingTypesAppService(IRepository<PackingType> packingTypeRepository,
+            IRepository<PackingTypeTranslation> packingTypeTranslationRepository)
         {
             _packingTypeRepository = packingTypeRepository;
             _packingTypeTranslationRepository = packingTypeTranslationRepository;
@@ -45,9 +45,6 @@ namespace TACHYON.Packing.PackingTypes
 
 
             return await LoadResultAsync(filteredPackingTypes, input.LoadOptions);
-
-
-
         }
 
         public async Task<GetPackingTypeForViewDto> GetPackingTypeForView(int id)
@@ -62,10 +59,7 @@ namespace TACHYON.Packing.PackingTypes
             if (packingType == null)
                 throw new UserFriendlyException(L("PackingTypeWithId" + id + "NotFound"));
 
-            var output = new GetPackingTypeForViewDto
-            {
-                PackingType = ObjectMapper.Map<PackingTypeDto>(packingType)
-            };
+            var output = new GetPackingTypeForViewDto { PackingType = ObjectMapper.Map<PackingTypeDto>(packingType) };
 
             return output;
         }
@@ -143,7 +137,6 @@ namespace TACHYON.Packing.PackingTypes
 
         public async Task CreateOrEditTranslation(PackingTypeTranslationDto input)
         {
-
             var translation = await _packingTypeTranslationRepository.FirstOrDefaultAsync(x => x.Id == input.Id);
             if (translation == null)
             {
@@ -152,12 +145,15 @@ namespace TACHYON.Packing.PackingTypes
             }
             else
             {
-                var duplication = await _packingTypeTranslationRepository.FirstOrDefaultAsync(x => x.CoreId == translation.CoreId && x.Language.Contains(translation.Language) && x.Id != translation.Id);
+                var duplication = await _packingTypeTranslationRepository.FirstOrDefaultAsync(x =>
+                    x.CoreId == translation.CoreId && x.Language.Contains(translation.Language) &&
+                    x.Id != translation.Id);
                 if (duplication != null)
                 {
                     throw new UserFriendlyException(
                         "The translation for this language already exists, you can modify it");
                 }
+
                 ObjectMapper.Map(input, translation);
             }
         }

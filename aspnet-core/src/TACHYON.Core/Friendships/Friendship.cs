@@ -33,7 +33,12 @@ namespace TACHYON.Friendships
 
         public DateTime CreationTime { get; set; }
 
-        public Friendship(UserIdentifier user, UserIdentifier probableFriend, string probableFriendTenancyName, string probableFriendUserName, Guid? probableFriendProfilePictureId, FriendshipState state)
+        public Friendship(UserIdentifier user,
+            UserIdentifier probableFriend,
+            string probableFriendTenancyName,
+            string probableFriendUserName,
+            Guid? probableFriendProfilePictureId,
+            FriendshipState state)
         {
             if (user == null)
             {
@@ -64,7 +69,6 @@ namespace TACHYON.Friendships
 
         protected Friendship()
         {
-
         }
     }
 }

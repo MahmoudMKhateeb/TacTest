@@ -7,7 +7,5 @@ namespace TACHYON.Trucks.TrucksTypes.Dtos
     public class GetTrucksTypeForEditOutput
     {
         public CreateOrEditTrucksTypeDto TrucksType { get; set; }
-
-
     }
 }

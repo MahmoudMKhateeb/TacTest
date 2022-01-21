@@ -6,14 +6,10 @@ namespace TACHYON.Nationalities.NationalitiesTranslation.Dtos
 {
     public class CreateOrEditNationalityTranslationDto : EntityDto<int?>
     {
+        [Required] public string TranslatedName { get; set; }
 
-        [Required]
-        public string TranslatedName { get; set; }
-
-        [Required]
-        public string Language { get; set; }
+        [Required] public string Language { get; set; }
 
         public int CoreId { get; set; }
-
     }
 }

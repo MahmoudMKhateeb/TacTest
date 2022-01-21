@@ -6,8 +6,7 @@ namespace TACHYON.Web.Public.Views
 {
     public abstract class TACHYONRazorPage<TModel> : AbpRazorPage<TModel>
     {
-        [RazorInject]
-        public IAbpSession AbpSession { get; set; }
+        [RazorInject] public IAbpSession AbpSession { get; set; }
 
         protected TACHYONRazorPage()
         {

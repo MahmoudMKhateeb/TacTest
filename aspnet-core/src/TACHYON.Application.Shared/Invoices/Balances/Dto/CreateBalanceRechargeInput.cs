@@ -6,20 +6,17 @@ using System.Text;
 
 namespace TACHYON.Invoices.Balances.Dto
 {
-
-    public  class CreateBalanceRechargeInput: ICustomValidate
+    public class CreateBalanceRechargeInput : ICustomValidate
     {
-        [Required]
-        public int? TenantId { get; set; }
+        [Required] public int? TenantId { get; set; }
 
-        [Required]
-        public decimal Amount { get; set; }
+        [Required] public decimal Amount { get; set; }
 
         public string ReferenceNo { get; set; }
 
         public void AddValidationErrors(CustomValidationContext context)
         {
-            if (!TenantId.HasValue || TenantId.Value<=0)
+            if (!TenantId.HasValue || TenantId.Value <= 0)
             {
                 context.Results.Add(new ValidationResult("YouMustSelectTheShipperFromAutoCompleteText"));
             }

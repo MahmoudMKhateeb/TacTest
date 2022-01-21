@@ -17,6 +17,5 @@ namespace TACHYON.Vases.Dtos
         public int MaxCount { get; set; }
 
         public bool IsOther { get; set; }
-
     }
 }

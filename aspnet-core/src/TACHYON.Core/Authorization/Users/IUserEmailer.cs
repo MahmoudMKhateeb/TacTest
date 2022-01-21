@@ -17,7 +17,9 @@ namespace TACHYON.Authorization.Users
         /// <param name="plainPassword">
         /// Can be set to user's plain password to include it in the email.
         /// </param>
-        Task SendEmailActivationLinkAsync(User user, string link, string plainPassword);
+        Task SendEmailActivationLinkAsync(User user,
+            string link,
+            string plainPassword);
 
         /// <summary>
         /// Send Email to admin tenant user when all documents approved by host
@@ -26,6 +28,7 @@ namespace TACHYON.Authorization.Users
         /// <param name="tenantId"></param>
         /// <returns></returns>
         Task SendAllApprovedDocumentsAsync(int tenantId, string loginLink);
+
         /// <summary>
         /// Send Email to admin tenant user when all documents approved by host
         /// </summary>
@@ -57,7 +60,11 @@ namespace TACHYON.Authorization.Users
         /// <param name="senderUsername"></param>
         /// <param name="senderTenancyName"></param>
         /// <param name="chatMessage"></param>
-        Task TryToSendChatMessageMail(User user, string senderUsername, string senderTenancyName, ChatMessage chatMessage);
+        Task TryToSendChatMessageMail(User user,
+            string senderUsername,
+            string senderTenancyName,
+            ChatMessage chatMessage);
+
         /// <summary>
         /// Send an Email When User Account Password Updated or Changed
         /// </summary>
@@ -65,7 +72,9 @@ namespace TACHYON.Authorization.Users
         /// <param name="userEmail"></param>
         /// /// <param name="tenantId"></param>
         /// <returns></returns>
-        Task SendPasswordUpdatedEmail(int? tenantId, string userEmail, string newPassword);
+        Task SendPasswordUpdatedEmail(int? tenantId,
+            string userEmail,
+            string newPassword);
 
         /// <summary>
         /// Send an Email To Warn User From Suspend Him Account Because That He Has Document Almost Expired
@@ -74,7 +83,9 @@ namespace TACHYON.Authorization.Users
         /// <param name="documentName"></param>
         /// <param name="documentExpireDate"></param>
         /// <returns></returns>
-        Task SendWarningSuspendAccountForExpiredDocumentEmail(int tenantId, string documentName, DateTime documentExpireDate);
+        Task SendWarningSuspendAccountForExpiredDocumentEmail(int tenantId,
+            string documentName,
+            DateTime documentExpireDate);
 
         /// <summary>
         /// Send an Email To Notify User That Him Account Was Suspended For Expired Document
@@ -91,7 +102,9 @@ namespace TACHYON.Authorization.Users
         /// <param name="invoiceNumber"></param>
         /// <param name="invoiceTotalAmount"></param>
         /// <returns></returns>
-        Task SendInvoiceDueEmail(int tenantId, string invoiceNumber, decimal invoiceTotalAmount);
+        Task SendInvoiceDueEmail(int tenantId,
+            string invoiceNumber,
+            decimal invoiceTotalAmount);
 
         /// <summary>
         /// Send Email To Tell User He Have a New Created Invoice
@@ -102,9 +115,14 @@ namespace TACHYON.Authorization.Users
         /// <param name="invoiceTotalAmount"></param>
         /// <param name="invoiceUrl"></param>
         /// <returns></returns>
-        Task SendIssuedInvoiceEmail(int tenantId, DateTime invoiceDueDate,
-            DateTime invoiceIssueDate, decimal invoiceTotalAmount, string invoiceUrl);
+        Task SendIssuedInvoiceEmail(int tenantId,
+            DateTime invoiceDueDate,
+            DateTime invoiceIssueDate,
+            decimal invoiceTotalAmount,
+            string invoiceUrl);
 
-        Task SendRejectedDocumentEmail(int tenantId, string documentName, string rejectionReason);
+        Task SendRejectedDocumentEmail(int tenantId,
+            string documentName,
+            string rejectionReason);
     }
 }

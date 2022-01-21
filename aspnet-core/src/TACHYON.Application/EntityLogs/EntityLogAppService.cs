@@ -51,24 +51,26 @@ namespace TACHYON.EntityLogs
                     logs = _logManager.GetAllEntityLogs<RoutPoint, long>(typeof(RoutPoint).ToString(), input.EntityId);
                     break;
                 case EntityLogType.ShippingRequestTrip:
-                    logs = _logManager.GetAllEntityLogs<ShippingRequestTrip, int>(typeof(ShippingRequestTrip).ToString(), input.EntityId);
+                    logs = _logManager.GetAllEntityLogs<ShippingRequestTrip, int>(
+                        typeof(ShippingRequestTrip).ToString(), input.EntityId);
                     break;
                 case EntityLogType.ShippingRequest:
-                    logs = _logManager.GetAllEntityLogs<RoutPoint, long>(typeof(ShippingRequest).ToString(), input.EntityId);
+                    logs = _logManager.GetAllEntityLogs<RoutPoint, long>(typeof(ShippingRequest).ToString(),
+                        input.EntityId);
                     break;
                 case EntityLogType.ShippingRequestPriceOffer:
                     logs = _logManager.GetAllEntityLogs<RoutPoint, long>(typeof(PriceOffer).ToString(), input.EntityId);
                     break;
                 default:
-                    throw new AbpValidationException("Don't Play With Me...Go To Hell"); // Test Msg todo add localization here
+                    throw new AbpValidationException(
+                        "Don't Play With Me...Go To Hell"); // Test Msg todo add localization here
             }
 
             var entityLogs = await logs.PageBy(input).ToListAsync();
 
             return new PagedResultDto<EntityLogListDto>()
             {
-                Items = await ToEntityLogListDto<RoutPoint>(entityLogs),
-                TotalCount = await logs.CountAsync()
+                Items = await ToEntityLogListDto<RoutPoint>(entityLogs), TotalCount = await logs.CountAsync()
             };
         }
 
@@ -112,7 +114,6 @@ namespace TACHYON.EntityLogs
 
             return logDtos;
         }
-
 
 
         private async Task<TSource> GetUserData<TSource>(long userId, Expression<Func<User, TSource>> selector)

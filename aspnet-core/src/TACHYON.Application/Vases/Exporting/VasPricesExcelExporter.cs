@@ -10,15 +10,14 @@ namespace TACHYON.Vases.Exporting
 {
     public class VasPricesExcelExporter : NpoiExcelExporterBase, IVasPricesExcelExporter
     {
-
         private readonly ITimeZoneConverter _timeZoneConverter;
         private readonly IAbpSession _abpSession;
 
         public VasPricesExcelExporter(
             ITimeZoneConverter timeZoneConverter,
             IAbpSession abpSession,
-			ITempFileCacheManager tempFileCacheManager) :  
-	base(tempFileCacheManager)
+            ITempFileCacheManager tempFileCacheManager) :
+            base(tempFileCacheManager)
         {
             _timeZoneConverter = timeZoneConverter;
             _abpSession = abpSession;
@@ -30,7 +29,6 @@ namespace TACHYON.Vases.Exporting
                 "VasPrices.xlsx",
                 excelPackage =>
                 {
-                    
                     var sheet = excelPackage.CreateSheet(L("VasPrices"));
 
                     AddHeader(
@@ -39,7 +37,7 @@ namespace TACHYON.Vases.Exporting
                         L("MaxAmount"),
                         L("MaxCount"),
                         (L("Vas")) + L("Name")
-                        );
+                    );
 
                     AddObjects(
                         sheet, 2, vasPrices,
@@ -47,10 +45,7 @@ namespace TACHYON.Vases.Exporting
                         _ => _.VasPrice.MaxAmount,
                         _ => _.VasPrice.MaxCount,
                         _ => _.VasName
-                        );
-
-					
-					
+                    );
                 });
         }
     }

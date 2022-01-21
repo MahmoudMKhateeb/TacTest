@@ -7,7 +7,5 @@
         public virtual string Name { get; set; }
 
         public string BayanIntegrationId { get; set; }
-
-
     }
 }

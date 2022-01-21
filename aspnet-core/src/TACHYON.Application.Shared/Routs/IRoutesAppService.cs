@@ -25,6 +25,5 @@ namespace TACHYON.Routs
 
 
         Task<List<RouteRoutTypeLookupTableDto>> GetAllRoutTypeForTableDropdown();
-
     }
 }

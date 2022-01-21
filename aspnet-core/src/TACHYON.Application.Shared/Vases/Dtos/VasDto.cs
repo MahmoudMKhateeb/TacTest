@@ -11,7 +11,5 @@ namespace TACHYON.Vases.Dtos
         public bool HasAmount { get; set; }
 
         public bool HasCount { get; set; }
-
-
     }
 }

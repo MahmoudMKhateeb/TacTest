@@ -3,7 +3,5 @@
     public class GetTruckStatusForViewDto
     {
         public TruckStatusDto TruckStatus { get; set; }
-
-
     }
 }

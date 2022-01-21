@@ -25,7 +25,6 @@ namespace TACHYON.Trucks.Importing.Dto
         public string ModelYear { get; set; }
 
 
-
         public bool? IsAttachable { get; set; }
 
 
@@ -41,7 +40,6 @@ namespace TACHYON.Trucks.Importing.Dto
         public int? Length { get; set; }
 
 
-
         #region Truck Categories
 
         public virtual int? TransportTypeId { get; set; }
@@ -51,7 +49,6 @@ namespace TACHYON.Trucks.Importing.Dto
         public virtual int? CapacityId { get; set; }
 
         public virtual int? PlateTypeId { get; set; }
-
 
         #endregion
 
@@ -64,6 +61,5 @@ namespace TACHYON.Trucks.Importing.Dto
         {
             return string.IsNullOrEmpty(Exception);
         }
-
     }
 }

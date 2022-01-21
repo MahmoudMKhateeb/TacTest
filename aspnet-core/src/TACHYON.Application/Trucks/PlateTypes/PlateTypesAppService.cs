@@ -25,14 +25,13 @@ namespace TACHYON.Trucks.PlateTypes
         public PlateTypesAppService(IRepository<PlateType> plateTypeRepository)
         {
             _plateTypeRepository = plateTypeRepository;
-
         }
 
         public async Task<PagedResultDto<PlateTypeDto>> GetAll(GetAllPlateTypesInput input)
         {
-
             var filteredPlateTypes = _plateTypeRepository.GetAll().Include(x => x.Translations)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Translations.Any(x => x.DisplayName.Contains(input.Filter)));
+                .WhereIf(!string.IsNullOrWhiteSpace(input.Filter),
+                    e => false || e.Translations.Any(x => x.DisplayName.Contains(input.Filter)));
 
             var pagedAndFilteredPlateTypes = filteredPlateTypes
                 .OrderBy(input.Sorting ?? "id asc")
@@ -72,7 +71,8 @@ namespace TACHYON.Trucks.PlateTypes
             var plateType = await _plateTypeRepository.GetAllIncluding(x => x.Translations)
                 .FirstOrDefaultAsync(x => x.Id == input.Id);
 
-            var output = new GetPlateTypeForEditOutput { PlateType = ObjectMapper.Map<CreateOrEditPlateTypeDto>(plateType) };
+            var output =
+                new GetPlateTypeForEditOutput { PlateType = ObjectMapper.Map<CreateOrEditPlateTypeDto>(plateType) };
 
             return output;
         }
@@ -120,20 +120,20 @@ namespace TACHYON.Trucks.PlateTypes
             plateType.Translations.Clear();
             ObjectMapper.Map(input, plateType);
         }
+
         private async Task CheckIfNameExists(CreateOrEditPlateTypeDto input)
         {
             foreach (var item in input.Translations)
             {
                 var nameExists = await _plateTypeRepository.FirstOrDefaultAsync(x =>
-                x.Translations.Any(x => x.Language == item.Language &&
-                x.DisplayName.ToLower() == item.DisplayName.ToLower()) &&
-                x.Id != input.Id);
+                    x.Translations.Any(x => x.Language == item.Language &&
+                                            x.DisplayName.ToLower() == item.DisplayName.ToLower()) &&
+                    x.Id != input.Id);
                 if (nameExists != null)
                 {
                     throw new UserFriendlyException(L("CannotCreateDuplicatedNameMessage"));
                 }
             }
         }
-
     }
 }

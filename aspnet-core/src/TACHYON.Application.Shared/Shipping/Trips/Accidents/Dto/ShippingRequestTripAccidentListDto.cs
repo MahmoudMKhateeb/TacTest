@@ -3,7 +3,7 @@ using System;
 
 namespace TACHYON.Shipping.Trips.Accidents.Dto
 {
-    public  class ShippingRequestTripAccidentListDto: EntityDto
+    public class ShippingRequestTripAccidentListDto : EntityDto
     {
         public long PointId { get; set; }
         public string PickingType { get; set; }

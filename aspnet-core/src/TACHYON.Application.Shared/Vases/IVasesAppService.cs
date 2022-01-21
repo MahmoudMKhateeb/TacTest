@@ -21,6 +21,5 @@ namespace TACHYON.Vases
         Task Delete(EntityDto input);
 
         Task<FileDto> GetVasesToExcel(GetAllVasesForExcelInput input);
-
     }
 }

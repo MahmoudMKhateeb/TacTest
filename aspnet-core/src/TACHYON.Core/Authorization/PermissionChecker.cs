@@ -9,7 +9,6 @@ namespace TACHYON.Authorization
         public PermissionChecker(UserManager userManager)
             : base(userManager)
         {
-
         }
     }
 }

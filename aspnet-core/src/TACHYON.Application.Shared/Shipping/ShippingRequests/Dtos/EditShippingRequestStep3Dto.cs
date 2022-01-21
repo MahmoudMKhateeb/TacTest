@@ -8,8 +8,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
 {
     public class EditShippingRequestStep3Dto : EntityDto<long>, IShippingRequestDtoHaveOthersName
     {
-        [Required]
-        public int? GoodCategoryId { get; set; }
+        [Required] public int? GoodCategoryId { get; set; }
         public double TotalWeight { get; set; }
         public int PackingTypeId { get; set; }
         public int NumberOfPacking { get; set; }
@@ -21,6 +20,5 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public string OtherGoodsCategoryName { get; set; }
         public string OtherTransportTypeName { get; set; }
         public string OtherTrucksTypeName { get; set; }
-
     }
 }

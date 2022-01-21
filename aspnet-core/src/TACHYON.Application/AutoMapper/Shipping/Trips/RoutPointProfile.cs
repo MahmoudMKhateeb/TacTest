@@ -51,7 +51,6 @@ namespace TACHYON.AutoMapper.Shipping.Trips
                     opt => opt.MapFrom(src =>
                         src.DangerousGoodTypeFk != null ? src.DangerousGoodTypeFk.Name : string.Empty));
             //.ForPath(dest => dest.GoodCategory, opt => opt.MapFrom(src => src.GoodCategoryFk != null ? src.GoodCategoryFk.DisplayName : string.Empty));
-
         }
     }
 }

@@ -21,6 +21,5 @@ namespace TACHYON.Nationalities.NationalitiesTranslation
         Task Delete(EntityDto input);
 
         Task<List<NationalityTranslationNationalityLookupTableDto>> GetAllNationalityForTableDropdown();
-
     }
 }

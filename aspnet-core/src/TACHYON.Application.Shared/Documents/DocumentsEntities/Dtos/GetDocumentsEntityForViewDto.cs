@@ -2,8 +2,6 @@
 {
     public class GetDocumentsEntityForViewDto
     {
-		public DocumentsEntityDto DocumentsEntity { get; set; }
-
-
+        public DocumentsEntityDto DocumentsEntity { get; set; }
     }
 }

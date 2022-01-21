@@ -15,8 +15,7 @@ namespace TACHYON.Authorization.Users
     /// </summary>
     public class User : AbpUser<User>, IHasRating
     {
-        [StringLength(12)]
-        public string AccountNumber { get; set; }
+        [StringLength(12)] public string AccountNumber { get; set; }
         public virtual Guid? ProfilePictureId { get; set; }
 
         public virtual bool ShouldChangePasswordOnNextLogin { get; set; }
@@ -37,15 +36,16 @@ namespace TACHYON.Authorization.Users
         public virtual string Address { get; set; }
         public virtual int? NationalityId { get; set; }
 
-        [ForeignKey("NationalityId")]
-        public virtual Nationality NationalityFk { get; set; }
+        [ForeignKey("NationalityId")] public virtual Nationality NationalityFk { get; set; }
         public virtual string ExperienceField { get; set; }
         public virtual DateTime? DateOfBirth { get; set; }
         public string HijriDateOfBirth { get; set; }
+
         /// <summary>
         /// This field is final rate for driver
         /// </summary>
         public decimal Rate { get; set; }
+
         public int RateNumber { get; set; }
 
         public User()

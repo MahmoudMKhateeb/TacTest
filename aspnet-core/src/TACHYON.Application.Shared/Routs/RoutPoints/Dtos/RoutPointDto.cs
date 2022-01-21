@@ -33,11 +33,16 @@ namespace TACHYON.Routs.RoutPoints.Dtos
         public string DocumentContentType { get; set; }
 
         public int? ReceiverId { get; set; }
+
         //receiver or sender full name, binded to sender or receiver cantact name in waybills
         public string SenderOrReceiverContactName { get; set; }
 
         [CanBeNull] public string ReceiverFullName { get; set; }
-        [DataType(DataType.PhoneNumber)] [CanBeNull] public string ReceiverPhoneNumber { get; set; }
+
+        [DataType(DataType.PhoneNumber)]
+        [CanBeNull]
+        public string ReceiverPhoneNumber { get; set; }
+
         [CanBeNull] public string ReceiverEmailAddress { get; set; }
         [CanBeNull] public string ReceiverCardIdNumber { get; set; }
 

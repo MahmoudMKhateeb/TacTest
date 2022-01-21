@@ -16,7 +16,9 @@ namespace TACHYON.Web.Controllers
         {
         }
 
-        public async Task<ActionResult> GetUploadedObject(Guid fileId, string fileName, string contentType)
+        public async Task<ActionResult> GetUploadedObject(Guid fileId,
+            string fileName,
+            string contentType)
         {
             using (CurrentUnitOfWork.SetTenantId(null))
             {

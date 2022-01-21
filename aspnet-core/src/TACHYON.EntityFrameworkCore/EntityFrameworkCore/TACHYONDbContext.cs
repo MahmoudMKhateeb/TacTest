@@ -100,8 +100,15 @@ namespace TACHYON.EntityFrameworkCore
         public virtual DbSet<TruckStatusesTranslation> TruckStatusesTranslations { get; set; }
 
         #region Trips
+
         public virtual DbSet<ShippingRequestTripRejectReason> ShippingRequestTripRejectReasons { get; set; }
-        public DbSet<ShippingRequestTripRejectReasonTranslation> ShippingRequestTripRejectReasonTranslations { get; set; }
+
+        public DbSet<ShippingRequestTripRejectReasonTranslation> ShippingRequestTripRejectReasonTranslations
+        {
+            get;
+            set;
+        }
+
         public virtual DbSet<ShippingRequestTripTransition> ShippingRequestTripTransitions { get; set; }
         public virtual DbSet<ShippingRequestTrip> ShippingRequestTrips { get; set; }
 
@@ -111,20 +118,24 @@ namespace TACHYON.EntityFrameworkCore
         public virtual DbSet<ShippingRequestTripAccidentComment> ShippingRequestTripAccidentComments { get; set; }
         public virtual DbSet<ShippingRequestTripAccidentResolve> ShippingRequestTripAccidentResolves { get; set; }
 
+        #endregion
+
+        #region TachyonDeal
+
+        public virtual DbSet<ShippingRequestsCarrierDirectPricing> ShippingRequestsCarrierDirectPricing { get; set; }
 
         #endregion
-        #region TachyonDeal
-        public virtual DbSet<ShippingRequestsCarrierDirectPricing> ShippingRequestsCarrierDirectPricing { get; set; }
-        #endregion
+
         #region Localization
+
         public DbSet<AppLocalization> AppLocalizations { get; set; }
         public DbSet<AppLocalizationTranslation> AppLocalizationTranslations { get; set; }
         public DbSet<TerminologieEdition> TerminologieEditions { get; set; }
 
         public DbSet<TerminologiePage> TerminologiePages { get; set; }
 
-
         #endregion
+
         public virtual DbSet<PackingType> PackingTypes { get; set; }
         public virtual DbSet<PackingTypeTranslation> PackingTypeTranslations { get; set; }
 
@@ -162,7 +173,11 @@ namespace TACHYON.EntityFrameworkCore
 
         public virtual DbSet<DocumentsEntity> DocumentsEntities { get; set; }
 
-        public virtual DbSet<Shipping.ShippingRequestStatuses.ShippingRequestStatus> ShippingRequestStatuses { get; set; }
+        public virtual DbSet<Shipping.ShippingRequestStatuses.ShippingRequestStatus> ShippingRequestStatuses
+        {
+            get;
+            set;
+        }
 
         public virtual DbSet<Port> Ports { get; set; }
 
@@ -263,25 +278,30 @@ namespace TACHYON.EntityFrameworkCore
 
         protected virtual bool CurrentIsCanceled => true;
         protected virtual bool CurrentIsDrafted => false;
-        protected virtual bool IsCanceledFilterEnabled => CurrentUnitOfWorkProvider?.Current?.IsFilterEnabled("IHasIsCanceled") == true;
 
-        protected virtual bool IsDraftedFilterEnabled => CurrentUnitOfWorkProvider?.Current?.IsFilterEnabled("IHasIsDrafted") == true;
+        protected virtual bool IsCanceledFilterEnabled =>
+            CurrentUnitOfWorkProvider?.Current?.IsFilterEnabled("IHasIsCanceled") == true;
+
+        protected virtual bool IsDraftedFilterEnabled =>
+            CurrentUnitOfWorkProvider?.Current?.IsFilterEnabled("IHasIsDrafted") == true;
 
         #region Mobile
+
         public DbSet<UserDeviceToken> UserDeviceTokens { get; set; }
         public DbSet<UserOTP> UserOTPs { get; set; }
 
-
         #endregion
+
         #region Price offers
+
         public DbSet<PriceOffer> PriceOffers { get; set; }
         public DbSet<PriceOfferDetail> PriceOfferDetails { get; set; }
 
         #endregion
+
         public TACHYONDbContext(DbContextOptions<TACHYONDbContext> options)
             : base(options)
         {
-
         }
 
         protected override bool ShouldFilterEntity<TEntity>(IMutableEntityType entityType)
@@ -294,6 +314,7 @@ namespace TACHYON.EntityFrameworkCore
             {
                 return true;
             }
+
             return base.ShouldFilterEntity<TEntity>(entityType);
         }
 
@@ -302,13 +323,17 @@ namespace TACHYON.EntityFrameworkCore
             var expression = base.CreateFilterExpression<TEntity>();
             if (typeof(IHasIsCanceled).IsAssignableFrom(typeof(TEntity)))
             {
-                Expression<Func<TEntity, bool>> mayHaveOUFilter = e => ((IHasIsCanceled)e).IsCancled == CurrentIsCanceled || (((IHasIsCanceled)e).IsCancled == CurrentIsCanceled) == IsCanceledFilterEnabled;
+                Expression<Func<TEntity, bool>> mayHaveOUFilter = e =>
+                    ((IHasIsCanceled)e).IsCancled == CurrentIsCanceled ||
+                    (((IHasIsCanceled)e).IsCancled == CurrentIsCanceled) == IsCanceledFilterEnabled;
                 expression = expression == null ? mayHaveOUFilter : CombineExpressions(expression, mayHaveOUFilter);
             }
 
             else if (typeof(IHasIsDrafted).IsAssignableFrom(typeof(TEntity)))
             {
-                Expression<Func<TEntity, bool>> mayHaveOUFilter = e => ((IHasIsDrafted)e).IsDrafted == CurrentIsDrafted || (((IHasIsDrafted)e).IsDrafted == CurrentIsDrafted) == IsDraftedFilterEnabled;
+                Expression<Func<TEntity, bool>> mayHaveOUFilter = e =>
+                    ((IHasIsDrafted)e).IsDrafted == CurrentIsDrafted ||
+                    (((IHasIsDrafted)e).IsDrafted == CurrentIsDrafted) == IsDraftedFilterEnabled;
                 expression = expression == null ? mayHaveOUFilter : CombineExpressions(expression, mayHaveOUFilter);
             }
 
@@ -324,9 +349,9 @@ namespace TACHYON.EntityFrameworkCore
             //    s.HasIndex(e => new { e.TenantId });
             //});
             modelBuilder.Entity<VasPrice>(v =>
-                       {
-                           v.HasIndex(e => new { e.TenantId });
-                       });
+            {
+                v.HasIndex(e => new { e.TenantId });
+            });
             modelBuilder.Entity<Receiver>(r =>
             {
                 r.HasIndex(e => new { e.TenantId });
@@ -338,13 +363,13 @@ namespace TACHYON.EntityFrameworkCore
                 f.HasIndex(e => new { e.TenantId });
             });
             modelBuilder.Entity<DocumentFile>(d =>
-                       {
-                           d.HasIndex(e => new { e.TenantId });
-                       });
+            {
+                d.HasIndex(e => new { e.TenantId });
+            });
             modelBuilder.Entity<ShippingRequest>(s =>
-                       {
-                           s.HasIndex(e => new { e.TenantId });
-                       });
+            {
+                s.HasIndex(e => new { e.TenantId });
+            });
             modelBuilder.Entity<ShippingRequestBid>(s =>
             {
                 s.HasIndex(e => new { e.TenantId });
@@ -356,9 +381,9 @@ namespace TACHYON.EntityFrameworkCore
             });
 
             modelBuilder.Entity<Offer>(o =>
-                       {
-                           o.HasIndex(e => new { e.TenantId });
-                       });
+            {
+                o.HasIndex(e => new { e.TenantId });
+            });
             //modelBuilder.Entity<Route>(r =>
             //           {
             //               r.HasIndex(e => new { e.TenantId });
@@ -368,13 +393,13 @@ namespace TACHYON.EntityFrameworkCore
                 r.HasIndex(e => new { e.TenantId });
             });
             modelBuilder.Entity<Trailer>(t =>
-                       {
-                           t.HasIndex(e => new { e.TenantId });
-                       });
+            {
+                t.HasIndex(e => new { e.TenantId });
+            });
             modelBuilder.Entity<Truck>(t =>
-                       {
-                           t.HasIndex(e => new { e.TenantId });
-                       });
+            {
+                t.HasIndex(e => new { e.TenantId });
+            });
 
             modelBuilder.Entity<TrucksType>()
                 .Property(b => b.IsActive)
@@ -385,9 +410,9 @@ namespace TACHYON.EntityFrameworkCore
                 .HasDefaultValue(true);
 
             modelBuilder.Entity<BinaryObject>(b =>
-                       {
-                           b.HasIndex(e => new { e.TenantId });
-                       });
+            {
+                b.HasIndex(e => new { e.TenantId });
+            });
 
             modelBuilder.Entity<ChatMessage>(b =>
             {
@@ -431,8 +456,8 @@ namespace TACHYON.EntityFrameworkCore
             });
 
             modelBuilder.Entity<ShippingRequestTrip>()
-            .HasIndex(e => e.WaybillNumber)
-            .IsUnique();
+                .HasIndex(e => e.WaybillNumber)
+                .IsUnique();
 
             modelBuilder.Entity<Tenant>(b =>
             {
@@ -442,20 +467,20 @@ namespace TACHYON.EntityFrameworkCore
 
 
             modelBuilder.Entity<RoutPoint>()
-            .HasIndex(e => e.WaybillNumber)
-            .IsUnique();
+                .HasIndex(e => e.WaybillNumber)
+                .IsUnique();
 
             modelBuilder.Entity<User>()
-            .HasIndex(e => e.AccountNumber)
-            .IsUnique();
+                .HasIndex(e => e.AccountNumber)
+                .IsUnique();
 
             modelBuilder.Entity<Invoice>()
-            .HasIndex(e => e.InvoiceNumber)
-            .IsUnique();
+                .HasIndex(e => e.InvoiceNumber)
+                .IsUnique();
 
             modelBuilder.Entity<ShippingRequest>()
-            .HasIndex(e => e.ReferenceNumber)
-            .IsUnique();
+                .HasIndex(e => e.ReferenceNumber)
+                .IsUnique();
 
             modelBuilder.Entity<EntityLog>()
                 .Property(x => x.LogTransaction)
@@ -464,6 +489,5 @@ namespace TACHYON.EntityFrameworkCore
 
             modelBuilder.ConfigurePersistedGrantEntity();
         }
-
     }
 }

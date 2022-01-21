@@ -22,11 +22,14 @@ namespace TACHYON.BayanIntegration.Modules
         /// always will be False
         /// </summary>
         public bool Tradable { get; set; } = false;
+
         public string ExtraCharges { get; set; }
+
         /// <summary>
         /// Not Required
         /// </summary>
         public string PaymentMethod { get; set; }
+
         /// <summary>
         /// Not Required
         /// </summary>

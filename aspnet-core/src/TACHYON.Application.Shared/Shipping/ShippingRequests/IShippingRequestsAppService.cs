@@ -11,7 +11,7 @@ namespace TACHYON.Shipping.ShippingRequests
     {
         Task<GetAllShippingRequestsOutputDto> GetAll(GetAllShippingRequestsInput Input);
 
-       // Task<GetAllShippingRequestsOutput> GetForAll(GetAllShippingRequestsInput input);
+        // Task<GetAllShippingRequestsOutput> GetForAll(GetAllShippingRequestsInput input);
         Task<GetShippingRequestForViewOutput> GetShippingRequestForView(long id);
 
         Task<GetShippingRequestForEditOutput> GetShippingRequestForEdit(EntityDto<long> input);
@@ -21,7 +21,7 @@ namespace TACHYON.Shipping.ShippingRequests
         Task AcceptOrRejectShippingRequestPrice(AcceptShippingRequestPriceInput input);
         Task RejectShippingRequest(long id);
         Task Delete(EntityDto<long> input);
-        
+
 
         //Task<FileDto> GetShippingRequestsToExcel(GetAllShippingRequestsForExcelInput input);
         IEnumerable<GetMasterWaybillOutput> GetMasterWaybill(int shippingRequestTripId);
@@ -32,6 +32,5 @@ namespace TACHYON.Shipping.ShippingRequests
 
         IEnumerable<GetMultipleDropWaybillOutput> GetMultipleDropWaybill(long routPointId);
         IEnumerable<GetAllShippingRequestVasesOutput> GetShippingRequestVasesForMultipleDropWaybill(long RoutPointId);
-
     }
 }

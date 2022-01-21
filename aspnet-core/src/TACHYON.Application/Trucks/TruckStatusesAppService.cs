@@ -1,6 +1,4 @@
-﻿
-
-using Abp.Application.Features;
+﻿using Abp.Application.Features;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
@@ -32,7 +30,8 @@ namespace TACHYON.Trucks
 
         //! Don't Forget Translation Permissions
 
-        public TruckStatusesAppService(IRepository<TruckStatus, long> truckStatusRepository, IRepository<TruckStatusesTranslation> truckStatusTranslationRepository)
+        public TruckStatusesAppService(IRepository<TruckStatus, long> truckStatusRepository,
+            IRepository<TruckStatusesTranslation> truckStatusTranslationRepository)
         {
             _truckStatusRepository = truckStatusRepository;
             _truckStatusTranslationRepository = truckStatusTranslationRepository;
@@ -40,7 +39,6 @@ namespace TACHYON.Trucks
 
         public async Task<LoadResult> GetAll(GetAllTruckStatusesInput input)
         {
-
             var truckStatuses = _truckStatusRepository.GetAll()
                 .AsNoTracking().ProjectTo<TruckStatusDto>(AutoMapperConfigurationProvider);
 
@@ -50,13 +48,10 @@ namespace TACHYON.Trucks
         public async Task<GetTruckStatusForViewDto> GetTruckStatusForView(long id)
         {
             var truckStatus = await _truckStatusRepository.GetAll().AsNoTracking()
-                .Include(x=> x.Translations)
-                .FirstOrDefaultAsync(x=> x.Id == id);
+                .Include(x => x.Translations)
+                .FirstOrDefaultAsync(x => x.Id == id);
 
-            var output = new GetTruckStatusForViewDto
-            {
-                TruckStatus = ObjectMapper.Map<TruckStatusDto>(truckStatus)
-            };
+            var output = new GetTruckStatusForViewDto { TruckStatus = ObjectMapper.Map<TruckStatusDto>(truckStatus) };
 
             return output;
         }
@@ -66,7 +61,10 @@ namespace TACHYON.Trucks
         {
             var truckStatus = await _truckStatusRepository.FirstOrDefaultAsync(input.Id);
 
-            var output = new GetTruckStatusForEditOutput { TruckStatus = ObjectMapper.Map<CreateOrEditTruckStatusDto>(truckStatus) };
+            var output = new GetTruckStatusForEditOutput
+            {
+                TruckStatus = ObjectMapper.Map<CreateOrEditTruckStatusDto>(truckStatus)
+            };
 
             return output;
         }
@@ -126,7 +124,6 @@ namespace TACHYON.Trucks
 
         public async Task CreateOrEditTranslation(CreateOrEditTruckStatusesTranslationDto input)
         {
-
             if (!input.Id.HasValue)
             {
                 var d = await _truckStatusTranslationRepository
@@ -148,8 +145,6 @@ namespace TACHYON.Trucks
                 var updatedTranslation = await _truckStatusTranslationRepository.SingleAsync(x => x.Id == input.Id);
                 ObjectMapper.Map(input, updatedTranslation);
             }
-
-
         }
 
         public async Task DeleteTranslation(EntityDto input)

@@ -20,7 +20,6 @@ namespace TACHYON.BayanIntegration.Jobs
         public override void Execute(int tripId)
         {
             AsyncHelper.RunSync(() => _bayanIntegrationManager.EditConsignmentNote(tripId));
-
         }
     }
 }

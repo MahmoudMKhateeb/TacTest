@@ -35,6 +35,5 @@ namespace TACHYON.Offers
         Task<List<GetAllGoodsCategoriesForDropDownOutput>> GetAllGoodCategoryForTableDropdown();
 
         Task<List<OfferRouteLookupTableDto>> GetAllRouteForTableDropdown();
-
     }
 }

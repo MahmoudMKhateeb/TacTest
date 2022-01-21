@@ -22,7 +22,11 @@ namespace TACHYON.Waybills
         private readonly GoodsDetailsAppService _goodsDetailsAppService;
         private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepository;
 
-        public WaybillsManager(ShippingRequestsAppService shippingRequestAppService, RoutPointsAppService routPointAppService, PdfExporterBase pdfExporterBase, GoodsDetailsAppService goodsDetailsAppService, IRepository<ShippingRequestTrip> shippingRequestTripRepository)
+        public WaybillsManager(ShippingRequestsAppService shippingRequestAppService,
+            RoutPointsAppService routPointAppService,
+            PdfExporterBase pdfExporterBase,
+            GoodsDetailsAppService goodsDetailsAppService,
+            IRepository<ShippingRequestTrip> shippingRequestTripRepository)
         {
             _shippingRequestAppService = shippingRequestAppService;
             _routPointAppService = routPointAppService;
@@ -30,6 +34,7 @@ namespace TACHYON.Waybills
             _goodsDetailsAppService = goodsDetailsAppService;
             _shippingRequestTripRepository = shippingRequestTripRepository;
         }
+
         public byte[] GetSingleDropOrMasterWaybillPdf(int shippingRequestTripId)
         {
             DisableTenancyFilters();
@@ -50,6 +55,7 @@ namespace TACHYON.Waybills
             {
                 throw new UserFriendlyException(L("Cannot download drop waybill for single drop shipping request"));
             }
+
             var reportPath = "/Waybills/Reports/Multiple_Drop_Waybill.rdlc";
 
             ArrayList names = new ArrayList();
@@ -126,6 +132,5 @@ namespace TACHYON.Waybills
 
             return item.ShippingRequestFk.RouteTypeId == ShippingRequestRouteType.SingleDrop;
         }
-
     }
 }

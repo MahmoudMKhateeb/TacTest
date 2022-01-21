@@ -11,7 +11,8 @@ using TACHYON.Configuration;
 
 namespace TACHYON.Web.Startup.ExternalLoginInfoProviders
 {
-    public class TenantBasedFacebookExternalLoginInfoProvider : TenantBasedExternalLoginInfoProviderBase, ISingletonDependency
+    public class TenantBasedFacebookExternalLoginInfoProvider : TenantBasedExternalLoginInfoProviderBase,
+        ISingletonDependency
     {
         private readonly ISettingManager _settingManager;
         private readonly IAbpSession _abpSession;
@@ -28,25 +29,31 @@ namespace TACHYON.Web.Startup.ExternalLoginInfoProviders
 
         private ExternalLoginProviderInfo CreateExternalLoginInfo(FacebookExternalLoginProviderSettings settings)
         {
-            return new ExternalLoginProviderInfo(Name, settings.AppId, settings.AppSecret, typeof(FacebookAuthProviderApi));
+            return new ExternalLoginProviderInfo(Name, settings.AppId, settings.AppSecret,
+                typeof(FacebookAuthProviderApi));
         }
 
         protected override bool TenantHasSettings()
         {
-            var settingValue = _settingManager.GetSettingValueForTenant(AppSettings.ExternalLoginProvider.Tenant.Facebook, _abpSession.TenantId.Value);
+            var settingValue =
+                _settingManager.GetSettingValueForTenant(AppSettings.ExternalLoginProvider.Tenant.Facebook,
+                    _abpSession.TenantId.Value);
             return !settingValue.IsNullOrWhiteSpace();
         }
 
         protected override ExternalLoginProviderInfo GetTenantInformation()
         {
-            string settingValue = _settingManager.GetSettingValueForTenant(AppSettings.ExternalLoginProvider.Tenant.Facebook, _abpSession.TenantId.Value);
+            string settingValue =
+                _settingManager.GetSettingValueForTenant(AppSettings.ExternalLoginProvider.Tenant.Facebook,
+                    _abpSession.TenantId.Value);
             var settings = settingValue.FromJsonString<FacebookExternalLoginProviderSettings>();
             return CreateExternalLoginInfo(settings);
         }
 
         protected override ExternalLoginProviderInfo GetHostInformation()
         {
-            string settingValue = _settingManager.GetSettingValueForApplication(AppSettings.ExternalLoginProvider.Host.Facebook);
+            string settingValue =
+                _settingManager.GetSettingValueForApplication(AppSettings.ExternalLoginProvider.Host.Facebook);
             var settings = settingValue.FromJsonString<FacebookExternalLoginProviderSettings>();
             return CreateExternalLoginInfo(settings);
         }

@@ -61,5 +61,4 @@ namespace TACHYON.PriceOffers.Dto
         /// </summary>
         public int TenantId { get; set; }
     }
-
 }

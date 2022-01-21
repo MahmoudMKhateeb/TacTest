@@ -23,7 +23,5 @@ namespace TACHYON.Dashboards.Shipper.Dto
         public string StatusTitle { get { return TripStatus.GetEnumDescription(); } }
         public string WayBillNumber { get; set; }
         public List<RoutePointsTripDto> RoutPoints { get; set; }
-
     }
-
 }

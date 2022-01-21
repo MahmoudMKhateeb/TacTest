@@ -4,15 +4,17 @@
     {
         private string _displayName;
 
-        public SelectItemDto(string id, string displayName, bool isOther = false)
+        public SelectItemDto(string id,
+            string displayName,
+            bool isOther = false)
         {
             Id = id;
             DisplayName = displayName;
             IsOther = isOther;
         }
+
         public SelectItemDto()
         {
-
         }
 
         public string Id { get; set; }
@@ -28,9 +30,7 @@
             set
             {
                 _displayName = value;
-
             }
-
         }
 
 
@@ -42,7 +42,5 @@
         string Id { get; set; }
         string DisplayName { get; set; }
         bool? IsOther { get; set; }
-
-
     }
 }

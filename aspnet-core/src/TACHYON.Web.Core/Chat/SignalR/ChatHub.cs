@@ -47,7 +47,8 @@ namespace TACHYON.Web.Chat.SignalR
             {
                 using (ChatAbpSession.Use(Context.GetTenantId(), Context.GetUserId()))
                 {
-                    await _chatMessageManager.SendMessageAsync(sender, receiver, input.Message, input.TenancyName, input.UserName, input.ProfilePictureId);
+                    await _chatMessageManager.SendMessageAsync(sender, receiver, input.Message, input.TenancyName,
+                        input.UserName, input.ProfilePictureId);
                     return string.Empty;
                 }
             }
@@ -76,6 +77,7 @@ namespace TACHYON.Web.Chat.SignalR
             {
                 return;
             }
+
             base.Dispose(disposing);
             if (disposing)
             {

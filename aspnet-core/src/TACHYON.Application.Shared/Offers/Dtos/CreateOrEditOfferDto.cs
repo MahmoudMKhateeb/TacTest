@@ -1,5 +1,4 @@
-﻿
-using Abp.Application.Services.Dto;
+﻿using Abp.Application.Services.Dto;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -7,7 +6,6 @@ namespace TACHYON.Offers.Dtos
 {
     public class CreateOrEditOfferDto : EntityDto<int?>
     {
-
         [StringLength(OfferConsts.MaxDisplayNameLength, MinimumLength = OfferConsts.MinDisplayNameLength)]
         public string DisplayName { get; set; }
 
@@ -26,7 +24,5 @@ namespace TACHYON.Offers.Dtos
         public int? GoodCategoryId { get; set; }
 
         public int? RouteId { get; set; }
-
-
     }
 }
