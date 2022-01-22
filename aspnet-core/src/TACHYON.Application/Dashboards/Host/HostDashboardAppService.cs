@@ -25,7 +25,7 @@ using TACHYON.Trucks.TrucksTypes.Dtos;
 
 namespace TACHYON.Dashboards.Host
 {
-    [AbpAuthorize(AppPermissions.Pages_HostDashboard)]
+    [AbpAuthorize(AppPermissions.Pages_HostDashboard, AppPermissions.App_TachyonDealer)]
     public class HostDashboardAppService : TACHYONAppServiceBase, IHostDashboardAppService
     {
         private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
@@ -60,6 +60,8 @@ namespace TACHYON.Dashboards.Host
 
         public async Task<List<TruckTypeAvailableTrucksDto>> GetTrucksTypeCount()
         {
+            DisableTenancyFiltersIfHost();
+            await DisableTenancyFiltersIfTachyonDealer();
             return await _lookup_trucksTypeRepository.GetAll()
             .Select(x => new TruckTypeAvailableTrucksDto()
             {
@@ -73,7 +75,8 @@ namespace TACHYON.Dashboards.Host
 
         public async Task<List<ListPerMonthDto>> GetAccountsCountsPerMonth()
         {
-            DisableTenancyFilters();
+            DisableTenancyFiltersIfHost();
+            await DisableTenancyFiltersIfTachyonDealer();
             var list = await _usersRepository.GetAll().AsNoTracking().Where(r => !r.IsDriver)
                 .GroupBy(r => new { r.CreationTime.Year, r.CreationTime.Month })
                 .Select(g => new ListPerMonthDto() { Year = DateTime.Now.Year, Month = g.Key.Month.ToString(), Count = g.Count() })
@@ -110,6 +113,8 @@ namespace TACHYON.Dashboards.Host
 
         public async Task<List<GoodTypeAvailableDto>> GetGoodTypeCountPerMonth()
         {
+            DisableTenancyFiltersIfHost();
+            await DisableTenancyFiltersIfTachyonDealer();
             return await _goodTypesRepository.GetAll().AsNoTracking()
            .Select(x => new GoodTypeAvailableDto()
            {
@@ -126,7 +131,8 @@ namespace TACHYON.Dashboards.Host
         /// <returns></returns>
         public async Task<List<RouteTypeAvailableDto>> GetRouteTypeCountPerMonth()
         {
-
+            DisableTenancyFiltersIfHost();
+            await DisableTenancyFiltersIfTachyonDealer();
             return await _shippingRequestRepository.GetAll().AsNoTracking()
                 .GroupBy(x => x.RouteTypeId)
                 .Select(group => new RouteTypeAvailableDto

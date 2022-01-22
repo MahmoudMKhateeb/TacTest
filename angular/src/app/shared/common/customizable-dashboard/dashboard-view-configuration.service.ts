@@ -337,6 +337,96 @@ export class DashboardViewConfigurationService {
       4
     );
 
+    //TMS
+    let NumberOfRegisteredTrucks_TMS = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.TachyonDealerNumberOfRegisteredTrucksWidget,
+      NumberOfRegesterdTrucksComponent,
+      4,
+      4
+    );
+
+    let NumberOfRegisteredShippers_TMS = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.TachyonDealerNumberOfRegisteredShippersWidget,
+      NumberOfRegesterdShippersComponent,
+      4,
+      4
+    );
+
+    let onGoingTrips_TMS = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.TachyonDealerNumberOfOngoingTripsWidget,
+      OnGoingTripsComponent,
+      4,
+      4
+    );
+
+    let numberOfDeliveredTrips_TMS = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.TachyonDealerNumberOfDeliveredTripsWidget,
+      DeleverdTripsComponent,
+      4,
+      4
+    );
+
+    let numberOfRegisteredCarriers_TMS = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.TachyonDealerMostRequestedCarriersWidget,
+      NumberOfRegesterdCarriersComponent,
+      4,
+      4
+    );
+
+    let hostNewAccounts_TMS = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.TachyonDealerNewAccountsRegisteredWidget,
+      HostNewAccountsChartComponent,
+      4,
+      4
+    );
+    let hostNewTrips_TMS = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.TachyonDealerNewTripsWidget,
+      HostNewTripsChartComponent,
+      4,
+      4
+    );
+
+    let hostTruckTypesChart_TMS = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.TachyonDealerTruckTypeUsageWidget,
+      HostTruckTypeUsageChartComponent,
+      4,
+      4
+    );
+
+    let goodTypesUsage_TMS = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.TachyonDealerGoodTypesUsageWidget,
+      HostGoodTypesUsageChartComponent,
+      4,
+      4
+    );
+
+    let routeTypeUsage_TMS = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.TachyonDealerRouteTypesUsageWidget,
+      HostGoodTypesUsageChartComponent,
+      4,
+      4
+    );
+
+    let hostRequestPricedMeter_TMS = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.TachyonDealerRequestsPricingBeforeBidEndingWidget,
+      HostRquestPricingMeterComponent,
+      4,
+      4
+    );
+    let hostRequestAcceptanceMeter_TMS = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.TachyonDealer.TachyonDealerRequestsPriceAcceptanceWidget,
+      HostRquestAcceptanceMeterComponent,
+      4,
+      4
+    );
+
+    let hostInvoicePaidMeter_TMS = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.TachyonDealer.TachyonDealerInvoicesPaidBeforeDueDateWidget,
+      HostInvoicesMeterComponent,
+      4,
+      4
+    );
+
     //shipperPush
     this.WidgetViewDefinitions.push(shippercompletedTrips);
     this.WidgetViewDefinitions.push(acceptedVsRejectedRequestsWidget);
@@ -384,6 +474,22 @@ export class DashboardViewConfigurationService {
     this.WidgetViewDefinitions.push(hostRequestPricedMeter);
     this.WidgetViewDefinitions.push(hostRequestAcceptanceMeter);
     this.WidgetViewDefinitions.push(hostInvoicePaidMeter);
+
+    //TMS   shared with host components
+    this.widgetFilterDefinitions.push(NumberOfRegisteredTrucks);
+    this.WidgetViewDefinitions.push(NumberOfRegisteredTrucks_TMS);
+    this.WidgetViewDefinitions.push(NumberOfRegisteredShippers_TMS);
+    this.WidgetViewDefinitions.push(onGoingTrips_TMS);
+    this.WidgetViewDefinitions.push(numberOfDeliveredTrips_TMS);
+    this.WidgetViewDefinitions.push(numberOfRegisteredCarriers_TMS);
+    this.WidgetViewDefinitions.push(hostNewAccounts_TMS);
+    this.WidgetViewDefinitions.push(hostNewTrips_TMS);
+    this.WidgetViewDefinitions.push(hostTruckTypesChart_TMS);
+    this.WidgetViewDefinitions.push(goodTypesUsage_TMS);
+    this.WidgetViewDefinitions.push(routeTypeUsage_TMS);
+    this.WidgetViewDefinitions.push(hostRequestPricedMeter_TMS);
+    this.WidgetViewDefinitions.push(hostRequestAcceptanceMeter_TMS);
+    this.WidgetViewDefinitions.push(hostInvoicePaidMeter_TMS);
     //console.log('WidgetViewDefinitions', this.WidgetViewDefinitions);
     // this.widgetFilterDefinitions.push();
   }

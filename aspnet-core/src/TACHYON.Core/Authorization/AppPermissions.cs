@@ -28,6 +28,7 @@
 
         public const string App_Shipper = "App.Shipper";
         public const string App_Carrier = "App.Carrier";
+        public const string App_TachyonDealer = "App.TachyonDealer";
 
         public const string Pages_HostDashboard = "Pages.HostDashboard";
 
