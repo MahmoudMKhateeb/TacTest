@@ -59,6 +59,7 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
   shippingRequestId: number;
   citySourceId: number;
   cityDestId: number;
+  pointsCount: number;
   isAdditionalReceiverEnabled: boolean;
   pointIdForEdit = null;
   usedIn: 'view' | 'createOrEdit';
@@ -85,12 +86,11 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
     this.usedInSubscription$ = this._PointService.currentUsedIn.subscribe((res) => (this.usedIn = res));
     console.log('used in from Create Or Edit Point ', this.usedIn);
 
-    this.feature.isEnabled('App.Shipper') ? this.loadFacilities() : 0;
-
     this._PointService.currentSingleWayPoint.subscribe((res) => {
       this.Point = res;
       this.wayPointVariableForTesting = res;
     });
+    //this.feature.isEnabled('App.Shipper') ? this.loadFacilities() : 0;
 
     // setInterval(() => {
     //   console.log('current Point', this.Point);
@@ -104,13 +104,14 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
     //if view disable the form otherwise enable it
     // this.usedIn == 'view' ? this.createOrEditPintForm.form.disable() : this.createOrEditPintForm.form.enable();
     this.active = true;
+    this.loadFacilities();
+
     //this.singleWayPoint = new CreateOrEditRoutPointDto();
     if (id) {
       this.pointIdForEdit = id;
       //this is edit point action
       this.Point = this.wayPointsList[id];
     }
-    this.loadFacilities();
 
     //tell the service that i have this SinglePoint Active Right Now
     this.isAdditionalReceiverEnabled = this.Point.receiverFullName ? true : false;
@@ -181,7 +182,7 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
   }
 
   /**
-   * loads Facilities
+   * loads Facilities with validation on it related to source and destination in SR
    */
   loadFacilities() {
     this.facilityLoading = true;
@@ -189,21 +190,33 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
       this._tripService.currentShippingRequest.subscribe((res) => {
         this.citySourceId = res.originalCityId;
         this.cityDestId = res.destinationCityId;
+        this.pointsCount = res.shippingRequest.numberOfDrops;
       });
     }
-
     if (this.wayPointsList.length > 0) {
+      // if point is last of drop off
+      if (this.wayPointsList.filter((r) => r.pickingType == 2).length + 1 == this.pointsCount) {
+        this.getFacilities(true);
+        return;
+      }
+      // hide facilities of souurce city SR if any point put in destinaton city of SR
       this.wayPointsList.forEach((element) => {
         this._facilitiesServiceProxy.getFacilityForView(element.facilityId).subscribe((r) => {
           if (r.facility.cityId != null)
-            if (r.facility.cityId == this.cityDestId) this.getFacilities(true);
-            else this.getFacilities(false);
+            if (r.facility.cityId == this.cityDestId) {
+              this.getFacilities(true);
+              return;
+            }
         });
       });
-      this.facilityLoading = false;
+
+      this.getFacilities(false);
     }
   }
 
+  /**
+   * get all facilities or get facilities without source SR facilities
+   */
   getFacilities(hideSource: boolean) {
     if (this.shippingRequestId != null) {
       this._routStepsServiceProxy.getAllFacilitiesByCityAndTenantForDropdown(this.shippingRequestId).subscribe((result) => {
@@ -214,6 +227,7 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
         }
       });
     }
+    this.facilityLoading = false;
   }
 
   /**
