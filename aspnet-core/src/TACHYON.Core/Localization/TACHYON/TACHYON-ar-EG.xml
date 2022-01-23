@@ -2145,6 +2145,10 @@
     <text name="StartedMovingToLoadingLocation"></text>
     <text name="AddIncident">الحادثة</text>
     <text name="ArriveToLoadingLocation">الوصول إلى موقع التحميل</text>
+    <text name="IsMandatoryDocumentTemplate">المستند إلزامي</text>
+    <text name="IsMandatoryNumber">الرقم إلزامي</text>
+    <text name="IsMandatoryExpirationDate">تاريخ الإنتهاء إلزامي</text>
+
     <!--<text name="StartOffloading"></text>
     <text name="ReceiverConfirmed"></text>
     <text name="DeliveryConfirmation"></text>-->
