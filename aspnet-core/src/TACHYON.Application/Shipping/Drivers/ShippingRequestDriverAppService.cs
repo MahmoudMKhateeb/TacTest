@@ -1,5 +1,5 @@
 ﻿using Abp;
-﻿using Abp.Application.Features;
+using Abp.Application.Features;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Collections.Extensions;
@@ -18,9 +18,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
-using TACHYON.Documents.DocumentFiles;
 using TACHYON.AddressBook;
 using TACHYON.Authorization.Users;
+using TACHYON.Documents.DocumentFiles;
 using TACHYON.DriverLocationLogs;
 using TACHYON.DriverLocationLogs.dtos;
 using TACHYON.EntityLogs;
@@ -274,10 +274,10 @@ namespace TACHYON.Shipping.Drivers
             {
                 if (q.ResoneFK != null && !q.ResoneFK.Key.Contains(TACHYONConsts.OthersDisplayName))
                 {
-                //var reasone = await _shippingRequestReasonAccidentRepository.FirstOrDefaultAsync(x=>x.Language== CurrentLanguage || x.Language== TACHYONConsts.DefaultLanguage);
-                var reasone = ObjectMapper.Map<ShippingRequestReasonAccidentListDto>(q.ResoneFK);
-                //q.Description = reasone.Name;
-                q.OtherReasonName = reasone.Name;
+                    //var reasone = await _shippingRequestReasonAccidentRepository.FirstOrDefaultAsync(x=>x.Language== CurrentLanguage || x.Language== TACHYONConsts.DefaultLanguage);
+                    var reasone = ObjectMapper.Map<ShippingRequestReasonAccidentListDto>(q.ResoneFK);
+                    //q.Description = reasone.Name;
+                    q.OtherReasonName = reasone.Name;
                 }
 
             });
@@ -399,14 +399,14 @@ namespace TACHYON.Shipping.Drivers
         {
             await CheckCurrentUserIsDriver();
 
-            var ratingLog = new RatingLog() {PointId = pointId, Rate = rate, Note = note};
+            var ratingLog = new RatingLog() { PointId = pointId, Rate = rate, Note = note };
             var pointFacilityId = await _RoutPointRepository.GetAll().AsNoTracking()
                 .Where(x => x.Id == ratingLog.PointId)
                 .Select(x => x.FacilityId).FirstOrDefaultAsync();
             ratingLog.DriverId = AbpSession.UserId;
             ratingLog.FacilityId = pointFacilityId;
             ratingLog.RateType = RateType.FacilityByDriver;
-            
+
             await _ratingLogManager.CreateRating(ratingLog);
         }
 
@@ -425,7 +425,7 @@ namespace TACHYON.Shipping.Drivers
         public async Task SetShippingExpRating(int tripId, int rate, string note)
         {
             await CheckCurrentUserIsDriver();
-            var input = new RatingLog() {TripId = tripId,RateType = RateType.SEByDriver, Rate = rate, Note = note,DriverId = AbpSession.UserId};
+            var input = new RatingLog() { TripId = tripId, RateType = RateType.SEByDriver, Rate = rate, Note = note, DriverId = AbpSession.UserId };
             await _ratingLogManager.CreateRating(input);
         }
 
@@ -561,11 +561,10 @@ namespace TACHYON.Shipping.Drivers
                     item.CanGoToNextLocation = false;
                     item.RoutPointStatusTransitions.Where(s => !s.IsReset).ForEach(x => x.IsReset = true);
                     item.IsPodUploaded = false;
-                    _tempFileCacheManager.ClearCache(string.Format(DocumentFileConsts.KeyCashes, item.Id));
-                //item.RatingLogs.Where(x => x.RateType != RateType.CarrierTripBySystem && x.RateType != RateType.ShipperTripBySystem).ToList().Clear();
-                //item.ShippingRequestTripAccidents.Clear();
-                //item.ShippingRequestTripTransitions.Clear();
-            });
+                    //item.RatingLogs.Where(x => x.RateType != RateType.CarrierTripBySystem && x.RateType != RateType.ShipperTripBySystem).ToList().Clear();
+                    //item.ShippingRequestTripAccidents.Clear();
+                    //item.ShippingRequestTripTransitions.Clear();
+                });
                 var request = trip.ShippingRequestFk;
                 request.Status = ShippingRequestStatus.PostPrice;
 
@@ -601,19 +600,19 @@ namespace TACHYON.Shipping.Drivers
                     await CurrentUnitOfWork.SaveChangesAsync();
 
                     // recalculate rating For Shipper
-                    await _ratingLogManager.RecalculateRatingById(trip.ShippingRequestFk.TenantId,typeof(Tenant));
-                    
+                    await _ratingLogManager.RecalculateRatingById(trip.ShippingRequestFk.TenantId, typeof(Tenant));
+
                     // recalculate rating For Carrier
                     if (trip.ShippingRequestFk.CarrierTenantId.HasValue)
-                        await _ratingLogManager.RecalculateRatingById(trip.ShippingRequestFk.CarrierTenantId.Value,typeof(Tenant));
-                    
+                        await _ratingLogManager.RecalculateRatingById(trip.ShippingRequestFk.CarrierTenantId.Value, typeof(Tenant));
+
                     // recalculate rating For Driver
                     if (driverId != null)
-                        await _ratingLogManager.RecalculateRatingById(driverId.Value,typeof(User));
-                    
+                        await _ratingLogManager.RecalculateRatingById(driverId.Value, typeof(User));
+
                     // recalculate rating For Facility
                     if (facilityId != null)
-                        await _ratingLogManager.RecalculateRatingById(facilityId.Value,typeof(Facility));
+                        await _ratingLogManager.RecalculateRatingById(facilityId.Value, typeof(Facility));
 
                 }
 

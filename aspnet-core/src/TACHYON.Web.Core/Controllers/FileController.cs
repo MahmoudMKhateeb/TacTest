@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using TACHYON.Authorization.Users;
 using TACHYON.Documents.DocumentFiles;
 using TACHYON.Documents.DocumentFiles.Dtos;
+using TACHYON.Documents.DocumentTypes;
 using TACHYON.Dto;
 using TACHYON.Features;
 using TACHYON.Routs.RoutPoints;
@@ -82,21 +83,6 @@ namespace TACHYON.Web.Controllers
 
         [DisableAuditing]
         [AbpMvcAuthorize()]
-        public async Task<ActionResult> DownloadPODFile(long id)
-        {
-            var files = await _workflow.GetPOD(id);
-            var fileBytes = _tempFileCacheManager.GetFiles(files.Select(x => x.FileToken).ToList());
-            if (fileBytes == null) return NotFound(L("RequestedFileDoesNotExists"));
-            var res = files.Select(x => new
-            {
-                fileContent = fileBytes.FirstOrDefault(c => c.Token == x.FileToken).File,
-                FileDownloadName = x.FileName + "." + GetFileDownlodName(x.FileType),
-                FileType = x.FileType,
-            });
-            return Ok(res);
-        }
-        [DisableAuditing]
-        [AbpMvcAuthorize()]
         public async Task<ActionResult> DownloadTripAttachmentFile(int id)
         {
             DisableTenancyFilters();
@@ -145,6 +131,20 @@ namespace TACHYON.Web.Controllers
             return File(binaryObject.Bytes, file.FileType, file.FileName);
 
         }
+        [DisableAuditing]
+        [AbpMvcAuthorize()]
+        public async Task<ActionResult> DownloadPODFile(Guid documentId, string contentType, string fileName)
+        {
+            var fileBytes = await _binaryObjectManager.GetOrNullAsync(documentId);
+
+            if (fileBytes == null)
+                return NotFound(L("RequestedFileDoesNotExists"));
+
+            MimeTypes.TryGetExtension(contentType, out var exten);
+
+            fileName = fileName + "." + exten;
+            return File(fileBytes.Bytes, contentType, fileName);
+        }
 
         [AbpMvcAuthorize()]
         public ActionResult waybill(int id)
@@ -152,9 +152,9 @@ namespace TACHYON.Web.Controllers
 
             var bytes = _waybillsManager.GetSingleDropOrMasterWaybillPdf(id);
 
-            MimeTypes.TryGetExtension("application/pdf", out var exten);
+            MimeTypes.TryGetExtension(DocumentTypeConsts.PDF, out var exten);
 
-            return File(bytes, "application/pdf", "waybill.pdf");
+            return File(bytes, DocumentTypeConsts.PDF, "waybill.pdf");
         }
 
         [AbpMvcAuthorize()]
@@ -162,16 +162,9 @@ namespace TACHYON.Web.Controllers
         {
             var bytes = _waybillsManager.GetMultipleDropWaybillPdf(id);
 
-            MimeTypes.TryGetExtension("application/pdf", out var exten);
+            MimeTypes.TryGetExtension(DocumentTypeConsts.PDF, out var exten);
 
-            return File(bytes, "application/pdf", "DropWaybill.pdf");
+            return File(bytes, DocumentTypeConsts.PDF, "DropWaybill.pdf");
         }
-        #region Functions
-        private string GetFileDownlodName(string fil)
-        {
-            MimeTypes.TryGetExtension(fil, out var exten);
-            return exten;
-        }
-        #endregion
     }
 }

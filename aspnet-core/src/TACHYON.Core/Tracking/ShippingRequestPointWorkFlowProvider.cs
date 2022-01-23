@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using TACHYON.Authorization.Users;
 using TACHYON.Common;
 using TACHYON.Documents.DocumentFiles;
+using TACHYON.Documents.DocumentFiles.Dtos;
 using TACHYON.Dto;
 using TACHYON.Features;
 using TACHYON.Firebases;
@@ -385,7 +386,7 @@ namespace TACHYON.Tracking
             trip.StartTripDate = Clock.Now;
 
             await StartTransition(routeStart, new Point(Input.lat, Input.lng));
-           // if (!currentUser.IsDriver) await _firebaseNotifier.TripChanged(new Abp.UserIdentifier(trip.ShippingRequestFk.CarrierTenantId.Value, trip.AssignedDriverUserId.Value), trip.Id.ToString());
+            // if (!currentUser.IsDriver) await _firebaseNotifier.TripChanged(new Abp.UserIdentifier(trip.ShippingRequestFk.CarrierTenantId.Value, trip.AssignedDriverUserId.Value), trip.Id.ToString());
         }
         public async Task Invoke(PointTransactionArgs args, string action)
         {
@@ -441,12 +442,8 @@ namespace TACHYON.Tracking
                     .FirstOrDefaultAsync();
             return ObjectMapper.Map<ShippingRequestTripDto>(currentTrip);
         }
-        public async Task<List<FileDto>> GetPOD(long id)
+        public async Task<List<GetAllUploadedFileDto>> GetPOD(long id)
         {
-            var key = string.Format(DocumentFileConsts.KeyCashes, id);
-            if (_tempFileCacheManager.GetPods(key) != null)
-                return _tempFileCacheManager.GetPods(key);
-
             DisableTenancyFilters();
             var currentUser = await GetCurrentUserAsync();
             var documents = await _routPointDocumentRepository.GetAll()
@@ -455,11 +452,8 @@ namespace TACHYON.Tracking
                 .WhereIf(currentUser.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.RoutPointFk.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == currentUser.TenantId.Value)
                 .WhereIf(currentUser.IsDriver, x => x.RoutPointFk.ShippingRequestTripFk.AssignedDriverUserId == currentUser.Id)
                 .ToListAsync();
-
             if (!documents.Any()) throw new UserFriendlyException(L("TheRoutePointIsNotFound"));
-            var files = await _commonManager.GetDocuments(ObjectMapper.Map<List<IHasDocument>>(documents));
-            _tempFileCacheManager.SetPods(key, files);
-            return files;
+            return await _commonManager.GetDocuments(ObjectMapper.Map<List<IHasDocument>>(documents));
         }
 
         #endregion
@@ -944,7 +938,7 @@ namespace TACHYON.Tracking
                 .GetAllIncluding(x => x.ShippingRequestFk)
                 .SingleAsync(x => x.Id == point.ShippingRequestTripId);
 
-           // if (!currentUser.IsDriver) await _firebaseNotifier.TripChanged(new Abp.UserIdentifier(trip.ShippingRequestFk.CarrierTenantId.Value, trip.AssignedDriverUserId.Value), trip.Id.ToString());
+            // if (!currentUser.IsDriver) await _firebaseNotifier.TripChanged(new Abp.UserIdentifier(trip.ShippingRequestFk.CarrierTenantId.Value, trip.AssignedDriverUserId.Value), trip.Id.ToString());
         }
         /// <summary>
         /// Singlar notifcation when the shipment delivered
@@ -952,7 +946,7 @@ namespace TACHYON.Tracking
         public async Task NotificationWhenShipmentDelivered(RoutPoint point, User currentUser)
         {
             var trip = point.ShippingRequestTripFk;
-           // if (!currentUser.IsDriver) await _firebaseNotifier.TripChanged(new Abp.UserIdentifier(trip.ShippingRequestFk.CarrierTenantId.Value, trip.AssignedDriverUserId.Value), trip.Id.ToString());
+            // if (!currentUser.IsDriver) await _firebaseNotifier.TripChanged(new Abp.UserIdentifier(trip.ShippingRequestFk.CarrierTenantId.Value, trip.AssignedDriverUserId.Value), trip.Id.ToString());
         }
         #endregion
     }
