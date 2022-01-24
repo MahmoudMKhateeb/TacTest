@@ -30,21 +30,18 @@ namespace TACHYON.Integration.WaslIntegration
 
         public async Task VehicleRegistration(long truckId)
         {
-            var truck = await _truckRepository.GetAsync(truckId);
-            await _manager.QueueVehicleRegistrationJob(truck);
+            await _manager.QueueVehicleRegistrationJob(truckId);
         }
         public async Task VehicleDelete(long truckId)
         {
+            DisableTenancyFiltersIfHost();
+
             var truck = await _truckRepository.GetAsync(truckId);
             await _manager.QueueVehicleDeleteJob(truck);
         }
         public async Task DriverRegistration(long driverId)
         {
-            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
-            {
-                var user = await _userRepository.GetAll().FirstAsync(x => x.Id == driverId);
-                await _manager.QueueDriverRegistrationJob(user);
-            }
+            await _manager.QueueDriverRegistrationJob(driverId);
 
         }
         public async Task DriverDelete(long driverId)
@@ -59,11 +56,45 @@ namespace TACHYON.Integration.WaslIntegration
         }
         public async Task TripRegistration(int tripId)
         {
+            DisableTenancyFiltersIfHost();
+
             await _manager.QueueTripRegistrationJob(tripId);
         }
         public async Task TripUpdate(int tripId)
         {
+            DisableTenancyFiltersIfHost();
+
             await _manager.QueueTripUpdateJob(tripId);
+        }
+
+        public async Task BulkVehicleRegistration(int tenantId)
+        {
+            DisableTenancyFiltersIfHost();
+            var trucks = await _truckRepository.GetAll()
+                .Where(x => x.TenantId == tenantId)
+                .Where(x => !x.IsWaslIntegrated)
+                .ToListAsync();
+
+            foreach (var truck in trucks)
+            {
+                await _manager.QueueVehicleRegistrationJob(truck.Id);
+            }
+        }
+
+
+        public async Task BulkDriverRegistration(int tenantId)
+        {
+            DisableTenancyFiltersIfHost();
+            var drivers = await _userRepository.GetAll()
+                .Where(x => x.TenantId == tenantId)
+                .Where(x => x.IsDriver)
+                .Where(x => !x.IsWaslIntegrated)
+                .ToListAsync();
+
+            foreach (var driver in drivers)
+            {
+                await _manager.QueueDriverRegistrationJob(driver.Id);
+            }
         }
 
     }

@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using TACHYON.AddressBook;
 using TACHYON.Authorization.Users;
+using TACHYON.Integration.WaslIntegration;
 using TACHYON.PriceOffers;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.ShippingRequests;
@@ -15,7 +16,7 @@ using TACHYON.Trucks;
 namespace TACHYON.Shipping.ShippingRequestTrips
 {
     [Table("ShippingRequestTrips")]
-    public class ShippingRequestTrip : FullAuditedEntity
+    public class ShippingRequestTrip : FullAuditedEntity, IWaslIntegrated
     {
         public long? WaybillNumber { get; set; }
         public DateTime StartTripDate { get; set; }

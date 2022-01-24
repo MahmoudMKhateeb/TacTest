@@ -271,7 +271,7 @@ namespace TACHYON.Trucks
 
 
             //Wasl Integration
-            await _waslIntegrationManager.QueueVehicleRegistrationJob(truck);
+            await _waslIntegrationManager.QueueVehicleRegistrationJob(truck.Id);
         }
 
         [AbpAuthorize(AppPermissions.Pages_Trucks_Edit)]
@@ -282,7 +282,7 @@ namespace TACHYON.Trucks
             ObjectMapper.Map(input, truck);
 
             //Wasl Integration
-            await _waslIntegrationManager.QueueVehicleRegistrationJob(truck);
+            await _waslIntegrationManager.QueueVehicleRegistrationJob(truck.Id);
         }
 
         [AbpAuthorize(AppPermissions.Pages_Trucks_Delete)]
@@ -542,10 +542,10 @@ namespace TACHYON.Trucks
         {
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
             {
-                var truck = await _truckRepository.GetAllIncluding(x=> x.PlateTypeFk)
-                    .FirstOrDefaultAsync(x=> x.Id == id);
+                var truck = await _truckRepository.GetAllIncluding(x => x.PlateTypeFk)
+                    .FirstOrDefaultAsync(x => x.Id == id);
                 //Wasl Integration
-                await _waslIntegrationManager.QueueVehicleRegistrationJob(truck);
+                await _waslIntegrationManager.QueueVehicleRegistrationJob(truck.Id);
             }
 
         }
