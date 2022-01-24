@@ -460,7 +460,6 @@ namespace TACHYON.Shipping.Trips
             {
                 var trip = await _shippingRequestTripRepository
                 .GetAll()
-                .AsNoTracking()
                 .Include(x => x.ShippingRequestFk)
                 .Include(x => x.OriginFacilityFk)
                 .Include(x => x.DestinationFacilityFk)
