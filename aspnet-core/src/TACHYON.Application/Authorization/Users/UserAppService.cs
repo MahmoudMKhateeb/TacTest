@@ -68,9 +68,8 @@ namespace TACHYON.Authorization.Users
         private readonly IRepository<DocumentType, long> _documentTypeRepository;
         private readonly IRepository<DocumentFile, Guid> _documentFileRepository;
         private readonly WaslIntegrationManager _waslIntegrationManager;
-        public UserAppService(
 
-            IRepository<DocumentFile, Guid> documentFileRepository,
+        public UserAppService(IRepository<DocumentFile, Guid> documentFileRepository,
             IRepository<DocumentType, long> documentTypeRepository,
             RoleManager roleManager,
             IUserEmailer userEmailer,
@@ -88,7 +87,9 @@ namespace TACHYON.Authorization.Users
             IRoleManagementConfig roleManagementConfig,
             UserManager userManager,
             IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository,
-            IRepository<OrganizationUnitRole, long> organizationUnitRoleRepository, DocumentFilesAppService documentFilesAppService, WaslIntegrationManager waslIntegrationManager)
+            IRepository<OrganizationUnitRole, long> organizationUnitRoleRepository,
+            DocumentFilesAppService documentFilesAppService,
+            WaslIntegrationManager waslIntegrationManager)
         {
             _documentFileRepository = documentFileRepository;
             _documentTypeRepository = documentTypeRepository;
@@ -123,34 +124,25 @@ namespace TACHYON.Authorization.Users
             var users = new List<User>();
             var userListDtos = new List<UserListDto>();
 
-            users = await query
-            .OrderBy(input.Sorting)
-            .PageBy(input)
-            .ToListAsync();
+            users = await query.OrderBy(input.Sorting).PageBy(input).ToListAsync();
 
             userListDtos = ObjectMapper.Map<List<UserListDto>>(users);
             await FillRoleNames(userListDtos);
 
 
-            return new PagedResultDto<UserListDto>(
-              userCount,
-              userListDtos
-              );
-
-
+            return new PagedResultDto<UserListDto>(userCount, userListDtos);
         }
 
 
         public async Task<LoadResult> GetDrivers(GetDriversInput input)
         {
-            var query = UserManager.Users
-                .Where(u => u.IsDriver)
-                .ProjectTo<DriverListDto>(AutoMapperConfigurationProvider);
+            var query = UserManager.Users.Where(u => u.IsDriver).ProjectTo<DriverListDto>(AutoMapperConfigurationProvider);
 
             var result = await LoadResultAsync(query, input.LoadOptions);
             await FillIsMissingDocumentFiles(result);
             return result;
         }
+
         private async Task FillIsMissingDocumentFiles(LoadResult pagedResultDto)
         {
             var ids = pagedResultDto.data.ToDynamicList<DriverListDto>().Select(x => x.Id);
@@ -160,11 +152,10 @@ namespace TACHYON.Authorization.Users
                 .CountAsync();
 
             var submittedDocuments = await (_documentFileRepository.GetAll()
-                    .Where(x => ids.Contains((long)x.UserId))
-                    .Where(x => x.DocumentTypeFk.IsRequired)
-                    .GroupBy(x => x.UserId)
-                    .Select(x => new { UserId = x.Key, IsMissingDocumentFiles = x.Count() == documentTypesCount }))
-                .ToListAsync();
+                .Where(x => ids.Contains((long)x.UserId))
+                .Where(x => x.DocumentTypeFk.IsRequired)
+                .GroupBy(x => x.UserId)
+                .Select(x => new { UserId = x.Key, IsMissingDocumentFiles = x.Count() == documentTypesCount })).ToListAsync();
 
             foreach (DriverListDto driverListDto in pagedResultDto.data.ToDynamicList<DriverListDto>())
             {
@@ -188,9 +179,7 @@ namespace TACHYON.Authorization.Users
         {
             var query = GetUsersFilteredQuery(input);
 
-            var users = await query
-                .OrderBy(input.Sorting)
-                .ToListAsync();
+            var users = await query.OrderBy(input.Sorting).ToListAsync();
 
             var userListDtos = ObjectMapper.Map<List<UserListDto>>(users);
             await FillRoleNames(userListDtos);
@@ -202,14 +191,8 @@ namespace TACHYON.Authorization.Users
         public async Task<GetUserForEditOutput> GetUserForEdit(NullableIdDto<long> input)
         {
             //Getting all available roles
-            var userRoleDtos = await _roleManager.Roles
-                .OrderBy(r => r.DisplayName)
-                .Select(r => new UserRoleDto
-                {
-                    RoleId = r.Id,
-                    RoleName = r.Name,
-                    RoleDisplayName = r.DisplayName
-                })
+            var userRoleDtos = await _roleManager.Roles.OrderBy(r => r.DisplayName)
+                .Select(r => new UserRoleDto { RoleId = r.Id, RoleName = r.Name, RoleDisplayName = r.DisplayName })
                 .ToArrayAsync();
 
             var allOrganizationUnits = await _organizationUnitRepository.GetAllListAsync();
@@ -265,15 +248,14 @@ namespace TACHYON.Authorization.Users
         }
 
 
-
         private List<string> GetAllRoleNamesOfUsersOrganizationUnits(long userId)
         {
-            return (from userOu in _userOrganizationUnitRepository.GetAll()
-                    join roleOu in _organizationUnitRoleRepository.GetAll() on userOu.OrganizationUnitId equals roleOu
-                        .OrganizationUnitId
-                    join userOuRoles in _roleRepository.GetAll() on roleOu.RoleId equals userOuRoles.Id
-                    where userOu.UserId == userId
-                    select userOuRoles.Name).ToList();
+            return (
+                from userOu in _userOrganizationUnitRepository.GetAll()
+                join roleOu in _organizationUnitRoleRepository.GetAll() on userOu.OrganizationUnitId equals roleOu.OrganizationUnitId
+                join userOuRoles in _roleRepository.GetAll() on roleOu.RoleId equals userOuRoles.Id
+                where userOu.UserId == userId
+                select userOuRoles.Name).ToList();
         }
 
         [AbpAuthorize(AppPermissions.Pages_Administration_Users_ChangePermissions)]
@@ -317,8 +299,6 @@ namespace TACHYON.Authorization.Users
             {
                 await CreateUserAsync(input);
             }
-
-
         }
 
 
@@ -372,7 +352,6 @@ namespace TACHYON.Authorization.Users
             if (!user.IsDriver)
             {
                 CheckErrors(await UserManager.SetRolesAsync(user, input.AssignedRoleNames));
-
             }
 
             //update organization units
@@ -381,16 +360,11 @@ namespace TACHYON.Authorization.Users
             if (input.SendActivationEmail)
             {
                 user.SetNewEmailConfirmationCode();
-                await _userEmailer.SendEmailActivationLinkAsync(
-                    user,
-                    AppUrlService.CreateEmailActivationUrlFormat(AbpSession.TenantId),
-                    input.User.Password
-                );
+                await _userEmailer.SendEmailActivationLinkAsync(user, AppUrlService.CreateEmailActivationUrlFormat(AbpSession.TenantId), input.User.Password);
             }
 
             //Wasl Integration
-            await _waslIntegrationManager.QueueDriverRegistrationJob(user);
-
+            await _waslIntegrationManager.QueueDriverRegistrationJob(user.Id);
         }
 
         [AbpAuthorize(AppPermissions.Pages_Administration_Users_Create)]
@@ -423,7 +397,6 @@ namespace TACHYON.Authorization.Users
                         doc.Name = item.Name;
                     }
                 }
-
             }
 
 
@@ -481,16 +454,12 @@ namespace TACHYON.Authorization.Users
             if (input.SendActivationEmail)
             {
                 user.SetNewEmailConfirmationCode();
-                await _userEmailer.SendEmailActivationLinkAsync(
-                    user,
-                    AppUrlService.CreateEmailActivationUrlFormat(AbpSession.TenantId),
-                    input.User.Password
-                );
+                await _userEmailer.SendEmailActivationLinkAsync(user, AppUrlService.CreateEmailActivationUrlFormat(AbpSession.TenantId), input.User.Password);
             }
 
 
             //Wasl Integration
-            await _waslIntegrationManager.QueueDriverRegistrationJob(user);
+            await _waslIntegrationManager.QueueDriverRegistrationJob(user.Id);
         }
 
 
@@ -499,9 +468,7 @@ namespace TACHYON.Authorization.Users
             /* This method is optimized to fill role names to given list. */
             var userIds = userListDtos.Select(u => u.Id);
 
-            var userRoles = await _userRoleRepository.GetAll()
-                .Where(userRole => userIds.Contains(userRole.UserId))
-                .Select(userRole => userRole).ToListAsync();
+            var userRoles = await _userRoleRepository.GetAll().Where(userRole => userIds.Contains(userRole.UserId)).Select(userRole => userRole).ToListAsync();
 
             var distinctRoleIds = userRoles.Select(userRole => userRole.RoleId).Distinct();
 
@@ -537,45 +504,43 @@ namespace TACHYON.Authorization.Users
 
         private IQueryable<User> GetUsersFilteredQuery(IGetUsersInput input)
         {
-            var query = UserManager.Users
-                .WhereIf(input.Role.HasValue, u => u.Roles.Any(r => r.RoleId == input.Role.Value))
+            var query = UserManager.Users.WhereIf(input.Role.HasValue, u => u.Roles.Any(r => r.RoleId == input.Role.Value))
                 .WhereIf(input.OnlyLockedUsers, u => u.LockoutEndDateUtc.HasValue && u.LockoutEndDateUtc.Value > DateTime.UtcNow)
                 .WhereIf(input.OnlyDrivers, u => u.IsDriver)
                 .WhereIf(input.OnlyUsers, u => u.IsDriver == false)
-                .WhereIf(
+                .WhereIf
+                (
                     !input.Filter.IsNullOrWhiteSpace(),
-                    u =>
-                        u.Name.Contains(input.Filter) ||
-                        u.Surname.Contains(input.Filter) ||
-                        u.UserName.Contains(input.Filter) ||
-                        u.EmailAddress.Contains(input.Filter)
+                    u => u.Name.Contains(input.Filter)
+                         || u.Surname.Contains(input.Filter)
+                         || u.UserName.Contains(input.Filter)
+                         || u.EmailAddress.Contains(input.Filter)
                 );
 
             if (input.Permissions != null && input.Permissions.Any(p => !p.IsNullOrWhiteSpace()))
             {
-                var staticRoleNames = _roleManagementConfig.StaticRoles.Where(
-                    r => r.GrantAllPermissionsByDefault &&
-                         r.Side == AbpSession.MultiTenancySide
-                ).Select(r => r.RoleName).ToList();
+                var staticRoleNames = _roleManagementConfig.StaticRoles.Where(r => r.GrantAllPermissionsByDefault && r.Side == AbpSession.MultiTenancySide)
+                    .Select(r => r.RoleName)
+                    .ToList();
 
                 input.Permissions = input.Permissions.Where(p => !string.IsNullOrEmpty(p)).ToList();
 
-                query = from user in query
-                        join ur in _userRoleRepository.GetAll() on user.Id equals ur.UserId into urJoined
-                        from ur in urJoined.DefaultIfEmpty()
-                        join urr in _roleRepository.GetAll() on ur.RoleId equals urr.Id into urrJoined
-                        from urr in urrJoined.DefaultIfEmpty()
-                        join up in _userPermissionRepository.GetAll()
-                            .Where(userPermission => input.Permissions.Contains(userPermission.Name)) on user.Id equals up.UserId into upJoined
-                        from up in upJoined.DefaultIfEmpty()
-                        join rp in _rolePermissionRepository.GetAll()
-                            .Where(rolePermission => input.Permissions.Contains(rolePermission.Name)) on
-                            new { RoleId = ur == null ? 0 : ur.RoleId } equals new { rp.RoleId } into rpJoined
-                        from rp in rpJoined.DefaultIfEmpty()
-                        where (up != null && up.IsGranted) ||
-                              (up == null && rp != null && rp.IsGranted) ||
-                              (up == null && rp == null && staticRoleNames.Contains(urr.Name))
-                        select user;
+                query =
+                    from user in query
+                    join ur in _userRoleRepository.GetAll() on user.Id equals ur.UserId into urJoined
+                    from ur in urJoined.DefaultIfEmpty()
+                    join urr in _roleRepository.GetAll() on ur.RoleId equals urr.Id into urrJoined
+                    from urr in urrJoined.DefaultIfEmpty()
+                    join up in _userPermissionRepository.GetAll().Where(userPermission => input.Permissions.Contains(userPermission.Name)) on user.Id equals
+                        up.UserId into upJoined
+                    from up in upJoined.DefaultIfEmpty()
+                    join rp in _rolePermissionRepository.GetAll().Where(rolePermission => input.Permissions.Contains(rolePermission.Name)) on
+                        new { RoleId = ur == null ? 0 : ur.RoleId } equals new { rp.RoleId } into rpJoined
+                    from rp in rpJoined.DefaultIfEmpty()
+                    where (up != null && up.IsGranted)
+                          || (up == null && rp != null && rp.IsGranted)
+                          || (up == null && rp == null && staticRoleNames.Contains(urr.Name))
+                    select user;
             }
 
             return query;
@@ -815,7 +780,6 @@ namespace TACHYON.Authorization.Users
             nationalites.Add(new SelectItemDto("Zimbabweans", "Zimbabweans"));
 
 
-
             return nationalites;
         }
 
@@ -824,6 +788,7 @@ namespace TACHYON.Authorization.Users
             var result = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName && x.Id != userId);
             return (result == null);
         }
+
         public async Task<bool> CheckIfEmailisAvailable(string email)
         {
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant))
@@ -838,7 +803,6 @@ namespace TACHYON.Authorization.Users
                     return false;
                 }
             }
-
         }
 
         private void CheckIfDriverPhoneNumberExists(CreateOrUpdateUserInput input)

@@ -13,7 +13,7 @@ using TACHYON.Integration.WaslIntegration.Modules;
 
 namespace TACHYON.Integration.WaslIntegration.Jobs
 {
-    public class DriverRegistrationJob : BackgroundJob<User>, ITransientDependency
+    public class DriverRegistrationJob : BackgroundJob<long>, ITransientDependency
     {
         private readonly WaslIntegrationManager _waslIntegrationManager;
 
@@ -24,9 +24,9 @@ namespace TACHYON.Integration.WaslIntegration.Jobs
 
         [UnitOfWork]
         [AutomaticRetry(Attempts = 2)]
-        public override void Execute(User args)
+        public override void Execute(long driverId)
         {
-            AsyncHelper.RunSync(() => _waslIntegrationManager.DriverRegistration(args));
+            AsyncHelper.RunSync(() => _waslIntegrationManager.DriverRegistration(driverId));
         }
     }
 }

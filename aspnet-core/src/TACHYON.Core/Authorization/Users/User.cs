@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using TACHYON.DriverLicenseTypes;
+using TACHYON.Integration.WaslIntegration;
 using TACHYON.Nationalities;
 
 namespace TACHYON.Authorization.Users
@@ -14,7 +15,7 @@ namespace TACHYON.Authorization.Users
     /// <summary>
     /// Represents a user in the system.
     /// </summary>
-    public class User : AbpUser<User>
+    public class User : AbpUser<User>, IWaslIntegrated
     {
         [StringLength(12)]
         public string AccountNumber { get; set; }
@@ -45,6 +46,11 @@ namespace TACHYON.Authorization.Users
 
         [ForeignKey("DriverLicenseTypeId")]
         public DriverLicenseType DriverLicenseTypeFk { get; set; }
+
+        public bool IsWaslIntegrated { get; set; }
+        public string WaslIntegrationErrorMsg { get; set; }
+
+
 
         public User()
         {

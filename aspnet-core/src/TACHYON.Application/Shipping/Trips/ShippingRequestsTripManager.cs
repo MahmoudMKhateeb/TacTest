@@ -21,6 +21,7 @@ using TACHYON.Common;
 using TACHYON.Dto;
 using TACHYON.Features;
 using TACHYON.Firebases;
+using TACHYON.Integration.WaslIntegration;
 using TACHYON.Invoices;
 using TACHYON.Net.Sms;
 using TACHYON.Notifications;
@@ -54,8 +55,11 @@ namespace TACHYON.Shipping.Trips
         private readonly InvoiceManager _invoiceManager;
         private readonly CommonManager _commonManager;
         private readonly UserManager UserManager;
+        private readonly WaslIntegrationManager _waslIntegrationManager;
 
-        public ShippingRequestsTripManager(IRepository<ShippingRequestTrip> shippingRequestTrip, PriceOfferManager priceOfferManager, IAppNotifier appNotifier, ISettingManager settingManager, IFeatureChecker featureChecker, IAbpSession abpSession, IHubContext<AbpCommonHub> hubContext, IRepository<RoutPoint, long> routPointRepository, IRepository<ShippingRequestTripTransition> shippingRequestTripTransitionRepository, IRepository<RoutPointStatusTransition> routPointStatusTransitionRepository, FirebaseNotifier firebaseNotifier, ISmsSender smsSender, InvoiceManager invoiceManager, CommonManager commonManager, IRepository<RoutPointDocument, long> routPointDocumentRepository, UserManager userManager)
+
+        public ShippingRequestsTripManager(IRepository<ShippingRequestTrip> shippingRequestTrip, PriceOfferManager priceOfferManager, IAppNotifier appNotifier, ISettingManager settingManager, IFeatureChecker featureChecker, IAbpSession abpSession, IHubContext<AbpCommonHub> hubContext, IRepository<RoutPoint, long> routPointRepository, IRepository<ShippingRequestTripTransition> shippingRequestTripTransitionRepository, IRepository<RoutPointStatusTransition> routPointStatusTransitionRepository, FirebaseNotifier firebaseNotifier, ISmsSender smsSender, InvoiceManager invoiceManager, CommonManager commonManager, IRepository<RoutPointDocument, long> routPointDocumentRepository, UserManager userManager,
+            WaslIntegrationManager waslIntegrationManager)
         {
             _shippingRequestTrip = shippingRequestTrip;
             _priceOfferManager = priceOfferManager;
@@ -73,6 +77,7 @@ namespace TACHYON.Shipping.Trips
             _commonManager = commonManager;
             _routPointDocumentRepository = routPointDocumentRepository;
             UserManager = userManager;
+            _waslIntegrationManager = waslIntegrationManager;
         }
 
         /// <summary>
@@ -199,6 +204,7 @@ namespace TACHYON.Shipping.Trips
                 case RoutePointStatus.StartedMovingToLoadingLocation:
                     trip.RoutePointStatus = RoutePointStatus.ArriveToLoadingLocation;
                     point.Status = RoutePointStatus.ArriveToLoadingLocation;
+                    await _waslIntegrationManager.QueueTripRegistrationJob(trip.Id);
                     break;
                 case RoutePointStatus.ArriveToLoadingLocation:
                     trip.RoutePointStatus = RoutePointStatus.StartLoading;
@@ -224,6 +230,16 @@ namespace TACHYON.Shipping.Trips
                 case RoutePointStatus.StartOffloading:
                     trip.RoutePointStatus = RoutePointStatus.FinishOffLoadShipment;
                     point.Status = RoutePointStatus.FinishOffLoadShipment;
+
+                    //if all points delivered, actual delivery date of last point will be stored in trip
+                    if (!trip.RoutPoints.Any(x => x.ActualPickupOrDeliveryDate == null && x.Id != point.Id))
+                    {
+                        trip.ActualDeliveryDate = Clock.Now;
+
+                        await _waslIntegrationManager.QueueTripUpdateJob(trip.Id);
+
+                    }
+
 
                     break;
                 default:

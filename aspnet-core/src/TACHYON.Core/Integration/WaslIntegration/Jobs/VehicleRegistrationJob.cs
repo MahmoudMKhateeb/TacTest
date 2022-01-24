@@ -13,7 +13,7 @@ using TACHYON.Trucks;
 
 namespace TACHYON.Integration.WaslIntegration.Jobs
 {
-    public class VehicleRegistrationJob : BackgroundJob<Truck>, ITransientDependency
+    public class VehicleRegistrationJob : BackgroundJob<long>, ITransientDependency
     {
         private readonly WaslIntegrationManager _waslIntegrationManager;
 
@@ -24,9 +24,9 @@ namespace TACHYON.Integration.WaslIntegration.Jobs
 
         [UnitOfWork]
         [AutomaticRetry(Attempts = 2)]
-        public override void Execute(Truck args)
+        public override void Execute(long truckId)
         {
-            AsyncHelper.RunSync(() => _waslIntegrationManager.VehicleRegistration(args));
+            AsyncHelper.RunSync(() => _waslIntegrationManager.VehicleRegistration(truckId));
         }
     }
 }
