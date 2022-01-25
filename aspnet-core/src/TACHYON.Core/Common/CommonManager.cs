@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
+using TACHYON.Authorization.Users;
 using TACHYON.Documents.DocumentFiles.Dtos;
 using TACHYON.Documents.DocumentTypes;
 using TACHYON.Dto;
@@ -22,17 +23,20 @@ namespace TACHYON.Common
         private readonly IFeatureChecker _featureChecker;
         private readonly IBinaryObjectManager _binaryObjectManager;
         private readonly ITempFileCacheManager _tempFileCacheManager;
+        private readonly UserManager UserManager;
+
 
         public CommonManager(
             IAbpSession AbpSession,
             IFeatureChecker featureChecker,
             IBinaryObjectManager binaryObjectManager,
-            ITempFileCacheManager tempFileCacheManager)
+            ITempFileCacheManager tempFileCacheManager, UserManager userManager)
         {
             _AbpSession = AbpSession;
             _featureChecker = featureChecker;
             _binaryObjectManager = binaryObjectManager;
             _tempFileCacheManager = tempFileCacheManager;
+            UserManager = userManager;
         }
         /// <summary>
         /// This function helep developers to execute any query need to disable filter if the user is host or check if tenant have feature to execute this query
@@ -161,7 +165,7 @@ namespace TACHYON.Common
 
             return file;
         }
-        public async Task<List<GetAllUploadedFileDto>> GetDocuments(List<IHasDocument> documents)
+        public async Task<List<GetAllUploadedFileDto>> GetDocuments(List<IHasDocument> documents, User user)
         {
             var files = new List<GetAllUploadedFileDto>();
             foreach (var item in documents)
@@ -169,8 +173,9 @@ namespace TACHYON.Common
                 var uploadedFile = new GetAllUploadedFileDto();
                 var file = await _binaryObjectManager.GetOrNullAsync(item.DocumentId.Value);
 
-                if (file.ThumbnailByte != null)
+                if (user.IsDriver && file.ThumbnailByte != null)
                     uploadedFile.ThumbnailImage = Convert.ToBase64String(file.ThumbnailByte);
+
 
                 uploadedFile.DocumentId = item.DocumentId.Value;
                 uploadedFile.FileName = item.DocumentName;

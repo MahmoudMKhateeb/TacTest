@@ -453,7 +453,7 @@ namespace TACHYON.Tracking
                 .WhereIf(currentUser.IsDriver, x => x.RoutPointFk.ShippingRequestTripFk.AssignedDriverUserId == currentUser.Id)
                 .ToListAsync();
             if (!documents.Any()) throw new UserFriendlyException(L("TheRoutePointIsNotFound"));
-            return await _commonManager.GetDocuments(ObjectMapper.Map<List<IHasDocument>>(documents));
+            return await _commonManager.GetDocuments(ObjectMapper.Map<List<IHasDocument>>(documents), currentUser);
         }
 
         #endregion

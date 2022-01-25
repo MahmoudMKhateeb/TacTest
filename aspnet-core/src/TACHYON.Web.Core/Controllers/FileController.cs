@@ -77,6 +77,9 @@ namespace TACHYON.Web.Controllers
             {
                 return StatusCode((int)HttpStatusCode.NotFound);
             }
+            MimeTypes.TryGetExtension(contentType, out var exten);
+
+            fileName = fileName + exten;
 
             return File(fileObject.Bytes, contentType, fileName);
         }
@@ -110,7 +113,6 @@ namespace TACHYON.Web.Controllers
             return File(binaryObject.Bytes, file.FileType, file.FileName);
         }
 
-
         [DisableAuditing]
         [AbpMvcAuthorize()]
         public async Task<ActionResult> DownloadTripIncidentFile(int id)
@@ -130,20 +132,6 @@ namespace TACHYON.Web.Controllers
             file.FileName = file.FileName + "." + exten;
             return File(binaryObject.Bytes, file.FileType, file.FileName);
 
-        }
-        [DisableAuditing]
-        [AbpMvcAuthorize()]
-        public async Task<ActionResult> DownloadPODFile(Guid documentId, string contentType, string fileName)
-        {
-            var fileBytes = await _binaryObjectManager.GetOrNullAsync(documentId);
-
-            if (fileBytes == null)
-                return NotFound(L("RequestedFileDoesNotExists"));
-
-            MimeTypes.TryGetExtension(contentType, out var exten);
-
-            fileName = fileName + "." + exten;
-            return File(fileBytes.Bytes, contentType, fileName);
         }
 
         [AbpMvcAuthorize()]
