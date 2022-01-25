@@ -14,15 +14,13 @@ namespace TACHYON.Firebases
     public class FirebaseNotifier : TACHYONDomainServiceBase, IFirebaseNotifier
     {
 
-        public FirebaseMessaging messaging { get; set; }
+        public FirebaseMessaging Messaging { get; set; }
         private readonly IRepository<UserDeviceToken> _userDeviceToken;
-        private readonly ISettingManager _settingManager;
+
         public FirebaseNotifier(IRepository<UserDeviceToken> userDeviceToken, ISettingManager settingManager)
         {
-            messaging = FirebaseMessaging.DefaultInstance;
+            Messaging = FirebaseMessaging.DefaultInstance;
             _userDeviceToken = userDeviceToken;
-            _settingManager = settingManager;
-
         }
     
        
@@ -34,6 +32,12 @@ namespace TACHYON.Firebases
         {
             
             var tokens = await GetUsersDevices(userIds);
+            if (tokens.Length < 1)
+            {
+                Logger.Error($"Failed when try to send notification {notificationName} with notification data {data}" +
+                             $"\nReason => Drivers With IDs:{userIds}, does not have any device token");
+                return;
+            }
             List<Message> msgList = new List<Message>();
             foreach (string token in tokens)
             {
@@ -64,7 +68,7 @@ namespace TACHYON.Firebases
 
             try
             {
-               await messaging.SendAllAsync(msgList);
+               await Messaging.SendAllAsync(msgList);
             }
             catch (FirebaseMessagingException ex)
             {
