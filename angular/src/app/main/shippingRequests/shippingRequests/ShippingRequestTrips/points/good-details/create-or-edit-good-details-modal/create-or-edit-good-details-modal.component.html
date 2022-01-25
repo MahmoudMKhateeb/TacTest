@@ -57,11 +57,10 @@
                       [minLength]="1"
                       [min]="1"
                       [max]="AllowedWeight / (amount || 1)"
-                      pattern="\d{1,2}([\.,][\d{1,2}])?"
                       name="Weight"
                       type="number"
-                      [class.is-invalid]="(GoodsWeight.pristine || GoodsWeight.touched) && !GoodsWeight.valid"
-                      [class.is-valid]="(GoodsWeight.pristine || GoodsWeight.touched) && GoodsWeight.valid"
+                      [class.is-invalid]="GoodsWeight.touched && !GoodsWeight.valid"
+                      [class.is-valid]="GoodsWeight.touched && GoodsWeight.valid"
                       required
                     />
                     <a class="text-muted mt-1"> {{ l('RemainingAllowedWeight') + ': ' + AllowedWeight / (amount || 1) }}</a>

@@ -432,13 +432,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
    */
   private validatePointsBeforeAddTrip() {
     //if trip Drop Points is less than number of drops Prevent Adding Trip
-    if (this.trip.routPoints.length !== this.shippingRequest.numberOfDrops + 1) {
-      console.log('first Condition Fired');
-      Swal.fire(this.l('IncompleteTripPoint'), this.l('PleaseAddAllTheDropPoints'), 'warning');
-      return false;
-      //if the routetype is single drop and the Drop point setup is not completed prevent adding trip
-    } else if (this.shippingRequest.routeTypeId === this.RouteTypes.SingleDrop && !this.trip.routPoints[1].goodsDetailListDto) {
-      console.log('Secound Condition Fired');
+    if (this.trip.routPoints.find((x) => !x.goodsDetailListDto)) {
       Swal.fire(this.l('IncompleteTripPoint'), this.l('PleaseCompleteTheDropPointSetup'), 'warning');
       return false;
     } else {
