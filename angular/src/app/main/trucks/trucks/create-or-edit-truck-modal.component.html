@@ -102,17 +102,7 @@
             <div class="form-group col-md-3">
               <label for="Truck_Capacity">{{ l('Capacity') }}</label>
               <div class="input-group">
-                <input
-                  [(ngModel)]="truck.capacity"
-                  #capacity="ngModel"
-                  class="form-control"
-                  id="Truck_Capacity"
-                  maxlength="4"
-                  minlength="1"
-                  min="0"
-                  name="Capacity"
-                  type="number"
-                />
+                <input [(ngModel)]="truck.capacity" #capacity="ngModel" class="form-control" id="Truck_Capacity" name="Capacity" type="text" />
                 <div class="input-group-append">
                   <!-- <span class="input-group-text">{{ l('Tons') }}</span> -->
                 </div>
