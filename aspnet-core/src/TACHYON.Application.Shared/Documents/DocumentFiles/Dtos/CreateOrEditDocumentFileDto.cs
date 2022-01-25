@@ -1,7 +1,7 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using Abp.Application.Services.Dto;
+﻿using Abp.Application.Services.Dto;
 using Abp.Runtime.Validation;
+using System;
+using System.ComponentModel.DataAnnotations;
 using TACHYON.Documents.DocumentsEntities;
 using TACHYON.Documents.DocumentTypes.Dtos;
 
@@ -40,7 +40,6 @@ namespace TACHYON.Documents.DocumentFiles.Dtos
         [StringLength(DocumentFileConsts.MaxNameLength, MinimumLength = DocumentFileConsts.MinNameLength)]
         public string Name { get; set; }
 
-        [Required]
         [StringLength(DocumentFileConsts.MaxExtnLength, MinimumLength = DocumentFileConsts.MinExtnLength)]
         public string Extn { get; set; }
 

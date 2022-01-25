@@ -2,6 +2,7 @@
 using Abp.Domain.Uow;
 using Abp.Extensions;
 using Abp.Runtime.Session;
+using Abp.Runtime.Validation;
 using Abp.Specifications;
 using Abp.UI;
 using DevExtreme.AspNet.Data.ResponseModel;
@@ -272,6 +273,7 @@ namespace TACHYON.Documents
 
             DocumentFile documentFile = await _documentFileRepository
                 .GetAll()
+                .Include(x => x.DocumentTypeFk)
                 .FirstOrDefaultAsync(x => x.Id == (Guid)input.Id);
 
             if (input.UpdateDocumentFileInput != null && !input.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
@@ -285,6 +287,10 @@ namespace TACHYON.Documents
                 input.IsAccepted = false;
                 input.IsRejected = false;
 
+            }
+            else
+            {
+                throw new AbpValidationException(L("ThereisamissingDocumnets", documentFile.DocumentTypeFk.DisplayName));
             }
             if (documentFile.ExpirationDate != input.ExpirationDate)
             {
