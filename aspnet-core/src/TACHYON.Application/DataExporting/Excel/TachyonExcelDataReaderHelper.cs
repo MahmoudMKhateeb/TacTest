@@ -31,6 +31,15 @@ namespace TACHYON.DataExporting.Excel
             exceptionMessage.Append(GetLocalizedExceptionMessagePart(columnName));
             return default(T);
         }
+        public T GetRequiredValuesFromRowOrNull<T>(ISheet worksheet, int row, int column, string columnName, StringBuilder exceptionMessage)
+        {
+            var value = GetValueFromRowOrNull<T>(worksheet, row, column, columnName, exceptionMessage);
+            if (value != null)
+            {
+                return value;
+            }
+            return default(T);
+        }
         public T GetValueFromRowOrNull<T>(ISheet worksheet, int row, int column, string columnName, StringBuilder exceptionMessage)
         {
             var value = _GetStringValueFromRowOrNull(worksheet, row, column, columnName, exceptionMessage);
