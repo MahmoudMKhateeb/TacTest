@@ -1,14 +1,14 @@
-﻿using System;
+﻿using Abp.Domain.Repositories;
+using Abp.Extensions;
+using Abp.Localization;
+using Abp.Localization.Sources;
+using NPOI.SS.UserModel;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlTypes;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using Abp.Domain.Repositories;
-using Abp.Extensions;
-using Abp.Localization;
-using Abp.Localization.Sources;
-using NPOI.SS.UserModel;
 using TACHYON.DataExporting.Excel;
 using TACHYON.DataExporting.Excel.NPOI;
 using TACHYON.Documents.DocumentFiles.Dtos;
@@ -115,7 +115,7 @@ namespace TACHYON.Trucks.Importing
                 #region Istimara document
 
                 //9
-                istimaraDocumentFileDto.Number = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet, row, 9, " Istimara NO*", exceptionMessage);
+                istimaraDocumentFileDto.Number = _tachyonExcelDataReaderHelper.GetRequiredValuesFromRowOrNull<string>(worksheet, row, 9, " Istimara NO*", exceptionMessage);
 
                 //10
                 istimaraDocumentFileDto.HijriExpirationDate = _tachyonExcelDataReaderHelper.GetValueFromRowOrNull<string>(worksheet, row, 10, "Istimara Expiry  Date (Hijri)*", exceptionMessage);
@@ -130,7 +130,7 @@ namespace TACHYON.Trucks.Importing
                 #region Insurance document
 
                 //12
-                insuranceDocumentFileDto.Number = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet, row, 12, "3rd Party Insurance Policy NO*", exceptionMessage);
+                insuranceDocumentFileDto.Number = _tachyonExcelDataReaderHelper.GetRequiredValuesFromRowOrNull<string>(worksheet, row, 12, "3rd Party Insurance Policy NO*", exceptionMessage);
 
                 //13
                 insuranceDocumentFileDto.HijriExpirationDate = _tachyonExcelDataReaderHelper.GetValueFromRowOrNull<string>(worksheet, row, 13, " 3rd party Insurance Expiry Date (Hijri)", exceptionMessage);
@@ -175,14 +175,6 @@ namespace TACHYON.Trucks.Importing
                 }
             }
 
-
-            if (insuranceDocumentType.HasExpirationDate &&
-                insuranceDocumentFileDto.HijriExpirationDate.IsNullOrEmpty() &&
-                insuranceDocumentFileDto.ExpirationDate == null)
-            {
-                exceptionMessage.Append("Insurance Expiry  Date (Gregorian OR Hijri) is required; ");
-            }
-
             if (!insuranceDocumentFileDto.HijriExpirationDate.IsNullOrEmpty() &&
                 insuranceDocumentFileDto.ExpirationDate == null)
             {
@@ -214,14 +206,6 @@ namespace TACHYON.Trucks.Importing
                                             istimaraDocumentType.NumberMaxDigits +
                                             " character; ");
                 }
-            }
-
-
-            if (istimaraDocumentType.HasExpirationDate &&
-                istimaraDocumentFileDto.HijriExpirationDate.IsNullOrEmpty() &&
-                istimaraDocumentFileDto.ExpirationDate == null)
-            {
-                exceptionMessage.Append("Istimara Expiry  Date (Gregorian OR Hijri) is required; ");
             }
 
             if (!istimaraDocumentFileDto.HijriExpirationDate.IsNullOrEmpty() &&
@@ -301,7 +285,7 @@ namespace TACHYON.Trucks.Importing
             }
 
             // get truckType English 
-            TrucksType trucksType = _trucksTypeRepository.GetAllIncluding(x=>x.Translations).FirstOrDefault(x => x.Translations.Any(x=>x.TranslatedDisplayName.ToLower() == text.ToLower()));
+            TrucksType trucksType = _trucksTypeRepository.GetAllIncluding(x => x.Translations).FirstOrDefault(x => x.Translations.Any(x => x.TranslatedDisplayName.ToLower() == text.ToLower()));
             if (trucksType == null)
             {
                 //Translated name 
