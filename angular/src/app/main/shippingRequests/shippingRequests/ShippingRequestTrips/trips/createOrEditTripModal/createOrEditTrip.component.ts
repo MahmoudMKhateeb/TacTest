@@ -237,6 +237,11 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       if (!this.trip.hasAttachment) {
         this.trip.createOrEditDocumentFileDto = null;
       }
+      this.GetSelectedstartDateChange(this.startTripdate, 'start');
+      if (this.endTripdate !== undefined) {
+        this.GetSelectedstartDateChange(this.endTripdate, 'end');
+      }
+
       this._shippingRequestTripsService
         .createOrEdit(this.trip)
         .pipe(
