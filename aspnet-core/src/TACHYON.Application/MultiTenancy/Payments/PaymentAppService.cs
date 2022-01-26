@@ -328,6 +328,8 @@ namespace TACHYON.MultiTenancy.Payments
 
         public async Task SwitchBetweenFreeEditions(int upgradeEditionId)
         {
+            // at now we don't need to execute this action instead of delete it
+            throw new UserFriendlyException(L("ThisFeatureNotEnabledAtTheMoment"));
             var tenant = await _tenantManager.GetByIdAsync(AbpSession.GetTenantId());
 
             if (!tenant.EditionId.HasValue)
