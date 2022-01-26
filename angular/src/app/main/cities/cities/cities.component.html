@@ -47,10 +47,7 @@
               <dxi-column dataField="longitude" caption="{{ l('Longitude') }}">
               </dxi-column> -->
 
-              <dxi-column dataField="countyId" caption="{{ l('CountryName') }}">
-                <dxi-validation-rule type="required"></dxi-validation-rule>
-                <dxo-lookup [dataSource]="countries" displayExpr="displayName" valueExpr="id"> </dxo-lookup>
-              </dxi-column>
+              <dxi-column dataField="translatedDisplayName" caption="{{ l('CountryName') }}"> </dxi-column>
               <dxi-column dataField="isActive" caption="{{ l('IsActive') }}"></dxi-column>
             </dx-data-grid>
           </div>
