@@ -11,7 +11,6 @@ import {
   ShippingRequestRouteType,
   WaybillsServiceProxy,
 } from '@shared/service-proxies/service-proxies';
-import Swal from 'sweetalert2';
 import { FileDownloadService } from '@shared/utils/file-download.service';
 import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
 import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
@@ -92,7 +91,7 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
       }
       //validate if point Limit Reached For Multible Drops And Show Success Message
       if (!this.activeTripId && this.RouteType == ShippingRequestRouteType.MultipleDrops && res.length - 1 == this.NumberOfDrops) {
-        Swal.fire(this.l('GoodJob'), this.l('AllDropPointsAddedSuccessfully'), 'success');
+        //  Swal.fire(this.l('GoodJob'), this.l('AllDropPointsAddedSuccessfully'), 'success');
       }
     });
     //Tell the Service Where this Component is Being Used
@@ -125,10 +124,6 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
         }
       });
     }
-
-    // setInterval(() => {
-    //   console.log(this.wayPointsList);
-    // }, 1000);
   }
 
   //Load DropDowns For Shipper Only
@@ -174,6 +169,18 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
     //Points Drawer
     this.wayPointsSetter();
     console.log('after:', this.wayPointsList);
+    this.createDropPointsForMultiDrops();
+  }
+
+  //for MultiBleDrops
+  createDropPointsForMultiDrops() {
+    if (this.RouteType === this.RouteTypes.MultipleDrops && this.wayPointsList.length === 1) {
+      for (let i = 0; i < this.NumberOfDrops; i++) {
+        let item = new CreateOrEditRoutPointDto();
+        item.pickingType = PickingType.Dropoff;
+        this.wayPointsList.push(item);
+      }
+    }
   }
 
   delete(index: number) {
@@ -227,5 +234,13 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
       this._fileDownloadService.downloadTempFile(result);
       this.loading = false;
     });
+  }
+
+  getTotalWeightOfDropPoint(record: CreateOrEditRoutPointDto): number {
+    let weight = 0;
+    record.goodsDetailListDto.forEach((x) => {
+      weight += x.weight * x.amount;
+    });
+    return weight;
   }
 }
