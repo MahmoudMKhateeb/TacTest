@@ -97,7 +97,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     public _fileDownloadService: FileDownloadService,
     private _waybillsServiceProxy: WaybillsServiceProxy,
     private cdref: ChangeDetectorRef,
-    private _TripService: TripService,
+    public _TripService: TripService,
     private _PointsService: PointsService,
     private _tokenService: TokenService,
     private _receiversServiceProxy: ReceiversServiceProxy
@@ -122,7 +122,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     this.PointsServiceSubscription = this._PointsService.currentWayPointsList.subscribe((res) => (this.trip.routPoints = res));
     //load the Facilites
     //this._PointsService.updateWayPoints(new CreateOrEditRoutPointDto[]);
-    this.refreshOrGetFacilities(null);
+    this.refreshOrGetFacilities(undefined);
     this.vasesHandler();
   }
 
@@ -247,16 +247,8 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     });
   }
   refreshOrGetFacilities(facility: FacilityForDropdownDto | undefined) {
-    if (facility) {
-      this.allFacilities.push(facility);
-      this.trip.originFacilityId = facility.id;
-    } else {
-      this.facilityLoading = true;
-      // this._shippingRequestDDService.allFacilities.subscribe((res) => (this.allFacilities = res));
-      this._TripService.currentFacilitiesItems.subscribe((res: DropDownMenu) => {
-        this.facilityLoading = res.isLoading;
-        this.allFacilities = res.items;
-      });
+    if (this.shippingRequest != null && this.shippingRequest != undefined) {
+      this._TripService.GetOrRefreshFacilities(this.shippingRequest.id);
     }
   }
 

@@ -25,11 +25,20 @@ export class TripService {
   private destFacility = new BehaviorSubject<number>(null);
   currentDestFacility = this.destFacility.asObservable();
 
-  private FacilitiesItems: BehaviorSubject<any> = new BehaviorSubject(new Array<DropDownMenu>());
-  currentFacilitiesItems = this.FacilitiesItems.asObservable();
+  //private FacilitiesItems: BehaviorSubject<any> = new BehaviorSubject(new Array<DropDownMenu>());
+  //currentFacilitiesItems = this.FacilitiesItems.asObservable();
+
+  public currentSourceFacilitiesItems: FacilityForDropdownDto[];
+  public currentDestinationFacilitiesItems: FacilityForDropdownDto[];
+
+  facilitiesLodaing: boolean;
+  citySourceId: number;
+  cityDestenationId: number;
+  shippingTypeId: number;
+  routeTypeId: number;
 
   constructor(private _routStepsServiceProxy: RoutStepsServiceProxy, private feature: FeatureCheckerService) {
-    this.GetOrRefreshFacilities();
+    //this.GetOrRefreshFacilities();
   }
 
   updateShippingRequest(shippingRequest: GetShippingRequestForViewOutput) {
@@ -50,13 +59,33 @@ export class TripService {
     this.destFacility.next(id);
   }
   //Loads All facilities
-  GetOrRefreshFacilities() {
-    if (this.feature.isEnabled('App.Shipper')) {
-      console.log('Facilities Loaded/Refreshed Only For Shipper From Trip Shared Service');
-      this.FacilitiesItems.next({ isLoading: true, items: null });
-      this._routStepsServiceProxy.getAllFacilitiesForDropdown().subscribe((result) => {
-        this.FacilitiesItems.next({ isLoading: false, items: result });
-      });
+  GetOrRefreshFacilities(shippingRequestId: number) {
+    this.facilitiesLodaing = true;
+    if (this.feature.isEnabled('App.Shipper') || this.feature.isEnabled('App.TachyonDealer')) {
+      if (shippingRequestId != null && shippingRequestId != undefined) {
+        this.currentShippingRequest.subscribe((res) => {
+          this.citySourceId = res.originalCityId;
+          this.cityDestenationId = res.destinationCityId;
+          this.shippingTypeId = res.shippingRequest.shippingTypeId;
+          this.routeTypeId = res.shippingRequest.routeTypeId;
+        });
+        this._routStepsServiceProxy.getAllFacilitiesByCityAndTenantForDropdown(shippingRequestId).subscribe((result) => {
+          if (this.shippingTypeId == 1) {
+            //inside city
+            this.currentSourceFacilitiesItems = this.currentDestinationFacilitiesItems = result;
+          } else {
+            //outside side
+            this.currentSourceFacilitiesItems = result.filter((r) => r.cityId == this.citySourceId);
+            this.currentDestinationFacilitiesItems = result.filter((r) => r.cityId == this.cityDestenationId);
+          }
+          this.facilitiesLodaing = false;
+        });
+      } else {
+        this._routStepsServiceProxy.getAllFacilitiesForDropdown().subscribe((result) => {
+          this.currentSourceFacilitiesItems = this.currentDestinationFacilitiesItems = result;
+          this.facilitiesLodaing = false;
+        });
+      }
     }
   }
 }
