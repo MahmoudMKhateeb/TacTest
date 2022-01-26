@@ -113,6 +113,7 @@ export class TrucksComponent extends AppComponentBase implements OnInit, AfterVi
         this._trucksServiceProxy.delete(truck.id).subscribe(() => {
           this.reloadPage();
           this.notify.success(this.l('SuccessfullyDeleted'));
+          this.getAllTrucks();
         });
       }
     });
