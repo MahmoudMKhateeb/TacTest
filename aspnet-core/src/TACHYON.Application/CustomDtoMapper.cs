@@ -94,6 +94,8 @@ using TACHYON.Offers.Dtos;
 using TACHYON.Organizations.Dto;
 using TACHYON.Packing.PackingTypes;
 using TACHYON.Packing.PackingTypes.Dtos;
+using TACHYON.PricePackages;
+using TACHYON.PricePackages.Dto.NormalPricePackage;
 using TACHYON.Receivers;
 using TACHYON.Receivers.Dtos;
 using TACHYON.Routs.Dtos;
@@ -717,6 +719,17 @@ namespace TACHYON
             configuration.CreateMap(typeof(TACHYONAppServiceBase.TachyonLoadResult<>), typeof(LoadResult)).ReverseMap();
 
             configuration.CreateMap<WorkflowTransaction<PointTransactionArgs, RoutePointStatus>, PointTransactionDto>();
+
+
+
+            //NormalPricePackage
+            configuration.CreateMap<NormalPricePackage, NormalPricePackageDto>()
+                .ForMember(src => src.PricePerExtraDrop, opt => opt.MapFrom(des => des.PricePerExtraDrop.HasValue ? des.PricePerExtraDrop.ToString() : "---"))
+                .ForMember(src => src.TruckType, opt => opt.MapFrom(des => des.TrucksTypeFk.DisplayName))
+                .ForMember(src => src.Origin, opt => opt.MapFrom(des => des.OriginCityFK.DisplayName))
+                .ForMember(src => src.Destination, opt => opt.MapFrom(des => des.DestinationCityFK.DisplayName));
+            configuration.CreateMap<CreateOrEditNormalPricePackageDto, NormalPricePackage>().ReverseMap();
+
         }
         /// <summary>
         /// MultiLingualMapping configuration 

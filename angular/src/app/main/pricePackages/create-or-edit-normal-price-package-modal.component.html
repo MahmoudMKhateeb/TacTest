@@ -1,0 +1,172 @@
+﻿<div
+  bsModal
+  #createOrEditModal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="createOrEditModal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form *ngIf="active" #normalPricePackageForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            <span *ngIf="normalPricePackage.id">{{ l('EditNormalPricePackage') }}</span>
+            <span *ngIf="!normalPricePackage.id">{{ l('CreateNormalPricePackage') }}</span>
+          </h4>
+          <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="NormalPricePackage_DisplayName">{{ l('PricePackageName') }} <span class="required-fileds">*</span></label>
+              <input
+                type="text"
+                #NormalPricePackage_DisplayName="ngModel"
+                id="NormalPricePackage_DisplayName"
+                class="form-control"
+                [(ngModel)]="normalPricePackage.displayName"
+                name="displayName"
+                minlength="3"
+                maxlength="100"
+                required
+              />
+              <validation-messages [formCtrl]="NormalPricePackage_DisplayName"></validation-messages>
+            </div>
+            <div class="checkbox-inline">
+              <label for="NormalPricePackage_IsMultiDrop" class="checkbox">
+                <input
+                  id="NormalPricePackage_IsMultiDrop"
+                  (change)="checkPricePerExtraDrop($event)"
+                  type="checkbox"
+                  name="isMultiDrop"
+                  [(ngModel)]="normalPricePackage.isMultiDrop"
+                />
+                <span> </span>
+                {{ 'isMultiDrop ' }}
+              </label>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>{{ l('TranspotType') }} <span class="required-fileds">*</span></label>
+              <select
+                name="transpotTypeId"
+                (change)="TranspotTypesChanged($event)"
+                [(ngModel)]="normalPricePackage.transportTypeId"
+                class="form-control"
+                required
+              >
+                <option value="undefined">{{ l('SelectATranspotType') }}</option>
+                <option *ngFor="let item of allTranspotTypes" [value]="item.id">{{ item.displayName }}</option>
+              </select>
+            </div>
+            <div class="form-group col-md-6">
+              <label>{{ l('TruckType') }} <span class="required-fileds">*</span></label>
+              <select name="trucksTypeId" [(ngModel)]="normalPricePackage.trucksTypeId" class="form-control" required>
+                <option value="undefined">{{ l('SelectATruckType') }}</option>
+                <option *ngFor="let item of allTruckTypes" [value]="item.id">{{ item.displayName }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <!-- Start of Select Source -->
+            <div class="col-md-6 form-group">
+              <label>{{ l('OriginCity') }} <span class="required-fileds">*</span></label>
+              <select class="form-control" name="originCityId" [(ngModel)]="normalPricePackage.originCityId" required>
+                <option value="undefined">{{ l('SelectanOriginCity') }}</option>
+                <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }}</option>
+              </select>
+            </div>
+            <div class="col-md-6 form-group">
+              <label> {{ l('DestinationCity') }} <span class="required-fileds">*</span></label>
+              <select class="form-control" name="destinationCityId" [(ngModel)]="normalPricePackage.destinationCityId" required>
+                <option value="undefined">{{ l('selectaDestination') }}</option>
+                <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }}</option>
+              </select>
+              <div class="invalid-feedback">{{ l('SourceAndDestinationCantBeTheSame') }}</div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col-md-6 form-group">
+              <label for="NormalPricePackage_DirectRequestPrice">{{ l('DirectRequestPrice') }} <span class="required-fileds">*</span></label>
+              <input
+                class="form-control"
+                #NormalPricePackage_DirectRequestPrice="ngModel"
+                id="NormalPricePackage_DirectRequestPrice"
+                name="directRequestPrice"
+                type="number"
+                step="0.01"
+                min="1"
+                [(ngModel)]="normalPricePackage.directRequestPrice"
+                required
+              />
+              <validation-messages [formCtrl]="NormalPricePackage_DirectRequestPrice"></validation-messages>
+            </div>
+            <div class="col-md-6 form-group">
+              <label>{{ l('MarcketPlaceRequestPrice') }} <span class="required-fileds">*</span></label>
+              <input
+                class="form-control"
+                type="number"
+                step="0.01"
+                min="1"
+                name="marcketPlaceRequestPrice"
+                id="marcketPlaceRequestPrice"
+                [(ngModel)]="normalPricePackage.marcketPlaceRequestPrice"
+                required
+              />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col-md-6 form-group">
+              <label>{{ l('TachyonMSRequestPrice') }} <span class="required-fileds">*</span></label>
+              <input
+                class="form-control"
+                name="tachyonMSRequestPrice"
+                id="tachyonMSRequestPrice"
+                [(ngModel)]="normalPricePackage.tachyonMSRequestPrice"
+                type="number"
+                step="0.01"
+                min="1"
+                required
+              />
+            </div>
+            <div class="col-md-6 form-group" *ngIf="normalPricePackage.isMultiDrop">
+              <div class="right">
+                <label for="NormalPricePackage_PricePerExtraDrop">{{ 'pricePerExtraDrops' }}<span class="required-fileds"> *</span> </label>
+                <input
+                  id="NormalPricePackage_PricePerExtraDrop"
+                  name="pricePerExtraDrop"
+                  #NormalPricePackage_PricePerExtraDrop="ngModel"
+                  class="form-control"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  [(ngModel)]="normalPricePackage.pricePerExtraDrop"
+                  [required]="normalPricePackage.isMultiDrop"
+                />
+                <validation-messages [formCtrl]="NormalPricePackage_PricePerExtraDrop"></validation-messages>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
+          <button
+            type="submit"
+            class="btn btn-primary blue"
+            [disabled]="!normalPricePackageForm.form.valid"
+            [buttonBusy]="saving"
+            [busyText]="l('SavingWithThreeDot')"
+          >
+            <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

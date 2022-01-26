@@ -82,6 +82,10 @@ import { PortsComponent } from './ports/ports/ports.component';
 import { ViewPortModalComponent } from './ports/ports/view-port-modal.component';
 import { CreateOrEditPortModalComponent } from './ports/ports/create-or-edit-port-modal.component';
 
+import { NormalPricePackageComponent } from './pricePackages/normal-price-package.component';
+import { ViewNormalPricePackageModalComponent } from './pricePackages/view-normal-price-package-modal.component';
+import { CreateOrEditNormalPricePackageModalComponent } from './pricePackages/create-or-edit-normal-price-package-modal.component';
+
 import { PickingTypesComponent } from './pickingTypes/pickingTypes/pickingTypes.component';
 import { ViewPickingTypeModalComponent } from './pickingTypes/pickingTypes/view-pickingType-modal.component';
 import { CreateOrEditPickingTypeModalComponent } from './pickingTypes/pickingTypes/create-or-edit-pickingType-modal.component';
@@ -529,6 +533,9 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ShippingRequestRatingModalComponent,
     ViewRatingComponent,
     ShipmentHistoryComponent,
+    NormalPricePackageComponent,
+    CreateOrEditNormalPricePackageModalComponent,
+    ViewNormalPricePackageModalComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },
