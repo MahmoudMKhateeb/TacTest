@@ -1,8 +1,8 @@
-<div class="card card-custom gutter-b card-stretch" [@routerTransition]>
+<div class="card card-custom gutter-b card-stretch p-0" [@routerTransition]>
   <!--begin::Body-->
-  <div class="card-body">
+  <div class="card-body p-0">
     <!--begin::Content-->
-    <div class="d-flex flex-wrap">
+    <div class="d-flex flex-wrap" *ngIf="mapToggle">
       <agm-map [zoom]="zoom" [longitude]="markerLong || 46.675761" [latitude]="markerLat || 24.717942">
         <agm-direction
           *ngIf="destination.lat && !markerLong"
@@ -14,12 +14,24 @@
           <agm-info-window>{{ markerFacilityName }}</agm-info-window>
         </agm-marker>
       </agm-map>
-      <!--      <agm-map></agm-map>-->
     </div>
 
     <!--end::Content-->
     <!--begin::Text-->
-    <p class="text-dark text-hover-primary font-weight-bold font-size-h4 mb-7 mt-3">{{ l('pointsDetails') }}</p>
+    <div class="d-flex justify-content-between mb-7 mt-3">
+      <p class="text-dark font-weight-bold font-size-h4">{{ l('PointsDetails')}}</p>
+      <div class="d-flex flex-row">
+        <label class="col-7 col-form-label">{{l('TrackingMap')}}</label>
+        <div class="col-3">
+          <span class="switch switch-danger switch-outline">
+            <label>
+              <input (click)="toggleMap()" [(ngModel)]="mapToggle" type="checkbox" checked="checked" name="mapToggle" />
+              <span></span>
+            </label>
+          </span>
+        </div>
+      </div>
+    </div>
     <!--end::Text-->
     <!--begin::Blog-->
     <div class="d-flex flex-column flex-grow-1">
@@ -31,7 +43,7 @@
       <!--end::Head-->
       <!--begin::Row-->
       <div class="row d-flex justify-content-center">
-        <div class="col-xl-11">
+        <div class="col-xl-12">
           <!--begin::Card-->
           <div class="card card-custom card-stretch" id="kt_todo_list">
             <!--begin::Body-->
@@ -115,8 +127,9 @@
                               </div>
                             </div>
 
-                            <!--                              <div  class="ribbon-target" style="top: -2px; right: 3%"></div>-->
-                            <button (click)="showPointLog(point.id)" class="btn btn-sm btn-danger mr-1 ml-1">{{ l('ActivityLogs') }}</button>
+                            <button *ngIf="point.isResolve" (click)="showPointLog(point.id)" class="btn btn-sm btn-danger mr-1 ml-1">
+                              {{ l('ActivityLogs') }}
+                            </button>
                             <!--    trip actions-->
                             <div
                               class="d-inline-block"
