@@ -387,6 +387,36 @@ namespace TACHYON.Routs.RoutSteps
                 }).ToListAsync();
         }
 
+        public async Task<List<FacilityForDropdownDto>> GetAllFacilitiesByCityAndTenantForDropdown(long? shippingRequestId)
+        {
+            int? shipperId = null;
+            var sr = await _shippingRequestRepository.FirstOrDefaultAsync(shippingRequestId.Value);
+            int? originCityId = sr.OriginCityId;
+            int? destinationCityId = sr.DestinationCityId;
+            int? ShippingTypeId = sr.ShippingTypeId;
+            // TMS can see any shipper facility in order to select it in Create Trip action 
+            if (await FeatureChecker.IsEnabledAsync(AppFeatures.TachyonDealer))
+            {
+                if (shippingRequestId != null)
+                {
+                    DisableTenancyFilters();
+                    shipperId = sr.TenantId;
+                }
+            }
+
+            return await _lookup_FacilityRepository.GetAll().AsNoTracking()
+            .WhereIf(shipperId.HasValue, x => x.TenantId == shipperId.Value)
+            .WhereIf(ShippingTypeId.HasValue && ShippingTypeId == 1, x => x.CityId == originCityId) //inside city
+            .WhereIf(ShippingTypeId.HasValue && ShippingTypeId == 2, x => x.CityId == originCityId || x.CityId == destinationCityId) //between city
+            .Select(x => new FacilityForDropdownDto
+            {
+                Id = x.Id,
+                DisplayName = x.Name,
+                Long = x.Location.X,
+                Lat = x.Location.Y,
+                CityId = x.CityId
+            }).ToListAsync();
+        }
 
         public async Task<List<FacilityForDropdownDto>> GetAllFacilitiesByCityIdForDropdown(long cityId)
         {

@@ -31,16 +31,12 @@
                       [(ngModel)]="Point.facilityId"
                       [disabled]="_tripService.facilitiesLodaing || this.RouteType == RouteTypes.SingleDrop"
                       (change)="RouteStepCordSetter(); loadReceivers(Point.facilityId)"
-                      [class.is-valid]="pointFacility.touched && pointFacility.valid"
-                      [class.is-invalid]="pointFacility.touched && !pointFacility.valid"
+                      [class.is-valid]="pointFacility.touched && pointFacility.valid && Point.facilityId != undefined"
+                      [class.is-invalid]="(pointFacility.touched && !pointFacility.valid) || Point.facilityId == undefined"
                       [required]="RouteType == RouteTypes.MultipleDrops"
                     >
-                      <option [ngValue]="null" selected>{{ l('SelectAFacility') }}</option>
-                      <option
-                        *ngFor="let item of _tripService.currentFacilitiesItems"
-                        [value]="item.id"
-                        [disabled]="item.id == wayPointsList[0].facilityId"
-                      >
+                      <option [value]="undefined" disabled selected>{{ l('SelectAFacility') }}</option>
+                      <option *ngFor="let item of allFacilities" [value]="item.id" [disabled]="item.id == wayPointsList[0].facilityId">
                         {{ item.displayName }}
                       </option>
                     </select>

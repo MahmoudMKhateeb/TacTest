@@ -26,13 +26,19 @@ export class TripService {
   currentDestFacility = this.destFacility.asObservable();
 
   //private FacilitiesItems: BehaviorSubject<any> = new BehaviorSubject(new Array<DropDownMenu>());
-  public currentFacilitiesItems: FacilityForDropdownDto[];
+  //currentFacilitiesItems = this.FacilitiesItems.asObservable();
 
-  public islam = 1987;
+  public currentSourceFacilitiesItems: FacilityForDropdownDto[];
+  public currentDestinationFacilitiesItems: FacilityForDropdownDto[];
+
   facilitiesLodaing: boolean;
+  citySourceId: number;
+  cityDestenationId: number;
+  shippingTypeId: number;
+  routeTypeId: number;
 
   constructor(private _routStepsServiceProxy: RoutStepsServiceProxy, private feature: FeatureCheckerService) {
-    //  this.GetOrRefreshFacilities(undefined);
+    //this.GetOrRefreshFacilities();
   }
 
   updateShippingRequest(shippingRequest: GetShippingRequestForViewOutput) {
@@ -56,10 +62,30 @@ export class TripService {
   GetOrRefreshFacilities(shippingRequestId: number) {
     this.facilitiesLodaing = true;
     if (this.feature.isEnabled('App.Shipper') || this.feature.isEnabled('App.TachyonDealer')) {
-      this._routStepsServiceProxy.getAllFacilitiesForDropdown(shippingRequestId).subscribe((result) => {
-        this.currentFacilitiesItems = result;
-        this.facilitiesLodaing = false;
-      });
+      if (shippingRequestId != null && shippingRequestId != undefined) {
+        this.currentShippingRequest.subscribe((res) => {
+          this.citySourceId = res.originalCityId;
+          this.cityDestenationId = res.destinationCityId;
+          this.shippingTypeId = res.shippingRequest.shippingTypeId;
+          this.routeTypeId = res.shippingRequest.routeTypeId;
+        });
+        this._routStepsServiceProxy.getAllFacilitiesByCityAndTenantForDropdown(shippingRequestId).subscribe((result) => {
+          if (this.shippingTypeId == 1) {
+            //inside city
+            this.currentSourceFacilitiesItems = this.currentDestinationFacilitiesItems = result;
+          } else {
+            //outside side
+            this.currentSourceFacilitiesItems = result.filter((r) => r.cityId == this.citySourceId);
+            this.currentDestinationFacilitiesItems = result.filter((r) => r.cityId == this.cityDestenationId);
+          }
+          this.facilitiesLodaing = false;
+        });
+      } else {
+        this._routStepsServiceProxy.getAllFacilitiesForDropdown().subscribe((result) => {
+          this.currentSourceFacilitiesItems = this.currentDestinationFacilitiesItems = result;
+          this.facilitiesLodaing = false;
+        });
+      }
     }
   }
 }

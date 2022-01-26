@@ -6,6 +6,7 @@ import {
   ReceiverFacilityLookupTableDto,
   ReceiversServiceProxy,
   RoutStepsServiceProxy,
+  FacilitiesServiceProxy,
   ShippingRequestRouteType,
 } from '@shared/service-proxies/service-proxies';
 import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
@@ -13,6 +14,7 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import { ModalDirective } from '@node_modules/ngx-bootstrap/modal';
 import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
 import { NgForm } from '@angular/forms';
+import { pipe } from '@node_modules/rxjs';
 import { take } from 'rxjs/operators';
 
 @Component({
@@ -25,6 +27,7 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
     injector: Injector,
     public _tripService: TripService,
     private _PointService: PointsService,
+    private _facilitiesServiceProxy: FacilitiesServiceProxy,
     private _receiversServiceProxy: ReceiversServiceProxy,
     private _routStepsServiceProxy: RoutStepsServiceProxy
   ) {
@@ -51,6 +54,10 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
   active = false;
   facilityLoading = false;
   receiversLoading = false;
+  shippingRequestId: number;
+  citySourceId: number;
+  cityDestId: number;
+  pointsCount: number;
   isAdditionalReceiverEnabled: boolean;
   pointIdForEdit = null;
   usedIn: 'view' | 'createOrEdit';
@@ -66,12 +73,10 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
   }
 
   ngOnInit(): void {
-    this.feature.isEnabled('App.Shipper') ? this.loadFacilities() : 0;
     //take the Route Type From the Shared Service
     this.tripServiceSubscription$ = this._tripService.currentShippingRequest.subscribe((res) => {
-      if (res.shippingRequest) {
-        this.RouteType = res.shippingRequest.routeTypeId;
-      }
+      this.RouteType = res.shippingRequest.routeTypeId;
+      this.shippingRequestId = res.shippingRequest.id;
     });
     //take the PointsList From The Shared Service
     this.pointsServiceSubscription$ = this._PointService.currentWayPointsList.subscribe((res) => (this.wayPointsList = res));
@@ -83,6 +88,7 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
       this.Point = res;
       this.wayPointVariableForTesting = res;
     });
+    //this.feature.isEnabled('App.Shipper') ? this.loadFacilities() : 0;
 
     // setInterval(() => {
     //   console.log('current Point', this.Point);
@@ -96,12 +102,15 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
     //if view disable the form otherwise enable it
     // this.usedIn == 'view' ? this.createOrEditPintForm.form.disable() : this.createOrEditPintForm.form.enable();
     this.active = true;
+    this.loadFacilities();
+
     //this.singleWayPoint = new CreateOrEditRoutPointDto();
     if (id) {
       this.pointIdForEdit = id;
       //this is edit point action
       this.Point = this.wayPointsList[id];
     }
+
     //tell the service that i have this SinglePoint Active Right Now
     this.isAdditionalReceiverEnabled = this.Point.receiverFullName ? true : false;
 
@@ -145,8 +154,14 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
    * Extracts Facility Coordinates for single Point (Map Drawing)
    */
   RouteStepCordSetter() {
-    this.Point.latitude = this._tripService.currentFacilitiesItems.find((x) => x.id == this.Point.facilityId)?.lat;
-    this.Point.longitude = this._tripService.currentFacilitiesItems.find((x) => x.id == this.Point.facilityId)?.long;
+    this.Point.latitude =
+      this._tripService.currentSourceFacilitiesItems.find((x) => x.id == this.Point.facilityId)?.lat == undefined
+        ? this._tripService.currentDestinationFacilitiesItems.find((x) => x.id == this.Point.facilityId)?.lat
+        : this._tripService.currentSourceFacilitiesItems.find((x) => x.id == this.Point.facilityId)?.lat;
+    this.Point.longitude =
+      this._tripService.currentSourceFacilitiesItems.find((x) => x.id == this.Point.facilityId)?.long == undefined
+        ? this._tripService.currentDestinationFacilitiesItems.find((x) => x.id == this.Point.facilityId)?.long
+        : this._tripService.currentSourceFacilitiesItems.find((x) => x.id == this.Point.facilityId)?.long;
   }
 
   /**
@@ -165,21 +180,52 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
   }
 
   /**
-   * loads Facilities
+   * loads Facilities with validation on it related to source and destination in SR
    */
   loadFacilities() {
-    // this.facilityLoading = false;
-    let shippingRequestId: number;
-    let shippingRequestSub = this._tripService.currentShippingRequest.pipe(take(1)).subscribe((res) => {
-      shippingRequestId = res.shippingRequest.id;
-    });
+    this.facilityLoading = true;
+    if (this.shippingRequestId != null) {
+      this._tripService.currentShippingRequest.subscribe((res) => {
+        this.citySourceId = res.originalCityId;
+        this.cityDestId = res.destinationCityId;
+        this.pointsCount = res.shippingRequest.numberOfDrops;
+      });
+    }
+    if (this.wayPointsList.length > 0) {
+      // if point is last of drop off
+      if (this.wayPointsList.filter((r) => r.pickingType == 2).length + 1 == this.pointsCount) {
+        this.getFacilities(true);
+        return;
+      }
+      // hide facilities of souurce city SR if any point put in destinaton city of SR
+      this.wayPointsList.forEach((element) => {
+        this._facilitiesServiceProxy.getFacilityForView(element.facilityId).subscribe((r) => {
+          if (r.facility.cityId != null)
+            if (r.facility.cityId == this.cityDestId) {
+              this.getFacilities(true);
+              return;
+            }
+        });
+      });
 
-    this._tripService.GetOrRefreshFacilities(shippingRequestId);
-    // this._shippingRequestDDService.allFacilities.subscribe((res) => (this.allFacilities = res));
-    // this._tripService.currentFacilitiesItems.subscribe((res: DropDownMenu) => {
-    //   this.facilityLoading = res.isLoading;
-    //   this.allFacilities = res.items;
-    // });
+      this.getFacilities(false);
+    }
+  }
+
+  /**
+   * get all facilities or get facilities without source SR facilities
+   */
+  getFacilities(hideSource: boolean) {
+    if (this.shippingRequestId != null) {
+      this._routStepsServiceProxy.getAllFacilitiesByCityAndTenantForDropdown(this.shippingRequestId).subscribe((result) => {
+        if (hideSource) {
+          this.allFacilities = result.filter((r) => r.cityId != this.citySourceId);
+        } else {
+          this.allFacilities = result;
+        }
+      });
+    }
+    this.facilityLoading = false;
   }
 
   /**
