@@ -13,6 +13,7 @@
         public const string DropOffStep5 = "ReceiverConfirmed";
         public const string DropOffStep6 = "DeliveryConfirmed";
         public const string DropOffStep7 = "DeliveryNoteUploded";
+        public const string DropOffStep8 = "UplodeGoodPicture";
 
         public const string Action1 = "DriverIsChanged";
         public const string Action2 = "TruckIsChanged";

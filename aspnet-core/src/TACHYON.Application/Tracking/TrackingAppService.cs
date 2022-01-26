@@ -13,6 +13,7 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using TACHYON.Authorization.Users.Profile;
+using TACHYON.Common;
 using TACHYON.Dto;
 using TACHYON.Features;
 using TACHYON.Goods.GoodCategories.Dtos;
@@ -153,6 +154,7 @@ namespace TACHYON.Tracking
                     IsDeliveryNoteUploaded = a.IsDeliveryNoteUploaded,
                     WaybillNumber = a.WaybillNumber,
                     IsPodUploaded = a.IsPodUploaded,
+                    IsGoodPictureUploaded = a.IsGoodPictureUploaded,
                     FacilityRate = a.FacilityFk.Rate,
                     Statues =
                         _workFlowProvider.GetStatuses(a.WorkFlowVersion,
@@ -197,6 +199,11 @@ namespace TACHYON.Tracking
         {
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier, AppFeatures.Shipper);
             return await _workFlowProvider.GetPOD(id);
+        }
+        public async Task<IHasDocument> GetDeliveryGoodPicture(long id)
+        {
+            CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier, AppFeatures.Shipper);
+            return await _workFlowProvider.GetDeliveryGoodPicture(id);
         }
 
         #region Helper

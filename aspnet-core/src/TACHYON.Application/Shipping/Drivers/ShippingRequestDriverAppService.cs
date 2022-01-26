@@ -18,9 +18,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
-using TACHYON.Documents.DocumentFiles;
 using TACHYON.AddressBook;
 using TACHYON.Authorization.Users;
+using TACHYON.Documents.DocumentFiles;
 using TACHYON.DriverLocationLogs;
 using TACHYON.DriverLocationLogs.dtos;
 using TACHYON.EntityLogs;
@@ -323,28 +323,25 @@ namespace TACHYON.Shipping.Drivers
         {
             DisableTenancyFilters();
             var routes = await _RoutPointRepository.GetAll()
-                .Include(t => t.RoutPointStatusTransitions)
-                .Include(z => z.FacilityFk)
-                .Where(x => x.ShippingRequestTripId == id)
-                .Select(x => new RoutPointsMobileDto
-                {
-                    Id = x.Id,
-                    ShippingRequestTripId = x.ShippingRequestTripId,
-                    CanGoToNextLocation = x.CanGoToNextLocation,
-                    IsActive = x.IsActive,
-                    IsResolve = x.IsResolve,
-                    IsComplete = x.IsComplete,
-                    Status = x.Status,
-                    lat = x.FacilityFk.Location.Y,
-                    lng = x.FacilityFk.Location.X,
-                    PickingType = x.PickingType,
-                    IsPodUploaded = x.IsPodUploaded,
-                    AvailableTransactions = !x.IsResolve
-                        ? new List<PointTransactionDto>()
-                        : _workFlowProvider.GetTransactionsByStatus(x.WorkFlowVersion,
-                            x.RoutPointStatusTransitions.Where(c => !c.IsReset).Select(v => v.Status).ToList(),
-                            x.Status)
-                }).ToListAsync();
+             .Include(t => t.RoutPointStatusTransitions)
+             .Include(z => z.FacilityFk)
+             .Where(x => x.ShippingRequestTripId == id)
+             .Select(x => new RoutPointsMobileDto
+             {
+                 Id = x.Id,
+                 ShippingRequestTripId = x.ShippingRequestTripId,
+                 CanGoToNextLocation = x.CanGoToNextLocation,
+                 IsActive = x.IsActive,
+                 IsResolve = x.IsResolve,
+                 IsComplete = x.IsComplete,
+                 Status = x.Status,
+                 lat = x.FacilityFk.Location.Y,
+                 lng = x.FacilityFk.Location.X,
+                 PickingType = x.PickingType,
+                 IsGoodPictureUploaded = x.IsGoodPictureUploaded,
+                 IsPodUploaded = x.IsPodUploaded,
+                 AvailableTransactions = !x.IsResolve ? new List<PointTransactionDto>() : _workFlowProvider.GetTransactionsByStatus(x.WorkFlowVersion, x.RoutPointStatusTransitions.Where(c => !c.IsReset).Select(v => v.Status).ToList(), x.Status)
+             }).ToListAsync();
             if (routes == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
             routes.ForEach(x => x.StatusTitle = L(x.Status.ToString()));
             return new DriverRoutPoint { TripStatus = _ShippingRequestTrip.Get(id).Status, RoutPoint = routes };
@@ -451,14 +448,7 @@ namespace TACHYON.Shipping.Drivers
             string note)
         {
             await CheckCurrentUserIsDriver();
-            var input = new RatingLog()
-            {
-                TripId = tripId,
-                RateType = RateType.SEByDriver,
-                Rate = rate,
-                Note = note,
-                DriverId = AbpSession.UserId
-            };
+            var input = new RatingLog() { TripId = tripId, RateType = RateType.SEByDriver, Rate = rate, Note = note, DriverId = AbpSession.UserId };
             await _ratingLogManager.CreateRating(input);
         }
 
@@ -588,6 +578,7 @@ namespace TACHYON.Shipping.Drivers
                     item.CompletedStatus = RoutePointCompletedStatus.NotCompleted;
                     item.StartTime = item.EndTime = null;
                     item.CanGoToNextLocation = false;
+                    item.IsGoodPictureUploaded = false;
                     item.RoutPointStatusTransitions.Where(s => !s.IsReset).ForEach(x => x.IsReset = true);
                     item.IsPodUploaded = false;
                     _tempFileCacheManager.ClearCache(string.Format(DocumentFileConsts.KeyCashes, item.Id));
@@ -639,8 +630,7 @@ namespace TACHYON.Shipping.Drivers
 
                     // recalculate rating For Carrier
                     if (trip.ShippingRequestFk.CarrierTenantId.HasValue)
-                        await _ratingLogManager.RecalculateRatingById(trip.ShippingRequestFk.CarrierTenantId.Value,
-                            typeof(Tenant));
+                        await _ratingLogManager.RecalculateRatingById(trip.ShippingRequestFk.CarrierTenantId.Value, typeof(Tenant));
 
                     // recalculate rating For Driver
                     if (driverId != null)
@@ -649,6 +639,7 @@ namespace TACHYON.Shipping.Drivers
                     // recalculate rating For Facility
                     if (facilityId != null)
                         await _ratingLogManager.RecalculateRatingById(facilityId.Value, typeof(Facility));
+
                 }
             }
             else

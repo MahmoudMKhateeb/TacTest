@@ -2194,7 +2194,6 @@
 		<text name="UploadDocumentMsg">Please upload the following documents in order to finalize your registration process.</text>
 		<text name="UploadedFile">Uploaded File</text>
 		<text name="UploadLogo_Info">Select a JPG/JPEG/PNG/GIF file with a maximum of 30KB size and 139x35 pixel resolution.</text>
-		<text name="UploadPOD">Upload POD</text>
 		<text name="UploadPODLbl">Upload POD</text>
 		<text name="UploadPODProofOfDelivery">Please upload POD</text>
 		<text name="Urdu">Urdu</text>
@@ -2503,5 +2502,8 @@
     <text name="facilityNameIsAlreadyExistsForThisTenant">Facility Name Is Already Exists For This Tenant</text>
 	<text name="NumberOfRating">Company Ratings Count</text>
 	<text name="PointNotFoundOrNotCompleted">Point not found or not completed</text>
+	<text name="UploadGoodPicture">Upload Good Picture</text>
+	<text name="UploadPOD">Upload POD</text>
+	<text name="UploadDeliveryNotes">Upload Delivery Notes</text>
 	</texts>
 </localizationDictionary>

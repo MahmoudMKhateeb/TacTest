@@ -9,6 +9,7 @@ using Abp.Runtime.Session;
 using Abp.Timing;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
+using MimeKit;
 using NetTopologySuite.Geometries;
 using System;
 using System.Collections.Generic;
@@ -234,15 +235,26 @@ namespace TACHYON.Tracking
                             Permissions = new List<string> { },
                             Features = new List<string> { },
                         },
-                        new WorkflowTransaction<PointTransactionArgs, RoutePointStatus>
+
+                         new WorkflowTransaction<PointTransactionArgs,RoutePointStatus>
                         {
-                            Action = WorkFlowActionConst.DeliveryConfirmationReceiverConfirmed,
+                            Action =  WorkFlowActionConst.DeliveryConfirmationUplodeGoodPicture,
                             FromStatus = RoutePointStatus.DeliveryConfirmation,
+                            ToStatus = RoutePointStatus.UplodeGoodPicture,
+                            Func = UplodeGoodPicture,
+                            Name = "UplodeGoodPicture",
+                            Permissions = new List<string>{},
+                            Features = new List<string>{},
+                        },
+                          new WorkflowTransaction<PointTransactionArgs,RoutePointStatus>
+                        {
+                            Action =  WorkFlowActionConst.UplodeGoodPictureReceiverConfirmed,
+                            FromStatus = RoutePointStatus.UplodeGoodPicture,
                             ToStatus = RoutePointStatus.ReceiverConfirmed,
                             Func = ReceiverConfirmed,
-                            Name = "DeliveryConfirmationReceiverConfirmed",
-                            Permissions = new List<string> { },
-                            Features = new List<string> { },
+                            Name = "UplodeGoodPictureReceiverConfirmed",
+                            Permissions = new List<string>{},
+                            Features = new List<string>{},
                         },
                     },
                 },
@@ -332,15 +344,25 @@ namespace TACHYON.Tracking
                             Permissions = new List<string> { },
                             Features = new List<string> { },
                         },
-                        new WorkflowTransaction<PointTransactionArgs, RoutePointStatus>
+                          new WorkflowTransaction<PointTransactionArgs,RoutePointStatus>
                         {
-                            Action = WorkFlowActionConst.DeliveryConfirmationReceiverConfirmed,
+                            Action =  WorkFlowActionConst.DeliveryConfirmationUplodeGoodPicture,
                             FromStatus = RoutePointStatus.DeliveryConfirmation,
+                            ToStatus = RoutePointStatus.UplodeGoodPicture,
+                            Func = UplodeGoodPicture,
+                            Name = "UplodeGoodPicture",
+                            Permissions = new List<string>{},
+                            Features = new List<string>{},
+                        },
+                          new WorkflowTransaction<PointTransactionArgs,RoutePointStatus>
+                        {
+                            Action =  WorkFlowActionConst.UplodeGoodPictureReceiverConfirmed,
+                            FromStatus = RoutePointStatus.UplodeGoodPicture,
                             ToStatus = RoutePointStatus.ReceiverConfirmed,
                             Func = ReceiverConfirmed,
-                            Name = "DeliveryConfirmationReceiverConfirmed",
-                            Permissions = new List<string> { },
-                            Features = new List<string> { },
+                            Name = "UplodeGoodPictureReceiverConfirmed",
+                            Permissions = new List<string>{},
+                            Features = new List<string>{},
                         },
                     },
                 },
@@ -497,6 +519,22 @@ namespace TACHYON.Tracking
             _tempFileCacheManager.SetPods(key, files);
             return files;
         }
+        public async Task<IHasDocument> GetDeliveryGoodPicture(long id)
+        {
+            DisableTenancyFilters();
+            var currentUser = await GetCurrentUserAsync();
+            var document = await _routPointDocumentRepository.GetAll().AsNoTracking()
+                .Where(x => x.RoutPointId == id && x.RoutePointDocumentType == RoutePointDocumentType.DeliveryGood)
+                .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => true)
+                .WhereIf(currentUser.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.RoutPointFk.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == currentUser.TenantId.Value)
+                .WhereIf(currentUser.IsDriver, x => x.RoutPointFk.ShippingRequestTripFk.AssignedDriverUserId == currentUser.Id)
+                .FirstOrDefaultAsync();
+
+            if (document == null) throw new UserFriendlyException(L("TheRoutePointIsNotFound"));
+            MimeTypes.TryGetExtension(document.DocumentContentType, out var exten);
+            document.DocumentName = document.DocumentName + exten;
+            return ObjectMapper.Map<IHasDocument>(document);
+        }
 
         #endregion
 
@@ -625,26 +663,24 @@ namespace TACHYON.Tracking
             var point = await _routPointRepository.GetAllIncluding(x => x.ShippingRequestTripFk)
                 .FirstOrDefaultAsync(x => x.Id == args.PointId);
 
-            if (args.Documents != null && !args.Documents.Any())
-                throw new UserFriendlyException(L("File_Empty_Error"));
-
-
-            foreach (var document in args.Documents)
-            {
-                _routPointDocumentRepository.Insert(new RoutPointDocument
-                {
-                    RoutPointId = point.Id,
-                    DocumentContentType = document.DocumentContentType,
-                    DocumentName = document.DocumentName,
-                    DocumentId = document.DocumentId,
-                    RoutePointDocumentType = RoutePointDocumentType.POD
-                });
-            }
+            UploadFiles(args.Documents, point.Id, RoutePointDocumentType.POD);
 
             point.Status = status;
             point.ShippingRequestTripFk.RoutePointStatus = status;
             point.IsPodUploaded = true;
-            await HandlePointDelivery(args.PointId);
+            var allPointsHasDeliveryConfirmation = !await _routPointRepository.GetAll()
+            .AnyAsync(x => x.ShippingRequestTripId == point.ShippingRequestTripId && x.PickingType == PickingType.Dropoff
+            && !x.RoutPointStatusTransitions.Any(s => !s.IsReset && s.Status == RoutePointStatus.DeliveryConfirmation)
+            && x.Id != point.Id);
+
+            if (allPointsHasDeliveryConfirmation)
+            {
+                var trip = await _shippingRequestTripRepository
+                    .GetAllIncluding(d => d.ShippingRequestTripVases)
+                    .Include(x => x.ShippingRequestFk).ThenInclude(c => c.Tenant)
+                    .FirstOrDefaultAsync(t => t.Id == point.ShippingRequestTripId);
+                await _invoiceManager.GenertateInvoiceWhenShipmintDelivery(trip);
+            }
             return nameof(RoutPointDropOffStep6);
         }
 
@@ -654,20 +690,7 @@ namespace TACHYON.Tracking
             var point = await _routPointRepository.GetAllIncluding(x => x.ShippingRequestTripFk)
                 .FirstOrDefaultAsync(x => x.Id == args.PointId);
 
-            if (args.Documents != null && !args.Documents.Any())
-                throw new UserFriendlyException(L("File_Empty_Error"));
-
-            foreach (var document in args.Documents)
-            {
-                _routPointDocumentRepository.Insert(new RoutPointDocument
-                {
-                    RoutPointId = point.Id,
-                    DocumentContentType = "image/jpeg",
-                    DocumentName = document.DocumentName,
-                    DocumentId = document.DocumentId,
-                    RoutePointDocumentType = RoutePointDocumentType.DeliveryNote
-                });
-            }
+            UploadFiles(args.Documents, point.Id, RoutePointDocumentType.DeliveryNote);
 
             point.IsDeliveryNoteUploaded = true;
             point.Status = status;
@@ -676,10 +699,47 @@ namespace TACHYON.Tracking
             return nameof(RoutPointDropOffStep7);
         }
 
+
+        private async Task<string> UplodeGoodPicture(PointTransactionArgs args)
+        {
+            var status = RoutePointStatus.UplodeGoodPicture;
+            var point = await _routPointRepository.GetAllIncluding(x => x.ShippingRequestTripFk)
+                 .FirstOrDefaultAsync(x => x.Id == args.PointId);
+
+            UploadFiles(args.Documents, point.Id, RoutePointDocumentType.DeliveryGood);
+
+            point.IsGoodPictureUploaded = true;
+            point.Status = status;
+            point.ShippingRequestTripFk.RoutePointStatus = status;
+            await HandlePointDelivery(args.PointId);
+
+            return nameof(RoutPointDropOffStep8);
+        }
+
         #endregion
 
         #region Helpers
 
+        /// <summary>
+        /// Insert files to Db
+        /// </summary>
+        private void UploadFiles(List<IHasDocument> documents, long pointId, RoutePointDocumentType documentType)
+        {
+            if (documents != null && !documents.Any())
+                throw new UserFriendlyException(L("File_Empty_Error"));
+
+            foreach (var document in documents)
+            {
+                _routPointDocumentRepository.Insert(new RoutPointDocument
+                {
+                    RoutPointId = pointId,
+                    DocumentContentType = document.DocumentContentType,
+                    DocumentName = document.DocumentName,
+                    DocumentId = document.DocumentId,
+                    RoutePointDocumentType = documentType
+                });
+            }
+        }
         /// <summary>
         /// Check the trip can accpted or not by status
         /// </summary>
@@ -882,7 +942,6 @@ namespace TACHYON.Tracking
                     trip.EndTripDate = Clock.Now;
                     await ChangeShippingRequestStatusIfAllTripsDone(trip);
                     await CloseLastTransitionInComplete(trip.Id);
-                    await _invoiceManager.GenertateInvoiceWhenShipmintDelivery(trip);
                     await NotificationWhenShipmentDelivered(point, currentUser);
                 }
                 else if (allPointsResolved && trip.Status == ShippingRequestTripStatus.Intransit)
@@ -900,7 +959,7 @@ namespace TACHYON.Tracking
             var statuses = GetTransactions(point.WorkFlowVersion)
                 .Where(x => x.ToStatus != point.Status)
                 .GroupBy(c => c.ToStatus)
-                .Select(x => x.Key);
+                .Select(x => x.Key).ToList();
 
             var transitions = _routPointStatusTransitionRepository.GetAll()
                 .Where(x =>
