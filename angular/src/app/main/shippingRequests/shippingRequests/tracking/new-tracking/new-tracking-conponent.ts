@@ -7,7 +7,6 @@ import {
   PointTransactionDto,
   RoutPointTransactionDto,
   ShippingRequestRouteType,
-  ShippingRequestTripDriverRoutePointDto,
   ShippingRequestTripDriverStatus,
   ShippingRequestTripStatus,
   ShippingRequestType,
@@ -44,7 +43,7 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
   pointsIsLoading = true;
   distance: string;
   duration: string;
-  readonly zoom: number = 15;
+  readonly zoom: number = 12;
   saving = false;
   markerLong: number;
   markerLat: number;
@@ -60,6 +59,7 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
   busyPointId: number;
   loadPodForPointId: number;
   pointPodList: FileDto[];
+  mapToggle: boolean = true;
 
   constructor(
     injector: Injector,
@@ -92,7 +92,6 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
     this.active = true;
     this.trip = item;
     this.getForView();
-    // this.modal.show();
   }
 
   /**
@@ -206,10 +205,10 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
    * accepts the trip
    */
   accept(tripId?: number): void {
-    this.busyPointId = this.routePoints[0].id;
     this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
       if (isConfirmed) {
         this.saving = true;
+        this.busyPointId = this.routePoints[0].id;
         this._trackingServiceProxy
           .accept(this.trip.id || tripId)
           .pipe(
@@ -300,19 +299,14 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
       transaction.action === 'UplodeDeliveryNoteDeliveryConfirmation'
     ) {
       //handle upload Pod
-      //this.busyPointId = null;
-
       return this.handleUploadPod(point, transaction);
     }
     if (transaction.action === 'UplodeDeliveryNote') {
       // this.saving = false;
-      // this.busyPointId = null;
-
       return this.handleUploadDeliveryNotes(point, transaction);
     }
     if (transaction.action === 'ReceiverConfirmed' || transaction.action === 'DeliveryConfirmationReceiverConfirmed') {
       // this.saving = false;
-      // this.busyPointId = null;
       return this.handleDeliveryConfirmationCode(point, transaction);
     }
     this.busyPointId = point.id;
@@ -322,7 +316,6 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
       .pipe(
         finalize(() => {
           this.saving = false;
-          //this.busyPointId = null;
         })
       )
       .subscribe(() => {
@@ -461,5 +454,12 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
   showPointLog(pointId: number) {
     this.activityLogModal.entityId = pointId;
     this.activityLogModal.show();
+  }
+
+  /**
+   * hide or show tracking map
+   */
+  toggleMap() {
+    this.mapToggle = !this.mapToggle;
   }
 }
