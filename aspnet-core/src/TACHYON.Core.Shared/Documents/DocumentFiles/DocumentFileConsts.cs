@@ -8,6 +8,7 @@
         public const int MinExtnLength = 0;
         public const int MaxExtnLength = 100;
 
-        public const string KeyCashes = "RoutPointFile_{0}";
+
+
     }
 }

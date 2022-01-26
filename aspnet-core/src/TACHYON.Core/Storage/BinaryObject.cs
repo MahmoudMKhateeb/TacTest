@@ -11,7 +11,7 @@ namespace TACHYON.Storage
     {
         public virtual int? TenantId { get; set; }
 
-        [Required] public virtual byte[] Bytes { get; set; }
+        public virtual byte[] Bytes { get; set; }
 
         public BinaryObject()
         {

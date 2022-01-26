@@ -47324,7 +47324,7 @@ export class TrackingServiceProxy {
    * @param id (optional)
    * @return Success
    */
-  pOD(id: number | undefined): Observable<FileDto[]> {
+  pOD(id: number | undefined): Observable<GetAllUploadedFileDto[]> {
     let url_ = this.baseUrl + '/api/services/app/Tracking/POD?';
     if (id === null) throw new Error("The parameter 'id' cannot be null.");
     else if (id !== undefined) url_ += 'id=' + encodeURIComponent('' + id) + '&';
@@ -47351,14 +47351,14 @@ export class TrackingServiceProxy {
             try {
               return this.processPOD(<any>response_);
             } catch (e) {
-              return <Observable<FileDto[]>>(<any>_observableThrow(e));
+              return <Observable<GetAllUploadedFileDto[]>>(<any>_observableThrow(e));
             }
-          } else return <Observable<FileDto[]>>(<any>_observableThrow(response_));
+          } else return <Observable<GetAllUploadedFileDto[]>>(<any>_observableThrow(response_));
         })
       );
   }
 
-  protected processPOD(response: HttpResponseBase): Observable<FileDto[]> {
+  protected processPOD(response: HttpResponseBase): Observable<GetAllUploadedFileDto[]> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -47375,7 +47375,7 @@ export class TrackingServiceProxy {
           let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
           if (Array.isArray(resultData200)) {
             result200 = [] as any;
-            for (let item of resultData200) result200!.push(FileDto.fromJS(item));
+            for (let item of resultData200) result200!.push(GetAllUploadedFileDto.fromJS(item));
           } else {
             result200 = <any>null;
           }
@@ -47389,7 +47389,7 @@ export class TrackingServiceProxy {
         })
       );
     }
-    return _observableOf<FileDto[]>(<any>null);
+    return _observableOf<GetAllUploadedFileDto[]>(<any>null);
   }
 }
 
@@ -90151,6 +90151,53 @@ export interface ITrackingShippingRequestTripDto {
   routPoints: TrackingRoutePointDto[] | undefined;
   canStartTrip: boolean;
   id: number;
+}
+
+export class GetAllUploadedFileDto implements IGetAllUploadedFileDto {
+  documentId!: string;
+  fileName!: string;
+  fileType!: string | undefined;
+  thumbnailImage!: string;
+
+  constructor(data?: IGetAllUploadedFileDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.documentId = _data['documentId'];
+      this.fileName = _data['fileName'];
+      this.fileType = _data['fileType'];
+      this.thumbnailImage = _data['thumbnailImage'];
+    }
+  }
+
+  static fromJS(data: any): GetAllUploadedFileDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new GetAllUploadedFileDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['documentId'] = this.documentId;
+    data['fileName'] = this.fileName;
+    data['fileType'] = this.fileType;
+    data['thumbnailImage'] = this.thumbnailImage;
+    return data;
+  }
+}
+
+export interface IGetAllUploadedFileDto {
+  documentId: string;
+  fileName: string;
+  fileType: string | undefined;
+  thumbnailImage: string;
 }
 
 export class TrailerDto implements ITrailerDto {

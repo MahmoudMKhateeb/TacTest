@@ -13,6 +13,7 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using TACHYON.Authorization.Users.Profile;
+using TACHYON.Documents.DocumentFiles.Dtos;
 using TACHYON.Common;
 using TACHYON.Dto;
 using TACHYON.Features;
@@ -194,8 +195,7 @@ namespace TACHYON.Tracking
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier);
             await _workFlowProvider.GoToNextLocation(id);
         }
-
-        public async Task<List<FileDto>> POD(long id)
+        public async Task<List<GetAllUploadedFileDto>> POD(long id)
         {
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier, AppFeatures.Shipper);
             return await _workFlowProvider.GetPOD(id);

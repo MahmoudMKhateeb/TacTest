@@ -6,8 +6,12 @@ using Abp.UI;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
+using TACHYON.Authorization.Users;
+using TACHYON.Documents.DocumentFiles.Dtos;
+using TACHYON.Documents.DocumentTypes;
 using TACHYON.Dto;
 using TACHYON.Storage;
 
@@ -19,17 +23,20 @@ namespace TACHYON.Common
         private readonly IFeatureChecker _featureChecker;
         private readonly IBinaryObjectManager _binaryObjectManager;
         private readonly ITempFileCacheManager _tempFileCacheManager;
+        private readonly UserManager UserManager;
+
 
         public CommonManager(
             IAbpSession AbpSession,
             IFeatureChecker featureChecker,
             IBinaryObjectManager binaryObjectManager,
-            ITempFileCacheManager tempFileCacheManager)
+            ITempFileCacheManager tempFileCacheManager, UserManager userManager)
         {
             _AbpSession = AbpSession;
             _featureChecker = featureChecker;
             _binaryObjectManager = binaryObjectManager;
             _tempFileCacheManager = tempFileCacheManager;
+            UserManager = userManager;
         }
 
         /// <summary>
@@ -121,6 +128,10 @@ namespace TACHYON.Common
                     }
 
                     var fileObject = new BinaryObject(tenantId, fileBytes);
+
+                    if (file.ContentType != DocumentTypeConsts.PDF)
+                        fileObject.ThumbnailByte = MakeThumbnail(fileBytes, 50, 50);
+
                     await _binaryObjectManager.SaveAsync(fileObject);
                     document.DocumentId = fileObject.Id;
                     document.DocumentContentType = file.ContentType;
@@ -159,19 +170,34 @@ namespace TACHYON.Common
 
             return file;
         }
-
-        public async Task<List<FileDto>> GetDocuments(List<IHasDocument> documents)
+        public async Task<List<GetAllUploadedFileDto>> GetDocuments(List<IHasDocument> documents, User user)
         {
-            var files = new List<FileDto>();
-            foreach (var document in documents)
+            var files = new List<GetAllUploadedFileDto>();
+            foreach (var item in documents)
             {
-                var binaryObject = await _binaryObjectManager.GetOrNullAsync(document.DocumentId.Value);
-                var file = new FileDto(document.DocumentName, document.DocumentContentType);
-                _tempFileCacheManager.SetFile(file.FileToken, binaryObject.Bytes);
-                files.Add(file);
+                var uploadedFile = new GetAllUploadedFileDto();
+                var file = await _binaryObjectManager.GetOrNullAsync(item.DocumentId.Value);
+
+                if (user.IsDriver && file.ThumbnailByte != null)
+                    uploadedFile.ThumbnailImage = Convert.ToBase64String(file.ThumbnailByte);
+
+
+                uploadedFile.DocumentId = item.DocumentId.Value;
+                uploadedFile.FileName = item.DocumentName;
+                uploadedFile.FileType = item.DocumentContentType;
+                files.Add(uploadedFile);
             }
 
             return files;
+        }
+        private byte[] MakeThumbnail(byte[] myImage, int thumbWidth, int thumbHeight)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            using (Image thumbnail = Image.FromStream(new MemoryStream(myImage)).GetThumbnailImage(thumbWidth, thumbHeight, null, new IntPtr()))
+            {
+                thumbnail.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                return ms.ToArray();
+            }
         }
     }
 }

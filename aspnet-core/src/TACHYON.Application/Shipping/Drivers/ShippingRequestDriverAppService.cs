@@ -581,7 +581,6 @@ namespace TACHYON.Shipping.Drivers
                     item.IsGoodPictureUploaded = false;
                     item.RoutPointStatusTransitions.Where(s => !s.IsReset).ForEach(x => x.IsReset = true);
                     item.IsPodUploaded = false;
-                    _tempFileCacheManager.ClearCache(string.Format(DocumentFileConsts.KeyCashes, item.Id));
                     //item.RatingLogs.Where(x => x.RateType != RateType.CarrierTripBySystem && x.RateType != RateType.ShipperTripBySystem).ToList().Clear();
                     //item.ShippingRequestTripAccidents.Clear();
                     //item.ShippingRequestTripTransitions.Clear();

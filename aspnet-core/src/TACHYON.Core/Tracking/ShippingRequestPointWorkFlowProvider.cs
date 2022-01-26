@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using TACHYON.Authorization.Users;
 using TACHYON.Common;
 using TACHYON.Documents.DocumentFiles;
+using TACHYON.Documents.DocumentFiles.Dtos;
 using TACHYON.Dto;
 using TACHYON.Features;
 using TACHYON.Firebases;
@@ -493,13 +494,8 @@ namespace TACHYON.Tracking
                 .FirstOrDefaultAsync();
             return ObjectMapper.Map<ShippingRequestTripDto>(currentTrip);
         }
-
-        public async Task<List<FileDto>> GetPOD(long id)
+        public async Task<List<GetAllUploadedFileDto>> GetPOD(long id)
         {
-            var key = string.Format(DocumentFileConsts.KeyCashes, id);
-            if (_tempFileCacheManager.GetPods(key) != null)
-                return _tempFileCacheManager.GetPods(key);
-
             DisableTenancyFilters();
             var currentUser = await GetCurrentUserAsync();
             var documents = await _routPointDocumentRepository.GetAll()
@@ -513,11 +509,8 @@ namespace TACHYON.Tracking
                 .WhereIf(currentUser.IsDriver,
                     x => x.RoutPointFk.ShippingRequestTripFk.AssignedDriverUserId == currentUser.Id)
                 .ToListAsync();
-
             if (!documents.Any()) throw new UserFriendlyException(L("TheRoutePointIsNotFound"));
-            var files = await _commonManager.GetDocuments(ObjectMapper.Map<List<IHasDocument>>(documents));
-            _tempFileCacheManager.SetPods(key, files);
-            return files;
+            return await _commonManager.GetDocuments(ObjectMapper.Map<List<IHasDocument>>(documents), currentUser);
         }
         public async Task<IHasDocument> GetDeliveryGoodPicture(long id)
         {
