@@ -247,6 +247,7 @@ namespace TACHYON.Authorization
 
             var shipper = pages.CreateChildPermission(AppPermissions.App_Shipper, L("Shipper"));
             var carrier = pages.CreateChildPermission(AppPermissions.App_Carrier, L("Carrier"));
+            var tachyonDealer = pages.CreateChildPermission(AppPermissions.App_TachyonDealer, L("TachyonDealer"));
 
             var documentFiles = pages.CreateChildPermission(AppPermissions.Pages_DocumentFiles, L("DocumentFiles"));
             documentFiles.CreateChildPermission(AppPermissions.Pages_DocumentFiles_Create, L("CreateNewDocumentFile"));
