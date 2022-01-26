@@ -2502,5 +2502,6 @@
     <text name="ImportTrucksUploadFailed">Trucks import process has failed.</text>
     <text name="facilityNameIsAlreadyExistsForThisTenant">Facility Name Is Already Exists For This Tenant</text>
 	<text name="NumberOfRating">Company Ratings Count</text>
+	<text name="PointNotFoundOrNotCompleted">Point not found or not completed</text>
 	</texts>
 </localizationDictionary>
