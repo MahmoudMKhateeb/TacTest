@@ -238,7 +238,7 @@ namespace TACHYON.Invoices
                 {
                     continue;
                 }
-                var relatedCarrierId =int.Parse(await _featureChecker.GetValueAsync(shipperId, AppFeatures.SaasRelatedCarrier));
+                var relatedCarrierId = int.Parse(await _featureChecker.GetValueAsync(shipperId, AppFeatures.SaasRelatedCarrier));
                 if (carrierId == relatedCarrierId)
                 {
                     trips.Remove(trip);
@@ -272,7 +272,7 @@ namespace TACHYON.Invoices
             {
                 var shipperId = trip.ShippingRequestFk.TenantId;
                 var carrierId = trip.ShippingRequestFk.CarrierTenantId;
-                if (! await _featureChecker.IsEnabledAsync(shipperId,AppFeatures.Saas))
+                if (!await _featureChecker.IsEnabledAsync(shipperId, AppFeatures.Saas))
                 {
                     continue;
                 }
@@ -380,50 +380,6 @@ namespace TACHYON.Invoices
             await _appNotifier.NewInvoiceShipperGenerated(invoice);
         }
 
-        /// <summary>
-        /// Generate invoice for carrirer after the host accepted the submit invoice
-        /// </summary>
-        /// <param name="Group"></param>
-        /// <returns></returns>
-        public async Task GenerateCarrirInvoice(SubmitInvoice submit)
-        {
-
-            DateTime dueDate = Clock.Now;
-
-            var paymentType = await _invoicePaymentMethodRepository.FirstOrDefaultAsync(x => x.Id == int.Parse(_featureChecker.GetValue(submit.Tenant.Id, AppFeatures.InvoicePaymentMethodCrarrier)));
-            if (paymentType.PaymentType == PaymentMethod.InvoicePaymentType.Days)
-            {
-                dueDate = Clock.Now.AddDays(paymentType.InvoiceDueDateDays);
-            }
-
-
-            var invoice = new Invoice
-            {
-                TenantId = submit.Tenant.Id,
-                PeriodId = submit.PeriodId,
-                DueDate = dueDate,
-                TotalAmount = submit.TotalAmount,
-                VatAmount = submit.VatAmount,
-                SubTotalAmount = submit.SubTotalAmount,
-                TaxVat = submit.TaxVat,
-                AccountType = InvoiceAccountType.AccountPayable,
-                Channel = InvoiceChannel.Trip,
-                Trips = submit.Trips.Select(
-               r => new InvoiceTrip()
-               {
-                   TripId = r.TripId
-               }).ToList()
-            };
-
-            foreach (var trip in submit.Trips)
-            {
-                trip.ShippingRequestTripFK.IsCarrierHaveInvoice = true;
-            }
-            invoice.Id = await _invoiceRepository.InsertAndGetIdAsync(invoice);
-
-
-            submit.Tenant.Balance += submit.TotalAmount;
-        }
         /// <summary>
         /// When the shipper billing interval  after delivry run this method to generate invoice
         /// </summary>

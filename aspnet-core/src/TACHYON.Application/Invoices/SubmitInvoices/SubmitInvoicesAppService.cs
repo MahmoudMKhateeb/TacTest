@@ -1,10 +1,12 @@
 ﻿using Abp;
+using Abp.Application.Features;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Authorization.Users;
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
+using Abp.Timing;
 using Abp.UI;
 using AutoMapper.QueryableExtensions;
 using DevExtreme.AspNet.Data.ResponseModel;
@@ -25,9 +27,11 @@ using TACHYON.Features;
 using TACHYON.Invoices.Balances;
 using TACHYON.Invoices.Dto;
 using TACHYON.Invoices.Groups.Dto;
+using TACHYON.Invoices.PaymentMethods;
 using TACHYON.Invoices.Periods;
 using TACHYON.Invoices.SubmitInvoices;
 using TACHYON.Invoices.SubmitInvoices.Dto;
+using TACHYON.Invoices.Transactions;
 using TACHYON.Notifications;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Trucks.TrucksTypes.Dtos;
@@ -42,12 +46,17 @@ namespace TACHYON.Invoices.Groups
         private readonly IRepository<SubmitInvoice, long> _SubmitInvoiceRepository;
         private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
         private readonly CommonManager _commonManager;
+        private readonly IRepository<InvoicePaymentMethod> _invoicePaymentMethodRepository;
+        private readonly IFeatureChecker _featureChecker;
         private readonly UserManager _userManager;
         private readonly IAppNotifier _appNotifier;
         private readonly InvoiceManager _invoiceManager;
         private readonly IExcelExporterManager<SubmitInvoiceListDto> _excelExporterManager;
         private readonly IRepository<DocumentFile, Guid> _documentFileRepository;
         private readonly IExcelExporterManager<InvoiceItemDto> _excelExporterInvoiceItemManager;
+        private readonly BalanceManager _balanceManager;
+        private readonly TransactionManager _transactionManager;
+
 
 
         public SubmitInvoicesAppService(
@@ -60,7 +69,7 @@ namespace TACHYON.Invoices.Groups
             IAppNotifier appNotifier,
             InvoiceManager invoiceManager,
             IExcelExporterManager<SubmitInvoiceListDto> excelExporterManager,
-            IRepository<DocumentFile, Guid> documentFileRepository, IExcelExporterManager<InvoiceItemDto> excelExporterInvoiceItemManager)
+            IRepository<DocumentFile, Guid> documentFileRepository, IExcelExporterManager<InvoiceItemDto> excelExporterInvoiceItemManager, IRepository<InvoicePaymentMethod> invoicePaymentMethodRepository, IFeatureChecker featureChecker, BalanceManager balanceManager, TransactionManager transactionManager)
         {
             _PeriodRepository = PeriodRepository;
             _SubmitInvoiceRepository = SubmitInvoiceRepository;
@@ -72,6 +81,10 @@ namespace TACHYON.Invoices.Groups
             _excelExporterManager = excelExporterManager;
             _documentFileRepository = documentFileRepository;
             _excelExporterInvoiceItemManager = excelExporterInvoiceItemManager;
+            _invoicePaymentMethodRepository = invoicePaymentMethodRepository;
+            _featureChecker = featureChecker;
+            _balanceManager = balanceManager;
+            _transactionManager = transactionManager;
         }
 
 
@@ -115,7 +128,22 @@ namespace TACHYON.Invoices.Groups
         public async Task Claim(SubmitInvoiceClaimCreateInput Input)
         {
             var submit = await GetSubmitInvoice(Input.Id);
+            submit.DueDate = Clock.Now;
+            int carrierInvoicePaymentMethod = default(int);
+            try
+            {
+                carrierInvoicePaymentMethod = int.Parse(_featureChecker.GetValue(submit.Tenant.Id, AppFeatures.InvoicePaymentMethodCrarrier));
+            }
+            catch
+            {
+                throw new UserFriendlyException(L("PleaseSelectPaymentMethodForCarrier"));
+            }
+            var paymentType = await _invoicePaymentMethodRepository.FirstOrDefaultAsync(x => x.Id == carrierInvoicePaymentMethod);
+            if (paymentType.PaymentType == PaymentMethod.InvoicePaymentType.Days)
+                submit.DueDate = Clock.Now.AddDays(paymentType.InvoiceDueDateDays);
+
             if (submit.Status == SubmitInvoiceStatus.Claim || submit.Status == SubmitInvoiceStatus.Accepted) return;
+
             var document = await _commonManager.UploadDocumentAsBase64(ObjectMapper.Map<DocumentUpload>(Input), AbpSession.TenantId);
             submit.Status = SubmitInvoiceStatus.Claim;
             submit.RejectedReason = string.Empty;
@@ -138,8 +166,6 @@ namespace TACHYON.Invoices.Groups
                 .FirstOrDefaultAsync(g => g.Id == id && g.Status == SubmitInvoiceStatus.Claim);
             if (invoice != null)
             {
-
-                await _invoiceManager.GenerateCarrirInvoice(invoice);
                 invoice.Status = SubmitInvoiceStatus.Accepted;
                 await _appNotifier.SubmitInvoiceOnAccepted(new UserIdentifier(invoice.TenantId, (await _userManager.GetAdminByTenantIdAsync(invoice.TenantId)).Id), invoice);
             }
@@ -213,6 +239,42 @@ namespace TACHYON.Invoices.Groups
 
             return _excelExporterInvoiceItemManager.ExportToFile(Items, "SubmitInvoices", HeaderText, propertySelectors);
         }
+        public async Task<bool> MakeSubmitInvoicePaid(long SubmitinvoiceId)
+        {
+            CheckIfCanAccessService(true, AppFeatures.TachyonDealer);
+
+            var Invoice = await GetSubmitInvoice(SubmitinvoiceId);
+            if (Invoice != null && Invoice.Status != SubmitInvoiceStatus.Paid)
+            {
+                return await _commonManager.ExecuteMethodIfHostOrTenantUsers(async () =>
+                {
+                    await _balanceManager.AddBalanceToCarrier(Invoice.TenantId, +Invoice.TotalAmount);
+                    Invoice.Status = SubmitInvoiceStatus.Paid;
+                    await _transactionManager.Create(new Transaction
+                    {
+                        Amount = Invoice.TotalAmount,
+                        ChannelId = ChannelType.Invoices,
+                        TenantId = Invoice.TenantId,
+                        SourceId = Invoice.Id,
+                    });
+
+                    return true;
+                });
+            }
+            return false;
+        }
+        public async Task MakeSubmitInvoiceUnPaid(long SubmitinvoiceId)
+        {
+            CheckIfCanAccessService(true, AppFeatures.TachyonDealer);
+
+            var Invoice = await GetSubmitInvoice(SubmitinvoiceId);
+            if (Invoice != null && Invoice.Status != SubmitInvoiceStatus.UnPaid)
+            {
+                await _balanceManager.AddBalanceToCarrier(Invoice.TenantId, -Invoice.TotalAmount);
+                await _transactionManager.Delete(Invoice.Id, ChannelType.Invoices);
+                Invoice.Status = SubmitInvoiceStatus.UnPaid;
+            }
+        }
         #region Heleper
         private async Task<IOrderedQueryable<SubmitInvoice>> GetSubmitInvoices(SubmitInvoiceFilterInput input)
         {
@@ -232,9 +294,13 @@ namespace TACHYON.Invoices.Groups
         }
         private async Task<SubmitInvoice> GetSubmitInvoice(long GroupId)
         {
-            return await _SubmitInvoiceRepository.FirstOrDefaultAsync(g => g.Id == GroupId);
+            DisableTenancyFilters();
+            return await _SubmitInvoiceRepository.GetAll()
+                .Include(x => x.Tenant)
+                .WhereIf(AbpSession.TenantId.HasValue && !await IsEnabledAsync(AppFeatures.TachyonDealer), e => e.TenantId == AbpSession.TenantId.Value)
+                .WhereIf(!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer), e => true)
+                .FirstOrDefaultAsync(g => g.Id == GroupId);
         }
-
         private async Task<SubmitInvoice> GetSubmitInvoiceInfo(long id)
         {
             DisableTenancyFilters();
@@ -336,9 +402,6 @@ namespace TACHYON.Invoices.Groups
             });
             return Items;
         }
-
-
-
         #endregion
     }
 }
