@@ -1,21 +1,21 @@
-import { Component, OnInit, Injector, ViewChild, Input, Output, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 
 import {
-  PriceOfferServiceProxy,
-  GetShippingRequestForPricingOutput,
   GetShippingRequestForPriceOfferListDto,
-  PriceOfferItemDto,
+  GetShippingRequestForPricingOutput,
   PriceOfferChannel,
+  PriceOfferItemDto,
+  PriceOfferServiceProxy,
   ShippingRequestBidStatus,
   ShippingRequestStatus,
 } from '@shared/service-proxies/service-proxies';
 
 @Component({
   templateUrl: './shippingrequests-details-model.component.html',
-  // styleUrls: ['/assets/custom/css/model.scss'],
+  styleUrls: ['./shippingrequests-details-model.component.css'],
   selector: 'shippingrequests-details-model',
   animations: [appModuleAnimation()],
 })

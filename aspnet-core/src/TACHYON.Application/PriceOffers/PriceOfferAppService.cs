@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using TACHYON.AddressBook;
 using TACHYON.Cities;
 using TACHYON.Cities.Dtos;
 using TACHYON.Configuration;
@@ -42,19 +43,13 @@ namespace TACHYON.PriceOffers
         private readonly IRepository<TrucksType, long> _trucksTypeRepository;
         private readonly IAppNotifier _appNotifier;
         private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepository;
+        private readonly IRepository<Facility,long> _facilityRepository;
 
         private IRepository<VasPrice> _vasPriceRepository;
-
-        public PriceOfferAppService(
-            IRepository<ShippingRequestDirectRequest, long> shippingRequestDirectRequestRepository,
-            IRepository<ShippingRequest, long> shippingRequestsRepository,
-            PriceOfferManager priceOfferManager,
-            IRepository<PriceOffer, long> priceOfferRepository,
-            IRepository<VasPrice> vasPriceRepository,
-            IRepository<City> cityRepository,
-            IRepository<TrucksType, long> trucksTypeRepository,
-            IAppNotifier appNotifier,
-            IRepository<ShippingRequestTrip> shippingRequestTripRepository)
+        public PriceOfferAppService(IRepository<ShippingRequestDirectRequest, long> shippingRequestDirectRequestRepository,
+            IRepository<ShippingRequest, long> shippingRequestsRepository, PriceOfferManager priceOfferManager,
+            IRepository<PriceOffer, long> priceOfferRepository, IRepository<VasPrice> vasPriceRepository,
+            IRepository<City> cityRepository, IRepository<TrucksType, long> trucksTypeRepository, IAppNotifier appNotifier, IRepository<ShippingRequestTrip> shippingRequestTripRepository, IRepository<Facility, long> facilityRepository)
         {
             _shippingRequestDirectRequestRepository = shippingRequestDirectRequestRepository;
             _shippingRequestsRepository = shippingRequestsRepository;
@@ -65,6 +60,7 @@ namespace TACHYON.PriceOffers
             _trucksTypeRepository = trucksTypeRepository;
             _appNotifier = appNotifier;
             _shippingRequestTripRepository = shippingRequestTripRepository;
+            _facilityRepository = facilityRepository;
         }
 
         #region Services
@@ -448,17 +444,26 @@ namespace TACHYON.PriceOffers
                 }
             }
 
+            // This Action need performance improvements 
 
-            var getShippingRequestForPricingOutput =
-                ObjectMapper.Map<GetShippingRequestForPricingOutput>(shippingRequest);
-            getShippingRequestForPricingOutput.Items =
-                ObjectMapper.Map<List<PriceOfferItemDto>>(shippingRequest.ShippingRequestVases);
-            getShippingRequestForPricingOutput.GoodsCategory =
-                ObjectMapper.Map<GoodCategoryDto>(shippingRequest.GoodCategoryFk).DisplayName;
-            getShippingRequestForPricingOutput.TrukType =
-                ObjectMapper.Map<TrucksTypeDto>(shippingRequest.TrucksTypeFk).TranslatedDisplayName;
+            var getShippingRequestForPricingOutput = ObjectMapper.Map<GetShippingRequestForPricingOutput>(shippingRequest);
+            getShippingRequestForPricingOutput.Items = ObjectMapper.Map<List<PriceOfferItemDto>>(shippingRequest.ShippingRequestVases);
+            getShippingRequestForPricingOutput.GoodsCategory = ObjectMapper.Map<GoodCategoryDto>(shippingRequest.GoodCategoryFk).DisplayName;
+            getShippingRequestForPricingOutput.TrukType = ObjectMapper.Map<TrucksTypeDto>(shippingRequest.TrucksTypeFk).TranslatedDisplayName;
             getShippingRequestForPricingOutput.ShipperRating = shippingRequest.Tenant.Rate;
             getShippingRequestForPricingOutput.ShipperRatingNumber = shippingRequest.Tenant.RateNumber;
+            
+            var facilitiesRatings = await _facilityRepository.GetAll().AsNoTracking()
+                .Where(x => x.TenantId == shippingRequest.TenantId)
+                .Select(x => x.Rate).ToListAsync();
+            
+            int facilitiesRatingsCount = facilitiesRatings.Count(x=> x > 0);
+            
+            getShippingRequestForPricingOutput.FacilitiesRatingAverage = facilitiesRatingsCount != 0 ?
+                facilitiesRatings.Sum() / facilitiesRatingsCount : facilitiesRatingsCount;
+            
+            getShippingRequestForPricingOutput.FacilitiesRatingCount = facilitiesRatingsCount;
+            getShippingRequestForPricingOutput.FacilitiesRatingAverage = 4.2m;
 
             return getShippingRequestForPricingOutput;
         }

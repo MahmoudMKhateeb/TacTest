@@ -118,6 +118,9 @@
                       <td>
                         <span class="ui-column-title"> {{ l('facilityName') }}</span>
                         {{ record.facility ? record.facility : getFacilityNameByid(record.facilityId) }}
+                        <br />
+                        <!--                          I don't need to show rate number so (Rate Number) equals 0-->
+                        <app-view-rating [max]="5" [rate]="record.facilityRate" [rateNumber]="0"></app-view-rating>
                       </td>
                       <td>
                         <span class="ui-column-title"> {{ l('WayBillNumber') }}</span>

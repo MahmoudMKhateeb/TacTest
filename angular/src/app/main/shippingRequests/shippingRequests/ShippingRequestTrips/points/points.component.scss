@@ -26,3 +26,6 @@ agm-map {
 .blueColor{
   color: blue;
 }
+::ng-deep .rate-visibility {
+    display: none;
+}
