@@ -2256,5 +2256,8 @@
 		<text name="ShippingRequestAsBidWithSameTruckNotificationMessage">تم إنشاء طلب الشحن مع نفس الشاحنات الخاصة بك في السوق</text>
 		<text name="ShipperShippingRequestFinishNotificationMessage">اكتملت جميع الشحنات الخاصة بطلب الشحن</text>
 		<text name="SubmitInvoiceOnClaim">تم مطالبة الفاتورة المرسلة</text>
-  </texts>
+    <text name="IsMandatoryExpirationDate">تاريخ الإنتهاء إلزامي</text>
+    <text name="IsMandatoryNumber">الرقم إلزامي</text>
+    <text name="IsMandatoryDocumentTemplate">المستند إلزامي</text>
+	</texts>
 </localizationDictionary>

@@ -1,13 +1,13 @@
-﻿using Abp.Domain.Entities;
+﻿using Abp.Application.Editions;
+using Abp.AutoMapper;
+using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Abp.Application.Editions;
-using TACHYON.Documents.DocumentsEntities;
-using System.Collections.Generic;
-using Abp.AutoMapper;
 using TACHYON.Documents.DocumentFiles;
+using TACHYON.Documents.DocumentsEntities;
 using TACHYON.Documents.DocumentTypeTranslations;
 using TACHYON.MultiTenancy;
 
@@ -81,6 +81,9 @@ namespace TACHYON.Documents.DocumentTypes
         public string TemplateName { get; set; }
         public string TemplateContentType { get; set; }
         public Guid? TemplateId { get; set; }
+        public bool IsRequiredNumber { get; set; }
+        public bool IsRequiredExpirationDate { get; set; }
+        public bool IsRequiredDocumentTemplate { get; set; }
         public int? DocumentRelatedWithId { get; set; }
 
         [ForeignKey("DocumentRelatedWithId")] public Tenant DocumentRelatedWithFk { get; set; }

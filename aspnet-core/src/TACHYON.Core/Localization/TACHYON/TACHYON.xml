@@ -2486,5 +2486,9 @@
 	<text name="UploadGoodPicture">Upload Good Picture</text>
 	<text name="UploadPOD">Upload POD</text>
 	<text name="UploadDeliveryNotes">Upload Delivery Notes</text>
+    <text name="IsMandatoryDocumentTemplate">Document Template Mandatory</text>
+    <text name="IsMandatoryNumber">Number Mandatory</text>
+    <text name="IsMandatoryExpirationDate">Expiration Date Mandatory</text>
+
 	</texts>
 </localizationDictionary>
