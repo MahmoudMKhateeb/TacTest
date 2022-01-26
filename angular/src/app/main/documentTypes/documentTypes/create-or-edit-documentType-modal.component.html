@@ -100,6 +100,10 @@
           <div class="dx-fieldset">
             <div class="dx-fieldset-header">DocumentTemplate</div>
             <div class="dx-field">
+              <dx-check-box [(value)]="documentType.isRequiredDocumentTemplate" text="{{ l('IsMandatoryDocumentTemplate') }}"> </dx-check-box>
+            </div>
+
+            <div class="dx-field">
               <div class="dx-field-label">{{ l('DocumentTemplate') }}</div>
               <div class="dx-field-value">
                 <dx-file-uploader
@@ -162,6 +166,9 @@
             </div>
 
             <div class="dx-field" *ngIf="documentType.hasNumber">
+              <div class="dx-field">
+                <dx-check-box [(value)]="documentType.isRequiredNumber" text="{{ l('IsMandatoryNumber') }}"> </dx-check-box>
+              </div>
               <div class="dx-field-label">{{ l('numberMinDigits') }}</div>
               <div class="dx-field-value">
                 <dx-number-box
@@ -193,6 +200,9 @@
               <dx-check-box [(value)]="documentType.hasExpirationDate" text="{{ l('hasExpirationDate') }}"> </dx-check-box>
             </div>
             <div *ngIf="documentType.hasExpirationDate" class="dx-field">
+              <div class="dx-field">
+                <dx-check-box [(value)]="documentType.isRequiredExpirationDate" text="{{ l('IsMandatoryExpirationDate') }}"> </dx-check-box>
+              </div>
               <div class="dx-field-label">{{ l('expirationAlertDays') }}</div>
               <div class="dx-field-value">
                 <dx-number-box [(value)]="documentType.expirationAlertDays" [min]="0" [showSpinButtons]="true">

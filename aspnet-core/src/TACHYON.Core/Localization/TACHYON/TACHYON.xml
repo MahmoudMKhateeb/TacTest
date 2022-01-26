@@ -2397,6 +2397,10 @@
     <text name="ThereIsNoDriverAssingdToTrip">There Is No Driver Assingd To Trip</text>
     <text name="TheDriverAlreadyWorkingOnAnotherTrip">The Driver Already Working On Another Trip</text>
     <text name="TheStartDateOfTripNotCome">The Start Date Of Trip NotC ome</text>
+    <text name="IsMandatoryDocumentTemplate">Document Template Mandatory</text>
+    <text name="IsMandatoryNumber">Number Mandatory</text>
+    <text name="IsMandatoryExpirationDate">Expiration Date Mandatory</text>
+
     <!--<text name="StartOffloading"></text>
     <text name="ReceiverConfirmed"></text>
     <text name="DeliveryConfirmation"></text>-->

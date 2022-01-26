@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using TACHYON.EntityFrameworkCore;
@@ -10,9 +11,10 @@ using TACHYON.EntityFrameworkCore;
 namespace TACHYON.Migrations
 {
     [DbContext(typeof(TACHYONDbContext))]
-    partial class TACHYONDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220123124903_AddIsMandatoryForDocuments_Columns")]
+    partial class AddIsMandatoryForDocuments_Columns
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1628,9 +1630,6 @@ namespace TACHYON.Migrations
                     b.Property<DateTime?>("DeletionTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("DriverLicenseTypeId")
-                        .HasColumnType("int");
-
                     b.Property<string>("EmailAddress")
                         .IsRequired()
                         .HasColumnType("nvarchar(256)")
@@ -1668,9 +1667,6 @@ namespace TACHYON.Migrations
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsTwoFactorEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsWaslIntegrated")
                         .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastModificationTime")
@@ -1742,9 +1738,6 @@ namespace TACHYON.Migrations
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
-                    b.Property<string>("WaslIntegrationErrorMsg")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("AccountNumber")
@@ -1754,8 +1747,6 @@ namespace TACHYON.Migrations
                     b.HasIndex("CreatorUserId");
 
                     b.HasIndex("DeleterUserId");
-
-                    b.HasIndex("DriverLicenseTypeId");
 
                     b.HasIndex("LastModifierUserId");
 
@@ -2282,50 +2273,6 @@ namespace TACHYON.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("DocumentsEntities");
-                });
-
-            modelBuilder.Entity("TACHYON.DriverLicenseTypes.DriverLicenseType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("ApplicableforWaslRegistration")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("DeleterUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("DeletionTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("LastModifierUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
-
-                    b.Property<int>("WasIIntegrationId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("DriverLicenseTypes");
                 });
 
             modelBuilder.Entity("TACHYON.Friendships.Friendship", b =>
@@ -4745,9 +4692,6 @@ namespace TACHYON.Migrations
                     b.Property<bool>("IsShipperHaveInvoice")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsWaslIntegrated")
-                        .HasColumnType("bit");
-
                     b.Property<DateTime?>("LastModificationTime")
                         .HasColumnType("datetime2");
 
@@ -4808,9 +4752,6 @@ namespace TACHYON.Migrations
 
                     b.Property<decimal?>("VatAmountWithCommission")
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("WaslIntegrationErrorMsg")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("WaybillNumber")
                         .HasColumnType("bigint");
@@ -5987,9 +5928,6 @@ namespace TACHYON.Migrations
                     b.Property<DateTime?>("DeletionTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsDefault")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -6003,9 +5941,6 @@ namespace TACHYON.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(64)")
                         .HasMaxLength(64);
-
-                    b.Property<int>("WaslIntegrationId")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -6068,9 +6003,6 @@ namespace TACHYON.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsWaslIntegrated")
-                        .HasColumnType("bit");
-
                     b.Property<DateTime?>("LastModificationTime")
                         .HasColumnType("datetime2");
 
@@ -6114,9 +6046,6 @@ namespace TACHYON.Migrations
 
                     b.Property<long?>("TrucksTypeId")
                         .HasColumnType("bigint");
-
-                    b.Property<string>("WaslIntegrationErrorMsg")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -6914,10 +6843,6 @@ namespace TACHYON.Migrations
                     b.HasOne("TACHYON.Authorization.Users.User", "DeleterUser")
                         .WithMany()
                         .HasForeignKey("DeleterUserId");
-
-                    b.HasOne("TACHYON.DriverLicenseTypes.DriverLicenseType", "DriverLicenseTypeFk")
-                        .WithMany()
-                        .HasForeignKey("DriverLicenseTypeId");
 
                     b.HasOne("TACHYON.Authorization.Users.User", "LastModifierUser")
                         .WithMany()
