@@ -955,7 +955,7 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             List<TransportType> transportTypes = await _transportTypeRepository
                 .GetAllIncluding(x => x.Translations)
-                .ToListAsync();
+                .AsNoTracking().ToListAsync();
 
             List<TransportTypeSelectItemDto> transportTypeDtos =
                 ObjectMapper.Map<List<TransportTypeSelectItemDto>>(transportTypes);
@@ -967,17 +967,12 @@ namespace TACHYON.Shipping.ShippingRequests
             int transportTypeId)
         {
             List<TrucksType> list = await _lookup_trucksTypeRepository.GetAll()
-                .Include(x => x.Translations)
+                .AsNoTracking().Include(x => x.Translations)
                 .Where(x => x.TransportTypeId == transportTypeId ||
                             x.DisplayName.ToLower().Contains(TACHYONConsts.OthersDisplayName))
                 .Where(x => x.IsActive)
                 .ToListAsync();
             return ObjectMapper.Map<List<TrucksTypeSelectItemDto>>(list);
-            //.Select(x => new SelectItemDto()
-            //{
-            //    Id = x.Id.ToString(),
-            //    DisplayName = x.DisplayName
-            //}).ToListAsync();
         }
 
         public async Task<List<SelectItemDto>> GetAllTuckCapacitiesByTuckTypeIdForDropdown(int truckTypeId)

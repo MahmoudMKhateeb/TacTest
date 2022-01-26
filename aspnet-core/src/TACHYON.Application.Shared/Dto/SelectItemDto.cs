@@ -2,7 +2,6 @@
 {
     public class SelectItemDto : ISelectItemDto
     {
-        private string _displayName;
 
         public SelectItemDto(string id,
             string displayName,
@@ -21,20 +20,7 @@
 
         public bool? IsOther { get; set; }
 
-        public string DisplayName
-        {
-            get
-            {
-                return TranslatedDisplayName ?? _displayName;
-            }
-            set
-            {
-                _displayName = value;
-            }
-        }
-
-
-        public string TranslatedDisplayName { get; set; }
+        public string DisplayName { get; set; }
     }
 
     public interface ISelectItemDto

@@ -10,7 +10,7 @@ namespace TACHYON.Trucks.TruckCategories.TransportTypes
 {
     public interface ITransportTypesAppService : IApplicationService
     {
-        Task<PagedResultDto<GetTransportTypeForViewDto>> GetAll(GetAllTransportTypesInput input);
+        Task<PagedResultDto<TransportTypeDto>> GetAll(GetAllTransportTypesInput input);
 
         Task<GetTransportTypeForViewDto> GetTransportTypeForView(int id);
 

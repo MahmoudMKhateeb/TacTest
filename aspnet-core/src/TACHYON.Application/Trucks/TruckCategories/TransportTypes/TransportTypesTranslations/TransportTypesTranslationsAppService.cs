@@ -6,6 +6,7 @@ using Abp.Linq.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
@@ -150,14 +151,13 @@ namespace TACHYON.Trucks.TruckCategories.TransportTypes.TransportTypesTranslatio
         public async Task<List<TransportTypesTranslationTransportTypeLookupTableDto>>
             GetAllTransportTypeForTableDropdown()
         {
-            return await _lookup_transportTypeRepository.GetAll()
+            // We really need to improve our system dropdown services it's too important
+            return await _lookup_transportTypeRepository.GetAllIncluding(x=> x.Translations)
+                .AsNoTracking()
                 .Select(transportType => new TransportTypesTranslationTransportTypeLookupTableDto
                 {
                     Id = transportType.Id,
-                    TranslatedDisplayName =
-                        transportType == null || transportType.DisplayName == null
-                            ? ""
-                            : transportType.DisplayName.ToString(),
+                    TranslatedDisplayName = transportType.GetTranslatedDisplayName<TransportType,TransportTypesTranslation>(),
                     IsOther = transportType.ContainsOther()
                 }).ToListAsync();
         }
