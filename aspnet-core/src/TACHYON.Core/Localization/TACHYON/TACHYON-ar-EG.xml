@@ -2243,13 +2243,18 @@
     <text name="ImportTrucksProcessStart">بدأت عملية استيراد الشاحنات</text>
 	<text name="ImportTrucksUploadFailed">فشلت عملية استيراد الشاحنات.</text>
 		<text name="NumberOfRating">عدد تقييمات الشركة</text>
-    <!--<text name="StartOffloading"></text>
-    <text name="ReceiverConfirmed"></text>
-    <text name="DeliveryConfirmation"></text>-->
     <text name="facilityNameIsAlreadyExistsForThisTenant">اسم المنشأة موجود بالفعل لهذا المستأجر</text>
 		<text name="PointNotFoundOrNotCompleted">الرحلة غير متوفرة او غير مكتملة</text>
 		<text name="UploadGoodPicture">رفع صورة البضاعة</text>
 		<text name="UploadPOD">رفع اثبات التسليم</text>
 		<text name="UploadDeliveryNotes">رفع ملاحظات التوصيل</text>
+		<text name="CancelShipment">تم إلغاء الشحنة من قبل {0}</text>
+		<text name="ClickToSeeInvalidTrucks">انقر لرؤية شاحنات غير صالحة</text>
+		<text name="CreateBidRequestNotificationMessage">تم إنشاء عرض سعر</text>
+		<text name="CancelBidRequestNotificationMessage">تم إلغاء عرض السعر</text>
+		<text name="AcceptShippingRequestNotificationMessage">تم قبول عرض تسعير طلب الشحن</text>
+		<text name="ShippingRequestAsBidWithSameTruckNotificationMessage">تم إنشاء طلب الشحن مع نفس الشاحنات الخاصة بك في السوق</text>
+		<text name="ShipperShippingRequestFinishNotificationMessage">اكتملت جميع الشحنات الخاصة بطلب الشحن</text>
+		<text name="SubmitInvoiceOnClaim">تم مطالبة الفاتورة المرسلة</text>
   </texts>
 </localizationDictionary>
