@@ -14,15 +14,14 @@ export class ViewTransportTypeModalComponent extends AppComponentBase {
   active = false;
   saving = false;
 
-  item: GetTransportTypeForViewDto;
+  item: TransportTypeDto;
 
   constructor(injector: Injector) {
     super(injector);
-    this.item = new GetTransportTypeForViewDto();
-    this.item.transportType = new TransportTypeDto();
+    this.item = new TransportTypeDto();
   }
 
-  show(item: GetTransportTypeForViewDto): void {
+  show(item: TransportTypeDto): void {
     this.item = item;
     this.active = true;
     this.modal.show();

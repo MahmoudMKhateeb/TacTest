@@ -5,6 +5,7 @@ using Abp.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -65,14 +66,21 @@ namespace TACHYON.Extension
             transContext.AddRange(translations);
         }
 
-
-        public static List<FieldInfo> GetAllPublicConstants(this Type type)
-        {
-            return type
-                .GetFields(BindingFlags.Public)
-                .Where(fi => fi.IsLiteral && !fi.IsInitOnly)
-                .ToList();
-        }
+        public static string GetTranslatedDisplayName<TEntity,TTranslation,TKey>(this TEntity entity)
+            where TEntity : FullAuditedEntity<TKey>, IHasKey, IMultiLingualEntity<TTranslation>
+            where TTranslation : class, IEntityTranslation<TEntity, TKey>, IHasDisplayName, new() 
+        
+            => entity.Translations
+                .Where(x => x.CoreId.Equals(entity.Id) && x.Language.Contains(CultureInfo.CurrentUICulture.Name))
+                .Select(x => x.DisplayName).FirstOrDefault() ?? entity.Key;
+        
+        public static string GetTranslatedDisplayName<TEntity,TTranslation>(this TEntity entity)
+            where TEntity : FullAuditedEntity, IHasKey, IMultiLingualEntity<TTranslation>
+            where TTranslation : class, IEntityTranslation<TEntity>, IHasDisplayName, new() 
+        
+            => entity.Translations
+                .Where(x => x.CoreId.Equals(entity.Id) && x.Language.Contains(CultureInfo.CurrentUICulture.Name))
+                .Select(x => x.DisplayName).FirstOrDefault() ?? entity.Key;
 
         /// <summary>
         /// This Method is Used To Convert Enum Type To it Display Name
