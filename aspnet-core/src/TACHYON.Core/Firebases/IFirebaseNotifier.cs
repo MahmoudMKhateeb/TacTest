@@ -11,8 +11,5 @@ namespace TACHYON.Firebases
         FirebaseMessaging Messaging { get; set; }
         Task PushNotification(string notificationName, NotificationData data = null, params long[] userIds);
 
-        Task PushNotification(string notificationName,
-            NotificationData data,
-            params long[] userIds);
     }
 }
