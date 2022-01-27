@@ -529,10 +529,10 @@ namespace TACHYON.Shipping.Trips
         {
             DisableTenancyFilters();
             var trip = await _shippingRequestTripRepository.GetAll().Include(x => x.ShippingRequestFk)
-                     .Where(x => x.Status != ShippingRequestTripStatus.Canceled)
+                     .Where(x => x.Status == ShippingRequestTripStatus.New ||
+                     x.Status == ShippingRequestTripStatus.Intransit)
                      .WhereIf(IsEnabled(AppFeatures.Carrier), x => x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
                      .WhereIf(IsEnabled(AppFeatures.Shipper), x => x.ShippingRequestFk.TenantId == AbpSession.TenantId)
-                     .WhereIf(IsEnabled(AppFeatures.TachyonDealer), x => !x.IsApproveCancledByShipper)
                 .FirstOrDefaultAsync(x => x.Id == input.id);
             if (trip != null)
             {
