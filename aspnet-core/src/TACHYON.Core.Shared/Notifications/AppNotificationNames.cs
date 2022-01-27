@@ -63,6 +63,9 @@ namespace TACHYON.Notifications
         public const string NotifyShipperWhenTripUpdated = "App.NotifyShipperWhenTripUpdated";
         public const string NotifyCarrierWhenTripUpdated = "App.NotifyCarrierWhenTripUpdated";
         public const string NotifyTachyonDealWhenTripUpdated = "App.NotifyTachyonDealWhenTripUpdated";
+        public const string ShippingRequestTripCanceled = "App.ShippingRequest.ShippingRequestTripCanceled";
+        public const string ShippingRequestTripRejectCancelByTachyonDealer = "App.ShippingRequest.ShippingRequestTripRejectCancelByTachyonDealer";
+        public const string ShippingRequestTripNeedsCancelApproval = "App.ShippingRequest.ShippingRequestTripNeedsCancelApproval";
 
         #endregion
         #region Accident
@@ -79,7 +82,7 @@ namespace TACHYON.Notifications
         #endregion
         #region Shipping Request
         public const string ShippingRequestNotifyCarrirerWhenShipperAccepted = "App.ShippingRequestNotifyCarrirerWhenShipperAccepted";
-        public const string ShipperReminderToCompleteTrips = "App.ShipperReminderToCompleteTrips";  
+        public const string ShipperReminderToCompleteTrips = "App.ShipperReminderToCompleteTrips";
         #region Offer
         public const string ShippingRequestSendOfferWhenAddPrice = "App.ShippingRequestSendOfferWhenAddPrice";
         public const string ShippingRequestSendOfferWhenUpdatePrice = "App.ShippingRequestSendOfferWhenUpdatePrice";

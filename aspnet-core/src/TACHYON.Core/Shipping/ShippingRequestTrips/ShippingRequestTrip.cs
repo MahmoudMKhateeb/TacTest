@@ -41,10 +41,21 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         /// if the driver make accident when he work on trip
         /// </summary>
         public bool HasAccident { get; set; }
+        /// <summary>
+        /// this column will be true if shipper make or approve cancel the trip
+        /// </summary>
         public bool IsApproveCancledByShipper { get; set; }
+        /// <summary>
+        /// this column will be true if carrier make or approve cancel the trip
+        /// </summary>
         public bool IsApproveCancledByCarrier { get; set; }
+        /// <summary>
+        /// this column will be true if TMS make or approve cancel the trip
+        /// </summary>
         public bool IsApproveCancledByTachyonDealer { get; set; }
+        //todo this will be removed .. TMS always force cancel the trip
         public bool IsForcedCanceledByTachyonDealer { get; set; }
+        public string CanceledReason { get; set; }
         public long? AssignedTruckId { get; set; }
         [ForeignKey("AssignedTruckId")]
         public Truck AssignedTruckFk { get; set; }

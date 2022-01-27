@@ -57,6 +57,7 @@
         public const string Pages_ShippingRequestTrips_Edit = "Pages.ShippingRequestTrips.Edit";
         public const string Pages_ShippingRequestTrips_Delete = "Pages.ShippingRequestTrips.Delete";
         public const string Pages_ShippingRequestTrips_Acident_Cancel = "Pages.ShippingRequestTrips.Accident.Cancel";
+        public const string Pages_ShippingRequestTrips_Cancel = "Pages.ShippingRequestTrips.Cancel";
         #region Accident
         public const string Pages_ShippingRequestResoneAccidents = "Pages.ShippingRequestResoneAccidents";
         public const string Pages_ShippingRequestResoneAccidents_Create = "Pages.ShippingRequestResoneAccidents.Create";

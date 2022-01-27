@@ -2501,6 +2501,12 @@
     <text name="ImportTrucksProcessStart">The process of importing Trucks has begun</text>
     <text name="ImportTrucksUploadFailed">Trucks import process has failed.</text>
     <text name="facilityNameIsAlreadyExistsForThisTenant">Facility Name Is Already Exists For This Tenant</text>
-	<text name="NumberOfRating">Company Ratings Count</text>
+	  <text name="NumberOfRating">Company Ratings Count</text>
+    <text name="ShippingRequestTripCanceled">
+      {0} has performed a cancelation on the trip
+      with the waybill number {1} from the request {2}
+    </text>
+    <text name="ShippingRequestTripRejectCancelByTachyonDealer"></text>
+    <text name="ShippingRequestTripNeedsCancelApproval"></text>
 	</texts>
 </localizationDictionary>

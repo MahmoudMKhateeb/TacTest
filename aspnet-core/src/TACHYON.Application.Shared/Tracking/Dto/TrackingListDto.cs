@@ -37,6 +37,8 @@ namespace TACHYON.Tracking.Dto
         public bool isApproveCancledByShipper { get; set; }
         public bool IsApproveCancledByTachyonDealer { get; set; }
         public bool IsForcedCanceledByTachyonDealer { get; set; }
+        public string CanceledReason { get; set; }
+
         public long? WaybillNumber { get; set; }
 
         public string ReferenceNumber { get; set; }

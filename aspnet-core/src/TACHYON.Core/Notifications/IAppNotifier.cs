@@ -48,12 +48,12 @@ namespace TACHYON.Notifications
         Task ShipperShippingRequestFinish(UserIdentifier argsUser, ShippingRequest Request);
 
         #region Trips
-        
+
 
         Task NotifyDriverWhenAssignTrip(int tripId, params UserIdentifier[] drivers);
 
         Task NotifyDriverWhenUnassignedTrip(int tripId, string waybillNumber, params UserIdentifier[] drivers);
-        
+
         Task DriverRejectTrip(ShippingRequestTrip Trip, string driver);
         Task DriverAcceptTrip(ShippingRequestTrip Trip, string driver);
         Task CarrierTripNeedAccept(ShippingRequestTrip Trip);
@@ -68,6 +68,9 @@ namespace TACHYON.Notifications
 
         Task ShippingRequestAccidentsOccure(List<UserIdentifier> Users, Dictionary<string, object> data);
         Task ShippingRequestTripCancelByAccident(List<UserIdentifier> Users, ShippingRequestTrip trip, User UserCancel);
+        Task ShippingRequestTripCanceled(List<UserIdentifier> Users, ShippingRequestTrip trip, string tenantName);
+        Task ShippingRequestTripRejectCancelByTachyonDealer(List<UserIdentifier> Users, ShippingRequest request);
+        Task ShippingRequestTripNeedsCancelApproval(List<UserIdentifier> Users, ShippingRequest request);
         #endregion
 
         #region ShippingRequest

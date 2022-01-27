@@ -31,6 +31,7 @@ namespace TACHYON.Shipping.Trips.Dto
         public bool IsApproveCancledByShipper { get; set; }
         public bool IsApproveCancledByCarrier { get; set; }
         public bool IsApproveCancledByTachyonDealer { get; set; }
+        public string CanceledReason { get; set; }
 
         public ShippingRequestTripDriverStatus DriverStatus { get; set; }
         public string DriverStatusTitle { get; set; }

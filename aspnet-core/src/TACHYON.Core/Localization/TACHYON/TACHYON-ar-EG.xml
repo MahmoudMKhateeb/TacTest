@@ -2248,5 +2248,8 @@
     <text name="ReceiverConfirmed"></text>
     <text name="DeliveryConfirmation"></text>-->
     <text name="facilityNameIsAlreadyExistsForThisTenant">اسم المنشأة موجود بالفعل لهذا المستأجر</text>
+    <text name="ShippingRequestTripCanceled"></text>
+    <text name="ShippingRequestTripRejectCancelByTachyonDealer"></text>
+    <text name="ShippingRequestTripNeedsCancelApproval"></text>
   </texts>
 </localizationDictionary>

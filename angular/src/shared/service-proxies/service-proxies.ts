@@ -39422,6 +39422,71 @@ export class ShippingRequestsTripServiceProxy {
     }
     return _observableOf<void>(<any>null);
   }
+
+  /**
+   * @param body (optional)
+   * @return Success
+   */
+  cancelTrip(body: CancelTripInput | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/ShippingRequestsTrip/CancelTrip';
+    url_ = url_.replace(/[?&]$/, '');
+
+    const content_ = JSON.stringify(body);
+
+    let options_: any = {
+      body: content_,
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processCancelTrip(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processCancelTrip(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processCancelTrip(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
 }
 
 @Injectable()
@@ -84904,6 +84969,7 @@ export class ShippingRequestsTripListDto implements IShippingRequestsTripListDto
   isApproveCancledByShipper!: boolean;
   isApproveCancledByCarrier!: boolean;
   isApproveCancledByTachyonDealer!: boolean;
+  canceledReason!: string | undefined;
   driverStatus!: ShippingRequestTripDriverStatus;
   driverStatusTitle!: string | undefined;
   rejectedReason!: string | undefined;
@@ -84936,6 +85002,7 @@ export class ShippingRequestsTripListDto implements IShippingRequestsTripListDto
       this.isApproveCancledByShipper = _data['isApproveCancledByShipper'];
       this.isApproveCancledByCarrier = _data['isApproveCancledByCarrier'];
       this.isApproveCancledByTachyonDealer = _data['isApproveCancledByTachyonDealer'];
+      this.canceledReason = _data['canceledReason'];
       this.driverStatus = _data['driverStatus'];
       this.driverStatusTitle = _data['driverStatusTitle'];
       this.rejectedReason = _data['rejectedReason'];
@@ -84969,6 +85036,7 @@ export class ShippingRequestsTripListDto implements IShippingRequestsTripListDto
     data['isApproveCancledByShipper'] = this.isApproveCancledByShipper;
     data['isApproveCancledByCarrier'] = this.isApproveCancledByCarrier;
     data['isApproveCancledByTachyonDealer'] = this.isApproveCancledByTachyonDealer;
+    data['canceledReason'] = this.canceledReason;
     data['driverStatus'] = this.driverStatus;
     data['driverStatusTitle'] = this.driverStatusTitle;
     data['rejectedReason'] = this.rejectedReason;
@@ -84995,6 +85063,7 @@ export interface IShippingRequestsTripListDto {
   isApproveCancledByShipper: boolean;
   isApproveCancledByCarrier: boolean;
   isApproveCancledByTachyonDealer: boolean;
+  canceledReason: string | undefined;
   driverStatus: ShippingRequestTripDriverStatus;
   driverStatusTitle: string | undefined;
   rejectedReason: string | undefined;
@@ -85398,6 +85467,49 @@ export interface IAssignDriverAndTruckToShippmentByCarrierInput {
   assignedDriverUserId: number;
   assignedTruckId: number;
   id: number;
+}
+
+export class CancelTripInput implements ICancelTripInput {
+  id!: number;
+  canceledReason!: string;
+  isApproved!: boolean;
+
+  constructor(data?: ICancelTripInput) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.id = _data['id'];
+      this.canceledReason = _data['canceledReason'];
+      this.isApproved = _data['isApproved'];
+    }
+  }
+
+  static fromJS(data: any): CancelTripInput {
+    data = typeof data === 'object' ? data : {};
+    let result = new CancelTripInput();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['id'] = this.id;
+    data['canceledReason'] = this.canceledReason;
+    data['isApproved'] = this.isApproved;
+    return data;
+  }
+}
+
+export interface ICancelTripInput {
+  id: number;
+  canceledReason: string;
+  isApproved: boolean;
 }
 
 export class ListResultDtoOfShippingRequestTripAccidentListDto implements IListResultDtoOfShippingRequestTripAccidentListDto {
@@ -89776,6 +89888,7 @@ export class TrackingListDto implements ITrackingListDto {
   isApproveCancledByShipper!: boolean;
   isApproveCancledByTachyonDealer!: boolean;
   isForcedCanceledByTachyonDealer!: boolean;
+  canceledReason!: string | undefined;
   waybillNumber!: number | undefined;
   referenceNumber!: string | undefined;
   tenantId!: number;
@@ -89821,6 +89934,7 @@ export class TrackingListDto implements ITrackingListDto {
       this.isApproveCancledByShipper = _data['isApproveCancledByShipper'];
       this.isApproveCancledByTachyonDealer = _data['isApproveCancledByTachyonDealer'];
       this.isForcedCanceledByTachyonDealer = _data['isForcedCanceledByTachyonDealer'];
+      this.canceledReason = _data['canceledReason'];
       this.waybillNumber = _data['waybillNumber'];
       this.referenceNumber = _data['referenceNumber'];
       this.tenantId = _data['tenantId'];
@@ -89867,6 +89981,7 @@ export class TrackingListDto implements ITrackingListDto {
     data['isApproveCancledByShipper'] = this.isApproveCancledByShipper;
     data['isApproveCancledByTachyonDealer'] = this.isApproveCancledByTachyonDealer;
     data['isForcedCanceledByTachyonDealer'] = this.isForcedCanceledByTachyonDealer;
+    data['canceledReason'] = this.canceledReason;
     data['waybillNumber'] = this.waybillNumber;
     data['referenceNumber'] = this.referenceNumber;
     data['tenantId'] = this.tenantId;
@@ -89906,6 +90021,7 @@ export interface ITrackingListDto {
   isApproveCancledByShipper: boolean;
   isApproveCancledByTachyonDealer: boolean;
   isForcedCanceledByTachyonDealer: boolean;
+  canceledReason: string | undefined;
   waybillNumber: number | undefined;
   referenceNumber: string | undefined;
   tenantId: number;
