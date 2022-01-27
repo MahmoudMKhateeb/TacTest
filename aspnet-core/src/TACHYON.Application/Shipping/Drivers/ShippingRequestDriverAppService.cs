@@ -533,6 +533,7 @@ namespace TACHYON.Shipping.Drivers
                 .Include(x => x.RoutPoints)
                 .ThenInclude(x => x.RatingLogs)
                 .Include(x => x.RatingLogs)
+                .Where(x => x.Status != ShippingRequestTripStatus.Canceled)
                 .FirstOrDefaultAsync(x => x.Id == TripId);
 
             await ResetTripStatus(trip);
