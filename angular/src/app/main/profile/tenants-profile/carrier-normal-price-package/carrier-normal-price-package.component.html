@@ -1,0 +1,69 @@
+<div class="col-lg-12 gutter-b">
+  <div class="card card-custom card-stretch gutter-b">
+    <!--begin::Header-->
+    <div class="card-header border-0 pt-5">
+      <h3 class="card-title align-items-start flex-column">
+        <span class="card-label font-weight-bolder text-dark">{{ 'NormalPricePackages' | localize }}</span>
+        <span class="text-muted mt-3 font-weight-bold font-size-sm"
+          >{{ l('NumberOfNormalPricePackages') }} : {{ primengTableHelper.totalRecordsCount }}</span
+        >
+      </h3>
+    </div>
+    <!--end::Header-->
+    <!--begin::Body-->
+    <div class="card-body pt-2">
+      <!--<Primeng-Datatable-Start>-->
+      <div class="primeng-datatable-container col-12" [busyIf]="primengTableHelper.isLoading">
+        <p-table
+          #dataTableNormalPricePackages
+          (onLazyLoad)="getAllNormalPricePackages($event)"
+          ScrollWidth="100%"
+          [lazy]="true"
+          [paginator]="false"
+          [resizableColumns]="primengTableHelper.resizableColumns"
+          [responsive]="primengTableHelper.isResponsive"
+          [scrollable]="true"
+          [value]="primengTableHelper.records"
+          rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th>{{ l('Referance') }}</th>
+              <th>{{ l('displayName') }}</th>
+              <th>{{ l('TruckType') }}</th>
+              <th>{{ l('Origin') }}</th>
+              <th>{{ l('Destination') }}</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-normalPricePackage>
+            <tr>
+              <td>{{ normalPricePackage.pricePackageId }}</td>
+              <td>{{ normalPricePackage.displayName }}</td>
+              <td>{{ normalPricePackage.truckType }}</td>
+              <td>{{ normalPricePackage.origin }}</td>
+              <td>{{ normalPricePackage.destination }}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+        <div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">
+          {{ 'NoData' | localize }}
+        </div>
+        <div class="primeng-paging-container">
+          <p-paginator
+            #paginatorNormalPricePackages
+            [rows]="primengTableHelper.defaultRecordsCountPerPage"
+            (onPageChange)="getAllNormalPricePackages($event)"
+            [totalRecords]="primengTableHelper.totalRecordsCount"
+            [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
+          >
+          </p-paginator>
+          <span class="total-records-count">
+            {{ 'TotalRecordsCount' | localize: primengTableHelper.totalRecordsCount }}
+          </span>
+        </div>
+      </div>
+      <!--<Primeng-Datatable-End>-->
+    </div>
+    <!--end::Body-->
+  </div>
+</div>

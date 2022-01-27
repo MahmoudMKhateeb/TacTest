@@ -728,6 +728,11 @@ namespace TACHYON
                 .ForMember(src => src.TruckType, opt => opt.MapFrom(des => des.TrucksTypeFk.DisplayName))
                 .ForMember(src => src.Origin, opt => opt.MapFrom(des => des.OriginCityFK.DisplayName))
                 .ForMember(src => src.Destination, opt => opt.MapFrom(des => des.DestinationCityFK.DisplayName));
+
+            configuration.CreateMap<NormalPricePackage, NormalPricePackageProfileDto>()
+               .ForMember(src => src.TruckType, opt => opt.MapFrom(des => des.TrucksTypeFk.DisplayName))
+               .ForMember(src => src.Origin, opt => opt.MapFrom(des => des.OriginCityFK.DisplayName))
+               .ForMember(src => src.Destination, opt => opt.MapFrom(des => des.DestinationCityFK.DisplayName));
             configuration.CreateMap<CreateOrEditNormalPricePackageDto, NormalPricePackage>().ReverseMap();
 
         }

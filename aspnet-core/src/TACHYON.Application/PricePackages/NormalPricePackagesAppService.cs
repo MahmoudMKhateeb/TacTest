@@ -1,4 +1,5 @@
-﻿using Abp.Application.Services.Dto;
+﻿using Abp.Application.Features;
+using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
@@ -37,6 +38,7 @@ namespace TACHYON.PricePackages
         #region Main Endpoints 
 
         [AbpAuthorize(AppPermissions.Pages_NormalPricePackages_Edit)]
+        [RequiresFeature(AppFeatures.Carrier, AppFeatures.NormalPricePackages, RequiresAll = true)]
         public async Task<CreateOrEditNormalPricePackageDto> GetNormalPricePackageForEdit(int id)
         {
             var pricePackage = await _pricePackageRepository.FirstOrDefaultAsync(id);
@@ -44,9 +46,10 @@ namespace TACHYON.PricePackages
 
             return ObjectMapper.Map<CreateOrEditNormalPricePackageDto>(pricePackage);
         }
+
+        [RequiresFeature(AppFeatures.Carrier, AppFeatures.NormalPricePackages, RequiresAll = true)]
         public async Task CreateOrEdit(CreateOrEditNormalPricePackageDto input)
         {
-            await CheckIfCanAccessService();
             var nameIsExsist = await CheckIfNamePricePackageIsExist(input.DisplayName, input.Id);
             if (nameIsExsist) throw new UserFriendlyException(L("ThePricePackageNameIsExists"));
 
@@ -55,15 +58,20 @@ namespace TACHYON.PricePackages
             else
                 await Update(input);
         }
+
         [AbpAuthorize(AppPermissions.Pages_NormalPricePackages_Delete)]
+        [RequiresFeature(AppFeatures.Carrier, AppFeatures.NormalPricePackages, RequiresAll = true)]
         public async Task Delete(EntityDto input)
         {
-            await CheckIfCanAccessService();
             await _pricePackageRepository.DeleteAsync(input.Id);
         }
+
         [AbpAuthorize(AppPermissions.Pages_NormalPricePackages)]
+        [RequiresFeature(AppFeatures.Carrier, AppFeatures.TachyonDealer)]
         public async Task<PagedResultDto<NormalPricePackageDto>> GetAll(GetAllNormalPricePackagesInput input)
         {
+            if (!await IsEnabledAsync(AppFeatures.NormalPricePackages)) throw new UserFriendlyException(L("YouCannotAccessThisPage"));
+
             DisableTenancyFilters();
             var tenentId = AbpSession.TenantId;
             var filteredPricePackages = _pricePackageRepository
@@ -77,7 +85,7 @@ namespace TACHYON.PricePackages
                 .WhereIf(!string.IsNullOrWhiteSpace(input.PricePackageIdFilter), e => e.PricePackageId.Contains(input.PricePackageIdFilter));
 
             var pagedAndFilteredPricePackages = filteredPricePackages
-                .OrderBy(input.Sorting ?? "id asc")
+                .OrderBy(input.Sorting ?? "id desc")
                 .PageBy(input);
 
             var pricePackages = ObjectMapper.Map<List<NormalPricePackageDto>>(await pagedAndFilteredPricePackages.ToListAsync());
@@ -89,7 +97,7 @@ namespace TACHYON.PricePackages
                 pricePackages
             );
         }
-        [AbpAuthorize(AppPermissions.Pages_NormalPricePackages_View)]
+
         public async Task<NormalPricePackageDto> GetNormalPricePackage(int id)
         {
             DisableTenancyFilters();
@@ -183,11 +191,6 @@ namespace TACHYON.PricePackages
             var referanceId = id + 1000;
             var referanceNumber = "{0}-{1}-{2}";
             return string.Format(referanceNumber, formatDate, routType, referanceId);
-        }
-        private async Task CheckIfCanAccessService()
-        {
-            if (!AbpSession.TenantId.HasValue || !await IsEnabledAsync(AppFeatures.Carrier))
-                throw new UserFriendlyException("YouDoNotHavePermissionToAccessThePage");
         }
 
         #endregion

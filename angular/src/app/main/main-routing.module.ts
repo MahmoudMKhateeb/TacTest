@@ -206,7 +206,7 @@ import { NormalPricePackageDto } from '@shared/service-proxies/service-proxies';
           },
           { path: 'vases/vasPrices', component: VasPricesComponent, data: { permission: 'Pages.VasPrices' } },
           { path: 'receivers/receivers', component: ReceiversComponent, data: { permission: 'Pages.Receivers' } },
-          { path: 'pricePackages/NormalPricePackages', component: NormalPricePackageComponent, data: { permission: 'Pages.Receivers' } },
+          { path: 'pricePackages/normalPricePackages', component: NormalPricePackageComponent, data: { permission: 'Pages.NormalPricePackages' } },
           { path: 'termsAndConditions/termAndConditions', component: TermAndConditionsComponent, data: { permission: 'Pages.TermAndConditions' } },
           { path: 'truckCapacities/capacities', component: CapacitiesComponent, data: { permission: 'Pages.Capacities' } },
           { path: 'transportTypes/transportTypes', component: TransportTypesComponent, data: { permission: 'Pages.TransportTypes' } },

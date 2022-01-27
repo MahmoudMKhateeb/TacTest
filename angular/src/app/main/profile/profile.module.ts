@@ -12,6 +12,7 @@ import { FormsModule } from '@angular/forms';
 import { RatingModule } from '@node_modules/primeng/rating';
 import { UtilsModule } from '@shared/utils/utils.module';
 import { PaginatorModule } from '@node_modules/primeng/paginator';
+import { CarrierNormalPricePackagesComponent } from './tenants-profile/carrier-normal-price-package/carrier-normal-price-package.component';
 import { CarrierVasesComponent } from './tenants-profile/carrier-vases/carrier-vases.component';
 import { CarrierFleetInformationComponent } from './tenants-profile/carrier-fleet-information/carrier-fleet-information.component';
 import { ShipperFacilitiesComponent } from './tenants-profile/shipper-facilities/shipper-facilities.component';
@@ -24,6 +25,7 @@ import { NgbRatingModule } from '@node_modules/@ng-bootstrap/ng-bootstrap';
     TenantsProfileComponent,
     SideProfileComponent,
     ProfileComponent,
+    CarrierNormalPricePackagesComponent,
     CarrierVasesComponent,
     CarrierFleetInformationComponent,
     ShipperFacilitiesComponent,

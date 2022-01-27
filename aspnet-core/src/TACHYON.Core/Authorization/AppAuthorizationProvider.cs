@@ -390,7 +390,6 @@ namespace TACHYON.Authorization
             normalPricePackage.CreateChildPermission(AppPermissions.Pages_NormalPricePackages_Create, L("CreateNewNormalPricePackage"), multiTenancySides: MultiTenancySides.Tenant);
             normalPricePackage.CreateChildPermission(AppPermissions.Pages_NormalPricePackages_Edit, L("EditNormalPricePackage"), multiTenancySides: MultiTenancySides.Tenant);
             normalPricePackage.CreateChildPermission(AppPermissions.Pages_NormalPricePackages_Delete, L("DeleteNormalPricePackage"), multiTenancySides: MultiTenancySides.Tenant);
-            normalPricePackage.CreateChildPermission(AppPermissions.Pages_NormalPricePackages_View, L("ViewNormalPricePackage"));
 
         }
 

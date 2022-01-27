@@ -233,9 +233,13 @@ namespace TACHYON.Features
                 TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f"
             };
 
-            ///*Invoices*/
 
 
+            var normalPricePackage = context.Create(
+            AppFeatures.NormalPricePackages,
+             "false",
+             L("NormalPricePackages"),
+               inputType: new CheckboxInputType());
             #endregion
             //---Y
 
@@ -504,24 +508,24 @@ namespace TACHYON.Features
 
             var carrierEditionId = Convert.ToInt32(SettingManager.GetSettingValue(AppSettings.Editions.CarrierEditionId));
             ILocalizableComboboxItem[] tenants = _tenantRepository.GetAll()
-                .Where(x=> x.EditionId == carrierEditionId)
-                .Select(i => new LocalizableComboboxItem(i.Id.ToString(), L(i.TenancyName +" - "+i.AccountNumber))).ToArray();
+                .Where(x => x.EditionId == carrierEditionId)
+                .Select(i => new LocalizableComboboxItem(i.Id.ToString(), L(i.TenancyName + " - " + i.AccountNumber))).ToArray();
 
-          var saasFeature =   shipperFeature.CreateChildFeature(
-                AppFeatures.Saas,
+            var saasFeature = shipperFeature.CreateChildFeature(
+                  AppFeatures.Saas,
+                  defaultValue: "false",
+                  displayName: L(AppFeatures.Saas),
+                  inputType: new CheckboxInputType()
+              );
+            saasFeature.CreateChildFeature(
+                AppFeatures.SaasRelatedCarrier,
                 defaultValue: "false",
-                displayName: L(AppFeatures.Saas),
-                inputType: new CheckboxInputType()
+                displayName: L(AppFeatures.SaasRelatedCarrier),
+                inputType: new ComboboxInputType(
+                    new StaticLocalizableComboboxItemSource(tenants)
+                )
             );
-                saasFeature.CreateChildFeature(
-                    AppFeatures.SaasRelatedCarrier,
-                    defaultValue: "false",
-                    displayName: L(AppFeatures.SaasRelatedCarrier),
-                    inputType: new ComboboxInputType(
-                        new StaticLocalizableComboboxItemSource(tenants)
-                    )
-                );
-            
+
 
         }
 

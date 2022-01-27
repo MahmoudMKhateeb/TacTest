@@ -86,10 +86,11 @@
         #endregion
         #endregion
         #endregion
-         public const string BayanIntegration = "App.BayanIntegration";
+        public const string BayanIntegration = "App.BayanIntegration";
         public const string SaasRelatedCarrier = "App.Shipper.SaaSCarrier";
         public const string Saas = "App.Shipper.Saas";
 
+        public const string NormalPricePackages = "App.NormalPricePackage";
         #endregion
 
 

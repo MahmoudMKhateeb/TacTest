@@ -40,6 +40,8 @@ using TACHYON.Friendships;
 using TACHYON.Gdpr;
 using TACHYON.Invoices.PaymentMethods;
 using TACHYON.Net.Sms;
+using TACHYON.PricePackages;
+using TACHYON.PricePackages.Dto.NormalPricePackage;
 using TACHYON.Security;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips;
@@ -77,6 +79,7 @@ namespace TACHYON.Authorization.Users.Profile
         private readonly IRepository<Edition> _lookupEditionRepository;
         private readonly IRepository<City> _lookupCityRepository;
         private readonly IRepository<TrucksTypesTranslation> _trucksTypesTranslationRepository;
+        private readonly IRepository<NormalPricePackage> _normalPricePackageRepository;
 
         public ProfileAppService(
             IAppFolders appFolders,
@@ -97,7 +100,9 @@ namespace TACHYON.Authorization.Users.Profile
             IRepository<VasPrice> lookupVasPriceRepository,
             IRepository<Truck, long> lookupTruckRepository,
             IRepository<Edition> lookupEditionRepository,
-            IRepository<City> lookupCityRepository, IRepository<TrucksTypesTranslation> trucksTypesTranslationRepository)
+            IRepository<City> lookupCityRepository,
+            IRepository<TrucksTypesTranslation> trucksTypesTranslationRepository,
+            IRepository<NormalPricePackage> normalPricePackageRepository)
         {
             _binaryObjectManager = binaryObjectManager;
             _timeZoneService = timezoneService;
@@ -118,6 +123,7 @@ namespace TACHYON.Authorization.Users.Profile
             _lookupEditionRepository = lookupEditionRepository;
             _lookupCityRepository = lookupCityRepository;
             _trucksTypesTranslationRepository = trucksTypesTranslationRepository;
+            _normalPricePackageRepository = normalPricePackageRepository;
         }
 
         [DisableAuditing]
@@ -373,6 +379,20 @@ namespace TACHYON.Authorization.Users.Profile
 
             return new PagedResultDto<AvailableVasDto>() { Items = ObjectMapper.Map<List<AvailableVasDto>>(pageResult), TotalCount = totalCount };
         }
+
+        public async Task<PagedResultDto<NormalPricePackageProfileDto>> GetNormalPricePackages(GetNormalPricePackagesForProfileInputDto input)
+        {
+            var availableVases = _normalPricePackageRepository.GetAllIncluding(x => x.DestinationCityFK, v => v.OriginCityFK, Z => Z.TrucksTypeFk)
+                .Where(x => x.TenantId == input.CarrierTenantId)
+                .OrderBy(input.Sorting ?? "Id desc");
+
+            var pageResult = await availableVases.PageBy(input).ToListAsync();
+            var totalCount = await availableVases.CountAsync();
+
+            return new PagedResultDto<NormalPricePackageProfileDto>() { Items = ObjectMapper.Map<List<NormalPricePackageProfileDto>>(pageResult), TotalCount = totalCount };
+        }
+
+
 
         #endregion
 

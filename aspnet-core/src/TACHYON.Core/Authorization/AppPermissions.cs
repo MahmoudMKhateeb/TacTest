@@ -438,7 +438,6 @@
         public const string Pages_NormalPricePackages_Create = "Pages.NormalPricePackages.Create";
         public const string Pages_NormalPricePackages_Edit = "Pages.NormalPricePackages.Edit";
         public const string Pages_NormalPricePackages_Delete = "Pages.NormalPricePackages.Delete";
-        public const string Pages_NormalPricePackages_View = "Pages.NormalPricePackages.View";
 
         #region shpping
 

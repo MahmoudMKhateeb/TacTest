@@ -2501,6 +2501,22 @@
     <text name="ImportTrucksProcessStart">The process of importing Trucks has begun</text>
     <text name="ImportTrucksUploadFailed">Trucks import process has failed.</text>
     <text name="facilityNameIsAlreadyExistsForThisTenant">Facility Name Is Already Exists For This Tenant</text>
-	<text name="NumberOfRating">Company Ratings Count</text>
+	<text name="NormalPricePackages">Normal price packages</text>
+	<text name="PricePackages">Price packages</text>
+	<text name="DirectRequestPrice">Direct request price</text>
+	<text name="TachyonMSRequestPrice">Tachyon MS request price</text>
+	<text name="MarcketPlaceRequestPrice">Marcket place request price</text>
+	<text name="PricePerExtraDrop">Price per extra drop</text>
+	<text name="IsMultiDrop">Is multi drop</text>
+	<text name="CreateNormalPricePackage">Create normal price package</text>
+	<text name="PricePackageName">Price package name </text>
+	<text name="SelectATransportType">Select a transport type</text>
+	<text name="SelectATruckType">Select a truck type</text>
+	<text name="SelectADestination ">Select a destination </text>
+	<text name="HeaderNormalPricePackageDetails">Normal price package details</text>
+	<text name="EditNormalPricePackage">Edit normal price package</text>
+	<text name="MultipleDrop">Multiple drop</text>
+	
+	
 	</texts>
 </localizationDictionary>

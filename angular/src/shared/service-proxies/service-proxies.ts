@@ -30554,6 +30554,86 @@ export class ProfileServiceProxy {
   }
 
   /**
+   * @param sorting (optional)
+   * @param skipCount (optional)
+   * @param maxResultCount (optional)
+   * @return Success
+   */
+  getNormalPricePackages(
+    carrierTenantId: number,
+    sorting: string | null | undefined,
+    skipCount: number | undefined,
+    maxResultCount: number | undefined
+  ): Observable<PagedResultDtoOfNormalPricePackageProfileDto> {
+    let url_ = this.baseUrl + '/api/services/app/Profile/GetNormalPricePackages?';
+    if (carrierTenantId === undefined || carrierTenantId === null)
+      throw new Error("The parameter 'carrierTenantId' must be defined and cannot be null.");
+    else url_ += 'CarrierTenantId=' + encodeURIComponent('' + carrierTenantId) + '&';
+    if (sorting !== undefined && sorting !== null) url_ += 'Sorting=' + encodeURIComponent('' + sorting) + '&';
+    if (skipCount === null) throw new Error("The parameter 'skipCount' cannot be null.");
+    else if (skipCount !== undefined) url_ += 'SkipCount=' + encodeURIComponent('' + skipCount) + '&';
+    if (maxResultCount === null) throw new Error("The parameter 'maxResultCount' cannot be null.");
+    else if (maxResultCount !== undefined) url_ += 'MaxResultCount=' + encodeURIComponent('' + maxResultCount) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetNormalPricePackages(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetNormalPricePackages(<any>response_);
+            } catch (e) {
+              return <Observable<PagedResultDtoOfNormalPricePackageProfileDto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<PagedResultDtoOfNormalPricePackageProfileDto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetNormalPricePackages(response: HttpResponseBase): Observable<PagedResultDtoOfNormalPricePackageProfileDto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = PagedResultDtoOfNormalPricePackageProfileDto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<PagedResultDtoOfNormalPricePackageProfileDto>(<any>null);
+  }
+
+  /**
    * @param body (optional)
    * @return Success
    */
@@ -78028,6 +78108,106 @@ export class PagedResultDtoOfAvailableVasDto implements IPagedResultDtoOfAvailab
 export interface IPagedResultDtoOfAvailableVasDto {
   totalCount: number;
   items: AvailableVasDto[] | undefined;
+}
+
+export class NormalPricePackageProfileDto implements INormalPricePackageProfileDto {
+  pricePackageId!: string | undefined;
+  id!: number;
+  displayName!: string | undefined;
+  truckType!: string | undefined;
+  origin!: string | undefined;
+  destination!: string | undefined;
+
+  constructor(data?: INormalPricePackageProfileDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.pricePackageId = _data['pricePackageId'];
+      this.id = _data['id'];
+      this.displayName = _data['displayName'];
+      this.truckType = _data['truckType'];
+      this.origin = _data['origin'];
+      this.destination = _data['destination'];
+    }
+  }
+
+  static fromJS(data: any): NormalPricePackageProfileDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new NormalPricePackageProfileDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['pricePackageId'] = this.pricePackageId;
+    data['id'] = this.id;
+    data['displayName'] = this.displayName;
+    data['truckType'] = this.truckType;
+    data['origin'] = this.origin;
+    data['destination'] = this.destination;
+    return data;
+  }
+}
+
+export interface INormalPricePackageProfileDto {
+  pricePackageId: string | undefined;
+  id: number;
+  displayName: string | undefined;
+  truckType: string | undefined;
+  origin: string | undefined;
+  destination: string | undefined;
+}
+
+export class PagedResultDtoOfNormalPricePackageProfileDto implements IPagedResultDtoOfNormalPricePackageProfileDto {
+  totalCount!: number;
+  items!: NormalPricePackageProfileDto[] | undefined;
+
+  constructor(data?: IPagedResultDtoOfNormalPricePackageProfileDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.totalCount = _data['totalCount'];
+      if (Array.isArray(_data['items'])) {
+        this.items = [] as any;
+        for (let item of _data['items']) this.items!.push(NormalPricePackageProfileDto.fromJS(item));
+      }
+    }
+  }
+
+  static fromJS(data: any): PagedResultDtoOfNormalPricePackageProfileDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new PagedResultDtoOfNormalPricePackageProfileDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['totalCount'] = this.totalCount;
+    if (Array.isArray(this.items)) {
+      data['items'] = [];
+      for (let item of this.items) data['items'].push(item.toJSON());
+    }
+    return data;
+  }
+}
+
+export interface IPagedResultDtoOfNormalPricePackageProfileDto {
+  totalCount: number;
+  items: NormalPricePackageProfileDto[] | undefined;
 }
 
 export class ChangePasswordInput implements IChangePasswordInput {
