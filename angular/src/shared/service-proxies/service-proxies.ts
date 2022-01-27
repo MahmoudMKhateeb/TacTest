@@ -33254,6 +33254,78 @@ export class RoutStepsServiceProxy {
   }
 
   /**
+   * @param shippingRequestId (optional)
+   * @return Success
+   */
+  getAllFacilitiesByCityAndTenantForDropdown(shippingRequestId: number | null | undefined): Observable<FacilityForDropdownDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/RoutSteps/GetAllFacilitiesByCityAndTenantForDropdown?';
+    if (shippingRequestId !== undefined && shippingRequestId !== null)
+      url_ += 'shippingRequestId=' + encodeURIComponent('' + shippingRequestId) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAllFacilitiesByCityAndTenantForDropdown(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAllFacilitiesByCityAndTenantForDropdown(<any>response_);
+            } catch (e) {
+              return <Observable<FacilityForDropdownDto[]>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<FacilityForDropdownDto[]>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAllFacilitiesByCityAndTenantForDropdown(response: HttpResponseBase): Observable<FacilityForDropdownDto[]> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          if (Array.isArray(resultData200)) {
+            result200 = [] as any;
+            for (let item of resultData200) result200!.push(FacilityForDropdownDto.fromJS(item));
+          } else {
+            result200 = <any>null;
+          }
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<FacilityForDropdownDto[]>(<any>null);
+  }
+
+  /**
    * @param cityId (optional)
    * @return Success
    */
@@ -47390,6 +47462,73 @@ export class TrackingServiceProxy {
       );
     }
     return _observableOf<GetAllUploadedFileDto[]>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
+  getDeliveryGoodPicture(id: number | undefined): Observable<IHasDocument> {
+    let url_ = this.baseUrl + '/api/services/app/Tracking/GetDeliveryGoodPicture?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetDeliveryGoodPicture(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetDeliveryGoodPicture(<any>response_);
+            } catch (e) {
+              return <Observable<IHasDocument>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<IHasDocument>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetDeliveryGoodPicture(response: HttpResponseBase): Observable<IHasDocument> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = IHasDocument.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<IHasDocument>(<any>null);
   }
 }
 
@@ -63070,6 +63209,9 @@ export class DocumentTypeDto implements IDocumentTypeDto {
   inActiveAccountExpired!: boolean;
   inActiveToleranceDays!: number | undefined;
   hasHijriExpirationDate!: boolean;
+  isRequiredNumber!: boolean;
+  isRequiredExpirationDate!: boolean;
+  isRequiredDocumentTemplate!: boolean;
   templateName!: string | undefined;
   templateContentType!: string | undefined;
   templateId!: string | undefined;
@@ -63106,6 +63248,9 @@ export class DocumentTypeDto implements IDocumentTypeDto {
       this.inActiveAccountExpired = _data['inActiveAccountExpired'];
       this.inActiveToleranceDays = _data['inActiveToleranceDays'];
       this.hasHijriExpirationDate = _data['hasHijriExpirationDate'];
+      this.isRequiredNumber = _data['isRequiredNumber'];
+      this.isRequiredExpirationDate = _data['isRequiredExpirationDate'];
+      this.isRequiredDocumentTemplate = _data['isRequiredDocumentTemplate'];
       this.templateName = _data['templateName'];
       this.templateContentType = _data['templateContentType'];
       this.templateId = _data['templateId'];
@@ -63143,6 +63288,9 @@ export class DocumentTypeDto implements IDocumentTypeDto {
     data['inActiveAccountExpired'] = this.inActiveAccountExpired;
     data['inActiveToleranceDays'] = this.inActiveToleranceDays;
     data['hasHijriExpirationDate'] = this.hasHijriExpirationDate;
+    data['isRequiredNumber'] = this.isRequiredNumber;
+    data['isRequiredExpirationDate'] = this.isRequiredExpirationDate;
+    data['isRequiredDocumentTemplate'] = this.isRequiredDocumentTemplate;
     data['templateName'] = this.templateName;
     data['templateContentType'] = this.templateContentType;
     data['templateId'] = this.templateId;
@@ -63173,6 +63321,9 @@ export interface IDocumentTypeDto {
   inActiveAccountExpired: boolean;
   inActiveToleranceDays: number | undefined;
   hasHijriExpirationDate: boolean;
+  isRequiredNumber: boolean;
+  isRequiredExpirationDate: boolean;
+  isRequiredDocumentTemplate: boolean;
   templateName: string | undefined;
   templateContentType: string | undefined;
   templateId: string | undefined;
@@ -63973,6 +64124,9 @@ export class CreateOrEditDocumentTypeDto implements ICreateOrEditDocumentTypeDto
   documentsEntityId!: number;
   editionId!: number | undefined;
   hasNumber!: boolean;
+  isRequiredNumber!: boolean;
+  isRequiredExpirationDate!: boolean;
+  isRequiredDocumentTemplate!: boolean;
   hasNotes!: boolean;
   isNumberUnique!: boolean;
   specialConstant!: string | undefined;
@@ -64008,6 +64162,9 @@ export class CreateOrEditDocumentTypeDto implements ICreateOrEditDocumentTypeDto
       this.documentsEntityId = _data['documentsEntityId'];
       this.editionId = _data['editionId'];
       this.hasNumber = _data['hasNumber'];
+      this.isRequiredNumber = _data['isRequiredNumber'];
+      this.isRequiredExpirationDate = _data['isRequiredExpirationDate'];
+      this.isRequiredDocumentTemplate = _data['isRequiredDocumentTemplate'];
       this.hasNotes = _data['hasNotes'];
       this.isNumberUnique = _data['isNumberUnique'];
       this.specialConstant = _data['specialConstant'];
@@ -64044,6 +64201,9 @@ export class CreateOrEditDocumentTypeDto implements ICreateOrEditDocumentTypeDto
     data['documentsEntityId'] = this.documentsEntityId;
     data['editionId'] = this.editionId;
     data['hasNumber'] = this.hasNumber;
+    data['isRequiredNumber'] = this.isRequiredNumber;
+    data['isRequiredExpirationDate'] = this.isRequiredExpirationDate;
+    data['isRequiredDocumentTemplate'] = this.isRequiredDocumentTemplate;
     data['hasNotes'] = this.hasNotes;
     data['isNumberUnique'] = this.isNumberUnique;
     data['specialConstant'] = this.specialConstant;
@@ -64073,6 +64233,9 @@ export interface ICreateOrEditDocumentTypeDto {
   documentsEntityId: number;
   editionId: number | undefined;
   hasNumber: boolean;
+  isRequiredNumber: boolean;
+  isRequiredExpirationDate: boolean;
+  isRequiredDocumentTemplate: boolean;
   hasNotes: boolean;
   isNumberUnique: boolean;
   specialConstant: string | undefined;
@@ -64398,6 +64561,7 @@ export class DriverDetailDto implements IDriverDetailDto {
   langaugeCode!: string | undefined;
   langaugeName!: string | undefined;
   langaugeNative!: string | undefined;
+  mobileAppManual!: string | undefined;
 
   constructor(data?: IDriverDetailDto) {
     if (data) {
@@ -64418,6 +64582,7 @@ export class DriverDetailDto implements IDriverDetailDto {
       this.langaugeCode = _data['langaugeCode'];
       this.langaugeName = _data['langaugeName'];
       this.langaugeNative = _data['langaugeNative'];
+      this.mobileAppManual = _data['mobileAppManual'];
     }
   }
 
@@ -64439,6 +64604,7 @@ export class DriverDetailDto implements IDriverDetailDto {
     data['langaugeCode'] = this.langaugeCode;
     data['langaugeName'] = this.langaugeName;
     data['langaugeNative'] = this.langaugeNative;
+    data['mobileAppManual'] = this.mobileAppManual;
     return data;
   }
 }
@@ -64453,6 +64619,7 @@ export interface IDriverDetailDto {
   langaugeCode: string | undefined;
   langaugeName: string | undefined;
   langaugeNative: string | undefined;
+  mobileAppManual: string | undefined;
 }
 
 export class UserDeviceTokenDto implements IUserDeviceTokenDto {
@@ -79323,6 +79490,7 @@ export class FacilityForDropdownDto implements IFacilityForDropdownDto {
   displayName!: string | undefined;
   long!: number;
   lat!: number;
+  cityId!: number;
 
   constructor(data?: IFacilityForDropdownDto) {
     if (data) {
@@ -79338,6 +79506,7 @@ export class FacilityForDropdownDto implements IFacilityForDropdownDto {
       this.displayName = _data['displayName'];
       this.long = _data['long'];
       this.lat = _data['lat'];
+      this.cityId = _data['cityId'];
     }
   }
 
@@ -79354,6 +79523,7 @@ export class FacilityForDropdownDto implements IFacilityForDropdownDto {
     data['displayName'] = this.displayName;
     data['long'] = this.long;
     data['lat'] = this.lat;
+    data['cityId'] = this.cityId;
     return data;
   }
 }
@@ -79363,6 +79533,7 @@ export interface IFacilityForDropdownDto {
   displayName: string | undefined;
   long: number;
   lat: number;
+  cityId: number;
 }
 
 export class RoutTypeDto implements IRoutTypeDto {
@@ -81277,6 +81448,7 @@ export enum RoutePointStatus {
   Delivered = 11,
   Issue = 12,
   DeliveryNoteUploded = 13,
+  UplodeGoodPicture = 14,
 }
 
 export enum RoutePointCompletedStatus {
@@ -81814,6 +81986,7 @@ export class RoutPointsMobileDto implements IRoutPointsMobileDto {
   isActive!: boolean;
   isComplete!: boolean;
   isResolve!: boolean;
+  isGoodPictureUploaded!: boolean;
   isPodUploaded!: boolean;
   canGoToNextLocation!: boolean;
   lat!: number;
@@ -81838,6 +82011,7 @@ export class RoutPointsMobileDto implements IRoutPointsMobileDto {
       this.isActive = _data['isActive'];
       this.isComplete = _data['isComplete'];
       this.isResolve = _data['isResolve'];
+      this.isGoodPictureUploaded = _data['isGoodPictureUploaded'];
       this.isPodUploaded = _data['isPodUploaded'];
       this.canGoToNextLocation = _data['canGoToNextLocation'];
       this.lat = _data['lat'];
@@ -81866,6 +82040,7 @@ export class RoutPointsMobileDto implements IRoutPointsMobileDto {
     data['isActive'] = this.isActive;
     data['isComplete'] = this.isComplete;
     data['isResolve'] = this.isResolve;
+    data['isGoodPictureUploaded'] = this.isGoodPictureUploaded;
     data['isPodUploaded'] = this.isPodUploaded;
     data['canGoToNextLocation'] = this.canGoToNextLocation;
     data['lat'] = this.lat;
@@ -81887,6 +82062,7 @@ export interface IRoutPointsMobileDto {
   isActive: boolean;
   isComplete: boolean;
   isResolve: boolean;
+  isGoodPictureUploaded: boolean;
   isPodUploaded: boolean;
   canGoToNextLocation: boolean;
   lat: number;
@@ -89969,6 +90145,7 @@ export class TrackingRoutePointDto implements ITrackingRoutePointDto {
   canGoToNextLocation!: boolean;
   isDeliveryNoteUploaded!: boolean;
   isPodUploaded!: boolean;
+  isGoodPictureUploaded!: boolean;
   facilityRate!: number;
   waybillNumber!: number | undefined;
   statues!: RoutPointTransactionDto[] | undefined;
@@ -90000,6 +90177,7 @@ export class TrackingRoutePointDto implements ITrackingRoutePointDto {
       this.canGoToNextLocation = _data['canGoToNextLocation'];
       this.isDeliveryNoteUploaded = _data['isDeliveryNoteUploaded'];
       this.isPodUploaded = _data['isPodUploaded'];
+      this.isGoodPictureUploaded = _data['isGoodPictureUploaded'];
       this.facilityRate = _data['facilityRate'];
       this.waybillNumber = _data['waybillNumber'];
       if (Array.isArray(_data['statues'])) {
@@ -90038,6 +90216,7 @@ export class TrackingRoutePointDto implements ITrackingRoutePointDto {
     data['canGoToNextLocation'] = this.canGoToNextLocation;
     data['isDeliveryNoteUploaded'] = this.isDeliveryNoteUploaded;
     data['isPodUploaded'] = this.isPodUploaded;
+    data['isGoodPictureUploaded'] = this.isGoodPictureUploaded;
     data['facilityRate'] = this.facilityRate;
     data['waybillNumber'] = this.waybillNumber;
     if (Array.isArray(this.statues)) {
@@ -90069,6 +90248,7 @@ export interface ITrackingRoutePointDto {
   canGoToNextLocation: boolean;
   isDeliveryNoteUploaded: boolean;
   isPodUploaded: boolean;
+  isGoodPictureUploaded: boolean;
   facilityRate: number;
   waybillNumber: number | undefined;
   statues: RoutPointTransactionDto[] | undefined;
@@ -90182,6 +90362,49 @@ export interface IGetAllUploadedFileDto {
   fileName: string;
   fileType: string | undefined;
   thumbnailImage: string;
+}
+
+export class IHasDocument implements IIHasDocument {
+  documentId!: string | undefined;
+  documentName!: string | undefined;
+  documentContentType!: string | undefined;
+
+  constructor(data?: IIHasDocument) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.documentId = _data['documentId'];
+      this.documentName = _data['documentName'];
+      this.documentContentType = _data['documentContentType'];
+    }
+  }
+
+  static fromJS(data: any): IHasDocument {
+    data = typeof data === 'object' ? data : {};
+    let result = new IHasDocument();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['documentId'] = this.documentId;
+    data['documentName'] = this.documentName;
+    data['documentContentType'] = this.documentContentType;
+    return data;
+  }
+}
+
+export interface IIHasDocument {
+  documentId: string | undefined;
+  documentName: string | undefined;
+  documentContentType: string | undefined;
 }
 
 export class TrailerDto implements ITrailerDto {

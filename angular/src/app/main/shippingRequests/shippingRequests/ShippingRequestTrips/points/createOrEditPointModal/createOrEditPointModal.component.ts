@@ -2,11 +2,12 @@
 import { Component, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   CreateOrEditRoutPointDto,
+  FacilitiesServiceProxy,
+  FacilityForDropdownDto,
   PickingType,
   ReceiverFacilityLookupTableDto,
   ReceiversServiceProxy,
   RoutStepsServiceProxy,
-  FacilitiesServiceProxy,
   ShippingRequestRouteType,
 } from '@shared/service-proxies/service-proxies';
 import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
@@ -14,8 +15,6 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import { ModalDirective } from '@node_modules/ngx-bootstrap/modal';
 import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
 import { NgForm } from '@angular/forms';
-import { pipe } from '@node_modules/rxjs';
-import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'createOrEditPointModal',
@@ -37,7 +36,7 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
   // @ViewChild('PointGoodDetailsComponent') public PointGoodDetailsComponent: GoodDetailsComponent;
   @ViewChild('createOrEditPintForm') public createOrEditPintForm: NgForm;
 
-  //allFacilities: FacilityForDropdownDto[];
+  allFacilities: FacilityForDropdownDto[];
   allReceivers: ReceiverFacilityLookupTableDto[];
 
   RouteType: number; //filled in onInit from the Trip Shared Service
@@ -200,11 +199,12 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
       // hide facilities of souurce city SR if any point put in destinaton city of SR
       this.wayPointsList.forEach((element) => {
         this._facilitiesServiceProxy.getFacilityForView(element.facilityId).subscribe((r) => {
-          if (r.facility.cityId != null)
+          if (r.facility.cityId != null) {
             if (r.facility.cityId == this.cityDestId) {
               this.getFacilities(true);
               return;
             }
+          }
         });
       });
 
