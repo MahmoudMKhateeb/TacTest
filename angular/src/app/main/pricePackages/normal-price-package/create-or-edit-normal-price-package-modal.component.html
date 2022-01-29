@@ -34,8 +34,10 @@
                 minlength="3"
                 maxlength="100"
                 required
+                (change)="checkIfIsPricePackageUniqueName()"
               />
               <validation-messages [formCtrl]="NormalPricePackage_DisplayName"></validation-messages>
+              <span *ngIf="!isNameAvilable" class="form-text text-danger">{{ l('PricePackageName') }} {{ 'AlreadyTaken' | localize }}</span>
             </div>
             <div class="checkbox-inline">
               <label for="NormalPricePackage_IsMultiDrop" class="checkbox">

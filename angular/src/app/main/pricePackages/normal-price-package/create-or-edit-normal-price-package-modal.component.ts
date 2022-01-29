@@ -1,7 +1,12 @@
 import { Component, ViewChild, Injector, Output, EventEmitter, Input } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
-import { NormalPricePackagesServiceProxy, CreateOrEditNormalPricePackageDto, SelectItemDto } from '@shared/service-proxies/service-proxies';
+import {
+  NormalPricePackagesServiceProxy,
+  CheckIfPricePackageNameAvailableDto,
+  CreateOrEditNormalPricePackageDto,
+  SelectItemDto,
+} from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import * as moment from 'moment';
 
@@ -55,7 +60,6 @@ export class CreateOrEditNormalPricePackageModalComponent extends AppComponentBa
     });
   }
   checkPricePerExtraDrop(event) {
-    debugger;
     if (!event.target.checked) {
       this.normalPricePackage.pricePerExtraDrop = undefined;
     }
@@ -81,17 +85,16 @@ export class CreateOrEditNormalPricePackageModalComponent extends AppComponentBa
   close(): void {
     this.clearListsItems();
     this.active = false;
+    this.isNameAvilable = true;
     this.modal.hide();
   }
-  numberOnly(event): boolean {
-    if (event.target.value.length >= 9) {
-      return false;
-    }
-    const charCode = event.which ? event.which : event.keyCode;
-    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-      return false;
-    }
-    return true;
+  checkIfIsPricePackageUniqueName() {
+    var modal = new CheckIfPricePackageNameAvailableDto();
+    modal.id = this.normalPricePackage.id;
+    modal.name = this.normalPricePackage.displayName;
+    this._normalPricePackagesServiceProxy.checkIfPricePackageNameAvailable(modal).subscribe((result) => {
+      this.isNameAvilable = result;
+    });
   }
   fillAllTruckTypes(transportTypeId: number) {
     this._normalPricePackagesServiceProxy.getAllTruckTypesForTableDropdown(transportTypeId).subscribe((result) => {

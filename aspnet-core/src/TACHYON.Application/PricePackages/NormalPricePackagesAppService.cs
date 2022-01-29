@@ -97,7 +97,6 @@ namespace TACHYON.PricePackages
                 pricePackages
             );
         }
-
         public async Task<NormalPricePackageDto> GetNormalPricePackage(int id)
         {
             DisableTenancyFilters();
@@ -110,6 +109,10 @@ namespace TACHYON.PricePackages
             if (pricePackage == null) throw new UserFriendlyException(L("ThePricePackageWasNotExists"));
 
             return ObjectMapper.Map<NormalPricePackageDto>(pricePackage);
+        }
+        public async Task<bool> CheckIfPricePackageNameAvailable(CheckIfPricePackageNameAvailableDto input)
+        {
+            return !await CheckIfNamePricePackageIsExist(input.Name, input.Id);
         }
         #endregion
 

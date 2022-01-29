@@ -77,7 +77,6 @@ export class NormalPricePackageComponent extends AppComponentBase {
   }
 
   createNormalPricePackage(): void {
-    debugger;
     this.createOrEditNormalPricePackageModal.show();
   }
 
