@@ -105,6 +105,10 @@
                       {{ l('Actions') }}
                     </th>
                     <th style="width: 120px" pSortableColumn="pricePackageId">
+                      {{ l('PricePackageName') }}
+                      <p-sortIcon field="reference"></p-sortIcon>
+                    </th>
+                    <th style="width: 120px" pSortableColumn="pricePackageId">
                       {{ l('Reference') }}
                       <p-sortIcon field="reference"></p-sortIcon>
                     </th>
@@ -167,6 +171,10 @@
                           </li>
                         </ul>
                       </div>
+                    </td>
+                    <td style="width: 120px">
+                      <span class="ui-column-title"> {{ l('PricePackageName') }}</span>
+                      {{ record.displayName }}
                     </td>
                     <td style="width: 120px">
                       <span class="ui-column-title"> {{ l('reference') }}</span>

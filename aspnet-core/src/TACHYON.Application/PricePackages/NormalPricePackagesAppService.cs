@@ -117,32 +117,20 @@ namespace TACHYON.PricePackages
         public async Task<List<SelectItemDto>> GetAllTranspotTypesForTableDropdown()
         {
             return await _lookup_transportTypeRepository.GetAll().AsNoTracking()
-               .Select(x => new SelectItemDto
-               {
-                   DisplayName = x.DisplayName ?? "",
-                   Id = x.Id.ToString()
-               }).ToListAsync();
+               .Select(x => new SelectItemDto { DisplayName = x.DisplayName ?? "", Id = x.Id.ToString() }).ToListAsync();
 
         }
         public async Task<List<SelectItemDto>> GetAllTruckTypesForTableDropdown(int transpotTypeId)
         {
             return await _lookup_trucksTypeRepository.GetAll().AsNoTracking()
                 .Where(c => c.TransportTypeId == transpotTypeId)
-               .Select(x => new SelectItemDto
-               {
-                   DisplayName = x.DisplayName ?? "",
-                   Id = x.Id.ToString()
-               }).ToListAsync();
+               .Select(p => new SelectItemDto { DisplayName = p.DisplayName ?? "", Id = p.Id.ToString() }).ToListAsync();
 
         }
         public async Task<List<SelectItemDto>> GetAllCitiesForTableDropdown()
         {
             return await _lookup_cityRepository.GetAll().AsNoTracking()
-                .Select(x => new SelectItemDto
-                {
-                    DisplayName = x.DisplayName ?? "",
-                    Id = x.Id.ToString()
-                }).ToListAsync();
+                .Select(t => new SelectItemDto { DisplayName = t.DisplayName ?? "", Id = t.Id.ToString() }).ToListAsync();
 
         }
         #endregion
