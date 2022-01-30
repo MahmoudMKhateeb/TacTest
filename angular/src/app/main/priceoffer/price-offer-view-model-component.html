@@ -17,17 +17,13 @@
         <form class="contentSetPrice">
           <ng-template [ngIf]="!feature.isEnabled('App.Carrier')">
             <div class="infoBasic">
-              <a href="javascript:void(0)" class="companyName">
-                {{ offer.editionId!=4 ? offer.name:l('TachyonManageService')}}
-              </a>
+              <a href="javascript:void(0)" class="companyName"> {{ offer.editionId!=4 ? offer.name:l('TachyonManageService')}} </a>
             </div>
             <div class="divirCard"></div>
           </ng-template>
           <ng-template [ngIf]="offer.status==2 || offer.status==5">
             <div class="infoBasic alert alert-warning">
-              <div class="alert alert-warning" role="alert">
-                {{offer.rejectedReason}}
-              </div>
+              <div class="alert alert-warning" role="alert">{{offer.rejectedReason}}</div>
             </div>
             <div class="divirCard"></div>
           </ng-template>
@@ -60,6 +56,11 @@
                 <i class="fas fa-check"></i>
                 {{l('SendOffer')}}
               </a>
+              <a href="javascript:void(0)" class="acceptTMS" (click)="accepTMStoffer()" *ngIf="canAcceptOrRejectOffer()">
+                <i class="fas fa-check"></i>
+                {{l('AcceptOfferOnBehalfShipper')}}
+              </a>
+
               <a href="javascript:void(0)" class="delete" (click)="CancelAccepted()" *ngIf="canSendOfferOrCancel()">
                 <i class="fas fa-check"></i>
                 {{l('Cancel')}}
@@ -68,31 +69,17 @@
             <table>
               <thead>
                 <tr>
-                  <th>
-                    {{l('Price')}}
-                  </th>
-                  <th *ngIf="feature.isEnabled('App.TachyonDealer') || !appSession.tenantId">
-                    {{l('CommissionType')}}
-                  </th>
-                  <th>
-                    {{l('NoOfTrips')}}
-                  </th>
-                  <th>
-                    {{l('Total')}}
-                  </th>
+                  <th>{{l('Price')}}</th>
+                  <th *ngIf="feature.isEnabled('App.TachyonDealer') || !appSession.tenantId">{{l('CommissionType')}}</th>
+                  <th>{{l('NoOfTrips')}}</th>
+                  <th>{{l('Total')}}</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>
-                    {{offer.itemPrice}}
-                  </td>
-                  <td *ngIf="feature.isEnabled('App.TachyonDealer') || !appSession.tenantId">
-                    {{l(offer.commissionTypeTitle)}}
-                  </td>
-                  <td>
-                    {{offer.quantity}}
-                  </td>
+                  <td>{{offer.itemPrice}}</td>
+                  <td *ngIf="feature.isEnabled('App.TachyonDealer') || !appSession.tenantId">{{l(offer.commissionTypeTitle)}}</td>
+                  <td>{{offer.quantity}}</td>
                   <td>
                     <span>{{(offer.itemPrice * offer.quantity) | number}}</span>
                     <span>{{l('SAR')}}</span>
@@ -106,31 +93,17 @@
             <table>
               <thead>
                 <tr>
-                  <th>
-                    {{l('Name')}}
-                  </th>
-                  <th>
-                    {{l('Price')}}
-                  </th>
-                  <th>
-                    {{l('Qty')}}
-                  </th>
-                  <th>
-                    {{l('Total')}}
-                  </th>
+                  <th>{{l('Name')}}</th>
+                  <th>{{l('Price')}}</th>
+                  <th>{{l('Qty')}}</th>
+                  <th>{{l('Total')}}</th>
                 </tr>
               </thead>
               <tbody>
                 <tr *ngFor="let item of Items; let i = index">
-                  <td>
-                    {{item.itemName}}
-                  </td>
-                  <td>
-                    {{item.itemPrice}}
-                  </td>
-                  <td>
-                    {{item.quantity}}
-                  </td>
+                  <td>{{item.itemName}}</td>
+                  <td>{{item.itemPrice}}</td>
+                  <td>{{item.quantity}}</td>
                   <td>
                     <span>{{(item.itemPrice * item.quantity) | number}}</span>
                     <span>{{l('SAR')}}</span>
@@ -142,36 +115,28 @@
           <div class="divirCard"></div>
           <div class="resultPrice">
             <div>
-              <p>
-                {{l('SubTotalAmount')}}
-              </p>
+              <p>{{l('SubTotalAmount')}}</p>
               <p>
                 <span>{{offer.subTotalAmount | number}}</span>
                 <span>{{l('SAR')}}</span>
               </p>
             </div>
             <div>
-              <p>
-                {{l('VatAmount')}}
-              </p>
+              <p>{{l('VatAmount')}}</p>
               <p>
                 <span>{{offer.vatAmount | number}}</span>
                 <span>{{l('SAR')}}</span>
               </p>
             </div>
             <div>
-              <p>
-                {{l('TotalAmount')}}
-              </p>
+              <p>{{l('TotalAmount')}}</p>
               <p>
                 <span>{{offer.totalAmount | number}}</span>
                 <span>{{l('SAR')}}</span>
               </p>
             </div>
             <div *ngIf="feature.isEnabled('App.TachyonDealer') || !appSession.tenantId">
-              <p>
-                {{l('Commission')}}
-              </p>
+              <p>{{l('Commission')}}</p>
               <p>
                 <span>{{offer.commissionAmount | number}}</span>
                 <span>{{l('SAR')}}</span>

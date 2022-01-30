@@ -5,6 +5,7 @@ using Abp.Configuration;
 using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
 using Abp.Runtime.Session;
+using Abp.Timing;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -231,6 +232,36 @@ namespace TACHYON.PriceOffers
                 //request.Status = ShippingRequestStatus.AcceptedAndWaitingCarrier;
             }
 
+            await SetShippingRequestPricing(offer);
+            await _appNotifier.ShipperAcceptedOffer(offer);
+            return offer.Status;
+        }
+        public async Task<PriceOfferStatus> AcceptOfferOnBehalfShipper(long id)
+        {
+            DisableTenancyFilters();
+            var offer = await CanAcceptOrRejectOffer(id);
+            if (offer == null) throw new UserFriendlyException(L("YouCanNotAcceptTheOffer"));
+            await CheckIfThereOfferAcceptedBefore(offer.ShippingRequestId);
+
+            await _balanceManager.ShipperCanAcceptOffer(offer);
+
+            if (offer.ShippingRequestFk.IsTachyonDeal)
+            {
+                offer.Status = PriceOfferStatus.Accepted;
+                offer.ShippingRequestFk.Status = ShippingRequestStatus.PostPrice;
+                offer.ApprovingTime = Clock.Now;
+                offer.ShippingRequestFk.CarrierTenantId = offer.TenantId;
+                offer.ApprovingUserId = offer.ShippingRequestFk.Tenant.Id;
+
+                if (offer.ShippingRequestFk.IsBid)
+                    offer.ShippingRequestFk.BidStatus = ShippingRequestBidStatus.Closed;
+
+                if (offer.Channel == PriceOfferChannel.DirectRequest)
+                    await ChangeDirectRequestStatus(offer.SourceId.Value, ShippingRequestDirectRequestStatus.Accepted);
+
+                await _appNotifier.TMSAcceptedOffer(offer);
+
+            }
             await SetShippingRequestPricing(offer);
             await _appNotifier.ShipperAcceptedOffer(offer);
             return offer.Status;
