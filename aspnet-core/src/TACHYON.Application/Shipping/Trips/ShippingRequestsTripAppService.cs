@@ -214,7 +214,7 @@ namespace TACHYON.Shipping.Trips
             await DisableTenancyFiltersIfTachyonDealer();
             var request = await GetShippingRequestByPermission(input.ShippingRequestId);
 
-            if (!await FeatureChecker.IsEnabledAsync(request.TenantId, AppFeatures.AddTripsByTachyonDeal))
+            if (await IsEnabledAsync(AppFeatures.TachyonDealer) && !await FeatureChecker.IsEnabledAsync(request.TenantId, AppFeatures.AddTripsByTachyonDeal))
                 throw new AbpValidationException(L("AddTripsByTachyonDealIsNotEnabledFromShipper"));
             ValidateTripDates(input, request);
             ValidateNumberOfDrops(input, request);
