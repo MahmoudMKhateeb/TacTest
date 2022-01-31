@@ -59,7 +59,9 @@ export class DriversComponent extends UsersComponent implements AfterViewInit, O
       load(loadOptions: LoadOptions) {
         if (!loadOptions.filter) {
           loadOptions.filter = [];
-          (loadOptions.filter as any[]).push(['isActive', '=', filter]);
+          if (isNotNullOrUndefined(filter)) {
+            (loadOptions.filter as any[]).push(['isActive', '=', filter]);
+          }
         }
         return self._userServiceProxy
           .getDrivers(JSON.stringify(loadOptions))
