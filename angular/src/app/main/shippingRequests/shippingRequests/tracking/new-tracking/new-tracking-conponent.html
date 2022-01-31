@@ -156,6 +156,10 @@
                         <div class="d-flex flex-column">
                           <p class="p-0">{{l('Address')}} : {{point.address}}</p>
                           <p class="p-0">{{l('Receiver')}} : {{point.receiverFullName}}</p>
+                          <p class="p-0 d-flex flex-row">
+                            <span class="mt-1 mr-2">{{l('FacilityRating')}} :</span>
+                            <p-rating [ngModel]="point.facilityRate" readonly="true" stars="5" [cancel]="false"></p-rating>
+                          </p>
                           <p-steps
                             [model]="getStepperSteps(point.statues)"
                             [(activeIndex)]="activeIndex"
