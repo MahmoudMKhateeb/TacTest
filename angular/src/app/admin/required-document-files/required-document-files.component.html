@@ -126,7 +126,7 @@
                         </span>
 
                         <span
-                          *ngIf="record.expirationDate <= todayMoment"
+                          *ngIf="record.expirationDate <= todayMoment && (record.isRejected || record.isAccepted)"
                           class="label mr-3 label-lg font-weight-bold label-light-danger label-inline"
                         >
                           {{ l('Expired') }}
