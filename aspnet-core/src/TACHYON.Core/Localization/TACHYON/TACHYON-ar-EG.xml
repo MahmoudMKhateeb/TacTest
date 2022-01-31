@@ -141,6 +141,8 @@
 		<text name="AutomaticallyBillMyAccount">فوتر حسابي تلقائيا</text>
 		<text name="AutomaticBilling">الفوترة التلقائية</text>
 		<text name="Available">متوفر</text>
+		<text name="AcceptOfferOnBehalfShipper">المواقفةعن الشاحن</text>
+
 		<text name="Back">رجوع</text>
 		<text name="BackToDefaultPage">العودة إلى الافتراضي</text>
 		<text name="BackToDefaultPageWarningMessage">هل أنت متأكد من إزالة صفحة "{0}" والعودة إلى الوضع الافتراضي؟</text>
