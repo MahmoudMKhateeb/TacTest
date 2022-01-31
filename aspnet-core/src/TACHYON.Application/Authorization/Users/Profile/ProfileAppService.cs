@@ -39,6 +39,7 @@ using TACHYON.Features;
 using TACHYON.Friendships;
 using TACHYON.Gdpr;
 using TACHYON.Invoices.PaymentMethods;
+using TACHYON.MultiTenancy;
 using TACHYON.Net.Sms;
 using TACHYON.Security;
 using TACHYON.Shipping.ShippingRequestTrips;
@@ -71,7 +72,7 @@ namespace TACHYON.Authorization.Users.Profile
         private readonly IRepository<ShippingRequestTrip> _lookupTripRepository;
         private readonly IRepository<Facility, long> _lookupFacilityRepository;
         private readonly IRepository<InvoicePaymentMethod> _lookupPaymentMethodRepository;
-        private readonly IRepository<TrucksType, long> _lookupTruckTypeRepository;
+        private readonly IRepository<Tenant> _tenantRepository;
         private readonly IRepository<Truck, long> _lookupTruckRepository;
         private readonly IRepository<VasPrice> _lookupVasPriceRepository;
         private readonly IRepository<Edition> _lookupEditionRepository;
@@ -93,11 +94,12 @@ namespace TACHYON.Authorization.Users.Profile
             IRepository<ShippingRequestTrip> lookupTripRepository,
             IRepository<Facility, long> lookupFacilityRepository,
             IRepository<InvoicePaymentMethod> lookupPaymentMethodRepository,
-            IRepository<TrucksType, long> lookupTruckTypeRepository,
             IRepository<VasPrice> lookupVasPriceRepository,
             IRepository<Truck, long> lookupTruckRepository,
             IRepository<Edition> lookupEditionRepository,
-            IRepository<City> lookupCityRepository, IRepository<TrucksTypesTranslation> trucksTypesTranslationRepository)
+            IRepository<City> lookupCityRepository,
+            IRepository<TrucksTypesTranslation> trucksTypesTranslationRepository,
+            IRepository<Tenant> tenantRepository)
         {
             _binaryObjectManager = binaryObjectManager;
             _timeZoneService = timezoneService;
@@ -112,12 +114,12 @@ namespace TACHYON.Authorization.Users.Profile
             _lookupTripRepository = lookupTripRepository;
             _lookupFacilityRepository = lookupFacilityRepository;
             _lookupPaymentMethodRepository = lookupPaymentMethodRepository;
-            _lookupTruckTypeRepository = lookupTruckTypeRepository;
             _lookupVasPriceRepository = lookupVasPriceRepository;
             _lookupTruckRepository = lookupTruckRepository;
             _lookupEditionRepository = lookupEditionRepository;
             _lookupCityRepository = lookupCityRepository;
             _trucksTypesTranslationRepository = trucksTypesTranslationRepository;
+            _tenantRepository = tenantRepository;
         }
 
         [DisableAuditing]
@@ -248,12 +250,14 @@ namespace TACHYON.Authorization.Users.Profile
         }
 
         public async Task<int> GetShipmentCount(int tenantId)
-        {  // Two In One Service
-
-            var tenant = await TenantManager.GetByIdAsync(tenantId);
-            var editionName = await (from edition in _lookupEditionRepository.GetAll()
-                                     where tenant.EditionId == edition.Id
-                                     select edition.DisplayName).FirstOrDefaultAsync();
+        {
+            // Two In One Service
+            
+            DisableTenancyFilters();
+            var editionName = await _tenantRepository
+                .GetAllIncluding(x=> x.Edition).AsNoTracking()
+                .Where(x=> x.Id == tenantId).Select(x=> x.Edition.DisplayName)
+                .FirstOrDefaultAsync();
 
             var isShipper = editionName.ToUpper().Contains("SHIPPER");
             var isCarrier = editionName.ToUpper().Contains("CARRIER");
@@ -279,6 +283,7 @@ namespace TACHYON.Authorization.Users.Profile
 
         public async Task<PagedResultDto<FacilityLocationListDto>> GetFacilitiesInformation(GetFacilitiesInformationInput input)
         {
+            DisableTenancyFilters();
             var shipperFacilities = _lookupFacilityRepository.GetAll()
                 .AsNoTracking().Include(x => x.CityFk)
                 .Where(x => x.TenantId == input.TenantId)
@@ -292,12 +297,14 @@ namespace TACHYON.Authorization.Users.Profile
 
         public async Task<InvoicingInformationDto> GetInvoicingInformation(int tenantId)
         {
-
-            var tenant = await TenantManager.GetByIdAsync(tenantId);
+            DisableTenancyFilters();
+            var tenantBalance = await (from tenant in _tenantRepository.GetAll().AsNoTracking()
+                where tenant.Id == tenantId
+                select new {tenant.Balance, tenant.ReservedBalance}).FirstOrDefaultAsync();
 
             var creditLimit = await FeatureChecker.GetValueAsync(tenantId,
                 AppFeatures.ShipperCreditLimit);
-            var currentBalance = tenant.Balance - tenant.ReservedBalance;
+            var currentBalance = tenantBalance.Balance - tenantBalance.ReservedBalance;
 
             var paymentMethodId = int.Parse(await FeatureChecker.GetValueAsync(tenantId,
                 AppFeatures.InvoicePaymentMethod));
@@ -319,8 +326,7 @@ namespace TACHYON.Authorization.Users.Profile
 
         public async Task<FleetInformationDto> GetFleetInformation(GetFleetInformationInputDto input)
         {
-
-
+            DisableTenancyFilters();
             var translationQuery = _trucksTypesTranslationRepository
                 .GetAll()
                 .Where(i => i.Language.Contains(CultureInfo.CurrentUICulture.Name));
@@ -362,6 +368,7 @@ namespace TACHYON.Authorization.Users.Profile
         public async Task<PagedResultDto<AvailableVasDto>> GetAvailableVases(GetAvailableVasesInputDto input)
         {
             // Ask if Need (Domain Service)
+            DisableTenancyFilters();
             var availableVases = _lookupVasPriceRepository.GetAll()
                 .Include(x => x.VasFk)
                 .ThenInclude(x => x.Translations)
@@ -510,27 +517,25 @@ namespace TACHYON.Authorization.Users.Profile
         }
 
         [DisableAuditing]
-        public async Task<GetProfilePictureOutput> GetProfilePicture(long? userId)
+        public async Task<GetProfilePictureOutput> GetProfilePicture(int? tenantId)
         {
-            // We need it to view picture from host and tms users 
-            DisableTenancyFiltersIfHost();
-            await DisableTenancyFiltersIfTachyonDealer();
+            DisableTenancyFilters();
 
             UserIdentifier userIdentifier;
-            if (!(userId is null))
+            if (!(tenantId is null))
             {
-                var tenantId = await (from user in _lookupUserRepository.GetAll()
-                                      where user.Id == userId
-                                      select user.TenantId).FirstOrDefaultAsync();
+                var userId = await (from user in _lookupUserRepository.GetAll()
+                    where user.TenantId == tenantId && user.UserName.Equals(AbpUserBase.AdminUserName)
+                    select user.Id).FirstOrDefaultAsync();
 
-                userIdentifier = new UserIdentifier(tenantId, userId.Value);
+                userIdentifier = new UserIdentifier(tenantId, userId);
             }
             else userIdentifier = AbpSession.ToUserIdentifier();
 
             using (var profileImageService = await _profileImageServiceFactory.Get(userIdentifier))
             {
                 var profilePictureContent = await profileImageService.Object.GetProfilePictureContentForUser(
-                    AbpSession.ToUserIdentifier()
+                    userIdentifier
                 );
 
                 return new GetProfilePictureOutput(profilePictureContent);
