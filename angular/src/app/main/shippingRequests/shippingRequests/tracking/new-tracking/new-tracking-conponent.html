@@ -183,6 +183,19 @@
                             <span class="mt-1 mr-2">{{l('FacilityRating')}} :</span>
                             <p-rating [ngModel]="point.facilityRate" readonly="true" stars="5" [cancel]="false"></p-rating>
                           </p>
+                          <div class="flex-row" *ngIf="!appSession.tenantId">
+                            <p class="p-0 mr-2">
+                              {{l('ReceiverCode')}} : {{newReceiverCode? newReceiverCode: point.receiverCode}}
+
+                              <i
+                                *ngIf="!point.isResolve && !point.isComplete"
+                                (click)="resetReceiverCode(point.id)"
+                                class="flaticon-refresh text-hover-primary ml-2"
+                                data-toggle="tooltip"
+                                title="{{l('ResetReceiverCode')}}"
+                              ></i>
+                            </p>
+                          </div>
                           <p-steps
                             [model]="getStepperSteps(point.statues)"
                             [(activeIndex)]="activeIndex"
