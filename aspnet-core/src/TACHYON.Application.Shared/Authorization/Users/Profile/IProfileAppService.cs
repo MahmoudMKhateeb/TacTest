@@ -20,7 +20,7 @@ namespace TACHYON.Authorization.Users.Profile
 
         Task<GetPasswordComplexitySettingOutput> GetPasswordComplexitySetting();
 
-        Task<GetProfilePictureOutput> GetProfilePicture(long? userId);
+        Task<GetProfilePictureOutput> GetProfilePicture(int? tenantId);
 
         Task<GetProfilePictureOutput> GetProfilePictureByUser(long userId);
 
