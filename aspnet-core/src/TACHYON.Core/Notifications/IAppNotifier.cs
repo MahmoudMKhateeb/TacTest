@@ -70,7 +70,6 @@ namespace TACHYON.Notifications
         Task ShippingRequestTripCancelByAccident(List<UserIdentifier> Users, ShippingRequestTrip trip, User UserCancel);
         Task ShippingRequestTripCanceled(List<UserIdentifier> Users, ShippingRequestTrip trip, string tenantName);
         Task ShippingRequestTripRejectCancelByTachyonDealer(List<UserIdentifier> Users, ShippingRequest request);
-        Task ShippingRequestTripNeedsCancelApproval(List<UserIdentifier> Users, ShippingRequest request);
         #endregion
 
         #region ShippingRequest

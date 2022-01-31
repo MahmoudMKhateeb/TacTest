@@ -901,18 +901,6 @@ namespace TACHYON.Notifications
             await _notificationPublisher.PublishAsync(AppNotificationNames.ShippingRequestCancelByTripAccidents, notificationData, userIds: Users.ToArray());
         }
 
-        public async Task ShippingRequestTripNeedsCancelApproval(List<UserIdentifier> Users, ShippingRequest request)
-        {
-            var notificationData = new LocalizableMessageNotificationData(
-                new LocalizableString(
-                    L("ShippingRequestTripNeedsCancelApproval"),
-                    TACHYONConsts.LocalizationSourceName
-                )
-            );
-            notificationData["id"] = request.Id;
-
-            await _notificationPublisher.PublishAsync(AppNotificationNames.ShippingRequestCancelByTripAccidents, notificationData, userIds: Users.ToArray());
-        }
         #endregion
 
         #region TachyonDeal

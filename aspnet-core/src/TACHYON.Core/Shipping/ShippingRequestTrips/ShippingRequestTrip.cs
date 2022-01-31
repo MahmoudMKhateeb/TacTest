@@ -28,6 +28,7 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public bool HasAttachment { get; set; }
         public bool NeedsDeliveryNote { get; set; }
         public ShippingRequestTripStatus Status { get; set; }
+        public ShippingRequestTripCancelStatus CancelStatus { get; set; }
         public RoutePointStatus RoutePointStatus { get; set; }
 
         public long? AssignedDriverUserId { get; set; }
@@ -55,7 +56,14 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public bool IsApproveCancledByTachyonDealer { get; set; }
         //todo this will be removed .. TMS always force cancel the trip
         public bool IsForcedCanceledByTachyonDealer { get; set; }
+        /// <summary>
+        /// When Shipper or carrier or TMS cancel trip, canceled reason should be filled.
+        /// </summary>
         public string CanceledReason { get; set; }
+        /// <summary>
+        /// When TMS reject cancelation from tenant, Reject Canceled Reason should be filled
+        /// </summary>
+        public string RejectedCancelingReason { get; set; }
         public long? AssignedTruckId { get; set; }
         [ForeignKey("AssignedTruckId")]
         public Truck AssignedTruckFk { get; set; }

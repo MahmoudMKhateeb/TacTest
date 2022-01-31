@@ -734,12 +734,12 @@ namespace TACHYON.Shipping.Trips
                 if (!trip.ShippingRequestFk.IsTachyonDeal)
                 {
                     trip.Status = ShippingRequestTripStatus.Canceled;
+                    trip.CancelStatus = ShippingRequestTripCancelStatus.Canceled;
                     await _appNotifier.ShippingRequestTripCanceled(userIdentifiers, trip, (await _tenantManager.GetByIdAsync(trip.ShippingRequestFk.TenantId)).TenancyName);
                 }
                 else
                 {
-                    //need approve from TMS
-                    await _appNotifier.ShippingRequestTripNeedsCancelApproval(userIdentifiers, trip.ShippingRequestFk);
+                    trip.CancelStatus = ShippingRequestTripCancelStatus.WaitingForTMSApproval;
                 }
             }
             else if (IsEnabled(AppFeatures.Carrier))
@@ -751,11 +751,12 @@ namespace TACHYON.Shipping.Trips
                 if (!trip.ShippingRequestFk.IsTachyonDeal)
                 {
                     trip.Status = ShippingRequestTripStatus.Canceled;
+                    trip.CancelStatus = ShippingRequestTripCancelStatus.Canceled;
                     await _appNotifier.ShippingRequestTripCanceled(userIdentifiers, trip, (await _tenantManager.GetByIdAsync(carrierIdent.TenantId.Value)).TenancyName);
                 }
                 else
                 {
-                    await _appNotifier.ShippingRequestTripNeedsCancelApproval(userIdentifiers, trip.ShippingRequestFk);
+                    trip.CancelStatus = ShippingRequestTripCancelStatus.WaitingForTMSApproval;
                 }
             }
             else if (IsEnabled(AppFeatures.TachyonDealer))
@@ -765,6 +766,7 @@ namespace TACHYON.Shipping.Trips
                 if (trip.IsApproveCancledByTachyonDealer)
                 {
                     trip.Status = ShippingRequestTripStatus.Canceled;
+                    trip.CancelStatus = ShippingRequestTripCancelStatus.Canceled;
                     if (trip.ShippingRequestFk.CarrierTenantId != null)
                     {
                         userIdentifiers.Add(await GetAdminTenant((int)trip.ShippingRequestFk.CarrierTenantId));
@@ -774,9 +776,13 @@ namespace TACHYON.Shipping.Trips
                 }
                 else
                 {
+                    trip.RejectedCancelingReason = input.RejectedCancelingReason;
+                    trip.CancelStatus = ShippingRequestTripCancelStatus.Rejected;
                     await _appNotifier.ShippingRequestTripRejectCancelByTachyonDealer(userIdentifiers, trip.ShippingRequestFk);
                 }
             }
+
+            trip.CanceledReason = input.CanceledReason;
         }
         #endregion
     }
