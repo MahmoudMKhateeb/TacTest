@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using TACHYON.Authorization;
 using TACHYON.Authorization.Users.Profile;
 using TACHYON.Documents.DocumentFiles.Dtos;
 using TACHYON.Common;
@@ -157,6 +158,7 @@ namespace TACHYON.Tracking
                     IsPodUploaded = a.IsPodUploaded,
                     IsGoodPictureUploaded = a.IsGoodPictureUploaded,
                     FacilityRate = a.FacilityFk.Rate,
+                    ReceiverCode = AbpSession.TenantId.HasValue ? null : a.Code,
                     Statues =
                         _workFlowProvider.GetStatuses(a.WorkFlowVersion,
                             a.RoutPointStatusTransitions.Where(x => !x.IsReset).Select(x => x.Status).ToList()),
@@ -204,6 +206,16 @@ namespace TACHYON.Tracking
         {
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier, AppFeatures.Shipper);
             return await _workFlowProvider.GetDeliveryGoodPicture(id);
+        }
+
+        [AbpAuthorize(AppPermissions.Pages_Tracking_ResetPointReceiverCode)]
+        public string ResetPointReceiverCode(long pointId)
+        {
+            
+            var randomCode = new Random().Next(100000, 999999).ToString();
+            _RoutPointRepository.Update(pointId, point => point.Code = randomCode);
+
+             return randomCode;
         }
 
         #region Helper

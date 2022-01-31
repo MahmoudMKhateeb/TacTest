@@ -2491,6 +2491,8 @@
     <text name="IsMandatoryDocumentTemplate">Document Template Mandatory</text>
     <text name="IsMandatoryNumber">Number Mandatory</text>
     <text name="IsMandatoryExpirationDate">Expiration Date Mandatory</text>
+    <text name="ResetReceiverCode">Reset shipment receiver code</text>
+    <text name="ReceiverCodeConfirmationMsg">Are you sure you want to reset the receiver code for this shipment?</text>
 
 	</texts>
 </localizationDictionary>
