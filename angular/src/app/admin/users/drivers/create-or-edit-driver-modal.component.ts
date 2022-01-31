@@ -84,8 +84,14 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
   //   });
   // }
   selectedDate: NgbDateStruct;
+  hijriDateNow = this.dateFormatterService.GetTodayHijri();
+  hDate = this.hijriDateNow.split('-');
+  gregDateNow = this.dateFormatterService.GetTodayGregorian();
   minGreg: NgbDateStruct = { day: 1, month: 1, year: 1900 };
   minHijri: NgbDateStruct = { day: 1, month: 1, year: 1342 };
+  maxGreg: NgbDateStruct = { day: this.gregDateNow.day, month: this.gregDateNow.month, year: this.gregDateNow.year };
+
+  maxHijri: NgbDateStruct = { day: parseInt(this.hDate[2]), month: parseInt(this.hDate[1]), year: parseInt(this.hDate[0]) };
 
   private getDriverRequiredDocumentFiles() {
     //RequiredDocuments
