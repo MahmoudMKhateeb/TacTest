@@ -80,6 +80,17 @@ export class PriceOfferViewModelComponent extends AppComponentBase {
       }
     });
   }
+  accepTMStoffer(): void {
+    this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
+      if (isConfirmed) {
+        this._CurrentServ.acceptOfferOnBehalfShipper(this.offer.id).subscribe((result) => {
+          this.notify.success(this.l('SuccessfullyAccepted'));
+          this.offer.status = result;
+          this.modalRefresh.emit(null);
+        });
+      }
+    });
+  }
   SendOffer(): void {}
   CancelAccepted(): void {
     this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {

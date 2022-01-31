@@ -362,6 +362,11 @@ namespace TACHYON.PriceOffers
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Shipper);
             return await _priceOfferManager.AcceptOffer(id);
         }
+        public async Task<PriceOfferStatus> AcceptOfferOnBehalfShipper(long id)
+        {
+            CheckIfCanAccessService(true, AppFeatures.TachyonDealer);
+            return await _priceOfferManager.AcceptOfferOnBehalfShipper(id);
+        }
 
 
         public async Task Reject(RejectPriceOfferInput input)

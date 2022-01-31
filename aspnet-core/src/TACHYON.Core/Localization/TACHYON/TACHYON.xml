@@ -47,6 +47,8 @@
 		<text name="AcceptedAndWaitingForShipper">Waiting approve by shipper</text>
 		<text name="AcceptedDate">Accepted date</text>
 		<text name="AcceptPrice">Accept price</text>
+		<text name="AcceptOfferOnBehalfShipper">Accept For Shipper</text>
+
 		<text name="AcceptShippingRequestNotificationMessage">Shipping request bid accepted</text>
 		<text name="Accesstoyourapplicationsandresources,evenwhenyouareoffline">Access to your applications and resources, even when you are offline</text>
 		<text name="AccidentReason">Incident reasons</text>
@@ -2489,6 +2491,8 @@
     <text name="IsMandatoryDocumentTemplate">Document Template Mandatory</text>
     <text name="IsMandatoryNumber">Number Mandatory</text>
     <text name="IsMandatoryExpirationDate">Expiration Date Mandatory</text>
+    <text name="ResetReceiverCode">Reset shipment receiver code</text>
+    <text name="ReceiverCodeConfirmationMsg">Are you sure you want to reset the receiver code for this shipment?</text>
 
 	</texts>
 </localizationDictionary>
