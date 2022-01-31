@@ -89,7 +89,6 @@ namespace TACHYON.Rating
 
             await ReCalculateTenantRating(rate, RateType.ShipperTripBySystem);
         }
-
         private async Task ReCalculateTenantRating(RatingLog log, RateType tenantType)
         {
             // Here RateType Must Be CarrierTripBySystem or ShipperTripBySystem and not any other values
@@ -113,6 +112,7 @@ namespace TACHYON.Rating
                 };
 
                 await _ratingLogRepository.InsertAndGetIdAsync(newRate);
+
             }
             else // Need To Check Save Change or Not
                 tenantTripBySystem.Rate = await UpdateAndRecalculateTenantTripRating(log);
@@ -162,10 +162,14 @@ namespace TACHYON.Rating
             // if rating log type is not carrier by shipper that's mean
             // we need to get carrier rating from the correct rating log
             if (rate.RateType != tenantRatingType)
+            {
+                var tripId = await _routePointRepository.GetAll().Where(x => x.Id == rate.PointId).Select(x => x.ShippingRequestTripId).FirstOrDefaultAsync();
                 tenantTripRating = await _ratingLogRepository.GetAll().Where(x =>
-                        x.RateType == tenantRatingType && x.TripId == rate.RoutePointFk.ShippingRequestTripId)
-                    .Select(x => x.Rate)
-                    .FirstOrDefaultAsync();
+                   x.RateType == tenantRatingType && x.TripId == tripId)
+               .Select(x => x.Rate)
+               .FirstOrDefaultAsync();
+            }
+
 
             counter += tenantTripRating <= 0 ? 0 : 1;
 
@@ -271,9 +275,9 @@ namespace TACHYON.Rating
                 .FirstOrDefaultAsync();
         }
 
-        private async Task<RatingLog> GetTripRating(RateType type,
-            int? tripId,
-            long? pointId)
+        }
+
+        private async Task<RatingLog> GetTripRating(RateType type, int? tripId, long? pointId)
         {
             if (tripId == null && pointId == null) return null;
             return await _ratingLogRepository
