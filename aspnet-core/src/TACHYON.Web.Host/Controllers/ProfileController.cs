@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using TACHYON.Authorization.Users;
 using TACHYON.Authorization.Users.Profile;
 using TACHYON.Authorization.Users.Profile.Dto;
+using TACHYON.Common;
 using TACHYON.Dto;
 using TACHYON.Storage;
 using TACHYON.Web.Helpers;
@@ -27,15 +28,18 @@ namespace TACHYON.Web.Controllers
     {
         private readonly IBinaryObjectManager _binaryObjectManager;
         private readonly UserManager _userManager;
+        private readonly CommonManager _commonManager;
+
         public ProfileController(
             ITempFileCacheManager tempFileCacheManager,
             IProfileAppService profileAppService,
             IBinaryObjectManager binaryObjectManager,
-            UserManager userManager) :
+            UserManager userManager, CommonManager commonManager) :
             base(tempFileCacheManager, profileAppService)
         {
             _binaryObjectManager = binaryObjectManager;
             _userManager = userManager;
+            _commonManager = commonManager;
         }
 
 
@@ -95,6 +99,7 @@ namespace TACHYON.Web.Controllers
                 }
 
                 var storedFile = new BinaryObject(AbpSession.TenantId, fileBytes);
+                storedFile.ThumbnailByte = _commonManager.MakeThumbnail(storedFile.Bytes, 90, 90);
                 await _binaryObjectManager.SaveAsync(storedFile);
                 user.ProfilePictureId = storedFile.Id;
 
