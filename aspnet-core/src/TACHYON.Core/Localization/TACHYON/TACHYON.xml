@@ -2508,5 +2508,8 @@
     </text>
     <text name="ShippingRequestTripRejectCancelByTachyonDealer"></text>
     <text name="ShippingRequestTripNeedsCancelApproval"></text>
+    <text name="YouMustEnterRejectedReason">Rejected reason is required!</text>
+    <text name="CanceledReasonIsRequired">Canceled reason in required!</text>
+    <text name="TripNotFound">Trip not found</text>
 	</texts>
 </localizationDictionary>

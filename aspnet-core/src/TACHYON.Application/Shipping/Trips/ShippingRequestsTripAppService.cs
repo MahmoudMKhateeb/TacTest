@@ -531,8 +531,8 @@ namespace TACHYON.Shipping.Trips
             var trip = await _shippingRequestTripRepository.GetAll().Include(x => x.ShippingRequestFk)
                      .Where(x => x.Status == ShippingRequestTripStatus.New ||
                      x.Status == ShippingRequestTripStatus.Intransit)
-                     .WhereIf(IsEnabled(AppFeatures.Carrier), x => x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
-                     .WhereIf(IsEnabled(AppFeatures.Shipper), x => x.ShippingRequestFk.TenantId == AbpSession.TenantId)
+                     .WhereIf(IsEnabled(AppFeatures.Carrier), x => x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId && x.CancelStatus==ShippingRequestTripCancelStatus.None)
+                     .WhereIf(IsEnabled(AppFeatures.Shipper), x => x.ShippingRequestFk.TenantId == AbpSession.TenantId && x.CancelStatus == ShippingRequestTripCancelStatus.None)
                 .FirstOrDefaultAsync(x => x.Id == input.id);
             if (trip != null)
             {
@@ -544,6 +544,10 @@ namespace TACHYON.Shipping.Trips
                 }
 
                 await CancelTripAsync(input, trip, carrierIdent);
+            }
+            else
+            {
+                throw new UserFriendlyException(L("TripNotFound"));
             }
         }
 
@@ -722,6 +726,9 @@ namespace TACHYON.Shipping.Trips
         private async Task CancelTripAsync(CancelTripInput input, ShippingRequestTrip trip, UserIdentifier carrierIdent)
         {
             List<UserIdentifier> userIdentifiers = new List<UserIdentifier>();
+
+            ValidateCanceledReason(input, trip);
+
             if (IsEnabled(AppFeatures.Shipper))
             {
                 //add carrier when request in post price
@@ -776,13 +783,34 @@ namespace TACHYON.Shipping.Trips
                 }
                 else
                 {
+                    ValidateRejectedReason(input, trip);
                     trip.RejectedCancelingReason = input.RejectedCancelingReason;
                     trip.CancelStatus = ShippingRequestTripCancelStatus.Rejected;
                     await _appNotifier.ShippingRequestTripRejectCancelByTachyonDealer(userIdentifiers, trip.ShippingRequestFk);
                 }
             }
 
-            trip.CanceledReason = input.CanceledReason;
+        }
+
+        private void ValidateRejectedReason(CancelTripInput input, ShippingRequestTrip trip)
+        {
+            if (string.IsNullOrWhiteSpace(input.RejectedCancelingReason) &&
+                                    trip.CancelStatus == ShippingRequestTripCancelStatus.WaitingForTMSApproval)
+            {
+                throw new UserFriendlyException(L("YouMustEnterRejectedReason"));
+            }
+        }
+
+        private void ValidateCanceledReason(CancelTripInput input, ShippingRequestTrip trip)
+        {
+            if (trip.CancelStatus == ShippingRequestTripCancelStatus.None)
+            {
+                if (string.IsNullOrWhiteSpace(input.CanceledReason))
+                {
+                    throw new UserFriendlyException(L("CanceledReasonIsRequired"));
+                }
+                trip.CanceledReason = input.CanceledReason;
+            }
         }
         #endregion
     }

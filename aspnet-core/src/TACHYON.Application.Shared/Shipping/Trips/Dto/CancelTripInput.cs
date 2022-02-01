@@ -9,7 +9,6 @@ namespace TACHYON.Shipping.Trips.Dto
     {
         [Required]
         public long id { get; set; }
-        [Required]
         [StringLength(ShippingRequestTripConsts.MaxCanceledReasonLength, MinimumLength = ShippingRequestTripConsts.MinCanceledReasonLength)]
         public string CanceledReason { get; set; }
         public bool IsApproved { get; set; } = true;

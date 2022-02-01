@@ -2251,5 +2251,8 @@
     <text name="ShippingRequestTripCanceled"></text>
     <text name="ShippingRequestTripRejectCancelByTachyonDealer"></text>
     <text name="ShippingRequestTripNeedsCancelApproval"></text>
+    <text name="YouMustEnterRejectedReason">سبب الرفض مطلوب !</text>
+    <text name="CanceledReasonIsRequired">سبب الإلغاء مطلوب!</text>
+    <text name="TripNotFound">الرحلة غير موجودة</text>
   </texts>
 </localizationDictionary>
