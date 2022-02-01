@@ -2254,5 +2254,11 @@
     <text name="YouMustEnterRejectedReason">سبب الرفض مطلوب !</text>
     <text name="CanceledReasonIsRequired">سبب الإلغاء مطلوب!</text>
     <text name="TripNotFound">الرحلة غير موجودة</text>
+	<text name="RejectCancel">رفض إلغاء الرحلة</text>
+	<text name="CancelReasonName">سبب الإلغاء</text>
+	<text name="WaitingApproveFromTMS">في انتظار الموافقة من Tachyon Manage Services</text>
+    <text name="RejectedReasonName">سبب رفض الإلغاء</text>
+	<text name="ApproveCancelTrip">الموافقة على إلغاء الرحلة</text>
+	<text name="ApplyCancel">تطبيق الإلغاء</text>
   </texts>
 </localizationDictionary>

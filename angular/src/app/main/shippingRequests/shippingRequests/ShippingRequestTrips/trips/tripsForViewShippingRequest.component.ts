@@ -9,6 +9,8 @@ import {
   ShippingRequestDto,
   ShippingRequestsServiceProxy,
   ShippingRequestsTripServiceProxy,
+  ShippingRequestTripCancelStatus,
+  ShippingRequestTripStatus,
 } from '@shared/service-proxies/service-proxies';
 import { CreateOrEditTripComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/createOrEditTripModal/createOrEditTrip.component';
 import { ViewTripModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/viewTripModal/viewTripModal.component';
@@ -29,6 +31,8 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   @Input() ShippingRequest: ShippingRequestDto;
   @Input() VasListFromFather: GetShippingRequestVasForViewDto[];
   tripsByTmsEnabled: boolean;
+  ShippingRequestTripStatusEnum = ShippingRequestTripStatus;
+  ShippingRequestTripCancelStatusEnum = ShippingRequestTripCancelStatus;
   saving = false;
   constructor(
     injector: Injector,

@@ -77,7 +77,12 @@
             </tr>
           </ng-template>
           <ng-template let-record="$implicit" pTemplate="body">
-            <tr [ngClass]="record.hasAccident ? 'table-warning' : ''">
+            <tr
+              [ngClass]="{
+                'table-warning': record.hasAccident || record.cancelStatus == ShippingRequestTripCancelStatusEnum.WaitingForTMSApproval,
+                'table-danger': record.status === ShippingRequestTripStatusEnum.Canceled
+              }"
+            >
               <!-- <td style="width: 50px;">
                   <span class="ui-column-title"> {{ l('id') }}</span>
                   {{ record.id }}
@@ -106,7 +111,13 @@
               <td>
                 <span class="ui-column-title"> {{ l('tripStatus') }}</span>
                 {{ record.statusTitle }}
-                <a (click)="ViewTripAccidentModal.getAll(record)" *ngIf="record.hasAccident"><i class="flaticon-warning text-danger"></i></a>
+                <a
+                  class="dropdown-item noPadding"
+                  *ngIf="record.status == ShippingRequestTripStatusEnum.Canceled"
+                  (click)="CancelTripModal.show(record)"
+                  ><i class="flaticon-warning text-danger"></i> {{ l('reason') }}</a
+                >
+                <a (click)="ViewTripAccidentModal.getAll(record)" *ngIf="record.hasAccident"><i class="flaticon-warning text-danger"></i> </a>
               </td>
               <td>
                 <span class="ui-column-title"> {{ l('waybillNumber') }}</span>
@@ -120,22 +131,60 @@
                     <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
                   </a>
                   <ul *dropdownMenu class="dropdown-menu">
-                    <li *ngIf="permission.isGranted('Pages.ShippingRequestTrips.Edit') && feature.isEnabled('App.Shipper') && record.status == 0">
+                    <li
+                      *ngIf="
+                        permission.isGranted('Pages.ShippingRequestTrips.Edit') &&
+                        feature.isEnabled('App.Shipper') &&
+                        record.status == ShippingRequestTripStatusEnum.New
+                      "
+                    >
                       <a class="dropdown-item" (click)="AddNewTripModal.show(record)">{{ l('Edit') }}</a>
                     </li>
                     <li>
                       <a class="dropdown-item" (click)="ViewTripModal.show(record.id)">{{ l('View') }}</a>
                     </li>
-                    <li *ngIf="record.status == 3">
+                    <li *ngIf="record.status == ShippingRequestTripStatusEnum.Delivered">
                       <a class="dropdown-item" (click)="shippingRequestRatingModal.show(record.id)">{{ l('Rating') }}</a>
                     </li>
-                    <li *ngIf="feature.isEnabled('App.Carrier') || feature.isEnabled('App.TachyonDealer')">
+                    <!-- if trip status canceled , No Reset option for trip -->
+                    <li
+                      *ngIf="
+                        record.status != ShippingRequestTripStatusEnum.Canceled &&
+                        (feature.isEnabled('App.Carrier') || feature.isEnabled('App.TachyonDealer'))
+                      "
+                    >
                       <a class="dropdown-item" (click)="ViewTripModal.ResetTrip(record.id)">{{ l('Reset') }}</a>
                     </li>
-                    <li *ngIf="record.status != 0 && record.status != 6 && record.status != 7">
+                    <li *ngIf="record.status != ShippingRequestTripStatusEnum.New">
                       <a class="dropdown-item" (click)="TripAccidentModal.show(record.id, null)">{{ l('CreateAccident') }}</a>
                     </li>
-                    <li *ngIf="permission.isGranted('Pages.ShippingRequestTrips.Delete') && feature.isEnabled('App.Shipper') && record.status == 0">
+                    <li
+                      *ngIf="
+                        (!feature.isEnabled('App.TachyonDealer') &&
+                          (record.status == ShippingRequestTripStatusEnum.New || record.status == ShippingRequestTripStatusEnum.Intransit) &&
+                          record.cancelStatus == ShippingRequestTripCancelStatusEnum.None) ||
+                        (feature.isEnabled('App.TachyonDealer') &&
+                          (record.status == ShippingRequestTripStatusEnum.New || record.status == ShippingRequestTripStatusEnum.Intransit) &&
+                          (record.cancelStatus == ShippingRequestTripCancelStatusEnum.None ||
+                            record.cancelStatus == ShippingRequestTripCancelStatusEnum.Rejected))
+                      "
+                    >
+                      <a class="dropdown-item" (click)="CancelTripModal.show(record)">{{ l('Cancel') }}</a>
+                    </li>
+                    <li
+                      *ngIf="
+                        feature.isEnabled('App.TachyonDealer') && record.cancelStatus == ShippingRequestTripCancelStatusEnum.WaitingForTMSApproval
+                      "
+                    >
+                      <a class="dropdown-item" (click)="TmsCancelTripModal.ApplyCancel(record)">{{ l('ApplyCancel') }}</a>
+                    </li>
+                    <li
+                      *ngIf="
+                        permission.isGranted('Pages.ShippingRequestTrips.Delete') &&
+                        feature.isEnabled('App.Shipper') &&
+                        record.status == ShippingRequestTripStatusEnum.New
+                      "
+                    >
                       <a class="dropdown-item" (click)="AddNewTripModal.deleteTrip(record.id)">{{ l('Delete') }}</a>
                     </li>
                     <li>
@@ -176,6 +225,9 @@
   [shippingRequest]="ShippingRequest"
   [VasListFromFather]="VasListFromFather"
 ></AddNewTripModal>
+
+<app-cancel-trip-modal #CancelTripModal (modalSave)="reloadPage()"></app-cancel-trip-modal>
+<app-tms-cancel-trip-modal #TmsCancelTripModal (modalSave)="reloadPage()"></app-tms-cancel-trip-modal>
 <viewTripModal #ViewTripModal (modalSave)="reloadPage()"></viewTripModal>
 <trip-accident-modal #TripAccidentModal (modalSave)="getShippingRequestsTrips($event)"></trip-accident-modal>
 <view-trip-accident-modal #ViewTripAccidentModal (modalcanceltrip)="reloadPage()"></view-trip-accident-modal>

@@ -2511,5 +2511,11 @@
     <text name="YouMustEnterRejectedReason">Rejected reason is required!</text>
     <text name="CanceledReasonIsRequired">Canceled reason in required!</text>
     <text name="TripNotFound">Trip not found</text>
+	<text name="RejectCancel">Reject Cancel Trip</text>
+	<text name="CancelReasonName">Cancelation Reason</text>
+	<text name="WaitingApproveFromTMS">Waiting Approve From Tachyon Manage Services</text>
+    <text name="RejectedReasonName">Rejected Reason Name</text>
+    <text name="ApproveCancelTrip">Approve Cancel Trip</text>
+	<text name="ApplyCancel">Apply Cancel</text>
 	</texts>
 </localizationDictionary>
