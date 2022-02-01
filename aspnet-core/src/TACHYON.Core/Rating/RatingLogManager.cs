@@ -275,7 +275,7 @@ namespace TACHYON.Rating
                 .FirstOrDefaultAsync();
         }
 
-        }
+        
 
         private async Task<RatingLog> GetTripRating(RateType type, int? tripId, long? pointId)
         {
