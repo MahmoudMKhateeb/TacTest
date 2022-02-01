@@ -2248,5 +2248,23 @@
     <text name="ReceiverConfirmed"></text>
     <text name="DeliveryConfirmation"></text>-->
     <text name="facilityNameIsAlreadyExistsForThisTenant">اسم المنشأة موجود بالفعل لهذا المستأجر</text>
-  </texts>
+		<text name="PointNotFoundOrNotCompleted">الرحلة غير متوفرة او غير مكتملة</text>
+		<text name="UploadGoodPicture">رفع صورة البضاعة</text>
+		<text name="UploadPOD">رفع اثبات التسليم</text>
+		<text name="UploadDeliveryNotes">رفع ملاحظات التوصيل</text>
+		<text name="CancelShipment">تم إلغاء الشحنة من قبل {0}</text>
+		<text name="ClickToSeeInvalidTrucks">انقر لرؤية شاحنات غير صالحة</text>
+		<text name="CreateBidRequestNotificationMessage">تم إنشاء عرض سعر</text>
+		<text name="CancelBidRequestNotificationMessage">تم إلغاء عرض السعر</text>
+		<text name="AcceptShippingRequestNotificationMessage">تم قبول عرض تسعير طلب الشحن</text>
+		<text name="ShippingRequestAsBidWithSameTruckNotificationMessage">تم إنشاء طلب الشحن مع نفس الشاحنات الخاصة بك في السوق</text>
+		<text name="ShipperShippingRequestFinishNotificationMessage">اكتملت جميع الشحنات الخاصة بطلب الشحن</text>
+		<text name="SubmitInvoiceOnClaim">تم مطالبة الفاتورة المرسلة</text>
+    <text name="IsMandatoryExpirationDate">تاريخ الإنتهاء إلزامي</text>
+    <text name="IsMandatoryNumber">الرقم إلزامي</text>
+    <text name="IsMandatoryDocumentTemplate">المستند إلزامي</text>
+		<text name="NoMatchingTrucks">لا توجد شاحنات مطابقة</text>
+		<text name="NoMatchingDrivers">لا يوجد سائقين</text>
+
+	</texts>
 </localizationDictionary>
