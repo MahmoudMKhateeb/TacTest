@@ -12,6 +12,7 @@ import { ViewOrEditEntityDocumentsModalComponent } from '@app/main/documentFiles
 import CustomStore from '@node_modules/devextreme/data/custom_store';
 import { LoadOptions } from '@node_modules/devextreme/data/load_options';
 import { DriverTrackingModalComponent } from '@app/admin/users/drivers/driver-tracking-modal/driver-tracking-modal.component';
+import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 
 @Component({
   selector: 'app-drivers',
@@ -59,7 +60,9 @@ export class DriversComponent extends UsersComponent implements AfterViewInit, O
       load(loadOptions: LoadOptions) {
         if (!loadOptions.filter) {
           loadOptions.filter = [];
-          (loadOptions.filter as any[]).push(['isActive', '=', filter]);
+          if (isNotNullOrUndefined(filter)) {
+            (loadOptions.filter as any[]).push(['isActive', '=', filter]);
+          }
         }
         return self._userServiceProxy
           .getDrivers(JSON.stringify(loadOptions))
@@ -83,5 +86,9 @@ export class DriversComponent extends UsersComponent implements AfterViewInit, O
   ngOnInit(): void {
     var filter = this._activatedRoute.snapshot.queryParams['isActive'];
     this.getDrivers(filter);
+    abp.event.on('UserDeletedEvent', () => {
+      this.getDrivers(filter);
+      this.notify.success(this.l('SuccessfullyDeleted'));
+    });
   }
 }
