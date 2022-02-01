@@ -1565,7 +1565,8 @@
 		<text name="SubscriptionExpireNotification">سينتهي اشتراكك خلال {0} أيام.</text>
 		
 		<text name="SubscriptionExpiringSoon_SubTitle">يتم إرسال هذا البريد الإلكتروني إليك لإعلامك بانتهاء صلاحية الاشتراك.</text>
-	
+		<text name="ShipperDoseNotHavedirectRequestCommissionFeautre">الناقل {0} لايمتلك خاصية الطلب</text>
+
 		<text name="SubscriptionExpiringTenants">عملاء بإشتراكات تنتهي</text>
 		<text name="SubscriptionInformation">معلومات الاشتراك</text>
 		<text name="SubscriptionPaymentGatewayType_Paypal">Paypal</text>
