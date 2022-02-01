@@ -345,10 +345,12 @@ namespace TACHYON.Shipping.Trips
                 trip.AssignedDriverTime = Clock.Now;
                 // Send Notification To New Driver
                 if (oldAssignedDriverUserId.HasValue)
-                    await _appNotifier.NotifyDriverWhenUnassignedTrip(trip.Id, trip.WaybillNumber.ToString(),
+                {
+                    await _appNotifier.NotifyDriverWhenUnassignedTrip(trip.Id,trip.WaybillNumber.ToString(),
                         new UserIdentifier(AbpSession.TenantId, oldAssignedDriverUserId.Value));
-
-                await UserManager.UpdateUserDriverStatus(oldAssignedDriverUserId.Value, UserDriverStatus.Available);
+                    
+                    await UserManager.UpdateUserDriverStatus(oldAssignedDriverUserId.Value, UserDriverStatus.Available);
+                }
             }
 
             await UserManager.UpdateUserDriverStatus(input.AssignedDriverUserId, UserDriverStatus.NotAvailable);
