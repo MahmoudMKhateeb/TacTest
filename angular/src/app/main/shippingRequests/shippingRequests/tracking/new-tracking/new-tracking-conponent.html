@@ -185,11 +185,11 @@
                           </p>
                           <div class="flex-row" *ngIf="!appSession.tenantId">
                             <p class="p-0 mr-2">
-                              {{l('ReceiverCode')}} : {{newReceiverCode? newReceiverCode: point.receiverCode}}
+                              {{l('ReceiverCode')}} : {{point.receiverCode}}
 
                               <i
                                 *ngIf="!point.isResolve && !point.isComplete"
-                                (click)="resetReceiverCode(point.id)"
+                                (click)="resetReceiverCode(point.id,i)"
                                 class="flaticon-refresh text-hover-primary ml-2"
                                 data-toggle="tooltip"
                                 title="{{l('ResetReceiverCode')}}"

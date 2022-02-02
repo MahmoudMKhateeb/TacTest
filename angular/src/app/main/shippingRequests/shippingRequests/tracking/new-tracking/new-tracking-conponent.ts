@@ -494,12 +494,12 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
   }
 
   // Reset Rout Point Receiver Code By Host
-  resetReceiverCode(pointId: number) {
+  resetReceiverCode(pointId: number, pointIndex: number) {
     this.message.confirm(this.l('ResetReceiverCode'), this.l('ReceiverCodeConfirmationMsg'), (isConfirmed) => {
       if (isConfirmed) {
         this._trackingServiceProxy.resetPointReceiverCode(pointId).subscribe((result) => {
           this.notify.success(this.l('ResetReceiverCodeSuccessfully'));
-          this.newReceiverCode = result;
+          this.routePoints[pointIndex].receiverCode = result;
         });
       }
     });
