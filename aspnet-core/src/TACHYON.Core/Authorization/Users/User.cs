@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using TACHYON.DriverLicenseTypes;
+using TACHYON.Integration.WaslIntegration;
 using TACHYON.Nationalities;
 using TACHYON.Rating;
 
@@ -13,7 +15,7 @@ namespace TACHYON.Authorization.Users
     /// <summary>
     /// Represents a user in the system.
     /// </summary>
-    public class User : AbpUser<User>, IHasRating
+    public class User : AbpUser<User>, IWaslIntegrated,IHasRating
     {
         [StringLength(12)] public string AccountNumber { get; set; }
         public virtual Guid? ProfilePictureId { get; set; }
@@ -40,6 +42,15 @@ namespace TACHYON.Authorization.Users
         public virtual string ExperienceField { get; set; }
         public virtual DateTime? DateOfBirth { get; set; }
         public string HijriDateOfBirth { get; set; }
+        public int? DriverLicenseTypeId { get; set; }
+
+        [ForeignKey("DriverLicenseTypeId")]
+        public DriverLicenseType DriverLicenseTypeFk { get; set; }
+
+        public bool IsWaslIntegrated { get; set; }
+        public string WaslIntegrationErrorMsg { get; set; }
+
+
 
         /// <summary>
         /// This field is final rate for driver

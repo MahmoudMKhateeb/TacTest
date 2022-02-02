@@ -7,6 +7,7 @@ using Abp.Localization;
 using Abp.ObjectMapping;
 using Abp.Threading;
 using Abp.UI;
+using Hangfire;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -61,6 +62,8 @@ namespace TACHYON.Trucks.Importing.Dto
             _plateTypeRepository = plateTypeRepository;
         }
 
+
+        [AutomaticRetry(Attempts = 1)]
         public override void Execute(ImportTrucksFromExcelJobArgs args)
         {
             var trucks = GetTruckListFromExcelOrNull(args);

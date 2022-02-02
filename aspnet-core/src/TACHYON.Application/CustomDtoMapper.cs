@@ -52,6 +52,8 @@ using TACHYON.Documents.DocumentTypes;
 using TACHYON.Documents.DocumentTypes.Dtos;
 using TACHYON.Documents.DocumentTypeTranslations;
 using TACHYON.Documents.DocumentTypeTranslations.Dtos;
+using TACHYON.DriverLicenseTypes;
+using TACHYON.DriverLicenseTypes.Dtos;
 using TACHYON.Drivers.importing.Dto;
 using TACHYON.DynamicEntityParameters.Dto;
 using TACHYON.Editions;
@@ -172,6 +174,8 @@ namespace TACHYON
 
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
+            configuration.CreateMap<CreateOrEditDriverLicenseTypeDto, DriverLicenseType>().ReverseMap();
+            configuration.CreateMap<DriverLicenseTypeDto, DriverLicenseType>().ReverseMap();
             configuration.CreateMap<CreateOrEditDangerousGoodTypeDto, DangerousGoodType>().ReverseMap();
             configuration.CreateMap<DangerousGoodTypeDto, DangerousGoodType>().ReverseMap();
             configuration.CreateMap<DangerousGoodTypeTranslation, DangerousGoodTypeTranslationDto>()

@@ -39,6 +39,7 @@ using TACHYON.Documents.DocumentTypes;
 using TACHYON.Dto;
 using TACHYON.Features;
 using TACHYON.Net.Sms;
+using TACHYON.Integration.WaslIntegration;
 using TACHYON.Notifications;
 using TACHYON.Organizations.Dto;
 using TACHYON.Url;
@@ -72,6 +73,7 @@ namespace TACHYON.Authorization.Users
         private readonly IRepository<DocumentType, long> _documentTypeRepository;
         private readonly IRepository<DocumentFile, Guid> _documentFileRepository;
         private readonly ISmsSender _smsSender;
+        private readonly WaslIntegrationManager _waslIntegrationManager;
 
         public UserAppService(
             IRepository<DocumentFile, Guid> documentFileRepository,
@@ -94,7 +96,9 @@ namespace TACHYON.Authorization.Users
             IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository,
             IRepository<OrganizationUnitRole, long> organizationUnitRoleRepository,
             DocumentFilesAppService documentFilesAppService,
-            ISmsSender smsSender)
+            ISmsSender smsSender,
+
+            WaslIntegrationManager waslIntegrationManager)
         {
             _documentFileRepository = documentFileRepository;
             _documentTypeRepository = documentTypeRepository;
@@ -116,6 +120,7 @@ namespace TACHYON.Authorization.Users
             _organizationUnitRoleRepository = organizationUnitRoleRepository;
             _documentFilesAppService = documentFilesAppService;
             _smsSender = smsSender;
+            _waslIntegrationManager = waslIntegrationManager;
             _roleRepository = roleRepository;
 
             AppUrlService = NullAppUrlService.Instance;
@@ -168,11 +173,10 @@ namespace TACHYON.Authorization.Users
                 .CountAsync();
 
             var submittedDocuments = await (_documentFileRepository.GetAll()
-                    .Where(x => ids.Contains((long)x.UserId))
-                    .Where(x => x.DocumentTypeFk.IsRequired)
-                    .GroupBy(x => x.UserId)
-                    .Select(x => new { UserId = x.Key, IsMissingDocumentFiles = x.Count() == documentTypesCount }))
-                .ToListAsync();
+                .Where(x => ids.Contains((long)x.UserId))
+                .Where(x => x.DocumentTypeFk.IsRequired)
+                .GroupBy(x => x.UserId)
+                .Select(x => new { UserId = x.Key, IsMissingDocumentFiles = x.Count() == documentTypesCount })).ToListAsync();
 
             foreach (DriverListDto driverListDto in pagedResultDto.data.ToDynamicList<DriverListDto>())
             {
@@ -196,9 +200,7 @@ namespace TACHYON.Authorization.Users
         {
             var query = GetUsersFilteredQuery(input);
 
-            var users = await query
-                .OrderBy(input.Sorting)
-                .ToListAsync();
+            var users = await query.OrderBy(input.Sorting).ToListAsync();
 
             var userListDtos = ObjectMapper.Map<List<UserListDto>>(users);
             await FillRoleNames(userListDtos);
@@ -347,6 +349,7 @@ namespace TACHYON.Authorization.Users
             }
         }
 
+
         [AbpAuthorize(AppPermissions.Pages_Administration_Users_Delete)]
         public async Task DeleteUser(EntityDto<long> input)
         {
@@ -366,6 +369,8 @@ namespace TACHYON.Authorization.Users
             else user = await UserManager.GetUserByIdAsync(input.Id);
 
             CheckErrors(await UserManager.DeleteAsync(user));
+            //Wasl integration 
+            await _waslIntegrationManager.QueueDriverDeleteJob(user);
         }
 
         [AbpAuthorize(AppPermissions.Pages_Administration_Users_Unlock)]
@@ -404,8 +409,6 @@ namespace TACHYON.Authorization.Users
             }
 
             //Update roles
-
-
             if (!user.IsDriver)
             {
                 CheckErrors(await UserManager.SetRolesAsync(user, input.AssignedRoleNames));
@@ -417,12 +420,11 @@ namespace TACHYON.Authorization.Users
             if (input.SendActivationEmail && !user.IsEmailConfirmed && !user.IsDriver)
             {
                 user.SetNewEmailConfirmationCode();
-                await _userEmailer.SendEmailActivationLinkAsync(
-                    user,
-                    AppUrlService.CreateEmailActivationUrlFormat(AbpSession.TenantId),
-                    input.User.Password
-                );
+                await _userEmailer.SendEmailActivationLinkAsync(user, AppUrlService.CreateEmailActivationUrlFormat(AbpSession.TenantId), input.User.Password);
             }
+
+            //Wasl Integration
+            await _waslIntegrationManager.QueueDriverRegistrationJob(user.Id);
         }
 
         [AbpAuthorize(AppPermissions.Pages_Administration_Users_Create)]
@@ -520,7 +522,6 @@ namespace TACHYON.Authorization.Users
                 user.DriverStatus = UserDriverStatus.Available; // Init Value
             }
 
-
             //Notifications
             await _notificationSubscriptionManager.SubscribeToAllAvailableNotificationsAsync(user.ToUserIdentifier());
             await _appNotifier.WelcomeToTheApplicationAsync(user);
@@ -532,22 +533,21 @@ namespace TACHYON.Authorization.Users
             if (input.SendActivationEmail && !user.IsDriver)
             {
                 user.SetNewEmailConfirmationCode();
-                await _userEmailer.SendEmailActivationLinkAsync(
-                    user,
-                    AppUrlService.CreateEmailActivationUrlFormat(AbpSession.TenantId),
-                    input.User.Password
-                );
+                await _userEmailer.SendEmailActivationLinkAsync(user, AppUrlService.CreateEmailActivationUrlFormat(AbpSession.TenantId), input.User.Password);
             }
+
+
+            //Wasl Integration
+            await _waslIntegrationManager.QueueDriverRegistrationJob(user.Id);
         }
+
 
         private async Task FillRoleNames(IReadOnlyCollection<UserListDto> userListDtos)
         {
             /* This method is optimized to fill role names to given list. */
             var userIds = userListDtos.Select(u => u.Id);
 
-            var userRoles = await _userRoleRepository.GetAll()
-                .Where(userRole => userIds.Contains(userRole.UserId))
-                .Select(userRole => userRole).ToListAsync();
+            var userRoles = await _userRoleRepository.GetAll().Where(userRole => userIds.Contains(userRole.UserId)).Select(userRole => userRole).ToListAsync();
 
             var distinctRoleIds = userRoles.Select(userRole => userRole.RoleId).Distinct();
 
@@ -583,46 +583,42 @@ namespace TACHYON.Authorization.Users
 
         private IQueryable<User> GetUsersFilteredQuery(IGetUsersInput input)
         {
-            var query = UserManager.Users
-                .WhereIf(input.Role.HasValue, u => u.Roles.Any(r => r.RoleId == input.Role.Value))
-                .WhereIf(input.OnlyLockedUsers,
-                    u => u.LockoutEndDateUtc.HasValue && u.LockoutEndDateUtc.Value > DateTime.UtcNow)
+            var query = UserManager.Users.WhereIf(input.Role.HasValue, u => u.Roles.Any(r => r.RoleId == input.Role.Value))
+                .WhereIf(input.OnlyLockedUsers, u => u.LockoutEndDateUtc.HasValue && u.LockoutEndDateUtc.Value > DateTime.UtcNow)
                 .WhereIf(input.OnlyDrivers, u => u.IsDriver)
                 .WhereIf(input.OnlyUsers, u => u.IsDriver == false)
-                .WhereIf(
+                .WhereIf
+                (
                     !input.Filter.IsNullOrWhiteSpace(),
-                    u =>
-                        u.Name.Contains(input.Filter) ||
-                        u.Surname.Contains(input.Filter) ||
-                        u.UserName.Contains(input.Filter) ||
-                        u.EmailAddress.Contains(input.Filter)
+                    u => u.Name.Contains(input.Filter)
+                         || u.Surname.Contains(input.Filter)
+                         || u.UserName.Contains(input.Filter)
+                         || u.EmailAddress.Contains(input.Filter)
                 );
 
             if (input.Permissions != null && input.Permissions.Any(p => !p.IsNullOrWhiteSpace()))
             {
-                var staticRoleNames = _roleManagementConfig.StaticRoles.Where(
-                    r => r.GrantAllPermissionsByDefault &&
-                         r.Side == AbpSession.MultiTenancySide
-                ).Select(r => r.RoleName).ToList();
+                var staticRoleNames = _roleManagementConfig.StaticRoles.Where(r => r.GrantAllPermissionsByDefault && r.Side == AbpSession.MultiTenancySide)
+                    .Select(r => r.RoleName)
+                    .ToList();
 
                 input.Permissions = input.Permissions.Where(p => !string.IsNullOrEmpty(p)).ToList();
 
-                query = from user in query
+                query =
+                    from user in query
                     join ur in _userRoleRepository.GetAll() on user.Id equals ur.UserId into urJoined
                     from ur in urJoined.DefaultIfEmpty()
                     join urr in _roleRepository.GetAll() on ur.RoleId equals urr.Id into urrJoined
                     from urr in urrJoined.DefaultIfEmpty()
-                    join up in _userPermissionRepository.GetAll()
-                            .Where(userPermission => input.Permissions.Contains(userPermission.Name)) on user.Id equals
+                    join up in _userPermissionRepository.GetAll().Where(userPermission => input.Permissions.Contains(userPermission.Name)) on user.Id equals
                         up.UserId into upJoined
                     from up in upJoined.DefaultIfEmpty()
-                    join rp in _rolePermissionRepository.GetAll()
-                            .Where(rolePermission => input.Permissions.Contains(rolePermission.Name)) on
+                    join rp in _rolePermissionRepository.GetAll().Where(rolePermission => input.Permissions.Contains(rolePermission.Name)) on
                         new { RoleId = ur == null ? 0 : ur.RoleId } equals new { rp.RoleId } into rpJoined
                     from rp in rpJoined.DefaultIfEmpty()
-                    where (up != null && up.IsGranted) ||
-                          (up == null && rp != null && rp.IsGranted) ||
-                          (up == null && rp == null && staticRoleNames.Contains(urr.Name))
+                    where (up != null && up.IsGranted)
+                          || (up == null && rp != null && rp.IsGranted)
+                          || (up == null && rp == null && staticRoleNames.Contains(urr.Name))
                     select user;
             }
 

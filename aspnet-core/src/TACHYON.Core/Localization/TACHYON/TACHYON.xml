@@ -1,6 +1,16 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <localizationDictionary culture="en">
 	<texts>
+    <text name="DriverLicenseTypes">Driver license types</text>
+    <text name="DriverLicenseType">Driver license type</text>
+    <text name="TACHYON.DriverLicenseTypes.DriverLicenseType">DriverLicenseType</text>
+    <text name="WasIIntegrationId">Was i integration id</text>
+    <text name="ApplicableforWaslRegistration">Applicablefor wasl registration</text>
+    <text name="NotApplicableforWaslRegistration">Not applicablefor wasl registration</text>
+    <text name="DriverLicenseTypesHeaderInfo">Driver license types header info</text>
+    <text name="CreateNewDriverLicenseType">Create new driver license type</text>
+    <text name="EditDriverLicenseType">Edit driver license type</text>
+    <text name="DeleteDriverLicenseType">Delete driver license type</text>
     <text name="Goods">Goods</text>
     <text name="DangerousGoodType">Dangerous good type</text>
     <text name="TACHYON.Goods.DangerousGoodType">DangerousGoodType</text>
@@ -1541,6 +1551,7 @@
 		<text name="Remove">Remove</text>
 		<text name="RemoveRoleFromOuWarningMessage">Are you sure to remove role {0} from organization unit {1}?</text>
 		<text name="RemoveUserFromOuWarningMessage">Are you sure to remove user {0} from organization unit {1}?</text>
+		<text name="ThereisamissingDocumnets">please upload the {0} it is a mandatory!</text>
 		<text name="RenamePage">Rename page</text>
 		<text name="Reply">Reply</text>
 		<text name="Reports">Reports</text>

@@ -10745,6 +10745,360 @@ export class DriverServiceProxy {
 }
 
 @Injectable()
+export class DriverLicenseTypesServiceProxy {
+  private http: HttpClient;
+  private baseUrl: string;
+  protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+  constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+    this.http = http;
+    this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : '';
+  }
+
+  /**
+   * @param filter (optional)
+   * @param sorting (optional)
+   * @param skipCount (optional)
+   * @param maxResultCount (optional)
+   * @return Success
+   */
+  getAll(
+    filter: string | null | undefined,
+    sorting: string | null | undefined,
+    skipCount: number | undefined,
+    maxResultCount: number | undefined
+  ): Observable<PagedResultDtoOfGetDriverLicenseTypeForViewDto> {
+    let url_ = this.baseUrl + '/api/services/app/DriverLicenseTypes/GetAll?';
+    if (filter !== undefined && filter !== null) url_ += 'Filter=' + encodeURIComponent('' + filter) + '&';
+    if (sorting !== undefined && sorting !== null) url_ += 'Sorting=' + encodeURIComponent('' + sorting) + '&';
+    if (skipCount === null) throw new Error("The parameter 'skipCount' cannot be null.");
+    else if (skipCount !== undefined) url_ += 'SkipCount=' + encodeURIComponent('' + skipCount) + '&';
+    if (maxResultCount === null) throw new Error("The parameter 'maxResultCount' cannot be null.");
+    else if (maxResultCount !== undefined) url_ += 'MaxResultCount=' + encodeURIComponent('' + maxResultCount) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAll(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAll(<any>response_);
+            } catch (e) {
+              return <Observable<PagedResultDtoOfGetDriverLicenseTypeForViewDto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<PagedResultDtoOfGetDriverLicenseTypeForViewDto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAll(response: HttpResponseBase): Observable<PagedResultDtoOfGetDriverLicenseTypeForViewDto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = PagedResultDtoOfGetDriverLicenseTypeForViewDto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<PagedResultDtoOfGetDriverLicenseTypeForViewDto>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
+  getDriverLicenseTypeForEdit(id: number | undefined): Observable<GetDriverLicenseTypeForEditOutput> {
+    let url_ = this.baseUrl + '/api/services/app/DriverLicenseTypes/GetDriverLicenseTypeForEdit?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'Id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetDriverLicenseTypeForEdit(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetDriverLicenseTypeForEdit(<any>response_);
+            } catch (e) {
+              return <Observable<GetDriverLicenseTypeForEditOutput>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<GetDriverLicenseTypeForEditOutput>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetDriverLicenseTypeForEdit(response: HttpResponseBase): Observable<GetDriverLicenseTypeForEditOutput> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = GetDriverLicenseTypeForEditOutput.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<GetDriverLicenseTypeForEditOutput>(<any>null);
+  }
+
+  /**
+   * @param body (optional)
+   * @return Success
+   */
+  createOrEdit(body: CreateOrEditDriverLicenseTypeDto | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/DriverLicenseTypes/CreateOrEdit';
+    url_ = url_.replace(/[?&]$/, '');
+
+    const content_ = JSON.stringify(body);
+
+    let options_: any = {
+      body: content_,
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processCreateOrEdit(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processCreateOrEdit(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processCreateOrEdit(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
+  delete(id: number | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/DriverLicenseTypes/Delete?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'Id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({}),
+    };
+
+    return this.http
+      .request('delete', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processDelete(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processDelete(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processDelete(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @return Success
+   */
+  getForDropDownList(): Observable<SelectItemDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/DriverLicenseTypes/GetForDropDownList';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetForDropDownList(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetForDropDownList(<any>response_);
+            } catch (e) {
+              return <Observable<SelectItemDto[]>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<SelectItemDto[]>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetForDropDownList(response: HttpResponseBase): Observable<SelectItemDto[]> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          if (Array.isArray(resultData200)) {
+            result200 = [] as any;
+            for (let item of resultData200) result200!.push(SelectItemDto.fromJS(item));
+          } else {
+            result200 = <any>null;
+          }
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<SelectItemDto[]>(<any>null);
+  }
+}
+
+@Injectable()
 export class DynamicEntityParameterDefinitionServiceProxy {
   private http: HttpClient;
   private baseUrl: string;
@@ -57629,6 +57983,514 @@ export class VasPricesServiceProxy {
 }
 
 @Injectable()
+export class WaslIntegrationServiceProxy {
+  private http: HttpClient;
+  private baseUrl: string;
+  protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+  constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+    this.http = http;
+    this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : '';
+  }
+
+  /**
+   * @param truckId (optional)
+   * @return Success
+   */
+  vehicleRegistration(truckId: number | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/WaslIntegration/VehicleRegistration?';
+    if (truckId === null) throw new Error("The parameter 'truckId' cannot be null.");
+    else if (truckId !== undefined) url_ += 'truckId=' + encodeURIComponent('' + truckId) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({}),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processVehicleRegistration(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processVehicleRegistration(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processVehicleRegistration(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @param truckId (optional)
+   * @return Success
+   */
+  vehicleDelete(truckId: number | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/WaslIntegration/VehicleDelete?';
+    if (truckId === null) throw new Error("The parameter 'truckId' cannot be null.");
+    else if (truckId !== undefined) url_ += 'truckId=' + encodeURIComponent('' + truckId) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({}),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processVehicleDelete(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processVehicleDelete(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processVehicleDelete(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @param driverId (optional)
+   * @return Success
+   */
+  driverRegistration(driverId: number | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/WaslIntegration/DriverRegistration?';
+    if (driverId === null) throw new Error("The parameter 'driverId' cannot be null.");
+    else if (driverId !== undefined) url_ += 'driverId=' + encodeURIComponent('' + driverId) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({}),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processDriverRegistration(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processDriverRegistration(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processDriverRegistration(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @param driverId (optional)
+   * @return Success
+   */
+  driverDelete(driverId: number | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/WaslIntegration/DriverDelete?';
+    if (driverId === null) throw new Error("The parameter 'driverId' cannot be null.");
+    else if (driverId !== undefined) url_ += 'driverId=' + encodeURIComponent('' + driverId) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({}),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processDriverDelete(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processDriverDelete(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processDriverDelete(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @param tripId (optional)
+   * @return Success
+   */
+  tripRegistration(tripId: number | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/WaslIntegration/TripRegistration?';
+    if (tripId === null) throw new Error("The parameter 'tripId' cannot be null.");
+    else if (tripId !== undefined) url_ += 'tripId=' + encodeURIComponent('' + tripId) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({}),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processTripRegistration(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processTripRegistration(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processTripRegistration(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @param tripId (optional)
+   * @return Success
+   */
+  tripUpdate(tripId: number | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/WaslIntegration/TripUpdate?';
+    if (tripId === null) throw new Error("The parameter 'tripId' cannot be null.");
+    else if (tripId !== undefined) url_ += 'tripId=' + encodeURIComponent('' + tripId) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({}),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processTripUpdate(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processTripUpdate(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processTripUpdate(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @param tenantId (optional)
+   * @return Success
+   */
+  bulkVehicleRegistration(tenantId: number | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/WaslIntegration/BulkVehicleRegistration?';
+    if (tenantId === null) throw new Error("The parameter 'tenantId' cannot be null.");
+    else if (tenantId !== undefined) url_ += 'tenantId=' + encodeURIComponent('' + tenantId) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({}),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processBulkVehicleRegistration(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processBulkVehicleRegistration(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processBulkVehicleRegistration(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @param tenantId (optional)
+   * @return Success
+   */
+  bulkDriverRegistration(tenantId: number | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/WaslIntegration/BulkDriverRegistration?';
+    if (tenantId === null) throw new Error("The parameter 'tenantId' cannot be null.");
+    else if (tenantId !== undefined) url_ += 'tenantId=' + encodeURIComponent('' + tenantId) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({}),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processBulkDriverRegistration(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processBulkDriverRegistration(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processBulkDriverRegistration(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+}
+
+@Injectable()
 export class WaybillsServiceProxy {
   private http: HttpClient;
   private baseUrl: string;
@@ -63579,7 +64441,7 @@ export class CreateOrEditDocumentFileDto implements ICreateOrEditDocumentFileDto
   otherDocumentTypeName!: string | undefined;
   updateDocumentFileInput!: UpdateDocumentFileInput;
   name!: string;
-  extn!: string;
+  extn!: string | undefined;
   binaryObjectId!: string;
   expirationDate!: moment.Moment | undefined;
   isAccepted!: boolean;
@@ -63672,7 +64534,7 @@ export interface ICreateOrEditDocumentFileDto {
   otherDocumentTypeName: string | undefined;
   updateDocumentFileInput: UpdateDocumentFileInput;
   name: string;
-  extn: string;
+  extn: string | undefined;
   binaryObjectId: string;
   expirationDate: moment.Moment | undefined;
   isAccepted: boolean;
@@ -64801,6 +65663,215 @@ export interface IUserDeviceTokenDto {
   deviceId: string | undefined;
   token: string | undefined;
   expireDate: moment.Moment | undefined;
+}
+
+export class DriverLicenseTypeDto implements IDriverLicenseTypeDto {
+  name!: string | undefined;
+  wasIIntegrationId!: number;
+  applicableforWaslRegistration!: boolean;
+  id!: number;
+
+  constructor(data?: IDriverLicenseTypeDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.name = _data['name'];
+      this.wasIIntegrationId = _data['wasIIntegrationId'];
+      this.applicableforWaslRegistration = _data['applicableforWaslRegistration'];
+      this.id = _data['id'];
+    }
+  }
+
+  static fromJS(data: any): DriverLicenseTypeDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new DriverLicenseTypeDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['name'] = this.name;
+    data['wasIIntegrationId'] = this.wasIIntegrationId;
+    data['applicableforWaslRegistration'] = this.applicableforWaslRegistration;
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+export interface IDriverLicenseTypeDto {
+  name: string | undefined;
+  wasIIntegrationId: number;
+  applicableforWaslRegistration: boolean;
+  id: number;
+}
+
+export class GetDriverLicenseTypeForViewDto implements IGetDriverLicenseTypeForViewDto {
+  driverLicenseType!: DriverLicenseTypeDto;
+
+  constructor(data?: IGetDriverLicenseTypeForViewDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.driverLicenseType = _data['driverLicenseType'] ? DriverLicenseTypeDto.fromJS(_data['driverLicenseType']) : <any>undefined;
+    }
+  }
+
+  static fromJS(data: any): GetDriverLicenseTypeForViewDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new GetDriverLicenseTypeForViewDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['driverLicenseType'] = this.driverLicenseType ? this.driverLicenseType.toJSON() : <any>undefined;
+    return data;
+  }
+}
+
+export interface IGetDriverLicenseTypeForViewDto {
+  driverLicenseType: DriverLicenseTypeDto;
+}
+
+export class PagedResultDtoOfGetDriverLicenseTypeForViewDto implements IPagedResultDtoOfGetDriverLicenseTypeForViewDto {
+  totalCount!: number;
+  items!: GetDriverLicenseTypeForViewDto[] | undefined;
+
+  constructor(data?: IPagedResultDtoOfGetDriverLicenseTypeForViewDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.totalCount = _data['totalCount'];
+      if (Array.isArray(_data['items'])) {
+        this.items = [] as any;
+        for (let item of _data['items']) this.items!.push(GetDriverLicenseTypeForViewDto.fromJS(item));
+      }
+    }
+  }
+
+  static fromJS(data: any): PagedResultDtoOfGetDriverLicenseTypeForViewDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new PagedResultDtoOfGetDriverLicenseTypeForViewDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['totalCount'] = this.totalCount;
+    if (Array.isArray(this.items)) {
+      data['items'] = [];
+      for (let item of this.items) data['items'].push(item.toJSON());
+    }
+    return data;
+  }
+}
+
+export interface IPagedResultDtoOfGetDriverLicenseTypeForViewDto {
+  totalCount: number;
+  items: GetDriverLicenseTypeForViewDto[] | undefined;
+}
+
+export class CreateOrEditDriverLicenseTypeDto implements ICreateOrEditDriverLicenseTypeDto {
+  name!: string;
+  wasIIntegrationId!: number;
+  applicableforWaslRegistration!: boolean;
+  id!: number | undefined;
+
+  constructor(data?: ICreateOrEditDriverLicenseTypeDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.name = _data['name'];
+      this.wasIIntegrationId = _data['wasIIntegrationId'];
+      this.applicableforWaslRegistration = _data['applicableforWaslRegistration'];
+      this.id = _data['id'];
+    }
+  }
+
+  static fromJS(data: any): CreateOrEditDriverLicenseTypeDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new CreateOrEditDriverLicenseTypeDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['name'] = this.name;
+    data['wasIIntegrationId'] = this.wasIIntegrationId;
+    data['applicableforWaslRegistration'] = this.applicableforWaslRegistration;
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+export interface ICreateOrEditDriverLicenseTypeDto {
+  name: string;
+  wasIIntegrationId: number;
+  applicableforWaslRegistration: boolean;
+  id: number | undefined;
+}
+
+export class GetDriverLicenseTypeForEditOutput implements IGetDriverLicenseTypeForEditOutput {
+  driverLicenseType!: CreateOrEditDriverLicenseTypeDto;
+
+  constructor(data?: IGetDriverLicenseTypeForEditOutput) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.driverLicenseType = _data['driverLicenseType'] ? CreateOrEditDriverLicenseTypeDto.fromJS(_data['driverLicenseType']) : <any>undefined;
+    }
+  }
+
+  static fromJS(data: any): GetDriverLicenseTypeForEditOutput {
+    data = typeof data === 'object' ? data : {};
+    let result = new GetDriverLicenseTypeForEditOutput();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['driverLicenseType'] = this.driverLicenseType ? this.driverLicenseType.toJSON() : <any>undefined;
+    return data;
+  }
+}
+
+export interface IGetDriverLicenseTypeForEditOutput {
+  driverLicenseType: CreateOrEditDriverLicenseTypeDto;
 }
 
 export class DynamicParameterDto implements IDynamicParameterDto {
@@ -93738,6 +94809,7 @@ export class UserEditDto implements IUserEditDto {
   experienceField!: string | undefined;
   dateOfBirth!: moment.Moment | undefined;
   hijriDateOfBirth!: string | undefined;
+  driverLicenseTypeId!: number | undefined;
 
   constructor(data?: IUserEditDto) {
     if (data) {
@@ -93768,6 +94840,7 @@ export class UserEditDto implements IUserEditDto {
       this.experienceField = _data['experienceField'];
       this.dateOfBirth = _data['dateOfBirth'] ? moment(_data['dateOfBirth'].toString()) : <any>undefined;
       this.hijriDateOfBirth = _data['hijriDateOfBirth'];
+      this.driverLicenseTypeId = _data['driverLicenseTypeId'];
     }
   }
 
@@ -93799,6 +94872,7 @@ export class UserEditDto implements IUserEditDto {
     data['experienceField'] = this.experienceField;
     data['dateOfBirth'] = this.dateOfBirth ? this.dateOfBirth.toISOString() : <any>undefined;
     data['hijriDateOfBirth'] = this.hijriDateOfBirth;
+    data['driverLicenseTypeId'] = this.driverLicenseTypeId;
     return data;
   }
 }
@@ -93823,6 +94897,7 @@ export interface IUserEditDto {
   experienceField: string | undefined;
   dateOfBirth: moment.Moment | undefined;
   hijriDateOfBirth: string | undefined;
+  driverLicenseTypeId: number | undefined;
 }
 
 export class UserRoleDto implements IUserRoleDto {

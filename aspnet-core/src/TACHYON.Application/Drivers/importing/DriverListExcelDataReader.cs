@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Abp.Domain.Repositories;
+﻿using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Localization;
 using Abp.Localization.Sources;
 using NPOI.SS.UserModel;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using TACHYON.Authorization.Users;
 using TACHYON.Authorization.Users.Importing.Dto;
 using TACHYON.DataExporting.Excel;
@@ -135,9 +135,7 @@ namespace TACHYON.Drivers.importing
 
                 //iqama document
                 //6
-                iqamaDocumentFileDto.Number =
-                    _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet, row, 6,
-                        "ID/Iqama/ NO*", exceptionMessage);
+                iqamaDocumentFileDto.Number = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet, row, 6, "ID/Iqama/ NO*", exceptionMessage);
 
                 //7
                 iqamaDocumentFileDto.HijriExpirationDate =
@@ -154,9 +152,7 @@ namespace TACHYON.Drivers.importing
 
                 //drivingLicense document
                 //9
-                drivingLicenseDocumentFileDto.Number =
-                    _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet, row, 9,
-                        "Driving License NO*", exceptionMessage);
+                drivingLicenseDocumentFileDto.Number = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet, row, 9, "Driving License NO*", exceptionMessage);
                 //10
                 drivingLicenseDocumentFileDto.HijriExpirationDate =
                     _tachyonExcelDataReaderHelper.GetValueFromRowOrNull<string>(worksheet, row, 10,
@@ -219,13 +215,6 @@ namespace TACHYON.Drivers.importing
                 }
             }
 
-            if (iqamaDocumentType.HasExpirationDate &&
-                iqamaDocumentFileDto.HijriExpirationDate.IsNullOrWhiteSpace() &&
-                iqamaDocumentFileDto.ExpirationDate == null)
-            {
-                exceptionMessage.Append("ID/Iqama Expiry  Date (Gregorian OR Hijri) is required; ");
-            }
-
             if (!iqamaDocumentFileDto.HijriExpirationDate.IsNullOrWhiteSpace() &&
                 iqamaDocumentFileDto.ExpirationDate == null)
             {
@@ -260,14 +249,6 @@ namespace TACHYON.Drivers.importing
                                             " character; ");
                 }
             }
-
-            if (drivingLicenseDocumentType.HasExpirationDate &&
-                drivingLicenseDocumentFileDto.HijriExpirationDate.IsNullOrWhiteSpace() &&
-                drivingLicenseDocumentFileDto.ExpirationDate == null)
-            {
-                exceptionMessage.Append("drivingLicense Expiry  Date (Gregorian OR Hijri) is required; ");
-            }
-
             if (!drivingLicenseDocumentFileDto.HijriExpirationDate.IsNullOrWhiteSpace() &&
                 drivingLicenseDocumentFileDto.ExpirationDate == null)
             {

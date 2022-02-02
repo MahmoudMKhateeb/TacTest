@@ -27,6 +27,7 @@ using TACHYON.EntityLogs;
 using TACHYON.Features;
 using TACHYON.Firebases;
 using TACHYON.Goods.GoodCategories.Dtos;
+using TACHYON.Integration.WaslIntegration;
 using TACHYON.Mobile;
 using TACHYON.MultiTenancy;
 using TACHYON.Notifications;
@@ -244,6 +245,7 @@ namespace TACHYON.Shipping.Drivers
                     .TranslatedDisplayName;
 
             if (tripDto.TripStatus == ShippingRequestTripStatus.Intransit)
+
                 tripDto.ActionStatus = ShippingRequestTripDriverActionStatusDto.ContinueTrip;
 
             else if (trip.StartTripDate.Date <= Clock.Now.Date && trip.Status == ShippingRequestTripStatus.New &&
@@ -252,21 +254,29 @@ namespace TACHYON.Shipping.Drivers
 
             var rate = new RatingLog();
 
-            tripDto.IsShippingExpRated = await _ratingLogManager.IsRateDoneBefore(new RatingLog
-            {
-                DriverId = AbpSession.UserId, TripId = TripId, RateType = RateType.SEByDriver
-            });
+            tripDto.IsShippingExpRated = await _ratingLogManager.IsRateDoneBefore
+            (
+                new RatingLog
+                {
+                    DriverId = AbpSession.UserId,
+                    TripId = TripId,
+                    RateType = RateType.SEByDriver
+                }
+            );
 
             //  Need Review This 
             foreach (var point in tripDto.RoutePoints)
             {
-                point.IsFacilityRated = await _ratingLogManager.IsRateDoneBefore(new RatingLog
-                {
-                    DriverId = AbpSession.UserId,
-                    PointId = point.Id,
-                    RateType = RateType.FacilityByDriver,
-                    FacilityId = point.FacilityId
-                });
+                point.IsFacilityRated = await _ratingLogManager.IsRateDoneBefore
+                (
+                    new RatingLog
+                    {
+                        DriverId = AbpSession.UserId,
+                        PointId = point.Id,
+                        RateType = RateType.FacilityByDriver,
+                        FacilityId = point.FacilityId
+                    }
+                );
             }
 
             //fill incidents
@@ -279,24 +289,24 @@ namespace TACHYON.Shipping.Drivers
                 .Include(r => r.ResoneFK)
                 .ThenInclude(t => t.Translations)
                 .Where(x => x.RoutPointFK.ShippingRequestTripId == TripId)
-                .WhereIf(AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Carrier),
-                    x => x.RoutPointFK.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
-                .WhereIf(AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Shipper),
-                    x => x.RoutPointFK.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId)
+                .WhereIf
+                (
+                    AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Carrier),
+                    x => x.RoutPointFK.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId
+                )
+                .WhereIf
+                (
+                    AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Shipper),
+                    x => x.RoutPointFK.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId
+                )
                 .WhereIf(!AbpSession.TenantId.HasValue || IsEnabled(AppFeatures.TachyonDealer), x => true)
-                .WhereIf(GetCurrentUser().IsDriver,
-                    x => x.RoutPointFK.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId).ToList();
+                .WhereIf
+                (
+                    GetCurrentUser().IsDriver,
+                    x => x.RoutPointFK.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId
+                ).ToList();
 
-            query.ForEach(q =>
-            {
-                if (q.ResoneFK != null && !q.ResoneFK.Key.Contains(TACHYONConsts.OthersDisplayName))
-                {
-                    //var reasone = await _shippingRequestReasonAccidentRepository.FirstOrDefaultAsync(x=>x.Language== CurrentLanguage || x.Language== TACHYONConsts.DefaultLanguage);
-                    var reasone = ObjectMapper.Map<ShippingRequestReasonAccidentListDto>(q.ResoneFK);
-                    //q.Description = reasone.Name;
-                    q.OtherReasonName = reasone.Name;
-                }
-            });
+
 
             tripDto.ShippingRequestTripAccidentList = ObjectMapper.Map<List<ShippingRequestTripAccidentListDto>>(query);
 
@@ -308,9 +318,15 @@ namespace TACHYON.Shipping.Drivers
             //    RateType = RateType.SEByDriver
             //})));
 
+
+
+
+
+
+
             //return good category name automatic from default language
             tripDto.GoodsCategory =
-                ObjectMapper.Map<GoodCategoryDto>(trip.ShippingRequestFk.GoodCategoryFk).DisplayName;
+                            ObjectMapper.Map<GoodCategoryDto>(trip.ShippingRequestFk.GoodCategoryFk).DisplayName;
             return tripDto;
         }
 

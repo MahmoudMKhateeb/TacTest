@@ -34,6 +34,7 @@ using TACHYON.Dto;
 using TACHYON.Editions;
 using TACHYON.Features;
 using TACHYON.MultiTenancy;
+using TACHYON.Integration.WaslIntegration;
 using TACHYON.Notifications;
 using TACHYON.Storage;
 using TACHYON.Trucks;
@@ -52,8 +53,8 @@ using GetAllForLookupTableInput = TACHYON.Trucks.Dtos.GetAllForLookupTableInput;
 
 namespace TACHYON.Trucks
 {
-    [AbpAuthorize(AppPermissions.Pages_Trucks)]
-    [RequiresFeature(AppFeatures.Carrier, AppFeatures.TachyonDealer)]
+    //[AbpAuthorize(AppPermissions.Pages_Trucks)]
+    //[RequiresFeature(AppFeatures.Carrier, AppFeatures.TachyonDealer)]
     public class TrucksAppService : TACHYONAppServiceBase, ITrucksAppService
     {
         private const int MaxTruckPictureBytes = 5242880; //5MB
@@ -72,6 +73,7 @@ namespace TACHYON.Trucks
         private readonly IRepository<Capacity, int> _capacityRepository;
         private readonly IRepository<PlateType> _plateTypesRepository;
         private readonly IRepository<Tenant> _lookupTenantRepository;
+        private readonly WaslIntegrationManager _waslIntegrationManager;
 
 
         public TrucksAppService(IRepository<DocumentType, long> documentTypeRepository,
@@ -88,7 +90,9 @@ namespace TACHYON.Trucks
             IRepository<TransportType, int> transportTypeRepository,
             IRepository<Capacity, int> capacityRepository,
             IRepository<PlateType> PlateTypesRepository,
-            IRepository<Tenant> lookupTenantRepository)
+            IRepository<Tenant> lookupTenantRepository,
+            WaslIntegrationManager waslIntegrationManager
+            )
         {
             _documentFileRepository = documentFileRepository;
             _documentTypeRepository = documentTypeRepository;
@@ -105,6 +109,7 @@ namespace TACHYON.Trucks
             _capacityRepository = capacityRepository;
             _plateTypesRepository = PlateTypesRepository;
             _lookupTenantRepository = lookupTenantRepository;
+            _waslIntegrationManager = waslIntegrationManager;
         }
 
         public async Task<LoadResult> GetAll(GetAllTrucksInput input)
@@ -312,19 +317,6 @@ namespace TACHYON.Trucks
 
 
             var truckId = await _truckRepository.InsertAndGetIdAsync(truck);
-            //if (input.Driver1UserId != null)
-            //{
-            //    try
-            //    {
-            //    await _appNotifier.AssignDriverToTruck(new UserIdentifier(AbpSession.TenantId, input.Driver1UserId.Value), truckId);
-
-            //    }
-            //    catch (Exception ex)
-            //    {
-
-            //        throw;
-            //    }
-            //}
 
 
             if (input.UpdateTruckPictureInput != null && !input.UpdateTruckPictureInput.FileToken.IsNullOrEmpty())
@@ -339,6 +331,10 @@ namespace TACHYON.Trucks
                 item.Name = item.Name + "_" + truckId.ToString();
                 await _documentFilesAppService.CreateOrEdit(item);
             }
+
+
+            //Wasl Integration
+            await _waslIntegrationManager.QueueVehicleRegistrationJob(truck.Id);
         }
 
         [AbpAuthorize(AppPermissions.Pages_Trucks_Edit)]
@@ -354,21 +350,18 @@ namespace TACHYON.Trucks
 
             ObjectMapper.Map(input, truck);
 
-            //if (!input.UpdateTruckPictureInput.FileToken.IsNullOrEmpty())
-            //{
-            //    if (truck.PictureId.HasValue)
-            //    {
-            //        await _binaryObjectManager.DeleteAsync(truck.PictureId.Value);
-            //    }
-
-            //    truck.PictureId = await AddOrUpdateTruckPicture(input.UpdateTruckPictureInput);
-            //}
+            //Wasl Integration
+            await _waslIntegrationManager.QueueVehicleRegistrationJob(truck.Id);
         }
 
         [AbpAuthorize(AppPermissions.Pages_Trucks_Delete)]
         public async Task Delete(EntityDto<long> input)
         {
+            var truck = await _truckRepository.FirstOrDefaultAsync(input.Id);
             await _truckRepository.DeleteAsync(input.Id);
+
+            //Wasl Integration
+            await _waslIntegrationManager.QueueVehicleDeleteJob(truck);
         }
 
         public async Task<FileDto> GetTrucksToExcel(GetAllTrucksForExcelInput input)

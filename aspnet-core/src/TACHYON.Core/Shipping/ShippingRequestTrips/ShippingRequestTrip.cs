@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using TACHYON.AddressBook;
 using TACHYON.Authorization.Users;
+using TACHYON.Integration.WaslIntegration;
 using TACHYON.PriceOffers;
 using TACHYON.Rating;
 using TACHYON.Routs.RoutPoints;
@@ -18,7 +19,7 @@ namespace TACHYON.Shipping.ShippingRequestTrips
 {
     [Audited]
     [Table("ShippingRequestTrips")]
-    public class ShippingRequestTrip : FullAuditedEntity
+    public class ShippingRequestTrip : FullAuditedEntity, IWaslIntegrated
     {
         public long? WaybillNumber { get; set; }
         public DateTime StartTripDate { get; set; }
@@ -103,8 +104,13 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public PriceOfferCommissionType? CommissionType { get; set; }
         public decimal? CommissionPercentageOrAddValue { get; set; }
         public decimal? CommissionAmount { get; set; }
-        public string BayanId { get; set; }
+
 
         #endregion
+        //integrations
+        public string BayanId { get; set; }
+        public bool IsWaslIntegrated { get; set; }
+        public string WaslIntegrationErrorMsg { get; set; }
+
     }
 }

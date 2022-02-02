@@ -396,14 +396,22 @@ namespace TACHYON.Invoices
         public async Task GenerateCarrirInvoice(SubmitInvoice submit)
         {
             DateTime dueDate = Clock.Now;
+            int? paymentTypeId;
 
-            var paymentType = await _invoicePaymentMethodRepository.FirstOrDefaultAsync(x =>
-                x.Id == int.Parse(_featureChecker.GetValue(submit.Tenant.Id,
-                    AppFeatures.InvoicePaymentMethodCrarrier)));
-            if (paymentType.PaymentType == PaymentMethod.InvoicePaymentType.Days)
+            if (await _featureChecker.IsEnabledAsync(submit.Tenant.Id, AppFeatures.InvoicePaymentMethodCrarrier))
             {
-                dueDate = Clock.Now.AddDays(paymentType.InvoiceDueDateDays);
+                paymentTypeId = int.Parse(await _featureChecker.GetValueAsync(submit.Tenant.Id, AppFeatures.InvoicePaymentMethodCrarrier));
+
+                var paymentType = await _invoicePaymentMethodRepository.FirstOrDefaultAsync(x => x.Id == paymentTypeId);
+
+                if (paymentType.PaymentType == PaymentMethod.InvoicePaymentType.Days)
+                {
+                    dueDate = Clock.Now.AddDays(paymentType.InvoiceDueDateDays);
+                }
+
             }
+
+
 
 
             var invoice = new Invoice

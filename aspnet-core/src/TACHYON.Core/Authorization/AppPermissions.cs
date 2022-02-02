@@ -6,6 +6,11 @@
     /// </summary>
     public static class AppPermissions
     {
+        public const string Pages_DriverLicenseTypes = "Pages.DriverLicenseTypes";
+        public const string Pages_DriverLicenseTypes_Create = "Pages.DriverLicenseTypes.Create";
+        public const string Pages_DriverLicenseTypes_Edit = "Pages.DriverLicenseTypes.Edit";
+        public const string Pages_DriverLicenseTypes_Delete = "Pages.DriverLicenseTypes.Delete";
+
         public const string Pages_DangerousGoodTypes = "Pages.DangerousGoodTypes";
         public const string Pages_DangerousGoodTypes_Create = "Pages.DangerousGoodTypes.Create";
         public const string Pages_DangerousGoodTypes_Edit = "Pages.DangerousGoodTypes.Edit";

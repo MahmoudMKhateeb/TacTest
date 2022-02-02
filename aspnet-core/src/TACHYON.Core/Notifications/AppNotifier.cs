@@ -708,7 +708,8 @@ namespace TACHYON.Notifications
                 )
             );
             notificationData["Percentage"] = Percentage;
-            UserIdentifier user = new UserIdentifier(TenantId, _userManager.GetAdminByTenantIdAsync(TenantId.Value).Id);
+            long adminUserId = (await _userManager.GetAdminByTenantIdAsync(TenantId.Value)).Id;
+            UserIdentifier user = new UserIdentifier(TenantId, adminUserId);
 
             await _notificationPublisher.PublishAsync(
                 AppNotificationNames.ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage, notificationData,

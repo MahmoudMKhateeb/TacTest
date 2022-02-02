@@ -7,6 +7,7 @@ import { ZeroTemplateHttpConfigurationService } from './zero-template-http-confi
 
 @NgModule({
   providers: [
+    ApiServiceProxies.DriverLicenseTypesServiceProxy,
     ApiServiceProxies.DangerousGoodTypesServiceProxy,
     ApiServiceProxies.TruckCapacitiesTranslationsServiceProxy,
     ApiServiceProxies.TruckStatusesTranslationsServiceProxy,
@@ -142,6 +143,7 @@ import { ZeroTemplateHttpConfigurationService } from './zero-template-http-confi
     ApiServiceProxies.TrackingServiceProxy,
     ApiServiceProxies.RatingServiceProxy,
     ApiServiceProxies.ShippingRequestDriverServiceProxy,
+    ApiServiceProxies.DriverLicenseTypesServiceProxy,
     ApiServiceProxies.ShippingRequestTripAccidentCommentsServiceProxy,
     ApiServiceProxies.CarrierDashboardServiceProxy,
     ApiServiceProxies.EntityLogServiceProxy,

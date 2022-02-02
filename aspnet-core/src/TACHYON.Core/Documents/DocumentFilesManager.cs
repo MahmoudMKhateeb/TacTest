@@ -3,6 +3,7 @@ using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Extensions;
 using Abp.Runtime.Session;
+using Abp.Runtime.Validation;
 using Abp.Specifications;
 using Abp.Timing;
 using Abp.UI;
@@ -285,6 +286,7 @@ namespace TACHYON.Documents
         {
             DocumentFile documentFile = await _documentFileRepository
                 .GetAll()
+                .Include(x => x.DocumentTypeFk)
                 .FirstOrDefaultAsync(x => x.Id == (Guid)input.Id);
 
             if (input.UpdateDocumentFileInput != null && !input.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
