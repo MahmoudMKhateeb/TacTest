@@ -14,15 +14,13 @@ using TACHYON.ShippingRequestTripVases.Dtos;
 
 namespace TACHYON.Shipping.Trips.Dto
 {
-    public class CreateOrEditShippingRequestTripDto : EntityDto<int?>, ICustomValidate, IShouldNormalize
+    public class CreateOrEditShippingRequestTripDto : EntityDto<int?>, ICreateOrEditTripDtoBase, ICustomValidate, IShouldNormalize
     {
         [Required] public DateTime? StartTripDate { get; set; }
 
         public DateTime? EndTripDate { get; set; }
 
 
-        //public long? AssignedDriverUserId { get; set; }
-        //public long? AssignedTruckId { get; set; }
         public long ShippingRequestId { get; set; }
 
         public bool HasAttachment { get; set; }
@@ -68,7 +66,6 @@ namespace TACHYON.Shipping.Trips.Dto
                     (string.IsNullOrWhiteSpace(drop.ReceiverFullName) ||
                      string.IsNullOrWhiteSpace(drop.ReceiverPhoneNumber)))
                 {
-                    //throw new UserFriendlyException(L("YouMustEnterReceiver"));
                     throw new UserFriendlyException("YouMustEnterReceiver");
                 }
             }

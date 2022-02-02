@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using System.Text;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
 using TACHYON.Authorization.Users;
@@ -234,6 +235,33 @@ namespace TACHYON.Shipping.Trips
             }
         }
 
+
+
+        private void ValidateTripDto(ImportTripDto importTripDto, long shippingRequestId)
+        {
+            var SR = _shippingRequestRepository.Get(shippingRequestId);
+
+            StringBuilder exceptionMessage = new StringBuilder();
+
+            if (importTripDto.EndTripDate != null && importTripDto.StartTripDate?.Date > importTripDto.EndTripDate.Value.Date)
+            {
+                exceptionMessage.Append("The start date must be or equal to end date." + "; ");
+            }
+
+            try
+            {
+                ValidateTripDates(importTripDto, SR);
+            }
+            catch (Exception e)
+            {
+                exceptionMessage.Append(e.Message);
+            }
+
+            importTripDto.Exception = exceptionMessage.ToString();
+
+        }
+
+
         [RequiresFeature(AppFeatures.Shipper)]
         public async Task ChangeAddTripsByTmsFeature()
         {
@@ -294,7 +322,7 @@ namespace TACHYON.Shipping.Trips
             }
         }
 
-        private void ValidateTripDates(CreateOrEditShippingRequestTripDto input, ShippingRequest request)
+        private void ValidateTripDates(ICreateOrEditTripDtoBase input, ShippingRequest request)
         {
             if (
                 input.StartTripDate?.Date > request.EndTripDate?.Date ||
@@ -346,9 +374,9 @@ namespace TACHYON.Shipping.Trips
                 // Send Notification To New Driver
                 if (oldAssignedDriverUserId.HasValue)
                 {
-                    await _appNotifier.NotifyDriverWhenUnassignedTrip(trip.Id,trip.WaybillNumber.ToString(),
+                    await _appNotifier.NotifyDriverWhenUnassignedTrip(trip.Id, trip.WaybillNumber.ToString(),
                         new UserIdentifier(AbpSession.TenantId, oldAssignedDriverUserId.Value));
-                    
+
                     await UserManager.UpdateUserDriverStatus(oldAssignedDriverUserId.Value, UserDriverStatus.Available);
                 }
             }
