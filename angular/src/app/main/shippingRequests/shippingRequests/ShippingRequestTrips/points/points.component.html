@@ -71,6 +71,33 @@
                   <ng-template let-record="$implicit" pTemplate="body" let-i="rowIndex">
                     <tr>
                       <td>
+                        <span class="ui-column-title"> {{ l('facilityName') }}</span>
+                        {{ record.facility ? record.facility : getFacilityNameByid(record.facilityId) }}
+                        <br />
+                        <!-- I don't need to show rate number so (Rate Number) equals 0-->
+                        <app-view-rating [max]="5" [rate]="record.facilityRate" [rateNumber]="0"></app-view-rating>
+                      </td>
+                      <td>
+                        <span class="ui-column-title"> {{ l('WayBillNumber') }}</span>
+                        <a
+                          class="blueColor"
+                          [busyText]="l('downloadDocument')"
+                          [buttonBusy]="loading && id == record.id"
+                          (click)="downloadDropWayBill(record.id)"
+                        >
+                          {{ record.waybillNumber }}
+                        </a>
+                      </td>
+                      <td>
+                        <span *ngIf="record.pickingType == 1" class="label label-success label-dot mr-2"></span>
+                        <span *ngIf="record.pickingType == 1" class="font-weight-bold text-success">{{ l('pickup') }}</span>
+                        <span *ngIf="record.pickingType != 1" class="label label-danger label-dot mr-2"></span>
+                        <span *ngIf="record.pickingType != 1" class="font-weight-bold text-danger">{{ l('drop') }}</span>
+                      </td>
+                      <td>
+                        {{ record.goodsDetailListDto ? getTotalWeightOfDropPoint(record) : '-' }}
+                      </td>
+                      <td>
                         <div class="btn-group dropdown" container="body" dropdown>
                           <a
                             class="dropdown-toggle btn btn-sm btn-primary"
@@ -114,27 +141,6 @@
                             </li>
                           </ul>
                         </div>
-                      </td>
-                      <td>
-                        <span class="ui-column-title"> {{ l('facilityName') }}</span>
-                        {{ record.facility ? record.facility : getFacilityNameByid(record.facilityId) }}
-                      </td>
-                      <td>
-                        <span class="ui-column-title"> {{ l('WayBillNumber') }}</span>
-                        <a
-                          class="blueColor"
-                          [busyText]="l('downloadDocument')"
-                          [buttonBusy]="loading && id == record.id"
-                          (click)="downloadDropWayBill(record.id)"
-                        >
-                          {{ record.waybillNumber }}
-                        </a>
-                      </td>
-                      <td>
-                        <span *ngIf="record.pickingType == 1" class="label label-success label-dot mr-2"></span>
-                        <span *ngIf="record.pickingType == 1" class="font-weight-bold text-success">{{ l('pickup') }}</span>
-                        <span *ngIf="record.pickingType != 1" class="label label-danger label-dot mr-2"></span>
-                        <span *ngIf="record.pickingType != 1" class="font-weight-bold text-danger">{{ l('drop') }}</span>
                       </td>
                     </tr>
                   </ng-template>
