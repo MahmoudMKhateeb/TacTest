@@ -29,5 +29,7 @@ namespace TACHYON.Web.Models.TokenAuth
         public string RefreshToken { get; set; }
 
         public int RefreshTokenExpireInSeconds { get; set; }
+        public string DriverName { get; set; }
+        public int? TenantId { get; set; }
     }
 }
