@@ -196,7 +196,8 @@ namespace TACHYON.Shipping.ShippingRequests
         }
         public async Task<LoadResult> GetAllShippingRequstHistory(LoadOptionsInput input)
         {
-
+            DisableTenancyFiltersIfHost();
+            await DisableTenancyFiltersIfTachyonDealer();
             var query = _shippingRequestRepository
            .GetAll().AsNoTracking()
                .Include(t => t.Tenant)
