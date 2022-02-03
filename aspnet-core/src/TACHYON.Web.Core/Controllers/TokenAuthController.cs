@@ -391,7 +391,9 @@ namespace TACHYON.Web.Controllers
                 RefreshTokenExpireInSeconds = (int)_configuration.RefreshTokenExpiration.TotalSeconds,
                 EncryptedAccessToken = GetEncryptedAccessToken(accessToken),
                 UserId = loginResult.User.Id,
-                TripDto = await _workFlowProvider.GetCurrentDriverTrip(loginResult.User.Id)
+                TripDto = await _workFlowProvider.GetCurrentDriverTrip(loginResult.User.Id),
+                DriverName = user.FullName,
+                TenantId = user.TenantId
             };
         }
 
