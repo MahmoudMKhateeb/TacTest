@@ -104,14 +104,28 @@
           <ng-container *ngIf="feature.isEnabled('App.Carrier')">
             <div class="form-group col-lg-6">
               <label>{{ l('driver') }}</label>
-              <select name="driver" type="text" [(ngModel)]="assignDriverAndTruck.assignedDriverUserId" class="form-control" [disabled]="saving">
+              <select
+                name="driver"
+                type="text"
+                [(ngModel)]="assignDriverAndTruck.assignedDriverUserId"
+                (click)="checkData()"
+                class="form-control"
+                [disabled]="saving"
+              >
                 <option [ngValue]="null">{{ l('selectaDriver') }}</option>
                 <option *ngFor="let item of allDrivers" [value]="item.id">{{ item.displayName }}</option>
               </select>
             </div>
             <div class="form-group col-lg-{{ trip.driverStatus == 0 ? 5 : 6 }}">
               <label>{{ l('tuck') }}</label>
-              <select name="truck" type="text" [(ngModel)]="assignDriverAndTruck.assignedTruckId" class="form-control" [disabled]="saving">
+              <select
+                name="truck"
+                type="text"
+                [(ngModel)]="assignDriverAndTruck.assignedTruckId"
+                (click)="checkData()"
+                class="form-control"
+                [disabled]="saving"
+              >
                 <option [ngValue]="null">{{ l('selectatruck') }}</option>
                 <option *ngFor="let item of allTrucks" [value]="item.id">{{ item.displayName }}</option>
               </select>
