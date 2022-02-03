@@ -13,6 +13,7 @@
         <agm-marker *ngIf="markerLong" [longitude]="markerLong" [latitude]="markerLat">
           <agm-info-window>{{ markerFacilityName }}</agm-info-window>
         </agm-marker>
+        <agm-marker *ngIf="driverLng" [longitude]="driverLng" [latitude]="driverlat" [iconUrl]="myIcon"> </agm-marker>
       </agm-map>
     </div>
 
