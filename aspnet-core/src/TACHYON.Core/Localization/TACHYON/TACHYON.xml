@@ -1810,6 +1810,7 @@
 		<text name="SubscriptionExpire_SubTitle">This email is sent you to notify about your subscription expiration</text>
 		<text name="SubscriptionExpire_Title">TACHYON subscription expire</text>
 		<text name="SubscriptionExpireNotification">Your subscription will expire in {0} day(s).</text>
+		<text name="ShipperDoseNotHavedirectRequestCommissionFeautre">The shipper {0} Dose Not Have direct Request Commission Feautre </text>
 		
 		<text name="SubscriptionExpiringSoon_SubTitle">This email is sent you to notify about your subscription expiration.</text>
 		<text name="SubscriptionExpiringTenants">Subscription expiring tenants</text>

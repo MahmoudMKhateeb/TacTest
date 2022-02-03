@@ -113,12 +113,10 @@ namespace TACHYON.PriceOffers
             DisableTenancyFilters();
 
             var shippingRequest = await _shippingRequestsRepository
-                .GetAll()
-                .Include(x => x.ShippingRequestVases)
-                .FirstOrDefaultAsync(r =>
-                    r.Id == input.ShippingRequestId && (r.Status == ShippingRequestStatus.NeedsAction ||
-                                                        r.Status == ShippingRequestStatus.PrePrice ||
-                                                        r.Status == ShippingRequestStatus.AcceptedAndWaitingCarrier));
+                                        .GetAll()
+                                        .Include(x => x.Tenant)
+                                        .Include(x => x.ShippingRequestVases)
+                                        .FirstOrDefaultAsync(r => r.Id == input.ShippingRequestId && (r.Status == ShippingRequestStatus.NeedsAction || r.Status == ShippingRequestStatus.PrePrice || r.Status == ShippingRequestStatus.AcceptedAndWaitingCarrier));
             if (shippingRequest == null) throw new UserFriendlyException(L("TheShippingRequestNotFound"));
 
             if (await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer))
@@ -759,24 +757,16 @@ namespace TACHYON.PriceOffers
             var vasCommissionValue =
                 Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.VasCommissionValue));
             // direct request
-            var directRequestCommissionType = (PriceOfferCommissionType)Convert.ToByte(
-                _featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.DirectRequestCommissionType));
-            var directRequestCommissionMinValue = Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId,
-                AppFeatures.DirectRequestCommissionMinValue));
-            var directRequestVasCommissionType = (PriceOfferCommissionType)Convert.ToByte(
-                _featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.DirectRequestVasCommissionType));
-            var directRequestVasCommissionMinValue = Convert.ToDecimal(
-                _featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.DirectRequestVasCommissionMinValue));
-            var directRequestCommissionPercentage = Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId,
-                AppFeatures.DirectRequestCommissionPercentage));
-            var directRequestVasCommissionPercentage = Convert.ToDecimal(
-                _featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.DirectRequestVasCommissionPercentage));
-            var directRequestCommissionValue =
-                Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId,
-                    AppFeatures.DirectRequestCommissionValue));
-            var directRequestVasCommissionValue = Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId,
-                AppFeatures.DirectRequestVasCommissionValue));
+            try { var directRequestCommissionTypes = (PriceOfferCommissionType)Convert.ToByte(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.DirectRequestCommissionType)); }
+            catch (Exception) { throw new UserFriendlyException(L("ShipperDoseNotHavedirectRequestCommissionFeautre", shippingRequest.Tenant.TenancyName)); }
 
+            var directRequestCommissionType = (PriceOfferCommissionType)Convert.ToByte(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.DirectRequestCommissionType));
+            var directRequestCommissionMinValue = Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.DirectRequestCommissionMinValue));
+            var directRequestVasCommissionMinValue = Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.DirectRequestVasCommissionMinValue));
+            var directRequestCommissionPercentage = Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.DirectRequestCommissionPercentage));
+            var directRequestVasCommissionPercentage = Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.DirectRequestVasCommissionPercentage));
+            var directRequestCommissionValue = Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.DirectRequestCommissionValue));
+            var directRequestVasCommissionValue = Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.DirectRequestVasCommissionValue));
             #endregion
 
 
