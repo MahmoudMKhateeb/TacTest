@@ -42,6 +42,7 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit {
   isResetTripLoading = false;
   private TruckTypeId: number;
   pickUpPointSender: string;
+
   constructor(
     injector: Injector,
     private _routStepsServiceProxy: RoutStepsServiceProxy,
@@ -97,6 +98,19 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit {
     this.allTrucks = [];
     this.loading = true;
     this.modal.hide();
+  }
+
+  checkData() {
+    if (this.allTrucks.length == 0) this.getAlert(this.l('NoMatchingTrucks'));
+    if (this.allDrivers.length == 0) this.getAlert(this.l('NoMatchingDrivers'));
+  }
+
+  getAlert(msg: string) {
+    Swal.fire({
+      title: msg,
+      icon: 'warning',
+      confirmButtonText: this.l('Ok'),
+    });
   }
 
   downloadAttachment(id: number) {

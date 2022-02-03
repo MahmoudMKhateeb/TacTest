@@ -2264,6 +2264,8 @@
     <text name="IsMandatoryExpirationDate">تاريخ الإنتهاء إلزامي</text>
     <text name="IsMandatoryNumber">الرقم إلزامي</text>
     <text name="IsMandatoryDocumentTemplate">المستند إلزامي</text>
+		<text name="NoMatchingTrucks">لا توجد شاحنات مطابقة</text>
+		<text name="NoMatchingDrivers">لا يوجد سائقين</text>
 	<text name="ResetReceiverCode">إعادة تعيين رمز مستلم الشحنة</text>
 	<text name="ReceiverCodeConfirmationMsg">هل أنت متأكد أنك تريد إعادة تعيين رمز المستلم لهذه الشحنة؟</text>
 	</texts>
