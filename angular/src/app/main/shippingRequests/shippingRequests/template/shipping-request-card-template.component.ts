@@ -14,8 +14,9 @@ import {
 import * as _ from 'lodash';
 import { ScrollPagnationComponentBase } from '@shared/common/scroll/scroll-pagination-component-base';
 import { ShippingRequestForPriceOfferGetAllInput } from '../../../../shared/common/search/ShippingRequestForPriceOfferGetAllInput';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ShippingrequestsDetailsModelComponent } from '../details/shippingrequests-details-model.component';
+import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 
 @Component({
   templateUrl: './shipping-request-card-template.component.html',
@@ -35,6 +36,7 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
   @Input() ShippingRequestId: number | null | undefined = undefined;
   direction = 'ltr';
   openCardId: number;
+  activeShippingRequestId: number;
   bidsloading = false;
   zoom: Number = 13; //map zoom
   lat: Number = 24.717942;
@@ -43,9 +45,11 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
     injector: Injector,
     private _currentServ: PriceOfferServiceProxy,
     private _directRequestSrv: ShippingRequestDirectRequestServiceProxy,
+    private _activatedRoute: ActivatedRoute,
     private router: Router
   ) {
     super(injector);
+    this.activeShippingRequestId = this._activatedRoute.snapshot.queryParams['srId'];
   }
   ngOnInit(): void {
     this.direction = document.getElementsByTagName('html')[0].getAttribute('dir');
@@ -54,6 +58,9 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
     if (this.isTMS) {
       this.searchInput.requestType = ShippingRequestType.TachyonManageService;
       this.searchInput.isTMS = true;
+    }
+    if (isNotNullOrUndefined(this.activeShippingRequestId)) {
+      this.searchInput.shippingRequestId = this.activeShippingRequestId;
     }
     this.LoadData();
   }
@@ -91,9 +98,13 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
               r.statusTitle = 'New';
             }
           }
+          // only in this case i need to use double equal not triple (type is difference)
+          if (isNotNullOrUndefined(this.activeShippingRequestId) && r.id == this.activeShippingRequestId) {
+            this.moreRedirectTo(r);
+            this.activeShippingRequestId = undefined;
+          }
         });
         this.Items.push(...result.items);
-        console.log('LoadingMore Date .....');
       });
   }
   canDeleteDirectRequest(input: GetShippingRequestForPriceOfferListDto) {

@@ -2493,6 +2493,7 @@
     <text name="IsMandatoryExpirationDate">Expiration Date Mandatory</text>
     <text name="ResetReceiverCode">Reset shipment receiver code</text>
     <text name="ReceiverCodeConfirmationMsg">Are you sure you want to reset the receiver code for this shipment?</text>
+    <text name="SrUpdatedMsgForOfferOwner">a request you priced it, has an update now, click to see the request</text>
 
 	</texts>
 </localizationDictionary>

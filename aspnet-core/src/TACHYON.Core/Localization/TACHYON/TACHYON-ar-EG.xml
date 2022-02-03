@@ -2263,5 +2263,6 @@
     <text name="IsMandatoryDocumentTemplate">المستند إلزامي</text>
 	<text name="ResetReceiverCode">إعادة تعيين رمز مستلم الشحنة</text>
 	<text name="ReceiverCodeConfirmationMsg">هل أنت متأكد أنك تريد إعادة تعيين رمز المستلم لهذه الشحنة؟</text>
+	<text name="SrUpdatedMsgForOfferOwner">طلب شحن قمت بتسعيره ، به تحديث الآن ، انقر لرؤية الطلب</text>
 	</texts>
 </localizationDictionary>
