@@ -184,12 +184,12 @@ namespace TACHYON.Common
             }
             return files;
         }
-        private byte[] MakeThumbnail(byte[] myImage, int thumbWidth, int thumbHeight)
+        public byte[] MakeThumbnail(byte[] myImage, int thumbWidth, int thumbHeight)
         {
             using (MemoryStream ms = new MemoryStream())
             using (Image thumbnail = Image.FromStream(new MemoryStream(myImage)).GetThumbnailImage(thumbWidth, thumbHeight, null, new IntPtr()))
             {
-                thumbnail.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                thumbnail.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
                 return ms.ToArray();
             }
         }
