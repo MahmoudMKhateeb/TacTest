@@ -24,6 +24,7 @@ import { NgbDropdownConfig } from '@node_modules/@ng-bootstrap/ng-bootstrap';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { FileDownloadService } from '@shared/utils/file-download.service';
 import { EntityLogComponent } from '@app/shared/common/entity-log/entity-log.component';
+import { AngularFireDatabase, AngularFireList } from '@angular/fire/compat/database';
 
 @Component({
   selector: 'new-tracking-conponent',
@@ -50,7 +51,7 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
   markerLong: number;
   markerLat: number;
   markerFacilityName: string;
-  activeIndex: number = 1;
+  activeIndex = 1;
   driverStatusesEnum = ShippingRequestTripDriverStatus;
   tripStatusesEnum = ShippingRequestTripStatus;
   pickingTypeEnum = PickingType;
@@ -62,16 +63,26 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
   loadPodForPointId: number;
   pointPodList: GetAllUploadedFileDto[];
   deliveryGoodPictureId: number;
-  mapToggle: boolean = true;
+  mapToggle = true;
+  private fireDB: AngularFireList<unknown>;
+  driverLng: number;
+  driverlat: number;
+  myIcon = {
+    url: 'https://img.icons8.com/external-justicon-flat-justicon/64/000000/external-truck-transportation-justicon-flat-justicon.png',
+    scaledSize: {
+      width: 64,
+      height: 64,
+    },
+  };
   newReceiverCode: string;
-
   constructor(
     injector: Injector,
     private elRef: ElementRef,
     private _trackingServiceProxy: TrackingServiceProxy,
     private _waybillsServiceProxy: WaybillsServiceProxy,
     private _fileDownloadService: FileDownloadService,
-    config: NgbDropdownConfig
+    config: NgbDropdownConfig,
+    private _db: AngularFireDatabase
   ) {
     super(injector);
     config.autoClose = true;
@@ -86,8 +97,17 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
     this.getForView();
     this.getCordinatesByCityName(this.trip.origin, 'source');
     this.getCordinatesByCityName(this.trip.destination, 'destanation');
+    this.getDriverLiveLocation();
   }
 
+  getDriverLiveLocation() {
+    this.fireDB = this._db.list('maps', (ref) => ref.orderByChild('tripId').equalTo(this.trip.id));
+    this.fireDB.valueChanges().subscribe((res: any) => {
+      console.log(res);
+      this.driverLng = res[0].lng;
+      this.driverlat = res[0].lat;
+    });
+  }
   /**
    * Show Item
    * @param item
