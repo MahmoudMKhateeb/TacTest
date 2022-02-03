@@ -4,6 +4,7 @@ using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Localization;
 using Abp.Notifications;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -608,6 +609,22 @@ namespace TACHYON.Notifications
                 await NotifyAllWhenTripUpdated(input);
                 // await _firebaseNotifier.TripUpdated(input);
             }
+        }
+        
+        public async Task NotifyOfferOwnerWhenSrUpdated(long srId, params int[] tenantsIds)
+        {
+            var tenantsAdmin = await GetTenantsAdminUsers(tenantsIds);
+
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    L("SrUpdatedMsgForOfferOwner"),
+                    TACHYONConsts.LocalizationSourceName))
+            {
+                Properties = new Dictionary<string, object>() { { "srId", srId } }
+            };
+
+            await _notificationPublisher.PublishAsync(AppNotificationNames.NotifyOfferOwnerWhenSrUpdated,
+                notificationData, userIds: tenantsAdmin);
         }
 
         #region Invoices
@@ -1244,10 +1261,23 @@ namespace TACHYON.Notifications
         {
             DisableTenancyFilters();
 
-            var user = await _userRepo.FirstOrDefaultAsync(x =>
-                x.TenantId == tenantId && x.UserName.Equals(AbpUserBase.AdminUserName));
+            var userId = await _userRepo.GetAll().Where(x =>
+                x.TenantId == tenantId && x.UserName.Equals(AbpUserBase.AdminUserName))
+                .Select(x=> x.Id).FirstOrDefaultAsync();
 
-            return new UserIdentifier(tenantId, user.Id);
+            return new UserIdentifier(tenantId, userId);
+        }
+        
+        [UnitOfWork]
+        protected virtual async Task<UserIdentifier[]> GetTenantsAdminUsers(params int[] tenantsIds )
+        {
+            if (tenantsIds.Length < 1) return new UserIdentifier[]{};
+            DisableTenancyFilters();
+
+            return await _userRepo.GetAll().Where(x => x.TenantId != null &&
+                    tenantsIds.Contains(x.TenantId.Value) && x.UserName.Equals(AbpUserBase.AdminUserName))
+                .Select(x=> new UserIdentifier(x.TenantId,x.Id)).ToArrayAsync();
+            
         }
 
         [UnitOfWork]

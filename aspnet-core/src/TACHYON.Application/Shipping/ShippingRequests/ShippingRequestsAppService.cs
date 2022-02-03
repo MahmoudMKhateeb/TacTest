@@ -80,24 +80,21 @@ namespace TACHYON.Shipping.ShippingRequests
             IRepository<Tenant> tenantRepository,
             IRepository<TrucksType, long> lookupTrucksTypeRepository,
             IRepository<TrailerType, int> lookupTrailerTypeRepository,
-            //IRepository<RoutType, int> lookupRoutTypeRepository,
             IRepository<GoodCategory, int> lookupGoodCategoryRepository,
             IRepository<Vas, int> lookup_vasRepository,
             IRepository<ShippingRequestVas, long> shippingRequestVasRepository,
             IRepository<VasPrice> vasPriceRepository,
             IRepository<Port, long> lookupPortRepository,
-            IRepository<ShippingRequestBid, long> shippingRequestBidRepository,
             BidDomainService bidDomainService,
             IRepository<Capacity, int> capacityRepository,
             IRepository<TransportType, int> transportTypeRepository,
             IRepository<RoutPoint, long> routPointRepository,
             IRepository<ShippingRequestsCarrierDirectPricing> carrierDirectPricingRepository,
-            IRepository<ShippingRequestDirectRequest, long> shippingRequestDirectRequestRepository,
-            PriceOfferManager priceOfferManager,
             IRepository<InvoiceTrip, long> invoiveTripRepository,
             ShippingRequestDirectRequestAppService shippingRequestDirectRequestAppService,
             ShippingRequestDirectRequestManager shippingRequestDirectRequestManager,
-            DocumentFilesManager documentFilesManager)
+            DocumentFilesManager documentFilesManager,
+            IRepository<PriceOffer, long> priceOfferRepository)
         {
             _vasPriceRepository = vasPriceRepository;
             _shippingRequestRepository = shippingRequestRepository;
@@ -112,7 +109,6 @@ namespace TACHYON.Shipping.ShippingRequests
             _lookup_trailerTypeRepository = lookupTrailerTypeRepository;
             _lookup_goodCategoryRepository = lookupGoodCategoryRepository;
             _lookup_PortRepository = lookupPortRepository;
-            _shippingRequestBidRepository = shippingRequestBidRepository;
             _bidDomainService = bidDomainService;
             _lookup_vasRepository = lookup_vasRepository;
             _shippingRequestVasRepository = shippingRequestVasRepository;
@@ -120,12 +116,11 @@ namespace TACHYON.Shipping.ShippingRequests
             _transportTypeRepository = transportTypeRepository;
             _routPointRepository = routPointRepository;
             _carrierDirectPricingRepository = carrierDirectPricingRepository;
-            _shippingRequestDirectRequestRepository = shippingRequestDirectRequestRepository;
-            _priceOfferManager = priceOfferManager;
             _InvoiveTripRepository = invoiveTripRepository;
             _shippingRequestDirectRequestAppService = shippingRequestDirectRequestAppService;
             _shippingRequestDirectRequestManager = shippingRequestDirectRequestManager;
             _documentFilesManager = documentFilesManager;
+            _priceOfferRepository = priceOfferRepository;
         }
 
         private readonly IRepository<ShippingRequestsCarrierDirectPricing> _carrierDirectPricingRepository;
@@ -137,10 +132,6 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly IRepository<UnitOfMeasure, int> _unitOfMeasureRepository;
         private readonly IRepository<Vas, int> _lookup_vasRepository;
         private readonly IRepository<ShippingRequestVas, long> _shippingRequestVasRepository;
-
-        private readonly IRepository<ShippingRequestDirectRequest, long> _shippingRequestDirectRequestRepository;
-
-        // private readonly IRepository<Route, int> _lookup_routeRepository;
         private readonly IRepository<RoutPoint, long> _routPointRepository;
         private readonly IAppNotifier _appNotifier;
         private readonly IRepository<Tenant> _tenantRepository;
@@ -148,12 +139,11 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly IRepository<TrailerType, int> _lookup_trailerTypeRepository;
         private readonly IRepository<GoodCategory, int> _lookup_goodCategoryRepository;
         private readonly IRepository<Port, long> _lookup_PortRepository;
-        private readonly IRepository<ShippingRequestBid, long> _shippingRequestBidRepository;
         private readonly BidDomainService _bidDomainService;
         private readonly IRepository<Capacity, int> _capacityRepository;
         private readonly IRepository<TransportType, int> _transportTypeRepository;
         private readonly IRepository<ShippingRequestTripVas, long> _shippingRequestTripVasRepository;
-        private readonly PriceOfferManager _priceOfferManager;
+        private readonly IRepository<PriceOffer, long> _priceOfferRepository;
         private readonly IRepository<InvoiceTrip, long> _InvoiveTripRepository;
         private readonly ShippingRequestDirectRequestAppService _shippingRequestDirectRequestAppService;
         private readonly ShippingRequestDirectRequestManager _shippingRequestDirectRequestManager;
@@ -836,6 +826,21 @@ namespace TACHYON.Shipping.ShippingRequests
             }
         }
 
+        /// <summary>
+        /// Used to check if the updated shipping request has any offer
+        /// and if it has any offer this method will notify all offers owners.
+        /// please use this method for pre-priced shipping requests only
+        /// </summary>
+        /// <param name="shippingRequestId"></param>
+        private async Task CheckHasOffersToNotifyCarriers(long shippingRequestId)
+        {
+            DisableTenancyFilters();
+            var carriers = await _priceOfferRepository.GetAll()
+                .Where(x => x.ShippingRequestId == shippingRequestId)
+                .Select(x => x.TenantId).ToArrayAsync();
+
+            await _appNotifier.NotifyOfferOwnerWhenSrUpdated(shippingRequestId, carriers);
+        }
         private async Task ValidateGoodsCategory(CreateOrEditShippingRequestDto input)
         {
             if (input.GoodCategoryId != null)
@@ -877,6 +882,9 @@ namespace TACHYON.Shipping.ShippingRequests
             }
 
             await ValidateGoodsCategory(input);
+            
+            if (shippingRequest.Status == ShippingRequestStatus.NeedsAction) 
+                await CheckHasOffersToNotifyCarriers(shippingRequest.Id);
 
             ObjectMapper.Map(input, shippingRequest);
         }
