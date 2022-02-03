@@ -16,12 +16,10 @@ import { ScrollPagnationComponentBase } from '@shared/common/scroll/scroll-pagin
 import { TrackingSearchInput } from '../../../../shared/common/search/TrackingSearchInput';
 import { LocalStorageService } from '@shared/utils/local-storage.service';
 import { AppConsts } from '@shared/AppConsts';
-import { TrackingSignalrService } from './tacking-signalr.service';
 import { ViewTripAccidentModelComponent } from '../ShippingRequestTrips/accident/View-trip-accident-modal.component';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { FileDownloadService } from '@shared/utils/file-download.service';
 import { NewTrackingConponent } from '@app/main/shippingRequests/shippingRequests/tracking/new-tracking/new-tracking-conponent';
-import { ViewTripModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/viewTripModal/viewTripModal.component';
 import { finalize } from '@node_modules/rxjs/operators';
 import Swal from 'sweetalert2';
 
@@ -39,7 +37,6 @@ import Swal from 'sweetalert2';
 export class TrackingComponent extends ScrollPagnationComponentBase implements OnInit {
   @ViewChild('ModelIncident', { static: false }) modelIncident: ViewTripAccidentModelComponent;
   @ViewChild('NewTrackingComponent', { static: false }) newTrackingComponent: NewTrackingConponent;
-  @ViewChild('ViewTripModal', { static: false }) ViewTripModal: ViewTripModalComponent;
 
   public Items: TrackingListDto[] = [];
   direction = 'ltr';
@@ -59,7 +56,6 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
     injector: Injector,
     private _currentServ: TrackingServiceProxy,
     private _localStorageService: LocalStorageService,
-    private _trackingSignalrService: TrackingSignalrService,
     private _waybillsServiceProxy: WaybillsServiceProxy,
     private _shippingRequestDriverServiceProxy: ShippingRequestDriverServiceProxy,
     private _trackingServiceProxy: TrackingServiceProxy,
