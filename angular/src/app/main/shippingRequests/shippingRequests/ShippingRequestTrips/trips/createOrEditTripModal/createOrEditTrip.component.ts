@@ -7,6 +7,7 @@ import {
   CreateOrEditShippingRequestTripVasDto,
   FacilityForDropdownDto,
   GetShippingRequestVasForViewDto,
+  PickingType,
   ReceiverFacilityLookupTableDto,
   ReceiversServiceProxy,
   RoutStepsServiceProxy,
@@ -259,14 +260,28 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
 
   GetSelectedstartDateChange($event: NgbDateStruct, type) {
     if ($event != null && $event.year < 1900) {
+      //When Date Type is Gregorian
       const ngDate = this.dateFormatterService.ToGregorian($event);
       var date = this.dateFormatterService.NgbDateStructToMoment(ngDate);
-      if (type == 'start') this.trip.startTripDate = date;
-      if (type == 'end') this.trip.endTripDate = date;
+      if (type == 'start') {
+        this.trip.startTripDate = date;
+        this.startTripdate = date;
+      }
+      if (type == 'end') {
+        this.trip.endTripDate = date;
+        this.endTripdate = date;
+      }
+      //When Date Type is Hijri
     } else if ($event != null && $event.year > 1900) {
       var fromHijriDate = this.dateFormatterService.NgbDateStructToMoment($event);
-      if (type == 'start') this.trip.startTripDate = fromHijriDate;
-      if (type == 'end') this.trip.endTripDate = fromHijriDate;
+      if (type == 'start') {
+        this.trip.startTripDate = fromHijriDate;
+        this.startTripdate = date;
+      }
+      if (type == 'end') {
+        this.trip.endTripDate = fromHijriDate;
+        this.endTripdate = date;
+      }
     }
   }
 
@@ -439,7 +454,13 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
    */
   private validatePointsBeforeAddTrip() {
     //if trip Drop Points is less than number of drops Prevent Adding Trip
-    if (this.trip.routPoints.find((x) => !x.goodsDetailListDto)) {
+    if (this.trip.routPoints.find((x) => x.pickingType == PickingType.Dropoff && !x.goodsDetailListDto)) {
+      console.log('first Condition Fired');
+      Swal.fire(this.l('IncompleteTripPoint'), this.l('PleaseAddAllTheDropPoints'), 'warning');
+      return false;
+      //if the routetype is single drop and the Drop point setup is not completed prevent adding trip
+    } else if (this.shippingRequest.routeTypeId === this.RouteTypes.SingleDrop && !this.trip.routPoints[1].goodsDetailListDto) {
+      console.log('Secound Condition Fired');
       Swal.fire(this.l('IncompleteTripPoint'), this.l('PleaseCompleteTheDropPointSetup'), 'warning');
       return false;
     } else {
