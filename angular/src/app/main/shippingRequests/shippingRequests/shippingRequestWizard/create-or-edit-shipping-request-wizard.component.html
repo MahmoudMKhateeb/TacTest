@@ -132,13 +132,17 @@
                         }"
                       >
                         <p-dropdown
+                          name="allCarriers"
                           [options]="allCarriers"
                           class="form-control"
                           [(ngModel)]="step1Dto.carrierTenantIdForDirectRequest"
                           placeholder="Select a Carrier"
                           optionLabel="displayName"
+                          optionValue="id"
                           [showClear]="true"
                           [styleClass]="'myCarrierInput'"
+                          formControlName="carrier"
+                          [dataKey]="'id'"
                         >
                           <ng-template let-carrier pTemplate="item">
                             <div class="country-item">
