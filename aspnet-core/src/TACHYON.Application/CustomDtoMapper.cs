@@ -600,7 +600,8 @@ namespace TACHYON
                       user.MapFrom(dto => dto.IsAvailable ? UserDriverStatus.Available : UserDriverStatus.NotAvailable));
             configuration.CreateMap<User, UserLoginInfoDto>();
             configuration.CreateMap<User, UserListDto>();
-            configuration.CreateMap<User, DriverListDto>();
+            configuration.CreateMap<User, DriverListDto>()
+                .ForMember(x=> x.Nationality,x=> x.MapFrom(y=> y.NationalityFk.Name));
             configuration.CreateMap<User, ChatUserDto>();
             configuration.CreateMap<User, OrganizationUnitUserListDto>();
             configuration.CreateMap<Role, OrganizationUnitRoleListDto>();

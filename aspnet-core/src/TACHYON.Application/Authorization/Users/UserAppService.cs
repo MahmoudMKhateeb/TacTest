@@ -38,6 +38,7 @@ using TACHYON.Documents.DocumentsEntities;
 using TACHYON.Documents.DocumentTypes;
 using TACHYON.Dto;
 using TACHYON.Features;
+using TACHYON.MultiTenancy;
 using TACHYON.Net.Sms;
 using TACHYON.Notifications;
 using TACHYON.Organizations.Dto;
@@ -65,6 +66,8 @@ namespace TACHYON.Authorization.Users
         private readonly IPasswordHasher<User> _passwordHasher;
         private readonly IRepository<OrganizationUnit, long> _organizationUnitRepository;
         private readonly IRoleManagementConfig _roleManagementConfig;
+        private readonly IRepository<User, long> _userRepository;
+        private readonly IRepository<Tenant> _tenantRepository;
         private readonly UserManager _userManager;
         private readonly IRepository<UserOrganizationUnit, long> _userOrganizationUnitRepository;
         private readonly IRepository<OrganizationUnitRole, long> _organizationUnitRoleRepository;
@@ -94,7 +97,8 @@ namespace TACHYON.Authorization.Users
             IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository,
             IRepository<OrganizationUnitRole, long> organizationUnitRoleRepository,
             DocumentFilesAppService documentFilesAppService,
-            ISmsSender smsSender)
+            ISmsSender smsSender, 
+            IRepository<User, long> userRepository, IRepository<Tenant> tenantRepository)
         {
             _documentFileRepository = documentFileRepository;
             _documentTypeRepository = documentTypeRepository;
@@ -116,6 +120,8 @@ namespace TACHYON.Authorization.Users
             _organizationUnitRoleRepository = organizationUnitRoleRepository;
             _documentFilesAppService = documentFilesAppService;
             _smsSender = smsSender;
+            _userRepository = userRepository;
+            _tenantRepository = tenantRepository;
             _roleRepository = roleRepository;
 
             AppUrlService = NullAppUrlService.Instance;
@@ -152,11 +158,17 @@ namespace TACHYON.Authorization.Users
             DisableTenancyFiltersIfHost();
             await DisableTenancyFiltersIfTachyonDealer();
 
-            var query = UserManager.Users
-                .Where(u => u.IsDriver)
-                .ProjectTo<DriverListDto>(AutoMapperConfigurationProvider);
+            var drivers = (from user in _userRepository.GetAllIncluding(x=> x.NationalityFk).AsNoTracking()
+                where user.IsDriver 
+                join tenant in _tenantRepository.GetAll() on user.TenantId equals tenant.Id
+                select new { User = user, CompanyName = tenant.companyName}).AsQueryable();
+                
+               var query = drivers.Select(x=> x.User)
+                   .ProjectTo<DriverListDto>(AutoMapperConfigurationProvider,
+                    drivers.Select(x=> x.CompanyName),
+                    x=> x.CompanyName);
 
-            var result = await LoadResultAsync(query, input.LoadOptions);
+               var result = await LoadResultAsync(query, input.LoadOptions);
             await FillIsMissingDocumentFiles(result);
             return result;
         }
