@@ -14,11 +14,13 @@ using Abp.Runtime.Session;
 using Abp.Runtime.Validation;
 using Abp.UI;
 using Abp.Zero.Configuration;
+using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Castle.Core.Internal;
 using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Stripe;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -159,16 +161,13 @@ namespace TACHYON.Authorization.Users
             await DisableTenancyFiltersIfTachyonDealer();
 
             var drivers = (from user in _userRepository.GetAllIncluding(x=> x.NationalityFk).AsNoTracking()
-                where user.IsDriver 
+                where user.IsDriver && user.NationalityFk != null
                 join tenant in _tenantRepository.GetAll() on user.TenantId equals tenant.Id
-                select new { User = user, CompanyName = tenant.companyName}).AsQueryable();
-                
-               var query = drivers.Select(x=> x.User)
-                   .ProjectTo<DriverListDto>(AutoMapperConfigurationProvider,
-                    drivers.Select(x=> x.CompanyName),
-                    x=> x.CompanyName);
+                select new DriverMappingEntity(){ User = user, CompanyName = tenant.companyName})
+                .Where(x=> x.User != null )
+                .ProjectTo<DriverListDto>(AutoMapperConfigurationProvider);
 
-               var result = await LoadResultAsync(query, input.LoadOptions);
+            var result = await LoadResultAsync(drivers, input.LoadOptions);
             await FillIsMissingDocumentFiles(result);
             return result;
         }

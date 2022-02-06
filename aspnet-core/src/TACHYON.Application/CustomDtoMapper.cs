@@ -600,8 +600,13 @@ namespace TACHYON
                       user.MapFrom(dto => dto.IsAvailable ? UserDriverStatus.Available : UserDriverStatus.NotAvailable));
             configuration.CreateMap<User, UserLoginInfoDto>();
             configuration.CreateMap<User, UserListDto>();
-            configuration.CreateMap<User, DriverListDto>()
-                .ForMember(x=> x.Nationality,x=> x.MapFrom(y=> y.NationalityFk.Name));
+            configuration.CreateMap<User, DriverMappingEntity>();
+            configuration.CreateMap<DriverListDto,DriverMappingEntity >()
+                .ForMember(x=> x.User,x=> x.MapFrom(y=> y))
+                .ForPath(x=> x.User.NationalityFk.Name,x=> x.MapFrom(y=> y.Nationality))
+                .ForMember(x=> x.CompanyName,x=> x.MapFrom(y=> y.CompanyName))
+                .ReverseMap();
+            configuration.CreateMap<User, DriverListDto>();
             configuration.CreateMap<User, ChatUserDto>();
             configuration.CreateMap<User, OrganizationUnitUserListDto>();
             configuration.CreateMap<Role, OrganizationUnitRoleListDto>();
@@ -939,5 +944,12 @@ namespace TACHYON
 
 
 
+    }
+    
+    public class DriverMappingEntity
+    {
+        public User User { get; set; }
+
+        public string CompanyName { get; set; }
     }
 }
