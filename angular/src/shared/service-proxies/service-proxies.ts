@@ -22636,6 +22636,7 @@ export class NormalPricePackagesServiceProxy {
   }
 
   /**
+   * @param carrierId (optional)
    * @param filter (optional)
    * @param destinationFilter (optional)
    * @param originFilter (optional)
@@ -22647,6 +22648,7 @@ export class NormalPricePackagesServiceProxy {
    * @return Success
    */
   getAll(
+    carrierId: number | null | undefined,
     filter: string | null | undefined,
     destinationFilter: string | null | undefined,
     originFilter: string | null | undefined,
@@ -22657,6 +22659,7 @@ export class NormalPricePackagesServiceProxy {
     maxResultCount: number | undefined
   ): Observable<PagedResultDtoOfNormalPricePackageDto> {
     let url_ = this.baseUrl + '/api/services/app/NormalPricePackages/GetAll?';
+    if (carrierId !== undefined && carrierId !== null) url_ += 'CarrierId=' + encodeURIComponent('' + carrierId) + '&';
     if (filter !== undefined && filter !== null) url_ += 'Filter=' + encodeURIComponent('' + filter) + '&';
     if (destinationFilter !== undefined && destinationFilter !== null)
       url_ += 'DestinationFilter=' + encodeURIComponent('' + destinationFilter) + '&';
@@ -22862,6 +22865,164 @@ export class NormalPricePackagesServiceProxy {
       );
     }
     return _observableOf<boolean>(<any>null);
+  }
+
+  /**
+   * @param pricePackageId (optional)
+   * @param shippingRequestId (optional)
+   * @return Success
+   */
+  calculateShippingRequestPricePackage(
+    pricePackageId: number | undefined,
+    shippingRequestId: number | undefined
+  ): Observable<CalculateShippingRequestPricePackageDto> {
+    let url_ = this.baseUrl + '/api/services/app/NormalPricePackages/CalculateShippingRequestPricePackage?';
+    if (pricePackageId === null) throw new Error("The parameter 'pricePackageId' cannot be null.");
+    else if (pricePackageId !== undefined) url_ += 'pricePackageId=' + encodeURIComponent('' + pricePackageId) + '&';
+    if (shippingRequestId === null) throw new Error("The parameter 'shippingRequestId' cannot be null.");
+    else if (shippingRequestId !== undefined) url_ += 'shippingRequestId=' + encodeURIComponent('' + shippingRequestId) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processCalculateShippingRequestPricePackage(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processCalculateShippingRequestPricePackage(<any>response_);
+            } catch (e) {
+              return <Observable<CalculateShippingRequestPricePackageDto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<CalculateShippingRequestPricePackageDto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processCalculateShippingRequestPricePackage(response: HttpResponseBase): Observable<CalculateShippingRequestPricePackageDto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = CalculateShippingRequestPricePackageDto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<CalculateShippingRequestPricePackageDto>(<any>null);
+  }
+
+  /**
+   * @param carrierId (optional)
+   * @param shippingRequestId (optional)
+   * @param sorting (optional)
+   * @param skipCount (optional)
+   * @param maxResultCount (optional)
+   * @return Success
+   */
+  getAllPricePackagesForShippingRequest(
+    carrierId: number | null | undefined,
+    shippingRequestId: number | undefined,
+    sorting: string | null | undefined,
+    skipCount: number | undefined,
+    maxResultCount: number | undefined
+  ): Observable<PagedResultDtoOfNormalPricePackageForShippingRequestDto> {
+    let url_ = this.baseUrl + '/api/services/app/NormalPricePackages/GetAllPricePackagesForShippingRequest?';
+    if (carrierId !== undefined && carrierId !== null) url_ += 'CarrierId=' + encodeURIComponent('' + carrierId) + '&';
+    if (shippingRequestId === null) throw new Error("The parameter 'shippingRequestId' cannot be null.");
+    else if (shippingRequestId !== undefined) url_ += 'ShippingRequestId=' + encodeURIComponent('' + shippingRequestId) + '&';
+    if (sorting !== undefined && sorting !== null) url_ += 'Sorting=' + encodeURIComponent('' + sorting) + '&';
+    if (skipCount === null) throw new Error("The parameter 'skipCount' cannot be null.");
+    else if (skipCount !== undefined) url_ += 'SkipCount=' + encodeURIComponent('' + skipCount) + '&';
+    if (maxResultCount === null) throw new Error("The parameter 'maxResultCount' cannot be null.");
+    else if (maxResultCount !== undefined) url_ += 'MaxResultCount=' + encodeURIComponent('' + maxResultCount) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAllPricePackagesForShippingRequest(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAllPricePackagesForShippingRequest(<any>response_);
+            } catch (e) {
+              return <Observable<PagedResultDtoOfNormalPricePackageForShippingRequestDto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<PagedResultDtoOfNormalPricePackageForShippingRequestDto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAllPricePackagesForShippingRequest(
+    response: HttpResponseBase
+  ): Observable<PagedResultDtoOfNormalPricePackageForShippingRequestDto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = PagedResultDtoOfNormalPricePackageForShippingRequestDto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<PagedResultDtoOfNormalPricePackageForShippingRequestDto>(<any>null);
   }
 
   /**
@@ -72692,6 +72853,140 @@ export class CheckIfPricePackageNameAvailableDto implements ICheckIfPricePackage
 export interface ICheckIfPricePackageNameAvailableDto {
   name: string | undefined;
   id: number | undefined;
+}
+
+export class CalculateShippingRequestPricePackageDto implements ICalculateShippingRequestPricePackageDto {
+  constructor(data?: ICalculateShippingRequestPricePackageDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {}
+
+  static fromJS(data: any): CalculateShippingRequestPricePackageDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new CalculateShippingRequestPricePackageDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    return data;
+  }
+}
+
+export interface ICalculateShippingRequestPricePackageDto {}
+
+export class NormalPricePackageForShippingRequestDto implements INormalPricePackageForShippingRequestDto {
+  id!: number;
+  carrierName!: string | undefined;
+  carrierRate!: number;
+  pricePackageId!: string | undefined;
+  displayName!: string | undefined;
+  truckType!: string | undefined;
+  origin!: string | undefined;
+  destination!: string | undefined;
+
+  constructor(data?: INormalPricePackageForShippingRequestDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.id = _data['id'];
+      this.carrierName = _data['carrierName'];
+      this.carrierRate = _data['carrierRate'];
+      this.pricePackageId = _data['pricePackageId'];
+      this.displayName = _data['displayName'];
+      this.truckType = _data['truckType'];
+      this.origin = _data['origin'];
+      this.destination = _data['destination'];
+    }
+  }
+
+  static fromJS(data: any): NormalPricePackageForShippingRequestDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new NormalPricePackageForShippingRequestDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['id'] = this.id;
+    data['carrierName'] = this.carrierName;
+    data['carrierRate'] = this.carrierRate;
+    data['pricePackageId'] = this.pricePackageId;
+    data['displayName'] = this.displayName;
+    data['truckType'] = this.truckType;
+    data['origin'] = this.origin;
+    data['destination'] = this.destination;
+    return data;
+  }
+}
+
+export interface INormalPricePackageForShippingRequestDto {
+  id: number;
+  carrierName: string | undefined;
+  carrierRate: number;
+  pricePackageId: string | undefined;
+  displayName: string | undefined;
+  truckType: string | undefined;
+  origin: string | undefined;
+  destination: string | undefined;
+}
+
+export class PagedResultDtoOfNormalPricePackageForShippingRequestDto implements IPagedResultDtoOfNormalPricePackageForShippingRequestDto {
+  totalCount!: number;
+  items!: NormalPricePackageForShippingRequestDto[] | undefined;
+
+  constructor(data?: IPagedResultDtoOfNormalPricePackageForShippingRequestDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.totalCount = _data['totalCount'];
+      if (Array.isArray(_data['items'])) {
+        this.items = [] as any;
+        for (let item of _data['items']) this.items!.push(NormalPricePackageForShippingRequestDto.fromJS(item));
+      }
+    }
+  }
+
+  static fromJS(data: any): PagedResultDtoOfNormalPricePackageForShippingRequestDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new PagedResultDtoOfNormalPricePackageForShippingRequestDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['totalCount'] = this.totalCount;
+    if (Array.isArray(this.items)) {
+      data['items'] = [];
+      for (let item of this.items) data['items'].push(item.toJSON());
+    }
+    return data;
+  }
+}
+
+export interface IPagedResultDtoOfNormalPricePackageForShippingRequestDto {
+  totalCount: number;
+  items: NormalPricePackageForShippingRequestDto[] | undefined;
 }
 
 export enum UserNotificationState {

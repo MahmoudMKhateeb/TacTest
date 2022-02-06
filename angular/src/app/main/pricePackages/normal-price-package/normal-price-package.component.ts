@@ -56,6 +56,7 @@ export class NormalPricePackageComponent extends AppComponentBase {
 
     this._normalPricePackagesServiceProxy
       .getAll(
+        null,
         this.filterText,
         this.destinationFilter,
         this.originFilter,

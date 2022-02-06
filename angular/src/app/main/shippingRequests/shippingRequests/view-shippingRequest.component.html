@@ -22,6 +22,12 @@
         ></shipping-request-offers-list>
       </ng-template>
       <!--  end:: PricOfferingSection -->
+
+      <!--  start:: NormalPricePackageSection -->
+      <ng-template [ngIf]="canSeePricePackages()">
+        <normal-price-packages-list [shippingRequestId]="activeShippingRequestId"></normal-price-packages-list>
+      </ng-template>
+      <!--  end:: NormalPricePackageSection -->
       <div class="card card-custom gutter-b">
         <!--  start of card::form-->
         <div class="card-header">

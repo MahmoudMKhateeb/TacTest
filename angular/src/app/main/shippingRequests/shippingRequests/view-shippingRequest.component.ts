@@ -164,6 +164,13 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
     }
     return true;
   }
+  canSeePricePackages() {
+    // if the user is carrier
+    if (this.feature.isEnabled('App.Carrier')) {
+      return false;
+    }
+    return true;
+  }
   /* canSeePriceOffers() {
     // if the user is carrier
     if (this.feature.isEnabled('App.Carrier') || this.shippingRequestforView.shippingRequest.price) {

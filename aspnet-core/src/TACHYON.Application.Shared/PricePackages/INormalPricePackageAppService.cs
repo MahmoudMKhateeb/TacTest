@@ -19,5 +19,7 @@ namespace TACHYON.PricePackages
         Task<List<SelectItemDto>> GetAllCitiesForTableDropdown();
         Task<List<SelectItemDto>> GetAllTranspotTypesForTableDropdown();
         Task<List<SelectItemDto>> GetAllTruckTypesForTableDropdown(int transpotTypeId);
+        Task<PagedResultDto<NormalPricePackageForShippingRequestDto>> GetAllPricePackagesForShippingRequest(GetAllNormalPricePackagesForShippingRequestInput input);
+        Task<CalculateShippingRequestPricePackageDto> CalculateShippingRequestPricePackage(int pricePackageId, long shippingRequestId);
     }
 }

@@ -15,6 +15,7 @@ using TACHYON.Cities;
 using TACHYON.Dto;
 using TACHYON.Features;
 using TACHYON.PricePackages.Dto.NormalPricePackage;
+using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Trucks.TruckCategories.TransportTypes;
 using TACHYON.Trucks.TrucksTypes;
 
@@ -24,19 +25,22 @@ namespace TACHYON.PricePackages
     public class NormalPricePackagesAppService : TACHYONAppServiceBase, INormalPricePackageAppService
     {
         private readonly IRepository<NormalPricePackage> _pricePackageRepository;
+        private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
         private readonly IRepository<City> _lookup_cityRepository;
         private readonly IRepository<TransportType> _lookup_transportTypeRepository;
         private readonly IRepository<TrucksType, long> _lookup_trucksTypeRepository;
-        public NormalPricePackagesAppService(IRepository<NormalPricePackage> pricePackageRepository, IRepository<City> lookup_cityRepository, IRepository<TransportType> lookup_transportTypeRepository, IRepository<TrucksType, long> lookup_trucksTypeRepository)
+        public NormalPricePackagesAppService(IRepository<NormalPricePackage> pricePackageRepository, IRepository<City> lookup_cityRepository, IRepository<TransportType> lookup_transportTypeRepository, IRepository<TrucksType, long> lookup_trucksTypeRepository, IRepository<ShippingRequest, long> shippingRequestRepository)
         {
             _pricePackageRepository = pricePackageRepository;
             _lookup_cityRepository = lookup_cityRepository;
             _lookup_transportTypeRepository = lookup_transportTypeRepository;
             _lookup_trucksTypeRepository = lookup_trucksTypeRepository;
+            _shippingRequestRepository = shippingRequestRepository;
         }
 
         #region Main Endpoints 
 
+        #region Crud Opiration
         [AbpAuthorize(AppPermissions.Pages_NormalPricePackages_Edit)]
         [RequiresFeature(AppFeatures.Carrier, AppFeatures.NormalPricePackages, RequiresAll = true)]
         public async Task<CreateOrEditNormalPricePackageDto> GetNormalPricePackageForEdit(int id)
@@ -116,6 +120,63 @@ namespace TACHYON.PricePackages
         }
         #endregion
 
+        #region ShippingRequestPricePackage 
+        public async Task<CalculateShippingRequestPricePackageDto> CalculateShippingRequestPricePackage(int pricePackageId, long shippingRequestId)
+        {
+            var shippingRequest = await _shippingRequestRepository.GetAll().AsNoTracking()
+                       .FirstOrDefaultAsync(x => x.Id == shippingRequestId);
+
+            if (shippingRequest == null) throw new UserFriendlyException();
+
+            var pricePackage = await _pricePackageRepository.GetAll().AsNoTracking()
+                       .FirstOrDefaultAsync(x => x.Id == pricePackageId);
+
+            if (pricePackage == null) throw new UserFriendlyException();
+            return new CalculateShippingRequestPricePackageDto();
+
+        }
+        public async Task<PagedResultDto<NormalPricePackageForShippingRequestDto>> GetAllPricePackagesForShippingRequest(GetAllNormalPricePackagesForShippingRequestInput input)
+        {
+            DisableTenancyFilters();
+
+            var shippingRequest = await _shippingRequestRepository.GetAll().AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == input.ShippingRequestId);
+
+            if (shippingRequest == null) throw new UserFriendlyException();
+
+            var filteredPricePackages = _pricePackageRepository
+                .GetAll().AsNoTracking()
+                .WhereIf(input.CarrierId.HasValue, x => x.TenantId == input.CarrierId)
+                .Where(p => p.TrucksTypeId == shippingRequest.TrucksTypeId
+                && p.OriginCityId == shippingRequest.OriginCityId
+                && p.DestinationCityId == shippingRequest.DestinationCityId);
+
+            var pagedAndFilteredPricePackages = filteredPricePackages
+                .OrderBy(input.Sorting ?? "id desc")
+                .PageBy(input);
+            var totalCount = await filteredPricePackages.CountAsync();
+            var pricePackages = await pagedAndFilteredPricePackages.Select(p => new NormalPricePackageForShippingRequestDto
+            {
+                Id = p.Id,
+                DisplayName = p.DisplayName,
+                PricePackageId = p.PricePackageId,
+                TruckType = p.TrucksTypeFk.DisplayName,
+                Destination = p.DestinationCityFK.DisplayName,
+                Origin = p.OriginCityFK.DisplayName,
+                CarrierName = p.Tenant.Name,
+                CarrierRate = p.Tenant.Rate,
+            }).ToListAsync();
+
+            return new PagedResultDto<NormalPricePackageForShippingRequestDto>(
+                totalCount,
+                pricePackages
+            );
+
+        }
+
+        #endregion
+        #endregion
+
         #region LookUps 
         public async Task<List<SelectItemDto>> GetAllTranspotTypesForTableDropdown()
         {
@@ -183,6 +244,8 @@ namespace TACHYON.PricePackages
             var referanceNumber = "{0}-{1}-{2}";
             return string.Format(referanceNumber, formatDate, routType, referanceId);
         }
+
+
 
         #endregion
     }
