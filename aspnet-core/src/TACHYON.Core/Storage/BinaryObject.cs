@@ -13,6 +13,7 @@ namespace TACHYON.Storage
 
         [Required]
         public virtual byte[] Bytes { get; set; }
+        public byte[] ThumbnailByte { get; set; }
 
         public BinaryObject()
         {

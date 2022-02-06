@@ -1797,6 +1797,7 @@
 		<text name="SubscriptionExpire_SubTitle">This email is sent you to notify about your subscription expiration</text>
 		<text name="SubscriptionExpire_Title">TACHYON subscription expire</text>
 		<text name="SubscriptionExpireNotification">Your subscription will expire in {0} day(s).</text>
+		<text name="ShipperDoseNotHavedirectRequestCommissionFeautre">The shipper {0} Dose Not Have direct Request Commission Feautre </text>
 		
 		<text name="SubscriptionExpiringSoon_SubTitle">This email is sent you to notify about your subscription expiration.</text>
 		<text name="SubscriptionExpiringTenants">Subscription expiring tenants</text>
@@ -2502,5 +2503,15 @@
     <text name="ImportTrucksUploadFailed">Trucks import process has failed.</text>
     <text name="facilityNameIsAlreadyExistsForThisTenant">Facility Name Is Already Exists For This Tenant</text>
 	<text name="NumberOfRating">Company Ratings Count</text>
+	<text name="PointNotFoundOrNotCompleted">Point not found or not completed</text>
+	<text name="UploadGoodPicture">Upload Good Picture</text>
+	<text name="UploadPOD">Upload POD</text>
+	<text name="UploadDeliveryNotes">Upload Delivery Notes</text>
+    <text name="IsMandatoryDocumentTemplate">Document Template Mandatory</text>
+    <text name="IsMandatoryNumber">Number Mandatory</text>
+    <text name="IsMandatoryExpirationDate">Expiration Date Mandatory</text>
+	<text name="NoMatchingTrucks">There is no matching trucks</text>
+	<text name="NoMatchingDrivers">There is no Drivers</text>
+
 	</texts>
 </localizationDictionary>

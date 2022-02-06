@@ -15,6 +15,7 @@ import {
   TrackingRoutePointDto,
   TrackingServiceProxy,
   WaybillsServiceProxy,
+  GetAllUploadedFileDto,
 } from '@shared/service-proxies/service-proxies';
 import { finalize } from 'rxjs/operators';
 import { TrackingConfirmModalComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tacking-confirm-code-model.component';
@@ -59,7 +60,7 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
   dropWaybillLoadingId: number;
   busyPointId: number;
   loadPodForPointId: number;
-  pointPodList: FileDto[];
+  pointPodList: GetAllUploadedFileDto[];
 
   constructor(
     injector: Injector,
@@ -454,8 +455,8 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
    * download a pod file
    * @param pod
    */
-  downloadPOD(pod: FileDto): void {
-    this._fileDownloadService.downloadTempFile(pod);
+  downloadPOD(pod: GetAllUploadedFileDto): void {
+    this._fileDownloadService.downloadFileByBinary(pod.documentId, pod.fileName, pod.fileType);
   }
 
   showPointLog(pointId: number) {

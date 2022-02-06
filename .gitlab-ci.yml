@@ -2,6 +2,7 @@ stages:
   - preparation
   - Build
   - release
+  - sonarQube
 ### start of Preparation
 Preparation:
   stage: preparation

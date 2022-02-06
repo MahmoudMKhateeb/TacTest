@@ -29,6 +29,11 @@ namespace TACHYON.Authorization.Users.Profile
             }
 
             var file = await _binaryObjectManager.GetOrNullAsync(user.ProfilePictureId.Value);
+
+            if (user.IsDriver)
+            {
+                return file == null ? "" : Convert.ToBase64String(file.ThumbnailByte);
+            }
             return file == null ? "" : Convert.ToBase64String(file.Bytes);
         }
     }
