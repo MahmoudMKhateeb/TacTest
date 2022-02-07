@@ -95,9 +95,6 @@
                         <span *ngIf="record.pickingType != 1" class="font-weight-bold text-danger">{{ l('drop') }}</span>
                       </td>
                       <td>
-                        {{ record.goodsDetailListDto ? getTotalWeightOfDropPoint(record) : '-' }}
-                      </td>
-                      <td>
                         <div class="btn-group dropdown" container="body" dropdown>
                           <a
                             class="dropdown-toggle btn btn-sm btn-primary"
