@@ -361,7 +361,7 @@ namespace TACHYON.Shipping.Drivers
             if (routes == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
             routes.ForEach(x => x.StatusTitle = L(x.Status.ToString()));
             var trip = _ShippingRequestTrip.Get(id);
-            return new DriverRoutPoint { TripStatus = trip.Status , TripId = trip.Id,WaybillNumber = trip.WaybillNumber, RoutPoint = routes };
+            return new DriverRoutPoint { TripStatus = trip.Status , TripId = trip.Id,WaybillNumber = trip.WaybillNumber, ShippingRequestId = trip.ShippingRequestId , RoutPoint = routes };
         }
 
         public async Task<RoutDropOffDto> GetDropOffDetail(long PointId)
