@@ -100,7 +100,11 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public decimal? CommissionPercentageOrAddValue { get; set; }
         public decimal? CommissionAmount { get; set; }
         public string BayanId { get; set; }
-
+        #endregion
+        #region Remarks
+        public bool CanBePrinted { get; set; }
+        public string RoundTrip { get; set; }
+        public string ContainerNumber { get; set; }
         #endregion
     }
 }
