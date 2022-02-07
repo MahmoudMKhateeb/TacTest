@@ -30237,12 +30237,12 @@ export class ProfileServiceProxy {
   }
 
   /**
-   * @param userId (optional)
+   * @param tenantId (optional)
    * @return Success
    */
-  getProfilePicture(userId: number | null | undefined): Observable<GetProfilePictureOutput> {
+  getProfilePicture(tenantId: number | null | undefined): Observable<GetProfilePictureOutput> {
     let url_ = this.baseUrl + '/api/services/app/Profile/GetProfilePicture?';
-    if (userId !== undefined && userId !== null) url_ += 'userId=' + encodeURIComponent('' + userId) + '&';
+    if (tenantId !== undefined && tenantId !== null) url_ += 'tenantId=' + encodeURIComponent('' + tenantId) + '&';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {

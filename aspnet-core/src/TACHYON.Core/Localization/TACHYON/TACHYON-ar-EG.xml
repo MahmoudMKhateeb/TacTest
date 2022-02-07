@@ -2251,8 +2251,7 @@
     <text name="facilityNameIsAlreadyExistsForThisTenant">اسم المنشأة موجود بالفعل لهذا المستأجر</text>
 		<text name="PointNotFoundOrNotCompleted">الرحلة غير متوفرة او غير مكتملة</text>
 		<text name="UploadGoodPicture">رفع صورة البضاعة</text>
-		<text name="UploadPOD">رفع اثبات التسليم</text>
-		<text name="UploadDeliveryNotes">رفع ملاحظات التوصيل</text>
+    <text name="UploadDeliveryNotes">رفع ملاحظات التوصيل</text>
 		<text name="CancelShipment">تم إلغاء الشحنة من قبل {0}</text>
 		<text name="ClickToSeeInvalidTrucks">انقر لرؤية شاحنات غير صالحة</text>
 		<text name="CreateBidRequestNotificationMessage">تم إنشاء عرض سعر</text>
