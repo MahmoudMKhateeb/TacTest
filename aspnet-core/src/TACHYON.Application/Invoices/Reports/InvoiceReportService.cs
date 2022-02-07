@@ -21,7 +21,7 @@ namespace TACHYON.Invoices.Reports
 
         public FileDto DownloadInvoiceReportPdf(long invoiceId)
         {
-            var reportPath = "/Invoices/Reports/Invoice.rdlc";
+            var reportPath = "/Invoices/Reports/LandScapeInvoice.rdlc";
 
             ArrayList names = new ArrayList();
             ArrayList data = new ArrayList();
