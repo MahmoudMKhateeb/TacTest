@@ -392,10 +392,23 @@ namespace TACHYON.Shipping.Trips
         }
         public async Task AddRemarks(RemarksInputDto input)
         {
-            var shippginRequstTrip = await _shippingRequestTripRepository.FirstOrDefaultAsync(x => x.Id == input.Id);
+            var shippginRequstTrip = await _shippingRequestTripRepository.GetAll()
+                .Include(z => z.ShippingRequestFk)
+                .FirstOrDefaultAsync(x => x.Id == input.Id);
             shippginRequstTrip.RoundTrip = input.RoundTrip;
             shippginRequstTrip.CanBePrinted = input.CanBePrinted;
             shippginRequstTrip.ContainerNumber = input.ContainerNumber;
+        }
+        public async Task<RemarksInputDto> GetRemarks(int tripId)
+        {
+            return await _shippingRequestTripRepository.GetAll()
+                  .Select(y => new RemarksInputDto()
+                  {
+                      Id = y.Id,
+                      RoundTrip = y.RoundTrip,
+                      ContainerNumber = y.ContainerNumber,
+                      CanBePrinted = y.CanBePrinted
+                  }).FirstOrDefaultAsync(x => x.Id == tripId);
         }
         private void AssignWorkFlowVersionToRoutPoints(ShippingRequestTrip trip)
         {

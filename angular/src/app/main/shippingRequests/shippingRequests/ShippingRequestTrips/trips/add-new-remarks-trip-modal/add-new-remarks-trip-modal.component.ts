@@ -1,29 +1,29 @@
-import { Component, ElementRef, Injector, OnInit, ViewChild } from '@angular/core';
+import { Component, Injector, OnInit, ViewChild } from '@angular/core';
 import { finalize } from 'rxjs/operators';
 import { RemarksInputDto, ShippingRequestsTripServiceProxy } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 
 @Component({
-  templateUrl: './CreateOrEditRemarks.component.html',
-  animations: [appModuleAnimation()],
+  selector: 'app-add-new-remarks-trip-modal',
+  templateUrl: './add-new-remarks-trip-modal.component.html',
+  styleUrls: ['./add-new-remarks-trip-modal.component.css'],
 })
-export class CreateOrEditRemarksComponent extends AppComponentBase implements OnInit {
+export class AddNewRemarksTripModalComponent extends AppComponentBase implements OnInit {
   @ViewChild('modal', { static: false }) modal: ModalDirective;
-  @ViewChild('roundTripInput', { static: false }) roundTripInput: ElementRef;
   saving = false;
   active = false;
-  remarksInput: RemarksInputDto;
+  remarksInput = new RemarksInputDto();
 
   constructor(injector: Injector, private _shippingRequestTripsService: ShippingRequestsTripServiceProxy) {
     super(injector);
   }
+
   ngOnInit(): void {}
-  onShown(): void {
-    this.roundTripInput.nativeElement.focus();
-  }
   show(id: number): void {
+    this._shippingRequestTripsService.getRemarks(id).subscribe((result) => {
+      this.remarksInput = result;
+    });
     this.active = true;
     this.remarksInput.id = id;
     this.modal.show();
@@ -43,7 +43,8 @@ export class CreateOrEditRemarksComponent extends AppComponentBase implements On
         })
       )
       .subscribe(() => {
-        this.notify.info(this.l('CreatedSuccessfully'));
+        this.notify.info(this.l('SavedSuccessfully'));
+        this.close();
       });
   }
 }

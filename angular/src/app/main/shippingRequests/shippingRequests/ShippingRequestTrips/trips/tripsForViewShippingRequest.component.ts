@@ -14,7 +14,7 @@ import { CreateOrEditTripComponent } from '@app/main/shippingRequests/shippingRe
 import { ViewTripModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/viewTripModal/viewTripModal.component';
 import { TripService } from '../trip.service';
 import Swal from 'sweetalert2';
-import { CreateOrEditRemarksComponent } from './RemarksModal/CreateOrEditRemarks.component';
+import { AddNewRemarksTripModalComponent } from './add-new-remarks-trip-modal/add-new-remarks-trip-modal.component';
 
 @Component({
   selector: 'TripsForViewShippingRequest',
@@ -26,7 +26,7 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   @ViewChild('paginatorchild', { static: false }) paginator: Paginator;
   @ViewChild('AddNewTripModal', { static: false }) AddNewTripModal: CreateOrEditTripComponent;
   @ViewChild('ViewTripModal', { static: false }) ViewTripModal: ViewTripModalComponent;
-  @ViewChild('AddRemarksModal', { static: false }) AddRemarksModal: CreateOrEditRemarksComponent;
+  @ViewChild('AddRemarksModal', { static: false }) AddRemarksModal: AddNewRemarksTripModalComponent;
 
   @Input() ShippingRequest: ShippingRequestDto;
   @Input() VasListFromFather: GetShippingRequestVasForViewDto[];
