@@ -48,6 +48,7 @@ namespace TACHYON.Shipping.Trips.Importing.Dto
         public override void Execute(ImportShipmentFromExcelJobArgs args)
         {
             var trips=GetShipmentListFromExcelOrNull(args);
+           
             if (trips == null || !trips.Any())
             {
                 SendInvalidExcelNotification(args);

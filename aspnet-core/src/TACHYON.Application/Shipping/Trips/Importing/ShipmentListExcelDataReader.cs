@@ -59,8 +59,8 @@ namespace TACHYON.Shipping.Trips.Importing
                 trip.HasAttachment = GetBoolValueFromYesOrNo(_tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
                     row, 6, "Has Attchment ?", exceptionMessage));
 
-                _shippingRequestTripManager.ValidateTripDto(trip, ShippingRequestId);
-                _shippingRequestTripManager.ValidateDuplicateBulkReferenceFromDB(trip, ShippingRequestId);
+                _shippingRequestTripManager.ValidateTripDto(trip, ShippingRequestId, exceptionMessage);
+                //_shippingRequestTripManager.ValidateDuplicateBulkReferenceFromDB(trip, ShippingRequestId);
 
                 if (exceptionMessage.Length > 0)
                 {
