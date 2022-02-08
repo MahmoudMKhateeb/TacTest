@@ -40606,6 +40606,101 @@ export class ShippingRequestTripRejectReasonServiceProxy {
 }
 
 @Injectable()
+export class ShippingRequestUpdateServiceProxy {
+  private http: HttpClient;
+  private baseUrl: string;
+  protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+  constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+    this.http = http;
+    this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : '';
+  }
+
+  /**
+   * @param sorting (optional)
+   * @param skipCount (optional)
+   * @param maxResultCount (optional)
+   * @return Success
+   */
+  getAll(
+    priceOfferId: number,
+    shippingRequestId: number,
+    sorting: string | null | undefined,
+    skipCount: number | undefined,
+    maxResultCount: number | undefined
+  ): Observable<PagedResultDtoOfShippingRequestUpdateListDto> {
+    let url_ = this.baseUrl + '/api/services/app/ShippingRequestUpdate/GetAll?';
+    if (priceOfferId === undefined || priceOfferId === null) throw new Error("The parameter 'priceOfferId' must be defined and cannot be null.");
+    else url_ += 'PriceOfferId=' + encodeURIComponent('' + priceOfferId) + '&';
+    if (shippingRequestId === undefined || shippingRequestId === null)
+      throw new Error("The parameter 'shippingRequestId' must be defined and cannot be null.");
+    else url_ += 'ShippingRequestId=' + encodeURIComponent('' + shippingRequestId) + '&';
+    if (sorting !== undefined && sorting !== null) url_ += 'Sorting=' + encodeURIComponent('' + sorting) + '&';
+    if (skipCount === null) throw new Error("The parameter 'skipCount' cannot be null.");
+    else if (skipCount !== undefined) url_ += 'SkipCount=' + encodeURIComponent('' + skipCount) + '&';
+    if (maxResultCount === null) throw new Error("The parameter 'maxResultCount' cannot be null.");
+    else if (maxResultCount !== undefined) url_ += 'MaxResultCount=' + encodeURIComponent('' + maxResultCount) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAll(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAll(<any>response_);
+            } catch (e) {
+              return <Observable<PagedResultDtoOfShippingRequestUpdateListDto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<PagedResultDtoOfShippingRequestUpdateListDto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAll(response: HttpResponseBase): Observable<PagedResultDtoOfShippingRequestUpdateListDto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = PagedResultDtoOfShippingRequestUpdateListDto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<PagedResultDtoOfShippingRequestUpdateListDto>(<any>null);
+  }
+}
+
+@Injectable()
 export class ShippingRequestVasesServiceProxy {
   private http: HttpClient;
   private baseUrl: string;
@@ -86277,6 +86372,109 @@ export class CreateOrEditShippingRequestTripRejectReasonDto implements ICreateOr
 export interface ICreateOrEditShippingRequestTripRejectReasonDto {
   translations: ShippingRequestTripRejectReasonTranslationDto[] | undefined;
   id: number;
+}
+
+export enum ShippingRequestUpdateStatus {
+  None = 1,
+  Repriced = 2,
+  KeepSamePrice = 3,
+  Dismissed = 4,
+}
+
+export class ShippingRequestUpdateListDto implements IShippingRequestUpdateListDto {
+  shippingRequestId!: number | undefined;
+  entityLogId!: string;
+  priceOfferId!: number;
+  status!: ShippingRequestUpdateStatus;
+  id!: string;
+
+  constructor(data?: IShippingRequestUpdateListDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.shippingRequestId = _data['shippingRequestId'];
+      this.entityLogId = _data['entityLogId'];
+      this.priceOfferId = _data['priceOfferId'];
+      this.status = _data['status'];
+      this.id = _data['id'];
+    }
+  }
+
+  static fromJS(data: any): ShippingRequestUpdateListDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new ShippingRequestUpdateListDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['shippingRequestId'] = this.shippingRequestId;
+    data['entityLogId'] = this.entityLogId;
+    data['priceOfferId'] = this.priceOfferId;
+    data['status'] = this.status;
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+export interface IShippingRequestUpdateListDto {
+  shippingRequestId: number | undefined;
+  entityLogId: string;
+  priceOfferId: number;
+  status: ShippingRequestUpdateStatus;
+  id: string;
+}
+
+export class PagedResultDtoOfShippingRequestUpdateListDto implements IPagedResultDtoOfShippingRequestUpdateListDto {
+  totalCount!: number;
+  items!: ShippingRequestUpdateListDto[] | undefined;
+
+  constructor(data?: IPagedResultDtoOfShippingRequestUpdateListDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.totalCount = _data['totalCount'];
+      if (Array.isArray(_data['items'])) {
+        this.items = [] as any;
+        for (let item of _data['items']) this.items!.push(ShippingRequestUpdateListDto.fromJS(item));
+      }
+    }
+  }
+
+  static fromJS(data: any): PagedResultDtoOfShippingRequestUpdateListDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new PagedResultDtoOfShippingRequestUpdateListDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['totalCount'] = this.totalCount;
+    if (Array.isArray(this.items)) {
+      data['items'] = [];
+      for (let item of this.items) data['items'].push(item.toJSON());
+    }
+    return data;
+  }
+}
+
+export interface IPagedResultDtoOfShippingRequestUpdateListDto {
+  totalCount: number;
+  items: ShippingRequestUpdateListDto[] | undefined;
 }
 
 export class PagedResultDtoOfShippingRequestVasDto implements IPagedResultDtoOfShippingRequestVasDto {

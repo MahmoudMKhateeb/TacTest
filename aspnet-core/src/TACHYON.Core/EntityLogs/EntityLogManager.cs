@@ -1,6 +1,7 @@
 ﻿using Abp.Domain.Entities.Auditing;
 using Abp.Domain.Repositories;
 using Abp.EntityHistory;
+using Abp.Events.Bus;
 using Abp.UI;
 using Castle.Core.Internal;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,8 @@ using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using TACHYON.Extension;
 using TACHYON.Routs.RoutPoints;
+using TACHYON.Shipping.ShippingRequests;
+using TACHYON.Shipping.ShippingRequestUpdates;
 using TACHYON.SmartEnums;
 
 namespace TACHYON.EntityLogs
@@ -20,23 +23,18 @@ namespace TACHYON.EntityLogs
 
     public class EntityLogManager : TACHYONDomainServiceBase
     {
-        private readonly IEntitySnapshotManager _snapshotManager;
-        private readonly IEntityChangeSetReasonProvider _reasonProvider;
         private readonly IRepository<EntityLog, Guid> _logRepository;
-        private readonly IRepository<EntityChange, long> _lookupEntityChangeRepository;
         private readonly IRepository<EntityChangeSet, long> _lookupChangeSetRepository;
+        private readonly IEventBus _eventBus;
 
-        public EntityLogManager(IEntitySnapshotManager snapshotManager,
+        public EntityLogManager(
             IRepository<EntityLog, Guid> logRepository,
-            IEntityChangeSetReasonProvider reasonProvider,
-            IRepository<EntityChange, long> lookupEntityChangeRepository,
-            IRepository<EntityChangeSet, long> lookupChangeSetRepository)
+            IRepository<EntityChangeSet, long> lookupChangeSetRepository,
+            IEventBus eventBus)
         {
-            _snapshotManager = snapshotManager;
             _logRepository = logRepository;
-            _reasonProvider = reasonProvider;
-            _lookupEntityChangeRepository = lookupEntityChangeRepository;
             _lookupChangeSetRepository = lookupChangeSetRepository;
+            _eventBus = eventBus;
         }
         // In Domain Service We Will Get Data As EntityLog Model
         // And in Application Service We Will Convert EntityLog Model to Dto it is Readable to Front-End  
@@ -82,10 +80,27 @@ namespace TACHYON.EntityLogs
                     Type.GetType(entityChange.EntityTypeFullName))
             };
 
-            await _logRepository.InsertAsync(log);
+           var logId = await _logRepository.InsertAndGetIdAsync(log);
+
+           if (log.Core.Equals(typeof(ShippingRequest).ToString()))
+           {
+               var eventData = new UpdatedShippingRequestEventData()
+               {
+                   EntityLogId = logId, ShippingRequestId = long.Parse(log.CoreId)
+               }; 
+               await _eventBus.TriggerAsync(eventData);
+           }// TriggerUpdatedSrEvent(logId, log);
 
             await CurrentUnitOfWork.SaveChangesAsync();
         }
+
+        // private void TriggerUpdatedSrEvent(Guid logId, EntityLog log)
+        // {
+        //     CurrentUnitOfWork.Completed +=  (sender, args) =>
+        //     {
+        //         
+        //     };
+        // }
 
         private static string FormatChangedPropertiesData(IEnumerable<EntityPropertyChange> propertyChanges,
             Type entityType)

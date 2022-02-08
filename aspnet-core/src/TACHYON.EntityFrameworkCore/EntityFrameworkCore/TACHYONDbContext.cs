@@ -57,6 +57,7 @@ using TACHYON.Shipping.ShippingRequestBids;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequests.TachyonDealer;
 using TACHYON.Shipping.ShippingRequestTrips;
+using TACHYON.Shipping.ShippingRequestUpdates;
 using TACHYON.Shipping.ShippingTypes;
 using TACHYON.ShippingRequestTripVases;
 using TACHYON.ShippingRequestVases;
@@ -275,6 +276,8 @@ namespace TACHYON.EntityFrameworkCore
         public DbSet<DriverLocationLog> DriverLocationLogs { get; set; }
 
         public DbSet<EntityLog> EntityLogs { get; set; }
+        
+        public DbSet<ShippingRequestUpdate> ShippingRequestUpdates { get; set; }
 
         protected virtual bool CurrentIsCanceled => true;
         protected virtual bool CurrentIsDrafted => false;

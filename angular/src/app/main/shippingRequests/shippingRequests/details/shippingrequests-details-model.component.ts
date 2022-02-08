@@ -11,6 +11,7 @@ import {
   PriceOfferServiceProxy,
   ShippingRequestBidStatus,
   ShippingRequestStatus,
+  ShippingRequestUpdateServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 
 @Component({
@@ -34,7 +35,7 @@ export class ShippingrequestsDetailsModelComponent extends AppComponentBase {
   direction: string;
   Items: PriceOfferItemDto[] = [];
   shippingrequest: GetShippingRequestForPriceOfferListDto = new GetShippingRequestForPriceOfferListDto();
-  constructor(injector: Injector, private _CurrentServ: PriceOfferServiceProxy) {
+  constructor(injector: Injector, private _CurrentServ: PriceOfferServiceProxy, private _srUpdateService: ShippingRequestUpdateServiceProxy) {
     super(injector);
   }
 
@@ -129,5 +130,12 @@ export class ShippingrequestsDetailsModelComponent extends AppComponentBase {
         this.duration = response.rows[0].elements[0].duration.text;
       }
     );
+  }
+
+  showSrUpdates(id: number, offerId: number) {
+    this._srUpdateService.getAll(offerId, id, null, 0, 10).subscribe((result) => {
+      console.log(result);
+      abp.notify.info('GetAll ShippingRequestUpdates Successfully');
+    });
   }
 }
