@@ -1,4 +1,5 @@
-﻿using NPOI.SS.UserModel;
+﻿using Abp.Extensions;
+using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using System;
 using System.Collections.Generic;
@@ -29,6 +30,34 @@ namespace TACHYON.DataExporting.Excel.NPOI
             }
 
             return entities;
+        }
+
+        protected bool GetBoolValueFromYesOrNo(string text)
+        {
+            try
+            {
+                return text.ToLower() == "yes" || text == "نعم";
+            }
+            catch
+            {
+                // ignored
+            }
+
+            return false;
+        }
+
+        protected DateTime? GetDateTimeValueFromTextOrNull(string text)
+        {
+            try
+            {
+                return Convert.ToDateTime(text);
+            }
+            catch
+            {
+                // ignored
+            }
+
+            return null;
         }
 
         private List<TEntity> ProcessWorksheet(ISheet worksheet, Func<ISheet, int, TEntity> processExcelRow)

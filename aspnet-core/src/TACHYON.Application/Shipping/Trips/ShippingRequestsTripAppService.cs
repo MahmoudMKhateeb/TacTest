@@ -60,7 +60,7 @@ namespace TACHYON.Shipping.Trips
         private readonly IRepository<DocumentType, long> _documentTypeRepository;
         private readonly IBinaryObjectManager _binaryObjectManager;
         private readonly ITempFileCacheManager _tempFileCacheManager;
-
+        private readonly ShippingRequestTripManager _shippingRequestTripManager;
 
         public ShippingRequestsTripAppService(
             IRepository<ShippingRequestTrip> shippingRequestTripRepository,
@@ -77,7 +77,7 @@ namespace TACHYON.Shipping.Trips
             DocumentFilesManager documentFilesManager,
             IRepository<DocumentType, long> documentTypeRepository,
             IBinaryObjectManager binaryObjectManager,
-            ITempFileCacheManager tempFileCacheManager)
+            ITempFileCacheManager tempFileCacheManager, ShippingRequestTripManager shippingRequestTripManager)
         {
             _shippingRequestTripRepository = shippingRequestTripRepository;
             _shippingRequestRepository = shippingRequestRepository;
@@ -94,6 +94,7 @@ namespace TACHYON.Shipping.Trips
             this._documentTypeRepository = documentTypeRepository;
             _binaryObjectManager = binaryObjectManager;
             _tempFileCacheManager = tempFileCacheManager;
+            _shippingRequestTripManager = shippingRequestTripManager;
         }
 
 
@@ -217,7 +218,7 @@ namespace TACHYON.Shipping.Trips
 
             if (await IsEnabledAsync(AppFeatures.TachyonDealer) && !await FeatureChecker.IsEnabledAsync(request.TenantId, AppFeatures.AddTripsByTachyonDeal))
                 throw new AbpValidationException(L("AddTripsByTachyonDealIsNotEnabledFromShipper"));
-            ValidateTripDates(input, request);
+            _shippingRequestTripManager.ValidateTripDates(input, request);
             ValidateNumberOfDrops(input, request);
             ValidateTotalweight(input, request);
             if (!input.Id.HasValue)
@@ -237,29 +238,29 @@ namespace TACHYON.Shipping.Trips
 
 
 
-        private void ValidateTripDto(ImportTripDto importTripDto, long shippingRequestId)
-        {
-            var SR = _shippingRequestRepository.Get(shippingRequestId);
+        //private void ValidateTripDto(ImportTripDto importTripDto, long shippingRequestId)
+        //{
+        //    var SR = _shippingRequestRepository.Get(shippingRequestId);
 
-            StringBuilder exceptionMessage = new StringBuilder();
+        //    StringBuilder exceptionMessage = new StringBuilder();
 
-            if (importTripDto.EndTripDate != null && importTripDto.StartTripDate?.Date > importTripDto.EndTripDate.Value.Date)
-            {
-                exceptionMessage.Append("The start date must be or equal to end date." + "; ");
-            }
+        //    if (importTripDto.EndTripDate != null && importTripDto.StartTripDate?.Date > importTripDto.EndTripDate.Value.Date)
+        //    {
+        //        exceptionMessage.Append("The start date must be or equal to end date." + "; ");
+        //    }
 
-            try
-            {
-                ValidateTripDates(importTripDto, SR);
-            }
-            catch (Exception e)
-            {
-                exceptionMessage.Append(e.Message);
-            }
+        //    try
+        //    {
+        //        ValidateTripDates(importTripDto, SR);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        exceptionMessage.Append(e.Message);
+        //    }
 
-            importTripDto.Exception = exceptionMessage.ToString();
+        //    importTripDto.Exception = exceptionMessage.ToString();
 
-        }
+        //}
 
 
         [RequiresFeature(AppFeatures.Shipper)]
@@ -322,18 +323,18 @@ namespace TACHYON.Shipping.Trips
             }
         }
 
-        private void ValidateTripDates(ICreateOrEditTripDtoBase input, ShippingRequest request)
-        {
-            if (
-                input.StartTripDate?.Date > request.EndTripDate?.Date ||
-                input.StartTripDate?.Date < request.StartTripDate?.Date ||
-                (input.EndTripDate != null && input.EndTripDate.Value.Date > request.EndTripDate?.Date) ||
-                (input.EndTripDate != null && input.EndTripDate.Value.Date < request.StartTripDate?.Date)
-            )
-            {
-                throw new UserFriendlyException(L("The trip date range must between shipping request range date"));
-            }
-        }
+        //private void ValidateTripDates(ICreateOrEditTripDtoBase input, ShippingRequest request)
+        //{
+        //    if (
+        //        input.StartTripDate?.Date > request.EndTripDate?.Date ||
+        //        input.StartTripDate?.Date < request.StartTripDate?.Date ||
+        //        (input.EndTripDate != null && input.EndTripDate.Value.Date > request.EndTripDate?.Date) ||
+        //        (input.EndTripDate != null && input.EndTripDate.Value.Date < request.StartTripDate?.Date)
+        //    )
+        //    {
+        //        throw new UserFriendlyException(L("The trip date range must between shipping request range date"));
+        //    }
+        //}
 
         public async Task AssignDriverAndTruckToShippmentByCarrier(AssignDriverAndTruckToShippmentByCarrierInput input)
         {

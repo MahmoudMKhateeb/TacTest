@@ -15,6 +15,9 @@ import { ViewTripModalComponent } from '@app/main/shippingRequests/shippingReque
 import { TripService } from '../trip.service';
 import Swal from 'sweetalert2';
 import { finalize } from 'rxjs/operators';
+import { AppConsts } from '@shared/AppConsts';
+import { FileUpload } from 'primeng/fileupload';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'TripsForViewShippingRequest',
@@ -26,18 +29,24 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   @ViewChild('paginatorchild', { static: false }) paginator: Paginator;
   @ViewChild('AddNewTripModal', { static: false }) AddNewTripModal: CreateOrEditTripComponent;
   @ViewChild('ViewTripModal', { static: false }) ViewTripModal: ViewTripModalComponent;
+  @ViewChild('ExcelFileUpload', { static: false }) excelFileUpload: FileUpload;
+
   @Input() ShippingRequest: ShippingRequestDto;
   @Input() VasListFromFather: GetShippingRequestVasForViewDto[];
   tripsByTmsEnabled: boolean;
   saving = false;
+  uploadUrl: string;
+
   constructor(
     injector: Injector,
     private _TripService: TripService,
     private _shippingRequestsServiceProxy: ShippingRequestsServiceProxy,
     private changeDetectorRef: ChangeDetectorRef,
-    private _shippingRequestTripsService: ShippingRequestsTripServiceProxy
+    private _shippingRequestTripsService: ShippingRequestsTripServiceProxy,
+    private _httpClient: HttpClient
   ) {
     super(injector);
+    this.uploadUrl = AppConsts.remoteServiceBaseUrl + '/Helper/ImportShipmentsFromExcel';
   }
 
   getShippingRequestsTrips(event?: LazyLoadEvent) {
@@ -92,5 +101,26 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
 
     this.primengTableHelper.adjustScroll(this.dataTable);
     this.tripsByTmsEnabled = this.ShippingRequest.addTripsByTmsEnabled;
+  }
+
+  uploadExcel(data: { files: File }): void {
+    const formData: FormData = new FormData();
+    const file = data.files[0];
+    formData.append('file', file, file.name);
+    formData.append('ShippingRequestId', this.ShippingRequest.id.toString());
+    this._httpClient
+      .post<any>(this.uploadUrl, formData)
+      .pipe(finalize(() => this.excelFileUpload.clear()))
+      .subscribe((response) => {
+        if (response.success) {
+          this.notify.success(this.l('ImportProcessStart'));
+        } else if (response.error != null) {
+          this.notify.error(this.l('ImportFailed'));
+        }
+      });
+  }
+
+  onUploadExcelError(): void {
+    this.notify.error(this.l('ImportTrucksUploadFailed'));
   }
 }

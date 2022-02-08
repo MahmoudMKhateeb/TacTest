@@ -283,6 +283,22 @@ namespace TACHYON.Notifications
                 });
         }
 
+        public Task SomeShipmentsCouldntBeImported(UserIdentifier user,
+            string fileToken,
+            string fileType,
+            string fileName)
+        {
+            return SendNotificationAsync(AppNotificationNames.DownloadInvalidImportUsers, user,
+                new LocalizableString(
+                    "ClickToSeeInvalidShipments",
+                    TACHYONConsts.LocalizationSourceName
+                ),
+                new Dictionary<string, object>
+                {
+                    { "fileToken", fileToken }, { "fileType", fileType }, { "fileName", fileName }
+                });
+        }
+
         public async Task CreateBidRequest(UserIdentifier argsUser, long shippingRequestBidId)
         {
             var notificationData = new LocalizableMessageNotificationData(

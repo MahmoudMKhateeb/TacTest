@@ -43,6 +43,11 @@ namespace TACHYON.Notifications
             string fileType,
             string fileName);
 
+        Task SomeShipmentsCouldntBeImported(UserIdentifier user,
+            string fileToken,
+            string fileType,
+            string fileName);
+
         Task CreateBidRequest(UserIdentifier argsUser, long shippingRequestBidId);
         Task UpdateBidRequest(UserIdentifier argsUser, long shippingRequestBidId);
         Task TenantDocumentFileUpdate(DocumentFile documentFile);

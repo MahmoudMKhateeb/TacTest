@@ -21,6 +21,24 @@
       >
         <i class="flaticon-plus"></i> {{ l('AddATrip') }}
       </button>
+
+      <div *ngIf="'Pages.Trucks.Create' | permission" class="no-padding">
+        <span class="fileinput-button">
+          <p-fileUpload
+            customUpload="true"
+            name="ExcelFileUpload"
+            #ExcelFileUpload
+            maxFileSize="10000000"
+            auto="auto"
+            accept=".csv,.xls,.xlsx"
+            (uploadHandler)="uploadExcel($event)"
+            (onError)="onUploadExcelError()"
+            chooseLabel="{{ 'ImportFromExcel' | localize }}"
+            [disabled]="primengTableHelper.totalRecordsCount >= ShippingRequest.numberOfTrips"
+          >
+          </p-fileUpload>
+        </span>
+      </div>
     </div>
   </div>
   <!--begin::card-body-->
