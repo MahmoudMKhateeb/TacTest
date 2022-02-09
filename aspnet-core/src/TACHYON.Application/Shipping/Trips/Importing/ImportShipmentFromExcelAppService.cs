@@ -32,17 +32,29 @@ namespace TACHYON.Shipping.Trips.Importing
 
         public async Task CreateShipmentsFromDto(List<ImportTripDto> importTripDtoList)
         {
+            List<ImportTripDto> SuccessImportTripDtoList = new List<ImportTripDto>();
             //override exception message
             foreach(var trip in importTripDtoList)
             {
-                StringBuilder exceptionMessage = new StringBuilder();
-                _shippingRequestTripManager.ValidateTripDto(trip, exceptionMessage);
-                if (exceptionMessage.Length > 0)
+                try
                 {
-                    trip.Exception = exceptionMessage.ToString();
+                    StringBuilder exceptionMessage = new StringBuilder();
+                    _shippingRequestTripManager.ValidateTripDto(trip, exceptionMessage);
+                    if (exceptionMessage.Length ==0)
+                    {
+                        SuccessImportTripDtoList.Add(trip);
+                    }
+                    else
+                    {
+                        trip.Exception = exceptionMessage.ToString();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    trip.Exception = ex.Message;
                 }
             }
-            await CreateShipments(importTripDtoList);
+            await CreateShipments(SuccessImportTripDtoList);
         }
 
         private async Task CreateShipments(List<ImportTripDto> Trips)
