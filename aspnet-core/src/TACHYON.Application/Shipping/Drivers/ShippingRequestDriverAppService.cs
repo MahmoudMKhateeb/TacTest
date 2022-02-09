@@ -335,7 +335,7 @@ namespace TACHYON.Shipping.Drivers
         /// </summary>
         /// <param name="id">TripId</param>
         /// <returns></returns>
-        public async Task<DriverRoutPoint> GetRoutPointForMobile(int id)
+        public async Task<DriverRoutPointDto> GetRoutPointForMobile(int id)
         {
             DisableTenancyFilters();
             var routes = await _RoutPointRepository.GetAll()
@@ -361,7 +361,9 @@ namespace TACHYON.Shipping.Drivers
             if (routes == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
             routes.ForEach(x => x.StatusTitle = L(x.Status.ToString()));
             var trip = _ShippingRequestTrip.Get(id);
-            return new DriverRoutPoint { TripStatus = trip.Status , TripId = trip.Id,WaybillNumber = trip.WaybillNumber, ShippingRequestId = trip.ShippingRequestId ,HasAccident = trip.HasAccident , RoutPoint = routes };
+            var mapper = ObjectMapper.Map<DriverRoutPointDto>(trip);
+            mapper.RoutPoint = routes;
+            return mapper;
         }
 
         public async Task<RoutDropOffDto> GetDropOffDetail(long PointId)

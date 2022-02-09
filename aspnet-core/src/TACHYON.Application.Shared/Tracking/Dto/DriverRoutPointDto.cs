@@ -5,7 +5,7 @@ using TACHYON.Shipping.Trips;
 
 namespace TACHYON.Tracking.Dto
 {
-    public class DriverRoutPoint
+    public class DriverRoutPointDto
     {
         public ShippingRequestTripStatus TripStatus { get; set; }
         public int TripId { get; set; }
