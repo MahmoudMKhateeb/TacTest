@@ -289,6 +289,7 @@ namespace TACHYON.Dashboards.Shipper
         // Tracking Map
         public async Task<List<TrackingMapDto>> GetTrackingMap()
         {
+            DisableTenancyFilters();
             return await _shippingRequestTripRepository.GetAll().AsNoTracking()
                 .Include(r => r.ShippingRequestFk)
                 .ThenInclude(r => r.Tenant)
