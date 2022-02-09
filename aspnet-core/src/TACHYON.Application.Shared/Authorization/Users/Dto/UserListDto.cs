@@ -50,6 +50,10 @@ namespace TACHYON.Authorization.Users.Dto
         public Guid? ProfilePictureId { get; set; }
 
         public bool IsEmailConfirmed { get; set; }
+        
+        public string CompanyName { get; set; }
+        
+        public string Nationality { get; set; }
 
 
         public bool IsActive { get; set; }
