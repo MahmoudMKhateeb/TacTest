@@ -16,9 +16,10 @@ namespace TACHYON.Shipping.ShippingRequestTrips
     {
         private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepository;
         private readonly IRepository<ShippingRequest,long> _shippingRequestRepository;
-        public ShippingRequestTripManager(IRepository<ShippingRequestTrip> shippingRequestTripRepository)
+        public ShippingRequestTripManager(IRepository<ShippingRequestTrip> shippingRequestTripRepository, IRepository<ShippingRequest, long> shippingRequestRepository)
         {
             _shippingRequestTripRepository = shippingRequestTripRepository;
+            _shippingRequestRepository = shippingRequestRepository;
         }
 
         public async Task<ShippingRequestTrip> CreateAsync(ShippingRequestTrip trip)
@@ -32,9 +33,9 @@ namespace TACHYON.Shipping.ShippingRequestTrips
             return await _shippingRequestTripRepository.InsertAsync(trip);
         }
 
-        public void ValidateTripDto(ImportTripDto importTripDto, long shippingRequestId, StringBuilder exceptionMessage)
+        public void ValidateTripDto(ImportTripDto importTripDto, StringBuilder exceptionMessage)
         {
-            var SR = _shippingRequestRepository.Get(shippingRequestId);
+            var SR = _shippingRequestRepository.Get(importTripDto.ShippingRequestId);
 
             //StringBuilder exceptionMessage = new StringBuilder();
 
@@ -52,7 +53,7 @@ namespace TACHYON.Shipping.ShippingRequestTrips
                 exceptionMessage.Append(e.Message);
             }
 
-            ValidateDuplicateBulkReferenceFromDB(importTripDto, shippingRequestId, exceptionMessage);
+            ValidateDuplicateBulkReferenceFromDB(importTripDto, exceptionMessage);
             //ValidateDuplicatedReference(importTripDtoList, exceptionMessage);
 
             importTripDto.Exception = exceptionMessage.ToString();
@@ -72,10 +73,10 @@ namespace TACHYON.Shipping.ShippingRequestTrips
             }
         }
 
-        private void ValidateDuplicateBulkReferenceFromDB(ImportTripDto importTripDto, long shippingRequestId, StringBuilder exceptionMessage)
+        private void ValidateDuplicateBulkReferenceFromDB(ImportTripDto importTripDto, StringBuilder exceptionMessage)
         {
             var trip = _shippingRequestTripRepository.GetAll()
-               .Where(x => x.ShippingRequestId == shippingRequestId && x.BulkUploadRef == importTripDto.BulkUploadReference).FirstOrDefault();
+               .Where(x => x.ShippingRequestId == importTripDto.ShippingRequestId && x.BulkUploadRef == importTripDto.BulkUploadReference).FirstOrDefault();
             if (trip != null)
             {
                 exceptionMessage.Append("The Bulk reference is already exists");

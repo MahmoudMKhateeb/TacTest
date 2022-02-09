@@ -36,6 +36,7 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   tripsByTmsEnabled: boolean;
   saving = false;
   uploadUrl: string;
+  isArabic = false;
 
   constructor(
     injector: Injector,
@@ -47,6 +48,10 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   ) {
     super(injector);
     this.uploadUrl = AppConsts.remoteServiceBaseUrl + '/Helper/ImportShipmentsFromExcel';
+  }
+
+  ngOnInit(): void {
+    this.isArabic = abp.localization.currentLanguage.name.startsWith('ar');
   }
 
   getShippingRequestsTrips(event?: LazyLoadEvent) {

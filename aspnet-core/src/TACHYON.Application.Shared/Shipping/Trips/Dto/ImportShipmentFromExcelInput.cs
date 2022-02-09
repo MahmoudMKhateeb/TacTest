@@ -5,13 +5,11 @@ using System.Text;
 
 namespace TACHYON.Shipping.Trips.Dto
 {
-    public class ImportShipmentFromExcelJobArgs
+    public class ImportShipmentFromExcelInput
     {
-        public int TenantId { get; set; }
-
+        public int? TenantId { get; set; }
         public Guid BinaryObjectId { get; set; }
-
-        public UserIdentifier User { get; set; }
         public long ShippingRequestId { get; set; }
+        public UserIdentifier User { get; set; }
     }
 }

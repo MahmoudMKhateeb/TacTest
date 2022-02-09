@@ -21,7 +21,6 @@ using TACHYON.Shipping.Trips;
 using TACHYON.Shipping.Trips.Accidents;
 using TACHYON.Shipping.Trips.Accidents.Dto;
 using TACHYON.Shipping.Trips.Dto;
-using TACHYON.Shipping.Trips.Importing.Dto;
 using TACHYON.Storage;
 using TACHYON.Tracking;
 using TACHYON.Tracking.Dto;
@@ -44,6 +43,7 @@ namespace TACHYON.Web.Controllers
         private ShippingRequestPointWorkFlowProvider _workFlowProvider;
         private CommonManager _commonManager;
         private IShippingRequestTripAccidentAppService _shippingRequestTripAccidentAppService;
+        private readonly IImportShipmentFromExcelAppService _importShipmentFromExcelAppService;
 
         public HelperController(TrucksAppService trucksAppService,
             ITempFileCacheManager tempFileCacheManager,
@@ -52,7 +52,7 @@ namespace TACHYON.Web.Controllers
             ShippingRequestDriverManager shippingRequestDriverManager,
             CommonManager commonManager,
             ShippingRequestPointWorkFlowProvider workFlowProvider,
-            IShippingRequestTripAccidentAppService shippingRequestTripAccidentAppService)
+            IShippingRequestTripAccidentAppService shippingRequestTripAccidentAppService, IImportShipmentFromExcelAppService importShipmentFromExcelAppService)
         {
             _trucksAppService = trucksAppService;
             _tempFileCacheManager = tempFileCacheManager;
@@ -62,6 +62,7 @@ namespace TACHYON.Web.Controllers
             _commonManager = commonManager;
             _workFlowProvider = workFlowProvider;
             _shippingRequestTripAccidentAppService = shippingRequestTripAccidentAppService;
+            _importShipmentFromExcelAppService = importShipmentFromExcelAppService;
         }
 
         public async Task<FileResult> GetTruckPictureByTruckId(long truckId)
@@ -186,17 +187,17 @@ namespace TACHYON.Web.Controllers
                 var fileObject = new BinaryObject(tenantId, fileBytes);
 
                 await BinaryObjectManager.SaveAsync(fileObject);
+                CurrentUnitOfWork.SaveChanges();
 
-                await BackgroundJobManager.EnqueueAsync<ImportShipmentFromExcelJob, ImportShipmentFromExcelJobArgs>(
-                    new ImportShipmentFromExcelJobArgs
-                    {
-                        TenantId = tenantId.Value,
-                        BinaryObjectId = fileObject.Id,
-                        User = AbpSession.ToUserIdentifier(),
-                        ShippingRequestId=ShippingRequestId
-                    });
+                var importShipmentListDto=await  _importShipmentFromExcelAppService.ImportShipmentFromExcel(new ImportShipmentFromExcelInput
+                {
+                    BinaryObjectId = fileObject.Id,
+                    ShippingRequestId = ShippingRequestId,
+                    TenantId = tenantId,
+                    User = AbpSession.ToUserIdentifier()
+                });
 
-                return Json(new AjaxResponse(new { }));
+                return Json(new AjaxResponse(new { importShipmentListDto}));
             }
             catch (UserFriendlyException ex)
             {

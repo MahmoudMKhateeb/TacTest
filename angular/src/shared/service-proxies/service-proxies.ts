@@ -90626,6 +90626,8 @@ export class AuthenticateResultModel implements IAuthenticateResultModel {
   returnUrl!: string | undefined;
   refreshToken!: string | undefined;
   refreshTokenExpireInSeconds!: number;
+  driverName!: string | undefined;
+  tenantId!: number | undefined;
 
   constructor(data?: IAuthenticateResultModel) {
     if (data) {
@@ -90653,6 +90655,8 @@ export class AuthenticateResultModel implements IAuthenticateResultModel {
       this.returnUrl = _data['returnUrl'];
       this.refreshToken = _data['refreshToken'];
       this.refreshTokenExpireInSeconds = _data['refreshTokenExpireInSeconds'];
+      this.driverName = _data['driverName'];
+      this.tenantId = _data['tenantId'];
     }
   }
 
@@ -90681,6 +90685,8 @@ export class AuthenticateResultModel implements IAuthenticateResultModel {
     data['returnUrl'] = this.returnUrl;
     data['refreshToken'] = this.refreshToken;
     data['refreshTokenExpireInSeconds'] = this.refreshTokenExpireInSeconds;
+    data['driverName'] = this.driverName;
+    data['tenantId'] = this.tenantId;
     return data;
   }
 }
@@ -90699,6 +90705,8 @@ export interface IAuthenticateResultModel {
   returnUrl: string | undefined;
   refreshToken: string | undefined;
   refreshTokenExpireInSeconds: number;
+  driverName: string | undefined;
+  tenantId: number | undefined;
 }
 
 export class OtpCreatedDto implements IOtpCreatedDto {

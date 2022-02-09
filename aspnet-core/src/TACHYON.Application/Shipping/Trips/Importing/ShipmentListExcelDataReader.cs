@@ -36,30 +36,32 @@ namespace TACHYON.Shipping.Trips.Importing
             ImportTripDto trip = new ImportTripDto();
             try
             {
+                trip.ShippingRequestId = ShippingRequestId;
+                //0
                 trip.BulkUploadReference = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
                     row, 0, "Reference No", exceptionMessage);
-                //0
+                //1
                 trip.StartTripDate = GetDateTimeValueFromTextOrNull(_tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
                     row, 1, "Trip Pick up Date Start *", exceptionMessage));
 
-                //1
+                //2
                 trip.EndTripDate= GetDateTimeValueFromTextOrNull(_tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
                     row, 2, "Trip Pick up Date End", exceptionMessage));
 
-                //2
+                //3
                 trip.TotalValue= _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
                     row, 3, "Approximate Total Value of Goods", exceptionMessage);
-
+                //4
                 trip.Note= _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
                     row, 4, "Notes to Carrier", exceptionMessage);
-
+                //5
                 trip.NeedsDeliveryNote= GetBoolValueFromYesOrNo(_tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
                     row, 5, "Needs Delivery Note ?", exceptionMessage));
-
+                //6
                 trip.HasAttachment = GetBoolValueFromYesOrNo(_tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
                     row, 6, "Has Attchment ?", exceptionMessage));
 
-                _shippingRequestTripManager.ValidateTripDto(trip, ShippingRequestId, exceptionMessage);
+                _shippingRequestTripManager.ValidateTripDto(trip, exceptionMessage);
                 //_shippingRequestTripManager.ValidateDuplicateBulkReferenceFromDB(trip, ShippingRequestId);
 
                 if (exceptionMessage.Length > 0)

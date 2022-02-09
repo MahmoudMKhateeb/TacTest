@@ -21,22 +21,43 @@
       >
         <i class="flaticon-plus"></i> {{ l('AddATrip') }}
       </button>
-
-      <div *ngIf="'Pages.Trucks.Create' | permission" class="no-padding">
-        <span class="fileinput-button">
-          <p-fileUpload
-            customUpload="true"
-            name="ExcelFileUpload"
-            #ExcelFileUpload
-            maxFileSize="10000000"
-            auto="auto"
-            accept=".csv,.xls,.xlsx"
-            (uploadHandler)="uploadExcel($event)"
-            (onError)="onUploadExcelError()"
-            chooseLabel="{{ 'ImportFromExcel' | localize }}"
-            [disabled]="primengTableHelper.totalRecordsCount >= ShippingRequest.numberOfTrips"
-          >
-          </p-fileUpload>
+      <div class="dropdown-menu dropdown-menu-right dropdown-excel-operations" *dropdownMenu>
+        <a class="dropdown-item" id="ExportShipmentsToExcelButton" href="javascript:;">
+          <i class="fa fa-download mr-2 mt-1" style="font-size: 1rem"></i>
+          {{ 'ExportToExcel' | localize }}
+        </a>
+        <!-- *ngIf="'Pages.ShippingRequestTrips.Create' | permission" -->
+        <div class="no-padding">
+          <span class="fileinput-button">
+            <p-fileUpload
+              customUpload="true"
+              name="ExcelFileUpload"
+              #ExcelFileUpload
+              maxFileSize="10000000"
+              auto="auto"
+              accept=".csv,.xls,.xlsx"
+              (uploadHandler)="uploadExcel($event)"
+              (onError)="onUploadExcelError()"
+              chooseLabel="{{ 'ImportFromExcel' | localize }}"
+              [disabled]="primengTableHelper.totalRecordsCount >= ShippingRequest.numberOfTrips"
+            >
+            </p-fileUpload>
+          </span>
+        </div>
+        <div class="dropdown-divider"></div>
+        <span class="dropdown-item-text text-muted pl-3" href="#">
+          <small
+            *ngIf="isArabic"
+            [innerHTML]="
+              l('ImportToExcelSampleFileDownloadInfo', '<a href=/assets/sampleFiles/ImportShipmentSampleFileAr.xlsx>' + l('ClickHere') + '</a>')
+            "
+          ></small>
+          <small
+            *ngIf="!isArabic"
+            [innerHTML]="
+              l('ImportToExcelSampleFileDownloadInfo', '<a href=/assets/sampleFiles/ImportShipmentSampleFile.xlsx>' + l('ClickHere') + '</a>')
+            "
+          ></small>
         </span>
       </div>
     </div>
