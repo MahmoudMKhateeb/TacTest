@@ -1,4 +1,7 @@
-﻿using Abp.Domain.Repositories;
+﻿using Abp.Application.Features;
+using Abp.Collections.Extensions;
+using Abp.Domain.Repositories;
+using Abp.Runtime.Session;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -7,6 +10,7 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Text;
 using System.Threading.Tasks;
+using TACHYON.Features;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.Trips.Dto;
 
@@ -16,10 +20,16 @@ namespace TACHYON.Shipping.ShippingRequestTrips
     {
         private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepository;
         private readonly IRepository<ShippingRequest,long> _shippingRequestRepository;
-        public ShippingRequestTripManager(IRepository<ShippingRequestTrip> shippingRequestTripRepository, IRepository<ShippingRequest, long> shippingRequestRepository)
+        private readonly IFeatureChecker _featureChecker;
+        private IAbpSession _AbpSession { get; set; }
+
+
+        public ShippingRequestTripManager(IRepository<ShippingRequestTrip> shippingRequestTripRepository, IRepository<ShippingRequest, long> shippingRequestRepository, IFeatureChecker featureChecker, IAbpSession abpSession)
         {
             _shippingRequestTripRepository = shippingRequestTripRepository;
             _shippingRequestRepository = shippingRequestRepository;
+            _featureChecker = featureChecker;
+            _AbpSession = abpSession;
         }
 
         public async Task<ShippingRequestTrip> CreateAsync(ShippingRequestTrip trip)
@@ -35,7 +45,11 @@ namespace TACHYON.Shipping.ShippingRequestTrips
 
         public void ValidateTripDto(ImportTripDto importTripDto, StringBuilder exceptionMessage)
         {
-            var SR = _shippingRequestRepository.Get(importTripDto.ShippingRequestId);
+            DisableTenancyFilters();
+            var SR = _shippingRequestRepository.GetAll()
+                .WhereIf(_featureChecker.IsEnabled(AppFeatures.TachyonDealer), x=>x.IsTachyonDeal)
+                .WhereIf(_featureChecker.IsEnabled(AppFeatures.Shipper), x=>x.TenantId== _AbpSession.TenantId)
+                .FirstOrDefault(x=>x.Id== importTripDto.ShippingRequestId);
 
             //StringBuilder exceptionMessage = new StringBuilder();
 
@@ -59,7 +73,7 @@ namespace TACHYON.Shipping.ShippingRequestTrips
             importTripDto.Exception = exceptionMessage.ToString();
         }
 
-        private static void ValidateDuplicatedReference(List<ImportTripDto> importTripDtoList, StringBuilder exceptionMessage)
+        public string DuplicatedReferenceFromList(List<ImportTripDto> importTripDtoList)
         {
             if (importTripDtoList != null && importTripDtoList.Count > 0)
             {
@@ -67,10 +81,11 @@ namespace TACHYON.Shipping.ShippingRequestTrips
                 {
                     if (importTripDtoList.Count(x => x.BulkUploadReference == trip.BulkUploadReference) > 1)
                     {
-                        exceptionMessage.Append("DuplicatedTripReference");
+                        return trip.BulkUploadReference;
                     }
                 }
             }
+            return "";
         }
 
         private void ValidateDuplicateBulkReferenceFromDB(ImportTripDto importTripDto, StringBuilder exceptionMessage)

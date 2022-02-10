@@ -32,29 +32,38 @@ namespace TACHYON.Shipping.Trips.Importing
 
         public async Task CreateShipmentsFromDto(List<ImportTripDto> importTripDtoList)
         {
-            try
+            List<ImportTripDto> SuccessImportTripDtoList = new List<ImportTripDto>();
+            List<ImportTripDto> InvalidShipments = new List<ImportTripDto>();
+            //override trip validation
+            foreach (var trip in importTripDtoList)
             {
-                List<ImportTripDto> SuccessImportTripDtoList = new List<ImportTripDto>();
-                //override trip validation
-                foreach (var trip in importTripDtoList)
+                StringBuilder exceptionMessage = new StringBuilder();
+                _shippingRequestTripManager.ValidateTripDto(trip, exceptionMessage);
+                if (exceptionMessage.Length == 0)
                 {
-                    StringBuilder exceptionMessage = new StringBuilder();
-                    _shippingRequestTripManager.ValidateTripDto(trip, exceptionMessage);
-                    if (exceptionMessage.Length == 0)
-                    {
-                        SuccessImportTripDtoList.Add(trip);
-                    }
-                    else
-                    {
-                        trip.Exception = exceptionMessage.ToString();
-                    }
+                    SuccessImportTripDtoList.Add(trip);
                 }
-                await CreateShipments(SuccessImportTripDtoList);
+                else
+                {
+                    trip.Exception = exceptionMessage.ToString();
+                    InvalidShipments.Add(trip);
+                }
             }
-            catch
+
+            var duplicatedReference = _shippingRequestTripManager.DuplicatedReferenceFromList(SuccessImportTripDtoList);
+            //check if no duplication in reference
+            if (!string.IsNullOrEmpty(duplicatedReference))
             {
-                throw new UserFriendlyException(L("AllShipmentsMustBeValid"));
+                throw new UserFriendlyException(string.Format(L("Reference {0} isDuplicatedMsg"), duplicatedReference));
             }
+
+            //check if all list is valid
+            if (InvalidShipments.Count>0)
+                throw new UserFriendlyException(L("AllShipmentsMustBeValid"));
+
+            //save
+            await CreateShipments(SuccessImportTripDtoList);
+
         }
         
         private async Task CreateShipments(List<ImportTripDto> Trips)
