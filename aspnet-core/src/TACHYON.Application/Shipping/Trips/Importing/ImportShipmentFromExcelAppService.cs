@@ -32,15 +32,15 @@ namespace TACHYON.Shipping.Trips.Importing
 
         public async Task CreateShipmentsFromDto(List<ImportTripDto> importTripDtoList)
         {
-            List<ImportTripDto> SuccessImportTripDtoList = new List<ImportTripDto>();
-            //override exception message
-            foreach(var trip in importTripDtoList)
+            try
             {
-                try
+                List<ImportTripDto> SuccessImportTripDtoList = new List<ImportTripDto>();
+                //override trip validation
+                foreach (var trip in importTripDtoList)
                 {
                     StringBuilder exceptionMessage = new StringBuilder();
                     _shippingRequestTripManager.ValidateTripDto(trip, exceptionMessage);
-                    if (exceptionMessage.Length ==0)
+                    if (exceptionMessage.Length == 0)
                     {
                         SuccessImportTripDtoList.Add(trip);
                     }
@@ -49,14 +49,14 @@ namespace TACHYON.Shipping.Trips.Importing
                         trip.Exception = exceptionMessage.ToString();
                     }
                 }
-                catch (Exception ex)
-                {
-                    trip.Exception = ex.Message;
-                }
+                await CreateShipments(SuccessImportTripDtoList);
             }
-            await CreateShipments(SuccessImportTripDtoList);
+            catch
+            {
+                throw new UserFriendlyException(L("AllShipmentsMustBeValid"));
+            }
         }
-
+        
         private async Task CreateShipments(List<ImportTripDto> Trips)
         {
             var invalidTrips = new List<ImportTripDto>();

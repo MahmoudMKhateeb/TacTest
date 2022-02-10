@@ -45,7 +45,7 @@ namespace TACHYON.Shipping.Trips.Importing
                     row, 1, "Trip Pick up Date Start *", exceptionMessage));
 
                 //2
-                trip.EndTripDate= GetDateTimeValueFromTextOrNull(_tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
+                trip.EndTripDate= GetDateTimeValueFromTextOrNull(_tachyonExcelDataReaderHelper.GetValueFromRowOrNull<string>(worksheet,
                     row, 2, "Trip Pick up Date End", exceptionMessage));
 
                 //3
