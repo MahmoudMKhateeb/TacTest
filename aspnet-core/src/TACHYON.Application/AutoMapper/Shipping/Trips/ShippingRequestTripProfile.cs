@@ -143,6 +143,9 @@ namespace TACHYON.AutoMapper.Shipping.Trips
                     opt => opt.MapFrom(src => src.ShippingRequestTripVases));
 
             CreateMap<ShippingRequestTrip, ShippingRequestTripDto>().ReverseMap();
+            
+            CreateMap<ImportTripDto,ShippingRequestTrip>()
+                .ReverseMap();
         }
 
         private static ShippingRequestTripDriverLoadStatusDto GetMobileTripStatus(ShippingRequestTrip trip)
