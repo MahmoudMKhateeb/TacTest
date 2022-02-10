@@ -138,7 +138,7 @@ namespace TACHYON.PriceOffers
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public async Task Delete(EntityDto input)
+        public async Task Delete(EntityDto<long> input)
         {
             DisableTenancyFilters();
             var pricing = await _priceOfferRepository

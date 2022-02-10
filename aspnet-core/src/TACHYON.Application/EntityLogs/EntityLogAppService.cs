@@ -1,5 +1,6 @@
 ﻿using Abp.Application.Services.Dto;
 using Abp.Authorization;
+using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.EntityHistory;
 using Abp.Linq.Extensions;
@@ -40,6 +41,15 @@ namespace TACHYON.EntityLogs
         public virtual async Task<PagedResultDto<EntityLogListDto>> GetAllEntityLogs(GetAllEntityLogInput input)
             => await GetPagedAndFilteredEntityLogs(input);
 
+        public async Task<EntityLogListDto> GetEntityLog(Guid logId)
+        {
+            var entityLogDto = await _logManager.GetEntityLogById(logId);
+
+            if (entityLogDto == null)
+                // This Exception Will return Not Found Status Code (404)
+                throw new EntityNotFoundException(L("TheRecordWithIdXIsNotFound",logId));
+            return entityLogDto;
+        }
         private async Task<PagedResultDto<EntityLogListDto>> GetPagedAndFilteredEntityLogs(GetAllEntityLogInput input)
         {
             DisableTenancyFilters(); // todo remove it asap

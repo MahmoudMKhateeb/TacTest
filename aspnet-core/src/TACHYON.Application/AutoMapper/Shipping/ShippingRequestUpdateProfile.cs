@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿using Abp.Localization;
+using AutoMapper;
+using TACHYON.Extension;
 using TACHYON.Shipping.ShippingRequestUpdate;
 using TACHYON.Shipping.ShippingRequestUpdates;
 
@@ -8,7 +10,9 @@ namespace TACHYON.AutoMapper.Shipping
     {
         public ShippingRequestUpdateProfile()
         {
-            CreateMap<ShippingRequestUpdate, ShippingRequestUpdateListDto>();
+            CreateMap<ShippingRequestUpdate, ShippingRequestUpdateListDto>()
+                .ForMember(x=> x.Status,x=> 
+                    x.MapFrom(i=> new LocalizableString(i.Status.GetEnumDescription(),TACHYONConsts.LocalizationSourceName)));
         }
     }
 }

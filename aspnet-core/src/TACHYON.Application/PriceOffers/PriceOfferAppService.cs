@@ -26,6 +26,7 @@ using TACHYON.Shipping.DirectRequests;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequests.Dtos;
 using TACHYON.Shipping.ShippingRequestTrips;
+using TACHYON.Shipping.ShippingRequestUpdates;
 using TACHYON.Shipping.Trips;
 using TACHYON.Trucks.TrucksTypes;
 using TACHYON.Trucks.TrucksTypes.Dtos;
@@ -45,12 +46,14 @@ namespace TACHYON.PriceOffers
         private readonly IAppNotifier _appNotifier;
         private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepository;
         private readonly IRepository<Facility,long> _facilityRepository;
+        private readonly ShippingRequestUpdateManager _srUpdateManager;
 
         private IRepository<VasPrice> _vasPriceRepository;
         public PriceOfferAppService(IRepository<ShippingRequestDirectRequest, long> shippingRequestDirectRequestRepository,
             IRepository<ShippingRequest, long> shippingRequestsRepository, PriceOfferManager priceOfferManager,
             IRepository<PriceOffer, long> priceOfferRepository, IRepository<VasPrice> vasPriceRepository,
-            IRepository<City> cityRepository, IRepository<TrucksType, long> trucksTypeRepository, IAppNotifier appNotifier, IRepository<ShippingRequestTrip> shippingRequestTripRepository, IRepository<Facility, long> facilityRepository)
+            IRepository<City> cityRepository, IRepository<TrucksType, long> trucksTypeRepository, IAppNotifier appNotifier, IRepository<ShippingRequestTrip> shippingRequestTripRepository, IRepository<Facility, long> facilityRepository,
+            ShippingRequestUpdateManager srUpdateManager)
         {
             _shippingRequestDirectRequestRepository = shippingRequestDirectRequestRepository;
             _shippingRequestsRepository = shippingRequestsRepository;
@@ -62,6 +65,7 @@ namespace TACHYON.PriceOffers
             _appNotifier = appNotifier;
             _shippingRequestTripRepository = shippingRequestTripRepository;
             _facilityRepository = facilityRepository;
+            _srUpdateManager = srUpdateManager;
         }
 
         #region Services
@@ -350,7 +354,7 @@ namespace TACHYON.PriceOffers
         }
 
 
-        public async Task Delete(EntityDto Input)
+        public async Task Delete(EntityDto<long> Input)
         {
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier);
             await _priceOfferManager.Delete(Input);
@@ -360,11 +364,21 @@ namespace TACHYON.PriceOffers
         public async Task<PriceOfferStatus> Accept(long id)
         {
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Shipper);
+            await CheckSrHasBendingUpdates(id);
             return await _priceOfferManager.AcceptOffer(id);
         }
+
+        private async Task CheckSrHasBendingUpdates(long priceOfferId)
+        {
+            var hasBendingUpdates = await _srUpdateManager.IsRequestHasBendingUpdates(priceOfferId);
+            if (hasBendingUpdates)
+                throw new AbpValidationException(L("CanNotAcceptOfferTheSRHasBendingUpdates"));
+        }
+
         public async Task<PriceOfferStatus> AcceptOfferOnBehalfShipper(long id)
         {
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer);
+            await CheckSrHasBendingUpdates(id);
             return await _priceOfferManager.AcceptOfferOnBehalfShipper(id);
         }
 
@@ -719,6 +733,7 @@ namespace TACHYON.PriceOffers
         private async Task<List<GetShippingRequestForPriceOfferListDto>> GetFromMarketPlace(
             ShippingRequestForPriceOfferGetAllInput input)
         {
+            // ## This Method Need a lot of Code And Performance Improvements ##
             var query = _shippingRequestsRepository
                 .GetAll()
                 .AsNoTracking()
@@ -763,27 +778,21 @@ namespace TACHYON.PriceOffers
             {
                 var dto = ObjectMapper.Map<GetShippingRequestForPriceOfferListDto>(request);
 
-                if (AbpSession.TenantId.HasValue && (IsEnabled(AppFeatures.Carrier) ||
-                                                     (IsEnabled(AppFeatures.TachyonDealer) && !request.IsTachyonDeal)))
+                if (AbpSession.TenantId.HasValue && (await IsEnabledAsync(AppFeatures.Carrier) ||
+                                                     (await IsEnabledAsync(AppFeatures.TachyonDealer) && !request.IsTachyonDeal)))
                 {
+                    dto.BidStatusTitle = "New";
                     var offer = _priceOfferManager.GetCarrierPricingOrNull(request.Id);
                     if (offer != null)
                     {
                         dto.OfferId = offer.Id;
                         dto.isPriced = true;
-                        if (offer.Status == PriceOfferStatus.Accepted ||
-                            offer.Status == PriceOfferStatus.AcceptedAndWaitingForShipper)
-                        {
+                        if (offer.Status == PriceOfferStatus.Accepted || offer.Status == PriceOfferStatus.AcceptedAndWaitingForShipper)
                             dto.BidStatusTitle = "Confirmed";
-                        }
+                        else if (await _srUpdateManager.IsRequestHasBendingUpdates(offer.Id))
+                            dto.BidStatusTitle = "PendingUpdate";
                         else
-                        {
                             dto.BidStatusTitle = "PriceSubmitted";
-                        }
-                    }
-                    else
-                    {
-                        dto.BidStatusTitle = "New";
                     }
 
                     dto.StatusTitle = "";

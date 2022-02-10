@@ -2264,5 +2264,11 @@
 	<text name="ResetReceiverCode">إعادة تعيين رمز مستلم الشحنة</text>
 	<text name="ReceiverCodeConfirmationMsg">هل أنت متأكد أنك تريد إعادة تعيين رمز المستلم لهذه الشحنة؟</text>
 	<text name="SrUpdatedMsgForOfferOwner">طلب شحن قمت بتسعيره ، به تحديث الآن ، انقر لرؤية الطلب</text>
+	<!-- (another value) =>  (في انتظار التحديث)  -->
+	<text name="PendingUpdate">تحديث معلق</text>
+	<text name="RepricedShippingRequestUpdateAction">The PriceOffer is Repriced</text>
+	<text name="KeepSamePriceShippingRequestUpdateAction">PriceOffer keeped same price</text>
+	<text name="DismissedShippingRequestUpdateAction">PriceOffer is Dismissed</text>
+		
 	</texts>
 </localizationDictionary>

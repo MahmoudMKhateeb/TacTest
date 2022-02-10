@@ -1,18 +1,18 @@
-﻿using Abp.Domain.Entities.Auditing;
+﻿using Abp.Dependency;
+using Abp.Domain.Entities.Auditing;
 using Abp.Domain.Repositories;
 using Abp.EntityHistory;
 using Abp.Events.Bus;
-using Abp.UI;
-using Castle.Core.Internal;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using TACHYON.EntityLogs.Dto;
 using TACHYON.Extension;
-using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestUpdates;
 using TACHYON.SmartEnums;
@@ -26,6 +26,7 @@ namespace TACHYON.EntityLogs
         private readonly IRepository<EntityLog, Guid> _logRepository;
         private readonly IRepository<EntityChangeSet, long> _lookupChangeSetRepository;
         private readonly IEventBus _eventBus;
+        private readonly IConfigurationProvider _autoMapperConfigurationProvider;
 
         public EntityLogManager(
             IRepository<EntityLog, Guid> logRepository,
@@ -35,6 +36,8 @@ namespace TACHYON.EntityLogs
             _logRepository = logRepository;
             _lookupChangeSetRepository = lookupChangeSetRepository;
             _eventBus = eventBus;
+            var mapper = IocManager.Instance.Resolve<IMapper>();
+            _autoMapperConfigurationProvider = mapper.ConfigurationProvider;
         }
         // In Domain Service We Will Get Data As EntityLog Model
         // And in Application Service We Will Convert EntityLog Model to Dto it is Readable to Front-End  
@@ -89,18 +92,10 @@ namespace TACHYON.EntityLogs
                    EntityLogId = logId, ShippingRequestId = long.Parse(log.CoreId)
                }; 
                await _eventBus.TriggerAsync(eventData);
-           }// TriggerUpdatedSrEvent(logId, log);
+           }
 
             await CurrentUnitOfWork.SaveChangesAsync();
         }
-
-        // private void TriggerUpdatedSrEvent(Guid logId, EntityLog log)
-        // {
-        //     CurrentUnitOfWork.Completed +=  (sender, args) =>
-        //     {
-        //         
-        //     };
-        // }
 
         private static string FormatChangedPropertiesData(IEnumerable<EntityPropertyChange> propertyChanges,
             Type entityType)
@@ -141,5 +136,9 @@ namespace TACHYON.EntityLogs
                 .Where(x => x.Core.Equals(coreType)
                             && x.CoreId.Equals(coreId))
                 .OrderByDescending(x => x.CreationTime);
+        public async Task<EntityLogListDto> GetEntityLogById(Guid logId)
+            => await _logRepository.GetAll().AsNoTracking()
+                .ProjectTo<EntityLogListDto>(_autoMapperConfigurationProvider)
+                .FirstOrDefaultAsync();
     }
 }

@@ -25,6 +25,14 @@ namespace TACHYON.Shipping.ShippingRequestUpdates
 
         [ForeignKey(nameof(PriceOfferId))]
         public PriceOffer PriceOffer { get; set; }
+        
+        /// <summary>
+        /// Id of Price Offer Before Repricing
+        /// </summary>
+        public long? OldPriceOfferId { get; set; }
+
+        [ForeignKey(nameof(OldPriceOfferId))]
+        public PriceOffer OldPriceOffer { get; set; }
 
         public ShippingRequestUpdateStatus Status { get; set; }
     }
