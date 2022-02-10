@@ -270,6 +270,7 @@ import { StepsModule } from '@node_modules/primeng/steps';
 import { ViewRatingComponent } from '@app/main/shippingRequests/shippingRequests/rating/view-rating/view-rating.component';
 import { ShipmentHistoryComponent } from '@app/main/shippingRequests/shippingRequests/shipment-history/shipment-history.component';
 import { TrackingModule } from '@app/main/shippingRequests/shippingRequests/tracking/tracking.module';
+import { ViewImportedTripsFromExcelModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/trips/view-imported-trips-from-excel-modal/view-imported-trips-from-excel-modal.component';
 
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
@@ -513,6 +514,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ShippingRequestRatingModalComponent,
     ViewRatingComponent,
     ShipmentHistoryComponent,
+    ViewImportedTripsFromExcelModalComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },

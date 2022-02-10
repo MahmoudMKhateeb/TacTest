@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Injector, Input, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Injector, Input, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { Table } from '@node_modules/primeng/table';
 import { Paginator } from '@node_modules/primeng/paginator';
@@ -9,6 +9,7 @@ import {
   ShippingRequestDto,
   ShippingRequestsServiceProxy,
   ShippingRequestsTripServiceProxy,
+  ImportTripDto,
 } from '@shared/service-proxies/service-proxies';
 import { CreateOrEditTripComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/createOrEditTripModal/createOrEditTrip.component';
 import { ViewTripModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/viewTripModal/viewTripModal.component';
@@ -18,6 +19,7 @@ import { finalize } from 'rxjs/operators';
 import { AppConsts } from '@shared/AppConsts';
 import { FileUpload } from 'primeng/fileupload';
 import { HttpClient } from '@angular/common/http';
+import { ModalDirective } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'TripsForViewShippingRequest',
@@ -30,13 +32,17 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   @ViewChild('AddNewTripModal', { static: false }) AddNewTripModal: CreateOrEditTripComponent;
   @ViewChild('ViewTripModal', { static: false }) ViewTripModal: ViewTripModalComponent;
   @ViewChild('ExcelFileUpload', { static: false }) excelFileUpload: FileUpload;
-
+  @ViewChild('ViewImportedTripsModal', { static: false }) modal: ModalDirective;
+  @Output() modalSave: EventEmitter<any> = new EventEmitter();
   @Input() ShippingRequest: ShippingRequestDto;
   @Input() VasListFromFather: GetShippingRequestVasForViewDto[];
   tripsByTmsEnabled: boolean;
   saving = false;
   uploadUrl: string;
   isArabic = false;
+  active = false;
+  list: ImportTripDto;
+  loading: boolean = false;
 
   constructor(
     injector: Injector,
@@ -111,15 +117,25 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   uploadExcel(data: { files: File }): void {
     const formData: FormData = new FormData();
     const file = data.files[0];
+    this.loading = true;
     formData.append('file', file, file.name);
     formData.append('ShippingRequestId', this.ShippingRequest.id.toString());
     this._httpClient
       .post<any>(this.uploadUrl, formData)
-      .pipe(finalize(() => this.excelFileUpload.clear()))
+      .pipe(
+        finalize(() => {
+          this.excelFileUpload.clear();
+        })
+      )
       .subscribe((response) => {
         if (response.success) {
+          this.list = response.result.importShipmentListDto;
+          this.loading = false;
           this.notify.success(this.l('ImportProcessStart'));
+          this.saving = true;
+          this.modal.show();
         } else if (response.error != null) {
+          this.loading = false;
           this.notify.error(this.l('ImportFailed'));
         }
       });
