@@ -45,6 +45,9 @@
                         {{ l('Facility') }}
                       </th>
                       <th>
+                        {{ l('FacilityRating') }}
+                      </th>
+                      <th>
                         {{ l('WayBillNumber') }}
                       </th>
                       <th>
@@ -61,10 +64,57 @@
                   <ng-template let-record="$implicit" pTemplate="body" let-i="rowIndex">
                     <tr>
                       <td>
+                        <div class="btn-group dropdown" container="body" dropdown>
+                          <a
+                            class="dropdown-toggle btn btn-sm btn-primary"
+                            dropdownToggle
+                            [class.disabled]="record.pickingType == PickingType.Pickup"
+                          >
+                            <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
+                          </a>
+                          <ul *dropdownMenu class="dropdown-menu">
+                            <ng-template [ngIf]="record.pickingType == PickingType.Dropoff">
+                              <li>
+                                <!--                                  AddRouteStep(i)-->
+                                <a
+                                  class="dropdown-item"
+                                  [hidden]="usedIn == 'view'"
+                                  *ngIf="isTachyonDealer || isShipper"
+                                  (click)="createOrEditPointModal.show(i)"
+                                  >{{ l('Edit') }}</a
+                                >
+                              </li>
+                              <li>
+                                <a
+                                  class="dropdown-item"
+                                  [hidden]="usedIn == 'view'"
+                                  (click)="delete(i)"
+                                  *ngIf="feature.isEnabled('App.Shipper') && record.pickingType == PickingType.Dropoff && !activeTripId"
+                                  >{{ l('Delete') }}</a
+                                >
+                              </li>
+                              <li>
+                                <a class="dropdown-item" [hidden]="usedIn !== 'view'" (click)="viewPointDetailsModal.show(record)">{{ l('View') }}</a>
+                              </li>
+                            </ng-template>
+                            <li>
+                              <a
+                                class="dropdown-item"
+                                *ngIf="RouteType !== RouteTypes.SingleDrop && record.pickingType == PickingType.Dropoff && record.id"
+                                (click)="downloadDropWayBill(record.id)"
+                                >{{ l('downloadDropWaybill') }}</a
+                              >
+                            </li>
+                          </ul>
+                        </div>
+                      </td>
+                      <td>
                         <span class="ui-column-title"> {{ l('facilityName') }}</span>
                         {{ record.facility ? record.facility : getFacilityNameByid(record.facilityId) }}
                         <br />
                         <!-- I don't need to show rate number so (Rate Number) equals 0-->
+                      </td>
+                      <td>
                         <app-view-rating [max]="5" [rate]="record.facilityRate" [rateNumber]="0"></app-view-rating>
                       </td>
                       <td>
