@@ -69,7 +69,7 @@
                   required
                   [disabled]="citiesLoading || !selectedCountryId"
                   [(ngModel)]="facility.cityId"
-                  [class.is-invalid]="(city.touched && !city.valid) || !facility.cityId"
+                  [class.is-invalid]="city.touched && !city.valid && !facility.cityId"
                   [class.is-valid]="city.touched && city.valid && facility.cityId"
                 >
                   <option value="" selected disabled>{{ l('SelectACity') }}</option>
