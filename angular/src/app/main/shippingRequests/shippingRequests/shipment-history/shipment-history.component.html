@@ -22,10 +22,7 @@
               <dxo-search-panel [visible]="true"></dxo-search-panel>
               <dxo-filter-panel [visible]="true"></dxo-filter-panel>
               <dxo-filter-builder-popup></dxo-filter-builder-popup>
-              <dxo-master-detail [enabled]="true" template="translations"></dxo-master-detail>
-              <div *dxTemplate="let options of 'translations'">
-                <app-translations-template [CoreId]="options.data.id"></app-translations-template>
-              </div>
+              <dxo-master-detail [enabled]="false" template="translations"></dxo-master-detail>
               <dxo-remote-operations [groupPaging]="true" [sorting]="true" [filtering]="true"> </dxo-remote-operations>
               <dxo-paging [pageSize]="5"></dxo-paging>
               <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20, 50, 200]"></dxo-pager>
