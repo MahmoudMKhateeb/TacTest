@@ -149,7 +149,6 @@ namespace TACHYON.Web.Controllers
                 // to do => it's a good idea if we bind mobile numbers from settings (use ui)
                 "599925326", // Aiman
                 "500679773", // Esraa
-                "551337923" // Lujain
             };
         }
 
