@@ -130,7 +130,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   step1Form = this.fb.group({
     shippingRequestType: [{ value: '', disabled: false }, Validators.required],
     shippingType: [{ value: '', disabled: false }, Validators.required],
-    carrier: [''],
+    carrier: [{ value: '', disabled: false }],
     tripsStartDate: [''],
     tripsEndDate: [''],
     biddingStartDate: [''],
@@ -703,6 +703,17 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
         }
       }
     );
+  }
+
+  /**
+   * Control Carrier Field Validation if shipping Request type is Direct request make the carrier required
+   */
+  validateCarrierForDirectRequest() {
+    if (this.shippingRequestType === 'directrequest') {
+      this.step1Form.controls.carrier.setValidators([Validators.required]);
+    } else {
+      this.step1Form.controls.carrier.clearValidators();
+    }
   }
 
   isOthersGoodCategoryId(goodCategoryId: number): boolean {

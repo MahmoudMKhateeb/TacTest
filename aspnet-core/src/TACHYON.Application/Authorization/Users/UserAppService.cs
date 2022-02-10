@@ -14,11 +14,13 @@ using Abp.Runtime.Session;
 using Abp.Runtime.Validation;
 using Abp.UI;
 using Abp.Zero.Configuration;
+using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Castle.Core.Internal;
 using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Stripe;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -38,6 +40,7 @@ using TACHYON.Documents.DocumentsEntities;
 using TACHYON.Documents.DocumentTypes;
 using TACHYON.Dto;
 using TACHYON.Features;
+using TACHYON.MultiTenancy;
 using TACHYON.Net.Sms;
 using TACHYON.Notifications;
 using TACHYON.Organizations.Dto;
@@ -65,6 +68,8 @@ namespace TACHYON.Authorization.Users
         private readonly IPasswordHasher<User> _passwordHasher;
         private readonly IRepository<OrganizationUnit, long> _organizationUnitRepository;
         private readonly IRoleManagementConfig _roleManagementConfig;
+        private readonly IRepository<User, long> _userRepository;
+        private readonly IRepository<Tenant> _tenantRepository;
         private readonly UserManager _userManager;
         private readonly IRepository<UserOrganizationUnit, long> _userOrganizationUnitRepository;
         private readonly IRepository<OrganizationUnitRole, long> _organizationUnitRoleRepository;
@@ -94,7 +99,8 @@ namespace TACHYON.Authorization.Users
             IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository,
             IRepository<OrganizationUnitRole, long> organizationUnitRoleRepository,
             DocumentFilesAppService documentFilesAppService,
-            ISmsSender smsSender)
+            ISmsSender smsSender, 
+            IRepository<User, long> userRepository, IRepository<Tenant> tenantRepository)
         {
             _documentFileRepository = documentFileRepository;
             _documentTypeRepository = documentTypeRepository;
@@ -116,6 +122,8 @@ namespace TACHYON.Authorization.Users
             _organizationUnitRoleRepository = organizationUnitRoleRepository;
             _documentFilesAppService = documentFilesAppService;
             _smsSender = smsSender;
+            _userRepository = userRepository;
+            _tenantRepository = tenantRepository;
             _roleRepository = roleRepository;
 
             AppUrlService = NullAppUrlService.Instance;
@@ -152,11 +160,14 @@ namespace TACHYON.Authorization.Users
             DisableTenancyFiltersIfHost();
             await DisableTenancyFiltersIfTachyonDealer();
 
-            var query = UserManager.Users
-                .Where(u => u.IsDriver)
+            var drivers = (from user in _userRepository.GetAllIncluding(x=> x.NationalityFk).AsNoTracking()
+                where user.IsDriver && user.NationalityFk != null
+                join tenant in _tenantRepository.GetAll() on user.TenantId equals tenant.Id
+                select new DriverMappingEntity(){ User = user, CompanyName = tenant.companyName})
+                .Where(x=> x.User != null )
                 .ProjectTo<DriverListDto>(AutoMapperConfigurationProvider);
 
-            var result = await LoadResultAsync(query, input.LoadOptions);
+            var result = await LoadResultAsync(drivers, input.LoadOptions);
             await FillIsMissingDocumentFiles(result);
             return result;
         }

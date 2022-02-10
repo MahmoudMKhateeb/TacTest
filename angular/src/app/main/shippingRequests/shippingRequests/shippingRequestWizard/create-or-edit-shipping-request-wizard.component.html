@@ -105,6 +105,7 @@
                         name="shippingRequestType"
                         formControlName="shippingRequestType"
                         [(ngModel)]="shippingRequestType"
+                        (change)="validateCarrierForDirectRequest()"
                         [class.is-valid]="
                           step1Form.get('shippingRequestType').valid &&
                           (step1Form.get('shippingRequestType').dirty || step1Form.get('shippingRequestType').touched)
@@ -143,6 +144,11 @@
                           [styleClass]="'myCarrierInput'"
                           formControlName="carrier"
                           [dataKey]="'id'"
+                          [required]="shippingRequestType === 'directrequest'"
+                          [class.is-valid]="step1Form.get('carrier').valid && (step1Form.get('carrier').dirty || step1Form.get('carrier').touched)"
+                          [class.is-invalid]="
+                            step1Form.get('carrier').invalid && (step1Form.get('carrier').dirty || step1Form.get('carrier').touched)
+                          "
                         >
                           <ng-template let-carrier pTemplate="item">
                             <div class="country-item">

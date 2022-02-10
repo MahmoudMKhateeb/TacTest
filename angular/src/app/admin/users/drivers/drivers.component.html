@@ -112,10 +112,10 @@
               <dxi-column dataField="surname" caption="{{ 'LastName' | localize }}"></dxi-column>
               <dxi-column dataField="isActive" caption="{{ 'Status' | localize }}"></dxi-column>
               <dxi-column dataField="creationTime" caption="{{ 'DriverCreationDateAndTime' | localize }}" dataType="datetime"></dxi-column>
+              <dxi-column dataField="companyName" caption="{{ l('companyName') }}"> </dxi-column>
+              <dxi-column dataField="nationality" caption="{{ l('Nationality') }}"> </dxi-column>
               <dxi-column
                 cellTemplate="cellDriverTrackingTemplate"
-                dataField="DriverTracking"
-                dataType="string"
                 cellTemplate="cellTrackingTemplate"
                 caption="{{ 'DriverTracking' | localize }}"
               ></dxi-column>

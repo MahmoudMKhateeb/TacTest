@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 @Component({
   templateUrl: './header-notifications.component.html',
   selector: 'header-notifications',
+  styleUrls: ['header-notifications.component.css'],
   encapsulation: ViewEncapsulation.None,
 })
 export class HeaderNotificationsComponent extends AppComponentBase implements OnInit {
