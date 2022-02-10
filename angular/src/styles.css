@@ -565,3 +565,28 @@ a {
   background-color: #3f4254 !important;
   color: #0c0c0d !important;
 }
+
+/* Hijri Calender Style */
+.ngb-dp-navigation-select {
+  flex: 1 1 14rem !important;
+}
+.ngb-dp-months {
+  display: block !important;
+}
+ngb-datepicker {
+  min-width: 19rem !important;
+}
+[ngbDatepickerDayView],
+.ngb-dp-day,
+.ngb-dp-week-number,
+.ngb-dp-weekday {
+  width: 3rem !important;
+  height: 3rem !important;
+  line-height: 3rem !important;
+}
+.ngb-dp-month:first-child .ngb-dp-week {
+  padding-left: 0 !important;
+}
+.ngb-dp-month:last-child .ngb-dp-week {
+  padding-right: 0 !important;
+}
