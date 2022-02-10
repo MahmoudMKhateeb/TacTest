@@ -101,7 +101,6 @@ namespace TACHYON.Authorization.Users
             IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository,
             IRepository<OrganizationUnitRole, long> organizationUnitRoleRepository,
             DocumentFilesAppService documentFilesAppService,
-            ISmsSender smsSender,
 
             WaslIntegrationManager waslIntegrationManager,
             ISmsSender smsSender, 
