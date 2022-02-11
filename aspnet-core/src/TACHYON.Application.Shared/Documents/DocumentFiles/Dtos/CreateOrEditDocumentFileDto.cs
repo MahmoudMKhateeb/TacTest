@@ -47,7 +47,6 @@ namespace TACHYON.Documents.DocumentFiles.Dtos
         [StringLength(DocumentFileConsts.MaxNameLength, MinimumLength = DocumentFileConsts.MinNameLength)]
         public string Name { get; set; }
 
-        [Required]
         [StringLength(DocumentFileConsts.MaxExtnLength, MinimumLength = DocumentFileConsts.MinExtnLength)]
         public string Extn { get; set; }
 

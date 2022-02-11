@@ -61,7 +61,7 @@ namespace TACHYON.Authorization.Users.Dto
 
         public string HijriDateOfBirth { get; set; }
 
-
+        public int? DriverLicenseTypeId { get; set; }
 
         #endregion
     }

@@ -44,7 +44,9 @@ namespace TACHYON.Documents.DocumentTypes.Dtos
         public int? InActiveToleranceDays { get; set; }
 
         public bool HasHijriExpirationDate { get; set; }
-
+        public bool IsRequiredNumber { get; set; }
+        public bool IsRequiredExpirationDate { get; set; }
+        public bool IsRequiredDocumentTemplate { get; set; }
 
         public string TemplateName { get; set; }
         public string TemplateContentType { get; set; }

@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Abp.Application.Services.Dto;
+using System;
 using System.ComponentModel.DataAnnotations;
-using Abp.Application.Services.Dto;
 using TACHYON.Dto;
 
 namespace TACHYON.Documents.DocumentTypes.Dtos
@@ -20,7 +20,9 @@ namespace TACHYON.Documents.DocumentTypes.Dtos
 
         public int? EditionId { get; set; }
         public bool HasNumber { get; set; }
-
+        public bool IsRequiredNumber { get; set; }
+        public bool IsRequiredExpirationDate { get; set; }
+        public bool IsRequiredDocumentTemplate { get; set; }
         public bool HasNotes { get; set; }
         public bool IsNumberUnique { get; set; }
         public string SpecialConstant { get; set; }

@@ -923,6 +923,8 @@
 		<text name="LicenseExpirationDate">تاريخ انتهاء الرخصة</text>
 		<text name="LicenseNumber">رقم الرخصة</text>
 		<text name="Link">رابط</text>
+		<text name="ThereisamissingDocumnets">هذا الحقل مطلوب الرجاء ادخال {0}</text>
+
 		<text name="LinkedAccounts">حسابات مرتبطة</text>
 		<text name="LinkedUserDeleteWarningMessage">سيتم إزالة الربط بالمستخدم {0}</text>
 		<text name="LinkNewAccount">ربط حساب جديد</text>
@@ -2245,6 +2247,10 @@
     <text name="ImportTrucksProcessStart">بدأت عملية استيراد الشاحنات</text>
 	<text name="ImportTrucksUploadFailed">فشلت عملية استيراد الشاحنات.</text>
 		<text name="NumberOfRating">عدد تقييمات الشركة</text>
+    <text name="IsMandatoryDocumentTemplate">المستند إلزامي</text>
+    <text name="IsMandatoryNumber">الرقم إلزامي</text>
+    <text name="IsMandatoryExpirationDate">تاريخ الإنتهاء إلزامي</text>
+
     <!--<text name="StartOffloading"></text>
     <text name="ReceiverConfirmed"></text>
     <text name="DeliveryConfirmation"></text>-->
@@ -2260,10 +2266,7 @@
 		<text name="ShippingRequestAsBidWithSameTruckNotificationMessage">تم إنشاء طلب الشحن مع نفس الشاحنات الخاصة بك في السوق</text>
 		<text name="ShipperShippingRequestFinishNotificationMessage">اكتملت جميع الشحنات الخاصة بطلب الشحن</text>
 		<text name="SubmitInvoiceOnClaim">تم مطالبة الفاتورة المرسلة</text>
-    <text name="IsMandatoryExpirationDate">تاريخ الإنتهاء إلزامي</text>
-    <text name="IsMandatoryNumber">الرقم إلزامي</text>
-    <text name="IsMandatoryDocumentTemplate">المستند إلزامي</text>
-		<text name="NoMatchingTrucks">لا توجد شاحنات مطابقة</text>
+    <text name="NoMatchingTrucks">لا توجد شاحنات مطابقة</text>
 		<text name="NoMatchingDrivers">لا يوجد سائقين</text>
 
 	</texts>

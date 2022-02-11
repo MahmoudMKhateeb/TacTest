@@ -218,61 +218,6 @@ namespace TACHYON.Documents.DocumentFiles
             await _documentFileRepository.DeleteAsync(input.Id);
         }
 
-        //public async Task<FileDto> GetDocumentFilesToExcel(GetAllDocumentFilesForExcelInput input)
-        //{
-        //    var filteredDocumentFiles = _documentFileRepository.GetAll()
-        //        .Include(e => e.DocumentTypeFk)
-        //        .Include(e => e.TruckFk)
-        //        .Include(e => e.TrailerFk)
-        //        .Include(e => e.UserFk)
-        //        .Include(e => e.RoutStepFk)
-        //        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Name.Contains(input.Filter) || e.Extn.Contains(input.Filter))
-        //        .WhereIf(!string.IsNullOrWhiteSpace(input.NameFilter), e => e.Name == input.NameFilter)
-        //        .WhereIf(!string.IsNullOrWhiteSpace(input.ExtnFilter), e => e.Extn == input.ExtnFilter)
-        //        .WhereIf(!string.IsNullOrWhiteSpace(input.BinaryObjectIdFilter.ToString()), e => e.BinaryObjectId.ToString() == input.BinaryObjectIdFilter.ToString())
-        //        .WhereIf(input.MinExpirationDateFilter != null, e => e.ExpirationDate >= input.MinExpirationDateFilter)
-        //        .WhereIf(input.MaxExpirationDateFilter != null, e => e.ExpirationDate <= input.MaxExpirationDateFilter)
-        //        .WhereIf(input.IsAcceptedFilter.HasValue, e => e.IsAccepted == input.IsAcceptedFilter.Value)
-        //        .WhereIf(!string.IsNullOrWhiteSpace(input.DocumentTypeDisplayNameFilter), e => e.DocumentTypeFk != null && e.DocumentTypeFk.DisplayName == input.DocumentTypeDisplayNameFilter)
-        //        .WhereIf(!string.IsNullOrWhiteSpace(input.TruckPlateNumberFilter), e => e.TruckFk != null && e.TruckFk.PlateNumber == input.TruckPlateNumberFilter)
-        //        .WhereIf(!string.IsNullOrWhiteSpace(input.TrailerTrailerCodeFilter), e => e.TrailerFk != null && e.TrailerFk.TrailerCode == input.TrailerTrailerCodeFilter)
-        //        .WhereIf(!string.IsNullOrWhiteSpace(input.UserNameFilter), e => e.UserFk != null && e.UserFk.Name == input.UserNameFilter)
-        //        .WhereIf(!string.IsNullOrWhiteSpace(input.RoutStepDisplayNameFilter), e => e.RoutStepFk != null && e.RoutStepFk.DisplayName == input.RoutStepDisplayNameFilter);
-
-        //    var query = from o in filteredDocumentFiles
-        //                join o1 in _lookupDocumentTypeRepository.GetAll() on o.DocumentTypeId equals o1.Id into j1
-        //                from s1 in j1.DefaultIfEmpty()
-        //                join o2 in _lookupTruckRepository.GetAll() on o.TruckId equals o2.Id into j2
-        //                from s2 in j2.DefaultIfEmpty()
-        //                join o3 in _lookupTrailerRepository.GetAll() on o.TrailerId equals o3.Id into j3
-        //                from s3 in j3.DefaultIfEmpty()
-        //                join o4 in _lookupUserRepository.GetAll() on o.UserId equals o4.Id into j4
-        //                from s4 in j4.DefaultIfEmpty()
-        //                join o5 in _lookupRoutStepRepository.GetAll() on o.RoutStepId equals o5.Id into j5
-        //                from s5 in j5.DefaultIfEmpty()
-        //                select new GetDocumentFileForViewDto
-        //                {
-        //                    DocumentFile = new DocumentFileDto
-        //                    {
-        //                        Name = o.Name,
-        //                        Extn = o.Extn,
-        //                        BinaryObjectId = o.BinaryObjectId,
-        //                        ExpirationDate = o.ExpirationDate,
-        //                        IsAccepted = o.IsAccepted,
-        //                        Id = o.Id
-        //                    },
-        //                    DocumentTypeDisplayName = s1 == null || s1.DisplayName == null ? "" : s1.DisplayName,
-        //                    TruckId = s2 == null || s2.PlateNumber == null ? "" : s2.PlateNumber,
-        //                    TrailerTrailerCode = s3 == null || s3.TrailerCode == null ? "" : s3.TrailerCode,
-        //                    UserName = s4 == null || s4.Name == null ? "" : s4.Name,
-        //                    RoutStepDisplayName = s5 == null || s5.DisplayName == null ? "" : s5.DisplayName.ToString()
-        //                };
-
-
-        //    var documentFileListDtos = await query.ToListAsync();
-
-        //    return _documentFilesExcelExporter.ExportToFile(documentFileListDtos);
-        //}
 
 
         [AbpAuthorize(AppPermissions.Pages_DocumentFiles)]

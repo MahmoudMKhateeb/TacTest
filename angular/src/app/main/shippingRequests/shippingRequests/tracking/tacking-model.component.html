@@ -238,6 +238,8 @@
               <div class="actions mt-0" *ngIf="canChangeDropStatus(drop) && !item.hasAccident && item.driverStatus == 1"></div>
               <p>{{ l('ReceiverCode') }}: {{ drop.receiverCode }}</p>
               <div class="shipperNote" *ngIf="isGranted('Pages.Shipment.Tracking.ReceiverCode')">
+              <div class="shipperNote" *ngIf="isGranted('Pages.Shipment.Tracking.ReceiverCode')">
+>>>>>>>>> Temporary merge branch 2
                 <a href="javascript:void(0)" *ngIf="!saving" (click)="changeStatus(drop)">
                   {{ drop.nextStatus }}
                 </a>

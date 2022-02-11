@@ -65,7 +65,7 @@ namespace TACHYON.Web.Controllers
             }
             MimeTypes.TryGetExtension(file.FileType, out var exten);
 
-            file.FileName = file.FileName + "." + exten;
+            file.FileName = file.FileName + exten;
             return File(fileBytes, file.FileType, file.FileName);
         }
 

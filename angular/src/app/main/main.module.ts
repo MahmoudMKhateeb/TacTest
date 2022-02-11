@@ -2,6 +2,9 @@
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
+import { DriverLicenseTypesComponent } from './driverLicenseTypes/driverLicenseTypes/driverLicenseTypes.component';
+import { CreateOrEditDriverLicenseTypeModalComponent } from './driverLicenseTypes/driverLicenseTypes/create-or-edit-driverLicenseType-modal.component';
+
 import { DangerousGoodTypesComponent } from './goods/dangerousGoodTypes/dangerousGoodTypes.component';
 
 import { PackingTypesComponent } from './packingTypes/packingTypes/packingTypes.component';
@@ -334,6 +337,8 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     StepsModule,
   ],
   declarations: [
+    DriverLicenseTypesComponent,
+    CreateOrEditDriverLicenseTypeModalComponent,
     DangerousGoodTypesComponent,
     TrucksTypesTranslationsComponent,
     ViewTrucksTypesTranslationModalComponent,

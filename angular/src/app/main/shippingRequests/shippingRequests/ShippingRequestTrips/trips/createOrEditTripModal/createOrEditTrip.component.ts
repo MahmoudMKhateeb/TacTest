@@ -123,7 +123,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     this.PointsServiceSubscription = this._PointsService.currentWayPointsList.subscribe((res) => (this.trip.routPoints = res));
     //load the Facilites
     //this._PointsService.updateWayPoints(new CreateOrEditRoutPointDto[]);
-    this.refreshOrGetFacilities(null);
+    this.refreshOrGetFacilities(undefined);
     this.vasesHandler();
   }
 
@@ -303,7 +303,9 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     });
   }
   refreshOrGetFacilities(facility: FacilityForDropdownDto | undefined) {
-    this._TripService.GetOrRefreshFacilities(this.shippingRequest.id);
+    if (this.shippingRequest != null && this.shippingRequest != undefined) {
+      this._TripService.GetOrRefreshFacilities(this.shippingRequest.id);
+    }
   }
 
   /**

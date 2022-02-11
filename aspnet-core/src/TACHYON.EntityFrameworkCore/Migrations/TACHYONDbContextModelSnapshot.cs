@@ -1676,6 +1676,9 @@ namespace TACHYON.Migrations
                     b.Property<bool>("IsTwoFactorEnabled")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsWaslIntegrated")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime?>("LastModificationTime")
                         .HasColumnType("datetime2");
 
@@ -1751,6 +1754,9 @@ namespace TACHYON.Migrations
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
+                    b.Property<string>("WaslIntegrationErrorMsg")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AccountNumber")
@@ -1760,6 +1766,8 @@ namespace TACHYON.Migrations
                     b.HasIndex("CreatorUserId");
 
                     b.HasIndex("DeleterUserId");
+
+                    b.HasIndex("DriverLicenseTypeId");
 
                     b.HasIndex("LastModifierUserId");
 
@@ -2207,6 +2215,15 @@ namespace TACHYON.Migrations
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsRequired")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsRequiredDocumentTemplate")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsRequiredExpirationDate")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsRequiredNumber")
                         .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastModificationTime")
@@ -4950,6 +4967,9 @@ namespace TACHYON.Migrations
                     b.Property<bool>("IsShipperHaveInvoice")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsWaslIntegrated")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime?>("LastModificationTime")
                         .HasColumnType("datetime2");
 
@@ -5010,6 +5030,9 @@ namespace TACHYON.Migrations
 
                     b.Property<decimal?>("VatAmountWithCommission")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("WaslIntegrationErrorMsg")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("WaybillNumber")
                         .HasColumnType("bigint");
@@ -6269,6 +6292,9 @@ namespace TACHYON.Migrations
                         .HasColumnType("nvarchar(64)")
                         .HasMaxLength(64);
 
+                    b.Property<int>("WaslIntegrationId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.ToTable("PlateTypes");
@@ -6330,6 +6356,9 @@ namespace TACHYON.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsWaslIntegrated")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime?>("LastModificationTime")
                         .HasColumnType("datetime2");
 
@@ -6373,6 +6402,9 @@ namespace TACHYON.Migrations
 
                     b.Property<long?>("TrucksTypeId")
                         .HasColumnType("bigint");
+
+                    b.Property<string>("WaslIntegrationErrorMsg")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -7197,6 +7229,10 @@ namespace TACHYON.Migrations
                     b.HasOne("TACHYON.Authorization.Users.User", "DeleterUser")
                         .WithMany()
                         .HasForeignKey("DeleterUserId");
+
+                    b.HasOne("TACHYON.DriverLicenseTypes.DriverLicenseType", "DriverLicenseTypeFk")
+                        .WithMany()
+                        .HasForeignKey("DriverLicenseTypeId");
 
                     b.HasOne("TACHYON.Authorization.Users.User", "LastModifierUser")
                         .WithMany()

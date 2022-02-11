@@ -351,8 +351,10 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
       if (this.shippingRequest.originCityId == this.shippingRequest.destinationCityId) {
         this.shippingRequestForm.controls['destination'].setErrors({ invalid: true });
         this.shippingRequestForm.controls['origin'].setErrors({ invalid: true });
-
         this.notify.error(this.l(' SourceAndDestinationCantBeTheSame'));
+      } else {
+        this.shippingRequestForm.controls['destination'].setErrors(null);
+        this.shippingRequestForm.controls['origin'].setErrors(null);
       }
     }
   }

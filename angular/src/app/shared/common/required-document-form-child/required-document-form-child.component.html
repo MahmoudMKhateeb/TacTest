@@ -3,15 +3,16 @@
   <div class="row">
     <div class="form-group col-6">
       <label class="text-primary"
-        >{{ item.documentTypeDto.name ? item.documentTypeDto.name : item.documentTypeDto.displayName }}<span class="text-danger">*</span> </label
-      >
+        >{{ item.documentTypeDto.name ? item.documentTypeDto.name : item.documentTypeDto.displayName
+        }}<span *ngIf="item.documentTypeDto.isRequiredDocumentTemplate" class="text-danger">*</span>
+      </label>
       <div class="custom-file">
         <input
           accept="image/x-png,image/jpeg,application/pdf"
           (change)="DocFileChangeEvent($event, item, i)"
           type="file"
           class="custom-file-input is-valid"
-          required
+          required="item.documentTypeDto.isRequiredDocumentTemplate"
           [ngClass]="{
             'is-valid': item?.name,
             'is-invalid': parentForm.submitted && !item?.name
@@ -57,13 +58,13 @@
       </div>
     </div>
     <div *ngIf="item.documentTypeDto.hasNumber" class="form-group col-6">
-      <label><span class="required-fileds"> *</span> {{ l('Number') }} </label>
+      <label><span *ngIf="item.documentTypeDto.isRequiredNumber" class="required-fileds"> *</span> {{ l('Number') }} </label>
       <input
         #inputDocumentNumber="ngModel"
         name="number{{ i }}"
         id="number{{ i }}"
         class="form-control m-input"
-        required
+        required="item.documentTypeDto.isRequiredNumber"
         [maxLength]="item.documentTypeDto.numberMaxDigits"
         [minLength]="item.documentTypeDto.numberMinDigits"
         type="text"
@@ -92,7 +93,7 @@
         [parentForm]="parentForm"
         [label]="l('ExpirationDate')"
         class="m-input"
-        [isRequired]="true"
+        [isRequired]="item.documentTypeDto.isRequiredExpirationDate"
         [readonly]="true"
         [minGreg]="todayGregorian"
         [minHijri]="todayHijri"

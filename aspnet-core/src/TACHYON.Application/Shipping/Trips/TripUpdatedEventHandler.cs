@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using TACHYON.Authorization.Users;
 using TACHYON.BayanIntegration;
 using TACHYON.Firebases;
+using TACHYON.Integration.BayanIntegration;
 using TACHYON.MultiTenancy;
 using TACHYON.Notifications;
 using TACHYON.Shipping.ShippingRequestTrips;

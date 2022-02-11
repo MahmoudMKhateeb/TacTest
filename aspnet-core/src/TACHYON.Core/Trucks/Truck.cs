@@ -8,6 +8,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using TACHYON.Authorization.Users;
 using TACHYON.Documents.DocumentFiles;
+using TACHYON.Integration.WaslIntegration;
 //using TACHYON.Authorization.Users;
 using TACHYON.Trucks;
 using TACHYON.Trucks.PlateTypes;
@@ -19,7 +20,8 @@ namespace TACHYON.Trucks
 {
     [Table("Trucks")]
     [Audited]
-    public class Truck : FullAuditedEntity<long>, IMustHaveTenant
+    [Serializable]
+    public class Truck : FullAuditedEntity<long>, IMustHaveTenant, IWaslIntegrated
     {
         public int TenantId { get; set; }
 
@@ -99,6 +101,11 @@ namespace TACHYON.Trucks
         public PlateType PlateTypeFk { get; set; }
 
         public virtual ICollection<DocumentFile> DocumentFiles { get; set; }
+
+        public bool IsWaslIntegrated { get; set; }
+        public string WaslIntegrationErrorMsg { get; set; }
+
+
 
         #region Helper
 

@@ -27,6 +27,7 @@ using TACHYON.EntityLogs;
 using TACHYON.Features;
 using TACHYON.Firebases;
 using TACHYON.Goods.GoodCategories.Dtos;
+using TACHYON.Integration.WaslIntegration;
 using TACHYON.Mobile;
 using TACHYON.MultiTenancy;
 using TACHYON.Notifications;

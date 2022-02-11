@@ -21,6 +21,7 @@ using TACHYON.Documents.DocumentsEntities;
 using TACHYON.Documents.DocumentTypes;
 using TACHYON.Documents.DocumentTypeTranslations;
 using TACHYON.DriverLocationLogs;
+using TACHYON.DriverLicenseTypes;
 using TACHYON.Editions;
 using TACHYON.EntityLogs;
 using TACHYON.Friendships;
@@ -84,6 +85,8 @@ namespace TACHYON.EntityFrameworkCore
 {
     public class TACHYONDbContext : AbpZeroDbContext<Tenant, Role, User, TACHYONDbContext>, IAbpPersistedGrantDbContext
     {
+        public virtual DbSet<DriverLicenseType> DriverLicenseTypes { get; set; }
+
         public virtual DbSet<DangerousGoodType> DangerousGoodTypes { get; set; }
         public virtual DbSet<DangerousGoodTypeTranslation> DangerousGoodTypeTranslations { get; set; }
 
