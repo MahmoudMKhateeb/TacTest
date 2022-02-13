@@ -26,7 +26,8 @@ namespace TACHYON.Shipping.Trips.Importing
 
         public async Task<List<ImportTripDto>> ImportShipmentFromExcel(ImportShipmentFromExcelInput importShipmentFromExcelInput)
         {
-            var trips =await GetShipmentListFromExcelOrNull(importShipmentFromExcelInput);
+            var trips = await GetShipmentListFromExcelOrNull(importShipmentFromExcelInput);
+            ValidateDuplicatedReferenceFromList(trips);
             return trips;
         }
 
@@ -34,6 +35,10 @@ namespace TACHYON.Shipping.Trips.Importing
         {
             List<ImportTripDto> SuccessImportTripDtoList = new List<ImportTripDto>();
             List<ImportTripDto> InvalidShipments = new List<ImportTripDto>();
+
+            //check if no duplication in reference
+            ValidateDuplicatedReferenceFromList(importTripDtoList);
+
             //override trip validation
             foreach (var trip in importTripDtoList)
             {
@@ -50,12 +55,6 @@ namespace TACHYON.Shipping.Trips.Importing
                 }
             }
 
-            var duplicatedReference = _shippingRequestTripManager.DuplicatedReferenceFromList(SuccessImportTripDtoList);
-            //check if no duplication in reference
-            if (!string.IsNullOrEmpty(duplicatedReference))
-            {
-                throw new UserFriendlyException(string.Format(L("Reference {0} isDuplicatedMsg"), duplicatedReference));
-            }
 
             //check if all list is valid
             if (InvalidShipments.Count>0)
@@ -68,34 +67,10 @@ namespace TACHYON.Shipping.Trips.Importing
         
         private async Task CreateShipments(List<ImportTripDto> Trips)
         {
-            var invalidTrips = new List<ImportTripDto>();
-
             foreach (var trip in Trips)
             {
-                if (trip.CanBeImported())
-                {
-                    try
-                    {
-                        await CreateShipmentAsync(trip);
-                    }
-                    catch (UserFriendlyException exception)
-                    {
-                        trip.Exception = exception.Message;
-                        invalidTrips.Add(trip);
-                    }
-                    catch (Exception exception)
-                    {
-                        trip.Exception = exception.ToString();
-                        invalidTrips.Add(trip);
-                    }
-                }
-                else
-                {
-                    invalidTrips.Add(trip);
-                }
-
+               await CreateShipmentAsync(trip);
             }
-            //await ProcessImportShipmentsResultAsync(args, invalidTrips));
         }
 
         private async Task CreateShipmentAsync(ImportTripDto input)
@@ -103,7 +78,6 @@ namespace TACHYON.Shipping.Trips.Importing
             var trip = ObjectMapper.Map<ShippingRequestTrip>(input);
             await _shippingRequestTripManager.CreateAsync(trip);
         }
-
 
         private async Task<List<ImportTripDto>> GetShipmentListFromExcelOrNull(ImportShipmentFromExcelInput importShipmentFromExcelInput)
         {
@@ -120,6 +94,20 @@ namespace TACHYON.Shipping.Trips.Importing
                 }
             }
 
+        }
+
+        private void ValidateDuplicatedReferenceFromList(List<ImportTripDto> trips)
+        {
+            var duplicatedReferenceTrips = _shippingRequestTripManager.DuplicatedReferenceFromList(trips);
+            //check if no duplication in reference
+            if (duplicatedReferenceTrips.Count() > 0)
+            {
+                foreach (var trip in duplicatedReferenceTrips)
+                {
+                    trip.Exception = trip.Exception + L("Reference is Duplicated;");
+
+                }
+            }
         }
     }
 }

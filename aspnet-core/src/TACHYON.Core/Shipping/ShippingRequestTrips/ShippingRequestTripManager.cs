@@ -62,30 +62,32 @@ namespace TACHYON.Shipping.ShippingRequestTrips
             {
                 ValidateTripDates(importTripDto, SR);
             }
-            catch (Exception e)
+            catch (UserFriendlyException e)
             {
-                exceptionMessage.Append(e.Message);
+                exceptionMessage.Append(e.Message+";");
             }
 
             ValidateDuplicateBulkReferenceFromDB(importTripDto, exceptionMessage);
             //ValidateDuplicatedReference(importTripDtoList, exceptionMessage);
-
+            //check if no duplication in reference from DB
             importTripDto.Exception = exceptionMessage.ToString();
         }
 
-        public string DuplicatedReferenceFromList(List<ImportTripDto> importTripDtoList)
+        public List<ImportTripDto> DuplicatedReferenceFromList(List<ImportTripDto> importTripDtoList)
         {
             if (importTripDtoList != null && importTripDtoList.Count > 0)
             {
+                List<ImportTripDto> dupicatedRedTripsList = new List<ImportTripDto>();
                 foreach (var trip in importTripDtoList)
                 {
                     if (importTripDtoList.Count(x => x.BulkUploadReference == trip.BulkUploadReference) > 1)
                     {
-                        return trip.BulkUploadReference;
+                            dupicatedRedTripsList.Add(trip);
                     }
                 }
+                return dupicatedRedTripsList;
             }
-            return "";
+            return null;
         }
 
         private void ValidateDuplicateBulkReferenceFromDB(ImportTripDto importTripDto, StringBuilder exceptionMessage)

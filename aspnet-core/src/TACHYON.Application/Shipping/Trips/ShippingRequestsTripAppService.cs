@@ -237,32 +237,6 @@ namespace TACHYON.Shipping.Trips
         }
 
 
-
-        //private void ValidateTripDto(ImportTripDto importTripDto, long shippingRequestId)
-        //{
-        //    var SR = _shippingRequestRepository.Get(shippingRequestId);
-
-        //    StringBuilder exceptionMessage = new StringBuilder();
-
-        //    if (importTripDto.EndTripDate != null && importTripDto.StartTripDate?.Date > importTripDto.EndTripDate.Value.Date)
-        //    {
-        //        exceptionMessage.Append("The start date must be or equal to end date." + "; ");
-        //    }
-
-        //    try
-        //    {
-        //        ValidateTripDates(importTripDto, SR);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        exceptionMessage.Append(e.Message);
-        //    }
-
-        //    importTripDto.Exception = exceptionMessage.ToString();
-
-        //}
-
-
         [RequiresFeature(AppFeatures.Shipper)]
         public async Task ChangeAddTripsByTmsFeature()
         {
