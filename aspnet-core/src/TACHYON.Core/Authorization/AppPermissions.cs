@@ -558,6 +558,11 @@
             "Pages.Administration.Host.Invoices.SubmitInvoices.Rejected";
 
         public const string Pages_Invoices_Transaction = "Pages.Invoices.Transaction";
+        
+        public const string Pages_EntityTemplate = "Pages.EntityTemplate";
+        public const string Pages_EntityTemplate_Create = "Pages.EntityTemplate.Create";
+        public const string Pages_EntityTemplate_Update = "Pages.EntityTemplate.Update";
+        public const string Pages_EntityTemplate_Delete = "Pages.EntityTemplate.Delete";
 
         #region shpping
 
