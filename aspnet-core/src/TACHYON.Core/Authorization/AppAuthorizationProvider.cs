@@ -656,7 +656,7 @@ namespace TACHYON.Authorization
                 L("EntityTemplate"));
             entityTemplate.CreateChildPermission(AppPermissions.Pages_EntityTemplate_Create,
                 L("CreateEntityTemplate"), multiTenancySides: MultiTenancySides.Tenant);
-            entityTemplate.CreateChildPermission(AppPermissions.Pages_EntityTemplate_Delete,
+            entityTemplate.CreateChildPermission(AppPermissions.Pages_EntityTemplate_Update,
                 L("UpdateEntityTemplate"), multiTenancySides: MultiTenancySides.Tenant);
             entityTemplate.CreateChildPermission(AppPermissions.Pages_EntityTemplate_Delete,
                 L("DeleteEntityTemplate"), multiTenancySides: MultiTenancySides.Tenant);

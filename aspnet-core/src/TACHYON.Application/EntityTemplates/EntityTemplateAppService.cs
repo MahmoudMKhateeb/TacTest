@@ -4,6 +4,7 @@ using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
+using Abp.Runtime.Validation;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -74,6 +75,15 @@ namespace TACHYON.EntityTemplates
         protected virtual async Task Update(CreateOrEditEntityTemplateInputDto input)
         {
             await _templateManager.Update(input);
+        }
+
+        public virtual async Task Delete(EntityDto<long> input)
+        {
+            var isExist = await _templateRepository.GetAll().AnyAsync(x => x.Id == input.Id);
+            if (!isExist)
+                throw new EntityNotFoundException(L("TemplateNotFount"));
+            
+            await _templateRepository.DeleteAsync(x => x.Id == input.Id);
         }
         
     }
