@@ -6,6 +6,7 @@ import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 
 import {
   CreateOrEditPriceOfferInput,
+  CreateSrUpdateActionInputDto,
   PriceOfferChannel,
   PriceOfferCommissionType,
   PriceOfferDetailDto,
@@ -13,6 +14,8 @@ import {
   PriceOfferItem,
   PriceOfferServiceProxy,
   PriceOfferTenantCommissionSettings,
+  ShippingRequestUpdateServiceProxy,
+  ShippingRequestUpdateStatus,
 } from '@shared/service-proxies/service-proxies';
 import { finalize } from 'rxjs/operators';
 
@@ -28,7 +31,8 @@ export class PriceOfferModelComponent extends AppComponentBase {
   @Output() modalSave: EventEmitter<number> = new EventEmitter<number>();
 
   @ViewChild('modal', { static: false }) modal: ModalDirective;
-
+  ShippingRequestUpdateStatusEnum = ShippingRequestUpdateStatus;
+  SRUpdateId: any;
   active = false;
   saving = false;
   offer: PriceOfferDto = new PriceOfferDto();
@@ -37,8 +41,16 @@ export class PriceOfferModelComponent extends AppComponentBase {
   Items: PriceOfferItem[] = [];
   priceOfferCommissionType: any;
   commissionTypeTitle: string;
+  type: string;
+  priceOfferInput: CreateOrEditPriceOfferInput;
+  CreateSrUpdateActionInput: CreateSrUpdateActionInputDto = new CreateSrUpdateActionInputDto();
 
-  constructor(injector: Injector, private _CurrentServ: PriceOfferServiceProxy, private enumToArray: EnumToArrayPipe) {
+  constructor(
+    injector: Injector,
+    private _srUpdateService: ShippingRequestUpdateServiceProxy,
+    private _CurrentServ: PriceOfferServiceProxy,
+    private enumToArray: EnumToArrayPipe
+  ) {
     super(injector);
   }
 
@@ -47,11 +59,13 @@ export class PriceOfferModelComponent extends AppComponentBase {
     this.offer.commissionSettings = new PriceOfferTenantCommissionSettings();
   }
 
-  show(id: number, offerId: number | undefined = undefined): void {
+  show(id: number, SRUpdateId: number | undefined = undefined, type: string | undefined = undefined, offerId: number | undefined = undefined): void {
     this.direction = document.getElementsByTagName('html')[0].getAttribute('dir');
     this._CurrentServ.getPriceOfferForCreateOrEdit(id, offerId).subscribe((result) => {
       this.offer = result;
       this.Items = this.offer.items;
+      this.type = type;
+      this.SRUpdateId = SRUpdateId;
       this.active = true;
       this.modal.show();
       this.input.shippingRequestId = id;
@@ -105,6 +119,14 @@ export class PriceOfferModelComponent extends AppComponentBase {
     });
   }
 
+  Reprice(id) {
+    this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
+      if (isConfirmed) {
+        this.sendOfferForReprice(id);
+      }
+    });
+  }
+
   sendOffer(): void {
     // this.calculatorAll();
     let itemDetails: PriceOfferDetailDto[] = [];
@@ -126,6 +148,40 @@ export class PriceOfferModelComponent extends AppComponentBase {
 
     this._CurrentServ
       .createOrEdit(this.input)
+      .pipe(finalize(() => (this.saving = false)))
+      .subscribe((result) => {
+        this.notify.info(this.l('SendSuccessfully'));
+        this.close();
+        this.modalSave.emit(result);
+      });
+
+    this.saving = true;
+  }
+
+  sendOfferForReprice(id): void {
+    this.CreateSrUpdateActionInput.status = ShippingRequestUpdateStatus.Repriced;
+
+    let itemDetails: PriceOfferDetailDto[] = [];
+
+    this.Items.forEach((item) => {
+      let order = new PriceOfferDetailDto();
+      order.itemId = item.sourceId;
+      order.price = item.itemPrice;
+      itemDetails.push(order);
+    });
+
+    this.input.itemPrice = this.offer.itemPrice;
+    if (this.offer.parentId) this.input.parentId = this.offer.parentId;
+    this.input.itemDetails = itemDetails;
+    this.input.commissionPercentageOrAddValue = this.offer.commissionPercentageOrAddValue;
+    this.input.commissionType = this.offer.commissionType;
+    this.input.vasCommissionPercentageOrAddValue = this.offer.vasCommissionPercentageOrAddValue;
+    this.input.vasCommissionType = this.offer.vasCommissionType;
+
+    this.CreateSrUpdateActionInput.priceOfferInput = this.input;
+    this.CreateSrUpdateActionInput.id = id;
+    this._srUpdateService
+      .takeAction(this.CreateSrUpdateActionInput)
       .pipe(finalize(() => (this.saving = false)))
       .subscribe((result) => {
         this.notify.info(this.l('SendSuccessfully'));

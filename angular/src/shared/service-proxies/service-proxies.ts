@@ -13213,6 +13213,73 @@ export class EntityLogServiceProxy {
     }
     return _observableOf<PagedResultDtoOfEntityLogListDto>(<any>null);
   }
+
+  /**
+   * @param logId (optional)
+   * @return Success
+   */
+  getEntityLog(logId: string | undefined): Observable<EntityLogListDto> {
+    let url_ = this.baseUrl + '/api/services/app/EntityLog/GetEntityLog?';
+    if (logId === null) throw new Error("The parameter 'logId' cannot be null.");
+    else if (logId !== undefined) url_ += 'logId=' + encodeURIComponent('' + logId) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetEntityLog(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetEntityLog(<any>response_);
+            } catch (e) {
+              return <Observable<EntityLogListDto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<EntityLogListDto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetEntityLog(response: HttpResponseBase): Observable<EntityLogListDto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = EntityLogListDto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<EntityLogListDto>(<any>null);
+  }
 }
 
 @Injectable()
@@ -40697,6 +40764,75 @@ export class ShippingRequestUpdateServiceProxy {
       );
     }
     return _observableOf<PagedResultDtoOfShippingRequestUpdateListDto>(<any>null);
+  }
+
+  /**
+   * @param body (optional)
+   * @return Success
+   */
+  takeAction(body: CreateSrUpdateActionInputDto | undefined): Observable<ShippingRequestUpdateStatus> {
+    let url_ = this.baseUrl + '/api/services/app/ShippingRequestUpdate/TakeAction';
+    url_ = url_.replace(/[?&]$/, '');
+
+    const content_ = JSON.stringify(body);
+
+    let options_: any = {
+      body: content_,
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processTakeAction(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processTakeAction(<any>response_);
+            } catch (e) {
+              return <Observable<ShippingRequestUpdateStatus>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<ShippingRequestUpdateStatus>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processTakeAction(response: HttpResponseBase): Observable<ShippingRequestUpdateStatus> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = resultData200 !== undefined ? resultData200 : <any>null;
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<ShippingRequestUpdateStatus>(<any>null);
   }
 }
 
@@ -86374,18 +86510,12 @@ export interface ICreateOrEditShippingRequestTripRejectReasonDto {
   id: number;
 }
 
-export enum ShippingRequestUpdateStatus {
-  None = 1,
-  Repriced = 2,
-  KeepSamePrice = 3,
-  Dismissed = 4,
-}
-
 export class ShippingRequestUpdateListDto implements IShippingRequestUpdateListDto {
   shippingRequestId!: number | undefined;
   entityLogId!: string;
   priceOfferId!: number;
-  status!: ShippingRequestUpdateStatus;
+  status!: string | undefined;
+  creationTime!: moment.Moment;
   id!: string;
 
   constructor(data?: IShippingRequestUpdateListDto) {
@@ -86402,6 +86532,7 @@ export class ShippingRequestUpdateListDto implements IShippingRequestUpdateListD
       this.entityLogId = _data['entityLogId'];
       this.priceOfferId = _data['priceOfferId'];
       this.status = _data['status'];
+      this.creationTime = _data['creationTime'] ? moment(_data['creationTime'].toString()) : <any>undefined;
       this.id = _data['id'];
     }
   }
@@ -86419,6 +86550,7 @@ export class ShippingRequestUpdateListDto implements IShippingRequestUpdateListD
     data['entityLogId'] = this.entityLogId;
     data['priceOfferId'] = this.priceOfferId;
     data['status'] = this.status;
+    data['creationTime'] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
     data['id'] = this.id;
     return data;
   }
@@ -86428,7 +86560,8 @@ export interface IShippingRequestUpdateListDto {
   shippingRequestId: number | undefined;
   entityLogId: string;
   priceOfferId: number;
-  status: ShippingRequestUpdateStatus;
+  status: string | undefined;
+  creationTime: moment.Moment;
   id: string;
 }
 
@@ -86475,6 +86608,56 @@ export class PagedResultDtoOfShippingRequestUpdateListDto implements IPagedResul
 export interface IPagedResultDtoOfShippingRequestUpdateListDto {
   totalCount: number;
   items: ShippingRequestUpdateListDto[] | undefined;
+}
+
+export enum ShippingRequestUpdateStatus {
+  None = 1,
+  Repriced = 2,
+  KeepSamePrice = 3,
+  Dismissed = 4,
+}
+
+export class CreateSrUpdateActionInputDto implements ICreateSrUpdateActionInputDto {
+  status!: ShippingRequestUpdateStatus;
+  priceOfferInput!: CreateOrEditPriceOfferInput;
+  id!: string;
+
+  constructor(data?: ICreateSrUpdateActionInputDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.status = _data['status'];
+      this.priceOfferInput = _data['priceOfferInput'] ? CreateOrEditPriceOfferInput.fromJS(_data['priceOfferInput']) : <any>undefined;
+      this.id = _data['id'];
+    }
+  }
+
+  static fromJS(data: any): CreateSrUpdateActionInputDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new CreateSrUpdateActionInputDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['status'] = this.status;
+    data['priceOfferInput'] = this.priceOfferInput ? this.priceOfferInput.toJSON() : <any>undefined;
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+export interface ICreateSrUpdateActionInputDto {
+  status: ShippingRequestUpdateStatus;
+  priceOfferInput: CreateOrEditPriceOfferInput;
+  id: string;
 }
 
 export class PagedResultDtoOfShippingRequestVasDto implements IPagedResultDtoOfShippingRequestVasDto {

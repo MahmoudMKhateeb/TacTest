@@ -56,6 +56,8 @@ using TACHYON.Drivers.importing.Dto;
 using TACHYON.DynamicEntityParameters.Dto;
 using TACHYON.Editions;
 using TACHYON.Editions.Dto;
+using TACHYON.EntityLogs;
+using TACHYON.EntityLogs.Dto;
 using TACHYON.Extension;
 using TACHYON.Friendships;
 using TACHYON.Friendships.Cache;
@@ -259,6 +261,7 @@ namespace TACHYON
             //configuration.CreateMap<PlateTypeDto, PlateType>().ReverseMap();
             configuration.CreateMap<CreateOrEditNationalityDto, Nationality>().ReverseMap();
             configuration.CreateMap<NationalityDto, Nationality>().ReverseMap();
+            configuration.CreateMap<EntityLogListDto, EntityLog>().ReverseMap();
             configuration.CreateMap<CreateOrEditNationalityTranslationDto, NationalityTranslation>().ReverseMap();
             configuration.CreateMap<NationalityTranslationDto, NationalityTranslation>().ReverseMap();
             configuration.CreateMap<CreateOrEditTrucksTypesTranslationDto, TrucksTypesTranslation>().ReverseMap();

@@ -13,11 +13,14 @@ import {
   ShippingRequestStatus,
   ShippingRequestUpdateStatus,
   ShippingRequestUpdateServiceProxy,
+  CreateSrUpdateActionInputDto,
+  CreateOrEditPriceOfferInput,
 } from '@shared/service-proxies/service-proxies';
 import { LazyLoadEvent } from 'primeng/api';
 import { Table } from '@node_modules/primeng/table';
 import { Paginator } from '@node_modules/primeng/paginator';
 import { PrimengTableHelper } from '@shared/helpers/PrimengTableHelper';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   templateUrl: './shippingrequests-details-model.component.html',
@@ -34,6 +37,8 @@ export class ShippingrequestsDetailsModelComponent extends AppComponentBase {
 
   ShippingRequestUpdateStatusEnum = ShippingRequestUpdateStatus;
   primengTableHelperEntityChanges = new PrimengTableHelper();
+  CreateSrUpdateActionInput = new CreateSrUpdateActionInputDto();
+  priceOfferInput: CreateOrEditPriceOfferInput;
   active = false;
   saving = false;
   request: GetShippingRequestForPricingOutput = new GetShippingRequestForPricingOutput();
@@ -173,6 +178,44 @@ export class ShippingrequestsDetailsModelComponent extends AppComponentBase {
         this.primengTableHelper.totalRecordsCount = result.totalCount;
         this.primengTableHelper.records = result.items;
         this.primengTableHelper.hideLoadingIndicator();
+      });
+  }
+
+  KeepSamePrice(offerId, id) {
+    this.CreateSrUpdateActionInput.status = ShippingRequestUpdateStatus.KeepSamePrice;
+    this.CreateSrUpdateActionInput.id = id;
+    this.primengTableHelper.showLoadingIndicator();
+
+    this._srUpdateService
+      .takeAction(this.CreateSrUpdateActionInput)
+      .pipe(
+        finalize(() => {
+          this.saving = false;
+          this.primengTableHelper.hideLoadingIndicator();
+        })
+      )
+      .subscribe(() => {
+        this.notify.info(this.l('SuccessfullySaved'));
+        this.getAll(offerId);
+      });
+  }
+
+  DismissOffer(offerId, id) {
+    this.CreateSrUpdateActionInput.status = ShippingRequestUpdateStatus.Dismissed;
+    this.CreateSrUpdateActionInput.id = id;
+    this.primengTableHelper.showLoadingIndicator();
+
+    this._srUpdateService
+      .takeAction(this.CreateSrUpdateActionInput)
+      .pipe(
+        finalize(() => {
+          this.saving = false;
+          this.primengTableHelper.hideLoadingIndicator();
+        })
+      )
+      .subscribe(() => {
+        this.notify.info(this.l('SuccessfullySaved'));
+        this.getAll(offerId);
       });
   }
 
