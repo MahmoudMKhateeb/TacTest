@@ -1,5 +1,6 @@
 ﻿using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Abp.Extensions;
 using Abp.Runtime.Validation;
 using Microsoft.EntityFrameworkCore;
@@ -77,6 +78,8 @@ namespace TACHYON.EntityTemplates
         {
             if (template.SavedEntityId.IsNullOrEmpty() || !template.SavedEntity.IsNullOrEmpty()) return;
 
+            CurrentUnitOfWork.DisableFilter(nameof(IHasIsDrafted));
+            
             object savedEntity = template.EntityType switch
             {
                 SavedEntityType.ShippingRequest => await _shippingRequestRepository.GetAll().AsNoTracking()
@@ -85,6 +88,8 @@ namespace TACHYON.EntityTemplates
                     .FirstOrDefaultAsync(x => x.Id.ToString().Equals(template.SavedEntityId)),
                 _ => throw new ArgumentOutOfRangeException()
             };
+            if (savedEntity == null)
+                throw new EntityNotFoundException(L("EntityWithIdXIsNotFound",template.SavedEntityId));
 
             template.SavedEntity = JsonConvert.SerializeObject(savedEntity);
         }

@@ -10,6 +10,8 @@ namespace TACHYON.EntityTemplates
 {
     public class CreateOrEditEntityTemplateInputDto : EntityDto<long?>, ICustomValidate
     {
+        [Required]
+        public string TemplateName { get; set; }
         public string SavedEntity { get; set; }
 
         public string SavedEntityId { get; set; }

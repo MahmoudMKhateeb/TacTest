@@ -5,7 +5,6 @@ namespace TACHYON.EntityTemplates
 {
     public class GetEntityTemplateInputDto : PagedSortedAndFilteredInputDto
     {
-        [Required]
-        public SavedEntityType Type { get; set; }
+        public SavedEntityType? Type { get; set; }
     }
 }

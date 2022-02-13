@@ -20,6 +20,7 @@ namespace TACHYON.Migrations
                     IsDeleted = table.Column<bool>(nullable: false),
                     DeleterUserId = table.Column<long>(nullable: true),
                     DeletionTime = table.Column<DateTime>(nullable: true),
+                    TemplateName = table.Column<string>(nullable: false),
                     SavedEntity = table.Column<string>(nullable: false),
                     SavedEntityId = table.Column<string>(nullable: true),
                     TenantId = table.Column<int>(nullable: false),

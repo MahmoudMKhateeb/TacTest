@@ -11,7 +11,7 @@ using TACHYON.EntityFrameworkCore;
 namespace TACHYON.Migrations
 {
     [DbContext(typeof(TACHYONDbContext))]
-    [Migration("20220213103053_Create_EntityTemplate_Table")]
+    [Migration("20220213150352_Create_EntityTemplate_Table")]
     partial class Create_EntityTemplate_Table
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -2462,6 +2462,10 @@ namespace TACHYON.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SavedEntityId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TemplateName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("TenantId")

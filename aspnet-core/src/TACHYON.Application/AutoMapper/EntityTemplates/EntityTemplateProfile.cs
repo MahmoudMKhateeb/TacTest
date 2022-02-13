@@ -11,10 +11,10 @@ namespace TACHYON.AutoMapper.EntityTemplates
         {
             CreateMap<CreateOrEditEntityTemplateInputDto, EntityTemplate>();
             CreateMap<EntityTemplate, EntityTemplateListDto>()
-                .ForMember(x=> x.EntityType,x=>
+                .ForMember(x=> x.EntityTypeTitle,x=>
                     x.MapFrom(i=> i.EntityType.GetEnumDescription() ?? i.EntityType.ToString()));
             CreateMap<EntityTemplate, EntityTemplateForViewDto>()
-                .ForMember(x=> x.Type,x=>
+                .ForMember(x=> x.EntityTypeTitle,x=>
                     x.MapFrom(i=> i.EntityType.GetEnumDescription() ?? i.EntityType.ToString()));
         }
     }

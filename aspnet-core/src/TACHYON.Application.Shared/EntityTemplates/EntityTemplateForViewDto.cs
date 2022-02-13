@@ -1,4 +1,5 @@
 ﻿using Abp.Application.Services.Dto;
+using System;
 
 namespace TACHYON.EntityTemplates
 {
@@ -9,7 +10,13 @@ namespace TACHYON.EntityTemplates
         public string SavedEntityId { get; set; }
         
         public int TenantId { get; set; }
-
-        public string Type { get; set; }
+        
+        public string TemplateName { get; set; }
+        
+        public DateTime CreationTime { get; set; }
+        
+        public string EntityTypeTitle { get; set; }
+        
+        public SavedEntityType EntityType { get; set; }
     }
 }

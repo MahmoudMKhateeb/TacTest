@@ -5,6 +5,7 @@ using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Abp.Runtime.Validation;
+using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,9 +32,10 @@ namespace TACHYON.EntityTemplates
         public async Task<PagedResultDto<EntityTemplateListDto>> GetAll(GetEntityTemplateInputDto input)
         {
             var templates =  _templateRepository.GetAll().AsNoTracking()
-                .Where(x => x.EntityType == input.Type)
+                .WhereIf(input.Type.HasValue,x => x.EntityType == input.Type)
                 .WhereIf(!input.Filter.IsNullOrEmpty(), x => x.SavedEntityId.Contains(input.Filter))
-                .OrderBy(input.Sorting??"Id desc");
+                .OrderBy(input.Sorting??"Id desc")
+                .ProjectTo<EntityTemplateListDto>(AutoMapperConfigurationProvider);
 
             var totalCount = await templates.CountAsync();
 
@@ -41,12 +43,13 @@ namespace TACHYON.EntityTemplates
 
             return new PagedResultDto<EntityTemplateListDto>()
             {
-                Items = ObjectMapper.Map<List<EntityTemplateListDto>>(pageResult), TotalCount = totalCount
+                Items = pageResult, TotalCount = totalCount
             };
         }
 
         public async Task CreateOrEdit(CreateOrEditEntityTemplateInputDto input)
         {
+            await CheckDuplicatedTemplateName(input);
             if (input.Id.HasValue)
             {
                 await Update(input);
@@ -86,5 +89,14 @@ namespace TACHYON.EntityTemplates
             await _templateRepository.DeleteAsync(x => x.Id == input.Id);
         }
         
+        private async Task CheckDuplicatedTemplateName(CreateOrEditEntityTemplateInputDto input)
+        {
+            
+           var isDuplicated = await _templateRepository.GetAll()
+               .WhereIf(input.Id.HasValue, x => x.Id != input.Id)
+                .AnyAsync(x => x.TemplateName.ToLower().Equals(input.TemplateName.ToLower()));
+           if (isDuplicated)
+               throw new AbpValidationException(L("TemplateNameAlreadyUsed"));
+        }
     }
 }

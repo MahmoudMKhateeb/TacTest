@@ -2415,6 +2415,10 @@ namespace TACHYON.Migrations
                     b.Property<string>("SavedEntityId")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("TemplateName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("TenantId")
                         .HasColumnType("int");
 
