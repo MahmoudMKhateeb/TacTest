@@ -126,10 +126,10 @@
                           {{ l('LogId') }}
                           <p-sortIcon field="EntityLogId"></p-sortIcon>
                         </th> -->
-                        <th pSortableColumn="PriceOfferId">
+                        <th pSortableColumn="CreationTime">
                           <!-- TODO: {{ l('Date') }}  -->
-                          {{ l('PriceOfferId') }}
-                          <p-sortIcon field="PriceOfferId"></p-sortIcon>
+                          {{ l('CreationTime') }}
+                          <p-sortIcon field="CreationTime"></p-sortIcon>
                         </th>
                         <th pSortableColumn="Status">
                           {{ l('Status') }}
@@ -144,8 +144,8 @@
                       <tr>
                         <td>
                           <!-- TODO: {{ l('Date') }}  -->
-                          <span class="ui-column-title"> {{ l('PriceOfferId') }}</span>
-                          {{ record.priceOfferId }}
+                          <span class="ui-column-title"> {{ l('CreationTime') }}</span>
+                          {{ record.creationTime | momentFormat: 'YYYY-MM-DD HH:mm' }}
                         </td>
 
                         <td>
