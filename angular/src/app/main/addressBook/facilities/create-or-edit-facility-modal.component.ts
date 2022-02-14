@@ -209,16 +209,9 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
     this.loadMapApi();
     this.citiesLoading = true;
     this.facility.cityId = undefined;
-    this._countriesServiceProxy
-      .getAllCitiesForTableDropdown(countryId)
-      .pipe(
-        finalize(() => {
-          this.facility = this.data;
-        })
-      )
-      .subscribe((res) => {
-        this.allCities = res;
-        this.citiesLoading = false;
-      });
+    this._countriesServiceProxy.getAllCitiesForTableDropdown(countryId).subscribe((res) => {
+      this.allCities = res;
+      this.citiesLoading = false;
+    });
   }
 }
