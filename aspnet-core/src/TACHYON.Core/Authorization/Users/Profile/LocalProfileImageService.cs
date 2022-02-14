@@ -32,7 +32,7 @@ namespace TACHYON.Authorization.Users.Profile
 
             if (user.IsDriver)
             {
-                return file == null ? "" : Convert.ToBase64String(file.ThumbnailByte);
+                return file != null && file.ThumbnailByte != null ? Convert.ToBase64String(file.ThumbnailByte):"";
             }
             return file == null ? "" : Convert.ToBase64String(file.Bytes);
         }
