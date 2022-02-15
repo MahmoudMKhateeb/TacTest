@@ -48,11 +48,13 @@ export class CreateTenantModalComponent extends AppComponentBase {
   isEmailValid = true;
   isMoiNumberAvailable = true;
   subscriptionEndDateUtc1: NgbDateStruct;
-  //selectedDateType: DateType = DateType.Hijri; // or DateType.Gregorian
+  hijriDateNow = this.dateFormatterService.GetTodayHijri();
+  hDate = this.hijriDateNow.split('-');
+  gregDateNow = this.dateFormatterService.GetTodayGregorian();
+  minGreg: NgbDateStruct = { day: this.gregDateNow.day, month: this.gregDateNow.month, year: this.gregDateNow.year };
+  minHijri: NgbDateStruct = { day: parseInt(this.hDate[2]), month: parseInt(this.hDate[1]), year: parseInt(this.hDate[0]) };
   @Input() parentForm: NgForm;
   @ViewChild('userForm', { static: false }) userForm: NgForm;
-  minGreg: NgbDateStruct = { day: 1, month: 1, year: 1900 };
-  minHijri: NgbDateStruct = { day: 1, month: 1, year: 1342 };
   todayGregorian = this.dateFormatterService.GetTodayGregorian();
   todayHijri = this.dateFormatterService.ToHijri(this.todayGregorian);
   constructor(
