@@ -10,13 +10,17 @@ namespace TACHYON.Authorization.Users.Profile.Dto
         [StringLength(80, MinimumLength = 2)]
         public string CompanyName { get; set; }
 
-        [Required]
         [StringLength(500, MinimumLength = 10)]
         public string CompanyInfo { get; set; }
 
-        [Required] [EmailAddress] public string CompanyEmailAddress { get; set; }
-        [Required] public string CompanySite { get; set; }
+        [Required]
+        [EmailAddress]
+        public string CompanyEmailAddress { get; set; }
 
-        [Required] [StringLength(20)] public string CompanyPhone { get; set; }
+        public string CompanySite { get; set; }
+        
+        [Required]
+        [StringLength(20)]
+        public string CompanyPhone { get; set; }
     }
 }

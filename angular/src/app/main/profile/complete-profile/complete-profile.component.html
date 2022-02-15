@@ -47,7 +47,7 @@
         </div>
 
         <div class="form-group row">
-          <label class="col-xl-3 col-lg-3 col-form-label">{{ l('CompanyName') }}</label>
+          <label class="col-xl-3 col-lg-3 col-form-label">{{ l('CompanyName') }} <span class="required-fileds">*</span></label>
           <div class="col-lg-9 col-xl-6">
             <input
               #companyName="ngModel"
@@ -62,6 +62,7 @@
               minlength="2"
               maxlength="80"
             />
+            <validation-messages [formCtrl]="companyName"></validation-messages>
           </div>
         </div>
         <div class="form-group row">
@@ -76,10 +77,6 @@
               placeholder="{{ l('CompanyDescription') }}"
               [(ngModel)]="completeFiled.companyInfo"
               name="CompanyDescription"
-              required
-              [class.is-invalid]="companyInfo.touched && !companyInfo.valid"
-              [class.is-valid]="companyInfo.touched && companyInfo.valid"
-              minlength="10"
               maxlength="500"
             >
             </textarea>
@@ -94,7 +91,7 @@
           </div>
         </div>
         <div class="form-group row">
-          <label class="col-xl-3 col-lg-3 col-form-label">{{ l('ContactPhone') }}</label>
+          <label class="col-xl-3 col-lg-3 col-form-label">{{ l('ContactPhone') }}<span class="required-fileds">*</span></label>
           <div class="col-lg-9 col-xl-6">
             <div class="input-group input-group-lg input-group-solid">
               <div class="input-group-prepend">
@@ -116,10 +113,11 @@
                 maxlength="20"
               />
             </div>
+            <validation-messages [formCtrl]="companyPhone"></validation-messages>
           </div>
         </div>
         <div class="form-group row">
-          <label class="col-xl-3 col-lg-3 col-form-label">{{ l('EmailAddress') }}</label>
+          <label class="col-xl-3 col-lg-3 col-form-label">{{ l('EmailAddress') }}<span class="required-fileds">*</span></label>
           <div class="col-lg-9 col-xl-6">
             <div class="input-group input-group-lg input-group-solid">
               <div class="input-group-prepend">
@@ -140,10 +138,11 @@
                 [class.is-valid]="companyEmailAddress.touched && companyEmailAddress.valid"
               />
             </div>
+            <validation-messages [formCtrl]="companyEmailAddress"></validation-messages>
           </div>
         </div>
         <div class="form-group row">
-          <label class="col-xl-3 col-lg-3 col-form-label">{{ l('CompanyWebsite') }}</label>
+          <label class="col-xl-3 col-lg-3 col-form-label">{{ l('CompanyWebsite') }} </label>
           <div class="col-lg-9 col-xl-6">
             <div class="input-group input-group-lg input-group-solid">
               <div class="input-group-prepend">
@@ -158,9 +157,6 @@
                 placeholder="{{ l('site.com') }}"
                 [(ngModel)]="completeFiled.companySite"
                 name="CompanySite"
-                required
-                [class.is-invalid]="companySite.touched && !companySite.valid"
-                [class.is-valid]="companySite.touched && companySite.valid"
               />
             </div>
           </div>
