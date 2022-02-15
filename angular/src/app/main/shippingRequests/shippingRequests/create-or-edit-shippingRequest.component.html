@@ -431,7 +431,7 @@
                             class="form-control"
                             name="routeType"
                             required
-                            [disabled]="!allRoutTypes"
+                            [disabled]="true"
                             [(ngModel)]="selectedRouteType"
                             [class.is-invalid]="RouteType.touched && !RouteType.valid"
                             [class.is-valid]="RouteType.touched && RouteType.valid"
