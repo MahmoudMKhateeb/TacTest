@@ -78,9 +78,8 @@
               placeholder="{{ l('CompanyDescription') }}"
               [(ngModel)]="completeFiled.companyInfo"
               name="CompanyDescription"
-              required
-              minlength="10"
               maxlength="500"
+
             >
             </textarea>
             <span class="form-text text-muted">{{ l('CompanyDescriptionMustBeAtLeast10Characters') }}.</span>
