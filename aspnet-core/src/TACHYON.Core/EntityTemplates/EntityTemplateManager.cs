@@ -1,12 +1,11 @@
 ﻿using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
-using Abp.Domain.Uow;
 using Abp.Extensions;
 using Abp.Runtime.Validation;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using System;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
@@ -91,7 +90,8 @@ namespace TACHYON.EntityTemplates
             if (savedEntity == null)
                 throw new EntityNotFoundException(L("EntityWithIdXIsNotFound",template.SavedEntityId));
 
-            template.SavedEntity = JsonConvert.SerializeObject(savedEntity);
+            template.SavedEntity = JsonSerializer.Serialize(savedEntity,
+                new JsonSerializerOptions() {PropertyNamingPolicy = JsonNamingPolicy.CamelCase});
         }
 
         #endregion

@@ -1,8 +1,10 @@
-﻿using Abp.Authorization;
+﻿using Abp.Application.Features;
+using Abp.Authorization;
 using Abp.Configuration.Startup;
 using Abp.Localization;
 using Abp.MultiTenancy;
 using TACHYON.Authorization.Permissions.Shipping.Trips;
+using TACHYON.Features;
 
 namespace TACHYON.Authorization
 {
@@ -651,15 +653,22 @@ namespace TACHYON.Authorization
                 multiTenancySides: _isMultiTenancyEnabled ? MultiTenancySides.Host : MultiTenancySides.Tenant);
             administration.CreateChildPermission(AppPermissions.Pages_Administration_Host_Dashboard, L("Dashboard"),
                 multiTenancySides: MultiTenancySides.Host);
-            
+
+            var templateFeatureDependency =
+                new SimpleFeatureDependency(false, AppFeatures.Shipper, AppFeatures.TachyonDealer);
+            // this permission has no restriction with scope or feature to provide an ability for host to view templates
             var entityTemplate = pages.CreateChildPermission(AppPermissions.Pages_EntityTemplate,
-                L("EntityTemplate"));
+                L("EntityTemplate")); 
+            
             entityTemplate.CreateChildPermission(AppPermissions.Pages_EntityTemplate_Create,
-                L("CreateEntityTemplate"), multiTenancySides: MultiTenancySides.Tenant);
+                L("CreateEntityTemplate"), multiTenancySides: MultiTenancySides.Tenant
+                ,featureDependency: templateFeatureDependency);
             entityTemplate.CreateChildPermission(AppPermissions.Pages_EntityTemplate_Update,
-                L("UpdateEntityTemplate"), multiTenancySides: MultiTenancySides.Tenant);
+                L("UpdateEntityTemplate"), multiTenancySides: MultiTenancySides.Tenant
+                ,featureDependency: templateFeatureDependency);
             entityTemplate.CreateChildPermission(AppPermissions.Pages_EntityTemplate_Delete,
-                L("DeleteEntityTemplate"), multiTenancySides: MultiTenancySides.Tenant);
+                L("DeleteEntityTemplate"), multiTenancySides: MultiTenancySides.Tenant
+                ,featureDependency: templateFeatureDependency);
         }
 
         private static ILocalizableString L(string name)

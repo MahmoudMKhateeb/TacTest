@@ -43,7 +43,7 @@ namespace TACHYON.EntityTemplates
                         SavedEntityId = JsonConvert.DeserializeObject<CreateOrEditShippingRequestDto>(SavedEntity).Id.ToString();
                         break;
                     case SavedEntityType.Trip:
-                        SavedEntityId = JsonConvert.DeserializeObject<CreateOrEditShippingRequestTripDto>(SavedEntity).Id.ToString();
+                        SavedEntityId = JsonConvert.DeserializeObject<CreateOrEditShippingRequestTemplateInputDto>(SavedEntity).Id.ToString();
                         break;
                     default:
                         return new ValidationResult("NotSupportedSavedEntityType");
