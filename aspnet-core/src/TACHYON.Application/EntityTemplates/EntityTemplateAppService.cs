@@ -34,7 +34,7 @@ namespace TACHYON.EntityTemplates
         {
             var templates =  _templateRepository.GetAll().AsNoTracking()
                 .WhereIf(input.Type.HasValue,x => x.EntityType == input.Type)
-                .WhereIf(!input.Filter.IsNullOrEmpty(), x => x.SavedEntityId.Contains(input.Filter))
+                .WhereIf(!input.Filter.IsNullOrEmpty(), x => x.TemplateName.Contains(input.Filter))
                 .OrderBy(input.Sorting??"Id desc")
                 .ProjectTo<EntityTemplateListDto>(AutoMapperConfigurationProvider);
 

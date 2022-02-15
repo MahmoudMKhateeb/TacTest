@@ -3,12 +3,15 @@ using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Runtime.Validation;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
+using TACHYON.Shipping.Trips.Dto;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace TACHYON.EntityTemplates
 {
@@ -81,16 +84,44 @@ namespace TACHYON.EntityTemplates
             
             object savedEntity = template.EntityType switch
             {
-                SavedEntityType.ShippingRequest => await _shippingRequestRepository.GetAll().AsNoTracking()
-                    .FirstOrDefaultAsync(x => x.Id.ToString().Equals(template.SavedEntityId)),
-                SavedEntityType.Trip => await _tripRepository.GetAll().AsNoTracking()
-                    .FirstOrDefaultAsync(x => x.Id.ToString().Equals(template.SavedEntityId)),
+                SavedEntityType.ShippingRequest => await GetShippingRequest(template.SavedEntityId),
+                SavedEntityType.Trip => await GetTrip(template.SavedEntityId),
                 _ => throw new ArgumentOutOfRangeException()
             };
             if (savedEntity == null)
                 throw new EntityNotFoundException(L("EntityWithIdXIsNotFound",template.SavedEntityId));
 
-            template.SavedEntity = JsonSerializer.Serialize(savedEntity,
+            template.SavedEntity = SerializeEntityWithFormatting(savedEntity,template.EntityType);
+        }
+
+        private async Task<CreateOrEditShippingRequestTripDto> GetTrip(string savedEntityId)
+        {
+            var trip = await _tripRepository.GetAll().AsNoTracking()
+                .Include(x=> x.RoutPoints).ThenInclude(x=> x.GoodsDetails)
+                .FirstOrDefaultAsync(x => x.Id.ToString().Equals(savedEntityId));
+           return ObjectMapper.Map<CreateOrEditShippingRequestTripDto>(trip);
+        }
+
+        private async Task<CreateOrEditShippingRequestTemplateInputDto> GetShippingRequest(string savedEntityId)
+        {
+            var shippingRequest = await _shippingRequestRepository.GetAllIncluding(x=> x.ShippingRequestVases)
+                .AsNoTracking().FirstOrDefaultAsync(x => x.Id.ToString().Equals(savedEntityId));
+            return ObjectMapper.Map<CreateOrEditShippingRequestTemplateInputDto>(shippingRequest);
+        }
+
+        private static string SerializeEntityWithFormatting(object entity,SavedEntityType type)
+        {
+            var entityJson = JsonConvert.SerializeObject(entity, new JsonSerializerSettings()
+                {ReferenceLoopHandling = ReferenceLoopHandling.Ignore});
+
+            var handledLoopEntity = type switch
+            {
+                SavedEntityType.ShippingRequest => JsonConvert.DeserializeObject(entityJson,typeof(CreateOrEditShippingRequestTemplateInputDto)),
+                SavedEntityType.Trip => JsonConvert.DeserializeObject(entityJson,typeof(CreateOrEditShippingRequestTripDto)),
+                _ => throw new ArgumentOutOfRangeException()
+            };
+            
+            return JsonSerializer.Serialize(handledLoopEntity,
                 new JsonSerializerOptions() {PropertyNamingPolicy = JsonNamingPolicy.CamelCase});
         }
 
