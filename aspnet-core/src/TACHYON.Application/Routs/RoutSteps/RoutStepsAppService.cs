@@ -3,11 +3,8 @@ using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
-using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Microsoft.EntityFrameworkCore;
-using NUglify.Helpers;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
@@ -19,8 +16,6 @@ using TACHYON.Cities;
 using TACHYON.Dto;
 using TACHYON.Features;
 using TACHYON.Goods.GoodsDetails;
-using TACHYON.Goods.GoodsDetails.Dtos;
-using TACHYON.Routs;
 using TACHYON.Routs.RoutPoints.Dtos;
 using TACHYON.Routs.RoutSteps.Dtos;
 using TACHYON.Routs.RoutSteps.Exporting;
@@ -389,25 +384,21 @@ namespace TACHYON.Routs.RoutSteps
 
         public async Task<List<FacilityForDropdownDto>> GetAllFacilitiesByCityAndTenantForDropdown(long? shippingRequestId)
         {
-            int? shipperId = null;
+            DisableTenancyFilters();
             var sr = await _shippingRequestRepository.FirstOrDefaultAsync(shippingRequestId.Value);
+            int? shipperId = null;
             int? originCityId = sr.OriginCityId;
             int? destinationCityId = sr.DestinationCityId;
             int? ShippingTypeId = sr.ShippingTypeId;
             // TMS can see any shipper facility in order to select it in Create Trip action 
-            if (await FeatureChecker.IsEnabledAsync(AppFeatures.TachyonDealer))
-            {
-                if (shippingRequestId != null)
-                {
-                    DisableTenancyFilters();
-                    shipperId = sr.TenantId;
-                }
-            }
+
+            if (await FeatureChecker.IsEnabledAsync(AppFeatures.TachyonDealer) && shippingRequestId != null)
+                shipperId = sr.TenantId;
 
             return await _lookup_FacilityRepository.GetAll().AsNoTracking()
             .WhereIf(shipperId.HasValue, x => x.TenantId == shipperId.Value)
-            .WhereIf(ShippingTypeId.HasValue && ShippingTypeId == 1, x => x.CityId == originCityId) //inside city
-            .WhereIf(ShippingTypeId.HasValue && ShippingTypeId == 2, x => x.CityId == originCityId || x.CityId == destinationCityId) //between city
+            .WhereIf(ShippingTypeId == 1, x => x.CityId == originCityId) //inside city
+            .WhereIf(ShippingTypeId == 2, x => x.CityId == originCityId || x.CityId == destinationCityId) //between city
             .Select(x => new FacilityForDropdownDto
             {
                 Id = x.Id,

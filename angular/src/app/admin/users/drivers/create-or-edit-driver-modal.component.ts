@@ -37,8 +37,9 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
     private _profileService: ProfileServiceProxy,
     private _nationalitiesServiceProxy: NationalitiesServiceProxy,
     private _documentFilesServiceProxy: DocumentFilesServiceProxy,
-    private _shippingRequestServiceProxy: ShippingRequestsServiceProxy,
-    private _driverLicenseTypesServiceProxy: DriverLicenseTypesServiceProxy
+    private _driverLicenseTypesServiceProxy: DriverLicenseTypesServiceProxy,
+
+    private _shippingRequestServiceProxy: ShippingRequestsServiceProxy
   ) {
     super(injector);
     this.getDriverRequiredDocumentFiles();
@@ -303,15 +304,15 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
       this.nationalities = res;
     });
   }
-  get isUserTenantRequired(): boolean {
-    return this.feature.isEnabled('App.TachyonDealer') && !this.user.id;
-  }
   GetDriverLicenseTypes() {
     this._driverLicenseTypesServiceProxy.getForDropDownList().subscribe((res) => {
       this.driverLicenseTypes = res;
     });
   }
 
+  get isUserTenantRequired(): boolean {
+    return this.feature.isEnabled('App.TachyonDealer') && !this.user.id;
+  }
   /**
    * do not delete the function dateSelected() below >
    */

@@ -81,7 +81,7 @@ export class TripService {
           this.facilitiesLodaing = false;
         });
       } else {
-        this._routStepsServiceProxy.getAllFacilitiesForDropdown(undefined).subscribe((result) => {
+        this._routStepsServiceProxy.getAllFacilitiesForDropdown(shippingRequestId).subscribe((result) => {
           this.currentSourceFacilitiesItems = this.currentDestinationFacilitiesItems = result;
           this.facilitiesLodaing = false;
         });

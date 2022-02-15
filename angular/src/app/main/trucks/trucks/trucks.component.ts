@@ -1,27 +1,21 @@
-﻿import { Component, Injector, ViewEncapsulation, ViewChild, ChangeDetectorRef, AfterViewInit, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { TrucksServiceProxy, TruckDto, DocumentsEntitiesEnum, CreateOrEditDocumentTypeDto } from '@shared/service-proxies/service-proxies';
+﻿import { AfterViewInit, ChangeDetectorRef, Component, Injector, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { DocumentsEntitiesEnum, TokenAuthServiceProxy, TruckDto, TrucksServiceProxy } from '@shared/service-proxies/service-proxies';
 import { NotifyService } from 'abp-ng2-module';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { TokenAuthServiceProxy } from '@shared/service-proxies/service-proxies';
 import { CreateOrEditTruckModalComponent } from './create-or-edit-truck-modal.component';
 
 import { ViewTruckModalComponent } from './view-truck-modal.component';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
-import { Table } from 'primeng/table';
-import { Paginator } from 'primeng/paginator';
-import { LazyLoadEvent } from 'primeng/api';
 import { FileDownloadService } from '@shared/utils/file-download.service';
 import { EntityTypeHistoryModalComponent } from '@app/shared/common/entityHistory/entity-type-history-modal.component';
 import * as _ from 'lodash';
-import * as moment from 'moment';
 import { finalize } from '@node_modules/rxjs/operators';
 import { AppConsts } from '@shared/AppConsts';
 import { HttpClient } from '@angular/common/http';
 import { FileUpload } from '@node_modules/primeng/fileupload';
 import { ViewOrEditEntityDocumentsModalComponent } from '@app/main/documentFiles/documentFiles/documentFilesViewComponents/view-or-edit-entity-documents-modal.componant';
 import { TruckUserLookupTableModalComponent } from './truck-user-lookup-table-modal.component';
-import { AppSessionService } from '@shared/common/session/app-session.service';
 import CustomStore from '@node_modules/devextreme/data/custom_store';
 import { LoadOptions } from '@node_modules/devextreme/data/load_options';
 
@@ -113,6 +107,8 @@ export class TrucksComponent extends AppComponentBase implements OnInit, AfterVi
           this.reloadPage();
           this.notify.success(this.l('SuccessfullyDeleted'));
           this.refreshData();
+            var filter = this._activatedRoute.snapshot.queryParams['Active'];
+          this.getAllTrucks(filter);
         });
       }
     });

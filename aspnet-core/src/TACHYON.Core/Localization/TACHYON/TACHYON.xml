@@ -2499,10 +2499,7 @@
 	<text name="PointNotFoundOrNotCompleted">Point not found or not completed</text>
 	<text name="UploadGoodPicture">Upload Good Picture</text>
 		<text name="UploadDeliveryNotes">Upload Delivery Notes</text>
-    <text name="IsMandatoryDocumentTemplate">Document Template Mandatory</text>
-    <text name="IsMandatoryNumber">Number Mandatory</text>
-    <text name="IsMandatoryExpirationDate">Expiration Date Mandatory</text>
-	<text name="NoMatchingTrucks">There is no matching trucks</text>
+		<text name="NoMatchingTrucks">There is no matching trucks</text>
 	<text name="NoMatchingDrivers">There is no Drivers</text>
     <text name="ResetReceiverCode">Reset shipment receiver code</text>
     <text name="ReceiverCodeConfirmationMsg">Are you sure you want to reset the receiver code for this shipment?</text>

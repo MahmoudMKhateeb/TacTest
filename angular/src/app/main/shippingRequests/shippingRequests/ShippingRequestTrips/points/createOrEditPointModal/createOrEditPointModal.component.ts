@@ -1,14 +1,14 @@
 /* tslint:disable:triple-equals */
 import { Component, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
-  CreateOrEditRoutPointDto,
-  FacilitiesServiceProxy,
-  FacilityForDropdownDto,
-  PickingType,
-  ReceiverFacilityLookupTableDto,
-  ReceiversServiceProxy,
-  RoutStepsServiceProxy,
-  ShippingRequestRouteType,
+    CreateOrEditRoutPointDto,
+    FacilitiesServiceProxy,
+    FacilityForDropdownDto,
+    PickingType,
+    ReceiverFacilityLookupTableDto,
+    ReceiversServiceProxy,
+    RoutStepsServiceProxy,
+    ShippingRequestRouteType,
 } from '@shared/service-proxies/service-proxies';
 import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
 import { AppComponentBase } from '@shared/common/app-component-base';
