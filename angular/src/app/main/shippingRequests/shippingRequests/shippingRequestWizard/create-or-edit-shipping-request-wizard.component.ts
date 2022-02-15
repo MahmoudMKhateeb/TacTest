@@ -239,9 +239,16 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
         }
         case 4: {
           console.log('step 4');
+          //check validation for vases
           let isVaild = true;
           this.selectedVases.forEach((element) => {
-            if (this.step2Dto.numberOfTrips < element.numberOfTrips) {
+            var isDisabledAmount = this.selectedVasesProperties[element.vasId].vasAmountDisabled;
+            var isDisabledCount = this.selectedVasesProperties[element.vasId].vasCountDisabled;
+            if (
+              this.step2Dto.numberOfTrips < element.numberOfTrips ||
+              (element.requestMaxCount <= 0 && !isDisabledCount) ||
+              (element.requestMaxAmount <= 0 && !isDisabledAmount)
+            ) {
               isVaild = false;
               return;
             }
