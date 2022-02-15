@@ -766,18 +766,22 @@
                               <td>
                                 <input
                                   type="number"
+                                  #VasCount="ngModel"
                                   [attr.disabled]="selectedVasesProperties[item.vasId].vasCountDisabled || null"
-                                  id="Vas-Count{{ i }}"
+                                  id="VasCount{{ i }}"
                                   [(ngModel)]="item.requestMaxCount"
                                   (keypress)="numberOnly($event)"
                                   [required]="!selectedVasesProperties[item.vasId].vasCountDisabled"
                                   class="form-control"
-                                  name="Vas-Count{{ i }}"
+                                  name="VasCount{{ i }}"
+                                  [class.is-invalid]="VasCount.touched && !VasCount.disabled && item.requestMaxCount <= 0"
+                                  [class.is-valid]="VasCount.touched && VasCount.valid && item.requestMaxCount > 0"
                                 />
                               </td>
                               <td>
                                 <input
                                   type="number"
+                                  #VasAmount2="ngModel"
                                   [attr.disabled]="selectedVasesProperties[item.vasId].vasAmountDisabled || null"
                                   id="VasAmount2{{ i }}"
                                   [(ngModel)]="item.requestMaxAmount"
@@ -785,6 +789,8 @@
                                   [required]="!selectedVasesProperties[item.vasId].vasAmountDisabled"
                                   class="form-control"
                                   name="VasAmount2{{ i }}"
+                                  [class.is-invalid]="VasAmount2.touched && !VasAmount2.disabled && item.requestMaxAmount <= 0"
+                                  [class.is-valid]="VasAmount2.touched && VasAmount2.valid && item.requestMaxAmount > 0"
                                 />
                               </td>
                               <td>
