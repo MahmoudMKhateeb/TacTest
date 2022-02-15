@@ -99,7 +99,7 @@
             [(ngModel)]="model.countryId"
             required
           >
-            <option value="">{{ l('Select') }} {{ l('Country') }}</option>
+            <option value="" selected disabled>{{ l('Select') }} {{ l('Country') }}</option>
             <option *ngFor="let country of allCountries" value="{{ country.id }}">{{ country.displayName }}</option>
           </select>
           <validation-messages [formCtrl]="countrySelect"></validation-messages>
@@ -110,7 +110,7 @@
         <div class="form-group">
           <label>{{ 'City' | localize }}</label>
           <select [disabled]="!isCountySelected" #citySelect="ngModel" class="form-control" name="tenant.cityId" [(ngModel)]="model.cityId" required>
-            <option [value]="undefined">{{ l('Select') }} {{ l('City') }}</option>
+            <option value="" selected disabled>{{ l('Select') }} {{ l('City') }}</option>
             <option *ngFor="let city of allCities" value="{{ city.id }}">{{ city.displayName }}</option>
           </select>
           <validation-messages [formCtrl]="citySelect"></validation-messages>
