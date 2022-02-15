@@ -12,6 +12,7 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
+using TACHYON.Dto;
 
 namespace TACHYON.EntityTemplates
 {
@@ -69,6 +70,18 @@ namespace TACHYON.EntityTemplates
 
             return ObjectMapper.Map<EntityTemplateForViewDto>(template);
         }
+
+        public async Task<List<SelectItemDto>> GetAllForDropdown(SavedEntityType type)
+            =>  await _templateRepository.GetAll().AsNoTracking()
+                .Where(x => x.EntityType == type)
+                .Select(x => new SelectItemDto()
+                {
+                    DisplayName = x.TemplateName,
+                    Id = x.Id.ToString()
+                })
+                .ToListAsync();
+        
+
         [AbpAuthorize(AppPermissions.Pages_EntityTemplate_Create)]
         protected virtual async Task Create(CreateOrEditEntityTemplateInputDto input)
         {
