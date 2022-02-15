@@ -61,20 +61,30 @@ export class PriceOfferModelComponent extends AppComponentBase {
 
   show(id: number, SRUpdateId: number | undefined = undefined, type: string | undefined = undefined, offerId: number | undefined = undefined): void {
     this.direction = document.getElementsByTagName('html')[0].getAttribute('dir');
+    this.input.shippingRequestId = id;
+    this.type = type;
+    this.input.channel = this.Channel;
+    this.SRUpdateId = SRUpdateId;
     this._CurrentServ.getPriceOfferForCreateOrEdit(id, offerId).subscribe((result) => {
+      this.Items = result.items;
+
       this.offer = result;
-      this.Items = this.offer.items;
-      this.type = type;
-      this.SRUpdateId = SRUpdateId;
-      this.active = true;
-      this.modal.show();
-      this.input.shippingRequestId = id;
-      this.input.channel = this.Channel;
       if (!this.feature.isEnabled('App.Carrier') && this.offer.id == 0) {
         this.changeItemComissionValue();
         this.changeVasComissionValue();
       }
-      //console.log(this.offer);
+
+      if (type == 'Reprice') {
+        this.offer = new PriceOfferDto();
+        this.offer.quantity = result.quantity;
+        this.Items = result.items;
+        this.Items.forEach((r) => {
+          r.itemPrice = undefined;
+          r.itemsTotalPricePreCommissionPreVat = undefined;
+        });
+      }
+      this.active = true;
+      this.modal.show();
     });
   }
 

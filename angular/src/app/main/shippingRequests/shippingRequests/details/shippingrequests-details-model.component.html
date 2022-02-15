@@ -104,9 +104,9 @@
               "
             >
               <div class="row align-items-center">
+                <span class="paddingForText"> {{ l('ShippingRequestsUpdates') }} <br /> </span>
                 <!--<Primeng-TurboTable-Start>-->
                 <div class="primeng-datatable-container col-12" [busyIf]="primengTableHelper.isLoading">
-                  <span class="titleVas"> {{ l('ShippingRequestsUpdates') }} <br /> </span>
                   <p-table
                     #dataTable
                     (onLazyLoad)="getAll(shippingrequest.offerId, $event)"
