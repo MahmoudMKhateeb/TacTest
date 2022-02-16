@@ -22,7 +22,7 @@ export class EntityLogComponent extends AppComponentBase implements OnInit {
   active = false;
   isCollapsed: boolean;
   activeId: number;
-
+  loading = false;
   constructor(injector: Injector, private _entityLogService: EntityLogServiceProxy) {
     super(injector);
   }
@@ -37,6 +37,7 @@ export class EntityLogComponent extends AppComponentBase implements OnInit {
   show(id = null) {
     this.modal.show();
     this.active = true;
+    this.loading = true;
     this.getEntityLogs(id);
   }
 
@@ -54,14 +55,16 @@ export class EntityLogComponent extends AppComponentBase implements OnInit {
     if (id != null) {
       this._entityLogService.getEntityLog(entutyId).subscribe((result) => {
         this.entityLogs.push(this.toEntityLogForView(result));
-        this.active = false;
+        this.loading = false;
+        this.active = true;
       });
     } else {
       this._entityLogService.getAllEntityLogs(entityType, entutyId, '', 10, 0).subscribe((result) => {
         for (let dto of result.items) {
           this.entityLogs.push(this.toEntityLogForView(dto));
         }
-        this.active = false;
+        this.loading = false;
+        this.active = true;
       });
     }
   }

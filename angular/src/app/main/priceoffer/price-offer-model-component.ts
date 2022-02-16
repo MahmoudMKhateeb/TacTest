@@ -194,9 +194,9 @@ export class PriceOfferModelComponent extends AppComponentBase {
       .takeAction(this.CreateSrUpdateActionInput)
       .pipe(finalize(() => (this.saving = false)))
       .subscribe((result) => {
+        abp.event.trigger('RepriceOffer');
         this.notify.info(this.l('SendSuccessfully'));
         this.close();
-        this.modalSave.emit(result);
       });
 
     this.saving = true;

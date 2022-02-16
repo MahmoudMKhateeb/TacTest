@@ -34,7 +34,7 @@ export class ShippingrequestsDetailsModelComponent extends AppComponentBase {
   @ViewChild('modal', { static: false }) modal: ModalDirective;
   @ViewChild('dataTable', { static: false }) dataTable: Table;
   @ViewChild('paginator', { static: false }) paginator: Paginator;
-
+  rows = 5;
   ShippingRequestUpdateStatusEnum = ShippingRequestUpdateStatus;
   primengTableHelperEntityChanges = new PrimengTableHelper();
   CreateSrUpdateActionInput = new CreateSrUpdateActionInputDto();
@@ -164,6 +164,7 @@ export class ShippingrequestsDetailsModelComponent extends AppComponentBase {
       return;
     }
     this.changeDetectorRef.detectChanges();
+    this.primengTableHelper.defaultRecordsCountPerPage = 5;
 
     this.primengTableHelper.showLoadingIndicator();
     this._srUpdateService
@@ -172,7 +173,7 @@ export class ShippingrequestsDetailsModelComponent extends AppComponentBase {
         this.shippingrequest.id,
         this.primengTableHelper.getSorting(this.dataTable),
         this.primengTableHelper.getSkipCount(this.paginator, event),
-        this.primengTableHelper.getMaxResultCount(this.paginator, event)
+        this.rows
       )
       .subscribe((result) => {
         this.primengTableHelper.totalRecordsCount = result.totalCount;
@@ -222,6 +223,9 @@ export class ShippingrequestsDetailsModelComponent extends AppComponentBase {
   ngAfterViewInit(): void {
     this.changeDetectorRef.detectChanges();
     this.primengTableHelper.adjustScroll(this.dataTable);
+    abp.event.on('RepriceOffer', () => {
+      this.getAll(this.shippingrequest.offerId);
+    });
   }
 
   reloadPage(): void {
