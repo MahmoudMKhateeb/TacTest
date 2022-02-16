@@ -2,13 +2,17 @@
 using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Runtime.Validation;
+using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using TACHYON.Dto;
 using TACHYON.Shipping.ShippingRequests;
+using TACHYON.Shipping.ShippingRequests.Dtos;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips.Dto;
 using JsonSerializer = System.Text.Json.JsonSerializer;
@@ -32,16 +36,16 @@ namespace TACHYON.EntityTemplates
         }
 
 
-        public virtual async Task Create(CreateOrEditEntityTemplateInputDto input)
+        public virtual async Task<string> Create(CreateOrEditEntityTemplateInputDto input)
         {
             var createdEntityTemplate = ObjectMapper.Map<EntityTemplate>(input); 
             await CheckIfAlreadyExist(createdEntityTemplate);
             await SetSavedEntity(createdEntityTemplate);
-            
-            await _templateRepository.InsertAsync(createdEntityTemplate);
+            var templateId = await _templateRepository.InsertAndGetIdAsync(createdEntityTemplate);
+           return templateId.ToString() ;
         }
         
-        public virtual async Task Update(CreateOrEditEntityTemplateInputDto input)
+        public virtual async Task<string> Update(CreateOrEditEntityTemplateInputDto input)
         {
             if (!input.Id.HasValue)
                 throw new AbpValidationException(L("IdCanNotBeNullWhenUpdateEntity"));
@@ -49,7 +53,7 @@ namespace TACHYON.EntityTemplates
             var updatedEntityTemplate = ObjectMapper.Map<EntityTemplate>(input);
             var oldEntityTemplate = await GetById(input.Id.Value);
             
-            ObjectMapper.Map(updatedEntityTemplate, oldEntityTemplate);
+           return ObjectMapper.Map(updatedEntityTemplate, oldEntityTemplate).Id.ToString();
         }
 
         private async Task<EntityTemplate> GetById(long templateId)
@@ -98,6 +102,7 @@ namespace TACHYON.EntityTemplates
         {
             var trip = await _tripRepository.GetAll().AsNoTracking()
                 .Include(x=> x.RoutPoints).ThenInclude(x=> x.GoodsDetails)
+                .Include(x=> x.RoutPoints).ThenInclude(x=> x.FacilityFk)
                 .FirstOrDefaultAsync(x => x.Id.ToString().Equals(savedEntityId));
            return ObjectMapper.Map<CreateOrEditShippingRequestTripDto>(trip);
         }

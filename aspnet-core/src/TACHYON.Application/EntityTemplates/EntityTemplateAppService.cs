@@ -5,8 +5,10 @@ using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Abp.Runtime.Validation;
+using Abp.UI;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
@@ -48,16 +50,13 @@ namespace TACHYON.EntityTemplates
             };
         }
 
-        public async Task CreateOrEdit(CreateOrEditEntityTemplateInputDto input)
+        public async Task<string> CreateOrEdit(CreateOrEditEntityTemplateInputDto input)
         {
             await CheckDuplicatedTemplateName(input);
             if (input.Id.HasValue)
-            {
-                await Update(input);
-                return;
-            }
+                return await Update(input);
 
-            await Create(input);
+            return await Create(input);
         }
 
         public async Task<EntityTemplateForViewDto> GetForView(EntityDto<long> input)
@@ -83,15 +82,12 @@ namespace TACHYON.EntityTemplates
         
 
         [AbpAuthorize(AppPermissions.Pages_EntityTemplate_Create)]
-        protected virtual async Task Create(CreateOrEditEntityTemplateInputDto input)
-        {
-            await _templateManager.Create(input);
-        }
+        protected virtual async Task<string> Create(CreateOrEditEntityTemplateInputDto input)
+        => await _templateManager.Create(input);
+        
         [AbpAuthorize(AppPermissions.Pages_EntityTemplate_Update)]
-        protected virtual async Task Update(CreateOrEditEntityTemplateInputDto input)
-        {
-            await _templateManager.Update(input);
-        }
+        protected virtual async Task<string> Update(CreateOrEditEntityTemplateInputDto input) 
+            => await _templateManager.Update(input);
 
         public virtual async Task Delete(EntityDto<long> input)
         {
