@@ -48,6 +48,10 @@ namespace TACHYON.EntityLogs
             if (entityLogDto == null)
                 // This Exception Will return Not Found Status Code (404)
                 throw new EntityNotFoundException(L("TheRecordWithIdXIsNotFound",logId));
+            DisableTenancyFilters();
+            entityLogDto.ModifierUserName = await _userRepository.GetAll()
+                .Where(x => x.Id == entityLogDto.ModifierUserId).Select(x => x.UserName)
+                .FirstOrDefaultAsync();
             return entityLogDto;
         }
         private async Task<PagedResultDto<EntityLogListDto>> GetPagedAndFilteredEntityLogs(GetAllEntityLogInput input)

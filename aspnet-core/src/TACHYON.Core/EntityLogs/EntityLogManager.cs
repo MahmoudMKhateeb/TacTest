@@ -26,7 +26,6 @@ namespace TACHYON.EntityLogs
         private readonly IRepository<EntityLog, Guid> _logRepository;
         private readonly IRepository<EntityChangeSet, long> _lookupChangeSetRepository;
         private readonly IEventBus _eventBus;
-        private readonly IConfigurationProvider _autoMapperConfigurationProvider;
 
         public EntityLogManager(
             IRepository<EntityLog, Guid> logRepository,
@@ -36,8 +35,6 @@ namespace TACHYON.EntityLogs
             _logRepository = logRepository;
             _lookupChangeSetRepository = lookupChangeSetRepository;
             _eventBus = eventBus;
-            var mapper = IocManager.Instance.Resolve<IMapper>();
-            _autoMapperConfigurationProvider = mapper.ConfigurationProvider;
         }
         // In Domain Service We Will Get Data As EntityLog Model
         // And in Application Service We Will Convert EntityLog Model to Dto it is Readable to Front-End  
@@ -137,8 +134,18 @@ namespace TACHYON.EntityLogs
                             && x.CoreId.Equals(coreId))
                 .OrderByDescending(x => x.CreationTime);
         public async Task<EntityLogListDto> GetEntityLogById(Guid logId)
-            => await _logRepository.GetAll().AsNoTracking()
-                .ProjectTo<EntityLogListDto>(_autoMapperConfigurationProvider)
-                .FirstOrDefaultAsync();
+        {
+            var log =  await _logRepository.GetAll().AsNoTracking().FirstOrDefaultAsync();
+
+            return new EntityLogListDto()
+            {
+                Id = log.Id,
+                Transaction = L(log.LogTransaction.Transaction),
+                ModificationTime = log.CreationTime,
+                ModifierUserId = log.CreatorUserId,
+                ChangesData = log.Data,
+                ModifierTenantId = log.TenantId
+            };
+        }
     }
 }
