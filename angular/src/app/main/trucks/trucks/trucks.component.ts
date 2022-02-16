@@ -82,7 +82,10 @@ export class TrucksComponent extends AppComponentBase implements OnInit, AfterVi
     );
   }
 
-  reloadPage(): void {}
+  getTrucks() {
+    var filter = this._activatedRoute.snapshot.queryParams['Active'];
+    this.getAllTrucks(filter);
+  }
 
   showTruckDocuments(truckId) {
     this.viewOrEditEntityDocumentsModal.show(truckId, DocumentsEntitiesEnum.Truck);
@@ -104,10 +107,10 @@ export class TrucksComponent extends AppComponentBase implements OnInit, AfterVi
     this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
       if (isConfirmed) {
         this._trucksServiceProxy.delete(truck.id).subscribe(() => {
-          this.reloadPage();
+          this.getTrucks();
           this.notify.success(this.l('SuccessfullyDeleted'));
           this.refreshData();
-            var filter = this._activatedRoute.snapshot.queryParams['Active'];
+          var filter = this._activatedRoute.snapshot.queryParams['Active'];
           this.getAllTrucks(filter);
         });
       }
