@@ -8,6 +8,7 @@ using Abp.Runtime.Validation;
 using Abp.UI;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using RestSharp.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -70,16 +71,30 @@ namespace TACHYON.EntityTemplates
             return ObjectMapper.Map<EntityTemplateForViewDto>(template);
         }
 
-        public async Task<List<SelectItemDto>> GetAllForDropdown(SavedEntityType type)
-            =>  await _templateRepository.GetAll().AsNoTracking()
-                .Where(x => x.EntityType == type)
-                .Select(x => new SelectItemDto()
-                {
-                    DisplayName = x.TemplateName,
-                    Id = x.Id.ToString()
-                })
-                .ToListAsync();
-        
+        public async Task<List<SelectItemDto>> GetAllForDropdown(GetAllTemplateForDropdownInputDto input)
+        {
+            var templates = _templateRepository.GetAll().AsNoTracking().Where(x => x.EntityType == input.Type);
+
+            switch (input.Type)
+            {
+                case SavedEntityType.ShippingRequest:
+                    return await templates
+                        .Select(x => new SelectItemDto() {DisplayName = x.TemplateName, Id = x.Id.ToString()})
+                        .ToListAsync();
+                case SavedEntityType.Trip:
+                    if (input.ParentEntityId.IsNullOrEmpty())
+                        throw new AbpValidationException(
+                            L("YouMustProvideTheShippingRequestYouWantToAddTripsFromTemplateOnIt"));
+                    
+                    var tripTemplates = await templates.ToListAsync();
+                    return await _templateManager.FilterTripTemplatesByParentEntity(tripTemplates, input.ParentEntityId);
+                default:
+                    throw new UserFriendlyException(L("NotSupportedEntityType"));
+            }
+
+           
+        }
+
 
         [AbpAuthorize(AppPermissions.Pages_EntityTemplate_Create)]
         protected virtual async Task<string> Create(CreateOrEditEntityTemplateInputDto input)

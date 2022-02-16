@@ -4,12 +4,14 @@ using Abp.Extensions;
 using Abp.Runtime.Validation;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using TACHYON.AddressBook;
 using TACHYON.Dto;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequests.Dtos;
@@ -24,15 +26,18 @@ namespace TACHYON.EntityTemplates
         private readonly IRepository<EntityTemplate, long> _templateRepository;
         private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
         private readonly IRepository<ShippingRequestTrip> _tripRepository;
+        private readonly IRepository<Facility,long> _facilityRepository;
 
         public EntityTemplateManager(
             IRepository<EntityTemplate, long> templateRepository,
             IRepository<ShippingRequest, long> shippingRequestRepository,
-            IRepository<ShippingRequestTrip> tripRepository)
+            IRepository<ShippingRequestTrip> tripRepository,
+            IRepository<Facility, long> facilityRepository)
         {
             _templateRepository = templateRepository;
             _shippingRequestRepository = shippingRequestRepository;
             _tripRepository = tripRepository;
+            _facilityRepository = facilityRepository;
         }
 
 
@@ -128,6 +133,79 @@ namespace TACHYON.EntityTemplates
             
             return JsonSerializer.Serialize(handledLoopEntity,
                 new JsonSerializerOptions() {PropertyNamingPolicy = JsonNamingPolicy.CamelCase});
+        }
+
+        
+        /// <summary>
+        /// Get All Trip Templates That Can Used To Specific Shipping Request
+        /// </summary>
+        /// <param name="tripTemplates"></param>
+        /// <param name="srId"></param>
+        /// <returns></returns>
+        public async Task<List<SelectItemDto>> FilterTripTemplatesByParentEntity(List<EntityTemplate> tripTemplates,string srId)
+        {
+            var shippingRequest = await _shippingRequestRepository.GetAll().AsNoTracking()
+                .Where(x => x.Id.ToString().Equals(srId))
+                .Select(x => new
+                {
+                    RoutType = x.RouteTypeId, 
+                    x.GoodCategoryId,
+                    SourceCityId = x.OriginCityId, 
+                    x.DestinationCityId
+                }).FirstOrDefaultAsync();
+
+            if (shippingRequest == null) throw new UserFriendlyException(L("ThereIsNoShippingRequest"));
+
+            var templatesList = ToTripTemplateDropdownItem(tripTemplates);
+            
+            var list = templatesList.Where(x => 
+                ValidateTripTemplate(x.Trip, shippingRequest.GoodCategoryId)).ToList();
+
+            return (from template in list
+                join originFacility in _facilityRepository.GetAll().AsNoTracking()
+                    on template.Trip.OriginFacilityId equals originFacility.Id
+                join destinationFacility in _facilityRepository.GetAll().AsNoTracking()
+                    on template.Trip.DestinationFacilityId equals destinationFacility.Id
+                select new SelectItemDto() {DisplayName = template.TemplateName, Id = template.Id.ToString()}).ToList();
+        }
+
+        private static List<TripTemplateDropdownItem> ToTripTemplateDropdownItem(List<EntityTemplate> tripTemplates)
+        {
+            var templatesList = new List<TripTemplateDropdownItem>();
+            foreach (var template in tripTemplates)
+            {
+                var item = new TripTemplateDropdownItem() {TemplateName = template.TemplateName, Id = template.Id};
+
+                try
+                {
+                    item.Trip = JsonConvert.DeserializeObject<CreateOrEditShippingRequestTripDto>(template.SavedEntity);
+                }
+                catch
+                {
+                    continue;
+                }
+
+                templatesList.Add(item);
+            }
+
+            return templatesList;
+        }
+
+        /// <summary>
+        /// Validate Good Category And Route Points For Trip Template
+        /// </summary>
+        /// <param name="trip"></param>
+        /// <param name="goodCategory"></param>
+        /// <returns></returns>
+        private static bool ValidateTripTemplate(CreateOrEditShippingRequestTripDto trip, int? goodCategory)
+        {
+            if (trip.RoutPoints == null || trip.RoutPoints.Count < 1) return false;
+
+            var point = trip.RoutPoints
+                .FirstOrDefault(r => r.GoodsDetailListDto != null && r.GoodsDetailListDto.Any());
+
+            var goodCategoryId = point?.GoodsDetailListDto.FirstOrDefault()?.GoodCategoryId;
+            return goodCategoryId == goodCategory;
         }
 
         #endregion
