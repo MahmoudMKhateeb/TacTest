@@ -21,6 +21,7 @@ using TACHYON.Shipping.Trips;
 using TACHYON.Shipping.Trips.Accidents;
 using TACHYON.Shipping.Trips.Accidents.Dto;
 using TACHYON.Shipping.Trips.Dto;
+using TACHYON.Shipping.Trips.Importing.Dto;
 using TACHYON.Storage;
 using TACHYON.Tracking;
 using TACHYON.Tracking.Dto;
@@ -193,8 +194,7 @@ namespace TACHYON.Web.Controllers
                 {
                     BinaryObjectId = fileObject.Id,
                     ShippingRequestId = ShippingRequestId,
-                    TenantId = tenantId,
-                    User = AbpSession.ToUserIdentifier()
+                    TenantId = tenantId
                 });
 
                 return Json(new AjaxResponse(new { importShipmentListDto}));
@@ -204,6 +204,53 @@ namespace TACHYON.Web.Controllers
                 return Json(new AjaxResponse(new ErrorInfo(ex.Message)));
             }
         }
+
+
+        [HttpPost]
+        [AbpMvcAuthorize(AppPermissions.Pages_ShippingRequestTrips_Create)]
+        public async Task<JsonResult> ImportPointsFromExcel(long ShippingRequestId)
+        {
+            try
+            {
+                var file = Request.Form.Files.First();
+
+                if (file == null)
+                {
+                    throw new UserFriendlyException(L("File_Empty_Error"));
+                }
+
+                if (file.Length > 1048576 * 100) //100 MB
+                {
+                    throw new UserFriendlyException(L("File_SizeLimit_Error"));
+                }
+
+                byte[] fileBytes;
+                using (var stream = file.OpenReadStream())
+                {
+                    fileBytes = stream.GetAllBytes();
+                }
+
+                var tenantId = AbpSession.TenantId;
+                var fileObject = new BinaryObject(tenantId, fileBytes);
+
+                await BinaryObjectManager.SaveAsync(fileObject);
+                CurrentUnitOfWork.SaveChanges();
+
+                var importPointListDto = await _importShipmentFromExcelAppService.ImportRoutePointsFromExcel(new ImportPointsFromExcelInput
+                {
+                    BinaryObjectId = fileObject.Id,
+                    ShippingRequestId = ShippingRequestId,
+                    TenantId = tenantId
+                });
+
+                return Json(new AjaxResponse(new { importPointListDto }));
+            }
+            catch (UserFriendlyException ex)
+            {
+                return Json(new AjaxResponse(new ErrorInfo(ex.Message)));
+            }
+        }
+
 
 
         [HttpPost]

@@ -10,7 +10,11 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Text;
 using System.Threading.Tasks;
+using TACHYON.AddressBook;
 using TACHYON.Features;
+using TACHYON.Receivers;
+using TACHYON.Routs.RoutPoints;
+using TACHYON.Routs.RoutPoints.Dtos;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.Trips.Dto;
 
@@ -20,36 +24,54 @@ namespace TACHYON.Shipping.ShippingRequestTrips
     {
         private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepository;
         private readonly IRepository<ShippingRequest,long> _shippingRequestRepository;
+        private readonly IRepository<RoutPoint, long> _routePointRepository;
         private readonly IFeatureChecker _featureChecker;
+        private readonly IRepository<Facility, long> _facilityRepository;
+        private readonly IRepository<Receiver> _receiverRepository;
+
+
         private IAbpSession _AbpSession { get; set; }
 
 
-        public ShippingRequestTripManager(IRepository<ShippingRequestTrip> shippingRequestTripRepository, IRepository<ShippingRequest, long> shippingRequestRepository, IFeatureChecker featureChecker, IAbpSession abpSession)
+        public ShippingRequestTripManager(IRepository<ShippingRequestTrip> shippingRequestTripRepository, IRepository<ShippingRequest, long> shippingRequestRepository, IFeatureChecker featureChecker, IAbpSession abpSession, IRepository<RoutPoint, long> routePointRepository, IRepository<Facility, long> facilityRepository, IRepository<Receiver> receiverRepository)
         {
             _shippingRequestTripRepository = shippingRequestTripRepository;
             _shippingRequestRepository = shippingRequestRepository;
             _featureChecker = featureChecker;
             _AbpSession = abpSession;
+            _routePointRepository = routePointRepository;
+            _facilityRepository = facilityRepository;
+            _receiverRepository = receiverRepository;
         }
 
         public async Task<ShippingRequestTrip> CreateAsync(ShippingRequestTrip trip)
         {
-            var existedTrip = await _shippingRequestTripRepository.FirstOrDefaultAsync(x => x.BulkUploadRef == trip.BulkUploadRef);
-            if (existedTrip != null)
-            {
-                throw new UserFriendlyException(L("truck.DuplicatePlateNumber"));
-            }
+            //var existedTrip = await _shippingRequestTripRepository.FirstOrDefaultAsync(x => x.BulkUploadRef == trip.BulkUploadRef);
+            //if (existedTrip != null)
+            //{
+             //   throw new UserFriendlyException(L("TripAlreadyExists"));
+            //}
 
             return await _shippingRequestTripRepository.InsertAsync(trip);
+        }
+
+        public async Task ValidateNumberOfTrips(ShippingRequest request, int tripsNo)
+        {
+            int requestNumberOfTripsAdd = await _shippingRequestTripRepository.GetAll()
+                    .Where(x => x.ShippingRequestId == request.Id).CountAsync() + tripsNo;
+            if (requestNumberOfTripsAdd > request.NumberOfTrips)
+                throw new UserFriendlyException(L("The number of trips " + request.NumberOfTrips));
+        }
+
+        public async Task<RoutPoint> CreatePointAsync(RoutPoint point)
+        {
+            return await _routePointRepository.InsertAsync(point);
         }
 
         public void ValidateTripDto(ImportTripDto importTripDto, StringBuilder exceptionMessage)
         {
             DisableTenancyFilters();
-            var SR = _shippingRequestRepository.GetAll()
-                .WhereIf(_featureChecker.IsEnabled(AppFeatures.TachyonDealer), x=>x.IsTachyonDeal)
-                .WhereIf(_featureChecker.IsEnabled(AppFeatures.Shipper), x=>x.TenantId== _AbpSession.TenantId)
-                .FirstOrDefault(x=>x.Id== importTripDto.ShippingRequestId);
+            var SR = GetShippingRequestByPermission(importTripDto.ShippingRequestId);
 
             //StringBuilder exceptionMessage = new StringBuilder();
 
@@ -73,36 +95,49 @@ namespace TACHYON.Shipping.ShippingRequestTrips
             importTripDto.Exception = exceptionMessage.ToString();
         }
 
-        public List<ImportTripDto> DuplicatedReferenceFromList(List<ImportTripDto> importTripDtoList)
+        public ShippingRequest GetShippingRequestByPermission(long id)
         {
-            if (importTripDtoList != null && importTripDtoList.Count > 0)
+            return _shippingRequestRepository.GetAll()
+                .WhereIf(_featureChecker.IsEnabled(AppFeatures.TachyonDealer), x => x.IsTachyonDeal)
+                .WhereIf(_featureChecker.IsEnabled(AppFeatures.Shipper), x => x.TenantId == _AbpSession.TenantId)
+                .FirstOrDefault(x => x.Id == id);
+        }
+
+        public ShippingRequest GetShippingRequestByPermission(int tripId)
+        {
+            DisableTenancyFilters();
+            var trip= _shippingRequestTripRepository.GetAll()
+                .Include(x=>x.ShippingRequestFk)
+                .WhereIf(_featureChecker.IsEnabled(AppFeatures.TachyonDealer), x => x.ShippingRequestFk.IsTachyonDeal)
+                .WhereIf(_featureChecker.IsEnabled(AppFeatures.Shipper), x => x.ShippingRequestFk.TenantId == _AbpSession.TenantId)
+                .FirstOrDefault(x => x.Id == tripId);
+            if (trip != null)
             {
-                List<ImportTripDto> dupicatedRedTripsList = new List<ImportTripDto>();
-                foreach (var trip in importTripDtoList)
-                {
-                    if (importTripDtoList.Count(x => x.BulkUploadReference == trip.BulkUploadReference) > 1)
-                    {
-                            dupicatedRedTripsList.Add(trip);
-                    }
-                }
-                return dupicatedRedTripsList;
+                return trip.ShippingRequestFk;
             }
             return null;
         }
 
-        private void ValidateDuplicateBulkReferenceFromDB(ImportTripDto importTripDto, StringBuilder exceptionMessage)
+        public List<string> DuplicatedReferenceFromList(List<string> list)
         {
-            var trip = _shippingRequestTripRepository.GetAll()
-               .Where(x => x.ShippingRequestId == importTripDto.ShippingRequestId && x.BulkUploadRef == importTripDto.BulkUploadReference).FirstOrDefault();
-            if (trip != null)
+            if (list != null && list.Count > 0)
             {
-                exceptionMessage.Append("The Bulk reference is already exists");
-                importTripDto.Exception = exceptionMessage.ToString();
+                return list.GroupBy(x => x)
+                                        .Where(g => g.Count() > 1)
+                                        .Select(x => x.Key).ToList();
+                
+                //List<string> dupicatedRedTripsList = new List<string>();
+                //foreach (var trip in importTripDtoList)
+                //{
+                //    if (importTripDtoList.Count(trip) > 1)
+                //    {
+                //            dupicatedRedTripsList.Add(trip);
+                //    }
+                //}
+                //return dupicatedRedTripsList;
             }
+            return null;
         }
-
-
-
 
         public void ValidateTripDates(ICreateOrEditTripDtoBase input, ShippingRequest request)
         {
@@ -114,6 +149,51 @@ namespace TACHYON.Shipping.ShippingRequestTrips
             )
             {
                 throw new UserFriendlyException(L("The trip date range must between shipping request range date"));
+            }
+        }
+
+        public void ValidateNumberOfDrops(int dropsCount, ShippingRequest request)
+        {
+            if (dropsCount != request.NumberOfDrops)
+            {
+                throw new UserFriendlyException(L("The number of drop points must be" + request.NumberOfDrops));
+            }
+        }
+
+        public Facility GetFacilityByPermission(string name,long shippingRequestId)
+        {
+            var request=GetShippingRequestByPermission(shippingRequestId);
+            return _facilityRepository.GetAll()
+                .WhereIf(_featureChecker.IsEnabled(AppFeatures.TachyonDealer),x=>x.TenantId==request.TenantId )
+                .WhereIf(_featureChecker.IsEnabled(AppFeatures.Shipper), x => x.TenantId == _AbpSession.TenantId)
+                .FirstOrDefault(x => x.Name == name);
+        }
+
+        public Receiver GetReceiverByPermissionAndFacility(string name, long shippingRequestId, long facilityId)
+        {
+            var request = GetShippingRequestByPermission(shippingRequestId);
+            return _receiverRepository.GetAll()
+                .Where(x=>x.FacilityId==facilityId)
+                .WhereIf(_featureChecker.IsEnabled(AppFeatures.TachyonDealer), x => x.TenantId == request.TenantId)
+                .WhereIf(_featureChecker.IsEnabled(AppFeatures.Shipper), x => x.TenantId == _AbpSession.TenantId)
+                .FirstOrDefault(x => x.FullName == name);
+        }
+
+
+        public ShippingRequestTrip GetShippingRequestTripIdByBulkRef(string tripReference)
+        {
+           return _shippingRequestTripRepository.FirstOrDefault(x => x.BulkUploadRef == tripReference);
+        }
+
+
+        private void ValidateDuplicateBulkReferenceFromDB(ImportTripDto importTripDto, StringBuilder exceptionMessage)
+        {
+            var trip = _shippingRequestTripRepository.GetAll()
+               .Where(x => x.ShippingRequestId == importTripDto.ShippingRequestId && x.BulkUploadRef == importTripDto.BulkUploadRef).FirstOrDefault();
+            if (trip != null)
+            {
+                exceptionMessage.Append("The Bulk reference is already exists");
+                importTripDto.Exception = exceptionMessage.ToString();
             }
         }
     }

@@ -19615,6 +19615,145 @@ export class ImportShipmentFromExcelServiceProxy {
     }
     return _observableOf<void>(<any>null);
   }
+
+  /**
+   * @param body (optional)
+   * @return Success
+   */
+  importRoutePointsFromExcel(body: ImportPointsFromExcelInput | undefined): Observable<ImportRoutePointDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/ImportShipmentFromExcel/ImportRoutePointsFromExcel';
+    url_ = url_.replace(/[?&]$/, '');
+
+    const content_ = JSON.stringify(body);
+
+    let options_: any = {
+      body: content_,
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processImportRoutePointsFromExcel(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processImportRoutePointsFromExcel(<any>response_);
+            } catch (e) {
+              return <Observable<ImportRoutePointDto[]>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<ImportRoutePointDto[]>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processImportRoutePointsFromExcel(response: HttpResponseBase): Observable<ImportRoutePointDto[]> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          if (Array.isArray(resultData200)) {
+            result200 = [] as any;
+            for (let item of resultData200) result200!.push(ImportRoutePointDto.fromJS(item));
+          } else {
+            result200 = <any>null;
+          }
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<ImportRoutePointDto[]>(<any>null);
+  }
+
+  /**
+   * @param body (optional)
+   * @return Success
+   */
+  createPointsFromDto(body: ImportRoutePointDto[] | null | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/ImportShipmentFromExcel/CreatePointsFromDto';
+    url_ = url_.replace(/[?&]$/, '');
+
+    const content_ = JSON.stringify(body);
+
+    let options_: any = {
+      body: content_,
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processCreatePointsFromDto(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processCreatePointsFromDto(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processCreatePointsFromDto(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
 }
 
 @Injectable()
@@ -70672,50 +70811,10 @@ export interface IExternalLoginSettingsDto {
   enabledSocialLoginSettings: string[] | undefined;
 }
 
-export class UserIdentifier implements IUserIdentifier {
-  tenantId!: number | undefined;
-  userId!: number;
-
-  constructor(data?: IUserIdentifier) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(_data?: any) {
-    if (_data) {
-      this.tenantId = _data['tenantId'];
-      this.userId = _data['userId'];
-    }
-  }
-
-  static fromJS(data: any): UserIdentifier {
-    data = typeof data === 'object' ? data : {};
-    let result = new UserIdentifier();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['tenantId'] = this.tenantId;
-    data['userId'] = this.userId;
-    return data;
-  }
-}
-
-export interface IUserIdentifier {
-  tenantId: number | undefined;
-  userId: number;
-}
-
 export class ImportShipmentFromExcelInput implements IImportShipmentFromExcelInput {
   tenantId!: number | undefined;
   binaryObjectId!: string;
   shippingRequestId!: number;
-  user!: UserIdentifier;
 
   constructor(data?: IImportShipmentFromExcelInput) {
     if (data) {
@@ -70730,7 +70829,6 @@ export class ImportShipmentFromExcelInput implements IImportShipmentFromExcelInp
       this.tenantId = _data['tenantId'];
       this.binaryObjectId = _data['binaryObjectId'];
       this.shippingRequestId = _data['shippingRequestId'];
-      this.user = _data['user'] ? UserIdentifier.fromJS(_data['user']) : <any>undefined;
     }
   }
 
@@ -70746,7 +70844,6 @@ export class ImportShipmentFromExcelInput implements IImportShipmentFromExcelInp
     data['tenantId'] = this.tenantId;
     data['binaryObjectId'] = this.binaryObjectId;
     data['shippingRequestId'] = this.shippingRequestId;
-    data['user'] = this.user ? this.user.toJSON() : <any>undefined;
     return data;
   }
 }
@@ -70755,7 +70852,6 @@ export interface IImportShipmentFromExcelInput {
   tenantId: number | undefined;
   binaryObjectId: string;
   shippingRequestId: number;
-  user: UserIdentifier;
 }
 
 export class ImportTripDto implements IImportTripDto {
@@ -70823,6 +70919,129 @@ export interface IImportTripDto {
   needsDeliveryNote: boolean;
   note: string | undefined;
   totalValue: string | undefined;
+}
+
+export class ImportPointsFromExcelInput implements IImportPointsFromExcelInput {
+  tenantId!: number | undefined;
+  binaryObjectId!: string;
+  shippingRequestId!: number;
+
+  constructor(data?: IImportPointsFromExcelInput) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.tenantId = _data['tenantId'];
+      this.binaryObjectId = _data['binaryObjectId'];
+      this.shippingRequestId = _data['shippingRequestId'];
+    }
+  }
+
+  static fromJS(data: any): ImportPointsFromExcelInput {
+    data = typeof data === 'object' ? data : {};
+    let result = new ImportPointsFromExcelInput();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['tenantId'] = this.tenantId;
+    data['binaryObjectId'] = this.binaryObjectId;
+    data['shippingRequestId'] = this.shippingRequestId;
+    return data;
+  }
+}
+
+export interface IImportPointsFromExcelInput {
+  tenantId: number | undefined;
+  binaryObjectId: string;
+  shippingRequestId: number;
+}
+
+export enum PickingType {
+  Pickup = 1,
+  Dropoff = 2,
+}
+
+export class ImportRoutePointDto implements IImportRoutePointDto {
+  pickingType!: PickingType;
+  pickingTypeDisplayName!: string | undefined;
+  facility!: string | undefined;
+  facilityId!: number;
+  receiver!: string | undefined;
+  receiverId!: number | undefined;
+  code!: string | undefined;
+  exception!: string | undefined;
+  shippingRequestTripId!: number;
+  bulkUploadReference!: string | undefined;
+  tripReference!: string | undefined;
+
+  constructor(data?: IImportRoutePointDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.pickingType = _data['pickingType'];
+      this.pickingTypeDisplayName = _data['pickingTypeDisplayName'];
+      this.facility = _data['facility'];
+      this.facilityId = _data['facilityId'];
+      this.receiver = _data['receiver'];
+      this.receiverId = _data['receiverId'];
+      this.code = _data['code'];
+      this.exception = _data['exception'];
+      this.shippingRequestTripId = _data['shippingRequestTripId'];
+      this.bulkUploadReference = _data['bulkUploadReference'];
+      this.tripReference = _data['tripReference'];
+    }
+  }
+
+  static fromJS(data: any): ImportRoutePointDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new ImportRoutePointDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['pickingType'] = this.pickingType;
+    data['pickingTypeDisplayName'] = this.pickingTypeDisplayName;
+    data['facility'] = this.facility;
+    data['facilityId'] = this.facilityId;
+    data['receiver'] = this.receiver;
+    data['receiverId'] = this.receiverId;
+    data['code'] = this.code;
+    data['exception'] = this.exception;
+    data['shippingRequestTripId'] = this.shippingRequestTripId;
+    data['bulkUploadReference'] = this.bulkUploadReference;
+    data['tripReference'] = this.tripReference;
+    return data;
+  }
+}
+
+export interface IImportRoutePointDto {
+  pickingType: PickingType;
+  pickingTypeDisplayName: string | undefined;
+  facility: string | undefined;
+  facilityId: number;
+  receiver: string | undefined;
+  receiverId: number | undefined;
+  code: string | undefined;
+  exception: string | undefined;
+  shippingRequestTripId: number;
+  bulkUploadReference: string | undefined;
+  tripReference: string | undefined;
 }
 
 export class InstallDto implements IInstallDto {
@@ -76801,28 +77020,28 @@ export interface IEnvelope {
 }
 
 export class Geometry implements IGeometry {
+  readonly area!: number;
+  dimension!: Dimension;
+  readonly geometryType!: string | undefined;
+  readonly isEmpty!: boolean;
+  readonly isValid!: boolean;
+  readonly length!: number;
+  readonly numGeometries!: number;
+  readonly numPoints!: number;
+  boundary!: Geometry;
+  centroid!: Point;
+  envelope!: Geometry;
+  interiorPoint!: Point;
+  readonly isSimple!: boolean;
+  pointOnSurface!: Point;
+  ogcGeometryType!: OgcGeometryType;
+  srid!: number;
   factory!: GeometryFactory;
   userData!: any | undefined;
-  srid!: number;
-  readonly geometryType!: string | undefined;
-  ogcGeometryType!: OgcGeometryType;
   precisionModel!: PrecisionModel;
   coordinate!: Coordinate;
   readonly coordinates!: Coordinate[] | undefined;
-  readonly numPoints!: number;
-  readonly numGeometries!: number;
-  readonly isSimple!: boolean;
-  readonly isValid!: boolean;
-  readonly isEmpty!: boolean;
-  readonly area!: number;
-  readonly length!: number;
-  centroid!: Point;
-  interiorPoint!: Point;
-  pointOnSurface!: Point;
-  dimension!: Dimension;
-  boundary!: Geometry;
   boundaryDimension!: Dimension;
-  envelope!: Geometry;
   envelopeInternal!: Envelope;
   readonly isRectangle!: boolean;
 
@@ -76836,31 +77055,31 @@ export class Geometry implements IGeometry {
 
   init(_data?: any) {
     if (_data) {
+      (<any>this).area = _data['area'];
+      this.dimension = _data['dimension'];
+      (<any>this).geometryType = _data['geometryType'];
+      (<any>this).isEmpty = _data['isEmpty'];
+      (<any>this).isValid = _data['isValid'];
+      (<any>this).length = _data['length'];
+      (<any>this).numGeometries = _data['numGeometries'];
+      (<any>this).numPoints = _data['numPoints'];
+      this.boundary = _data['boundary'] ? Geometry.fromJS(_data['boundary']) : <any>undefined;
+      this.centroid = _data['centroid'] ? Point.fromJS(_data['centroid']) : <any>undefined;
+      this.envelope = _data['envelope'] ? Geometry.fromJS(_data['envelope']) : <any>undefined;
+      this.interiorPoint = _data['interiorPoint'] ? Point.fromJS(_data['interiorPoint']) : <any>undefined;
+      (<any>this).isSimple = _data['isSimple'];
+      this.pointOnSurface = _data['pointOnSurface'] ? Point.fromJS(_data['pointOnSurface']) : <any>undefined;
+      this.ogcGeometryType = _data['ogcGeometryType'];
+      this.srid = _data['srid'];
       this.factory = _data['factory'] ? GeometryFactory.fromJS(_data['factory']) : <any>undefined;
       this.userData = _data['userData'];
-      this.srid = _data['srid'];
-      (<any>this).geometryType = _data['geometryType'];
-      this.ogcGeometryType = _data['ogcGeometryType'];
       this.precisionModel = _data['precisionModel'] ? PrecisionModel.fromJS(_data['precisionModel']) : <any>undefined;
       this.coordinate = _data['coordinate'] ? Coordinate.fromJS(_data['coordinate']) : <any>undefined;
       if (Array.isArray(_data['coordinates'])) {
         (<any>this).coordinates = [] as any;
         for (let item of _data['coordinates']) (<any>this).coordinates!.push(Coordinate.fromJS(item));
       }
-      (<any>this).numPoints = _data['numPoints'];
-      (<any>this).numGeometries = _data['numGeometries'];
-      (<any>this).isSimple = _data['isSimple'];
-      (<any>this).isValid = _data['isValid'];
-      (<any>this).isEmpty = _data['isEmpty'];
-      (<any>this).area = _data['area'];
-      (<any>this).length = _data['length'];
-      this.centroid = _data['centroid'] ? Point.fromJS(_data['centroid']) : <any>undefined;
-      this.interiorPoint = _data['interiorPoint'] ? Point.fromJS(_data['interiorPoint']) : <any>undefined;
-      this.pointOnSurface = _data['pointOnSurface'] ? Point.fromJS(_data['pointOnSurface']) : <any>undefined;
-      this.dimension = _data['dimension'];
-      this.boundary = _data['boundary'] ? Geometry.fromJS(_data['boundary']) : <any>undefined;
       this.boundaryDimension = _data['boundaryDimension'];
-      this.envelope = _data['envelope'] ? Geometry.fromJS(_data['envelope']) : <any>undefined;
       this.envelopeInternal = _data['envelopeInternal'] ? Envelope.fromJS(_data['envelopeInternal']) : <any>undefined;
       (<any>this).isRectangle = _data['isRectangle'];
     }
@@ -76875,31 +77094,31 @@ export class Geometry implements IGeometry {
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
+    data['area'] = this.area;
+    data['dimension'] = this.dimension;
+    data['geometryType'] = this.geometryType;
+    data['isEmpty'] = this.isEmpty;
+    data['isValid'] = this.isValid;
+    data['length'] = this.length;
+    data['numGeometries'] = this.numGeometries;
+    data['numPoints'] = this.numPoints;
+    data['boundary'] = this.boundary ? this.boundary.toJSON() : <any>undefined;
+    data['centroid'] = this.centroid ? this.centroid.toJSON() : <any>undefined;
+    data['envelope'] = this.envelope ? this.envelope.toJSON() : <any>undefined;
+    data['interiorPoint'] = this.interiorPoint ? this.interiorPoint.toJSON() : <any>undefined;
+    data['isSimple'] = this.isSimple;
+    data['pointOnSurface'] = this.pointOnSurface ? this.pointOnSurface.toJSON() : <any>undefined;
+    data['ogcGeometryType'] = this.ogcGeometryType;
+    data['srid'] = this.srid;
     data['factory'] = this.factory ? this.factory.toJSON() : <any>undefined;
     data['userData'] = this.userData;
-    data['srid'] = this.srid;
-    data['geometryType'] = this.geometryType;
-    data['ogcGeometryType'] = this.ogcGeometryType;
     data['precisionModel'] = this.precisionModel ? this.precisionModel.toJSON() : <any>undefined;
     data['coordinate'] = this.coordinate ? this.coordinate.toJSON() : <any>undefined;
     if (Array.isArray(this.coordinates)) {
       data['coordinates'] = [];
       for (let item of this.coordinates) data['coordinates'].push(item.toJSON());
     }
-    data['numPoints'] = this.numPoints;
-    data['numGeometries'] = this.numGeometries;
-    data['isSimple'] = this.isSimple;
-    data['isValid'] = this.isValid;
-    data['isEmpty'] = this.isEmpty;
-    data['area'] = this.area;
-    data['length'] = this.length;
-    data['centroid'] = this.centroid ? this.centroid.toJSON() : <any>undefined;
-    data['interiorPoint'] = this.interiorPoint ? this.interiorPoint.toJSON() : <any>undefined;
-    data['pointOnSurface'] = this.pointOnSurface ? this.pointOnSurface.toJSON() : <any>undefined;
-    data['dimension'] = this.dimension;
-    data['boundary'] = this.boundary ? this.boundary.toJSON() : <any>undefined;
     data['boundaryDimension'] = this.boundaryDimension;
-    data['envelope'] = this.envelope ? this.envelope.toJSON() : <any>undefined;
     data['envelopeInternal'] = this.envelopeInternal ? this.envelopeInternal.toJSON() : <any>undefined;
     data['isRectangle'] = this.isRectangle;
     return data;
@@ -76907,28 +77126,28 @@ export class Geometry implements IGeometry {
 }
 
 export interface IGeometry {
+  area: number;
+  dimension: Dimension;
+  geometryType: string | undefined;
+  isEmpty: boolean;
+  isValid: boolean;
+  length: number;
+  numGeometries: number;
+  numPoints: number;
+  boundary: Geometry;
+  centroid: Point;
+  envelope: Geometry;
+  interiorPoint: Point;
+  isSimple: boolean;
+  pointOnSurface: Point;
+  ogcGeometryType: OgcGeometryType;
+  srid: number;
   factory: GeometryFactory;
   userData: any | undefined;
-  srid: number;
-  geometryType: string | undefined;
-  ogcGeometryType: OgcGeometryType;
   precisionModel: PrecisionModel;
   coordinate: Coordinate;
   coordinates: Coordinate[] | undefined;
-  numPoints: number;
-  numGeometries: number;
-  isSimple: boolean;
-  isValid: boolean;
-  isEmpty: boolean;
-  area: number;
-  length: number;
-  centroid: Point;
-  interiorPoint: Point;
-  pointOnSurface: Point;
-  dimension: Dimension;
-  boundary: Geometry;
   boundaryDimension: Dimension;
-  envelope: Geometry;
   envelopeInternal: Envelope;
   isRectangle: boolean;
 }
@@ -80193,11 +80412,6 @@ export class RouteRoutTypeLookupTableDto implements IRouteRoutTypeLookupTableDto
 export interface IRouteRoutTypeLookupTableDto {
   id: number;
   displayName: string | undefined;
-}
-
-export enum PickingType {
-  Pickup = 1,
-  Dropoff = 2,
 }
 
 export class RoutPointDto implements IRoutPointDto {

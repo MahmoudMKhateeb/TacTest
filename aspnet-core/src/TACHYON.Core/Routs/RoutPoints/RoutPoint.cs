@@ -85,5 +85,9 @@ namespace TACHYON.Routs.RoutPoints
         public bool IsPodUploaded { get; set; }
         public bool IsGoodPictureUploaded { get; set; }
         public DateTime? ActualPickupOrDeliveryDate { get; set; }
+        /// <summary>
+        /// This field is filled when point is imported from excel, it is unique for each trip
+        /// </summary>
+        public string BulkUploadReference { get; set; }
     }
 }

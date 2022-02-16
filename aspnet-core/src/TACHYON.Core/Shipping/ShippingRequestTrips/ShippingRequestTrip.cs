@@ -116,8 +116,8 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         /// This reference is for import shipment from excel, it is unique reference for user to know the trips whick contains errors,
         /// it is either entered menual or auto generated. it is unique in each request.
         /// </summary>
-        public string BulkUploadRef { get; set; } =
-            DateTime.Now.ToString("dd") + DateTime.Now.ToString("HH") + RandomHelper.GetRandom(10, 99);
+        public string BulkUploadRef { get; set; } 
+            = DateTime.Now.ToString("dd") + DateTime.Now.ToString("HH") + RandomHelper.GetRandom(10, 99);
 
     }
 }

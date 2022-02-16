@@ -1,0 +1,9 @@
+th,
+td {
+  width: 23%;
+  word-break: break-all;
+}
+
+.customAlert {
+  background-color: #bbf9b3 !important;
+}

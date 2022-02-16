@@ -271,6 +271,7 @@ import { ViewRatingComponent } from '@app/main/shippingRequests/shippingRequests
 import { ShipmentHistoryComponent } from '@app/main/shippingRequests/shippingRequests/shipment-history/shipment-history.component';
 import { TrackingModule } from '@app/main/shippingRequests/shippingRequests/tracking/tracking.module';
 import { ViewImportedTripsFromExcelModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/trips/view-imported-trips-from-excel-modal/view-imported-trips-from-excel-modal.component';
+import { ViewImportedPointsFromExcelModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/trips/view-imported-points-from-excel-modal/view-imported-points-from-excel-modal.component';
 
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
@@ -515,6 +516,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ViewRatingComponent,
     ShipmentHistoryComponent,
     ViewImportedTripsFromExcelModalComponent,
+    ViewImportedPointsFromExcelModalComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },

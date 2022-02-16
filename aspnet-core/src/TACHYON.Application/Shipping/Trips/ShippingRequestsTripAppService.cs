@@ -219,14 +219,16 @@ namespace TACHYON.Shipping.Trips
             if (await IsEnabledAsync(AppFeatures.TachyonDealer) && !await FeatureChecker.IsEnabledAsync(request.TenantId, AppFeatures.AddTripsByTachyonDeal))
                 throw new AbpValidationException(L("AddTripsByTachyonDealIsNotEnabledFromShipper"));
             _shippingRequestTripManager.ValidateTripDates(input, request);
-            ValidateNumberOfDrops(input, request);
+            //ValidateNumberOfDrops(input, request);
+            _shippingRequestTripManager.ValidateNumberOfDrops(input.RoutPoints.Count(x => x.PickingType == PickingType.Dropoff), request);
             ValidateTotalweight(input, request);
             if (!input.Id.HasValue)
             {
-                int requestNumberOfTripsAdd = await _shippingRequestTripRepository.GetAll()
-                    .Where(x => x.ShippingRequestId == input.ShippingRequestId).CountAsync() + 1;
-                if (requestNumberOfTripsAdd > request.NumberOfTrips)
-                    throw new UserFriendlyException(L("The number of trips " + request.NumberOfTrips));
+                //int requestNumberOfTripsAdd = await _shippingRequestTripRepository.GetAll()
+                //    .Where(x => x.ShippingRequestId == input.ShippingRequestId).CountAsync() + 1;
+                //if (requestNumberOfTripsAdd > request.NumberOfTrips)
+                //    throw new UserFriendlyException(L("The number of trips " + request.NumberOfTrips));
+                await _shippingRequestTripManager.ValidateNumberOfTrips(request, 1);
                 await Create(input, request);
                 request.TotalsTripsAddByShippier += 1;
             }
@@ -289,13 +291,13 @@ namespace TACHYON.Shipping.Trips
             }
         }
 
-        private void ValidateNumberOfDrops(CreateOrEditShippingRequestTripDto input, ShippingRequest request)
-        {
-            if (input.RoutPoints.Count(x => x.PickingType == PickingType.Dropoff) != request.NumberOfDrops)
-            {
-                throw new UserFriendlyException(L("The number of drop points must be" + request.NumberOfDrops));
-            }
-        }
+        //private void ValidateNumberOfDrops(CreateOrEditShippingRequestTripDto input, ShippingRequest request)
+        //{
+        //    if (input.RoutPoints.Count(x => x.PickingType == PickingType.Dropoff) != request.NumberOfDrops)
+        //    {
+        //        throw new UserFriendlyException(L("The number of drop points must be" + request.NumberOfDrops));
+        //    }
+        //}
 
         //private void ValidateTripDates(ICreateOrEditTripDtoBase input, ShippingRequest request)
         //{
