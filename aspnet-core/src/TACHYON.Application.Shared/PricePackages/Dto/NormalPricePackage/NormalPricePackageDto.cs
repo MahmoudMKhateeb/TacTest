@@ -10,9 +10,9 @@ namespace TACHYON.PricePackages.Dto.NormalPricePackage
         public int Id { get; set; }
         public string DisplayName { get; set; }
         public string TruckType { get; set; }
-        public float DirectRequestPrice { get; set; }
-        public float MarcketPlaceRequestPrice { get; set; }
-        public float TachyonMSRequestPrice { get; set; }
+        public decimal DirectRequestPrice { get; set; }
+        public decimal MarcketPlaceRequestPrice { get; set; }
+        public decimal TachyonMSRequestPrice { get; set; }
         public string PricePerExtraDrop { get; set; }
         public bool IsMultiDrop { get; set; }
         public string Origin { get; set; }

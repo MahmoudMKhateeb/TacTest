@@ -279,6 +279,7 @@ import { StepsModule } from '@node_modules/primeng/steps';
 import { ViewRatingComponent } from '@app/main/shippingRequests/shippingRequests/rating/view-rating/view-rating.component';
 import { ShipmentHistoryComponent } from '@app/main/shippingRequests/shippingRequests/shipment-history/shipment-history.component';
 import { NormalPricePackagesList } from '@app/main/shippingRequests/shippingRequests/normal-price-packages/normal-price-packages-list.component';
+import { NormalPricePackageCalculationComponent } from '@app/main/shippingRequests/shippingRequests/normal-price-packages/normal-price-package-calculation/normal-price-package-calculation-component';
 
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
@@ -531,6 +532,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ViewRatingComponent,
     ShipmentHistoryComponent,
     NormalPricePackagesList,
+    NormalPricePackageCalculationComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },

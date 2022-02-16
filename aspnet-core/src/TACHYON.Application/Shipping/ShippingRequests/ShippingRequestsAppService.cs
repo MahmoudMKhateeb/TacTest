@@ -454,7 +454,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
         private async Task SendtoCarrierIfShippingRequestIsDirectRequest(ShippingRequest shippingRequest)
         {
-            if (shippingRequest.IsDirectRequest)
+            if (shippingRequest.IsDirectRequest && shippingRequest.CarrierTenantIdForDirectRequest.HasValue)
             {
                 var directRequestInput = new CreateShippingRequestDirectRequestInput();
                 directRequestInput.CarrierTenantId = shippingRequest.CarrierTenantIdForDirectRequest.Value;

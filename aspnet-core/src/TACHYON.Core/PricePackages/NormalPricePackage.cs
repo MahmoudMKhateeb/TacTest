@@ -10,12 +10,12 @@ namespace TACHYON.PricePackages
     public class NormalPricePackage : BasePricePackage
     {
         [Range(PricePackagesConst.MinPriceNumber, PricePackagesConst.MaxPriceNumber)]
-        public float DirectRequestPrice { get; set; }
+        public decimal DirectRequestPrice { get; set; }
         [Range(PricePackagesConst.MinPriceNumber, PricePackagesConst.MaxPriceNumber)]
-        public float MarcketPlaceRequestPrice { get; set; }
+        public decimal MarcketPlaceRequestPrice { get; set; }
         [Range(PricePackagesConst.MinPriceNumber, PricePackagesConst.MaxPriceNumber)]
-        public float TachyonMSRequestPrice { get; set; }
-        public float? PricePerExtraDrop { get; set; }
+        public decimal TachyonMSRequestPrice { get; set; }
+        public decimal? PricePerExtraDrop { get; set; }
         public bool IsMultiDrop { get; set; }
         public int? OriginCityId { get; set; }
         [ForeignKey(nameof(OriginCityId))]
@@ -24,6 +24,7 @@ namespace TACHYON.PricePackages
         public int? DestinationCityId { get; set; }
         [ForeignKey(nameof(DestinationCityId))]
         public City DestinationCityFK { get; set; }
+        public ICollection<BidNormalPricePackage> BidNormalPricePackages { get; set; }
 
     }
 }

@@ -138,6 +138,15 @@
                 </button>
               </div>
             </ng-template>
+
+            <ng-template [ngIf]="shippingrequest.bidNormalPricePackageId && !shippingrequest.isPriced">
+              <div class="divirCard"></div>
+              <div class="setPrice">
+                <button type="button" (click)="ModelPriceCalculation.Preview(request.id, request.bidNormalPricePackageId)">
+                  {{ l('PreviewBidPricePackage') }}
+                </button>
+              </div>
+            </ng-template>
           </div>
           <div class="map">
             <agm-map [latitude]="24.717942" [longitude]="46.675761" [zoom]="10">
@@ -156,3 +165,4 @@
 </div>
 <price-offer-model #ModelPrice [Channel]="Channel" (modalSave)="update($event)"></price-offer-model>
 <price-offer-view-model #ModelViewPrice [Channel]="Channel" (modalDelete)="delete()"></price-offer-view-model>
+<normal-price-package-calculation #ModelPriceCalculation></normal-price-package-calculation>

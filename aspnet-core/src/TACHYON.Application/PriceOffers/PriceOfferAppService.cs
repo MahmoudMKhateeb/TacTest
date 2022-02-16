@@ -387,7 +387,7 @@ namespace TACHYON.PriceOffers
                              .ThenInclude(x => x.Translations)
                             .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper), x => x.TenantId == AbpSession.TenantId && !x.IsTachyonDeal)
                             .FirstOrDefaultAsync(r => r.Id == input.Id/* && (r.Status == ShippingRequestStatus.NeedsAction || r.Status == ShippingRequestStatus.PrePrice || r.Status == ShippingRequestStatus.AcceptedAndWaitingCarrier)*/);
-
+            long? bidNormalPricePackageId = default;
             if (shippingRequest == null) throw new UserFriendlyException(L("TheRecordIsNotFound"));
 
             if (AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Carrier))// Applay permission for carrier if can see the shipping request details
@@ -402,6 +402,7 @@ namespace TACHYON.PriceOffers
                     {
                         var _directRequest = await _shippingRequestDirectRequestRepository.FirstOrDefaultAsync(x => x.CarrierTenantId == AbpSession.TenantId.Value && x.ShippingRequestId == input.Id && x.Status != ShippingRequestDirectRequestStatus.Declined);
                         if (_directRequest == null) throw new UserFriendlyException(L("YouDoNotHaveDirectRequest"));
+                        bidNormalPricePackageId = _directRequest.BidNormalPricePackageId;
                     }
                 }
 
@@ -416,6 +417,7 @@ namespace TACHYON.PriceOffers
             getShippingRequestForPricingOutput.TrukType = ObjectMapper.Map<TrucksTypeDto>(shippingRequest.TrucksTypeFk).TranslatedDisplayName;
             getShippingRequestForPricingOutput.ShipperRating = shippingRequest.Tenant.Rate;
             getShippingRequestForPricingOutput.ShipperRatingNumber = shippingRequest.Tenant.RateNumber;
+            getShippingRequestForPricingOutput.BidNormalPricePackageId = bidNormalPricePackageId;
 
             return getShippingRequestForPricingOutput;
 
@@ -580,6 +582,7 @@ namespace TACHYON.PriceOffers
                 dto.CreationTime = request.CreationTime;
                 dto.DirectRequestStatus = request.Status;
                 dto.BidStatusTitle = string.Empty;
+                dto.BidNormalPricePackageId = request.BidNormalPricePackageId;
                 dto.TruckType = ObjectMapper.Map<TrucksTypeDto>(request.ShippingRequestFK.TrucksTypeFk).TranslatedDisplayName;
                 dto.GoodsCategory = ObjectMapper.Map<GoodCategoryDto>(request.ShippingRequestFK.GoodCategoryFk).DisplayName;
                 dto.NumberOfCompletedTrips = await getCompletedRequestTripsCount(request.ShippingRequestFK);

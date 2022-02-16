@@ -61,10 +61,10 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
                 RequestType = ShippingRequestType.DirectRequest;
             }
 
-            if (IsDirectRequest && CarrierTenantIdForDirectRequest == null)
-            {
-                context.Results.Add(new ValidationResult("You must choose one carrier to send direct request"));
-            }
+            //if (IsDirectRequest && CarrierTenantIdForDirectRequest == null)
+            //{
+            //    context.Results.Add(new ValidationResult("You must choose one carrier to send direct request"));
+            //}
         }
     }
 }

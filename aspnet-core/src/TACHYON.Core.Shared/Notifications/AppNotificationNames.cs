@@ -48,6 +48,7 @@ namespace TACHYON.Notifications
 
         public const string ShipperShippingRequestFinish = "App.Shipper.ShippingRequest.Finish";
         public const string DriverGpsOff = "App.DriverGpsOff";
+        public const string BidNormalPricePackageWasCreated = "App.BidNormalPricePackageWasCreated";
 
         #region Trip
         public const string NotifyDriverWhenAssignTrip = "App.ShipperShippingRequestTripNotifyDriverWhenAssignTrip";
@@ -79,7 +80,7 @@ namespace TACHYON.Notifications
         #endregion
         #region Shipping Request
         public const string ShippingRequestNotifyCarrirerWhenShipperAccepted = "App.ShippingRequestNotifyCarrirerWhenShipperAccepted";
-        public const string ShipperReminderToCompleteTrips = "App.ShipperReminderToCompleteTrips";  
+        public const string ShipperReminderToCompleteTrips = "App.ShipperReminderToCompleteTrips";
         #region Offer
         public const string ShippingRequestSendOfferWhenAddPrice = "App.ShippingRequestSendOfferWhenAddPrice";
         public const string ShippingRequestSendOfferWhenUpdatePrice = "App.ShippingRequestSendOfferWhenUpdatePrice";

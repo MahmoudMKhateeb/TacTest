@@ -22868,6 +22868,76 @@ export class NormalPricePackagesServiceProxy {
   }
 
   /**
+   * @param bidPricePackageId (optional)
+   * @param shippingRequestId (optional)
+   * @return Success
+   */
+  getBidNormalPricePackage(bidPricePackageId: number | undefined, shippingRequestId: number | undefined): Observable<BidNormalPricePackageDto> {
+    let url_ = this.baseUrl + '/api/services/app/NormalPricePackages/GetBidNormalPricePackage?';
+    if (bidPricePackageId === null) throw new Error("The parameter 'bidPricePackageId' cannot be null.");
+    else if (bidPricePackageId !== undefined) url_ += 'bidPricePackageId=' + encodeURIComponent('' + bidPricePackageId) + '&';
+    if (shippingRequestId === null) throw new Error("The parameter 'shippingRequestId' cannot be null.");
+    else if (shippingRequestId !== undefined) url_ += 'shippingRequestId=' + encodeURIComponent('' + shippingRequestId) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetBidNormalPricePackage(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetBidNormalPricePackage(<any>response_);
+            } catch (e) {
+              return <Observable<BidNormalPricePackageDto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<BidNormalPricePackageDto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetBidNormalPricePackage(response: HttpResponseBase): Observable<BidNormalPricePackageDto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = BidNormalPricePackageDto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<BidNormalPricePackageDto>(<any>null);
+  }
+
+  /**
    * @param pricePackageId (optional)
    * @param shippingRequestId (optional)
    * @return Success
@@ -22875,7 +22945,7 @@ export class NormalPricePackagesServiceProxy {
   calculateShippingRequestPricePackage(
     pricePackageId: number | undefined,
     shippingRequestId: number | undefined
-  ): Observable<CalculateShippingRequestPricePackageDto> {
+  ): Observable<BidNormalPricePackageDto> {
     let url_ = this.baseUrl + '/api/services/app/NormalPricePackages/CalculateShippingRequestPricePackage?';
     if (pricePackageId === null) throw new Error("The parameter 'pricePackageId' cannot be null.");
     else if (pricePackageId !== undefined) url_ += 'pricePackageId=' + encodeURIComponent('' + pricePackageId) + '&';
@@ -22904,14 +22974,14 @@ export class NormalPricePackagesServiceProxy {
             try {
               return this.processCalculateShippingRequestPricePackage(<any>response_);
             } catch (e) {
-              return <Observable<CalculateShippingRequestPricePackageDto>>(<any>_observableThrow(e));
+              return <Observable<BidNormalPricePackageDto>>(<any>_observableThrow(e));
             }
-          } else return <Observable<CalculateShippingRequestPricePackageDto>>(<any>_observableThrow(response_));
+          } else return <Observable<BidNormalPricePackageDto>>(<any>_observableThrow(response_));
         })
       );
   }
 
-  protected processCalculateShippingRequestPricePackage(response: HttpResponseBase): Observable<CalculateShippingRequestPricePackageDto> {
+  protected processCalculateShippingRequestPricePackage(response: HttpResponseBase): Observable<BidNormalPricePackageDto> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -22926,7 +22996,7 @@ export class NormalPricePackagesServiceProxy {
         _observableMergeMap((_responseText) => {
           let result200: any = null;
           let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
-          result200 = CalculateShippingRequestPricePackageDto.fromJS(resultData200);
+          result200 = BidNormalPricePackageDto.fromJS(resultData200);
           return _observableOf(result200);
         })
       );
@@ -22937,7 +23007,7 @@ export class NormalPricePackagesServiceProxy {
         })
       );
     }
-    return _observableOf<CalculateShippingRequestPricePackageDto>(<any>null);
+    return _observableOf<BidNormalPricePackageDto>(<any>null);
   }
 
   /**
@@ -23023,6 +23093,71 @@ export class NormalPricePackagesServiceProxy {
       );
     }
     return _observableOf<PagedResultDtoOfNormalPricePackageForShippingRequestDto>(<any>null);
+  }
+
+  /**
+   * @param pricePackageId (optional)
+   * @param shippingRequestId (optional)
+   * @return Success
+   */
+  submitBidByPricePackage(pricePackageId: number | undefined, shippingRequestId: number | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/NormalPricePackages/SubmitBidByPricePackage?';
+    if (pricePackageId === null) throw new Error("The parameter 'pricePackageId' cannot be null.");
+    else if (pricePackageId !== undefined) url_ += 'pricePackageId=' + encodeURIComponent('' + pricePackageId) + '&';
+    if (shippingRequestId === null) throw new Error("The parameter 'shippingRequestId' cannot be null.");
+    else if (shippingRequestId !== undefined) url_ += 'shippingRequestId=' + encodeURIComponent('' + shippingRequestId) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({}),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processSubmitBidByPricePackage(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processSubmitBidByPricePackage(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processSubmitBidByPricePackage(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
   }
 
   /**
@@ -23202,6 +23337,75 @@ export class NormalPricePackagesServiceProxy {
   }
 
   protected processGetAllCitiesForTableDropdown(response: HttpResponseBase): Observable<SelectItemDto[]> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          if (Array.isArray(resultData200)) {
+            result200 = [] as any;
+            for (let item of resultData200) result200!.push(SelectItemDto.fromJS(item));
+          } else {
+            result200 = <any>null;
+          }
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<SelectItemDto[]>(<any>null);
+  }
+
+  /**
+   * @return Success
+   */
+  getCarriers(): Observable<SelectItemDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/NormalPricePackages/GetCarriers';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetCarriers(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetCarriers(<any>response_);
+            } catch (e) {
+              return <Observable<SelectItemDto[]>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<SelectItemDto[]>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetCarriers(response: HttpResponseBase): Observable<SelectItemDto[]> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -72855,8 +73059,30 @@ export interface ICheckIfPricePackageNameAvailableDto {
   id: number | undefined;
 }
 
-export class CalculateShippingRequestPricePackageDto implements ICalculateShippingRequestPricePackageDto {
-  constructor(data?: ICalculateShippingRequestPricePackageDto) {
+export class BidNormalPricePackageItemDto implements IBidNormalPricePackageItemDto {
+  itemName!: number;
+  sourceId!: number | undefined;
+  priceType!: PriceOfferType;
+  itemPrice!: number;
+  itemVatAmount!: number;
+  itemTotalAmount!: number;
+  itemSubTotalAmountWithCommission!: number;
+  itemVatAmountWithCommission!: number;
+  itemTotalAmountWithCommission!: number;
+  itemsTotalPricePreCommissionPreVat!: number;
+  totalAmount!: number;
+  subTotalAmount!: number;
+  vatAmount!: number;
+  totalAmountWithCommission!: number;
+  subTotalAmountWithCommission!: number;
+  vatAmountWithCommission!: number;
+  commissionType!: PriceOfferCommissionType;
+  itemCommissionAmount!: number;
+  commissionPercentageOrAddValue!: number;
+  commissionAmount!: number;
+  quantity!: number;
+
+  constructor(data?: IBidNormalPricePackageItemDto) {
     if (data) {
       for (var property in data) {
         if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
@@ -72864,25 +73090,318 @@ export class CalculateShippingRequestPricePackageDto implements ICalculateShippi
     }
   }
 
-  init(_data?: any) {}
+  init(_data?: any) {
+    if (_data) {
+      this.itemName = _data['itemName'];
+      this.sourceId = _data['sourceId'];
+      this.priceType = _data['priceType'];
+      this.itemPrice = _data['itemPrice'];
+      this.itemVatAmount = _data['itemVatAmount'];
+      this.itemTotalAmount = _data['itemTotalAmount'];
+      this.itemSubTotalAmountWithCommission = _data['itemSubTotalAmountWithCommission'];
+      this.itemVatAmountWithCommission = _data['itemVatAmountWithCommission'];
+      this.itemTotalAmountWithCommission = _data['itemTotalAmountWithCommission'];
+      this.itemsTotalPricePreCommissionPreVat = _data['itemsTotalPricePreCommissionPreVat'];
+      this.totalAmount = _data['totalAmount'];
+      this.subTotalAmount = _data['subTotalAmount'];
+      this.vatAmount = _data['vatAmount'];
+      this.totalAmountWithCommission = _data['totalAmountWithCommission'];
+      this.subTotalAmountWithCommission = _data['subTotalAmountWithCommission'];
+      this.vatAmountWithCommission = _data['vatAmountWithCommission'];
+      this.commissionType = _data['commissionType'];
+      this.itemCommissionAmount = _data['itemCommissionAmount'];
+      this.commissionPercentageOrAddValue = _data['commissionPercentageOrAddValue'];
+      this.commissionAmount = _data['commissionAmount'];
+      this.quantity = _data['quantity'];
+    }
+  }
 
-  static fromJS(data: any): CalculateShippingRequestPricePackageDto {
+  static fromJS(data: any): BidNormalPricePackageItemDto {
     data = typeof data === 'object' ? data : {};
-    let result = new CalculateShippingRequestPricePackageDto();
+    let result = new BidNormalPricePackageItemDto();
     result.init(data);
     return result;
   }
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
+    data['itemName'] = this.itemName;
+    data['sourceId'] = this.sourceId;
+    data['priceType'] = this.priceType;
+    data['itemPrice'] = this.itemPrice;
+    data['itemVatAmount'] = this.itemVatAmount;
+    data['itemTotalAmount'] = this.itemTotalAmount;
+    data['itemSubTotalAmountWithCommission'] = this.itemSubTotalAmountWithCommission;
+    data['itemVatAmountWithCommission'] = this.itemVatAmountWithCommission;
+    data['itemTotalAmountWithCommission'] = this.itemTotalAmountWithCommission;
+    data['itemsTotalPricePreCommissionPreVat'] = this.itemsTotalPricePreCommissionPreVat;
+    data['totalAmount'] = this.totalAmount;
+    data['subTotalAmount'] = this.subTotalAmount;
+    data['vatAmount'] = this.vatAmount;
+    data['totalAmountWithCommission'] = this.totalAmountWithCommission;
+    data['subTotalAmountWithCommission'] = this.subTotalAmountWithCommission;
+    data['vatAmountWithCommission'] = this.vatAmountWithCommission;
+    data['commissionType'] = this.commissionType;
+    data['itemCommissionAmount'] = this.itemCommissionAmount;
+    data['commissionPercentageOrAddValue'] = this.commissionPercentageOrAddValue;
+    data['commissionAmount'] = this.commissionAmount;
+    data['quantity'] = this.quantity;
     return data;
   }
 }
 
-export interface ICalculateShippingRequestPricePackageDto {}
+export interface IBidNormalPricePackageItemDto {
+  itemName: number;
+  sourceId: number | undefined;
+  priceType: PriceOfferType;
+  itemPrice: number;
+  itemVatAmount: number;
+  itemTotalAmount: number;
+  itemSubTotalAmountWithCommission: number;
+  itemVatAmountWithCommission: number;
+  itemTotalAmountWithCommission: number;
+  itemsTotalPricePreCommissionPreVat: number;
+  totalAmount: number;
+  subTotalAmount: number;
+  vatAmount: number;
+  totalAmountWithCommission: number;
+  subTotalAmountWithCommission: number;
+  vatAmountWithCommission: number;
+  commissionType: PriceOfferCommissionType;
+  itemCommissionAmount: number;
+  commissionPercentageOrAddValue: number;
+  commissionAmount: number;
+  quantity: number;
+}
+
+export class BidNormalPricePackageDto implements IBidNormalPricePackageDto {
+  displayName!: string | undefined;
+  pricePackageId!: string | undefined;
+  truckType!: string | undefined;
+  originCityId!: number;
+  origin!: string | undefined;
+  destination!: string | undefined;
+  destinationCityId!: number;
+  transportTypeId!: number;
+  trucksTypeId!: number;
+  isMultiDrop!: boolean;
+  numberOfDrops!: number;
+  numberOfTrips!: number;
+  singleDropPrice!: number;
+  pricePerExtraDrop!: number | undefined;
+  normalPricePackageId!: number;
+  tenantId!: number;
+  items!: BidNormalPricePackageItemDto[] | undefined;
+  sourceId!: number | undefined;
+  priceType!: PriceOfferType;
+  itemPrice!: number;
+  itemVatAmount!: number;
+  itemTotalAmount!: number;
+  itemSubTotalAmountWithCommission!: number;
+  itemVatAmountWithCommission!: number;
+  itemTotalAmountWithCommission!: number;
+  itemsTotalPricePreCommissionPreVat!: number;
+  totalAmount!: number;
+  subTotalAmount!: number;
+  vatAmount!: number;
+  totalAmountWithCommission!: number;
+  subTotalAmountWithCommission!: number;
+  vatAmountWithCommission!: number;
+  commissionType!: PriceOfferCommissionType;
+  itemCommissionAmount!: number;
+  commissionPercentageOrAddValue!: number;
+  commissionAmount!: number;
+  quantity!: number;
+  itemsTotalVatAmountPreCommission!: number;
+  itemsTotalCommission!: number;
+  itemsTotalPricePostCommissionPreVat!: number;
+  itemsTotalVatPostCommission!: number;
+  detailsTotalPricePreCommissionPreVat!: number;
+  detailsTotalVatAmountPreCommission!: number;
+  detailsTotalCommission!: number;
+  detailsTotalPricePostCommissionPreVat!: number;
+  detailsTotalVatPostCommission!: number;
+  taxVat!: number;
+
+  constructor(data?: IBidNormalPricePackageDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.displayName = _data['displayName'];
+      this.pricePackageId = _data['pricePackageId'];
+      this.truckType = _data['truckType'];
+      this.originCityId = _data['originCityId'];
+      this.origin = _data['origin'];
+      this.destination = _data['destination'];
+      this.destinationCityId = _data['destinationCityId'];
+      this.transportTypeId = _data['transportTypeId'];
+      this.trucksTypeId = _data['trucksTypeId'];
+      this.isMultiDrop = _data['isMultiDrop'];
+      this.numberOfDrops = _data['numberOfDrops'];
+      this.numberOfTrips = _data['numberOfTrips'];
+      this.singleDropPrice = _data['singleDropPrice'];
+      this.pricePerExtraDrop = _data['pricePerExtraDrop'];
+      this.normalPricePackageId = _data['normalPricePackageId'];
+      this.tenantId = _data['tenantId'];
+      if (Array.isArray(_data['items'])) {
+        this.items = [] as any;
+        for (let item of _data['items']) this.items!.push(BidNormalPricePackageItemDto.fromJS(item));
+      }
+      this.sourceId = _data['sourceId'];
+      this.priceType = _data['priceType'];
+      this.itemPrice = _data['itemPrice'];
+      this.itemVatAmount = _data['itemVatAmount'];
+      this.itemTotalAmount = _data['itemTotalAmount'];
+      this.itemSubTotalAmountWithCommission = _data['itemSubTotalAmountWithCommission'];
+      this.itemVatAmountWithCommission = _data['itemVatAmountWithCommission'];
+      this.itemTotalAmountWithCommission = _data['itemTotalAmountWithCommission'];
+      this.itemsTotalPricePreCommissionPreVat = _data['itemsTotalPricePreCommissionPreVat'];
+      this.totalAmount = _data['totalAmount'];
+      this.subTotalAmount = _data['subTotalAmount'];
+      this.vatAmount = _data['vatAmount'];
+      this.totalAmountWithCommission = _data['totalAmountWithCommission'];
+      this.subTotalAmountWithCommission = _data['subTotalAmountWithCommission'];
+      this.vatAmountWithCommission = _data['vatAmountWithCommission'];
+      this.commissionType = _data['commissionType'];
+      this.itemCommissionAmount = _data['itemCommissionAmount'];
+      this.commissionPercentageOrAddValue = _data['commissionPercentageOrAddValue'];
+      this.commissionAmount = _data['commissionAmount'];
+      this.quantity = _data['quantity'];
+      this.itemsTotalVatAmountPreCommission = _data['itemsTotalVatAmountPreCommission'];
+      this.itemsTotalCommission = _data['itemsTotalCommission'];
+      this.itemsTotalPricePostCommissionPreVat = _data['itemsTotalPricePostCommissionPreVat'];
+      this.itemsTotalVatPostCommission = _data['itemsTotalVatPostCommission'];
+      this.detailsTotalPricePreCommissionPreVat = _data['detailsTotalPricePreCommissionPreVat'];
+      this.detailsTotalVatAmountPreCommission = _data['detailsTotalVatAmountPreCommission'];
+      this.detailsTotalCommission = _data['detailsTotalCommission'];
+      this.detailsTotalPricePostCommissionPreVat = _data['detailsTotalPricePostCommissionPreVat'];
+      this.detailsTotalVatPostCommission = _data['detailsTotalVatPostCommission'];
+      this.taxVat = _data['taxVat'];
+    }
+  }
+
+  static fromJS(data: any): BidNormalPricePackageDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new BidNormalPricePackageDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['displayName'] = this.displayName;
+    data['pricePackageId'] = this.pricePackageId;
+    data['truckType'] = this.truckType;
+    data['originCityId'] = this.originCityId;
+    data['origin'] = this.origin;
+    data['destination'] = this.destination;
+    data['destinationCityId'] = this.destinationCityId;
+    data['transportTypeId'] = this.transportTypeId;
+    data['trucksTypeId'] = this.trucksTypeId;
+    data['isMultiDrop'] = this.isMultiDrop;
+    data['numberOfDrops'] = this.numberOfDrops;
+    data['numberOfTrips'] = this.numberOfTrips;
+    data['singleDropPrice'] = this.singleDropPrice;
+    data['pricePerExtraDrop'] = this.pricePerExtraDrop;
+    data['normalPricePackageId'] = this.normalPricePackageId;
+    data['tenantId'] = this.tenantId;
+    if (Array.isArray(this.items)) {
+      data['items'] = [];
+      for (let item of this.items) data['items'].push(item.toJSON());
+    }
+    data['sourceId'] = this.sourceId;
+    data['priceType'] = this.priceType;
+    data['itemPrice'] = this.itemPrice;
+    data['itemVatAmount'] = this.itemVatAmount;
+    data['itemTotalAmount'] = this.itemTotalAmount;
+    data['itemSubTotalAmountWithCommission'] = this.itemSubTotalAmountWithCommission;
+    data['itemVatAmountWithCommission'] = this.itemVatAmountWithCommission;
+    data['itemTotalAmountWithCommission'] = this.itemTotalAmountWithCommission;
+    data['itemsTotalPricePreCommissionPreVat'] = this.itemsTotalPricePreCommissionPreVat;
+    data['totalAmount'] = this.totalAmount;
+    data['subTotalAmount'] = this.subTotalAmount;
+    data['vatAmount'] = this.vatAmount;
+    data['totalAmountWithCommission'] = this.totalAmountWithCommission;
+    data['subTotalAmountWithCommission'] = this.subTotalAmountWithCommission;
+    data['vatAmountWithCommission'] = this.vatAmountWithCommission;
+    data['commissionType'] = this.commissionType;
+    data['itemCommissionAmount'] = this.itemCommissionAmount;
+    data['commissionPercentageOrAddValue'] = this.commissionPercentageOrAddValue;
+    data['commissionAmount'] = this.commissionAmount;
+    data['quantity'] = this.quantity;
+    data['itemsTotalVatAmountPreCommission'] = this.itemsTotalVatAmountPreCommission;
+    data['itemsTotalCommission'] = this.itemsTotalCommission;
+    data['itemsTotalPricePostCommissionPreVat'] = this.itemsTotalPricePostCommissionPreVat;
+    data['itemsTotalVatPostCommission'] = this.itemsTotalVatPostCommission;
+    data['detailsTotalPricePreCommissionPreVat'] = this.detailsTotalPricePreCommissionPreVat;
+    data['detailsTotalVatAmountPreCommission'] = this.detailsTotalVatAmountPreCommission;
+    data['detailsTotalCommission'] = this.detailsTotalCommission;
+    data['detailsTotalPricePostCommissionPreVat'] = this.detailsTotalPricePostCommissionPreVat;
+    data['detailsTotalVatPostCommission'] = this.detailsTotalVatPostCommission;
+    data['taxVat'] = this.taxVat;
+    return data;
+  }
+}
+
+export interface IBidNormalPricePackageDto {
+  displayName: string | undefined;
+  pricePackageId: string | undefined;
+  truckType: string | undefined;
+  originCityId: number;
+  origin: string | undefined;
+  destination: string | undefined;
+  destinationCityId: number;
+  transportTypeId: number;
+  trucksTypeId: number;
+  isMultiDrop: boolean;
+  numberOfDrops: number;
+  numberOfTrips: number;
+  singleDropPrice: number;
+  pricePerExtraDrop: number | undefined;
+  normalPricePackageId: number;
+  tenantId: number;
+  items: BidNormalPricePackageItemDto[] | undefined;
+  sourceId: number | undefined;
+  priceType: PriceOfferType;
+  itemPrice: number;
+  itemVatAmount: number;
+  itemTotalAmount: number;
+  itemSubTotalAmountWithCommission: number;
+  itemVatAmountWithCommission: number;
+  itemTotalAmountWithCommission: number;
+  itemsTotalPricePreCommissionPreVat: number;
+  totalAmount: number;
+  subTotalAmount: number;
+  vatAmount: number;
+  totalAmountWithCommission: number;
+  subTotalAmountWithCommission: number;
+  vatAmountWithCommission: number;
+  commissionType: PriceOfferCommissionType;
+  itemCommissionAmount: number;
+  commissionPercentageOrAddValue: number;
+  commissionAmount: number;
+  quantity: number;
+  itemsTotalVatAmountPreCommission: number;
+  itemsTotalCommission: number;
+  itemsTotalPricePostCommissionPreVat: number;
+  itemsTotalVatPostCommission: number;
+  detailsTotalPricePreCommissionPreVat: number;
+  detailsTotalVatAmountPreCommission: number;
+  detailsTotalCommission: number;
+  detailsTotalPricePostCommissionPreVat: number;
+  detailsTotalVatPostCommission: number;
+  taxVat: number;
+}
 
 export class NormalPricePackageForShippingRequestDto implements INormalPricePackageForShippingRequestDto {
   id!: number;
+  carrierTenantId!: number;
   carrierName!: string | undefined;
   carrierRate!: number;
   pricePackageId!: string | undefined;
@@ -72902,6 +73421,7 @@ export class NormalPricePackageForShippingRequestDto implements INormalPricePack
   init(_data?: any) {
     if (_data) {
       this.id = _data['id'];
+      this.carrierTenantId = _data['carrierTenantId'];
       this.carrierName = _data['carrierName'];
       this.carrierRate = _data['carrierRate'];
       this.pricePackageId = _data['pricePackageId'];
@@ -72922,6 +73442,7 @@ export class NormalPricePackageForShippingRequestDto implements INormalPricePack
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
     data['id'] = this.id;
+    data['carrierTenantId'] = this.carrierTenantId;
     data['carrierName'] = this.carrierName;
     data['carrierRate'] = this.carrierRate;
     data['pricePackageId'] = this.pricePackageId;
@@ -72935,6 +73456,7 @@ export class NormalPricePackageForShippingRequestDto implements INormalPricePack
 
 export interface INormalPricePackageForShippingRequestDto {
   id: number;
+  carrierTenantId: number;
   carrierName: string | undefined;
   carrierRate: number;
   pricePackageId: string | undefined;
@@ -77375,6 +77897,7 @@ export enum ShippingRequestDirectRequestStatus {
 export class GetShippingRequestForPriceOfferListDto implements IGetShippingRequestForPriceOfferListDto {
   directRequestId!: number | undefined;
   offerId!: number | undefined;
+  bidNormalPricePackageId!: number | undefined;
   goodCategoryId!: number | undefined;
   name!: string | undefined;
   shipperRating!: number;
@@ -77428,6 +77951,7 @@ export class GetShippingRequestForPriceOfferListDto implements IGetShippingReque
     if (_data) {
       this.directRequestId = _data['directRequestId'];
       this.offerId = _data['offerId'];
+      this.bidNormalPricePackageId = _data['bidNormalPricePackageId'];
       this.goodCategoryId = _data['goodCategoryId'];
       this.name = _data['name'];
       this.shipperRating = _data['shipperRating'];
@@ -77482,6 +78006,7 @@ export class GetShippingRequestForPriceOfferListDto implements IGetShippingReque
     data = typeof data === 'object' ? data : {};
     data['directRequestId'] = this.directRequestId;
     data['offerId'] = this.offerId;
+    data['bidNormalPricePackageId'] = this.bidNormalPricePackageId;
     data['goodCategoryId'] = this.goodCategoryId;
     data['name'] = this.name;
     data['shipperRating'] = this.shipperRating;
@@ -77529,6 +78054,7 @@ export class GetShippingRequestForPriceOfferListDto implements IGetShippingReque
 export interface IGetShippingRequestForPriceOfferListDto {
   directRequestId: number | undefined;
   offerId: number | undefined;
+  bidNormalPricePackageId: number | undefined;
   goodCategoryId: number | undefined;
   name: string | undefined;
   shipperRating: number;
@@ -77709,6 +78235,7 @@ export interface IPriceOfferItemDto {
 export class GetShippingRequestForPricingOutput implements IGetShippingRequestForPricingOutput {
   items!: PriceOfferItemDto[] | undefined;
   offerId!: number;
+  bidNormalPricePackageId!: number | undefined;
   shipper!: string | undefined;
   shipperRating!: number;
   shipperRatingNumber!: number;
@@ -77744,6 +78271,7 @@ export class GetShippingRequestForPricingOutput implements IGetShippingRequestFo
         for (let item of _data['items']) this.items!.push(PriceOfferItemDto.fromJS(item));
       }
       this.offerId = _data['offerId'];
+      this.bidNormalPricePackageId = _data['bidNormalPricePackageId'];
       this.shipper = _data['shipper'];
       this.shipperRating = _data['shipperRating'];
       this.shipperRatingNumber = _data['shipperRatingNumber'];
@@ -77780,6 +78308,7 @@ export class GetShippingRequestForPricingOutput implements IGetShippingRequestFo
       for (let item of this.items) data['items'].push(item.toJSON());
     }
     data['offerId'] = this.offerId;
+    data['bidNormalPricePackageId'] = this.bidNormalPricePackageId;
     data['shipper'] = this.shipper;
     data['shipperRating'] = this.shipperRating;
     data['shipperRatingNumber'] = this.shipperRatingNumber;
@@ -77806,6 +78335,7 @@ export class GetShippingRequestForPricingOutput implements IGetShippingRequestFo
 export interface IGetShippingRequestForPricingOutput {
   items: PriceOfferItemDto[] | undefined;
   offerId: number;
+  bidNormalPricePackageId: number | undefined;
   shipper: string | undefined;
   shipperRating: number;
   shipperRatingNumber: number;
@@ -82319,6 +82849,7 @@ export interface IPagedResultDtoOfShippingRequestDirectRequestGetCarrirerListDto
 export class CreateShippingRequestDirectRequestInput implements ICreateShippingRequestDirectRequestInput {
   shippingRequestId!: number;
   carrierTenantId!: number;
+  bidNormalPricePackage!: BidNormalPricePackageDto;
 
   constructor(data?: ICreateShippingRequestDirectRequestInput) {
     if (data) {
@@ -82332,6 +82863,7 @@ export class CreateShippingRequestDirectRequestInput implements ICreateShippingR
     if (_data) {
       this.shippingRequestId = _data['shippingRequestId'];
       this.carrierTenantId = _data['carrierTenantId'];
+      this.bidNormalPricePackage = _data['bidNormalPricePackage'] ? BidNormalPricePackageDto.fromJS(_data['bidNormalPricePackage']) : <any>undefined;
     }
   }
 
@@ -82346,6 +82878,7 @@ export class CreateShippingRequestDirectRequestInput implements ICreateShippingR
     data = typeof data === 'object' ? data : {};
     data['shippingRequestId'] = this.shippingRequestId;
     data['carrierTenantId'] = this.carrierTenantId;
+    data['bidNormalPricePackage'] = this.bidNormalPricePackage ? this.bidNormalPricePackage.toJSON() : <any>undefined;
     return data;
   }
 }
@@ -82353,6 +82886,7 @@ export class CreateShippingRequestDirectRequestInput implements ICreateShippingR
 export interface ICreateShippingRequestDirectRequestInput {
   shippingRequestId: number;
   carrierTenantId: number;
+  bidNormalPricePackage: BidNormalPricePackageDto;
 }
 
 export class RejectShippingRequestDirectRequestInput implements IRejectShippingRequestDirectRequestInput {

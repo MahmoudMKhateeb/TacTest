@@ -77,7 +77,15 @@ namespace TACHYON.Shipping.DirectRequests
             IfCanAccessService();
             await CheckCanAddDriectRequestToCarrirer(input);
             var id = await _shippingRequestDirectRequestRepository.InsertAndGetIdAsync(ObjectMapper.Map<ShippingRequestDirectRequest>(input));
-            await _appNotifier.SendDriectRequest(GetCurrentTenant().Name, input.CarrierTenantId, id);
+
+            if (input.BidNormalPricePackage != null)
+            {
+                await _appNotifier.NotfiyCarrierWhenReceiveBidPricePackage(input.CarrierTenantId, GetCurrentTenant().Name, input.BidNormalPricePackage.PricePackageId, id);
+            }
+            else
+            {
+                await _appNotifier.SendDriectRequest(GetCurrentTenant().Name, input.CarrierTenantId, id);
+            }
         }
 
         [RequiresFeature(AppFeatures.SendDirectRequest)]

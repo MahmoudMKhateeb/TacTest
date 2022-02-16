@@ -14,7 +14,11 @@ using TACHYON.Authorization;
 using TACHYON.Cities;
 using TACHYON.Dto;
 using TACHYON.Features;
+using TACHYON.MultiTenancy;
+using TACHYON.PriceOffers;
 using TACHYON.PricePackages.Dto.NormalPricePackage;
+using TACHYON.Shipping.DirectRequests;
+using TACHYON.Shipping.DirectRequests.Dto;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Trucks.TruckCategories.TransportTypes;
 using TACHYON.Trucks.TrucksTypes;
@@ -29,13 +33,30 @@ namespace TACHYON.PricePackages
         private readonly IRepository<City> _lookup_cityRepository;
         private readonly IRepository<TransportType> _lookup_transportTypeRepository;
         private readonly IRepository<TrucksType, long> _lookup_trucksTypeRepository;
-        public NormalPricePackagesAppService(IRepository<NormalPricePackage> pricePackageRepository, IRepository<City> lookup_cityRepository, IRepository<TransportType> lookup_transportTypeRepository, IRepository<TrucksType, long> lookup_trucksTypeRepository, IRepository<ShippingRequest, long> shippingRequestRepository)
+        private readonly IRepository<BidNormalPricePackage, long> _bidNormalPricePackage;
+        private readonly IRepository<Tenant> _tenantRepository;
+        private readonly IShippingRequestDirectRequestAppService _shippingRequestDirectRequestAppService;
+        private readonly NormalPricePackageManager _normalPricePackageManager;
+        public NormalPricePackagesAppService(
+            IRepository<NormalPricePackage> pricePackageRepository,
+            IRepository<City> lookup_cityRepository,
+            IRepository<TransportType> lookup_transportTypeRepository,
+            IRepository<TrucksType, long> lookup_trucksTypeRepository,
+            IRepository<ShippingRequest, long> shippingRequestRepository,
+            NormalPricePackageManager normalPricePackageManager,
+            IRepository<Tenant> tenantRepository,
+            IShippingRequestDirectRequestAppService shippingRequestDirectRequestAppService,
+            IRepository<BidNormalPricePackage, long> bidNormalPricePackage)
         {
             _pricePackageRepository = pricePackageRepository;
             _lookup_cityRepository = lookup_cityRepository;
             _lookup_transportTypeRepository = lookup_transportTypeRepository;
             _lookup_trucksTypeRepository = lookup_trucksTypeRepository;
             _shippingRequestRepository = shippingRequestRepository;
+            _tenantRepository = tenantRepository;
+            _shippingRequestDirectRequestAppService = shippingRequestDirectRequestAppService;
+            _normalPricePackageManager = normalPricePackageManager;
+            _bidNormalPricePackage = bidNormalPricePackage;
         }
 
         #region Main Endpoints 
@@ -121,19 +142,32 @@ namespace TACHYON.PricePackages
         #endregion
 
         #region ShippingRequestPricePackage 
-        public async Task<CalculateShippingRequestPricePackageDto> CalculateShippingRequestPricePackage(int pricePackageId, long shippingRequestId)
+        public async Task<BidNormalPricePackageDto> GetBidNormalPricePackage(int bidPricePackageId, long shippingRequestId)
         {
-            var shippingRequest = await _shippingRequestRepository.GetAll().AsNoTracking()
-                       .FirstOrDefaultAsync(x => x.Id == shippingRequestId);
+            DisableTenancyFilters();
+            //need validation
+            var shippingRequest = await _shippingRequestRepository
+                .GetAll()
+                .Include(x => x.ShippingRequestVases)
+                .ThenInclude(x => x.VasFk)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == shippingRequestId);
 
-            if (shippingRequest == null) throw new UserFriendlyException();
+            var bid = await _bidNormalPricePackage
+                .GetAllIncluding(x => x.Items)
+                .FirstOrDefaultAsync(x => x.Id == bidPricePackageId);
+            var dto = ObjectMapper.Map<BidNormalPricePackageDto>(bid);
+            foreach (var item in dto.Items)
+            {
+                item.ItemName = shippingRequest.ShippingRequestVases.FirstOrDefault(x => x.VasId == item.SourceId)?.VasFk?.Name ?? "";
+            }
+            return dto;
+        }
 
-            var pricePackage = await _pricePackageRepository.GetAll().AsNoTracking()
-                       .FirstOrDefaultAsync(x => x.Id == pricePackageId);
-
-            if (pricePackage == null) throw new UserFriendlyException();
-            return new CalculateShippingRequestPricePackageDto();
-
+        public async Task<BidNormalPricePackageDto> CalculateShippingRequestPricePackage(int pricePackageId, long shippingRequestId)
+        {
+            DisableTenancyFilters();
+            return await _normalPricePackageManager.GetBidNormalPricePackageDto(pricePackageId, shippingRequestId);
         }
         public async Task<PagedResultDto<NormalPricePackageForShippingRequestDto>> GetAllPricePackagesForShippingRequest(GetAllNormalPricePackagesForShippingRequestInput input)
         {
@@ -155,17 +189,19 @@ namespace TACHYON.PricePackages
                 .OrderBy(input.Sorting ?? "id desc")
                 .PageBy(input);
             var totalCount = await filteredPricePackages.CountAsync();
-            var pricePackages = await pagedAndFilteredPricePackages.Select(p => new NormalPricePackageForShippingRequestDto
-            {
-                Id = p.Id,
-                DisplayName = p.DisplayName,
-                PricePackageId = p.PricePackageId,
-                TruckType = p.TrucksTypeFk.DisplayName,
-                Destination = p.DestinationCityFK.DisplayName,
-                Origin = p.OriginCityFK.DisplayName,
-                CarrierName = p.Tenant.Name,
-                CarrierRate = p.Tenant.Rate,
-            }).ToListAsync();
+            var pricePackages = await pagedAndFilteredPricePackages
+                .Select(p => new NormalPricePackageForShippingRequestDto
+                {
+                    Id = p.Id,
+                    DisplayName = p.DisplayName,
+                    PricePackageId = p.PricePackageId,
+                    TruckType = p.TrucksTypeFk.DisplayName,
+                    Destination = p.DestinationCityFK.DisplayName,
+                    Origin = p.OriginCityFK.DisplayName,
+                    CarrierName = p.Tenant.Name,
+                    CarrierRate = p.Tenant.Rate,
+                    CarrierTenantId = p.TenantId
+                }).ToListAsync();
 
             return new PagedResultDto<NormalPricePackageForShippingRequestDto>(
                 totalCount,
@@ -173,7 +209,21 @@ namespace TACHYON.PricePackages
             );
 
         }
+        public async Task SubmitBidByPricePackage(int pricePackageId, long shippingRequestId)
+        {
+            DisableTenancyFilters();
 
+            var pricePackageBidDto = await _normalPricePackageManager.GetBidNormalPricePackageDto(pricePackageId, shippingRequestId);
+            var carrierTenantId = await _pricePackageRepository.GetAll().Where(x => x.Id == pricePackageId).Select(x => x.TenantId).FirstOrDefaultAsync();
+
+            var directRequestInput = new CreateShippingRequestDirectRequestInput
+            {
+                CarrierTenantId = carrierTenantId,
+                ShippingRequestId = shippingRequestId,
+                BidNormalPricePackage = pricePackageBidDto
+            };
+            await _shippingRequestDirectRequestAppService.Create(directRequestInput);
+        }
         #endregion
         #endregion
 
@@ -196,6 +246,16 @@ namespace TACHYON.PricePackages
             return await _lookup_cityRepository.GetAll().AsNoTracking()
                 .Select(t => new SelectItemDto { DisplayName = t.DisplayName ?? "", Id = t.Id.ToString() }).ToListAsync();
 
+        }
+        public async Task<List<SelectItemDto>> GetCarriers()
+        {
+            return await _tenantRepository
+                            .GetAll().AsNoTracking().OrderBy("id desc")
+                            .Select(r => new SelectItemDto
+                            {
+                                Id = r.Id.ToString(),
+                                DisplayName = r.Name,
+                            }).ToListAsync();
         }
         #endregion
 
@@ -244,9 +304,6 @@ namespace TACHYON.PricePackages
             var referanceNumber = "{0}-{1}-{2}";
             return string.Format(referanceNumber, formatDate, routType, referanceId);
         }
-
-
-
         #endregion
     }
 }

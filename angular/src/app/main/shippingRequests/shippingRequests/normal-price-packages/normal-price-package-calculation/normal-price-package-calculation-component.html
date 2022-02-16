@@ -1,0 +1,165 @@
+<div
+  bsModal
+  #modal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="modal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-lg" style="max-width: 1200px">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">MatchingPricePackage</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close()">
+          <i aria-hidden="true" class="ki ki-close"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #Form="ngForm" novalidate>
+          <div class="table-responsive">
+            <table class="table table-sm table-bordered rounded">
+              <thead>
+                <tr class="table-active">
+                  <th style="width: 200px"></th>
+                  <th style="width: 150px">{{l('Qty')}}</th>
+                  <th style="width: 350px">itemPrice</th>
+                  <th>{{l('Total Price of All Trips Pre-Commission Pre-VAT')}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Trip</td>
+                  <td>{{offer.quantity}}</td>
+                  <td>{{offer.itemPrice}}</td>
+                  <td>{{offer.itemsTotalPricePreCommissionPreVat}}</td>
+                </tr>
+                <tr>
+                  <td colspan="3"></td>
+                  <td class="table-primary">{{offer.itemsTotalPricePreCommissionPreVat}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="table-responsive" *ngIf="Items.length">
+            <table class="table table-sm table-bordered rounded">
+              <thead>
+                <tr class="table-active">
+                  <th style="width: 200px">{{l('VasName')}}</th>
+                  <th style="width: 150px">{{l('Qty')}}</th>
+                  <th style="width: 350px">{{l('Price')}}</th>
+                  <th>{{l('Total Price of All VAS Pre-Commission Pre-VAT')}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of Items; let i = index">
+                  <td>{{item.itemName}}</td>
+                  <td>{{item.quantity}}</td>
+                  <td>{{item.itemPrice}}</td>
+                  <td>{{item.itemsTotalPricePreCommissionPreVat}}</td>
+                </tr>
+                <tr>
+                  <td colspan="3"></td>
+                  <td class="table-primary">{{offer.detailsTotalPricePreCommissionPreVat}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-sm table-bordered rounded">
+              <thead>
+                <tr class="table-active">
+                  <th style="width: 200px">field</th>
+                  <th style="width: 150px">Price Pre commission</th>
+                  <th style="width: 350px">Total commission</th>
+                  <th>Total Price post commission</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Trip</td>
+                  <td>{{offer.itemsTotalPricePreCommissionPreVat}}</td>
+                  <td>{{offer.itemsTotalCommission}}</td>
+                  <td>{{offer.itemsTotalPricePostCommissionPreVat}}</td>
+                </tr>
+                <tr>
+                  <td>VAS</td>
+                  <td>{{offer.detailsTotalPricePreCommissionPreVat}}</td>
+                  <td>{{offer.detailsTotalCommission}}</td>
+                  <td>{{offer.detailsTotalPricePostCommissionPreVat}}</td>
+                </tr>
+                <tr>
+                  <td colspan="3"></td>
+                  <td class="table-primary">{{offer.subTotalAmountWithCommission}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-sm table-bordered rounded">
+              <thead>
+                <tr class="table-active">
+                  <th style="width: 350px"></th>
+                  <th style="width: 350px">Pre commission</th>
+                  <th>Post commission</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>total VAT for Trip</td>
+                  <td>{{offer.itemsTotalVatAmountPreCommission}}</td>
+                  <td>{{offer.itemsTotalVatPostCommission}}</td>
+                </tr>
+                <tr>
+                  <td>total VAT for VAS</td>
+                  <td>{{offer.detailsTotalVatAmountPreCommission}}</td>
+                  <td>{{offer.detailsTotalVatPostCommission}}</td>
+                </tr>
+                <tr>
+                  <td colspan="2"></td>
+
+                  <td class="table-primary">{{offer.vatAmountWithCommission}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-sm table-bordered rounded">
+              <thead>
+                <tr class="table-active">
+                  <th style="width: 350px"></th>
+                  <th style="width: 350px"></th>
+                  <th>Total Price Post Vat</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td class="table-primary">{{offer.totalAmountWithCommission}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="sendOffer">
+            <button
+              type="submit"
+              class="btn btn-primary"
+              (click)="submit(shippingRequestId,pricePackageId)"
+              [buttonBusy]="saving"
+              [busyText]="l('SavingWithThreeDot' | localize)"
+            >
+              <i class="fa fa-save"></i> <span>{{ 'SendBid' | localize }}</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

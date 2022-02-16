@@ -7,6 +7,7 @@ namespace TACHYON.PricePackages.Dto.NormalPricePackage
     public class NormalPricePackageForShippingRequestDto
     {
         public int Id { get; set; }
+        public int CarrierTenantId { get; set; }
         public string CarrierName { get; set; }
         public decimal CarrierRate { get; set; }
         public string PricePackageId { get; set; }

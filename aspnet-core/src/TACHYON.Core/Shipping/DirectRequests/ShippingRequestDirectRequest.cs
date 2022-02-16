@@ -2,18 +2,21 @@
 using Abp.Domain.Entities.Auditing;
 using System.ComponentModel.DataAnnotations.Schema;
 using TACHYON.MultiTenancy;
+using TACHYON.PricePackages;
 using TACHYON.Shipping.ShippingRequests;
 
 namespace TACHYON.Shipping.DirectRequests
 {
     [Table("ShippingRequestDirectRequests")]
 
-    public class ShippingRequestDirectRequest: FullAuditedEntity<long>, IMustHaveTenant
+    public class ShippingRequestDirectRequest : FullAuditedEntity<long>, IMustHaveTenant
     {
         public int TenantId { get; set; }
         [ForeignKey(nameof(TenantId))]
         public Tenant Tenant { get; set; }
-
+        public long? BidNormalPricePackageId { get; set; }
+        [ForeignKey(nameof(BidNormalPricePackageId))]
+        public BidNormalPricePackage BidNormalPricePackageFK { get; set; }
         public int CarrierTenantId { get; set; }
 
         [ForeignKey(nameof(CarrierTenantId))]
