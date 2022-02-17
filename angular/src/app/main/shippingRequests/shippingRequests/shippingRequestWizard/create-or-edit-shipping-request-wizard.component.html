@@ -909,6 +909,36 @@
                       </div>
                     </div>
                     <div>
+                      <div class="btn-group" dropdown #dropdownAddPage="bs-dropdown" [dropup]="true" [insideClick]="true" *ngIf="activeStep > 1">
+                        <button
+                          dropdownToggle
+                          type="button"
+                          class="btn btn-light-danger font-weight-bold px-9 py-4 dropdown-toggle btn-elevate-hover mr-2"
+                          aria-controls="dropdown-basic"
+                        >
+                          <i class="fa fa-plus"></i> {{ 'Template' | localize }}<span class="caret"></span>
+                        </button>
+                        <ul *dropdownMenu class="dropdown-menu p-2" role="menu" aria-labelledby="button-basic">
+                          <li role="menuitem">
+                            <a
+                              class="btn btn-icon btn-xs float-right"
+                              placement="top"
+                              ngbPopover="{{ l('TemplateHelpingText') }}"
+                              popoverTitle="{{ l('ًWhatIsTemplate') }}"
+                            >
+                              <i class="flaticon-exclamation"></i>
+                            </a>
+
+                            <div class="form-group">
+                              <label for="TemplateNameInput">{{ 'TemplateName' | localize }}</label>
+                              <input type="text" class="form-control" placeholder="" [(ngModel)]="templateName" />
+                            </div>
+                            <button class="btn btn-sm btn-block btn-info" (click)="SaveOrEditEntityTemplate()">
+                              {{ templateId > 0 ? l('Update') : l('Save') }}
+                            </button>
+                          </li>
+                        </ul>
+                      </div>
                       <button (click)="onSubmit()" class="btn btn-success font-weight-bold text-uppercase px-9 py-4" data-wizard-type="action-submit">
                         {{ l('Publish') }}
                       </button>
