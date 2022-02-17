@@ -16306,7 +16306,7 @@ export class ShippingRequestDriverServiceProxy {
    * @param id (optional)
    * @return Success
    */
-  getRoutPointForMobile(id: number | undefined): Observable<DriverRoutPoint> {
+  getRoutPointForMobile(id: number | undefined): Observable<DriverRoutPointDto> {
     let url_ = this.baseUrl + '/api/services/app/ShippingRequestDriver/GetRoutPointForMobile?';
     if (id === null) throw new Error("The parameter 'id' cannot be null.");
     else if (id !== undefined) url_ += 'id=' + encodeURIComponent('' + id) + '&';
@@ -16333,14 +16333,14 @@ export class ShippingRequestDriverServiceProxy {
             try {
               return this.processGetRoutPointForMobile(<any>response_);
             } catch (e) {
-              return <Observable<DriverRoutPoint>>(<any>_observableThrow(e));
+              return <Observable<DriverRoutPointDto>>(<any>_observableThrow(e));
             }
-          } else return <Observable<DriverRoutPoint>>(<any>_observableThrow(response_));
+          } else return <Observable<DriverRoutPointDto>>(<any>_observableThrow(response_));
         })
       );
   }
 
-  protected processGetRoutPointForMobile(response: HttpResponseBase): Observable<DriverRoutPoint> {
+  protected processGetRoutPointForMobile(response: HttpResponseBase): Observable<DriverRoutPointDto> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -16355,7 +16355,7 @@ export class ShippingRequestDriverServiceProxy {
         _observableMergeMap((_responseText) => {
           let result200: any = null;
           let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
-          result200 = DriverRoutPoint.fromJS(resultData200);
+          result200 = DriverRoutPointDto.fromJS(resultData200);
           return _observableOf(result200);
         })
       );
@@ -16366,7 +16366,7 @@ export class ShippingRequestDriverServiceProxy {
         })
       );
     }
-    return _observableOf<DriverRoutPoint>(<any>null);
+    return _observableOf<DriverRoutPointDto>(<any>null);
   }
 
   /**
@@ -29114,7 +29114,6 @@ export class PriceOfferServiceProxy {
   }
 
   /**
-<<<<<<< HEAD
    * @param id (optional)
    * @return Success
    */
@@ -29182,8 +29181,6 @@ export class PriceOfferServiceProxy {
   }
 
   /**
-=======
->>>>>>> TAC-2671-validation-error-when-adding-price
    * @param body (optional)
    * @return Success
    */
@@ -33681,10 +33678,10 @@ export class RoutStepsServiceProxy {
    * @param shippingRequestId (optional)
    * @return Success
    */
-  getAllFacilitiesByCityAndTenantForDropdown(shippingRequestId: number | null | undefined): Observable<FacilityForDropdownDto[]> {
+  getAllFacilitiesByCityAndTenantForDropdown(shippingRequestId: number | undefined): Observable<FacilityForDropdownDto[]> {
     let url_ = this.baseUrl + '/api/services/app/RoutSteps/GetAllFacilitiesByCityAndTenantForDropdown?';
-    if (shippingRequestId !== undefined && shippingRequestId !== null)
-      url_ += 'shippingRequestId=' + encodeURIComponent('' + shippingRequestId) + '&';
+    if (shippingRequestId === null) throw new Error("The parameter 'shippingRequestId' cannot be null.");
+    else if (shippingRequestId !== undefined) url_ += 'shippingRequestId=' + encodeURIComponent('' + shippingRequestId) + '&';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -47887,7 +47884,6 @@ export class TrackingServiceProxy {
     }
     return _observableOf<GetAllUploadedFileDto[]>(<any>null);
   }
-<<<<<<< HEAD
 
   /**
    * @param id (optional)
@@ -48022,8 +48018,6 @@ export class TrackingServiceProxy {
     }
     return _observableOf<string>(<any>null);
   }
-=======
->>>>>>> TAC-2671-validation-error-when-adding-price
 }
 
 @Injectable()
@@ -49872,11 +49866,7 @@ export class TransportTypesServiceProxy {
     sorting: string | null | undefined,
     skipCount: number | undefined,
     maxResultCount: number | undefined
-<<<<<<< HEAD
   ): Observable<PagedResultDtoOfTransportTypeDto> {
-=======
-  ): Observable<PagedResultDtoOfGetTransportTypeForViewDto> {
->>>>>>> TAC-2671-validation-error-when-adding-price
     let url_ = this.baseUrl + '/api/services/app/TransportTypes/GetAll?';
     if (filter !== undefined && filter !== null) url_ += 'Filter=' + encodeURIComponent('' + filter) + '&';
     if (displayNameFilter !== undefined && displayNameFilter !== null)
@@ -49909,24 +49899,14 @@ export class TransportTypesServiceProxy {
             try {
               return this.processGetAll(<any>response_);
             } catch (e) {
-<<<<<<< HEAD
               return <Observable<PagedResultDtoOfTransportTypeDto>>(<any>_observableThrow(e));
             }
           } else return <Observable<PagedResultDtoOfTransportTypeDto>>(<any>_observableThrow(response_));
-=======
-              return <Observable<PagedResultDtoOfGetTransportTypeForViewDto>>(<any>_observableThrow(e));
-            }
-          } else return <Observable<PagedResultDtoOfGetTransportTypeForViewDto>>(<any>_observableThrow(response_));
->>>>>>> TAC-2671-validation-error-when-adding-price
         })
       );
   }
 
-<<<<<<< HEAD
   protected processGetAll(response: HttpResponseBase): Observable<PagedResultDtoOfTransportTypeDto> {
-=======
-  protected processGetAll(response: HttpResponseBase): Observable<PagedResultDtoOfGetTransportTypeForViewDto> {
->>>>>>> TAC-2671-validation-error-when-adding-price
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -49941,11 +49921,7 @@ export class TransportTypesServiceProxy {
         _observableMergeMap((_responseText) => {
           let result200: any = null;
           let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
-<<<<<<< HEAD
           result200 = PagedResultDtoOfTransportTypeDto.fromJS(resultData200);
-=======
-          result200 = PagedResultDtoOfGetTransportTypeForViewDto.fromJS(resultData200);
->>>>>>> TAC-2671-validation-error-when-adding-price
           return _observableOf(result200);
         })
       );
@@ -49956,11 +49932,7 @@ export class TransportTypesServiceProxy {
         })
       );
     }
-<<<<<<< HEAD
     return _observableOf<PagedResultDtoOfTransportTypeDto>(<any>null);
-=======
-    return _observableOf<PagedResultDtoOfGetTransportTypeForViewDto>(<any>null);
->>>>>>> TAC-2671-validation-error-when-adding-price
   }
 
   /**
@@ -62800,10 +62772,6 @@ export class SelectItemDto implements ISelectItemDto {
   id!: string | undefined;
   isOther!: boolean | undefined;
   displayName!: string | undefined;
-<<<<<<< HEAD
-=======
-  translatedDisplayName!: string | undefined;
->>>>>>> TAC-2671-validation-error-when-adding-price
 
   constructor(data?: ISelectItemDto) {
     if (data) {
@@ -62818,10 +62786,6 @@ export class SelectItemDto implements ISelectItemDto {
       this.id = _data['id'];
       this.isOther = _data['isOther'];
       this.displayName = _data['displayName'];
-<<<<<<< HEAD
-=======
-      this.translatedDisplayName = _data['translatedDisplayName'];
->>>>>>> TAC-2671-validation-error-when-adding-price
     }
   }
 
@@ -62837,10 +62801,6 @@ export class SelectItemDto implements ISelectItemDto {
     data['id'] = this.id;
     data['isOther'] = this.isOther;
     data['displayName'] = this.displayName;
-<<<<<<< HEAD
-=======
-    data['translatedDisplayName'] = this.translatedDisplayName;
->>>>>>> TAC-2671-validation-error-when-adding-price
     return data;
   }
 }
@@ -62849,10 +62809,6 @@ export interface ISelectItemDto {
   id: string | undefined;
   isOther: boolean | undefined;
   displayName: string | undefined;
-<<<<<<< HEAD
-=======
-  translatedDisplayName: string | undefined;
->>>>>>> TAC-2671-validation-error-when-adding-price
 }
 
 export class ShippingRequestAccidentReasonLookupDto implements IShippingRequestAccidentReasonLookupDto {
@@ -73864,10 +73820,6 @@ export class TrucksTypeSelectItemDto implements ITrucksTypeSelectItemDto {
   id!: string | undefined;
   isOther!: boolean | undefined;
   displayName!: string | undefined;
-<<<<<<< HEAD
-=======
-  translatedDisplayName!: string | undefined;
->>>>>>> TAC-2671-validation-error-when-adding-price
 
   constructor(data?: ITrucksTypeSelectItemDto) {
     if (data) {
@@ -73882,10 +73834,6 @@ export class TrucksTypeSelectItemDto implements ITrucksTypeSelectItemDto {
       this.id = _data['id'];
       this.isOther = _data['isOther'];
       this.displayName = _data['displayName'];
-<<<<<<< HEAD
-=======
-      this.translatedDisplayName = _data['translatedDisplayName'];
->>>>>>> TAC-2671-validation-error-when-adding-price
     }
   }
 
@@ -73901,10 +73849,6 @@ export class TrucksTypeSelectItemDto implements ITrucksTypeSelectItemDto {
     data['id'] = this.id;
     data['isOther'] = this.isOther;
     data['displayName'] = this.displayName;
-<<<<<<< HEAD
-=======
-    data['translatedDisplayName'] = this.translatedDisplayName;
->>>>>>> TAC-2671-validation-error-when-adding-price
     return data;
   }
 }
@@ -73913,10 +73857,6 @@ export interface ITrucksTypeSelectItemDto {
   id: string | undefined;
   isOther: boolean | undefined;
   displayName: string | undefined;
-<<<<<<< HEAD
-=======
-  translatedDisplayName: string | undefined;
->>>>>>> TAC-2671-validation-error-when-adding-price
 }
 
 export class OfferTrailerTypeLookupTableDto implements IOfferTrailerTypeLookupTableDto {
@@ -77881,11 +77821,8 @@ export class GetShippingRequestForPricingOutput implements IGetShippingRequestFo
   offerId!: number;
   shipper!: string | undefined;
   shipperRating!: number;
-<<<<<<< HEAD
   facilitiesRatingAverage!: number;
   facilitiesRatingCount!: number;
-=======
->>>>>>> TAC-2671-validation-error-when-adding-price
   shipperRatingNumber!: number;
   creationTime!: moment.Moment;
   isTachyonDeal!: boolean;
@@ -77921,11 +77858,8 @@ export class GetShippingRequestForPricingOutput implements IGetShippingRequestFo
       this.offerId = _data['offerId'];
       this.shipper = _data['shipper'];
       this.shipperRating = _data['shipperRating'];
-<<<<<<< HEAD
       this.facilitiesRatingAverage = _data['facilitiesRatingAverage'];
       this.facilitiesRatingCount = _data['facilitiesRatingCount'];
-=======
->>>>>>> TAC-2671-validation-error-when-adding-price
       this.shipperRatingNumber = _data['shipperRatingNumber'];
       this.creationTime = _data['creationTime'] ? moment(_data['creationTime'].toString()) : <any>undefined;
       this.isTachyonDeal = _data['isTachyonDeal'];
@@ -77962,11 +77896,8 @@ export class GetShippingRequestForPricingOutput implements IGetShippingRequestFo
     data['offerId'] = this.offerId;
     data['shipper'] = this.shipper;
     data['shipperRating'] = this.shipperRating;
-<<<<<<< HEAD
     data['facilitiesRatingAverage'] = this.facilitiesRatingAverage;
     data['facilitiesRatingCount'] = this.facilitiesRatingCount;
-=======
->>>>>>> TAC-2671-validation-error-when-adding-price
     data['shipperRatingNumber'] = this.shipperRatingNumber;
     data['creationTime'] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
     data['isTachyonDeal'] = this.isTachyonDeal;
@@ -77993,11 +77924,8 @@ export interface IGetShippingRequestForPricingOutput {
   offerId: number;
   shipper: string | undefined;
   shipperRating: number;
-<<<<<<< HEAD
   facilitiesRatingAverage: number;
   facilitiesRatingCount: number;
-=======
->>>>>>> TAC-2671-validation-error-when-adding-price
   shipperRatingNumber: number;
   creationTime: moment.Moment;
   isTachyonDeal: boolean;
@@ -78313,15 +78241,9 @@ export interface ITenantProfileInformationForViewDto {
 
 export class UpdateTenantProfileInformationInputDto implements IUpdateTenantProfileInformationInputDto {
   companyName!: string;
-<<<<<<< HEAD
-  companyInfo!: string;
-  companyEmailAddress!: string;
-  companySite!: string;
-=======
   companyInfo!: string | undefined;
   companyEmailAddress!: string;
   companySite!: string | undefined;
->>>>>>> TAC-2671-validation-error-when-adding-price
   companyPhone!: string;
   id!: number;
 
@@ -78365,15 +78287,9 @@ export class UpdateTenantProfileInformationInputDto implements IUpdateTenantProf
 
 export interface IUpdateTenantProfileInformationInputDto {
   companyName: string;
-<<<<<<< HEAD
-  companyInfo: string;
-  companyEmailAddress: string;
-  companySite: string;
-=======
   companyInfo: string | undefined;
   companyEmailAddress: string;
   companySite: string | undefined;
->>>>>>> TAC-2671-validation-error-when-adding-price
   companyPhone: string;
   id: number;
 }
@@ -79986,10 +79902,7 @@ export class RoutPointDto implements IRoutPointDto {
   pickingType!: PickingType;
   facilityId!: number;
   facility!: string | undefined;
-<<<<<<< HEAD
   facilityRate!: number;
-=======
->>>>>>> TAC-2671-validation-error-when-adding-price
   longitude!: number;
   latitude!: number;
   shippingRequestTripId!: number;
@@ -80026,10 +79939,7 @@ export class RoutPointDto implements IRoutPointDto {
       this.pickingType = _data['pickingType'];
       this.facilityId = _data['facilityId'];
       this.facility = _data['facility'];
-<<<<<<< HEAD
       this.facilityRate = _data['facilityRate'];
-=======
->>>>>>> TAC-2671-validation-error-when-adding-price
       this.longitude = _data['longitude'];
       this.latitude = _data['latitude'];
       this.shippingRequestTripId = _data['shippingRequestTripId'];
@@ -80070,10 +79980,7 @@ export class RoutPointDto implements IRoutPointDto {
     data['pickingType'] = this.pickingType;
     data['facilityId'] = this.facilityId;
     data['facility'] = this.facility;
-<<<<<<< HEAD
     data['facilityRate'] = this.facilityRate;
-=======
->>>>>>> TAC-2671-validation-error-when-adding-price
     data['longitude'] = this.longitude;
     data['latitude'] = this.latitude;
     data['shippingRequestTripId'] = this.shippingRequestTripId;
@@ -80107,10 +80014,7 @@ export interface IRoutPointDto {
   pickingType: PickingType;
   facilityId: number;
   facility: string | undefined;
-<<<<<<< HEAD
   facilityRate: number;
-=======
->>>>>>> TAC-2671-validation-error-when-adding-price
   longitude: number;
   latitude: number;
   shippingRequestTripId: number;
@@ -81757,7 +81661,6 @@ export interface IUpdateUserSignInTokenOutput {
   signInToken: string | undefined;
   encodedUserId: string | undefined;
   encodedTenantId: string | undefined;
-<<<<<<< HEAD
 }
 
 export class RequestsListPerMonthDto implements IRequestsListPerMonthDto {
@@ -81854,104 +81757,6 @@ export interface IAcceptedAndRejectedRequestsListDto {
   rejectedRequests: RequestsListPerMonthDto[] | undefined;
 }
 
-=======
-}
-
-export class RequestsListPerMonthDto implements IRequestsListPerMonthDto {
-  year!: number;
-  month!: number;
-  count!: number;
-
-  constructor(data?: IRequestsListPerMonthDto) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(_data?: any) {
-    if (_data) {
-      this.year = _data['year'];
-      this.month = _data['month'];
-      this.count = _data['count'];
-    }
-  }
-
-  static fromJS(data: any): RequestsListPerMonthDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new RequestsListPerMonthDto();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['year'] = this.year;
-    data['month'] = this.month;
-    data['count'] = this.count;
-    return data;
-  }
-}
-
-export interface IRequestsListPerMonthDto {
-  year: number;
-  month: number;
-  count: number;
-}
-
-export class AcceptedAndRejectedRequestsListDto implements IAcceptedAndRejectedRequestsListDto {
-  acceptedRequests!: RequestsListPerMonthDto[] | undefined;
-  rejectedRequests!: RequestsListPerMonthDto[] | undefined;
-
-  constructor(data?: IAcceptedAndRejectedRequestsListDto) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(_data?: any) {
-    if (_data) {
-      if (Array.isArray(_data['acceptedRequests'])) {
-        this.acceptedRequests = [] as any;
-        for (let item of _data['acceptedRequests']) this.acceptedRequests!.push(RequestsListPerMonthDto.fromJS(item));
-      }
-      if (Array.isArray(_data['rejectedRequests'])) {
-        this.rejectedRequests = [] as any;
-        for (let item of _data['rejectedRequests']) this.rejectedRequests!.push(RequestsListPerMonthDto.fromJS(item));
-      }
-    }
-  }
-
-  static fromJS(data: any): AcceptedAndRejectedRequestsListDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new AcceptedAndRejectedRequestsListDto();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    if (Array.isArray(this.acceptedRequests)) {
-      data['acceptedRequests'] = [];
-      for (let item of this.acceptedRequests) data['acceptedRequests'].push(item.toJSON());
-    }
-    if (Array.isArray(this.rejectedRequests)) {
-      data['rejectedRequests'] = [];
-      for (let item of this.rejectedRequests) data['rejectedRequests'].push(item.toJSON());
-    }
-    return data;
-  }
-}
-
-export interface IAcceptedAndRejectedRequestsListDto {
-  acceptedRequests: RequestsListPerMonthDto[] | undefined;
-  rejectedRequests: RequestsListPerMonthDto[] | undefined;
-}
-
->>>>>>> TAC-2671-validation-error-when-adding-price
 export class MostCarriersWorksListDto implements IMostCarriersWorksListDto {
   id!: number | undefined;
   carrierName!: string | undefined;
@@ -82848,10 +82653,7 @@ export enum RoutePointStatus {
   Delivered = 11,
   Issue = 12,
   DeliveryNoteUploded = 13,
-<<<<<<< HEAD
   UplodeGoodPicture = 14,
-=======
->>>>>>> TAC-2671-validation-error-when-adding-price
 }
 
 export enum RoutePointCompletedStatus {
@@ -83389,10 +83191,7 @@ export class RoutPointsMobileDto implements IRoutPointsMobileDto {
   isActive!: boolean;
   isComplete!: boolean;
   isResolve!: boolean;
-<<<<<<< HEAD
   isGoodPictureUploaded!: boolean;
-=======
->>>>>>> TAC-2671-validation-error-when-adding-price
   isPodUploaded!: boolean;
   canGoToNextLocation!: boolean;
   lat!: number;
@@ -83417,10 +83216,7 @@ export class RoutPointsMobileDto implements IRoutPointsMobileDto {
       this.isActive = _data['isActive'];
       this.isComplete = _data['isComplete'];
       this.isResolve = _data['isResolve'];
-<<<<<<< HEAD
       this.isGoodPictureUploaded = _data['isGoodPictureUploaded'];
-=======
->>>>>>> TAC-2671-validation-error-when-adding-price
       this.isPodUploaded = _data['isPodUploaded'];
       this.canGoToNextLocation = _data['canGoToNextLocation'];
       this.lat = _data['lat'];
@@ -83449,10 +83245,7 @@ export class RoutPointsMobileDto implements IRoutPointsMobileDto {
     data['isActive'] = this.isActive;
     data['isComplete'] = this.isComplete;
     data['isResolve'] = this.isResolve;
-<<<<<<< HEAD
     data['isGoodPictureUploaded'] = this.isGoodPictureUploaded;
-=======
->>>>>>> TAC-2671-validation-error-when-adding-price
     data['isPodUploaded'] = this.isPodUploaded;
     data['canGoToNextLocation'] = this.canGoToNextLocation;
     data['lat'] = this.lat;
@@ -83474,10 +83267,7 @@ export interface IRoutPointsMobileDto {
   isActive: boolean;
   isComplete: boolean;
   isResolve: boolean;
-<<<<<<< HEAD
   isGoodPictureUploaded: boolean;
-=======
->>>>>>> TAC-2671-validation-error-when-adding-price
   isPodUploaded: boolean;
   canGoToNextLocation: boolean;
   lat: number;
@@ -83486,11 +83276,15 @@ export interface IRoutPointsMobileDto {
   id: number;
 }
 
-export class DriverRoutPoint implements IDriverRoutPoint {
+export class DriverRoutPointDto implements IDriverRoutPointDto {
   tripStatus!: ShippingRequestTripStatus;
+  tripId!: number;
+  waybillNumber!: number | undefined;
+  hasAccident!: boolean;
+  shippingRequestId!: number;
   routPoint!: RoutPointsMobileDto[] | undefined;
 
-  constructor(data?: IDriverRoutPoint) {
+  constructor(data?: IDriverRoutPointDto) {
     if (data) {
       for (var property in data) {
         if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
@@ -83501,6 +83295,10 @@ export class DriverRoutPoint implements IDriverRoutPoint {
   init(_data?: any) {
     if (_data) {
       this.tripStatus = _data['tripStatus'];
+      this.tripId = _data['tripId'];
+      this.waybillNumber = _data['waybillNumber'];
+      this.hasAccident = _data['hasAccident'];
+      this.shippingRequestId = _data['shippingRequestId'];
       if (Array.isArray(_data['routPoint'])) {
         this.routPoint = [] as any;
         for (let item of _data['routPoint']) this.routPoint!.push(RoutPointsMobileDto.fromJS(item));
@@ -83508,9 +83306,9 @@ export class DriverRoutPoint implements IDriverRoutPoint {
     }
   }
 
-  static fromJS(data: any): DriverRoutPoint {
+  static fromJS(data: any): DriverRoutPointDto {
     data = typeof data === 'object' ? data : {};
-    let result = new DriverRoutPoint();
+    let result = new DriverRoutPointDto();
     result.init(data);
     return result;
   }
@@ -83518,6 +83316,10 @@ export class DriverRoutPoint implements IDriverRoutPoint {
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
     data['tripStatus'] = this.tripStatus;
+    data['tripId'] = this.tripId;
+    data['waybillNumber'] = this.waybillNumber;
+    data['hasAccident'] = this.hasAccident;
+    data['shippingRequestId'] = this.shippingRequestId;
     if (Array.isArray(this.routPoint)) {
       data['routPoint'] = [];
       for (let item of this.routPoint) data['routPoint'].push(item.toJSON());
@@ -83526,8 +83328,12 @@ export class DriverRoutPoint implements IDriverRoutPoint {
   }
 }
 
-export interface IDriverRoutPoint {
+export interface IDriverRoutPointDto {
   tripStatus: ShippingRequestTripStatus;
+  tripId: number;
+  waybillNumber: number | undefined;
+  hasAccident: boolean;
+  shippingRequestId: number;
   routPoint: RoutPointsMobileDto[] | undefined;
 }
 
@@ -83703,7 +83509,6 @@ export interface IShippingRequestTripDriverStartInputDto {
   lat: number;
   lng: number;
   id: number;
-<<<<<<< HEAD
 }
 
 export class InvokeStatusInputDto implements IInvokeStatusInputDto {
@@ -83749,53 +83554,6 @@ export interface IInvokeStatusInputDto {
   id: number;
 }
 
-=======
-}
-
-export class InvokeStatusInputDto implements IInvokeStatusInputDto {
-  action!: string;
-  code!: string | undefined;
-  id!: number;
-
-  constructor(data?: IInvokeStatusInputDto) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(_data?: any) {
-    if (_data) {
-      this.action = _data['action'];
-      this.code = _data['code'];
-      this.id = _data['id'];
-    }
-  }
-
-  static fromJS(data: any): InvokeStatusInputDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new InvokeStatusInputDto();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['action'] = this.action;
-    data['code'] = this.code;
-    data['id'] = this.id;
-    return data;
-  }
-}
-
-export interface IInvokeStatusInputDto {
-  action: string;
-  code: string | undefined;
-  id: number;
-}
-
->>>>>>> TAC-2671-validation-error-when-adding-price
 export class CreateDriverLocationLogInput implements ICreateDriverLocationLogInput {
   tripId!: number | undefined;
   longitude!: number;
@@ -85629,7 +85387,6 @@ export interface IUpdatePriceInput {
 export class AcceptShippingRequestPriceInput implements IAcceptShippingRequestPriceInput {
   id!: number;
   isPriceAccepted!: boolean;
-<<<<<<< HEAD
 
   constructor(data?: IAcceptShippingRequestPriceInput) {
     if (data) {
@@ -85653,31 +85410,6 @@ export class AcceptShippingRequestPriceInput implements IAcceptShippingRequestPr
     return result;
   }
 
-=======
-
-  constructor(data?: IAcceptShippingRequestPriceInput) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(_data?: any) {
-    if (_data) {
-      this.id = _data['id'];
-      this.isPriceAccepted = _data['isPriceAccepted'];
-    }
-  }
-
-  static fromJS(data: any): AcceptShippingRequestPriceInput {
-    data = typeof data === 'object' ? data : {};
-    let result = new AcceptShippingRequestPriceInput();
-    result.init(data);
-    return result;
-  }
-
->>>>>>> TAC-2671-validation-error-when-adding-price
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
     data['id'] = this.id;
@@ -85737,7 +85469,6 @@ export interface ICarriersForDropDownDto {
 export class ShippersForDropDownDto implements IShippersForDropDownDto {
   id!: number;
   displayName!: string | undefined;
-<<<<<<< HEAD
 
   constructor(data?: IShippersForDropDownDto) {
     if (data) {
@@ -85761,31 +85492,6 @@ export class ShippersForDropDownDto implements IShippersForDropDownDto {
     return result;
   }
 
-=======
-
-  constructor(data?: IShippersForDropDownDto) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(_data?: any) {
-    if (_data) {
-      this.id = _data['id'];
-      this.displayName = _data['displayName'];
-    }
-  }
-
-  static fromJS(data: any): ShippersForDropDownDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new ShippersForDropDownDto();
-    result.init(data);
-    return result;
-  }
-
->>>>>>> TAC-2671-validation-error-when-adding-price
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
     data['id'] = this.id;
@@ -88798,10 +88504,6 @@ export class TenantCountryLookupTableDto implements ITenantCountryLookupTableDto
   id!: string | undefined;
   isOther!: boolean | undefined;
   displayName!: string | undefined;
-<<<<<<< HEAD
-=======
-  translatedDisplayName!: string | undefined;
->>>>>>> TAC-2671-validation-error-when-adding-price
 
   constructor(data?: ITenantCountryLookupTableDto) {
     if (data) {
@@ -88816,10 +88518,6 @@ export class TenantCountryLookupTableDto implements ITenantCountryLookupTableDto
       this.id = _data['id'];
       this.isOther = _data['isOther'];
       this.displayName = _data['displayName'];
-<<<<<<< HEAD
-=======
-      this.translatedDisplayName = _data['translatedDisplayName'];
->>>>>>> TAC-2671-validation-error-when-adding-price
     }
   }
 
@@ -88835,10 +88533,6 @@ export class TenantCountryLookupTableDto implements ITenantCountryLookupTableDto
     data['id'] = this.id;
     data['isOther'] = this.isOther;
     data['displayName'] = this.displayName;
-<<<<<<< HEAD
-=======
-    data['translatedDisplayName'] = this.translatedDisplayName;
->>>>>>> TAC-2671-validation-error-when-adding-price
     return data;
   }
 }
@@ -88847,20 +88541,12 @@ export interface ITenantCountryLookupTableDto {
   id: string | undefined;
   isOther: boolean | undefined;
   displayName: string | undefined;
-<<<<<<< HEAD
-=======
-  translatedDisplayName: string | undefined;
->>>>>>> TAC-2671-validation-error-when-adding-price
 }
 
 export class TenantCityLookupTableDto implements ITenantCityLookupTableDto {
   id!: string | undefined;
   isOther!: boolean | undefined;
   displayName!: string | undefined;
-<<<<<<< HEAD
-=======
-  translatedDisplayName!: string | undefined;
->>>>>>> TAC-2671-validation-error-when-adding-price
 
   constructor(data?: ITenantCityLookupTableDto) {
     if (data) {
@@ -88875,10 +88561,6 @@ export class TenantCityLookupTableDto implements ITenantCityLookupTableDto {
       this.id = _data['id'];
       this.isOther = _data['isOther'];
       this.displayName = _data['displayName'];
-<<<<<<< HEAD
-=======
-      this.translatedDisplayName = _data['translatedDisplayName'];
->>>>>>> TAC-2671-validation-error-when-adding-price
     }
   }
 
@@ -88894,10 +88576,6 @@ export class TenantCityLookupTableDto implements ITenantCityLookupTableDto {
     data['id'] = this.id;
     data['isOther'] = this.isOther;
     data['displayName'] = this.displayName;
-<<<<<<< HEAD
-=======
-    data['translatedDisplayName'] = this.translatedDisplayName;
->>>>>>> TAC-2671-validation-error-when-adding-price
     return data;
   }
 }
@@ -88906,10 +88584,6 @@ export interface ITenantCityLookupTableDto {
   id: string | undefined;
   isOther: boolean | undefined;
   displayName: string | undefined;
-<<<<<<< HEAD
-=======
-  translatedDisplayName: string | undefined;
->>>>>>> TAC-2671-validation-error-when-adding-price
 }
 
 export class TenantCarriersListDto implements ITenantCarriersListDto {
@@ -89330,13 +89004,6 @@ export interface IGetTopStatsOutput {
 
 export class GetProfitShareOutput implements IGetProfitShareOutput {
   profitShares!: number[] | undefined;
-<<<<<<< HEAD
-
-  constructor(data?: IGetProfitShareOutput) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
-=======
 
   constructor(data?: IGetProfitShareOutput) {
     if (data) {
@@ -89346,17 +89013,6 @@ export class GetProfitShareOutput implements IGetProfitShareOutput {
     }
   }
 
-  init(_data?: any) {
-    if (_data) {
-      if (Array.isArray(_data['profitShares'])) {
-        this.profitShares = [] as any;
-        for (let item of _data['profitShares']) this.profitShares!.push(item);
->>>>>>> TAC-2671-validation-error-when-adding-price
-      }
-    }
-  }
-
-<<<<<<< HEAD
   init(_data?: any) {
     if (_data) {
       if (Array.isArray(_data['profitShares'])) {
@@ -89373,15 +89029,6 @@ export class GetProfitShareOutput implements IGetProfitShareOutput {
     return result;
   }
 
-=======
-  static fromJS(data: any): GetProfitShareOutput {
-    data = typeof data === 'object' ? data : {};
-    let result = new GetProfitShareOutput();
-    result.init(data);
-    return result;
-  }
-
->>>>>>> TAC-2671-validation-error-when-adding-price
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
     if (Array.isArray(this.profitShares)) {
@@ -90786,7 +90433,6 @@ export class ListResultDtoOfNameValueDto implements IListResultDtoOfNameValueDto
       for (var property in data) {
         if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
       }
-<<<<<<< HEAD
     }
   }
 
@@ -90799,20 +90445,6 @@ export class ListResultDtoOfNameValueDto implements IListResultDtoOfNameValueDto
     }
   }
 
-=======
-    }
-  }
-
-  init(_data?: any) {
-    if (_data) {
-      if (Array.isArray(_data['items'])) {
-        this.items = [] as any;
-        for (let item of _data['items']) this.items!.push(NameValueDto.fromJS(item));
-      }
-    }
-  }
-
->>>>>>> TAC-2671-validation-error-when-adding-price
   static fromJS(data: any): ListResultDtoOfNameValueDto {
     data = typeof data === 'object' ? data : {};
     let result = new ListResultDtoOfNameValueDto();
@@ -91010,11 +90642,8 @@ export class AuthenticateResultModel implements IAuthenticateResultModel {
   returnUrl!: string | undefined;
   refreshToken!: string | undefined;
   refreshTokenExpireInSeconds!: number;
-<<<<<<< HEAD
   driverName!: string | undefined;
   tenantId!: number | undefined;
-=======
->>>>>>> TAC-2671-validation-error-when-adding-price
 
   constructor(data?: IAuthenticateResultModel) {
     if (data) {
@@ -91042,11 +90671,8 @@ export class AuthenticateResultModel implements IAuthenticateResultModel {
       this.returnUrl = _data['returnUrl'];
       this.refreshToken = _data['refreshToken'];
       this.refreshTokenExpireInSeconds = _data['refreshTokenExpireInSeconds'];
-<<<<<<< HEAD
       this.driverName = _data['driverName'];
       this.tenantId = _data['tenantId'];
-=======
->>>>>>> TAC-2671-validation-error-when-adding-price
     }
   }
 
@@ -91075,11 +90701,8 @@ export class AuthenticateResultModel implements IAuthenticateResultModel {
     data['returnUrl'] = this.returnUrl;
     data['refreshToken'] = this.refreshToken;
     data['refreshTokenExpireInSeconds'] = this.refreshTokenExpireInSeconds;
-<<<<<<< HEAD
     data['driverName'] = this.driverName;
     data['tenantId'] = this.tenantId;
-=======
->>>>>>> TAC-2671-validation-error-when-adding-price
     return data;
   }
 }
@@ -91098,11 +90721,8 @@ export interface IAuthenticateResultModel {
   returnUrl: string | undefined;
   refreshToken: string | undefined;
   refreshTokenExpireInSeconds: number;
-<<<<<<< HEAD
   driverName: string | undefined;
   tenantId: number | undefined;
-=======
->>>>>>> TAC-2671-validation-error-when-adding-price
 }
 
 export class OtpCreatedDto implements IOtpCreatedDto {
@@ -91754,15 +91374,10 @@ export class TrackingRoutePointDto implements ITrackingRoutePointDto {
   canGoToNextLocation!: boolean;
   isDeliveryNoteUploaded!: boolean;
   isPodUploaded!: boolean;
-<<<<<<< HEAD
   isGoodPictureUploaded!: boolean;
   facilityRate!: number;
   waybillNumber!: number | undefined;
   receiverCode!: string | undefined;
-=======
-  facilityRate!: number;
-  waybillNumber!: number | undefined;
->>>>>>> TAC-2671-validation-error-when-adding-price
   statues!: RoutPointTransactionDto[] | undefined;
   availableTransactions!: PointTransactionDto[] | undefined;
   id!: number;
@@ -91792,15 +91407,10 @@ export class TrackingRoutePointDto implements ITrackingRoutePointDto {
       this.canGoToNextLocation = _data['canGoToNextLocation'];
       this.isDeliveryNoteUploaded = _data['isDeliveryNoteUploaded'];
       this.isPodUploaded = _data['isPodUploaded'];
-<<<<<<< HEAD
       this.isGoodPictureUploaded = _data['isGoodPictureUploaded'];
       this.facilityRate = _data['facilityRate'];
       this.waybillNumber = _data['waybillNumber'];
       this.receiverCode = _data['receiverCode'];
-=======
-      this.facilityRate = _data['facilityRate'];
-      this.waybillNumber = _data['waybillNumber'];
->>>>>>> TAC-2671-validation-error-when-adding-price
       if (Array.isArray(_data['statues'])) {
         this.statues = [] as any;
         for (let item of _data['statues']) this.statues!.push(RoutPointTransactionDto.fromJS(item));
@@ -91837,15 +91447,10 @@ export class TrackingRoutePointDto implements ITrackingRoutePointDto {
     data['canGoToNextLocation'] = this.canGoToNextLocation;
     data['isDeliveryNoteUploaded'] = this.isDeliveryNoteUploaded;
     data['isPodUploaded'] = this.isPodUploaded;
-<<<<<<< HEAD
     data['isGoodPictureUploaded'] = this.isGoodPictureUploaded;
     data['facilityRate'] = this.facilityRate;
     data['waybillNumber'] = this.waybillNumber;
     data['receiverCode'] = this.receiverCode;
-=======
-    data['facilityRate'] = this.facilityRate;
-    data['waybillNumber'] = this.waybillNumber;
->>>>>>> TAC-2671-validation-error-when-adding-price
     if (Array.isArray(this.statues)) {
       data['statues'] = [];
       for (let item of this.statues) data['statues'].push(item.toJSON());
@@ -91875,15 +91480,10 @@ export interface ITrackingRoutePointDto {
   canGoToNextLocation: boolean;
   isDeliveryNoteUploaded: boolean;
   isPodUploaded: boolean;
-<<<<<<< HEAD
   isGoodPictureUploaded: boolean;
   facilityRate: number;
   waybillNumber: number | undefined;
   receiverCode: string | undefined;
-=======
-  facilityRate: number;
-  waybillNumber: number | undefined;
->>>>>>> TAC-2671-validation-error-when-adding-price
   statues: RoutPointTransactionDto[] | undefined;
   availableTransactions: PointTransactionDto[] | undefined;
   id: number;
@@ -91988,7 +91588,6 @@ export class GetAllUploadedFileDto implements IGetAllUploadedFileDto {
     data['thumbnailImage'] = this.thumbnailImage;
     return data;
   }
-<<<<<<< HEAD
 }
 
 export interface IGetAllUploadedFileDto {
@@ -92039,15 +91638,6 @@ export interface IIHasDocument {
   documentId: string | undefined;
   documentName: string | undefined;
   documentContentType: string | undefined;
-=======
-}
-
-export interface IGetAllUploadedFileDto {
-  documentId: string;
-  fileName: string;
-  fileType: string | undefined;
-  thumbnailImage: string;
->>>>>>> TAC-2671-validation-error-when-adding-price
 }
 
 export class TrailerDto implements ITrailerDto {
@@ -92703,7 +92293,6 @@ export interface ICreateOrEditTrailerStatusDto {
 
 export class GetTrailerStatusForEditOutput implements IGetTrailerStatusForEditOutput {
   trailerStatus!: CreateOrEditTrailerStatusDto;
-<<<<<<< HEAD
 
   constructor(data?: IGetTrailerStatusForEditOutput) {
     if (data) {
@@ -92726,30 +92315,6 @@ export class GetTrailerStatusForEditOutput implements IGetTrailerStatusForEditOu
     return result;
   }
 
-=======
-
-  constructor(data?: IGetTrailerStatusForEditOutput) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(_data?: any) {
-    if (_data) {
-      this.trailerStatus = _data['trailerStatus'] ? CreateOrEditTrailerStatusDto.fromJS(_data['trailerStatus']) : <any>undefined;
-    }
-  }
-
-  static fromJS(data: any): GetTrailerStatusForEditOutput {
-    data = typeof data === 'object' ? data : {};
-    let result = new GetTrailerStatusForEditOutput();
-    result.init(data);
-    return result;
-  }
-
->>>>>>> TAC-2671-validation-error-when-adding-price
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
     data['trailerStatus'] = this.trailerStatus ? this.trailerStatus.toJSON() : <any>undefined;
@@ -92764,7 +92329,6 @@ export interface IGetTrailerStatusForEditOutput {
 export class TrailerTypeDto implements ITrailerTypeDto {
   displayName!: string | undefined;
   id!: number;
-<<<<<<< HEAD
 
   constructor(data?: ITrailerTypeDto) {
     if (data) {
@@ -92788,31 +92352,6 @@ export class TrailerTypeDto implements ITrailerTypeDto {
     return result;
   }
 
-=======
-
-  constructor(data?: ITrailerTypeDto) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(_data?: any) {
-    if (_data) {
-      this.displayName = _data['displayName'];
-      this.id = _data['id'];
-    }
-  }
-
-  static fromJS(data: any): TrailerTypeDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new TrailerTypeDto();
-    result.init(data);
-    return result;
-  }
-
->>>>>>> TAC-2671-validation-error-when-adding-price
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
     data['displayName'] = this.displayName;
@@ -93054,18 +92593,11 @@ export interface ITransportTypeDto {
   id: number;
 }
 
-<<<<<<< HEAD
 export class PagedResultDtoOfTransportTypeDto implements IPagedResultDtoOfTransportTypeDto {
   totalCount!: number;
   items!: TransportTypeDto[] | undefined;
 
   constructor(data?: IPagedResultDtoOfTransportTypeDto) {
-=======
-export class GetTransportTypeForViewDto implements IGetTransportTypeForViewDto {
-  transportType!: TransportTypeDto;
-
-  constructor(data?: IGetTransportTypeForViewDto) {
->>>>>>> TAC-2671-validation-error-when-adding-price
     if (data) {
       for (var property in data) {
         if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
@@ -93075,7 +92607,6 @@ export class GetTransportTypeForViewDto implements IGetTransportTypeForViewDto {
 
   init(_data?: any) {
     if (_data) {
-<<<<<<< HEAD
       this.totalCount = _data['totalCount'];
       if (Array.isArray(_data['items'])) {
         this.items = [] as any;
@@ -93087,35 +92618,21 @@ export class GetTransportTypeForViewDto implements IGetTransportTypeForViewDto {
   static fromJS(data: any): PagedResultDtoOfTransportTypeDto {
     data = typeof data === 'object' ? data : {};
     let result = new PagedResultDtoOfTransportTypeDto();
-=======
-      this.transportType = _data['transportType'] ? TransportTypeDto.fromJS(_data['transportType']) : <any>undefined;
-    }
-  }
-
-  static fromJS(data: any): GetTransportTypeForViewDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new GetTransportTypeForViewDto();
->>>>>>> TAC-2671-validation-error-when-adding-price
     result.init(data);
     return result;
   }
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-<<<<<<< HEAD
     data['totalCount'] = this.totalCount;
     if (Array.isArray(this.items)) {
       data['items'] = [];
       for (let item of this.items) data['items'].push(item.toJSON());
     }
-=======
-    data['transportType'] = this.transportType ? this.transportType.toJSON() : <any>undefined;
->>>>>>> TAC-2671-validation-error-when-adding-price
     return data;
   }
 }
 
-<<<<<<< HEAD
 export interface IPagedResultDtoOfTransportTypeDto {
   totalCount: number;
   items: TransportTypeDto[] | undefined;
@@ -93125,17 +92642,6 @@ export class GetTransportTypeForViewDto implements IGetTransportTypeForViewDto {
   transportType!: TransportTypeDto;
 
   constructor(data?: IGetTransportTypeForViewDto) {
-=======
-export interface IGetTransportTypeForViewDto {
-  transportType: TransportTypeDto;
-}
-
-export class PagedResultDtoOfGetTransportTypeForViewDto implements IPagedResultDtoOfGetTransportTypeForViewDto {
-  totalCount!: number;
-  items!: GetTransportTypeForViewDto[] | undefined;
-
-  constructor(data?: IPagedResultDtoOfGetTransportTypeForViewDto) {
->>>>>>> TAC-2671-validation-error-when-adding-price
     if (data) {
       for (var property in data) {
         if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
@@ -93145,7 +92651,6 @@ export class PagedResultDtoOfGetTransportTypeForViewDto implements IPagedResultD
 
   init(_data?: any) {
     if (_data) {
-<<<<<<< HEAD
       this.transportType = _data['transportType'] ? TransportTypeDto.fromJS(_data['transportType']) : <any>undefined;
     }
   }
@@ -93153,46 +92658,19 @@ export class PagedResultDtoOfGetTransportTypeForViewDto implements IPagedResultD
   static fromJS(data: any): GetTransportTypeForViewDto {
     data = typeof data === 'object' ? data : {};
     let result = new GetTransportTypeForViewDto();
-=======
-      this.totalCount = _data['totalCount'];
-      if (Array.isArray(_data['items'])) {
-        this.items = [] as any;
-        for (let item of _data['items']) this.items!.push(GetTransportTypeForViewDto.fromJS(item));
-      }
-    }
-  }
-
-  static fromJS(data: any): PagedResultDtoOfGetTransportTypeForViewDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new PagedResultDtoOfGetTransportTypeForViewDto();
->>>>>>> TAC-2671-validation-error-when-adding-price
     result.init(data);
     return result;
   }
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-<<<<<<< HEAD
     data['transportType'] = this.transportType ? this.transportType.toJSON() : <any>undefined;
-=======
-    data['totalCount'] = this.totalCount;
-    if (Array.isArray(this.items)) {
-      data['items'] = [];
-      for (let item of this.items) data['items'].push(item.toJSON());
-    }
->>>>>>> TAC-2671-validation-error-when-adding-price
     return data;
   }
 }
 
-<<<<<<< HEAD
 export interface IGetTransportTypeForViewDto {
   transportType: TransportTypeDto;
-=======
-export interface IPagedResultDtoOfGetTransportTypeForViewDto {
-  totalCount: number;
-  items: GetTransportTypeForViewDto[] | undefined;
->>>>>>> TAC-2671-validation-error-when-adding-price
 }
 
 export class CreateOrEditTransportTypeDto implements ICreateOrEditTransportTypeDto {
@@ -93994,10 +93472,6 @@ export class TruckTruckStatusLookupTableDto implements ITruckTruckStatusLookupTa
   id!: string | undefined;
   isOther!: boolean | undefined;
   displayName!: string | undefined;
-<<<<<<< HEAD
-=======
-  translatedDisplayName!: string | undefined;
->>>>>>> TAC-2671-validation-error-when-adding-price
 
   constructor(data?: ITruckTruckStatusLookupTableDto) {
     if (data) {
@@ -94012,10 +93486,6 @@ export class TruckTruckStatusLookupTableDto implements ITruckTruckStatusLookupTa
       this.id = _data['id'];
       this.isOther = _data['isOther'];
       this.displayName = _data['displayName'];
-<<<<<<< HEAD
-=======
-      this.translatedDisplayName = _data['translatedDisplayName'];
->>>>>>> TAC-2671-validation-error-when-adding-price
     }
   }
 
@@ -94031,10 +93501,6 @@ export class TruckTruckStatusLookupTableDto implements ITruckTruckStatusLookupTa
     data['id'] = this.id;
     data['isOther'] = this.isOther;
     data['displayName'] = this.displayName;
-<<<<<<< HEAD
-=======
-    data['translatedDisplayName'] = this.translatedDisplayName;
->>>>>>> TAC-2671-validation-error-when-adding-price
     return data;
   }
 }
@@ -94043,10 +93509,6 @@ export interface ITruckTruckStatusLookupTableDto {
   id: string | undefined;
   isOther: boolean | undefined;
   displayName: string | undefined;
-<<<<<<< HEAD
-=======
-  translatedDisplayName: string | undefined;
->>>>>>> TAC-2671-validation-error-when-adding-price
 }
 
 export class TruckUserLookupTableDto implements ITruckUserLookupTableDto {
@@ -94138,10 +93600,6 @@ export class PlateTypeSelectItemDto implements IPlateTypeSelectItemDto {
   id!: string | undefined;
   isOther!: boolean | undefined;
   displayName!: string | undefined;
-<<<<<<< HEAD
-=======
-  translatedDisplayName!: string | undefined;
->>>>>>> TAC-2671-validation-error-when-adding-price
 
   constructor(data?: IPlateTypeSelectItemDto) {
     if (data) {
@@ -94157,10 +93615,6 @@ export class PlateTypeSelectItemDto implements IPlateTypeSelectItemDto {
       this.id = _data['id'];
       this.isOther = _data['isOther'];
       this.displayName = _data['displayName'];
-<<<<<<< HEAD
-=======
-      this.translatedDisplayName = _data['translatedDisplayName'];
->>>>>>> TAC-2671-validation-error-when-adding-price
     }
   }
 
@@ -94177,10 +93631,6 @@ export class PlateTypeSelectItemDto implements IPlateTypeSelectItemDto {
     data['id'] = this.id;
     data['isOther'] = this.isOther;
     data['displayName'] = this.displayName;
-<<<<<<< HEAD
-=======
-    data['translatedDisplayName'] = this.translatedDisplayName;
->>>>>>> TAC-2671-validation-error-when-adding-price
     return data;
   }
 }
@@ -94190,10 +93640,6 @@ export interface IPlateTypeSelectItemDto {
   id: string | undefined;
   isOther: boolean | undefined;
   displayName: string | undefined;
-<<<<<<< HEAD
-=======
-  translatedDisplayName: string | undefined;
->>>>>>> TAC-2671-validation-error-when-adding-price
 }
 
 export class TruckStatusDto implements ITruckStatusDto {
