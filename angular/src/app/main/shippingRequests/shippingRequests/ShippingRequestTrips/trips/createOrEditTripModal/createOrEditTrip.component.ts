@@ -5,12 +5,15 @@ import {
   CreateOrEditRoutPointDto,
   CreateOrEditShippingRequestTripDto,
   CreateOrEditShippingRequestTripVasDto,
+  EntityTemplateServiceProxy,
   FacilityForDropdownDto,
   GetShippingRequestVasForViewDto,
   PickingType,
   ReceiverFacilityLookupTableDto,
   ReceiversServiceProxy,
   RoutStepsServiceProxy,
+  SavedEntityType,
+  SelectItemDto,
   ShippingRequestDto,
   ShippingRequestRouteType,
   ShippingRequestsTripServiceProxy,
@@ -90,6 +93,9 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
    * DocFileUploader onProgressItem file name
    */
   docProgressFileName: any;
+  templatesLoading: boolean;
+  tripTemples: SelectItemDto[];
+  SavedEntityType = SavedEntityType;
 
   constructor(
     injector: Injector,
@@ -101,7 +107,8 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     public _TripService: TripService,
     private _PointsService: PointsService,
     private _tokenService: TokenService,
-    private _receiversServiceProxy: ReceiversServiceProxy
+    private _receiversServiceProxy: ReceiversServiceProxy,
+    private _templates: EntityTemplateServiceProxy
   ) {
     super(injector);
   }
@@ -112,6 +119,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   receiversLoading: boolean;
   allReceivers: ReceiverFacilityLookupTableDto[];
   pickupPointSenderId: number;
+  selectedTemplate: number;
 
   get isFileInputValid() {
     return this.trip.hasAttachment ? (this.trip.createOrEditDocumentFileDto.name ? true : false) : true;
@@ -466,5 +474,44 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     } else {
       return true;
     }
+  }
+
+  /**
+   * load Trip Templates For Drop Down
+   */
+  loadTemplates() {
+    this.templatesLoading = true;
+    this._templates.getAllForDropdown(this.SavedEntityType.Trip, this.shippingRequest.id.toString()).subscribe((res) => {
+      this.templatesLoading = false;
+      this.tripTemples = res;
+    });
+  }
+
+  /**
+   * apply Selected Template to the Trip
+   */
+  applyTemplate() {
+    // this.activeTripId = record.id;
+    // this._TripService.updateActiveTripId(this.activeTripId);
+    // this._shippingRequestTripsService.getShippingRequestTripForEdit(record.id).subscribe((res) => {
+    //     this.trip = res;
+    //     //this.startTripdate = this.dateFormatterService.MomentToNgbDateStruct(res.startTripDate);
+    //     if (res.endTripDate != null && res.endTripDate != undefined)
+    //         this.endTripdate = this.dateFormatterService.MomentToNgbDateStruct(res.endTripDate);
+    //     this._PointsService.updateWayPoints(this.trip.routPoints);
+    //     this.pickupPointSenderId = res.routPoints[0].receiverId;
+    //     this.loadReceivers(this.trip.originFacilityId);
+    //     this.loading = false;
+    let jsonObject = null;
+    this._templates.getForView(this.selectedTemplate).subscribe((res) => {
+      jsonObject = JSON.parse(res.savedEntity);
+      this.trip = jsonObject;
+      this.trip.id = undefined;
+      this.trip.originFacilityId = null;
+      this.trip.destinationFacilityId = null;
+      this.pickupPointSenderId = this.trip.routPoints[0].receiverId = undefined;
+      this._PointsService.updateWayPoints(this.trip.routPoints);
+      console.log(this.trip);
+    });
   }
 }

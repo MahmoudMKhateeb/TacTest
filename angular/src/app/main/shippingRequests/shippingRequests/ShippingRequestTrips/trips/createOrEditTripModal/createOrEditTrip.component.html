@@ -16,6 +16,36 @@
             <span>{{ l('TripDetails') }}</span>
           </p>
           <div class="card-toolbar">
+            <div
+              class="btn-group"
+              dropdown
+              #dropdownAddPage="bs-dropdown"
+              [dropup]="false"
+              [insideClick]="true"
+              *ngIf="!trip.id && (isShipper || isTachyonDealer)"
+            >
+              <button
+                dropdownToggle
+                type="button"
+                class="btn btn-outline-danger dropdown-toggle btn-elevate-hover mr-2"
+                aria-controls="dropdown-basic"
+                (click)="loadTemplates()"
+              >
+                <i class="fa fa-list"></i> {{ 'TripTemplates' | localize }}<span class="caret"></span>
+              </button>
+              <ul *dropdownMenu class="dropdown-menu p-2" role="menu" aria-labelledby="button-basic">
+                <li role="menuitem">
+                  <div class="form-group">
+                    <select class="form-control" name="tripTemplate" [(ngModel)]="selectedTemplate" [busyIf]="templatesLoading">
+                      <option value="undefined" selected disabled>{{ l('SelectATripTemplate') }}</option>
+                      <option *ngFor="let item of tripTemples" value="{{ item.id }}">{{ item.displayName }}</option>
+                    </select>
+                  </div>
+                  <button class="btn btn-sm btn-block btn-info" (click)="applyTemplate()">{{ 'Load' | localize }}</button>
+                </li>
+              </ul>
+            </div>
+
             <button
               class="btn btn-primary"
               *ngIf="trip.id"
