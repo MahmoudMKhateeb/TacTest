@@ -465,63 +465,63 @@ namespace TACHYON.Shipping.Trips
             }
         }
 
-        [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Acident_Cancel)]
-        public async Task CancelByAccident(long id, bool isForce)
-        {
-            DisableTenancyFilters();
-            var trip = await _shippingRequestTripRepository.GetAll().Include(x => x.ShippingRequestFk)
-                     .WhereIf(IsEnabled(AppFeatures.Carrier), x => x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId && !x.IsApproveCancledByCarrier)
-                     .WhereIf(IsEnabled(AppFeatures.Shipper), x => x.ShippingRequestFk.TenantId == AbpSession.TenantId && !x.IsApproveCancledByShipper)
-                     .WhereIf(IsEnabled(AppFeatures.TachyonDealer), x => !x.IsApproveCancledByShipper || !x.IsApproveCancledByCarrier)
-                .FirstOrDefaultAsync(x => x.Id == id && x.HasAccident);
-            if (trip != null)
-            {
-                List<UserIdentifier> userIdentifiers = new List<UserIdentifier>();
-                if (IsEnabled(AppFeatures.Shipper))
-                {
-                    trip.IsApproveCancledByShipper = true;
-                    userIdentifiers.Add(await GetAdminTenant((int)trip.ShippingRequestFk.CarrierTenantId));
-                }
-                else if (IsEnabled(AppFeatures.Carrier))
-                {
-                    trip.IsApproveCancledByCarrier = true;
-                    userIdentifiers.Add(new UserIdentifier(trip.ShippingRequestFk.TenantId, (long)trip.ShippingRequestFk.CreatorUserId));
+        //[AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Acident_Cancel)]
+        //public async Task CancelByAccident(long id, bool isForce)
+        //{
+        //    DisableTenancyFilters();
+        //    var trip = await _shippingRequestTripRepository.GetAll().Include(x => x.ShippingRequestFk)
+        //             .WhereIf(IsEnabled(AppFeatures.Carrier), x => x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId && !x.IsApproveCancledByCarrier)
+        //             .WhereIf(IsEnabled(AppFeatures.Shipper), x => x.ShippingRequestFk.TenantId == AbpSession.TenantId && !x.IsApproveCancledByShipper)
+        //             .WhereIf(IsEnabled(AppFeatures.TachyonDealer), x => !x.IsApproveCancledByShipper || !x.IsApproveCancledByCarrier)
+        //        .FirstOrDefaultAsync(x => x.Id == id && x.HasAccident);
+        //    if (trip != null)
+        //    {
+        //        List<UserIdentifier> userIdentifiers = new List<UserIdentifier>();
+        //        if (IsEnabled(AppFeatures.Shipper))
+        //        {
+        //            trip.IsApproveCancledByShipper = true;
+        //            userIdentifiers.Add(await GetAdminTenant((int)trip.ShippingRequestFk.CarrierTenantId));
+        //        }
+        //        else if (IsEnabled(AppFeatures.Carrier))
+        //        {
+        //            trip.IsApproveCancledByCarrier = true;
+        //            userIdentifiers.Add(new UserIdentifier(trip.ShippingRequestFk.TenantId, (long)trip.ShippingRequestFk.CreatorUserId));
 
-                }
-                else if (IsEnabled(AppFeatures.TachyonDealer))
-                {
-                    if (isForce)
-                    {
-                        trip.IsApproveCancledByTachyonDealer = true;
-                        trip.IsForcedCanceledByTachyonDealer = true;
-                    }
-                    else
-                    {
-                        trip.IsApproveCancledByTachyonDealer = true;
-                    }
-                    userIdentifiers.Add(await GetAdminTenant((int)trip.ShippingRequestFk.CarrierTenantId));
-                    userIdentifiers.Add(new UserIdentifier(trip.ShippingRequestFk.TenantId, (long)trip.ShippingRequestFk.CreatorUserId));
+        //        }
+        //        else if (IsEnabled(AppFeatures.TachyonDealer))
+        //        {
+        //            if (isForce)
+        //            {
+        //                trip.IsApproveCancledByTachyonDealer = true;
+        //                trip.IsForcedCanceledByTachyonDealer = true;
+        //            }
+        //            else
+        //            {
+        //                trip.IsApproveCancledByTachyonDealer = true;
+        //            }
+        //            userIdentifiers.Add(await GetAdminTenant((int)trip.ShippingRequestFk.CarrierTenantId));
+        //            userIdentifiers.Add(new UserIdentifier(trip.ShippingRequestFk.TenantId, (long)trip.ShippingRequestFk.CreatorUserId));
 
-                }
+        //        }
 
-                //send notification to tachyon dealer in every request canceled
-                userIdentifiers.Add(await _userManager.GetTachyonDealerUserIdentifierAsync());
+        //        //send notification to tachyon dealer in every request canceled
+        //        userIdentifiers.Add(await _userManager.GetTachyonDealerUserIdentifierAsync());
 
-                if ((!trip.ShippingRequestFk.IsTachyonDeal && trip.IsApproveCancledByShipper && trip.IsApproveCancledByCarrier) ||
-                    (trip.IsForcedCanceledByTachyonDealer) ||
-                (!trip.IsForcedCanceledByTachyonDealer && trip.ShippingRequestFk.IsTachyonDeal && trip.IsApproveCancledByShipper && trip.IsApproveCancledByCarrier && trip.IsApproveCancledByTachyonDealer))
-                {
-                    if (!_shippingRequestTripRepository.GetAll().Any(x => x.Id != trip.Id && x.HasAccident))
-                    {
-                        var request = trip.ShippingRequestFk;
-                        request.HasAccident = false;
-                    }
-                    trip.Status = ShippingRequestTripStatus.Canceled;
-                }
-                await _appNotifier.ShippingRequestTripCancelByAccident(userIdentifiers, trip, GetCurrentUser());
-            }
-            //await _shippingRequestRepository.DeleteAsync(input.Id);
-        }
+        //        if ((!trip.ShippingRequestFk.IsTachyonDeal && trip.IsApproveCancledByShipper && trip.IsApproveCancledByCarrier) ||
+        //            (trip.IsForcedCanceledByTachyonDealer) ||
+        //        (!trip.IsForcedCanceledByTachyonDealer && trip.ShippingRequestFk.IsTachyonDeal && trip.IsApproveCancledByShipper && trip.IsApproveCancledByCarrier && trip.IsApproveCancledByTachyonDealer))
+        //        {
+        //            if (!_shippingRequestTripRepository.GetAll().Any(x => x.Id != trip.Id && x.HasAccident))
+        //            {
+        //                var request = trip.ShippingRequestFk;
+        //                request.HasAccident = false;
+        //            }
+        //            trip.Status = ShippingRequestTripStatus.Canceled;
+        //        }
+        //        await _appNotifier.ShippingRequestTripCancelByAccident(userIdentifiers, trip, GetCurrentUser());
+        //    }
+        //    //await _shippingRequestRepository.DeleteAsync(input.Id);
+        //}
 
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Cancel)]
@@ -529,9 +529,12 @@ namespace TACHYON.Shipping.Trips
         {
             DisableTenancyFilters();
             var trip = await _shippingRequestTripRepository.GetAll().Include(x => x.ShippingRequestFk)
+                     //add preprice  & !payInadvance condition now, then in future post price cancelation will be added
+                     .Where(x => x.ShippingRequestFk.Status == ShippingRequestStatus.PrePrice)
+                     .Where(x => x.ShippingRequestFk.IsPrePayed.HasValue && x.ShippingRequestFk.IsPrePayed.Value)
                      .Where(x => x.Status == ShippingRequestTripStatus.New ||
                      x.Status == ShippingRequestTripStatus.Intransit)
-                     .WhereIf(IsEnabled(AppFeatures.Carrier), x => x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId && x.CancelStatus==ShippingRequestTripCancelStatus.None)
+                     .WhereIf(IsEnabled(AppFeatures.Carrier), x => x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId && x.CancelStatus == ShippingRequestTripCancelStatus.None)
                      .WhereIf(IsEnabled(AppFeatures.Shipper), x => x.ShippingRequestFk.TenantId == AbpSession.TenantId && x.CancelStatus == ShippingRequestTripCancelStatus.None)
                 .FirstOrDefaultAsync(x => x.Id == input.id);
             if (trip != null)
@@ -542,7 +545,7 @@ namespace TACHYON.Shipping.Trips
                 {
                     carrierIdent = await GetAdminTenant((int)trip.ShippingRequestFk.CarrierTenantId);
                 }
-
+                //check Invoice type, skip if pay in advance
                 await CancelTripAsync(input, trip, carrierIdent);
             }
             else
