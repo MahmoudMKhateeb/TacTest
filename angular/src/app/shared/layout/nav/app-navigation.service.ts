@@ -157,7 +157,19 @@ export class AppNavigationService {
             undefined,
             () => this.isEnabled('App.Shipper')
           ),
+
           new AppMenuItem('MyShippingRequests', 'Pages.ShippingRequests', '', '/app/main/shippingRequests/shippingRequests'),
+          new AppMenuItem(
+            'Templates',
+            'Pages.ShippingRequests',
+            '',
+            '/app/main/shippingRequests/requestsTemplates',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            () => this.isEnabled('App.Shipper') || this.isEnabled('App.TachyonDealer')
+          ),
           new AppMenuItem(
             'ShipmentHistory',
             'Pages.ShippingRequests',
