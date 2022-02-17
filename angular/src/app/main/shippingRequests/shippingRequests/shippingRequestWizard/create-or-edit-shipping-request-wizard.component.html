@@ -495,15 +495,13 @@
                               class="form-control"
                               (change)="isOthersGoodCategoryId(step3Dto.goodCategoryId)"
                               [(ngModel)]="step3Dto.otherGoodsCategoryName"
-                              [class.is-valid]="
-                                step3Form.get('otherGoodsCategoryName').valid &&
-                                (step3Form.get('otherGoodsCategoryName').dirty || step3Form.get('otherGoodsCategoryName').touched)
-                              "
                               [class.is-invalid]="
                                 step3Form.get('otherGoodsCategoryName').invalid &&
-                                (step3Form.get('otherGoodsCategoryName').dirty || step3Form.get('otherGoodsCategoryName').touched)
+                                IfOther(
+                                  allGoodCategorys,
+                                  step3Dto.goodCategoryId
+                                )(step3Form.get('otherGoodsCategoryName').dirty || step3Form.get('otherGoodsCategoryName').touched)
                               "
-                              [required]="step3Form.get('goodCategory').valid"
                             />
                           </div>
                         </div>
@@ -597,15 +595,11 @@
                                 formControlName="otherTransportTypeName"
                                 class="form-control"
                                 [(ngModel)]="step3Dto.otherTransportTypeName"
-                                [class.is-valid]="
-                                  step3Form.get('otherTransportTypeName').valid &&
-                                  (step3Form.get('otherTransportTypeName').dirty || step3Form.get('otherTransportTypeName').touched)
-                                "
                                 [class.is-invalid]="
                                   step3Form.get('otherTransportTypeName').invalid &&
+                                  IfOther(allTransportTypes, step3Dto.transportTypeId) &&
                                   (step3Form.get('otherTransportTypeName').dirty || step3Form.get('otherTransportTypeName').touched)
                                 "
-                                [required]="step3Form.get('transportType').valid"
                               />
                             </div>
                           </div>
@@ -662,15 +656,11 @@
                                 formControlName="otherTrucksTypeName"
                                 class="form-control"
                                 [(ngModel)]="step3Dto.otherTrucksTypeName"
-                                [class.is-valid]="
-                                  step3Form.get('otherTrucksTypeName').valid &&
-                                  (step3Form.get('otherTrucksTypeName').dirty || step3Form.get('otherTrucksTypeName').touched)
-                                "
                                 [class.is-invalid]="
                                   step3Form.get('otherTrucksTypeName').invalid &&
+                                  IfOther(allTrucksTypes, step3Dto.trucksTypeId) &&
                                   (step3Form.get('otherTrucksTypeName').dirty || step3Form.get('otherTrucksTypeName').touched)
                                 "
-                                [required]="step3Form.get('truckType').valid"
                               />
                             </div>
                           </div>
