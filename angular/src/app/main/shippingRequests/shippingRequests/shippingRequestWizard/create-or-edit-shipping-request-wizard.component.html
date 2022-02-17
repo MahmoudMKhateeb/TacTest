@@ -484,7 +484,7 @@
                         <span class="form-text text-muted">{{ l('TotalWeightofGoodsinKG') }}</span>
                       </div>
 
-                      <div class="col-lg-12 mt-4" *ngIf="IfOther(allGoodCategorys, step3Dto.goodCategoryId)">
+                      <div class="col-lg-12 mt-4" [hidden]="!IfOther(allGoodCategorys, step3Dto.goodCategoryId)">
                         <label>{{ l('Other') }} <span class="required-fileds">*</span></label>
                         <div>
                           <div class="input-group">
@@ -495,13 +495,16 @@
                               class="form-control"
                               (change)="isOthersGoodCategoryId(step3Dto.goodCategoryId)"
                               [(ngModel)]="step3Dto.otherGoodsCategoryName"
+                              [class.is-valid]="
+                                step3Form.get('otherGoodsCategoryName').valid &&
+                                (step3Form.get('otherGoodsCategoryName').dirty || step3Form.get('otherGoodsCategoryName').touched)
+                              "
                               [class.is-invalid]="
                                 step3Form.get('otherGoodsCategoryName').invalid &&
-                                IfOther(
-                                  allGoodCategorys,
-                                  step3Dto.goodCategoryId
-                                )(step3Form.get('otherGoodsCategoryName').dirty || step3Form.get('otherGoodsCategoryName').touched)
+                                IfOther(allGoodCategorys, step3Dto.goodCategoryId) &&
+                                (step3Form.get('otherGoodsCategoryName').dirty || step3Form.get('otherGoodsCategoryName').touched)
                               "
+                              [required]="step3Form.get('goodCategory').valid && IfOther(allGoodCategorys, step3Dto.goodCategoryId)"
                             />
                           </div>
                         </div>
@@ -585,7 +588,7 @@
                         </div>
                         <span class="form-text text-muted">{{ l('SelectaTransportType') }}</span>
 
-                        <div class="form-group" *ngIf="IfOther(allTransportTypes, step3Dto.transportTypeId)">
+                        <div class="form-group" [hidden]="!IfOther(allTransportTypes, step3Dto.transportTypeId)">
                           <label>{{ l('Other') }} <span class="required-fileds">*</span></label>
                           <div>
                             <div class="input-group">
@@ -595,11 +598,16 @@
                                 formControlName="otherTransportTypeName"
                                 class="form-control"
                                 [(ngModel)]="step3Dto.otherTransportTypeName"
+                                [class.is-valid]="
+                                  step3Form.get('otherTransportTypeName').valid &&
+                                  (step3Form.get('otherTransportTypeName').dirty || step3Form.get('otherTransportTypeName').touched)
+                                "
                                 [class.is-invalid]="
                                   step3Form.get('otherTransportTypeName').invalid &&
                                   IfOther(allTransportTypes, step3Dto.transportTypeId) &&
                                   (step3Form.get('otherTransportTypeName').dirty || step3Form.get('otherTransportTypeName').touched)
                                 "
+                                [required]="step3Form.get('transportType').valid && IfOther(allTransportTypes, step3Dto.transportTypeId)"
                               />
                             </div>
                           </div>
@@ -646,7 +654,7 @@
 
                         <span class="form-text text-muted">{{ l('SelectaTruckType') }}</span>
 
-                        <div class="form-group" *ngIf="IfOther(allTrucksTypes, step3Dto.trucksTypeId)">
+                        <div class="form-group" [hidden]="!IfOther(allTrucksTypes, step3Dto.trucksTypeId)">
                           <label>{{ l('Other') }} <span class="required-fileds">*</span></label>
                           <div>
                             <div class="input-group">
@@ -656,11 +664,16 @@
                                 formControlName="otherTrucksTypeName"
                                 class="form-control"
                                 [(ngModel)]="step3Dto.otherTrucksTypeName"
+                                [class.is-valid]="
+                                  step3Form.get('otherTrucksTypeName').valid &&
+                                  (step3Form.get('otherTrucksTypeName').dirty || step3Form.get('otherTrucksTypeName').touched)
+                                "
                                 [class.is-invalid]="
                                   step3Form.get('otherTrucksTypeName').invalid &&
                                   IfOther(allTrucksTypes, step3Dto.trucksTypeId) &&
                                   (step3Form.get('otherTrucksTypeName').dirty || step3Form.get('otherTrucksTypeName').touched)
                                 "
+                                [required]="step3Form.get('truckType').valid && IfOther(allTrucksTypes, step3Dto.trucksTypeId)"
                               />
                             </div>
                           </div>

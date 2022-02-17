@@ -225,12 +225,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
         }
         case 3: {
           console.log('step 3');
-          if (
-            this.step3Form.invalid ||
-            (this.IfOther(this.allTransportTypes, this.step3Dto.transportTypeId) && !this.step3Dto.otherTransportTypeName) ||
-            (this.IfOther(this.allTrucksTypes, this.step3Dto.trucksTypeId) && !this.step3Dto.otherTrucksTypeName) ||
-            (this.IfOther(this.allGoodCategorys, this.step3Dto.goodCategoryId) && !this.step3Dto.otherGoodsCategoryName)
-          ) {
+          if (this.step3Form.invalid) {
             wizardObj.stop();
             this.step3Form.markAllAsTouched();
             this.notify.error(this.l('PleaseCompleteMissingFields'));
@@ -298,7 +293,6 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     this.shippingRequestType == 'tachyondeal' ? (this.step1Dto.isTachyonDeal = true) : (this.step1Dto.isTachyonDeal = false);
     this.shippingRequestType == 'directrequest' ? (this.step1Dto.isDirectRequest = true) : (this.step1Dto.isDirectRequest = false);
     this.step1Dto.startTripDate == null ? (this.step1Dto.startTripDate = moment(this.today)) : null;
-    console.log('sds ', this.step1Dto);
     this._shippingRequestsServiceProxy
       .createOrEditStep1(this.step1Dto)
       .pipe(
@@ -332,7 +326,6 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   }
   createOrEditStep3() {
     this.saving = true;
-    console.log('this.step3Dto ', this.step3Dto);
     this.step3Dto.id = this.activeShippingRequestId;
     this._shippingRequestsServiceProxy
       .editStep3(this.step3Dto)
@@ -482,7 +475,6 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
 
     this._shippingRequestsServiceProxy.getAllTransportTypesForDropdown().subscribe((result) => {
       this.allTransportTypes = result;
-      console.log('transp ', this.allTransportTypes);
     });
 
     this._shippingRequestsServiceProxy.getAllShippingTypesForDropdown().subscribe((result) => {
