@@ -1,0 +1,37 @@
+<div
+  #AddNewEntityModalComponent="bs-modal"
+  aria-hidden="true"
+  aria-labelledby="AddNewEntityModalComponent"
+  bsModal
+  class="modal fade"
+  role="dialog"
+  tabindex="-10010"
+>
+  <div class="modal-dialog modal-lg">
+    <div *ngIf="active" class="modal-content">
+      <!--begin::Card-->
+      <div class="card card-custom">
+        <!--begin::Header-->
+        <div class="card-header align-items-center px-4 py-3">
+          <h3>{{ l('NewTemplate') }}</h3>
+        </div>
+        <!--end::Header-->
+        <!--begin::Body-->
+        <div class="card-body">
+          <div class="form-group">
+            <label>{{ l('TemplateName') }}</label>
+            <input type="TemplateName" [(ngModel)]="templateName" class="form-control" />
+          </div>
+        </div>
+        <!--end::Body-->
+        <!--begin::Footer-->
+        <div class="card-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="close()" [disabled]="saving">{{ l('Close') }}</button>
+          <button type="button" class="btn btn-primary" [disabled]="saving" [busyIf]="saving" (click)="save()">{{ l('Save') }}</button>
+        </div>
+        <!--end::Footer-->
+      </div>
+      <!--end::Card-->
+    </div>
+  </div>
+</div>
