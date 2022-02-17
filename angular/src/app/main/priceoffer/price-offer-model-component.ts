@@ -15,6 +15,7 @@ import {
   PriceOfferTenantCommissionSettings,
 } from '@shared/service-proxies/service-proxies';
 import { finalize } from 'rxjs/operators';
+import { NgForm } from '@angular/forms';
 
 @Component({
   templateUrl: './price-offer-model-component.html',
@@ -28,6 +29,7 @@ export class PriceOfferModelComponent extends AppComponentBase {
   @Output() modalSave: EventEmitter<number> = new EventEmitter<number>();
 
   @ViewChild('modal', { static: false }) modal: ModalDirective;
+  @ViewChild('Form', { static: false }) form: NgForm;
 
   active = false;
   saving = false;
@@ -141,8 +143,9 @@ export class PriceOfferModelComponent extends AppComponentBase {
     // this.offer.itemCommissionAmount = this.calculatorItemCommission(this.offer.itemPrice);
     // this.offer.itemSubTotalAmountWithCommission = this.offer.itemCommissionAmount * this.offer.quantity;
     // this.calculatorAll();
-
-    this.initPriceOffer();
+    if (this.form.form.valid) {
+      this.initPriceOffer();
+    }
   }
 
   // calculatorItem(item: PriceOfferItem): void {
