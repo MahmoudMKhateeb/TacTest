@@ -6,6 +6,8 @@ import {
   GetShippingRequestVasForViewDto,
   ShippingRequestStatus,
   ShippingRequestType,
+  CreateOrEditEntityTemplateInputDto,
+  EntityTemplateServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ActivatedRoute, NavigationEnd, Router, RouterEvent } from '@angular/router';
@@ -15,7 +17,8 @@ import { filter } from '@node_modules/rxjs/internal/operators';
 import { DOCUMENT } from '@angular/common';
 import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
 import { DirectRequestComponent } from '@app/main/shippingRequests/shippingRequests/directrequest/direct-request.component';
-import { retry } from 'rxjs/operators';
+import { finalize, retry } from 'rxjs/operators';
+import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 
 @Component({
   templateUrl: './view-shippingRequest.component.html',
@@ -33,6 +36,7 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
   bidsloading = false;
 
   breadcrumbs: BreadcrumbItem[] = [new BreadcrumbItem(this.l('ShippingRequests'), '/app/main/shippingRequests/shippingRequests')];
+  templateName: string;
 
   constructor(
     injector: Injector,
@@ -41,6 +45,7 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
     private _shippingRequestsServiceProxy: ShippingRequestsServiceProxy,
     private changeDetectorRef: ChangeDetectorRef,
     private _trip: TripService,
+    private _templateService: EntityTemplateServiceProxy,
     @Inject(DOCUMENT) private _document: Document
   ) {
     super(injector);
@@ -126,12 +131,16 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
   canSeeShippingRequestTrips() {
     //if there is no carrierTenantId  and the current user in not a carrier Hide Trips Section
     if (this.feature.isEnabled('App.Carrier') && !this.shippingRequestforView.shippingRequest.carrierTenantId) {
+      console.log('false');
       return false;
     } else if (this.feature.isEnabled('App.TachyonDealer')) {
       //if Tachyon Dealer
+      console.log('true');
+
       return true;
     }
     //By Default
+    // console.log('true');
     return true;
   }
 
@@ -181,5 +190,31 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
     setTimeout(() => {
       this.directRequestComponent.DirectRequestTenantModel.show();
     }, 1000);
+  }
+
+  /**
+   * Save Shipping Request as a Template
+   * @constructor
+   */
+  /**
+   * save Shipping Request As Template
+   */
+  SaveAsTemplate(): void {
+    if (!isNotNullOrUndefined(this.templateName)) return;
+    this.loading = true;
+    let entityTemplateInput: CreateOrEditEntityTemplateInputDto = new CreateOrEditEntityTemplateInputDto();
+    entityTemplateInput.templateName = this.templateName;
+    entityTemplateInput.savedEntityId = this.activeShippingRequestId.toString();
+    entityTemplateInput.entityType = 1;
+    this._templateService
+      .createOrEdit(entityTemplateInput)
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+        })
+      )
+      .subscribe(() => {
+        this.notify.success(this.l('TemplateSavedSuccessfully'));
+      });
   }
 }

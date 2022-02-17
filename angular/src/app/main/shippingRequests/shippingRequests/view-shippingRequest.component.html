@@ -8,6 +8,21 @@
       <!--        </button>-->
       <!--      </div>-->
       <div role="actions">
+        <div class="btn-group" dropdown #dropdownAddPage="bs-dropdown" [dropup]="false" [insideClick]="true" *ngIf="isShipper || isTachyonDealer">
+          <button dropdownToggle type="button" class="btn btn-outline-danger dropdown-toggle btn-elevate-hover mr-2" aria-controls="dropdown-basic">
+            <i class="fa fa-plus"></i> {{ 'SaveAsTemplate' | localize }}<span class="caret"></span>
+          </button>
+          <ul *dropdownMenu class="dropdown-menu p-10" role="menu" aria-labelledby="button-basic">
+            <li role="menuitem">
+              <div class="form-group">
+                <label for="TemplateNameInput">{{ 'TemplateName' | localize }}</label>
+                <input type="text" class="form-control" placeholder="" [(ngModel)]="templateName" />
+              </div>
+              <button class="btn btn-sm btn-block btn-info" (click)="SaveAsTemplate()">{{ 'Save' | localize }}</button>
+            </li>
+          </ul>
+        </div>
+
         <a class="btn btn-outline-success" (click)="appEntityLog.show()"> <i class="flaticon-notes"></i> {{ 'Activity Log' }} </a>
       </div>
     </sub-header>
