@@ -7,9 +7,12 @@ namespace TACHYON.Shipping.ShippingRequests
 {
     public enum ShippingRequestBidStatus : byte
     {
-        [Description("New")] StandBy,
-        [Description("PriceSubmitted")] OnGoing,
-        [Description("Confirmed")] Closed,
+        [Description("New")]
+        StandBy,
+        [Description("OnGoing")]
+        OnGoing,
+        [Description("Confirmed")]
+        Closed,
         Cancled
     }
 }
