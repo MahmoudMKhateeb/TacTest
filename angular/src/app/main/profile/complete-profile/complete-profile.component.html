@@ -62,8 +62,7 @@
               minlength="2"
               maxlength="80"
             />
-              <validation-messages [formCtrl]="companyName"></validation-messages>
-
+            <validation-messages [formCtrl]="companyName"></validation-messages>
           </div>
         </div>
         <div class="form-group row">
@@ -79,10 +78,9 @@
               [(ngModel)]="completeFiled.companyInfo"
               name="CompanyDescription"
               maxlength="500"
-
             >
             </textarea>
-            <span class="form-text text-muted">{{ l('CompanyDescriptionMustBeAtLeast10Characters') }}.</span>
+            <span class="form-text text-muted">{{ l('CompanyDescriptionHint') }}.</span>
           </div>
         </div>
 
@@ -115,8 +113,7 @@
                 maxlength="20"
               />
             </div>
-              <validation-messages [formCtrl]="companyPhone"></validation-messages>
-
+            <validation-messages [formCtrl]="companyPhone"></validation-messages>
           </div>
         </div>
         <div class="form-group row">
@@ -141,8 +138,7 @@
                 [class.is-valid]="companyEmailAddress.touched && companyEmailAddress.valid"
               />
             </div>
-              <validation-messages [formCtrl]="companyEmailAddress"></validation-messages>
-
+            <validation-messages [formCtrl]="companyEmailAddress"></validation-messages>
           </div>
         </div>
         <div class="form-group row">

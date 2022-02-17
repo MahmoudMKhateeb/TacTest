@@ -10,7 +10,7 @@ namespace TACHYON.Authorization.Users.Profile.Dto
         [StringLength(80, MinimumLength = 2)]
         public string CompanyName { get; set; }
 
-        [StringLength(500, MinimumLength = 10)]
+        [StringLength(500)]
         public string CompanyInfo { get; set; }
 
         [Required]

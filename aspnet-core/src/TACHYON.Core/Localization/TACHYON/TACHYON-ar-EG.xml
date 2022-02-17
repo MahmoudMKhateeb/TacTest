@@ -2268,6 +2268,7 @@
 		<text name="SubmitInvoiceOnClaim">تم مطالبة الفاتورة المرسلة</text>
     <text name="NoMatchingTrucks">لا توجد شاحنات مطابقة</text>
 		<text name="NoMatchingDrivers">لا يوجد سائقين</text>
+		<text name="CompanyDescriptionHint">يجب ألا يزيد وصف الشركة عن 500 حرف</text>
 
 	</texts>
 </localizationDictionary>
