@@ -208,17 +208,10 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
     this.selectedCountryCode = this.countries.find((x) => x.id == this.selectedCountryId).code;
     this.loadMapApi();
     this.citiesLoading = true;
-    this._countriesServiceProxy
-      .getAllCitiesForTableDropdown(countryId)
-      .pipe(
-        finalize(() => {
-          this.facility = this.data;
-          this.facility.cityId = undefined;
-        })
-      )
-      .subscribe((res) => {
-        this.allCities = res;
-        this.citiesLoading = false;
-      });
+    this.facility.cityId = undefined;
+    this._countriesServiceProxy.getAllCitiesForTableDropdown(countryId).subscribe((res) => {
+      this.allCities = res;
+      this.citiesLoading = false;
+    });
   }
 }
