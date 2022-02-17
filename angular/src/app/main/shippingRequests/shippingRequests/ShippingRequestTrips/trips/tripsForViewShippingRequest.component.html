@@ -123,6 +123,7 @@
                     <li *ngIf="permission.isGranted('Pages.ShippingRequestTrips.Edit') && feature.isEnabled('App.Shipper') && record.status == 0">
                       <a class="dropdown-item" (click)="AddNewTripModal.show(record)">{{ l('Edit') }}</a>
                     </li>
+
                     <li>
                       <a class="dropdown-item" (click)="ViewTripModal.show(record.id)">{{ l('View') }}</a>
                     </li>
@@ -137,6 +138,9 @@
                     </li>
                     <li *ngIf="permission.isGranted('Pages.ShippingRequestTrips.Delete') && feature.isEnabled('App.Shipper') && record.status == 0">
                       <a class="dropdown-item" (click)="AddNewTripModal.deleteTrip(record.id)">{{ l('Delete') }}</a>
+                    </li>
+                    <li *ngIf="isShipper || isTachyonDealer">
+                      <a class="dropdown-item" (click)="saveAsTemplateModal.show(record.id)">{{ l('SaveAsTemplate') }}</a>
                     </li>
                     <li>
                       <!--                        <a class="dropdown-item" (click)="AddNewTripModal.printMasterWaybill(record.id)">{{ l('PrintMasterWaybill') }}</a>-->
@@ -180,3 +184,4 @@
 <trip-accident-modal #TripAccidentModal (modalSave)="getShippingRequestsTrips($event)"></trip-accident-modal>
 <view-trip-accident-modal #ViewTripAccidentModal (modalcanceltrip)="reloadPage()"></view-trip-accident-modal>
 <app-shipping-request-rating-modal #shippingRequestRatingModal></app-shipping-request-rating-modal>
+<create-new-entity-template-modal #saveAsTemplateModal></create-new-entity-template-modal>

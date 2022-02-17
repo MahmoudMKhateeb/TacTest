@@ -26,6 +26,7 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   @ViewChild('paginatorchild', { static: false }) paginator: Paginator;
   @ViewChild('AddNewTripModal', { static: false }) AddNewTripModal: CreateOrEditTripComponent;
   @ViewChild('ViewTripModal', { static: false }) ViewTripModal: ViewTripModalComponent;
+  @ViewChild('saveAsTemplateModal', { static: false }) saveAsTemplateModal: ViewTripModalComponent;
   @Input() ShippingRequest: ShippingRequestDto;
   @Input() VasListFromFather: GetShippingRequestVasForViewDto[];
   tripsByTmsEnabled: boolean;
