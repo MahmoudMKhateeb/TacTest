@@ -29,10 +29,13 @@ namespace TACHYON.Shipping.ShippingRequestUpdates
         {
             // Here We Check is the Shipping Request in pre-price stage (Status NeedAction)
             // And Has Offer not accepted Yet
-            var isSrHasOffers = await _shippingRequestRepository.GetAll()
-                .Where(x=> x.Id == input.ShippingRequestId && x.Status == ShippingRequestStatus.NeedsAction)
-                .AnyAsync(sr =>  sr.TotalOffers > 0);
+            var isSrHasOffers = await (from request in _shippingRequestRepository.GetAll() 
+                where request.Id == input.ShippingRequestId && (request.Status == ShippingRequestStatus.NeedsAction 
+                                                                || request.Status == ShippingRequestStatus.PrePrice)
+                join offer in _priceOfferRepository.GetAll() on request.Id equals offer.ShippingRequestId
+                select offer).AnyAsync();
             
+
             if (!isSrHasOffers) return;
 
             var createdSrUpdates = await _priceOfferRepository.GetAll()
