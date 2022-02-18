@@ -361,9 +361,12 @@ namespace TACHYON.Documents.DocumentFiles
             }
 
 
-            if (!input.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
+            if (input.UpdateDocumentFileInput != null)
             {
-                documentFile.BinaryObjectId = await _documentFilesManager.SaveDocumentFileBinaryObject(input.UpdateDocumentFileInput.FileToken, AbpSession.TenantId);
+                if (!input.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
+                {
+                    documentFile.BinaryObjectId = await _documentFilesManager.SaveDocumentFileBinaryObject(input.UpdateDocumentFileInput.FileToken, AbpSession.TenantId);
+                }
             }
             await _documentFileRepository.InsertAsync(documentFile);
 
