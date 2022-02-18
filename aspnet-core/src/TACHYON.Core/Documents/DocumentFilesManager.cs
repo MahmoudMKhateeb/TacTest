@@ -294,10 +294,7 @@ namespace TACHYON.Documents
                 input.IsRejected = false;
 
             }
-            else
-            {
-                throw new AbpValidationException(L("ThereisamissingDocumnets", documentFile.DocumentTypeFk.DisplayName));
-            }
+
             if (documentFile.ExpirationDate != input.ExpirationDate)
             {
                 input.IsAccepted = false;
