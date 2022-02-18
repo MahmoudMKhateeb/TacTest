@@ -64440,7 +64440,7 @@ export class CreateOrEditDocumentFileDto implements ICreateOrEditDocumentFileDto
   documentTypeDto!: DocumentTypeDto;
   otherDocumentTypeName!: string | undefined;
   updateDocumentFileInput!: UpdateDocumentFileInput;
-  name!: string;
+  name!: string | undefined;
   extn!: string | undefined;
   binaryObjectId!: string;
   expirationDate!: moment.Moment | undefined;
@@ -64533,7 +64533,7 @@ export interface ICreateOrEditDocumentFileDto {
   documentTypeDto: DocumentTypeDto;
   otherDocumentTypeName: string | undefined;
   updateDocumentFileInput: UpdateDocumentFileInput;
-  name: string;
+  name: string | undefined;
   extn: string | undefined;
   binaryObjectId: string;
   expirationDate: moment.Moment | undefined;
