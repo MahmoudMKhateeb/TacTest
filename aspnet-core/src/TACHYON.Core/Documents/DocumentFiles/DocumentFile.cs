@@ -28,7 +28,7 @@ namespace TACHYON.Documents.DocumentFiles
         [StringLength(DocumentFileConsts.MaxNameLength, MinimumLength = DocumentFileConsts.MinNameLength)]
         public virtual string Name { get; set; }
 
-        [Required]
+      
         [StringLength(DocumentFileConsts.MaxExtnLength, MinimumLength = DocumentFileConsts.MinExtnLength)]
         public virtual string Extn { get; set; }
 
