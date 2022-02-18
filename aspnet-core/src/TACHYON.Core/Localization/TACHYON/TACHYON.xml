@@ -2503,5 +2503,7 @@
 	<text name="NoMatchingDrivers">There is no Drivers</text>
     <text name="ResetReceiverCode">Reset shipment receiver code</text>
     <text name="ReceiverCodeConfirmationMsg">Are you sure you want to reset the receiver code for this shipment?</text>
+	<text name="CompanyDescriptionHint">Company description must be at most 500 characters</text>
+
 	</texts>
 </localizationDictionary>
