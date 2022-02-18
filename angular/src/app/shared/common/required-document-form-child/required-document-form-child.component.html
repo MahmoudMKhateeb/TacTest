@@ -12,10 +12,10 @@
           (change)="DocFileChangeEvent($event, item, i)"
           type="file"
           class="custom-file-input is-valid"
-          required="item.documentTypeDto.isRequiredDocumentTemplate"
+          [required]="item.documentTypeDto.isRequiredDocumentTemplate"
           [ngClass]="{
             'is-valid': item?.name,
-            'is-invalid': parentForm.submitted && !item?.name
+            'is-invalid': parentForm.submitted && !item?.name && item.documentTypeDto.isRequiredDocumentTemplate
           }"
         />
         <label class="custom-file-label text-truncate" [for]="item.documentTypeDto.displayName"> {{ item.name ? item.name : l('SelectFile') }}</label>
@@ -58,18 +58,19 @@
       </div>
     </div>
     <div *ngIf="item.documentTypeDto.hasNumber" class="form-group col-6">
-      <label><span *ngIf="item.documentTypeDto.isRequiredNumber" class="required-fileds"> *</span> {{ l('Number') }} </label>
+      <label>
+        {{ l('Number') }}
+        <span *ngIf="item.documentTypeDto.isRequiredNumber" class="required-fileds"> *</span>
+      </label>
       <input
         #inputDocumentNumber="ngModel"
         name="number{{ i }}"
         id="number{{ i }}"
         class="form-control m-input"
-        required="item.documentTypeDto.isRequiredNumber"
-        [maxLength]="item.documentTypeDto.numberMaxDigits"
-        [minLength]="item.documentTypeDto.numberMinDigits"
-        type="text"
+        [required]="item.documentTypeDto.isRequiredNumber"
         [(ngModel)]="item.number"
-        (keypress)="onlyNumberKey($event)"
+        type="text"
+        [pattern]="'[0-9]{' + item.documentTypeDto.numberMinDigits + ',' + item.documentTypeDto.numberMaxDigits + '}'"
         [ngClass]="{
           'is-valid': inputDocumentNumber.valid,
           'is-invalid': parentForm.submitted && !inputDocumentNumber.valid

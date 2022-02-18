@@ -1,18 +1,11 @@
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Injector, Input, OnInit, Output } from '@angular/core';
-import {
-  CreateOrEditDocumentFileDto,
-  DocumentFilesServiceProxy,
-  DocumentTypesServiceProxy,
-  UpdateDocumentFileInput,
-  UserEditDto,
-} from '@shared/service-proxies/service-proxies';
+import { ChangeDetectorRef, Component, EventEmitter, Injector, Input, OnInit, Output } from '@angular/core';
+import { CreateOrEditDocumentFileDto, DocumentTypesServiceProxy, UpdateDocumentFileInput } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { DateType } from '@app/shared/common/hijri-gregorian-datepicker/consts';
 import { FileItem, FileUploader, FileUploaderOptions } from '@node_modules/ng2-file-upload';
 import { AppConsts } from '@shared/AppConsts';
 import { IAjaxResponse, TokenService } from '@node_modules/abp-ng2-module';
 import { ControlContainer, NgForm } from '@angular/forms';
-import { NgbDateStruct } from '@node_modules/@ng-bootstrap/ng-bootstrap';
 import { FileDownloadService } from '@shared/utils/file-download.service';
 
 @Component({
@@ -182,7 +175,7 @@ export class RequiredDocumentFormChildComponent extends AppComponentBase impleme
   intilizedates() {
     this.createOrEditDocumentFileDtos.forEach((element) => {
       if (element.documentTypeDto.hasExpirationDate) {
-        element.expirationDate = this.dateFormatterService.NgbDateStructToMoment(this.todayGregorian);
+        //element.expirationDate = this.dateFormatterService.NgbDateStructToMoment(this.todayGregorian);
       }
     });
   }

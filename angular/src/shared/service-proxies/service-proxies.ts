@@ -33611,10 +33611,10 @@ export class RoutStepsServiceProxy {
    * @param shippingRequestId (optional)
    * @return Success
    */
-  getAllFacilitiesByCityAndTenantForDropdown(shippingRequestId: number | null | undefined): Observable<FacilityForDropdownDto[]> {
+  getAllFacilitiesByCityAndTenantForDropdown(shippingRequestId: number | undefined): Observable<FacilityForDropdownDto[]> {
     let url_ = this.baseUrl + '/api/services/app/RoutSteps/GetAllFacilitiesByCityAndTenantForDropdown?';
-    if (shippingRequestId !== undefined && shippingRequestId !== null)
-      url_ += 'shippingRequestId=' + encodeURIComponent('' + shippingRequestId) + '&';
+    if (shippingRequestId === null) throw new Error("The parameter 'shippingRequestId' cannot be null.");
+    else if (shippingRequestId !== undefined) url_ += 'shippingRequestId=' + encodeURIComponent('' + shippingRequestId) + '&';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {

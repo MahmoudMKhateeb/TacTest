@@ -16,19 +16,22 @@ namespace TACHYON.Documents.DocumentFiles.Dtos
             {
                 return;
             }
-            if (!DocumentTypeDto.HasNumber)
-            {
-                return;
-            }
 
-            if (DocumentTypeDto.NumberMaxDigits != 0 && Number.ToString().Length > DocumentTypeDto.NumberMaxDigits)
+            if (DocumentTypeDto.IsRequiredDocumentTemplate && Name.IsNullOrEmpty())
             {
-                context.Results.Add(new ValidationResult("Number digits must be less than or equal " + DocumentTypeDto.NumberMaxDigits));
+                context.Results.Add(new ValidationResult("File Required"));
             }
-
-            if (DocumentTypeDto.NumberMinDigits != 0 && Number.ToString().Length < DocumentTypeDto.NumberMinDigits)
+            if (DocumentTypeDto.HasNumber && !Number.IsNullOrEmpty())
             {
-                context.Results.Add(new ValidationResult("Number digits must be greater than or equal " + DocumentTypeDto.NumberMinDigits));
+                if (DocumentTypeDto.NumberMaxDigits != 0 && Number.ToString().Length > DocumentTypeDto.NumberMaxDigits)
+                {
+                    context.Results.Add(new ValidationResult("Number digits must be less than or equal " + DocumentTypeDto.NumberMaxDigits));
+                }
+
+                if (DocumentTypeDto.NumberMinDigits != 0 && Number.ToString().Length < DocumentTypeDto.NumberMinDigits)
+                {
+                    context.Results.Add(new ValidationResult("Number digits must be greater than or equal " + DocumentTypeDto.NumberMinDigits));
+                }
             }
 
             if (IsAccepted && IsRejected)
@@ -43,7 +46,6 @@ namespace TACHYON.Documents.DocumentFiles.Dtos
         public string OtherDocumentTypeName { get; set; }
         public UpdateDocumentFileInput UpdateDocumentFileInput { get; set; }
 
-        [Required]
         [StringLength(DocumentFileConsts.MaxNameLength, MinimumLength = DocumentFileConsts.MinNameLength)]
         public string Name { get; set; }
 
