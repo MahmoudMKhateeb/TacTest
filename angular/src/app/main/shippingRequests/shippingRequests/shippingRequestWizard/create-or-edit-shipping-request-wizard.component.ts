@@ -231,7 +231,6 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
             this.notify.error(this.l('PleaseCompleteMissingFields'));
           } else {
             this.createOrEditStep3();
-            console.log('transportTypeId : ', this.step3Dto.transportTypeId);
             wizardObj.goNext();
           }
           //statements;
@@ -301,7 +300,6 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     this.shippingRequestType == 'tachyondeal' ? (this.step1Dto.isTachyonDeal = true) : (this.step1Dto.isTachyonDeal = false);
     this.shippingRequestType == 'directrequest' ? (this.step1Dto.isDirectRequest = true) : (this.step1Dto.isDirectRequest = false);
     this.step1Dto.startTripDate == null ? (this.step1Dto.startTripDate = moment(this.today)) : null;
-    console.log('sds ', this.step1Dto);
     this._shippingRequestsServiceProxy
       .createOrEditStep1(this.step1Dto)
       .pipe(
