@@ -33611,10 +33611,10 @@ export class RoutStepsServiceProxy {
    * @param shippingRequestId (optional)
    * @return Success
    */
-  getAllFacilitiesByCityAndTenantForDropdown(shippingRequestId: number | null | undefined): Observable<FacilityForDropdownDto[]> {
+  getAllFacilitiesByCityAndTenantForDropdown(shippingRequestId: number | undefined): Observable<FacilityForDropdownDto[]> {
     let url_ = this.baseUrl + '/api/services/app/RoutSteps/GetAllFacilitiesByCityAndTenantForDropdown?';
-    if (shippingRequestId !== undefined && shippingRequestId !== null)
-      url_ += 'shippingRequestId=' + encodeURIComponent('' + shippingRequestId) + '&';
+    if (shippingRequestId === null) throw new Error("The parameter 'shippingRequestId' cannot be null.");
+    else if (shippingRequestId !== undefined) url_ += 'shippingRequestId=' + encodeURIComponent('' + shippingRequestId) + '&';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -65360,6 +65360,7 @@ export class DriverDetailDto implements IDriverDetailDto {
   langaugeCode!: string | undefined;
   langaugeName!: string | undefined;
   langaugeNative!: string | undefined;
+  mobileAppManual!: string | undefined;
 
   constructor(data?: IDriverDetailDto) {
     if (data) {
@@ -65380,6 +65381,7 @@ export class DriverDetailDto implements IDriverDetailDto {
       this.langaugeCode = _data['langaugeCode'];
       this.langaugeName = _data['langaugeName'];
       this.langaugeNative = _data['langaugeNative'];
+      this.mobileAppManual = _data['mobileAppManual'];
     }
   }
 
@@ -65401,6 +65403,7 @@ export class DriverDetailDto implements IDriverDetailDto {
     data['langaugeCode'] = this.langaugeCode;
     data['langaugeName'] = this.langaugeName;
     data['langaugeNative'] = this.langaugeNative;
+    data['mobileAppManual'] = this.mobileAppManual;
     return data;
   }
 }
@@ -65415,6 +65418,7 @@ export interface IDriverDetailDto {
   langaugeCode: string | undefined;
   langaugeName: string | undefined;
   langaugeNative: string | undefined;
+  mobileAppManual: string | undefined;
 }
 
 export class UserDeviceTokenDto implements IUserDeviceTokenDto {

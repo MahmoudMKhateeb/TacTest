@@ -9,7 +9,7 @@ namespace TACHYON.Shipping.ShippingRequests
     {
         [Description("New")]
         StandBy,
-        [Description("PriceSubmitted")]
+        [Description("OnGoing")]
         OnGoing,
         [Description("Confirmed")]
         Closed,
