@@ -108,6 +108,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   requestType: any;
   AllShippers: ShippersForDropDownDto[];
   public allCarriers: CarriersForDropDownDto[];
+  isCarrierSass = false;
 
   constructor(
     injector: Injector,
@@ -128,7 +129,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   breadcrumbs: BreadcrumbItem[] = [new BreadcrumbItem(this.l('ShippingRequest'), '/app/main/shippingRequests/shippingRequests')];
   @ViewChild('wizard', { static: true }) el: ElementRef;
   step1Form = this.fb.group({
-    shippingRequestType: [{ value: '', disabled: false }, Validators.required],
+    shippingRequestType: [{ value: '', disabled: false }, this.isCarrierSass ? Validators.required : false],
     shippingType: [{ value: '', disabled: false }, Validators.required],
     carrier: [{ value: '', disabled: false }],
     tripsStartDate: [''],
@@ -172,6 +173,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     this.loadAllDropDownLists();
     this.allRoutTypes = this.enumToArray.transform(ShippingRequestRouteType);
     this.GetAllCarriersForDropDown();
+    this.isCarrierSass = this.feature.isEnabled('App.CarrierAsASaas');
   }
 
   ngOnDestroy() {
@@ -226,6 +228,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
         case 3: {
           console.log('step 3');
           if (this.step3Form.invalid) {
+            //console.log(this.step3Form);
             wizardObj.stop();
             this.step3Form.markAllAsTouched();
             this.notify.error(this.l('PleaseCompleteMissingFields'));
@@ -298,8 +301,13 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     this.step1Dto.id = this.activeShippingRequestId || undefined;
     this.shippingRequestType == 'bidding' ? (this.step1Dto.isBid = true) : (this.step1Dto.isBid = false);
     this.shippingRequestType == 'tachyondeal' ? (this.step1Dto.isTachyonDeal = true) : (this.step1Dto.isTachyonDeal = false);
-    this.shippingRequestType == 'directrequest' ? (this.step1Dto.isDirectRequest = true) : (this.step1Dto.isDirectRequest = false);
+    this.shippingRequestType == 'directrequest' || this.isCarrierSass
+      ? (this.step1Dto.isDirectRequest = true)
+      : (this.step1Dto.isDirectRequest = false);
     this.step1Dto.startTripDate == null ? (this.step1Dto.startTripDate = moment(this.today)) : null;
+    if (this.isCarrierSass) {
+      this.step1Dto.carrierTenantIdForDirectRequest = this.appSession.tenantId;
+    }
     this._shippingRequestsServiceProxy
       .createOrEditStep1(this.step1Dto)
       .pipe(

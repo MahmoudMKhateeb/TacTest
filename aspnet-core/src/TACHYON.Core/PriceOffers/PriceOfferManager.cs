@@ -96,24 +96,29 @@ namespace TACHYON.PriceOffers
         public async Task<PriceOffer> InitPriceOffer(CreateOrEditPriceOfferInput input)
         {
             DisableTenancyFilters();
+            using (CurrentUnitOfWork.DisableFilter("IHasIsDrafted")) // filter disabled for carrier as saas 
+            {
+                var shippingRequest = await _shippingRequestsRepository
+                    .GetAll()
+                    .Include(x => x.Tenant)
+                    .Include(x => x.ShippingRequestVases)
+                    .FirstOrDefaultAsync
+                    (
+                        r => r.Id == input.ShippingRequestId && (r.Status == ShippingRequestStatus.NeedsAction || r.Status == ShippingRequestStatus.PrePrice ||
+                                                                 r.Status == ShippingRequestStatus.AcceptedAndWaitingCarrier)
+                    );
+                if (shippingRequest == null) throw new UserFriendlyException(L("TheShippingRequestNotFound"));
 
-            var shippingRequest = await _shippingRequestsRepository
-                                        .GetAll()
-                                        .Include(x => x.Tenant)
-                                        .Include(x => x.ShippingRequestVases)
-                                        .FirstOrDefaultAsync(r => r.Id == input.ShippingRequestId && (r.Status == ShippingRequestStatus.NeedsAction || r.Status == ShippingRequestStatus.PrePrice || r.Status == ShippingRequestStatus.AcceptedAndWaitingCarrier));
-            if (shippingRequest == null) throw new UserFriendlyException(L("TheShippingRequestNotFound"));
+                if (await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer))
+                    input.Channel = PriceOfferChannel.TachyonManageService;
 
-            if (await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer))
-                input.Channel = PriceOfferChannel.TachyonManageService;
+                var offer = ObjectMapper.Map<PriceOffer>(input);
+                offer.PriceOfferDetails = await GetListOfVases(input, shippingRequest);
+                offer.ShippingRequestFk = shippingRequest;
+                Calculate(offer, shippingRequest, input);
 
-            var offer = ObjectMapper.Map<PriceOffer>(input);
-            offer.PriceOfferDetails = await GetListOfVases(input, shippingRequest);
-            offer.ShippingRequestFk = shippingRequest;
-            Calculate(offer, shippingRequest, input);
-
-            return offer;
-
+                return offer;
+            }
 
         }
 
@@ -213,7 +218,7 @@ namespace TACHYON.PriceOffers
 
             }
 
-            await SetShippingRequestPricing(offer);
+             SetShippingRequestPricing(offer);
             await _appNotifier.ShipperAcceptedOffer(offer);
             return offer.Status;
         }
@@ -382,7 +387,7 @@ namespace TACHYON.PriceOffers
         /// </summary>
         /// <param name="offer"></param>
         /// <returns></returns>
-        private Task SetShippingRequestPricing(PriceOffer offer)
+        public void SetShippingRequestPricing(PriceOffer offer)
         {
             var request = offer.ShippingRequestFk;
             request.Price = offer.TotalAmountWithCommission;
@@ -391,7 +396,7 @@ namespace TACHYON.PriceOffers
             request.VatSetting = offer.TaxVat;
             request.TotalCommission = offer.TotalAmountWithCommission;
             request.CarrierPrice = offer.TotalAmount;
-            return Task.CompletedTask;
+            
         }
         /// <summary>
         /// If the current user login have feature carrier get the offer 

@@ -208,12 +208,12 @@ export class AppNavigationService {
             'CreateNewRequest',
             'Pages.ShippingRequests',
             '',
-            '/app/main/shippingRequests/shippingRequests/createOrEdit',
+            '/app/main/shippingRequests/shippingRequestWizard',
             undefined,
             undefined,
             undefined,
             undefined,
-            () => this.isEnabled('App.Shipper')
+            () => this.isEnabled('App.Shipper') || this.isEnabled('App.CarrierAsASaas')
           ),
           new AppMenuItem('MyShippingRequests', 'Pages.ShippingRequests', '', '/app/main/shippingRequests/shippingRequests'),
           new AppMenuItem('Marketplace', '', '', '/app/main/marketplace/list', undefined, undefined, undefined, undefined, () =>
@@ -543,7 +543,7 @@ export class AppNavigationService {
         //added these line because the tachyon dealer has the above permision and he suppose not to see this menu
         undefined,
         undefined,
-        () => !this.isEnabled('App.TachyonDealer') && !this.isEnabled('App.Carrier')
+        () => (!this.isEnabled('App.TachyonDealer') && !this.isEnabled('App.Carrier')) || this.isEnabled('App.CarrierAsASaas')
       ),
 
       // new AppMenuItem(
