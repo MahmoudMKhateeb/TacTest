@@ -27,6 +27,7 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   @ViewChild('AddNewTripModal', { static: false }) AddNewTripModal: CreateOrEditTripComponent;
   @ViewChild('ViewTripModal', { static: false }) ViewTripModal: ViewTripModalComponent;
   @Input() ShippingRequest: ShippingRequestDto;
+  @Input() shippingRequestForView: any;
   @Input() VasListFromFather: GetShippingRequestVasForViewDto[];
   tripsByTmsEnabled: boolean;
   saving = false;
@@ -38,6 +39,18 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
     private _shippingRequestTripsService: ShippingRequestsTripServiceProxy
   ) {
     super(injector);
+  }
+
+  /**
+   * checks if the current user has the ability to edit a trip
+   * @constructor
+   */
+  get CanEditTrip(): boolean {
+    //check if shipper or  Carrier has a Saas feature and Can edit this trip
+    return (
+      this.feature.isEnabled('App.Shipper') ||
+      (this.feature.isEnabled('App.CarrierAsASaas') && this.ShippingRequest.carrierTenantId === this.shippingRequestForView.tenantId)
+    );
   }
 
   getShippingRequestsTrips(event?: LazyLoadEvent) {
