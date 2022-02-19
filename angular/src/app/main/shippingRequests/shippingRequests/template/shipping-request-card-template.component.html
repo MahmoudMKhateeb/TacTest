@@ -50,6 +50,9 @@
               <b *ngIf="!Channel && item.statusTitle" class="infoHighLight green stautsTruck">
                 {{ l(item.statusTitle) }}
               </b>
+              <b *ngIf="item.isSaas" class="infoHighLight green stautsTruck">
+                {{ l('saas') }}
+              </b>
             </div>
 
             <div class="detailsRoad">
@@ -136,6 +139,11 @@
             </div>
             <div class="actionsShip">
               <div>
+                <a
+                  *ngIf="feature.isEnabled('App.Shipper') || feature.isEnabled('App.CarrierAsASaas')"
+                  href="javascript:void(0)"
+                  class="infoHighLight blue"
+                ></a>
                 <a *ngIf="(!Channel || Channel == 3) && item.createdByTachyonDealer" href="javascript:void(0)" class="infoHighLight blue">
                   {{ l('CreatedByTachyonDealer') }}
                 </a>
@@ -200,7 +208,11 @@
                   {{ l('More') }}
                 </a>
                 <a
-                  *ngIf="permission.isGranted('Pages.ShippingRequests.Edit') && !Channel && feature.isEnabled('App.Shipper')"
+                  *ngIf="
+                    permission.isGranted('Pages.ShippingRequests.Edit') &&
+                    !Channel &&
+                    (feature.isEnabled('App.Shipper') || feature.isEnabled('App.CarrierAsASaas'))
+                  "
                   [queryParams]="{ id: item.id }"
                   [routerLink]="['/app/main/shippingRequests/shippingRequests/createOrEdit']"
                   class="red"

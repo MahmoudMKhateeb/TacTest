@@ -20,7 +20,7 @@ using TACHYON.Receivers.Exporting;
 namespace TACHYON.Receivers
 {
     [AbpAuthorize(AppPermissions.Pages_Receivers)]
-    [RequiresFeature(AppFeatures.Shipper, AppFeatures.TachyonDealer)]
+    [RequiresFeature(AppFeatures.Shipper, AppFeatures.TachyonDealer, AppFeatures.CarrierAsASaas)]
     public class ReceiversAppService : TACHYONAppServiceBase, IReceiversAppService
     {
         private readonly IRepository<Receiver> _receiverRepository;
