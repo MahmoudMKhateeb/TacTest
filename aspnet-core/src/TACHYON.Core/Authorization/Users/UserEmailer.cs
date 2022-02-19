@@ -10,9 +10,12 @@ using Abp.Runtime.Security;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using RestSharp;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Dynamic.Core;
@@ -25,6 +28,7 @@ using TACHYON.Documents;
 using TACHYON.Documents.DocumentFiles;
 using TACHYON.Documents.DocumentsEntities;
 using TACHYON.Editions;
+using TACHYON.EmailTemplates;
 using TACHYON.Localization;
 using TACHYON.MultiTenancy;
 using TACHYON.Net.Emailing;
@@ -46,8 +50,12 @@ namespace TACHYON.Authorization.Users
         private readonly UserManager _userManager;
         private readonly DocumentFilesManager _documentFilesManager;
         private readonly IRepository<User, long> _lookupUserRepository;
+        private readonly IRepository<EmailTemplate> _emailTemplatesRepository;
+        private readonly IRepository<EmailTemplateTranslation> _emailTemplatesTranslationRepository;
 
-        private bool isRTL = CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft; // to improve this use it as local variable 
+
+        private bool
+            isRTL = CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft; // to improve this use it as local variable 
 
         public UserEmailer(
             IEmailTemplateProvider emailTemplateProvider,
@@ -58,7 +66,9 @@ namespace TACHYON.Authorization.Users
             ISettingManager settingManager,
             EditionManager editionManager,
             UserManager userManager,
-            IRepository<User, long> lookupUserRepository)
+            IRepository<User, long> lookupUserRepository,
+            IRepository<EmailTemplate> emailTemplatesRepository,
+            IRepository<EmailTemplateTranslation> emailTemplatesTranslationRepository)
         {
             _emailTemplateProvider = emailTemplateProvider;
             _emailSender = emailSender;
@@ -69,8 +79,24 @@ namespace TACHYON.Authorization.Users
             _editionManager = editionManager;
             _userManager = userManager;
             _lookupUserRepository = lookupUserRepository;
+            _emailTemplatesRepository = emailTemplatesRepository;
+            _emailTemplatesTranslationRepository = emailTemplatesTranslationRepository;
         }
 
+
+        private async Task<string> GetContent(EmailTemplateTypesEnum type)
+        {
+
+            var template = await _emailTemplatesRepository.GetAllIncluding(x => x.Translations)
+                .FirstOrDefaultAsync(x => x.EmailTemplateType == type);
+
+            var emailTemplateTranslation = template.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name));
+            var converter = new ExpandoObjectConverter();
+
+            dynamic content = JsonConvert.DeserializeObject<ExpandoObject>(emailTemplateTranslation != null ? emailTemplateTranslation.TranslatedContent : template.Content, converter);
+
+            return content.html;
+        }
         /// <summary>
         /// Send email activation link to user's email address.
         /// </summary>
@@ -88,6 +114,9 @@ namespace TACHYON.Authorization.Users
                 throw new Exception("EmailConfirmationCode should be set in order to send email activation link.");
             }
 
+            string html = await GetContent(EmailTemplateTypesEnum.EmailActivation);
+
+
             link = link.Replace("{userId}", user.Id.ToString());
             link = link.Replace("{confirmationCode}", Uri.EscapeDataString(user.EmailConfirmationCode));
 
@@ -99,17 +128,26 @@ namespace TACHYON.Authorization.Users
             link = EncryptQueryParameters(link);
 
             var tenancyName = GetTenancyNameOrNull(user.TenantId);
-            var emailTemplate = await GetEmailTemplate(user.TenantId, L("EmailActivation_Title"), L("EmailActivation_SubTitle"));
-            var mailMessage = new StringBuilder("<div class=\"data\"><ul>");
-            mailMessage.AppendLine($"<li><span class=\"first\">{L("Name")}</span><span class=\"last\">{user.FullName}</span></li>");
-            mailMessage.AppendLine($"<li><span class=\"first\">{L("CompanyNameEmailTemplate")}</span><span class=\"last\">{tenancyName}</span></li>");
-            mailMessage.AppendLine($"<li><span class=\"first\">{L("Email")}</span><span class=\"last\">{user.EmailAddress}</span></li>");
-            mailMessage.AppendLine($"<li><span class=\"first\">{L("Password")}</span><span class=\"last\">{password}</span></li>");
-            mailMessage.AppendLine($"</ul></div><p class=\"lead\">{L("ClickButtonMessage")}</p>");
-            mailMessage.AppendLine($"<a href=\"{link}\" style=\"width: 200px\" class=\"btn btn-red\">{L("Verify")}</a>");
-            mailMessage.AppendLine($"<p class=\"lead\">{L("CopyLinkMessage")}</p>");
-            mailMessage.AppendLine($"<p class=\"lead\">{link}</p>");
-            await ReplaceBodyAndSend(user.EmailAddress, L("EmailActivation_Subject"), emailTemplate, mailMessage);
+
+
+
+
+            html = html
+                .Replace("{{Name}}", user.FullName)
+                .Replace("{{Company name}}", tenancyName)
+                .Replace("{{Email}}", user.EmailAddress)
+                .Replace("{{Password}}", password)
+                .Replace("{{Link}}", link);
+
+
+
+            await _emailSender.SendAsync(new MailMessage
+            {
+                To = { user.EmailAddress },
+                Subject = L("EmailActivation_Subject"),
+                Body = html,
+                IsBodyHtml = true
+            });
         }
 
         /// <summary>
@@ -121,15 +159,19 @@ namespace TACHYON.Authorization.Users
         [UnitOfWork]
         public virtual async Task SendAllApprovedDocumentsAsync(int tenantId, string loginLink)
         {
-            // You Can Get Login Link From IAppUrlService And Method Name : GetTachyonPlatformLoginUrl()
-            var emailTemplate = await GetEmailTemplate(tenantId, L("ApprovedDocuments_Title"));
-            var mailMessage = new StringBuilder($"<div class=\"data\"><h2>{L("DearsAt")}");
-            mailMessage.AppendLine($" {IntoSpan(await GetCompanyName(tenantId))}</h2></div>");
-            mailMessage.AppendLine($"<p class=\"lead\" style=\"width: 65%; margin: 30px auto\">{L("ApprovalDocumentsEmailMessage")}</p>");
-            mailMessage.AppendLine($"<a href=\"{loginLink}\" class=\"lead\" target=\"blank\" ");
-            mailMessage.AppendLine($"style=\"width: 85%; margin: 30px auto\">{L("LoginLink")}</a>");
+            string html = await GetContent(EmailTemplateTypesEnum.DocumentsApproved);
+            html = html
+               .Replace("{{CompanyName}}", await GetCompanyName(tenantId))
+               .Replace("{{loginLink}}", loginLink);
 
-            await ReplaceBodyAndSend(await GetTenantAdminEmailAddress(tenantId), L("DocumentsApproved"), emailTemplate, mailMessage);
+            await _emailSender.SendAsync(new MailMessage
+            {
+                To = { await GetTenantAdminEmailAddress(tenantId) },
+                Subject = L("DocumentsApproved"),
+                Body = html,
+                IsBodyHtml = true
+            });
+
         }
 
 
@@ -636,7 +678,6 @@ namespace TACHYON.Authorization.Users
                               where user.TenantId == tenantId
                                     && user.UserName.Equals(AbpUserBase.AdminUserName)
                               select user.EmailAddress).FirstOrDefaultAsync();
-
             }
 
         }

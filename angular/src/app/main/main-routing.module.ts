@@ -1,6 +1,7 @@
 ﻿import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { DriverLicenseTypesComponent } from './driverLicenseTypes/driverLicenseTypes/driverLicenseTypes.component';
+import { EmailTemplatesComponent } from './emailTemplates/emailTemplates/emailTemplates.component';
 import { DangerousGoodTypesComponent } from './goods/dangerousGoodTypes/dangerousGoodTypes.component';
 import { PackingTypesComponent } from './packingTypes/packingTypes/packingTypes.component';
 import { ShippingTypesComponent } from './shippingTypes/shippingTypes/shippingTypes.component';
@@ -74,6 +75,7 @@ import { TrackingComponent } from '@app/main/shippingRequests/shippingRequests/t
       {
         path: '',
         children: [
+          { path: 'emailTemplates/emailTemplates', component: EmailTemplatesComponent, data: { permission: 'Pages.EmailTemplates' } },
           { path: 'driverLicenseTypes/driverLicenseTypes', component: DriverLicenseTypesComponent, data: { permission: 'Pages.DriverLicenseTypes' } },
           { path: 'goods/dangerousGoodTypes', component: DangerousGoodTypesComponent, data: { permission: 'Pages.DangerousGoodTypes' } },
           {

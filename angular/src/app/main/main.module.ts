@@ -2,6 +2,9 @@
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
+import { EmailTemplatesComponent } from './emailTemplates/emailTemplates/emailTemplates.component';
+import { ViewEmailTemplateModalComponent } from './emailTemplates/emailTemplates/view-emailTemplate-modal.component';
+import { CreateOrEditEmailTemplateModalComponent } from './emailTemplates/emailTemplates/create-or-edit-emailTemplate-modal.component';
 import { DriverLicenseTypesComponent } from './driverLicenseTypes/driverLicenseTypes/driverLicenseTypes.component';
 import { CreateOrEditDriverLicenseTypeModalComponent } from './driverLicenseTypes/driverLicenseTypes/create-or-edit-driverLicenseType-modal.component';
 
@@ -281,6 +284,9 @@ import { RatingModule } from '@node_modules/primeng/rating';
 import { StepsModule } from '@node_modules/primeng/steps';
 import { ViewRatingComponent } from '@app/main/shippingRequests/shippingRequests/rating/view-rating/view-rating.component';
 import { ShipmentHistoryComponent } from '@app/main/shippingRequests/shippingRequests/shipment-history/shipment-history.component';
+import { EmailEditorModule } from '@node_modules/angular-email-editor';
+import { EmailTemplateTranslationTemplateComponent } from './emailTemplates/emailTemplates/email-template-translation-template.component';
+import { CreateOrEditEmailTemplateTranslationModalComponent } from './emailTemplates/emailTemplates/create-or-edit-email-template-translation-modal.component';
 
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
@@ -335,8 +341,12 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     NgbModule,
     NgbDropdownModule,
     StepsModule,
+    EmailEditorModule,
   ],
   declarations: [
+    EmailTemplatesComponent,
+    ViewEmailTemplateModalComponent,
+    CreateOrEditEmailTemplateModalComponent,
     DriverLicenseTypesComponent,
     CreateOrEditDriverLicenseTypeModalComponent,
     DangerousGoodTypesComponent,
@@ -534,6 +544,8 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ShippingRequestRatingModalComponent,
     ViewRatingComponent,
     ShipmentHistoryComponent,
+    EmailTemplateTranslationTemplateComponent,
+    CreateOrEditEmailTemplateTranslationModalComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },

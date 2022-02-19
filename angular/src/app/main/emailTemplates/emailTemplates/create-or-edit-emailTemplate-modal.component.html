@@ -1,0 +1,102 @@
+﻿<div
+  bsModal
+  #createOrEditModal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="createOrEditModal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content" style="width: fit-content">
+      <form *ngIf="active" #emailTemplateForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            <span *ngIf="emailTemplate.id">{{ l('EditEmailTemplate') }}</span>
+            <span *ngIf="!emailTemplate.id">{{ l('CreateNewEmailTemplate') }}</span>
+          </h4>
+
+          <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group m-form__group">
+            <label for="emailTemplateType">{{ l('emailTemplateType') }}</label>
+            <select
+              name="emailTemplateType"
+              [(ngModel)]="emailTemplate.emailTemplateType"
+              class="form-control"
+              required
+              #emailTemplateType="ngModel"
+              id="emailTemplateType"
+            >
+              <option value="">{{ l('Select') }}</option>
+              <option [value]="code.key" *ngFor="let code of types">
+                {{ code.value | localize }}
+              </option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="EmailTemplate_Name">{{ l('Name') }} *</label>
+            <input
+              type="text"
+              #EmailTemplate_Name="ngModel"
+              id="EmailTemplate_Name"
+              class="form-control"
+              [(ngModel)]="emailTemplate.name"
+              name="Name"
+              required
+            />
+            <validation-messages [formCtrl]="EmailTemplate_Name"></validation-messages>
+          </div>
+
+          <div class="form-group">
+            <label for="EmailTemplate_DisplayName">{{ l('DisplayName') }}</label>
+            <input
+              type="text"
+              #EmailTemplate_DisplayName="ngModel"
+              id="EmailTemplate_DisplayName"
+              class="form-control"
+              [(ngModel)]="emailTemplate.displayName"
+              name="DisplayName"
+            />
+            <validation-messages [formCtrl]="EmailTemplate_DisplayName"></validation-messages>
+          </div>
+
+          <div class="form-group">
+            <label for="EmailTemplate_Tags">{{ l('Tags') }} *</label>
+            <input
+              type="text"
+              #EmailTemplate_Tags="ngModel"
+              id="EmailTemplate_Tags"
+              class="form-control"
+              [(ngModel)]="emailTemplate.tags"
+              name="Tags"
+              required
+            />
+            <validation-messages [formCtrl]="EmailTemplate_Tags"></validation-messages>
+          </div>
+
+          <div class="container">
+            <email-editor minHeight="700px" (loaded)="editorLoaded($event)" (ready)="editorReady($event)"></email-editor>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
+          <button
+            type="submit"
+            class="btn btn-primary blue"
+            [disabled]="!emailTemplateForm.form.valid"
+            [buttonBusy]="saving"
+            [busyText]="l('SavingWithThreeDot')"
+          >
+            <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

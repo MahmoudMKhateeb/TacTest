@@ -6,6 +6,11 @@
     /// </summary>
     public static class AppPermissions
     {
+        public const string Pages_EmailTemplates = "Pages.EmailTemplates";
+        public const string Pages_EmailTemplates_Create = "Pages.EmailTemplates.Create";
+        public const string Pages_EmailTemplates_Edit = "Pages.EmailTemplates.Edit";
+        public const string Pages_EmailTemplates_Delete = "Pages.EmailTemplates.Delete";
+
         public const string Pages_DriverLicenseTypes = "Pages.DriverLicenseTypes";
         public const string Pages_DriverLicenseTypes_Create = "Pages.DriverLicenseTypes.Create";
         public const string Pages_DriverLicenseTypes_Edit = "Pages.DriverLicenseTypes.Edit";
@@ -52,7 +57,6 @@
         public const string Pages_PlateTypes_Create = "Pages.PlateTypes.Create";
         public const string Pages_PlateTypes_Edit = "Pages.PlateTypes.Edit";
         public const string Pages_PlateTypes_Delete = "Pages.PlateTypes.Delete";
-
 
         #region Shipping Request
 
@@ -106,7 +110,6 @@
         public const string Pages_ShippingTypes_Create = "Pages.ShippingTypes.Create";
         public const string Pages_ShippingTypes_Edit = "Pages.ShippingTypes.Edit";
         public const string Pages_ShippingTypes_Delete = "Pages.ShippingTypes.Delete";
-
 
         public const string Pages_Nationalities = "Pages.Nationalities";
         public const string Pages_Nationalities_Create = "Pages.Nationalities.Create";
@@ -232,7 +235,6 @@
         public const string Pages_Offers_Reject = "Pages.Offers.Reject";
         public const string Pages_Offers_Cancel = "Pages.Offers.Cancel";
         public const string Pages_Offers_Accept = "Pages.Offers.Accept";
-
 
         public const string Pages_RoutSteps = "Pages.RoutSteps";
         public const string Pages_RoutSteps_Create = "Pages.RoutSteps.Create";
@@ -403,7 +405,6 @@
         public const string Pages_Administration_Host_Maintenance = "Pages.Administration.Host.Maintenance";
         public const string Pages_Administration_Host_Settings = "Pages.Administration.Host.Settings";
         public const string Pages_Administration_Host_Dashboard = "Pages.Administration.Host.Dashboard";
-
 
         /*Invoices */
         public const string Pages_Administration_Host_Invoices_Periods = "Pages.Administration.Host.Invoices.Periods";
