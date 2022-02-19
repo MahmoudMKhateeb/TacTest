@@ -755,7 +755,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
    * save or edit Shipping Request As Template
    */
   SaveOrEditEntityTemplate(): void {
-    if (!isNotNullOrUndefined(this.templateName)) return; //Template Name Is Empty Exit
+    if (!isNotNullOrUndefined(this.templateName) || this.templateName === '') return; //Template Name Is Empty Exit
     let entityTemplateInput: CreateOrEditEntityTemplateInputDto = new CreateOrEditEntityTemplateInputDto();
     let msg;
     entityTemplateInput.templateName = this.templateName;

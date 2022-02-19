@@ -200,7 +200,7 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
    * save Shipping Request As Template
    */
   SaveAsTemplate(): void {
-    if (!isNotNullOrUndefined(this.templateName)) return;
+    if (!isNotNullOrUndefined(this.templateName) || this.templateName === '') return;
     this.loading = true;
     let entityTemplateInput: CreateOrEditEntityTemplateInputDto = new CreateOrEditEntityTemplateInputDto();
     entityTemplateInput.templateName = this.templateName;
