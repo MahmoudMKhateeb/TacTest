@@ -2,18 +2,33 @@
 {
     public enum EmailTemplateTypesEnum
     {
+        EmailTemplateLayout = 0,
+        
+        #region TACHYON_Emails
+
         EmailActivation = 1,
-        DocumentsApproved = 2,
+        ApprovedDocument = 2,
         RejectedDocument = 3,
-        ExpiredDateDocuments = 4,
-        DocumentsExpirerationreminder =5,
-        PasswordResetCode = 6,
-        NewChatMessageEmail = 7,
-        PasswordUpdated = 8,
-        WarningSuspendAccount = 9,
-        SuspendedAccountDocumentExpired = 10,
-        InvoiceDue = 11,
-        SubscriptionExpire = 12,
+        ResetPassword = 4,
+        PasswordUpdated = 5,
+        SuspendedAccountWarning = 6,
+        SuspendedAccount = 7,
+        InvoiceDue = 8,
+        IssuedInvoice = 9,
+        ExpiredDocuments = 10,
+
+        #endregion
+
+        #region ABP_Emails
+
+        SubscriptionExpire = 11,
+        SubscriptionAssignedToAnother = 12,
+        FailedSubscriptionTerminations = 13,
+        SubscriptionExpiringSoon = 14,
+        ChatMessage = 15,
+
+        #endregion
+        
 
     }
 }

@@ -16,6 +16,7 @@ using Abp.UI;
 using AutoMapper.QueryableExtensions;
 using DevExtreme.AspNet.Data.ResponseModel;
 using JetBrains.Annotations;
+using TACHYON.Authorization.Users;
 using TACHYON.Common;
 using TACHYON.Common.Dto;
 using TACHYON.Storage;
@@ -28,11 +29,16 @@ namespace TACHYON.EmailTemplates
     {
         private readonly IRepository<EmailTemplate> _emailTemplateRepository;
         private readonly IRepository<EmailTemplateTranslation> _emailTemplatesTranslationRepository;
+        private readonly IUserEmailer _emailer;
 
-        public EmailTemplatesAppService(IRepository<EmailTemplate> emailTemplateRepository, IRepository<EmailTemplateTranslation> emailTemplatesTranslationRepository)
+        public EmailTemplatesAppService(
+            IRepository<EmailTemplate> emailTemplateRepository,
+            IRepository<EmailTemplateTranslation> emailTemplatesTranslationRepository,
+            IUserEmailer emailer)
         {
             _emailTemplateRepository = emailTemplateRepository;
             _emailTemplatesTranslationRepository = emailTemplatesTranslationRepository;
+            _emailer = emailer;
         }
 
         public async Task<PagedResultDto<GetEmailTemplateForViewDto>> GetAll(GetAllEmailTemplatesInput input)
@@ -177,6 +183,19 @@ namespace TACHYON.EmailTemplates
 
             return output;
         }
+
+        public async Task<GetEmailTemplateLayoutForView> GetEmailTemplateLayout()
+        {
+            string content = await _emailTemplateRepository.GetAll()
+                .Where(x => x.EmailTemplateType == EmailTemplateTypesEnum.EmailTemplateLayout)
+                .Select(x => x.Content)
+                .FirstOrDefaultAsync();
+            var adminUser = await UserManager.GetAdminHostAsync();
+            return new GetEmailTemplateLayoutForView() {Content = content,DefaultTestEmail = adminUser.EmailAddress};
+        }
+
+        public async Task SendTestEmailTemplate(TestEmailTemplateInputDto input)
+        => await _emailer.SendTestTemplateEmail(input);
 
         [AbpAuthorize(AppPermissions.Pages_EmailTemplates_Edit)]
         public async Task<GetEmailTemplateForEditOutput> GetEmailTemplateForEdit(EntityDto input)

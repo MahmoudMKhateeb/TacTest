@@ -1,7 +1,12 @@
 ﻿import { Component, EventEmitter, Injector, OnInit, Output, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
-import { CreateOrEditEmailTemplateDto, EmailTemplatesServiceProxy, EmailTemplateTypesEnum } from '@shared/service-proxies/service-proxies';
+import {
+  CreateOrEditEmailTemplateDto,
+  EmailTemplatesServiceProxy,
+  EmailTemplateTypesEnum,
+  TestEmailTemplateInputDto,
+} from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { EmailEditorComponent } from '@node_modules/angular-email-editor';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
@@ -22,6 +27,8 @@ export class CreateOrEditEmailTemplateModalComponent extends AppComponentBase im
 
   active = false;
   saving = false;
+  testEmailDto = new TestEmailTemplateInputDto();
+  templateLayoutDto;
 
   emailTemplate: CreateOrEditEmailTemplateDto = new CreateOrEditEmailTemplateDto();
 
@@ -32,10 +39,14 @@ export class CreateOrEditEmailTemplateModalComponent extends AppComponentBase im
   }
 
   show(emailTemplateId?: number): void {
+    this._emailTemplatesServiceProxy.getEmailTemplateLayout().subscribe((result) => {
+      this.templateLayoutDto = result;
+    });
+    this.testEmailDto.testEmail = this.templateLayoutDto.defaultTestEmail;
     if (!emailTemplateId) {
       this.emailTemplate = new CreateOrEditEmailTemplateDto();
       this.emailTemplate.id = emailTemplateId;
-
+      this.emailTemplate.content = this.templateLayoutDto.content;
       this.active = true;
       this.modal.show();
     } else {
@@ -85,6 +96,15 @@ export class CreateOrEditEmailTemplateModalComponent extends AppComponentBase im
     // this.emailEditor.editor.loadDesign({});
   }
 
+  sendTestEmail() {
+    this.testEmailDto.testTemplate = this.emailTemplate;
+    this.emailEditor.editor.exportHtml((data) => {
+      this.testEmailDto.testTemplate.content = JSON.stringify(data);
+      this._emailTemplatesServiceProxy.sendTestEmailTemplate(this.testEmailDto).subscribe(() => {
+        abp.notify.success(this.l('TestEmailSentSuccessfully'));
+      });
+    });
+  }
   // called when the editor has finished loading
   editorReady($event: any) {
     this.emailEditor.editor.loadDesign(JSON.parse(this.emailTemplate.content).design);

@@ -27,11 +27,9 @@ namespace TACHYON.Documents
         [UnitOfWork]
         protected override async Task ExecuteAsync(int? args)
         {
-            using (var uow = _unitOfWorkManager.Begin())
-            {
-                await _documentFilesManager.SendDocumentsExpiredStatusMonthlyReport();
-                uow.Complete();
-            }
+            using var uow = _unitOfWorkManager.Begin();
+            await _documentFilesManager.SendDocumentsExpiredStatusMonthlyReport();
+            await uow.CompleteAsync();
         }
     }
 }
