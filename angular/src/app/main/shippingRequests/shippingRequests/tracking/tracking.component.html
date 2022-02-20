@@ -94,6 +94,34 @@
                           <i class="flaticon-pin"></i> {{ l('Track') }}</a
                         >
                         <a
+                          *ngIf="
+                            item.shippingRequestStatus == ShippingRequestStatusEnum.PrePrice &&
+                            (item.isPrePayedShippingRequest == null || item.isPrePayedShippingRequest == false) &&
+                            (((feature.isEnabled('App.Shipper') || feature.isEnabled('App.Carrier')) &&
+                              (item.status == ShippingRequestTripStatusEnum.New || item.status == ShippingRequestTripStatusEnum.Intransit) &&
+                              item.cancelStatus == ShippingRequestTripCancelStatusEnum.None) ||
+                              (feature.isEnabled('App.TachyonDealer') &&
+                                (item.status == ShippingRequestTripStatusEnum.New || item.status == ShippingRequestTripStatusEnum.Intransit) &&
+                                (item.cancelStatus == ShippingRequestTripCancelStatusEnum.None ||
+                                  item.cancelStatus == ShippingRequestTripCancelStatusEnum.Rejected)))
+                          "
+                          class="btn btn-sm btn-light-danger font-weight-bolder text-uppercase mr-2"
+                          (click)="CancelTripModal.show(item.id, item.status, item.canceledReason, item.requestType)"
+                          >{{ l('Cancel') }}</a
+                        >
+
+                        <a
+                          *ngIf="
+                            item.shippingRequestStatus == ShippingRequestStatusEnum.PrePrice &&
+                            (item.isPrePayedShippingRequest == null || item.isPrePayedShippingRequest == false) &&
+                            feature.isEnabled('App.TachyonDealer') &&
+                            item.cancelStatus == ShippingRequestTripCancelStatusEnum.WaitingForTMSApproval
+                          "
+                          class="btn btn-sm btn-light-danger font-weight-bolder text-uppercase mr-2"
+                          (click)="TmsCancelTripModal.ApplyCancel(item.id)"
+                          >{{ l('ApplyCancel') }}</a
+                        >
+                        <a
                           class="btn btn-sm btn-light-danger font-weight-bolder text-uppercase mr-2"
                           *ngIf="activePanelId == item.id"
                           href="javascript:void(0)"
@@ -274,3 +302,5 @@
 <tacking-search-model #ModelSearch (modalsearch)="search()"></tacking-search-model>
 <view-trip-accident-modal #ModelIncident></view-trip-accident-modal>
 <trip-accident-modal #TripAccidentModal></trip-accident-modal>
+<app-cancel-trip-modal #CancelTripModal (modalSave)="LoadData()"></app-cancel-trip-modal>
+<app-tms-cancel-trip-modal #TmsCancelTripModal (modalSave)="LoadData()"></app-tms-cancel-trip-modal>

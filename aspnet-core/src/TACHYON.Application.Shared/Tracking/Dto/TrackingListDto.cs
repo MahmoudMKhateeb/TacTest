@@ -11,6 +11,7 @@ namespace TACHYON.Tracking.Dto
         public ShippingRequestTripStatus Status { get; set; }
         public string StatusTitle { get { return Status.GetEnumDescription(); } set { } }
         public string Driver { get; set; }
+        public ShippingRequestTripCancelStatus CancelStatus { get; set; }
         public decimal DriverRate { get; set; }
         public ShippingRequestTripDriverStatus DriverStatus { get; set; }
         public string DriverStatusTitle { get { return DriverStatus.GetEnumDescription(); } set { } }

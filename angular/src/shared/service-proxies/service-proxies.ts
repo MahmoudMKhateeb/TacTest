@@ -39359,71 +39359,6 @@ export class ShippingRequestsTripServiceProxy {
   }
 
   /**
-   * @param id (optional)
-   * @param isForce (optional)
-   * @return Success
-   */
-  cancelByAccident(id: number | undefined, isForce: boolean | undefined): Observable<void> {
-    let url_ = this.baseUrl + '/api/services/app/ShippingRequestsTrip/CancelByAccident?';
-    if (id === null) throw new Error("The parameter 'id' cannot be null.");
-    else if (id !== undefined) url_ += 'id=' + encodeURIComponent('' + id) + '&';
-    if (isForce === null) throw new Error("The parameter 'isForce' cannot be null.");
-    else if (isForce !== undefined) url_ += 'isForce=' + encodeURIComponent('' + isForce) + '&';
-    url_ = url_.replace(/[?&]$/, '');
-
-    let options_: any = {
-      observe: 'response',
-      responseType: 'blob',
-      headers: new HttpHeaders({}),
-    };
-
-    return this.http
-      .request('post', url_, options_)
-      .pipe(
-        _observableMergeMap((response_: any) => {
-          return this.processCancelByAccident(response_);
-        })
-      )
-      .pipe(
-        _observableCatch((response_: any) => {
-          if (response_ instanceof HttpResponseBase) {
-            try {
-              return this.processCancelByAccident(<any>response_);
-            } catch (e) {
-              return <Observable<void>>(<any>_observableThrow(e));
-            }
-          } else return <Observable<void>>(<any>_observableThrow(response_));
-        })
-      );
-  }
-
-  protected processCancelByAccident(response: HttpResponseBase): Observable<void> {
-    const status = response.status;
-    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-    let _headers: any = {};
-    if (response.headers) {
-      for (let key of response.headers.keys()) {
-        _headers[key] = response.headers.get(key);
-      }
-    }
-    if (status === 200) {
-      return blobToText(responseBlob).pipe(
-        _observableMergeMap((_responseText) => {
-          return _observableOf<void>(<any>null);
-        })
-      );
-    } else if (status !== 200 && status !== 204) {
-      return blobToText(responseBlob).pipe(
-        _observableMergeMap((_responseText) => {
-          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
-        })
-      );
-    }
-    return _observableOf<void>(<any>null);
-  }
-
-  /**
    * @param body (optional)
    * @return Success
    */
@@ -75198,28 +75133,28 @@ export interface IEnvelope {
 }
 
 export class Geometry implements IGeometry {
-  readonly area!: number;
-  dimension!: Dimension;
-  readonly geometryType!: string | undefined;
-  readonly isEmpty!: boolean;
-  readonly isValid!: boolean;
-  readonly length!: number;
-  readonly numGeometries!: number;
-  readonly numPoints!: number;
-  boundary!: Geometry;
-  centroid!: Point;
-  envelope!: Geometry;
-  interiorPoint!: Point;
-  readonly isSimple!: boolean;
-  pointOnSurface!: Point;
-  ogcGeometryType!: OgcGeometryType;
-  srid!: number;
   factory!: GeometryFactory;
   userData!: any | undefined;
+  srid!: number;
+  readonly geometryType!: string | undefined;
+  ogcGeometryType!: OgcGeometryType;
   precisionModel!: PrecisionModel;
   coordinate!: Coordinate;
   readonly coordinates!: Coordinate[] | undefined;
+  readonly numPoints!: number;
+  readonly numGeometries!: number;
+  readonly isSimple!: boolean;
+  readonly isValid!: boolean;
+  readonly isEmpty!: boolean;
+  readonly area!: number;
+  readonly length!: number;
+  centroid!: Point;
+  interiorPoint!: Point;
+  pointOnSurface!: Point;
+  dimension!: Dimension;
+  boundary!: Geometry;
   boundaryDimension!: Dimension;
+  envelope!: Geometry;
   envelopeInternal!: Envelope;
   readonly isRectangle!: boolean;
 
@@ -75233,31 +75168,31 @@ export class Geometry implements IGeometry {
 
   init(_data?: any) {
     if (_data) {
-      (<any>this).area = _data['area'];
-      this.dimension = _data['dimension'];
-      (<any>this).geometryType = _data['geometryType'];
-      (<any>this).isEmpty = _data['isEmpty'];
-      (<any>this).isValid = _data['isValid'];
-      (<any>this).length = _data['length'];
-      (<any>this).numGeometries = _data['numGeometries'];
-      (<any>this).numPoints = _data['numPoints'];
-      this.boundary = _data['boundary'] ? Geometry.fromJS(_data['boundary']) : <any>undefined;
-      this.centroid = _data['centroid'] ? Point.fromJS(_data['centroid']) : <any>undefined;
-      this.envelope = _data['envelope'] ? Geometry.fromJS(_data['envelope']) : <any>undefined;
-      this.interiorPoint = _data['interiorPoint'] ? Point.fromJS(_data['interiorPoint']) : <any>undefined;
-      (<any>this).isSimple = _data['isSimple'];
-      this.pointOnSurface = _data['pointOnSurface'] ? Point.fromJS(_data['pointOnSurface']) : <any>undefined;
-      this.ogcGeometryType = _data['ogcGeometryType'];
-      this.srid = _data['srid'];
       this.factory = _data['factory'] ? GeometryFactory.fromJS(_data['factory']) : <any>undefined;
       this.userData = _data['userData'];
+      this.srid = _data['srid'];
+      (<any>this).geometryType = _data['geometryType'];
+      this.ogcGeometryType = _data['ogcGeometryType'];
       this.precisionModel = _data['precisionModel'] ? PrecisionModel.fromJS(_data['precisionModel']) : <any>undefined;
       this.coordinate = _data['coordinate'] ? Coordinate.fromJS(_data['coordinate']) : <any>undefined;
       if (Array.isArray(_data['coordinates'])) {
         (<any>this).coordinates = [] as any;
         for (let item of _data['coordinates']) (<any>this).coordinates!.push(Coordinate.fromJS(item));
       }
+      (<any>this).numPoints = _data['numPoints'];
+      (<any>this).numGeometries = _data['numGeometries'];
+      (<any>this).isSimple = _data['isSimple'];
+      (<any>this).isValid = _data['isValid'];
+      (<any>this).isEmpty = _data['isEmpty'];
+      (<any>this).area = _data['area'];
+      (<any>this).length = _data['length'];
+      this.centroid = _data['centroid'] ? Point.fromJS(_data['centroid']) : <any>undefined;
+      this.interiorPoint = _data['interiorPoint'] ? Point.fromJS(_data['interiorPoint']) : <any>undefined;
+      this.pointOnSurface = _data['pointOnSurface'] ? Point.fromJS(_data['pointOnSurface']) : <any>undefined;
+      this.dimension = _data['dimension'];
+      this.boundary = _data['boundary'] ? Geometry.fromJS(_data['boundary']) : <any>undefined;
       this.boundaryDimension = _data['boundaryDimension'];
+      this.envelope = _data['envelope'] ? Geometry.fromJS(_data['envelope']) : <any>undefined;
       this.envelopeInternal = _data['envelopeInternal'] ? Envelope.fromJS(_data['envelopeInternal']) : <any>undefined;
       (<any>this).isRectangle = _data['isRectangle'];
     }
@@ -75272,31 +75207,31 @@ export class Geometry implements IGeometry {
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data['area'] = this.area;
-    data['dimension'] = this.dimension;
-    data['geometryType'] = this.geometryType;
-    data['isEmpty'] = this.isEmpty;
-    data['isValid'] = this.isValid;
-    data['length'] = this.length;
-    data['numGeometries'] = this.numGeometries;
-    data['numPoints'] = this.numPoints;
-    data['boundary'] = this.boundary ? this.boundary.toJSON() : <any>undefined;
-    data['centroid'] = this.centroid ? this.centroid.toJSON() : <any>undefined;
-    data['envelope'] = this.envelope ? this.envelope.toJSON() : <any>undefined;
-    data['interiorPoint'] = this.interiorPoint ? this.interiorPoint.toJSON() : <any>undefined;
-    data['isSimple'] = this.isSimple;
-    data['pointOnSurface'] = this.pointOnSurface ? this.pointOnSurface.toJSON() : <any>undefined;
-    data['ogcGeometryType'] = this.ogcGeometryType;
-    data['srid'] = this.srid;
     data['factory'] = this.factory ? this.factory.toJSON() : <any>undefined;
     data['userData'] = this.userData;
+    data['srid'] = this.srid;
+    data['geometryType'] = this.geometryType;
+    data['ogcGeometryType'] = this.ogcGeometryType;
     data['precisionModel'] = this.precisionModel ? this.precisionModel.toJSON() : <any>undefined;
     data['coordinate'] = this.coordinate ? this.coordinate.toJSON() : <any>undefined;
     if (Array.isArray(this.coordinates)) {
       data['coordinates'] = [];
       for (let item of this.coordinates) data['coordinates'].push(item.toJSON());
     }
+    data['numPoints'] = this.numPoints;
+    data['numGeometries'] = this.numGeometries;
+    data['isSimple'] = this.isSimple;
+    data['isValid'] = this.isValid;
+    data['isEmpty'] = this.isEmpty;
+    data['area'] = this.area;
+    data['length'] = this.length;
+    data['centroid'] = this.centroid ? this.centroid.toJSON() : <any>undefined;
+    data['interiorPoint'] = this.interiorPoint ? this.interiorPoint.toJSON() : <any>undefined;
+    data['pointOnSurface'] = this.pointOnSurface ? this.pointOnSurface.toJSON() : <any>undefined;
+    data['dimension'] = this.dimension;
+    data['boundary'] = this.boundary ? this.boundary.toJSON() : <any>undefined;
     data['boundaryDimension'] = this.boundaryDimension;
+    data['envelope'] = this.envelope ? this.envelope.toJSON() : <any>undefined;
     data['envelopeInternal'] = this.envelopeInternal ? this.envelopeInternal.toJSON() : <any>undefined;
     data['isRectangle'] = this.isRectangle;
     return data;
@@ -75304,28 +75239,28 @@ export class Geometry implements IGeometry {
 }
 
 export interface IGeometry {
-  area: number;
-  dimension: Dimension;
-  geometryType: string | undefined;
-  isEmpty: boolean;
-  isValid: boolean;
-  length: number;
-  numGeometries: number;
-  numPoints: number;
-  boundary: Geometry;
-  centroid: Point;
-  envelope: Geometry;
-  interiorPoint: Point;
-  isSimple: boolean;
-  pointOnSurface: Point;
-  ogcGeometryType: OgcGeometryType;
-  srid: number;
   factory: GeometryFactory;
   userData: any | undefined;
+  srid: number;
+  geometryType: string | undefined;
+  ogcGeometryType: OgcGeometryType;
   precisionModel: PrecisionModel;
   coordinate: Coordinate;
   coordinates: Coordinate[] | undefined;
+  numPoints: number;
+  numGeometries: number;
+  isSimple: boolean;
+  isValid: boolean;
+  isEmpty: boolean;
+  area: number;
+  length: number;
+  centroid: Point;
+  interiorPoint: Point;
+  pointOnSurface: Point;
+  dimension: Dimension;
+  boundary: Geometry;
   boundaryDimension: Dimension;
+  envelope: Geometry;
   envelopeInternal: Envelope;
   isRectangle: boolean;
 }
@@ -82696,6 +82631,7 @@ export class ShippingRequestDto implements IShippingRequestDto {
   addTripsByTmsEnabled!: boolean;
   shipperReference!: string | undefined;
   shipperInvoiceNo!: string | undefined;
+  isPrePayed!: boolean | undefined;
   readonly statusTitle!: string | undefined;
   readonly bidStatusTitle!: string | undefined;
   id!: number;
@@ -82741,6 +82677,7 @@ export class ShippingRequestDto implements IShippingRequestDto {
       this.addTripsByTmsEnabled = _data['addTripsByTmsEnabled'];
       this.shipperReference = _data['shipperReference'];
       this.shipperInvoiceNo = _data['shipperInvoiceNo'];
+      this.isPrePayed = _data['isPrePayed'];
       (<any>this).statusTitle = _data['statusTitle'];
       (<any>this).bidStatusTitle = _data['bidStatusTitle'];
       this.id = _data['id'];
@@ -82787,6 +82724,7 @@ export class ShippingRequestDto implements IShippingRequestDto {
     data['addTripsByTmsEnabled'] = this.addTripsByTmsEnabled;
     data['shipperReference'] = this.shipperReference;
     data['shipperInvoiceNo'] = this.shipperInvoiceNo;
+    data['isPrePayed'] = this.isPrePayed;
     data['statusTitle'] = this.statusTitle;
     data['bidStatusTitle'] = this.bidStatusTitle;
     data['id'] = this.id;
@@ -82826,6 +82764,7 @@ export interface IShippingRequestDto {
   addTripsByTmsEnabled: boolean;
   shipperReference: string | undefined;
   shipperInvoiceNo: string | undefined;
+  isPrePayed: boolean | undefined;
   statusTitle: string | undefined;
   bidStatusTitle: string | undefined;
   id: number;
@@ -89881,6 +89820,7 @@ export class TrackingListDto implements ITrackingListDto {
   status!: ShippingRequestTripStatus;
   statusTitle!: string | undefined;
   driver!: string | undefined;
+  cancelStatus!: ShippingRequestTripCancelStatus;
   driverRate!: number;
   driverStatus!: ShippingRequestTripDriverStatus;
   driverStatusTitle!: string | undefined;
@@ -89911,6 +89851,8 @@ export class TrackingListDto implements ITrackingListDto {
   waybillNumber!: number | undefined;
   referenceNumber!: string | undefined;
   tenantId!: number;
+  shippingRequestStatus!: ShippingRequestStatus;
+  isPrePayedShippingRequest!: boolean | undefined;
   id!: number;
 
   constructor(data?: ITrackingListDto) {
@@ -89927,6 +89869,7 @@ export class TrackingListDto implements ITrackingListDto {
       this.status = _data['status'];
       this.statusTitle = _data['statusTitle'];
       this.driver = _data['driver'];
+      this.cancelStatus = _data['cancelStatus'];
       this.driverRate = _data['driverRate'];
       this.driverStatus = _data['driverStatus'];
       this.driverStatusTitle = _data['driverStatusTitle'];
@@ -89957,6 +89900,8 @@ export class TrackingListDto implements ITrackingListDto {
       this.waybillNumber = _data['waybillNumber'];
       this.referenceNumber = _data['referenceNumber'];
       this.tenantId = _data['tenantId'];
+      this.shippingRequestStatus = _data['shippingRequestStatus'];
+      this.isPrePayedShippingRequest = _data['isPrePayedShippingRequest'];
       this.id = _data['id'];
     }
   }
@@ -89974,6 +89919,7 @@ export class TrackingListDto implements ITrackingListDto {
     data['status'] = this.status;
     data['statusTitle'] = this.statusTitle;
     data['driver'] = this.driver;
+    data['cancelStatus'] = this.cancelStatus;
     data['driverRate'] = this.driverRate;
     data['driverStatus'] = this.driverStatus;
     data['driverStatusTitle'] = this.driverStatusTitle;
@@ -90004,6 +89950,8 @@ export class TrackingListDto implements ITrackingListDto {
     data['waybillNumber'] = this.waybillNumber;
     data['referenceNumber'] = this.referenceNumber;
     data['tenantId'] = this.tenantId;
+    data['shippingRequestStatus'] = this.shippingRequestStatus;
+    data['isPrePayedShippingRequest'] = this.isPrePayedShippingRequest;
     data['id'] = this.id;
     return data;
   }
@@ -90014,6 +89962,7 @@ export interface ITrackingListDto {
   status: ShippingRequestTripStatus;
   statusTitle: string | undefined;
   driver: string | undefined;
+  cancelStatus: ShippingRequestTripCancelStatus;
   driverRate: number;
   driverStatus: ShippingRequestTripDriverStatus;
   driverStatusTitle: string | undefined;
@@ -90044,6 +89993,8 @@ export interface ITrackingListDto {
   waybillNumber: number | undefined;
   referenceNumber: string | undefined;
   tenantId: number;
+  shippingRequestStatus: ShippingRequestStatus;
+  isPrePayedShippingRequest: boolean | undefined;
   id: number;
 }
 

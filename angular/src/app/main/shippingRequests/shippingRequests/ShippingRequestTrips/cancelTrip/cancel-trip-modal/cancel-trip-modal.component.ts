@@ -25,19 +25,21 @@ export class CancelTripModalComponent extends AppComponentBase implements OnInit
   view: boolean = false;
   applyCancel: boolean = false;
   rejectForm: boolean = false;
+  requestType: number;
   ShippingRequestTripStatusEnum = ShippingRequestTripStatus;
   constructor(injector: Injector, private _tripService: TripService, private _shippingRequestTripsService: ShippingRequestsTripServiceProxy) {
     super(injector);
   }
   ngOnInit(): void {}
 
-  public show(trip: ShippingRequestsTripListDto): void {
+  public show(tripId: undefined, status: undefined, canceledReason: undefined, requestType: undefined): void {
     this.reason = new CancelTripInput();
-    this.reason.id = trip.id;
-    if (trip.status == this.ShippingRequestTripStatusEnum.Canceled) {
+    this.reason.id = tripId;
+    this.requestType = requestType;
+    if (status == this.ShippingRequestTripStatusEnum.Canceled) {
       // Canceled Trip => show reason
       this.view = true;
-      this.reason.canceledReason = trip.canceledReason;
+      this.reason.canceledReason = canceledReason;
     }
     this.active = true;
     this.modal.show();
@@ -45,9 +47,7 @@ export class CancelTripModalComponent extends AppComponentBase implements OnInit
 
   cancelTrip() {
     this.saving = true;
-    this._tripService.currentShippingRequest.subscribe((res) => {
-      if (res.shippingRequest.requestType == ShippingRequestType.TachyonManageService) this.isTMS = true;
-    });
+    if (this.requestType == ShippingRequestType.TachyonManageService) this.isTMS = true;
 
     if (this.isTachyonDealer) {
       this.reason.isApproved = true;

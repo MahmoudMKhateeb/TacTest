@@ -114,7 +114,7 @@
                 <a
                   class="dropdown-item noPadding"
                   *ngIf="record.status == ShippingRequestTripStatusEnum.Canceled"
-                  (click)="CancelTripModal.show(record)"
+                  (click)="CancelTripModal.show(record.id, record.status, record.canceledReason, record.requestType)"
                   ><i class="flaticon-warning text-danger"></i> {{ l('reason') }}</a
                 >
                 <a (click)="ViewTripAccidentModal.getAll(record)" *ngIf="record.hasAccident"><i class="flaticon-warning text-danger"></i> </a>
@@ -160,23 +160,30 @@
                     </li>
                     <li
                       *ngIf="
-                        (!feature.isEnabled('App.TachyonDealer') &&
+                        ShippingRequest.status == ShippingRequestStatusEnum.PrePrice &&
+                        (ShippingRequest.isPrePayed == null || ShippingRequest.isPrePayed == false) &&
+                        ((!feature.isEnabled('App.TachyonDealer') &&
                           (record.status == ShippingRequestTripStatusEnum.New || record.status == ShippingRequestTripStatusEnum.Intransit) &&
                           record.cancelStatus == ShippingRequestTripCancelStatusEnum.None) ||
-                        (feature.isEnabled('App.TachyonDealer') &&
-                          (record.status == ShippingRequestTripStatusEnum.New || record.status == ShippingRequestTripStatusEnum.Intransit) &&
-                          (record.cancelStatus == ShippingRequestTripCancelStatusEnum.None ||
-                            record.cancelStatus == ShippingRequestTripCancelStatusEnum.Rejected))
+                          (feature.isEnabled('App.TachyonDealer') &&
+                            (record.status == ShippingRequestTripStatusEnum.New || record.status == ShippingRequestTripStatusEnum.Intransit) &&
+                            (record.cancelStatus == ShippingRequestTripCancelStatusEnum.None ||
+                              record.cancelStatus == ShippingRequestTripCancelStatusEnum.Rejected)))
                       "
                     >
-                      <a class="dropdown-item" (click)="CancelTripModal.show(record)">{{ l('Cancel') }}</a>
+                      <a class="dropdown-item" (click)="CancelTripModal.show(record.id, record.status, record.canceledReason, record.requestType)">{{
+                        l('Cancel')
+                      }}</a>
                     </li>
                     <li
                       *ngIf="
-                        feature.isEnabled('App.TachyonDealer') && record.cancelStatus == ShippingRequestTripCancelStatusEnum.WaitingForTMSApproval
+                        ShippingRequest.status == ShippingRequestStatusEnum.PrePrice &&
+                        (ShippingRequest.isPrePayed == null || ShippingRequest.isPrePayed == false) &&
+                        feature.isEnabled('App.TachyonDealer') &&
+                        record.cancelStatus == ShippingRequestTripCancelStatusEnum.WaitingForTMSApproval
                       "
                     >
-                      <a class="dropdown-item" (click)="TmsCancelTripModal.ApplyCancel(record)">{{ l('ApplyCancel') }}</a>
+                      <a class="dropdown-item" (click)="TmsCancelTripModal.ApplyCancel(record.id)">{{ l('ApplyCancel') }}</a>
                     </li>
                     <li
                       *ngIf="

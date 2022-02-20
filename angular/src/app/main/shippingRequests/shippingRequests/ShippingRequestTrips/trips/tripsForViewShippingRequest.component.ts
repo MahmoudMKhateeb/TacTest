@@ -8,6 +8,7 @@ import {
   GetShippingRequestVasForViewDto,
   ShippingRequestDto,
   ShippingRequestsServiceProxy,
+  ShippingRequestStatus,
   ShippingRequestsTripServiceProxy,
   ShippingRequestTripCancelStatus,
   ShippingRequestTripStatus,
@@ -32,6 +33,7 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   @Input() VasListFromFather: GetShippingRequestVasForViewDto[];
   tripsByTmsEnabled: boolean;
   ShippingRequestTripStatusEnum = ShippingRequestTripStatus;
+  ShippingRequestStatusEnum = ShippingRequestStatus;
   ShippingRequestTripCancelStatusEnum = ShippingRequestTripCancelStatus;
   saving = false;
   constructor(

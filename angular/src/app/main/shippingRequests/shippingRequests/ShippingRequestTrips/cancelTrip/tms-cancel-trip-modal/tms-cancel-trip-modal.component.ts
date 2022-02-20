@@ -29,9 +29,9 @@ export class TmsCancelTripModalComponent extends AppComponentBase implements OnI
   }
   ngOnInit(): void {}
 
-  ApplyCancel(trip: ShippingRequestsTripListDto) {
+  ApplyCancel(tripId: undefined) {
     this.reason = new CancelTripInput();
-    this.reason.id = trip.id;
+    this.reason.id = tripId;
     this.applyCancel = true;
     this.active = true;
     this.modal.show();

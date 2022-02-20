@@ -54,6 +54,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         /// shipper add his invoice number manually
         /// </summary>
         public string ShipperInvoiceNo { get; set; }
+        public bool? IsPrePayed { get; set; }
         public string StatusTitle
         {
             get { return Status.GetEnumDescription(); }
