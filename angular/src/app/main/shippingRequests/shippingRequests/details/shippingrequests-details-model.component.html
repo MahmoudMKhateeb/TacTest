@@ -177,7 +177,7 @@
                                 <a
                                   class="dropdown-item"
                                   *ngIf="record.status == ShippingRequestUpdateStatusEnum.None"
-                                  (click)="DismissOffer(shippingrequest.offerId, record.id)"
+                                  (click)="DismissOffer(shippingrequest.offerId, record.id, request)"
                                   >{{ l('DismissRequest') }}</a
                                 >
                               </li>
