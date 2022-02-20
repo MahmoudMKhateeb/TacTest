@@ -4,7 +4,6 @@ using Abp.Extensions;
 using Abp.Runtime.Validation;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -14,7 +13,6 @@ using System.Threading.Tasks;
 using TACHYON.AddressBook;
 using TACHYON.Dto;
 using TACHYON.Shipping.ShippingRequests;
-using TACHYON.Shipping.ShippingRequests.Dtos;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips.Dto;
 using JsonSerializer = System.Text.Json.JsonSerializer;
@@ -108,6 +106,7 @@ namespace TACHYON.EntityTemplates
             var trip = await _tripRepository.GetAll().AsNoTracking()
                 .Include(x=> x.RoutPoints).ThenInclude(x=> x.GoodsDetails)
                 .Include(x=> x.RoutPoints).ThenInclude(x=> x.FacilityFk)
+                .Include(x=> x.ShippingRequestTripVases)
                 .FirstOrDefaultAsync(x => x.Id.ToString().Equals(savedEntityId));
            return ObjectMapper.Map<CreateOrEditShippingRequestTripDto>(trip);
         }
@@ -157,16 +156,22 @@ namespace TACHYON.EntityTemplates
             if (shippingRequest == null) throw new UserFriendlyException(L("ThereIsNoShippingRequest"));
 
             var templatesList = ToTripTemplateDropdownItem(tripTemplates);
-            
-            var list = templatesList.Where(x => 
-                ValidateTripTemplate(x.Trip, shippingRequest.GoodCategoryId)).ToList();
 
-            return (from template in list
+            var filteredTemplateList =  (from item in templatesList
+                where item.Trip.Id.HasValue
+                join trip in _tripRepository.GetAllIncluding(x => x.ShippingRequestFk) on item.Trip.Id equals trip.Id
+                where trip.ShippingRequestFk.GoodCategoryId == shippingRequest.GoodCategoryId select item).ToList();
+            
+            var matchesOriginAndDestinationItems = (from template in filteredTemplateList
                 join originFacility in _facilityRepository.GetAll().AsNoTracking()
                     on template.Trip.OriginFacilityId equals originFacility.Id
                 join destinationFacility in _facilityRepository.GetAll().AsNoTracking()
                     on template.Trip.DestinationFacilityId equals destinationFacility.Id
-                select new SelectItemDto() {DisplayName = template.TemplateName, Id = template.Id.ToString()}).ToList();
+                    where originFacility.CityId == shippingRequest.SourceCityId 
+                && destinationFacility.CityId == shippingRequest.DestinationCityId
+                select new SelectItemDto() {DisplayName = template.TemplateName, Id = template.Id.ToString()});
+
+            return matchesOriginAndDestinationItems.ToList();
         }
 
         private static List<TripTemplateDropdownItem> ToTripTemplateDropdownItem(List<EntityTemplate> tripTemplates)
@@ -189,23 +194,6 @@ namespace TACHYON.EntityTemplates
             }
 
             return templatesList;
-        }
-
-        /// <summary>
-        /// Validate Good Category And Route Points For Trip Template
-        /// </summary>
-        /// <param name="trip"></param>
-        /// <param name="goodCategory"></param>
-        /// <returns></returns>
-        private static bool ValidateTripTemplate(CreateOrEditShippingRequestTripDto trip, int? goodCategory)
-        {
-            if (trip.RoutPoints == null || trip.RoutPoints.Count < 1) return false;
-
-            var point = trip.RoutPoints
-                .FirstOrDefault(r => r.GoodsDetailListDto != null && r.GoodsDetailListDto.Any());
-
-            var goodCategoryId = point?.GoodsDetailListDto.FirstOrDefault()?.GoodCategoryId;
-            return goodCategoryId == goodCategory;
         }
 
         #endregion
