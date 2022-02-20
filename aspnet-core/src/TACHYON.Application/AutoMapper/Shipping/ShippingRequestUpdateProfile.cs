@@ -11,7 +11,7 @@ namespace TACHYON.AutoMapper.Shipping
         public ShippingRequestUpdateProfile()
         {
             CreateMap<ShippingRequestUpdate, ShippingRequestUpdateListDto>()
-                .ForMember(x=> x.Status,x=> 
+                .ForMember(x=> x.StatusTitle,x=> 
                     x.MapFrom(i=> new LocalizableString(i.Status.GetEnumDescription(),TACHYONConsts.LocalizationSourceName)));
         }
     }

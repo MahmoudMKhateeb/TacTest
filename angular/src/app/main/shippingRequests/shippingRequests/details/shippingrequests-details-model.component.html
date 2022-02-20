@@ -141,8 +141,9 @@
                           {{ record.creationTime | momentFormat: 'YYYY-MM-DD HH:mm' }}
                         </td>
                         <td>
-                          <span class="ui-column-title"> {{ l('Status') }}</span>
-                          {{ record.status }}
+                          <span class="ui-column-title"> {{ l('statusTitle') }}</span>
+
+                          {{ record.statusTitle }}
                         </td>
                         <td>
                           <span class="ui-column-title"> {{ l('Actions') }}</span>
@@ -155,13 +156,30 @@
                                 <a class="dropdown-item" (click)="appEntityLog.show(record.entityLogId)">{{ l('View') }}</a>
                               </li>
                               <li>
-                                <a class="dropdown-item" (click)="ModelPrice.show(shippingrequest.id, record.id, 'Reprice')">{{ l('Reprice') }}</a>
+                                <a
+                                  class="dropdown-item"
+                                  *ngIf="record.status == ShippingRequestUpdateStatusEnum.None"
+                                  (click)="ModelPrice.show(shippingrequest.id, record.id, 'Reprice')"
+                                  >{{ l('Reprice') }}</a
+                                >
                               </li>
+
                               <li>
-                                <a class="dropdown-item" (click)="KeepSamePrice(shippingrequest.offerId, record.id)">{{ l('KeepSamePrice') }}</a>
+                                <a
+                                  class="dropdown-item"
+                                  *ngIf="record.status == ShippingRequestUpdateStatusEnum.None"
+                                  (click)="KeepSamePrice(shippingrequest.offerId, record.id)"
+                                  >{{ l('KeepSamePrice') }}</a
+                                >
                               </li>
+
                               <li>
-                                <a class="dropdown-item" (click)="DismissOffer(shippingrequest.offerId, record.id)">{{ l('DismissRequest') }}</a>
+                                <a
+                                  class="dropdown-item"
+                                  *ngIf="record.status == ShippingRequestUpdateStatusEnum.None"
+                                  (click)="DismissOffer(shippingrequest.offerId, record.id)"
+                                  >{{ l('DismissRequest') }}</a
+                                >
                               </li>
                             </ul>
                           </div>

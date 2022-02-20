@@ -86510,11 +86510,19 @@ export interface ICreateOrEditShippingRequestTripRejectReasonDto {
   id: number;
 }
 
+export enum ShippingRequestUpdateStatus {
+  None = 1,
+  Repriced = 2,
+  KeepSamePrice = 3,
+  Dismissed = 4,
+}
+
 export class ShippingRequestUpdateListDto implements IShippingRequestUpdateListDto {
   shippingRequestId!: number | undefined;
   entityLogId!: string;
   priceOfferId!: number;
-  status!: string | undefined;
+  statusTitle!: string | undefined;
+  status!: ShippingRequestUpdateStatus;
   creationTime!: moment.Moment;
   id!: string;
 
@@ -86531,6 +86539,7 @@ export class ShippingRequestUpdateListDto implements IShippingRequestUpdateListD
       this.shippingRequestId = _data['shippingRequestId'];
       this.entityLogId = _data['entityLogId'];
       this.priceOfferId = _data['priceOfferId'];
+      this.statusTitle = _data['statusTitle'];
       this.status = _data['status'];
       this.creationTime = _data['creationTime'] ? moment(_data['creationTime'].toString()) : <any>undefined;
       this.id = _data['id'];
@@ -86549,6 +86558,7 @@ export class ShippingRequestUpdateListDto implements IShippingRequestUpdateListD
     data['shippingRequestId'] = this.shippingRequestId;
     data['entityLogId'] = this.entityLogId;
     data['priceOfferId'] = this.priceOfferId;
+    data['statusTitle'] = this.statusTitle;
     data['status'] = this.status;
     data['creationTime'] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
     data['id'] = this.id;
@@ -86560,7 +86570,8 @@ export interface IShippingRequestUpdateListDto {
   shippingRequestId: number | undefined;
   entityLogId: string;
   priceOfferId: number;
-  status: string | undefined;
+  statusTitle: string | undefined;
+  status: ShippingRequestUpdateStatus;
   creationTime: moment.Moment;
   id: string;
 }
@@ -86608,13 +86619,6 @@ export class PagedResultDtoOfShippingRequestUpdateListDto implements IPagedResul
 export interface IPagedResultDtoOfShippingRequestUpdateListDto {
   totalCount: number;
   items: ShippingRequestUpdateListDto[] | undefined;
-}
-
-export enum ShippingRequestUpdateStatus {
-  None = 1,
-  Repriced = 2,
-  KeepSamePrice = 3,
-  Dismissed = 4,
 }
 
 export class CreateSrUpdateActionInputDto implements ICreateSrUpdateActionInputDto {

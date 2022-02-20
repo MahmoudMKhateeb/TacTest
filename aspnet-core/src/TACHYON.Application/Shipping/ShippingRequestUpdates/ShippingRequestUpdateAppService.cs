@@ -2,6 +2,7 @@
 using Abp.Authorization;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
+using Abp.EntityFrameworkCore.EFPlus;
 using Abp.Linq.Extensions;
 using Abp.Runtime.Validation;
 using Microsoft.EntityFrameworkCore;
@@ -54,7 +55,8 @@ namespace TACHYON.Shipping.ShippingRequestUpdates
         {
             var srUpdate = await GetWithValidateSrUpdate(input);
 
-            // I can't use s
+            // I can't use switch expression here, Please update C# lang 
+            // our C# version it's too old please update it asap
             switch (input.Status)
             {
                 case ShippingRequestUpdateStatus.None:
@@ -76,6 +78,9 @@ namespace TACHYON.Shipping.ShippingRequestUpdates
         {
             srUpdate.Status = ShippingRequestUpdateStatus.Dismissed;
             await _offerManager.Delete(new EntityDto<long>(srUpdate.PriceOfferId));
+            await _srUpdateRepository.BatchUpdateAsync(
+                x => new ShippingRequestUpdate() {Status = srUpdate.Status},
+                x => x.PriceOfferId == srUpdate.PriceOfferId && x.Status == ShippingRequestUpdateStatus.None);
             return srUpdate.Status;
         }
         
@@ -93,7 +98,9 @@ namespace TACHYON.Shipping.ShippingRequestUpdates
             var createdOfferId = await _offerManager.CreateOrEdit(input);
             srUpdate.OldPriceOfferId = srUpdate.PriceOfferId;
             srUpdate.PriceOfferId = createdOfferId;
-            
+           await _srUpdateRepository.BatchUpdateAsync(
+               x => new ShippingRequestUpdate() {Status = srUpdate.Status},
+                x => x.PriceOfferId == srUpdate.PriceOfferId && x.Status == ShippingRequestUpdateStatus.None);
             return srUpdate.Status;
         }
 

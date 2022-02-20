@@ -1,5 +1,6 @@
 ﻿using Abp.Application.Services.Dto;
 using System;
+using TACHYON.Shipping.ShippingRequestUpdates;
 
 namespace TACHYON.Shipping.ShippingRequestUpdate
 {
@@ -11,7 +12,8 @@ namespace TACHYON.Shipping.ShippingRequestUpdate
         
         public long PriceOfferId { get; set; }
         
-        public string Status { get; set; }
+        public string StatusTitle { get; set; }
+        public ShippingRequestUpdateStatus Status { get; set; }
 
         public DateTime CreationTime { get; set; }
     }
