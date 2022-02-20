@@ -591,7 +591,7 @@ namespace TACHYON.Notifications
 
             notificationData["shippingRequestId"] = shippingRequestId;
             var user = await _userManager.GetAdminByTenantIdAsync(carrierTenantId);
-            if (user != null) await _notificationPublisher.PublishAsync(AppNotificationNames.BidNormalPricePackageWasCreated, notificationData, userIds: new[] { new UserIdentifier(carrierTenantId, user.Id) });
+            if (user != null) await _notificationPublisher.PublishAsync(AppNotificationNames.PricePackageOfferWasCreated, notificationData, userIds: new[] { new UserIdentifier(carrierTenantId, user.Id) });
         }
 
         #region Invoices
@@ -1165,6 +1165,18 @@ namespace TACHYON.Notifications
         {
             var tenant = await _tenantsRepository.FirstOrDefaultAsync(x => x.Edition.Id == TachyonEditionId);
             return await GetTenantAdminUser(tenant.Id);
+        }
+
+        public async Task CarrierAcceptPricePackageOffer(int tenantId, string carrierTenantName, string requestReferance, long shippingRequestId)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                          new LocalizableString(
+                              L("CarrierAcceptPricePackageOffer", carrierTenantName, requestReferance),
+                              TACHYONConsts.LocalizationSourceName));
+
+            notificationData["shippingRequestId"] = shippingRequestId;
+            var user = await _userManager.GetAdminByTenantIdAsync(tenantId);
+            if (user != null) await _notificationPublisher.PublishAsync(AppNotificationNames.CarrierAcceptPricePackageOffer, notificationData, userIds: new[] { new UserIdentifier(tenantId, user.Id) });
         }
 
         #endregion

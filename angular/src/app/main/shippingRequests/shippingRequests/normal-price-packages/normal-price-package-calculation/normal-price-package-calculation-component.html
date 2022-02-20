@@ -18,6 +18,24 @@
       </div>
       <div class="modal-body">
         <form #Form="ngForm" novalidate>
+          <div class="row">
+            <div class="col-3 mb-3">
+              <h6>{{ l('reference') }}:</h6>
+              {{ offer.pricePackageId }}
+            </div>
+            <div class="col-3 mb-3">
+              <h6>{{ l('truckType') }} :</h6>
+              {{ offer.truckType }}
+            </div>
+            <div class="col-3 mb-3">
+              <h6>{{ l('origin') }}:</h6>
+              {{ offer.origin }}
+            </div>
+            <div class="col-3 mb-3">
+              <h6>{{ l('destination') }}:</h6>
+              {{ offer.destination }}
+            </div>
+          </div>
           <div class="table-responsive">
             <table class="table table-sm table-bordered rounded">
               <thead>
@@ -149,13 +167,23 @@
 
           <div class="sendOffer">
             <button
+              *ngIf="!isCarrier && !offer.hasDirectRequest"
               type="submit"
               class="btn btn-primary"
               (click)="submit(shippingRequestId,pricePackageId)"
               [buttonBusy]="saving"
               [busyText]="l('SavingWithThreeDot' | localize)"
             >
-              <i class="fa fa-save"></i> <span>{{ 'SendBid' | localize }}</span>
+              <i class="fa fa-save"></i> <span>{{ 'SendPricePackageOffer' | localize }}</span>
+            </button>
+            <button
+              *ngIf="isCarrier && directRequestStatus == 0"
+              class="btn btn-primary"
+              (click)="accept(pricePackageId)"
+              [buttonBusy]="saving"
+              [busyText]="l('SavingWithThreeDot' | localize)"
+            >
+              <i class="fa fa-save"></i> <span>{{ 'AcceptPrice' | localize }}</span>
             </button>
           </div>
         </form>

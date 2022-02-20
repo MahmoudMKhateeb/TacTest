@@ -30,7 +30,7 @@ export class NormalPricePackagesList extends AppComponentBase {
   getAll(event?: LazyLoadEvent): void {
     this.primengTableHelper.showLoadingIndicator();
     this._normalPricePackages
-      .getAllPricePackagesForShippingRequest(
+      .getMatchingPricePackagesForRequest(
         this.carrierId,
         this.shippingRequestId,
         this.primengTableHelper.getSorting(this.dataTable),

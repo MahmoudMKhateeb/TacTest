@@ -6,7 +6,7 @@ namespace TACHYON.Shipping.DirectRequests.Dto
     {
         public long ShippingRequestId { get; set; }
         public int CarrierTenantId { get; set; }
-        public BidNormalPricePackageDto BidNormalPricePackage { get; set; }
+        public PricePackageOfferDto BidNormalPricePackage { get; set; }
 
     }
 }

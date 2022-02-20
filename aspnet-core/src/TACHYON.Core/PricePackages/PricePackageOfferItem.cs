@@ -8,11 +8,11 @@ using TACHYON.Vases;
 
 namespace TACHYON.PricePackages
 {
-    public class BidPricePackageDetails : PriceOfferBase
+    public class PricePackageOfferItem : PriceOfferBase
     {
         public long BidNormalPricePackageId { get; set; }
         [ForeignKey(nameof(BidNormalPricePackageId))]
-        public BidNormalPricePackage BidNormalPricePackageFK { get; set; }
+        public PricePackageOffer BidNormalPricePackageFK { get; set; }
 
 
     }

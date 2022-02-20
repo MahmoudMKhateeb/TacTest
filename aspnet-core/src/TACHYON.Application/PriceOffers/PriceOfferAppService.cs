@@ -402,7 +402,7 @@ namespace TACHYON.PriceOffers
                     {
                         var _directRequest = await _shippingRequestDirectRequestRepository.FirstOrDefaultAsync(x => x.CarrierTenantId == AbpSession.TenantId.Value && x.ShippingRequestId == input.Id && x.Status != ShippingRequestDirectRequestStatus.Declined);
                         if (_directRequest == null) throw new UserFriendlyException(L("YouDoNotHaveDirectRequest"));
-                        bidNormalPricePackageId = _directRequest.BidNormalPricePackageId;
+                        bidNormalPricePackageId = _directRequest.PricePackageOfferId;
                     }
                 }
 
@@ -582,7 +582,7 @@ namespace TACHYON.PriceOffers
                 dto.CreationTime = request.CreationTime;
                 dto.DirectRequestStatus = request.Status;
                 dto.BidStatusTitle = string.Empty;
-                dto.BidNormalPricePackageId = request.BidNormalPricePackageId;
+                dto.BidNormalPricePackageId = request.PricePackageOfferId;
                 dto.TruckType = ObjectMapper.Map<TrucksTypeDto>(request.ShippingRequestFK.TrucksTypeFk).TranslatedDisplayName;
                 dto.GoodsCategory = ObjectMapper.Map<GoodCategoryDto>(request.ShippingRequestFK.GoodCategoryFk).DisplayName;
                 dto.NumberOfCompletedTrips = await getCompletedRequestTripsCount(request.ShippingRequestFK);

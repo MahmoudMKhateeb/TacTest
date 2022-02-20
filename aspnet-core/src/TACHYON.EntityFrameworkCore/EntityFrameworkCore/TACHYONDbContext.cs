@@ -262,8 +262,8 @@ namespace TACHYON.EntityFrameworkCore
 
         public DbSet<EntityLog> EntityLogs { get; set; }
         public DbSet<NormalPricePackage> NormalPricePackages { get; set; }
-        public DbSet<BidNormalPricePackage> BidNormalPricePackages { get; set; }
-        public DbSet<BidPricePackageDetails> BidPricePackageDetails { get; set; }
+        public DbSet<PricePackageOffer> PricePackageOffers { get; set; }
+        public DbSet<PricePackageOfferItem> PricePackageOfferItems { get; set; }
 
         protected virtual bool CurrentIsCanceled => true;
         protected virtual bool CurrentIsDrafted => false;

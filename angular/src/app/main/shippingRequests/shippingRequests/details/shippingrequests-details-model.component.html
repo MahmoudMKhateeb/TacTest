@@ -130,7 +130,7 @@
                 </button>
               </div>
             </ng-template>
-            <ng-template [ngIf]="shippingrequest.isPriced">
+            <ng-template [ngIf]="shippingrequest.isPriced && shippingrequest.offerId">
               <div class="divirCard"></div>
               <div class="setPrice">
                 <button type="button" (click)="ModelViewPrice.show(request.id, shippingrequest.offerId)">
@@ -139,11 +139,11 @@
               </div>
             </ng-template>
 
-            <ng-template [ngIf]="shippingrequest.bidNormalPricePackageId && !shippingrequest.isPriced">
+            <ng-template [ngIf]="shippingrequest.bidNormalPricePackageId">
               <div class="divirCard"></div>
               <div class="setPrice">
-                <button type="button" (click)="ModelPriceCalculation.Preview(request.id, request.bidNormalPricePackageId)">
-                  {{ l('PreviewBidPricePackage') }}
+                <button type="button" (click)="ModelPriceCalculation.Preview(request.id, shippingrequest.bidNormalPricePackageId)">
+                  {{ l('PreviewPricePackageOffer') }}
                 </button>
               </div>
             </ng-template>
@@ -165,4 +165,8 @@
 </div>
 <price-offer-model #ModelPrice [Channel]="Channel" (modalSave)="update($event)"></price-offer-model>
 <price-offer-view-model #ModelViewPrice [Channel]="Channel" (modalDelete)="delete()"></price-offer-view-model>
-<normal-price-package-calculation #ModelPriceCalculation></normal-price-package-calculation>
+<normal-price-package-calculation
+  [directRequestStatus]="request.status"
+  (modalSave)="markAsPriced($event)"
+  #ModelPriceCalculation
+></normal-price-package-calculation>

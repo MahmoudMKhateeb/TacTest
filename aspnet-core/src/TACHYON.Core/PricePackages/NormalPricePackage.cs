@@ -24,7 +24,7 @@ namespace TACHYON.PricePackages
         public int? DestinationCityId { get; set; }
         [ForeignKey(nameof(DestinationCityId))]
         public City DestinationCityFK { get; set; }
-        public ICollection<BidNormalPricePackage> BidNormalPricePackages { get; set; }
+        public ICollection<PricePackageOffer> BidNormalPricePackages { get; set; }
 
     }
 }

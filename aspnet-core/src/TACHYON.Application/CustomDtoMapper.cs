@@ -724,7 +724,7 @@ namespace TACHYON
 
 
             //NormalPricePackage
-            configuration.CreateMap<NormalPricePackage, BidNormalPricePackageDto>()
+            configuration.CreateMap<NormalPricePackage, PricePackageOfferDto>()
                 .ForMember(src => src.PricePerExtraDrop, opt => opt.MapFrom(des => des.PricePerExtraDrop.HasValue ? des.PricePerExtraDrop.ToString() : "---"))
                 .ForMember(src => src.TruckType, opt => opt.MapFrom(des => des.TrucksTypeFk.DisplayName))
                 .ForMember(src => src.Origin, opt => opt.MapFrom(des => des.OriginCityFK.DisplayName))
@@ -741,19 +741,26 @@ namespace TACHYON
                .ForMember(src => src.Origin, opt => opt.MapFrom(des => des.OriginCityFK.DisplayName))
                .ForMember(src => src.Destination, opt => opt.MapFrom(des => des.DestinationCityFK.DisplayName));
 
-            configuration.CreateMap<NormalPricePackage, BidNormalPricePackageDto>()
+            configuration.CreateMap<NormalPricePackage, PricePackageOfferDto>()
              .ForMember(src => src.TruckType, opt => opt.MapFrom(des => des.TrucksTypeFk.DisplayName))
              .ForMember(src => src.Origin, opt => opt.MapFrom(des => des.OriginCityFK.DisplayName))
              .ForMember(src => src.Destination, opt => opt.MapFrom(des => des.DestinationCityFK.DisplayName))
              .ForMember(src => src.NormalPricePackageId, opt => opt.MapFrom(des => des.Id));
             configuration.CreateMap<CreateOrEditNormalPricePackageDto, NormalPricePackage>().ReverseMap();
 
-            configuration.CreateMap<PriceOffer, BidNormalPricePackageDto>()
+            configuration.CreateMap<PriceOffer, PricePackageOfferDto>()
                 .ForMember(src => src.Items, opt => opt.MapFrom(des => des.PriceOfferDetails))
                 .ReverseMap();
-            configuration.CreateMap<PriceOfferDetail, BidNormalPricePackageItemDto>().ReverseMap();
-            configuration.CreateMap<BidNormalPricePackageDto, BidNormalPricePackage>().ReverseMap();
-            configuration.CreateMap<BidNormalPricePackageItemDto, BidPricePackageDetails>().ReverseMap();
+
+            configuration.CreateMap<PricePackageOffer, PriceOffer>()
+               .ForMember(src => src.PriceOfferDetails, opt => opt.MapFrom(des => des.Items))
+               .ReverseMap();
+            configuration.CreateMap<PriceOfferDetail, PricePackageOfferItem>()
+               .ReverseMap();
+            configuration.CreateMap<PriceOfferDetail, PricePackageOfferItemDto>().ReverseMap();
+            configuration.CreateMap<PricePackageOffer, PricePackageOfferDto>()
+                .ReverseMap();
+            configuration.CreateMap<PricePackageOfferItemDto, PricePackageOfferItem>().ReverseMap();
 
         }
         /// <summary>

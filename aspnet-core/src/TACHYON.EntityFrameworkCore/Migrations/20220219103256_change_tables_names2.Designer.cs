@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using TACHYON.EntityFrameworkCore;
@@ -10,9 +11,10 @@ using TACHYON.EntityFrameworkCore;
 namespace TACHYON.Migrations
 {
     [DbContext(typeof(TACHYONDbContext))]
-    partial class TACHYONDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220219103256_change_tables_names2")]
+    partial class change_tables_names2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1902,6 +1904,9 @@ namespace TACHYON.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -4224,9 +4229,6 @@ namespace TACHYON.Migrations
                     b.Property<DateTime?>("DeletionTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("DestinationCityId")
-                        .HasColumnType("int");
-
                     b.Property<decimal>("DetailsTotalCommission")
                         .HasColumnType("decimal(18,2)");
 
@@ -4295,9 +4297,6 @@ namespace TACHYON.Migrations
                     b.Property<int>("NormalPricePackageId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("OriginCityId")
-                        .HasColumnType("int");
-
                     b.Property<string>("PricePackageId")
                         .HasColumnType("nvarchar(max)");
 
@@ -4342,11 +4341,7 @@ namespace TACHYON.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DestinationCityId");
-
                     b.HasIndex("NormalPricePackageId");
-
-                    b.HasIndex("OriginCityId");
 
                     b.HasIndex("TenantId");
 
@@ -8023,19 +8018,11 @@ namespace TACHYON.Migrations
 
             modelBuilder.Entity("TACHYON.PricePackages.PricePackageOffer", b =>
                 {
-                    b.HasOne("TACHYON.Cities.City", "DestinationCityFK")
-                        .WithMany()
-                        .HasForeignKey("DestinationCityId");
-
                     b.HasOne("TACHYON.PricePackages.NormalPricePackage", "NormalPricePackageFK")
                         .WithMany("BidNormalPricePackages")
                         .HasForeignKey("NormalPricePackageId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("TACHYON.Cities.City", "OriginCityFK")
-                        .WithMany()
-                        .HasForeignKey("OriginCityId");
 
                     b.HasOne("TACHYON.MultiTenancy.Tenant", "Tenant")
                         .WithMany()

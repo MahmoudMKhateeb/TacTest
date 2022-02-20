@@ -2,9 +2,8 @@ import { Component, EventEmitter, Injector, Input, Output, ViewChild } from '@an
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { ModalDirective } from 'ngx-bootstrap/modal';
-import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 
-import { NormalPricePackagesServiceProxy, BidNormalPricePackageDto, BidNormalPricePackageItemDto } from '@shared/service-proxies/service-proxies';
+import { NormalPricePackagesServiceProxy, PricePackageOfferDto, PricePackageOfferItemDto } from '@shared/service-proxies/service-proxies';
 import { finalize } from 'rxjs/operators';
 
 @Component({
@@ -15,13 +14,14 @@ import { finalize } from 'rxjs/operators';
 })
 export class NormalPricePackageCalculationComponent extends AppComponentBase {
   @Output() modalSave: EventEmitter<number> = new EventEmitter<number>();
+  @Input() directRequestStatus: number | null | undefined;
 
   @ViewChild('modal', { static: false }) modal: ModalDirective;
 
   active = false;
   saving = false;
-  offer: BidNormalPricePackageDto = new BidNormalPricePackageDto();
-  Items: BidNormalPricePackageItemDto[] = [];
+  offer: PricePackageOfferDto = new PricePackageOfferDto();
+  Items: PricePackageOfferItemDto[] = [];
   priceOfferCommissionType: any;
   commissionTypeTitle: string;
   shippingRequestId: number;
@@ -33,35 +33,51 @@ export class NormalPricePackageCalculationComponent extends AppComponentBase {
   show(id: number, pricePackageId: number | undefined = undefined): void {
     this.shippingRequestId = id;
     this.pricePackageId = pricePackageId;
-    this._CurrentServ.calculateShippingRequestPricePackage(pricePackageId, id).subscribe((result) => {
+    this._CurrentServ.getPricePackageOfferForHandle(pricePackageId, id).subscribe((result) => {
       this.offer = result;
       this.Items = this.offer.items;
       this.active = true;
       this.modal.show();
     });
   }
-  Preview(id: number, pricePackageId: number | undefined = undefined): void {
-    this.shippingRequestId = id;
-    this.pricePackageId = pricePackageId;
-    this._CurrentServ.getBidNormalPricePackage(pricePackageId, id).subscribe((result) => {
-      this.offer = result;
-      this.Items = this.offer.items;
-      this.active = true;
-      this.modal.show();
-    });
-  }
+
   close(): void {
     this.active = false;
     this.modal.hide();
   }
+
+  Preview(id: number, pricePackageId: number | undefined = undefined): void {
+    this.shippingRequestId = id;
+    this.pricePackageId = pricePackageId;
+    this._CurrentServ.getPricePackageOffer(pricePackageId, id).subscribe((result) => {
+      this.offer = result;
+      this.Items = this.offer.items;
+      this.active = true;
+      this.modal.show();
+    });
+  }
   submit(id: number, pricePackageId: number): void {
     this.saving = true;
     this._CurrentServ
-      .submitBidByPricePackage(pricePackageId, id)
+      .handlePricePackageOfferToCarrier(pricePackageId, id)
       .pipe(finalize(() => (this.saving = false)))
       .subscribe((result) => {
         this.notify.info(this.l('SendSuccessfully'));
         this.close();
       });
+  }
+  accept(pricePackageId: number) {
+    this.saving = true;
+    this._CurrentServ
+      .acceptPricePackageOffer(pricePackageId)
+      .pipe(finalize(() => (this.saving = false)))
+      .subscribe((result) => {
+        this.notify.info(this.l('SendSuccessfully'));
+        this.close();
+        this.modalSave.emit(result);
+      });
+  }
+  get isCarrier(): boolean {
+    return this.feature.isEnabled('App.Carrier');
   }
 }

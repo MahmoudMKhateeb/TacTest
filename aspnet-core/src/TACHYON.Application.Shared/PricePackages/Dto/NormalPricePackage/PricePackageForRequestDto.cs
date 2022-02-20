@@ -4,7 +4,7 @@ using System.Text;
 
 namespace TACHYON.PricePackages.Dto.NormalPricePackage
 {
-    public class NormalPricePackageForShippingRequestDto
+    public class PricePackageForRequestDto
     {
         public int Id { get; set; }
         public int CarrierTenantId { get; set; }

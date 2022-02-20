@@ -15,7 +15,7 @@ namespace TACHYON.PricePackages.Dto.NormalPricePackage
         public string PricePackageIdFilter { get; set; }
     }
 
-    public class GetAllNormalPricePackagesForShippingRequestInput : PagedAndSortedResultRequestDto
+    public class GetAllPricePackagesForRequestInput : PagedAndSortedResultRequestDto
     {
         public int? CarrierId { get; set; }
         public int ShippingRequestId { get; set; }

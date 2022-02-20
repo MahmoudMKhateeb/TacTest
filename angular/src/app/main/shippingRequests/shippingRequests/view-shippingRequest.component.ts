@@ -166,10 +166,10 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
   }
   canSeePricePackages() {
     // if the user is carrier
-    if (this.feature.isEnabled('App.Carrier')) {
-      return false;
+    if (!this.feature.isEnabled('App.Carrier') && this.shippingRequestforView.shippingRequest.requestType != ShippingRequestType.Marketplace) {
+      return true;
     }
-    return true;
+    return false;
   }
   /* canSeePriceOffers() {
     // if the user is carrier

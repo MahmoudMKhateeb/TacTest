@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using TACHYON.Cities;
 using TACHYON.MultiTenancy;
 using TACHYON.PriceOffers.Base;
 using TACHYON.Shipping.DirectRequests;
@@ -9,7 +10,7 @@ using TACHYON.Trucks.TrucksTypes;
 
 namespace TACHYON.PricePackages
 {
-    public class BidNormalPricePackage : PriceOfferBase
+    public class PricePackageOffer : PriceOfferBase
     {
         #region Invoice
 
@@ -80,7 +81,13 @@ namespace TACHYON.PricePackages
         public long TrucksTypeId { get; set; }
         [ForeignKey(nameof(TrucksTypeId))]
         public TrucksType TrucksTypeFk { get; set; }
-        public List<BidPricePackageDetails> Items { get; set; }
+        public int? OriginCityId { get; set; }
+        [ForeignKey(nameof(OriginCityId))]
+        public City OriginCityFK { get; set; }
+        public int? DestinationCityId { get; set; }
+        [ForeignKey(nameof(DestinationCityId))]
+        public City DestinationCityFK { get; set; }
+        public List<PricePackageOfferItem> Items { get; set; }
         public int NormalPricePackageId { get; set; }
         [ForeignKey(nameof(NormalPricePackageId))]
         public NormalPricePackage NormalPricePackageFK { get; set; }

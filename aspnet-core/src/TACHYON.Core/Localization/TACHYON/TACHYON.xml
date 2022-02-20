@@ -2517,5 +2517,7 @@
 	<text name="EditNormalPricePackage">Edit normal price package</text>
 	<text name="MultipleDrop">Multiple drop</text>
 	<text name="BidNormalPricePackageWasCreated">A bid was created by {0} and it matches the priced package that you created with the reference {1}</text>
+	<text name="PreviewPricePackageOffer">Preview Price Package Offer</text>
+	<text name="CarrierAcceptPricePackageOffer">{0} Accept your price package offer on request {1}</text>
 	</texts>
 </localizationDictionary>

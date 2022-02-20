@@ -5,7 +5,7 @@ using TACHYON.PriceOffers;
 
 namespace TACHYON.PricePackages.Dto.NormalPricePackage
 {
-    public class BidNormalPricePackageDto
+    public class PricePackageOfferDto
     {
         public string DisplayName { get; set; }
         public string PricePackageId { get; set; }
@@ -17,13 +17,14 @@ namespace TACHYON.PricePackages.Dto.NormalPricePackage
         public int TransportTypeId { get; set; }
         public long TrucksTypeId { get; set; }
         public bool IsMultiDrop { get; set; }
+        public bool HasDirectRequest { get; set; }
         public int NumberOfDrops { get; set; }
         public int NumberOfTrips { get; set; }
         public decimal SingleDropPrice { get; set; }
         public decimal? PricePerExtraDrop { get; set; }
         public long NormalPricePackageId { get; set; }
         public int TenantId { get; set; }
-        public List<BidNormalPricePackageItemDto> Items { get; set; }
+        public List<PricePackageOfferItemDto> Items { get; set; }
         /// <summary>
         /// Get id from source entity
         /// </summary>
@@ -184,7 +185,7 @@ namespace TACHYON.PricePackages.Dto.NormalPricePackage
         public decimal TaxVat { get; set; }
         #endregion
     }
-    public class BidNormalPricePackageItemDto
+    public class PricePackageOfferItemDto
     {
         public string ItemName { get; set; }
 
