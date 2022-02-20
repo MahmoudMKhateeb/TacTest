@@ -29,5 +29,6 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public string RouteType { get; set; }
         public bool IsDrafted { get; set; }
         public int DraftStep { get; set; }
+        public bool? IsPrePayed { get; set; }
     }
 }

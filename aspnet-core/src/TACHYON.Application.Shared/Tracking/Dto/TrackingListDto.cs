@@ -47,5 +47,7 @@ namespace TACHYON.Tracking.Dto
         /// shipper Id
         /// </summary>
         public int TenantId { get; set; }
+        public ShippingRequestStatus shippingRequestStatus { get; set; }
+        public bool? IsPrePayedShippingRequest { get; set; }
     }
 }
