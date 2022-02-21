@@ -96,7 +96,9 @@ namespace TACHYON.Shipping.Trips.Importing
 
             var points = await GetRoutePointListFromExcelOrNull(importPointFromExcelInput);
 
+            BindTripIdFromReference(points, request);
             ValidateRoutePoints(points,request);
+            
 
             return points;
         }
@@ -228,7 +230,7 @@ namespace TACHYON.Shipping.Trips.Importing
         private void ValidateRoutePoints(List<ImportRoutePointDto> points, ShippingRequest request)
         {
             ValidatePointsDuplicatedReferenceFromList(points);
-            CheckExistPointsAndBindTripIdFromReference(points);
+            CheckExistPointsAndBindTripIdFromReference(points, request);
 
             //CheckRequestRouteType(request);
             if (IsSingleDropRequest(request))
@@ -321,12 +323,12 @@ namespace TACHYON.Shipping.Trips.Importing
         }
 
 
-        private void CheckExistPointsAndBindTripIdFromReference(List<ImportRoutePointDto> points)
+        private void CheckExistPointsAndBindTripIdFromReference(List<ImportRoutePointDto> points, ShippingRequest request)
         {
             var tripsRefs = points.Select(x => x.TripReference).Distinct().ToList();
             foreach (var tripRef in tripsRefs)
             {
-                var trip = _shippingRequestTripManager.GetShippingRequestTripIdByBulkRef(tripRef);
+                var trip = _shippingRequestTripManager.GetShippingRequestTripIdByBulkRef(tripRef,request);
                 if (trip == null)
                 {
                     points.Where(x => x.TripReference == tripRef)
@@ -335,9 +337,9 @@ namespace TACHYON.Shipping.Trips.Importing
                 }
                 else
                 {
-                    points.Where(x => x.TripReference == tripRef)
-                        .ToList()
-                        .ForEach(y => y.ShippingRequestTripId = trip.Id);
+                    //points.Where(x => x.TripReference == tripRef)
+                    //    .ToList()
+                    //    .ForEach(y => y.ShippingRequestTripId = trip.Id);
 
                     //check if there is points in trip
                     var existPoints = _routPointRepository.FirstOrDefault(x => x.ShippingRequestTripId == trip.Id);
@@ -351,7 +353,29 @@ namespace TACHYON.Shipping.Trips.Importing
             }
         }
 
-        private void ValidateGoodsDetails(ShippingRequest request, List<ImportGoodsDetailsDto> goodsDetails)
+        private void BindTripIdFromReference(List<ImportRoutePointDto> points, ShippingRequest request)
+        {
+            var tripsRefs = points.Select(x => x.TripReference).Distinct().ToList();
+            foreach (var tripRef in tripsRefs)
+            {
+                var trip = _shippingRequestTripManager.GetShippingRequestTripIdByBulkRef(tripRef, request);
+                if (trip == null)
+                {
+                    points.Where(x => x.TripReference == tripRef)
+                        .ToList()
+                        .ForEach(y => y.Exception += L("InvalidTrip"));
+                }
+                else
+                {
+                    points.Where(x => x.TripReference == tripRef)
+                        .ToList()
+                        .ForEach(y => y.ShippingRequestTripId = trip.Id);
+
+                }
+            }
+        }
+
+                private void ValidateGoodsDetails(ShippingRequest request, List<ImportGoodsDetailsDto> goodsDetails)
         {
             //group goods details by trip
             var GroupedGoodsDetailsByTrip = goodsDetails

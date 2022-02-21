@@ -183,9 +183,9 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         }
 
 
-        public ShippingRequestTrip GetShippingRequestTripIdByBulkRef(string tripReference)
+        public ShippingRequestTrip GetShippingRequestTripIdByBulkRef(string tripReference, ShippingRequest request)
         {
-           return _shippingRequestTripRepository.FirstOrDefault(x => x.BulkUploadRef == tripReference);
+           return _shippingRequestTripRepository.FirstOrDefault(x => x.BulkUploadRef == tripReference && x.ShippingRequestId==request.Id);
         }
 
         //goods details validation
