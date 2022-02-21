@@ -508,6 +508,7 @@ namespace TACHYON.Notifications
                 Properties = new Dictionary<string, object>() { { "updatedTripId", input.TripId } }
             };
 
+            notificationData["shippingRequestId"] = input.ShippingRequestId;
             await _notificationPublisher.PublishAsync(AppNotificationNames.NotifyShipperWhenTripUpdated, notificationData, userIds: new[] { tenantAdmin });
         }
 
@@ -586,7 +587,8 @@ namespace TACHYON.Notifications
             {
                 ShipperTenantId = shipperTenantId,
                 TripId = trip.Id,
-                WaybillNumber = waybillNo.ToString()
+                WaybillNumber = waybillNo.ToString(),
+                ShippingRequestId = trip.ShippingRequestId
             };
 
             #endregion
