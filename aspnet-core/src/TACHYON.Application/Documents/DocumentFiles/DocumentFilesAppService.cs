@@ -498,11 +498,8 @@ namespace TACHYON.Documents.DocumentFiles
             {
                 await _appNotifier.AcceptedSubmittedDocument(new UserIdentifier(documentFile.TenantId, documentFile.CreatorUserId.Value), documentFile);
             }
-
-            if (await IsAllRequiredDocumentsApproved(documentFile.TenantId.Value))
-            {
-                await _userEmailer.SendAllApprovedDocumentsAsync(documentFile.TenantId.Value, _appUrlService.GetTachyonPlatformLoginUrl());
-            }
+            if (documentFile.TenantId.HasValue)
+             await _userEmailer.SendApprovedDocumentEmail(documentFile.TenantId.Value, _appUrlService.GetTachyonPlatformLoginUrl());
 
         }
 

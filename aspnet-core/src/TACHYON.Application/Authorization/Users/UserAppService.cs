@@ -416,7 +416,7 @@ namespace TACHYON.Authorization.Users
             if (input.SendActivationEmail && !user.IsEmailConfirmed && !user.IsDriver)
             {
                 user.SetNewEmailConfirmationCode();
-                await _userEmailer.SendEmailActivationLinkAsync(user, AppUrlService.CreateEmailActivationUrlFormat(AbpSession.TenantId), input.User.Password);
+                await _userEmailer.SendEmailActivationEmail(user, AppUrlService.CreateEmailActivationUrlFormat(AbpSession.TenantId), input.User.Password);
             }
 
             //Wasl Integration
@@ -528,7 +528,7 @@ namespace TACHYON.Authorization.Users
             if (input.SendActivationEmail && !user.IsDriver)
             {
                 user.SetNewEmailConfirmationCode();
-                await _userEmailer.SendEmailActivationLinkAsync(user, AppUrlService.CreateEmailActivationUrlFormat(AbpSession.TenantId), input.User.Password);
+                await _userEmailer.SendEmailActivationEmail(user, AppUrlService.CreateEmailActivationUrlFormat(AbpSession.TenantId), input.User.Password);
             }
 
 

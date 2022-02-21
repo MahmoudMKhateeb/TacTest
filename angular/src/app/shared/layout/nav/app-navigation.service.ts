@@ -627,6 +627,8 @@ export class AppNavigationService {
 
           // new AppMenuItem('AuditLogs', 'Pages.Administration.AuditLogs', '', '/app/admin/auditLogs'),
           new AppMenuItem('Maintenance', 'Pages.Administration.Host.Maintenance', '', '/app/admin/maintenance'),
+          new AppMenuItem('EmailTemplates', 'Pages.EmailTemplates', 'flaticon-more', '/app/main/emailTemplates/emailTemplates'),
+
           // new AppMenuItem(
           //   'Subscription',
           //   'Pages.Administration.Tenant.SubscriptionManagement',
@@ -664,6 +666,7 @@ export class AppNavigationService {
         [],
         [
           new AppMenuItem('Tenants', 'Pages.Tenants', '', '/app/admin/tenants'),
+
           new AppMenuItem('Editions', 'Pages.Editions', '', '/app/admin/editions'),
         ]
       ),
