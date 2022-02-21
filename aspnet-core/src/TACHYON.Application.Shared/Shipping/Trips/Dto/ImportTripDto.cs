@@ -26,5 +26,25 @@ namespace TACHYON.Shipping.Trips.Dto
         public bool NeedsDeliveryNote { get; set; }
         public string Note { get; set; }
         public string TotalValue { get; set; }
+        /// <summary>
+        /// This field is for single drop pickup point facility
+        /// </summary>
+        public string OriginalFacility { get; set; }
+        public long? OriginalFacilityId { get; set; }
+        /// <summary>
+        /// This field is for single drop, drop point facility
+        /// </summary>
+        public string DestinationFacility { get; set; }
+        public long? DestinationFacilityId { get; set; }
+        /// <summary>
+        /// This field is for single drop pickup point sender
+        /// </summary>
+        public string sender { get; set; }
+        public int? SenderId { get; set; }
+        /// <summary>
+        /// This field is for single drop, drop point receiver
+        /// </summary>
+        public string Receiver { get; set; }
+        public int? ReceiverId { get; set; }
     }
 }

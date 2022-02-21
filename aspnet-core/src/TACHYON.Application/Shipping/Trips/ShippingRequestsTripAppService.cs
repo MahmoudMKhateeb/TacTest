@@ -28,6 +28,7 @@ using TACHYON.Documents.DocumentTypes.Dtos;
 using TACHYON.Dto;
 using TACHYON.Features;
 using TACHYON.Firebases;
+using TACHYON.Goods.Dtos;
 using TACHYON.Goods.GoodCategories;
 using TACHYON.Goods.GoodsDetails;
 using TACHYON.Notifications;
@@ -221,7 +222,8 @@ namespace TACHYON.Shipping.Trips
             _shippingRequestTripManager.ValidateTripDates(input, request);
             //ValidateNumberOfDrops(input, request);
             _shippingRequestTripManager.ValidateNumberOfDrops(input.RoutPoints.Count(x => x.PickingType == PickingType.Dropoff), request);
-            ValidateTotalweight(input, request);
+            //ValidateTotalweight(input, request);
+            _shippingRequestTripManager.ValidateTotalweight(input.RoutPoints.SelectMany(x=>x.GoodsDetailListDto).ToList<ICreateOrEditGoodsDetailDtoBase>(), request);
             if (!input.Id.HasValue)
             {
                 //int requestNumberOfTripsAdd = await _shippingRequestTripRepository.GetAll()
@@ -276,20 +278,20 @@ namespace TACHYON.Shipping.Trips
             return file;
         }
 
-        private void ValidateTotalweight(CreateOrEditShippingRequestTripDto input, ShippingRequest request)
-        {
-            if (request.TotalWeight > 0)
-            {
-                var totalWeight = input.RoutPoints.Where(x => x.GoodsDetailListDto != null)
-                    .Sum(x => x.GoodsDetailListDto.Sum(g => g.Weight * g.Amount));
-                if (totalWeight > request.TotalWeight)
-                {
-                    throw new UserFriendlyException(L(
-                        "TheTotalWeightOfGoodsDetailsshouldNotBeGreaterThanShippingRequestWeight",
-                        request.TotalWeight));
-                }
-            }
-        }
+        //private void ValidateTotalweight(CreateOrEditShippingRequestTripDto input, ShippingRequest request)
+        //{
+        //    if (request.TotalWeight > 0)
+        //    {
+        //        var totalWeight = input.RoutPoints.Where(x => x.GoodsDetailListDto != null)
+        //            .Sum(x => x.GoodsDetailListDto.Sum(g => g.Weight * g.Amount));
+        //        if (totalWeight > request.TotalWeight)
+        //        {
+        //            throw new UserFriendlyException(L(
+        //                "TheTotalWeightOfGoodsDetailsshouldNotBeGreaterThanShippingRequestWeight",
+        //                request.TotalWeight));
+        //        }
+        //    }
+        //}
 
         //private void ValidateNumberOfDrops(CreateOrEditShippingRequestTripDto input, ShippingRequest request)
         //{

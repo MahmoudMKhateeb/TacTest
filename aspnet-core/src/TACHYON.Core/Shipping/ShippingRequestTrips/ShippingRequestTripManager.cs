@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TACHYON.AddressBook;
 using TACHYON.Features;
+using TACHYON.Goods.Dtos;
 using TACHYON.Receivers;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Routs.RoutPoints.Dtos;
@@ -185,6 +186,20 @@ namespace TACHYON.Shipping.ShippingRequestTrips
            return _shippingRequestTripRepository.FirstOrDefault(x => x.BulkUploadRef == tripReference);
         }
 
+        //goods details validation
+        public void ValidateTotalweight(List<ICreateOrEditGoodsDetailDtoBase> input, ShippingRequest request)
+        {
+            if (request.TotalWeight > 0)
+            {
+                var totalWeight = input.Sum(g => g.Weight * g.Amount);
+                if (totalWeight > request.TotalWeight)
+                {
+                    throw new UserFriendlyException(L(
+                        "TheTotalWeightOfGoodsDetailsshouldNotBeGreaterThanShippingRequestWeight",
+                        request.TotalWeight));
+                }
+            }
+        }
 
         private void ValidateDuplicateBulkReferenceFromDB(ImportTripDto importTripDto, StringBuilder exceptionMessage)
         {

@@ -252,6 +252,51 @@ namespace TACHYON.Web.Controllers
         }
 
 
+        [HttpPost]
+        [AbpMvcAuthorize(AppPermissions.Pages_ShippingRequestTrips_Create)]
+        public async Task<JsonResult> ImportGoodsDetailsFromExcel(long ShippingRequestId)
+        {
+            try
+            {
+                var file = Request.Form.Files.First();
+
+                if (file == null)
+                {
+                    throw new UserFriendlyException(L("File_Empty_Error"));
+                }
+
+                if (file.Length > 1048576 * 100) //100 MB
+                {
+                    throw new UserFriendlyException(L("File_SizeLimit_Error"));
+                }
+
+                byte[] fileBytes;
+                using (var stream = file.OpenReadStream())
+                {
+                    fileBytes = stream.GetAllBytes();
+                }
+
+                var tenantId = AbpSession.TenantId;
+                var fileObject = new BinaryObject(tenantId, fileBytes);
+
+                await BinaryObjectManager.SaveAsync(fileObject);
+                CurrentUnitOfWork.SaveChanges();
+
+                var importPointListDto = await _importShipmentFromExcelAppService.ImportGoodsDetailsFromExcel(new ImportGoodsDetailsFromExcelInput
+                {
+                    BinaryObjectId = fileObject.Id,
+                    ShippingRequestId = ShippingRequestId,
+                    TenantId = tenantId
+                });
+
+                return Json(new AjaxResponse(new { importPointListDto }));
+            }
+            catch (UserFriendlyException ex)
+            {
+                return Json(new AjaxResponse(new ErrorInfo(ex.Message)));
+            }
+        }
+
 
         [HttpPost]
         [AbpMvcAuthorize(AppPermissions.Pages_AppLocalization_Edit)]
