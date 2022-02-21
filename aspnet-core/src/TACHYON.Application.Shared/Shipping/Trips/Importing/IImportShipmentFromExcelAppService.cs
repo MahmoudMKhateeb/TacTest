@@ -13,6 +13,8 @@ namespace TACHYON.Shipping.Trips
         Task CreateShipmentsFromDto(List<ImportTripDto> importTripDtoList);
         Task<List<ImportRoutePointDto>> ImportRoutePointsFromExcel(ImportPointsFromExcelInput importShipmentFromExcelInput);
         Task CreatePointsFromDto(List<ImportRoutePointDto> importRoutePointDtoList);
+        Task<List<ImportGoodsDetailsDto>> ImportGoodsDetailsFromExcel(ImportGoodsDetailsFromExcelInput input);
+        Task CreateGoodsDetailsFromDto(List<ImportGoodsDetailsDto> importGoodsDetailsDtoList);
 
     }
 }
