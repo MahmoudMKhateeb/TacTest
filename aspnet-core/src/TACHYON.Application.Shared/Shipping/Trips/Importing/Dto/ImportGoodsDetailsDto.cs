@@ -19,7 +19,7 @@ namespace TACHYON.Shipping.Trips.Importing.Dto
         public string DangerousGoodsCode { get; set; }
         public int? DangerousGoodTypeId { get; set; }
         public string DangerousGoodsType { get; set; }
-        public int GoodCategoryId { get; set; }
+        public int? GoodCategoryId { get; set; }
         public string GoodsSubCategory { get; set; }
         public string OtherGoodsCategoryName { get; set; }
         public int UnitOfMeasureId { get; set; }

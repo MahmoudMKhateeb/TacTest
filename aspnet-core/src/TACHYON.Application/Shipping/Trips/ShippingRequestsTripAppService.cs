@@ -392,8 +392,8 @@ namespace TACHYON.Shipping.Trips
             await ValidateGoodsCategory(input.RoutPoints, request.GoodCategoryId);
 
             ShippingRequestTrip trip = ObjectMapper.Map<ShippingRequestTrip>(input);
-            AssignWorkFlowVersionToRoutPoints(trip);
-
+            //AssignWorkFlowVersionToRoutPoints(trip);
+            _shippingRequestTripManager.AssignWorkFlowVersionToRoutPoints(trip);
             //insert trip 
             var shippingRequestTripId = await _shippingRequestTripRepository.InsertAndGetIdAsync(trip);
 
@@ -408,23 +408,23 @@ namespace TACHYON.Shipping.Trips
             }
 
             //Notify Carrier with trip details
-            await NotifyCarrierWithTripDetails(trip, request.CarrierTenantId, true, true, true);
+           await  _shippingRequestTripManager.NotifyCarrierWithTripDetails(trip, request.CarrierTenantId, true, true, true);
         }
 
-        private void AssignWorkFlowVersionToRoutPoints(ShippingRequestTrip trip)
-        {
-            if (trip.RoutPoints != null && trip.RoutPoints.Any())
-            {
-                foreach (var point in trip.RoutPoints)
-                {
-                    point.WorkFlowVersion = point.PickingType == PickingType.Pickup
-                        ? TACHYONConsts.PickUpRoutPointWorkflowVersion
-                        : trip.NeedsDeliveryNote
-                            ? TACHYONConsts.DropOfWithDeliveryNoteRoutPointWorkflowVersion
-                            : TACHYONConsts.DropOfRoutPointWorkflowVersion;
-                }
-            }
-        }
+        //private void AssignWorkFlowVersionToRoutPoints(ShippingRequestTrip trip)
+        //{
+        //    if (trip.RoutPoints != null && trip.RoutPoints.Any())
+        //    {
+        //        foreach (var point in trip.RoutPoints)
+        //        {
+        //            point.WorkFlowVersion = point.PickingType == PickingType.Pickup
+        //                ? TACHYONConsts.PickUpRoutPointWorkflowVersion
+        //                : trip.NeedsDeliveryNote
+        //                    ? TACHYONConsts.DropOfWithDeliveryNoteRoutPointWorkflowVersion
+        //                    : TACHYONConsts.DropOfRoutPointWorkflowVersion;
+        //        }
+        //    }
+        //}
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Edit)]
         private async Task Update(CreateOrEditShippingRequestTripDto input, ShippingRequest request)
@@ -695,23 +695,23 @@ namespace TACHYON.Shipping.Trips
             }
         }
 
-        private async Task NotifyCarrierWithTripDetails(ShippingRequestTrip trip,
-            int? carrierTenantId,
-            bool hasAttachmentNotification,
-            bool needseliverNoteNotification,
-            bool hasAttachment)
-        {
-            //Notify carrier when trip has attachment or needs delivery note
-            if (trip.ShippingRequestFk.CarrierTenantId != null && trip.HasAttachment && hasAttachmentNotification)
-            {
-                await _appNotifier.NotifyCarrierWhenTripHasAttachment(trip.Id, carrierTenantId, hasAttachment);
-            }
+        //private async Task NotifyCarrierWithTripDetails(ShippingRequestTrip trip,
+        //    int? carrierTenantId,
+        //    bool hasAttachmentNotification,
+        //    bool needseliverNoteNotification,
+        //    bool hasAttachment)
+        //{
+        //    //Notify carrier when trip has attachment or needs delivery note
+        //    if (trip.ShippingRequestFk.CarrierTenantId != null && trip.HasAttachment && hasAttachmentNotification)
+        //    {
+        //        await _appNotifier.NotifyCarrierWhenTripHasAttachment(trip.Id, carrierTenantId, hasAttachment);
+        //    }
 
-            if (trip.ShippingRequestFk.CarrierTenantId != null && trip.NeedsDeliveryNote && needseliverNoteNotification)
-            {
-                await _appNotifier.NotifyCarrierWhenTripNeedsDeliverNote(trip.Id, carrierTenantId);
-            }
-        }
+        //    if (trip.ShippingRequestFk.CarrierTenantId != null && trip.NeedsDeliveryNote && needseliverNoteNotification)
+        //    {
+        //        await _appNotifier.NotifyCarrierWhenTripNeedsDeliverNote(trip.Id, carrierTenantId);
+        //    }
+        //}
 
         private async Task<bool> CheckIfDriverWorkingOnAnotherTrip(long assignedDriverUserId)
         {

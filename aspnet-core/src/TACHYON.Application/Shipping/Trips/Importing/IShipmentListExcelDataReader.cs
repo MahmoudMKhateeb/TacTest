@@ -9,6 +9,6 @@ namespace TACHYON.Shipping.Trips.Importing
 {
     public interface IShipmentListExcelDataReader : ITransientDependency
     {
-        List<ImportTripDto> GetShipmentsFromExcel(byte[] fileBytes, long shippingRequestId);
+        List<ImportTripDto> GetShipmentsFromExcel(byte[] fileBytes, long shippingRequestId, bool isSingleDropRequest);
     }
 }

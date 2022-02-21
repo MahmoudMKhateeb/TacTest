@@ -7,6 +7,7 @@ namespace TACHYON.Shipping.Trips.Dto
 {
     public class ImportTripDto : ICreateOrEditTripDtoBase
     {
+        public int Id { get; set; }
         public string BulkUploadRef { get; set; }
 
         /// <summary>

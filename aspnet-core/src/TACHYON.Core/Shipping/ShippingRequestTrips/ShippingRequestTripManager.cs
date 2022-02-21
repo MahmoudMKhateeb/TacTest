@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using TACHYON.AddressBook;
 using TACHYON.Features;
 using TACHYON.Goods.Dtos;
+using TACHYON.Notifications;
 using TACHYON.Receivers;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Routs.RoutPoints.Dtos;
@@ -29,12 +30,12 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         private readonly IFeatureChecker _featureChecker;
         private readonly IRepository<Facility, long> _facilityRepository;
         private readonly IRepository<Receiver> _receiverRepository;
-
+        private readonly IAppNotifier _appNotifier;
 
         private IAbpSession _AbpSession { get; set; }
 
 
-        public ShippingRequestTripManager(IRepository<ShippingRequestTrip> shippingRequestTripRepository, IRepository<ShippingRequest, long> shippingRequestRepository, IFeatureChecker featureChecker, IAbpSession abpSession, IRepository<RoutPoint, long> routePointRepository, IRepository<Facility, long> facilityRepository, IRepository<Receiver> receiverRepository)
+        public ShippingRequestTripManager(IRepository<ShippingRequestTrip> shippingRequestTripRepository, IRepository<ShippingRequest, long> shippingRequestRepository, IFeatureChecker featureChecker, IAbpSession abpSession, IRepository<RoutPoint, long> routePointRepository, IRepository<Facility, long> facilityRepository, IRepository<Receiver> receiverRepository, IAppNotifier appNotifier)
         {
             _shippingRequestTripRepository = shippingRequestTripRepository;
             _shippingRequestRepository = shippingRequestRepository;
@@ -43,9 +44,10 @@ namespace TACHYON.Shipping.ShippingRequestTrips
             _routePointRepository = routePointRepository;
             _facilityRepository = facilityRepository;
             _receiverRepository = receiverRepository;
+            _appNotifier = appNotifier;
         }
 
-        public async Task<ShippingRequestTrip> CreateAsync(ShippingRequestTrip trip)
+        public async Task<int> CreateAndGetIdAsync(ShippingRequestTrip trip)
         {
             //var existedTrip = await _shippingRequestTripRepository.FirstOrDefaultAsync(x => x.BulkUploadRef == trip.BulkUploadRef);
             //if (existedTrip != null)
@@ -53,7 +55,7 @@ namespace TACHYON.Shipping.ShippingRequestTrips
              //   throw new UserFriendlyException(L("TripAlreadyExists"));
             //}
 
-            return await _shippingRequestTripRepository.InsertAsync(trip);
+            return await _shippingRequestTripRepository.InsertAndGetIdAsync(trip);
         }
 
         public async Task ValidateNumberOfTrips(ShippingRequest request, int tripsNo)
@@ -201,6 +203,38 @@ namespace TACHYON.Shipping.ShippingRequestTrips
             }
         }
 
+        public void AssignWorkFlowVersionToRoutPoints(ShippingRequestTrip trip)
+        {
+            if (trip.RoutPoints != null && trip.RoutPoints.Any())
+            {
+                foreach (var point in trip.RoutPoints)
+                {
+                    point.WorkFlowVersion = point.PickingType == PickingType.Pickup
+                        ? TACHYONConsts.PickUpRoutPointWorkflowVersion
+                        : trip.NeedsDeliveryNote
+                            ? TACHYONConsts.DropOfWithDeliveryNoteRoutPointWorkflowVersion
+                            : TACHYONConsts.DropOfRoutPointWorkflowVersion;
+                }
+            }
+        }
+
+        public async Task NotifyCarrierWithTripDetails(ShippingRequestTrip trip,
+            int? carrierTenantId,
+            bool hasAttachmentNotification,
+            bool needseliverNoteNotification,
+            bool hasAttachment)
+        {
+            //Notify carrier when trip has attachment or needs delivery note
+            if (trip.ShippingRequestFk.CarrierTenantId != null && trip.HasAttachment && hasAttachmentNotification)
+            {
+                await _appNotifier.NotifyCarrierWhenTripHasAttachment(trip.Id, carrierTenantId, hasAttachment);
+            }
+
+            if (trip.ShippingRequestFk.CarrierTenantId != null && trip.NeedsDeliveryNote && needseliverNoteNotification)
+            {
+                await _appNotifier.NotifyCarrierWhenTripNeedsDeliverNote(trip.Id, carrierTenantId);
+            }
+        }
         private void ValidateDuplicateBulkReferenceFromDB(ImportTripDto importTripDto, StringBuilder exceptionMessage)
         {
             var trip = _shippingRequestTripRepository.GetAll()

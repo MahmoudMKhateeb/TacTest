@@ -33,6 +33,7 @@ namespace TACHYON.Goods.GoodsDetails.Dtos
         [Required] public int UnitOfMeasureId { get; set; }
         public string OtherUnitOfMeasureName { get; set; }
 
-        public long? RoutPointId { get; set; }
+        public long RoutPointId { get; set; }
+        public string Exception { get; set; }
     }
 }

@@ -20,24 +20,22 @@ namespace TACHYON.Shipping.Trips.Importing
         private readonly TachyonExcelDataReaderHelper _tachyonExcelDataReaderHelper;
         private readonly ShippingRequestTripManager _shippingRequestTripManager;
         private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepository;
-        private readonly IRepository<Facility, long> _facilityRepository;
-        private readonly IRepository<Receiver> _receiverRepository;
 
         private long ShippingRequestId;
+        private bool IsSingleDropRequest;
 
-
-        public ShipmentListExcelDataReader(TachyonExcelDataReaderHelper tachyonExcelDataReaderHelper, ShippingRequestTripManager shippingRequestTripManager, IRepository<ShippingRequestTrip> shippingRequestTripRepository, IRepository<Facility, long> facilityRepository, IRepository<Receiver> receiverRepository)
+        public ShipmentListExcelDataReader(TachyonExcelDataReaderHelper tachyonExcelDataReaderHelper, ShippingRequestTripManager shippingRequestTripManager, IRepository<ShippingRequestTrip> shippingRequestTripRepository)
         {
             _tachyonExcelDataReaderHelper = tachyonExcelDataReaderHelper;
             _shippingRequestTripManager = shippingRequestTripManager;
             _shippingRequestTripRepository = shippingRequestTripRepository;
-            _facilityRepository = facilityRepository;
-            _receiverRepository = receiverRepository;
+
         }
 
-        public List<ImportTripDto> GetShipmentsFromExcel(byte[] fileBytes, long shippingRequestId)
+        public List<ImportTripDto> GetShipmentsFromExcel(byte[] fileBytes, long shippingRequestId, bool isSingleDropRequest)
         {
             ShippingRequestId = shippingRequestId;
+            IsSingleDropRequest = isSingleDropRequest;
             return ProcessExcelFile(fileBytes, ProcessShipmentsExcelRow);
         }
 
@@ -76,6 +74,34 @@ namespace TACHYON.Shipping.Trips.Importing
                 trip.HasAttachment = GetBoolValueFromYesOrNo(_tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
                     row, 6, "Has Attchment ?", exceptionMessage));
 
+                if (IsSingleDropRequest)
+                {
+                    var originFacility= _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
+                    row, 7, "Original Facility*", exceptionMessage);
+                    trip.OriginalFacility = originFacility;
+                    trip.OriginalFacilityId = GetFacilityId(originFacility, exceptionMessage);
+
+                    var sender = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
+                    row, 8, "Sender*", exceptionMessage);
+                    trip.sender = sender;
+                    if (trip.OriginalFacilityId != null)
+                    {
+                        trip.SenderId = GetReceiverId(sender, exceptionMessage, trip.OriginalFacilityId.Value);
+                    }
+
+                    var destinationFacility = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
+                    row, 9, "Destination Facility*", exceptionMessage);
+                    trip.DestinationFacility = destinationFacility;
+                    trip.DestinationFacilityId = GetFacilityId(destinationFacility, exceptionMessage);
+
+                    var receiver = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
+                    row, 10, "Receiver*", exceptionMessage);
+                    trip.Receiver = receiver;
+                    if (trip.DestinationFacilityId != null)
+                    {
+                        trip.ReceiverId = GetReceiverId(receiver, exceptionMessage, trip.DestinationFacilityId.Value);
+                    }
+                }
                 _shippingRequestTripManager.ValidateTripDto(trip, exceptionMessage);
 
                 if (exceptionMessage.Length > 0)
@@ -89,6 +115,42 @@ namespace TACHYON.Shipping.Trips.Importing
             }
 
             return trip;
+        }
+
+        private long? GetFacilityId(string text, StringBuilder exceptionMessage)
+        {
+            if (text.IsNullOrEmpty())
+            {
+                exceptionMessage.Append(
+                    _tachyonExcelDataReaderHelper.GetLocalizedExceptionMessagePart("Facility"));
+                return null;
+            }
+
+            var facility = _shippingRequestTripManager.GetFacilityByPermission(text, ShippingRequestId);
+            //_facilityRepository.FirstOrDefault(x => x.Name == text);
+            if (facility != null)
+                return facility.Id;
+
+            exceptionMessage.Append(_tachyonExcelDataReaderHelper.GetLocalizedExceptionMessagePart("Facility"));
+            return null;
+        }
+
+        private int? GetReceiverId(string text, StringBuilder exceptionMessage, long facilityId)
+        {
+            if (text.IsNullOrEmpty())
+            {
+                exceptionMessage.Append(
+                    _tachyonExcelDataReaderHelper.GetLocalizedExceptionMessagePart("Receiver"));
+                return null;
+            }
+
+            var receiver = _shippingRequestTripManager.GetReceiverByPermissionAndFacility(text, ShippingRequestId, facilityId);
+            //_receiverRepository.FirstOrDefault(x => x.FullName == text);
+            if (receiver != null)
+                return receiver.Id;
+
+            exceptionMessage.Append(_tachyonExcelDataReaderHelper.GetLocalizedExceptionMessagePart("Receiver"));
+            return null;
         }
 
     }
