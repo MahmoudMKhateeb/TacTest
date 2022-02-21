@@ -123,7 +123,7 @@ namespace TACHYON.Authorization.Accounts
         {
             var user = await GetUserByChecking(input.EmailAddress);
             user.SetNewPasswordResetCode();
-            await _userEmailer.SendPasswordResetLinkAsync(
+            await _userEmailer.SendResetPasswordEmail(
                 user,
                 AppUrlService.CreatePasswordResetUrlFormat(AbpSession.TenantId)
                 );
@@ -169,7 +169,7 @@ namespace TACHYON.Authorization.Accounts
         {
             var user = await GetUserByChecking(input.EmailAddress);
             user.SetNewEmailConfirmationCode();
-            await _userEmailer.SendEmailActivationLinkAsync(
+            await _userEmailer.SendEmailActivationEmail(
                 user,
                 AppUrlService.CreateEmailActivationUrlFormat(AbpSession.TenantId),
                 input.UserPassword

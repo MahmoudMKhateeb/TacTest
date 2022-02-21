@@ -21,14 +21,14 @@ namespace TACHYON.MultiTenancy
         private readonly IRepository<Tenant> _tenantRepository;
         private readonly IRepository<SubscribableEdition> _editionRepository;
         private readonly TenantManager _tenantManager;
-        private readonly UserEmailer _userEmailer;
+        private readonly IUserEmailer _userEmailer;
 
         public SubscriptionExpirationCheckWorker(
             AbpTimer timer,
             IRepository<Tenant> tenantRepository,
             IRepository<SubscribableEdition> editionRepository,
             TenantManager tenantManager,
-            UserEmailer userEmailer)
+            IUserEmailer userEmailer)
             : base(timer)
         {
             _tenantRepository = tenantRepository;
@@ -76,11 +76,11 @@ namespace TACHYON.MultiTenancy
 
                     if (endSubscriptionResult == EndSubscriptionResult.TenantSetInActive)
                     {
-                        AsyncHelper.RunSync(() => _userEmailer.TryToSendSubscriptionExpireEmail(tenant.Id, utcNow));
+                        AsyncHelper.RunSync(() => _userEmailer.SendSubscriptionExpireEmail(tenant.Id, utcNow));
                     }
                     else if (endSubscriptionResult == EndSubscriptionResult.AssignedToAnotherEdition)
                     {
-                        AsyncHelper.RunSync(() => _userEmailer.TryToSendSubscriptionAssignedToAnotherEmail(tenant.Id, utcNow, edition.ExpiringEditionId.Value));
+                        AsyncHelper.RunSync(() => _userEmailer.SendSubscriptionAssignedToAnotherEmail(tenant.Id, utcNow, edition.ExpiringEditionId.Value));
                     }
                 }
                 catch (Exception exception)
@@ -96,7 +96,7 @@ namespace TACHYON.MultiTenancy
                 return;
             }
 
-            AsyncHelper.RunSync(() => _userEmailer.TryToSendFailedSubscriptionTerminationsEmail(failedTenancyNames, utcNow));
+            AsyncHelper.RunSync(() => _userEmailer.SendFailedSubscriptionTerminationsEmail(failedTenancyNames, utcNow));
         }
     }
 }

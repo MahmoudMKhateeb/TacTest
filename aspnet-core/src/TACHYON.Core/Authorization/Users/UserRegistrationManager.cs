@@ -90,7 +90,7 @@ namespace TACHYON.Authorization.Users
             if (!user.IsEmailConfirmed)
             {
                 user.SetNewEmailConfirmationCode();
-                await _userEmailer.SendEmailActivationLinkAsync(user, emailActivationLink,plainPassword);
+                await _userEmailer.SendEmailActivationEmail(user, emailActivationLink,plainPassword);
             }
 
             //Notifications
