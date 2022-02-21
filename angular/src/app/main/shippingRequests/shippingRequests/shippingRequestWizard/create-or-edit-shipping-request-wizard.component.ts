@@ -243,19 +243,18 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
           console.log('step 4');
           //check validation for vases
           let isVaild = true;
+          var tripsCountNotValid = this.selectedVases.filter(
+            (r) => r.numberOfTrips == null || r.numberOfTrips == 0 || r.numberOfTrips > this.step2Dto.numberOfTrips
+          ).length;
           this.selectedVases.forEach((element) => {
             var isDisabledAmount = this.selectedVasesProperties[element.vasId].vasAmountDisabled;
             var isDisabledCount = this.selectedVasesProperties[element.vasId].vasCountDisabled;
-            if (
-              this.step2Dto.numberOfTrips < element.numberOfTrips ||
-              (element.requestMaxCount <= 0 && !isDisabledCount) ||
-              (element.requestMaxAmount <= 0 && !isDisabledAmount)
-            ) {
+            if ((element.requestMaxCount <= 0 && !isDisabledCount) || (element.requestMaxAmount <= 0 && !isDisabledAmount)) {
               isVaild = false;
               return;
             }
           });
-          if (isVaild) {
+          if (isVaild && tripsCountNotValid == 0) {
             this.createOrEditStep4();
             wizardObj.goNext();
             //statements;
