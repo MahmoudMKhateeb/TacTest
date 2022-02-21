@@ -103,6 +103,7 @@ namespace TACHYON.Shipping.Trips.Importing
 
         public async Task CreatePointsFromDto(List<ImportRoutePointDto> importRoutePointDtoList)
         {
+            DisableTenancyFilters();
             var request = _shippingRequestTripManager.GetShippingRequestByPermission(importRoutePointDtoList.First().ShippingRequestTripId);
 
             if (request == null)
@@ -137,6 +138,7 @@ namespace TACHYON.Shipping.Trips.Importing
 
         public async Task CreateGoodsDetailsFromDto(List<ImportGoodsDetailsDto> importGoodsDetailsDtoList)
         {
+            DisableTenancyFilters();
             var request = _shippingRequestTripManager.GetShippingRequestByPermission(importGoodsDetailsDtoList.First().ShippingRequestTripId);
             try
             {
