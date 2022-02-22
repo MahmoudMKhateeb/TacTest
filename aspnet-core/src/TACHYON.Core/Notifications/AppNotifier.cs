@@ -478,7 +478,11 @@ namespace TACHYON.Notifications
                     input.WaybillNumber),
                 TACHYONConsts.LocalizationSourceName))
             {
-                Properties = new Dictionary<string, object>() { { "updatedTripId", input.TripId } }
+                Properties = new Dictionary<string, object>()
+                {
+                    { "updatedTripId", input.TripId },
+                    {"srId" , input.ShippingRequestId}
+                }
             };
 
             await _notificationPublisher.PublishAsync(AppNotificationNames.NotifyShipperWhenTripUpdated, notificationData, userIds: new[] { tenantAdmin });
@@ -494,7 +498,11 @@ namespace TACHYON.Notifications
             input.WaybillNumber),
                     TACHYONConsts.LocalizationSourceName))
             {
-                Properties = new Dictionary<string, object>() { { "id", input.TripId } }
+                Properties = new Dictionary<string, object>()
+                {
+                    { "id", input.TripId } ,
+                    {"srId",input.ShippingRequestId}
+                }
             };
 
             var notifiedUsers = new List<UserIdentifier>(){tenantAdmin};
@@ -532,7 +540,11 @@ namespace TACHYON.Notifications
                         input.WaybillNumber),
                     TACHYONConsts.LocalizationSourceName))
             {
-                Properties = new Dictionary<string, object>() { { "updatedTripId", input.TripId } }
+                Properties = new Dictionary<string, object>()
+                {
+                    { "updatedTripId", input.TripId },
+                    {"srId", input.ShippingRequestId}
+                }
             };
 
             await _notificationPublisher.PublishAsync(AppNotificationNames.NotifyTachyonDealWhenTripUpdated, notificationData, userIds: new[] { tenantAdmin });
@@ -557,6 +569,7 @@ namespace TACHYON.Notifications
 
             var input = new NotifyTripUpdatedInput()
             {
+                ShippingRequestId = trip.ShippingRequestId,
                 ShipperTenantId = shipperTenantId,
                 TripId = trip.Id,
                 WaybillNumber = waybillNo.ToString()
