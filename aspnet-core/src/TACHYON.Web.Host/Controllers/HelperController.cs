@@ -282,14 +282,14 @@ namespace TACHYON.Web.Controllers
                 await BinaryObjectManager.SaveAsync(fileObject);
                 CurrentUnitOfWork.SaveChanges();
 
-                var importPointListDto = await _importShipmentFromExcelAppService.ImportGoodsDetailsFromExcel(new ImportGoodsDetailsFromExcelInput
+                var importGoodsDetaiListDto = await _importShipmentFromExcelAppService.ImportGoodsDetailsFromExcel(new ImportGoodsDetailsFromExcelInput
                 {
                     BinaryObjectId = fileObject.Id,
                     ShippingRequestId = ShippingRequestId,
                     TenantId = tenantId
                 });
 
-                return Json(new AjaxResponse(new { importPointListDto }));
+                return Json(new AjaxResponse(new { importGoodsDetaiListDto }));
             }
             catch (UserFriendlyException ex)
             {

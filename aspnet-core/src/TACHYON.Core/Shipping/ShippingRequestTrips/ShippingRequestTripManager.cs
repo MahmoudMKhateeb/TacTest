@@ -188,6 +188,11 @@ namespace TACHYON.Shipping.ShippingRequestTrips
            return _shippingRequestTripRepository.FirstOrDefault(x => x.BulkUploadRef == tripReference && x.ShippingRequestId==request.Id);
         }
 
+        public List<ShippingRequestTrip> GetShippingRequestTripsIdByBulkRefs(List<string> references)
+        {
+            return _shippingRequestTripRepository.GetAll().Where(x => references.Contains(x.BulkUploadRef)).ToList();
+        }
+
         //goods details validation
         public void ValidateTotalweight(List<ICreateOrEditGoodsDetailDtoBase> input, ShippingRequest request)
         {

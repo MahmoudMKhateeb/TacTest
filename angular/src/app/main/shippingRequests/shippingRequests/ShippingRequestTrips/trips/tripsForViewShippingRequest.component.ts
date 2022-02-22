@@ -198,7 +198,7 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
       )
       .subscribe((response) => {
         if (response.success) {
-          this.goodDetailsList = response.result.importPointListDto;
+          this.goodDetailsList = response.result.importGoodsDetaiListDto;
           this.loading = false;
           this.notify.success(this.l('ImportProcessStart'));
           this.saving = true;
@@ -212,6 +212,6 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   }
 
   onUploadExcelError(): void {
-    this.notify.error(this.l('ImportTrucksUploadFailed'));
+    this.notify.error(this.l('ImportUploadFailed'));
   }
 }

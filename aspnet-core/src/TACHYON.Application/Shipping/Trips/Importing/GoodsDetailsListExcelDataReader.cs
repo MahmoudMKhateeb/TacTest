@@ -56,7 +56,7 @@ namespace TACHYON.Shipping.Trips.Importing
             var TripReference = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
                     row, 0, "Trip Reference*", exceptionMessage);
 
-
+                goodsDetail.TripReference = TripReference;
             //1
             var pointReference = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
                     row, 1, "Point Reference*", exceptionMessage);
@@ -159,7 +159,7 @@ namespace TACHYON.Shipping.Trips.Importing
             if (text.IsNullOrEmpty())
             {
                 exceptionMessage.Append(
-                    _tachyonExcelDataReaderHelper.GetLocalizedExceptionMessagePart("Receiver"));
+                    _tachyonExcelDataReaderHelper.GetLocalizedExceptionMessagePart("GoodsCategory"));
                 return null;
             }
 
