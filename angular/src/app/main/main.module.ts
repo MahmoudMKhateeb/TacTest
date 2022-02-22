@@ -287,6 +287,7 @@ import { ShipmentHistoryComponent } from '@app/main/shippingRequests/shippingReq
 import { EmailEditorModule } from '@node_modules/angular-email-editor';
 import { EmailTemplateTranslationTemplateComponent } from './emailTemplates/emailTemplates/email-template-translation-template.component';
 import { CreateOrEditEmailTemplateTranslationModalComponent } from './emailTemplates/emailTemplates/create-or-edit-email-template-translation-modal.component';
+import { ImportCitiesPolygonsModalComponent } from './cities/cities/import-cities-polygoins-modal/import-cities-polygons-modal.component';
 
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
@@ -546,6 +547,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ShipmentHistoryComponent,
     EmailTemplateTranslationTemplateComponent,
     CreateOrEditEmailTemplateTranslationModalComponent,
+    ImportCitiesPolygonsModalComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },

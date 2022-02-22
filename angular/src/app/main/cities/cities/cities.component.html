@@ -3,7 +3,9 @@
     <sub-header [title]="'Cities' | localize" [description]="'CitiesHeaderInfo' | localize">
       <div role="actions">
         <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
-
+        <button (click)="ImportCitiesPolygonsModal.show()" class="btn btn-outline-danger">
+          <i class="fa fa-plus"></i> {{ l('ImportCitiesPolygons') }}
+        </button>
         <button *ngIf="isGranted('Pages.Cities.Create')" (click)="createCity()" class="btn btn-primary blue">
           <i class="fa fa-plus"></i> {{ l('CreateNewCity') }}
         </button>
@@ -52,6 +54,7 @@
                 <dxo-lookup [dataSource]="countries" displayExpr="displayName" valueExpr="id"> </dxo-lookup>
               </dxi-column>
               <dxi-column dataField="isActive" caption="{{ l('IsActive') }}"></dxi-column>
+              <dxi-column dataField="HasPolygon" caption="{{ l('HasPolygon') }}"></dxi-column>
             </dx-data-grid>
           </div>
         </div>
@@ -61,3 +64,4 @@
 </div>
 
 <createOrEditCityModal #createOrEditCityModal (modalSave)="getCities()"></createOrEditCityModal>
+<import-cities-polygons-modal #ImportCitiesPolygonsModal></import-cities-polygons-modal>
