@@ -16,7 +16,7 @@
         offIcon="pi pi-lock"
         *ngIf="ShippingRequest.isTachyonDeal && feature.isEnabled('App.Shipper')"
         (click)="updateAddTripsByTmsFeature()"
-        [disabled]="saving"
+        [busyIf]="saving"
       >
       </p-toggleButton>
 
