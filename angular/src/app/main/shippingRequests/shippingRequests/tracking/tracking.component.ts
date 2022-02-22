@@ -248,4 +248,17 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
       this.Items[tripIndex].hasAccident = true;
     });
   }
+
+  /**
+   * check if user can reset a trip
+   * if user is Carrier/TMS and the Trip Status is not new/Delivered
+   * @param item
+   */
+  canResetTrip(item: TrackingListDto) {
+    return (
+      (this.isCarrier || this.isTachyonDealer) &&
+      item.status !== this.ShippingRequestTripStatusEnum.New &&
+      item.status !== this.ShippingRequestTripStatusEnum.Delivered
+    );
+  }
 }

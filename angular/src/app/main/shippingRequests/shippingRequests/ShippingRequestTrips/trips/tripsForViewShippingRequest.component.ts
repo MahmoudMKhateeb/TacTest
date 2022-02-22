@@ -9,6 +9,7 @@ import {
   ShippingRequestDto,
   ShippingRequestsServiceProxy,
   ShippingRequestsTripServiceProxy,
+  ShippingRequestTripStatus,
 } from '@shared/service-proxies/service-proxies';
 import { CreateOrEditTripComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/createOrEditTripModal/createOrEditTrip.component';
 import { ViewTripModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/viewTripModal/viewTripModal.component';
@@ -31,6 +32,7 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   @Input() VasListFromFather: GetShippingRequestVasForViewDto[];
   tripsByTmsEnabled: boolean;
   saving = false;
+  ShippingRequestTripStatus = ShippingRequestTripStatus;
   constructor(
     injector: Injector,
     private _TripService: TripService,
@@ -105,5 +107,18 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
 
     this.primengTableHelper.adjustScroll(this.dataTable);
     this.tripsByTmsEnabled = this.ShippingRequest.addTripsByTmsEnabled;
+  }
+
+  /**
+   * check if user can reset a trip
+   * if user is Carrier/TMS and the Trip Status is not new/Delivered
+   * @param record
+   */
+  canResetTrip(record): boolean {
+    return (
+      (this.isCarrier || this.isTachyonDealer) &&
+      record.status !== this.ShippingRequestTripStatus.New &&
+      record.status !== this.ShippingRequestTripStatus.Delivered
+    );
   }
 }
