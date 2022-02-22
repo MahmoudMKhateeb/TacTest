@@ -396,10 +396,10 @@ namespace TACHYON.Shipping.ShippingRequests
             ShippingRequest shippingRequest;
             using (CurrentUnitOfWork.DisableFilter("IHasIsDrafted"))
             {
-                 shippingRequest = await _shippingRequestRepository.GetAll()
-                     .Include(x=> x.ShippingRequestVases)
-                  .Where(x => x.Id == id && x.IsDrafted == true)
-                  .FirstOrDefaultAsync();
+                shippingRequest = await _shippingRequestRepository.GetAll()
+                    .Include(x => x.ShippingRequestVases)
+                 .Where(x => x.Id == id && x.IsDrafted == true)
+                 .FirstOrDefaultAsync();
             }
 
             if (shippingRequest.DraftStep < 4)
@@ -736,6 +736,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
                     .Include(e => e.ShippingTypeFk)
                     .Include(e => e.PackingTypeFk)
+                    .ThenInclude(v => v.Translations)
                     .Include(e => e.CarrierTenantFk)
                     .FirstOrDefaultAsync();
 
@@ -810,6 +811,13 @@ namespace TACHYON.Shipping.ShippingRequests
                 //return translated good category name by default language
                 output.GoodsCategoryName =
                     ObjectMapper.Map<GoodCategoryDto>(shippingRequest.GoodCategoryFk).DisplayName;
+
+
+
+                //return translated Packing Type name by current language
+                output.packingTypeDisplayName =
+                    ObjectMapper.Map<PackingTypeDto>(shippingRequest.PackingTypeFk).DisplayName;
+
 
 
                 //return translated truck type by default language
