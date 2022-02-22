@@ -287,6 +287,7 @@ import { ShipmentHistoryComponent } from '@app/main/shippingRequests/shippingReq
 import { EmailEditorModule } from '@node_modules/angular-email-editor';
 import { EmailTemplateTranslationTemplateComponent } from './emailTemplates/emailTemplates/email-template-translation-template.component';
 import { CreateOrEditEmailTemplateTranslationModalComponent } from './emailTemplates/emailTemplates/create-or-edit-email-template-translation-modal.component';
+import { ToggleButtonModule } from '@node_modules/primeng/togglebutton';
 
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
@@ -342,6 +343,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     NgbDropdownModule,
     StepsModule,
     EmailEditorModule,
+    ToggleButtonModule,
   ],
   declarations: [
     EmailTemplatesComponent,

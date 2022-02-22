@@ -7,15 +7,19 @@
       class="card-toolbar"
       *ngIf="feature.isEnabled('App.Shipper') || feature.isEnabled('App.TachyonDealer') || feature.isEnabled('App.CarrierAsASaas')"
     >
-      <button
-        class="btn btn-primary"
+      <p-toggleButton
+        onLabel="{{ l('EnableAddTripsByTms') }}"
+        offLabel="{{ l('DisableAddTripsByTms') }}"
+        [(ngModel)]="tripsByTmsEnabled"
+        [style]="{ width: '14em' }"
+        onIcon="pi pi-lock-open"
+        offIcon="pi pi-lock"
         *ngIf="ShippingRequest.isTachyonDeal && feature.isEnabled('App.Shipper')"
         (click)="updateAddTripsByTmsFeature()"
         [disabled]="saving"
       >
-        <i [class]="tripsByTmsEnabled ? 'fas fa-lock' : 'fas fa-lock-open'"></i>
-        {{ tripsByTmsEnabled ? l('DisableAddTripsByTms') : l('EnableAddTripsByTms') }}
-      </button>
+      </p-toggleButton>
+
       <button
         class="btn btn-primary"
         (click)="AddNewTripModal.show()"
