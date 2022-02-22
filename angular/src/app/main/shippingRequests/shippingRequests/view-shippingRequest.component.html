@@ -389,6 +389,7 @@
         <TripsForViewShippingRequest
           *ngIf="shippingRequestforView.shippingRequest.id && bidsloading == false"
           [ShippingRequest]="shippingRequestforView.shippingRequest"
+          [shippingRequestForView]="shippingRequestforView"
           [VasListFromFather]="shippingRequestforView.shippingRequestVasDtoList"
         ></TripsForViewShippingRequest>
       </ng-template>

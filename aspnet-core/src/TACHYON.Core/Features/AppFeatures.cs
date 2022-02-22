@@ -14,6 +14,8 @@
 
         public const string Shipper = "App.Shipper";
         public const string Carrier = "App.Carrier";
+        public const string Pay = "App.Pay";
+        public const string Receipt = "App.Receipt";
         public const string Broker = "App.Broker";
         public const string Receiver = "App.Receiver";
         public const string TachyonDealer = "App.TachyonDealer";
@@ -22,15 +24,14 @@
         public const string OffersMarketPlace = "App.OffersMarketPlace";
         public const string SendDirectRequest = "App.SendDirectRequest";
         public const string SendTachyonDealShippingRequest = "App.SendTachyonDealShippingRequest";
+        public const string CarrierAsASaas = "App.CarrierAsASaas";
+        public const string CarrierAsSaasCommissionValue = "App.CarrierAsASaas.carrierAsSaasCommissionValue";
         public const string AddTripsByTachyonDeal = "App.Shipper.AddTripsByTachyonDeal";
         public const string ShipperCreditLimit = "App.Shipper.CreditLimit";
         public const string ShipperPeriods = "App.Shipper.Periods";
         public const string CarrierPeriods = "App.Carrier.Periods";
 
 
-        public const string BiddingCommissionPercentage = "App.Shipper.BiddingCommissionPercentage";
-        public const string BiddingCommissionValue = "App.Shipper.BiddingCommissionValue";
-        public const string BiddingMinValueCommission = "App.Shipper.BiddingMinValueCommission";
         public const string TachyonDealerCommissionPercentage = "TachyonDealer.TachyonDealerCommissionPercentage";
         public const string TachyonDealerCommissionValue = "TachyonDealer.TachyonDealerCommissionValue";
         public const string TachyonDealerMinValueCommission = "TachyonDealer.TachyonDealerMinValueCommission";
@@ -103,5 +104,11 @@
         public const string Saas = "App.Shipper.Saas";
 
         #endregion
+
+        public const string Bidding = "App.Pay.Bidding";
+        public const string CreateDirectRequest = "App.Pay.CreateDirectRequest";
+        public const string CreateTmsRequest = "App.Pay.CreateTmsRequest";
+        public const string PayPeriod = "App.Pay.PayPeriod";
+
     }
 }

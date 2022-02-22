@@ -1,5 +1,6 @@
 ﻿using Abp.MultiTenancy;
 using Abp.Timing;
+using JetBrains.Annotations;
 using Org.BouncyCastle.Asn1.Microsoft;
 using System;
 using System.ComponentModel.DataAnnotations;
@@ -64,7 +65,7 @@ namespace TACHYON.MultiTenancy
         /// <summary>
         /// Moi number for company 
         /// </summary>
-        [Required]
+        [CanBeNull]
         [RegularExpression(TenantConsts.MoiNumberRegex)]
         public string MoiNumber { get; set; }
 

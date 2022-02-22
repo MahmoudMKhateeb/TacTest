@@ -3566,7 +3566,6 @@ namespace TACHYON.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MoiNumber")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")

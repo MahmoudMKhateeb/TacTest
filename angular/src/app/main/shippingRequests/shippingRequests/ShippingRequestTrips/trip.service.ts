@@ -61,7 +61,7 @@ export class TripService {
   //Loads All facilities
   GetOrRefreshFacilities(shippingRequestId: number) {
     this.facilitiesLodaing = true;
-    if (this.feature.isEnabled('App.Shipper') || this.feature.isEnabled('App.TachyonDealer')) {
+    if (this.feature.isEnabled('App.Shipper') || this.feature.isEnabled('App.TachyonDealer') || this.feature.isEnabled('App.CarrierAsASaas')) {
       if (shippingRequestId != null && shippingRequestId != undefined) {
         this.currentShippingRequest.subscribe((res) => {
           this.citySourceId = res.originalCityId;

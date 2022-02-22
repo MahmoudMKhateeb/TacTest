@@ -23,6 +23,7 @@ using System.Threading.Tasks;
 using TACHYON.AddressBook;
 using TACHYON.AddressBook.Ports;
 using TACHYON.Authorization;
+using TACHYON.Cities;
 using TACHYON.Common;
 using TACHYON.Documents;
 using TACHYON.Dto;
@@ -33,6 +34,7 @@ using TACHYON.Goods.GoodCategories.Dtos;
 using TACHYON.Invoices;
 using TACHYON.MultiTenancy;
 using TACHYON.Notifications;
+using TACHYON.Offers;
 using TACHYON.Packing.PackingTypes;
 using TACHYON.Packing.PackingTypes.Dtos;
 using TACHYON.PriceOffers;
@@ -69,8 +71,7 @@ namespace TACHYON.Shipping.ShippingRequests
     [AbpAuthorize(AppPermissions.Pages_ShippingRequests)]
     public class ShippingRequestsAppService : TACHYONAppServiceBase, IShippingRequestsAppService
     {
-        public ShippingRequestsAppService(
-            IRepository<ShippingRequest, long> shippingRequestRepository,
+        public ShippingRequestsAppService(IRepository<ShippingRequest, long> shippingRequestRepository,
             IRepository<ShippingRequestTrip> shippingRequestTripRepository,
             IRepository<ShippingRequestTripVas, long> shippingRequestTripVasRepository,
             IRepository<ShippingType, int> shippingTypeRepository,
@@ -97,7 +98,8 @@ namespace TACHYON.Shipping.ShippingRequests
             IRepository<InvoiceTrip, long> invoiveTripRepository,
             ShippingRequestDirectRequestAppService shippingRequestDirectRequestAppService,
             ShippingRequestDirectRequestManager shippingRequestDirectRequestManager,
-            DocumentFilesManager documentFilesManager)
+            DocumentFilesManager documentFilesManager,
+            IRepository<PriceOffer, long> priceOfferRepository)
         {
             _vasPriceRepository = vasPriceRepository;
             _shippingRequestRepository = shippingRequestRepository;
@@ -126,6 +128,7 @@ namespace TACHYON.Shipping.ShippingRequests
             _shippingRequestDirectRequestAppService = shippingRequestDirectRequestAppService;
             _shippingRequestDirectRequestManager = shippingRequestDirectRequestManager;
             _documentFilesManager = documentFilesManager;
+            _priceOfferRepository = priceOfferRepository;
         }
 
         private readonly IRepository<ShippingRequestsCarrierDirectPricing> _carrierDirectPricingRepository;
@@ -158,7 +161,7 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly ShippingRequestDirectRequestAppService _shippingRequestDirectRequestAppService;
         private readonly ShippingRequestDirectRequestManager _shippingRequestDirectRequestManager;
         private readonly DocumentFilesManager _documentFilesManager;
-
+        private readonly IRepository<PriceOffer, long> _priceOfferRepository;
         public async Task<GetAllShippingRequestsOutputDto> GetAll(GetAllShippingRequestsInput Input)
         {
             DisableTenancyFilters();
@@ -237,7 +240,7 @@ namespace TACHYON.Shipping.ShippingRequests
         }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequests_Edit)]
-        [RequiresFeature(AppFeatures.Shipper)]
+        [RequiresFeature(AppFeatures.Shipper, AppFeatures.CarrierAsASaas)]
         public async Task<GetShippingRequestForEditOutput> GetShippingRequestForEdit(EntityDto<long> input)
         {
             if (await IsEnabledAsync(AppFeatures.TachyonDealer))
@@ -268,7 +271,7 @@ namespace TACHYON.Shipping.ShippingRequests
             }
             else if (input.IsDirectRequest)
             {
-                if (!await IsEnabledAsync(AppFeatures.SendDirectRequest))
+                if (!await IsEnabledAsync(AppFeatures.SendDirectRequest) && !await IsEnabledAsync(AppFeatures.CarrierAsASaas))
                 {
                     throw new UserFriendlyException(L("feature SendDirectRequest not enabled"));
                 }
@@ -407,7 +410,15 @@ namespace TACHYON.Shipping.ShippingRequests
                 DisableTenancyFilters();
             }
 
-            ShippingRequest shippingRequest = await GetDraftedShippingRequest(id);
+            ShippingRequest shippingRequest;
+            using (CurrentUnitOfWork.DisableFilter("IHasIsDrafted"))
+            {
+                 shippingRequest = await _shippingRequestRepository.GetAll()
+                     .Include(x=> x.ShippingRequestVases)
+                  .Where(x => x.Id == id && x.IsDrafted == true)
+                  .FirstOrDefaultAsync();
+            }
+
             if (shippingRequest.DraftStep < 4)
             {
                 throw new UserFriendlyException(L("YouMustCompleteWizardStepsFirst"));
@@ -417,8 +428,61 @@ namespace TACHYON.Shipping.ShippingRequests
             // _commissionManager.AddShippingRequestCommissionSettingInfo(shippingRequest);
             shippingRequest.IsDrafted = false;
             //to make SR to non drafted .. 
-            CurrentUnitOfWork.SaveChanges();
-            await SendtoCarrierIfShippingRequestIsDirectRequest(shippingRequest);
+            //CurrentUnitOfWork.SaveChanges();
+            if (!shippingRequest.IsSaas())
+            {
+                await SendtoCarrierIfShippingRequestIsDirectRequest(shippingRequest);
+            }
+
+            // handle carrier as saas SR pricing
+            if (shippingRequest.IsSaas())
+            {
+                decimal carrierAsSaasCommissionValue = Convert.ToDecimal(await FeatureChecker.GetValueAsync(shippingRequest.TenantId, AppFeatures.CarrierAsSaasCommissionValue));
+
+
+                var itemDetails = new List<PriceOfferDetailDto>();
+                foreach (ShippingRequestVas vas in shippingRequest.ShippingRequestVases)
+                {
+
+                    itemDetails.Add(new PriceOfferDetailDto
+                    {
+                        ItemId = vas.Id,
+                        Price = 0,
+                        CommissionPercentageOrAddValue = 0,
+                        PriceType = PriceOfferType.Vas,
+                        CommissionType = PriceOfferCommissionType.CommissionValue
+                    }
+                    );
+                }
+
+
+                var input = new CreateOrEditPriceOfferInput
+                {
+                    ShippingRequestId = shippingRequest.Id,
+                    ItemPrice = 0,
+                    Channel = PriceOfferChannel.CarrierAsSaas,
+                    ParentId = null,
+                    PriceType = PriceOfferType.Trip,
+                    //ignor vas's
+                    ItemDetails = itemDetails,
+                    CommissionPercentageOrAddValue = carrierAsSaasCommissionValue,
+                    CommissionType = PriceOfferCommissionType.CommissionValue,
+                    VasCommissionPercentageOrAddValue = 0,
+                    VasCommissionType = PriceOfferCommissionType.CommissionValue,
+                    SourceId = null
+                };
+
+
+                var offer = await _priceOfferManager.InitPriceOffer(input);
+                _priceOfferManager.SetShippingRequestPricing(offer);
+
+                offer.Status = PriceOfferStatus.Accepted;
+
+                shippingRequest.Status = ShippingRequestStatus.PostPrice;
+
+                await _priceOfferRepository.InsertAsync(offer);
+
+            }
         }
 
 
@@ -439,6 +503,12 @@ namespace TACHYON.Shipping.ShippingRequests
             if (input.ShipperId.HasValue)
             {
                 shippingRequest.TenantId = input.ShipperId.Value;
+            }
+
+            if (await IsCarrier() && await IsEnabledAsync(AppFeatures.CarrierAsASaas))
+            {
+                shippingRequest.TenantId = AbpSession.TenantId.Value;
+                shippingRequest.CarrierTenantId = AbpSession.TenantId.Value;
             }
 
             //ValidateStep1(shippingRequest);
@@ -494,7 +564,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
         #endregion
 
-        [RequiresFeature(AppFeatures.ShippingRequest)]
+        [RequiresFeature(AppFeatures.ShippingRequest, AppFeatures.CarrierAsASaas)]
         public async Task CreateOrEdit(CreateOrEditShippingRequestDto input)
         {
             await OthersNameValidation(input);
@@ -508,7 +578,7 @@ namespace TACHYON.Shipping.ShippingRequests
             }
             else if (input.IsDirectRequest)
             {
-                if (!await IsEnabledAsync(AppFeatures.SendDirectRequest))
+                if (!await IsEnabledAsync(AppFeatures.SendDirectRequest) && !await IsEnabledAsync(AppFeatures.CarrierAsASaas))
                 {
                     throw new UserFriendlyException(L("feature SendDirectRequest not enabled"));
                 }
@@ -711,8 +781,11 @@ namespace TACHYON.Shipping.ShippingRequests
                     if (shippingRequest.Status == ShippingRequestStatus.PrePrice ||
                         shippingRequest.Status == ShippingRequestStatus.NeedsAction)
                     {
-                        var carrierHasOffers = _carrierDirectPricingRepository.GetAll().Any(e =>
-                            e.RequestId == id && e.CarrirerTenantId == abpSessionTenantId);
+                        var carrierHasOffers = _carrierDirectPricingRepository.GetAll().Any
+                        (
+                            e =>
+                                e.RequestId == id && e.CarrirerTenantId == abpSessionTenantId
+                        );
                         // if carrier has no offers 
                         if (!carrierHasOffers)
                         {
@@ -994,8 +1067,11 @@ namespace TACHYON.Shipping.ShippingRequests
             List<Capacity> filteredCapacity = new List<Capacity>();
             foreach (var c in capacity)
             {
-                if (filteredCapacity.Find(x => x.DisplayName.ToLower().TrimEnd().TrimStart() ==
-                                               c.DisplayName.ToLower().TrimEnd().TrimStart()) == null)
+                if (filteredCapacity.Find
+                    (
+                        x => x.DisplayName.ToLower().TrimEnd().TrimStart() ==
+                             c.DisplayName.ToLower().TrimEnd().TrimStart()
+                    ) == null)
                     filteredCapacity.Add(c);
             }
 
@@ -1334,12 +1410,15 @@ namespace TACHYON.Shipping.ShippingRequests
                 .Where(x => x.ShippingRequestTripId == shippingRequestTripId)
                 .ToList();
 
-            var output = vases.Select(x => new GetAllShippingRequestVasesOutput
-            {
-                VasName = x.ShippingRequestVasFk.VasFk.Name,
-                Amount = x.ShippingRequestVasFk.RequestMaxAmount,
-                Count = x.ShippingRequestVasFk.RequestMaxCount
-            });
+            var output = vases.Select
+            (
+                x => new GetAllShippingRequestVasesOutput
+                {
+                    VasName = x.ShippingRequestVasFk.VasFk.Name,
+                    Amount = x.ShippingRequestVasFk.RequestMaxAmount,
+                    Count = x.ShippingRequestVasFk.RequestMaxCount
+                }
+            );
 
             return output;
         }
@@ -1358,12 +1437,15 @@ namespace TACHYON.Shipping.ShippingRequests
                 .Where(x => x.ShippingRequestTripId == shippingRequestTripId)
                 .ToList();
 
-            var output = vases.Select(x => new GetAllShippingRequestVasesOutput
-            {
-                VasName = x.ShippingRequestVasFk.VasFk.Name,
-                Amount = x.ShippingRequestVasFk.RequestMaxAmount,
-                Count = x.ShippingRequestVasFk.RequestMaxCount
-            });
+            var output = vases.Select
+            (
+                x => new GetAllShippingRequestVasesOutput
+                {
+                    VasName = x.ShippingRequestVasFk.VasFk.Name,
+                    Amount = x.ShippingRequestVasFk.RequestMaxAmount,
+                    Count = x.ShippingRequestVasFk.RequestMaxCount
+                }
+            );
 
             return output;
         }
@@ -1490,8 +1572,10 @@ namespace TACHYON.Shipping.ShippingRequests
 
                 if (item.NumberOfTrips > numberOfTrips)
                 {
-                    throw new AbpValidationException(
-                        L("NumberOfTripsForVasCanNotBeGreaterThanShippingRequestNumberOfTrips"));
+                    throw new AbpValidationException
+                    (
+                        L("NumberOfTripsForVasCanNotBeGreaterThanShippingRequestNumberOfTrips")
+                    );
                 }
 
                 if (vasItem == null) continue;

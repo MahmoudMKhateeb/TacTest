@@ -3,7 +3,10 @@
     <h3 class="card-title">
       {{ l('shippingRequestTrips') }}
     </h3>
-    <div class="card-toolbar" *ngIf="feature.isEnabled('App.Shipper') || feature.isEnabled('App.TachyonDealer')">
+    <div
+      class="card-toolbar"
+      *ngIf="feature.isEnabled('App.Shipper') || feature.isEnabled('App.TachyonDealer') || feature.isEnabled('App.CarrierAsASaas')"
+    >
       <button
         class="btn btn-primary"
         *ngIf="ShippingRequest.isTachyonDeal && feature.isEnabled('App.Shipper')"
@@ -120,7 +123,7 @@
                     <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
                   </a>
                   <ul *dropdownMenu class="dropdown-menu">
-                    <li *ngIf="permission.isGranted('Pages.ShippingRequestTrips.Edit') && feature.isEnabled('App.Shipper') && record.status == 0">
+                    <li *ngIf="record.status == 0 && CanEditTrip">
                       <a class="dropdown-item" (click)="AddNewTripModal.show(record)">{{ l('Edit') }}</a>
                     </li>
                     <li>
@@ -170,7 +173,7 @@
 </div>
 
 <AddNewTripModal
-  *ngIf="feature.isEnabled('App.Shipper') || feature.isEnabled('App.TachyonDealer')"
+  *ngIf="feature.isEnabled('App.Shipper') || feature.isEnabled('App.TachyonDealer') || feature.isEnabled('App.CarrierAsASaas')"
   #AddNewTripModal
   (modalSave)="reloadPage()"
   [shippingRequest]="ShippingRequest"

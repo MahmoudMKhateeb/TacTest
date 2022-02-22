@@ -54,10 +54,8 @@
             </label>
           </div>
 
-          <ng-container *ngIf="Period.periodType == 3 || Period.periodType == 4 || Period.periodType == 5">
-            <hr />
-            <quartz-cron name="cronexpression" [(ngModel)]="Period.cronexpression"></quartz-cron>
-          </ng-container>
+          <hr />
+          <quartz-cron name="cronexpression" [(ngModel)]="Period.cronexpression"></quartz-cron>
         </div>
 
         <div class="modal-footer">

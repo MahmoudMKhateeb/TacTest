@@ -28,7 +28,7 @@ using TACHYON.Trucks.TrucksTypes.Dtos;
 namespace TACHYON.Routs.RoutSteps
 {
     [AbpAuthorize(AppPermissions.Pages_RoutSteps)]
-    [RequiresFeature(AppFeatures.Shipper, AppFeatures.TachyonDealer)]
+    [RequiresFeature(AppFeatures.Shipper, AppFeatures.TachyonDealer, AppFeatures.CarrierAsASaas)]
     public class RoutStepsAppService : TACHYONAppServiceBase, IRoutStepsAppService
     {
         private readonly IRepository<RoutStep, long> _routStepRepository;

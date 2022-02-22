@@ -81,16 +81,7 @@ namespace TACHYON.Features
 
             #region ######## Tachyon features #########
 
-            //var shipperFeature1 = context.Create(
-            //    AppFeatures.Shipper,
-            //    "false",
-            //    L("ShipperFeature"), // todo add localization here
-            //    inputType: new CheckboxInputType()
-            //)[FeatureMetadata.CustomFeatureKey] = new FeatureMetadata
-            //{
-            //    IsVisibleOnPricingTable = true,
-            //    TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f"
-            //};
+
 
 
             var shipperFeature = context.Create(
@@ -107,52 +98,21 @@ namespace TACHYON.Features
                 inputType: new CheckboxInputType()
             );
 
-            var periods = _PeriodRepository.GetAll().Where(p => p.Enabled == true).ToList();
-
-            shipperFeature.CreateChildFeature(
-                AppFeatures.ShipperCreditLimit,
+            var payFeature = context.Create(
+                AppFeatures.Pay,
                 "false",
-                L(AppFeatures.ShipperCreditLimit),
-                inputType: new SingleLineStringInputType());
-            if (periods != null && periods.Count > 0)
-            {
-                LocalizableComboboxItem[] ShipperPeriods = periods.Where(x => x.Enabled)
-                    .Select(i => new LocalizableComboboxItem(i.Id.ToString(), L(i.DisplayName))).ToArray();
-                shipperFeature.CreateChildFeature(
-                    AppFeatures.ShipperPeriods,
-                    defaultValue: "false",
-                    displayName: L(AppFeatures.ShipperPeriods),
-                    inputType: new ComboboxInputType(
-                        new StaticLocalizableComboboxItemSource(ShipperPeriods)
-                    )
-                );
-
-                var Carrierperiods = periods.Where(x => x.Enabled && !x.ShipperOnlyUsed)
-                    .Select(i => new LocalizableComboboxItem(i.Id.ToString(), L(i.DisplayName))).ToArray();
-                if (Carrierperiods != null && Carrierperiods.Length > 0)
-                {
-                    carrierFeature.CreateChildFeature(
-                        AppFeatures.CarrierPeriods,
-                        defaultValue: "false",
-                        displayName: L(AppFeatures.CarrierPeriods),
-                        inputType: new ComboboxInputType(
-                            new StaticLocalizableComboboxItemSource(Carrierperiods)
-                        )
+                L("PayFeature"),
+                inputType: new CheckboxInputType()
+            );
+            var receiptFeature = context.Create(
+                        AppFeatures.Receipt,
+                        "false",
+                        L("ReceiptFeature"),
+                        inputType: new CheckboxInputType()
                     );
-                }
-            }
 
-            var invoicePaymentMethodsCrarrier = _invoicePaymentMethodRepository.GetAll()
-                .Select(x => new LocalizableComboboxItem(x.Id.ToString(), L(x.DisplayName))).ToArray();
-            if (invoicePaymentMethodsCrarrier.Length > 0)
-            {
-                carrierFeature.CreateChildFeature(
-                    AppFeatures.InvoicePaymentMethodCrarrier,
-                    "false",
-                    L("InvoicePaymentMethod"),
-                    inputType: new ComboboxInputType(new StaticLocalizableComboboxItemSource
-                        (invoicePaymentMethodsCrarrier)));
-            }
+
+
 
 
             shipperFeature.CreateChildFeature(AppFeatures.AddTripsByTachyonDeal,
@@ -215,7 +175,8 @@ namespace TACHYON.Features
                 inputType: new CheckboxInputType()
             )[FeatureMetadata.CustomFeatureKey] = new FeatureMetadata
             {
-                IsVisibleOnPricingTable = true, TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f"
+                IsVisibleOnPricingTable = true,
+                TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f"
             };
 
             var SendDirectRequest = context.Create(
@@ -235,6 +196,7 @@ namespace TACHYON.Features
                 IsVisibleOnPricingTable = false, TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f"
             };
 
+
             ///*Invoices*/
 
             #endregion
@@ -242,6 +204,79 @@ namespace TACHYON.Features
             //---Y
 
             #region Commission
+
+
+
+
+
+
+
+
+
+
+            //        #region Removed
+
+            #region Pay
+
+
+
+
+            var invoicePaymentMethods = _invoicePaymentMethodRepository.GetAll()
+                .Select(x => new LocalizableComboboxItem(x.Id.ToString(), L(x.DisplayName))).ToArray();
+            if (invoicePaymentMethods.Length > 0)
+            {
+                payFeature.CreateChildFeature(
+                    AppFeatures.InvoicePaymentMethod,
+                    "false",
+                    L("InvoicePaymentMethod"),
+                    inputType: new ComboboxInputType(new StaticLocalizableComboboxItemSource
+                        (invoicePaymentMethods)));
+            }
+
+
+
+
+
+            var periods = _PeriodRepository.GetAll().Where(p => p.Enabled).ToList();
+
+            if (periods.Count > 0)
+            {
+                LocalizableComboboxItem[] ShipperPeriods = periods
+                    .Select(i => new LocalizableComboboxItem(i.Id.ToString(), L(i.DisplayName)))
+                    .ToArray();
+
+                payFeature.CreateChildFeature(
+                    AppFeatures.ShipperPeriods,
+                    defaultValue: "false",
+                    displayName: L(AppFeatures.ShipperPeriods),
+                    inputType: new ComboboxInputType(
+                        new StaticLocalizableComboboxItemSource(ShipperPeriods)
+                    )
+                );
+
+
+            }
+
+
+            // crdit limmit 
+
+
+            payFeature.CreateChildFeature(
+                AppFeatures.ShipperCreditLimit,
+                "false",
+                L(AppFeatures.ShipperCreditLimit),
+                inputType: new SingleLineStringInputType());
+
+
+
+            //bidding
+            var biddingFeature = payFeature.CreateChildFeature(
+                   AppFeatures.Bidding,
+                   "false",
+                   L(AppFeatures.Bidding),
+                   inputType: new CheckboxInputType()
+                   );
+
 
             List<LocalizableComboboxItem> CommissionTypes = new List<LocalizableComboboxItem>();
             foreach (byte i in Enum.GetValues(typeof(PriceOfferCommissionType)))
@@ -251,218 +286,268 @@ namespace TACHYON.Features
                     L(Enum.GetName(typeof(PriceOfferCommissionType), i))));
             }
 
-            var invoicePaymentMethods = _invoicePaymentMethodRepository.GetAll()
-                .Select(x => new LocalizableComboboxItem(x.Id.ToString(), L(x.DisplayName))).ToArray();
-            if (invoicePaymentMethods.Length > 0)
-            {
-                shipperFeature.CreateChildFeature(
-                    AppFeatures.InvoicePaymentMethod,
-                    "false",
-                    L("InvoicePaymentMethod"),
-                    inputType: new ComboboxInputType(new StaticLocalizableComboboxItemSource
-                        (invoicePaymentMethods)));
-            }
+            biddingFeature.CreateChildFeature(
+               AppFeatures.TripCommissionType,
+               "false",
+               L("TripCommissionType"),
+               inputType: new ComboboxInputType(new StaticLocalizableComboboxItemSource(CommissionTypes.ToArray())));
 
-
-            shipperFeature.CreateChildFeature(
-                AppFeatures.TripCommissionType,
-                "false",
-                L("TripCommissionType"),
-                inputType: new ComboboxInputType(new StaticLocalizableComboboxItemSource(CommissionTypes.ToArray())));
-
-            shipperFeature.CreateChildFeature(
+            biddingFeature.CreateChildFeature(
                 AppFeatures.TripCommissionPercentage,
                 "false",
                 L("TripCommissionPercentage"),
                 inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
 
-            shipperFeature.CreateChildFeature(
+            biddingFeature.CreateChildFeature(
                 AppFeatures.TripCommissionValue,
                 "false",
                 L("TripCommissionValue"),
                 inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
 
-            shipperFeature.CreateChildFeature(
+            biddingFeature.CreateChildFeature(
                 AppFeatures.TripMinValueCommission,
                 "false",
                 L("TripMinValueCommission"),
                 inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
 
-            shipperFeature.CreateChildFeature(
+            biddingFeature.CreateChildFeature(
                 AppFeatures.VasCommissionType,
                 "false",
                 L("VasCommissionType"),
                 inputType: new ComboboxInputType(new StaticLocalizableComboboxItemSource(CommissionTypes.ToArray())));
 
-            shipperFeature.CreateChildFeature(
+            biddingFeature.CreateChildFeature(
                 AppFeatures.VasCommissionPercentage,
                 "false",
                 L("VasCommissionPercentage"),
                 inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
 
-            shipperFeature.CreateChildFeature(
+            biddingFeature.CreateChildFeature(
                 AppFeatures.VasCommissionValue,
                 "false",
                 L("VasCommissionValue"),
                 inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
 
-            shipperFeature.CreateChildFeature(
+            biddingFeature.CreateChildFeature(
                 AppFeatures.VasMinValueCommission,
                 "false",
                 L("VasMinValueCommission"),
                 inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
 
-
-            shipperFeature.CreateChildFeature(
-                AppFeatures.TachyonDealerTripCommissionType,
-                "false",
-                L("TachyonDealerTripCommissionType"),
-                inputType: new ComboboxInputType(
-                    new StaticLocalizableComboboxItemSource(CommissionTypes.ToArray())
-                )
-            );
-
-            shipperFeature.CreateChildFeature(
-                AppFeatures.TachyonDealerTripCommissionPercentage,
-                "false",
-                L("TachyonDealerTripCommissionPercentage"),
-                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
-
-            shipperFeature.CreateChildFeature(
-                AppFeatures.TachyonDealerTripCommissionValue,
-                "false",
-                L("TachyonDealerTripCommissionValue"),
-                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
-
-            shipperFeature.CreateChildFeature(
-                AppFeatures.TachyonDealerTripMinValueCommission,
-                "false",
-                L("TachyonDealerTripMinValueCommission"),
-                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
-
-            shipperFeature.CreateChildFeature(
-                AppFeatures.TachyonDealerVasCommissionType,
-                "false",
-                L("TachyonDealerVasCommissionType"),
-                inputType: new ComboboxInputType(new StaticLocalizableComboboxItemSource(CommissionTypes.ToArray())));
-
-            shipperFeature.CreateChildFeature(
-                AppFeatures.TachyonDealerVasCommissionPercentage,
-                "false",
-                L("TachyonDealerVasCommissionPercentage"),
-                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
-
-            shipperFeature.CreateChildFeature(
-                AppFeatures.TachyonDealerVasCommissionValue,
-                "false",
-                L("TachyonDealerVasCommissionValue"),
-                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
-
-            shipperFeature.CreateChildFeature(
-                AppFeatures.TachyonDealerVasMinValueCommission,
-                "false",
-                L("TachyonDealerVasMinValueCommission"),
-                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
-
-
-            //        #region Removed
-
-            shipperFeature.CreateChildFeature(
-                AppFeatures.BiddingCommissionPercentage,
-                "false",
-                L(AppFeatures.BiddingCommissionPercentage),
-                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
-
-            shipperFeature.CreateChildFeature(
-                AppFeatures.BiddingCommissionValue,
-                "false",
-                L(AppFeatures.BiddingCommissionValue),
-                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
-
-            shipperFeature.CreateChildFeature(AppFeatures.BiddingMinValueCommission,
-                "false",
-                L(AppFeatures.BiddingMinValueCommission),
-                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
-
-
-            shipperFeature.CreateChildFeature(
-                AppFeatures.TachyonDealerCommissionType,
-                "false",
-                L("TachyonDealerCommissionType"),
-                inputType: new ComboboxInputType(new StaticLocalizableComboboxItemSource(CommissionTypes.ToArray())));
-
-            shipperFeature.CreateChildFeature(
-                AppFeatures.TachyonDealerCommissionPercentage,
-                "false",
-                L("TachyonDealerCommissionPercentage"),
-                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
-
-            shipperFeature.CreateChildFeature(
-                AppFeatures.TachyonDealerCommissionValue,
-                "false",
-                L("TachyonDealerCommissionValue"),
-                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
-
-            shipperFeature.CreateChildFeature(
-                AppFeatures.TachyonDealerMinValueCommission,
-                "false",
-                L("TachyonDealerMinValueCommission"),
-                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
-
-
             // direct request commission 
-            shipperFeature.CreateChildFeature(
+
+            var createDirectRequestFeature = payFeature.CreateChildFeature(
+                   AppFeatures.CreateDirectRequest,
+                   "false",
+                   L(AppFeatures.CreateDirectRequest),
+                   inputType: new CheckboxInputType()
+                   );
+
+
+            createDirectRequestFeature.CreateChildFeature(
                 AppFeatures.DirectRequestCommissionType,
                 "false",
                 L("DirectRequestCommissionType"),
                 inputType: new ComboboxInputType(new StaticLocalizableComboboxItemSource(CommissionTypes.ToArray())));
 
-            shipperFeature.CreateChildFeature(
+            createDirectRequestFeature.CreateChildFeature(
                 AppFeatures.DirectRequestCommissionPercentage,
                 "false",
                 L("DirectRequestCommissionPercentage"),
                 inputType: new SingleLineStringInputType(new NumericValueValidator(0, 100)));
 
-            shipperFeature.CreateChildFeature(
+            createDirectRequestFeature.CreateChildFeature(
                 AppFeatures.DirectRequestCommissionValue,
                 "false",
                 L("DirectRequestCommissionValue"),
                 inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
 
 
-            shipperFeature.CreateChildFeature(
+            createDirectRequestFeature.CreateChildFeature(
                 AppFeatures.DirectRequestCommissionMinValue,
                 "false",
                 L("DirectDirectRequestCommissionMinValue"),
                 inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
 
 
-            shipperFeature.CreateChildFeature(
+            createDirectRequestFeature.CreateChildFeature(
                 AppFeatures.DirectRequestVasCommissionType,
                 "false",
                 L("DirectRequestVASCommissionType"),
                 inputType: new ComboboxInputType(new StaticLocalizableComboboxItemSource(CommissionTypes.ToArray())));
 
 
-            shipperFeature.CreateChildFeature(
+            createDirectRequestFeature.CreateChildFeature(
                 AppFeatures.DirectRequestVasCommissionPercentage,
                 "false",
                 L("DirectRequestVASCommissionPercentage"),
                 inputType: new SingleLineStringInputType(new NumericValueValidator(0, 100)));
 
 
-            shipperFeature.CreateChildFeature(
+            createDirectRequestFeature.CreateChildFeature(
                 AppFeatures.DirectRequestVasCommissionValue,
                 "false",
                 L("DirectRequestVASCommissionValue"),
                 inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
 
 
-            shipperFeature.CreateChildFeature(
+            createDirectRequestFeature.CreateChildFeature(
                 AppFeatures.DirectRequestVasCommissionMinValue,
                 "false",
                 L("DirectRequestVASCommissionMinValue"),
                 inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+
+            // TMS request 
+
+
+            var createTmsRequestFeature = payFeature.CreateChildFeature(
+                AppFeatures.CreateTmsRequest,
+                "false",
+                L(AppFeatures.CreateTmsRequest),
+                inputType: new CheckboxInputType()
+                );
+
+            createTmsRequestFeature.CreateChildFeature(
+               AppFeatures.TachyonDealerCommissionType,
+               "false",
+               L("TachyonDealerCommissionType"),
+               inputType: new ComboboxInputType(new StaticLocalizableComboboxItemSource(CommissionTypes.ToArray())));
+
+            createTmsRequestFeature.CreateChildFeature(
+                AppFeatures.TachyonDealerCommissionPercentage,
+                "false",
+                L("TachyonDealerCommissionPercentage"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+            createTmsRequestFeature.CreateChildFeature(
+                AppFeatures.TachyonDealerCommissionValue,
+                "false",
+                L("TachyonDealerCommissionValue"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+            createTmsRequestFeature.CreateChildFeature(
+                AppFeatures.TachyonDealerMinValueCommission,
+                "false",
+                L("TachyonDealerMinValueCommission"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+
+            createTmsRequestFeature.CreateChildFeature(
+               AppFeatures.TachyonDealerTripCommissionType,
+               "false",
+               L("TachyonDealerTripCommissionType"),
+               inputType: new ComboboxInputType(
+                   new StaticLocalizableComboboxItemSource(CommissionTypes.ToArray())
+               )
+           );
+
+            createTmsRequestFeature.CreateChildFeature(
+                AppFeatures.TachyonDealerTripCommissionPercentage,
+                "false",
+                L("TachyonDealerTripCommissionPercentage"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+            createTmsRequestFeature.CreateChildFeature(
+                AppFeatures.TachyonDealerTripCommissionValue,
+                "false",
+                L("TachyonDealerTripCommissionValue"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+            createTmsRequestFeature.CreateChildFeature(
+                AppFeatures.TachyonDealerTripMinValueCommission,
+                "false",
+                L("TachyonDealerTripMinValueCommission"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+            createTmsRequestFeature.CreateChildFeature(
+                AppFeatures.TachyonDealerVasCommissionType,
+                "false",
+                L("TachyonDealerVasCommissionType"),
+                inputType: new ComboboxInputType(new StaticLocalizableComboboxItemSource(CommissionTypes.ToArray())));
+
+            createTmsRequestFeature.CreateChildFeature(
+                AppFeatures.TachyonDealerVasCommissionPercentage,
+                "false",
+                L("TachyonDealerVasCommissionPercentage"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+            createTmsRequestFeature.CreateChildFeature(
+                AppFeatures.TachyonDealerVasCommissionValue,
+                "false",
+                L("TachyonDealerVasCommissionValue"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+            createTmsRequestFeature.CreateChildFeature(
+                AppFeatures.TachyonDealerVasMinValueCommission,
+                "false",
+                L("TachyonDealerVasMinValueCommission"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+
+            // carrier as Saas
+
+            var carrierAsASaas = payFeature.CreateChildFeature(
+                                 AppFeatures.CarrierAsASaas,
+                                 "false",
+                                 L(AppFeatures.CarrierAsASaas),
+                                 inputType: new CheckboxInputType()
+                                 );
+
+
+            carrierAsASaas.CreateChildFeature(
+                AppFeatures.CarrierAsSaasCommissionValue,
+                "false",
+                L(AppFeatures.CarrierAsSaasCommissionValue),
+               inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue))
+                );
+
+
+            #endregion
+
+
+            #region Receipt
+
+            if (periods.Count > 0)
+            {
+                LocalizableComboboxItem[] ShipperPeriods = periods
+                    .Select(i => new LocalizableComboboxItem(i.Id.ToString(), L(i.DisplayName)))
+                    .ToArray();
+
+
+                var Carrierperiods = periods.Where(x => x.Enabled && !x.ShipperOnlyUsed)
+                    .Select(i => new LocalizableComboboxItem(i.Id.ToString(), L(i.DisplayName))).ToArray();
+                if (Carrierperiods != null && Carrierperiods.Length > 0)
+                {
+                    receiptFeature.CreateChildFeature(
+                        AppFeatures.CarrierPeriods,
+                        defaultValue: "false",
+                        displayName: L(AppFeatures.CarrierPeriods),
+                        inputType: new ComboboxInputType(
+                            new StaticLocalizableComboboxItemSource(Carrierperiods)
+                        )
+                    );
+                }
+            }
+
+
+            var invoicePaymentMethodsCrarrier = _invoicePaymentMethodRepository.GetAll()
+                    .Select(x => new LocalizableComboboxItem(x.Id.ToString(), L(x.DisplayName))).ToArray();
+            if (invoicePaymentMethodsCrarrier.Length > 0)
+            {
+                receiptFeature.CreateChildFeature(
+                    AppFeatures.InvoicePaymentMethodCrarrier,
+                    "false",
+                    L("InvoicePaymentMethod"),
+                    inputType: new ComboboxInputType(new StaticLocalizableComboboxItemSource
+                        (invoicePaymentMethodsCrarrier)));
+            }
+
+
+            #endregion
+
+
+
 
             #endregion
 
@@ -499,15 +584,14 @@ namespace TACHYON.Features
                 Convert.ToInt32(SettingManager.GetSettingValue(AppSettings.Editions.CarrierEditionId));
             ILocalizableComboboxItem[] tenants = _tenantRepository.GetAll()
                 .Where(x => x.EditionId == carrierEditionId)
-                .Select(i => new LocalizableComboboxItem(i.Id.ToString(), L(i.TenancyName + " - " + i.AccountNumber)))
-                .ToArray();
+                .Select(i => new LocalizableComboboxItem(i.Id.ToString(), L(i.TenancyName + " - " + i.AccountNumber))).ToArray();
 
             var saasFeature = shipperFeature.CreateChildFeature(
-                AppFeatures.Saas,
-                defaultValue: "false",
-                displayName: L(AppFeatures.Saas),
-                inputType: new CheckboxInputType()
-            );
+                  AppFeatures.Saas,
+                  defaultValue: "false",
+                  displayName: L(AppFeatures.Saas),
+                  inputType: new CheckboxInputType()
+              );
             saasFeature.CreateChildFeature(
                 AppFeatures.SaasRelatedCarrier,
                 defaultValue: "false",
@@ -516,6 +600,9 @@ namespace TACHYON.Features
                     new StaticLocalizableComboboxItemSource(tenants)
                 )
             );
+
+
+
         }
 
         private static ILocalizableString L(string name)

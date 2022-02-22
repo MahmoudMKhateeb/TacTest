@@ -297,5 +297,10 @@ namespace TACHYON.Shipping.ShippingRequests
             BidStatus = ShippingRequestBidStatus.OnGoing;
             BidStartDate = Clock.Now;
         }
+
+        public bool IsSaas()
+        {
+            return TenantId == CarrierTenantId;
+        }
     }
 }

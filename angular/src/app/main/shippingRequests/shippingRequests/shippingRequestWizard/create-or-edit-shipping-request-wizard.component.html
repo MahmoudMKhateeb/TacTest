@@ -98,7 +98,7 @@
                       <span class="form-text text-muted">{{ l('SelectShipper') }} {{ step1Dto.shipperId }}</span>
                     </div>
 
-                    <div class="form-group">
+                    <div *ngIf="!isCarrierSass" class="form-group">
                       <label>{{ l('ShippingRequestType') }} <span class="required-fileds">*</span></label>
                       <select
                         class="form-control"
@@ -121,11 +121,13 @@
                         <option value="undefined" selected>{{ l('select') }}</option>
                         <option [value]="'bidding'">{{ l('Marketplace') }}</option>
                         <option [value]="'tachyondeal'">{{ l('TachyonManageService') }}</option>
-                        <option *ngIf="this.feature.isEnabled('App.SendDirectRequest')" value="directrequest">{{ l('DirectRequest') }}</option>
+                        <option *ngIf="this.feature.isEnabled('App.SendDirectRequest')" value="directrequest">
+                          {{ l('DirectRequest') }}
+                        </option>
                       </select>
                       <span class="form-text text-muted">{{ l('PickaShippingRequestType') }}</span>
                     </div>
-                    <div class="form-group" [hidden]="shippingRequestType !== 'directrequest'">
+                    <div class="form-group" [hidden]="shippingRequestType !== 'directrequest' || isCarrierSass">
                       <label>{{ l('SelectCarriers') }} <span class="required-fileds">*</span></label>
                       <div
                         [ngClass]="{

@@ -71253,9 +71253,7 @@ export interface ICreateOrEditInvoicePaymentMethod {
 export enum InvoicePeriodType {
   PayInAdvance = 1,
   PayuponDelivery = 2,
-  Daily = 3,
-  Weekly = 4,
-  Monthly = 5,
+  Period = 3,
 }
 
 export enum FrequencyRelativeInterval {
@@ -77490,6 +77488,7 @@ export class GetShippingRequestForPriceOfferListDto implements IGetShippingReque
   shipperRating!: number;
   shipperRatingNumber!: number;
   carrier!: string | undefined;
+  carrierTenantId!: number | undefined;
   longitude!: number;
   latitude!: number;
   creationTime!: moment.Moment | undefined;
@@ -77524,6 +77523,7 @@ export class GetShippingRequestForPriceOfferListDto implements IGetShippingReque
   readonly requestTypeTitle!: string | undefined;
   isDrafted!: boolean;
   tenantId!: number;
+  readonly isSaas!: boolean;
   id!: number;
 
   constructor(data?: IGetShippingRequestForPriceOfferListDto) {
@@ -77543,6 +77543,7 @@ export class GetShippingRequestForPriceOfferListDto implements IGetShippingReque
       this.shipperRating = _data['shipperRating'];
       this.shipperRatingNumber = _data['shipperRatingNumber'];
       this.carrier = _data['carrier'];
+      this.carrierTenantId = _data['carrierTenantId'];
       this.longitude = _data['longitude'];
       this.latitude = _data['latitude'];
       this.creationTime = _data['creationTime'] ? moment(_data['creationTime'].toString()) : <any>undefined;
@@ -77577,6 +77578,7 @@ export class GetShippingRequestForPriceOfferListDto implements IGetShippingReque
       (<any>this).requestTypeTitle = _data['requestTypeTitle'];
       this.isDrafted = _data['isDrafted'];
       this.tenantId = _data['tenantId'];
+      (<any>this).isSaas = _data['isSaas'];
       this.id = _data['id'];
     }
   }
@@ -77597,6 +77599,7 @@ export class GetShippingRequestForPriceOfferListDto implements IGetShippingReque
     data['shipperRating'] = this.shipperRating;
     data['shipperRatingNumber'] = this.shipperRatingNumber;
     data['carrier'] = this.carrier;
+    data['carrierTenantId'] = this.carrierTenantId;
     data['longitude'] = this.longitude;
     data['latitude'] = this.latitude;
     data['creationTime'] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
@@ -77631,6 +77634,7 @@ export class GetShippingRequestForPriceOfferListDto implements IGetShippingReque
     data['requestTypeTitle'] = this.requestTypeTitle;
     data['isDrafted'] = this.isDrafted;
     data['tenantId'] = this.tenantId;
+    data['isSaas'] = this.isSaas;
     data['id'] = this.id;
     return data;
   }
@@ -77644,6 +77648,7 @@ export interface IGetShippingRequestForPriceOfferListDto {
   shipperRating: number;
   shipperRatingNumber: number;
   carrier: string | undefined;
+  carrierTenantId: number | undefined;
   longitude: number;
   latitude: number;
   creationTime: moment.Moment | undefined;
@@ -77678,6 +77683,7 @@ export interface IGetShippingRequestForPriceOfferListDto {
   requestTypeTitle: string | undefined;
   isDrafted: boolean;
   tenantId: number;
+  isSaas: boolean;
   id: number;
 }
 
