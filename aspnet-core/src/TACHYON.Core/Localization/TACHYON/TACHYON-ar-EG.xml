@@ -2181,7 +2181,7 @@
 	<text name="SuspendedAccountDocumentExpired_Title">مستند منتهي الصلاحية وحسابك معلق</text>
 	<text name="SuspendedAccountForExpiredDocumentMessage">تم تعليق حسابك حاليًا بسبب انتهاء صلاحية مستند {0} ، يرجى إرسال تجديد للمستند لإعادة تنشيط حسابك</text>
     <text name="LoginLink">تسجيل الدخول</text>
-	<text name="RejectedDocument_Title">مستند مرفوض</text>    
+	<text name="RejectedDocument">مستند مرفوض</text>    
 	<text name="RejectedDocumentEmailMessage">تم إرسال هذا البريد الإلكتروني إليك لإبلاغك بأنه تم رفض المستند {0} بسبب {1} إذا كانت لديك أية أسئلة ، فيرجى الاتصال بفريق الدعم.</text>
 		<text name="TripDataChanged">لديك رحلة بالمعرف {0} تم تغييرها ، يرجى مراجعة جميع تغييرات الرحلة</text>
 		<text name="ShipperTripUpdatedNotificationMessage">هناك بعض التغييرات في الرحلة برقم بوليصة الشحن {0}. لمزيد من التفاصيل، الرجاء الضغط هنا</text>
@@ -2265,6 +2265,7 @@
 	<text name="ResetReceiverCode">إعادة تعيين رمز مستلم الشحنة</text>
 	<text name="ReceiverCodeConfirmationMsg">هل أنت متأكد أنك تريد إعادة تعيين رمز المستلم لهذه الشحنة؟</text>
 		<text name="CompanyDescriptionHint">يجب ألا يزيد وصف الشركة عن 500 حرف</text>
+		<text name="SelectAnEmailTemplateType">أختر نوع قالب البريد الإلكتروني</text>
 
 	</texts>
 </localizationDictionary>

@@ -216,12 +216,12 @@ namespace TACHYON.Chat
                     ? _tenantCache.Get(senderIdentifier.TenantId.Value).TenancyName
                     : null;
 
-                await _userEmailer.TryToSendChatMessageMail(
-                    _userManager.GetUser(receiverIdentifier),
-                    _userManager.GetUser(senderIdentifier).UserName,
-                    senderTenancyName,
-                    sentMessage
-                );
+                await _userEmailer.SendChatMessageMail(
+                      _userManager.GetUser(receiverIdentifier),
+                      _userManager.GetUser(senderIdentifier).UserName,
+                      senderTenancyName,
+                      sentMessage
+                  );
             }
         }
 

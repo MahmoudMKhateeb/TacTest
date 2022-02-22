@@ -23,6 +23,7 @@ using TACHYON.Documents.DocumentTypeTranslations;
 using TACHYON.DriverLocationLogs;
 using TACHYON.DriverLicenseTypes;
 using TACHYON.Editions;
+using TACHYON.EmailTemplates;
 using TACHYON.EntityLogs;
 using TACHYON.Friendships;
 using TACHYON.Goods;
@@ -85,6 +86,10 @@ namespace TACHYON.EntityFrameworkCore
 {
     public class TACHYONDbContext : AbpZeroDbContext<Tenant, Role, User, TACHYONDbContext>, IAbpPersistedGrantDbContext
     {
+        public virtual DbSet<EmailTemplateTranslation> EmailTemplateTranslations { get; set; }
+
+        public virtual DbSet<EmailTemplate> EmailTemplates { get; set; }
+
         public virtual DbSet<DriverLicenseType> DriverLicenseTypes { get; set; }
 
         public virtual DbSet<DangerousGoodType> DangerousGoodTypes { get; set; }

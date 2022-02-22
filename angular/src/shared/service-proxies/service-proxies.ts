@@ -12536,6 +12536,831 @@ export class EditionServiceProxy {
 }
 
 @Injectable()
+export class EmailTemplatesServiceProxy {
+  private http: HttpClient;
+  private baseUrl: string;
+  protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+  constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+    this.http = http;
+    this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : '';
+  }
+
+  /**
+   * @param filter (optional)
+   * @param nameFilter (optional)
+   * @param displayNameFilter (optional)
+   * @param sorting (optional)
+   * @param skipCount (optional)
+   * @param maxResultCount (optional)
+   * @return Success
+   */
+  getAll(
+    filter: string | null | undefined,
+    nameFilter: string | null | undefined,
+    displayNameFilter: string | null | undefined,
+    sorting: string | null | undefined,
+    skipCount: number | undefined,
+    maxResultCount: number | undefined
+  ): Observable<PagedResultDtoOfGetEmailTemplateForViewDto> {
+    let url_ = this.baseUrl + '/api/services/app/EmailTemplates/GetAll?';
+    if (filter !== undefined && filter !== null) url_ += 'Filter=' + encodeURIComponent('' + filter) + '&';
+    if (nameFilter !== undefined && nameFilter !== null) url_ += 'NameFilter=' + encodeURIComponent('' + nameFilter) + '&';
+    if (displayNameFilter !== undefined && displayNameFilter !== null)
+      url_ += 'DisplayNameFilter=' + encodeURIComponent('' + displayNameFilter) + '&';
+    if (sorting !== undefined && sorting !== null) url_ += 'Sorting=' + encodeURIComponent('' + sorting) + '&';
+    if (skipCount === null) throw new Error("The parameter 'skipCount' cannot be null.");
+    else if (skipCount !== undefined) url_ += 'SkipCount=' + encodeURIComponent('' + skipCount) + '&';
+    if (maxResultCount === null) throw new Error("The parameter 'maxResultCount' cannot be null.");
+    else if (maxResultCount !== undefined) url_ += 'MaxResultCount=' + encodeURIComponent('' + maxResultCount) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAll(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAll(<any>response_);
+            } catch (e) {
+              return <Observable<PagedResultDtoOfGetEmailTemplateForViewDto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<PagedResultDtoOfGetEmailTemplateForViewDto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAll(response: HttpResponseBase): Observable<PagedResultDtoOfGetEmailTemplateForViewDto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = PagedResultDtoOfGetEmailTemplateForViewDto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<PagedResultDtoOfGetEmailTemplateForViewDto>(<any>null);
+  }
+
+  /**
+   * @param body (optional)
+   * @return Success
+   */
+  dxGetAll(body: LoadOptionsInput | undefined): Observable<LoadResult> {
+    let url_ = this.baseUrl + '/api/services/app/EmailTemplates/DxGetAll';
+    url_ = url_.replace(/[?&]$/, '');
+
+    const content_ = JSON.stringify(body);
+
+    let options_: any = {
+      body: content_,
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processDxGetAll(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processDxGetAll(<any>response_);
+            } catch (e) {
+              return <Observable<LoadResult>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<LoadResult>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processDxGetAll(response: HttpResponseBase): Observable<LoadResult> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = LoadResult.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<LoadResult>(<any>null);
+  }
+
+  /**
+   * @param coreId (optional)
+   * @param loadOptions (optional)
+   * @return Success
+   */
+  getAllTranslations(coreId: number | undefined, loadOptions: string | null | undefined): Observable<LoadResult> {
+    let url_ = this.baseUrl + '/api/services/app/EmailTemplates/GetAllTranslations?';
+    if (coreId === null) throw new Error("The parameter 'coreId' cannot be null.");
+    else if (coreId !== undefined) url_ += 'CoreId=' + encodeURIComponent('' + coreId) + '&';
+    if (loadOptions !== undefined && loadOptions !== null) url_ += 'LoadOptions=' + encodeURIComponent('' + loadOptions) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAllTranslations(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAllTranslations(<any>response_);
+            } catch (e) {
+              return <Observable<LoadResult>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<LoadResult>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAllTranslations(response: HttpResponseBase): Observable<LoadResult> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = LoadResult.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<LoadResult>(<any>null);
+  }
+
+  /**
+   * @param body (optional)
+   * @return Success
+   */
+  createOrEditTranslation(body: CreateOrEditEmailTemplateTranslationDto | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/EmailTemplates/CreateOrEditTranslation';
+    url_ = url_.replace(/[?&]$/, '');
+
+    const content_ = JSON.stringify(body);
+
+    let options_: any = {
+      body: content_,
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processCreateOrEditTranslation(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processCreateOrEditTranslation(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processCreateOrEditTranslation(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
+  deleteTranslation(id: number | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/EmailTemplates/DeleteTranslation?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'Id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({}),
+    };
+
+    return this.http
+      .request('delete', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processDeleteTranslation(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processDeleteTranslation(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processDeleteTranslation(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @param coreId (optional)
+   * @return Success
+   */
+  getEmailTemplateTranslationForCreateOrEdit(
+    id: number | null | undefined,
+    coreId: number | undefined
+  ): Observable<GetEmailTemplateTranslationForEditOutput> {
+    let url_ = this.baseUrl + '/api/services/app/EmailTemplates/GetEmailTemplateTranslationForCreateOrEdit?';
+    if (id !== undefined && id !== null) url_ += 'id=' + encodeURIComponent('' + id) + '&';
+    if (coreId === null) throw new Error("The parameter 'coreId' cannot be null.");
+    else if (coreId !== undefined) url_ += 'coreId=' + encodeURIComponent('' + coreId) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetEmailTemplateTranslationForCreateOrEdit(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetEmailTemplateTranslationForCreateOrEdit(<any>response_);
+            } catch (e) {
+              return <Observable<GetEmailTemplateTranslationForEditOutput>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<GetEmailTemplateTranslationForEditOutput>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetEmailTemplateTranslationForCreateOrEdit(response: HttpResponseBase): Observable<GetEmailTemplateTranslationForEditOutput> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = GetEmailTemplateTranslationForEditOutput.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<GetEmailTemplateTranslationForEditOutput>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
+  getEmailTemplateForView(id: number | undefined): Observable<GetEmailTemplateForViewDto> {
+    let url_ = this.baseUrl + '/api/services/app/EmailTemplates/GetEmailTemplateForView?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetEmailTemplateForView(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetEmailTemplateForView(<any>response_);
+            } catch (e) {
+              return <Observable<GetEmailTemplateForViewDto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<GetEmailTemplateForViewDto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetEmailTemplateForView(response: HttpResponseBase): Observable<GetEmailTemplateForViewDto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = GetEmailTemplateForViewDto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<GetEmailTemplateForViewDto>(<any>null);
+  }
+
+  /**
+   * @return Success
+   */
+  getEmailTemplateLayout(): Observable<GetEmailTemplateLayoutForView> {
+    let url_ = this.baseUrl + '/api/services/app/EmailTemplates/GetEmailTemplateLayout';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetEmailTemplateLayout(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetEmailTemplateLayout(<any>response_);
+            } catch (e) {
+              return <Observable<GetEmailTemplateLayoutForView>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<GetEmailTemplateLayoutForView>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetEmailTemplateLayout(response: HttpResponseBase): Observable<GetEmailTemplateLayoutForView> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = GetEmailTemplateLayoutForView.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<GetEmailTemplateLayoutForView>(<any>null);
+  }
+
+  /**
+   * @param body (optional)
+   * @return Success
+   */
+  sendTestEmailTemplate(body: TestEmailTemplateInputDto | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/EmailTemplates/SendTestEmailTemplate';
+    url_ = url_.replace(/[?&]$/, '');
+
+    const content_ = JSON.stringify(body);
+
+    let options_: any = {
+      body: content_,
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processSendTestEmailTemplate(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processSendTestEmailTemplate(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processSendTestEmailTemplate(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
+  getEmailTemplateForEdit(id: number | undefined): Observable<GetEmailTemplateForEditOutput> {
+    let url_ = this.baseUrl + '/api/services/app/EmailTemplates/GetEmailTemplateForEdit?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'Id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetEmailTemplateForEdit(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetEmailTemplateForEdit(<any>response_);
+            } catch (e) {
+              return <Observable<GetEmailTemplateForEditOutput>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<GetEmailTemplateForEditOutput>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetEmailTemplateForEdit(response: HttpResponseBase): Observable<GetEmailTemplateForEditOutput> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = GetEmailTemplateForEditOutput.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<GetEmailTemplateForEditOutput>(<any>null);
+  }
+
+  /**
+   * @param body (optional)
+   * @return Success
+   */
+  createOrEdit(body: CreateOrEditEmailTemplateDto | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/EmailTemplates/CreateOrEdit';
+    url_ = url_.replace(/[?&]$/, '');
+
+    const content_ = JSON.stringify(body);
+
+    let options_: any = {
+      body: content_,
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processCreateOrEdit(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processCreateOrEdit(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processCreateOrEdit(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
+  delete(id: number | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/EmailTemplates/Delete?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'Id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({}),
+    };
+
+    return this.http
+      .request('delete', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processDelete(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processDelete(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processDelete(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+}
+
+@Injectable()
 export class EntityDynamicParameterServiceProxy {
   private http: HttpClient;
   private baseUrl: string;
@@ -66760,6 +67585,406 @@ export class MoveTenantsToAnotherEditionDto implements IMoveTenantsToAnotherEdit
 export interface IMoveTenantsToAnotherEditionDto {
   sourceEditionId: number;
   targetEditionId: number;
+}
+
+export class EmailTemplateDto implements IEmailTemplateDto {
+  name!: string | undefined;
+  displayName!: string | undefined;
+  id!: number;
+
+  constructor(data?: IEmailTemplateDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.name = _data['name'];
+      this.displayName = _data['displayName'];
+      this.id = _data['id'];
+    }
+  }
+
+  static fromJS(data: any): EmailTemplateDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new EmailTemplateDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['name'] = this.name;
+    data['displayName'] = this.displayName;
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+export interface IEmailTemplateDto {
+  name: string | undefined;
+  displayName: string | undefined;
+  id: number;
+}
+
+export class GetEmailTemplateForViewDto implements IGetEmailTemplateForViewDto {
+  emailTemplate!: EmailTemplateDto;
+
+  constructor(data?: IGetEmailTemplateForViewDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.emailTemplate = _data['emailTemplate'] ? EmailTemplateDto.fromJS(_data['emailTemplate']) : <any>undefined;
+    }
+  }
+
+  static fromJS(data: any): GetEmailTemplateForViewDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new GetEmailTemplateForViewDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['emailTemplate'] = this.emailTemplate ? this.emailTemplate.toJSON() : <any>undefined;
+    return data;
+  }
+}
+
+export interface IGetEmailTemplateForViewDto {
+  emailTemplate: EmailTemplateDto;
+}
+
+export class PagedResultDtoOfGetEmailTemplateForViewDto implements IPagedResultDtoOfGetEmailTemplateForViewDto {
+  totalCount!: number;
+  items!: GetEmailTemplateForViewDto[] | undefined;
+
+  constructor(data?: IPagedResultDtoOfGetEmailTemplateForViewDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.totalCount = _data['totalCount'];
+      if (Array.isArray(_data['items'])) {
+        this.items = [] as any;
+        for (let item of _data['items']) this.items!.push(GetEmailTemplateForViewDto.fromJS(item));
+      }
+    }
+  }
+
+  static fromJS(data: any): PagedResultDtoOfGetEmailTemplateForViewDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new PagedResultDtoOfGetEmailTemplateForViewDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['totalCount'] = this.totalCount;
+    if (Array.isArray(this.items)) {
+      data['items'] = [];
+      for (let item of this.items) data['items'].push(item.toJSON());
+    }
+    return data;
+  }
+}
+
+export interface IPagedResultDtoOfGetEmailTemplateForViewDto {
+  totalCount: number;
+  items: GetEmailTemplateForViewDto[] | undefined;
+}
+
+export class CreateOrEditEmailTemplateTranslationDto implements ICreateOrEditEmailTemplateTranslationDto {
+  translatedContent!: string | undefined;
+  language!: string;
+  coreId!: number;
+  id!: number | undefined;
+
+  constructor(data?: ICreateOrEditEmailTemplateTranslationDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.translatedContent = _data['translatedContent'];
+      this.language = _data['language'];
+      this.coreId = _data['coreId'];
+      this.id = _data['id'];
+    }
+  }
+
+  static fromJS(data: any): CreateOrEditEmailTemplateTranslationDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new CreateOrEditEmailTemplateTranslationDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['translatedContent'] = this.translatedContent;
+    data['language'] = this.language;
+    data['coreId'] = this.coreId;
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+export interface ICreateOrEditEmailTemplateTranslationDto {
+  translatedContent: string | undefined;
+  language: string;
+  coreId: number;
+  id: number | undefined;
+}
+
+export class GetEmailTemplateTranslationForEditOutput implements IGetEmailTemplateTranslationForEditOutput {
+  emailTemplate!: CreateOrEditEmailTemplateTranslationDto;
+
+  constructor(data?: IGetEmailTemplateTranslationForEditOutput) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.emailTemplate = _data['emailTemplate'] ? CreateOrEditEmailTemplateTranslationDto.fromJS(_data['emailTemplate']) : <any>undefined;
+    }
+  }
+
+  static fromJS(data: any): GetEmailTemplateTranslationForEditOutput {
+    data = typeof data === 'object' ? data : {};
+    let result = new GetEmailTemplateTranslationForEditOutput();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['emailTemplate'] = this.emailTemplate ? this.emailTemplate.toJSON() : <any>undefined;
+    return data;
+  }
+}
+
+export interface IGetEmailTemplateTranslationForEditOutput {
+  emailTemplate: CreateOrEditEmailTemplateTranslationDto;
+}
+
+export class GetEmailTemplateLayoutForView implements IGetEmailTemplateLayoutForView {
+  content!: string | undefined;
+  defaultTestEmail!: string | undefined;
+
+  constructor(data?: IGetEmailTemplateLayoutForView) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.content = _data['content'];
+      this.defaultTestEmail = _data['defaultTestEmail'];
+    }
+  }
+
+  static fromJS(data: any): GetEmailTemplateLayoutForView {
+    data = typeof data === 'object' ? data : {};
+    let result = new GetEmailTemplateLayoutForView();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['content'] = this.content;
+    data['defaultTestEmail'] = this.defaultTestEmail;
+    return data;
+  }
+}
+
+export interface IGetEmailTemplateLayoutForView {
+  content: string | undefined;
+  defaultTestEmail: string | undefined;
+}
+
+export enum EmailTemplateTypesEnum {
+  EmailTemplateLayout = 0,
+  EmailActivation = 1,
+  ApprovedDocument = 2,
+  RejectedDocument = 3,
+  ResetPassword = 4,
+  PasswordUpdated = 5,
+  SuspendedAccountWarning = 6,
+  SuspendedAccount = 7,
+  InvoiceDue = 8,
+  IssuedInvoice = 9,
+  ExpiredDocuments = 10,
+  SubscriptionExpire = 11,
+  SubscriptionAssignedToAnother = 12,
+  FailedSubscriptionTerminations = 13,
+  SubscriptionExpiringSoon = 14,
+  ChatMessage = 15,
+}
+
+export class CreateOrEditEmailTemplateDto implements ICreateOrEditEmailTemplateDto {
+  name!: string;
+  displayName!: string | undefined;
+  content!: string | undefined;
+  html!: string | undefined;
+  emailTemplateType!: EmailTemplateTypesEnum;
+  tags!: string | undefined;
+  description!: string | undefined;
+  id!: number | undefined;
+
+  constructor(data?: ICreateOrEditEmailTemplateDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.name = _data['name'];
+      this.displayName = _data['displayName'];
+      this.content = _data['content'];
+      this.html = _data['html'];
+      this.emailTemplateType = _data['emailTemplateType'];
+      this.tags = _data['tags'];
+      this.description = _data['description'];
+      this.id = _data['id'];
+    }
+  }
+
+  static fromJS(data: any): CreateOrEditEmailTemplateDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new CreateOrEditEmailTemplateDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['name'] = this.name;
+    data['displayName'] = this.displayName;
+    data['content'] = this.content;
+    data['html'] = this.html;
+    data['emailTemplateType'] = this.emailTemplateType;
+    data['tags'] = this.tags;
+    data['description'] = this.description;
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+export interface ICreateOrEditEmailTemplateDto {
+  name: string;
+  displayName: string | undefined;
+  content: string | undefined;
+  html: string | undefined;
+  emailTemplateType: EmailTemplateTypesEnum;
+  tags: string | undefined;
+  description: string | undefined;
+  id: number | undefined;
+}
+
+export class TestEmailTemplateInputDto implements ITestEmailTemplateInputDto {
+  testTemplate!: CreateOrEditEmailTemplateDto;
+  testEmail!: string;
+
+  constructor(data?: ITestEmailTemplateInputDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.testTemplate = _data['testTemplate'] ? CreateOrEditEmailTemplateDto.fromJS(_data['testTemplate']) : <any>undefined;
+      this.testEmail = _data['testEmail'];
+    }
+  }
+
+  static fromJS(data: any): TestEmailTemplateInputDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new TestEmailTemplateInputDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['testTemplate'] = this.testTemplate ? this.testTemplate.toJSON() : <any>undefined;
+    data['testEmail'] = this.testEmail;
+    return data;
+  }
+}
+
+export interface ITestEmailTemplateInputDto {
+  testTemplate: CreateOrEditEmailTemplateDto;
+  testEmail: string;
+}
+
+export class GetEmailTemplateForEditOutput implements IGetEmailTemplateForEditOutput {
+  emailTemplate!: CreateOrEditEmailTemplateDto;
+
+  constructor(data?: IGetEmailTemplateForEditOutput) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.emailTemplate = _data['emailTemplate'] ? CreateOrEditEmailTemplateDto.fromJS(_data['emailTemplate']) : <any>undefined;
+    }
+  }
+
+  static fromJS(data: any): GetEmailTemplateForEditOutput {
+    data = typeof data === 'object' ? data : {};
+    let result = new GetEmailTemplateForEditOutput();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['emailTemplate'] = this.emailTemplate ? this.emailTemplate.toJSON() : <any>undefined;
+    return data;
+  }
+}
+
+export interface IGetEmailTemplateForEditOutput {
+  emailTemplate: CreateOrEditEmailTemplateDto;
 }
 
 export class EntityDynamicParameterDto implements IEntityDynamicParameterDto {

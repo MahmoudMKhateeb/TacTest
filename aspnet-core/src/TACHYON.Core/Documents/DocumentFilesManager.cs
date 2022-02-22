@@ -171,9 +171,9 @@ namespace TACHYON.Documents
             foreach (var tenant in tenants)
             {
                 var documents = await GetAllTenantDriverAndTruckDocumentFilesListAsync(tenant.Id);
+                
                 if (documents.Count > 0)
-                    await _userEmailer.SendDocumentsExpiredInfoAsyn(documents,
-                        tenant.Id); //documents.FirstOrDefault().TenantId.Value);
+                    await _userEmailer.SendExpiredDocumentsEmail(tenant.Id,documents.ToArray());
             }
         }
 
@@ -363,7 +363,8 @@ namespace TACHYON.Documents
                         Logger.Info(documentFile + "ExpiredDocumentFileWorker logger.");
 
                         //Send email with expired documents
-                        await _userEmailer.SendExpiredDateDocumentsAsyn(documentFile.TenantFk, documentFile.Name);
+                        if (documentFile.TenantId.HasValue)
+                         await _userEmailer.SendExpiredDocumentsEmail(documentFile.TenantId.Value, documentFile);
                     }
                 }
 

@@ -773,7 +773,7 @@
 		<text name="WarningSuspendAccount">Document Expiration Reminder</text>
 		<text name="WarningSuspendAccount_Title">Expiration document reminder</text>
 		<text name="SuspendedAccountForExpiredDocumentMessage">Your account is currently suspended due to the expiration of the {0} document please submit a renewal one to reactivate your account.</text>
-		<text name="SuspendedAccountDocumentExpired_Title">Expired date document and suspend your account</text>
+		<text name="SuspendedAccountDocumentExpired">Expired date document and suspend your account</text>
 		<text name="ExpiredDateDocuments_Title">Expired date document</text>
 		<text name="Document File: {0} has been expired message">Document File: "{0}" has been expired message</text>
 		<text name="ExpiredDocument">Expired documents</text>
@@ -2420,7 +2420,7 @@
     <text name="CompanyNameEmailTemplate">Company name</text>
     <text name="ClickToRate">Click to rate </text>
     <text name="LoginLink">Login Link</text>
-    <text name="RejectedDocument_Title">Rejected Document</text>
+    <text name="RejectedDocument">Rejected Document</text>
     <text name="RejectedDocumentEmailMessage">This email is sent to you to inform you that your document {0} have been rejected with reason {1} if you have any questions, please contact with support team.</text>
 		
 	 	<text name="TripDataChanged">You Have Trip With Waybill No {0} Changed Please Review All Of Trip Changes</text> 
@@ -2504,6 +2504,7 @@
     <text name="ResetReceiverCode">Reset shipment receiver code</text>
     <text name="ReceiverCodeConfirmationMsg">Are you sure you want to reset the receiver code for this shipment?</text>
 	<text name="CompanyDescriptionHint">Company description must be at most 500 characters</text>
+	<text name="SelectAnEmailTemplateType">Select an email template type</text>
 
 	</texts>
 </localizationDictionary>

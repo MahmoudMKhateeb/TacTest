@@ -32,6 +32,11 @@ namespace TACHYON.Authorization
             var pages = context.GetPermissionOrNull(AppPermissions.Pages) ??
                         context.CreatePermission(AppPermissions.Pages, L("Pages"));
 
+            var emailTemplates = pages.CreateChildPermission(AppPermissions.Pages_EmailTemplates, L("EmailTemplates"), multiTenancySides: MultiTenancySides.Host);
+            emailTemplates.CreateChildPermission(AppPermissions.Pages_EmailTemplates_Create, L("CreateNewEmailTemplate"), multiTenancySides: MultiTenancySides.Host);
+            emailTemplates.CreateChildPermission(AppPermissions.Pages_EmailTemplates_Edit, L("EditEmailTemplate"), multiTenancySides: MultiTenancySides.Host);
+            emailTemplates.CreateChildPermission(AppPermissions.Pages_EmailTemplates_Delete, L("DeleteEmailTemplate"), multiTenancySides: MultiTenancySides.Host);
+
             var driverLicenseTypes = pages.CreateChildPermission(AppPermissions.Pages_DriverLicenseTypes, L("DriverLicenseTypes"), multiTenancySides: MultiTenancySides.Host);
             driverLicenseTypes.CreateChildPermission(AppPermissions.Pages_DriverLicenseTypes_Create, L("CreateNewDriverLicenseType"), multiTenancySides: MultiTenancySides.Host);
             driverLicenseTypes.CreateChildPermission(AppPermissions.Pages_DriverLicenseTypes_Edit, L("EditDriverLicenseType"), multiTenancySides: MultiTenancySides.Host);

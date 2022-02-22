@@ -384,32 +384,32 @@ namespace TACHYON.Routs.RoutSteps
 
         public async Task<List<FacilityForDropdownDto>> GetAllFacilitiesByCityAndTenantForDropdown(long shippingRequestId)
         {
-
-            var shippingRequest = await _shippingRequestRepository.FirstOrDefaultAsync(shippingRequestId);
-
-            var query = _lookup_FacilityRepository
+            ShippingRequest shippingRequest;
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
+            {
+                shippingRequest = await _shippingRequestRepository.FirstOrDefaultAsync(shippingRequestId);
+                var query = _lookup_FacilityRepository
                 .GetAll()
                 .AsNoTracking()
                 .WhereIf(shippingRequest.ShippingTypeId == 1, x => x.CityId == shippingRequest.OriginCityId) //inside city
                 .WhereIf(shippingRequest.ShippingTypeId == 2, x => x.CityId == shippingRequest.OriginCityId || x.CityId == shippingRequest.DestinationCityId); //between city
-
-            // TMS can see any shipper facility in order to select it in Create Trip action 
-            if (await FeatureChecker.IsEnabledAsync(AppFeatures.TachyonDealer))
-            {
-                DisableTenancyFilters();
                 query = query.Where(x => x.TenantId == shippingRequest.TenantId);
+                var result = await query.Select(x => new FacilityForDropdownDto
+                {
+                    Id = x.Id,
+                    DisplayName = x.Name,
+                    Long = x.Location.X,
+                    Lat = x.Location.Y,
+                    CityId = x.CityId
+                }).ToListAsync();
+
+                return result;
             }
 
-            var result = await query.Select(x => new FacilityForDropdownDto
-            {
-                Id = x.Id,
-                DisplayName = x.Name,
-                Long = x.Location.X,
-                Lat = x.Location.Y,
-                CityId = x.CityId
-            }).ToListAsync();
 
-            return result;
+
+
+
         }
 
         public async Task<List<FacilityForDropdownDto>> GetAllFacilitiesByCityIdForDropdown(long cityId)

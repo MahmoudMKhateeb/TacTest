@@ -11,8 +11,8 @@ using TACHYON.EntityFrameworkCore;
 namespace TACHYON.Migrations
 {
     [DbContext(typeof(TACHYONDbContext))]
-    [Migration("20220211212853_refresh")]
-    partial class refresh
+    [Migration("20220206082909_add html to email templates")]
+    partial class addhtmltoemailtemplates
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -2376,6 +2376,52 @@ namespace TACHYON.Migrations
                     b.ToTable("DriverLocationLogs");
                 });
 
+            modelBuilder.Entity("TACHYON.EmailTemplates.EmailTemplate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("CreatorUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("DeleterUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DisplayName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Html")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("LastModifierUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EmailTemplates");
+                });
+
             modelBuilder.Entity("TACHYON.EntityLogs.EntityLog", b =>
                 {
                     b.Property<Guid>("Id")
@@ -3961,6 +4007,12 @@ namespace TACHYON.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<DateTime>("ApprovingTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ApprovingUserId")
+                        .HasColumnType("int");
+
                     b.Property<byte>("Channel")
                         .HasColumnType("tinyint");
 
@@ -4353,6 +4405,9 @@ namespace TACHYON.Migrations
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsDeliveryNoteUploaded")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsGoodPictureUploaded")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsPodUploaded")
@@ -5907,7 +5962,6 @@ namespace TACHYON.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<byte[]>("Bytes")
-                        .IsRequired()
                         .HasColumnType("varbinary(max)");
 
                     b.Property<int?>("TenantId")

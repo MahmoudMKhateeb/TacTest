@@ -7,6 +7,7 @@ import { ZeroTemplateHttpConfigurationService } from './zero-template-http-confi
 
 @NgModule({
   providers: [
+    ApiServiceProxies.EmailTemplatesServiceProxy,
     ApiServiceProxies.DriverLicenseTypesServiceProxy,
     ApiServiceProxies.DangerousGoodTypesServiceProxy,
     ApiServiceProxies.TruckCapacitiesTranslationsServiceProxy,

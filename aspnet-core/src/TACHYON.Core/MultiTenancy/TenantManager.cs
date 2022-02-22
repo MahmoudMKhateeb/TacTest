@@ -190,8 +190,7 @@ namespace TACHYON.MultiTenancy
                     if (!emailActivationLink.IsNullOrEmpty())
                     {
                         adminUser.SetNewEmailConfirmationCode();
-                        await _userEmailer.SendEmailActivationLinkAsync(adminUser, emailActivationLink,
-                            input.AdminPassword);
+                        await _userEmailer.SendEmailActivationEmail(adminUser, emailActivationLink, input.AdminPassword);
                     }
 
                     await _unitOfWorkManager.Current.SaveChangesAsync();
