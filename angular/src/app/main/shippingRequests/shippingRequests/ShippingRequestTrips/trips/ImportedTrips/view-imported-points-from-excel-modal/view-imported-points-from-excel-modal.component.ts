@@ -29,6 +29,7 @@ export class ViewImportedPointsFromExcelModalComponent extends AppComponentBase 
   }
 
   save() {
+    this.saving = true;
     this.ImportShipmentFromExcelService.createPointsFromDto(this.ImportedPointsList)
       .pipe(finalize(() => (this.saving = false)))
       .subscribe(() => {

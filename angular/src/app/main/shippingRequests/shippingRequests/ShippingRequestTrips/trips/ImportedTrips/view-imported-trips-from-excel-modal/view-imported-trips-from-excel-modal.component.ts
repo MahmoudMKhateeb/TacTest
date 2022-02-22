@@ -29,6 +29,7 @@ export class ViewImportedTripsFromExcelModalComponent extends AppComponentBase {
   }
 
   save() {
+    this.saving = true;
     this.ImportShipmentFromExcelService.createShipmentsFromDto(this.ImportedTripsList)
       .pipe(finalize(() => (this.saving = false)))
       .subscribe(() => {

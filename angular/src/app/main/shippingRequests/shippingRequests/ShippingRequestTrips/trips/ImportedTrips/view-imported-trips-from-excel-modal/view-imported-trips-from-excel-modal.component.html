@@ -1,6 +1,6 @@
 <div
   bsModal
-  #ViewImportedPointsModal="bs-modal"
+  #ViewImportedTripsModal="bs-modal"
   class="modal fade"
   role="dialog"
   aria-labelledby="createOrEditModal"
@@ -11,7 +11,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <p class="modal-title">
-          <span>{{ l('ImportedPoints') }}</span>
+          <span>{{ l('ImportedTrips') }}</span>
         </p>
         <div class="card-toolbar"></div>
       </div>
@@ -28,23 +28,27 @@
                   [resizableColumns]="primengTableHelper.resizableColumns"
                   [responsive]="primengTableHelper.isResponsive"
                   [scrollable]="true"
-                  [value]="ImportedPointsList"
+                  [value]="ImportedTripsList"
                   rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"
                 >
                   <ng-template pTemplate="header">
                     <tr>
-                      <th>{{ l('TripReferenceID') }}</th>
+                      <th>{{ l('ReferenceID') }}</th>
                       <th>
-                        {{ l('PointReferenceID') }}
+                        {{ l('startTripDate') }}
                       </th>
                       <th>
-                        {{ l('PointType') }}
+                        {{ l('endTripDate') }}
                       </th>
                       <th>
-                        {{ l('Facility') }}
+                        {{ l('hasAttachment') }}
+                      </th>
+                      <th>{{ l('needsDeliveryNote') }}</th>
+                      <th>
+                        {{ l('totalValue') }}
                       </th>
                       <th>
-                        {{ l('Agent') }}
+                        {{ l('note') }}
                       </th>
                       <th>
                         {{ l('exception') }}
@@ -54,24 +58,32 @@
                   <ng-template let-record="$implicit" pTemplate="body" let-i="rowIndex">
                     <tr [class]="record.exception ? 'alert alert-custom alert-light-warning' : 'alert alert-custom alert-light-success customAlert'">
                       <td>
-                        <span class="ui-column-title"> {{ l('TripReference') }}</span>
-                        {{ record.tripReference }}
+                        <span class="ui-column-title"> {{ l('bulkUploadReference') }}</span>
+                        {{ record.bulkUploadRef }}
                       </td>
                       <td>
-                        <span class="ui-column-title"> {{ l('PointReference') }}</span>
-                        {{ record.bulkUploadReference }}
+                        <span class="ui-column-title"> {{ l('startTripDate') }}</span>
+                        {{ record.startTripDate | momentFormat: 'YYYY-MM-DD' }}
                       </td>
                       <td>
-                        <span class="ui-column-title"> {{ l('PickingType') }}</span>
-                        {{ record.pickingTypeDisplayName }}
+                        <span class="ui-column-title"> {{ l('endTripDate') }}</span>
+                        {{ record.endTripDate | momentFormat: 'YYYY-MM-DD' }}
                       </td>
                       <td>
-                        <span class="ui-column-title"> {{ l('Facility') }}</span>
-                        {{ record.facility }}
+                        <span class="ui-column-title"> {{ l('hasAttachment') }}</span>
+                        {{ record.hasAttachment }}
                       </td>
                       <td>
-                        <span class="ui-column-title"> {{ l('Receiver') }}</span>
-                        {{ record.receiver }}
+                        <span class="ui-column-title"> {{ l('needsDeliveryNote') }}</span>
+                        {{ record.needsDeliveryNote }}
+                      </td>
+                      <td>
+                        <span class="ui-column-title"> {{ l('totalValue') }}</span>
+                        {{ record.totalValue }}
+                      </td>
+                      <td>
+                        <span class="ui-column-title"> {{ l('note') }}</span>
+                        {{ record.note }}
                       </td>
                       <td>
                         <span class="ui-column-title"> {{ l('exception') }}</span>
@@ -80,7 +92,7 @@
                     </tr>
                   </ng-template>
                 </p-table>
-                <!-- <div *ngIf="ImportedPointsList.length == 0" class="primeng-no-data">
+                <!-- <div *ngIf="ImportedTripsList.length == 0" class="primeng-no-data">
                     {{ l('NoData') }}
                   </div> -->
               </div>
@@ -99,7 +111,7 @@
           type="submit"
           (click)="save()"
           class="btn btn-save font-weight-bold"
-          [disabled]=""
+          [disabled]="saving"
           [buttonBusy]="saving"
           [busyText]="l('SavingWithThreeDot')"
         >

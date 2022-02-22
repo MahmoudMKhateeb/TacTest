@@ -270,8 +270,9 @@ import { StepsModule } from '@node_modules/primeng/steps';
 import { ViewRatingComponent } from '@app/main/shippingRequests/shippingRequests/rating/view-rating/view-rating.component';
 import { ShipmentHistoryComponent } from '@app/main/shippingRequests/shippingRequests/shipment-history/shipment-history.component';
 import { TrackingModule } from '@app/main/shippingRequests/shippingRequests/tracking/tracking.module';
-import { ViewImportedTripsFromExcelModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/trips/view-imported-trips-from-excel-modal/view-imported-trips-from-excel-modal.component';
-import { ViewImportedPointsFromExcelModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/trips/view-imported-points-from-excel-modal/view-imported-points-from-excel-modal.component';
+import { ViewImportedTripsFromExcelModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/trips/ImportedTrips/view-imported-trips-from-excel-modal/view-imported-trips-from-excel-modal.component';
+import { ViewImportedPointsFromExcelModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/trips/ImportedTrips/view-imported-points-from-excel-modal/view-imported-points-from-excel-modal.component';
+import { ViewImportedGoodDetailsFromExcelModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/trips/ImportedTrips/view-imported-good-details-from-excel-modal/view-imported-good-details-from-excel-modal.component';
 
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
@@ -517,6 +518,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ShipmentHistoryComponent,
     ViewImportedTripsFromExcelModalComponent,
     ViewImportedPointsFromExcelModalComponent,
+    ViewImportedGoodDetailsFromExcelModalComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },

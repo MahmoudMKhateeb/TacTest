@@ -11,6 +11,7 @@ import {
   ShippingRequestsTripServiceProxy,
   ImportTripDto,
   ImportRoutePointDto,
+  ImportGoodsDetailsDto,
 } from '@shared/service-proxies/service-proxies';
 import { CreateOrEditTripComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/createOrEditTripModal/createOrEditTrip.component';
 import { ViewTripModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/viewTripModal/viewTripModal.component';
@@ -34,8 +35,11 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   @ViewChild('ViewTripModal', { static: false }) ViewTripModal: ViewTripModalComponent;
   @ViewChild('ExcelFileUpload', { static: false }) excelFileUpload: FileUpload;
   @ViewChild('PointExcelFileUpload', { static: false }) PointExcelFileUpload: FileUpload;
+  @ViewChild('GoodDetailsExcelFileUpload', { static: false }) GoodDetailsExcelFileUpload: FileUpload;
   @ViewChild('ViewImportedTripsModal', { static: false }) modal: ModalDirective;
   @ViewChild('ViewImportedPointsModal', { static: false }) pointModal: ModalDirective;
+  @ViewChild('ViewImportedGoodDetailsModal', { static: false }) goodDetailsModal: ModalDirective;
+
   @Output() modalSave: EventEmitter<any> = new EventEmitter();
   @Input() ShippingRequest: ShippingRequestDto;
   @Input() VasListFromFather: GetShippingRequestVasForViewDto[];
@@ -47,7 +51,9 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   active = false;
   list: ImportTripDto;
   pointsList: ImportRoutePointDto;
+  goodDetailsList: ImportGoodsDetailsDto;
   loading: boolean = false;
+  uploadGoodDetailsUrl: string;
 
   constructor(
     injector: Injector,
@@ -60,6 +66,7 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
     super(injector);
     this.uploadUrl = AppConsts.remoteServiceBaseUrl + '/Helper/ImportShipmentsFromExcel';
     this.uploadPointUrl = AppConsts.remoteServiceBaseUrl + '/Helper/ImportPointsFromExcel';
+    this.uploadGoodDetailsUrl = AppConsts.remoteServiceBaseUrl + '/Helper/ImportGoodsDetailsFromExcel';
   }
 
   ngOnInit(): void {
@@ -168,6 +175,34 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
           this.notify.success(this.l('ImportProcessStart'));
           this.saving = true;
           this.pointModal.show();
+        } else if (response.error != null) {
+          this.loading = false;
+          // this.notify.error(this.l('ImportFailed'));
+          this.notify.error(response.error.message);
+        }
+      });
+  }
+
+  uploadGoodDetailsExcel(data: { files: File }): void {
+    const formData: FormData = new FormData();
+    const file = data.files[0];
+    this.loading = true;
+    formData.append('file', file, file.name);
+    formData.append('ShippingRequestId', this.ShippingRequest.id.toString());
+    this._httpClient
+      .post<any>(this.uploadGoodDetailsUrl, formData)
+      .pipe(
+        finalize(() => {
+          this.GoodDetailsExcelFileUpload.clear();
+        })
+      )
+      .subscribe((response) => {
+        if (response.success) {
+          this.goodDetailsList = response.result.importPointListDto;
+          this.loading = false;
+          this.notify.success(this.l('ImportProcessStart'));
+          this.saving = true;
+          this.goodDetailsModal.show();
         } else if (response.error != null) {
           this.loading = false;
           // this.notify.error(this.l('ImportFailed'));

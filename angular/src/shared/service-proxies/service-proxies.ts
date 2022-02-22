@@ -19754,6 +19754,145 @@ export class ImportShipmentFromExcelServiceProxy {
     }
     return _observableOf<void>(<any>null);
   }
+
+  /**
+   * @param body (optional)
+   * @return Success
+   */
+  importGoodsDetailsFromExcel(body: ImportGoodsDetailsFromExcelInput | undefined): Observable<ImportGoodsDetailsDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/ImportShipmentFromExcel/ImportGoodsDetailsFromExcel';
+    url_ = url_.replace(/[?&]$/, '');
+
+    const content_ = JSON.stringify(body);
+
+    let options_: any = {
+      body: content_,
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processImportGoodsDetailsFromExcel(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processImportGoodsDetailsFromExcel(<any>response_);
+            } catch (e) {
+              return <Observable<ImportGoodsDetailsDto[]>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<ImportGoodsDetailsDto[]>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processImportGoodsDetailsFromExcel(response: HttpResponseBase): Observable<ImportGoodsDetailsDto[]> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          if (Array.isArray(resultData200)) {
+            result200 = [] as any;
+            for (let item of resultData200) result200!.push(ImportGoodsDetailsDto.fromJS(item));
+          } else {
+            result200 = <any>null;
+          }
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<ImportGoodsDetailsDto[]>(<any>null);
+  }
+
+  /**
+   * @param body (optional)
+   * @return Success
+   */
+  createGoodsDetailsFromDto(body: ImportGoodsDetailsDto[] | null | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/ImportShipmentFromExcel/CreateGoodsDetailsFromDto';
+    url_ = url_.replace(/[?&]$/, '');
+
+    const content_ = JSON.stringify(body);
+
+    let options_: any = {
+      body: content_,
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processCreateGoodsDetailsFromDto(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processCreateGoodsDetailsFromDto(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processCreateGoodsDetailsFromDto(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
 }
 
 @Injectable()
@@ -68723,7 +68862,8 @@ export class CreateOrEditGoodsDetailDto implements ICreateOrEditGoodsDetailDto {
   goodCategoryId!: number | undefined;
   unitOfMeasureId!: number;
   otherUnitOfMeasureName!: string | undefined;
-  routPointId!: number | undefined;
+  routPointId!: number;
+  exception!: string | undefined;
   id!: number | undefined;
 
   constructor(data?: ICreateOrEditGoodsDetailDto) {
@@ -68747,6 +68887,7 @@ export class CreateOrEditGoodsDetailDto implements ICreateOrEditGoodsDetailDto {
       this.unitOfMeasureId = _data['unitOfMeasureId'];
       this.otherUnitOfMeasureName = _data['otherUnitOfMeasureName'];
       this.routPointId = _data['routPointId'];
+      this.exception = _data['exception'];
       this.id = _data['id'];
     }
   }
@@ -68771,6 +68912,7 @@ export class CreateOrEditGoodsDetailDto implements ICreateOrEditGoodsDetailDto {
     data['unitOfMeasureId'] = this.unitOfMeasureId;
     data['otherUnitOfMeasureName'] = this.otherUnitOfMeasureName;
     data['routPointId'] = this.routPointId;
+    data['exception'] = this.exception;
     data['id'] = this.id;
     return data;
   }
@@ -68787,7 +68929,8 @@ export interface ICreateOrEditGoodsDetailDto {
   goodCategoryId: number | undefined;
   unitOfMeasureId: number;
   otherUnitOfMeasureName: string | undefined;
-  routPointId: number | undefined;
+  routPointId: number;
+  exception: string | undefined;
   id: number | undefined;
 }
 
@@ -70855,7 +70998,8 @@ export interface IImportShipmentFromExcelInput {
 }
 
 export class ImportTripDto implements IImportTripDto {
-  bulkUploadReference!: string | undefined;
+  id!: number;
+  bulkUploadRef!: string | undefined;
   exception!: string | undefined;
   shippingRequestId!: number;
   startTripDate!: moment.Moment | undefined;
@@ -70864,6 +71008,14 @@ export class ImportTripDto implements IImportTripDto {
   needsDeliveryNote!: boolean;
   note!: string | undefined;
   totalValue!: string | undefined;
+  originalFacility!: string | undefined;
+  originalFacilityId!: number | undefined;
+  destinationFacility!: string | undefined;
+  destinationFacilityId!: number | undefined;
+  sender!: string | undefined;
+  senderId!: number | undefined;
+  receiver!: string | undefined;
+  receiverId!: number | undefined;
 
   constructor(data?: IImportTripDto) {
     if (data) {
@@ -70875,7 +71027,8 @@ export class ImportTripDto implements IImportTripDto {
 
   init(_data?: any) {
     if (_data) {
-      this.bulkUploadReference = _data['bulkUploadReference'];
+      this.id = _data['id'];
+      this.bulkUploadRef = _data['bulkUploadRef'];
       this.exception = _data['exception'];
       this.shippingRequestId = _data['shippingRequestId'];
       this.startTripDate = _data['startTripDate'] ? moment(_data['startTripDate'].toString()) : <any>undefined;
@@ -70884,6 +71037,14 @@ export class ImportTripDto implements IImportTripDto {
       this.needsDeliveryNote = _data['needsDeliveryNote'];
       this.note = _data['note'];
       this.totalValue = _data['totalValue'];
+      this.originalFacility = _data['originalFacility'];
+      this.originalFacilityId = _data['originalFacilityId'];
+      this.destinationFacility = _data['destinationFacility'];
+      this.destinationFacilityId = _data['destinationFacilityId'];
+      this.sender = _data['sender'];
+      this.senderId = _data['senderId'];
+      this.receiver = _data['receiver'];
+      this.receiverId = _data['receiverId'];
     }
   }
 
@@ -70896,7 +71057,8 @@ export class ImportTripDto implements IImportTripDto {
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data['bulkUploadReference'] = this.bulkUploadReference;
+    data['id'] = this.id;
+    data['bulkUploadRef'] = this.bulkUploadRef;
     data['exception'] = this.exception;
     data['shippingRequestId'] = this.shippingRequestId;
     data['startTripDate'] = this.startTripDate ? this.startTripDate.toISOString() : <any>undefined;
@@ -70905,12 +71067,21 @@ export class ImportTripDto implements IImportTripDto {
     data['needsDeliveryNote'] = this.needsDeliveryNote;
     data['note'] = this.note;
     data['totalValue'] = this.totalValue;
+    data['originalFacility'] = this.originalFacility;
+    data['originalFacilityId'] = this.originalFacilityId;
+    data['destinationFacility'] = this.destinationFacility;
+    data['destinationFacilityId'] = this.destinationFacilityId;
+    data['sender'] = this.sender;
+    data['senderId'] = this.senderId;
+    data['receiver'] = this.receiver;
+    data['receiverId'] = this.receiverId;
     return data;
   }
 }
 
 export interface IImportTripDto {
-  bulkUploadReference: string | undefined;
+  id: number;
+  bulkUploadRef: string | undefined;
   exception: string | undefined;
   shippingRequestId: number;
   startTripDate: moment.Moment | undefined;
@@ -70919,6 +71090,14 @@ export interface IImportTripDto {
   needsDeliveryNote: boolean;
   note: string | undefined;
   totalValue: string | undefined;
+  originalFacility: string | undefined;
+  originalFacilityId: number | undefined;
+  destinationFacility: string | undefined;
+  destinationFacilityId: number | undefined;
+  sender: string | undefined;
+  senderId: number | undefined;
+  receiver: string | undefined;
+  receiverId: number | undefined;
 }
 
 export class ImportPointsFromExcelInput implements IImportPointsFromExcelInput {
@@ -71042,6 +71221,152 @@ export interface IImportRoutePointDto {
   shippingRequestTripId: number;
   bulkUploadReference: string | undefined;
   tripReference: string | undefined;
+}
+
+export class ImportGoodsDetailsFromExcelInput implements IImportGoodsDetailsFromExcelInput {
+  tenantId!: number | undefined;
+  binaryObjectId!: string;
+  shippingRequestId!: number;
+
+  constructor(data?: IImportGoodsDetailsFromExcelInput) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.tenantId = _data['tenantId'];
+      this.binaryObjectId = _data['binaryObjectId'];
+      this.shippingRequestId = _data['shippingRequestId'];
+    }
+  }
+
+  static fromJS(data: any): ImportGoodsDetailsFromExcelInput {
+    data = typeof data === 'object' ? data : {};
+    let result = new ImportGoodsDetailsFromExcelInput();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['tenantId'] = this.tenantId;
+    data['binaryObjectId'] = this.binaryObjectId;
+    data['shippingRequestId'] = this.shippingRequestId;
+    return data;
+  }
+}
+
+export interface IImportGoodsDetailsFromExcelInput {
+  tenantId: number | undefined;
+  binaryObjectId: string;
+  shippingRequestId: number;
+}
+
+export class ImportGoodsDetailsDto implements IImportGoodsDetailsDto {
+  tripReference!: string | undefined;
+  shippingRequestTripId!: number;
+  pointReference!: string | undefined;
+  routPointId!: number;
+  description!: string | undefined;
+  amount!: number;
+  weight!: number;
+  dimentions!: string | undefined;
+  isDangerousGood!: boolean;
+  dangerousGoodsCode!: string | undefined;
+  dangerousGoodTypeId!: number | undefined;
+  dangerousGoodsType!: string | undefined;
+  goodCategoryId!: number | undefined;
+  goodsSubCategory!: string | undefined;
+  otherGoodsCategoryName!: string | undefined;
+  unitOfMeasureId!: number;
+  unitOfMeasure!: string | undefined;
+  exception!: string | undefined;
+
+  constructor(data?: IImportGoodsDetailsDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.tripReference = _data['tripReference'];
+      this.shippingRequestTripId = _data['shippingRequestTripId'];
+      this.pointReference = _data['pointReference'];
+      this.routPointId = _data['routPointId'];
+      this.description = _data['description'];
+      this.amount = _data['amount'];
+      this.weight = _data['weight'];
+      this.dimentions = _data['dimentions'];
+      this.isDangerousGood = _data['isDangerousGood'];
+      this.dangerousGoodsCode = _data['dangerousGoodsCode'];
+      this.dangerousGoodTypeId = _data['dangerousGoodTypeId'];
+      this.dangerousGoodsType = _data['dangerousGoodsType'];
+      this.goodCategoryId = _data['goodCategoryId'];
+      this.goodsSubCategory = _data['goodsSubCategory'];
+      this.otherGoodsCategoryName = _data['otherGoodsCategoryName'];
+      this.unitOfMeasureId = _data['unitOfMeasureId'];
+      this.unitOfMeasure = _data['unitOfMeasure'];
+      this.exception = _data['exception'];
+    }
+  }
+
+  static fromJS(data: any): ImportGoodsDetailsDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new ImportGoodsDetailsDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['tripReference'] = this.tripReference;
+    data['shippingRequestTripId'] = this.shippingRequestTripId;
+    data['pointReference'] = this.pointReference;
+    data['routPointId'] = this.routPointId;
+    data['description'] = this.description;
+    data['amount'] = this.amount;
+    data['weight'] = this.weight;
+    data['dimentions'] = this.dimentions;
+    data['isDangerousGood'] = this.isDangerousGood;
+    data['dangerousGoodsCode'] = this.dangerousGoodsCode;
+    data['dangerousGoodTypeId'] = this.dangerousGoodTypeId;
+    data['dangerousGoodsType'] = this.dangerousGoodsType;
+    data['goodCategoryId'] = this.goodCategoryId;
+    data['goodsSubCategory'] = this.goodsSubCategory;
+    data['otherGoodsCategoryName'] = this.otherGoodsCategoryName;
+    data['unitOfMeasureId'] = this.unitOfMeasureId;
+    data['unitOfMeasure'] = this.unitOfMeasure;
+    data['exception'] = this.exception;
+    return data;
+  }
+}
+
+export interface IImportGoodsDetailsDto {
+  tripReference: string | undefined;
+  shippingRequestTripId: number;
+  pointReference: string | undefined;
+  routPointId: number;
+  description: string | undefined;
+  amount: number;
+  weight: number;
+  dimentions: string | undefined;
+  isDangerousGood: boolean;
+  dangerousGoodsCode: string | undefined;
+  dangerousGoodTypeId: number | undefined;
+  dangerousGoodsType: string | undefined;
+  goodCategoryId: number | undefined;
+  goodsSubCategory: string | undefined;
+  otherGoodsCategoryName: string | undefined;
+  unitOfMeasureId: number;
+  unitOfMeasure: string | undefined;
+  exception: string | undefined;
 }
 
 export class InstallDto implements IInstallDto {
@@ -77020,28 +77345,28 @@ export interface IEnvelope {
 }
 
 export class Geometry implements IGeometry {
-  readonly area!: number;
-  dimension!: Dimension;
-  readonly geometryType!: string | undefined;
-  readonly isEmpty!: boolean;
-  readonly isValid!: boolean;
-  readonly length!: number;
-  readonly numGeometries!: number;
-  readonly numPoints!: number;
-  boundary!: Geometry;
-  centroid!: Point;
-  envelope!: Geometry;
-  interiorPoint!: Point;
-  readonly isSimple!: boolean;
-  pointOnSurface!: Point;
-  ogcGeometryType!: OgcGeometryType;
-  srid!: number;
   factory!: GeometryFactory;
   userData!: any | undefined;
+  srid!: number;
+  readonly geometryType!: string | undefined;
+  ogcGeometryType!: OgcGeometryType;
   precisionModel!: PrecisionModel;
   coordinate!: Coordinate;
   readonly coordinates!: Coordinate[] | undefined;
+  readonly numPoints!: number;
+  readonly numGeometries!: number;
+  readonly isSimple!: boolean;
+  readonly isValid!: boolean;
+  readonly isEmpty!: boolean;
+  readonly area!: number;
+  readonly length!: number;
+  centroid!: Point;
+  interiorPoint!: Point;
+  pointOnSurface!: Point;
+  dimension!: Dimension;
+  boundary!: Geometry;
   boundaryDimension!: Dimension;
+  envelope!: Geometry;
   envelopeInternal!: Envelope;
   readonly isRectangle!: boolean;
 
@@ -77055,31 +77380,31 @@ export class Geometry implements IGeometry {
 
   init(_data?: any) {
     if (_data) {
-      (<any>this).area = _data['area'];
-      this.dimension = _data['dimension'];
-      (<any>this).geometryType = _data['geometryType'];
-      (<any>this).isEmpty = _data['isEmpty'];
-      (<any>this).isValid = _data['isValid'];
-      (<any>this).length = _data['length'];
-      (<any>this).numGeometries = _data['numGeometries'];
-      (<any>this).numPoints = _data['numPoints'];
-      this.boundary = _data['boundary'] ? Geometry.fromJS(_data['boundary']) : <any>undefined;
-      this.centroid = _data['centroid'] ? Point.fromJS(_data['centroid']) : <any>undefined;
-      this.envelope = _data['envelope'] ? Geometry.fromJS(_data['envelope']) : <any>undefined;
-      this.interiorPoint = _data['interiorPoint'] ? Point.fromJS(_data['interiorPoint']) : <any>undefined;
-      (<any>this).isSimple = _data['isSimple'];
-      this.pointOnSurface = _data['pointOnSurface'] ? Point.fromJS(_data['pointOnSurface']) : <any>undefined;
-      this.ogcGeometryType = _data['ogcGeometryType'];
-      this.srid = _data['srid'];
       this.factory = _data['factory'] ? GeometryFactory.fromJS(_data['factory']) : <any>undefined;
       this.userData = _data['userData'];
+      this.srid = _data['srid'];
+      (<any>this).geometryType = _data['geometryType'];
+      this.ogcGeometryType = _data['ogcGeometryType'];
       this.precisionModel = _data['precisionModel'] ? PrecisionModel.fromJS(_data['precisionModel']) : <any>undefined;
       this.coordinate = _data['coordinate'] ? Coordinate.fromJS(_data['coordinate']) : <any>undefined;
       if (Array.isArray(_data['coordinates'])) {
         (<any>this).coordinates = [] as any;
         for (let item of _data['coordinates']) (<any>this).coordinates!.push(Coordinate.fromJS(item));
       }
+      (<any>this).numPoints = _data['numPoints'];
+      (<any>this).numGeometries = _data['numGeometries'];
+      (<any>this).isSimple = _data['isSimple'];
+      (<any>this).isValid = _data['isValid'];
+      (<any>this).isEmpty = _data['isEmpty'];
+      (<any>this).area = _data['area'];
+      (<any>this).length = _data['length'];
+      this.centroid = _data['centroid'] ? Point.fromJS(_data['centroid']) : <any>undefined;
+      this.interiorPoint = _data['interiorPoint'] ? Point.fromJS(_data['interiorPoint']) : <any>undefined;
+      this.pointOnSurface = _data['pointOnSurface'] ? Point.fromJS(_data['pointOnSurface']) : <any>undefined;
+      this.dimension = _data['dimension'];
+      this.boundary = _data['boundary'] ? Geometry.fromJS(_data['boundary']) : <any>undefined;
       this.boundaryDimension = _data['boundaryDimension'];
+      this.envelope = _data['envelope'] ? Geometry.fromJS(_data['envelope']) : <any>undefined;
       this.envelopeInternal = _data['envelopeInternal'] ? Envelope.fromJS(_data['envelopeInternal']) : <any>undefined;
       (<any>this).isRectangle = _data['isRectangle'];
     }
@@ -77094,31 +77419,31 @@ export class Geometry implements IGeometry {
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data['area'] = this.area;
-    data['dimension'] = this.dimension;
-    data['geometryType'] = this.geometryType;
-    data['isEmpty'] = this.isEmpty;
-    data['isValid'] = this.isValid;
-    data['length'] = this.length;
-    data['numGeometries'] = this.numGeometries;
-    data['numPoints'] = this.numPoints;
-    data['boundary'] = this.boundary ? this.boundary.toJSON() : <any>undefined;
-    data['centroid'] = this.centroid ? this.centroid.toJSON() : <any>undefined;
-    data['envelope'] = this.envelope ? this.envelope.toJSON() : <any>undefined;
-    data['interiorPoint'] = this.interiorPoint ? this.interiorPoint.toJSON() : <any>undefined;
-    data['isSimple'] = this.isSimple;
-    data['pointOnSurface'] = this.pointOnSurface ? this.pointOnSurface.toJSON() : <any>undefined;
-    data['ogcGeometryType'] = this.ogcGeometryType;
-    data['srid'] = this.srid;
     data['factory'] = this.factory ? this.factory.toJSON() : <any>undefined;
     data['userData'] = this.userData;
+    data['srid'] = this.srid;
+    data['geometryType'] = this.geometryType;
+    data['ogcGeometryType'] = this.ogcGeometryType;
     data['precisionModel'] = this.precisionModel ? this.precisionModel.toJSON() : <any>undefined;
     data['coordinate'] = this.coordinate ? this.coordinate.toJSON() : <any>undefined;
     if (Array.isArray(this.coordinates)) {
       data['coordinates'] = [];
       for (let item of this.coordinates) data['coordinates'].push(item.toJSON());
     }
+    data['numPoints'] = this.numPoints;
+    data['numGeometries'] = this.numGeometries;
+    data['isSimple'] = this.isSimple;
+    data['isValid'] = this.isValid;
+    data['isEmpty'] = this.isEmpty;
+    data['area'] = this.area;
+    data['length'] = this.length;
+    data['centroid'] = this.centroid ? this.centroid.toJSON() : <any>undefined;
+    data['interiorPoint'] = this.interiorPoint ? this.interiorPoint.toJSON() : <any>undefined;
+    data['pointOnSurface'] = this.pointOnSurface ? this.pointOnSurface.toJSON() : <any>undefined;
+    data['dimension'] = this.dimension;
+    data['boundary'] = this.boundary ? this.boundary.toJSON() : <any>undefined;
     data['boundaryDimension'] = this.boundaryDimension;
+    data['envelope'] = this.envelope ? this.envelope.toJSON() : <any>undefined;
     data['envelopeInternal'] = this.envelopeInternal ? this.envelopeInternal.toJSON() : <any>undefined;
     data['isRectangle'] = this.isRectangle;
     return data;
@@ -77126,28 +77451,28 @@ export class Geometry implements IGeometry {
 }
 
 export interface IGeometry {
-  area: number;
-  dimension: Dimension;
-  geometryType: string | undefined;
-  isEmpty: boolean;
-  isValid: boolean;
-  length: number;
-  numGeometries: number;
-  numPoints: number;
-  boundary: Geometry;
-  centroid: Point;
-  envelope: Geometry;
-  interiorPoint: Point;
-  isSimple: boolean;
-  pointOnSurface: Point;
-  ogcGeometryType: OgcGeometryType;
-  srid: number;
   factory: GeometryFactory;
   userData: any | undefined;
+  srid: number;
+  geometryType: string | undefined;
+  ogcGeometryType: OgcGeometryType;
   precisionModel: PrecisionModel;
   coordinate: Coordinate;
   coordinates: Coordinate[] | undefined;
+  numPoints: number;
+  numGeometries: number;
+  isSimple: boolean;
+  isValid: boolean;
+  isEmpty: boolean;
+  area: number;
+  length: number;
+  centroid: Point;
+  interiorPoint: Point;
+  pointOnSurface: Point;
+  dimension: Dimension;
+  boundary: Geometry;
   boundaryDimension: Dimension;
+  envelope: Geometry;
   envelopeInternal: Envelope;
   isRectangle: boolean;
 }

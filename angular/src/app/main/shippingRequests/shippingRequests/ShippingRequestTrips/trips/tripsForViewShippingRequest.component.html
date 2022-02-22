@@ -70,6 +70,22 @@
             >
             </p-fileUpload>
           </span>
+
+          <span class="fileinput-button">
+            <p-fileUpload
+              customUpload="true"
+              name="GoodDetailsExcelFileUpload"
+              #GoodDetailsExcelFileUpload
+              maxFileSize="10000000"
+              auto="auto"
+              accept=".csv,.xls,.xlsx"
+              (uploadHandler)="uploadGoodDetailsExcel($event)"
+              (onError)="onUploadExcelError()"
+              chooseLabel="{{ 'ImportGoodDetailsFromExcel' | localize }}"
+              [disabled]="primengTableHelper.totalRecordsCount == 0"
+            >
+            </p-fileUpload>
+          </span>
           <!-- </div> -->
 
           <div class="dropdown-divider"></div>
@@ -253,6 +269,12 @@
     #ViewImportedPointsModal
     (modalSave)="reloadPage()"
   ></app-view-imported-points-from-excel-modal>
+  <app-view-imported-good-details-from-excel-modal
+    [ImportedGoodDetailsList]="goodDetailsList"
+    #ViewImportedGoodDetailsModal
+    (modalSave)="reloadPage()"
+  >
+  </app-view-imported-good-details-from-excel-modal>
   <viewTripModal #ViewTripModal (modalSave)="reloadPage()"></viewTripModal>
   <trip-accident-modal #TripAccidentModal (modalSave)="getShippingRequestsTrips($event)"></trip-accident-modal>
   <view-trip-accident-modal #ViewTripAccidentModal (modalcanceltrip)="reloadPage()"></view-trip-accident-modal>
