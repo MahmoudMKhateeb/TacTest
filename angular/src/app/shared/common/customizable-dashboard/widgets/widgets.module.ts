@@ -49,6 +49,7 @@ import { UnpricedRequestsInMarketplaceComponent } from './host/unpriced-requests
 import { PaginatorModule } from '@node_modules/primeng/paginator';
 import { UtilsModule } from '@shared/utils/utils.module';
 import { BsDatepickerModule } from '@node_modules/ngx-bootstrap/datepicker';
+import { NgbRatingModule } from '@node_modules/@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -104,6 +105,7 @@ import { BsDatepickerModule } from '@node_modules/ngx-bootstrap/datepicker';
     PaginatorModule,
     UtilsModule,
     BsDatepickerModule,
+    NgbRatingModule,
   ],
   entryComponents: [
     CompletedTripsWidgetComponent,
