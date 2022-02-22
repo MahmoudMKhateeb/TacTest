@@ -167,7 +167,7 @@
                   [attr.aria-expanded]="openCardId == item.id"
                   aria-controls="collapseExample"
                 >
-                  <i class="fas fa-angle-double-down fa-2x"></i>
+                  <i class="fas fa-angle-down fa-2x"></i>
                 </button>
                 <button
                   class="btn"
@@ -176,7 +176,7 @@
                   [attr.aria-expanded]="openCardId == item.id"
                   aria-controls="collapseExample"
                 >
-                  <i class="fas fa-angle-double-up fa-2x"></i>
+                  <i class="fas fa-angle-up fa-2x"></i>
                 </button>
               </div>
               <div class="actions">
@@ -223,46 +223,33 @@
             </div>
           </div>
 
-          <div id="collapseExample" [ngbCollapse]="openCardId == null">
-            <div class="card">
-              <div class="card-body" *ngIf="openCardId == item.id">
+          <div class="shipCardWhite padding-percent-2" [ngbCollapse]="openCardId == null">
+            <div>
+              <div *ngIf="openCardId == item.id">
                 <!--  start of ShippingRequestType::Details-->
-                <div class="col-12">
-                  <div class="mb-3">
-                    <div class="mb-2">
-                      <div class="form-group row fv-plugins-icon-container">
-                        <div class="col-lg-6">
-                          <label><span class="required-fileds"></span> {{ l('ShippingRequestType') }}</label>
-                          <input class="form-control" type="text" name="ShippingRequestType" [value]="item.requestTypeTitle" disabled />
-                        </div>
-                        <div class="col-lg-6">
-                          <label><span class="required-fileds"></span> {{ l('Price') }}</label>
-                          <input class="form-control" type="number" name="ShippingRequestType" [value]="item.price" disabled />
-                        </div>
-                        <br />
-                        <div *ngIf="!this.feature.isEnabled('App.Carrier')">
-                          <shipping-request-offers-list
-                            [shippingRequestId]="item.id"
-                            [isTachyonDeal]="item.isTachyonDeal"
-                            [Channel]="item.bidStatus == 0 ? 2 : 1"
-                          >
-                          </shipping-request-offers-list>
-                        </div>
+                <div class="mb-2">
+                  <div class="form-group row fv-plugins-icon-container">
+                    <div *ngIf="!this.feature.isEnabled('App.Carrier')">
+                      <shipping-request-offers-list
+                        [shippingRequestId]="item.id"
+                        [isTachyonDeal]="item.isTachyonDeal"
+                        [Channel]="item.bidStatus == 0 ? 2 : 1"
+                      >
+                      </shipping-request-offers-list>
+                    </div>
 
-                        <div *ngIf="feature.isEnabled('App.Shipper') || feature.isEnabled('App.TachyonDealer')">
-                          <TripsForViewShippingRequest
-                            *ngIf="item.id && bidsloading == false"
-                            [ShippingRequest]="item"
-                            [VasListFromFather]="undefined"
-                          ></TripsForViewShippingRequest>
-                        </div>
+                    <div *ngIf="feature.isEnabled('App.Shipper') || feature.isEnabled('App.TachyonDealer')">
+                      <TripsForViewShippingRequest
+                        *ngIf="item.id && bidsloading == false"
+                        [ShippingRequest]="item"
+                        [VasListFromFather]="undefined"
+                      ></TripsForViewShippingRequest>
+                    </div>
 
-                        <div class="col-lg-12">
-                          <agm-map style="height: 200px" [latitude]="24.717942" [longitude]="46.675761" [zoom]="zoom">
-                            <agm-marker [latitude]="item.latitude || 24.717942" [longitude]="item.longitude || 46.675761"></agm-marker>
-                          </agm-map>
-                        </div>
-                      </div>
+                    <div class="col-lg-12">
+                      <agm-map style="height: 300px" [latitude]="24.717942" [longitude]="46.675761" [zoom]="zoom">
+                        <agm-marker [latitude]="item.latitude || 24.717942" [longitude]="item.longitude || 46.675761"></agm-marker>
+                      </agm-map>
                     </div>
                   </div>
                 </div>
