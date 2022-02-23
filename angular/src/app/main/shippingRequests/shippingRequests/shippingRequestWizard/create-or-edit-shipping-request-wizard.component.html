@@ -779,6 +779,7 @@
                                   [required]="!selectedVasesProperties[item.vasId].vasCountDisabled"
                                   class="form-control"
                                   name="VasCount{{ i }}"
+                                  min="0"
                                   [class.is-invalid]="VasCount.touched && !VasCount.disabled && item.requestMaxCount <= 0"
                                   [class.is-valid]="VasCount.touched && VasCount.valid && item.requestMaxCount > 0"
                                 />
@@ -794,6 +795,7 @@
                                   [required]="!selectedVasesProperties[item.vasId].vasAmountDisabled"
                                   class="form-control"
                                   name="VasAmount2{{ i }}"
+                                  min="0"
                                   [class.is-invalid]="VasAmount2.touched && !VasAmount2.disabled && item.requestMaxAmount <= 0"
                                   [class.is-valid]="VasAmount2.touched && VasAmount2.valid && item.requestMaxAmount > 0"
                                 />
@@ -808,7 +810,10 @@
                                   class="form-control"
                                   name="numberOfTrips{{ i }}"
                                   required
-                                  [class.is-invalid]="numberOfTrips.touched && !numberOfTrips.valid && step2Dto.numberOfTrips < item.numberOfTrips"
+                                  [class.is-invalid]="
+                                    numberOfTrips.touched &&
+                                    (!numberOfTrips.valid || item.numberOfTrips == 0 || step2Dto.numberOfTrips < item.numberOfTrips)
+                                  "
                                   [class.is-valid]="numberOfTrips.touched && numberOfTrips.valid && step2Dto.numberOfTrips >= item.numberOfTrips"
                                   [max]="step2Dto.numberOfTrips"
                                   min="0"
