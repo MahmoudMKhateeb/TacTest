@@ -30,6 +30,7 @@ using TACHYON.Firebases;
 using TACHYON.Goods.GoodCategories;
 using TACHYON.Goods.GoodsDetails;
 using TACHYON.Notifications;
+using TACHYON.Rating;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Routs.RoutPoints.Dtos;
 using TACHYON.Shipping.ShippingRequests;
@@ -59,6 +60,7 @@ namespace TACHYON.Shipping.Trips
         private readonly IRepository<DocumentType, long> _documentTypeRepository;
         private readonly IBinaryObjectManager _binaryObjectManager;
         private readonly ITempFileCacheManager _tempFileCacheManager;
+        private readonly RatingLogManager _ratingLogManager;
 
 
 
@@ -71,7 +73,7 @@ namespace TACHYON.Shipping.Trips
             IRepository<GoodsDetail, long> goodsDetailRepository,
             UserManager userManager,
             IAppNotifier appNotifier,
-            ShippingRequestManager shippingRequestManager, DocumentFilesAppService documentFilesAppService, IRepository<GoodCategory> goodCategoryRepository, IRepository<DocumentFile, Guid> documentFileRepository, DocumentFilesManager documentFilesManager, IRepository<DocumentType, long> documentTypeRepository, IBinaryObjectManager binaryObjectManager, ITempFileCacheManager tempFileCacheManager)
+            ShippingRequestManager shippingRequestManager, DocumentFilesAppService documentFilesAppService, IRepository<GoodCategory> goodCategoryRepository, IRepository<DocumentFile, Guid> documentFileRepository, DocumentFilesManager documentFilesManager, IRepository<DocumentType, long> documentTypeRepository, IBinaryObjectManager binaryObjectManager, ITempFileCacheManager tempFileCacheManager, RatingLogManager ratingLogManager)
         {
             _shippingRequestTripRepository = shippingRequestTripRepository;
             _shippingRequestRepository = shippingRequestRepository;
@@ -88,6 +90,7 @@ namespace TACHYON.Shipping.Trips
             this._documentTypeRepository = documentTypeRepository;
             _binaryObjectManager = binaryObjectManager;
             _tempFileCacheManager = tempFileCacheManager;
+            _ratingLogManager = ratingLogManager;
         }
 
 
@@ -139,6 +142,19 @@ namespace TACHYON.Shipping.Trips
                 pageResult = SortByFacility(input.Sorting, pageResult);
 
             var totalCount = await query.CountAsync();
+            var output = ObjectMapper.Map<List<ShippingRequestsTripListDto>>(resultPage);
+
+            foreach (var x in output)
+            {
+                x.IsTripRateBefore = await _ratingLogManager.IsRateDoneBefore(new RatingLog
+                {
+                    ShipperId = request.TenantId,
+                    CarrierId = request.CarrierTenantId,
+                    RateType = await IsShipper() ? RateType.CarrierByShipper : RateType.ShipperByCarrier,
+                    TripId = x.Id
+                });
+            }
+
             return new PagedResultDto<ShippingRequestsTripListDto>(
                 totalCount,
                 pageResult

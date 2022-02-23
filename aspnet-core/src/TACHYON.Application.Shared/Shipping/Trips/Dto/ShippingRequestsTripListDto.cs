@@ -6,7 +6,7 @@ using TACHYON.ShippingRequestTripVases.Dtos;
 
 namespace TACHYON.Shipping.Trips.Dto
 {
-    public class ShippingRequestsTripListDto : EntityDto<long>
+    public class ShippingRequestsTripListDto : EntityDto<int>
     {
         public DateTime StartTripDate { get; set; }
         public DateTime? EndTripDate { get; set; }
@@ -36,6 +36,7 @@ namespace TACHYON.Shipping.Trips.Dto
         public string DriverStatusTitle { get; set; }
         public string RejectedReason { get; set; }
         public long? WaybillNumber { get; set; }
+        public bool IsTripRateBefore { get; set; }
 
     }
 }
