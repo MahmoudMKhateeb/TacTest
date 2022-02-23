@@ -73,35 +73,6 @@ export class DashboardViewConfigurationService {
     //add your filters here
     this.widgetFilterDefinitions.push(filterDateRangePicker);
 
-    let generalStats = new WidgetViewDefinition(DashboardCustomizationConst.widgets.tenant.generalStats, WidgetGeneralStatsComponent, 6, 4);
-
-    let dailySales = new WidgetViewDefinition(DashboardCustomizationConst.widgets.tenant.dailySales, WidgetDailySalesComponent);
-
-    let profitShare = new WidgetViewDefinition(DashboardCustomizationConst.widgets.tenant.profitShare, WidgetProfitShareComponent);
-
-    let memberActivity = new WidgetViewDefinition(DashboardCustomizationConst.widgets.tenant.memberActivity, WidgetMemberActivityComponent);
-
-    let regionalStats = new WidgetViewDefinition(DashboardCustomizationConst.widgets.tenant.regionalStats, WidgetRegionalStatsComponent);
-
-    let salesSummary = new WidgetViewDefinition(DashboardCustomizationConst.widgets.tenant.salesSummary, WidgetSalesSummaryComponent);
-
-    let topStats = new WidgetViewDefinition(DashboardCustomizationConst.widgets.tenant.topStats, WidgetTopStatsComponent);
-    //add your tenant side widgets here
-
-    // let incomeStatistics = new WidgetViewDefinition(DashboardCustomizationConst.widgets.host.incomeStatistics, WidgetIncomeStatisticsComponent);
-    //
-    let editionStatistics = new WidgetViewDefinition(DashboardCustomizationConst.widgets.host.editionStatistics, WidgetEditionStatisticsComponent);
-    //
-    // let recentTenants = new WidgetViewDefinition(DashboardCustomizationConst.widgets.host.recentTenants, WidgetRecentTenantsComponent);
-    //
-    // let subscriptionExpiringTenants = new WidgetViewDefinition(
-    //   DashboardCustomizationConst.widgets.host.subscriptionExpiringTenants,
-    //   WidgetSubscriptionExpiringTenantsComponent
-    // );
-    //
-    // let hostTopStats = new WidgetViewDefinition(DashboardCustomizationConst.widgets.host.topStats, WidgetHostTopStatsComponent);
-    // //add your host side widgets here
-
     //Shipper
     //1
     let shippercompletedTrips = new WidgetViewDefinition(
@@ -262,6 +233,44 @@ export class DashboardViewConfigurationService {
       8
     );
     //Host
+
+    let generalStats = new WidgetViewDefinition(DashboardCustomizationConst.widgets.tenant.generalStats, WidgetGeneralStatsComponent, 6, 4);
+
+    let dailySales = new WidgetViewDefinition(DashboardCustomizationConst.widgets.tenant.dailySales, WidgetDailySalesComponent, 6, 4);
+
+    let profitShare = new WidgetViewDefinition(DashboardCustomizationConst.widgets.tenant.profitShare, WidgetProfitShareComponent, 6, 4);
+
+    let memberActivity = new WidgetViewDefinition(DashboardCustomizationConst.widgets.tenant.memberActivity, WidgetMemberActivityComponent, 6, 4);
+
+    let regionalStats = new WidgetViewDefinition(DashboardCustomizationConst.widgets.tenant.regionalStats, WidgetRegionalStatsComponent, 6, 4);
+
+    let salesSummary = new WidgetViewDefinition(DashboardCustomizationConst.widgets.tenant.salesSummary, WidgetSalesSummaryComponent, 6, 4);
+
+    let WidgetIncomeStatistics = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.incomeStatistics,
+      WidgetIncomeStatisticsComponent,
+      4,
+      4
+    );
+
+    let WidgetRecentTenants = new WidgetViewDefinition(DashboardCustomizationConst.widgets.host.recentTenants, WidgetRecentTenantsComponent, 4, 4);
+
+    let editionStatistics = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.editionStatistics,
+      WidgetEditionStatisticsComponent,
+      4,
+      4
+    );
+
+    let WidgetSubscriptionExpiringTenants = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.subscriptionExpiringTenants,
+      WidgetSubscriptionExpiringTenantsComponent,
+      4,
+      4
+    );
+
+    let WidgetHostTopStatst = new WidgetViewDefinition(DashboardCustomizationConst.widgets.host.topStats, WidgetHostTopStatsComponent, 4, 4);
+
     let NumberOfRegisteredTrucks = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.host.TachyonDealerNumberOfRegisteredTrucksWidget,
       NumberOfRegesterdTrucksComponent,
@@ -438,8 +447,18 @@ export class DashboardViewConfigurationService {
 
     //Host
     //this.widgetFilterDefinitions.push(NumberOfRegisteredTrucks);
-    // this.WidgetViewDefinitions.push(topStats);
-    //this.WidgetViewDefinitions.push(editionStatistics);
+    this.WidgetViewDefinitions.push(editionStatistics);
+    this.WidgetViewDefinitions.push(WidgetIncomeStatistics);
+    this.WidgetViewDefinitions.push(WidgetHostTopStatst);
+    this.WidgetViewDefinitions.push(WidgetRecentTenants);
+    this.WidgetViewDefinitions.push(WidgetSubscriptionExpiringTenants);
+    this.WidgetViewDefinitions.push(generalStats);
+    this.WidgetViewDefinitions.push(dailySales);
+    this.WidgetViewDefinitions.push(profitShare);
+    this.WidgetViewDefinitions.push(memberActivity);
+    this.WidgetViewDefinitions.push(regionalStats);
+    this.WidgetViewDefinitions.push(salesSummary);
+
     this.WidgetViewDefinitions.push(NumberOfRegisteredTrucks);
     this.WidgetViewDefinitions.push(NumberOfRegisteredShippers);
     this.WidgetViewDefinitions.push(onGoingTrips);
