@@ -17,6 +17,7 @@ import KTWizard from '@metronic/common/js/components/wizard';
 
 import {
   CarriersForDropDownDto,
+  CountyDto,
   CreateOrEditShippingRequestStep1Dto,
   CreateOrEditShippingRequestVasListDto,
   EditShippingRequestStep2Dto,
@@ -35,6 +36,8 @@ import {
   ShippingRequestRouteType,
   ShippingRequestsServiceProxy,
   ShippingRequestVasListOutput,
+  TenantCityLookupTableDto,
+  TenantRegistrationServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -68,7 +71,6 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   allGoodCategorys: GetAllGoodsCategoriesForDropDownOutput[];
   allCarrierTenants: CarriersForDropDownDto[];
   allRoutTypes: any;
-  allCitys: RoutStepCityLookupTableDto[];
   allFacilities: FacilityForDropdownDto[];
   allVases: ShippingRequestVasListOutput[];
   selectedVases: CreateOrEditShippingRequestVasListDto[] = [];
@@ -109,11 +111,18 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   AllShippers: ShippersForDropDownDto[];
   public allCarriers: CarriersForDropDownDto[];
   isCarrierSass = false;
+  sourceCities: TenantCityLookupTableDto[];
+  destinationCities: TenantCityLookupTableDto[];
+  citiesLoading = false;
+  allCountries: CountyDto[];
+  originCountry: number;
+  destinationCountry: number;
 
   constructor(
     injector: Injector,
     private _activatedRoute: ActivatedRoute,
     private _shippingRequestsServiceProxy: ShippingRequestsServiceProxy,
+    private _countriesServiceProxy: TenantRegistrationServiceProxy,
     private _router: Router,
     private _goodsDetailsServiceProxy: GoodsDetailsServiceProxy,
     private mapsAPILoader: MapsAPILoader,
@@ -141,8 +150,10 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     ShipperInvoiceNumber: [''],
   });
   step2Form = this.fb.group({
-    origin: ['', Validators.required],
-    destination: ['', Validators.required],
+    originCountry: ['', Validators.required],
+    destinationCountry: ['', Validators.required],
+    originCity: ['', Validators.required],
+    destinationCity: ['', Validators.required],
     routeType: ['', Validators.required],
     numberOfDrops: ['', [Validators.minLength(1), Validators.maxLength(3)]],
     NumberOfTrips: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(2), Validators.min(1), Validators.max(20)]],
@@ -172,7 +183,6 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   ngOnInit() {
     this.loadAllDropDownLists();
     this.allRoutTypes = this.enumToArray.transform(ShippingRequestRouteType);
-    this.GetAllCarriersForDropDown();
     this.isCarrierSass = this.feature.isEnabled('App.CarrierAsASaas');
   }
 
@@ -288,6 +298,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
           )
           .subscribe((res) => {
             this.notify.success(this.l('ShippingRequestPublishedSuccessfully'));
+            if (this.feature.isEnabled('App.TachyonDealer')) this._router.navigate(['/app/main/tms/shippingRequests']);
             this._router.navigate(['/app/main/shippingRequests/shippingRequests']);
           });
       }
@@ -483,8 +494,8 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
       this.allGoodCategorys = result;
     });
 
-    this._routStepsServiceProxy.getAllCityForTableDropdown().subscribe((result) => {
-      this.allCitys = result;
+    this._countriesServiceProxy.getAllCountriesWithCode().subscribe((res) => {
+      this.allCountries = res;
     });
 
     this._shippingRequestsServiceProxy.getAllTransportTypesForDropdown().subscribe((result) => {
@@ -499,21 +510,28 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
       this.allpackingTypes = result;
     });
 
-    /*this._routesServiceProxy.getAllRoutTypeForTableDropdown().subscribe((result) => {
-          this.allRoutTypes = result;
-        });*/
-
-    // this._routStepsServiceProxy.getAllFacilitiesForDropdown().subscribe((result) => {
-    //   this.allFacilities = result;
-    // });
-    this.loadallVases();
-  }
-  /* get all carriers for view in drop dawon */
-  GetAllCarriersForDropDown() {
     this._shippingRequestsServiceProxy.getAllCarriersForDropDown().subscribe((result) => {
       this.allCarriers = result;
     });
+
+    this.loadallVases();
   }
+
+  loadCitiesByCountryId(countryId: number, type: 'source' | 'destination') {
+    console.log('countryId', countryId, this.destinationCountry);
+    this.citiesLoading = true;
+    this._countriesServiceProxy
+      .getAllCitiesForTableDropdown(countryId)
+      .pipe(
+        finalize(() => {
+          this.citiesLoading = false;
+        })
+      )
+      .subscribe((res) => {
+        type === 'source' ? (this.sourceCities = res) : (this.destinationCities = res);
+      });
+  }
+
   loadTruckandCapacityForEdit() {
     //Get these DD in Edit Only
     if (this.activeShippingRequestId && this.step3Dto.transportTypeId) {
@@ -677,12 +695,26 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   validateShippingRequestType() {
     //check if user choose local-inside city  but the origin&des same
     if (this.step1Dto.shippingTypeId == 1) {
+      this.destinationCountry = this.originCountry;
       this.step2Dto.destinationCityId = this.step2Dto.originCityId;
+      this.destinationCities = this.sourceCities;
     } else if (this.step1Dto.shippingTypeId == 2) {
-      // check if user select same city in source and destination
+      // if route type is local betwenn cities check if user select same city in source and destination
+      this.destinationCities = this.sourceCities;
+      this.destinationCountry = this.originCountry;
       if (this.step2Dto.originCityId == this.step2Dto.destinationCityId) {
-        this.step2Form.controls['destination'].setErrors({ invalid: true });
-        // this.step2Form.controls['origin'].setErrors({ invalid: true });
+        this.step2Form.controls['destinationCity'].setErrors({ invalid: true });
+        this.step2Form.controls['destinationCountry'].setErrors({ invalid: true });
+      }
+      if (this.originCountry != this.destinationCountry) {
+        this.step2Form.controls['originCountry'].setErrors({ invalid: true });
+        this.step2Form.controls['destinationCountry'].setErrors({ invalid: true });
+      }
+    } else if (this.step1Dto.shippingTypeId == 4) {
+      //if route type is cross border prevent the countries to be the same
+      if (this.originCountry === this.destinationCountry) {
+        this.step2Form.controls['originCountry'].setErrors({ invalid: true });
+        this.step2Form.controls['destinationCountry'].setErrors({ invalid: true });
       }
     }
   }
