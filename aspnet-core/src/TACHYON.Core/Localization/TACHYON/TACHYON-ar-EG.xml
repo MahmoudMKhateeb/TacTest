@@ -1329,7 +1329,8 @@
 		<text name="RegisterFormUserNameInvalidMessage">الرجاء عدم ادخال بريدك الإلكتروني كاسم مستخدم</text>
 		<text name="Reject">رفض</text>
 		<text name="Rejected">مرفوض</text>
-		<text name="RejectedOffer">لقد تم رفض عرضك من قبل {rejectedby}.</text>
+    <text name="DataMustBeValid">البيانات غير صحيحة</text>
+    <text name="RejectedOffer">لقد تم رفض عرضك من قبل {rejectedby}.</text>
 		<text name="RejectedReason">سبب الرفض</text>
 		<text name="RejectionReason">سبب رفض المستند</text>
 		<text name="RejectOffer">رفض</text>
@@ -2267,6 +2268,26 @@
 		<text name="NoMatchingTrucks">لا توجد شاحنات مطابقة</text>
 		<text name="NoMatchingDrivers">لا يوجد سائقين</text>
 	<text name="ResetReceiverCode">إعادة تعيين رمز مستلم الشحنة</text>
-	<text name="ReceiverCodeConfirmationMsg">هل أنت متأكد أنك تريد إعادة تعيين رمز المستلم لهذه الشحنة؟</text>
+    <text name="DropGoodsDetailsMustBeEmptyForTrip">بيانات البضاعة لبعض النقاط موجودة مسبقاً</text>
+    <text name="invalidShippingRequest">طلب الشحن غير صالح</text>
+    <text name="RequestShouldnotBeSingleDrop">طلب الشحن يجب أن لا تكون ذهاب فقط</text>
+    <text name="DuplicatedReference">الرقم مكرر</text>
+    <text name="SomePointsAlreadyAddedToTrip">بعض النقاط موجودة مسبقاً</text>
+    <text name="InvalidTrip">الرحلة غير صالحة</text>
+    <text name="ReceiverCodeConfirmationMsg">هل أنت متأكد أنك تريد إعادة تعيين رمز المستلم لهذه الشحنة؟</text>
+    <text name="ImportProcessStart">جاري البدء في الاستيراد</text>
+    <text name="ImportUploadFailed">فشلت عملية الاستيراد</text>
+    <text name="GoodsSubCategory">التصنيف الفرعي للبضاعة</text>
+    <text name="DangerousGoodsType">نوع الخطر للبضاعة</text>
+    <text name="otherGoodsCategoryName">اسم التصنيف الفرعي الآخر</text>
+    <text name="TripReferenceID">رقم الرحلة</text>
+    <text name="PointReferenceID">رقم النقطة</text>
+    <text name="PointType">نوع النقطة</text>
+    <text name="Agent">المستلم</text>
+    <text name="totalValue">القيمة الكلية</text>
+    <text name="bulkUploadReference">الرقم</text>
+    <text name="The number of trips ">عدد الرحلات</text>
+    <text name="AllDropsMustHaveGoodsDetails">جميع نقاط التسليم يجب أن تحتوي على تفاصيل بضاعة</text>
+
 	</texts>
 </localizationDictionary>
