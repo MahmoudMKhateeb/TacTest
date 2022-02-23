@@ -30,7 +30,7 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   @Input() ShippingRequest: ShippingRequestDto;
   @Input() shippingRequestForView: any;
   @Input() VasListFromFather: GetShippingRequestVasForViewDto[];
-  tripsByTmsEnabled: boolean;
+  tripsByTmsEnabled = false;
   saving = false;
   ShippingRequestTripStatus = ShippingRequestTripStatus;
   constructor(
@@ -88,7 +88,6 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
       if (result.value) {
         this.saving = true;
         this._shippingRequestTripsService.changeAddTripsByTmsFeature().subscribe(() => {
-          this.tripsByTmsEnabled = !this.tripsByTmsEnabled;
           this.saving = false;
         });
       } //end of if
@@ -102,11 +101,11 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
     // update Trip Service and send vases list to trip component
     this._shippingRequestsServiceProxy.getShippingRequestForView(this.ShippingRequest.id).subscribe((result) => {
       this.VasListFromFather = result.shippingRequestVasDtoList;
+      this.tripsByTmsEnabled = result.shippingRequest.addTripsByTmsEnabled;
       this._TripService.updateShippingRequest(result);
     });
 
     this.primengTableHelper.adjustScroll(this.dataTable);
-    this.tripsByTmsEnabled = this.ShippingRequest.addTripsByTmsEnabled;
   }
 
   /**
