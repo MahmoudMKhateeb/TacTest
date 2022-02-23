@@ -299,6 +299,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
           )
           .subscribe((res) => {
             this.notify.success(this.l('ShippingRequestPublishedSuccessfully'));
+            if (this.feature.isEnabled('App.TachyonDealer')) this._router.navigate(['/app/main/tms/shippingRequests']);
             this._router.navigate(['/app/main/shippingRequests/shippingRequests']);
           });
       }
