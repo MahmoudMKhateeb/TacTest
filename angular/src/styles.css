@@ -590,3 +590,12 @@ ngb-datepicker {
 .ngb-dp-month:last-child .ngb-dp-week {
   padding-right: 0 !important;
 }
+.padding-percent-2 {
+  padding: 2% !important;
+}
+.shipCard {
+  border: none !important;
+}
+.shipCardWhite {
+  background-color: #ffffff !important;
+}
