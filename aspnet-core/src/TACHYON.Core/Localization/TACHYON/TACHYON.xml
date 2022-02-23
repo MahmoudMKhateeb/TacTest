@@ -1438,7 +1438,8 @@
 		<text name="Pink">Pink</text>
 		<text name="Place">Send</text>
 		<text name="PlateNumber">Plate number</text>
-		<text name="PlateType">Plate type</text>
+    <text name="DropGoodsDetailsMustBeEmptyForTrip">Drop goods details must Be empty for trip</text>
+    <text name="PlateType">Plate type</text>
 		<text name="PlateTypeId">Plate type id</text>
 		<text name="PlateTypes">Plate types</text>
 		<text name="PlateTypesHeaderInfo">Plate Types header info</text>
@@ -2507,5 +2508,26 @@
 	<text name="NoMatchingDrivers">There is no Drivers</text>
     <text name="ResetReceiverCode">Reset shipment receiver code</text>
     <text name="ReceiverCodeConfirmationMsg">Are you sure you want to reset the receiver code for this shipment?</text>
+    <text name="ImportProcessStart">Import process start</text>
+    <text name="invalidShippingRequest">Invalid shipping request</text>
+    <text name="DataMustBeValid">Data must be valid</text>
+    <text name="RequestShouldnotBeSingleDrop">Request should not be single drop</text>
+    <text name="DuplicatedReference">Duplicated reference</text>
+    <text name="SomePointsAlreadyAddedToTrip">Some points already added to trip</text>
+    <text name="InvalidTrip">Invalid trip</text>
+    <text name="ImportUploadFailed">Import upload failed</text>
+    <text name="GoodsSubCategory">Goods sub category</text>
+    <text name="DangerousGoodsType">Dangerous Goods Type</text>
+    <text name="otherGoodsCategoryName">Other Goods category name</text>
+    <text name="TripReferenceID">Trip reference</text>
+    <text name="PointReferenceID">Point reference</text>
+    <text name="PointType">Point type</text>
+    <text name="Agent">Agent</text>
+    <text name="totalValue">Total Value</text>
+    <text name="bulkUploadReference">Reference No</text>
+    <text name="The number of trips ">The number of trips </text>
+    <text name="AllDropsMustHaveGoodsDetails">All drops must have goods details</text>
+
+
 	</texts>
 </localizationDictionary>
