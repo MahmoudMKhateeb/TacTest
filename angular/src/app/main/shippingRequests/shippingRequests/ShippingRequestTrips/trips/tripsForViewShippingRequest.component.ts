@@ -12,6 +12,7 @@ import {
   ImportTripDto,
   ImportRoutePointDto,
   ImportGoodsDetailsDto,
+  ShippingRequestRouteType,
 } from '@shared/service-proxies/service-proxies';
 import { CreateOrEditTripComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/createOrEditTripModal/createOrEditTrip.component';
 import { ViewTripModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/viewTripModal/viewTripModal.component';
@@ -54,6 +55,7 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   goodDetailsList: ImportGoodsDetailsDto;
   loading: boolean = false;
   uploadGoodDetailsUrl: string;
+  ShippingRequestRouteTypeEnum = ShippingRequestRouteType;
 
   constructor(
     injector: Injector,

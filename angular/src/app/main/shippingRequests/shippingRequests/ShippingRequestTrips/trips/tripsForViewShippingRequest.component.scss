@@ -1,12 +1,12 @@
 a{
     cursor:pointer;
 }
-.p-fileupload, .p-fileupload-content{
-    height: 45px !important;
-    padding: 0 !important;
-    border: 0 !important;
+
+::ng-deep .p-fileupload-buttonbar span{
+    width: -webkit-fill-available !important;
 }
 
-.p-fileupload-buttonbar span{
-    width: -webkit-fill-available !important;
+::ng-deep .p-fileupload-content{
+    padding: 0 !important;
+    border: 0 !important;
 }

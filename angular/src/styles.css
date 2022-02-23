@@ -570,3 +570,6 @@ a {
   background-color: #3f4254 !important;
   color: #0c0c0d !important;
 }
+.lgWidth {
+  max-width: 1200px !important;
+}

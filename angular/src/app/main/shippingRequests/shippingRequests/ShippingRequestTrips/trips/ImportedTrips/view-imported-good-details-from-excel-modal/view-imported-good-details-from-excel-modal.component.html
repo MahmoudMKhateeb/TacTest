@@ -7,7 +7,7 @@
   aria-hidden="true"
   [config]="{ backdrop: 'static' }"
 >
-  <div class="modal-dialog modal-dialog-centered modal-xl">
+  <div class="modal-dialog modal-dialog-centered modal-xl lgWidth2">
     <div class="modal-content">
       <div class="modal-header">
         <p class="modal-title">
@@ -34,7 +34,7 @@
                   <ng-template pTemplate="header">
                     <tr>
                       <th>{{ l('TripReference') }}</th>
-                      <th>{{ l('GoodsSubCategory') }}</th>
+                      <th>{{ l('SubCategory') }}</th>
                       <th>
                         {{ l('Amount') }}
                       </th>
@@ -46,23 +46,17 @@
                         {{ l('Description') }}
                       </th>
                       <th>
-                        {{ l('IsDangerousGood') }}
+                        {{ l('IsDangerous') }}
                       </th>
                       <th>
-                        {{ l('DangerousGoodsCode') }}
-                      </th>
-                      <!-- <th>
-                        {{ l('DangerousGoodTypeId') }}
-                      </th> -->
-                      <th>
-                        {{ l('DangerousGoodsType') }}
+                        {{ l('DangerousCode') }}
                       </th>
                       <th>
-                        {{ l('otherGoodsCategoryName') }}
+                        {{ l('DangerousType') }}
                       </th>
-                      <!-- <th>
-                        {{ l('unitOfMeasureId') }}
-                      </th> -->
+                      <th>
+                        {{ l('otherCategoryName') }}
+                      </th>
                       <th>
                         {{ l('unitOfMeasure') }}
                       </th>
@@ -106,10 +100,6 @@
                         <span class="ui-column-title"> {{ l('dangerousGoodsCode') }}</span>
                         {{ record.dangerousGoodsCode }}
                       </td>
-                      <!-- <td>
-                        <span class="ui-column-title"> {{ l('dangerousGoodTypeId') }}</span>
-                        {{ record.dangerousGoodTypeId }}
-                      </td> -->
                       <td>
                         <span class="ui-column-title"> {{ l('dangerousGoodsType') }}</span>
                         {{ record.dangerousGoodsType }}
@@ -118,10 +108,6 @@
                         <span class="ui-column-title"> {{ l('otherGoodsCategoryName') }}</span>
                         {{ record.otherGoodsCategoryName }}
                       </td>
-                      <!-- <td>
-                        <span class="ui-column-title"> {{ l('unitOfMeasureId') }}</span>
-                        {{ record.unitOfMeasureId }}
-                      </td> -->
                       <td>
                         <span class="ui-column-title"> {{ l('unitOfMeasure') }}</span>
                         {{ record.unitOfMeasure }}

@@ -38,8 +38,4 @@ export class ViewImportedTripsFromExcelModalComponent extends AppComponentBase {
         this.modalSave.emit(null);
       });
   }
-
-  checkIfExceptions() {
-    return this.ImportedTripsList.some((r) => r.exception);
-  }
 }
