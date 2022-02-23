@@ -1,0 +1,7 @@
+.map {
+  height: 450px;
+}
+.preventClick {
+  pointer-events: none;
+  opacity: 80%;
+}

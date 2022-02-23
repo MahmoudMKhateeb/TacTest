@@ -1,4 +1,4 @@
-﻿import { Component, Injector, ViewEncapsulation, ViewChild } from '@angular/core';
+import { Component, Injector, ViewEncapsulation, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CitiesServiceProxy, CityDto, LoadOptionsInput } from '@shared/service-proxies/service-proxies';
 import { NotifyService } from 'abp-ng2-module';
