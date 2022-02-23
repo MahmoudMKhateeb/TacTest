@@ -35,6 +35,7 @@ using TACHYON.Authorization.Roles;
 using TACHYON.Authorization.Users.Dto;
 using TACHYON.Authorization.Users.Exporting;
 using TACHYON.Configuration;
+using TACHYON.Documents;
 using TACHYON.Documents.DocumentFiles;
 using TACHYON.Documents.DocumentsEntities;
 using TACHYON.Documents.DocumentTypes;
@@ -75,6 +76,7 @@ namespace TACHYON.Authorization.Users
         private readonly IRepository<UserOrganizationUnit, long> _userOrganizationUnitRepository;
         private readonly IRepository<OrganizationUnitRole, long> _organizationUnitRoleRepository;
         private readonly DocumentFilesAppService _documentFilesAppService;
+        private readonly DocumentFilesManager _documentFilesManager;
         private readonly IRepository<DocumentType, long> _documentTypeRepository;
         private readonly IRepository<DocumentFile, Guid> _documentFileRepository;
         private readonly WaslIntegrationManager _waslIntegrationManager;
@@ -103,7 +105,8 @@ namespace TACHYON.Authorization.Users
             DocumentFilesAppService documentFilesAppService,
             ISmsSender smsSender, 
             IRepository<User, long> userRepository, IRepository<Tenant> tenantRepository,
-            WaslIntegrationManager waslIntegrationManager)
+            WaslIntegrationManager waslIntegrationManager,
+            DocumentFilesManager documentFilesManager)
         {
             _documentFileRepository = documentFileRepository;
             _documentTypeRepository = documentTypeRepository;
@@ -128,6 +131,7 @@ namespace TACHYON.Authorization.Users
             _userRepository = userRepository;
             _tenantRepository = tenantRepository;
             _waslIntegrationManager = waslIntegrationManager;
+            _documentFilesManager = documentFilesManager;
             _roleRepository = roleRepository;
 
             AppUrlService = NullAppUrlService.Instance;
@@ -503,7 +507,7 @@ namespace TACHYON.Authorization.Users
                 {
                     item.UserId = user.Id;
                     item.Name = item.Name + "_" + user.Id.ToString();
-                    await _documentFilesAppService.CreateOrEdit(item);
+                    await _documentFilesManager.CreateOrEditDocumentFile(item);
                 }
 
                 var iosLink = await SettingManager.GetSettingValueAsync(AppSettings.Links.IosAppLink);
