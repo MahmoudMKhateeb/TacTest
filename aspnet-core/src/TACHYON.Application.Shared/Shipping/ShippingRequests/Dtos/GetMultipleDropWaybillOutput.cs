@@ -13,6 +13,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public string ShippingRequestStatus { get; set; }
         public string InvoiceNumber { get; set; }
         public string ShipperReference { get; set; }
+        public string ShipperInvoiceNo { get; set; }
         public string StartTripDate { get; set; }
         public string DeliveryDate { get; set; }
         public string CarrierName { get; set; }

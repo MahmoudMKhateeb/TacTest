@@ -396,10 +396,10 @@ namespace TACHYON.Shipping.ShippingRequests
             ShippingRequest shippingRequest;
             using (CurrentUnitOfWork.DisableFilter("IHasIsDrafted"))
             {
-                 shippingRequest = await _shippingRequestRepository.GetAll()
-                     .Include(x=> x.ShippingRequestVases)
-                  .Where(x => x.Id == id && x.IsDrafted == true)
-                  .FirstOrDefaultAsync();
+                shippingRequest = await _shippingRequestRepository.GetAll()
+                    .Include(x => x.ShippingRequestVases)
+                 .Where(x => x.Id == id && x.IsDrafted == true)
+                 .FirstOrDefaultAsync();
             }
 
             if (shippingRequest.DraftStep < 4)
@@ -1136,7 +1136,8 @@ namespace TACHYON.Shipping.ShippingRequests
                         CarrierName = x.CarrierName,
                         TotalWeight = x.TotalWeight,
                         ShipperReference = x.ShipperReference,
-                        InvoiceNumber = x.ShipperInvoiceNo,//GetInvoiceNumberByTripId(shippingRequestTripId),
+                        ShipperInvoiceNo = x.ShipperInvoiceNo,
+                        InvoiceNumber = GetInvoiceNumberByTripId(shippingRequestTripId).ToString(),//GetInvoiceNumberByTripId(shippingRequestTripId),
                         ClientName = x.ClientName,
                         ShipperNotes = x.ShipperNotes
                     });
@@ -1230,6 +1231,7 @@ namespace TACHYON.Shipping.ShippingRequests
                         HasAttachment = x.HasAttachment,
                         NeedsDeliveryNote = x.NeedDeliveryNote,
                         ShipperReference = x.ShipperReference, /*TAC-2181 || 22/12/2021 || need to display it as an empty on production*/
+                        ShipperInvoiceNo = x.ShipperInvoiceNo, /*TAC-2181 || 22/12/2021 || need to display it as an empty on production*/
                         InvoiceNumber = GetInvoiceNumberByTripId(shippingRequestTripId).ToString()
 
                     });
@@ -1330,6 +1332,7 @@ namespace TACHYON.Shipping.ShippingRequests
                         HasAttachment = x.HasAttachment,
                         NeedsDeliveryNote = x.NeedsDeliveryNote,
                         ShipperReference = x.ShipperReference,/*TAC-2181 || 22/12/2021 || need to display it as an empty on production*/
+                        ShipperInvoiceNo = x.ShipperInvoiceNo,
                         InvoiceNumber = GetInvoiceNumberByTripId(x.Id).ToString()
                     });
 

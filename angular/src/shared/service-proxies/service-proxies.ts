@@ -74053,6 +74053,7 @@ export enum PriceOfferChannel {
   MarketPlace = 1,
   DirectRequest = 2,
   TachyonManageService = 3,
+  CarrierAsSaas = 4,
   Offers = 10,
 }
 
@@ -86561,6 +86562,7 @@ export class GetMasterWaybillOutput implements IGetMasterWaybillOutput {
   shippingRequestStatus!: string | undefined;
   invoiceNumber!: string | undefined;
   shipperReference!: string | undefined;
+  shipperInvoiceNo!: string | undefined;
   totalWeight!: number;
   shipperNotes!: string | undefined;
   companyName!: string | undefined;
@@ -86597,6 +86599,7 @@ export class GetMasterWaybillOutput implements IGetMasterWaybillOutput {
       this.shippingRequestStatus = _data['shippingRequestStatus'];
       this.invoiceNumber = _data['invoiceNumber'];
       this.shipperReference = _data['shipperReference'];
+      this.shipperInvoiceNo = _data['shipperInvoiceNo'];
       this.totalWeight = _data['totalWeight'];
       this.shipperNotes = _data['shipperNotes'];
       this.companyName = _data['companyName'];
@@ -86634,6 +86637,7 @@ export class GetMasterWaybillOutput implements IGetMasterWaybillOutput {
     data['shippingRequestStatus'] = this.shippingRequestStatus;
     data['invoiceNumber'] = this.invoiceNumber;
     data['shipperReference'] = this.shipperReference;
+    data['shipperInvoiceNo'] = this.shipperInvoiceNo;
     data['totalWeight'] = this.totalWeight;
     data['shipperNotes'] = this.shipperNotes;
     data['companyName'] = this.companyName;
@@ -86664,6 +86668,7 @@ export interface IGetMasterWaybillOutput {
   shippingRequestStatus: string | undefined;
   invoiceNumber: string | undefined;
   shipperReference: string | undefined;
+  shipperInvoiceNo: string | undefined;
   totalWeight: number;
   shipperNotes: string | undefined;
   companyName: string | undefined;
@@ -86692,6 +86697,7 @@ export class GetSingleDropWaybillOutput implements IGetSingleDropWaybillOutput {
   shippingRequestStatus!: string | undefined;
   invoiceNumber!: string | undefined;
   shipperReference!: string | undefined;
+  shipperInvoiceNo!: string | undefined;
   startTripDate!: string | undefined;
   actualPickupDate!: string | undefined;
   deliveryDate!: string | undefined;
@@ -86738,6 +86744,7 @@ export class GetSingleDropWaybillOutput implements IGetSingleDropWaybillOutput {
       this.shippingRequestStatus = _data['shippingRequestStatus'];
       this.invoiceNumber = _data['invoiceNumber'];
       this.shipperReference = _data['shipperReference'];
+      this.shipperInvoiceNo = _data['shipperInvoiceNo'];
       this.startTripDate = _data['startTripDate'];
       this.actualPickupDate = _data['actualPickupDate'];
       this.deliveryDate = _data['deliveryDate'];
@@ -86785,6 +86792,7 @@ export class GetSingleDropWaybillOutput implements IGetSingleDropWaybillOutput {
     data['shippingRequestStatus'] = this.shippingRequestStatus;
     data['invoiceNumber'] = this.invoiceNumber;
     data['shipperReference'] = this.shipperReference;
+    data['shipperInvoiceNo'] = this.shipperInvoiceNo;
     data['startTripDate'] = this.startTripDate;
     data['actualPickupDate'] = this.actualPickupDate;
     data['deliveryDate'] = this.deliveryDate;
@@ -86825,6 +86833,7 @@ export interface IGetSingleDropWaybillOutput {
   shippingRequestStatus: string | undefined;
   invoiceNumber: string | undefined;
   shipperReference: string | undefined;
+  shipperInvoiceNo: string | undefined;
   startTripDate: string | undefined;
   actualPickupDate: string | undefined;
   deliveryDate: string | undefined;
@@ -86864,6 +86873,7 @@ export class GetMultipleDropWaybillOutput implements IGetMultipleDropWaybillOutp
   shippingRequestStatus!: string | undefined;
   invoiceNumber!: string | undefined;
   shipperReference!: string | undefined;
+  shipperInvoiceNo!: string | undefined;
   startTripDate!: string | undefined;
   deliveryDate!: string | undefined;
   carrierName!: string | undefined;
@@ -86906,6 +86916,7 @@ export class GetMultipleDropWaybillOutput implements IGetMultipleDropWaybillOutp
       this.shippingRequestStatus = _data['shippingRequestStatus'];
       this.invoiceNumber = _data['invoiceNumber'];
       this.shipperReference = _data['shipperReference'];
+      this.shipperInvoiceNo = _data['shipperInvoiceNo'];
       this.startTripDate = _data['startTripDate'];
       this.deliveryDate = _data['deliveryDate'];
       this.carrierName = _data['carrierName'];
@@ -86949,6 +86960,7 @@ export class GetMultipleDropWaybillOutput implements IGetMultipleDropWaybillOutp
     data['shippingRequestStatus'] = this.shippingRequestStatus;
     data['invoiceNumber'] = this.invoiceNumber;
     data['shipperReference'] = this.shipperReference;
+    data['shipperInvoiceNo'] = this.shipperInvoiceNo;
     data['startTripDate'] = this.startTripDate;
     data['deliveryDate'] = this.deliveryDate;
     data['carrierName'] = this.carrierName;
@@ -86985,6 +86997,7 @@ export interface IGetMultipleDropWaybillOutput {
   shippingRequestStatus: string | undefined;
   invoiceNumber: string | undefined;
   shipperReference: string | undefined;
+  shipperInvoiceNo: string | undefined;
   startTripDate: string | undefined;
   deliveryDate: string | undefined;
   carrierName: string | undefined;
