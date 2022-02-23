@@ -33,7 +33,7 @@
                 >
                   <ng-template pTemplate="header">
                     <tr>
-                      <!-- <th>{{ l('GoodCategoryId') }}</th> -->
+                      <th>{{ l('TripReference') }}</th>
                       <th>{{ l('GoodsSubCategory') }}</th>
                       <th>
                         {{ l('Amount') }}
@@ -73,18 +73,15 @@
                   </ng-template>
                   <ng-template let-record="$implicit" pTemplate="body" let-i="rowIndex">
                     <tr [class]="record.exception ? 'alert alert-custom alert-light-warning' : 'alert alert-custom alert-light-success customAlert'">
-                      <!-- <td>
-                        <span class="ui-column-title"> {{ l('goodCategoryId') }}</span>
-                        {{ record.goodCategoryId }}
-                      </td> -->
+                      <td>
+                        <span class="ui-column-title"> {{ l('TripReference') }}</span>
+                        {{ record.tripReference }}
+                      </td>
                       <td>
                         <span class="ui-column-title"> {{ l('goodsSubCategory') }}</span>
                         {{ record.goodsSubCategory }}
                       </td>
-                      <td>
-                        <span class="ui-column-title"> {{ l('endTripDate') }}</span>
-                        {{ record.endTripDate | momentFormat: 'YYYY-MM-DD' }}
-                      </td>
+
                       <td>
                         <span class="ui-column-title"> {{ l('amount') }}</span>
                         {{ record.amount }}

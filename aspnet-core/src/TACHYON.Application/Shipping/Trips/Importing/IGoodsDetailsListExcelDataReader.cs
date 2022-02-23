@@ -8,6 +8,6 @@ namespace TACHYON.Shipping.Trips.Importing
 {
     public interface IGoodsDetailsListExcelDataReader : ITransientDependency
     {
-        List<ImportGoodsDetailsDto> GetGoodsDetailsFromExcel(byte[] fileBytes, long shippingRequestId, int requestGoodsCategoryId);
+        List<ImportGoodsDetailsDto> GetGoodsDetailsFromExcel(byte[] fileBytes, long shippingRequestId,int requestGoodsCategoryId , bool isSingleDropRequest);
     }
 }

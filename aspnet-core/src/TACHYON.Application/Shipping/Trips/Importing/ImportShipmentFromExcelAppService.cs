@@ -131,7 +131,7 @@ namespace TACHYON.Shipping.Trips.Importing
         public async Task<List<ImportGoodsDetailsDto>> ImportGoodsDetailsFromExcel(ImportGoodsDetailsFromExcelInput input)
         {
             var request = _shippingRequestTripManager.GetShippingRequestByPermission(input.ShippingRequestId);
-            var goodsDetails = await GetGoodsDetailsListFromExcelOrNull(input, request.GoodCategoryId.Value);
+            var goodsDetails = await GetGoodsDetailsListFromExcelOrNull(input, request.GoodCategoryId.Value,IsSingleDropRequest(request));
             BindTripIdFromReference(goodsDetails, request);
             ValidateGoodsDetails(request, goodsDetails);
 
@@ -261,14 +261,14 @@ namespace TACHYON.Shipping.Trips.Importing
             }
         }
 
-        private async Task<List<ImportGoodsDetailsDto>> GetGoodsDetailsListFromExcelOrNull(ImportGoodsDetailsFromExcelInput input, int requestGoodsCategory)
+        private async Task<List<ImportGoodsDetailsDto>> GetGoodsDetailsListFromExcelOrNull(ImportGoodsDetailsFromExcelInput input, int requestGoodsCategory, bool isSingleDropRequest)
         {
             using (CurrentUnitOfWork.SetTenantId(input.TenantId))
             {
                 try
                 {
                     var file = await _binaryObjectManager.GetOrNullAsync(input.BinaryObjectId);
-                    return _goodsDetailsListExcelDataReader.GetGoodsDetailsFromExcel(file.Bytes, input.ShippingRequestId, requestGoodsCategory);
+                    return _goodsDetailsListExcelDataReader.GetGoodsDetailsFromExcel(file.Bytes, input.ShippingRequestId, requestGoodsCategory, isSingleDropRequest);
                 }
                 catch
                 {
