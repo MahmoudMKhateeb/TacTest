@@ -91025,7 +91025,6 @@ export class CityPolygonLookupTableDto implements ICityPolygonLookupTableDto {
   id!: string | undefined;
   isOther!: boolean | undefined;
   displayName!: string | undefined;
-  translatedDisplayName!: string | undefined;
 
   constructor(data?: ICityPolygonLookupTableDto) {
     if (data) {
@@ -91042,7 +91041,6 @@ export class CityPolygonLookupTableDto implements ICityPolygonLookupTableDto {
       this.id = _data['id'];
       this.isOther = _data['isOther'];
       this.displayName = _data['displayName'];
-      this.translatedDisplayName = _data['translatedDisplayName'];
     }
   }
 
@@ -91060,7 +91058,6 @@ export class CityPolygonLookupTableDto implements ICityPolygonLookupTableDto {
     data['id'] = this.id;
     data['isOther'] = this.isOther;
     data['displayName'] = this.displayName;
-    data['translatedDisplayName'] = this.translatedDisplayName;
     return data;
   }
 }
@@ -91071,7 +91068,6 @@ export interface ICityPolygonLookupTableDto {
   id: string | undefined;
   isOther: boolean | undefined;
   displayName: string | undefined;
-  translatedDisplayName: string | undefined;
 }
 
 export class TermAndConditionDto implements ITermAndConditionDto {

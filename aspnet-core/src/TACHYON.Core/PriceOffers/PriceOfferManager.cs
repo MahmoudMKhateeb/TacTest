@@ -237,7 +237,7 @@ namespace TACHYON.PriceOffers
                 //request.Status = ShippingRequestStatus.AcceptedAndWaitingCarrier;
             }
 
-             SetShippingRequestPricing(offer);
+            SetShippingRequestPricing(offer);
             await _appNotifier.ShipperAcceptedOffer(offer);
             return offer.Status;
         }
@@ -267,7 +267,7 @@ namespace TACHYON.PriceOffers
                 await _appNotifier.TMSAcceptedOffer(offer);
 
             }
-            await SetShippingRequestPricing(offer);
+            SetShippingRequestPricing(offer);
             await _appNotifier.ShipperAcceptedOffer(offer);
             return offer.Status;
         }
@@ -470,7 +470,7 @@ namespace TACHYON.PriceOffers
             request.VatSetting = offer.TaxVat;
             request.TotalCommission = offer.TotalAmountWithCommission;
             request.CarrierPrice = offer.TotalAmount;
-            
+
         }
 
         /// <summary>
