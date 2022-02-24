@@ -74053,6 +74053,7 @@ export enum PriceOfferChannel {
   MarketPlace = 1,
   DirectRequest = 2,
   TachyonManageService = 3,
+  CarrierAsSaas = 4,
   Offers = 10,
 }
 
@@ -87493,7 +87494,7 @@ export class ShippingRequestsTripForViewDto implements IShippingRequestsTripForV
   endTripDate!: moment.Moment | undefined;
   startWorking!: moment.Moment | undefined;
   endWorking!: moment.Moment | undefined;
-  status!: string | undefined;
+  statusTitle!: string | undefined;
   routePointStatus!: string | undefined;
   assignedDriverUserId!: number | undefined;
   assignedTruckId!: number | undefined;
@@ -87511,6 +87512,8 @@ export class ShippingRequestsTripForViewDto implements IShippingRequestsTripForV
   rejectedReason!: string | undefined;
   totalValue!: string | undefined;
   note!: string | undefined;
+  waybillNumber!: number | undefined;
+  status!: ShippingRequestTripStatus;
 
   constructor(data?: IShippingRequestsTripForViewDto) {
     if (data) {
@@ -87526,7 +87529,7 @@ export class ShippingRequestsTripForViewDto implements IShippingRequestsTripForV
       this.endTripDate = _data['endTripDate'] ? moment(_data['endTripDate'].toString()) : <any>undefined;
       this.startWorking = _data['startWorking'] ? moment(_data['startWorking'].toString()) : <any>undefined;
       this.endWorking = _data['endWorking'] ? moment(_data['endWorking'].toString()) : <any>undefined;
-      this.status = _data['status'];
+      this.statusTitle = _data['statusTitle'];
       this.routePointStatus = _data['routePointStatus'];
       this.assignedDriverUserId = _data['assignedDriverUserId'];
       this.assignedTruckId = _data['assignedTruckId'];
@@ -87550,6 +87553,8 @@ export class ShippingRequestsTripForViewDto implements IShippingRequestsTripForV
       this.rejectedReason = _data['rejectedReason'];
       this.totalValue = _data['totalValue'];
       this.note = _data['note'];
+      this.waybillNumber = _data['waybillNumber'];
+      this.status = _data['status'];
     }
   }
 
@@ -87566,7 +87571,7 @@ export class ShippingRequestsTripForViewDto implements IShippingRequestsTripForV
     data['endTripDate'] = this.endTripDate ? this.endTripDate.toISOString() : <any>undefined;
     data['startWorking'] = this.startWorking ? this.startWorking.toISOString() : <any>undefined;
     data['endWorking'] = this.endWorking ? this.endWorking.toISOString() : <any>undefined;
-    data['status'] = this.status;
+    data['statusTitle'] = this.statusTitle;
     data['routePointStatus'] = this.routePointStatus;
     data['assignedDriverUserId'] = this.assignedDriverUserId;
     data['assignedTruckId'] = this.assignedTruckId;
@@ -87590,6 +87595,8 @@ export class ShippingRequestsTripForViewDto implements IShippingRequestsTripForV
     data['rejectedReason'] = this.rejectedReason;
     data['totalValue'] = this.totalValue;
     data['note'] = this.note;
+    data['waybillNumber'] = this.waybillNumber;
+    data['status'] = this.status;
     return data;
   }
 }
@@ -87599,7 +87606,7 @@ export interface IShippingRequestsTripForViewDto {
   endTripDate: moment.Moment | undefined;
   startWorking: moment.Moment | undefined;
   endWorking: moment.Moment | undefined;
-  status: string | undefined;
+  statusTitle: string | undefined;
   routePointStatus: string | undefined;
   assignedDriverUserId: number | undefined;
   assignedTruckId: number | undefined;
@@ -87617,6 +87624,8 @@ export interface IShippingRequestsTripForViewDto {
   rejectedReason: string | undefined;
   totalValue: string | undefined;
   note: string | undefined;
+  waybillNumber: number | undefined;
+  status: ShippingRequestTripStatus;
 }
 
 export class CreateOrEditShippingRequestTripVasDto implements ICreateOrEditShippingRequestTripVasDto {

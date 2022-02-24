@@ -12,6 +12,7 @@ import {
   AssignDriverAndTruckToShippmentByCarrierInput,
   ShippingRequestDriverServiceProxy,
   GetShippingRequestForViewOutput,
+  ShippingRequestTripStatus,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { finalize } from '@node_modules/rxjs/operators';
@@ -42,7 +43,7 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit {
   isResetTripLoading = false;
   private TruckTypeId: number;
   pickUpPointSender: string;
-
+  shippingRequestTripStatusEnum = ShippingRequestTripStatus;
   constructor(
     injector: Injector,
     private _routStepsServiceProxy: RoutStepsServiceProxy,
