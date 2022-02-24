@@ -131,11 +131,39 @@
           <DataField>ShipperNotes</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="ShipperInvoiceNo">
+          <DataField>ShipperInvoiceNo</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
       </Fields>
       <rd:DataSetInfo>
         <rd:DataSetName>DataSet1</rd:DataSetName>
-        <rd:SchemaPath>C:\Users\DELL\source\repos\tachyon-core2\aspnet-core\src\TACHYON.Application\Waybills\Reports\DataSet1.xsd</rd:SchemaPath>
+        <rd:SchemaPath>E:\TrustAngleProjects\aspnet-core\src\TACHYON.Application\Waybills\Reports\DataSet1.xsd</rd:SchemaPath>
         <rd:TableName>Trucks</rd:TableName>
+        <rd:TableAdapterFillMethod />
+        <rd:TableAdapterGetDataMethod />
+        <rd:TableAdapterName />
+      </rd:DataSetInfo>
+    </DataSet>
+    <DataSet Name="GetDropDetailsDS">
+      <Query>
+        <DataSourceName>GetDropDetailsDS</DataSourceName>
+        <CommandText>/* Local Query */</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="Code">
+          <DataField>Code</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ReceiverDisplayName">
+          <DataField>ReceiverDisplayName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+      <rd:DataSetInfo>
+        <rd:DataSetName>GetDropDetailsDS</rd:DataSetName>
+        <rd:SchemaPath>E:\TrustAngleProjects\aspnet-core\src\TACHYON.Application\Waybills\Reports\GetDropDetailsDS.xsd</rd:SchemaPath>
+        <rd:TableName>DataTable1</rd:TableName>
         <rd:TableAdapterFillMethod />
         <rd:TableAdapterGetDataMethod />
         <rd:TableAdapterName />
@@ -162,31 +190,7 @@
       </Fields>
       <rd:DataSetInfo>
         <rd:DataSetName>SingleDropVasDataSet</rd:DataSetName>
-        <rd:SchemaPath>C:\Users\tasneem\source\repos\tachyonhub\tachyon-core\aspnet-core\src\TACHYON.Application\Waybills\Reports\SingleDropVasDataSet.xsd</rd:SchemaPath>
-        <rd:TableName>DataTable1</rd:TableName>
-        <rd:TableAdapterFillMethod />
-        <rd:TableAdapterGetDataMethod />
-        <rd:TableAdapterName />
-      </rd:DataSetInfo>
-    </DataSet>
-    <DataSet Name="GetDropDetailsDS">
-      <Query>
-        <DataSourceName>GetDropDetailsDS</DataSourceName>
-        <CommandText>/* Local Query */</CommandText>
-      </Query>
-      <Fields>
-        <Field Name="Code">
-          <DataField>Code</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="ReceiverDisplayName">
-          <DataField>ReceiverDisplayName</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-      </Fields>
-      <rd:DataSetInfo>
-        <rd:DataSetName>GetDropDetailsDS</rd:DataSetName>
-        <rd:SchemaPath>C:\Users\tasneem\source\repos\tachyonhub\tachyon-core\aspnet-core\src\TACHYON.Application\Waybills\Reports\GetDropDetailsDS.xsd</rd:SchemaPath>
+        <rd:SchemaPath>E:\TrustAngleProjects\aspnet-core\src\TACHYON.Application\Waybills\Reports\SingleDropVasDataSet.xsd</rd:SchemaPath>
         <rd:TableName>DataTable1</rd:TableName>
         <rd:TableAdapterFillMethod />
         <rd:TableAdapterGetDataMethod />
@@ -292,8 +296,8 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>0.48352in</Top>
-            <Left>0.22165in</Left>
+            <Top>0.81479in</Top>
+            <Left>0.23237in</Left>
             <Height>0.68819cm</Height>
             <Width>3.3992in</Width>
             <ZIndex>2</ZIndex>
@@ -366,8 +370,8 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>0.82352in</Top>
-            <Left>0.22165in</Left>
+            <Top>1.15479in</Top>
+            <Left>0.23237in</Left>
             <Height>0.68819cm</Height>
             <Width>3.3992in</Width>
             <ZIndex>4</ZIndex>
@@ -441,9 +445,9 @@
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
             <Top>1.15001in</Top>
-            <Left>0.22165in</Left>
+            <Left>3.67718in</Left>
             <Height>0.68819cm</Height>
-            <Width>6.85484in</Width>
+            <Width>3.39931in</Width>
             <ZIndex>6</ZIndex>
             <Style>
               <Border>
@@ -1211,8 +1215,8 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>0.52584in</Top>
-            <Left>2.76187in</Left>
+            <Top>0.85711in</Top>
+            <Left>2.77259in</Left>
             <Height>0.18639in</Height>
             <Width>0.82827in</Width>
             <ZIndex>16</ZIndex>
@@ -1259,8 +1263,8 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>0.52584in</Top>
-            <Left>0.26622in</Left>
+            <Top>0.85711in</Top>
+            <Left>0.27694in</Left>
             <Height>0.18639in</Height>
             <Width>0.77368in</Width>
             <ZIndex>17</ZIndex>
@@ -1297,8 +1301,8 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox82</rd:DefaultName>
-            <Top>0.52584in</Top>
-            <Left>1.19653in</Left>
+            <Top>0.85711in</Top>
+            <Left>1.20725in</Left>
             <Height>0.18639in</Height>
             <Width>1.56534in</Width>
             <ZIndex>18</ZIndex>
@@ -1460,7 +1464,7 @@
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
             <Top>1.17574in</Top>
-            <Left>0.26622in</Left>
+            <Left>3.7115in</Left>
             <Height>0.18203in</Height>
             <Width>0.79052in</Width>
             <ZIndex>22</ZIndex>
@@ -1495,7 +1499,7 @@
             </Paragraphs>
             <rd:DefaultName>Textbox88</rd:DefaultName>
             <Top>1.17574in</Top>
-            <Left>3.06402in</Left>
+            <Left>4.8075in</Left>
             <Height>0.24521in</Height>
             <Width>1.59999in</Width>
             <ZIndex>23</ZIndex>
@@ -2216,8 +2220,8 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>0.88518in</Top>
-            <Left>2.77286in</Left>
+            <Top>1.21645in</Top>
+            <Left>2.78358in</Left>
             <Height>0.18203in</Height>
             <Width>0.82827in</Width>
             <ZIndex>39</ZIndex>
@@ -2264,8 +2268,8 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>0.86147in</Top>
-            <Left>0.2543in</Left>
+            <Top>1.19274in</Top>
+            <Left>0.26502in</Left>
             <Height>0.18203in</Height>
             <Width>0.99818in</Width>
             <ZIndex>40</ZIndex>
@@ -2301,8 +2305,8 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox82</rd:DefaultName>
-            <Top>0.82352in</Top>
-            <Left>1.29414in</Left>
+            <Top>1.15479in</Top>
+            <Left>1.30486in</Left>
             <Height>0.24369in</Height>
             <Width>1.55864in</Width>
             <ZIndex>41</ZIndex>
@@ -5708,6 +5712,152 @@
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Textbox79">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value />
+                    <Style>
+                      <FontSize>8pt</FontSize>
+                      <Color>#282828</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Right</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox3</rd:DefaultName>
+            <Top>0.48352in</Top>
+            <Left>0.22436in</Left>
+            <Height>0.68819cm</Height>
+            <Width>3.39931in</Width>
+            <ZIndex>57</ZIndex>
+            <Style>
+              <Border>
+                <Color>#707070</Color>
+                <Style>Solid</Style>
+              </Border>
+              <VerticalAlign>Middle</VerticalAlign>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Textbox10">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>:رقم فاتورة المراجعة</Value>
+                    <Style>
+                      <FontSize>8pt</FontSize>
+                      <FontWeight>SemiBold</FontWeight>
+                      <Color>#404040</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Right</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox3</rd:DefaultName>
+            <Top>0.5002in</Top>
+            <Left>2.65073in</Left>
+            <Height>0.21202in</Height>
+            <Width>0.90178in</Width>
+            <ZIndex>58</ZIndex>
+            <Style>
+              <Border>
+                <Color>White</Color>
+                <Style>Solid</Style>
+              </Border>
+              <VerticalAlign>Middle</VerticalAlign>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Textbox87">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Shipper Invoice No</Value>
+                    <Style>
+                      <FontFamily>Open Sans</FontFamily>
+                      <FontSize>8pt</FontSize>
+                      <FontWeight>SemiBold</FontWeight>
+                      <Color>#404040</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox3</rd:DefaultName>
+            <Top>0.5002in</Top>
+            <Left>0.275in</Left>
+            <Height>0.21203in</Height>
+            <Width>1.26455in</Width>
+            <ZIndex>59</ZIndex>
+            <Style>
+              <Border>
+                <Color>White</Color>
+                <Style>Solid</Style>
+              </Border>
+              <VerticalAlign>Middle</VerticalAlign>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Textbox90">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=First(Fields!ShipperInvoiceNo.Value, "DataSet1")</Value>
+                    <Style>
+                      <FontFamily>Open Sans</FontFamily>
+                      <FontSize>8pt</FontSize>
+                      <Color>#404040</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox88</rd:DefaultName>
+            <Top>0.5002in</Top>
+            <Left>1.48381in</Left>
+            <Height>0.21203in</Height>
+            <Width>1.11136in</Width>
+            <ZIndex>60</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>4pt</PaddingTop>
               <PaddingBottom>2pt</PaddingBottom>
             </Style>
           </Textbox>

@@ -14,6 +14,8 @@ namespace TACHYON.Cities.Dtos
 
         public double Longitude { get; set; }
 
+        public bool HasPolygon { get; set; }
+
         public int CountyId { get; set; }
         public bool IsActive { get; set; }
 

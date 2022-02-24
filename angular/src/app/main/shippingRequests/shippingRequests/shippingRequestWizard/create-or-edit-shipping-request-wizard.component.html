@@ -312,52 +312,116 @@
                   <div class="pb-5" [formGroup]="step2Form" data-wizard-type="step-content">
                     <div class="row">
                       <!-- Start of Select Source -->
+                      <!--    Countries    -->
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <label>{{ l('OriginCountry') }} <span class="required-fileds">*</span> </label>
+                          <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allCountries }">
+                            <select
+                              class="form-control"
+                              name="originCountry"
+                              formControlName="originCountry"
+                              [(ngModel)]="originCountry"
+                              [class.is-valid]="
+                                step2Form.get('originCountry').valid &&
+                                (step2Form.get('originCountry').dirty || step2Form.get('originCountry').touched)
+                              "
+                              [class.is-invalid]="
+                                step2Form.get('originCountry').invalid &&
+                                (step2Form.get('originCountry').dirty || step2Form.get('originCountry').touched)
+                              "
+                              (ngModelChange)="validateShippingRequestType()"
+                              (change)="loadCitiesByCountryId(originCountry, 'source')"
+                              required
+                            >
+                              <option value="undefined">{{ l('SelectanOriginCountry') }}</option>
+                              <option *ngFor="let item of allCountries" value="{{ item.id }}">{{ item.displayName }}</option>
+                            </select>
+                          </div>
+
+                          <span class="form-text text-muted">{{ l('SelectaCountry') }}</span>
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <label> {{ l('DestinationCountry') }}<span class="required-fileds">*</span></label>
+                          <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allCountries }">
+                            <select
+                              class="form-control"
+                              name="destinationCountry"
+                              formControlName="destinationCountry"
+                              [(ngModel)]="destinationCountry"
+                              [class.is-valid]="
+                                step2Form.get('destinationCountry').valid &&
+                                (step2Form.get('destinationCountry').dirty || step2Form.get('destinationCountry').touched)
+                              "
+                              [class.is-invalid]="
+                                step2Form.get('destinationCountry').invalid &&
+                                (step2Form.get('destinationCountry').dirty || step2Form.get('destinationCountry').touched)
+                              "
+                              [attr.disabled]="step1Dto.shippingTypeId == 2 || step1Dto.shippingTypeId == 1 ? true : null"
+                              (ngModelChange)="validateShippingRequestType()"
+                              (change)="loadCitiesByCountryId(destinationCountry, 'destination')"
+                              required
+                            >
+                              <option value="undefined">{{ l('selectaDestination') }}</option>
+                              <option *ngFor="let item of allCountries" value="{{ item.id }}">{{ item.displayName }}</option>
+                            </select>
+                            <div class="invalid-feedback">{{ l('SourceAndDestinationCantBeTheSame') }}</div>
+                          </div>
+                          <span class="form-text text-muted">{{ l('SelectaCountry') }}</span>
+                        </div>
+                      </div>
+                      <!--    Cities        -->
                       <div class="col-lg-6">
                         <div class="form-group">
                           <label>{{ l('OriginCity') }} <span class="required-fileds">*</span> </label>
-                          <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allCitys }">
+                          <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': citiesLoading }">
                             <select
                               class="form-control"
-                              name="origin"
-                              formControlName="origin"
-                              [attr.disabled]="allCitys ? null : true"
+                              name="originCity"
+                              formControlName="originCity"
                               [(ngModel)]="step2Dto.originCityId"
-                              [class.is-valid]="step2Form.get('origin').valid && (step2Form.get('origin').dirty || step2Form.get('origin').touched)"
+                              [class.is-valid]="
+                                step2Form.get('originCity').valid && (step2Form.get('originCity').dirty || step2Form.get('originCity').touched)
+                              "
                               [class.is-invalid]="
-                                step2Form.get('origin').invalid && (step2Form.get('origin').dirty || step2Form.get('origin').touched)
+                                step2Form.get('originCity').invalid && (step2Form.get('originCity').dirty || step2Form.get('originCity').touched)
                               "
                               (ngModelChange)="validateShippingRequestType()"
                               required
                             >
-                              <option value="undefined">{{ l('SelectanOriginCity') }}</option>
-                              <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }}</option>
+                              <option [ngValue]="null" selected disabled>{{ l('SelectanOriginCity') }}</option>
+                              <option *ngFor="let item of sourceCities" value="{{ item.id }}">{{ item.displayName }}</option>
                             </select>
                           </div>
 
-                          <span class="form-text text-muted">{{ l('SelectaCity') }}</span>
+                          <span class="form-text text-muted">{{ l('SelectaCountry') }}</span>
                         </div>
                       </div>
                       <div class="col-lg-6">
                         <div class="form-group">
                           <label> {{ l('DestinationCity') }}<span class="required-fileds">*</span></label>
-                          <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allCitys }">
+                          <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': citiesLoading }">
                             <select
                               class="form-control"
-                              name="destination"
-                              formControlName="destination"
+                              name="destinationCity"
+                              formControlName="destinationCity"
                               [(ngModel)]="step2Dto.destinationCityId"
                               [class.is-valid]="
-                                step2Form.get('destination').valid && (step2Form.get('destination').dirty || step2Form.get('destination').touched)
+                                step2Form.get('destinationCity').valid &&
+                                (step2Form.get('destinationCity').dirty || step2Form.get('destinationCity').touched)
                               "
                               [class.is-invalid]="
-                                step2Form.get('destination').invalid && (step2Form.get('destination').dirty || step2Form.get('destination').touched)
+                                step2Form.get('destinationCity').invalid &&
+                                (step2Form.get('destinationCity').dirty || step2Form.get('destinationCity').touched)
                               "
                               [attr.disabled]="step1Dto.shippingTypeId == 1 ? true : null"
                               (ngModelChange)="validateShippingRequestType()"
                               required
                             >
                               <option value="undefined">{{ l('selectaDestination') }}</option>
-                              <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }}</option>
+                              <option *ngFor="let item of destinationCities" value="{{ item.id }}">{{ item.displayName }}</option>
                             </select>
                             <div class="invalid-feedback">{{ l('SourceAndDestinationCantBeTheSame') }}</div>
                           </div>
@@ -779,6 +843,7 @@
                                   [required]="!selectedVasesProperties[item.vasId].vasCountDisabled"
                                   class="form-control"
                                   name="VasCount{{ i }}"
+                                  min="0"
                                   [class.is-invalid]="VasCount.touched && !VasCount.disabled && item.requestMaxCount <= 0"
                                   [class.is-valid]="VasCount.touched && VasCount.valid && item.requestMaxCount > 0"
                                 />
@@ -794,6 +859,7 @@
                                   [required]="!selectedVasesProperties[item.vasId].vasAmountDisabled"
                                   class="form-control"
                                   name="VasAmount2{{ i }}"
+                                  min="0"
                                   [class.is-invalid]="VasAmount2.touched && !VasAmount2.disabled && item.requestMaxAmount <= 0"
                                   [class.is-valid]="VasAmount2.touched && VasAmount2.valid && item.requestMaxAmount > 0"
                                 />
@@ -808,7 +874,10 @@
                                   class="form-control"
                                   name="numberOfTrips{{ i }}"
                                   required
-                                  [class.is-invalid]="numberOfTrips.touched && !numberOfTrips.valid && step2Dto.numberOfTrips < item.numberOfTrips"
+                                  [class.is-invalid]="
+                                    numberOfTrips.touched &&
+                                    (!numberOfTrips.valid || item.numberOfTrips == 0 || step2Dto.numberOfTrips < item.numberOfTrips)
+                                  "
                                   [class.is-valid]="numberOfTrips.touched && numberOfTrips.valid && step2Dto.numberOfTrips >= item.numberOfTrips"
                                   [max]="step2Dto.numberOfTrips"
                                   min="0"

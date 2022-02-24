@@ -9,6 +9,7 @@ import {
   ShippingRequestDto,
   ShippingRequestsServiceProxy,
   ShippingRequestsTripServiceProxy,
+  ShippingRequestTripStatus,
 } from '@shared/service-proxies/service-proxies';
 import { CreateOrEditTripComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/createOrEditTripModal/createOrEditTrip.component';
 import { ViewTripModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/viewTripModal/viewTripModal.component';
@@ -29,8 +30,9 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   @Input() ShippingRequest: ShippingRequestDto;
   @Input() shippingRequestForView: any;
   @Input() VasListFromFather: GetShippingRequestVasForViewDto[];
-  tripsByTmsEnabled: boolean;
+  tripsByTmsEnabled = false;
   saving = false;
+  ShippingRequestTripStatus = ShippingRequestTripStatus;
   constructor(
     injector: Injector,
     private _TripService: TripService,
@@ -86,7 +88,6 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
       if (result.value) {
         this.saving = true;
         this._shippingRequestTripsService.changeAddTripsByTmsFeature().subscribe(() => {
-          this.tripsByTmsEnabled = !this.tripsByTmsEnabled;
           this.saving = false;
         });
       } //end of if
@@ -100,10 +101,23 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
     // update Trip Service and send vases list to trip component
     this._shippingRequestsServiceProxy.getShippingRequestForView(this.ShippingRequest.id).subscribe((result) => {
       this.VasListFromFather = result.shippingRequestVasDtoList;
+      this.tripsByTmsEnabled = result.shippingRequest.addTripsByTmsEnabled;
       this._TripService.updateShippingRequest(result);
     });
 
     this.primengTableHelper.adjustScroll(this.dataTable);
-    this.tripsByTmsEnabled = this.ShippingRequest.addTripsByTmsEnabled;
+  }
+
+  /**
+   * check if user can reset a trip
+   * if user is Carrier/TMS and the Trip Status is not new/Delivered
+   * @param record
+   */
+  canResetTrip(record): boolean {
+    return (
+      (this.isCarrier || this.isTachyonDealer) &&
+      record.status !== this.ShippingRequestTripStatus.New &&
+      record.status !== this.ShippingRequestTripStatus.Delivered
+    );
   }
 }

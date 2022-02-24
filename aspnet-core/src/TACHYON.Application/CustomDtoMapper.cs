@@ -449,6 +449,7 @@ namespace TACHYON
             configuration.CreateMap<CreateOrEditCityDto, City>().ForMember(x => x.Translations, x => x.Ignore());
 
             configuration.CreateMap<City, CityDto>()
+                .ForMember(x=> x.HasPolygon, x=> x.MapFrom(i=> !i.Polygon.IsNullOrEmpty()))
             .ForMember(x => x.DisplayName, x => x.MapFrom(i => i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)) == null ? i.DisplayName : i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName))
             .ForMember(x => x.CountyId, x => x.MapFrom(i => i.CountyId))
             .ForMember(x => x.Code, x => x.MapFrom(i => i.Code))
@@ -769,6 +770,12 @@ namespace TACHYON
             configuration.CreateMultiLingualMap<City, CitiesTranslation, TenantCityLookupTableDto>(context)
                 .EntityMap
                 .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
+                .ReverseMap();
+            
+            configuration.CreateMultiLingualMap<City, CitiesTranslation, CityPolygonLookupTableDto>(context)
+                .EntityMap
+                .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
+                .ForMember(dst => dst.HasPolygon, opt => opt.MapFrom(src => !src.Polygon.IsNullOrEmpty()))
                 .ReverseMap();
 
             configuration.CreateMultiLingualMap<TruckStatus, long, TruckStatusesTranslation, TruckStatusDto>(context)

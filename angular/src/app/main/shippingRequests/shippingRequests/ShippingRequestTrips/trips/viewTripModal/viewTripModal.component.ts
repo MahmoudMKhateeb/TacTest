@@ -1,4 +1,4 @@
-import { Component, ViewChild, Injector, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, ViewChild, Injector, OnInit, Output, EventEmitter, AfterViewInit } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import {
   FacilityForDropdownDto,
@@ -12,6 +12,7 @@ import {
   AssignDriverAndTruckToShippmentByCarrierInput,
   ShippingRequestDriverServiceProxy,
   GetShippingRequestForViewOutput,
+  ShippingRequestTripStatus,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { finalize } from '@node_modules/rxjs/operators';
@@ -19,12 +20,14 @@ import { FileDownloadService } from '@shared/utils/file-download.service';
 import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
 import Swal from 'sweetalert2';
 import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 
 @Component({
   selector: 'viewTripModal',
   templateUrl: './viewTripModal.component.html',
 })
-export class ViewTripModalComponent extends AppComponentBase implements OnInit {
+export class ViewTripModalComponent extends AppComponentBase implements OnInit, AfterViewInit {
   @ViewChild('viewTripDetails', { static: false }) modal: ModalDirective;
   @Output() modalSave: EventEmitter<any> = new EventEmitter();
   Vases: CreateOrEditShippingRequestTripVasDto[];
@@ -42,7 +45,9 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit {
   isResetTripLoading = false;
   private TruckTypeId: number;
   pickUpPointSender: string;
+  activeTripId: any;
 
+  shippingRequestTripStatusEnum = ShippingRequestTripStatus;
   constructor(
     injector: Injector,
     private _routStepsServiceProxy: RoutStepsServiceProxy,
@@ -52,7 +57,8 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit {
     private _trucksServiceProxy: TrucksServiceProxy,
     private _shippingRequestDriverServiceProxy: ShippingRequestDriverServiceProxy,
     private _PointsService: PointsService,
-    private _TripService: TripService
+    private _TripService: TripService,
+    private _Router: ActivatedRoute
   ) {
     super(injector);
   }
@@ -61,6 +67,13 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit {
     this._TripService.currentShippingRequest.subscribe((res) => {
       this.TruckTypeId = res.truckTypeId;
     });
+    this.activeTripId = this._Router.snapshot.queryParams['tripId'];
+  }
+
+  ngAfterViewInit() {
+    if (isNotNullOrUndefined(this.activeTripId)) {
+      this.show(this.activeTripId);
+    }
   }
 
   show(id): void {

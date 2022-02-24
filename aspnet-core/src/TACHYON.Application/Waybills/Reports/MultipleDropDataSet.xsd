@@ -12,7 +12,7 @@
   <xs:element name="MultipleDropDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="MultipleDropDataSet" msprop:Generator_UserDSName="MultipleDropDataSet">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="DataTable1" msprop:Generator_TableClassName="DataTable1DataTable" msprop:Generator_TableVarName="tableDataTable1" msprop:Generator_TablePropName="DataTable1" msprop:Generator_RowDeletingName="DataTable1RowDeleting" msprop:Generator_RowChangingName="DataTable1RowChanging" msprop:Generator_RowEvHandlerName="DataTable1RowChangeEventHandler" msprop:Generator_RowDeletedName="DataTable1RowDeleted" msprop:Generator_UserTableName="DataTable1" msprop:Generator_RowChangedName="DataTable1RowChanged" msprop:Generator_RowEvArgName="DataTable1RowChangeEvent" msprop:Generator_RowClassName="DataTable1Row">
+        <xs:element name="DataTable1" msprop:Generator_TableClassName="DataTable1DataTable" msprop:Generator_TableVarName="tableDataTable1" msprop:Generator_RowChangedName="DataTable1RowChanged" msprop:Generator_TablePropName="DataTable1" msprop:Generator_RowDeletingName="DataTable1RowDeleting" msprop:Generator_RowChangingName="DataTable1RowChanging" msprop:Generator_RowEvHandlerName="DataTable1RowChangeEventHandler" msprop:Generator_RowDeletedName="DataTable1RowDeleted" msprop:Generator_RowClassName="DataTable1Row" msprop:Generator_UserTableName="DataTable1" msprop:Generator_RowEvArgName="DataTable1RowChangeEvent">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="MasterWaybillNo" msprop:Generator_ColumnVarNameInTable="columnMasterWaybillNo" msprop:Generator_ColumnPropNameInRow="MasterWaybillNo" msprop:Generator_ColumnPropNameInTable="MasterWaybillNoColumn" msprop:Generator_UserColumnName="MasterWaybillNo" type="xs:string" minOccurs="0" />
@@ -52,6 +52,7 @@
               <xs:element name="HasAttachment" msprop:Generator_ColumnVarNameInTable="columnHasAttachment" msprop:Generator_ColumnPropNameInRow="HasAttachment" msprop:Generator_ColumnPropNameInTable="HasAttachmentColumn" msprop:Generator_UserColumnName="HasAttachment" type="xs:string" minOccurs="0" />
               <xs:element name="NeedsDeliveryNote" msprop:Generator_ColumnVarNameInTable="columnNeedsDeliveryNote" msprop:Generator_ColumnPropNameInRow="NeedsDeliveryNote" msprop:Generator_ColumnPropNameInTable="NeedsDeliveryNoteColumn" msprop:Generator_UserColumnName="NeedsDeliveryNote" type="xs:string" minOccurs="0" />
               <xs:element name="ShipperNotes" msprop:Generator_ColumnVarNameInTable="columnShipperNotes" msprop:Generator_ColumnPropNameInRow="ShipperNotes" msprop:Generator_ColumnPropNameInTable="ShipperNotesColumn" msprop:Generator_UserColumnName="ShipperNotes" type="xs:string" minOccurs="0" />
+              <xs:element name="ShipperInvoiceNo" msprop:Generator_ColumnVarNameInTable="columnShipperInvoiceNo" msprop:Generator_ColumnPropNameInRow="ShipperInvoiceNo" msprop:Generator_ColumnPropNameInTable="ShipperInvoiceNoColumn" msprop:Generator_UserColumnName="ShipperInvoiceNo" type="xs:string" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>

@@ -1,4 +1,5 @@
 ﻿using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Abp.Linq.Extensions;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
@@ -43,7 +44,7 @@ namespace TACHYON.Rating
 
         public async Task CreateRating(RatingLog ratingLog)
         {
-            if (ratingLog.PointId != null) await CheckIfFinishOffLoadingPoint(ratingLog);
+            if (ratingLog.PointId != null) await CheckIfPointCompleted(ratingLog);
 
             if (await IsRateDoneBefore(ratingLog)) throw new UserFriendlyException(L("RateDoneBefore"));
             await _ratingLogRepository.InsertAndGetIdAsync(ratingLog);
@@ -113,7 +114,7 @@ namespace TACHYON.Rating
                 await _ratingLogRepository.InsertAndGetIdAsync(newRate);
 
             }
-            else // Need To Check Save Change or Not
+            else 
                 tenantTripBySystem.Rate = await UpdateAndRecalculateTenantTripRating(log);
 
 
@@ -162,18 +163,20 @@ namespace TACHYON.Rating
             // we need to get carrier rating from the correct rating log
             if (rate.RateType != tenantRatingType)
             {
-                var tripId = await _routePointRepository.GetAll().Where(x => x.Id == rate.PointId).Select(x => x.ShippingRequestTripId).FirstOrDefaultAsync();
-                tenantTripRating = await _ratingLogRepository.GetAll().Where(x =>
-                   x.RateType == tenantRatingType && x.TripId == tripId)
-               .Select(x => x.Rate)
-               .FirstOrDefaultAsync();
+                using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant,AbpDataFilters.MustHaveTenant))
+                {
+                    var tripId = rate.TripId ?? await _routePointRepository.GetAll().Where(x => x.Id == rate.PointId).Select(x => x.ShippingRequestTripId).FirstOrDefaultAsync();
+                    tenantTripRating = await _ratingLogRepository.GetAll().Where(x =>
+                            x.RateType == tenantRatingType && x.TripId == tripId)
+                        .Select(x => x.Rate)
+                        .FirstOrDefaultAsync();
+                }
             }
-
 
             counter += tenantTripRating <= 0 ? 0 : 1;
 
             decimal rateSum = experienceRatingAverage + entityRatingAverage + tenantTripRating;
-            return Convert.ToDecimal((rateSum / counter).ToString("0.00"));
+            return rateSum == 0 || counter == 0 ? 0 : Convert.ToDecimal((rateSum / counter).ToString("0.00"));
         }
 
         public async Task RecalculateRatingById<TRatingEntityId>(TRatingEntityId id, Type type)
@@ -234,16 +237,16 @@ namespace TACHYON.Rating
             => await _ratingLogRepository.GetAll().AsNoTracking()
                 .AnyAsync(RatingLogEquals(rate));
 
-        private async Task CheckIfFinishOffLoadingPoint(RatingLog log)
+        private async Task CheckIfPointCompleted(RatingLog log)
         {
             DisableTenancyFilters();
-            var isRoutPointFinished = await _routePointRepository.GetAll().AsNoTracking()
+            var isRoutPointCompleted = await _routePointRepository.GetAll().AsNoTracking()
                 .WhereIf(log.RateType == RateType.FacilityByDriver,
                     x => x.ShippingRequestTripFk.AssignedDriverUserId == log.DriverId)
-                .AnyAsync(x => x.Id == log.PointId && x.Status >= RoutePointStatus.FinishOffLoadShipment);
+                .AnyAsync(x => x.Id == log.PointId && x.IsComplete);
 
-            if (isRoutPointFinished) return;
-            throw new UserFriendlyException(L("PointNotFoundOrNotFinished"));
+            if (isRoutPointCompleted) return;
+            throw new UserFriendlyException(L("PointNotFoundOrNotCompleted"));
         }
 
         private async Task<int?> GetTenantIdForRate(RatingLog log)

@@ -7,15 +7,19 @@
       class="card-toolbar"
       *ngIf="feature.isEnabled('App.Shipper') || feature.isEnabled('App.TachyonDealer') || feature.isEnabled('App.CarrierAsASaas')"
     >
-      <button
-        class="btn btn-primary"
+      <p-toggleButton
+        onLabel="{{ l('EnableAddTripsByTms') }}"
+        offLabel="{{ l('DisableAddTripsByTms') }}"
+        [(ngModel)]="tripsByTmsEnabled"
+        [style]="{ width: '14em' }"
+        onIcon="pi pi-lock-open"
+        offIcon="pi pi-lock"
         *ngIf="ShippingRequest.isTachyonDeal && feature.isEnabled('App.Shipper')"
         (click)="updateAddTripsByTmsFeature()"
-        [disabled]="saving"
+        [busyIf]="saving"
       >
-        <i [class]="tripsByTmsEnabled ? 'fas fa-lock' : 'fas fa-lock-open'"></i>
-        {{ tripsByTmsEnabled ? l('DisableAddTripsByTms') : l('EnableAddTripsByTms') }}
-      </button>
+      </p-toggleButton>
+
       <button
         class="btn btn-primary"
         (click)="AddNewTripModal.show()"
@@ -127,12 +131,12 @@
                       <a class="dropdown-item" (click)="AddNewTripModal.show(record)">{{ l('Edit') }}</a>
                     </li>
                     <li>
-                      <a class="dropdown-item" (click)="ViewTripModal.show(record.id)">{{ l('View') }}</a>
+                      <a class="dropdown-item" (click)="ViewTripModal.show(record.id)">{{ isCarrier ? l('ViewOrAssignDriver') : l('View') }}</a>
                     </li>
                     <li *ngIf="record.status == 3">
                       <a class="dropdown-item" (click)="shippingRequestRatingModal.show(record.id)">{{ l('Rating') }}</a>
                     </li>
-                    <li *ngIf="feature.isEnabled('App.Carrier') || feature.isEnabled('App.TachyonDealer')">
+                    <li *ngIf="canResetTrip(record)">
                       <a class="dropdown-item" (click)="ViewTripModal.ResetTrip(record.id)">{{ l('Reset') }}</a>
                     </li>
                     <li *ngIf="record.status != 0 && record.status != 6 && record.status != 7">

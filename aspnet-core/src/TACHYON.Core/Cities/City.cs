@@ -23,12 +23,7 @@ namespace TACHYON.Cities
         [StringLength(CityConsts.MaxCodeLength, MinimumLength = CityConsts.MinCodeLength)]
         public virtual string Code { get; set; }
 
-        //[StringLength(CityConsts.MaxLatitudeLength, MinimumLength = CityConsts.MinLatitudeLength)]
-        //public virtual string Latitude { get; set; }
-
-        //[StringLength(CityConsts.MaxLongitudeLength, MinimumLength = CityConsts.MinLongitudeLength)]
-        //public virtual string Longitude { get; set; }
-
+        public string Polygon { get; set; }
         public Point Location { get; set; }
         public virtual int CountyId { get; set; }
 

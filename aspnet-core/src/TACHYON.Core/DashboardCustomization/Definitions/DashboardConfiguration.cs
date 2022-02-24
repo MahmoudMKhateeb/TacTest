@@ -241,9 +241,9 @@ namespace TACHYON.DashboardCustomization.Definitions
             var tachyonDealerRequestsPriceAcceptanceWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.TachyonDealerRequestsPriceAcceptanceWidget, "TachyonDealerRequestsPriceAcceptanceWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
             var tachyonDealerInvoicesPaidBeforeDueDateWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.TachyonDealerInvoicesPaidBeforeDueDateWidget, "TachyonDealerInvoicesPaidBeforeDueDateWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
             var tachyonDealerNumberOfRequestsPerAreaOrCityWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.TachyonDealerNumberOfRequestsPerAreaOrCityWidget, "TachyonDealerNumberOfRequestsPerAreaOrCityWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
-            var tachyonDealerSearchableMapWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.TachyonDealerSearchableMapWidget, "TachyonDealerSearchableMapWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
-            var tachyonDealerRequestsHeatMapWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.TachyonDealerRequestsHeatMapWidget, "TachyonDealerRequestsHeatMapWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
-            var tachyonDealerNormalVsRentalRequestsWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.TachyonDealerNormalVsRentalRequestsWidget, "TachyonDealerNormalVsRentalRequestsWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
+            //var tachyonDealerSearchableMapWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.TachyonDealerSearchableMapWidget, "TachyonDealerSearchableMapWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
+            //var tachyonDealerRequestsHeatMapWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.TachyonDealerRequestsHeatMapWidget, "TachyonDealerRequestsHeatMapWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
+            //var tachyonDealerNormalVsRentalRequestsWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.TachyonDealerNormalVsRentalRequestsWidget, "TachyonDealerNormalVsRentalRequestsWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
 
 
             WidgetDefinitions.Add(tachyonDealerNumberOfRegisteredTrucksWidget);
@@ -267,9 +267,9 @@ namespace TACHYON.DashboardCustomization.Definitions
             WidgetDefinitions.Add(tachyonDealerRequestsPriceAcceptanceWidget);
             WidgetDefinitions.Add(tachyonDealerInvoicesPaidBeforeDueDateWidget);
             WidgetDefinitions.Add(tachyonDealerNumberOfRequestsPerAreaOrCityWidget);
-            WidgetDefinitions.Add(tachyonDealerSearchableMapWidget);
-            WidgetDefinitions.Add(tachyonDealerRequestsHeatMapWidget);
-            WidgetDefinitions.Add(tachyonDealerNormalVsRentalRequestsWidget);
+            //WidgetDefinitions.Add(tachyonDealerSearchableMapWidget);
+            //WidgetDefinitions.Add(tachyonDealerRequestsHeatMapWidget);
+            //WidgetDefinitions.Add(tachyonDealerNormalVsRentalRequestsWidget);
 
 
             #endregion
@@ -353,9 +353,9 @@ namespace TACHYON.DashboardCustomization.Definitions
                     tachyonDealerRequestsPriceAcceptanceWidget.Id,
                     tachyonDealerInvoicesPaidBeforeDueDateWidget.Id,
                     tachyonDealerNumberOfRequestsPerAreaOrCityWidget.Id,
-                    tachyonDealerSearchableMapWidget.Id,
-                    tachyonDealerRequestsHeatMapWidget.Id,
-                    tachyonDealerNormalVsRentalRequestsWidget.Id,
+                    //tachyonDealerSearchableMapWidget.Id,
+                    //tachyonDealerRequestsHeatMapWidget.Id,
+                    //tachyonDealerNormalVsRentalRequestsWidget.Id,
                 });
             DashboardDefinitions.Add(defaultTachyonMangedServiceDashboard);
 
@@ -393,9 +393,9 @@ namespace TACHYON.DashboardCustomization.Definitions
                     tachyonDealerRequestsPriceAcceptanceWidget.Id,
                     tachyonDealerInvoicesPaidBeforeDueDateWidget.Id,
                     tachyonDealerNumberOfRequestsPerAreaOrCityWidget.Id,
-                    tachyonDealerSearchableMapWidget.Id,
-                    tachyonDealerRequestsHeatMapWidget.Id,
-                    tachyonDealerNormalVsRentalRequestsWidget.Id,
+                    //tachyonDealerSearchableMapWidget.Id,
+                    //tachyonDealerRequestsHeatMapWidget.Id,
+                    //tachyonDealerNormalVsRentalRequestsWidget.Id,
                 });
 
             DashboardDefinitions.Add(defaultHostDashboard);

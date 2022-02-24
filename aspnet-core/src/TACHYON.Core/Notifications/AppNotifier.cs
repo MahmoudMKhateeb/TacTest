@@ -99,7 +99,9 @@ namespace TACHYON.Notifications
             await _notificationPublisher.PublishAsync(AppNotificationNames.DriverTripReminder,
                 notificationData,userIds: new []{user});
 
-            await _firebaseNotifier.PushNotification(AppNotificationNames.DriverTripReminder, notificationData,
+            await _firebaseNotifier.PushNotification(AppNotificationNames.DriverTripReminder,
+                L("DriverTripReminder")
+                ,notificationData,
                 user.UserId);
         }
         
@@ -505,7 +507,11 @@ namespace TACHYON.Notifications
                     input.WaybillNumber),
                 TACHYONConsts.LocalizationSourceName))
             {
-                Properties = new Dictionary<string, object>() { { "updatedTripId", input.TripId } }
+                Properties = new Dictionary<string, object>()
+                {
+                    { "updatedTripId", input.TripId },
+                    {"srId" , input.ShippingRequestId}
+                }
             };
 
             await _notificationPublisher.PublishAsync(AppNotificationNames.NotifyShipperWhenTripUpdated, notificationData, userIds: new[] { tenantAdmin });
@@ -521,13 +527,19 @@ namespace TACHYON.Notifications
             input.WaybillNumber),
                     TACHYONConsts.LocalizationSourceName))
             {
-                Properties = new Dictionary<string, object>() { { "id", input.TripId } }
+                Properties = new Dictionary<string, object>()
+                {
+                    { "id", input.TripId } ,
+                    {"srId",input.ShippingRequestId}
+                }
             };
 
             var notifiedUsers = new List<UserIdentifier>(){tenantAdmin};
             if (input.DriverIdentifier != null)
             {
                 await _firebaseNotifier.PushNotification(AppNotificationNames.NotifyCarrierWhenTripUpdated,
+                    L("CarrierTripUpdatedNotificationMessage",
+                        input.WaybillNumber),
                     notificationData, input.DriverIdentifier.UserId);
                 notifiedUsers.Add(input.DriverIdentifier);
             }
@@ -543,6 +555,7 @@ namespace TACHYON.Notifications
                     TACHYONConsts.LocalizationSourceName))
             {[ "id"] = tripId};
             await _firebaseNotifier.PushNotification(AppNotificationNames.NotifyCarrierWhenTripUpdated,
+                L("CarrierTripUpdatedNotificationMessage", waybillNumber),
                 notificationData, drivers.Select(x=> x.UserId).ToArray());
             
             await _notificationPublisher.PublishAsync(AppNotificationNames.NotifyCarrierWhenTripUpdated,
@@ -559,7 +572,11 @@ namespace TACHYON.Notifications
                         input.WaybillNumber),
                     TACHYONConsts.LocalizationSourceName))
             {
-                Properties = new Dictionary<string, object>() { { "updatedTripId", input.TripId } }
+                Properties = new Dictionary<string, object>()
+                {
+                    { "updatedTripId", input.TripId },
+                    {"srId", input.ShippingRequestId}
+                }
             };
 
             await _notificationPublisher.PublishAsync(AppNotificationNames.NotifyTachyonDealWhenTripUpdated, notificationData, userIds: new[] { tenantAdmin });
@@ -584,6 +601,7 @@ namespace TACHYON.Notifications
 
             var input = new NotifyTripUpdatedInput()
             {
+                ShippingRequestId = trip.ShippingRequestId,
                 ShipperTenantId = shipperTenantId,
                 TripId = trip.Id,
                 WaybillNumber = waybillNo.ToString()
@@ -726,6 +744,7 @@ namespace TACHYON.Notifications
             ) {["id"] = tripId};
 
             await _firebaseNotifier.PushNotification(AppNotificationNames.NotifyDriverWhenAssignTrip,
+                L("NotifyDriverWhenAssignToTrip"),
                 notificationData, drivers.Select(x => x.UserId).ToArray());
             await _notificationPublisher.PublishAsync(AppNotificationNames.NotifyDriverWhenAssignTrip, notificationData,
                 userIds: drivers);
@@ -739,6 +758,7 @@ namespace TACHYON.Notifications
             {["id"] = tripId};
 
             await _firebaseNotifier.PushNotification(AppNotificationNames.NotifyDriverWhenUnassignedTrip,
+                L("NotifyDriverWhenUnassignedToTrip", waybillNumber),
                 notificationData, drivers.Select(x => x.UserId).ToArray());
             await _notificationPublisher.PublishAsync(AppNotificationNames.NotifyDriverWhenUnassignedTrip, notificationData, userIds: drivers);
         }
@@ -1209,7 +1229,7 @@ namespace TACHYON.Notifications
                 )
             ) {["id"] = shippingRequestId};
 
-            await _firebaseNotifier.PushNotification(AppNotificationNames.ShipperReminderToCompleteTrips, notificationData, userId.UserId);
+            await _firebaseNotifier.PushNotification(AppNotificationNames.ShipperReminderToCompleteTrips, L("ShipperReminderToCompleteTrips"),notificationData, userId.UserId);
             await _notificationPublisher.PublishAsync(AppNotificationNames.ShipperReminderToCompleteTrips, notificationData, userIds: new []{userId});
         }
 

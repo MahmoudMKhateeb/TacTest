@@ -120,11 +120,7 @@
                             <button ngbDropdownItem *ngIf="canCreateAccident(item)" (click)="TripAccidentModal.show(item.id, null)">
                               {{ l('CreateAccident') }}
                             </button>
-                            <button
-                              ngbDropdownItem
-                              *ngIf="feature.isEnabled('App.Carrier') || feature.isEnabled('App.TachyonDealer')"
-                              (click)="handleTripReset(item.id)"
-                            >
+                            <button ngbDropdownItem *ngIf="canResetTrip(item)" (click)="handleTripReset(item.id)">
                               {{ l('Reset') }}
                             </button>
                           </div>

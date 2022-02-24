@@ -10,11 +10,9 @@
 >
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
-      <form #createFacilityForm="ngForm" novalidate autocomplete="off" (ngSubmit)="save()">
+      <form *ngIf="active" #createFacilityForm="ngForm" novalidate autocomplete="off" (ngSubmit)="save()">
         <div class="modal-header">
           <h4 class="modal-title">
-            <!--                <span *ngIf="routStep.id">{{l("EditRoutStep")}}</span>-->
-            <!--                <span *ngIf="!routStep.id">{{l("CreateNewRoutStep")}}</span>-->
             <span>{{ facility?.id ? l('EditFacility') : l('CreateNewFacility') }}</span>
           </h4>
           <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
@@ -54,13 +52,13 @@
                   [class.is-valid]="country.touched && country.valid"
                   (change)="loadCitiesByCountryId(selectedCountryId)"
                 >
-                  <option value="" selected disabled>{{ l('SelectACounty') }}</option>
+                  <option [ngValue]="null" selected disabled hidden>{{ l('SelectACounty') }}</option>
                   <option *ngFor="let item of countries" value="{{ item.id }}">{{ item.displayName }}</option>
                 </select>
               </div>
             </div>
             <div class="form-group col-md-6">
-              <label>{{ l('SelectaCity') }}<span class="required-fileds">*</span></label>
+              <label>{{ l('SelectaCity') }}<span class="required-fileds"> *</span></label>
               <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': citiesLoading }">
                 <select
                   #city="ngModel"
@@ -71,41 +69,50 @@
                   [(ngModel)]="facility.cityId"
                   [class.is-invalid]="city.touched && !city.valid"
                   [class.is-valid]="city.touched && city.valid"
+                  (change)="cityChangeEvent()"
                 >
                   <option value="" selected disabled>{{ l('SelectACity') }}</option>
-                  <option *ngFor="let item of allCities" value="{{ item.id }}">{{ item.displayName }}</option>
+                  <option *ngFor="let item of allCities" [ngClass]="{ 'text-danger': !item.hasPolygon }" value="{{ item.id }}">
+                    {{ item.displayName }}
+                  </option>
                 </select>
               </div>
             </div>
             <div class="form-group col-md-6">
-              <label>{{ l('longitute') }} <span class="required-fileds">*</span></label>
+              <label>{{ l('longitute') }} </label>
               <input
-                #longitude="ngModel"
+                #long="ngModel"
                 type="number"
                 name="long"
                 placeholder="long"
                 class="form-control"
-                required
                 [(ngModel)]="facility.longitude"
                 (change)="manualCords()"
-                [class.is-invalid]="longitude.touched && !longitude.valid"
-                [class.is-valid]="longitude.touched && longitude.valid"
+                [class.is-invalid]="long.touched && !long.valid"
+                [class.is-valid]="long.touched && long.valid"
+                [disabled]="!facility.cityId"
+                minlength="0"
+                maxlength="30"
               />
+              <div *ngIf="!long.valid" class="invalid-feedback">{{ l('HasToBeWithInCityBounds') }}</div>
             </div>
             <div class="form-group col-md-6">
-              <label>{{ l('latitute') }} <span class="required-fileds">*</span></label>
+              <label>{{ l('latitute') }} </label>
               <input
-                #latitude="ngModel"
+                #lat="ngModel"
                 type="number"
                 name="lat"
-                placeholder="long"
+                placeholder="lat"
                 class="form-control"
-                required
                 [(ngModel)]="facility.latitude"
                 (change)="manualCords()"
-                [class.is-invalid]="latitude.touched && !latitude.valid"
-                [class.is-valid]="latitude.touched && latitude.valid"
+                [class.is-invalid]="lat.touched && !lat.valid"
+                [class.is-valid]="lat.touched && lat.valid"
+                [disabled]="!facility.cityId"
+                minlength="0"
+                maxlength="30"
               />
+              <div *ngIf="!lat.valid" class="invalid-feedback">{{ l('HasToBeWithInCityBounds') }}</div>
             </div>
             <div class="form-group col-md-12">
               <label>{{ l('Address') }} <span class="required-fileds">*</span></label>
@@ -122,19 +129,18 @@
               />
             </div>
             <!-- CreateNewFacilityMap -->
-            <div class="form-group col-md-12">
+            <div class="form-group col-md-12" [ngClass]="{ preventClick: !facility.cityId }">
               <agm-map
-                style="height: 350px"
-                [latitude]="facility.latitude"
-                [longitude]="facility.longitude"
-                [zoom]="zoom"
-                (mapClick)="mapClicked($event)"
+                class="map"
+                [zoom]="12"
+                [longitude]="Bounds?.getCenter().lng() || facility.longitude"
+                [latitude]="Bounds?.getCenter().lat() || facility.latitude"
               >
+                <agm-data-layer [geoJson]="selectedCityJson" (layerClick)="mapClicked($event)" [style]="styleObject"></agm-data-layer>
                 <agm-marker
+                  *ngIf="facility.latitude && facility.longitude"
                   [latitude]="facility.latitude"
                   [longitude]="facility.longitude"
-                  [markerDraggable]="true"
-                  (dragEnd)="mapClicked($event)"
                 ></agm-marker>
               </agm-map>
             </div>

@@ -6,7 +6,7 @@ export class DashboardCustomizationConst {
       memberActivity: 'Widgets_Tenant_MemberActivity',
       regionalStats: 'Widgets_Tenant_RegionalStats',
       salesSummary: 'Widgets_Tenant_SalesSummary',
-      topStats: 'Widgets_Tenant_TopStats',
+      //topStats: 'Widgets_Tenant_TopStats',
       generalStats: 'Widgets_Tenant_GeneralStats',
       dailySales: 'Widgets_Tenant_DailySales',
     },
@@ -94,9 +94,9 @@ export class DashboardCustomizationConst {
       TachyonDealerRequestsPriceAcceptanceWidget: 'Widgets_Tenant_TachyonDealer_RequestsPriceAcceptanceWidget',
       TachyonDealerInvoicesPaidBeforeDueDateWidget: 'Widgets_Tenant_TachyonDealer_InvoicesPaidBeforeDureDateWidget',
       TachyonDealerNumberOfRequestsPerAreaOrCityWidget: 'Widgets_Tenant_TachyonDealer_NumberOfRequestsPerAreaOrCityWidget',
-      TachyonDealerSearchableMapWidget: 'Widgets_Tenant_TachyonDealer_SearchableMapWidget',
-      TachyonDealerRequestsHeatMapWidget: 'Widgets_Tenant_TachyonDealer_RequestsHeatMapWidget',
-      TachyonDealerNormalVsRentalRequestsWidget: 'Widgets_Tenant_TachyonDealer_NormalVsRentalRequestsWidget',
+      //TachyonDealerSearchableMapWidget: 'Widgets_Tenant_TachyonDealer_SearchableMapWidget',
+      //TachyonDealerRequestsHeatMapWidget: 'Widgets_Tenant_TachyonDealer_RequestsHeatMapWidget',
+      //TachyonDealerNormalVsRentalRequestsWidget: 'Widgets_Tenant_TachyonDealer_NormalVsRentalRequestsWidget',
     },
   };
   static filters = {
