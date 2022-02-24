@@ -1,12 +1,12 @@
-import { Component, ViewChild, Injector, Output, EventEmitter, NgZone, ElementRef, OnInit, AfterViewInit } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Injector, NgZone, OnInit, Output, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
 import {
-  FacilitiesServiceProxy,
-  CreateOrEditFacilityDto,
-  TenantRegistrationServiceProxy,
-  FacilityForDropdownDto,
   CityPolygonLookupTableDto,
+  CreateOrEditFacilityDto,
+  FacilitiesServiceProxy,
+  FacilityForDropdownDto,
+  TenantRegistrationServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { MapsAPILoader } from '@node_modules/@agm/core';
@@ -207,10 +207,6 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
   loadCitiesByCountryId(countryId): any {
     this.citiesLoading = true;
     this.facility.cityId = undefined;
-    this._countriesServiceProxy.getAllCitiesForTableDropdown(countryId).subscribe((res) => {
-      this.allCities = res;
-      this.citiesLoading = false;
-    });
     this._countriesServiceProxy.getAllCitiesWithPolygonsByCountryId(countryId).subscribe((res) => {
       this.allCities = res;
       this.citiesLoading = false;

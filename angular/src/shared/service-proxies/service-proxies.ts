@@ -16672,6 +16672,100 @@ export class GoodsDetailsServiceProxy {
 }
 
 @Injectable()
+export class HelperServiceProxy {
+  private http: HttpClient;
+  private baseUrl: string;
+  protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+  constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+    this.http = http;
+    this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : '';
+  }
+
+  /**
+   * @param contentType (optional)
+   * @param contentDisposition (optional)
+   * @param headers (optional)
+   * @param length (optional)
+   * @param name (optional)
+   * @param fileName (optional)
+   * @return Success
+   */
+  importCitiesPolygon(
+    contentType: string | null | undefined,
+    contentDisposition: string | null | undefined,
+    headers: { [key: string]: string[] } | null | undefined,
+    length: number | undefined,
+    name: string | null | undefined,
+    fileName: string | null | undefined
+  ): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/helper/ImportCitiesPolygon';
+    url_ = url_.replace(/[?&]$/, '');
+
+    const content_ = new FormData();
+    if (contentType !== null && contentType !== undefined) content_.append('ContentType', contentType.toString());
+    if (contentDisposition !== null && contentDisposition !== undefined) content_.append('ContentDisposition', contentDisposition.toString());
+    if (headers !== null && headers !== undefined) content_.append('Headers', JSON.stringify(headers));
+    if (length === null || length === undefined) throw new Error("The parameter 'length' cannot be null.");
+    else content_.append('Length', length.toString());
+    if (name !== null && name !== undefined) content_.append('Name', name.toString());
+    if (fileName !== null && fileName !== undefined) content_.append('FileName', fileName.toString());
+
+    let options_: any = {
+      body: content_,
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({}),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processImportCitiesPolygon(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processImportCitiesPolygon(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processImportCitiesPolygon(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+}
+
+@Injectable()
 export class ShippingRequestDriverServiceProxy {
   private http: HttpClient;
   private baseUrl: string;
@@ -45572,6 +45666,78 @@ export class TenantRegistrationServiceProxy {
   }
 
   /**
+   * @param countryId (optional)
+   * @return Success
+   */
+  getAllCitiesWithPolygonsByCountryId(countryId: number | undefined): Observable<CityPolygonLookupTableDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/TenantRegistration/GetAllCitiesWithPolygonsByCountryId?';
+    if (countryId === null) throw new Error("The parameter 'countryId' cannot be null.");
+    else if (countryId !== undefined) url_ += 'countryId=' + encodeURIComponent('' + countryId) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAllCitiesWithPolygonsByCountryId(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAllCitiesWithPolygonsByCountryId(<any>response_);
+            } catch (e) {
+              return <Observable<CityPolygonLookupTableDto[]>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<CityPolygonLookupTableDto[]>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAllCitiesWithPolygonsByCountryId(response: HttpResponseBase): Observable<CityPolygonLookupTableDto[]> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          if (Array.isArray(resultData200)) {
+            result200 = [] as any;
+            for (let item of resultData200) result200!.push(CityPolygonLookupTableDto.fromJS(item));
+          } else {
+            result200 = <any>null;
+          }
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<CityPolygonLookupTableDto[]>(<any>null);
+  }
+
+  /**
    * @param companyName (optional)
    * @return Success
    */
@@ -62724,6 +62890,7 @@ export class CityDto implements ICityDto {
   code!: string | undefined;
   latitude!: number;
   longitude!: number;
+  hasPolygon!: boolean;
   countyId!: number;
   isActive!: boolean;
   translatedDisplayName!: string | undefined;
@@ -62743,6 +62910,7 @@ export class CityDto implements ICityDto {
       this.code = _data['code'];
       this.latitude = _data['latitude'];
       this.longitude = _data['longitude'];
+      this.hasPolygon = _data['hasPolygon'];
       this.countyId = _data['countyId'];
       this.isActive = _data['isActive'];
       this.translatedDisplayName = _data['translatedDisplayName'];
@@ -62763,6 +62931,7 @@ export class CityDto implements ICityDto {
     data['code'] = this.code;
     data['latitude'] = this.latitude;
     data['longitude'] = this.longitude;
+    data['hasPolygon'] = this.hasPolygon;
     data['countyId'] = this.countyId;
     data['isActive'] = this.isActive;
     data['translatedDisplayName'] = this.translatedDisplayName;
@@ -62776,6 +62945,7 @@ export interface ICityDto {
   code: string | undefined;
   latitude: number;
   longitude: number;
+  hasPolygon: boolean;
   countyId: number;
   isActive: boolean;
   translatedDisplayName: string | undefined;
@@ -90629,6 +90799,61 @@ export class EditionsSelectOutput implements IEditionsSelectOutput {
 export interface IEditionsSelectOutput {
   allFeatures: FlatFeatureSelectDto[] | undefined;
   editionsWithFeatures: EditionWithFeaturesDto[] | undefined;
+}
+
+export class CityPolygonLookupTableDto implements ICityPolygonLookupTableDto {
+  polygon!: string | undefined;
+  hasPolygon!: boolean;
+  id!: string | undefined;
+  isOther!: boolean | undefined;
+  displayName!: string | undefined;
+  translatedDisplayName!: string | undefined;
+
+  constructor(data?: ICityPolygonLookupTableDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.polygon = _data['polygon'];
+      this.hasPolygon = _data['hasPolygon'];
+      this.id = _data['id'];
+      this.isOther = _data['isOther'];
+      this.displayName = _data['displayName'];
+      this.translatedDisplayName = _data['translatedDisplayName'];
+    }
+  }
+
+  static fromJS(data: any): CityPolygonLookupTableDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new CityPolygonLookupTableDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['polygon'] = this.polygon;
+    data['hasPolygon'] = this.hasPolygon;
+    data['id'] = this.id;
+    data['isOther'] = this.isOther;
+    data['displayName'] = this.displayName;
+    data['translatedDisplayName'] = this.translatedDisplayName;
+    return data;
+  }
+}
+
+export interface ICityPolygonLookupTableDto {
+  polygon: string | undefined;
+  hasPolygon: boolean;
+  id: string | undefined;
+  isOther: boolean | undefined;
+  displayName: string | undefined;
+  translatedDisplayName: string | undefined;
 }
 
 export class TermAndConditionDto implements ITermAndConditionDto {
