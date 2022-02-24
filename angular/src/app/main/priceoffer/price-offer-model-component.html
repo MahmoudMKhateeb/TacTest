@@ -34,7 +34,7 @@
               <label>commissionTypeValue:</label>
               <input
                 type="number"
-                min="1"
+                min="0"
                 class="form-control"
                 placeholder="Value"
                 (change)="calculator();"
@@ -75,15 +75,13 @@
             <table class="table table-sm table-bordered rounded">
               <thead>
                 <tr class="table-active">
-                  <th style="width: 200px"></th>
-                  <th style="width: 150px">{{l('Qty')}}</th>
+                  <th style="width: 350px">{{l('#Trips')}}</th>
                   <th style="width: 350px">itemPrice</th>
-                  <th>{{l('Total Price of All Trips Pre-Commission Pre-VAT')}}</th>
+                  <th>itemPrice post commission</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>Trip</td>
                   <td>{{offer.quantity}}</td>
                   <td>
                     <input
@@ -98,11 +96,12 @@
                       class="form-control"
                     />
                   </td>
-                  <td>{{offer.itemsTotalPricePreCommissionPreVat}}</td>
+                  <td>{{offer.itemSubTotalAmountWithCommission}}</td>
                 </tr>
                 <tr>
-                  <td colspan="3"></td>
-                  <td class="table-primary">{{offer.itemsTotalPricePreCommissionPreVat}}</td>
+                  <td></td>
+                  <td class="table-success">{{offer.itemsTotalPricePreCommissionPreVat}}</td>
+                  <td></td>
                 </tr>
               </tbody>
             </table>
@@ -138,17 +137,17 @@
                 </tr>
                 <tr>
                   <td colspan="3"></td>
-                  <td class="table-primary">{{offer.detailsTotalPricePreCommissionPreVat}}</td>
+                  <td>{{offer.detailsTotalPricePreCommissionPreVat}}</td>
                 </tr>
               </tbody>
             </table>
           </div>
 
-          <div class="table-responsive">
+          <div class="table-responsive" *ngIf="isTachyonDealerOrHost">
             <table class="table table-sm table-bordered rounded">
               <thead>
                 <tr class="table-active">
-                  <th style="width: 200px">field</th>
+                  <th style="width: 200px"></th>
                   <th style="width: 150px">Price Pre commission</th>
                   <th style="width: 350px">Total commission</th>
                   <th>Total Price post commission</th>
@@ -161,7 +160,7 @@
                   <td>{{offer.itemsTotalCommission}}</td>
                   <td>{{offer.itemsTotalPricePostCommissionPreVat}}</td>
                 </tr>
-                <tr>
+                <tr *ngIf="Items.length">
                   <td>VAS</td>
                   <td>{{offer.detailsTotalPricePreCommissionPreVat}}</td>
                   <td>{{offer.detailsTotalCommission}}</td>
@@ -169,6 +168,7 @@
                 </tr>
                 <tr>
                   <td colspan="3"></td>
+
                   <td class="table-primary">{{offer.subTotalAmountWithCommission}}</td>
                 </tr>
               </tbody>
@@ -181,24 +181,24 @@
                 <tr class="table-active">
                   <th style="width: 350px"></th>
                   <th style="width: 350px">Pre commission</th>
-                  <th>Post commission</th>
+                  <th *ngIf="isTachyonDealerOrHost">Post commission</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td>total VAT for Trip</td>
                   <td>{{offer.itemsTotalVatAmountPreCommission}}</td>
-                  <td>{{offer.itemsTotalVatPostCommission}}</td>
+                  <td *ngIf="isTachyonDealerOrHost">{{offer.itemsTotalVatPostCommission}}</td>
                 </tr>
                 <tr>
                   <td>total VAT for VAS</td>
                   <td>{{offer.detailsTotalVatAmountPreCommission}}</td>
-                  <td>{{offer.detailsTotalVatPostCommission}}</td>
+                  <td *ngIf="isTachyonDealerOrHost">{{offer.detailsTotalVatPostCommission}}</td>
                 </tr>
                 <tr>
-                  <td colspan="2"></td>
-
-                  <td class="table-primary">{{offer.vatAmountWithCommission}}</td>
+                  <td></td>
+                  <td class="table-success">{{offer.vatAmount}}</td>
+                  <td *ngIf="isTachyonDealerOrHost" class="table-primary">{{offer.vatAmountWithCommission}}</td>
                 </tr>
               </tbody>
             </table>
@@ -209,15 +209,15 @@
               <thead>
                 <tr class="table-active">
                   <th style="width: 350px"></th>
-                  <th style="width: 350px"></th>
-                  <th>Total Price Post Vat</th>
+                  <th style="width: 350px">Total Price Post Vat pre commission</th>
+                  <th *ngIf="isTachyonDealerOrHost">Total Price Post Vat with commission</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td></td>
-                  <td></td>
-                  <td class="table-primary">{{offer.totalAmountWithCommission}}</td>
+                  <td class="table-success">{{offer.totalAmount}}</td>
+                  <td *ngIf="isTachyonDealerOrHost" class="table-primary">{{offer.totalAmountWithCommission}}</td>
                 </tr>
               </tbody>
             </table>

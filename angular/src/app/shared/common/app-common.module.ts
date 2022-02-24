@@ -74,6 +74,7 @@ import { NgApexchartsModule } from '@node_modules/ng-apexcharts';
 import { WidgetsModule } from '@app/shared/common/customizable-dashboard/widgets/widgets.module';
 import { EntityLogComponent } from './entity-log/entity-log.component';
 import { CollapseModule } from '@node_modules/ngx-bootstrap/collapse';
+import { PriceSARComponent } from './price-sar/price-sar.component';
 // import { FileUploadModule } from '@node_modules/primeng';
 
 @NgModule({
@@ -142,6 +143,7 @@ import { CollapseModule } from '@node_modules/ngx-bootstrap/collapse';
     ViewRejectionReasonModalComponent,
     TruckSubmitedDocumentsListComponent,
     EntityLogComponent,
+    PriceSARComponent,
   ],
   exports: [
     TimeZoneComboComponent,
@@ -165,6 +167,7 @@ import { CollapseModule } from '@node_modules/ngx-bootstrap/collapse';
     TruckSubmitedDocumentsListComponent,
     EntityLogComponent,
     EntityLogComponent,
+    PriceSARComponent,
   ],
   providers: [
     DateTimeService,

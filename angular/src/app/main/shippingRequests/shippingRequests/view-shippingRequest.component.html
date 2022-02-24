@@ -9,6 +9,10 @@
       <!--      </div>-->
       <div role="actions">
         <a class="btn btn-outline-success" (click)="appEntityLog.show()"> <i class="flaticon-notes"></i> {{ 'Activity Log' }} </a>
+        <ng-container *ngIf="feature.isEnabled('App.TachyonDealer') && !shippingRequestforView.shippingRequest.isBid">
+          <a class="btn btn-outline-success" (click)="scrollToDirectRequests()">Send Direct Request</a>
+          <a class="btn btn-outline-success" (click)="tachyonDealToBiddingModal.show(activeShippingRequestId)">Start Bidding</a>
+        </ng-container>
       </div>
     </sub-header>
 
@@ -33,18 +37,7 @@
             <div class="alert-icon"><i class="flaticon-warning"></i></div>
             <div class="alert-text">You have trips that contain accidents</div>
           </div>
-          <div
-            *ngIf="feature.isEnabled('App.TachyonDealer') && !shippingRequestforView.shippingRequest.isBid"
-            class="alert alert-custom alert-light-info"
-            role="alert"
-          >
-            <div class="alert-icon"><i class="flaticon-info"></i></div>
-            <div class="alert-text text-bold">
-              This Shipping Request is still in price offering Stage you can either
-              <a class="mx-1" (click)="scrollToDirectRequests()">Send Direct Request</a> or
-              <a class="mx-1" (click)="tachyonDealToBiddingModal.show(activeShippingRequestId)">Start Bidding</a> on it now
-            </div>
-          </div>
+
           <div class="row">
             <!--  start of truck::Details-->
             <div class="col-12">

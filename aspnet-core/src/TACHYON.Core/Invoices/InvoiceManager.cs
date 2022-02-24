@@ -381,60 +381,6 @@ namespace TACHYON.Invoices
         }
 
         /// <summary>
-        /// Generate invoice for carrirer after the host accepted the submit invoice
-        /// </summary>
-        /// <param name="Group"></param>
-        /// <returns></returns>
-        public async Task GenerateCarrirInvoice(SubmitInvoice submit)
-        {
-
-            DateTime dueDate = Clock.Now;
-            int? paymentTypeId;
-
-            if (await _featureChecker.IsEnabledAsync(submit.Tenant.Id, AppFeatures.InvoicePaymentMethodCrarrier))
-            {
-                paymentTypeId = int.Parse(await _featureChecker.GetValueAsync(submit.Tenant.Id, AppFeatures.InvoicePaymentMethodCrarrier));
-
-                var paymentType = await _invoicePaymentMethodRepository.FirstOrDefaultAsync(x => x.Id == paymentTypeId);
-
-                if (paymentType.PaymentType == PaymentMethod.InvoicePaymentType.Days)
-                {
-                    dueDate = Clock.Now.AddDays(paymentType.InvoiceDueDateDays);
-                }
-
-            }
-
-
-
-
-            var invoice = new Invoice
-            {
-                TenantId = submit.Tenant.Id,
-                PeriodId = submit.PeriodId,
-                DueDate = dueDate,
-                TotalAmount = submit.TotalAmount,
-                VatAmount = submit.VatAmount,
-                SubTotalAmount = submit.SubTotalAmount,
-                TaxVat = submit.TaxVat,
-                AccountType = InvoiceAccountType.AccountPayable,
-                Channel = InvoiceChannel.Trip,
-                Trips = submit.Trips.Select(
-               r => new InvoiceTrip()
-               {
-                   TripId = r.TripId
-               }).ToList()
-            };
-
-            foreach (var trip in submit.Trips)
-            {
-                trip.ShippingRequestTripFK.IsCarrierHaveInvoice = true;
-            }
-            invoice.Id = await _invoiceRepository.InsertAndGetIdAsync(invoice);
-
-
-            submit.Tenant.Balance += submit.TotalAmount;
-        }
-        /// <summary>
         /// When the shipper billing interval  after delivry run this method to generate invoice
         /// </summary>
         /// <param name="request"></param>

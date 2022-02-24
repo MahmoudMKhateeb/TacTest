@@ -7,13 +7,15 @@ using TACHYON.Invoices.SubmitInvoices.Dto;
 
 namespace TACHYON.Invoices.SubmitInvoices
 {
-    public interface ISubmitInvoiceAppService:IApplicationService
+    public interface ISubmitInvoiceAppService : IApplicationService
     {
         Task<SubmitInvoiceInfoDto> GetById(EntityDto input);
 
         Task Claim(SubmitInvoiceClaimCreateInput Input);
         Task Accepted(long id);
         Task Rejected(SubmitInvoiceRejectedInput Input);
+        Task<bool> MakeSubmitInvoicePaid(long SubmitinvoiceId);
+        Task MakeSubmitInvoiceUnPaid(long SubmitinvoiceId);
 
         Task<FileDto> GetFileDto(long id);
         Task<FileDto> Exports(SubmitInvoiceFilterInput input);
