@@ -43521,6 +43521,135 @@ export class SubmitInvoicesServiceProxy {
     }
     return _observableOf<FileDto>(<any>null);
   }
+
+  /**
+   * @param submitinvoiceId (optional)
+   * @return Success
+   */
+  makeSubmitInvoicePaid(submitinvoiceId: number | undefined): Observable<boolean> {
+    let url_ = this.baseUrl + '/api/services/app/SubmitInvoices/MakeSubmitInvoicePaid?';
+    if (submitinvoiceId === null) throw new Error("The parameter 'submitinvoiceId' cannot be null.");
+    else if (submitinvoiceId !== undefined) url_ += 'SubmitinvoiceId=' + encodeURIComponent('' + submitinvoiceId) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processMakeSubmitInvoicePaid(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processMakeSubmitInvoicePaid(<any>response_);
+            } catch (e) {
+              return <Observable<boolean>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<boolean>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processMakeSubmitInvoicePaid(response: HttpResponseBase): Observable<boolean> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = resultData200 !== undefined ? resultData200 : <any>null;
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<boolean>(<any>null);
+  }
+
+  /**
+   * @param submitinvoiceId (optional)
+   * @return Success
+   */
+  makeSubmitInvoiceUnPaid(submitinvoiceId: number | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/SubmitInvoices/MakeSubmitInvoiceUnPaid?';
+    if (submitinvoiceId === null) throw new Error("The parameter 'submitinvoiceId' cannot be null.");
+    else if (submitinvoiceId !== undefined) url_ += 'SubmitinvoiceId=' + encodeURIComponent('' + submitinvoiceId) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({}),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processMakeSubmitInvoiceUnPaid(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processMakeSubmitInvoiceUnPaid(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processMakeSubmitInvoiceUnPaid(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
 }
 
 @Injectable()
@@ -89167,6 +89296,8 @@ export enum SubmitInvoiceStatus {
   Claim = 1,
   Accepted = 2,
   Rejected = 3,
+  Paid = 4,
+  UnPaid = 5,
 }
 
 export class SubmitInvoiceFilterInput implements ISubmitInvoiceFilterInput {
