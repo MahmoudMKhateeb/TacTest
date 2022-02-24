@@ -158,6 +158,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     otherTransportTypeName: [null],
     otherTrucksTypeName: [null],
     otherGoodsCategoryName: [null],
+    otherPackingTypeName: [null],
   });
   step4Form = this.fb.group({});
 
@@ -178,11 +179,6 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
 
   ngOnDestroy() {
     this.wizard = undefined;
-  }
-
-  IfOther(items, id) {
-    if (id != undefined) return items?.find((x) => x.id == id).isOther;
-    else return false;
   }
 
   getRequestType(isBid, isDirectRequest) {
@@ -405,6 +401,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
 
   loadStep2ForEdit() {
     this.loading = true;
+    console.log('22');
     return this._shippingRequestsServiceProxy
       .getStep2ForEdit(this.activeShippingRequestId)
       .pipe(

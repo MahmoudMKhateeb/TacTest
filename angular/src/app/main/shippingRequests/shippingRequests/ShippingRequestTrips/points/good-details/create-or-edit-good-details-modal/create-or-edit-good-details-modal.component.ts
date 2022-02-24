@@ -58,6 +58,7 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
   amount: number;
   unitOfMeasureId: number;
   description: string;
+  otherUnitOfMeasureName: string;
   isDangerousGood: boolean;
   dangerousGoodsTypeId: number;
   dangerousGoodsCode: string;
@@ -103,7 +104,7 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
       this.isDangerousGood = this.myGoodsDetailList[id].isDangerousGood;
       this.dangerousGoodsCode = this.myGoodsDetailList[id].dangerousGoodsCode;
       this.dangerousGoodsTypeId = this.myGoodsDetailList[id].dangerousGoodTypeId;
-
+      this.otherUnitOfMeasureName = this.myGoodsDetailList[id].otherUnitOfMeasureName;
       this.dimentions = this.myGoodsDetailList[id].dimentions;
     }
     if (this.weightValidation()) {
@@ -125,6 +126,7 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
     this.weight = undefined;
     this.amount = undefined;
     this.unitOfMeasureId = undefined;
+    this.otherUnitOfMeasureName = undefined;
     this.description = undefined;
     this.isDangerousGood = undefined;
     this.dangerousGoodsCode = undefined;
@@ -138,6 +140,7 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
     this.goodsDetail.weight = this.weight;
     this.goodsDetail.amount = this.amount;
     this.goodsDetail.unitOfMeasureId = this.unitOfMeasureId;
+    this.goodsDetail.otherUnitOfMeasureName = this.otherUnitOfMeasureName;
     this.goodsDetail.description = this.description;
     this.goodsDetail.isDangerousGood = this.isDangerousGood;
     this.goodsDetail.dimentions = this.dimentions;
@@ -179,7 +182,6 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
       this.allDangerousGoodTypes = res;
     });
   }
-
   /**
    * validates Good Details Weight and Amount
    */

@@ -57,5 +57,8 @@ namespace TACHYON.Trucks.Dtos
 
         public int? TenantId { get; set; }
 
+        public string OtherTrucksTypeName { get; set; }
+        public string OtherTransportTypeName { get; set; }
+
     }
 }

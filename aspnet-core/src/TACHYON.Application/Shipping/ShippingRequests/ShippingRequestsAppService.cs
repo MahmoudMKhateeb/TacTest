@@ -1462,7 +1462,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 {
                     Id = x.Id.ToString(),
                     DisplayName = x.DisplayName,
-                    IsOther = x.ContainsOther()
+                    IsOther = x.DisplayName.Contains(TACHYONConsts.OthersDisplayName.ToLower())
                 }).ToListAsync();
         }
 
@@ -1481,12 +1481,13 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             return (await _packingTypeRepository.GetAll()
                     .ProjectTo<PackingTypeDto>(AutoMapperConfigurationProvider)
-                    .ToArrayAsync())
                 .Select(x => new SelectItemDto()
                 {
                     Id = x.Id.ToString(),
-                    DisplayName = x.DisplayName
-                }).ToList();
+                    DisplayName = x.DisplayName,
+                    IsOther = x.DisplayName.Contains(TACHYONConsts.OthersDisplayName.ToLower())
+                }).ToListAsync());
+            
         }
         //end Multiple Drops
 
@@ -1583,6 +1584,17 @@ namespace TACHYON.Shipping.ShippingRequests
             if (trucksType.DisplayName.ToLower().Contains(TACHYONConsts.OthersDisplayName) &&
                 input.OtherTrucksTypeName.IsNullOrEmpty())
                 throw new UserFriendlyException(L("TrucksTypeCanNotBeOtherAndEmptyAtSameTime"));
+
+            #endregion
+
+            #region Validate PackingType
+
+            var packingType = await _packingTypeRepository
+                .FirstOrDefaultAsync(input.PackingTypeId);
+
+            if (packingType.DisplayName.ToLower().Contains(TACHYONConsts.OthersDisplayName) &&
+                input.OtherPackingTypeName.IsNullOrEmpty())
+                throw new UserFriendlyException(L("PackingTypeCanNotBeOtherAndEmptyAtSameTime"));
 
             #endregion
 

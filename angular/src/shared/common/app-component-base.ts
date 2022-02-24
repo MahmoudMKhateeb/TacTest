@@ -252,4 +252,10 @@ export abstract class AppComponentBase {
   get isTachyonDealerOrHost(): boolean {
     return this.isTachyonDealer || !this.appSession.tenantId;
   }
+
+  IfOther(items: any, id: any) {
+    // id return string or number
+    if (id != undefined) return items?.filter((x) => x.id == id && x.isOther).length > 0;
+    else return false;
+  }
 }

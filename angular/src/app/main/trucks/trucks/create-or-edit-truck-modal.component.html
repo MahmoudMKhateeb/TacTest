@@ -65,57 +65,120 @@
                   <option *ngFor="let item of allTransportTypes" value="{{ item.id }}">{{ item.displayName }}</option>
                 </select>
                 <validation-messages [formCtrl]="transportTypeId"></validation-messages>
+                <span class="form-text text-muted">{{ l('SelectTransportType') }} </span>
+              </div>
+
+              <div class="form-group m-form__group" [hidden]="!IfOther(allTransportTypes, truck.transportTypeId)">
+                <label>{{ l('OtherTransportType') }} <span class="required-fileds">*</span></label>
+                <div>
+                  <div class="input-group">
+                    <input
+                      id="otherTransportTypeName"
+                      type="text"
+                      #otherTransportTypeName="ngModel"
+                      name="otherTransportTypeName"
+                      class="form-control"
+                      [(ngModel)]="truck.otherTransportTypeName"
+                      [ngClass]="{
+                        'is-valid': otherTransportTypeName.touched && otherTransportTypeName.valid,
+                        'is-invalid':
+                          otherTransportTypeName.touched && !otherTransportTypeName.valid && IfOther(allTransportTypes, truck.transportTypeId)
+                      }"
+                      [required]="IfOther(allTransportTypes, truck.transportTypeId)"
+                    />
+                  </div>
+                </div>
+                <span class="form-text text-muted">{{ l('OtherTransportTypeName') }}</span>
               </div>
             </div>
 
             <div class="col-md-6">
               <div class="form-group m-form__group">
                 <label for="trucksTypeId">{{ l('TruckType') }}<span class="text-danger">*</span> </label>
-                <select
-                  id="trucksTypeId"
-                  #trucksTypeId="ngModel"
-                  [(ngModel)]="truck.trucksTypeId"
-                  class="form-control"
-                  name="truck.trucksTypeId"
-                  (change)="trucksTypeSelectChange(truck.trucksTypeId)"
-                  [disabled]="truck.transportTypeId != null && allTransportTypes != null ? null : true"
-                  required
+                <div
                   [ngClass]="{
-                    'is-valid': trucksTypeId.valid,
-                    'is-invalid': truckForm.submitted && trucksTypeId.invalid
+                    'spinner spinner-success spinner-right mr-1 ml-1': truckTypeLoading
                   }"
                 >
-                  <option [ngValue]="null">{{ l('Select') }} {{ l('TruckType') }}</option>
-                  <option *ngFor="let item of allTruckTypesByTransportType" value="{{ item.id }}">{{ item.displayName }}</option>
-                </select>
+                  <select
+                    id="trucksTypeId"
+                    #trucksTypeId="ngModel"
+                    [(ngModel)]="truck.trucksTypeId"
+                    class="form-control"
+                    name="truck.trucksTypeId"
+                    (change)="trucksTypeSelectChange(truck.trucksTypeId)"
+                    [disabled]="truck.transportTypeId != null && allTransportTypes != null ? null : true"
+                    required
+                    [ngClass]="{
+                      'is-valid': trucksTypeId.valid,
+                      'is-invalid': truckForm.submitted && trucksTypeId.invalid
+                    }"
+                  >
+                    <option [ngValue]="null">{{ l('Select') }} {{ l('TruckType') }}</option>
+                    <option *ngFor="let item of allTruckTypesByTransportType" value="{{ item.id }}">{{ item.displayName }}</option>
+                  </select>
+                </div>
                 <validation-messages [formCtrl]="trucksTypeId"></validation-messages>
                 <span class="form-text text-muted">{{ l('SelectTransportTypeToOpenTrucksType') }} </span>
+              </div>
+              <div class="form-group m-form__group" [hidden]="!IfOther(allTruckTypesByTransportType, truck.trucksTypeId)">
+                <label>{{ l('otherTrucksType') }} <span class="required-fileds">*</span></label>
+                <div>
+                  <div class="input-group">
+                    <input
+                      type="text"
+                      id="otherTrucksTypeName"
+                      #otherTrucksTypeName="ngModel"
+                      name="otherTrucksTypeName"
+                      class="form-control"
+                      [(ngModel)]="truck.otherTrucksTypeName"
+                      [ngClass]="{
+                        'is-valid': otherTrucksTypeName.touched && otherTrucksTypeName.valid,
+                        'is-invalid': otherTrucksTypeName.touched && !otherTrucksTypeName.valid && IfOther(allTransportTypes, truck.transportTypeId)
+                      }"
+                      [required]="IfOther(allTruckTypesByTransportType, truck.trucksTypeId)"
+                    />
+                  </div>
+                </div>
+                <span class="form-text text-muted">{{ l('OtherTrucksTypeName') }}</span>
               </div>
             </div>
 
             <div class="col-md-6">
               <div class="form-group m-form__group">
                 <label for="capacityId"> {{ l('CapacityCategory') }}<span class="text-danger">*</span></label>
-                <select
-                  id="capacityId"
-                  #capacityId="ngModel"
-                  [(ngModel)]="truck.capacityId"
-                  class="form-control"
-                  name="truck.capacityId"
-                  [disabled]="
-                    truck.trucksTypeId != null && truck.trucksTypeId != null && truck.transportTypeId && (allTransportTypes != null) != null
-                      ? null
-                      : true
-                  "
-                  required
+                <div
                   [ngClass]="{
-                    'is-valid': capacityId.valid,
-                    'is-invalid': truckForm.submitted && capacityId.invalid
+                    'spinner spinner-success spinner-right mr-1 ml-1': capacityLoading
                   }"
                 >
-                  <option [ngValue]="null">{{ l('Select') }} {{ l('CapacityCategory') }}</option>
-                  <option *ngFor="let item of allTrucksCapByTruckTypeId" value="{{ item.id }}">{{ item.displayName }}</option>
-                </select>
+                  <select
+                    id="capacityId"
+                    #capacityId="ngModel"
+                    [(ngModel)]="truck.capacityId"
+                    class="form-control"
+                    name="truck.capacityId"
+                    [attr.disabled]="
+                      capacityLoading
+                        ? true
+                        : null || truck.transportTypeId == null
+                        ? true
+                        : null || allTransportTypes == null
+                        ? true
+                        : null || allTrucksCapByTruckTypeId == null
+                        ? true
+                        : null
+                    "
+                    required
+                    [ngClass]="{
+                      'is-valid': capacityId.valid,
+                      'is-invalid': truckForm.submitted && capacityId.invalid
+                    }"
+                  >
+                    <option [ngValue]="null">{{ l('Select') }} {{ l('CapacityCategory') }}</option>
+                    <option *ngFor="let item of allTrucksCapByTruckTypeId" value="{{ item.id }}">{{ item.displayName }}</option>
+                  </select>
+                </div>
                 <validation-messages [formCtrl]="capacityId"></validation-messages>
                 <span class="form-text text-muted">{{ l('SelectTrucksTypeToOpenCapacity') }} </span>
               </div>
@@ -123,7 +186,27 @@
             <div class="form-group col-md-3">
               <label for="Truck_Capacity">{{ l('Capacity') }}</label>
               <div class="input-group">
-                <input [(ngModel)]="truck.capacity" #capacity="ngModel" class="form-control" id="Truck_Capacity" name="Capacity" type="text" />
+                <input
+                  [(ngModel)]="truck.capacity"
+                  [attr.disabled]="
+                    capacityLoading
+                      ? true
+                      : null || truck.trucksTypeId == null
+                      ? true
+                      : null || truck.transportTypeId == null
+                      ? true
+                      : null || allTransportTypes == null
+                      ? true
+                      : null || allTrucksCapByTruckTypeId == null
+                      ? true
+                      : null
+                  "
+                  #capacity="ngModel"
+                  class="form-control"
+                  id="Truck_Capacity"
+                  name="Capacity"
+                  type="text"
+                />
                 <div class="input-group-append">
                   <!-- <span class="input-group-text">{{ l('Tons') }}</span> -->
                 </div>
