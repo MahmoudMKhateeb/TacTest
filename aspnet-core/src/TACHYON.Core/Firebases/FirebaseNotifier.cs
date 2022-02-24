@@ -1,5 +1,6 @@
 ﻿using Abp.Configuration;
 using Abp.Domain.Repositories;
+using Abp.Localization;
 using Abp.Notifications;
 using Abp.Timing;
 using FirebaseAdmin.Messaging;
@@ -16,16 +17,21 @@ namespace TACHYON.Firebases
 
         public FirebaseMessaging Messaging { get; set; }
         private readonly IRepository<UserDeviceToken> _userDeviceToken;
+        private readonly ILocalizationContext _localizationContext;
 
-        public FirebaseNotifier(IRepository<UserDeviceToken> userDeviceToken, ISettingManager settingManager)
+        public FirebaseNotifier(
+            IRepository<UserDeviceToken> userDeviceToken,
+            ILocalizationContext localizationContext)
         {
             Messaging = FirebaseMessaging.DefaultInstance;
             _userDeviceToken = userDeviceToken;
+            _localizationContext = localizationContext;
         }
 
 
         public async Task PushNotification(
             string notificationName,
+            string msgTitle,
             NotificationData data = null,
             params long[] userIds)
         {
@@ -44,7 +50,8 @@ namespace TACHYON.Firebases
                     Token = token,
                     Notification = new Notification()
                     {
-                        Title = data?.Properties["Message"].ToString(), Body = notificationName,
+                        Title = msgTitle,
+                        Body = notificationName,
                     },
                     Data = data?.Properties.ToDictionary(x => x.Key, x => x.Value.ToString())
                 };

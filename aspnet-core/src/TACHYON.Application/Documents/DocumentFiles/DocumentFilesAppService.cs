@@ -351,8 +351,6 @@ namespace TACHYON.Documents.DocumentFiles
         [AbpAuthorize(AppPermissions.Pages_DocumentFiles_Create)]
         protected virtual async Task Create(CreateOrEditDocumentFileDto input)
         {
-            var documentFile = ObjectMapper.Map<DocumentFile>(input);
-
             if (input.DocumentTypeDto != null && input.DocumentTypeDto.IsNumberUnique)
                 //if(input.DocumentTypeDto.IsNumberUnique)
             {
@@ -363,39 +361,9 @@ namespace TACHYON.Documents.DocumentFiles
                     throw new UserFriendlyException(L("document number should be unique message"));
                 }
             }
+            
+            await _documentFilesManager.CreateDocumentFile(input);
 
-            if (string.IsNullOrEmpty(documentFile.Name))
-            {
-                documentFile.Name = input.DocumentTypeDto.DisplayName + "_" + AbpSession.GetTenantId();
-            }
-
-
-            if (AbpSession.TenantId != null)
-            {
-                documentFile.TenantId = AbpSession.TenantId;
-            }
-
-
-            if (input.EntityType == DocumentsEntitiesEnum.Truck)
-            {
-                documentFile.TruckId = long.Parse(input.EntityId);
-            }
-
-            if (input.EntityType == DocumentsEntitiesEnum.Driver)
-            {
-                documentFile.UserId = long.Parse(input.EntityId);
-            }
-
-
-            if (input.UpdateDocumentFileInput != null)
-            {
-                if (!input.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
-                {
-                    documentFile.BinaryObjectId = await _documentFilesManager.SaveDocumentFileBinaryObject(input.UpdateDocumentFileInput.FileToken, AbpSession.TenantId);
-                }
-            }
-
-            await _documentFileRepository.InsertAsync(documentFile);
         }
 
 

@@ -329,6 +329,8 @@ namespace TACHYON.Waybills.Reports {
             
             private global::System.Data.DataColumn columnShipperNotes;
             
+            private global::System.Data.DataColumn columnShipperInvoiceNo;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public TrucksDataTable() {
@@ -564,6 +566,14 @@ namespace TACHYON.Waybills.Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn ShipperInvoiceNoColumn {
+                get {
+                    return this.columnShipperInvoiceNo;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -624,7 +634,8 @@ namespace TACHYON.Waybills.Reports {
                         string NumberOfPacking, 
                         string CarrierName, 
                         string ClientName, 
-                        string ShipperNotes) {
+                        string ShipperNotes, 
+                        string ShipperInvoiceNo) {
                 TrucksRow rowTrucksRow = ((TrucksRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         Date,
@@ -651,7 +662,8 @@ namespace TACHYON.Waybills.Reports {
                         NumberOfPacking,
                         CarrierName,
                         ClientName,
-                        ShipperNotes};
+                        ShipperNotes,
+                        ShipperInvoiceNo};
                 rowTrucksRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowTrucksRow);
                 return rowTrucksRow;
@@ -699,6 +711,7 @@ namespace TACHYON.Waybills.Reports {
                 this.columnCarrierName = base.Columns["CarrierName"];
                 this.columnClientName = base.Columns["ClientName"];
                 this.columnShipperNotes = base.Columns["ShipperNotes"];
+                this.columnShipperInvoiceNo = base.Columns["ShipperInvoiceNo"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -754,6 +767,8 @@ namespace TACHYON.Waybills.Reports {
                 base.Columns.Add(this.columnClientName);
                 this.columnShipperNotes = new global::System.Data.DataColumn("ShipperNotes", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnShipperNotes);
+                this.columnShipperInvoiceNo = new global::System.Data.DataColumn("ShipperInvoiceNo", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnShipperInvoiceNo);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1296,6 +1311,22 @@ namespace TACHYON.Waybills.Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string ShipperInvoiceNo {
+                get {
+                    try {
+                        return ((string)(this[this.tableTrucks.ShipperInvoiceNoColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'ShipperInvoiceNo\' in table \'Trucks\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTrucks.ShipperInvoiceNoColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public bool IsDateNull() {
                 return this.IsNull(this.tableTrucks.DateColumn);
             }
@@ -1592,6 +1623,18 @@ namespace TACHYON.Waybills.Reports {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public void SetShipperNotesNull() {
                 this[this.tableTrucks.ShipperNotesColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsShipperInvoiceNoNull() {
+                return this.IsNull(this.tableTrucks.ShipperInvoiceNoColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetShipperInvoiceNoNull() {
+                this[this.tableTrucks.ShipperInvoiceNoColumn] = global::System.Convert.DBNull;
             }
         }
         

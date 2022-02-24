@@ -431,7 +431,7 @@ namespace TACHYON.Tracking
             routeStart.IsActive = true;
             routeStart.IsResolve = true;
             trip.Status = ShippingRequestTripStatus.Intransit;
-            trip.StartTripDate = Clock.Now;
+            trip.StartWorking = Clock.Now;
 
             await StartTransition(routeStart, new Point(Input.lat, Input.lng));
             // if (!currentUser.IsDriver) await _firebaseNotifier.TripChanged(new Abp.UserIdentifier(trip.ShippingRequestFk.CarrierTenantId.Value, trip.AssignedDriverUserId.Value), trip.Id.ToString());
@@ -932,7 +932,7 @@ namespace TACHYON.Tracking
                 if (allPointsCompleted)
                 {
                     trip.Status = ShippingRequestTripStatus.Delivered;
-                    trip.EndTripDate = Clock.Now;
+                    trip.EndWorking = Clock.Now;
                     await ChangeShippingRequestStatusIfAllTripsDone(trip);
                     await CloseLastTransitionInComplete(trip.Id);
                     await NotificationWhenShipmentDelivered(point, currentUser);

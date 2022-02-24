@@ -1,4 +1,5 @@
 ﻿using Abp;
+using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Extensions;
@@ -15,6 +16,7 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using TACHYON.Authorization;
 using TACHYON.Authorization.Users;
 using TACHYON.Documents.DocumentFiles;
 using TACHYON.Documents.DocumentFiles.Dtos;
@@ -281,6 +283,44 @@ namespace TACHYON.Documents
             return result;
         }
 
+
+        public async Task CreateOrEditDocumentFile(CreateOrEditDocumentFileDto input)
+        {
+            if (input.Id.HasValue)
+            {
+                await UpdateDocumentFile(input);
+                return;
+            }
+
+            await CreateDocumentFile(input);
+        }
+
+        public async Task CreateDocumentFile(CreateOrEditDocumentFileDto input)
+        {
+            
+            var documentFile = ObjectMapper.Map<DocumentFile>(input);
+            
+            if (string.IsNullOrEmpty(documentFile.Name))
+                documentFile.Name = input.DocumentTypeDto.DisplayName + "_" + AbpSession.GetTenantId();
+
+            if (AbpSession.TenantId != null)
+                documentFile.TenantId = AbpSession.TenantId;
+
+            if (input.EntityType == DocumentsEntitiesEnum.Truck)
+                documentFile.TruckId = long.Parse(input.EntityId);
+
+            if (input.EntityType == DocumentsEntitiesEnum.Driver)
+                documentFile.UserId = long.Parse(input.EntityId);
+            
+            if (input.UpdateDocumentFileInput != null)
+            {
+                if (!input.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
+                {
+                    documentFile.BinaryObjectId = await SaveDocumentFileBinaryObject(input.UpdateDocumentFileInput.FileToken, AbpSession.TenantId);
+                }
+            }
+            await _documentFileRepository.InsertAsync(documentFile);
+        }
 
         public async Task UpdateDocumentFile(CreateOrEditDocumentFileDto input)
         {

@@ -13,7 +13,7 @@ namespace TACHYON.Shipping.Trips.Dto
         public DateTime? EndTripDate { get; set; }
         public DateTime? StartWorking { get; set; }
         public DateTime? EndWorking { get; set; }
-        public string Status { get; set; }
+        public string StatusTitle { get; set; }
         public string RoutePointStatus { get; set; }
         public long? AssignedDriverUserId { get; set; }
         public long? AssignedTruckId { get; set; }
@@ -33,5 +33,9 @@ namespace TACHYON.Shipping.Trips.Dto
         public string RejectedReason { get; set; }
         public string TotalValue { get; set; }
         public string Note { get; set; }
+        
+        public long? WaybillNumber { get; set; }
+
+        public ShippingRequestTripStatus Status { get; set; }
     }
 }

@@ -4,20 +4,24 @@ using Abp.BackgroundJobs;
 using Abp.Extensions;
 using Abp.IO.Extensions;
 using Abp.Runtime.Session;
+using Abp.Runtime.Validation;
 using Abp.UI;
 using Abp.Web.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
+using TACHYON.Cities;
 using TACHYON.Common;
 using TACHYON.Documents.DocumentFiles.Dtos;
 using TACHYON.Dto;
 using TACHYON.Localization.Importing;
+using TACHYON.Polygons;
 using TACHYON.Shipping.Drivers;
-using TACHYON.Shipping.Drivers.Dto;
-using TACHYON.Shipping.Trips;
 using TACHYON.Shipping.Trips.Accidents;
 using TACHYON.Shipping.Trips.Accidents.Dto;
 using TACHYON.Storage;
@@ -34,7 +38,9 @@ namespace TACHYON.Web.Controllers
         private readonly TrucksAppService _trucksAppService;
         private readonly ITempFileCacheManager _tempFileCacheManager;
         private readonly IBinaryObjectManager BinaryObjectManager;
+        private readonly CityManager _cityManager;
         protected readonly IBackgroundJobManager BackgroundJobManager;
+        private const int _100Megabyte = 1048576 * 100;
 
         private const int MaxDocumentFilePictureSize = 5242880; //5MB
 
@@ -48,9 +54,7 @@ namespace TACHYON.Web.Controllers
             IBinaryObjectManager binaryObjectManager,
             IBackgroundJobManager backgroundJobManager,
             ShippingRequestDriverManager shippingRequestDriverManager,
-            CommonManager commonManager,
-            ShippingRequestPointWorkFlowProvider workFlowProvider,
-            IShippingRequestTripAccidentAppService shippingRequestTripAccidentAppService)
+            CommonManager commonManager, ShippingRequestPointWorkFlowProvider workFlowProvider, IShippingRequestTripAccidentAppService shippingRequestTripAccidentAppService, CityManager cityManager)
         {
             _trucksAppService = trucksAppService;
             _tempFileCacheManager = tempFileCacheManager;
@@ -60,6 +64,7 @@ namespace TACHYON.Web.Controllers
             _commonManager = commonManager;
             _workFlowProvider = workFlowProvider;
             _shippingRequestTripAccidentAppService = shippingRequestTripAccidentAppService;
+            _cityManager = cityManager;
         }
 
         public async Task<FileResult> GetTruckPictureByTruckId(long truckId)
@@ -169,7 +174,7 @@ namespace TACHYON.Web.Controllers
                     throw new UserFriendlyException(L("File_Empty_Error"));
                 }
 
-                if (file.Length > 1048576 * 100) //100 MB
+                if (file.Length > _100Megabyte) //100 MB
                 {
                     throw new UserFriendlyException(L("File_SizeLimit_Error"));
                 }
@@ -190,37 +195,38 @@ namespace TACHYON.Web.Controllers
             }
         }
 
-        //[HttpPost]
-        //[AbpMvcAuthorize()]
-        //// [Produces("application/json")]
-        //[Route("/api/services/app/ShippingRequestDriver/UploadPointDeliveryDocument")]
-        //public async Task<JsonResult> SetDropOffPointToDelivery(long? pointId)
-        //{
-        //    try
-        //    {
-        //        var file = Request.Form.Files.First();
-        //        //Input.Document = file;
-        //        if (file.Length == 0)
-        //        {
-        //            throw new UserFriendlyException(L("File_Empty_Error"));
-        //        }
+        [AbpMvcAuthorize(AppPermissions.Pages_Administration_PolygonsImport)]
+        [HttpPost]
+        [Route("/api/services/app/helper/ImportCitiesPolygon")]
+        public async Task<IActionResult> ImportCitiesPolygon([FromForm] IFormFile file)
+        {
+            if (file == null || file.Length < 1)
+                throw new AbpValidationException(L("File_Empty_Error"));
+            if (file.Length > _100Megabyte )
+                throw new AbpValidationException(L("File_SizeLimit_Error"));
 
-        //        if (file.Length > 1048576 * 100) //100 MB
-        //        {
-        //            throw new UserFriendlyException(L("File_SizeLimit_Error"));
-        //        }
+            using var stream = new StreamReader(file.OpenReadStream());
+            var fileContent = await stream.ReadToEndAsync();
 
-        //        var document = await _commonManager.UploadDocument(file, AbpSession.TenantId);
-
-        //        await _shippingRequestDriverManager.SetPointToDelivery(document, pointId);
-        //        return Json(new AjaxResponse(new { }));
-        //    }
-        //    catch (UserFriendlyException ex)
-        //    {
-        //        return Json(new AjaxResponse(new ErrorInfo(ex.Message)));
-        //    }
-        //}
-
+            try
+            {
+                var root = JsonConvert.DeserializeObject<PolygonListRoot>(fileContent);
+                if (root == null) throw new Exception();
+                
+                    var polygonCitiesList = root.Features;
+                    if (polygonCitiesList is null || polygonCitiesList.Count < 1) throw new Exception();
+                    
+                    var errorWhenImportItems =  await _cityManager.ImportAllPolygonsIntoCities(polygonCitiesList);
+                    
+                    return Ok(L("CitiesPolygonImportedSuccessfully")+"\n Failed To Import Items: \n"+errorWhenImportItems);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e.Message,e);
+                throw new UserFriendlyException(L("ErrorWhenReadFile"));
+            }
+            
+        }
 
         [HttpPost]
         [AbpMvcAuthorize()]

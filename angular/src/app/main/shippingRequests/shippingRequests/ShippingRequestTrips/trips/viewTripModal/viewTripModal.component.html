@@ -11,7 +11,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <p class="modal-title">
-          <span>{{ l('TripDetails') }}</span>
+          <span>{{ l('TripDetails') }}</span> <small> - {{ trip.waybillNumber }}</small>
         </p>
         <div class="card-toolbar">
           <button
@@ -101,7 +101,7 @@
           <!--  end:: Trip start&End Dates-->
 
           <!-- StartOf::Driver&Truck -->
-          <ng-container *ngIf="feature.isEnabled('App.Carrier')">
+          <ng-container *ngIf="feature.isEnabled('App.Carrier') && trip.status !== shippingRequestTripStatusEnum.Delivered">
             <div class="form-group col-lg-6">
               <label>{{ l('driver') }}</label>
               <select

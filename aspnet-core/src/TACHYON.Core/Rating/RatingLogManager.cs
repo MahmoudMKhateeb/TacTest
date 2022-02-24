@@ -1,4 +1,5 @@
 ﻿using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Abp.Linq.Extensions;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
@@ -114,7 +115,7 @@ namespace TACHYON.Rating
                 await _ratingLogRepository.InsertAndGetIdAsync(newRate);
 
             }
-            else // Need To Check Save Change or Not
+            else 
                 tenantTripBySystem.Rate = await UpdateAndRecalculateTenantTripRating(log);
 
 
@@ -163,18 +164,20 @@ namespace TACHYON.Rating
             // we need to get carrier rating from the correct rating log
             if (rate.RateType != tenantRatingType)
             {
-                var tripId = await _routePointRepository.GetAll().Where(x => x.Id == rate.PointId).Select(x => x.ShippingRequestTripId).FirstOrDefaultAsync();
-                tenantTripRating = await _ratingLogRepository.GetAll().Where(x =>
-                   x.RateType == tenantRatingType && x.TripId == tripId)
-               .Select(x => x.Rate)
-               .FirstOrDefaultAsync();
+                using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant,AbpDataFilters.MustHaveTenant))
+                {
+                    var tripId = rate.TripId ?? await _routePointRepository.GetAll().Where(x => x.Id == rate.PointId).Select(x => x.ShippingRequestTripId).FirstOrDefaultAsync();
+                    tenantTripRating = await _ratingLogRepository.GetAll().Where(x =>
+                            x.RateType == tenantRatingType && x.TripId == tripId)
+                        .Select(x => x.Rate)
+                        .FirstOrDefaultAsync();
+                }
             }
-
 
             counter += tenantTripRating <= 0 ? 0 : 1;
 
             decimal rateSum = experienceRatingAverage + entityRatingAverage + tenantTripRating;
-            return Convert.ToDecimal((rateSum / counter).ToString("0.00"));
+            return rateSum == 0 || counter == 0 ? 0 : Convert.ToDecimal((rateSum / counter).ToString("0.00"));
         }
 
         public async Task RecalculateRatingById<TRatingEntityId>(TRatingEntityId id, Type type)

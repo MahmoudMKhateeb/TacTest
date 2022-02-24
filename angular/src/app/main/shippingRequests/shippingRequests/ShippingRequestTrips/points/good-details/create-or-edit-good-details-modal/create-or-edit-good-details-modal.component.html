@@ -77,10 +77,7 @@
                       id="goodsDetail.amount"
                       name="goodsDetail.amount"
                       type="number"
-                      [maxLength]="6"
-                      [minLength]="1"
                       [min]="1"
-                      pattern="\d{1,2}([\.,][\d{1,2}])?"
                       [class.is-invalid]="GoodsAmount.touched && !GoodsAmount.valid"
                       [class.is-valid]="GoodsAmount.touched && GoodsAmount.valid"
                       required

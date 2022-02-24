@@ -2267,5 +2267,7 @@
 		<text name="CompanyDescriptionHint">يجب ألا يزيد وصف الشركة عن 500 حرف</text>
 		<text name="SelectAnEmailTemplateType">أختر نوع قالب البريد الإلكتروني</text>
 
+		
+
 	</texts>
 </localizationDictionary>

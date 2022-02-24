@@ -413,10 +413,10 @@ namespace TACHYON.Shipping.ShippingRequests
             ShippingRequest shippingRequest;
             using (CurrentUnitOfWork.DisableFilter("IHasIsDrafted"))
             {
-                 shippingRequest = await _shippingRequestRepository.GetAll()
-                     .Include(x=> x.ShippingRequestVases)
-                  .Where(x => x.Id == id && x.IsDrafted == true)
-                  .FirstOrDefaultAsync();
+                shippingRequest = await _shippingRequestRepository.GetAll()
+                    .Include(x => x.ShippingRequestVases)
+                 .Where(x => x.Id == id && x.IsDrafted == true)
+                 .FirstOrDefaultAsync();
             }
 
             if (shippingRequest.DraftStep < 4)
@@ -760,6 +760,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     .ThenInclude(e => e.Translations)
                     .Include(e => e.ShippingTypeFk)
                     .Include(e => e.PackingTypeFk)
+                    .ThenInclude(v => v.Translations)
                     .Include(e => e.CarrierTenantFk)
                     .FirstOrDefaultAsync();
 
@@ -832,6 +833,13 @@ namespace TACHYON.Shipping.ShippingRequests
                 //return translated good category name by default language
                 output.GoodsCategoryName =
                     ObjectMapper.Map<GoodCategoryDto>(shippingRequest.GoodCategoryFk).DisplayName;
+
+
+
+                //return translated Packing Type name by current language
+                output.packingTypeDisplayName =
+                    ObjectMapper.Map<PackingTypeDto>(shippingRequest.PackingTypeFk).DisplayName;
+
 
 
                 //return translated truck type by default language
@@ -1168,7 +1176,8 @@ namespace TACHYON.Shipping.ShippingRequests
                         CarrierName = x.CarrierName,
                         TotalWeight = x.TotalWeight,
                         ShipperReference = x.ShipperReference,
-                        InvoiceNumber = x.ShipperInvoiceNo, //GetInvoiceNumberByTripId(shippingRequestTripId),
+                        ShipperInvoiceNo = x.ShipperInvoiceNo,
+                        InvoiceNumber = GetInvoiceNumberByTripId(shippingRequestTripId).ToString(),//GetInvoiceNumberByTripId(shippingRequestTripId),
                         ClientName = x.ClientName,
                         ShipperNotes = x.ShipperNotes
                     });
@@ -1274,8 +1283,8 @@ namespace TACHYON.Shipping.ShippingRequests
                             ObjectMapper.Map<GoodCategoryDto>(x.GoodsCategoryDisplayName).DisplayName,
                         HasAttachment = x.HasAttachment,
                         NeedsDeliveryNote = x.NeedDeliveryNote,
-                        ShipperReference =
-                            x.ShipperReference, /*TAC-2181 || 22/12/2021 || need to display it as an empty on production*/
+                        ShipperReference = x.ShipperReference, /*TAC-2181 || 22/12/2021 || need to display it as an empty on production*/
+                        ShipperInvoiceNo = x.ShipperInvoiceNo, /*TAC-2181 || 22/12/2021 || need to display it as an empty on production*/
                         InvoiceNumber = GetInvoiceNumberByTripId(shippingRequestTripId).ToString()
                     });
 
@@ -1392,8 +1401,8 @@ namespace TACHYON.Shipping.ShippingRequests
                         DeliveryDate = NormalizeDateTimeToClientTime(x.DeliveryDate),
                         HasAttachment = x.HasAttachment,
                         NeedsDeliveryNote = x.NeedsDeliveryNote,
-                        ShipperReference =
-                            x.ShipperReference, /*TAC-2181 || 22/12/2021 || need to display it as an empty on production*/
+                        ShipperReference = x.ShipperReference,/*TAC-2181 || 22/12/2021 || need to display it as an empty on production*/
+                        ShipperInvoiceNo = x.ShipperInvoiceNo,
                         InvoiceNumber = GetInvoiceNumberByTripId(x.Id).ToString()
                     });
 

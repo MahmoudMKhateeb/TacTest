@@ -1,0 +1,42 @@
+<div
+  bsModal
+  #modal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="modal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form *ngIf="active" novalidate (ngSubmit)="save()">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            <span></span>
+          </h4>
+          <button type="button" class="close" (click)="close()" style="position: relative; z-index: 99999" aria-label="Close">
+            <span aria-hidden="false">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>{{ l('File') }}</label>
+            <p-fileUpload
+              customUpload="true"
+              name="FileUpload"
+              #FileUpload
+              maxFileSize="10000000"
+              accept=".geojson,.json"
+              (uploadHandler)="upload($event)"
+              (onError)="onUploadError()"
+              chooseLabel="{{ 'ImportFile' | localize }}"
+              [busyIf]="loading"
+            >
+            </p-fileUpload>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

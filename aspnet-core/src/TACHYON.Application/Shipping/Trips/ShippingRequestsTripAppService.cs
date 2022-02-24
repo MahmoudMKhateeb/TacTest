@@ -111,9 +111,9 @@ namespace TACHYON.Shipping.Trips
                 .Include(x => x.AssignedDriverUserFk)
                 .Include(x => x.ShippingRequestTripRejectReason)
                 .ThenInclude(t => t.Translations)
-                .Where(x => x.ShippingRequestId == request.Id)
-                .WhereIf(input.Status.HasValue, e => e.Status == input.Status)
-                .OrderBy(input.Sorting ?? "Status asc");
+        .Where(x => x.ShippingRequestId == request.Id)
+        .WhereIf(input.Status.HasValue, e => e.Status == input.Status)
+        .OrderBy(!input.Sorting.IsNullOrEmpty() && !input.Sorting.Contains("Facility")? input.Sorting: "Status asc");
 
 
             var resultPage = await query.PageBy(input).ToListAsync();
@@ -137,11 +137,30 @@ namespace TACHYON.Shipping.Trips
                 }
             });
 
+            var pageResult = ObjectMapper.Map<List<ShippingRequestsTripListDto>>(resultPage);
+            if (!input.Sorting.IsNullOrEmpty() && input.Sorting.Contains("Facility")) 
+                pageResult = SortByFacility(input.Sorting, pageResult);
+
             var totalCount = await query.CountAsync();
             return new PagedResultDto<ShippingRequestsTripListDto>(
                 totalCount,
-                ObjectMapper.Map<List<ShippingRequestsTripListDto>>(resultPage)
+                pageResult
             );
+        }
+
+        private static List<ShippingRequestsTripListDto> SortByFacility(string sorting, List<ShippingRequestsTripListDto> pageResult)
+        {
+
+            if (sorting.Contains("DESC"))
+                pageResult = pageResult
+                    .OrderByDescending(x => sorting.Contains("origin") ? x.OriginCity : x.DestinationCity)
+                    .ToList();
+
+            else
+                pageResult = pageResult
+                    .OrderBy(x => sorting.Contains("origin") ? x.OriginCity : x.DestinationCity)
+                    .ToList();
+            return pageResult;
         }
 
         public async Task<ShippingRequestsTripForViewDto> GetShippingRequestTripForView(int id)

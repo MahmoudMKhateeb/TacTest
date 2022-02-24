@@ -645,17 +645,19 @@ namespace TACHYON.Authorization
             tenantCarrier.CreateChildPermission(AppPermissions.Pages_TenantCarrier_Delete, L("TenantCarrierDelete"),
                 multiTenancySides: MultiTenancySides.Host);
 
-            administration.CreateChildPermission(AppPermissions.Pages_Administration_Host_Settings, L("Settings"),
-                multiTenancySides: MultiTenancySides.Host);
-            administration.CreateChildPermission(AppPermissions.Pages_Administration_Host_Languages, L("Settings"),
-                multiTenancySides: MultiTenancySides.Host);
-            administration.CreateChildPermission(AppPermissions.Pages_Administration_Host_Maintenance, L("Maintenance"),
-                multiTenancySides: _isMultiTenancyEnabled ? MultiTenancySides.Host : MultiTenancySides.Tenant);
-            administration.CreateChildPermission(AppPermissions.Pages_Administration_HangfireDashboard,
-                L("HangfireDashboard"),
-                multiTenancySides: _isMultiTenancyEnabled ? MultiTenancySides.Host : MultiTenancySides.Tenant);
-            administration.CreateChildPermission(AppPermissions.Pages_Administration_Host_Dashboard, L("Dashboard"),
-                multiTenancySides: MultiTenancySides.Host);
+            administration.CreateChildPermission(AppPermissions.Pages_Administration_Host_Settings, L("Settings"), multiTenancySides: MultiTenancySides.Host);
+            administration.CreateChildPermission(AppPermissions.Pages_Administration_Host_Languages, L("Settings"), multiTenancySides: MultiTenancySides.Host);
+            administration.CreateChildPermission(AppPermissions.Pages_Administration_Host_Maintenance, L("Maintenance"), multiTenancySides: _isMultiTenancyEnabled ? MultiTenancySides.Host : MultiTenancySides.Tenant);
+            administration.CreateChildPermission(AppPermissions.Pages_Administration_HangfireDashboard, L("HangfireDashboard"), multiTenancySides: _isMultiTenancyEnabled ? MultiTenancySides.Host : MultiTenancySides.Tenant);
+            administration.CreateChildPermission(AppPermissions.Pages_Administration_Host_Dashboard, L("Dashboard"), multiTenancySides: MultiTenancySides.Host);
+            cities.CreateChildPermission(AppPermissions.Pages_Administration_PolygonsImport, L("PolygonsImport"), multiTenancySides: MultiTenancySides.Host);
+
+
+
+
+
+
+
         }
 
         private static ILocalizableString L(string name)

@@ -584,6 +584,8 @@ namespace TACHYON.Shipping.Drivers
                 trip.RejectedReason = string.Empty;
                 trip.RejectReasonId = default(int?);
                 trip.ActualDeliveryDate = trip.ActualPickupDate = null;
+                trip.StartWorking = null;
+                trip.EndWorking = null;
                 // trip.RatingLogs.Where(x => x.RateType != RateType.CarrierTripBySystem && x.RateType != RateType.ShipperTripBySystem).ToList().Clear();
                 trip.RoutPoints.ToList().ForEach(item =>
                 {

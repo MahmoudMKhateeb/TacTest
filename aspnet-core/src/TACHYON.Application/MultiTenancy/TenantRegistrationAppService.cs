@@ -11,12 +11,14 @@ using Abp.Runtime.Session;
 using Abp.Timing;
 using Abp.UI;
 using Abp.Zero.Configuration;
+using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TACHYON.Cities;
+using TACHYON.Cities.Dtos;
 using TACHYON.Configuration;
 using TACHYON.Countries;
 using TACHYON.Countries.Dtos;
@@ -352,8 +354,20 @@ namespace TACHYON.MultiTenancy
 
             List<TenantCityLookupTableDto> cityDtos = ObjectMapper.Map<List<TenantCityLookupTableDto>>(cities);
             return cityDtos;
-        }
 
+        } //GetAllCitiesWithPolygonsByCountryId
+
+        public async Task<List<CityPolygonLookupTableDto>> GetAllCitiesWithPolygonsByCountryId(int countryId)
+        {
+            var cities = await _lookupCityRepository
+                .GetAllIncluding(x => x.Translations)
+                .AsNoTracking()
+                .Where(x => x.CountyId == countryId)
+                .OrderBy(x => x.DisplayName)
+                .ToListAsync();
+            
+            return ObjectMapper.Map<List<CityPolygonLookupTableDto>>(cities);
+        }
 
         public bool CheckIfCompanyUniqueNameisAvailable(string companyName)
         {
