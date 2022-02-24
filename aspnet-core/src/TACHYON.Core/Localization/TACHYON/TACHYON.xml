@@ -2526,5 +2526,6 @@
 	<text name="CompanyDescriptionHint">Company description must be at most 500 characters</text>
 	<text name="SelectAnEmailTemplateType">Select an email template type</text>
 
+	<text name="PointNotFoundOrNotCompleted">Point not found or not completed</text>
 	</texts>
 </localizationDictionary>
