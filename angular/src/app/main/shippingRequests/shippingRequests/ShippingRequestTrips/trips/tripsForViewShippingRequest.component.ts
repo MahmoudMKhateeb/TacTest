@@ -35,7 +35,7 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   @Input() VasListFromFather: GetShippingRequestVasForViewDto[];
   tripsByTmsEnabled = false;
   saving = false;
-  ShippingRequestTripStatus = ShippingRequestTripStatus;
+  ShippingRequestTripStatusEnum = ShippingRequestTripStatus;
   constructor(
     injector: Injector,
     private _TripService: TripService,
