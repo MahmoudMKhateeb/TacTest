@@ -13,7 +13,7 @@
         <div class="modal-body">
           <div class="form-group" *ngIf="widgets && widgets.length > 0">
             <select autoFocus size="1" class="form-control" name="selectedWidget" [(ngModel)]="selectedWidgetId">
-              <option *ngFor="let widget of widgets" [value]="widget.id">{{ widget.name }}</option>
+              <option *ngFor="let widget of widgets" [value]="widget.id">{{ l(widget.name) }}</option>
             </select>
           </div>
           <div class="form-group" *ngIf="!widgets || widgets.length == 0">{{ 'NoWidgetAvailableMessage' | localize }}</div>
