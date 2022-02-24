@@ -1,9 +1,10 @@
 ﻿using Abp.Application.Services.Dto;
+using Abp.Domain.Entities;
 using System;
 
 namespace TACHYON.PriceOffers.Dto
 {
-    public class PriceOfferListDto:EntityDto<long>
+    public class PriceOfferListDto:EntityDto<long> , IMustHaveTenant
     {
         public long ShippingRequestId { get; set; }
         public string Name { get; set; }
@@ -21,5 +22,6 @@ namespace TACHYON.PriceOffers.Dto
 
         public int CarrierTenantId { get; set; }
 
+        public int TenantId { get; set; }
     }
 }

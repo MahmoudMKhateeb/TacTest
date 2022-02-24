@@ -153,7 +153,13 @@
                 <a *ngIf="canSeeTotalOffers(item)" href="javascript:void(0)" class="infoHighLight green" (click)="ModelOffer.show(item)">
                   {{ item.totalOffers }} {{ getWordTitle(item.totalOffers, 'TotalOffer') }}
                 </a>
-                <a *ngIf="item.isPriced && Channel != 10" href="javascript:void(0)" class="infoHighLight red">{{ l('MarketPlacepriced') }}</a>
+                <a
+                  *ngIf="item.isPriced && Channel != 10"
+                  href="javascript:void(0)"
+                  class="infoHighLight blue"
+                  (click)="ModelViewPrice.show(item.id, item.offerId)"
+                  >{{ l('MarketPlacepriced') }}</a
+                >
                 <a *ngIf="item.price && (item.status == 5 || item.status == 1) && Channel != 10" href="javascript:void(0)" class="infoHighLight red"
                   >{{ item.price | number }} {{ l('SAR') }}</a
                 >
@@ -270,3 +276,4 @@
 <price-offer-list-model [Channel]="Channel" #ModelOffer></price-offer-list-model>
 <shipping-request-card-search-model #ModelSearch (modalsearch)="search()"></shipping-request-card-search-model>
 <shipping-request-card-cancel-model #ModelCancel></shipping-request-card-cancel-model>
+<price-offer-view-model #ModelViewPrice [Channel]="Channel" (modalDelete)="search()"></price-offer-view-model>

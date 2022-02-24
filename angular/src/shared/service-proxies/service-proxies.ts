@@ -78265,6 +78265,7 @@ export class PriceOfferListDto implements IPriceOfferListDto {
   readonly priceTypeTitle!: string | undefined;
   readonly channelTitle!: string | undefined;
   carrierTenantId!: number;
+  tenantId!: number;
   id!: number;
 
   constructor(data?: IPriceOfferListDto) {
@@ -78290,6 +78291,7 @@ export class PriceOfferListDto implements IPriceOfferListDto {
       (<any>this).priceTypeTitle = _data['priceTypeTitle'];
       (<any>this).channelTitle = _data['channelTitle'];
       this.carrierTenantId = _data['carrierTenantId'];
+      this.tenantId = _data['tenantId'];
       this.id = _data['id'];
     }
   }
@@ -78316,6 +78318,7 @@ export class PriceOfferListDto implements IPriceOfferListDto {
     data['priceTypeTitle'] = this.priceTypeTitle;
     data['channelTitle'] = this.channelTitle;
     data['carrierTenantId'] = this.carrierTenantId;
+    data['tenantId'] = this.tenantId;
     data['id'] = this.id;
     return data;
   }
@@ -78335,6 +78338,7 @@ export interface IPriceOfferListDto {
   priceTypeTitle: string | undefined;
   channelTitle: string | undefined;
   carrierTenantId: number;
+  tenantId: number;
   id: number;
 }
 
