@@ -155,7 +155,7 @@ namespace TACHYON.Dashboards.Host
             await DisableTenancyFiltersIfTachyonDealer();
 
             return await _shippingRequestTripRepository.GetAll().AsNoTracking()
-                .Where(x => x.Status == ShippingRequestTripStatus.Intransit)
+                .Where(x => x.Status == ShippingRequestTripStatus.InTransit)
                 .CountAsync();
 
         }

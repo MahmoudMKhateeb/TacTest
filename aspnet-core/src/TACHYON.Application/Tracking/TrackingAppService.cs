@@ -233,7 +233,7 @@ namespace TACHYON.Tracking
         }
         private bool WorkingInAnotherTrip(ShippingRequestTrip trip)
         {
-            return _ShippingRequestTripRepository.GetAll().Any(x => x.AssignedDriverUserId == trip.AssignedDriverUserId && x.DriverStatus == ShippingRequestTripDriverStatus.Accepted && x.Status == ShippingRequestTripStatus.Intransit);
+            return _ShippingRequestTripRepository.GetAll().Any(x => x.AssignedDriverUserId == trip.AssignedDriverUserId && x.DriverStatus == ShippingRequestTripDriverStatus.Accepted && x.Status == ShippingRequestTripStatus.InTransit);
         }
         #endregion
     }

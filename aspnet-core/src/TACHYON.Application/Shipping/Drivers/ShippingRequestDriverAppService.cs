@@ -221,7 +221,7 @@ namespace TACHYON.Shipping.Drivers
 
             // return current driver trip
             var CurrentTrip = await _ShippingRequestTrip.GetAll()
-                    .Where(x => x.AssignedDriverUserId == AbpSession.UserId && x.Status == ShippingRequestTripStatus.Intransit).FirstOrDefaultAsync();
+                    .Where(x => x.AssignedDriverUserId == AbpSession.UserId && x.Status == ShippingRequestTripStatus.InTransit).FirstOrDefaultAsync();
 
             if (CurrentTrip != null)
                 tripDto.CurrentTripId = CurrentTrip.Id;
@@ -229,7 +229,7 @@ namespace TACHYON.Shipping.Drivers
             if (trip.AssignedTruckFk != null)
                 tripDto.TruckType = ObjectMapper.Map<TrucksTypeDto>(trip.AssignedTruckFk.TrucksTypeFk).TranslatedDisplayName;
 
-            if (tripDto.TripStatus == ShippingRequestTripStatus.Intransit)
+            if (tripDto.TripStatus == ShippingRequestTripStatus.InTransit)
                 tripDto.ActionStatus = ShippingRequestTripDriverActionStatusDto.ContinueTrip;
 
             else if (trip.StartTripDate.Date <= Clock.Now.Date && trip.Status == ShippingRequestTripStatus.New && trip.DriverStatus == ShippingRequestTripDriverStatus.Accepted)

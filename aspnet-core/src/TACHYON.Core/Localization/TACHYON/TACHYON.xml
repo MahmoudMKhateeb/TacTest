@@ -18,7 +18,6 @@
     <text name="CreateNewDangerousGoodType">Create new dangerous good type</text>
     <text name="EditDangerousGoodType">Edit dangerous good type</text>
     <text name="DeleteDangerousGoodType">Delete dangerous good type</text>
-    <text name="DangerousGoodTypes">Dangerous good types</text>
     <text name="NumberOfRequests">Number Of Requests</text>
     <text name="NumberOfDeliveredTrips">Number Of Delivered Trips</text>
     <text name="MostShippersRequests">Most Shippers Requests</text>
@@ -2538,6 +2537,7 @@
 	<text name="TMS_NumberOfRegisteredTrucksWidget">Number of registered trucks</text>
 	<text name="TMS_NumberOfRegisteredShippersWidget">Number of registered shippers</text>
 	<text name="TMS_NumberOfRegisteredCarriersWidget">Number of registered carriers</text>
+	<text name="TMS_NumberOfRegisteredDriversWidget">Number of registered drivers</text>
 	<text name="TMS_NewAccountsRegisteredWidget">New accounts registered</text>
 	<text name="TMS_NewTripsWidget">New trips</text>
 	<text name="TMS_NumberOfDeliveredTripsWidget">Number of delivered trips</text>
@@ -2566,6 +2566,21 @@
 	<text name="AssignDriver">Assign driver</text>
 	<text name="searchForNearestLocation">Search for nearest location</text>
 	<text name="HasToBeWithInCityBounds">Has to be within city bounds</text>
+	<text name="RequestReference">Request reference</text>
+	<text name="InTransit">In transit</text>
+	<text name="MyProfile">My Profile</text>
+	<text name="MyProfile_Description">You can view and edit your information in your profile</text>
+	<text name="ProfileOverview">Profile Overview</text>
+	<text name="AccountInformation">Account Information</text>
+	<text name="CompanyWebsite">Company website</text>
+	<text name="ContactInfo">Contact information</text>
+	<text name="ContactPhone">Contact phone</text>
+	<text name="CompanyDescription">CompanyDescription</text>
+	<text name="UpdateYourCompanyProfileInformation">Update your company profile information</text>
+	<text name="SaveChanges">Save changes</text>
+	<text name="Avatar">Avatar</text>
+	<text name="DriverLicenceType">Driver licence types</text>
+	<text name="DangerousGoodTypes">Dangerous goods types</text>
 
 
     

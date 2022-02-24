@@ -266,7 +266,7 @@ namespace TACHYON.Authorization.Users.Profile
                 throw new UserFriendlyException(L("ThisTenantNotShipperOrCarrier"));
 
             var numberOfCompletedShipments = await _lookupTripRepository.GetAll()
-                .Where(x => x.Status == ShippingRequestTripStatus.Intransit
+                .Where(x => x.Status == ShippingRequestTripStatus.InTransit
                             || x.Status == ShippingRequestTripStatus.Delivered
                             || x.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation)
                 .WhereIf(isShipper, x => x.ShippingRequestFk.TenantId == tenantId)

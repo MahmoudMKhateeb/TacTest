@@ -292,7 +292,7 @@ namespace TACHYON.Dashboards.Shipper
             .ThenInclude(x => x.CityFk)
             .WhereIf(IsEnabled(AppFeatures.Carrier), x => x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
             .WhereIf(IsEnabled(AppFeatures.Shipper), x => x.ShippingRequestFk.TenantId == AbpSession.TenantId)
-            .Where(r => r.Status == ShippingRequestTripStatus.Intransit)
+            .Where(r => r.Status == ShippingRequestTripStatus.InTransit)
             .Select(s => new TrackingMapDto()
             {
                 DestinationCity = s.DestinationFacilityFk.Name,

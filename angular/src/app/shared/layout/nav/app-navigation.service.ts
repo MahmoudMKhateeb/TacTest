@@ -87,7 +87,7 @@ export class AppNavigationService {
       //TODO: the operations menu and subMenus Need Permission !important
       //start of operations
       new AppMenuItem(
-        'operations',
+        'Operations',
         'Pages',
         'digital marketing, marketing, content marketing, launch, startup, laptop.svg',
         '',
@@ -266,7 +266,7 @@ export class AppNavigationService {
       //start of shipment tracking
       //TODO: shipmentTracking Carrier Menu item need Permission and Route(Component)
       new AppMenuItem(
-        'shipmentTracking',
+        'ShipmentTracking',
         'Pages',
         'map, navigation, location, navigate, pointer.svg',
         '/app/main/tracking',
@@ -404,7 +404,7 @@ export class AppNavigationService {
       //for host only
       //TODO: Need Permission
       new AppMenuItem(
-        'reports',
+        'Reports',
         'Pages.Administration.Host.Dashboard',
 
         'warning, signs, sign, alert, truck.svg',
@@ -434,7 +434,7 @@ export class AppNavigationService {
           new AppMenuItem('CapacityCategories', 'Pages.Capacities', '', '/app/main/truckCapacities/capacities'),
           new AppMenuItem('PlateTypes', 'Pages.Capacities', '', '/app/main/plateTypes/plateTypes'),
           new AppMenuItem('TruckStatuses', 'Pages.Administration.TruckStatuses', '', '/app/admin/trucks/truckStatuses'),
-          new AppMenuItem('DriverLicenseTypes', 'Pages.DriverLicenseTypes', '', '/app/main/driverLicenseTypes/driverLicenseTypes'),
+          new AppMenuItem('DriverLicenseType', 'Pages.DriverLicenseTypes', '', '/app/main/driverLicenseTypes/driverLicenseTypes'),
 
           //   new AppMenuItem(
           //     'TruckTypes',
@@ -594,7 +594,7 @@ export class AppNavigationService {
             undefined,
             [
               // new AppMenuItem('PlatformTerminologies', 'Pages.AppLocalizations', 'flaticon-clipboard', '/app/main/lanaguages/applocalizations'),
-              new AppMenuItem('Translations', 'Pages.AppLocalizations', 'flaticon2-edit', '', undefined, [
+              new AppMenuItem('Translations', 'Pages.AppLocalizations', '', '', undefined, [
                 new AppMenuItem(
                   'NationalityTranslations',
                   'Pages.NationalityTranslations',
@@ -627,7 +627,7 @@ export class AppNavigationService {
 
           // new AppMenuItem('AuditLogs', 'Pages.Administration.AuditLogs', '', '/app/admin/auditLogs'),
           new AppMenuItem('Maintenance', 'Pages.Administration.Host.Maintenance', '', '/app/admin/maintenance'),
-          new AppMenuItem('EmailTemplates', 'Pages.EmailTemplates', 'flaticon-more', '/app/main/emailTemplates/emailTemplates'),
+          new AppMenuItem('EmailTemplates', 'Pages.EmailTemplates', '', '/app/main/emailTemplates/emailTemplates'),
 
           // new AppMenuItem(
           //   'Subscription',
