@@ -2438,22 +2438,6 @@
 		<text name="PickupFacilityAndDropOffFacilityCantBeTheSame">Pickup facility and drop off facility can't be the same</text>
 		<text name="CreateOrEditPoint">Create or Edit Point</text>
 		<text name="SelectADangerousGoodType">Select a Dangerous Good Type</text>
-
-
-		<!--
-		<text name="StartedMovingToLoadingLocation">Started moving to loading location</text>
-		<text name="ArriveToLoadingLocation">Arrive To Loading Location</text>
-		<text name="StartLoading">Start Loading</text>
-		<text name="FinishLoading">Finish Loading</text>
-		<text name="StartedMovingToOfLoadingLocation">Started Moving To Off Loading Location</text>
-		<text name="ArrivedToDestination">Arrived To Destination</text>
-		<text name="StartOffloading">Start Off loading</text>
-		<text name="FinishOffLoadShipment">Finish Off Load Shipment</text>
-		<text name="ReceiverConfirmed">Receiver Confirmed</text>
-		<text name="FinishOffLoadShipmentDeliveryConfirmation">Delivery Confirmation after Finish Off Load Shipment</text>
-		<text name="DeliveryConfirmation">Delivery Confirmation</text>
-		<text name="DeliveryConfirmationReceiverConfirmed">Receiver Confirmed after DeliveryConfirmation</text>
-		-->
 		<text name="WorkFlowNotExist">WorkFlow for current point does not exist</text>
 		<text name="TransactionNotExist">Transaction does not exist</text>
 		<text name="FinishOffLoadShipmentDeliveryConfirmation">Delivery Confirmation after Finish Off Load Shipment</text>
@@ -2516,9 +2500,7 @@
     <text name="IsMandatoryNumber">Number Mandatory</text>
     <text name="IsMandatoryExpirationDate">Expiration Date Mandatory</text>
 
-    <!--<text name="StartOffloading"></text>
-    <text name="ReceiverConfirmed"></text>
-    <text name="DeliveryConfirmation"></text>-->
+
     <text name="ImportTrucksProcessStart">The process of importing Trucks has begun</text>
     <text name="ImportTrucksUploadFailed">Trucks import process has failed.</text>
     <text name="facilityNameIsAlreadyExistsForThisTenant">Facility Name Is Already Exists For This Tenant</text>
@@ -2530,6 +2512,61 @@
 	<text name="NoMatchingDrivers">There is no Drivers</text>
 	<text name="CompanyDescriptionHint">Company description must be at most 500 characters</text>
 	<text name="SelectAnEmailTemplateType">Select an email template type</text>
+	<text name="ShipperNumberOfCompletedTripsWidget">Number of completed trips</text>
+	<text name="ShipperAcceptedVsRejectedRequestsWidget">Accepted vs rejected requests</text>
+	<text name="ShipperCompletedTripsVsPodWidget">Completed trips vs Prof of delivary</text>
+	<text name="ShipperInvoicesVsPaidInvoicesWidget">Invoices vs Paid invoices</text>
+	<text name="ShipperNextInvoiceFrequencyEndDateWidget">Next invoice frequency end date</text>
+	<text name="ShipperInvoiceDueDateInDaysWidget">Invoice due date in days</text>
+	<text name="ShipperDocumentDueDateInDaysWidget">Document due date in days</text>
+	<text name="ShipperMostWorkedWithCarriersWidget">Most worked with carriers</text>
+	<text name="ShipperMostUsedOriginsWidget">Most used origins</text>
+	<text name="ShipperMostUsedDestinationsWidget">Most used destinations</text>
+	<text name="ShipperRequestsInMarketplaceWidget">Requests in marketplace</text>
+	<text name="ShipperTrackingMapWidget">Tracking map</text>
+	<text name="CarrierDriversActivityWidget">Drivers activity</text>
+	<text name="CarrierTrucksActivityWidget">Trucks activity</text>
+	<text name="CarrierAcceptedVsRejectedPricingWidget">Accepted vs rejected pricing</text>
+	<text name="CarrierInvoicesVsPaidInvoicesWidget">Invoices vs paid invoices</text>
+	<text name="CarrierMostUsedPpWidget">Most used piced packages</text>
+	<text name="CarrierMostUsedVasWidget">Most used vas</text>
+	<text name="CarrierNumberOfCompletedTripsTotalMonthlyIncreaseWidget">Total monthly number of completed trips</text>
+	<text name="CarrierMostWorkedWithShipperWidget">Most worked with shipper</text>
+	<text name="CarrierNextInvoiceFrequencyEndDateWidget">Next invoice frequency end date</text>
+	<text name="CarrierDueDateInDaysWidget">Due date in days</text>
+	<text name="CarrierTrackingMapWidget">Tracking map</text>
+	<text name="TMS_NumberOfRegisteredTrucksWidget">Number of registered trucks</text>
+	<text name="TMS_NumberOfRegisteredShippersWidget">Number of registered shippers</text>
+	<text name="TMS_NumberOfRegisteredCarriersWidget">Number of registered carriers</text>
+	<text name="TMS_NewAccountsRegisteredWidget">New accounts registered</text>
+	<text name="TMS_NewTripsWidget">New trips</text>
+	<text name="TMS_NumberOfDeliveredTripsWidget">Number of delivered trips</text>
+	<text name="TMS_NumberOfOngoingTripsWidget">Number of on going trips</text>
+	<text name="TMS_TruckTypeUsageWidget">Trucks type usage</text>
+	<text name="TMS_GoodTypesUsageWidget">Goods types usage</text>
+	<text name="TMS_RouteTypesUsageWidget">Routes types usage</text>
+	<text name="TMS_MostRequestingShippersWidget">Most requesting shippers</text>
+	<text name="TMS_MostRequestedCarriersWidget">Most requested carriers</text>
+	<text name="TMS_TopRatedShippersWidget">Top rated shippers</text>
+	<text name="TMS_TopRatedCarriersWidget">Top rated carriers</text>
+	<text name="TMS_WorstRatedShippersWidget">Worst rated shippers</text>
+	<text name="TMS_WorstRatedCarriersWidget">Worst rated carriers</text>
+	<text name="TMS_UnPricedRequestsInMarketPlaceWidget">Unpriced requests in marketplace</text>
+	<text name="TMS_RequestsPricingBeforeBidEndingWidget">Requests pricing before bid ending</text>
+	<text name="TMS_RequestsPriceAcceptanceWidget">Requests price acceptance</text>
+	<text name="TMS_InvoicesPaidBeforeDueDateWidget">Invoices paid before due date</text>
+	<text name="TMS_NumberOfRequestsPerAreaOrCityWidget">Number of requests per area or city</text>
+	<text name="TMS_SearchableMapWidget">Searchable Map</text>
+	<text name="TMS_RequestsHeatMapWidget">Heat map for requests</text>
+	<text name="TMS_NormalVsRentalRequestsWidget">Normal vs rental requests</text>
+	<text name="FacilityRating">Facility Rating</text>
+	<text name="ViewPointDetails">View point details</text>
+	<text name="ViewGoodsDetails">View goods details</text>
+	<text name="ActivityLog">Activity Logs</text>
+	<text name="AssignDriver">Assign driver</text>
+	<text name="searchForNearestLocation">Search for nearest location</text>
+	<text name="HasToBeWithInCityBounds">Has to be within city bounds</text>
+
 
     
     <text name="ResetReceiverCode">Reset shipment receiver code</text>
