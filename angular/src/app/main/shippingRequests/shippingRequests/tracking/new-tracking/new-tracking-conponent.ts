@@ -39,8 +39,7 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
   @Input() trip: TrackingListDto = new TrackingListDto();
   active = false;
   item: number;
-  origin = { lat: null, lng: null };
-  destination = { lat: null, lng: null };
+
   routePoints: TrackingRoutePointDto[];
   pointsIsLoading = true;
   distance: string;
@@ -68,6 +67,13 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
   driverlat: number;
 
   newReceiverCode: string;
+  tripRoute = {
+    origin: { lat: null, lng: null },
+    wayPoints: [],
+    destination: { lat: null, lng: null },
+  };
+  driversToggle = true;
+  tripsToggle = true;
   constructor(
     injector: Injector,
     private elRef: ElementRef,
@@ -88,11 +94,38 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
    */
   ngOnChanges(changes: SimpleChanges) {
     this.getForView();
-    this.getCordinatesByCityName(this.trip.origin, 'source');
-    this.getCordinatesByCityName(this.trip.destination, 'destanation');
     this.getDriverLiveLocation();
   }
 
+  /**
+   * when map is ready do stuff
+   * @param event
+   */
+  mapReady(event: any) {
+    event.controls[google.maps.ControlPosition.TOP_RIGHT].push(document.getElementById('Settings'));
+  }
+
+  /**
+   * Get source/Destionation/WayPoints For Map Drawing from Drop Points
+   */
+  getTripRouteForMap() {
+    this.tripRoute.origin.lng = this.routePoints[0].lng;
+    this.tripRoute.origin.lat = this.routePoints[0].lat;
+    this.tripRoute.destination.lng = this.routePoints[this.routePoints.length - 1].lng;
+    this.tripRoute.destination.lat = this.routePoints[this.routePoints.length - 1].lat;
+    for (let i = 1; i < this.routePoints.length - 1; i++) {
+      this.tripRoute.wayPoints.push({
+        location: {
+          lat: this.routePoints[i].lat,
+          lng: this.routePoints[i].lng,
+        },
+      });
+    }
+  }
+
+  /**
+   * get live Driver Location
+   */
   getDriverLiveLocation() {
     this.fireDB = this._db.list('maps', (ref) => ref.orderByChild('tripId').equalTo(this.trip.id));
     this.fireDB.valueChanges().subscribe((res: any) => {
@@ -140,6 +173,7 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
         this.routePoints = result.routPoints;
         this.syncTripInGetForView(this.trip);
         this.handleCanGoNextLocation(result.routPoints);
+        this.getTripRouteForMap();
       });
   }
 
@@ -163,64 +197,6 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
       });
   }
 
-  /**
-   * Get City Cordinates By Providing its name
-   * this finction is to draw the shipping Request Main Route in View SR Details in marketPlace
-   * @param cityName
-   * @param cityType   source/dest
-   */
-  getCordinatesByCityName(cityName: string, cityType: string) {
-    const geocoder = new google.maps.Geocoder();
-    geocoder.geocode(
-      {
-        address: cityName,
-      },
-      (results, status) => {
-        if (status == google.maps.GeocoderStatus.OK) {
-          const Lat = results[0].geometry.location.lat();
-          const Lng = results[0].geometry.location.lng();
-          if (cityType == 'source') {
-            this.origin = { lat: Lat, lng: Lng };
-          } else {
-            this.destination = { lat: Lat, lng: Lng };
-            this.messuareDistance(this.origin, this.destination);
-          }
-        } else {
-          console.log('Something got wrong ' + status);
-        }
-      }
-    );
-  }
-
-  /**
-   * Measure the Distance Between 2 Points using Cordinates
-   * @param Oring { lat: null, lng: null }
-   * @param destination { lat: null, lng: null }
-   */
-
-  messuareDistance(origin, destination) {
-    origin = this.origin;
-    destination = this.destination;
-    const service = new google.maps.DistanceMatrixService();
-    service.getDistanceMatrix(
-      {
-        origins: [{ lat: origin.lat, lng: origin.lng }],
-        destinations: [{ lat: destination.lat, lng: destination.lng }],
-        travelMode: google.maps.TravelMode.DRIVING,
-        unitSystem: google.maps.UnitSystem.METRIC,
-        avoidHighways: false,
-        avoidTolls: false,
-      },
-      (response, status) => {
-        this.distance = response.rows[0].elements[0].distance.text;
-        this.duration = response.rows[0].elements[0].duration.text;
-      }
-    );
-  }
-
-  /**
-   * accepts the trip
-   */
   accept(tripId?: number): void {
     this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
       if (isConfirmed) {
@@ -490,5 +466,19 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
         });
       }
     });
+  }
+
+  /**
+   * show or hide drivers  from the map
+   */
+  driverToggle() {
+    this.driversToggle = !this.driversToggle;
+  }
+
+  /**
+   * show or hide trips from the map
+   */
+  tripToggle() {
+    this.tripsToggle = !this.tripsToggle;
   }
 }

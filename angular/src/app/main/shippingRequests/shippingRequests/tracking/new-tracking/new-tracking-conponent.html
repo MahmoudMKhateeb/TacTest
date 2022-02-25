@@ -3,17 +3,45 @@
   <div class="card-body p-0">
     <!--begin::Content-->
     <div class="d-flex flex-wrap" *ngIf="mapToggle">
-      <agm-map [zoom]="zoom" [longitude]="markerLong || 46.675761" [latitude]="markerLat || 24.717942">
-        <agm-direction
-          *ngIf="destination.lat && !markerLong"
-          [origin]="{ lat: origin.lat, lng: origin.lng }"
-          [destination]="{ lat: destination.lat, lng: destination.lng }"
-          [travelMode]="'DRIVING'"
-        ></agm-direction>
-        <agm-marker *ngIf="markerLong" [longitude]="markerLong" [latitude]="markerLat">
-          <agm-info-window>{{ markerFacilityName }}</agm-info-window>
-        </agm-marker>
-        <agm-marker *ngIf="driverLng" [longitude]="driverLng" [latitude]="driverlat" [iconUrl]="trackingIconsList.driverIcon"> </agm-marker>
+      <agm-map [zoom]="zoom" [longitude]="markerLong || 46.675761" [latitude]="markerLat || 24.717942" (mapReady)="mapReady($event)">
+        <div id="Settings" class="rounded bg-white p-2" style="height: 50px">
+          <div class="form-group row p-1">
+            <label class="col-3 col-form-label">{{ l('Drivers') }}</label>
+            <div class="col-3">
+              <span class="switch switch-outline switch-icon switch-danger">
+                <label>
+                  <input [(ngModel)]="driversToggle" type="checkbox" name="driversToggle" (click)="driverToggle()" />
+                  <span></span>
+                </label>
+              </span>
+            </div>
+            <label class="col-3 col-form-label">{{ l('Trip') }}</label>
+            <div class="col-3">
+              <span class="switch switch-outline switch-icon switch-danger">
+                <label>
+                  <input [(ngModel)]="tripsToggle" type="checkbox" name="tripsToggle" (click)="tripToggle()" />
+                  <span></span>
+                </label>
+              </span>
+            </div>
+          </div>
+        </div>
+        <ng-container *ngIf="tripsToggle" id="route">
+          <agm-direction
+            *ngIf="tripRoute.destination.lat && !markerLong"
+            [origin]="{ lat: tripRoute.origin.lat, lng: tripRoute.origin.lng }"
+            [destination]="{ lat: tripRoute.destination.lat, lng: tripRoute.destination.lng }"
+            [waypoints]="tripRoute.wayPoints"
+            [travelMode]="'DRIVING'"
+          ></agm-direction>
+        </ng-container>
+        <ng-container id="markers">
+          <agm-marker *ngIf="driversToggle && markerLong" [longitude]="markerLong" [latitude]="markerLat">
+            <agm-info-window>{{ markerFacilityName }}</agm-info-window>
+          </agm-marker>
+          <agm-marker *ngIf="driversToggle && driverLng" [longitude]="driverLng" [latitude]="driverlat" [iconUrl]="trackingIconsList.driverIcon.url">
+          </agm-marker>
+        </ng-container>
       </agm-map>
     </div>
 
