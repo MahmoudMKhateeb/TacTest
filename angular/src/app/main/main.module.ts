@@ -1,4 +1,4 @@
-﻿import { CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
@@ -196,15 +196,11 @@ import { PriceOfferListModelComponent } from '@app/main/priceoffer/price-offer-l
 import { PriceOfferRejectModelComponent } from '@app/main/priceoffer/price-offer-reject-model-component';
 import { ShippingRequestOffersList } from '@app/main/shippingRequests/shippingRequests/offers/shipping-request-offers-list.component';
 import { ViewShippingRequestPriceResponseModalComponent } from './shippingRequests/shippingRequests/shipping-request-Response/view-shipping-request-response-modal.component';
-// import { ListboxModule, MultiSelectModule, PickListModule, SelectButtonModule, StepsModule } from '@node_modules/primeng';
 import { PointsComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.component';
 
 import { AgmDirectionModule } from '@node_modules/agm-direction';
 import { TripsForViewShippingRequestComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/tripsForViewShippingRequest.component';
 import { CreateOrEditTripComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/createOrEditTripModal/createOrEditTrip.component';
-import { CreateOrEditTripAccidentModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/accident/create-or-edit-trip-accident-modal.component';
-import { ViewTripAccidentModelComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/accident/View-trip-accident-modal.component';
-import { CreateOrEditTripResolveAccidentModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/accident/resolves/create-or-edit-resolve-trip-accident-modal.component';
 import { TripRejectReasonComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/rejectreason/trip-reject-reason.component';
 import { TripRejectReasonModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/rejectreason/create-or-edit-trip-reject-reason-modal.component';
 
@@ -241,11 +237,6 @@ import { ApplocalizationModalComponent } from '@app/main/applocalizations/create
 import { ViewApplocalizationModalComponent } from '@app/main/applocalizations/view-applocalization-modal.component';
 import { ComingSoonComponent } from '@app/main/commingSoon/comingSoon.component';
 import { CreateOrEditShippingRequestWizardComponent } from '@app/main/shippingRequests/shippingRequests/shippingRequestWizard/create-or-edit-shipping-request-wizard.component';
-import { TrackingComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tracking.component';
-import { TrackinSearchModelComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tacking-search-model.component';
-// import { TrackingModelComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tacking-model.component';
-import { TrackingConfirmModalComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tacking-confirm-code-model.component';
-import { TrackingPODModalComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tacking-pod-model.component';
 import { TMSRequestListComponent } from '@app/main/tms/tms-request-list.component';
 import { MultiSelectModule } from '@node_modules/primeng/multiselect';
 import { ListboxModule } from '@node_modules/primeng/listbox';
@@ -266,7 +257,6 @@ import { ProfileModule } from '@app/main/profile/profile.module';
 import { ViewGoodDetailsComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/points/good-details/view-good-details/view-good-details.component';
 import { ViewPointModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/points/view-point-modal/view-point-modal.component';
 import { DangerousCoodTypesTranslationsComponent } from './goods/dangerous-cood-types-translations/dangerous-cood-types-translations.component';
-import { NewTrackingConponent } from './shippingRequests/shippingRequests/tracking/new-tracking/new-tracking-conponent';
 import { CollapseModule } from '@node_modules/ngx-bootstrap/collapse';
 import { NgxSkeletonLoaderModule } from '@node_modules/ngx-skeleton-loader';
 import {
@@ -277,8 +267,6 @@ import {
   NgbNavModule,
   NgbRatingModule,
 } from '@node_modules/@ng-bootstrap/ng-bootstrap';
-import { ViewDetailsAccidentModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/accident/view-details-accident-modal.component';
-import { AddAccidentCommentModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/accident/accident-comment/add-accident-comment-modal.component';
 import { ShippingRequestRatingModalComponent } from './shippingRequests/shippingRequests/rating/shipping-request-rating-modal.component';
 import { RatingModule } from '@node_modules/primeng/rating';
 import { StepsModule } from '@node_modules/primeng/steps';
@@ -289,6 +277,7 @@ import { EmailTemplateTranslationTemplateComponent } from './emailTemplates/emai
 import { CreateOrEditEmailTemplateTranslationModalComponent } from './emailTemplates/emailTemplates/create-or-edit-email-template-translation-modal.component';
 import { ImportCitiesPolygonsModalComponent } from './cities/cities/import-cities-polygoins-modal/import-cities-polygons-modal.component';
 import { ToggleButtonModule } from '@node_modules/primeng/togglebutton';
+import { TrackingModule } from '@app/main/shippingRequests/shippingRequests/tracking/tracking.module';
 
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
@@ -345,6 +334,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     StepsModule,
     EmailEditorModule,
     ToggleButtonModule,
+    TrackingModule,
   ],
   declarations: [
     EmailTemplatesComponent,
@@ -500,10 +490,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     PointsComponent,
     TripsForViewShippingRequestComponent,
     CreateOrEditTripComponent,
-    CreateOrEditTripAccidentModalComponent,
     ViewTripModalComponent,
-    ViewTripAccidentModelComponent,
-    CreateOrEditTripResolveAccidentModalComponent,
     AccidentReasonComponent,
     AccidentReasonComponentModalComponent,
     TripRejectReasonComponent,
@@ -522,11 +509,6 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     CreateOrEditShippingRequestWizardComponent,
     ShippingrequestsDetailsModelComponent,
     ComingSoonComponent,
-    TrackingComponent,
-    TrackinSearchModelComponent,
-    // TrackingModelComponent,
-    TrackingConfirmModalComponent,
-    TrackingPODModalComponent,
     TMSRequestListComponent,
     GoodDetailsComponent,
     CreateOrEditGoodDetailsModalComponent,
@@ -541,9 +523,6 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ViewGoodDetailsComponent,
     ViewPointModalComponent,
     DangerousCoodTypesTranslationsComponent,
-    NewTrackingConponent,
-    ViewDetailsAccidentModalComponent,
-    AddAccidentCommentModalComponent,
     ShippingRequestRatingModalComponent,
     ViewRatingComponent,
     ShipmentHistoryComponent,
@@ -556,5 +535,6 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     { provide: BsDaterangepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDaterangepickerConfig },
     { provide: BsLocaleService, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerLocale },
   ],
+  exports: [],
 })
 export class MainModule {}
