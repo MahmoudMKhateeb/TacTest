@@ -63,6 +63,23 @@ export abstract class AppComponentBase {
     { type: 'jpg', icon: 'fas fa-file-image' },
   ];
 
+  trackingIconsList = {
+    driverIcon: {
+      url: 'https://img.icons8.com/external-victoruler-flat-gradient-victoruler/64/000000/external-delivery-courier-food-and-delivery-victoruler-flat-gradient-victoruler.png',
+      scaledSize: {
+        width: 40,
+        height: 40,
+      },
+    },
+    truckIcon: {
+      url: 'https://img.icons8.com/external-justicon-flat-justicon/64/000000/external-truck-transportation-justicon-flat-justicon.png',
+      scaledSize: {
+        width: 40,
+        height: 40,
+      },
+    },
+  };
+
   constructor(injector: Injector) {
     this.localization = injector.get(LocalizationService);
     this.permission = injector.get(PermissionCheckerService);

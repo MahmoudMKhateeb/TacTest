@@ -50,6 +50,10 @@ import { PaginatorModule } from '@node_modules/primeng/paginator';
 import { UtilsModule } from '@shared/utils/utils.module';
 import { BsDatepickerModule } from '@node_modules/ngx-bootstrap/datepicker';
 import { NgbRatingModule } from '@node_modules/@ng-bootstrap/ng-bootstrap';
+import { AngularFireModule } from '@angular/fire/compat';
+import { environment } from '../../../../../environments/environment';
+import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -106,6 +110,9 @@ import { NgbRatingModule } from '@node_modules/@ng-bootstrap/ng-bootstrap';
     UtilsModule,
     BsDatepickerModule,
     NgbRatingModule,
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFirestoreModule,
+    RouterModule,
   ],
   entryComponents: [
     CompletedTripsWidgetComponent,

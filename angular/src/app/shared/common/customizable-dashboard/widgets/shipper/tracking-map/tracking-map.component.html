@@ -1,16 +1,66 @@
 <!--begin::Body-->
 <div class="row bg-white p-2">
-  <div class="col-lg-12" *ngIf="loading">
-    <agm-map minZoom="5" [zoom]="zoom" [longitude]="source1.lng || 46.675761" [latitude]="source1.lat || 24.717942" [scrollwheel]="false">
-      <agm-direction
-        *ngFor="let item of items"
-        [origin]="item.source"
-        [destination]="item.destination"
-        [waypoints]="item.waybill"
-        [renderOptions]="item.renderOption"
-        [markerOptions]="item.markerOptions"
-        [optimizeWaypoints]="false"
-      ></agm-direction>
+  <div class="col-lg-12">
+    <agm-map minZoom="5" [longitude]="allDrivers[0]?.lng || 46.675761" [latitude]="allDrivers[0]?.lat || 24.717942" (mapReady)="mapReady($event)">
+      <div id="Settings" class="rounded bg-white p-2" style="height: 50px">
+        <div class="form-group row p-1">
+          <label class="col-3 col-form-label">{{ l('Drivers') }}</label>
+          <div class="col-3">
+            <span class="switch switch-outline switch-icon switch-danger">
+              <label>
+                <input [(ngModel)]="driversToggle" type="checkbox" name="driversToggle" (click)="driverToggle()" />
+                <span></span>
+              </label>
+            </span>
+          </div>
+          <label class="col-3 col-form-label">{{ l('Trips') }}</label>
+          <div class="col-3">
+            <span class="switch switch-outline switch-icon switch-danger">
+              <label>
+                <input [(ngModel)]="tripsToggle" type="checkbox" name="tripsToggle" (click)="tripToggle()" />
+                <span></span>
+              </label>
+            </span>
+          </div>
+        </div>
+      </div>
+      <ng-container *ngIf="tripsToggle">
+        <agm-direction
+          *ngFor="let item of items"
+          [origin]="item.source"
+          [destination]="item.destination"
+          [waypoints]="item.waybill"
+          [renderOptions]="item.renderOption"
+          [markerOptions]="item.markerOptions"
+          [optimizeWaypoints]="false"
+        ></agm-direction>
+      </ng-container>
+      <ng-container *ngIf="driversToggle">
+        <agm-marker *ngFor="let driver of allDrivers" [longitude]="driver.lng" [latitude]="driver.lat" [iconUrl]="trackingIconsList.driverIcon">
+          <agm-info-window>
+            <div class="d-flex flex-column">
+              <div>
+                <span class="font-weight-bold">{{ l('Driver') }}</span> : {{ driver.driverName }}
+              </div>
+              <div>
+                <span class="font-weight-bold">{{ l('Waybill') }}</span> :
+                <a href="javascript:;" [busyIf]="waybillDownloading" (click)="DownloadSingleDropWaybillPdf(driver.tripId)">{{
+                  driver.waybillNumber
+                }}</a>
+              </div>
+              <div>
+                <span class="font-weight-bold">{{ l('shippingRequest') }}</span> :
+                <a
+                  href="javascript:;"
+                  [routerLink]="['/app/main/shippingRequests/shippingRequests/view']"
+                  [queryParams]="{ id: driver.shippingRequestId }"
+                  >{{ driver.shippingRequestId }}</a
+                >
+              </div>
+            </div>
+          </agm-info-window>
+        </agm-marker>
+      </ng-container>
     </agm-map>
   </div>
   <div class="col-lg-12">

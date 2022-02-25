@@ -60,7 +60,12 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
   busyPointId: number;
   loadPodForPointId: number;
   pointPodList: GetAllUploadedFileDto[];
-  mapToggle: boolean = true;
+  deliveryGoodPictureId: number;
+  mapToggle = true;
+  private fireDB: AngularFireList<unknown>;
+  driverLng: number;
+  driverlat: number;
+
   newReceiverCode: string;
 
   constructor(
