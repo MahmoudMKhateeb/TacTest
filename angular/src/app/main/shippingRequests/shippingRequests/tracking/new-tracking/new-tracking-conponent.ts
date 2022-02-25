@@ -61,6 +61,7 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
   loadPodForPointId: number;
   pointPodList: GetAllUploadedFileDto[];
   mapToggle: boolean = true;
+  newReceiverCode: string;
 
   constructor(
     injector: Injector,
@@ -462,5 +463,17 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
    */
   toggleMap() {
     this.mapToggle = !this.mapToggle;
+  }
+
+  // Reset Rout Point Receiver Code By Host
+  resetReceiverCode(pointId: number) {
+    this.message.confirm(this.l('ResetReceiverCode'), this.l('ReceiverCodeConfirmationMsg'), (isConfirmed) => {
+      if (isConfirmed) {
+        this._trackingServiceProxy.resetPointReceiverCode(pointId).subscribe((result) => {
+          this.notify.success(this.l('ResetReceiverCodeSuccessfully'));
+          this.newReceiverCode = result;
+        });
+      }
+    });
   }
 }

@@ -12,7 +12,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using TACHYON.Authorization;
 using TACHYON.Authorization.Users.Profile;
+using TACHYON.Common;
 using TACHYON.Documents.DocumentFiles.Dtos;
 using TACHYON.Dto;
 using TACHYON.Features;
@@ -136,8 +138,15 @@ namespace TACHYON.Tracking
                     WaybillNumber = a.WaybillNumber,
                     IsPodUploaded = a.IsPodUploaded,
                     FacilityRate = a.FacilityFk.Rate,
-                    Statues = _workFlowProvider.GetStatuses(a.WorkFlowVersion, a.RoutPointStatusTransitions.Where(x => !x.IsReset).Select(x => x.Status).ToList()),
-                    AvailableTransactions = !a.IsResolve ? new List<PointTransactionDto>() : _workFlowProvider.GetTransactionsByStatus(a.WorkFlowVersion, a.RoutPointStatusTransitions.Where(c => !c.IsReset).Select(v => v.Status).ToList(), a.Status),
+                    ReceiverCode = AbpSession.TenantId.HasValue ? null : a.Code,
+                    Statues =
+                        _workFlowProvider.GetStatuses(a.WorkFlowVersion,
+                            a.RoutPointStatusTransitions.Where(x => !x.IsReset).Select(x => x.Status).ToList()),
+                    AvailableTransactions = !a.IsResolve
+                        ? new List<PointTransactionDto>()
+                        : _workFlowProvider.GetTransactionsByStatus(a.WorkFlowVersion,
+                            a.RoutPointStatusTransitions.Where(c => !c.IsReset).Select(v => v.Status).ToList(),
+                            a.Status),
                 }).ToListAsync();
 
             mappedTrip.CanStartTrip = CanStartTrip(trip);
@@ -173,6 +182,17 @@ namespace TACHYON.Tracking
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier, AppFeatures.Shipper);
             return await _workFlowProvider.GetPOD(id);
         }
+
+        [AbpAuthorize(AppPermissions.Pages_Tracking_ResetPointReceiverCode)]
+        public string ResetPointReceiverCode(long pointId)
+        {
+            
+            var randomCode = new Random().Next(100000, 999999).ToString();
+            _RoutPointRepository.Update(pointId, point => point.Code = randomCode);
+
+             return randomCode;
+        }
+
         #region Helper
         private TrackingListDto GetMap(ShippingRequestTrip trip)
         {

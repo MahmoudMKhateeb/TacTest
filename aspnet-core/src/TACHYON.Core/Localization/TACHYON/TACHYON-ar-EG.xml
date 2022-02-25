@@ -2249,7 +2249,7 @@
 		<text name="NumberOfRating">عدد تقييمات الشركة</text>
     <text name="IsMandatoryDocumentTemplate">المستند إلزامي</text>
     <text name="IsMandatoryNumber">الرقم إلزامي</text>
-    <text name="IsMandatoryExpirationDate">تاريخ الإنتهاء إلزامي</text>
+   
 
     <!--<text name="StartOffloading"></text>
     <text name="ReceiverConfirmed"></text>
@@ -2273,5 +2273,9 @@
 
 		
 
+    <text name="IsMandatoryExpirationDate">تاريخ الإنتهاء إلزامي</text>
+
+	<text name="ResetReceiverCode">إعادة تعيين رمز مستلم الشحنة</text>
+	<text name="ReceiverCodeConfirmationMsg">هل أنت متأكد أنك تريد إعادة تعيين رمز المستلم لهذه الشحنة؟</text>
 	</texts>
 </localizationDictionary>

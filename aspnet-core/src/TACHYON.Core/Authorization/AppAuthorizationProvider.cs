@@ -267,7 +267,10 @@ namespace TACHYON.Authorization
             trucksTypes.CreateChildPermission(AppPermissions.Pages_TrucksTypes_Delete, L("DeleteTrucksType"), multiTenancySides: MultiTenancySides.Host);
 
             pages.CreateChildPermission(AppPermissions.Pages_DemoUiComponents, L("DemoUiComponents"));
-            pages.CreateChildPermission(AppPermissions.Pages_Tracking_ReceiverCode, L("TrackingReceiverCode"), multiTenancySides: MultiTenancySides.Host);
+            pages.CreateChildPermission(AppPermissions.Pages_Tracking_ReceiverCode, L("TrackingReceiverCode"),
+                multiTenancySides: MultiTenancySides.Host);
+            pages.CreateChildPermission(AppPermissions.Pages_Tracking_ResetPointReceiverCode, L("ResetReceiverCode"),
+                multiTenancySides: MultiTenancySides.Host);
 
             var administration = pages.CreateChildPermission(AppPermissions.Pages_Administration, L("Administration"));
 
