@@ -315,6 +315,8 @@
 		<text name="CreateNewCountriesTranslation">إضافة ترجمة الدول</text>
 		<text name="CreateNewCounty">إضافة دولة جديدة</text>
 		<text name="CreateNewDocumentFile">إضافة مستند جديد</text>
+		<text name="CanBePrinted">السماح بالطباعة</text>
+		<text name="ContainerNumber">رقم الحاوية</text>
 		<text name="CreateNewDocumentsEntity">إنشاء مستندات العنصر</text>
 		<text name="CreateNewDocumentType">إضافة نوع مستند جديد</text>
 		<text name="CreateNewDriver">إضافة سائق جديد</text>
@@ -1346,6 +1348,7 @@
 		<text name="RemoveUserFromOuWarningMessage">هل أنت متأكد من إزالة المستخدم {0} من الوحدة {1} ؟</text>
 		<text name="RenamePage">إعادة تسمية الصفحة</text>
 		<text name="Reply">رد</text>
+		<text name="RoundTrip">الرحلة العائدة</text>
 		<text name="Reports">تقارير</text>
 		<text name="RePricing">إعادة تسعير</text>
 		<text name="RequestedFileDoesNotExists">لم نعثر على الملف المطلوب</text>

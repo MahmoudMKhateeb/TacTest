@@ -158,6 +158,8 @@
 		<text name="AShipmentWasAssignedForYouToReceiveOn">A shipment was assigned for you to receive on</text>
 		<text name="AspNetZeroPlatForm">AspNetZero</text>
 		<text name="Assign">Assign</text>
+		<text name="AddRemarks">Add Remarks</text>
+
 		<text name="AssignCarrier">Assign carrier</text>
 		<text name="AssignDriverToTruckNotificationMessage">
 			Assign driver to truck
@@ -335,6 +337,8 @@
 		<text name="ConsumerKey">Consumer Key</text>
 		<text name="ConsumerSecret">Consumer Secret</text>
 		<text name="Content">Content</text>
+		<text name="ContainerNumber">Container Number</text>
+		<text name="CanBePrinted">Can Be Printed</text>
 		<text name="ContinueTrip">Continue Trip</text>
 		<text name="Contracts">Contracts</text>
 		<text name="CookieConsent">Cookie consent</text>
@@ -1484,6 +1488,7 @@
 		<text name="Prices">Prices</text>
 		<text name="PriceSubmitted">Price submitted</text>
 		<text name="Pricing">Pricing</text>
+		<text name="RoundTrip">Round Trip</text>
 		<text name="PricingOffer">Pricing offer</text>
 		<text name="Print">Print</text>
 		<text name="PrintMasterWaybill">Print master waybill</text>

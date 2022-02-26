@@ -327,7 +327,7 @@ namespace TACHYON.Shipping.Trips
         {
             ShippingRequestTrip trip;
 
-            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant,AbpDataFilters.MustHaveTenant))
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
             {
                 trip = await _shippingRequestTripRepository.
                     GetAll().
@@ -338,7 +338,7 @@ namespace TACHYON.Shipping.Trips
                     //.Where(e => e.Status != ShippingRequestTripStatus.Delivered)
                     .FirstOrDefaultAsync();
             }
-             
+
             if (trip == null) throw new UserFriendlyException(L("NoTripToAssignDriver"));
 
             if (trip.Status == ShippingRequestTripStatus.Intransit && await CheckIfDriverWorkingOnAnotherTrip(input.AssignedDriverUserId))
@@ -379,16 +379,17 @@ namespace TACHYON.Shipping.Trips
                     TripId = trip.Id,
                     WaybillNumber = trip.WaybillNumber.ToString(),
                     DriverIdentifier = new UserIdentifier(trip.AssignedDriverUserFk.TenantId,
-                        trip.AssignedDriverUserId.Value)};
-                
+                        trip.AssignedDriverUserId.Value)
+                };
+
                 await _appNotifier.NotifyCarrierWhenTripUpdated(notifyTripInput);
             }
             // Send Notification To New Driver
             await _appNotifier.NotifyDriverWhenAssignTrip(trip.Id,
                 new UserIdentifier(trip.ShippingRequestFk.CarrierTenantId, trip.AssignedDriverUserId.Value));
-            
+
             // No Need For This Already Notify All in Event Handler
-           // await _appNotifier.NotificationWhenTripDetailsChanged(trip, await GetCurrentUserAsync());
+            // await _appNotifier.NotificationWhenTripDetailsChanged(trip, await GetCurrentUserAsync());
 
         }
 
@@ -418,7 +419,26 @@ namespace TACHYON.Shipping.Trips
             await NotifyCarrierWithTripDetails(trip, request.CarrierTenantId, true, true, true);
 
         }
-
+        public async Task AddRemarks(RemarksInputDto input)
+        {
+            var shippginRequstTrip = await _shippingRequestTripRepository.GetAll()
+                .Include(z => z.ShippingRequestFk)
+                .FirstOrDefaultAsync(x => x.Id == input.Id);
+            shippginRequstTrip.RoundTrip = input.RoundTrip;
+            shippginRequstTrip.CanBePrinted = input.CanBePrinted;
+            shippginRequstTrip.ContainerNumber = input.ContainerNumber;
+        }
+        public async Task<RemarksInputDto> GetRemarks(int tripId)
+        {
+            return await _shippingRequestTripRepository.GetAll()
+                  .Select(y => new RemarksInputDto()
+                  {
+                      Id = y.Id,
+                      RoundTrip = y.RoundTrip,
+                      ContainerNumber = y.ContainerNumber,
+                      CanBePrinted = y.CanBePrinted
+                  }).FirstOrDefaultAsync(x => x.Id == tripId);
+        }
         private void AssignWorkFlowVersionToRoutPoints(ShippingRequestTrip trip)
         {
             if (trip.RoutPoints != null && trip.RoutPoints.Any())
@@ -458,12 +478,6 @@ namespace TACHYON.Shipping.Trips
                     await _documentFilesManager.DeleteDocumentFile(documentFile);
                 }
 
-            }
-
-            var needseliveryNoteOldValue = trip.NeedsDeliveryNote;
-
-            if (needseliveryNoteOldValue != input.NeedsDeliveryNote)
-            {
             }
 
             ObjectMapper.Map(input, trip);
