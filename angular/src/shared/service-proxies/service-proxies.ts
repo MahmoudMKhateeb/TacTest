@@ -17225,7 +17225,7 @@ export class ShippingRequestDriverServiceProxy {
    * @param id (optional)
    * @return Success
    */
-  getRoutPointForMobile(id: number | undefined): Observable<DriverRoutPoint> {
+  getRoutPointForMobile(id: number | undefined): Observable<DriverRoutPointDto> {
     let url_ = this.baseUrl + '/api/services/app/ShippingRequestDriver/GetRoutPointForMobile?';
     if (id === null) throw new Error("The parameter 'id' cannot be null.");
     else if (id !== undefined) url_ += 'id=' + encodeURIComponent('' + id) + '&';
@@ -17252,14 +17252,14 @@ export class ShippingRequestDriverServiceProxy {
             try {
               return this.processGetRoutPointForMobile(<any>response_);
             } catch (e) {
-              return <Observable<DriverRoutPoint>>(<any>_observableThrow(e));
+              return <Observable<DriverRoutPointDto>>(<any>_observableThrow(e));
             }
-          } else return <Observable<DriverRoutPoint>>(<any>_observableThrow(response_));
+          } else return <Observable<DriverRoutPointDto>>(<any>_observableThrow(response_));
         })
       );
   }
 
-  protected processGetRoutPointForMobile(response: HttpResponseBase): Observable<DriverRoutPoint> {
+  protected processGetRoutPointForMobile(response: HttpResponseBase): Observable<DriverRoutPointDto> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -17274,7 +17274,7 @@ export class ShippingRequestDriverServiceProxy {
         _observableMergeMap((_responseText) => {
           let result200: any = null;
           let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
-          result200 = DriverRoutPoint.fromJS(resultData200);
+          result200 = DriverRoutPointDto.fromJS(resultData200);
           return _observableOf(result200);
         })
       );
@@ -17285,7 +17285,7 @@ export class ShippingRequestDriverServiceProxy {
         })
       );
     }
-    return _observableOf<DriverRoutPoint>(<any>null);
+    return _observableOf<DriverRoutPointDto>(<any>null);
   }
 
   /**
@@ -40642,6 +40642,138 @@ export class ShippingRequestsTripServiceProxy {
   }
 
   /**
+   * @param body (optional)
+   * @return Success
+   */
+  addRemarks(body: RemarksInputDto | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/ShippingRequestsTrip/AddRemarks';
+    url_ = url_.replace(/[?&]$/, '');
+
+    const content_ = JSON.stringify(body);
+
+    let options_: any = {
+      body: content_,
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processAddRemarks(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processAddRemarks(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processAddRemarks(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @param tripId (optional)
+   * @return Success
+   */
+  getRemarks(tripId: number | undefined): Observable<RemarksInputDto> {
+    let url_ = this.baseUrl + '/api/services/app/ShippingRequestsTrip/GetRemarks?';
+    if (tripId === null) throw new Error("The parameter 'tripId' cannot be null.");
+    else if (tripId !== undefined) url_ += 'tripId=' + encodeURIComponent('' + tripId) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetRemarks(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetRemarks(<any>response_);
+            } catch (e) {
+              return <Observable<RemarksInputDto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<RemarksInputDto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetRemarks(response: HttpResponseBase): Observable<RemarksInputDto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = RemarksInputDto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<RemarksInputDto>(<any>null);
+  }
+
+  /**
    * @param id (optional)
    * @return Success
    */
@@ -42101,138 +42233,6 @@ export class ShippingRequestVasesServiceProxy {
       );
     }
     return _observableOf<void>(<any>null);
-  }
-
-  /**
-   * @param body (optional)
-   * @return Success
-   */
-  addRemarks(body: RemarksInputDto | undefined): Observable<void> {
-    let url_ = this.baseUrl + '/api/services/app/ShippingRequestsTrip/AddRemarks';
-    url_ = url_.replace(/[?&]$/, '');
-
-    const content_ = JSON.stringify(body);
-
-    let options_: any = {
-      body: content_,
-      observe: 'response',
-      responseType: 'blob',
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json-patch+json',
-      }),
-    };
-
-    return this.http
-      .request('post', url_, options_)
-      .pipe(
-        _observableMergeMap((response_: any) => {
-          return this.processAddRemarks(response_);
-        })
-      )
-      .pipe(
-        _observableCatch((response_: any) => {
-          if (response_ instanceof HttpResponseBase) {
-            try {
-              return this.processAddRemarks(<any>response_);
-            } catch (e) {
-              return <Observable<void>>(<any>_observableThrow(e));
-            }
-          } else return <Observable<void>>(<any>_observableThrow(response_));
-        })
-      );
-  }
-
-  protected processAddRemarks(response: HttpResponseBase): Observable<void> {
-    const status = response.status;
-    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-    let _headers: any = {};
-    if (response.headers) {
-      for (let key of response.headers.keys()) {
-        _headers[key] = response.headers.get(key);
-      }
-    }
-    if (status === 200) {
-      return blobToText(responseBlob).pipe(
-        _observableMergeMap((_responseText) => {
-          return _observableOf<void>(<any>null);
-        })
-      );
-    } else if (status !== 200 && status !== 204) {
-      return blobToText(responseBlob).pipe(
-        _observableMergeMap((_responseText) => {
-          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
-        })
-      );
-    }
-    return _observableOf<void>(<any>null);
-  }
-
-  /**
-   * @param tripId (optional)
-   * @return Success
-   */
-  getRemarks(tripId: number | undefined): Observable<RemarksInputDto> {
-    let url_ = this.baseUrl + '/api/services/app/ShippingRequestsTrip/GetRemarks?';
-    if (tripId === null) throw new Error("The parameter 'tripId' cannot be null.");
-    else if (tripId !== undefined) url_ += 'tripId=' + encodeURIComponent('' + tripId) + '&';
-    url_ = url_.replace(/[?&]$/, '');
-
-    let options_: any = {
-      observe: 'response',
-      responseType: 'blob',
-      headers: new HttpHeaders({
-        Accept: 'text/plain',
-      }),
-    };
-
-    return this.http
-      .request('get', url_, options_)
-      .pipe(
-        _observableMergeMap((response_: any) => {
-          return this.processGetRemarks(response_);
-        })
-      )
-      .pipe(
-        _observableCatch((response_: any) => {
-          if (response_ instanceof HttpResponseBase) {
-            try {
-              return this.processGetRemarks(<any>response_);
-            } catch (e) {
-              return <Observable<RemarksInputDto>>(<any>_observableThrow(e));
-            }
-          } else return <Observable<RemarksInputDto>>(<any>_observableThrow(response_));
-        })
-      );
-  }
-
-  protected processGetRemarks(response: HttpResponseBase): Observable<RemarksInputDto> {
-    const status = response.status;
-    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-    let _headers: any = {};
-    if (response.headers) {
-      for (let key of response.headers.keys()) {
-        _headers[key] = response.headers.get(key);
-      }
-    }
-    if (status === 200) {
-      return blobToText(responseBlob).pipe(
-        _observableMergeMap((_responseText) => {
-          let result200: any = null;
-          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
-          result200 = RemarksInputDto.fromJS(resultData200);
-          return _observableOf(result200);
-        })
-      );
-    } else if (status !== 200 && status !== 204) {
-      return blobToText(responseBlob).pipe(
-        _observableMergeMap((_responseText) => {
-          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
-        })
-      );
-    }
-    return _observableOf<RemarksInputDto>(<any>null);
   }
 
   /**
@@ -72359,6 +72359,8 @@ export class InvoiceItemDto implements IInvoiceItemDto {
   destination!: string | undefined;
   dateWork!: string | undefined;
   remarks!: string | undefined;
+  roundTrip!: string | undefined;
+  containerNumber!: string | undefined;
 
   constructor(data?: IInvoiceItemDto) {
     if (data) {
@@ -72380,6 +72382,8 @@ export class InvoiceItemDto implements IInvoiceItemDto {
       this.destination = _data['destination'];
       this.dateWork = _data['dateWork'];
       this.remarks = _data['remarks'];
+      this.roundTrip = _data['roundTrip'];
+      this.containerNumber = _data['containerNumber'];
     }
   }
 
@@ -72402,6 +72406,8 @@ export class InvoiceItemDto implements IInvoiceItemDto {
     data['destination'] = this.destination;
     data['dateWork'] = this.dateWork;
     data['remarks'] = this.remarks;
+    data['roundTrip'] = this.roundTrip;
+    data['containerNumber'] = this.containerNumber;
     return data;
   }
 }
@@ -72417,6 +72423,8 @@ export interface IInvoiceItemDto {
   destination: string | undefined;
   dateWork: string | undefined;
   remarks: string | undefined;
+  roundTrip: string | undefined;
+  containerNumber: string | undefined;
 }
 
 export class InvoiceInfoDto implements IInvoiceInfoDto {
@@ -84800,11 +84808,15 @@ export interface IRoutPointsMobileDto {
   id: number;
 }
 
-export class DriverRoutPoint implements IDriverRoutPoint {
+export class DriverRoutPointDto implements IDriverRoutPointDto {
   tripStatus!: ShippingRequestTripStatus;
+  tripId!: number;
+  waybillNumber!: number | undefined;
+  hasAccident!: boolean;
+  shippingRequestId!: number;
   routPoint!: RoutPointsMobileDto[] | undefined;
 
-  constructor(data?: IDriverRoutPoint) {
+  constructor(data?: IDriverRoutPointDto) {
     if (data) {
       for (var property in data) {
         if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
@@ -84815,6 +84827,10 @@ export class DriverRoutPoint implements IDriverRoutPoint {
   init(_data?: any) {
     if (_data) {
       this.tripStatus = _data['tripStatus'];
+      this.tripId = _data['tripId'];
+      this.waybillNumber = _data['waybillNumber'];
+      this.hasAccident = _data['hasAccident'];
+      this.shippingRequestId = _data['shippingRequestId'];
       if (Array.isArray(_data['routPoint'])) {
         this.routPoint = [] as any;
         for (let item of _data['routPoint']) this.routPoint!.push(RoutPointsMobileDto.fromJS(item));
@@ -84822,9 +84838,9 @@ export class DriverRoutPoint implements IDriverRoutPoint {
     }
   }
 
-  static fromJS(data: any): DriverRoutPoint {
+  static fromJS(data: any): DriverRoutPointDto {
     data = typeof data === 'object' ? data : {};
-    let result = new DriverRoutPoint();
+    let result = new DriverRoutPointDto();
     result.init(data);
     return result;
   }
@@ -84832,6 +84848,10 @@ export class DriverRoutPoint implements IDriverRoutPoint {
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
     data['tripStatus'] = this.tripStatus;
+    data['tripId'] = this.tripId;
+    data['waybillNumber'] = this.waybillNumber;
+    data['hasAccident'] = this.hasAccident;
+    data['shippingRequestId'] = this.shippingRequestId;
     if (Array.isArray(this.routPoint)) {
       data['routPoint'] = [];
       for (let item of this.routPoint) data['routPoint'].push(item.toJSON());
@@ -84840,8 +84860,12 @@ export class DriverRoutPoint implements IDriverRoutPoint {
   }
 }
 
-export interface IDriverRoutPoint {
+export interface IDriverRoutPointDto {
   tripStatus: ShippingRequestTripStatus;
+  tripId: number;
+  waybillNumber: number | undefined;
+  hasAccident: boolean;
+  shippingRequestId: number;
   routPoint: RoutPointsMobileDto[] | undefined;
 }
 
