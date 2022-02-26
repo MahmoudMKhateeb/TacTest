@@ -25,6 +25,8 @@ namespace TACHYON.Tracking.Dto
         public bool IsPodUploaded { get; set; }
         public decimal FacilityRate { get; set; }
         public long? WaybillNumber { get; set; }
+
+        public string ReceiverCode { get; set; }
         public List<RoutPointTransactionDto> Statues { get; set; }
         public List<PointTransactionDto> AvailableTransactions { get; set; }
     }

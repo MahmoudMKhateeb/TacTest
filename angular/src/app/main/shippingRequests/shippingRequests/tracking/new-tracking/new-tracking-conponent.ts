@@ -7,7 +7,6 @@ import {
   PointTransactionDto,
   RoutPointTransactionDto,
   ShippingRequestRouteType,
-  ShippingRequestTripDriverRoutePointDto,
   ShippingRequestTripDriverStatus,
   ShippingRequestTripStatus,
   ShippingRequestType,
@@ -24,6 +23,7 @@ import { NgbDropdownConfig } from '@node_modules/@ng-bootstrap/ng-bootstrap';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { FileDownloadService } from '@shared/utils/file-download.service';
 import { EntityLogComponent } from '@app/shared/common/entity-log/entity-log.component';
+import { AngularFireDatabase, AngularFireList } from '@angular/fire/compat/database';
 
 @Component({
   selector: 'new-tracking-conponent',
@@ -39,18 +39,17 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
   @Input() trip: TrackingListDto = new TrackingListDto();
   active = false;
   item: number;
-  origin = { lat: null, lng: null };
-  destination = { lat: null, lng: null };
+
   routePoints: TrackingRoutePointDto[];
   pointsIsLoading = true;
   distance: string;
   duration: string;
-  readonly zoom: number = 15;
+  readonly zoom: number = 12;
   saving = false;
   markerLong: number;
   markerLat: number;
   markerFacilityName: string;
-  activeIndex: number = 1;
+  activeIndex = 1;
   driverStatusesEnum = ShippingRequestTripDriverStatus;
   tripStatusesEnum = ShippingRequestTripStatus;
   pickingTypeEnum = PickingType;
@@ -61,14 +60,28 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
   busyPointId: number;
   loadPodForPointId: number;
   pointPodList: GetAllUploadedFileDto[];
+  deliveryGoodPictureId: number;
+  mapToggle = true;
+  private fireDB: AngularFireList<unknown>;
+  driverLng: number;
+  driverlat: number;
 
+  newReceiverCode: string;
+  tripRoute = {
+    origin: { lat: null, lng: null },
+    wayPoints: [],
+    destination: { lat: null, lng: null },
+  };
+  driversToggle = true;
+  tripsToggle = true;
   constructor(
     injector: Injector,
     private elRef: ElementRef,
     private _trackingServiceProxy: TrackingServiceProxy,
     private _waybillsServiceProxy: WaybillsServiceProxy,
     private _fileDownloadService: FileDownloadService,
-    config: NgbDropdownConfig
+    config: NgbDropdownConfig,
+    private _db: AngularFireDatabase
   ) {
     super(injector);
     config.autoClose = true;
@@ -81,10 +94,46 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
    */
   ngOnChanges(changes: SimpleChanges) {
     this.getForView();
-    this.getCordinatesByCityName(this.trip.origin, 'source');
-    this.getCordinatesByCityName(this.trip.destination, 'destanation');
+    this.getDriverLiveLocation();
   }
 
+  /**
+   * when map is ready do stuff
+   * @param event
+   */
+  mapReady(event: any) {
+    event.controls[google.maps.ControlPosition.TOP_RIGHT].push(document.getElementById('Settings'));
+  }
+
+  /**
+   * Get source/Destionation/WayPoints For Map Drawing from Drop Points
+   */
+  getTripRouteForMap() {
+    this.tripRoute.origin.lng = this.routePoints[0].lng;
+    this.tripRoute.origin.lat = this.routePoints[0].lat;
+    this.tripRoute.destination.lng = this.routePoints[this.routePoints.length - 1].lng;
+    this.tripRoute.destination.lat = this.routePoints[this.routePoints.length - 1].lat;
+    for (let i = 1; i < this.routePoints.length - 1; i++) {
+      this.tripRoute.wayPoints.push({
+        location: {
+          lat: this.routePoints[i].lat,
+          lng: this.routePoints[i].lng,
+        },
+      });
+    }
+  }
+
+  /**
+   * get live Driver Location
+   */
+  getDriverLiveLocation() {
+    this.fireDB = this._db.list('maps', (ref) => ref.orderByChild('tripId').equalTo(this.trip.id));
+    this.fireDB.valueChanges().subscribe((res: any) => {
+      console.log(res);
+      this.driverLng = res[0].lng;
+      this.driverlat = res[0].lat;
+    });
+  }
   /**
    * Show Item
    * @param item
@@ -93,7 +142,6 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
     this.active = true;
     this.trip = item;
     this.getForView();
-    // this.modal.show();
   }
 
   /**
@@ -125,6 +173,7 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
         this.routePoints = result.routPoints;
         this.syncTripInGetForView(this.trip);
         this.handleCanGoNextLocation(result.routPoints);
+        this.getTripRouteForMap();
       });
   }
 
@@ -148,69 +197,11 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
       });
   }
 
-  /**
-   * Get City Cordinates By Providing its name
-   * this finction is to draw the shipping Request Main Route in View SR Details in marketPlace
-   * @param cityName
-   * @param cityType   source/dest
-   */
-  getCordinatesByCityName(cityName: string, cityType: string) {
-    const geocoder = new google.maps.Geocoder();
-    geocoder.geocode(
-      {
-        address: cityName,
-      },
-      (results, status) => {
-        if (status == google.maps.GeocoderStatus.OK) {
-          const Lat = results[0].geometry.location.lat();
-          const Lng = results[0].geometry.location.lng();
-          if (cityType == 'source') {
-            this.origin = { lat: Lat, lng: Lng };
-          } else {
-            this.destination = { lat: Lat, lng: Lng };
-            this.messuareDistance(this.origin, this.destination);
-          }
-        } else {
-          console.log('Something got wrong ' + status);
-        }
-      }
-    );
-  }
-
-  /**
-   * Measure the Distance Between 2 Points using Cordinates
-   * @param Oring { lat: null, lng: null }
-   * @param destination { lat: null, lng: null }
-   */
-
-  messuareDistance(origin, destination) {
-    origin = this.origin;
-    destination = this.destination;
-    const service = new google.maps.DistanceMatrixService();
-    service.getDistanceMatrix(
-      {
-        origins: [{ lat: origin.lat, lng: origin.lng }],
-        destinations: [{ lat: destination.lat, lng: destination.lng }],
-        travelMode: google.maps.TravelMode.DRIVING,
-        unitSystem: google.maps.UnitSystem.METRIC,
-        avoidHighways: false,
-        avoidTolls: false,
-      },
-      (response, status) => {
-        this.distance = response.rows[0].elements[0].distance.text;
-        this.duration = response.rows[0].elements[0].duration.text;
-      }
-    );
-  }
-
-  /**
-   * accepts the trip
-   */
   accept(tripId?: number): void {
-    this.busyPointId = this.routePoints[0].id;
     this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
       if (isConfirmed) {
         this.saving = true;
+        this.busyPointId = this.routePoints[0].id;
         this._trackingServiceProxy
           .accept(this.trip.id || tripId)
           .pipe(
@@ -301,19 +292,14 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
       transaction.action === 'UplodeDeliveryNoteDeliveryConfirmation'
     ) {
       //handle upload Pod
-      //this.busyPointId = null;
-
       return this.handleUploadPod(point, transaction);
     }
     if (transaction.action === 'UplodeDeliveryNote') {
       // this.saving = false;
-      // this.busyPointId = null;
-
       return this.handleUploadDeliveryNotes(point, transaction);
     }
     if (transaction.action === 'ReceiverConfirmed' || transaction.action === 'DeliveryConfirmationReceiverConfirmed') {
       // this.saving = false;
-      // this.busyPointId = null;
       return this.handleDeliveryConfirmationCode(point, transaction);
     }
     this.busyPointId = point.id;
@@ -323,7 +309,6 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
       .pipe(
         finalize(() => {
           this.saving = false;
-          //this.busyPointId = null;
         })
       )
       .subscribe(() => {
@@ -462,5 +447,38 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
   showPointLog(pointId: number) {
     this.activityLogModal.entityId = pointId;
     this.activityLogModal.show();
+  }
+
+  /**
+   * hide or show tracking map
+   */
+  toggleMap() {
+    this.mapToggle = !this.mapToggle;
+  }
+
+  // Reset Rout Point Receiver Code By Host
+  resetReceiverCode(pointId: number) {
+    this.message.confirm(this.l('ResetReceiverCode'), this.l('ReceiverCodeConfirmationMsg'), (isConfirmed) => {
+      if (isConfirmed) {
+        this._trackingServiceProxy.resetPointReceiverCode(pointId).subscribe((result) => {
+          this.notify.success(this.l('ResetReceiverCodeSuccessfully'));
+          this.newReceiverCode = result;
+        });
+      }
+    });
+  }
+
+  /**
+   * show or hide drivers  from the map
+   */
+  driverToggle() {
+    this.driversToggle = !this.driversToggle;
+  }
+
+  /**
+   * show or hide trips from the map
+   */
+  tripToggle() {
+    this.tripsToggle = !this.tripsToggle;
   }
 }

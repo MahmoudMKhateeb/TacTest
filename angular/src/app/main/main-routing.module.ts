@@ -67,7 +67,6 @@ import { TMSRequestListComponent } from '@app/main/tms/tms-request-list.componen
 import { TrucksSubmittedDocumentsComponent } from '@app/main/documentFiles/documentFiles/trucks-submitted-documents/trucks-submitted-documents.component';
 import { DriversSubmittedDocumentsComponent } from '@app/main/documentFiles/documentFiles/drivers-submitted-documents/drivers-submitted-documents.component';
 import { ShipmentHistoryComponent } from '@app/main/shippingRequests/shippingRequests/shipment-history/shipment-history.component';
-import { TrackingComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tracking.component';
 
 @NgModule({
   imports: [
@@ -253,7 +252,10 @@ import { TrackingComponent } from '@app/main/shippingRequests/shippingRequests/t
 
           { path: 'shippingRequests/shippingRequests/view', component: ViewShippingRequestComponent, data: { permission: 'Pages.ShippingRequests' } },
           { path: 'marketplace/list', component: MarketPlaceListComponent },
-          { path: 'tracking', component: TrackingComponent },
+          {
+            path: 'tracking',
+            loadChildren: () => import('@app/main/shippingRequests/shippingRequests/tracking/tracking.module').then((m) => m.TrackingModule), //Lazy load main module
+          },
           { path: 'directrequest/list', component: DirectRequestViewComponent },
           { path: 'offers', component: OffersListComponent },
           { path: 'routSteps/routSteps', component: RoutStepsComponent, data: { permission: 'Pages.RoutSteps' } },

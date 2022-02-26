@@ -407,6 +407,9 @@ namespace TACHYON
                 .ForMember(dst => dst.SourceRoutPointFk, opt => opt.MapFrom(src => src.CreateOrEditSourceRoutPointInputDto))
                 .ForMember(dest => dest.DestinationRoutPointFk, opt => opt.MapFrom(src => src.CreateOrEditDestinationRoutPointInputDto))
                 .ReverseMap();
+           configuration.CreateMap<ShippingRequestTrip, DriverRoutPointDto>()
+                .ForMember(dst => dst.TripStatus, opt => opt.MapFrom(src => src.Status))
+                .ForMember(dst => dst.TripId, opt => opt.MapFrom(src => src.Id));
 
             configuration.CreateMap<RoutStepDto, RoutStep>().ReverseMap();
 

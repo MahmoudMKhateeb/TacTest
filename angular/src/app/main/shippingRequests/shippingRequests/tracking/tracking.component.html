@@ -9,7 +9,7 @@
     <!--end::Subheader-->
     <!--begin::Entry-->
 
-    <div class="container-fluid" [busyIf]="IsLoading">
+    <div class="container-fluid">
       <div class="row">
         <div class="col-12 mb-7" *ngFor="let item of Items">
           <div>
@@ -164,20 +164,24 @@
                       <!--                      {{ item.profilePictureUrl }}-->
                       <!--end::Description-->
                     </div>
-                    <div
-                      *ngIf="activePanelId === item.id"
-                      id="{{ item.id }}"
-                      class="col-12 p-0"
-                      [collapse]="activePanelId !== item.id"
-                      [isAnimated]="true"
-                    >
-                      <new-tracking-conponent [trip]="item"></new-tracking-conponent>
-                    </div>
+
                     <!--end::Content-->
                   </div>
                   <!--end::Info-->
                 </div>
                 <!--end::Top-->
+
+                <!--begin::middile-->
+                <div
+                  *ngIf="activePanelId === item.id"
+                  id="{{ item.id }}"
+                  class="col-12 p-0"
+                  [collapse]="activePanelId !== item.id"
+                  [isAnimated]="true"
+                >
+                  <new-tracking-conponent [trip]="item"></new-tracking-conponent>
+                </div>
+                <!--begin::middle-->
                 <!--begin::Separator-->
                 <div class="separator separator-solid my-7"></div>
                 <!--end::Separator-->
@@ -228,10 +232,12 @@
                       <span class="font-weight-bolder font-size-h5">
                         <span class="font-weight-normal"></span>{{ item.driver ? item.driver : l('NotAssigned') }}</span
                       >
+                      <span class="font-weight-normal" *ngIf="item.driver">
+                        <p-rating [(ngModel)]="item.driverRate" readonly="true" stars="5" [cancel]="false"></p-rating>
+                      </span>
                     </div>
                   </div>
                   <!--end: Item-->
-
                   <!--begin: Item-->
                   <div class="d-flex align-items-center flex-lg-fill mr-5 my-1">
                     <span class="mr-4">
@@ -239,7 +245,7 @@
                     </span>
                     <div class="d-flex flex-column flex-lg-fill">
                       <span class="text-dark-75 font-weight-bolder font-size-sm">{{ l('NumberOfDrops') }}</span>
-                      <a class="text-primary font-weight-bolder">{{ item.numberOfDrops }}</a>
+                      <span class="text-dark font-weight-bolder">{{ item.numberOfDrops }}</span>
                     </div>
                   </div>
                   <!--end: Item-->
@@ -261,6 +267,9 @@
               </div>
             </div>
           </div>
+        </div>
+        <div *ngIf="IsLoading" class="col-12 loadingRow text-center my-3">
+          <span></span>
         </div>
       </div>
     </div>

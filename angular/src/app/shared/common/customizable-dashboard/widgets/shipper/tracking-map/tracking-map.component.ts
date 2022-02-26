@@ -1,6 +1,8 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { ShipperDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
+import { ShipperDashboardServiceProxy, WaybillsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { AngularFireDatabase, AngularFireList } from '@angular/fire/compat/database';
+import { FileDownloadService } from '@shared/utils/file-download.service';
 
 @Component({
   selector: 'app-tracking-map',
@@ -10,7 +12,10 @@ import { ShipperDashboardServiceProxy } from '@shared/service-proxies/service-pr
 export class TrackingMapComponent extends AppComponentBase implements OnInit {
   route1: any;
   waypoints1: any;
-  source1: any;
+  source1 = {
+    lng: 21,
+    lat: 22,
+  };
   dest1: any;
   trips: any;
   renderOptions1: any;
@@ -21,12 +26,29 @@ export class TrackingMapComponent extends AppComponentBase implements OnInit {
   colors: any = ['#9604f3', '#0f0', '#0ff', '#dec', '#f0f', '#ff0', '#f99', '#000', '#233', '#dff', '747', '944', '833'];
   colors2: any[];
   public markerOptions: any;
+  private fireDB: AngularFireList<unknown>;
+  allDrivers = [];
+  map: any;
+  tripsToggle = true;
+  driversToggle = true;
+  waybillDownloading = false;
 
-  constructor(private injector: Injector, private _shipperDashboardServiceProxy: ShipperDashboardServiceProxy) {
+  constructor(
+    private injector: Injector,
+    private _shipperDashboardServiceProxy: ShipperDashboardServiceProxy,
+    private _waybillsServiceProxy: WaybillsServiceProxy,
+    private _fileDownloadService: FileDownloadService,
+    private _db: AngularFireDatabase
+  ) {
     super(injector);
   }
 
   ngOnInit(): void {
+    this.getTableRecords();
+    this.getDriverLiveLocation();
+  }
+
+  getTableRecords() {
     this._shipperDashboardServiceProxy.getTrackingMap().subscribe((result) => {
       this.items = [];
       this.colors2 = this.colors;
@@ -83,5 +105,48 @@ export class TrackingMapComponent extends AppComponentBase implements OnInit {
       });
       this.loading = true;
     });
+  }
+  getDriverLiveLocation() {
+    if (this.isCarrier) {
+      this.fireDB = this._db.list('maps', (ref) => ref.orderByChild('tenantId').equalTo(this.appSession.tenant.id));
+    } else if (!this.appSession.tenant.id) {
+      //host
+      //get all active Drivers
+      this.fireDB = this._db.list('maps');
+    }
+    this.fireDB.valueChanges().subscribe((res: any) => {
+      this.allDrivers = res;
+    });
+  }
+  mapReady(event: any) {
+    this.map = event;
+    this.map.controls[google.maps.ControlPosition.TOP_RIGHT].push(document.getElementById('Settings'));
+  }
+
+  /**
+   * Downloads A single Drop Wayboll
+   * @param id
+   * @constructor
+   */
+  DownloadSingleDropWaybillPdf(id: number): void {
+    this.waybillDownloading = true;
+    this._waybillsServiceProxy.getSingleDropOrMasterWaybillPdf(id).subscribe((result) => {
+      this._fileDownloadService.downloadTempFile(result);
+      this.waybillDownloading = false;
+    });
+  }
+
+  /**
+   * show or hide drivers  from the map
+   */
+  driverToggle() {
+    this.driversToggle = !this.driversToggle;
+  }
+
+  /**
+   * show or hide trips from the map
+   */
+  tripToggle() {
+    this.tripsToggle = !this.tripsToggle;
   }
 }

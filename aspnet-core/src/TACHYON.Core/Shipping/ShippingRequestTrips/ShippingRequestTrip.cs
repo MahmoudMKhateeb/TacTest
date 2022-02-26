@@ -108,5 +108,10 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public bool IsWaslIntegrated { get; set; }
         public string WaslIntegrationErrorMsg { get; set; }
 
+        #region Remarks
+        public bool CanBePrinted { get; set; }
+        public string RoundTrip { get; set; }
+        public string ContainerNumber { get; set; }
+        #endregion
     }
 }

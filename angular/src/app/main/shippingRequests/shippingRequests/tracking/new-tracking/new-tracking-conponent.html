@@ -1,25 +1,66 @@
-<div class="card card-custom gutter-b card-stretch" [@routerTransition]>
+<div class="card card-custom gutter-b card-stretch p-0" [@routerTransition]>
   <!--begin::Body-->
-  <div class="card-body">
+  <div class="card-body p-0">
     <!--begin::Content-->
-    <div class="d-flex flex-wrap">
-      <agm-map [zoom]="zoom" [longitude]="markerLong || 46.675761" [latitude]="markerLat || 24.717942">
-        <agm-direction
-          *ngIf="destination.lat && !markerLong"
-          [origin]="{ lat: origin.lat, lng: origin.lng }"
-          [destination]="{ lat: destination.lat, lng: destination.lng }"
-          [travelMode]="'DRIVING'"
-        ></agm-direction>
-        <agm-marker *ngIf="markerLong" [longitude]="markerLong" [latitude]="markerLat">
-          <agm-info-window>{{ markerFacilityName }}</agm-info-window>
-        </agm-marker>
+    <div class="d-flex flex-wrap" *ngIf="mapToggle">
+      <agm-map [zoom]="zoom" [longitude]="markerLong || 46.675761" [latitude]="markerLat || 24.717942" (mapReady)="mapReady($event)">
+        <div id="Settings" class="rounded bg-white p-2" style="height: 50px">
+          <div class="form-group row p-1">
+            <label class="col-3 col-form-label">{{ l('Drivers') }}</label>
+            <div class="col-3">
+              <span class="switch switch-outline switch-icon switch-danger">
+                <label>
+                  <input [(ngModel)]="driversToggle" type="checkbox" name="driversToggle" (click)="driverToggle()" />
+                  <span></span>
+                </label>
+              </span>
+            </div>
+            <label class="col-3 col-form-label">{{ l('Trip') }}</label>
+            <div class="col-3">
+              <span class="switch switch-outline switch-icon switch-danger">
+                <label>
+                  <input [(ngModel)]="tripsToggle" type="checkbox" name="tripsToggle" (click)="tripToggle()" />
+                  <span></span>
+                </label>
+              </span>
+            </div>
+          </div>
+        </div>
+        <ng-container *ngIf="tripsToggle" id="route">
+          <agm-direction
+            *ngIf="tripRoute.destination.lat && !markerLong"
+            [origin]="{ lat: tripRoute.origin.lat, lng: tripRoute.origin.lng }"
+            [destination]="{ lat: tripRoute.destination.lat, lng: tripRoute.destination.lng }"
+            [waypoints]="tripRoute.wayPoints"
+            [travelMode]="'DRIVING'"
+          ></agm-direction>
+        </ng-container>
+        <ng-container id="markers">
+          <agm-marker *ngIf="driversToggle && markerLong" [longitude]="markerLong" [latitude]="markerLat">
+            <agm-info-window>{{ markerFacilityName }}</agm-info-window>
+          </agm-marker>
+          <agm-marker *ngIf="driversToggle && driverLng" [longitude]="driverLng" [latitude]="driverlat" [iconUrl]="trackingIconsList.driverIcon.url">
+          </agm-marker>
+        </ng-container>
       </agm-map>
-      <!--      <agm-map></agm-map>-->
     </div>
 
     <!--end::Content-->
     <!--begin::Text-->
-    <p class="text-dark text-hover-primary font-weight-bold font-size-h4 mb-7 mt-3">{{ l('pointsDetails') }}</p>
+    <div class="d-flex justify-content-between mb-7 mt-3">
+      <p class="text-dark font-weight-bold font-size-h4">{{ l('PointsDetails')}}</p>
+      <div class="d-flex flex-row">
+        <label class="col-7 col-form-label">{{l('TrackingMap')}}</label>
+        <div class="col-3">
+          <span class="switch switch-danger switch-outline">
+            <label>
+              <input (click)="toggleMap()" [(ngModel)]="mapToggle" type="checkbox" checked="checked" name="mapToggle" />
+              <span></span>
+            </label>
+          </span>
+        </div>
+      </div>
+    </div>
     <!--end::Text-->
     <!--begin::Blog-->
     <div class="d-flex flex-column flex-grow-1">
@@ -31,7 +72,7 @@
       <!--end::Head-->
       <!--begin::Row-->
       <div class="row d-flex justify-content-center">
-        <div class="col-xl-11">
+        <div class="col-xl-12">
           <!--begin::Card-->
           <div class="card card-custom card-stretch" id="kt_todo_list">
             <!--begin::Body-->
@@ -105,8 +146,9 @@
                               </div>
                             </div>
 
-                            <!--                              <div  class="ribbon-target" style="top: -2px; right: 3%"></div>-->
-                            <button (click)="showPointLog(point.id)" class="btn btn-sm btn-danger mr-1 ml-1">{{ l('ActivityLogs') }}</button>
+                            <button *ngIf="point.isResolve" (click)="showPointLog(point.id)" class="btn btn-sm btn-danger mr-1 ml-1">
+                              {{ l('ActivityLogs') }}
+                            </button>
                             <!--    trip actions-->
                             <div
                               class="d-inline-block"
@@ -156,6 +198,23 @@
                         <div class="d-flex flex-column">
                           <p class="p-0">{{l('Address')}} : {{point.address}}</p>
                           <p class="p-0">{{l('Receiver')}} : {{point.receiverFullName}}</p>
+                          <p class="p-0 d-flex flex-row">
+                            <span class="mt-1 mr-2">{{l('FacilityRating')}} :</span>
+                            <p-rating [ngModel]="point.facilityRate" readonly="true" stars="5" [cancel]="false"></p-rating>
+                          </p>
+                          <div class="flex-row" *ngIf="!appSession.tenantId">
+                            <p class="p-0 mr-2">
+                              {{l('ReceiverCode')}} : {{newReceiverCode? newReceiverCode: point.receiverCode}}
+
+                              <i
+                                *ngIf="!point.isResolve && !point.isComplete"
+                                (click)="resetReceiverCode(point.id)"
+                                class="flaticon-refresh text-hover-primary ml-2"
+                                data-toggle="tooltip"
+                                title="{{l('ResetReceiverCode')}}"
+                              ></i>
+                            </p>
+                          </div>
                           <p-steps
                             [model]="getStepperSteps(point.statues)"
                             [(activeIndex)]="activeIndex"
