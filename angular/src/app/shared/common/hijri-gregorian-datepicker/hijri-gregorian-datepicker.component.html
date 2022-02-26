@@ -10,7 +10,7 @@
           'is-valid': parentForm?.submitted && ngbDatepicker.valid,
           'is-invalid': parentForm?.submitted && ngbDatepicker.invalid
         }"
-        [placeholder]="'d/M/yyyy' | localize"
+        [placeholder]="'DD/MM/YYYY' | localize"
         [name]="label"
         [(ngModel)]="selectedDate"
         ngbDatepicker
@@ -38,7 +38,6 @@
       style="flex: 1 1 auto;"
       [name]="label"
       [isRequired]="isRequired"
-      [placeHolder]="placeHolder"
       [disabled]="disabled"
     >
     </hijri-date-picker>
