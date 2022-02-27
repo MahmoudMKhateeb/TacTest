@@ -2525,7 +2525,17 @@
 	<text name="NoMatchingDrivers">There is no Drivers</text>
 	<text name="CompanyDescriptionHint">Company description must be at most 500 characters</text>
 	<text name="SelectAnEmailTemplateType">Select an email template type</text>
+		<text name="NumberOfRequestsForEachCity">Number Of Requests For Each City</text>
+		<text name="ongoingTrips">On Going Trips</text>
+		<text name="NumberOfRegesteredTrucks">Number Of Registered Trucks</text>
+		<text name="NumberOfRegesteredShippers">Number Of Registered Shippers</text>
+		<text name="NumberOfRegesteredDrivers">Number Of Registered Drivers</text>
+		<text name="NumberOfRegesteredCarriers">Number Of Registered Carriers</text>
+		<text name="HostTruckTypesUsage">Truck Types Usage</text>
+		<text name="RouteTypesUsage">Route Types Usage</text>
+		<text name="GoodTypesUsage">Good Types Usage</text>
+		<text name="NewAccounts">New Accounts</text>
+		<text name="NewTrips">New Trips</text>
 
-	
 	</texts>
 </localizationDictionary>

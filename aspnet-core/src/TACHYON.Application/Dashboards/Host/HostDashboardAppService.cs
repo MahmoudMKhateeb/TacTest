@@ -77,44 +77,50 @@ namespace TACHYON.Dashboards.Host
             {
                 Id = x.Id,
                 TruckType = x.DisplayName,
-                AvailableTrucksCount = _shippingRequestRepository.GetAll().AsNoTracking().Where(r => r.TrucksTypeId == x.Id).Count()
+                AvailableTrucksCount = _shippingRequestRepository.GetAll().AsNoTracking().Where(r => r.TrucksTypeId == x.Id && r.CreationTime.Year == DateTime.Now.Year).Count()
 
             }).Where(r => r.AvailableTrucksCount > 0).ToListAsync();
 
         }
 
-        public async Task<List<ListPerMonthDto>> GetAccountsCountsPerMonth()
+        public async Task<List<ListPerMonthDto>> GetAccountsCountsPerMonth(GetDataByDateFilterInput input)
         {
-            DisableTenancyFilters();
-            var list = await _usersRepository.GetAll().AsNoTracking().Where(r => !r.IsDriver)
+            DisableTenancyFiltersIfHost();
+            await DisableTenancyFiltersIfTachyonDealer();
+            var list = await _usersRepository.GetAll().AsNoTracking()
+                .Where(r => !r.IsDriver)
+                .WhereIf(input.FromDate == null || input.ToDate == null, r=> r.CreationTime.Year == DateTime.Now.Year)
+                .WhereIf(input.FromDate != null && input.ToDate != null, r => r.CreationTime >= input.FromDate && r.CreationTime <= input.ToDate)
                 .GroupBy(r => new { r.CreationTime.Year, r.CreationTime.Month })
-                .Select(g => new ListPerMonthDto() { Year = DateTime.Now.Year, Month = g.Key.Month.ToString(), Count = g.Count() })
+                .Select(g => new ListPerMonthDto() { Year = g.Key.Year, Month = g.Key.Month.ToString(), Count = g.Count() })
                 .OrderBy(x => x.Year).ThenBy(x => x.Month)
              .ToListAsync();
 
             list.ForEach(r =>
             {
-                r.Month = new DateTime(DateTime.Now.Year, Convert.ToInt32(r.Month), 1).ToString("MMM");
+                r.Month = new DateTime(r.Year, Convert.ToInt32(r.Month), 1).ToString("MMM");
             });
 
             return list;
         }
 
-        public async Task<List<ListPerMonthDto>> GetNewTripsCountPerMonth()
+        public async Task<List<ListPerMonthDto>> GetNewTripsCountPerMonth(GetDataByDateFilterInput input)
         {
             DisableTenancyFiltersIfHost();
             await DisableTenancyFiltersIfTachyonDealer();
 
             var groupedTrips = await _shippingRequestTripRepository.GetAll().AsNoTracking()
                 .Where(x => x.Status == ShippingRequestTripStatus.New)
+                .WhereIf(input.FromDate == null || input.ToDate == null, r => r.CreationTime.Year == DateTime.Now.Year)
+                .WhereIf(input.FromDate != null && input.ToDate != null, r => r.CreationTime >= input.FromDate && r.CreationTime <= input.ToDate)
                 .GroupBy(r => new { r.CreationTime.Year, r.CreationTime.Month })
-                .Select(g => new ListPerMonthDto() { Year = DateTime.Now.Year, Month = g.Key.Month.ToString(), Count = g.Count() })
+                .Select(g => new ListPerMonthDto() { Year = g.Key.Year, Month = g.Key.Month.ToString(), Count = g.Count() })
                 .OrderBy(x => x.Year).ThenBy(x => x.Month)
              .ToListAsync();
 
             groupedTrips.ForEach(r =>
             {
-                r.Month = new DateTime(DateTime.Now.Year, Convert.ToInt32(r.Month), 1).ToString("MMM");
+                r.Month = new DateTime(r.Year, Convert.ToInt32(r.Month), 1).ToString("MMM");
             });
 
             return groupedTrips;
@@ -127,19 +133,16 @@ namespace TACHYON.Dashboards.Host
            {
                Id = x.Id,
                GoodType = x.Translations.FirstOrDefault() != null ? x.Translations.FirstOrDefault().DisplayName : "",
-               AvailableGoodTypesCount = _shippingRequestRepository.GetAll().Where(r => r.GoodCategoryId == x.Id).Count()
+               AvailableGoodTypesCount = _shippingRequestRepository.GetAll().Where(r => r.GoodCategoryId == x.Id && r.CreationTime.Year == DateTime.Now.Year).Count()
 
            }).Where(r => r.AvailableGoodTypesCount > 0).ToListAsync();
 
         }
-        /// <summary>
-        /// FOR Reviewwwww
-        /// </summary>
-        /// <returns></returns>
+
         public async Task<List<RouteTypeAvailableDto>> GetRouteTypeCountPerMonth()
         {
 
-            return await _shippingRequestRepository.GetAll().AsNoTracking()
+            return await _shippingRequestRepository.GetAll().AsNoTracking().Where(r=>r.RouteTypeId != null && r.RouteTypeId != 0 && r.CreationTime.Year == DateTime.Now.Year)
                 .GroupBy(x => x.RouteTypeId)
                 .Select(group => new RouteTypeAvailableDto
                 {
@@ -155,7 +158,7 @@ namespace TACHYON.Dashboards.Host
             await DisableTenancyFiltersIfTachyonDealer();
 
             return await _shippingRequestTripRepository.GetAll().AsNoTracking()
-                .Where(x => x.Status == ShippingRequestTripStatus.Intransit)
+                .Where(x => x.Status == ShippingRequestTripStatus.Intransit && x.CreationTime.Year == DateTime.Now.Year)
                 .CountAsync();
 
         }
@@ -166,7 +169,7 @@ namespace TACHYON.Dashboards.Host
             await DisableTenancyFiltersIfTachyonDealer();
 
             return await _shippingRequestTripRepository.GetAll().AsNoTracking()
-                .Where(x => x.Status == ShippingRequestTripStatus.Delivered)
+                .Where(x => x.Status == ShippingRequestTripStatus.Delivered && x.CreationTime.Year == DateTime.Now.Year)
                 .CountAsync();
 
         }
@@ -177,7 +180,7 @@ namespace TACHYON.Dashboards.Host
             await DisableTenancyFiltersIfTachyonDealer();
 
             return await _tenantRepository.GetAll().AsNoTracking()
-                .Where(r => r.Edition.DisplayName.Equals("shipper"))
+                .Where(r => r.Edition.DisplayName.Equals("shipper") && r.CreationTime.Year == DateTime.Now.Year)
                 .CountAsync();
         }
 
@@ -187,7 +190,7 @@ namespace TACHYON.Dashboards.Host
             await DisableTenancyFiltersIfTachyonDealer();
 
             return await _tenantRepository.GetAll().AsNoTracking()
-                .Where(r => r.Edition.DisplayName.Equals("carrier"))
+                .Where(r => r.Edition.DisplayName.Equals("carrier") && r.CreationTime.Year == DateTime.Now.Year)
                 .CountAsync();
         }
 
@@ -197,7 +200,7 @@ namespace TACHYON.Dashboards.Host
             await DisableTenancyFiltersIfTachyonDealer();
 
             return await _usersRepository.GetAll().AsNoTracking()
-                .Where(r => r.IsDriver)
+                .Where(r => r.IsDriver && r.CreationTime.Year == DateTime.Now.Year)
                 .CountAsync();
         }
 
@@ -219,7 +222,7 @@ namespace TACHYON.Dashboards.Host
                 Id = tenant.Id,
                 Name = tenant.Name,
                 Rating = tenant.Rate,
-                NumberOfRequests = _shippingRequestRepository.GetAll().AsNoTracking().Include(r => r.Tenant).AsNoTracking().Where(r => r.TenantId == tenant.Id && r.Status == ShippingRequestStatus.Completed).Count()
+                NumberOfRequests = _shippingRequestRepository.GetAll().AsNoTracking().Include(r => r.Tenant).AsNoTracking().Where(r => r.TenantId == tenant.Id && r.Status == ShippingRequestStatus.Completed && r.CreationTime.Year == DateTime.Now.Year).Count()
             }).Where(r => r.NumberOfRequests > 0).OrderByDescending(r => r.NumberOfRequests).Take(3).ToListAsync();
         }
 
@@ -233,7 +236,7 @@ namespace TACHYON.Dashboards.Host
                Id = tenant.Id,
                Name = tenant.Name,
                Rating = tenant.Rate,
-               NumberOfRequests = _shippingRequestRepository.GetAll().AsNoTracking().Include(r => r.Tenant).AsNoTracking().Where(r => r.TenantId == tenant.Id && r.Status == ShippingRequestStatus.Completed).Count()
+               NumberOfRequests = _shippingRequestRepository.GetAll().AsNoTracking().Include(r => r.Tenant).AsNoTracking().Where(r => r.TenantId == tenant.Id && r.Status == ShippingRequestStatus.Completed && r.CreationTime.Year == DateTime.Now.Year).Count()
            }).Where(r => r.NumberOfRequests > 0).OrderByDescending(r => r.NumberOfRequests).Take(3).ToListAsync();
         }
 
@@ -247,7 +250,7 @@ namespace TACHYON.Dashboards.Host
                 Id = tenant.Id,
                 Name = tenant.Name,
                 Rating = tenant.Rate,
-                NumberOfRequests = _shippingRequestRepository.GetAll().AsNoTracking().Include(r => r.Tenant).AsNoTracking().Where(r => r.TenantId == tenant.Id).Count()
+                NumberOfRequests = _shippingRequestRepository.GetAll().AsNoTracking().Include(r => r.Tenant).AsNoTracking().Where(r => r.TenantId == tenant.Id && r.CreationTime.Year == DateTime.Now.Year).Count()
             }).Where(r => r.Rating > 0).OrderByDescending(r => r.Rating).Take(5).ToListAsync();
         }
 
@@ -261,7 +264,7 @@ namespace TACHYON.Dashboards.Host
                 Id = tenant.Id,
                 Name = tenant.Name,
                 Rating = tenant.Rate,
-                NumberOfRequests = _shippingRequestRepository.GetAll().AsNoTracking().Include(r => r.Tenant).AsNoTracking().Where(r => r.TenantId == tenant.Id).Count()
+                NumberOfRequests = _shippingRequestRepository.GetAll().AsNoTracking().Include(r => r.Tenant).AsNoTracking().Where(r => r.TenantId == tenant.Id && r.CreationTime.Year == DateTime.Now.Year).Count()
             }).Where(r => r.Rating > 0).OrderByDescending(r => r.Rating).Take(5).ToListAsync();
         }
 
@@ -275,7 +278,7 @@ namespace TACHYON.Dashboards.Host
                 Id = tenant.Id,
                 Name = tenant.Name,
                 Rating = tenant.Rate,
-                NumberOfRequests = _shippingRequestRepository.GetAll().AsNoTracking().Include(r => r.Tenant).AsNoTracking().Where(r => r.TenantId == tenant.Id).Count()
+                NumberOfRequests = _shippingRequestRepository.GetAll().AsNoTracking().Include(r => r.Tenant).AsNoTracking().Where(r => r.TenantId == tenant.Id && r.CreationTime.Year == DateTime.Now.Year).Count()
             }).OrderBy(r => r.Rating).Take(5).ToListAsync();
         }
 
@@ -289,7 +292,7 @@ namespace TACHYON.Dashboards.Host
                 Id = tenant.Id,
                 Name = tenant.Name,
                 Rating = tenant.Rate,
-                NumberOfRequests = _shippingRequestRepository.GetAll().AsNoTracking().Include(r => r.Tenant).AsNoTracking().Where(r => r.TenantId == tenant.Id).Count()
+                NumberOfRequests = _shippingRequestRepository.GetAll().AsNoTracking().Include(r => r.Tenant).AsNoTracking().Where(r => r.TenantId == tenant.Id && r.CreationTime.Year == DateTime.Now.Year).Count()
             }).OrderBy(r => r.Rating).Take(5).ToListAsync();
         }
 
@@ -297,10 +300,10 @@ namespace TACHYON.Dashboards.Host
         {
             DisableTenancyFiltersIfHost();
 
-            var t = await _shippingRequestRepository.GetAll().AsNoTracking().Include(r => r.Tenant).Where(r => r.RequestType == ShippingRequestType.Marketplace
+            return await _shippingRequestRepository.GetAll().AsNoTracking().Include(r => r.Tenant).Where(r => r.RequestType == ShippingRequestType.Marketplace
                                                                                            && r.Status == ShippingRequestStatus.PrePrice
                                                                                            && r.BidEndDate != null
-                                                                                           && r.BidEndDate.Value.Date <= Clock.Now.Date)
+                                                                                           && r.BidEndDate.Value.Date <= Clock.Now.Date && r.CreationTime.Year == DateTime.Now.Year)
                                                                                    .WhereIf(input.StartDate != null && input.EndDate != null, r => r.BidStartDate >= input.StartDate && r.BidEndDate <= input.EndDate)
             .Select(request => new ListRequestsUnPricedMarketPlace()
             {
@@ -309,14 +312,13 @@ namespace TACHYON.Dashboards.Host
                 BiddingEndDate = request.BidEndDate,
                 RequestReference = request.ReferenceNumber
             }).OrderBy(r => r.BiddingEndDate).Take(10).ToListAsync();
-            return t;
         }
 
         public async Task<List<ListRequestsByCityDto>> GetNumberOfRequestsForEachCity()
         {
             DisableTenancyFiltersIfHost();
 
-            var result = await _shippingRequestRepository.GetAll().AsNoTracking().Include(r => r.DestinationCityFk)
+            var result = await _shippingRequestRepository.GetAll().AsNoTracking().Include(r => r.DestinationCityFk).Where(r=>r.CreationTime.Year == DateTime.Now.Year)
                         .GroupBy(p => p.DestinationCityId,
                         (k, c) => new ListRequestsByCityDto()
                         {
@@ -324,7 +326,7 @@ namespace TACHYON.Dashboards.Host
                             NumberOfRequests = c.Count(),
                             CityName = _lookup_citiesRepository.GetAll().AsNoTracking().Where(e => e.Id == k.Value).FirstOrDefault().DisplayName
                         }
-                        ).ToListAsync();
+                        ).Where(r=>r.Id != null).ToListAsync();
 
             result.ForEach(x =>
             {
@@ -346,6 +348,7 @@ namespace TACHYON.Dashboards.Host
             return await _shippingRequestRepository.GetAll().AsNoTracking()
                 .Where(x => x.Status == ShippingRequestStatus.PostPrice
                          && x.BidEndDate != null
+                         && x.CreationTime.Year == DateTime.Now.Year
                          && x.BidEndDate.Value.Date <= Clock.Now.Date)
                 .CountAsync();
         }
@@ -359,7 +362,7 @@ namespace TACHYON.Dashboards.Host
             await DisableTenancyFiltersIfTachyonDealer();
 
             return await _shippingRequestRepository.GetAll().AsNoTracking()
-                .Where(x => x.Status == ShippingRequestStatus.PostPrice)
+                .Where(x => x.Status == ShippingRequestStatus.PostPrice && x.CreationTime.Year == DateTime.Now.Year)
                 .CountAsync();
         }
 
@@ -374,6 +377,7 @@ namespace TACHYON.Dashboards.Host
             return await _invoicesRepository.GetAll().AsNoTracking()
                 .Where(x => x.AccountType == InvoiceAccountType.AccountReceivable
                          && x.IsPaid == true
+                         && x.CreationTime.Year == DateTime.Now.Year
                          && x.DueDate.Date > Clock.Now.Date)
                 .CountAsync();
         }

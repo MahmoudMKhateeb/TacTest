@@ -2,6 +2,7 @@ import { Component, Injector, OnInit } from '@angular/core';
 import { MeterCharts } from '@app/shared/common/customizable-dashboard/widgets/ApexInterfaces';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { HostDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-host-rquest-acceptance-meter',
@@ -17,8 +18,20 @@ export class HostRquestAcceptanceMeterComponent extends AppComponentBase impleme
   }
 
   ngOnInit() {
-    this._hostDashboardServiceProxy.getRequestsPricingAcceptedCount().subscribe((result) => {
-      if (result) {
+    this.getData();
+  }
+
+  getData() {
+    this.loading = true;
+
+    this._hostDashboardServiceProxy
+      .getRequestsPricingAcceptedCount()
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+        })
+      )
+      .subscribe((result) => {
         this.chartOptions = {
           series: [result],
 
@@ -62,8 +75,8 @@ export class HostRquestAcceptanceMeterComponent extends AppComponentBase impleme
           },
           labels: ['RequestAcceptancePercentage'],
         };
-        this.loading = true;
-      }
-    });
+
+        this.loading = false;
+      });
   }
 }

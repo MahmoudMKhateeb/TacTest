@@ -201,7 +201,7 @@ export class DashboardViewConfigurationService {
     let activeTrucks = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.Carrier.CarrierTrucksActivityWidget,
       TucksActivityComponent,
-      4,
+      8,
       4
     );
 
@@ -215,14 +215,14 @@ export class DashboardViewConfigurationService {
     let nonActivTrucks = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.Carrier.CarrierTrucksActivityWidget,
       TucksActivityComponent,
-      4,
+      8,
       4
     );
 
     let nonActiveDrivers = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.Carrier.CarrierDriversActivityWidget,
       DriversActivityComponent,
-      4,
+      8,
       4
     );
 
@@ -230,190 +230,143 @@ export class DashboardViewConfigurationService {
       DashboardCustomizationConst.widgets.Carrier.CarrierTrackingMapWidget,
       TrackingMapComponent,
       8,
-      8
+      4
     );
     //Host
 
-    let generalStats = new WidgetViewDefinition(DashboardCustomizationConst.widgets.tenant.generalStats, WidgetGeneralStatsComponent, 6, 4);
-
-    let dailySales = new WidgetViewDefinition(DashboardCustomizationConst.widgets.tenant.dailySales, WidgetDailySalesComponent, 6, 4);
-
-    let profitShare = new WidgetViewDefinition(DashboardCustomizationConst.widgets.tenant.profitShare, WidgetProfitShareComponent, 6, 4);
-
-    let memberActivity = new WidgetViewDefinition(DashboardCustomizationConst.widgets.tenant.memberActivity, WidgetMemberActivityComponent, 6, 4);
-
-    let regionalStats = new WidgetViewDefinition(DashboardCustomizationConst.widgets.tenant.regionalStats, WidgetRegionalStatsComponent, 6, 4);
-
-    let salesSummary = new WidgetViewDefinition(DashboardCustomizationConst.widgets.tenant.salesSummary, WidgetSalesSummaryComponent, 6, 4);
-
-    let WidgetIncomeStatistics = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.host.incomeStatistics,
-      WidgetIncomeStatisticsComponent,
-      4,
-      4
-    );
-
-    let WidgetRecentTenants = new WidgetViewDefinition(DashboardCustomizationConst.widgets.host.recentTenants, WidgetRecentTenantsComponent, 4, 4);
-
-    let editionStatistics = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.host.editionStatistics,
-      WidgetEditionStatisticsComponent,
-      4,
-      4
-    );
-
-    let WidgetSubscriptionExpiringTenants = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.host.subscriptionExpiringTenants,
-      WidgetSubscriptionExpiringTenantsComponent,
-      4,
-      4
-    );
-
-    let WidgetHostTopStatst = new WidgetViewDefinition(DashboardCustomizationConst.widgets.host.topStats, WidgetHostTopStatsComponent, 4, 4);
-
     let NumberOfRegisteredTrucks = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.host.TachyonDealerNumberOfRegisteredTrucksWidget,
+      DashboardCustomizationConst.widgets.host.NumberOfRegisteredTrucksWidget,
       NumberOfRegesterdTrucksComponent,
-      4,
+      8,
       4
     );
 
     let NumberOfRegisteredShippers = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.host.TachyonDealerNumberOfRegisteredShippersWidget,
+      DashboardCustomizationConst.widgets.host.NumberOfRegisteredShippersWidget,
       NumberOfRegesterdShippersComponent,
-      4,
+      8,
       4
     );
 
-    let onGoingTrips = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.host.TachyonDealerNumberOfOngoingTripsWidget,
-      OnGoingTripsComponent,
-      4,
-      4
-    );
+    let onGoingTrips = new WidgetViewDefinition(DashboardCustomizationConst.widgets.host.NumberOfOngoingTripsWidget, OnGoingTripsComponent, 8, 4);
 
     let TopThreeShippersHaveRequests = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.host.TachyonDealerMostRequestingShippersWidget,
+      DashboardCustomizationConst.widgets.host.MostRequestingShippersWidget,
       TopThreeShippersHaveRequestsComponent,
-      4,
-      6
+      12,
+      10
     );
 
     let TopThreeCarriersHaveRequests = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.host.TachyonDealerMostRequestedCarriersWidget,
+      DashboardCustomizationConst.widgets.host.MostRequestedCarriersWidget,
       TopThreeCarriersHaveRequestsComponent,
-      4,
-      6
+      12,
+      10
     );
 
     let topRatedShippersWidget = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.host.TachyonDealerTopRatedShippersWidget,
+      DashboardCustomizationConst.widgets.host.TopRatedShippersWidget,
       TopRatedShippersComponent,
-      4,
-      8
+      12,
+      15
     );
 
     let topRatedCarriersWidget = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.host.TachyonDealerTopRatedCarriersWidget,
+      DashboardCustomizationConst.widgets.host.TopRatedCarriersWidget,
       TopRatedCarriersComponent,
-      4,
-      8
+      12,
+      15
     );
 
     let worstRatedShippersWidget = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.host.TachyonDealerWorstRatedShippersWidget,
+      DashboardCustomizationConst.widgets.host.WorstRatedShippersWidget,
       WorstRatedShippersComponent,
-      4,
-      8
+      12,
+      15
     );
 
     let worstRatedCarriersWidget = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.host.TachyonDealerWorstRatedCarriersWidget,
+      DashboardCustomizationConst.widgets.host.WorstRatedCarriersWidget,
       WorstRatedCarriersComponent,
-      4,
-      8
+      12,
+      15
     );
 
     let unPricedShippingRequestsWidget = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.host.TachyonDealerUnPricedRequestsInMarketPlaceWidget,
+      DashboardCustomizationConst.widgets.host.UnPricedRequestsInMarketPlaceWidget,
       UnpricedRequestsInMarketplaceComponent,
-      4,
+      8,
       8
     );
 
     let numberOfDeliveredTrips = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.host.TachyonDealerNumberOfDeliveredTripsWidget,
+      DashboardCustomizationConst.widgets.host.NumberOfDeliveredTripsWidget,
       DeleverdTripsComponent,
-      4,
+      8,
       4
     );
 
     let numberOfRegisteredCarriers = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.host.TachyonDealerNumberOfRegisteredCarriersWidget,
+      DashboardCustomizationConst.widgets.host.NumberOfRegisteredCarriersWidget,
       NumberOfRegesterdCarriersComponent,
-      4,
+      8,
       4
     );
 
     let hostNewAccounts = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.host.TachyonDealerNewAccountsRegisteredWidget,
+      DashboardCustomizationConst.widgets.host.NewAccountsRegisteredWidget,
       HostNewAccountsChartComponent,
-      4,
-      4
+      18,
+      15
     );
-    let hostNewTrips = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.host.TachyonDealerNewTripsWidget,
-      HostNewTripsChartComponent,
-      4,
-      4
-    );
+    let hostNewTrips = new WidgetViewDefinition(DashboardCustomizationConst.widgets.host.NewTripsWidget, HostNewTripsChartComponent, 18, 15);
 
     let hostTruckTypesChart = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.host.TachyonDealerTruckTypeUsageWidget,
+      DashboardCustomizationConst.widgets.host.TruckTypeUsageWidget,
       HostTruckTypeUsageChartComponent,
-      4,
-      4
+      18,
+      15
     );
 
     let goodTypesUsage = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.host.TachyonDealerGoodTypesUsageWidget,
+      DashboardCustomizationConst.widgets.host.GoodTypesUsageWidget,
       HostGoodTypesUsageChartComponent,
-      4,
-      4
+      18,
+      15
     );
 
     let routeTypeUsage = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.host.TachyonDealerRouteTypesUsageWidget,
+      DashboardCustomizationConst.widgets.host.RouteTypesUsageWidget,
       HostRouteTypeUsageChartComponent,
-      4,
-      4
+      18,
+      15
     );
 
     let hostRequestPricedMeter = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.host.TachyonDealerRequestsPricingBeforeBidEndingWidget,
+      DashboardCustomizationConst.widgets.host.RequestsPricingBeforeBidEndingWidget,
       HostRquestPricingMeterComponent,
-      4,
-      4
+      8,
+      8
     );
     let hostRequestAcceptanceMeter = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.host.TachyonDealerRequestsPriceAcceptanceWidget,
+      DashboardCustomizationConst.widgets.host.RequestsPriceAcceptanceWidget,
       HostRquestAcceptanceMeterComponent,
-      4,
-      4
+      10,
+      10
     );
 
     let hostInvoicePaidMeter = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.host.TachyonDealerInvoicesPaidBeforeDueDateWidget,
+      DashboardCustomizationConst.widgets.host.InvoicesPaidBeforeDueDateWidget,
       HostInvoicesMeterComponent,
-      4,
-      4
+      8,
+      8
     );
 
     let hostRequestsPerAreaOrCity = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.host.TachyonDealerNumberOfRequestsPerAreaOrCityWidget,
+      DashboardCustomizationConst.widgets.host.NumberOfRequestsPerAreaOrCityWidget,
       NumberOfRequestsForEachCityComponent,
-      8,
-      6
+      30,
+      15
     );
 
     //shipperPush
@@ -447,17 +400,6 @@ export class DashboardViewConfigurationService {
 
     //Host
     //this.widgetFilterDefinitions.push(NumberOfRegisteredTrucks);
-    this.WidgetViewDefinitions.push(editionStatistics);
-    this.WidgetViewDefinitions.push(WidgetIncomeStatistics);
-    this.WidgetViewDefinitions.push(WidgetHostTopStatst);
-    this.WidgetViewDefinitions.push(WidgetRecentTenants);
-    this.WidgetViewDefinitions.push(WidgetSubscriptionExpiringTenants);
-    this.WidgetViewDefinitions.push(generalStats);
-    this.WidgetViewDefinitions.push(dailySales);
-    this.WidgetViewDefinitions.push(profitShare);
-    this.WidgetViewDefinitions.push(memberActivity);
-    this.WidgetViewDefinitions.push(regionalStats);
-    this.WidgetViewDefinitions.push(salesSummary);
 
     this.WidgetViewDefinitions.push(NumberOfRegisteredTrucks);
     this.WidgetViewDefinitions.push(NumberOfRegisteredShippers);

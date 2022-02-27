@@ -2270,8 +2270,23 @@
 		<text name="NoMatchingDrivers">لا يوجد سائقين</text>
 		<text name="CompanyDescriptionHint">يجب ألا يزيد وصف الشركة عن 500 حرف</text>
 		<text name="SelectAnEmailTemplateType">أختر نوع قالب البريد الإلكتروني</text>
+		<text name="NumberOfRequestsForEachCity">عدد الطلبات لكل مدينة</text>
+		<text name="ongoingTrips">الرحلات المنطلقة</text>
+		<text name="NumberOfRegesteredTrucks">عدد الشاحنات المسجلة</text>
+		<text name="NumberOfRegesteredShippers">عدد الشواحن المسجلة</text>
+		<text name="NumberOfRegesteredDrivers">عدد السائقين المسجلة</text>
+		<text name="NumberOfRegesteredCarriers">عدد الناقلين المسجلة</text>
+		<text name="HostTruckTypesUsage">أنواع الشاحنات المستخدمة</text>
+		<text name="RouteTypesUsage">أنواع المسارات المستخدمة</text>
+		<text name="GoodTypesUsage">استخدام أنواع البضائع</text>
+		<text name="NewAccounts">حسابات جديدة</text>
+		<text name="NewTrips">الرحلات الجديدة</text>
 
-		
+
+
+
+
+
 
 	</texts>
 </localizationDictionary>

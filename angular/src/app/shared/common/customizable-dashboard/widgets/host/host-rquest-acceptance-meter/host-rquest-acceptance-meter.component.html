@@ -7,9 +7,10 @@
           <h3 class="card-label">{{ l('RequestAcceptancePercentage') }}</h3>
         </div>
       </div>
-      <div class="card-body p-1" *ngIf="loading">
+      <div class="card-body p-1" [busyIf]="loading">
         <div id="chart">
           <apx-chart
+            *ngIf="chartOptions && chartOptions.series"
             [series]="chartOptions.series"
             [chart]="chartOptions.chart"
             [plotOptions]="chartOptions.plotOptions"

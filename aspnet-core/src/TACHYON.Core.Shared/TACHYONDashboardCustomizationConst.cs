@@ -13,13 +13,6 @@
         {
             public class Tenant
             {
-                public const string GeneralStats = "Widgets_Tenant_GeneralStats";
-                public const string DailySales = "Widgets_Tenant_DailySales";
-                public const string ProfitShare = "Widgets_Tenant_ProfitShare";
-                public const string MemberActivity = "Widgets_Tenant_MemberActivity";
-                public const string RegionalStats = "Widgets_Tenant_RegionalStats";
-                public const string SalesSummary = "Widgets_Tenant_SalesSummary";
-                public const string TopStats = "Widgets_Tenant_TopStats";
             }
 
             public class Shipper
@@ -53,38 +46,33 @@
             }
             public class TachyonDealer
             {
-                public const string TachyonDealerNumberOfRegisteredTrucksWidget = "Widgets_Tenant_TachyonDealer_NumberOfRegisteredTrucksWidget";
-                public const string TachyonDealerNumberOfRegisteredShippersWidget = "Widgets_Tenant_TachyonDealer_NumberOfRegisteredShippersWidget";
-                public const string TachyonDealerNumberOfRegisteredCarriersWidget = "Widgets_Tenant_TachyonDealer_NumberOfRegisteredCarriersWidget";
-                public const string TachyonDealerNewAccountsRegisteredWidget = "Widgets_Tenant_TachyonDealer_NewAccountsRegisterdWidget";
-                public const string TachyonDealerNewTripsWidget = "Widgets_Tenant_TachyonDealer_NewTripsWidget";
-                public const string TachyonDealerNumberOfDeliveredTripsWidget = "Widgets_Tenant_TachyonDealer_NumberOfDeliverdTripsWidget";
-                public const string TachyonDealerNumberOfOngoingTripsWidget = "Widgets_Tenant_TachyonDealer_NumberOfOngoingTripsWidget";
-                public const string TachyonDealerTruckTypeUsageWidget = "Widgets_Tenant_TachyonDealer_TruckTypeUsageWidget";
-                public const string TachyonDealerGoodTypesUsageWidget = "Widgets_Tenant_TachyonDealer_GoodTypesUsageWidget";
-                public const string TachyonDealerRouteTypesUsageWidget = "Widgets_Tenant_TachyonDealer_RouteTypesUsageWidget";
-                public const string TachyonDealerMostRequestingShippersWidget = "Widgets_Tenant_TachyonDealer_MostRequestingShippersWidget";
-                public const string TachyonDealerMostRequestedCarriersWidget = "Widgets_Tenant_TachyonDealer_MostRequestedCarriersWidget";
-                public const string TachyonDealerTopRatedShippersWidget = "Widgets_Tenant_TachyonDealer_TopRatedShippersWidget";
-                public const string TachyonDealerTopRatedCarriersWidget = "Widgets_Tenant_TachyonDealer_TopRatedCarriersWidget";
-                public const string TachyonDealerWorstRatedShippersWidget = "Widgets_Tenant_TachyonDealer_WorstRatedShippersWidget";
-                public const string TachyonDealerWorstRatedCarriersWidget = "Widgets_Tenant_TachyonDealer_WorstRatedCarriersWidget";
-                public const string TachyonDealerUnPricedRequestsInMarketPlaceWidget = "Widgets_Tenant_TachyonDealer_UnpricedRequestsInMarketPlaceWidget";
-                public const string TachyonDealerRequestsPricingBeforeBidEndingWidget = "Widgets_Tenant_TachyonDealer_RequestsPricingBeforeBidEndingWidget";
-                public const string TachyonDealerRequestsPriceAcceptanceWidget = "Widgets_Tenant_TachyonDealer_RequestsPriceAcceptanceWidget";
-                public const string TachyonDealerInvoicesPaidBeforeDueDateWidget = "Widgets_Tenant_TachyonDealer_InvoicesPaidBeforeDureDateWidget";
-                public const string TachyonDealerNumberOfRequestsPerAreaOrCityWidget = "Widgets_Tenant_TachyonDealer_NumberOfRequestsPerAreaOrCityWidget";
-                public const string TachyonDealerSearchableMapWidget = "Widgets_Tenant_TachyonDealer_SearchableMapWidget";
-                public const string TachyonDealerRequestsHeatMapWidget = "Widgets_Tenant_TachyonDealer_RequestsHeatMapWidget";
-                public const string TachyonDealerNormalVsRentalRequestsWidget = "Widgets_Tenant_TachyonDealer_NormalVsRentalRequestsWidget";
+                public const string NumberOfRegisteredTrucksWidget = "Widgets_Tenant_TachyonDealer_NumberOfRegisteredTrucksWidget";
+                public const string NumberOfRegisteredShippersWidget = "Widgets_Tenant_TachyonDealer_NumberOfRegisteredShippersWidget";
+                public const string NumberOfRegisteredCarriersWidget = "Widgets_Tenant_TachyonDealer_NumberOfRegisteredCarriersWidget";
+                public const string NewAccountsRegisteredWidget = "Widgets_Tenant_TachyonDealer_NewAccountsRegisterdWidget";
+                public const string NewTripsWidget = "Widgets_Tenant_TachyonDealer_NewTripsWidget";
+                public const string NumberOfDeliveredTripsWidget = "Widgets_Tenant_TachyonDealer_NumberOfDeliverdTripsWidget";
+                public const string NumberOfOngoingTripsWidget = "Widgets_Tenant_TachyonDealer_NumberOfOngoingTripsWidget";
+                public const string TruckTypeUsageWidget = "Widgets_Tenant_TachyonDealer_TruckTypeUsageWidget";
+                public const string GoodTypesUsageWidget = "Widgets_Tenant_TachyonDealer_GoodTypesUsageWidget";
+                public const string RouteTypesUsageWidget = "Widgets_Tenant_TachyonDealer_RouteTypesUsageWidget";
+                public const string MostRequestingShippersWidget = "Widgets_Tenant_TachyonDealer_MostRequestingShippersWidget";
+                public const string MostRequestedCarriersWidget = "Widgets_Tenant_TachyonDealer_MostRequestedCarriersWidget";
+                public const string TopRatedShippersWidget = "Widgets_Tenant_TachyonDealer_TopRatedShippersWidget";
+                public const string TopRatedCarriersWidget = "Widgets_Tenant_TachyonDealer_TopRatedCarriersWidget";
+                public const string WorstRatedShippersWidget = "Widgets_Tenant_TachyonDealer_WorstRatedShippersWidget";
+                public const string WorstRatedCarriersWidget = "Widgets_Tenant_TachyonDealer_WorstRatedCarriersWidget";
+                public const string UnPricedRequestsInMarketPlaceWidget = "Widgets_Tenant_TachyonDealer_UnpricedRequestsInMarketPlaceWidget";
+                public const string RequestsPricingBeforeBidEndingWidget = "Widgets_Tenant_TachyonDealer_RequestsPricingBeforeBidEndingWidget";
+                public const string RequestsPriceAcceptanceWidget = "Widgets_Tenant_TachyonDealer_RequestsPriceAcceptanceWidget";
+                public const string InvoicesPaidBeforeDueDateWidget = "Widgets_Tenant_TachyonDealer_InvoicesPaidBeforeDureDateWidget";
+                public const string NumberOfRequestsPerAreaOrCityWidget = "Widgets_Tenant_TachyonDealer_NumberOfRequestsPerAreaOrCityWidget";
+                public const string SearchableMapWidget = "Widgets_Tenant_TachyonDealer_SearchableMapWidget";
+                public const string RequestsHeatMapWidget = "Widgets_Tenant_TachyonDealer_RequestsHeatMapWidget";
+                public const string NormalVsRentalRequestsWidget = "Widgets_Tenant_TachyonDealer_NormalVsRentalRequestsWidget";
             }
             public class Host
             {
-                public const string TopStats = "Widgets_Host_TopStats";
-                public const string IncomeStatistics = "Widgets_Host_IncomeStatistics";
-                public const string EditionStatistics = "Widgets_Host_EditionStatistics";
-                public const string SubscriptionExpiringTenants = "Widgets_Host_SubscriptionExpiringTenants";
-                public const string RecentTenants = "Widgets_Host_RecentTenants";
             }
 
 

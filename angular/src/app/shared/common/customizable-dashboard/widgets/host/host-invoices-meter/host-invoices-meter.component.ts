@@ -2,6 +2,7 @@ import { Component, Injector, OnInit } from '@angular/core';
 import { MeterCharts } from '@app/shared/common/customizable-dashboard/widgets/ApexInterfaces';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { HostDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-host-invoices-meter',
@@ -16,8 +17,19 @@ export class HostInvoicesMeterComponent extends AppComponentBase implements OnIn
   }
 
   ngOnInit() {
-    this._hostDashboardServiceProxy.getInvoicesPaidBeforeDueDatePercentageCount().subscribe((result) => {
-      if (result) {
+    this.getInvoices();
+  }
+
+  getInvoices() {
+    this.loading = true;
+    this._hostDashboardServiceProxy
+      .getInvoicesPaidBeforeDueDatePercentageCount()
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+        })
+      )
+      .subscribe((result) => {
         this.chartOptions = {
           series: [result],
 
@@ -61,8 +73,8 @@ export class HostInvoicesMeterComponent extends AppComponentBase implements OnIn
           },
           labels: ['InvoicesPaidBeforeDueDatePercentage'],
         };
-        this.loading = true;
-      }
-    });
+
+        this.loading = false;
+      });
   }
 }

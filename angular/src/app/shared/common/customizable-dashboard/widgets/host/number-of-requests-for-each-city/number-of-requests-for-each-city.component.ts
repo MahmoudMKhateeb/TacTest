@@ -4,6 +4,7 @@ import { HostDashboardServiceProxy } from '@shared/service-proxies/service-proxi
 import * as ApexCharts from 'apexcharts';
 
 import { ApexAxisChartSeries, ApexTitleSubtitle, ApexDataLabels, ApexChart, ApexPlotOptions, ChartComponent } from 'ng-apexcharts';
+import { finalize } from 'rxjs/operators';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -30,68 +31,80 @@ export class NumberOfRequestsForEachCityComponent extends AppComponentBase imple
   }
 
   ngOnInit(): void {
+    this.getData();
+  }
+
+  getData() {
     this.y = [];
     this.series1 = [];
+    this.loading = true;
 
-    this._hostDashboardServiceProxy.getNumberOfRequestsForEachCity().subscribe((result) => {
-      result.forEach((element) => {
-        this.series1.push({
-          name: element.cityName,
-          data: this.generateData(element.numberOfRequests, {
-            min: element.minimumValueOfRequests,
-            max: element.maximumValueOfRequests,
-          }),
+    this._hostDashboardServiceProxy
+      .getNumberOfRequestsForEachCity()
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+        })
+      )
+      .subscribe((result) => {
+        result.forEach((element) => {
+          this.series1.push({
+            name: element.cityName,
+            data: this.generateData(element.numberOfRequests, {
+              min: element.minimumValueOfRequests,
+              max: element.maximumValueOfRequests,
+            }),
+          });
         });
-      });
 
-      this.chartOptions = {
-        series: this.series1,
-        chart: {
-          height: 350,
-          type: 'heatmap',
-        },
-        plotOptions: {
-          heatmap: {
-            shadeIntensity: 0.5,
-            colorScale: {
-              ranges: [
-                {
-                  from: -30,
-                  to: 5,
-                  name: 'low',
-                  color: '#00A100',
-                },
-                {
-                  from: 6,
-                  to: 20,
-                  name: 'medium',
-                  color: '#128FD9',
-                },
-                {
-                  from: 21,
-                  to: 45,
-                  name: 'high',
-                  color: '#FFB200',
-                },
-                {
-                  from: 46,
-                  to: 55,
-                  name: 'extreme',
-                  color: '#FF0000',
-                },
-              ],
+        this.chartOptions = {
+          series: this.series1,
+          chart: {
+            height: 350,
+            type: 'heatmap',
+          },
+          plotOptions: {
+            heatmap: {
+              shadeIntensity: 0.5,
+              colorScale: {
+                ranges: [
+                  {
+                    from: -30,
+                    to: 5,
+                    name: 'low',
+                    color: '#00A100',
+                  },
+                  {
+                    from: 6,
+                    to: 20,
+                    name: 'medium',
+                    color: '#128FD9',
+                  },
+                  {
+                    from: 21,
+                    to: 45,
+                    name: 'high',
+                    color: '#FFB200',
+                  },
+                  {
+                    from: 46,
+                    to: 55,
+                    name: 'extreme',
+                    color: '#FF0000',
+                  },
+                ],
+              },
             },
           },
-        },
-        dataLabels: {
-          enabled: false,
-        },
-        title: {
-          text: 'HeatMap Chart with Color Range',
-        },
-      };
-      this.loading = true;
-    });
+          dataLabels: {
+            enabled: false,
+          },
+          title: {
+            text: 'HeatMap Chart with Color Range',
+          },
+        };
+        this.loading = false;
+      });
   }
 
   public generateData(count, yrange) {

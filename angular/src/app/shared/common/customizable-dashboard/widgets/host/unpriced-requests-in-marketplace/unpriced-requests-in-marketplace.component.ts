@@ -12,6 +12,9 @@ export class UnpricedRequestsInMarketplaceComponent extends AppComponentBase imp
   requests: any;
   endDate: moment.Moment = null;
   startDate: moment.Moment = null;
+  loading: boolean = false;
+  saving = false;
+  noRequests: number = 0;
 
   constructor(private injector: Injector, private _hostDashboardServiceProxy: HostDashboardServiceProxy) {
     super(injector);
@@ -22,8 +25,14 @@ export class UnpricedRequestsInMarketplaceComponent extends AppComponentBase imp
   }
 
   getUnpricedRequests() {
+    this.saving = true;
+    this.loading = true;
     this._hostDashboardServiceProxy.getUnpricedRequestsInMarketplace(this.startDate, this.endDate).subscribe((result) => {
       this.requests = result;
+      console.log('req', this.requests);
+      this.noRequests = this.requests.length;
+      this.loading = false;
+      this.saving = false;
     });
   }
 }

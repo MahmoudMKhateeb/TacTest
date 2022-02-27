@@ -9,8 +9,8 @@ namespace TACHYON.Dashboards.Host
     public interface IHostDashboardAppService : IApplicationService
     {
         Task<List<TruckTypeAvailableTrucksDto>> GetTrucksTypeCount();
-        Task<List<ListPerMonthDto>> GetAccountsCountsPerMonth();
-        Task<List<ListPerMonthDto>> GetNewTripsCountPerMonth();
+        Task<List<ListPerMonthDto>> GetAccountsCountsPerMonth(GetDataByDateFilterInput input);
+        Task<List<ListPerMonthDto>> GetNewTripsCountPerMonth(GetDataByDateFilterInput input);
         Task<long> GetOngoingTripsCount();
         Task<long> GetDeliveredTripsCount();
         Task<long> GetShippersCount();

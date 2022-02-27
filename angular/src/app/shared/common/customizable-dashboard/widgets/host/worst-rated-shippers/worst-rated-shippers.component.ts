@@ -9,14 +9,21 @@ import { HostDashboardServiceProxy } from '@shared/service-proxies/service-proxi
 })
 export class WorstRatedShippersComponent extends AppComponentBase implements OnInit {
   worstRatedShippers: any;
+  loading: boolean = false;
 
   constructor(private injector: Injector, private _hostDashboardServiceProxy: HostDashboardServiceProxy) {
     super(injector);
   }
 
   ngOnInit(): void {
+    this.getData();
+  }
+
+  getData() {
+    this.loading = true;
     this._hostDashboardServiceProxy.getWorstRatedShippers().subscribe((result) => {
       this.worstRatedShippers = result;
+      this.loading = false;
     });
   }
 }
