@@ -37,6 +37,7 @@ using TACHYON.Packing.PackingTypes;
 using TACHYON.Packing.PackingTypes.Dtos;
 using TACHYON.PriceOffers;
 using TACHYON.PriceOffers.Dto;
+using TACHYON.PricePackages;
 using TACHYON.Receivers;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Routs.RoutSteps;
@@ -89,7 +90,7 @@ namespace TACHYON.Shipping.ShippingRequests
             BidDomainService bidDomainService,
             IRepository<Capacity, int> capacityRepository, IRepository<TransportType, int> transportTypeRepository, IRepository<RoutPoint, long> routPointRepository,
             IRepository<ShippingRequestsCarrierDirectPricing> carrierDirectPricingRepository,
-            IRepository<ShippingRequestDirectRequest, long> shippingRequestDirectRequestRepository, PriceOfferManager priceOfferManager, IRepository<InvoiceTrip, long> invoiveTripRepository, ShippingRequestDirectRequestAppService shippingRequestDirectRequestAppService, ShippingRequestDirectRequestManager shippingRequestDirectRequestManager, DocumentFilesManager documentFilesManager)
+            IRepository<ShippingRequestDirectRequest, long> shippingRequestDirectRequestRepository, PriceOfferManager priceOfferManager, IRepository<InvoiceTrip, long> invoiveTripRepository, ShippingRequestDirectRequestAppService shippingRequestDirectRequestAppService, ShippingRequestDirectRequestManager shippingRequestDirectRequestManager, DocumentFilesManager documentFilesManager, NormalPricePackageManager normalPricePackageManager)
         {
             _vasPriceRepository = vasPriceRepository;
             _shippingRequestRepository = shippingRequestRepository;
@@ -118,6 +119,7 @@ namespace TACHYON.Shipping.ShippingRequests
             _shippingRequestDirectRequestAppService = shippingRequestDirectRequestAppService;
             _shippingRequestDirectRequestManager = shippingRequestDirectRequestManager;
             _documentFilesManager = documentFilesManager;
+            _normalPricePackageManager = normalPricePackageManager;
         }
         private readonly IRepository<ShippingRequestsCarrierDirectPricing> _carrierDirectPricingRepository;
         private readonly IRepository<VasPrice> _vasPriceRepository;
@@ -147,6 +149,8 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly ShippingRequestDirectRequestAppService _shippingRequestDirectRequestAppService;
         private readonly ShippingRequestDirectRequestManager _shippingRequestDirectRequestManager;
         private readonly DocumentFilesManager _documentFilesManager;
+        private readonly NormalPricePackageManager _normalPricePackageManager;
+
         public async Task<GetAllShippingRequestsOutputDto> GetAll(GetAllShippingRequestsInput Input)
         {
             DisableTenancyFilters();
@@ -821,6 +825,9 @@ namespace TACHYON.Shipping.ShippingRequests
             {
                 UserIdentifier[] users = await _bidDomainService.GetCarriersByTruckTypeArrayAsync(shippingRequest.TrucksTypeId.Value);
                 await _appNotifier.ShippingRequestAsBidWithSameTruckAsync(users, shippingRequest.Id);
+
+                var carriersIds = await _normalPricePackageManager.GetCarriersMatchingPricePackages(shippingRequest.TrucksTypeId, shippingRequest.OriginCityId, shippingRequest.DestinationCityId);
+                await _appNotifier.ShippingRequestAsBidWithMatchingPricePackage(carriersIds, shippingRequest.Id);
             }
         }
 

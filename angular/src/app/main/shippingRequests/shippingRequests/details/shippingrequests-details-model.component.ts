@@ -61,6 +61,9 @@ export class ShippingrequestsDetailsModelComponent extends AppComponentBase {
   }
   markAsPriced(offerId: number) {
     this.shippingrequest.isPriced = true;
+    if (this.shippingrequest.isBid) {
+      this.shippingrequest.offerId = offerId;
+    }
   }
   delete() {
     this.shippingrequest.offerId = undefined;

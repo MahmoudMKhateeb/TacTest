@@ -11,7 +11,8 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
     public class GetShippingRequestForPricingOutput : EntityDto<long>
     {
         public long OfferId { get; set; }
-        public long? BidNormalPricePackageId { get; set; }
+        public long? MatchingPricePackageId { get; set; }
+        public long? PricePackageOfferId { get; set; }
         public string Shipper { get; set; }
         public decimal ShipperRating { get; set; }
         public int ShipperRatingNumber { get; set; }

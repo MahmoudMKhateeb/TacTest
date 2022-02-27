@@ -26,6 +26,7 @@ namespace TACHYON.Notifications
         public const string RejectShippingRequest = "App.RejectShippingRequest";
         public const string AcceptShippingRequestBid = "App.AcceptShippingRequestBid";
         public const string ShippingRequestAsBidWithSameTruck = "App.ShippingRequestAsBidWithSameTruck";
+        public const string ShippingRequestAsBidWithMatchingPricePackage = "App.ShippingRequestAsBidWithMatchingPricePackage";
         public const string CreateShippingRequestBid = "app.CreateShippingRequestBid";
         public const string UpdateShippingRequestBid = "app.UpdateShippingRequestBid";
         public const string CancelShippingRequestBid = "app.CancelShippingRequestBid";

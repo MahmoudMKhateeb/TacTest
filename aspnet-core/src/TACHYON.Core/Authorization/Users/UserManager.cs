@@ -259,6 +259,19 @@ namespace TACHYON.Authorization.Users
 
         }
 
+
+        public async Task<UserIdentifier[]> GetTenantAdminsByTenantIdsAsync(List<int> tenantIds)
+        {
+
+            using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
+            {
+                return await _userRepository.GetAll()
+                    .Where(x => x.TenantId.HasValue && tenantIds.Contains(x.TenantId.Value) && x.UserName == AbpUserBase.AdminUserName)
+                    .Select(c => new UserIdentifier(c.TenantId, c.Id)).ToArrayAsync();
+            }
+
+        }
+
         public async Task<User> GetAdminHostAsync()
         {
 

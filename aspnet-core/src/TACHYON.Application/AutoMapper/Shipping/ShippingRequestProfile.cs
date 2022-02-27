@@ -16,7 +16,7 @@ namespace TACHYON.AutoMapper.Shipping
                 .ForMember(dst => dst.RouteType, opt => opt.MapFrom(src => Enum.GetName(typeof(ShippingRequestRouteType), src.RouteTypeId)));
 
             CreateMap<ShippingRequest, GetShippingRequestForViewOutput>()
-                .ForMember(dest=> dest.TruckTypeId,opt=> opt.MapFrom(x=> x.TrucksTypeId))
+                .ForMember(dest => dest.TruckTypeId, opt => opt.MapFrom(x => x.TrucksTypeId))
                 .ForMember(dest => dest.ShippingRequest, opt => opt.MapFrom(src => src))
                 .ForMember(dest => dest.ShippingRequestBidDtoList, opt => opt.Ignore())
                 .ForMember(dest => dest.AssignedTruckDto, opt => opt.MapFrom(src => src.AssignedTruckFk))
@@ -35,7 +35,7 @@ namespace TACHYON.AutoMapper.Shipping
                 .ForMember(dest => dest.CapacityDisplayName, opt => opt.MapFrom(src => src.CapacityFk.DisplayName))
                 .ForMember(dest => dest.TransportTypeDisplayName, opt => opt.MapFrom(src => src.TransportTypeFk.DisplayName))
                 .ForMember(dest => dest.ShippingTypeDisplayName, opt => opt.MapFrom(src => src.ShippingTypeFk.DisplayName))
-                .ForMember(dest => dest.packingTypeDisplayName, opt => opt.MapFrom(src => src.PackingTypeFk.DisplayName))
+                //.ForMember(dest => dest.packingTypeDisplayName, opt => opt.MapFrom(src => src.PackingTypeFk.DisplayName))
                 .ForMember(dest => dest.CarrierName, opt => opt.MapFrom(src => src.CarrierTenantFk.Name));
             //.AfterMap(AssignTruckTypeFullName);
 
@@ -44,13 +44,13 @@ namespace TACHYON.AutoMapper.Shipping
                  .ForMember(dst => dst.OriginCity, opt => opt.MapFrom(src => src.OriginCityFk.DisplayName))
                  .ForMember(dst => dst.DestinationCity, opt => opt.MapFrom(src => src.DestinationCityFk.DisplayName))
                  .ForMember(dst => dst.RangeDate, opt => opt.MapFrom(src => GetDateRange(src.StartTripDate, src.EndTripDate)));
-            
+
 
             CreateMap<CreateOrEditShippingRequestStep1Dto, ShippingRequest>()
                 .ForMember(dest => dest.IsDrafted, opt => opt.Ignore())
                 .ForMember(dest => dest.DraftStep, opt => opt.Ignore());
 
-            CreateMap<ShippingRequest,CreateOrEditShippingRequestStep1Dto>();
+            CreateMap<ShippingRequest, CreateOrEditShippingRequestStep1Dto>();
 
             CreateMap<EditShippingRequestStep2Dto, ShippingRequest>()
                 .ForMember(dest => dest.IsDrafted, opt => opt.Ignore())
@@ -84,5 +84,5 @@ namespace TACHYON.AutoMapper.Shipping
         //}
     }
 
-   
+
 }

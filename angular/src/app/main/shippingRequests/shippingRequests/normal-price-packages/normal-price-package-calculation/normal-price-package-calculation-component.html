@@ -176,14 +176,25 @@
             >
               <i class="fa fa-save"></i> <span>{{ 'SendPricePackageOffer' | localize }}</span>
             </button>
+
             <button
-              *ngIf="isCarrier && directRequestStatus == 0"
+              *ngIf="isCarrier && directRequestStatus == 0 && !isBid && !isTachyonDeal"
               class="btn btn-primary"
               (click)="accept(pricePackageId)"
               [buttonBusy]="saving"
               [busyText]="l('SavingWithThreeDot' | localize)"
             >
               <i class="fa fa-save"></i> <span>{{ 'AcceptPrice' | localize }}</span>
+            </button>
+
+            <button
+              *ngIf="isCarrier && canSendPriceOfferByPricePackage()"
+              class="btn btn-primary"
+              (click)="sendPriceOfferByPricePackage()"
+              [buttonBusy]="saving"
+              [busyText]="l('SavingWithThreeDot' | localize)"
+            >
+              <i class="fa fa-save"></i> <span>{{ 'SendPriceOfferByPricePackage' | localize }}</span>
             </button>
           </div>
         </form>

@@ -139,11 +139,32 @@
               </div>
             </ng-template>
 
-            <ng-template [ngIf]="shippingrequest.bidNormalPricePackageId">
+            <ng-template [ngIf]="request.pricePackageOfferId && !shippingrequest.isBid">
               <div class="divirCard"></div>
               <div class="setPrice">
-                <button type="button" (click)="ModelPriceCalculation.Preview(request.id, shippingrequest.bidNormalPricePackageId)">
+                <button type="button" (click)="ModelPriceCalculation.Preview(request.id, request.pricePackageOfferId)">
                   {{ l('PreviewPricePackageOffer') }}
+                </button>
+              </div>
+            </ng-template>
+            <ng-template [ngIf]="request.matchingPricePackageId && canSetPrice()">
+              <div class="divirCard"></div>
+              <div class="setPrice">
+                <button
+                  type="button"
+                  (click)="
+                    ModelPriceCalculation.PreviewMatching(
+                      request.id,
+                      request.matchingPricePackageId,
+                      Channel,
+                      request.bidStatus,
+                      request.status,
+                      shippingrequest.isBid,
+                      shippingrequest.isTachyonDeal
+                    )
+                  "
+                >
+                  {{ l('PreviewMatchingPricePackage') }}
                 </button>
               </div>
             </ng-template>

@@ -3,7 +3,14 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 
-import { NormalPricePackagesServiceProxy, PricePackageOfferDto, PricePackageOfferItemDto } from '@shared/service-proxies/service-proxies';
+import {
+  NormalPricePackagesServiceProxy,
+  PricePackageOfferDto,
+  PricePackageOfferItemDto,
+  PriceOfferChannel,
+  ShippingRequestStatus,
+  ShippingRequestBidStatus,
+} from '@shared/service-proxies/service-proxies';
 import { finalize } from 'rxjs/operators';
 
 @Component({
@@ -26,6 +33,13 @@ export class NormalPricePackageCalculationComponent extends AppComponentBase {
   commissionTypeTitle: string;
   shippingRequestId: number;
   pricePackageId: number;
+  matchingPricePackageId: number;
+  isBid: boolean;
+  requestStatus: ShippingRequestStatus;
+  bidStatus: ShippingRequestBidStatus;
+  channel: PriceOfferChannel;
+  isTachyonDeal: boolean;
+
   constructor(injector: Injector, private _CurrentServ: NormalPricePackagesServiceProxy) {
     super(injector);
   }
@@ -56,6 +70,43 @@ export class NormalPricePackageCalculationComponent extends AppComponentBase {
       this.modal.show();
     });
   }
+
+  canSendPriceOfferByPricePackage(): boolean {
+    if (
+      this.isBid &&
+      (this.requestStatus === ShippingRequestStatus.PrePrice || this.requestStatus === ShippingRequestStatus.NeedsAction) &&
+      this.bidStatus === ShippingRequestBidStatus.OnGoing &&
+      this.channel == PriceOfferChannel.MarketPlace
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  PreviewMatching(
+    id: number,
+    matchingPricePackageId: number,
+    channel: PriceOfferChannel,
+    bidStatus: ShippingRequestBidStatus,
+    requestStatus: ShippingRequestStatus,
+    isBid: boolean,
+    isTachyonDeal: boolean
+  ): void {
+    this.shippingRequestId = id;
+    this.matchingPricePackageId = matchingPricePackageId;
+    this.channel = channel;
+    this.bidStatus = bidStatus;
+    this.requestStatus = requestStatus;
+    this.isBid = isBid;
+    this.isTachyonDeal = isTachyonDeal;
+    this._CurrentServ.getPricePackageOfferForHandle(matchingPricePackageId, id).subscribe((result) => {
+      this.offer = result;
+      this.Items = this.offer.items;
+      this.active = true;
+      this.modal.show();
+    });
+  }
+
   submit(id: number, pricePackageId: number): void {
     this.saving = true;
     this._CurrentServ
@@ -66,10 +117,22 @@ export class NormalPricePackageCalculationComponent extends AppComponentBase {
         this.close();
       });
   }
+
   accept(pricePackageId: number) {
     this.saving = true;
     this._CurrentServ
       .acceptPricePackageOffer(pricePackageId)
+      .pipe(finalize(() => (this.saving = false)))
+      .subscribe((result) => {
+        this.notify.info(this.l('SendSuccessfully'));
+        this.close();
+        this.modalSave.emit(result);
+      });
+  }
+  sendPriceOfferByPricePackage() {
+    this.saving = true;
+    this._CurrentServ
+      .sendPriceOfferByPricePackage(this.matchingPricePackageId, this.shippingRequestId)
       .pipe(finalize(() => (this.saving = false)))
       .subscribe((result) => {
         this.notify.info(this.l('SendSuccessfully'));

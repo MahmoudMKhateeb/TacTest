@@ -19,6 +19,7 @@ using TACHYON.Features;
 using TACHYON.Goods.GoodCategories.Dtos;
 using TACHYON.Notifications;
 using TACHYON.PriceOffers.Dto;
+using TACHYON.PricePackages;
 using TACHYON.Rating;
 using TACHYON.Shipping.DirectRequests;
 using TACHYON.Shipping.ShippingRequests;
@@ -37,6 +38,7 @@ namespace TACHYON.PriceOffers
         private readonly IRepository<ShippingRequestDirectRequest, long> _shippingRequestDirectRequestRepository;
         private IRepository<ShippingRequest, long> _shippingRequestsRepository;
         private readonly PriceOfferManager _priceOfferManager;
+        private readonly NormalPricePackageManager _normalPricePackageManager;
         private IRepository<PriceOffer, long> _priceOfferRepository;
         private readonly IRepository<City> _cityRepository;
         private readonly IRepository<TrucksType, long> _trucksTypeRepository;
@@ -47,7 +49,7 @@ namespace TACHYON.PriceOffers
         public PriceOfferAppService(IRepository<ShippingRequestDirectRequest, long> shippingRequestDirectRequestRepository,
             IRepository<ShippingRequest, long> shippingRequestsRepository, PriceOfferManager priceOfferManager,
             IRepository<PriceOffer, long> priceOfferRepository, IRepository<VasPrice> vasPriceRepository,
-            IRepository<City> cityRepository, IRepository<TrucksType, long> trucksTypeRepository, IAppNotifier appNotifier, IRepository<ShippingRequestTrip> shippingRequestTripRepository)
+            IRepository<City> cityRepository, IRepository<TrucksType, long> trucksTypeRepository, IAppNotifier appNotifier, IRepository<ShippingRequestTrip> shippingRequestTripRepository, NormalPricePackageManager normalPricePackageManager)
         {
             _shippingRequestDirectRequestRepository = shippingRequestDirectRequestRepository;
             _shippingRequestsRepository = shippingRequestsRepository;
@@ -58,6 +60,7 @@ namespace TACHYON.PriceOffers
             _trucksTypeRepository = trucksTypeRepository;
             _appNotifier = appNotifier;
             _shippingRequestTripRepository = shippingRequestTripRepository;
+            _normalPricePackageManager = normalPricePackageManager;
         }
         #region Services
 
@@ -387,7 +390,7 @@ namespace TACHYON.PriceOffers
                              .ThenInclude(x => x.Translations)
                             .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper), x => x.TenantId == AbpSession.TenantId && !x.IsTachyonDeal)
                             .FirstOrDefaultAsync(r => r.Id == input.Id/* && (r.Status == ShippingRequestStatus.NeedsAction || r.Status == ShippingRequestStatus.PrePrice || r.Status == ShippingRequestStatus.AcceptedAndWaitingCarrier)*/);
-            long? bidNormalPricePackageId = default;
+            long? pricePackageOfferId = default, matchingPricePackageId = default;
             if (shippingRequest == null) throw new UserFriendlyException(L("TheRecordIsNotFound"));
 
             if (AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Carrier))// Applay permission for carrier if can see the shipping request details
@@ -397,12 +400,13 @@ namespace TACHYON.PriceOffers
                     if (shippingRequest.IsBid && input.Channel == PriceOfferChannel.MarketPlace)
                     {
                         if (shippingRequest.BidStatus != ShippingRequestBidStatus.OnGoing) throw new UserFriendlyException(L("The Bid must be Ongoing"));
+                        matchingPricePackageId = await _normalPricePackageManager.GetMatchingPricePackages(shippingRequest.TrucksTypeId, shippingRequest.OriginCityId, shippingRequest.DestinationCityId);
                     }
                     else
                     {
                         var _directRequest = await _shippingRequestDirectRequestRepository.FirstOrDefaultAsync(x => x.CarrierTenantId == AbpSession.TenantId.Value && x.ShippingRequestId == input.Id && x.Status != ShippingRequestDirectRequestStatus.Declined);
                         if (_directRequest == null) throw new UserFriendlyException(L("YouDoNotHaveDirectRequest"));
-                        bidNormalPricePackageId = _directRequest.PricePackageOfferId;
+                        pricePackageOfferId = _directRequest.PricePackageOfferId;
                     }
                 }
 
@@ -417,7 +421,8 @@ namespace TACHYON.PriceOffers
             getShippingRequestForPricingOutput.TrukType = ObjectMapper.Map<TrucksTypeDto>(shippingRequest.TrucksTypeFk).TranslatedDisplayName;
             getShippingRequestForPricingOutput.ShipperRating = shippingRequest.Tenant.Rate;
             getShippingRequestForPricingOutput.ShipperRatingNumber = shippingRequest.Tenant.RateNumber;
-            getShippingRequestForPricingOutput.BidNormalPricePackageId = bidNormalPricePackageId;
+            getShippingRequestForPricingOutput.PricePackageOfferId = pricePackageOfferId;
+            getShippingRequestForPricingOutput.MatchingPricePackageId = matchingPricePackageId;
 
             return getShippingRequestForPricingOutput;
 

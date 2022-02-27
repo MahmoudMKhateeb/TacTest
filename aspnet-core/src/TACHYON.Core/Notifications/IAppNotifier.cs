@@ -157,5 +157,6 @@ namespace TACHYON.Notifications
 
         Task NotfiyCarrierWhenReceiveBidPricePackage(int carrierTenantId, string SenderTenantName, string pricePackageId, long shippingRequestId);
         Task CarrierAcceptPricePackageOffer(int tenantId, string carrierTenantName, string requestReferance, long shippingRequestId);
+        Task ShippingRequestAsBidWithMatchingPricePackage(List<int> carriersIds, long shippingRequestId);
     }
 }

@@ -25,6 +25,8 @@ using TACHYON.Invoices;
 using TACHYON.Net.Sms;
 using TACHYON.Notifications;
 using TACHYON.PriceOffers;
+using TACHYON.PriceOffers.Base;
+using TACHYON.PricePackages;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Routs.RoutPoints.RoutPointSmartEnum;
 using TACHYON.Shipping.Drivers.Dto;
@@ -51,6 +53,7 @@ namespace TACHYON.Tracking
         private readonly IRepository<RoutPoint, long> _routPointRepository;
         private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepository;
         private readonly PriceOfferManager _priceOfferManager;
+        private readonly NormalPricePackageManager _normalPricePackageManager;
         private readonly IAppNotifier _appNotifier;
         private readonly IFeatureChecker _featureChecker;
         private readonly IAbpSession _abpSession;
@@ -69,7 +72,7 @@ namespace TACHYON.Tracking
 
 
         #region Constractor
-        public ShippingRequestPointWorkFlowProvider(IRepository<RoutPoint, long> routPointRepository, IRepository<ShippingRequestTrip> shippingRequestTrip, PriceOfferManager priceOfferManager, IAppNotifier appNotifier, IFeatureChecker featureChecker, IAbpSession abpSession, IRepository<RoutPointDocument, long> routPointDocumentRepository, IRepository<ShippingRequestTripTransition> shippingRequestTripTransitionRepository, IRepository<RoutPointStatusTransition> routPointStatusTransitionRepository, FirebaseNotifier firebaseNotifier, ISmsSender smsSender, InvoiceManager invoiceManager, CommonManager commonManager, UserManager userManager, IWebUrlService webUrlService, IPermissionChecker permissionChecker, IEntityChangeSetReasonProvider reasonProvider, ITempFileCacheManager tempFileCacheManager)
+        public ShippingRequestPointWorkFlowProvider(IRepository<RoutPoint, long> routPointRepository, IRepository<ShippingRequestTrip> shippingRequestTrip, PriceOfferManager priceOfferManager, IAppNotifier appNotifier, IFeatureChecker featureChecker, IAbpSession abpSession, IRepository<RoutPointDocument, long> routPointDocumentRepository, IRepository<ShippingRequestTripTransition> shippingRequestTripTransitionRepository, IRepository<RoutPointStatusTransition> routPointStatusTransitionRepository, FirebaseNotifier firebaseNotifier, ISmsSender smsSender, InvoiceManager invoiceManager, CommonManager commonManager, UserManager userManager, IWebUrlService webUrlService, IPermissionChecker permissionChecker, IEntityChangeSetReasonProvider reasonProvider, ITempFileCacheManager tempFileCacheManager, NormalPricePackageManager normalPricePackageManager)
         {
             _routPointRepository = routPointRepository;
             _shippingRequestTripRepository = shippingRequestTrip;
@@ -326,6 +329,7 @@ namespace TACHYON.Tracking
                     },
                 },
             };
+            _normalPricePackageManager = normalPricePackageManager;
         }
         #endregion
 
@@ -385,7 +389,7 @@ namespace TACHYON.Tracking
             trip.StartTripDate = Clock.Now;
 
             await StartTransition(routeStart, new Point(Input.lat, Input.lng));
-           // if (!currentUser.IsDriver) await _firebaseNotifier.TripChanged(new Abp.UserIdentifier(trip.ShippingRequestFk.CarrierTenantId.Value, trip.AssignedDriverUserId.Value), trip.Id.ToString());
+            // if (!currentUser.IsDriver) await _firebaseNotifier.TripChanged(new Abp.UserIdentifier(trip.ShippingRequestFk.CarrierTenantId.Value, trip.AssignedDriverUserId.Value), trip.Id.ToString());
         }
         public async Task Invoke(PointTransactionArgs args, string action)
         {
@@ -657,7 +661,13 @@ namespace TACHYON.Tracking
         private async Task TransferPricesToTrip(ShippingRequestTrip trip)
         {
             DisableTenancyFilters();
+
             var offer = await _priceOfferManager.GetOfferAcceptedByShippingRequestId(trip.ShippingRequestId);
+            if (offer == null)
+            {
+                await TransferPricesToTripByPricePackage(trip);
+                return;
+            }
 
             trip.CommissionType = offer.CommissionType;
             trip.SubTotalAmount = offer.ItemPrice;
@@ -673,6 +683,40 @@ namespace TACHYON.Tracking
             foreach (var vas in trip.ShippingRequestTripVases)
             {
                 var item = offer.PriceOfferDetails.FirstOrDefault(x => x.SourceId == vas.ShippingRequestVasId && x.PriceType == PriceOfferType.Vas);
+                vas.CommissionType = item.CommissionType;
+                vas.SubTotalAmount = item.ItemPrice;
+                vas.VatAmount = item.ItemVatAmount;
+                vas.TotalAmount = item.ItemTotalAmount;
+                vas.SubTotalAmountWithCommission = item.ItemSubTotalAmountWithCommission;
+                vas.VatAmountWithCommission = item.ItemVatAmountWithCommission;
+                vas.TotalAmountWithCommission = item.ItemTotalAmountWithCommission;
+                vas.CommissionPercentageOrAddValue = item.CommissionPercentageOrAddValue;
+                vas.CommissionAmount = item.ItemCommissionAmount;
+                vas.Quantity = 1;
+            }
+
+        }
+        /// <summary>
+        /// Transfer the prices from price offer to trip
+        /// </summary>
+        private async Task TransferPricesToTripByPricePackage(ShippingRequestTrip trip)
+        {
+            var pricePackageOffer = await _normalPricePackageManager.GetOfferByShippingRequestId(trip.ShippingRequestId);
+
+            trip.CommissionType = pricePackageOffer.CommissionType;
+            trip.SubTotalAmount = pricePackageOffer.ItemPrice;
+            trip.VatAmount = pricePackageOffer.ItemVatAmount;
+            trip.TotalAmount = pricePackageOffer.ItemTotalAmount;
+            trip.SubTotalAmountWithCommission = pricePackageOffer.ItemSubTotalAmountWithCommission;
+            trip.VatAmountWithCommission = pricePackageOffer.ItemVatAmountWithCommission;
+            trip.TotalAmountWithCommission = pricePackageOffer.ItemTotalAmountWithCommission;
+            trip.CommissionAmount = pricePackageOffer.ItemCommissionAmount;
+            trip.CommissionPercentageOrAddValue = pricePackageOffer.CommissionPercentageOrAddValue;
+            trip.TaxVat = pricePackageOffer.TaxVat;
+            if (trip.ShippingRequestTripVases == null || trip.ShippingRequestTripVases.Count == 0) return;
+            foreach (var vas in trip.ShippingRequestTripVases)
+            {
+                var item = pricePackageOffer.Items.FirstOrDefault(x => x.SourceId == vas.ShippingRequestVasId && x.PriceType == PriceOfferType.Vas);
                 vas.CommissionType = item.CommissionType;
                 vas.SubTotalAmount = item.ItemPrice;
                 vas.VatAmount = item.ItemVatAmount;
@@ -944,7 +988,7 @@ namespace TACHYON.Tracking
                 .GetAllIncluding(x => x.ShippingRequestFk)
                 .SingleAsync(x => x.Id == point.ShippingRequestTripId);
 
-           // if (!currentUser.IsDriver) await _firebaseNotifier.TripChanged(new Abp.UserIdentifier(trip.ShippingRequestFk.CarrierTenantId.Value, trip.AssignedDriverUserId.Value), trip.Id.ToString());
+            // if (!currentUser.IsDriver) await _firebaseNotifier.TripChanged(new Abp.UserIdentifier(trip.ShippingRequestFk.CarrierTenantId.Value, trip.AssignedDriverUserId.Value), trip.Id.ToString());
         }
         /// <summary>
         /// Singlar notifcation when the shipment delivered
@@ -952,7 +996,7 @@ namespace TACHYON.Tracking
         public async Task NotificationWhenShipmentDelivered(RoutPoint point, User currentUser)
         {
             var trip = point.ShippingRequestTripFk;
-           // if (!currentUser.IsDriver) await _firebaseNotifier.TripChanged(new Abp.UserIdentifier(trip.ShippingRequestFk.CarrierTenantId.Value, trip.AssignedDriverUserId.Value), trip.Id.ToString());
+            // if (!currentUser.IsDriver) await _firebaseNotifier.TripChanged(new Abp.UserIdentifier(trip.ShippingRequestFk.CarrierTenantId.Value, trip.AssignedDriverUserId.Value), trip.Id.ToString());
         }
         #endregion
     }

@@ -22442,6 +22442,285 @@ export class NormalPricePackagesServiceProxy {
   }
 
   /**
+   * @return Success
+   */
+  getAllTranspotTypesForTableDropdown(): Observable<SelectItemDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/NormalPricePackages/GetAllTranspotTypesForTableDropdown';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAllTranspotTypesForTableDropdown(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAllTranspotTypesForTableDropdown(<any>response_);
+            } catch (e) {
+              return <Observable<SelectItemDto[]>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<SelectItemDto[]>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAllTranspotTypesForTableDropdown(response: HttpResponseBase): Observable<SelectItemDto[]> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          if (Array.isArray(resultData200)) {
+            result200 = [] as any;
+            for (let item of resultData200) result200!.push(SelectItemDto.fromJS(item));
+          } else {
+            result200 = <any>null;
+          }
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<SelectItemDto[]>(<any>null);
+  }
+
+  /**
+   * @param transpotTypeId (optional)
+   * @return Success
+   */
+  getAllTruckTypesForTableDropdown(transpotTypeId: number | undefined): Observable<SelectItemDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/NormalPricePackages/GetAllTruckTypesForTableDropdown?';
+    if (transpotTypeId === null) throw new Error("The parameter 'transpotTypeId' cannot be null.");
+    else if (transpotTypeId !== undefined) url_ += 'transpotTypeId=' + encodeURIComponent('' + transpotTypeId) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAllTruckTypesForTableDropdown(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAllTruckTypesForTableDropdown(<any>response_);
+            } catch (e) {
+              return <Observable<SelectItemDto[]>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<SelectItemDto[]>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAllTruckTypesForTableDropdown(response: HttpResponseBase): Observable<SelectItemDto[]> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          if (Array.isArray(resultData200)) {
+            result200 = [] as any;
+            for (let item of resultData200) result200!.push(SelectItemDto.fromJS(item));
+          } else {
+            result200 = <any>null;
+          }
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<SelectItemDto[]>(<any>null);
+  }
+
+  /**
+   * @return Success
+   */
+  getAllCitiesForTableDropdown(): Observable<SelectItemDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/NormalPricePackages/GetAllCitiesForTableDropdown';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAllCitiesForTableDropdown(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAllCitiesForTableDropdown(<any>response_);
+            } catch (e) {
+              return <Observable<SelectItemDto[]>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<SelectItemDto[]>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAllCitiesForTableDropdown(response: HttpResponseBase): Observable<SelectItemDto[]> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          if (Array.isArray(resultData200)) {
+            result200 = [] as any;
+            for (let item of resultData200) result200!.push(SelectItemDto.fromJS(item));
+          } else {
+            result200 = <any>null;
+          }
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<SelectItemDto[]>(<any>null);
+  }
+
+  /**
+   * @return Success
+   */
+  getCarriers(): Observable<SelectItemDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/NormalPricePackages/GetCarriers';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetCarriers(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetCarriers(<any>response_);
+            } catch (e) {
+              return <Observable<SelectItemDto[]>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<SelectItemDto[]>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetCarriers(response: HttpResponseBase): Observable<SelectItemDto[]> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          if (Array.isArray(resultData200)) {
+            result200 = [] as any;
+            for (let item of resultData200) result200!.push(SelectItemDto.fromJS(item));
+          } else {
+            result200 = <any>null;
+          }
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<SelectItemDto[]>(<any>null);
+  }
+
+  /**
    * @param id (optional)
    * @return Success
    */
@@ -23223,10 +23502,16 @@ export class NormalPricePackagesServiceProxy {
   }
 
   /**
+   * @param pricePackageId (optional)
+   * @param shippingRequestId (optional)
    * @return Success
    */
-  getAllTranspotTypesForTableDropdown(): Observable<SelectItemDto[]> {
-    let url_ = this.baseUrl + '/api/services/app/NormalPricePackages/GetAllTranspotTypesForTableDropdown';
+  sendPriceOfferByPricePackage(pricePackageId: number | undefined, shippingRequestId: number | undefined): Observable<number> {
+    let url_ = this.baseUrl + '/api/services/app/NormalPricePackages/SendPriceOfferByPricePackage?';
+    if (pricePackageId === null) throw new Error("The parameter 'pricePackageId' cannot be null.");
+    else if (pricePackageId !== undefined) url_ += 'pricePackageId=' + encodeURIComponent('' + pricePackageId) + '&';
+    if (shippingRequestId === null) throw new Error("The parameter 'shippingRequestId' cannot be null.");
+    else if (shippingRequestId !== undefined) url_ += 'shippingRequestId=' + encodeURIComponent('' + shippingRequestId) + '&';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -23238,26 +23523,26 @@ export class NormalPricePackagesServiceProxy {
     };
 
     return this.http
-      .request('get', url_, options_)
+      .request('post', url_, options_)
       .pipe(
         _observableMergeMap((response_: any) => {
-          return this.processGetAllTranspotTypesForTableDropdown(response_);
+          return this.processSendPriceOfferByPricePackage(response_);
         })
       )
       .pipe(
         _observableCatch((response_: any) => {
           if (response_ instanceof HttpResponseBase) {
             try {
-              return this.processGetAllTranspotTypesForTableDropdown(<any>response_);
+              return this.processSendPriceOfferByPricePackage(<any>response_);
             } catch (e) {
-              return <Observable<SelectItemDto[]>>(<any>_observableThrow(e));
+              return <Observable<number>>(<any>_observableThrow(e));
             }
-          } else return <Observable<SelectItemDto[]>>(<any>_observableThrow(response_));
+          } else return <Observable<number>>(<any>_observableThrow(response_));
         })
       );
   }
 
-  protected processGetAllTranspotTypesForTableDropdown(response: HttpResponseBase): Observable<SelectItemDto[]> {
+  protected processSendPriceOfferByPricePackage(response: HttpResponseBase): Observable<number> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -23272,12 +23557,7 @@ export class NormalPricePackagesServiceProxy {
         _observableMergeMap((_responseText) => {
           let result200: any = null;
           let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
-          if (Array.isArray(resultData200)) {
-            result200 = [] as any;
-            for (let item of resultData200) result200!.push(SelectItemDto.fromJS(item));
-          } else {
-            result200 = <any>null;
-          }
+          result200 = resultData200 !== undefined ? resultData200 : <any>null;
           return _observableOf(result200);
         })
       );
@@ -23288,217 +23568,7 @@ export class NormalPricePackagesServiceProxy {
         })
       );
     }
-    return _observableOf<SelectItemDto[]>(<any>null);
-  }
-
-  /**
-   * @param transpotTypeId (optional)
-   * @return Success
-   */
-  getAllTruckTypesForTableDropdown(transpotTypeId: number | undefined): Observable<SelectItemDto[]> {
-    let url_ = this.baseUrl + '/api/services/app/NormalPricePackages/GetAllTruckTypesForTableDropdown?';
-    if (transpotTypeId === null) throw new Error("The parameter 'transpotTypeId' cannot be null.");
-    else if (transpotTypeId !== undefined) url_ += 'transpotTypeId=' + encodeURIComponent('' + transpotTypeId) + '&';
-    url_ = url_.replace(/[?&]$/, '');
-
-    let options_: any = {
-      observe: 'response',
-      responseType: 'blob',
-      headers: new HttpHeaders({
-        Accept: 'text/plain',
-      }),
-    };
-
-    return this.http
-      .request('get', url_, options_)
-      .pipe(
-        _observableMergeMap((response_: any) => {
-          return this.processGetAllTruckTypesForTableDropdown(response_);
-        })
-      )
-      .pipe(
-        _observableCatch((response_: any) => {
-          if (response_ instanceof HttpResponseBase) {
-            try {
-              return this.processGetAllTruckTypesForTableDropdown(<any>response_);
-            } catch (e) {
-              return <Observable<SelectItemDto[]>>(<any>_observableThrow(e));
-            }
-          } else return <Observable<SelectItemDto[]>>(<any>_observableThrow(response_));
-        })
-      );
-  }
-
-  protected processGetAllTruckTypesForTableDropdown(response: HttpResponseBase): Observable<SelectItemDto[]> {
-    const status = response.status;
-    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-    let _headers: any = {};
-    if (response.headers) {
-      for (let key of response.headers.keys()) {
-        _headers[key] = response.headers.get(key);
-      }
-    }
-    if (status === 200) {
-      return blobToText(responseBlob).pipe(
-        _observableMergeMap((_responseText) => {
-          let result200: any = null;
-          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
-          if (Array.isArray(resultData200)) {
-            result200 = [] as any;
-            for (let item of resultData200) result200!.push(SelectItemDto.fromJS(item));
-          } else {
-            result200 = <any>null;
-          }
-          return _observableOf(result200);
-        })
-      );
-    } else if (status !== 200 && status !== 204) {
-      return blobToText(responseBlob).pipe(
-        _observableMergeMap((_responseText) => {
-          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
-        })
-      );
-    }
-    return _observableOf<SelectItemDto[]>(<any>null);
-  }
-
-  /**
-   * @return Success
-   */
-  getAllCitiesForTableDropdown(): Observable<SelectItemDto[]> {
-    let url_ = this.baseUrl + '/api/services/app/NormalPricePackages/GetAllCitiesForTableDropdown';
-    url_ = url_.replace(/[?&]$/, '');
-
-    let options_: any = {
-      observe: 'response',
-      responseType: 'blob',
-      headers: new HttpHeaders({
-        Accept: 'text/plain',
-      }),
-    };
-
-    return this.http
-      .request('get', url_, options_)
-      .pipe(
-        _observableMergeMap((response_: any) => {
-          return this.processGetAllCitiesForTableDropdown(response_);
-        })
-      )
-      .pipe(
-        _observableCatch((response_: any) => {
-          if (response_ instanceof HttpResponseBase) {
-            try {
-              return this.processGetAllCitiesForTableDropdown(<any>response_);
-            } catch (e) {
-              return <Observable<SelectItemDto[]>>(<any>_observableThrow(e));
-            }
-          } else return <Observable<SelectItemDto[]>>(<any>_observableThrow(response_));
-        })
-      );
-  }
-
-  protected processGetAllCitiesForTableDropdown(response: HttpResponseBase): Observable<SelectItemDto[]> {
-    const status = response.status;
-    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-    let _headers: any = {};
-    if (response.headers) {
-      for (let key of response.headers.keys()) {
-        _headers[key] = response.headers.get(key);
-      }
-    }
-    if (status === 200) {
-      return blobToText(responseBlob).pipe(
-        _observableMergeMap((_responseText) => {
-          let result200: any = null;
-          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
-          if (Array.isArray(resultData200)) {
-            result200 = [] as any;
-            for (let item of resultData200) result200!.push(SelectItemDto.fromJS(item));
-          } else {
-            result200 = <any>null;
-          }
-          return _observableOf(result200);
-        })
-      );
-    } else if (status !== 200 && status !== 204) {
-      return blobToText(responseBlob).pipe(
-        _observableMergeMap((_responseText) => {
-          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
-        })
-      );
-    }
-    return _observableOf<SelectItemDto[]>(<any>null);
-  }
-
-  /**
-   * @return Success
-   */
-  getCarriers(): Observable<SelectItemDto[]> {
-    let url_ = this.baseUrl + '/api/services/app/NormalPricePackages/GetCarriers';
-    url_ = url_.replace(/[?&]$/, '');
-
-    let options_: any = {
-      observe: 'response',
-      responseType: 'blob',
-      headers: new HttpHeaders({
-        Accept: 'text/plain',
-      }),
-    };
-
-    return this.http
-      .request('get', url_, options_)
-      .pipe(
-        _observableMergeMap((response_: any) => {
-          return this.processGetCarriers(response_);
-        })
-      )
-      .pipe(
-        _observableCatch((response_: any) => {
-          if (response_ instanceof HttpResponseBase) {
-            try {
-              return this.processGetCarriers(<any>response_);
-            } catch (e) {
-              return <Observable<SelectItemDto[]>>(<any>_observableThrow(e));
-            }
-          } else return <Observable<SelectItemDto[]>>(<any>_observableThrow(response_));
-        })
-      );
-  }
-
-  protected processGetCarriers(response: HttpResponseBase): Observable<SelectItemDto[]> {
-    const status = response.status;
-    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-    let _headers: any = {};
-    if (response.headers) {
-      for (let key of response.headers.keys()) {
-        _headers[key] = response.headers.get(key);
-      }
-    }
-    if (status === 200) {
-      return blobToText(responseBlob).pipe(
-        _observableMergeMap((_responseText) => {
-          let result200: any = null;
-          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
-          if (Array.isArray(resultData200)) {
-            result200 = [] as any;
-            for (let item of resultData200) result200!.push(SelectItemDto.fromJS(item));
-          } else {
-            result200 = <any>null;
-          }
-          return _observableOf(result200);
-        })
-      );
-    } else if (status !== 200 && status !== 204) {
-      return blobToText(responseBlob).pipe(
-        _observableMergeMap((_responseText) => {
-          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
-        })
-      );
-    }
-    return _observableOf<SelectItemDto[]>(<any>null);
+    return _observableOf<number>(<any>null);
   }
 }
 
@@ -77974,6 +78044,7 @@ export class GetShippingRequestForPriceOfferListDto implements IGetShippingReque
   latitude!: number;
   creationTime!: moment.Moment | undefined;
   isTachyonDeal!: boolean;
+  isBid!: boolean;
   createdByTachyonDealer!: boolean;
   originCity!: string | undefined;
   destinationCity!: string | undefined;
@@ -78028,6 +78099,7 @@ export class GetShippingRequestForPriceOfferListDto implements IGetShippingReque
       this.latitude = _data['latitude'];
       this.creationTime = _data['creationTime'] ? moment(_data['creationTime'].toString()) : <any>undefined;
       this.isTachyonDeal = _data['isTachyonDeal'];
+      this.isBid = _data['isBid'];
       this.createdByTachyonDealer = _data['createdByTachyonDealer'];
       this.originCity = _data['originCity'];
       this.destinationCity = _data['destinationCity'];
@@ -78083,6 +78155,7 @@ export class GetShippingRequestForPriceOfferListDto implements IGetShippingReque
     data['latitude'] = this.latitude;
     data['creationTime'] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
     data['isTachyonDeal'] = this.isTachyonDeal;
+    data['isBid'] = this.isBid;
     data['createdByTachyonDealer'] = this.createdByTachyonDealer;
     data['originCity'] = this.originCity;
     data['destinationCity'] = this.destinationCity;
@@ -78131,6 +78204,7 @@ export interface IGetShippingRequestForPriceOfferListDto {
   latitude: number;
   creationTime: moment.Moment | undefined;
   isTachyonDeal: boolean;
+  isBid: boolean;
   createdByTachyonDealer: boolean;
   originCity: string | undefined;
   destinationCity: string | undefined;
@@ -78302,7 +78376,8 @@ export interface IPriceOfferItemDto {
 export class GetShippingRequestForPricingOutput implements IGetShippingRequestForPricingOutput {
   items!: PriceOfferItemDto[] | undefined;
   offerId!: number;
-  bidNormalPricePackageId!: number | undefined;
+  matchingPricePackageId!: number | undefined;
+  pricePackageOfferId!: number | undefined;
   shipper!: string | undefined;
   shipperRating!: number;
   shipperRatingNumber!: number;
@@ -78338,7 +78413,8 @@ export class GetShippingRequestForPricingOutput implements IGetShippingRequestFo
         for (let item of _data['items']) this.items!.push(PriceOfferItemDto.fromJS(item));
       }
       this.offerId = _data['offerId'];
-      this.bidNormalPricePackageId = _data['bidNormalPricePackageId'];
+      this.matchingPricePackageId = _data['matchingPricePackageId'];
+      this.pricePackageOfferId = _data['pricePackageOfferId'];
       this.shipper = _data['shipper'];
       this.shipperRating = _data['shipperRating'];
       this.shipperRatingNumber = _data['shipperRatingNumber'];
@@ -78375,7 +78451,8 @@ export class GetShippingRequestForPricingOutput implements IGetShippingRequestFo
       for (let item of this.items) data['items'].push(item.toJSON());
     }
     data['offerId'] = this.offerId;
-    data['bidNormalPricePackageId'] = this.bidNormalPricePackageId;
+    data['matchingPricePackageId'] = this.matchingPricePackageId;
+    data['pricePackageOfferId'] = this.pricePackageOfferId;
     data['shipper'] = this.shipper;
     data['shipperRating'] = this.shipperRating;
     data['shipperRatingNumber'] = this.shipperRatingNumber;
@@ -78402,7 +78479,8 @@ export class GetShippingRequestForPricingOutput implements IGetShippingRequestFo
 export interface IGetShippingRequestForPricingOutput {
   items: PriceOfferItemDto[] | undefined;
   offerId: number;
-  bidNormalPricePackageId: number | undefined;
+  matchingPricePackageId: number | undefined;
+  pricePackageOfferId: number | undefined;
   shipper: string | undefined;
   shipperRating: number;
   shipperRatingNumber: number;

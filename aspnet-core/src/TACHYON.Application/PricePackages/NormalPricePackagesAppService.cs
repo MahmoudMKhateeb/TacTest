@@ -260,6 +260,10 @@ namespace TACHYON.PricePackages
         {
             return await _normalPricePackageManager.AcceptPricePackageOffer(pricePackageOfferId);
         }
+        public async Task<long> SendPriceOfferByPricePackage(int pricePackageId, long shippingRequestId)
+        {
+            return await _normalPricePackageManager.SendPriceOfferByPricePackage(pricePackageId, shippingRequestId);
+        }
         #endregion
     }
 }

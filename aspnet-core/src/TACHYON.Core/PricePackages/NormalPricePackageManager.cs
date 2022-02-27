@@ -143,7 +143,8 @@ namespace TACHYON.PricePackages
         public async Task<ShippingRequestDirectRequestStatus> AcceptPricePackageOffer(int pricePackageOfferId)
         {
             DisableTenancyFilters();
-            var pricePackageOffer = await _pricePackageOfferRepository.GetAll()
+            var pricePackageOffer = await _pricePackageOfferRepository
+                                .GetAllIncluding(x => x.Items)
                 .WhereIf(_abpSession.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.NormalPricePackageFK.TenantId == _abpSession.TenantId)
                 .WhereIf(_abpSession.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Shipper), x => x.TenantId == _abpSession.TenantId)
                 .WhereIf(!_abpSession.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => true)
@@ -182,7 +183,46 @@ namespace TACHYON.PricePackages
 
         }
 
+        /// <summary>
+        /// Get Carriers Matching Price Packages to send notfication to them
+        /// </summary>
+        public async Task<List<int>> GetCarriersMatchingPricePackages(long? truckType, int? originCityId, int? destinationCityId)
+        {
+            DisableTenancyFilters();
+            var query = MatchingPricePackageQuery(truckType, originCityId, destinationCityId);
+            return await query.Select(c => c.TenantId).Distinct().ToListAsync();
+        }
+
+        /// <summary>
+        /// Get Matching Price Package
+        /// </summary>
+        public async Task<int?> GetMatchingPricePackages(long? truckType, int? originCityId, int? destinationCityId)
+        {
+            var query = MatchingPricePackageQuery(truckType, originCityId, destinationCityId);
+            return await query.Select(x => x.Id).FirstOrDefaultAsync();
+        }
+        public async Task<long> SendPriceOfferByPricePackage(int pricePackageId, long shippingRequestId)
+        {
+            DisableTenancyFilters();
+            var priceOfferInput = await GeneratePriceOfferInput(pricePackageId, shippingRequestId);
+            return await _priceOfferManager.CreateOrEdit(priceOfferInput);
+        }
+
+        public async Task<PricePackageOffer> GetOfferByShippingRequestId(long shippingRequestId)
+        {
+            return await _directShippingRequestRepository.GetAll()
+                  .Include(x => x.PricePackageOfferFK)
+                  .ThenInclude(x => x.Items)
+                  .Where(x => x.ShippingRequestId == shippingRequestId && x.Status == ShippingRequestDirectRequestStatus.Accepted)
+                  .Select(x => x.PricePackageOfferFK).FirstOrDefaultAsync();
+        }
+
         #region Helpers
+        private IQueryable<NormalPricePackage> MatchingPricePackageQuery(long? truckType, int? originCityId, int? destinationCityId)
+        {
+            return _normalPricePackageRepository.GetAll()
+                .Where(x => x.TrucksTypeId == truckType && x.OriginCityId == originCityId && x.DestinationCityId == destinationCityId);
+        }
         /// <summary>
         /// Accept Price Package Offer from Tachyon Dealer
         /// </summary>
@@ -304,7 +344,6 @@ namespace TACHYON.PricePackages
                 .Include(x => x.ShippingRequestVases)
                 .ThenInclude(x => x.VasFk)
                 .AsNoTracking()
-                .WhereIf(_abpSession.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.TenantId == _abpSession.TenantId)
                 .WhereIf(!_abpSession.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => x.IsTachyonDeal)
                 .FirstOrDefaultAsync(x => x.Id == shippingRequestId);
             if (shippingRequest == null) throw new UserFriendlyException(L("ThesShippingRequestDoesNotExist"));
