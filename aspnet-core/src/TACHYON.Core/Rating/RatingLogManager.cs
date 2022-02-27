@@ -58,7 +58,9 @@ namespace TACHYON.Rating
         public async Task DeleteAllTripAndPointsRatingAsync(RatingLog rate)
         {
             if (!rate.TripId.HasValue && !rate.PointId.HasValue) return;
-            var ratePoints = rate.TripFk.RoutPoints.Select(y => y.Id).ToList();
+            var ratePoints = await _routePointRepository.GetAll()
+                .Where(x=> x.Id == rate.PointId || x.ShippingRequestTripId == rate.TripId)
+                .Select(y => y.Id).ToListAsync();
 
             if (rate.TripId.HasValue)
             {
