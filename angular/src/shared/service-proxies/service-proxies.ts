@@ -76177,6 +76177,7 @@ export class ShippingRequestDto implements IShippingRequestDto {
     addTripsByTmsEnabled!: boolean;
     shipperReference!: string | undefined;
     shipperInvoiceNo!: string | undefined;
+    isSaas!: boolean;
     readonly statusTitle!: string | undefined;
     readonly bidStatusTitle!: string | undefined;
     id!: number;
@@ -76223,6 +76224,7 @@ export class ShippingRequestDto implements IShippingRequestDto {
             this.addTripsByTmsEnabled = _data["addTripsByTmsEnabled"];
             this.shipperReference = _data["shipperReference"];
             this.shipperInvoiceNo = _data["shipperInvoiceNo"];
+            this.isSaas = _data["isSaas"];
             (<any>this).statusTitle = _data["statusTitle"];
             (<any>this).bidStatusTitle = _data["bidStatusTitle"];
             this.id = _data["id"];
@@ -76269,6 +76271,7 @@ export class ShippingRequestDto implements IShippingRequestDto {
         data["addTripsByTmsEnabled"] = this.addTripsByTmsEnabled;
         data["shipperReference"] = this.shipperReference;
         data["shipperInvoiceNo"] = this.shipperInvoiceNo;
+        data["isSaas"] = this.isSaas;
         data["statusTitle"] = this.statusTitle;
         data["bidStatusTitle"] = this.bidStatusTitle;
         data["id"] = this.id;
@@ -76308,6 +76311,7 @@ export interface IShippingRequestDto {
     addTripsByTmsEnabled: boolean;
     shipperReference: string | undefined;
     shipperInvoiceNo: string | undefined;
+    isSaas: boolean;
     statusTitle: string | undefined;
     bidStatusTitle: string | undefined;
     id: number;

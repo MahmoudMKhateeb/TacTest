@@ -397,7 +397,9 @@ namespace TACHYON
                 .ForPath(dst => dst.Tenant.Name, opt => opt.MapFrom(src => src.CarrierName))
                 .ReverseMap();
             configuration.CreateMap<CreatOrEditShippingRequestBidDto, ShippingRequestBid>().ReverseMap();
-            configuration.CreateMap<ShippingRequestDto, ShippingRequest>().ReverseMap();
+            configuration.CreateMap<ShippingRequestDto, ShippingRequest>();
+            configuration.CreateMap<ShippingRequest, ShippingRequestDto>()
+                .ForMember(x=> x.IsSaas,x=> x.MapFrom(i=> i.IsSaas())).ReverseMap();
             configuration.CreateMap<CreateOrEditGoodsDetailDto, GoodsDetail>().ReverseMap();
             configuration.CreateMap<GoodsDetail, GoodsDetailDto>()
                 .ReverseMap();
