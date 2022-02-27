@@ -783,4 +783,11 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     this.step3Form?.controls?.otherTrucksTypeName?.updateValueAndValidity();
     return r;
   }
+
+  /**
+   * resets step2 inputs if the Route Type Change
+   */
+  resetStep2Inputs() {
+    this.step2Dto.destinationCityId = this.step2Dto.originCityId = this.originCountry = this.destinationCountry = undefined;
+  }
 }
