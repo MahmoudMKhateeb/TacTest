@@ -695,6 +695,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   validateShippingRequestType() {
     //check if user choose local-inside city  but the origin&des same
     if (this.step1Dto.shippingTypeId == 1) {
+      //local inside city
       this.destinationCountry = this.originCountry;
       this.step2Dto.destinationCityId = this.step2Dto.originCityId;
       this.destinationCities = this.sourceCities;
@@ -705,16 +706,25 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
       if (this.step2Dto.originCityId == this.step2Dto.destinationCityId) {
         this.step2Form.controls['destinationCity'].setErrors({ invalid: true });
         this.step2Form.controls['destinationCountry'].setErrors({ invalid: true });
-      }
-      if (this.originCountry != this.destinationCountry) {
+      } else if (this.originCountry !== this.destinationCountry) {
         this.step2Form.controls['originCountry'].setErrors({ invalid: true });
         this.step2Form.controls['destinationCountry'].setErrors({ invalid: true });
+      } else {
+        this.step2Form.controls['destinationCity'].setErrors(null);
+        this.step2Form.controls['destinationCountry'].setErrors(null);
+        this.step2Form.controls['destinationCity'].updateValueAndValidity();
+        this.step2Form.controls['destinationCountry'].updateValueAndValidity();
       }
     } else if (this.step1Dto.shippingTypeId == 4) {
       //if route type is cross border prevent the countries to be the same
       if (this.originCountry === this.destinationCountry) {
         this.step2Form.controls['originCountry'].setErrors({ invalid: true });
         this.step2Form.controls['destinationCountry'].setErrors({ invalid: true });
+      } else {
+        this.step2Form.controls['destinationCity'].setErrors(null);
+        this.step2Form.controls['destinationCountry'].setErrors(null);
+        this.step2Form.controls['originCountry'].updateValueAndValidity();
+        this.step2Form.controls['destinationCountry'].updateValueAndValidity();
       }
     }
   }

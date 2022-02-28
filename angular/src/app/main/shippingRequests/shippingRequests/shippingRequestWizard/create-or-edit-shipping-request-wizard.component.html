@@ -392,7 +392,7 @@
                               (ngModelChange)="validateShippingRequestType()"
                               required
                             >
-                              <option [ngValue]="null" selected disabled>{{ l('SelectanOriginCity') }}</option>
+                              <option value="undefined" selected disabled>{{ l('SelectanOriginCity') }}</option>
                               <option *ngFor="let item of sourceCities" value="{{ item.id }}">{{ item.displayName }}</option>
                             </select>
                           </div>
