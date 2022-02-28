@@ -52,7 +52,7 @@
                   [class.is-valid]="country.touched && country.valid"
                   (change)="loadCitiesByCountryId(selectedCountryId)"
                 >
-                  <option [ngValue]="null" selected disabled hidden>{{ l('SelectACounty') }}</option>
+                  <option value="undefined" selected disabled>{{ l('SelectACounty') }}</option>
                   <option *ngFor="let item of countries" value="{{ item.id }}">{{ item.displayName }}</option>
                 </select>
               </div>
@@ -71,8 +71,8 @@
                   [class.is-valid]="city.touched && city.valid"
                   (change)="cityChangeEvent()"
                 >
-                  <option value="" selected disabled>{{ l('SelectACity') }}</option>
-                  <option *ngFor="let item of allCities" [ngClass]="{ 'text-danger': !item.hasPolygon }" value="{{ item.id }}">
+                  <option value="undefined" selected disabled>{{ l('SelectACity') }}</option>
+                  <option *ngFor="let item of allCities" [ngClass]="{ 'text-danger': !item.hasPolygon }" [ngValue]="item.id">
                     {{ item.displayName }}
                   </option>
                 </select>
@@ -93,6 +93,7 @@
                 [disabled]="!facility.cityId"
                 minlength="0"
                 maxlength="30"
+                required
               />
               <div *ngIf="!long.valid" class="invalid-feedback">{{ l('HasToBeWithInCityBounds') }}</div>
             </div>
@@ -111,6 +112,7 @@
                 [disabled]="!facility.cityId"
                 minlength="0"
                 maxlength="30"
+                required
               />
               <div *ngIf="!lat.valid" class="invalid-feedback">{{ l('HasToBeWithInCityBounds') }}</div>
             </div>
@@ -130,18 +132,19 @@
             </div>
             <!-- CreateNewFacilityMap -->
             <div class="form-group col-md-12" [ngClass]="{ preventClick: !facility.cityId }">
-              <agm-map
-                class="map"
-                [zoom]="12"
-                [longitude]="Bounds?.getCenter().lng() || facility.longitude"
-                [latitude]="Bounds?.getCenter().lat() || facility.latitude"
-              >
-                <agm-data-layer [geoJson]="selectedCityJson" (layerClick)="mapClicked($event)" [style]="styleObject"></agm-data-layer>
+              <agm-map class="map" [zoom]="12" [longitude]="facility.longitude" [latitude]="facility.latitude" (mapClick)="mapClicked($event)">
                 <agm-marker
                   *ngIf="facility.latitude && facility.longitude"
                   [latitude]="facility.latitude"
                   [longitude]="facility.longitude"
+                  [markerDraggable]="selectedCityJson ? false : true"
                 ></agm-marker>
+                <agm-data-layer
+                  *ngIf="selectedCityJson"
+                  [geoJson]="selectedCityJson"
+                  (layerClick)="mapClicked($event)"
+                  [style]="styleObject"
+                ></agm-data-layer>
               </agm-map>
             </div>
           </div>

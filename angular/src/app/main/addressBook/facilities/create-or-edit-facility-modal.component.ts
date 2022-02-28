@@ -3,6 +3,7 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
 import {
   CityPolygonLookupTableDto,
+  CountyDto,
   CreateOrEditFacilityDto,
   FacilitiesServiceProxy,
   FacilityForDropdownDto,
@@ -11,6 +12,7 @@ import {
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { MapsAPILoader } from '@node_modules/@agm/core';
 import { NgForm } from '@angular/forms';
+import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 
 @Component({
   selector: 'createOrEditFacilityModal',
@@ -28,9 +30,7 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
   active = false;
   saving = false;
   facility: CreateOrEditFacilityDto = new CreateOrEditFacilityDto();
-  countries: any;
   cities: any;
-  private geoCoder;
   allCities: CityPolygonLookupTableDto[];
   countriesLoading: boolean;
   citiesLoading: boolean;
@@ -43,6 +43,8 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
   };
   selectedCityJson: Pokedex;
   Bounds: google.maps.LatLngBounds;
+  countries: CountyDto[];
+  private geoCoder: google.maps.Geocoder;
 
   constructor(
     injector: Injector,
@@ -58,6 +60,9 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
     this.loadAllCountries();
   }
 
+  private get SelectedCountryCode(): string {
+    return this.countries?.find((x) => x.id == this.selectedCountryId)?.code;
+  }
   show(facilityId?: number): void {
     this.active = true;
     if (!facilityId) {
@@ -72,9 +77,11 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
         this.selectedCountryId = result.countryId;
         this.loadCitiesByCountryId(result.countryId);
         this.data = result.facility;
+        console.log(result);
         this.modal.show();
       });
     }
+    this.loadMapApi();
   }
 
   /**
@@ -116,17 +123,31 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
     this.mapsAPILoader.load().then(() => {
       this.geoCoder = new google.maps.Geocoder();
       let Bounds = new google.maps.LatLngBounds();
-      console.log('this.selectedCityJson', this.selectedCityJson);
-      this.selectedCityJson.geometry.coordinates[0].forEach((x) => {
-        let lng: number = x[0];
-        let lat: number = x[1];
-        Bounds.extend(new google.maps.LatLng(lat, lng, false));
-      });
+      if (this.selectedCityJson) {
+        this.selectedCityJson.geometry.coordinates[0].forEach((x) => {
+          let lng: number = x[0];
+          let lat: number = x[1];
+          Bounds.extend(new google.maps.LatLng(lat, lng, false));
+        });
+      }
       this.Bounds = Bounds;
-      let autocomplete = new google.maps.places.Autocomplete(this.searchElementRef.nativeElement, {
-        bounds: Bounds,
-        strictBounds: true,
-      });
+      let options = {
+        borderRestriction: {
+          bounds: Bounds,
+          strictBounds: true,
+        },
+        countryRestriction: {
+          componentRestrictions: {
+            country: this.SelectedCountryCode,
+          },
+        },
+      };
+
+      let autocomplete = new google.maps.places.Autocomplete(
+        this.searchElementRef.nativeElement,
+        isNotNullOrUndefined(this.selectedCityJson) ? options.borderRestriction : options.countryRestriction
+      );
+      console.log(options.borderRestriction);
       autocomplete.addListener('place_changed', () => {
         this.ngZone.run(() => {
           let place: google.maps.places.PlaceResult = autocomplete.getPlace();
@@ -156,15 +177,20 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
         }
       }
     });
-    this.geoCoder.zoom = 16;
+    //  this.geoCoder. = 12;
   }
 
   /**
    * Getting The Map Marker Cordinates from The Click
    * @param $event
    */
-  mapClicked(event) {
-    let position = { lat: event.latLng.lat(), lng: event.latLng.lng() };
+  mapClicked($event) {
+    let position;
+    if (isNotNullOrUndefined(this.selectedCityJson)) {
+      position = { lat: $event.latLng.lat(), lng: $event.latLng.lng() };
+    } else {
+      position = { lat: $event.coords.lat, lng: $event.coords.lng };
+    }
     console.log(position);
     this.facility.latitude = position.lat;
     this.facility.longitude = position.lng;
