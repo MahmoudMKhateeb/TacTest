@@ -57,6 +57,8 @@
 		<text name="AcceptedAndWaitingForShipper">Waiting approve by shipper</text>
 		<text name="AcceptedDate">Accepted date</text>
 		<text name="AcceptPrice">Accept price</text>
+		<text name="AcceptOfferOnBehalfShipper">Accept For Shipper</text>
+
 		<text name="AcceptShippingRequestNotificationMessage">Shipping request bid accepted</text>
 		<text name="Accesstoyourapplicationsandresources,evenwhenyouareoffline">Access to your applications and resources, even when you are offline</text>
 		<text name="AccidentReason">Incident reasons</text>

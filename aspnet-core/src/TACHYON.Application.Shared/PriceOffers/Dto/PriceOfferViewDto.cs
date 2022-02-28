@@ -7,11 +7,11 @@ namespace TACHYON.PriceOffers.Dto
     public class PriceOfferViewDto : EntityDto<long>
     {
         public int TenantId { get; set; }
-        public  int? EditionId { get; set; }
+        public int? EditionId { get; set; }
         public string Name { get; set; }
         public PriceOfferStatus Status { get; set; }
         public PriceOfferType PriceType { get; set; }
-        public ShippingRequestStatus  ShippingRequestStatus { get; set; }
+        public ShippingRequestStatus ShippingRequestStatus { get; set; }
 
         public bool IsTachyonDeal { get; set; }
         #region Invoice
@@ -40,8 +40,9 @@ namespace TACHYON.PriceOffers.Dto
         #endregion
         #region Commission
         public PriceOfferCommissionType CommissionType { get; set; }
-        public string CommissionTypeTitle { 
-            get {return CommissionType.GetEnumDescription(); }
+        public string CommissionTypeTitle
+        {
+            get { return CommissionType.GetEnumDescription(); }
         }
 
         public decimal ItemCommissionAmount { get; set; }
@@ -62,6 +63,16 @@ namespace TACHYON.PriceOffers.Dto
 
 
     }
+
+    public class GetOfferForViewOutput
+    {
+        public PriceOfferViewDto PriceOfferViewDto { get; set; }
+
+        public bool CanIAcceptOffer { get; set; }
+        public bool CanIAcceptOrRejectOfferOnBehalf { get; set; }
+        public bool CanIEditOffer { get; set; }
+    }
+
 
 
 }

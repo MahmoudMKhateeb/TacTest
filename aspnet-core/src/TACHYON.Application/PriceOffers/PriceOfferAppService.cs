@@ -189,11 +189,11 @@ namespace TACHYON.PriceOffers
         /// <summary>
         /// Get offer details for preview
         /// </summary>
-        /// <param name="OfferId"></param>
+        /// <param name="offerId"></param>
         /// <returns></returns>
-        public async Task<PriceOfferViewDto> GetPriceOfferForView(long OfferId)
+        [RequiresFeature(AppFeatures.TachyonDealer, AppFeatures.Carrier, AppFeatures.Shipper)]
+        public async Task<GetOfferForViewOutput> GetPriceOfferForView(long offerId)
         {
-            CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier, AppFeatures.Shipper);
             DisableTenancyFilters();
             var offer = await _priceOfferRepository
                 .GetAll()
@@ -202,26 +202,27 @@ namespace TACHYON.PriceOffers
                 .Include(i => i.ShippingRequestFk)
                  .ThenInclude(v => v.ShippingRequestVases)
                   .ThenInclude(v => v.VasFk)
-                  .Where(x => x.Id == OfferId)
-                //.WhereIf(!AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.TachyonDealer), x => x.ShippingRequestFk.IsTachyonDeal || (!x.ShippingRequestFk.IsTachyonDeal && x.TenantId== AbpSession.TenantId.Value))
-                .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper), x => x.ShippingRequestFk.TenantId == AbpSession.TenantId.Value && (!x.ShippingRequestFk.IsTachyonDeal || x.Channel == PriceOfferChannel.TachyonManageService))
-                .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Carrier), x => x.TenantId == AbpSession.TenantId.Value)
-                .FirstOrDefaultAsync();
+                  .Where(x => x.Id == offerId)
+                .WhereIf(await IsShipper(), x => x.ShippingRequestFk.TenantId == AbpSession.TenantId.Value && (!x.ShippingRequestFk.IsTachyonDeal || x.Channel == PriceOfferChannel.TachyonManageService))
+                .WhereIf(await IsCarrier(), x => x.TenantId == AbpSession.TenantId.Value)
+                .SingleAsync();
 
 
-            if (offer == null) throw new UserFriendlyException(L("ThereNoOffer"));
             var priceOfferDto = ObjectMapper.Map<PriceOfferViewDto>(offer);
+
+
+
             foreach (var item in priceOfferDto.Items)
             {
-                item.ItemName = offer.ShippingRequestFk.ShippingRequestVases.FirstOrDefault(x => x.Id == item.SourceId).VasFk.Name;
-                if (AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper))
+                item.ItemName = offer.ShippingRequestFk.ShippingRequestVases.FirstOrDefault(x => x.Id == item.SourceId)?.VasFk.Name;
+                if (await IsShipper())
                 {
                     item.ItemPrice = item.ItemSubTotalAmountWithCommission;
                     item.ItemTotalAmount = item.ItemTotalAmountWithCommission;
                 }
 
             }
-            if (AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper))
+            if (await IsShipper())
             {
                 priceOfferDto.ItemPrice = offer.ItemSubTotalAmountWithCommission;
                 priceOfferDto.ItemTotalAmount = offer.ItemTotalAmountWithCommission;
@@ -231,7 +232,13 @@ namespace TACHYON.PriceOffers
                 offer.IsView = true;
             }
 
-            return priceOfferDto;
+            return new GetOfferForViewOutput()
+            {
+                PriceOfferViewDto = priceOfferDto,
+                CanIAcceptOffer = await _priceOfferManager.CanAcceptOrRejectOffer(offer),
+                CanIAcceptOrRejectOfferOnBehalf = await _priceOfferManager.canAcceptOrRejectOfferOnBehalf(offer),
+                CanIEditOffer = _priceOfferManager.CanEditOffer(offer)
+            };
         }
 
 
@@ -240,7 +247,7 @@ namespace TACHYON.PriceOffers
 
         public async Task<long> CreateOrEdit(CreateOrEditPriceOfferInput Input)
         {
-            if (IsEnabled(AppFeatures.Carrier))
+            if (await IsEnabledAsync(AppFeatures.Carrier))
             {
                 Input.CommissionPercentageOrAddValue = default;
                 Input.CommissionType = default;
@@ -248,7 +255,6 @@ namespace TACHYON.PriceOffers
                 Input.VasCommissionType = default;
                 Input.ParentId = default;
             }
-            //Input.Channel = PriceOfferChannel.MarketPlace;
             return await _priceOfferManager.CreateOrEdit(Input);
 
         }
@@ -321,6 +327,12 @@ namespace TACHYON.PriceOffers
         {
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Shipper);
             return await _priceOfferManager.AcceptOffer(id);
+        }
+
+        [AbpAuthorize(AppFeatures.TachyonDealer)]
+        public async Task<PriceOfferStatus> AcceptOfferOnBehalfShipper(long id)
+        {
+            return await _priceOfferManager.AcceptOfferOnBehalfShipper(id);
         }
 
 

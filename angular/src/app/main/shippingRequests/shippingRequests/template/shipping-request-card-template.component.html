@@ -228,39 +228,36 @@
               </div>
             </div>
           </div>
+          <div [ngbCollapse]="openCardId == null">
+            <div *ngIf="openCardId == item.id">
+              <!--  start of ShippingRequestType::Details-->
+              <div class="mb-2">
+                <div class="form-group row fv-plugins-icon-container">
+                  <div *ngIf="!this.feature.isEnabled('App.Carrier')">
+                    <shipping-request-offers-list
+                      [shippingRequestId]="item.id"
+                      [isTachyonDeal]="item.isTachyonDeal"
+                      [Channel]="item.bidStatus == 0 ? 2 : 1"
+                    >
+                    </shipping-request-offers-list>
+                  </div>
 
-          <div class="shipCardWhite padding-percent-2" [ngbCollapse]="openCardId == null">
-            <div>
-              <div *ngIf="openCardId == item.id">
-                <!--  start of ShippingRequestType::Details-->
-                <div class="mb-2">
-                  <div class="form-group row fv-plugins-icon-container">
-                    <div *ngIf="!this.feature.isEnabled('App.Carrier')">
-                      <shipping-request-offers-list
-                        [shippingRequestId]="item.id"
-                        [isTachyonDeal]="item.isTachyonDeal"
-                        [Channel]="item.bidStatus == 0 ? 2 : 1"
-                      >
-                      </shipping-request-offers-list>
-                    </div>
+                  <div *ngIf="feature.isEnabled('App.Shipper') || feature.isEnabled('App.TachyonDealer')">
+                    <TripsForViewShippingRequest
+                      *ngIf="item.id && bidsloading == false"
+                      [ShippingRequest]="item"
+                      [VasListFromFather]="undefined"
+                    ></TripsForViewShippingRequest>
+                  </div>
 
-                    <div *ngIf="feature.isEnabled('App.Shipper') || feature.isEnabled('App.TachyonDealer')">
-                      <TripsForViewShippingRequest
-                        *ngIf="item.id && bidsloading == false"
-                        [ShippingRequest]="item"
-                        [VasListFromFather]="undefined"
-                      ></TripsForViewShippingRequest>
-                    </div>
-
-                    <div class="col-lg-12">
-                      <agm-map style="height: 300px" [latitude]="24.717942" [longitude]="46.675761" [zoom]="zoom">
-                        <agm-marker [latitude]="item.latitude || 24.717942" [longitude]="item.longitude || 46.675761"></agm-marker>
-                      </agm-map>
-                    </div>
+                  <div class="col-lg-12">
+                    <agm-map style="height: 300px" [latitude]="24.717942" [longitude]="46.675761" [zoom]="zoom">
+                      <agm-marker [latitude]="item.latitude || 24.717942" [longitude]="item.longitude || 46.675761"></agm-marker>
+                    </agm-map>
                   </div>
                 </div>
-                <!--  end::ShippingRequestType::Details-->
               </div>
+              <!--  end::ShippingRequestType::Details-->
             </div>
           </div>
         </div>
