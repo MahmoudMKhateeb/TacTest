@@ -27,6 +27,7 @@ import { AddAccidentCommentModalComponent } from '@app/main/shippingRequests/shi
 import { CreateOrEditTripResolveAccidentModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/accident/resolves/create-or-edit-resolve-trip-accident-modal.component';
 import { TableModule } from '@node_modules/primeng/table';
 import { TrackingRoutingModule } from '@app/main/shippingRequests/shippingRequests/tracking/tracking-routing.module';
+import { NgbDropdownModule } from '@node_modules/@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -59,6 +60,7 @@ import { TrackingRoutingModule } from '@app/main/shippingRequests/shippingReques
     CollapseModule,
     TableModule,
     TrackingRoutingModule,
+    NgbDropdownModule,
   ],
   exports: [
     CreateOrEditTripAccidentModalComponent,
