@@ -230,7 +230,7 @@
                           name="shippingType"
                           formControlName="shippingType"
                           [(ngModel)]="step1Dto.shippingTypeId"
-                          (change)="step2Dto.destinationCityId = undefined"
+                          (change)="resetStep2Inputs()"
                           [class.is-valid]="
                             step1Form.get('shippingType').valid && (step1Form.get('shippingType').dirty || step1Form.get('shippingType').touched)
                           "
@@ -334,7 +334,7 @@
                               (change)="loadCitiesByCountryId(originCountry, 'source')"
                               required
                             >
-                              <option value="undefined">{{ l('SelectanOriginCountry') }}</option>
+                              <option value="undefined" selected disabled>{{ l('SelectanOriginCountry') }}</option>
                               <option *ngFor="let item of allCountries" value="{{ item.id }}">{{ item.displayName }}</option>
                             </select>
                           </div>
@@ -364,7 +364,7 @@
                               (change)="loadCitiesByCountryId(destinationCountry, 'destination')"
                               required
                             >
-                              <option value="undefined">{{ l('selectaDestination') }}</option>
+                              <option value="undefined" selected disabled>{{ l('selectaDestination') }}</option>
                               <option *ngFor="let item of allCountries" value="{{ item.id }}">{{ item.displayName }}</option>
                             </select>
                             <div class="invalid-feedback">{{ l('SourceAndDestinationCantBeTheSame') }}</div>
@@ -382,6 +382,7 @@
                               name="originCity"
                               formControlName="originCity"
                               [(ngModel)]="step2Dto.originCityId"
+                              [attr.disabled]="!sourceCities ? true : null"
                               [class.is-valid]="
                                 step2Form.get('originCity').valid && (step2Form.get('originCity').dirty || step2Form.get('originCity').touched)
                               "
@@ -391,7 +392,7 @@
                               (ngModelChange)="validateShippingRequestType()"
                               required
                             >
-                              <option [ngValue]="null" selected disabled>{{ l('SelectanOriginCity') }}</option>
+                              <option value="undefined" selected disabled>{{ l('SelectanOriginCity') }}</option>
                               <option *ngFor="let item of sourceCities" value="{{ item.id }}">{{ item.displayName }}</option>
                             </select>
                           </div>
@@ -420,7 +421,7 @@
                               (ngModelChange)="validateShippingRequestType()"
                               required
                             >
-                              <option value="undefined">{{ l('selectaDestination') }}</option>
+                              <option value="undefined" selected disabled>{{ l('selectaDestination') }}</option>
                               <option *ngFor="let item of destinationCities" value="{{ item.id }}">{{ item.displayName }}</option>
                             </select>
                             <div class="invalid-feedback">{{ l('SourceAndDestinationCantBeTheSame') }}</div>
