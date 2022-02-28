@@ -710,10 +710,8 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
         this.step2Form.controls['originCountry'].setErrors({ invalid: true });
         this.step2Form.controls['destinationCountry'].setErrors({ invalid: true });
       } else {
-        this.step2Form.controls['destinationCity'].setErrors(null);
-        this.step2Form.controls['destinationCountry'].setErrors(null);
-        this.step2Form.controls['destinationCity'].updateValueAndValidity();
-        this.step2Form.controls['destinationCountry'].updateValueAndValidity();
+        this.clearValidation('destinationCity');
+        this.clearValidation('destinationCountry');
       }
     } else if (this.step1Dto.shippingTypeId == 4) {
       //if route type is cross border prevent the countries to be the same
@@ -721,14 +719,31 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
         this.step2Form.controls['originCountry'].setErrors({ invalid: true });
         this.step2Form.controls['destinationCountry'].setErrors({ invalid: true });
       } else {
-        this.step2Form.controls['destinationCity'].setErrors(null);
-        this.step2Form.controls['destinationCountry'].setErrors(null);
-        this.step2Form.controls['originCountry'].updateValueAndValidity();
-        this.step2Form.controls['destinationCountry'].updateValueAndValidity();
+        this.clearValidation('originCountry');
+        this.clearValidation('destinationCountry');
       }
     }
   }
 
+  /**
+   * clears an input previous validation
+   * @param controlName
+   */
+  clearValidation(controlName: string) {
+    this.step2Form.controls[controlName].setErrors(null);
+    this.step2Form.controls[controlName].updateValueAndValidity();
+  }
+
+  /**
+   * resets step2 inputs if the Route Type Change
+   */
+  resetStep2Inputs() {
+    this.step2Dto.destinationCityId = this.step2Dto.originCityId = this.originCountry = this.destinationCountry = undefined;
+    this.clearValidation('originCity');
+    this.clearValidation('destinationCity');
+    this.clearValidation('originCountry');
+    this.clearValidation('destinationCountry');
+  }
   /**
    * Get City Cordinates By Providing its name
    * this finction is to draw the shipping Request Main Route in View SR Details in marketPlace
@@ -792,12 +807,5 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     }
     this.step3Form?.controls?.otherTrucksTypeName?.updateValueAndValidity();
     return r;
-  }
-
-  /**
-   * resets step2 inputs if the Route Type Change
-   */
-  resetStep2Inputs() {
-    this.step2Dto.destinationCityId = this.step2Dto.originCityId = this.originCountry = this.destinationCountry = undefined;
   }
 }
