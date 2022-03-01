@@ -119,8 +119,12 @@
                         type="text"
                         class="form-control"
                         [(ngModel)]="otherUnitOfMeasureName"
-                        [class.is-valid]="otherUnitOfMeasure.touched && otherUnitOfMeasure.valid"
-                        [class.is-invalid]="otherUnitOfMeasure.touched && !otherUnitOfMeasure.valid && IfOther(allUnitOfMeasure, unitOfMeasureId)"
+                        [class.is-valid]="otherUnitOfMeasure.touched && otherUnitOfMeasure.valid && cannotContainSpace(otherUnitOfMeasureName)"
+                        [class.is-invalid]="
+                          otherUnitOfMeasure.touched &&
+                          (!otherUnitOfMeasure.valid || !cannotContainSpace(otherUnitOfMeasureName)) &&
+                          IfOther(allUnitOfMeasure, unitOfMeasureId)
+                        "
                         [required]="IfOther(allUnitOfMeasure, unitOfMeasureId)"
                       />
                     </div>

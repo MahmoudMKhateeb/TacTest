@@ -223,7 +223,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
         }
         case 3: {
           console.log('step 3');
-          if (this.step3Form.invalid) {
+          if (this.step3Form.invalid || !this.validateOthersInputs()) {
             //console.log(this.step3Form);
             wizardObj.stop();
             this.step3Form.markAllAsTouched();
@@ -269,6 +269,22 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   }
   ngAfterViewChecked() {
     this.cdr.detectChanges();
+  }
+
+  validateOthersInputs() {
+    if (this.IfOther(this.allGoodCategorys, this.step3Dto.goodCategoryId) && !this.step3Dto.otherGoodsCategoryName.trim()) {
+      return false;
+    }
+    if (this.IfOther(this.allTransportTypes, this.step3Dto.transportTypeId) && !this.step3Dto.otherTransportTypeName.trim()) {
+      return false;
+    }
+    if (this.IfOther(this.allTrucksTypes, this.step3Dto.trucksTypeId) && !this.step3Dto.otherTrucksTypeName.trim()) {
+      return false;
+    }
+    if (this.IfOther(this.allpackingTypes, this.step3Dto.packingTypeId) && !this.step3Dto.otherPackingTypeName.trim()) {
+      return false;
+    }
+    return true;
   }
 
   //publish

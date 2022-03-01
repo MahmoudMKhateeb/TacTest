@@ -211,7 +211,7 @@ namespace TACHYON
                     x.MapFrom(i => i.Translations));
 
             configuration.CreateMap<PackingType, PackingTypeDto>()
-                .ForMember(x => x.IsOther, x => x.MapFrom(i => i.DisplayName.Contains(TACHYONConsts.OthersDisplayName.ToLower())))
+                .ForMember(x => x.IsOther, x => x.MapFrom(i => i.DisplayName.ToLower().Contains(TACHYONConsts.OthersDisplayName.ToLower())))
                 .ForMember(x => x.DisplayName, x =>
                     x.MapFrom(i => i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)) == null ? i.DisplayName : i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).DisplayName))
                 .ForMember(x => x.Description, x =>

@@ -258,4 +258,11 @@ export abstract class AppComponentBase {
     if (id != undefined) return items?.filter((x) => x.id == id && x.isOther).length > 0;
     else return false;
   }
+
+  cannotContainSpace(input: string) {
+    if (input) {
+      if (input.includes(' ') && input.trim().length == 0) return false;
+      else return true;
+    }
+  }
 }

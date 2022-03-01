@@ -80,9 +80,12 @@
                       class="form-control"
                       [(ngModel)]="truck.otherTransportTypeName"
                       [ngClass]="{
-                        'is-valid': otherTransportTypeName.touched && otherTransportTypeName.valid,
+                        'is-valid':
+                          otherTransportTypeName.touched && otherTransportTypeName.valid && cannotContainSpace(truck.otherTransportTypeName),
                         'is-invalid':
-                          otherTransportTypeName.touched && !otherTransportTypeName.valid && IfOther(allTransportTypes, truck.transportTypeId)
+                          otherTransportTypeName.touched &&
+                          (!otherTransportTypeName.valid || !cannotContainSpace(truck.otherTransportTypeName)) &&
+                          IfOther(allTransportTypes, truck.transportTypeId)
                       }"
                       [required]="IfOther(allTransportTypes, truck.transportTypeId)"
                     />
@@ -133,8 +136,11 @@
                       class="form-control"
                       [(ngModel)]="truck.otherTrucksTypeName"
                       [ngClass]="{
-                        'is-valid': otherTrucksTypeName.touched && otherTrucksTypeName.valid,
-                        'is-invalid': otherTrucksTypeName.touched && !otherTrucksTypeName.valid && IfOther(allTransportTypes, truck.transportTypeId)
+                        'is-valid': otherTrucksTypeName.touched && otherTrucksTypeName.valid && cannotContainSpace(truck.otherTrucksTypeName),
+                        'is-invalid':
+                          otherTrucksTypeName.touched &&
+                          (!otherTrucksTypeName.valid || !cannotContainSpace(truck.otherTrucksTypeName)) &&
+                          IfOther(allTransportTypes, truck.transportTypeId)
                       }"
                       [required]="IfOther(allTruckTypesByTransportType, truck.trucksTypeId)"
                     />

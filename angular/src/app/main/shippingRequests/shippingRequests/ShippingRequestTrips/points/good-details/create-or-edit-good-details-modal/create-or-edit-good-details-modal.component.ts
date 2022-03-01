@@ -135,7 +135,16 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
     this.createOrEditGoodDetail.hide();
   }
 
+  validateOthersInputs() {
+    if (this.IfOther(this.allUnitOfMeasure, this.unitOfMeasureId) && !this.otherUnitOfMeasureName.trim()) return false;
+    else return true;
+  }
+
   AddOrEditGoodDetail() {
+    if (!this.validateOthersInputs()) {
+      this.notify.error(this.l('PleaseCompleteMissingFields'));
+      return false;
+    }
     this.goodsDetail.goodCategoryId = this.goodCategoryId;
     this.goodsDetail.weight = this.weight;
     this.goodsDetail.amount = this.amount;

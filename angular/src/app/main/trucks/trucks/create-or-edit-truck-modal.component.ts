@@ -198,6 +198,10 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
   } //end of show
 
   createOrEditTruck() {
+    if (!this.validateOthersInputs()) {
+      this.notify.error(this.l('PleaseCompleteMissingFields'));
+      return false;
+    }
     this.truck.modelYear = moment(this.truck.modelYear).locale('en').format('YYYY');
     this._trucksServiceProxy
       .createOrEdit(this.truck)
@@ -214,6 +218,16 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
       });
   }
 
+  validateOthersInputs() {
+    if (this.IfOther(this.allTransportTypes, this.truck.transportTypeId) && !this.truck.otherTransportTypeName.trim()) {
+      return false;
+    }
+    if (this.IfOther(this.allTrucksTypes, this.truck.trucksTypeId) && !this.truck.otherTrucksTypeName.trim()) {
+      return false;
+    }
+
+    return true;
+  }
   save(): void {
     this.saving = true;
 
