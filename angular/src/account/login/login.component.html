@@ -1,8 +1,8 @@
 <!--begin::Login Sign in form-->
 <div class="login-signin" [@routerTransition]>
   <div class="mb-20">
-    <h3 class="head-text">{{ 'signInToTachyon' | localize }}</h3>
-    <div class="normal-text">{{ 'enterYourDetailsToLoginToYourAccount' | localize }}</div>
+    <h3 class="head-text">{{ 'SignInToTachyon' | localize }}</h3>
+    <div class="normal-text">{{ 'EnterYourDetailsToLoginToYourAccount' | localize }}</div>
   </div>
   <form #loginForm="ngForm" class="form fv-plugins-bootstrap fv-plugins-framework" method="post" (ngSubmit)="login()">
     <div class="form-group mb-5 fv-plugins-icon-container">
@@ -21,7 +21,7 @@
         pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,3}$"
       />
       <div *ngIf="userNameOrEmailAddressInput.errors && (userNameOrEmailAddressInput.touched || userNameOrEmailAddressInput.dirty)">
-        <div class="text-left" style="color: #f64e60;" [hidden]="!userNameOrEmailAddressInput.errors?.pattern">
+        <div class="text-left" style="color: #f64e60" [hidden]="!userNameOrEmailAddressInput.errors?.pattern">
           {{ 'InvalidEmailAddress' | localize }}
         </div>
       </div>
@@ -54,7 +54,7 @@
     </button>
   </form>
   <div class="mt-10">
-    <span class="opacity-70 mr-4">{{ 'dontHaveAnAccountYet' | localize }}?</span>
+    <span class="opacity-70 mr-4">{{ 'DontHaveAnAccountYet' | localize }}</span>
     <a class="text-muted text-hover-primary font-weight-bold" routerLink="/account/select-edition">{{ 'NotAMemberYet' | localize }}!</a>
   </div>
 </div>

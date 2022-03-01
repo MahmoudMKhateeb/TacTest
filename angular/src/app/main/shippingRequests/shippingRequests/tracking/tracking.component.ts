@@ -139,7 +139,7 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
         return 0;
         break;
       }
-      case ShippingRequestTripStatus.Intransit: {
+      case ShippingRequestTripStatus.InTransit: {
         return 75;
         break;
       }
@@ -223,7 +223,7 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
    * checks if the tenant can report an Accident to the current trip
    */
   canCreateAccident(trip: TrackingListDto) {
-    if (trip.status === ShippingRequestTripStatus.Intransit) {
+    if (trip.status === ShippingRequestTripStatus.InTransit) {
       if (!this.appSession.tenantId || this.feature.isEnabled('App.TachyonDealer')) {
         //if tachyon dealer and is assign return true
         return trip.isAssign;

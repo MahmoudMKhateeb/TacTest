@@ -33,7 +33,7 @@
                     [ngClass]="{
                       'bg-danger': item.status === ShippingRequestTripStatusEnum.Delivered,
                       'bg-info': item.status === ShippingRequestTripStatusEnum.Canceled,
-                      'bg-success': item.status === ShippingRequestTripStatusEnum.Intransit,
+                      'bg-success': item.status === ShippingRequestTripStatusEnum.InTransit,
                       'bg-secondary': item.status === ShippingRequestTripStatusEnum.DeliveredAndNeedsConfirmation,
                       'bg-primary': item.status === ShippingRequestTripStatusEnum.New
                     }"
@@ -215,7 +215,7 @@
                       <i class="flaticon2-box-1 icon-2x text-muted font-weight-bold"></i>
                     </span>
                     <div class="d-flex flex-column text-dark-75">
-                      <span class="font-weight-bolder font-size-sm">{{ l('goodsCategory') }}</span>
+                      <span class="font-weight-bolder font-size-sm">{{ l('GoodCategory') }}</span>
                       <span class="font-weight-bolder font-size-h5">
                         <span class="text-dark-50 font-weight-bold"></span>{{ item.goodsCategory }}</span
                       >

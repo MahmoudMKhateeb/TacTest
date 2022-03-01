@@ -19,7 +19,7 @@
               bsDatepicker
               datePickerMomentModifier
               [(date)]="startDate"
-              placeholder="{{ l('startDate') }}"
+              placeholder="{{ l('StartDate') }}"
             />
             &nbsp; &nbsp;
             <input
@@ -31,10 +31,10 @@
               bsDatepicker
               datePickerMomentModifier
               [(date)]="endDate"
-              placeholder="{{ l('endDate') }}"
+              placeholder="{{ l('EndDate') }}"
             />
             <span class="input-group-btn">
-              <button (click)="getUnpricedRequests()" class="btn btn-primary" type="submit"><i class="icon-refresh"></i> {{ l('search') }}</button>
+              <button (click)="getUnpricedRequests()" class="btn btn-primary" type="submit"><i class="icon-refresh"></i> {{ l('Search') }}</button>
             </span>
           </div>
         </div>
@@ -43,7 +43,7 @@
           <p-table [value]="requests" (onLazyLoad)="getUnpricedRequests()">
             <ng-template pTemplate="header">
               <tr>
-                <th>{{ l('RequestReferance') }}</th>
+                <th>{{ l('RequestReference') }}</th>
                 <th>{{ l('ShipperName') }}</th>
                 <th>{{ l('BiddingEndDate') }}</th>
               </tr>

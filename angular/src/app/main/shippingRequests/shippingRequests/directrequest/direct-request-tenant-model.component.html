@@ -12,7 +12,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <p class="modal-title">
-          <span>{{ l('SendDirectRequest') }}</span>
+          <span>{{ l('SendDirectRequests') }}</span>
         </p>
         <button type="button" class="close" style="position: relative; z-index: 99999" (click)="close()" aria-label="Close">
           <i class="fas fa-times"></i>
@@ -111,7 +111,7 @@
                       [disabled]="record.isRequestSent"
                       (click)="sendDirectRequestToCarrier(record)"
                     >
-                      {{ l('sendDirectRequestOffer') }}
+                      {{ l('SendDirectRequestOffer') }}
                     </button>
                   </span>
                 </td>

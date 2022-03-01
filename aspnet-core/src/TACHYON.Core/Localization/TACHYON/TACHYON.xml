@@ -18,7 +18,6 @@
     <text name="CreateNewDangerousGoodType">Create new dangerous good type</text>
     <text name="EditDangerousGoodType">Edit dangerous good type</text>
     <text name="DeleteDangerousGoodType">Delete dangerous good type</text>
-    <text name="DangerousGoodTypes">Dangerous good types</text>
     <text name="NumberOfRequests">Number Of Requests</text>
     <text name="NumberOfDeliveredTrips">Number Of Delivered Trips</text>
     <text name="MostShippersRequests">Most Shippers Requests</text>
@@ -155,6 +154,7 @@
 		<text name="Arabic">Arabic</text>
 		<text name="AreYouSure">Are you sure ?</text>
 		<text name="AreYouSure?">Are you sure?</text>
+		<text name="areYouSure">Are you sure?</text>
 		<text name="ArrivedToDestination">Arrive to offloading location</text>
 		<text name="ArriveToLoadingLocation">Arrive to loading location </text>
 		<text name="AShipmentWasAssignedForYouToReceiveOn">A shipment was assigned for you to receive on</text>
@@ -324,7 +324,6 @@
 		<text name="CommissionAmount">Commission amount</text>
 		<text name="CommissionMinimumValue">Minimum value</text>
 		<text name="CommissionPercentage">Percentage</text>
-		<text name="CommissionType">Commission type</text>
 		<text name="CommissionValue">Add value</text>
 		<text name="Company">Company</text>
 		<text name="CompanyFullLeagalName">Company legal name</text>
@@ -406,7 +405,6 @@
 		<text name="CreateNewRoutType">Add new route type</text>
 		<text name="CreateNewShippingRequest">Create shipping request </text>
 		<text name="CreateNewShippingRequestStatus">Create New Shipping Request Status</text>
-		<text name="CreateNewShippingRequestVas">Create New Shipping Request VAS</text>
 		<text name="CreateNewShippingType">Create new shipping type</text>
 		<text name="CreateNewTenant">Create new company</text>
 		<text name="CreateNewTermAndConditionTranslation">Add new terms and conditions translation</text>
@@ -532,7 +530,6 @@
 		<text name="DeletePort">Delete port</text>
 		<text name="DeleteReceiver">Delete receiver</text>
 		<text name="DeleteRoute">Delete route</text>
-		<text name="DeleteRoutStep">Delete rout step</text>
 		<text name="DeleteRoutType">Delete route type</text>
 		<text name="DeleteShippingRequest">Delete shipping request</text>
 		<text name="DeleteShippingRequestStatus">Delete shipping request status</text>
@@ -2024,7 +2021,6 @@
 		<text name="Total">Total</text>
 		<text name="TotalAmount">Total amount</text>
 		<text name="TotalBidsCount">Total bids</text>
-		<text name="TotalCommission">Total commission</text>
 		<text name="TotalDistance">Total distance </text>
 		<text name="TotalOfDrop">Number of drops: {0}</text>
 		<text name="TotalOffer">Offer</text>
@@ -2441,22 +2437,6 @@
 		<text name="PickupFacilityAndDropOffFacilityCantBeTheSame">Pickup facility and drop off facility can't be the same</text>
 		<text name="CreateOrEditPoint">Create or Edit Point</text>
 		<text name="SelectADangerousGoodType">Select a Dangerous Good Type</text>
-
-
-		<!--
-		<text name="StartedMovingToLoadingLocation">Started moving to loading location</text>
-		<text name="ArriveToLoadingLocation">Arrive To Loading Location</text>
-		<text name="StartLoading">Start Loading</text>
-		<text name="FinishLoading">Finish Loading</text>
-		<text name="StartedMovingToOfLoadingLocation">Started Moving To Off Loading Location</text>
-		<text name="ArrivedToDestination">Arrived To Destination</text>
-		<text name="StartOffloading">Start Off loading</text>
-		<text name="FinishOffLoadShipment">Finish Off Load Shipment</text>
-		<text name="ReceiverConfirmed">Receiver Confirmed</text>
-		<text name="FinishOffLoadShipmentDeliveryConfirmation">Delivery Confirmation after Finish Off Load Shipment</text>
-		<text name="DeliveryConfirmation">Delivery Confirmation</text>
-		<text name="DeliveryConfirmationReceiverConfirmed">Receiver Confirmed after DeliveryConfirmation</text>
-		-->
 		<text name="WorkFlowNotExist">WorkFlow for current point does not exist</text>
 		<text name="TransactionNotExist">Transaction does not exist</text>
 		<text name="FinishOffLoadShipmentDeliveryConfirmation">Delivery Confirmation after Finish Off Load Shipment</text>
@@ -2519,9 +2499,7 @@
     <text name="IsMandatoryNumber">Number Mandatory</text>
     <text name="IsMandatoryExpirationDate">Expiration Date Mandatory</text>
 
-    <!--<text name="StartOffloading"></text>
-    <text name="ReceiverConfirmed"></text>
-    <text name="DeliveryConfirmation"></text>-->
+
     <text name="ImportTrucksProcessStart">The process of importing Trucks has begun</text>
     <text name="ImportTrucksUploadFailed">Trucks import process has failed.</text>
     <text name="facilityNameIsAlreadyExistsForThisTenant">Facility Name Is Already Exists For This Tenant</text>
@@ -2535,11 +2513,178 @@
 	<text name="SelectAnEmailTemplateType">Select an email template type</text>
 		<text name="AllowedWeightShouldBeMaximum">Allowed Weight Should Be Maximum</text>
 		<text name="RemainingAllowedWeight">Remaining Allowed Weight</text>
+	<text name="ShipperNumberOfCompletedTripsWidget">Number of completed trips</text>
+	<text name="ShipperAcceptedVsRejectedRequestsWidget">Accepted vs rejected requests</text>
+	<text name="ShipperCompletedTripsVsPodWidget">Completed trips vs Prof of delivary</text>
+	<text name="ShipperInvoicesVsPaidInvoicesWidget">Invoices vs Paid invoices</text>
+	<text name="ShipperNextInvoiceFrequencyEndDateWidget">Next invoice frequency end date</text>
+	<text name="ShipperInvoiceDueDateInDaysWidget">Invoice due date in days</text>
+	<text name="ShipperDocumentDueDateInDaysWidget">Document due date in days</text>
+	<text name="ShipperMostWorkedWithCarriersWidget">Most worked with carriers</text>
+	<text name="ShipperMostUsedOriginsWidget">Most used origins</text>
+	<text name="ShipperMostUsedDestinationsWidget">Most used destinations</text>
+	<text name="ShipperRequestsInMarketplaceWidget">Requests in marketplace</text>
+	<text name="ShipperTrackingMapWidget">Tracking map</text>
+	<text name="CarrierDriversActivityWidget">Drivers activity</text>
+	<text name="CarrierTrucksActivityWidget">Trucks activity</text>
+	<text name="CarrierAcceptedVsRejectedPricingWidget">Accepted vs rejected pricing</text>
+	<text name="CarrierInvoicesVsPaidInvoicesWidget">Invoices vs paid invoices</text>
+	<text name="CarrierMostUsedPpWidget">Most used piced packages</text>
+	<text name="CarrierMostUsedVasWidget">Most used vas</text>
+	<text name="CarrierNumberOfCompletedTripsTotalMonthlyIncreaseWidget">Total monthly number of completed trips</text>
+	<text name="CarrierMostWorkedWithShipperWidget">Most worked with shipper</text>
+	<text name="CarrierNextInvoiceFrequencyEndDateWidget">Next invoice frequency end date</text>
+	<text name="CarrierDueDateInDaysWidget">Due date in days</text>
+	<text name="CarrierTrackingMapWidget">Tracking map</text>
+	<text name="TMS_NumberOfRegisteredTrucksWidget">Number of registered trucks</text>
+	<text name="TMS_NumberOfRegisteredShippersWidget">Number of registered shippers</text>
+	<text name="TMS_NumberOfRegisteredCarriersWidget">Number of registered carriers</text>
+	<text name="TMS_NumberOfRegisteredDriversWidget">Number of registered drivers</text>
+	<text name="TMS_NewAccountsRegisteredWidget">New accounts registered</text>
+	<text name="TMS_NewTripsWidget">New trips</text>
+	<text name="TMS_NumberOfDeliveredTripsWidget">Number of delivered trips</text>
+	<text name="TMS_NumberOfOngoingTripsWidget">Number of on going trips</text>
+	<text name="TMS_TruckTypeUsageWidget">Trucks type usage</text>
+	<text name="TMS_GoodTypesUsageWidget">Goods types usage</text>
+	<text name="TMS_RouteTypesUsageWidget">Routes types usage</text>
+	<text name="TMS_MostRequestingShippersWidget">Most requesting shippers</text>
+	<text name="TMS_MostRequestedCarriersWidget">Most requested carriers</text>
+	<text name="TMS_TopRatedShippersWidget">Top rated shippers</text>
+	<text name="TMS_TopRatedCarriersWidget">Top rated carriers</text>
+	<text name="TMS_WorstRatedShippersWidget">Worst rated shippers</text>
+	<text name="TMS_WorstRatedCarriersWidget">Worst rated carriers</text>
+	<text name="TMS_UnPricedRequestsInMarketPlaceWidget">Unpriced requests in marketplace</text>
+	<text name="TMS_RequestsPricingBeforeBidEndingWidget">Requests pricing before bid ending</text>
+	<text name="TMS_RequestsPriceAcceptanceWidget">Requests price acceptance</text>
+	<text name="TMS_InvoicesPaidBeforeDueDateWidget">Invoices paid before due date</text>
+	<text name="TMS_NumberOfRequestsPerAreaOrCityWidget">Number of requests per area or city</text>
+	<text name="TMS_SearchableMapWidget">Searchable Map</text>
+	<text name="TMS_RequestsHeatMapWidget">Heat map for requests</text>
+	<text name="TMS_NormalVsRentalRequestsWidget">Normal vs rental requests</text>
+	<text name="FacilityRating">Facility Rating</text>
+	<text name="ViewPointDetails">View point details</text>
+	<text name="ViewGoodsDetails">View goods details</text>
+	<text name="ActivityLog">Activity Logs</text>
+	<text name="AssignDriver">Assign driver</text>
+	<text name="searchForNearestLocation">Search for nearest location</text>
+	<text name="HasToBeWithInCityBounds">Has to be within city bounds</text>
+	<text name="RequestReference">Request reference</text>
+	<text name="InTransit">In transit</text>
+	<text name="MyProfile">My Profile</text>
+	<text name="MyProfile_Description">You can view and edit your information in your profile</text>
+	<text name="ProfileOverview">Profile Overview</text>
+	<text name="AccountInformation">Account Information</text>
+	<text name="CompanyWebsite">Company website</text>
+	<text name="ContactInfo">Contact information</text>
+	<text name="ContactPhone">Contact phone</text>
+	<text name="CompanyDescription">CompanyDescription</text>
+	<text name="UpdateYourCompanyProfileInformation">Update your company profile information</text>
+	<text name="SaveChanges">Save changes</text>
+	<text name="Avatar">Avatar</text>
+	<text name="DriverLicenceType">Driver licence types</text>
+	<text name="DangerousGoodTypes">Dangerous goods types</text>
+
 
     
     <text name="ResetReceiverCode">Reset shipment receiver code</text>
     <text name="ReceiverCodeConfirmationMsg">Are you sure you want to reset the receiver code for this shipment?</text>
+		
+		
+		
+    <text name="CurrentlyActiveTrucks">Currently Active Trucks</text>
+    <text name="CurrentlyNonActiveTrucks">Currently Non Active Trucks</text>
+    <text name="DocumentTypeName">Document Type Name</text>
+    <text name="submitterTenatTenancyName">submitter Tenancy Name</text>
+    <text name="ShipperReference">Shipper Reference</text>
+    <text name="ShipperInvoiceNumber">Shipper Invoice Number</text>
+    <text name="OriginCountry">Origin Country</text>
+    <text name="DestinationCountry">Destination Country</text>
+    <text name="SelectanOriginCountry">Select Origin Country</text>
+	<text name="SelectanDestinationCountry">Select Destination Country</text>
+	<text name="SelectanDestinationCity">Select Destination City</text>
+	<text name="ViewOrAssignDriver">View Or Assign Driver</text>
+	<text name="ShippingRequestReference">Shipping Request Reference</text>
+	<text name="ViewOffer">View Offer</text>
+	<text name="PointsDetails">Points Details</text>
+	<text name="DeliveryConfirmation">Delivery Confirmation</text>
+	<text name="StartedMovingToOffLoadingLocation">Started Moving To Off Loading Location</text>
+	<text name="TrackingMap">Tracking Map</text>
+	<text name="Trip">Trip</text>
+	<text name="DriverTracking">Driver Tracking</text>
+	<text name="companyName">Company</text>
+	<text name="rating">Rating</text>
+	<text name="isMissingDocumentFiles">Is missing document files</text>
+	<text name="IstmaraNumber">Istmara Number</text>
+	<text name="SelectCarriers">Select Carriers</text>
+	<text name="SelectaCarrier">Select a Carrier</text>
+	<text name="NumberOfRate">Number Of Rate</text>
+	<text name="EnableAddTripsByTms">Enable Add Trips By Tms</text>
+	<text name="DisableAddTripsByTms">Disable Add Trips By Tms</text>
+	<text name="CreatedByTachyonDealer">Created By TMS</text>
+	<text name="longitute">longitude</text>
+	<text name="latitute">latitude</text>
+	<text name="Rate">Rate</text>
+	<text name="OnGoing">On Going</text>
+	<text name="SelectShipper">Select Shipper</text>
+	<text name="carrier">Carrier</text>
+	<text name="shipper">Shipper</text>
+	<text name="DragAColumnHeaderHereToGroupByThatColumn">Drag a column header here to group by that column</text>
+	<text name="MobileAppManual">Mobile App Manual</text>
+		
+		
+	<text name="CommissionType">Commission type</text>
+	<text name="CommissionTypeValue">Commission type value</text>
+	<text name="VasCommissionType">Vas commission type</text>
+	<text name="VasCommissionPercentageOrAddValue">Vas commission percentage or add value</text>
+	<text name="#Trips">Trips</text>
+	<text name="ItemPrice">Item price</text>
+	<text name="ItemPricePostCommission">Item price post commission</text>
+	<text name="PricePreCommission">Price pre commission</text>
+	<text name="TotalCommission">Total commission</text>
+	<text name="TotalPricePostCommission">Total price post commission</text>
+	<text name="PreCommission">Pre commission</text>
+	<text name="PostCommission">Post commission</text>
+	<text name="TotalVATForTrip">Total VAT for trip</text>
+	<text name="TotalVATForVas">Total VAT for vas</text>
+	<text name="TotalPricePostVatPreCommission">Total price post vat pre commission	</text>
+	<text name="TotalPricePostVatWithCommission">Total Price Post Vat with commission</text>
+	<text name="TotalPriceOfAllVASPre-CommissionPre-VAT">Total Price of All VAS Pre-Commission Pre-VAT</text>
+	<text name="PriceOffer">Price Offer</text>
+	<text name="StartBidding">Start Bidding</text>
+	<text name="UplodeDeliveryNote">Upload Delivery Note</text>
+		
+	<text name="ProfileManagement">Profile management</text>
+	<text name="CarrierDashboard">Carrier dashboard</text>
+	<text name="HostDashboard">Host dashboard</text>
+	<text name="RoutPoints">Rout points</text>
+	<text name="CreateRoutPoint">Create rout point</text>
+	<text name="DeleteRoutPoint">Delete rout point</text>
+	<text name="EditRoutPoint">Edit rout point</text>
+	<text name="DeleteRoutStep">Delete rout step</text>
+	<text name="ShipperDashboard">Shipper dashboard</text>
+	<text name="ShippingRequestTrip_Accident_Comments">Shipping request trip Accident Comments</text>
+	<text name="ShippingRequest_Accidents_Comments_CreateOrEdit">Shipping request Accidents Comments Create or edit</text>
+	<text name="ShippingRequest_Accidents_Comments_Delete">Shipping request Accidents Comments Delete</text>
+	<text name="ShippingRequestsTripsAccident">Shipping requests trips accident</text>
+	<text name="CreateNewShippingRequestTripAccidentResolve">Create new shipping request trip accident resolve</text>
+	<text name="CreateNewShippingRequestTripAccident">Create new shipping request trip accident</text>
+	<text name="EditShippingRequestTripAccidentResolve">Edit shipping request trip accident resolve</text>
+	<text name="EditShippingRequestTripAccident">Edit shipping request trip accident</text>
+	<text name="ShippingRerquestBids">Shipping rerquest bids</text>
+	<text name="CreateNewShippingRequestBid">Create new shipping request bid</text>
+	<text name="DeleteNewShippingRequestBid">Delete new shipping request bid</text>
+	<text name="EditNewShippingRequestBid">Edit new shipping request bid</text>
+	<text name="CreateNewShippingRequestVas">Create new shipping request vas</text>
+	<text name="PaidInvoice">Paid invoice</text>
+	<text name="UnPaidInvoice">UnPaid Invoice</text>
+	<text name="ClaimSubmitInvoices">Claim submit invoices</text>
+	<text name="CreateNewShippingRequestTrip">Create new shipping request trip</text>
+	<text name="DeleteShippingRequestTrip">Delete shipping request trip</text>
+	<text name="EditShippingRequestTrip">Edit shipping request trip</text>
+	<text name="AcceptOffer">Accept offer</text>
+	<text name="CreateOffer">Create offer</text>
+	<text name="ShippingRequest_Accidents_Comments_Edit">Shipping Request Accidents Comments Edit</text>
 
-	
+
 	</texts>
 </localizationDictionary>
