@@ -474,7 +474,9 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             using (CurrentUnitOfWork.DisableFilter("IHasIsDrafted"))
             {
+                DisableTenancyFilters();
                 ShippingRequest shippingRequest = await _shippingRequestRepository.GetAll()
+                    .WhereIf(await IsTachyonDealer(), x => x.IsTachyonDeal == true)
                   .Where(x => x.Id == id && x.IsDrafted == true)
                   .FirstOrDefaultAsync();
                 return shippingRequest;
