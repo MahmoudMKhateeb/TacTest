@@ -13,6 +13,7 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import { MapsAPILoader } from '@node_modules/@agm/core';
 import { NgForm } from '@angular/forms';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
+import { Pokedex, styleObject } from '@app/main/addressBook/facilities/facilites-helper';
 
 @Component({
   selector: 'createOrEditFacilityModal',
@@ -23,10 +24,9 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
   @ViewChild('createOrEditFacilityModal', { static: true }) modal: ModalDirective;
   @ViewChild('search') public searchElementRef: ElementRef;
   @ViewChild('createFacilityForm') public createFacilityForm: NgForm;
-  @ViewChild('secountInput') public secountInput: ElementRef;
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
 
-  zoom = 14;
+  zoom = 6;
   active = false;
   saving = false;
   facility: CreateOrEditFacilityDto = new CreateOrEditFacilityDto();
@@ -35,16 +35,12 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
   countriesLoading: boolean;
   citiesLoading: boolean;
   selectedCountryId: number;
-  data: CreateOrEditFacilityDto = new CreateOrEditFacilityDto();
-  public styleObject = {
-    clickable: true,
-    fillColor: 'rgba(143,75,75,0.92)',
-    strokeWeight: 1,
-  };
+
   selectedCityJson: Pokedex;
   Bounds: google.maps.LatLngBounds;
   countries: CountyDto[];
   private geoCoder: google.maps.Geocoder;
+  polygonStyle = styleObject;
 
   constructor(
     injector: Injector,
@@ -70,18 +66,14 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
       this.facility.id = facilityId;
       this.facility.latitude = 24.67911662122269;
       this.facility.longitude = 46.6355543345471;
-      this.modal.show();
     } else {
       this._facilitiesServiceProxy.getFacilityForEdit(facilityId).subscribe((result) => {
         this.facility = result.facility;
         this.selectedCountryId = result.countryId;
         this.loadCitiesByCountryId(result.countryId);
-        this.data = result.facility;
-        console.log(result);
-        this.modal.show();
       });
     }
-    this.loadMapApi();
+    this.modal.show();
   }
 
   /**
@@ -147,7 +139,6 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
         this.searchElementRef.nativeElement,
         isNotNullOrUndefined(this.selectedCityJson) ? options.borderRestriction : options.countryRestriction
       );
-      console.log(options.borderRestriction);
       autocomplete.addListener('place_changed', () => {
         this.ngZone.run(() => {
           let place: google.maps.places.PlaceResult = autocomplete.getPlace();
@@ -172,12 +163,11 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
       if (status === 'OK') {
         console.log(results);
         if (results[0]) {
-          //this.zoom = 14;
+          this.zoom = 10;
           this.facility.address = results[0].formatted_address;
         }
       }
     });
-    //  this.geoCoder. = 12;
   }
 
   /**
@@ -198,13 +188,10 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
   }
 
   /**
-   * Allow the User To Add Cord Manulay
-   * @param $event
+   * Allow the User to Add a Manual Coordinates and Apply Boundaries Validation
    */
-  manualCords() {
-    /**
-     * if manual coordinate is outside the bounds exit
-     */
+  manualCords(): void {
+    //check if manual Cord are within the selected city
     if (this.Bounds.contains(new google.maps.LatLng(this.facility.latitude, this.facility.longitude))) {
       this.getAddress(Number(this.facility.latitude), Number(this.facility.longitude));
     } else {
@@ -232,39 +219,26 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
 
   loadCitiesByCountryId(countryId): any {
     this.citiesLoading = true;
-    this.facility.cityId = undefined;
     this._countriesServiceProxy.getAllCitiesWithPolygonsByCountryId(countryId).subscribe((res) => {
       this.allCities = res;
       this.citiesLoading = false;
+      this.handleCityPolygon();
     });
   }
 
   /**
-   * handle a city select change
+   * Gets the Selected City Polygons
    */
-  cityChangeEvent() {
+  handleCityPolygon() {
     let Json = this.allCities[this.allCities.findIndex((x) => x.id === this.facility.cityId.toString())].polygon;
     this.selectedCityJson = JSON.parse(Json);
     //empty old address
-    this.facility.longitude = null;
-    this.facility.latitude = null;
-    this.facility.address = null;
+    if (!this.facility.id) {
+      this.facility.longitude = null;
+      this.facility.latitude = null;
+      this.facility.address = null;
+    }
     // Load Map Api
     this.loadMapApi();
   }
-}
-export interface Pokedex {
-  type: string;
-  geometry: Geometry;
-  properties: Properties;
-}
-
-export interface Geometry {
-  type: string;
-  coordinates: Array<Array<number[]>>;
-}
-
-export interface Properties {
-  name: string;
-  description: string;
 }
