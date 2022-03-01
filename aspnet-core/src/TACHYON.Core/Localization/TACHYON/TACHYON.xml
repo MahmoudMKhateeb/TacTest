@@ -403,7 +403,6 @@
 		<text name="CreateNewRoutType">Add new route type</text>
 		<text name="CreateNewShippingRequest">Create shipping request </text>
 		<text name="CreateNewShippingRequestStatus">Create New Shipping Request Status</text>
-		<text name="CreateNewShippingRequestVas">Create New Shipping Request VAS</text>
 		<text name="CreateNewShippingType">Create new shipping type</text>
 		<text name="CreateNewTenant">Create new company</text>
 		<text name="CreateNewTermAndConditionTranslation">Add new terms and conditions translation</text>
@@ -529,7 +528,6 @@
 		<text name="DeletePort">Delete port</text>
 		<text name="DeleteReceiver">Delete receiver</text>
 		<text name="DeleteRoute">Delete route</text>
-		<text name="DeleteRoutStep">Delete rout step</text>
 		<text name="DeleteRoutType">Delete route type</text>
 		<text name="DeleteShippingRequest">Delete shipping request</text>
 		<text name="DeleteShippingRequestStatus">Delete shipping request status</text>
@@ -2649,6 +2647,38 @@
 	<text name="PriceOffer">Price Offer</text>
 	<text name="StartBidding">Start Bidding</text>
 	<text name="UplodeDeliveryNote">Upload Delivery Note</text>
+		
+	<text name="ProfileManagement">Profile management</text>
+	<text name="CarrierDashboard">Carrier dashboard</text>
+	<text name="HostDashboard">Host dashboard</text>
+	<text name="RoutPoints">Rout points</text>
+	<text name="CreateRoutPoint">Create rout point</text>
+	<text name="DeleteRoutPoint">Delete rout point</text>
+	<text name="EditRoutPoint">Edit rout point</text>
+	<text name="DeleteRoutStep">Delete rout step</text>
+	<text name="ShipperDashboard">Shipper dashboard</text>
+	<text name="ShippingRequestTrip_Accident_Comments">Shipping request trip Accident Comments</text>
+	<text name="ShippingRequest_Accidents_Comments_CreateOrEdit">Shipping request Accidents Comments Create or edit</text>
+	<text name="ShippingRequest_Accidents_Comments_Delete">Shipping request Accidents Comments Delete</text>
+	<text name="ShippingRequestsTripsAccident">Shipping requests trips accident</text>
+	<text name="CreateNewShippingRequestTripAccidentResolve">Create new shipping request trip accident resolve</text>
+	<text name="CreateNewShippingRequestTripAccident">Create new shipping request trip accident</text>
+	<text name="EditShippingRequestTripAccidentResolve">Edit shipping request trip accident resolve</text>
+	<text name="EditShippingRequestTripAccident">Edit shipping request trip accident</text>
+	<text name="ShippingRerquestBids">Shipping rerquest bids</text>
+	<text name="CreateNewShippingRequestBid">Create new shipping request bid</text>
+	<text name="DeleteNewShippingRequestBid">Delete new shipping request bid</text>
+	<text name="EditNewShippingRequestBid">Edit new shipping request bid</text>
+	<text name="CreateNewShippingRequestVas">Create new shipping request vas</text>
+	<text name="PaidInvoice">Paid invoice</text>
+	<text name="UnPaidInvoice">UnPaid Invoice</text>
+	<text name="ClaimSubmitInvoices">Claim submit invoices</text>
+	<text name="CreateNewShippingRequestTrip">Create new shipping request trip</text>
+	<text name="DeleteShippingRequestTrip">Delete shipping request trip</text>
+	<text name="EditShippingRequestTrip">Edit shipping request trip</text>
+	<text name="AcceptOffer">Accept offer</text>
+	<text name="CreateOffer">Create offer</text>
+	<text name="ShippingRequest_Accidents_Comments_Edit">Shipping Request Accidents Comments Edit</text>
 
 
 	</texts>

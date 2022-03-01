@@ -2420,5 +2420,40 @@
 		<text name="StartBidding">بدء المزايدة</text>
 		<text name="UplodeDeliveryNote">تحميل مذكرة التسليم</text>
 
+		<text name="ProfileManagement">ادارة الملف الشخصي</text>
+		<text name="CarrierDashboard">لوحة عمل الناقل</text>
+		<text name="HostDashboard">لوحة عمل الادمن</text>
+		<text name="RoutPoints">نقاط الطريق</text>
+		<text name="CreateRoutPoint">انشاء نقطة طريق</text>
+		<text name="DeleteRoutPoint">حذف نقطة الطريق</text>
+		<text name="EditRoutPoint">تعديل نقطة الطريق</text>
+		<text name="RoutSteps">خطوات الطريق</text>
+		<text name="CreateNewRoutStep">انشاء خطوة طريق</text>
+		<text name="DeleteRoutStep">حذف خطوة طريق</text>
+		<text name="EditRoutStep">تعديل خطوة طرق</text>
+		<text name="ShipperDashboard">لوحة عمل الشاحن</text>
+		<text name="ShippingRequestTrip_Accident_Comments">تعليقات حادثة طلب الشحن</text>
+		<text name="ShippingRequest_Accidents_Comments_CreateOrEdit">اضافة او تعديل تعليق حادثة طلب الشحن</text>
+		<text name="ShippingRequest_Accidents_Comments_Delete">حذف تعليق حادثة طلب الشحن</text>
+		<text name="ShippingRequestsTripsAccident">حادثة رحلة في طلب الشحن</text>
+		<text name="CreateNewShippingRequestTripAccidentResolve">حل حادثة رحلة طلب الشحن</text>
+		<text name="CreateNewShippingRequestTripAccident">انشاء حادثة رحلة طلب شحن</text>
+		<text name="EditShippingRequestTripAccidentResolve">حل حادثة رحلة طلب الشحن</text>
+		<text name="EditShippingRequestTripAccident">تعديل حادقة رحلة طلب الشحن</text>
+		<text name="ShippingRerquestBids">عطاءات طلبات الشحن</text>
+		<text name="CreateNewShippingRequestBid">انشاء عطاء طلب شحن</text>
+		<text name="DeleteNewShippingRequestBid">حذف عطاء طلب شحن</text>
+		<text name="EditNewShippingRequestBid">تعديل عطاء طلب شحن</text>
+		<text name="CreateNewShippingRequestVas">انشاء خدمة اضافية</text>
+		<text name="PaidInvoice">فاتورة مدفوعة</text>
+		<text name="UnPaidInvoice">فاتورة غير مدفوعة</text>
+		<text name="ClaimSubmitInvoices">تحصيل الفواتير المرسلة</text>
+		<text name="CreateNewShippingRequestTrip">اضافة رحلة الى طلب الشحن</text>
+		<text name="DeleteShippingRequestTrip">حذف رحلة من طلب الشحن</text>
+		<text name="EditShippingRequestTrip">تعديل رحلة طلب الشحن</text>
+		<text name="AcceptOffer">قبول العرض</text>
+		<text name="CreateOffer">انشاء العرض</text>
+		<text name="ShippingRequest_Accidents_Comments_Edit">تعديل تعليق حادثة طلب الشحن</text>
+
 	</texts>
 </localizationDictionary>
