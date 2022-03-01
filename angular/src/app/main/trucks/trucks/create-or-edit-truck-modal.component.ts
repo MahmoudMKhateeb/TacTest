@@ -137,7 +137,9 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
         this.allTruckStatuss = result;
       });
 
-      this._shippingRequestsService.getAllCarriersForDropDown().subscribe((result) => (this.carriers = result));
+      if (this.isTruckTenantRequired) {
+        this._shippingRequestsService.getAllCarriersForDropDown().subscribe((result) => (this.carriers = result));
+      }
 
       this._trucksServiceProxy.getAllPlateTypeIdForDropdown().subscribe((result) => {
         this.allPlateTypes = result;
@@ -247,7 +249,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
     this.uploader.addToQueue([<File>base64ToFile(event.base64)]);
   }
   get isTruckTenantRequired(): boolean {
-    return this.feature.isEnabled('App.TachyonDealer') && !this.truck?.id;
+    return (this.feature.isEnabled('App.TachyonDealer') || !this.appSession.tenantId) && !this.truck?.id;
   }
 
   getTruckPictureUrl(truckId: number): void {

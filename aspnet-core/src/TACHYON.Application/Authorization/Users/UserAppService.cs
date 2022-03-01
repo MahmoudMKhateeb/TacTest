@@ -441,7 +441,7 @@ namespace TACHYON.Authorization.Users
             //required Docs
             if (input.User.IsDriver)
             {
-                if (await IsEnabledAsync(AppFeatures.TachyonDealer))
+                if (!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer))
                 {
                     if (input.User?.TenantId == null) throw new AbpValidationException(L("YouMustSetTenant"));
                     if (!await FeatureChecker.IsEnabledAsync(input.User.TenantId.Value, AppFeatures.Carrier))
@@ -457,7 +457,7 @@ namespace TACHYON.Authorization.Users
                     {
                         var doc = input.CreateOrEditDocumentFileDtos.FirstOrDefault(x => x.DocumentTypeId == item.DocumentTypeId);
 
-                        if (doc.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
+                        if (doc?.UpdateDocumentFileInput == null || doc.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
                         {
                             throw new UserFriendlyException(L("document missing msg :" + item.Name));
                         }
