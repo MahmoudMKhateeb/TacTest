@@ -152,6 +152,7 @@
 		<text name="Arabic">Arabic</text>
 		<text name="AreYouSure">Are you sure ?</text>
 		<text name="AreYouSure?">Are you sure?</text>
+		<text name="areYouSure">Are you sure?</text>
 		<text name="ArrivedToDestination">Arrive to offloading location</text>
 		<text name="ArriveToLoadingLocation">Arrive to loading location </text>
 		<text name="AShipmentWasAssignedForYouToReceiveOn">A shipment was assigned for you to receive on</text>
@@ -2586,7 +2587,48 @@
     
     <text name="ResetReceiverCode">Reset shipment receiver code</text>
     <text name="ReceiverCodeConfirmationMsg">Are you sure you want to reset the receiver code for this shipment?</text>
+		
+		
+		
+    <text name="CurrentlyActiveTrucks">Currently Active Trucks</text>
+    <text name="CurrentlyNonActiveTrucks">Currently Non Active Trucks</text>
+    <text name="DocumentTypeName">Document Type Name</text>
+    <text name="submitterTenatTenancyName">submitter Tenancy Name</text>
+    <text name="ShipperReference">Shipper Reference</text>
+    <text name="ShipperInvoiceNumber">Shipper Invoice Number</text>
+    <text name="OriginCountry">Origin Country</text>
+    <text name="DestinationCountry">Destination Country</text>
+    <text name="SelectanOriginCountry">Select Origin Country</text>
+	<text name="SelectanDestinationCountry">Select Destination Country</text>
+	<text name="SelectanDestinationCity">Select Destination City</text>
+	<text name="ViewOrAssignDriver">View Or Assign Driver</text>
+	<text name="ShippingRequestReference">Shipping Request Reference</text>
+	<text name="ViewOffer">View Offer</text>
+	<text name="PointsDetails">Points Details</text>
+	<text name="DeliveryConfirmation">Delivery Confirmation</text>
+	<text name="StartedMovingToOffLoadingLocation">Started Moving To Off Loading Location</text>
+	<text name="TrackingMap">Tracking Map</text>
+	<text name="Trip">Trip</text>
+	<text name="DriverTracking">Driver Tracking</text>
+	<text name="companyName">Company</text>
+	<text name="rating">Rating</text>
+	<text name="isMissingDocumentFiles">Is missing document files</text>
+	<text name="IstmaraNumber">Istmara Number</text>
+	<text name="SelectCarriers">Select Carriers</text>
+	<text name="SelectaCarrier">Select a Carrier</text>
+	<text name="NumberOfRate">Number Of Rate</text>
+	<text name="EnableAddTripsByTms">Enable Add Trips By Tms</text>
+	<text name="DisableAddTripsByTms">Disable Add Trips By Tms</text>
+	<text name="CreatedByTachyonDealer">Created By TMS</text>
+	<text name="longitute">longitude</text>
+	<text name="latitute">latitude</text>
+	<text name="Rate">Rate</text>
+	<text name="OnGoing">On Going</text>
+	<text name="SelectShipper">Select Shipper</text>
+	<text name="carrier">Carrier</text>
+	<text name="shipper">Shipper</text>
+	<text name="DragAColumnHeaderHereToGroupByThatColumn">Drag a column header here to group by that column</text>
+	<text name="MobileAppManual">Mobile App Manual</text>
 
-	
 	</texts>
 </localizationDictionary>

@@ -36,7 +36,7 @@
               <dxo-filter-panel [visible]="true"></dxo-filter-panel>
               <dxo-filter-builder-popup></dxo-filter-builder-popup>
               <dxo-scrolling mode="virtual"></dxo-scrolling>
-              <dxo-group-panel [visible]="true"></dxo-group-panel>
+              <dxo-group-panel [visible]="true" emptyPanelText="{{ l('DragAColumnHeaderHereToGroupByThatColumn') }}"></dxo-group-panel>
               <dxo-grouping #expand [autoExpandAll]="false"></dxo-grouping>
               <dxo-remote-operations [groupPaging]="true" [sorting]="true" [filtering]="true"> </dxo-remote-operations>
               <dxo-paging [pageSize]="20"></dxo-paging>
@@ -61,7 +61,7 @@
               >
               </dxi-column>
               <dxi-column dataField="period" caption="{{ l('Period') }}"> </dxi-column>
-              <dxi-column dataField="dueDate" caption="{{ l('dueDate') }}" dataType="date"> </dxi-column>
+              <dxi-column dataField="dueDate" caption="{{ l('DueDate') }}" dataType="date"> </dxi-column>
               <dxi-column
                 dataField="accountType"
                 caption="{{ l('AccountType') }} "
@@ -98,7 +98,7 @@
                       <a class="dropdown-item" (click)="details(options.data)">{{ l('Detail') }}</a>
                     </li>
                     <li>
-                      <a class="dropdown-item" (click)="downloadReport(options.data.id)">{{ l('downloadInvoice') }}</a>
+                      <a class="dropdown-item" (click)="downloadReport(options.data.id)">{{ l('DownloadInvoice') }}</a>
                     </li>
                     <li *ngIf="!options.data.isPaid">
                       <a

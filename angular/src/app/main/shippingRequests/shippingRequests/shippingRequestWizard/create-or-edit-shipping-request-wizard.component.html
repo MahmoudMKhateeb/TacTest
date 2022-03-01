@@ -118,7 +118,7 @@
                         readonly="readonly"
                         [attr.disabled]="step1Dto.shipperId > 0 ? true : null"
                       >
-                        <option value="undefined" selected>{{ l('select') }}</option>
+                        <option value="undefined" selected>{{ l('Select') }}</option>
                         <option [value]="'bidding'">{{ l('Marketplace') }}</option>
                         <option [value]="'tachyondeal'">{{ l('TachyonManageService') }}</option>
                         <option *ngIf="this.feature.isEnabled('App.SendDirectRequest')" value="directrequest">
@@ -139,7 +139,7 @@
                           [options]="allCarriers"
                           class="form-control"
                           [(ngModel)]="step1Dto.carrierTenantIdForDirectRequest"
-                          placeholder="Select a Carrier"
+                          placeholder="{{ l('SelectaCarrier') }}"
                           optionLabel="displayName"
                           optionValue="id"
                           [showClear]="true"
@@ -293,7 +293,7 @@
                       </div>
                       <div class="col-lg-6">
                         <div class="form-group">
-                          <label>{{ l(' ShipperInvoiceNumber') }}</label>
+                          <label>{{ l('ShipperInvoiceNumber') }}</label>
                           <div class="input-group date">
                             <input
                               formControlName="ShipperInvoiceNumber"
@@ -364,7 +364,7 @@
                               (change)="loadCitiesByCountryId(destinationCountry, 'destination')"
                               required
                             >
-                              <option value="undefined">{{ l('selectaDestination') }}</option>
+                              <option value="undefined">{{ l('SelectanDestinationCountry') }}</option>
                               <option *ngFor="let item of allCountries" value="{{ item.id }}">{{ item.displayName }}</option>
                             </select>
                             <div class="invalid-feedback">{{ l('SourceAndDestinationCantBeTheSame') }}</div>
@@ -396,7 +396,7 @@
                             </select>
                           </div>
 
-                          <span class="form-text text-muted">{{ l('SelectaCountry') }}</span>
+                          <span class="form-text text-muted">{{ l('SelectaCity') }}</span>
                         </div>
                       </div>
                       <div class="col-lg-6">
@@ -420,7 +420,7 @@
                               (ngModelChange)="validateShippingRequestType()"
                               required
                             >
-                              <option value="undefined">{{ l('selectaDestination') }}</option>
+                              <option value="undefined">{{ l('SelectanDestinationCity') }}</option>
                               <option *ngFor="let item of destinationCities" value="{{ item.id }}">{{ item.displayName }}</option>
                             </select>
                             <div class="invalid-feedback">{{ l('SourceAndDestinationCantBeTheSame') }}</div>

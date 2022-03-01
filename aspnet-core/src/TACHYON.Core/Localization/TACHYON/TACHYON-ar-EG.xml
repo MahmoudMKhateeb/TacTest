@@ -125,6 +125,7 @@
 		<text name="Arabic">العربية</text>
 		<text name="AreYouSure">هل أنت متأكد؟</text>
 		<text name="AreYouSure?">هل أنت متأكد</text>
+		<text name="areYouSure">هل أنت متأكد</text>
 		<text name="ArrivedToDestination">الوصول إلى موقع التنزيل</text>
 		<text name="Assign">تعيين</text>
 		<text name="AssignCarrier">تعيين الناقل</text>
@@ -2353,5 +2354,52 @@
 
 	<text name="ResetReceiverCode">إعادة تعيين رمز مستلم الشحنة</text>
 	<text name="ReceiverCodeConfirmationMsg">هل أنت متأكد أنك تريد إعادة تعيين رمز المستلم لهذه الشحنة؟</text>
+
+
+		<text name="CurrentlyActiveTrucks">الشاحنات الفعالة</text>
+		<text name="CurrentlyNonActiveTrucks">الشاحنات الغير فعالة</text>
+		<text name="DocumentTypeName">اسم نوع المستند</text>
+		<text name="submitterTenatTenancyName">اسم الشركة المرسلة</text>
+		<text name="ShipperReference">رقم فاتورة المراجعة</text>
+		<text name="ShipperInvoiceNumber">مرجع المرسل</text>
+		<text name="OriginCountry">دولة الإنطلاق</text>
+		<text name="DestinationCountry">دولة الوصول</text>
+		<text name="SelectanOriginCountry">اختر دولة الإنطلاق</text>
+		<text name="SelectanDestinationCountry">اختر دولة الوصول</text>
+		<text name="SelectanDestinationCity">اختر مدينة الوصول</text>
+		<text name="ViewOrAssignDriver">عرض او اسناد الى السائق</text>
+		<text name="ShippingRequestReference">مرجع طلب الشحن</text>
+		<text name="ShippingRequestId">معرف طلب الشحن</text>
+		<text name="ViewOffer">عرض العرض</text>
+		<text name="PointsDetails">تفاصيل نقاط الرحلة</text>
+		<text name="StartedMovingToOffLoadingLocation">بدأ التحرك إلى مكان التنزيل</text>
+		<text name="DeliveryConfirmation">تأكيد التوصيل</text>
+		<text name="TrackingMap">خريطة التتبع</text>
+		<text name="Trip">رحلة</text>
+		<text name="DriverTracking">تتبع السائق</text>
+		<text name="companyName">الشركة</text>
+		<text name="rating">التقييم</text>
+		<text name="UserID">معرف المستخدم</text>
+		<text name="driverLicenseType">نوع رخصة السائق</text>
+		<text name="isMissingDocumentFiles">ملفات المستندات مفقودة</text>
+		<text name="IstmaraNumber">رقم الاستمارة</text>
+		<text name="SelectCarriers">اختر الناقلين</text>
+		<text name="SelectaCarrier">اختر ناقل</text>
+		<text name="NumberOfRate">عدد التقييمات</text>
+		<text name="EnableAddTripsByTms">تفعيل إضافة الرحلات بواسطة Tms</text>
+		<text name="DisableAddTripsByTms">تعطيل إضافة الرحلات بواسطة Tms</text>
+		<text name="CreatedByTachyonDealer">تم انشائه بواسطة ادارة خدمات تاكيون </text>
+		<text name="longitute">خط الطول</text>
+		<text name="latitute">خط العرض</text>
+		<text name="Rate">التقييم</text>
+		<text name="SendDirectRequestOffer">ارسال عرض طلب خاص</text>
+		<text name="OnGoing">جاري التنفيذ</text>
+		<text name="SelectShipper">اختر شاحن</text>
+		<text name="carrier">ناقل</text>
+		<text name="shipper">شاحن</text>
+		<text name="Standard">قياسي</text>
+		<text name="DragAColumnHeaderHereToGroupByThatColumn">اسحب عنوان العمود هنا للتجميع حسب ذلك العمود</text>
+		<text name="MobileAppManual">دليل تطبيقات الهاتف</text>
+
 	</texts>
 </localizationDictionary>
