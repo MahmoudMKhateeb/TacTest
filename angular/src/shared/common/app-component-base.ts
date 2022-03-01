@@ -282,4 +282,7 @@ export abstract class AppComponentBase {
       else return true;
     }
   }
+  get isSaaS(): boolean {
+    return this.feature.isEnabled('App.CarrierAsASaas');
+  }
 }
