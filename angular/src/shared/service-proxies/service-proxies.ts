@@ -29570,10 +29570,17 @@ export class PriceOfferServiceProxy {
    * @param offerId (optional)
    * @return Success
    */
+<<<<<<< HEAD
   getPriceOfferForView(offerId: number | undefined): Observable<GetOfferForViewOutput> {
     let url_ = this.baseUrl + '/api/services/app/PriceOffer/GetPriceOfferForView?';
     if (offerId === null) throw new Error("The parameter 'offerId' cannot be null.");
     else if (offerId !== undefined) url_ += 'offerId=' + encodeURIComponent('' + offerId) + '&';
+=======
+  getPriceOfferForView(offerId: number | undefined): Observable<PriceOfferViewDto> {
+    let url_ = this.baseUrl + '/api/services/app/PriceOffer/GetPriceOfferForView?';
+    if (offerId === null) throw new Error("The parameter 'offerId' cannot be null.");
+    else if (offerId !== undefined) url_ += 'OfferId=' + encodeURIComponent('' + offerId) + '&';
+>>>>>>> TAC-2797
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -29597,14 +29604,24 @@ export class PriceOfferServiceProxy {
             try {
               return this.processGetPriceOfferForView(<any>response_);
             } catch (e) {
+<<<<<<< HEAD
               return <Observable<GetOfferForViewOutput>>(<any>_observableThrow(e));
             }
           } else return <Observable<GetOfferForViewOutput>>(<any>_observableThrow(response_));
+=======
+              return <Observable<PriceOfferViewDto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<PriceOfferViewDto>>(<any>_observableThrow(response_));
+>>>>>>> TAC-2797
         })
       );
   }
 
+<<<<<<< HEAD
   protected processGetPriceOfferForView(response: HttpResponseBase): Observable<GetOfferForViewOutput> {
+=======
+  protected processGetPriceOfferForView(response: HttpResponseBase): Observable<PriceOfferViewDto> {
+>>>>>>> TAC-2797
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -29619,7 +29636,11 @@ export class PriceOfferServiceProxy {
         _observableMergeMap((_responseText) => {
           let result200: any = null;
           let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+<<<<<<< HEAD
           result200 = GetOfferForViewOutput.fromJS(resultData200);
+=======
+          result200 = PriceOfferViewDto.fromJS(resultData200);
+>>>>>>> TAC-2797
           return _observableOf(result200);
         })
       );
@@ -29630,7 +29651,11 @@ export class PriceOfferServiceProxy {
         })
       );
     }
+<<<<<<< HEAD
     return _observableOf<GetOfferForViewOutput>(<any>null);
+=======
+    return _observableOf<PriceOfferViewDto>(<any>null);
+>>>>>>> TAC-2797
   }
 
   /**
@@ -30033,6 +30058,7 @@ export class PriceOfferServiceProxy {
   }
 
   /**
+<<<<<<< HEAD
    * @param id (optional)
    * @return Success
    */
@@ -30100,6 +30126,8 @@ export class PriceOfferServiceProxy {
   }
 
   /**
+=======
+>>>>>>> TAC-2797
    * @param body (optional)
    * @return Success
    */
@@ -79061,6 +79089,7 @@ export interface IPriceOfferViewDto {
   items: PriceOfferItem[] | undefined;
   rejectedReason: string | undefined;
   id: number;
+<<<<<<< HEAD
 }
 
 export class GetOfferForViewOutput implements IGetOfferForViewOutput {
@@ -79108,6 +79137,8 @@ export interface IGetOfferForViewOutput {
   canIAcceptOffer: boolean;
   canIAcceptOrRejectOfferOnBehalf: boolean;
   canIEditOffer: boolean;
+=======
+>>>>>>> TAC-2797
 }
 
 export enum ShippingRequestType {
@@ -85678,6 +85709,10 @@ export class ShippingRequestDto implements IShippingRequestDto {
   addTripsByTmsEnabled!: boolean;
   shipperReference!: string | undefined;
   shipperInvoiceNo!: string | undefined;
+<<<<<<< HEAD
+=======
+  isSaas!: boolean;
+>>>>>>> TAC-2797
   readonly statusTitle!: string | undefined;
   readonly bidStatusTitle!: string | undefined;
   id!: number;
@@ -85723,6 +85758,10 @@ export class ShippingRequestDto implements IShippingRequestDto {
       this.addTripsByTmsEnabled = _data['addTripsByTmsEnabled'];
       this.shipperReference = _data['shipperReference'];
       this.shipperInvoiceNo = _data['shipperInvoiceNo'];
+<<<<<<< HEAD
+=======
+      this.isSaas = _data['isSaas'];
+>>>>>>> TAC-2797
       (<any>this).statusTitle = _data['statusTitle'];
       (<any>this).bidStatusTitle = _data['bidStatusTitle'];
       this.id = _data['id'];
@@ -85769,6 +85808,10 @@ export class ShippingRequestDto implements IShippingRequestDto {
     data['addTripsByTmsEnabled'] = this.addTripsByTmsEnabled;
     data['shipperReference'] = this.shipperReference;
     data['shipperInvoiceNo'] = this.shipperInvoiceNo;
+<<<<<<< HEAD
+=======
+    data['isSaas'] = this.isSaas;
+>>>>>>> TAC-2797
     data['statusTitle'] = this.statusTitle;
     data['bidStatusTitle'] = this.bidStatusTitle;
     data['id'] = this.id;
@@ -85808,6 +85851,10 @@ export interface IShippingRequestDto {
   addTripsByTmsEnabled: boolean;
   shipperReference: string | undefined;
   shipperInvoiceNo: string | undefined;
+<<<<<<< HEAD
+=======
+  isSaas: boolean;
+>>>>>>> TAC-2797
   statusTitle: string | undefined;
   bidStatusTitle: string | undefined;
   id: number;

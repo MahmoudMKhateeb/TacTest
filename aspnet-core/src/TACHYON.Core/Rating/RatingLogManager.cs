@@ -44,6 +44,9 @@ namespace TACHYON.Rating
 
         public async Task CreateRating(RatingLog ratingLog)
         {
+            if (await IsSaasRating(ratingLog))
+                throw new UserFriendlyException(L("CanNotAddRatingForSaasShipment"));
+            
             if (ratingLog.PointId != null) await CheckIfPointCompleted(ratingLog);
 
             if (await IsRateDoneBefore(ratingLog)) throw new UserFriendlyException(L("RateDoneBefore"));
@@ -55,7 +58,9 @@ namespace TACHYON.Rating
         public async Task DeleteAllTripAndPointsRatingAsync(RatingLog rate)
         {
             if (!rate.TripId.HasValue && !rate.PointId.HasValue) return;
-            var ratePoints = rate.TripFk.RoutPoints.Select(y => y.Id).ToList();
+            var ratePoints = await _routePointRepository.GetAll()
+                .Where(x=> x.Id == rate.PointId || x.ShippingRequestTripId == rate.TripId)
+                .Select(y => y.Id).ToListAsync();
 
             if (rate.TripId.HasValue)
             {
@@ -318,6 +323,18 @@ namespace TACHYON.Rating
                          ratingLog.ShipperId == log.ShipperId && ratingLog.TripId == log.TripId &&
                          ratingLog.FacilityId == log.FacilityId && ratingLog.RateType == log.RateType;
 
+        private async Task<bool> IsSaasRating(RatingLog log)
+        {
+            if (log.CarrierId.HasValue && log.ShipperId.HasValue)
+                return log.CarrierId == log.ShipperId;
+
+            return await _routePointRepository.GetAll().AsNoTracking()
+                .Include(x=> x.ShippingRequestTripFk)
+                .ThenInclude(x=> x.ShippingRequestFk)
+                .Where(x => x.Id == log.PointId || x.ShippingRequestTripId == log.TripId)
+                .AnyAsync(x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId
+                               == x.ShippingRequestTripFk.ShippingRequestFk.TenantId);
+        }
         #endregion
     }
 }
