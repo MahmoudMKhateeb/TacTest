@@ -179,7 +179,7 @@ namespace TACHYON.Authorization
             documentTypes.CreateChildPermission(AppPermissions.Pages_DocumentTypes_Edit, L("EditDocumentType"), multiTenancySides: MultiTenancySides.Host);
             documentTypes.CreateChildPermission(AppPermissions.Pages_DocumentTypes_Delete, L("DeleteDocumentType"), multiTenancySides: MultiTenancySides.Host);
 
-            var shippingRequests = pages.CreateChildPermission(AppPermissions.Pages_ShippingRequests, L("ShippingRequests"), multiTenancySides: MultiTenancySides.Tenant);
+            var shippingRequests = pages.CreateChildPermission(AppPermissions.Pages_ShippingRequests, L("ShippingRequests"));
             shippingRequests.CreateChildPermission(AppPermissions.Pages_ShippingRequests_Create, L("CreateNewShippingRequest"), multiTenancySides: MultiTenancySides.Tenant);
             shippingRequests.CreateChildPermission(AppPermissions.Pages_ShippingRequests_Edit, L("EditShippingRequest"), multiTenancySides: MultiTenancySides.Tenant);
             shippingRequests.CreateChildPermission(AppPermissions.Pages_ShippingRequests_Delete, L("DeleteShippingRequest"), multiTenancySides: MultiTenancySides.Tenant);
@@ -257,9 +257,9 @@ namespace TACHYON.Authorization
             trailerTypes.CreateChildPermission(AppPermissions.Pages_TrailerTypes_Delete, L("DeleteTrailerType"), multiTenancySides: MultiTenancySides.Host);
 
             var trucks = pages.CreateChildPermission(AppPermissions.Pages_Trucks, L("Trucks"));
-            trucks.CreateChildPermission(AppPermissions.Pages_Trucks_Create, L("CreateNewTruck"), multiTenancySides: MultiTenancySides.Tenant);
-            trucks.CreateChildPermission(AppPermissions.Pages_Trucks_Edit, L("EditTruck"), multiTenancySides: MultiTenancySides.Tenant);
-            trucks.CreateChildPermission(AppPermissions.Pages_Trucks_Delete, L("DeleteTruck"), multiTenancySides: MultiTenancySides.Tenant);
+            trucks.CreateChildPermission(AppPermissions.Pages_Trucks_Create, L("CreateNewTruck"));
+            trucks.CreateChildPermission(AppPermissions.Pages_Trucks_Edit, L("EditTruck"));
+            trucks.CreateChildPermission(AppPermissions.Pages_Trucks_Delete, L("DeleteTruck"));
 
             var trucksTypes = pages.CreateChildPermission(AppPermissions.Pages_TrucksTypes, L("TrucksTypes"), multiTenancySides: MultiTenancySides.Host);
             trucksTypes.CreateChildPermission(AppPermissions.Pages_TrucksTypes_Create, L("CreateNewTrucksType"), multiTenancySides: MultiTenancySides.Host);

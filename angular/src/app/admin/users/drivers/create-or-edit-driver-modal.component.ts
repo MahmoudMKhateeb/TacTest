@@ -127,7 +127,9 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
         this.sendActivationEmail = false;
         this.selectedDate = this.dateFormatterService.MomentToNgbDateStruct(userResult.user.dateOfBirth);
       }
-      this._shippingRequestServiceProxy.getAllCarriersForDropDown().subscribe((result) => (this.carriers = result));
+      if (this.isUserTenantRequired) {
+        this._shippingRequestServiceProxy.getAllCarriersForDropDown().subscribe((result) => (this.carriers = result));
+      }
 
       this._profileService.getPasswordComplexitySetting().subscribe((passwordComplexityResult) => {
         this.passwordComplexitySetting = passwordComplexityResult.setting;
@@ -311,7 +313,7 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
   }
 
   get isUserTenantRequired(): boolean {
-    return this.feature.isEnabled('App.TachyonDealer') && !this.user.id;
+    return (this.feature.isEnabled('App.TachyonDealer') || !this.appSession.tenantId) && !this.user.id;
   }
   /**
    * do not delete the function dateSelected() below >

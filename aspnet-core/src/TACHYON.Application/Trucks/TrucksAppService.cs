@@ -278,7 +278,7 @@ namespace TACHYON.Trucks
                 truck.TenantId = (int)AbpSession.TenantId;
             }
 
-            if (await IsEnabledAsync(AppFeatures.TachyonDealer))
+            if (!AbpSession.TenantId.HasValue ||await IsEnabledAsync(AppFeatures.TachyonDealer))
             {
                 // Use AbpValidationException to return Status Code => 400 Bad Request
                 if (input.TenantId == null) throw new AbpValidationException(L("YouMustSetTenant"));
