@@ -300,10 +300,11 @@ namespace TACHYON
             configuration.CreateMap<PortDto, Port>().ReverseMap();
             configuration.CreateMap<CreateOrEditUnitOfMeasureDto, UnitOfMeasure>().ReverseMap();
             configuration.CreateMap<UnitOfMeasureDto, UnitOfMeasure>().ReverseMap();
-            configuration.CreateMap<CreateOrEditFacilityDto, Facility>().ReverseMap();
+            configuration.CreateMap<CreateOrEditFacilityDto, Facility>();
             configuration.CreateMap<Facility, CreateOrEditFacilityDto>()
                 .ForMember(dst => dst.Longitude, opt => opt.MapFrom(src => src.Location.X))
-                 .ForMember(dst => dst.Latitude, opt => opt.MapFrom(src => src.Location.Y));
+                 .ForMember(dst => dst.Latitude, opt => opt.MapFrom(src => src.Location.Y))
+                .ForMember(x=> x.CityId, x=> x.MapFrom(i=> i.CityId));
             configuration.CreateMap<Facility, FacilityLocationListDto>()
                 .ForMember(dst => dst.Longitude, opt => opt.MapFrom(src => src.Location.X))
                 .ForMember(dst => dst.Latitude, opt => opt.MapFrom(src => src.Location.Y));
