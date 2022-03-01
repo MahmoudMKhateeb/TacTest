@@ -1,5 +1,6 @@
 ﻿using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using TACHYON.MultiTenancy;
@@ -95,9 +96,8 @@ namespace TACHYON.PriceOffers
         /// If the shipper or TAD view this pricing,Help us when the carrier edit the price to check if the is view sent notification to stachholder the the carrier update price else sent there new price add.
         /// </summary>
         public bool IsView { get; set; }
-
-
-
-
+        public int ApprovingUserId { get; set; }
+        public DateTime ApprovingTime { get; set; }
+       
     }
 }

@@ -131,7 +131,7 @@ namespace TACHYON.UnitOfMeasures
                 {
                     Id = x.Id.ToString(),
                     DisplayName = x.DisplayName,
-                    IsOther = x.ContainsOther()
+                    IsOther = x.DisplayName.ToLower().Contains(TACHYONConsts.OthersDisplayName)
                 }).ToListAsync();
         }
 

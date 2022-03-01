@@ -24,7 +24,7 @@
               <dxo-filter-panel [visible]="true"></dxo-filter-panel>
               <dxo-filter-builder-popup [position]="popupPosition"></dxo-filter-builder-popup>
               <dxo-scrolling mode="virtual"></dxo-scrolling>
-              <dxo-group-panel [visible]="true"></dxo-group-panel>
+              <dxo-group-panel [visible]="true" emptyPanelText="{{ l('DragAColumnHeaderHereToGroupByThatColumn') }}"></dxo-group-panel>
               <dxo-grouping #expand [autoExpandAll]="false"></dxo-grouping>
               <dxo-remote-operations [groupPaging]="true" [sorting]="true" [filtering]="true"> </dxo-remote-operations>
               <dxo-paging [pageSize]="20"></dxo-paging>
@@ -43,8 +43,8 @@
                 cellTemplate="cellTemplateStatus"
               ></dxi-column>
               <dxi-column dataField="extn" caption="{{ l('Extn') }}" [allowFiltering]="false"></dxi-column>
-              <dxi-column dataField="isAccepted" caption="{{ l('isAccepted') }}"></dxi-column>
-              <dxi-column dataField="isRejected" caption="{{ l('isRejected') }}"></dxi-column>
+              <dxi-column dataField="isAccepted" caption="{{ l('IsAccepted') }}"></dxi-column>
+              <dxi-column dataField="isRejected" caption="{{ l('IsRejected') }}"></dxi-column>
               <dxi-column dataField="number" caption="{{ l('Number') }}"></dxi-column>
 
               <div *dxTemplate="let data of 'cellTemplateStatus'">

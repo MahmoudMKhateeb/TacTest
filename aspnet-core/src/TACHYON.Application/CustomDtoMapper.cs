@@ -211,6 +211,7 @@ namespace TACHYON
                     x.MapFrom(i => i.Translations));
 
             configuration.CreateMap<PackingType, PackingTypeDto>()
+                .ForMember(x => x.IsOther, x => x.MapFrom(i => i.DisplayName.ToLower().Contains(TACHYONConsts.OthersDisplayName.ToLower())))
                 .ForMember(x => x.DisplayName, x =>
                     x.MapFrom(i => i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)) == null ? i.DisplayName : i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).DisplayName))
                 .ForMember(x => x.Description, x =>
@@ -299,10 +300,11 @@ namespace TACHYON
             configuration.CreateMap<PortDto, Port>().ReverseMap();
             configuration.CreateMap<CreateOrEditUnitOfMeasureDto, UnitOfMeasure>().ReverseMap();
             configuration.CreateMap<UnitOfMeasureDto, UnitOfMeasure>().ReverseMap();
-            configuration.CreateMap<CreateOrEditFacilityDto, Facility>().ReverseMap();
+            configuration.CreateMap<CreateOrEditFacilityDto, Facility>();
             configuration.CreateMap<Facility, CreateOrEditFacilityDto>()
                 .ForMember(dst => dst.Longitude, opt => opt.MapFrom(src => src.Location.X))
-                 .ForMember(dst => dst.Latitude, opt => opt.MapFrom(src => src.Location.Y));
+                 .ForMember(dst => dst.Latitude, opt => opt.MapFrom(src => src.Location.Y))
+                .ForMember(x=> x.CityId, x=> x.MapFrom(i=> i.CityId));
             configuration.CreateMap<Facility, FacilityLocationListDto>()
                 .ForMember(dst => dst.Longitude, opt => opt.MapFrom(src => src.Location.X))
                 .ForMember(dst => dst.Latitude, opt => opt.MapFrom(src => src.Location.Y));
@@ -397,7 +399,9 @@ namespace TACHYON
                 .ForPath(dst => dst.Tenant.Name, opt => opt.MapFrom(src => src.CarrierName))
                 .ReverseMap();
             configuration.CreateMap<CreatOrEditShippingRequestBidDto, ShippingRequestBid>().ReverseMap();
-            configuration.CreateMap<ShippingRequestDto, ShippingRequest>().ReverseMap();
+            configuration.CreateMap<ShippingRequestDto, ShippingRequest>();
+            configuration.CreateMap<ShippingRequest, ShippingRequestDto>()
+                .ForMember(x=> x.IsSaas,x=> x.MapFrom(i=> i.IsSaas())).ReverseMap();
             configuration.CreateMap<CreateOrEditGoodsDetailDto, GoodsDetail>().ReverseMap();
             configuration.CreateMap<GoodsDetail, GoodsDetailDto>()
                 .ReverseMap();
@@ -802,7 +806,6 @@ namespace TACHYON
                 .ReverseMap();
 
             configuration.CreateMap<TrucksType, TrucksTypeSelectItemDto>()
-                .ForMember(x => x.IsOther, x => x.MapFrom(i => i.ContainsOther()))
                 .ForMember(x => x.Id, x => x.MapFrom(i => i.Id.ToString()))
                 .ForMember(x => x.IsOther, x => x.MapFrom(i => i.ContainsOther()))
                .ForMember(x => x.TranslatedDisplayName, x =>

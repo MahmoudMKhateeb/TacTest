@@ -1,7 +1,7 @@
 <div class="card card-custom">
   <div class="card-header">
     <h3 class="card-title">
-      {{ l('shippingRequestTrips') }}
+      {{ l('ShippingRequestTrips') }}
     </h3>
     <div
       class="card-toolbar"
@@ -50,27 +50,27 @@
           <ng-template pTemplate="header">
             <tr>
               <th pSortableColumn="startTripDate">
-                {{ l('startDate') }}
+                {{ l('StartDate') }}
                 <p-sortIcon field="startTripDate"></p-sortIcon>
               </th>
               <th pSortableColumn="endTripDate">
-                {{ l('endDate') }}
+                {{ l('EndDate') }}
                 <p-sortIcon field="endTripDate"></p-sortIcon>
               </th>
               <th pSortableColumn="originFacility">
-                {{ l('origin') }}
+                {{ l('Origin') }}
                 <p-sortIcon field="originFacility"></p-sortIcon>
               </th>
               <th pSortableColumn="destinationFacility">
-                {{ l('destination') }}
+                {{ l('Destination') }}
                 <p-sortIcon field="destinationFacility"></p-sortIcon>
               </th>
               <th *ngIf="feature.isEnabled('App.Carrier')" pSortableColumn="driverStatusTitle">
-                {{ l('driverStatus') }}
+                {{ l('DriverStatus') }}
                 <p-sortIcon field="driverStatusTitle"></p-sortIcon>
               </th>
               <th pSortableColumn="status">
-                {{ l('tripStatus') }}
+                {{ l('TripStatus') }}
                 <p-sortIcon field="status"></p-sortIcon>
               </th>
               <th pSortableColumn="status">
@@ -133,7 +133,7 @@
                     <li>
                       <a class="dropdown-item" (click)="ViewTripModal.show(record.id)">{{ isCarrier ? l('ViewOrAssignDriver') : l('View') }}</a>
                     </li>
-                    <li *ngIf="!shippingRequestForView.isSaas && record.status == 3">
+                    <li *ngIf="!ShippingRequest.isSaas && record.status == 3">
                       <a class="dropdown-item" (click)="shippingRequestRatingModal.show(record.id)">{{ l('Rating') }}</a>
                     </li>
                     <li *ngIf="canResetTrip(record)">

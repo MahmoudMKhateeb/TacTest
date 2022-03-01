@@ -21,7 +21,7 @@
           <div class="row p-0 mt-4">
             <div class="col-lg-12 row">
               <div class="form-group col-lg-{{ this.RouteType == RouteTypes.SingleDrop ? 12 : 6 }}" *ngIf="RouteType !== RouteTypes.SingleDrop">
-                <label>{{ l('facility') }}</label>
+                <label>{{ l('Facility') }}</label>
                 <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': _tripService.facilitiesLodaing }">
                   <div class="input-group">
                     <select
@@ -35,7 +35,7 @@
                       [class.is-invalid]="(pointFacility.touched && !pointFacility.valid) || Point.facilityId == undefined"
                       [required]="RouteType == RouteTypes.MultipleDrops"
                     >
-                      <option [value]="undefined" disabled selected>{{ l('SelectAFacility') }}</option>
+                      <option [value]="undefined" disabled selected>{{ l('SelectaFacility') }}</option>
                       <option *ngFor="let item of allFacilities" [value]="item.id" [disabled]="item.id == wayPointsList[0].facilityId">
                         {{ item.displayName }}
                       </option>

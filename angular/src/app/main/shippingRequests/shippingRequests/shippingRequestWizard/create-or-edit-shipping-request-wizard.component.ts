@@ -169,6 +169,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     otherTransportTypeName: [null],
     otherTrucksTypeName: [null],
     otherGoodsCategoryName: [null],
+    otherPackingTypeName: [null],
   });
   step4Form = this.fb.group({});
 
@@ -188,11 +189,6 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
 
   ngOnDestroy() {
     this.wizard = undefined;
-  }
-
-  IfOther(items, id) {
-    if (id != undefined) return items?.find((x) => x.id == id).isOther;
-    else return false;
   }
 
   getRequestType(isBid, isDirectRequest) {
@@ -237,7 +233,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
         }
         case 3: {
           console.log('step 3');
-          if (this.step3Form.invalid) {
+          if (this.step3Form.invalid || !this.validateOthersInputs()) {
             //console.log(this.step3Form);
             wizardObj.stop();
             this.step3Form.markAllAsTouched();
@@ -284,6 +280,22 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     this.cdr.detectChanges();
   }
 
+  validateOthersInputs() {
+    if (this.IfOther(this.allGoodCategorys, this.step3Dto.goodCategoryId) && !this.step3Dto.otherGoodsCategoryName.trim()) {
+      return false;
+    }
+    if (this.IfOther(this.allTransportTypes, this.step3Dto.transportTypeId) && !this.step3Dto.otherTransportTypeName.trim()) {
+      return false;
+    }
+    if (this.IfOther(this.allTrucksTypes, this.step3Dto.trucksTypeId) && !this.step3Dto.otherTrucksTypeName.trim()) {
+      return false;
+    }
+    if (this.IfOther(this.allpackingTypes, this.step3Dto.packingTypeId) && !this.step3Dto.otherPackingTypeName.trim()) {
+      return false;
+    }
+    return true;
+  }
+
   //publish
   onSubmit() {
     this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
@@ -299,7 +311,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
           .subscribe((res) => {
             this.notify.success(this.l('ShippingRequestPublishedSuccessfully'));
             if (this.feature.isEnabled('App.TachyonDealer')) this._router.navigate(['/app/main/tms/shippingRequests']);
-            this._router.navigate(['/app/main/shippingRequests/shippingRequests']);
+            else this._router.navigate(['/app/main/shippingRequests/shippingRequests']);
           });
       }
     });
@@ -415,6 +427,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
 
   loadStep2ForEdit() {
     this.loading = true;
+    console.log('22');
     return this._shippingRequestsServiceProxy
       .getStep2ForEdit(this.activeShippingRequestId)
       .pipe(
@@ -695,6 +708,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   validateShippingRequestType() {
     //check if user choose local-inside city  but the origin&des same
     if (this.step1Dto.shippingTypeId == 1) {
+      //local inside city
       this.destinationCountry = this.originCountry;
       this.step2Dto.destinationCityId = this.step2Dto.originCityId;
       this.destinationCities = this.sourceCities;
@@ -705,20 +719,44 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
       if (this.step2Dto.originCityId == this.step2Dto.destinationCityId) {
         this.step2Form.controls['destinationCity'].setErrors({ invalid: true });
         this.step2Form.controls['destinationCountry'].setErrors({ invalid: true });
-      }
-      if (this.originCountry != this.destinationCountry) {
+      } else if (this.originCountry !== this.destinationCountry) {
         this.step2Form.controls['originCountry'].setErrors({ invalid: true });
         this.step2Form.controls['destinationCountry'].setErrors({ invalid: true });
+      } else {
+        this.clearValidation('destinationCity');
+        this.clearValidation('destinationCountry');
       }
     } else if (this.step1Dto.shippingTypeId == 4) {
       //if route type is cross border prevent the countries to be the same
       if (this.originCountry === this.destinationCountry) {
         this.step2Form.controls['originCountry'].setErrors({ invalid: true });
         this.step2Form.controls['destinationCountry'].setErrors({ invalid: true });
+      } else {
+        this.clearValidation('originCountry');
+        this.clearValidation('destinationCountry');
       }
     }
   }
 
+  /**
+   * clears an input previous validation
+   * @param controlName
+   */
+  clearValidation(controlName: string) {
+    this.step2Form.controls[controlName].setErrors(null);
+    this.step2Form.controls[controlName].updateValueAndValidity();
+  }
+
+  /**
+   * resets step2 inputs if the Route Type Change
+   */
+  resetStep2Inputs() {
+    this.step2Dto.destinationCityId = this.step2Dto.originCityId = this.originCountry = this.destinationCountry = undefined;
+    this.clearValidation('originCity');
+    this.clearValidation('destinationCity');
+    this.clearValidation('originCountry');
+    this.clearValidation('destinationCountry');
+  }
   /**
    * Get City Cordinates By Providing its name
    * this finction is to draw the shipping Request Main Route in View SR Details in marketPlace

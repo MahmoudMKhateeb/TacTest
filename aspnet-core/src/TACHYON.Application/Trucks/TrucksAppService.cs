@@ -133,7 +133,9 @@ namespace TACHYON.Trucks
                             CapacityId = truck.CapacityId,
                             Id = truck.Id,
                             TrucksTypeId = truck.TrucksTypeId,
-                            IstmaraNumber = document.Number
+                            IstmaraNumber = document.Number,
+                            OtherTransportTypeName = truck.OtherTransportTypeName,
+                            OtherTrucksTypeName = truck.OtherTrucksTypeName
                         };
 
             var result = await LoadResultAsync(query, input.Filter);
@@ -266,6 +268,8 @@ namespace TACHYON.Trucks
         [AbpAuthorize(AppPermissions.Pages_Trucks_Create)]
         protected virtual async Task Create(CreateOrEditTruckDto input)
         {
+            await OthersNameValidation(input);
+
             var truck = ObjectMapper.Map<Truck>(input);
 
 
@@ -274,7 +278,7 @@ namespace TACHYON.Trucks
                 truck.TenantId = (int)AbpSession.TenantId;
             }
 
-            if (await IsEnabledAsync(AppFeatures.TachyonDealer))
+            if (!AbpSession.TenantId.HasValue ||await IsEnabledAsync(AppFeatures.TachyonDealer))
             {
                 // Use AbpValidationException to return Status Code => 400 Bad Request
                 if (input.TenantId == null) throw new AbpValidationException(L("YouMustSetTenant"));
@@ -326,6 +330,9 @@ namespace TACHYON.Trucks
         protected virtual async Task Update(CreateOrEditTruckDto input)
         {
             await DisableTenancyFiltersIfTachyonDealer();
+
+            await OthersNameValidation(input);
+
             var truck = await _truckRepository.FirstOrDefaultAsync(input.Id.Value);
             //if (input.Driver1UserId.HasValue && input.Driver1UserId != truck.Driver1UserId)
             //{
@@ -587,6 +594,37 @@ namespace TACHYON.Trucks
         #endregion
 
         #region Helpers
+
+        private async Task OthersNameValidation(CreateOrEditTruckDto input)
+        {
+            #region Validate TransportType
+
+            if (input.TransportTypeId != null)
+            {
+                var transportType = await _transportTypeRepository
+                    .FirstOrDefaultAsync(input.TransportTypeId.Value);
+
+                if (transportType.DisplayName.ToLower().Contains(TACHYONConsts.OthersDisplayName) &&
+                    input.OtherTransportTypeName.IsNullOrEmpty())
+                    throw new UserFriendlyException(L("TransportTypeCanNotBeOtherAndEmptyAtSameTime"));
+            }
+
+            #endregion
+
+            #region Validate TrucksType
+
+            //? FYI TrucksTypeId Not Nullable 
+            var trucksType = await _lookup_trucksTypeRepository
+                .FirstOrDefaultAsync((long)input.TrucksTypeId);
+
+            if (trucksType.DisplayName.ToLower().Contains(TACHYONConsts.OthersDisplayName) &&
+                input.OtherTrucksTypeName.IsNullOrEmpty())
+                throw new UserFriendlyException(L("TrucksTypeCanNotBeOtherAndEmptyAtSameTime"));
+
+            #endregion
+
+
+        }
 
 
         #endregion

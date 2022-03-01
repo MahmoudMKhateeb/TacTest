@@ -29570,10 +29570,10 @@ export class PriceOfferServiceProxy {
    * @param offerId (optional)
    * @return Success
    */
-  getPriceOfferForView(offerId: number | undefined): Observable<PriceOfferViewDto> {
+  getPriceOfferForView(offerId: number | undefined): Observable<GetOfferForViewOutput> {
     let url_ = this.baseUrl + '/api/services/app/PriceOffer/GetPriceOfferForView?';
     if (offerId === null) throw new Error("The parameter 'offerId' cannot be null.");
-    else if (offerId !== undefined) url_ += 'OfferId=' + encodeURIComponent('' + offerId) + '&';
+    else if (offerId !== undefined) url_ += 'offerId=' + encodeURIComponent('' + offerId) + '&';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -29597,14 +29597,14 @@ export class PriceOfferServiceProxy {
             try {
               return this.processGetPriceOfferForView(<any>response_);
             } catch (e) {
-              return <Observable<PriceOfferViewDto>>(<any>_observableThrow(e));
+              return <Observable<GetOfferForViewOutput>>(<any>_observableThrow(e));
             }
-          } else return <Observable<PriceOfferViewDto>>(<any>_observableThrow(response_));
+          } else return <Observable<GetOfferForViewOutput>>(<any>_observableThrow(response_));
         })
       );
   }
 
-  protected processGetPriceOfferForView(response: HttpResponseBase): Observable<PriceOfferViewDto> {
+  protected processGetPriceOfferForView(response: HttpResponseBase): Observable<GetOfferForViewOutput> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -29619,7 +29619,7 @@ export class PriceOfferServiceProxy {
         _observableMergeMap((_responseText) => {
           let result200: any = null;
           let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
-          result200 = PriceOfferViewDto.fromJS(resultData200);
+          result200 = GetOfferForViewOutput.fromJS(resultData200);
           return _observableOf(result200);
         })
       );
@@ -29630,7 +29630,7 @@ export class PriceOfferServiceProxy {
         })
       );
     }
-    return _observableOf<PriceOfferViewDto>(<any>null);
+    return _observableOf<GetOfferForViewOutput>(<any>null);
   }
 
   /**
@@ -30004,6 +30004,73 @@ export class PriceOfferServiceProxy {
   }
 
   protected processAccept(response: HttpResponseBase): Observable<PriceOfferStatus> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = resultData200 !== undefined ? resultData200 : <any>null;
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<PriceOfferStatus>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
+  acceptOfferOnBehalfShipper(id: number | undefined): Observable<PriceOfferStatus> {
+    let url_ = this.baseUrl + '/api/services/app/PriceOffer/AcceptOfferOnBehalfShipper?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processAcceptOfferOnBehalfShipper(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processAcceptOfferOnBehalfShipper(<any>response_);
+            } catch (e) {
+              return <Observable<PriceOfferStatus>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<PriceOfferStatus>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processAcceptOfferOnBehalfShipper(response: HttpResponseBase): Observable<PriceOfferStatus> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -76086,6 +76153,7 @@ export interface IFindOrganizationUnitRolesInput {
 export class PackingTypeDto implements IPackingTypeDto {
   displayName!: string | undefined;
   description!: string | undefined;
+  isOther!: boolean;
   id!: number;
 
   constructor(data?: IPackingTypeDto) {
@@ -76100,6 +76168,7 @@ export class PackingTypeDto implements IPackingTypeDto {
     if (_data) {
       this.displayName = _data['displayName'];
       this.description = _data['description'];
+      this.isOther = _data['isOther'];
       this.id = _data['id'];
     }
   }
@@ -76115,6 +76184,7 @@ export class PackingTypeDto implements IPackingTypeDto {
     data = typeof data === 'object' ? data : {};
     data['displayName'] = this.displayName;
     data['description'] = this.description;
+    data['isOther'] = this.isOther;
     data['id'] = this.id;
     return data;
   }
@@ -76123,6 +76193,7 @@ export class PackingTypeDto implements IPackingTypeDto {
 export interface IPackingTypeDto {
   displayName: string | undefined;
   description: string | undefined;
+  isOther: boolean;
   id: number;
 }
 
@@ -78994,6 +79065,53 @@ export interface IPriceOfferViewDto {
   items: PriceOfferItem[] | undefined;
   rejectedReason: string | undefined;
   id: number;
+}
+
+export class GetOfferForViewOutput implements IGetOfferForViewOutput {
+  priceOfferViewDto!: PriceOfferViewDto;
+  canIAcceptOffer!: boolean;
+  canIAcceptOrRejectOfferOnBehalf!: boolean;
+  canIEditOffer!: boolean;
+
+  constructor(data?: IGetOfferForViewOutput) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.priceOfferViewDto = _data['priceOfferViewDto'] ? PriceOfferViewDto.fromJS(_data['priceOfferViewDto']) : <any>undefined;
+      this.canIAcceptOffer = _data['canIAcceptOffer'];
+      this.canIAcceptOrRejectOfferOnBehalf = _data['canIAcceptOrRejectOfferOnBehalf'];
+      this.canIEditOffer = _data['canIEditOffer'];
+    }
+  }
+
+  static fromJS(data: any): GetOfferForViewOutput {
+    data = typeof data === 'object' ? data : {};
+    let result = new GetOfferForViewOutput();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['priceOfferViewDto'] = this.priceOfferViewDto ? this.priceOfferViewDto.toJSON() : <any>undefined;
+    data['canIAcceptOffer'] = this.canIAcceptOffer;
+    data['canIAcceptOrRejectOfferOnBehalf'] = this.canIAcceptOrRejectOfferOnBehalf;
+    data['canIEditOffer'] = this.canIEditOffer;
+    return data;
+  }
+}
+
+export interface IGetOfferForViewOutput {
+  priceOfferViewDto: PriceOfferViewDto;
+  canIAcceptOffer: boolean;
+  canIAcceptOrRejectOfferOnBehalf: boolean;
+  canIEditOffer: boolean;
 }
 
 export enum ShippingRequestType {
@@ -83531,7 +83649,7 @@ export interface IMostUsedOriginsDto {
 
 export enum ShippingRequestTripStatus {
   New = 0,
-  Intransit = 1,
+  InTransit = 1,
   Canceled = 2,
   Delivered = 3,
   DeliveredAndNeedsConfirmation = 4,
@@ -85564,6 +85682,7 @@ export class ShippingRequestDto implements IShippingRequestDto {
   addTripsByTmsEnabled!: boolean;
   shipperReference!: string | undefined;
   shipperInvoiceNo!: string | undefined;
+  isSaas!: boolean;
   readonly statusTitle!: string | undefined;
   readonly bidStatusTitle!: string | undefined;
   id!: number;
@@ -85609,6 +85728,7 @@ export class ShippingRequestDto implements IShippingRequestDto {
       this.addTripsByTmsEnabled = _data['addTripsByTmsEnabled'];
       this.shipperReference = _data['shipperReference'];
       this.shipperInvoiceNo = _data['shipperInvoiceNo'];
+      this.isSaas = _data['isSaas'];
       (<any>this).statusTitle = _data['statusTitle'];
       (<any>this).bidStatusTitle = _data['bidStatusTitle'];
       this.id = _data['id'];
@@ -85655,6 +85775,7 @@ export class ShippingRequestDto implements IShippingRequestDto {
     data['addTripsByTmsEnabled'] = this.addTripsByTmsEnabled;
     data['shipperReference'] = this.shipperReference;
     data['shipperInvoiceNo'] = this.shipperInvoiceNo;
+    data['isSaas'] = this.isSaas;
     data['statusTitle'] = this.statusTitle;
     data['bidStatusTitle'] = this.bidStatusTitle;
     data['id'] = this.id;
@@ -85694,6 +85815,7 @@ export interface IShippingRequestDto {
   addTripsByTmsEnabled: boolean;
   shipperReference: string | undefined;
   shipperInvoiceNo: string | undefined;
+  isSaas: boolean;
   statusTitle: string | undefined;
   bidStatusTitle: string | undefined;
   id: number;
@@ -85925,6 +86047,8 @@ export class TruckDto implements ITruckDto {
   trucksTypeDisplayName!: string | undefined;
   capacityId!: number | undefined;
   capacityDisplayName!: string | undefined;
+  otherTransportTypeName!: string | undefined;
+  otherTrucksTypeName!: string | undefined;
   isMissingDocumentFiles!: boolean;
   companyName!: string | undefined;
   istmaraNumber!: string | undefined;
@@ -85953,6 +86077,8 @@ export class TruckDto implements ITruckDto {
       this.trucksTypeDisplayName = _data['trucksTypeDisplayName'];
       this.capacityId = _data['capacityId'];
       this.capacityDisplayName = _data['capacityDisplayName'];
+      this.otherTransportTypeName = _data['otherTransportTypeName'];
+      this.otherTrucksTypeName = _data['otherTrucksTypeName'];
       this.isMissingDocumentFiles = _data['isMissingDocumentFiles'];
       this.companyName = _data['companyName'];
       this.istmaraNumber = _data['istmaraNumber'];
@@ -85982,6 +86108,8 @@ export class TruckDto implements ITruckDto {
     data['trucksTypeDisplayName'] = this.trucksTypeDisplayName;
     data['capacityId'] = this.capacityId;
     data['capacityDisplayName'] = this.capacityDisplayName;
+    data['otherTransportTypeName'] = this.otherTransportTypeName;
+    data['otherTrucksTypeName'] = this.otherTrucksTypeName;
     data['isMissingDocumentFiles'] = this.isMissingDocumentFiles;
     data['companyName'] = this.companyName;
     data['istmaraNumber'] = this.istmaraNumber;
@@ -86004,6 +86132,8 @@ export interface ITruckDto {
   trucksTypeDisplayName: string | undefined;
   capacityId: number | undefined;
   capacityDisplayName: string | undefined;
+  otherTransportTypeName: string | undefined;
+  otherTrucksTypeName: string | undefined;
   isMissingDocumentFiles: boolean;
   companyName: string | undefined;
   istmaraNumber: string | undefined;
@@ -86308,6 +86438,7 @@ export class CreateOrEditShippingRequestDto implements ICreateOrEditShippingRequ
   otherGoodsCategoryName!: string | undefined;
   otherTransportTypeName!: string | undefined;
   otherTrucksTypeName!: string | undefined;
+  otherPackingTypeName!: string | undefined;
   shippingRequestVasList!: CreateOrEditShippingRequestVasListDto[] | undefined;
   id!: number | undefined;
 
@@ -86349,6 +86480,7 @@ export class CreateOrEditShippingRequestDto implements ICreateOrEditShippingRequ
       this.otherGoodsCategoryName = _data['otherGoodsCategoryName'];
       this.otherTransportTypeName = _data['otherTransportTypeName'];
       this.otherTrucksTypeName = _data['otherTrucksTypeName'];
+      this.otherPackingTypeName = _data['otherPackingTypeName'];
       if (Array.isArray(_data['shippingRequestVasList'])) {
         this.shippingRequestVasList = [] as any;
         for (let item of _data['shippingRequestVasList']) this.shippingRequestVasList!.push(CreateOrEditShippingRequestVasListDto.fromJS(item));
@@ -86394,6 +86526,7 @@ export class CreateOrEditShippingRequestDto implements ICreateOrEditShippingRequ
     data['otherGoodsCategoryName'] = this.otherGoodsCategoryName;
     data['otherTransportTypeName'] = this.otherTransportTypeName;
     data['otherTrucksTypeName'] = this.otherTrucksTypeName;
+    data['otherPackingTypeName'] = this.otherPackingTypeName;
     if (Array.isArray(this.shippingRequestVasList)) {
       data['shippingRequestVasList'] = [];
       for (let item of this.shippingRequestVasList) data['shippingRequestVasList'].push(item.toJSON());
@@ -86432,6 +86565,7 @@ export interface ICreateOrEditShippingRequestDto {
   otherGoodsCategoryName: string | undefined;
   otherTransportTypeName: string | undefined;
   otherTrucksTypeName: string | undefined;
+  otherPackingTypeName: string | undefined;
   shippingRequestVasList: CreateOrEditShippingRequestVasListDto[] | undefined;
   id: number | undefined;
 }
@@ -86638,6 +86772,7 @@ export class EditShippingRequestStep3Dto implements IEditShippingRequestStep3Dto
   otherGoodsCategoryName!: string | undefined;
   otherTransportTypeName!: string | undefined;
   otherTrucksTypeName!: string | undefined;
+  otherPackingTypeName!: string | undefined;
   id!: number;
 
   constructor(data?: IEditShippingRequestStep3Dto) {
@@ -86662,6 +86797,7 @@ export class EditShippingRequestStep3Dto implements IEditShippingRequestStep3Dto
       this.otherGoodsCategoryName = _data['otherGoodsCategoryName'];
       this.otherTransportTypeName = _data['otherTransportTypeName'];
       this.otherTrucksTypeName = _data['otherTrucksTypeName'];
+      this.otherPackingTypeName = _data['otherPackingTypeName'];
       this.id = _data['id'];
     }
   }
@@ -86687,6 +86823,7 @@ export class EditShippingRequestStep3Dto implements IEditShippingRequestStep3Dto
     data['otherGoodsCategoryName'] = this.otherGoodsCategoryName;
     data['otherTransportTypeName'] = this.otherTransportTypeName;
     data['otherTrucksTypeName'] = this.otherTrucksTypeName;
+    data['otherPackingTypeName'] = this.otherPackingTypeName;
     data['id'] = this.id;
     return data;
   }
@@ -86705,6 +86842,7 @@ export interface IEditShippingRequestStep3Dto {
   otherGoodsCategoryName: string | undefined;
   otherTransportTypeName: string | undefined;
   otherTrucksTypeName: string | undefined;
+  otherPackingTypeName: string | undefined;
   id: number;
 }
 
@@ -94947,6 +95085,8 @@ export class CreateOrEditTruckDto implements ICreateOrEditTruckDto {
   length!: number | undefined;
   plateTypeId!: number;
   tenantId!: number | undefined;
+  otherTrucksTypeName!: string | undefined;
+  otherTransportTypeName!: string | undefined;
   id!: number | undefined;
 
   constructor(data?: ICreateOrEditTruckDto) {
@@ -94979,6 +95119,8 @@ export class CreateOrEditTruckDto implements ICreateOrEditTruckDto {
       this.length = _data['length'];
       this.plateTypeId = _data['plateTypeId'];
       this.tenantId = _data['tenantId'];
+      this.otherTrucksTypeName = _data['otherTrucksTypeName'];
+      this.otherTransportTypeName = _data['otherTransportTypeName'];
       this.id = _data['id'];
     }
   }
@@ -95010,6 +95152,8 @@ export class CreateOrEditTruckDto implements ICreateOrEditTruckDto {
     data['length'] = this.length;
     data['plateTypeId'] = this.plateTypeId;
     data['tenantId'] = this.tenantId;
+    data['otherTrucksTypeName'] = this.otherTrucksTypeName;
+    data['otherTransportTypeName'] = this.otherTransportTypeName;
     data['id'] = this.id;
     return data;
   }
@@ -95031,6 +95175,8 @@ export interface ICreateOrEditTruckDto {
   length: number | undefined;
   plateTypeId: number;
   tenantId: number | undefined;
+  otherTrucksTypeName: string | undefined;
+  otherTransportTypeName: string | undefined;
   id: number | undefined;
 }
 
@@ -96058,6 +96204,7 @@ export interface ITrucksTypesTranslationTrucksTypeLookupTableDto {
 
 export class UnitOfMeasureDto implements IUnitOfMeasureDto {
   displayName!: string | undefined;
+  isOther!: boolean;
   id!: number;
 
   constructor(data?: IUnitOfMeasureDto) {
@@ -96071,6 +96218,7 @@ export class UnitOfMeasureDto implements IUnitOfMeasureDto {
   init(_data?: any) {
     if (_data) {
       this.displayName = _data['displayName'];
+      this.isOther = _data['isOther'];
       this.id = _data['id'];
     }
   }
@@ -96085,6 +96233,7 @@ export class UnitOfMeasureDto implements IUnitOfMeasureDto {
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
     data['displayName'] = this.displayName;
+    data['isOther'] = this.isOther;
     data['id'] = this.id;
     return data;
   }
@@ -96092,6 +96241,7 @@ export class UnitOfMeasureDto implements IUnitOfMeasureDto {
 
 export interface IUnitOfMeasureDto {
   displayName: string | undefined;
+  isOther: boolean;
   id: number;
 }
 

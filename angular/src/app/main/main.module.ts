@@ -279,6 +279,7 @@ import { ImportCitiesPolygonsModalComponent } from './cities/cities/import-citie
 import { ToggleButtonModule } from '@node_modules/primeng/togglebutton';
 import { TrackingModule } from '@app/main/shippingRequests/shippingRequests/tracking/tracking.module';
 import { AddNewRemarksTripModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/add-new-remarks-trip-modal/add-new-remarks-trip-modal.component';
+import { QuartzCronModule } from '@node_modules/@sbzen/ng-cron';
 
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
@@ -336,6 +337,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     EmailEditorModule,
     ToggleButtonModule,
     TrackingModule,
+    QuartzCronModule,
   ],
   declarations: [
     EmailTemplatesComponent,

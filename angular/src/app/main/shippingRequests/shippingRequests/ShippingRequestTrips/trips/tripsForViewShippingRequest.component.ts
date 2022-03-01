@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Injector, Input, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Injector, Input, OnChanges, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { Table } from '@node_modules/primeng/table';
 import { Paginator } from '@node_modules/primeng/paginator';
@@ -22,7 +22,7 @@ import { AddNewRemarksTripModalComponent } from './add-new-remarks-trip-modal/ad
   templateUrl: './tripsForViewShippingRequest.component.html',
   styleUrls: ['./tripsForViewShippingRequest.component.scss'],
 })
-export class TripsForViewShippingRequestComponent extends AppComponentBase implements AfterViewInit {
+export class TripsForViewShippingRequestComponent extends AppComponentBase implements AfterViewInit, OnChanges {
   @ViewChild('dataTablechild', { static: false }) dataTable: Table;
   @ViewChild('paginatorchild', { static: false }) paginator: Paginator;
   @ViewChild('AddNewTripModal', { static: false }) AddNewTripModal: CreateOrEditTripComponent;
@@ -121,5 +121,8 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
       record.status !== this.ShippingRequestTripStatus.New &&
       record.status !== this.ShippingRequestTripStatus.Delivered
     );
+  }
+  ngOnChanges() {
+    this.reloadPage();
   }
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using TACHYON.EntityFrameworkCore;
@@ -10,9 +11,10 @@ using TACHYON.EntityFrameworkCore;
 namespace TACHYON.Migrations
 {
     [DbContext(typeof(TACHYONDbContext))]
-    partial class TACHYONDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220224074043_Add_Columns_OtherTransportType_OtherTruckType_Truck_Tbl")]
+    partial class Add_Columns_OtherTransportType_OtherTruckType_Truck_Tbl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1634,6 +1636,9 @@ namespace TACHYON.Migrations
                     b.Property<DateTime?>("DeletionTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("DriverLicenseTypeId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("DriverStatus")
                         .HasColumnType("int");
 
@@ -1925,9 +1930,6 @@ namespace TACHYON.Migrations
 
                     b.Property<Point>("Location")
                         .HasColumnType("geography");
-
-                    b.Property<string>("Polygon")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -2299,6 +2301,50 @@ namespace TACHYON.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("DocumentsEntities");
+                });
+
+            modelBuilder.Entity("TACHYON.DriverLicenseTypes.DriverLicenseType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("ApplicableforWaslRegistration")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("CreatorUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("DeleterUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("LastModifierUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.Property<int>("WasIIntegrationId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DriverLicenseTypes");
                 });
 
             modelBuilder.Entity("TACHYON.DriverLocationLogs.DriverLocationLog", b =>
@@ -3191,9 +3237,6 @@ namespace TACHYON.Migrations
                     b.Property<string>("DocumentName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("DueDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -4012,12 +4055,6 @@ namespace TACHYON.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("ApprovingTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ApprovingUserId")
-                        .HasColumnType("int");
 
                     b.Property<byte>("Channel")
                         .HasColumnType("tinyint");
@@ -5965,6 +6002,7 @@ namespace TACHYON.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<byte[]>("Bytes")
+                        .IsRequired()
                         .HasColumnType("varbinary(max)");
 
                     b.Property<int?>("TenantId")
@@ -6485,6 +6523,12 @@ namespace TACHYON.Migrations
                     b.Property<string>("Note")
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
+
+                    b.Property<string>("OtherTransportTypeName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OtherTrucksTypeName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("PictureId")
                         .HasColumnType("uniqueidentifier");

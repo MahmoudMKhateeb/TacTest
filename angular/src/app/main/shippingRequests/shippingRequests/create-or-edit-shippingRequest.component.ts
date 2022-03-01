@@ -187,10 +187,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
       this._shippingRequestsServiceProxy.getAllTruckTypesByTransportTypeIdForDropdown(this.shippingRequest.transportTypeId).subscribe((result) => {
         this.allTrucksTypes = result;
         this.truckTypeLoading = false;
-      });
-      this._shippingRequestsServiceProxy.getAllTuckCapacitiesByTuckTypeIdForDropdown(this.shippingRequest.trucksTypeId).subscribe((result) => {
-        this.allCapacities = result;
-        this.capacityLoading = false;
+        this.getCapacityByTruck(this.allTrucksTypes, this.shippingRequest.trucksTypeId);
       });
     }
 
@@ -211,6 +208,27 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
 
   cancel(): void {
     this._router.navigate(['app/main/shippingRequests/shippingRequests']);
+  }
+
+  getCapacityByTruck(allTrucksTypes, trucksTypeId) {
+    this.capacityLoading = true;
+    if (trucksTypeId) {
+      if (this.IfOther(allTrucksTypes, trucksTypeId)) {
+        this._shippingRequestsServiceProxy.getAllCapacitiesForDropdown().subscribe((result) => {
+          this.allCapacities = result;
+          this.capacityLoading = false;
+        });
+      } else {
+        this._shippingRequestsServiceProxy.getAllTuckCapacitiesByTuckTypeIdForDropdown(trucksTypeId).subscribe((result) => {
+          this.allCapacities = result;
+          this.capacityLoading = false;
+        });
+      }
+    } else {
+      this.shippingRequest.trucksTypeId = null;
+      this.allTrucksTypes = null;
+      this.allCapacities = null;
+    }
   }
 
   /**
@@ -262,17 +280,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   }
 
   trucksTypeSelectChange(trucksTypeId?: number) {
-    if (trucksTypeId > 0) {
-      this.capacityLoading = true;
-      this._shippingRequestsServiceProxy.getAllTuckCapacitiesByTuckTypeIdForDropdown(trucksTypeId).subscribe((result) => {
-        this.allCapacities = result;
-        this.shippingRequest.capacityId = null;
-        this.capacityLoading = false;
-      });
-    } else {
-      this.shippingRequest.capacityId = null;
-      this.allCapacities = null;
-    }
+    this.getCapacityByTruck(this.allTrucksTypes, trucksTypeId);
   }
 
   //select a vas and move it to Selected Vases

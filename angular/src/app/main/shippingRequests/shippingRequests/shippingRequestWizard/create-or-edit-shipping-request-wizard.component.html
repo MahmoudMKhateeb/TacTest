@@ -118,7 +118,7 @@
                         readonly="readonly"
                         [attr.disabled]="step1Dto.shipperId > 0 ? true : null"
                       >
-                        <option value="undefined" selected>{{ l('select') }}</option>
+                        <option value="undefined" selected>{{ l('Select') }}</option>
                         <option [value]="'bidding'">{{ l('Marketplace') }}</option>
                         <option [value]="'tachyondeal'">{{ l('TachyonManageService') }}</option>
                         <option *ngIf="this.feature.isEnabled('App.SendDirectRequest')" value="directrequest">
@@ -139,7 +139,7 @@
                           [options]="allCarriers"
                           class="form-control"
                           [(ngModel)]="step1Dto.carrierTenantIdForDirectRequest"
-                          placeholder="Select a Carrier"
+                          placeholder="{{ l('SelectaCarrier') }}"
                           optionLabel="displayName"
                           optionValue="id"
                           [showClear]="true"
@@ -230,7 +230,7 @@
                           name="shippingType"
                           formControlName="shippingType"
                           [(ngModel)]="step1Dto.shippingTypeId"
-                          (change)="step2Dto.destinationCityId = undefined"
+                          (change)="resetStep2Inputs()"
                           [class.is-valid]="
                             step1Form.get('shippingType').valid && (step1Form.get('shippingType').dirty || step1Form.get('shippingType').touched)
                           "
@@ -293,7 +293,7 @@
                       </div>
                       <div class="col-lg-6">
                         <div class="form-group">
-                          <label>{{ l(' ShipperInvoiceNumber') }}</label>
+                          <label>{{ l('ShipperInvoiceNumber') }}</label>
                           <div class="input-group date">
                             <input
                               formControlName="ShipperInvoiceNumber"
@@ -334,7 +334,7 @@
                               (change)="loadCitiesByCountryId(originCountry, 'source')"
                               required
                             >
-                              <option value="undefined">{{ l('SelectanOriginCountry') }}</option>
+                              <option value="undefined" selected disabled>{{ l('SelectanOriginCountry') }}</option>
                               <option *ngFor="let item of allCountries" value="{{ item.id }}">{{ item.displayName }}</option>
                             </select>
                           </div>
@@ -364,7 +364,7 @@
                               (change)="loadCitiesByCountryId(destinationCountry, 'destination')"
                               required
                             >
-                              <option value="undefined">{{ l('selectaDestination') }}</option>
+                              <option value="undefined" selected disabled>{{ l('SelectanDestinationCountry') }}</option>
                               <option *ngFor="let item of allCountries" value="{{ item.id }}">{{ item.displayName }}</option>
                             </select>
                             <div class="invalid-feedback">{{ l('SourceAndDestinationCantBeTheSame') }}</div>
@@ -382,6 +382,7 @@
                               name="originCity"
                               formControlName="originCity"
                               [(ngModel)]="step2Dto.originCityId"
+                              [attr.disabled]="!sourceCities ? true : null"
                               [class.is-valid]="
                                 step2Form.get('originCity').valid && (step2Form.get('originCity').dirty || step2Form.get('originCity').touched)
                               "
@@ -391,12 +392,12 @@
                               (ngModelChange)="validateShippingRequestType()"
                               required
                             >
-                              <option [ngValue]="null" selected disabled>{{ l('SelectanOriginCity') }}</option>
+                              <option value="undefined" selected disabled>{{ l('SelectanOriginCity') }}</option>
                               <option *ngFor="let item of sourceCities" value="{{ item.id }}">{{ item.displayName }}</option>
                             </select>
                           </div>
 
-                          <span class="form-text text-muted">{{ l('SelectaCountry') }}</span>
+                          <span class="form-text text-muted">{{ l('SelectaCity') }}</span>
                         </div>
                       </div>
                       <div class="col-lg-6">
@@ -420,7 +421,7 @@
                               (ngModelChange)="validateShippingRequestType()"
                               required
                             >
-                              <option value="undefined">{{ l('selectaDestination') }}</option>
+                              <option value="undefined" selected disabled>{{ l('SelectanDestinationCity') }}</option>
                               <option *ngFor="let item of destinationCities" value="{{ item.id }}">{{ item.displayName }}</option>
                             </select>
                             <div class="invalid-feedback">{{ l('SourceAndDestinationCantBeTheSame') }}</div>
@@ -561,7 +562,7 @@
                       </div>
 
                       <div class="col-lg-12 mt-4" [hidden]="!IfOther(allGoodCategorys, step3Dto.goodCategoryId)">
-                        <label>{{ l('Other') }} <span class="required-fileds">*</span></label>
+                        <label>{{ l('OtherGoodCategory') }} <span class="required-fileds">*</span></label>
                         <div>
                           <div class="input-group">
                             <input
@@ -573,10 +574,11 @@
                               [(ngModel)]="step3Dto.otherGoodsCategoryName"
                               [class.is-valid]="
                                 step3Form.get('otherGoodsCategoryName').valid &&
+                                cannotContainSpace(step3Dto.otherGoodsCategoryName) &&
                                 (step3Form.get('otherGoodsCategoryName').dirty || step3Form.get('otherGoodsCategoryName').touched)
                               "
                               [class.is-invalid]="
-                                step3Form.get('otherGoodsCategoryName').invalid &&
+                                (step3Form.get('otherGoodsCategoryName').invalid || !cannotContainSpace(step3Dto.otherGoodsCategoryName)) &&
                                 IfOther(allGoodCategorys, step3Dto.goodCategoryId) &&
                                 (step3Form.get('otherGoodsCategoryName').dirty || step3Form.get('otherGoodsCategoryName').touched)
                               "
@@ -639,6 +641,32 @@
                           <span class="form-text text-muted">{{ l('EnterNumberOfPacking') }}</span>
                         </div>
                       </div>
+                      <div class="col-lg-12 mt-4" [hidden]="!IfOther(allpackingTypes, step3Dto.packingTypeId)">
+                        <label>{{ l('OtherPackingType') }} <span class="required-fileds">*</span></label>
+                        <div>
+                          <div class="input-group">
+                            <input
+                              type="text"
+                              name="otherPackingTypeName"
+                              formControlName="otherPackingTypeName"
+                              class="form-control"
+                              [(ngModel)]="step3Dto.otherPackingTypeName"
+                              [class.is-valid]="
+                                step3Form.get('otherPackingTypeName').valid &&
+                                cannotContainSpace(step3Dto.otherPackingTypeName) &&
+                                (step3Form.get('otherPackingTypeName').dirty || step3Form.get('otherPackingTypeName').touched)
+                              "
+                              [class.is-invalid]="
+                                (step3Form.get('otherPackingTypeName').invalid || !cannotContainSpace(step3Dto.otherPackingTypeName)) &&
+                                IfOther(allpackingTypes, step3Dto.packingTypeId) &&
+                                (step3Form.get('otherPackingTypeName').dirty || step3Form.get('otherPackingTypeName').touched)
+                              "
+                              [required]="step3Form.get('packingType').valid && IfOther(allpackingTypes, step3Dto.packingTypeId)"
+                            />
+                          </div>
+                        </div>
+                        <span class="form-text text-muted">{{ l('otherPackingTypeName') }}</span>
+                      </div>
                       <div class="col-lg-6 mt-4">
                         <label> {{ l('TransportType') }} <span class="required-fileds">*</span></label>
                         <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allTransportTypes }">
@@ -665,7 +693,7 @@
                         <span class="form-text text-muted">{{ l('SelectaTransportType') }}</span>
 
                         <div class="form-group" [hidden]="!IfOther(allTransportTypes, step3Dto.transportTypeId)">
-                          <label>{{ l('Other') }} <span class="required-fileds">*</span></label>
+                          <label>{{ l('OtherTransportType') }} <span class="required-fileds">*</span></label>
                           <div>
                             <div class="input-group">
                               <input
@@ -676,10 +704,11 @@
                                 [(ngModel)]="step3Dto.otherTransportTypeName"
                                 [class.is-valid]="
                                   step3Form.get('otherTransportTypeName').valid &&
+                                  cannotContainSpace(step3Dto.otherTransportTypeName) &&
                                   (step3Form.get('otherTransportTypeName').dirty || step3Form.get('otherTransportTypeName').touched)
                                 "
                                 [class.is-invalid]="
-                                  step3Form.get('otherTransportTypeName').invalid &&
+                                  (step3Form.get('otherTransportTypeName').invalid || !cannotContainSpace(step3Dto.otherTransportTypeName)) &&
                                   IfOther(allTransportTypes, step3Dto.transportTypeId) &&
                                   (step3Form.get('otherTransportTypeName').dirty || step3Form.get('otherTransportTypeName').touched)
                                 "
@@ -731,7 +760,7 @@
                         <span class="form-text text-muted">{{ l('SelectaTruckType') }}</span>
 
                         <div class="form-group" [hidden]="!IfOther(allTrucksTypes, step3Dto.trucksTypeId)">
-                          <label>{{ l('Other') }} <span class="required-fileds">*</span></label>
+                          <label>{{ l('OtherTruckType') }} <span class="required-fileds">*</span></label>
                           <div>
                             <div class="input-group">
                               <input
@@ -742,10 +771,11 @@
                                 [(ngModel)]="step3Dto.otherTrucksTypeName"
                                 [class.is-valid]="
                                   step3Form.get('otherTrucksTypeName').valid &&
+                                  cannotContainSpace(step3Dto.otherTrucksTypeName) &&
                                   (step3Form.get('otherTrucksTypeName').dirty || step3Form.get('otherTrucksTypeName').touched)
                                 "
                                 [class.is-invalid]="
-                                  step3Form.get('otherTrucksTypeName').invalid &&
+                                  (step3Form.get('otherTrucksTypeName').invalid || !cannotContainSpace(step3Dto.otherTrucksTypeName)) &&
                                   IfOther(allTrucksTypes, step3Dto.trucksTypeId) &&
                                   (step3Form.get('otherTrucksTypeName').dirty || step3Form.get('otherTrucksTypeName').touched)
                                 "

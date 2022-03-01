@@ -11,7 +11,7 @@
   <div class="modal-dialog modal-lg" style="max-width: 1200px">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Price Offer</h5>
+        <h5 class="modal-title">{{l('PriceOffer')}}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close()">
           <i aria-hidden="true" class="ki ki-close"></i>
         </button>
@@ -20,7 +20,7 @@
         <form #Form="ngForm" novalidate (ngSubmit)="confirmSendOffer()">
           <div class="form-group row">
             <div class="col-lg-4" *ngIf="!feature.isEnabled('App.Carrier')">
-              <label>commissionType:</label>
+              <label>{{ l('CommissionType') }}:</label>
               <select
                 class="form-control"
                 name="CommissionType"
@@ -31,7 +31,7 @@
               </select>
             </div>
             <div class="col-lg-4" *ngIf="!feature.isEnabled('App.Carrier')">
-              <label>commissionTypeValue:</label>
+              <label>{{ l('CommissionTypeValue') }}:</label>
               <input
                 type="number"
                 min="0"
@@ -45,7 +45,7 @@
           </div>
           <div class="form-group row">
             <div class="col-lg-4" *ngIf="!feature.isEnabled('App.Carrier')">
-              <label>vasCommissionType:</label>
+              <label>{{ l('VasCommissionType') }}:</label>
 
               <select
                 class="form-control form-control-sm"
@@ -57,7 +57,7 @@
               </select>
             </div>
             <div class="col-lg-4" *ngIf="!feature.isEnabled('App.Carrier')">
-              <label>vasCommissionPercentageOrAddValue:</label>
+              <label>{{ l('VasCommissionPercentageOrAddValue') }}:</label>
 
               <input
                 type="number"
@@ -77,7 +77,7 @@
                 <tr class="table-active">
                   <th style="width: 350px">{{l('#Trips')}}</th>
                   <th style="width: 350px">itemPrice</th>
-                  <th>itemPrice post commission</th>
+                  <th *ngIf="isTachyonDealer">{{l('ItemPricePostCommission')}}</th>
                 </tr>
               </thead>
               <tbody>
@@ -96,12 +96,12 @@
                       class="form-control"
                     />
                   </td>
-                  <td>{{offer.itemSubTotalAmountWithCommission}}</td>
+                  <td *ngIf="isTachyonDealer">{{offer.itemSubTotalAmountWithCommission}}</td>
                 </tr>
                 <tr>
                   <td></td>
                   <td class="table-success">{{offer.itemsTotalPricePreCommissionPreVat}}</td>
-                  <td></td>
+                  <td *ngIf="isTachyonDealer"></td>
                 </tr>
               </tbody>
             </table>
@@ -114,7 +114,7 @@
                   <th style="width: 200px">{{l('VasName')}}</th>
                   <th style="width: 150px">{{l('Qty')}}</th>
                   <th style="width: 350px">{{l('Price')}}</th>
-                  <th>{{l('Total Price of All VAS Pre-Commission Pre-VAT')}}</th>
+                  <th>{{l('TotalPriceOfAllVASPre-CommissionPre-VAT')}}</th>
                 </tr>
               </thead>
               <tbody>
@@ -148,20 +148,20 @@
               <thead>
                 <tr class="table-active">
                   <th style="width: 200px"></th>
-                  <th style="width: 150px">Price Pre commission</th>
-                  <th style="width: 350px">Total commission</th>
-                  <th>Total Price post commission</th>
+                  <th style="width: 150px">{{l('PricePreCommission')}}</th>
+                  <th style="width: 350px">{{l('TotalCommission')}}</th>
+                  <th>{{l('TotalPricePostCommission')}}</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>Trip</td>
+                  <td>{{l('Trip')}}</td>
                   <td>{{offer.itemsTotalPricePreCommissionPreVat}}</td>
                   <td>{{offer.itemsTotalCommission}}</td>
                   <td>{{offer.itemsTotalPricePostCommissionPreVat}}</td>
                 </tr>
                 <tr *ngIf="Items.length">
-                  <td>VAS</td>
+                  <td>{{l('Vas')}}</td>
                   <td>{{offer.detailsTotalPricePreCommissionPreVat}}</td>
                   <td>{{offer.detailsTotalCommission}}</td>
                   <td>{{offer.detailsTotalPricePostCommissionPreVat}}</td>
@@ -180,18 +180,18 @@
               <thead>
                 <tr class="table-active">
                   <th style="width: 350px"></th>
-                  <th style="width: 350px">Pre commission</th>
-                  <th *ngIf="isTachyonDealerOrHost">Post commission</th>
+                  <th style="width: 350px">{{l('PreCommission')}}</th>
+                  <th *ngIf="isTachyonDealerOrHost">{{l('PostCommission')}}</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>total VAT for Trip</td>
+                  <td>{{l('TotalVATForTrip')}}</td>
                   <td>{{offer.itemsTotalVatAmountPreCommission}}</td>
                   <td *ngIf="isTachyonDealerOrHost">{{offer.itemsTotalVatPostCommission}}</td>
                 </tr>
                 <tr>
-                  <td>total VAT for VAS</td>
+                  <td>{{l('TotalVATForVas')}}</td>
                   <td>{{offer.detailsTotalVatAmountPreCommission}}</td>
                   <td *ngIf="isTachyonDealerOrHost">{{offer.detailsTotalVatPostCommission}}</td>
                 </tr>
@@ -209,8 +209,8 @@
               <thead>
                 <tr class="table-active">
                   <th style="width: 350px"></th>
-                  <th style="width: 350px">Total Price Post Vat pre commission</th>
-                  <th *ngIf="isTachyonDealerOrHost">Total Price Post Vat with commission</th>
+                  <th style="width: 350px">{{l('TotalPricePostVatPreCommission')}}</th>
+                  <th *ngIf="isTachyonDealerOrHost">{{l('TotalPricePostVatWithCommission')}}</th>
                 </tr>
               </thead>
               <tbody>

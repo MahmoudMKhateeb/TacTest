@@ -8,10 +8,10 @@
       <!--        </button>-->
       <!--      </div>-->
       <div role="actions">
-        <a class="btn btn-outline-success" (click)="appEntityLog.show()"> <i class="flaticon-notes"></i> {{ 'Activity Log' }} </a>
+        <a class="btn btn-outline-success" (click)="appEntityLog.show()"> <i class="flaticon-notes"></i> {{ l('ActivityLog') }} </a>
         <ng-container *ngIf="feature.isEnabled('App.TachyonDealer') && !shippingRequestforView.shippingRequest.isBid">
-          <a class="btn btn-outline-success" (click)="scrollToDirectRequests()">Send Direct Request</a>
-          <a class="btn btn-outline-success" (click)="tachyonDealToBiddingModal.show(activeShippingRequestId)">Start Bidding</a>
+          <a class="btn btn-outline-success" (click)="scrollToDirectRequests()">{{ l('SendDirectRequests') }}</a>
+          <a class="btn btn-outline-success" (click)="tachyonDealToBiddingModal.show(activeShippingRequestId)">{{ l('StartBidding') }}</a>
         </ng-container>
       </div>
     </sub-header>

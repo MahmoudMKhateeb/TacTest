@@ -382,8 +382,8 @@ namespace TACHYON.Tracking
             routeStart.StartTime = Clock.Now;
             routeStart.IsActive = true;
             routeStart.IsResolve = true;
-            trip.Status = ShippingRequestTripStatus.Intransit;
-            trip.StartWorking = Clock.Now;
+            trip.Status = ShippingRequestTripStatus.InTransit;
+            trip.StartTripDate = Clock.Now;
 
             await StartTransition(routeStart, new Point(Input.lat, Input.lng));
             // if (!currentUser.IsDriver) await _firebaseNotifier.TripChanged(new Abp.UserIdentifier(trip.ShippingRequestFk.CarrierTenantId.Value, trip.AssignedDriverUserId.Value), trip.Id.ToString());
@@ -438,7 +438,7 @@ namespace TACHYON.Tracking
                     .Where(
                     x =>
                     x.AssignedDriverUserId == userId &&
-                    x.Status == ShippingRequestTripStatus.Intransit)
+                    x.Status == ShippingRequestTripStatus.InTransit)
                     .FirstOrDefaultAsync();
             return ObjectMapper.Map<ShippingRequestTripDto>(currentTrip);
         }
@@ -641,7 +641,7 @@ namespace TACHYON.Tracking
                             .WhereIf(currentUser.IsDriver, x => x.AssignedDriverUserId == currentUser.Id)
                             .FirstOrDefaultAsync(t => t.DriverStatus == ShippingRequestTripDriverStatus.None && (t.Status == ShippingRequestTripStatus.New ||
                             // new driver "changed" can accept trip
-                            t.Status == ShippingRequestTripStatus.Intransit));
+                            t.Status == ShippingRequestTripStatus.InTransit));
             if (trip == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
             return trip;
         }
@@ -740,7 +740,7 @@ namespace TACHYON.Tracking
                 .ThenInclude(s => s.ShippingRequestFk).Include(x => x.FacilityFk)
                 .Where(x => x.Id == pointId
                          && x.Status == RoutePointStatus.StandBy && !x.IsActive && !x.IsResolve && !x.IsComplete
-                         && x.ShippingRequestTripFk.Status == ShippingRequestTripStatus.Intransit
+                         && x.ShippingRequestTripFk.Status == ShippingRequestTripStatus.InTransit
                          && x.PickingType == Routs.RoutPoints.PickingType.Dropoff)
                 .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => x.ShippingRequestTripFk.ShippingRequestFk.IsTachyonDeal)
                 .WhereIf(currentUser.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == currentUser.TenantId.Value)
@@ -755,7 +755,7 @@ namespace TACHYON.Tracking
             var currentUser = await GetCurrentUserAsync();
             return await _routPointRepository
                 .GetAll().Where(x => x.ShippingRequestTripId == tripId &&
-                x.ShippingRequestTripFk.Status == ShippingRequestTripStatus.Intransit && x.CanGoToNextLocation)
+                x.ShippingRequestTripFk.Status == ShippingRequestTripStatus.InTransit && x.CanGoToNextLocation)
                 .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => x.ShippingRequestTripFk.ShippingRequestFk.IsTachyonDeal)
                 .WhereIf(currentUser.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == currentUser.TenantId.Value)
                 .WhereIf(currentUser.IsDriver, x => x.ShippingRequestTripFk.AssignedDriverUserId == currentUser.Id)
@@ -796,7 +796,7 @@ namespace TACHYON.Tracking
                     await _invoiceManager.GenertateInvoiceWhenShipmintDelivery(trip);
                     await NotificationWhenShipmentDelivered(point, currentUser);
                 }
-                else if (allPointsResolved && trip.Status == ShippingRequestTripStatus.Intransit)
+                else if (allPointsResolved && trip.Status == ShippingRequestTripStatus.InTransit)
                 {
                     trip.Status = ShippingRequestTripStatus.DeliveredAndNeedsConfirmation;
                 }

@@ -126,8 +126,8 @@ namespace TACHYON.Tracking
                     Status = a.Status,
                     ReceiverFullName = a.ReceiverFk != null ? a.ReceiverFk.FullName : a.ReceiverFullName,
                     Address = a.FacilityFk.Address,
-                    lat = a.FacilityFk.Location.X,
-                    lng = a.FacilityFk.Location.Y,
+                    lat = a.FacilityFk.Location.Y,
+                    lng = a.FacilityFk.Location.X,
                     StartTime = a.StartTime,
                     EndTime = a.EndTime,
                     IsActive = a.IsActive,
@@ -233,7 +233,7 @@ namespace TACHYON.Tracking
         }
         private bool WorkingInAnotherTrip(ShippingRequestTrip trip)
         {
-            return _ShippingRequestTripRepository.GetAll().Any(x => x.AssignedDriverUserId == trip.AssignedDriverUserId && x.DriverStatus == ShippingRequestTripDriverStatus.Accepted && x.Status == ShippingRequestTripStatus.Intransit);
+            return _ShippingRequestTripRepository.GetAll().Any(x => x.AssignedDriverUserId == trip.AssignedDriverUserId && x.DriverStatus == ShippingRequestTripDriverStatus.Accepted && x.Status == ShippingRequestTripStatus.InTransit);
         }
         #endregion
     }
