@@ -609,6 +609,9 @@ namespace TACHYON.PriceOffers
 
             if (offer.ParentId != null) offer.Status = PriceOfferStatus.AcceptedAndWaitingForShipper;
             await _appNotifier.ShippingRequestSendOfferWhenAddPrice(offer, GetCurrentTenant(_abpSession).Name);
+
+            await _appNotifier.NotifyShipperWhenSendPriceOffer(shippingRequest.TenantId, offer.Id);
+
             return offer.Id;
 
         }
@@ -642,6 +645,7 @@ namespace TACHYON.PriceOffers
 
             }
             await _priceOfferRepository.UpdateAsync(offer);
+
             return offer.Id;
         }
         /// <summary>
@@ -1005,6 +1009,7 @@ namespace TACHYON.PriceOffers
             item.CommissionAmount = item.ItemCommissionAmount * item.Quantity;
         }
         #endregion
+
         #endregion
 
         protected virtual Tenant GetCurrentTenant(IAbpSession abpSession)

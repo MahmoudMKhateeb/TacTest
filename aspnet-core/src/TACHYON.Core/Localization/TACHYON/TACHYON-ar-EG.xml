@@ -1852,6 +1852,7 @@
 		<text name="Type">ادخل النص...</text>
 		<text name="TypeAMessageHere">اكتب رسالتك هنا...</text>
 		<text name="TypeTitle">النوع</text>
+		<text name="thereisanewpriceoffer">هناك عرض سعر جديد</text>
 		<text name="UiCustomization_AllowAsideHiding">السماح بغلق الجانب</text>
 		<text name="UiCustomization_AllowAsideMinimizing">السماح بتقليل الجانب</text>
 		<text name="UiCustomization_Boxed">مربع</text>

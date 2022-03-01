@@ -95,7 +95,9 @@ namespace TACHYON.Notifications
         public const string PendingOffer = "App.PendingOffer";
         #endregion
         #endregion
-
+        #region PriceOffer
+        public const string SendPriceOfferToShipper = "App.SendPriceOfferToShipper";
+        #endregion
         #region Mobile
 
         public const string DriverTripReminder = "App.DriverTripReminder";
