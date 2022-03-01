@@ -2525,7 +2525,9 @@
 	<text name="NoMatchingDrivers">There is no Drivers</text>
 	<text name="CompanyDescriptionHint">Company description must be at most 500 characters</text>
 	<text name="SelectAnEmailTemplateType">Select an email template type</text>
+		<text name="AllowedWeightShouldBeMaximum">Allowed Weight Should Be Maximum</text>
+		<text name="RemainingAllowedWeight">Remaining Allowed Weight</text>
 
-	
+
 	</texts>
 </localizationDictionary>

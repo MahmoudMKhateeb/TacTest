@@ -2270,8 +2270,11 @@
 		<text name="NoMatchingDrivers">لا يوجد سائقين</text>
 		<text name="CompanyDescriptionHint">يجب ألا يزيد وصف الشركة عن 500 حرف</text>
 		<text name="SelectAnEmailTemplateType">أختر نوع قالب البريد الإلكتروني</text>
+		<text name="AllowedWeightShouldBeMaximum">يجب أن يكون الوزن المسموح به الحد الأقصى</text>
+		<text name="RemainingAllowedWeight">الوزن المتبقي المسموح به</text>
 
-		
+
+
 
 	</texts>
 </localizationDictionary>

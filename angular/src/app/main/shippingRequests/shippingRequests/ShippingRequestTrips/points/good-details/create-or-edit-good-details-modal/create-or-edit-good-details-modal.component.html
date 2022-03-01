@@ -63,7 +63,16 @@
                       [class.is-valid]="(GoodsWeight.pristine || GoodsWeight.touched) && GoodsWeight.valid"
                       required
                     />
-                    <a class="text-muted mt-1"> {{ l('RemainingAllowedWeight') + ': ' + AllowedWeight / (amount || 1) }}</a>
+                    <a class="text-muted mt-1" *ngIf="weight > 0 && amount > 0 && !(AllowedWeight - (weight || 0) * (amount || 1) < 0)">
+                      {{
+                        l('RemainingAllowedWeight') +
+                          ': ' +
+                          (AllowedWeight - (weight || 0) * (amount || 1) < 0 ? 0 : AllowedWeight - (weight || 0) * (amount || 1))
+                      }}
+                    </a>
+                    <span *ngIf="AllowedWeight - (weight || 0) * (amount || 1) < 0"
+                      >{{ l('AllowedWeightShouldBeMaximum') }} : {{ AllowedWeight }}</span
+                    >
                   </div>
                 </div>
 
