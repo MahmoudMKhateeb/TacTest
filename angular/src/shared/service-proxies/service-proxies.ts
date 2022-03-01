@@ -76181,6 +76181,7 @@ export interface IFindOrganizationUnitRolesInput {
 export class PackingTypeDto implements IPackingTypeDto {
   displayName!: string | undefined;
   description!: string | undefined;
+  isOther!: boolean;
   id!: number;
 
   constructor(data?: IPackingTypeDto) {
@@ -76195,6 +76196,7 @@ export class PackingTypeDto implements IPackingTypeDto {
     if (_data) {
       this.displayName = _data['displayName'];
       this.description = _data['description'];
+      this.isOther = _data['isOther'];
       this.id = _data['id'];
     }
   }
@@ -76210,6 +76212,7 @@ export class PackingTypeDto implements IPackingTypeDto {
     data = typeof data === 'object' ? data : {};
     data['displayName'] = this.displayName;
     data['description'] = this.description;
+    data['isOther'] = this.isOther;
     data['id'] = this.id;
     return data;
   }
@@ -76218,6 +76221,7 @@ export class PackingTypeDto implements IPackingTypeDto {
 export interface IPackingTypeDto {
   displayName: string | undefined;
   description: string | undefined;
+  isOther: boolean;
   id: number;
 }
 
@@ -86469,6 +86473,7 @@ export class CreateOrEditShippingRequestDto implements ICreateOrEditShippingRequ
   otherGoodsCategoryName!: string | undefined;
   otherTransportTypeName!: string | undefined;
   otherTrucksTypeName!: string | undefined;
+  otherPackingTypeName!: string | undefined;
   shippingRequestVasList!: CreateOrEditShippingRequestVasListDto[] | undefined;
   id!: number | undefined;
 
@@ -86510,6 +86515,7 @@ export class CreateOrEditShippingRequestDto implements ICreateOrEditShippingRequ
       this.otherGoodsCategoryName = _data['otherGoodsCategoryName'];
       this.otherTransportTypeName = _data['otherTransportTypeName'];
       this.otherTrucksTypeName = _data['otherTrucksTypeName'];
+      this.otherPackingTypeName = _data['otherPackingTypeName'];
       if (Array.isArray(_data['shippingRequestVasList'])) {
         this.shippingRequestVasList = [] as any;
         for (let item of _data['shippingRequestVasList']) this.shippingRequestVasList!.push(CreateOrEditShippingRequestVasListDto.fromJS(item));
@@ -86555,6 +86561,7 @@ export class CreateOrEditShippingRequestDto implements ICreateOrEditShippingRequ
     data['otherGoodsCategoryName'] = this.otherGoodsCategoryName;
     data['otherTransportTypeName'] = this.otherTransportTypeName;
     data['otherTrucksTypeName'] = this.otherTrucksTypeName;
+    data['otherPackingTypeName'] = this.otherPackingTypeName;
     if (Array.isArray(this.shippingRequestVasList)) {
       data['shippingRequestVasList'] = [];
       for (let item of this.shippingRequestVasList) data['shippingRequestVasList'].push(item.toJSON());
@@ -86593,6 +86600,7 @@ export interface ICreateOrEditShippingRequestDto {
   otherGoodsCategoryName: string | undefined;
   otherTransportTypeName: string | undefined;
   otherTrucksTypeName: string | undefined;
+  otherPackingTypeName: string | undefined;
   shippingRequestVasList: CreateOrEditShippingRequestVasListDto[] | undefined;
   id: number | undefined;
 }
@@ -86799,6 +86807,7 @@ export class EditShippingRequestStep3Dto implements IEditShippingRequestStep3Dto
   otherGoodsCategoryName!: string | undefined;
   otherTransportTypeName!: string | undefined;
   otherTrucksTypeName!: string | undefined;
+  otherPackingTypeName!: string | undefined;
   id!: number;
 
   constructor(data?: IEditShippingRequestStep3Dto) {
@@ -86823,6 +86832,7 @@ export class EditShippingRequestStep3Dto implements IEditShippingRequestStep3Dto
       this.otherGoodsCategoryName = _data['otherGoodsCategoryName'];
       this.otherTransportTypeName = _data['otherTransportTypeName'];
       this.otherTrucksTypeName = _data['otherTrucksTypeName'];
+      this.otherPackingTypeName = _data['otherPackingTypeName'];
       this.id = _data['id'];
     }
   }
@@ -86848,6 +86858,7 @@ export class EditShippingRequestStep3Dto implements IEditShippingRequestStep3Dto
     data['otherGoodsCategoryName'] = this.otherGoodsCategoryName;
     data['otherTransportTypeName'] = this.otherTransportTypeName;
     data['otherTrucksTypeName'] = this.otherTrucksTypeName;
+    data['otherPackingTypeName'] = this.otherPackingTypeName;
     data['id'] = this.id;
     return data;
   }
@@ -86866,6 +86877,7 @@ export interface IEditShippingRequestStep3Dto {
   otherGoodsCategoryName: string | undefined;
   otherTransportTypeName: string | undefined;
   otherTrucksTypeName: string | undefined;
+  otherPackingTypeName: string | undefined;
   id: number;
 }
 
@@ -95108,6 +95120,8 @@ export class CreateOrEditTruckDto implements ICreateOrEditTruckDto {
   length!: number | undefined;
   plateTypeId!: number;
   tenantId!: number | undefined;
+  otherTrucksTypeName!: string | undefined;
+  otherTransportTypeName!: string | undefined;
   id!: number | undefined;
 
   constructor(data?: ICreateOrEditTruckDto) {
@@ -95140,6 +95154,8 @@ export class CreateOrEditTruckDto implements ICreateOrEditTruckDto {
       this.length = _data['length'];
       this.plateTypeId = _data['plateTypeId'];
       this.tenantId = _data['tenantId'];
+      this.otherTrucksTypeName = _data['otherTrucksTypeName'];
+      this.otherTransportTypeName = _data['otherTransportTypeName'];
       this.id = _data['id'];
     }
   }
@@ -95171,6 +95187,8 @@ export class CreateOrEditTruckDto implements ICreateOrEditTruckDto {
     data['length'] = this.length;
     data['plateTypeId'] = this.plateTypeId;
     data['tenantId'] = this.tenantId;
+    data['otherTrucksTypeName'] = this.otherTrucksTypeName;
+    data['otherTransportTypeName'] = this.otherTransportTypeName;
     data['id'] = this.id;
     return data;
   }
@@ -95192,6 +95210,8 @@ export interface ICreateOrEditTruckDto {
   length: number | undefined;
   plateTypeId: number;
   tenantId: number | undefined;
+  otherTrucksTypeName: string | undefined;
+  otherTransportTypeName: string | undefined;
   id: number | undefined;
 }
 
@@ -96219,6 +96239,7 @@ export interface ITrucksTypesTranslationTrucksTypeLookupTableDto {
 
 export class UnitOfMeasureDto implements IUnitOfMeasureDto {
   displayName!: string | undefined;
+  isOther!: boolean;
   id!: number;
 
   constructor(data?: IUnitOfMeasureDto) {
@@ -96232,6 +96253,7 @@ export class UnitOfMeasureDto implements IUnitOfMeasureDto {
   init(_data?: any) {
     if (_data) {
       this.displayName = _data['displayName'];
+      this.isOther = _data['isOther'];
       this.id = _data['id'];
     }
   }
@@ -96246,6 +96268,7 @@ export class UnitOfMeasureDto implements IUnitOfMeasureDto {
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
     data['displayName'] = this.displayName;
+    data['isOther'] = this.isOther;
     data['id'] = this.id;
     return data;
   }
@@ -96253,6 +96276,7 @@ export class UnitOfMeasureDto implements IUnitOfMeasureDto {
 
 export interface IUnitOfMeasureDto {
   displayName: string | undefined;
+  isOther: boolean;
   id: number;
 }
 

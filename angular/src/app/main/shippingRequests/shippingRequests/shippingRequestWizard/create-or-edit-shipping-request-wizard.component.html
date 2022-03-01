@@ -562,7 +562,7 @@
                       </div>
 
                       <div class="col-lg-12 mt-4" [hidden]="!IfOther(allGoodCategorys, step3Dto.goodCategoryId)">
-                        <label>{{ l('Other') }} <span class="required-fileds">*</span></label>
+                        <label>{{ l('OtherGoodCategory') }} <span class="required-fileds">*</span></label>
                         <div>
                           <div class="input-group">
                             <input
@@ -574,10 +574,11 @@
                               [(ngModel)]="step3Dto.otherGoodsCategoryName"
                               [class.is-valid]="
                                 step3Form.get('otherGoodsCategoryName').valid &&
+                                cannotContainSpace(step3Dto.otherGoodsCategoryName) &&
                                 (step3Form.get('otherGoodsCategoryName').dirty || step3Form.get('otherGoodsCategoryName').touched)
                               "
                               [class.is-invalid]="
-                                step3Form.get('otherGoodsCategoryName').invalid &&
+                                (step3Form.get('otherGoodsCategoryName').invalid || !cannotContainSpace(step3Dto.otherGoodsCategoryName)) &&
                                 IfOther(allGoodCategorys, step3Dto.goodCategoryId) &&
                                 (step3Form.get('otherGoodsCategoryName').dirty || step3Form.get('otherGoodsCategoryName').touched)
                               "
@@ -640,6 +641,32 @@
                           <span class="form-text text-muted">{{ l('EnterNumberOfPacking') }}</span>
                         </div>
                       </div>
+                      <div class="col-lg-12 mt-4" [hidden]="!IfOther(allpackingTypes, step3Dto.packingTypeId)">
+                        <label>{{ l('OtherPackingType') }} <span class="required-fileds">*</span></label>
+                        <div>
+                          <div class="input-group">
+                            <input
+                              type="text"
+                              name="otherPackingTypeName"
+                              formControlName="otherPackingTypeName"
+                              class="form-control"
+                              [(ngModel)]="step3Dto.otherPackingTypeName"
+                              [class.is-valid]="
+                                step3Form.get('otherPackingTypeName').valid &&
+                                cannotContainSpace(step3Dto.otherPackingTypeName) &&
+                                (step3Form.get('otherPackingTypeName').dirty || step3Form.get('otherPackingTypeName').touched)
+                              "
+                              [class.is-invalid]="
+                                (step3Form.get('otherPackingTypeName').invalid || !cannotContainSpace(step3Dto.otherPackingTypeName)) &&
+                                IfOther(allpackingTypes, step3Dto.packingTypeId) &&
+                                (step3Form.get('otherPackingTypeName').dirty || step3Form.get('otherPackingTypeName').touched)
+                              "
+                              [required]="step3Form.get('packingType').valid && IfOther(allpackingTypes, step3Dto.packingTypeId)"
+                            />
+                          </div>
+                        </div>
+                        <span class="form-text text-muted">{{ l('otherPackingTypeName') }}</span>
+                      </div>
                       <div class="col-lg-6 mt-4">
                         <label> {{ l('TransportType') }} <span class="required-fileds">*</span></label>
                         <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allTransportTypes }">
@@ -666,7 +693,7 @@
                         <span class="form-text text-muted">{{ l('SelectaTransportType') }}</span>
 
                         <div class="form-group" [hidden]="!IfOther(allTransportTypes, step3Dto.transportTypeId)">
-                          <label>{{ l('Other') }} <span class="required-fileds">*</span></label>
+                          <label>{{ l('OtherTransportType') }} <span class="required-fileds">*</span></label>
                           <div>
                             <div class="input-group">
                               <input
@@ -677,10 +704,11 @@
                                 [(ngModel)]="step3Dto.otherTransportTypeName"
                                 [class.is-valid]="
                                   step3Form.get('otherTransportTypeName').valid &&
+                                  cannotContainSpace(step3Dto.otherTransportTypeName) &&
                                   (step3Form.get('otherTransportTypeName').dirty || step3Form.get('otherTransportTypeName').touched)
                                 "
                                 [class.is-invalid]="
-                                  step3Form.get('otherTransportTypeName').invalid &&
+                                  (step3Form.get('otherTransportTypeName').invalid || !cannotContainSpace(step3Dto.otherTransportTypeName)) &&
                                   IfOther(allTransportTypes, step3Dto.transportTypeId) &&
                                   (step3Form.get('otherTransportTypeName').dirty || step3Form.get('otherTransportTypeName').touched)
                                 "
@@ -732,7 +760,7 @@
                         <span class="form-text text-muted">{{ l('SelectaTruckType') }}</span>
 
                         <div class="form-group" [hidden]="!IfOther(allTrucksTypes, step3Dto.trucksTypeId)">
-                          <label>{{ l('Other') }} <span class="required-fileds">*</span></label>
+                          <label>{{ l('OtherTruckType') }} <span class="required-fileds">*</span></label>
                           <div>
                             <div class="input-group">
                               <input
@@ -743,10 +771,11 @@
                                 [(ngModel)]="step3Dto.otherTrucksTypeName"
                                 [class.is-valid]="
                                   step3Form.get('otherTrucksTypeName').valid &&
+                                  cannotContainSpace(step3Dto.otherTrucksTypeName) &&
                                   (step3Form.get('otherTrucksTypeName').dirty || step3Form.get('otherTrucksTypeName').touched)
                                 "
                                 [class.is-invalid]="
-                                  step3Form.get('otherTrucksTypeName').invalid &&
+                                  (step3Form.get('otherTrucksTypeName').invalid || !cannotContainSpace(step3Dto.otherTrucksTypeName)) &&
                                   IfOther(allTrucksTypes, step3Dto.trucksTypeId) &&
                                   (step3Form.get('otherTrucksTypeName').dirty || step3Form.get('otherTrucksTypeName').touched)
                                 "
