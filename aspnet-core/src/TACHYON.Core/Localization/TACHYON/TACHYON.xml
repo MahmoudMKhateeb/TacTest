@@ -322,7 +322,6 @@
 		<text name="CommissionAmount">Commission amount</text>
 		<text name="CommissionMinimumValue">Minimum value</text>
 		<text name="CommissionPercentage">Percentage</text>
-		<text name="CommissionType">Commission type</text>
 		<text name="CommissionValue">Add value</text>
 		<text name="Company">Company</text>
 		<text name="CompanyFullLeagalName">Company legal name</text>
@@ -2022,7 +2021,6 @@
 		<text name="Total">Total</text>
 		<text name="TotalAmount">Total amount</text>
 		<text name="TotalBidsCount">Total bids</text>
-		<text name="TotalCommission">Total commission</text>
 		<text name="TotalDistance">Total distance </text>
 		<text name="TotalOfDrop">Number of drops: {0}</text>
 		<text name="TotalOffer">Offer</text>
@@ -2629,6 +2627,29 @@
 	<text name="shipper">Shipper</text>
 	<text name="DragAColumnHeaderHereToGroupByThatColumn">Drag a column header here to group by that column</text>
 	<text name="MobileAppManual">Mobile App Manual</text>
+		
+		
+	<text name="CommissionType">Commission type</text>
+	<text name="CommissionTypeValue">Commission type value</text>
+	<text name="VasCommissionType">Vas commission type</text>
+	<text name="VasCommissionPercentageOrAddValue">Vas commission percentage or add value</text>
+	<text name="#Trips">Trips</text>
+	<text name="ItemPrice">Item price</text>
+	<text name="ItemPricePostCommission">Item price post commission</text>
+	<text name="PricePreCommission">Price pre commission</text>
+	<text name="TotalCommission">Total commission</text>
+	<text name="TotalPricePostCommission">Total price post commission</text>
+	<text name="PreCommission">Pre commission</text>
+	<text name="PostCommission">Post commission</text>
+	<text name="TotalVATForTrip">Total VAT for trip</text>
+	<text name="TotalVATForVas">Total VAT for vas</text>
+	<text name="TotalPricePostVatPreCommission">Total price post vat pre commission	</text>
+	<text name="TotalPricePostVatWithCommission">Total Price Post Vat with commission</text>
+	<text name="TotalPriceOfAllVASPre-CommissionPre-VAT">Total Price of All VAS Pre-Commission Pre-VAT</text>
+	<text name="PriceOffer">Price Offer</text>
+	<text name="StartBidding">Start Bidding</text>
+	<text name="UplodeDeliveryNote">Upload Delivery Note</text>
+
 
 	</texts>
 </localizationDictionary>
