@@ -46,6 +46,8 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
 
         public bool AddTripsByTmsEnabled { get; set; }
 
+        public bool CanAddTrip { get; set; }
+
         /// <summary>
         /// This reference shipper add it manually
         /// </summary>

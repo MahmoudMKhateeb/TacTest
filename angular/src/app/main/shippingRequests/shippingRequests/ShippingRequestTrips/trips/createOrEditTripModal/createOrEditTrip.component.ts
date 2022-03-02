@@ -254,6 +254,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
           this.close();
           this.modalSave.emit(null);
           this.notify.info(this.l('SuccessfullySaved'));
+          abp.event.trigger('ShippingRequestTripCreatedEvent');
         });
     }
   }

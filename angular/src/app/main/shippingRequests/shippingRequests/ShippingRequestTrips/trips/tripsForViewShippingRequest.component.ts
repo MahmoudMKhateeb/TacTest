@@ -5,6 +5,7 @@ import { Paginator } from '@node_modules/primeng/paginator';
 import { LazyLoadEvent } from 'primeng/api';
 
 import {
+  EntityDtoOfInt64,
   GetShippingRequestVasForViewDto,
   ShippingRequestDto,
   ShippingRequestsServiceProxy,
@@ -108,6 +109,11 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
     });
 
     this.primengTableHelper.adjustScroll(this.dataTable);
+    abp.event.on('ShippingRequestTripCreatedEvent', (args) => {
+      this._shippingRequestsServiceProxy.canAddTripForShippingRequest(this.ShippingRequest.id).subscribe((result) => {
+        this.ShippingRequest.canAddTrip = result;
+      });
+    });
   }
 
   /**
