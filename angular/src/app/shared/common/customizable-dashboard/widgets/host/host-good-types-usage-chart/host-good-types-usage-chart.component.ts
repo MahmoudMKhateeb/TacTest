@@ -10,8 +10,8 @@ import { finalize } from 'rxjs/operators';
   styles: [],
 })
 export class HostGoodTypesUsageChartComponent extends AppComponentBase implements OnInit {
-  x: string[];
-  y: number[];
+  types: string[];
+  counts: number[];
   loading: boolean = false;
 
   constructor(private injector: Injector, private _hostDashboardServiceProxy: HostDashboardServiceProxy) {
@@ -24,8 +24,8 @@ export class HostGoodTypesUsageChartComponent extends AppComponentBase implement
   }
 
   getData() {
-    this.x = [];
-    this.y = [];
+    this.types = [];
+    this.counts = [];
     this.loading = true;
     this._hostDashboardServiceProxy
       .getGoodTypeCountPerMonth()
@@ -36,15 +36,15 @@ export class HostGoodTypesUsageChartComponent extends AppComponentBase implement
       )
       .subscribe((result) => {
         result.forEach((element) => {
-          this.x.push(element.goodType);
-          this.y.push(element.availableGoodTypesCount);
+          this.types.push(element.goodType);
+          this.counts.push(element.availableGoodTypesCount);
         });
 
         this.chartOptions = {
           series: [
             {
               name: 'Category',
-              data: this.y,
+              data: this.counts,
               color: '#b10303',
             },
           ],
@@ -67,7 +67,7 @@ export class HostGoodTypesUsageChartComponent extends AppComponentBase implement
             colors: ['transparent'],
           },
           xaxis: {
-            categories: this.x,
+            categories: this.types,
           },
 
           fill: {

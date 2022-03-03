@@ -8,7 +8,10 @@
         </div>
       </div>
       <div class="card-body p-1">
-        <div id="invoicesVsPaidInvoices">
+        <div class="pd-5" *ngIf="types.length == 0">
+          {{ l('NoData') }}
+        </div>
+        <div *ngIf="types.length > 0" id="invoicesVsPaidInvoices">
           <apx-chart
             *ngIf="chartOptions && chartOptions.series"
             [series]="chartOptions.series"

@@ -10,8 +10,8 @@ import { finalize } from 'rxjs/operators';
   styles: [],
 })
 export class HostNewAccountsChartComponent extends AppComponentBase implements OnInit {
-  x: string[];
-  y: number[];
+  months: string[];
+  counts: number[];
   loading: boolean = false;
   fromDate: moment.Moment = null;
   toDate: moment.Moment = null;
@@ -26,8 +26,8 @@ export class HostNewAccountsChartComponent extends AppComponentBase implements O
   }
 
   getAccounts() {
-    this.x = [];
-    this.y = [];
+    this.counts = [];
+    this.months = [];
     this.loading = true;
 
     this._hostDashboardServiceProxy
@@ -40,14 +40,14 @@ export class HostNewAccountsChartComponent extends AppComponentBase implements O
       .subscribe((result) => {
         result.forEach((element) => {
           element.year;
-          this.x.push(element.month + '-' + element.year);
-          this.y.push(element.count);
+          this.months.push(element.month + '-' + element.year);
+          this.counts.push(element.count);
         });
         this.chartOptions = {
           series: [
             {
               name: 'Accounts',
-              data: this.y,
+              data: this.counts,
               color: '#b10303',
             },
           ],
@@ -70,7 +70,7 @@ export class HostNewAccountsChartComponent extends AppComponentBase implements O
             colors: ['transparent'],
           },
           xaxis: {
-            categories: this.x,
+            categories: this.months,
           },
           fill: {
             opacity: 1,

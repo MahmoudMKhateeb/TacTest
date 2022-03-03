@@ -67,7 +67,8 @@ namespace TACHYON.DashboardCustomization.Definitions
             var shipperAcceptedVsRejectedRequestsWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Shipper.ShipperAcceptedVsRejectedRequestsWidget, "ShipperAcceptedVsRejectedRequestsWidget", side: MultiTenancySides.Tenant, permissions: shipperWidgetsDefaultPermission);
             var shipperCompletedTripsVsPodWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Shipper.ShipperCompletedTripsVsPodWidget, "ShipperCompletedTripsVsPodWidget", side: MultiTenancySides.Tenant, permissions: shipperWidgetsDefaultPermission);
             var shipperInvoicesVsPaidInvoicesWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Shipper.ShipperInvoicesVsPaidInvoicesWidget, "ShipperInvoicesVsPaidInvoicesWidget", side: MultiTenancySides.Tenant, permissions: shipperWidgetsDefaultPermission);
-            var shipperNextInvoiceFrequancyEndDateWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Shipper.ShipperNextInvoiceFrequancyEndDateWidget, "ShipperNextInvoiceFrequancyEndDateWidget", side: MultiTenancySides.Tenant, permissions: shipperWidgetsDefaultPermission);
+            //TODO as soon as
+            //var shipperNextInvoiceFrequancyEndDateWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Shipper.ShipperNextInvoiceFrequancyEndDateWidget, "ShipperNextInvoiceFrequancyEndDateWidget", side: MultiTenancySides.Tenant, permissions: shipperWidgetsDefaultPermission);
             var shipperInvoiceDueDateInDaysWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Shipper.ShipperInvoiceDueDateInDaysWidget, "ShipperInvoiceDueDateInDaysWidget", side: MultiTenancySides.Tenant, permissions: shipperWidgetsDefaultPermission);
             var shipperDocumentDueDateInDaysWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Shipper.ShipperDocumentDueDateInDaysWidget, "ShipperDocumentDueDateInDaysWidget", side: MultiTenancySides.Tenant, permissions: shipperWidgetsDefaultPermission);
             var shipperMostWorkedWithCarriersWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Shipper.ShipperMostWorkedWithCarriersWidget, "ShipperMostWorkedWithCarriersWidget", side: MultiTenancySides.Tenant, permissions: shipperWidgetsDefaultPermission);
@@ -81,7 +82,7 @@ namespace TACHYON.DashboardCustomization.Definitions
             WidgetDefinitions.Add(shipperAcceptedVsRejectedRequestsWidget);
             WidgetDefinitions.Add(shipperCompletedTripsVsPodWidget);
             WidgetDefinitions.Add(shipperInvoicesVsPaidInvoicesWidget);
-            WidgetDefinitions.Add(shipperNextInvoiceFrequancyEndDateWidget);
+            //WidgetDefinitions.Add(shipperNextInvoiceFrequancyEndDateWidget);
             WidgetDefinitions.Add(shipperInvoiceDueDateInDaysWidget);
             WidgetDefinitions.Add(shipperDocumentDueDateInDaysWidget);
             WidgetDefinitions.Add(shipperMostWorkedWithCarriersWidget);
@@ -217,7 +218,7 @@ namespace TACHYON.DashboardCustomization.Definitions
                     shipperAcceptedVsRejectedRequestsWidget.Id,
                     shipperCompletedTripsVsPodWidget.Id,
                     shipperInvoicesVsPaidInvoicesWidget.Id,
-                    shipperNextInvoiceFrequancyEndDateWidget.Id,
+                    //shipperNextInvoiceFrequancyEndDateWidget.Id,
                     shipperInvoiceDueDateInDaysWidget.Id,
                     shipperDocumentDueDateInDaysWidget.Id,
                     shipperMostWorkedWithCarriersWidget.Id,

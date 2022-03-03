@@ -1,24 +1,29 @@
 <div class="row">
   <div class="col-lg-12">
     <!--begin::Card-->
-    <div class="card card-custom card-stretch">
+    <div class="card card-custom card-stretch" [busyIf]="loading">
       <div class="card-header border-0">
         <div class="card-title text-center">
           <h3 class="card-label">{{ l('CompletedTrips') }}</h3>
         </div>
       </div>
-      <div class="card-body p-0" [busyIf]="!loading">
-        <!--The content below is only a placeholder and can be replaced.-->
-        <div id="CompletedTripsChart">
-          <apx-chart
-            [series]="chartOptions.series"
-            [chart]="chartOptions.chart"
-            [xaxis]="chartOptions.xaxis"
-            [dataLabels]="chartOptions.dataLabels"
-            [grid]="chartOptions.grid"
-            [stroke]="chartOptions.stroke"
-            [title]="chartOptions.title"
-          ></apx-chart>
+      <div class="card-body p-0">
+        <div class="pd-5" *ngIf="trips.length == 0">
+          {{ l('NoData') }}
+        </div>
+        <div *ngIf="trips.length > 0">
+          <div id="CompletedTripsChart">
+            <apx-chart
+              *ngIf="chartOptions && chartOptions.series"
+              [series]="chartOptions.series"
+              [chart]="chartOptions.chart"
+              [xaxis]="chartOptions.xaxis"
+              [dataLabels]="chartOptions.dataLabels"
+              [grid]="chartOptions.grid"
+              [stroke]="chartOptions.stroke"
+              [title]="chartOptions.title"
+            ></apx-chart>
+          </div>
         </div>
       </div>
     </div>

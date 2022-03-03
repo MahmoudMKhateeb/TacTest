@@ -35463,10 +35463,17 @@ export class ShipperDashboardServiceProxy {
   }
 
   /**
+   * @param fromDate (optional)
+   * @param toDate (optional)
    * @return Success
    */
-  getCompletedTripsCountPerMonth(): Observable<ListPerMonthDto[]> {
-    let url_ = this.baseUrl + '/api/services/app/ShipperDashboard/GetCompletedTripsCountPerMonth';
+  getCompletedTripsCountPerMonth(
+    fromDate: moment.Moment | null | undefined,
+    toDate: moment.Moment | null | undefined
+  ): Observable<ListPerMonthDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/ShipperDashboard/GetCompletedTripsCountPerMonth?';
+    if (fromDate !== undefined && fromDate !== null) url_ += 'FromDate=' + encodeURIComponent(fromDate ? '' + fromDate.toJSON() : '') + '&';
+    if (toDate !== undefined && toDate !== null) url_ += 'ToDate=' + encodeURIComponent(toDate ? '' + toDate.toJSON() : '') + '&';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -35532,10 +35539,17 @@ export class ShipperDashboardServiceProxy {
   }
 
   /**
+   * @param fromDate (optional)
+   * @param toDate (optional)
    * @return Success
    */
-  getAcceptedAndRejectedRequests(): Observable<AcceptedAndRejectedRequestsListDto> {
-    let url_ = this.baseUrl + '/api/services/app/ShipperDashboard/GetAcceptedAndRejectedRequests';
+  getAcceptedAndRejectedRequests(
+    fromDate: moment.Moment | null | undefined,
+    toDate: moment.Moment | null | undefined
+  ): Observable<AcceptedAndRejectedRequestsListDto> {
+    let url_ = this.baseUrl + '/api/services/app/ShipperDashboard/GetAcceptedAndRejectedRequests?';
+    if (fromDate !== undefined && fromDate !== null) url_ += 'FromDate=' + encodeURIComponent(fromDate ? '' + fromDate.toJSON() : '') + '&';
+    if (toDate !== undefined && toDate !== null) url_ += 'ToDate=' + encodeURIComponent(toDate ? '' + toDate.toJSON() : '') + '&';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -35665,10 +35679,14 @@ export class ShipperDashboardServiceProxy {
   }
 
   /**
+   * @param fromDate (optional)
+   * @param toDate (optional)
    * @return Success
    */
-  getCompletedTripVsPod(): Observable<CompletedTripVsPodListDto> {
-    let url_ = this.baseUrl + '/api/services/app/ShipperDashboard/GetCompletedTripVsPod';
+  getCompletedTripVsPod(fromDate: moment.Moment | null | undefined, toDate: moment.Moment | null | undefined): Observable<CompletedTripVsPodListDto> {
+    let url_ = this.baseUrl + '/api/services/app/ShipperDashboard/GetCompletedTripVsPod?';
+    if (fromDate !== undefined && fromDate !== null) url_ += 'FromDate=' + encodeURIComponent(fromDate ? '' + fromDate.toJSON() : '') + '&';
+    if (toDate !== undefined && toDate !== null) url_ += 'ToDate=' + encodeURIComponent(toDate ? '' + toDate.toJSON() : '') + '&';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -35729,10 +35747,17 @@ export class ShipperDashboardServiceProxy {
   }
 
   /**
+   * @param fromDate (optional)
+   * @param toDate (optional)
    * @return Success
    */
-  getInvoicesVSPaidInvoices(): Observable<InvoicesVsPaidInvoicesDto> {
-    let url_ = this.baseUrl + '/api/services/app/ShipperDashboard/GetInvoicesVSPaidInvoices';
+  getInvoicesVSPaidInvoices(
+    fromDate: moment.Moment | null | undefined,
+    toDate: moment.Moment | null | undefined
+  ): Observable<InvoicesVsPaidInvoicesDto> {
+    let url_ = this.baseUrl + '/api/services/app/ShipperDashboard/GetInvoicesVSPaidInvoices?';
+    if (fromDate !== undefined && fromDate !== null) url_ += 'FromDate=' + encodeURIComponent(fromDate ? '' + fromDate.toJSON() : '') + '&';
+    if (toDate !== undefined && toDate !== null) url_ += 'ToDate=' + encodeURIComponent(toDate ? '' + toDate.toJSON() : '') + '&';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -35793,10 +35818,17 @@ export class ShipperDashboardServiceProxy {
   }
 
   /**
+   * @param fromDate (optional)
+   * @param toDate (optional)
    * @return Success
    */
-  getRequestsInMarketpalce(): Observable<RequestsInMarketpalceDto[]> {
-    let url_ = this.baseUrl + '/api/services/app/ShipperDashboard/GetRequestsInMarketpalce';
+  getRequestsInMarketpalce(
+    fromDate: moment.Moment | null | undefined,
+    toDate: moment.Moment | null | undefined
+  ): Observable<RequestsInMarketpalceDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/ShipperDashboard/GetRequestsInMarketpalce?';
+    if (fromDate !== undefined && fromDate !== null) url_ += 'FromDate=' + encodeURIComponent(fromDate ? '' + fromDate.toJSON() : '') + '&';
+    if (toDate !== undefined && toDate !== null) url_ += 'ToDate=' + encodeURIComponent(toDate ? '' + toDate.toJSON() : '') + '&';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {

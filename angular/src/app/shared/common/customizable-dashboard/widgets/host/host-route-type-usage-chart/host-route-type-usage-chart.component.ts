@@ -10,8 +10,8 @@ import { ChartOptionsBars } from '../../ApexInterfaces';
   styles: [],
 })
 export class HostRouteTypeUsageChartComponent extends AppComponentBase implements OnInit {
-  x: string[];
-  y: number[];
+  routes: string[];
+  counts: number[];
   loading: boolean = false;
 
   constructor(private injector: Injector, private _hostDashboardServiceProxy: HostDashboardServiceProxy) {
@@ -24,8 +24,8 @@ export class HostRouteTypeUsageChartComponent extends AppComponentBase implement
   }
 
   getData() {
-    this.x = [];
-    this.y = [];
+    this.routes = [];
+    this.counts = [];
     this.loading = true;
     this._hostDashboardServiceProxy
       .getRouteTypeCountPerMonth()
@@ -36,14 +36,14 @@ export class HostRouteTypeUsageChartComponent extends AppComponentBase implement
       )
       .subscribe((result) => {
         result.forEach((element) => {
-          this.x.push(element.routeType);
-          this.y.push(element.availableRouteTypesCount);
+          this.routes.push(element.routeType);
+          this.counts.push(element.availableRouteTypesCount);
         });
         this.chartOptions = {
           series: [
             {
               name: 'Shipping Requests',
-              data: this.y,
+              data: this.counts,
               color: '#b10303',
             },
           ],
@@ -66,7 +66,7 @@ export class HostRouteTypeUsageChartComponent extends AppComponentBase implement
             colors: ['transparent'],
           },
           xaxis: {
-            categories: this.x,
+            categories: this.routes,
           },
 
           fill: {

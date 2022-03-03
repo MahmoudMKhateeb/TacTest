@@ -1,6 +1,7 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ShipperDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-tracking-map',
@@ -27,61 +28,73 @@ export class TrackingMapComponent extends AppComponentBase implements OnInit {
   }
 
   ngOnInit(): void {
-    this._shipperDashboardServiceProxy.getTrackingMap().subscribe((result) => {
-      this.items = [];
-      this.colors2 = this.colors;
-      result.forEach((r) => {
-        this.waypoints1 = [];
+    this.getdata();
+  }
 
-        this.source1 = {
-          lat: r.originLatitude || undefined,
-          lng: r.originLongitude || undefined,
-        };
+  getdata() {
+    this.loading = false;
+    this._shipperDashboardServiceProxy
+      .getTrackingMap()
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+        })
+      )
+      .subscribe((result) => {
+        this.items = [];
+        this.colors2 = this.colors;
+        result.forEach((r) => {
+          this.waypoints1 = [];
 
-        this.dest1 = {
-          lat: r.destinationLatitude || undefined,
-          lng: r.destinationLongitude || undefined,
-        };
-        var t = r.routPoints;
-        for (let i = 0; i < t.length; i++) {
-          this.waypoints1.push({
-            location: {
-              lat: r.routPoints[i].latitude,
-              lng: r.routPoints[i].longitude,
+          this.source1 = {
+            lat: r.originLatitude || undefined,
+            lng: r.originLongitude || undefined,
+          };
+
+          this.dest1 = {
+            lat: r.destinationLatitude || undefined,
+            lng: r.destinationLongitude || undefined,
+          };
+          var t = r.routPoints;
+          for (let i = 0; i < t.length; i++) {
+            this.waypoints1.push({
+              location: {
+                lat: r.routPoints[i].latitude,
+                lng: r.routPoints[i].longitude,
+              },
+            });
+          }
+
+          var item = this.colors2[Math.floor(Math.random() * this.colors2.length)];
+          var index: number = this.colors2.indexOf(item);
+
+          if (index !== -1) {
+            this.colors2.splice(index, 1);
+          }
+
+          this.renderOptions1 = { polylineOptions: { strokeColor: item || '#344440' } };
+
+          this.markerOptions = {
+            origin: {
+              icon: 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=•|' + item + '|2',
             },
-          });
-        }
+            destination: {
+              icon: 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=•|9604f3|2',
+            },
+            waypoints: { icon: 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=•|f75|2' },
+          };
 
-        var item = this.colors2[Math.floor(Math.random() * this.colors2.length)];
-        var index: number = this.colors2.indexOf(item);
-
-        if (index !== -1) {
-          this.colors2.splice(index, 1);
-        }
-
-        this.renderOptions1 = { polylineOptions: { strokeColor: item || '#344440' } };
-
-        this.markerOptions = {
-          origin: {
-            icon: 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=•|' + item + '|2',
-          },
-          destination: {
-            icon: 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=•|9604f3|2',
-          },
-          waypoints: { icon: 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=•|f75|2' },
-        };
-
-        this.option = {
-          source: this.source1,
-          destination: this.dest1,
-          waybill: this.waypoints1,
-          renderOption: this.renderOptions1,
-          markerOptions: this.markerOptions,
-        };
-        this.trips = result;
-        this.items.push(this.option);
+          this.option = {
+            source: this.source1,
+            destination: this.dest1,
+            waybill: this.waypoints1,
+            renderOption: this.renderOptions1,
+            markerOptions: this.markerOptions,
+          };
+          this.trips = result;
+          this.items.push(this.option);
+        });
+        this.loading = false;
       });
-      this.loading = true;
-    });
   }
 }

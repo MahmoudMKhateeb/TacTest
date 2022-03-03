@@ -12,7 +12,7 @@ import { finalize } from 'rxjs/operators';
 export class HostRquestAcceptanceMeterComponent extends AppComponentBase implements OnInit {
   public chartOptions: Partial<MeterCharts>;
   loading: boolean = false;
-
+  items: any;
   constructor(private injector: Injector, private _hostDashboardServiceProxy: HostDashboardServiceProxy) {
     super(injector);
   }
@@ -32,6 +32,7 @@ export class HostRquestAcceptanceMeterComponent extends AppComponentBase impleme
         })
       )
       .subscribe((result) => {
+        this.items = result;
         this.chartOptions = {
           series: [result],
 

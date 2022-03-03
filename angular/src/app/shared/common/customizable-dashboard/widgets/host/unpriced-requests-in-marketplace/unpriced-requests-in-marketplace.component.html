@@ -11,31 +11,31 @@
         <div class="col-sm-10">
           <div class="input-group">
             <input
-              id="startDate"
+              id="fromDate"
               type="text"
               #SampleDatePicker
               name="SampleDatePicker"
               class="form-control"
               bsDatepicker
               datePickerMomentModifier
-              [(date)]="startDate"
-              placeholder="{{ l('startDate') }}"
+              [(date)]="fromDate"
+              placeholder="{{ l('FromDate') }}"
             />
             &nbsp; &nbsp;
             <input
-              id="endDate"
+              id="toDate"
               type="text"
               #SampleDatePicker1
               name="SampleDatePicker1"
               class="form-control"
               bsDatepicker
               datePickerMomentModifier
-              [(date)]="endDate"
-              placeholder="{{ l('endDate') }}"
+              [(date)]="toDate"
+              placeholder="{{ l('toDate') }}"
             />
             <span class="input-group-btn">
               <button
-                [disabled]="saving || !startDate || !endDate"
+                [disabled]="saving || !fromDate || !toDate"
                 [buttonBusy]="saving"
                 [busyText]="l('LoadWithThreeDot')"
                 (click)="getUnpricedRequests()"

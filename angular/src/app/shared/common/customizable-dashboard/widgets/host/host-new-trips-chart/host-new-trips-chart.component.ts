@@ -10,8 +10,8 @@ import { finalize } from 'rxjs/operators';
   styles: [],
 })
 export class HostNewTripsChartComponent extends AppComponentBase implements OnInit {
-  x: string[];
-  y: number[];
+  months: string[];
+  trips: number[];
   loading: boolean = false;
   fromDate: moment.Moment = null;
   toDate: moment.Moment = null;
@@ -26,8 +26,8 @@ export class HostNewTripsChartComponent extends AppComponentBase implements OnIn
   }
 
   getTrips() {
-    this.x = [];
-    this.y = [];
+    this.months = [];
+    this.trips = [];
     this.loading = true;
 
     this._hostDashboardServiceProxy
@@ -39,14 +39,14 @@ export class HostNewTripsChartComponent extends AppComponentBase implements OnIn
       )
       .subscribe((result) => {
         result.forEach((element) => {
-          this.x.push(element.month + '-' + element.year);
-          this.y.push(element.count);
+          this.months.push(element.month + '-' + element.year);
+          this.trips.push(element.count);
         });
         this.chartOptions = {
           series: [
             {
               name: 'Trips',
-              data: this.y,
+              data: this.trips,
               color: '#b10303',
             },
           ],
@@ -69,7 +69,7 @@ export class HostNewTripsChartComponent extends AppComponentBase implements OnIn
             colors: ['transparent'],
           },
           xaxis: {
-            categories: this.x,
+            categories: this.months,
           },
 
           fill: {

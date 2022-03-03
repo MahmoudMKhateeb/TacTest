@@ -33,6 +33,9 @@
               </tr>
             </ng-template>
           </p-table>
+          <div class="pd-5" *ngIf="!Carriers || Carriers.length == 0">
+            {{ l('NoData') }}
+          </div>
         </div>
         <!--end::Body-->
       </div>

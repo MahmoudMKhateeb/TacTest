@@ -5,50 +5,14 @@
       <div class="card-header border-0">
         <div class="card-title text-center">
           <h3 class="card-label">{{ l('NewTrips') }}</h3>
-          <br />
-          <div class="col-sm-8">
-            <div class="input-group">
-              <input
-                id="fromDate"
-                type="text"
-                #SampleDatePicker
-                name="SampleDatePicker"
-                class="form-control"
-                bsDatepicker
-                datePickerMomentModifier
-                [(date)]="fromDate"
-                placeholder="{{ l('FromDate') }}"
-              />
-              &nbsp; &nbsp;
-              <input
-                id="toDate"
-                type="text"
-                #SampleDatePicker1
-                name="SampleDatePicker1"
-                class="form-control"
-                bsDatepicker
-                datePickerMomentModifier
-                [(date)]="toDate"
-                placeholder="{{ l('ToDate') }}"
-              />
-              <span class="input-group-btn">
-                <button
-                  [disabled]="saving || !fromDate || !toDate"
-                  [buttonBusy]="saving"
-                  [busyText]="l('LoadWithThreeDot')"
-                  (click)="getTrips()"
-                  class="btn btn-primary"
-                  type="submit"
-                >
-                  <i class="icon-refresh"></i> {{ l('search') }}
-                </button>
-              </span>
-            </div>
-          </div>
         </div>
       </div>
+
       <div class="card-body p-1">
-        <div id="invoicesVsPaidInvoices">
+        <div class="pd-5" *ngIf="trips.length == 0">
+          {{ l('NoData') }}
+        </div>
+        <div *ngIf="trips.length > 0" id="invoicesVsPaidInvoices">
           <apx-chart
             *ngIf="chartOptions && chartOptions.series"
             [series]="chartOptions.series"

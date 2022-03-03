@@ -13,6 +13,8 @@ export class AcceptedVsRejectedPricingComponent extends AppComponentBase impleme
   months: string[] = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   acceptedReqs: number[];
   rejectedReqs: number[];
+  fromDate: moment.Moment = null;
+  toDate: moment.Moment = null;
   loading: boolean = false;
   constructor(injector: Injector, private _shipperDashboardServiceProxy: ShipperDashboardServiceProxy) {
     super(injector);
@@ -21,7 +23,7 @@ export class AcceptedVsRejectedPricingComponent extends AppComponentBase impleme
   ngOnInit() {
     this.acceptedReqs = [];
     this.rejectedReqs = [];
-    this._shipperDashboardServiceProxy.getAcceptedAndRejectedRequests().subscribe((result) => {
+    this._shipperDashboardServiceProxy.getAcceptedAndRejectedRequests(this.fromDate, this.toDate).subscribe((result) => {
       this.months.forEach((d) => {
         let i = this.months.indexOf(d) + 1;
         let year = new Date().getFullYear();

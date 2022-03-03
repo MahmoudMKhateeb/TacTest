@@ -56,28 +56,30 @@ namespace TACHYON.Dashboards.Shipper
         }
 
 
-        public async Task<List<ListPerMonthDto>> GetCompletedTripsCountPerMonth()
+        public async Task<List<ListPerMonthDto>> GetCompletedTripsCountPerMonth(GetDataByDateFilterInput input)
         {
             DisableTenancyFilters();
             var groupedTrips = await _shippingRequestTripRepository.GetAll().AsNoTracking()
                 .Where(x => x.Status == ShippingRequestTripStatus.Delivered)
                 .WhereIf(IsEnabled(AppFeatures.Carrier), x => x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
                 .WhereIf(IsEnabled(AppFeatures.Shipper), x => x.ShippingRequestFk.TenantId == AbpSession.TenantId)
+                .WhereIf(input.FromDate == null || input.ToDate == null, r => r.CreationTime.Year == DateTime.Now.Year)
+                .WhereIf(input.FromDate != null && input.ToDate != null, r => r.CreationTime >= input.FromDate && r.CreationTime <= input.ToDate)
                 .GroupBy(r => new { r.CreationTime.Year, r.CreationTime.Month })
-                .Select(g => new ListPerMonthDto() { Year = DateTime.Now.Year, Month = g.Key.Month.ToString(), Count = g.Count() })
+                .Select(g => new ListPerMonthDto() { Year = g.Key.Year, Month = g.Key.Month.ToString(), Count = g.Count() })
                 .OrderBy(x => x.Year).ThenBy(x => x.Month)
              .ToListAsync();
 
             groupedTrips.ForEach(r =>
             {
-                r.Month = new DateTime(DateTime.Now.Year, Convert.ToInt32(r.Month), 1).ToString("MMM");
+                r.Month = new DateTime(r.Year, Convert.ToInt32(r.Month), 1).ToString("MMM");
             });
 
             return groupedTrips;
         }
 
 
-        public async Task<AcceptedAndRejectedRequestsListDto> GetAcceptedAndRejectedRequests()
+        public async Task<AcceptedAndRejectedRequestsListDto> GetAcceptedAndRejectedRequests(GetDataByDateFilterInput input)
         {
             DisableTenancyFilters();
 
@@ -87,8 +89,10 @@ namespace TACHYON.Dashboards.Shipper
                 .Where(x => x.Status == ShippingRequestStatus.PostPrice)
                 .WhereIf(IsEnabled(AppFeatures.Carrier), x => x.CarrierTenantId == AbpSession.TenantId)
                 .WhereIf(IsEnabled(AppFeatures.Shipper), x => x.TenantId == AbpSession.TenantId)
+                .WhereIf(input.FromDate == null || input.ToDate == null, r => r.CreationTime.Year == DateTime.Now.Year)
+                .WhereIf(input.FromDate != null && input.ToDate != null, r => r.CreationTime >= input.FromDate && r.CreationTime <= input.ToDate)
                 .GroupBy(r => new { r.CreationTime.Year, r.CreationTime.Month })
-                .Select(g => new RequestsListPerMonthDto() { Year = DateTime.Now.Year, Month = g.Key.Month, Count = g.Count() })
+                .Select(g => new RequestsListPerMonthDto() { Year = g.Key.Year, Month = g.Key.Month, Count = g.Count() })
                 .OrderBy(x => x.Year).ThenBy(x => x.Month)
              .ToListAsync();
 
@@ -96,8 +100,10 @@ namespace TACHYON.Dashboards.Shipper
                 .Where(x => x.Status == ShippingRequestStatus.Cancled || x.Status == ShippingRequestStatus.Expired)
                 .WhereIf(IsEnabled(AppFeatures.Carrier), x => x.CarrierTenantId == AbpSession.TenantId)
                 .WhereIf(IsEnabled(AppFeatures.Shipper), x => x.TenantId == AbpSession.TenantId)
+                .WhereIf(input.FromDate == null || input.ToDate == null, r => r.CreationTime.Year == DateTime.Now.Year)
+                .WhereIf(input.FromDate != null && input.ToDate != null, r => r.CreationTime >= input.FromDate && r.CreationTime <= input.ToDate)
                 .GroupBy(r => new { r.CreationTime.Year, r.CreationTime.Month })
-                .Select(g => new RequestsListPerMonthDto() { Year = DateTime.Now.Year, Month = g.Key.Month, Count = g.Count() })
+                .Select(g => new RequestsListPerMonthDto() { Year = g.Key.Year, Month = g.Key.Month, Count = g.Count() })
                 .OrderBy(x => x.Year).ThenBy(x => x.Month)
              .ToListAsync();
 
@@ -127,7 +133,7 @@ namespace TACHYON.Dashboards.Shipper
 
         }
 
-        public async Task<CompletedTripVsPodListDto> GetCompletedTripVsPod()
+        public async Task<CompletedTripVsPodListDto> GetCompletedTripVsPod(GetDataByDateFilterInput input)
         {
             DisableTenancyFilters();
 
@@ -136,8 +142,10 @@ namespace TACHYON.Dashboards.Shipper
             var completedTrips = await _shippingRequestTripRepository.GetAll().AsNoTracking()
                 .Where(x => x.Status == ShippingRequestTripStatus.Delivered)
                 .WhereIf(IsEnabled(AppFeatures.Shipper), x => x.ShippingRequestFk.TenantId == AbpSession.TenantId)
+                .WhereIf(input.FromDate == null || input.ToDate == null, r => r.CreationTime.Year == DateTime.Now.Year)
+                .WhereIf(input.FromDate != null && input.ToDate != null, r => r.CreationTime >= input.FromDate && r.CreationTime <= input.ToDate)
                 .GroupBy(r => new { r.CreationTime.Year, r.CreationTime.Month })
-                .Select(g => new RequestsListPerMonthDto() { Year = DateTime.Now.Year, Month = g.Key.Month, Count = g.Count() })
+                .Select(g => new RequestsListPerMonthDto() { Year = g.Key.Year, Month = g.Key.Month, Count = g.Count() })
                 .OrderBy(x => x.Year).ThenBy(x => x.Month)
              .ToListAsync();
 
@@ -148,8 +156,10 @@ namespace TACHYON.Dashboards.Shipper
                 .ThenInclude(r => r.Tenant)
                 .Where(r => r.RoutPointFk.Status == RoutePointStatus.DeliveryConfirmation && r.RoutePointDocumentType == RoutePointDocumentType.POD)
                 .Where(x => x.RoutPointFk.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId)
+                .WhereIf(input.FromDate == null || input.ToDate == null, r => r.CreationTime.Year == DateTime.Now.Year)
+                .WhereIf(input.FromDate != null && input.ToDate != null, r => r.CreationTime >= input.FromDate && r.CreationTime <= input.ToDate)
                 .GroupBy(r => new { r.CreationTime.Year, r.CreationTime.Month })
-                .Select(g => new RequestsListPerMonthDto() { Year = DateTime.Now.Year, Month = g.Key.Month, Count = g.Count() })
+                .Select(g => new RequestsListPerMonthDto() { Year = g.Key.Year, Month = g.Key.Month, Count = g.Count() })
                 .OrderBy(x => x.Year).ThenBy(x => x.Month)
              .ToListAsync();
 
@@ -158,7 +168,7 @@ namespace TACHYON.Dashboards.Shipper
             return list;
         }
 
-        public async Task<InvoicesVsPaidInvoicesDto> GetInvoicesVSPaidInvoices()
+        public async Task<InvoicesVsPaidInvoicesDto> GetInvoicesVSPaidInvoices(GetDataByDateFilterInput input)
         {
             DisableTenancyFilters();
 
@@ -167,6 +177,8 @@ namespace TACHYON.Dashboards.Shipper
             var invoices = await _invoiceTripsRepository.GetAll().AsNoTracking()
                 .Include(x => x.InvoiceFK)
                 .Where(x => x.InvoiceFK.TenantId == AbpSession.TenantId)
+                .WhereIf(input.FromDate == null || input.ToDate == null, r => r.InvoiceFK.CreationTime.Year == DateTime.Now.Year)
+                .WhereIf(input.FromDate != null && input.ToDate != null, r => r.InvoiceFK.CreationTime >= input.FromDate && r.InvoiceFK.CreationTime <= input.ToDate)
                 .GroupBy(r => new { r.InvoiceFK.CreationTime.Year, r.InvoiceFK.CreationTime.Month })
                 .Select(g => new RequestsListPerMonthDto() { Year = DateTime.Now.Year, Month = g.Key.Month, Count = g.Count() })
                 .OrderBy(x => x.Year).ThenBy(x => x.Month)
@@ -176,6 +188,8 @@ namespace TACHYON.Dashboards.Shipper
                 .Include(x => x.InvoiceFK)
                 .Where(x => x.InvoiceFK.TenantId == AbpSession.TenantId)
                 .Where(x => x.InvoiceFK.IsPaid == true)
+                .WhereIf(input.FromDate == null || input.ToDate == null, r => r.InvoiceFK.CreationTime.Year == DateTime.Now.Year)
+                .WhereIf(input.FromDate != null && input.ToDate != null, r => r.InvoiceFK.CreationTime >= input.FromDate && r.InvoiceFK.CreationTime <= input.ToDate)
                 .GroupBy(r => new { r.InvoiceFK.CreationTime.Year, r.InvoiceFK.CreationTime.Month })
                 .Select(g => new RequestsListPerMonthDto() { Year = DateTime.Now.Year, Month = g.Key.Month, Count = g.Count() })
                 .OrderBy(x => x.Year).ThenBy(x => x.Month)
@@ -186,7 +200,7 @@ namespace TACHYON.Dashboards.Shipper
             return list;
         }
 
-        public async Task<List<RequestsInMarketpalceDto>> GetRequestsInMarketpalce()
+        public async Task<List<RequestsInMarketpalceDto>> GetRequestsInMarketpalce(GetDataByDateFilterInput input)
         {
             DisableTenancyFilters();
 
@@ -196,6 +210,8 @@ namespace TACHYON.Dashboards.Shipper
                                                                       && r.CarrierTenantId == null
                                                                       && r.BidEndDate != null
                                                                       && r.BidEndDate.Value.Date <= Clock.Now.Date)
+                                                              .WhereIf(input.FromDate == null || input.ToDate == null, r => r.CreationTime.Year == DateTime.Now.Year)
+                                                              .WhereIf(input.FromDate != null && input.ToDate != null, r => r.CreationTime >= input.FromDate && r.CreationTime <= input.ToDate)
                                                               .Select(request => new RequestsInMarketpalceDto()
                                                               {
                                                                   RequestReference = request.ReferenceNumber,

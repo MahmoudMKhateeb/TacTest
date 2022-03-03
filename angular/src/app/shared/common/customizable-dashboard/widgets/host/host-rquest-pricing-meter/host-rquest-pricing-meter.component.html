@@ -8,7 +8,10 @@
         </div>
       </div>
       <div class="card-body p-1">
-        <div id="chart">
+        <div class="pd-5" *ngIf="!items">
+          {{ l('NoData') }}
+        </div>
+        <div *ngIf="items" id="chart">
           <apx-chart
             *ngIf="chartOptions && chartOptions.series"
             [series]="chartOptions.series"

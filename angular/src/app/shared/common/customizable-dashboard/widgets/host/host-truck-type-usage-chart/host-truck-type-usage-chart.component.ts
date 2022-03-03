@@ -10,8 +10,8 @@ import { finalize } from 'rxjs/operators';
   styles: [],
 })
 export class HostTruckTypeUsageChartComponent extends AppComponentBase implements OnInit {
-  x: string[];
-  y: number[];
+  types: string[];
+  counts: number[];
   loading: boolean = false;
 
   constructor(private injector: Injector, private _hostDashboardServiceProxy: HostDashboardServiceProxy) {
@@ -24,8 +24,8 @@ export class HostTruckTypeUsageChartComponent extends AppComponentBase implement
   }
 
   getData() {
-    this.x = [];
-    this.y = [];
+    this.types = [];
+    this.counts = [];
     this.loading = true;
 
     this._hostDashboardServiceProxy
@@ -37,15 +37,15 @@ export class HostTruckTypeUsageChartComponent extends AppComponentBase implement
       )
       .subscribe((result) => {
         result.forEach((element) => {
-          this.x.push(element.truckType);
-          this.y.push(element.availableTrucksCount);
+          this.types.push(element.truckType);
+          this.counts.push(element.availableTrucksCount);
         });
 
         this.chartOptions = {
           series: [
             {
               name: 'Requests',
-              data: this.y,
+              data: this.counts,
               color: '#b10303',
             },
           ],
@@ -68,7 +68,7 @@ export class HostTruckTypeUsageChartComponent extends AppComponentBase implement
             colors: ['transparent'],
           },
           xaxis: {
-            categories: this.x,
+            categories: this.types,
           },
 
           fill: {

@@ -201,7 +201,7 @@ export class DashboardViewConfigurationService {
     let activeTrucks = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.Carrier.CarrierTrucksActivityWidget,
       TucksActivityComponent,
-      8,
+      4,
       4
     );
 
@@ -215,14 +215,14 @@ export class DashboardViewConfigurationService {
     let nonActivTrucks = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.Carrier.CarrierTrucksActivityWidget,
       TucksActivityComponent,
-      8,
+      4,
       4
     );
 
     let nonActiveDrivers = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.Carrier.CarrierDriversActivityWidget,
       DriversActivityComponent,
-      8,
+      4,
       4
     );
 
@@ -237,14 +237,14 @@ export class DashboardViewConfigurationService {
     let NumberOfRegisteredTrucks = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.host.NumberOfRegisteredTrucksWidget,
       NumberOfRegesterdTrucksComponent,
-      8,
+      4,
       4
     );
 
     let NumberOfRegisteredShippers = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.host.NumberOfRegisteredShippersWidget,
       NumberOfRegesterdShippersComponent,
-      8,
+      4,
       4
     );
 
@@ -253,42 +253,42 @@ export class DashboardViewConfigurationService {
     let TopThreeShippersHaveRequests = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.host.MostRequestingShippersWidget,
       TopThreeShippersHaveRequestsComponent,
-      12,
+      8,
       10
     );
 
     let TopThreeCarriersHaveRequests = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.host.MostRequestedCarriersWidget,
       TopThreeCarriersHaveRequestsComponent,
-      12,
+      8,
       10
     );
 
     let topRatedShippersWidget = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.host.TopRatedShippersWidget,
       TopRatedShippersComponent,
-      12,
+      8,
       15
     );
 
     let topRatedCarriersWidget = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.host.TopRatedCarriersWidget,
       TopRatedCarriersComponent,
-      12,
+      8,
       15
     );
 
     let worstRatedShippersWidget = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.host.WorstRatedShippersWidget,
       WorstRatedShippersComponent,
-      12,
+      8,
       15
     );
 
     let worstRatedCarriersWidget = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.host.WorstRatedCarriersWidget,
       WorstRatedCarriersComponent,
-      12,
+      8,
       15
     );
 
@@ -302,21 +302,21 @@ export class DashboardViewConfigurationService {
     let numberOfDeliveredTrips = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.host.NumberOfDeliveredTripsWidget,
       DeleverdTripsComponent,
-      8,
+      4,
       4
     );
 
     let numberOfRegisteredCarriers = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.host.NumberOfRegisteredCarriersWidget,
       NumberOfRegesterdCarriersComponent,
-      8,
+      4,
       4
     );
 
     let hostNewAccounts = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.host.NewAccountsRegisteredWidget,
       HostNewAccountsChartComponent,
-      18,
+      10,
       15
     );
     let hostNewTrips = new WidgetViewDefinition(DashboardCustomizationConst.widgets.host.NewTripsWidget, HostNewTripsChartComponent, 18, 15);
@@ -324,21 +324,21 @@ export class DashboardViewConfigurationService {
     let hostTruckTypesChart = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.host.TruckTypeUsageWidget,
       HostTruckTypeUsageChartComponent,
-      18,
+      10,
       15
     );
 
     let goodTypesUsage = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.host.GoodTypesUsageWidget,
       HostGoodTypesUsageChartComponent,
-      18,
+      10,
       15
     );
 
     let routeTypeUsage = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.host.RouteTypesUsageWidget,
       HostRouteTypeUsageChartComponent,
-      18,
+      10,
       15
     );
 
@@ -365,7 +365,7 @@ export class DashboardViewConfigurationService {
     let hostRequestsPerAreaOrCity = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.host.NumberOfRequestsPerAreaOrCityWidget,
       NumberOfRequestsForEachCityComponent,
-      30,
+      18,
       15
     );
 

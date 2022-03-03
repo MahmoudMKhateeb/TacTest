@@ -7,9 +7,10 @@
           <h3 class="card-label">{{ l('InvoicesVsPaidInvoices') }}</h3>
         </div>
       </div>
-      <div class="card-body p-0" [busyIf]="!loading">
+      <div class="card-body p-0" [busyIf]="loading">
         <div id="chart">
           <apx-chart
+            *ngIf="chartOptions && chartOptions.series"
             [series]="chartOptions.series"
             [chart]="chartOptions.chart"
             [xaxis]="chartOptions.xaxis"

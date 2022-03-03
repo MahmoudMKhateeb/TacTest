@@ -1,15 +1,16 @@
 <div class="row">
   <div class="col-lg-12">
     <!--begin::Card-->
-    <div class="card card-custom card-stretch">
+    <div class="card card-custom card-stretch" [busyIf]="loading">
       <div class="card-header border-0">
         <div class="card-title text-center">
           <h3 class="card-label">{{ l('CompletedTripsvsPod') }}</h3>
         </div>
       </div>
-      <div class="card-body p-1" *ngIf="loading">
+      <div class="card-body p-1">
         <div id="acceptedVsRejectedChart">
           <apx-chart
+            *ngIf="chartOptions && chartOptions.series"
             [series]="chartOptions.series"
             [chart]="chartOptions.chart"
             [xaxis]="chartOptions.xaxis"
