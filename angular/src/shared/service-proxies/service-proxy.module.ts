@@ -98,6 +98,7 @@ import { ZeroTemplateHttpConfigurationService } from './zero-template-http-confi
     ApiServiceProxies.TenantSettingsServiceProxy,
     ApiServiceProxies.TimingServiceProxy,
     ApiServiceProxies.UserServiceProxy,
+    ApiServiceProxies.InvoiceNoteServiceProxy,
     ApiServiceProxies.UserLinkServiceProxy,
     ApiServiceProxies.UserLoginServiceProxy,
     ApiServiceProxies.WebLogServiceProxy,

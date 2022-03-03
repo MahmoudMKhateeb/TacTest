@@ -13,6 +13,8 @@
     <RootNamespace>TACHYON</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Invoices\InvoiceNotes.rdlc" />
+    <None Remove="Invoices\InvoiceNotesa.rdlc" />
     <None Remove="Invoices\Reports\Dedicated_Invoice.rdlc" />
     <None Remove="Invoices\Reports\Invoice.rdlc" />
     <None Remove="Waybills\Reports\Master_Waybill.rdlc" />
@@ -21,6 +23,9 @@
     <None Remove="Shipping\Trips\ShippingRequestsTripManager.cs.orig" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Invoices\Reports\InvoiceNote.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="Invoices\Reports\Invoice.rdlc">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
@@ -52,6 +57,16 @@
     <ProjectReference Include="..\TACHYON.EntityFrameworkCore\TACHYON.EntityFrameworkCore.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="Invoices\Reports\Datasets\GetInvoiceNoteItemReportInfoDataset.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>GetInvoiceNoteItemReportInfoDataset.xsd</DependentUpon>
+    </Compile>
+    <Compile Update="Invoices\Reports\Datasets\GetInvoiceNoteReportInfoDataset.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>GetInvoiceNoteReportInfoDataset.xsd</DependentUpon>
+    </Compile>
     <Compile Update="Invoices\Reports\Datasets\GetInvoiceReportInfoDataset.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -61,6 +76,11 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>GetInvoiceShippingRequestsReportInfoDataset.xsd</DependentUpon>
+    </Compile>
+    <Compile Update="TACHYONDB_NotesDataSet.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TACHYONDB_NotesDataSet.xsd</DependentUpon>
     </Compile>
     <Compile Update="Waybills\Reports\DataSet1.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -104,6 +124,14 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Update="Invoices\Reports\Datasets\GetInvoiceNoteItemReportInfoDataset.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>GetInvoiceNoteItemReportInfoDataset.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Invoices\Reports\Datasets\GetInvoiceNoteReportInfoDataset.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>GetInvoiceNoteReportInfoDataset.Designer.cs</LastGenOutput>
+    </None>
     <None Update="Invoices\Reports\Datasets\GetInvoiceReportInfoDataset.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>GetInvoiceReportInfoDataset.Designer.cs</LastGenOutput>
@@ -111,6 +139,10 @@
     <None Update="Invoices\Reports\Datasets\GetInvoiceShippingRequestsReportInfoDataset.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>GetInvoiceShippingRequestsReportInfoDataset.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="TACHYONDB_NotesDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>TACHYONDB_NotesDataSet.Designer.cs</LastGenOutput>
     </None>
     <None Update="Waybills\Reports\DataSet1.xsd">
       <Generator>MSDataSetGenerator</Generator>

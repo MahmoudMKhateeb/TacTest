@@ -73,6 +73,7 @@ using TACHYON.Invoices.Balances;
 using TACHYON.Invoices.Balances.Dto;
 using TACHYON.Invoices.Dto;
 using TACHYON.Invoices.Groups;
+using TACHYON.Invoices.InoviceNote.Dto;
 using TACHYON.Invoices.Periods;
 using TACHYON.Invoices.Periods.Dto;
 using TACHYON.Invoices.SubmitInvoices;
@@ -754,6 +755,28 @@ namespace TACHYON
                 .ForMember(dto => dto.Period,
                     options => options.MapFrom(entity => entity.InvoicePeriodsFK.DisplayName));
             configuration.CreateMap<RoutPointStatusTransition, RoutPointStatusTransitionDto>();
+
+            configuration.CreateMap<InvoiceNote, GetInvoiceNoteDto>()
+                .ForMember(dto => dto.GenerationDate, options => options.MapFrom(entity => entity.CreationTime))
+                .ForMember(dto => dto.ComanyName, options => options.MapFrom(entity => entity.Tenant.companyName));
+
+            configuration.CreateMap<InvoiceNote, InvoiceNoteInfoDto>()
+                .ForMember(dto=>dto.ClientName ,options=>options.MapFrom(entity=>entity.Tenant.companyName))
+                .ForMember(dto => dto.ClientId, options => options.MapFrom(entity => entity.TenantId))
+                .ForMember(dto => dto.Notes, options => options.MapFrom(entity => entity.Remarks))
+                .ForMember(dto => dto.Address, options => options.MapFrom(entity => entity.Tenant.Address))
+                .ForMember(dto => dto.CreationTime, options => options.MapFrom(entity => entity.CreationTime.ToString("dd/mm/yyyy mm:hh")))
+                .ForMember(dto => dto.ContractNo, options => options.MapFrom(entity => entity.Tenant.ContractNumber));
+
+            configuration.CreateMap<CreateOrEditInvoiceNoteDto, InvoiceNote>().ReverseMap();
+
+            configuration.CreateMap<GetInvoiceNoteForEditOutput, InvoiceNote>().ReverseMap();
+
+            configuration.CreateMap<Invoice,PartialVoidInvoiceDto>()
+                .ForMember(dto => dto.InvoiceItems, options => options.MapFrom(entity => entity.Trips.Select(x=> x.ShippingRequestTripFK)))
+                .ReverseMap();
+
+            configuration.CreateMap<ShippingRequestTrip, GetAllInvoiceItemDto>();
 
             configuration.CreateMap<GroupShippingRequests, SubmitInvoiceShippingRequestDto>()
                 .ForMember(dto => dto.Price, options => options.MapFrom(entity => entity.ShippingRequests.Price))

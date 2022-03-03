@@ -281,7 +281,9 @@ import { RatingModule } from '@node_modules/primeng/rating';
 import { StepsModule } from '@node_modules/primeng/steps';
 import { ViewRatingComponent } from '@app/main/shippingRequests/shippingRequests/rating/view-rating/view-rating.component';
 import { ShipmentHistoryComponent } from '@app/main/shippingRequests/shippingRequests/shipment-history/shipment-history.component';
-
+import { InvoiceNoteListComponent } from './Invoices/InvoiceNote/invoice-note-list/invoice-note-list.component';
+import { InoviceNoteModalComponent } from './Invoices/InvoiceNote/invoice-note-list/inovice-note-modal/inovice-note-modal.component';
+import { CreateOrEditNoteModalComponent } from './Invoices/InvoiceNote/invoice-note-list/create-or-edit-note-modal/create-or-edit-note-modal.component';
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
 @NgModule({
@@ -379,6 +381,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ViewVasPriceModalComponent,
     CreateOrEditVasPriceModalComponent,
     ReceiversComponent,
+    InvoiceNoteListComponent,
     ViewReceiverModalComponent,
     CreateOrEditReceiverModalComponent,
     TermAndConditionsComponent,
@@ -505,7 +508,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     AppLocalizationComponent,
     ApplocalizationModalComponent,
     ViewApplocalizationModalComponent,
-
+    CreateOrEditNoteModalComponent,
     CreateOrEditShippingRequestWizardComponent,
     ShippingrequestsDetailsModelComponent,
     ComingSoonComponent,
@@ -527,6 +530,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     TrucksTypeTranslationTemplateComponent,
     ViewGoodDetailsComponent,
     ViewPointModalComponent,
+    InoviceNoteModalComponent,
     DangerousCoodTypesTranslationsComponent,
     NewTrackingConponent,
     ViewDetailsAccidentModalComponent,

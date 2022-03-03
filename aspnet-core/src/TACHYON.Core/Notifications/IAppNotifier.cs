@@ -46,7 +46,7 @@ namespace TACHYON.Notifications
         Task CreateBidRequest(UserIdentifier argsUser, long shippingRequestBidId);
         Task UpdateBidRequest(UserIdentifier argsUser, long shippingRequestBidId);
         Task TenantDocumentFileUpdate(DocumentFile documentFile);
-
+        Task NewCreditOrDebitNoteAdded(InvoiceNote Note);
         Task CancelBidRequest(UserIdentifier argsUser,
             long shippingRequestId,
             long shippingRequestBidId);

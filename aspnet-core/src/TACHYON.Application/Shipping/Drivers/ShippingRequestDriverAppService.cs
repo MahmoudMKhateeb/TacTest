@@ -566,9 +566,12 @@ namespace TACHYON.Shipping.Drivers
                 .Include(x => x.RoutPoints)
                 .ThenInclude(x => x.RatingLogs)
                 .Include(x => x.RatingLogs)
-                .FirstOrDefaultAsync(x => x.Id == TripId);
+                .ToListAsync();
 
-            await ResetTripStatus(trip);
+            foreach (var item in trip)
+            {
+                await ResetTripStatus(item);
+            }
         }
 
         private async Task ResetTripStatus(ShippingRequestTrip trip)
@@ -594,7 +597,7 @@ namespace TACHYON.Shipping.Drivers
                     item.CompletedStatus = RoutePointCompletedStatus.NotCompleted;
                     item.StartTime = item.EndTime = null;
                     item.CanGoToNextLocation = false;
-                    item.IsGoodPictureUploaded = false;
+                    //item.IsGoodPictureUploaded = false;
                     item.RoutPointStatusTransitions.Where(s => !s.IsReset).ForEach(x => x.IsReset = true);
                     item.IsPodUploaded = false;
                     //item.RatingLogs.Where(x => x.RateType != RateType.CarrierTripBySystem && x.RateType != RateType.ShipperTripBySystem).ToList().Clear();

@@ -863,6 +863,7 @@
 		<text name="FilterByRole">Filter by role</text>
 		<text name="FilterDateRangePicker">Date range</text>
 		<text name="FilterOrAddUser">Filter/Add user</text>
+		<text name="FullVoid">Full Void</text>
 		<text name="FinalPrice">Final price</text>
 		<text name="FinancialTransActionMenu">Financial Transactions History</text>
 		<text name="FirstName">First name</text>
@@ -1214,6 +1215,7 @@
 		<text name="NewTermAndCondition">New Terms and Conditions</text>
 		<text name="NewTransportType">New transport type</text>
 		<text name="NewTripAssign">The new trip has assign to you.</text>
+		<text name="NewCreaditOrDebitNoteGenerated">A {0} Was assigned to you by Tachyon platform, click to view the details.</text>
 
 		<text name="TrucktDocuments">Truckt Documents</text>
 
@@ -2425,6 +2427,7 @@
 	 	<text name="TripDataChanged">You Have Trip With Waybill No {0} Changed Please Review All Of Trip Changes</text> 
 		<text name="ShipperTripUpdatedNotificationMessage">There are some changes on trip with waybill No {0} . For more details please click here</text>
 		<text name="NewBalanceAddedToShippper">New Balance Added Value {0}</text>
+
 		<text name="CarrierTripUpdatedNotificationMessage">There are some changes on trip with waybill No {0} . For more details please click here</text>
 		<text name="TachyonDealerTripUpdatedNotificationMessage">There are some changes on trip with waybill No {0} . For more details please click here</text>
 		<text name="NotSet">Not Set</text>

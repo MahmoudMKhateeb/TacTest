@@ -322,6 +322,8 @@ export class AppNavigationService {
         [],
         [
           new AppMenuItem('InvoicesList', 'Pages.Invoices', '', '/app/main/invoices/view'),
+          new AppMenuItem('InvoicesNoteList', 'Pages.Invoices', '', '/app/main/invoicenote/view'),
+
           new AppMenuItem(
             'BillingInterval',
             'Pages.Invoices',

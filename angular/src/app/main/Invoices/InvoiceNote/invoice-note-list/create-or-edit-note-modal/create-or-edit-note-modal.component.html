@@ -1,0 +1,88 @@
+<div
+  bsModal
+  #createOrEditFacilityModal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="createOrEditModal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <form #createOrEditNoteForm="ngForm" novalidate autocomplete="off" (ngSubmit)="save()">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            <span>{{ invoiceNote?.id ? l('EditInvoiceNote') : l('CreateNewInvoiceNote') }}</span>
+          </h4>
+          <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="form-group col-md-6">
+              <label>{{ l('selectaCompany') }} <span class="required-fileds">*</span></label>
+              <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': companyLoading }">
+                <select
+                  #company="ngModel"
+                  class="form-control"
+                  required
+                  [disabled]="companyLoading"
+                  [(ngModel)]="selectedCompanyId"
+                  [class.is-invalid]="company.touched && !company.valid"
+                  [class.is-valid]="company.touched && company.valid"
+                  (change)="companySelectChange(selectedCompanyId)"
+                >
+                  <option value="" selected disabled>{{ l('SelectACompany') }}</option>
+                  <option *ngFor="let item of company" value="{{ item.id }}">{{ item.displayName }}</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group col-md-6">
+              <label>{{ l('SelectaInvoiceRefreanceNumber') }}<span class="required-fileds">*</span></label>
+              <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': invoiceLoading }">
+                <select
+                  #invoice="ngModel"
+                  class="form-control"
+                  name="invoice"
+                  required
+                  [disabled]="companyLoading || !selectedCompanyId"
+                  [(ngModel)]="invoiceNote.invoiceNumber"
+                  [class.is-invalid]="(invoice.touched && !invoice.valid) || !invoiceNote.invoiceNumber"
+                  [class.is-valid]="invoice.touched && invoice.valid && invoiceNote.invoiceNumber"
+                >
+                  <option value="" selected disabled>{{ l('SelectaInvoiceRefreanceNumber') }}</option>
+                  <option *ngFor="let item of allInvoice" value="{{ item.id }}">{{ item.displayName }}</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group col-md-12">
+              <label>{{ l('Remarks') }} <span class="required-fileds">*</span></label>
+              <input
+                #search
+                type="text"
+                class="form-control"
+                [(ngModel)]="invoiceNote.remarks"
+                placeholder="{{ l('searchForNearestLocation') }}"
+                required
+              />
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
+          <button
+            type="submit"
+            class="btn btn-primary blue"
+            [disabled]="!createOrEditNoteForm.form.valid"
+            [buttonBusy]="saving"
+            [busyText]="l('SavingWithThreeDot')"
+          >
+            <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

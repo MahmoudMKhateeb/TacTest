@@ -342,6 +342,20 @@ namespace TACHYON.Notifications
                 severity: NotificationSeverity.Success,
                 userIds: new[] { argsUser });
         }
+        public async Task NewCreditOrDebitNoteAdded(InvoiceNote Note)
+        {
+            var tenantAdmin = await GetTenantAdminUser(Note.TenantId);
+
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                L("ThereIsAnew",
+                    Note.NoteType.ToString()),
+                TACHYONConsts.LocalizationSourceName));
+
+            notificationData["InvoiceNoteId"] = Note.Id;
+
+            await _notificationPublisher.PublishAsync(AppNotificationNames.NewCreaditOrDebitNoteGenerated, notificationData, userIds: new[] { tenantAdmin });
+        }
 
         public async Task ShippingRequestAsBidWithSameTruckAsync(UserIdentifier[] argsUser, long shippingRequestId)
         {
