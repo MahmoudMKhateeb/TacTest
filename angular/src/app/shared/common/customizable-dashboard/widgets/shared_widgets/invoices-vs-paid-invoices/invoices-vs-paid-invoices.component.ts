@@ -33,85 +33,85 @@ export class InvoicesVsPaidInvoicesComponent extends AppComponentBase implements
     this.loading = true;
     this.saving = true;
 
-    this._shipperDashboardServiceProxy
-      .getInvoicesVSPaidInvoices(this.fromDate, this.toDate)
-      .pipe(
-        finalize(() => {
-          this.loading = false;
-          this.saving = false;
-        })
-      )
-      .subscribe((result) => {
-        this.months.forEach((d) => {
-          let i = this.months.indexOf(d) + 1;
-          let year = new Date().getFullYear();
-          const foundInvoicesElement = result.shipperInvoices.some((el) => el.month === i);
-          if (!foundInvoicesElement) {
-            result.shipperInvoices.push(
-              new RequestsListPerMonthDto({
-                count: 0,
-                month: i,
-                year: year,
-              })
-            );
-          }
-          const foundPaidInvoicesElement = result.paidInvoices.some((el) => el.month === i);
-          if (!foundPaidInvoicesElement) {
-            result.paidInvoices.push(
-              new RequestsListPerMonthDto({
-                count: 0,
-                month: i,
-                year: year,
-              })
-            );
-          }
-        });
-        result.shipperInvoices.sort(function (a, b) {
-          return a.month - b.month;
-        });
-        result.shipperInvoices.forEach((element) => {
-          this.invoices.push(element.count);
-        });
-        result.paidInvoices.sort(function (a, b) {
-          return a.month - b.month;
-        });
-        result.paidInvoices.forEach((element) => {
-          this.paidInvoices.push(element.count);
-        });
+    // this._shipperDashboardServiceProxy
+    //   .getInvoicesVSPaidInvoices(this.fromDate, this.toDate)
+    //   .pipe(
+    //     finalize(() => {
+    //       this.loading = false;
+    //       this.saving = false;
+    //     })
+    //   )
+    //   .subscribe((result) => {
+    //     this.months.forEach((d) => {
+    //       let i = this.months.indexOf(d) + 1;
+    //       let year = new Date().getFullYear();
+    //       const foundInvoicesElement = result.shipperInvoices.some((el) => el.month === i);
+    //       if (!foundInvoicesElement) {
+    //         result.shipperInvoices.push(
+    //           new RequestsListPerMonthDto({
+    //             count: 0,
+    //             month: i,
+    //             year: year,
+    //           })
+    //         );
+    //       }
+    //       const foundPaidInvoicesElement = result.paidInvoices.some((el) => el.month === i);
+    //       if (!foundPaidInvoicesElement) {
+    //         result.paidInvoices.push(
+    //           new RequestsListPerMonthDto({
+    //             count: 0,
+    //             month: i,
+    //             year: year,
+    //           })
+    //         );
+    //       }
+    //     });
+    //     result.shipperInvoices.sort(function (a, b) {
+    //       return a.month - b.month;
+    //     });
+    //     result.shipperInvoices.forEach((element) => {
+    //       this.invoices.push(element.count);
+    //     });
+    //     result.paidInvoices.sort(function (a, b) {
+    //       return a.month - b.month;
+    //     });
+    //     result.paidInvoices.forEach((element) => {
+    //       this.paidInvoices.push(element.count);
+    //     });
 
-        this.chartOptions = {
-          series: [
-            {
-              name: 'Invoices',
-              data: this.invoices,
-            },
-            {
-              name: 'Paid Invoices',
-              data: this.paidInvoices,
-            },
-          ],
-          chart: {
-            height: 350,
-            type: 'area',
-          },
-          dataLabels: {
-            enabled: false,
-          },
-          stroke: {
-            curve: 'smooth',
-          },
-          xaxis: {
-            type: 'category',
-            categories: this.months,
-          },
-          tooltip: {
-            x: {
-              format: 'dd/MM/yy',
-            },
-          },
-        };
-        this.loading = false;
-        this.saving = false;
-      });
+    //     this.chartOptions = {
+    //       series: [
+    //         {
+    //           name: 'Invoices',
+    //           data: this.invoices,
+    //         },
+    //         {
+    //           name: 'Paid Invoices',
+    //           data: this.paidInvoices,
+    //         },
+    //       ],
+    //       chart: {
+    //         height: 350,
+    //         type: 'area',
+    //       },
+    //       dataLabels: {
+    //         enabled: false,
+    //       },
+    //       stroke: {
+    //         curve: 'smooth',
+    //       },
+    //       xaxis: {
+    //         type: 'category',
+    //         categories: this.months,
+    //       },
+    //       tooltip: {
+    //         x: {
+    //           format: 'dd/MM/yy',
+    //         },
+    //       },
+    //     };
+    //     this.loading = false;
+    //     this.saving = false;
+    //   });
   }
 }

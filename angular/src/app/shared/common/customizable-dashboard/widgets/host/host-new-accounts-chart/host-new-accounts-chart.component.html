@@ -1,33 +1,62 @@
-<div class="row">
-  <div class="col-lg-12">
-    <!--begin::Card-->
-    <div class="card card-custom card-stretch" [busyIf]="loading">
-      <div class="card-header border-0">
-        <div class="card-title text-center">
-          <h3 class="card-label">{{ l('NewAccounts') }}</h3>
-        </div>
+<div class="card card-custom h-100">
+  <div class="card-header align-items-center border-0">
+    <h3 class="card-title align-items-start flex-column">
+      <span class="font-weight-bolder text-dark">
+        {{ 'NewAccounts' | localize }}
+      </span>
+    </h3>
+    <div class="card-toolbar">
+      <div class="btn-group" data-toggle="buttons">
+        <label
+          class="btn btn-secondary active"
+          [ngClass]="{ active: selectedDatePeriod == appSalesSummaryDateInterval.Daily }"
+          (click)="reload(appSalesSummaryDateInterval.Daily)"
+        >
+          <input type="radio" name="SalesSummaryDateInterval" [value]="appSalesSummaryDateInterval.Daily" />
+          {{ 'Daily' | localize }}
+        </label>
+        <label
+          class="btn btn-secondary"
+          [ngClass]="{ active: selectedDatePeriod == appSalesSummaryDateInterval.Weekly }"
+          (click)="reload(appSalesSummaryDateInterval.Weekly)"
+        >
+          <input type="radio" name="SalesSummaryDateInterval" [value]="appSalesSummaryDateInterval.Weekly" />
+          {{ 'Weekly' | localize }}
+        </label>
+        <label
+          class="btn btn-secondary"
+          [ngClass]="{ active: selectedDatePeriod == appSalesSummaryDateInterval.Monthly }"
+          (click)="reload(appSalesSummaryDateInterval.Monthly)"
+        >
+          <input type="radio" name="SalesSummaryDateInterval" [value]="appSalesSummaryDateInterval.Monthly" />
+          {{ 'Monthly' | localize }}
+        </label>
       </div>
-      <div class="card-body p-1">
-        <div class="pd-5" *ngIf="months.length == 0">
-          {{ l('NoData') }}
-        </div>
-        <div *ngIf="months.length > 0" id="invoicesVsPaidInvoices">
-          <apx-chart
-            *ngIf="chartOptions && chartOptions.series"
-            [series]="chartOptions.series"
-            [chart]="chartOptions.chart"
-            [dataLabels]="chartOptions.dataLabels"
-            [plotOptions]="chartOptions.plotOptions"
-            [yaxis]="chartOptions.yaxis"
-            [legend]="chartOptions.legend"
-            [fill]="chartOptions.fill"
-            [stroke]="chartOptions.stroke"
-            [tooltip]="chartOptions.tooltip"
-            [xaxis]="chartOptions.xaxis"
-          ></apx-chart>
+    </div>
+  </div>
+  <div class="card-body" [busyIf]="loading">
+    <div class="card-body">
+      <div class="row">
+        <div class="col" style="max-height: 200px">
+          <div class="card-body p-1">
+            <div id="invoicesVsPaidInvoices">
+              <apx-chart
+                *ngIf="chartOptions && chartOptions.series"
+                [series]="chartOptions.series"
+                [chart]="chartOptions.chart"
+                [dataLabels]="chartOptions.dataLabels"
+                [plotOptions]="chartOptions.plotOptions"
+                [yaxis]="chartOptions.yaxis"
+                [legend]="chartOptions.legend"
+                [fill]="chartOptions.fill"
+                [stroke]="chartOptions.stroke"
+                [tooltip]="chartOptions.tooltip"
+                [xaxis]="chartOptions.xaxis"
+              ></apx-chart>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    <!--end::Card-->
   </div>
 </div>

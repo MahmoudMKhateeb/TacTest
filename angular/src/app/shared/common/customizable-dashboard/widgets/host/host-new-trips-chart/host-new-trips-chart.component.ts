@@ -1,13 +1,13 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { ChartOptionsBars } from '@app/shared/common/customizable-dashboard/widgets/ApexInterfaces';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { HostDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
+import { HostDashboardServiceProxy, SalesSummaryDatePeriod } from '@shared/service-proxies/service-proxies';
 import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-host-new-trips-chart',
   templateUrl: './host-new-trips-chart.component.html',
-  styles: [],
+  styleUrls: ['./host-new-trips-chart.component.css'],
 })
 export class HostNewTripsChartComponent extends AppComponentBase implements OnInit {
   months: string[];
@@ -16,22 +16,36 @@ export class HostNewTripsChartComponent extends AppComponentBase implements OnIn
   fromDate: moment.Moment = null;
   toDate: moment.Moment = null;
   saving = false;
+  appSalesSummaryDateInterval = SalesSummaryDatePeriod;
+  selectedDatePeriod: SalesSummaryDatePeriod;
 
   constructor(private injector: Injector, private _hostDashboardServiceProxy: HostDashboardServiceProxy) {
     super(injector);
   }
   public chartOptions: Partial<ChartOptionsBars>;
-  ngOnInit() {
-    this.getTrips();
+
+  ngOnInit(): void {
+    this.getTrips(this.appSalesSummaryDateInterval.Daily);
   }
 
-  getTrips() {
+  reload(datePeriod) {
+    if (this.selectedDatePeriod === datePeriod) {
+      this.loading = false;
+      return;
+    }
+
+    this.selectedDatePeriod = datePeriod;
+
+    this.getTrips(this.selectedDatePeriod);
+  }
+
+  getTrips(datePeriod: SalesSummaryDatePeriod) {
     this.months = [];
     this.trips = [];
     this.loading = true;
 
     this._hostDashboardServiceProxy
-      .getNewTripsCountPerMonth(this.fromDate, this.toDate)
+      .getNewTripsStatistics(datePeriod)
       .pipe(
         finalize(() => {
           this.loading = false;
@@ -39,7 +53,14 @@ export class HostNewTripsChartComponent extends AppComponentBase implements OnIn
       )
       .subscribe((result) => {
         result.forEach((element) => {
-          this.months.push(element.month + '-' + element.year);
+          var txt = element.day + '-' + element.month;
+          if (datePeriod == SalesSummaryDatePeriod.Weekly) {
+            txt = 'wk-' + element.week;
+          }
+          if (datePeriod == SalesSummaryDatePeriod.Monthly) {
+            txt = element.month;
+          }
+          this.months.push(txt);
           this.trips.push(element.count);
         });
         this.chartOptions = {

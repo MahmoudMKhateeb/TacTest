@@ -27,18 +27,18 @@ export class RequestsInMarketPlaceComponent extends AppComponentBase implements 
   getRequests() {
     this.loading = true;
     this.saving = true;
-    this._shipperDashboardServiceProxy
-      .getRequestsInMarketpalce(this.fromDate, this.toDate)
-      .pipe(
-        finalize(() => {
-          this.loading = false;
-          this.saving = false;
-        })
-      )
-      .subscribe((result) => {
-        this.Requests = result;
-        this.loading = false;
-        this.saving = false;
-      });
+    // this._shipperDashboardServiceProxy
+    //   .getRequestsInMarketpalce(this.fromDate, this.toDate)
+    //   .pipe(
+    //     finalize(() => {
+    //       this.loading = false;
+    //       this.saving = false;
+    //     })
+    //   )
+    //   .subscribe((result) => {
+    //     this.Requests = result;
+    //     this.loading = false;
+    //     this.saving = false;
+    //   });
   }
 }

@@ -1,37 +1,52 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { ChartOptionsBars } from '@app/shared/common/customizable-dashboard/widgets/ApexInterfaces';
-import { AppComponentBase } from '@shared/common/app-component-base';
-import { HostDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
+import { HostDashboardServiceProxy, SalesSummaryDatePeriod } from '@shared/service-proxies/service-proxies';
 import { finalize } from 'rxjs/operators';
+import { WidgetComponentBase } from '../../widget-component-base';
 
 @Component({
   selector: 'app-host-new-accounts-chart',
   templateUrl: './host-new-accounts-chart.component.html',
-  styles: [],
+  styleUrls: ['./host-new-accounts-chart.component.css'],
 })
-export class HostNewAccountsChartComponent extends AppComponentBase implements OnInit {
+export class HostNewAccountsChartComponent extends WidgetComponentBase implements OnInit {
   months: string[];
   counts: number[];
   loading: boolean = false;
   fromDate: moment.Moment = null;
   toDate: moment.Moment = null;
   saving = false;
+  appSalesSummaryDateInterval = SalesSummaryDatePeriod;
+  selectedDatePeriod: SalesSummaryDatePeriod;
 
   constructor(private injector: Injector, private _hostDashboardServiceProxy: HostDashboardServiceProxy) {
     super(injector);
   }
+
   public chartOptions: Partial<ChartOptionsBars>;
-  ngOnInit() {
-    this.getAccounts();
+
+  ngOnInit(): void {
+    this.getAccounts(this.appSalesSummaryDateInterval.Daily);
   }
 
-  getAccounts() {
+  reload(datePeriod) {
+    if (this.selectedDatePeriod === datePeriod) {
+      this.loading = false;
+      return;
+    }
+
+    this.selectedDatePeriod = datePeriod;
+
+    this.getAccounts(this.selectedDatePeriod);
+  }
+
+  getAccounts(datePeriod: SalesSummaryDatePeriod) {
     this.counts = [];
     this.months = [];
     this.loading = true;
 
     this._hostDashboardServiceProxy
-      .getAccountsCountsPerMonth(this.fromDate, this.toDate)
+      .getAccountsStatistics(datePeriod)
       .pipe(
         finalize(() => {
           this.loading = false;
@@ -39,8 +54,17 @@ export class HostNewAccountsChartComponent extends AppComponentBase implements O
       )
       .subscribe((result) => {
         result.forEach((element) => {
-          element.year;
-          this.months.push(element.month + '-' + element.year);
+          var txt = '';
+          if (datePeriod == SalesSummaryDatePeriod.Daily) {
+            txt = element.day + '-' + element.month;
+          }
+          if (datePeriod == SalesSummaryDatePeriod.Weekly) {
+            txt = 'wk-' + element.week;
+          }
+          if (datePeriod == SalesSummaryDatePeriod.Monthly) {
+            txt = 'month-' + element.month;
+          }
+          this.months.push(txt);
           this.counts.push(element.count);
         });
         this.chartOptions = {

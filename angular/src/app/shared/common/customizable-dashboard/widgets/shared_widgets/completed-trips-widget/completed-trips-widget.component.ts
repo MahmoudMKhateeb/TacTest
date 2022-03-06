@@ -32,53 +32,53 @@ export class CompletedTripsWidgetComponent extends AppComponentBase implements O
     this.trips = [];
     this.loading = true;
     this.saving = true;
-    this._shipperDashboardServiceProxy
-      .getCompletedTripsCountPerMonth(this.fromDate, this.toDate)
-      .pipe(
-        finalize(() => {
-          this.loading = false;
-          this.saving = false;
-        })
-      )
-      .subscribe((result) => {
-        result.forEach((element) => {
-          this.months.push(element.month + '_' + element.year);
-          this.trips.push(element.count);
-        });
+    // this._shipperDashboardServiceProxy
+    //   .getCompletedTripsCountPerMonth(this.fromDate, this.toDate)
+    //   .pipe(
+    //     finalize(() => {
+    //       this.loading = false;
+    //       this.saving = false;
+    //     })
+    //   )
+    //   .subscribe((result) => {
+    //     result.forEach((element) => {
+    //       this.months.push(element.month + '_' + element.year);
+    //       this.trips.push(element.count);
+    //     });
 
-        this.chartOptions = {
-          series: [
-            {
-              name: 'Trips',
-              data: this.trips,
-              color: '#801e1e',
-            },
-          ],
-          chart: {
-            height: 350,
-            type: 'line',
-            zoom: {
-              enabled: false,
-            },
-          },
-          dataLabels: {
-            enabled: false,
-          },
-          stroke: {
-            curve: 'straight',
-          },
-          grid: {
-            row: {
-              colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
-              opacity: 0.5,
-            },
-          },
-          xaxis: {
-            categories: this.months,
-          },
-        };
-        this.loading = false;
-        this.saving = false;
-      });
+    //     this.chartOptions = {
+    //       series: [
+    //         {
+    //           name: 'Trips',
+    //           data: this.trips,
+    //           color: '#801e1e',
+    //         },
+    //       ],
+    //       chart: {
+    //         height: 350,
+    //         type: 'line',
+    //         zoom: {
+    //           enabled: false,
+    //         },
+    //       },
+    //       dataLabels: {
+    //         enabled: false,
+    //       },
+    //       stroke: {
+    //         curve: 'straight',
+    //       },
+    //       grid: {
+    //         row: {
+    //           colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+    //           opacity: 0.5,
+    //         },
+    //       },
+    //       xaxis: {
+    //         categories: this.months,
+    //       },
+    //     };
+    //     this.loading = false;
+    //     this.saving = false;
+    //   });
   }
 }

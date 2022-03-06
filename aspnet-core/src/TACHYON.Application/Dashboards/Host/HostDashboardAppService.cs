@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
@@ -23,6 +24,7 @@ using TACHYON.Routs.RoutTypes;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips;
+using TACHYON.Tenants.Dashboard.Dto;
 using TACHYON.Trucks;
 using TACHYON.Trucks.TrucksTypes;
 using TACHYON.Trucks.TrucksTypes.Dtos;
@@ -32,6 +34,7 @@ namespace TACHYON.Dashboards.Host
     [AbpAuthorize(AppPermissions.Pages_HostDashboard)]
     public class HostDashboardAppService : TACHYONAppServiceBase, IHostDashboardAppService
     {
+        private const string DateFormat = "yyyy-MM-dd";
         private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
         private readonly IRepository<TrucksType, long> _lookup_trucksTypeRepository;
         private readonly IRepository<User, long> _usersRepository;
@@ -82,46 +85,101 @@ namespace TACHYON.Dashboards.Host
             }).Where(r => r.AvailableTrucksCount > 0).ToListAsync();
 
         }
-
-        public async Task<List<ListPerMonthDto>> GetAccountsCountsPerMonth(GetDataByDateFilterInput input)
+        //Get Data For Current year by default
+        public async Task<List<ListPerMonthDto>> GetAccountsStatistics(GetDataByDateFilterInput input)
         {
             DisableTenancyFiltersIfHost();
             await DisableTenancyFiltersIfTachyonDealer();
             var list = await _usersRepository.GetAll().AsNoTracking()
-                .Where(r => !r.IsDriver)
-                .WhereIf(input.FromDate == null || input.ToDate == null, r=> r.CreationTime.Year == DateTime.Now.Year)
-                .WhereIf(input.FromDate != null && input.ToDate != null, r => r.CreationTime >= input.FromDate && r.CreationTime <= input.ToDate)
-                .GroupBy(r => new { r.CreationTime.Year, r.CreationTime.Month })
-                .Select(g => new ListPerMonthDto() { Year = g.Key.Year, Month = g.Key.Month.ToString(), Count = g.Count() })
+                .Where(r => !r.IsDriver && r.CreationTime.Year == DateTime.Now.Year)
+                .WhereIf(input.SalesSummaryDatePeriod == SalesSummaryDatePeriod.Daily, r=> r.CreationTime > DateTime.Now.AddDays(-30) && r.CreationTime < DateTime.Now)
+                .GroupBy(r => new { r.CreationTime.Year, r.CreationTime.Month,r.CreationTime.Day })
+                .Select(g => new ListPerMonthDto() { Year = g.Key.Year, Month = g.Key.Month.ToString(),Day = g.Key.Day, Count = g.Count() })
                 .OrderBy(x => x.Year).ThenBy(x => x.Month)
              .ToListAsync();
 
             list.ForEach(r =>
             {
-                r.Month = new DateTime(r.Year, Convert.ToInt32(r.Month), 1).ToString("MMM");
+                r.Month = new DateTime(r.Year, Convert.ToInt32(r.Month), r.Day).ToString("MMM");
             });
+            if(input.SalesSummaryDatePeriod == SalesSummaryDatePeriod.Weekly)
+            {
+                DateTime firstDay = new DateTime(DateTime.Now.Year,1,1);
 
+                var query = (from u in _usersRepository.GetAll().AsNoTracking().AsEnumerable()
+                       where u.IsDriver == false && u.CreationTime.Year == DateTime.Now.Year
+                       group u by new { u.CreationTime.Year, WeekNumber = (u.CreationTime - new DateTime(DateTime.Now.Year, 1, 1)).Days / 7 } into ut
+                       select new ListPerMonthDto { Year = ut.Key.Year, Week = ut.Key.WeekNumber, Count = ut.Count() });
+                list = query.OrderBy(r=>r.Week).ToList();
+                
+            }
+            if (input.SalesSummaryDatePeriod == SalesSummaryDatePeriod.Monthly)
+            {
+
+                list = await _usersRepository.GetAll().AsNoTracking()
+                .Where(r => !r.IsDriver && r.CreationTime.Year == DateTime.Now.Year)
+                .GroupBy(r => new {
+                    year = r.CreationTime.Year,
+                    month = r.CreationTime.Month
+                })
+                .Select(g => new ListPerMonthDto() { Year = g.Key.year, Month = g.Key.month.ToString(), Count = g.Count() })
+                .OrderBy(x => x.Year).ThenBy(x => x.Month)
+                .ToListAsync();
+
+                list.ForEach(r =>
+                {
+                    r.Month = new DateTime(r.Year, Convert.ToInt32(r.Month), 1).ToString("MMM");
+                });
+            }
             return list;
         }
 
-        public async Task<List<ListPerMonthDto>> GetNewTripsCountPerMonth(GetDataByDateFilterInput input)
+        public async Task<List<ListPerMonthDto>> GetNewTripsStatistics(GetDataByDateFilterInput input)
         {
             DisableTenancyFiltersIfHost();
             await DisableTenancyFiltersIfTachyonDealer();
 
             var groupedTrips = await _shippingRequestTripRepository.GetAll().AsNoTracking()
-                .Where(x => x.Status == ShippingRequestTripStatus.New)
-                .WhereIf(input.FromDate == null || input.ToDate == null, r => r.CreationTime.Year == DateTime.Now.Year)
-                .WhereIf(input.FromDate != null && input.ToDate != null, r => r.CreationTime >= input.FromDate && r.CreationTime <= input.ToDate)
-                .GroupBy(r => new { r.CreationTime.Year, r.CreationTime.Month })
-                .Select(g => new ListPerMonthDto() { Year = g.Key.Year, Month = g.Key.Month.ToString(), Count = g.Count() })
-                .OrderBy(x => x.Year).ThenBy(x => x.Month)
+                .Where(x => x.Status == ShippingRequestTripStatus.New && x.CreationTime.Year == Clock.Now.Year)
+                .WhereIf(input.SalesSummaryDatePeriod == SalesSummaryDatePeriod.Daily, r => r.CreationTime > DateTime.Now.AddDays(-30) && r.CreationTime < DateTime.Now)
+                .GroupBy(r => new { r.CreationTime.Year, r.CreationTime.Month , r.CreationTime.Day })
+                .Select(g => new ListPerMonthDto() { Year = g.Key.Year, Month = g.Key.Month.ToString(), Day = g.Key.Day, Count = g.Count() })
+                .OrderBy(x => x.Day)
              .ToListAsync();
 
             groupedTrips.ForEach(r =>
             {
-                r.Month = new DateTime(r.Year, Convert.ToInt32(r.Month), 1).ToString("MMM");
+                r.Month = new DateTime(r.Year, Convert.ToByte(r.Month),1).ToString("MMM");
             });
+
+            if (input.SalesSummaryDatePeriod == SalesSummaryDatePeriod.Weekly)
+            {
+                DateTime firstDay = new DateTime(DateTime.Now.Year, 1, 1);
+
+                var query = (from u in _shippingRequestTripRepository.GetAll().AsNoTracking().AsEnumerable()
+                             where u.Status == ShippingRequestTripStatus.New && u.CreationTime.Year == Clock.Now.Year
+                             group u by new { u.CreationTime.Year, WeekNumber = (u.CreationTime - new DateTime(DateTime.Now.Year, 1, 1)).Days / 7 } into ut
+                             select new ListPerMonthDto { Year = ut.Key.Year, Week = ut.Key.WeekNumber, Count = ut.Count() });
+                groupedTrips = query.OrderBy(r => r.Week).ToList();
+            }
+            if (input.SalesSummaryDatePeriod == SalesSummaryDatePeriod.Monthly)
+            {
+
+                groupedTrips = await _shippingRequestTripRepository.GetAll().AsNoTracking()
+                .Where(x => x.Status == ShippingRequestTripStatus.New && x.CreationTime.Year == Clock.Now.Year)
+                .GroupBy(r => new {
+                    year = r.CreationTime.Year,
+                    month = r.CreationTime.Month
+                })
+                .Select(g => new ListPerMonthDto() { Year = g.Key.year, Month = g.Key.month.ToString(), Count = g.Count() })
+                .OrderBy(x => x.Year).ThenBy(x => x.Month)
+                .ToListAsync();
+
+                groupedTrips.ForEach(r =>
+                {
+                    r.Month = new DateTime(r.Year, Convert.ToByte(r.Month), 1).ToString("MMM");
+                });
+            }
 
             return groupedTrips;
         }
@@ -296,22 +354,80 @@ namespace TACHYON.Dashboards.Host
             }).OrderBy(r => r.Rating).Take(5).ToListAsync();
         }
 
-        public async Task<List<ListRequestsUnPricedMarketPlace>> GetUnpricedRequestsInMarketplace(GetUnpricedRequestsInMarketplaceInput input)
+        public async Task<List<ListRequestsUnPricedMarketPlace>> GetUnpricedRequestsInMarketplace(GetDataByDateFilterInput input)
         {
             DisableTenancyFiltersIfHost();
 
-            return await _shippingRequestRepository.GetAll().AsNoTracking().Include(r => r.Tenant).Where(r => r.RequestType == ShippingRequestType.Marketplace
-                                                                                           && r.Status == ShippingRequestStatus.PrePrice
-                                                                                           && r.BidEndDate != null
-                                                                                           && r.BidEndDate.Value.Date <= Clock.Now.Date && r.CreationTime.Year == DateTime.Now.Year)
-                                                                                   .WhereIf(input.StartDate != null && input.EndDate != null, r => r.BidStartDate >= input.StartDate && r.BidEndDate <= input.EndDate)
-            .Select(request => new ListRequestsUnPricedMarketPlace()
+            var list = await _shippingRequestRepository.GetAll().AsNoTracking()
+                .Include(r => r.Tenant)
+                .Where(r => r.RequestType == ShippingRequestType.Marketplace
+                    && r.Status == ShippingRequestStatus.PrePrice
+                    && r.BidEndDate != null
+                    && r.BidEndDate.Value.Date <= Clock.Now.Date && r.CreationTime.Year == Clock.Now.Year)
+                .WhereIf(input.SalesSummaryDatePeriod == SalesSummaryDatePeriod.Daily, r => r.CreationTime > DateTime.Now.AddDays(-30) && r.CreationTime < DateTime.Now)
+                .Select(request => new ListRequestsUnPricedMarketPlace()
+                {
+                    Id = request.Id,
+                    ShipperName = request.Tenant.Name,
+                    BiddingEndDate = request.BidEndDate,
+                    RequestReference = request.ReferenceNumber
+                }).OrderBy(r => r.BiddingEndDate).Take(10).ToListAsync();
+
+            if (input.SalesSummaryDatePeriod == SalesSummaryDatePeriod.Weekly)
             {
-                Id = request.Id,
-                ShipperName = request.Tenant.Name,
-                BiddingEndDate = request.BidEndDate,
-                RequestReference = request.ReferenceNumber
-            }).OrderBy(r => r.BiddingEndDate).Take(10).ToListAsync();
+                DateTime firstDay = new DateTime(DateTime.Now.Year, 1, 1);
+
+                var query = (from r in _shippingRequestRepository.GetAll().AsNoTracking().AsEnumerable()
+                             where  r.RequestType == ShippingRequestType.Marketplace
+                                    && r.Status == ShippingRequestStatus.PrePrice
+                                    && r.BidEndDate != null
+                                    && r.BidEndDate.Value.Date <= Clock.Now.Date && r.CreationTime.Year == Clock.Now.Year
+                             group r by new
+                             {
+                                 Id = r.Id,
+                                 ShipperName = r.Tenant.Name,
+                                 BiddingEndDate = r.BidEndDate,
+                                 RequestReference = r.ReferenceNumber,
+                                 r.CreationTime.Year,
+                                 WeekNumber = (r.CreationTime - new DateTime(DateTime.Now.Year, 1, 1)).Days / 7 } into ut
+                             select new ListRequestsUnPricedMarketPlace {
+                                 Id = ut.Key.Id,
+                                 ShipperName = ut.Key.ShipperName,
+                                 BiddingEndDate = ut.Key.BiddingEndDate,
+                                 RequestReference = ut.Key.RequestReference
+                             });
+                list = query.ToList();
+               
+            }
+            if (input.SalesSummaryDatePeriod == SalesSummaryDatePeriod.Monthly)
+            {
+
+             list = await _shippingRequestRepository.GetAll().AsNoTracking()
+               .Include(r => r.Tenant)
+               .Where(r => r.RequestType == ShippingRequestType.Marketplace
+                   && r.CreationTime.Year == DateTime.Now.Year
+                   && r.Status == ShippingRequestStatus.PrePrice
+                   && r.BidEndDate != null
+                   && r.BidEndDate.Value.Date <= Clock.Now.Date && r.CreationTime.Year == Clock.Now.Year)
+                .GroupBy(r => new {
+                    Id = r.Id,
+                    ShipperName = r.Tenant.Name,
+                    BiddingEndDate = r.BidEndDate,
+                    RequestReference = r.ReferenceNumber,
+                    year = r.CreationTime.Year,
+                    month = r.CreationTime.Month
+                })
+               .Select(request => new ListRequestsUnPricedMarketPlace()
+               {
+                   Id = request.Key.Id,
+                   ShipperName = request.Key.ShipperName,
+                   BiddingEndDate = request.Key.BiddingEndDate,
+                   RequestReference = request.Key.RequestReference
+               }).OrderBy(r => r.BiddingEndDate).ToListAsync();
+
+            }
+
+            return list;
         }
 
         public async Task<List<ListRequestsByCityDto>> GetNumberOfRequestsForEachCity()

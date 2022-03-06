@@ -3,13 +3,13 @@ using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using System;
 using System.Collections.Generic;
+using TACHYON.Tenants.Dashboard.Dto;
 
 namespace TACHYON.Dashboards.Host.Dto
 {
     public class GetDataByDateFilterInput
     {
-        public DateTime? FromDate { get; set; }
-        public DateTime? ToDate { get; set; }
+        public SalesSummaryDatePeriod SalesSummaryDatePeriod { get; set; }
 
     }
 

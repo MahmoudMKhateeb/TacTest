@@ -18635,14 +18635,13 @@ export class HostDashboardServiceProxy {
   }
 
   /**
-   * @param fromDate (optional)
-   * @param toDate (optional)
    * @return Success
    */
-  getAccountsCountsPerMonth(fromDate: moment.Moment | null | undefined, toDate: moment.Moment | null | undefined): Observable<ListPerMonthDto[]> {
-    let url_ = this.baseUrl + '/api/services/app/HostDashboard/GetAccountsCountsPerMonth?';
-    if (fromDate !== undefined && fromDate !== null) url_ += 'FromDate=' + encodeURIComponent(fromDate ? '' + fromDate.toJSON() : '') + '&';
-    if (toDate !== undefined && toDate !== null) url_ += 'ToDate=' + encodeURIComponent(toDate ? '' + toDate.toJSON() : '') + '&';
+  getAccountsStatistics(salesSummaryDatePeriod: SalesSummaryDatePeriod): Observable<ListPerMonthDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/HostDashboard/GetAccountsStatistics?';
+    if (salesSummaryDatePeriod === undefined || salesSummaryDatePeriod === null)
+      throw new Error("The parameter 'salesSummaryDatePeriod' must be defined and cannot be null.");
+    else url_ += 'SalesSummaryDatePeriod=' + encodeURIComponent('' + salesSummaryDatePeriod) + '&';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -18657,14 +18656,14 @@ export class HostDashboardServiceProxy {
       .request('get', url_, options_)
       .pipe(
         _observableMergeMap((response_: any) => {
-          return this.processGetAccountsCountsPerMonth(response_);
+          return this.processGetAccountsStatistics(response_);
         })
       )
       .pipe(
         _observableCatch((response_: any) => {
           if (response_ instanceof HttpResponseBase) {
             try {
-              return this.processGetAccountsCountsPerMonth(<any>response_);
+              return this.processGetAccountsStatistics(<any>response_);
             } catch (e) {
               return <Observable<ListPerMonthDto[]>>(<any>_observableThrow(e));
             }
@@ -18673,7 +18672,7 @@ export class HostDashboardServiceProxy {
       );
   }
 
-  protected processGetAccountsCountsPerMonth(response: HttpResponseBase): Observable<ListPerMonthDto[]> {
+  protected processGetAccountsStatistics(response: HttpResponseBase): Observable<ListPerMonthDto[]> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -18708,14 +18707,13 @@ export class HostDashboardServiceProxy {
   }
 
   /**
-   * @param fromDate (optional)
-   * @param toDate (optional)
    * @return Success
    */
-  getNewTripsCountPerMonth(fromDate: moment.Moment | null | undefined, toDate: moment.Moment | null | undefined): Observable<ListPerMonthDto[]> {
-    let url_ = this.baseUrl + '/api/services/app/HostDashboard/GetNewTripsCountPerMonth?';
-    if (fromDate !== undefined && fromDate !== null) url_ += 'FromDate=' + encodeURIComponent(fromDate ? '' + fromDate.toJSON() : '') + '&';
-    if (toDate !== undefined && toDate !== null) url_ += 'ToDate=' + encodeURIComponent(toDate ? '' + toDate.toJSON() : '') + '&';
+  getNewTripsStatistics(salesSummaryDatePeriod: SalesSummaryDatePeriod): Observable<ListPerMonthDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/HostDashboard/GetNewTripsStatistics?';
+    if (salesSummaryDatePeriod === undefined || salesSummaryDatePeriod === null)
+      throw new Error("The parameter 'salesSummaryDatePeriod' must be defined and cannot be null.");
+    else url_ += 'SalesSummaryDatePeriod=' + encodeURIComponent('' + salesSummaryDatePeriod) + '&';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -18730,14 +18728,14 @@ export class HostDashboardServiceProxy {
       .request('get', url_, options_)
       .pipe(
         _observableMergeMap((response_: any) => {
-          return this.processGetNewTripsCountPerMonth(response_);
+          return this.processGetNewTripsStatistics(response_);
         })
       )
       .pipe(
         _observableCatch((response_: any) => {
           if (response_ instanceof HttpResponseBase) {
             try {
-              return this.processGetNewTripsCountPerMonth(<any>response_);
+              return this.processGetNewTripsStatistics(<any>response_);
             } catch (e) {
               return <Observable<ListPerMonthDto[]>>(<any>_observableThrow(e));
             }
@@ -18746,7 +18744,7 @@ export class HostDashboardServiceProxy {
       );
   }
 
-  protected processGetNewTripsCountPerMonth(response: HttpResponseBase): Observable<ListPerMonthDto[]> {
+  protected processGetNewTripsStatistics(response: HttpResponseBase): Observable<ListPerMonthDto[]> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -19717,17 +19715,13 @@ export class HostDashboardServiceProxy {
   }
 
   /**
-   * @param startDate (optional)
-   * @param endDate (optional)
    * @return Success
    */
-  getUnpricedRequestsInMarketplace(
-    startDate: moment.Moment | null | undefined,
-    endDate: moment.Moment | null | undefined
-  ): Observable<ListRequestsUnPricedMarketPlace[]> {
+  getUnpricedRequestsInMarketplace(salesSummaryDatePeriod: SalesSummaryDatePeriod): Observable<ListRequestsUnPricedMarketPlace[]> {
     let url_ = this.baseUrl + '/api/services/app/HostDashboard/GetUnpricedRequestsInMarketplace?';
-    if (startDate !== undefined && startDate !== null) url_ += 'StartDate=' + encodeURIComponent(startDate ? '' + startDate.toJSON() : '') + '&';
-    if (endDate !== undefined && endDate !== null) url_ += 'EndDate=' + encodeURIComponent(endDate ? '' + endDate.toJSON() : '') + '&';
+    if (salesSummaryDatePeriod === undefined || salesSummaryDatePeriod === null)
+      throw new Error("The parameter 'salesSummaryDatePeriod' must be defined and cannot be null.");
+    else url_ += 'SalesSummaryDatePeriod=' + encodeURIComponent('' + salesSummaryDatePeriod) + '&';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -35463,17 +35457,13 @@ export class ShipperDashboardServiceProxy {
   }
 
   /**
-   * @param fromDate (optional)
-   * @param toDate (optional)
    * @return Success
    */
-  getCompletedTripsCountPerMonth(
-    fromDate: moment.Moment | null | undefined,
-    toDate: moment.Moment | null | undefined
-  ): Observable<ListPerMonthDto[]> {
+  getCompletedTripsCountPerMonth(salesSummaryDatePeriod: SalesSummaryDatePeriod): Observable<ListPerMonthDto[]> {
     let url_ = this.baseUrl + '/api/services/app/ShipperDashboard/GetCompletedTripsCountPerMonth?';
-    if (fromDate !== undefined && fromDate !== null) url_ += 'FromDate=' + encodeURIComponent(fromDate ? '' + fromDate.toJSON() : '') + '&';
-    if (toDate !== undefined && toDate !== null) url_ += 'ToDate=' + encodeURIComponent(toDate ? '' + toDate.toJSON() : '') + '&';
+    if (salesSummaryDatePeriod === undefined || salesSummaryDatePeriod === null)
+      throw new Error("The parameter 'salesSummaryDatePeriod' must be defined and cannot be null.");
+    else url_ += 'SalesSummaryDatePeriod=' + encodeURIComponent('' + salesSummaryDatePeriod) + '&';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -35539,17 +35529,13 @@ export class ShipperDashboardServiceProxy {
   }
 
   /**
-   * @param fromDate (optional)
-   * @param toDate (optional)
    * @return Success
    */
-  getAcceptedAndRejectedRequests(
-    fromDate: moment.Moment | null | undefined,
-    toDate: moment.Moment | null | undefined
-  ): Observable<AcceptedAndRejectedRequestsListDto> {
+  getAcceptedAndRejectedRequests(salesSummaryDatePeriod: SalesSummaryDatePeriod): Observable<AcceptedAndRejectedRequestsListDto> {
     let url_ = this.baseUrl + '/api/services/app/ShipperDashboard/GetAcceptedAndRejectedRequests?';
-    if (fromDate !== undefined && fromDate !== null) url_ += 'FromDate=' + encodeURIComponent(fromDate ? '' + fromDate.toJSON() : '') + '&';
-    if (toDate !== undefined && toDate !== null) url_ += 'ToDate=' + encodeURIComponent(toDate ? '' + toDate.toJSON() : '') + '&';
+    if (salesSummaryDatePeriod === undefined || salesSummaryDatePeriod === null)
+      throw new Error("The parameter 'salesSummaryDatePeriod' must be defined and cannot be null.");
+    else url_ += 'SalesSummaryDatePeriod=' + encodeURIComponent('' + salesSummaryDatePeriod) + '&';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -35679,14 +35665,13 @@ export class ShipperDashboardServiceProxy {
   }
 
   /**
-   * @param fromDate (optional)
-   * @param toDate (optional)
    * @return Success
    */
-  getCompletedTripVsPod(fromDate: moment.Moment | null | undefined, toDate: moment.Moment | null | undefined): Observable<CompletedTripVsPodListDto> {
+  getCompletedTripVsPod(salesSummaryDatePeriod: SalesSummaryDatePeriod): Observable<CompletedTripVsPodListDto> {
     let url_ = this.baseUrl + '/api/services/app/ShipperDashboard/GetCompletedTripVsPod?';
-    if (fromDate !== undefined && fromDate !== null) url_ += 'FromDate=' + encodeURIComponent(fromDate ? '' + fromDate.toJSON() : '') + '&';
-    if (toDate !== undefined && toDate !== null) url_ += 'ToDate=' + encodeURIComponent(toDate ? '' + toDate.toJSON() : '') + '&';
+    if (salesSummaryDatePeriod === undefined || salesSummaryDatePeriod === null)
+      throw new Error("The parameter 'salesSummaryDatePeriod' must be defined and cannot be null.");
+    else url_ += 'SalesSummaryDatePeriod=' + encodeURIComponent('' + salesSummaryDatePeriod) + '&';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -35747,17 +35732,13 @@ export class ShipperDashboardServiceProxy {
   }
 
   /**
-   * @param fromDate (optional)
-   * @param toDate (optional)
    * @return Success
    */
-  getInvoicesVSPaidInvoices(
-    fromDate: moment.Moment | null | undefined,
-    toDate: moment.Moment | null | undefined
-  ): Observable<InvoicesVsPaidInvoicesDto> {
+  getInvoicesVSPaidInvoices(salesSummaryDatePeriod: SalesSummaryDatePeriod): Observable<InvoicesVsPaidInvoicesDto> {
     let url_ = this.baseUrl + '/api/services/app/ShipperDashboard/GetInvoicesVSPaidInvoices?';
-    if (fromDate !== undefined && fromDate !== null) url_ += 'FromDate=' + encodeURIComponent(fromDate ? '' + fromDate.toJSON() : '') + '&';
-    if (toDate !== undefined && toDate !== null) url_ += 'ToDate=' + encodeURIComponent(toDate ? '' + toDate.toJSON() : '') + '&';
+    if (salesSummaryDatePeriod === undefined || salesSummaryDatePeriod === null)
+      throw new Error("The parameter 'salesSummaryDatePeriod' must be defined and cannot be null.");
+    else url_ += 'SalesSummaryDatePeriod=' + encodeURIComponent('' + salesSummaryDatePeriod) + '&';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -35818,17 +35799,13 @@ export class ShipperDashboardServiceProxy {
   }
 
   /**
-   * @param fromDate (optional)
-   * @param toDate (optional)
    * @return Success
    */
-  getRequestsInMarketpalce(
-    fromDate: moment.Moment | null | undefined,
-    toDate: moment.Moment | null | undefined
-  ): Observable<RequestsInMarketpalceDto[]> {
+  getRequestsInMarketpalce(salesSummaryDatePeriod: SalesSummaryDatePeriod): Observable<RequestsInMarketpalceDto[]> {
     let url_ = this.baseUrl + '/api/services/app/ShipperDashboard/GetRequestsInMarketpalce?';
-    if (fromDate !== undefined && fromDate !== null) url_ += 'FromDate=' + encodeURIComponent(fromDate ? '' + fromDate.toJSON() : '') + '&';
-    if (toDate !== undefined && toDate !== null) url_ += 'ToDate=' + encodeURIComponent(toDate ? '' + toDate.toJSON() : '') + '&';
+    if (salesSummaryDatePeriod === undefined || salesSummaryDatePeriod === null)
+      throw new Error("The parameter 'salesSummaryDatePeriod' must be defined and cannot be null.");
+    else url_ += 'SalesSummaryDatePeriod=' + encodeURIComponent('' + salesSummaryDatePeriod) + '&';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -70406,8 +70383,16 @@ export interface ITruckTypeAvailableTrucksDto {
   id: number;
 }
 
+export enum SalesSummaryDatePeriod {
+  Daily = 1,
+  Weekly = 2,
+  Monthly = 3,
+}
+
 export class ListPerMonthDto implements IListPerMonthDto {
   year!: number;
+  day!: number;
+  week!: number;
   month!: string | undefined;
   count!: number;
 
@@ -70422,6 +70407,8 @@ export class ListPerMonthDto implements IListPerMonthDto {
   init(_data?: any) {
     if (_data) {
       this.year = _data['year'];
+      this.day = _data['day'];
+      this.week = _data['week'];
       this.month = _data['month'];
       this.count = _data['count'];
     }
@@ -70437,6 +70424,8 @@ export class ListPerMonthDto implements IListPerMonthDto {
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
     data['year'] = this.year;
+    data['day'] = this.day;
+    data['week'] = this.week;
     data['month'] = this.month;
     data['count'] = this.count;
     return data;
@@ -70445,6 +70434,8 @@ export class ListPerMonthDto implements IListPerMonthDto {
 
 export interface IListPerMonthDto {
   year: number;
+  day: number;
+  week: number;
   month: string | undefined;
   count: number;
 }
@@ -90178,12 +90169,6 @@ export class GetMemberActivityOutput implements IGetMemberActivityOutput {
 
 export interface IGetMemberActivityOutput {
   memberActivities: MemberActivity[] | undefined;
-}
-
-export enum SalesSummaryDatePeriod {
-  Daily = 1,
-  Weekly = 2,
-  Monthly = 3,
 }
 
 export class SalesSummaryData implements ISalesSummaryData {

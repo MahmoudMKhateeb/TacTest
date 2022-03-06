@@ -5,51 +5,40 @@
       <div class="card-header border-0">
         <div class="card-title text-center">
           <h3 class="card-label">{{ l('UnPricedShippingRequests') }}</h3>
+          <div class="card-toolbar">
+            <div class="btn-group" data-toggle="buttons">
+              <label
+                class="btn btn-secondary active"
+                [ngClass]="{ active: selectedDatePeriod == appSalesSummaryDateInterval.Daily }"
+                (click)="reload(appSalesSummaryDateInterval.Daily)"
+              >
+                <input type="radio" name="SalesSummaryDateInterval" [value]="appSalesSummaryDateInterval.Daily" />
+                {{ 'Daily' | localize }}
+              </label>
+              <label
+                class="btn btn-secondary"
+                [ngClass]="{ active: selectedDatePeriod == appSalesSummaryDateInterval.Weekly }"
+                (click)="reload(appSalesSummaryDateInterval.Weekly)"
+              >
+                <input type="radio" name="SalesSummaryDateInterval" [value]="appSalesSummaryDateInterval.Weekly" />
+                {{ 'Weekly' | localize }}
+              </label>
+              <label
+                class="btn btn-secondary"
+                [ngClass]="{ active: selectedDatePeriod == appSalesSummaryDateInterval.Monthly }"
+                (click)="reload(appSalesSummaryDateInterval.Monthly)"
+              >
+                <input type="radio" name="SalesSummaryDateInterval" [value]="appSalesSummaryDateInterval.Monthly" />
+                {{ 'Monthly' | localize }}
+              </label>
+            </div>
+          </div>
         </div>
       </div>
       <div class="card-body p-0">
-        <div class="col-sm-10">
-          <div class="input-group">
-            <input
-              id="fromDate"
-              type="text"
-              #SampleDatePicker
-              name="SampleDatePicker"
-              class="form-control"
-              bsDatepicker
-              datePickerMomentModifier
-              [(date)]="fromDate"
-              placeholder="{{ l('FromDate') }}"
-            />
-            &nbsp; &nbsp;
-            <input
-              id="toDate"
-              type="text"
-              #SampleDatePicker1
-              name="SampleDatePicker1"
-              class="form-control"
-              bsDatepicker
-              datePickerMomentModifier
-              [(date)]="toDate"
-              placeholder="{{ l('toDate') }}"
-            />
-            <span class="input-group-btn">
-              <button
-                [disabled]="saving || !fromDate || !toDate"
-                [buttonBusy]="saving"
-                [busyText]="l('LoadWithThreeDot')"
-                (click)="getUnpricedRequests()"
-                class="btn btn-primary"
-                type="submit"
-              >
-                <i class="icon-refresh"></i> {{ l('search') }}
-              </button>
-            </span>
-          </div>
-        </div>
         <!--begin::Body-->
         <div class="card-body pt-2">
-          <p-table [value]="requests" (onLazyLoad)="getUnpricedRequests()">
+          <p-table [value]="requests" (onLazyLoad)="reload(appSalesSummaryDateInterval.Daily)">
             <ng-template pTemplate="header">
               <tr>
                 <th>{{ l('RequestID') }}</th>

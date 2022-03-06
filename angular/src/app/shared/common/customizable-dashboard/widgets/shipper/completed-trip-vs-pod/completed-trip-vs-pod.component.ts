@@ -32,85 +32,85 @@ export class CompletedTripVsPodComponent extends AppComponentBase implements OnI
     this.loading = true;
     this.saving = true;
 
-    this._shipperDashboardServiceProxy
-      .getCompletedTripVsPod(this.fromDate, this.toDate)
-      .pipe(
-        finalize(() => {
-          this.loading = false;
-          this.saving = false;
-        })
-      )
-      .subscribe((result) => {
-        this.months.forEach((d) => {
-          let i = this.months.indexOf(d) + 1;
-          let year = new Date().getFullYear();
-          const foundAcceptElement = result.completedTrips.some((el) => el.month === i);
-          if (!foundAcceptElement) {
-            result.completedTrips.push(
-              new RequestsListPerMonthDto({
-                count: 0,
-                month: i,
-                year: year,
-              })
-            );
-          }
-          const foundRejectElement = result.podTrips.some((el) => el.month === i);
-          if (!foundRejectElement) {
-            result.podTrips.push(
-              new RequestsListPerMonthDto({
-                count: 0,
-                month: i,
-                year: year,
-              })
-            );
-          }
-        });
-        result.completedTrips.sort(function (a, b) {
-          return a.month - b.month;
-        });
-        result.completedTrips.forEach((element) => {
-          this.completedTrips.push(element.count);
-        });
-        result.podTrips.sort(function (a, b) {
-          return a.month - b.month;
-        });
-        result.podTrips.forEach((element) => {
-          this.POD.push(element.count);
-        });
+    // this._shipperDashboardServiceProxy
+    //   .getCompletedTripVsPod(this.fromDate, this.toDate)
+    //   .pipe(
+    //     finalize(() => {
+    //       this.loading = false;
+    //       this.saving = false;
+    //     })
+    //   )
+    //   .subscribe((result) => {
+    //     this.months.forEach((d) => {
+    //       let i = this.months.indexOf(d) + 1;
+    //       let year = new Date().getFullYear();
+    //       const foundAcceptElement = result.completedTrips.some((el) => el.month === i);
+    //       if (!foundAcceptElement) {
+    //         result.completedTrips.push(
+    //           new RequestsListPerMonthDto({
+    //             count: 0,
+    //             month: i,
+    //             year: year,
+    //           })
+    //         );
+    //       }
+    //       const foundRejectElement = result.podTrips.some((el) => el.month === i);
+    //       if (!foundRejectElement) {
+    //         result.podTrips.push(
+    //           new RequestsListPerMonthDto({
+    //             count: 0,
+    //             month: i,
+    //             year: year,
+    //           })
+    //         );
+    //       }
+    //     });
+    //     result.completedTrips.sort(function (a, b) {
+    //       return a.month - b.month;
+    //     });
+    //     result.completedTrips.forEach((element) => {
+    //       this.completedTrips.push(element.count);
+    //     });
+    //     result.podTrips.sort(function (a, b) {
+    //       return a.month - b.month;
+    //     });
+    //     result.podTrips.forEach((element) => {
+    //       this.POD.push(element.count);
+    //     });
 
-        this.chartOptions = {
-          series: [
-            {
-              name: 'Completed',
-              data: this.completedTrips,
-            },
-            {
-              name: 'Pod',
-              data: this.POD,
-            },
-          ],
-          chart: {
-            height: 350,
-            type: 'area',
-          },
-          dataLabels: {
-            enabled: false,
-          },
-          stroke: {
-            curve: 'smooth',
-          },
-          xaxis: {
-            type: 'category',
-            categories: this.months,
-          },
-          tooltip: {
-            x: {
-              format: 'dd/MM/yy',
-            },
-          },
-        };
-        this.loading = false;
-        this.saving = false;
-      });
+    //     this.chartOptions = {
+    //       series: [
+    //         {
+    //           name: 'Completed',
+    //           data: this.completedTrips,
+    //         },
+    //         {
+    //           name: 'Pod',
+    //           data: this.POD,
+    //         },
+    //       ],
+    //       chart: {
+    //         height: 350,
+    //         type: 'area',
+    //       },
+    //       dataLabels: {
+    //         enabled: false,
+    //       },
+    //       stroke: {
+    //         curve: 'smooth',
+    //       },
+    //       xaxis: {
+    //         type: 'category',
+    //         categories: this.months,
+    //       },
+    //       tooltip: {
+    //         x: {
+    //           format: 'dd/MM/yy',
+    //         },
+    //       },
+    //     };
+    //     this.loading = false;
+    //     this.saving = false;
+    //   });
   }
 }
