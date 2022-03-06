@@ -227,7 +227,7 @@ namespace TACHYON.Invoices.InvoiceNotes
                 {
                     items.Add(new InvoiceNoteItem()
                     {
-                        TripId = item,
+                        TripId =(int)item.Id,
                         InvoiceNoteId = mapper.Id
                     });
                 }
@@ -259,13 +259,13 @@ namespace TACHYON.Invoices.InvoiceNotes
             {
                 var toAddInovioceItem = new List<InvoiceNoteItem>();
                 var toRemoveInovioceItem = new List<InvoiceNoteItem>();
-                foreach (var item in model.InvoiceItem)
+                foreach (var item in model.InvoiceItem.Select(x=>x.Id))
                 {
-                    if (!itemsIds.Contains(item))
+                    if (!itemsIds.Contains((int)item))
                     {
                         toAddInovioceItem.Add(new InvoiceNoteItem()
                         {
-                            TripId = item,
+                            TripId = (int)item,
                             InvoiceNoteId = inoviceNote.Id
                         });
                     }
@@ -273,7 +273,7 @@ namespace TACHYON.Invoices.InvoiceNotes
                 }
                 foreach (var item in invoices)
                 {
-                    if (!model.InvoiceItem.Contains(item.TripId))
+                    if (!model.InvoiceItem.Select(x=>x.Id).Contains(item.TripId))
                     {
                         toRemoveInovioceItem.Add(item);
                     }
