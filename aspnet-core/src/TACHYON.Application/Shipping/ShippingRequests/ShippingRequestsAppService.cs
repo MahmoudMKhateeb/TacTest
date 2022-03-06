@@ -474,7 +474,9 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             using (CurrentUnitOfWork.DisableFilter("IHasIsDrafted"))
             {
+                DisableTenancyFilters();
                 ShippingRequest shippingRequest = await _shippingRequestRepository.GetAll()
+                    .WhereIf(await IsTachyonDealer(), x => x.IsTachyonDeal == true)
                   .Where(x => x.Id == id && x.IsDrafted == true)
                   .FirstOrDefaultAsync();
                 return shippingRequest;
@@ -804,6 +806,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     ObjectMapper.Map<GetShippingRequestForViewOutput>(shippingRequest);
                 output.ShippingRequest.AddTripsByTmsEnabled =
                     await FeatureChecker.IsEnabledAsync(shippingRequest.TenantId, AppFeatures.AddTripsByTachyonDeal);
+                output.ShippingRequest.CanAddTrip = await CanCurrentUserAddTrip(shippingRequest);
                 output.ShippingRequestBidDtoList = shippingRequestBidDtoList;
                 output.ShippingRequestVasDtoList = shippingRequestVasList;
                 output.ShipperRating = shippingRequest.Tenant.Rate;
@@ -815,8 +818,9 @@ namespace TACHYON.Shipping.ShippingRequests
 
 
                 //return translated Packing Type name by current language
-                output.packingTypeDisplayName =
-                    ObjectMapper.Map<PackingTypeDto>(shippingRequest.PackingTypeFk).DisplayName;
+                if (shippingRequest.PackingTypeFk != null)
+                    output.packingTypeDisplayName =
+                        ObjectMapper.Map<PackingTypeDto>(shippingRequest.PackingTypeFk).DisplayName;
 
 
 
@@ -833,6 +837,66 @@ namespace TACHYON.Shipping.ShippingRequests
             }
         }
 
+        public async Task<bool> CanAddTripForShippingRequest(long shippingRequestId)
+        {
+            var request = await _shippingRequestRepository.GetAll()
+                .Where(x => x.Id == shippingRequestId).Select(x => new {x.Id, x.TenantId, x.CarrierTenantId, x.NumberOfTrips})
+                .FirstOrDefaultAsync();
+
+            if (request == null)
+                throw new UserFriendlyException(L("ShippingRequestNotFound"));
+
+            return await CanCurrentUserAddTrip(request.TenantId, request.Id, request.NumberOfTrips, request.CarrierTenantId);
+        }
+        private async Task<bool> CanCurrentUserAddTrip(ShippingRequest request)
+            => await CanCurrentUserAddTrip(request.TenantId, request.Id, request.NumberOfTrips,
+                request.CarrierTenantId);
+
+        [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Create)]
+        private async Task<bool> CanCurrentUserAddTrip(int srTenantId,long srId,int numberOfTrips,int? srCarrierTenantId)
+        {
+            bool IsSaas()
+                => srTenantId == srCarrierTenantId;
+            
+            #region CarrierSaas
+
+            if (IsSaas())
+            {
+                if (AbpSession.TenantId != srTenantId ||
+                    !await FeatureChecker.IsEnabledAsync(AppFeatures.CarrierAsASaas))
+                    return false;
+            }
+                
+
+            #endregion
+
+            #region TripsByTMS
+
+            if (await FeatureChecker.IsEnabledAsync(AppFeatures.TachyonDealer))
+            {
+                var tripsByTmsEnabled = await FeatureChecker.IsEnabledAsync(
+                    srTenantId, AppFeatures.AddTripsByTachyonDeal);
+                
+                if (!tripsByTmsEnabled)
+                    return false;
+            }
+
+            #endregion
+
+            #region TripsByShipper
+
+            if (!IsSaas())
+            {
+                if (srTenantId != AbpSession.TenantId || !await IsEnabledAsync(AppFeatures.Shipper) )
+                    return false ;
+            }
+               
+
+            #endregion
+
+            return true;
+        }
+        
         protected virtual GetShippingRequestForEditOutput _GetShippingRequestForEdit(EntityDto<long> input)
         {
             //using (CurrentUnitOfWork.DisableFilter("IHasIsDrafted"))

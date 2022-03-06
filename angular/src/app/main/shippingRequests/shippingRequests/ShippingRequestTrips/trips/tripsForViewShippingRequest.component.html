@@ -24,7 +24,7 @@
         class="btn btn-primary"
         (click)="AddNewTripModal.show()"
         [disabled]="primengTableHelper.totalRecordsCount >= ShippingRequest.numberOfTrips"
-        *ngIf="!(feature.isEnabled('App.TachyonDealer') && !ShippingRequest.addTripsByTmsEnabled)"
+        *ngIf="ShippingRequest.canAddTrip"
       >
         <i class="flaticon-plus"></i> {{ l('AddATrip') }}
       </button>
@@ -174,7 +174,7 @@
 </div>
 
 <AddNewTripModal
-  *ngIf="feature.isEnabled('App.Shipper') || feature.isEnabled('App.TachyonDealer') || feature.isEnabled('App.CarrierAsASaas')"
+  *ngIf="ShippingRequest.canAddTrip && primengTableHelper.totalRecordsCount < ShippingRequest.numberOfTrips"
   #AddNewTripModal
   (modalSave)="reloadPage()"
   [shippingRequest]="ShippingRequest"

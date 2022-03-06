@@ -177,8 +177,10 @@ namespace TACHYON.Shipping.DirectRequests
                 if (!await _tenantCarrierRepository.GetAll().AnyAsync(x => x.CarrierTenantId == input.CarrierTenantId)) throw new UserFriendlyException(L("TheCarrirerSelectedIsNotInYourList"));
             }
             DisableTenancyFilters();
-            if (await _shippingRequestManager.GetShippingRequestWhenNormalStatus(input.ShippingRequestId) == null) throw new UserFriendlyException(L("TheShippingRequestNotFound"));
-
+            using (CurrentUnitOfWork.DisableFilter("IHasIsDrafted"))
+            {
+                if (await _shippingRequestManager.GetShippingRequestWhenNormalStatus(input.ShippingRequestId) == null) throw new UserFriendlyException(L("TheShippingRequestNotFound"));
+            }
         }
 
         private void IfCanAccessService()

@@ -38669,6 +38669,73 @@ export class ShippingRequestsServiceProxy {
   }
 
   /**
+   * @param shippingRequestId (optional)
+   * @return Success
+   */
+  canAddTripForShippingRequest(shippingRequestId: number | undefined): Observable<boolean> {
+    let url_ = this.baseUrl + '/api/services/app/ShippingRequests/CanAddTripForShippingRequest?';
+    if (shippingRequestId === null) throw new Error("The parameter 'shippingRequestId' cannot be null.");
+    else if (shippingRequestId !== undefined) url_ += 'shippingRequestId=' + encodeURIComponent('' + shippingRequestId) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processCanAddTripForShippingRequest(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processCanAddTripForShippingRequest(<any>response_);
+            } catch (e) {
+              return <Observable<boolean>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<boolean>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processCanAddTripForShippingRequest(response: HttpResponseBase): Observable<boolean> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = resultData200 !== undefined ? resultData200 : <any>null;
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<boolean>(<any>null);
+  }
+
+  /**
    * @return Success
    */
   getAllShippingRequestVasesForTableDropdown(): Observable<ShippingRequestVasListOutput[]> {
@@ -85680,6 +85747,7 @@ export class ShippingRequestDto implements IShippingRequestDto {
   otherTransportTypeName!: string | undefined;
   otherTrucksTypeName!: string | undefined;
   addTripsByTmsEnabled!: boolean;
+  canAddTrip!: boolean;
   shipperReference!: string | undefined;
   shipperInvoiceNo!: string | undefined;
   isSaas!: boolean;
@@ -85726,6 +85794,7 @@ export class ShippingRequestDto implements IShippingRequestDto {
       this.otherTransportTypeName = _data['otherTransportTypeName'];
       this.otherTrucksTypeName = _data['otherTrucksTypeName'];
       this.addTripsByTmsEnabled = _data['addTripsByTmsEnabled'];
+      this.canAddTrip = _data['canAddTrip'];
       this.shipperReference = _data['shipperReference'];
       this.shipperInvoiceNo = _data['shipperInvoiceNo'];
       this.isSaas = _data['isSaas'];
@@ -85773,6 +85842,7 @@ export class ShippingRequestDto implements IShippingRequestDto {
     data['otherTransportTypeName'] = this.otherTransportTypeName;
     data['otherTrucksTypeName'] = this.otherTrucksTypeName;
     data['addTripsByTmsEnabled'] = this.addTripsByTmsEnabled;
+    data['canAddTrip'] = this.canAddTrip;
     data['shipperReference'] = this.shipperReference;
     data['shipperInvoiceNo'] = this.shipperInvoiceNo;
     data['isSaas'] = this.isSaas;
@@ -85813,6 +85883,7 @@ export interface IShippingRequestDto {
   otherTransportTypeName: string | undefined;
   otherTrucksTypeName: string | undefined;
   addTripsByTmsEnabled: boolean;
+  canAddTrip: boolean;
   shipperReference: string | undefined;
   shipperInvoiceNo: string | undefined;
   isSaas: boolean;
