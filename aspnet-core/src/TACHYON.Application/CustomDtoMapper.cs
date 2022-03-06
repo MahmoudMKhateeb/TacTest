@@ -774,6 +774,12 @@ namespace TACHYON
                 .ForMember(dto => dto.InvoiceItems, options => options.MapFrom(entity => entity.Trips.Select(x=> x.ShippingRequestTripFK)))
                 .ReverseMap();
 
+            configuration.CreateMap<InvoiceNote, GetInvoiceNoteForEditDto>()
+              .ForMember(dto => dto.InvoiceItems, options => options.MapFrom(entity => entity.InvoiceItems.Select(x => x.ShippingRequestTripFK)))
+              .ReverseMap();
+           
+
+
             configuration.CreateMap<ShippingRequestTrip, GetAllInvoiceItemDto>();
 
             configuration.CreateMap<GroupShippingRequests, SubmitInvoiceShippingRequestDto>()

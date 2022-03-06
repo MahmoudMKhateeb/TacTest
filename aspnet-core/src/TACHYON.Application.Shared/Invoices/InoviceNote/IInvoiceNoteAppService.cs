@@ -15,7 +15,7 @@ namespace TACHYON.Invoices.InoviceNote
         Task CreateOrEdit(CreateOrEditInvoiceNoteDto input);
         Task ChangeInvoiceNoteStatus(long id);
         Task GenrateFullVoidInvoiceNote(long id);
-        Task<CreateOrEditInvoiceNoteDto> GetInvoiceNoteForEdit(int id);
+        Task<GetInvoiceNoteForEditDto> GetInvoiceNoteForEdit(int id);
         List<InvoiceNoteInfoDto> GetInvoiceNoteReportInfo(long id);
         List<InvoiceNoteItemDto> GetInvoiceNoteItemReportInfo(long invoiceNoteId);
         Task<PartialVoidInvoiceDto> GetInvoiceForPartialVoid(long id);
