@@ -770,8 +770,6 @@ namespace TACHYON
 
             configuration.CreateMap<CreateOrEditInvoiceNoteDto, InvoiceNote>().ReverseMap();
 
-            configuration.CreateMap<GetInvoiceNoteForEditOutput, InvoiceNote>().ReverseMap();
-
             configuration.CreateMap<Invoice,PartialVoidInvoiceDto>()
                 .ForMember(dto => dto.InvoiceItems, options => options.MapFrom(entity => entity.Trips.Select(x=> x.ShippingRequestTripFK)))
                 .ReverseMap();

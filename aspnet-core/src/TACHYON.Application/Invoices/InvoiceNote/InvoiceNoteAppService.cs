@@ -112,11 +112,11 @@ namespace TACHYON.Invoices.InvoiceNotes
                     throw new UserFriendlyException(L("YouCanNotChangeInvoiceNoteStatus"));
             }
         }
-        public async Task<GetInvoiceNoteForEditOutput> GetInvoiceNoteForEdit(int id)
+        public async Task<CreateOrEditInvoiceNoteDto> GetInvoiceNoteForEdit(int id)
         {
             var invoiceNote = await _invoiceNoteRepository.GetAll().FirstOrDefaultAsync(x => x.Id == id);
-            var mapper = ObjectMapper.Map<GetInvoiceNoteForEditOutput>(invoiceNote);
-            mapper.InvoiceItems = await _invoiceNoteItemReposity.GetAll().Where(x => x.InvoiceNoteId == invoiceNote.Id).Select(x => x.TripId).ToListAsync();
+            var mapper = ObjectMapper.Map<CreateOrEditInvoiceNoteDto>(invoiceNote);
+            mapper.InvoiceItem = await _invoiceNoteItemReposity.GetAll().Where(x => x.InvoiceNoteId == invoiceNote.Id).Select(x => x.TripId).ToListAsync();
             return mapper;
         }
         public async Task GenrateFullVoidInvoiceNote(long id)
@@ -246,7 +246,7 @@ namespace TACHYON.Invoices.InvoiceNotes
                 .FirstOrDefaultAsync(x => x.Id == model.Id.Value);
             if (inoviceNote == null) throw new UserFriendlyException("TheNoteDoseNotFound");
             ObjectMapper.Map(model, inoviceNote);
-            var invoiceIds = await _invoiceNoteItemReposity.GetAll().Where(x => x.InvoiceNoteId == inoviceNote.Id).ToListAsync();
+            var invoices = await _invoiceNoteItemReposity.GetAll().Where(x => x.InvoiceNoteId == inoviceNote.Id).ToListAsync();
             var itemsIds = inoviceNote.InvoiceItems.Select(x => x.TripId).ToList();
             if (inoviceNote.Status == NoteStatus.Draft)
             {
@@ -264,7 +264,7 @@ namespace TACHYON.Invoices.InvoiceNotes
                     }
 
                 }
-                foreach (var item in invoiceIds)
+                foreach (var item in invoices)
                 {
                     if (!model.InvoiceItem.Contains(item.TripId))
                     {
