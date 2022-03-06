@@ -112,7 +112,7 @@ namespace TACHYON.Invoices.InvoiceNotes
                     throw new UserFriendlyException(L("YouCanNotChangeInvoiceNoteStatus"));
             }
         }
-        public async Task<GetInvoiceNoteForEditDto> GetInvoiceNoteForEdit(int id)
+        public async Task<CreateOrEditInvoiceNoteDto> GetInvoiceNoteForEdit(int id)
         {
             var invoiceNote = await _invoiceNoteRepository.GetAll()
                 .Include(x=>x.InvoiceItems)
@@ -122,7 +122,7 @@ namespace TACHYON.Invoices.InvoiceNotes
             if (invoiceNote == null)
                 throw new UserFriendlyException(L("TheInvoiceNotFound"));
 
-            return  ObjectMapper.Map<GetInvoiceNoteForEditDto>(invoiceNote);
+            return  ObjectMapper.Map<CreateOrEditInvoiceNoteDto>(invoiceNote);
         }
         public async Task GenrateFullVoidInvoiceNote(long id)
         {
