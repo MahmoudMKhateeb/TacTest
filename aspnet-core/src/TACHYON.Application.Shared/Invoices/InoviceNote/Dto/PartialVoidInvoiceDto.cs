@@ -9,6 +9,7 @@ namespace TACHYON.Invoices.InoviceNote.Dto
     {
         public int TenantId { get; set; }
         public long InvoiceNumber { get; set; }
+        public NoteStatus Status { get; set; }
         public List<GetAllInvoiceItemDto> InvoiceItems { get; set; }
     }
 }
