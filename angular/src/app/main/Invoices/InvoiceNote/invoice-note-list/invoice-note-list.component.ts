@@ -16,6 +16,8 @@ import CustomStore from 'devextreme/data/custom_store';
 import { LoadOptions } from 'devextreme/data/load_options';
 import { CreateOrEditNoteModalComponent } from './create-or-edit-note-modal/create-or-edit-note-modal.component';
 import { InoviceNoteModalComponent } from './inovice-note-modal/inovice-note-modal.component';
+import { VoidInvoiceNoteModalComponent } from '@app/main/Invoices/InvoiceNote/invoice-note-list/void-invoice-note-modal/void-invoice-note-modal.component';
+
 @Component({
   selector: 'app-invoice-note-list',
   templateUrl: './invoice-note-list.component.html',
@@ -26,11 +28,14 @@ export class InvoiceNoteListComponent extends AppComponentBase implements OnInit
   @ViewChild('dataGrid', { static: true }) dataGrid: DxDataGridComponent;
   @ViewChild('inoviceNoteModalComponent') inoviceNoteModalComponent: InoviceNoteModalComponent;
   @ViewChild('createOrEditNoteModalComponent') createOrEditNoteModalComponent: CreateOrEditNoteModalComponent;
+  @ViewChild('voidInvoice') voidInvoice: VoidInvoiceNoteModalComponent;
 
   Tenants: ISelectItemDto[];
   dataSource: any = {};
   NoteStatus: any;
   NoteType: any;
+  NoteStatusesEnum = NoteStatus;
+
   constructor(
     injector: Injector,
     private _InvoiceNoteServiceProxy: InvoiceNoteServiceProxy,
@@ -43,20 +48,21 @@ export class InvoiceNoteListComponent extends AppComponentBase implements OnInit
     this.NoteStatus = this.enumToArray.transform(NoteStatus);
     this.NoteType = this.enumToArray.transform(NoteType);
   }
+
   ngOnInit(): void {
     this.getAllInvoiceNotes();
   }
+
   reloadPage(): void {
     this.refreshDataGrid();
   }
+
   search(event) {
     this._CommonServices.getAutoCompleteTenants(event.query, '').subscribe((result) => {
       this.Tenants = result;
     });
   }
-  createInvoiceNote() {
-    this.createOrEditNoteModalComponent.show();
-  }
+
   changeStauts(InvoiceNoteId: number): void {
     this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
       if (isConfirmed) {
@@ -73,6 +79,7 @@ export class InvoiceNoteListComponent extends AppComponentBase implements OnInit
       this._fileDownloadService.downloadTempFile(result);
     });
   }
+
   StyleStatus(Status: NoteStatus): string {
     switch (Status) {
       case NoteStatus.Draft:
@@ -89,6 +96,7 @@ export class InvoiceNoteListComponent extends AppComponentBase implements OnInit
         return 'label label-default label-inline m-1';
     }
   }
+
   StyleNoteType(noteType: NoteType): string {
     switch (noteType) {
       case NoteType.Credit:
@@ -99,6 +107,7 @@ export class InvoiceNoteListComponent extends AppComponentBase implements OnInit
         return 'label label-default label-inline m-1';
     }
   }
+
   getAllInvoiceNotes() {
     let self = this;
     this.dataSource = {};
@@ -123,6 +132,7 @@ export class InvoiceNoteListComponent extends AppComponentBase implements OnInit
       },
     });
   }
+
   refreshDataGrid() {
     this.dataGrid.instance
       .refresh()

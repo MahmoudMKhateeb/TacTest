@@ -38,10 +38,10 @@
               <dxo-scrolling mode="virtual"></dxo-scrolling>
               <dxo-group-panel [visible]="true"></dxo-group-panel>
               <dxo-grouping #expand [autoExpandAll]="false"></dxo-grouping>
-              <dxo-remote-operations [groupPaging]="true" [sorting]="true" [filtering]="true"> </dxo-remote-operations>
+              <dxo-remote-operations [groupPaging]="true" [sorting]="true" [filtering]="true"></dxo-remote-operations>
               <dxo-paging [pageSize]="20"></dxo-paging>
               <dxo-summary>
-                <dxi-group-item column="id" summaryType="count"> </dxi-group-item>
+                <dxi-group-item column="id" summaryType="count"></dxi-group-item>
               </dxo-summary>
 
               <dxi-column
@@ -52,7 +52,7 @@
                 [editorOptions]="{ visible: false }"
                 [width]="50"
               ></dxi-column>
-              <dxi-column dataField="invoiceNumber" caption="{{ l('InvoiceNumber') }}"> </dxi-column>
+              <dxi-column dataField="invoiceNumber" caption="{{ l('InvoiceNumber') }}"></dxi-column>
               <dxi-column
                 *ngIf="!appSession.tenantId || feature.isEnabled('App.TachyonDealer')"
                 dataField="tenantName"
@@ -60,17 +60,17 @@
                 caption="{{ l('CompanyName') }}"
               >
               </dxi-column>
-              <dxi-column dataField="period" caption="{{ l('Period') }}"> </dxi-column>
-              <dxi-column dataField="dueDate" caption="{{ l('dueDate') }}" dataType="date"> </dxi-column>
+              <dxi-column dataField="period" caption="{{ l('Period') }}"></dxi-column>
+              <dxi-column dataField="dueDate" caption="{{ l('dueDate') }}" dataType="date"></dxi-column>
               <dxi-column
                 dataField="accountType"
                 caption="{{ l('AccountType') }} "
                 *ngIf="!appSession.tenantId || feature.isEnabled('App.TachyonDealer')"
               >
               </dxi-column>
-              <dxi-column dataField="totalAmount" caption="{{ l('TotalAmount') }}"> </dxi-column>
-              <dxi-column dataField="creationTime" caption="{{ l('IssuanceDate') }}" dataType="date"> </dxi-column>
-              <dxi-column dataField="isPaid" cellTemplate="cellTemplate_isPaid" caption="{{ l('Status') }}"> </dxi-column>
+              <dxi-column dataField="totalAmount" caption="{{ l('TotalAmount') }}"></dxi-column>
+              <dxi-column dataField="creationTime" caption="{{ l('IssuanceDate') }}" dataType="date"></dxi-column>
+              <dxi-column dataField="isPaid" cellTemplate="cellTemplate_isPaid" caption="{{ l('Status') }}"></dxi-column>
 
               <div *dxTemplate="let options of 'cellTemplate_isPaid'">
                 <span *ngIf="options.data.isPaid" class="badge badge-success badge-inline">{{ 'Paid' | localize }}</span>
@@ -118,6 +118,9 @@
                         >{{ l('MakeUnPaid') }}</a
                       >
                     </li>
+                    <li>
+                      <a class="dropdown-item" href="javascript:;" (click)="voidModal.show(options.data.id)">{{ l('Void') }}</a>
+                    </li>
                   </ul>
                 </div>
               </div>
@@ -130,3 +133,4 @@
 </div>
 <invoices-ondeman-model (modalSave)="reloadPage()" #OndemandModel></invoices-ondeman-model>
 <invoice-tenant-items-details #InvoiceDetailsModel></invoice-tenant-items-details>
+<void-invoice-note-modal #voidModal></void-invoice-note-modal>

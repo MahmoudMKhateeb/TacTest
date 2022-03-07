@@ -2,7 +2,9 @@
   <div class="content d-flex flex-column flex-column-fluid">
     <sub-header [title]="'InvoiceNotesList' | localize" [description]="'' | localize">
       <div role="actions">
-        <button class="btn btn-danger" (click)="createInvoiceNote()"><i class="fa fa-plus"></i> {{ l('CreateNewInvoiceNote') }}</button>
+        <button class="btn btn-danger" (click)="createOrEditNoteModalComponent.show()">
+          <i class="fa fa-plus"></i> {{ l('CreateNewInvoiceNote') }}
+        </button>
       </div>
     </sub-header>
     <div [class]="containerClass">
@@ -29,10 +31,10 @@
               <dxo-scrolling mode="virtual"></dxo-scrolling>
               <dxo-group-panel [visible]="true"></dxo-group-panel>
               <dxo-grouping #expand [autoExpandAll]="false"></dxo-grouping>
-              <dxo-remote-operations [groupPaging]="true" [sorting]="true" [filtering]="true"> </dxo-remote-operations>
+              <dxo-remote-operations [groupPaging]="true" [sorting]="true" [filtering]="true"></dxo-remote-operations>
               <dxo-paging [pageSize]="20"></dxo-paging>
               <dxo-summary>
-                <dxi-group-item column="id" summaryType="count"> </dxi-group-item>
+                <dxi-group-item column="id" summaryType="count"></dxi-group-item>
               </dxo-summary>
 
               <dxi-column
@@ -49,8 +51,8 @@
                 caption="{{ l('ComanyName') }}"
               >
               </dxi-column>
-              <dxi-column dataField="generationDate" caption="{{ l('GenerationDate') }}" dataType="date"> </dxi-column>
-              <dxi-column dataField="totalValue" caption="{{ l('TotalValue') }}"> </dxi-column>
+              <dxi-column dataField="generationDate" caption="{{ l('GenerationDate') }}" dataType="date"></dxi-column>
+              <dxi-column dataField="totalValue" caption="{{ l('TotalValue') }}"></dxi-column>
               <dxi-column cellTemplate="noteTypeCellTemplate" dataField="noteType" caption=" {{ l('NoteType') }}"></dxi-column>
               <div *dxTemplate="let options of 'noteTypeCellTemplate'">
                 <span style="width: 137px; text-align: center"
@@ -96,22 +98,25 @@
                     </span>
                   </a>
                   <ul class="dropdown-menu" *dropdownMenu>
+                    <li *ngIf="options.data.status === NoteStatusesEnum.Draft">
+                      <a class="dropdown-item" (click)="createOrEditNoteModalComponent.show(options.data.id)">{{ l('EditNote') }}</a>
+                    </li>
                     <li>
                       <a class="dropdown-item" (click)="downloadReport(options.data.id)">{{ l('downloadNote') }}</a>
                     </li>
                     <li>
                       <a class="dropdown-item" (click)="inoviceNoteModalComponent.show(options.data)">{{ l('More') }}</a>
                     </li>
-                    <li *ngIf="options.data.status == 0">
+                    <li *ngIf="options.data.status === NoteStatusesEnum.Draft">
                       <a
                         class="dropdown-item"
                         href="javascript:;"
                         *ngIf="feature.isEnabled('App.TachyonDealer') || !this.appSession.tenantId"
                         (click)="changeStauts(options.data.id)"
-                        >{{ l('Confirm) }}</a
+                        >{{ l('Confirm') }}</a
                       >
                     </li>
-                    <li *ngIf="options.data.status == 1">
+                    <li *ngIf="options.data.status === NoteStatusesEnum.Confirm">
                       <a
                         class="dropdown-item"
                         href="javascript:;"
@@ -120,7 +125,7 @@
                         >{{ l('WaitingtobePaid) }}</a
                       >
                     </li>
-                    <li *ngIf="options.data.status == 4">
+                    <li *ngIf="options.data.status === NoteStatusesEnum.Paid">
                       <a
                         class="dropdown-item"
                         href="javascript:;"
@@ -129,7 +134,7 @@
                         >{{ l('Cancel) }}</a
                       >
                     </li>
-                    <li *ngIf="options.data.status == 3">
+                    <li *ngIf="options.data.status === NoteStatusesEnum.WaitingtobePaid">
                       <a
                         class="dropdown-item"
                         href="javascript:;"
@@ -147,6 +152,7 @@
       </div>
     </div>
     <app-inovice-note-modal #inoviceNoteModalComponent></app-inovice-note-modal>
-    <app-create-or-edit-note-modal #createOrEditNoteModalComponent></app-create-or-edit-note-modal>
+    <create-or-edit-note-modal (modalSave)="refreshDataGrid()" #createOrEditNoteModalComponent></create-or-edit-note-modal>
+    <void-invoice-note-modal #voidInvoice></void-invoice-note-modal>
   </div>
 </div>

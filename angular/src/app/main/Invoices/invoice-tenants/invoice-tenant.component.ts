@@ -18,6 +18,7 @@ import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 import { InvoiceTenantItemsDetailsComponent } from './model/invoice-tenant-items-details.component';
 import CustomStore from '@node_modules/devextreme/data/custom_store';
 import { LoadOptions } from '@node_modules/devextreme/data/load_options';
+import { VoidInvoiceNoteModalComponent } from '@app/main/Invoices/InvoiceNote/invoice-note-list/void-invoice-note-modal/void-invoice-note-modal.component';
 
 @Component({
   templateUrl: './invoice-tenant.component.html',
@@ -27,6 +28,7 @@ import { LoadOptions } from '@node_modules/devextreme/data/load_options';
 })
 export class InvoiceTenantComponent extends AppComponentBase implements OnInit {
   @ViewChild('InvoiceDetailsModel', { static: true }) InvoiceDetailsModel: InvoiceTenantItemsDetailsComponent;
+  @ViewChild('voidModal', { static: true }) voidModal: VoidInvoiceNoteModalComponent;
 
   SubmitStatus: any;
   IsStartSearch = false;
