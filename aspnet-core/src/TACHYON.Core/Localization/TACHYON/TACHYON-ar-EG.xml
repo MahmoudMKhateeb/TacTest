@@ -2460,6 +2460,14 @@
 		<text name="AcceptOffer">قبول العرض</text>
 		<text name="CreateOffer">انشاء العرض</text>
 		<text name="ShippingRequest_Accidents_Comments_Edit">تعديل تعليق حادثة طلب الشحن</text>
+		<text name="ThereIsNoDriverAssignedToTrip">لم يتم اسناد الرحلة الى سائق</text>
+		<text name="TheDriverStatusShouldBeAccepted">يجب ان تكون حالة السائق موافقة</text>
+		<text name="TheTripAlreadyStarted">الرحلة قد بدأت بالفعل</text>
+		<text name="TheDriverAlreadyWorkingOnAnotherTrip">السائق يعمل حال على رحلة اخرى</text>
+		<text name="YouCanStartTripAt">يمكنك بدأ الرحلة في الوقت التالي {0}</text>
+		<text name="UplodeDeliveryNoteDeliveryConfirmation">تأكيد التسليم بعد رفع مذكرة التسليم</text>
+		<text name="Remarks">ملاحظات</text>
+		<text name="YouCannotAddRemarksForThisTrip">لا يمكنك اضافة ملاحظات الى هذه الرحلة</text>
 
 	</texts>
 </localizationDictionary>

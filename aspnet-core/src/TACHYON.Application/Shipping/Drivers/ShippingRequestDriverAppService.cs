@@ -297,6 +297,9 @@ namespace TACHYON.Shipping.Drivers
             tripDto.GoodsCategory = ObjectMapper.Map<GoodCategoryDto>(trip.ShippingRequestFk.GoodCategoryFk).DisplayName;
             return tripDto;
         }
+
+
+
         /// <summary>
         /// 
         /// </summary>

@@ -22,14 +22,14 @@
             <div class="col-lg-12 row">
               <div class="form-group col-lg-{{ this.RouteType == RouteTypes.SingleDrop ? 12 : 6 }}" *ngIf="RouteType !== RouteTypes.SingleDrop">
                 <label>{{ l('Facility') }}</label>
-                <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': _tripService.facilitiesLodaing }">
+                <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': facilityLoading }">
                   <div class="input-group">
                     <select
                       #pointFacility="ngModel"
                       name="facility"
                       class="form-control"
                       [(ngModel)]="Point.facilityId"
-                      [disabled]="_tripService.facilitiesLodaing || this.RouteType == RouteTypes.SingleDrop"
+                      [disabled]="facilityLoading || this.RouteType == RouteTypes.SingleDrop"
                       (change)="RouteStepCordSetter(); loadReceivers(Point.facilityId)"
                       [class.is-valid]="pointFacility.touched && pointFacility.valid && Point.facilityId != undefined"
                       [class.is-invalid]="(pointFacility.touched && !pointFacility.valid) || Point.facilityId == undefined"

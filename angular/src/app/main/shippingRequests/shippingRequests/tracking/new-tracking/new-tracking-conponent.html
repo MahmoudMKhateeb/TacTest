@@ -120,10 +120,7 @@
                             <span class="text-muted ml-2" *ngIf="point.endTime">{{point.endTime | momentFormat: 'L'}}</span>
                           </div>
 
-                          <div
-                            class="btn-group mt-6"
-                            *ngIf="trip.driver && (isCarrier || isTachyonDealer && trip.requestType === ShippingRequestTypeEnum.TachyonManageService)"
-                          >
+                          <div class="btn-group mt-6" *ngIf="trip.driver && (isCarrier || isTachyonDealerOrHost)">
                             <!--   POD       -->
                             <div class="d-inline-block" ngbDropdown *ngIf="point.isPodUploaded">
                               <button
@@ -161,11 +158,21 @@
                                 <button ngbDropdownItem (click)="accept()" *ngIf="trip.driverStatus === driverStatusesEnum.None">
                                   {{ l('AcceptTrip') }}
                                 </button>
-                                <button ngbDropdownItem (click)="start()" *ngIf="trip.canStartTrip">{{ l('StartTrip') }}</button>
+                                <button
+                                  ngbDropdownItem
+                                  (click)="start()"
+                                  *ngIf="trip.status == 0 && trip.driverStatus == driverStatusesEnum.Accepted"
+                                >
+                                  {{ l('StartTrip') }}
+                                </button>
                               </div>
                             </div>
                             <!--                      points DropDown Actions      -->
-                            <div *ngIf="!point.isComplete && trip.status !== tripStatusesEnum.New" class="d-inline-block" ngbDropdown>
+                            <div
+                              *ngIf="!point.isComplete && trip.status !== tripStatusesEnum.New && trip.driver && (isCarrier || isTachyonDealerOrHost) "
+                              class="d-inline-block"
+                              ngbDropdown
+                            >
                               <button
                                 [disabled]="!canDoActionsOnPoints(point)"
                                 class="btn btn-sm btn-danger"

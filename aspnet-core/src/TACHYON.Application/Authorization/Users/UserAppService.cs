@@ -454,13 +454,17 @@ namespace TACHYON.Authorization.Users
                 if (requiredDocs.Count > 0)
                 {
                     foreach (var item in requiredDocs)
-                    {
+                    {                    
                         var doc = input.CreateOrEditDocumentFileDtos.FirstOrDefault(x => x.DocumentTypeId == item.DocumentTypeId);
 
-                        if (doc?.UpdateDocumentFileInput == null || doc.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
+                        if (item.DocumentTypeDto.IsRequiredDocumentTemplate)
                         {
-                            throw new UserFriendlyException(L("document missing msg :" + item.Name));
+                            if (doc?.UpdateDocumentFileInput == null || doc.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
+                            {
+                                throw new UserFriendlyException(L("document missing msg :" + item.Name));
+                            }
                         }
+
 
                         doc.Name = item.Name;
                     }

@@ -329,7 +329,7 @@ namespace TACHYON.PriceOffers
             return await _priceOfferManager.AcceptOffer(id);
         }
 
-        [AbpAuthorize(AppFeatures.TachyonDealer)]
+        [RequiresFeature(AppFeatures.TachyonDealer)]
         public async Task<PriceOfferStatus> AcceptOfferOnBehalfShipper(long id)
         {
             return await _priceOfferManager.AcceptOfferOnBehalfShipper(id);
@@ -866,10 +866,18 @@ namespace TACHYON.PriceOffers
             if (request == null) throw new UserFriendlyException(L("YouCanNotCancelThisShipment"));
             request.CancelReason = input.CancelReason;
             request.Status = ShippingRequestStatus.Cancled;
+            await CancelTrips(request.Id);
             if (!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer))
             {
-                var user = await UserManager.GetAdminTachyonDealerAsync();
-                await _appNotifier.CancelShipment(request.Id, request.CancelReason, L(AppConsts.TMS), new UserIdentifier(request.TenantId, request.CreatorUserId.Value));
+                var userAdmin = await UserManager.GetAdminByTenantIdAsync(request.TenantId);
+                if (request.CreatorUserId == null)
+                {
+                    await _appNotifier.CancelShipment(request.Id, request.CancelReason, L(AppConsts.TMS), new UserIdentifier(request.TenantId, userAdmin.Id));
+                }
+                else
+                {
+                    await _appNotifier.CancelShipment(request.Id, request.CancelReason, L(AppConsts.TMS), new UserIdentifier(request.TenantId, request.CreatorUserId.Value));
+                }
             }
             else if (await IsEnabledAsync(AppFeatures.Shipper) && request.IsTachyonDeal)
             {
@@ -878,9 +886,5 @@ namespace TACHYON.PriceOffers
             }
         }
         #endregion
-
-
-
-
     }
 }
