@@ -142,8 +142,8 @@
                     <li *ngIf="record.status != 0 && record.status != 6 && record.status != 7">
                       <a class="dropdown-item" (click)="TripAccidentModal.show(record.id, null)">{{ l('CreateAccident') }}</a>
                     </li>
-                    <li *ngIf="record.status == 0 && (feature.isEnabled('App.Shipper') || feature.isEnabled('App.TachyonDealer'))">
-                      <a class="dropdown-item" (click)="AddRemarksModal.show(record.id)">{{ l('AddRemarks') }}</a>
+                    <li>
+                      <a class="dropdown-item" (click)="AddRemarksModal.show(record.id)">{{ l('Remarks') }}</a>
                     </li>
                   </ul>
                 </div>
