@@ -142,14 +142,12 @@ namespace TACHYON.Tracking
                     Statues =
                         _workFlowProvider.GetStatuses(a.WorkFlowVersion,
                             a.RoutPointStatusTransitions.Where(x => !x.IsReset).Select(x => x.Status).ToList()),
-                    AvailableTransactions = !a.IsResolve
+                    AvailableTransactions = !a.IsResolve || mappedTrip.DriverStatus != ShippingRequestTripDriverStatus.Accepted
                         ? new List<PointTransactionDto>()
                         : _workFlowProvider.GetTransactionsByStatus(a.WorkFlowVersion,
                             a.RoutPointStatusTransitions.Where(c => !c.IsReset).Select(v => v.Status).ToList(),
                             a.Status),
                 }).ToListAsync();
-
-            mappedTrip.CanStartTrip = CanStartTrip(trip);
             return mappedTrip;
         }
         public async Task Accept(int id)
@@ -186,17 +184,16 @@ namespace TACHYON.Tracking
         [AbpAuthorize(AppPermissions.Pages_Tracking_ResetPointReceiverCode)]
         public string ResetPointReceiverCode(long pointId)
         {
-            
+
             var randomCode = new Random().Next(100000, 999999).ToString();
             _RoutPointRepository.Update(pointId, point => point.Code = randomCode);
 
-             return randomCode;
+            return randomCode;
         }
 
         #region Helper
         private TrackingListDto GetMap(ShippingRequestTrip trip)
         {
-            var workingOnAnotherTrip = WorkingInAnotherTrip(trip);
             var dto = ObjectMapper.Map<TrackingListDto>(trip);
 
             var date64 = _ProfileAppService.GetProfilePictureByUser((long)trip.CreatorUserId).Result.ProfilePicture;
@@ -231,10 +228,7 @@ namespace TACHYON.Tracking
 
             return false;
         }
-        private bool WorkingInAnotherTrip(ShippingRequestTrip trip)
-        {
-            return _ShippingRequestTripRepository.GetAll().Any(x => x.AssignedDriverUserId == trip.AssignedDriverUserId && x.DriverStatus == ShippingRequestTripDriverStatus.Accepted && x.Status == ShippingRequestTripStatus.InTransit);
-        }
+
         #endregion
     }
 }

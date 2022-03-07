@@ -13,6 +13,5 @@ namespace TACHYON.Tracking.Dto
         public ShippingRequestTripStatus Status { get; set; }
         public string StatusTitle { get { return Status.GetEnumDescription(); } set { } }
         public List<TrackingRoutePointDto> RoutPoints { get; set; }
-        public bool CanStartTrip { get; set; }
     }
 }
