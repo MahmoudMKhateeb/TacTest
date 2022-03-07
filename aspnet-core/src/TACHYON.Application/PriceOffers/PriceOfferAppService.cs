@@ -400,7 +400,7 @@ namespace TACHYON.PriceOffers
                     if (shippingRequest.IsBid && input.Channel == PriceOfferChannel.MarketPlace)
                     {
                         if (shippingRequest.BidStatus != ShippingRequestBidStatus.OnGoing) throw new UserFriendlyException(L("The Bid must be Ongoing"));
-                        matchingPricePackageId = await _normalPricePackageManager.GetMatchingPricePackages(shippingRequest.TrucksTypeId, shippingRequest.OriginCityId, shippingRequest.DestinationCityId);
+                        matchingPricePackageId = await _normalPricePackageManager.GetMatchingPricePackageId(shippingRequest.TrucksTypeId, shippingRequest.OriginCityId, shippingRequest.DestinationCityId);
                     }
                     else
                     {

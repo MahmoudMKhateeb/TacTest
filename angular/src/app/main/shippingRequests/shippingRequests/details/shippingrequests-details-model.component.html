@@ -187,7 +187,7 @@
 <price-offer-model #ModelPrice [Channel]="Channel" (modalSave)="update($event)"></price-offer-model>
 <price-offer-view-model #ModelViewPrice [Channel]="Channel" (modalDelete)="delete()"></price-offer-view-model>
 <normal-price-package-calculation
-  [directRequestStatus]="request.status"
+  [directRequestStatus]="shippingrequest.directRequestStatus"
   (modalSave)="markAsPriced($event)"
   #ModelPriceCalculation
 ></normal-price-package-calculation>

@@ -82793,6 +82793,8 @@ export class ShippingRequestDirectRequestListDto implements IShippingRequestDire
   status!: ShippingRequestDirectRequestStatus;
   readonly statusTitle!: string | undefined;
   rejetcReason!: string | undefined;
+  pricePackageOfferId!: number | undefined;
+  shippingRequestId!: number;
   id!: number;
 
   constructor(data?: IShippingRequestDirectRequestListDto) {
@@ -82812,6 +82814,8 @@ export class ShippingRequestDirectRequestListDto implements IShippingRequestDire
       this.status = _data['status'];
       (<any>this).statusTitle = _data['statusTitle'];
       this.rejetcReason = _data['rejetcReason'];
+      this.pricePackageOfferId = _data['pricePackageOfferId'];
+      this.shippingRequestId = _data['shippingRequestId'];
       this.id = _data['id'];
     }
   }
@@ -82832,6 +82836,8 @@ export class ShippingRequestDirectRequestListDto implements IShippingRequestDire
     data['status'] = this.status;
     data['statusTitle'] = this.statusTitle;
     data['rejetcReason'] = this.rejetcReason;
+    data['pricePackageOfferId'] = this.pricePackageOfferId;
+    data['shippingRequestId'] = this.shippingRequestId;
     data['id'] = this.id;
     return data;
   }
@@ -82845,6 +82851,8 @@ export interface IShippingRequestDirectRequestListDto {
   status: ShippingRequestDirectRequestStatus;
   statusTitle: string | undefined;
   rejetcReason: string | undefined;
+  pricePackageOfferId: number | undefined;
+  shippingRequestId: number;
   id: number;
 }
 

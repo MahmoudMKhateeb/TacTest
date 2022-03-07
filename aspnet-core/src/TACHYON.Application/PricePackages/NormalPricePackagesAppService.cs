@@ -90,7 +90,6 @@ namespace TACHYON.PricePackages
         }
         #endregion
 
-
         #region Crud Opiration
         [AbpAuthorize(AppPermissions.Pages_NormalPricePackages_Edit)]
         [RequiresFeature(AppFeatures.Carrier, AppFeatures.NormalPricePackages, RequiresAll = true)]
@@ -146,6 +145,8 @@ namespace TACHYON.PricePackages
         [RequiresFeature(AppFeatures.Carrier, AppFeatures.NormalPricePackages, RequiresAll = true)]
         public async Task Delete(EntityDto input)
         {
+            var pricePackage = await GetPricePackageFromDB(input.Id);
+            if (pricePackage == null) throw new UserFriendlyException(L("ThePricePackageWasNotExists"));
             await _pricePackageRepository.DeleteAsync(input.Id);
         }
         [AbpAuthorize(AppPermissions.Pages_NormalPricePackages)]
@@ -182,24 +183,31 @@ namespace TACHYON.PricePackages
         public async Task<NormalPricePackageDto> GetNormalPricePackage(int id)
         {
             DisableTenancyFilters();
+            var pricePackage = await GetPricePackageFromDB(id);
+            if (pricePackage == null) throw new UserFriendlyException(L("ThePricePackageWasNotExists"));
+
+            return ObjectMapper.Map<NormalPricePackageDto>(pricePackage);
+        }
+
+        private async Task<NormalPricePackage> GetPricePackageFromDB(int id)
+        {
             var tenentId = AbpSession.TenantId;
             var pricePackage = await _pricePackageRepository
                 .GetAllIncluding(x => x.TrucksTypeFk, c => c.OriginCityFK, f => f.DestinationCityFK).AsNoTracking()
                 .WhereIf(tenentId.HasValue && await IsEnabledAsync(AppFeatures.Carrier), p => p.TenantId == tenentId)
                 .WhereIf(!tenentId.HasValue && await IsEnabledAsync(AppFeatures.TachyonDealer), e => true)
                 .FirstOrDefaultAsync(p => p.Id == id);
-            if (pricePackage == null) throw new UserFriendlyException(L("ThePricePackageWasNotExists"));
-
-            return ObjectMapper.Map<NormalPricePackageDto>(pricePackage);
+            return pricePackage;
         }
+
         public async Task<bool> CheckIfPricePackageNameAvailable(CheckIfPricePackageNameAvailableDto input)
         {
             return !await _normalPricePackageManager.CheckIfNamePricePackageIsExist(input.Name, input.Id);
         }
         #endregion
 
-
         #region ShippingRequestPricePackage 
+        [RequiresFeature(AppFeatures.Carrier, AppFeatures.Shipper)]
         public async Task<PagedResultDto<PricePackageForRequestDto>> GetMatchingPricePackagesForRequest(GetAllPricePackagesForRequestInput input)
         {
             DisableTenancyFilters();
@@ -234,8 +242,7 @@ namespace TACHYON.PricePackages
                     CarrierName = p.Tenant.Name,
                     CarrierRate = p.Tenant.Rate,
                     CarrierTenantId = p.TenantId
-                })
-                .ToListAsync();
+                }).ToListAsync();
 
             return new PagedResultDto<PricePackageForRequestDto>(
                 totalCount,
@@ -247,6 +254,7 @@ namespace TACHYON.PricePackages
         {
             return await _normalPricePackageManager.GetPricePackageOffer(pricePackageOfferId, shippingRequestId);
         }
+        [RequiresFeature(AppFeatures.Carrier, AppFeatures.Shipper)]
         public async Task<PricePackageOfferDto> GetPricePackageOfferForHandle(int pricePackageId, long shippingRequestId)
         {
             return await _normalPricePackageManager.GetPricePackageOfferDto(pricePackageId, shippingRequestId);
@@ -256,10 +264,12 @@ namespace TACHYON.PricePackages
             var directRequestInput = await _normalPricePackageManager.GetDirectRequestToHandleByPricePackage(pricePackageId, shippingRequestId);
             await _shippingRequestDirectRequestAppService.Create(directRequestInput);
         }
+        [RequiresFeature(AppFeatures.Carrier)]
         public async Task<ShippingRequestDirectRequestStatus> AcceptPricePackageOffer(int pricePackageOfferId)
         {
             return await _normalPricePackageManager.AcceptPricePackageOffer(pricePackageOfferId);
         }
+        [RequiresFeature(AppFeatures.Carrier)]
         public async Task<long> SendPriceOfferByPricePackage(int pricePackageId, long shippingRequestId)
         {
             return await _normalPricePackageManager.SendPriceOfferByPricePackage(pricePackageId, shippingRequestId);

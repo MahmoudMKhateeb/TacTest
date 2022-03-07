@@ -166,7 +166,16 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
   }
   canSeePricePackages() {
     // if the user is carrier
-    if (!this.feature.isEnabled('App.Carrier') && this.shippingRequestforView.shippingRequest.requestType != ShippingRequestType.Marketplace) {
+    if (
+      !this.feature.isEnabled('App.Carrier') &&
+      this.shippingRequestforView.shippingRequest.requestType != ShippingRequestType.Marketplace &&
+      (this.shippingRequestforView.shippingRequest.status == ShippingRequestStatus.PrePrice ||
+        (this.shippingRequestforView.shippingRequest.status == ShippingRequestStatus.NeedsAction &&
+          this.feature.isEnabled('App.Shipper') &&
+          this.shippingRequestforView.shippingRequest.requestType == ShippingRequestType.DirectRequest) ||
+        (this.feature.isEnabled('App.TachyonDealer') &&
+          this.shippingRequestforView.shippingRequest.requestType == ShippingRequestType.TachyonManageService))
+    ) {
       return true;
     }
     return false;

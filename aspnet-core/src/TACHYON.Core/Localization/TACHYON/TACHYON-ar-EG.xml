@@ -2248,5 +2248,13 @@
     <text name="ReceiverConfirmed"></text>
     <text name="DeliveryConfirmation"></text>-->
     <text name="facilityNameIsAlreadyExistsForThisTenant">اسم المنشأة موجود بالفعل لهذا المستأجر</text>
+		<text name="ThePricePackageWasNotExists">حزمة الاسعار غير موجودة</text>
+	<text name="ThePricePackageNameIsExists">اسم حزمة الاسعار موجود من قبل</text>
+	<text name="TheShippingRequestDoesNotExist">طلب الشحن غير موجود</text>
+	<text name="ThePricePackageOfferDoesNotExist">عرض حزمة الاسعار غير موجود</text>
+	<text name="TheDirectRequestDoesNotExist">طلب الشحن المباشر غير موجود</text>
+	<text name="YouCannotAcceptTheOffer">لا يمكنك قبول العرض</text>
+	<text name="PreviewMatchingPricePackage">مشاهدة حزمة الاسعار المتطابقة</text>
+	<text name="PreviewPricePackageOffer">مشاهدة عرض حزمة الاسعار المتطابقة</text>
   </texts>
 </localizationDictionary>

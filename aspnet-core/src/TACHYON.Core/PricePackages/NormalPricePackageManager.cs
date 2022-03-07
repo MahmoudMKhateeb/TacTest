@@ -67,6 +67,7 @@ namespace TACHYON.PricePackages
             _abpSession = abpSession;
         }
 
+        #region Main Functions
         /// <summary>
         /// Get Price Package Offer by Id for preview
         /// </summary>
@@ -76,9 +77,6 @@ namespace TACHYON.PricePackages
 
             var pricePackageOffer = await _pricePackageOfferRepository
                 .GetAllIncluding(x => x.Items, v => v.TrucksTypeFk, b => b.DestinationCityFK, b => b.OriginCityFK)
-                .WhereIf(_abpSession.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.NormalPricePackageFK.TenantId == _abpSession.TenantId)
-                .WhereIf(_abpSession.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Shipper), x => x.TenantId == _abpSession.TenantId)
-                .WhereIf(!_abpSession.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => true)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == pricePackageOfferId);
 
@@ -88,8 +86,12 @@ namespace TACHYON.PricePackages
 
             await SetVasNames(shippingRequestId, pricePackageOfferDto);
 
+            pricePackageOfferDto.HasDirectRequest = await _directShippingRequestRepository.GetAll()
+               .AnyAsync(x => x.CarrierTenantId == pricePackageOfferDto.TenantId && x.ShippingRequestId == shippingRequestId);
+
             return pricePackageOfferDto;
         }
+
         /// <summary>
         /// Create direct request input for handling
         /// </summary>
@@ -111,6 +113,7 @@ namespace TACHYON.PricePackages
                 BidNormalPricePackage = pricePackageBidDto
             };
         }
+
         /// <summary>
         /// Calculate shipping request based on price package and generate price offer dto for viewing or handling
         /// </summary>
@@ -137,29 +140,17 @@ namespace TACHYON.PricePackages
 
             return pricePackageOfferDto;
         }
+
         /// <summary>
         /// Accept Price Package Offer from Carrier or Tachyon Dealer
         /// </summary>
         public async Task<ShippingRequestDirectRequestStatus> AcceptPricePackageOffer(int pricePackageOfferId)
         {
             DisableTenancyFilters();
-            var pricePackageOffer = await _pricePackageOfferRepository
-                                .GetAllIncluding(x => x.Items)
-                .WhereIf(_abpSession.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.NormalPricePackageFK.TenantId == _abpSession.TenantId)
-                .WhereIf(_abpSession.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Shipper), x => x.TenantId == _abpSession.TenantId)
-                .WhereIf(!_abpSession.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => true)
-                .Where(x => x.Id == pricePackageOfferId)
-                .FirstOrDefaultAsync();
-
+            var pricePackageOffer = await GetPricePackageOfferById(pricePackageOfferId);
             if (pricePackageOffer == null) throw new UserFriendlyException(L("ThePricePackageOfferDoesNotExist"));
-            var directRequest = await _directShippingRequestRepository
-                .GetAllIncluding(x => x.ShippingRequestFK, b => b.Carrier)
-                .Where(x => x.PricePackageOfferId == pricePackageOfferId && x.Status == ShippingRequestDirectRequestStatus.New)
-                .WhereIf(_abpSession.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.CarrierTenantId == _abpSession.TenantId)
-                .WhereIf(_abpSession.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Shipper), x => x.TenantId == _abpSession.TenantId)
-                .WhereIf(!_abpSession.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => true)
-                .FirstOrDefaultAsync();
 
+            var directRequest = await GetDirectRequestByPricePackageOfferId(pricePackageOfferId);
             if (directRequest == null) throw new UserFriendlyException(L("TheDirectRequestDoesNotExist"));
 
             if (directRequest.ShippingRequestFK.Status != ShippingRequestStatus.PrePrice && directRequest.ShippingRequestFK.Status != ShippingRequestStatus.NeedsAction)
@@ -180,7 +171,6 @@ namespace TACHYON.PricePackages
             await _balanceManager.ShipperCanAcceptOffer(pricePackageOffer, pricePackageOffer.TaxVat, directRequest.ShippingRequestId);
             await _appNotifier.CarrierAcceptPricePackageOffer(directRequest.TenantId, directRequest.Carrier.Name, directRequest.ShippingRequestFK.ReferenceNumber, directRequest.ShippingRequestId);
             return directRequest.Status;
-
         }
 
         /// <summary>
@@ -194,13 +184,17 @@ namespace TACHYON.PricePackages
         }
 
         /// <summary>
-        /// Get Matching Price Package
+        /// Get Matching Price Package Id based on truckType, originCityId and destinationCityId
         /// </summary>
-        public async Task<int?> GetMatchingPricePackages(long? truckType, int? originCityId, int? destinationCityId)
+        public async Task<int?> GetMatchingPricePackageId(long? truckType, int? originCityId, int? destinationCityId)
         {
             var query = MatchingPricePackageQuery(truckType, originCityId, destinationCityId);
             return await query.Select(x => x.Id).FirstOrDefaultAsync();
         }
+
+        /// <summary>
+        ///send price offer based on price package prices -- used with marketplace request --
+        /// </summary>
         public async Task<long> SendPriceOfferByPricePackage(int pricePackageId, long shippingRequestId)
         {
             DisableTenancyFilters();
@@ -208,6 +202,9 @@ namespace TACHYON.PricePackages
             return await _priceOfferManager.CreateOrEdit(priceOfferInput);
         }
 
+        /// <summary>
+        ///get accepted price package offer based on shipping request Id
+        /// </summary>
         public async Task<PricePackageOffer> GetOfferByShippingRequestId(long shippingRequestId)
         {
             return await _directShippingRequestRepository.GetAll()
@@ -216,13 +213,33 @@ namespace TACHYON.PricePackages
                   .Where(x => x.ShippingRequestId == shippingRequestId && x.Status == ShippingRequestDirectRequestStatus.Accepted)
                   .Select(x => x.PricePackageOfferFK).FirstOrDefaultAsync();
         }
+        #endregion
 
         #region Helpers
+        private async Task<ShippingRequestDirectRequest> GetDirectRequestByPricePackageOfferId(int pricePackageOfferId)
+        {
+            return await _directShippingRequestRepository.GetAllIncluding(x => x.ShippingRequestFK, b => b.Carrier)
+                .Where(x => x.PricePackageOfferId == pricePackageOfferId && x.Status == ShippingRequestDirectRequestStatus.New)
+                .WhereIf(_abpSession.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.CarrierTenantId == _abpSession.TenantId)
+                .WhereIf(_abpSession.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Shipper), x => x.TenantId == _abpSession.TenantId)
+                .WhereIf(!_abpSession.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => true)
+                .FirstOrDefaultAsync();
+        }
+        private async Task<PricePackageOffer> GetPricePackageOfferById(int pricePackageOfferId)
+        {
+            return await _pricePackageOfferRepository.GetAllIncluding(x => x.Items)
+                .WhereIf(_abpSession.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.NormalPricePackageFK.TenantId == _abpSession.TenantId)
+                .WhereIf(_abpSession.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Shipper), x => x.TenantId == _abpSession.TenantId)
+                .WhereIf(!_abpSession.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => true)
+                .Where(x => x.Id == pricePackageOfferId)
+                .FirstOrDefaultAsync();
+        }
         private IQueryable<NormalPricePackage> MatchingPricePackageQuery(long? truckType, int? originCityId, int? destinationCityId)
         {
             return _normalPricePackageRepository.GetAll()
                 .Where(x => x.TrucksTypeId == truckType && x.OriginCityId == originCityId && x.DestinationCityId == destinationCityId);
         }
+
         /// <summary>
         /// Accept Price Package Offer from Tachyon Dealer
         /// </summary>
@@ -359,8 +376,8 @@ namespace TACHYON.PricePackages
                 .Where(v => v.ShippingRequestId == shippingRequestId).AsNoTracking().ToListAsync();
 
             var vasesIds = shippingRequestVases.Select(x => x.VasId).ToList();
-            var pricedVases = await _priceVasRepository.GetAll()
 
+            var pricedVases = await _priceVasRepository.GetAll()
                 .Where(v => v.TenantId == carrierTenantId
                 && vasesIds.Contains(v.VasId)).AsNoTracking().ToListAsync();
 
@@ -369,12 +386,10 @@ namespace TACHYON.PricePackages
             foreach (var vas in shippingRequestVases)
             {
                 var pricedVas = pricedVases.FirstOrDefault(x => x.VasId == vas.VasId);
-                var vasDto = new PriceOfferDetailDto
-                {
-                    ItemId = vas.Id,
-                    Price = Convert.ToInt32(pricedVas.Price.HasValue ? (decimal)pricedVas.Price : 0),
-                };
-                res.Add(vasDto);
+                var price = 0;
+                if (pricedVas != null) price = Convert.ToInt32(pricedVas.Price.HasValue ? (decimal)pricedVas.Price : 0);
+
+                res.Add(new PriceOfferDetailDto { ItemId = vas.Id, Price = price });
             }
             return res;
         }

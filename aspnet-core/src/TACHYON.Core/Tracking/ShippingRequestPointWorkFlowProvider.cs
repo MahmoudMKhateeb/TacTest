@@ -662,13 +662,23 @@ namespace TACHYON.Tracking
         {
             DisableTenancyFilters();
 
-            var offer = await _priceOfferManager.GetOfferAcceptedByShippingRequestId(trip.ShippingRequestId);
-            if (offer == null)
+            var priceOffer = await _priceOfferManager.GetOfferAcceptedByShippingRequestId(trip.ShippingRequestId);
+            if (priceOffer != null)
             {
-                await TransferPricesToTripByPricePackage(trip);
-                return;
+                var items = ObjectMapper.Map<List<PricePackageOfferItem>>(priceOffer.PriceOfferDetails);
+                TransferPrices(trip, priceOffer, items, priceOffer.TaxVat);
             }
-
+            else
+            {
+                var pricePackageOffer = await _normalPricePackageManager.GetOfferByShippingRequestId(trip.ShippingRequestId);
+                TransferPrices(trip, pricePackageOffer, pricePackageOffer.Items, pricePackageOffer.TaxVat);
+            }
+        }
+        /// <summary>
+        /// Transfer the prices from price offer to trip
+        /// </summary>
+        private void TransferPrices(ShippingRequestTrip trip, PriceOfferBase offer, List<PricePackageOfferItem> items, decimal taxVat)
+        {
             trip.CommissionType = offer.CommissionType;
             trip.SubTotalAmount = offer.ItemPrice;
             trip.VatAmount = offer.ItemVatAmount;
@@ -678,11 +688,12 @@ namespace TACHYON.Tracking
             trip.TotalAmountWithCommission = offer.ItemTotalAmountWithCommission;
             trip.CommissionAmount = offer.ItemCommissionAmount;
             trip.CommissionPercentageOrAddValue = offer.CommissionPercentageOrAddValue;
-            trip.TaxVat = offer.TaxVat;
+            trip.TaxVat = taxVat;
             if (trip.ShippingRequestTripVases == null || trip.ShippingRequestTripVases.Count == 0) return;
+
             foreach (var vas in trip.ShippingRequestTripVases)
             {
-                var item = offer.PriceOfferDetails.FirstOrDefault(x => x.SourceId == vas.ShippingRequestVasId && x.PriceType == PriceOfferType.Vas);
+                var item = items.FirstOrDefault(x => x.SourceId == vas.ShippingRequestVasId && x.PriceType == PriceOfferType.Vas);
                 vas.CommissionType = item.CommissionType;
                 vas.SubTotalAmount = item.ItemPrice;
                 vas.VatAmount = item.ItemVatAmount;
@@ -694,41 +705,6 @@ namespace TACHYON.Tracking
                 vas.CommissionAmount = item.ItemCommissionAmount;
                 vas.Quantity = 1;
             }
-
-        }
-        /// <summary>
-        /// Transfer the prices from price offer to trip
-        /// </summary>
-        private async Task TransferPricesToTripByPricePackage(ShippingRequestTrip trip)
-        {
-            var pricePackageOffer = await _normalPricePackageManager.GetOfferByShippingRequestId(trip.ShippingRequestId);
-
-            trip.CommissionType = pricePackageOffer.CommissionType;
-            trip.SubTotalAmount = pricePackageOffer.ItemPrice;
-            trip.VatAmount = pricePackageOffer.ItemVatAmount;
-            trip.TotalAmount = pricePackageOffer.ItemTotalAmount;
-            trip.SubTotalAmountWithCommission = pricePackageOffer.ItemSubTotalAmountWithCommission;
-            trip.VatAmountWithCommission = pricePackageOffer.ItemVatAmountWithCommission;
-            trip.TotalAmountWithCommission = pricePackageOffer.ItemTotalAmountWithCommission;
-            trip.CommissionAmount = pricePackageOffer.ItemCommissionAmount;
-            trip.CommissionPercentageOrAddValue = pricePackageOffer.CommissionPercentageOrAddValue;
-            trip.TaxVat = pricePackageOffer.TaxVat;
-            if (trip.ShippingRequestTripVases == null || trip.ShippingRequestTripVases.Count == 0) return;
-            foreach (var vas in trip.ShippingRequestTripVases)
-            {
-                var item = pricePackageOffer.Items.FirstOrDefault(x => x.SourceId == vas.ShippingRequestVasId && x.PriceType == PriceOfferType.Vas);
-                vas.CommissionType = item.CommissionType;
-                vas.SubTotalAmount = item.ItemPrice;
-                vas.VatAmount = item.ItemVatAmount;
-                vas.TotalAmount = item.ItemTotalAmount;
-                vas.SubTotalAmountWithCommission = item.ItemSubTotalAmountWithCommission;
-                vas.VatAmountWithCommission = item.ItemVatAmountWithCommission;
-                vas.TotalAmountWithCommission = item.ItemTotalAmountWithCommission;
-                vas.CommissionPercentageOrAddValue = item.CommissionPercentageOrAddValue;
-                vas.CommissionAmount = item.ItemCommissionAmount;
-                vas.Quantity = 1;
-            }
-
         }
         /// <summary>
         /// Check If user Can Start the trip

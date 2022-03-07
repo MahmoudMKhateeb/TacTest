@@ -2520,5 +2520,12 @@
 	<text name="PreviewPricePackageOffer">Preview Price Package Offer</text>
 	<text name="CarrierAcceptPricePackageOffer">{0} Accept your price package offer on request {1}</text>
 	<text name="ShippingRequestAsBidWithMatchingPricePackage">There's bid request placed on marketpace matching your price package</text>
+	<text name="ThePricePackageWasNotExists">The Price Package Was Not Exists</text>
+	<text name="ThePricePackageNameIsExists">The Price Package Name Is Exists</text>
+	<text name="TheShippingRequestDoesNotExist">The Shipping Request Does Not Exist</text>
+	<text name="ThePricePackageOfferDoesNotExist">The Price Package Offer Does Not Exist</text>
+	<text name="TheDirectRequestDoesNotExist">The Direct Request Does Not Exist</text>
+	<text name="YouCannotAcceptTheOffer">You Can't Accept The Offer</text>
+    <text name="PreviewMatchingPricePackage">Preview Matching Price Package</text>
 	</texts>
 </localizationDictionary>
