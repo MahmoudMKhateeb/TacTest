@@ -1,93 +1,117 @@
-import { Component, EventEmitter, Injector, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Injector, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ModalDirective } from '@node_modules/ngx-bootstrap/modal';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { CreateOrEditInvoiceNoteDto, GetInvoiceNoteForEditOutput, InvoiceNoteServiceProxy } from '@shared/service-proxies/service-proxies';
-import { ModalDirective } from 'ngx-bootstrap/modal';
+import {
+  CompayForDropDownDto,
+  CreateOrEditInvoiceNoteDto,
+  GetAllInvoiceItemDto,
+  InvoiceNoteServiceProxy,
+  InvoiceRefreanceNumberDto,
+  NoteType,
+} from '@shared/service-proxies/service-proxies';
+import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
+import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 import { finalize } from 'rxjs/operators';
+
 @Component({
-  selector: 'app-create-or-edit-note-modal',
+  selector: 'create-or-edit-note-modal',
   templateUrl: './create-or-edit-note-modal.component.html',
+  styleUrls: ['./create-or-edit-note-modal.component.css'],
+  providers: [EnumToArrayPipe],
+  encapsulation: ViewEncapsulation.None,
 })
 export class CreateOrEditNoteModalComponent extends AppComponentBase implements OnInit {
-  @ViewChild('createOrEditModal', { static: true }) modal: ModalDirective;
+  @ViewChild('modal', { static: false }) modal: ModalDirective;
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
   active = false;
-  saving = false;
-  companyLoading: boolean;
-  invoiceLoading: boolean;
-  invoiceItemLoading: boolean;
-  company: any;
-  Invoice: any;
-  allInvoice: any;
-  allInvoiceItem: any;
-  selectedCompanyId: number;
-  invoiceNote: CreateOrEditInvoiceNoteDto = new CreateOrEditInvoiceNoteDto();
-  data: GetInvoiceNoteForEditOutput = new GetInvoiceNoteForEditOutput();
-  constructor(injector: Injector, private _invoiceNoteServiceProxy: InvoiceNoteServiceProxy) {
-    super(injector);
+  noteTypeId: number;
+  form: CreateOrEditInvoiceNoteDto;
+  noteTypeEnum = NoteType;
+  noteTypes = this.enumToArray.transform(this.noteTypeEnum);
+  allCompanies: CompayForDropDownDto[];
+  allInvoices: InvoiceRefreanceNumberDto[];
+  allWaybills: GetAllInvoiceItemDto[] = [];
+  saving: boolean;
+  manualInvoiceNoteIsEnabled = true;
+
+  constructor(inject: Injector, private _invoiceNoteServiceProxy: InvoiceNoteServiceProxy, private enumToArray: EnumToArrayPipe) {
+    super(inject);
   }
-  ngOnInit(): void {}
-  show(invoiceNoteId?: number): void {
-    if (!invoiceNoteId) {
-      this.invoiceNote = new CreateOrEditInvoiceNoteDto();
-      this.invoiceNote.id = invoiceNoteId;
-      this.active = true;
-      this.modal.show();
-    } else {
-      this._invoiceNoteServiceProxy.getInvoiceNoteForEdit(invoiceNoteId).subscribe((result) => {
-        this.data = result;
-        this.active = true;
-        this.modal.show();
-      });
-    }
+
+  ngOnInit(): void {
+    this.loadDropDowns();
   }
-  save(): void {
+
+  loadDropDowns() {
+    this.getAllCompaniesForDropDown();
+  }
+
+  getAllCompaniesForDropDown() {
+    this._invoiceNoteServiceProxy.getAllCompanyForDropDown().subscribe((res) => {
+      this.allCompanies = res;
+    });
+  }
+
+  getAllInvoicesByCompanyId() {
+    this._invoiceNoteServiceProxy.getAllInvoiceNumberBaseOnCompanyDropDown(this.form.tenantId).subscribe((res) => {
+      this.allInvoices = res;
+      this.getAllWaybillByInvoiceId();
+    });
+  }
+
+  getAllWaybillByInvoiceId() {
+    if (this.form.id) this.form.invoiceItem = [];
+    let id = this.allInvoices.find((x) => x.refreanceNumber == this.form.invoiceNumber).id;
+    this._invoiceNoteServiceProxy.getAllInvoiceItemDto(id).subscribe((res) => {
+      this.allWaybills = res;
+    });
+  }
+
+  save() {
+    // console.log(this.form);
     this.saving = true;
     this._invoiceNoteServiceProxy
-      .createOrEdit(this.invoiceNote)
+      .createOrEdit(this.form)
       .pipe(
         finalize(() => {
           this.saving = false;
+          this.notify.success('SavedSuccessfully');
+          this.modalSave.emit();
         })
       )
-      .subscribe((id) => {
-        console.log(id);
-        this.notify.info(this.l('SavedSuccessfully'));
+      .subscribe(() => {
         this.close();
-        this.modalSave.emit(null);
       });
   }
-  loadAllCompany() {
-    this.companyLoading = true;
-    this._invoiceNoteServiceProxy.getAllCompanyForDropDown().subscribe((res) => {
-      this.company = res;
-      this.companyLoading = false;
-    });
-  }
-  companySelectChange(companyId?: number) {
-    if (companyId > 0) {
-      this.invoiceLoading = true;
-      this._invoiceNoteServiceProxy.getAllInvoiceNumberBaseOnCompanyDropDown(companyId).subscribe((result) => {
-        this.allInvoice = result;
-        this.invoiceLoading = false;
+
+  show(id?: number) {
+    this.active = true;
+    this.form = new CreateOrEditInvoiceNoteDto();
+    if (isNotNullOrUndefined(id)) {
+      //edit
+      this._invoiceNoteServiceProxy.getInvoiceNoteForEdit(id).subscribe((res) => {
+        this.form = res;
+        this.getAllInvoicesByCompanyId();
+        console.log('Edit Fired .........');
+        //this.getAllWaybillByInvoiceId();
       });
-    } else {
-      this.allInvoice = null;
-      this.allInvoiceItem = null;
     }
+    this.modal.show();
+    console.log(this.form);
   }
-  InvoiceItemSelectChange(invoiceId?: number) {
-    if (invoiceId > 0) {
-      this.invoiceItemLoading = true;
-      this._invoiceNoteServiceProxy.getAllInvoiceItemDto(invoiceId).subscribe((result) => {
-        this.allInvoiceItem = result;
-        this.invoiceItemLoading = false;
-      });
-    } else {
-      this.allInvoiceItem = null;
-    }
-  }
-  close(): void {
+
+  close() {
     this.active = false;
+    this.manualInvoiceNoteIsEnabled = true;
     this.modal.hide();
+  }
+
+  handleCompanyChange() {
+    console.log('handleCompanyChange');
+    if (!this.form.isManual) {
+      console.log('2handleCompanyChange');
+      this.getAllInvoicesByCompanyId();
+      this.form.invoiceItem = [];
+    }
   }
 }

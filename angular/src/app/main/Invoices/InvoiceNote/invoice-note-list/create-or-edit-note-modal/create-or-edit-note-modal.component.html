@@ -1,85 +1,175 @@
 <div
   bsModal
-  #createOrEditFacilityModal="bs-modal"
+  #modal="bs-modal"
   class="modal fade"
   tabindex="-1"
   role="dialog"
-  aria-labelledby="createOrEditModal"
+  aria-labelledby="modal"
   aria-hidden="true"
   [config]="{ backdrop: 'static' }"
 >
-  <div class="modal-dialog modal-xl">
+  <div class="modal-dialog modal-md">
     <div class="modal-content">
-      <form #createOrEditNoteForm="ngForm" novalidate autocomplete="off" (ngSubmit)="save()">
+      <form *ngIf="active" #Form="ngForm" novalidate (ngSubmit)="save()">
         <div class="modal-header">
           <h4 class="modal-title">
-            <span>{{ invoiceNote?.id ? l('EditInvoiceNote') : l('CreateNewInvoiceNote') }}</span>
+            {{ l('InvoiceNote') }}
           </h4>
-          <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <div class="row">
-            <div class="form-group col-md-6">
-              <label>{{ l('selectaCompany') }} <span class="required-fileds">*</span></label>
-              <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': companyLoading }">
-                <select
-                  #company="ngModel"
-                  class="form-control"
-                  required
-                  [disabled]="companyLoading"
-                  [(ngModel)]="selectedCompanyId"
-                  [class.is-invalid]="company.touched && !company.valid"
-                  [class.is-valid]="company.touched && company.valid"
-                  (change)="companySelectChange(selectedCompanyId)"
-                >
-                  <option value="" selected disabled>{{ l('SelectACompany') }}</option>
-                  <option *ngFor="let item of company" value="{{ item.id }}">{{ item.displayName }}</option>
-                </select>
+          <div class="card-toolbar">
+            <div *ngIf="!form.id && manualInvoiceNoteIsEnabled" class="d-flex flex-row justify-content-end">
+              <label class="col-6 col-form-label">{{ l('IsManual') }}</label>
+              <div class="col-5">
+                <span class="switch switch-danger switch-outline">
+                  <label>
+                    <input [(ngModel)]="form.isManual" type="checkbox" checked="checked" name="IsManual" (change)="form.invoiceItem = []" />
+                    <span></span>
+                  </label>
+                </span>
               </div>
-            </div>
-            <div class="form-group col-md-6">
-              <label>{{ l('SelectaInvoiceRefreanceNumber') }}<span class="required-fileds">*</span></label>
-              <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': invoiceLoading }">
-                <select
-                  #invoice="ngModel"
-                  class="form-control"
-                  name="invoice"
-                  required
-                  [disabled]="companyLoading || !selectedCompanyId"
-                  [(ngModel)]="invoiceNote.invoiceNumber"
-                  [class.is-invalid]="(invoice.touched && !invoice.valid) || !invoiceNote.invoiceNumber"
-                  [class.is-valid]="invoice.touched && invoice.valid && invoiceNote.invoiceNumber"
-                >
-                  <option value="" selected disabled>{{ l('SelectaInvoiceRefreanceNumber') }}</option>
-                  <option *ngFor="let item of allInvoice" value="{{ item.id }}">{{ item.displayName }}</option>
-                </select>
-              </div>
-            </div>
-            <div class="form-group col-md-12">
-              <label>{{ l('Remarks') }} <span class="required-fileds">*</span></label>
-              <input
-                #search
-                type="text"
-                class="form-control"
-                [(ngModel)]="invoiceNote.remarks"
-                placeholder="{{ l('searchForNearestLocation') }}"
-                required
-              />
             </div>
           </div>
         </div>
+        <div class="modal-body">
+          <div class="row">
+            <!--  begin :: Body-->
+            <div class="col-lg-12">
+              <label>{{ l('NoteType') }} <span class="required-fileds">*</span></label>
+              <div>
+                <select
+                  #NoteType="ngModel"
+                  class="form-control"
+                  [(ngModel)]="form.noteType"
+                  name="noteType"
+                  [class.is-valid]="NoteType.valid && (NoteType.dirty || NoteType.touched)"
+                  [class.is-invalid]="NoteType.invalid && (NoteType.dirty || NoteType.touched)"
+                  required
+                >
+                  <option value="undefined" disabled selected>{{ l('SelectNoteType') }}</option>
+                  <option *ngFor="let item of noteTypes" value="{{ item.key }}">{{ item.value }}</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-lg-12 mt-4">
+              <label>{{ l('Company') }} <span class="required-fileds">*</span></label>
+              <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': false }">
+                <p-dropdown
+                  #Company="ngModel"
+                  name="Company"
+                  [options]="allCompanies"
+                  [(ngModel)]="form.tenantId"
+                  optionLabel="displayName"
+                  [filter]="true"
+                  filterBy="displayName"
+                  [showClear]="true"
+                  (onChange)="handleCompanyChange()"
+                  placeholder="{{ l('SelectCompany') }}"
+                  optionValue="id"
+                  [disabled]="!manualInvoiceNoteIsEnabled || form.id"
+                  required
+                >
+                </p-dropdown>
+              </div>
+            </div>
+            <div *ngIf="!form.isManual" class="col-lg-12 mt-4">
+              <label>{{ l('InvoiceReferenceNumber') }} <span class="required-fileds">*</span></label>
+              <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': false }">
+                <select
+                  #invoiceNumber="ngModel"
+                  class="form-control"
+                  [(ngModel)]="form.invoiceNumber"
+                  name="invoiceNumber"
+                  [class.is-valid]="invoiceNumber.valid && (invoiceNumber.dirty || invoiceNumber.touched)"
+                  [class.is-invalid]="invoiceNumber.invalid && (invoiceNumber.dirty || invoiceNumber.touched)"
+                  (change)="getAllWaybillByInvoiceId()"
+                  [attr.disabled]="manualInvoiceNoteIsEnabled ? null : true"
+                  required
+                >
+                  <option value="undefined" disabled selected>{{ l('SelectInvoiceReference') }}</option>
+                  <option *ngFor="let item of allInvoices" value="{{ item.refreanceNumber }}">{{ item.refreanceNumber }}</option>
+                </select>
+              </div>
+            </div>
+            <ng-container *ngIf="form.isManual">
+              <div class="col-lg-12 mt-4">
+                <label>{{ l('InvoiceReferenceNumber') }} <span class="required-fileds">*</span></label>
+                <input
+                  #invoiceNumberfreeText="ngModel"
+                  type="text"
+                  class="form-control"
+                  [(ngModel)]="form.invoiceNumber"
+                  name="invoiceNumberfreeText"
+                  [class.is-valid]="invoiceNumberfreeText.valid && (invoiceNumberfreeText.dirty || invoiceNumberfreeText.touched)"
+                  [class.is-invalid]="invoiceNumberfreeText.invalid && (invoiceNumberfreeText.dirty || invoiceNumberfreeText.touched)"
+                  required
+                />
+              </div>
+              <div class="col-lg-12 mt-4">
+                <label>{{ l('VatAmount') }} <span class="required-fileds">*</span></label>
+                <input
+                  #vatAmount="ngModel"
+                  type="number"
+                  class="form-control"
+                  [(ngModel)]="form.vatAmount"
+                  name="vatAmount"
+                  [class.is-valid]="vatAmount.valid && (vatAmount.dirty || vatAmount.touched)"
+                  [class.is-invalid]="vatAmount.invalid && (vatAmount.dirty || vatAmount.touched)"
+                  [required]="form.isManual"
+                />
+              </div>
+              <div class="col-lg-12 mt-4">
+                <label>{{ l('Price') }} <span class="required-fileds">*</span></label>
+                <input
+                  #Price="ngModel"
+                  type="number"
+                  class="form-control"
+                  [(ngModel)]="form.price"
+                  name="Price"
+                  [class.is-valid]="Price.valid && (Price.dirty || Price.touched)"
+                  [class.is-invalid]="Price.invalid && (Price.dirty || Price.touched)"
+                  [required]="form.isManual"
+                />
+              </div>
+            </ng-container>
+            <div *ngIf="!form.isManual" class="col-lg-12 mt-4">
+              <label>{{ l('Waybills') }} <span class="required-fileds">*</span></label>
+              <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': false }">
+                <p-multiSelect
+                  [options]="allWaybills"
+                  [(ngModel)]="form.invoiceItem"
+                  name="Waybills"
+                  defaultLabel="{{ l('SelectWayBills') }}"
+                  optionLabel="waybillNumber"
+                  display="chip"
+                  required
+                ></p-multiSelect>
+              </div>
+            </div>
+            <div class="col-lg-12 mt-4">
+              <label>{{ l('Remarks') }}</label>
+              <textarea
+                #notes="ngModel"
+                name="notes"
+                class="form-control"
+                [(ngModel)]="form.remarks"
+                [class.is-valid]="notes.touched && notes.value && !notes.valid"
+              ></textarea>
+            </div>
+
+            <!--  end :: Body-->
+          </div>
+        </div>
+        <!-- end::Body-->
         <div class="modal-footer">
-          <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
+          <button type="button" class="btn btn-secondary" (click)="close()">{{ 'Cancel' | localize }}</button>
           <button
             type="submit"
-            class="btn btn-primary blue"
-            [disabled]="!createOrEditNoteForm.form.valid"
+            class="btn btn-primary"
+            [disabled]="!Form.form.valid"
             [buttonBusy]="saving"
-            [busyText]="l('SavingWithThreeDot')"
+            [busyText]="l('SavingWithThreeDot' | localize)"
+            (click)="save()"
           >
-            <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
+            <i class="fa fa-save"></i> <span>{{ 'Submit' | localize }}</span>
           </button>
         </div>
       </form>
