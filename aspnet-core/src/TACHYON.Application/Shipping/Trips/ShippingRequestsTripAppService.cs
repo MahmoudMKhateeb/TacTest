@@ -109,7 +109,7 @@ namespace TACHYON.Shipping.Trips
                 .ThenInclude(t => t.Translations)
         .Where(x => x.ShippingRequestId == request.Id)
         .WhereIf(input.Status.HasValue, e => e.Status == input.Status)
-        .OrderBy(!input.Sorting.IsNullOrEmpty() && !input.Sorting.Contains("Facility")? input.Sorting: "Status asc");
+        .OrderBy(!input.Sorting.IsNullOrEmpty() && !input.Sorting.Contains("Facility") ? input.Sorting : "Status asc");
 
 
             var resultPage = await query.PageBy(input).ToListAsync();
@@ -135,7 +135,7 @@ namespace TACHYON.Shipping.Trips
             });
 
             var pageResult = ObjectMapper.Map<List<ShippingRequestsTripListDto>>(resultPage);
-            if (!input.Sorting.IsNullOrEmpty() && input.Sorting.Contains("Facility")) 
+            if (!input.Sorting.IsNullOrEmpty() && input.Sorting.Contains("Facility"))
                 pageResult = SortByFacility(input.Sorting, pageResult);
 
             var totalCount = await query.CountAsync();
@@ -363,9 +363,9 @@ namespace TACHYON.Shipping.Trips
                 // Send Notification To New Driver
                 if (oldAssignedDriverUserId.HasValue)
                 {
-                    await _appNotifier.NotifyDriverWhenUnassignedTrip(trip.Id,trip.WaybillNumber.ToString(),
+                    await _appNotifier.NotifyDriverWhenUnassignedTrip(trip.Id, trip.WaybillNumber.ToString(),
                         new UserIdentifier(AbpSession.TenantId, oldAssignedDriverUserId.Value));
-                    
+
                     await UserManager.UpdateUserDriverStatus(oldAssignedDriverUserId.Value, UserDriverStatus.Available);
                 }
             }
@@ -421,9 +421,17 @@ namespace TACHYON.Shipping.Trips
         }
         public async Task AddRemarks(RemarksInputDto input)
         {
+            DisableTenancyFilters();
+            var tenantId = AbpSession.TenantId;
             var shippginRequstTrip = await _shippingRequestTripRepository.GetAll()
-                .Include(z => z.ShippingRequestFk)
+                .WhereIf(tenantId.HasValue && await IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestFk.CarrierTenantId == tenantId)
+                .WhereIf(tenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper), x => x.ShippingRequestFk.TenantId == tenantId)
+                .WhereIf(tenantId.HasValue && await IsEnabledAsync(AppFeatures.TachyonDealer), x => x.ShippingRequestFk.IsTachyonDeal)
+                .Include(x => x.ShippingRequestFk) // include shipping request because we need it in trip update event when send Notfication
                 .FirstOrDefaultAsync(x => x.Id == input.Id);
+
+            if (shippginRequstTrip == null) throw new UserFriendlyException(L("YouCannotAddRemarksForThisTrip"));
+
             shippginRequstTrip.RoundTrip = input.RoundTrip;
             shippginRequstTrip.CanBePrinted = input.CanBePrinted;
             shippginRequstTrip.ContainerNumber = input.ContainerNumber;

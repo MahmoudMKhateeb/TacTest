@@ -2460,6 +2460,8 @@
 		<text name="AcceptOffer">قبول العرض</text>
 		<text name="CreateOffer">انشاء العرض</text>
 		<text name="ShippingRequest_Accidents_Comments_Edit">تعديل تعليق حادثة طلب الشحن</text>
+		<text name="Remarks">ملاحظات</text>
+		<text name="YouCannotAddRemarksForThisTrip">لا يمكنك اضافة ملاحظات الى هذه الرحلة</text>
 
 	</texts>
 </localizationDictionary>
