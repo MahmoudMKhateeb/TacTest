@@ -1,5 +1,4 @@
-﻿using Abp.Authorization;
-using Abp.Domain.Repositories;
+﻿using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
 using Abp.Runtime.Session;
 using Abp.Threading;
@@ -81,12 +80,13 @@ namespace TACHYON.Invoices.InvoiceNotes
         }
         public async Task ChangeInvoiceNoteStatus(long id)
         {
+           await DisableTenancyFiltersIfTachyonDealer();
             var invoiceNote = await _invoiceNoteRepository.GetAll()
                 .WhereIf(!_AbpSession.TenantId.HasValue, x => true)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             if (invoiceNote == null)
-                throw new UserFriendlyException(L("theinvoicedosenotfound"));
+                throw new UserFriendlyException(L("Theinvoicedosenotfound"));
 
             switch (invoiceNote.Status)
             {
@@ -108,13 +108,14 @@ namespace TACHYON.Invoices.InvoiceNotes
         }
         public async Task<CreateOrEditInvoiceNoteDto> GetInvoiceNoteForEdit(int id)
         {
+           await DisableTenancyFiltersIfTachyonDealer();
             var invoiceNote = await _invoiceNoteRepository.GetAll()
                 .Include(x => x.InvoiceItems)
                 .ThenInclude(x => x.ShippingRequestTripFK)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             if (invoiceNote == null)
-                throw new UserFriendlyException(L("TheInvoiceNotFound"));
+                throw new UserFriendlyException(L("Theinvoicedosenotfound"));
 
             return ObjectMapper.Map<CreateOrEditInvoiceNoteDto>(invoiceNote);
         }
@@ -136,23 +137,22 @@ namespace TACHYON.Invoices.InvoiceNotes
         public async Task<PartialVoidInvoiceDto> GetInvoiceForPartialVoid(long id)
         {
             DisableTenancyFilters();
-
             var shipperEditionId = await SettingManager.GetSettingValueAsync(AppSettings.Editions.ShipperEditionId);
             var invoiceTenantId = await _invoiceReposity.GetAll().Where(x => x.Id == id).Select(x => x.TenantId).FirstOrDefaultAsync();
             var tenantEdition = await _tenantRepository.GetAll().Where(x => x.Id == invoiceTenantId).Select(c => c.EditionId).FirstOrDefaultAsync();
             if (tenantEdition == int.Parse(shipperEditionId))
             {
-            var invoice = await _invoiceReposity.GetAll()
-            .Include(x => x.Trips)
-            .ThenInclude(x => x.ShippingRequestTripFK)
-            .FirstOrDefaultAsync(x => x.Id == id);
-             return ObjectMapper.Map<PartialVoidInvoiceDto>(invoice);
+                var invoice = await _invoiceReposity.GetAll()
+                .Include(x => x.Trips)
+                .ThenInclude(x => x.ShippingRequestTripFK)
+                .FirstOrDefaultAsync(x => x.Id == id);
+                return ObjectMapper.Map<PartialVoidInvoiceDto>(invoice);
             }
             var submitInvoice = await _submitInvoiceReposity.GetAll()
               .Include(x => x.Trips)
               .ThenInclude(x => x.ShippingRequestTripFK)
               .FirstOrDefaultAsync(x => x.Id == id);
-             return ObjectMapper.Map<PartialVoidInvoiceDto>(submitInvoice);
+            return ObjectMapper.Map<PartialVoidInvoiceDto>(submitInvoice);
         }
         #endregion
 
@@ -230,7 +230,7 @@ namespace TACHYON.Invoices.InvoiceNotes
                 {
                     items.Add(new InvoiceNoteItem()
                     {
-                        TripId = (int)item.Id,
+                        TripId = item.Id,
                         InvoiceNoteId = mapper.Id
                     });
                 }
@@ -252,43 +252,41 @@ namespace TACHYON.Invoices.InvoiceNotes
         /// <exception cref="UserFriendlyException"></exception>
         private async Task Update(CreateOrEditInvoiceNoteDto model)
         {
-            var inoviceNote = await _invoiceNoteRepository.GetAll()
-                .FirstOrDefaultAsync(x => x.Id == model.Id.Value);
-            if (inoviceNote == null) throw new UserFriendlyException("TheNoteDoseNotFound");
+           await DisableTenancyFiltersIfTachyonDealer();
+            var inoviceNote = await _invoiceNoteRepository.GetAll().FirstOrDefaultAsync(x => x.Id == model.Id.Value);
+            if (inoviceNote == null)
+                throw new UserFriendlyException(L("Theinvoicedosenotfound"));
+
             ObjectMapper.Map(model, inoviceNote);
-            var invoices = await _invoiceNoteItemReposity.GetAll().Where(x => x.InvoiceNoteId == inoviceNote.Id).ToListAsync();
+            var modelItemIds = model.InvoiceItem.Select(x => x.Id).ToList();
+            var invoiceItmes = await _invoiceNoteItemReposity.GetAll().Where(x => x.InvoiceNoteId == inoviceNote.Id).ToListAsync();
             var itemsIds = inoviceNote.InvoiceItems.Select(x => x.TripId).ToList();
             if (inoviceNote.Status == NoteStatus.Draft)
             {
                 var toAddInovioceItem = new List<InvoiceNoteItem>();
                 var toRemoveInovioceItem = new List<InvoiceNoteItem>();
-                foreach (var item in model.InvoiceItem.Select(x => x.Id))
-                {
-                    if (!itemsIds.Contains((int)item))
-                    {
-                        toAddInovioceItem.Add(new InvoiceNoteItem()
-                        {
-                            TripId = (int)item,
-                            InvoiceNoteId = inoviceNote.Id
-                        });
-                    }
 
-                }
-                foreach (var item in invoices)
+                foreach (var item in modelItemIds.Where(x => !itemsIds.Contains(x)))
                 {
-                    if (!model.InvoiceItem.Select(x => x.Id).Contains(item.TripId))
+                    toAddInovioceItem.Add(new InvoiceNoteItem()
                     {
+                        TripId = item,
+                        InvoiceNoteId = inoviceNote.Id
+                    });
+                }
+
+                foreach (var item in invoiceItmes)
+                {
+                    if (!modelItemIds.Contains(item.TripId))
                         toRemoveInovioceItem.Add(item);
-                    }
                 }
+
                 if (toAddInovioceItem.Any())
-                {
                     inoviceNote.InvoiceItems.AddRange(toAddInovioceItem);
-                }
+
                 if (toRemoveInovioceItem.Any())
-                {
                     inoviceNote.InvoiceItems.RemoveAll(x => toRemoveInovioceItem.Any(v => v.Id == x.Id));
-                }
+
                 await ItemValueCalculator(inoviceNote.InvoiceNumber, inoviceNote.InvoiceItems, inoviceNote.Id);
             }
         }
@@ -304,7 +302,7 @@ namespace TACHYON.Invoices.InvoiceNotes
                 .Where(x => x.Status != NoteStatus.Canceled)
                 .FirstOrDefaultAsync(x => x.Id == invoiceId);
             if (invoiceNote == null)
-                throw new UserFriendlyException("TheNoteDoseNotFounded");
+                throw new UserFriendlyException(L("Theinvoicedosenotfound"));
             if (invoiceNote.Status == NoteStatus.Draft)
             {
                 invoiceNote.Status = NoteStatus.Confirm;
@@ -393,7 +391,7 @@ namespace TACHYON.Invoices.InvoiceNotes
             var invoice = await _invoiceReposity.GetAll()
                        .Include(x => x.Trips).Where(x => x.Id == invoiceId).FirstOrDefaultAsync();
             if (invoice == null)
-                throw new UserFriendlyException("TherIsNoInvoiceFounded");
+                throw new UserFriendlyException(L("TheInvoiceNotFound"));
             var invoiceNote = new InvoiceNote()
             {
                 NoteType = NoteType.Credit,
@@ -424,7 +422,7 @@ namespace TACHYON.Invoices.InvoiceNotes
                     .Include(x => x.Trips).Where(x => x.Id == invoiceId).FirstOrDefaultAsync();
 
             if (submitInvoice == null)
-                throw new UserFriendlyException("TherIsNoSubmitInvoiceFounded");
+                throw new UserFriendlyException(L("TheInvoiceNotFound"));
 
             var invoiceNote = new InvoiceNote()
             {
@@ -459,7 +457,7 @@ namespace TACHYON.Invoices.InvoiceNotes
                 .FirstOrDefault(i => i.Id == id);
 
             if (invoiceNote == null)
-                throw new UserFriendlyException(L("TheInvoiceNotFound"));
+                throw new UserFriendlyException(L("Theinvoicedosenotfound"));
 
             var invoiceNoteDto = ObjectMapper.Map<InvoiceNoteInfoDto>(invoiceNote);
 
@@ -502,7 +500,7 @@ namespace TACHYON.Invoices.InvoiceNotes
                  .ThenInclude(m => m.VasFk)
                  .FirstOrDefaultAsync(x => x.Id == invoiceNoteId);
             if (invoiceNote == null)
-                throw new UserFriendlyException("TheInvoiceNoteDoseNotFound");
+                throw new UserFriendlyException(L("Theinvoicedosenotfound"));
             return invoiceNote;
         }
         /// <summary>
@@ -515,7 +513,7 @@ namespace TACHYON.Invoices.InvoiceNotes
         {
             DisableTenancyFilters();
             var invoiceNote = AsyncHelper.RunSync(() => GetInvoiceNoteInfo(invoiceNoteId));
-            if (invoiceNote == null) throw new UserFriendlyException(L("TheInvoiceNotFound"));
+            if (invoiceNote == null) throw new UserFriendlyException(L("Theinvoicedosenotfound"));
             var TotalItem = invoiceNote.InvoiceItems.Count +
                          invoiceNote.InvoiceItems.Sum(v => v.ShippingRequestTripFK.ShippingRequestTripVases.Count);
             int Sequence = 1;

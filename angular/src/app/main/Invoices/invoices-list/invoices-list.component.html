@@ -119,7 +119,13 @@
                       >
                     </li>
                     <li>
-                      <a class="dropdown-item" href="javascript:;" (click)="voidModal.show(options.data.id)">{{ l('Void') }}</a>
+                      <a
+                        class="dropdown-item"
+                        href="javascript:;"
+                        (click)="voidModal.show(options.data.id)"
+                        *ngIf="!feature.isEnabled('App.Carrier') && !feature.isEnabled('App.Shipper')"
+                        >{{ l('Void') }}</a
+                      >
                     </li>
                   </ul>
                 </div>

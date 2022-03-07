@@ -98,7 +98,9 @@
                     </span>
                   </a>
                   <ul class="dropdown-menu" *dropdownMenu>
-                    <li *ngIf="options.data.status === NoteStatusesEnum.Draft">
+                    <li
+                      *ngIf="options.data.status === NoteStatusesEnum.Draft && !feature.isEnabled('App.Carrier') && !feature.isEnabled('App.Shipper')"
+                    >
                       <a class="dropdown-item" (click)="createOrEditNoteModalComponent.show(options.data.id)">{{ l('EditNote') }}</a>
                     </li>
                     <li>
@@ -122,7 +124,7 @@
                         href="javascript:;"
                         *ngIf="feature.isEnabled('App.TachyonDealer') || !this.appSession.tenantId"
                         (click)="changeStauts(options.data.id)"
-                        >{{ l('WaitingtobePaid) }}</a
+                        >{{ l('WaitingtobePaid') }}</a
                       >
                     </li>
                     <li *ngIf="options.data.status === NoteStatusesEnum.Paid">
@@ -131,7 +133,7 @@
                         href="javascript:;"
                         *ngIf="feature.isEnabled('App.TachyonDealer') || !this.appSession.tenantId"
                         (click)="changeStauts(options.data.id)"
-                        >{{ l('Cancel) }}</a
+                        >{{ l('Cancel') }}</a
                       >
                     </li>
                     <li *ngIf="options.data.status === NoteStatusesEnum.WaitingtobePaid">
@@ -140,7 +142,7 @@
                         href="javascript:;"
                         *ngIf="feature.isEnabled('App.TachyonDealer') || !this.appSession.tenantId"
                         (click)="changeStauts(options.data.id)"
-                        >{{ l('Paid) }}</a
+                        >{{ l('Paid') }}</a
                       >
                     </li>
                   </ul>

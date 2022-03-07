@@ -6,7 +6,7 @@ namespace TACHYON.Invoices.InoviceNote.Dto
 {
     public class GetAllInvoiceItemDto
     {
-        public long Id { get; set; }
+        public int Id { get; set; }
         public long WaybillNumber { get; set; }
     }
 }

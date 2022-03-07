@@ -549,6 +549,7 @@
 		<text name="DownloadCollectedData_Description">تحميل إعدادات حسابك</text>
 		<text name="DownloadDropWaybill">تحميل وثيقة الشحن</text>
 		<text name="DownloadInvoice">تحميل الفاتورة</text>
+		<text name="downloadNote">تزيل الملاحظة</text>
 		<text name="UploadInvoiceDocument">تحميل مستند الفاتورة</text>
 		<text name="DriectRequestCarrierRespone">{clientname} قام بوضع عرض مالي للشحنة رقم: {ShipimentNo}.</text>
 		<text name="Driver">سائق</text>
@@ -652,6 +653,7 @@
 		<text name="EditVasPrice">تعديل سعر الخدمات الإضافية</text>
 		<text name="EditWebhookSubscription">Edit Webhook Subscription</text>
 		<text name="EditYourName">تعديل الاسم</text>
+		<text name="EditNote">تعديل الملاحظة</text>
 		<text name="Email">البريد الإلكتروني</text>
 		<text name="EmailActivation">تفعيل البريد الإلكتروني</text>
 		<text name="EmailActivation_ClickTheLinkBelowToVerifyYourEmail">يرجى الضغط على الرابط أدناه لتأكيد البريد الإلكتروني:</text>
@@ -869,6 +871,7 @@
 		<text name="InvoiceNumber">رقم الفاتورة</text>
 		<text name="Invoices">الفواتير</text>
 		<text name="InvoicesList">قائمة الفواتير</text>
+		<text name="InvoiceNotesList">الملاحظة قائمة الفواتير</text>
 		<text name="InvoicesProformas">الفواتير الأولية</text>
 		<text name="InvoiceTo">فاتورة</text>
 		<text name="InvoiceVasRemarksAll">العدد:{0}, الكمية:{1}</text>
@@ -1848,6 +1851,7 @@
 		<text name="Type">ادخل النص...</text>
 		<text name="TypeAMessageHere">اكتب رسالتك هنا...</text>
 		<text name="TypeTitle">النوع</text>
+		<text name="Theinvoicedosenotfound">فاتورة الملاحظة غير موجودة</text>
 		<text name="UiCustomization_AllowAsideHiding">السماح بغلق الجانب</text>
 		<text name="UiCustomization_AllowAsideMinimizing">السماح بتقليل الجانب</text>
 		<text name="UiCustomization_Boxed">مربع</text>
@@ -2101,7 +2105,9 @@
 		<text name="YourPriceAlreadyAcceptedYouCanEdit">لا يمكنك  تحرير السعر في حال تم إعتماده</text>
 		<text name="YourSessionIsAboutToExpire">جلستك على وشك الانتهاء</text>
 		<text name="YourSessionIsLocked">الجلسة مغلقة</text>
+		<text name="TheInvoiceNotFound">الجلسة مغلقة</text>
 		<text name="Youruseridentifier">معرف المستخدم</text>
+		<text name="YouCanNotChangeInvoiceNoteStatus">لا يمكنك تغير حالة الملاحظة</text>
 		<text name="Youruserprofileinformation(firstname,lastname,etc.)">معلومات الملف الشخصي للمستخدم (الاسم الأول واسم العائلة وما إلى ذلك)</text>
 		<text name="TrucksSubmittedDocuments">مستندات الشاحنات</text>
 		<text name="DriversSubmittedDocuments">مستندات السائقين</text>

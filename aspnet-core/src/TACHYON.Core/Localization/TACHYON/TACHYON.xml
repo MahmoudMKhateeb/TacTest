@@ -615,6 +615,7 @@
 		<text name="DocumentTypeTranslations">Document type translation</text>
 		<text name="DocumentTypeTranslationsHeaderInfo">Document Type Translations Header Info</text>
 		<text name="DomainName">Domain name</text>
+		<text name="downloadNote">Download Note</text>
 		<text name="DoNotAllow">Do not allow</text>
 		<text name="DontHaveAnAccount">Don't have an account</text>
 		<text name="DontHaveAnAccountYet">Don't have an account yet</text>
@@ -991,6 +992,7 @@
 		<text name="InvoiceNumber">Invoice No.</text>
 		<text name="Invoices">Invoices</text>
 		<text name="InvoicesList">List of Invoices</text>
+		<text name="InvoiceNotesList">Invoice Note List</text>
 		<text name="InvoicesProformas">Invoices proformas</text>
 		<text name="InvoiceSubTotal">Invoice sub total</text>
 		<text name="InvoiceTo">Invoice to</text>
@@ -2116,6 +2118,8 @@
 		<text name="Type">Type...</text>
 		<text name="TypeAMessageHere">Type your message here...</text>
 		<text name="TypeTitle">Type</text>
+		<text name="TheInvoiceNotFound">The Invoice Not Found</text>
+		<text name="Theinvoicedosenotfound">The inovice note dose found </text>
 		<text name="UiCustomization_AllowAsideHiding">Allow aside hiding</text>
 		<text name="UiCustomization_AllowAsideMinimizing">Allow aside minimizing</text>
 		<text name="UiCustomization_Boxed">Boxed</text>
@@ -2381,6 +2385,7 @@
 		<text name="YourSessionIsAboutToExpire">Your session is about to expire</text>
 		<text name="YourSessionIsLocked">Your session is locked</text>
 		<text name="Youruseridentifier">Your user identifier</text>
+		<text name="YouCanNotChangeInvoiceNoteStatus">You Can Not Change InvoiceNote Status</text>
 		<text name="Youruserprofileinformation(firstname,lastname,etc.)">Your user profile information (first name, last name, etc.)</text>
 	    <text name="TrucksSubmittedDocuments">Trucks Documents</text>
 	    <text name="DriversSubmittedDocuments">Drivers Documents</text>
