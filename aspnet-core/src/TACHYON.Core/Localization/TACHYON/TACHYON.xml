@@ -2492,7 +2492,6 @@
     <text name="CompanyNamePatternError">Company name is longer than 3 characters, only English letters, numbers, dash and underscore are allowed</text>
     <text name="CompanyLegalNamePatternError">Company legal name is longer than 3 characters, only English and Arabic letters, numbers, dash and underscores are allowed</text>
     <text name="ThereIsNoDriverAssingdToTrip">There Is No Driver Assingd To Trip</text>
-    <text name="TheDriverAlreadyWorkingOnAnotherTrip">The Driver Already Working On Another Trip</text>
     <text name="TheStartDateOfTripNotCome">The Start Date Of Trip NotC ome</text>
     <text name="IsMandatoryDocumentTemplate">Document Template Mandatory</text>
     <text name="IsMandatoryNumber">Number Mandatory</text>
@@ -2682,7 +2681,12 @@
 	<text name="EditShippingRequestTrip">Edit shipping request trip</text>
 	<text name="AcceptOffer">Accept offer</text>
 	<text name="CreateOffer">Create offer</text>
-		<text name="ShippingRequest_Accidents_Comments_Edit">Shipping Request Accidents Comments Edit</text>
+	<text name="ShippingRequest_Accidents_Comments_Edit">Shipping Request Accidents Comments Edit</text>
+	<text name="ThereIsNoDriverAssignedToTrip">There Is No Driver Assigned To Trip</text>
+	<text name="TheDriverStatusShouldBeAccepted">The Driver Status Should Be Accepted</text>
+	<text name="TheTripAlreadyStarted">The Trip Already Started</text>
+	<text name="TheDriverAlreadyWorkingOnAnotherTrip">The Driver Already Working On Another Trip</text>
+	<text name="YouCanStartTripAt">You Can Start Trip At {0}</text>
 		<text name="UplodeDeliveryNoteDeliveryConfirmation">Delivery Confirmation After Delivery Note</text>
 	<text name="Remarks">Remarks</text>
 	<text name="YouCannotAddRemarksForThisTrip">You Can't Add Remarks For This Trip</text>

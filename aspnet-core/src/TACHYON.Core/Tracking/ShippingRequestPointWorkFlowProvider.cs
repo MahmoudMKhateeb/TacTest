@@ -365,6 +365,10 @@ namespace TACHYON.Tracking
         {
             DisableTenancyFilters();
             var trip = await CheckIfCanAccepted(id);
+
+            var canAcceptTrip = await CanAcceptTrip(trip.AssignedDriverUserId, trip.Status, trip.DriverStatus);
+            if (!canAcceptTrip.canAccept) throw new UserFriendlyException(canAcceptTrip.reason);
+
             trip.DriverStatus = ShippingRequestTripDriverStatus.Accepted;
             await TransferPricesToTrip(trip);
             var currentUser = await GetCurrentUserAsync();
@@ -377,6 +381,10 @@ namespace TACHYON.Tracking
 
             var trip = await CheckIfCanStartTrip(Input.Id);
             if (trip == null) throw new UserFriendlyException(L("YouCannotStartWithTheTripSelected"));
+
+            var canStartTrip = await CanStartTrip(trip.AssignedDriverUserId, trip.Status, trip.DriverStatus, trip.StartTripDate);
+            if (!canStartTrip.canStart) throw new UserFriendlyException(canStartTrip.reason);
+
             //Get PickUp Point
             var routeStart = await GetPickUpPointToStart(trip.Id);
             routeStart.StartTime = Clock.Now;
@@ -455,7 +463,39 @@ namespace TACHYON.Tracking
             if (!documents.Any()) throw new UserFriendlyException(L("TheRoutePointIsNotFound"));
             return await _commonManager.GetDocuments(ObjectMapper.Map<List<IHasDocument>>(documents), currentUser);
         }
+        public async Task<(bool canAccept, string reason)> CanAcceptTrip(long? driverUserId, ShippingRequestTripStatus tripStatus, ShippingRequestTripDriverStatus driverStatus)
+        {
+            if (!driverUserId.HasValue)
+                return (false, L("ThereIsNoDriverAssignedToTrip"));
 
+            if ((driverStatus == ShippingRequestTripDriverStatus.None
+                && tripStatus == ShippingRequestTripStatus.New)
+                || (driverStatus == ShippingRequestTripDriverStatus.None
+                && tripStatus == ShippingRequestTripStatus.InTransit
+                && !await WorkingOnAnotherTrip(driverUserId.Value)))
+                return (true, null);
+
+            return (false, L("TheDriverAlreadyWorkingOnAnotherTrip"));
+        }
+        public async Task<(bool canStart, string reason)> CanStartTrip(long? driverUserId, ShippingRequestTripStatus tripStatus, ShippingRequestTripDriverStatus driverStatus, DateTime startTripDate)
+        {
+            if (!driverUserId.HasValue)
+                return (false, L("ThereIsNoDriverAssignedToTrip"));
+
+            if (driverStatus != ShippingRequestTripDriverStatus.Accepted)
+                return (false, L("TheDriverStatusShouldBeAccepted"));
+
+            if (tripStatus == ShippingRequestTripStatus.InTransit)
+                return (false, L("TheTripAlreadyStarted"));
+
+            if (await WorkingOnAnotherTrip(driverUserId.Value))
+                return (false, L("TheDriverAlreadyWorkingOnAnotherTrip"));
+
+            if (startTripDate.Date > Clock.Now.Date)
+                return (false, L("YouCanStartTripAt", startTripDate.ToString("dd/MM/yyyy")));
+
+            return (true, null);
+        }
         #endregion
 
         #region Transactions Functions
@@ -627,6 +667,11 @@ namespace TACHYON.Tracking
         #endregion
 
         #region Helpers
+
+        private async Task<bool> WorkingOnAnotherTrip(long driverUserId)
+        {
+            return await _shippingRequestTripRepository.GetAll().AnyAsync(x => x.AssignedDriverUserId == driverUserId && x.DriverStatus == ShippingRequestTripDriverStatus.Accepted && x.Status == ShippingRequestTripStatus.InTransit);
+        }
         /// <summary>
         /// Check the trip can accpted or not by status
         /// </summary>
@@ -639,9 +684,7 @@ namespace TACHYON.Tracking
                             .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => true)
                             .WhereIf(currentUser.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestFk.CarrierTenantId == currentUser.TenantId.Value)
                             .WhereIf(currentUser.IsDriver, x => x.AssignedDriverUserId == currentUser.Id)
-                            .FirstOrDefaultAsync(t => t.DriverStatus == ShippingRequestTripDriverStatus.None && (t.Status == ShippingRequestTripStatus.New ||
-                            // new driver "changed" can accept trip
-                            t.Status == ShippingRequestTripStatus.InTransit));
+                            .FirstOrDefaultAsync();
             if (trip == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
             return trip;
         }
@@ -689,9 +732,8 @@ namespace TACHYON.Tracking
             return await _shippingRequestTripRepository
                             .GetAll().Include(s => s.ShippingRequestFk).Where(x => x.Id == tripId &&
                                 x.Status == ShippingRequestTripStatus.New &&
-                                x.DriverStatus == ShippingRequestTripDriverStatus.Accepted &&
-                                x.ShippingRequestFk.StartTripDate.Value.Date <= Clock.Now.Date)
-                            .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => true)
+                                x.DriverStatus == ShippingRequestTripDriverStatus.Accepted)
+                            .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => x.ShippingRequestFk.IsTachyonDeal)
                             .WhereIf(currentUser.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestFk.CarrierTenantId == currentUser.TenantId.Value)
                             .WhereIf(currentUser.IsDriver, x => x.AssignedDriverUserId == currentUser.Id)
                             .FirstOrDefaultAsync();
@@ -926,6 +968,7 @@ namespace TACHYON.Tracking
             return user;
         }
         #endregion
+
         #region Notfications
         /// <summary>
         /// Singlar notifcation when the route point status changed
