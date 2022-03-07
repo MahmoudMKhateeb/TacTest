@@ -329,7 +329,7 @@ namespace TACHYON.PriceOffers
             return await _priceOfferManager.AcceptOffer(id);
         }
 
-        [AbpAuthorize(AppFeatures.TachyonDealer)]
+        [RequiresFeature(AppFeatures.TachyonDealer)]
         public async Task<PriceOfferStatus> AcceptOfferOnBehalfShipper(long id)
         {
             return await _priceOfferManager.AcceptOfferOnBehalfShipper(id);
