@@ -1,0 +1,36 @@
+<div
+  bsModal
+  #voidInvoiceModal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="createOrEditModal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div *ngIf="active" class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          <span>{{ l('VoidInvoice') }}</span>
+        </h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-6 mb-3">
+            <button [buttonBusy]="sendFullVoidLoading" (click)="sendFullVoid()" class="btn btn-danger btn-lg btn-outline-danger">
+              {{ l('FullVoid') }}
+            </button>
+          </div>
+          <div class="col-6 mb-3">
+            <button class="btn btn-success btn-lg btn-outline-success" (click)="SendPartiallyVoid()">{{ l('PartiallyVoid') }}</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button [disabled]="saving" type="button" class="btn btn-primary blue" (click)="close()">{{ l('Close') }}</button>
+      </div>
+    </div>
+  </div>
+</div>
+<create-or-edit-note-modal #CreateOrEditNoteModalComponent></create-or-edit-note-modal>
