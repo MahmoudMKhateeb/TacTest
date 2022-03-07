@@ -30,6 +30,8 @@ export class HostNewAccountsChartComponent extends WidgetComponentBase implement
   }
 
   reload(datePeriod) {
+    this.loading = true;
+
     if (this.selectedDatePeriod === datePeriod) {
       this.loading = false;
       return;
@@ -65,7 +67,7 @@ export class HostNewAccountsChartComponent extends WidgetComponentBase implement
             txt = 'month-' + element.month;
           }
           this.months.push(txt);
-          this.counts.push(element.count);
+          this.counts.push(parseInt(element.count.toString()));
         });
         this.chartOptions = {
           series: [

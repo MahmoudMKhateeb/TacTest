@@ -80,7 +80,7 @@ namespace TACHYON.Dashboards.Host
             {
                 Id = x.Id,
                 TruckType = x.DisplayName,
-                AvailableTrucksCount = _shippingRequestRepository.GetAll().AsNoTracking().Where(r => r.TrucksTypeId == x.Id && r.CreationTime.Year == DateTime.Now.Year).Count()
+                AvailableTrucksCount = _shippingRequestRepository.GetAll().AsNoTracking().Where(r => r.TrucksTypeId == x.Id && r.CreationTime.Year == Clock.Now.Year).Count()
 
             }).Where(r => r.AvailableTrucksCount > 0).ToListAsync();
 
@@ -91,23 +91,24 @@ namespace TACHYON.Dashboards.Host
             DisableTenancyFiltersIfHost();
             await DisableTenancyFiltersIfTachyonDealer();
             var list = await _usersRepository.GetAll().AsNoTracking()
-                .Where(r => !r.IsDriver && r.CreationTime.Year == DateTime.Now.Year)
-                .WhereIf(input.SalesSummaryDatePeriod == SalesSummaryDatePeriod.Daily, r=> r.CreationTime > DateTime.Now.AddDays(-30) && r.CreationTime < DateTime.Now)
-                .GroupBy(r => new { r.CreationTime.Year, r.CreationTime.Month,r.CreationTime.Day })
-                .Select(g => new ListPerMonthDto() { Year = g.Key.Year, Month = g.Key.Month.ToString(),Day = g.Key.Day, Count = g.Count() })
+                .Where(r => !r.IsDriver && r.CreationTime.Year == Clock.Now.Year)
+                .WhereIf(input.SalesSummaryDatePeriod == SalesSummaryDatePeriod.Daily, r => r.CreationTime > Clock.Now.AddDays(-30) && r.CreationTime < Clock.Now)
+                .GroupBy(r => new { r.CreationTime.Year, r.CreationTime.Month, r.CreationTime.Day })
+                .Select(g => new ListPerMonthDto() { Year = g.Key.Year, Month = g.Key.Month.ToString(), Day = g.Key.Day, Count = g.Count() })
                 .OrderBy(x => x.Year).ThenBy(x => x.Month)
              .ToListAsync();
 
             list.ForEach(r =>
             {
-                r.Month = new DateTime(r.Year, Convert.ToInt32(r.Month), r.Day).ToString("MMM");
+                r.Month = new DateTime(r.Year, Convert.ToByte(r.Month), r.Day).ToString("MMM");
             });
+        
             if(input.SalesSummaryDatePeriod == SalesSummaryDatePeriod.Weekly)
             {
                 DateTime firstDay = new DateTime(DateTime.Now.Year,1,1);
 
                 var query = (from u in _usersRepository.GetAll().AsNoTracking().AsEnumerable()
-                       where u.IsDriver == false && u.CreationTime.Year == DateTime.Now.Year
+                       where u.IsDriver == false && u.CreationTime.Year == Clock.Now.Year
                        group u by new { u.CreationTime.Year, WeekNumber = (u.CreationTime - new DateTime(DateTime.Now.Year, 1, 1)).Days / 7 } into ut
                        select new ListPerMonthDto { Year = ut.Key.Year, Week = ut.Key.WeekNumber, Count = ut.Count() });
                 list = query.OrderBy(r=>r.Week).ToList();
@@ -117,7 +118,7 @@ namespace TACHYON.Dashboards.Host
             {
 
                 list = await _usersRepository.GetAll().AsNoTracking()
-                .Where(r => !r.IsDriver && r.CreationTime.Year == DateTime.Now.Year)
+                .Where(r => !r.IsDriver && r.CreationTime.Year == Clock.Now.Year)
                 .GroupBy(r => new {
                     year = r.CreationTime.Year,
                     month = r.CreationTime.Month
@@ -128,7 +129,7 @@ namespace TACHYON.Dashboards.Host
 
                 list.ForEach(r =>
                 {
-                    r.Month = new DateTime(r.Year, Convert.ToInt32(r.Month), 1).ToString("MMM");
+                    r.Month = new DateTime(r.Year, Convert.ToByte(r.Month), 1).ToString("MMM");
                 });
             }
             return list;
@@ -141,7 +142,7 @@ namespace TACHYON.Dashboards.Host
 
             var groupedTrips = await _shippingRequestTripRepository.GetAll().AsNoTracking()
                 .Where(x => x.Status == ShippingRequestTripStatus.New && x.CreationTime.Year == Clock.Now.Year)
-                .WhereIf(input.SalesSummaryDatePeriod == SalesSummaryDatePeriod.Daily, r => r.CreationTime > DateTime.Now.AddDays(-30) && r.CreationTime < DateTime.Now)
+                .WhereIf(input.SalesSummaryDatePeriod == SalesSummaryDatePeriod.Daily, r => r.CreationTime > Clock.Now.AddDays(-30) && r.CreationTime < Clock.Now)
                 .GroupBy(r => new { r.CreationTime.Year, r.CreationTime.Month , r.CreationTime.Day })
                 .Select(g => new ListPerMonthDto() { Year = g.Key.Year, Month = g.Key.Month.ToString(), Day = g.Key.Day, Count = g.Count() })
                 .OrderBy(x => x.Day)
