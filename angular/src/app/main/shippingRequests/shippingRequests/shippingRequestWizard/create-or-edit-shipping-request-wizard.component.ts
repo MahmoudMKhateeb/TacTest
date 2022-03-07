@@ -827,13 +827,13 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     this.step1Dto.isBid ? (this.shippingRequestType = 'bidding') : '';
     this.step1Dto.isTachyonDeal ? (this.shippingRequestType = 'tachyondeal') : '';
     this.step1Dto.isDirectRequest ? (this.shippingRequestType = 'directrequest') : '';
+    this.step1Dto.endTripDate = this.step1Dto.startTripDate = this.step1Dto.bidStartDate = this.step1Dto.bidEndDate = null; //empty Shipping Request Dates
     this.step2Dto.init(pharsedJson);
     this.step3Dto.init(pharsedJson);
     this.step4Dto.init(pharsedJson);
     // this.templateId = undefined;
     // Swal.fire(this.l('Goodjob') + '!', this.l('TemplateImportedSuccessfully'), 'success');
     Swal.fire({
-      position: 'top-end',
       icon: 'success',
       title: this.l('TemplateImportedSuccessfully'),
       showConfirmButton: false,

@@ -44,6 +44,7 @@ export class RequestTemplatesComponent extends AppComponentBase implements OnIni
   availableEntityTypes = this.enumToArray.transform(SavedEntityType);
 
   private entityTypesEnum = SavedEntityType;
+
   constructor(
     injector: Injector,
     private _templateService: EntityTemplateServiceProxy,
@@ -113,7 +114,6 @@ export class RequestTemplatesComponent extends AppComponentBase implements OnIni
       // this._router.navigate(['/app/main/shippingRequests/shippingRequestWizard', { templateId: record.id }]);
       this._router.navigate(['/app/main/shippingRequests/shippingRequestWizard'], {
         queryParams: {
-          id: record.savedEntityId,
           templateId: record.id,
         },
       });
