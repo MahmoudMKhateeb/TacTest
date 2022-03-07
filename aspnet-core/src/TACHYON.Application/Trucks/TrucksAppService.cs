@@ -294,11 +294,14 @@ namespace TACHYON.Trucks
                 {
                     var doc = input.CreateOrEditDocumentFileDtos
                         .FirstOrDefault(x => x.DocumentTypeId == item.DocumentTypeId);
-
-                    if (doc.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
+                    if (item.DocumentTypeDto.IsRequiredDocumentTemplate)
                     {
-                        throw new UserFriendlyException(L("document missing msg :" + item.Name));
+                        if (doc.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
+                        {
+                            throw new UserFriendlyException(L("document missing msg :" + item.Name));
+                        }
                     }
+    
 
                     doc.Name = item.DocumentTypeDto.DisplayName;
                 }
