@@ -93355,7 +93355,6 @@ export class TrackingShippingRequestTripDto implements ITrackingShippingRequestT
   status!: ShippingRequestTripStatus;
   statusTitle!: string | undefined;
   routPoints!: TrackingRoutePointDto[] | undefined;
-  canStartTrip!: boolean;
   id!: number;
 
   constructor(data?: ITrackingShippingRequestTripDto) {
@@ -93375,7 +93374,6 @@ export class TrackingShippingRequestTripDto implements ITrackingShippingRequestT
         this.routPoints = [] as any;
         for (let item of _data['routPoints']) this.routPoints!.push(TrackingRoutePointDto.fromJS(item));
       }
-      this.canStartTrip = _data['canStartTrip'];
       this.id = _data['id'];
     }
   }
@@ -93396,7 +93394,6 @@ export class TrackingShippingRequestTripDto implements ITrackingShippingRequestT
       data['routPoints'] = [];
       for (let item of this.routPoints) data['routPoints'].push(item.toJSON());
     }
-    data['canStartTrip'] = this.canStartTrip;
     data['id'] = this.id;
     return data;
   }
@@ -93407,7 +93404,6 @@ export interface ITrackingShippingRequestTripDto {
   status: ShippingRequestTripStatus;
   statusTitle: string | undefined;
   routPoints: TrackingRoutePointDto[] | undefined;
-  canStartTrip: boolean;
   id: number;
 }
 
