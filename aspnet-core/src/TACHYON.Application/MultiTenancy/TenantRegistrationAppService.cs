@@ -139,6 +139,7 @@ namespace TACHYON.MultiTenancy
                 createInput.ShouldChangePasswordOnNextLogin = false;
                 createInput.SubscriptionEndDateUtc = subscriptionEndDate;
                 createInput.IsInTrialPeriod = isInTrialPeriod;
+                createInput.IsActive = isActive;
                 var tenantId = await _tenantManager.CreateWithAdminUserAsync(
                     createInput, AppUrlService.CreateEmailActivationUrlFormat(tenancyName));
 
@@ -152,9 +153,9 @@ namespace TACHYON.MultiTenancy
                     Name = input.Name,
                     UserName = AbpUserBase.AdminUserName,
                     EmailAddress = input.AdminEmailAddress,
-                    IsActive = tenant.IsActive,
+                    IsActive = isActive,
                     IsEmailConfirmationRequired = isEmailConfirmationRequired,
-                    IsTenantActive = tenant.IsActive
+                    IsTenantActive = isActive
                 };
             }
         }
