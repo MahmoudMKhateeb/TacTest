@@ -1491,7 +1491,7 @@
 		<text name="ShipperAcceptedOffers">الشاحن {shipper} تم الموافقة على العرض.</text>
 		<text name="ShipperName">اسم الشاحن</text>
 		<text name="ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage">لقد استخدمت أكثر من 70% من حدك الإئتماني</text>
-		<text name="ShipperReminderToCompelteTrips">لديك شحنة لم تكمل الرحلات الخاصة بها</text>
+		<text name="ShipperReminderToCompleteTrips">لديك شحنة لم تكمل الرحلات الخاصة بها</text>
 		<text name="ShippingNote">ملاحظات الشاحن</text>
 		<text name="ShippingRequest">إنشاء طلب شحن</text>
 		<text name="ShippingRequestAccidentsOccure">لقد حدث حادث للشحنة رقم: {id}.</text>
