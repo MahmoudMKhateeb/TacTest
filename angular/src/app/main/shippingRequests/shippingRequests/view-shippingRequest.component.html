@@ -8,21 +8,10 @@
       <!--        </button>-->
       <!--      </div>-->
       <div role="actions">
-        <div class="btn-group" dropdown #dropdownAddPage="bs-dropdown" [dropup]="false" [insideClick]="true" *ngIf="isShipper || isTachyonDealer">
-          <button dropdownToggle type="button" class="btn btn-outline-danger dropdown-toggle btn-elevate-hover mr-2" aria-controls="dropdown-basic">
-            <i class="fa fa-plus"></i> {{ 'SaveAsTemplate' | localize }}<span class="caret"></span>
-          </button>
-          <ul *dropdownMenu class="dropdown-menu p-10" role="menu" aria-labelledby="button-basic">
-            <li role="menuitem">
-              <div class="form-group">
-                <label for="TemplateNameInput">{{ 'TemplateName' | localize }}</label>
-                <input type="text" class="form-control" placeholder="" [(ngModel)]="templateName" />
-              </div>
-              <button class="btn btn-sm btn-block btn-info" (click)="SaveAsTemplate()">{{ 'Save' | localize }}</button>
-            </li>
-          </ul>
-        </div>
-
+        <create-or-edit-template-drop-down-button
+          [entityType]="entityTypes.ShippingRequest"
+          [sourceEntityId]="activeShippingRequestId"
+        ></create-or-edit-template-drop-down-button>
         <a class="btn btn-outline-success" (click)="appEntityLog.show()"> <i class="flaticon-notes"></i> {{ 'Activity Log' }} </a>
       </div>
     </sub-header>
@@ -103,7 +92,7 @@
                 <div class="mb-2">
                   <div class="form-group row fv-plugins-icon-container">
                     <div class="col-lg-6">
-                      <label><span class="required-fileds"></span> {{ l('ShippingRequestType') }}</label>
+                      <label><span class="required-fileds"></span> {{ l('ShippingRequestType') }} </label>
                       <input class="form-control" type="text" name="ShippingRequestType" [value]="shipppingRequestType()" disabled />
                     </div>
                     <!--  Start::Shipping Type                 -->
@@ -219,7 +208,7 @@
                 <div class="mb-2">
                   <div class="row">
                     <div class="col-lg-6">
-                      <label><span class="required-fileds"></span> {{ l('MainGoodCategory') }}</label>
+                      <label><span class="required-fileds"></span> {{ l('MainGoodCategory') }} </label>
                       <input class="form-control" type="text" name="MainGoodCategory" [value]="shippingRequestforView.goodsCategoryName" disabled />
                     </div>
                     <div class="col-lg-6">
@@ -355,7 +344,7 @@
                     </div>
                     <div class="col-lg-3">
                       <div class="form-group">
-                        <label><span class="required-fileds"></span> {{ l('NumberOfDrops') }}</label>
+                        <label><span class="required-fileds"></span> {{ l('NumberOfDrops') }} </label>
                         <input
                           class="form-control"
                           type="number"

@@ -115,8 +115,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   requestType: any;
   AllShippers: ShippersForDropDownDto[];
   public allCarriers: CarriersForDropDownDto[];
-  private entityType: SavedEntityType = SavedEntityType.ShippingRequest;
-  templateName: string;
+  entityType = SavedEntityType;
   constructor(
     injector: Injector,
     private _activatedRoute: ActivatedRoute,
@@ -752,49 +751,6 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   }
 
   /**
-   * save or edit Shipping Request As Template
-   */
-  SaveOrEditEntityTemplate(): void {
-    if (!isNotNullOrUndefined(this.templateName) || this.templateName === '') return; //Template Name Is Empty Exit
-    let entityTemplateInput: CreateOrEditEntityTemplateInputDto = new CreateOrEditEntityTemplateInputDto();
-    let msg;
-    entityTemplateInput.templateName = this.templateName;
-    entityTemplateInput.savedEntityId = this.activeShippingRequestId.toString();
-    entityTemplateInput.entityType = this.entityType;
-    msg = this.l('NewTemplateWillBeCreatedWithName') + ' :' + this.templateName;
-    //in case of edit
-    if (isNotNullOrUndefined(this.templateId)) {
-      entityTemplateInput.id = this.templateId;
-      msg = this.l('TemplateDataWillBeChangedAreYouSureYouWantToContinue');
-    }
-    Swal.fire({
-      title: 'Are you sure?',
-      text: msg,
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: this.l('Yes'),
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.loading = true;
-        this._templateService
-          .createOrEdit(entityTemplateInput)
-          .pipe(
-            finalize(() => {
-              this.loading = false;
-            })
-          )
-          .subscribe((res) => {
-            //TODO : return the created id from mosa to allow edit
-            this.templateId = this.Number(res);
-            this.notify.success(this.l('TemplateSavedSuccessfully'));
-          });
-      }
-    });
-  }
-
-  /**
    * get Shipping Request Template by TemplateId
    * then pass the res to parseJsonToDtoData to fill the data
    * @private
@@ -810,7 +766,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
           })
         )
         .subscribe((res) => {
-          this.templateName = res.templateName;
+          // this.templateName = res.templateName;
           this.parseJsonToDtoData(res.savedEntity);
         });
     }

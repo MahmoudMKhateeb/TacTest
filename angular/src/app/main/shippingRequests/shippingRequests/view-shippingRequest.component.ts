@@ -6,8 +6,7 @@ import {
   GetShippingRequestVasForViewDto,
   ShippingRequestStatus,
   ShippingRequestType,
-  CreateOrEditEntityTemplateInputDto,
-  EntityTemplateServiceProxy,
+  SavedEntityType,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ActivatedRoute, NavigationEnd, Router, RouterEvent } from '@angular/router';
@@ -34,9 +33,8 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
   vases: GetShippingRequestVasForViewDto[];
   activeShippingRequestId: number;
   bidsloading = false;
-
+  entityTypes = SavedEntityType;
   breadcrumbs: BreadcrumbItem[] = [new BreadcrumbItem(this.l('ShippingRequests'), '/app/main/shippingRequests/shippingRequests')];
-  templateName: string;
 
   constructor(
     injector: Injector,
@@ -45,7 +43,6 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
     private _shippingRequestsServiceProxy: ShippingRequestsServiceProxy,
     private changeDetectorRef: ChangeDetectorRef,
     private _trip: TripService,
-    private _templateService: EntityTemplateServiceProxy,
     @Inject(DOCUMENT) private _document: Document
   ) {
     super(injector);
@@ -109,6 +106,7 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
       return false;
     }
   }
+
   /**
    * Binds the Value if Shipping Request Type in View Shipping Request Base on User Feature
    */
@@ -148,7 +146,9 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
    * this function validates who Can See And Access the DirectRequests List in ViewShippingRequest
    */
   canSeeDirectRequests() {
-    if (!this.feature.isEnabled('App.SendDirectRequest')) return false;
+    if (!this.feature.isEnabled('App.SendDirectRequest')) {
+      return false;
+    }
     if (this.feature.isEnabled('App.TachyonDealer') && this.shippingRequestforView.shippingRequest.isTachyonDeal) {
       return true;
     }
@@ -173,14 +173,15 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
     }
     return true;
   }
+
   /* canSeePriceOffers() {
-    // if the user is carrier
-    if (this.feature.isEnabled('App.Carrier') || this.shippingRequestforView.shippingRequest.price) {
-      return false;
+      // if the user is carrier
+      if (this.feature.isEnabled('App.Carrier') || this.shippingRequestforView.shippingRequest.price) {
+        return false;
+      }
+      return true;
     }
-    return true;
-  }
-  */
+    */
   /**
    * this function scrolls to a the direct Requests table and opens up the Send Direct Requests Modal for Tachyon Dealer
    */
@@ -190,31 +191,5 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
     setTimeout(() => {
       this.directRequestComponent.DirectRequestTenantModel.show();
     }, 1000);
-  }
-
-  /**
-   * Save Shipping Request as a Template
-   * @constructor
-   */
-  /**
-   * save Shipping Request As Template
-   */
-  SaveAsTemplate(): void {
-    if (!isNotNullOrUndefined(this.templateName) || this.templateName === '') return;
-    this.loading = true;
-    let entityTemplateInput: CreateOrEditEntityTemplateInputDto = new CreateOrEditEntityTemplateInputDto();
-    entityTemplateInput.templateName = this.templateName;
-    entityTemplateInput.savedEntityId = this.activeShippingRequestId.toString();
-    entityTemplateInput.entityType = 1;
-    this._templateService
-      .createOrEdit(entityTemplateInput)
-      .pipe(
-        finalize(() => {
-          this.loading = false;
-        })
-      )
-      .subscribe(() => {
-        this.notify.success(this.l('TemplateSavedSuccessfully'));
-      });
   }
 }
