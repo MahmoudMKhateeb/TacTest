@@ -733,7 +733,7 @@ namespace TACHYON.Tracking
                             .GetAll().Include(s => s.ShippingRequestFk).Where(x => x.Id == tripId &&
                                 x.Status == ShippingRequestTripStatus.New &&
                                 x.DriverStatus == ShippingRequestTripDriverStatus.Accepted)
-                            .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => x.ShippingRequestFk.IsTachyonDeal)
+                            .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => true)
                             .WhereIf(currentUser.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestFk.CarrierTenantId == currentUser.TenantId.Value)
                             .WhereIf(currentUser.IsDriver, x => x.AssignedDriverUserId == currentUser.Id)
                             .FirstOrDefaultAsync();
