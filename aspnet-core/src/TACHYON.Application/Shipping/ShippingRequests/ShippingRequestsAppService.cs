@@ -839,6 +839,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
         public async Task<bool> CanAddTripForShippingRequest(long shippingRequestId)
         {
+            DisableTenancyFilters();
             var request = await _shippingRequestRepository.GetAll()
                 .Where(x => x.Id == shippingRequestId).Select(x => new {x.Id, x.TenantId, x.CarrierTenantId, x.NumberOfTrips})
                 .FirstOrDefaultAsync();
@@ -857,6 +858,8 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             bool IsSaas()
                 => srTenantId == srCarrierTenantId;
+
+            bool carrierSaasEnabled = true, shipperEnabled = true, tmsEnabled = true;
             
             #region CarrierSaas
 
@@ -864,7 +867,7 @@ namespace TACHYON.Shipping.ShippingRequests
             {
                 if (AbpSession.TenantId != srTenantId ||
                     !await FeatureChecker.IsEnabledAsync(AppFeatures.CarrierAsASaas))
-                    return false;
+                    carrierSaasEnabled = false;
             }
                 
 
@@ -878,7 +881,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     srTenantId, AppFeatures.AddTripsByTachyonDeal);
                 
                 if (!tripsByTmsEnabled)
-                    return false;
+                    tmsEnabled = false;
             }
 
             #endregion
@@ -887,14 +890,14 @@ namespace TACHYON.Shipping.ShippingRequests
 
             if (!IsSaas())
             {
-                if (srTenantId != AbpSession.TenantId || !await IsEnabledAsync(AppFeatures.Shipper) )
-                    return false ;
+                if (srTenantId != AbpSession.TenantId || !await IsEnabledAsync(AppFeatures.Shipper))
+                    shipperEnabled = false;
             }
                
 
             #endregion
 
-            return true;
+            return carrierSaasEnabled || tmsEnabled || shipperEnabled ;
         }
         
         protected virtual GetShippingRequestForEditOutput _GetShippingRequestForEdit(EntityDto<long> input)
