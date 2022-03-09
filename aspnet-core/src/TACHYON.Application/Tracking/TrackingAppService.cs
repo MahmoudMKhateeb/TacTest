@@ -139,9 +139,9 @@ namespace TACHYON.Tracking
                     IsPodUploaded = a.IsPodUploaded,
                     FacilityRate = a.FacilityFk.Rate,
                     ReceiverCode = AbpSession.TenantId.HasValue ? null : a.Code,
-                    Statues =
-                        _workFlowProvider.GetStatuses(a.WorkFlowVersion,
-                            a.RoutPointStatusTransitions.Where(x => !x.IsReset).Select(x => x.Status).ToList()),
+                    Statues = _workFlowProvider.GetStatuses(a.WorkFlowVersion,
+                            a.RoutPointStatusTransitions.Where(x => !x.IsReset)
+                            .Select(x => new RoutPointTransactionArgDto { Status = x.Status, CreationTime = x.CreationTime }).ToList()),
                     AvailableTransactions = !a.IsResolve || mappedTrip.DriverStatus != ShippingRequestTripDriverStatus.Accepted
                         ? new List<PointTransactionDto>()
                         : _workFlowProvider.GetTransactionsByStatus(a.WorkFlowVersion,
