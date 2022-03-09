@@ -847,6 +847,19 @@ namespace TACHYON
                 .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
                 .ReverseMap();
 
+            configuration.CreateMap<ShippingRequestTrip, TrackingByReferanceNumberDto>()
+                .ForMember(dst => dst.CarrierName, opt => opt.MapFrom(src => src.ShippingRequestFk.CarrierTenantFk.Name))
+                .ForMember(dst => dst.ShipperName, opt => opt.MapFrom(src => src.ShippingRequestFk.Tenant.Name))
+                .ForMember(dst => dst.TripStatus, opt => opt.MapFrom(src => src.Status.ToString()));
+
+                configuration.CreateMap<ShippingRequestTrip, TrackingByWaybillNumberTripDto>()
+                .ForMember(dst => dst.Origin, opt => opt.MapFrom(src => src.OriginFacilityFk.Address))
+                .ForMember(dst => dst.Destination, opt => opt.MapFrom(src => src.DestinationFacilityFk.Address))
+                .ForMember(dst => dst.CarrierName, opt => opt.MapFrom(src => src.ShippingRequestFk.CarrierTenantFk.Name))
+                .ForMember(dst => dst.ShipperName, opt => opt.MapFrom(src => src.ShippingRequestFk.Tenant.Name))
+                .ForMember(dst => dst.ReferanceNumber, opt => opt.MapFrom(src => src.ShippingRequestFk.ReferenceNumber))
+                .ForMember(dst => dst.TripStatus, opt => opt.MapFrom(src => src.Status.ToString()));
+
             configuration.CreateMap<TrucksType, TrucksTypeSelectItemDto>()
                 .ForMember(x => x.IsOther, x => x.MapFrom(i => i.ContainsOther()))
                 .ForMember(x => x.Id, x => x.MapFrom(i => i.Id.ToString()))

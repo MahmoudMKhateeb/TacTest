@@ -28,6 +28,7 @@ using TACHYON.Shipping.Trips.RejectReasons.Dtos;
 using TACHYON.Tracking.Dto;
 using TACHYON.Tracking.Dto.WorkFlow;
 using TACHYON.Trucks.TrucksTypes.Dtos;
+using AutoMapper.QueryableExtensions;
 
 namespace TACHYON.Tracking
 {
@@ -97,6 +98,7 @@ namespace TACHYON.Tracking
                     x => x.ShippingRequestFk.Tenant.Name.ToLower().Contains(input.Shipper) ||
                          x.ShippingRequestFk.Tenant.companyName.ToLower().Contains(input.Shipper) ||
                          x.ShippingRequestFk.Tenant.TenancyName.ToLower().Contains(input.Shipper))
+                .WhereIf(!string.IsNullOrEmpty(input.ReferenceNumber), x => x.ShippingRequestFk.ReferenceNumber.Contains(input.ReferenceNumber))
                 .WhereIf(!string.IsNullOrEmpty(input.Carrier),
                     x => x.ShippingRequestFk.CarrierTenantFk.Name.ToLower().Contains(input.Carrier) ||
                          x.ShippingRequestFk.CarrierTenantFk.companyName.ToLower().Contains(input.Carrier) ||
@@ -115,7 +117,39 @@ namespace TACHYON.Tracking
                 trackingLists
             );
         }
+        [AbpAllowAnonymous]
+        public async Task<PagedResultDto<TrackingByReferanceNumberDto>> GetTripsByShippingRequestReferance(string referanceNumber)
+        {
+            DisableTenancyFilters();
+            var query =  await _ShippingRequestTripRepository
+             .GetAll()
+             .AsNoTracking()
+             .Include(r => r.ShippingRequestFk)
+             .ThenInclude(s => s.Tenant)
+             .Include(r => r.ShippingRequestFk)
+             .ThenInclude(c => c.CarrierTenantFk)
+             .Where(x => x.ShippingRequestFk.ReferenceNumber.Equals(referanceNumber))
+             .ProjectTo<TrackingByReferanceNumberDto>(AutoMapperConfigurationProvider).ToListAsync();
+             return new PagedResultDto<TrackingByReferanceNumberDto>(query.Count, query);
 
+        }
+
+        [AbpAllowAnonymous]
+        public async Task<TrackingByWaybillNumberTripDto> GetTripByWaybillNumber(string waybillNumber)
+        {
+            DisableTenancyFilters();
+            return await _ShippingRequestTripRepository
+             .GetAll()
+             .AsNoTracking()
+             .Include(x => x.OriginFacilityFk)
+             .Include(x => x.DestinationFacilityFk)
+             .Include(r => r.ShippingRequestFk)
+             .ThenInclude(s => s.Tenant)
+             .Include(r => r.ShippingRequestFk)
+             .ThenInclude(c => c.CarrierTenantFk)
+             .ProjectTo<TrackingByWaybillNumberTripDto>(AutoMapperConfigurationProvider)
+             .FirstOrDefaultAsync(x => x.WaybillNumber.Equals(waybillNumber));
+        }
         public async Task<TrackingShippingRequestTripDto> GetForView(long id)
         {
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier, AppFeatures.Shipper);
@@ -211,11 +245,11 @@ namespace TACHYON.Tracking
         [AbpAuthorize(AppPermissions.Pages_Tracking_ResetPointReceiverCode)]
         public string ResetPointReceiverCode(long pointId)
         {
-            
+
             var randomCode = new Random().Next(100000, 999999).ToString();
             _RoutPointRepository.Update(pointId, point => point.Code = randomCode);
 
-             return randomCode;
+            return randomCode;
         }
 
         #region Helper
