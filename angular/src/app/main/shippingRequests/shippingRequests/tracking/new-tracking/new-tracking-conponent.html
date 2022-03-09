@@ -222,12 +222,20 @@
                               ></i>
                             </p>
                           </div>
-                          <p-steps
-                            [model]="getStepperSteps(point.statues)"
-                            [(activeIndex)]="activeIndex"
-                            [readonly]="true"
-                            [busyIf]="busyPointId == point.id"
-                          ></p-steps>
+
+                          <div class="card">
+                            <p-timeline [value]="getStepperSteps(point.statues)" layout="horizontal" align="top">
+                              <ng-template pTemplate="marker" let-event>
+                                <span class="custom-marker p-shadow-2 {{event.isDone ? 'p-disabled' : ''}}" [style.backgroundColor]="event.color">
+                                  {{event.index}}
+                                </span>
+                              </ng-template>
+                              <ng-template pTemplate="content" let-event>
+                                <span class="font-weight-bolder text-dark {{event.isDone ? 'p-disabled' : ''}}">{{event.status}}</span><br />
+                                <span class="text-muted mt-3 font-weight-bold font-size-sm">{{event.time | momentFromNow }}</span>
+                              </ng-template>
+                            </p-timeline>
+                          </div>
                         </div>
                       </div>
                     </div>
