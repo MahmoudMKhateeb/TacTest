@@ -278,6 +278,7 @@ import { EmailTemplateTranslationTemplateComponent } from './emailTemplates/emai
 import { CreateOrEditEmailTemplateTranslationModalComponent } from './emailTemplates/emailTemplates/create-or-edit-email-template-translation-modal.component';
 import { ImportCitiesPolygonsModalComponent } from './cities/cities/import-cities-polygoins-modal/import-cities-polygons-modal.component';
 import { ToggleButtonModule } from '@node_modules/primeng/togglebutton';
+import { PenaltiesListComponent } from './Penalties/penalties-list/penalties-list.component';
 
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
@@ -529,6 +530,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     EmailTemplateTranslationTemplateComponent,
     CreateOrEditEmailTemplateTranslationModalComponent,
     ImportCitiesPolygonsModalComponent,
+    PenaltiesListComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },

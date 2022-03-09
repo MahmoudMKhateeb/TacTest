@@ -162,6 +162,8 @@ using TACHYON.Vases;
 using TACHYON.Vases.Dtos;
 using TACHYON.WebHooks.Dto;
 using TACHYON.WorkFlows;
+using TACHYON.Penalties;
+using TACHYON.Penalties.Dto;
 
 namespace TACHYON
 {
@@ -735,6 +737,10 @@ namespace TACHYON
                 .ForMember(dto => dto.TenantName, options => options.MapFrom(entity => entity.Tenant.Name))
                 .ForMember(dto => dto.Period,
                     options => options.MapFrom(entity => entity.InvoicePeriodsFK.DisplayName));
+
+            configuration.CreateMap<Penalty, GetAllPenaltiesDto>()
+            .ForMember(dto => dto.CompanyName, options => options.MapFrom(entity => entity.Tenant.companyName));
+
 
             configuration.CreateMap<SubmitInvoice, SubmitInvoiceInfoDto>()
                 .ForMember(dto => dto.ClientName, options => options.MapFrom(entity => entity.Tenant.Name))

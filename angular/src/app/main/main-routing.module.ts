@@ -67,6 +67,7 @@ import { TMSRequestListComponent } from '@app/main/tms/tms-request-list.componen
 import { TrucksSubmittedDocumentsComponent } from '@app/main/documentFiles/documentFiles/trucks-submitted-documents/trucks-submitted-documents.component';
 import { DriversSubmittedDocumentsComponent } from '@app/main/documentFiles/documentFiles/drivers-submitted-documents/drivers-submitted-documents.component';
 import { ShipmentHistoryComponent } from '@app/main/shippingRequests/shippingRequests/shipment-history/shipment-history.component';
+import { PenaltiesListComponent } from './Penalties/penalties-list/penalties-list.component';
 
 @NgModule({
   imports: [
@@ -273,6 +274,8 @@ import { ShipmentHistoryComponent } from '@app/main/shippingRequests/shippingReq
           { path: 'trucks/trucks', component: TrucksComponent, data: { permission: 'Pages.Trucks' } },
           { path: 'trucksTypes/trucksTypes', component: TrucksTypesComponent, data: { permission: 'Pages.TrucksTypes' } },
           { path: 'invoices/view', component: InvoicesListComponent, data: { permission: 'Pages.Invoices' } },
+          { path: 'penalties/view', component: PenaltiesListComponent, data: { permission: 'Pages.Invoices' } },
+
           {
             path: 'invoices/detail/:id',
             component: InvoiceDetailComponent,
