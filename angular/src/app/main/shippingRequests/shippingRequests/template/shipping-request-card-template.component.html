@@ -3,7 +3,28 @@
     <!--begin::Subheader-->
     <sub-header [title]="Title | localize" [description]="'' | localize">
       <div role="actions">
-        <button (click)="createNewRequest()" class="btn btn-success"><i class="fas fa-plus"></i> {{ l('CreateNewRequest') }}</button>
+        <div class="btn-group mr-2" dropdown #dropdownAddPage="bs-dropdown" [dropup]="false" [insideClick]="true">
+          <button dropdownToggle type="button" class="btn btn-success" aria-controls="dropdown-basic">
+            <i class="fas fa-plus"></i> {{ 'CreateNewRequest' | localize }}<span class="caret"></span>
+          </button>
+          <ul *dropdownMenu class="dropdown-menu p-2 w-100" role="menu" aria-labelledby="button-basic">
+            <li role="menuitem">
+              <button (click)="createNewRequest()" class="btn btn-outline-success btn-elevate-hover w-100">
+                <i class="fas fa-plus"></i> {{ l('New') }}
+              </button>
+            </li>
+            <li role="menuitem">
+              <button *ngIf="isShipper || isTachyonDealer" class="btn btn-outline-info btn-elevate-hover mt-2 w-100">
+                <i class="fas fa-list"></i> {{ l('FromTemplate') }}
+              </button>
+            </li>
+            <li role="menuitem mt-2">
+              <select name="templates" id="templates" class="form-control">
+                <option>Template 1</option>
+              </select>
+            </li>
+          </ul>
+        </div>
         <button (click)="ModelSearch.show(searchInput)" class="btn btn-primary red"><i class="fas fa-search"></i> {{ l('Search') }}</button>
       </div>
     </sub-header>
