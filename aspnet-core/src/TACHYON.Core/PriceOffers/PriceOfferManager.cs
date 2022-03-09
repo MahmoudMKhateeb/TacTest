@@ -768,6 +768,20 @@ namespace TACHYON.PriceOffers
             var directRequestVasCommissionPercentage = Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.DirectRequestVasCommissionPercentage));
             var directRequestCommissionValue = Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.DirectRequestCommissionValue));
             var directRequestVasCommissionValue = Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.DirectRequestVasCommissionValue));
+            if (offer.Channel == PriceOfferChannel.CarrierAsSaas)
+            {
+                decimal carrierAsSaasCommissionValue = Convert.ToDecimal( _featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.CarrierAsSaasCommissionValue));
+
+                directRequestCommissionType = PriceOfferCommissionType.CommissionValue;
+                directRequestCommissionMinValue = carrierAsSaasCommissionValue;
+                directRequestVasCommissionMinValue = carrierAsSaasCommissionValue;
+                directRequestCommissionPercentage = 0;
+                directRequestVasCommissionPercentage = 0;
+                directRequestCommissionValue = carrierAsSaasCommissionValue;
+                directRequestVasCommissionValue = 0;
+
+            }
+
             #endregion
 
 

@@ -93,7 +93,7 @@
                       <a
                         (click)="downloadMultiDropPointWaybill(point.id)"
                         [buttonBusy]="dropWaybillLoadingId == point.id"
-                        *ngIf="trip.routeTypeId === routeTypeEnum.MultipleDrops"
+                        *ngIf="trip.routeTypeId === routeTypeEnum.MultipleDrops && point.pickingType == pickingTypeEnum.Dropoff"
                         class="ribbon-target bg-danger"
                         style="top: -2px; right: 12%; background-color: #6c757d !important"
                       >

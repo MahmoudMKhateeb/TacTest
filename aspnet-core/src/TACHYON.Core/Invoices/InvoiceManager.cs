@@ -177,10 +177,16 @@ namespace TACHYON.Invoices
 
             foreach (var tenant in tenants)
             {
-                if (tenant.EditionId == ShipperEditionId)
+                if (await _featureChecker.IsEnabledAsync(AppFeatures.Pay))
+                {
                     await CollectTripsForShipper(tenant, period);
-                else
+
+                }
+                else if (await _featureChecker.IsEnabledAsync(AppFeatures.Receipt))
+                {
                     await BuildCarrierSubmitInvoice(tenant, period);
+
+                }
 
             }
         }
@@ -277,7 +283,7 @@ namespace TACHYON.Invoices
                     continue;
                 }
                 var relatedCarrierId = int.Parse(await _featureChecker.GetValueAsync(shipperId, AppFeatures.SaasRelatedCarrier));
-                if (carrierId == relatedCarrierId)
+                if (carrierId == relatedCarrierId || carrierId == shipperId) // saas
                 {
                     trips.Remove(trip);
                 }
@@ -321,9 +327,25 @@ namespace TACHYON.Invoices
         /// <param name="period"></param>
         public async Task GenerateShipperInvoice(Tenant tenant, List<ShippingRequestTrip> trips, InvoicePeriod period)
         {
-            decimal totalAmount = (decimal)trips.Sum(r => r.TotalAmountWithCommission + r.ShippingRequestTripVases.Sum(v => v.TotalAmountWithCommission));
-            decimal vatAmount = (decimal)trips.Sum(r => r.VatAmountWithCommission + r.ShippingRequestTripVases.Sum(v => v.VatAmountWithCommission));
-            decimal subTotalAmount = (decimal)trips.Sum(r => r.SubTotalAmountWithCommission + r.ShippingRequestTripVases.Sum(v => v.SubTotalAmountWithCommission));
+            //not saas trips
+            var notSaasTrips = trips.Where(x => !x.ShippingRequestFk.IsSaas());
+
+            decimal notSaasTotalAmount = (decimal)notSaasTrips.Sum(r => r.TotalAmountWithCommission + r.ShippingRequestTripVases.Sum(v => v.TotalAmountWithCommission));
+            decimal notSaasVatAmount = (decimal)notSaasTrips.Sum(r => r.VatAmountWithCommission + r.ShippingRequestTripVases.Sum(v => v.VatAmountWithCommission));
+            decimal notSaaSubTotalAmount = (decimal)notSaasTrips.Sum(r => r.SubTotalAmountWithCommission + r.ShippingRequestTripVases.Sum(v => v.SubTotalAmountWithCommission));
+
+            //saas trips
+            var saasTrips = trips.Where(x => x.ShippingRequestFk.IsSaas());
+
+            decimal SaasTotalAmount = (decimal)saasTrips.Sum(r => r.TotalAmountWithCommission);
+            decimal SaasVatAmount = (decimal)saasTrips.Sum(r => r.VatAmountWithCommission);
+            decimal SaasSubTotalAmount = (decimal)saasTrips.Sum(r => r.SubTotalAmountWithCommission);
+
+            var totalAmount = notSaasTotalAmount + SaasTotalAmount;
+            var vatAmount = notSaasVatAmount + SaasVatAmount;
+            var subTotalAmount = notSaaSubTotalAmount + SaasSubTotalAmount;
+
+
 
 
             DateTime dueDate = Clock.Now;
