@@ -27,16 +27,14 @@ namespace TACHYON.Firebases
             _userDeviceToken = userDeviceToken;
             _localizationContext = localizationContext;
         }
-    
-       
-        
+
+
         public async Task PushNotification(
             string notificationName,
-            string msgTitle,
+            string msgBody,
             NotificationData data = null,
             params long[] userIds)
         {
-            
             var tokens = await GetUsersDevices(userIds);
             if (tokens.Length < 1)
             {
@@ -47,27 +45,23 @@ namespace TACHYON.Firebases
             List<Message> msgList = new List<Message>();
             foreach (string token in tokens)
             {
-
                 Message message = new Message
                 {
                     Token = token,
                     Notification = new Notification()
                     {
-                        Title = msgTitle,
-                        Body = notificationName,
+                        Title = "TachyonDriver",
+                        Body = msgBody,
                     },
-                    Data = data?.Properties.ToDictionary(x=> x.Key,x=> x.Value.ToString())
+                    Data = data?.Properties.ToDictionary(x => x.Key, x => x.Value.ToString())
                 };
                 message.Android = new AndroidConfig()
                 {
                     Priority = Priority.High,
-                    Notification = new AndroidNotification()
-                    {
-                        Title = message.Notification.Title,
-                        Body = notificationName,
-
-                    },
-                    Data = data?.Properties.ToDictionary(x=> x.Key,x=> x.Value.ToString())
+                    Notification =
+                        new AndroidNotification() { Title = "TachyonDriver",
+                            Body = msgBody, },
+                    Data = data?.Properties.ToDictionary(x => x.Key, x => x.Value.ToString())
                 };
                 msgList.Add(message);
             }
@@ -78,10 +72,10 @@ namespace TACHYON.Firebases
             }
             catch (FirebaseMessagingException ex)
             {
-                Logger.Error("Error When Send Notification",ex);
+                Logger.Error("Error When Send Notification", ex);
             }
         }
-        
+
         #region Helper
 
         private async Task<string[]> GetUsersDevices(params long[] userIds)
@@ -90,9 +84,10 @@ namespace TACHYON.Firebases
                 .Where(x => userIds.Contains(x.UserId)
                             && (!x.ExpireDate.HasValue
                                 || x.ExpireDate >= Clock.Now))
-                .Select(x=> x.Token).ToArrayAsync();
+                .Select(x => x.Token).ToArrayAsync();
             return devices;
         }
+
         #endregion
     }
 }

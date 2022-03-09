@@ -588,6 +588,10 @@ namespace TACHYON.Tracking
 
             if (otherPoints.All(x => x.ActualPickupOrDeliveryDate.HasValue))
                 point.ShippingRequestTripFk.ActualDeliveryDate = Clock.Now;
+
+            if (otherPoints.All(x => x.IsResolve))
+                point.ShippingRequestTripFk.Status = ShippingRequestTripStatus.DeliveredAndNeedsConfirmation;
+
             return nameof(RoutPointDropOffStep4);
 
         }
@@ -733,7 +737,7 @@ namespace TACHYON.Tracking
                             .GetAll().Include(s => s.ShippingRequestFk).Where(x => x.Id == tripId &&
                                 x.Status == ShippingRequestTripStatus.New &&
                                 x.DriverStatus == ShippingRequestTripDriverStatus.Accepted)
-                            .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => x.ShippingRequestFk.IsTachyonDeal)
+                            .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => true)
                             .WhereIf(currentUser.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestFk.CarrierTenantId == currentUser.TenantId.Value)
                             .WhereIf(currentUser.IsDriver, x => x.AssignedDriverUserId == currentUser.Id)
                             .FirstOrDefaultAsync();
@@ -819,8 +823,6 @@ namespace TACHYON.Tracking
 
                 var allPointsCompleted = !await _routPointRepository.GetAll()
                .AnyAsync(x => x.ShippingRequestTripId == point.ShippingRequestTripId && !x.IsComplete && x.Id != point.Id);
-                var allPointsResolved = !await _routPointRepository.GetAll()
-                    .AnyAsync(x => x.ShippingRequestTripId == point.ShippingRequestTripId && !x.IsResolve && x.Id != point.Id);
 
                 var trip = await _shippingRequestTripRepository
                     .GetAllIncluding(d => d.ShippingRequestTripVases)
@@ -837,10 +839,6 @@ namespace TACHYON.Tracking
                     await CloseLastTransitionInComplete(trip.Id);
                     await _invoiceManager.GenertateInvoiceWhenShipmintDelivery(trip);
                     await NotificationWhenShipmentDelivered(point, currentUser);
-                }
-                else if (allPointsResolved && trip.Status == ShippingRequestTripStatus.InTransit)
-                {
-                    trip.Status = ShippingRequestTripStatus.DeliveredAndNeedsConfirmation;
                 }
             }
         }
