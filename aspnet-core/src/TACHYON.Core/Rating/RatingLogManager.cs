@@ -74,6 +74,18 @@ namespace TACHYON.Rating
                 rate.PointId || x.TripId == rate.RoutePointFk.ShippingRequestTripId);
         }
 
+
+        public async Task<List<RatingLog>> GetAllRatingByUserAsync(RateType? rateType = null,
+            int? shipperId = null, int? carrierId = null,
+            long? driverId = null)
+        {
+            return await _ratingLogRepository.GetAll().AsNoTracking()
+                .WhereIf(rateType.HasValue, x => x.RateType == rateType)
+                .WhereIf(shipperId.HasValue, x => x.ShipperId == shipperId)
+                .WhereIf(carrierId.HasValue, x => x.CarrierId == carrierId)
+                .WhereIf(driverId.HasValue, x => x.DriverId == driverId)
+                .ToListAsync();
+        }
         #region Recalculating
 
         private async Task ReCalculateTenantOrEntityRating(RatingLog rate)

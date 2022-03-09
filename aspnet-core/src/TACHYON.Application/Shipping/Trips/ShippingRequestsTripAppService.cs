@@ -144,15 +144,18 @@ namespace TACHYON.Shipping.Trips
             var totalCount = await query.CountAsync();
             var output = ObjectMapper.Map<List<ShippingRequestsTripListDto>>(resultPage);
 
+            var allRatingLogList = await _ratingLogManager.GetAllRatingByUserAsync(await IsShipper() ? RateType.CarrierByShipper : RateType.ShipperByCarrier,
+                request.TenantId, request.CarrierTenantId, null);
             foreach (var x in output)
             {
-                x.IsTripRateBefore = await _ratingLogManager.IsRateDoneBefore(new RatingLog
-                {
-                    ShipperId = request.TenantId,
-                    CarrierId = request.CarrierTenantId,
-                    RateType = await IsShipper() ? RateType.CarrierByShipper : RateType.ShipperByCarrier,
-                    TripId = x.Id
-                });
+                //x.IsTripRateBefore = await _ratingLogManager.IsRateDoneBefore(new RatingLog
+                //{
+                //    ShipperId = request.TenantId,
+                //    CarrierId = request.CarrierTenantId,
+                //    RateType = await IsShipper() ? RateType.CarrierByShipper : RateType.ShipperByCarrier,
+                //    TripId = x.Id
+                //});
+                x.IsTripRateBefore = allRatingLogList.Any(x => x.TripId == x.Id);
             }
 
             return new PagedResultDto<ShippingRequestsTripListDto>(
