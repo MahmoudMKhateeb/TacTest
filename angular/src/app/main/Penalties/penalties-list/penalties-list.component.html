@@ -2,7 +2,7 @@
   <div class="content d-flex flex-column flex-column-fluid">
     <sub-header [title]="'PenaltiesList' | localize" [description]="'' | localize">
       <div role="actions">
-        <button class="btn btn-outline-success">{{ l('ApplyNotLoggedPenalty') }}</button>
+        <button class="btn btn-outline-success" (click)="createOrEditPenaltyModal.show()">{{ l('ApplyNotLoggedPenalty') }}</button>
       </div>
     </sub-header>
     <div [class]="containerClass">
@@ -65,7 +65,7 @@
                   </a>
                   <ul class="dropdown-menu" *dropdownMenu>
                     <li>
-                      <a class="dropdown-item">{{ l('EditPenalty') }}</a>
+                      <a class="dropdown-item" (click)="createOrEditPenaltyModal.show(options.data.id)">{{ l('Edit') }}</a>
                     </li>
                   </ul>
                 </div>
@@ -77,3 +77,4 @@
     </div>
   </div>
 </div>
+<createOrEditPenaltyModal #createOrEditPenaltyModal (modalSave)="reloadPage()"></createOrEditPenaltyModal>

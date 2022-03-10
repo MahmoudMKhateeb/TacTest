@@ -741,6 +741,7 @@ namespace TACHYON
             configuration.CreateMap<Penalty, GetAllPenaltiesDto>()
             .ForMember(dto => dto.CompanyName, options => options.MapFrom(entity => entity.Tenant.companyName));
 
+            configuration.CreateMap<CreateOrEditPenaltyDto, Penalty>().ReverseMap();
 
             configuration.CreateMap<SubmitInvoice, SubmitInvoiceInfoDto>()
                 .ForMember(dto => dto.ClientName, options => options.MapFrom(entity => entity.Tenant.Name))

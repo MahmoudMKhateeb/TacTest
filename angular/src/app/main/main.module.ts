@@ -279,7 +279,7 @@ import { CreateOrEditEmailTemplateTranslationModalComponent } from './emailTempl
 import { ImportCitiesPolygonsModalComponent } from './cities/cities/import-cities-polygoins-modal/import-cities-polygons-modal.component';
 import { ToggleButtonModule } from '@node_modules/primeng/togglebutton';
 import { PenaltiesListComponent } from './Penalties/penalties-list/penalties-list.component';
-
+import { CreateOrEditPenaltyModalComponent } from './Penalties/penalties-list/create-or-edit-penalty-modal/create-or-edit-penalty-modal.component';
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
 @NgModule({
@@ -364,6 +364,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ViewCountriesTranslationModalComponent,
     CreateOrEditCountriesTranslationModalComponent,
     PlateTypesComponent,
+    CreateOrEditPenaltyModalComponent,
     ViewPlateTypeModalComponent,
     CreateOrEditPlateTypeModalComponent,
     NationalitiesComponent,
