@@ -2288,6 +2288,9 @@
     <text name="bulkUploadReference">الرقم</text>
     <text name="The number of trips ">عدد الرحلات</text>
     <text name="AllDropsMustHaveGoodsDetails">جميع نقاط التسليم يجب أن تحتوي على تفاصيل بضاعة</text>
+	<text name="ImportedGoodDetails">استيراد تفاصيل البضائع</text>
+		<text name="ImportedPoints">استيراد النقاط</text>
+		<text name="ImportedTrips">استيراد الرحلات</text>
 
 	</texts>
 </localizationDictionary>

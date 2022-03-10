@@ -2527,7 +2527,9 @@
     <text name="bulkUploadReference">Reference No</text>
     <text name="The number of trips ">The number of trips </text>
     <text name="AllDropsMustHaveGoodsDetails">All drops must have goods details</text>
-
+		<text name="ImportedGoodDetails">Imported Good Details</text>
+				<text name="ImportedPoints">Imported Points</text>
+		<text name="ImportedTrips">Imported Trips</text>
 
 	</texts>
 </localizationDictionary>

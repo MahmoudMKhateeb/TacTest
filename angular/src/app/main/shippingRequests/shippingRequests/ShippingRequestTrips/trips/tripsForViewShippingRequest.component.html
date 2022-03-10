@@ -58,7 +58,10 @@
                   <small
                     *ngIf="isArabic"
                     [innerHTML]="
-                      l('ImportToExcelSampleFileDownloadInfo', '<a href=/assets/sampleFiles/ImportShipmentSampleFile.xlsx>' + l('ClickHere') + '</a>')
+                      l(
+                        'ImportToExcelSampleFileDownloadInfo',
+                        '<a href=/assets/sampleFiles/ImportShipmentSampleFileAr.xlsx>' + l('ClickHere') + '</a>'
+                      )
                     "
                   ></small>
                   <small
@@ -87,24 +90,24 @@
                 [disabled]="primengTableHelper.totalRecordsCount == 0"
               >
               </p-fileUpload>
+              <div>
+                <div class="dropdown-divider"></div>
+                <span class="dropdown-item-text text-muted pl-3" href="#">
+                  <small
+                    *ngIf="isArabic"
+                    [innerHTML]="
+                      l('ImportToExcelSampleFileDownloadInfo', '<a href=/assets/sampleFiles/ImportPointSampleFile.xlsx>' + l('ClickHere') + '</a>')
+                    "
+                  ></small>
+                  <small
+                    *ngIf="!isArabic"
+                    [innerHTML]="
+                      l('ImportToExcelSampleFileDownloadInfo', '<a href=/assets/sampleFiles/ImportPointSampleFile.xlsx>' + l('ClickHere') + '</a>')
+                    "
+                  ></small>
+                </span>
+              </div>
             </span>
-            <div>
-              <div class="dropdown-divider"></div>
-              <span class="dropdown-item-text text-muted pl-3" href="#">
-                <small
-                  *ngIf="isArabic"
-                  [innerHTML]="
-                    l('ImportToExcelSampleFileDownloadInfo', '<a href=/assets/sampleFiles/ImportPointSampleFile.xlsx>' + l('ClickHere') + '</a>')
-                  "
-                ></small>
-                <small
-                  *ngIf="!isArabic"
-                  [innerHTML]="
-                    l('ImportToExcelSampleFileDownloadInfo', '<a href=/assets/sampleFiles/ImportPointSampleFile.xlsx>' + l('ClickHere') + '</a>')
-                  "
-                ></small>
-              </span>
-            </div>
           </div>
 
           <div class="no-padding">
