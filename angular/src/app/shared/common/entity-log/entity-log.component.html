@@ -27,7 +27,7 @@
                 <div class="timeline-media">
                   <!-- Need Add Check For Transaction Icon -->
                   <!--                  <i class="flaticon2-user-outline-symbol text-success"></i>-->
-                  <img alt="Pic" src="https://preview.keenthemes.com/metronic/theme/html/demo1/dist/assets/media/users/300_25.jpg" />
+                  <img alt="Pic" src="assets/common/images/default-profile-picture.png" />
                 </div>
                 <div
                   class="timeline-content"
@@ -61,7 +61,7 @@
                     <!--                    <h5>{{ log.transaction }}</h5>-->
                     <!--                    <a class="text-success font-weight-bold"></a>-->
                     <div class="d-flex flex-column flex-grow-1 py-2">
-                      <div #collapse="ngbCollapse" [(ngbCollapse)]="!active">
+                      <div #collapse="ngbCollapse" [(ngbCollapse)]="!active" *ngIf="isTachyonDealerOrHost">
                         <div *ngFor="let z of log.changesData | keyvalue">
                           <p class="font-weight-bold mt-2" *ngIf="!z.key.includes('LastModifi')">
                             <a class="text-primary font-weight-bold">{{ z.key }}</a> :
