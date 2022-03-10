@@ -2527,9 +2527,12 @@
     <text name="bulkUploadReference">Reference No</text>
     <text name="The number of trips ">The number of trips </text>
     <text name="AllDropsMustHaveGoodsDetails">All drops must have goods details</text>
-		<text name="ImportedGoodDetails">Imported Good Details</text>
-				<text name="ImportedPoints">Imported Points</text>
-		<text name="ImportedTrips">Imported Trips</text>
+	<text name="ImportedGoodDetails">Imported Good Details</text>
+	<text name="ImportedPoints">Imported Points</text>
+	<text name="ImportedTrips">Imported Trips</text>
+	<text name="ImportTripFromExcel">Import Trip From Excel</text>
+	<text name="ImportPointFromExcel">Import Point From Excel</text>
+	<text name="ImportGoodDetailsFromExcel">Import Good Details From Excel</text>
 
 	</texts>
 </localizationDictionary>

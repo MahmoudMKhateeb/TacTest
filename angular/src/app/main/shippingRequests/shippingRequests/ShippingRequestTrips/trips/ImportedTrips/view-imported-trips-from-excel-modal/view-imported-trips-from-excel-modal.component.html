@@ -33,25 +33,25 @@
                 >
                   <ng-template pTemplate="header">
                     <tr>
-                      <th>{{ l('ReferenceID') }}</th>
+                      <th>{{ l('TripReferenceID') }}</th>
                       <th>
-                        {{ l('startTripDate') }}
+                        {{ l('TripStartDate') }}
                       </th>
                       <th>
-                        {{ l('endTripDate') }}
+                        {{ l('TripEndDate') }}
                       </th>
                       <th>
-                        {{ l('hasAttachment') }}
+                        {{ l('HasAttachment') }}
                       </th>
-                      <th>{{ l('needsDeliveryNote') }}</th>
+                      <th>{{ l('NeedsDeliveryNote') }}</th>
                       <th>
                         {{ l('totalValue') }}
                       </th>
                       <th>
-                        {{ l('note') }}
+                        {{ l('Note') }}
                       </th>
                       <th>
-                        {{ l('exception') }}
+                        {{ l('Exception') }}
                       </th>
                     </tr>
                   </ng-template>
@@ -92,9 +92,6 @@
                     </tr>
                   </ng-template>
                 </p-table>
-                <!-- <div *ngIf="ImportedTripsList.length == 0" class="primeng-no-data">
-                    {{ l('NoData') }}
-                  </div> -->
               </div>
               <!--<Primeng-Datatable-End>-->
             </div>

@@ -1,11 +1,15 @@
 a{
     cursor:pointer;
 }
-
-::ng-deep .p-fileupload-buttonbar span{
+::ng-deep .p-button.p-fileupload-choose{
     width: -webkit-fill-available !important;
 }
-
+::ng-deep .p-button-label{
+    text-align: start;
+}
+.dropdown-menu{
+  min-width: 17rem !important;
+}
 ::ng-deep .p-fileupload-content{
     padding: 0 !important;
     border: 0 !important;

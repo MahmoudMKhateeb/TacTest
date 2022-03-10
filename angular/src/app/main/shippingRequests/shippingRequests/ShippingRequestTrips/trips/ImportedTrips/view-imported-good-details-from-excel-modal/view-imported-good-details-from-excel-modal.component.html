@@ -33,8 +33,8 @@
                 >
                   <ng-template pTemplate="header">
                     <tr>
-                      <th>{{ l('TripReference') }}</th>
-                      <th>{{ l('SubCategory') }}</th>
+                      <th>{{ l('TripReferenceID') }}</th>
+                      <th>{{ l('GoodsSubCategory') }}</th>
                       <th>
                         {{ l('Amount') }}
                       </th>
@@ -46,22 +46,22 @@
                         {{ l('Description') }}
                       </th>
                       <th>
-                        {{ l('IsDangerous') }}
+                        {{ l('IsDangerousGood') }}
                       </th>
                       <th>
-                        {{ l('DangerousCode') }}
+                        {{ l('DangerousGoodsCode') }}
                       </th>
                       <th>
-                        {{ l('DangerousType') }}
+                        {{ l('DangerousGoodsType') }}
                       </th>
                       <th>
-                        {{ l('otherCategoryName') }}
+                        {{ l('otherGoodsCategoryName') }}
                       </th>
                       <th>
-                        {{ l('unitOfMeasure') }}
+                        {{ l('UnitOfMeasure') }}
                       </th>
                       <th>
-                        {{ l('exception') }}
+                        {{ l('Exception') }}
                       </th>
                     </tr>
                   </ng-template>
@@ -119,9 +119,6 @@
                     </tr>
                   </ng-template>
                 </p-table>
-                <!-- <div *ngIf="ImportedTripsList.length == 0" class="primeng-no-data">
-                    {{ l('NoData') }}
-                  </div> -->
               </div>
               <!--<Primeng-Datatable-End>-->
             </div>

@@ -1,6 +1,8 @@
 th,
 td {
-  width: 23%;
+  width: 15%;
+}
+td {
   word-break: break-all;
 }
 
