@@ -47,7 +47,20 @@
               <dxi-column dataField="penaltyDescrption" caption="{{ l('PenaltyDescrption') }}" dataType="date"> </dxi-column>
               <dxi-column dataField="amount" caption="{{ l('Amount') }}"> </dxi-column>
               <dxi-column dataField="companyName" caption="{{ l('CompanyName') }}" dataType="date"> </dxi-column>
-
+              <dxi-column cellTemplate="TypeCellTemplate" dataField="Type" caption=" {{ l('Type') }}"></dxi-column>
+              <div *dxTemplate="let options of 'TypeCellTemplate'">
+                <span style="width: 137px"
+                  ><span
+                    class="badge badge-inline"
+                    [ngClass]="{
+                      'badge-warning': options.data.penaltyTypeTitle == 'NotLogged',
+                      'badge-success': options.data.penaltyTypeTitle == 'Cancelation',
+                      'badge-primary': options.data.penaltyTypeTitle == 'Delay'
+                    }"
+                    >{{ l(options.data.penaltyTypeTitle) }}</span
+                  ></span
+                >
+              </div>
               <div *dxTemplate="let options of 'cellTemplateActions'">
                 <div class="btn-group dropdown" dropdown container="body">
                   <a href="javascript:;" class="btn btn-sm btn-clean btn-icon mr-2" dropdownToggle>

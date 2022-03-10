@@ -15,7 +15,7 @@ namespace TACHYON.Penalties.Dto
         public decimal Amount { get; set; }
         [Required]
         public int TenantId { get; set; }
-        public long? ShippingRequestId { get; set; }
-        public int? ShippingRequestTripId { get; set; }
+        public PenaltyType Type { get; set; }
+
     }
 }

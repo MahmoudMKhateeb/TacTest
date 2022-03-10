@@ -38,7 +38,7 @@ namespace TACHYON.Penalties
             {
                 DisableTenancyFilters();
             }
-            return await LoadResultAsync(query, input.LoadOptions);
+            return await LoadResultAsync<GetAllPenaltiesDto>(query, input.LoadOptions);
         }
         public async Task CreateOrEdit(CreateOrEditPenaltyDto input) 
         {
