@@ -29,6 +29,7 @@ using TACHYON.Tracking.Dto;
 using TACHYON.Tracking.Dto.WorkFlow;
 using TACHYON.Trucks.TrucksTypes.Dtos;
 using AutoMapper.QueryableExtensions;
+using Microsoft.AspNetCore.Mvc;
 
 namespace TACHYON.Tracking
 {
@@ -118,36 +119,24 @@ namespace TACHYON.Tracking
             );
         }
         [AbpAllowAnonymous]
-        public async Task<PagedResultDto<TrackingByReferanceNumberDto>> GetTripsByShippingRequestReferance(string referanceNumber)
+        public async Task<PagedResultDto<TrackingByWaybillDto>> GetDropsOffByMasterWaybill(long waybillNumber)
         {
             DisableTenancyFilters();
-            var query =  await _ShippingRequestTripRepository
-             .GetAll()
-             .AsNoTracking()
-             .Include(r => r.ShippingRequestFk)
-             .ThenInclude(s => s.Tenant)
-             .Include(r => r.ShippingRequestFk)
-             .ThenInclude(c => c.CarrierTenantFk)
-             .Where(x => x.ShippingRequestFk.ReferenceNumber.Equals(referanceNumber))
-             .ProjectTo<TrackingByReferanceNumberDto>(AutoMapperConfigurationProvider).ToListAsync();
-             return new PagedResultDto<TrackingByReferanceNumberDto>(query.Count, query);
+            var query =  await _RoutPointRepository
+             .GetAll().AsNoTracking()
+             .Where(x => x.ShippingRequestTripFk.WaybillNumber == waybillNumber)
+             .ProjectTo<TrackingByWaybillDto>(AutoMapperConfigurationProvider).ToListAsync();
+             return new PagedResultDto<TrackingByWaybillDto>(query.Count, query);
 
         }
 
         [AbpAllowAnonymous]
-        public async Task<TrackingByWaybillNumberTripDto> GetTripByWaybillNumber(string waybillNumber)
+        public async Task<TrackingByWaybillRoutPointDto> GetDropOffBySubWaybill(string waybillNumber)
         {
             DisableTenancyFilters();
-            return await _ShippingRequestTripRepository
-             .GetAll()
-             .AsNoTracking()
-             .Include(x => x.OriginFacilityFk)
-             .Include(x => x.DestinationFacilityFk)
-             .Include(r => r.ShippingRequestFk)
-             .ThenInclude(s => s.Tenant)
-             .Include(r => r.ShippingRequestFk)
-             .ThenInclude(c => c.CarrierTenantFk)
-             .ProjectTo<TrackingByWaybillNumberTripDto>(AutoMapperConfigurationProvider)
+            return await _RoutPointRepository
+             .GetAll().AsNoTracking()
+             .ProjectTo<TrackingByWaybillRoutPointDto>(AutoMapperConfigurationProvider)
              .FirstOrDefaultAsync(x => x.WaybillNumber.Equals(waybillNumber));
         }
         public async Task<TrackingShippingRequestTripDto> GetForView(long id)
