@@ -232,7 +232,9 @@
                               </ng-template>
                               <ng-template pTemplate="content" let-event>
                                 <span class="font-weight-bolder text-dark {{event.isDone ? 'p-disabled' : ''}}">{{event.status}}</span><br />
-                                <span class="text-muted mt-3 font-weight-bold font-size-sm">{{event.time | momentFromNow }}</span>
+                                <span class="text-muted mt-3 font-weight-bold font-size-sm"
+                                  >{{event.time | momentFormat: 'YYYY-MM-DD HH:mm:ss' }}</span
+                                >
                               </ng-template>
                             </p-timeline>
                           </div>
