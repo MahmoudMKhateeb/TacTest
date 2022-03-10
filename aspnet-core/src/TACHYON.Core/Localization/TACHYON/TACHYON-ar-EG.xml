@@ -2266,8 +2266,9 @@
 	<text name="ReceiverCodeConfirmationMsg">هل أنت متأكد أنك تريد إعادة تعيين رمز المستلم لهذه الشحنة؟</text>
 		<text name="CompanyDescriptionHint">يجب ألا يزيد وصف الشركة عن 500 حرف</text>
 		<text name="SelectAnEmailTemplateType">أختر نوع قالب البريد الإلكتروني</text>
+		<text name="InCorrectWaybillNumber">رقم الشحنة لا يطابق اي شحنة في المنصة</text>
 
-		
+
 
 	</texts>
 </localizationDictionary>

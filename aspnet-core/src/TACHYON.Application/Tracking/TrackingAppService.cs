@@ -126,6 +126,8 @@ namespace TACHYON.Tracking
              .GetAll().AsNoTracking()
              .Where(x => x.ShippingRequestTripFk.WaybillNumber == waybillNumber)
              .ProjectTo<TrackingByWaybillDto>(AutoMapperConfigurationProvider).ToListAsync();
+            if (!query.Any()) throw new UserFriendlyException(L("InCorrectWaybillNumber"));
+
              return new PagedResultDto<TrackingByWaybillDto>(query.Count, query);
 
         }
@@ -134,10 +136,13 @@ namespace TACHYON.Tracking
         public async Task<TrackingByWaybillRoutPointDto> GetDropOffBySubWaybill(string waybillNumber)
         {
             DisableTenancyFilters();
-            return await _RoutPointRepository
+            var dropOff =  await _RoutPointRepository
              .GetAll().AsNoTracking()
              .ProjectTo<TrackingByWaybillRoutPointDto>(AutoMapperConfigurationProvider)
              .FirstOrDefaultAsync(x => x.WaybillNumber.Equals(waybillNumber));
+
+            if (dropOff == null) throw new UserFriendlyException(L("InCorrectWaybillNumber"));
+            return dropOff;
         }
         public async Task<TrackingShippingRequestTripDto> GetForView(long id)
         {
