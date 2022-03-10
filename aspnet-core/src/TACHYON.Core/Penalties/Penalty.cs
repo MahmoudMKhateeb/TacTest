@@ -16,14 +16,11 @@ namespace TACHYON.Penalties
         public string PenaltyName { get; set; }
         public string PenaltyDescrption { get; set; }
         public decimal Amount { get; set; }
+        public PenaltyType Type { get; set; }
         public int TenantId { get; set; }
         [ForeignKey(nameof(TenantId))]
         public Tenant Tenant { get; set; }
-        public long? ShippingRequestId { get; set; }
-        [ForeignKey(nameof(ShippingRequestId))]
-        public ShippingRequest ShippingRequest { get; set; }
-        public int? ShippingRequestTripId { get; set; }
-        [ForeignKey(nameof(ShippingRequestTripId))]
-        public ShippingRequestTrip ShippingRequestTrip { get; set; }
+        public long? SourceId { get; set; }
+        public SourceType? SourceType { get; set; }
     }
 }

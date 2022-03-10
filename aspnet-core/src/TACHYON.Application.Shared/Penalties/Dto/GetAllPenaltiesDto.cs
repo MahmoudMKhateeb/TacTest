@@ -11,5 +11,7 @@ namespace TACHYON.Penalties.Dto
         public string PenaltyDescrption { get; set; }
         public decimal Amount { get; set; }
         public string CompanyName { get; set; }
+        public PenaltyType Type { get; set; }
+        public string PenaltyTypeTitle { get { return Type.GetEnumDescription(); } }
     }
 }
