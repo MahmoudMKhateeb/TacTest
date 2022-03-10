@@ -1,7 +1,7 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { ChartOptions } from '@app/shared/common/customizable-dashboard/widgets/ApexInterfaces';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { RequestsListPerMonthDto, ShipperDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
+import { RequestsListPerMonthDto, SalesSummaryDatePeriod, ShipperDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
 import { finalize } from 'rxjs/operators';
 
 @Component({
@@ -18,11 +18,12 @@ export class CompletedTripVsPodComponent extends AppComponentBase implements OnI
   fromDate: moment.Moment = null;
   loading: boolean = false;
   saving = false;
+
   constructor(injector: Injector, private _shipperDashboardServiceProxy: ShipperDashboardServiceProxy) {
     super(injector);
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.getTrips();
   }
 
@@ -32,85 +33,92 @@ export class CompletedTripVsPodComponent extends AppComponentBase implements OnI
     this.loading = true;
     this.saving = true;
 
-    // this._shipperDashboardServiceProxy
-    //   .getCompletedTripVsPod(this.fromDate, this.toDate)
-    //   .pipe(
-    //     finalize(() => {
-    //       this.loading = false;
-    //       this.saving = false;
-    //     })
-    //   )
-    //   .subscribe((result) => {
-    //     this.months.forEach((d) => {
-    //       let i = this.months.indexOf(d) + 1;
-    //       let year = new Date().getFullYear();
-    //       const foundAcceptElement = result.completedTrips.some((el) => el.month === i);
-    //       if (!foundAcceptElement) {
-    //         result.completedTrips.push(
-    //           new RequestsListPerMonthDto({
-    //             count: 0,
-    //             month: i,
-    //             year: year,
-    //           })
-    //         );
-    //       }
-    //       const foundRejectElement = result.podTrips.some((el) => el.month === i);
-    //       if (!foundRejectElement) {
-    //         result.podTrips.push(
-    //           new RequestsListPerMonthDto({
-    //             count: 0,
-    //             month: i,
-    //             year: year,
-    //           })
-    //         );
-    //       }
-    //     });
-    //     result.completedTrips.sort(function (a, b) {
-    //       return a.month - b.month;
-    //     });
-    //     result.completedTrips.forEach((element) => {
-    //       this.completedTrips.push(element.count);
-    //     });
-    //     result.podTrips.sort(function (a, b) {
-    //       return a.month - b.month;
-    //     });
-    //     result.podTrips.forEach((element) => {
-    //       this.POD.push(element.count);
-    //     });
+    this._shipperDashboardServiceProxy
+      .getCompletedTripVsPod()
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          this.saving = false;
+        })
+      )
+      .subscribe((result) => {
+        this.months.forEach((d) => {
+          let i = this.months.indexOf(d) + 1;
+          let year = new Date().getFullYear();
+          const foundAcceptElement = result.completedTrips.some((el) => el.month === i);
+          if (!foundAcceptElement) {
+            result.completedTrips.push(
+              new RequestsListPerMonthDto({
+                count: 0,
+                month: i,
+                year: year,
+              })
+            );
+          }
+          const foundRejectElement = result.podTrips.some((el) => el.month === i);
+          if (!foundRejectElement) {
+            result.podTrips.push(
+              new RequestsListPerMonthDto({
+                count: 0,
+                month: i,
+                year: year,
+              })
+            );
+          }
+        });
+        result.completedTrips.sort(function (a, b) {
+          return a.month - b.month;
+        });
+        result.completedTrips.forEach((element) => {
+          this.completedTrips.push(element.count);
+        });
+        result.podTrips.sort(function (a, b) {
+          return a.month - b.month;
+        });
+        result.podTrips.forEach((element) => {
+          this.POD.push(element.count);
+        });
 
-    //     this.chartOptions = {
-    //       series: [
-    //         {
-    //           name: 'Completed',
-    //           data: this.completedTrips,
-    //         },
-    //         {
-    //           name: 'Pod',
-    //           data: this.POD,
-    //         },
-    //       ],
-    //       chart: {
-    //         height: 350,
-    //         type: 'area',
-    //       },
-    //       dataLabels: {
-    //         enabled: false,
-    //       },
-    //       stroke: {
-    //         curve: 'smooth',
-    //       },
-    //       xaxis: {
-    //         type: 'category',
-    //         categories: this.months,
-    //       },
-    //       tooltip: {
-    //         x: {
-    //           format: 'dd/MM/yy',
-    //         },
-    //       },
-    //     };
-    //     this.loading = false;
-    //     this.saving = false;
-    //   });
+        this.chartOptions = {
+          series: [
+            {
+              name: 'Completed',
+              data: this.completedTrips,
+              color: 'rgba(187, 41, 41, 0.847)',
+            },
+            {
+              name: 'Pod',
+              data: this.POD,
+              color: '#b5b5c3',
+            },
+          ],
+          chart: {
+            height: 350,
+            type: 'area',
+          },
+          dataLabels: {
+            enabled: false,
+          },
+          stroke: {
+            curve: 'smooth',
+          },
+          xaxis: {
+            type: 'category',
+            categories: this.months,
+          },
+          tooltip: {
+            x: {
+              format: 'dd/MM/yy',
+            },
+            y: {
+              formatter: function (val) {
+                return val.toFixed(0);
+              },
+            },
+          },
+        };
+        this.loading = false;
+        this.saving = false;
+      });
   }
 }

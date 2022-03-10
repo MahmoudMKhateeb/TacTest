@@ -72,13 +72,13 @@ export class NumberOfRequestsForEachCityComponent extends AppComponentBase imple
                     from: -30,
                     to: 5,
                     name: 'low',
-                    color: '#00A100',
+                    color: '#b12120',
                   },
                   {
                     from: 6,
                     to: 20,
                     name: 'medium',
-                    color: '#128FD9',
+                    color: '#b5b5c3',
                   },
                   {
                     from: 21,

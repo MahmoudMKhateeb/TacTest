@@ -31,10 +31,10 @@ using TACHYON.Trucks.TrucksTypes.Dtos;
 
 namespace TACHYON.Dashboards.Host
 {
-    [AbpAuthorize(AppPermissions.Pages_HostDashboard)]
+    [AbpAuthorize(AppPermissions.Pages_HostDashboard, AppPermissions.App_TachyonDealer)]
+
     public class HostDashboardAppService : TACHYONAppServiceBase, IHostDashboardAppService
     {
-        private const string DateFormat = "yyyy-MM-dd";
         private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
         private readonly IRepository<TrucksType, long> _lookup_trucksTypeRepository;
         private readonly IRepository<User, long> _usersRepository;
@@ -75,6 +75,8 @@ namespace TACHYON.Dashboards.Host
 
         public async Task<List<TruckTypeAvailableTrucksDto>> GetTrucksTypeCount()
         {
+            DisableTenancyFiltersIfHost();
+            await DisableTenancyFiltersIfTachyonDealer();
             return await _lookup_trucksTypeRepository.GetAll()
             .Select(x => new TruckTypeAvailableTrucksDto()
             {
@@ -187,6 +189,9 @@ namespace TACHYON.Dashboards.Host
 
         public async Task<List<GoodTypeAvailableDto>> GetGoodTypeCountPerMonth()
         {
+            DisableTenancyFiltersIfHost();
+            await DisableTenancyFiltersIfTachyonDealer();
+
             return await _goodTypesRepository.GetAll().AsNoTracking()
            .Select(x => new GoodTypeAvailableDto()
            {
@@ -200,6 +205,8 @@ namespace TACHYON.Dashboards.Host
 
         public async Task<List<RouteTypeAvailableDto>> GetRouteTypeCountPerMonth()
         {
+            DisableTenancyFiltersIfHost();
+            await DisableTenancyFiltersIfTachyonDealer();
 
             return await _shippingRequestRepository.GetAll().AsNoTracking().Where(r=>r.RouteTypeId != null && r.RouteTypeId != 0 && r.CreationTime.Year == DateTime.Now.Year)
                 .GroupBy(x => x.RouteTypeId)
@@ -239,7 +246,7 @@ namespace TACHYON.Dashboards.Host
             await DisableTenancyFiltersIfTachyonDealer();
 
             return await _tenantRepository.GetAll().AsNoTracking()
-                .Where(r => r.Edition.DisplayName.Equals("shipper") && r.CreationTime.Year == DateTime.Now.Year)
+                .Where(r => r.Edition.DisplayName.Equals(TACHYONConsts.ShipperEdtionName) && r.CreationTime.Year == DateTime.Now.Year)
                 .CountAsync();
         }
 
@@ -249,7 +256,7 @@ namespace TACHYON.Dashboards.Host
             await DisableTenancyFiltersIfTachyonDealer();
 
             return await _tenantRepository.GetAll().AsNoTracking()
-                .Where(r => r.Edition.DisplayName.Equals("carrier") && r.CreationTime.Year == DateTime.Now.Year)
+                .Where(r => r.Edition.DisplayName.Equals(TACHYONConsts.CarrierEdtionName) && r.CreationTime.Year == DateTime.Now.Year)
                 .CountAsync();
         }
 
@@ -274,12 +281,13 @@ namespace TACHYON.Dashboards.Host
         public async Task<List<ListUsersHaveMostRequests>> GetShippersHaveMostRequests()
         {
             DisableTenancyFiltersIfHost();
+            await DisableTenancyFiltersIfTachyonDealer();
 
-            return await _tenantRepository.GetAll().AsNoTracking().Include(r => r.Edition).Where(r => r.Edition.DisplayName.Contains("shipper"))
+            return await _tenantRepository.GetAll().AsNoTracking().Include(r => r.Edition).Where(r => r.Edition.DisplayName.Contains(TACHYONConsts.ShipperEdtionName))
             .Select(tenant => new ListUsersHaveMostRequests()
             {
                 Id = tenant.Id,
-                Name = tenant.Name,
+                Name = tenant.TenancyName,
                 Rating = tenant.Rate,
                 NumberOfRequests = _shippingRequestRepository.GetAll().AsNoTracking().Include(r => r.Tenant).AsNoTracking().Where(r => r.TenantId == tenant.Id && r.Status == ShippingRequestStatus.Completed && r.CreationTime.Year == DateTime.Now.Year).Count()
             }).Where(r => r.NumberOfRequests > 0).OrderByDescending(r => r.NumberOfRequests).Take(3).ToListAsync();
@@ -288,12 +296,13 @@ namespace TACHYON.Dashboards.Host
         public async Task<List<ListUsersHaveMostRequests>> GetCarriersHaveMostRequests()
         {
             DisableTenancyFiltersIfHost();
+            await DisableTenancyFiltersIfTachyonDealer();
 
-            return await _tenantRepository.GetAll().AsNoTracking().Include(r => r.Edition).Where(r => r.Edition.DisplayName.Contains("carrier"))
+            return await _tenantRepository.GetAll().AsNoTracking().Include(r => r.Edition).Where(r => r.Edition.DisplayName.Contains(TACHYONConsts.CarrierEdtionName))
            .Select(tenant => new ListUsersHaveMostRequests()
            {
                Id = tenant.Id,
-               Name = tenant.Name,
+               Name = tenant.TenancyName,
                Rating = tenant.Rate,
                NumberOfRequests = _shippingRequestRepository.GetAll().AsNoTracking().Include(r => r.Tenant).AsNoTracking().Where(r => r.TenantId == tenant.Id && r.Status == ShippingRequestStatus.Completed && r.CreationTime.Year == DateTime.Now.Year).Count()
            }).Where(r => r.NumberOfRequests > 0).OrderByDescending(r => r.NumberOfRequests).Take(3).ToListAsync();
@@ -302,12 +311,13 @@ namespace TACHYON.Dashboards.Host
         public async Task<List<ListUsersHaveMostRequests>> GetTopRatedShippers()
         {
             DisableTenancyFiltersIfHost();
+            await DisableTenancyFiltersIfTachyonDealer();
 
-            return await _tenantRepository.GetAll().AsNoTracking().Include(r => r.Edition).Where(r => r.Edition.DisplayName.Contains("shipper"))
+            return await _tenantRepository.GetAll().AsNoTracking().Include(r => r.Edition).Where(r => r.Edition.DisplayName.Contains(TACHYONConsts.ShipperEdtionName))
             .Select(tenant => new ListUsersHaveMostRequests()
             {
                 Id = tenant.Id,
-                Name = tenant.Name,
+                Name = tenant.TenancyName,
                 Rating = tenant.Rate,
                 NumberOfRequests = _shippingRequestRepository.GetAll().AsNoTracking().Include(r => r.Tenant).AsNoTracking().Where(r => r.TenantId == tenant.Id && r.CreationTime.Year == DateTime.Now.Year).Count()
             }).Where(r => r.Rating > 0).OrderByDescending(r => r.Rating).Take(5).ToListAsync();
@@ -316,12 +326,13 @@ namespace TACHYON.Dashboards.Host
         public async Task<List<ListUsersHaveMostRequests>> GetTopRatedCarriers()
         {
             DisableTenancyFiltersIfHost();
+            await DisableTenancyFiltersIfTachyonDealer();
 
-            return await _tenantRepository.GetAll().AsNoTracking().Include(r => r.Edition).Where(r => r.Edition.DisplayName.Contains("carrier"))
+            return await _tenantRepository.GetAll().AsNoTracking().Include(r => r.Edition).Where(r => r.Edition.DisplayName.Contains(TACHYONConsts.CarrierEdtionName))
             .Select(tenant => new ListUsersHaveMostRequests()
             {
                 Id = tenant.Id,
-                Name = tenant.Name,
+                Name = tenant.TenancyName,
                 Rating = tenant.Rate,
                 NumberOfRequests = _shippingRequestRepository.GetAll().AsNoTracking().Include(r => r.Tenant).AsNoTracking().Where(r => r.TenantId == tenant.Id && r.CreationTime.Year == DateTime.Now.Year).Count()
             }).Where(r => r.Rating > 0).OrderByDescending(r => r.Rating).Take(5).ToListAsync();
@@ -330,12 +341,13 @@ namespace TACHYON.Dashboards.Host
         public async Task<List<ListUsersHaveMostRequests>> GetWorstRatedShippers()
         {
             DisableTenancyFiltersIfHost();
+            await DisableTenancyFiltersIfTachyonDealer();
 
-            return await _tenantRepository.GetAll().AsNoTracking().Include(r => r.Edition).Where(r => r.Edition.DisplayName.Contains("shipper"))
+            return await _tenantRepository.GetAll().AsNoTracking().Include(r => r.Edition).Where(r => r.Edition.DisplayName.Contains(TACHYONConsts.ShipperEdtionName))
             .Select(tenant => new ListUsersHaveMostRequests()
             {
                 Id = tenant.Id,
-                Name = tenant.Name,
+                Name = tenant.TenancyName,
                 Rating = tenant.Rate,
                 NumberOfRequests = _shippingRequestRepository.GetAll().AsNoTracking().Include(r => r.Tenant).AsNoTracking().Where(r => r.TenantId == tenant.Id && r.CreationTime.Year == DateTime.Now.Year).Count()
             }).OrderBy(r => r.Rating).Take(5).ToListAsync();
@@ -344,12 +356,13 @@ namespace TACHYON.Dashboards.Host
         public async Task<List<ListUsersHaveMostRequests>> GetWorstRatedCarriers()
         {
             DisableTenancyFiltersIfHost();
+            await DisableTenancyFiltersIfTachyonDealer();
 
-            return await _tenantRepository.GetAll().AsNoTracking().Include(r => r.Edition).Where(r => r.Edition.DisplayName.Contains("carrier"))
+            return await _tenantRepository.GetAll().AsNoTracking().Include(r => r.Edition).Where(r => r.Edition.DisplayName.Contains(TACHYONConsts.CarrierEdtionName))
             .Select(tenant => new ListUsersHaveMostRequests()
             {
                 Id = tenant.Id,
-                Name = tenant.Name,
+                Name = tenant.TenancyName,
                 Rating = tenant.Rate,
                 NumberOfRequests = _shippingRequestRepository.GetAll().AsNoTracking().Include(r => r.Tenant).AsNoTracking().Where(r => r.TenantId == tenant.Id && r.CreationTime.Year == DateTime.Now.Year).Count()
             }).OrderBy(r => r.Rating).Take(5).ToListAsync();
@@ -358,14 +371,15 @@ namespace TACHYON.Dashboards.Host
         public async Task<List<ListRequestsUnPricedMarketPlace>> GetUnpricedRequestsInMarketplace(GetDataByDateFilterInput input)
         {
             DisableTenancyFiltersIfHost();
+            await DisableTenancyFiltersIfTachyonDealer();
 
-            var list = await _shippingRequestRepository.GetAll().AsNoTracking()
+            var query = _shippingRequestRepository.GetAll().AsNoTracking()
                 .Include(r => r.Tenant)
                 .Where(r => r.RequestType == ShippingRequestType.Marketplace
                     && r.Status == ShippingRequestStatus.PrePrice
-                    && r.BidEndDate != null
-                    && r.BidEndDate.Value.Date <= Clock.Now.Date && r.CreationTime.Year == Clock.Now.Year)
-                .WhereIf(input.SalesSummaryDatePeriod == SalesSummaryDatePeriod.Daily, r => r.CreationTime > DateTime.Now.AddDays(-30) && r.CreationTime < DateTime.Now)
+                    && ((r.BidEndDate != null && r.BidEndDate.Value.Date <= Clock.Now.Date) || r.BidEndDate == null));
+            
+            var list = await query.WhereIf(input.SalesSummaryDatePeriod == SalesSummaryDatePeriod.Daily, r => r.CreationTime > DateTime.Now.AddDays(-30) && r.CreationTime < DateTime.Now)
                 .Select(request => new ListRequestsUnPricedMarketPlace()
                 {
                     Id = request.Id,
@@ -378,11 +392,7 @@ namespace TACHYON.Dashboards.Host
             {
                 DateTime firstDay = new DateTime(DateTime.Now.Year, 1, 1);
 
-                var query = (from r in _shippingRequestRepository.GetAll().AsNoTracking().AsEnumerable()
-                             where  r.RequestType == ShippingRequestType.Marketplace
-                                    && r.Status == ShippingRequestStatus.PrePrice
-                                    && r.BidEndDate != null
-                                    && r.BidEndDate.Value.Date <= Clock.Now.Date && r.CreationTime.Year == Clock.Now.Year
+                var query2 = (from r in query.AsEnumerable()
                              group r by new
                              {
                                  Id = r.Id,
@@ -397,22 +407,16 @@ namespace TACHYON.Dashboards.Host
                                  BiddingEndDate = ut.Key.BiddingEndDate,
                                  RequestReference = ut.Key.RequestReference
                              });
-                list = query.ToList();
+                list = query2.ToList();
                
             }
             if (input.SalesSummaryDatePeriod == SalesSummaryDatePeriod.Monthly)
             {
 
-             list = await _shippingRequestRepository.GetAll().AsNoTracking()
-               .Include(r => r.Tenant)
-               .Where(r => r.RequestType == ShippingRequestType.Marketplace
-                   && r.CreationTime.Year == DateTime.Now.Year
-                   && r.Status == ShippingRequestStatus.PrePrice
-                   && r.BidEndDate != null
-                   && r.BidEndDate.Value.Date <= Clock.Now.Date && r.CreationTime.Year == Clock.Now.Year)
-                .GroupBy(r => new {
+             list = await query
+                    .GroupBy(r => new {
                     Id = r.Id,
-                    ShipperName = r.Tenant.Name,
+                    ShipperName = r.Tenant.TenancyName,
                     BiddingEndDate = r.BidEndDate,
                     RequestReference = r.ReferenceNumber,
                     year = r.CreationTime.Year,
@@ -434,6 +438,7 @@ namespace TACHYON.Dashboards.Host
         public async Task<List<ListRequestsByCityDto>> GetNumberOfRequestsForEachCity()
         {
             DisableTenancyFiltersIfHost();
+            await DisableTenancyFiltersIfTachyonDealer();
 
             var result = await _shippingRequestRepository.GetAll().AsNoTracking().Include(r => r.DestinationCityFk).Where(r=>r.CreationTime.Year == DateTime.Now.Year)
                         .GroupBy(p => p.DestinationCityId,
@@ -464,9 +469,8 @@ namespace TACHYON.Dashboards.Host
 
             return await _shippingRequestRepository.GetAll().AsNoTracking()
                 .Where(x => x.Status == ShippingRequestStatus.PostPrice
-                         && x.BidEndDate != null
                          && x.CreationTime.Year == DateTime.Now.Year
-                         && x.BidEndDate.Value.Date <= Clock.Now.Date)
+                         && ((x.BidEndDate != null && x.BidEndDate.Value.Date <= Clock.Now.Date) || x.BidEndDate == null))
                 .CountAsync();
         }
 

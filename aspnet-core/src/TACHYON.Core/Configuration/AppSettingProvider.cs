@@ -604,7 +604,7 @@ namespace TACHYON.Configuration
                         new Page
                         {
                             Name = TACHYONDashboardCustomizationConsts.DefaultPageName,
-                           
+                            Widgets = new List<Widget>()
                         }
                     }
                 },
@@ -616,7 +616,7 @@ namespace TACHYON.Configuration
                         new Page
                         {
                             Name = TACHYONDashboardCustomizationConsts.DefaultPageName,
-                           
+                            Widgets = new List<Widget>()
                         }
                     }
                 }
@@ -637,7 +637,7 @@ namespace TACHYON.Configuration
                         new Page
                         {
                             Name = TACHYONDashboardCustomizationConsts.DefaultPageName,
-                           
+                            Widgets = new List<Widget>()
                         }
                     }
                 },
@@ -692,7 +692,8 @@ namespace TACHYON.Configuration
                         new Page
                         {
                             Name = TACHYONDashboardCustomizationConsts.DefaultPageName,
-                          
+                            Widgets = new List<Widget>()
+
                         }
                     }
                 }

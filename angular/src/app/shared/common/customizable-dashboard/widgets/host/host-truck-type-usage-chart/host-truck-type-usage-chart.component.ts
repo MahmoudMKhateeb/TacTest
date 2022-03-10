@@ -74,7 +74,15 @@ export class HostTruckTypeUsageChartComponent extends AppComponentBase implement
           fill: {
             opacity: 1,
           },
+          tooltip: {
+            y: {
+              formatter: function (val) {
+                return val.toFixed(0);
+              },
+            },
+          },
         };
+
         this.loading = false;
       });
   }

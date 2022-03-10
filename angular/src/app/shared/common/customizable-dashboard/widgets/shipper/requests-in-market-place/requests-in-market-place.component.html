@@ -1,19 +1,49 @@
 <div class="row">
   <div class="col-lg-12">
     <!--begin::Card-->
-    <div class="card card-custom card-stretch" [busyIf]="loading">
+    <div class="card card-custom card-stretch">
       <div class="card-header border-0">
         <div class="card-title text-center">
           <h3 class="card-label">{{ l('RequestsInMarketPlace') }}</h3>
         </div>
+        <div class="card-toolbar" *ngIf="Requests">
+          <div class="btn-group" data-toggle="buttons">
+            <label
+              class="btn btn-secondary active"
+              [ngClass]="{ active: selectedDatePeriod == appSalesSummaryDateInterval.Daily }"
+              (click)="reload(appSalesSummaryDateInterval.Daily)"
+            >
+              <input type="radio" name="SalesSummaryDateInterval" [value]="appSalesSummaryDateInterval.Daily" />
+              {{ 'Daily' | localize }}
+            </label>
+            <label
+              class="btn btn-secondary"
+              [ngClass]="{ active: selectedDatePeriod == appSalesSummaryDateInterval.Weekly }"
+              (click)="reload(appSalesSummaryDateInterval.Weekly)"
+            >
+              <input type="radio" name="SalesSummaryDateInterval" [value]="appSalesSummaryDateInterval.Weekly" />
+              {{ 'Weekly' | localize }}
+            </label>
+            <label
+              class="btn btn-secondary"
+              [ngClass]="{ active: selectedDatePeriod == appSalesSummaryDateInterval.Monthly }"
+              (click)="reload(appSalesSummaryDateInterval.Monthly)"
+            >
+              <input type="radio" name="SalesSummaryDateInterval" [value]="appSalesSummaryDateInterval.Monthly" />
+              {{ 'Monthly' | localize }}
+            </label>
+          </div>
+        </div>
       </div>
       <div class="card-body">
-        <p-table [value]="Requests" (onLazyLoad)="getRequests()">
+        <a *ngIf="Requests" class="btn btn-danger btn-xs red float-left" target="_blank" href="/app/main/marketplace/list">{{ l('more') }}</a>
+        <br /><br />
+        <p-table [value]="Requests" [busyIf]="loading" (onLazyLoad)="reload(selectedDatePeriod)">
           <ng-template pTemplate="header">
             <tr>
               <th>{{ l('ReferanceNumber') }}</th>
               <th>{{ l('EndDate') }}</th>
-              <th>{{ l('NumberOfOffers') }}</th>
+              <th>{{ l('TotalOffers') }}</th>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-record>
@@ -24,7 +54,7 @@
             </tr>
           </ng-template>
         </p-table>
-        <div class="pd-5" *ngIf="!Requests || Requests.length == 0">
+        <div class="pd-5 text-center" *ngIf="!Requests || Requests.length == 0">
           {{ l('NoData') }}
         </div>
         <!--end::Body-->

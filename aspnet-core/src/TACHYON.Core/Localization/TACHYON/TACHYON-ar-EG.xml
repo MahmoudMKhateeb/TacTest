@@ -2281,6 +2281,19 @@
 		<text name="GoodTypesUsage">استخدام أنواع البضائع</text>
 		<text name="NewAccounts">حسابات جديدة</text>
 		<text name="NewTrips">الرحلات الجديدة</text>
+		<text name="CurrentlyNonActiveDrivers">حسابات السائقين غير نشطة</text>
+		<text name="CurrentlyActiveDrivers">حسابات السائقين نشطة</text>
+		<text name="CurrentlyActiveTrucks">شاحنات نشطة</text>
+		<text name="CurrentlyNonActiveTrucks">شاحنات غير نشطة</text>
+		<text name="MostUsedVases">أكثر Vases مستخدمة</text>
+		<text name="MostWorkedWithShippers">أكثر الشواحن تفاعلا</text>
+		<text name="TrackingMap">خريطة تتبع الرحلات</text>
+		<text name="WorstRatedCarriers">الناقلين الأقل تقييماً</text>
+		<text name="WorstRatedShippers">الشواحن الأقل تقييماً</text>
+		<text name="ReferanceNumber">رقم المرجع للطلب</text>
+		<text name="ForCurrentYear">السنة الحاليه</text>
+
+
 
 
 

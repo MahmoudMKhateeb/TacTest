@@ -4,12 +4,13 @@
     <div class="card card-custom card-stretch" [busyIf]="loading">
       <div class="card-header d-flex justify-content-center">
         <div class="card-title">
-          <h3 class="card-label">{{ l('OnGoingTrips') }}</h3>
+          <h3 class="card-label">{{ l('ongoingTrips') }}</h3>
         </div>
       </div>
       <div class="card-body w-100 d-flex justify-content-center">
         <h5 class="text-dark font-weight-bold">{{ tripsCount }}</h5>
       </div>
+      <span class="form-text text-muted text-center mr-btm">{{ l('ForCurrentYear') }}</span>
     </div>
     <!--end::Card-->
   </div>

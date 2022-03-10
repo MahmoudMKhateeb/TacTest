@@ -13,3 +13,7 @@
   overflow: hidden;
   color: #ffca08;
 }
+th,
+td {
+  text-align: center !important;
+}

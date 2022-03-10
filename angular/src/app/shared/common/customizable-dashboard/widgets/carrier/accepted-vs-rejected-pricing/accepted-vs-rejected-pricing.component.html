@@ -1,42 +1,17 @@
 <div class="row">
   <div class="col-lg-12">
     <!--begin::Card-->
-    <div class="card card-custom card-stretch">
+    <div class="card card-custom card-stretch" [busyIf]="loading">
       <div class="card-header border-0">
         <div class="card-title text-center">
           <h3 class="card-label">{{ l('AcceptedVSRejectedPricing') }}</h3>
-          <div class="card-toolbar">
-            <div class="btn-group" data-toggle="buttons">
-              <label
-                class="btn btn-secondary active"
-                [ngClass]="{ active: selectedDatePeriod == appSalesSummaryDateInterval.Daily }"
-                (click)="reload(appSalesSummaryDateInterval.Daily)"
-              >
-                <input type="radio" name="SalesSummaryDateInterval" [value]="appSalesSummaryDateInterval.Daily" />
-                {{ 'Daily' | localize }}
-              </label>
-              <label
-                class="btn btn-secondary"
-                [ngClass]="{ active: selectedDatePeriod == appSalesSummaryDateInterval.Weekly }"
-                (click)="reload(appSalesSummaryDateInterval.Weekly)"
-              >
-                <input type="radio" name="SalesSummaryDateInterval" [value]="appSalesSummaryDateInterval.Weekly" />
-                {{ 'Weekly' | localize }}
-              </label>
-              <label
-                class="btn btn-secondary"
-                [ngClass]="{ active: selectedDatePeriod == appSalesSummaryDateInterval.Monthly }"
-                (click)="reload(appSalesSummaryDateInterval.Monthly)"
-              >
-                <input type="radio" name="SalesSummaryDateInterval" [value]="appSalesSummaryDateInterval.Monthly" />
-                {{ 'Monthly' | localize }}
-              </label>
-            </div>
-          </div>
         </div>
       </div>
-      <div class="card-body p-1" [busyIf]="loading">
-        <div id="acceptedVsRejectedChart">
+      <div class="card-body p-1">
+        <div class="pd-5 text-center" *ngIf="acceptedReqs.length == 0 && rejectedReqs.length == 0">
+          {{ l('NoData') }}
+        </div>
+        <div id="acceptedVsRejectedChart" *ngIf="acceptedReqs.length > 0 || rejectedReqs.length > 0">
           <apx-chart
             [series]="chartOptions.series"
             [chart]="chartOptions.chart"

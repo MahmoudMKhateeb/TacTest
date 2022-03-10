@@ -55,7 +55,7 @@ export class HostNewTripsChartComponent extends AppComponentBase implements OnIn
         result.forEach((element) => {
           var txt = element.day + '-' + element.month;
           if (datePeriod == SalesSummaryDatePeriod.Weekly) {
-            txt = 'wk-' + element.week;
+            txt = 'week-' + element.week;
           }
           if (datePeriod == SalesSummaryDatePeriod.Monthly) {
             txt = element.month;
@@ -92,7 +92,13 @@ export class HostNewTripsChartComponent extends AppComponentBase implements OnIn
           xaxis: {
             categories: this.months,
           },
-
+          tooltip: {
+            y: {
+              formatter: function (val) {
+                return val.toFixed(0);
+              },
+            },
+          },
           fill: {
             opacity: 1,
           },

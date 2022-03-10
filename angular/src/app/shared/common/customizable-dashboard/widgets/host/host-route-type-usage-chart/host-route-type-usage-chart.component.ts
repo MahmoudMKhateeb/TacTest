@@ -68,7 +68,13 @@ export class HostRouteTypeUsageChartComponent extends AppComponentBase implement
           xaxis: {
             categories: this.routes,
           },
-
+          tooltip: {
+            y: {
+              formatter: function (val) {
+                return val.toFixed(0);
+              },
+            },
+          },
           fill: {
             opacity: 1,
           },

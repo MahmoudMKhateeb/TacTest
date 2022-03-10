@@ -69,7 +69,13 @@ export class HostGoodTypesUsageChartComponent extends AppComponentBase implement
           xaxis: {
             categories: this.types,
           },
-
+          tooltip: {
+            y: {
+              formatter: function (val) {
+                return val.toFixed(0);
+              },
+            },
+          },
           fill: {
             opacity: 1,
           },

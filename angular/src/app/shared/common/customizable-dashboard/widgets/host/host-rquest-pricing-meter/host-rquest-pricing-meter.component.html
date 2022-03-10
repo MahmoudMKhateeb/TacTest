@@ -8,7 +8,7 @@
         </div>
       </div>
       <div class="card-body p-1">
-        <div class="pd-5" *ngIf="!items">
+        <div class="pd-5 text-center" *ngIf="!items">
           {{ l('NoData') }}
         </div>
         <div *ngIf="items" id="chart">
@@ -22,6 +22,7 @@
             [stroke]="chartOptions.stroke"
             [colors]="['rgba(199,198,171,0.99)']"
           ></apx-chart>
+          <span class="form-text text-muted text-center mr-btm">{{ l('ForCurrentYear') }}</span>
         </div>
       </div>
     </div>

@@ -17,9 +17,9 @@ export class TrackingMapComponent extends AppComponentBase implements OnInit {
   renderOptions1: any;
   option: any;
   items: any[];
-  loading: boolean = false;
+  loading: boolean;
   zoom: 12;
-  colors: any = ['#9604f3', '#0f0', '#0ff', '#dec', '#f0f', '#ff0', '#f99', '#000', '#233', '#dff', '747', '944', '833'];
+  colors: any = ['#9604f3', '#0f0', '#0ff', '#d35', '#f0f', '#ff0', '#f29', '#000', '#233', '#3ff', '747', '944', '833'];
   colors2: any[];
   public markerOptions: any;
 
@@ -32,7 +32,7 @@ export class TrackingMapComponent extends AppComponentBase implements OnInit {
   }
 
   getdata() {
-    this.loading = false;
+    this.loading = true;
     this._shipperDashboardServiceProxy
       .getTrackingMap()
       .pipe(
@@ -75,12 +75,6 @@ export class TrackingMapComponent extends AppComponentBase implements OnInit {
           this.renderOptions1 = { polylineOptions: { strokeColor: item || '#344440' } };
 
           this.markerOptions = {
-            origin: {
-              icon: 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=•|' + item + '|2',
-            },
-            destination: {
-              icon: 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=•|9604f3|2',
-            },
             waypoints: { icon: 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=•|f75|2' },
           };
 

@@ -56,7 +56,7 @@ namespace TACHYON.Dashboards.Carrier
         public async Task<ActivityItemsDto> GetDriversActivity()
         {
             DisableTenancyFilters();
-            var drivers = _usersRepository.GetAll().AsNoTracking()
+             var drivers = _usersRepository.GetAll().AsNoTracking()
                  .Where(r => r.IsDriver && r.TenantId == AbpSession.TenantId);
             return new ActivityItemsDto()
             {
@@ -84,11 +84,11 @@ namespace TACHYON.Dashboards.Carrier
             return await _shippingRequestRepository.GetAll().AsNoTracking()
                 .Include(r => r.CarrierTenantFk)
                 .WhereIf(IsEnabled(AppFeatures.Carrier), x => x.CarrierTenantId != null && x.CarrierTenantId == AbpSession.TenantId)
-                .GroupBy(r => new { r.TenantId, r.Tenant.Name, r.Tenant.Rate })
+                .GroupBy(r => new { r.TenantId, r.Tenant.TenancyName, r.Tenant.Rate })
                 .Select(shipper => new MostShippersWorksListDto()
                 {
                     Id = shipper.Key.TenantId,
-                    ShipperName = shipper.Key.Name,
+                    ShipperName = shipper.Key.TenancyName,
                     ShipperRating = shipper.Key.Rate,
                     NumberOfTrips = _shippingRequestTripRepository.GetAll().AsNoTracking().Where(r => r.ShippingRequestFk.TenantId == AbpSession.TenantId && r.ShippingRequestFk.TenantId == shipper.Key.TenantId).Count(),
                     Count = shipper.Count()
@@ -104,7 +104,7 @@ namespace TACHYON.Dashboards.Carrier
                 .Include(r => r.ShippingRequestFk)
                  .ThenInclude(r => r.Tenant)
                 .Include(r => r.VasFk)
-                .WhereIf(IsEnabled(AppFeatures.Carrier), x => x.ShippingRequestFk.CarrierTenantId != null && x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
+                .WhereIf(await IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestFk.CarrierTenantId != null && x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
                 .GroupBy(r => new { r.VasFk.Name })
                 .Select(vas => new VasTypeDto()
                 {

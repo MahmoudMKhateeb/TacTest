@@ -35,7 +35,6 @@ export class HostRquestPricingMeterComponent extends AppComponentBase implements
       .subscribe((result) => {
         this.items = result;
 
-        console.log('items ', this.items);
         this.chartOptions = {
           series: [result],
 

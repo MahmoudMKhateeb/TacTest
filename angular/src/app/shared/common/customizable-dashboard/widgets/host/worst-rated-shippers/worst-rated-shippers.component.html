@@ -20,7 +20,9 @@
             </ng-template>
             <ng-template pTemplate="body" let-record>
               <tr>
-                <td>{{ record.name }}</td>
+                <td>
+                  <a target="_blank" href="/app/main/profile/{{ record.id }}/view">{{ record.name }}</a>
+                </td>
                 <td>
                   <div class="mt-1">
                     <ng-template #t let-fill="fill">

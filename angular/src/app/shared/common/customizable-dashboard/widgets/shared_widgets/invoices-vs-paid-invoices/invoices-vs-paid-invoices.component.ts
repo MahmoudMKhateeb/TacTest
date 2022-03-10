@@ -14,44 +14,26 @@ export class InvoicesVsPaidInvoicesComponent extends AppComponentBase implements
   months: string[] = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   invoices: number[];
   paidInvoices: number[];
-  toDate: moment.Moment = null;
-  fromDate: moment.Moment = null;
   loading: boolean = false;
-  saving = false;
-  appSalesSummaryDateInterval = SalesSummaryDatePeriod;
-  selectedDatePeriod: SalesSummaryDatePeriod;
 
   constructor(injector: Injector, private _shipperDashboardServiceProxy: ShipperDashboardServiceProxy) {
     super(injector);
   }
 
   ngOnInit(): void {
-    this.getInvoices(this.appSalesSummaryDateInterval.Daily);
+    this.getInvoices();
   }
 
-  reload(datePeriod) {
-    if (this.selectedDatePeriod === datePeriod) {
-      this.loading = false;
-      return;
-    }
-
-    this.selectedDatePeriod = datePeriod;
-
-    this.getInvoices(this.selectedDatePeriod);
-  }
-
-  getInvoices(datePeriod: SalesSummaryDatePeriod) {
+  getInvoices() {
     this.invoices = [];
     this.paidInvoices = [];
     this.loading = true;
-    this.saving = true;
 
     this._shipperDashboardServiceProxy
-      .getInvoicesVSPaidInvoices(datePeriod)
+      .getInvoicesVSPaidInvoices()
       .pipe(
         finalize(() => {
           this.loading = false;
-          this.saving = false;
         })
       )
       .subscribe((result) => {
@@ -65,8 +47,6 @@ export class InvoicesVsPaidInvoicesComponent extends AppComponentBase implements
                 count: 0,
                 month: i,
                 year: year,
-                day: foundInvoicesElement[i].day,
-                week: foundInvoicesElement[i].week,
               })
             );
           }
@@ -77,24 +57,18 @@ export class InvoicesVsPaidInvoicesComponent extends AppComponentBase implements
                 count: 0,
                 month: i,
                 year: year,
-                day: foundPaidInvoicesElement[i].day,
-                week: foundPaidInvoicesElement[i].week,
               })
             );
           }
         });
         result.shipperInvoices.sort(function (a, b) {
-          if (datePeriod == SalesSummaryDatePeriod.Monthly) return a.month - b.month;
-          if (datePeriod == SalesSummaryDatePeriod.Daily) return a.day - b.day;
-          if (datePeriod == SalesSummaryDatePeriod.Weekly) return a.week - b.week;
+          return a.month - b.month;
         });
         result.shipperInvoices.forEach((element) => {
           this.invoices.push(element.count);
         });
         result.paidInvoices.sort(function (a, b) {
-          if (datePeriod == SalesSummaryDatePeriod.Monthly) return a.month - b.month;
-          if (datePeriod == SalesSummaryDatePeriod.Daily) return a.day - b.day;
-          if (datePeriod == SalesSummaryDatePeriod.Weekly) return a.week - b.week;
+          return a.month - b.month;
         });
         result.paidInvoices.forEach((element) => {
           this.paidInvoices.push(element.count);
@@ -105,10 +79,12 @@ export class InvoicesVsPaidInvoicesComponent extends AppComponentBase implements
             {
               name: 'Invoices',
               data: this.invoices,
+              color: 'rgba(187, 41, 41, 0.847)',
             },
             {
               name: 'Paid Invoices',
               data: this.paidInvoices,
+              color: '#b5b5c3',
             },
           ],
           chart: {
@@ -129,10 +105,14 @@ export class InvoicesVsPaidInvoicesComponent extends AppComponentBase implements
             x: {
               format: 'dd/MM/yy',
             },
+            y: {
+              formatter: function (val) {
+                return val.toFixed(0);
+              },
+            },
           },
         };
         this.loading = false;
-        this.saving = false;
       });
   }
 }

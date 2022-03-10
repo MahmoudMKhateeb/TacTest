@@ -8,7 +8,10 @@
         </div>
       </div>
       <div class="card-body p-1">
-        <div id="acceptedVsRejectedChart">
+        <div class="pd-5 text-center" *ngIf="completedTrips.length == 0 && POD.length == 0">
+          {{ l('NoData') }}
+        </div>
+        <div id="acceptedVsRejectedChart" *ngIf="completedTrips.length > 0 || POD.length > 0">
           <apx-chart
             *ngIf="chartOptions && chartOptions.series"
             [series]="chartOptions.series"

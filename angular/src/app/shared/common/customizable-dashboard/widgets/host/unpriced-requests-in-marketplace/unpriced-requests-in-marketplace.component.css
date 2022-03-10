@@ -5,3 +5,7 @@ input[type='radio'] {
   margin-left: -35px;
   margin-top: 35px;
 }
+th,
+td {
+  text-align: center !important;
+}

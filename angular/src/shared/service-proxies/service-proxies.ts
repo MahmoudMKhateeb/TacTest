@@ -35669,11 +35669,8 @@ export class ShipperDashboardServiceProxy {
   /**
    * @return Success
    */
-  getAcceptedAndRejectedRequests(salesSummaryDatePeriod: SalesSummaryDatePeriod): Observable<AcceptedAndRejectedRequestsListDto> {
-    let url_ = this.baseUrl + '/api/services/app/ShipperDashboard/GetAcceptedAndRejectedRequests?';
-    if (salesSummaryDatePeriod === undefined || salesSummaryDatePeriod === null)
-      throw new Error("The parameter 'salesSummaryDatePeriod' must be defined and cannot be null.");
-    else url_ += 'SalesSummaryDatePeriod=' + encodeURIComponent('' + salesSummaryDatePeriod) + '&';
+  getAcceptedAndRejectedRequests(): Observable<AcceptedAndRejectedRequestsListDto> {
+    let url_ = this.baseUrl + '/api/services/app/ShipperDashboard/GetAcceptedAndRejectedRequests';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -35805,11 +35802,8 @@ export class ShipperDashboardServiceProxy {
   /**
    * @return Success
    */
-  getCompletedTripVsPod(salesSummaryDatePeriod: SalesSummaryDatePeriod): Observable<CompletedTripVsPodListDto> {
-    let url_ = this.baseUrl + '/api/services/app/ShipperDashboard/GetCompletedTripVsPod?';
-    if (salesSummaryDatePeriod === undefined || salesSummaryDatePeriod === null)
-      throw new Error("The parameter 'salesSummaryDatePeriod' must be defined and cannot be null.");
-    else url_ += 'SalesSummaryDatePeriod=' + encodeURIComponent('' + salesSummaryDatePeriod) + '&';
+  getCompletedTripVsPod(): Observable<CompletedTripVsPodListDto> {
+    let url_ = this.baseUrl + '/api/services/app/ShipperDashboard/GetCompletedTripVsPod';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -35872,11 +35866,8 @@ export class ShipperDashboardServiceProxy {
   /**
    * @return Success
    */
-  getInvoicesVSPaidInvoices(salesSummaryDatePeriod: SalesSummaryDatePeriod): Observable<InvoicesVsPaidInvoicesDto> {
-    let url_ = this.baseUrl + '/api/services/app/ShipperDashboard/GetInvoicesVSPaidInvoices?';
-    if (salesSummaryDatePeriod === undefined || salesSummaryDatePeriod === null)
-      throw new Error("The parameter 'salesSummaryDatePeriod' must be defined and cannot be null.");
-    else url_ += 'SalesSummaryDatePeriod=' + encodeURIComponent('' + salesSummaryDatePeriod) + '&';
+  getInvoicesVSPaidInvoices(): Observable<InvoicesVsPaidInvoicesDto> {
+    let url_ = this.baseUrl + '/api/services/app/ShipperDashboard/GetInvoicesVSPaidInvoices';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -83255,8 +83246,6 @@ export interface IUpdateUserSignInTokenOutput {
 export class RequestsListPerMonthDto implements IRequestsListPerMonthDto {
   year!: number;
   month!: number;
-  day!: number;
-  week!: number;
   count!: number;
 
   constructor(data?: IRequestsListPerMonthDto) {
@@ -83271,8 +83260,6 @@ export class RequestsListPerMonthDto implements IRequestsListPerMonthDto {
     if (_data) {
       this.year = _data['year'];
       this.month = _data['month'];
-      this.day = _data['day'];
-      this.week = _data['week'];
       this.count = _data['count'];
     }
   }
@@ -83288,8 +83275,6 @@ export class RequestsListPerMonthDto implements IRequestsListPerMonthDto {
     data = typeof data === 'object' ? data : {};
     data['year'] = this.year;
     data['month'] = this.month;
-    data['day'] = this.day;
-    data['week'] = this.week;
     data['count'] = this.count;
     return data;
   }
@@ -83298,8 +83283,6 @@ export class RequestsListPerMonthDto implements IRequestsListPerMonthDto {
 export interface IRequestsListPerMonthDto {
   year: number;
   month: number;
-  day: number;
-  week: number;
   count: number;
 }
 

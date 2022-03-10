@@ -2536,6 +2536,16 @@
 		<text name="GoodTypesUsage">Good Types Usage</text>
 		<text name="NewAccounts">New Accounts</text>
 		<text name="NewTrips">New Trips</text>
-
+		<text name="CurrentlyNonActiveDrivers">Non Active Drivers</text>
+		<text name="CurrentlyActiveDrivers">Active Drivers</text>
+		<text name="CurrentlyActiveTrucks">Active Trucks</text>
+		<text name="CurrentlyNonActiveTrucks">Non Active Trucks</text>
+		<text name="MostUsedVases"> Most Used Vases </text>
+		<text name="MostWorkedWithShippers">Most Worked With Shippers</text>
+		<text name="TrackingMap">Tracking Map</text>
+		<text name="WorstRatedCarriers">Worst Rated Carriers</text>
+		<text name="WorstRatedShippers">Worst Rated Shippers</text>
+		<text name="ReferanceNumber">Referance Number</text>
+		<text name="ForCurrentYear">For Current Year</text>
 	</texts>
 </localizationDictionary>

@@ -1,9 +1,12 @@
 import { Component, Injector, OnDestroy, OnInit } from '@angular/core';
 import { WidgetComponentBase } from '@app/shared/common/customizable-dashboard/widgets/widget-component-base';
-import { ChartOptions } from '@app/shared/common/customizable-dashboard/widgets/ApexInterfaces';
+import { ChartOptions, ChartOptionsBars } from '@app/shared/common/customizable-dashboard/widgets/ApexInterfaces';
 import { SalesSummaryDatePeriod, ShipperDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { finalize } from 'rxjs/operators';
+import { format } from 'path/posix';
+import { formatNumber } from '@angular/common';
+import { count } from 'console';
 
 @Component({
   selector: 'app-completed-trips-widget',
@@ -11,13 +14,10 @@ import { finalize } from 'rxjs/operators';
   styleUrls: ['./completed-trips-widget.component.css'],
 })
 export class CompletedTripsWidgetComponent extends AppComponentBase implements OnInit {
-  public chartOptions: Partial<ChartOptions>;
+  public chartOptions: Partial<ChartOptionsBars>;
   months: string[];
   trips: number[];
-  toDate: moment.Moment = null;
-  fromDate: moment.Moment = null;
   loading: boolean = false;
-  saving = false;
   appSalesSummaryDateInterval = SalesSummaryDatePeriod;
   selectedDatePeriod: SalesSummaryDatePeriod;
 
@@ -44,26 +44,24 @@ export class CompletedTripsWidgetComponent extends AppComponentBase implements O
     this.months = [];
     this.trips = [];
     this.loading = true;
-    this.saving = true;
     this._shipperDashboardServiceProxy
       .getCompletedTripsCountPerMonth(datePeriod)
       .pipe(
         finalize(() => {
           this.loading = false;
-          this.saving = false;
         })
       )
       .subscribe((result) => {
         result.forEach((element) => {
           var txt = '';
           if (datePeriod == SalesSummaryDatePeriod.Daily) {
-            txt = element.day + '-' + element.month;
+            txt = element.day + '-' + element.month + '-' + element.year;
           }
           if (datePeriod == SalesSummaryDatePeriod.Weekly) {
-            txt = 'wk-' + element.week;
+            txt = 'week-' + element.week;
           }
           if (datePeriod == SalesSummaryDatePeriod.Monthly) {
-            txt = 'month-' + element.month;
+            txt = element.month;
           }
           this.months.push(txt);
           this.trips.push(element.count);
@@ -74,34 +72,41 @@ export class CompletedTripsWidgetComponent extends AppComponentBase implements O
             {
               name: 'Trips',
               data: this.trips,
-              color: '#801e1e',
+              color: 'rgba(187, 41, 41, 0.847)',
             },
           ],
           chart: {
+            type: 'area',
             height: 350,
-            type: 'line',
-            zoom: {
-              enabled: false,
+          },
+          plotOptions: {
+            area: {
+              fillTo: 'origin',
             },
           },
           dataLabels: {
             enabled: false,
           },
           stroke: {
-            curve: 'straight',
-          },
-          grid: {
-            row: {
-              colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
-              opacity: 0.5,
-            },
+            show: true,
+            width: 2,
+            colors: ['transparent'],
           },
           xaxis: {
             categories: this.months,
           },
+          tooltip: {
+            y: {
+              formatter: function (val) {
+                return val.toFixed(0);
+              },
+            },
+          },
+          fill: {
+            opacity: 1,
+          },
         };
         this.loading = false;
-        this.saving = false;
       });
   }
 }

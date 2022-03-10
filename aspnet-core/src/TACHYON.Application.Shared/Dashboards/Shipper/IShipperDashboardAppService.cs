@@ -9,10 +9,10 @@ namespace TACHYON.Dashboards.Shipper
     public interface IShipperDashboardAppService : IApplicationService
     {
         Task<List<ListPerMonthDto>> GetCompletedTripsCountPerMonth(GetDataByDateFilterInput input);
-        Task<AcceptedAndRejectedRequestsListDto> GetAcceptedAndRejectedRequests(GetDataByDateFilterInput input);
+        Task<AcceptedAndRejectedRequestsListDto> GetAcceptedAndRejectedRequests();
         Task<List<MostCarriersWorksListDto>> GetMostWorkedWithCarriers();
-        Task<CompletedTripVsPodListDto> GetCompletedTripVsPod(GetDataByDateFilterInput input);
-        Task<InvoicesVsPaidInvoicesDto> GetInvoicesVSPaidInvoices(GetDataByDateFilterInput input);
+        Task<CompletedTripVsPodListDto> GetCompletedTripVsPod();
+        Task<InvoicesVsPaidInvoicesDto> GetInvoicesVSPaidInvoices();
         Task<List<RequestsInMarketpalceDto>> GetRequestsInMarketpalce(GetDataByDateFilterInput input);
         Task<List<MostUsedOriginsDto>> GetMostUsedOrigins();
         Task<List<MostUsedOriginsDto>> GetMostUsedDestinatiions();

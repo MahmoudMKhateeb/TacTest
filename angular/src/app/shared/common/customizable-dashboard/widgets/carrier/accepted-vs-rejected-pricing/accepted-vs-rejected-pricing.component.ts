@@ -14,38 +14,23 @@ export class AcceptedVsRejectedPricingComponent extends AppComponentBase impleme
   months: string[] = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   acceptedReqs: number[];
   rejectedReqs: number[];
-  fromDate: moment.Moment = null;
-  toDate: moment.Moment = null;
   loading: boolean = false;
-  appSalesSummaryDateInterval = SalesSummaryDatePeriod;
-  selectedDatePeriod: SalesSummaryDatePeriod;
 
   constructor(injector: Injector, private _shipperDashboardServiceProxy: ShipperDashboardServiceProxy) {
     super(injector);
   }
 
   ngOnInit(): void {
-    this.getRequests(this.appSalesSummaryDateInterval.Monthly);
+    this.getRequests();
   }
 
-  reload(datePeriod) {
-    if (this.selectedDatePeriod === datePeriod) {
-      this.loading = false;
-      return;
-    }
-
-    this.selectedDatePeriod = datePeriod;
-
-    this.getRequests(this.selectedDatePeriod);
-  }
-
-  getRequests(datePeriod: SalesSummaryDatePeriod) {
+  getRequests() {
     this.acceptedReqs = [];
     this.rejectedReqs = [];
     this.loading = true;
 
     this._shipperDashboardServiceProxy
-      .getAcceptedAndRejectedRequests(datePeriod)
+      .getAcceptedAndRejectedRequests()
       .pipe(
         finalize(() => {
           this.loading = false;
@@ -62,8 +47,6 @@ export class AcceptedVsRejectedPricingComponent extends AppComponentBase impleme
                 count: 0,
                 month: i,
                 year: year,
-                day: foundAcceptElement[i].day,
-                week: foundAcceptElement[i].week,
               })
             );
           }
@@ -74,24 +57,18 @@ export class AcceptedVsRejectedPricingComponent extends AppComponentBase impleme
                 count: 0,
                 month: i,
                 year: year,
-                day: foundAcceptElement[i].day,
-                week: foundAcceptElement[i].week,
               })
             );
           }
         });
         result.acceptedRequests.sort(function (a, b) {
-          if (datePeriod == SalesSummaryDatePeriod.Monthly) return a.month - b.month;
-          if (datePeriod == SalesSummaryDatePeriod.Daily) return a.day - b.day;
-          if (datePeriod == SalesSummaryDatePeriod.Weekly) return a.week - b.week;
+          return a.month - b.month;
         });
         result.acceptedRequests.forEach((element) => {
           this.acceptedReqs.push(element.count);
         });
         result.rejectedRequests.sort(function (a, b) {
-          if (datePeriod == SalesSummaryDatePeriod.Monthly) return a.month - b.month;
-          if (datePeriod == SalesSummaryDatePeriod.Daily) return a.day - b.day;
-          if (datePeriod == SalesSummaryDatePeriod.Weekly) return a.week - b.week;
+          return a.month - b.month;
         });
         result.rejectedRequests.forEach((element) => {
           this.rejectedReqs.push(element.count);
@@ -102,10 +79,12 @@ export class AcceptedVsRejectedPricingComponent extends AppComponentBase impleme
             {
               name: 'Accepted',
               data: this.acceptedReqs,
+              color: 'rgba(187, 41, 41, 0.847)',
             },
             {
               name: 'Rejected',
               data: this.rejectedReqs,
+              color: '#b5b5c3',
             },
           ],
           chart: {
@@ -125,6 +104,11 @@ export class AcceptedVsRejectedPricingComponent extends AppComponentBase impleme
           tooltip: {
             x: {
               format: 'dd/MM/yy',
+            },
+            y: {
+              formatter: function (val) {
+                return val.toFixed(0);
+              },
             },
           },
         };
