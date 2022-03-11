@@ -213,8 +213,8 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
         })
       )
       .subscribe(() => {
-        this.notify.info(this.l('SavedSuccessfully'));
         this.close();
+        this.notify.info(this.l('SavedSuccessfully'));
         this.modalSave.emit(null);
       });
   }
