@@ -14,14 +14,13 @@
               </button>
             </li>
             <li role="menuitem">
-              <button *ngIf="isShipper || isTachyonDealer" class="btn btn-outline-info btn-elevate-hover mt-2 w-100">
+              <button
+                (click)="loadEntityTemplateModal.show(1)"
+                *ngIf="isShipper || isTachyonDealer"
+                class="btn btn-outline-info btn-elevate-hover mt-2 w-100"
+              >
                 <i class="fas fa-list"></i> {{ l('FromTemplate') }}
               </button>
-            </li>
-            <li role="menuitem mt-2">
-              <select name="templates" id="templates" class="form-control">
-                <option>Template 1</option>
-              </select>
             </li>
           </ul>
         </div>
@@ -292,3 +291,4 @@
 <price-offer-list-model [Channel]="Channel" #ModelOffer></price-offer-list-model>
 <shipping-request-card-search-model #ModelSearch (modalsearch)="search()"></shipping-request-card-search-model>
 <shipping-request-card-cancel-model #ModelCancel></shipping-request-card-cancel-model>
+<load-entity-template-modal #loadEntityTemplateModal></load-entity-template-modal>

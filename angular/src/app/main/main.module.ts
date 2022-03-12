@@ -273,6 +273,7 @@ import { TrackingModule } from '@app/main/shippingRequests/shippingRequests/trac
 import { RequestTemplatesComponent } from './shippingRequests/shippingRequests/request-templates/request-templates.component';
 import { CreateNewEntityTemplateModalComponent } from './shippingRequests/shippingRequests/request-templates/create-new-entity-template-modal/create-new-entity-template-modal.component';
 import { CreateOrEditTemplateDropDownButtonComponent } from './shippingRequests/shippingRequests/request-templates/create-or-edit-template-drop-down-button/create-or-edit-template-drop-down-button.component';
+import { LoadEntityTemplateModalComponent } from '@app/main/shippingRequests/shippingRequests/request-templates/load-entity-template-modal/load-entity-template-modal.component';
 
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
@@ -519,6 +520,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     RequestTemplatesComponent,
     CreateNewEntityTemplateModalComponent,
     CreateOrEditTemplateDropDownButtonComponent,
+    LoadEntityTemplateModalComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },

@@ -16,15 +16,16 @@ import { ScrollPagnationComponentBase } from '@shared/common/scroll/scroll-pagin
 import { ShippingRequestForPriceOfferGetAllInput } from '../../../../shared/common/search/ShippingRequestForPriceOfferGetAllInput';
 import { Router } from '@angular/router';
 import { ShippingrequestsDetailsModelComponent } from '../details/shippingrequests-details-model.component';
+import { LoadEntityTemplateModalComponent } from '@app/main/shippingRequests/shippingRequests/request-templates/load-entity-template-modal/load-entity-template-modal.component';
 
 @Component({
   templateUrl: './shipping-request-card-template.component.html',
-  // styleUrls: ['/assets/custom/css/style.scss'],
   selector: 'shipping-request-card-template',
   animations: [appModuleAnimation()],
 })
 export class ShippingRequestCardTemplateComponent extends ScrollPagnationComponentBase implements OnInit {
   @ViewChild('Model', { static: false }) modalMore: ShippingrequestsDetailsModelComponent;
+  @ViewChild('loadEntityTemplateModal', { static: false }) loadEntityTemplateModal: LoadEntityTemplateModalComponent;
   shippingRequestforView: GetShippingRequestForViewOutput;
 
   Items: GetShippingRequestForPriceOfferListDto[] = [];
