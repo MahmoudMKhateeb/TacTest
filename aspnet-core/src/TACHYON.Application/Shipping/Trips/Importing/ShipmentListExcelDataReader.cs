@@ -62,10 +62,10 @@ namespace TACHYON.Shipping.Trips.Importing
                     row, 2, "Trip Pick up Date End", exceptionMessage));
 
                 //3
-                trip.TotalValue= _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
+                trip.TotalValue= _tachyonExcelDataReaderHelper.GetValueFromRowOrNull<string>(worksheet,
                     row, 3, "Approximate Total Value of Goods", exceptionMessage);
                 //4
-                trip.Note= _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
+                trip.Note= _tachyonExcelDataReaderHelper.GetValueFromRowOrNull<string>(worksheet,
                     row, 4, "Notes to Carrier", exceptionMessage);
                 //5
                 trip.NeedsDeliveryNote= GetBoolValueFromYesOrNo(_tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
