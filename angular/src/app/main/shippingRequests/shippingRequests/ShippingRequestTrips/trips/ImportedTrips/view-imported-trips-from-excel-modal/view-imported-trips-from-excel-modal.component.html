@@ -71,11 +71,11 @@
                       </td>
                       <td>
                         <span class="ui-column-title"> {{ l('hasAttachment') }}</span>
-                        {{ record.hasAttachment }}
+                        {{ record.hasAttachment == true ? l('Yes') : l('No') }}
                       </td>
                       <td>
                         <span class="ui-column-title"> {{ l('needsDeliveryNote') }}</span>
-                        {{ record.needsDeliveryNote }}
+                        {{ record.needsDeliveryNote == true ? l('Yes') : l('No') }}
                       </td>
                       <td>
                         <span class="ui-column-title"> {{ l('totalValue') }}</span>

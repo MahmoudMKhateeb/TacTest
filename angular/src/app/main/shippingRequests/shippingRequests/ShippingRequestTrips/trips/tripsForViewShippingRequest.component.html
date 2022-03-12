@@ -56,7 +56,7 @@
                 <div class="dropdown-divider"></div>
                 <span class="dropdown-item-text text-muted pl-3" href="#">
                   <small
-                    *ngIf="isArabic"
+                    *ngIf="isArabic && ShippingRequest.routeTypeId != ShippingRequestRouteTypeEnum.SingleDrop"
                     [innerHTML]="
                       l(
                         'ImportToExcelSampleFileDownloadInfo',
@@ -64,10 +64,29 @@
                       )
                     "
                   ></small>
+
                   <small
-                    *ngIf="!isArabic"
+                    *ngIf="isArabic && ShippingRequest.routeTypeId == ShippingRequestRouteTypeEnum.SingleDrop"
+                    [innerHTML]="
+                      l(
+                        'ImportToExcelSampleFileDownloadInfo',
+                        '<a href=/assets/sampleFiles/ImportSingleDropShipmentSampleFile.xlsx>' + l('ClickHere') + '</a>'
+                      )
+                    "
+                  ></small>
+                  <small
+                    *ngIf="!isArabic && ShippingRequest.routeTypeId != ShippingRequestRouteTypeEnum.SingleDrop"
                     [innerHTML]="
                       l('ImportToExcelSampleFileDownloadInfo', '<a href=/assets/sampleFiles/ImportShipmentSampleFile.xlsx>' + l('ClickHere') + '</a>')
+                    "
+                  ></small>
+                  <small
+                    *ngIf="!isArabic && ShippingRequest.routeTypeId == ShippingRequestRouteTypeEnum.SingleDrop"
+                    [innerHTML]="
+                      l(
+                        'ImportToExcelSampleFileDownloadInfo',
+                        '<a href=/assets/sampleFiles/ImportSingleDropShipmentSampleFile.xlsx>' + l('ClickHere') + '</a>'
+                      )
                     "
                   ></small>
                 </span>
