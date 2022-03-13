@@ -63,7 +63,7 @@ namespace TACHYON.Shipping.Trips.Importing
                 point.PickingType = GetPickingTypeEnumFromString(pickingType, exceptionMessage).Value;
 
                 var facility = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
-                    row, 3, "Facility", exceptionMessage);
+                    row, 3, "Facility*", exceptionMessage);
                 point.Facility = facility;
                 var facilityId = GetFacilityId(facility, exceptionMessage);
                 if (facilityId != null)

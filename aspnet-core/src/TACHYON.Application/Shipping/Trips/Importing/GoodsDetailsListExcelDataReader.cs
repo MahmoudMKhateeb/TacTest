@@ -103,29 +103,36 @@ namespace TACHYON.Shipping.Trips.Importing
                 goodsDetail.UnitOfMeasure= _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
                    row, 5, "Unit Of Measure*", exceptionMessage);
 
-                var unitOfMesureId = GetUnitOfMesureByName(goodsDetail.UnitOfMeasure, exceptionMessage);
+                
+                    var unitOfMesureId = GetUnitOfMesureByName(goodsDetail.UnitOfMeasure, exceptionMessage);
                 if (unitOfMesureId != null)
                 {
                     goodsDetail.UnitOfMeasureId = unitOfMesureId.Value;
                 }
 
+                if (goodsDetail.UnitOfMeasure.Contains(TACHYONConsts.OthersDisplayName))
+                {
+                    goodsDetail.OtherUnitOfMeasureName = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
+                   row, 6, "Other Unit Of Measure", exceptionMessage);
+                }
+
                 //6
                 goodsDetail.Weight = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<double>(worksheet,
-                   row, 6, "Weight Per Item*", exceptionMessage);
+                   row, 7, "Weight Per Item*", exceptionMessage);
                 //7
                 goodsDetail.Dimentions = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
-                   row, 7, "Package Dimensions*", exceptionMessage);
+                   row, 8, "Package Dimensions*", exceptionMessage);
                 //8
                 goodsDetail.Amount= _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<int>(worksheet,
-                   row, 8, "Quantity*", exceptionMessage);
+                   row, 9, "Quantity*", exceptionMessage);
                 //9
                 goodsDetail.IsDangerousGood= GetBoolValueFromYesOrNo(_tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
-                   row, 9, "Is Dangerous Goods?*", exceptionMessage));
+                   row, 10, "Is Dangerous Goods?*", exceptionMessage));
 
                 if (goodsDetail.IsDangerousGood)
                 {
                     goodsDetail.DangerousGoodsType = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
-                   row, 10,"DangerousGoodType", exceptionMessage);
+                   row, 11,"DangerousGoodType", exceptionMessage);
 
                     var dangerousGoodTypeId = GetDangerousGoodIdTypeByName(goodsDetail.DangerousGoodsType, exceptionMessage);
                     if (dangerousGoodTypeId != null)
@@ -134,7 +141,7 @@ namespace TACHYON.Shipping.Trips.Importing
                     }
 
                     goodsDetail.DangerousGoodsCode= _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
-                   row, 11, "DangerousGoodsCode", exceptionMessage);
+                   row, 12, "DangerousGoodsCode", exceptionMessage);
                 }
 
 

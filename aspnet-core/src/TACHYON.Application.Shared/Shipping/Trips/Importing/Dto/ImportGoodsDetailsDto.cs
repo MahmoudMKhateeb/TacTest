@@ -23,6 +23,7 @@ namespace TACHYON.Shipping.Trips.Importing.Dto
         public string GoodsSubCategory { get; set; }
         public string OtherGoodsCategoryName { get; set; }
         public int UnitOfMeasureId { get; set; }
+        public string OtherUnitOfMeasureName { get; set; }
         public string UnitOfMeasure { get; set; }
         public string Exception { get; set; }
     }

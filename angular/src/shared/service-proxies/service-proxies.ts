@@ -71283,6 +71283,7 @@ export class ImportGoodsDetailsDto implements IImportGoodsDetailsDto {
   goodsSubCategory!: string | undefined;
   otherGoodsCategoryName!: string | undefined;
   unitOfMeasureId!: number;
+  otherUnitOfMeasureName!: string | undefined;
   unitOfMeasure!: string | undefined;
   exception!: string | undefined;
 
@@ -71312,6 +71313,7 @@ export class ImportGoodsDetailsDto implements IImportGoodsDetailsDto {
       this.goodsSubCategory = _data['goodsSubCategory'];
       this.otherGoodsCategoryName = _data['otherGoodsCategoryName'];
       this.unitOfMeasureId = _data['unitOfMeasureId'];
+      this.otherUnitOfMeasureName = _data['otherUnitOfMeasureName'];
       this.unitOfMeasure = _data['unitOfMeasure'];
       this.exception = _data['exception'];
     }
@@ -71342,6 +71344,7 @@ export class ImportGoodsDetailsDto implements IImportGoodsDetailsDto {
     data['goodsSubCategory'] = this.goodsSubCategory;
     data['otherGoodsCategoryName'] = this.otherGoodsCategoryName;
     data['unitOfMeasureId'] = this.unitOfMeasureId;
+    data['otherUnitOfMeasureName'] = this.otherUnitOfMeasureName;
     data['unitOfMeasure'] = this.unitOfMeasure;
     data['exception'] = this.exception;
     return data;
@@ -71365,6 +71368,7 @@ export interface IImportGoodsDetailsDto {
   goodsSubCategory: string | undefined;
   otherGoodsCategoryName: string | undefined;
   unitOfMeasureId: number;
+  otherUnitOfMeasureName: string | undefined;
   unitOfMeasure: string | undefined;
   exception: string | undefined;
 }
