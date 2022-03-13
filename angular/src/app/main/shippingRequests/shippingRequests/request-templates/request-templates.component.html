@@ -1,6 +1,6 @@
 <div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
-    <sub-header [title]="'Templates' | localize" [description]="'' | localize">
+    <sub-header [title]="l('SavedTemplates') | localize" [description]="'' | localize">
       <div role="actions">
         <button class="btn btn-primary blue" [routerLink]="['/app/main/shippingRequests/shippingRequestWizard']">
           <i class="fa fa-plus"></i> {{ l('CreateNewTemplate') }}
@@ -42,7 +42,7 @@
                     <label for="templateTypeFilter">{{ l('TemplateType') }}</label>
                     <select class="form-control" id="templateTypeFilter" name="templateTypeFilter" [(ngModel)]="templateTypeFilter">
                       <option value="" selected>{{ l('All') }}</option>
-                      <option *ngFor="let item of availableEntityTypes" value="{{ item.key }}">{{ item.value }}</option>
+                      <option *ngFor="let item of availableEntityTypes" value="{{ item.key }}">{{ l(item.value) }}</option>
                     </select>
                   </div>
                 </div>
@@ -89,7 +89,7 @@
                       {{ l('TemplateType') }}
                     </th>
                     <th>
-                      {{ l('CreatedFrom') }}
+                      {{ l('TemplateReference') }}
                     </th>
                   </tr>
                 </ng-template>
@@ -102,7 +102,7 @@
                         </button>
                         <ul class="dropdown-menu" *dropdownMenu>
                           <li>
-                            <a href="javascript:;" class="dropdown-item" (click)="useTemplate(record)">{{ l('Use') }}</a>
+                            <a href="javascript:;" class="dropdown-item" (click)="useTemplate(record)">{{ l('UseTemplate') }}</a>
                           </li>
                           <!--                          <li>-->
                           <!--                            <a href="javascript:;" class="dropdown-item" (click)="editTemplate(record)">{{ l('Edit') }}</a>-->

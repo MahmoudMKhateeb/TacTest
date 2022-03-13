@@ -481,7 +481,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
    */
   loadTemplates() {
     this.templatesLoading = true;
-    this._templates.getAllForDropdown(this.SavedEntityType.Trip, this.shippingRequest.id.toString()).subscribe((res) => {
+    this._templates.getAllForDropdown(this.SavedEntityType.TripTemplate, this.shippingRequest.id.toString()).subscribe((res) => {
       this.templatesLoading = false;
       this.tripTemples = res;
     });

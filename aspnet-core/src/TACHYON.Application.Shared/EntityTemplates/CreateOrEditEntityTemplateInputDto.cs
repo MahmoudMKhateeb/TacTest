@@ -39,10 +39,10 @@ namespace TACHYON.EntityTemplates
             {
                 switch (EntityType)
                 {
-                    case SavedEntityType.ShippingRequest:
+                    case SavedEntityType.ShippingRequestTemplate:
                         SavedEntityId = JsonConvert.DeserializeObject<CreateOrEditShippingRequestDto>(SavedEntity).Id.ToString();
                         break;
-                    case SavedEntityType.Trip:
+                    case SavedEntityType.TripTemplate:
                         SavedEntityId = JsonConvert.DeserializeObject<CreateOrEditShippingRequestTemplateInputDto>(SavedEntity).Id.ToString();
                         break;
                     default:

@@ -2506,5 +2506,27 @@
 	<text name="NoMatchingDrivers">There is no Drivers</text>
     <text name="ResetReceiverCode">Reset shipment receiver code</text>
     <text name="ReceiverCodeConfirmationMsg">Are you sure you want to reset the receiver code for this shipment?</text>
+		<text name="TripTemplates">Trip templates</text>
+		<text name="SelectATripTemplate">Select a trip template</text>
+		<text name="Load">load</text>
+		<text name="SaveAsTemplate">Save as template</text>
+		<text name="NewTemplate">New template</text>
+		<text name="TemplateName">Template name</text>
+		<text name="TemplateSavedSuccessfully">Template saved successfully</text>
+		<text name="CreateNewTemplate">Create new template</text>
+		<text name="TemplateType">Template type</text>
+		<text name="TemplateReference">Template reference</text>
+		<text name="Template">Template</text>
+		<text name="TemplateImportedSuccessfully">Template imported successfully</text>
+		<text name="NotSupportedEntityType">Not supported entity type</text>
+		<text name="TemplateNameAlreadyUsed">Template name already used</text>
+		<text name="SavedTemplates">Saved Templates</text>
+		<text name="CreateEntityTemplate"> Create entity template</text>
+		<text name="UpdateEntityTemplate">Update entity template</text>
+		<text name="DeleteEntityTemplate">Delete entity template</text>
+		<text name="TemplateWithIdXIsNotFound">Template is not found !</text>
+		<text name="ShippingRequestTemplate">Shipping request template</text>
+		<text name="TripTemplate">Trip template</text>
+		<text name="UseTemplate">Use template</text>
 	</texts>
 </localizationDictionary>

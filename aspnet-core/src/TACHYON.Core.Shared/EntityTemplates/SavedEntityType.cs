@@ -5,8 +5,8 @@ namespace TACHYON.EntityTemplates
     public enum SavedEntityType
     {
         [Description("ShippingRequestSavedTepmlate")]
-        ShippingRequest = 1,
+        ShippingRequestTemplate = 1,
         [Description("TripSavedTepmlate")]
-        Trip = 2
+        TripTemplate = 2
     }
 }

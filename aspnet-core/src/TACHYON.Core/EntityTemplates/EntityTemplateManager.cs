@@ -91,8 +91,8 @@ namespace TACHYON.EntityTemplates
             
             object savedEntity = template.EntityType switch
             {
-                SavedEntityType.ShippingRequest => await GetShippingRequest(template.SavedEntityId),
-                SavedEntityType.Trip => await GetTrip(template.SavedEntityId),
+                SavedEntityType.ShippingRequestTemplate => await GetShippingRequest(template.SavedEntityId),
+                SavedEntityType.TripTemplate => await GetTrip(template.SavedEntityId),
                 _ => throw new ArgumentOutOfRangeException()
             };
             if (savedEntity == null)
@@ -125,8 +125,8 @@ namespace TACHYON.EntityTemplates
 
             var handledLoopEntity = type switch
             {
-                SavedEntityType.ShippingRequest => JsonConvert.DeserializeObject(entityJson,typeof(CreateOrEditShippingRequestTemplateInputDto)),
-                SavedEntityType.Trip => JsonConvert.DeserializeObject(entityJson,typeof(CreateOrEditShippingRequestTripDto)),
+                SavedEntityType.ShippingRequestTemplate => JsonConvert.DeserializeObject(entityJson,typeof(CreateOrEditShippingRequestTemplateInputDto)),
+                SavedEntityType.TripTemplate => JsonConvert.DeserializeObject(entityJson,typeof(CreateOrEditShippingRequestTripDto)),
                 _ => throw new ArgumentOutOfRangeException()
             };
             

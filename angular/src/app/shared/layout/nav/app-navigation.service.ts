@@ -160,7 +160,7 @@ export class AppNavigationService {
 
           new AppMenuItem('MyShippingRequests', 'Pages.ShippingRequests', '', '/app/main/shippingRequests/shippingRequests'),
           new AppMenuItem(
-            'Templates',
+            'SavedTemplates',
             'Pages.ShippingRequests',
             '',
             '/app/main/shippingRequests/requestsTemplates',

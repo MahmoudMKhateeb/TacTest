@@ -40,7 +40,7 @@ export class RequestTemplatesComponent extends AppComponentBase implements OnIni
   toDate: moment.Moment | null | undefined;
   creationDateRange: Date[] = [moment().startOf('day').toDate(), moment().endOf('day').toDate()];
   creationDateRangeActive: boolean = false;
-  entityType: SavedEntityType = SavedEntityType.ShippingRequest;
+  entityType: SavedEntityType = SavedEntityType.ShippingRequestTemplate;
   availableEntityTypes = this.enumToArray.transform(SavedEntityType);
 
   private entityTypesEnum = SavedEntityType;
@@ -108,7 +108,7 @@ export class RequestTemplatesComponent extends AppComponentBase implements OnIni
    */
   useTemplate(record: EntityTemplateListDto) {
     console.log(record);
-    if (record.entityType === this.entityTypesEnum.ShippingRequest) {
+    if (record.entityType === this.entityTypesEnum.ShippingRequestTemplate) {
       console.log('reached here');
       //handle Redirect To Wizard
       // this._router.navigate(['/app/main/shippingRequests/shippingRequestWizard', { templateId: record.id }]);
@@ -117,7 +117,7 @@ export class RequestTemplatesComponent extends AppComponentBase implements OnIni
           templateId: record.id,
         },
       });
-    } else if (record.entityType === this.entityTypesEnum.Trip) {
+    } else if (record.entityType === this.entityTypesEnum.TripTemplate) {
       Swal.fire({
         icon: 'info',
         title: 'Oops...',

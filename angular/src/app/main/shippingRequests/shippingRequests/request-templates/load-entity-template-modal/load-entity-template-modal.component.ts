@@ -40,7 +40,7 @@ export class LoadEntityTemplateModalComponent extends AppComponentBase {
    */
   loadTemplate() {
     this.loading = true;
-    this._templateService.getAllForDropdown(this.entityTypesEnum.ShippingRequest, null).subscribe((res) => {
+    this._templateService.getAllForDropdown(this.entityTypesEnum.ShippingRequestTemplate, null).subscribe((res) => {
       this.templates = res;
       this.loading = false;
     });

@@ -77,11 +77,11 @@ namespace TACHYON.EntityTemplates
 
             switch (input.Type)
             {
-                case SavedEntityType.ShippingRequest:
+                case SavedEntityType.ShippingRequestTemplate:
                     return await templates
                         .Select(x => new SelectItemDto() {DisplayName = x.TemplateName, Id = x.Id.ToString()})
                         .ToListAsync();
-                case SavedEntityType.Trip:
+                case SavedEntityType.TripTemplate:
                     if (input.ParentEntityId.IsNullOrEmpty())
                         throw new AbpValidationException(
                             L("YouMustProvideTheShippingRequestYouWantToAddTripsFromTemplateOnIt"));

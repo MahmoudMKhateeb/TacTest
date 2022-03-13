@@ -13,7 +13,7 @@ export class CreateNewEntityTemplateModalComponent extends AppComponentBase {
   @ViewChild('AddNewEntityModalComponent', { static: false }) public modal: ModalDirective;
   active = false;
   saving = false;
-  private entityType: SavedEntityType = SavedEntityType.Trip;
+  private entityType: SavedEntityType = SavedEntityType.TripTemplate;
   constructor(injector: Injector, private _templateService: EntityTemplateServiceProxy) {
     super(injector);
   }
