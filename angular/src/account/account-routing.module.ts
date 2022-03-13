@@ -25,6 +25,7 @@ import { PaymentCompletedComponent } from './payment/payment-completed.component
 import { SessionLockScreenComponent } from './login/session-lock-screen.component';
 import { TermAndConditionRegistrationComponent } from '@account/register/term-and-condition-registration/term-and-condition-registration.component';
 import { RatingPageComponent } from '@app/rating-page/rating-page.component';
+import { TrackingOutsidePlatformComponent } from '@account/tracking-outside-platform/tracking-outside-platform.component';
 
 @NgModule({
   imports: [
@@ -59,6 +60,10 @@ import { RatingPageComponent } from '@app/rating-page/rating-page.component';
           {
             path: 'RatingPage/:code',
             component: RatingPageComponent,
+          },
+          {
+            path: 'outsideTracking',
+            component: TrackingOutsidePlatformComponent,
           },
           { path: '**', redirectTo: 'login' },
         ],
