@@ -124,8 +124,8 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   canResetTrip(record): boolean {
     return (
       (this.isCarrier || this.isTachyonDealer) &&
-      record.status !== this.ShippingRequestTripStatus.New &&
-      record.status !== this.ShippingRequestTripStatus.Delivered
+      record.status !== this.ShippingRequestTripStatusEnum.New &&
+      record.status !== this.ShippingRequestTripStatusEnum.Delivered
     );
   }
   ngOnChanges() {
