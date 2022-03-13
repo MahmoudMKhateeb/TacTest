@@ -83,6 +83,7 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
         this.searchInput.pickupToDate,
         this.searchInput.fromDate,
         this.searchInput.toDate,
+        this.searchInput.shippingRequestReferance,
         this.searchInput.routeTypeId,
         '',
         this.skipCount,
