@@ -229,7 +229,7 @@ namespace TACHYON.Shipping.Trips.Importing
         private void ValidateRoutePoints(List<ImportRoutePointDto> points, ShippingRequest request)
         {
             ValidatePointsDuplicatedReferenceFromList(points);
-            CheckExistPointsInDB(points, request);
+            CheckExistPointsInDB(points);
 
             if (IsSingleDropRequest(request))
             {
@@ -311,7 +311,7 @@ namespace TACHYON.Shipping.Trips.Importing
         }
 
 
-        private void CheckExistPointsInDB(List<ImportRoutePointDto> points, ShippingRequest request)
+        private void CheckExistPointsInDB(List<ImportRoutePointDto> points)
         {
             var tripsRefs = points.Select(x => x.TripReference).Distinct().ToList();
             foreach (var tripRef in tripsRefs)
@@ -393,7 +393,7 @@ namespace TACHYON.Shipping.Trips.Importing
             foreach (var tripGoodsDetails in GroupedGoodsDetailsByTrip)
             {
                 ValidateAllDropGoodsExists(goodsDetails, tripGoodsDetails);
-                GoodsDetailsExistsInDB(tripGoodsDetails);
+                GoodsDetailsExistsInDB(tripGoodsDetails, request.Id);
                 ValidateTotalWeight(request, tripGoodsDetails);
             }
         }
@@ -435,10 +435,11 @@ namespace TACHYON.Shipping.Trips.Importing
             }
         }
 
-        private void GoodsDetailsExistsInDB(GroupedGoodsDetailsDto tripGoodsDetails)
+        private void GoodsDetailsExistsInDB(GroupedGoodsDetailsDto tripGoodsDetails, long shippingRequestId)
         {
             var goodsDetailsExistsForTrip = _goodsDetailRepository.GetAll()
-                .Where(x => x.RoutPointFk.ShippingRequestTripFk.BulkUploadRef == tripGoodsDetails.tripRef).Any();
+                .Where(x => x.RoutPointFk.ShippingRequestTripFk.BulkUploadRef == tripGoodsDetails.tripRef &&
+                x.RoutPointFk.ShippingRequestTripFk.ShippingRequestId == shippingRequestId).Any();
             if (goodsDetailsExistsForTrip)
             {
                 tripGoodsDetails.importGoodsDetailsDtoList.ForEach(x =>
