@@ -710,8 +710,8 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     if (this.step1Dto.shippingTypeId == 1) {
       //local inside city
       this.destinationCountry = this.originCountry;
-      this.step2Dto.destinationCityId = this.step2Dto.originCityId;
       this.destinationCities = this.sourceCities;
+      this.step2Dto.destinationCityId = this.step2Dto.originCityId;
     } else if (this.step1Dto.shippingTypeId == 2) {
       // if route type is local betwenn cities check if user select same city in source and destination
       this.destinationCities = this.sourceCities;

@@ -342,7 +342,7 @@
                           <span class="form-text text-muted">{{ l('SelectaCountry') }}</span>
                         </div>
                       </div>
-                      <div class="col-lg-6">
+                      <div class="col-lg-6" [hidden]="step1Dto.shippingTypeId == 1">
                         <div class="form-group">
                           <label> {{ l('DestinationCountry') }}<span class="required-fileds">*</span></label>
                           <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allCountries }">
@@ -400,7 +400,7 @@
                           <span class="form-text text-muted">{{ l('SelectaCity') }}</span>
                         </div>
                       </div>
-                      <div class="col-lg-6">
+                      <div class="col-lg-6" [hidden]="step1Dto.shippingTypeId == 1">
                         <div class="form-group">
                           <label> {{ l('DestinationCity') }}<span class="required-fileds">*</span></label>
                           <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': citiesLoading }">
