@@ -28,6 +28,7 @@ import { CreateOrEditTripResolveAccidentModalComponent } from '@app/main/shippin
 import { TableModule } from '@node_modules/primeng/table';
 import { TrackingRoutingModule } from '@app/main/shippingRequests/shippingRequests/tracking/tracking-routing.module';
 import { NgbDropdownModule } from '@node_modules/@ng-bootstrap/ng-bootstrap';
+import { TimelineModule } from '@node_modules/primeng/timeline';
 
 @NgModule({
   declarations: [
@@ -61,6 +62,7 @@ import { NgbDropdownModule } from '@node_modules/@ng-bootstrap/ng-bootstrap';
     TableModule,
     TrackingRoutingModule,
     NgbDropdownModule,
+    TimelineModule,
   ],
   exports: [
     CreateOrEditTripAccidentModalComponent,
