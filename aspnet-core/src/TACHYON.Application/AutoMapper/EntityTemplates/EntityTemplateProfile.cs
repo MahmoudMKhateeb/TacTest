@@ -13,7 +13,7 @@ namespace TACHYON.AutoMapper.EntityTemplates
             CreateMap<CreateOrEditEntityTemplateInputDto, EntityTemplate>();
             CreateMap<EntityTemplate, EntityTemplateListDto>()
                 .ForMember(x=> x.EntityTypeTitle,x=>
-                    x.MapFrom(i=> i.EntityType.GetEnumDescription() ?? i.EntityType.ToString()));
+                    x.MapFrom(i=> i.EntityType.ToString()));
             CreateMap<EntityTemplate, EntityTemplateForViewDto>()
                 .ForMember(x=> x.EntityTypeTitle,x=>
                     x.MapFrom(i=> i.EntityType.GetEnumDescription() ?? i.EntityType.ToString()));
