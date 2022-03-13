@@ -1634,6 +1634,9 @@ namespace TACHYON.Migrations
                     b.Property<DateTime?>("DeletionTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("DriverLicenseTypeId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("DriverStatus")
                         .HasColumnType("int");
 
@@ -2299,6 +2302,50 @@ namespace TACHYON.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("DocumentsEntities");
+                });
+
+            modelBuilder.Entity("TACHYON.DriverLicenseTypes.DriverLicenseType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("ApplicableforWaslRegistration")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("CreatorUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("DeleterUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("LastModifierUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.Property<int>("WasIIntegrationId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DriverLicenseTypes");
                 });
 
             modelBuilder.Entity("TACHYON.DriverLocationLogs.DriverLocationLog", b =>
@@ -4001,6 +4048,67 @@ namespace TACHYON.Migrations
                     b.HasIndex("CoreId");
 
                     b.ToTable("PackingTypesTranslations");
+                });
+
+            modelBuilder.Entity("TACHYON.Penalties.Penalty", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("CreatorUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("DeleterUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("InvoiceId")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("LastModifierUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("PenaltyDescrption")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PenaltyName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long?>("SourceId")
+                        .HasColumnType("bigint");
+
+                    b.Property<byte?>("SourceType")
+                        .HasColumnType("tinyint");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
+
+                    b.Property<byte>("Type")
+                        .HasColumnType("tinyint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InvoiceId");
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("Penalties");
                 });
 
             modelBuilder.Entity("TACHYON.PriceOffers.PriceOffer", b =>
@@ -7772,6 +7880,19 @@ namespace TACHYON.Migrations
                     b.HasOne("TACHYON.Packing.PackingTypes.PackingType", "Core")
                         .WithMany("Translations")
                         .HasForeignKey("CoreId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("TACHYON.Penalties.Penalty", b =>
+                {
+                    b.HasOne("TACHYON.Invoices.Invoice", "InvoiceFK")
+                        .WithMany("Penalties")
+                        .HasForeignKey("InvoiceId");
+
+                    b.HasOne("TACHYON.MultiTenancy.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

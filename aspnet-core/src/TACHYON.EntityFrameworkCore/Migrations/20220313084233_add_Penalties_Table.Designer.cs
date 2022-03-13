@@ -11,8 +11,8 @@ using TACHYON.EntityFrameworkCore;
 namespace TACHYON.Migrations
 {
     [DbContext(typeof(TACHYONDbContext))]
-    [Migration("20220309183318_add_Penlaties_Table")]
-    partial class add_Penlaties_Table
+    [Migration("20220313084233_add_Penalties_Table")]
+    partial class add_Penalties_Table
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -4074,6 +4074,9 @@ namespace TACHYON.Migrations
                     b.Property<DateTime?>("DeletionTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<long?>("InvoiceId")
+                        .HasColumnType("bigint");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -4089,20 +4092,21 @@ namespace TACHYON.Migrations
                     b.Property<string>("PenaltyName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long?>("ShippingRequestId")
+                    b.Property<long?>("SourceId")
                         .HasColumnType("bigint");
 
-                    b.Property<int?>("ShippingRequestTripId")
-                        .HasColumnType("int");
+                    b.Property<byte?>("SourceType")
+                        .HasColumnType("tinyint");
 
                     b.Property<int>("TenantId")
                         .HasColumnType("int");
 
+                    b.Property<byte>("Type")
+                        .HasColumnType("tinyint");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("ShippingRequestId");
-
-                    b.HasIndex("ShippingRequestTripId");
+                    b.HasIndex("InvoiceId");
 
                     b.HasIndex("TenantId");
 
@@ -7884,13 +7888,9 @@ namespace TACHYON.Migrations
 
             modelBuilder.Entity("TACHYON.Penalties.Penalty", b =>
                 {
-                    b.HasOne("TACHYON.Shipping.ShippingRequests.ShippingRequest", "ShippingRequest")
-                        .WithMany()
-                        .HasForeignKey("ShippingRequestId");
-
-                    b.HasOne("TACHYON.Shipping.ShippingRequestTrips.ShippingRequestTrip", "ShippingRequestTrip")
-                        .WithMany()
-                        .HasForeignKey("ShippingRequestTripId");
+                    b.HasOne("TACHYON.Invoices.Invoice", "InvoiceFK")
+                        .WithMany("Penalties")
+                        .HasForeignKey("InvoiceId");
 
                     b.HasOne("TACHYON.MultiTenancy.Tenant", "Tenant")
                         .WithMany()
