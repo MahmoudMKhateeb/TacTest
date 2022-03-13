@@ -19,5 +19,6 @@ namespace TACHYON.Invoices.InoviceNote
         List<InvoiceNoteInfoDto> GetInvoiceNoteReportInfo(long id);
         List<InvoiceNoteItemDto> GetInvoiceNoteItemReportInfo(long invoiceNoteId);
         Task<PartialVoidInvoiceDto> GetInvoiceForPartialVoid(long id);
+        Task Canacel(int invoiceId);
     }
 }

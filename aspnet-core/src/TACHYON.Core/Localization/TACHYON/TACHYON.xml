@@ -438,6 +438,7 @@
 		<text name="CreatingWebhooks">Creating new webhook</text>
 		<text name="CreationDate">Creation date</text>
 		<text name="CreationTime">Creation date</text>
+		<text name="CreateNewInvoiceNote">Create New Invoice Note</text>
 		<text name="Current">Current</text>
 		<text name="CurrentLanguage">Current language</text>
 		<text name="CurrentPassword">Current password</text>
@@ -835,6 +836,7 @@
 		<text name="ExpiringTenantsHelpText">First {1} clients expiring in {0} days...</text>
 		<text name="ExportToExcel">Export to excel</text>
 		<text name="Extend">Extend</text>
+		<text name="EditNote">Edit Note</text>
 		<text name="Extend_Edition_Description">Extend {0} subscription type</text>
 		<text name="ExtendedEdition">Extended {0} subscription type</text>
 		<text name="ExternalLoginSettings">External login settings</text>
@@ -992,7 +994,7 @@
 		<text name="InvoiceNumber">Invoice No.</text>
 		<text name="Invoices">Invoices</text>
 		<text name="InvoicesList">List of Invoices</text>
-		<text name="InvoiceNotesList">Invoice Note List</text>
+		<text name="InvoicesNoteList">Invoice Note List</text>
 		<text name="InvoicesProformas">Invoices proformas</text>
 		<text name="InvoiceSubTotal">Invoice sub total</text>
 		<text name="InvoiceTo">Invoice to</text>
@@ -1000,6 +1002,7 @@
 		<text name="InvoiceVasRemarksAmount">Amount:{0}</text>
 		<text name="InvoiceVasRemarksCount">Count:{0}</text>
 		<text name="InvoiceVasType">Type:{0}</text>
+		<text name="InvoiceNote">Invoice Note</text>
 		<text name="IpAddress">IP address</text>
 		<text name="IsAccepted">Is accepted</text>
 		<text name="IsActive">Is Active</text>
@@ -1031,6 +1034,7 @@
 		<text name="IsTachyonDeal">Is Tachyon Deal</text>
 		<text name="Istimara">Istimara</text>
 		<text name="IsTrialActive">Is trial active</text>
+		<text name="InvoiceReferenceNumber">Invoice Reference Number</text>
 		<text name="IsTwoFactorEnabled">Two factor authentication enabled</text>
 		<text name="IsVented">Is vented</text>
 		<text name="Item">Item</text>
@@ -1227,6 +1231,7 @@
 		<text name="NewUserRegisteredNotificationDefinition">On a new user registered to the system</text>
 		<text name="NewUserRegisteredNotificationMessage">A new user registered to the platform User name: {userName}, Email address: {emailAddress}.</text>
 		<text name="NewValue">New value</text>
+		<text name="NoteDetails">Note Details</text>
 		<text name="Next">Next</text>
 		<text name="No">No</text>
 		<text name="No.">No.</text>
@@ -1662,7 +1667,9 @@
 		<text name="SelectDate">Select date</text>
 		<text name="SelectFile">Select document</text>
 		<text name="SelectPermissions">Select permissions</text>
+		<text name="SelectInvoiceReference">Select Invoice Reference</text>
 		<text name="SelectReason">Select reason</text>
+		<text name="SelectNoteType">Select Note Type</text>
 		<text name="SelectRoles">Select roles</text>
 		<text name="SelectRouteType">Select route type</text>
 		<text name="SelectTransportTypeToOpenTrucksType">Select transport type to open trucks types list</text>
@@ -2005,6 +2012,7 @@
 		<text name="ThisWebSiteRootAddress">Web site root address</text>
 		<text name="ThisWebSiteRootAddress_Hint">It will be used when building links to this web site. It's needed for some tasks like building password reset links. Ex: http://mydomain.com/</text>
 		<text name="Time">Time</text>
+		<text name="TotalValue">Total Value</text>
 		<text name="TimeoutPleaseTryAgain">Timeout! Please try again.</text>
 		<text name="Timezone">Time zone</text>
 		<text name="TimeZoneSettingChangedRefreshPageNotification">Time zone setting changed. Click OK button to refresh page and changes to take effect.</text>
@@ -2337,6 +2345,7 @@
 		<text name="WidgetSubscriptionExpiringTenants">Subscription Expiring Tenants</text>
 		<text name="WidgetTopStats">General Summary</text>
 		<text name="Width">Width</text>
+		<text name="WaitingtobePaid">Waiting Paid</text>
 		<text name="WillBeShownOnAllOfficialDocumentsLikeWaybillsAndInvoices">Will be shown on all official documents like waybills and invoices</text>
 		<text name="WriteIncidentReport">Please Write The Incident Report</text>
 		<text name="WriteRejectReason">Please Write The Rejection Reason</text>
@@ -2432,6 +2441,8 @@
 	 	<text name="TripDataChanged">You Have Trip With Waybill No {0} Changed Please Review All Of Trip Changes</text> 
 		<text name="ShipperTripUpdatedNotificationMessage">There are some changes on trip with waybill No {0} . For more details please click here</text>
 		<text name="NewBalanceAddedToShippper">New Balance Added Value {0}</text>
+		<text name="CreaditOrDebitNoteAdded">A {0} Was assigned to you by Tachyon platform, click to view the details.</text>
+		<text name="TheCreaditOrDebitNotePaid">The {0} was Paid</text>
 
 		<text name="CarrierTripUpdatedNotificationMessage">There are some changes on trip with waybill No {0} . For more details please click here</text>
 		<text name="TachyonDealerTripUpdatedNotificationMessage">There are some changes on trip with waybill No {0} . For more details please click here</text>
@@ -2483,7 +2494,10 @@
 		<text name="CreatedTripsFromTotal">Created Trips / No of Trips</text>
 		<text name="RateForDriver">Rate for Driver</text>
 		<text name="RateForExperience">Rate for Experience</text>
-		
+		<text name="ComanyName">Comany Name</text>
+		<text name="GenerationDate">Generation Date</text>
+		<text name="VoidInvoice">Void Invoice</text>
+		<text name="PartiallyVoid">Partially Void</text>
 		<text name="NotAttached">Not uploaded yet</text>
 		<text name="CardNumberId">Receiver ID</text>
 		<text name="AdditionalReceiver">Additional Receiver</text>

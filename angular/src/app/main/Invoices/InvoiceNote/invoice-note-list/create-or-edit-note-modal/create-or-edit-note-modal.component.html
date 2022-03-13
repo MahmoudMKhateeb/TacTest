@@ -40,6 +40,7 @@
                   class="form-control"
                   [(ngModel)]="form.noteType"
                   name="noteType"
+                  [disabled]="form.id"
                   [class.is-valid]="NoteType.valid && (NoteType.dirty || NoteType.touched)"
                   [class.is-invalid]="NoteType.invalid && (NoteType.dirty || NoteType.touched)"
                   required
@@ -91,16 +92,29 @@
             </div>
             <ng-container *ngIf="form.isManual">
               <div class="col-lg-12 mt-4">
-                <label>{{ l('InvoiceReferenceNumber') }} <span class="required-fileds">*</span></label>
+                <label>{{ l('WaybillNumber') }} <span class="required-fileds">*</span></label>
                 <input
-                  #invoiceNumberfreeText="ngModel"
+                  #waybillNumberfreeText="ngModel"
                   type="text"
                   class="form-control"
-                  [(ngModel)]="form.invoiceNumber"
-                  name="invoiceNumberfreeText"
-                  [class.is-valid]="invoiceNumberfreeText.valid && (invoiceNumberfreeText.dirty || invoiceNumberfreeText.touched)"
-                  [class.is-invalid]="invoiceNumberfreeText.invalid && (invoiceNumberfreeText.dirty || invoiceNumberfreeText.touched)"
+                  [(ngModel)]="form.waybillNumber"
+                  name="waybillNumberfreeText"
+                  [class.is-valid]="waybillNumberfreeText.valid && (waybillNumberfreeText.dirty || waybillNumberfreeText.touched)"
+                  [class.is-invalid]="waybillNumberfreeText.invalid && (waybillNumberfreeText.dirty || waybillNumberfreeText.touched)"
                   required
+                />
+              </div>
+              <div class="col-lg-12 mt-4">
+                <label>{{ l('TotalValue') }} <span class="required-fileds">*</span></label>
+                <input
+                  #totalValue="ngModel"
+                  type="number"
+                  class="form-control"
+                  [(ngModel)]="form.totalValue"
+                  name="totalValue"
+                  [class.is-valid]="totalValue.valid && (totalValue.dirty || totalValue.touched)"
+                  [class.is-invalid]="totalValue.invalid && (totalValue.dirty || totalValue.touched)"
+                  [required]="form.isManual"
                 />
               </div>
               <div class="col-lg-12 mt-4">
@@ -154,7 +168,6 @@
                 [class.is-valid]="notes.touched && notes.value && !notes.valid"
               ></textarea>
             </div>
-
             <!--  end :: Body-->
           </div>
         </div>

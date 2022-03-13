@@ -62,6 +62,16 @@ export class InvoiceNoteListComponent extends AppComponentBase implements OnInit
       this.Tenants = result;
     });
   }
+  canacel(InvoiceNoteId: number): void {
+    this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
+      if (isConfirmed) {
+        this._InvoiceNoteServiceProxy.canacel(InvoiceNoteId).subscribe(() => {
+          this.notify.success(this.l('Successfully'));
+          this.refreshDataGrid();
+        });
+      }
+    });
+  }
 
   changeStauts(InvoiceNoteId: number): void {
     this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {

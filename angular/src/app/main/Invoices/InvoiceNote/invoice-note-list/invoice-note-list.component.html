@@ -1,8 +1,12 @@
 <div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
-    <sub-header [title]="'InvoiceNotesList' | localize" [description]="'' | localize">
+    <sub-header [title]="'InvoicesNoteList' | localize" [description]="'' | localize">
       <div role="actions">
-        <button class="btn btn-danger" (click)="createOrEditNoteModalComponent.show()">
+        <button
+          *ngIf="feature.isEnabled('App.TachyonDealer') || !appSession.tenantId"
+          class="btn btn-danger"
+          (click)="createOrEditNoteModalComponent.show()"
+        >
           <i class="fa fa-plus"></i> {{ l('CreateNewInvoiceNote') }}
         </button>
       </div>
@@ -127,12 +131,12 @@
                         >{{ l('WaitingtobePaid') }}</a
                       >
                     </li>
-                    <li *ngIf="options.data.status === NoteStatusesEnum.Paid">
+                    <li *ngIf="options.data.status != NoteStatusesEnum.Canceled && options.data.status === NoteStatusesEnum.Draft">
                       <a
                         class="dropdown-item"
                         href="javascript:;"
                         *ngIf="feature.isEnabled('App.TachyonDealer') || !this.appSession.tenantId"
-                        (click)="changeStauts(options.data.id)"
+                        (click)="canacel(options.data.id)"
                         >{{ l('Cancel') }}</a
                       >
                     </li>
@@ -155,6 +159,5 @@
     </div>
     <app-inovice-note-modal #inoviceNoteModalComponent></app-inovice-note-modal>
     <create-or-edit-note-modal (modalSave)="refreshDataGrid()" #createOrEditNoteModalComponent></create-or-edit-note-modal>
-    <void-invoice-note-modal #voidInvoice></void-invoice-note-modal>
   </div>
 </div>

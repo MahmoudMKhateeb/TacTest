@@ -12,6 +12,7 @@ namespace TACHYON.Invoices.InoviceNote.Dto
         public string Remarks { get; set; }
         public long InvoiceNumber { get; set; }
         public decimal VatAmount { get; set; }
+        public string WaybillNumber { get; set; }
         public decimal Price { get; set; }
         public decimal TotalValue { get; set; }
         public bool IsManual { get; set; }

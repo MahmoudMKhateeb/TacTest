@@ -768,7 +768,6 @@ namespace TACHYON
                 .ForMember(dto => dto.CreationTime, options => options.MapFrom(entity => entity.CreationTime.ToString("dd/mm/yyyy mm:hh")))
                 .ForMember(dto => dto.ContractNo, options => options.MapFrom(entity => entity.Tenant.ContractNumber));
 
-            configuration.CreateMap<CreateOrEditInvoiceNoteDto, InvoiceNote>();
 
 
             configuration.CreateMap<Invoice,PartialVoidInvoiceDto>()
@@ -781,7 +780,7 @@ namespace TACHYON
                 .ReverseMap();
 
             configuration.CreateMap<InvoiceNote, CreateOrEditInvoiceNoteDto>()
-            .ForMember(dto => dto.InvoiceItem, options => options.MapFrom(entity => entity.InvoiceItems.Select(x => x.ShippingRequestTripFK)));
+            .ForMember(dto => dto.InvoiceItem, options => options.MapFrom(entity => entity.InvoiceItems.Select(x => x.ShippingRequestTripFK))).ReverseMap();
 
             configuration.CreateMap<ShippingRequestTrip, GetAllInvoiceItemDto>();
 

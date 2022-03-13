@@ -348,8 +348,20 @@ namespace TACHYON.Notifications
 
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(
-                L("ThereIsAnew",
-                    Note.NoteType.ToString()),
+                L("CreaditOrDebitNoteAdded",Note.NoteType),
+                TACHYONConsts.LocalizationSourceName));
+
+            notificationData["InvoiceNoteId"] = Note.Id;
+
+            await _notificationPublisher.PublishAsync(AppNotificationNames.NewCreaditOrDebitNoteGenerated, notificationData, userIds: new[] { tenantAdmin });
+        }
+        public async Task TheCreaditOrDebitNotePaid(InvoiceNote Note)
+        {
+            var tenantAdmin = await GetTenantAdminUser(Note.TenantId);
+
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                L("TheCreaditOrDebitNotePaid", Note.NoteType),
                 TACHYONConsts.LocalizationSourceName));
 
             notificationData["InvoiceNoteId"] = Note.Id;
