@@ -7,7 +7,11 @@ namespace TACHYON.Penalties
    public enum PenaltyType : byte
     {
         NotLogged,
-        Cancelation,
-        Delay
+        ShippingRequestCancelingDuringPostPriceProcess,
+        ShippingRequestCancelBeforeCompletionTrips,
+        TripCancelingBeforeDeliveringAllDrops,
+        DetentionPeriodExceedMaximumAllowedTime,
+        NotAssigningTruckAndDriverBeforeTheDateForTheTrip,
+        NotDeliveringAllDropsBeforeExpectedTripEndDate
     }
 }

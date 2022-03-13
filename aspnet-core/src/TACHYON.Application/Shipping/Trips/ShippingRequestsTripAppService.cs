@@ -30,6 +30,7 @@ using TACHYON.Firebases;
 using TACHYON.Goods.GoodCategories;
 using TACHYON.Goods.GoodsDetails;
 using TACHYON.Notifications;
+using TACHYON.Penalties;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Routs.RoutPoints.Dtos;
 using TACHYON.Shipping.ShippingRequests;
@@ -59,6 +60,7 @@ namespace TACHYON.Shipping.Trips
         private readonly IRepository<DocumentType, long> _documentTypeRepository;
         private readonly IBinaryObjectManager _binaryObjectManager;
         private readonly ITempFileCacheManager _tempFileCacheManager;
+        private readonly PenaltyManager _penaltyManager;
 
 
         public ShippingRequestsTripAppService(
@@ -76,7 +78,7 @@ namespace TACHYON.Shipping.Trips
             DocumentFilesManager documentFilesManager,
             IRepository<DocumentType, long> documentTypeRepository,
             IBinaryObjectManager binaryObjectManager,
-            ITempFileCacheManager tempFileCacheManager)
+            ITempFileCacheManager tempFileCacheManager, PenaltyManager penaltyManager)
         {
             _shippingRequestTripRepository = shippingRequestTripRepository;
             _shippingRequestRepository = shippingRequestRepository;
@@ -93,6 +95,7 @@ namespace TACHYON.Shipping.Trips
             this._documentTypeRepository = documentTypeRepository;
             _binaryObjectManager = binaryObjectManager;
             _tempFileCacheManager = tempFileCacheManager;
+            _penaltyManager = penaltyManager;
         }
 
 
@@ -113,7 +116,7 @@ namespace TACHYON.Shipping.Trips
                 .ThenInclude(t => t.Translations)
         .Where(x => x.ShippingRequestId == request.Id)
         .WhereIf(input.Status.HasValue, e => e.Status == input.Status)
-        .OrderBy(!input.Sorting.IsNullOrEmpty() && !input.Sorting.Contains("Facility")? input.Sorting: "Status asc");
+        .OrderBy(!input.Sorting.IsNullOrEmpty() && !input.Sorting.Contains("Facility") ? input.Sorting : "Status asc");
 
 
             var resultPage = await query.PageBy(input).ToListAsync();
@@ -138,7 +141,7 @@ namespace TACHYON.Shipping.Trips
             });
 
             var pageResult = ObjectMapper.Map<List<ShippingRequestsTripListDto>>(resultPage);
-            if (!input.Sorting.IsNullOrEmpty() && input.Sorting.Contains("Facility")) 
+            if (!input.Sorting.IsNullOrEmpty() && input.Sorting.Contains("Facility"))
                 pageResult = SortByFacility(input.Sorting, pageResult);
 
             var totalCount = await query.CountAsync();
@@ -374,9 +377,9 @@ namespace TACHYON.Shipping.Trips
                 // Send Notification To New Driver
                 if (oldAssignedDriverUserId.HasValue)
                 {
-                    await _appNotifier.NotifyDriverWhenUnassignedTrip(trip.Id,trip.WaybillNumber.ToString(),
+                    await _appNotifier.NotifyDriverWhenUnassignedTrip(trip.Id, trip.WaybillNumber.ToString(),
                         new UserIdentifier(AbpSession.TenantId, oldAssignedDriverUserId.Value));
-                    
+
                     await UserManager.UpdateUserDriverStatus(oldAssignedDriverUserId.Value, UserDriverStatus.Available);
                 }
             }
@@ -397,6 +400,9 @@ namespace TACHYON.Shipping.Trips
                 await _appNotifier.NotifyCarrierWhenTripUpdated(notifyTripInput);
             }
 
+            await _penaltyManager.InitPenalty(PenaltyType.NotAssigningTruckAndDriverBeforeTheDateForTheTrip,
+                trip.ShippingRequestFk.CarrierTenantId.Value, trip.Id, SourceType.ShippingRequestTrip, trip.StartTripDate);
+            
             // Send Notification To New Driver
             await _appNotifier.NotifyDriverWhenAssignTrip(trip.Id,
                 new UserIdentifier(trip.ShippingRequestFk.CarrierTenantId, trip.AssignedDriverUserId.Value));

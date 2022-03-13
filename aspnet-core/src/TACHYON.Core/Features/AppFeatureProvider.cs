@@ -12,6 +12,7 @@ using TACHYON.Configuration;
 using TACHYON.Invoices.PaymentMethods;
 using TACHYON.Invoices.Periods;
 using TACHYON.MultiTenancy;
+using TACHYON.Penalties.UnitOfMeasures;
 using TACHYON.PriceOffers;
 
 namespace TACHYON.Features
@@ -601,9 +602,128 @@ namespace TACHYON.Features
                 )
             );
 
+        #region Penalties
+            List<LocalizableComboboxItem> unitsOfMeasures = new List<LocalizableComboboxItem>();
+            foreach (int i in Enum.GetValues(typeof(UnitOfMeasure)))
+            {
+                if (i != 1 && i != 2) continue;
+                unitsOfMeasures.Add(new LocalizableComboboxItem(i.ToString(),
+                    L(Enum.GetName(typeof(UnitOfMeasure), i))));
+            }
 
+            var penaltiesFeature = context.Create(
+                AppFeatures.Penalties,
+                "true",
+                L("PenaltiesFeature"),
+                inputType: new CheckboxInputType());
+
+            #region shippingRequestCancelPostPrice
+                penaltiesFeature.CreateChildFeature(
+                AppFeatures.ShippingRequestCancelPostPriceAmount,
+                "50",
+                L("ShippingRequestCancelPostPriceAmount"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+            #endregion
+
+            #region shippingRequestCancelBeforeCompletionTrips
+            penaltiesFeature.CreateChildFeature(
+                AppFeatures.ShippingRequestCancelBeforeCompletionTripsAmount,
+                "50",
+                L("ShippingRequestCancelBeforeCompletionTripsAmount "),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+             #endregion
+
+            #region tripCancelBeforeDeliveringAllDrops
+            penaltiesFeature.CreateChildFeature(
+                AppFeatures.TripCancelBeforeDeliveringAllDropsAmount,
+                "50",
+                L("TripCancelBeforeDeliveringAllDropsAmount"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+
+            #endregion
+
+            #region notAssignTruckAndDriverStartDate
+            var notAssignTruckAndDriverStartDate = penaltiesFeature.CreateChildFeature(
+                AppFeatures.NotAssignTruckAndDriverStartDate,
+                "true",
+                L("notAssignTruckAndDriverStartDate"),
+                inputType: new CheckboxInputType());
+
+            notAssignTruckAndDriverStartDate.CreateChildFeature(
+                AppFeatures.NotAssignTruckAndDriverStartDate_UnitsOfMeasure,
+                "1",
+                L("UnitsOfMeasure"),
+                inputType: new ComboboxInputType(new StaticLocalizableComboboxItemSource(unitsOfMeasures.ToArray())));
+
+            notAssignTruckAndDriverStartDate.CreateChildFeature(
+                AppFeatures.NotAssignTruckAndDriverStartDate_NumberOfUnitsOfMeasure,
+                "1",
+                L("NumberOfUnitsOfMeasure"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+                notAssignTruckAndDriverStartDate.CreateChildFeature(
+                AppFeatures.NotAssignTruckAndDriverStartDate_Amount,
+                "50",
+                L("Amount "),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+                notAssignTruckAndDriverStartDate.CreateChildFeature(
+                AppFeatures.NotAssignTruckAndDriverStartDate_StartingAmount,
+                "50",
+                L("StartingAmount"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+                notAssignTruckAndDriverStartDate.CreateChildFeature(
+                AppFeatures.NotAssignTruckAndDriverStartDate_MaximumAmount,
+                "100",
+                L("MaximumAmount"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+            #endregion
+
+            #region notDeliveringAllDropsBeforeEndDate
+            var notDeliveringAllDropsBeforeEndDate = penaltiesFeature.CreateChildFeature(
+                AppFeatures.NotDeliveringAllDropsBeforeEndDate,
+                "true",
+                L("notDeliveringAllDropsBeforeEndDate"),
+                inputType: new CheckboxInputType());
+
+            notDeliveringAllDropsBeforeEndDate.CreateChildFeature(
+                AppFeatures.NotDeliveringAllDropsBeforeEndDate_UnitsOfMeasure,
+                "1",
+                L("UnitsOfMeasure"),
+                inputType: new ComboboxInputType(new StaticLocalizableComboboxItemSource(unitsOfMeasures.ToArray())));
+
+            notDeliveringAllDropsBeforeEndDate.CreateChildFeature(
+                AppFeatures.NotDeliveringAllDropsBeforeEndDate_NumberOfUnitsOfMeasure,
+                "1",
+                L("NumberOfUnitsOfMeasure"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+                notDeliveringAllDropsBeforeEndDate.CreateChildFeature(
+                AppFeatures.NotDeliveringAllDropsBeforeEndDate_Amount,
+                "50",
+                L("Amount"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+                notDeliveringAllDropsBeforeEndDate.CreateChildFeature(
+                AppFeatures.NotDeliveringAllDropsBeforeEndDate_StartingAmount,
+                "50",
+                L("StartingAmount"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+                notDeliveringAllDropsBeforeEndDate.CreateChildFeature(
+                AppFeatures.NotDeliveringAllDropsBeforeEndDate_MaximumAmount,
+                "10",
+                L("MaximumAmount"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+            #endregion
+
+        #endregion
 
         }
+
 
         private static ILocalizableString L(string name)
         {

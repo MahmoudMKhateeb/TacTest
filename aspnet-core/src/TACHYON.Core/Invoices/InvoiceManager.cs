@@ -23,6 +23,7 @@ using TACHYON.Invoices.SubmitInvoices;
 using TACHYON.Invoices.Transactions;
 using TACHYON.MultiTenancy;
 using TACHYON.Notifications;
+using TACHYON.Penalties;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
 
@@ -49,6 +50,7 @@ namespace TACHYON.Invoices
         private readonly IFeatureChecker _featureChecker;
         private readonly BalanceManager _balanceManager;
         private readonly TransactionManager _transactionManager;
+        private readonly IRepository<Penalty> _penaltyRepository;
 
         #endregion
 
@@ -68,7 +70,8 @@ namespace TACHYON.Invoices
             TransactionManager transactionManager,
             IRepository<ShippingRequestTrip> shippingRequestTrip,
             IRepository<InvoicePaymentMethod> invoicePaymentMethodRepository,
-            IRepository<SubmitInvoice, long> submitInvoiceRepository)
+            IRepository<SubmitInvoice, long> submitInvoiceRepository,
+            IRepository<Penalty> penaltyRepository)
         {
             _periodRepository = periodRepository;
             _invoiceRepository = invoiceRepository;
@@ -86,6 +89,7 @@ namespace TACHYON.Invoices
             _shippingRequestTrip = shippingRequestTrip;
             _invoicePaymentMethodRepository = invoicePaymentMethodRepository;
             _submitInvoiceRepository = submitInvoiceRepository;
+            _penaltyRepository = penaltyRepository;
         }
 
 
@@ -351,7 +355,7 @@ namespace TACHYON.Invoices
                 }
             }
 
-
+           var penalties = await _penaltyRepository.GetAll().Where(x=> !x.InvoiceId.HasValue).ToListAsync();
             var invoice = new Invoice
             {
                 TenantId = tenant.Id,
@@ -364,7 +368,8 @@ namespace TACHYON.Invoices
                 TaxVat = trips.Where(x => x.TaxVat.HasValue).FirstOrDefault().TaxVat.Value,
                 AccountType = InvoiceAccountType.AccountReceivable,
                 Channel = InvoiceChannel.Trip,
-                Trips = trips.Select(r => new InvoiceTrip() { TripId = r.Id }).ToList()
+                Trips = trips.Select(r => new InvoiceTrip() { TripId = r.Id }).ToList(),
+                Penalties = penalties
             };
             invoice.Id = await _invoiceRepository.InsertAndGetIdAsync(invoice);
 

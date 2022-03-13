@@ -64,16 +64,7 @@ export class PenaltiesListComponent extends AppComponentBase implements OnInit {
     });
   }
   StyleStatus(Status: PenaltyType): string {
-    switch (Status) {
-      case PenaltyType.NotLogged:
-        return 'label label-success label-inline m-1';
-      case PenaltyType.Delay:
-        return 'label label-danger label-inline m-1';
-      case PenaltyType.Cancelation:
-        return 'label label-info label-inline m-1';
-      default:
-        return 'label label-default label-inline m-1';
-    }
+    return 'label label-default label-inline m-1';
   }
   refreshDataGrid() {
     this.dataGrid.instance

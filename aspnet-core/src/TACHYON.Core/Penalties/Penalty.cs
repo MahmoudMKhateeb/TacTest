@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
+using TACHYON.Invoices;
 using TACHYON.MultiTenancy;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
@@ -22,5 +23,8 @@ namespace TACHYON.Penalties
         public Tenant Tenant { get; set; }
         public long? SourceId { get; set; }
         public SourceType? SourceType { get; set; }
+        public long? InvoiceId { get; set; }
+        [ForeignKey(nameof(InvoiceId))]
+        public Invoice InvoiceFK { get; set; }
     }
 }

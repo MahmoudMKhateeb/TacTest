@@ -28089,6 +28089,207 @@ export class PenaltiesServiceProxy {
     }
     return _observableOf<LoadResult>(<any>null);
   }
+
+  /**
+   * @param body (optional)
+   * @return Success
+   */
+  createOrEdit(body: CreateOrEditPenaltyDto | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/Penalties/CreateOrEdit';
+    url_ = url_.replace(/[?&]$/, '');
+
+    const content_ = JSON.stringify(body);
+
+    let options_: any = {
+      body: content_,
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processCreateOrEdit(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processCreateOrEdit(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processCreateOrEdit(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
+  getPenaltyForEditDto(id: number | undefined): Observable<CreateOrEditPenaltyDto> {
+    let url_ = this.baseUrl + '/api/services/app/Penalties/GetPenaltyForEditDto?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'Id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetPenaltyForEditDto(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetPenaltyForEditDto(<any>response_);
+            } catch (e) {
+              return <Observable<CreateOrEditPenaltyDto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<CreateOrEditPenaltyDto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetPenaltyForEditDto(response: HttpResponseBase): Observable<CreateOrEditPenaltyDto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = CreateOrEditPenaltyDto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<CreateOrEditPenaltyDto>(<any>null);
+  }
+
+  /**
+   * @return Success
+   */
+  getAllCompanyForDropDown(): Observable<GetAllCompanyForDropDownDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/Penalties/GetAllCompanyForDropDown';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAllCompanyForDropDown(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAllCompanyForDropDown(<any>response_);
+            } catch (e) {
+              return <Observable<GetAllCompanyForDropDownDto[]>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<GetAllCompanyForDropDownDto[]>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAllCompanyForDropDown(response: HttpResponseBase): Observable<GetAllCompanyForDropDownDto[]> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          if (Array.isArray(resultData200)) {
+            result200 = [] as any;
+            for (let item of resultData200) result200!.push(GetAllCompanyForDropDownDto.fromJS(item));
+          } else {
+            result200 = <any>null;
+          }
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<GetAllCompanyForDropDownDto[]>(<any>null);
+  }
 }
 
 @Injectable()
@@ -77002,6 +77203,110 @@ export interface IPayPalConfigurationDto {
   clientId: string | undefined;
   demoUsername: string | undefined;
   demoPassword: string | undefined;
+}
+
+export enum PenaltyType {
+  NotLogged = 0,
+  ShippingRequestCancelingDuringPostPriceProcess = 1,
+  ShippingRequestCancelBeforeCompletionTrips = 2,
+  TripCancelingBeforeDeliveringAllDrops = 3,
+  DetentionPeriodExceedMaximumAllowedTime = 4,
+  NotAssigningTruckAndDriverBeforeTheDateForTheTrip = 5,
+  NotDeliveringAllDropsBeforeExpectedTripEndDate = 6,
+}
+
+export class CreateOrEditPenaltyDto implements ICreateOrEditPenaltyDto {
+  penaltyName!: string;
+  penaltyDescrption!: string | undefined;
+  amount!: number;
+  tenantId!: number;
+  type!: PenaltyType;
+  id!: number | undefined;
+
+  constructor(data?: ICreateOrEditPenaltyDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.penaltyName = _data['penaltyName'];
+      this.penaltyDescrption = _data['penaltyDescrption'];
+      this.amount = _data['amount'];
+      this.tenantId = _data['tenantId'];
+      this.type = _data['type'];
+      this.id = _data['id'];
+    }
+  }
+
+  static fromJS(data: any): CreateOrEditPenaltyDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new CreateOrEditPenaltyDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['penaltyName'] = this.penaltyName;
+    data['penaltyDescrption'] = this.penaltyDescrption;
+    data['amount'] = this.amount;
+    data['tenantId'] = this.tenantId;
+    data['type'] = this.type;
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+export interface ICreateOrEditPenaltyDto {
+  penaltyName: string;
+  penaltyDescrption: string | undefined;
+  amount: number;
+  tenantId: number;
+  type: PenaltyType;
+  id: number | undefined;
+}
+
+export class GetAllCompanyForDropDownDto implements IGetAllCompanyForDropDownDto {
+  displayName!: string | undefined;
+  id!: number;
+
+  constructor(data?: IGetAllCompanyForDropDownDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.displayName = _data['displayName'];
+      this.id = _data['id'];
+    }
+  }
+
+  static fromJS(data: any): GetAllCompanyForDropDownDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new GetAllCompanyForDropDownDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['displayName'] = this.displayName;
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+export interface IGetAllCompanyForDropDownDto {
+  displayName: string | undefined;
+  id: number;
 }
 
 export class FlatPermissionWithLevelDto implements IFlatPermissionWithLevelDto {

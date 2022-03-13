@@ -110,5 +110,25 @@
         public const string CreateTmsRequest = "App.Pay.CreateTmsRequest";
         public const string PayPeriod = "App.Pay.PayPeriod";
 
+        public const string Penalties = "App.Penalties";
+
+        public const string ShippingRequestCancelPostPriceAmount = "App.Penalties.ShippingRequestCancelPostPriceAmount";
+        public const string ShippingRequestCancelBeforeCompletionTripsAmount = "App.Penalties.ShippingRequestCancelBeforeCompletionTripsAmount";
+        public const string TripCancelBeforeDeliveringAllDropsAmount = "App.Penalties.TripCancelBeforeDeliveringAllDropsAmount";
+
+   
+        public const string NotAssignTruckAndDriverStartDate = "App.Penalties.NotAssignTruckAndDriverStartDate";
+        public const string NotAssignTruckAndDriverStartDate_NumberOfUnitsOfMeasure = "App.Penalties.NotAssignTruckAndDriverStartDate.NumberOfUnitsOfMeasure";
+        public const string NotAssignTruckAndDriverStartDate_UnitsOfMeasure = "App.Penalties.NotAssignTruckAndDriverStartDate.UnitsOfMeasure";
+        public const string NotAssignTruckAndDriverStartDate_Amount = "App.Penalties.NotAssignTruckAndDriverStartDate.Amount";
+        public const string NotAssignTruckAndDriverStartDate_StartingAmount = "App.Penalties.NotAssignTruckAndDriverStartDate.StartingAmount";
+        public const string NotAssignTruckAndDriverStartDate_MaximumAmount = "App.Penalties.NotAssignTruckAndDriverStartDate.MaximumAmount";
+       
+        public const string NotDeliveringAllDropsBeforeEndDate = "App.Penalties.NotDeliveringAllDropsBeforeEndDate";
+        public const string NotDeliveringAllDropsBeforeEndDate_NumberOfUnitsOfMeasure = "App.Penalties.NotDeliveringAllDropsBeforeEndDate.NumberOfUnitsOfMeasure";
+        public const string NotDeliveringAllDropsBeforeEndDate_UnitsOfMeasure = "App.Penalties.NotDeliveringAllDropsBeforeEndDate.UnitsOfMeasure";
+        public const string NotDeliveringAllDropsBeforeEndDate_Amount = "App.Penalties.NotDeliveringAllDropsBeforeEndDate.Amount";
+        public const string NotDeliveringAllDropsBeforeEndDate_StartingAmount = "App.Penalties.NotDeliveringAllDropsBeforeEndDate.StartingAmount";
+        public const string NotDeliveringAllDropsBeforeEndDate_MaximumAmount = "App.Penalties.NotDeliveringAllDropsBeforeEndDate.MaximumAmount";
     }
 }
