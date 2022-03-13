@@ -2534,6 +2534,7 @@
 	<text name="ImportTripFromExcel">Import Trip From Excel</text>
 	<text name="ImportPointFromExcel">Import Point From Excel</text>
 	<text name="ImportGoodDetailsFromExcel">Import Good Details From Excel</text>
+    <text name="otherUnitOfMeasure">Other Unit Of Measure</text>
 
 	</texts>
 </localizationDictionary>
