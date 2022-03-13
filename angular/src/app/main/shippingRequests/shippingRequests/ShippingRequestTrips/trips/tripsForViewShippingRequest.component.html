@@ -56,32 +56,14 @@
                 <div class="dropdown-divider"></div>
                 <span class="dropdown-item-text text-muted pl-3" href="#">
                   <small
-                    *ngIf="isArabic && ShippingRequest.routeTypeId != ShippingRequestRouteTypeEnum.SingleDrop"
-                    [innerHTML]="
-                      l(
-                        'ImportToExcelSampleFileDownloadInfo',
-                        '<a href=/assets/sampleFiles/ImportShipmentSampleFileAr.xlsx>' + l('ClickHere') + '</a>'
-                      )
-                    "
-                  ></small>
-
-                  <small
-                    *ngIf="isArabic && ShippingRequest.routeTypeId == ShippingRequestRouteTypeEnum.SingleDrop"
-                    [innerHTML]="
-                      l(
-                        'ImportToExcelSampleFileDownloadInfo',
-                        '<a href=/assets/sampleFiles/ImportSingleDropShipmentSampleFile.xlsx>' + l('ClickHere') + '</a>'
-                      )
-                    "
-                  ></small>
-                  <small
-                    *ngIf="!isArabic && ShippingRequest.routeTypeId != ShippingRequestRouteTypeEnum.SingleDrop"
+                    *ngIf="ShippingRequest.routeTypeId != ShippingRequestRouteTypeEnum.SingleDrop"
                     [innerHTML]="
                       l('ImportToExcelSampleFileDownloadInfo', '<a href=/assets/sampleFiles/ImportShipmentSampleFile.xlsx>' + l('ClickHere') + '</a>')
                     "
                   ></small>
+
                   <small
-                    *ngIf="!isArabic && ShippingRequest.routeTypeId == ShippingRequestRouteTypeEnum.SingleDrop"
+                    *ngIf="ShippingRequest.routeTypeId == ShippingRequestRouteTypeEnum.SingleDrop"
                     [innerHTML]="
                       l(
                         'ImportToExcelSampleFileDownloadInfo',
@@ -113,13 +95,6 @@
                 <div class="dropdown-divider"></div>
                 <span class="dropdown-item-text text-muted pl-3" href="#">
                   <small
-                    *ngIf="isArabic"
-                    [innerHTML]="
-                      l('ImportToExcelSampleFileDownloadInfo', '<a href=/assets/sampleFiles/ImportPointSampleFile.xlsx>' + l('ClickHere') + '</a>')
-                    "
-                  ></small>
-                  <small
-                    *ngIf="!isArabic"
                     [innerHTML]="
                       l('ImportToExcelSampleFileDownloadInfo', '<a href=/assets/sampleFiles/ImportPointSampleFile.xlsx>' + l('ClickHere') + '</a>')
                     "
@@ -149,7 +124,7 @@
               <div class="dropdown-divider"></div>
               <span class="dropdown-item-text text-muted pl-3" href="#">
                 <small
-                  *ngIf="isArabic && ShippingRequest.routeTypeId != ShippingRequestRouteTypeEnum.SingleDrop"
+                  *ngIf="ShippingRequest.routeTypeId != ShippingRequestRouteTypeEnum.SingleDrop"
                   [innerHTML]="
                     l(
                       'ImportToExcelSampleFileDownloadInfo',
@@ -159,25 +134,7 @@
                 ></small>
 
                 <small
-                  *ngIf="isArabic && ShippingRequest.routeTypeId == ShippingRequestRouteTypeEnum.SingleDrop"
-                  [innerHTML]="
-                    l(
-                      'ImportToExcelSampleFileDownloadInfo',
-                      '<a href=/assets/sampleFiles/ImportGoodsDetailsSingleDropRequestSampleFile.xlsx>' + l('ClickHere') + '</a>'
-                    )
-                  "
-                ></small>
-                <small
-                  *ngIf="!isArabic && ShippingRequest.routeTypeId != ShippingRequestRouteTypeEnum.SingleDrop"
-                  [innerHTML]="
-                    l(
-                      'ImportToExcelSampleFileDownloadInfo',
-                      '<a href=/assets/sampleFiles/ImportGoodsDetailsRequestSampleFile.xlsx>' + l('ClickHere') + '</a>'
-                    )
-                  "
-                ></small>
-                <small
-                  *ngIf="!isArabic && ShippingRequest.routeTypeId == ShippingRequestRouteTypeEnum.SingleDrop"
+                  *ngIf="ShippingRequest.routeTypeId == ShippingRequestRouteTypeEnum.SingleDrop"
                   [innerHTML]="
                     l(
                       'ImportToExcelSampleFileDownloadInfo',
