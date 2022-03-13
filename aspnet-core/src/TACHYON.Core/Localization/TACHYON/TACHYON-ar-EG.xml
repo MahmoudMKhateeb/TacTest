@@ -2272,6 +2272,7 @@
     <text name="invalidShippingRequest">طلب الشحن غير صالح</text>
     <text name="RequestShouldnotBeSingleDrop">طلب الشحن يجب أن لا تكون ذهاب فقط</text>
     <text name="DuplicatedReference">الرقم مكرر</text>
+    <text name="DuplicatedPointReference">رقم النقطة مكرر</text>
     <text name="SomePointsAlreadyAddedToTrip">بعض النقاط موجودة مسبقاً</text>
     <text name="InvalidTrip">الرحلة غير صالحة</text>
     <text name="ReceiverCodeConfirmationMsg">هل أنت متأكد أنك تريد إعادة تعيين رمز المستلم لهذه الشحنة؟</text>

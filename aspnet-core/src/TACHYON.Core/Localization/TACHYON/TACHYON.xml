@@ -2513,6 +2513,7 @@
     <text name="DataMustBeValid">Data must be valid</text>
     <text name="RequestShouldnotBeSingleDrop">Request should not be single drop</text>
     <text name="DuplicatedReference">Duplicated reference</text>
+    <text name="DuplicatedPointReference">Duplicated point reference</text>
     <text name="SomePointsAlreadyAddedToTrip">Some points already added to trip</text>
     <text name="InvalidTrip">Invalid trip</text>
     <text name="ImportUploadFailed">Import upload failed</text>

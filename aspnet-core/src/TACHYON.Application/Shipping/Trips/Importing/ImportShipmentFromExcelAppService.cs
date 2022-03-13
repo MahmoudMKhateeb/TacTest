@@ -300,7 +300,7 @@ namespace TACHYON.Shipping.Trips.Importing
                 foreach (var duplicateRef in duplicatedReferencePoints)
                 {
                     points.Where(x => x.BulkUploadReference == duplicateRef).ToList().ForEach(x =>
-                        x.Exception += L("DuplicatedReference") + ";");
+                        x.Exception += L("DuplicatedPointReference") + ";");
                 }
             }
         }
