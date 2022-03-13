@@ -133,7 +133,13 @@
                     <li>
                       <a class="dropdown-item" (click)="ViewTripModal.show(record.id)">{{ isCarrier ? l('ViewOrAssignDriver') : l('View') }}</a>
                     </li>
-                    <li *ngIf="!ShippingRequest.isSaas && record.status == 3">
+                    <li
+                      *ngIf="
+                        record.status == ShippingRequestTripStatusEnum.Delivered && !ShippingRequest.isSaas &&
+                        !record.isTripRateBefore &&
+                        (feature.isEnabled('App.Carrier') || feature.isEnabled('App.Shipper'))
+                      "
+                    >
                       <a class="dropdown-item" (click)="shippingRequestRatingModal.show(record.id)">{{ l('Rating') }}</a>
                     </li>
                     <li *ngIf="canResetTrip(record)">

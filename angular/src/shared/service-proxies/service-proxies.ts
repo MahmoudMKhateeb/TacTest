@@ -88042,6 +88042,8 @@ export interface IGetShippingRequestStatusForEditOutput {
 }
 
 export class ShippingRequestsTripListDto implements IShippingRequestsTripListDto {
+  tenantId!: number;
+  carrierTenantId!: number | undefined;
   startTripDate!: moment.Moment;
   endTripDate!: moment.Moment | undefined;
   startWorking!: moment.Moment | undefined;
@@ -88062,6 +88064,7 @@ export class ShippingRequestsTripListDto implements IShippingRequestsTripListDto
   driverStatusTitle!: string | undefined;
   rejectedReason!: string | undefined;
   waybillNumber!: number | undefined;
+  isTripRateBefore!: boolean;
   id!: number;
 
   constructor(data?: IShippingRequestsTripListDto) {
@@ -88074,6 +88077,8 @@ export class ShippingRequestsTripListDto implements IShippingRequestsTripListDto
 
   init(_data?: any) {
     if (_data) {
+      this.tenantId = _data['tenantId'];
+      this.carrierTenantId = _data['carrierTenantId'];
       this.startTripDate = _data['startTripDate'] ? moment(_data['startTripDate'].toString()) : <any>undefined;
       this.endTripDate = _data['endTripDate'] ? moment(_data['endTripDate'].toString()) : <any>undefined;
       this.startWorking = _data['startWorking'] ? moment(_data['startWorking'].toString()) : <any>undefined;
@@ -88094,6 +88099,7 @@ export class ShippingRequestsTripListDto implements IShippingRequestsTripListDto
       this.driverStatusTitle = _data['driverStatusTitle'];
       this.rejectedReason = _data['rejectedReason'];
       this.waybillNumber = _data['waybillNumber'];
+      this.isTripRateBefore = _data['isTripRateBefore'];
       this.id = _data['id'];
     }
   }
@@ -88107,6 +88113,8 @@ export class ShippingRequestsTripListDto implements IShippingRequestsTripListDto
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
+    data['tenantId'] = this.tenantId;
+    data['carrierTenantId'] = this.carrierTenantId;
     data['startTripDate'] = this.startTripDate ? this.startTripDate.toISOString() : <any>undefined;
     data['endTripDate'] = this.endTripDate ? this.endTripDate.toISOString() : <any>undefined;
     data['startWorking'] = this.startWorking ? this.startWorking.toISOString() : <any>undefined;
@@ -88127,12 +88135,15 @@ export class ShippingRequestsTripListDto implements IShippingRequestsTripListDto
     data['driverStatusTitle'] = this.driverStatusTitle;
     data['rejectedReason'] = this.rejectedReason;
     data['waybillNumber'] = this.waybillNumber;
+    data['isTripRateBefore'] = this.isTripRateBefore;
     data['id'] = this.id;
     return data;
   }
 }
 
 export interface IShippingRequestsTripListDto {
+  tenantId: number;
+  carrierTenantId: number | undefined;
   startTripDate: moment.Moment;
   endTripDate: moment.Moment | undefined;
   startWorking: moment.Moment | undefined;
@@ -88153,6 +88164,7 @@ export interface IShippingRequestsTripListDto {
   driverStatusTitle: string | undefined;
   rejectedReason: string | undefined;
   waybillNumber: number | undefined;
+  isTripRateBefore: boolean;
   id: number;
 }
 
