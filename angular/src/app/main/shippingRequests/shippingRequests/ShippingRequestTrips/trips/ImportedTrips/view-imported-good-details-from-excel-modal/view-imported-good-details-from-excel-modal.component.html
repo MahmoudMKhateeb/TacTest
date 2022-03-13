@@ -61,6 +61,9 @@
                         {{ l('UnitOfMeasure') }}
                       </th>
                       <th>
+                        {{ l('otherUnitOfMeasure') }}
+                      </th>
+                      <th>
                         {{ l('Exception') }}
                       </th>
                     </tr>
@@ -111,6 +114,10 @@
                       <td>
                         <span class="ui-column-title"> {{ l('unitOfMeasure') }}</span>
                         {{ record.unitOfMeasure }}
+                      </td>
+                      <td>
+                        <span class="ui-column-title"> {{ l('otherUnitOfMeasure') }}</span>
+                        {{ record.otherUnitOfMeasureName }}
                       </td>
                       <td>
                         <span class="ui-column-title"> {{ l('exception') }}</span>

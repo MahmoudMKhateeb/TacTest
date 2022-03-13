@@ -2295,6 +2295,7 @@
 	<text name="ImportTripFromExcel">استيراد الرحلات من اكسل</text>
 	<text name="ImportPointFromExcel">استيراد نقاط التوصيل من اكسل</text>
 	<text name="ImportGoodDetailsFromExcel">استيراد تفاصيل البضائع من اكسل</text>
+	<text name="otherUnitOfMeasure">وحدة قياس أخرى</text>
 
 
 	</texts>
