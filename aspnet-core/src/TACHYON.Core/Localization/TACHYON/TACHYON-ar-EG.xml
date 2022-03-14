@@ -1774,7 +1774,7 @@
 		<text name="TotalOffers">عروض</text>
 		<text name="TotalRecordsCount">المجموع: {0}</text>
 		<text name="TotalsTripsAddByShippier">عدد الشحنات التي تم إضافتها من قبل الشاحن</text>
-		<text name="TotalWeight">الوزن الإجمالي</text>
+		<text name="TotalWeight">الوزن الإجمالي/رحلة</text>
 		<text name="TotalWeightofGoodsinKG">وزن البضاعة الإجمالي بالكيلو</text>
 		<text name="Trailer">المقطورة</text>
 		<text name="TrailerCode">الرقم المميز للمفطورة</text>
