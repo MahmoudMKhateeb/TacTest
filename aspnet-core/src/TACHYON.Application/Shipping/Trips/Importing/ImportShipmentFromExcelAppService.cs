@@ -547,7 +547,8 @@ namespace TACHYON.Shipping.Trips.Importing
                 }
                 catch
                 {
-                    
+                    tripVases.Where(x => x.ShippingRequestVasId == vas.VasId).ToList().ForEach(x =>
+                        x.Exception = L("InvalidVas")+";");
                 }
             }
         }
