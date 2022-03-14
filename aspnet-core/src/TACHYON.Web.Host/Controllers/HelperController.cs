@@ -328,14 +328,14 @@ namespace TACHYON.Web.Controllers
                 await BinaryObjectManager.SaveAsync(fileObject);
                 CurrentUnitOfWork.SaveChanges();
 
-                var importGoodsDetaiListDto = await _importShipmentFromExcelAppService.ImportTripVasesFromExcel(new ImportTripVasesFromExcelInput
+                var importTripVasesListDto = await _importShipmentFromExcelAppService.ImportTripVasesFromExcel(new ImportTripVasesFromExcelInput
                 {
                     BinaryObjectId = fileObject.Id,
                     ShippingRequestId = ShippingRequestId,
                     TenantId = tenantId
                 });
 
-                return Json(new AjaxResponse(new { importGoodsDetaiListDto }));
+                return Json(new AjaxResponse(new { importTripVasesListDto }));
             }
             catch (UserFriendlyException ex)
             {

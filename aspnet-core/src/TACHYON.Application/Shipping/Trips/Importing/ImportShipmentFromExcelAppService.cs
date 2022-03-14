@@ -537,10 +537,17 @@ namespace TACHYON.Shipping.Trips.Importing
 
             foreach (var vas in groupedVases)
             {
-                if (!_shippingRequestTripManager.ValidateTripVasesNumber(shippingRequestId, vas.Count, vas.VasId))
+                try
                 {
-                    tripVases.Where(x => x.ShippingRequestVasId == vas.VasId).ToList()
-                        .ForEach(x => x.Exception = L("VasesCountMoreThanRequestVasNumberOfTrips") + ";");
+                    if (!_shippingRequestTripManager.ValidateTripVasesNumber(shippingRequestId, vas.Count, vas.VasId))
+                    {
+                        tripVases.Where(x => x.ShippingRequestVasId == vas.VasId).ToList()
+                            .ForEach(x => x.Exception = L("VasesCountMoreThanRequestVasNumberOfTrips") + ";");
+                    }
+                }
+                catch
+                {
+                    
                 }
             }
         }
