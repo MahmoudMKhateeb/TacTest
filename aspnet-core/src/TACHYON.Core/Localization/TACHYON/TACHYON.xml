@@ -1502,7 +1502,7 @@
 		<text name="ProjectName">Project name</text>
 		<text name="Property">Property</text>
 		<text name="Purchase">Purchase</text>
-		<text name="Qty">Qty</text>
+		<text name="Qty">Qty/Value</text>
 		<text name="Quantity">Quantity</text>
 		<text name="QuickNav">Quick Navigation</text>
 		<text name="QuickThemeSelection">Quick theme selection</text>
