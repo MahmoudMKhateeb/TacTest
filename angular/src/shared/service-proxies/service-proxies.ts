@@ -68848,6 +68848,7 @@ export class EntityLogListDto implements IEntityLogListDto {
   modifierUserName!: string | undefined;
   modifierUserId!: number | undefined;
   modifierTenantId!: number | undefined;
+  modifierTenantName!: string | undefined;
   changesData!: string | undefined;
   id!: string;
 
@@ -68866,6 +68867,7 @@ export class EntityLogListDto implements IEntityLogListDto {
       this.modifierUserName = _data['modifierUserName'];
       this.modifierUserId = _data['modifierUserId'];
       this.modifierTenantId = _data['modifierTenantId'];
+      this.modifierTenantName = _data['modifierTenantName'];
       this.changesData = _data['changesData'];
       this.id = _data['id'];
     }
@@ -68885,6 +68887,7 @@ export class EntityLogListDto implements IEntityLogListDto {
     data['modifierUserName'] = this.modifierUserName;
     data['modifierUserId'] = this.modifierUserId;
     data['modifierTenantId'] = this.modifierTenantId;
+    data['modifierTenantName'] = this.modifierTenantName;
     data['changesData'] = this.changesData;
     data['id'] = this.id;
     return data;
@@ -68897,6 +68900,7 @@ export interface IEntityLogListDto {
   modifierUserName: string | undefined;
   modifierUserId: number | undefined;
   modifierTenantId: number | undefined;
+  modifierTenantName: string | undefined;
   changesData: string | undefined;
   id: string;
 }
@@ -93355,7 +93359,6 @@ export class TrackingShippingRequestTripDto implements ITrackingShippingRequestT
   status!: ShippingRequestTripStatus;
   statusTitle!: string | undefined;
   routPoints!: TrackingRoutePointDto[] | undefined;
-  canStartTrip!: boolean;
   id!: number;
 
   constructor(data?: ITrackingShippingRequestTripDto) {
@@ -93375,7 +93378,6 @@ export class TrackingShippingRequestTripDto implements ITrackingShippingRequestT
         this.routPoints = [] as any;
         for (let item of _data['routPoints']) this.routPoints!.push(TrackingRoutePointDto.fromJS(item));
       }
-      this.canStartTrip = _data['canStartTrip'];
       this.id = _data['id'];
     }
   }
@@ -93396,7 +93398,6 @@ export class TrackingShippingRequestTripDto implements ITrackingShippingRequestT
       data['routPoints'] = [];
       for (let item of this.routPoints) data['routPoints'].push(item.toJSON());
     }
-    data['canStartTrip'] = this.canStartTrip;
     data['id'] = this.id;
     return data;
   }
@@ -93407,7 +93408,6 @@ export interface ITrackingShippingRequestTripDto {
   status: ShippingRequestTripStatus;
   statusTitle: string | undefined;
   routPoints: TrackingRoutePointDto[] | undefined;
-  canStartTrip: boolean;
   id: number;
 }
 

@@ -40,7 +40,9 @@
                     <div class="mr-2">
                       <a class="text-dark-75 font-weight-bold">{{ log.transaction }}</a>
                       <span class="text-muted ml-2">{{ log.modificationTime }}</span>
-                      <span class="label label-inline label-light-primary label-bold font-weight-bold ml-2">{{ log.modifierUserName }}</span>
+                      <span class="label label-inline label-light-primary label-bold font-weight-bold ml-2"
+                        >{{ log.modifierTenantName }}\{{ log.modifierUserName }}</span
+                      >
                       <!--                        <span class="label label-light-danger font-weight-bolder label-inline ml-2"></span>-->
                     </div>
                     <!--                    <div class="dropdown ml-2" data-toggle="tooltip" title="Quick actions" data-placement="left">-->

@@ -6,6 +6,7 @@ export class EntityLogForView {
   modifierUserName: string;
   modifierUserId: number;
   modifierTenantId: number;
+  modifierTenantName: string;
   changesData: LogChangeItem[];
 }
 

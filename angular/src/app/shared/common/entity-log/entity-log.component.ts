@@ -73,6 +73,7 @@ export class EntityLogComponent extends AppComponentBase implements OnInit {
     logForView.modifierTenantId = dto.modifierTenantId;
     logForView.modifierUserName = dto.modifierUserName;
     logForView.modifierUserId = dto.modifierUserId;
+    logForView.modifierTenantName = dto.modifierTenantName;
     logForView.changesData = this.formatEntityLog(dto.changesData);
 
     return logForView;
