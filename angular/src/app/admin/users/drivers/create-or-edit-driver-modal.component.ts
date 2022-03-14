@@ -106,6 +106,7 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
   }
 
   show(userId?: number): void {
+    this.CheckingIfDriverPhoneNumberIsValid = true;
     if (!userId) {
       this.active = true;
       this.sendActivationEmail = true;
