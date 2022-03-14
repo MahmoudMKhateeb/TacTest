@@ -2690,7 +2690,12 @@
 		<text name="UplodeDeliveryNoteDeliveryConfirmation">Delivery Confirmation After Delivery Note</text>
 	<text name="Remarks">Remarks</text>
 	<text name="YouCannotAddRemarksForThisTrip">You Can't Add Remarks For This Trip</text>
-
+	<text name="NoReasonProvided">No reason provided</text>
+	<text name="ShippingRequestUpdatedTransaction">Update shipping request</text>
+	<text name="PriceOfferCreatedTransaction">A price offer added</text>
+	<text name="PriceOfferUpdatedTransaction">The price offer was updated</text>
+	<text name="PriceOfferAcceptedTransaction">Price offer accepted</text>
+	<text name="DriverAndTruckIsChanged">Driver and truck changed </text>
 
 	</texts>
 </localizationDictionary>

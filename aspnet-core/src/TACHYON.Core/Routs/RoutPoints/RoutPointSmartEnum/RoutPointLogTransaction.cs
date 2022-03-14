@@ -108,4 +108,12 @@ namespace TACHYON.Routs.RoutPoints.RoutPointSmartEnum
         }
         public sealed override string Transaction { get => RoutPointConsts.Action3; }
     }
+    
+    public class RoutPointAction4 : EntityLogTransaction
+    {
+        public RoutPointAction4(string displayName, int value) : base(displayName, value)
+        {
+        }
+        public sealed override string Transaction { get => RoutPointConsts.Action4; }
+    }
 }

@@ -2468,6 +2468,12 @@
 		<text name="UplodeDeliveryNoteDeliveryConfirmation">تأكيد التسليم بعد رفع مذكرة التسليم</text>
 		<text name="Remarks">ملاحظات</text>
 		<text name="YouCannotAddRemarksForThisTrip">لا يمكنك اضافة ملاحظات الى هذه الرحلة</text>
+		<text name="NoReasonProvided">لم يتم تقديم سبب</text>
+		<text name="ShippingRequestUpdatedTransaction">تعديل طلب الشحن</text>
+		<text name="PriceOfferCreatedTransaction">إضافة عرض سعر</text>
+		<text name="PriceOfferUpdatedTransaction">تعديل عرض السعر</text>
+		<text name="PriceOfferAcceptedTransaction">قبول عرض السعر</text>
+		<text name="DriverAndTruckIsChanged">تغيير السائق والشاحنة</text>
 
 	</texts>
 </localizationDictionary>
