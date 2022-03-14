@@ -51,28 +51,24 @@
                 [disabled]="primengTableHelper.totalRecordsCount >= ShippingRequest.numberOfTrips"
               >
               </p-fileUpload>
+              <span class="dropdown-item-text text-muted pl-3" href="#">
+                <small
+                  *ngIf="ShippingRequest.routeTypeId != ShippingRequestRouteTypeEnum.SingleDrop"
+                  [innerHTML]="
+                    l('ImportToExcelSampleFileDownloadInfo', '<a href=/assets/sampleFiles/ImportShipmentSampleFile.xlsx>' + l('ClickHere') + '</a>')
+                  "
+                ></small>
 
-              <div>
-                <div class="dropdown-divider"></div>
-                <span class="dropdown-item-text text-muted pl-3" href="#">
-                  <small
-                    *ngIf="ShippingRequest.routeTypeId != ShippingRequestRouteTypeEnum.SingleDrop"
-                    [innerHTML]="
-                      l('ImportToExcelSampleFileDownloadInfo', '<a href=/assets/sampleFiles/ImportShipmentSampleFile.xlsx>' + l('ClickHere') + '</a>')
-                    "
-                  ></small>
-
-                  <small
-                    *ngIf="ShippingRequest.routeTypeId == ShippingRequestRouteTypeEnum.SingleDrop"
-                    [innerHTML]="
-                      l(
-                        'ImportToExcelSampleFileDownloadInfo',
-                        '<a href=/assets/sampleFiles/ImportSingleDropShipmentSampleFile.xlsx>' + l('ClickHere') + '</a>'
-                      )
-                    "
-                  ></small>
-                </span>
-              </div>
+                <small
+                  *ngIf="ShippingRequest.routeTypeId == ShippingRequestRouteTypeEnum.SingleDrop"
+                  [innerHTML]="
+                    l(
+                      'ImportToExcelSampleFileDownloadInfo',
+                      '<a href=/assets/sampleFiles/ImportSingleDropShipmentSampleFile.xlsx>' + l('ClickHere') + '</a>'
+                    )
+                  "
+                ></small>
+              </span>
             </span>
           </div>
 
@@ -91,16 +87,13 @@
                 [disabled]="primengTableHelper.totalRecordsCount == 0"
               >
               </p-fileUpload>
-              <div>
-                <div class="dropdown-divider"></div>
-                <span class="dropdown-item-text text-muted pl-3" href="#">
-                  <small
-                    [innerHTML]="
-                      l('ImportToExcelSampleFileDownloadInfo', '<a href=/assets/sampleFiles/ImportPointSampleFile.xlsx>' + l('ClickHere') + '</a>')
-                    "
-                  ></small>
-                </span>
-              </div>
+              <span class="dropdown-item-text text-muted pl-3" href="#">
+                <small
+                  [innerHTML]="
+                    l('ImportToExcelSampleFileDownloadInfo', '<a href=/assets/sampleFiles/ImportPointSampleFile.xlsx>' + l('ClickHere') + '</a>')
+                  "
+                ></small>
+              </span>
             </span>
           </div>
 
@@ -119,9 +112,6 @@
                 [disabled]="primengTableHelper.totalRecordsCount == 0"
               >
               </p-fileUpload>
-            </span>
-            <div>
-              <div class="dropdown-divider"></div>
               <span class="dropdown-item-text text-muted pl-3" href="#">
                 <small
                   *ngIf="ShippingRequest.routeTypeId != ShippingRequestRouteTypeEnum.SingleDrop"
@@ -143,7 +133,35 @@
                   "
                 ></small>
               </span>
-            </div>
+            </span>
+          </div>
+
+          <div class="no-padding">
+            <span class="fileinput-button">
+              <p-fileUpload
+                customUpload="true"
+                name="VasesExcelFileUpload"
+                #VasesExcelFileUpload
+                maxFileSize="10000000"
+                auto="auto"
+                accept=".csv,.xls,.xlsx"
+                (uploadHandler)="uploadVasesExcel($event)"
+                (onError)="onUploadExcelError()"
+                chooseLabel="{{ 'ImportVasesFromExcel' | localize }}"
+                [disabled]="primengTableHelper.totalRecordsCount == 0"
+              >
+              </p-fileUpload>
+              <span class="dropdown-item-text text-muted pl-3" href="#">
+                <small
+                  [innerHTML]="
+                    l(
+                      'ImportToExcelSampleFileDownloadInfo',
+                      '<a href=/assets/sampleFiles/ImportTripVasesFromExcelSampleFile.xlsx>' + l('ClickHere') + '</a>'
+                    )
+                  "
+                ></small>
+              </span>
+            </span>
           </div>
         </div>
       </div>
@@ -317,6 +335,8 @@
     (modalSave)="reloadPage()"
   >
   </app-view-imported-good-details-from-excel-modal>
+  <app-view-import-vases-from-excel-modal [ImportedVasesList]="vasesList" #ViewImportedVasesModal (modalSave)="reloadPage()">
+  </app-view-import-vases-from-excel-modal>
   <viewTripModal #ViewTripModal (modalSave)="reloadPage()"></viewTripModal>
   <trip-accident-modal #TripAccidentModal (modalSave)="getShippingRequestsTrips($event)"></trip-accident-modal>
   <view-trip-accident-modal #ViewTripAccidentModal (modalcanceltrip)="reloadPage()"></view-trip-accident-modal>

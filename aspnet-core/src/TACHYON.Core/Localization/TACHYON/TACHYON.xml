@@ -2535,6 +2535,8 @@
 		<text name="ImportPointFromExcel">Import Point From Excel</text>
 		<text name="ImportGoodDetailsFromExcel">Import Good Details From Excel</text>
     <text name="otherUnitOfMeasure">Other Unit Of Measure</text>
+    <text name="ImportedVasesDetails">Imported Vases Details</text>
+	<text name="ImportVasesFromExcel">Import Vases From Excel</text>
     <text name="SomeTripVasesAlreadyExists">Some trip vases already exists</text>
     <text name="DuplicatedVas">Duplicated vas</text>
 	</texts>

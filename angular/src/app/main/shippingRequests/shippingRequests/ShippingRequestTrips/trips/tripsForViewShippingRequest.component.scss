@@ -8,9 +8,22 @@ a{
     text-align: start;
 }
 .dropdown-menu{
-  min-width: 17rem !important;
+  min-width: 19rem !important;
 }
 ::ng-deep .p-fileupload-content{
     padding: 0 !important;
     border: 0 !important;
+}
+::ng-deep .dropdown-item-text{
+    padding: 0 !important;
+    margin-left: 5%;
+}
+::ng-deep .p-button{
+    font-size: 12px;
+}
+::ng-deep .p-fileupload .p-fileupload-buttonbar .p-button {
+    margin-right: 0 !important;
+}
+::ng-deep .p-fileupload .p-fileupload-buttonbar{
+    padding: 7px !important;
 }

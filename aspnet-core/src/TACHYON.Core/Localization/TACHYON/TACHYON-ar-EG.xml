@@ -2296,6 +2296,9 @@
 		<text name="ImportPointFromExcel">استيراد نقاط التوصيل من اكسل</text>
 		<text name="ImportGoodDetailsFromExcel">استيراد تفاصيل البضائع من اكسل</text>
     <text name="otherUnitOfMeasure">وحدة قياس أخرى</text>
+	<text name="ImportedVasesDetails">خدمات إضافيه مستوردة</text>
+	<text name="ImportVasesFromExcel">استيراد خدمات إضافية من إكسل</text>
+
     <text name="SomeTripVasesAlreadyExists">بعض الخدمات الإضافية موجودة مسبقاً</text>
     <text name="DuplicatedVas">يوجد تكرار</text>
 

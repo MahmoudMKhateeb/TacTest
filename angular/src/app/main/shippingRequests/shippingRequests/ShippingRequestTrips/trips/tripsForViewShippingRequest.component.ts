@@ -40,6 +40,8 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   @ViewChild('ViewImportedTripsModal', { static: false }) modal: ModalDirective;
   @ViewChild('ViewImportedPointsModal', { static: false }) pointModal: ModalDirective;
   @ViewChild('ViewImportedGoodDetailsModal', { static: false }) goodDetailsModal: ModalDirective;
+  @ViewChild('VasesExcelFileUpload', { static: false }) VasesExcelFileUpload: FileUpload;
+  @ViewChild('ViewImportedVasesModal', { static: false }) VasesModal: ModalDirective;
 
   @Output() modalSave: EventEmitter<any> = new EventEmitter();
   @Input() ShippingRequest: ShippingRequestDto;
@@ -48,11 +50,13 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   saving = false;
   uploadUrl: string;
   uploadPointUrl: string;
+  tripVases: string;
   isArabic = false;
   active = false;
   list: ImportTripDto;
   pointsList: ImportRoutePointDto;
   goodDetailsList: ImportGoodsDetailsDto;
+  vasesList: ImportGoodsDetailsDto;
   loading: boolean = false;
   uploadGoodDetailsUrl: string;
   ShippingRequestRouteTypeEnum = ShippingRequestRouteType;
@@ -69,6 +73,7 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
     this.uploadUrl = AppConsts.remoteServiceBaseUrl + '/Helper/ImportShipmentsFromExcel';
     this.uploadPointUrl = AppConsts.remoteServiceBaseUrl + '/Helper/ImportPointsFromExcel';
     this.uploadGoodDetailsUrl = AppConsts.remoteServiceBaseUrl + '/Helper/ImportGoodsDetailsFromExcel';
+    this.tripVases = AppConsts.remoteServiceBaseUrl + '/Helper/ImportTripVasesFromExcel';
   }
 
   ngOnInit(): void {
@@ -205,6 +210,34 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
           this.notify.success(this.l('ImportProcessStart'));
           this.saving = true;
           this.goodDetailsModal.show();
+        } else if (response.error != null) {
+          this.loading = false;
+          // this.notify.error(this.l('ImportFailed'));
+          this.notify.error(response.error.message);
+        }
+      });
+  }
+
+  uploadVasesExcel(data: { files: File }): void {
+    const formData: FormData = new FormData();
+    const file = data.files[0];
+    this.loading = true;
+    formData.append('file', file, file.name);
+    formData.append('ShippingRequestId', this.ShippingRequest.id.toString());
+    this._httpClient
+      .post<any>(this.tripVases, formData)
+      .pipe(
+        finalize(() => {
+          this.VasesExcelFileUpload.clear();
+        })
+      )
+      .subscribe((response) => {
+        if (response.success) {
+          this.vasesList = response.result.importTripVasesFromExcel;
+          this.loading = false;
+          this.notify.success(this.l('ImportProcessStart'));
+          this.saving = true;
+          this.VasesModal.show();
         } else if (response.error != null) {
           this.loading = false;
           // this.notify.error(this.l('ImportFailed'));
