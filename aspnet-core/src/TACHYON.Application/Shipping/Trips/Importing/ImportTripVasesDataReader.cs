@@ -43,6 +43,7 @@ namespace TACHYON.Shipping.Trips.Importing
             ImportTripVasesDto TripVas = new ImportTripVasesDto();
             try
             {
+                TripVas.ShippingRequestId = shippingRequestId;
                 var TripReference = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
                     row, 0, "Trip Reference*", exceptionMessage);
 

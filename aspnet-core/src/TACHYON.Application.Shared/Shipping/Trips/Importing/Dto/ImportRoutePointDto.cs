@@ -22,7 +22,14 @@ namespace TACHYON.Shipping.Trips.Importing.Dto
         public int? ReceiverId { get; set; }
         public string Code { set; get; } = (new Random().Next(100000, 999999)).ToString();
         public string Exception { get; set; }
+        /// <summary>
+        /// This is helper field for backend
+        /// </summary>
         public int ShippingRequestTripId { get; set; }
+        /// <summary>
+        /// This is helper field to assign workflow version for points
+        /// </summary>
+        public bool TripNeedsDeliveryNote { get; set; }
         public string BulkUploadReference { get; set; }
         public string TripReference { get; set; }
         public bool CanBeImported()

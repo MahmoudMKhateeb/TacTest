@@ -1,4 +1,5 @@
-﻿using Abp.Domain.Repositories;
+﻿using Abp.Authorization;
+using Abp.Domain.Repositories;
 using Abp.Threading;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TACHYON.Authorization;
 using TACHYON.Goods.Dtos;
 using TACHYON.Goods.GoodsDetails;
 using TACHYON.Routs.RoutPoints;
@@ -53,7 +55,7 @@ namespace TACHYON.Shipping.Trips.Importing
             ValidateDuplicatedReferenceFromList(trips);
             return trips;
         }
-
+        [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Create)]
         public async Task CreateShipmentsFromDto(List<ImportTripDto> importTripDtoList)
         {
             var request = _shippingRequestTripManager.GetShippingRequestByPermission(importTripDtoList.First().ShippingRequestId);
@@ -108,7 +110,7 @@ namespace TACHYON.Shipping.Trips.Importing
 
             return points;
         }
-
+        [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Create)]
         public async Task CreatePointsFromDto(List<ImportRoutePointDto> importRoutePointDtoList)
         {
             var request = _shippingRequestTripManager.GetShippingRequestByPermission(importRoutePointDtoList.First().ShippingRequestTripId);
@@ -142,7 +144,7 @@ namespace TACHYON.Shipping.Trips.Importing
 
             return goodsDetails;
         }
-
+        [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Create)]
         public async Task CreateGoodsDetailsFromDto(List<ImportGoodsDetailsDto> importGoodsDetailsDtoList)
         {
             var request = _shippingRequestTripManager.GetShippingRequestByPermission(importGoodsDetailsDtoList.First().ShippingRequestTripId);
@@ -166,12 +168,20 @@ namespace TACHYON.Shipping.Trips.Importing
         {
             var request = _shippingRequestTripManager.GetShippingRequestByPermission(input.ShippingRequestId);
             var tripVases = await GetTripVasListFromExcelOrNull(input, request.Id);
-            await ValidateTripVases(input, tripVases);
+            await ValidateTripVases(request.Id, tripVases);
 
             return tripVases;
         }
+        [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Create)]
+        public async Task CreateTripVasesFromDto(List<ImportTripVasesDto> importTripVasesDtoList)
+        {
+            var request = _shippingRequestTripManager.GetShippingRequestByPermission(importTripVasesDtoList.First().ShippingRequestId);
+            importTripVasesDtoList.ForEach(x => x.Exception = "");
+            await ValidateTripVases(request.Id, importTripVasesDtoList);
+            await CreateTripVasesAsync(importTripVasesDtoList);
+        }
 
-
+        
         #endregion
 
         #region Helper
@@ -227,8 +237,19 @@ namespace TACHYON.Shipping.Trips.Importing
                 RoutPointList.Add(await CreatePointAsync(point));
             }
 
-            //todo, assign workflow version
-            //_shippingRequestTripManager.AssignWorkFlowVersionToRoutPoints(RoutPointList, R)
+            var groupedPointsByDeliverNote = points.GroupBy(x => x.TripNeedsDeliveryNote,
+              (k,g)=>  new
+                {
+                    needsDeliveryNote=k,
+                    points=g
+                });
+
+
+            //assign workflow version
+            foreach(var point in groupedPointsByDeliverNote)
+            {
+                _shippingRequestTripManager.AssignWorkFlowVersionToRoutPoints(RoutPointList, point.needsDeliveryNote);
+            }
         }
 
         private async Task<List<ImportTripDto>> GetShipmentListFromExcelOrNull(ImportShipmentFromExcelInput importShipmentFromExcelInput, bool isSingleDropRequest)
@@ -409,10 +430,11 @@ namespace TACHYON.Shipping.Trips.Importing
                 }
                 else
                 {
-                    points.Where(x => x.TripReference == tripRef)
-                        .ToList()
-                        .ForEach(y => y.ShippingRequestTripId = trip.Id);
-
+                    foreach(var point in points.Where(x => x.TripReference == tripRef).ToList())
+                    {
+                        point.ShippingRequestTripId = trip.Id;
+                        point.TripNeedsDeliveryNote = trip.NeedsDeliveryNote;
+                    }
                 }
             }
         }
@@ -493,17 +515,17 @@ namespace TACHYON.Shipping.Trips.Importing
                 await _goodsDetailRepository.InsertAsync(goodsDetailItem);
             }
         }
-        private async Task ValidateTripVases(ImportTripVasesFromExcelInput input, List<ImportTripVasesDto> tripVases)
+        private async Task ValidateTripVases(long shippingRequestId, List<ImportTripVasesDto> tripVases)
         {
             await ValidateTripVasIfExistsInDB(tripVases);
 
             ValidateDuplicatedVas(tripVases);
 
-            ValidateNumberOfVases(input, tripVases);
+            ValidateNumberOfVases(shippingRequestId, tripVases);
         }
 
 
-        private void ValidateNumberOfVases(ImportTripVasesFromExcelInput input, List<ImportTripVasesDto> tripVases)
+        private void ValidateNumberOfVases(long shippingRequestId, List<ImportTripVasesDto> tripVases)
         {
             var groupedVases = tripVases
                 .GroupBy(x => x.ShippingRequestVasId,
@@ -515,7 +537,7 @@ namespace TACHYON.Shipping.Trips.Importing
 
             foreach (var vas in groupedVases)
             {
-                if (!_shippingRequestTripManager.ValidateTripVasesNumber(input.ShippingRequestId, vas.Count, vas.VasId))
+                if (!_shippingRequestTripManager.ValidateTripVasesNumber(shippingRequestId, vas.Count, vas.VasId))
                 {
                     tripVases.Where(x => x.ShippingRequestVasId == vas.VasId).ToList()
                         .ForEach(x => x.Exception = L("VasesCountMoreThanRequestVasNumberOfTrips") + ";");
@@ -554,7 +576,14 @@ namespace TACHYON.Shipping.Trips.Importing
             }
         }
 
-       
+        private async Task CreateTripVasesAsync(List<ImportTripVasesDto> importTripVasesDtoList)
+        {
+            foreach (var item in importTripVasesDtoList)
+            {
+                var tripVas = ObjectMapper.Map<ShippingRequestTripVas>(item);
+                await _shippingRequestTripVas.InsertAsync(tripVas);
+            }
+        }
         #endregion
     }
 }
