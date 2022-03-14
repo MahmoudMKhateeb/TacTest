@@ -2,8 +2,10 @@
 using Abp.Application.Features;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
+using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.EntityHistory;
 using Abp.Linq.Extensions;
 using Abp.Runtime.Validation;
 using Abp.Threading;
@@ -27,6 +29,7 @@ using TACHYON.Cities;
 using TACHYON.Common;
 using TACHYON.Documents;
 using TACHYON.Dto;
+using TACHYON.EntityLogs.Transactions;
 using TACHYON.Extension;
 using TACHYON.Features;
 using TACHYON.Goods.GoodCategories;
@@ -81,25 +84,23 @@ namespace TACHYON.Shipping.ShippingRequests
             IRepository<Tenant> tenantRepository,
             IRepository<TrucksType, long> lookupTrucksTypeRepository,
             IRepository<TrailerType, int> lookupTrailerTypeRepository,
-            //IRepository<RoutType, int> lookupRoutTypeRepository,
             IRepository<GoodCategory, int> lookupGoodCategoryRepository,
             IRepository<Vas, int> lookup_vasRepository,
             IRepository<ShippingRequestVas, long> shippingRequestVasRepository,
             IRepository<VasPrice> vasPriceRepository,
             IRepository<Port, long> lookupPortRepository,
-            IRepository<ShippingRequestBid, long> shippingRequestBidRepository,
             BidDomainService bidDomainService,
             IRepository<Capacity, int> capacityRepository,
             IRepository<TransportType, int> transportTypeRepository,
             IRepository<RoutPoint, long> routPointRepository,
             IRepository<ShippingRequestsCarrierDirectPricing> carrierDirectPricingRepository,
-            IRepository<ShippingRequestDirectRequest, long> shippingRequestDirectRequestRepository,
             PriceOfferManager priceOfferManager,
             IRepository<InvoiceTrip, long> invoiveTripRepository,
             ShippingRequestDirectRequestAppService shippingRequestDirectRequestAppService,
             ShippingRequestDirectRequestManager shippingRequestDirectRequestManager,
             DocumentFilesManager documentFilesManager,
-            IRepository<PriceOffer, long> priceOfferRepository)
+            IRepository<PriceOffer, long> priceOfferRepository, 
+            IEntityChangeSetReasonProvider reasonProvider)
         {
             _vasPriceRepository = vasPriceRepository;
             _shippingRequestRepository = shippingRequestRepository;
@@ -114,7 +115,6 @@ namespace TACHYON.Shipping.ShippingRequests
             _lookup_trailerTypeRepository = lookupTrailerTypeRepository;
             _lookup_goodCategoryRepository = lookupGoodCategoryRepository;
             _lookup_PortRepository = lookupPortRepository;
-            _shippingRequestBidRepository = shippingRequestBidRepository;
             _bidDomainService = bidDomainService;
             _lookup_vasRepository = lookup_vasRepository;
             _shippingRequestVasRepository = shippingRequestVasRepository;
@@ -122,13 +122,13 @@ namespace TACHYON.Shipping.ShippingRequests
             _transportTypeRepository = transportTypeRepository;
             _routPointRepository = routPointRepository;
             _carrierDirectPricingRepository = carrierDirectPricingRepository;
-            _shippingRequestDirectRequestRepository = shippingRequestDirectRequestRepository;
             _priceOfferManager = priceOfferManager;
             _InvoiveTripRepository = invoiveTripRepository;
             _shippingRequestDirectRequestAppService = shippingRequestDirectRequestAppService;
             _shippingRequestDirectRequestManager = shippingRequestDirectRequestManager;
             _documentFilesManager = documentFilesManager;
             _priceOfferRepository = priceOfferRepository;
+            _reasonProvider = reasonProvider;
         }
         private readonly IRepository<ShippingRequestsCarrierDirectPricing> _carrierDirectPricingRepository;
         private readonly IRepository<VasPrice> _vasPriceRepository;
@@ -139,8 +139,6 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly IRepository<UnitOfMeasure, int> _unitOfMeasureRepository;
         private readonly IRepository<Vas, int> _lookup_vasRepository;
         private readonly IRepository<ShippingRequestVas, long> _shippingRequestVasRepository;
-        private readonly IRepository<ShippingRequestDirectRequest, long> _shippingRequestDirectRequestRepository;
-        // private readonly IRepository<Route, int> _lookup_routeRepository;
         private readonly IRepository<RoutPoint, long> _routPointRepository;
         private readonly IAppNotifier _appNotifier;
         private readonly IRepository<Tenant> _tenantRepository;
@@ -148,7 +146,6 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly IRepository<TrailerType, int> _lookup_trailerTypeRepository;
         private readonly IRepository<GoodCategory, int> _lookup_goodCategoryRepository;
         private readonly IRepository<Port, long> _lookup_PortRepository;
-        private readonly IRepository<ShippingRequestBid, long> _shippingRequestBidRepository;
         private readonly BidDomainService _bidDomainService;
         private readonly IRepository<Capacity, int> _capacityRepository;
         private readonly IRepository<TransportType, int> _transportTypeRepository;
@@ -159,6 +156,7 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly ShippingRequestDirectRequestManager _shippingRequestDirectRequestManager;
         private readonly DocumentFilesManager _documentFilesManager;
         private readonly IRepository<PriceOffer, long> _priceOfferRepository;
+        private readonly IEntityChangeSetReasonProvider _reasonProvider;
         public async Task<GetAllShippingRequestsOutputDto> GetAll(GetAllShippingRequestsInput Input)
         {
             DisableTenancyFilters();
@@ -987,6 +985,8 @@ namespace TACHYON.Shipping.ShippingRequests
         [AbpAuthorize(AppPermissions.Pages_ShippingRequests_Edit)]
         protected virtual async Task Update(CreateOrEditShippingRequestDto input)
         {
+            _reasonProvider.Use(nameof(UpdateShippingRequestTransaction));
+            
             ShippingRequest shippingRequest = await _shippingRequestRepository.GetAll()
                 .Include(x => x.ShippingRequestVases)
                 .Where(x => x.Id == (long)input.Id)
@@ -1007,6 +1007,8 @@ namespace TACHYON.Shipping.ShippingRequests
             await ValidateGoodsCategory(input);
 
             ObjectMapper.Map(input, shippingRequest);
+            
+            await CurrentUnitOfWork.SaveChangesAsync();
         }
 
 

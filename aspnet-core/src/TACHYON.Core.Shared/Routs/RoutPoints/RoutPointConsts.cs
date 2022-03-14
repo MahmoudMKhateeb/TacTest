@@ -17,5 +17,6 @@
         public const string Action1 = "DriverIsChanged";
         public const string Action2 = "TruckIsChanged";
         public const string Action3 = "IncidentHappened";
+        public const string Action4 = "DriverAndTruckIsChanged";
     }
 }

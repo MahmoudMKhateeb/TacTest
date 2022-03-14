@@ -1,6 +1,7 @@
 ﻿using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Abp.EntityHistory;
 using Abp.Linq.Extensions;
 using Abp.Runtime.Validation;
@@ -16,6 +17,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using TACHYON.Authorization.Users;
 using TACHYON.EntityLogs.Dto;
+using TACHYON.MultiTenancy;
 using TACHYON.PriceOffers;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.ShippingRequests;
@@ -29,11 +31,15 @@ namespace TACHYON.EntityLogs
     {
         private readonly EntityLogManager _logManager;
         private readonly IRepository<User, long> _userRepository;
+        private readonly IRepository<Tenant> _tenantRepository;
 
-        public EntityLogAppService(EntityLogManager logManager, IRepository<User, long> userRepository)
+        public EntityLogAppService(EntityLogManager logManager,
+            IRepository<User, long> userRepository,
+            IRepository<Tenant> tenantRepository)
         {
             _logManager = logManager;
             _userRepository = userRepository;
+            _tenantRepository = tenantRepository;
         }
 
 
@@ -54,10 +60,11 @@ namespace TACHYON.EntityLogs
                     logs = _logManager.GetAllEntityLogs<ShippingRequestTrip, int>(typeof(ShippingRequestTrip).ToString(), input.EntityId);
                     break;
                 case EntityLogType.ShippingRequest:
-                    logs = _logManager.GetAllEntityLogs<RoutPoint, long>(typeof(ShippingRequest).ToString(), input.EntityId);
+                    // Entity <Generic> Type Not Used (no effect here) but this will be more readable 
+                    logs = _logManager.GetAllEntityLogs<ShippingRequest, long>(typeof(ShippingRequest).ToString(), input.EntityId);
                     break;
                 case EntityLogType.ShippingRequestPriceOffer:
-                    logs = _logManager.GetAllEntityLogs<RoutPoint, long>(typeof(PriceOffer).ToString(), input.EntityId);
+                    logs = _logManager.GetAllEntityLogs<PriceOffer, long>(typeof(PriceOffer).ToString(), input.EntityId);
                     break;
                 default:
                     throw new AbpValidationException("Don't Play With Me...Go To Hell"); // Test Msg todo add localization here
@@ -67,7 +74,7 @@ namespace TACHYON.EntityLogs
 
             return new PagedResultDto<EntityLogListDto>()
             {
-                Items = await ToEntityLogListDto<RoutPoint>(entityLogs),
+                Items = await ToEntityLogListDto(entityLogs),
                 TotalCount = await logs.CountAsync()
             };
         }
@@ -77,16 +84,23 @@ namespace TACHYON.EntityLogs
         // Here I passed The Entity logs as List of EntityLog Not As IEnumerable
         // For More Details See https://www.jetbrains.com/help/resharper/PossibleMultipleEnumeration.html
 
-        private async Task<List<EntityLogListDto>> ToEntityLogListDto<TEntity>(List<EntityLog> entityLogs)
+        private async Task<List<EntityLogListDto>> ToEntityLogListDto(List<EntityLog> entityLogs)
         {
             List<EntityLogListDto> logDtos = new List<EntityLogListDto>();
 
             // Don't Set those list null garbage cleaner will remove it 
             var users = entityLogs.Select(x => x.CreatorUserId);
+            var tenantIds = entityLogs.Select(x => x.TenantId).ToList();
+
+            CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant);
 
             var userNames = await _userRepository.GetAll()
                 .Where(x => users.Any(i => i == x.Id)) // No Need To Null Check
                 .ToDictionaryAsync(x => x.Id, y => y.UserName);
+
+            var tenantNames = await _tenantRepository.GetAll()
+                .Where(x => tenantIds.Contains(x.Id))
+                .Select(x => new {x.TenancyName, x.Id}).ToListAsync();
 
 
             foreach (EntityLog log in entityLogs)
@@ -98,7 +112,8 @@ namespace TACHYON.EntityLogs
                     ModificationTime = log.CreationTime,
                     ModifierUserId = log.CreatorUserId,
                     ChangesData = log.Data,
-                    ModifierTenantId = log.TenantId
+                    ModifierTenantId = log.TenantId,
+                    ModifierTenantName = tenantNames.FirstOrDefault(x=> x.Id == log.TenantId)?.TenancyName ?? ""
                 };
 
                 if (log.CreatorUserId != null)

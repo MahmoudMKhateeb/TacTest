@@ -5,6 +5,7 @@ using Abp.Authorization;
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.EntityHistory;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Abp.Runtime.Validation;
@@ -33,6 +34,7 @@ using TACHYON.Notifications;
 using TACHYON.Rating;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Routs.RoutPoints.Dtos;
+using TACHYON.Routs.RoutPoints.RoutPointSmartEnum;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips.Dto;
@@ -61,6 +63,7 @@ namespace TACHYON.Shipping.Trips
         private readonly IBinaryObjectManager _binaryObjectManager;
         private readonly ITempFileCacheManager _tempFileCacheManager;
         private readonly RatingLogManager _ratingLogManager;
+        private readonly IEntityChangeSetReasonProvider _reasonProvider;
 
 
 
@@ -73,7 +76,7 @@ namespace TACHYON.Shipping.Trips
             IRepository<GoodsDetail, long> goodsDetailRepository,
             UserManager userManager,
             IAppNotifier appNotifier,
-            ShippingRequestManager shippingRequestManager, DocumentFilesAppService documentFilesAppService, IRepository<GoodCategory> goodCategoryRepository, IRepository<DocumentFile, Guid> documentFileRepository, DocumentFilesManager documentFilesManager, IRepository<DocumentType, long> documentTypeRepository, IBinaryObjectManager binaryObjectManager, ITempFileCacheManager tempFileCacheManager, RatingLogManager ratingLogManager)
+            ShippingRequestManager shippingRequestManager, DocumentFilesAppService documentFilesAppService, IRepository<GoodCategory> goodCategoryRepository, IRepository<DocumentFile, Guid> documentFileRepository, DocumentFilesManager documentFilesManager, IRepository<DocumentType, long> documentTypeRepository, IBinaryObjectManager binaryObjectManager, ITempFileCacheManager tempFileCacheManager, RatingLogManager ratingLogManager, IEntityChangeSetReasonProvider reasonProvider)
         {
             _shippingRequestTripRepository = shippingRequestTripRepository;
             _shippingRequestRepository = shippingRequestRepository;
@@ -91,6 +94,7 @@ namespace TACHYON.Shipping.Trips
             _binaryObjectManager = binaryObjectManager;
             _tempFileCacheManager = tempFileCacheManager;
             _ratingLogManager = ratingLogManager;
+            _reasonProvider = reasonProvider;
         }
 
 
@@ -345,6 +349,7 @@ namespace TACHYON.Shipping.Trips
         public async Task AssignDriverAndTruckToShippmentByCarrier(AssignDriverAndTruckToShippmentByCarrierInput input)
         {
             ShippingRequestTrip trip;
+            bool isDriverChanged = false;
 
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
             {
@@ -364,9 +369,10 @@ namespace TACHYON.Shipping.Trips
                 throw new UserFriendlyException(L("TheDriverAreadyWorkingOnAnotherTrip"));
 
             long? oldAssignedDriverUserId = trip.AssignedDriverUserId;
-            long? oldAssignedTruckId = input.AssignedTruckId;
+            long? oldAssignedTruckId = trip.AssignedTruckId;
             trip.AssignedDriverUserId = input.AssignedDriverUserId;
             trip.AssignedTruckId = input.AssignedTruckId;
+            bool isTruckChanged = oldAssignedTruckId != input.AssignedTruckId;
 
             //reset driver status when change 
             if (trip.DriverStatus != ShippingRequestTripDriverStatus.None)
@@ -386,8 +392,31 @@ namespace TACHYON.Shipping.Trips
                         new UserIdentifier(AbpSession.TenantId, oldAssignedDriverUserId.Value));
 
                     await UserManager.UpdateUserDriverStatus(oldAssignedDriverUserId.Value, UserDriverStatus.Available);
+                    isDriverChanged = true;
                 }
             }
+
+            #region SetUpdateReason
+
+            string reason;
+
+            switch (isDriverChanged)
+            {
+                case true when isTruckChanged:
+                    reason =  nameof(RoutPointAction4);
+                    break;
+                case true:
+                    reason =  nameof(RoutPointAction1);
+                    break;
+                case false when isTruckChanged:
+                    reason =  nameof(RoutPointAction2);
+                    break;
+                default: return;
+            }
+
+            _reasonProvider.Use(reason);
+            #endregion
+       
             await UserManager.UpdateUserDriverStatus(input.AssignedDriverUserId, UserDriverStatus.NotAvailable);
 
             if (oldAssignedTruckId != trip.AssignedTruckId && trip.ShippingRequestFk.CarrierTenantId != null)
@@ -407,9 +436,9 @@ namespace TACHYON.Shipping.Trips
             await _appNotifier.NotifyDriverWhenAssignTrip(trip.Id,
                 new UserIdentifier(trip.ShippingRequestFk.CarrierTenantId, trip.AssignedDriverUserId.Value));
 
-            // No Need For This Already Notify All in Event Handler
-            // await _appNotifier.NotificationWhenTripDetailsChanged(trip, await GetCurrentUserAsync());
 
+            
+            await CurrentUnitOfWork.SaveChangesAsync();
         }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Create)]
