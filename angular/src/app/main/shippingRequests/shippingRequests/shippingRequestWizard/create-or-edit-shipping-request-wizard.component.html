@@ -119,7 +119,7 @@
                         [attr.disabled]="step1Dto.shipperId > 0 ? true : null"
                       >
                         <option value="undefined" selected>{{ l('Select') }}</option>
-                        <option [value]="'bidding'">{{ l('Marketplace') }}</option>
+                        <option *ngIf="feature.isEnabled('App.MarketPlace')" [value]="'bidding'">{{ l('Marketplace') }}</option>
                         <option [value]="'tachyondeal'">{{ l('TachyonManageService') }}</option>
                         <option *ngIf="this.feature.isEnabled('App.SendDirectRequest')" value="directrequest">
                           {{ l('DirectRequest') }}
