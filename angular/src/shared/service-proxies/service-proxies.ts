@@ -19893,6 +19893,80 @@ export class ImportShipmentFromExcelServiceProxy {
     }
     return _observableOf<void>(<any>null);
   }
+
+  /**
+   * @param body (optional)
+   * @return Success
+   */
+  importTripVasesFromExcel(body: ImportTripVasesFromExcelInput | undefined): Observable<ImportTripVasesDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/ImportShipmentFromExcel/ImportTripVasesFromExcel';
+    url_ = url_.replace(/[?&]$/, '');
+
+    const content_ = JSON.stringify(body);
+
+    let options_: any = {
+      body: content_,
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processImportTripVasesFromExcel(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processImportTripVasesFromExcel(<any>response_);
+            } catch (e) {
+              return <Observable<ImportTripVasesDto[]>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<ImportTripVasesDto[]>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processImportTripVasesFromExcel(response: HttpResponseBase): Observable<ImportTripVasesDto[]> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          if (Array.isArray(resultData200)) {
+            result200 = [] as any;
+            for (let item of resultData200) result200!.push(ImportTripVasesDto.fromJS(item));
+          } else {
+            result200 = <any>null;
+          }
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<ImportTripVasesDto[]>(<any>null);
+  }
 }
 
 @Injectable()
@@ -71370,6 +71444,100 @@ export interface IImportGoodsDetailsDto {
   unitOfMeasureId: number;
   otherUnitOfMeasureName: string | undefined;
   unitOfMeasure: string | undefined;
+  exception: string | undefined;
+}
+
+export class ImportTripVasesFromExcelInput implements IImportTripVasesFromExcelInput {
+  shippingRequestId!: number;
+  tenantId!: number | undefined;
+  binaryObjectId!: string;
+
+  constructor(data?: IImportTripVasesFromExcelInput) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.shippingRequestId = _data['shippingRequestId'];
+      this.tenantId = _data['tenantId'];
+      this.binaryObjectId = _data['binaryObjectId'];
+    }
+  }
+
+  static fromJS(data: any): ImportTripVasesFromExcelInput {
+    data = typeof data === 'object' ? data : {};
+    let result = new ImportTripVasesFromExcelInput();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['shippingRequestId'] = this.shippingRequestId;
+    data['tenantId'] = this.tenantId;
+    data['binaryObjectId'] = this.binaryObjectId;
+    return data;
+  }
+}
+
+export interface IImportTripVasesFromExcelInput {
+  shippingRequestId: number;
+  tenantId: number | undefined;
+  binaryObjectId: string;
+}
+
+export class ImportTripVasesDto implements IImportTripVasesDto {
+  tripReference!: string | undefined;
+  shippingRequestTripId!: number;
+  vasName!: string | undefined;
+  shippingRequestVasId!: number;
+  exception!: string | undefined;
+
+  constructor(data?: IImportTripVasesDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.tripReference = _data['tripReference'];
+      this.shippingRequestTripId = _data['shippingRequestTripId'];
+      this.vasName = _data['vasName'];
+      this.shippingRequestVasId = _data['shippingRequestVasId'];
+      this.exception = _data['exception'];
+    }
+  }
+
+  static fromJS(data: any): ImportTripVasesDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new ImportTripVasesDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['tripReference'] = this.tripReference;
+    data['shippingRequestTripId'] = this.shippingRequestTripId;
+    data['vasName'] = this.vasName;
+    data['shippingRequestVasId'] = this.shippingRequestVasId;
+    data['exception'] = this.exception;
+    return data;
+  }
+}
+
+export interface IImportTripVasesDto {
+  tripReference: string | undefined;
+  shippingRequestTripId: number;
+  vasName: string | undefined;
+  shippingRequestVasId: number;
   exception: string | undefined;
 }
 

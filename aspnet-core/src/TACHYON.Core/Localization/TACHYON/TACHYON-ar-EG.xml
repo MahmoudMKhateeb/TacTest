@@ -2289,14 +2289,15 @@
     <text name="bulkUploadReference">الرقم</text>
     <text name="The number of trips ">عدد الرحلات</text>
     <text name="AllDropsMustHaveGoodsDetails">جميع نقاط التسليم يجب أن تحتوي على تفاصيل بضاعة</text>
-	<text name="ImportedGoodDetails">استيراد تفاصيل البضائع</text>
-	<text name="ImportedPoints">استيراد النقاط</text>
-	<text name="ImportedTrips">استيراد الرحلات</text>
-	<text name="ImportTripFromExcel">استيراد الرحلات من اكسل</text>
-	<text name="ImportPointFromExcel">استيراد نقاط التوصيل من اكسل</text>
-	<text name="ImportGoodDetailsFromExcel">استيراد تفاصيل البضائع من اكسل</text>
+		<text name="ImportedGoodDetails">استيراد تفاصيل البضائع</text>
+		<text name="ImportedPoints">استيراد النقاط</text>
+		<text name="ImportedTrips">استيراد الرحلات</text>
+		<text name="ImportTripFromExcel">استيراد الرحلات من اكسل</text>
+		<text name="ImportPointFromExcel">استيراد نقاط التوصيل من اكسل</text>
+		<text name="ImportGoodDetailsFromExcel">استيراد تفاصيل البضائع من اكسل</text>
     <text name="otherUnitOfMeasure">وحدة قياس أخرى</text>
-
+    <text name="SomeTripVasesAlreadyExists">بعض الخدمات الإضافية موجودة مسبقاً</text>
+    <text name="DuplicatedVas">يوجد تكرار</text>
 
 	</texts>
 </localizationDictionary>

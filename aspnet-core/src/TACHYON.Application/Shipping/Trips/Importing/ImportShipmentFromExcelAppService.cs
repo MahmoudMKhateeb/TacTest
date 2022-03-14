@@ -1,6 +1,7 @@
 ﻿using Abp.Domain.Repositories;
 using Abp.Threading;
 using Abp.UI;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,7 @@ using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips.Dto;
 using TACHYON.Shipping.Trips.Importing.Dto;
+using TACHYON.ShippingRequestTripVases;
 using TACHYON.Storage;
 
 namespace TACHYON.Shipping.Trips.Importing
@@ -26,7 +28,9 @@ namespace TACHYON.Shipping.Trips.Importing
         private readonly IRepository<RoutPoint, long> _routPointRepository;
         private readonly IRepository<GoodsDetail, long> _goodsDetailRepository;
         private readonly IGoodsDetailsListExcelDataReader _goodsDetailsListExcelDataReader;
-        public ImportShipmentFromExcelAppService(IBinaryObjectManager binaryObjectManager, IShipmentListExcelDataReader shipmentListExcelDataReader, ShippingRequestTripManager shippingRequestTripManager, IRoutePointListDataReader routePointListExcelDataReader, IRepository<RoutPoint, long> routPointRepository, IGoodsDetailsListExcelDataReader goodsDetailsListExcelDataReader, IRepository<GoodsDetail, long> goodsDetailRepository)
+        private readonly IImportTripVasesDataReader _importTripVasesDataReader;
+        private readonly IRepository<ShippingRequestTripVas, long> _shippingRequestTripVas;
+        public ImportShipmentFromExcelAppService(IBinaryObjectManager binaryObjectManager, IShipmentListExcelDataReader shipmentListExcelDataReader, ShippingRequestTripManager shippingRequestTripManager, IRoutePointListDataReader routePointListExcelDataReader, IRepository<RoutPoint, long> routPointRepository, IGoodsDetailsListExcelDataReader goodsDetailsListExcelDataReader, IRepository<GoodsDetail, long> goodsDetailRepository, IImportTripVasesDataReader importTripVasesDataReader, IRepository<ShippingRequestTripVas, long> shippingRequestTripVas)
         {
             _binaryObjectManager = binaryObjectManager;
             _shipmentListExcelDataReader = shipmentListExcelDataReader;
@@ -35,6 +39,8 @@ namespace TACHYON.Shipping.Trips.Importing
             _routPointRepository = routPointRepository;
             _goodsDetailsListExcelDataReader = goodsDetailsListExcelDataReader;
             _goodsDetailRepository = goodsDetailRepository;
+            _importTripVasesDataReader = importTripVasesDataReader;
+            _shippingRequestTripVas = shippingRequestTripVas;
         }
 
         #region ImportTrips
@@ -113,7 +119,6 @@ namespace TACHYON.Shipping.Trips.Importing
             importRoutePointDtoList.ForEach(x => x.Exception = null);
 
             ValidateRoutePoints(importRoutePointDtoList,request);
-
             if (importRoutePointDtoList.All(x => string.IsNullOrEmpty(x.Exception)))
             {
                 await CreatePoints(importRoutePointDtoList);
@@ -151,6 +156,19 @@ namespace TACHYON.Shipping.Trips.Importing
             }
 
             await CreateGoodsDetailsAsync(importGoodsDetailsDtoList);
+        }
+
+
+        #endregion
+
+        #region Vases
+        public async Task<List<ImportTripVasesDto>> ImportTripVasesFromExcel(ImportTripVasesFromExcelInput input)
+        {
+            var request = _shippingRequestTripManager.GetShippingRequestByPermission(input.ShippingRequestId);
+            var tripVases = await GetTripVasListFromExcelOrNull(input, request.Id);
+            await ValidateTripVases(input, tripVases);
+
+            return tripVases;
         }
 
 
@@ -195,18 +213,22 @@ namespace TACHYON.Shipping.Trips.Importing
             await _routPointRepository.InsertAsync(dropPoint);
         }
 
-        private async Task CreatePointAsync(ImportRoutePointDto input)
+        private async Task<RoutPoint> CreatePointAsync(ImportRoutePointDto input)
         {
             var point = ObjectMapper.Map<RoutPoint>(input);
-            await _shippingRequestTripManager.CreatePointAsync(point);
+            return await _shippingRequestTripManager.CreatePointAsync(point);
         }
 
         private async Task CreatePoints(List<ImportRoutePointDto> points)
         {
+            List<RoutPoint> RoutPointList = new List<RoutPoint>();
             foreach (var point in points)
             {
-                await CreatePointAsync(point);
+                RoutPointList.Add(await CreatePointAsync(point));
             }
+
+            //todo, assign workflow version
+            //_shippingRequestTripManager.AssignWorkFlowVersionToRoutPoints(RoutPointList, R)
         }
 
         private async Task<List<ImportTripDto>> GetShipmentListFromExcelOrNull(ImportShipmentFromExcelInput importShipmentFromExcelInput, bool isSingleDropRequest)
@@ -269,6 +291,22 @@ namespace TACHYON.Shipping.Trips.Importing
                 {
                     var file = await _binaryObjectManager.GetOrNullAsync(input.BinaryObjectId);
                     return _goodsDetailsListExcelDataReader.GetGoodsDetailsFromExcel(file.Bytes, input.ShippingRequestId, requestGoodsCategory, isSingleDropRequest);
+                }
+                catch
+                {
+                    return null;
+                }
+            }
+        }
+
+        private async Task<List<ImportTripVasesDto>> GetTripVasListFromExcelOrNull(ImportTripVasesFromExcelInput input,long ShippingRequestId)
+        {
+            using (CurrentUnitOfWork.SetTenantId(input.TenantId))
+            {
+                try
+                {
+                    var file = await _binaryObjectManager.GetOrNullAsync(input.BinaryObjectId);
+                    return _importTripVasesDataReader.GetTripVasesFromExcel(file.Bytes, input.ShippingRequestId);
                 }
                 catch
                 {
@@ -455,6 +493,68 @@ namespace TACHYON.Shipping.Trips.Importing
                 await _goodsDetailRepository.InsertAsync(goodsDetailItem);
             }
         }
+        private async Task ValidateTripVases(ImportTripVasesFromExcelInput input, List<ImportTripVasesDto> tripVases)
+        {
+            await ValidateTripVasIfExistsInDB(tripVases);
+
+            ValidateDuplicatedVas(tripVases);
+
+            ValidateNumberOfVases(input, tripVases);
+        }
+
+
+        private void ValidateNumberOfVases(ImportTripVasesFromExcelInput input, List<ImportTripVasesDto> tripVases)
+        {
+            var groupedVases = tripVases
+                .GroupBy(x => x.ShippingRequestVasId,
+                (k, g) => new
+                {
+                    VasId = k,
+                    Count = g.Count()
+                }).ToList();
+
+            foreach (var vas in groupedVases)
+            {
+                if (!_shippingRequestTripManager.ValidateTripVasesNumber(input.ShippingRequestId, vas.Count, vas.VasId))
+                {
+                    tripVases.Where(x => x.ShippingRequestVasId == vas.VasId).ToList()
+                        .ForEach(x => x.Exception = L("VasesCountMoreThanRequestVasNumberOfTrips") + ";");
+                }
+            }
+        }
+
+        private void ValidateDuplicatedVas(List<ImportTripVasesDto> tripVases)
+        {
+            var groupedTrips = tripVases
+                .GroupBy(x => x.TripReference,
+                x => x.VasName,
+                (k, g) => new
+                {
+                    key = k,
+                    count = g.Count()
+                }).ToList();
+
+            if (groupedTrips.Any(x => x.count > 1))
+            {
+                foreach (var item in groupedTrips)
+                {
+                    tripVases.Where(x => x.VasName == item.key || x.TripReference == item.key).ToList().ForEach(x =>
+                       x.Exception = L("DuplicatedVas")+";");
+                }
+            }
+        }
+
+        private async Task ValidateTripVasIfExistsInDB(List<ImportTripVasesDto> tripVases)
+        {
+            var tripIds = tripVases.Select(x => x.ShippingRequestTripId).Distinct();
+
+            if (await _shippingRequestTripVas.GetAll().AnyAsync(x => tripIds.Contains(x.ShippingRequestTripId)))
+            {
+                throw new UserFriendlyException(L("SomeTripVasesAlreadyExists"));
+            }
+        }
+
+       
         #endregion
     }
 }

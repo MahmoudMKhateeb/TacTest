@@ -393,7 +393,7 @@ namespace TACHYON.Shipping.Trips
 
             ShippingRequestTrip trip = ObjectMapper.Map<ShippingRequestTrip>(input);
             //AssignWorkFlowVersionToRoutPoints(trip);
-            _shippingRequestTripManager.AssignWorkFlowVersionToRoutPoints(trip);
+            _shippingRequestTripManager.AssignWorkFlowVersionToRoutPoints(trip.RoutPoints.ToList(), trip.NeedsDeliveryNote);
             //insert trip 
             var shippingRequestTripId = await _shippingRequestTripRepository.InsertAndGetIdAsync(trip);
 

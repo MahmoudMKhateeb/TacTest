@@ -19,6 +19,7 @@ using TACHYON.Routs.RoutPoints;
 using TACHYON.Routs.RoutPoints.Dtos;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.Trips.Dto;
+using TACHYON.ShippingRequestVases;
 
 namespace TACHYON.Shipping.ShippingRequestTrips
 {
@@ -31,11 +32,12 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         private readonly IRepository<Facility, long> _facilityRepository;
         private readonly IRepository<Receiver> _receiverRepository;
         private readonly IAppNotifier _appNotifier;
+        private readonly IRepository<ShippingRequestVas, long> _shippingRequestVasRepository;
 
         private IAbpSession _AbpSession { get; set; }
 
 
-        public ShippingRequestTripManager(IRepository<ShippingRequestTrip> shippingRequestTripRepository, IRepository<ShippingRequest, long> shippingRequestRepository, IFeatureChecker featureChecker, IAbpSession abpSession, IRepository<RoutPoint, long> routePointRepository, IRepository<Facility, long> facilityRepository, IRepository<Receiver> receiverRepository, IAppNotifier appNotifier)
+        public ShippingRequestTripManager(IRepository<ShippingRequestTrip> shippingRequestTripRepository, IRepository<ShippingRequest, long> shippingRequestRepository, IFeatureChecker featureChecker, IAbpSession abpSession, IRepository<RoutPoint, long> routePointRepository, IRepository<Facility, long> facilityRepository, IRepository<Receiver> receiverRepository, IAppNotifier appNotifier, IRepository<ShippingRequestVas, long> shippingRequestVasRepository)
         {
             _shippingRequestTripRepository = shippingRequestTripRepository;
             _shippingRequestRepository = shippingRequestRepository;
@@ -45,6 +47,7 @@ namespace TACHYON.Shipping.ShippingRequestTrips
             _facilityRepository = facilityRepository;
             _receiverRepository = receiverRepository;
             _appNotifier = appNotifier;
+            _shippingRequestVasRepository = shippingRequestVasRepository;
         }
 
         public async Task<int> CreateAndGetIdAsync(ShippingRequestTrip trip)
@@ -163,6 +166,12 @@ namespace TACHYON.Shipping.ShippingRequestTrips
             }
         }
 
+        public bool ValidateTripVasesNumber(long shippingRequestId,int tripVasNumber, long vasId)
+        {
+            var tripsNumber=_shippingRequestVasRepository.FirstOrDefault(x => x.VasId == vasId && x.ShippingRequestId == shippingRequestId).NumberOfTrips;
+            return tripVasNumber <= tripsNumber;
+        }
+
         public Facility GetFacilityByPermission(string name,long shippingRequestId)
         {
             var request=GetShippingRequestByPermission(shippingRequestId);
@@ -183,9 +192,9 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         }
 
 
-        public ShippingRequestTrip GetShippingRequestTripIdByBulkRef(string tripReference, ShippingRequest request)
+        public ShippingRequestTrip GetShippingRequestTripIdByBulkRef(string tripReference, long shippingRequestId)
         {
-           return _shippingRequestTripRepository.FirstOrDefault(x => x.BulkUploadRef == tripReference && x.ShippingRequestId==request.Id);
+           return _shippingRequestTripRepository.FirstOrDefault(x => x.BulkUploadRef == tripReference && x.ShippingRequestId==shippingRequestId);
         }
 
         public List<ShippingRequestTrip> GetShippingRequestTripsIdByBulkRefs(List<string> references)
@@ -208,15 +217,15 @@ namespace TACHYON.Shipping.ShippingRequestTrips
             }
         }
 
-        public void AssignWorkFlowVersionToRoutPoints(ShippingRequestTrip trip)
+        public void AssignWorkFlowVersionToRoutPoints(List<RoutPoint> routPoints, bool tripNeedsDeliveryNote)
         {
-            if (trip.RoutPoints != null && trip.RoutPoints.Any())
+            if (routPoints != null && routPoints.Any())
             {
-                foreach (var point in trip.RoutPoints)
+                foreach (var point in routPoints)
                 {
                     point.WorkFlowVersion = point.PickingType == PickingType.Pickup
                         ? TACHYONConsts.PickUpRoutPointWorkflowVersion
-                        : trip.NeedsDeliveryNote
+                        : tripNeedsDeliveryNote
                             ? TACHYONConsts.DropOfWithDeliveryNoteRoutPointWorkflowVersion
                             : TACHYONConsts.DropOfRoutPointWorkflowVersion;
                 }
