@@ -63,6 +63,7 @@ using TACHYON.Trucks.TruckCategories.TruckCapacities.Dtos;
 using TACHYON.Trucks.TrucksTypes;
 using TACHYON.Trucks.TrucksTypes.Dtos;
 using TACHYON.UnitOfMeasures;
+using TACHYON.UnitOfMeasures.Dtos;
 using TACHYON.Vases;
 using TACHYON.Vases.Dtos;
 
@@ -841,7 +842,7 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             DisableTenancyFilters();
             var request = await _shippingRequestRepository.GetAll()
-                .Where(x => x.Id == shippingRequestId).Select(x => new {x.Id, x.TenantId, x.CarrierTenantId, x.NumberOfTrips})
+                .Where(x => x.Id == shippingRequestId).Select(x => new { x.Id, x.TenantId, x.CarrierTenantId, x.NumberOfTrips })
                 .FirstOrDefaultAsync();
 
             if (request == null)
@@ -854,13 +855,13 @@ namespace TACHYON.Shipping.ShippingRequests
                 request.CarrierTenantId);
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Create)]
-        private async Task<bool> CanCurrentUserAddTrip(int srTenantId,long srId,int numberOfTrips,int? srCarrierTenantId)
+        private async Task<bool> CanCurrentUserAddTrip(int srTenantId, long srId, int numberOfTrips, int? srCarrierTenantId)
         {
             bool IsSaas()
                 => srTenantId == srCarrierTenantId;
 
             bool carrierSaasEnabled = true, shipperEnabled = true, tmsEnabled = true;
-            
+
             #region CarrierSaas
 
             if (IsSaas())
@@ -869,7 +870,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     !await FeatureChecker.IsEnabledAsync(AppFeatures.CarrierAsASaas))
                     carrierSaasEnabled = false;
             }
-                
+
 
             #endregion
 
@@ -879,7 +880,7 @@ namespace TACHYON.Shipping.ShippingRequests
             {
                 var tripsByTmsEnabled = await FeatureChecker.IsEnabledAsync(
                     srTenantId, AppFeatures.AddTripsByTachyonDeal);
-                
+
                 if (!tripsByTmsEnabled)
                     tmsEnabled = false;
             }
@@ -893,13 +894,13 @@ namespace TACHYON.Shipping.ShippingRequests
                 if (srTenantId != AbpSession.TenantId || !await IsEnabledAsync(AppFeatures.Shipper))
                     shipperEnabled = false;
             }
-               
+
 
             #endregion
 
-            return carrierSaasEnabled || tmsEnabled || shipperEnabled ;
+            return carrierSaasEnabled || tmsEnabled || shipperEnabled;
         }
-        
+
         protected virtual GetShippingRequestForEditOutput _GetShippingRequestForEdit(EntityDto<long> input)
         {
             //using (CurrentUnitOfWork.DisableFilter("IHasIsDrafted"))
@@ -1533,15 +1534,12 @@ namespace TACHYON.Shipping.ShippingRequests
         #region dropDowns
 
 
-        public async Task<List<SelectItemDto>> GetAllUnitOfMeasuresForDropdown()
+        public async Task<List<GetAllUnitOfMeasureForDropDownOutput>> GetAllUnitOfMeasuresForDropdown()
         {
-            return await _unitOfMeasureRepository.GetAll()
-                .Select(x => new SelectItemDto()
-                {
-                    Id = x.Id.ToString(),
-                    DisplayName = x.DisplayName,
-                    IsOther = x.DisplayName.ToLower().Contains(TACHYONConsts.OthersDisplayName.ToLower())
-                }).ToListAsync();
+            var unitOfMeasures = await _unitOfMeasureRepository.GetAll()
+                .Include(x => x.Translations)
+                .ToListAsync();
+            return ObjectMapper.Map<List<GetAllUnitOfMeasureForDropDownOutput>>(unitOfMeasures);
         }
 
         public async Task<List<SelectItemDto>> GetAllShippingTypesForDropdown()
@@ -1565,7 +1563,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     DisplayName = x.DisplayName,
                     IsOther = x.DisplayName.ToLower().Contains(TACHYONConsts.OthersDisplayName.ToLower())
                 }).ToListAsync());
-            
+
         }
         //end Multiple Drops
 

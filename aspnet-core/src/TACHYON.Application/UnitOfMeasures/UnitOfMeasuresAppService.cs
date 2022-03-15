@@ -20,20 +20,22 @@ namespace TACHYON.UnitOfMeasures
     public class UnitOfMeasuresAppService : TACHYONAppServiceBase, IUnitOfMeasuresAppService
     {
         private readonly IRepository<UnitOfMeasure> _unitOfMeasureRepository;
+        private readonly IRepository<UnitOfMeasureTranslation> _unitOfMeasureTranslationRepository;
 
 
-        public UnitOfMeasuresAppService(IRepository<UnitOfMeasure> unitOfMeasureRepository)
+        public UnitOfMeasuresAppService(IRepository<UnitOfMeasure> unitOfMeasureRepository, IRepository<UnitOfMeasureTranslation> unitOfMeasureTranslationRepository)
         {
             _unitOfMeasureRepository = unitOfMeasureRepository;
-
+            _unitOfMeasureTranslationRepository = unitOfMeasureTranslationRepository;
         }
 
         public async Task<PagedResultDto<GetUnitOfMeasureForViewDto>> GetAll(GetAllUnitOfMeasuresInput input)
         {
 
             var filteredUnitOfMeasures = _unitOfMeasureRepository.GetAll()
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter))
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.DisplayName == input.DisplayNameFilter);
+                .Include(x => x.Translations)
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Translations.Any(x => x.DisplayName.Contains(input.Filter)))
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.Translations.Any(x => x.DisplayName == input.DisplayNameFilter));
 
             var pagedAndFilteredUnitOfMeasures = filteredUnitOfMeasures
                 .OrderBy(input.Sorting ?? "id asc")
@@ -42,11 +44,12 @@ namespace TACHYON.UnitOfMeasures
             var unitOfMeasures = from o in pagedAndFilteredUnitOfMeasures
                                  select new GetUnitOfMeasureForViewDto()
                                  {
-                                     UnitOfMeasure = new UnitOfMeasureDto
-                                     {
-                                         DisplayName = o.DisplayName,
-                                         Id = o.Id
-                                     }
+                                     UnitOfMeasure = ObjectMapper.Map<UnitOfMeasureDto>(o)
+                                     //UnitOfMeasure = new UnitOfMeasureDto
+                                     //{
+                                     //    DisplayName = o.DisplayName,
+                                     //    Id = o.Id
+                                     //}
                                  };
 
             var totalCount = await filteredUnitOfMeasures.CountAsync();
@@ -79,7 +82,7 @@ namespace TACHYON.UnitOfMeasures
         public async Task CreateOrEdit(CreateOrEditUnitOfMeasureDto input)
         {
 
-            await IsUintOfMeasureNameDuplicatedOrEmpty(input.DisplayName);
+            await IsUnitOfMeasureNameDuplicatedOrEmpty(input.Translations);
 
             if (input.Id == null)
             {
@@ -96,56 +99,61 @@ namespace TACHYON.UnitOfMeasures
         {
             var unitOfMeasure = ObjectMapper.Map<UnitOfMeasure>(input);
 
-
-
             await _unitOfMeasureRepository.InsertAsync(unitOfMeasure);
         }
 
         [AbpAuthorize(AppPermissions.Pages_Administration_UnitOfMeasures_Edit)]
         protected virtual async Task Update(CreateOrEditUnitOfMeasureDto input)
         {
-            var unitOfMeasure = await _unitOfMeasureRepository.FirstOrDefaultAsync((int)input.Id);
+            var unitOfMeasure = await _unitOfMeasureRepository.GetAll()
+                .Include(x => x.Translations)
+                .FirstOrDefaultAsync(x => x.Id == (int)input.Id);
 
-            if (unitOfMeasure.DisplayName.ToLower().Contains(TACHYONConsts.OthersDisplayName)
-                && !input.DisplayName.ToLower().Contains(TACHYONConsts.OthersDisplayName))
+            if (unitOfMeasure.Key.ToLower().Contains(TACHYONConsts.OthersDisplayName)
+                && !input.Key.ToLower().Contains(TACHYONConsts.OthersDisplayName))
                 throw new UserFriendlyException(L("OtherUnitOfMeasureMustContainTheOtherWord"));
-
+            unitOfMeasure.Translations.Clear();
             ObjectMapper.Map(input, unitOfMeasure);
         }
 
         [AbpAuthorize(AppPermissions.Pages_Administration_UnitOfMeasures_Delete)]
         public async Task Delete(EntityDto input)
         {
-            var unitOfMeasure = await _unitOfMeasureRepository.SingleAsync(x => x.Id == input.Id);
+            var unitOfMeasure = await _unitOfMeasureRepository
+                .GetAll()
+                .Include(x => x.Translations)
+                .SingleAsync(x => x.Id == input.Id);
 
-            if (unitOfMeasure.DisplayName.ToLower().Contains(TACHYONConsts.OthersDisplayName))
+            if (unitOfMeasure.Translations.Any(x => x.DisplayName.ToLower().Contains(TACHYONConsts.OthersDisplayName)))
                 throw new UserFriendlyException(L("OtherUnitOfMeasureNotRemovable"));
-
+            unitOfMeasure.Translations.Clear();
             await _unitOfMeasureRepository.DeleteAsync(unitOfMeasure);
         }
 
-        public async Task<List<SelectItemDto>> GetAllUnitOfMeasuresForDropdown()
+        public async Task<List<GetAllUnitOfMeasureForDropDownOutput>> GetAllUnitOfMeasuresForDropdown()
         {
-            return await _unitOfMeasureRepository.GetAll()
-                .Select(x => new SelectItemDto()
-                {
-                    Id = x.Id.ToString(),
-                    DisplayName = x.DisplayName,
-                    IsOther = x.DisplayName.ToLower().Contains(TACHYONConsts.OthersDisplayName)
-                }).ToListAsync();
+            var unitOfMeasures = await _unitOfMeasureRepository.GetAll()
+                .Include(x => x.Translations)
+                .ToListAsync();
+            return ObjectMapper.Map<List<GetAllUnitOfMeasureForDropDownOutput>>(unitOfMeasures);
         }
 
 
-        private async Task IsUintOfMeasureNameDuplicatedOrEmpty(string displayName)
+        private async Task IsUnitOfMeasureNameDuplicatedOrEmpty(ICollection<UnitOfmeasureTranslationDto> unitOfmeasureTranslations)
         {
-            if (displayName.IsNullOrEmpty() || displayName.IsNullOrWhiteSpace())
-                throw new UserFriendlyException(L("UintOfMeasureNameCanNotBeEmpty"));
+            var unitOfMeasureTranslationList = await _unitOfMeasureTranslationRepository.GetAll().ToListAsync();
+            foreach (var item in unitOfmeasureTranslations)
+            {
+                if (item.DisplayName.IsNullOrEmpty() || item.DisplayName.IsNullOrWhiteSpace())
+                    throw new UserFriendlyException(L("UintOfMeasureNameCanNotBeEmpty"));
 
-            var isDuplicated = await _unitOfMeasureRepository.GetAll()
-                .AnyAsync(x => x.DisplayName.ToUpper().Equals(displayName.ToUpper()));
+                var isDuplicated = unitOfMeasureTranslationList
+                    .Any(x => x.DisplayName.ToUpper().Equals(item.DisplayName.ToUpper()));
 
-            if (isDuplicated)
-                throw new UserFriendlyException(L("UintOfMeasureNameCanNotBeDuplicated"));
+                if (isDuplicated)
+                    throw new UserFriendlyException(L("UintOfMeasureNameCanNotBeDuplicated"));
+            }
+
         }
 
     }

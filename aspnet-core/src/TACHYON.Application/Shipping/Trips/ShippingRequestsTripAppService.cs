@@ -607,6 +607,7 @@ namespace TACHYON.Shipping.Trips
                 .Include(x => x.RoutPoints)
                     .ThenInclude(r => r.GoodsDetails)
                     .ThenInclude(c => c.UnitOfMeasureFk)
+                    .ThenInclude(x => x.Translations)
                 .Include(x => x.RoutPoints)
                     .ThenInclude(c => c.ReceiverFk)
                 .Include(x => x.ShippingRequestTripVases)
