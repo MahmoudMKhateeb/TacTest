@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Abp.Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using TACHYON.Routs.RoutPoints;
@@ -6,7 +7,7 @@ using TACHYON.Routs.RoutPoints.Dtos;
 
 namespace TACHYON.Shipping.Trips.Importing.Dto
 {
-    public class ImportRoutePointDto : ICreateOrEditRoutPointDtoBase
+    public class ImportRoutePointDto : Entity<long?>, ICreateOrEditRoutPointDtoBase
     {
         public PickingType PickingType { get; set; }
         public string PickingTypeDisplayName { get; set; }

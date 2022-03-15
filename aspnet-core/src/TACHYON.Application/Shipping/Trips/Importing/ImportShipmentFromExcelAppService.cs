@@ -223,7 +223,7 @@ namespace TACHYON.Shipping.Trips.Importing
             await _routPointRepository.InsertAsync(dropPoint);
         }
 
-        private async Task<RoutPoint> CreatePointAsync(ImportRoutePointDto input)
+        private async Task<long> CreatePointAsync(ImportRoutePointDto input)
         {
             var point = ObjectMapper.Map<RoutPoint>(input);
             return await _shippingRequestTripManager.CreatePointAsync(point);
@@ -234,21 +234,19 @@ namespace TACHYON.Shipping.Trips.Importing
             List<RoutPoint> RoutPointList = new List<RoutPoint>();
             foreach (var point in points)
             {
-                RoutPointList.Add(await CreatePointAsync(point));
+                point.Id=await CreatePointAsync(point);
             }
 
             var groupedPointsByDeliverNote = points.GroupBy(x => x.TripNeedsDeliveryNote,
-              (k,g)=>  new
-                {
-                    needsDeliveryNote=k,
-                    points=g
-                });
-
-
+              (k, g) => new
+              {
+                  TripNeedsDeliveryNote = k,
+                  points = g
+              });
             //assign workflow version
-            foreach(var point in groupedPointsByDeliverNote)
+            foreach (var point in groupedPointsByDeliverNote)
             {
-                _shippingRequestTripManager.AssignWorkFlowVersionToRoutPoints(RoutPointList, point.needsDeliveryNote);
+                _shippingRequestTripManager.AssignWorkFlowVersionToRoutPoints(ObjectMapper.Map<List<RoutPoint>>(point.points.ToList()), point.TripNeedsDeliveryNote);
             }
         }
 
@@ -373,13 +371,16 @@ namespace TACHYON.Shipping.Trips.Importing
         private void CheckExistPointsInDB(List<ImportRoutePointDto> points)
         {
             var tripsRefs = points.Select(x => x.TripReference).Distinct().ToList();
+            var AllPoints = _routPointRepository.GetAll().Where(x => points.Select(x => x.ShippingRequestTripId).Contains(x.ShippingRequestTripId)).ToList();
+
             foreach (var tripRef in tripsRefs)
             {
                 var tripId=points.Where(x => x.TripReference == tripRef).Select(x => x.ShippingRequestTripId).FirstOrDefault();
 
                 //check if there is points in trip
-                var existPoints = _routPointRepository.FirstOrDefault(x => x.ShippingRequestTripId == tripId);
-                if (existPoints!= null)
+                var existPoints = AllPoints.Any(x => x.ShippingRequestTripId == tripId);
+                    //_routPointRepository.FirstOrDefault(x => x.ShippingRequestTripId == tripId);
+                if (existPoints)
                 {
                     points.Where(x => x.TripReference == tripRef)
                     .ToList()
