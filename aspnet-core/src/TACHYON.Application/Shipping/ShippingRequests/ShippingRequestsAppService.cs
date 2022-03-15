@@ -839,7 +839,7 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             DisableTenancyFilters();
             var request = await _shippingRequestRepository.GetAll()
-                .Where(x => x.Id == shippingRequestId).Select(x => new {x.Id, x.TenantId, x.CarrierTenantId, x.NumberOfTrips})
+                .Where(x => x.Id == shippingRequestId).Select(x => new { x.Id, x.TenantId, x.CarrierTenantId, x.NumberOfTrips })
                 .FirstOrDefaultAsync();
 
             if (request == null)
@@ -852,13 +852,13 @@ namespace TACHYON.Shipping.ShippingRequests
                 request.CarrierTenantId);
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Create)]
-        private async Task<bool> CanCurrentUserAddTrip(int srTenantId,long srId,int numberOfTrips,int? srCarrierTenantId)
+        private async Task<bool> CanCurrentUserAddTrip(int srTenantId, long srId, int numberOfTrips, int? srCarrierTenantId)
         {
             bool IsSaas()
                 => srTenantId == srCarrierTenantId;
 
             bool carrierSaasEnabled = true, shipperEnabled = true, tmsEnabled = true;
-            
+
             #region CarrierSaas
 
             if (IsSaas())
@@ -867,7 +867,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     !await FeatureChecker.IsEnabledAsync(AppFeatures.CarrierAsASaas))
                     carrierSaasEnabled = false;
             }
-                
+
 
             #endregion
 
@@ -877,7 +877,7 @@ namespace TACHYON.Shipping.ShippingRequests
             {
                 var tripsByTmsEnabled = await FeatureChecker.IsEnabledAsync(
                     srTenantId, AppFeatures.AddTripsByTachyonDeal);
-                
+
                 if (!tripsByTmsEnabled)
                     tmsEnabled = false;
             }
@@ -891,13 +891,13 @@ namespace TACHYON.Shipping.ShippingRequests
                 if (srTenantId != AbpSession.TenantId || !await IsEnabledAsync(AppFeatures.Shipper))
                     shipperEnabled = false;
             }
-               
+
 
             #endregion
 
-            return carrierSaasEnabled || tmsEnabled || shipperEnabled ;
+            return carrierSaasEnabled || tmsEnabled || shipperEnabled;
         }
-        
+
         protected virtual GetShippingRequestForEditOutput _GetShippingRequestForEdit(EntityDto<long> input)
         {
             //using (CurrentUnitOfWork.DisableFilter("IHasIsDrafted"))
@@ -1223,7 +1223,7 @@ namespace TACHYON.Shipping.ShippingRequests
             }
         }
         //Single Drop Waybill
-        public IEnumerable<GetSingleDropWaybillOutput> GetSingleDropWaybill(int shippingRequestTripId)
+        public IEnumerable<GetDropWaybillOutput> GetDropWaybill(int shippingRequestTripId, long? dropOffId = null)
         {
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant))
             {
@@ -1235,10 +1235,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     Id = x.Id,
                     MasterWaybillNo = x.WaybillNumber.Value,
                     ShippingRequestStatus = x.Status == Trips.ShippingRequestTripStatus.Delivered ? "Final" : "Draft",
-                    //(x.AssignedDriverUserId != null && x.AssignedTruckId != null) ? "Final" : "Draft",
-                    // SenderCompanyName = "",//x.ShippingRequestFk.Tenant.companyName,
                     ClientName = x.ShippingRequestFk.Tenant.TenancyName,
-                    // ReceiverCompanyName = x.ShippingRequestFk.CarrierTenantFk != null ? x.ShippingRequestFk.CarrierTenantFk.companyName : "",
                     CarrierName = x.ShippingRequestFk.CarrierTenantFk.TenancyName,
                     DriverName = x.AssignedDriverUserFk != null ? x.AssignedDriverUserFk.FullName : "",
                     driverUserId = x.AssignedDriverUserId,
@@ -1266,16 +1263,21 @@ namespace TACHYON.Shipping.ShippingRequests
 
                 var pickup = GetPickupOrDropPointFacilityForTrip(shippingRequestTripId, PickingType.Pickup);
 
-                var delivery = GetPickupOrDropPointFacilityForTrip(shippingRequestTripId, PickingType.Dropoff);
+                var delivery = GetPickupOrDropPointFacilityForTrip(shippingRequestTripId, PickingType.Dropoff, dropOffId);
+
+                var routPointWaybillNumber = _routPointRepository.GetAll()
+                    .Where(x => x.Id == dropOffId && x.PickingType == PickingType.Dropoff)
+                    .Select(x => x.WaybillNumber).FirstOrDefault();
 
                 var SenderpickupPoint = GetSenderInfo(shippingRequestTripId);
                 var contactName = SenderpickupPoint != null ? SenderpickupPoint.FullName : "";
                 var mobileNo = SenderpickupPoint != null ? SenderpickupPoint.PhoneNumber : "";
 
                 var finalOutput = query.ToList().Select(x
-                    => new GetSingleDropWaybillOutput
+                    => new GetDropWaybillOutput
                     {
                         MasterWaybillNo = x.MasterWaybillNo,
+                        WaybillNumber = routPointWaybillNumber,
                         Date = NormalizeDateTimeToClientTime(Clock.Now),
                         ShippingRequestStatus = x.ShippingRequestStatus,
                         SenderCompanyName = GetFacilityPoint(x.Id, null, PickingType.Pickup),// x.SenderCompanyName,
@@ -1309,8 +1311,8 @@ namespace TACHYON.Shipping.ShippingRequests
                         NeedsDeliveryNote = x.NeedDeliveryNote,
                         ShipperReference = x.ShipperReference, /*TAC-2181 || 22/12/2021 || need to display it as an empty on production*/
                         ShipperInvoiceNo = x.ShipperInvoiceNo, /*TAC-2181 || 22/12/2021 || need to display it as an empty on production*/
-                        InvoiceNumber = GetInvoiceNumberByTripId(shippingRequestTripId).ToString()
-
+                        InvoiceNumber = GetInvoiceNumberByTripId(shippingRequestTripId).ToString(),
+                        IsSingleDrop = !dropOffId.HasValue,
                     });
 
                 return finalOutput;
@@ -1567,7 +1569,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     DisplayName = x.DisplayName,
                     IsOther = x.DisplayName.ToLower().Contains(TACHYONConsts.OthersDisplayName.ToLower())
                 }).ToListAsync());
-            
+
         }
         //end Multiple Drops
 
@@ -1680,12 +1682,12 @@ namespace TACHYON.Shipping.ShippingRequests
 
         }
 
-        private Facility GetPickupOrDropPointFacilityForTrip(int id, PickingType type)
+        private Facility GetPickupOrDropPointFacilityForTrip(int id, PickingType type, long? dropOffId = null)
         {
             var pickupFacility = _routPointRepository
                 .GetAll()
-                .Where(x => x.ShippingRequestTripId == id)
-                .Where(x => x.PickingType == type)
+                .Where(x => x.ShippingRequestTripId == id && x.PickingType == type)
+                .WhereIf(dropOffId.HasValue, x => x.Id == dropOffId.Value)
                 .Include(x => x.FacilityFk)
                 .ThenInclude(x => x.CityFk)
                 .ThenInclude(x => x.CountyFk)

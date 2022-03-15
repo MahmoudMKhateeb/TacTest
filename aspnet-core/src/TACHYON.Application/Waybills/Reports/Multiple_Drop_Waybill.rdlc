@@ -5701,156 +5701,6 @@
           <PaddingBottom>2pt</PaddingBottom>
         </Style>
       </Textbox>
-      <Textbox Name="Textbox110">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value />
-                <Style>
-                  <FontFamily>Open Sans</FontFamily>
-                  <FontSize>8pt</FontSize>
-                  <Color>#282828</Color>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Center</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>5.14258in</Top>
-        <Left>1.95451in</Left>
-        <Height>0.68819cm</Height>
-        <Width>3.39869in</Width>
-        <ZIndex>56</ZIndex>
-        <Style>
-          <Border>
-            <Color>#707070</Color>
-            <Style>Solid</Style>
-          </Border>
-          <VerticalAlign>Middle</VerticalAlign>
-          <PaddingLeft>4pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="Textbox40">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>Invoice NO:</Value>
-                <Style>
-                  <FontFamily>Open Sans</FontFamily>
-                  <FontSize>8pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
-                  <Color>#404040</Color>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Left</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>5.18341in</Top>
-        <Left>2.00435in</Left>
-        <Height>0.18011in</Height>
-        <Width>0.8702in</Width>
-        <ZIndex>57</ZIndex>
-        <Style>
-          <Border>
-            <Color>White</Color>
-            <Style>Solid</Style>
-          </Border>
-          <VerticalAlign>Middle</VerticalAlign>
-          <PaddingLeft>4pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="Textbox12">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>رقم الفاتورة</Value>
-                <Style>
-                  <FontSize>8pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
-                  <Color>#282828</Color>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Right</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>5.18341in</Top>
-        <Left>4.74092in</Left>
-        <Height>0.18011in</Height>
-        <Width>0.59969in</Width>
-        <ZIndex>58</ZIndex>
-        <Style>
-          <Border>
-            <Color>White</Color>
-            <Style>Solid</Style>
-          </Border>
-          <VerticalAlign>Middle</VerticalAlign>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>4pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="Textbox90">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>=First(Fields!InvoiceNumber.Value, "MultipleDropDataSet")</Value>
-                <Style>
-                  <FontFamily>open sans</FontFamily>
-                  <FontSize>8pt</FontSize>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Center</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>Textbox88</rd:DefaultName>
-        <Top>5.16341in</Top>
-        <Left>2.6708in</Left>
-        <Height>0.20011in</Height>
-        <Width>2.09166in</Width>
-        <ZIndex>59</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
       <Textbox Name="Textbox114">
         <CanGrow>true</CanGrow>
         <KeepTogether>true</KeepTogether>
@@ -5876,7 +5726,7 @@
         <Left>0.20223in</Left>
         <Height>0.68819cm</Height>
         <Width>3.39869in</Width>
-        <ZIndex>60</ZIndex>
+        <ZIndex>56</ZIndex>
         <Style>
           <Border>
             <Color>#707070</Color>
@@ -5915,7 +5765,7 @@
         <Left>0.25207in</Left>
         <Height>0.18011in</Height>
         <Width>0.8702in</Width>
-        <ZIndex>61</ZIndex>
+        <ZIndex>57</ZIndex>
         <Style>
           <Border>
             <Color>White</Color>
@@ -5953,7 +5803,7 @@
         <Left>2.98864in</Left>
         <Height>0.18011in</Height>
         <Width>0.59969in</Width>
-        <ZIndex>62</ZIndex>
+        <ZIndex>58</ZIndex>
         <Style>
           <Border>
             <Color>White</Color>
@@ -5990,7 +5840,7 @@
         <Left>0.91852in</Left>
         <Height>0.20011in</Height>
         <Width>2.09166in</Width>
-        <ZIndex>63</ZIndex>
+        <ZIndex>59</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -6026,7 +5876,7 @@
         <Left>0.21482in</Left>
         <Height>0.68819cm</Height>
         <Width>3.39869in</Width>
-        <ZIndex>64</ZIndex>
+        <ZIndex>60</ZIndex>
         <Style>
           <Border>
             <Color>#707070</Color>
@@ -6065,7 +5915,7 @@
         <Left>0.26466in</Left>
         <Height>0.18011in</Height>
         <Width>1.17326in</Width>
-        <ZIndex>65</ZIndex>
+        <ZIndex>61</ZIndex>
         <Style>
           <Border>
             <Color>White</Color>
@@ -6103,7 +5953,7 @@
         <Left>2.72636in</Left>
         <Height>0.18011in</Height>
         <Width>0.87456in</Width>
-        <ZIndex>66</ZIndex>
+        <ZIndex>62</ZIndex>
         <Style>
           <Border>
             <Color>White</Color>
@@ -6140,7 +5990,7 @@
         <Left>1.43792in</Left>
         <Height>0.20011in</Height>
         <Width>1.28844in</Width>
-        <ZIndex>67</ZIndex>
+        <ZIndex>63</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>

@@ -53,6 +53,8 @@
               <xs:element name="ActualPickupDate" msprop:Generator_ColumnVarNameInTable="columnActualPickupDate" msprop:Generator_ColumnPropNameInRow="ActualPickupDate" msprop:Generator_ColumnPropNameInTable="ActualPickupDateColumn" msprop:Generator_UserColumnName="ActualPickupDate" type="xs:string" minOccurs="0" />
               <xs:element name="ShipperNotes" msprop:Generator_ColumnVarNameInTable="columnShipperNotes" msprop:Generator_ColumnPropNameInRow="ShipperNotes" msprop:Generator_ColumnPropNameInTable="ShipperNotesColumn" msprop:Generator_UserColumnName="ShipperNotes" type="xs:string" minOccurs="0" />
               <xs:element name="ShipperInvoiceNo" msprop:Generator_ColumnVarNameInTable="columnShipperInvoiceNo" msprop:Generator_ColumnPropNameInRow="ShipperInvoiceNo" msprop:Generator_ColumnPropNameInTable="ShipperInvoiceNoColumn" msprop:Generator_UserColumnName="ShipperInvoiceNo" type="xs:string" minOccurs="0" />
+              <xs:element name="WaybillNumber" msprop:Generator_ColumnVarNameInTable="columnWaybillNumber" msprop:Generator_ColumnPropNameInRow="WaybillNumber" msprop:Generator_ColumnPropNameInTable="WaybillNumberColumn" msprop:Generator_UserColumnName="WaybillNumber" type="xs:string" minOccurs="0" />
+              <xs:element name="IsSingleDrop" msprop:Generator_ColumnVarNameInTable="columnIsSingleDrop" msprop:Generator_ColumnPropNameInRow="IsSingleDrop" msprop:Generator_ColumnPropNameInTable="IsSingleDropColumn" msprop:Generator_UserColumnName="IsSingleDrop" type="xs:string" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>

@@ -146,9 +146,9 @@ namespace TACHYON.Web.Controllers
         }
 
         [AbpMvcAuthorize()]
-        public ActionResult DropWaybill(int id)
+        public async Task<ActionResult> DropWaybill(int id)
         {
-            var bytes = _waybillsManager.GetMultipleDropWaybillPdf(id);
+            var bytes = await _waybillsManager.GetMultipleDropWaybillPdf(id);
 
             MimeTypes.TryGetExtension(DocumentTypeConsts.PDF, out var exten);
 

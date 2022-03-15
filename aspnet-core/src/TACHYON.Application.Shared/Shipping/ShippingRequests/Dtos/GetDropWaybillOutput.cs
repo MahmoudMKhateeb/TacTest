@@ -6,7 +6,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
 {
 
 
-    public class GetSingleDropWaybillOutput
+    public class GetDropWaybillOutput
     {
         //Base Info
         public long MasterWaybillNo { get; set; }
@@ -61,5 +61,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public string DroppCountryName { get; set; }
         public string DroppCityName { get; set; }
         public string DroppArea { get; set; }
+        public long? WaybillNumber { get; set; }
+        public bool IsSingleDrop { get; set; }
     }
 }
