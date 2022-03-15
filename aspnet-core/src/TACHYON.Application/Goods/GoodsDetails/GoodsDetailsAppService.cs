@@ -247,10 +247,11 @@ namespace TACHYON.Goods.GoodsDetails
         }
 
         #region Waybills
-        public IEnumerable<GetGoodsDetailsForWaybillsOutput> GetShippingrequestGoodsDetailsForSingleDropWaybill(int shippingRequestTripId)
+        public IEnumerable<GetGoodsDetailsForWaybillsOutput> GetShippingrequestGoodsDetailsForSingleDropWaybill(int shippingRequestTripId, long? dropOffId = null)
         {
-            var dropPoint = _routPointRepository.Single(x =>
-                x.ShippingRequestTripId == shippingRequestTripId && x.PickingType == PickingType.Dropoff);
+            var dropPoint = _routPointRepository.GetAll()
+                .WhereIf(dropOffId.HasValue, x => x.Id == dropOffId)
+                .Single(x => x.ShippingRequestTripId == shippingRequestTripId && x.PickingType == PickingType.Dropoff);
 
             var goods = _goodsDetailRepository.GetAll()
                 .Include(x => x.GoodCategoryFk)
