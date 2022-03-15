@@ -1300,7 +1300,7 @@
 		<text name="ProfilePicture_Warn_SizeLimit">يجب أن يكون حجم الصورة أصغر من {0} كيلوبايت يرجى تحديد ملف آخر</text>
 		<text name="Property">Property</text>
 		<text name="Purchase">شراء</text>
-		<text name="Qty">الكمية</text>
+		<text name="Qty">الكمية/القيمة</text>
 		<text name="Quantity">الكمية</text>
 		<text name="QuickNav">الإنتقال السريع</text>
 		<text name="QuickThemeSelection">الاختيار السريع للتصميم</text>
@@ -1774,7 +1774,7 @@
 		<text name="TotalOffers">عروض</text>
 		<text name="TotalRecordsCount">المجموع: {0}</text>
 		<text name="TotalsTripsAddByShippier">عدد الشحنات التي تم إضافتها من قبل الشاحن</text>
-		<text name="TotalWeight">الوزن الإجمالي</text>
+		<text name="TotalWeight">الوزن الإجمالي/رحلة</text>
 		<text name="TotalWeightofGoodsinKG">وزن البضاعة الإجمالي بالكيلو</text>
 		<text name="Trailer">المقطورة</text>
 		<text name="TrailerCode">الرقم المميز للمفطورة</text>
@@ -2468,6 +2468,12 @@
 		<text name="UplodeDeliveryNoteDeliveryConfirmation">تأكيد التسليم بعد رفع مذكرة التسليم</text>
 		<text name="Remarks">ملاحظات</text>
 		<text name="YouCannotAddRemarksForThisTrip">لا يمكنك اضافة ملاحظات الى هذه الرحلة</text>
+		<text name="NoReasonProvided">لم يتم تقديم سبب</text>
+		<text name="ShippingRequestUpdatedTransaction">تعديل طلب الشحن</text>
+		<text name="PriceOfferCreatedTransaction">إضافة عرض سعر</text>
+		<text name="PriceOfferUpdatedTransaction">تعديل عرض السعر</text>
+		<text name="PriceOfferAcceptedTransaction">قبول عرض السعر</text>
+		<text name="DriverAndTruckIsChanged">تغيير السائق والشاحنة</text>
 
 	</texts>
 </localizationDictionary>

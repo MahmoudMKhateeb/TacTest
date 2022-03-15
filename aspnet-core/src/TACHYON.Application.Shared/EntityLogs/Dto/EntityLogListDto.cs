@@ -17,6 +17,8 @@ namespace TACHYON.EntityLogs.Dto
         public long? ModifierUserId { get; set; }
 
         public int? ModifierTenantId { get; set; }
+        
+        public string ModifierTenantName { get; set; }
 
         public string ChangesData { get; set; }
     }

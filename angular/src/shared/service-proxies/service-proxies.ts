@@ -16528,12 +16528,17 @@ export class GoodsDetailsServiceProxy {
 
   /**
    * @param shippingRequestTripId (optional)
+   * @param dropOffId (optional)
    * @return Success
    */
-  getShippingrequestGoodsDetailsForSingleDropWaybill(shippingRequestTripId: number | undefined): Observable<GetGoodsDetailsForWaybillsOutput[]> {
+  getShippingrequestGoodsDetailsForSingleDropWaybill(
+    shippingRequestTripId: number | undefined,
+    dropOffId: number | null | undefined
+  ): Observable<GetGoodsDetailsForWaybillsOutput[]> {
     let url_ = this.baseUrl + '/api/services/app/GoodsDetails/GetShippingrequestGoodsDetailsForSingleDropWaybill?';
     if (shippingRequestTripId === null) throw new Error("The parameter 'shippingRequestTripId' cannot be null.");
     else if (shippingRequestTripId !== undefined) url_ += 'shippingRequestTripId=' + encodeURIComponent('' + shippingRequestTripId) + '&';
+    if (dropOffId !== undefined && dropOffId !== null) url_ += 'dropOffId=' + encodeURIComponent('' + dropOffId) + '&';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -39299,12 +39304,14 @@ export class ShippingRequestsServiceProxy {
 
   /**
    * @param shippingRequestTripId (optional)
+   * @param dropOffId (optional)
    * @return Success
    */
-  getSingleDropWaybill(shippingRequestTripId: number | undefined): Observable<GetSingleDropWaybillOutput[]> {
-    let url_ = this.baseUrl + '/api/services/app/ShippingRequests/GetSingleDropWaybill?';
+  getDropWaybill(shippingRequestTripId: number | undefined, dropOffId: number | null | undefined): Observable<GetDropWaybillOutput[]> {
+    let url_ = this.baseUrl + '/api/services/app/ShippingRequests/GetDropWaybill?';
     if (shippingRequestTripId === null) throw new Error("The parameter 'shippingRequestTripId' cannot be null.");
     else if (shippingRequestTripId !== undefined) url_ += 'shippingRequestTripId=' + encodeURIComponent('' + shippingRequestTripId) + '&';
+    if (dropOffId !== undefined && dropOffId !== null) url_ += 'dropOffId=' + encodeURIComponent('' + dropOffId) + '&';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -39319,23 +39326,23 @@ export class ShippingRequestsServiceProxy {
       .request('get', url_, options_)
       .pipe(
         _observableMergeMap((response_: any) => {
-          return this.processGetSingleDropWaybill(response_);
+          return this.processGetDropWaybill(response_);
         })
       )
       .pipe(
         _observableCatch((response_: any) => {
           if (response_ instanceof HttpResponseBase) {
             try {
-              return this.processGetSingleDropWaybill(<any>response_);
+              return this.processGetDropWaybill(<any>response_);
             } catch (e) {
-              return <Observable<GetSingleDropWaybillOutput[]>>(<any>_observableThrow(e));
+              return <Observable<GetDropWaybillOutput[]>>(<any>_observableThrow(e));
             }
-          } else return <Observable<GetSingleDropWaybillOutput[]>>(<any>_observableThrow(response_));
+          } else return <Observable<GetDropWaybillOutput[]>>(<any>_observableThrow(response_));
         })
       );
   }
 
-  protected processGetSingleDropWaybill(response: HttpResponseBase): Observable<GetSingleDropWaybillOutput[]> {
+  protected processGetDropWaybill(response: HttpResponseBase): Observable<GetDropWaybillOutput[]> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -39352,7 +39359,7 @@ export class ShippingRequestsServiceProxy {
           let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
           if (Array.isArray(resultData200)) {
             result200 = [] as any;
-            for (let item of resultData200) result200!.push(GetSingleDropWaybillOutput.fromJS(item));
+            for (let item of resultData200) result200!.push(GetDropWaybillOutput.fromJS(item));
           } else {
             result200 = <any>null;
           }
@@ -39366,7 +39373,7 @@ export class ShippingRequestsServiceProxy {
         })
       );
     }
-    return _observableOf<GetSingleDropWaybillOutput[]>(<any>null);
+    return _observableOf<GetDropWaybillOutput[]>(<any>null);
   }
 
   /**
@@ -68848,6 +68855,7 @@ export class EntityLogListDto implements IEntityLogListDto {
   modifierUserName!: string | undefined;
   modifierUserId!: number | undefined;
   modifierTenantId!: number | undefined;
+  modifierTenantName!: string | undefined;
   changesData!: string | undefined;
   id!: string;
 
@@ -68866,6 +68874,7 @@ export class EntityLogListDto implements IEntityLogListDto {
       this.modifierUserName = _data['modifierUserName'];
       this.modifierUserId = _data['modifierUserId'];
       this.modifierTenantId = _data['modifierTenantId'];
+      this.modifierTenantName = _data['modifierTenantName'];
       this.changesData = _data['changesData'];
       this.id = _data['id'];
     }
@@ -68885,6 +68894,7 @@ export class EntityLogListDto implements IEntityLogListDto {
     data['modifierUserName'] = this.modifierUserName;
     data['modifierUserId'] = this.modifierUserId;
     data['modifierTenantId'] = this.modifierTenantId;
+    data['modifierTenantName'] = this.modifierTenantName;
     data['changesData'] = this.changesData;
     data['id'] = this.id;
     return data;
@@ -68897,6 +68907,7 @@ export interface IEntityLogListDto {
   modifierUserName: string | undefined;
   modifierUserId: number | undefined;
   modifierTenantId: number | undefined;
+  modifierTenantName: string | undefined;
   changesData: string | undefined;
   id: string;
 }
@@ -87426,7 +87437,7 @@ export interface IGetMasterWaybillOutput {
   clientName: string | undefined;
 }
 
-export class GetSingleDropWaybillOutput implements IGetSingleDropWaybillOutput {
+export class GetDropWaybillOutput implements IGetDropWaybillOutput {
   masterWaybillNo!: number;
   date!: string | undefined;
   shippingRequestStatus!: string | undefined;
@@ -87463,8 +87474,10 @@ export class GetSingleDropWaybillOutput implements IGetSingleDropWaybillOutput {
   droppCountryName!: string | undefined;
   droppCityName!: string | undefined;
   droppArea!: string | undefined;
+  waybillNumber!: number | undefined;
+  isSingleDrop!: boolean;
 
-  constructor(data?: IGetSingleDropWaybillOutput) {
+  constructor(data?: IGetDropWaybillOutput) {
     if (data) {
       for (var property in data) {
         if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
@@ -87510,12 +87523,14 @@ export class GetSingleDropWaybillOutput implements IGetSingleDropWaybillOutput {
       this.droppCountryName = _data['droppCountryName'];
       this.droppCityName = _data['droppCityName'];
       this.droppArea = _data['droppArea'];
+      this.waybillNumber = _data['waybillNumber'];
+      this.isSingleDrop = _data['isSingleDrop'];
     }
   }
 
-  static fromJS(data: any): GetSingleDropWaybillOutput {
+  static fromJS(data: any): GetDropWaybillOutput {
     data = typeof data === 'object' ? data : {};
-    let result = new GetSingleDropWaybillOutput();
+    let result = new GetDropWaybillOutput();
     result.init(data);
     return result;
   }
@@ -87558,11 +87573,13 @@ export class GetSingleDropWaybillOutput implements IGetSingleDropWaybillOutput {
     data['droppCountryName'] = this.droppCountryName;
     data['droppCityName'] = this.droppCityName;
     data['droppArea'] = this.droppArea;
+    data['waybillNumber'] = this.waybillNumber;
+    data['isSingleDrop'] = this.isSingleDrop;
     return data;
   }
 }
 
-export interface IGetSingleDropWaybillOutput {
+export interface IGetDropWaybillOutput {
   masterWaybillNo: number;
   date: string | undefined;
   shippingRequestStatus: string | undefined;
@@ -87599,6 +87616,8 @@ export interface IGetSingleDropWaybillOutput {
   droppCountryName: string | undefined;
   droppCityName: string | undefined;
   droppArea: string | undefined;
+  waybillNumber: number | undefined;
+  isSingleDrop: boolean;
 }
 
 export class GetMultipleDropWaybillOutput implements IGetMultipleDropWaybillOutput {
@@ -88042,6 +88061,8 @@ export interface IGetShippingRequestStatusForEditOutput {
 }
 
 export class ShippingRequestsTripListDto implements IShippingRequestsTripListDto {
+  tenantId!: number;
+  carrierTenantId!: number | undefined;
   startTripDate!: moment.Moment;
   endTripDate!: moment.Moment | undefined;
   startWorking!: moment.Moment | undefined;
@@ -88062,6 +88083,7 @@ export class ShippingRequestsTripListDto implements IShippingRequestsTripListDto
   driverStatusTitle!: string | undefined;
   rejectedReason!: string | undefined;
   waybillNumber!: number | undefined;
+  isTripRateBefore!: boolean;
   id!: number;
 
   constructor(data?: IShippingRequestsTripListDto) {
@@ -88074,6 +88096,8 @@ export class ShippingRequestsTripListDto implements IShippingRequestsTripListDto
 
   init(_data?: any) {
     if (_data) {
+      this.tenantId = _data['tenantId'];
+      this.carrierTenantId = _data['carrierTenantId'];
       this.startTripDate = _data['startTripDate'] ? moment(_data['startTripDate'].toString()) : <any>undefined;
       this.endTripDate = _data['endTripDate'] ? moment(_data['endTripDate'].toString()) : <any>undefined;
       this.startWorking = _data['startWorking'] ? moment(_data['startWorking'].toString()) : <any>undefined;
@@ -88094,6 +88118,7 @@ export class ShippingRequestsTripListDto implements IShippingRequestsTripListDto
       this.driverStatusTitle = _data['driverStatusTitle'];
       this.rejectedReason = _data['rejectedReason'];
       this.waybillNumber = _data['waybillNumber'];
+      this.isTripRateBefore = _data['isTripRateBefore'];
       this.id = _data['id'];
     }
   }
@@ -88107,6 +88132,8 @@ export class ShippingRequestsTripListDto implements IShippingRequestsTripListDto
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
+    data['tenantId'] = this.tenantId;
+    data['carrierTenantId'] = this.carrierTenantId;
     data['startTripDate'] = this.startTripDate ? this.startTripDate.toISOString() : <any>undefined;
     data['endTripDate'] = this.endTripDate ? this.endTripDate.toISOString() : <any>undefined;
     data['startWorking'] = this.startWorking ? this.startWorking.toISOString() : <any>undefined;
@@ -88127,12 +88154,15 @@ export class ShippingRequestsTripListDto implements IShippingRequestsTripListDto
     data['driverStatusTitle'] = this.driverStatusTitle;
     data['rejectedReason'] = this.rejectedReason;
     data['waybillNumber'] = this.waybillNumber;
+    data['isTripRateBefore'] = this.isTripRateBefore;
     data['id'] = this.id;
     return data;
   }
 }
 
 export interface IShippingRequestsTripListDto {
+  tenantId: number;
+  carrierTenantId: number | undefined;
   startTripDate: moment.Moment;
   endTripDate: moment.Moment | undefined;
   startWorking: moment.Moment | undefined;
@@ -88153,6 +88183,7 @@ export interface IShippingRequestsTripListDto {
   driverStatusTitle: string | undefined;
   rejectedReason: string | undefined;
   waybillNumber: number | undefined;
+  isTripRateBefore: boolean;
   id: number;
 }
 

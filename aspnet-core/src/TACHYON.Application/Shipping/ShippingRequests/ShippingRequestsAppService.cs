@@ -2,8 +2,10 @@
 using Abp.Application.Features;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
+using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.EntityHistory;
 using Abp.Linq.Extensions;
 using Abp.Runtime.Validation;
 using Abp.Threading;
@@ -27,6 +29,7 @@ using TACHYON.Cities;
 using TACHYON.Common;
 using TACHYON.Documents;
 using TACHYON.Dto;
+using TACHYON.EntityLogs.Transactions;
 using TACHYON.Extension;
 using TACHYON.Features;
 using TACHYON.Goods.GoodCategories;
@@ -81,25 +84,23 @@ namespace TACHYON.Shipping.ShippingRequests
             IRepository<Tenant> tenantRepository,
             IRepository<TrucksType, long> lookupTrucksTypeRepository,
             IRepository<TrailerType, int> lookupTrailerTypeRepository,
-            //IRepository<RoutType, int> lookupRoutTypeRepository,
             IRepository<GoodCategory, int> lookupGoodCategoryRepository,
             IRepository<Vas, int> lookup_vasRepository,
             IRepository<ShippingRequestVas, long> shippingRequestVasRepository,
             IRepository<VasPrice> vasPriceRepository,
             IRepository<Port, long> lookupPortRepository,
-            IRepository<ShippingRequestBid, long> shippingRequestBidRepository,
             BidDomainService bidDomainService,
             IRepository<Capacity, int> capacityRepository,
             IRepository<TransportType, int> transportTypeRepository,
             IRepository<RoutPoint, long> routPointRepository,
             IRepository<ShippingRequestsCarrierDirectPricing> carrierDirectPricingRepository,
-            IRepository<ShippingRequestDirectRequest, long> shippingRequestDirectRequestRepository,
             PriceOfferManager priceOfferManager,
             IRepository<InvoiceTrip, long> invoiveTripRepository,
             ShippingRequestDirectRequestAppService shippingRequestDirectRequestAppService,
             ShippingRequestDirectRequestManager shippingRequestDirectRequestManager,
             DocumentFilesManager documentFilesManager,
-            IRepository<PriceOffer, long> priceOfferRepository)
+            IRepository<PriceOffer, long> priceOfferRepository, 
+            IEntityChangeSetReasonProvider reasonProvider)
         {
             _vasPriceRepository = vasPriceRepository;
             _shippingRequestRepository = shippingRequestRepository;
@@ -114,7 +115,6 @@ namespace TACHYON.Shipping.ShippingRequests
             _lookup_trailerTypeRepository = lookupTrailerTypeRepository;
             _lookup_goodCategoryRepository = lookupGoodCategoryRepository;
             _lookup_PortRepository = lookupPortRepository;
-            _shippingRequestBidRepository = shippingRequestBidRepository;
             _bidDomainService = bidDomainService;
             _lookup_vasRepository = lookup_vasRepository;
             _shippingRequestVasRepository = shippingRequestVasRepository;
@@ -122,13 +122,13 @@ namespace TACHYON.Shipping.ShippingRequests
             _transportTypeRepository = transportTypeRepository;
             _routPointRepository = routPointRepository;
             _carrierDirectPricingRepository = carrierDirectPricingRepository;
-            _shippingRequestDirectRequestRepository = shippingRequestDirectRequestRepository;
             _priceOfferManager = priceOfferManager;
             _InvoiveTripRepository = invoiveTripRepository;
             _shippingRequestDirectRequestAppService = shippingRequestDirectRequestAppService;
             _shippingRequestDirectRequestManager = shippingRequestDirectRequestManager;
             _documentFilesManager = documentFilesManager;
             _priceOfferRepository = priceOfferRepository;
+            _reasonProvider = reasonProvider;
         }
         private readonly IRepository<ShippingRequestsCarrierDirectPricing> _carrierDirectPricingRepository;
         private readonly IRepository<VasPrice> _vasPriceRepository;
@@ -139,8 +139,6 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly IRepository<UnitOfMeasure, int> _unitOfMeasureRepository;
         private readonly IRepository<Vas, int> _lookup_vasRepository;
         private readonly IRepository<ShippingRequestVas, long> _shippingRequestVasRepository;
-        private readonly IRepository<ShippingRequestDirectRequest, long> _shippingRequestDirectRequestRepository;
-        // private readonly IRepository<Route, int> _lookup_routeRepository;
         private readonly IRepository<RoutPoint, long> _routPointRepository;
         private readonly IAppNotifier _appNotifier;
         private readonly IRepository<Tenant> _tenantRepository;
@@ -148,7 +146,6 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly IRepository<TrailerType, int> _lookup_trailerTypeRepository;
         private readonly IRepository<GoodCategory, int> _lookup_goodCategoryRepository;
         private readonly IRepository<Port, long> _lookup_PortRepository;
-        private readonly IRepository<ShippingRequestBid, long> _shippingRequestBidRepository;
         private readonly BidDomainService _bidDomainService;
         private readonly IRepository<Capacity, int> _capacityRepository;
         private readonly IRepository<TransportType, int> _transportTypeRepository;
@@ -159,6 +156,7 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly ShippingRequestDirectRequestManager _shippingRequestDirectRequestManager;
         private readonly DocumentFilesManager _documentFilesManager;
         private readonly IRepository<PriceOffer, long> _priceOfferRepository;
+        private readonly IEntityChangeSetReasonProvider _reasonProvider;
         public async Task<GetAllShippingRequestsOutputDto> GetAll(GetAllShippingRequestsInput Input)
         {
             DisableTenancyFilters();
@@ -841,7 +839,7 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             DisableTenancyFilters();
             var request = await _shippingRequestRepository.GetAll()
-                .Where(x => x.Id == shippingRequestId).Select(x => new {x.Id, x.TenantId, x.CarrierTenantId, x.NumberOfTrips})
+                .Where(x => x.Id == shippingRequestId).Select(x => new { x.Id, x.TenantId, x.CarrierTenantId, x.NumberOfTrips })
                 .FirstOrDefaultAsync();
 
             if (request == null)
@@ -854,13 +852,13 @@ namespace TACHYON.Shipping.ShippingRequests
                 request.CarrierTenantId);
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Create)]
-        private async Task<bool> CanCurrentUserAddTrip(int srTenantId,long srId,int numberOfTrips,int? srCarrierTenantId)
+        private async Task<bool> CanCurrentUserAddTrip(int srTenantId, long srId, int numberOfTrips, int? srCarrierTenantId)
         {
             bool IsSaas()
                 => srTenantId == srCarrierTenantId;
 
             bool carrierSaasEnabled = true, shipperEnabled = true, tmsEnabled = true;
-            
+
             #region CarrierSaas
 
             if (IsSaas())
@@ -869,7 +867,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     !await FeatureChecker.IsEnabledAsync(AppFeatures.CarrierAsASaas))
                     carrierSaasEnabled = false;
             }
-                
+
 
             #endregion
 
@@ -879,7 +877,7 @@ namespace TACHYON.Shipping.ShippingRequests
             {
                 var tripsByTmsEnabled = await FeatureChecker.IsEnabledAsync(
                     srTenantId, AppFeatures.AddTripsByTachyonDeal);
-                
+
                 if (!tripsByTmsEnabled)
                     tmsEnabled = false;
             }
@@ -893,13 +891,13 @@ namespace TACHYON.Shipping.ShippingRequests
                 if (srTenantId != AbpSession.TenantId || !await IsEnabledAsync(AppFeatures.Shipper))
                     shipperEnabled = false;
             }
-               
+
 
             #endregion
 
-            return carrierSaasEnabled || tmsEnabled || shipperEnabled ;
+            return carrierSaasEnabled || tmsEnabled || shipperEnabled;
         }
-        
+
         protected virtual GetShippingRequestForEditOutput _GetShippingRequestForEdit(EntityDto<long> input)
         {
             //using (CurrentUnitOfWork.DisableFilter("IHasIsDrafted"))
@@ -987,6 +985,8 @@ namespace TACHYON.Shipping.ShippingRequests
         [AbpAuthorize(AppPermissions.Pages_ShippingRequests_Edit)]
         protected virtual async Task Update(CreateOrEditShippingRequestDto input)
         {
+            _reasonProvider.Use(nameof(UpdateShippingRequestTransaction));
+            
             ShippingRequest shippingRequest = await _shippingRequestRepository.GetAll()
                 .Include(x => x.ShippingRequestVases)
                 .Where(x => x.Id == (long)input.Id)
@@ -1007,6 +1007,8 @@ namespace TACHYON.Shipping.ShippingRequests
             await ValidateGoodsCategory(input);
 
             ObjectMapper.Map(input, shippingRequest);
+            
+            await CurrentUnitOfWork.SaveChangesAsync();
         }
 
 
@@ -1221,7 +1223,7 @@ namespace TACHYON.Shipping.ShippingRequests
             }
         }
         //Single Drop Waybill
-        public IEnumerable<GetSingleDropWaybillOutput> GetSingleDropWaybill(int shippingRequestTripId)
+        public IEnumerable<GetDropWaybillOutput> GetDropWaybill(int shippingRequestTripId, long? dropOffId = null)
         {
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant))
             {
@@ -1233,10 +1235,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     Id = x.Id,
                     MasterWaybillNo = x.WaybillNumber.Value,
                     ShippingRequestStatus = x.Status == Trips.ShippingRequestTripStatus.Delivered ? "Final" : "Draft",
-                    //(x.AssignedDriverUserId != null && x.AssignedTruckId != null) ? "Final" : "Draft",
-                    // SenderCompanyName = "",//x.ShippingRequestFk.Tenant.companyName,
                     ClientName = x.ShippingRequestFk.Tenant.TenancyName,
-                    // ReceiverCompanyName = x.ShippingRequestFk.CarrierTenantFk != null ? x.ShippingRequestFk.CarrierTenantFk.companyName : "",
                     CarrierName = x.ShippingRequestFk.CarrierTenantFk.TenancyName,
                     DriverName = x.AssignedDriverUserFk != null ? x.AssignedDriverUserFk.FullName : "",
                     driverUserId = x.AssignedDriverUserId,
@@ -1264,16 +1263,21 @@ namespace TACHYON.Shipping.ShippingRequests
 
                 var pickup = GetPickupOrDropPointFacilityForTrip(shippingRequestTripId, PickingType.Pickup);
 
-                var delivery = GetPickupOrDropPointFacilityForTrip(shippingRequestTripId, PickingType.Dropoff);
+                var delivery = GetPickupOrDropPointFacilityForTrip(shippingRequestTripId, PickingType.Dropoff, dropOffId);
+
+                var routPointWaybillNumber = _routPointRepository.GetAll()
+                    .Where(x => x.Id == dropOffId && x.PickingType == PickingType.Dropoff)
+                    .Select(x => x.WaybillNumber).FirstOrDefault();
 
                 var SenderpickupPoint = GetSenderInfo(shippingRequestTripId);
                 var contactName = SenderpickupPoint != null ? SenderpickupPoint.FullName : "";
                 var mobileNo = SenderpickupPoint != null ? SenderpickupPoint.PhoneNumber : "";
 
                 var finalOutput = query.ToList().Select(x
-                    => new GetSingleDropWaybillOutput
+                    => new GetDropWaybillOutput
                     {
                         MasterWaybillNo = x.MasterWaybillNo,
+                        WaybillNumber = routPointWaybillNumber,
                         Date = NormalizeDateTimeToClientTime(Clock.Now),
                         ShippingRequestStatus = x.ShippingRequestStatus,
                         SenderCompanyName = GetFacilityPoint(x.Id, null, PickingType.Pickup),// x.SenderCompanyName,
@@ -1307,8 +1311,8 @@ namespace TACHYON.Shipping.ShippingRequests
                         NeedsDeliveryNote = x.NeedDeliveryNote,
                         ShipperReference = x.ShipperReference, /*TAC-2181 || 22/12/2021 || need to display it as an empty on production*/
                         ShipperInvoiceNo = x.ShipperInvoiceNo, /*TAC-2181 || 22/12/2021 || need to display it as an empty on production*/
-                        InvoiceNumber = GetInvoiceNumberByTripId(shippingRequestTripId).ToString()
-
+                        InvoiceNumber = GetInvoiceNumberByTripId(shippingRequestTripId).ToString(),
+                        IsSingleDrop = !dropOffId.HasValue,
                     });
 
                 return finalOutput;
@@ -1565,7 +1569,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     DisplayName = x.DisplayName,
                     IsOther = x.DisplayName.ToLower().Contains(TACHYONConsts.OthersDisplayName.ToLower())
                 }).ToListAsync());
-            
+
         }
         //end Multiple Drops
 
@@ -1678,12 +1682,12 @@ namespace TACHYON.Shipping.ShippingRequests
 
         }
 
-        private Facility GetPickupOrDropPointFacilityForTrip(int id, PickingType type)
+        private Facility GetPickupOrDropPointFacilityForTrip(int id, PickingType type, long? dropOffId = null)
         {
             var pickupFacility = _routPointRepository
                 .GetAll()
-                .Where(x => x.ShippingRequestTripId == id)
-                .Where(x => x.PickingType == type)
+                .Where(x => x.ShippingRequestTripId == id && x.PickingType == type)
+                .WhereIf(dropOffId.HasValue, x => x.Id == dropOffId.Value)
                 .Include(x => x.FacilityFk)
                 .ThenInclude(x => x.CityFk)
                 .ThenInclude(x => x.CountyFk)

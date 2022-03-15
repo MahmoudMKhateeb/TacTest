@@ -1,7 +1,7 @@
-import { Component, ElementRef, Injector, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, ElementRef, Injector, Input, OnChanges, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import {
-  FileDto,
+  GetAllUploadedFileDto,
   InvokeStatusInputDto,
   PickingType,
   PointTransactionDto,
@@ -14,7 +14,6 @@ import {
   TrackingRoutePointDto,
   TrackingServiceProxy,
   WaybillsServiceProxy,
-  GetAllUploadedFileDto,
 } from '@shared/service-proxies/service-proxies';
 import { finalize } from 'rxjs/operators';
 import { TrackingConfirmModalComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tacking-confirm-code-model.component';
@@ -28,7 +27,7 @@ import { AngularFireDatabase, AngularFireList } from '@angular/fire/compat/datab
 @Component({
   selector: 'new-tracking-conponent',
   templateUrl: './new-tracking-conponent.html',
-  styleUrls: ['./new-tracking-conponent.css'],
+  styleUrls: ['./new-tracking-conponent.scss'],
   providers: [NgbDropdownConfig],
   animations: [appModuleAnimation()],
 })
@@ -319,14 +318,18 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
    * creates the Steps for the primeng stepper
    * @param statues
    */
-  getStepperSteps(statues: RoutPointTransactionDto[]): {} {
+  getStepperSteps(statues: RoutPointTransactionDto[]): any[] {
     let items = [];
     //TODO change active index back to null
     this.activeIndex = null;
     for (let i = 0; i < statues.length; i++) {
       items.push({
-        label: statues[i].name,
-        styleClass: 'completed',
+        index: i + 1,
+        status: statues[i].name,
+        date: statues[i].name,
+        icon: 'flaticon2-checkmark',
+        time: statues[i].creationTime,
+        isDone: statues[i].isDone,
       });
       if (statues[i].isDone) {
         this.activeIndex = i;

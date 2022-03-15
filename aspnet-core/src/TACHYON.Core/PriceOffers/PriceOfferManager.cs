@@ -3,6 +3,7 @@ using Abp.Application.Features;
 using Abp.Application.Services.Dto;
 using Abp.Configuration;
 using Abp.Domain.Repositories;
+using Abp.EntityHistory;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Abp.Runtime.Session;
@@ -16,6 +17,7 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using TACHYON.Configuration;
+using TACHYON.EntityLogs.Transactions;
 using TACHYON.Features;
 using TACHYON.Invoices.Balances;
 using TACHYON.MultiTenancy;
@@ -37,8 +39,9 @@ namespace TACHYON.PriceOffers
         private readonly BalanceManager _balanceManager;
         private ShippingRequestDirectRequest _directRequest;
         private readonly TenantManager _tenantManager;
+        private readonly IEntityChangeSetReasonProvider _reasonProvider;
 
-        public PriceOfferManager(IAppNotifier appNotifier, ISettingManager settingManager, IFeatureChecker featureChecker, IRepository<ShippingRequest, long> shippingRequestsRepository, IAbpSession abpSession, BalanceManager balanceManager, IRepository<ShippingRequestDirectRequest, long> shippingRequestDirectRequestRepository, IRepository<PriceOffer, long> priceOfferRepository, TenantManager tenantManager)
+        public PriceOfferManager(IAppNotifier appNotifier, ISettingManager settingManager, IFeatureChecker featureChecker, IRepository<ShippingRequest, long> shippingRequestsRepository, IAbpSession abpSession, BalanceManager balanceManager, IRepository<ShippingRequestDirectRequest, long> shippingRequestDirectRequestRepository, IRepository<PriceOffer, long> priceOfferRepository, TenantManager tenantManager, IEntityChangeSetReasonProvider reasonProvider)
         {
             _appNotifier = appNotifier;
             _settingManager = settingManager;
@@ -49,6 +52,7 @@ namespace TACHYON.PriceOffers
             _shippingRequestDirectRequestRepository = shippingRequestDirectRequestRepository;
             _priceOfferRepository = priceOfferRepository;
             _tenantManager = tenantManager;
+            _reasonProvider = reasonProvider;
         }
         /// <summary>
         /// Create Or Edit Offer
@@ -172,7 +176,7 @@ namespace TACHYON.PriceOffers
         public async Task<PriceOfferStatus> AcceptOffer(long id)
         {
             DisableTenancyFilters();
-
+            _reasonProvider.Use(nameof(AcceptShippingRequestPriceOfferTransaction));
             var offer = await GetOffer(id);
             var canAcceptOrRejectOffer = await CanAcceptOrRejectOffer(offer);
             if (!canAcceptOrRejectOffer) throw new UserFriendlyException(L("YouCanNotAcceptTheOffer"));
@@ -232,6 +236,8 @@ namespace TACHYON.PriceOffers
 
             SetShippingRequestPricing(offer);
             await _appNotifier.ShipperAcceptedOffer(offer);
+            
+             await CurrentUnitOfWork.SaveChangesAsync();
             return offer.Status;
         }
         public async Task<PriceOfferStatus> AcceptOfferOnBehalfShipper(long id)
@@ -590,7 +596,7 @@ namespace TACHYON.PriceOffers
         /// <returns></returns>
         private async Task<long> Create(CreateOrEditPriceOfferInput input, ShippingRequest shippingRequest, PriceOffer rejectedOffer)
         {
-
+            _reasonProvider.Use(nameof(CreateShippingRequestPriceOfferTransaction));
             var offer = ObjectMapper.Map<PriceOffer>(input);
             offer.PriceOfferDetails = await GetListOfVases(input, shippingRequest);
             offer.ShippingRequestFk = shippingRequest;
@@ -612,6 +618,8 @@ namespace TACHYON.PriceOffers
 
             await _appNotifier.NotifyShipperWhenSendPriceOffer(shippingRequest.TenantId, offer.Id);
 
+
+            await CurrentUnitOfWork.SaveChangesAsync();
             return offer.Id;
 
         }
@@ -625,6 +633,7 @@ namespace TACHYON.PriceOffers
         /// <returns></returns>
         private async Task<long> Update(CreateOrEditPriceOfferInput input, ShippingRequest shippingRequest, PriceOffer offer)
         {
+            _reasonProvider.Use(nameof(UpdateShippingRequestPriceOfferTransaction));
             if (!CanEditOffer(offer))
             {
                 throw new UserFriendlyException(L("YouCantEditOffer"));
@@ -646,6 +655,7 @@ namespace TACHYON.PriceOffers
             }
             await _priceOfferRepository.UpdateAsync(offer);
 
+            await CurrentUnitOfWork.SaveChangesAsync();
             return offer.Id;
         }
         /// <summary>

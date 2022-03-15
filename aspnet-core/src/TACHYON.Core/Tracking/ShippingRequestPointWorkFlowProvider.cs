@@ -335,15 +335,16 @@ namespace TACHYON.Tracking
         {
             return Flows.FirstOrDefault(c => c.Version == workFlowVersion)?.Transactions.ToList();
         }
-        public List<RoutPointTransactionDto> GetStatuses(int workflowVersion, List<RoutePointStatus> statuses)
+        public List<RoutPointTransactionDto> GetStatuses(int workflowVersion, List<RoutPointTransactionArgDto> statuses)
         {
             return GetTransactions(workflowVersion).GroupBy(c => c.ToStatus)
                      .Select(x =>
                      new RoutPointTransactionDto
                      {
                          Status = x.Key,
-                         IsDone = statuses.Any(g => g == x.Key),
-                         Name = L(x.Key.ToString())
+                         IsDone = statuses.Any(g => g.Status == x.Key),
+                         Name = L(x.Key.ToString()),
+                         CreationTime = statuses.FirstOrDefault(c => c.Status == x.Key)?.CreationTime,
                      }).ToList();
         }
         public List<PointTransactionDto> GetTransactionsByStatus(int workFlowVersion, List<RoutePointStatus> statuses, RoutePointStatus status)

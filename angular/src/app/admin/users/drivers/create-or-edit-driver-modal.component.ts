@@ -106,6 +106,7 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
   }
 
   show(userId?: number): void {
+    this.CheckingIfDriverPhoneNumberIsValid = true;
     if (!userId) {
       this.active = true;
       this.sendActivationEmail = true;
@@ -213,8 +214,8 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
         })
       )
       .subscribe(() => {
-        this.notify.info(this.l('SavedSuccessfully'));
         this.close();
+        this.notify.info(this.l('SavedSuccessfully'));
         this.modalSave.emit(null);
       });
   }

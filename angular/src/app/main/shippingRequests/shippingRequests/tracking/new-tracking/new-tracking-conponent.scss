@@ -1,0 +1,100 @@
+agm-map {
+    height: 650px;
+    width: 100% !important;
+}
+
+.active {
+    background-color: #f3f6f9 !important;
+    cursor: pointer;
+}
+
+.timeline.timeline-3 .timeline-items .timeline-item:hover .timeline-content:hover {
+    background-color: #f3f6f9 !important;
+}
+
+::ng-deep .p-menuitem-link {
+    background-color: TRANSPARENT !important;
+    padding-right: 12px;
+    margin-bottom: 3px;
+}
+
+::ng-deep .dropdown-menu {
+    right: auto !important;
+    left: auto !important;
+}
+
+///*.customstepper .ui-steps p-steps {*/
+///*    color: green;*/
+///*    background-color: red;*/
+///*!*}*!*/
+///*::ng-deep .p-steps-number {*/
+///*  color: white !important;*/
+///*  width: 2.5rem !important;*/
+///*  height: 2.5rem !important;*/
+///*  background-color: #f64e60 !important;*/
+///*  !*background: url(https://img.icons8.com/dusk/64/000000/shipped--v2.gif) no-repeat 80% 0% !important;*!*/
+///*}*/
+///*::ng-deep .p-steps-item:before {*/
+///*  border-top: 1px solid rgba(0, 0, 0, 0.11) !important;*/
+///*}*/
+//
+///*::ng-deep .p-steps-title {*/
+///*  color: #3f4254 !important;*/
+///*  font-weight: 500 !important;*/
+///*}*/
+
+.text-gray-400 {
+    color: #b5b5c3 !important;
+}
+
+.fw-bold {
+    font-weight: 500 !important;
+}
+
+.fs-7 {
+    font-size: 0.95rem !important;
+}
+
+.text-gray-800 {
+    color: #3f4254 !important;
+}
+
+.fw-bolder {
+    font-weight: 600 !important;
+}
+
+.fs-6 {
+    font-size: 1.075rem !important;
+}
+
+
+
+
+
+::ng-deep .p-timeline {
+    align-items: flex-start !important;
+    i {
+      color: white !important;
+    }
+}
+::ng-deep  .custom-marker {
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     color: #fff!important;
+     width: 2.6rem!important;
+     height: 2.5rem!important;
+     background-color: #f64e60!important;
+     border-radius: 50% !important;
+     border: 1px solid #e9ecef;
+     min-width: 2rem;
+     line-height: 2rem;
+     font-size: 1.143rem;
+     z-index: 1;
+ }
+::ng-deep  .p-timeline-event-separator{
+    align-items: center !important;
+}
+.card {
+    background: transparent;
+}

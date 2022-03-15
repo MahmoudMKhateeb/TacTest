@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using TACHYON.DataExporting;
 using TACHYON.Goods.GoodsDetails;
 using TACHYON.Routs.RoutPoints;
@@ -21,14 +22,16 @@ namespace TACHYON.Waybills
         private readonly PdfExporterBase _pdfExporterBase;
         private readonly GoodsDetailsAppService _goodsDetailsAppService;
         private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepository;
+        private readonly IRepository<RoutPoint, long> _routPointReqpsitory;
 
-        public WaybillsManager(ShippingRequestsAppService shippingRequestAppService, RoutPointsAppService routPointAppService, PdfExporterBase pdfExporterBase, GoodsDetailsAppService goodsDetailsAppService, IRepository<ShippingRequestTrip> shippingRequestTripRepository)
+        public WaybillsManager(ShippingRequestsAppService shippingRequestAppService, RoutPointsAppService routPointAppService, PdfExporterBase pdfExporterBase, GoodsDetailsAppService goodsDetailsAppService, IRepository<ShippingRequestTrip> shippingRequestTripRepository, IRepository<RoutPoint, long> routPointReqpsitory)
         {
             _shippingRequestAppService = shippingRequestAppService;
             _routPointAppService = routPointAppService;
             _pdfExporterBase = pdfExporterBase;
             _goodsDetailsAppService = goodsDetailsAppService;
             _shippingRequestTripRepository = shippingRequestTripRepository;
+            _routPointReqpsitory = routPointReqpsitory;
         }
         public byte[] GetSingleDropOrMasterWaybillPdf(int shippingRequestTripId)
         {
@@ -43,28 +46,14 @@ namespace TACHYON.Waybills
             }
         }
 
-        public byte[] GetMultipleDropWaybillPdf(long id)
+        public async Task<byte[]> GetMultipleDropWaybillPdf(long id)
         {
             DisableTenancyFilters();
             if (IsSingleDropShippingRequest(id))
-            {
                 throw new UserFriendlyException(L("Cannot download drop waybill for single drop shipping request"));
-            }
-            var reportPath = "/Waybills/Reports/Multiple_Drop_Waybill.rdlc";
+            var tripId = await _routPointReqpsitory.GetAll().Where(x => x.Id == id).Select(x => x.ShippingRequestTripId).FirstOrDefaultAsync();
 
-            ArrayList names = new ArrayList();
-            ArrayList data = new ArrayList();
-
-            names.Add("MultipleDropDataSet");
-            data.Add(_shippingRequestAppService.GetMultipleDropWaybill(id));
-
-            names.Add("MultipleDropsGoodsDetailsDataSet");
-            data.Add(_goodsDetailsAppService.GetShippingrequestGoodsDetailsForMultipleDropWaybill(id));
-
-            names.Add("MultipleDropsVasDataSet");
-            data.Add(_shippingRequestAppService.GetShippingRequestVasesForMultipleDropWaybill(id));
-
-            return _pdfExporterBase.GetRdlcPdfPackageAsBinaryData(reportPath, names, data);
+            return GetSingleDropWaybillPdf(tripId, id);
         }
 
         private byte[] GetMasterWaybillPdf(int shippingRequestTripId)
@@ -86,7 +75,7 @@ namespace TACHYON.Waybills
             return _pdfExporterBase.GetRdlcPdfPackageAsBinaryData(reportPath, names, data);
         }
 
-        private byte[] GetSingleDropWaybillPdf(int shippingRequestTripId)
+        private byte[] GetSingleDropWaybillPdf(int shippingRequestTripId, long? dropOffId = null)
         {
             DisableTenancyFilters();
             var reportPath = "/Waybills/Reports/Single_Drop_Waybill.rdlc";
@@ -95,17 +84,16 @@ namespace TACHYON.Waybills
             ArrayList data = new ArrayList();
 
             names.Add("SingleDropDataSet");
-            data.Add(_shippingRequestAppService.GetSingleDropWaybill(shippingRequestTripId));
+            data.Add(_shippingRequestAppService.GetDropWaybill(shippingRequestTripId, dropOffId));
 
             names.Add("SingleDropGoodsDetailsDataSet");
-            data.Add(_goodsDetailsAppService.GetShippingrequestGoodsDetailsForSingleDropWaybill(shippingRequestTripId));
+            data.Add(_goodsDetailsAppService.GetShippingrequestGoodsDetailsForSingleDropWaybill(shippingRequestTripId, dropOffId));
 
             names.Add("SingleDropVasDataSet");
             data.Add(_shippingRequestAppService.GetShippingRequestVasesForSingleDropWaybill(shippingRequestTripId));
 
             return _pdfExporterBase.GetRdlcPdfPackageAsBinaryData(reportPath, names, data);
         }
-
 
         private bool IsSingleDropShippingRequest(int shippingRequestTripId)
         {

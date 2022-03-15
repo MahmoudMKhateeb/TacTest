@@ -245,15 +245,17 @@ namespace TACHYON.Shipping.Drivers
             });
 
             //  Need Review This 
+            var allRatingLogList = await _ratingLogManager.GetAllRatingByUserAsync(RateType.FacilityByDriver, null, null, AbpSession.UserId);
             foreach (var point in tripDto.RoutePoints)
             {
-                point.IsFacilityRated = await _ratingLogManager.IsRateDoneBefore(new RatingLog
-                {
-                    DriverId = AbpSession.UserId,
-                    PointId = point.Id,
-                    RateType = RateType.FacilityByDriver,
-                    FacilityId = point.FacilityId
-                });
+                point.IsFacilityRated = allRatingLogList.Any(x => x.PointId == point.Id && x.FacilityId == point.FacilityId);
+                // point.IsFacilityRated = await _ratingLogManager.IsRateDoneBefore(new RatingLog
+                //{
+                //    DriverId = AbpSession.UserId,
+                //    PointId = point.Id,
+                //    RateType = RateType.FacilityByDriver,
+                //    FacilityId = point.FacilityId
+                //});
             }
 
             //fill incidents

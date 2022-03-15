@@ -630,6 +630,7 @@ namespace TACHYON.Authorization.Users
 
         public async Task<bool> CheckIfPhoneNumberValid(string phoneNumber, long? driverId)
         {
+            DisableTenancyFilters();
             var result = await _userManager.Users.FirstOrDefaultAsync(x => x.PhoneNumber == phoneNumber && x.Id != driverId);
             return (result == null);
         }

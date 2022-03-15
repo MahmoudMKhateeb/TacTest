@@ -67,9 +67,6 @@
                         {{ l('FacilityRating') }}
                       </th>
                       <th>
-                        {{ l('WayBillNumber') }}
-                      </th>
-                      <th>
                         {{ l('DatatablePickingType') }}
                       </th>
                     </tr>
@@ -131,18 +128,6 @@
                         <app-view-rating [max]="5" [rate]="record.facilityRate" [rateNumber]="0"></app-view-rating>
                       </td>
                       <td>
-                        <span class="ui-column-title"> {{ l('WayBillNumber') }}</span>
-                        <a
-                          *ngIf="RouteType != RouteTypes.SingleDrop && record.pickingType == PickingType.Dropoff && record.id"
-                          class="blueColor"
-                          [busyText]="l('downloadDocument')"
-                          [buttonBusy]="loading && id == record.id"
-                          (click)="downloadDropWayBill(record.id)"
-                        >
-                          {{ record.waybillNumber }}
-                        </a>
-                        <span *ngIf="RouteType == RouteTypes.SingleDrop">{{ record.waybillNumber }}</span>
-                      </td>
                       <td>
                         <span *ngIf="record.pickingType == 1" class="label label-success label-dot mr-2"></span>
                         <span *ngIf="record.pickingType == 1" class="font-weight-bold text-success">{{ l('pickup') }}</span>
