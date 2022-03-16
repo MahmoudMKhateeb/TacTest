@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Injector, OnInit, Output, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ModalDirective } from 'ngx-bootstrap/modal';
-import { InvoiceNoteListComponent } from '../invoice-note-list.component';
 
 @Component({
   selector: 'app-inovice-note-modal',
@@ -9,7 +8,6 @@ import { InvoiceNoteListComponent } from '../invoice-note-list.component';
 })
 export class InoviceNoteModalComponent extends AppComponentBase implements OnInit {
   @ViewChild('createOrEditModal', { static: true }) modal: ModalDirective;
-  // @ViewChild('invoiceNoteListComponent',{ static: true }) invoiceNoteListComponent: InvoiceNoteListComponent;
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
 
   active = false;

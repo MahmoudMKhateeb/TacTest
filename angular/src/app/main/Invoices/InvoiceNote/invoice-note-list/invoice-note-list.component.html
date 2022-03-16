@@ -149,6 +149,15 @@
                         >{{ l('Paid') }}</a
                       >
                     </li>
+                    <li *ngIf="options.data.status === NoteStatusesEnum.Draft">
+                      <a
+                        class="dropdown-item"
+                        href="javascript:;"
+                        *ngIf="feature.isEnabled('App.TachyonDealer') || !this.appSession.tenantId"
+                        (click)="noteModalComponent.show(options.data.id)"
+                        >{{ l('Note') }}</a
+                      >
+                    </li>
                   </ul>
                 </div>
               </div>
@@ -159,5 +168,6 @@
     </div>
     <app-inovice-note-modal #inoviceNoteModalComponent></app-inovice-note-modal>
     <create-or-edit-note-modal (modalSave)="refreshDataGrid()" #createOrEditNoteModalComponent></create-or-edit-note-modal>
+    <app-note-modal #noteModalComponent></app-note-modal>
   </div>
 </div>

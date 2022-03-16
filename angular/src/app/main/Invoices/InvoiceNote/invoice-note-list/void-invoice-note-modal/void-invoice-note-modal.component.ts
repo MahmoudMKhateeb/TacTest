@@ -3,7 +3,7 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import { ModalDirective } from '@node_modules/ngx-bootstrap/modal';
 import { InvoiceNoteServiceProxy, PartialVoidInvoiceDto } from '@shared/service-proxies/service-proxies';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
-import { CreateOrEditNoteModalComponent } from '@app/main/Invoices/InvoiceNote/invoice-note-list/create-or-edit-note-modal/create-or-edit-note-modal.component';
+import { CreateOrEditNoteModalComponent } from '../create-or-edit-note-modal/create-or-edit-note-modal.component';
 
 @Component({
   selector: 'void-invoice-note-modal',

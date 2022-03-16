@@ -285,6 +285,7 @@ import { InvoiceNoteListComponent } from './Invoices/InvoiceNote/invoice-note-li
 import { InoviceNoteModalComponent } from './Invoices/InvoiceNote/invoice-note-list/inovice-note-modal/inovice-note-modal.component';
 import { CreateOrEditNoteModalComponent } from './Invoices/InvoiceNote/invoice-note-list/create-or-edit-note-modal/create-or-edit-note-modal.component';
 import { VoidInvoiceNoteModalComponent } from './Invoices/InvoiceNote/invoice-note-list/void-invoice-note-modal/void-invoice-note-modal.component';
+import { NoteModalComponent } from './Invoices/InvoiceNote/invoice-note-list/note-modal/note-modal.component';
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
 @NgModule({
@@ -540,6 +541,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ViewRatingComponent,
     ShipmentHistoryComponent,
     VoidInvoiceNoteModalComponent,
+    NoteModalComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },

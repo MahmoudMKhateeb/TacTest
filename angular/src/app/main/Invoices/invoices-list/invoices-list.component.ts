@@ -16,7 +16,7 @@ import { Router } from '@angular/router';
 import CustomStore from '@node_modules/devextreme/data/custom_store';
 import { LoadOptions } from '@node_modules/devextreme/data/load_options';
 import { DxDataGridComponent } from '@node_modules/devextreme-angular';
-import { VoidInvoiceNoteModalComponent } from '@app/main/Invoices/InvoiceNote/invoice-note-list/void-invoice-note-modal/void-invoice-note-modal.component';
+import { VoidInvoiceNoteModalComponent } from '../InvoiceNote/invoice-note-list/void-invoice-note-modal/void-invoice-note-modal.component';
 
 @Component({
   templateUrl: './invoices-list.component.html',

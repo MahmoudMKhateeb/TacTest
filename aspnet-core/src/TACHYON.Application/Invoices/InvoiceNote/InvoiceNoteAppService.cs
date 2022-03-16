@@ -14,7 +14,6 @@ using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using TACHYON.Authorization.Users;
 using TACHYON.Common;
-using TACHYON.Configuration;
 using TACHYON.Documents.DocumentFiles;
 using TACHYON.Features;
 using TACHYON.Invoices.InoviceNote;
@@ -108,7 +107,7 @@ namespace TACHYON.Invoices.InvoiceNotes
         }
         public async Task<CreateOrEditInvoiceNoteDto> GetInvoiceNoteForEdit(int id)
         {
-           await DisableTenancyFiltersIfTachyonDealer();
+            await DisableTenancyFiltersIfTachyonDealer();
             var invoiceNote = await _invoiceNoteRepository.GetAll()
                 .Include(x => x.InvoiceItems)
                 .ThenInclude(x => x.ShippingRequestTripFK)
@@ -135,7 +134,7 @@ namespace TACHYON.Invoices.InvoiceNotes
         }
         public async Task<PartialVoidInvoiceDto> GetInvoiceForPartialVoid(long id)
         {
-           await DisableTenancyFiltersIfTachyonDealer();
+            await DisableTenancyFiltersIfTachyonDealer();
             var invoiceTenantId = await _invoiceReposity.GetAll().Where(x => x.Id == id).Select(x => x.TenantId).FirstOrDefaultAsync();
             var tenantEdition = await _tenantRepository.GetAll().Where(x => x.Id == invoiceTenantId).Select(c => c.EditionId).FirstOrDefaultAsync();
             if (tenantEdition == ShipperEditionId)
@@ -152,7 +151,7 @@ namespace TACHYON.Invoices.InvoiceNotes
               .FirstOrDefaultAsync(x => x.Id == id);
             return ObjectMapper.Map<PartialVoidInvoiceDto>(submitInvoice);
         }
-        public async Task Canacel(int invoiceId) 
+        public async Task Canacel(int invoiceId)
         {
             var invoiceNote = await _invoiceNoteRepository.FirstOrDefaultAsync(invoiceId);
 
@@ -160,6 +159,23 @@ namespace TACHYON.Invoices.InvoiceNotes
                 throw new UserFriendlyException(L("Theinvoicedosenotfound"));
 
             invoiceNote.Status = NoteStatus.Canceled;
+        }
+        public async Task AddRemarks(NoteInputDto input)
+        {
+            var shippginRequstTrip = await _invoiceNoteRepository.GetAll()
+                .FirstOrDefaultAsync(x => x.Id == input.Id);
+            shippginRequstTrip.Note = input.Note;
+            shippginRequstTrip.CanBePrinted = input.CanBePrinted;
+        }
+        public async Task<NoteInputDto> GetRemarks(int tripId)
+        {
+            return await _invoiceNoteRepository.GetAll()
+                  .Select(y => new NoteInputDto()
+                  {
+                      Id = y.Id,
+                      Note = y.Note,
+                      CanBePrinted = y.CanBePrinted
+                  }).FirstOrDefaultAsync(x => x.Id == tripId);
         }
         #endregion
 
@@ -204,7 +220,7 @@ namespace TACHYON.Invoices.InvoiceNotes
         {
             DisableTenancyFilters();
             var invoiceTenantId = await _invoiceReposity.GetAll().Where(x => x.Id == id).Select(x => x.TenantId).FirstOrDefaultAsync();
-            var tenantEdition = await _tenantRepository.GetAll().Where(x=>x.Id == invoiceTenantId).Select(z=>z.EditionId).FirstOrDefaultAsync();
+            var tenantEdition = await _tenantRepository.GetAll().Where(x => x.Id == invoiceTenantId).Select(z => z.EditionId).FirstOrDefaultAsync();
             if (tenantEdition == ShipperEditionId)
             {
                 return await _invoiveTripRepository.GetAll()
@@ -247,7 +263,7 @@ namespace TACHYON.Invoices.InvoiceNotes
         }
         private async Task Update(CreateOrEditInvoiceNoteDto model)
         {
-           await DisableTenancyFiltersIfTachyonDealer();
+            await DisableTenancyFiltersIfTachyonDealer();
             var inoviceNote = await _invoiceNoteRepository.GetAll().FirstOrDefaultAsync(x => x.Id == model.Id.Value);
 
             if (inoviceNote == null)
@@ -311,7 +327,7 @@ namespace TACHYON.Invoices.InvoiceNotes
                    .Where(x => x.InvoiceNumber == InvoiceNumber)
                    .Select(x => x.Trips).FirstOrDefaultAsync();
 
-            var invoiceItem = trips.Where(x => items.Select(x=>x.TripId).Contains(x.TripId));
+            var invoiceItem = trips.Where(x => items.Select(x => x.TripId).Contains(x.TripId));
 
             invoiceNote.TotalValue = (decimal)invoiceItem.Sum(r => r.ShippingRequestTripFK.TotalAmountWithCommission + r.ShippingRequestTripFK.ShippingRequestTripVases.Sum(v => v.TotalAmountWithCommission));
             invoiceNote.VatAmount = (decimal)invoiceItem.Sum(r => r.ShippingRequestTripFK.VatAmountWithCommission + r.ShippingRequestTripFK.ShippingRequestTripVases.Sum(v => v.VatAmountWithCommission));

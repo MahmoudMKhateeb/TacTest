@@ -27,6 +27,10 @@ namespace TACHYON.Invoices
         public long InvoiceNumber { get; set; }
         public VoidType VoidType { get; set; }
         public bool IsManual { get; set; }
+        #region Note
+        public bool CanBePrinted { get; set; }
+        public string Note { get; set; }
+        #endregion
         public List<InvoiceNoteItem> InvoiceItems { get; set; }
         public InvoiceNote()
         {
