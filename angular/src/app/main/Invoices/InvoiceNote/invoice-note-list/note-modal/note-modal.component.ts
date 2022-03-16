@@ -19,7 +19,7 @@ export class NoteModalComponent extends AppComponentBase implements OnInit {
   }
   ngOnInit(): void {}
   show(id: number): void {
-    this._invoiceNoteServiceProxy.getRemarks(id).subscribe((result) => {
+    this._invoiceNoteServiceProxy.getNote(id).subscribe((result) => {
       this.noteInput = result;
     });
     this.active = true;
@@ -35,7 +35,7 @@ export class NoteModalComponent extends AppComponentBase implements OnInit {
   save(): void {
     this.saving = true;
     this._invoiceNoteServiceProxy
-      .addRemarks(this.noteInput)
+      .addNote(this.noteInput)
       .pipe(
         finalize(() => {
           this.saving = false;

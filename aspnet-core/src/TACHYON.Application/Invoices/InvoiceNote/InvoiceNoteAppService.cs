@@ -160,15 +160,17 @@ namespace TACHYON.Invoices.InvoiceNotes
 
             invoiceNote.Status = NoteStatus.Canceled;
         }
-        public async Task AddRemarks(NoteInputDto input)
+        public async Task AddNote(NoteInputDto input)
         {
-            var shippginRequstTrip = await _invoiceNoteRepository.GetAll()
+           await DisableTenancyFiltersIfTachyonDealer();
+            var invoiceNote = await _invoiceNoteRepository.GetAll()
                 .FirstOrDefaultAsync(x => x.Id == input.Id);
-            shippginRequstTrip.Note = input.Note;
-            shippginRequstTrip.CanBePrinted = input.CanBePrinted;
+            invoiceNote.Note = input.Note;
+            invoiceNote.CanBePrinted = input.CanBePrinted;
         }
-        public async Task<NoteInputDto> GetRemarks(int tripId)
+        public async Task<NoteInputDto> GetNote(int tripId)
         {
+            await DisableTenancyFiltersIfTachyonDealer();
             return await _invoiceNoteRepository.GetAll()
                   .Select(y => new NoteInputDto()
                   {
@@ -437,6 +439,9 @@ namespace TACHYON.Invoices.InvoiceNotes
 
             if (document != null)
                 invoiceNoteDto.TenantVatNumber = documentVat.Number;
+
+            if (invoiceNote.CanBePrinted)
+                invoiceNoteDto.Notes = invoiceNote.Note;
 
             return new List<InvoiceNoteInfoDto>() { invoiceNoteDto };
         }
