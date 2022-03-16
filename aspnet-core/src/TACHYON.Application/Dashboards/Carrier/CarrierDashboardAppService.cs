@@ -56,44 +56,45 @@ namespace TACHYON.Dashboards.Carrier
         public async Task<ActivityItemsDto> GetDriversActivity()
         {
             DisableTenancyFilters();
-             var drivers = _usersRepository.GetAll().AsNoTracking()
-                 .Where(r => r.IsDriver && r.TenantId == AbpSession.TenantId);
+             var drivers = await _usersRepository.GetAll().AsNoTracking()
+                 .Where(r => r.IsDriver && r.TenantId == AbpSession.TenantId).ToListAsync();
             return new ActivityItemsDto()
             {
-                ActiveItems = await drivers.Where(r => r.IsActive).CountAsync(),
-                NotActiveItems = await drivers.Where(r => !r.IsActive).CountAsync()
+                ActiveItems = drivers.Where(r => r.IsActive).Count(),
+                NotActiveItems = drivers.Where(r => !r.IsActive).Count()
             };
         }
 
         public async Task<ActivityItemsDto> GetTrucksActivity()
         {
             DisableTenancyFilters();
-            var trucks = _trucksRepository.GetAll().AsNoTracking()
-                       .Where(r => r.TenantId == AbpSession.TenantId);
+            var trucks = await _trucksRepository.GetAll().AsNoTracking()
+                       .Where(r => r.TenantId == AbpSession.TenantId).ToListAsync();
             return new ActivityItemsDto()
             {
-                ActiveItems = await trucks.Where(r => r.TruckStatusId == 1).CountAsync(),
-                NotActiveItems = await trucks.Where(r => r.TruckStatusId == 2).CountAsync()
+                ActiveItems = trucks.Where(r => r.TruckStatusId == 1).Count(),
+                NotActiveItems = trucks.Where(r => r.TruckStatusId == 2).Count()
             };
         }
 
         public async Task<List<MostShippersWorksListDto>> GetMostWorkedWithShippers()
         {
             DisableTenancyFilters();
-
-            return await _shippingRequestRepository.GetAll().AsNoTracking()
-                .Include(r => r.CarrierTenantFk)
-                .WhereIf(IsEnabled(AppFeatures.Carrier), x => x.CarrierTenantId != null && x.CarrierTenantId == AbpSession.TenantId)
-                .GroupBy(r => new { r.TenantId, r.Tenant.TenancyName, r.Tenant.Rate })
-                .Select(shipper => new MostShippersWorksListDto()
-                {
-                    Id = shipper.Key.TenantId,
-                    ShipperName = shipper.Key.TenancyName,
-                    ShipperRating = shipper.Key.Rate,
-                    NumberOfTrips = _shippingRequestTripRepository.GetAll().AsNoTracking().Where(r => r.ShippingRequestFk.TenantId == AbpSession.TenantId && r.ShippingRequestFk.TenantId == shipper.Key.TenantId).Count(),
-                    Count = shipper.Count()
-                })
-                .OrderByDescending(r => r.Count).Take(5).ToListAsync();
+            var requests = await _shippingRequestRepository.GetAll().Include(r => r.Tenant).Include(r => r.CarrierTenantFk).AsNoTracking()
+                 .Where(x => x.CarrierTenantId != null && x.CarrierTenantId == AbpSession.TenantId)
+                 .ToListAsync();
+            var shippersIdsList = requests.Select(x => x.Id).ToList();
+            var trips = await _shippingRequestTripRepository.GetAll()
+                             .Include(r => r.ShippingRequestFk).ThenInclude(r => r.Tenant).AsNoTracking()
+                             .Where(r => shippersIdsList.Contains(r.ShippingRequestFk.TenantId)).Distinct().ToListAsync();
+            return requests.Select(shipper => new MostShippersWorksListDto()
+            {
+                Id = shipper.TenantId,
+                ShipperName = shipper.Tenant.TenancyName,
+                ShipperRating = shipper.Tenant.Rate,
+                NumberOfTrips = trips.Where(r => r.ShippingRequestFk != null && r.ShippingRequestFk.TenantId == shipper.TenantId).Count(),
+            }).OrderByDescending(r => r.NumberOfTrips).Take(5).ToList();
+            
         }
 
         public async Task<List<VasTypeDto>> GetMostVasesUsedByShippers()
@@ -104,13 +105,13 @@ namespace TACHYON.Dashboards.Carrier
                 .Include(r => r.ShippingRequestFk)
                  .ThenInclude(r => r.Tenant)
                 .Include(r => r.VasFk)
-                .WhereIf(await IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestFk.CarrierTenantId != null && x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
+                .Where(x => x.ShippingRequestFk.CarrierTenantId != null && x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
                 .GroupBy(r => new { r.VasFk.Name })
                 .Select(vas => new VasTypeDto()
                 {
                     VasType = vas.Key.Name,
                     AvailableVasTypeCount = vas.Count()
-                }).OrderByDescending(r => r.AvailableVasTypeCount).Take(5).ToListAsync();
+                }).Distinct().OrderByDescending(r => r.AvailableVasTypeCount).Take(5).ToListAsync();
         }
 
 

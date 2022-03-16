@@ -2,10 +2,14 @@ input[type='radio'] {
   display: none;
 }
 :host ::ng-deep .sales-summary-chart svg.ngx-charts {
-  margin-left: -35px;
-  margin-top: 35px;
+  margin-left: -35px !important;
+  margin-top: 35px !important;
 }
 th,
 td {
   text-align: center !important;
+}
+.red {
+  margin-top: -6% !important;
+  margin-left: 0% !important;
 }

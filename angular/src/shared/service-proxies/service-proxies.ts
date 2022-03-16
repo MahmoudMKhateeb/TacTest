@@ -18775,11 +18775,10 @@ export class HostDashboardServiceProxy {
   /**
    * @return Success
    */
-  getAccountsStatistics(salesSummaryDatePeriod: SalesSummaryDatePeriod): Observable<ListPerMonthDto[]> {
+  getAccountsStatistics(datePeriod: FilterDatePeriod): Observable<ListPerMonthDto[]> {
     let url_ = this.baseUrl + '/api/services/app/HostDashboard/GetAccountsStatistics?';
-    if (salesSummaryDatePeriod === undefined || salesSummaryDatePeriod === null)
-      throw new Error("The parameter 'salesSummaryDatePeriod' must be defined and cannot be null.");
-    else url_ += 'SalesSummaryDatePeriod=' + encodeURIComponent('' + salesSummaryDatePeriod) + '&';
+    if (datePeriod === undefined || datePeriod === null) throw new Error("The parameter 'datePeriod' must be defined and cannot be null.");
+    else url_ += 'DatePeriod=' + encodeURIComponent('' + datePeriod) + '&';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -18847,11 +18846,10 @@ export class HostDashboardServiceProxy {
   /**
    * @return Success
    */
-  getNewTripsStatistics(salesSummaryDatePeriod: SalesSummaryDatePeriod): Observable<ListPerMonthDto[]> {
+  getNewTripsStatistics(datePeriod: FilterDatePeriod): Observable<ListPerMonthDto[]> {
     let url_ = this.baseUrl + '/api/services/app/HostDashboard/GetNewTripsStatistics?';
-    if (salesSummaryDatePeriod === undefined || salesSummaryDatePeriod === null)
-      throw new Error("The parameter 'salesSummaryDatePeriod' must be defined and cannot be null.");
-    else url_ += 'SalesSummaryDatePeriod=' + encodeURIComponent('' + salesSummaryDatePeriod) + '&';
+    if (datePeriod === undefined || datePeriod === null) throw new Error("The parameter 'datePeriod' must be defined and cannot be null.");
+    else url_ += 'DatePeriod=' + encodeURIComponent('' + datePeriod) + '&';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -19855,11 +19853,10 @@ export class HostDashboardServiceProxy {
   /**
    * @return Success
    */
-  getUnpricedRequestsInMarketplace(salesSummaryDatePeriod: SalesSummaryDatePeriod): Observable<ListRequestsUnPricedMarketPlace[]> {
+  getUnpricedRequestsInMarketplace(datePeriod: FilterDatePeriod): Observable<ListRequestsUnPricedMarketPlace[]> {
     let url_ = this.baseUrl + '/api/services/app/HostDashboard/GetUnpricedRequestsInMarketplace?';
-    if (salesSummaryDatePeriod === undefined || salesSummaryDatePeriod === null)
-      throw new Error("The parameter 'salesSummaryDatePeriod' must be defined and cannot be null.");
-    else url_ += 'SalesSummaryDatePeriod=' + encodeURIComponent('' + salesSummaryDatePeriod) + '&';
+    if (datePeriod === undefined || datePeriod === null) throw new Error("The parameter 'datePeriod' must be defined and cannot be null.");
+    else url_ += 'DatePeriod=' + encodeURIComponent('' + datePeriod) + '&';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -35597,11 +35594,10 @@ export class ShipperDashboardServiceProxy {
   /**
    * @return Success
    */
-  getCompletedTripsCountPerMonth(salesSummaryDatePeriod: SalesSummaryDatePeriod): Observable<ListPerMonthDto[]> {
+  getCompletedTripsCountPerMonth(datePeriod: FilterDatePeriod): Observable<ListPerMonthDto[]> {
     let url_ = this.baseUrl + '/api/services/app/ShipperDashboard/GetCompletedTripsCountPerMonth?';
-    if (salesSummaryDatePeriod === undefined || salesSummaryDatePeriod === null)
-      throw new Error("The parameter 'salesSummaryDatePeriod' must be defined and cannot be null.");
-    else url_ += 'SalesSummaryDatePeriod=' + encodeURIComponent('' + salesSummaryDatePeriod) + '&';
+    if (datePeriod === undefined || datePeriod === null) throw new Error("The parameter 'datePeriod' must be defined and cannot be null.");
+    else url_ += 'DatePeriod=' + encodeURIComponent('' + datePeriod) + '&';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -35930,11 +35926,10 @@ export class ShipperDashboardServiceProxy {
   /**
    * @return Success
    */
-  getRequestsInMarketpalce(salesSummaryDatePeriod: SalesSummaryDatePeriod): Observable<RequestsInMarketpalceDto[]> {
+  getRequestsInMarketpalce(datePeriod: FilterDatePeriod): Observable<RequestsInMarketpalceDto[]> {
     let url_ = this.baseUrl + '/api/services/app/ShipperDashboard/GetRequestsInMarketpalce?';
-    if (salesSummaryDatePeriod === undefined || salesSummaryDatePeriod === null)
-      throw new Error("The parameter 'salesSummaryDatePeriod' must be defined and cannot be null.");
-    else url_ += 'SalesSummaryDatePeriod=' + encodeURIComponent('' + salesSummaryDatePeriod) + '&';
+    if (datePeriod === undefined || datePeriod === null) throw new Error("The parameter 'datePeriod' must be defined and cannot be null.");
+    else url_ += 'DatePeriod=' + encodeURIComponent('' + datePeriod) + '&';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -70602,7 +70597,7 @@ export interface ITruckTypeAvailableTrucksDto {
   id: number;
 }
 
-export enum SalesSummaryDatePeriod {
+export enum FilterDatePeriod {
   Daily = 1,
   Weekly = 2,
   Monthly = 3,
@@ -90388,6 +90383,12 @@ export class GetMemberActivityOutput implements IGetMemberActivityOutput {
 
 export interface IGetMemberActivityOutput {
   memberActivities: MemberActivity[] | undefined;
+}
+
+export enum SalesSummaryDatePeriod {
+  Daily = 1,
+  Weekly = 2,
+  Monthly = 3,
 }
 
 export class SalesSummaryData implements ISalesSummaryData {

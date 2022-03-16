@@ -74,7 +74,7 @@ export class HostRquestAcceptanceMeterComponent extends AppComponentBase impleme
           stroke: {
             dashArray: 4,
           },
-          labels: ['RequestAcceptancePercentage'],
+          labels: [''],
         };
 
         this.loading = false;

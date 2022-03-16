@@ -10,26 +10,26 @@
           <div class="btn-group" data-toggle="buttons">
             <label
               class="btn btn-secondary active"
-              [ngClass]="{ active: selectedDatePeriod == appSalesSummaryDateInterval.Daily }"
-              (click)="reload(appSalesSummaryDateInterval.Daily)"
+              [ngClass]="{ active: selectedDatePeriod == filterDatePeriodInterval.Daily }"
+              (click)="reload(filterDatePeriodInterval.Daily)"
             >
-              <input type="radio" name="SalesSummaryDateInterval" [value]="appSalesSummaryDateInterval.Daily" />
+              <input type="radio" name="filterDatePeriodInterval" [value]="filterDatePeriodInterval.Daily" />
               {{ 'Daily' | localize }}
             </label>
             <label
               class="btn btn-secondary"
-              [ngClass]="{ active: selectedDatePeriod == appSalesSummaryDateInterval.Weekly }"
-              (click)="reload(appSalesSummaryDateInterval.Weekly)"
+              [ngClass]="{ active: selectedDatePeriod == filterDatePeriodInterval.Weekly }"
+              (click)="reload(filterDatePeriodInterval.Weekly)"
             >
-              <input type="radio" name="SalesSummaryDateInterval" [value]="appSalesSummaryDateInterval.Weekly" />
+              <input type="radio" name="filterDatePeriodInterval" [value]="filterDatePeriodInterval.Weekly" />
               {{ 'Weekly' | localize }}
             </label>
             <label
               class="btn btn-secondary"
-              [ngClass]="{ active: selectedDatePeriod == appSalesSummaryDateInterval.Monthly }"
-              (click)="reload(appSalesSummaryDateInterval.Monthly)"
+              [ngClass]="{ active: selectedDatePeriod == filterDatePeriodInterval.Monthly }"
+              (click)="reload(filterDatePeriodInterval.Monthly)"
             >
-              <input type="radio" name="SalesSummaryDateInterval" [value]="appSalesSummaryDateInterval.Monthly" />
+              <input type="radio" name="SalesSummaryDateInterval" [value]="filterDatePeriodInterval.Monthly" />
               {{ 'Monthly' | localize }}
             </label>
           </div>

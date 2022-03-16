@@ -1,6 +1,6 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { ChartOptionsBars } from '@app/shared/common/customizable-dashboard/widgets/ApexInterfaces';
-import { HostDashboardServiceProxy, SalesSummaryDatePeriod } from '@shared/service-proxies/service-proxies';
+import { FilterDatePeriod, HostDashboardServiceProxy, SalesSummaryDatePeriod } from '@shared/service-proxies/service-proxies';
 import { finalize } from 'rxjs/operators';
 import { WidgetComponentBase } from '../../widget-component-base';
 
@@ -13,11 +13,9 @@ export class HostNewAccountsChartComponent extends WidgetComponentBase implement
   months: string[];
   counts: number[];
   loading: boolean = false;
-  fromDate: moment.Moment = null;
-  toDate: moment.Moment = null;
   saving = false;
-  appSalesSummaryDateInterval = SalesSummaryDatePeriod;
-  selectedDatePeriod: SalesSummaryDatePeriod;
+  filterDatePeriodInterval = FilterDatePeriod;
+  selectedDatePeriod: FilterDatePeriod;
 
   constructor(private injector: Injector, private _hostDashboardServiceProxy: HostDashboardServiceProxy) {
     super(injector);
@@ -26,7 +24,9 @@ export class HostNewAccountsChartComponent extends WidgetComponentBase implement
   public chartOptions: Partial<ChartOptionsBars>;
 
   ngOnInit(): void {
-    this.getAccounts(this.appSalesSummaryDateInterval.Daily);
+    this.runDelayed(() => {
+      this.getAccounts(this.filterDatePeriodInterval.Daily);
+    });
   }
 
   reload(datePeriod) {
@@ -42,7 +42,7 @@ export class HostNewAccountsChartComponent extends WidgetComponentBase implement
     this.getAccounts(this.selectedDatePeriod);
   }
 
-  getAccounts(datePeriod: SalesSummaryDatePeriod) {
+  getAccounts(datePeriod: FilterDatePeriod) {
     this.counts = [];
     this.months = [];
     this.loading = true;
@@ -57,13 +57,13 @@ export class HostNewAccountsChartComponent extends WidgetComponentBase implement
       .subscribe((result) => {
         result.forEach((element) => {
           var txt = '';
-          if (datePeriod == SalesSummaryDatePeriod.Daily) {
+          if (datePeriod == FilterDatePeriod.Daily) {
             txt = element.day + '-' + element.month;
           }
-          if (datePeriod == SalesSummaryDatePeriod.Weekly) {
+          if (datePeriod == FilterDatePeriod.Weekly) {
             txt = 'week-' + element.week;
           }
-          if (datePeriod == SalesSummaryDatePeriod.Monthly) {
+          if (datePeriod == FilterDatePeriod.Monthly) {
             txt = 'month-' + element.month;
           }
           this.months.push(txt);

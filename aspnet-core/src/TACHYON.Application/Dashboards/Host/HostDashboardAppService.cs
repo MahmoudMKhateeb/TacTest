@@ -77,130 +77,175 @@ namespace TACHYON.Dashboards.Host
         {
             DisableTenancyFiltersIfHost();
             await DisableTenancyFiltersIfTachyonDealer();
-            return await _lookup_trucksTypeRepository.GetAll()
-            .Select(x => new TruckTypeAvailableTrucksDto()
+
+            var truckTypes = await _lookup_trucksTypeRepository.GetAll().ToListAsync();
+            var truckIdsList = truckTypes.Select(x => x.Id).ToList();
+            var requests = await _shippingRequestRepository.GetAll()
+                .Where(x => truckIdsList.Contains(x.TrucksTypeId.Value))
+                .ToListAsync();
+            return truckTypes.Select(x => new TruckTypeAvailableTrucksDto
             {
-                Id = x.Id,
-                TruckType = x.DisplayName,
-                AvailableTrucksCount = _shippingRequestRepository.GetAll().AsNoTracking().Where(r => r.TrucksTypeId == x.Id && r.CreationTime.Year == Clock.Now.Year).Count()
-
-            }).Where(r => r.AvailableTrucksCount > 0).ToListAsync();
-
+                Id=x.Id,
+                TruckType=x.DisplayName,
+                AvailableTrucksCount= requests.Where(y=>y.TrucksTypeId == x.Id).Count()
+            }).Where(r => r.AvailableTrucksCount > 0).ToList();
         }
         //Get Data For Current year by default
         public async Task<List<ListPerMonthDto>> GetAccountsStatistics(GetDataByDateFilterInput input)
         {
             DisableTenancyFiltersIfHost();
             await DisableTenancyFiltersIfTachyonDealer();
-            var list = await _usersRepository.GetAll().AsNoTracking()
-                .Where(r => !r.IsDriver && r.CreationTime.Year == Clock.Now.Year)
-                .WhereIf(input.SalesSummaryDatePeriod == SalesSummaryDatePeriod.Daily, r => r.CreationTime > Clock.Now.AddDays(-30) && r.CreationTime < Clock.Now)
-                .GroupBy(r => new { r.CreationTime.Year, r.CreationTime.Month, r.CreationTime.Day })
-                .Select(g => new ListPerMonthDto() { Year = g.Key.Year, Month = g.Key.Month.ToString(), Day = g.Key.Day, Count = g.Count() })
-                .OrderBy(x => x.Year).ThenBy(x => x.Month)
-             .ToListAsync();
-
-            list.ForEach(r =>
+            var groupedAccountList = new List<ListPerMonthDto>();
+            //daily => default before 30 day
+            if (input.DatePeriod == FilterDatePeriod.Daily)
             {
-                r.Month = new DateTime(r.Year, Convert.ToByte(r.Month), r.Day).ToString("MMM");
-            });
-        
-            if(input.SalesSummaryDatePeriod == SalesSummaryDatePeriod.Weekly)
-            {
-                DateTime firstDay = new DateTime(DateTime.Now.Year,1,1);
-
-                var query = (from u in _usersRepository.GetAll().AsNoTracking().AsEnumerable()
-                       where u.IsDriver == false && u.CreationTime.Year == Clock.Now.Year
-                       group u by new { u.CreationTime.Year, WeekNumber = (u.CreationTime - new DateTime(DateTime.Now.Year, 1, 1)).Days / 7 } into ut
-                       select new ListPerMonthDto { Year = ut.Key.Year, Week = ut.Key.WeekNumber, Count = ut.Count() });
-                list = query.OrderBy(r=>r.Week).ToList();
-                
-            }
-            if (input.SalesSummaryDatePeriod == SalesSummaryDatePeriod.Monthly)
-            {
-
-                list = await _usersRepository.GetAll().AsNoTracking()
-                .Where(r => !r.IsDriver && r.CreationTime.Year == Clock.Now.Year)
-                .GroupBy(r => new {
-                    year = r.CreationTime.Year,
-                    month = r.CreationTime.Month
-                })
-                .Select(g => new ListPerMonthDto() { Year = g.Key.year, Month = g.Key.month.ToString(), Count = g.Count() })
-                .OrderBy(x => x.Year).ThenBy(x => x.Month)
-                .ToListAsync();
-
-                list.ForEach(r =>
+                var AccountsDailyList = await _usersRepository.GetAll().AsNoTracking()
+                .Where(r => !r.IsDriver &&
+                r.CreationTime.Year == Clock.Now.Year &&
+                r.CreationTime > Clock.Now.AddDays(-30)).ToListAsync();
+                var grouped = AccountsDailyList
+                    .GroupBy(r => new { r.CreationTime.Day, r.CreationTime.Year, r.CreationTime.Month })
+                    .Select(s => new
+                    {
+                        list = s.ToList(),
+                        Year = s.Key.Year,
+                        Day = s.Key.Day,
+                        Month = s.Key.Month.ToString()
+                    }).ToList();
+                groupedAccountList = grouped.Select(g => new ListPerMonthDto
                 {
-                    r.Month = new DateTime(r.Year, Convert.ToByte(r.Month), 1).ToString("MMM");
-                });
+                    Year = g.Year,
+                    Month = g.Month,
+                    Day = g.Day,
+                    Count = g.list.Count(),
+                }).OrderBy(r => r.Day).ToList();
             }
-            return list;
+            if (input.DatePeriod == FilterDatePeriod.Weekly)
+            {
+                DateTime firstDay = new DateTime(DateTime.Now.Year, 1, 1);
+
+                var AccountsWeeklyList = (from u in _usersRepository.GetAll().AsNoTracking().AsEnumerable()
+                                       where !u.IsDriver && u.CreationTime.Year == Clock.Now.Year
+                                       group u by new { u.CreationTime.Year, WeekNumber = (u.CreationTime - new DateTime(DateTime.Now.Year, 1, 1)).Days / 7 } into ut
+                                       select new { list = ut.ToList(), Year = ut.Key.Year, Week = ut.Key.WeekNumber }).ToList();
+
+
+                groupedAccountList = AccountsWeeklyList.Select(x => new ListPerMonthDto
+                {
+                    Year = x.Year,
+                    Week = x.Week,
+                    Count = x.list.Count()
+                }).OrderBy(r => r.Week).Distinct().ToList();
+
+            }
+            if (input.DatePeriod == FilterDatePeriod.Monthly)
+            {
+                var AccountsMonthlyList = await _usersRepository.GetAll().AsNoTracking()
+                    .Where(r => !r.IsDriver && r.CreationTime.Year == Clock.Now.Year).ToListAsync();
+
+                var grouped2 = AccountsMonthlyList
+            .GroupBy(r => new { r.CreationTime.Year, r.CreationTime.Month })
+            .Select(s => new
+            {
+                list = s.ToList(),
+                Year = s.Key.Year,
+                Month = s.Key.Month.ToString()
+            }).ToList();
+                groupedAccountList = grouped2.Select(g => new ListPerMonthDto
+                {
+                    Year = g.Year,
+                    Month = new DateTime(g.Year, Convert.ToInt16(g.Month), 1).ToString("MMM"),
+                    Count = g.list.Count(),
+                }).ToList();
+            }
+            return groupedAccountList;
         }
 
         public async Task<List<ListPerMonthDto>> GetNewTripsStatistics(GetDataByDateFilterInput input)
         {
             DisableTenancyFiltersIfHost();
             await DisableTenancyFiltersIfTachyonDealer();
-
-            var groupedTrips = await _shippingRequestTripRepository.GetAll().AsNoTracking()
-                .Where(x => x.Status == ShippingRequestTripStatus.New && x.CreationTime.Year == Clock.Now.Year)
-                .WhereIf(input.SalesSummaryDatePeriod == SalesSummaryDatePeriod.Daily, r => r.CreationTime > Clock.Now.AddDays(-30) && r.CreationTime < Clock.Now)
-                .GroupBy(r => new { r.CreationTime.Year, r.CreationTime.Month , r.CreationTime.Day })
-                .Select(g => new ListPerMonthDto() { Year = g.Key.Year, Month = g.Key.Month.ToString(), Day = g.Key.Day, Count = g.Count() })
-                .OrderBy(x => x.Day)
-             .ToListAsync();
-
-            groupedTrips.ForEach(r =>
+            var groupedTripsList = new List<ListPerMonthDto>();
+            //daily => default before 30 day
+            if (input.DatePeriod == FilterDatePeriod.Daily)
             {
-                r.Month = new DateTime(r.Year, Convert.ToByte(r.Month),1).ToString("MMM");
-            });
-
-            if (input.SalesSummaryDatePeriod == SalesSummaryDatePeriod.Weekly)
+                var TripsDailyList = await _shippingRequestTripRepository.GetAll().AsNoTracking()
+                .Where(r => r.Status == ShippingRequestTripStatus.New &&
+                r.CreationTime.Year == Clock.Now.Year &&
+                r.CreationTime > Clock.Now.AddDays(-30)).ToListAsync();
+                var grouped = TripsDailyList
+                    .GroupBy(r => new { r.CreationTime.Day, r.CreationTime.Year, r.CreationTime.Month })
+                    .Select(s => new
+                    {
+                        list = s.ToList(),
+                        Year = s.Key.Year,
+                        Day = s.Key.Day,
+                        Month = s.Key.Month.ToString()
+                    }).ToList();
+                groupedTripsList = grouped.Select(g => new ListPerMonthDto
+                {
+                    Year = g.Year,
+                    Month = g.Month,
+                    Day = g.Day,
+                    Count = g.list.Count(),
+                }).OrderBy(r => r.Day).ToList();
+            }
+            if (input.DatePeriod == FilterDatePeriod.Weekly)
             {
                 DateTime firstDay = new DateTime(DateTime.Now.Year, 1, 1);
 
-                var query = (from u in _shippingRequestTripRepository.GetAll().AsNoTracking().AsEnumerable()
-                             where u.Status == ShippingRequestTripStatus.New && u.CreationTime.Year == Clock.Now.Year
-                             group u by new { u.CreationTime.Year, WeekNumber = (u.CreationTime - new DateTime(DateTime.Now.Year, 1, 1)).Days / 7 } into ut
-                             select new ListPerMonthDto { Year = ut.Key.Year, Week = ut.Key.WeekNumber, Count = ut.Count() });
-                groupedTrips = query.OrderBy(r => r.Week).ToList();
-            }
-            if (input.SalesSummaryDatePeriod == SalesSummaryDatePeriod.Monthly)
-            {
+                var TripsWeeklyList = (from u in _shippingRequestTripRepository.GetAll().AsNoTracking().AsEnumerable()
+                                         where u.Status == ShippingRequestTripStatus.New && u.CreationTime.Year == Clock.Now.Year
+                                         group u by new { u.CreationTime.Year, WeekNumber = (u.CreationTime - new DateTime(DateTime.Now.Year, 1, 1)).Days / 7 } into ut
+                                         select new { list = ut.ToList(),  Year = ut.Key.Year, Week = ut.Key.WeekNumber }).ToList();
 
-                groupedTrips = await _shippingRequestTripRepository.GetAll().AsNoTracking()
-                .Where(x => x.Status == ShippingRequestTripStatus.New && x.CreationTime.Year == Clock.Now.Year)
-                .GroupBy(r => new {
-                    year = r.CreationTime.Year,
-                    month = r.CreationTime.Month
-                })
-                .Select(g => new ListPerMonthDto() { Year = g.Key.year, Month = g.Key.month.ToString(), Count = g.Count() })
-                .OrderBy(x => x.Year).ThenBy(x => x.Month)
-                .ToListAsync();
-
-                groupedTrips.ForEach(r =>
+               
+                groupedTripsList = TripsWeeklyList.Select(x => new ListPerMonthDto
                 {
-                    r.Month = new DateTime(r.Year, Convert.ToByte(r.Month), 1).ToString("MMM");
-                });
+                    Year = x.Year,
+                    Week = x.Week,
+                    Count = x.list.Count()
+                }).OrderBy(r => r.Week).Distinct().ToList();
+
             }
+            if (input.DatePeriod == FilterDatePeriod.Monthly)
+            {
+                var TripsMonthlyList = await _shippingRequestTripRepository.GetAll().AsNoTracking()
+                    .Where(r => r.Status == ShippingRequestTripStatus.New && r.CreationTime.Year == Clock.Now.Year).ToListAsync();
 
-            return groupedTrips;
+                var grouped2 = TripsMonthlyList
+            .GroupBy(r => new { r.CreationTime.Year, r.CreationTime.Month })
+            .Select(s => new
+            {
+                list = s.ToList(),
+                Year = s.Key.Year,
+                Month = s.Key.Month.ToString()
+            }).ToList();
+                groupedTripsList = grouped2.Select(g => new ListPerMonthDto
+                {
+                    Year = g.Year,
+                    Month = new DateTime(g.Year, Convert.ToInt16(g.Month), 1).ToString("MMM"),
+                    Count = g.list.Count(),
+                }).ToList();
+            }
+            return groupedTripsList;
         }
-
         public async Task<List<GoodTypeAvailableDto>> GetGoodTypeCountPerMonth()
         {
             DisableTenancyFiltersIfHost();
             await DisableTenancyFiltersIfTachyonDealer();
-
-            return await _goodTypesRepository.GetAll().AsNoTracking()
-           .Select(x => new GoodTypeAvailableDto()
-           {
-               Id = x.Id,
-               GoodType = x.Translations.FirstOrDefault() != null ? x.Translations.FirstOrDefault().DisplayName : "",
-               AvailableGoodTypesCount = _shippingRequestRepository.GetAll().Where(r => r.GoodCategoryId == x.Id && r.CreationTime.Year == DateTime.Now.Year).Count()
-
-           }).Where(r => r.AvailableGoodTypesCount > 0).ToListAsync();
-
+            var goodTypes = await _goodTypesRepository.GetAll().ToListAsync();
+            var goodTypesIdsList = goodTypes.Select(x => x.Id).ToList();
+            var requests = await _shippingRequestRepository.GetAll()
+                .Where(x => x.GoodCategoryId != null && goodTypesIdsList.Contains(x.GoodCategoryId.Value))
+                .ToListAsync();
+            var g = goodTypes.Select(x => new GoodTypeAvailableDto
+            {
+                Id = x.Id,
+                GoodType = x.Translations != null ? x.Translations.FirstOrDefault().DisplayName : x.Key,
+                AvailableGoodTypesCount = requests.Where(y => y.GoodCategoryId == x.Id).Count()
+            }).Where(r => r.AvailableGoodTypesCount > 0).ToList();
+            return g;
         }
 
         public async Task<List<RouteTypeAvailableDto>> GetRouteTypeCountPerMonth()
@@ -282,15 +327,18 @@ namespace TACHYON.Dashboards.Host
         {
             DisableTenancyFiltersIfHost();
             await DisableTenancyFiltersIfTachyonDealer();
-
-            return await _tenantRepository.GetAll().AsNoTracking().Include(r => r.Edition).Where(r => r.Edition.DisplayName.Contains(TACHYONConsts.ShipperEdtionName))
-            .Select(tenant => new ListUsersHaveMostRequests()
+            var shippers = await _tenantRepository.GetAll().Include(r => r.Edition).AsNoTracking().Where(r => r.Edition.DisplayName.Contains(TACHYONConsts.ShipperEdtionName)).ToListAsync();
+            var shippersIdsList = shippers.Select(x => x.Id).ToList();
+            var requests = await _shippingRequestRepository.GetAll().Include(r => r.Tenant).AsNoTracking()
+                .Where(r => r.Status == ShippingRequestStatus.Completed && r.CreationTime.Year == DateTime.Now.Year && shippersIdsList.Contains(r.TenantId)).ToListAsync();
+            return shippers.Select(tenant => new ListUsersHaveMostRequests()
             {
                 Id = tenant.Id,
                 Name = tenant.TenancyName,
                 Rating = tenant.Rate,
-                NumberOfRequests = _shippingRequestRepository.GetAll().AsNoTracking().Include(r => r.Tenant).AsNoTracking().Where(r => r.TenantId == tenant.Id && r.Status == ShippingRequestStatus.Completed && r.CreationTime.Year == DateTime.Now.Year).Count()
-            }).Where(r => r.NumberOfRequests > 0).OrderByDescending(r => r.NumberOfRequests).Take(3).ToListAsync();
+                NumberOfRequests = requests.Where(r=>r.TenantId == tenant.Id).Count()
+            }).Where(r => r.NumberOfRequests > 0).OrderByDescending(r => r.NumberOfRequests).Take(3).ToList();
+
         }
 
         public async Task<List<ListUsersHaveMostRequests>> GetCarriersHaveMostRequests()
@@ -298,74 +346,87 @@ namespace TACHYON.Dashboards.Host
             DisableTenancyFiltersIfHost();
             await DisableTenancyFiltersIfTachyonDealer();
 
-            return await _tenantRepository.GetAll().AsNoTracking().Include(r => r.Edition).Where(r => r.Edition.DisplayName.Contains(TACHYONConsts.CarrierEdtionName))
-           .Select(tenant => new ListUsersHaveMostRequests()
-           {
-               Id = tenant.Id,
-               Name = tenant.TenancyName,
-               Rating = tenant.Rate,
-               NumberOfRequests = _shippingRequestRepository.GetAll().AsNoTracking().Include(r => r.Tenant).AsNoTracking().Where(r => r.TenantId == tenant.Id && r.Status == ShippingRequestStatus.Completed && r.CreationTime.Year == DateTime.Now.Year).Count()
-           }).Where(r => r.NumberOfRequests > 0).OrderByDescending(r => r.NumberOfRequests).Take(3).ToListAsync();
+            DisableTenancyFiltersIfHost();
+            await DisableTenancyFiltersIfTachyonDealer();
+            var carriers = await _tenantRepository.GetAll().Include(r => r.Edition).AsNoTracking().Where(r => r.Edition.DisplayName.Contains(TACHYONConsts.CarrierEdtionName)).ToListAsync();
+            var carriersIdsList = carriers.Select(x => x.Id).ToList();
+            var requests = await _shippingRequestRepository.GetAll().Include(r => r.Tenant).AsNoTracking()
+                .Where(r => r.Status == ShippingRequestStatus.Completed && r.CreationTime.Year == DateTime.Now.Year && carriersIdsList.Contains(r.TenantId)).ToListAsync();
+            return carriers.Select(tenant => new ListUsersHaveMostRequests()
+            {
+                Id = tenant.Id,
+                Name = tenant.TenancyName,
+                Rating = tenant.Rate,
+                NumberOfRequests = requests.Where(r => r.TenantId == tenant.Id).Count()
+            }).Where(r => r.NumberOfRequests > 0).OrderByDescending(r => r.NumberOfRequests).Take(3).ToList();
         }
 
         public async Task<List<ListUsersHaveMostRequests>> GetTopRatedShippers()
         {
             DisableTenancyFiltersIfHost();
             await DisableTenancyFiltersIfTachyonDealer();
-
-            return await _tenantRepository.GetAll().AsNoTracking().Include(r => r.Edition).Where(r => r.Edition.DisplayName.Contains(TACHYONConsts.ShipperEdtionName))
-            .Select(tenant => new ListUsersHaveMostRequests()
+            var shippers = await _tenantRepository.GetAll().Include(r => r.Edition).AsNoTracking().Where(r => r.Edition.DisplayName.Contains(TACHYONConsts.ShipperEdtionName)).ToListAsync();
+            var shippersIdsList = shippers.Select(x => x.Id).ToList();
+            var requests = await _shippingRequestRepository.GetAll().Include(r => r.Tenant).AsNoTracking()
+                .Where(r => r.Status == ShippingRequestStatus.Completed && r.CreationTime.Year == DateTime.Now.Year && shippersIdsList.Contains(r.TenantId)).ToListAsync();
+            return shippers.Select(tenant => new ListUsersHaveMostRequests()
             {
                 Id = tenant.Id,
                 Name = tenant.TenancyName,
                 Rating = tenant.Rate,
-                NumberOfRequests = _shippingRequestRepository.GetAll().AsNoTracking().Include(r => r.Tenant).AsNoTracking().Where(r => r.TenantId == tenant.Id && r.CreationTime.Year == DateTime.Now.Year).Count()
-            }).Where(r => r.Rating > 0).OrderByDescending(r => r.Rating).Take(5).ToListAsync();
+                NumberOfRequests = requests.Where(r => r.TenantId == tenant.Id).Count()
+            }).Where(r => r.Rating > 0).OrderByDescending(r => r.Rating).Take(5).ToList();
         }
 
         public async Task<List<ListUsersHaveMostRequests>> GetTopRatedCarriers()
         {
             DisableTenancyFiltersIfHost();
             await DisableTenancyFiltersIfTachyonDealer();
-
-            return await _tenantRepository.GetAll().AsNoTracking().Include(r => r.Edition).Where(r => r.Edition.DisplayName.Contains(TACHYONConsts.CarrierEdtionName))
-            .Select(tenant => new ListUsersHaveMostRequests()
+            var carriers = await _tenantRepository.GetAll().Include(r => r.Edition).AsNoTracking().Where(r => r.Edition.DisplayName.Contains(TACHYONConsts.CarrierEdtionName)).ToListAsync();
+            var carriersIdsList = carriers.Select(x => x.Id).ToList();
+            var requests = await _shippingRequestRepository.GetAll().Include(r => r.Tenant).AsNoTracking()
+                .Where(r => r.Status == ShippingRequestStatus.Completed && r.CreationTime.Year == DateTime.Now.Year && carriersIdsList.Contains(r.TenantId)).ToListAsync();
+            return carriers.Select(tenant => new ListUsersHaveMostRequests()
             {
                 Id = tenant.Id,
                 Name = tenant.TenancyName,
                 Rating = tenant.Rate,
-                NumberOfRequests = _shippingRequestRepository.GetAll().AsNoTracking().Include(r => r.Tenant).AsNoTracking().Where(r => r.TenantId == tenant.Id && r.CreationTime.Year == DateTime.Now.Year).Count()
-            }).Where(r => r.Rating > 0).OrderByDescending(r => r.Rating).Take(5).ToListAsync();
+                NumberOfRequests = requests.Where(r => r.TenantId == tenant.Id).Count()
+            }).Where(r => r.Rating > 0).OrderByDescending(r => r.Rating).Take(5).ToList();
         }
 
         public async Task<List<ListUsersHaveMostRequests>> GetWorstRatedShippers()
         {
             DisableTenancyFiltersIfHost();
             await DisableTenancyFiltersIfTachyonDealer();
-
-            return await _tenantRepository.GetAll().AsNoTracking().Include(r => r.Edition).Where(r => r.Edition.DisplayName.Contains(TACHYONConsts.ShipperEdtionName))
-            .Select(tenant => new ListUsersHaveMostRequests()
+            var shippers = await _tenantRepository.GetAll().Include(r => r.Edition).AsNoTracking().Where(r => r.Edition.DisplayName.Contains(TACHYONConsts.ShipperEdtionName)).ToListAsync();
+            var shippersIdsList = shippers.Select(x => x.Id).ToList();
+            var requests = await _shippingRequestRepository.GetAll().Include(r => r.Tenant).AsNoTracking()
+                .Where(r => r.Status == ShippingRequestStatus.Completed && r.CreationTime.Year == DateTime.Now.Year && shippersIdsList.Contains(r.TenantId)).ToListAsync();
+            return shippers.Select(tenant => new ListUsersHaveMostRequests()
             {
                 Id = tenant.Id,
                 Name = tenant.TenancyName,
                 Rating = tenant.Rate,
-                NumberOfRequests = _shippingRequestRepository.GetAll().AsNoTracking().Include(r => r.Tenant).AsNoTracking().Where(r => r.TenantId == tenant.Id && r.CreationTime.Year == DateTime.Now.Year).Count()
-            }).OrderBy(r => r.Rating).Take(5).ToListAsync();
+                NumberOfRequests = requests.Where(r => r.TenantId == tenant.Id).Count()
+            }).OrderBy(r => r.Rating).Take(5).ToList();
         }
 
         public async Task<List<ListUsersHaveMostRequests>> GetWorstRatedCarriers()
         {
             DisableTenancyFiltersIfHost();
             await DisableTenancyFiltersIfTachyonDealer();
-
-            return await _tenantRepository.GetAll().AsNoTracking().Include(r => r.Edition).Where(r => r.Edition.DisplayName.Contains(TACHYONConsts.CarrierEdtionName))
-            .Select(tenant => new ListUsersHaveMostRequests()
+            var carriers = await _tenantRepository.GetAll().Include(r => r.Edition).AsNoTracking().Where(r => r.Edition.DisplayName.Contains(TACHYONConsts.ShipperEdtionName)).ToListAsync();
+            var carriersIdsList = carriers.Select(x => x.Id).ToList();
+            var requests = await _shippingRequestRepository.GetAll().Include(r => r.Tenant).AsNoTracking()
+                .Where(r => r.Status == ShippingRequestStatus.Completed && r.CreationTime.Year == DateTime.Now.Year && carriersIdsList.Contains(r.TenantId)).ToListAsync();
+            return carriers.Select(tenant => new ListUsersHaveMostRequests()
             {
                 Id = tenant.Id,
                 Name = tenant.TenancyName,
                 Rating = tenant.Rate,
-                NumberOfRequests = _shippingRequestRepository.GetAll().AsNoTracking().Include(r => r.Tenant).AsNoTracking().Where(r => r.TenantId == tenant.Id && r.CreationTime.Year == DateTime.Now.Year).Count()
-            }).OrderBy(r => r.Rating).Take(5).ToListAsync();
+                NumberOfRequests = requests.Where(r => r.TenantId == tenant.Id).Count()
+            }).OrderBy(r => r.Rating).Take(5).ToList();
         }
 
         public async Task<List<ListRequestsUnPricedMarketPlace>> GetUnpricedRequestsInMarketplace(GetDataByDateFilterInput input)
@@ -373,22 +434,25 @@ namespace TACHYON.Dashboards.Host
             DisableTenancyFiltersIfHost();
             await DisableTenancyFiltersIfTachyonDealer();
 
-            var query = _shippingRequestRepository.GetAll().AsNoTracking()
+            var query = _shippingRequestRepository.GetAll()
                 .Include(r => r.Tenant)
+                .AsNoTracking()
                 .Where(r => r.RequestType == ShippingRequestType.Marketplace
                     && r.Status == ShippingRequestStatus.PrePrice
                     && ((r.BidEndDate != null && r.BidEndDate.Value.Date <= Clock.Now.Date) || r.BidEndDate == null));
-            
-            var list = await query.WhereIf(input.SalesSummaryDatePeriod == SalesSummaryDatePeriod.Daily, r => r.CreationTime > DateTime.Now.AddDays(-30) && r.CreationTime < DateTime.Now)
-                .Select(request => new ListRequestsUnPricedMarketPlace()
-                {
-                    Id = request.Id,
-                    ShipperName = request.Tenant.Name,
-                    BiddingEndDate = request.BidEndDate,
-                    RequestReference = request.ReferenceNumber
-                }).OrderBy(r => r.BiddingEndDate).Take(10).ToListAsync();
-
-            if (input.SalesSummaryDatePeriod == SalesSummaryDatePeriod.Weekly)
+            var list = new List<ListRequestsUnPricedMarketPlace>();
+            if (input.DatePeriod == FilterDatePeriod.Daily)
+            { 
+                 list = await query.WhereIf(input.DatePeriod == FilterDatePeriod.Daily, r => r.CreationTime > DateTime.Now.AddDays(-30))
+                    .Select(request => new ListRequestsUnPricedMarketPlace()
+                    {
+                        Id = request.Id,
+                        ShipperName = request.Tenant.TenancyName,
+                        BiddingEndDate = request.BidEndDate,
+                        RequestReference = request.ReferenceNumber
+                    }).OrderBy(r => r.BiddingEndDate).Take(10).ToListAsync();
+            }
+            if (input.DatePeriod == FilterDatePeriod.Weekly)
             {
                 DateTime firstDay = new DateTime(DateTime.Now.Year, 1, 1);
 
@@ -396,7 +460,7 @@ namespace TACHYON.Dashboards.Host
                              group r by new
                              {
                                  Id = r.Id,
-                                 ShipperName = r.Tenant.Name,
+                                 ShipperName = r.Tenant.TenancyName,
                                  BiddingEndDate = r.BidEndDate,
                                  RequestReference = r.ReferenceNumber,
                                  r.CreationTime.Year,
@@ -407,10 +471,10 @@ namespace TACHYON.Dashboards.Host
                                  BiddingEndDate = ut.Key.BiddingEndDate,
                                  RequestReference = ut.Key.RequestReference
                              });
-                list = query2.ToList();
+                list = query2.OrderBy(r => r.BiddingEndDate).Take(10).ToList();
                
             }
-            if (input.SalesSummaryDatePeriod == SalesSummaryDatePeriod.Monthly)
+            if (input.DatePeriod == FilterDatePeriod.Monthly)
             {
 
              list = await query
@@ -428,7 +492,7 @@ namespace TACHYON.Dashboards.Host
                    ShipperName = request.Key.ShipperName,
                    BiddingEndDate = request.Key.BiddingEndDate,
                    RequestReference = request.Key.RequestReference
-               }).OrderBy(r => r.BiddingEndDate).ToListAsync();
+               }).OrderBy(r => r.BiddingEndDate).Take(10).ToListAsync();
 
             }
 
@@ -439,16 +503,23 @@ namespace TACHYON.Dashboards.Host
         {
             DisableTenancyFiltersIfHost();
             await DisableTenancyFiltersIfTachyonDealer();
+            var requests = await _shippingRequestRepository
+                .GetAll()
+                .Include(r => r.DestinationCityFk).AsNoTracking().Where(r => r.CreationTime.Year == DateTime.Now.Year).ToListAsync();
+            var groupedCities = requests
+                    .GroupBy(r => new { r.DestinationCityId })
+                    .Select((c,k) => new
+                    {
+                        key = c.Key.DestinationCityId,
+                        list = c.ToList()
+                    }).ToList();
 
-            var result = await _shippingRequestRepository.GetAll().AsNoTracking().Include(r => r.DestinationCityFk).Where(r=>r.CreationTime.Year == DateTime.Now.Year)
-                        .GroupBy(p => p.DestinationCityId,
-                        (k, c) => new ListRequestsByCityDto()
-                        {
-                            Id = k,
-                            NumberOfRequests = c.Count(),
-                            CityName = _lookup_citiesRepository.GetAll().AsNoTracking().Where(e => e.Id == k.Value).FirstOrDefault().DisplayName
-                        }
-                        ).Where(r=>r.Id != null).ToListAsync();
+             var result = groupedCities.Select(g => new ListRequestsByCityDto
+             {
+                 Id = g.key,
+                 NumberOfRequests = g.list.Count(),
+                 CityName = g.list.Select(r=>r.DestinationCityFk.DisplayName).FirstOrDefault()
+             }).OrderBy(r => r.Id).ToList();
 
             result.ForEach(x =>
             {

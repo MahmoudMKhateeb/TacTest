@@ -1,7 +1,7 @@
 import { Component, Injector, OnDestroy, OnInit } from '@angular/core';
 import { WidgetComponentBase } from '@app/shared/common/customizable-dashboard/widgets/widget-component-base';
 import { ChartOptions, ChartOptionsBars } from '@app/shared/common/customizable-dashboard/widgets/ApexInterfaces';
-import { SalesSummaryDatePeriod, ShipperDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
+import { FilterDatePeriod, SalesSummaryDatePeriod, ShipperDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { finalize } from 'rxjs/operators';
 import { format } from 'path/posix';
@@ -13,20 +13,22 @@ import { count } from 'console';
   templateUrl: './completed-trips-widget.component.html',
   styleUrls: ['./completed-trips-widget.component.css'],
 })
-export class CompletedTripsWidgetComponent extends AppComponentBase implements OnInit {
+export class CompletedTripsWidgetComponent extends WidgetComponentBase implements OnInit {
   public chartOptions: Partial<ChartOptionsBars>;
   months: string[];
   trips: number[];
   loading: boolean = false;
-  appSalesSummaryDateInterval = SalesSummaryDatePeriod;
-  selectedDatePeriod: SalesSummaryDatePeriod;
+  filterDatePeriodInterval = FilterDatePeriod;
+  selectedDatePeriod: FilterDatePeriod;
 
   constructor(private injector: Injector, private _shipperDashboardServiceProxy: ShipperDashboardServiceProxy) {
     super(injector);
   }
 
   ngOnInit() {
-    this.getTrips(this.appSalesSummaryDateInterval.Daily);
+    this.runDelayed(() => {
+      this.getTrips(this.filterDatePeriodInterval.Daily);
+    });
   }
 
   reload(datePeriod) {
@@ -40,7 +42,7 @@ export class CompletedTripsWidgetComponent extends AppComponentBase implements O
     this.getTrips(this.selectedDatePeriod);
   }
 
-  getTrips(datePeriod: SalesSummaryDatePeriod) {
+  getTrips(datePeriod: FilterDatePeriod) {
     this.months = [];
     this.trips = [];
     this.loading = true;
@@ -54,13 +56,13 @@ export class CompletedTripsWidgetComponent extends AppComponentBase implements O
       .subscribe((result) => {
         result.forEach((element) => {
           var txt = '';
-          if (datePeriod == SalesSummaryDatePeriod.Daily) {
+          if (datePeriod == FilterDatePeriod.Daily) {
             txt = element.day + '-' + element.month + '-' + element.year;
           }
-          if (datePeriod == SalesSummaryDatePeriod.Weekly) {
+          if (datePeriod == FilterDatePeriod.Weekly) {
             txt = 'week-' + element.week;
           }
-          if (datePeriod == SalesSummaryDatePeriod.Monthly) {
+          if (datePeriod == FilterDatePeriod.Monthly) {
             txt = element.month;
           }
           this.months.push(txt);
@@ -72,11 +74,11 @@ export class CompletedTripsWidgetComponent extends AppComponentBase implements O
             {
               name: 'Trips',
               data: this.trips,
-              color: 'rgba(187, 41, 41, 0.847)',
+              color: 'rgba(187, 41, 41, 0.99)',
             },
           ],
           chart: {
-            type: 'area',
+            type: 'bar',
             height: 350,
           },
           plotOptions: {

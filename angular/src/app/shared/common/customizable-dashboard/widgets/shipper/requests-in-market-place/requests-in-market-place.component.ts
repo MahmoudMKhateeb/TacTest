@@ -1,27 +1,30 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { SalesSummaryDatePeriod, ShipperDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
+import { FilterDatePeriod, SalesSummaryDatePeriod, ShipperDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
 import * as moment from 'moment';
 import { finalize } from 'rxjs/operators';
+import { WidgetComponentBase } from '../../widget-component-base';
 
 @Component({
   selector: 'app-requests-in-market-place',
   templateUrl: './requests-in-market-place.component.html',
   styleUrls: ['./requests-in-market-place.component.css'],
 })
-export class RequestsInMarketPlaceComponent extends AppComponentBase implements OnInit {
+export class RequestsInMarketPlaceComponent extends WidgetComponentBase implements OnInit {
   Requests: any;
   loading: boolean = false;
   saving = false;
-  appSalesSummaryDateInterval = SalesSummaryDatePeriod;
-  selectedDatePeriod: SalesSummaryDatePeriod;
+  filterDatePeriodInterval = FilterDatePeriod;
+  selectedDatePeriod: FilterDatePeriod;
 
   constructor(private injector: Injector, private _shipperDashboardServiceProxy: ShipperDashboardServiceProxy) {
     super(injector);
   }
 
   ngOnInit() {
-    this.getRequests(this.appSalesSummaryDateInterval.Daily);
+    this.runDelayed(() => {
+      this.getRequests(this.filterDatePeriodInterval.Daily);
+    });
   }
 
   reload(datePeriod) {
@@ -35,7 +38,7 @@ export class RequestsInMarketPlaceComponent extends AppComponentBase implements 
     this.getRequests(this.selectedDatePeriod);
   }
 
-  getRequests(datePeriod: SalesSummaryDatePeriod) {
+  getRequests(datePeriod: FilterDatePeriod) {
     this.loading = true;
     this._shipperDashboardServiceProxy
       .getRequestsInMarketpalce(datePeriod)

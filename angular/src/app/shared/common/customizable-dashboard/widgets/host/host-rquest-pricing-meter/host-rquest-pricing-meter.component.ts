@@ -76,7 +76,7 @@ export class HostRquestPricingMeterComponent extends AppComponentBase implements
           stroke: {
             dashArray: 4,
           },
-          labels: ['RequestBeingPricedBeforeBidEndDate'],
+          labels: [''],
         };
 
         this.loading = false;

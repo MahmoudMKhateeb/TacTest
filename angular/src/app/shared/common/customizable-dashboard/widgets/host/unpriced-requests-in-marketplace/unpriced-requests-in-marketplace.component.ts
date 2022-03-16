@@ -1,33 +1,36 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { HostDashboardServiceProxy, SalesSummaryDatePeriod } from '@shared/service-proxies/service-proxies';
+import { FilterDatePeriod, HostDashboardServiceProxy, SalesSummaryDatePeriod } from '@shared/service-proxies/service-proxies';
 import * as moment from 'moment';
 import { finalize } from 'rxjs/operators';
+import { WidgetComponentBase } from '../../widget-component-base';
 
 @Component({
   selector: 'app-unpriced-requests-in-marketplace',
   templateUrl: './unpriced-requests-in-marketplace.component.html',
   styleUrls: ['./unpriced-requests-in-marketplace.component.css'],
 })
-export class UnpricedRequestsInMarketplaceComponent extends AppComponentBase implements OnInit {
+export class UnpricedRequestsInMarketplaceComponent extends WidgetComponentBase implements OnInit {
   requests: any;
-  toDate: moment.Moment = null;
-  fromDate: moment.Moment = null;
   loading: boolean = false;
   saving = false;
   noRequests: number = 0;
-  appSalesSummaryDateInterval = SalesSummaryDatePeriod;
-  selectedDatePeriod: SalesSummaryDatePeriod;
+  filterDatePeriodInterval = FilterDatePeriod;
+  selectedDatePeriod: FilterDatePeriod;
 
   constructor(private injector: Injector, private _hostDashboardServiceProxy: HostDashboardServiceProxy) {
     super(injector);
   }
 
   ngOnInit(): void {
-    this.getUnpricedRequests(this.appSalesSummaryDateInterval.Daily);
+    this.runDelayed(() => {
+      this.getUnpricedRequests(this.filterDatePeriodInterval.Daily);
+    });
   }
 
   reload(datePeriod) {
+    this.loading = true;
+
     if (this.selectedDatePeriod === datePeriod) {
       this.loading = false;
       return;
@@ -38,7 +41,7 @@ export class UnpricedRequestsInMarketplaceComponent extends AppComponentBase imp
     this.getUnpricedRequests(this.selectedDatePeriod);
   }
 
-  getUnpricedRequests(datePeriod: SalesSummaryDatePeriod) {
+  getUnpricedRequests(datePeriod: FilterDatePeriod) {
     this.saving = true;
     this.loading = true;
     this._hostDashboardServiceProxy

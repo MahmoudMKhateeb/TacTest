@@ -112,21 +112,21 @@ export class DashboardViewConfigurationService {
       DashboardCustomizationConst.widgets.Shipper.ShipperNextInvoiceFrequancyEndDateWidget,
       NextInvoiceFrequancyDateComponent,
       6,
-      4
+      5
     );
     //7
     let invoiceDueDate = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.Shipper.ShipperInvoiceDueDateInDaysWidget,
       InvoiceDueDateComponent,
-      6,
-      4
+      4,
+      3
     );
     //8
     let dueDateInDays = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.Shipper.ShipperDocumentDueDateInDaysWidget,
       ShipperDueDateInDaysComponent,
-      6,
-      4
+      4,
+      3
     );
 
     //9
@@ -195,7 +195,7 @@ export class DashboardViewConfigurationService {
       DashboardCustomizationConst.widgets.Carrier.CarrierTrackingMapWidget,
       TrackingMapComponent,
       8,
-      4
+      5
     );
     //Host
 

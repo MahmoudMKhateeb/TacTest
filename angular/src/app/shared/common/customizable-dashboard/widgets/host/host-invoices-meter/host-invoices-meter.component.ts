@@ -71,7 +71,7 @@ export class HostInvoicesMeterComponent extends AppComponentBase implements OnIn
           stroke: {
             dashArray: 4,
           },
-          labels: ['InvoicesPaidBeforeDueDatePercentage'],
+          labels: [''],
         };
 
         this.loading = false;

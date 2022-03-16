@@ -9,7 +9,7 @@ namespace TACHYON.Dashboards.Host.Dto
 {
     public class GetDataByDateFilterInput
     {
-        public SalesSummaryDatePeriod SalesSummaryDatePeriod { get; set; }
+        public FilterDatePeriod DatePeriod { get; set; }
 
     }
 
