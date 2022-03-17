@@ -6,16 +6,12 @@ import { AppComponentBase } from '@shared/common/app-component-base';
   templateUrl: './view-rating.component.html',
   styleUrls: ['./view-rating.component.css'],
 })
-export class ViewRatingComponent extends AppComponentBase implements AfterViewInit {
+export class ViewRatingComponent extends AppComponentBase {
   @Input() rate: number;
   @Input() max: number = 5;
   @Input() rateNumber: number;
 
   constructor(injector: Injector) {
     super(injector);
-  }
-
-  ngAfterViewInit(): void {
-    throw new Error('Method not implemented.');
   }
 }

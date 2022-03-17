@@ -102,7 +102,7 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
     // update Trip Service and send vases list to trip component
     this._shippingRequestsServiceProxy.getShippingRequestForView(this.ShippingRequest.id).subscribe((result) => {
       this.VasListFromFather = result.shippingRequestVasDtoList;
-      this.tripsByTmsEnabled = result.shippingRequest.addTripsByTmsEnabled;
+      this.tripsByTmsEnabled = true;
       this._TripService.updateShippingRequest(result);
     });
 

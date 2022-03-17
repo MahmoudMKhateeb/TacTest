@@ -2351,6 +2351,27 @@
 		<text name="CompanyWebsite">الموقع الإلكتروني للشركة</text>
 		<text name="DriverLicenceType">أنواع رخصة القيادة</text>
 		<text name="DangerousGoodTypes">أنواع البضائع الخطرة</text>
+		<text name="NumberOfRequestsForEachCity">عدد الطلبات لكل مدينة</text>
+		<text name="ongoingTrips">الرحلات المنطلقة</text>
+		<text name="NumberOfRegesteredTrucks">عدد الشاحنات المسجلة</text>
+		<text name="NumberOfRegesteredShippers">عدد الشواحن المسجلة</text>
+		<text name="NumberOfRegesteredDrivers">عدد السائقين المسجلة</text>
+		<text name="NumberOfRegesteredCarriers">عدد الناقلين المسجلة</text>
+		<text name="HostTruckTypesUsage">أنواع الشاحنات المستخدمة</text>
+		<text name="RouteTypesUsage">أنواع المسارات المستخدمة</text>
+		<text name="GoodTypesUsage">استخدام أنواع البضائع</text>
+		<text name="NewAccounts">حسابات جديدة</text>
+		<text name="NewTrips">الرحلات الجديدة</text>
+		<text name="CurrentlyNonActiveDrivers">حسابات السائقين غير نشطة</text>
+		<text name="CurrentlyActiveDrivers">حسابات السائقين نشطة</text>
+		<text name="CurrentlyActiveTrucks">شاحنات نشطة</text>
+		<text name="CurrentlyNonActiveTrucks">شاحنات غير نشطة</text>
+		<text name="MostUsedVases">أكثر Vases مستخدمة</text>
+		<text name="MostWorkedWithShippers">أكثر الشواحن تفاعلا</text>
+    <text name="WorstRatedCarriers">الناقلين الأقل تقييماً</text>
+		<text name="WorstRatedShippers">الشواحن الأقل تقييماً</text>
+		<text name="ReferanceNumber">رقم المرجع للطلب</text>
+		<text name="ForCurrentYear">السنة الحاليه</text>
 
 
 
@@ -2361,8 +2382,7 @@
 	<text name="ReceiverCodeConfirmationMsg">هل أنت متأكد أنك تريد إعادة تعيين رمز المستلم لهذه الشحنة؟</text>
 
 
-		<text name="CurrentlyActiveTrucks">الشاحنات الفعالة</text>
-		<text name="CurrentlyNonActiveTrucks">الشاحنات الغير فعالة</text>
+
 		<text name="DocumentTypeName">اسم نوع المستند</text>
 		<text name="submitterTenatTenancyName">اسم الشركة المرسلة</text>
 		<text name="ShipperReference">رقم فاتورة المراجعة</text>

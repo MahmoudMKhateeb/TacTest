@@ -2588,8 +2588,7 @@
 		
 		
 		
-    <text name="CurrentlyActiveTrucks">Currently Active Trucks</text>
-    <text name="CurrentlyNonActiveTrucks">Currently Non Active Trucks</text>
+
     <text name="DocumentTypeName">Document type</text>
     <text name="submitterTenatTenancyName">Submitter company</text>
     <text name="ShipperReference">Shipper reference</text>
@@ -2717,5 +2716,27 @@
 	<text name="UnPaid">Unpaid</text>
 	<text name="SAASTrip">Sass</text>
 
+		<text name="NumberOfRequestsForEachCity">Number Of Requests For Each City</text>
+		<text name="ongoingTrips">On Going Trips</text>
+		<text name="NumberOfRegesteredTrucks">Number Of Registered Trucks</text>
+		<text name="NumberOfRegesteredShippers">Number Of Registered Shippers</text>
+		<text name="NumberOfRegesteredDrivers">Number Of Registered Drivers</text>
+		<text name="NumberOfRegesteredCarriers">Number Of Registered Carriers</text>
+		<text name="HostTruckTypesUsage">Truck Types Usage</text>
+		<text name="RouteTypesUsage">Route Types Usage</text>
+		<text name="GoodTypesUsage">Good Types Usage</text>
+		<text name="NewAccounts">New Accounts</text>
+		<text name="NewTrips">New Trips</text>
+		<text name="CurrentlyNonActiveDrivers">Non Active Drivers</text>
+		<text name="CurrentlyActiveDrivers">Active Drivers</text>
+		<text name="CurrentlyActiveTrucks">Active Trucks</text>
+		<text name="CurrentlyNonActiveTrucks">Non Active Trucks</text>
+		<text name="MostUsedVases"> Most Used Vases </text>
+		<text name="MostWorkedWithShippers">Most Worked With Shippers</text>
+		
+		<text name="WorstRatedCarriers">Worst Rated Carriers</text>
+		<text name="WorstRatedShippers">Worst Rated Shippers</text>
+		<text name="ReferanceNumber">Referance Number</text>
+		<text name="ForCurrentYear">For Current Year</text>
 	</texts>
 </localizationDictionary>

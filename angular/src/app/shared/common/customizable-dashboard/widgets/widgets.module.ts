@@ -14,7 +14,7 @@ import { InvoiceDueDateComponent } from './shipper/invoice-due-date/invoice-due-
 import { ShipperDueDateInDaysComponent } from './shared_widgets/shipper-due-date-in-days/shipper-due-date-in-days.component';
 import { MostUsedOriginComponent } from './shipper/most-used-origin/most-used-origin.component';
 import { MostUsedDestinationsComponent } from './shipper/most-used-destinations/most-used-destinations.component';
-import { TrackingMapComponent } from './shipper/tracking-map/tracking-map.component';
+import { TrackingMapComponent } from './shared_widgets/tracking-map/tracking-map.component';
 import { AgmCoreModule } from '@node_modules/@agm/core';
 import { AgmDirectionModule } from '@node_modules/agm-direction';
 import { AcceptedVsRejectedPricingComponent } from './carrier/accepted-vs-rejected-pricing/accepted-vs-rejected-pricing.component';
@@ -134,6 +134,28 @@ import { RouterModule } from '@angular/router';
     MostUsedVasesComponent,
     MostWorkedWithShippersComponent,
     CarrierNextInvoiceFrequenctEndComponent,
+    NumberOfRegesterdTrucksComponent,
+    NumberOfRegesterdDriversComponent,
+    NumberOfRegesterdShippersComponent,
+    OnGoingTripsComponent,
+    DeleverdTripsComponent,
+    NumberOfRegesterdCarriersComponent,
+    HostNewAccountsChartComponent,
+    HostNewTripsChartComponent,
+    HostTruckTypeUsageChartComponent,
+    HostGoodTypesUsageChartComponent,
+    HostRouteTypeUsageChartComponent,
+    HostRquestPricingMeterComponent,
+    HostRquestAcceptanceMeterComponent,
+    HostInvoicesMeterComponent,
+    TopThreeShippersHaveRequestsComponent,
+    TopThreeCarriersHaveRequestsComponent,
+    TopRatedCarriersComponent,
+    TopRatedShippersComponent,
+    WorstRatedShippersComponent,
+    WorstRatedCarriersComponent,
+    NumberOfRequestsForEachCityComponent,
+    UnpricedRequestsInMarketplaceComponent,
   ],
 })
 export class WidgetsModule {}

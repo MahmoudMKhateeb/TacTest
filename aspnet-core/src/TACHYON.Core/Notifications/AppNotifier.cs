@@ -605,8 +605,7 @@ namespace TACHYON.Notifications
                 ShippingRequestId = trip.ShippingRequestId,
                 ShipperTenantId = shipperTenantId,
                 TripId = trip.Id,
-                WaybillNumber = waybillNo.ToString(),
-                ShippingRequestId = trip.ShippingRequestId
+                WaybillNumber = waybillNo.ToString()
             };
 
             #endregion

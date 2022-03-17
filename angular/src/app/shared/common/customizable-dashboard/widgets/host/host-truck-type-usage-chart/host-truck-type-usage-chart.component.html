@@ -4,12 +4,16 @@
     <div class="card card-custom card-stretch">
       <div class="card-header border-0">
         <div class="card-title text-center">
-          <h3 class="card-label">{{ 'TMS_TruckTypeUsageWidget' | localize }}</h3>
+          <h3 class="card-label">{{ l('HostTruckTypesUsage') }}</h3>
         </div>
       </div>
-      <div class="card-body p-1">
+      <div class="card-body p-1" [busyIf]="loading">
+        <div class="pd-5" *ngIf="types.length == 0">
+          {{ l('NoData') }}
+        </div>
         <div id="invoicesVsPaidInvoices">
           <apx-chart
+            *ngIf="chartOptions && chartOptions.series && types.length > 0"
             [series]="chartOptions.series"
             [chart]="chartOptions.chart"
             [dataLabels]="chartOptions.dataLabels"

@@ -1,0 +1,45 @@
+<!--begin::Body-->
+<div class="row bg-white p-2" [busyIf]="loading">
+  <div class="card-header border-0">
+    <div class="text-center">
+      <h3 class="card-label">{{ l('TrackingMap') }}</h3>
+    </div>
+  </div>
+  <div class="col-lg-12" *ngIf="trips">
+    <agm-map minZoom="5" [zoom]="zoom" [longitude]="source1.lng || 46.675761" [latitude]="source1.lat || 24.717942" [scrollwheel]="false">
+      <agm-direction
+        *ngFor="let item of items"
+        [origin]="item.source"
+        [destination]="item.destination"
+        [waypoints]="item.waybill"
+        [renderOptions]="item.renderOption"
+        [markerOptions]="item.markerOptions"
+        [optimizeWaypoints]="false"
+      ></agm-direction>
+    </agm-map>
+  </div>
+  <div class="col-lg-12">
+    <br />
+    <a *ngIf="trips" class="btn btn-danger btn-xs red float-right mr-1" target="_blank" href="/app/main/tracking">{{ l('more') }}</a>
+    <br /><br />
+    <p-table [value]="trips">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>{{ l('Source') }}</th>
+          <th>{{ l('Destination') }}</th>
+          <th>{{ l('WaybillNumber') }}</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-record>
+        <tr>
+          <td>{{ record.originCity }}</td>
+          <td>{{ record.destinationCity }}</td>
+          <td>{{ record.wayBillNumber }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <div class="pd-5 text-center" *ngIf="!trips || trips.length == 0">
+      {{ l('NoData') }}
+    </div>
+  </div>
+</div>

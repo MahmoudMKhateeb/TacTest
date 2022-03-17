@@ -1,0 +1,15 @@
+input[type='radio'] {
+  display: none !important;
+}
+:host ::ng-deep .sales-summary-chart svg.ngx-charts {
+  margin-left: -35px !important;
+  margin-top: 35px !important;
+}
+.red {
+  margin-top: -6% !important;
+  margin-left: 0% !important;
+}
+th,
+td {
+  text-align: center !important;
+}

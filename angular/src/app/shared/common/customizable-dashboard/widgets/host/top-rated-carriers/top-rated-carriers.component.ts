@@ -9,14 +9,21 @@ import { HostDashboardServiceProxy } from '@shared/service-proxies/service-proxi
 })
 export class TopRatedCarriersComponent extends AppComponentBase implements OnInit {
   topCarriers: any;
+  loading: boolean = false;
 
   constructor(private injector: Injector, private _hostDashboardServiceProxy: HostDashboardServiceProxy) {
     super(injector);
   }
 
   ngOnInit(): void {
+    this.getData();
+  }
+
+  getData() {
+    this.loading = true;
     this._hostDashboardServiceProxy.getTopRatedCarriers().subscribe((result) => {
       this.topCarriers = result;
+      this.loading = false;
     });
   }
 }

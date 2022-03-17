@@ -1,4 +1,4 @@
-<div class="row d-flex justify-content-center">
+<div class="row d-flex justify-content-center" [busyIf]="loading">
   <div class="col-sm">
     <!--begin::Card-->
     <div class="card card-custom card-stretch">
@@ -10,6 +10,7 @@
       <div class="card-body w-100 d-flex justify-content-center">
         <h5 class="text-dark font-weight-bold">{{ deliveredTripsCount }}</h5>
       </div>
+      <span class="form-text text-muted text-center mr-btm">{{ l('ForCurrentYear') }}</span>
     </div>
     <!--end::Card-->
   </div>
