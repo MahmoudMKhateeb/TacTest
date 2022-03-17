@@ -18,6 +18,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Linq.Dynamic.Core;
@@ -125,11 +126,15 @@ namespace TACHYON.Trucks
                             ModelYear = truck.ModelYear,
                             Length = truck.Length,
                             TruckStatusDisplayName = truck.TruckStatusFk != null ? truck.TruckStatusFk.DisplayName : "",
-                            TransportTypeDisplayName = truck.TransportTypeFk != null ? truck.TransportTypeFk.DisplayName : "",
+                            TransportTypeDisplayName = truck.TransportTypeFk.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)) != null
+                                            ? truck.TransportTypeFk.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName
+                                            : truck.TransportTypeFk.DisplayName,
                             PlateNumber = truck.PlateNumber,
                             Note = truck.Note,
                             TransportTypeId = truck.TransportTypeId,
-                            TrucksTypeDisplayName = truck.TrucksTypeFk != null ? truck.TrucksTypeFk.DisplayName : "",
+                            TrucksTypeDisplayName = truck.TrucksTypeFk.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)) != null
+                                            ? truck.TrucksTypeFk.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName
+                                            : truck.TrucksTypeFk.DisplayName,
                             CapacityId = truck.CapacityId,
                             Id = truck.Id,
                             TrucksTypeId = truck.TrucksTypeId,
@@ -278,7 +283,7 @@ namespace TACHYON.Trucks
                 truck.TenantId = (int)AbpSession.TenantId;
             }
 
-            if (!AbpSession.TenantId.HasValue ||await IsEnabledAsync(AppFeatures.TachyonDealer))
+            if (!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer))
             {
                 // Use AbpValidationException to return Status Code => 400 Bad Request
                 if (input.TenantId == null) throw new AbpValidationException(L("YouMustSetTenant"));
@@ -301,7 +306,7 @@ namespace TACHYON.Trucks
                             throw new UserFriendlyException(L("document missing msg :" + item.Name));
                         }
                     }
-    
+
 
                     doc.Name = item.DocumentTypeDto.DisplayName;
                 }

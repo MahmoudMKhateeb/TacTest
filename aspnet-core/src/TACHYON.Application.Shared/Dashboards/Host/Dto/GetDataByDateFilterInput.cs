@@ -3,14 +3,13 @@ using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using System;
 using System.Collections.Generic;
+using TACHYON.Tenants.Dashboard.Dto;
 
 namespace TACHYON.Dashboards.Host.Dto
 {
-    public class ListPerMonthDto
+    public class GetDataByDateFilterInput
     {
-        public int Year { get; set; }
-        public string Month { get; set; }
-        public int Count { get; set; }
+        public FilterDatePeriod DatePeriod { get; set; }
 
     }
 

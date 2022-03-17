@@ -514,6 +514,7 @@ namespace TACHYON.Notifications
                 }
             };
 
+            notificationData["shippingRequestId"] = input.ShippingRequestId;
             await _notificationPublisher.PublishAsync(AppNotificationNames.NotifyShipperWhenTripUpdated, notificationData, userIds: new[] { tenantAdmin });
         }
 

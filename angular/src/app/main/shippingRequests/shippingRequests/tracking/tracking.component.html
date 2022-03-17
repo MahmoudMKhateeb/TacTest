@@ -40,6 +40,9 @@
                   >
                     {{ item.statusTitle | localize }}
                   </div>
+                  <div *ngIf="item.isSass" class="ribbon-target bg-info" style="top: -2px" [ngClass]="{ left: !isRtl, right: isRtl }">
+                    {{ 'SAASTrip' | localize }}
+                  </div>
                 </div>
 
                 <!--begin::Top-->

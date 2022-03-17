@@ -44,7 +44,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public string OtherTransportTypeName { get; set; }
         public string OtherTrucksTypeName { get; set; }
 
-        public bool AddTripsByTmsEnabled { get; set; }
+        //public bool AddTripsByTmsEnabled { get; set; }
 
         public bool CanAddTrip { get; set; }
 

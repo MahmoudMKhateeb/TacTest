@@ -160,6 +160,7 @@ namespace TACHYON.Authorization.Users
             DisableTenancyFiltersIfHost();
             await DisableTenancyFiltersIfTachyonDealer();
 
+
             var drivers = (from user in _userRepository.GetAllIncluding(x=> x.NationalityFk).AsNoTracking()
                 where user.IsDriver && user.NationalityFk != null
                 join tenant in _tenantRepository.GetAll() on user.TenantId equals tenant.Id

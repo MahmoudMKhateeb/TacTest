@@ -4,11 +4,14 @@
     <div class="card card-custom card-stretch">
       <div class="card-header border-0">
         <div class="card-title text-center">
-          <h3 class="card-label">Most Used Vases</h3>
+          <h3 class="card-label">{{ l('MostUsedVases') }}</h3>
         </div>
       </div>
       <div class="card-body p-1">
-        <div id="invoicesVsPaidInvoices">
+        <div class="pd-5 text-center" *ngIf="types.length == 0">
+          {{ l('NoData') }}
+        </div>
+        <div *ngIf="types.length > 0" id="invoicesVsPaidInvoices">
           <apx-chart
             [series]="chartOptions.series"
             [chart]="chartOptions.chart"

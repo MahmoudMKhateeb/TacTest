@@ -31,6 +31,8 @@
               (uploadHandler)="upload($event)"
               (onError)="onUploadError()"
               chooseLabel="{{ 'ImportFile' | localize }}"
+              uploadLabel="{{ 'Upload' | localize }}"
+              cancelLabel="{{ 'Cancel' | localize }}"
               [busyIf]="loading"
             >
             </p-fileUpload>

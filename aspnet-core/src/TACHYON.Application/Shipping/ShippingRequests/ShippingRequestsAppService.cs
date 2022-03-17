@@ -99,7 +99,7 @@ namespace TACHYON.Shipping.ShippingRequests
             ShippingRequestDirectRequestAppService shippingRequestDirectRequestAppService,
             ShippingRequestDirectRequestManager shippingRequestDirectRequestManager,
             DocumentFilesManager documentFilesManager,
-            IRepository<PriceOffer, long> priceOfferRepository, 
+            IRepository<PriceOffer, long> priceOfferRepository,
             IEntityChangeSetReasonProvider reasonProvider)
         {
             _vasPriceRepository = vasPriceRepository;
@@ -802,8 +802,11 @@ namespace TACHYON.Shipping.ShippingRequests
 
                 GetShippingRequestForViewOutput output =
                     ObjectMapper.Map<GetShippingRequestForViewOutput>(shippingRequest);
-                output.ShippingRequest.AddTripsByTmsEnabled =
-                    await FeatureChecker.IsEnabledAsync(shippingRequest.TenantId, AppFeatures.AddTripsByTachyonDeal);
+
+                //output.ShippingRequest.AddTripsByTmsEnabled =
+                //    await FeatureChecker.IsEnabledAsync(shippingRequest.TenantId, AppFeatures.AddTripsByTachyonDeal);
+
+
                 output.ShippingRequest.CanAddTrip = await CanCurrentUserAddTrip(shippingRequest);
                 output.ShippingRequestBidDtoList = shippingRequestBidDtoList;
                 output.ShippingRequestVasDtoList = shippingRequestVasList;
@@ -838,65 +841,41 @@ namespace TACHYON.Shipping.ShippingRequests
         public async Task<bool> CanAddTripForShippingRequest(long shippingRequestId)
         {
             DisableTenancyFilters();
-            var request = await _shippingRequestRepository.GetAll()
-                .Where(x => x.Id == shippingRequestId).Select(x => new { x.Id, x.TenantId, x.CarrierTenantId, x.NumberOfTrips })
-                .FirstOrDefaultAsync();
+            var request = await _shippingRequestRepository.GetAsync(shippingRequestId);
 
-            if (request == null)
-                throw new UserFriendlyException(L("ShippingRequestNotFound"));
-
-            return await CanCurrentUserAddTrip(request.TenantId, request.Id, request.NumberOfTrips, request.CarrierTenantId);
+            return await CanCurrentUserAddTrip(request);
         }
         private async Task<bool> CanCurrentUserAddTrip(ShippingRequest request)
-            => await CanCurrentUserAddTrip(request.TenantId, request.Id, request.NumberOfTrips,
-                request.CarrierTenantId);
+        {
+
+
+            //CarrierSaas
+            if (request.IsSaas() && AbpSession.TenantId == request.TenantId && await FeatureChecker.IsEnabledAsync(AppFeatures.CarrierAsASaas))
+            {
+                return true;
+            }
+
+
+            // TripsByTMS
+            if (await FeatureChecker.IsEnabledAsync(AppFeatures.TachyonDealer)) // false 
+            {
+
+                return true;
+            }
+
+            //Shipper
+            if (request.TenantId == AbpSession.TenantId && await IsEnabledAsync(AppFeatures.Shipper))
+            {
+                return true;
+            }
+
+            return false;
+
+        }
+
+
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Create)]
-        private async Task<bool> CanCurrentUserAddTrip(int srTenantId, long srId, int numberOfTrips, int? srCarrierTenantId)
-        {
-            bool IsSaas()
-                => srTenantId == srCarrierTenantId;
-
-            bool carrierSaasEnabled = true, shipperEnabled = true, tmsEnabled = true;
-
-            #region CarrierSaas
-
-            if (IsSaas())
-            {
-                if (AbpSession.TenantId != srTenantId ||
-                    !await FeatureChecker.IsEnabledAsync(AppFeatures.CarrierAsASaas))
-                    carrierSaasEnabled = false;
-            }
-
-
-            #endregion
-
-            #region TripsByTMS
-
-            if (await FeatureChecker.IsEnabledAsync(AppFeatures.TachyonDealer))
-            {
-                var tripsByTmsEnabled = await FeatureChecker.IsEnabledAsync(
-                    srTenantId, AppFeatures.AddTripsByTachyonDeal);
-
-                if (!tripsByTmsEnabled)
-                    tmsEnabled = false;
-            }
-
-            #endregion
-
-            #region TripsByShipper
-
-            if (!IsSaas())
-            {
-                if (srTenantId != AbpSession.TenantId || !await IsEnabledAsync(AppFeatures.Shipper))
-                    shipperEnabled = false;
-            }
-
-
-            #endregion
-
-            return carrierSaasEnabled || tmsEnabled || shipperEnabled;
-        }
 
         protected virtual GetShippingRequestForEditOutput _GetShippingRequestForEdit(EntityDto<long> input)
         {
@@ -986,7 +965,7 @@ namespace TACHYON.Shipping.ShippingRequests
         protected virtual async Task Update(CreateOrEditShippingRequestDto input)
         {
             _reasonProvider.Use(nameof(UpdateShippingRequestTransaction));
-            
+
             ShippingRequest shippingRequest = await _shippingRequestRepository.GetAll()
                 .Include(x => x.ShippingRequestVases)
                 .Where(x => x.Id == (long)input.Id)
@@ -1007,7 +986,7 @@ namespace TACHYON.Shipping.ShippingRequests
             await ValidateGoodsCategory(input);
 
             ObjectMapper.Map(input, shippingRequest);
-            
+
             await CurrentUnitOfWork.SaveChangesAsync();
         }
 

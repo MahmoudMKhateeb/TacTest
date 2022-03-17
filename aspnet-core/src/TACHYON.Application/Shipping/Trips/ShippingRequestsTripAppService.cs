@@ -252,13 +252,13 @@ namespace TACHYON.Shipping.Trips
 
             //TMS can Edit Shipper TRIP
             //CSaas can edit his trips 
-            if (await FeatureChecker.IsEnabledAsync(AppFeatures.TachyonDealer))
-            {
-                if (!await FeatureChecker.IsEnabledAsync(request.TenantId, AppFeatures.AddTripsByTachyonDeal))
-                {
-                    throw new AbpValidationException(L("AddTripsByTachyonDealIsNotEnabledFromShipper"));
-                }
-            }
+            //if (await FeatureChecker.IsEnabledAsync(AppFeatures.TachyonDealer))
+            //{
+            //    if (!await FeatureChecker.IsEnabledAsync(request.TenantId, AppFeatures.AddTripsByTachyonDeal))
+            //    {
+            //        throw new AbpValidationException(L("AddTripsByTachyonDealIsNotEnabledFromShipper"));
+            //    }
+            //}
 
             ValidateTripDates(input, request);
             ValidateNumberOfDrops(input, request);
@@ -278,13 +278,13 @@ namespace TACHYON.Shipping.Trips
 
         }
 
-        [RequiresFeature(AppFeatures.Shipper)]
-        public async Task ChangeAddTripsByTmsFeature()
-        {
-            if (!AbpSession.TenantId.HasValue) return;
-            await TenantManager.SetFeatureValueAsync(AbpSession.TenantId.Value, AppFeatures.AddTripsByTachyonDeal,
-                await IsEnabledAsync(AppFeatures.AddTripsByTachyonDeal) ? "false" : "true");
-        }
+        //[RequiresFeature(AppFeatures.Shipper)]
+        //public async Task ChangeAddTripsByTmsFeature()
+        //{
+        //    if (!AbpSession.TenantId.HasValue) return;
+        //    await TenantManager.SetFeatureValueAsync(AbpSession.TenantId.Value, AppFeatures.AddTripsByTachyonDeal,
+        //        await IsEnabledAsync(AppFeatures.AddTripsByTachyonDeal) ? "false" : "true");
+        //}
         public async Task<FileDto> GetTripAttachmentFileDto(int id)
         {
             DisableTenancyFilters();
@@ -421,13 +421,13 @@ namespace TACHYON.Shipping.Trips
 
             if (oldAssignedTruckId != trip.AssignedTruckId && trip.ShippingRequestFk.CarrierTenantId != null)
             {
+                var driver = await _userManager.GetUserByIdAsync(trip.AssignedDriverUserId.Value);
                 var notifyTripInput = new NotifyTripUpdatedInput()
                 {
                     CarrierTenantId = trip.ShippingRequestFk.CarrierTenantId.Value,
                     TripId = trip.Id,
                     WaybillNumber = trip.WaybillNumber.ToString(),
-                    DriverIdentifier = new UserIdentifier(trip.AssignedDriverUserFk.TenantId,
-                        trip.AssignedDriverUserId.Value)
+                    DriverIdentifier = new UserIdentifier(driver.TenantId, trip.AssignedDriverUserId.Value)
                 };
 
                 await _appNotifier.NotifyCarrierWhenTripUpdated(notifyTripInput);

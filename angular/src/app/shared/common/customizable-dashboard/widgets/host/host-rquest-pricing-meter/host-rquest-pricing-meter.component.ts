@@ -2,6 +2,7 @@ import { Component, Injector, OnInit } from '@angular/core';
 import { ChartOptions, MeterCharts } from '@app/shared/common/customizable-dashboard/widgets/ApexInterfaces';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { HostDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-host-rquest-pricing-meter',
@@ -11,14 +12,29 @@ import { HostDashboardServiceProxy } from '@shared/service-proxies/service-proxi
 export class HostRquestPricingMeterComponent extends AppComponentBase implements OnInit {
   public chartOptions: Partial<MeterCharts>;
   loading: boolean = false;
+  items: any;
 
   constructor(private injector: Injector, private _hostDashboardServiceProxy: HostDashboardServiceProxy) {
     super(injector);
   }
 
   ngOnInit() {
-    this._hostDashboardServiceProxy.getRequestBeingPricedBeforeBidEndDateCount().subscribe((result) => {
-      if (result) {
+    this.getRequests();
+  }
+
+  getRequests() {
+    this.loading = true;
+
+    this._hostDashboardServiceProxy
+      .getRequestBeingPricedBeforeBidEndDateCount()
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+        })
+      )
+      .subscribe((result) => {
+        this.items = result;
+
         this.chartOptions = {
           series: [result],
 
@@ -60,10 +76,10 @@ export class HostRquestPricingMeterComponent extends AppComponentBase implements
           stroke: {
             dashArray: 4,
           },
-          labels: ['RequestBeingPricedBeforeBidEndDate'],
+          labels: [''],
         };
-        this.loading = true;
-      }
-    });
+
+        this.loading = false;
+      });
   }
 }

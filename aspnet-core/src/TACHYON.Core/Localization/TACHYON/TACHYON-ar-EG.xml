@@ -566,7 +566,7 @@
 		<text name="DriverStatus">حالة السائق</text>
 		<text name="DriverTripReminder">لديك رحلة جديدة غداً</text>
 		<text name="DrivingLicense">رخصة القيادة</text>
-		<text name="DropOff">موقع التنزيل</text>
+		<text name="DropOff">مكان التنزيل</text>
 		<text name="DropoffDetailCommodity">تفاصيل البضاعة</text>
 		<text name="DropoffDetailDropoff">نقطة التنزيل</text>
 		<text name="DropoffDetailID">رقم الهوية</text>
@@ -1240,7 +1240,7 @@
 		<text name="PickTruck">اختر الشاحنة</text>
 		<text name="PickTruckStatus">اختر حالة الشاحنة</text>
 		<text name="PickTrucksType">اختر نوع الشاحنة</text>
-		<text name="Pickup">موقع التحميل</text>
+		<text name="Pickup">مكان التحميل</text>
 		<text name="PickUser">اختر المستخدم</text>
 		<text name="PickVas">اختر الخدمات الإضافية</text>
 		<text name="Pin">تثبيت</text>
@@ -1493,7 +1493,7 @@
 		<text name="ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage">لقد استخدمت أكثر من 70% من حدك الإئتماني</text>
 		<text name="ShipperReminderToCompleteTrips">لديك شحنة لم تكمل الرحلات الخاصة بها</text>
 		<text name="ShippingNote">ملاحظات الشاحن</text>
-		<text name="ShippingRequest">إنشاء طلب شحن</text>
+		<text name="ShippingRequest">طلبات الشحن</text>
 		<text name="ShippingRequestAccidentsOccure">لقد حدث حادث للشحنة رقم: {id}.</text>
 		<text name="ShippingRequestCancelTripByAccidents">لقد تم إلغاء الشحنة رقم {id} بسبب وجود حادث</text>
 		<text name="ShippingRequestDetails">تفاصيل طلب الشحن</text>
@@ -1923,6 +1923,7 @@
 		<text name="UnlockedTenandAdmin">تم إلغاء قفل المشرف ل {0}</text>
 		<text name="UnlockedTheUser">فتح قفل المستخدم {0}</text>
 		<text name="Unpaid">غير مدفوع</text>
+		<text name="UnPaid">غير مدفوع</text>
 		<text name="Unread">غير مقروء</text>
 		<text name="UpComingLoad">الحمولة القادمة</text>
 		<text name="Update">تحديث</text>
@@ -2245,7 +2246,6 @@
 		<text name="RateOffloadingFacility">تقييم منشأة التنزيل</text>
 		<text name="ClickToRateFacility">الرجاء الضغط هنا لتقييم المنشأة</text>
 		<text name="StartOffloading">بدء التنزيل </text>
-		<text name="DeliveredAndNeedsConfirmation">تم الاستلام / بحاجة إلى اكمال المستندات</text>
 		<text name="Enter9DigitsNumber">رقم الجوال . 9 أرقام تبدأ بخمسة </text>
 		
 		<text name="CompanyNamePatternError">اسم الشركة اطول من 3 احرف ,الاحرف الانجليزية والارقام والشَرطة و الشَرطة السفلية مسموحة فقط</text>
@@ -2351,6 +2351,27 @@
 		<text name="CompanyWebsite">الموقع الإلكتروني للشركة</text>
 		<text name="DriverLicenceType">أنواع رخصة القيادة</text>
 		<text name="DangerousGoodTypes">أنواع البضائع الخطرة</text>
+		<text name="NumberOfRequestsForEachCity">عدد الطلبات لكل مدينة</text>
+		<text name="ongoingTrips">الرحلات المنطلقة</text>
+		<text name="NumberOfRegesteredTrucks">عدد الشاحنات المسجلة</text>
+		<text name="NumberOfRegesteredShippers">عدد الشواحن المسجلة</text>
+		<text name="NumberOfRegesteredDrivers">عدد السائقين المسجلة</text>
+		<text name="NumberOfRegesteredCarriers">عدد الناقلين المسجلة</text>
+		<text name="HostTruckTypesUsage">أنواع الشاحنات المستخدمة</text>
+		<text name="RouteTypesUsage">أنواع المسارات المستخدمة</text>
+		<text name="GoodTypesUsage">استخدام أنواع البضائع</text>
+		<text name="NewAccounts">حسابات جديدة</text>
+		<text name="NewTrips">الرحلات الجديدة</text>
+		<text name="CurrentlyNonActiveDrivers">حسابات السائقين غير نشطة</text>
+		<text name="CurrentlyActiveDrivers">حسابات السائقين نشطة</text>
+		<text name="CurrentlyActiveTrucks">شاحنات نشطة</text>
+		<text name="CurrentlyNonActiveTrucks">شاحنات غير نشطة</text>
+		<text name="MostUsedVases">أكثر Vases مستخدمة</text>
+		<text name="MostWorkedWithShippers">أكثر الشواحن تفاعلا</text>
+    <text name="WorstRatedCarriers">الناقلين الأقل تقييماً</text>
+		<text name="WorstRatedShippers">الشواحن الأقل تقييماً</text>
+		<text name="ReferanceNumber">رقم المرجع للطلب</text>
+		<text name="ForCurrentYear">السنة الحاليه</text>
 
 
 
@@ -2361,8 +2382,7 @@
 	<text name="ReceiverCodeConfirmationMsg">هل أنت متأكد أنك تريد إعادة تعيين رمز المستلم لهذه الشحنة؟</text>
 
 
-		<text name="CurrentlyActiveTrucks">الشاحنات الفعالة</text>
-		<text name="CurrentlyNonActiveTrucks">الشاحنات الغير فعالة</text>
+
 		<text name="DocumentTypeName">اسم نوع المستند</text>
 		<text name="submitterTenatTenancyName">اسم الشركة المرسلة</text>
 		<text name="ShipperReference">رقم فاتورة المراجعة</text>
@@ -2474,6 +2494,25 @@
 		<text name="PriceOfferUpdatedTransaction">تعديل عرض السعر</text>
 		<text name="PriceOfferAcceptedTransaction">قبول عرض السعر</text>
 		<text name="DriverAndTruckIsChanged">تغيير السائق والشاحنة</text>
+		<text name="CreateNewRequests">إنشاء طلب شحن جديد</text>
+		<text name="NewShippingRequest">طلب شحن جديد</text>
+		<text name="SelectAPickUpAgent">اختر المرسل</text>
+		<text name="PickAReceiver">اختر المستلم</text>
+		<text name="SelectADangeroudGoodType">اختر انواع البضائع الخطرة</text>
+		<text name="Done">تم</text>
+		<text name="AllDropPointsAddedSuccessfully">تم اضافة كل اماكن التنزيل بنجاح</text>
+		<text name="AddNewContact">اضافة جهة اتصال جديدة</text>
+		<text name="EditConatct">تعديل جهة اتصال</text>
+		<text name="SelectPlateType">اختر نوع اللوحة</text>
+		<text name="itemPrice">سعر الرحلة</text>
+		<text name="AcceptTrip">قبول الرحلة</text>
+		<text name="StartTrip">بدأ الرحلة</text>
+		<text name="AcceptedAndWaitingCarrier">تمت الموافقة/يحتاج لموافقة الناقل</text>
+		<text name="UploadDeliveryConfirmation">اضافة اثبات التسليم</text>
+		<text name="EnterReceiverCode">ادخال رمز التسليم</text>
+		<text name="ImportFile">إضافة ملف</text>
+		<text name="DeliveredAndNeedsConfirmation">تم التوصيل وبحاجة للتأكيد</text>
+		<text name="SAASTrip">Sass</text>
 
 	</texts>
 </localizationDictionary>

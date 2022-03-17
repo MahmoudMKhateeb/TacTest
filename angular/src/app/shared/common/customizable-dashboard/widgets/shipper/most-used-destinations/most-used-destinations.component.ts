@@ -1,6 +1,7 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ShipperDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-most-used-destinations',
@@ -9,6 +10,7 @@ import { ShipperDashboardServiceProxy } from '@shared/service-proxies/service-pr
 })
 export class MostUsedDestinationsComponent extends AppComponentBase implements OnInit {
   data: any;
+  loading: boolean = false;
 
   constructor(private injector: Injector, private _shipperDashboardServiceProxy: ShipperDashboardServiceProxy) {
     super(injector);
@@ -19,8 +21,17 @@ export class MostUsedDestinationsComponent extends AppComponentBase implements O
   }
 
   getDestinations() {
-    this._shipperDashboardServiceProxy.getMostUsedDestinatiions().subscribe((result) => {
-      this.data = result;
-    });
+    this.loading = true;
+    this._shipperDashboardServiceProxy
+      .getMostUsedDestinatiions()
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+        })
+      )
+      .subscribe((result) => {
+        this.data = result;
+        this.loading = false;
+      });
   }
 }

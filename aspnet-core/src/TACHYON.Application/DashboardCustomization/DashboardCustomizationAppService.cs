@@ -59,6 +59,7 @@ namespace TACHYON.DashboardCustomization
             {
                 return;
             }
+            CheckPageName(dashboard, input.Name);
 
             page.Name = input.Name;
 
@@ -69,6 +70,8 @@ namespace TACHYON.DashboardCustomization
         {
             var dashboards = await GetDashboardFromSettings(input.Application);
             var dashboard = GetDashboard(dashboards, input.DashboardName);
+
+            CheckPageName(dashboard, input.Name);
 
             var page = new Page
             {
@@ -105,8 +108,8 @@ namespace TACHYON.DashboardCustomization
             var dashboards = await GetDashboardFromSettings(input.Application);
             var dashboard = GetDashboard(dashboards, input.DashboardName);
 
-            var page = dashboard.Pages.Single(p => p.Id == input.PageId);
-
+            var page = dashboard.Pages.SingleOrDefault(p => p.Id == input.PageId);
+            CheckPageName(dashboard, input.DashboardName);
             var widget = new Widget
             {
                 WidgetId = input.WidgetId,
@@ -160,6 +163,15 @@ namespace TACHYON.DashboardCustomization
         public string GetSettingName(string application)
         {
             return AppSettings.DashboardCustomization.Configuration + "." + application;
+        }
+
+        private void CheckPageName(Dashboard dashboard , string Name)
+        {
+            var pageNameExists = dashboard.Pages.FirstOrDefault(p => p.Name.Equals(Name));
+            if (pageNameExists != null)
+            {
+                throw new UserFriendlyException(L("PageNameAlreadyExists", Name));
+            }
         }
 
         private Dashboard GetDashboard(List<Dashboard> dashboards, string dashboardName)

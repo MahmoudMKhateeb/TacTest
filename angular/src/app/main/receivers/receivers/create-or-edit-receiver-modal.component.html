@@ -13,10 +13,8 @@
       <form *ngIf="active" #receiverForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
         <div class="modal-header">
           <h4 class="modal-title">
-            <span *ngIf="receiver.id && agentType != 'sender'">{{ l('EditReceiver') }}</span>
-            <span *ngIf="!receiver.id && agentType != 'sender'">{{ l('CreateNewReceiver') }}</span>
-            <span *ngIf="receiver.id && agentType != 'sender'">{{ l('EditSender') }}</span>
-            <span *ngIf="!receiver.id && agentType != 'sender'">{{ l('CreateNewSender') }}</span>
+            <span *ngIf="receiver.id">{{ l('EditContact') }}</span>
+            <span *ngIf="!receiver.id">{{ l('AddNewContact') }}</span>
           </h4>
           <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
             <span aria-hidden="true">&times;</span>

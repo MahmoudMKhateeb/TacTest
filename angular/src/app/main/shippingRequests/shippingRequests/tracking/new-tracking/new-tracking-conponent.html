@@ -120,7 +120,7 @@
                             <span class="text-muted ml-2" *ngIf="point.endTime">{{point.endTime | momentFormat: 'L'}}</span>
                           </div>
 
-                          <div class="btn-group mt-6" *ngIf="trip.driver && (isCarrier || isTachyonDealerOrHost)">
+                          <div class="btn-group mt-6" *ngIf="trip.driver ">
                             <!--   POD       -->
                             <div class="d-inline-block" ngbDropdown *ngIf="point.isPodUploaded">
                               <button
