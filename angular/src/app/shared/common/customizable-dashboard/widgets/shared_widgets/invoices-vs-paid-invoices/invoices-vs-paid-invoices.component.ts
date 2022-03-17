@@ -84,7 +84,7 @@ export class InvoicesVsPaidInvoicesComponent extends AppComponentBase implements
             {
               name: 'Paid Invoices',
               data: this.paidInvoices,
-              color: '#b5b5c3',
+              color: '#b10303',
             },
           ],
           chart: {

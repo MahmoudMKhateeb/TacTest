@@ -18917,8 +18917,8 @@ export class HostDashboardServiceProxy {
   /**
    * @return Success
    */
-  getGoodTypeCountPerMonth(): Observable<GoodTypeAvailableDto[]> {
-    let url_ = this.baseUrl + '/api/services/app/HostDashboard/GetGoodTypeCountPerMonth';
+  getGoodTypeCount(): Observable<GoodTypeAvailableDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/HostDashboard/GetGoodTypeCount';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -18933,14 +18933,14 @@ export class HostDashboardServiceProxy {
       .request('get', url_, options_)
       .pipe(
         _observableMergeMap((response_: any) => {
-          return this.processGetGoodTypeCountPerMonth(response_);
+          return this.processGetGoodTypeCount(response_);
         })
       )
       .pipe(
         _observableCatch((response_: any) => {
           if (response_ instanceof HttpResponseBase) {
             try {
-              return this.processGetGoodTypeCountPerMonth(<any>response_);
+              return this.processGetGoodTypeCount(<any>response_);
             } catch (e) {
               return <Observable<GoodTypeAvailableDto[]>>(<any>_observableThrow(e));
             }
@@ -18949,7 +18949,7 @@ export class HostDashboardServiceProxy {
       );
   }
 
-  protected processGetGoodTypeCountPerMonth(response: HttpResponseBase): Observable<GoodTypeAvailableDto[]> {
+  protected processGetGoodTypeCount(response: HttpResponseBase): Observable<GoodTypeAvailableDto[]> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -18986,8 +18986,8 @@ export class HostDashboardServiceProxy {
   /**
    * @return Success
    */
-  getRouteTypeCountPerMonth(): Observable<RouteTypeAvailableDto[]> {
-    let url_ = this.baseUrl + '/api/services/app/HostDashboard/GetRouteTypeCountPerMonth';
+  getRouteTypeCount(): Observable<RouteTypeAvailableDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/HostDashboard/GetRouteTypeCount';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -19002,14 +19002,14 @@ export class HostDashboardServiceProxy {
       .request('get', url_, options_)
       .pipe(
         _observableMergeMap((response_: any) => {
-          return this.processGetRouteTypeCountPerMonth(response_);
+          return this.processGetRouteTypeCount(response_);
         })
       )
       .pipe(
         _observableCatch((response_: any) => {
           if (response_ instanceof HttpResponseBase) {
             try {
-              return this.processGetRouteTypeCountPerMonth(<any>response_);
+              return this.processGetRouteTypeCount(<any>response_);
             } catch (e) {
               return <Observable<RouteTypeAvailableDto[]>>(<any>_observableThrow(e));
             }
@@ -19018,7 +19018,7 @@ export class HostDashboardServiceProxy {
       );
   }
 
-  protected processGetRouteTypeCountPerMonth(response: HttpResponseBase): Observable<RouteTypeAvailableDto[]> {
+  protected processGetRouteTypeCount(response: HttpResponseBase): Observable<RouteTypeAvailableDto[]> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 

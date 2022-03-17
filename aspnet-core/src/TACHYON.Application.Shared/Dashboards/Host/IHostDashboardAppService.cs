@@ -17,8 +17,8 @@ namespace TACHYON.Dashboards.Host
         Task<long> GetCarriersCount();
         Task<long> GetDriversCount();
         Task<long> GetTrucksCount();
-        Task<List<GoodTypeAvailableDto>> GetGoodTypeCountPerMonth();
-        Task<List<RouteTypeAvailableDto>> GetRouteTypeCountPerMonth();
+        Task<List<GoodTypeAvailableDto>> GetGoodTypeCount();
+        Task<List<RouteTypeAvailableDto>> GetRouteTypeCount();
         Task<List<ListUsersHaveMostRequests>> GetShippersHaveMostRequests();
         Task<List<ListUsersHaveMostRequests>> GetCarriersHaveMostRequests();
         Task<List<ListUsersHaveMostRequests>> GetTopRatedShippers();

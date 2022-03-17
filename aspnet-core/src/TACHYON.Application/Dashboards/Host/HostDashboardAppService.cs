@@ -96,6 +96,65 @@ namespace TACHYON.Dashboards.Host
             DisableTenancyFiltersIfHost();
             await DisableTenancyFiltersIfTachyonDealer();
             var groupedAccountList = new List<ListPerMonthDto>();
+            groupedAccountList = await GetAccountsIfDaily(input, groupedAccountList);
+            groupedAccountList = GetAccountsIfWeekly(input, groupedAccountList);
+            groupedAccountList = await GetAccountsIfMonthly(input, groupedAccountList);
+            
+            return groupedAccountList;
+        }
+
+        private async Task<List<ListPerMonthDto>> GetAccountsIfMonthly(GetDataByDateFilterInput input, List<ListPerMonthDto> groupedAccountList)
+        {
+            if (input.DatePeriod == FilterDatePeriod.Monthly)
+            {
+                var AccountsMonthlyList = await _usersRepository.GetAll().AsNoTracking()
+                    .Where(r => !r.IsDriver && r.CreationTime.Year == Clock.Now.Year).ToListAsync();
+
+                var grouped2 = AccountsMonthlyList
+            .GroupBy(r => new { r.CreationTime.Year, r.CreationTime.Month })
+            .Select(s => new
+            {
+                list = s.ToList(),
+                Year = s.Key.Year,
+                Month = s.Key.Month.ToString()
+            }).ToList();
+                groupedAccountList = grouped2.Select(g => new ListPerMonthDto
+                {
+                    Year = g.Year,
+                    Month = new DateTime(g.Year, Convert.ToInt16(g.Month), 1).ToString("MMM"),
+                    Count = g.list.Count(),
+                }).ToList();
+            }
+
+            return groupedAccountList;
+        }
+
+        private List<ListPerMonthDto> GetAccountsIfWeekly(GetDataByDateFilterInput input, List<ListPerMonthDto> groupedAccountList)
+        {
+            if (input.DatePeriod == FilterDatePeriod.Weekly)
+            {
+                DateTime firstDay = new DateTime(DateTime.Now.Year, 1, 1);
+
+                var AccountsWeeklyList = (from u in _usersRepository.GetAll().AsNoTracking().AsEnumerable()
+                                          where !u.IsDriver && u.CreationTime.Year == Clock.Now.Year
+                                          group u by new { u.CreationTime.Year, WeekNumber = (u.CreationTime - new DateTime(DateTime.Now.Year, 1, 1)).Days / 7 } into ut
+                                          select new { list = ut.ToList(), Year = ut.Key.Year, Week = ut.Key.WeekNumber }).ToList();
+
+
+                groupedAccountList = AccountsWeeklyList.Select(x => new ListPerMonthDto
+                {
+                    Year = x.Year,
+                    Week = x.Week,
+                    Count = x.list.Count()
+                }).OrderBy(r => r.Week).Distinct().ToList();
+
+            }
+
+            return groupedAccountList;
+        }
+
+        private async Task<List<ListPerMonthDto>> GetAccountsIfDaily(GetDataByDateFilterInput input, List<ListPerMonthDto> groupedAccountList)
+        {
             //daily => default before 30 day
             if (input.DatePeriod == FilterDatePeriod.Daily)
             {
@@ -120,44 +179,7 @@ namespace TACHYON.Dashboards.Host
                     Count = g.list.Count(),
                 }).OrderBy(r => r.Day).ToList();
             }
-            if (input.DatePeriod == FilterDatePeriod.Weekly)
-            {
-                DateTime firstDay = new DateTime(DateTime.Now.Year, 1, 1);
 
-                var AccountsWeeklyList = (from u in _usersRepository.GetAll().AsNoTracking().AsEnumerable()
-                                       where !u.IsDriver && u.CreationTime.Year == Clock.Now.Year
-                                       group u by new { u.CreationTime.Year, WeekNumber = (u.CreationTime - new DateTime(DateTime.Now.Year, 1, 1)).Days / 7 } into ut
-                                       select new { list = ut.ToList(), Year = ut.Key.Year, Week = ut.Key.WeekNumber }).ToList();
-
-
-                groupedAccountList = AccountsWeeklyList.Select(x => new ListPerMonthDto
-                {
-                    Year = x.Year,
-                    Week = x.Week,
-                    Count = x.list.Count()
-                }).OrderBy(r => r.Week).Distinct().ToList();
-
-            }
-            if (input.DatePeriod == FilterDatePeriod.Monthly)
-            {
-                var AccountsMonthlyList = await _usersRepository.GetAll().AsNoTracking()
-                    .Where(r => !r.IsDriver && r.CreationTime.Year == Clock.Now.Year).ToListAsync();
-
-                var grouped2 = AccountsMonthlyList
-            .GroupBy(r => new { r.CreationTime.Year, r.CreationTime.Month })
-            .Select(s => new
-            {
-                list = s.ToList(),
-                Year = s.Key.Year,
-                Month = s.Key.Month.ToString()
-            }).ToList();
-                groupedAccountList = grouped2.Select(g => new ListPerMonthDto
-                {
-                    Year = g.Year,
-                    Month = new DateTime(g.Year, Convert.ToInt16(g.Month), 1).ToString("MMM"),
-                    Count = g.list.Count(),
-                }).ToList();
-            }
             return groupedAccountList;
         }
 
@@ -166,6 +188,64 @@ namespace TACHYON.Dashboards.Host
             DisableTenancyFiltersIfHost();
             await DisableTenancyFiltersIfTachyonDealer();
             var groupedTripsList = new List<ListPerMonthDto>();
+            groupedTripsList = await GetTripsIfDaily(input, groupedTripsList);
+            groupedTripsList = GetTripsIfWeekly(input, groupedTripsList);
+            groupedTripsList = await GetTripsIfMonthly(input, groupedTripsList);
+            return groupedTripsList;
+        }
+
+        private async Task<List<ListPerMonthDto>> GetTripsIfMonthly(GetDataByDateFilterInput input, List<ListPerMonthDto> groupedTripsList)
+        {
+            if (input.DatePeriod == FilterDatePeriod.Monthly)
+            {
+                var TripsMonthlyList = await _shippingRequestTripRepository.GetAll().AsNoTracking()
+                    .Where(r => r.Status == ShippingRequestTripStatus.New && r.CreationTime.Year == Clock.Now.Year).ToListAsync();
+
+                var grouped2 = TripsMonthlyList
+            .GroupBy(r => new { r.CreationTime.Year, r.CreationTime.Month })
+            .Select(s => new
+            {
+                list = s.ToList(),
+                Year = s.Key.Year,
+                Month = s.Key.Month.ToString()
+            }).ToList();
+                groupedTripsList = grouped2.Select(g => new ListPerMonthDto
+                {
+                    Year = g.Year,
+                    Month = new DateTime(g.Year, Convert.ToInt16(g.Month), 1).ToString("MMM"),
+                    Count = g.list.Count(),
+                }).ToList();
+            }
+
+            return groupedTripsList;
+        }
+
+        private List<ListPerMonthDto> GetTripsIfWeekly(GetDataByDateFilterInput input, List<ListPerMonthDto> groupedTripsList)
+        {
+            if (input.DatePeriod == FilterDatePeriod.Weekly)
+            {
+                DateTime firstDay = new DateTime(DateTime.Now.Year, 1, 1);
+
+                var TripsWeeklyList = (from u in _shippingRequestTripRepository.GetAll().AsNoTracking().AsEnumerable()
+                                       where u.Status == ShippingRequestTripStatus.New && u.CreationTime.Year == Clock.Now.Year
+                                       group u by new { u.CreationTime.Year, WeekNumber = (u.CreationTime - new DateTime(DateTime.Now.Year, 1, 1)).Days / 7 } into ut
+                                       select new { list = ut.ToList(), Year = ut.Key.Year, Week = ut.Key.WeekNumber }).ToList();
+
+
+                groupedTripsList = TripsWeeklyList.Select(x => new ListPerMonthDto
+                {
+                    Year = x.Year,
+                    Week = x.Week,
+                    Count = x.list.Count()
+                }).OrderBy(r => r.Week).Distinct().ToList();
+
+            }
+
+            return groupedTripsList;
+        }
+
+        private async Task<List<ListPerMonthDto>> GetTripsIfDaily(GetDataByDateFilterInput input, List<ListPerMonthDto> groupedTripsList)
+        {
             //daily => default before 30 day
             if (input.DatePeriod == FilterDatePeriod.Daily)
             {
@@ -190,47 +270,11 @@ namespace TACHYON.Dashboards.Host
                     Count = g.list.Count(),
                 }).OrderBy(r => r.Day).ToList();
             }
-            if (input.DatePeriod == FilterDatePeriod.Weekly)
-            {
-                DateTime firstDay = new DateTime(DateTime.Now.Year, 1, 1);
 
-                var TripsWeeklyList = (from u in _shippingRequestTripRepository.GetAll().AsNoTracking().AsEnumerable()
-                                         where u.Status == ShippingRequestTripStatus.New && u.CreationTime.Year == Clock.Now.Year
-                                         group u by new { u.CreationTime.Year, WeekNumber = (u.CreationTime - new DateTime(DateTime.Now.Year, 1, 1)).Days / 7 } into ut
-                                         select new { list = ut.ToList(),  Year = ut.Key.Year, Week = ut.Key.WeekNumber }).ToList();
-
-               
-                groupedTripsList = TripsWeeklyList.Select(x => new ListPerMonthDto
-                {
-                    Year = x.Year,
-                    Week = x.Week,
-                    Count = x.list.Count()
-                }).OrderBy(r => r.Week).Distinct().ToList();
-
-            }
-            if (input.DatePeriod == FilterDatePeriod.Monthly)
-            {
-                var TripsMonthlyList = await _shippingRequestTripRepository.GetAll().AsNoTracking()
-                    .Where(r => r.Status == ShippingRequestTripStatus.New && r.CreationTime.Year == Clock.Now.Year).ToListAsync();
-
-                var grouped2 = TripsMonthlyList
-            .GroupBy(r => new { r.CreationTime.Year, r.CreationTime.Month })
-            .Select(s => new
-            {
-                list = s.ToList(),
-                Year = s.Key.Year,
-                Month = s.Key.Month.ToString()
-            }).ToList();
-                groupedTripsList = grouped2.Select(g => new ListPerMonthDto
-                {
-                    Year = g.Year,
-                    Month = new DateTime(g.Year, Convert.ToInt16(g.Month), 1).ToString("MMM"),
-                    Count = g.list.Count(),
-                }).ToList();
-            }
             return groupedTripsList;
         }
-        public async Task<List<GoodTypeAvailableDto>> GetGoodTypeCountPerMonth()
+
+        public async Task<List<GoodTypeAvailableDto>> GetGoodTypeCount()
         {
             DisableTenancyFiltersIfHost();
             await DisableTenancyFiltersIfTachyonDealer();
@@ -239,16 +283,15 @@ namespace TACHYON.Dashboards.Host
             var requests = await _shippingRequestRepository.GetAll()
                 .Where(x => x.GoodCategoryId != null && goodTypesIdsList.Contains(x.GoodCategoryId.Value))
                 .ToListAsync();
-            var g = goodTypes.Select(x => new GoodTypeAvailableDto
+            return goodTypes.Select(x => new GoodTypeAvailableDto
             {
                 Id = x.Id,
                 GoodType = x.Translations != null ? x.Translations.FirstOrDefault().DisplayName : x.Key,
                 AvailableGoodTypesCount = requests.Where(y => y.GoodCategoryId == x.Id).Count()
             }).Where(r => r.AvailableGoodTypesCount > 0).ToList();
-            return g;
         }
 
-        public async Task<List<RouteTypeAvailableDto>> GetRouteTypeCountPerMonth()
+        public async Task<List<RouteTypeAvailableDto>> GetRouteTypeCount()
         {
             DisableTenancyFiltersIfHost();
             await DisableTenancyFiltersIfTachyonDealer();

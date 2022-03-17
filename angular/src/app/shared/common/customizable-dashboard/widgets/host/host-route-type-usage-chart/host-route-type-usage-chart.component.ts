@@ -28,7 +28,7 @@ export class HostRouteTypeUsageChartComponent extends AppComponentBase implement
     this.counts = [];
     this.loading = true;
     this._hostDashboardServiceProxy
-      .getRouteTypeCountPerMonth()
+      .getRouteTypeCount()
       .pipe(
         finalize(() => {
           this.loading = false;

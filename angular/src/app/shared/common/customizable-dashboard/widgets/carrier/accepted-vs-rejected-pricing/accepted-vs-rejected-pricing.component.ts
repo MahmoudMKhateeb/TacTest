@@ -84,7 +84,7 @@ export class AcceptedVsRejectedPricingComponent extends AppComponentBase impleme
             {
               name: 'Rejected',
               data: this.rejectedReqs,
-              color: '#b5b5c3',
+              color: '#b10303',
             },
           ],
           chart: {

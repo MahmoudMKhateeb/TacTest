@@ -68,12 +68,12 @@ namespace TACHYON.Dashboards.Carrier
         public async Task<ActivityItemsDto> GetTrucksActivity()
         {
             DisableTenancyFilters();
-            var trucks = await _trucksRepository.GetAll().AsNoTracking()
+            var trucks = await _trucksRepository.GetAll().Include(r=>r.TruckStatusFk).AsNoTracking()
                        .Where(r => r.TenantId == AbpSession.TenantId).ToListAsync();
             return new ActivityItemsDto()
             {
-                ActiveItems = trucks.Where(r => r.TruckStatusId == 1).Count(),
-                NotActiveItems = trucks.Where(r => r.TruckStatusId == 2).Count()
+                ActiveItems = trucks.Where(r => r.TruckStatusFk.DisplayName.ToLower() == "active").Count(),
+                NotActiveItems = trucks.Where(r => r.TruckStatusFk.DisplayName.ToLower() == "not active").Count()
             };
         }
 

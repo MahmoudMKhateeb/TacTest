@@ -28,7 +28,7 @@ export class HostGoodTypesUsageChartComponent extends AppComponentBase implement
     this.counts = [];
     this.loading = true;
     this._hostDashboardServiceProxy
-      .getGoodTypeCountPerMonth()
+      .getGoodTypeCount()
       .pipe(
         finalize(() => {
           this.loading = false;

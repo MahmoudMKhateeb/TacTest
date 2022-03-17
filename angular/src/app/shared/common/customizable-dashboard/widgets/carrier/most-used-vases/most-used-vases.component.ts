@@ -69,7 +69,13 @@ export class MostUsedVasesComponent extends AppComponentBase implements OnInit {
           xaxis: {
             categories: this.types,
           },
-
+          tooltip: {
+            y: {
+              formatter: function (val) {
+                return val.toFixed(0);
+              },
+            },
+          },
           fill: {
             opacity: 1,
           },
