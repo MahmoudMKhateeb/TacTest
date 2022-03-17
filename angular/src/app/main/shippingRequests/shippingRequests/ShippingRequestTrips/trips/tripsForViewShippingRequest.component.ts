@@ -1,11 +1,10 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Injector, Input, OnChanges, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Injector, Input, OnChanges, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { Table } from '@node_modules/primeng/table';
 import { Paginator } from '@node_modules/primeng/paginator';
 import { LazyLoadEvent } from 'primeng/api';
 
 import {
-  EntityDtoOfInt64,
   GetShippingRequestVasForViewDto,
   ShippingRequestDto,
   ShippingRequestsServiceProxy,
@@ -15,7 +14,6 @@ import {
 import { CreateOrEditTripComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/createOrEditTripModal/createOrEditTrip.component';
 import { ViewTripModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/viewTripModal/viewTripModal.component';
 import { TripService } from '../trip.service';
-import Swal from 'sweetalert2';
 import { AddNewRemarksTripModalComponent } from './add-new-remarks-trip-modal/add-new-remarks-trip-modal.component';
 
 @Component({
@@ -80,22 +78,22 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
       });
   }
 
-  updateAddTripsByTmsFeature() {
-    Swal.fire({
-      title: this.l('areYouSure'),
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: this.l('Yes'),
-      cancelButtonText: this.l('No'),
-    }).then((result) => {
-      if (result.value) {
-        this.saving = true;
-        this._shippingRequestTripsService.changeAddTripsByTmsFeature().subscribe(() => {
-          this.saving = false;
-        });
-      } //end of if
-    });
-  }
+  // updateAddTripsByTmsFeature() {
+  //   Swal.fire({
+  //     title: this.l('areYouSure'),
+  //     icon: 'warning',
+  //     showCancelButton: true,
+  //     confirmButtonText: this.l('Yes'),
+  //     cancelButtonText: this.l('No'),
+  //   }).then((result) => {
+  //     if (result.value) {
+  //       this.saving = true;
+  //       this._shippingRequestTripsService.changeAddTripsByTmsFeature().subscribe(() => {
+  //         this.saving = false;
+  //       });
+  //     } //end of if
+  //   });
+  // }
 
   reloadPage(): void {
     this.paginator.changePage(this.paginator.getPage());

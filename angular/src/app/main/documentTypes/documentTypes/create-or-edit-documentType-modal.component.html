@@ -171,12 +171,11 @@
               </div>
               <div class="dx-field-label">{{ l('numberMinDigits') }}</div>
               <div class="dx-field-value">
-                <dx-number-box
-                  [(value)]="documentType.numberMinDigits"
-                  [min]="1"
-                  [max]="documentType.numberMaxDigits"
-                  [showSpinButtons]="true"
-                ></dx-number-box>
+                <dx-number-box [(value)]="documentType.numberMinDigits" [min]="1" [max]="documentType.numberMaxDigits" [showSpinButtons]="true">
+                  <dx-validator *ngIf="documentType.isRequiredNumber">
+                    <dxi-validation-rule type="required" message="numberMinDigits is required"></dxi-validation-rule>
+                  </dx-validator>
+                </dx-number-box>
                 <span class="text-muted">{{ 'NumberMinDigits' | localize }}</span>
               </div>
             </div>
@@ -184,12 +183,11 @@
             <div class="dx-field" *ngIf="documentType.hasNumber">
               <div class="dx-field-label">{{ l('numberMaxDigits') }}</div>
               <div class="dx-field-value">
-                <dx-number-box
-                  [(value)]="documentType.numberMaxDigits"
-                  [min]="documentType.numberMinDigits"
-                  max="100"
-                  [showSpinButtons]="true"
-                ></dx-number-box>
+                <dx-number-box [(value)]="documentType.numberMaxDigits" [min]="documentType.numberMinDigits" max="100" [showSpinButtons]="true">
+                  <dx-validator *ngIf="documentType.isRequiredNumber">
+                    <dxi-validation-rule type="required" message="numberMaxDigits is required"></dxi-validation-rule>
+                  </dx-validator>
+                </dx-number-box>
                 <span class="text-muted">{{ 'NumberMaxDigits' | localize }}</span>
               </div>
             </div>
