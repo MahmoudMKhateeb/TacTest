@@ -13,6 +13,7 @@ namespace TACHYON.Shipping.Trips.Dto
         public UserIdentifier DriverIdentifier { get; set; }
 
         public int TripId { get; set; }
+        public long ShippingRequestId { get; set; }
 
         public long ShippingRequestId { get; set; }
 

@@ -514,6 +514,7 @@ namespace TACHYON.Notifications
                 }
             };
 
+            notificationData["shippingRequestId"] = input.ShippingRequestId;
             await _notificationPublisher.PublishAsync(AppNotificationNames.NotifyShipperWhenTripUpdated, notificationData, userIds: new[] { tenantAdmin });
         }
 
@@ -604,7 +605,8 @@ namespace TACHYON.Notifications
                 ShippingRequestId = trip.ShippingRequestId,
                 ShipperTenantId = shipperTenantId,
                 TripId = trip.Id,
-                WaybillNumber = waybillNo.ToString()
+                WaybillNumber = waybillNo.ToString(),
+                ShippingRequestId = trip.ShippingRequestId
             };
 
             #endregion
