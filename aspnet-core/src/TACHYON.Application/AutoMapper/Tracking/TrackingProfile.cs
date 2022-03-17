@@ -24,7 +24,8 @@ namespace TACHYON.AutoMapper.Tracking
             .ForMember(dst => dst.ReferenceNumber, opt => opt.MapFrom(src => src.ShippingRequestFk.ReferenceNumber))
             .ForMember(dst => dst.TenantId, opt => opt.MapFrom(src => src.ShippingRequestFk.TenantId))
             .ForMember(dst => dst.RequestId, opt => opt.MapFrom(src => src.ShippingRequestId))
-            .ForMember(dst => dst.DriverRate, opt => opt.MapFrom(src => src.AssignedDriverUserFk.Rate));
+            .ForMember(dst => dst.DriverRate, opt => opt.MapFrom(src => src.AssignedDriverUserFk.Rate))
+            .ForMember(dst => dst.IsSass, opt => opt.MapFrom(src => src.ShippingRequestFk.IsSaas()));
 
 
             ;
