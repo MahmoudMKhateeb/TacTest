@@ -3133,6 +3133,144 @@ export class CarrierDashboardServiceProxy {
     }
     return _observableOf<ActivityItemsDto>(<any>null);
   }
+
+  /**
+   * @return Success
+   */
+  getMostWorkedWithShippers(): Observable<MostShippersWorksListDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/CarrierDashboard/GetMostWorkedWithShippers';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetMostWorkedWithShippers(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetMostWorkedWithShippers(<any>response_);
+            } catch (e) {
+              return <Observable<MostShippersWorksListDto[]>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<MostShippersWorksListDto[]>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetMostWorkedWithShippers(response: HttpResponseBase): Observable<MostShippersWorksListDto[]> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          if (Array.isArray(resultData200)) {
+            result200 = [] as any;
+            for (let item of resultData200) result200!.push(MostShippersWorksListDto.fromJS(item));
+          } else {
+            result200 = <any>null;
+          }
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<MostShippersWorksListDto[]>(<any>null);
+  }
+
+  /**
+   * @return Success
+   */
+  getMostVasesUsedByShippers(): Observable<VasTypeDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/CarrierDashboard/GetMostVasesUsedByShippers';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetMostVasesUsedByShippers(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetMostVasesUsedByShippers(<any>response_);
+            } catch (e) {
+              return <Observable<VasTypeDto[]>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<VasTypeDto[]>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetMostVasesUsedByShippers(response: HttpResponseBase): Observable<VasTypeDto[]> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          if (Array.isArray(resultData200)) {
+            result200 = [] as any;
+            for (let item of resultData200) result200!.push(VasTypeDto.fromJS(item));
+          } else {
+            result200 = <any>null;
+          }
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<VasTypeDto[]>(<any>null);
+  }
 }
 
 @Injectable()
@@ -18642,8 +18780,10 @@ export class HostDashboardServiceProxy {
   /**
    * @return Success
    */
-  getAccountsCountsPerMonth(): Observable<ListPerMonthDto[]> {
-    let url_ = this.baseUrl + '/api/services/app/HostDashboard/GetAccountsCountsPerMonth';
+  getAccountsStatistics(datePeriod: FilterDatePeriod): Observable<ListPerMonthDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/HostDashboard/GetAccountsStatistics?';
+    if (datePeriod === undefined || datePeriod === null) throw new Error("The parameter 'datePeriod' must be defined and cannot be null.");
+    else url_ += 'DatePeriod=' + encodeURIComponent('' + datePeriod) + '&';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -18658,14 +18798,14 @@ export class HostDashboardServiceProxy {
       .request('get', url_, options_)
       .pipe(
         _observableMergeMap((response_: any) => {
-          return this.processGetAccountsCountsPerMonth(response_);
+          return this.processGetAccountsStatistics(response_);
         })
       )
       .pipe(
         _observableCatch((response_: any) => {
           if (response_ instanceof HttpResponseBase) {
             try {
-              return this.processGetAccountsCountsPerMonth(<any>response_);
+              return this.processGetAccountsStatistics(<any>response_);
             } catch (e) {
               return <Observable<ListPerMonthDto[]>>(<any>_observableThrow(e));
             }
@@ -18674,7 +18814,7 @@ export class HostDashboardServiceProxy {
       );
   }
 
-  protected processGetAccountsCountsPerMonth(response: HttpResponseBase): Observable<ListPerMonthDto[]> {
+  protected processGetAccountsStatistics(response: HttpResponseBase): Observable<ListPerMonthDto[]> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -18711,8 +18851,10 @@ export class HostDashboardServiceProxy {
   /**
    * @return Success
    */
-  getNewTripsCountPerMonth(): Observable<ListPerMonthDto[]> {
-    let url_ = this.baseUrl + '/api/services/app/HostDashboard/GetNewTripsCountPerMonth';
+  getNewTripsStatistics(datePeriod: FilterDatePeriod): Observable<ListPerMonthDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/HostDashboard/GetNewTripsStatistics?';
+    if (datePeriod === undefined || datePeriod === null) throw new Error("The parameter 'datePeriod' must be defined and cannot be null.");
+    else url_ += 'DatePeriod=' + encodeURIComponent('' + datePeriod) + '&';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -18727,14 +18869,14 @@ export class HostDashboardServiceProxy {
       .request('get', url_, options_)
       .pipe(
         _observableMergeMap((response_: any) => {
-          return this.processGetNewTripsCountPerMonth(response_);
+          return this.processGetNewTripsStatistics(response_);
         })
       )
       .pipe(
         _observableCatch((response_: any) => {
           if (response_ instanceof HttpResponseBase) {
             try {
-              return this.processGetNewTripsCountPerMonth(<any>response_);
+              return this.processGetNewTripsStatistics(<any>response_);
             } catch (e) {
               return <Observable<ListPerMonthDto[]>>(<any>_observableThrow(e));
             }
@@ -18743,7 +18885,7 @@ export class HostDashboardServiceProxy {
       );
   }
 
-  protected processGetNewTripsCountPerMonth(response: HttpResponseBase): Observable<ListPerMonthDto[]> {
+  protected processGetNewTripsStatistics(response: HttpResponseBase): Observable<ListPerMonthDto[]> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -18780,8 +18922,8 @@ export class HostDashboardServiceProxy {
   /**
    * @return Success
    */
-  getGoodTypeCountPerMonth(): Observable<GoodTypeAvailableDto[]> {
-    let url_ = this.baseUrl + '/api/services/app/HostDashboard/GetGoodTypeCountPerMonth';
+  getGoodTypeCount(): Observable<GoodTypeAvailableDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/HostDashboard/GetGoodTypeCount';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -18796,14 +18938,14 @@ export class HostDashboardServiceProxy {
       .request('get', url_, options_)
       .pipe(
         _observableMergeMap((response_: any) => {
-          return this.processGetGoodTypeCountPerMonth(response_);
+          return this.processGetGoodTypeCount(response_);
         })
       )
       .pipe(
         _observableCatch((response_: any) => {
           if (response_ instanceof HttpResponseBase) {
             try {
-              return this.processGetGoodTypeCountPerMonth(<any>response_);
+              return this.processGetGoodTypeCount(<any>response_);
             } catch (e) {
               return <Observable<GoodTypeAvailableDto[]>>(<any>_observableThrow(e));
             }
@@ -18812,7 +18954,7 @@ export class HostDashboardServiceProxy {
       );
   }
 
-  protected processGetGoodTypeCountPerMonth(response: HttpResponseBase): Observable<GoodTypeAvailableDto[]> {
+  protected processGetGoodTypeCount(response: HttpResponseBase): Observable<GoodTypeAvailableDto[]> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -18849,8 +18991,8 @@ export class HostDashboardServiceProxy {
   /**
    * @return Success
    */
-  getRouteTypeCountPerMonth(): Observable<RouteTypeAvailableDto[]> {
-    let url_ = this.baseUrl + '/api/services/app/HostDashboard/GetRouteTypeCountPerMonth';
+  getRouteTypeCount(): Observable<RouteTypeAvailableDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/HostDashboard/GetRouteTypeCount';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -18865,14 +19007,14 @@ export class HostDashboardServiceProxy {
       .request('get', url_, options_)
       .pipe(
         _observableMergeMap((response_: any) => {
-          return this.processGetRouteTypeCountPerMonth(response_);
+          return this.processGetRouteTypeCount(response_);
         })
       )
       .pipe(
         _observableCatch((response_: any) => {
           if (response_ instanceof HttpResponseBase) {
             try {
-              return this.processGetRouteTypeCountPerMonth(<any>response_);
+              return this.processGetRouteTypeCount(<any>response_);
             } catch (e) {
               return <Observable<RouteTypeAvailableDto[]>>(<any>_observableThrow(e));
             }
@@ -18881,7 +19023,7 @@ export class HostDashboardServiceProxy {
       );
   }
 
-  protected processGetRouteTypeCountPerMonth(response: HttpResponseBase): Observable<RouteTypeAvailableDto[]> {
+  protected processGetRouteTypeCount(response: HttpResponseBase): Observable<RouteTypeAvailableDto[]> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -19714,17 +19856,12 @@ export class HostDashboardServiceProxy {
   }
 
   /**
-   * @param startDate (optional)
-   * @param endDate (optional)
    * @return Success
    */
-  getUnpricedRequestsInMarketplace(
-    startDate: moment.Moment | null | undefined,
-    endDate: moment.Moment | null | undefined
-  ): Observable<ListRequestsUnPricedMarketPlace[]> {
+  getUnpricedRequestsInMarketplace(datePeriod: FilterDatePeriod): Observable<ListRequestsUnPricedMarketPlace[]> {
     let url_ = this.baseUrl + '/api/services/app/HostDashboard/GetUnpricedRequestsInMarketplace?';
-    if (startDate !== undefined && startDate !== null) url_ += 'StartDate=' + encodeURIComponent(startDate ? '' + startDate.toJSON() : '') + '&';
-    if (endDate !== undefined && endDate !== null) url_ += 'EndDate=' + encodeURIComponent(endDate ? '' + endDate.toJSON() : '') + '&';
+    if (datePeriod === undefined || datePeriod === null) throw new Error("The parameter 'datePeriod' must be defined and cannot be null.");
+    else url_ += 'DatePeriod=' + encodeURIComponent('' + datePeriod) + '&';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -35529,8 +35666,10 @@ export class ShipperDashboardServiceProxy {
   /**
    * @return Success
    */
-  getCompletedTripsCountPerMonth(): Observable<ListPerMonthDto[]> {
-    let url_ = this.baseUrl + '/api/services/app/ShipperDashboard/GetCompletedTripsCountPerMonth';
+  getCompletedTripsCountPerMonth(datePeriod: FilterDatePeriod): Observable<ListPerMonthDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/ShipperDashboard/GetCompletedTripsCountPerMonth?';
+    if (datePeriod === undefined || datePeriod === null) throw new Error("The parameter 'datePeriod' must be defined and cannot be null.");
+    else url_ += 'DatePeriod=' + encodeURIComponent('' + datePeriod) + '&';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -35859,8 +35998,10 @@ export class ShipperDashboardServiceProxy {
   /**
    * @return Success
    */
-  getRequestsInMarketpalce(): Observable<RequestsInMarketpalceDto[]> {
-    let url_ = this.baseUrl + '/api/services/app/ShipperDashboard/GetRequestsInMarketpalce';
+  getRequestsInMarketpalce(datePeriod: FilterDatePeriod): Observable<RequestsInMarketpalceDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/ShipperDashboard/GetRequestsInMarketpalce?';
+    if (datePeriod === undefined || datePeriod === null) throw new Error("The parameter 'datePeriod' must be defined and cannot be null.");
+    else url_ += 'DatePeriod=' + encodeURIComponent('' + datePeriod) + '&';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -40566,65 +40707,6 @@ export class ShippingRequestsTripServiceProxy {
   }
 
   protected processCreateOrEdit(response: HttpResponseBase): Observable<void> {
-    const status = response.status;
-    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-    let _headers: any = {};
-    if (response.headers) {
-      for (let key of response.headers.keys()) {
-        _headers[key] = response.headers.get(key);
-      }
-    }
-    if (status === 200) {
-      return blobToText(responseBlob).pipe(
-        _observableMergeMap((_responseText) => {
-          return _observableOf<void>(<any>null);
-        })
-      );
-    } else if (status !== 200 && status !== 204) {
-      return blobToText(responseBlob).pipe(
-        _observableMergeMap((_responseText) => {
-          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
-        })
-      );
-    }
-    return _observableOf<void>(<any>null);
-  }
-
-  /**
-   * @return Success
-   */
-  changeAddTripsByTmsFeature(): Observable<void> {
-    let url_ = this.baseUrl + '/api/services/app/ShippingRequestsTrip/ChangeAddTripsByTmsFeature';
-    url_ = url_.replace(/[?&]$/, '');
-
-    let options_: any = {
-      observe: 'response',
-      responseType: 'blob',
-      headers: new HttpHeaders({}),
-    };
-
-    return this.http
-      .request('post', url_, options_)
-      .pipe(
-        _observableMergeMap((response_: any) => {
-          return this.processChangeAddTripsByTmsFeature(response_);
-        })
-      )
-      .pipe(
-        _observableCatch((response_: any) => {
-          if (response_ instanceof HttpResponseBase) {
-            try {
-              return this.processChangeAddTripsByTmsFeature(<any>response_);
-            } catch (e) {
-              return <Observable<void>>(<any>_observableThrow(e));
-            }
-          } else return <Observable<void>>(<any>_observableThrow(response_));
-        })
-      );
-  }
-
-  protected processChangeAddTripsByTmsFeature(response: HttpResponseBase): Observable<void> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -63041,6 +63123,96 @@ export interface IActivityItemsDto {
   notActiveItems: number;
 }
 
+export class MostShippersWorksListDto implements IMostShippersWorksListDto {
+  id!: number | undefined;
+  shipperName!: string | undefined;
+  numberOfTrips!: number;
+  shipperRating!: number;
+  count!: number;
+
+  constructor(data?: IMostShippersWorksListDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.id = _data['id'];
+      this.shipperName = _data['shipperName'];
+      this.numberOfTrips = _data['numberOfTrips'];
+      this.shipperRating = _data['shipperRating'];
+      this.count = _data['count'];
+    }
+  }
+
+  static fromJS(data: any): MostShippersWorksListDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new MostShippersWorksListDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['id'] = this.id;
+    data['shipperName'] = this.shipperName;
+    data['numberOfTrips'] = this.numberOfTrips;
+    data['shipperRating'] = this.shipperRating;
+    data['count'] = this.count;
+    return data;
+  }
+}
+
+export interface IMostShippersWorksListDto {
+  id: number | undefined;
+  shipperName: string | undefined;
+  numberOfTrips: number;
+  shipperRating: number;
+  count: number;
+}
+
+export class VasTypeDto implements IVasTypeDto {
+  vasType!: string | undefined;
+  availableVasTypeCount!: number;
+
+  constructor(data?: IVasTypeDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.vasType = _data['vasType'];
+      this.availableVasTypeCount = _data['availableVasTypeCount'];
+    }
+  }
+
+  static fromJS(data: any): VasTypeDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new VasTypeDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['vasType'] = this.vasType;
+    data['availableVasTypeCount'] = this.availableVasTypeCount;
+    return data;
+  }
+}
+
+export interface IVasTypeDto {
+  vasType: string | undefined;
+  availableVasTypeCount: number;
+}
+
 export enum FriendshipState {
   Accepted = 1,
   Blocked = 2,
@@ -70710,8 +70882,16 @@ export interface ITruckTypeAvailableTrucksDto {
   id: number;
 }
 
+export enum FilterDatePeriod {
+  Daily = 1,
+  Weekly = 2,
+  Monthly = 3,
+}
+
 export class ListPerMonthDto implements IListPerMonthDto {
   year!: number;
+  day!: number;
+  week!: number;
   month!: string | undefined;
   count!: number;
 
@@ -70726,6 +70906,8 @@ export class ListPerMonthDto implements IListPerMonthDto {
   init(_data?: any) {
     if (_data) {
       this.year = _data['year'];
+      this.day = _data['day'];
+      this.week = _data['week'];
       this.month = _data['month'];
       this.count = _data['count'];
     }
@@ -70741,6 +70923,8 @@ export class ListPerMonthDto implements IListPerMonthDto {
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
     data['year'] = this.year;
+    data['day'] = this.day;
+    data['week'] = this.week;
     data['month'] = this.month;
     data['count'] = this.count;
     return data;
@@ -70749,6 +70933,8 @@ export class ListPerMonthDto implements IListPerMonthDto {
 
 export interface IListPerMonthDto {
   year: number;
+  day: number;
+  week: number;
   month: string | undefined;
   count: number;
 }
@@ -85761,7 +85947,6 @@ export class ShippingRequestDto implements IShippingRequestDto {
   otherGoodsCategoryName!: string | undefined;
   otherTransportTypeName!: string | undefined;
   otherTrucksTypeName!: string | undefined;
-  addTripsByTmsEnabled!: boolean;
   canAddTrip!: boolean;
   shipperReference!: string | undefined;
   shipperInvoiceNo!: string | undefined;
@@ -85808,7 +85993,6 @@ export class ShippingRequestDto implements IShippingRequestDto {
       this.otherGoodsCategoryName = _data['otherGoodsCategoryName'];
       this.otherTransportTypeName = _data['otherTransportTypeName'];
       this.otherTrucksTypeName = _data['otherTrucksTypeName'];
-      this.addTripsByTmsEnabled = _data['addTripsByTmsEnabled'];
       this.canAddTrip = _data['canAddTrip'];
       this.shipperReference = _data['shipperReference'];
       this.shipperInvoiceNo = _data['shipperInvoiceNo'];
@@ -85856,7 +86040,6 @@ export class ShippingRequestDto implements IShippingRequestDto {
     data['otherGoodsCategoryName'] = this.otherGoodsCategoryName;
     data['otherTransportTypeName'] = this.otherTransportTypeName;
     data['otherTrucksTypeName'] = this.otherTrucksTypeName;
-    data['addTripsByTmsEnabled'] = this.addTripsByTmsEnabled;
     data['canAddTrip'] = this.canAddTrip;
     data['shipperReference'] = this.shipperReference;
     data['shipperInvoiceNo'] = this.shipperInvoiceNo;
@@ -85897,7 +86080,6 @@ export interface IShippingRequestDto {
   otherGoodsCategoryName: string | undefined;
   otherTransportTypeName: string | undefined;
   otherTrucksTypeName: string | undefined;
-  addTripsByTmsEnabled: boolean;
   canAddTrip: boolean;
   shipperReference: string | undefined;
   shipperInvoiceNo: string | undefined;
@@ -93070,6 +93252,7 @@ export class TrackingListDto implements ITrackingListDto {
   isApproveCancledByTachyonDealer!: boolean;
   isForcedCanceledByTachyonDealer!: boolean;
   waybillNumber!: number | undefined;
+  isSass!: boolean;
   referenceNumber!: string | undefined;
   tenantId!: number;
   id!: number;
@@ -93115,6 +93298,7 @@ export class TrackingListDto implements ITrackingListDto {
       this.isApproveCancledByTachyonDealer = _data['isApproveCancledByTachyonDealer'];
       this.isForcedCanceledByTachyonDealer = _data['isForcedCanceledByTachyonDealer'];
       this.waybillNumber = _data['waybillNumber'];
+      this.isSass = _data['isSass'];
       this.referenceNumber = _data['referenceNumber'];
       this.tenantId = _data['tenantId'];
       this.id = _data['id'];
@@ -93161,6 +93345,7 @@ export class TrackingListDto implements ITrackingListDto {
     data['isApproveCancledByTachyonDealer'] = this.isApproveCancledByTachyonDealer;
     data['isForcedCanceledByTachyonDealer'] = this.isForcedCanceledByTachyonDealer;
     data['waybillNumber'] = this.waybillNumber;
+    data['isSass'] = this.isSass;
     data['referenceNumber'] = this.referenceNumber;
     data['tenantId'] = this.tenantId;
     data['id'] = this.id;
@@ -93200,6 +93385,7 @@ export interface ITrackingListDto {
   isApproveCancledByTachyonDealer: boolean;
   isForcedCanceledByTachyonDealer: boolean;
   waybillNumber: number | undefined;
+  isSass: boolean;
   referenceNumber: string | undefined;
   tenantId: number;
   id: number;
