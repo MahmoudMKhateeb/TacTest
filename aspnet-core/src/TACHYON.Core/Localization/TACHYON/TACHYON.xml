@@ -624,10 +624,9 @@
 		<text name="DownloadAll">Download all</text>
 		<text name="DownloadCollectedData">Download collected data</text>
 		<text name="DownloadCollectedData_Description">Download data belongs to your account</text>
-		<text name="DownloadDropWaybill">Download waybill</text>
 		<text name="DocumentHeaderDetails">Document Details</text>
 		<text name="DownloadInvoice">Download invoice</text>
-		<text name="UploadInvoiceDocument">Upload invoice document</text>
+		<text name="UploadInvoiceDocument">Upload the invoice</text>
 		<text name="DriectRequestCarrierRespone">The {clientname} has established a current view of the  shipment No.: {id}.</text>
 		<text name="Driver">Driver</text>
 		<text name="DriverAcceptTrip">The driver {driver} has been accepted the trip from {source} to {destination}</text>
@@ -643,7 +642,7 @@
 		<text name="DriverTripReminder">You have a new trip tomorrow</text>
 		<text name="DrivingLicense">Driving License</text>
 		<text name="Drop">Drop</text>
-		<text name="DropOff">Drop off</text>
+		<text name="DropOff">Drop-off</text>
 		<text name="DropoffDetailCommodity">Goods details</text>
 		<text name="DropoffDetailDropoff">Dropoff </text>
 		<text name="DropoffDetailID">id</text>
@@ -1434,7 +1433,7 @@
 		<text name="PickupPointFacilityAndSourceTripFacilityareNotTheSame">Pickup point facility and source trip facilityare not the same</text>
 		<text name="PickUser">Select user</text>
 		<text name="PickVas">Select VAS</text>
-		<text name="VASType">VAS Type</text>
+		<text name="VASType">VAS type</text>
 		<text name="Pin">Pin</text>
 		<text name="Pink">Pink</text>
 		<text name="Place">Send</text>
@@ -1633,7 +1632,7 @@
 		<text name="SelectaCountry">Select country</text>
 		<text name="SelectACounty">Select country</text>
 		<text name="SelectaDestination">Select a destination</text>
-		<text name="SelectaDriver">Selecta driver</text>
+		<text name="SelectaDriver">Select driver</text>
 		<text name="SelectADynamicParameter">Select A DynamicParameter</text>
 		<text name="SelectaFacility">Select facility</text>
 		<text name="SelectAGoodCategory">Select goods category</text>
@@ -1716,7 +1715,7 @@
 		<text name="ShipperReminderToCompleteTrips">You have a shipment that has not completed its journeys</text>
 		<text name="ShipperShippingRequestFinishNotificationMessage">all shippments are completed for shipping request</text>
 		<text name="ShippingNote">Shipper notes</text>
-		<text name="ShippingRequest">Shipping request</text>
+		<text name="ShippingRequest">Shipping Request</text>
 		<text name="ShippingRequestAccidentsOccure">There has been an accident for shipment No.: {id}.</text>
 		<text name="ShippingRequestAsBidWithSameTruckNotificationMessage">Shipping request with your same trucks is created in marketplace</text>
 		<text name="ShippingRequestCancelTripByAccidents">The shipment No.:{id} cancled by incident.</text>
@@ -1776,7 +1775,7 @@
 		<text name="StartDate">Trips pickup date start</text>
 		<text name="StartLoading">Start loading</text>
 		<text name="StartMovingToDestination">Start moving to offloading location</text>
-		<text name="StartedMovingToLoadingLocation">Start Moving To Loading Location</text>
+		<text name="StartedMovingToLoadingLocation">Start moving to loading location</text>
 		<text name="StartShippmentNotificationMessage">Shippment is started</text>
 		<text name="StartTime">Start time</text>
 		<text name="StartTripDate">Pickup date</text>
@@ -1784,7 +1783,7 @@
 		<text name="Static">Static</text>
 		<text name="StaticRole_Tooltip">Static roles can not be deleted.</text>
 		<text name="Status">Status</text>
-		<text name="MissingDocumentFiles">Missingdocument files</text>
+		<text name="MissingDocumentFiles">Documents (Available, Not available)</text>
 		<text name="StatusName">status</text>
 		<text name="StatusTitle">Status title</text>
 		<text name="StopBiddingOnthisRequest">Stop pricing on this request</text>
@@ -2473,7 +2472,7 @@
 		<text name="InvoicingFrequency">Invoicing Frequency</text>
 		<text name="InvoicingDuePeriod">Invoicing Due Period</text>
 		<text name="CreditType">Credit Type</text>
-		<text name="ReceiverConfirmed">Receiver Confirmed</text>
+		<text name="ReceiverConfirmed">Receiver conformed</text>
 		<text name="CompletedTripsFromTotal">Completed Trips / No of Trips</text>
 		<text name="CreatedTripsFromTotal">Created Trips / No of Trips</text>
 		<text name="RateForDriver">Rate for Driver</text>
@@ -2486,7 +2485,7 @@
 		<text name="RateOffloadingFacility">Rate offloading facility</text>
 		<text name="ClickToRateFacility">Please click here to rate the facility</text>
 		<text name="StartOffloading">Start offloading</text>
-		<text name="DeliveredAndNeedsConfirmation">Delivered/needs action</text>
+		<text name="DeliveredAndNeedsConfirmation">Delivered / needs action</text>
 		<text name="Enter9DigitsNumber">Mobile NO. 9 digits, start with 5 </text>
 		
     <text name="CompanyNamePatternError">Company name is longer than 3 characters, only English letters, numbers, dash and underscore are allowed</text>
@@ -2559,7 +2558,7 @@
 	<text name="TMS_SearchableMapWidget">Searchable Map</text>
 	<text name="TMS_RequestsHeatMapWidget">Heat map for requests</text>
 	<text name="TMS_NormalVsRentalRequestsWidget">Normal vs rental requests</text>
-	<text name="FacilityRating">Facility Rating</text>
+	<text name="FacilityRating">Facility rating</text>
 	<text name="ViewPointDetails">View point details</text>
 	<text name="ViewGoodsDetails">View goods details</text>
 	<text name="ActivityLog">Activity Logs</text>
@@ -2591,24 +2590,24 @@
 		
     <text name="CurrentlyActiveTrucks">Currently Active Trucks</text>
     <text name="CurrentlyNonActiveTrucks">Currently Non Active Trucks</text>
-    <text name="DocumentTypeName">Document Type Name</text>
-    <text name="submitterTenatTenancyName">submitter Tenancy Name</text>
-    <text name="ShipperReference">Shipper Reference</text>
-    <text name="ShipperInvoiceNumber">Shipper Invoice Number</text>
-    <text name="OriginCountry">Origin Country</text>
-    <text name="DestinationCountry">Destination Country</text>
-    <text name="SelectanOriginCountry">Select Origin Country</text>
-	<text name="SelectanDestinationCountry">Select Destination Country</text>
-	<text name="SelectanDestinationCity">Select Destination City</text>
-	<text name="ViewOrAssignDriver">View Or Assign Driver</text>
+    <text name="DocumentTypeName">Document type</text>
+    <text name="submitterTenatTenancyName">Submitter company</text>
+    <text name="ShipperReference">Shipper reference</text>
+    <text name="ShipperInvoiceNumber">Shipper invoice</text>
+    <text name="OriginCountry">Origin country</text>
+    <text name="DestinationCountry">Destination country</text>
+    <text name="SelectanOriginCountry">Select origin country</text>
+	<text name="SelectanDestinationCountry">Select destination country</text>
+	<text name="SelectanDestinationCity">Select destination city</text>
+	<text name="ViewOrAssignDriver">View or assign </text>
 	<text name="ShippingRequestReference">Shipping Request Reference</text>
 	<text name="ViewOffer">View Offer</text>
 	<text name="PointsDetails">Points Details</text>
-	<text name="DeliveryConfirmation">Delivery Confirmation</text>
-	<text name="StartedMovingToOffLoadingLocation">Started Moving To Off Loading Location</text>
+	<text name="DeliveryConfirmation">Delivery conformed</text>
+	<text name="StartedMovingToOffLoadingLocation">Start moving to off-loading location</text>
 	<text name="TrackingMap">Tracking Map</text>
 	<text name="Trip">Trip</text>
-	<text name="DriverTracking">Driver Tracking</text>
+	<text name="DriverTracking">Driver tracking</text>
 	<text name="companyName">Company</text>
 	<text name="rating">Rating</text>
 	<text name="isMissingDocumentFiles">Is missing document files</text>
@@ -2674,7 +2673,7 @@
 	<text name="EditNewShippingRequestBid">Edit new shipping request bid</text>
 	<text name="CreateNewShippingRequestVas">Create new shipping request vas</text>
 	<text name="PaidInvoice">Paid invoice</text>
-	<text name="UnPaidInvoice">UnPaid Invoice</text>
+	<text name="UnPaidInvoice">Unpaid Invoice</text>
 	<text name="ClaimSubmitInvoices">Claim submit invoices</text>
 	<text name="CreateNewShippingRequestTrip">Create new shipping request trip</text>
 	<text name="DeleteShippingRequestTrip">Delete shipping request trip</text>
@@ -2696,6 +2695,27 @@
 	<text name="PriceOfferUpdatedTransaction">The price offer was updated</text>
 	<text name="PriceOfferAcceptedTransaction">Price offer accepted</text>
 	<text name="DriverAndTruckIsChanged">Driver and truck changed </text>
+		
+	<text name="CreateNewRequests">Create New Requests</text>
+	<text name="NewShippingRequest">New shipping request</text>
+	<text name="SelectAPickUpAgent">Select a pick-up agent</text>
+	<text name="PickAReceiver">Select a receiver</text>
+	<text name="SelectADangeroudGoodType">Select dangerous good type</text>
+	<text name="Done">Done</text>
+	<text name="AllDropPointsAddedSuccessfully">All Drops have been added</text>
+	<text name="AddNewContact">Add New Contact</text>
+	<text name="EditConatct">Edit Conatct</text>
+	<text name="DownloadDropWaybill">Download waybill</text>
+	<text name="SelectPlateType">Select plate type</text>
+	<text name="itemPrice">Trip price</text>
+	<text name="AcceptTrip">Accept</text>
+	<text name="StartTrip">Start</text>
+	<text name="AcceptedAndWaitingCarrier">Accepted and waiting carrier</text>
+	<text name="UploadDeliveryConfirmation">Upload delivery confirmation</text>
+	<text name="EnterReceiverCode">Enter receiver code</text>
+	<text name="ImportFile">Import file</text>
+	<text name="UnPaid">Unpaid</text>
+	<text name="SAASTrip">Sass</text>
 
 	</texts>
 </localizationDictionary>

@@ -112,7 +112,7 @@
                                 class="dropdown-item"
                                 *ngIf="RouteType !== RouteTypes.SingleDrop && record.pickingType == PickingType.Dropoff && record.id"
                                 (click)="downloadDropWayBill(record.id)"
-                                >{{ l('downloadDropWaybill') }}</a
+                                >{{ l('DownloadDropWaybill') }}</a
                               >
                             </li>
                           </ul>
@@ -130,9 +130,9 @@
 
                       <td>
                         <span *ngIf="record.pickingType == 1" class="label label-success label-dot mr-2"></span>
-                        <span *ngIf="record.pickingType == 1" class="font-weight-bold text-success">{{ l('pickup') }}</span>
+                        <span *ngIf="record.pickingType == 1" class="font-weight-bold text-success">{{ l('Pickup') }}</span>
                         <span *ngIf="record.pickingType != 1" class="label label-danger label-dot mr-2"></span>
-                        <span *ngIf="record.pickingType != 1" class="font-weight-bold text-danger">{{ l('drop') }}</span>
+                        <span *ngIf="record.pickingType != 1" class="font-weight-bold text-danger">{{ l('DropOff') }}</span>
                       </td>
                     </tr>
                   </ng-template>

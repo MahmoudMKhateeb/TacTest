@@ -112,7 +112,7 @@
 
               <td>
                 <span class="ui-column-title"> {{ l('tripStatus') }}</span>
-                {{ record.statusTitle }}
+                {{ l(record.statusTitle) }}
                 <a (click)="ViewTripAccidentModal.getAll(record)" *ngIf="record.hasAccident"><i class="flaticon-warning text-danger"></i></a>
               </td>
               <td>
