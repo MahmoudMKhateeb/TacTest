@@ -92,7 +92,7 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
       }
       //validate if point Limit Reached For Multible Drops And Show Success Message
       if (!this.activeTripId && this.RouteType == ShippingRequestRouteType.MultipleDrops && res.length - 1 == this.NumberOfDrops) {
-        Swal.fire(this.l('GoodJob'), this.l('AllDropPointsAddedSuccessfully'), 'success');
+        Swal.fire(this.l('Done'), this.l('AllDropPointsAddedSuccessfully'), 'success');
       }
     });
     //Tell the Service Where this Component is Being Used

@@ -270,7 +270,7 @@
                   'is-invalid': truckForm.submitted && PlateTypeId.invalid
                 }"
               >
-                <option [ngValue]="null">{{ l('Select') }} {{ l('PlateType') }}</option>
+                <option [ngValue]="null">{{ l('SelectPlateType') }}</option>
                 <option
                   *ngFor="let item of allPlateTypes"
                   value="{{ item.id }}"

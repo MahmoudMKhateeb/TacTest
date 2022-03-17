@@ -1,6 +1,6 @@
 <div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
-    <sub-header [breadcrumbs]="breadcrumbs" [title]="l('ShippingRequest')"> </sub-header>
+    <sub-header [breadcrumbs]="breadcrumbs" [title]="l('CreateNewRequests')"> </sub-header>
 
     <div class="container">
       <div class="card card-custom gutter-b">
@@ -19,7 +19,7 @@
         <div class="card-header">
           <div class="card-title">
             <h3 class="card-label">
-              <ng-container>{{ l('ShippingRequest') }} </ng-container>
+              <ng-container>{{ l('NewShippingRequest') }} </ng-container>
             </h3>
           </div>
           <div class="card-toolbar">
@@ -957,7 +957,7 @@
                           <br />
                           {{ l('DestinationCity') }} : {{ shippingRequestReview?.destinationCityName }}
                           <br />
-                          {{ l('RouteType') }} : {{ shippingRequestReview?.routTypeName }}
+                          {{ l('RouteType') }} : {{ l(shippingRequestReview?.routTypeName) }}
                           <br />
                           {{ l('NumberOfDrops') }} : {{ shippingRequestReview?.shippingRequest?.numberOfDrops }}
                           <br />

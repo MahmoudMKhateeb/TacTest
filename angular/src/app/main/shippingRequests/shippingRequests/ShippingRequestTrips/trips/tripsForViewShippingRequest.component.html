@@ -112,7 +112,7 @@
 
               <td>
                 <span class="ui-column-title"> {{ l('tripStatus') }}</span>
-                {{ record.statusTitle }}
+                {{ l(record.statusTitle) }}
                 <a (click)="ViewTripAccidentModal.getAll(record)" *ngIf="record.hasAccident"><i class="flaticon-warning text-danger"></i></a>
               </td>
               <td>
@@ -135,7 +135,8 @@
                     </li>
                     <li
                       *ngIf="
-                        record.status == ShippingRequestTripStatusEnum.Delivered && !ShippingRequest.isSaas &&
+                        record.status == ShippingRequestTripStatusEnum.Delivered &&
+                        !ShippingRequest.isSaas &&
                         !record.isTripRateBefore &&
                         (feature.isEnabled('App.Carrier') || feature.isEnabled('App.Shipper'))
                       "

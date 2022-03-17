@@ -53,7 +53,7 @@
                   (change)="loadCitiesByCountryId(selectedCountryId)"
                 >
                   <option value="undefined" selected disabled>{{ l('SelectACounty') }}</option>
-                  <option *ngFor="let item of countries" value="{{ item.id }}">{{ item.displayName }}</option>
+                  <option *ngFor="let item of countries" value="{{ item.id }}">{{ item.translatedDisplayName }}</option>
                 </select>
               </div>
             </div>
@@ -71,7 +71,7 @@
                   [class.is-valid]="city.touched && city.valid"
                   (change)="handleCityPolygon()"
                 >
-                  <option value="undefined" selected disabled>{{ l('SelectACity') }}</option>
+                  <option value="undefined" selected disabled>{{ l('SelectaCity') }}</option>
                   <option *ngFor="let item of allCities" [ngClass]="{ 'text-danger': !item.hasPolygon }" value="{{ item.id }}">
                     {{ item.displayName }}
                   </option>
