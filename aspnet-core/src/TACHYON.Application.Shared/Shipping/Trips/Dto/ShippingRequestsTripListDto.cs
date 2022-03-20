@@ -8,6 +8,7 @@ namespace TACHYON.Shipping.Trips.Dto
 {
     public class ShippingRequestsTripListDto : EntityDto<long>
     {
+        public string BulkUploadRef { get; set; }
         public DateTime StartTripDate { get; set; }
         public DateTime? EndTripDate { get; set; }
         public DateTime? StartWorking { get; set; }

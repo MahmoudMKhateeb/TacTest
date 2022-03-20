@@ -97,6 +97,7 @@
           (click)="save()"
           class="btn btn-save font-weight-bold"
           [disabled]="saving"
+          [disabled]="ImportedPointsList ? checkImportedList(ImportedPointsList) : false"
           [buttonBusy]="saving"
           [busyText]="l('SavingWithThreeDot')"
         >

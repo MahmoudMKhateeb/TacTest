@@ -1,8 +1,8 @@
-import { Component, EventEmitter, Injector, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, Output, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
-import { ImportShipmentFromExcelServiceProxy, ImportTripVasesFromExcelInput } from '@shared/service-proxies/service-proxies';
+import { ImportShipmentFromExcelServiceProxy, ImportTripVasesDto, ImportTripVasesFromExcelInput } from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-view-import-vases-from-excel-modal',
@@ -10,11 +10,12 @@ import { ImportShipmentFromExcelServiceProxy, ImportTripVasesFromExcelInput } fr
   styleUrls: ['./view-import-vases-from-excel-modal.component.css'],
 })
 export class ViewImportVasesFromExcelModalComponent extends AppComponentBase {
-  @Input() ImportedVasesList: ImportTripVasesFromExcelInput;
+  @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
+  @Input() ImportedVasesList: ImportTripVasesDto[];
+
   active = false;
   saving = false;
   @ViewChild('ViewImportedVasesModal', { static: false }) modal: ModalDirective;
-  @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
 
   constructor(injector: Injector, private ImportShipmentFromExcelService: ImportShipmentFromExcelServiceProxy) {
     super(injector);
@@ -30,7 +31,7 @@ export class ViewImportVasesFromExcelModalComponent extends AppComponentBase {
 
   save() {
     this.saving = true;
-    this.ImportShipmentFromExcelService.importTripVasesFromExcel(this.ImportedVasesList)
+    this.ImportShipmentFromExcelService.createTripVasesFromDto(this.ImportedVasesList)
       .pipe(finalize(() => (this.saving = false)))
       .subscribe(() => {
         this.notify.info(this.l('SavedSuccessfully'));

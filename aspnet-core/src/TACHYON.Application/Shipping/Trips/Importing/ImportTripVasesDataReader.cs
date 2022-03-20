@@ -62,6 +62,11 @@ namespace TACHYON.Shipping.Trips.Importing
                 {
                     TripVas.ShippingRequestVasId = vasId.Value;
                 }
+
+                if (exceptionMessage.Length > 0)
+                {
+                    TripVas.Exception = exceptionMessage.ToString();
+                }
             }
             catch(Exception exception)
             {

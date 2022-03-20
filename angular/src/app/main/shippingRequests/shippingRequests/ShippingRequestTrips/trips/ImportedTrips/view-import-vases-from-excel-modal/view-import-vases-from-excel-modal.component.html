@@ -57,29 +57,30 @@
                     </tr>
                   </ng-template>
                 </p-table>
+                <br />
+                <div class="modal-footer">
+                  <!--begin::Buttons-->
+
+                  <button type="button" class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 text-uppercase" (click)="close()">
+                    {{ l('Close') }}
+                  </button>
+                  <button
+                    type="submit"
+                    (click)="save()"
+                    class="btn btn-save font-weight-bold"
+                    [disabled]="ImportedVasesList ? checkImportedList(ImportedVasesList) : false"
+                    [buttonBusy]="saving"
+                    [busyText]="l('SavingWithThreeDot')"
+                  >
+                    <i class="fa fa-save"></i> <span>{{ 'Save' | localize }}</span>
+                  </button>
+                  <!--end::Buttons-->
+                </div>
               </div>
               <!--<Primeng-Datatable-End>-->
             </div>
           </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <!--begin::Buttons-->
-
-        <button type="button" class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 text-uppercase" (click)="close()">
-          {{ l('Close') }}
-        </button>
-        <button
-          type="submit"
-          (click)="save()"
-          class="btn btn-save font-weight-bold"
-          [disabled]="saving"
-          [buttonBusy]="saving"
-          [busyText]="l('SavingWithThreeDot')"
-        >
-          <i class="fa fa-save"></i> <span>{{ 'Save' | localize }}</span>
-        </button>
-        <!--end::Buttons-->
       </div>
     </div>
   </div>

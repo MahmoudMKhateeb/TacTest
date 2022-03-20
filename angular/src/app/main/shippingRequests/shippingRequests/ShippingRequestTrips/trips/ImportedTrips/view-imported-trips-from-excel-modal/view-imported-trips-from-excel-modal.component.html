@@ -44,6 +44,22 @@
                         {{ l('HasAttachment') }}
                       </th>
                       <th>{{ l('NeedsDeliveryNote') }}</th>
+                      <th *ngIf="isSingleDdrop" pSortableColumn="originFacility">
+                        {{ l('origin') }}
+                        <p-sortIcon field="originFacility"></p-sortIcon>
+                      </th>
+                      <th *ngIf="isSingleDdrop" pSortableColumn="destinationFacility">
+                        {{ l('destination') }}
+                        <p-sortIcon field="destinationFacility"></p-sortIcon>
+                      </th>
+                      <th *ngIf="isSingleDdrop" pSortableColumn="sender">
+                        {{ l('Sender') }}
+                        <p-sortIcon field="sender"></p-sortIcon>
+                      </th>
+                      <th *ngIf="isSingleDdrop" pSortableColumn="receiver">
+                        {{ l('Receiver') }}
+                        <p-sortIcon field="receiver"></p-sortIcon>
+                      </th>
                       <th>
                         {{ l('totalValue') }}
                       </th>
@@ -77,6 +93,22 @@
                         <span class="ui-column-title"> {{ l('needsDeliveryNote') }}</span>
                         {{ record.needsDeliveryNote == true ? l('Yes') : l('No') }}
                       </td>
+                      <td *ngIf="isSingleDdrop">
+                        <span class="ui-column-title"> {{ l('originFacility') }}</span>
+                        {{ record.originalFacility }}
+                      </td>
+                      <td *ngIf="isSingleDdrop">
+                        <span class="ui-column-title"> {{ l('destinationFacility') }}</span>
+                        {{ record.destinationFacility }}
+                      </td>
+                      <td *ngIf="isSingleDdrop">
+                        <span class="ui-column-title"> {{ l('sender') }}</span>
+                        {{ record.sender }}
+                      </td>
+                      <td *ngIf="isSingleDdrop">
+                        <span class="ui-column-title"> {{ l('receiver') }}</span>
+                        {{ record.receiver }}
+                      </td>
                       <td>
                         <span class="ui-column-title"> {{ l('totalValue') }}</span>
                         {{ record.totalValue }}
@@ -108,7 +140,7 @@
           type="submit"
           (click)="save()"
           class="btn btn-save font-weight-bold"
-          [disabled]="saving"
+          [disabled]="ImportedTripsList ? checkImportedList(ImportedTripsList) : false"
           [buttonBusy]="saving"
           [busyText]="l('SavingWithThreeDot')"
         >

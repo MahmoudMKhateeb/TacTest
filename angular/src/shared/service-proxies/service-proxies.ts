@@ -87365,6 +87365,7 @@ export interface IGetShippingRequestStatusForEditOutput {
 }
 
 export class ShippingRequestsTripListDto implements IShippingRequestsTripListDto {
+  bulkUploadRef!: string | undefined;
   startTripDate!: moment.Moment;
   endTripDate!: moment.Moment | undefined;
   startWorking!: moment.Moment | undefined;
@@ -87397,6 +87398,7 @@ export class ShippingRequestsTripListDto implements IShippingRequestsTripListDto
 
   init(_data?: any) {
     if (_data) {
+      this.bulkUploadRef = _data['bulkUploadRef'];
       this.startTripDate = _data['startTripDate'] ? moment(_data['startTripDate'].toString()) : <any>undefined;
       this.endTripDate = _data['endTripDate'] ? moment(_data['endTripDate'].toString()) : <any>undefined;
       this.startWorking = _data['startWorking'] ? moment(_data['startWorking'].toString()) : <any>undefined;
@@ -87430,6 +87432,7 @@ export class ShippingRequestsTripListDto implements IShippingRequestsTripListDto
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
+    data['bulkUploadRef'] = this.bulkUploadRef;
     data['startTripDate'] = this.startTripDate ? this.startTripDate.toISOString() : <any>undefined;
     data['endTripDate'] = this.endTripDate ? this.endTripDate.toISOString() : <any>undefined;
     data['startWorking'] = this.startWorking ? this.startWorking.toISOString() : <any>undefined;
@@ -87456,6 +87459,7 @@ export class ShippingRequestsTripListDto implements IShippingRequestsTripListDto
 }
 
 export interface IShippingRequestsTripListDto {
+  bulkUploadRef: string | undefined;
   startTripDate: moment.Moment;
   endTripDate: moment.Moment | undefined;
   startWorking: moment.Moment | undefined;

@@ -11,6 +11,7 @@ import { finalize } from 'rxjs/operators';
 })
 export class ViewImportedTripsFromExcelModalComponent extends AppComponentBase {
   @Input() ImportedTripsList: ImportTripDto[];
+  @Input() isSingleDdrop: boolean;
   active = false;
   saving = false;
   @ViewChild('ViewImportedTripsModal', { static: false }) modal: ModalDirective;

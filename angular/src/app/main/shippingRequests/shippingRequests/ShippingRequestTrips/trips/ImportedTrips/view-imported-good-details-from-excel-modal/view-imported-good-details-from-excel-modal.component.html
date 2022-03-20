@@ -142,6 +142,7 @@
           type="submit"
           (click)="save()"
           class="btn btn-save font-weight-bold"
+          [disabled]="ImportedGoodDetailsList ? checkImportedList(ImportedGoodDetailsList) : false"
           [disabled]="saving"
           [buttonBusy]="saving"
           [busyText]="l('SavingWithThreeDot')"
