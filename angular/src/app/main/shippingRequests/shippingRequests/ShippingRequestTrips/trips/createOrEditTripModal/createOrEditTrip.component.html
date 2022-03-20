@@ -334,7 +334,12 @@
             <button [disabled]="saving" type="button" class="btn btn-secondary font-weight-bolder btn-sm py-3 px-6" (click)="close()">
               {{ l('Close') }}
             </button>
-
+            <create-or-edit-template-drop-down-button
+              [entityType]="SavedEntityType.TripTemplate"
+              [jsonData]="TripAsJson"
+              [dropDirection]="'up'"
+              [customClass]="'btn btn-light-danger font-weight-bold  dropdown-toggle btn-elevate-hover mx-2'"
+            ></create-or-edit-template-drop-down-button>
             <button
               type="submit"
               [disabled]="saving || !shippingRequestTripsForm.form.valid || !isFileInputValid"

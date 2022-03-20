@@ -15,6 +15,9 @@ export class CreateOrEditTemplateDropDownButtonComponent extends AppComponentBas
   @Input() sourceEntityId: string;
   @Input() templateIdForEdit: number;
   @Input() customClass: string;
+  @Input() jsonData: string;
+  @Input() dropDirection: 'up' | 'down';
+
   templateName: string;
   loading: boolean;
 
@@ -32,12 +35,20 @@ export class CreateOrEditTemplateDropDownButtonComponent extends AppComponentBas
     }
     this.loading = true;
     let entityTemplateInput: CreateOrEditEntityTemplateInputDto = new CreateOrEditEntityTemplateInputDto();
-    if (isNotNullOrUndefined(this.templateIdForEdit)) {
-      entityTemplateInput.id = this.templateIdForEdit;
-    }
     entityTemplateInput.templateName = this.templateName;
     entityTemplateInput.savedEntityId = this.sourceEntityId;
     entityTemplateInput.entityType = this.entityType;
+    if (isNotNullOrUndefined(this.templateIdForEdit)) {
+      entityTemplateInput.id = this.templateIdForEdit;
+    }
+    // there is 2 ways of Creating Entity Template  1.By Providing EntityId example: TripId / ShippingRequestID
+    // or 2. by providing a json data of the entity for example Json Data Of the Trip/Shipping Request
+    // Handle if there is Json Data
+    if (isNotNullOrUndefined(this.jsonData)) {
+      entityTemplateInput.savedEntityId = undefined;
+      entityTemplateInput.savedEntity = this.jsonData;
+    }
+
     this._templateService
       .createOrEdit(entityTemplateInput)
       .pipe(

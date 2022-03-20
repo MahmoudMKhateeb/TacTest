@@ -36,7 +36,6 @@ import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { DateType } from '@app/shared/common/hijri-gregorian-datepicker/consts';
 import * as moment from 'moment';
 import { DateFormatterService } from '@app/shared/common/hijri-gregorian-datepicker/date-formatter.service';
-
 @Component({
   selector: 'AddNewTripModal',
   styleUrls: ['./createOrEditTrip.component.css'],
@@ -96,7 +95,6 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   templatesLoading: boolean;
   tripTemples: SelectItemDto[];
   SavedEntityType = SavedEntityType;
-
   constructor(
     injector: Injector,
     private _routStepsServiceProxy: RoutStepsServiceProxy,
@@ -120,6 +118,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   allReceivers: ReceiverFacilityLookupTableDto[];
   pickupPointSenderId: number;
   selectedTemplate: number;
+  TripAsJson = JSON.stringify(this.trip);
 
   get isFileInputValid() {
     return this.trip.hasAttachment ? (this.trip.createOrEditDocumentFileDto.name ? true : false) : true;
@@ -133,6 +132,12 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     //this._PointsService.updateWayPoints(new CreateOrEditRoutPointDto[]);
     this.refreshOrGetFacilities(undefined);
     this.vasesHandler();
+    setInterval(() => {
+      console.log(this.TripAsJson);
+      console.log(this.trip);
+      console.log('stringifhed trip', JSON.stringify(this.trip));
+      console.log('this.trip.toJSON();', this.trip.toJSON());
+    }, 5000);
   }
 
   /**
@@ -491,17 +496,6 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
    * apply Selected Template to the Trip
    */
   applyTemplate() {
-    // this.activeTripId = record.id;
-    // this._TripService.updateActiveTripId(this.activeTripId);
-    // this._shippingRequestTripsService.getShippingRequestTripForEdit(record.id).subscribe((res) => {
-    //     this.trip = res;
-    //     //this.startTripdate = this.dateFormatterService.MomentToNgbDateStruct(res.startTripDate);
-    //     if (res.endTripDate != null && res.endTripDate != undefined)
-    //         this.endTripdate = this.dateFormatterService.MomentToNgbDateStruct(res.endTripDate);
-    //     this._PointsService.updateWayPoints(this.trip.routPoints);
-    //     this.pickupPointSenderId = res.routPoints[0].receiverId;
-    //     this.loadReceivers(this.trip.originFacilityId);
-    //     this.loading = false;
     let jsonObject = null;
     this._templates.getForView(this.selectedTemplate).subscribe((res) => {
       jsonObject = JSON.parse(res.savedEntity);

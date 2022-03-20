@@ -1,4 +1,11 @@
-<div class="btn-group" dropdown #dropdownAddPage="bs-dropdown" [dropup]="false" [insideClick]="true" *ngIf="isShipper || isTachyonDealer">
+<div
+  class="btn-group"
+  dropdown
+  #dropdownAddPage="bs-dropdown"
+  [dropup]="dropDirection == 'up'"
+  [insideClick]="true"
+  *ngIf="isShipper || isTachyonDealer"
+>
   <button
     dropdownToggle
     type="button"
@@ -9,22 +16,24 @@
   </button>
   <ul *dropdownMenu class="dropdown-menu p-2" role="menu" aria-labelledby="button-basic">
     <li role="menuitem">
-      <div class="form-group">
+      <div class="form-group mb-1">
         <input
           #templateNameInput="ngModel"
           name="templateName"
           type="text"
           class="form-control"
           placeholder="{{ l('TemplateName') }}"
-          maxlength="150"
+          maxlength="50"
+          minlength="3"
           [class.is-valid]="templateNameInput.touched && templateNameInput.valid"
           [class.is-invalid]="templateNameInput.touched && !templateNameInput.valid"
           [(ngModel)]="templateName"
           required
         />
       </div>
+      <validation-messages [formCtrl]="templateNameInput"></validation-messages>
       <button [disabled]="!templateNameInput.valid" class="btn btn-sm btn-block btn-info" (click)="SaveAsTemplate()">
-        {{ templateIdForEdit ? 'Update' : ('Save' | localize) }}
+        {{ (templateIdForEdit ? 'Update' : 'Save') | localize }}
       </button>
     </li>
   </ul>
