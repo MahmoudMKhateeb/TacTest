@@ -19967,6 +19967,71 @@ export class ImportShipmentFromExcelServiceProxy {
     }
     return _observableOf<ImportTripVasesDto[]>(<any>null);
   }
+
+  /**
+   * @param body (optional)
+   * @return Success
+   */
+  createTripVasesFromDto(body: ImportTripVasesDto[] | null | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/ImportShipmentFromExcel/CreateTripVasesFromDto';
+    url_ = url_.replace(/[?&]$/, '');
+
+    const content_ = JSON.stringify(body);
+
+    let options_: any = {
+      body: content_,
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processCreateTripVasesFromDto(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processCreateTripVasesFromDto(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processCreateTripVasesFromDto(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
 }
 
 @Injectable()
@@ -71232,8 +71297,10 @@ export class ImportRoutePointDto implements IImportRoutePointDto {
   code!: string | undefined;
   exception!: string | undefined;
   shippingRequestTripId!: number;
+  tripNeedsDeliveryNote!: boolean;
   bulkUploadReference!: string | undefined;
   tripReference!: string | undefined;
+  id!: number | undefined;
 
   constructor(data?: IImportRoutePointDto) {
     if (data) {
@@ -71254,8 +71321,10 @@ export class ImportRoutePointDto implements IImportRoutePointDto {
       this.code = _data['code'];
       this.exception = _data['exception'];
       this.shippingRequestTripId = _data['shippingRequestTripId'];
+      this.tripNeedsDeliveryNote = _data['tripNeedsDeliveryNote'];
       this.bulkUploadReference = _data['bulkUploadReference'];
       this.tripReference = _data['tripReference'];
+      this.id = _data['id'];
     }
   }
 
@@ -71277,8 +71346,10 @@ export class ImportRoutePointDto implements IImportRoutePointDto {
     data['code'] = this.code;
     data['exception'] = this.exception;
     data['shippingRequestTripId'] = this.shippingRequestTripId;
+    data['tripNeedsDeliveryNote'] = this.tripNeedsDeliveryNote;
     data['bulkUploadReference'] = this.bulkUploadReference;
     data['tripReference'] = this.tripReference;
+    data['id'] = this.id;
     return data;
   }
 }
@@ -71293,8 +71364,10 @@ export interface IImportRoutePointDto {
   code: string | undefined;
   exception: string | undefined;
   shippingRequestTripId: number;
+  tripNeedsDeliveryNote: boolean;
   bulkUploadReference: string | undefined;
   tripReference: string | undefined;
+  id: number | undefined;
 }
 
 export class ImportGoodsDetailsFromExcelInput implements IImportGoodsDetailsFromExcelInput {
@@ -71492,6 +71565,7 @@ export interface IImportTripVasesFromExcelInput {
 
 export class ImportTripVasesDto implements IImportTripVasesDto {
   tripReference!: string | undefined;
+  shippingRequestId!: number;
   shippingRequestTripId!: number;
   vasName!: string | undefined;
   shippingRequestVasId!: number;
@@ -71508,6 +71582,7 @@ export class ImportTripVasesDto implements IImportTripVasesDto {
   init(_data?: any) {
     if (_data) {
       this.tripReference = _data['tripReference'];
+      this.shippingRequestId = _data['shippingRequestId'];
       this.shippingRequestTripId = _data['shippingRequestTripId'];
       this.vasName = _data['vasName'];
       this.shippingRequestVasId = _data['shippingRequestVasId'];
@@ -71525,6 +71600,7 @@ export class ImportTripVasesDto implements IImportTripVasesDto {
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
     data['tripReference'] = this.tripReference;
+    data['shippingRequestId'] = this.shippingRequestId;
     data['shippingRequestTripId'] = this.shippingRequestTripId;
     data['vasName'] = this.vasName;
     data['shippingRequestVasId'] = this.shippingRequestVasId;
@@ -71535,6 +71611,7 @@ export class ImportTripVasesDto implements IImportTripVasesDto {
 
 export interface IImportTripVasesDto {
   tripReference: string | undefined;
+  shippingRequestId: number;
   shippingRequestTripId: number;
   vasName: string | undefined;
   shippingRequestVasId: number;
