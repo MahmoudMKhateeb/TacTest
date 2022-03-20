@@ -112,6 +112,11 @@ namespace TACHYON.Shipping.ShippingRequestTrips
 
         public DateTime? ActualPickupDate { get; set; }
         public DateTime? ActualDeliveryDate { get; set; }
+        /// <summary>
+        /// This field entered by shipper to suppose time for driver to start with in this range
+        /// </summary>
+        public DateTime? SupposedPickupDateFrom { get; set; }
+        public DateTime? SupposedPickupDateTo { get; set; }
 
         #region Prices
 

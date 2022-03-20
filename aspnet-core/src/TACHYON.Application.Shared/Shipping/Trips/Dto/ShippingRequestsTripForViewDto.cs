@@ -38,5 +38,7 @@ namespace TACHYON.Shipping.Trips.Dto
         public long? WaybillNumber { get; set; }
 
         public ShippingRequestTripStatus Status { get; set; }
+        public DateTime? SupposedPickupDateFrom { get; set; }
+        public DateTime? SupposedPickupDateTo { get; set; }
     }
 }

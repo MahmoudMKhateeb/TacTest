@@ -36,6 +36,8 @@ namespace TACHYON.Shipping.Trips.Dto
 
         [StringLength(ShippingRequestTripConsts.MaxNoteLength)]
         public string Note { get; set; }
+        public DateTime? SupposedPickupDateFrom { get; set; }
+        public DateTime? SupposedPickupDateTo { get; set; }
 
         public List<CreateOrEditRoutPointDto> RoutPoints { get; set; }
         public List<CreateOrEditShippingRequestTripVasDto> ShippingRequestTripVases { get; set; }
@@ -58,7 +60,6 @@ namespace TACHYON.Shipping.Trips.Dto
             {
                 context.Results.Add(new ValidationResult("The start date must be or equal to end date."));
             }
-
 
             var dropPoints = RoutPoints.Where(x => x.PickingType == PickingType.Dropoff);
             foreach (var drop in dropPoints)
