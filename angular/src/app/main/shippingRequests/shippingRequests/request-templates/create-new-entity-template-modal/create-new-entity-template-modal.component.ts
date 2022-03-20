@@ -10,7 +10,7 @@ import { finalize } from '@node_modules/rxjs/operators';
   styleUrls: ['./create-new-entity-template-modal.component.css'],
 })
 export class CreateNewEntityTemplateModalComponent extends AppComponentBase {
-  @ViewChild('AddNewEntityModalComponent', { static: false }) public modal: ModalDirective;
+  @ViewChild('AddNewEntityModalComponent', { static: true }) public modal: ModalDirective;
   active = false;
   saving = false;
   private entityType: SavedEntityType = SavedEntityType.TripTemplate;
@@ -23,6 +23,7 @@ export class CreateNewEntityTemplateModalComponent extends AppComponentBase {
     this.entityId = id;
     this.active = true;
     this.modal.show();
+    this.templateName = undefined;
   }
   close() {
     this.active = false;

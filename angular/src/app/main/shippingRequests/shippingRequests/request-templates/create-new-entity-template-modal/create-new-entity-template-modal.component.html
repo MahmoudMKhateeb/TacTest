@@ -1,14 +1,15 @@
 <div
-  #AddNewEntityModalComponent="bs-modal"
-  aria-hidden="true"
-  aria-labelledby="AddNewEntityModalComponent"
   bsModal
+  #AddNewEntityModalComponent="bs-modal"
   class="modal fade"
+  tabindex="-1"
   role="dialog"
-  tabindex="-10010"
+  aria-labelledby="createModal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static', keyboard: !saving }"
 >
   <div class="modal-dialog modal-lg">
-    <div *ngIf="active" class="modal-content">
+    <div class="modal-content">
       <!--begin::Card-->
       <div class="card card-custom">
         <!--begin::Header-->
@@ -17,12 +18,12 @@
         </div>
         <!--end::Header-->
         <!--begin::Body-->
-        <div class="card-body">
+        <form *ngIf="active" novalidate class="card-body">
           <div class="form-group">
             <label>{{ l('TemplateName') }}</label>
-            <input type="TemplateName" [(ngModel)]="templateName" class="form-control" />
+            <input type="text" name="TemplateName" [(ngModel)]="templateName" class="form-control" />
           </div>
-        </div>
+        </form>
         <!--end::Body-->
         <!--begin::Footer-->
         <div class="card-footer">
