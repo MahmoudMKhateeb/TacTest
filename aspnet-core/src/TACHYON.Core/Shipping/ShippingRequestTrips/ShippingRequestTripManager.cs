@@ -69,9 +69,9 @@ namespace TACHYON.Shipping.ShippingRequestTrips
                 throw new UserFriendlyException(L("The number of trips " + request.NumberOfTrips));
         }
 
-        public async Task<RoutPoint> CreatePointAsync(RoutPoint point)
+        public async Task<long> CreatePointAsync(RoutPoint point)
         {
-            return await _routePointRepository.InsertAsync(point);
+            return await _routePointRepository.InsertAndGetIdAsync(point);
         }
 
         public void ValidateTripDto(ImportTripDto importTripDto, StringBuilder exceptionMessage)

@@ -13,6 +13,7 @@ import {
   ImportRoutePointDto,
   ImportGoodsDetailsDto,
   ShippingRequestRouteType,
+  ImportTripVasesFromExcelInput,
 } from '@shared/service-proxies/service-proxies';
 import { CreateOrEditTripComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/createOrEditTripModal/createOrEditTrip.component';
 import { ViewTripModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/viewTripModal/viewTripModal.component';
@@ -28,6 +29,7 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
   selector: 'TripsForViewShippingRequest',
   templateUrl: './tripsForViewShippingRequest.component.html',
   styleUrls: ['./tripsForViewShippingRequest.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class TripsForViewShippingRequestComponent extends AppComponentBase implements AfterViewInit {
   @ViewChild('dataTablechild', { static: false }) dataTable: Table;
@@ -56,7 +58,7 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   list: ImportTripDto;
   pointsList: ImportRoutePointDto;
   goodDetailsList: ImportGoodsDetailsDto;
-  vasesList: ImportGoodsDetailsDto;
+  vasesList: ImportTripVasesFromExcelInput;
   loading: boolean = false;
   uploadGoodDetailsUrl: string;
   ShippingRequestRouteTypeEnum = ShippingRequestRouteType;
@@ -76,9 +78,7 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
     this.tripVases = AppConsts.remoteServiceBaseUrl + '/Helper/ImportTripVasesFromExcel';
   }
 
-  ngOnInit(): void {
-    this.isArabic = abp.localization.currentLanguage.name.startsWith('ar');
-  }
+  ngOnInit(): void {}
 
   getShippingRequestsTrips(event?: LazyLoadEvent) {
     this.changeDetectorRef.detectChanges();
@@ -233,7 +233,7 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
       )
       .subscribe((response) => {
         if (response.success) {
-          this.vasesList = response.result.importTripVasesFromExcel;
+          this.vasesList = response.result.importTripVasesListDto;
           this.loading = false;
           this.notify.success(this.l('ImportProcessStart'));
           this.saving = true;

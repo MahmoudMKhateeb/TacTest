@@ -1,29 +1,29 @@
 a{
     cursor:pointer;
 }
-::ng-deep .p-button.p-fileupload-choose{
+.p-button.p-fileupload-choose{
     width: -webkit-fill-available !important;
 }
-::ng-deep .p-button-label{
+.p-button-label{
     text-align: start;
 }
 .dropdown-menu{
   min-width: 19rem !important;
 }
-::ng-deep .p-fileupload-content{
+.p-fileupload-content{
     padding: 0 !important;
     border: 0 !important;
 }
-::ng-deep .dropdown-item-text{
+.dropdown-item-text{
     padding: 0 !important;
     margin-left: 5%;
 }
-::ng-deep .p-button{
+.p-button{
     font-size: 12px;
 }
-::ng-deep .p-fileupload .p-fileupload-buttonbar .p-button {
+.p-fileupload .p-fileupload-buttonbar .p-button {
     margin-right: 0 !important;
 }
-::ng-deep .p-fileupload .p-fileupload-buttonbar{
+.p-fileupload .p-fileupload-buttonbar{
     padding: 7px !important;
 }
