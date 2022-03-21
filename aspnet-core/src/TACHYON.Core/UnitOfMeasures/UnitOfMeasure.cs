@@ -19,6 +19,6 @@ namespace TACHYON.UnitOfMeasures
         [Required]
         [StringLength(UnitOfMeasureConsts.MaxDisplayNameLength, MinimumLength = UnitOfMeasureConsts.MinDisplayNameLength)]
         public virtual string Key { get; set; }
-        public ICollection<UnitOfMeasureTranslation> Translations { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public ICollection<UnitOfMeasureTranslation> Translations { get; set; }
     }
 }

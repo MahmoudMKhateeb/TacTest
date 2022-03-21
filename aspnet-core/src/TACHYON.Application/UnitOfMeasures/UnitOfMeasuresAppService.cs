@@ -4,7 +4,10 @@ using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Abp.UI;
+using AutoMapper.QueryableExtensions;
+using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
@@ -16,6 +19,13 @@ using TACHYON.UnitOfMeasures.Dtos;
 
 namespace TACHYON.UnitOfMeasures
 {
+    public class GetAllTranslationsInput
+    {
+
+        public string LoadOptions { get; set; }
+        public string CoreId { get; set; }
+    }
+
     [AbpAuthorize(AppPermissions.Pages_Administration_UnitOfMeasures)]
     public class UnitOfMeasuresAppService : TACHYONAppServiceBase, IUnitOfMeasuresAppService
     {
@@ -29,35 +39,13 @@ namespace TACHYON.UnitOfMeasures
             _unitOfMeasureTranslationRepository = unitOfMeasureTranslationRepository;
         }
 
-        public async Task<PagedResultDto<GetUnitOfMeasureForViewDto>> GetAll(GetAllUnitOfMeasuresInput input)
+        public async Task<LoadResult> GetAll(GetAllUnitOfMeasuresInput input)
         {
 
             var filteredUnitOfMeasures = _unitOfMeasureRepository.GetAll()
-                .Include(x => x.Translations)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Translations.Any(x => x.DisplayName.Contains(input.Filter)))
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.Translations.Any(x => x.DisplayName == input.DisplayNameFilter));
+                .ProjectTo<UnitOfMeasureDto>(AutoMapperConfigurationProvider);
 
-            var pagedAndFilteredUnitOfMeasures = filteredUnitOfMeasures
-                .OrderBy(input.Sorting ?? "id asc")
-                .PageBy(input);
-
-            var unitOfMeasures = from o in pagedAndFilteredUnitOfMeasures
-                                 select new GetUnitOfMeasureForViewDto()
-                                 {
-                                     UnitOfMeasure = ObjectMapper.Map<UnitOfMeasureDto>(o)
-                                     //UnitOfMeasure = new UnitOfMeasureDto
-                                     //{
-                                     //    DisplayName = o.DisplayName,
-                                     //    Id = o.Id
-                                     //}
-                                 };
-
-            var totalCount = await filteredUnitOfMeasures.CountAsync();
-
-            return new PagedResultDto<GetUnitOfMeasureForViewDto>(
-                totalCount,
-                await unitOfMeasures.ToListAsync()
-            );
+            return await LoadResultAsync(filteredUnitOfMeasures, input.LoadOptions);
         }
 
         public async Task<GetUnitOfMeasureForViewDto> GetUnitOfMeasureForView(int id)
@@ -82,7 +70,7 @@ namespace TACHYON.UnitOfMeasures
         public async Task CreateOrEdit(CreateOrEditUnitOfMeasureDto input)
         {
 
-            await IsUnitOfMeasureNameDuplicatedOrEmpty(input.Translations);
+            await IsUnitOfMeasureKeyDuplicatedOrEmpty(input);
 
             if (input.Id == null)
             {
@@ -106,13 +94,11 @@ namespace TACHYON.UnitOfMeasures
         protected virtual async Task Update(CreateOrEditUnitOfMeasureDto input)
         {
             var unitOfMeasure = await _unitOfMeasureRepository.GetAll()
-                .Include(x => x.Translations)
                 .FirstOrDefaultAsync(x => x.Id == (int)input.Id);
 
             if (unitOfMeasure.Key.ToLower().Contains(TACHYONConsts.OthersDisplayName)
                 && !input.Key.ToLower().Contains(TACHYONConsts.OthersDisplayName))
                 throw new UserFriendlyException(L("OtherUnitOfMeasureMustContainTheOtherWord"));
-            unitOfMeasure.Translations.Clear();
             ObjectMapper.Map(input, unitOfMeasure);
         }
 
@@ -126,7 +112,6 @@ namespace TACHYON.UnitOfMeasures
 
             if (unitOfMeasure.Translations.Any(x => x.DisplayName.ToLower().Contains(TACHYONConsts.OthersDisplayName)))
                 throw new UserFriendlyException(L("OtherUnitOfMeasureNotRemovable"));
-            unitOfMeasure.Translations.Clear();
             await _unitOfMeasureRepository.DeleteAsync(unitOfMeasure);
         }
 
@@ -139,22 +124,56 @@ namespace TACHYON.UnitOfMeasures
         }
 
 
-        private async Task IsUnitOfMeasureNameDuplicatedOrEmpty(ICollection<UnitOfmeasureTranslationDto> unitOfmeasureTranslations)
+        private async Task IsUnitOfMeasureKeyDuplicatedOrEmpty(CreateOrEditUnitOfMeasureDto input)
         {
-            var unitOfMeasureTranslationList = await _unitOfMeasureTranslationRepository.GetAll().ToListAsync();
-            foreach (var item in unitOfmeasureTranslations)
+            if (await _unitOfMeasureRepository.GetAll().AnyAsync(x => x.Key == input.Key && x.Id != input.Id))
             {
-                if (item.DisplayName.IsNullOrEmpty() || item.DisplayName.IsNullOrWhiteSpace())
-                    throw new UserFriendlyException(L("UintOfMeasureNameCanNotBeEmpty"));
-
-                var isDuplicated = unitOfMeasureTranslationList
-                    .Any(x => x.DisplayName.ToUpper().Equals(item.DisplayName.ToUpper()));
-
-                if (isDuplicated)
-                    throw new UserFriendlyException(L("UintOfMeasureNameCanNotBeDuplicated"));
+                throw new UserFriendlyException(L("UintOfMeasureKeyCanNotBeDuplicated"));
             }
 
         }
+
+
+        #region MultiLingual
+
+        public async Task CreateOrEditTranslation(UnitOfmeasureTranslationDto input)
+        {
+
+            var translation = await _unitOfMeasureTranslationRepository.FirstOrDefaultAsync(x => x.Id == input.Id);
+            if (translation == null)
+            {
+                var newTranslation = ObjectMapper.Map<UnitOfMeasureTranslation>(input);
+                await _unitOfMeasureTranslationRepository.InsertAsync(newTranslation);
+            }
+            else
+            {
+                var duplication = await _unitOfMeasureTranslationRepository.FirstOrDefaultAsync(x => x.CoreId == translation.CoreId && x.Language.Contains(translation.Language) && x.Id != translation.Id);
+                if (duplication != null)
+                {
+                    throw new UserFriendlyException(
+                        "The translation for this language already exists, you can modify it");
+                }
+                ObjectMapper.Map(input, translation);
+            }
+        }
+
+        public async Task<LoadResult> GetAllTranslations(GetAllTranslationsInput input)
+        {
+            var filteredPackingTypes = _unitOfMeasureTranslationRepository
+                .GetAll()
+                .Where(x => x.CoreId == Convert.ToInt32(input.CoreId))
+                .ProjectTo<UnitOfmeasureTranslationDto>(AutoMapperConfigurationProvider);
+
+            return await LoadResultAsync(filteredPackingTypes, input.LoadOptions);
+        }
+
+
+        public async Task DeleteTranslation(EntityDto input)
+        {
+            await _unitOfMeasureTranslationRepository.DeleteAsync(input.Id);
+        }
+
+        #endregion
 
     }
 }

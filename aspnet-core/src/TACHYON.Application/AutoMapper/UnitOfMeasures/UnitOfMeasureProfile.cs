@@ -11,8 +11,7 @@ namespace TACHYON.AutoMapper.UnitOfMeasures
     {
         public UnitOfMeasureProfile()
         {
-            CreateMap<CreateOrEditUnitOfMeasureDto, UnitOfMeasure>()
-                .ForMember(x => x.Translations, opt => opt.MapFrom(src => src.Translations)).ReverseMap();
+            CreateMap<CreateOrEditUnitOfMeasureDto, UnitOfMeasure>().ReverseMap();
             CreateMap<UnitOfmeasureTranslationDto, UnitOfMeasureTranslation>().ReverseMap();
 
         }

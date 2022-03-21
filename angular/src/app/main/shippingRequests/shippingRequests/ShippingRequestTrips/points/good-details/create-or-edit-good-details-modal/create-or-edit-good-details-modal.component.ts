@@ -6,6 +6,7 @@ import {
   CreateOrEditRoutPointDto,
   DangerousGoodTypesServiceProxy,
   GetAllGoodsCategoriesForDropDownOutput,
+  GetAllUnitOfMeasureForDropDownOutput,
   GoodsDetailDto,
   GoodsDetailsServiceProxy,
   PickingType,
@@ -31,7 +32,7 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
   // singleWayPoint: CreateOrEditRoutPointDto;
   goodsDetail: CreateOrEditGoodsDetailDto = new GoodsDetailDto();
   myGoodsDetailList: CreateOrEditGoodsDetailDto[] = [];
-  allUnitOfMeasure: SelectItemDto[];
+  allUnitOfMeasure: GetAllUnitOfMeasureForDropDownOutput[];
   GoodCategory: number;
   allSubGoodCategorys: GetAllGoodsCategoriesForDropDownOutput[];
   isDangerousGoodLoading: boolean;

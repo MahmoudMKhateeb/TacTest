@@ -13,8 +13,6 @@ namespace TACHYON.UnitOfMeasures.Dtos
         [StringLength(UnitOfMeasureConsts.MaxDisplayNameLength, MinimumLength = UnitOfMeasureConsts.MinDisplayNameLength)]
         public string Key { get; set; }
 
-        public ICollection<UnitOfmeasureTranslationDto> Translations { get; set; }
-
 
     }
 }
