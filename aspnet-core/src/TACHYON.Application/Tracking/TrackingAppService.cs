@@ -38,6 +38,7 @@ namespace TACHYON.Tracking
     {
         private readonly IRepository<ShippingRequestTrip> _ShippingRequestTripRepository;
         private readonly IRepository<RoutPoint, long> _RoutPointRepository;
+        private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
         private readonly ShippingRequestPointWorkFlowProvider _workFlowProvider;
         private readonly ProfileAppService _ProfileAppService;
 
@@ -245,6 +246,11 @@ namespace TACHYON.Tracking
 
             return randomCode;
         }
+        public async Task<List<ShippingRequestFilterListDto>> GetRequestReferancesList()
+        {
+            return await _workFlowProvider.GetRequestReferancesList();
+        }
+
 
         #region Helper
 
