@@ -23,6 +23,7 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { FileDownloadService } from '@shared/utils/file-download.service';
 import { EntityLogComponent } from '@app/shared/common/entity-log/entity-log.component';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/compat/database';
+import { DriverLocation, FirebaseHelperClass, trackingIconsList } from '@app/main/shippingRequests/shippingRequests/tracking/firebaseHelper.class';
 
 @Component({
   selector: 'new-tracking-conponent',
@@ -61,10 +62,6 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
   pointPodList: GetAllUploadedFileDto[];
   deliveryGoodPictureId: number;
   mapToggle = true;
-  private fireDB: AngularFireList<unknown>;
-  driverLng: number;
-  driverlat: number;
-
   newReceiverCode: string;
   tripRoute = {
     origin: { lat: null, lng: null },
@@ -73,14 +70,16 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
   };
   driversToggle = true;
   tripsToggle = true;
+  driverLiveLocation: DriverLocation = { lng: 0, lat: 0 };
+  trackingIconsList = trackingIconsList;
   constructor(
     injector: Injector,
     private elRef: ElementRef,
     private _trackingServiceProxy: TrackingServiceProxy,
     private _waybillsServiceProxy: WaybillsServiceProxy,
     private _fileDownloadService: FileDownloadService,
-    config: NgbDropdownConfig,
-    private _db: AngularFireDatabase
+    private _db: AngularFireDatabase,
+    config: NgbDropdownConfig
   ) {
     super(injector);
     config.autoClose = true;
@@ -126,11 +125,10 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
    * get live Driver Location
    */
   getDriverLiveLocation() {
-    this.fireDB = this._db.list('maps', (ref) => ref.orderByChild('tripId').equalTo(this.trip.id));
-    this.fireDB.valueChanges().subscribe((res: any) => {
-      console.log(res);
-      this.driverLng = res[0].lng;
-      this.driverlat = res[0].lat;
+    let firebaseHelper = new FirebaseHelperClass(this._db);
+    firebaseHelper.getDriverLocationLiveByTripId(this.trip.id).subscribe((res) => {
+      this.driverLiveLocation.lat = res[0]?.lat;
+      this.driverLiveLocation.lng = res[0]?.lng;
     });
   }
   /**
