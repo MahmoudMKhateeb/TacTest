@@ -2289,5 +2289,6 @@
 		<text name="ShippingRequestTemplate">قالب طلب شحن</text>
 		<text name="TripTemplate">قالب رحلة</text>
 		<text name="UseTemplate">استخدم القالب</text>
+		<text name="TripTemplateUsageMsg">يمكنك استخدام قالب الرحلة أثناء إنشاء رحلة جديدة فقط</text>
 	</texts>
 </localizationDictionary>

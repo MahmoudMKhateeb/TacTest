@@ -36,16 +36,16 @@
             />
             <validation-messages [formCtrl]="templateNameInput"></validation-messages>
           </div>
+          <!--end::Body-->
+          <!--begin::Footer-->
+          <div class="card-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="close()" [disabled]="saving">{{ l('Close') }}</button>
+            <button type="button" class="btn btn-primary" [disabled]="saving || !templateNameInput.valid" [busyIf]="saving" (click)="save()">
+              {{ l('Save') }}
+            </button>
+          </div>
+          <!--end::Footer-->
         </form>
-        <!--end::Body-->
-        <!--begin::Footer-->
-        <div class="card-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="close()" [disabled]="saving">{{ l('Close') }}</button>
-          <button type="button" class="btn btn-primary" [disabled]="saving || !templateNameInput.valid" [busyIf]="saving" (click)="save()">
-            {{ l('Save') }}
-          </button>
-        </div>
-        <!--end::Footer-->
       </div>
       <!--end::Card-->
     </div>

@@ -2528,5 +2528,6 @@
 		<text name="ShippingRequestTemplate">Shipping request template</text>
 		<text name="TripTemplate">Trip template</text>
 		<text name="UseTemplate">Use template</text>
+		<text name="TripTemplateUsageMsg">A trip template can be used while creating a new trip only</text>
 	</texts>
 </localizationDictionary>

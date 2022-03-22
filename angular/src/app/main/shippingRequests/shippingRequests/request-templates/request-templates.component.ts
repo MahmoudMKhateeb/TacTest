@@ -121,7 +121,7 @@ export class RequestTemplatesComponent extends AppComponentBase implements OnIni
       Swal.fire({
         icon: 'info',
         title: 'Oops...',
-        text: this.l('TripTemplateCanBeUsedWhileCreatingNewTripOnly'),
+        text: this.l('TripTemplateUsageMsg'),
       });
     }
   }
