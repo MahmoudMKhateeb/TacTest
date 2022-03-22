@@ -382,6 +382,7 @@ namespace TACHYON.Authorization.Users.Profile
 
         public async Task<PagedResultDto<NormalPricePackageProfileDto>> GetNormalPricePackages(GetNormalPricePackagesForProfileInputDto input)
         {
+            DisableTenancyFilters();
             var availableVases = _normalPricePackageRepository.GetAllIncluding(x => x.DestinationCityFK, v => v.OriginCityFK, Z => Z.TrucksTypeFk)
                 .Where(x => x.TenantId == input.CarrierTenantId)
                 .OrderBy(input.Sorting ?? "Id desc");

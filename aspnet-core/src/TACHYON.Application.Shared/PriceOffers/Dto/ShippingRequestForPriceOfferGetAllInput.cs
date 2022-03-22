@@ -5,11 +5,12 @@ using TACHYON.Shipping.ShippingRequests;
 
 namespace TACHYON.PriceOffers.Dto
 {
-    public class ShippingRequestForPriceOfferGetAllInput: PagedAndSortedResultRequestDto, IShouldNormalize
+    public class ShippingRequestForPriceOfferGetAllInput : PagedAndSortedResultRequestDto, IShouldNormalize
     {
         public string Filter { get; set; }
         public string Carrier { get; set; }
         public long? ShippingRequestId { get; set; }
+        public long? DirectRequestId { get; set; }
         public PriceOfferChannel? Channel { get; set; }
         public ShippingRequestType? RequestType { get; set; }
 

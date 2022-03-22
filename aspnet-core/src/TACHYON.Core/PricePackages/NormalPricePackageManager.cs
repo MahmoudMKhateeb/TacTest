@@ -84,6 +84,10 @@ namespace TACHYON.PricePackages
 
             var pricePackageOfferDto = ObjectMapper.Map<PricePackageOfferDto>(pricePackageOffer);
 
+            pricePackageOfferDto.Origin = pricePackageOffer.OriginCityFK.DisplayName;
+            pricePackageOfferDto.Destination = pricePackageOffer.DestinationCityFK.DisplayName;
+            pricePackageOfferDto.TruckType = pricePackageOffer.TrucksTypeFk.DisplayName;
+
             await SetVasNames(shippingRequestId, pricePackageOfferDto);
 
             pricePackageOfferDto.HasDirectRequest = await _directShippingRequestRepository.GetAll()
@@ -176,11 +180,11 @@ namespace TACHYON.PricePackages
         /// <summary>
         /// Get Carriers Matching Price Packages to send notfication to them
         /// </summary>
-        public async Task<List<int>> GetCarriersMatchingPricePackages(long? truckType, int? originCityId, int? destinationCityId)
+        public async Task<List<CarrierPricePackageDto>> GetCarriersMatchingPricePackages(long? truckType, int? originCityId, int? destinationCityId)
         {
             DisableTenancyFilters();
             var query = MatchingPricePackageQuery(truckType, originCityId, destinationCityId);
-            return await query.Select(c => c.TenantId).Distinct().ToListAsync();
+            return await query.Select(c => new CarrierPricePackageDto { CarrierTenantId = c.TenantId, PricePackageReferance = c.PricePackageId }).Distinct().ToListAsync();
         }
 
         /// <summary>
@@ -299,8 +303,8 @@ namespace TACHYON.PricePackages
         private async Task SetVasNames(long shippingRequestId, PricePackageOfferDto pricePackageOfferDto)
         {
             var vases = await _shippingRequestVasRepository
-                       .GetAll().Where(v => v.ShippingRequestId == shippingRequestId)
-                       .Select(c => c.VasFk)
+                       .GetAll().Include(x => x.VasFk)
+                       .Where(v => v.ShippingRequestId == shippingRequestId)
                        .AsNoTracking()
                        .ToListAsync();
 
@@ -308,7 +312,7 @@ namespace TACHYON.PricePackages
             {
                 foreach (var vasItem in pricePackageOfferDto.Items)
                 {
-                    vasItem.ItemName = vases.FirstOrDefault(x => x.Id == vasItem.SourceId)?.Name ?? "";
+                    vasItem.ItemName = vases.FirstOrDefault(x => x.Id == vasItem.SourceId)?.VasFk?.Name ?? "";
                 }
             }
 

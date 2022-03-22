@@ -207,7 +207,6 @@ namespace TACHYON.PricePackages
         #endregion
 
         #region ShippingRequestPricePackage 
-        [RequiresFeature(AppFeatures.Carrier, AppFeatures.Shipper)]
         public async Task<PagedResultDto<PricePackageForRequestDto>> GetMatchingPricePackagesForRequest(GetAllPricePackagesForRequestInput input)
         {
             DisableTenancyFilters();
@@ -254,7 +253,6 @@ namespace TACHYON.PricePackages
         {
             return await _normalPricePackageManager.GetPricePackageOffer(pricePackageOfferId, shippingRequestId);
         }
-        [RequiresFeature(AppFeatures.Carrier, AppFeatures.Shipper)]
         public async Task<PricePackageOfferDto> GetPricePackageOfferForHandle(int pricePackageId, long shippingRequestId)
         {
             return await _normalPricePackageManager.GetPricePackageOfferDto(pricePackageId, shippingRequestId);

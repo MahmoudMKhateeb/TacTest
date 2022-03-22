@@ -15,6 +15,7 @@ using TACHYON.Invoices;
 using TACHYON.Invoices.SubmitInvoices;
 using TACHYON.MultiTenancy;
 using TACHYON.PriceOffers;
+using TACHYON.PricePackages.Dto.NormalPricePackage;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequests.TachyonDealer;
 using TACHYON.Shipping.ShippingRequestTrips;
@@ -337,21 +338,25 @@ namespace TACHYON.Notifications
                 notificationData,
                 userIds: argsUser);
         }
-        public async Task ShippingRequestAsBidWithMatchingPricePackage(List<int> carriersIds, long shippingRequestId)
+        public async Task ShippingRequestAsBidWithMatchingPricePackage(List<CarrierPricePackageDto> carriers, string shippingRequestReferance, long shippingRequestId)
         {
-            var notificationData = new LocalizableMessageNotificationData(
-                new LocalizableString(
-                    L("ShippingRequestAsBidWithMatchingPricePackage"),
-                    TACHYONConsts.LocalizationSourceName
-                    )
-                );
+            foreach (var carrier in carriers)
+            {
+                var notificationData = new LocalizableMessageNotificationData(
+                                new LocalizableString(
+                                    L("ShippingRequestAsBidWithMatchingPricePackage", shippingRequestReferance, carrier.PricePackageReferance),
+                                    TACHYONConsts.LocalizationSourceName
+                                    )
+                                );
 
-            notificationData["shippingRequestId"] = shippingRequestId;
+                notificationData["shippingRequestId"] = shippingRequestId;
 
-            var carrierAdmins = await _userManager.GetTenantAdminsByTenantIdsAsync(carriersIds);
-            await _notificationPublisher.PublishAsync(AppNotificationNames.ShippingRequestAsBidWithSameTruck,
-                notificationData,
-                userIds: carrierAdmins);
+                var carrierAdmin = await _userManager.GetAdminByTenantIdAsync(carrier.CarrierTenantId);
+                await _notificationPublisher.PublishAsync(AppNotificationNames.ShippingRequestAsBidWithSameTruck,
+                    notificationData,
+                    userIds: new UserIdentifier[] { new UserIdentifier(carrier.CarrierTenantId, carrierAdmin.Id) });
+            }
+
         }
 
         public async Task StartShippment(UserIdentifier argsUser, long TripId, string PickupFacilityName)
@@ -598,14 +603,15 @@ namespace TACHYON.Notifications
 
             }
         }
-        public async Task NotfiyCarrierWhenReceiveBidPricePackage(int carrierTenantId, string SenderTenantName, string pricePackageId, long shippingRequestId)
+        public async Task NotfiyCarrierWhenReceiveBidPricePackage(int carrierTenantId, string SenderTenantName, string pricePackageId, long directRequestId, string referanceNumber)
         {
+
             var notificationData = new LocalizableMessageNotificationData(
                new LocalizableString(
-                   L("BidNormalPricePackageWasCreated", SenderTenantName, pricePackageId),
+                   L("BidNormalPricePackageWasCreated", SenderTenantName, pricePackageId, referanceNumber),
                    TACHYONConsts.LocalizationSourceName));
 
-            notificationData["shippingRequestId"] = shippingRequestId;
+            notificationData["directRequestId"] = directRequestId;
             var user = await _userManager.GetAdminByTenantIdAsync(carrierTenantId);
             if (user != null) await _notificationPublisher.PublishAsync(AppNotificationNames.PricePackageOfferWasCreated, notificationData, userIds: new[] { new UserIdentifier(carrierTenantId, user.Id) });
         }

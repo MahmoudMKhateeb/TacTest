@@ -755,6 +755,9 @@ namespace TACHYON
                .ReverseMap();
             configuration.CreateMap<PriceOfferDetail, PricePackageOfferItemDto>().ReverseMap();
             configuration.CreateMap<PricePackageOffer, PricePackageOfferDto>()
+            //    .ForMember(src => src.TruckType, opt => opt.MapFrom(des => des.TrucksTypeFk.DisplayName))
+            //    .ForMember(src => src.Origin, opt => opt.MapFrom(des => des.OriginCityFK.DisplayName))
+            //    .ForMember(src => src.Destination, opt => opt.MapFrom(des => des.DestinationCityFK.DisplayName))
                 .ReverseMap();
             configuration.CreateMap<PricePackageOfferItemDto, PricePackageOfferItem>().ReverseMap();
 

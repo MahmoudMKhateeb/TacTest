@@ -2516,10 +2516,10 @@
 	<text name="HeaderNormalPricePackageDetails">Normal price package details</text>
 	<text name="EditNormalPricePackage">Edit normal price package</text>
 	<text name="MultipleDrop">Multiple drop</text>
-	<text name="BidNormalPricePackageWasCreated">A bid was created by {0} and it matches the priced package that you created with the reference {1}</text>
+	<text name="BidNormalPricePackageWasCreated">{0} choose your PP with Ref {1} to handel his request with number {2}</text>
 	<text name="PreviewPricePackageOffer">Preview Price Package Offer</text>
 	<text name="CarrierAcceptPricePackageOffer">{0} Accept your price package offer on request {1}</text>
-	<text name="ShippingRequestAsBidWithMatchingPricePackage">There's bid request placed on marketpace matching your price package</text>
+	<text name="ShippingRequestAsBidWithMatchingPricePackage">Shipping Request {0} that matches You Price Package {1}, click to view details</text>
 	<text name="ThePricePackageWasNotExists">The Price Package Was Not Exists</text>
 	<text name="ThePricePackageNameIsExists">The Price Package Name Is Exists</text>
 	<text name="TheShippingRequestDoesNotExist">The Shipping Request Does Not Exist</text>
@@ -2527,5 +2527,10 @@
 	<text name="TheDirectRequestDoesNotExist">The Direct Request Does Not Exist</text>
 	<text name="YouCannotAcceptTheOffer">You Can't Accept The Offer</text>
     <text name="PreviewMatchingPricePackage">Preview Matching Price Package</text>
+	<text name="VatNotIncluded">Vat not included</text>
+	<text name="MatchingPricePackages">Matching price packages</text>
+	<text name="CarrierRate">Carrier rate</text>
+	<text name="SendPricePackageOffer">Send price package offer</text>
+		
 	</texts>
 </localizationDictionary>

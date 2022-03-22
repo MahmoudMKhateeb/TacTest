@@ -107,6 +107,7 @@
                 [(ngModel)]="normalPricePackage.directRequestPrice"
                 required
               />
+              <span class="form-text text-muted">{{ l('VatNotIncluded') }}</span>
               <validation-messages [formCtrl]="NormalPricePackage_DirectRequestPrice"></validation-messages>
             </div>
             <div class="col-md-6 form-group">
@@ -121,6 +122,7 @@
                 [(ngModel)]="normalPricePackage.marcketPlaceRequestPrice"
                 required
               />
+              <span class="form-text text-muted">{{ l('VatNotIncluded') }}</span>
             </div>
           </div>
           <div class="form-row">
@@ -136,6 +138,7 @@
                 min="1"
                 required
               />
+              <span class="form-text text-muted">{{ l('VatNotIncluded') }}</span>
             </div>
             <div class="col-md-6 form-group" *ngIf="normalPricePackage.isMultiDrop">
               <div class="right">
@@ -151,6 +154,7 @@
                   [(ngModel)]="normalPricePackage.pricePerExtraDrop"
                   [required]="normalPricePackage.isMultiDrop"
                 />
+                <span class="form-text text-muted">{{ l('VatNotIncluded') }}</span>
                 <validation-messages [formCtrl]="NormalPricePackage_PricePerExtraDrop"></validation-messages>
               </div>
             </div>

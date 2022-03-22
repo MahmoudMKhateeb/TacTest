@@ -24,12 +24,13 @@ namespace TACHYON.Shipping.DirectRequests
         private readonly IRepository<TenantCarrier, long> _tenantCarrierRepository;
         private readonly IRepository<Tenant> _tenantRepository;
         private readonly IRepository<ShippingRequestDirectRequest, long> _shippingRequestDirectRequestRepository;
+        private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
         private readonly ShippingRequestManager _shippingRequestManager;
         private readonly IAppNotifier _appNotifier;
         private readonly PriceOfferManager _priceOfferManager;
 
 
-        public ShippingRequestDirectRequestAppService(IRepository<TenantCarrier, long> tenantCarrierRepository, IRepository<Tenant> tenantRepository, IRepository<ShippingRequestDirectRequest, long> shippingRequestDirectRequestRepository, ShippingRequestManager shippingRequestManager, IAppNotifier appNotifier, PriceOfferManager priceOfferManager)
+        public ShippingRequestDirectRequestAppService(IRepository<TenantCarrier, long> tenantCarrierRepository, IRepository<Tenant> tenantRepository, IRepository<ShippingRequestDirectRequest, long> shippingRequestDirectRequestRepository, ShippingRequestManager shippingRequestManager, IAppNotifier appNotifier, PriceOfferManager priceOfferManager, IRepository<ShippingRequest, long> shippingRequestRepository)
         {
             _tenantCarrierRepository = tenantCarrierRepository;
             _tenantRepository = tenantRepository;
@@ -37,6 +38,7 @@ namespace TACHYON.Shipping.DirectRequests
             _shippingRequestManager = shippingRequestManager;
             _appNotifier = appNotifier;
             _priceOfferManager = priceOfferManager;
+            _shippingRequestRepository = shippingRequestRepository;
         }
         [RequiresFeature(AppFeatures.SendDirectRequest)]
         public async Task<PagedResultDto<ShippingRequestDirectRequestListDto>> GetAll(ShippingRequestDirectRequestGetAllInput input)
@@ -80,7 +82,12 @@ namespace TACHYON.Shipping.DirectRequests
 
             if (input.BidNormalPricePackage != null)
             {
-                await _appNotifier.NotfiyCarrierWhenReceiveBidPricePackage(input.CarrierTenantId, GetCurrentTenant().Name, input.BidNormalPricePackage.PricePackageId, id);
+                var referanceNumber = await _shippingRequestRepository.GetAll()
+                    .Where(x => x.Id == input.ShippingRequestId)
+                    .Select(x => x.ReferenceNumber)
+                    .FirstOrDefaultAsync();
+
+                await _appNotifier.NotfiyCarrierWhenReceiveBidPricePackage(input.CarrierTenantId, GetCurrentTenant().Name, input.BidNormalPricePackage.PricePackageId, id, referanceNumber);
             }
             else
             {
