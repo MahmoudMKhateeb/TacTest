@@ -325,6 +325,7 @@ namespace TACHYON.Shipping.Drivers
                  Status = x.Status,
                  lat = x.FacilityFk.Location.Y,
                  lng = x.FacilityFk.Location.X,
+                 FacilityName = x.FacilityFk.Name,
                  PickingType = x.PickingType,
                  IsPodUploaded = x.IsPodUploaded,
                  WaybillNumber = x.WaybillNumber,
