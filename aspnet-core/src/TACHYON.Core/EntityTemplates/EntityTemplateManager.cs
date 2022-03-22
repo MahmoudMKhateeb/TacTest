@@ -53,10 +53,16 @@ namespace TACHYON.EntityTemplates
             if (!input.Id.HasValue)
                 throw new AbpValidationException(L("IdCanNotBeNullWhenUpdateEntity"));
             
-            var updatedEntityTemplate = ObjectMapper.Map<EntityTemplate>(input);
-            var oldEntityTemplate = await GetById(input.Id.Value);
             
-           return ObjectMapper.Map(updatedEntityTemplate, oldEntityTemplate).Id.ToString();
+            var oldEntityTemplate = await GetById(input.Id.Value);
+
+            var updatedEntityTemplate = ObjectMapper.Map(input, oldEntityTemplate);
+
+            await SetSavedEntity(updatedEntityTemplate);
+            
+            await _templateRepository.UpdateAsync(updatedEntityTemplate);
+
+            return updatedEntityTemplate.Id.ToString();
         }
 
         private async Task<EntityTemplate> GetById(long templateId)
