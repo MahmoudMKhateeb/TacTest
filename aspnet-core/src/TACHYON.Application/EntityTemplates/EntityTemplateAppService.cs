@@ -82,12 +82,14 @@ namespace TACHYON.EntityTemplates
                         .Select(x => new SelectItemDto() {DisplayName = x.TemplateName, Id = x.Id.ToString()})
                         .ToListAsync();
                 case SavedEntityType.TripTemplate:
-                    if (input.ParentEntityId.IsNullOrEmpty())
-                        throw new AbpValidationException(
-                            L("YouMustProvideTheShippingRequestYouWantToAddTripsFromTemplateOnIt"));
-                    
+
                     var tripTemplates = await templates.ToListAsync();
-                    return await _templateManager.FilterTripTemplatesByParentEntity(tripTemplates, input.ParentEntityId);
+                    if (!input.ParentEntityId.IsNullOrEmpty()) 
+                        return await _templateManager.FilterTripTemplatesByParentEntity(tripTemplates, input.ParentEntityId);
+                    
+                    return await templates
+                        .Select(x => new SelectItemDto() {DisplayName = x.TemplateName, Id = x.Id.ToString()})
+                        .ToListAsync();
                 default:
                     throw new UserFriendlyException(L("NotSupportedEntityType"));
             }
