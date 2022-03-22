@@ -1,12 +1,9 @@
-import { Component, Injector, OnDestroy, OnInit } from '@angular/core';
+import { Component, Injector, OnInit } from '@angular/core';
 import { WidgetComponentBase } from '@app/shared/common/customizable-dashboard/widgets/widget-component-base';
-import { ChartOptions, ChartOptionsBars } from '@app/shared/common/customizable-dashboard/widgets/ApexInterfaces';
-import { FilterDatePeriod, SalesSummaryDatePeriod, ShipperDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
-import { AppComponentBase } from '@shared/common/app-component-base';
+import { ChartOptionsBars } from '@app/shared/common/customizable-dashboard/widgets/ApexInterfaces';
+import { FilterDatePeriod, ShipperDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
 import { finalize } from 'rxjs/operators';
-import { format } from 'path/posix';
-import { formatNumber } from '@angular/common';
-import { count } from 'console';
+import session = abp.session;
 
 @Component({
   selector: 'app-completed-trips-widget',
@@ -15,11 +12,10 @@ import { count } from 'console';
 })
 export class CompletedTripsWidgetComponent extends WidgetComponentBase implements OnInit {
   public chartOptions: Partial<ChartOptionsBars>;
-  months: string[];
-  trips: number[];
-  loading: boolean = false;
-  filterDatePeriodInterval = FilterDatePeriod;
+  loading = false;
+  FilterDatePeriod = FilterDatePeriod;
   selectedDatePeriod: FilterDatePeriod;
+  noData = true;
 
   constructor(private injector: Injector, private _shipperDashboardServiceProxy: ShipperDashboardServiceProxy) {
     super(injector);
@@ -27,25 +23,13 @@ export class CompletedTripsWidgetComponent extends WidgetComponentBase implement
 
   ngOnInit() {
     this.runDelayed(() => {
-      this.getTrips(this.filterDatePeriodInterval.Daily);
+      this.getTrips(FilterDatePeriod.Daily);
     });
   }
 
-  reload(datePeriod) {
-    if (this.selectedDatePeriod === datePeriod) {
-      this.loading = false;
-      return;
-    }
-
-    this.selectedDatePeriod = datePeriod;
-
-    this.getTrips(this.selectedDatePeriod);
-  }
-
   getTrips(datePeriod: FilterDatePeriod) {
-    this.months = [];
-    this.trips = [];
     this.loading = true;
+    this.selectedDatePeriod = datePeriod;
     this._shipperDashboardServiceProxy
       .getCompletedTripsCountPerMonth(datePeriod)
       .pipe(
@@ -54,26 +38,11 @@ export class CompletedTripsWidgetComponent extends WidgetComponentBase implement
         })
       )
       .subscribe((result) => {
-        result.forEach((element) => {
-          var txt = '';
-          if (datePeriod == FilterDatePeriod.Daily) {
-            txt = element.day + '-' + element.month + '-' + element.year;
-          }
-          if (datePeriod == FilterDatePeriod.Weekly) {
-            txt = 'week-' + element.week;
-          }
-          if (datePeriod == FilterDatePeriod.Monthly) {
-            txt = element.month;
-          }
-          this.months.push(txt);
-          this.trips.push(element.count);
-        });
-
         this.chartOptions = {
           series: [
             {
               name: 'Trips',
-              data: this.trips,
+              data: result,
               color: 'rgba(187, 41, 41, 0.99)',
             },
           ],
@@ -81,34 +50,16 @@ export class CompletedTripsWidgetComponent extends WidgetComponentBase implement
             type: 'bar',
             height: 350,
           },
-          plotOptions: {
-            area: {
-              fillTo: 'origin',
-            },
-          },
-          dataLabels: {
-            enabled: false,
-          },
-          stroke: {
-            show: true,
-            width: 2,
-            colors: ['transparent'],
-          },
           xaxis: {
-            categories: this.months,
-          },
-          tooltip: {
-            y: {
-              formatter: function (val) {
-                return val.toFixed(0);
-              },
-            },
-          },
-          fill: {
-            opacity: 1,
+            type: 'category',
           },
         };
+
         this.loading = false;
+
+        if (result?.length > 0) {
+          this.noData = false;
+        }
       });
   }
 }

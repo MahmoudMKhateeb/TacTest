@@ -10,26 +10,18 @@
           <div class="btn-group" data-toggle="buttons">
             <label
               class="btn btn-secondary active"
-              [ngClass]="{ active: selectedDatePeriod == filterDatePeriodInterval.Daily }"
-              (click)="reload(filterDatePeriodInterval.Daily)"
+              [ngClass]="{ active: selectedDatePeriod == FilterDatePeriod.Daily }"
+              (click)="getTrips(FilterDatePeriod.Daily)"
             >
-              <input type="radio" name="filterDatePeriodInterval" [value]="filterDatePeriodInterval.Daily" />
+              <input type="radio" name="filterDatePeriodInterval" [value]="FilterDatePeriod.Daily" />
               {{ 'Daily' | localize }}
             </label>
             <label
               class="btn btn-secondary"
-              [ngClass]="{ active: selectedDatePeriod == filterDatePeriodInterval.Weekly }"
-              (click)="reload(filterDatePeriodInterval.Weekly)"
+              [ngClass]="{ active: selectedDatePeriod == FilterDatePeriod.Monthly }"
+              (click)="getTrips(FilterDatePeriod.Monthly)"
             >
-              <input type="radio" name="filterDatePeriodInterval" [value]="filterDatePeriodInterval.Weekly" />
-              {{ 'Weekly' | localize }}
-            </label>
-            <label
-              class="btn btn-secondary"
-              [ngClass]="{ active: selectedDatePeriod == filterDatePeriodInterval.Monthly }"
-              (click)="reload(filterDatePeriodInterval.Monthly)"
-            >
-              <input type="radio" name="SalesSummaryDateInterval" [value]="filterDatePeriodInterval.Monthly" />
+              <input type="radio" name="SalesSummaryDateInterval" [value]="FilterDatePeriod.Monthly" />
               {{ 'Monthly' | localize }}
             </label>
           </div>
@@ -37,10 +29,10 @@
       </div>
 
       <div class="card-body p-0">
-        <div class="pd-5 text-center" *ngIf="trips.length == 0">
+        <div class="pd-5 text-center" *ngIf="noData">
           {{ l('NoData') }}
         </div>
-        <div id="CompletedTripsChart" *ngIf="trips.length > 0">
+        <div id="CompletedTripsChart" *ngIf="!noData">
           <apx-chart
             *ngIf="chartOptions && chartOptions.series"
             [series]="chartOptions.series"

@@ -1,7 +1,7 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { ChartOptions } from '@app/shared/common/customizable-dashboard/widgets/ApexInterfaces';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { RequestsListPerMonthDto, SalesSummaryDatePeriod, ShipperDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
+import { ShipperDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
 import { finalize } from 'rxjs/operators';
 
 @Component({
@@ -11,10 +11,8 @@ import { finalize } from 'rxjs/operators';
 })
 export class InvoicesVsPaidInvoicesComponent extends AppComponentBase implements OnInit {
   public chartOptions: Partial<ChartOptions>;
-  months: string[] = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  invoices: number[];
-  paidInvoices: number[];
-  loading: boolean = false;
+
+  loading = false;
 
   constructor(injector: Injector, private _shipperDashboardServiceProxy: ShipperDashboardServiceProxy) {
     super(injector);
@@ -25,8 +23,6 @@ export class InvoicesVsPaidInvoicesComponent extends AppComponentBase implements
   }
 
   getInvoices() {
-    this.invoices = [];
-    this.paidInvoices = [];
     this.loading = true;
 
     this._shipperDashboardServiceProxy
@@ -37,53 +33,16 @@ export class InvoicesVsPaidInvoicesComponent extends AppComponentBase implements
         })
       )
       .subscribe((result) => {
-        this.months.forEach((d) => {
-          let i = this.months.indexOf(d) + 1;
-          let year = new Date().getFullYear();
-          const foundInvoicesElement = result.shipperInvoices.filter((el) => el.month === i);
-          if (!foundInvoicesElement) {
-            result.shipperInvoices.push(
-              new RequestsListPerMonthDto({
-                count: 0,
-                month: i,
-                year: year,
-              })
-            );
-          }
-          const foundPaidInvoicesElement = result.paidInvoices.filter((el) => el.month === i);
-          if (!foundPaidInvoicesElement) {
-            result.paidInvoices.push(
-              new RequestsListPerMonthDto({
-                count: 0,
-                month: i,
-                year: year,
-              })
-            );
-          }
-        });
-        result.shipperInvoices.sort(function (a, b) {
-          return a.month - b.month;
-        });
-        result.shipperInvoices.forEach((element) => {
-          this.invoices.push(element.count);
-        });
-        result.paidInvoices.sort(function (a, b) {
-          return a.month - b.month;
-        });
-        result.paidInvoices.forEach((element) => {
-          this.paidInvoices.push(element.count);
-        });
-
         this.chartOptions = {
           series: [
             {
               name: 'Invoices',
-              data: this.invoices,
+              data: result.shipperInvoices,
               color: 'rgba(187, 41, 41, 0.847)',
             },
             {
               name: 'Paid Invoices',
-              data: this.paidInvoices,
+              data: result.paidInvoices,
               color: '#b10303',
             },
           ],
@@ -99,7 +58,6 @@ export class InvoicesVsPaidInvoicesComponent extends AppComponentBase implements
           },
           xaxis: {
             type: 'category',
-            categories: this.months,
           },
           tooltip: {
             x: {

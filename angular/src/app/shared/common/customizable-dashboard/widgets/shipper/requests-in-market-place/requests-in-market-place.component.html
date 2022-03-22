@@ -7,38 +7,11 @@
           <h3 class="card-label">{{ l('RequestsInMarketPlace') }}</h3>
         </div>
         <div class="card-toolbar" *ngIf="Requests">
-          <div class="btn-group" data-toggle="buttons">
-            <label
-              class="btn btn-secondary active"
-              [ngClass]="{ active: selectedDatePeriod == filterDatePeriodInterval.Daily }"
-              (click)="reload(filterDatePeriodInterval.Daily)"
-            >
-              <input type="radio" name="filterDatePeriodInterval" [value]="filterDatePeriodInterval.Daily" />
-              {{ 'Daily' | localize }}
-            </label>
-            <label
-              class="btn btn-secondary"
-              [ngClass]="{ active: selectedDatePeriod == filterDatePeriodInterval.Weekly }"
-              (click)="reload(filterDatePeriodInterval.Weekly)"
-            >
-              <input type="radio" name="filterDatePeriodInterval" [value]="filterDatePeriodInterval.Weekly" />
-              {{ 'Weekly' | localize }}
-            </label>
-            <label
-              class="btn btn-secondary"
-              [ngClass]="{ active: selectedDatePeriod == filterDatePeriodInterval.Monthly }"
-              (click)="reload(filterDatePeriodInterval.Monthly)"
-            >
-              <input type="radio" name="filterDatePeriodInterval" [value]="filterDatePeriodInterval.Monthly" />
-              {{ 'Monthly' | localize }}
-            </label>
-          </div>
+          <a class="btn btn-danger btn-xs red" target="_blank" href="/app/main/marketplace/list">{{ l('more') }}</a>
         </div>
       </div>
       <div class="card-body">
-        <a *ngIf="Requests" class="btn btn-danger btn-xs red float-left" target="_blank" href="/app/main/marketplace/list">{{ l('more') }}</a>
-        <br /><br />
-        <p-table [value]="Requests" [busyIf]="loading" (onLazyLoad)="reload(selectedDatePeriod)">
+        <p-table [value]="Requests" [busyIf]="loading">
           <ng-template pTemplate="header">
             <tr>
               <th>{{ l('ReferanceNumber') }}</th>
@@ -49,7 +22,7 @@
           <ng-template pTemplate="body" let-record>
             <tr>
               <td>{{ record.requestReference }}</td>
-              <td>{{ record.biddingEndDate | momentFormat: 'YYYY-MM-DD HH:mm:ss' }}</td>
+              <td>{{ record.biddingEndDate | momentFormat: 'dd/MM/YYYY' }}</td>
               <td>{{ record.numberOfOffers }}</td>
             </tr>
           </ng-template>

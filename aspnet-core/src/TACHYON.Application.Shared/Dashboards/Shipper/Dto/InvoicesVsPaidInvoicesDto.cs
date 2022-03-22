@@ -10,8 +10,8 @@ namespace TACHYON.Dashboards.Shipper.Dto
 {
     public class InvoicesVsPaidInvoicesDto
     {
-        public List<RequestsListPerMonthDto> ShipperInvoices { get; set; }
-        public List<RequestsListPerMonthDto> PaidInvoices { get; set; }
+        public List<ChartCategoryPairedValuesDto> ShipperInvoices { get; set; }
+        public List<ChartCategoryPairedValuesDto> PaidInvoices { get; set; }
 
     }
 

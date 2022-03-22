@@ -11,7 +11,7 @@ namespace TACHYON.Dashboards.Shipper.Dto
         public int? Id { get; set; }
         public string CarrierName { get; set; }
         public int NumberOfTrips { get; set; }
-        public decimal CarrierRating { get; set; }
+        public decimal? CarrierRating { get; set; }
         public int Count { get; set; }
     }
 

@@ -11,6 +11,7 @@ namespace TACHYON.Dashboards.Host.Dto
     {
         public FilterDatePeriod DatePeriod { get; set; }
 
+
     }
 
 }
