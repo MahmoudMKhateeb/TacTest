@@ -2738,5 +2738,6 @@
 		<text name="WorstRatedShippers">Worst Rated Shippers</text>
 		<text name="ReferanceNumber">Referance Number</text>
 		<text name="ForCurrentYear">For Current Year</text>
+		<text name="InternalTruckId">Internal Truck ID</text>
 	</texts>
 </localizationDictionary>

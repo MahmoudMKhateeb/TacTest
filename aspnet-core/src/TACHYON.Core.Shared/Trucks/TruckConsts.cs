@@ -20,5 +20,7 @@
         public const int MinNoteLength = 0;
         public const int MaxNoteLength = 256;
 
+        public const int MaxInternalTruckIdLength = 10;
+
     }
 }

@@ -6,11 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using TACHYON.Authorization.Users;
 using TACHYON.Documents.DocumentFiles;
 using TACHYON.Integration.WaslIntegration;
-//using TACHYON.Authorization.Users;
-using TACHYON.Trucks;
 using TACHYON.Trucks.PlateTypes;
 using TACHYON.Trucks.TruckCategories.TransportTypes;
 using TACHYON.Trucks.TruckCategories.TruckCapacities;
@@ -45,6 +42,8 @@ namespace TACHYON.Trucks
         [StringLength(TruckConsts.MaxNoteLength, MinimumLength = TruckConsts.MinNoteLength)]
         public virtual string Note { get; set; }
 
+        [StringLength(TruckConsts.MaxInternalTruckIdLength)]
+        public string InternalTruckId { get; set; }
 
         public virtual long? TruckStatusId { get; set; }
 

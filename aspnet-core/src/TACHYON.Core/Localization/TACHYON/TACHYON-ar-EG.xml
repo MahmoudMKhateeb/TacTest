@@ -2513,6 +2513,7 @@
 		<text name="ImportFile">إضافة ملف</text>
 		<text name="DeliveredAndNeedsConfirmation">تم التوصيل وبحاجة للتأكيد</text>
 		<text name="SAASTrip">Sass</text>
+		<text name="InternalTruckId">معرف الشاحنة الداخلي</text>
 
 	</texts>
 </localizationDictionary>
