@@ -38,6 +38,25 @@ export class FirebaseHelperClass {
   }
 
   /**
+   * get All Drivers Location in the system based on tenant Id
+   */
+  getAllActiveDriversLiveLocationByTenantId(tenantId: number): Observable<any> {
+    console.log(this.database);
+    this.fireDB = this._db.list(
+      this.database,
+      (ref) => ref.orderByChild('tenantId').equalTo(tenantId) && ref.orderByChild('activePointId').startAfter(0)
+    );
+    return this.fireDB.valueChanges();
+  }
+
+  /**
+   * get all drivers locations in the system
+   */
+  getAllActiveDriversLocationsInTheSystem(): Observable<any> {
+    this.fireDB = this._db.list(this.database, (ref) => ref.orderByChild('activePointId').startAfter(0));
+    return this.fireDB.valueChanges();
+  }
+  /**
    * detects the Current Enviroment Based on user App Url
    * to Determine Witch Firebase database should the app connect to
    * @private
