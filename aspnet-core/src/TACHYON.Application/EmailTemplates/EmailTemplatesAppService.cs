@@ -1,24 +1,24 @@
-﻿using System;
-using System.Linq;
-using System.Linq.Dynamic.Core;
-using Abp.Linq.Extensions;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Abp.Domain.Repositories;
-using TACHYON.EmailTemplates.Dtos;
-using TACHYON.Dto;
-using Abp.Application.Services.Dto;
-using TACHYON.Authorization;
-using Abp.Extensions;
+﻿using Abp.Application.Services.Dto;
 using Abp.Authorization;
-using Microsoft.EntityFrameworkCore;
+using Abp.Domain.Repositories;
+using Abp.Extensions;
+using Abp.Linq.Extensions;
 using Abp.UI;
 using AutoMapper.QueryableExtensions;
 using DevExtreme.AspNet.Data.ResponseModel;
 using JetBrains.Annotations;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Dynamic.Core;
+using System.Threading.Tasks;
+using TACHYON.Authorization;
 using TACHYON.Authorization.Users;
 using TACHYON.Common;
 using TACHYON.Common.Dto;
+using TACHYON.Dto;
+using TACHYON.EmailTemplates.Dtos;
 using TACHYON.Storage;
 using TACHYON.Trucks.TrucksTypes.TrucksTypesTranslations.Dtos;
 
@@ -114,8 +114,8 @@ namespace TACHYON.EmailTemplates
             //? Check if Core of Translation Is Exist Or Not
             #region CoreValidation
 
-            var template = await _emailTemplateRepository.FirstOrDefaultAsync(input.CoreId);
-            if (template == null)
+            var isTemplateExist = await _emailTemplateRepository.GetAll().AnyAsync(x => x.Id == input.CoreId);
+            if (!isTemplateExist)
                 throw new UserFriendlyException(L("CoreNotFound"));
 
             #endregion
@@ -140,7 +140,7 @@ namespace TACHYON.EmailTemplates
             var translation = await _emailTemplatesTranslationRepository
                 .SingleAsync(x => x.Id == input.Id.Value);
 
-            ObjectMapper.Map(translation, input);
+            ObjectMapper.Map(input, translation);
         }
 
         public async Task DeleteTranslation(EntityDto input)
@@ -191,7 +191,7 @@ namespace TACHYON.EmailTemplates
                 .Select(x => x.Content)
                 .FirstOrDefaultAsync();
             var adminUser = await UserManager.GetAdminHostAsync();
-            return new GetEmailTemplateLayoutForView() {Content = content,DefaultTestEmail = adminUser.EmailAddress};
+            return new GetEmailTemplateLayoutForView() { Content = content, DefaultTestEmail = adminUser.EmailAddress };
         }
 
         public async Task SendTestEmailTemplate(TestEmailTemplateInputDto input)
