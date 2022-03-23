@@ -182,8 +182,8 @@ namespace TACHYON.EntityTemplates
             };
 
             var filteredByGoodsCategoryItems = (from item in filteredByRoutTypeItems
-                let dropOffPoints = item.Trip.RoutPoints.Where(x => x.PickingType == PickingType.Dropoff)
-                where dropOffPoints.All(point => (from goodDetail in point.GoodsDetailListDto
+                let dropOffPoints = item?.Trip?.RoutPoints?.Where(x => x.PickingType == PickingType.Dropoff)
+                where dropOffPoints.All(point => (from goodDetail in point?.GoodsDetailListDto where goodDetail != null
                         from subGoodCategory in _goodsCategoryRepository.GetAll()
                             .Where(g => g.Id == goodDetail.GoodCategoryId).DefaultIfEmpty()
                         where subGoodCategory != null select subGoodCategory)
