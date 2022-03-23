@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TACHYON.Dashboards.Carrier.Dto;
+using TACHYON.Dashboards.Shipper.Dto;
 using TACHYON.Trucks.TrucksTypes.Dtos;
 
 namespace TACHYON.Dashboards.Carrier
@@ -10,7 +11,7 @@ namespace TACHYON.Dashboards.Carrier
     {
         Task<ActivityItemsDto> GetDriversActivity();
         Task<ActivityItemsDto> GetTrucksActivity();
-        Task<List<MostShippersWorksListDto>> GetMostWorkedWithShippers();
-        Task<List<VasTypeDto>> GetMostVasesUsedByShippers();
+        Task<List<MostTenantWorksListDto>> GetMostWorkedWithShippers();
+        Task<List<ChartCategoryPairedValuesDto>> GetMostVasesUsedByShippers();
     }
 }

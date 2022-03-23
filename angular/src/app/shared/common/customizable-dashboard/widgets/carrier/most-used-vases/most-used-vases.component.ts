@@ -11,9 +11,7 @@ import { finalize } from 'rxjs/operators';
 })
 export class MostUsedVasesComponent extends AppComponentBase implements OnInit {
   public chartOptions: Partial<ChartOptionsBars>;
-  types: string[];
-  counts: number[];
-  loading: boolean = false;
+  loading = false;
 
   constructor(private injector: Injector, private _carrierDashboardServiceProxy: CarrierDashboardServiceProxy) {
     super(injector);
@@ -24,8 +22,6 @@ export class MostUsedVasesComponent extends AppComponentBase implements OnInit {
   }
 
   getData() {
-    this.types = [];
-    this.counts = [];
     this.loading = true;
     this._carrierDashboardServiceProxy
       .getMostVasesUsedByShippers()
@@ -35,16 +31,11 @@ export class MostUsedVasesComponent extends AppComponentBase implements OnInit {
         })
       )
       .subscribe((result) => {
-        result.forEach((element) => {
-          this.types.push(element.vasType);
-          this.counts.push(element.availableVasTypeCount);
-        });
-
         this.chartOptions = {
           series: [
             {
               name: 'Count',
-              data: this.counts,
+              data: result,
               color: 'rgba(187, 41, 41, 0.847)',
             },
           ],
@@ -55,29 +46,13 @@ export class MostUsedVasesComponent extends AppComponentBase implements OnInit {
           plotOptions: {
             bar: {
               horizontal: false,
-              columnWidth: '55%',
             },
           },
           dataLabels: {
             enabled: false,
           },
-          stroke: {
-            show: true,
-            width: 2,
-            colors: ['transparent'],
-          },
           xaxis: {
-            categories: this.types,
-          },
-          tooltip: {
-            y: {
-              formatter: function (val) {
-                return val.toFixed(0);
-              },
-            },
-          },
-          fill: {
-            opacity: 1,
+            type: 'category',
           },
         };
         this.loading = false;

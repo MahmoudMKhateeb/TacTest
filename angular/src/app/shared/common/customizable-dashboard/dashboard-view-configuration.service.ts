@@ -1,19 +1,7 @@
-import { Injectable, OnInit } from '@angular/core';
-import { WidgetViewDefinition, WidgetFilterViewDefinition } from './definitions';
+import { Injectable } from '@angular/core';
+import { WidgetFilterViewDefinition, WidgetViewDefinition } from './definitions';
 import { DashboardCustomizationConst } from './DashboardCustomizationConsts';
-import { WidgetGeneralStatsComponent } from './widgets/widget-general-stats/widget-general-stats.component';
-import { WidgetDailySalesComponent } from './widgets/widget-daily-sales/widget-daily-sales.component';
-import { WidgetProfitShareComponent } from './widgets/widget-profit-share/widget-profit-share.component';
-import { WidgetMemberActivityComponent } from './widgets/widget-member-activity/widget-member-activity.component';
-import { WidgetRegionalStatsComponent } from './widgets/widget-regional-stats/widget-regional-stats.component';
-import { WidgetSalesSummaryComponent } from './widgets/widget-sales-summary/widget-sales-summary.component';
-import { WidgetIncomeStatisticsComponent } from './widgets/widget-income-statistics/widget-income-statistics.component';
-import { WidgetRecentTenantsComponent } from './widgets/widget-recent-tenants/widget-recent-tenants.component';
-import { WidgetEditionStatisticsComponent } from './widgets/widget-edition-statistics/widget-edition-statistics.component';
-import { WidgetSubscriptionExpiringTenantsComponent } from './widgets/widget-subscription-expiring-tenants/widget-subscription-expiring-tenants.component';
-import { WidgetHostTopStatsComponent } from './widgets/widget-host-top-stats/widget-host-top-stats.component';
 import { FilterDateRangePickerComponent } from './filters/filter-date-range-picker/filter-date-range-picker.component';
-import { WidgetTopStatsComponent } from './widgets/widget-top-stats/widget-top-stats.component';
 import { CompletedTripsWidgetComponent } from '@app/shared/common/customizable-dashboard/widgets/shared_widgets/completed-trips-widget/completed-trips-widget.component';
 import { CompletedTripVsPodComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/completed-trip-vs-pod/completed-trip-vs-pod.component';
 import { AcceptedVsRejecedRequestsComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/accepted-vs-rejeced-requests/accepted-vs-rejeced-requests.component';
@@ -26,7 +14,6 @@ import { ShipperDueDateInDaysComponent } from '@app/shared/common/customizable-d
 import { MostUsedOriginComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/most-used-origin/most-used-origin.component';
 import { MostUsedDestinationsComponent } from '@app/shared/common/customizable-dashboard/widgets/shipper/most-used-destinations/most-used-destinations.component';
 import { TrackingMapComponent } from '@app/shared/common/customizable-dashboard/widgets/shared_widgets/tracking-map/tracking-map.component';
-import { AcceptedVsRejectedPricingComponent } from '@app/shared/common/customizable-dashboard/widgets/carrier/accepted-vs-rejected-pricing/accepted-vs-rejected-pricing.component';
 import { MostUsedVasesComponent } from '@app/shared/common/customizable-dashboard/widgets/carrier/most-used-vases/most-used-vases.component';
 import { MostWorkedWithShippersComponent } from '@app/shared/common/customizable-dashboard/widgets/carrier/most-worked-with-shippers/most-worked-with-shippers.component';
 import { MostUsedppComponent } from '@app/shared/common/customizable-dashboard/widgets/carrier/most-usedpp/most-usedpp.component';
@@ -53,6 +40,9 @@ import { TopThreeCarriersHaveRequestsComponent } from './widgets/host/top-three-
 import { TopThreeShippersHaveRequestsComponent } from './widgets/host/top-three-shippers-have-requests/top-three-shippers-have-requests.component';
 import { HostRouteTypeUsageChartComponent } from './widgets/host/host-route-type-usage-chart/host-route-type-usage-chart.component';
 import { NumberOfRequestsForEachCityComponent } from './widgets/host/number-of-requests-for-each-city/number-of-requests-for-each-city.component';
+import { CarrierComplitedTripsWidgetComponent } from '@app/shared/common/customizable-dashboard/widgets/carrier/carrier-complited-trips-widget/carrier-complited-trips-widget.component';
+import { CarrierAcceptedVsRejectdRequestsComponent } from '@app/shared/common/customizable-dashboard/widgets/carrier/carrier-accepted-vs-rejectd-requests/carrier-accepted-vs-rejectd-requests.component';
+import { CarrierInvoicesDetailsWidgetComponent } from '@app/shared/common/customizable-dashboard/widgets/carrier/carrier-invoices-details-widget/carrier-invoices-details-widget.component';
 
 @Injectable({
   providedIn: 'root',
@@ -155,17 +145,17 @@ export class DashboardViewConfigurationService {
     //carrier Widgets
     let carrierInvoicesVsPaid = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.Carrier.CarrierInvoicesVsPaidInvoicesWidget,
-      InvoicesVsPaidInvoicesComponent
+      CarrierInvoicesDetailsWidgetComponent
     );
 
     let carrierAcceptedVsRejected = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.Carrier.CarrierAcceptedVsRejectedPricingWidget,
-      AcceptedVsRejectedPricingComponent
+      CarrierAcceptedVsRejectdRequestsComponent
     );
 
     let CarrierCompletedTrips = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.Carrier.CarrierNumberOfCompletedTripsTotalMonthlyIncreaseWidget,
-      CompletedTripsWidgetComponent
+      CarrierComplitedTripsWidgetComponent
     );
 
     let mostUsedVases = new WidgetViewDefinition(DashboardCustomizationConst.widgets.Carrier.CarrierMostUsedVasWidget, MostUsedVasesComponent);

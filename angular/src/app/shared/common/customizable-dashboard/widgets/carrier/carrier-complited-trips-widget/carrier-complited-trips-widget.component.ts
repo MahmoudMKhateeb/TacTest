@@ -1,22 +1,22 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { WidgetComponentBase } from '@app/shared/common/customizable-dashboard/widgets/widget-component-base';
 import { ChartOptionsBars } from '@app/shared/common/customizable-dashboard/widgets/ApexInterfaces';
-import { FilterDatePeriod, ShipperDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
-import { finalize } from 'rxjs/operators';
+import { CarrierDashboardServiceProxy, FilterDatePeriod } from '@shared/service-proxies/service-proxies';
+import { finalize } from '@node_modules/rxjs/operators';
 
 @Component({
-  selector: 'app-completed-trips-widget',
-  templateUrl: './completed-trips-widget.component.html',
-  styleUrls: ['./completed-trips-widget.component.css'],
+  selector: 'app-carrier-complited-trips-widget',
+  templateUrl: './carrier-complited-trips-widget.component.html',
+  styleUrls: ['./carrier-complited-trips-widget.component.css'],
 })
-export class CompletedTripsWidgetComponent extends WidgetComponentBase implements OnInit {
+export class CarrierComplitedTripsWidgetComponent extends WidgetComponentBase implements OnInit {
   public chartOptions: Partial<ChartOptionsBars>;
   loading = false;
   FilterDatePeriod = FilterDatePeriod;
   selectedDatePeriod: FilterDatePeriod;
   noData = true;
 
-  constructor(private injector: Injector, private _shipperDashboardServiceProxy: ShipperDashboardServiceProxy) {
+  constructor(private injector: Injector, private _carrierDashboardServiceProxy: CarrierDashboardServiceProxy) {
     super(injector);
   }
 
@@ -29,7 +29,7 @@ export class CompletedTripsWidgetComponent extends WidgetComponentBase implement
   getTrips(datePeriod: FilterDatePeriod) {
     this.loading = true;
     this.selectedDatePeriod = datePeriod;
-    this._shipperDashboardServiceProxy
+    this._carrierDashboardServiceProxy
       .getCompletedTripsCountPerMonth(datePeriod)
       .pipe(
         finalize(() => {
@@ -47,6 +47,7 @@ export class CompletedTripsWidgetComponent extends WidgetComponentBase implement
           ],
           chart: {
             type: 'bar',
+            height: 350,
           },
           xaxis: {
             type: 'category',

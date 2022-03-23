@@ -8,5 +8,7 @@ namespace TACHYON.Dashboards.Carrier.Dto
     {
         public int ActiveItems { get; set; }
         public int NotActiveItems { get; set; }
+        public int InTransitItems { get; set; }
+        public int TotalItemsCount { get; set; }
     }
 }
