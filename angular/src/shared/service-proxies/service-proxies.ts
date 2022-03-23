@@ -3009,6 +3009,77 @@ export class CarrierDashboardServiceProxy {
   /**
    * @return Success
    */
+  getCompletedTripsCountPerMonth(datePeriod: FilterDatePeriod): Observable<ChartCategoryPairedValuesDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/CarrierDashboard/GetCompletedTripsCountPerMonth?';
+    if (datePeriod === undefined || datePeriod === null) throw new Error("The parameter 'datePeriod' must be defined and cannot be null.");
+    else url_ += 'DatePeriod=' + encodeURIComponent('' + datePeriod) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetCompletedTripsCountPerMonth(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetCompletedTripsCountPerMonth(<any>response_);
+            } catch (e) {
+              return <Observable<ChartCategoryPairedValuesDto[]>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<ChartCategoryPairedValuesDto[]>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetCompletedTripsCountPerMonth(response: HttpResponseBase): Observable<ChartCategoryPairedValuesDto[]> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          if (Array.isArray(resultData200)) {
+            result200 = [] as any;
+            for (let item of resultData200) result200!.push(ChartCategoryPairedValuesDto.fromJS(item));
+          } else {
+            result200 = <any>null;
+          }
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<ChartCategoryPairedValuesDto[]>(<any>null);
+  }
+
+  /**
+   * @return Success
+   */
   getDriversActivity(): Observable<ActivityItemsDto> {
     let url_ = this.baseUrl + '/api/services/app/CarrierDashboard/GetDriversActivity';
     url_ = url_.replace(/[?&]$/, '');
@@ -3137,7 +3208,7 @@ export class CarrierDashboardServiceProxy {
   /**
    * @return Success
    */
-  getMostWorkedWithShippers(): Observable<MostShippersWorksListDto[]> {
+  getMostWorkedWithShippers(): Observable<MostTenantWorksListDto[]> {
     let url_ = this.baseUrl + '/api/services/app/CarrierDashboard/GetMostWorkedWithShippers';
     url_ = url_.replace(/[?&]$/, '');
 
@@ -3162,14 +3233,14 @@ export class CarrierDashboardServiceProxy {
             try {
               return this.processGetMostWorkedWithShippers(<any>response_);
             } catch (e) {
-              return <Observable<MostShippersWorksListDto[]>>(<any>_observableThrow(e));
+              return <Observable<MostTenantWorksListDto[]>>(<any>_observableThrow(e));
             }
-          } else return <Observable<MostShippersWorksListDto[]>>(<any>_observableThrow(response_));
+          } else return <Observable<MostTenantWorksListDto[]>>(<any>_observableThrow(response_));
         })
       );
   }
 
-  protected processGetMostWorkedWithShippers(response: HttpResponseBase): Observable<MostShippersWorksListDto[]> {
+  protected processGetMostWorkedWithShippers(response: HttpResponseBase): Observable<MostTenantWorksListDto[]> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -3186,7 +3257,7 @@ export class CarrierDashboardServiceProxy {
           let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
           if (Array.isArray(resultData200)) {
             result200 = [] as any;
-            for (let item of resultData200) result200!.push(MostShippersWorksListDto.fromJS(item));
+            for (let item of resultData200) result200!.push(MostTenantWorksListDto.fromJS(item));
           } else {
             result200 = <any>null;
           }
@@ -3200,13 +3271,13 @@ export class CarrierDashboardServiceProxy {
         })
       );
     }
-    return _observableOf<MostShippersWorksListDto[]>(<any>null);
+    return _observableOf<MostTenantWorksListDto[]>(<any>null);
   }
 
   /**
    * @return Success
    */
-  getMostVasesUsedByShippers(): Observable<VasTypeDto[]> {
+  getMostVasesUsedByShippers(): Observable<ChartCategoryPairedValuesDto[]> {
     let url_ = this.baseUrl + '/api/services/app/CarrierDashboard/GetMostVasesUsedByShippers';
     url_ = url_.replace(/[?&]$/, '');
 
@@ -3231,14 +3302,14 @@ export class CarrierDashboardServiceProxy {
             try {
               return this.processGetMostVasesUsedByShippers(<any>response_);
             } catch (e) {
-              return <Observable<VasTypeDto[]>>(<any>_observableThrow(e));
+              return <Observable<ChartCategoryPairedValuesDto[]>>(<any>_observableThrow(e));
             }
-          } else return <Observable<VasTypeDto[]>>(<any>_observableThrow(response_));
+          } else return <Observable<ChartCategoryPairedValuesDto[]>>(<any>_observableThrow(response_));
         })
       );
   }
 
-  protected processGetMostVasesUsedByShippers(response: HttpResponseBase): Observable<VasTypeDto[]> {
+  protected processGetMostVasesUsedByShippers(response: HttpResponseBase): Observable<ChartCategoryPairedValuesDto[]> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -3255,7 +3326,7 @@ export class CarrierDashboardServiceProxy {
           let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
           if (Array.isArray(resultData200)) {
             result200 = [] as any;
-            for (let item of resultData200) result200!.push(VasTypeDto.fromJS(item));
+            for (let item of resultData200) result200!.push(ChartCategoryPairedValuesDto.fromJS(item));
           } else {
             result200 = <any>null;
           }
@@ -3269,7 +3340,135 @@ export class CarrierDashboardServiceProxy {
         })
       );
     }
-    return _observableOf<VasTypeDto[]>(<any>null);
+    return _observableOf<ChartCategoryPairedValuesDto[]>(<any>null);
+  }
+
+  /**
+   * @return Success
+   */
+  getAcceptedAndRejectedRequests(): Observable<AcceptedAndRejectedRequestsListDto> {
+    let url_ = this.baseUrl + '/api/services/app/CarrierDashboard/GetAcceptedAndRejectedRequests';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAcceptedAndRejectedRequests(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAcceptedAndRejectedRequests(<any>response_);
+            } catch (e) {
+              return <Observable<AcceptedAndRejectedRequestsListDto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<AcceptedAndRejectedRequestsListDto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAcceptedAndRejectedRequests(response: HttpResponseBase): Observable<AcceptedAndRejectedRequestsListDto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = AcceptedAndRejectedRequestsListDto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<AcceptedAndRejectedRequestsListDto>(<any>null);
+  }
+
+  /**
+   * @return Success
+   */
+  getCarrierInvoicesDetails(): Observable<GetCarrierInvoicesDetailsOutput> {
+    let url_ = this.baseUrl + '/api/services/app/CarrierDashboard/GetCarrierInvoicesDetails';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetCarrierInvoicesDetails(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetCarrierInvoicesDetails(<any>response_);
+            } catch (e) {
+              return <Observable<GetCarrierInvoicesDetailsOutput>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<GetCarrierInvoicesDetailsOutput>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetCarrierInvoicesDetails(response: HttpResponseBase): Observable<GetCarrierInvoicesDetailsOutput> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = GetCarrierInvoicesDetailsOutput.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<GetCarrierInvoicesDetailsOutput>(<any>null);
   }
 }
 
@@ -35666,7 +35865,7 @@ export class ShipperDashboardServiceProxy {
   /**
    * @return Success
    */
-  getCompletedTripsCountPerMonth(datePeriod: FilterDatePeriod): Observable<ListPerMonthDto[]> {
+  getCompletedTripsCountPerMonth(datePeriod: FilterDatePeriod): Observable<ChartCategoryPairedValuesDto[]> {
     let url_ = this.baseUrl + '/api/services/app/ShipperDashboard/GetCompletedTripsCountPerMonth?';
     if (datePeriod === undefined || datePeriod === null) throw new Error("The parameter 'datePeriod' must be defined and cannot be null.");
     else url_ += 'DatePeriod=' + encodeURIComponent('' + datePeriod) + '&';
@@ -35693,14 +35892,14 @@ export class ShipperDashboardServiceProxy {
             try {
               return this.processGetCompletedTripsCountPerMonth(<any>response_);
             } catch (e) {
-              return <Observable<ListPerMonthDto[]>>(<any>_observableThrow(e));
+              return <Observable<ChartCategoryPairedValuesDto[]>>(<any>_observableThrow(e));
             }
-          } else return <Observable<ListPerMonthDto[]>>(<any>_observableThrow(response_));
+          } else return <Observable<ChartCategoryPairedValuesDto[]>>(<any>_observableThrow(response_));
         })
       );
   }
 
-  protected processGetCompletedTripsCountPerMonth(response: HttpResponseBase): Observable<ListPerMonthDto[]> {
+  protected processGetCompletedTripsCountPerMonth(response: HttpResponseBase): Observable<ChartCategoryPairedValuesDto[]> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -35717,7 +35916,7 @@ export class ShipperDashboardServiceProxy {
           let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
           if (Array.isArray(resultData200)) {
             result200 = [] as any;
-            for (let item of resultData200) result200!.push(ListPerMonthDto.fromJS(item));
+            for (let item of resultData200) result200!.push(ChartCategoryPairedValuesDto.fromJS(item));
           } else {
             result200 = <any>null;
           }
@@ -35731,7 +35930,7 @@ export class ShipperDashboardServiceProxy {
         })
       );
     }
-    return _observableOf<ListPerMonthDto[]>(<any>null);
+    return _observableOf<ChartCategoryPairedValuesDto[]>(<any>null);
   }
 
   /**
@@ -35801,7 +36000,7 @@ export class ShipperDashboardServiceProxy {
   /**
    * @return Success
    */
-  getMostWorkedWithCarriers(): Observable<MostCarriersWorksListDto[]> {
+  getMostWorkedWithCarriers(): Observable<MostTenantWorksListDto[]> {
     let url_ = this.baseUrl + '/api/services/app/ShipperDashboard/GetMostWorkedWithCarriers';
     url_ = url_.replace(/[?&]$/, '');
 
@@ -35826,14 +36025,14 @@ export class ShipperDashboardServiceProxy {
             try {
               return this.processGetMostWorkedWithCarriers(<any>response_);
             } catch (e) {
-              return <Observable<MostCarriersWorksListDto[]>>(<any>_observableThrow(e));
+              return <Observable<MostTenantWorksListDto[]>>(<any>_observableThrow(e));
             }
-          } else return <Observable<MostCarriersWorksListDto[]>>(<any>_observableThrow(response_));
+          } else return <Observable<MostTenantWorksListDto[]>>(<any>_observableThrow(response_));
         })
       );
   }
 
-  protected processGetMostWorkedWithCarriers(response: HttpResponseBase): Observable<MostCarriersWorksListDto[]> {
+  protected processGetMostWorkedWithCarriers(response: HttpResponseBase): Observable<MostTenantWorksListDto[]> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -35850,7 +36049,7 @@ export class ShipperDashboardServiceProxy {
           let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
           if (Array.isArray(resultData200)) {
             result200 = [] as any;
-            for (let item of resultData200) result200!.push(MostCarriersWorksListDto.fromJS(item));
+            for (let item of resultData200) result200!.push(MostTenantWorksListDto.fromJS(item));
           } else {
             result200 = <any>null;
           }
@@ -35864,7 +36063,7 @@ export class ShipperDashboardServiceProxy {
         })
       );
     }
-    return _observableOf<MostCarriersWorksListDto[]>(<any>null);
+    return _observableOf<MostTenantWorksListDto[]>(<any>null);
   }
 
   /**
@@ -35998,10 +36197,8 @@ export class ShipperDashboardServiceProxy {
   /**
    * @return Success
    */
-  getRequestsInMarketpalce(datePeriod: FilterDatePeriod): Observable<RequestsInMarketpalceDto[]> {
-    let url_ = this.baseUrl + '/api/services/app/ShipperDashboard/GetRequestsInMarketpalce?';
-    if (datePeriod === undefined || datePeriod === null) throw new Error("The parameter 'datePeriod' must be defined and cannot be null.");
-    else url_ += 'DatePeriod=' + encodeURIComponent('' + datePeriod) + '&';
+  getRequestsInMarketpalce(): Observable<RequestsInMarketpalceDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/ShipperDashboard/GetRequestsInMarketpalce';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -63084,9 +63281,56 @@ export interface IISelectItemDto {
   isOther: boolean | undefined;
 }
 
+export enum FilterDatePeriod {
+  Daily = 1,
+  Weekly = 2,
+  Monthly = 3,
+}
+
+export class ChartCategoryPairedValuesDto implements IChartCategoryPairedValuesDto {
+  y!: number;
+  x!: string | undefined;
+
+  constructor(data?: IChartCategoryPairedValuesDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.y = _data['y'];
+      this.x = _data['x'];
+    }
+  }
+
+  static fromJS(data: any): ChartCategoryPairedValuesDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new ChartCategoryPairedValuesDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['y'] = this.y;
+    data['x'] = this.x;
+    return data;
+  }
+}
+
+export interface IChartCategoryPairedValuesDto {
+  y: number;
+  x: string | undefined;
+}
+
 export class ActivityItemsDto implements IActivityItemsDto {
   activeItems!: number;
   notActiveItems!: number;
+  inTransitItems!: number;
+  totalItemsCount!: number;
 
   constructor(data?: IActivityItemsDto) {
     if (data) {
@@ -63100,6 +63344,8 @@ export class ActivityItemsDto implements IActivityItemsDto {
     if (_data) {
       this.activeItems = _data['activeItems'];
       this.notActiveItems = _data['notActiveItems'];
+      this.inTransitItems = _data['inTransitItems'];
+      this.totalItemsCount = _data['totalItemsCount'];
     }
   }
 
@@ -63114,6 +63360,8 @@ export class ActivityItemsDto implements IActivityItemsDto {
     data = typeof data === 'object' ? data : {};
     data['activeItems'] = this.activeItems;
     data['notActiveItems'] = this.notActiveItems;
+    data['inTransitItems'] = this.inTransitItems;
+    data['totalItemsCount'] = this.totalItemsCount;
     return data;
   }
 }
@@ -63121,16 +63369,18 @@ export class ActivityItemsDto implements IActivityItemsDto {
 export interface IActivityItemsDto {
   activeItems: number;
   notActiveItems: number;
+  inTransitItems: number;
+  totalItemsCount: number;
 }
 
-export class MostShippersWorksListDto implements IMostShippersWorksListDto {
+export class MostTenantWorksListDto implements IMostTenantWorksListDto {
   id!: number | undefined;
-  shipperName!: string | undefined;
+  name!: string | undefined;
   numberOfTrips!: number;
-  shipperRating!: number;
+  rating!: number | undefined;
   count!: number;
 
-  constructor(data?: IMostShippersWorksListDto) {
+  constructor(data?: IMostTenantWorksListDto) {
     if (data) {
       for (var property in data) {
         if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
@@ -63141,16 +63391,16 @@ export class MostShippersWorksListDto implements IMostShippersWorksListDto {
   init(_data?: any) {
     if (_data) {
       this.id = _data['id'];
-      this.shipperName = _data['shipperName'];
+      this.name = _data['name'];
       this.numberOfTrips = _data['numberOfTrips'];
-      this.shipperRating = _data['shipperRating'];
+      this.rating = _data['rating'];
       this.count = _data['count'];
     }
   }
 
-  static fromJS(data: any): MostShippersWorksListDto {
+  static fromJS(data: any): MostTenantWorksListDto {
     data = typeof data === 'object' ? data : {};
-    let result = new MostShippersWorksListDto();
+    let result = new MostTenantWorksListDto();
     result.init(data);
     return result;
   }
@@ -63158,27 +63408,27 @@ export class MostShippersWorksListDto implements IMostShippersWorksListDto {
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
     data['id'] = this.id;
-    data['shipperName'] = this.shipperName;
+    data['name'] = this.name;
     data['numberOfTrips'] = this.numberOfTrips;
-    data['shipperRating'] = this.shipperRating;
+    data['rating'] = this.rating;
     data['count'] = this.count;
     return data;
   }
 }
 
-export interface IMostShippersWorksListDto {
+export interface IMostTenantWorksListDto {
   id: number | undefined;
-  shipperName: string | undefined;
+  name: string | undefined;
   numberOfTrips: number;
-  shipperRating: number;
+  rating: number | undefined;
   count: number;
 }
 
-export class VasTypeDto implements IVasTypeDto {
-  vasType!: string | undefined;
-  availableVasTypeCount!: number;
+export class AcceptedAndRejectedRequestsListDto implements IAcceptedAndRejectedRequestsListDto {
+  acceptedOffers!: ChartCategoryPairedValuesDto[] | undefined;
+  rejectedOffers!: ChartCategoryPairedValuesDto[] | undefined;
 
-  constructor(data?: IVasTypeDto) {
+  constructor(data?: IAcceptedAndRejectedRequestsListDto) {
     if (data) {
       for (var property in data) {
         if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
@@ -63188,29 +63438,112 @@ export class VasTypeDto implements IVasTypeDto {
 
   init(_data?: any) {
     if (_data) {
-      this.vasType = _data['vasType'];
-      this.availableVasTypeCount = _data['availableVasTypeCount'];
+      if (Array.isArray(_data['acceptedOffers'])) {
+        this.acceptedOffers = [] as any;
+        for (let item of _data['acceptedOffers']) this.acceptedOffers!.push(ChartCategoryPairedValuesDto.fromJS(item));
+      }
+      if (Array.isArray(_data['rejectedOffers'])) {
+        this.rejectedOffers = [] as any;
+        for (let item of _data['rejectedOffers']) this.rejectedOffers!.push(ChartCategoryPairedValuesDto.fromJS(item));
+      }
     }
   }
 
-  static fromJS(data: any): VasTypeDto {
+  static fromJS(data: any): AcceptedAndRejectedRequestsListDto {
     data = typeof data === 'object' ? data : {};
-    let result = new VasTypeDto();
+    let result = new AcceptedAndRejectedRequestsListDto();
     result.init(data);
     return result;
   }
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data['vasType'] = this.vasType;
-    data['availableVasTypeCount'] = this.availableVasTypeCount;
+    if (Array.isArray(this.acceptedOffers)) {
+      data['acceptedOffers'] = [];
+      for (let item of this.acceptedOffers) data['acceptedOffers'].push(item.toJSON());
+    }
+    if (Array.isArray(this.rejectedOffers)) {
+      data['rejectedOffers'] = [];
+      for (let item of this.rejectedOffers) data['rejectedOffers'].push(item.toJSON());
+    }
     return data;
   }
 }
 
-export interface IVasTypeDto {
-  vasType: string | undefined;
-  availableVasTypeCount: number;
+export interface IAcceptedAndRejectedRequestsListDto {
+  acceptedOffers: ChartCategoryPairedValuesDto[] | undefined;
+  rejectedOffers: ChartCategoryPairedValuesDto[] | undefined;
+}
+
+export class GetCarrierInvoicesDetailsOutput implements IGetCarrierInvoicesDetailsOutput {
+  paidInvoices!: ChartCategoryPairedValuesDto[] | undefined;
+  newInvoices!: ChartCategoryPairedValuesDto[] | undefined;
+  total!: ChartCategoryPairedValuesDto[] | undefined;
+  claimed!: ChartCategoryPairedValuesDto[] | undefined;
+
+  constructor(data?: IGetCarrierInvoicesDetailsOutput) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      if (Array.isArray(_data['paidInvoices'])) {
+        this.paidInvoices = [] as any;
+        for (let item of _data['paidInvoices']) this.paidInvoices!.push(ChartCategoryPairedValuesDto.fromJS(item));
+      }
+      if (Array.isArray(_data['newInvoices'])) {
+        this.newInvoices = [] as any;
+        for (let item of _data['newInvoices']) this.newInvoices!.push(ChartCategoryPairedValuesDto.fromJS(item));
+      }
+      if (Array.isArray(_data['total'])) {
+        this.total = [] as any;
+        for (let item of _data['total']) this.total!.push(ChartCategoryPairedValuesDto.fromJS(item));
+      }
+      if (Array.isArray(_data['claimed'])) {
+        this.claimed = [] as any;
+        for (let item of _data['claimed']) this.claimed!.push(ChartCategoryPairedValuesDto.fromJS(item));
+      }
+    }
+  }
+
+  static fromJS(data: any): GetCarrierInvoicesDetailsOutput {
+    data = typeof data === 'object' ? data : {};
+    let result = new GetCarrierInvoicesDetailsOutput();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    if (Array.isArray(this.paidInvoices)) {
+      data['paidInvoices'] = [];
+      for (let item of this.paidInvoices) data['paidInvoices'].push(item.toJSON());
+    }
+    if (Array.isArray(this.newInvoices)) {
+      data['newInvoices'] = [];
+      for (let item of this.newInvoices) data['newInvoices'].push(item.toJSON());
+    }
+    if (Array.isArray(this.total)) {
+      data['total'] = [];
+      for (let item of this.total) data['total'].push(item.toJSON());
+    }
+    if (Array.isArray(this.claimed)) {
+      data['claimed'] = [];
+      for (let item of this.claimed) data['claimed'].push(item.toJSON());
+    }
+    return data;
+  }
+}
+
+export interface IGetCarrierInvoicesDetailsOutput {
+  paidInvoices: ChartCategoryPairedValuesDto[] | undefined;
+  newInvoices: ChartCategoryPairedValuesDto[] | undefined;
+  total: ChartCategoryPairedValuesDto[] | undefined;
+  claimed: ChartCategoryPairedValuesDto[] | undefined;
 }
 
 export enum FriendshipState {
@@ -70880,12 +71213,6 @@ export interface ITruckTypeAvailableTrucksDto {
   truckType: string | undefined;
   availableTrucksCount: number;
   id: number;
-}
-
-export enum FilterDatePeriod {
-  Daily = 1,
-  Weekly = 2,
-  Monthly = 3,
 }
 
 export class ListPerMonthDto implements IListPerMonthDto {
@@ -83582,154 +83909,9 @@ export interface IUpdateUserSignInTokenOutput {
   encodedTenantId: string | undefined;
 }
 
-export class RequestsListPerMonthDto implements IRequestsListPerMonthDto {
-  year!: number;
-  month!: number;
-  count!: number;
-
-  constructor(data?: IRequestsListPerMonthDto) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(_data?: any) {
-    if (_data) {
-      this.year = _data['year'];
-      this.month = _data['month'];
-      this.count = _data['count'];
-    }
-  }
-
-  static fromJS(data: any): RequestsListPerMonthDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new RequestsListPerMonthDto();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['year'] = this.year;
-    data['month'] = this.month;
-    data['count'] = this.count;
-    return data;
-  }
-}
-
-export interface IRequestsListPerMonthDto {
-  year: number;
-  month: number;
-  count: number;
-}
-
-export class AcceptedAndRejectedRequestsListDto implements IAcceptedAndRejectedRequestsListDto {
-  acceptedRequests!: RequestsListPerMonthDto[] | undefined;
-  rejectedRequests!: RequestsListPerMonthDto[] | undefined;
-
-  constructor(data?: IAcceptedAndRejectedRequestsListDto) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(_data?: any) {
-    if (_data) {
-      if (Array.isArray(_data['acceptedRequests'])) {
-        this.acceptedRequests = [] as any;
-        for (let item of _data['acceptedRequests']) this.acceptedRequests!.push(RequestsListPerMonthDto.fromJS(item));
-      }
-      if (Array.isArray(_data['rejectedRequests'])) {
-        this.rejectedRequests = [] as any;
-        for (let item of _data['rejectedRequests']) this.rejectedRequests!.push(RequestsListPerMonthDto.fromJS(item));
-      }
-    }
-  }
-
-  static fromJS(data: any): AcceptedAndRejectedRequestsListDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new AcceptedAndRejectedRequestsListDto();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    if (Array.isArray(this.acceptedRequests)) {
-      data['acceptedRequests'] = [];
-      for (let item of this.acceptedRequests) data['acceptedRequests'].push(item.toJSON());
-    }
-    if (Array.isArray(this.rejectedRequests)) {
-      data['rejectedRequests'] = [];
-      for (let item of this.rejectedRequests) data['rejectedRequests'].push(item.toJSON());
-    }
-    return data;
-  }
-}
-
-export interface IAcceptedAndRejectedRequestsListDto {
-  acceptedRequests: RequestsListPerMonthDto[] | undefined;
-  rejectedRequests: RequestsListPerMonthDto[] | undefined;
-}
-
-export class MostCarriersWorksListDto implements IMostCarriersWorksListDto {
-  id!: number | undefined;
-  carrierName!: string | undefined;
-  numberOfTrips!: number;
-  carrierRating!: number;
-  count!: number;
-
-  constructor(data?: IMostCarriersWorksListDto) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(_data?: any) {
-    if (_data) {
-      this.id = _data['id'];
-      this.carrierName = _data['carrierName'];
-      this.numberOfTrips = _data['numberOfTrips'];
-      this.carrierRating = _data['carrierRating'];
-      this.count = _data['count'];
-    }
-  }
-
-  static fromJS(data: any): MostCarriersWorksListDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new MostCarriersWorksListDto();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['id'] = this.id;
-    data['carrierName'] = this.carrierName;
-    data['numberOfTrips'] = this.numberOfTrips;
-    data['carrierRating'] = this.carrierRating;
-    data['count'] = this.count;
-    return data;
-  }
-}
-
-export interface IMostCarriersWorksListDto {
-  id: number | undefined;
-  carrierName: string | undefined;
-  numberOfTrips: number;
-  carrierRating: number;
-  count: number;
-}
-
 export class CompletedTripVsPodListDto implements ICompletedTripVsPodListDto {
-  completedTrips!: RequestsListPerMonthDto[] | undefined;
-  podTrips!: RequestsListPerMonthDto[] | undefined;
+  completedTrips!: ChartCategoryPairedValuesDto[] | undefined;
+  podTrips!: ChartCategoryPairedValuesDto[] | undefined;
 
   constructor(data?: ICompletedTripVsPodListDto) {
     if (data) {
@@ -83743,11 +83925,11 @@ export class CompletedTripVsPodListDto implements ICompletedTripVsPodListDto {
     if (_data) {
       if (Array.isArray(_data['completedTrips'])) {
         this.completedTrips = [] as any;
-        for (let item of _data['completedTrips']) this.completedTrips!.push(RequestsListPerMonthDto.fromJS(item));
+        for (let item of _data['completedTrips']) this.completedTrips!.push(ChartCategoryPairedValuesDto.fromJS(item));
       }
       if (Array.isArray(_data['podTrips'])) {
         this.podTrips = [] as any;
-        for (let item of _data['podTrips']) this.podTrips!.push(RequestsListPerMonthDto.fromJS(item));
+        for (let item of _data['podTrips']) this.podTrips!.push(ChartCategoryPairedValuesDto.fromJS(item));
       }
     }
   }
@@ -83774,13 +83956,13 @@ export class CompletedTripVsPodListDto implements ICompletedTripVsPodListDto {
 }
 
 export interface ICompletedTripVsPodListDto {
-  completedTrips: RequestsListPerMonthDto[] | undefined;
-  podTrips: RequestsListPerMonthDto[] | undefined;
+  completedTrips: ChartCategoryPairedValuesDto[] | undefined;
+  podTrips: ChartCategoryPairedValuesDto[] | undefined;
 }
 
 export class InvoicesVsPaidInvoicesDto implements IInvoicesVsPaidInvoicesDto {
-  shipperInvoices!: RequestsListPerMonthDto[] | undefined;
-  paidInvoices!: RequestsListPerMonthDto[] | undefined;
+  shipperInvoices!: ChartCategoryPairedValuesDto[] | undefined;
+  paidInvoices!: ChartCategoryPairedValuesDto[] | undefined;
 
   constructor(data?: IInvoicesVsPaidInvoicesDto) {
     if (data) {
@@ -83794,11 +83976,11 @@ export class InvoicesVsPaidInvoicesDto implements IInvoicesVsPaidInvoicesDto {
     if (_data) {
       if (Array.isArray(_data['shipperInvoices'])) {
         this.shipperInvoices = [] as any;
-        for (let item of _data['shipperInvoices']) this.shipperInvoices!.push(RequestsListPerMonthDto.fromJS(item));
+        for (let item of _data['shipperInvoices']) this.shipperInvoices!.push(ChartCategoryPairedValuesDto.fromJS(item));
       }
       if (Array.isArray(_data['paidInvoices'])) {
         this.paidInvoices = [] as any;
-        for (let item of _data['paidInvoices']) this.paidInvoices!.push(RequestsListPerMonthDto.fromJS(item));
+        for (let item of _data['paidInvoices']) this.paidInvoices!.push(ChartCategoryPairedValuesDto.fromJS(item));
       }
     }
   }
@@ -83825,8 +84007,8 @@ export class InvoicesVsPaidInvoicesDto implements IInvoicesVsPaidInvoicesDto {
 }
 
 export interface IInvoicesVsPaidInvoicesDto {
-  shipperInvoices: RequestsListPerMonthDto[] | undefined;
-  paidInvoices: RequestsListPerMonthDto[] | undefined;
+  shipperInvoices: ChartCategoryPairedValuesDto[] | undefined;
+  paidInvoices: ChartCategoryPairedValuesDto[] | undefined;
 }
 
 export class RequestsInMarketpalceDto implements IRequestsInMarketpalceDto {
