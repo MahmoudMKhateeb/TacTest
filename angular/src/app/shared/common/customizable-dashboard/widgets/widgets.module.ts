@@ -54,6 +54,9 @@ import { AngularFireModule } from '@angular/fire/compat';
 import { environment } from '../../../../../environments/environment';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { RouterModule } from '@angular/router';
+import { CarrierComplitedTripsWidgetComponent } from './carrier/carrier-complited-trips-widget/carrier-complited-trips-widget.component';
+import { CarrierAcceptedVsRejectdRequestsComponent } from './carrier/carrier-accepted-vs-rejectd-requests/carrier-accepted-vs-rejectd-requests.component';
+import { CarrierInvoicesDetailsWidgetComponent } from './carrier/carrier-invoices-details-widget/carrier-invoices-details-widget.component';
 
 @NgModule({
   declarations: [
@@ -98,6 +101,9 @@ import { RouterModule } from '@angular/router';
     WorstRatedCarriersComponent,
     NumberOfRequestsForEachCityComponent,
     UnpricedRequestsInMarketplaceComponent,
+    CarrierComplitedTripsWidgetComponent,
+    CarrierAcceptedVsRejectdRequestsComponent,
+    CarrierInvoicesDetailsWidgetComponent,
   ],
   imports: [
     CommonModule,

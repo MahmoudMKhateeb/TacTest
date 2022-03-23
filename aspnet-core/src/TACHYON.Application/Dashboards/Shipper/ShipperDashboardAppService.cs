@@ -120,7 +120,7 @@ namespace TACHYON.Dashboards.Shipper
             };
         }
 
-        public async Task<List<MostCarriersWorksListDto>> GetMostWorkedWithCarriers()
+        public async Task<List<MostTenantWorksListDto>> GetMostWorkedWithCarriers()
         {
             DisableTenancyFilters();
 
@@ -144,11 +144,11 @@ namespace TACHYON.Dashboards.Shipper
             return trips
                 .GroupBy(x => x.CarrierId)
                 .Select(
-                    g => new MostCarriersWorksListDto()
+                    g => new MostTenantWorksListDto()
                     {
                         Id = g.Key,
-                        CarrierName = g.FirstOrDefault()?.CarrierName,
-                        CarrierRating = g.FirstOrDefault()?.CarrierRating,
+                        Name = g.FirstOrDefault()?.CarrierName,
+                        Rating = g.FirstOrDefault()?.CarrierRating,
                         NumberOfTrips = g.Count(),
                     })
              .OrderByDescending(x => x.NumberOfTrips)
