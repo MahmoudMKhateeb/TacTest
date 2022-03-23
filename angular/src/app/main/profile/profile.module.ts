@@ -17,6 +17,7 @@ import { CarrierFleetInformationComponent } from './tenants-profile/carrier-flee
 import { ShipperFacilitiesComponent } from './tenants-profile/shipper-facilities/shipper-facilities.component';
 import { ShipperInvoicingComponent } from './tenants-profile/shipper-invoicing/shipper-invoicing.component';
 import { NgbRatingModule } from '@node_modules/@ng-bootstrap/ng-bootstrap';
+import { TooltipModule } from '@node_modules/ngx-bootstrap/tooltip';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { NgbRatingModule } from '@node_modules/@ng-bootstrap/ng-bootstrap';
     UtilsModule,
     PaginatorModule,
     NgbRatingModule,
+    TooltipModule,
   ],
 })
 export class ProfileModule {}

@@ -2690,6 +2690,8 @@
 		<text name="UplodeDeliveryNoteDeliveryConfirmation">Delivery Confirmation After Delivery Note</text>
 	<text name="Remarks">Remarks</text>
 	<text name="YouCannotAddRemarksForThisTrip">You Can't Add Remarks For This Trip</text>
+	<text name="NumberOfShipments">Number of shipments</text>
+	<text name="ProfileNumberOfShipmentsTooltipMsg">Number of shipments whose status is in transit, completed or completed without confirmation</text>
 
 
 	</texts>
