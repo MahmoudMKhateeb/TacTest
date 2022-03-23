@@ -8,10 +8,13 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Text.Json;
 using System.Threading.Tasks;
 using TACHYON.AddressBook;
 using TACHYON.Dto;
+using TACHYON.Goods.GoodCategories;
+using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips.Dto;
@@ -25,17 +28,20 @@ namespace TACHYON.EntityTemplates
         private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
         private readonly IRepository<ShippingRequestTrip> _tripRepository;
         private readonly IRepository<Facility,long> _facilityRepository;
+        private readonly IRepository<GoodCategory> _goodsCategoryRepository;
 
         public EntityTemplateManager(
             IRepository<EntityTemplate, long> templateRepository,
             IRepository<ShippingRequest, long> shippingRequestRepository,
             IRepository<ShippingRequestTrip> tripRepository,
-            IRepository<Facility, long> facilityRepository)
+            IRepository<Facility, long> facilityRepository,
+            IRepository<GoodCategory> goodsCategoryRepository)
         {
             _templateRepository = templateRepository;
             _shippingRequestRepository = shippingRequestRepository;
             _tripRepository = tripRepository;
             _facilityRepository = facilityRepository;
+            _goodsCategoryRepository = goodsCategoryRepository;
         }
 
 
@@ -156,19 +162,34 @@ namespace TACHYON.EntityTemplates
                     RoutType = x.RouteTypeId, 
                     x.GoodCategoryId,
                     SourceCityId = x.OriginCityId, 
-                    x.DestinationCityId
+                    x.DestinationCityId,
+                    x.NumberOfDrops
                 }).FirstOrDefaultAsync();
 
             if (shippingRequest == null) throw new UserFriendlyException(L("ThereIsNoShippingRequest"));
 
             var templatesList = ToTripTemplateDropdownItem(tripTemplates);
 
-            var filteredTemplateList =  (from item in templatesList
-                where item.Trip.Id.HasValue
-                join trip in _tripRepository.GetAllIncluding(x => x.ShippingRequestFk) on item.Trip.Id equals trip.Id
-                where trip.ShippingRequestFk.GoodCategoryId == shippingRequest.GoodCategoryId select item).ToList();
-            
-            var matchesOriginAndDestinationItems = (from template in filteredTemplateList
+            var filteredByRoutTypeItems = shippingRequest.RoutType switch
+            {
+                ShippingRequestRouteType.SingleDrop => (from item in templatesList
+                    where item.Trip?.RoutPoints?.Count(x=> x.PickingType == PickingType.Dropoff) == 1 select item),
+                ShippingRequestRouteType.MultipleDrops => (from item in templatesList
+                    let pointsCount = item.Trip?.RoutPoints?.Count(x=> x.PickingType == PickingType.Dropoff)
+                    where pointsCount > 1 && pointsCount <= shippingRequest.NumberOfDrops
+                    select item),
+                _ => new List<TripTemplateDropdownItem>()
+            };
+
+            var filteredByGoodsCategoryItems = (from item in filteredByRoutTypeItems
+                let dropOffPoints = item.Trip.RoutPoints.Where(x => x.PickingType == PickingType.Dropoff)
+                where dropOffPoints.All(point => (from goodDetail in point.GoodsDetailListDto
+                        from subGoodCategory in _goodsCategoryRepository.GetAll()
+                            .Where(g => g.Id == goodDetail.GoodCategoryId).DefaultIfEmpty()
+                        where subGoodCategory != null select subGoodCategory)
+                        .All(g => g.FatherId == shippingRequest.GoodCategoryId)) select item);
+
+            var matchesOriginAndDestinationItems = (from template in filteredByGoodsCategoryItems
                 join originFacility in _facilityRepository.GetAll().AsNoTracking()
                     on template.Trip.OriginFacilityId equals originFacility.Id
                 join destinationFacility in _facilityRepository.GetAll().AsNoTracking()
@@ -176,7 +197,7 @@ namespace TACHYON.EntityTemplates
                     where originFacility.CityId == shippingRequest.SourceCityId 
                 && destinationFacility.CityId == shippingRequest.DestinationCityId
                 select new SelectItemDto() {DisplayName = template.TemplateName, Id = template.Id.ToString()});
-
+            
             return matchesOriginAndDestinationItems.ToList();
         }
 
