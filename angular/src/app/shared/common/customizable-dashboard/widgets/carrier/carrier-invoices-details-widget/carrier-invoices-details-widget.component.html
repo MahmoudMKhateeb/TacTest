@@ -1,29 +1,25 @@
-<div class="row">
-  <div class="col-lg-12">
-    <!--begin::Card-->
-    <div class="card card-custom card-stretch" [busyIf]="loading">
-      <div class="card-header border-0">
-        <div class="card-title text-center">
-          <h3 class="card-label">{{ l('InvoicesVsPaidInvoices') }}</h3>
-        </div>
-      </div>
-      <div class="card-body p-0">
-        <!--        <div class="pd-5 text-center" *ngIf="invoices.length == 0 && paidInvoices.length == 0">-->
-        <!--          {{ l('NoData') }}-->
-        <!--        </div>-->
-        <div id="chart">
-          <apx-chart
-            *ngIf="chartOptions && chartOptions.series"
-            [series]="chartOptions.series"
-            [chart]="chartOptions.chart"
-            [xaxis]="chartOptions.xaxis"
-            [stroke]="chartOptions.stroke"
-            [tooltip]="chartOptions.tooltip"
-            [dataLabels]="chartOptions.dataLabels"
-          ></apx-chart>
-        </div>
-      </div>
+<!--begin::Card-->
+<div class="card card-custom card-stretch w-100 h-100" [busyIf]="loading">
+  <div class="card-header border-0">
+    <div class="card-title text-center">
+      <h3 class="card-label">{{ l('InvoicesVsPaidInvoices') }}</h3>
     </div>
-    <!--end::Card-->
+  </div>
+  <div class="card-body p-0">
+    <!--        <div class="pd-5 text-center" *ngIf="invoices.length == 0 && paidInvoices.length == 0">-->
+    <!--          {{ l('NoData') }}-->
+    <!--        </div>-->
+    <div id="chart">
+      <apx-chart
+        *ngIf="chartOptions && chartOptions.series"
+        [series]="chartOptions.series"
+        [chart]="chartOptions.chart"
+        [xaxis]="chartOptions.xaxis"
+        [stroke]="chartOptions.stroke"
+        [tooltip]="chartOptions.tooltip"
+        [dataLabels]="chartOptions.dataLabels"
+      ></apx-chart>
+    </div>
   </div>
 </div>
+<!--end::Card-->

@@ -1,6 +1,6 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { ShipperDashboardServiceProxy, WaybillsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { ShipperDashboardServiceProxy, TrackingMapDto, WaybillsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/compat/database';
 import { FileDownloadService } from '@shared/utils/file-download.service';
 import { FirebaseHelperClass, trackingIconsList } from '@app/main/shippingRequests/shippingRequests/tracking/firebaseHelper.class';
@@ -12,21 +12,15 @@ import { FirebaseHelperClass, trackingIconsList } from '@app/main/shippingReques
 })
 export class TrackingMapComponent extends AppComponentBase implements OnInit {
   route1: any;
-  waypoints1: any;
   source1 = {
     lng: 21,
     lat: 22,
   };
   dest1: any;
-  trips: any;
-  renderOptions1: any;
-  option: any;
-  items: any[];
+  directions: any[];
   loading: boolean = false;
   zoom: 12;
-  colors: any = ['#9604f3', '#0f0', '#0ff', '#dec', '#f0f', '#ff0', '#f99', '#000', '#233', '#dff', '747', '944', '833'];
-  colors2: any[];
-  public markerOptions: any;
+  colors: any = ['#9604f3', '#0f0', '#0ff', '#dec', '#f0f', '#ff0', '#f99', '#000', '#233', '#dff', '#747', '#944', '#833'];
   private fireDB: AngularFireList<unknown>;
   allDrivers = [];
   map: any;
@@ -51,57 +45,47 @@ export class TrackingMapComponent extends AppComponentBase implements OnInit {
 
   getTableRecords() {
     this._shipperDashboardServiceProxy.getTrackingMap().subscribe((result) => {
-      this.items = [];
-      this.colors2 = this.colors;
+      this.directions = [];
       result.forEach((r) => {
-        this.waypoints1 = [];
-        this.source1 = {
-          lat: r.originLatitude || undefined,
-          lng: r.originLongitude || undefined,
-        };
-
-        this.dest1 = {
-          lat: r.destinationLatitude || undefined,
-          lng: r.destinationLongitude || undefined,
-        };
-        var t = r.routPoints;
-        for (let i = 0; i < t.length; i++) {
-          this.waypoints1.push({
-            location: {
-              lat: r.routPoints[i].latitude,
-              lng: r.routPoints[i].longitude,
+        let renderOptions: google.maps.DirectionsRendererOptions = { polylineOptions: { strokeColor: '#344440' } };
+        let color = this.getRandomColor();
+        let direction: {
+          origin: google.maps.LatLng;
+          destination: google.maps.LatLng;
+          waypoints: google.maps.DirectionsWaypoint[];
+          renderOptions?: google.maps.DirectionsRendererOptions;
+          trackingMapDto: TrackingMapDto;
+          show: boolean;
+          color: string;
+        } = {
+          origin: undefined,
+          destination: undefined,
+          waypoints: [],
+          renderOptions: {
+            polylineOptions: {
+              strokeWeight: 6,
+              strokeOpacity: 0.55,
+              strokeColor: color,
             },
-          });
-        }
-
-        var item = this.colors2[Math.floor(Math.random() * this.colors2.length)];
-        var index: number = this.colors2.indexOf(item);
-
-        if (index !== -1) {
-          this.colors2.splice(index, 1);
-        }
-
-        this.renderOptions1 = { polylineOptions: { strokeColor: item || '#344440' } };
-
-        this.markerOptions = {
-          origin: {
-            icon: 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=•|' + item + '|2',
           },
-          destination: {
-            icon: 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=•|9604f3|2',
-          },
-          waypoints: { icon: 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=•|f75|2' },
+          trackingMapDto: r,
+          show: true,
+          color: color,
         };
 
-        this.option = {
-          source: this.source1,
-          destination: this.dest1,
-          waybill: this.waypoints1,
-          renderOption: this.renderOptions1,
-          markerOptions: this.markerOptions,
-        };
-        this.trips = result;
-        this.items.push(this.option);
+        r.routPoints.forEach((x) => {
+          if (r.routPoints.indexOf(x) === 0) {
+            direction.origin = new google.maps.LatLng(x.latitude, x.longitude);
+          } else if (r.routPoints.indexOf(x) === r.routPoints.length - 1) {
+            direction.destination = new google.maps.LatLng(x.latitude, x.longitude);
+          } else {
+            direction.waypoints.push({
+              location: new google.maps.LatLng(x.latitude, x.longitude),
+            });
+          }
+        });
+
+        this.directions.push(direction);
       });
       this.loading = true;
     });
@@ -152,5 +136,15 @@ export class TrackingMapComponent extends AppComponentBase implements OnInit {
    */
   tripToggle() {
     this.tripsToggle = !this.tripsToggle;
+  }
+
+  getRandomColor(): string {
+    let color = '#'; // <-----------
+    let letters = '0123456789ABCDEF';
+
+    for (var i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
   }
 }

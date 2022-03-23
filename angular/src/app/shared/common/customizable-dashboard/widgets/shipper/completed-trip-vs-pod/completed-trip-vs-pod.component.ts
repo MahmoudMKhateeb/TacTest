@@ -42,12 +42,10 @@ export class CompletedTripVsPodComponent extends AppComponentBase implements OnI
             {
               name: 'Pod',
               data: result.podTrips,
-              color: '#b5b5c3',
             },
           ],
           chart: {
-            height: 350,
-            type: 'area',
+            type: 'bar',
           },
           xaxis: {
             type: 'category',

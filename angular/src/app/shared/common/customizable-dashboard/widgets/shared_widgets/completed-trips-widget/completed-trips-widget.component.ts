@@ -3,7 +3,6 @@ import { WidgetComponentBase } from '@app/shared/common/customizable-dashboard/w
 import { ChartOptionsBars } from '@app/shared/common/customizable-dashboard/widgets/ApexInterfaces';
 import { FilterDatePeriod, ShipperDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
 import { finalize } from 'rxjs/operators';
-import session = abp.session;
 
 @Component({
   selector: 'app-completed-trips-widget',
@@ -48,7 +47,6 @@ export class CompletedTripsWidgetComponent extends WidgetComponentBase implement
           ],
           chart: {
             type: 'bar',
-            height: 350,
           },
           xaxis: {
             type: 'category',

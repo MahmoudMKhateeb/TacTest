@@ -43,31 +43,13 @@ export class InvoicesVsPaidInvoicesComponent extends AppComponentBase implements
             {
               name: 'Paid Invoices',
               data: result.paidInvoices,
-              color: '#b10303',
             },
           ],
           chart: {
-            height: 350,
-            type: 'area',
-          },
-          dataLabels: {
-            enabled: false,
-          },
-          stroke: {
-            curve: 'smooth',
+            type: 'bar',
           },
           xaxis: {
             type: 'category',
-          },
-          tooltip: {
-            x: {
-              format: 'dd/MM/yy',
-            },
-            y: {
-              formatter: function (val) {
-                return val.toFixed(0);
-              },
-            },
           },
         };
         this.loading = false;
