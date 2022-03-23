@@ -573,3 +573,9 @@ a {
 .lgWidth {
   max-width: 1200px !important;
 }
+.customSuccessAlert {
+  background-color: #bbf9b3 !important;
+}
+.customDangerAlert {
+  background-color: #ffbec5 !important;
+}
