@@ -1,6 +1,6 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { CarrierDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
+import { CarrierDashboardServiceProxy, MostTenantWorksListDto } from '@shared/service-proxies/service-proxies';
 import { finalize } from 'rxjs/operators';
 
 @Component({
@@ -9,8 +9,8 @@ import { finalize } from 'rxjs/operators';
   styleUrls: ['./most-worked-with-shippers.component.css'],
 })
 export class MostWorkedWithShippersComponent extends AppComponentBase implements OnInit {
-  Shippers: any;
-  loading: boolean = false;
+  Shippers: MostTenantWorksListDto[];
+  loading = false;
 
   constructor(private injector: Injector, private _carrierDashboardServiceProxy: CarrierDashboardServiceProxy) {
     super(injector);

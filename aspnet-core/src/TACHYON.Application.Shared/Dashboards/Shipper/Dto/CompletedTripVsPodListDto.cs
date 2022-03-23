@@ -10,8 +10,8 @@ namespace TACHYON.Dashboards.Shipper.Dto
 {
     public class CompletedTripVsPodListDto
     {
-        public List<RequestsListPerMonthDto> CompletedTrips { get; set; }
-        public List<RequestsListPerMonthDto> PODTrips { get; set; }
+        public List<ChartCategoryPairedValuesDto> CompletedTrips { get; set; }
+        public List<ChartCategoryPairedValuesDto> PODTrips { get; set; }
 
     }
 

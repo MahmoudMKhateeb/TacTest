@@ -1,19 +1,19 @@
 import { Component, Injector, OnInit } from '@angular/core';
-import { ChartOptions } from '@app/shared/common/customizable-dashboard/widgets/ApexInterfaces';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { ShipperDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
-import { finalize } from 'rxjs/operators';
+import { ChartOptions } from '@app/shared/common/customizable-dashboard/widgets/ApexInterfaces';
+import { CarrierDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
+import { finalize } from '@node_modules/rxjs/operators';
 
 @Component({
-  selector: 'app-accepted-vs-rejeced-requests',
-  templateUrl: './accepted-vs-rejeced-requests.component.html',
-  styleUrls: ['./accepted-vs-rejeced-requests.component.css'],
+  selector: 'app-carrier-accepted-vs-rejectd-requests',
+  templateUrl: './carrier-accepted-vs-rejectd-requests.component.html',
+  styleUrls: ['./carrier-accepted-vs-rejectd-requests.component.css'],
 })
-export class AcceptedVsRejecedRequestsComponent extends AppComponentBase implements OnInit {
+export class CarrierAcceptedVsRejectdRequestsComponent extends AppComponentBase implements OnInit {
   public chartOptions: Partial<ChartOptions>;
   loading = false;
 
-  constructor(injector: Injector, private _shipperDashboardServiceProxy: ShipperDashboardServiceProxy) {
+  constructor(injector: Injector, private _carrierDashboardServiceProxy: CarrierDashboardServiceProxy) {
     super(injector);
   }
 
@@ -23,7 +23,7 @@ export class AcceptedVsRejecedRequestsComponent extends AppComponentBase impleme
 
   getRequests() {
     this.loading = true;
-    this._shipperDashboardServiceProxy
+    this._carrierDashboardServiceProxy
       .getAcceptedAndRejectedRequests()
       .pipe(
         finalize(() => {
@@ -45,7 +45,8 @@ export class AcceptedVsRejecedRequestsComponent extends AppComponentBase impleme
             },
           ],
           chart: {
-            type: 'bar',
+            height: 350,
+            type: 'area',
           },
           xaxis: {
             type: 'category',

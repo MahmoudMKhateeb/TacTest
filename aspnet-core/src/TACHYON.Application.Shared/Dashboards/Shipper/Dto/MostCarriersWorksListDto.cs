@@ -6,12 +6,12 @@ using System.Collections.Generic;
 
 namespace TACHYON.Dashboards.Shipper.Dto
 {
-    public class MostCarriersWorksListDto
+    public class MostTenantWorksListDto
     {
         public int? Id { get; set; }
-        public string CarrierName { get; set; }
+        public string Name { get; set; }
         public int NumberOfTrips { get; set; }
-        public decimal CarrierRating { get; set; }
+        public decimal? Rating { get; set; }
         public int Count { get; set; }
     }
 

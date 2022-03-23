@@ -1,45 +1,105 @@
 <!--begin::Body-->
-<div class="row bg-white p-2" [busyIf]="loading">
-  <div class="card-header border-0">
-    <div class="text-center">
-      <h3 class="card-label">{{ l('TrackingMap') }}</h3>
-    </div>
-  </div>
-  <div class="col-lg-12" *ngIf="trips">
-    <agm-map minZoom="5" [zoom]="zoom" [longitude]="source1.lng || 46.675761" [latitude]="source1.lat || 24.717942" [scrollwheel]="false">
-      <agm-direction
-        *ngFor="let item of items"
-        [origin]="item.source"
-        [destination]="item.destination"
-        [waypoints]="item.waybill"
-        [renderOptions]="item.renderOption"
-        [markerOptions]="item.markerOptions"
-        [optimizeWaypoints]="false"
-      ></agm-direction>
+<div class="row bg-white p-2 w-100 h-100">
+  <div class="col-lg-12">
+    <agm-map
+      minZoom="5"
+      [longitude]="allDrivers[0]?.lng || 46.675761"
+      [latitude]="allDrivers[0]?.lat || 24.717942"
+      [scrollwheel]="false"
+      (mapReady)="mapReady($event)"
+    >
+      <div id="Settings" class="rounded bg-white p-2" style="height: 50px">
+        <div class="form-group row p-1">
+          <label class="col-3 col-form-label">{{ l('Drivers') }}</label>
+          <div class="col-3">
+            <span class="switch switch-outline switch-icon switch-danger">
+              <label>
+                <input [(ngModel)]="driversToggle" type="checkbox" name="driversToggle" (click)="driverToggle()" />
+                <span></span>
+              </label>
+            </span>
+          </div>
+          <label class="col-3 col-form-label">{{ l('Trips') }}</label>
+          <div class="col-3">
+            <span class="switch switch-outline switch-icon switch-danger">
+              <label>
+                <input [(ngModel)]="tripsToggle" type="checkbox" name="tripsToggle" (click)="tripToggle()" />
+                <span></span>
+              </label>
+            </span>
+          </div>
+        </div>
+      </div>
+      <ng-container *ngIf="tripsToggle">
+        <ng-container *ngFor="let direction of directions">
+          <agm-direction
+            *ngIf="direction.show"
+            [origin]="direction.origin"
+            [destination]="direction.destination"
+            [waypoints]="direction.waypoints"
+            [optimizeWaypoints]="false"
+            [renderOptions]="direction.renderOptions"
+          >
+          </agm-direction>
+        </ng-container>
+      </ng-container>
+      <ng-container *ngIf="driversToggle">
+        <agm-marker *ngFor="let driver of allDrivers" [longitude]="driver.lng" [latitude]="driver.lat" [iconUrl]="trackingIconsList.driverIcon">
+          <agm-info-window>
+            <div class="d-flex flex-column">
+              <div>
+                <span class="font-weight-bold">{{ l('Driver') }}</span> : {{ driver.driverName }}
+              </div>
+              <div>
+                <span class="font-weight-bold">{{ l('Waybill') }}</span> :
+                <a href="javascript:;" [busyIf]="waybillDownloading" (click)="DownloadSingleDropWaybillPdf(driver.tripId)">{{
+                  driver.waybillNumber
+                }}</a>
+              </div>
+              <div>
+                <span class="font-weight-bold">{{ l('shippingRequest') }}</span> :
+                <a
+                  href="javascript:;"
+                  [routerLink]="['/app/main/shippingRequests/shippingRequests/view']"
+                  [queryParams]="{ id: driver.shippingRequestId }"
+                  >{{ driver.shippingRequestId }}</a
+                >
+              </div>
+            </div>
+          </agm-info-window>
+        </agm-marker>
+      </ng-container>
     </agm-map>
   </div>
-  <div class="col-lg-12">
-    <br />
-    <a *ngIf="trips" class="btn btn-danger btn-xs red float-right mr-1" target="_blank" href="/app/main/tracking">{{ l('more') }}</a>
-    <br /><br />
-    <p-table [value]="trips">
+  <div class="col-lg-12" *ngIf="tripsToggle">
+    <p-table [value]="directions">
       <ng-template pTemplate="header">
         <tr>
           <th>{{ l('Source') }}</th>
           <th>{{ l('Destination') }}</th>
           <th>{{ l('WaybillNumber') }}</th>
+          <th>{{ l('NumberOfDrops') }}</th>
+          <th>{{ l('Show') }}</th>
+          <th>{{ l('tag') }}</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-record>
         <tr>
-          <td>{{ record.originCity }}</td>
-          <td>{{ record.destinationCity }}</td>
-          <td>{{ record.wayBillNumber }}</td>
+          <td>{{ record.trackingMapDto?.originCity }}</td>
+          <td>{{ record.trackingMapDto?.destinationCity }}</td>
+          <td>{{ record.trackingMapDto?.wayBillNumber }}</td>
+          <td>{{ record.trackingMapDto?.routPoints?.length - 1 }}</td>
+          <td>
+            <span class="switch switch-sm">
+              <label>
+                <input [(ngModel)]="record.show" type="checkbox" checked="checked" name="select" />
+                <span></span>
+              </label>
+            </span>
+          </td>
+          <td><i style="color: {{ record.color }}" class="icon-2x flaticon-add-label-button"></i></td>
         </tr>
       </ng-template>
     </p-table>
-    <div class="pd-5 text-center" *ngIf="!trips || trips.length == 0">
-      {{ l('NoData') }}
-    </div>
   </div>
 </div>

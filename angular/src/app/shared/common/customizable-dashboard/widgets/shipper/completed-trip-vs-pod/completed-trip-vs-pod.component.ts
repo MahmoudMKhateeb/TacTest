@@ -1,7 +1,7 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { ChartOptions } from '@app/shared/common/customizable-dashboard/widgets/ApexInterfaces';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { RequestsListPerMonthDto, SalesSummaryDatePeriod, ShipperDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
+import { ShipperDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
 import { finalize } from 'rxjs/operators';
 
 @Component({
@@ -11,13 +11,7 @@ import { finalize } from 'rxjs/operators';
 })
 export class CompletedTripVsPodComponent extends AppComponentBase implements OnInit {
   public chartOptions: Partial<ChartOptions>;
-  months: string[] = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  completedTrips: number[];
-  POD: number[];
-  toDate: moment.Moment = null;
-  fromDate: moment.Moment = null;
-  loading: boolean = false;
-  saving = false;
+  loading = false;
 
   constructor(injector: Injector, private _shipperDashboardServiceProxy: ShipperDashboardServiceProxy) {
     super(injector);
@@ -28,97 +22,36 @@ export class CompletedTripVsPodComponent extends AppComponentBase implements OnI
   }
 
   getTrips() {
-    this.completedTrips = [];
-    this.POD = [];
     this.loading = true;
-    this.saving = true;
 
     this._shipperDashboardServiceProxy
       .getCompletedTripVsPod()
       .pipe(
         finalize(() => {
           this.loading = false;
-          this.saving = false;
         })
       )
       .subscribe((result) => {
-        this.months.forEach((d) => {
-          let i = this.months.indexOf(d) + 1;
-          let year = new Date().getFullYear();
-          const foundAcceptElement = result.completedTrips.some((el) => el.month === i);
-          if (!foundAcceptElement) {
-            result.completedTrips.push(
-              new RequestsListPerMonthDto({
-                count: 0,
-                month: i,
-                year: year,
-              })
-            );
-          }
-          const foundRejectElement = result.podTrips.some((el) => el.month === i);
-          if (!foundRejectElement) {
-            result.podTrips.push(
-              new RequestsListPerMonthDto({
-                count: 0,
-                month: i,
-                year: year,
-              })
-            );
-          }
-        });
-        result.completedTrips.sort(function (a, b) {
-          return a.month - b.month;
-        });
-        result.completedTrips.forEach((element) => {
-          this.completedTrips.push(element.count);
-        });
-        result.podTrips.sort(function (a, b) {
-          return a.month - b.month;
-        });
-        result.podTrips.forEach((element) => {
-          this.POD.push(element.count);
-        });
-
         this.chartOptions = {
           series: [
             {
               name: 'Completed',
-              data: this.completedTrips,
+              data: result.completedTrips,
               color: 'rgba(187, 41, 41, 0.847)',
             },
             {
               name: 'Pod',
-              data: this.POD,
-              color: '#b5b5c3',
+              data: result.podTrips,
             },
           ],
           chart: {
-            height: 350,
-            type: 'area',
-          },
-          dataLabels: {
-            enabled: false,
-          },
-          stroke: {
-            curve: 'smooth',
+            type: 'bar',
           },
           xaxis: {
             type: 'category',
-            categories: this.months,
-          },
-          tooltip: {
-            x: {
-              format: 'dd/MM/yy',
-            },
-            y: {
-              formatter: function (val) {
-                return val.toFixed(0);
-              },
-            },
           },
         };
         this.loading = false;
-        this.saving = false;
       });
   }
 }

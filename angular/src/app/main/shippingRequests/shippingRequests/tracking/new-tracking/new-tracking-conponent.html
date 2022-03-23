@@ -39,7 +39,12 @@
           <agm-marker *ngIf="driversToggle && markerLong" [longitude]="markerLong" [latitude]="markerLat">
             <agm-info-window>{{ markerFacilityName }}</agm-info-window>
           </agm-marker>
-          <agm-marker *ngIf="driversToggle && driverLng" [longitude]="driverLng" [latitude]="driverlat" [iconUrl]="trackingIconsList.driverIcon.url">
+          <agm-marker
+            *ngIf="driversToggle && driverLiveLocation.lng"
+            [longitude]="driverLiveLocation.lng"
+            [latitude]="driverLiveLocation.lat"
+            [iconUrl]="trackingIconsList.driverIcon"
+          >
           </agm-marker>
         </ng-container>
       </agm-map>
