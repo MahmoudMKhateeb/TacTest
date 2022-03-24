@@ -1,4 +1,5 @@
-﻿using Abp.Domain.Entities;
+﻿using Abp.Collections.Extensions;
+using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Runtime.Validation;
@@ -183,7 +184,7 @@ namespace TACHYON.EntityTemplates
 
             var filteredByGoodsCategoryItems = (from item in filteredByRoutTypeItems
                 let dropOffPoints = item?.Trip?.RoutPoints?.Where(x => x.PickingType == PickingType.Dropoff)
-                where dropOffPoints.All(point => (from goodDetail in point?.GoodsDetailListDto where goodDetail != null
+                where dropOffPoints.All(point => !point.GoodsDetailListDto.IsNullOrEmpty() && (from goodDetail in point?.GoodsDetailListDto where goodDetail != null
                         from subGoodCategory in _goodsCategoryRepository.GetAll()
                             .Where(g => g.Id == goodDetail.GoodCategoryId).DefaultIfEmpty()
                         where subGoodCategory != null select subGoodCategory)
