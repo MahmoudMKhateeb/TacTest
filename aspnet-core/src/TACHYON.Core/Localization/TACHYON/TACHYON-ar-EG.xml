@@ -1141,7 +1141,7 @@
 		<text name="OriginalCity">مدينة الانطلاق</text>
 		<text name="OriginalValue">القيمة الأصلية</text>
 		<text name="OriginCity">مدينة الإنطلاق</text>
-		<text name="OriginFacility" />
+    <text name="OriginFacility">منشأة الانطلاق</text>
 		<text name="Other">أخرى</text>
 		<text name="OtherReason">اسباب اخرى</text>
 		<text name="Others">أخرى</text>
@@ -2302,5 +2302,9 @@
     <text name="SomeTripVasesAlreadyExists">بعض الخدمات الإضافية موجودة مسبقاً</text>
     <text name="DuplicatedVas">يوجد تكرار</text>
     <text name="PickupPointFacilityMustBeSameToOriginalTripFacility">منشأة التحميل يجب أن تكون مطابقة لمنشأة تحميل الرحلة</text>
+    <text name="TheBulkReferenceIsAlreadyExists">المرجع موجود مسبقاً</text>
+    <text name="TheTripDateRangeMustBetweenShippingRequestRangeDate">نطاق تاريخ الرحلة يجب أن يكون ضمن نطاق طلب الشحن</text>
+    <text name="OriginalFacility">منشأة الانطلاق</text>
+    <text name="TripPickupDateStart">تاريخ انطلاق الرحلة</text>
 	</texts>
 </localizationDictionary>

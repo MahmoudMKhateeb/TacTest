@@ -72,7 +72,7 @@ namespace TACHYON.Shipping.Trips.Importing
                     row, 5, "Needs Delivery Note ?*", exceptionMessage));
                 //6
                 trip.HasAttachment = GetBoolValueFromYesOrNo(_tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
-                    row, 6, "Has Attchment ?*", exceptionMessage));
+                    row, 6, "Has Attachment ?*", exceptionMessage));
 
                 var originFacility = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
                     row, 7, "Original Facility*", exceptionMessage);

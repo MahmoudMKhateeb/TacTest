@@ -154,7 +154,7 @@ namespace TACHYON.Shipping.ShippingRequestTrips
                 (input.EndTripDate != null && input.EndTripDate.Value.Date < request.StartTripDate?.Date)
             )
             {
-                throw new UserFriendlyException(L("The trip date range must between shipping request range date"));
+                throw new UserFriendlyException(L("TheTripDateRangeMustBetweenShippingRequestRangeDate"));
             }
         }
 
@@ -255,7 +255,7 @@ namespace TACHYON.Shipping.ShippingRequestTrips
                .Where(x => x.ShippingRequestId == importTripDto.ShippingRequestId && x.BulkUploadRef == importTripDto.BulkUploadRef).FirstOrDefault();
             if (trip != null)
             {
-                exceptionMessage.Append("The Bulk reference is already exists");
+                exceptionMessage.Append(L("TheBulkReferenceIsAlreadyExists")+";");
                 importTripDto.Exception = exceptionMessage.ToString();
             }
         }

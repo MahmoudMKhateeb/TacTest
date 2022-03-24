@@ -52,7 +52,7 @@ namespace TACHYON.DataExporting.Excel.NPOI
             {
                 if (text != null)
                 {
-                    return Convert.ToDateTime(text);
+                    return Convert.ToDateTime(text.Trim());
                 }
                 else
                     return null;

@@ -2540,5 +2540,9 @@
     <text name="SomeTripVasesAlreadyExists">Some trip vases already exists</text>
     <text name="DuplicatedVas">Duplicated vas</text>
     <text name="PickupPointFacilityMustBeSameToOriginalTripFacility">Pickup point facility must be same to original trip facility</text>
+    <text name="TheBulkReferenceIsAlreadyExists">The bulk reference is already exists</text>
+    <text name="TheTripDateRangeMustBetweenShippingRequestRangeDate">The trip date range must between shipping request range date</text>
+    <text name="OriginalFacility">Pickup facility</text>
+    <text name="TripPickupDateStart">Trip pickup start date</text>
 	</texts>
 </localizationDictionary>
