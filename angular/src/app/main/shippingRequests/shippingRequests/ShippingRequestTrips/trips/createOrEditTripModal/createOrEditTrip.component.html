@@ -336,9 +336,10 @@
             </button>
             <create-or-edit-template-drop-down-button
               [entityType]="SavedEntityType.TripTemplate"
-              [jsonData]="TripAsJson"
+              [jsonData]="tripAsJson"
               [dropDirection]="'up'"
               [customClass]="'btn btn-light-danger font-weight-bold  dropdown-toggle btn-elevate-hover mx-2'"
+              [disabled]="PointsAreInValid() || !shippingRequestTripsForm.form.valid"
             ></create-or-edit-template-drop-down-button>
             <button
               type="submit"

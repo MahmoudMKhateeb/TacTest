@@ -168,7 +168,7 @@ export class AppNavigationService {
             undefined,
             undefined,
             undefined,
-            () => this.isEnabled('App.Shipper') || this.isEnabled('App.TachyonDealer')
+            () => this.isEnabled('App.Shipper') || this.isEnabled('App.TachyonDealer') || this.isEnabled('App.Shipper.Saas')
           ),
           new AppMenuItem(
             'ShipmentHistory',

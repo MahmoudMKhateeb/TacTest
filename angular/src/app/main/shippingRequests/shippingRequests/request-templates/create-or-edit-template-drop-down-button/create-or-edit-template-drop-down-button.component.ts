@@ -3,6 +3,7 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 import { CreateOrEditEntityTemplateInputDto, EntityTemplateServiceProxy, SavedEntityType } from '@shared/service-proxies/service-proxies';
 import { finalize } from '@node_modules/rxjs/operators';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'create-or-edit-template-drop-down-button',
@@ -13,15 +14,20 @@ import { finalize } from '@node_modules/rxjs/operators';
 export class CreateOrEditTemplateDropDownButtonComponent extends AppComponentBase {
   @Input() entityType: SavedEntityType;
   @Input() sourceEntityId: string;
-  @Input() templateIdForEdit: number;
   @Input() customClass: string;
   @Input() jsonData: string;
   @Input() dropDirection: 'up' | 'down';
+  @Input() disabled: boolean;
 
   templateName: string;
   loading: boolean;
-
-  constructor(injector: Injector, private _templateService: EntityTemplateServiceProxy) {
+  templateIdForEdit: string = this._activeRoute.snapshot.queryParams['templateId'] || null;
+  constructor(
+    injector: Injector,
+    private _templateService: EntityTemplateServiceProxy,
+    private _router: Router,
+    private _activeRoute: ActivatedRoute
+  ) {
     super(injector);
   }
   /**
@@ -39,7 +45,7 @@ export class CreateOrEditTemplateDropDownButtonComponent extends AppComponentBas
     entityTemplateInput.savedEntityId = this.sourceEntityId;
     entityTemplateInput.entityType = this.entityType;
     if (isNotNullOrUndefined(this.templateIdForEdit)) {
-      entityTemplateInput.id = this.templateIdForEdit;
+      entityTemplateInput.id = Number(this.templateIdForEdit);
     }
     // there is 2 ways of Creating Entity Template  1.By Providing EntityId example: TripId / ShippingRequestID
     // or 2. by providing a json data of the entity for example Json Data Of the Trip/Shipping Request
@@ -56,8 +62,23 @@ export class CreateOrEditTemplateDropDownButtonComponent extends AppComponentBas
           this.loading = false;
         })
       )
-      .subscribe(() => {
+      .subscribe((res) => {
+        this.templateIdForEdit = res;
+        this.updateUrl(res);
         this.notify.success(this.l('TemplateSavedSuccessfully'));
       });
+  }
+
+  /**
+   * Add Created Template Id To The Url To allow Edits
+   * @param TemplateId
+   */
+  updateUrl(TemplateId: string) {
+    this._router.navigate([], {
+      queryParams: {
+        templateId: TemplateId,
+      },
+      queryParamsHandling: 'merge',
+    });
   }
 }

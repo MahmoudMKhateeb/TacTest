@@ -36,6 +36,7 @@ import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { DateType } from '@app/shared/common/hijri-gregorian-datepicker/consts';
 import * as moment from 'moment';
 import { DateFormatterService } from '@app/shared/common/hijri-gregorian-datepicker/date-formatter.service';
+import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 @Component({
   selector: 'AddNewTripModal',
   styleUrls: ['./createOrEditTrip.component.css'],
@@ -118,10 +119,12 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   allReceivers: ReceiverFacilityLookupTableDto[];
   pickupPointSenderId: number;
   selectedTemplate: number;
-  TripAsJson = JSON.stringify(this.trip);
 
   get isFileInputValid() {
     return this.trip.hasAttachment ? (this.trip.createOrEditDocumentFileDto.name ? true : false) : true;
+  }
+  get tripAsJson(): string {
+    return JSON.stringify(this.trip);
   }
   ngOnInit() {
     //link the trip from the shared service to the this component
@@ -132,12 +135,6 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     //this._PointsService.updateWayPoints(new CreateOrEditRoutPointDto[]);
     this.refreshOrGetFacilities(undefined);
     this.vasesHandler();
-    setInterval(() => {
-      console.log(this.TripAsJson);
-      console.log(this.trip);
-      console.log('stringifhed trip', JSON.stringify(this.trip));
-      console.log('this.trip.toJSON();', this.trip.toJSON());
-    }, 5000);
   }
 
   /**
@@ -455,7 +452,6 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       //to be Changed
       this._receiversServiceProxy.getAllReceiversByFacilityForTableDropdown(facilityId).subscribe((result) => {
         this.allReceivers = result;
-        console.log('all Receivers logged .................  : ', result);
         this.receiversLoading = false;
       });
     }
@@ -482,6 +478,23 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   }
 
   /**
+   * Validates Shipping Request Trip Before Create Template
+   * @private
+   */
+  public PointsAreInValid(): boolean {
+    //if there is no routePoints
+    if (!isNotNullOrUndefined(this.trip.routPoints)) {
+      return true;
+    }
+    //if there is route points check for good details
+    //if there is no good details return false
+    if (this.trip.routPoints.find((x) => x.pickingType == PickingType.Dropoff && !isNotNullOrUndefined(x.goodsDetailListDto))) {
+      return true;
+    }
+    //else return false
+    return false;
+  }
+  /**
    * load Trip Templates For Drop Down
    */
   loadTemplates() {
@@ -501,11 +514,8 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       jsonObject = JSON.parse(res.savedEntity);
       this.trip = jsonObject;
       this.trip.id = undefined;
-      this.trip.originFacilityId = null;
-      this.trip.destinationFacilityId = null;
-      this.pickupPointSenderId = this.trip.routPoints[0].receiverId = undefined;
+      this.loadReceivers(this.trip.originFacilityId);
       this._PointsService.updateWayPoints(this.trip.routPoints);
-      console.log(this.trip);
     });
   }
 }

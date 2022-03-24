@@ -115,6 +115,7 @@ export class RequestTemplatesComponent extends AppComponentBase implements OnIni
       this._router.navigate(['/app/main/shippingRequests/shippingRequestWizard'], {
         queryParams: {
           templateId: record.id,
+          templateName: record.templateName,
         },
       });
     } else if (record.entityType === this.entityTypesEnum.TripTemplate) {

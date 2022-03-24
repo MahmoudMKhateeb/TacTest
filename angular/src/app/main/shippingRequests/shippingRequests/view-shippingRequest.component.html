@@ -9,6 +9,7 @@
       <!--      </div>-->
       <div role="actions">
         <create-or-edit-template-drop-down-button
+          *ngIf="feature.isEnabled('App.Shipper.Saas') || feature.isEnabled('Shipper') || feature.isEnabled('App.TachyonDealer')"
           [entityType]="entityTypes.ShippingRequestTemplate"
           [sourceEntityId]="activeShippingRequestId"
         ></create-or-edit-template-drop-down-button>

@@ -593,13 +593,12 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
    * @param Step
    */
   updateRoutingQueries(shippingRequestId, Step?) {
-    console.log('this.templateId', this.templateId);
     this._router.navigate([], {
       queryParams: {
         id: shippingRequestId,
-        templateId: this.templateId,
         completedSteps: Step || 1,
       },
+      queryParamsHandling: 'merge',
     });
     this.activeStep = Step;
   }
@@ -794,6 +793,14 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
       title: this.l('TemplateImportedSuccessfully'),
       showConfirmButton: false,
       timer: 2000,
+    });
+
+    this._router.navigate([], {
+      queryParams: {
+        templateName: null,
+        templateId: null,
+      },
+      queryParamsHandling: 'merge',
     });
   }
 }
