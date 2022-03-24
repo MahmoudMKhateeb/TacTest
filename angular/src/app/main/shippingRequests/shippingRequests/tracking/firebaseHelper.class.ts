@@ -1,5 +1,7 @@
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/compat/database';
 import { Observable } from 'rxjs';
+import { map } from '@node_modules/rxjs/internal/operators';
+
 export const trackingIconsList = {
   driverIcon: {
     url: 'https://img.icons8.com/external-victoruler-flat-gradient-victoruler/64/000000/external-delivery-courier-food-and-delivery-victoruler-flat-gradient-victoruler.png',
@@ -25,6 +27,7 @@ export interface DriverLocation {
 export class FirebaseHelperClass {
   private fireDB: AngularFireList<unknown>;
   private database: string;
+
   constructor(private _db: AngularFireDatabase) {
     this.envDetector();
   }
@@ -42,11 +45,10 @@ export class FirebaseHelperClass {
    */
   getAllActiveDriversLiveLocationByTenantId(tenantId: number): Observable<any> {
     console.log(this.database);
-    this.fireDB = this._db.list(
-      this.database,
-      (ref) => ref.orderByChild('tenantId').equalTo(tenantId) && ref.orderByChild('activePointId').startAfter(0)
-    );
-    return this.fireDB.valueChanges();
+    this.fireDB = this._db.list(this.database, (ref) => {
+      return ref.orderByChild('tenantId').equalTo(tenantId);
+    });
+    return this.fireDB.valueChanges().pipe(map((res) => res.filter((x: any) => x.activePointId > 0)));
   }
 
   /**
@@ -56,6 +58,7 @@ export class FirebaseHelperClass {
     this.fireDB = this._db.list(this.database, (ref) => ref.orderByChild('activePointId').startAfter(0));
     return this.fireDB.valueChanges();
   }
+
   /**
    * detects the Current Enviroment Based on user App Url
    * to Determine Witch Firebase database should the app connect to

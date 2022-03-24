@@ -54,7 +54,6 @@ export class CarrierInvoicesDetailsWidgetComponent extends AppComponentBase impl
             },
           ],
           chart: {
-            height: 350,
             type: 'bar',
           },
           xaxis: {
