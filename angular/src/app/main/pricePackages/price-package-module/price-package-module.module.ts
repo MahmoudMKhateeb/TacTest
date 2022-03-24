@@ -11,6 +11,7 @@ import { PaginatorModule } from 'primeng/paginator';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { DevExtremeModule, DxButtonModule } from '@node_modules/devextreme-angular';
 
 @NgModule({
   declarations: [ViewNormalPricePackageModalComponent, NormalPricePackageComponent, CreateOrEditNormalPricePackageModalComponent],
@@ -22,6 +23,8 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
     PaginatorModule,
     TableModule,
     ModalModule,
+    DxButtonModule,
+    DevExtremeModule,
     BsDropdownModule.forRoot(),
   ],
 })

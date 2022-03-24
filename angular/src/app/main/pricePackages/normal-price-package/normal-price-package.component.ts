@@ -1,4 +1,4 @@
-import { Component, Injector, ViewEncapsulation, ViewChild } from '@angular/core';
+import { Component, Injector, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NormalPricePackagesServiceProxy } from '@shared/service-proxies/service-proxies';
 import { NotifyService } from 'abp-ng2-module';
@@ -12,7 +12,9 @@ import { Table } from 'primeng/table';
 import { Paginator } from 'primeng/paginator';
 import { LazyLoadEvent } from 'primeng/api';
 import * as _ from 'lodash';
-import * as moment from 'moment';
+import { LoadOptions } from '@node_modules/devextreme/data/load_options';
+import { DxDataGridComponent } from '@node_modules/devextreme-angular';
+import CustomStore from '@node_modules/devextreme/data/custom_store';
 
 @Component({
   templateUrl: './normal-price-package.component.html',
@@ -23,9 +25,11 @@ export class NormalPricePackageComponent extends AppComponentBase {
   @ViewChild('createOrEditNormalPricePackageModal', { static: true })
   createOrEditNormalPricePackageModal: CreateOrEditNormalPricePackageModalComponent;
   @ViewChild('viewNormalPricePackageModalComponent', { static: true }) viewNormalPricePackageModal: ViewNormalPricePackageModalComponent;
+  @ViewChild('dataGrid', { static: true }) dataGrid: DxDataGridComponent;
 
   @ViewChild('dataTable', { static: true }) dataTable: Table;
   @ViewChild('paginator', { static: true }) paginator: Paginator;
+  dataSource: any = {};
 
   advancedFiltersAreShown = false;
   filterText = '';
@@ -44,33 +48,33 @@ export class NormalPricePackageComponent extends AppComponentBase {
     super(injector);
   }
 
-  ngOnInit(): void {}
+  ngOnInit() {
+    this.getAllNormalPricePackages();
+  }
+  getAllNormalPricePackages() {
+    let self = this;
 
-  getNormalPricePackages(event?: LazyLoadEvent) {
-    if (this.primengTableHelper.shouldResetPaging(event)) {
-      this.paginator.changePage(0);
-      return;
-    }
-
-    this.primengTableHelper.showLoadingIndicator();
-
-    this._normalPricePackagesServiceProxy
-      .getAll(
-        null,
-        this.filterText,
-        this.destinationFilter,
-        this.originFilter,
-        this.truckTypeFilter,
-        this.pricePackageIdFilter,
-        this.primengTableHelper.getSorting(this.dataTable),
-        this.primengTableHelper.getSkipCount(this.paginator, event),
-        this.primengTableHelper.getMaxResultCount(this.paginator, event)
-      )
-      .subscribe((result) => {
-        this.primengTableHelper.totalRecordsCount = result.totalCount;
-        this.primengTableHelper.records = result.items;
-        this.primengTableHelper.hideLoadingIndicator();
-      });
+    this.dataSource = {};
+    this.dataSource.store = new CustomStore({
+      load(loadOptions: LoadOptions) {
+        console.log(JSON.stringify(loadOptions));
+        return self._normalPricePackagesServiceProxy
+          .getAll(JSON.stringify(loadOptions))
+          .toPromise()
+          .then((response) => {
+            return {
+              data: response.data,
+              totalCount: response.totalCount,
+              summary: response.summary,
+              groupCount: response.groupCount,
+            };
+          })
+          .catch((error) => {
+            console.log(error);
+            throw new Error('Data Loading Error');
+          });
+      },
+    });
   }
 
   reloadPage(): void {

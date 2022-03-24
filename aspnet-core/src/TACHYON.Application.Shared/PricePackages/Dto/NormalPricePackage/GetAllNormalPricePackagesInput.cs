@@ -5,14 +5,9 @@ using System.Text;
 
 namespace TACHYON.PricePackages.Dto.NormalPricePackage
 {
-    public class GetAllNormalPricePackagesInput : PagedAndSortedResultRequestDto
+    public class GetAllNormalPricePackagesInput
     {
-        public int? CarrierId { get; set; }
-        public string Filter { get; set; }
-        public string DestinationFilter { get; set; }
-        public string OriginFilter { get; set; }
-        public string TruckTypeFilter { get; set; }
-        public string PricePackageIdFilter { get; set; }
+        public string LoadOptions { get; set; }
     }
 
     public class GetAllPricePackagesForRequestInput : PagedAndSortedResultRequestDto

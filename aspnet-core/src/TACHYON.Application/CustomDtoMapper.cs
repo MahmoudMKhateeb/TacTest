@@ -727,6 +727,7 @@ namespace TACHYON
 
             configuration.CreateMap<NormalPricePackage, NormalPricePackageDto>()
                 .ForMember(src => src.PricePerExtraDrop, opt => opt.MapFrom(des => des.PricePerExtraDrop.HasValue ? des.PricePerExtraDrop.ToString() : "---"))
+                .ForMember(src => src.TenantName, opt => opt.MapFrom(des => des.Tenant.Name))
                 .ForMember(src => src.TruckType, opt => opt.MapFrom(des => des.TrucksTypeFk.DisplayName))
                 .ForMember(src => src.Origin, opt => opt.MapFrom(des => des.OriginCityFK.DisplayName))
                 .ForMember(src => src.Destination, opt => opt.MapFrom(des => des.DestinationCityFK.DisplayName));

@@ -4,6 +4,8 @@ using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
 using Abp.UI;
+using AutoMapper.QueryableExtensions;
+using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -151,34 +153,18 @@ namespace TACHYON.PricePackages
         }
         [AbpAuthorize(AppPermissions.Pages_NormalPricePackages)]
         [RequiresFeature(AppFeatures.Carrier, AppFeatures.TachyonDealer)]
-        public async Task<PagedResultDto<NormalPricePackageDto>> GetAll(GetAllNormalPricePackagesInput input)
+        public async Task<LoadResult> GetAll(GetAllNormalPricePackagesInput input)
         {
             if (!await IsEnabledAsync(AppFeatures.NormalPricePackages)) throw new UserFriendlyException(L("YouCannotAccessThisPage"));
 
             DisableTenancyFilters();
             var tenentId = AbpSession.TenantId;
             var filteredPricePackages = _pricePackageRepository
-                .GetAllIncluding(x => x.TrucksTypeFk, c => c.OriginCityFK, f => f.DestinationCityFK).AsNoTracking()
+                .GetAllIncluding(x => x.TrucksTypeFk, c => c.OriginCityFK, f => f.DestinationCityFK, p => p.Tenant).AsNoTracking()
                 .WhereIf(tenentId.HasValue && await IsEnabledAsync(AppFeatures.Carrier), p => p.TenantId == tenentId)
-                .WhereIf(!tenentId.HasValue && await IsEnabledAsync(AppFeatures.TachyonDealer), e => true)
-                .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => e.DisplayName.Contains(input.Filter))
-                .WhereIf(!string.IsNullOrWhiteSpace(input.DestinationFilter), e => e.DestinationCityFK.DisplayName.Contains(input.DestinationFilter))
-                .WhereIf(!string.IsNullOrWhiteSpace(input.OriginFilter), e => e.OriginCityFK.DisplayName.Contains(input.OriginFilter))
-                .WhereIf(!string.IsNullOrWhiteSpace(input.TruckTypeFilter), e => e.TrucksTypeFk.DisplayName.Contains(input.TruckTypeFilter))
-                .WhereIf(!string.IsNullOrWhiteSpace(input.PricePackageIdFilter), e => e.PricePackageId.Contains(input.PricePackageIdFilter));
+                .ProjectTo<NormalPricePackageDto>(AutoMapperConfigurationProvider);
 
-            var pagedAndFilteredPricePackages = filteredPricePackages
-                .OrderBy(input.Sorting ?? "id desc")
-                .PageBy(input);
-
-            var pricePackages = ObjectMapper.Map<List<NormalPricePackageDto>>(await pagedAndFilteredPricePackages.ToListAsync());
-
-            var totalCount = await filteredPricePackages.CountAsync();
-
-            return new PagedResultDto<NormalPricePackageDto>(
-                totalCount,
-                pricePackages
-            );
+            return await LoadResultAsync(filteredPricePackages, input.LoadOptions);
         }
         public async Task<NormalPricePackageDto> GetNormalPricePackage(int id)
         {

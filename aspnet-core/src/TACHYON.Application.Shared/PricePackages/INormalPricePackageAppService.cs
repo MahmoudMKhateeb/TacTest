@@ -1,5 +1,6 @@
 ﻿using Abp.Application.Services;
 using Abp.Application.Services.Dto;
+using DevExtreme.AspNet.Data.ResponseModel;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,7 +12,7 @@ namespace TACHYON.PricePackages
 {
     public interface INormalPricePackageAppService : IApplicationService
     {
-        Task<PagedResultDto<NormalPricePackageDto>> GetAll(GetAllNormalPricePackagesInput input);
+        Task<LoadResult> GetAll(GetAllNormalPricePackagesInput input);
         Task<NormalPricePackageDto> GetNormalPricePackage(int id);
         Task CreateOrEdit(CreateOrEditNormalPricePackageDto input);
         Task Delete(EntityDto input);
