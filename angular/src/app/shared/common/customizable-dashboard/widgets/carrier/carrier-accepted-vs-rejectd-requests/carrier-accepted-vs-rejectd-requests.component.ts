@@ -41,11 +41,9 @@ export class CarrierAcceptedVsRejectdRequestsComponent extends AppComponentBase 
             {
               name: 'Rejected',
               data: result.rejectedOffers,
-              color: '#b5b5c3',
             },
           ],
           chart: {
-            height: 350,
             type: 'area',
           },
           xaxis: {

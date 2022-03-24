@@ -47,7 +47,6 @@ export class CarrierComplitedTripsWidgetComponent extends WidgetComponentBase im
           ],
           chart: {
             type: 'bar',
-            height: 350,
           },
           xaxis: {
             type: 'category',

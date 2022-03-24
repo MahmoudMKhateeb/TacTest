@@ -22,7 +22,6 @@ export class MostUsedppComponent implements OnInit {
       ],
       chart: {
         type: 'bar',
-        height: 350,
       },
       plotOptions: {
         bar: {
@@ -37,9 +36,6 @@ export class MostUsedppComponent implements OnInit {
         show: true,
         width: 2,
         colors: ['transparent'],
-      },
-      xaxis: {
-        categories: ['PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP'],
       },
 
       fill: {
