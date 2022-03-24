@@ -31,7 +31,7 @@ namespace TACHYON.Shipping.Trips.Dto
         /// This field is for single drop pickup point facility
         /// </summary>
         public string OriginalFacility { get; set; }
-        public long? OriginalFacilityId { get; set; }
+        public long? OriginFacilityId { get; set; }
         /// <summary>
         /// This field is for single drop, drop point facility
         /// </summary>

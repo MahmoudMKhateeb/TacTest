@@ -2301,6 +2301,6 @@
 
     <text name="SomeTripVasesAlreadyExists">بعض الخدمات الإضافية موجودة مسبقاً</text>
     <text name="DuplicatedVas">يوجد تكرار</text>
-
+    <text name="PickupPointFacilityMustBeSameToOriginalTripFacility">منشأة التحميل يجب أن تكون مطابقة لمنشأة تحميل الرحلة</text>
 	</texts>
 </localizationDictionary>

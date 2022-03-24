@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Abp.Application.Services.Dto;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace TACHYON.Shipping.Trips.Importing.Dto
 {
-    public class ImportTripVasesDto
+    public class ImportTripVasesDto : EntityDto<long?>
     {
         public string TripReference { get; set; }
         public long ShippingRequestId { get; set; }

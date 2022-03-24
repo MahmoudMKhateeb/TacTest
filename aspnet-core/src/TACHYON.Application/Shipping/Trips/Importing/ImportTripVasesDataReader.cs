@@ -75,12 +75,12 @@ namespace TACHYON.Shipping.Trips.Importing
             return TripVas;
         }
 
-        private int? GetVasId(string vasName, StringBuilder exceptionMessage)
+        private long? GetVasId(string vasName, StringBuilder exceptionMessage)
         {
             var vasId= _shippingRequestVasRepository.GetAll().Where(x => x.ShippingRequestId == shippingRequestId &&
             (x.VasFk.Name.ToLower() == vasName.ToLower() ||
             x.VasFk.Translations.Any(x => x.DisplayName.ToLower() == vasName.ToLower())
-            )).Select(x => x.VasId).FirstOrDefault();
+            )).Select(x => x.Id).FirstOrDefault();
             if (vasId != 0)
             {
                 return vasId;

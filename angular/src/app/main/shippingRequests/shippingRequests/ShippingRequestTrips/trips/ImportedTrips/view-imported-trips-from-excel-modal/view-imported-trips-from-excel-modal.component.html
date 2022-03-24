@@ -44,10 +44,10 @@
                         {{ l('HasAttachment') }}
                       </th>
                       <th>{{ l('NeedsDeliveryNote') }}</th>
-                      <th *ngIf="isSingleDdrop">
+                      <th>
                         {{ l('origin') }}
                       </th>
-                      <th *ngIf="isSingleDdrop">
+                      <th>
                         {{ l('destination') }}
                       </th>
                       <th *ngIf="isSingleDdrop">
@@ -86,11 +86,11 @@
                         <span class="ui-column-title"> {{ l('needsDeliveryNote') }}</span>
                         {{ record.needsDeliveryNote == true ? l('Yes') : l('No') }}
                       </td>
-                      <td *ngIf="isSingleDdrop">
+                      <td>
                         <span class="ui-column-title"> {{ l('originFacility') }}</span>
                         {{ record.originalFacility }}
                       </td>
-                      <td *ngIf="isSingleDdrop">
+                      <td>
                         <span class="ui-column-title"> {{ l('destinationFacility') }}</span>
                         {{ record.destinationFacility }}
                       </td>

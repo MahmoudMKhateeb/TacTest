@@ -2539,5 +2539,6 @@
 	<text name="ImportVasesFromExcel">Import Vases From Excel</text>
     <text name="SomeTripVasesAlreadyExists">Some trip vases already exists</text>
     <text name="DuplicatedVas">Duplicated vas</text>
+    <text name="PickupPointFacilityMustBeSameToOriginalTripFacility">Pickup point facility must be same to original trip facility</text>
 	</texts>
 </localizationDictionary>

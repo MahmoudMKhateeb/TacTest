@@ -74,25 +74,25 @@ namespace TACHYON.Shipping.Trips.Importing
                 trip.HasAttachment = GetBoolValueFromYesOrNo(_tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
                     row, 6, "Has Attchment ?*", exceptionMessage));
 
+                var originFacility = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
+                    row, 7, "Original Facility*", exceptionMessage);
+                trip.OriginalFacility = originFacility;
+                trip.OriginFacilityId = GetFacilityId(originFacility, exceptionMessage);
+
+                var destinationFacility = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
+                   row, 8, "Destination Facility*", exceptionMessage);
+                trip.DestinationFacility = destinationFacility;
+                trip.DestinationFacilityId = GetFacilityId(destinationFacility, exceptionMessage);
+
                 if (IsSingleDropRequest)
                 {
-                    var originFacility= _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
-                    row, 7, "Original Facility*", exceptionMessage);
-                    trip.OriginalFacility = originFacility;
-                    trip.OriginalFacilityId = GetFacilityId(originFacility, exceptionMessage);
-
                     var sender = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
-                    row, 8, "Sender*", exceptionMessage);
+                    row, 9, "Sender*", exceptionMessage);
                     trip.sender = sender;
-                    if (trip.OriginalFacilityId != null)
+                    if (trip.OriginFacilityId != null)
                     {
-                        trip.SenderId = GetReceiverId(sender, exceptionMessage, trip.OriginalFacilityId.Value);
+                        trip.SenderId = GetReceiverId(sender, exceptionMessage, trip.OriginFacilityId.Value);
                     }
-
-                    var destinationFacility = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
-                    row, 9, "Destination Facility*", exceptionMessage);
-                    trip.DestinationFacility = destinationFacility;
-                    trip.DestinationFacilityId = GetFacilityId(destinationFacility, exceptionMessage);
 
                     var receiver = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
                     row, 10, "Receiver*", exceptionMessage);

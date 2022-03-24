@@ -166,9 +166,9 @@ namespace TACHYON.Shipping.ShippingRequestTrips
             }
         }
 
-        public bool ValidateTripVasesNumber(long shippingRequestId,int tripVasNumber, long vasId)
+        public bool ValidateTripVasesNumber(long shippingRequestId,int tripVasNumber, long shippingRequestVasId)
         {
-            var tripsNumber=_shippingRequestVasRepository.FirstOrDefault(x => x.VasId == vasId && x.ShippingRequestId == shippingRequestId).NumberOfTrips;
+            var tripsNumber=_shippingRequestVasRepository.FirstOrDefault(x => x.Id == shippingRequestVasId && x.ShippingRequestId == shippingRequestId).NumberOfTrips;
             return tripVasNumber <= tripsNumber;
         }
 
