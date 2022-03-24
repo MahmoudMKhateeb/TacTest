@@ -78,9 +78,9 @@ namespace TACHYON.Authorization.Users.Profile
         private readonly IRepository<Edition> _lookupEditionRepository;
         private readonly IRepository<City> _lookupCityRepository;
         private readonly IRepository<TrucksTypesTranslation> _trucksTypesTranslationRepository;
+        private readonly IRepository<TrucksType, long> _truckTypeRepository;
 
         public ProfileAppService(
-            IAppFolders appFolders,
             IBinaryObjectManager binaryObjectManager,
             ITimeZoneService timezoneService,
             IFriendshipManager friendshipManager,
@@ -99,7 +99,8 @@ namespace TACHYON.Authorization.Users.Profile
             IRepository<Edition> lookupEditionRepository,
             IRepository<City> lookupCityRepository,
             IRepository<TrucksTypesTranslation> trucksTypesTranslationRepository,
-            IRepository<Tenant> tenantRepository)
+            IRepository<Tenant> tenantRepository,
+            IRepository<TrucksType, long> truckTypeRepository)
         {
             _binaryObjectManager = binaryObjectManager;
             _timeZoneService = timezoneService;
@@ -120,6 +121,7 @@ namespace TACHYON.Authorization.Users.Profile
             _lookupCityRepository = lookupCityRepository;
             _trucksTypesTranslationRepository = trucksTypesTranslationRepository;
             _tenantRepository = tenantRepository;
+            _truckTypeRepository = truckTypeRepository;
         }
 
         [DisableAuditing]
@@ -252,11 +254,11 @@ namespace TACHYON.Authorization.Users.Profile
         public async Task<int> GetShipmentCount(int tenantId)
         {
             // Two In One Service
-            
+
             DisableTenancyFilters();
             var editionName = await _tenantRepository
-                .GetAllIncluding(x=> x.Edition).AsNoTracking()
-                .Where(x=> x.Id == tenantId).Select(x=> x.Edition.DisplayName)
+                .GetAllIncluding(x => x.Edition).AsNoTracking()
+                .Where(x => x.Id == tenantId).Select(x => x.Edition.DisplayName)
                 .FirstOrDefaultAsync();
 
             var isShipper = editionName.ToUpper().Contains("SHIPPER");
@@ -299,8 +301,8 @@ namespace TACHYON.Authorization.Users.Profile
         {
             DisableTenancyFilters();
             var tenantBalance = await (from tenant in _tenantRepository.GetAll().AsNoTracking()
-                where tenant.Id == tenantId
-                select new {tenant.Balance, tenant.ReservedBalance}).FirstOrDefaultAsync();
+                                       where tenant.Id == tenantId
+                                       select new { tenant.Balance, tenant.ReservedBalance }).FirstOrDefaultAsync();
 
             var creditLimit = await FeatureChecker.GetValueAsync(tenantId,
                 AppFeatures.ShipperCreditLimit);
@@ -327,39 +329,50 @@ namespace TACHYON.Authorization.Users.Profile
         public async Task<FleetInformationDto> GetFleetInformation(GetFleetInformationInputDto input)
         {
             DisableTenancyFilters();
-            var translationQuery = _trucksTypesTranslationRepository
-                .GetAll()
-                .Where(i => i.Language.Contains(CultureInfo.CurrentUICulture.Name));
 
-            var resultQuery = from t in _lookupTruckRepository.GetAll()
-                              join r in translationQuery.DefaultIfEmpty() on t.TrucksTypeId equals r.CoreId
+            var truckTypes = (from truckType in _truckTypeRepository.GetAll()
+                              from trans in _trucksTypesTranslationRepository.GetAll().Where(x =>
+                                  x.CoreId == truckType.Id && x.Language.Contains(CultureInfo.CurrentUICulture.Name)).DefaultIfEmpty()
                               select new
                               {
-                                  r.CoreId,
-                                  r.TranslatedDisplayName,
-                              };
+                                  truckType.Id,
+                                  TypeDisplayName = trans != null
+                                      ? trans.TranslatedDisplayName ?? trans.DisplayName
+                                      : truckType.DisplayName ?? truckType.Key
+                              });
 
-            var availableTrucks = resultQuery
-               .GroupBy(x => new { TrucksTypeId = x.CoreId, x.TranslatedDisplayName })
-               .Select(g => new TruckTypeAvailableTrucksDto
-               {
-                   Id = g.Key.TrucksTypeId,
-                   AvailableTrucksCount = g.Count(),
-                   TruckType = g.Key.TranslatedDisplayName
+            var trucks = (from truck in _lookupTruckRepository.GetAll()
+                          where truck.TenantId == input.TenantId
+                          select truck);
 
-               });
+            var trucksByType = (
+                from type in truckTypes
+                from truck in trucks.Where(x => x.TrucksTypeId == type.Id).DefaultIfEmpty()
+                select new { truck, type });
+
+            var queryResult = await trucksByType.ToListAsync();
+            var pageResult = (from truck in queryResult
+                              group truck by truck.type.Id
+                into truckGroup
+                              orderby truckGroup.Count(x => x.truck != null) descending
+                              select new TruckTypeAvailableTrucksDto()
+                              {
+                                  Id = truckGroup.Key,
+                                  TruckType = truckGroup.Select(x => x.type.TypeDisplayName).FirstOrDefault(),
+                                  AvailableTrucksCount = truckGroup.Count(x => x.truck != null)
+                              }).Skip(input.SkipCount).Take(input.MaxResultCount).ToList();
 
 
-            //var availableTrucks = 
-
-            var pageResult = await availableTrucks.PageBy(input).ToListAsync();
-            var totalCount = await availableTrucks.CountAsync();
+            var totalCount = await truckTypes.CountAsync();
             var driversCount = await _lookupUserRepository.CountAsync(x => x.TenantId == input.TenantId && x.IsDriver);
 
             return new FleetInformationDto()
             {
                 AvailableTrucksDto = new PagedResultDto<TruckTypeAvailableTrucksDto>()
-                { Items = pageResult, TotalCount = totalCount },
+                {
+                    Items = pageResult,
+                    TotalCount = totalCount
+                },
                 TotalDrivers = driversCount
             };
         }
@@ -525,8 +538,8 @@ namespace TACHYON.Authorization.Users.Profile
             if (!(tenantId is null))
             {
                 var userId = await (from user in _lookupUserRepository.GetAll()
-                    where user.TenantId == tenantId && user.UserName.Equals(AbpUserBase.AdminUserName)
-                    select user.Id).FirstOrDefaultAsync();
+                                    where user.TenantId == tenantId && user.UserName.Equals(AbpUserBase.AdminUserName)
+                                    select user.Id).FirstOrDefaultAsync();
 
                 userIdentifier = new UserIdentifier(tenantId, userId);
             }

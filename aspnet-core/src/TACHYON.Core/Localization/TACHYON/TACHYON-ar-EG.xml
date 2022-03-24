@@ -2513,6 +2513,8 @@
 		<text name="ImportFile">إضافة ملف</text>
 		<text name="DeliveredAndNeedsConfirmation">تم التوصيل وبحاجة للتأكيد</text>
 		<text name="SAASTrip">Sass</text>
+		<text name="NumberOfShipments">عدد الشحنات</text>
+		<text name="ProfileNumberOfShipmentsTooltipMsg">عدد الشحنات التي تكون حالتها قيد النقل أو مكتملة أو مكتملة بدون تأكيد</text>
 
 	</texts>
 </localizationDictionary>

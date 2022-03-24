@@ -2715,6 +2715,8 @@
 	<text name="ImportFile">Import file</text>
 	<text name="UnPaid">Unpaid</text>
 	<text name="SAASTrip">Sass</text>
+	<text name="NumberOfShipments">Number of shipments</text>
+	<text name="ProfileNumberOfShipmentsTooltipMsg">Number of shipments whose status is in transit, completed or completed without confirmation</text>
 
 		<text name="NumberOfRequestsForEachCity">Number Of Requests For Each City</text>
 		<text name="ongoingTrips">On Going Trips</text>
