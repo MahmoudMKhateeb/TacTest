@@ -8,7 +8,7 @@
         {
             Id = id;
             DisplayName = displayName;
-            IsOther = isOther;
+            IsOther = DisplayName.ToLower().Contains(TACHYONConsts.OthersDisplayName);
         }
         public SelectItemDto()
         {

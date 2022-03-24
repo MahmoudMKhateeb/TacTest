@@ -172,6 +172,7 @@ namespace TACHYON.Shipping.Drivers
            .Include(i => i.ReceiverFk)
            .Include(i => i.GoodsDetails)
             .ThenInclude(i => i.UnitOfMeasureFk)
+            .ThenInclude(i => i.Translations)
             .SingleOrDefaultAsync(t => t.Id == PointId && t.ShippingRequestTripFk.Status != ShippingRequestTripStatus.Canceled && t.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId && t.ShippingRequestTripFk.DriverStatus != ShippingRequestTripDriverStatus.Rejected);
             if (Point == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
             var DropOff = ObjectMapper.Map<DropOffPointDto>(Point);
@@ -351,6 +352,7 @@ namespace TACHYON.Shipping.Drivers
                 .Include(i => i.ReceiverFk)
                 .Include(i => i.GoodsDetails)
                  .ThenInclude(i => i.UnitOfMeasureFk)
+                 .ThenInclude(x => x.Translations)
             .SingleOrDefaultAsync(t => t.Id == PointId && t.ShippingRequestTripFk.Status != ShippingRequestTripStatus.Canceled && t.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId && t.ShippingRequestTripFk.DriverStatus != ShippingRequestTripDriverStatus.Rejected);
 
             if (Point == null) throw new UserFriendlyException(L("TheTripIsNotFound"));

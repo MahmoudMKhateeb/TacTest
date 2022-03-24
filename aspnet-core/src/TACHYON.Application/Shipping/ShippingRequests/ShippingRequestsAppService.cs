@@ -66,6 +66,7 @@ using TACHYON.Trucks.TruckCategories.TruckCapacities.Dtos;
 using TACHYON.Trucks.TrucksTypes;
 using TACHYON.Trucks.TrucksTypes.Dtos;
 using TACHYON.UnitOfMeasures;
+using TACHYON.UnitOfMeasures.Dtos;
 using TACHYON.Vases;
 using TACHYON.Vases.Dtos;
 
@@ -1516,15 +1517,12 @@ namespace TACHYON.Shipping.ShippingRequests
         #region dropDowns
 
 
-        public async Task<List<SelectItemDto>> GetAllUnitOfMeasuresForDropdown()
+        public async Task<List<GetAllUnitOfMeasureForDropDownOutput>> GetAllUnitOfMeasuresForDropdown()
         {
-            return await _unitOfMeasureRepository.GetAll()
-                .Select(x => new SelectItemDto()
-                {
-                    Id = x.Id.ToString(),
-                    DisplayName = x.DisplayName,
-                    IsOther = x.DisplayName.ToLower().Contains(TACHYONConsts.OthersDisplayName.ToLower())
-                }).ToListAsync();
+            var unitOfMeasures = await _unitOfMeasureRepository.GetAll()
+                .Include(x => x.Translations)
+                .ToListAsync();
+            return ObjectMapper.Map<List<GetAllUnitOfMeasureForDropDownOutput>>(unitOfMeasures);
         }
 
         public async Task<List<SelectItemDto>> GetAllShippingTypesForDropdown()

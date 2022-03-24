@@ -40,7 +40,8 @@ namespace TACHYON.AutoMapper.Shipping.Trips
             CreateMap<GoodsDetail, GoodsDetailDto>()
                 .ForPath(dest => dest.UnitOfMeasure,
                     opt => opt.MapFrom(src =>
-                        src.UnitOfMeasureFk != null ? src.UnitOfMeasureFk.DisplayName : string.Empty))
+                        src.UnitOfMeasureFk != null ? src.UnitOfMeasureFk.Translations.FirstOrDefault(x =>
+                                x.Language.Contains(CultureInfo.CurrentCulture.Name)).DisplayName : string.Empty))
                 .ForMember(dest => dest.GoodCategory,
                     opt =>
                         opt.MapFrom(src => src.GoodCategoryFk != null
