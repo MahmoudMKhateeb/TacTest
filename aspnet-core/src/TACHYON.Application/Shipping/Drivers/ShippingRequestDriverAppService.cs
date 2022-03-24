@@ -326,8 +326,10 @@ namespace TACHYON.Shipping.Drivers
                  Status = x.Status,
                  lat = x.FacilityFk.Location.Y,
                  lng = x.FacilityFk.Location.X,
+                 FacilityName = x.FacilityFk.Name,
                  PickingType = x.PickingType,
                  IsPodUploaded = x.IsPodUploaded,
+                 WaybillNumber = x.WaybillNumber,
                  AvailableTransactions = !x.IsResolve ? new List<PointTransactionDto>() : _workFlowProvider.GetTransactionsByStatus(x.WorkFlowVersion, x.RoutPointStatusTransitions.Where(c => !c.IsReset).Select(v => v.Status).ToList(), x.Status)
              }).ToListAsync();
             if (routes == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
