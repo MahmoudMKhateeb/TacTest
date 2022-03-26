@@ -3,11 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TACHYON.Migrations
 {
-    public partial class add_Penalties_Table : Migration
+    public partial class add_Penalty_Table : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-          
             migrationBuilder.CreateTable(
                 name: "Penalties",
                 columns: table => new
@@ -26,8 +25,10 @@ namespace TACHYON.Migrations
                     Amount = table.Column<decimal>(nullable: false),
                     Type = table.Column<byte>(nullable: false),
                     TenantId = table.Column<int>(nullable: false),
-                    SourceId = table.Column<long>(nullable: true),
-                    SourceType = table.Column<byte>(nullable: true),
+                    TripId = table.Column<long>(nullable: true),
+                    TripFKId = table.Column<int>(nullable: true),
+                    PointId = table.Column<long>(nullable: true),
+                    RoutPointFKId = table.Column<long>(nullable: true),
                     InvoiceId = table.Column<long>(nullable: true)
                 },
                 constraints: table =>
@@ -40,11 +41,23 @@ namespace TACHYON.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
+                        name: "FK_Penalties_RoutPoints_RoutPointFKId",
+                        column: x => x.RoutPointFKId,
+                        principalTable: "RoutPoints",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
                         name: "FK_Penalties_AbpTenants_TenantId",
                         column: x => x.TenantId,
                         principalTable: "AbpTenants",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Penalties_ShippingRequestTrips_TripFKId",
+                        column: x => x.TripFKId,
+                        principalTable: "ShippingRequestTrips",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
             migrationBuilder.CreateIndex(
                 name: "IX_Penalties_InvoiceId",
@@ -52,9 +65,19 @@ namespace TACHYON.Migrations
                 column: "InvoiceId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Penalties_RoutPointFKId",
+                table: "Penalties",
+                column: "RoutPointFKId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Penalties_TenantId",
                 table: "Penalties",
                 column: "TenantId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Penalties_TripFKId",
+                table: "Penalties",
+                column: "TripFKId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

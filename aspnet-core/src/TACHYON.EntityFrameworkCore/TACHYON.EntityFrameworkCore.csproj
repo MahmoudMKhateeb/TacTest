@@ -49,6 +49,8 @@
     <Compile Remove="Migrations\20211027080531_addAccidentIdForTripCommentsTbl.Designer.cs" />
     <Compile Remove="Migrations\20211027085020_addTenantRelationForTripCommentsTbl.cs" />
     <Compile Remove="Migrations\20211027085020_addTenantRelationForTripCommentsTbl.Designer.cs" />
+    <Compile Remove="Migrations\20220313084233_add_Penalties_Table.cs" />
+    <Compile Remove="Migrations\20220313084233_add_Penalties_Table.Designer.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.5" />
