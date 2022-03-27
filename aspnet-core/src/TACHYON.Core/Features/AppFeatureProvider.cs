@@ -626,22 +626,54 @@ namespace TACHYON.Features
 
             #endregion
 
-            #region shippingRequestCancelBeforeCompletionTrips
-            penaltiesFeature.CreateChildFeature(
-                AppFeatures.ShippingRequestCancelBeforeCompletionTripsAmount,
-                "50",
-                L("ShippingRequestCancelBeforeCompletionTripsAmount "),
-                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
-             #endregion
+            //#region shippingRequestCancelBeforeCompletionTrips
+            //penaltiesFeature.CreateChildFeature(
+            //    AppFeatures.ShippingRequestCancelBeforeCompletionTripsAmount,
+            //    "50",
+            //    L("ShippingRequestCancelBeforeCompletionTripsAmount "),
+            //    inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+            // #endregion
 
-            #region tripCancelBeforeDeliveringAllDrops
-            penaltiesFeature.CreateChildFeature(
-                AppFeatures.TripCancelBeforeDeliveringAllDropsAmount,
-                "50",
-                L("TripCancelBeforeDeliveringAllDropsAmount"),
-                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+            //#region tripCancelBeforeDeliveringAllDrops
+            //penaltiesFeature.CreateChildFeature(
+            //    AppFeatures.TripCancelBeforeDeliveringAllDropsAmount,
+            //    "50",
+            //    L("TripCancelBeforeDeliveringAllDropsAmount"),
+            //    inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
 
 
+            //#endregion
+
+            #region Detention
+            var detention = penaltiesFeature.CreateChildFeature(
+            AppFeatures.Detention,
+            "true",
+            L("Detention"),
+            inputType: new CheckboxInputType());
+
+            detention.CreateChildFeature(
+            AppFeatures.AllowedDetentionPeriod,
+            "1",
+            L("AllowedDetentionPeriod"),
+            inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+            detention.CreateChildFeature(
+            AppFeatures.DetentionFeesIncreaseRate,
+            "0",
+            L("DetentionFeesIncreaseRate "),
+            inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+            detention.CreateChildFeature(
+            AppFeatures.MaxDetentionFeesAmount,
+            "0",
+            L("MaxDetentionFeesAmount"),
+            inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+            detention.CreateChildFeature(
+            AppFeatures.BaseDetentionFeesAmount,
+            "0",
+            L("BaseDetentionFeesAmount"),
+            inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
             #endregion
 
             #region notAssignTruckAndDriverStartDate

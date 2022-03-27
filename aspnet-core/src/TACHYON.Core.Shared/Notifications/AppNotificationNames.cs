@@ -120,6 +120,8 @@ namespace TACHYON.Notifications
 
         #endregion
 
+        public const string NotifyShipperBeforApplyDetention = "App.NotifyShipperBeforApplyDetention";
+
         #endregion
     }
 }

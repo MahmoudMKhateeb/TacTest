@@ -1,4 +1,5 @@
 ﻿using Abp.Application.Features;
+using Abp.BackgroundJobs;
 using Abp.Domain.Repositories;
 using Abp.Timing;
 using Abp.UI;
@@ -7,20 +8,55 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using TACHYON.Features;
+using TACHYON.Notifications;
 using TACHYON.Penalties;
 using TACHYON.Penalties.Dto;
+using TACHYON.Penalties.Jobs;
 using TACHYON.Penalties.UnitOfMeasures;
+using TACHYON.Routs.RoutPoints;
 
 namespace TACHYON.Penalties
 {
     public class PenaltyManager : TACHYONDomainServiceBase
     {
         private readonly IRepository<Penalty> _penaltyRepository;
+        private readonly IRepository<RoutPoint, long> _routPointrepository;
         private readonly IFeatureChecker _featureChecker;
-        public PenaltyManager(IRepository<Penalty> penaltyRepository, IFeatureChecker featureChecker)
+        private readonly IAppNotifier _appNotifier;
+        private readonly IBackgroundJobManager _backgroundJobManager;
+        public PenaltyManager(IRepository<Penalty> penaltyRepository,
+            IFeatureChecker featureChecker,
+            IAppNotifier appNotifier,
+            IRepository<RoutPoint, long> routPointrepository,
+            IBackgroundJobManager backgroundJobManager)
         {
             _penaltyRepository = penaltyRepository;
             _featureChecker = featureChecker;
+            _appNotifier = appNotifier;
+            _routPointrepository = routPointrepository;
+            _backgroundJobManager = backgroundJobManager;
+        }
+        public async Task SendNotficationBeforeViolateDetention(int shipperTenantId, long pointId)
+        {
+            var routPoint = await _routPointrepository.FirstOrDefaultAsync(pointId);
+            if (routPoint.Status == RoutePointStatus.ArrivedToDestination
+                || routPoint.Status == RoutePointStatus.ArriveToLoadingLocation)
+            {
+                await _appNotifier.NotifyShipperBeforApplyDetention(shipperTenantId, routPoint.ShippingRequestTripFk.WaybillNumber.ToString(), routPoint.ShippingRequestTripId);
+            }
+        }
+
+        public async Task NotficationBeforeViolateDetention(int shipperTenantId, int pointId)
+        {
+            var allowedDelay = Convert.ToInt32(await _featureChecker.GetValueAsync(shipperTenantId, AppFeatures.AllowedDetentionPeriod));
+            int[] args = new int[] { shipperTenantId, pointId };
+            await _backgroundJobManager.EnqueueAsync<NotficationBeforeViolateDetention, int[]>(args, delay: new TimeSpan(allowedDelay, -15, 00));
+        }
+        public async Task NotficationWhenViolateDetention(int shipperTenantId, int pointId)
+        {
+            var allowedDelay = Convert.ToInt32(await _featureChecker.GetValueAsync(shipperTenantId, AppFeatures.AllowedDetentionPeriod));
+            int[] args = new int[] { shipperTenantId, pointId };
+            await _backgroundJobManager.EnqueueAsync<NotficationWhenViolateDetention, int[]>(args, delay: new TimeSpan(allowedDelay, 30, 00));
         }
         public async Task InitPenalty(PenaltyType penaltyType, int tenantId, long sourceId, SourceType sourceType, DateTime date)
         {

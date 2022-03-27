@@ -1279,5 +1279,19 @@ namespace TACHYON.Notifications
         }
 
         #endregion
+
+       public async Task NotifyShipperBeforApplyDetention(int? shipperTenantId, string waybillNumber,int tripId)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+             new LocalizableString(
+                 L("NotifyShipperBeforApplyDetention"),
+                 TACHYONConsts.LocalizationSourceName
+             )
+         );
+            notificationData["tripId"] = tripId;
+
+            await _notificationPublisher.PublishAsync(AppNotificationNames.SendDriectRequestForCarrier,
+                notificationData, tenantIds: new[] { shipperTenantId });
+        }
     }
 }
