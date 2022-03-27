@@ -1293,6 +1293,7 @@ namespace TACHYON.Shipping.ShippingRequests
                         ShipperInvoiceNo = x.ShipperInvoiceNo, /*TAC-2181 || 22/12/2021 || need to display it as an empty on production*/
                         InvoiceNumber = GetInvoiceNumberByTripId(shippingRequestTripId).ToString(),
                         IsSingleDrop = !dropOffId.HasValue,
+                        ShipperNotes = x.ShipperNotes
                     });
 
                 return finalOutput;
