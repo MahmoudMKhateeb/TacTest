@@ -209,8 +209,8 @@
                             class="m-input"
                             [disabled]="shippingRequestType == 'bidding' ? null : true"
                             [readonly]="true"
-                            [minHijri]="todayHijri"
-                            [minGreg]="todayGregorian"
+                            [minHijri]="minHijriEndDate"
+                            [minGreg]="minGrogEndDate"
                             [selectedDate]="endBiddate"
                             (selectedDateChange)="validateBiddingDates($event, 'biddingEndDate')"
                           >
@@ -269,8 +269,8 @@
                             [label]="l('TripsEndDate')"
                             class="m-input"
                             [readonly]="true"
-                            [minHijri]="startTripdate || todayHijri"
-                            [minGreg]="startTripdate || todayGregorian"
+                            [minHijri]="minHijriTripdate"
+                            [minGreg]="minGrogTripdate"
                             [selectedDate]="endTripdate"
                             (selectedDateChange)="validateTripsDates($event, 'tripsEndDate')"
                           >
