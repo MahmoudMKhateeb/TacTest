@@ -7,6 +7,7 @@ using System.Text;
 using TACHYON.Invoices;
 using TACHYON.Invoices.SubmitInvoices;
 using TACHYON.MultiTenancy;
+using TACHYON.PriceOffers;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
@@ -18,7 +19,6 @@ namespace TACHYON.Penalties
     {
         public string PenaltyName { get; set; }
         public string PenaltyDescrption { get; set; }
-        public decimal Amount { get; set; }
         public PenaltyType Type { get; set; }
         public int TenantId { get; set; }
         [ForeignKey(nameof(TenantId))]
@@ -35,5 +35,18 @@ namespace TACHYON.Penalties
         public long? SubmitInvoiceId {get; set; }
         [ForeignKey(nameof(SubmitInvoiceId))]
         public SubmitInvoice Submitinvoice { get; set; }
+
+        public decimal CommissionValue { get; set; }
+        public PriceOfferCommissionType CommissionType { get; set; }
+        public decimal AmountPreCommestion { get; set; }
+        public decimal AmountPostCommestion { get; set; }
+
+        public decimal VatAmount { get; set; }
+        public decimal VatPreCommestion { get; set; }
+        public decimal VatPostCommestion { get; set; }
+
+        public decimal TotalAmount { get; set; }
+
+
     }
 }

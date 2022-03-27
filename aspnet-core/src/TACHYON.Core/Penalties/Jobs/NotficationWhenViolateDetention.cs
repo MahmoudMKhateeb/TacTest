@@ -6,7 +6,11 @@ using System.Text;
 
 namespace TACHYON.Penalties.Jobs
 {
-   public class NotficationWhenViolateDetention : BackgroundJob<int[]>, ITransientDependency
+    public class NotficationWhenViolateDetention : BackgroundJob<int[]>, ITransientDependency
     {
+        public override void Execute(int[] args)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

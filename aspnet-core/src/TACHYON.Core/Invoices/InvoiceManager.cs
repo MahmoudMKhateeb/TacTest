@@ -431,7 +431,7 @@ namespace TACHYON.Invoices
          List<Penalty> penalties,
          InvoicePeriod period)
         {
-            decimal totalAmount = penalties.Sum(r=>r.Amount);
+            decimal totalAmount = penalties.Sum(r=>r.TotalAmount);
             decimal vatAmount = (decimal)penalties.Sum(r => r.TripFK.VatAmount);
             decimal subTotalAmount = (decimal)penalties.Sum(r =>r.TripFK.SubTotalAmount);
 
@@ -488,7 +488,7 @@ namespace TACHYON.Invoices
             }
 
             if (!penalties.Any()) return;
-            decimal totalAmount = penalties.Sum(r => r.Amount);
+            decimal totalAmount = penalties.Sum(r => r.TotalAmount);
             decimal vatAmount = (decimal)penalties.Sum(r => r.TripFK.VatAmount);
             decimal subTotalAmount = (decimal)penalties.Sum(r => r.TripFK.SubTotalAmount);
 
