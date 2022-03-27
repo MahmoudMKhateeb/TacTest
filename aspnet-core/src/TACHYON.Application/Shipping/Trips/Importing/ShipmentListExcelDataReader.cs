@@ -54,12 +54,31 @@ namespace TACHYON.Shipping.Trips.Importing
                 trip.BulkUploadRef = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
                     row, 0, "Reference No", exceptionMessage);
                 //1
-                trip.StartTripDate = GetDateTimeValueFromTextOrNull(_tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
-                    row, 1, "Trip Pick up Date Start *", exceptionMessage));
+                var startDate = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
+                    row, 1, "Trip Pick up Date Start *", exceptionMessage);
+                var startTripDate = GetDateTimeValueFromTextOrNull(startDate);
+                if(startDate!=null && (startTripDate == null || startTripDate == default(DateTime)))
+                {
+                    exceptionMessage.Append(_tachyonExcelDataReaderHelper.GetLocalizedExceptionMessagePart("StartTripDate"));
+                }
+                else
+                {
+                    trip.StartTripDate = startTripDate;
+                }
 
                 //2
-                trip.EndTripDate= GetDateTimeValueFromTextOrNull(_tachyonExcelDataReaderHelper.GetValueFromRowOrNull<string>(worksheet,
-                    row, 2, "Trip Pick up Date End", exceptionMessage));
+                var endDate = _tachyonExcelDataReaderHelper.GetValueFromRowOrNull<string>(worksheet,
+                    row, 2, "Trip Pick up Date End", exceptionMessage);
+                var endTripDate= GetDateTimeValueFromTextOrNull(endDate);
+
+                if(endDate!=null && (trip.EndTripDate==null || trip.EndTripDate==default(DateTime)))
+                {
+                    exceptionMessage.Append(_tachyonExcelDataReaderHelper.GetLocalizedExceptionMessagePart("EndTripDate"));
+                }
+                else
+                {
+                    trip.EndTripDate = endTripDate;
+                }
 
                 //3
                 trip.TotalValue= _tachyonExcelDataReaderHelper.GetValueFromRowOrNull<string>(worksheet,
