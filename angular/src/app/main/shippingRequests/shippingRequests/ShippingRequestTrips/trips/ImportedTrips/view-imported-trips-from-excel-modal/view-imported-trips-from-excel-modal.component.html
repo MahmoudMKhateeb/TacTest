@@ -80,11 +80,11 @@
                       </td>
                       <td>
                         <span class="ui-column-title"> {{ l('hasAttachment') }}</span>
-                        {{ record.hasAttachment == true ? l('Yes') : l('No') }}
+                        {{ record.hasAttachment ? l('Yes') : l('No') }}
                       </td>
                       <td>
                         <span class="ui-column-title"> {{ l('needsDeliveryNote') }}</span>
-                        {{ record.needsDeliveryNote == true ? l('Yes') : l('No') }}
+                        {{ record.needsDeliveryNote ? l('Yes') : l('No') }}
                       </td>
                       <td>
                         <span class="ui-column-title"> {{ l('originFacility') }}</span>
@@ -112,7 +112,7 @@
                       </td>
                     </tr>
                     <tr>
-                      <td colspan="11" *ngIf="record.exception">
+                      <td [attr.colspan]="isSingleDdrop ? '11' : '9'" *ngIf="record.exception">
                         <span class="required-fileds font-weight-bolder"> {{ l('Exception') }} : </span>
                         {{ record.exception }}
                       </td>
