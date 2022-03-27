@@ -12,6 +12,5 @@ namespace TACHYON.Penalties.Dto
         public PenaltyType Type { get; set; }
         public int TenantId { get; set; }
         public long? SourceId { get; set; }
-        public SourceType? SourceType { get; set; }
     }
 }

@@ -4090,14 +4090,23 @@ namespace TACHYON.Migrations
                     b.Property<string>("PenaltyName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long?>("SourceId")
+                    b.Property<long?>("PointId")
                         .HasColumnType("bigint");
 
-                    b.Property<byte?>("SourceType")
-                        .HasColumnType("tinyint");
+                    b.Property<long?>("RoutPointFKId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("SubmitInvoiceId")
+                        .HasColumnType("bigint");
 
                     b.Property<int>("TenantId")
                         .HasColumnType("int");
+
+                    b.Property<int?>("TripFKId")
+                        .HasColumnType("int");
+
+                    b.Property<long?>("TripId")
+                        .HasColumnType("bigint");
 
                     b.Property<byte>("Type")
                         .HasColumnType("tinyint");
@@ -4106,7 +4115,13 @@ namespace TACHYON.Migrations
 
                     b.HasIndex("InvoiceId");
 
+                    b.HasIndex("RoutPointFKId");
+
+                    b.HasIndex("SubmitInvoiceId");
+
                     b.HasIndex("TenantId");
+
+                    b.HasIndex("TripFKId");
 
                     b.ToTable("Penalties");
                 });
@@ -7890,11 +7905,23 @@ namespace TACHYON.Migrations
                         .WithMany("Penalties")
                         .HasForeignKey("InvoiceId");
 
+                    b.HasOne("TACHYON.Routs.RoutPoints.RoutPoint", "RoutPointFK")
+                        .WithMany("Penalties")
+                        .HasForeignKey("RoutPointFKId");
+
+                    b.HasOne("TACHYON.Invoices.SubmitInvoices.SubmitInvoice", "Submitinvoice")
+                        .WithMany("Penalties")
+                        .HasForeignKey("SubmitInvoiceId");
+
                     b.HasOne("TACHYON.MultiTenancy.Tenant", "Tenant")
                         .WithMany()
                         .HasForeignKey("TenantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("TACHYON.Shipping.ShippingRequestTrips.ShippingRequestTrip", "TripFK")
+                        .WithMany("Penalties")
+                        .HasForeignKey("TripFKId");
                 });
 
             modelBuilder.Entity("TACHYON.PriceOffers.PriceOffer", b =>

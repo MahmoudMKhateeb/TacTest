@@ -191,9 +191,15 @@ namespace TACHYON.Invoices
             foreach (var tenant in tenants)
             {
                 if (tenant.EditionId == ShipperEditionId)
+                {
                     await CollectTripsForShipper(tenant, period);
+                    await CollectPenaltyForShipper(tenant, period);
+                }
                 else
+                {
                     await BuildCarrierSubmitInvoice(tenant, period);
+                    await GenerateCarrierPenaltyInvoice(tenant, period);
+                }
             }
         }
 
@@ -260,6 +266,34 @@ namespace TACHYON.Invoices
 
             if (trips.Any())
                 await GenerateShipperInvoice(tenant, trips, period);
+        }
+
+        private async Task CollectPenaltyForShipper(Tenant tenant, InvoicePeriod period)
+        {
+           var penalties = await _penaltyRepository.GetAll()
+                .Include(x=>x.TripFK)
+                .ThenInclude(x=>x.ShippingRequestFk)
+                .Where(x => !x.InvoiceId.HasValue).ToListAsync();
+
+            foreach (var item in penalties)
+            {
+                var shipperId = item.TenantId;
+                var carrierId = item.TripFK.ShippingRequestFk.CarrierTenantId;
+                if (!await _featureChecker.IsEnabledAsync(shipperId, AppFeatures.Saas))
+                {
+                    continue;
+                }
+
+                var relatedCarrierId =
+                    int.Parse(await _featureChecker.GetValueAsync(shipperId, AppFeatures.SaasRelatedCarrier));
+                if (carrierId == relatedCarrierId)
+                {
+                    penalties.Remove(item);
+                } // lugin confirmation 
+            }
+
+            if (penalties.Any())
+                await GenerateShipperPenaltyInvoice(tenant, penalties, period);
         }
 
 
@@ -391,6 +425,84 @@ namespace TACHYON.Invoices
 
             await _balanceManager.CheckShipperOverLimit(tenant);
             await _appNotifier.NewInvoiceShipperGenerated(invoice);
+        }
+
+        public async Task GenerateShipperPenaltyInvoice(Tenant tenant,
+         List<Penalty> penalties,
+         InvoicePeriod period)
+        {
+            decimal totalAmount = penalties.Sum(r=>r.Amount);
+            decimal vatAmount = (decimal)penalties.Sum(r => r.TripFK.VatAmount);
+            decimal subTotalAmount = (decimal)penalties.Sum(r =>r.TripFK.SubTotalAmount);
+
+            DateTime dueDate = Clock.Now;
+
+            if (period.PeriodType != InvoicePeriodType.PayInAdvance)
+            {
+                var paymentType = await _invoicePaymentMethodRepository.FirstOrDefaultAsync(x =>
+                    x.Id == int.Parse(_featureChecker.GetValue(tenant.Id, AppFeatures.InvoicePaymentMethod)));
+                if (paymentType.PaymentType == PaymentMethod.InvoicePaymentType.Days)
+                {
+                    dueDate = Clock.Now.AddDays(paymentType.InvoiceDueDateDays);
+                }
+            }
+
+            var invoice = new Invoice
+            {
+                TenantId = tenant.Id,
+                PeriodId = period.Id,
+                DueDate = dueDate,
+                IsPaid = period.PeriodType == InvoicePeriodType.PayInAdvance,
+                TotalAmount = totalAmount,
+                VatAmount = vatAmount,
+                SubTotalAmount = subTotalAmount,
+                AccountType = InvoiceAccountType.AccountReceivable,
+                Channel = InvoiceChannel.Penalty,
+                Penalties = penalties
+            };
+            invoice.Id = await _invoiceRepository.InsertAndGetIdAsync(invoice);
+
+        }
+        private async Task GenerateCarrierPenaltyInvoice(Tenant tenant, InvoicePeriod period)
+        {
+            var penalties = await _penaltyRepository.GetAll()
+                .Include(x => x.TripFK)
+                .ThenInclude(x => x.ShippingRequestFk)
+                .Where(x => !x.SubmitInvoiceId.HasValue && x.Tenant.EditionId  == CarrierEditionId).ToListAsync();
+
+            foreach (var item in penalties)
+            {
+                var shipperId = item.TenantId;
+                var carrierId = item.TripFK.ShippingRequestFk.CarrierTenantId;
+                if (!await _featureChecker.IsEnabledAsync(shipperId, AppFeatures.Saas))
+                {
+                    continue;
+                }
+
+                var relatedCarrierId =
+                    int.Parse(await _featureChecker.GetValueAsync(shipperId, AppFeatures.SaasRelatedCarrier));
+                if (carrierId == relatedCarrierId)
+                {
+                    penalties.Remove(item);
+                }
+            }
+
+            if (!penalties.Any()) return;
+            decimal totalAmount = penalties.Sum(r => r.Amount);
+            decimal vatAmount = (decimal)penalties.Sum(r => r.TripFK.VatAmount);
+            decimal subTotalAmount = (decimal)penalties.Sum(r => r.TripFK.SubTotalAmount);
+
+            var submitInvoice = new SubmitInvoice
+            {
+                TenantId = tenant.Id,
+                PeriodId = period.Id,
+                TotalAmount = totalAmount,
+                VatAmount = vatAmount,
+                SubTotalAmount = subTotalAmount,
+                Channel = InvoiceChannel.Penalty,
+                Penalties = penalties
+            };
+            submitInvoice.Id = await _submitInvoiceRepository.InsertAndGetIdAsync(submitInvoice);
         }
 
         /// <summary>

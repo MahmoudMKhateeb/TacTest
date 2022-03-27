@@ -58,7 +58,7 @@ namespace TACHYON.Penalties
             int[] args = new int[] { shipperTenantId, pointId };
             await _backgroundJobManager.EnqueueAsync<NotficationWhenViolateDetention, int[]>(args, delay: new TimeSpan(allowedDelay, 30, 00));
         }
-        public async Task InitPenalty(PenaltyType penaltyType, int tenantId, long sourceId, SourceType sourceType, DateTime date)
+        public async Task InitPenalty(PenaltyType penaltyType, int tenantId, long sourceId, DateTime date)
         {
             if (!(await _featureChecker.IsEnabledAsync(tenantId, AppFeatures.Carrier) || await _featureChecker.IsEnabledAsync(tenantId, AppFeatures.Shipper)))
                 throw new UserFriendlyException(L("YouShouldAddPenaltyToShipperOrCarrier"));
@@ -70,10 +70,10 @@ namespace TACHYON.Penalties
                 var penalty = new Penalty
                 {
                     Amount = featureAmount,
-                    SourceId = sourceId,
                     TenantId = tenantId,
                     Type = penaltyType,
-                    SourceType = sourceType,
+                    PointId = sourceId,
+                    TripId = sourceId,
                     PenaltyName = penaltyType.ToString(),
                     PenaltyDescrption = penaltyType.ToString()
                 };

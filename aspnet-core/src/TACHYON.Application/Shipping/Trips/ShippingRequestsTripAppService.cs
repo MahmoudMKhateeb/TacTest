@@ -401,7 +401,7 @@ namespace TACHYON.Shipping.Trips
             }
 
             await _penaltyManager.InitPenalty(PenaltyType.NotAssigningTruckAndDriverBeforeTheDateForTheTrip,
-                trip.ShippingRequestFk.CarrierTenantId.Value, trip.Id, SourceType.ShippingRequestTrip, trip.StartTripDate);
+                trip.ShippingRequestFk.CarrierTenantId.Value, trip.Id , trip.StartTripDate);
             
             // Send Notification To New Driver
             await _appNotifier.NotifyDriverWhenAssignTrip(trip.Id,
