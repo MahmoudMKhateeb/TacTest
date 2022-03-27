@@ -91,6 +91,7 @@ namespace TACHYON.EntityFrameworkCore
         public virtual DbSet<EmailTemplate> EmailTemplates { get; set; }
 
         public virtual DbSet<DriverLicenseType> DriverLicenseTypes { get; set; }
+        public virtual DbSet<DriverLicenseTypeTranslation> DriverLicenseTypeTranslations { get; set; }
 
         public virtual DbSet<DangerousGoodType> DangerousGoodTypes { get; set; }
         public virtual DbSet<DangerousGoodTypeTranslation> DangerousGoodTypeTranslations { get; set; }

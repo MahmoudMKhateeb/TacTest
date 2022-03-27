@@ -178,8 +178,7 @@ namespace TACHYON
             configuration.CreateMap<CreateOrEditEmailTemplateTranslationDto, EmailTemplateTranslation>().ReverseMap();
             configuration.CreateMap<CreateOrEditEmailTemplateDto, EmailTemplate>().ReverseMap();
             configuration.CreateMap<EmailTemplateDto, EmailTemplate>().ReverseMap();
-            configuration.CreateMap<CreateOrEditDriverLicenseTypeDto, DriverLicenseType>().ReverseMap();
-            configuration.CreateMap<DriverLicenseTypeDto, DriverLicenseType>().ReverseMap();
+            //configuration.CreateMap<DriverLicenseTypeDto, DriverLicenseType>().ReverseMap();
             configuration.CreateMap<CreateOrEditDangerousGoodTypeDto, DangerousGoodType>().ReverseMap();
             configuration.CreateMap<DangerousGoodTypeDto, DangerousGoodType>().ReverseMap();
             configuration.CreateMap<DangerousGoodTypeTranslation, DangerousGoodTypeTranslationDto>()
@@ -849,6 +848,10 @@ namespace TACHYON
                 CreateMultiLingualMap<UnitOfMeasure, UnitOfMeasureTranslation, UnitOfMeasureDto>(context);
             configuration.
                 CreateMultiLingualMap<UnitOfMeasure, UnitOfMeasureTranslation, GetAllUnitOfMeasureForDropDownOutput>(context)
+                .EntityMap.ForMember(x => x.IsOther, x => x.MapFrom(i => i.ContainsOther()));
+            configuration.CreateMultiLingualMap<DriverLicenseType, DriverLicenseTypeTranslation, DriverLicenseTypeDto>(context);
+            configuration.
+                CreateMultiLingualMap<DriverLicenseType, DriverLicenseTypeTranslation, GetLicenseTypeForDropDownOutput>(context)
                 .EntityMap.ForMember(x => x.IsOther, x => x.MapFrom(i => i.ContainsOther()));
         }
 

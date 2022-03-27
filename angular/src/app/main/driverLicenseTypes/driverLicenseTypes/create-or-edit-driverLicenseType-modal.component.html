@@ -22,13 +22,13 @@
         </div>
         <div class="modal-body">
           <div class="form-group">
-            <label for="DriverLicenseType_Name">{{ l('Name') }} *</label>
+            <label for="DriverLicenseType_Name">{{ l('Key') }} *</label>
             <input
               type="text"
               id="DriverLicenseType_Name"
               class="form-control"
-              [(ngModel)]="driverLicenseType.name"
-              name="Name"
+              [(ngModel)]="driverLicenseType.key"
+              name="Key"
               minlength="0"
               maxlength="256"
               required
