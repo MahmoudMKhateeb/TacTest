@@ -40,9 +40,16 @@
                 <div class="col-md-3">
                   <div class="form-group">
                     <label for="templateTypeFilter">{{ l('TemplateType') }}</label>
-                    <select class="form-control" id="templateTypeFilter" name="templateTypeFilter" [(ngModel)]="templateTypeFilter">
+                    <select
+                      class="form-control"
+                      id="templateTypeFilter"
+                      name="templateTypeFilter"
+                      [(ngModel)]="templateTypeFilter"
+                      ngModel
+                      (ngModelChange)="getTemplates()"
+                    >
                       <option value="" selected>{{ l('All') }}</option>
-                      <option *ngFor="let item of availableEntityTypes" value="{{ item.key }}" (click)="getTemplates()">{{ l(item.value) }}</option>
+                      <option *ngFor="let item of availableEntityTypes" value="{{ item.key }}">{{ l(item.value) }}</option>
                     </select>
                   </div>
                 </div>
