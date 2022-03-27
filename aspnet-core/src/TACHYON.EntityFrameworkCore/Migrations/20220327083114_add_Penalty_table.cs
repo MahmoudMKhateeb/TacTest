@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TACHYON.Migrations
 {
-    public partial class add_Penalty_Table : Migration
+    public partial class add_Penalty_table : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -29,7 +29,8 @@ namespace TACHYON.Migrations
                     TripFKId = table.Column<int>(nullable: true),
                     PointId = table.Column<long>(nullable: true),
                     RoutPointFKId = table.Column<long>(nullable: true),
-                    InvoiceId = table.Column<long>(nullable: true)
+                    InvoiceId = table.Column<long>(nullable: true),
+                    SubmitInvoiceId = table.Column<long>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -44,6 +45,12 @@ namespace TACHYON.Migrations
                         name: "FK_Penalties_RoutPoints_RoutPointFKId",
                         column: x => x.RoutPointFKId,
                         principalTable: "RoutPoints",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Penalties_SubmitInvoices_SubmitInvoiceId",
+                        column: x => x.SubmitInvoiceId,
+                        principalTable: "SubmitInvoices",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -70,6 +77,11 @@ namespace TACHYON.Migrations
                 column: "RoutPointFKId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Penalties_SubmitInvoiceId",
+                table: "Penalties",
+                column: "SubmitInvoiceId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Penalties_TenantId",
                 table: "Penalties",
                 column: "TenantId");
@@ -78,6 +90,7 @@ namespace TACHYON.Migrations
                 name: "IX_Penalties_TripFKId",
                 table: "Penalties",
                 column: "TripFKId");
+
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

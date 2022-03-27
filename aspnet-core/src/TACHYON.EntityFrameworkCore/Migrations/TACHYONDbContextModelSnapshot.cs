@@ -4096,6 +4096,9 @@ namespace TACHYON.Migrations
                     b.Property<long?>("RoutPointFKId")
                         .HasColumnType("bigint");
 
+                    b.Property<long?>("SubmitInvoiceId")
+                        .HasColumnType("bigint");
+
                     b.Property<int>("TenantId")
                         .HasColumnType("int");
 
@@ -4113,6 +4116,8 @@ namespace TACHYON.Migrations
                     b.HasIndex("InvoiceId");
 
                     b.HasIndex("RoutPointFKId");
+
+                    b.HasIndex("SubmitInvoiceId");
 
                     b.HasIndex("TenantId");
 
@@ -7903,6 +7908,10 @@ namespace TACHYON.Migrations
                     b.HasOne("TACHYON.Routs.RoutPoints.RoutPoint", "RoutPointFK")
                         .WithMany("Penalties")
                         .HasForeignKey("RoutPointFKId");
+
+                    b.HasOne("TACHYON.Invoices.SubmitInvoices.SubmitInvoice", "Submitinvoice")
+                        .WithMany("Penalties")
+                        .HasForeignKey("SubmitInvoiceId");
 
                     b.HasOne("TACHYON.MultiTenancy.Tenant", "Tenant")
                         .WithMany()

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 using TACHYON.Invoices;
+using TACHYON.Invoices.SubmitInvoices;
 using TACHYON.MultiTenancy;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.ShippingRequests;
@@ -26,8 +27,13 @@ namespace TACHYON.Penalties
         public ShippingRequestTrip TripFK { get; set; }
         public long? PointId { get; set; }
         public RoutPoint RoutPointFK { get; set; }
+        //shipper
         public long? InvoiceId { get; set; }
         [ForeignKey(nameof(InvoiceId))]
         public Invoice InvoiceFK { get; set; }
+        //carrier
+        public long? SubmitInvoiceId {get; set; }
+        [ForeignKey(nameof(SubmitInvoiceId))]
+        public SubmitInvoice Submitinvoice { get; set; }
     }
 }

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using TACHYON.Invoices.Periods;
 using TACHYON.MultiTenancy;
+using TACHYON.Penalties;
 
 namespace TACHYON.Invoices.SubmitInvoices
 {
@@ -27,6 +28,7 @@ namespace TACHYON.Invoices.SubmitInvoices
         public ICollection<SubmitInvoiceTrip> Trips { get; set; }
         public SubmitInvoiceStatus Status { get; set; }
         public string RejectedReason { get; set; }
+        public ICollection<Penalty> Penalties { get; set; }
 
         public SubmitInvoice()
         {
