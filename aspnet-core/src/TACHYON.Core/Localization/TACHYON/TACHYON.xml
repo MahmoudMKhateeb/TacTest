@@ -301,7 +301,7 @@
 		<text name="CityDisplayName">City</text>
 		<text name="CityName">City</text>
 		<text name="CityOrigin">Origin</text>
-		<text name="Claim">Claim</text>
+		<text name="Claim">Claimed</text>
 		<text name="ClaimKey">Claim Key</text>
 		<text name="ClaimsMapping">Claims Mapping</text>
 		<text name="ClaimValue">Claim Value</text>
@@ -487,7 +487,7 @@
 		<text name="DeactivateAccountUponexpiration">Deactivate Account Upon expiration</text>
 		<text name="DeactivateSubscriptionWarningMessage">Webhook subscription will be deactivated and your endpoint will no longer get webhooks</text>
 		<text name="DeactiveTenant">Deactivate company</text>
-		<text name="Declined">Declined</text>
+		<text name="Declined">Decline</text>
 		<text name="DeclinedOfPricing">Declined of pricing</text>
 		<text name="DeclineDriectRequest">The carrier {client} Declined of pricing shipment.</text>
 		<text name="Default">Default</text>
