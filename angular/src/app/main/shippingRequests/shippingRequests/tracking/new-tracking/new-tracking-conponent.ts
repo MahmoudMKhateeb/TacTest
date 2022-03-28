@@ -24,6 +24,7 @@ import { FileDownloadService } from '@shared/utils/file-download.service';
 import { EntityLogComponent } from '@app/shared/common/entity-log/entity-log.component';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/compat/database';
 import { DriverLocation, FirebaseHelperClass, trackingIconsList } from '@app/main/shippingRequests/shippingRequests/tracking/firebaseHelper.class';
+import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 
 @Component({
   selector: 'new-tracking-conponent',
@@ -72,6 +73,7 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
   tripsToggle = true;
   driverLiveLocation: DriverLocation = { lng: 0, lat: 0 };
   trackingIconsList = trackingIconsList;
+  driverLocationUnknown: boolean;
   constructor(
     injector: Injector,
     private elRef: ElementRef,
@@ -129,6 +131,7 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
     firebaseHelper.getDriverLocationLiveByTripId(this.trip.id).subscribe((res) => {
       this.driverLiveLocation.lat = res[0]?.lat;
       this.driverLiveLocation.lng = res[0]?.lng;
+      isNotNullOrUndefined(res[0]?.lng) ? (this.driverLocationUnknown = false) : (this.driverLocationUnknown = true);
     });
   }
   /**
@@ -186,6 +189,7 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
         finalize(() => {
           this.saving = false;
           this.getForView();
+          this.sendDriverLocationToFirebase();
         })
       )
       .subscribe(() => {
@@ -480,5 +484,14 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
    */
   tripToggle() {
     this.tripsToggle = !this.tripsToggle;
+  }
+
+  /**
+   * Send Driver Location to Firebase On Trip Start
+   * @private
+   */
+  private sendDriverLocationToFirebase() {
+    let helper = new FirebaseHelperClass(this._db);
+    helper.assignDriverToTrip(this.trip, this.appSession.tenantId);
   }
 }

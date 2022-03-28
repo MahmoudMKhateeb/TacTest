@@ -1,6 +1,7 @@
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/compat/database';
 import { Observable } from 'rxjs';
 import { map } from '@node_modules/rxjs/internal/operators';
+import { TrackingListDto } from '@shared/service-proxies/service-proxies';
 
 export const trackingIconsList = {
   driverIcon: {
@@ -12,6 +13,13 @@ export const trackingIconsList = {
   },
   truckIcon: {
     url: 'https://img.icons8.com/external-justicon-flat-justicon/64/000000/external-truck-transportation-justicon-flat-justicon.png',
+    scaledSize: {
+      width: 40,
+      height: 40,
+    },
+  },
+  offlineDriverIcon: {
+    url: 'https://img.icons8.com/dusk/344/wifi-off.png',
     scaledSize: {
       width: 40,
       height: 40,
@@ -57,6 +65,24 @@ export class FirebaseHelperClass {
   getAllActiveDriversLocationsInTheSystem(): Observable<any> {
     this.fireDB = this._db.list(this.database, (ref) => ref.orderByChild('activePointId').startAfter(0));
     return this.fireDB.valueChanges();
+  }
+
+  /**
+   * Emit Driver Starting Trip From Frontend
+   */
+  assignDriverToTrip(trip: TrackingListDto, tenantId: number) {
+    this.fireDB = this._db.list(this.database);
+    let data = {
+      driverId: trip.assignedDriverUserId,
+      driverName: trip.driver,
+      hasAccident: trip.hasAccident,
+      shippingRequestId: trip.requestId,
+      tenantId: tenantId,
+      tripId: trip.id,
+      tripStatus: trip.status,
+      waybillNumber: trip.waybillNumber,
+    };
+    this.fireDB.set(trip.assignedDriverUserId.toString(), data);
   }
 
   /**
