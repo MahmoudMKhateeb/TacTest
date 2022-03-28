@@ -2505,6 +2505,9 @@
     <text name="ReceiverCodeConfirmationMsg">Are you sure you want to reset the receiver code for this shipment?</text>
 	<text name="CompanyDescriptionHint">Company description must be at most 500 characters</text>
 	<text name="SelectAnEmailTemplateType">Select an email template type</text>
+	<text name="NotifyShipperWhenApplyDetention">
+		The Allowed Detention time policy in the Facility {0} was violated on the Trip {1} and according to Tachyon’s policies you will be charged {2}. Please Contact Tachyon platform administration for any Inquiries.
+	</text>
 
 	
 	</texts>

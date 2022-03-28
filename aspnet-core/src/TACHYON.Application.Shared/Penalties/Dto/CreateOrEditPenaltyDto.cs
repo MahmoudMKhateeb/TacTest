@@ -12,9 +12,11 @@ namespace TACHYON.Penalties.Dto
         public string PenaltyName { get; set; }
         public string PenaltyDescrption { get; set; }
         [Required]
-        public decimal Amount { get; set; }
+        public decimal TotalAmount { get; set; }
         [Required]
         public int TenantId { get; set; }
+        [Required]
+        public int DestinationTenantId { get; set; }
         public PenaltyType Type { get; set; }
 
     }

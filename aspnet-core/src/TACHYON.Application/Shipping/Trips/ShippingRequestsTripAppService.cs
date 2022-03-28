@@ -400,7 +400,8 @@ namespace TACHYON.Shipping.Trips
                 await _appNotifier.NotifyCarrierWhenTripUpdated(notifyTripInput);
             }
 
-            
+            await _penaltyManager.ApplyNotAssigningTruckAndDriverPenalty(trip.ShippingRequestFk.CarrierTenantId.Value, trip.ShippingRequestFk.TenantId, trip.StartTripDate, trip.Id);
+
             // Send Notification To New Driver
             await _appNotifier.NotifyDriverWhenAssignTrip(trip.Id,
                 new UserIdentifier(trip.ShippingRequestFk.CarrierTenantId, trip.AssignedDriverUserId.Value));

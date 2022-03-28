@@ -45,8 +45,9 @@
 
               <dxi-column dataField="penaltyName" caption="{{ l('PenaltyName') }}"> </dxi-column>
               <dxi-column dataField="penaltyDescrption" caption="{{ l('PenaltyDescrption') }}" dataType="date"> </dxi-column>
-              <dxi-column dataField="amount" caption="{{ l('Amount') }}"> </dxi-column>
+              <dxi-column dataField="totalAmount" caption="{{ l('Amount') }}"> </dxi-column>
               <dxi-column dataField="companyName" caption="{{ l('CompanyName') }}" dataType="date"> </dxi-column>
+              <dxi-column dataField="destinationCompanyName" caption="{{ l('DestinationCompanyName') }}" dataType="date"> </dxi-column>
               <dxi-column cellTemplate="TypeCellTemplate" dataField="Type" caption=" {{ l('Type') }}"></dxi-column>
               <div *dxTemplate="let options of 'TypeCellTemplate'">
                 <span style="width: 137px"
@@ -80,6 +81,12 @@
                     <li>
                       <a class="dropdown-item" (click)="createOrEditPenaltyModal.show(options.data.id)">{{ l('Edit') }}</a>
                     </li>
+                    <li *ngIf="!options.data.penaltyComplaintId && appSession.tenantId == options.data.tenantId">
+                      <a class="dropdown-item" (click)="registerAComplaint.show(options.data.id)">{{ l('RegisteraComplaint') }}</a>
+                    </li>
+                    <li *ngIf="options.data.penaltyComplaintId">
+                      <a class="dropdown-item" (click)="viewComplaint.show(options.data.id)">{{ l('ViewComplaint') }}</a>
+                    </li>
                   </ul>
                 </div>
               </div>
@@ -91,3 +98,5 @@
   </div>
 </div>
 <createOrEditPenaltyModal #createOrEditPenaltyModal (modalSave)="reloadPage()"></createOrEditPenaltyModal>
+<registerComplaint #registerAComplaint (modalSave)="reloadPage()"></registerComplaint>
+<viewComplaint #viewComplaint (modalSave)="reloadPage()"></viewComplaint>

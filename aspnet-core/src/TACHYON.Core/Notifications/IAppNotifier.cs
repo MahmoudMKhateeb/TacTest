@@ -202,5 +202,6 @@ namespace TACHYON.Notifications
             params UserIdentifier[] drivers);
 
         Task NotifyShipperBeforApplyDetention(int? shipperTenantId, string waybillNumber, int tripId);
+        Task NotifyShipperWhenApplyDetention(int? shipperTenantId, string facilityName, string waybillNumber, decimal amount, int tripId);
     }
 }

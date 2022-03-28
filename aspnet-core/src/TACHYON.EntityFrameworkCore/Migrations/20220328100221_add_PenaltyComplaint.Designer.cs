@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using TACHYON.EntityFrameworkCore;
@@ -10,9 +11,10 @@ using TACHYON.EntityFrameworkCore;
 namespace TACHYON.Migrations
 {
     [DbContext(typeof(TACHYONDbContext))]
-    partial class TACHYONDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220328100221_add_PenaltyComplaint")]
+    partial class add_PenaltyComplaint
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -4081,9 +4083,6 @@ namespace TACHYON.Migrations
                     b.Property<DateTime?>("DeletionTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("DestinationTenantId")
-                        .HasColumnType("int");
-
                     b.Property<long?>("InvoiceId")
                         .HasColumnType("bigint");
 
@@ -4110,9 +4109,6 @@ namespace TACHYON.Migrations
 
                     b.Property<string>("SourceFeature")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
 
                     b.Property<long?>("SubmitInvoiceId")
                         .HasColumnType("bigint");
@@ -4143,8 +4139,6 @@ namespace TACHYON.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DestinationTenantId");
-
                     b.HasIndex("InvoiceId");
 
                     b.HasIndex("RoutPointFKId");
@@ -4169,12 +4163,6 @@ namespace TACHYON.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PenaltyId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("RejectReason")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -7960,12 +7948,6 @@ namespace TACHYON.Migrations
 
             modelBuilder.Entity("TACHYON.Penalties.Penalty", b =>
                 {
-                    b.HasOne("TACHYON.MultiTenancy.Tenant", "DestinationTenantFK")
-                        .WithMany()
-                        .HasForeignKey("DestinationTenantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("TACHYON.Invoices.Invoice", "InvoiceFK")
                         .WithMany("Penalties")
                         .HasForeignKey("InvoiceId");

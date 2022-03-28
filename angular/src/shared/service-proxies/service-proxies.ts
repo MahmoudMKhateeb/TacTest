@@ -28223,6 +28223,265 @@ export class PenaltiesServiceProxy {
   }
 
   /**
+   * @param id (optional)
+   * @return Success
+   */
+  getPenaltyComplaintForView(id: number | undefined): Observable<PenaltyComplaintDto> {
+    let url_ = this.baseUrl + '/api/services/app/Penalties/GetPenaltyComplaintForView?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetPenaltyComplaintForView(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetPenaltyComplaintForView(<any>response_);
+            } catch (e) {
+              return <Observable<PenaltyComplaintDto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<PenaltyComplaintDto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetPenaltyComplaintForView(response: HttpResponseBase): Observable<PenaltyComplaintDto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = PenaltyComplaintDto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<PenaltyComplaintDto>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
+  acceptComplaint(id: number | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/Penalties/AcceptComplaint?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({}),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processAcceptComplaint(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processAcceptComplaint(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processAcceptComplaint(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @param body (optional)
+   * @return Success
+   */
+  rejectComplaint(body: RejectComplaintDto | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/Penalties/RejectComplaint';
+    url_ = url_.replace(/[?&]$/, '');
+
+    const content_ = JSON.stringify(body);
+
+    let options_: any = {
+      body: content_,
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processRejectComplaint(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processRejectComplaint(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processRejectComplaint(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @param body (optional)
+   * @return Success
+   */
+  registerComplaint(body: RegisterPenaltyComplaintDto | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/Penalties/RegisterComplaint';
+    url_ = url_.replace(/[?&]$/, '');
+
+    const content_ = JSON.stringify(body);
+
+    let options_: any = {
+      body: content_,
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processRegisterComplaint(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processRegisterComplaint(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processRegisterComplaint(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
    * @return Success
    */
   getAllCompanyForDropDown(): Observable<GetAllCompanyForDropDownDto[]> {
@@ -77207,19 +77466,18 @@ export interface IPayPalConfigurationDto {
 
 export enum PenaltyType {
   NotLogged = 0,
-  ShippingRequestCancelingDuringPostPriceProcess = 1,
-  ShippingRequestCancelBeforeCompletionTrips = 2,
-  TripCancelingBeforeDeliveringAllDrops = 3,
-  DetentionPeriodExceedMaximumAllowedTime = 4,
-  NotAssigningTruckAndDriverBeforeTheDateForTheTrip = 5,
-  NotDeliveringAllDropsBeforeExpectedTripEndDate = 6,
+  TripCancelation = 1,
+  DetentionPeriodExceedMaximumAllowedTime = 2,
+  NotAssigningTruckAndDriverBeforeTheDateForTheTrip = 3,
+  NotDeliveringAllDropsBeforeExpectedTripEndDate = 4,
 }
 
 export class CreateOrEditPenaltyDto implements ICreateOrEditPenaltyDto {
   penaltyName!: string;
   penaltyDescrption!: string | undefined;
-  amount!: number;
+  totalAmount!: number;
   tenantId!: number;
+  destinationTenantId!: number;
   type!: PenaltyType;
   id!: number | undefined;
 
@@ -77235,8 +77493,9 @@ export class CreateOrEditPenaltyDto implements ICreateOrEditPenaltyDto {
     if (_data) {
       this.penaltyName = _data['penaltyName'];
       this.penaltyDescrption = _data['penaltyDescrption'];
-      this.amount = _data['amount'];
+      this.totalAmount = _data['totalAmount'];
       this.tenantId = _data['tenantId'];
+      this.destinationTenantId = _data['destinationTenantId'];
       this.type = _data['type'];
       this.id = _data['id'];
     }
@@ -77253,8 +77512,9 @@ export class CreateOrEditPenaltyDto implements ICreateOrEditPenaltyDto {
     data = typeof data === 'object' ? data : {};
     data['penaltyName'] = this.penaltyName;
     data['penaltyDescrption'] = this.penaltyDescrption;
-    data['amount'] = this.amount;
+    data['totalAmount'] = this.totalAmount;
     data['tenantId'] = this.tenantId;
+    data['destinationTenantId'] = this.destinationTenantId;
     data['type'] = this.type;
     data['id'] = this.id;
     return data;
@@ -77264,9 +77524,145 @@ export class CreateOrEditPenaltyDto implements ICreateOrEditPenaltyDto {
 export interface ICreateOrEditPenaltyDto {
   penaltyName: string;
   penaltyDescrption: string | undefined;
-  amount: number;
+  totalAmount: number;
   tenantId: number;
+  destinationTenantId: number;
   type: PenaltyType;
+  id: number | undefined;
+}
+
+export enum ComplaintStatus {
+  New = 1,
+  Accepted = 2,
+  Rejected = 3,
+}
+
+export class PenaltyComplaintDto implements IPenaltyComplaintDto {
+  rejectReason!: string | undefined;
+  description!: string | undefined;
+  status!: ComplaintStatus;
+  id!: number;
+
+  constructor(data?: IPenaltyComplaintDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.rejectReason = _data['rejectReason'];
+      this.description = _data['description'];
+      this.status = _data['status'];
+      this.id = _data['id'];
+    }
+  }
+
+  static fromJS(data: any): PenaltyComplaintDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new PenaltyComplaintDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['rejectReason'] = this.rejectReason;
+    data['description'] = this.description;
+    data['status'] = this.status;
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+export interface IPenaltyComplaintDto {
+  rejectReason: string | undefined;
+  description: string | undefined;
+  status: ComplaintStatus;
+  id: number;
+}
+
+export class RejectComplaintDto implements IRejectComplaintDto {
+  rejectReason!: string | undefined;
+  id!: number;
+
+  constructor(data?: IRejectComplaintDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.rejectReason = _data['rejectReason'];
+      this.id = _data['id'];
+    }
+  }
+
+  static fromJS(data: any): RejectComplaintDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new RejectComplaintDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['rejectReason'] = this.rejectReason;
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+export interface IRejectComplaintDto {
+  rejectReason: string | undefined;
+  id: number;
+}
+
+export class RegisterPenaltyComplaintDto implements IRegisterPenaltyComplaintDto {
+  penaltyId!: number;
+  description!: string | undefined;
+  id!: number | undefined;
+
+  constructor(data?: IRegisterPenaltyComplaintDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.penaltyId = _data['penaltyId'];
+      this.description = _data['description'];
+      this.id = _data['id'];
+    }
+  }
+
+  static fromJS(data: any): RegisterPenaltyComplaintDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new RegisterPenaltyComplaintDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['penaltyId'] = this.penaltyId;
+    data['description'] = this.description;
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+export interface IRegisterPenaltyComplaintDto {
+  penaltyId: number;
+  description: string | undefined;
   id: number | undefined;
 }
 

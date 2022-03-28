@@ -91,7 +91,7 @@ namespace TACHYON.EntityFrameworkCore
 
         public virtual DbSet<EmailTemplate> EmailTemplates { get; set; }
 
-        public virtual DbSet<DriverLicenseType> DriverLicenseTypes { get; set; }
+         public virtual DbSet<DriverLicenseType> DriverLicenseTypes { get; set; }
 
         public virtual DbSet<DangerousGoodType> DangerousGoodTypes { get; set; }
         public virtual DbSet<DangerousGoodTypeTranslation> DangerousGoodTypeTranslations { get; set; }
@@ -200,6 +200,7 @@ namespace TACHYON.EntityFrameworkCore
 
         public virtual DbSet<DocumentType> DocumentTypes { get; set; }
         public virtual DbSet<Penalty> Penalties { get; set; }
+        public virtual DbSet<PenaltyComplaint> PenaltyComplaints { get; set; }
 
         public virtual DbSet<ShippingRequest> ShippingRequests { get; set; }
         public DbSet<ShippingRequestDirectRequest> ShippingRequestDirectRequests { get; set; }
@@ -389,6 +390,10 @@ namespace TACHYON.EntityFrameworkCore
             {
                 s.HasIndex(e => new { e.TenantId });
             });
+
+            modelBuilder.Entity<Penalty>()
+            .HasOne(a => a.PenaltyComplaintFK).WithOne(b => b.PenaltyFK)
+            .HasForeignKey<PenaltyComplaint>(e => e.PenaltyId);
 
             modelBuilder.Entity<Offer>(o =>
             {

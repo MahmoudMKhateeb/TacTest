@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+﻿import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
@@ -280,6 +280,8 @@ import { ImportCitiesPolygonsModalComponent } from './cities/cities/import-citie
 import { ToggleButtonModule } from '@node_modules/primeng/togglebutton';
 import { PenaltiesListComponent } from './Penalties/penalties-list/penalties-list.component';
 import { CreateOrEditPenaltyModalComponent } from './Penalties/penalties-list/create-or-edit-penalty-modal/create-or-edit-penalty-modal.component';
+import { RegisterComplaintModalComponent } from './Penalties/register-complaint/register-complaint-modal.component';
+import { ViewComplaintModalComponent } from './Penalties/penalties-list/view-complaint/view-complaint-modal.component';
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
 @NgModule({
@@ -532,6 +534,8 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     CreateOrEditEmailTemplateTranslationModalComponent,
     ImportCitiesPolygonsModalComponent,
     PenaltiesListComponent,
+    RegisterComplaintModalComponent,
+    ViewComplaintModalComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },
