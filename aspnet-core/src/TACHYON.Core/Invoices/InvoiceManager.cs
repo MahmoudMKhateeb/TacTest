@@ -240,6 +240,7 @@ namespace TACHYON.Invoices
             {
                 var shipperId = trip.ShippingRequestFk.TenantId;
                 var carrierId = trip.ShippingRequestFk.CarrierTenantId;
+
                 if (!await _featureChecker.IsEnabledAsync(shipperId, AppFeatures.Saas))
                 {
                     continue;
@@ -249,6 +250,7 @@ namespace TACHYON.Invoices
                 {
                     trips.Remove(trip);
                 }
+
             }
 
             if (trips.Any())
@@ -284,6 +286,11 @@ namespace TACHYON.Invoices
                 }
                 var relatedCarrierId = int.Parse(await _featureChecker.GetValueAsync(shipperId, AppFeatures.SaasRelatedCarrier));
                 if (carrierId == relatedCarrierId || carrierId == shipperId) // saas
+                {
+                    trips.Remove(trip);
+                }
+
+                if (trip.ShippingRequestFk.IsSaas())
                 {
                     trips.Remove(trip);
                 }

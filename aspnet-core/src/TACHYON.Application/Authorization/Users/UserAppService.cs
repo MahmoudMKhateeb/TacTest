@@ -162,7 +162,7 @@ namespace TACHYON.Authorization.Users
 
 
             var drivers = (from user in _userRepository.GetAllIncluding(x=> x.NationalityFk).AsNoTracking()
-                where user.IsDriver && user.NationalityFk != null
+                where user.IsDriver 
                 join tenant in _tenantRepository.GetAll() on user.TenantId equals tenant.Id
                 select new DriverMappingEntity(){ User = user, CompanyName = tenant.companyName})
                 .Where(x=> x.User != null )

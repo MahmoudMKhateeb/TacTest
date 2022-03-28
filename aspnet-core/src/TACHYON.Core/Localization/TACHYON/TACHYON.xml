@@ -2740,5 +2740,6 @@
 		<text name="WorstRatedShippers">Worst Rated Shippers</text>
 		<text name="ReferanceNumber">Referance Number</text>
 		<text name="ForCurrentYear">For Current Year</text>
+		<text name="YouCanNotRejectTheOffer">You Can Not Reject The Offer</text>
 	</texts>
 </localizationDictionary>
