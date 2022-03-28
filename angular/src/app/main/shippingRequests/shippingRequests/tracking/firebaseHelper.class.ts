@@ -70,9 +70,10 @@ export class FirebaseHelperClass {
   /**
    * Emit Driver Starting Trip From Frontend
    */
-  assignDriverToTrip(trip: TrackingListDto, tenantId: number) {
+  assignDriverToTrip(trip: TrackingListDto, tenantId: number, activePointId: number) {
     this.fireDB = this._db.list(this.database);
     let data = {
+      activePointId: 1,
       driverId: trip.assignedDriverUserId,
       driverName: trip.driver,
       hasAccident: trip.hasAccident,

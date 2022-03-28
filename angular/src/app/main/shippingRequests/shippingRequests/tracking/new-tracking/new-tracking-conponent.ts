@@ -492,6 +492,6 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
    */
   private sendDriverLocationToFirebase() {
     let helper = new FirebaseHelperClass(this._db);
-    helper.assignDriverToTrip(this.trip, this.appSession.tenantId);
+    helper.assignDriverToTrip(this.trip, this.appSession.tenantId, this.routePoints[0].id);
   }
 }
