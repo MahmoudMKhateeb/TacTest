@@ -3,9 +3,9 @@ using System;
 
 namespace TACHYON.DriverLicenseTypes.Dtos
 {
-    public class GetAllDriverLicenseTypesInput : PagedAndSortedResultRequestDto
+    public class GetAllDriverLicenseTypesInput
     {
-        public string Filter { get; set; }
+        public string LoadOptions { get; set; }
 
 
 

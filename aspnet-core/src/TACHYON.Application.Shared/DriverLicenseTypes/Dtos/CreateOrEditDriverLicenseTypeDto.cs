@@ -10,7 +10,7 @@ namespace TACHYON.DriverLicenseTypes.Dtos
 
         [Required]
         [StringLength(DriverLicenseTypeConsts.MaxNameLength, MinimumLength = DriverLicenseTypeConsts.MinNameLength)]
-        public string Name { get; set; }
+        public string Key { get; set; }
 
 
         [Range(DriverLicenseTypeConsts.MinWasIIntegrationIdValue, DriverLicenseTypeConsts.MaxWasIIntegrationIdValue)]

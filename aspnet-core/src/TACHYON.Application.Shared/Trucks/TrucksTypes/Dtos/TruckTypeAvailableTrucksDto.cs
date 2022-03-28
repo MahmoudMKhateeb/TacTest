@@ -2,7 +2,7 @@
 
 namespace TACHYON.Trucks.TrucksTypes.Dtos
 {
-    public class TruckTypeAvailableTrucksDto : EntityDto<long>
+    public class TruckTypeAvailableTrucksDto : EntityDto<long?>
     {
         public string TruckType { get; set; }
 

@@ -531,7 +531,9 @@ namespace TACHYON.Tracking
         private async Task<string> FinishLoading(PointTransactionArgs args)
         {
             var status = RoutePointStatus.FinishLoading;
-            var point = await _routPointRepository.GetAllIncluding(x => x.ShippingRequestTripFk)
+            var point = await _routPointRepository.GetAll()
+                .Include(x => x.ShippingRequestTripFk)
+                .ThenInclude(x => x.ShippingRequestFk)
                 .FirstOrDefaultAsync(x => x.Id == args.PointId);
             point.Status = status;
             point.ShippingRequestTripFk.RoutePointStatus = status;
@@ -539,7 +541,7 @@ namespace TACHYON.Tracking
             point.EndTime = Clock.Now;
             point.ActualPickupOrDeliveryDate = point.ShippingRequestTripFk.ActualPickupDate = Clock.Now;
             point.CanGoToNextLocation = true;
-            await SendSmsToReceivers(point.ShippingRequestTripId);
+            await SendSmsToReceivers(point.ShippingRequestTripId, point.ShippingRequestTripFk.WaybillNumber, point.ShippingRequestTripFk.ShippingRequestFk.RouteTypeId);
             return nameof(RoutPointPickUpStep4);
         }
         private async Task<string> StartedMovingToOfLoadingLocation(PointTransactionArgs args)
@@ -904,23 +906,25 @@ namespace TACHYON.Tracking
         /// <summary>
         /// Send shipment code to receivers
         /// </summary>
-        private async Task SendSmsToReceivers(int tripId)
+        private async Task SendSmsToReceivers(int tripId, long? tripWaybillNumber, ShippingRequestRouteType? routType)
         {
-            var dropOffPoints = await _routPointRepository.GetAll().Include(x => x.ReceiverFk)
+            var dropOffPoints = await _routPointRepository.GetAll()
+                .Include(x => x.ReceiverFk)
                 .Where(x => x.ShippingRequestTripId == tripId && x.PickingType == Routs.RoutPoints.PickingType.Dropoff)
                 .ToListAsync();
             foreach (var point in dropOffPoints)
-                await SendSmsToReceiver(point);
-
+                await SendSmsToReceiver(point, tripWaybillNumber, routType);
         }
         /// <summary>
         /// Send shipment code to receiver
         /// </summary>
-        private async Task SendSmsToReceiver(RoutPoint point)
+        private async Task SendSmsToReceiver(RoutPoint point, long? tripWaybillNumber, ShippingRequestRouteType? routType)
         {
             string number = point.ReceiverPhoneNumber;
             var ratingLink = $"{L("ClickToRate")} {_webUrlService.WebSiteRootAddressFormat}account/RatingPage/{point.Code}";
-            string message = L(TACHYONConsts.SMSShippingRequestReceiverCode, point.WaybillNumber, point.Code, ratingLink);
+            var waybillNumber = routType.HasValue && routType == ShippingRequestRouteType.SingleDrop ? tripWaybillNumber : point.WaybillNumber;
+
+            string message = L(TACHYONConsts.SMSShippingRequestReceiverCode, waybillNumber, point.Code, ratingLink);
             if (point.ReceiverFk != null)
                 number = point.ReceiverFk.PhoneNumber;
             await _smsSender.SendAsync(number, message);

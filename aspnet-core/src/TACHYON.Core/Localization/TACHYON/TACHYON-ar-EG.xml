@@ -1300,7 +1300,7 @@
 		<text name="ProfilePicture_Warn_SizeLimit">يجب أن يكون حجم الصورة أصغر من {0} كيلوبايت يرجى تحديد ملف آخر</text>
 		<text name="Property">Property</text>
 		<text name="Purchase">شراء</text>
-		<text name="Qty">الكمية/القيمة</text>
+		<text name="Qty">الكمية</text>
 		<text name="Quantity">الكمية</text>
 		<text name="QuickNav">الإنتقال السريع</text>
 		<text name="QuickThemeSelection">الاختيار السريع للتصميم</text>
@@ -2513,6 +2513,9 @@
 		<text name="ImportFile">إضافة ملف</text>
 		<text name="DeliveredAndNeedsConfirmation">تم التوصيل وبحاجة للتأكيد</text>
 		<text name="SAASTrip">Sass</text>
+		<text name="NumberOfShipments">عدد الشحنات</text>
+		<text name="ProfileNumberOfShipmentsTooltipMsg">عدد الشحنات التي تكون حالتها قيد النقل أو مكتملة أو مكتملة بدون تأكيد</text>
+		<text name="YouCanNotRejectTheOffer">لا يمكنك رفض العرض</text>
 
 	</texts>
 </localizationDictionary>

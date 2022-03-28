@@ -94,6 +94,10 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   minHijri: NgbDateStruct = { day: 1, month: 1, year: 1342 };
   todayGregorian = this.dateFormatterService.GetTodayGregorian();
   todayHijri = this.dateFormatterService.ToHijri(this.todayGregorian);
+  minHijriEndDate: NgbDateStruct;
+  minGrogEndDate: NgbDateStruct;
+  minHijriTripdate: NgbDateStruct;
+  minGrogTripdate: NgbDateStruct;
   step1Dto = new CreateOrEditShippingRequestStep1Dto();
   step2Dto = new EditShippingRequestStep2Dto();
   step3Dto = new EditShippingRequestStep3Dto();
@@ -641,7 +645,14 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
    * validates trips start/end date
    */
   validateTripsDates($event: NgbDateStruct, type) {
-    if (type == 'tripsStartDate') this.startTripdate = $event;
+    if (type == 'tripsStartDate') {
+      this.startTripdate = $event;
+      if ($event != null && $event.year < 1900) {
+        this.minHijriTripdate = $event;
+      } else {
+        this.minGrogTripdate = $event;
+      }
+    }
     if (type == 'tripsEndDate') this.endTripdate = $event;
 
     var startDate = this.dateFormatterService.NgbDateStructToMoment(this.startTripdate);
@@ -665,7 +676,14 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
    * validates bidding start+end date
    */
   validateBiddingDates($event: NgbDateStruct, type) {
-    if (type == 'biddingStartDate') this.startBiddate = $event;
+    if (type == 'biddingStartDate') {
+      this.startBiddate = $event;
+      if ($event != null && $event.year < 1900) {
+        this.minHijriEndDate = $event;
+      } else {
+        this.minGrogEndDate = $event;
+      }
+    }
     if (type == 'biddingEndDate') this.endBiddate = $event;
 
     var startDate = this.dateFormatterService.NgbDateStructToMoment(this.startBiddate);

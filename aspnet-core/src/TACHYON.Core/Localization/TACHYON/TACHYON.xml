@@ -301,7 +301,7 @@
 		<text name="CityDisplayName">City</text>
 		<text name="CityName">City</text>
 		<text name="CityOrigin">Origin</text>
-		<text name="Claim">Claim</text>
+		<text name="Claim">Claimed</text>
 		<text name="ClaimKey">Claim Key</text>
 		<text name="ClaimsMapping">Claims Mapping</text>
 		<text name="ClaimValue">Claim Value</text>
@@ -487,7 +487,7 @@
 		<text name="DeactivateAccountUponexpiration">Deactivate Account Upon expiration</text>
 		<text name="DeactivateSubscriptionWarningMessage">Webhook subscription will be deactivated and your endpoint will no longer get webhooks</text>
 		<text name="DeactiveTenant">Deactivate company</text>
-		<text name="Declined">Declined</text>
+		<text name="Declined">Decline</text>
 		<text name="DeclinedOfPricing">Declined of pricing</text>
 		<text name="DeclineDriectRequest">The carrier {client} Declined of pricing shipment.</text>
 		<text name="Default">Default</text>
@@ -1501,7 +1501,7 @@
 		<text name="ProjectName">Project name</text>
 		<text name="Property">Property</text>
 		<text name="Purchase">Purchase</text>
-		<text name="Qty">Qty/Value</text>
+		<text name="Qty">Qty</text>
 		<text name="Quantity">Quantity</text>
 		<text name="QuickNav">Quick Navigation</text>
 		<text name="QuickThemeSelection">Quick theme selection</text>
@@ -2715,6 +2715,8 @@
 	<text name="ImportFile">Import file</text>
 	<text name="UnPaid">Unpaid</text>
 	<text name="SAASTrip">Sass</text>
+	<text name="NumberOfShipments">Number of shipments</text>
+	<text name="ProfileNumberOfShipmentsTooltipMsg">Number of shipments whose status is in transit, completed or completed without confirmation</text>
 
 		<text name="NumberOfRequestsForEachCity">Number Of Requests For Each City</text>
 		<text name="ongoingTrips">On Going Trips</text>
@@ -2738,5 +2740,6 @@
 		<text name="WorstRatedShippers">Worst Rated Shippers</text>
 		<text name="ReferanceNumber">Referance Number</text>
 		<text name="ForCurrentYear">For Current Year</text>
+		<text name="YouCanNotRejectTheOffer">You Can Not Reject The Offer</text>
 	</texts>
 </localizationDictionary>

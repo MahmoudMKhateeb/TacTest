@@ -62,6 +62,8 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   minHijri: NgbDateStruct = { day: 1, month: 1, year: 1342 };
   todayGregorian = this.dateFormatterService.GetTodayGregorian();
   todayHijri = this.dateFormatterService.ToHijri(this.todayGregorian);
+  minHijriTripdate: NgbDateStruct;
+  minGrogTripdate: NgbDateStruct;
   minTripDateAsGrorg: NgbDateStruct;
   minTripDateAsHijri: NgbDateStruct;
   maxTripDateAsGrorg: NgbDateStruct;
@@ -218,6 +220,8 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     this.minTripDateAsGrorg = this.dateFormatterService.ToGregorianDateStruct(todayGregorian, 'D/M/YYYY');
     this.minTripDateAsHijri = this.dateFormatterService.ToHijriDateStruct(todayGregorian, 'D/M/YYYY');
     this.startTripdate = this.minTripDateAsGrorg;
+    this.minHijriTripdate = this.minTripDateAsHijri;
+    this.minGrogTripdate = this.minTripDateAsGrorg;
   }
 
   close(): void {
@@ -262,29 +266,30 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   }
 
   GetSelectedstartDateChange($event: NgbDateStruct, type) {
-    if ($event != null && $event.year < 1900) {
-      //When Date Type is Gregorian
-      const ngDate = this.dateFormatterService.ToGregorian($event);
-      var date = this.dateFormatterService.NgbDateStructToMoment(ngDate);
-      if (type == 'start') {
-        this.trip.startTripDate = date;
-        this.startTripdate = date;
+    if (type == 'start') {
+      this.startTripdate = $event;
+      if ($event != null && $event.year < 1900) {
+        this.minHijriTripdate = $event;
+      } else {
+        this.minGrogTripdate = $event;
       }
-      if (type == 'end') {
-        this.trip.endTripDate = date;
-        this.endTripdate = date;
-      }
-      //When Date Type is Hijri
-    } else if ($event != null && $event.year > 1900) {
-      var fromHijriDate = this.dateFormatterService.NgbDateStructToMoment($event);
-      if (type == 'start') {
-        this.trip.startTripDate = fromHijriDate;
-        this.startTripdate = date;
-      }
-      if (type == 'end') {
-        this.trip.endTripDate = fromHijriDate;
-        this.endTripdate = date;
-      }
+    }
+    if (type == 'end') this.endTripdate = $event;
+
+    var startDate = this.dateFormatterService.NgbDateStructToMoment(this.startTripdate);
+    var endDate = this.dateFormatterService.NgbDateStructToMoment(this.endTripdate);
+
+    if (this.startTripdate != null && this.startTripdate != undefined)
+      this.trip.startTripDate = this.GetGregorianAndhijriFromDatepickerChange(this.startTripdate).GregorianDate;
+
+    this.trip.startTripDate == null ? (this.trip.startTripDate = moment(new Date())) : null;
+
+    if (this.endTripdate != null && this.endTripdate != undefined)
+      this.trip.endTripDate = this.GetGregorianAndhijriFromDatepickerChange(this.endTripdate).GregorianDate;
+
+    //checks if the trips end date is less than trips start date
+    if (startDate != undefined && endDate != undefined) {
+      if (endDate < startDate) this.trip.endTripDate = this.endTripdate = undefined;
     }
   }
 

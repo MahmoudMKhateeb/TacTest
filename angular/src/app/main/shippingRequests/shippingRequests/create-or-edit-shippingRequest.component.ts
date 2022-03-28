@@ -77,6 +77,9 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   todayHijri = this.dateFormatterService.ToHijri(this.todayGregorian);
   startTripdate: any;
   endTripdate: any;
+  minEndDate: NgbDateStruct;
+  minHijriTripdate: NgbDateStruct;
+  minGrogTripdate: NgbDateStruct;
   constructor(
     injector: Injector,
     private _activatedRoute: ActivatedRoute,
@@ -119,8 +122,9 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
           if (result.shippingRequest.bidStartDate != null && result.shippingRequest.bidStartDate != undefined)
             this.startBiddate = this.dateFormatterService.MomentToNgbDateStruct(result.shippingRequest.bidStartDate);
           if (result.shippingRequest.bidEndDate != null && result.shippingRequest.bidEndDate != undefined)
-            this.endTripdate = this.dateFormatterService.MomentToNgbDateStruct(result.shippingRequest.bidEndDate);
+            this.endBiddate = this.dateFormatterService.MomentToNgbDateStruct(result.shippingRequest.bidEndDate);
           this.startTripdate = this.dateFormatterService.MomentToNgbDateStruct(result.shippingRequest.startTripDate);
+          this.minGrogTripdate = this.startTripdate;
           if (result.shippingRequest.endTripDate != null && result.shippingRequest.endTripDate != undefined)
             this.endTripdate = this.dateFormatterService.MomentToNgbDateStruct(result.shippingRequest.endTripDate);
           this.shippingRequestType =
@@ -312,7 +316,15 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
    * validates trips start/end date
    */
   validateTripsDates($event: NgbDateStruct, type) {
-    if (type == 'tripsStartDate') this.startTripdate = $event;
+    if (type == 'tripsStartDate') {
+      this.startTripdate = $event;
+      if ($event != null && $event.year < 1900) {
+        this.minHijriTripdate = $event;
+      } else {
+        this.minGrogTripdate = $event;
+      }
+    }
+
     if (type == 'tripsEndDate') this.endTripdate = $event;
 
     var startDate = this.dateFormatterService.NgbDateStructToMoment(this.startTripdate);
@@ -328,7 +340,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
    * validates bidding start+end date
    */
   validateBiddingDates($event: NgbDateStruct, type) {
-    if (type == 'biddingStartDate') this.startBiddate = $event;
+    if (type == 'biddingStartDate') this.startBiddate = this.minEndDate = $event;
     if (type == 'biddingEndDate') this.endBiddate = $event;
 
     var startDate = this.dateFormatterService.NgbDateStructToMoment(this.startBiddate);

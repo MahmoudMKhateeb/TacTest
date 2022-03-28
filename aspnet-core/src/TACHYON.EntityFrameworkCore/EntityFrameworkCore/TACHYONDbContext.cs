@@ -20,8 +20,8 @@ using TACHYON.Documents.DocumentFiles;
 using TACHYON.Documents.DocumentsEntities;
 using TACHYON.Documents.DocumentTypes;
 using TACHYON.Documents.DocumentTypeTranslations;
-using TACHYON.DriverLocationLogs;
 using TACHYON.DriverLicenseTypes;
+using TACHYON.DriverLocationLogs;
 using TACHYON.Editions;
 using TACHYON.EmailTemplates;
 using TACHYON.EntityLogs;
@@ -91,6 +91,7 @@ namespace TACHYON.EntityFrameworkCore
         public virtual DbSet<EmailTemplate> EmailTemplates { get; set; }
 
         public virtual DbSet<DriverLicenseType> DriverLicenseTypes { get; set; }
+        public virtual DbSet<DriverLicenseTypeTranslation> DriverLicenseTypeTranslations { get; set; }
 
         public virtual DbSet<DangerousGoodType> DangerousGoodTypes { get; set; }
         public virtual DbSet<DangerousGoodTypeTranslation> DangerousGoodTypeTranslations { get; set; }
@@ -177,6 +178,7 @@ namespace TACHYON.EntityFrameworkCore
         // public virtual DbSet<PickingType> PickingTypes { get; set; }
 
         public virtual DbSet<UnitOfMeasure> UnitOfMeasures { get; set; }
+        public virtual DbSet<UnitOfMeasureTranslation> UnitOfMeasureTranslations { get; set; }
 
         public virtual DbSet<Facility> Facilities { get; set; }
 

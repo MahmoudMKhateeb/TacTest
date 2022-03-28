@@ -73,7 +73,7 @@ export class PriceOfferViewModelComponent extends AppComponentBase {
           this.offerForEditOutput.priceOfferViewDto.status = result;
           this.modalRefresh.emit(null);
           //this.modalDelete.emit(null);
-          //this.close();
+          this.close();
         });
       }
     });
@@ -85,6 +85,7 @@ export class PriceOfferViewModelComponent extends AppComponentBase {
           this.notify.success(this.l('SuccessfullyAccepted'));
           this.offerForEditOutput.priceOfferViewDto.status = result;
           this.modalRefresh.emit(null);
+          this.close();
         });
       }
     });
@@ -97,7 +98,7 @@ export class PriceOfferViewModelComponent extends AppComponentBase {
           this.notify.success(this.l('SuccessfullyCanceled'));
           this.offerForEditOutput.priceOfferViewDto.status = PriceOfferStatus.New;
           //this.modalDelete.emit(null);
-          //this.close();
+          this.close();
         });
       }
     });
@@ -131,5 +132,6 @@ export class PriceOfferViewModelComponent extends AppComponentBase {
     this.offerForEditOutput.priceOfferViewDto.status = PriceOfferStatus.Rejected;
     this.offerForEditOutput.priceOfferViewDto.rejectedReason = reason;
     this.modalRefresh.emit(null);
+    this.close();
   }
 }

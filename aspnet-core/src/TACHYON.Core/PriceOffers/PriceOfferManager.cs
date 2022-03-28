@@ -350,7 +350,7 @@ namespace TACHYON.PriceOffers
 
             var offer = await GetOffer(input.Id);
             var canAcceptOrRejectOffer = await CanAcceptOrRejectOffer(offer);
-            if (!canAcceptOrRejectOffer) throw new UserFriendlyException(L("YouCanNotAcceptTheOffer"));
+            if (!canAcceptOrRejectOffer) throw new UserFriendlyException(L("YouCanNotRejectTheOffer"));
             await CheckIfThereOfferAcceptedBefore(offer.ShippingRequestId);
             offer.Status = PriceOfferStatus.Rejected;
             offer.RejectedReason = input.Reason;
@@ -415,7 +415,7 @@ namespace TACHYON.PriceOffers
             //TMS or host
             if (await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer))
             {
-                if (offer.ShippingRequestFk.IsTachyonDeal && offer.Status == PriceOfferStatus.New)
+                if (offer.ShippingRequestFk.IsTachyonDeal && offer.Status == PriceOfferStatus.New && ! await _featureChecker.IsEnabledAsync(offer.TenantId,AppFeatures.Carrier))
                 {
                     return true;
                 }

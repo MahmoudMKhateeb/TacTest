@@ -170,9 +170,9 @@
                           class="m-input"
                           [readonly]="true"
                           [isRequired]="this.shippingRequestType == 'bidding'"
-                          [minHijri]="todayHijri"
                           [disabled]="shippingRequestType != 'bidding'"
-                          [minGreg]="todayGregorian"
+                          [minHijri]="startBiddate"
+                          [minGreg]="startBiddate"
                           [selectedDate]="endBiddate"
                           (selectedDateChange)="validateBiddingDates($event, 'biddingEndDate')"
                         ></hijri-gregorian-datepicker-test>
@@ -407,7 +407,7 @@
                             [minHijri]="todayHijri"
                             [minGreg]="todayGregorian"
                             [selectedDate]="startTripdate"
-                            (selectedDateChange)="validateTripsDates($event, 'biddingStartDate')"
+                            (selectedDateChange)="validateTripsDates($event, 'tripsStartDate')"
                           >
                           </hijri-gregorian-datepicker-test>
                           <span class="form-text text-muted">{{ l('DescriptionTripsStartDate') }}</span>
@@ -420,9 +420,10 @@
                             [label]="l('TripsEndDate')"
                             class="m-input"
                             [readonly]="true"
-                            [minHijri]="startTripdate || todayHijri"
-                            [minGreg]="startTripdate || todayGregorian"
+                            [minHijri]="minHijriTripdate"
+                            [minGreg]="minGrogTripdate"
                             [selectedDate]="endTripdate"
+                            (selectedDateChange)="validateTripsDates($event, 'tripsEndDate')"
                           >
                           </hijri-gregorian-datepicker-test>
                           <span class="form-text text-muted">{{ l('DescriptionTextTripsEndDate') }}</span>

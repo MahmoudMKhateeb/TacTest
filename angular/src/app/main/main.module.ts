@@ -280,6 +280,7 @@ import { ToggleButtonModule } from '@node_modules/primeng/togglebutton';
 import { TrackingModule } from '@app/main/shippingRequests/shippingRequests/tracking/tracking.module';
 import { AddNewRemarksTripModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/add-new-remarks-trip-modal/add-new-remarks-trip-modal.component';
 import { QuartzCronModule } from '@node_modules/@sbzen/ng-cron';
+import { DriverLicenseTypeTranslationsComponent } from './driverLicenseTypes/driverLicenseTypeTranslations/driver-license-type-translations/driver-license-type-translations.component';
 
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
@@ -533,6 +534,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     CreateOrEditEmailTemplateTranslationModalComponent,
     ImportCitiesPolygonsModalComponent,
     AddNewRemarksTripModalComponent,
+    DriverLicenseTypeTranslationsComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },

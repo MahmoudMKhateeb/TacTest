@@ -7,6 +7,7 @@ import {
   CreateOrUpdateUserInput,
   DocumentFilesServiceProxy,
   DriverLicenseTypesServiceProxy,
+  GetLicenseTypeForDropDownOutput,
   NationalitiesServiceProxy,
   OrganizationUnitDto,
   PasswordComplexitySetting,
@@ -79,7 +80,7 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
   isWaintingUserNameValidation = false;
   CheckingIfDriverPhoneNumberIsValid = false;
 
-  driverLicenseTypes: SelectItemDto[] = [];
+  driverLicenseTypes: GetLicenseTypeForDropDownOutput[] = [];
 
   // CheckIfDriverMobileNumberIsValid(mobileNumber: string) {
   //   this.isWaintingUserNameValidation = true;

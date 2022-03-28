@@ -12,7 +12,7 @@ namespace TACHYON.DriverLicenseTypes.Dtos
 
         public bool ApplicableforWaslRegistration { get; set; }
 
-
+        public string Key { get; set; }
 
     }
 }

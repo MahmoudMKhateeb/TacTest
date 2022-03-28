@@ -3,7 +3,7 @@
     <!--begin::Subheader-->
     <sub-header [title]="Title | localize" [description]="'' | localize">
       <div role="actions">
-        <button [hidden]="isCarrier && !isSaaS" (click)="createNewRequest()" class="btn btn-success">
+        <button [hidden]="(isCarrier && !isSaaS) || !appSession.tenantId" (click)="createNewRequest()" class="btn btn-success">
           <i class="fas fa-plus"></i> {{ l('CreateNewRequest') }}
         </button>
         <button (click)="ModelSearch.show(searchInput)" class="btn btn-primary red"><i class="fas fa-search"></i> {{ l('Search') }}</button>

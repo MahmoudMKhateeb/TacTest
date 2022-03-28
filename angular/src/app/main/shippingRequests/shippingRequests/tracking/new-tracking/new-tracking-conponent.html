@@ -36,8 +36,14 @@
           ></agm-direction>
         </ng-container>
         <ng-container id="markers">
-          <agm-marker *ngIf="driversToggle && markerLong" [longitude]="markerLong" [latitude]="markerLat">
-            <agm-info-window>{{ markerFacilityName }}</agm-info-window>
+          <!--  Disconnected Driver Marker          -->
+          <agm-marker
+            *ngIf="driversToggle && driverLocationUnknown && trip.status === tripStatusesEnum.InTransit"
+            [longitude]="tripRoute.origin.lng + 0.1"
+            [latitude]="tripRoute.origin.lat + 0.1"
+            [iconUrl]="trackingIconsList.offlineDriverIcon"
+          >
+            <agm-info-window>{{ l('DriverOfflineMessage') }}</agm-info-window>
           </agm-marker>
           <agm-marker
             *ngIf="driversToggle && driverLiveLocation.lng"
@@ -114,7 +120,7 @@
                         ></i>
                         <span class="pulse-ring"></span>
                       </div>
-                      <div class="timeline-content" [ngClass]="{ active: item === point.id }" (click)="timeLinePanelClick(point)">
+                      <div class="timeline-content" [ngClass]="{ active: item === point.id }">
                         <div class="d-flex align-items-center justify-content-between mb-3 mt-1">
                           <div class="mr-2">
                             <a href="#" class="text-dark-75 text-hover-primary font-weight-bold"
