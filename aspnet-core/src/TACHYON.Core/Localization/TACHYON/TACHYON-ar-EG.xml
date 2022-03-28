@@ -2513,6 +2513,8 @@
 		<text name="ImportFile">إضافة ملف</text>
 		<text name="DeliveredAndNeedsConfirmation">تم التوصيل وبحاجة للتأكيد</text>
 		<text name="SAASTrip">Sass</text>
+		<text name="DriverLicenseType">نوع رخصة السائق</text>
+		<text name="SelectALicenseType">أختر نوع رخصة السائق</text>
 
 	</texts>
 </localizationDictionary>
