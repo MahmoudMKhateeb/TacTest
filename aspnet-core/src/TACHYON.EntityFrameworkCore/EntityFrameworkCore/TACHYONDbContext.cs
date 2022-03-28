@@ -194,7 +194,7 @@ namespace TACHYON.EntityFrameworkCore
         public virtual DbSet<UnitOfMeasure> UnitOfMeasures { get; set; }
 
         public virtual DbSet<Facility> Facilities { get; set; }
-
+        public virtual DbSet<FacilityWorkingHour> FacilityWorkingHours { get; set; }
         public virtual DbSet<DocumentFile> DocumentFiles { get; set; }
 
         public virtual DbSet<DocumentType> DocumentTypes { get; set; }
