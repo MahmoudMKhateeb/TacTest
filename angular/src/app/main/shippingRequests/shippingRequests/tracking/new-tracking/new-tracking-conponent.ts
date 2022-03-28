@@ -214,23 +214,6 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
   }
 
   /**
-   * time line Panel Click
-   * @param $event
-   */
-  timeLinePanelClick(point: TrackingRoutePointDto) {
-    this.item = point.id;
-    if (this.markerLong == point.lng && this.markerLat == point.lat) {
-      this.markerLong = null;
-      this.markerLat = null;
-      this.markerFacilityName = '';
-      return;
-    }
-    this.markerLong = point.lng;
-    this.markerLat = point.lat;
-    this.markerFacilityName = '';
-  }
-
-  /**
    * handels Pod Uploading Process
    * @param point
    * @param transaction
