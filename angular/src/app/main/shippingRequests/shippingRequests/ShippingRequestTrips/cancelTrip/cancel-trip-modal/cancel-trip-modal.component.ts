@@ -71,5 +71,6 @@ export class CancelTripModalComponent extends AppComponentBase implements OnInit
     this.modal.hide();
     this.rejectForm = false;
     this.active = false;
+    this.view = false;
   }
 }

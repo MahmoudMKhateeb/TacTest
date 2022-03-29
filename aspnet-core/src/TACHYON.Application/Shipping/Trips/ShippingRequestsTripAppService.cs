@@ -531,7 +531,6 @@ namespace TACHYON.Shipping.Trips
             var trip = await _shippingRequestTripRepository.GetAll().Include(x => x.ShippingRequestFk)
                      //add preprice  & !payInadvance condition now, then in future post price cancelation will be added
                      .Where(x => x.ShippingRequestFk.Status == ShippingRequestStatus.PrePrice)
-                     .Where(x => x.ShippingRequestFk.IsPrePayed.HasValue && x.ShippingRequestFk.IsPrePayed.Value)
                      .Where(x => x.Status == ShippingRequestTripStatus.New ||
                      x.Status == ShippingRequestTripStatus.Intransit)
                      .WhereIf(IsEnabled(AppFeatures.Carrier), x => x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId && x.CancelStatus == ShippingRequestTripCancelStatus.None)
