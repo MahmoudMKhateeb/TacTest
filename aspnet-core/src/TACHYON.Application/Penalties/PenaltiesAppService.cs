@@ -33,7 +33,7 @@ namespace TACHYON.Penalties
         {
             var query = _penaltyRepository
                            .GetAll()
-                           .Include(x => x.Tenant)
+                           .Include(x=> x.ShippingRequestTripFK)
                            .ProjectTo<GetAllPenaltiesDto>(AutoMapperConfigurationProvider)
                            .AsNoTracking();
             if (!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer))

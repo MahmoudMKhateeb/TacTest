@@ -1,7 +1,7 @@
 <div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
     <sub-header [title]="'PenaltiesList' | localize" [description]="'' | localize">
-      <div role="actions">
+      <div *ngIf="isTachyonDealerOrHost" role="actions">
         <button class="btn btn-outline-success" (click)="createOrEditPenaltyModal.show()">{{ l('ApplyNotLoggedPenalty') }}</button>
       </div>
     </sub-header>
@@ -44,23 +44,15 @@
               ></dxi-column>
 
               <dxi-column dataField="penaltyName" caption="{{ l('PenaltyName') }}"> </dxi-column>
-              <dxi-column dataField="penaltyDescrption" caption="{{ l('PenaltyDescrption') }}" dataType="date"> </dxi-column>
               <dxi-column dataField="totalAmount" caption="{{ l('Amount') }}"> </dxi-column>
               <dxi-column dataField="penaltyStatusTitle" caption="{{ l('Status') }}"> </dxi-column>
-              <dxi-column dataField="companyName" caption="{{ l('CompanyName') }}" dataType="date"> </dxi-column>
+              <dxi-column dataField="companyName" caption="{{ l('CompanyName') }}" dataType="text"> </dxi-column>
+              <dxi-column dataField="waybillNumber" caption="{{ l('WaybillNumber') }}" dataType="number"> </dxi-column>
               <dxi-column dataField="destinationCompanyName" caption="{{ l('DestinationCompanyName') }}" dataType="date"> </dxi-column>
               <dxi-column cellTemplate="TypeCellTemplate" dataField="Type" caption=" {{ l('Type') }}"></dxi-column>
               <div *dxTemplate="let options of 'TypeCellTemplate'">
                 <span style="width: 137px"
-                  ><span
-                    class="badge badge-inline"
-                    [ngClass]="{
-                      'badge-warning': options.data.penaltyTypeTitle == 'NotLogged',
-                      'badge-success': options.data.penaltyTypeTitle == 'Cancelation',
-                      'badge-primary': options.data.penaltyTypeTitle == 'Delay'
-                    }"
-                    >{{ l(options.data.penaltyTypeTitle) }}</span
-                  ></span
+                  ><span class="badge badge-inline badge-warning">{{ l(options.data.penaltyTypeTitle) }}</span></span
                 >
               </div>
               <div *dxTemplate="let options of 'cellTemplateActions'">

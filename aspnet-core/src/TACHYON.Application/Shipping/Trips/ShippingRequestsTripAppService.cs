@@ -359,7 +359,7 @@ namespace TACHYON.Shipping.Trips
                 throw new UserFriendlyException(L("TheDriverAreadyWorkingOnAnotherTrip"));
 
             long? oldAssignedDriverUserId = trip.AssignedDriverUserId;
-            long? oldAssignedTruckId = input.AssignedTruckId;
+            long? oldAssignedTruckId = trip.AssignedTruckId;
             trip.AssignedDriverUserId = input.AssignedDriverUserId;
             trip.AssignedTruckId = input.AssignedTruckId;
 
@@ -399,8 +399,8 @@ namespace TACHYON.Shipping.Trips
 
                 await _appNotifier.NotifyCarrierWhenTripUpdated(notifyTripInput);
             }
-
-            await _penaltyManager.ApplyNotAssigningTruckAndDriverPenalty(trip.ShippingRequestFk.CarrierTenantId.Value, trip.ShippingRequestFk.TenantId, trip.StartTripDate, trip.Id);
+            //if (!oldAssignedTruckId.HasValue && !oldAssignedDriverUserId.HasValue)
+                await _penaltyManager.ApplyNotAssigningTruckAndDriverPenalty(trip.ShippingRequestFk.CarrierTenantId.Value, trip.ShippingRequestFk.TenantId, trip.StartTripDate, trip.Id);
 
             // Send Notification To New Driver
             await _appNotifier.NotifyDriverWhenAssignTrip(trip.Id,

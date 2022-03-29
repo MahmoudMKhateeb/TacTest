@@ -740,6 +740,7 @@ namespace TACHYON
 
             configuration.CreateMap<Penalty, GetAllPenaltiesDto>()
             .ForMember(dto => dto.CompanyName, options => options.MapFrom(entity => entity.Tenant.companyName))
+            .ForMember(dto => dto.WaybillNumber, options => options.MapFrom(entity => entity.ShippingRequestTripFK.WaybillNumber))
             .ForMember(dto => dto.DestinationCompanyName, options => options.MapFrom(entity => entity.DestinationTenantFK.companyName))
             .ForMember(dto => dto.PenaltyComplaintId, options => options.MapFrom(entity => entity.PenaltyComplaintFK.Id));
 

@@ -271,14 +271,14 @@ namespace TACHYON.Invoices
         private async Task CollectPenaltyForShipper(Tenant tenant, InvoicePeriod period)
         {
            var penalties = await _penaltyRepository.GetAll()
-                .Include(x=>x.TripFK)
+                .Include(x=>x.ShippingRequestTripFK)
                 .ThenInclude(x=>x.ShippingRequestFk)
                 .Where(x => !x.InvoiceId.HasValue).ToListAsync();
 
             foreach (var item in penalties)
             {
                 var shipperId = item.TenantId;
-                var carrierId = item.TripFK.ShippingRequestFk.CarrierTenantId;
+                var carrierId = item.ShippingRequestTripFK.ShippingRequestFk.CarrierTenantId;
                 if (!await _featureChecker.IsEnabledAsync(shipperId, AppFeatures.Saas))
                 {
                     continue;
@@ -432,8 +432,8 @@ namespace TACHYON.Invoices
          InvoicePeriod period)
         {
             decimal totalAmount = penalties.Sum(r=>r.TotalAmount);
-            decimal vatAmount = (decimal)penalties.Sum(r => r.TripFK.VatAmount);
-            decimal subTotalAmount = (decimal)penalties.Sum(r =>r.TripFK.SubTotalAmount);
+            decimal vatAmount = (decimal)penalties.Sum(r => r.ShippingRequestTripFK.VatAmount);
+            decimal subTotalAmount = (decimal)penalties.Sum(r =>r.ShippingRequestTripFK.SubTotalAmount);
 
             DateTime dueDate = Clock.Now;
 
@@ -466,14 +466,14 @@ namespace TACHYON.Invoices
         private async Task GenerateCarrierPenaltyInvoice(Tenant tenant, InvoicePeriod period)
         {
             var penalties = await _penaltyRepository.GetAll()
-                .Include(x => x.TripFK)
+                .Include(x => x.ShippingRequestTripFK)
                 .ThenInclude(x => x.ShippingRequestFk)
                 .Where(x => !x.SubmitInvoiceId.HasValue && x.Tenant.EditionId  == CarrierEditionId).ToListAsync();
 
             foreach (var item in penalties)
             {
                 var shipperId = item.TenantId;
-                var carrierId = item.TripFK.ShippingRequestFk.CarrierTenantId;
+                var carrierId = item.ShippingRequestTripFK.ShippingRequestFk.CarrierTenantId;
                 if (!await _featureChecker.IsEnabledAsync(shipperId, AppFeatures.Saas))
                 {
                     continue;
@@ -489,8 +489,8 @@ namespace TACHYON.Invoices
 
             if (!penalties.Any()) return;
             decimal totalAmount = penalties.Sum(r => r.TotalAmount);
-            decimal vatAmount = (decimal)penalties.Sum(r => r.TripFK.VatAmount);
-            decimal subTotalAmount = (decimal)penalties.Sum(r => r.TripFK.SubTotalAmount);
+            decimal vatAmount = (decimal)penalties.Sum(r => r.ShippingRequestTripFK.VatAmount);
+            decimal subTotalAmount = (decimal)penalties.Sum(r => r.ShippingRequestTripFK.SubTotalAmount);
 
             var submitInvoice = new SubmitInvoice
             {

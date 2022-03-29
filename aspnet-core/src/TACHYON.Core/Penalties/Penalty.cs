@@ -28,8 +28,10 @@ namespace TACHYON.Penalties
         public int DestinationTenantId { get; set; }
         [ForeignKey(nameof(DestinationTenantId))]
         public Tenant DestinationTenantFK { get; set; }
-        public long? TripId { get; set; }
-        public ShippingRequestTrip TripFK { get; set; }
+        public int? ShippingRequestTripId { get; set; }
+        [ForeignKey(nameof(ShippingRequestTripId))]
+
+        public ShippingRequestTrip ShippingRequestTripFK { get; set; }
         public long? PointId { get; set; }
         public RoutPoint RoutPointFK { get; set; }
         //shipper

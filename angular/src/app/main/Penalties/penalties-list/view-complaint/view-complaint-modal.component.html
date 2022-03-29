@@ -20,10 +20,12 @@
           <div class="row">
             <!--  begin :: Body-->
             <div class="col-lg-12 mt-4">
+              <span>{{ l('ComplaintDescription:') }}</span>
               <P>{{ penaltyComplaint.description }}</P>
             </div>
 
             <div *ngIf="penaltyComplaint.rejectReason && penaltyComplaint.status == 3" class="col-lg-12 mt-4">
+              <span>{{ l('ComplaintRejectReason:') }}</span>
               <P>{{ penaltyComplaint.rejectReason }}</P>
             </div>
             <!--  end :: Body-->
@@ -53,8 +55,12 @@
           </div>
         </div>
         <!-- end::Body-->
-        <div class="modal-footer" *ngIf="penaltyComplaint.status == 1 && isTachyonDealerOrHost">
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="close()">{{ 'Cancel' | localize }}</button>
+
           <button
+            *ngIf="penaltyComplaint.status == 1 && isTachyonDealerOrHost"
             type="submit"
             class="btn btn-info"
             [buttonBusy]="saving"
@@ -64,7 +70,12 @@
             {{ 'Reject' | localize }}
           </button>
 
-          <button class="btn btn-success" [disabled]="needEnterRejectReason" (click)="accept(penaltyComplaint.id)">
+          <button
+            *ngIf="penaltyComplaint.status == 1 && isTachyonDealerOrHost"
+            class="btn btn-success"
+            [disabled]="needEnterRejectReason"
+            (click)="accept(penaltyComplaint.id)"
+          >
             <i class="fa fa-save"></i> <span>{{ 'Accept' | localize }}</span>
           </button>
         </div>

@@ -48,14 +48,14 @@ namespace TACHYON.Penalties
         }
 
         #region Applying Penalties
-        public async Task ApplyTripCancelationPenalty(int tenantId, int destinationTenantId, long tripId)
+        public async Task ApplyTripCancelationPenalty(int tenantId, int destinationTenantId, int tripId)
         {
             var amount = Convert.ToDecimal(await _featureChecker.GetValueAsync(tenantId, AppFeatures.TripCancelation));
             var commestionValues = await CalculateCommestions(tenantId, amount,
                 AppFeatures.TripCancelationCommissionType, AppFeatures.TripCancelationCommissionMinValue,
                 AppFeatures.TripCancelationCommissionPercentage, AppFeatures.TripCancelationCommissionValue);
 
-            await InitPenalty(amount, PenaltyType.TripCancelation, tenantId, destinationTenantId, tripId, commestionValues);
+            await InitPenalty(PenaltyType.TripCancelation, tenantId, destinationTenantId, tripId, commestionValues);
         }
         public async Task ApplyDetentionPenalty(int tenantId, int destinationTenantId, DateTime arriveTime, DateTime leaveTime, int tripId)
         {
@@ -80,7 +80,7 @@ namespace TACHYON.Penalties
                 AppFeatures.DetentionCommissionType, AppFeatures.DetentionCommissionMinValue,
                 AppFeatures.DetentionCommissionPercentage, AppFeatures.DetentionCommissionValue);
 
-                await InitPenalty(amount, PenaltyType.DetentionPeriodExceedMaximumAllowedTime, tenantId, destinationTenantId, tripId, commestionValues);
+                await InitPenalty(PenaltyType.DetentionPeriodExceedMaximumAllowedTime, tenantId, destinationTenantId, tripId, commestionValues);
                 await _appNotifier.NotifyShipperWhenApplyDetention(tenantId, "", "", commestionValues.TotalAmount(), tripId);
             }
 
@@ -90,16 +90,18 @@ namespace TACHYON.Penalties
             var amount = Convert.ToDecimal(await _featureChecker.GetValueAsync(tenantId, AppFeatures.NotAssignTruckAndDriverStartDate_Amount));
             var unitOfMeasure = (UnitOfMeasure)Convert.ToInt32(await _featureChecker.GetValueAsync(tenantId, AppFeatures.NotAssignTruckAndDriverStartDate_UnitsOfMeasure));
             var numberUnitOfMeasure = Convert.ToInt32(await _featureChecker.GetValueAsync(tenantId, AppFeatures.NotAssignTruckAndDriverStartDate_NumberOfUnitsOfMeasure));
-            var numberOfDelay = GetDelayBasedOnUnitOfMeasure(startTripDate, unitOfMeasure);
+            var numberOfDelay =(decimal) GetDelayBasedOnUnitOfMeasure(startTripDate, unitOfMeasure);
             if (numberOfDelay > 0)
             {
                 var finalAmount = (numberOfDelay - numberUnitOfMeasure) * amount;
 
                 var commestionValues = await CalculateCommestions(tenantId, finalAmount,
-                AppFeatures.NotAssignTruckAndDriverStartDate_CommissionType, AppFeatures.NotAssignTruckAndDriverStartDate_CommissionMinValue,
-                AppFeatures.NotAssignTruckAndDriverStartDate_CommissionPercentage, AppFeatures.NotAssignTruckAndDriverStartDate_CommissionValue);
+                AppFeatures.NotAssignTruckAndDriverStartDate_CommissionType,
+                AppFeatures.NotAssignTruckAndDriverStartDate_CommissionMinValue,
+                AppFeatures.NotAssignTruckAndDriverStartDate_CommissionPercentage,
+                AppFeatures.NotAssignTruckAndDriverStartDate_CommissionValue);
 
-                await InitPenalty(finalAmount, PenaltyType.NotAssigningTruckAndDriverBeforeTheDateForTheTrip, tenantId, destinationTenantId, tripId, commestionValues);
+                await InitPenalty(PenaltyType.NotAssigningTruckAndDriverBeforeTheDateForTheTrip, tenantId, destinationTenantId, tripId, commestionValues);
             }
 
         }
@@ -108,7 +110,7 @@ namespace TACHYON.Penalties
             var amount = Convert.ToDecimal(await _featureChecker.GetValueAsync(tenantId, AppFeatures.NotDeliveringAllDropsBeforeEndDate_Amount));
             var unitOfMeasure = (UnitOfMeasure)Convert.ToInt32(await _featureChecker.GetValueAsync(tenantId, AppFeatures.NotDeliveringAllDropsBeforeEndDate_UnitsOfMeasure));
             var numberUnitOfMeasure = Convert.ToInt32(await _featureChecker.GetValueAsync(tenantId, AppFeatures.NotDeliveringAllDropsBeforeEndDate_NumberOfUnitsOfMeasure));
-            var numberOfDelay = GetDelayBasedOnUnitOfMeasure(startTripDate, unitOfMeasure);
+            var numberOfDelay = (decimal) GetDelayBasedOnUnitOfMeasure(startTripDate, unitOfMeasure);
             if (numberOfDelay > 0)
             {
                 var finalAmount = (numberOfDelay - numberUnitOfMeasure) * amount;
@@ -116,7 +118,7 @@ namespace TACHYON.Penalties
                AppFeatures.NotDeliveringAllDropsBeforeEndDate_CommissionType, AppFeatures.NotDeliveringAllDropsBeforeEndDate_CommissionMinValue,
                AppFeatures.NotDeliveringAllDropsBeforeEndDate_CommissionPercentage, AppFeatures.NotDeliveringAllDropsBeforeEndDate_CommissionValue);
 
-                await InitPenalty(finalAmount, PenaltyType.NotDeliveringAllDropsBeforeExpectedTripEndDate, tenantId, tripId, destinationTenantId,commestionValues);
+                await InitPenalty(PenaltyType.NotDeliveringAllDropsBeforeExpectedTripEndDate, tenantId, tripId, destinationTenantId,commestionValues);
             }
         }
         #endregion
@@ -163,7 +165,7 @@ namespace TACHYON.Penalties
             {
                 case PriceOfferCommissionType.CommissionPercentage:
                     res.CommissionValue = amount * (commestionPercentage / 100);
-                    amount += amount * (commestionPercentage / 100);
+                    amount += res.CommissionValue;
                     res.VatPostCommestion += res.VatPreCommestion * (commestionPercentage / 100);
                     amount += res.CommissionValue;
                     break;
@@ -187,18 +189,18 @@ namespace TACHYON.Penalties
 
             return res;
         }
-        private async Task InitPenalty(decimal amount, PenaltyType penaltyType, int tenantId, int destinationTenantId, long? tripId, PenaltyCommestionDto commestion)
+        private async Task InitPenalty(PenaltyType penaltyType, int tenantId, int destinationTenantId, int? tripId, PenaltyCommestionDto commestion)
         {
             if (!(await _featureChecker.IsEnabledAsync(tenantId, AppFeatures.Carrier) || await _featureChecker.IsEnabledAsync(tenantId, AppFeatures.Shipper)))
                 throw new UserFriendlyException(L("YouShouldAddPenaltyToShipperOrCarrier"));
 
             var penalty = new Penalty
             {
-                TotalAmount = amount,
+                TotalAmount = commestion.AmountPostCommestion + commestion.VatPostCommestion,
                 TenantId = tenantId,
                 DestinationTenantId = destinationTenantId,
                 Type = penaltyType,
-                TripId = tripId,
+                ShippingRequestTripId = tripId,
                 PenaltyName = penaltyType.ToString(),
                 PenaltyDescrption = penaltyType.ToString(),
                 CommissionType = commestion.CommissionType,
@@ -212,13 +214,13 @@ namespace TACHYON.Penalties
 
             await _penaltyRepository.InsertAsync(penalty);
         }
-        private static int GetDelayBasedOnUnitOfMeasure(DateTime date, UnitOfMeasure unitOfMeasure)
+        private static double GetDelayBasedOnUnitOfMeasure(DateTime date, UnitOfMeasure unitOfMeasure)
         {
             switch (unitOfMeasure)
             {
-                case UnitOfMeasure.Hourly: return (Clock.Now - date).Hours;
+                case UnitOfMeasure.Hourly: return (Clock.Now - date).TotalHours;
 
-                case UnitOfMeasure.Daily: return (Clock.Now - date).Days;
+                case UnitOfMeasure.Daily: return (Clock.Now - date).TotalDays;
             }
             return 0;
         }
