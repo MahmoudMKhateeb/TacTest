@@ -4,6 +4,7 @@ import { finalize } from 'rxjs/operators';
 import {
   CityPolygonLookupTableDto,
   CreateOrEditFacilityDto,
+  CreateOrEditFacilityWorkingHourDto,
   FacilitiesServiceProxy,
   FacilityForDropdownDto,
   TenantRegistrationServiceProxy,
@@ -11,6 +12,8 @@ import {
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { MapsAPILoader } from '@node_modules/@agm/core';
 import { NgForm } from '@angular/forms';
+import { WeekDay } from '@angular/common';
+import { CreateOrEditWorkingHoursComponent } from '@app/shared/common/workingHours/create-or-edit-working-hours/create-or-edit-working-hours.component';
 
 @Component({
   selector: 'createOrEditFacilityModal',
@@ -22,6 +25,8 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
   @ViewChild('search') public searchElementRef: ElementRef;
   @ViewChild('createFacilityForm') public createFacilityForm: NgForm;
   @ViewChild('secountInput') public secountInput: ElementRef;
+  @ViewChild('CreateOrEditWorkingHoursComponent', { static: true }) CreateOrEditWorkingHoursComponent: CreateOrEditWorkingHoursComponent;
+
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
 
   zoom = 14;
@@ -43,6 +48,8 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
   };
   selectedCityJson: Pokedex;
   Bounds: google.maps.LatLngBounds;
+  days = WeekDay;
+  FacilityWorkingHours: any[];
 
   constructor(
     injector: Injector,
@@ -58,6 +65,43 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
     this.loadAllCountries();
   }
 
+  getEnumsAsList() {
+    const result = [];
+    for (const [propertyKey, propertyValue] of Object.entries(this.days)) {
+      if (!Number.isNaN(Number(propertyKey))) {
+        continue;
+      }
+      result.push({ dayOfWeek: this.days[propertyKey], name: propertyKey });
+    }
+    return result;
+  }
+
+  getEnumsAsFillList(list2: CreateOrEditFacilityWorkingHourDto[]) {
+    const result = [];
+    let list = this.getEnumsAsList();
+    for (const propertyKey of list) {
+      if (!Number.isNaN(Number(propertyKey.dayOfWeek)) && result.filter((r) => r.dayOfWeek == propertyKey.dayOfWeek).length > 1) {
+        continue;
+      }
+      var item = list2.find((r) => r.dayOfWeek === propertyKey.dayOfWeek);
+
+      if (item && result.filter((r) => r.dayOfWeek === propertyKey.dayOfWeek).length == 0) {
+        result.push({
+          dayOfWeek: propertyKey.dayOfWeek,
+          name: this.days[propertyKey.dayOfWeek],
+          startTime: item.startTime,
+          endTime: item.endTime,
+          hasTime: true,
+          id: item.id,
+          facilityId: item.facilityId,
+        });
+      } else {
+        result.push({ dayOfWeek: propertyKey.dayOfWeek, name: this.days[propertyKey.dayOfWeek], hasTime: false, facilityId: list2[0].facilityId });
+      }
+    }
+    return result;
+  }
+
   show(facilityId?: number): void {
     this.active = true;
     if (!facilityId) {
@@ -65,10 +109,17 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
       this.facility.id = facilityId;
       this.facility.latitude = 24.67911662122269;
       this.facility.longitude = 46.6355543345471;
+      this.FacilityWorkingHours = this.getEnumsAsList();
       this.modal.show();
     } else {
       this._facilitiesServiceProxy.getFacilityForEdit(facilityId).subscribe((result) => {
         this.facility = result.facility;
+        this.FacilityWorkingHours = [];
+        if (result.facility.facilityWorkingHours.length == 0) {
+          this.FacilityWorkingHours = this.getEnumsAsList();
+        } else {
+          this.FacilityWorkingHours = this.getEnumsAsFillList(result.facility.facilityWorkingHours);
+        }
         this.selectedCountryId = result.countryId;
         this.loadCitiesByCountryId(result.countryId);
         this.data = result.facility;
@@ -82,6 +133,28 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
    */
   save(): void {
     this.saving = true;
+    this.facility.facilityWorkingHours = this.FacilityWorkingHours.filter((r) => r.startTime && r.endTime).map(
+      (fh) =>
+        new CreateOrEditFacilityWorkingHourDto({
+          dayOfWeek: fh.dayOfWeek,
+          startTime: fh.startTime,
+          endTime: fh.endTime,
+          facilityId: this.facility.id == undefined ? null : fh.facilityId,
+          id: this.facility.id == undefined ? null : fh.id,
+        })
+    );
+    if (this.facility.facilityWorkingHours.length == 0) {
+      this.notify.error(this.l('PleaseEnterfacilityWorkingHours'));
+      this.saving = false;
+      return;
+    }
+
+    if (this.facility.cityId == undefined) {
+      this.notify.error(this.l('PleaseEnterCity'));
+      this.saving = false;
+      return;
+    }
+
     this._facilitiesServiceProxy
       .createOrEdit(this.facility)
       .pipe(
@@ -104,6 +177,7 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
 
   close(): void {
     this.facility = null;
+    this.FacilityWorkingHours = null;
     this.active = false;
     this.modal.hide();
   }

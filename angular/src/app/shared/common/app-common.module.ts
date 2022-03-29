@@ -74,6 +74,8 @@ import { NgApexchartsModule } from '@node_modules/ng-apexcharts';
 import { WidgetsModule } from '@app/shared/common/customizable-dashboard/widgets/widgets.module';
 import { EntityLogComponent } from './entity-log/entity-log.component';
 import { CollapseModule } from '@node_modules/ngx-bootstrap/collapse';
+import { CreateOrEditWorkingHoursComponent } from './workingHours/create-or-edit-working-hours/create-or-edit-working-hours.component';
+import { ViewWorkingHoursComponent } from './workingHours/view-working-hours/view-working-hours.component';
 // import { FileUploadModule } from '@node_modules/primeng';
 
 @NgModule({
@@ -142,6 +144,8 @@ import { CollapseModule } from '@node_modules/ngx-bootstrap/collapse';
     ViewRejectionReasonModalComponent,
     TruckSubmitedDocumentsListComponent,
     EntityLogComponent,
+    CreateOrEditWorkingHoursComponent,
+    ViewWorkingHoursComponent,
   ],
   exports: [
     TimeZoneComboComponent,
@@ -165,6 +169,8 @@ import { CollapseModule } from '@node_modules/ngx-bootstrap/collapse';
     TruckSubmitedDocumentsListComponent,
     EntityLogComponent,
     EntityLogComponent,
+    CreateOrEditWorkingHoursComponent,
+    ViewWorkingHoursComponent,
   ],
   providers: [
     DateTimeService,

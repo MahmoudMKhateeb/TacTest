@@ -71,7 +71,8 @@ namespace TACHYON.AddressBook
                     },
                     CityDisplayName = s2 == null || s2.DisplayName == null ? "" : s2.DisplayName.ToString(),
                     Country = o.CityFk.CountyFk.DisplayName ?? "",
-                    CreationTime = o.CreationTime
+                    CreationTime = o.CreationTime,
+                    FacilityWorkingHours = ObjectMapper.Map<List<FacilityWorkingHourDto>>(o.FacilityWorkingHours)
                 };
 
             var totalCount = await filteredFacilities.CountAsync();
@@ -101,7 +102,9 @@ namespace TACHYON.AddressBook
         [AbpAuthorize(AppPermissions.Pages_Facilities_Edit)]
         public async Task<GetFacilityForEditOutput> GetFacilityForEdit(EntityDto<long> input)
         {
-            var facility = await _facilityRepository.FirstOrDefaultAsync(input.Id);
+            var facility = await _facilityRepository.GetAll()
+                .Include(x=>x.FacilityWorkingHours)
+                .FirstOrDefaultAsync(x=> x.Id==input.Id);
 
             var output =
                 new GetFacilityForEditOutput { Facility = ObjectMapper.Map<CreateOrEditFacilityDto>(facility) };

@@ -2505,7 +2505,8 @@
     <text name="ReceiverCodeConfirmationMsg">Are you sure you want to reset the receiver code for this shipment?</text>
 	<text name="CompanyDescriptionHint">Company description must be at most 500 characters</text>
 	<text name="SelectAnEmailTemplateType">Select an email template type</text>
-
-	
+	<text name="WorkingDaysHours">Working Days Hours</text>
+	<text name="PleaseEnterfacilityWorkingHours">Please Enter Working Days Hours</text>
+	<text name="PleaseEnterCity">Please Enter City</text>
 	</texts>
 </localizationDictionary>
