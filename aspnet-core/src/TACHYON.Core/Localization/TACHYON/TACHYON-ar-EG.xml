@@ -2267,7 +2267,12 @@
 		<text name="CompanyDescriptionHint">يجب ألا يزيد وصف الشركة عن 500 حرف</text>
 		<text name="SelectAnEmailTemplateType">أختر نوع قالب البريد الإلكتروني</text>
 		<text name="InCorrectWaybillNumber">رقم الشحنة لا يطابق اي شحنة في المنصة</text>
-
+		<text name="DropOffStatus">حالة نقطة التنزيل</text>
+		<text name="SubWaybill">وثيقة الشحن الفرعية</text>
+		<text name="MasterWaybillNumber">وثيقة الشحن الرئيسية</text>
+		<text name="PickupDate">تاريخ الإلتقاط</text>
+		<text name="DropOffDate">تاريخ التنزيل</text>
+		<text name="waybillSearch">رقم وثيقة الشحن ...</text>
 
 
 	</texts>

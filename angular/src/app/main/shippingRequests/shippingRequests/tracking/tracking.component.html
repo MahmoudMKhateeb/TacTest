@@ -104,7 +104,11 @@
                           <i class="flaticon2-up"></i> {{ l('Collapse') }}</a
                         >
                         <div
-                          *ngIf="item.driver && (isCarrier || (isTachyonDealer && item.requestType === ShippingRequestTypeEnum.TachyonManageService))"
+                          *ngIf="
+                            item.status != 3 &&
+                            item.driver &&
+                            (isCarrier || (isTachyonDealer && item.requestType === ShippingRequestTypeEnum.TachyonManageService))
+                          "
                           ngbDropdown
                           container="body"
                           class="d-inline-block"

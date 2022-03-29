@@ -2506,7 +2506,12 @@
 	<text name="CompanyDescriptionHint">Company description must be at most 500 characters</text>
 	<text name="SelectAnEmailTemplateType">Select an email template type</text>
 	<text name="InCorrectWaybillNumber">Waybill number does not match any active waybill number in the platform</text>
+	<text name="DropOffStatus">Drop-off status</text>
+	<text name="SubWaybill">Sub waybill</text>
+		<text name="MasterWaybillNumber">Master waybill number</text>
+		<text name="DropOffDate">Drop-off date</text>
+		<text name="waybillSearch">waybill...</text>
 
-	
+
 	</texts>
 </localizationDictionary>

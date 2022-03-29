@@ -4,7 +4,13 @@
       <div class="row align-items-center">
         <div class="col-md-12 my-2 my-md-0">
           <div class="input-icon">
-            <input type="number" [(ngModel)]="waybillNumber" class="form-control" placeholder="waybill..." id="kt_datatable_search_query" />
+            <input
+              type="number"
+              [(ngModel)]="waybillNumber"
+              class="form-control"
+              placeholder="{{ l('waybillSearch') }}"
+              id="kt_datatable_search_query"
+            />
             <span>
               <i class="flaticon2-search-1 text-muted"></i>
             </span>
@@ -30,15 +36,15 @@
         <th>{{ l('Shipper') }}</th>
         <th>{{ l('Carrier') }}</th>
         <th>{{ l('Status') }}</th>
-        <th>{{ l('dropOffStatus') }}</th>
-        <th>{{ l('subWaybill') }}</th>
+        <th>{{ l('DropOffStatus') }}</th>
+        <th>{{ l('SubWaybill') }}</th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-trip let-expanded="expanded">
       <tr [pRowToggler]="trip" (click)="trackSubWaybill(trip.waybillNumber)">
         <td>{{ trip.shipperName }}</td>
         <td>{{ trip.carrierName }}</td>
-        <td>{{ trip.tripStatus }}</td>
+        <td>{{ l(trip.tripStatus) }}</td>
         <td>{{ trip.dropOffStatus }}</td>
         <td>{{ trip.waybillNumber }}</td>
       </tr>
@@ -50,18 +56,20 @@
             <p-table [value]="subWabillData" dataKey="waybillNumber">
               <ng-template pTemplate="header">
                 <tr>
-                  <th>{{ l('waybillNumber') }}</th>
-                  <th>{{ l('dropOffStatus') }}</th>
-                  <th>{{ l('origin') }}</th>
-                  <th>{{ l('destination') }}</th>
-                  <th>{{ l('pickupDate') }}</th>
-                  <th>{{ l('dropOffDate') }}</th>
+                  <th>{{ l('MasterWaybillNumber') }}</th>
+                  <th>{{ l('WaybillNumber') }}</th>
+                  <th>{{ l('DropOffStatus') }}</th>
+                  <th>{{ l('Origin') }}</th>
+                  <th>{{ l('Destination') }}</th>
+                  <th>{{ l('PickupDate') }}</th>
+                  <th>{{ l('DropOffDate') }}</th>
                 </tr>
               </ng-template>
               <ng-template pTemplate="body" let-subWaybill>
                 <tr>
+                  <td>{{ subWaybill.masterWaybillNumber }}</td>
                   <td>{{ subWaybill.waybillNumber }}</td>
-                  <td>{{ subWaybill.dropOffStatus }}</td>
+                  <td>{{ l(subWaybill.dropOffStatus) }}</td>
                   <td>{{ subWaybill.origin }}</td>
                   <td>{{ subWaybill.destination }}</td>
                   <td>{{ subWaybill.pickupDate }}</td>
