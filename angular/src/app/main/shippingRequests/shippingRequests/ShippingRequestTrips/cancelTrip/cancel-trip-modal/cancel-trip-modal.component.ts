@@ -9,6 +9,7 @@ import {
   ShippingRequestType,
 } from '@shared/service-proxies/service-proxies';
 import { TripService } from '../../trip.service';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-cancel-trip-modal',
@@ -57,14 +58,22 @@ export class CancelTripModalComponent extends AppComponentBase implements OnInit
   }
 
   cancelation(reason: CancelTripInput, type) {
-    this._shippingRequestTripsService.cancelTrip(reason).subscribe(() => {
-      this.close();
-      this.modalSave.emit(null);
-      this.saving = false;
-      type == 'tms'
-        ? this.notify.info(!this.isTMS ? this.l('SuccessfullyCanceled') : this.l('WaitingApproveFromTMS'))
-        : this.notify.info(this.l('SuccessfullyCanceled'));
-    });
+    this.saving = true;
+    this._shippingRequestTripsService
+      .cancelTrip(reason)
+      .pipe(
+        finalize(() => {
+          this.saving = false;
+        })
+      )
+      .subscribe(() => {
+        this.close();
+        this.modalSave.emit(null);
+        this.saving = false;
+        type == 'tms'
+          ? this.notify.info(!this.isTMS ? this.l('SuccessfullyCanceled') : this.l('WaitingApproveFromTMS'))
+          : this.notify.info(this.l('SuccessfullyCanceled'));
+      });
   }
 
   close(): void {

@@ -99,4 +99,10 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
     this.primengTableHelper.adjustScroll(this.dataTable);
     this.tripsByTmsEnabled = this.ShippingRequest.addTripsByTmsEnabled;
   }
+  getCancelStatus(statusId) {
+    if (statusId == this.ShippingRequestTripCancelStatusEnum.Canceled) return this.l('Canceled');
+    else if (statusId == this.ShippingRequestTripCancelStatusEnum.Rejected) return this.l('Rejected');
+    else if (statusId == this.ShippingRequestTripCancelStatusEnum.WaitingForTMSApproval) return this.l('WaitingForTMSApproval');
+    else return this.l('None');
+  }
 }

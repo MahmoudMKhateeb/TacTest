@@ -7,6 +7,7 @@ import {
   ShippingRequestTripStatus,
 } from '@shared/service-proxies/service-proxies';
 import { ModalDirective } from 'ngx-bootstrap/modal';
+import { finalize } from 'rxjs/operators';
 import { TripService } from '../../trip.service';
 
 @Component({
@@ -58,12 +59,20 @@ export class TmsCancelTripModalComponent extends AppComponentBase implements OnI
   }
 
   cancelation(reason: CancelTripInput, type) {
-    this._shippingRequestTripsService.cancelTrip(reason).subscribe(() => {
-      this.close();
-      this.modalSave.emit(null);
-      this.saving = false;
-      type == 'reject' ? this.notify.info(this.l('SuccessfullyRejectCancelation')) : this.notify.info(this.l('SuccessfullyCanceled'));
-    });
+    this.saving = true;
+    this._shippingRequestTripsService
+      .cancelTrip(reason)
+      .pipe(
+        finalize(() => {
+          this.saving = false;
+        })
+      )
+      .subscribe(() => {
+        this.close();
+        this.modalSave.emit(null);
+        this.saving = false;
+        type == 'reject' ? this.notify.info(this.l('SuccessfullyRejectCancelation')) : this.notify.info(this.l('SuccessfullyCanceled'));
+      });
   }
 
   close(): void {
