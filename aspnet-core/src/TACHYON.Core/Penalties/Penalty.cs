@@ -51,7 +51,6 @@ namespace TACHYON.Penalties
         public decimal VatPreCommestion { get; set; }
         public decimal VatPostCommestion { get; set; }
         public decimal TotalAmount { get; set; }
-
-
+        public decimal ItmePrice { get; set; }
     }
 }

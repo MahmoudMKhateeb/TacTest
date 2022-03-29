@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TACHYON.Migrations
 {
-    public partial class add_Penalty_table : Migration
+    public partial class Add_Penalty_Table : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -22,19 +22,35 @@ namespace TACHYON.Migrations
                     DeletionTime = table.Column<DateTime>(nullable: true),
                     PenaltyName = table.Column<string>(nullable: true),
                     PenaltyDescrption = table.Column<string>(nullable: true),
-                    Amount = table.Column<decimal>(nullable: false),
                     Type = table.Column<byte>(nullable: false),
+                    Status = table.Column<int>(nullable: false),
+                    SourceFeature = table.Column<string>(nullable: true),
                     TenantId = table.Column<int>(nullable: false),
-                    TripId = table.Column<long>(nullable: true),
-                    TripFKId = table.Column<int>(nullable: true),
+                    DestinationTenantId = table.Column<int>(nullable: false),
+                    ShippingRequestTripId = table.Column<int>(nullable: true),
                     PointId = table.Column<long>(nullable: true),
                     RoutPointFKId = table.Column<long>(nullable: true),
                     InvoiceId = table.Column<long>(nullable: true),
-                    SubmitInvoiceId = table.Column<long>(nullable: true)
+                    SubmitInvoiceId = table.Column<long>(nullable: true),
+                    CommissionValue = table.Column<decimal>(nullable: false),
+                    CommissionType = table.Column<byte>(nullable: false),
+                    AmountPreCommestion = table.Column<decimal>(nullable: false),
+                    AmountPostCommestion = table.Column<decimal>(nullable: false),
+                    VatAmount = table.Column<decimal>(nullable: false),
+                    VatPreCommestion = table.Column<decimal>(nullable: false),
+                    VatPostCommestion = table.Column<decimal>(nullable: false),
+                    TotalAmount = table.Column<decimal>(nullable: false),
+                    ItmePrice = table.Column<decimal>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Penalties", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Penalties_AbpTenants_DestinationTenantId",
+                        column: x => x.DestinationTenantId,
+                        principalTable: "AbpTenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Penalties_Invoices_InvoiceId",
                         column: x => x.InvoiceId,
@@ -48,6 +64,12 @@ namespace TACHYON.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
+                        name: "FK_Penalties_ShippingRequestTrips_ShippingRequestTripId",
+                        column: x => x.ShippingRequestTripId,
+                        principalTable: "ShippingRequestTrips",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
                         name: "FK_Penalties_SubmitInvoices_SubmitInvoiceId",
                         column: x => x.SubmitInvoiceId,
                         principalTable: "SubmitInvoices",
@@ -58,14 +80,35 @@ namespace TACHYON.Migrations
                         column: x => x.TenantId,
                         principalTable: "AbpTenants",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Penalties_ShippingRequestTrips_TripFKId",
-                        column: x => x.TripFKId,
-                        principalTable: "ShippingRequestTrips",
-                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
+            migrationBuilder.CreateTable(
+                name: "PenaltyComplaints",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PenaltyId = table.Column<int>(nullable: false),
+                    Description = table.Column<string>(nullable: true),
+                    RejectReason = table.Column<string>(nullable: true),
+                    Status = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PenaltyComplaints", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PenaltyComplaints_Penalties_PenaltyId",
+                        column: x => x.PenaltyId,
+                        principalTable: "Penalties",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Penalties_DestinationTenantId",
+                table: "Penalties",
+                column: "DestinationTenantId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_Penalties_InvoiceId",
                 table: "Penalties",
@@ -75,6 +118,11 @@ namespace TACHYON.Migrations
                 name: "IX_Penalties_RoutPointFKId",
                 table: "Penalties",
                 column: "RoutPointFKId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Penalties_ShippingRequestTripId",
+                table: "Penalties",
+                column: "ShippingRequestTripId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Penalties_SubmitInvoiceId",
@@ -87,14 +135,15 @@ namespace TACHYON.Migrations
                 column: "TenantId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Penalties_TripFKId",
-                table: "Penalties",
-                column: "TripFKId");
-
+                name: "IX_PenaltyComplaints_PenaltyId",
+                table: "PenaltyComplaints",
+                column: "PenaltyId",
+                unique: true);
         }
-
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "PenaltyComplaints");
             migrationBuilder.DropTable(
                 name: "Penalties");
         }

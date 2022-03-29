@@ -4090,6 +4090,9 @@ namespace TACHYON.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<decimal>("ItmePrice")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<DateTime?>("LastModificationTime")
                         .HasColumnType("datetime2");
 
@@ -7971,7 +7974,7 @@ namespace TACHYON.Migrations
                         .WithMany("Penalties")
                         .HasForeignKey("RoutPointFKId");
 
-                    b.HasOne("TACHYON.Shipping.ShippingRequestTrips.ShippingRequestTrip", "TripFK")
+                    b.HasOne("TACHYON.Shipping.ShippingRequestTrips.ShippingRequestTrip", "ShippingRequestTripFK")
                         .WithMany("Penalties")
                         .HasForeignKey("ShippingRequestTripId");
 

@@ -13,6 +13,7 @@
     <RootNamespace>TACHYON</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Invoices\PenaltyInvoice.rdlc" />
     <None Remove="Invoices\Reports\Dedicated_Invoice.rdlc" />
     <None Remove="Invoices\Reports\Invoice.rdlc" />
     <None Remove="Waybills\Reports\Master_Waybill.rdlc" />
@@ -21,6 +22,9 @@
     <None Remove="Shipping\Trips\ShippingRequestsTripManager.cs.orig" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Invoices\Reports\PenaltyInvoice.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="Invoices\Reports\Invoice.rdlc">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
@@ -52,6 +56,11 @@
     <ProjectReference Include="..\TACHYON.EntityFrameworkCore\TACHYON.EntityFrameworkCore.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="Invoices\Reports\Datasets\GetInvoicePenaltiseInvoiceReportInfo.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>GetInvoicePenaltiseInvoiceReportInfo.xsd</DependentUpon>
+    </Compile>
     <Compile Update="Invoices\Reports\Datasets\GetInvoiceReportInfoDataset.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -104,6 +113,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Update="Invoices\Reports\Datasets\GetInvoicePenaltiseInvoiceReportInfo.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>GetInvoicePenaltiseInvoiceReportInfo.Designer.cs</LastGenOutput>
+    </None>
     <None Update="Invoices\Reports\Datasets\GetInvoiceReportInfoDataset.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>GetInvoiceReportInfoDataset.Designer.cs</LastGenOutput>

@@ -34,5 +34,20 @@ namespace TACHYON.Invoices.Reports
 
             return _pdfExporterBase.CreateRdlcPdfPackageFromList("Invoice", reportPath, names, data);
         }
+        public FileDto DonwloadPenaltyInvoice(long invoiceId)
+        {
+            var reportPath = "/Invoices/Reports/Invoice.rdlc";
+
+            ArrayList names = new ArrayList();
+            ArrayList data = new ArrayList();
+
+            names.Add("GetPenaltyInvoiceReportInfoDataset");
+            data.Add(_invoiceAppService.GetInvoiceReportInfo(invoiceId));
+
+            names.Add("GetInvoiceShippingRequestsReportInfoDataset");
+            data.Add(_invoiceAppService.GetInvoicePenaltiseInvoiceReportInfo(invoiceId));
+
+            return _pdfExporterBase.CreateRdlcPdfPackageFromList("Invoice", reportPath, names, data);
+        }
     }
 }

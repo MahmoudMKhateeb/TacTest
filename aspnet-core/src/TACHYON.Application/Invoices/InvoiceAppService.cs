@@ -25,6 +25,7 @@ using TACHYON.Invoices.Balances;
 using TACHYON.Invoices.Dto;
 using TACHYON.Invoices.Periods;
 using TACHYON.Invoices.Transactions;
+using TACHYON.Penalties;
 using TACHYON.ShippingRequestVases;
 using TACHYON.Trucks.TrucksTypes.Dtos;
 
@@ -44,6 +45,7 @@ namespace TACHYON.Invoices
         private readonly IExcelExporterManager<InvoiceListDto> _excelExporterManager;
         private readonly IRepository<DocumentFile, Guid> _documentFileRepository;
         private readonly IExcelExporterManager<InvoiceItemDto> _excelExporterInvoiceItemManager;
+
 
         public InvoiceAppService(
             IRepository<Invoice, long> invoiceRepository,
@@ -140,6 +142,22 @@ namespace TACHYON.Invoices
             return invoice;
         }
 
+        private async Task<Invoice> GetPenaltyInvoiceInfo(long penaltyInvoiceId) 
+        {
+            DisableTenancyFilters();
+            var invoice = await _invoiceRepository
+                .GetAll()
+                .Include(i => i.Tenant)
+                .Include(i => i.Penalties)
+                .Include(x => x.Trips)
+                .ThenInclude(r => r.ShippingRequestTripFK)
+                .ThenInclude(i => i.ShippingRequestFk)
+                .ThenInclude(x=>x.AssignedTruckFk)
+                .FirstOrDefaultAsync(i => i.Id == penaltyInvoiceId);
+            if (invoice == null) throw new UserFriendlyException(L("TheInvoiceNotFound"));
+
+            return invoice;
+        }
         private List<InvoiceItemDto> GetInvoiceItems(Invoice invoice)
         {
             var TotalItem = invoice.Trips.Count +
@@ -354,7 +372,6 @@ namespace TACHYON.Invoices
             if (document != null) invoiceDto.TenantVatNumber = documentVat.Number;
             return new List<InvoiceInfoDto>() { invoiceDto };
         }
-
         public IEnumerable<InvoiceItemDto> GetInvoiceShippingRequestsReportInfo(long invoiceId)
         {
             DisableTenancyFilters();
@@ -463,6 +480,35 @@ namespace TACHYON.Invoices
             //DisableTenancyFilters();
             //var documnet = AsyncHelper.RunSync(() => _documentFileRepository.FirstOrDefaultAsync(x => x.TenantId == invoice.TenantId && x.DocumentTypeId == 14);
             //if (documnet != null) invoiceDto.CR = documnet.Number;
+            return Items;
+        }
+        public IEnumerable<PeanltyInvoiceItemDto> GetInvoicePenaltiseInvoiceReportInfo(long penaltynvoiceId)
+        {
+            DisableTenancyFilters();
+            var pnealtyInvoice = AsyncHelper.RunSync(() => GetPenaltyInvoiceInfo(penaltynvoiceId));
+
+            if (pnealtyInvoice == null) throw new UserFriendlyException(L("TheInvoiceNotFound"));
+            var TotalItem = pnealtyInvoice.Penalties.Count();
+            int Sequence = 1;
+            List<PeanltyInvoiceItemDto> Items = new List<PeanltyInvoiceItemDto>();
+            pnealtyInvoice.Penalties.ToList().ForEach(penalty =>
+            {
+                Items.Add(new PeanltyInvoiceItemDto
+                {
+                    Sequence = $"{Sequence}/{TotalItem}",
+                    VatAmount = penalty.VatAmount,
+                    TotalAmount = penalty.TotalAmount,
+                    Date = penalty.CreationTime.ToString("dd/MM/yyyy"),
+                    ContainerNumber = penalty.ShippingRequestTripFK.AssignedTruckFk.PlateNumber,
+                    WayBillNumber = penalty.ShippingRequestTripFK.WaybillNumber.ToString(),
+                    ItmePrice = penalty.ItmePrice,
+                    Remarks = penalty.ShippingRequestTripFK.ShippingRequestFk.RouteTypeId ==
+                              Shipping.ShippingRequests.ShippingRequestRouteType.MultipleDrops
+                        ? L("TotalOfDrop", penalty.ShippingRequestTripFK.ShippingRequestFk.NumberOfDrops)
+                        : ""
+                });
+                Sequence++;
+            });;
             return Items;
         }
 
