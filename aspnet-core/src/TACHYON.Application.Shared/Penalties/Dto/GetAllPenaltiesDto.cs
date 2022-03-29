@@ -18,5 +18,6 @@ namespace TACHYON.Penalties.Dto
         public int TenantId { get; set; }
         public int DestinationTenantId { get; set; }
         public string PenaltyTypeTitle { get { return Type.GetEnumDescription(); } }
+        public string PenaltyStatusTitle { get { return Status.GetEnumDescription(); } }
     }
 }

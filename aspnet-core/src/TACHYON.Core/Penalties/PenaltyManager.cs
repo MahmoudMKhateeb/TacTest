@@ -1,13 +1,17 @@
 ﻿using Abp.Application.Features;
 using Abp.BackgroundJobs;
+using Abp.Configuration;
 using Abp.Domain.Repositories;
 using Abp.Timing;
 using Abp.UI;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TACHYON.Common;
+using TACHYON.Configuration;
 using TACHYON.Features;
 using TACHYON.Notifications;
 using TACHYON.Penalties;
@@ -26,17 +30,21 @@ namespace TACHYON.Penalties
         private readonly IFeatureChecker _featureChecker;
         private readonly IAppNotifier _appNotifier;
         private readonly IBackgroundJobManager _backgroundJobManager;
+        private readonly ISettingManager _settingManager;
+
         public PenaltyManager(IRepository<Penalty> penaltyRepository,
             IFeatureChecker featureChecker,
             IAppNotifier appNotifier,
             IRepository<RoutPoint, long> routPointrepository,
-            IBackgroundJobManager backgroundJobManager)
+            IBackgroundJobManager backgroundJobManager,
+            ISettingManager settingManager)
         {
             _penaltyRepository = penaltyRepository;
             _featureChecker = featureChecker;
             _appNotifier = appNotifier;
             _routPointrepository = routPointrepository;
             _backgroundJobManager = backgroundJobManager;
+            _settingManager = settingManager;
         }
 
         #region Applying Penalties
@@ -54,7 +62,7 @@ namespace TACHYON.Penalties
             var allowedHouers = Convert.ToInt32(await _featureChecker.GetValueAsync(tenantId, AppFeatures.AllowedDetentionPeriod));
             var violatedHours = (leaveTime - arriveTime);
 
-            if (allowedHouers > violatedHours.Hours)
+            if (allowedHouers < violatedHours.Hours)
             {
                 var price = Convert.ToDecimal(await _featureChecker.GetValueAsync(tenantId, AppFeatures.DetentionFeesIncreaseRate));
                 var minAmount = Convert.ToDecimal(await _featureChecker.GetValueAsync(tenantId, AppFeatures.BaseDetentionFeesAmount));
@@ -91,7 +99,7 @@ namespace TACHYON.Penalties
                 AppFeatures.NotAssignTruckAndDriverStartDate_CommissionType, AppFeatures.NotAssignTruckAndDriverStartDate_CommissionMinValue,
                 AppFeatures.NotAssignTruckAndDriverStartDate_CommissionPercentage, AppFeatures.NotAssignTruckAndDriverStartDate_CommissionValue);
 
-                await InitPenalty(finalAmount, PenaltyType.DetentionPeriodExceedMaximumAllowedTime, tenantId, destinationTenantId, tripId, commestionValues);
+                await InitPenalty(finalAmount, PenaltyType.NotAssigningTruckAndDriverBeforeTheDateForTheTrip, tenantId, destinationTenantId, tripId, commestionValues);
             }
 
         }
@@ -108,7 +116,7 @@ namespace TACHYON.Penalties
                AppFeatures.NotDeliveringAllDropsBeforeEndDate_CommissionType, AppFeatures.NotDeliveringAllDropsBeforeEndDate_CommissionMinValue,
                AppFeatures.NotDeliveringAllDropsBeforeEndDate_CommissionPercentage, AppFeatures.NotDeliveringAllDropsBeforeEndDate_CommissionValue);
 
-                await InitPenalty(finalAmount, PenaltyType.DetentionPeriodExceedMaximumAllowedTime, tenantId, tripId, destinationTenantId,commestionValues);
+                await InitPenalty(finalAmount, PenaltyType.NotDeliveringAllDropsBeforeExpectedTripEndDate, tenantId, tripId, destinationTenantId,commestionValues);
             }
         }
         #endregion
@@ -116,7 +124,11 @@ namespace TACHYON.Penalties
         #region Detention Notfications
         public async Task SendNotficationBeforeViolateDetention(int shipperTenantId, long pointId)
         {
-            var routPoint = await _routPointrepository.FirstOrDefaultAsync(pointId);
+            var routPoint = await _routPointrepository
+                .GetAllIncluding(c=> c.ShippingRequestTripFk)
+                .Where(x=> x.Id == pointId)
+                .FirstOrDefaultAsync();
+
             if (routPoint.Status == RoutePointStatus.ArrivedToDestination
                 || routPoint.Status == RoutePointStatus.ArriveToLoadingLocation)
             {
@@ -140,11 +152,12 @@ namespace TACHYON.Penalties
             var commestionMinValue = Convert.ToDecimal(await _featureChecker.GetValueAsync(tenantId, commestionMinValueKey));
             var commestionPercentage = Convert.ToDecimal(await _featureChecker.GetValueAsync(tenantId, commestionPercentageKey));
             var commestionValue = Convert.ToDecimal(await _featureChecker.GetValueAsync(tenantId, commestionValueKey));
+            var taxVat = _settingManager.GetSettingValue<decimal>(AppSettings.HostManagement.TaxVat);
 
             var res = new PenaltyCommestionDto();
             res.AmountPreCommestion = amount;
             res.CommissionType = commestionType;
-            res.VatPreCommestion = Calculate.CalculateVat(res.AmountPreCommestion, 15);
+            res.VatPreCommestion = Calculate.CalculateVat(res.AmountPreCommestion, taxVat);
 
             switch (commestionType)
             {
@@ -203,9 +216,9 @@ namespace TACHYON.Penalties
         {
             switch (unitOfMeasure)
             {
-                case UnitOfMeasure.Hourly: return (date - Clock.Now).Hours;
+                case UnitOfMeasure.Hourly: return (Clock.Now - date).Hours;
 
-                case UnitOfMeasure.Daily: return (date - Clock.Now).Days;
+                case UnitOfMeasure.Daily: return (Clock.Now - date).Days;
             }
             return 0;
         }

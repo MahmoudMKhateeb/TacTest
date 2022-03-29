@@ -630,7 +630,7 @@ namespace TACHYON.Features
 
             tripCancelation.CreateChildFeature(
                 AppFeatures.TripCancelationCommissionType,
-                "false",
+                "1",
                 L("TripCancelationCommissionType"),
                 inputType: new ComboboxInputType(new StaticLocalizableComboboxItemSource(CommissionTypes.ToArray())));
 
@@ -687,7 +687,7 @@ namespace TACHYON.Features
 
             detention.CreateChildFeature(
                 AppFeatures.DetentionCommissionType,
-                "false",
+                "1",
                 L("DetentionCommissionType"),
                 inputType: new ComboboxInputType(new StaticLocalizableComboboxItemSource(CommissionTypes.ToArray())));
 
@@ -750,7 +750,7 @@ namespace TACHYON.Features
 
             notAssignTruckAndDriverStartDate.CreateChildFeature(
                 AppFeatures.NotAssignTruckAndDriverStartDate_CommissionType,
-                "false",
+                "1",
                 L("NotAssignTruckAndDriverStartDate_CommissionType"),
                 inputType: new ComboboxInputType(new StaticLocalizableComboboxItemSource(CommissionTypes.ToArray())));
 
@@ -813,7 +813,7 @@ namespace TACHYON.Features
 
             notDeliveringAllDropsBeforeEndDate.CreateChildFeature(
                 AppFeatures.NotDeliveringAllDropsBeforeEndDate_CommissionType,
-                "false",
+                "1",
                 L("NotDeliveringAllDropsBeforeEndDate_CommissionType"),
                 inputType: new ComboboxInputType(new StaticLocalizableComboboxItemSource(CommissionTypes.ToArray())));
 

@@ -53,7 +53,7 @@
           </div>
         </div>
         <!-- end::Body-->
-        <div class="modal-footer" *ngIf="penaltyComplaint.status == 1">
+        <div class="modal-footer" *ngIf="penaltyComplaint.status == 1 && isTachyonDealerOrHost">
           <button
             type="submit"
             class="btn btn-info"

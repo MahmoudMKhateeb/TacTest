@@ -92,7 +92,7 @@ namespace TACHYON.Tracking
             IWebUrlService webUrlService,
             IPermissionChecker permissionChecker,
             IEntityChangeSetReasonProvider reasonProvider,
-            ITempFileCacheManager tempFileCacheManager)
+            ITempFileCacheManager tempFileCacheManager, PenaltyManager penaltyManager)
         {
             _routPointRepository = routPointRepository;
             _shippingRequestTripRepository = shippingRequestTrip;
@@ -370,6 +370,7 @@ namespace TACHYON.Tracking
                     },
                 },
             };
+            _penaltyManager = penaltyManager;
         }
 
         #endregion
