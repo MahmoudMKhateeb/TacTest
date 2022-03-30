@@ -128,14 +128,7 @@
                 required
               />
             </div>
-            <div class="col-md-6">
-              <app-create-or-edit-working-hours
-                #CreateOrEditWorkingHoursComponent
-                [FacilityWorkingHoursInput]="FacilityWorkingHours"
-                [parentForm]="createFacilityForm"
-              >
-              </app-create-or-edit-working-hours>
-            </div>
+
             <!-- CreateNewFacilityMap -->
             <div class="form-group col-md-12" [ngClass]="{ preventClick: !facility.cityId }">
               <agm-map
@@ -151,6 +144,15 @@
                   [longitude]="facility.longitude"
                 ></agm-marker>
               </agm-map>
+            </div>
+
+            <div class="col-md-6">
+              <app-create-or-edit-working-hours
+                #CreateOrEditWorkingHoursComponent
+                [FacilityWorkingHoursInput]="FacilityWorkingHours"
+                [parentForm]="createFacilityForm"
+              >
+              </app-create-or-edit-working-hours>
             </div>
           </div>
         </div>
