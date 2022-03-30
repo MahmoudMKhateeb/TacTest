@@ -25,6 +25,7 @@ import { EntityLogComponent } from '@app/shared/common/entity-log/entity-log.com
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/compat/database';
 import { DriverLocation, FirebaseHelperClass, trackingIconsList } from '@app/main/shippingRequests/shippingRequests/tracking/firebaseHelper.class';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
+import { FileViwerComponent } from '@app/shared/common/file-viwer/file-viwer.component';
 
 @Component({
   selector: 'new-tracking-conponent',
@@ -37,6 +38,8 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
   @ViewChild('modelconfirm', { static: false }) modelConfirmCode: TrackingConfirmModalComponent;
   @ViewChild('modelpod', { static: false }) modelpod: TrackingPODModalComponent;
   @ViewChild('appEntityLog', { static: false }) activityLogModal: EntityLogComponent;
+  @ViewChild('fileViwerComponent', { static: false }) fileViwerComponent: FileViwerComponent;
+
   @Input() trip: TrackingListDto = new TrackingListDto();
   active = false;
   item: number;
@@ -379,6 +382,7 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
     this.dropWaybillLoadingId = id;
     this._waybillsServiceProxy.getMultipleDropWaybillPdf(id).subscribe((result) => {
       this._fileDownloadService.downloadTempFile(result);
+      this.fileViwerComponent.show(this._fileDownloadService.downloadTempFile(result), 'pdf');
       this.dropWaybillLoadingId = null;
     });
   }
@@ -428,7 +432,8 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
    * @param pod
    */
   downloadPOD(pod: GetAllUploadedFileDto): void {
-    this._fileDownloadService.downloadFileByBinary(pod.documentId, pod.fileName, pod.fileType);
+    let image = this._fileDownloadService.downloadFileByBinary(pod.documentId, pod.fileName, pod.fileType);
+    this.fileViwerComponent.show(image, 'img');
   }
 
   showPointLog(pointId: number) {
