@@ -276,7 +276,7 @@
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
             <Top>3.94003in</Top>
-            <Left>4.1527in</Left>
+            <Left>4.15274in</Left>
             <Height>1.40895in</Height>
             <Width>3.74383in</Width>
             <Style>
@@ -398,7 +398,7 @@
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
             <Top>3.94003in</Top>
-            <Left>0.49957in</Left>
+            <Left>0.48569in</Left>
             <Height>1.40895in</Height>
             <Width>3.13328in</Width>
             <ZIndex>1</ZIndex>
@@ -422,6 +422,17 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
+                    <Value>*</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>Open Sans</FontFamily>
+                      <FontSize>6pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#181818</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
                     <Value>التاريخ هو تاريخ تسليم الشحنة الفعلي</Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
@@ -432,7 +443,6 @@
                     </Style>
                   </TextRun>
                 </TextRuns>
-                <ListStyle>Bulleted</ListStyle>
                 <ListLevel>1</ListLevel>
                 <Style>
                   <TextAlign>Right</TextAlign>
@@ -441,7 +451,18 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>في حالة الخدمات الاضافية، الخدمات الاضافية ستضاف الي رقم وثيقة الشحن كمرجع</Value>
+                    <Value>**</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>Open Sans</FontFamily>
+                      <FontSize>6pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#181818</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>في حالة الخدمات الاضافية، الخدمات الاضافية ستضاف الي رقم وثيقة الشحن كمرجع                                              </Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
                       <FontSize>6pt</FontSize>
@@ -451,18 +472,17 @@
                     </Style>
                   </TextRun>
                 </TextRuns>
-                <ListStyle>Bulleted</ListStyle>
                 <ListLevel>1</ListLevel>
                 <Style>
-                  <TextAlign>Right</TextAlign>
+                  <TextAlign>Left</TextAlign>
                 </Style>
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>2.22557in</Top>
-            <Left>4.15273in</Left>
+            <Top>2.24923in</Top>
+            <Left>4.97774in</Left>
             <Height>0.66969in</Height>
-            <Width>3.74383in</Width>
+            <Width>3.28998in</Width>
             <ZIndex>2</ZIndex>
             <Style>
               <Border>
@@ -483,7 +503,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>Date is the actual shipment delivery date</Value>
+                    <Value>*Date is the actual shipment delivery date</Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
                       <FontFamily>Open Sans</FontFamily>
@@ -494,7 +514,6 @@
                     </Style>
                   </TextRun>
                 </TextRuns>
-                <ListStyle>Bulleted</ListStyle>
                 <ListLevel>1</ListLevel>
                 <Style>
                   <TextAlign>Left</TextAlign>
@@ -503,7 +522,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value> In case there is VAS, then VAS will be added to the waybill number as a reference</Value>
+                    <Value>**In case there is VAS, then VAS will be added to the waybill number as a reference</Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
                       <FontFamily>Open Sans</FontFamily>
@@ -514,7 +533,6 @@
                     </Style>
                   </TextRun>
                 </TextRuns>
-                <ListStyle>Bulleted</ListStyle>
                 <ListLevel>1</ListLevel>
                 <Style>
                   <TextAlign>Left</TextAlign>
@@ -522,10 +540,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>2.21168in</Top>
-            <Left>0.49957in</Left>
+            <Top>2.23534in</Top>
+            <Left>0.0759in</Left>
             <Height>0.68358in</Height>
-            <Width>3.20273in</Width>
+            <Width>3.85742in</Width>
             <ZIndex>3</ZIndex>
             <Style>
               <Border>
@@ -623,7 +641,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value />
+                                  <Value>=</Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>7pt</FontSize>
@@ -741,7 +759,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value />
+                                  <Value>=</Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>7pt</FontSize>
@@ -1789,7 +1807,7 @@
             <Top>0.21555cm</Top>
             <Left>1.26891cm</Left>
             <Height>2.89709cm</Height>
-            <Width>18.78836cm</Width>
+            <Width>18.78834cm</Width>
             <ZIndex>4</ZIndex>
             <Style>
               <Border>
@@ -1892,7 +1910,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Date</Value>
+                                  <Value>Date*</Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>7pt</FontSize>
@@ -2358,7 +2376,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!DateWork.Value</Value>
+                                  <Value>=Fields!Date.Value</Value>
                                   <Style>
                                     <FontStyle>Normal</FontStyle>
                                     <FontFamily>Open Sans</FontFamily>
@@ -2382,7 +2400,6 @@
                             </Border>
                             <LeftBorder>
                               <Style>Solid</Style>
-                              <Width>1pt</Width>
                             </LeftBorder>
                             <BackgroundColor>White</BackgroundColor>
                             <VerticalAlign>Middle</VerticalAlign>
@@ -2440,7 +2457,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=First(Fields!ItemPrice.Value, "GetInvoicePenaltiseInvoiceReportInfo")</Value>
+                                  <Value>=Fields!ItemPrice.Value</Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>7pt</FontSize>
@@ -2477,7 +2494,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!TruckType.Value</Value>
+                                  <Value>=Fields!VatAmount.Value</Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>7pt</FontSize>
@@ -2514,7 +2531,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!VatAmount.Value</Value>
+                                  <Value>=Fields!TotalAmount.Value</Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>7pt</FontSize>
@@ -2553,7 +2570,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!TotalAmount.Value</Value>
+                                  <Value>=Fields!ContainerNumber.Value</Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>7pt</FontSize>
@@ -2651,11 +2668,11 @@
                 </TablixMember>
               </TablixMembers>
             </TablixRowHierarchy>
-            <DataSetName>GetInvoiceShippingRequestsReportInfoDataset</DataSetName>
+            <DataSetName>GetInvoicePenaltiseInvoiceReportInfo</DataSetName>
             <Top>3.88245cm</Top>
             <Left>1.26891cm</Left>
             <Height>1.87638cm</Height>
-            <Width>18.78836cm</Width>
+            <Width>18.78838cm</Width>
             <ZIndex>5</ZIndex>
             <Style>
               <Border>
@@ -3177,7 +3194,7 @@
             <Top>7.59044cm</Top>
             <Left>10.54793cm</Left>
             <Height>2.06457cm</Height>
-            <Width>9.50931cm</Width>
+            <Width>9.50932cm</Width>
             <ZIndex>6</ZIndex>
             <Style>
               <Border>
@@ -3665,7 +3682,7 @@
             <Top>11.18894cm</Top>
             <Left>10.66888cm</Left>
             <Height>2.29494cm</Height>
-            <Width>9.2523cm</Width>
+            <Width>9.25231cm</Width>
             <ZIndex>7</ZIndex>
             <Style>
               <Border>
@@ -3729,21 +3746,172 @@
               <PaddingBottom>2pt</PaddingBottom>
             </Style>
           </Textbox>
-          <Image Name="Image1">
-            <Source>Embedded</Source>
-            <Value>ID154405</Value>
-            <Sizing>FitProportional</Sizing>
-            <Top>7.59044cm</Top>
-            <Left>2.73014cm</Left>
-            <Height>2.06458cm</Height>
-            <Width>4.26232cm</Width>
+          <Tablix Name="Tablix1">
+            <TablixBody>
+              <TablixColumns>
+                <TablixColumn>
+                  <Width>3.03635cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>3.03635cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>3.03635cm</Width>
+                </TablixColumn>
+              </TablixColumns>
+              <TablixRows>
+                <TablixRow>
+                  <Height>0.98819cm</Height>
+                  <TablixCells>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox4">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>For Integrated Solutions for Logistics Services</Value>
+                                  <Style>
+                                    <FontStyle>Normal</FontStyle>
+                                    <FontFamily>Times New Roman</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                    <FontWeight>Normal</FontWeight>
+                                    <TextDecoration>None</TextDecoration>
+                                    <Color>#181818</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>الحلول المتكاملة للخدمات اللوجستية</Value>
+                                  <Style>
+                                    <FontStyle>Normal</FontStyle>
+                                    <FontFamily>Times New Roman</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                    <FontWeight>Normal</FontWeight>
+                                    <TextDecoration>None</TextDecoration>
+                                    <Color>#181818</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox4</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                        <ColSpan>3</ColSpan>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell />
+                    <TablixCell />
+                  </TablixCells>
+                </TablixRow>
+                <TablixRow>
+                  <Height>0.98819cm</Height>
+                  <TablixCells>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox7">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value />
+                                  <Style>
+                                    <FontStyle>Normal</FontStyle>
+                                    <FontFamily>Times New Roman</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                    <FontWeight>Normal</FontWeight>
+                                    <TextDecoration>None</TextDecoration>
+                                    <Color>#181818</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Authorized Signature                                                                   التوقيع </Value>
+                                  <Style>
+                                    <FontStyle>Normal</FontStyle>
+                                    <FontFamily>Times New Roman</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                    <FontWeight>Normal</FontWeight>
+                                    <TextDecoration>None</TextDecoration>
+                                    <Color>#181818</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox7</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                        <ColSpan>3</ColSpan>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell />
+                    <TablixCell />
+                  </TablixCells>
+                </TablixRow>
+              </TablixRows>
+            </TablixBody>
+            <TablixColumnHierarchy>
+              <TablixMembers>
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+              </TablixMembers>
+            </TablixColumnHierarchy>
+            <TablixRowHierarchy>
+              <TablixMembers>
+                <TablixMember>
+                  <KeepWithGroup>After</KeepWithGroup>
+                </TablixMember>
+                <TablixMember>
+                  <Group Name="Details" />
+                </TablixMember>
+              </TablixMembers>
+            </TablixRowHierarchy>
+            <Top>7.67863cm</Top>
+            <Left>0.88156cm</Left>
+            <Height>1.97638cm</Height>
+            <Width>9.10906cm</Width>
             <ZIndex>9</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
               </Border>
             </Style>
-          </Image>
+          </Tablix>
         </ReportItems>
         <Height>15.7cm</Height>
         <Style>

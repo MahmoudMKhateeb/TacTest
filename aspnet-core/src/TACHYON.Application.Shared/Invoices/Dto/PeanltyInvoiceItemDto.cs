@@ -14,5 +14,6 @@ namespace TACHYON.Invoices.Dto
         public string Date { get; set; }
         public string Remarks { get; set; }
         public string ContainerNumber { get; set; }
+        public InvoiceChannel Channel { get; set; }
     }
 }

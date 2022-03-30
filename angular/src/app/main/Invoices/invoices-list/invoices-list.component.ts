@@ -123,6 +123,11 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
       this._fileDownloadService.downloadTempFile(result);
     });
   }
+  downloadPenaltyReport(id: number) {
+    this._InvoiceReportServiceProxy.donwloadPenaltyInvoice(id).subscribe((result) => {
+      this._fileDownloadService.downloadTempFile(result);
+    });
+  }
   details(invoice: any): void {
     if (invoice.accountType == InvoiceAccountType.AccountReceivable) {
       this.router.navigate([`/app/main/invoices/detail/${invoice.id}`]);
