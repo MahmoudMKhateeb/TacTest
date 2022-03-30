@@ -301,7 +301,7 @@
 		<text name="CityDisplayName">City</text>
 		<text name="CityName">City</text>
 		<text name="CityOrigin">Origin</text>
-		<text name="Claim">Claimed</text>
+		<text name="Claim">Claim</text>
 		<text name="ClaimKey">Claim Key</text>
 		<text name="ClaimsMapping">Claims Mapping</text>
 		<text name="ClaimValue">Claim Value</text>
