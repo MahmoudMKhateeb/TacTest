@@ -561,7 +561,7 @@ namespace TACHYON.Tracking
                 .FirstOrDefaultAsync(x => x.Id == args.PointId);
             point.Status = status;
             point.ShippingRequestTripFk.RoutePointStatus = status;
-            await _penaltyManager.SendNotficationBeforeViolateDetention(point.ShippingRequestTripFk.ShippingRequestFk.TenantId, args.PointId);
+            await _penaltyManager.NotficationBeforeViolateDetention(point.ShippingRequestTripFk.ShippingRequestFk.TenantId, args.PointId);
             return nameof(RoutPointPickUpStep2);
         }
 
@@ -623,7 +623,7 @@ namespace TACHYON.Tracking
             point.Status = status;
             point.ShippingRequestTripFk.RoutePointStatus = status;
 
-            await _penaltyManager.SendNotficationBeforeViolateDetention(point.ShippingRequestTripFk.ShippingRequestFk.TenantId, args.PointId);
+            await _penaltyManager.NotficationBeforeViolateDetention(point.ShippingRequestTripFk.ShippingRequestFk.TenantId, args.PointId);
             return nameof(RoutPointDropOffStep2);
         }
 
@@ -669,6 +669,7 @@ namespace TACHYON.Tracking
 
             var shippingRequest = point.ShippingRequestTripFk.ShippingRequestFk;
             await _penaltyManager.ApplyDetentionPenalty(shippingRequest.TenantId, shippingRequest.CarrierTenantId.Value, arrviceTime, Clock.Now, point.ShippingRequestTripId);
+            await _penaltyManager.ApplyNotDeliveringAllDropsPenalty(shippingRequest.TenantId, shippingRequest.CarrierTenantId.Value, point.ShippingRequestTripFk.EndTripDate.Value, point.ShippingRequestTripId);
 
             return nameof(RoutPointDropOffStep4);
         }

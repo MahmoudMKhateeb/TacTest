@@ -74,7 +74,7 @@ namespace TACHYON.Penalties
         {
             var penalty = await _penaltyRepository
                 .GetAllIncluding(x=> x.PenaltyComplaintFK)
-                .Where(x => x.Id == id).FirstOrDefaultAsync();
+                .Where(x => x.PenaltyComplaintFK.Id == id).FirstOrDefaultAsync();
             penalty.Status = PenaltyStatus.Canceled;
             penalty.PenaltyComplaintFK.Status = ComplaintStatus.Accepted;
         }
@@ -93,6 +93,15 @@ namespace TACHYON.Penalties
             var penaltyComplaint = ObjectMapper.Map<PenaltyComplaint>(input);
             await _penaltyComplaintRepository.InsertAsync(penaltyComplaint);
         }
+
+        public async Task CancelPenalty(int id)
+        {
+            var penalty = await _penaltyRepository
+               .GetAllIncluding(x => x.PenaltyComplaintFK)
+               .Where(x => x.Id == id).FirstOrDefaultAsync();
+
+            penalty.Status = PenaltyStatus.Canceled;
+        }
         #endregion
 
         #region Lookups
@@ -108,6 +117,7 @@ namespace TACHYON.Penalties
         private async Task Create(CreateOrEditPenaltyDto model)
         {
             var peanlty = ObjectMapper.Map<Penalty>(model);
+            peanlty.CommissionType = PriceOffers.PriceOfferCommissionType.CommissionValue;
             await _penaltyRepository.InsertAsync(peanlty);
         }
         private async Task Update(CreateOrEditPenaltyDto model)

@@ -118,7 +118,7 @@ namespace TACHYON.Penalties
                AppFeatures.NotDeliveringAllDropsBeforeEndDate_CommissionType, AppFeatures.NotDeliveringAllDropsBeforeEndDate_CommissionMinValue,
                AppFeatures.NotDeliveringAllDropsBeforeEndDate_CommissionPercentage, AppFeatures.NotDeliveringAllDropsBeforeEndDate_CommissionValue);
 
-                await InitPenalty(PenaltyType.NotDeliveringAllDropsBeforeExpectedTripEndDate, tenantId, tripId, destinationTenantId,commestionValues);
+                await InitPenalty(PenaltyType.NotDeliveringAllDropsBeforeExpectedTripEndDate, tenantId, destinationTenantId, tripId, commestionValues);
             }
         }
         #endregion
@@ -137,11 +137,11 @@ namespace TACHYON.Penalties
                 await _appNotifier.NotifyShipperBeforApplyDetention(shipperTenantId, routPoint.ShippingRequestTripFk.WaybillNumber.ToString(), routPoint.ShippingRequestTripId);
             }
         }
-        public async Task NotficationBeforeViolateDetention(int shipperTenantId, int pointId)
+        public async Task NotficationBeforeViolateDetention(int shipperTenantId, long pointId)
         {
             var allowedDelay = Convert.ToInt32(await _featureChecker.GetValueAsync(shipperTenantId, AppFeatures.AllowedDetentionPeriod));
-            int[] args = new int[] { shipperTenantId, pointId };
-            await _backgroundJobManager.EnqueueAsync<NotficationBeforeViolateDetention, int[]>(args, delay: new TimeSpan(allowedDelay, -15, 00));
+            
+            await _backgroundJobManager.EnqueueAsync<NotficationBeforeViolateDetention, (int shipperId, long pointId)>((shipperTenantId, pointId), delay: new TimeSpan(allowedDelay, -15, 00));
         }
         #endregion
 

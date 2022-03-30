@@ -7,7 +7,7 @@ using System.Text;
 
 namespace TACHYON.Penalties.Jobs
 {
-    public class NotficationBeforeViolateDetention : BackgroundJob<int[]>, ITransientDependency
+    public class NotficationBeforeViolateDetention : BackgroundJob<(int shipperId,long pointId)>, ITransientDependency
     {
         private readonly PenaltyManager _penaltyManager;
 
@@ -16,9 +16,9 @@ namespace TACHYON.Penalties.Jobs
             _penaltyManager = penaltyManager;
         }
 
-        public override void Execute(int[] args)
+        public override void Execute((int shipperId, long pointId) args)
         {
-            AsyncHelper.RunSync(() => _penaltyManager.SendNotficationBeforeViolateDetention(args[0], args[1]));
+            AsyncHelper.RunSync(() => _penaltyManager.SendNotficationBeforeViolateDetention(args.shipperId, args.pointId));
         }
     }
 }
