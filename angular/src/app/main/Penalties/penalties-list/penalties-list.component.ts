@@ -5,6 +5,7 @@ import { CommonLookupServiceProxy, ISelectItemDto, PenaltiesServiceProxy, Penalt
 import { DxDataGridComponent } from 'devextreme-angular';
 import CustomStore from 'devextreme/data/custom_store';
 import { LoadOptions } from 'devextreme/data/load_options';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-penalties-list',
@@ -65,6 +66,23 @@ export class PenaltiesListComponent extends AppComponentBase implements OnInit {
   }
   StyleStatus(Status: PenaltyType): string {
     return 'label label-default label-inline m-1';
+  }
+
+  Cancel(id: number): void {
+    this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
+      if (isConfirmed) {
+        this._PenaltiesServiceProxy
+          .cancelPenalty(id)
+          .pipe(
+            finalize(() => {
+              this.refreshDataGrid();
+            })
+          )
+          .subscribe((result) => {
+            this.notify.info(this.l('SuccessfullyCanceld'));
+          });
+      }
+    });
   }
   refreshDataGrid() {
     this.dataGrid.instance

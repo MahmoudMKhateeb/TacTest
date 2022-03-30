@@ -80,6 +80,9 @@
                     <li *ngIf="options.data.penaltyComplaintId">
                       <a class="dropdown-item" (click)="viewComplaint.show(options.data.id)">{{ l('ViewComplaint') }}</a>
                     </li>
+                    <li *ngIf="options.data.status == 1 && isTachyonDealerOrHost">
+                      <a class="dropdown-item" (click)="Cancel(options.data.id)">{{ l('Cancel') }}</a>
+                    </li>
                   </ul>
                 </div>
               </div>
