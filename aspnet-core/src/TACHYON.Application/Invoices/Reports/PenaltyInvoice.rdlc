@@ -641,7 +641,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=</Value>
+                                  <Value></Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>7pt</FontSize>
@@ -759,7 +759,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=</Value>
+                                  <Value></Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>7pt</FontSize>
@@ -3901,10 +3901,11 @@
                 </TablixMember>
               </TablixMembers>
             </TablixRowHierarchy>
+            <DataSetName>GetInvoicePenaltiseInvoiceReportInfo</DataSetName>
             <Top>7.67863cm</Top>
             <Left>0.88156cm</Left>
             <Height>1.97638cm</Height>
-            <Width>9.10906cm</Width>
+            <Width>9.10905cm</Width>
             <ZIndex>9</ZIndex>
             <Style>
               <Border>
@@ -3921,7 +3922,7 @@
           <BackgroundColor>White</BackgroundColor>
         </Style>
       </Body>
-      <Width>21cm</Width>
+      <Width>21.00001cm</Width>
       <Page>
         <PageHeader>
           <Height>1.77249cm</Height>
