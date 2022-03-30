@@ -75,6 +75,8 @@ import { WidgetsModule } from '@app/shared/common/customizable-dashboard/widgets
 import { EntityLogComponent } from './entity-log/entity-log.component';
 import { CollapseModule } from '@node_modules/ngx-bootstrap/collapse';
 import { PriceSARComponent } from './price-sar/price-sar.component';
+import { FileViwerComponent } from './file-viwer/file-viwer.component';
+import { PdfJsViewerModule } from '@node_modules/ng2-pdfjs-viewer';
 // import { FileUploadModule } from '@node_modules/primeng';
 
 @NgModule({
@@ -103,6 +105,7 @@ import { PriceSARComponent } from './price-sar/price-sar.component';
     NgApexchartsModule,
     WidgetsModule,
     CollapseModule,
+    PdfJsViewerModule,
   ],
   declarations: [
     TimeZoneComboComponent,
@@ -144,6 +147,7 @@ import { PriceSARComponent } from './price-sar/price-sar.component';
     TruckSubmitedDocumentsListComponent,
     EntityLogComponent,
     PriceSARComponent,
+    FileViwerComponent,
   ],
   exports: [
     TimeZoneComboComponent,
@@ -168,6 +172,7 @@ import { PriceSARComponent } from './price-sar/price-sar.component';
     EntityLogComponent,
     EntityLogComponent,
     PriceSARComponent,
+    FileViwerComponent,
   ],
   providers: [
     DateTimeService,

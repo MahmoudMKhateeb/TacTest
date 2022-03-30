@@ -15,6 +15,7 @@ export class FileDownloadService {
       '&fileName=' +
       file.fileName;
     location.href = url; //TODO: This causes reloading of same page in Firefox
+    return url;
   }
 
   /**
@@ -24,10 +25,11 @@ export class FileDownloadService {
     const url = AppConsts.remoteServiceBaseUrl + '/File/DownloadBinaryFile?id=' + BinaryToken + '&contentType=application/zip&fileName=' + fileName;
     location.href = url;
   }
-  downloadFileByBinary(documentId: string, fileName: string, contentType: string) {
+  downloadFileByBinary(documentId: string, fileName: string, contentType: string): string {
     const url =
       AppConsts.remoteServiceBaseUrl + '/File/DownloadBinaryFile?id=' + documentId + '&contentType=' + contentType + '&fileName=' + fileName;
     location.href = url;
+    return url;
   }
 
   GetTempFileUrl(file: FileDto): string {
