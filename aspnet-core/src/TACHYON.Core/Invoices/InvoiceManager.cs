@@ -268,27 +268,11 @@ namespace TACHYON.Invoices
 
         private async Task PenaltyCollector(Tenant tenant, InvoicePeriod period)
         {
+           DisableTenancyFilters();    
            var penalties = await _penaltyRepository.GetAll()
                 .Include(x=>x.ShippingRequestTripFK)
                 .ThenInclude(x=>x.ShippingRequestFk)
                 .Where(x => !x.InvoiceId.HasValue).ToListAsync();
-
-            foreach (var item in penalties)
-            {
-                var shipperId = item.TenantId;
-                var carrierId = item.ShippingRequestTripFK.ShippingRequestFk.CarrierTenantId;
-                if (!await _featureChecker.IsEnabledAsync(shipperId, AppFeatures.Saas))
-                {
-                    continue;
-                }
-
-                var relatedCarrierId =
-                    int.Parse(await _featureChecker.GetValueAsync(shipperId, AppFeatures.SaasRelatedCarrier));
-                if (carrierId == relatedCarrierId)
-                {
-                    penalties.Remove(item);
-                } // lugin confirmation 
-            }
 
             if (penalties.Any())
                 await GeneratePenaltyInvoice(tenant, penalties, period);
@@ -451,7 +435,7 @@ namespace TACHYON.Invoices
                 Channel = InvoiceChannel.Penalty,
                 Penalties = penalties
             };
-            await _invoiceRepository.InsertAsync(invoice);
+             await _invoiceRepository.InsertAsync(invoice);
         }
 
         /// <summary>

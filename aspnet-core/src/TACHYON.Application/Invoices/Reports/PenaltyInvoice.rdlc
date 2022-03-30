@@ -16,6 +16,13 @@
       </ConnectionProperties>
       <rd:DataSourceID>2aa81ea0-1e63-4ad3-bfec-c598fae87a4f</rd:DataSourceID>
     </DataSource>
+    <DataSource Name="GetInvoiceShippingRequestsReportInfoDataset">
+      <ConnectionProperties>
+        <DataProvider>System.Data.DataSet</DataProvider>
+        <ConnectString>/* Local Connection */</ConnectString>
+      </ConnectionProperties>
+      <rd:DataSourceID>0ecd6114-19e4-43a4-909f-ccf607525959</rd:DataSourceID>
+    </DataSource>
   </DataSources>
   <DataSets>
     <DataSet Name="GetInvoiceReportInfoDataset">
@@ -426,7 +433,7 @@
                     <Style>
                       <FontStyle>Normal</FontStyle>
                       <FontFamily>Open Sans</FontFamily>
-                      <FontSize>6pt</FontSize>
+                      <FontSize>7pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
                       <Color>#181818</Color>
@@ -436,7 +443,7 @@
                     <Value>التاريخ هو تاريخ تسليم الشحنة الفعلي</Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
-                      <FontSize>6pt</FontSize>
+                      <FontSize>7pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
                       <Color>#181818</Color>
@@ -455,7 +462,7 @@
                     <Style>
                       <FontStyle>Normal</FontStyle>
                       <FontFamily>Open Sans</FontFamily>
-                      <FontSize>6pt</FontSize>
+                      <FontSize>7pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
                       <Color>#181818</Color>
@@ -465,7 +472,7 @@
                     <Value>في حالة الخدمات الاضافية، الخدمات الاضافية ستضاف الي رقم وثيقة الشحن كمرجع                                              </Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
-                      <FontSize>6pt</FontSize>
+                      <FontSize>7pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
                       <Color>#181818</Color>
@@ -479,9 +486,9 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>2.24923in</Top>
+            <Top>2.3367in</Top>
             <Left>4.97774in</Left>
-            <Height>0.66969in</Height>
+            <Height>0.58222in</Height>
             <Width>3.28998in</Width>
             <ZIndex>2</ZIndex>
             <Style>
@@ -507,7 +514,7 @@
                     <Style>
                       <FontStyle>Normal</FontStyle>
                       <FontFamily>Open Sans</FontFamily>
-                      <FontSize>6pt</FontSize>
+                      <FontSize>7pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
                       <Color>#181818</Color>
@@ -526,7 +533,7 @@
                     <Style>
                       <FontStyle>Normal</FontStyle>
                       <FontFamily>Open Sans</FontFamily>
-                      <FontSize>6pt</FontSize>
+                      <FontSize>7pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
                       <Color>#181818</Color>
@@ -540,10 +547,9 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>2.23534in</Top>
-            <Left>0.0759in</Left>
-            <Height>0.68358in</Height>
-            <Width>3.85742in</Width>
+            <Top>2.32281in</Top>
+            <Height>0.59611in</Height>
+            <Width>4.2773in</Width>
             <ZIndex>3</ZIndex>
             <Style>
               <Border>
@@ -641,7 +647,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value></Value>
+                                  <Value>=First(Fields!ClientName.Value, "GetInvoiceReportInfoDataset")</Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>7pt</FontSize>
@@ -759,7 +765,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value></Value>
+                                  <Value>=First(Fields!InvoiceNumber.Value, "GetInvoiceReportInfoDataset")</Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>7pt</FontSize>
@@ -2329,7 +2335,7 @@
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Sequence1">
+                        <Textbox Name="Sequence">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
@@ -2352,7 +2358,8 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Sequence1</rd:DefaultName>
+                          <rd:DefaultName>Sequence</rd:DefaultName>
+                          <ToolTip>=iif(RowNumber(Nothing) Mod 2, "LightGrey", "White")</ToolTip>
                           <Style>
                             <Border>
                               <Style>None</Style>
@@ -2674,6 +2681,7 @@
             <Height>1.87638cm</Height>
             <Width>18.78838cm</Width>
             <ZIndex>5</ZIndex>
+            <ToolTip>=iif(RowNumber(Nothing) Mod 2, "LightGrey", "White")</ToolTip>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -3750,13 +3758,13 @@
             <TablixBody>
               <TablixColumns>
                 <TablixColumn>
-                  <Width>3.03635cm</Width>
+                  <Width>2.91899cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>3.03635cm</Width>
+                  <Width>2.91899cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>3.03635cm</Width>
+                  <Width>2.91899cm</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
@@ -3901,11 +3909,11 @@
                 </TablixMember>
               </TablixMembers>
             </TablixRowHierarchy>
-            <DataSetName>GetInvoicePenaltiseInvoiceReportInfo</DataSetName>
+            <DataSetName>GetInvoiceReportInfoDataset</DataSetName>
             <Top>7.67863cm</Top>
-            <Left>0.88156cm</Left>
+            <Left>1.23365cm</Left>
             <Height>1.97638cm</Height>
-            <Width>9.10905cm</Width>
+            <Width>8.75697cm</Width>
             <ZIndex>9</ZIndex>
             <Style>
               <Border>

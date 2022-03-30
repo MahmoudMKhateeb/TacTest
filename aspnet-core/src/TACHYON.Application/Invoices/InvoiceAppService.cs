@@ -149,10 +149,11 @@ namespace TACHYON.Invoices
                 .GetAll()
                 .Include(i => i.Tenant)
                 .Include(i => i.Penalties)
-                .Include(x => x.Trips)
-                .ThenInclude(r => r.ShippingRequestTripFK)
-                .ThenInclude(i => i.ShippingRequestFk)
-                .ThenInclude(x=>x.AssignedTruckFk)
+                .ThenInclude(x=>x.ShippingRequestTripFK)
+                .ThenInclude(x=>x.ShippingRequestFk)
+                .Include(x=>x.Penalties)
+                .ThenInclude(x=>x.ShippingRequestTripFK)
+                .ThenInclude(x => x.AssignedTruckFk)
                 .FirstOrDefaultAsync(i => i.Id == penaltyInvoiceId);
             if (invoice == null) throw new UserFriendlyException(L("TheInvoiceNotFound"));
 
@@ -484,7 +485,6 @@ namespace TACHYON.Invoices
         }
         public IEnumerable<PeanltyInvoiceItemDto> GetInvoicePenaltiseInvoiceReportInfo(long penaltynvoiceId)
         {
-            DisableTenancyFilters();
             var pnealtyInvoice = AsyncHelper.RunSync(() => GetPenaltyInvoiceInfo(penaltynvoiceId));
 
             if (pnealtyInvoice == null) throw new UserFriendlyException(L("TheInvoiceNotFound"));
@@ -499,13 +499,13 @@ namespace TACHYON.Invoices
                     VatAmount = penalty.VatAmount,
                     TotalAmount = penalty.TotalAmount,
                     Date = penalty.CreationTime.ToString("dd/MM/yyyy"),
-                    ContainerNumber = penalty.ShippingRequestTripFK.AssignedTruckFk.PlateNumber,
-                    WayBillNumber = penalty.ShippingRequestTripFK.WaybillNumber.ToString(),
+                    ContainerNumber = penalty.ShippingRequestTripFK != null ? penalty.ShippingRequestTripFK.AssignedTruckFk.PlateNumber : "-",
+                    WayBillNumber = penalty.ShippingRequestTripFK != null ? penalty.ShippingRequestTripFK.WaybillNumber.ToString() : "-" ,
                     ItmePrice = penalty.ItmePrice,
-                    Remarks = penalty.ShippingRequestTripFK.ShippingRequestFk.RouteTypeId ==
+                    Remarks = penalty.ShippingRequestTripFK != null ? penalty.ShippingRequestTripFK.ShippingRequestFk.RouteTypeId ==
                               Shipping.ShippingRequests.ShippingRequestRouteType.MultipleDrops
                         ? L("TotalOfDrop", penalty.ShippingRequestTripFK.ShippingRequestFk.NumberOfDrops)
-                        : ""
+                        : "" : ""
                 });
                 Sequence++;
             });;
