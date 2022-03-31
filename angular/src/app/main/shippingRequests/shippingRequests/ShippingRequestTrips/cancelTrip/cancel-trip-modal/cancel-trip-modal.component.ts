@@ -33,7 +33,7 @@ export class CancelTripModalComponent extends AppComponentBase implements OnInit
   }
   ngOnInit(): void {}
 
-  public show(tripId: undefined, status: undefined, canceledReason: undefined, requestType: undefined): void {
+  public show(tripId: undefined, status: undefined, canceledReason: undefined, requestType: undefined, rejectedCancelingReason: undefined): void {
     this.reason = new CancelTripInput();
     this.reason.id = tripId;
     this.requestType = requestType;
@@ -41,6 +41,9 @@ export class CancelTripModalComponent extends AppComponentBase implements OnInit
       // Canceled Trip => show reason
       this.view = true;
       this.reason.canceledReason = canceledReason;
+    } else if (rejectedCancelingReason != null || rejectedCancelingReason != '') {
+      this.view = true;
+      this.reason.canceledReason = rejectedCancelingReason;
     }
     this.active = true;
     this.modal.show();

@@ -1,6 +1,14 @@
 a{
     cursor:pointer;
+    background-color: unset !important;
+    text-anchor: unset !important;
 }
 .noPadding{
     padding: 0 !important;
+}
+.bg-danger{
+    background-color: #fff3f3 !important;
+}
+.noColor{
+    color: unset !important;
 }
