@@ -399,7 +399,7 @@ namespace TACHYON.Shipping.Trips
 
                 await _appNotifier.NotifyCarrierWhenTripUpdated(notifyTripInput);
             }
-            //if (!oldAssignedTruckId.HasValue && !oldAssignedDriverUserId.HasValue)
+            if (!oldAssignedTruckId.HasValue && !oldAssignedDriverUserId.HasValue)
                 await _penaltyManager.ApplyNotAssigningTruckAndDriverPenalty(trip.ShippingRequestFk.CarrierTenantId.Value, trip.ShippingRequestFk.TenantId, trip.StartTripDate, trip.Id);
 
             // Send Notification To New Driver
