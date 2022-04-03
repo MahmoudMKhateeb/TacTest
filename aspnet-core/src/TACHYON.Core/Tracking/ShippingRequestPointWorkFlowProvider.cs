@@ -663,7 +663,7 @@ namespace TACHYON.Tracking
 
             var arrviceTime = await _routPointStatusTransitionRepository.GetAll()
                .Where(x => x.PointId == args.PointId && !x.IsReset
-                && x.Status == RoutePointStatus.ArriveToLoadingLocation)
+                && x.Status == RoutePointStatus.ArrivedToDestination)
                .Select(x => x.CreationTime)
                .FirstOrDefaultAsync();
 

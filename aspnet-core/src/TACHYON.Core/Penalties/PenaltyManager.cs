@@ -88,12 +88,22 @@ namespace TACHYON.Penalties
         public async Task ApplyNotAssigningTruckAndDriverPenalty(int tenantId, int destinationTenantId, DateTime startTripDate, int tripId)
         {
             var amount = Convert.ToDecimal(await _featureChecker.GetValueAsync(tenantId, AppFeatures.NotAssignTruckAndDriverStartDate_Amount));
+            var startAmount = Convert.ToDecimal(await _featureChecker.GetValueAsync(tenantId, AppFeatures.NotAssignTruckAndDriverStartDate_StartingAmount));
+            var maxAmount = Convert.ToDecimal(await _featureChecker.GetValueAsync(tenantId, AppFeatures.NotAssignTruckAndDriverStartDate_MaximumAmount));
             var unitOfMeasure = (UnitOfMeasure)Convert.ToInt32(await _featureChecker.GetValueAsync(tenantId, AppFeatures.NotAssignTruckAndDriverStartDate_UnitsOfMeasure));
             var numberUnitOfMeasure = Convert.ToInt32(await _featureChecker.GetValueAsync(tenantId, AppFeatures.NotAssignTruckAndDriverStartDate_NumberOfUnitsOfMeasure));
-            var numberOfDelay =(decimal) GetDelayBasedOnUnitOfMeasure(startTripDate, unitOfMeasure);
+            var numberOfDelay = (decimal)GetDelayBasedOnUnitOfMeasure(startTripDate, unitOfMeasure);
+            numberOfDelay -= numberUnitOfMeasure;
+
             if (numberOfDelay > 0)
             {
-                var finalAmount = (numberOfDelay - numberUnitOfMeasure) * amount;
+                var finalAmount = numberOfDelay * amount;
+
+                if (finalAmount > maxAmount)
+                    finalAmount = maxAmount;
+
+                if (finalAmount < startAmount)
+                    finalAmount = startAmount;
 
                 var commestionValues = await CalculateCommestions(tenantId, finalAmount,
                 AppFeatures.NotAssignTruckAndDriverStartDate_CommissionType,
@@ -108,12 +118,21 @@ namespace TACHYON.Penalties
         public async Task ApplyNotDeliveringAllDropsPenalty(int tenantId, int destinationTenantId, DateTime startTripDate, int tripId)
         {
             var amount = Convert.ToDecimal(await _featureChecker.GetValueAsync(tenantId, AppFeatures.NotDeliveringAllDropsBeforeEndDate_Amount));
+            var startAmount = Convert.ToDecimal(await _featureChecker.GetValueAsync(tenantId, AppFeatures.NotDeliveringAllDropsBeforeEndDate_StartingAmount));
+            var maxAmount = Convert.ToDecimal(await _featureChecker.GetValueAsync(tenantId, AppFeatures.NotDeliveringAllDropsBeforeEndDate_MaximumAmount));
             var unitOfMeasure = (UnitOfMeasure)Convert.ToInt32(await _featureChecker.GetValueAsync(tenantId, AppFeatures.NotDeliveringAllDropsBeforeEndDate_UnitsOfMeasure));
             var numberUnitOfMeasure = Convert.ToInt32(await _featureChecker.GetValueAsync(tenantId, AppFeatures.NotDeliveringAllDropsBeforeEndDate_NumberOfUnitsOfMeasure));
-            var numberOfDelay = (decimal) GetDelayBasedOnUnitOfMeasure(startTripDate, unitOfMeasure);
-            if (numberOfDelay > 0)
+            var numberOfDelay = (decimal)GetDelayBasedOnUnitOfMeasure(startTripDate, unitOfMeasure);
+            numberOfDelay -= numberUnitOfMeasure;
+                if (numberOfDelay > 0)
             {
-                var finalAmount = (numberOfDelay - numberUnitOfMeasure) * amount;
+                var finalAmount = numberOfDelay * amount;
+
+                if (finalAmount > maxAmount)
+                    finalAmount = maxAmount;
+
+                if (finalAmount < startAmount)
+                    finalAmount = startAmount;
                 var commestionValues = await CalculateCommestions(tenantId, finalAmount,
                AppFeatures.NotDeliveringAllDropsBeforeEndDate_CommissionType, AppFeatures.NotDeliveringAllDropsBeforeEndDate_CommissionMinValue,
                AppFeatures.NotDeliveringAllDropsBeforeEndDate_CommissionPercentage, AppFeatures.NotDeliveringAllDropsBeforeEndDate_CommissionValue);
@@ -127,8 +146,8 @@ namespace TACHYON.Penalties
         public async Task SendNotficationBeforeViolateDetention(int shipperTenantId, long pointId)
         {
             var routPoint = await _routPointrepository
-                .GetAllIncluding(c=> c.ShippingRequestTripFk)
-                .Where(x=> x.Id == pointId)
+                .GetAllIncluding(c => c.ShippingRequestTripFk)
+                .Where(x => x.Id == pointId)
                 .FirstOrDefaultAsync();
 
             if (routPoint.Status == RoutePointStatus.ArrivedToDestination
@@ -140,7 +159,7 @@ namespace TACHYON.Penalties
         public async Task NotficationBeforeViolateDetention(int shipperTenantId, long pointId)
         {
             var allowedDelay = Convert.ToInt32(await _featureChecker.GetValueAsync(shipperTenantId, AppFeatures.AllowedDetentionPeriod));
-            
+
             await _backgroundJobManager.EnqueueAsync<NotficationBeforeViolateDetention, (int shipperId, long pointId)>((shipperTenantId, pointId), delay: new TimeSpan(allowedDelay, -15, 00));
         }
         #endregion
@@ -166,8 +185,9 @@ namespace TACHYON.Penalties
                 case PriceOfferCommissionType.CommissionPercentage:
                     res.CommissionValue = amount * (commestionPercentage / 100);
                     amount += res.CommissionValue;
-                    res.VatPostCommestion += res.VatPreCommestion * (commestionPercentage / 100);
-                    amount += res.CommissionValue;
+                    var vatCommestion = res.VatPreCommestion * (commestionPercentage / 100);
+                    res.VatPostCommestion = vatCommestion + res.VatPreCommestion;
+                    amount += res.VatPostCommestion;
                     break;
 
                 case PriceOfferCommissionType.CommissionValue:
@@ -196,7 +216,7 @@ namespace TACHYON.Penalties
 
             var penalty = new Penalty
             {
-                TotalAmount = commestion.AmountPostCommestion + commestion.VatPostCommestion,
+                TotalAmount = commestion.AmountPostCommestion,
                 TenantId = tenantId,
                 DestinationTenantId = destinationTenantId,
                 Type = penaltyType,
