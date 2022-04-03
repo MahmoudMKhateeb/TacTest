@@ -2513,7 +2513,7 @@
     <text name="TripNotFound">Trip not found</text>
 	<text name="RejectCancel">Reject Cancel Trip</text>
 	<text name="CancelReasonName">Cancelation Reason</text>
-	<text name="WaitingApproveFromTMS">Waiting Approve From Tachyon Manage Services</text>
+	<text name="WaitingCancelApproveFromTMS">Waiting TMS cancel Approve</text>
     <text name="RejectedReasonName">Rejected Reason Name</text>
     <text name="ApproveCancelTrip">Approve Cancel Trip</text>
 	<text name="ApplyCancel">Apply Cancel</text>

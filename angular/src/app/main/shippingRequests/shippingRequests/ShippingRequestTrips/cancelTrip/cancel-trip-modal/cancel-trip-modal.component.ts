@@ -7,6 +7,7 @@ import {
   ShippingRequestsTripListDto,
   ShippingRequestTripStatus,
   ShippingRequestType,
+  ShippingRequestTripCancelStatus,
 } from '@shared/service-proxies/service-proxies';
 import { TripService } from '../../trip.service';
 import { finalize } from 'rxjs/operators';
@@ -33,18 +34,26 @@ export class CancelTripModalComponent extends AppComponentBase implements OnInit
   }
   ngOnInit(): void {}
 
-  public show(tripId: undefined, status: undefined, canceledReason: undefined, requestType: undefined, rejectedCancelingReason: undefined): void {
+  public show(
+    tripId: undefined,
+    status: undefined,
+    canceledReason: undefined,
+    requestType: undefined,
+    rejectedCancelingReason: undefined,
+    cancelStatus: ShippingRequestTripCancelStatus
+  ): void {
     this.reason = new CancelTripInput();
     this.reason.id = tripId;
     this.requestType = requestType;
-    if (status == this.ShippingRequestTripStatusEnum.Canceled) {
+    if (status == this.ShippingRequestTripStatusEnum.Canceled || cancelStatus == ShippingRequestTripCancelStatus.WaitingForTMSApproval) {
       // Canceled Trip => show reason
       this.view = true;
       this.reason.canceledReason = canceledReason;
-    } else if (rejectedCancelingReason != null || rejectedCancelingReason != '') {
+    } else if (cancelStatus == ShippingRequestTripCancelStatus.Rejected) {
       this.view = true;
       this.reason.canceledReason = rejectedCancelingReason;
     }
+
     this.active = true;
     this.modal.show();
   }

@@ -102,7 +102,7 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   getCancelStatus(statusId) {
     if (statusId == this.ShippingRequestTripCancelStatusEnum.Canceled) return this.l('Canceled');
     else if (statusId == this.ShippingRequestTripCancelStatusEnum.Rejected) return this.l('Rejected');
-    else if (statusId == this.ShippingRequestTripCancelStatusEnum.WaitingForTMSApproval) return this.l('WaitingForTMSApproval');
+    else if (statusId == this.ShippingRequestTripCancelStatusEnum.WaitingForTMSApproval) return this.l('WaitingCancelApproveFromTMS');
     else return this.l('None');
   }
 }

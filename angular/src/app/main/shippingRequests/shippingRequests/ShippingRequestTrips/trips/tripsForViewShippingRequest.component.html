@@ -117,10 +117,18 @@
                   <a
                     class="noPadding noColor"
                     (click)="
-                      CancelTripModal.show(record.id, record.status, record.canceledReason, record.requestType, record.rejectedCancelingReason)
+                      CancelTripModal.show(
+                        record.id,
+                        record.status,
+                        record.canceledReason,
+                        record.requestType,
+                        record.rejectedCancelingReason,
+                        record.cancelStatus
+                      )
                     "
                   >
                     <span
+                      class="cancelLink"
                       *ngIf="
                         record.cancelStatus !== ShippingRequestTripCancelStatusEnum.Canceled &&
                         record.cancelStatus !== ShippingRequestTripCancelStatusEnum.None
@@ -134,9 +142,18 @@
                 <a
                   class="noPadding noColor"
                   *ngIf="record.status == ShippingRequestTripStatusEnum.Canceled"
-                  (click)="CancelTripModal.show(record.id, record.status, record.canceledReason, record.requestType, record.rejectedCancelingReason)"
+                  (click)="
+                    CancelTripModal.show(
+                      record.id,
+                      record.status,
+                      record.canceledReason,
+                      record.requestType,
+                      record.rejectedCancelingReason,
+                      record.cancelStatus
+                    )
+                  "
                 >
-                  <span *ngIf="record.cancelStatus == ShippingRequestTripCancelStatusEnum.Canceled">
+                  <span class="cancelLink" *ngIf="record.cancelStatus == ShippingRequestTripCancelStatusEnum.Canceled">
                     {{ record.statusTitle }}
                   </span>
 
@@ -206,7 +223,14 @@
                       <a
                         class="dropdown-item"
                         (click)="
-                          CancelTripModal.show(record.id, record.status, record.canceledReason, record.requestType, record.rejectedCancelingReason)
+                          CancelTripModal.show(
+                            record.id,
+                            record.status,
+                            record.canceledReason,
+                            record.requestType,
+                            record.rejectedCancelingReason,
+                            record.cancelStatus
+                          )
                         "
                       >
                         {{ l('Cancel') }}
