@@ -2741,5 +2741,6 @@
 		<text name="ReferanceNumber">Referance Number</text>
 		<text name="ForCurrentYear">For Current Year</text>
 		<text name="YouCanNotRejectTheOffer">You Can Not Reject The Offer</text>
+  <text name="YouMustEnterRates">You must enter rates</text>
 	</texts>
 </localizationDictionary>
