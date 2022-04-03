@@ -41,15 +41,16 @@ export class TrackingPODModalComponent extends AppComponentBase {
     this.active = false;
   }
 
-  upload(data: { files: File }): void {
+  upload(data: { files: File[] }): void {
     this.loading = true;
-    const formData: FormData = new FormData();
-    const file = data.files[0];
-    formData.append('file', file, file.name);
-    formData.append('Action', this.action);
-    formData.append('id', this.id.toString());
+    let files: FormData = new FormData();
+    data.files.forEach((x) => {
+      files.append('file', x, x.name);
+      files.append('Action', this.action);
+      files.append('id', this.id.toString());
+    });
     this._httpClient
-      .post<any>(AppConsts.remoteServiceBaseUrl + '/api/services/app/DropOffPointToDelivery', formData)
+      .post<any>(AppConsts.remoteServiceBaseUrl + '/api/services/app/DropOffPointToDelivery', files)
       .pipe(
         finalize(() => {
           this.fileUpload.clear();
