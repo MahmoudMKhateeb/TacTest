@@ -54,37 +54,36 @@ namespace TACHYON.Penalties
             var commestionValues = await CalculateCommestions(tenantId, amount,
                 AppFeatures.TripCancelationCommissionType, AppFeatures.TripCancelationCommissionMinValue,
                 AppFeatures.TripCancelationCommissionPercentage, AppFeatures.TripCancelationCommissionValue);
-
+            commestionValues.ItemPrice = amount;
             await InitPenalty(PenaltyType.TripCancelation, tenantId, destinationTenantId, tripId, commestionValues);
         }
-        public async Task ApplyDetentionPenalty(int tenantId, int destinationTenantId, DateTime arriveTime, DateTime leaveTime, int tripId)
+        public async Task ApplyDetentionPenalty(int tenantId, int destinationTenantId, DateTime arriveTime,int tripId, string facilityName,long? waybillNumber)
         {
+            DateTime leaveTime = Clock.Now;
             var allowedHouers = Convert.ToInt32(await _featureChecker.GetValueAsync(tenantId, AppFeatures.AllowedDetentionPeriod));
-            var violatedHours = (leaveTime - arriveTime);
+            var violatedHours = Convert.ToDecimal((arriveTime - leaveTime).TotalHours);
+            violatedHours -= allowedHouers;
 
-            if (allowedHouers < violatedHours.Hours)
+            if (allowedHouers < violatedHours)
             {
                 var price = Convert.ToDecimal(await _featureChecker.GetValueAsync(tenantId, AppFeatures.DetentionFeesIncreaseRate));
                 var minAmount = Convert.ToDecimal(await _featureChecker.GetValueAsync(tenantId, AppFeatures.BaseDetentionFeesAmount));
                 var maxAmount = Convert.ToDecimal(await _featureChecker.GetValueAsync(tenantId, AppFeatures.MaxDetentionFeesAmount));
 
-                decimal amount = violatedHours.Hours * price;
+                decimal amount = violatedHours * price;
 
-                if (amount < minAmount)
-                    amount = minAmount;
-
-                if (amount > maxAmount)
-                    amount = maxAmount;
+                amount = CheckMinMaxAmount(minAmount, maxAmount, amount);
 
                 var commestionValues = await CalculateCommestions(tenantId, amount,
                 AppFeatures.DetentionCommissionType, AppFeatures.DetentionCommissionMinValue,
                 AppFeatures.DetentionCommissionPercentage, AppFeatures.DetentionCommissionValue);
-
+                commestionValues.ItemPrice = price;
                 await InitPenalty(PenaltyType.DetentionPeriodExceedMaximumAllowedTime, tenantId, destinationTenantId, tripId, commestionValues);
-                await _appNotifier.NotifyShipperWhenApplyDetention(tenantId, "", "", commestionValues.TotalAmount(), tripId);
+                await _appNotifier.NotifyShipperWhenApplyDetention(tenantId, facilityName, waybillNumber.ToString(), commestionValues.TotalAmount(), tripId);
             }
 
         }
+
         public async Task ApplyNotAssigningTruckAndDriverPenalty(int tenantId, int destinationTenantId, DateTime startTripDate, int tripId)
         {
             var amount = Convert.ToDecimal(await _featureChecker.GetValueAsync(tenantId, AppFeatures.NotAssignTruckAndDriverStartDate_Amount));
@@ -99,18 +98,14 @@ namespace TACHYON.Penalties
             {
                 var finalAmount = numberOfDelay * amount;
 
-                if (finalAmount > maxAmount)
-                    finalAmount = maxAmount;
-
-                if (finalAmount < startAmount)
-                    finalAmount = startAmount;
+                finalAmount = CheckMinMaxAmount(startAmount, maxAmount, finalAmount);
 
                 var commestionValues = await CalculateCommestions(tenantId, finalAmount,
                 AppFeatures.NotAssignTruckAndDriverStartDate_CommissionType,
                 AppFeatures.NotAssignTruckAndDriverStartDate_CommissionMinValue,
                 AppFeatures.NotAssignTruckAndDriverStartDate_CommissionPercentage,
                 AppFeatures.NotAssignTruckAndDriverStartDate_CommissionValue);
-
+                commestionValues.ItemPrice = amount;
                 await InitPenalty(PenaltyType.NotAssigningTruckAndDriverBeforeTheDateForTheTrip, tenantId, destinationTenantId, tripId, commestionValues);
             }
 
@@ -128,15 +123,13 @@ namespace TACHYON.Penalties
             {
                 var finalAmount = numberOfDelay * amount;
 
-                if (finalAmount > maxAmount)
-                    finalAmount = maxAmount;
+                finalAmount = CheckMinMaxAmount(startAmount, maxAmount, finalAmount);
 
-                if (finalAmount < startAmount)
-                    finalAmount = startAmount;
                 var commestionValues = await CalculateCommestions(tenantId, finalAmount,
                AppFeatures.NotDeliveringAllDropsBeforeEndDate_CommissionType, AppFeatures.NotDeliveringAllDropsBeforeEndDate_CommissionMinValue,
                AppFeatures.NotDeliveringAllDropsBeforeEndDate_CommissionPercentage, AppFeatures.NotDeliveringAllDropsBeforeEndDate_CommissionValue);
 
+                commestionValues.ItemPrice = amount;
                 await InitPenalty(PenaltyType.NotDeliveringAllDropsBeforeExpectedTripEndDate, tenantId, destinationTenantId, tripId, commestionValues);
             }
         }
@@ -151,7 +144,9 @@ namespace TACHYON.Penalties
                 .FirstOrDefaultAsync();
 
             if (routPoint.Status == RoutePointStatus.ArrivedToDestination
-                || routPoint.Status == RoutePointStatus.ArriveToLoadingLocation)
+                || routPoint.Status == RoutePointStatus.StartLoading
+                || routPoint.Status == RoutePointStatus.ArriveToLoadingLocation
+                || routPoint.Status == RoutePointStatus.StartOffloading)
             {
                 await _appNotifier.NotifyShipperBeforApplyDetention(shipperTenantId, routPoint.ShippingRequestTripFk.WaybillNumber.ToString(), routPoint.ShippingRequestTripId);
             }
@@ -230,6 +225,7 @@ namespace TACHYON.Penalties
                 VatAmount = commestion.VatAmount(),
                 VatPostCommestion = commestion.VatPostCommestion,
                 VatPreCommestion = commestion.VatPreCommestion,
+                ItmePrice = commestion.ItemPrice
             };
 
             await _penaltyRepository.InsertAsync(penalty);
@@ -244,7 +240,16 @@ namespace TACHYON.Penalties
             }
             return 0;
         }
+        private static decimal CheckMinMaxAmount(decimal minAmount, decimal maxAmount, decimal amount)
+        {
+            if (amount < minAmount)
+                amount = minAmount;
 
+            if (amount > maxAmount)
+                amount = maxAmount;
+
+            return amount;
+        }
         #endregion
     }
 }

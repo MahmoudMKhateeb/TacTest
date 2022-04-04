@@ -1,5 +1,6 @@
 ﻿using Abp.BackgroundJobs;
 using Abp.Dependency;
+using Abp.Domain.Uow;
 using Abp.Threading;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ namespace TACHYON.Penalties.Jobs
         {
             _penaltyManager = penaltyManager;
         }
-
+        [UnitOfWork]
         public override void Execute((int shipperId, long pointId) args)
         {
             AsyncHelper.RunSync(() => _penaltyManager.SendNotficationBeforeViolateDetention(args.shipperId, args.pointId));

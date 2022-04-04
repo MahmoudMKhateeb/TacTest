@@ -13,6 +13,7 @@ namespace TACHYON.Penalties.Dto
         public decimal AmountPostCommestion { get; set; }
         public decimal VatPreCommestion { get; set; }
         public decimal VatPostCommestion { get; set; }
+        public decimal ItemPrice { get; set; }
 
         public decimal VatAmount()
         {

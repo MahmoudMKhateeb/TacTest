@@ -21202,6 +21202,78 @@ export class InvoiceServiceProxy {
   }
 
   /**
+   * @param penaltynvoiceId (optional)
+   * @return Success
+   */
+  getInvoicePenaltiseInvoiceReportInfo(penaltynvoiceId: number | undefined): Observable<PeanltyInvoiceItemDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/Invoice/GetInvoicePenaltiseInvoiceReportInfo?';
+    if (penaltynvoiceId === null) throw new Error("The parameter 'penaltynvoiceId' cannot be null.");
+    else if (penaltynvoiceId !== undefined) url_ += 'penaltynvoiceId=' + encodeURIComponent('' + penaltynvoiceId) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetInvoicePenaltiseInvoiceReportInfo(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetInvoicePenaltiseInvoiceReportInfo(<any>response_);
+            } catch (e) {
+              return <Observable<PeanltyInvoiceItemDto[]>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<PeanltyInvoiceItemDto[]>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetInvoicePenaltiseInvoiceReportInfo(response: HttpResponseBase): Observable<PeanltyInvoiceItemDto[]> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          if (Array.isArray(resultData200)) {
+            result200 = [] as any;
+            for (let item of resultData200) result200!.push(PeanltyInvoiceItemDto.fromJS(item));
+          } else {
+            result200 = <any>null;
+          }
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<PeanltyInvoiceItemDto[]>(<any>null);
+  }
+
+  /**
    * @param body (optional)
    * @return Success
    */
@@ -22069,6 +22141,73 @@ export class InvoiceReportServiceServiceProxy {
   }
 
   protected processDownloadInvoiceReportPdf(response: HttpResponseBase): Observable<FileDto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = FileDto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<FileDto>(<any>null);
+  }
+
+  /**
+   * @param invoiceId (optional)
+   * @return Success
+   */
+  donwloadPenaltyInvoice(invoiceId: number | undefined): Observable<FileDto> {
+    let url_ = this.baseUrl + '/api/services/app/InvoiceReportService/DonwloadPenaltyInvoice?';
+    if (invoiceId === null) throw new Error("The parameter 'invoiceId' cannot be null.");
+    else if (invoiceId !== undefined) url_ += 'invoiceId=' + encodeURIComponent('' + invoiceId) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processDonwloadPenaltyInvoice(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processDonwloadPenaltyInvoice(<any>response_);
+            } catch (e) {
+              return <Observable<FileDto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<FileDto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processDonwloadPenaltyInvoice(response: HttpResponseBase): Observable<FileDto> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -28456,6 +28595,68 @@ export class PenaltiesServiceProxy {
   }
 
   protected processRegisterComplaint(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
+  cancelPenalty(id: number | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/Penalties/CancelPenalty?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({}),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processCancelPenalty(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processCancelPenalty(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processCancelPenalty(response: HttpResponseBase): Observable<void> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -72961,6 +73162,79 @@ export interface IInvoiceInfoDto {
   bankNameArabic: string | undefined;
   bankNameEnglish: string | undefined;
   id: number;
+}
+
+export enum InvoiceChannel {
+  Trip = 1,
+  Dedicated = 2,
+  Penalty = 3,
+}
+
+export class PeanltyInvoiceItemDto implements IPeanltyInvoiceItemDto {
+  sequence!: string | undefined;
+  wayBillNumber!: string | undefined;
+  itmePrice!: number;
+  vatAmount!: number;
+  totalAmount!: number;
+  date!: string | undefined;
+  remarks!: string | undefined;
+  containerNumber!: string | undefined;
+  channel!: InvoiceChannel;
+
+  constructor(data?: IPeanltyInvoiceItemDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.sequence = _data['sequence'];
+      this.wayBillNumber = _data['wayBillNumber'];
+      this.itmePrice = _data['itmePrice'];
+      this.vatAmount = _data['vatAmount'];
+      this.totalAmount = _data['totalAmount'];
+      this.date = _data['date'];
+      this.remarks = _data['remarks'];
+      this.containerNumber = _data['containerNumber'];
+      this.channel = _data['channel'];
+    }
+  }
+
+  static fromJS(data: any): PeanltyInvoiceItemDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new PeanltyInvoiceItemDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['sequence'] = this.sequence;
+    data['wayBillNumber'] = this.wayBillNumber;
+    data['itmePrice'] = this.itmePrice;
+    data['vatAmount'] = this.vatAmount;
+    data['totalAmount'] = this.totalAmount;
+    data['date'] = this.date;
+    data['remarks'] = this.remarks;
+    data['containerNumber'] = this.containerNumber;
+    data['channel'] = this.channel;
+    return data;
+  }
+}
+
+export interface IPeanltyInvoiceItemDto {
+  sequence: string | undefined;
+  wayBillNumber: string | undefined;
+  itmePrice: number;
+  vatAmount: number;
+  totalAmount: number;
+  date: string | undefined;
+  remarks: string | undefined;
+  containerNumber: string | undefined;
+  channel: InvoiceChannel;
 }
 
 export class InvoiceFilterInput implements IInvoiceFilterInput {
