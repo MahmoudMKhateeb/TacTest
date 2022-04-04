@@ -103,8 +103,8 @@ export class TrackinSearchModelComponent extends AppComponentBase implements OnI
   getRequestStatus() {
     this.statusData.push(
       { displayText: this.l('New'), value: '0' },
-      { displayText: this.l('Intransit'), value: '1' },
-      { displayText: this.l('Canceled'), value: '2' },
+      { displayText: this.l('InTransit'), value: '1' },
+      { displayText: this.l('Cancled'), value: '2' },
       { displayText: this.l('Delivered'), value: '3' }
     );
   }
