@@ -52,7 +52,17 @@
               <dxi-column cellTemplate="TypeCellTemplate" dataField="Type" caption=" {{ l('Type') }}"></dxi-column>
               <div *dxTemplate="let options of 'TypeCellTemplate'">
                 <span style="width: 137px"
-                  ><span class="badge badge-inline badge-warning">{{ l(options.data.penaltyTypeTitle) }}</span></span
+                  ><span
+                    class="badge badge-inline"
+                    [ngClass]="{
+                      'badge-warning': options.data.penaltyTypeTitle == 'NotLogged',
+                      'badge-secondary': options.data.penaltyTypeTitle == 'TripCancelation',
+                      'badge-primary': options.data.penaltyTypeTitle == 'ExceedMaximumAllowedTime',
+                      'badge-danger': options.data.penaltyTypeTitle == 'TruckAndDriverLateAssigned',
+                      'badge-success': options.data.penaltyTypeTitle == 'DropsDeliveringAfterTripEndDate'
+                    }"
+                    >{{ l(options.data.penaltyTypeTitle) }}</span
+                  ></span
                 >
               </div>
               <div *dxTemplate="let options of 'cellTemplateActions'">
