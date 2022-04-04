@@ -87,8 +87,8 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
         }
         result.items.forEach((r) => {
           if (this.feature.isEnabled('App.Shipper')) {
-            if (r.requestTypeTitle == 'TachyonManageService' && r.statusTitle == 'NeedsAction') {
-              r.statusTitle = 'New';
+            if (r.requestType == ShippingRequestType.TachyonManageService && r.status == ShippingRequestStatus.NeedsAction) {
+              r.statusTitle = this.l('New');
             }
           }
         });

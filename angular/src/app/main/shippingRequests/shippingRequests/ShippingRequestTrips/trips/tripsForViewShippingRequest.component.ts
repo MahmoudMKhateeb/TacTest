@@ -100,8 +100,8 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
     this.tripsByTmsEnabled = this.ShippingRequest.addTripsByTmsEnabled;
   }
   getCancelStatus(statusId) {
-    if (statusId == this.ShippingRequestTripCancelStatusEnum.Canceled) return this.l('Canceled');
-    else if (statusId == this.ShippingRequestTripCancelStatusEnum.Rejected) return this.l('Rejected');
+    if (statusId == this.ShippingRequestTripCancelStatusEnum.Canceled) return this.l('CanceledTrip');
+    else if (statusId == this.ShippingRequestTripCancelStatusEnum.Rejected) return this.l('RejectedTripCancelation');
     else if (statusId == this.ShippingRequestTripCancelStatusEnum.WaitingForTMSApproval) return this.l('WaitingCancelApproveFromTMS');
     else return this.l('None');
   }

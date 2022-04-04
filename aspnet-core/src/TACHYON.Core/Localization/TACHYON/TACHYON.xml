@@ -2517,5 +2517,9 @@
     <text name="RejectedReasonName">Rejected Reason Name</text>
     <text name="ApproveCancelTrip">Approve Cancel Trip</text>
 	<text name="ApplyCancel">Apply Cancel</text>
+	<text name="CanceledTrip">Canceled Trip</text>
+	<text name="RejectedTripCancelation">Rejected Trip Cancelation</text>
+	<text name="ViewCancelReasonTrip">View Cancel Reason Trip</text>
+	<text name="SuccessfullyRejectCancelation">Successfully Reject Cancelation</text>
 	</texts>
 </localizationDictionary>

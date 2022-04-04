@@ -21,7 +21,7 @@
         </div>
         <div class="modal-body">
           <div class="form-group">
-            <label for="Image">{{ 'CancelReasonName' | localize }} <span class="required-fileds">*</span></label>
+            <label>{{ 'CancelReasonName' | localize }} <span class="required-fileds">*</span></label>
             <textarea
               name="reason.canceledReason"
               rows="4"
@@ -33,7 +33,7 @@
             ></textarea>
           </div>
         </div>
-        <div class="modal-footer" *ngIf="!view">
+        <div class="modal-footer">
           <button [disabled]="saving" type="button" class="btn btn-secondary" (click)="close()">{{ l('close') }}</button>
 
           <button

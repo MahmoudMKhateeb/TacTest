@@ -113,19 +113,10 @@
               <td>
                 <span class="ui-column-title"> {{ l('tripStatus') }}</span>
                 <span class="noPadding" *ngIf="record.status != ShippingRequestTripStatusEnum.Canceled">
-                  {{ record.statusTitle }}
+                  {{ l(record.statusTitle) }}
                   <a
                     class="noPadding noColor"
-                    (click)="
-                      CancelTripModal.show(
-                        record.id,
-                        record.status,
-                        record.canceledReason,
-                        record.requestType,
-                        record.rejectedCancelingReason,
-                        record.cancelStatus
-                      )
-                    "
+                    (click)="ViewCancelReasonModal.show(record.status, record.canceledReason, record.rejectedCancelingReason, record.cancelStatus)"
                   >
                     <span
                       class="cancelLink"
@@ -142,19 +133,10 @@
                 <a
                   class="noPadding noColor"
                   *ngIf="record.status == ShippingRequestTripStatusEnum.Canceled"
-                  (click)="
-                    CancelTripModal.show(
-                      record.id,
-                      record.status,
-                      record.canceledReason,
-                      record.requestType,
-                      record.rejectedCancelingReason,
-                      record.cancelStatus
-                    )
-                  "
+                  (click)="ViewCancelReasonModal.show(record.status, record.canceledReason, record.rejectedCancelingReason, record.cancelStatus)"
                 >
                   <span class="cancelLink" *ngIf="record.cancelStatus == ShippingRequestTripCancelStatusEnum.Canceled">
-                    {{ record.statusTitle }}
+                    {{ l(record.statusTitle) }}
                   </span>
 
                   <span
@@ -220,19 +202,7 @@
                               record.cancelStatus == ShippingRequestTripCancelStatusEnum.Rejected)))
                       "
                     >
-                      <a
-                        class="dropdown-item"
-                        (click)="
-                          CancelTripModal.show(
-                            record.id,
-                            record.status,
-                            record.canceledReason,
-                            record.requestType,
-                            record.rejectedCancelingReason,
-                            record.cancelStatus
-                          )
-                        "
-                      >
+                      <a class="dropdown-item" (click)="CancelTripModal.show(record.id, record.requestType)">
                         {{ l('Cancel') }}
                       </a>
                     </li>
@@ -292,7 +262,7 @@
   [shippingRequest]="ShippingRequest"
   [VasListFromFather]="VasListFromFather"
 ></AddNewTripModal>
-
+<app-view-cancel-reason-modal #ViewCancelReasonModal></app-view-cancel-reason-modal>
 <app-cancel-trip-modal #CancelTripModal (modalSave)="reloadPage()"></app-cancel-trip-modal>
 <app-tms-cancel-trip-modal #TmsCancelTripModal (modalSave)="reloadPage()"></app-tms-cancel-trip-modal>
 <viewTripModal #ViewTripModal (modalSave)="reloadPage()"></viewTripModal>

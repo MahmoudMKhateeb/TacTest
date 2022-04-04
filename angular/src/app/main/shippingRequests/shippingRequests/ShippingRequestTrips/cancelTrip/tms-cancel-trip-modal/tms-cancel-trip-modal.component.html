@@ -19,7 +19,9 @@
         </button>
       </div>
       <div class="modal-footer">
-        <button [disabled]="saving" type="button" class="btn btn-danger" (click)="toggleRejectCancelModal()">{{ l('RejectCancel') }}</button>
+        <button [disabled]="saving" type="button" class="btn btn-danger" (click)="toggleRejectCancelModal()">
+          {{ l('RejectedTripCancelation') }}
+        </button>
         <button
           type="button"
           class="btn btn-success"
@@ -59,7 +61,7 @@
               [buttonBusy]="saving"
               [busyText]="l('SavingWithThreeDot' | localize)"
             >
-              <i class="fa fa-save"></i> <span> {{ 'RejectCancel' | localize }}</span>
+              <i class="fa fa-save"></i> <span> {{ 'RejectedTripCancelation' | localize }}</span>
             </button>
           </div>
         </div>

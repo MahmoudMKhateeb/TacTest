@@ -1,14 +1,7 @@
 import { Component, ViewChild, Injector, Output, EventEmitter, OnInit } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import {
-  ShippingRequestsTripServiceProxy,
-  CancelTripInput,
-  ShippingRequestsTripListDto,
-  ShippingRequestTripStatus,
-  ShippingRequestType,
-  ShippingRequestTripCancelStatus,
-} from '@shared/service-proxies/service-proxies';
+import { ShippingRequestsTripServiceProxy, CancelTripInput, ShippingRequestType } from '@shared/service-proxies/service-proxies';
 import { TripService } from '../../trip.service';
 import { finalize } from 'rxjs/operators';
 
@@ -24,36 +17,18 @@ export class CancelTripModalComponent extends AppComponentBase implements OnInit
   active: boolean = false;
   saving: boolean = false;
   isTMS: boolean = false;
-  view: boolean = false;
   applyCancel: boolean = false;
   rejectForm: boolean = false;
   requestType: number;
-  ShippingRequestTripStatusEnum = ShippingRequestTripStatus;
-  constructor(injector: Injector, private _tripService: TripService, private _shippingRequestTripsService: ShippingRequestsTripServiceProxy) {
+  constructor(injector: Injector, private _shippingRequestTripsService: ShippingRequestsTripServiceProxy) {
     super(injector);
   }
   ngOnInit(): void {}
 
-  public show(
-    tripId: undefined,
-    status: undefined,
-    canceledReason: undefined,
-    requestType: undefined,
-    rejectedCancelingReason: undefined,
-    cancelStatus: ShippingRequestTripCancelStatus
-  ): void {
+  show(tripId: undefined, requestType: undefined): void {
     this.reason = new CancelTripInput();
     this.reason.id = tripId;
     this.requestType = requestType;
-    if (status == this.ShippingRequestTripStatusEnum.Canceled || cancelStatus == ShippingRequestTripCancelStatus.WaitingForTMSApproval) {
-      // Canceled Trip => show reason
-      this.view = true;
-      this.reason.canceledReason = canceledReason;
-    } else if (cancelStatus == ShippingRequestTripCancelStatus.Rejected) {
-      this.view = true;
-      this.reason.canceledReason = rejectedCancelingReason;
-    }
-
     this.active = true;
     this.modal.show();
   }
@@ -83,7 +58,7 @@ export class CancelTripModalComponent extends AppComponentBase implements OnInit
         this.modalSave.emit(null);
         this.saving = false;
         type == 'tms'
-          ? this.notify.info(!this.isTMS ? this.l('SuccessfullyCanceled') : this.l('WaitingApproveFromTMS'))
+          ? this.notify.info(!this.isTMS ? this.l('SuccessfullyCanceled') : this.l('WaitingCancelApproveFromTMS'))
           : this.notify.info(this.l('SuccessfullyCanceled'));
       });
   }
@@ -92,6 +67,5 @@ export class CancelTripModalComponent extends AppComponentBase implements OnInit
     this.modal.hide();
     this.rejectForm = false;
     this.active = false;
-    this.view = false;
   }
 }

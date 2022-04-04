@@ -280,6 +280,7 @@ import { ViewRatingComponent } from '@app/main/shippingRequests/shippingRequests
 import { ShipmentHistoryComponent } from '@app/main/shippingRequests/shippingRequests/shipment-history/shipment-history.component';
 import { CancelTripModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/cancelTrip/cancel-trip-modal/cancel-trip-modal.component';
 import { TmsCancelTripModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/cancelTrip/tms-cancel-trip-modal/tms-cancel-trip-modal.component';
+import { ViewCancelReasonModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/cancelTrip/view-cancel-reason-modal/view-cancel-reason-modal.component';
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
 @NgModule({
@@ -532,6 +533,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ShipmentHistoryComponent,
     CancelTripModalComponent,
     TmsCancelTripModalComponent,
+    ViewCancelReasonModalComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },
