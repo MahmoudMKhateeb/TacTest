@@ -181,7 +181,7 @@
 </div>
 
 <AddNewTripModal
-  *ngIf="ShippingRequest.canAddTrip && primengTableHelper.totalRecordsCount < ShippingRequest.numberOfTrips"
+  *ngIf="ShippingRequest.canAddTrip && primengTableHelper.totalRecordsCount <= ShippingRequest.numberOfTrips"
   #AddNewTripModal
   (modalSave)="reloadPage()"
   [shippingRequest]="ShippingRequest"
