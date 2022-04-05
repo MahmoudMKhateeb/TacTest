@@ -49,15 +49,7 @@ export class TrackingMapComponent extends AppComponentBase implements OnInit {
       result.forEach((r) => {
         let renderOptions: google.maps.DirectionsRendererOptions = { polylineOptions: { strokeColor: '#344440' } };
         let color = this.getRandomColor();
-        let direction: {
-          origin: google.maps.LatLng;
-          destination: google.maps.LatLng;
-          waypoints: google.maps.DirectionsWaypoint[];
-          renderOptions?: google.maps.DirectionsRendererOptions;
-          trackingMapDto: TrackingMapDto;
-          show: boolean;
-          color: string;
-        } = {
+        let direction: Direction = {
           origin: undefined,
           destination: undefined,
           waypoints: [],
@@ -99,10 +91,12 @@ export class TrackingMapComponent extends AppComponentBase implements OnInit {
     if (this.isCarrier) {
       helper.getAllActiveDriversLiveLocationByTenantId(this.appSession.tenantId).subscribe((res) => {
         this.allDrivers = res;
+        console.log('allDrivers', this.allDrivers);
       });
     } else if (!this.appSession.tenant.id || this.isTachyonDealer) {
       helper.getAllActiveDriversLocationsInTheSystem().subscribe((res) => {
         this.allDrivers = res;
+        console.log('allDrivers', this.allDrivers);
       });
     }
   }
@@ -147,4 +141,13 @@ export class TrackingMapComponent extends AppComponentBase implements OnInit {
     }
     return color;
   }
+}
+export interface Direction {
+  origin: google.maps.LatLng;
+  destination: google.maps.LatLng;
+  waypoints: google.maps.DirectionsWaypoint[];
+  renderOptions?: google.maps.DirectionsRendererOptions;
+  trackingMapDto: TrackingMapDto;
+  show: boolean;
+  color: string;
 }

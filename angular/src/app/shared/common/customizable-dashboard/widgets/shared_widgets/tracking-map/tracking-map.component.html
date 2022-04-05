@@ -56,15 +56,6 @@
                   driver.waybillNumber
                 }}</a>
               </div>
-              <div>
-                <span class="font-weight-bold">{{ l('shippingRequest') }}</span> :
-                <a
-                  href="javascript:;"
-                  [routerLink]="['/app/main/shippingRequests/shippingRequests/view']"
-                  [queryParams]="{ id: driver.shippingRequestId }"
-                  >{{ driver.shippingRequestId }}</a
-                >
-              </div>
             </div>
           </agm-info-window>
         </agm-marker>
