@@ -2519,5 +2519,6 @@
 		<text name="inTransitDrivers">السائقين قيدالنقل</text>
 		<text name="inTransitTrucks">الشاحنات قيد النقل</text>
 
+    <text name="YouMustEnterRates">يجب عليك إدخال التقييمات</text>
 	</texts>
 </localizationDictionary>

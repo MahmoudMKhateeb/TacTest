@@ -2743,5 +2743,6 @@
 		<text name="YouCanNotRejectTheOffer">You Can Not Reject The Offer</text>
 		<text name="inTransitDrivers">In Transit Drivers</text>
 		<text name="inTransitTrucks">In Transit Trucks</text>
+  <text name="YouMustEnterRates">You must enter rates</text>
 	</texts>
 </localizationDictionary>

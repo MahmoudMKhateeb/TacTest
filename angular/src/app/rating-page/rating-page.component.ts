@@ -33,6 +33,10 @@ export class RatingPageComponent extends AppComponentBase implements OnInit {
 
   ngOnInit(): void {}
   onSubmit() {
+    if (!this.rate1 || !this.rate2) {
+      this.notify.error(this.l('YouMustEnterRates'));
+      return;
+    }
     this.saving = true;
     this.rateDto.createDriverRatingDtoByReceiverInput = new CreateDriverRatingDtoByReceiverDto();
     this.rateDto.createDeliveryExpRateByReceiverInput = new CreateDeliveryExpRateByReceiverDto();
