@@ -45,7 +45,20 @@
 
               <dxi-column dataField="penaltyName" caption="{{ l('PenaltyName') }}"> </dxi-column>
               <dxi-column dataField="totalAmount" caption="{{ l('Amount') }}"> </dxi-column>
-              <dxi-column dataField="penaltyStatusTitle" caption="{{ l('Status') }}"> </dxi-column>
+              <dxi-column cellTemplate="statusCellTemplate" dataField="penaltyStatusTitle" caption="{{ l('Status') }}"> </dxi-column>
+              <div *dxTemplate="let options of 'statusCellTemplate'">
+                <span style="width: 137px"
+                  ><span
+                    class="badge badge-inline"
+                    [ngClass]="{
+                      'badge-danger': options.data.penaltyStatusTitle == 'Canceled',
+                      'badge-primary': options.data.penaltyStatusTitle == 'New',
+                      'badge-success': options.data.penaltyStatusTitle == 'Paid'
+                    }"
+                    >{{ l(options.data.penaltyStatusTitle) }}</span
+                  ></span
+                >
+              </div>
               <dxi-column dataField="companyName" caption="{{ l('CompanyName') }}" dataType="text"> </dxi-column>
               <dxi-column dataField="waybillNumber" caption="{{ l('WaybillNumber') }}" dataType="number"> </dxi-column>
               <dxi-column dataField="destinationCompanyName" caption="{{ l('DestinationCompanyName') }}" dataType="date"> </dxi-column>

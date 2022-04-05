@@ -64,9 +64,6 @@ export class PenaltiesListComponent extends AppComponentBase implements OnInit {
       },
     });
   }
-  StyleStatus(Status: PenaltyType): string {
-    return 'label label-default label-inline m-1';
-  }
 
   Cancel(id: number): void {
     this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {

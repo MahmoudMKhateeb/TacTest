@@ -98,6 +98,23 @@
                 [class.is-invalid]="totalAmount.invalid && (totalAmount.dirty || totalAmount.touched)"
               />
             </div>
+            <div class="col-lg-12 mt-4" *ngIf="!feature.isEnabled('App.Carrier')">
+              <label>{{ l('commissionType') }}:</label>
+              <select class="form-control" name="CommissionType" [(ngModel)]="form.commissionType">
+                <option [value]="code.key" *ngFor="let code of priceOfferCommissionType">{{ l(code.value) | localize }}</option>
+              </select>
+            </div>
+            <div class="col-lg-12 mt-4" *ngIf="!feature.isEnabled('App.Carrier')">
+              <label>{{ l('commissionTypeValue') }}:</label>
+              <input
+                type="number"
+                min="1"
+                class="form-control"
+                placeholder="Value"
+                name="commissionPercentageOrAddValue"
+                [(ngModel)]="form.commissionPercentageOrAddValue"
+              />
+            </div>
             <!--  end :: Body-->
           </div>
         </div>

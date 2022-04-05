@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using TACHYON.PriceOffers;
 
 namespace TACHYON.Penalties.Dto
 {
@@ -18,6 +19,7 @@ namespace TACHYON.Penalties.Dto
         [Required]
         public int DestinationTenantId { get; set; }
         public PenaltyType Type { get; set; }
-
+        public PriceOfferCommissionType CommissionType { get; set; }
+        public decimal CommissionPercentageOrAddValue { get; set; }
     }
 }

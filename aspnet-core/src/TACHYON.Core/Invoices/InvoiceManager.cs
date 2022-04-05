@@ -272,7 +272,7 @@ namespace TACHYON.Invoices
            var penalties = await _penaltyRepository.GetAll()
                 .Include(x=>x.ShippingRequestTripFK)
                 .ThenInclude(x=>x.ShippingRequestFk)
-                .Where(x => !x.InvoiceId.HasValue).ToListAsync();
+                .Where(x => !x.InvoiceId.HasValue && x.Status != PenaltyStatus.Canceled).ToListAsync();
 
             if (penalties.Any())
                 await GeneratePenaltyInvoice(tenant, penalties, period);
@@ -436,6 +436,19 @@ namespace TACHYON.Invoices
                 Penalties = penalties
             };
              await _invoiceRepository.InsertAsync(invoice);
+
+            if (period.PeriodType == InvoicePeriodType.PayInAdvance)
+            {
+                tenant.Balance -= totalAmount;
+                tenant.ReservedBalance -= totalAmount;
+            }
+            else
+            {
+                tenant.CreditBalance -= totalAmount;
+            }
+
+
+            await _balanceManager.CheckShipperOverLimit(tenant);
         }
 
         /// <summary>

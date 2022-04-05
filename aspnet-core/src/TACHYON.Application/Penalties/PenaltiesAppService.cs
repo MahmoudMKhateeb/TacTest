@@ -1,5 +1,6 @@
 ﻿using Abp.Application.Features;
 using Abp.Authorization;
+using Abp.Configuration;
 using Abp.Domain.Repositories;
 using Abp.UI;
 using AutoMapper.QueryableExtensions;
@@ -11,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TACHYON.Common;
+using TACHYON.Configuration;
 using TACHYON.Features;
 using TACHYON.MultiTenancy;
 using TACHYON.Penalties.Dto;
@@ -22,11 +24,15 @@ namespace TACHYON.Penalties
         private readonly IRepository<Penalty> _penaltyRepository;
         private readonly IRepository<PenaltyComplaint> _penaltyComplaintRepository;
         private readonly IRepository<Tenant> _tenantRepository;
-        public PenaltiesAppService(IRepository<Penalty> penaltyRepository, IRepository<Tenant> tenantRepository, IRepository<PenaltyComplaint> penaltyComplaintRepository)
+        private readonly PenaltyManager _penaltyManager;
+        private readonly ISettingManager _settingManager;
+        public PenaltiesAppService(IRepository<Penalty> penaltyRepository, IRepository<Tenant> tenantRepository, IRepository<PenaltyComplaint> penaltyComplaintRepository, PenaltyManager penaltyManager, ISettingManager settingManager)
         {
             _penaltyRepository = penaltyRepository;
             _tenantRepository = tenantRepository;
             _penaltyComplaintRepository = penaltyComplaintRepository;
+            _penaltyManager = penaltyManager;
+            _settingManager = settingManager;
         }
 
         #region MainFunctions
@@ -141,7 +147,11 @@ namespace TACHYON.Penalties
         {
             var peanlty = ObjectMapper.Map<Penalty>(model);
             peanlty.CommissionType = PriceOffers.PriceOfferCommissionType.CommissionValue;
-            await _penaltyRepository.InsertAsync(peanlty);
+            var value = model.CommissionPercentageOrAddValue;
+            var taxVat = _settingManager.GetSettingValue<decimal>(AppSettings.HostManagement.TaxVat);
+            var commestion =  _penaltyManager.CalculateValues(model.TotalAmount, model.CommissionType, value, value, value, taxVat);
+            var mapper = ObjectMapper.Map(commestion,peanlty);
+            await _penaltyRepository.InsertAsync(mapper);
         }
         private async Task Update(CreateOrEditPenaltyDto model)
         {

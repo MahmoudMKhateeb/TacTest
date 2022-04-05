@@ -170,6 +170,11 @@ namespace TACHYON.Penalties
             var commestionValue = Convert.ToDecimal(await _featureChecker.GetValueAsync(tenantId, commestionValueKey));
             var taxVat = _settingManager.GetSettingValue<decimal>(AppSettings.HostManagement.TaxVat);
 
+            return CalculateValues(amount, commestionType, commestionMinValue, commestionPercentage, commestionValue, taxVat);
+        }
+
+        public  PenaltyCommestionDto CalculateValues(decimal amount, PriceOfferCommissionType commestionType, decimal commestionMinValue, decimal commestionPercentage, decimal commestionValue, decimal taxVat)
+        {
             var res = new PenaltyCommestionDto();
             res.AmountPreCommestion = amount;
             res.CommissionType = commestionType;
@@ -204,6 +209,7 @@ namespace TACHYON.Penalties
 
             return res;
         }
+
         private async Task InitPenalty(PenaltyType penaltyType, int tenantId, int destinationTenantId, int? tripId, PenaltyCommestionDto commestion)
         {
             if (!(await _featureChecker.IsEnabledAsync(tenantId, AppFeatures.Carrier) || await _featureChecker.IsEnabledAsync(tenantId, AppFeatures.Shipper)))

@@ -1,6 +1,12 @@
 import { Component, EventEmitter, Injector, OnInit, Output, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { CreateOrEditPenaltyDto, GetAllCompanyForDropDownDto, PenaltiesServiceProxy } from '@shared/service-proxies/service-proxies';
+import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
+import {
+  CreateOrEditPenaltyDto,
+  GetAllCompanyForDropDownDto,
+  PenaltiesServiceProxy,
+  PriceOfferCommissionType,
+} from '@shared/service-proxies/service-proxies';
 import { isNotNullOrUndefined } from 'codelyzer/util/isNotNullOrUndefined';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
@@ -18,12 +24,13 @@ export class CreateOrEditPenaltyModalComponent extends AppComponentBase implemen
   active = false;
   saving: boolean;
   form: CreateOrEditPenaltyDto;
-
-  constructor(inject: Injector, private _PenaltiesServiceProxy: PenaltiesServiceProxy) {
+  priceOfferCommissionType: any;
+  constructor(inject: Injector, private _PenaltiesServiceProxy: PenaltiesServiceProxy, private enumToArray: EnumToArrayPipe) {
     super(inject);
   }
   ngOnInit(): void {
     this.loadDropDowns();
+    this.priceOfferCommissionType = this.enumToArray.transform(PriceOfferCommissionType);
   }
   loadDropDowns() {
     this.getAllCompaniesForDropDown();

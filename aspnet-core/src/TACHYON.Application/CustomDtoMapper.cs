@@ -748,6 +748,7 @@ namespace TACHYON
 
             configuration.CreateMap<RegisterPenaltyComplaintDto, PenaltyComplaint>().ReverseMap();
             configuration.CreateMap<PenaltyComplaint, PenaltyComplaintDto>();
+            configuration.CreateMap<PenaltyCommestionDto, Penalty>().ReverseMap();
 
 
             configuration.CreateMap<SubmitInvoice, SubmitInvoiceInfoDto>()
