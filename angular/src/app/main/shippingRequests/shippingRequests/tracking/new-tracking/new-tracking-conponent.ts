@@ -1,4 +1,4 @@
-import { Component, ElementRef, Injector, Input, OnChanges, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, Injector, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import {
   GetAllUploadedFileDto,
@@ -22,7 +22,7 @@ import { NgbDropdownConfig } from '@node_modules/@ng-bootstrap/ng-bootstrap';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { FileDownloadService } from '@shared/utils/file-download.service';
 import { EntityLogComponent } from '@app/shared/common/entity-log/entity-log.component';
-import { AngularFireDatabase, AngularFireList } from '@angular/fire/compat/database';
+import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { DriverLocation, FirebaseHelperClass, trackingIconsList } from '@app/main/shippingRequests/shippingRequests/tracking/firebaseHelper.class';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 
@@ -73,7 +73,8 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
   tripsToggle = true;
   driverLiveLocation: DriverLocation = { lng: 0, lat: 0 };
   trackingIconsList = trackingIconsList;
-  driverLocationUnknown: boolean;
+  driverOnline: boolean;
+
   constructor(
     injector: Injector,
     private elRef: ElementRef,
@@ -131,9 +132,15 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
     firebaseHelper.getDriverLocationLiveByTripId(this.trip.id).subscribe((res) => {
       this.driverLiveLocation.lat = res[0]?.lat;
       this.driverLiveLocation.lng = res[0]?.lng;
-      isNotNullOrUndefined(res[0]?.lng) ? (this.driverLocationUnknown = false) : (this.driverLocationUnknown = true);
+      //if the trip is in transit and there is not driver data coming from firebase
+      if (this.trip.status == this.tripStatusesEnum.InTransit && !isNotNullOrUndefined(res[0])) {
+        this.driverOnline = false;
+      } else {
+        this.driverOnline = res[0]?.onlineStatus;
+      }
     });
   }
+
   /**
    * Show Item
    * @param item
@@ -170,6 +177,9 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
         this.trip.driverStatus = result.driverStatus;
         this.trip.statusTitle = result.statusTitle;
         this.routePoints = result.routPoints;
+        if (result.status === this.tripStatusesEnum.Delivered) {
+          this.emitToMobileApplication('TripIsDelivered', null, 'delete');
+        }
         this.syncTripInGetForView(this.trip);
         this.handleCanGoNextLocation(result.routPoints);
         this.getTripRouteForMap();
@@ -189,7 +199,7 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
         finalize(() => {
           this.saving = false;
           this.getForView();
-          this.sendDriverLocationToFirebase();
+          this.emitToMobileApplication('Started', this.routePoints[0], 'write');
         })
       )
       .subscribe(() => {
@@ -211,49 +221,10 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
             })
           )
           .subscribe((result) => {
+            this.emitToMobileApplication('Accepted', this.routePoints[0], 'write');
             this.notify.info(this.l('SuccessfullyAccepted'));
           });
       }
-    });
-  }
-
-  /**
-   * handels Pod Uploading Process
-   * @param point
-   * @param transaction
-   * @private
-   */
-  private handleUploadPod(point: TrackingRoutePointDto, transaction: PointTransactionDto) {
-    this.modelpod.show(point.id, transaction.action);
-    abp.event.on('PodUploadedSuccess', () => {
-      this.getForView();
-    });
-  }
-
-  /**
-   * handles the Trip Confirmation code process
-   * opens the modal the send a request with the code to the invoke service and if code is correct refresh the data (getforView)
-   * @param point
-   * @param transaction
-   */
-  private handleDeliveryConfirmationCode(point: TrackingRoutePointDto, transaction: PointTransactionDto) {
-    //show the modal
-    this.modelConfirmCode.show(point.id, transaction.action);
-    abp.event.on('trackingConfirmCodeSubmitted', () => {
-      this.getForView();
-    });
-  }
-
-  /**
-   * handels the upload proccess of a delivery note for the points
-   * @param point
-   * @param transaction
-   * @private
-   */
-  private handleUploadDeliveryNotes(point: TrackingRoutePointDto, transaction: PointTransactionDto) {
-    this.modelpod.show(point.id, transaction.action);
-    abp.event.on('tripDeliveryNotesUploadSuccess', () => {
-      this.getForView();
     });
   }
 
@@ -297,6 +268,7 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
       .subscribe(() => {
         this.getForView();
       });
+    this.emitToMobileApplication(transaction.action, point, 'write');
   }
 
   /**
@@ -342,33 +314,6 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
       .subscribe(() => {
         this.notify.info(this.l('SuccessfullyChanged'));
       });
-  }
-
-  private handleCanGoNextLocation(routPoints: TrackingRoutePointDto[]): boolean {
-    const singleDrop = this.routeTypeEnum.SingleDrop;
-    const MultipleDrops = this.routeTypeEnum.MultipleDrops;
-    const canStartAnotherPoint = routPoints.find((item) => item.canGoToNextLocation === true) ? true : false;
-    console.log(
-      'routPoints.find((item) => item.canGoToNextLocation)',
-      routPoints.find((item) => item.canGoToNextLocation)
-    );
-    console.log('routPoints', routPoints);
-    console.log('canStartAnotherPoint', canStartAnotherPoint);
-    //single Drop
-    if (this.trip.routeTypeId === singleDrop && canStartAnotherPoint) {
-      console.log('should go next');
-
-      this.saving = true;
-      this.nextLocation(this.routePoints[1]);
-      this.notify.info('CanGoNextForSingleDrop');
-    }
-    //for Multible Drops
-    if (this.trip.routeTypeId === MultipleDrops && canStartAnotherPoint && routPoints[0].isComplete) {
-      this.notify.info('CanGoNext');
-      console.log('can Go Next For MultiDrops');
-      this.canStartAnotherPoint = canStartAnotherPoint;
-    }
-    return (this.canStartAnotherPoint = canStartAnotherPoint);
   }
 
   /**
@@ -470,11 +415,82 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
   }
 
   /**
+   * handels Pod Uploading Process
+   * @param point
+   * @param transaction
+   * @private
+   */
+  private handleUploadPod(point: TrackingRoutePointDto, transaction: PointTransactionDto) {
+    this.modelpod.show(point.id, transaction.action);
+    abp.event.on('PodUploadedSuccess', () => {
+      this.getForView();
+    });
+  }
+
+  /**
+   * handles the Trip Confirmation code process
+   * opens the modal the send a request with the code to the invoke service and if code is correct refresh the data (getforView)
+   * @param point
+   * @param transaction
+   */
+  private handleDeliveryConfirmationCode(point: TrackingRoutePointDto, transaction: PointTransactionDto) {
+    //show the modal
+    this.modelConfirmCode.show(point.id, transaction.action);
+    abp.event.on('trackingConfirmCodeSubmitted', () => {
+      this.getForView();
+    });
+  }
+
+  /**
+   * handels the upload proccess of a delivery note for the points
+   * @param point
+   * @param transaction
+   * @private
+   */
+  private handleUploadDeliveryNotes(point: TrackingRoutePointDto, transaction: PointTransactionDto) {
+    this.modelpod.show(point.id, transaction.action);
+    abp.event.on('tripDeliveryNotesUploadSuccess', () => {
+      this.getForView();
+    });
+  }
+
+  private handleCanGoNextLocation(routPoints: TrackingRoutePointDto[]): boolean {
+    const singleDrop = this.routeTypeEnum.SingleDrop;
+    const MultipleDrops = this.routeTypeEnum.MultipleDrops;
+    const canStartAnotherPoint = routPoints.find((item) => item.canGoToNextLocation === true) ? true : false;
+    console.log(
+      'routPoints.find((item) => item.canGoToNextLocation)',
+      routPoints.find((item) => item.canGoToNextLocation)
+    );
+    console.log('routPoints', routPoints);
+    console.log('canStartAnotherPoint', canStartAnotherPoint);
+    //single Drop
+    if (this.trip.routeTypeId === singleDrop && canStartAnotherPoint) {
+      console.log('should go next');
+
+      this.saving = true;
+      this.nextLocation(this.routePoints[1]);
+      this.notify.info('CanGoNextForSingleDrop');
+    }
+    //for Multible Drops
+    if (this.trip.routeTypeId === MultipleDrops && canStartAnotherPoint && routPoints[0].isComplete) {
+      this.notify.info('CanGoNext');
+      console.log('can Go Next For MultiDrops');
+      this.canStartAnotherPoint = canStartAnotherPoint;
+    }
+    return (this.canStartAnotherPoint = canStartAnotherPoint);
+  }
+
+  /**
    * Send Driver Location to Firebase On Trip Start
    * @private
    */
-  private sendDriverLocationToFirebase() {
+  private emitToMobileApplication(transaction: string, point?: TrackingRoutePointDto, mode?: 'write' | 'delete') {
     let helper = new FirebaseHelperClass(this._db);
-    helper.assignDriverToTrip(this.trip, this.appSession.tenantId, this.routePoints[0].id);
+    if (mode === 'delete') {
+      helper.unAssignDriver(this.trip);
+    } else if (mode === 'write') {
+      helper.assignDriverToTrip(this.trip, point, this.appSession.tenantId, transaction);
+    }
   }
 }

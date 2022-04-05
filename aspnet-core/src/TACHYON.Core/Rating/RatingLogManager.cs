@@ -46,7 +46,7 @@ namespace TACHYON.Rating
         {
             if (await IsSaasRating(ratingLog))
                 throw new UserFriendlyException(L("CanNotAddRatingForSaasShipment"));
-            
+
             if (ratingLog.PointId != null) await CheckIfPointCompleted(ratingLog);
 
             if (await IsRateDoneBefore(ratingLog)) throw new UserFriendlyException(L("RateDoneBefore"));
@@ -59,7 +59,7 @@ namespace TACHYON.Rating
         {
             if (!rate.TripId.HasValue && !rate.PointId.HasValue) return;
             var ratePoints = await _routePointRepository.GetAll()
-                .Where(x=> x.Id == rate.PointId || x.ShippingRequestTripId == rate.TripId)
+                .Where(x => x.Id == rate.PointId || x.ShippingRequestTripId == rate.TripId)
                 .Select(y => y.Id).ToListAsync();
 
             if (rate.TripId.HasValue)
@@ -131,7 +131,7 @@ namespace TACHYON.Rating
                 await _ratingLogRepository.InsertAndGetIdAsync(newRate);
 
             }
-            else 
+            else
                 tenantTripBySystem.Rate = await UpdateAndRecalculateTenantTripRating(log);
 
 
@@ -180,7 +180,7 @@ namespace TACHYON.Rating
             // we need to get carrier rating from the correct rating log
             if (rate.RateType != tenantRatingType)
             {
-                using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant,AbpDataFilters.MustHaveTenant))
+                using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
                 {
                     var tripId = rate.TripId ?? await _routePointRepository.GetAll().Where(x => x.Id == rate.PointId).Select(x => x.ShippingRequestTripId).FirstOrDefaultAsync();
                     tenantTripRating = await _ratingLogRepository.GetAll().Where(x =>
@@ -260,7 +260,9 @@ namespace TACHYON.Rating
             var isRoutPointCompleted = await _routePointRepository.GetAll().AsNoTracking()
                 .WhereIf(log.RateType == RateType.FacilityByDriver,
                     x => x.ShippingRequestTripFk.AssignedDriverUserId == log.DriverId)
-                .AnyAsync(x => x.Id == log.PointId && x.IsComplete);
+                .AnyAsync(x => x.Id == log.PointId &&
+                (x.Status == RoutePointStatus.FinishOffLoadShipment || x.Status == RoutePointStatus.FinishLoading || x.Status == RoutePointStatus.ReceiverConfirmed ||
+                 x.Status == RoutePointStatus.DeliveryNoteUploded || x.Status == RoutePointStatus.DeliveryConfirmation));
 
             if (isRoutPointCompleted) return;
             throw new UserFriendlyException(L("PointNotFoundOrNotCompleted"));
@@ -341,8 +343,8 @@ namespace TACHYON.Rating
                 return log.CarrierId == log.ShipperId;
 
             return await _routePointRepository.GetAll().AsNoTracking()
-                .Include(x=> x.ShippingRequestTripFk)
-                .ThenInclude(x=> x.ShippingRequestFk)
+                .Include(x => x.ShippingRequestTripFk)
+                .ThenInclude(x => x.ShippingRequestFk)
                 .Where(x => x.Id == log.PointId || x.ShippingRequestTripId == log.TripId)
                 .AnyAsync(x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId
                                == x.ShippingRequestTripFk.ShippingRequestFk.TenantId);
