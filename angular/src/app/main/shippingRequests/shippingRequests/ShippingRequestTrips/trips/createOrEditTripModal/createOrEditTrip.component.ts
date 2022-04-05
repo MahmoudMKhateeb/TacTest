@@ -16,6 +16,7 @@ import {
   ShippingRequestsTripServiceProxy,
   UpdateDocumentFileInput,
   WaybillsServiceProxy,
+  FileDto,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { finalize } from '@node_modules/rxjs/operators';
@@ -84,6 +85,10 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   public DocsUploader: FileUploader;
   private _DocsUploaderOptions: FileUploaderOptions = {};
   fileToken: string;
+  fileType: string;
+  fileName: string;
+  hasNewUpload: boolean;
+
   /**
    * DocFileUploader onProgressItem progress
    */
@@ -230,6 +235,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     this.modal.hide();
     this.trip = new CreateOrEditShippingRequestTripDto();
     this.fileToken = undefined;
+    this.hasNewUpload = undefined;
     this.pickupPointSenderId = undefined;
     this._TripService.updateSourceFacility(null);
     this._TripService.updateDestFacility(null);
@@ -352,7 +358,10 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       if (resp.success) {
         //attach each fileToken to his CreateOrEditDocumentFileDto
         this.trip.createOrEditDocumentFileDto.updateDocumentFileInput = new UpdateDocumentFileInput({ fileToken: resp.result.fileToken });
+        this.hasNewUpload = true;
         this.fileToken = resp.result.fileToken;
+        this.fileType = resp.result.fileType;
+        this.fileName = resp.result.fileName;
       } else {
         this.message.error(resp.error.message);
       }
@@ -393,6 +402,21 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     this.DocsUploader.setOptions(this._DocsUploaderOptions);
   }
 
+  downloadAttatchment(): void {
+    if (this.trip.id && !this.hasNewUpload) {
+      this._fileDownloadService.downloadFileByBinary(
+        this.trip.createOrEditDocumentFileDto.binaryObjectId,
+        this.trip.createOrEditDocumentFileDto.name,
+        this.trip.createOrEditDocumentFileDto.extn
+      );
+    } else {
+      var fileDto = new FileDto();
+      fileDto.fileName = this.fileName;
+      fileDto.fileToken = this.fileToken;
+      fileDto.fileType = this.fileType;
+      this._fileDownloadService.downloadTempFile(fileDto);
+    }
+  }
   DocFileChangeEvent(event: any, item: CreateOrEditDocumentFileDto): void {
     if (event.target.files[0].size > 5242880) {
       //5MB
