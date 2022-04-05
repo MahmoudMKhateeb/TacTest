@@ -236,8 +236,8 @@ namespace TACHYON.PriceOffers
 
             SetShippingRequestPricing(offer);
             await _appNotifier.ShipperAcceptedOffer(offer);
-            
-             await CurrentUnitOfWork.SaveChangesAsync();
+
+            await CurrentUnitOfWork.SaveChangesAsync();
             return offer.Status;
         }
         public async Task<PriceOfferStatus> AcceptOfferOnBehalfShipper(long id)
@@ -246,7 +246,7 @@ namespace TACHYON.PriceOffers
             var offer = await GetOffer(id);
             var canAcceptOrRejectOffer = await canAcceptOrRejectOfferOnBehalf(offer);
             if (!canAcceptOrRejectOffer) throw new UserFriendlyException(L("YouCanNotAcceptTheOffer"));
-            await CheckIfThereOfferAcceptedBefore(offer.ShippingRequestId);
+           // await CheckIfThereOfferAcceptedBefore(offer.ShippingRequestId);
 
             await _balanceManager.ShipperCanAcceptOffer(offer);
 
@@ -407,7 +407,7 @@ namespace TACHYON.PriceOffers
         {
 
             //SR status check
-            if (!offer.ShippingRequestFk.Status.IsIn(ShippingRequestStatus.NeedsAction, ShippingRequestStatus.AcceptedAndWaitingCarrier))
+            if (!offer.Status.IsIn(PriceOfferStatus.AcceptedAndWaitingForShipper))
             {
                 return false;
             }
@@ -415,10 +415,9 @@ namespace TACHYON.PriceOffers
             //TMS or host
             if (await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer))
             {
-                if (offer.ShippingRequestFk.IsTachyonDeal && offer.Status == PriceOfferStatus.New && ! await _featureChecker.IsEnabledAsync(offer.TenantId,AppFeatures.Carrier))
-                {
-                    return true;
-                }
+
+                return true;
+
             }
 
             return false;
@@ -780,7 +779,7 @@ namespace TACHYON.PriceOffers
             var directRequestVasCommissionValue = Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.DirectRequestVasCommissionValue));
             if (offer.Channel == PriceOfferChannel.CarrierAsSaas)
             {
-                decimal carrierAsSaasCommissionValue = Convert.ToDecimal( _featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.CarrierAsSaasCommissionValue));
+                decimal carrierAsSaasCommissionValue = Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.CarrierAsSaasCommissionValue));
 
                 directRequestCommissionType = PriceOfferCommissionType.CommissionValue;
                 directRequestCommissionMinValue = carrierAsSaasCommissionValue;

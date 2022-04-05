@@ -182,7 +182,7 @@ namespace TACHYON.Invoices
                     await CollectTripsForShipper(tenant, period);
 
                 }
-                else if (await _featureChecker.IsEnabledAsync(AppFeatures.Receipt))
+                if (await _featureChecker.IsEnabledAsync(AppFeatures.Receipt))
                 {
                     await BuildCarrierSubmitInvoice(tenant, period);
 
@@ -236,6 +236,7 @@ namespace TACHYON.Invoices
                 .Where(trip => !trip.IsShipperHaveInvoice)
                 .Where(trip => trip.Status == Shipping.Trips.ShippingRequestTripStatus.Delivered)
                 .ToList();
+
             foreach (ShippingRequestTrip trip in trips.ToList())
             {
                 var shipperId = trip.ShippingRequestFk.TenantId;
@@ -280,16 +281,24 @@ namespace TACHYON.Invoices
             {
                 var shipperId = trip.ShippingRequestFk.TenantId;
                 var carrierId = trip.ShippingRequestFk.CarrierTenantId;
-                if (!await _featureChecker.IsEnabledAsync(shipperId, AppFeatures.Saas))
-                {
-                    continue;
-                }
-                var relatedCarrierId = int.Parse(await _featureChecker.GetValueAsync(shipperId, AppFeatures.SaasRelatedCarrier));
-                if (carrierId == relatedCarrierId || carrierId == shipperId) // saas
+                if (carrierId == shipperId) // saas
                 {
                     trips.Remove(trip);
                 }
 
+
+                //related carriers 
+                int relatedCarrierId;
+
+                int.TryParse(await _featureChecker.GetValueAsync(shipperId, AppFeatures.SaasRelatedCarrier), out relatedCarrierId);
+
+                if (carrierId == relatedCarrierId)
+                {
+                    trips.Remove(trip);
+                }
+
+
+                //saas SR 
                 if (trip.ShippingRequestFk.IsSaas())
                 {
                     trips.Remove(trip);
