@@ -51,7 +51,7 @@ export class DriverLicenseTypeTranslationsComponent extends AppComponentBase imp
         return self._driverLicenseTypesServiceProxy.createOrEditTranslation(values).toPromise();
       },
       remove: (key) => {
-        return self._driverLicenseTypesServiceProxy.delete(key).toPromise();
+        return self._driverLicenseTypesServiceProxy.deleteTranslation(key).toPromise();
       },
     });
   }
