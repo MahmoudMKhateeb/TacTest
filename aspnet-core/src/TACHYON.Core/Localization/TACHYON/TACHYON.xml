@@ -1159,7 +1159,7 @@
 		<text name="MoveTenantsOfEditionDescription">{0} tenants will be moved</text>
 		<text name="MoveTenantsToAnotherEdition">Move tenants to another edition</text>
 		<text name="MoveTenantsToAnotherEditionStartedNotification">We are moving companies to selected subscription type. You will be notified when the operation is complete.</text>
-		<text name="MultipleDrops">Multiple drops</text>
+		<text name="MultipleDrops">Multiple Drops</text>
 		<text name="MyBiddingHistory">My bidding history</text>
 		<text name="MyBidPrice">My bid price</text>
 		<text name="Myload">My Load</text>
@@ -1758,7 +1758,7 @@
 		<text name="ShowTimeOutNotificationSecond">Countdown Modal Wait Time (Seconds)</text>
 		<text name="SignInToTachyon">Sign in to Tachyon</text>
 		<text name="SignUp">Sign up</text>
-		<text name="SingleDrop">Single drop</text>
+		<text name="SingleDrop">Single Drop</text>
 		<text name="Sms">SMS</text>
 		<text name="SMSOTP">Please use the code below to login.&#xA;Code:{0}</text>
 		<text name="SmsSecurityCodeMessage">Your security code is: {0}</text>
@@ -2070,7 +2070,7 @@
 		<text name="TripsStartDate">Trips pickup date start</text>
 		<text name="TripStartDate">Trips start date</text>
 		<text name="TripStartDateCantBeGretterThanTripEndDate">Trip start date cant be gretter than trip end date</text>
-		<text name="TripStatus">Trip status</text>
+		<text name="TripStatus">Trip Status</text>
 		<text name="Truck">Truck details</text>
 		<text name="TruckCapacities">Truck Capacity</text>
 		<text name="TruckCapacitiesTranslation">Truck Capacities Translation</text>
@@ -2741,5 +2741,7 @@
 		<text name="ReferanceNumber">Referance Number</text>
 		<text name="ForCurrentYear">For Current Year</text>
 		<text name="YouCanNotRejectTheOffer">You Can Not Reject The Offer</text>
+		<text name="inTransitDrivers">In Transit Drivers</text>
+		<text name="inTransitTrucks">In Transit Trucks</text>
 	</texts>
 </localizationDictionary>
