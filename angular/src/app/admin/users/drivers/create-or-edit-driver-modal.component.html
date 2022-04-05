@@ -260,6 +260,7 @@
                         'is-invalid': userForm.submitted && !driverLicenseTypeId.valid
                       }"
                     >
+                      <option selected disabled [ngValue]="null">{{ l('SelectALicenseType') }}</option>
                       <option *ngFor="let item of driverLicenseTypes" [value]="item.id">{{ item.displayName }}</option>
                     </select>
                     <validation-messages [formCtrl]="driverLicenseTypeId"></validation-messages>

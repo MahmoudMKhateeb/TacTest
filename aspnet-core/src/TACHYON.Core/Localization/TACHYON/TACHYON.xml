@@ -2744,5 +2744,6 @@
 		<text name="inTransitDrivers">In Transit Drivers</text>
 		<text name="inTransitTrucks">In Transit Trucks</text>
   <text name="YouMustEnterRates">You must enter rates</text>
+		<text name="SelectALicenseType">Select a license type</text>
 	</texts>
 </localizationDictionary>

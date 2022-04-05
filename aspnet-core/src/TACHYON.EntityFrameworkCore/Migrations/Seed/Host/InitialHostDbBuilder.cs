@@ -23,6 +23,7 @@ namespace TACHYON.Migrations.Seed.Host
             new CountriesAndCitiesCreator(_context).Create();
             new TransportTypesAndTheirChildrenCreator(_context).Create();
             new ListOthersCreator(_context).Create();
+            new DefaultDriverLicenseTypes(_context).Create();
             _context.SaveChanges();
         }
     }

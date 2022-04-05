@@ -2518,6 +2518,8 @@
 		<text name="YouCanNotRejectTheOffer">لا يمكنك رفض العرض</text>
 		<text name="inTransitDrivers">السائقين قيدالنقل</text>
 		<text name="inTransitTrucks">الشاحنات قيد النقل</text>
+		<text name="DriverLicenseType">نوع رخصة السائق</text>
+		<text name="SelectALicenseType">أختر نوع رخصة السائق</text>
 
     <text name="YouMustEnterRates">يجب عليك إدخال التقييمات</text>
 	</texts>
