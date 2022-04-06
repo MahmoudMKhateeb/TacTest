@@ -21,6 +21,7 @@ namespace TACHYON.Tracking
         public bool IsResolve { get; set; }
         public long? WaybillNumber { get; set; }
         public string FacilityName { get; set; }
+        public bool IsSaas { get; set; }
         public bool IsPodUploaded { get; set; }
         public bool CanGoToNextLocation { get; set; }
         public double lat { get; set; }

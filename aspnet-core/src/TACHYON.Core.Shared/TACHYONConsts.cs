@@ -96,6 +96,7 @@
         #region SMS
         public const string SMSOTP = "SMSOTP";
         public const string SMSShippingRequestReceiverCode = "ShippingRequestReceiverCode";
+        public const string SMSSaasShippingRequestReceiverCode = "SMSSaasShippingRequestReceiverCode";
         public const string DriverWelcomeMessage = "DriverWelcomeMessageRegistrationNotification";
         #endregion
         #region Signalr triggers

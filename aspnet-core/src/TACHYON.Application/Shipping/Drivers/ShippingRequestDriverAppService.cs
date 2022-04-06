@@ -314,6 +314,8 @@ namespace TACHYON.Shipping.Drivers
             var routes = await _RoutPointRepository.GetAll()
              .Include(t => t.RoutPointStatusTransitions)
              .Include(z => z.FacilityFk)
+             .Include(v => v.ShippingRequestTripFk)
+             .ThenInclude(m => m.ShippingRequestFk)
              .Where(x => x.ShippingRequestTripId == id)
              .Select(x => new RoutPointsMobileDto
              {
@@ -330,6 +332,7 @@ namespace TACHYON.Shipping.Drivers
                  PickingType = x.PickingType,
                  IsPodUploaded = x.IsPodUploaded,
                  WaybillNumber = x.WaybillNumber,
+                 IsSaas = x.ShippingRequestTripFk.ShippingRequestFk.IsSaas(),
                  AvailableTransactions = !x.IsResolve ? new List<PointTransactionDto>() : _workFlowProvider.GetTransactionsByStatus(x.WorkFlowVersion, x.RoutPointStatusTransitions.Where(c => !c.IsReset).Select(v => v.Status).ToList(), x.Status)
              }).ToListAsync();
             if (routes == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
