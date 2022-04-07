@@ -84,6 +84,8 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   uploadGoodDetailsUrl: string;
   ShippingRequestRouteTypeEnum = ShippingRequestRouteType;
 
+  type = 'Trip';
+  ShippingRequestTripStatus = ShippingRequestTripStatus;
   constructor(
     injector: Injector,
     private _TripService: TripService,

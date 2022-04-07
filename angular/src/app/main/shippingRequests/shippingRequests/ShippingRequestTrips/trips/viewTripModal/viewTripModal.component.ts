@@ -32,6 +32,7 @@ import { FileViwerComponent } from '@app/shared/common/file-viwer/file-viwer.com
 })
 export class ViewTripModalComponent extends AppComponentBase implements OnInit, AfterViewInit {
   @ViewChild('viewTripDetails', { static: false }) modal: ModalDirective;
+  @ViewChild('TripNotesModal', { static: false }) TripNotesModal: ModalDirective;
   @Output() modalSave: EventEmitter<any> = new EventEmitter();
   @ViewChild('fileViwerComponent', { static: false }) fileViwerComponent: FileViwerComponent;
 
@@ -53,6 +54,8 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
   private TruckTypeId: number;
   pickUpPointSender: string;
   activeTripId: any;
+  type = 'Trip';
+
   shippingRequestTripStatusEnum = ShippingRequestTripStatus;
   expectedDeliveryTime: moment.Moment;
   constructor(
@@ -175,6 +178,9 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
     }
   }
 
+  getNotes() {
+    this.TripNotesModal.show();
+  }
   /**
    * this function is to assign Driver And Truck To shipping Request Trip
    */

@@ -58,7 +58,11 @@
         public const string Pages_PlateTypes_Create = "Pages.PlateTypes.Create";
         public const string Pages_PlateTypes_Edit = "Pages.PlateTypes.Edit";
         public const string Pages_PlateTypes_Delete = "Pages.PlateTypes.Delete";
-
+        
+        public const string Pages_ShippingRequestAndTripNotes = "Pages.ShippingRequestAndTripNotes";
+        public const string Pages_ShippingRequestAndTripNotes_Create = "Pages.ShippingRequestAndTripNotes_Create.Create";
+        public const string Pages_ShippingRequestAndTripNotes_Edit = "Pages.ShippingRequestAndTripNotes_Create.Edit";
+        public const string Pages_ShippingRequestAndTripNotes_Delete = "Pages.ShippingRequestAndTripNotes_Create.Delete";
         #region Shipping Request
 
         #region Trip

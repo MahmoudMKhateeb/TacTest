@@ -185,6 +185,18 @@ namespace TACHYON.Authorization
                 AppPermissions.Pages_ShippingRequest_Accidents_Comments_Delete,
                 L("ShippingRequest_Accidents_Comments_Delete"), multiTenancySides: MultiTenancySides.Tenant);
 
+                 var ShippingRequestAndTripNotes = pages.CreateChildPermission(
+                AppPermissions.Pages_ShippingRequestAndTripNotes, L("ShippingRequestAndTripNotes"),
+                multiTenancySides: MultiTenancySides.Tenant);
+            ShippingRequestAndTripNotes.CreateChildPermission(
+                AppPermissions.Pages_ShippingRequestAndTripNotes_Create,
+                L("ShippingRequestAndTripNotes_CreateOrEdit"), multiTenancySides: MultiTenancySides.Tenant);
+            ShippingRequestAndTripNotes.CreateChildPermission(
+                AppPermissions.Pages_ShippingRequestAndTripNotes_Edit,
+                L("ShippingRequestAndTripNotes_Edit"), multiTenancySides: MultiTenancySides.Tenant);
+            shippingRequestTripAccidentComments.CreateChildPermission(
+                AppPermissions.Pages_ShippingRequestAndTripNotes_Delete,
+                L("ShippingRequestAndTripNotes_Delete"), multiTenancySides: MultiTenancySides.Tenant);
             var vasPrices = pages.CreateChildPermission(AppPermissions.Pages_VasPrices, L("VasPrices"),
                 multiTenancySides: MultiTenancySides.Tenant);
             vasPrices.CreateChildPermission(AppPermissions.Pages_VasPrices_Create, L("CreateNewVasPrice"),

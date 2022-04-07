@@ -2955,5 +2955,19 @@
     <text name="supposedPickupDateFrom">Supposed Pick up Date From</text>
 	<text name="supposedPickupDateTo">Supposed Pick up Date To</text>
 		<text name="FinancialDepartmentDetails">Financial department details</text>
+	<text name="DeleteWarningMessage">Warning Message For Delete</text>
+	<text name="AddNote">Add Note</text>
+	<text name="Internal">Internal</text>
+	<text name="IsPrintedByWabillInvoice">Print to Waybill Invoice</text>
+	<text name="Attachments">Attachments</text>
+	<text name="TMSAndCarrier">Tachyon Manage Service and Carrier</text>
+	<text name="CarrierOnly">Carrier Only</text>
+	<text name="TMSOnly">Tachyon Manage Service Only</text>
+	<text name="ShipperOnly">Shipper Only</text>
+	<text name="AddedAt">Added at</text>
+	<text name="LastModifiedAt">Last Modified at</text>
+	<text name="by">by</text>
+	<text name="ViewNote">View Note</text>
+	<text name="UpdateNote">Update Note</text>
 	</texts>
 </localizationDictionary>

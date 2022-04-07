@@ -18,6 +18,7 @@ import { TripService } from '@app/main/shippingRequests/shippingRequests/Shippin
 import { DirectRequestComponent } from '@app/main/shippingRequests/shippingRequests/directrequest/direct-request.component';
 import { finalize, retry } from 'rxjs/operators';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
+import { NotesComponent } from './notes/notes.component';
 
 @Component({
   templateUrl: './view-shippingRequest.component.html',
@@ -26,6 +27,7 @@ import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUn
 })
 export class ViewShippingRequestComponent extends AppComponentBase implements OnInit, AfterViewChecked {
   @ViewChild('directRequestComponent') public directRequestComponent: DirectRequestComponent;
+  @ViewChild('NotesComponent') public NotesComponent: NotesComponent;
   active = false;
   saving = false;
   loading = true;
@@ -34,6 +36,7 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
   activeShippingRequestId: number;
   bidsloading = false;
   entityTypes = SavedEntityType;
+  type = 'ShippingRequest';
   breadcrumbs: BreadcrumbItem[] = [new BreadcrumbItem(this.l('ShippingRequests'), '/app/main/shippingRequests/shippingRequests')];
 
   constructor(

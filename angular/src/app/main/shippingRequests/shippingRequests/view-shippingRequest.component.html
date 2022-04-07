@@ -378,6 +378,9 @@
       </ng-template>
       <!--  end:: DirectOffers        -->
 
+      <div>
+        <app-notes #NotesComponent [shippingRequestId]="activeShippingRequestId" [type]="type"> </app-notes>
+      </div>
       <!--   Start::Trips Section     -->
       <!--        !feature.isEnabled('App.TachyonDealer') || -->
       <ng-template [ngIf]="canSeeShippingRequestTrips()">

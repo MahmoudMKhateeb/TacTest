@@ -143,7 +143,6 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     this.PointsServiceSubscription = this._PointsService.currentWayPointsList.subscribe((res) => (this.trip.routPoints = res));
     //load the Facilites
     //this._PointsService.updateWayPoints(new CreateOrEditRoutPointDto[]);
-    this.refreshOrGetFacilities(undefined);
     this.vasesHandler();
   }
 
@@ -186,6 +185,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   }
 
   show(record?: CreateOrEditShippingRequestTripDto): void {
+    this.refreshOrGetFacilities(undefined);
     if (this.shippingRequest) {
       this.setStartTripDate(this.shippingRequest.startTripDate);
       const EndDateGregorian = moment(this.shippingRequest.endTripDate).locale('en').format('D/M/YYYY');

@@ -299,6 +299,10 @@ import { ViewImportedTripsFromExcelModalComponent } from './shippingRequests/shi
 import { ViewImportedPointsFromExcelModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/trips/ImportedTrips/view-imported-points-from-excel-modal/view-imported-points-from-excel-modal.component';
 import { ViewImportedGoodDetailsFromExcelModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/trips/ImportedTrips/view-imported-good-details-from-excel-modal/view-imported-good-details-from-excel-modal.component';
 import { ViewImportVasesFromExcelModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/trips/ImportedTrips/view-import-vases-from-excel-modal/view-import-vases-from-excel-modal.component';
+import { ViewNotesComponent } from './shippingRequests/shippingRequests/notes/view-notes/view-notes.component';
+import { AddNewNoteModalComponent } from './shippingRequests/shippingRequests/notes/add-new-note-modal/add-new-note-modal.component';
+import { NotesComponent } from './shippingRequests/shippingRequests/notes/notes.component';
+import { TripNotesModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/trips/trip-notes-modal/trip-notes-modal.component';
 
 import { PenaltiesListComponent } from './Penalties/penalties-list/penalties-list.component';
 import { CreateOrEditPenaltyModalComponent } from './Penalties/penalties-list/create-or-edit-penalty-modal/create-or-edit-penalty-modal.component';
@@ -584,6 +588,10 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ViewCancelReasonModalComponent,
     VoidInvoiceNoteModalComponent,
     NoteModalComponent,
+    ViewNotesComponent,
+    AddNewNoteModalComponent,
+    NotesComponent,
+    TripNotesModalComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },
