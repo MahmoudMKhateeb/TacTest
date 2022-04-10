@@ -108,7 +108,7 @@
                   <ul class="dropdown-menu" *dropdownMenu>
                     <li *ngIf="options.data.documentName">
                       <a class="dropdown-item" href="javascript:;" (click)="downloadDocument(options.data.id)">
-                        {{ l('Download') }}
+                        {{ l('View') }}
                       </a>
                     </li>
 
@@ -159,3 +159,4 @@
 <deman-model (modalSave)="reloadPage()" #ClaimModel></deman-model>
 <submitinvoice-rejected-modal #RejectedModel (modalSave)="reloadPage()"></submitinvoice-rejected-modal>
 <invoice-tenant-items-details #InvoiceDetailsModel></invoice-tenant-items-details>
+<shared-file-viewer #fileViwerComponent></shared-file-viewer>
