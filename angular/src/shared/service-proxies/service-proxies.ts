@@ -84873,6 +84873,7 @@ export class ShippingRequestTripDriverListDto implements IShippingRequestTripDri
   driverStatus!: ShippingRequestTripDriverStatus;
   waybillNumber!: number | undefined;
   hasIncident!: boolean;
+  isSaas!: boolean;
   id!: number;
 
   constructor(data?: IShippingRequestTripDriverListDto) {
@@ -84897,6 +84898,7 @@ export class ShippingRequestTripDriverListDto implements IShippingRequestTripDri
       this.driverStatus = _data['driverStatus'];
       this.waybillNumber = _data['waybillNumber'];
       this.hasIncident = _data['hasIncident'];
+      this.isSaas = _data['isSaas'];
       this.id = _data['id'];
     }
   }
@@ -84922,6 +84924,7 @@ export class ShippingRequestTripDriverListDto implements IShippingRequestTripDri
     data['driverStatus'] = this.driverStatus;
     data['waybillNumber'] = this.waybillNumber;
     data['hasIncident'] = this.hasIncident;
+    data['isSaas'] = this.isSaas;
     data['id'] = this.id;
     return data;
   }
@@ -84940,6 +84943,7 @@ export interface IShippingRequestTripDriverListDto {
   driverStatus: ShippingRequestTripDriverStatus;
   waybillNumber: number | undefined;
   hasIncident: boolean;
+  isSaas: boolean;
   id: number;
 }
 
@@ -85624,6 +85628,7 @@ export class RoutPointsMobileDto implements IRoutPointsMobileDto {
   isResolve!: boolean;
   waybillNumber!: number | undefined;
   facilityName!: string | undefined;
+  isSaas!: boolean;
   isPodUploaded!: boolean;
   canGoToNextLocation!: boolean;
   lat!: number;
@@ -85650,6 +85655,7 @@ export class RoutPointsMobileDto implements IRoutPointsMobileDto {
       this.isResolve = _data['isResolve'];
       this.waybillNumber = _data['waybillNumber'];
       this.facilityName = _data['facilityName'];
+      this.isSaas = _data['isSaas'];
       this.isPodUploaded = _data['isPodUploaded'];
       this.canGoToNextLocation = _data['canGoToNextLocation'];
       this.lat = _data['lat'];
@@ -85680,6 +85686,7 @@ export class RoutPointsMobileDto implements IRoutPointsMobileDto {
     data['isResolve'] = this.isResolve;
     data['waybillNumber'] = this.waybillNumber;
     data['facilityName'] = this.facilityName;
+    data['isSaas'] = this.isSaas;
     data['isPodUploaded'] = this.isPodUploaded;
     data['canGoToNextLocation'] = this.canGoToNextLocation;
     data['lat'] = this.lat;
@@ -85703,6 +85710,7 @@ export interface IRoutPointsMobileDto {
   isResolve: boolean;
   waybillNumber: number | undefined;
   facilityName: string | undefined;
+  isSaas: boolean;
   isPodUploaded: boolean;
   canGoToNextLocation: boolean;
   lat: number;
@@ -85782,6 +85790,7 @@ export class RoutDropOffDto implements IRoutDropOffDto {
   ratingNumber!: number;
   isFacilityRated!: boolean;
   isComplete!: boolean;
+  isSaas!: boolean;
   receiverDto!: ReceiverDto;
   receiverFullName!: string | undefined;
   receiverPhoneNumber!: string | undefined;
@@ -85815,6 +85824,7 @@ export class RoutDropOffDto implements IRoutDropOffDto {
       this.ratingNumber = _data['ratingNumber'];
       this.isFacilityRated = _data['isFacilityRated'];
       this.isComplete = _data['isComplete'];
+      this.isSaas = _data['isSaas'];
       this.receiverDto = _data['receiverDto'] ? ReceiverDto.fromJS(_data['receiverDto']) : <any>undefined;
       this.receiverFullName = _data['receiverFullName'];
       this.receiverPhoneNumber = _data['receiverPhoneNumber'];
@@ -85855,6 +85865,7 @@ export class RoutDropOffDto implements IRoutDropOffDto {
     data['ratingNumber'] = this.ratingNumber;
     data['isFacilityRated'] = this.isFacilityRated;
     data['isComplete'] = this.isComplete;
+    data['isSaas'] = this.isSaas;
     data['receiverDto'] = this.receiverDto ? this.receiverDto.toJSON() : <any>undefined;
     data['receiverFullName'] = this.receiverFullName;
     data['receiverPhoneNumber'] = this.receiverPhoneNumber;
@@ -85888,6 +85899,7 @@ export interface IRoutDropOffDto {
   ratingNumber: number;
   isFacilityRated: boolean;
   isComplete: boolean;
+  isSaas: boolean;
   receiverDto: ReceiverDto;
   receiverFullName: string | undefined;
   receiverPhoneNumber: string | undefined;
