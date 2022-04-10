@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <localizationDictionary culture="ar-EG">
 	<texts>
 		<text name="{0}IsInvalid">"{0}" غير صالح</text>
@@ -2266,8 +2266,12 @@
 	<text name="ReceiverCodeConfirmationMsg">هل أنت متأكد أنك تريد إعادة تعيين رمز المستلم لهذه الشحنة؟</text>
 		<text name="CompanyDescriptionHint">يجب ألا يزيد وصف الشركة عن 500 حرف</text>
 		<text name="SelectAnEmailTemplateType">أختر نوع قالب البريد الإلكتروني</text>
-
-		
-
+	<text name="PostPriceSrUpdatedMsg">تم إجراء تغيير على تفاصيل الطلب بالرقم المرجعي {0}.</text>
+		<text name="PostPriceSrUpdateActionMsg">التغيير الذي أجريته في الطلب باستخدام الرقم المرجعي {0} تم {1}الرقم المرجعي {0} تم {1}</text>
+		<text name="PostPriceSrUpdateChangeInPriceRequestedMsg">التغيير الذي أجريته في الطلب بمرجع {} تم قبوله مع تغيير في السعر</text>
+		<text name="PostPriceUpdateWaitingForCarrierAction">بأنتظار إجراء الناقل </text>
+		<text name="AcceptedPostPriceUpdateByCarrier">قبول التغيير</text>
+		<text name="ChangePriceRequestedForPostPriceUpdate">قبول مع إعادة التسعير</text>
+		<text name="RejectedPostPriceUpdateByCarrier">رفض التغيير</text>
 	</texts>
 </localizationDictionary>

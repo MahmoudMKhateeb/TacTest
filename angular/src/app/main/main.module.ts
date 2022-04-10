@@ -278,6 +278,9 @@ import { EmailTemplateTranslationTemplateComponent } from './emailTemplates/emai
 import { CreateOrEditEmailTemplateTranslationModalComponent } from './emailTemplates/emailTemplates/create-or-edit-email-template-translation-modal.component';
 import { ImportCitiesPolygonsModalComponent } from './cities/cities/import-cities-polygoins-modal/import-cities-polygons-modal.component';
 import { ToggleButtonModule } from '@node_modules/primeng/togglebutton';
+import { SrPostPriceUpdateComponent } from './shippingRequests/shippingRequests/srpost-price-update/sr-post-price-update.component';
+import { ViewSrPostPriceUpdateModalComponent } from './shippingRequests/shippingRequests/srpost-price-update/view-sr-post-price-update-modal/view-sr-post-price-update-modal.component';
+import { CardModule } from '@node_modules/primeng/card';
 
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
@@ -505,7 +508,6 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     AppLocalizationComponent,
     ApplocalizationModalComponent,
     ViewApplocalizationModalComponent,
-
     CreateOrEditShippingRequestWizardComponent,
     ShippingrequestsDetailsModelComponent,
     ComingSoonComponent,
@@ -529,6 +531,8 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     EmailTemplateTranslationTemplateComponent,
     CreateOrEditEmailTemplateTranslationModalComponent,
     ImportCitiesPolygonsModalComponent,
+    SrPostPriceUpdateComponent,
+    ViewSrPostPriceUpdateModalComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },

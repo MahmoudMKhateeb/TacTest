@@ -137,6 +137,16 @@ export class UserNotificationHelper extends AppComponentBase {
           `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.srId}` +
           `&tripId=${userNotification.notification.data.properties.updatedTripId}`
         );
+
+      case 'App.NotifyCarrierWhenPostPriceSrUpdated':
+        return `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.srId}`;
+
+      case 'App.NotifyShipperForPostPriceSrUpdateAction':
+        return `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.srId}`;
+
+      case 'App.NotifyShipperWhenRequestChangePrice':
+        return `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.srId}`;
+
       //New Offer Redirection
       case 'App.ShippingRequestSendOfferWhenAddPrice':
         return (

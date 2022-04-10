@@ -1,6 +1,7 @@
 ﻿using Abp;
 using Abp.Application.Features;
 using Abp.Application.Services.Dto;
+using Abp.Collections.Extensions;
 using Abp.Configuration;
 using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
@@ -71,10 +72,10 @@ namespace TACHYON.PriceOffers
             var shippingRequest = await _shippingRequestsRepository
                 .GetAll()
                 .Include(x => x.ShippingRequestVases)
-                .FirstOrDefaultAsync(r =>
-                    r.Id == input.ShippingRequestId && (r.Status == ShippingRequestStatus.NeedsAction ||
-                                                        r.Status == ShippingRequestStatus.PrePrice ||
-                                                        r.Status == ShippingRequestStatus.AcceptedAndWaitingCarrier));
+                .WhereIf(!input.IsPostPrice, r => (r.Status == ShippingRequestStatus.NeedsAction ||
+                                                   r.Status == ShippingRequestStatus.PrePrice ||
+                                                   r.Status == ShippingRequestStatus.AcceptedAndWaitingCarrier))
+                .FirstOrDefaultAsync(r => r.Id == input.ShippingRequestId);
             if (shippingRequest == null) throw new UserFriendlyException(L("TheShippingRequestNotFound"));
 
 
@@ -83,7 +84,7 @@ namespace TACHYON.PriceOffers
                 input.Channel = PriceOfferChannel.TachyonManageService;
             }
 
-            if (input.Channel == PriceOfferChannel.MarketPlace)
+            if (input.Channel == PriceOfferChannel.MarketPlace && !input.IsPostPrice)
             {
                 MarketPlaceCanAccess(input, shippingRequest);
             }
@@ -91,12 +92,14 @@ namespace TACHYON.PriceOffers
             if (_featureChecker.IsEnabled(AppFeatures.TachyonDealer))
                 input.Channel = PriceOfferChannel.TachyonManageService;
 
-            if (input.Channel == PriceOfferChannel.DirectRequest)
+            if (input.Channel == PriceOfferChannel.DirectRequest && !input.IsPostPrice)
             {
                 await DirectRequestCanAccess(input, shippingRequest);
             }
 
-            var offer = GetCarrierPricingOrNull(input.ShippingRequestId);
+            PriceOffer offer = null;
+            if (!input.IsPostPrice) 
+                offer = GetCarrierPricingOrNull(input.ShippingRequestId);
 
             if (offer == null || offer.Status == PriceOfferStatus.Rejected)
             {
@@ -117,11 +120,9 @@ namespace TACHYON.PriceOffers
                     .GetAll()
                     .Include(x => x.Tenant)
                     .Include(x => x.ShippingRequestVases)
-                    .FirstOrDefaultAsync
-                    (
-                        r => r.Id == input.ShippingRequestId && (r.Status == ShippingRequestStatus.NeedsAction || r.Status == ShippingRequestStatus.PrePrice ||
-                                                                 r.Status == ShippingRequestStatus.AcceptedAndWaitingCarrier)
-                    );
+                    .WhereIf(!input.IsPostPrice,r=> (r.Status == ShippingRequestStatus.NeedsAction || r.Status == ShippingRequestStatus.PrePrice ||
+                                                     r.Status == ShippingRequestStatus.AcceptedAndWaitingCarrier) )
+                    .FirstOrDefaultAsync(r => r.Id == input.ShippingRequestId);
                 if (shippingRequest == null) throw new UserFriendlyException(L("TheShippingRequestNotFound"));
 
                 if (await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer))
@@ -630,6 +631,8 @@ namespace TACHYON.PriceOffers
             ShippingRequest shippingRequest)
         {
             List<PriceOfferDetail> shippingRequestVasesPricing = new List<PriceOfferDetail>();
+            input.ItemDetails ??= new List<PriceOfferDetailDto>();
+            
             if (input.ItemDetails.Count != shippingRequest.ShippingRequestVases.Count)
             {
                 throw new UserFriendlyException(L("YouShouldAddPricesForAllVases"));

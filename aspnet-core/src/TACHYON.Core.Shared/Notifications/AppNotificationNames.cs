@@ -95,6 +95,14 @@ namespace TACHYON.Notifications
 
         public const string ShipperReminderToCompleteTrips = "App.ShipperReminderToCompleteTrips";
 
+        #region ShippingRequestPostPriceUpdate
+
+        public const string NotifyCarrierWhenPostPriceSrUpdated = "App.NotifyCarrierWhenPostPriceSrUpdated";
+        public const string NotifyShipperForPostPriceSrUpdateAction = "App.NotifyShipperForPostPriceSrUpdateAction";
+        public const string NotifyShipperWhenRequestChangePrice = "App.NotifyShipperWhenRequestChangePrice";
+
+        #endregion
+
         #region Offer
 
         public const string ShippingRequestSendOfferWhenAddPrice = "App.ShippingRequestSendOfferWhenAddPrice";

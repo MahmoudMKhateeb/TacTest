@@ -27,6 +27,7 @@ import { NgForm } from '@angular/forms';
 export class PriceOfferModelComponent extends AppComponentBase {
   @Input() Channel: PriceOfferChannel | null | undefined;
   @Output() modalSave: EventEmitter<number> = new EventEmitter<number>();
+  @Output() postPriceOfferSubmitted = new EventEmitter<CreateOrEditPriceOfferInput>();
 
   @ViewChild('modal', { static: false }) modal: ModalDirective;
   @ViewChild('Form', { static: false }) form: NgForm;
@@ -39,6 +40,7 @@ export class PriceOfferModelComponent extends AppComponentBase {
   Items: PriceOfferItem[] = [];
   priceOfferCommissionType: any;
   commissionTypeTitle: string;
+  isPostPriceOffer: boolean;
 
   constructor(injector: Injector, private _CurrentServ: PriceOfferServiceProxy, private enumToArray: EnumToArrayPipe) {
     super(injector);
@@ -47,9 +49,12 @@ export class PriceOfferModelComponent extends AppComponentBase {
   ngOnInit(): void {
     this.priceOfferCommissionType = this.enumToArray.transform(PriceOfferCommissionType);
     this.offer.commissionSettings = new PriceOfferTenantCommissionSettings();
+    this.isPostPriceOffer = false;
   }
 
-  show(id: number, offerId: number | undefined = undefined): void {
+  show(id: number, offerId: number | undefined = undefined, isPostPriceOffer: boolean = false): void {
+    this.isPostPriceOffer = isPostPriceOffer;
+
     this.direction = document.getElementsByTagName('html')[0].getAttribute('dir');
     this._CurrentServ.getPriceOfferForCreateOrEdit(id, offerId).subscribe((result) => {
       this.offer = result;
@@ -125,6 +130,13 @@ export class PriceOfferModelComponent extends AppComponentBase {
     this.input.commissionType = this.offer.commissionType;
     this.input.vasCommissionPercentageOrAddValue = this.offer.vasCommissionPercentageOrAddValue;
     this.input.vasCommissionType = this.offer.vasCommissionType;
+
+    if (this.isPostPriceOffer) {
+      this.postPriceOfferSubmitted.emit(this.input);
+      this.isPostPriceOffer = false;
+      this.close();
+      return;
+    }
 
     this._CurrentServ
       .createOrEdit(this.input)
@@ -211,6 +223,7 @@ export class PriceOfferModelComponent extends AppComponentBase {
     this.input.commissionType = this.offer.commissionType;
     this.input.vasCommissionPercentageOrAddValue = this.offer.vasCommissionPercentageOrAddValue;
     this.input.vasCommissionType = this.offer.vasCommissionType;
+    this.input.isPostPrice = this.isPostPriceOffer;
     this._CurrentServ.initPriceOffer(this.input).subscribe((result) => {
       this.offer = result;
       this.Items = this.offer.items;

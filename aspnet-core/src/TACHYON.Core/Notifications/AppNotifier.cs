@@ -4,6 +4,7 @@ using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Localization;
 using Abp.Notifications;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,7 @@ using TACHYON.PriceOffers;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequests.TachyonDealer;
 using TACHYON.Shipping.ShippingRequestTrips;
+using TACHYON.Shipping.SrPostPriceUpdates;
 using TACHYON.Shipping.Trips;
 using TACHYON.Shipping.Trips.Dto;
 using TACHYON.TachyonPriceOffers;
@@ -629,6 +631,61 @@ namespace TACHYON.Notifications
                 // await _firebaseNotifier.TripUpdated(input);
             }
         }
+
+        #region ShippingRequestPostPriceUpdate
+
+        public async Task NotifyCarrierWhenPostPriceSrUpdated(long srId, string referenceNumber, int carrierTenantId)
+        {
+            var carrierAdmin = await GetAdminUser(carrierTenantId);
+
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    L("PostPriceSrUpdatedMsg",referenceNumber),
+                    TACHYONConsts.LocalizationSourceName))
+            {
+                Properties = new Dictionary<string, object>() { { "srId", srId } }
+            };
+
+            await _notificationPublisher.PublishAsync(AppNotificationNames.NotifyCarrierWhenPostPriceSrUpdated,
+                notificationData, userIds: new []{carrierAdmin});
+        }
+
+
+        public async Task NotifyShipperForPostPriceSrUpdateAction(long srId,int tenantId,string referenceNumber,SrPostPriceUpdateAction action)
+        {
+            var shipperAdmin = await GetAdminUser(tenantId);
+
+            var actionMsg = L(action.GetEnumDescription());
+            var notificationMsg = L("PostPriceSrUpdateActionMsg", referenceNumber,actionMsg);
+            
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(notificationMsg, TACHYONConsts.LocalizationSourceName))
+            {
+                Properties = new Dictionary<string, object>() { { "srId", srId } }
+            };
+
+            await _notificationPublisher.PublishAsync(AppNotificationNames.NotifyCarrierWhenPostPriceSrUpdated,
+                notificationData, userIds: new []{shipperAdmin});
+        }
+        
+        public async Task NotifyShipperWhenRequestChangePrice(long srId,int tenantId,string referenceNumber)
+        {
+            var shipperAdmin = await GetAdminUser(tenantId);
+
+            
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(L("PostPriceSrUpdateChangeInPriceRequestedMsg", referenceNumber)
+                    , TACHYONConsts.LocalizationSourceName))
+            {
+                Properties = new Dictionary<string, object>() { { "srId", srId } }
+            };
+
+            await _notificationPublisher.PublishAsync(AppNotificationNames.NotifyShipperWhenRequestChangePrice,
+                notificationData, userIds: new []{shipperAdmin});
+        }
+        
+        
+        #endregion
 
         #region Invoices
 

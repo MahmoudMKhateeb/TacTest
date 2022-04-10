@@ -2505,6 +2505,13 @@
     <text name="ReceiverCodeConfirmationMsg">Are you sure you want to reset the receiver code for this shipment?</text>
 	<text name="CompanyDescriptionHint">Company description must be at most 500 characters</text>
 	<text name="SelectAnEmailTemplateType">Select an email template type</text>
+    <text name="PostPriceSrUpdatedMsg">A Change was made on the details of request with the reference Number {0}.</text>
+    <text name="PostPriceSrUpdateActionMsg">The Change That you made in the Request with the reference number {0} was {1}</text>
+    <text name="PostPriceSrUpdateChangeInPriceRequestedMsg">The Change That you made in the Request with the reference number {0} was Accepted with a change in price.</text>
+	<text name="PostPriceUpdateWaitingForCarrierAction">Pending carrier action</text>
+	<text name="AcceptedPostPriceUpdateByCarrier">Accept Change</text>
+	<text name="ChangePriceRequestedForPostPriceUpdate">Accept with reprice</text>
+	<text name="RejectedPostPriceUpdateByCarrier">Reject Change</text>
 
 	
 	</texts>

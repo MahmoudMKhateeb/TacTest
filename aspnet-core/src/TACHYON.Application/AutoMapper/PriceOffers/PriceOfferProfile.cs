@@ -13,7 +13,7 @@ namespace TACHYON.AutoMapper.PriceOffers
     {
         public PriceOfferProfile()
         {
-            CreateMap<CreateOrEditPriceOfferInput, PriceOffer>();
+            CreateMap<CreateOrEditPriceOfferInput, PriceOffer>().ReverseMap();
             CreateMap<PriceOfferDetail, PriceOfferItem>();
             CreateMap<PriceOffer, PriceOfferListDto>()
                 .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Tenant.Name))

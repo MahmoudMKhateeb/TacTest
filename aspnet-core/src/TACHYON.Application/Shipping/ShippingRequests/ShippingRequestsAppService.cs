@@ -51,6 +51,7 @@ using TACHYON.Shipping.ShippingRequests.TachyonDealer;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.ShippingTypes;
 using TACHYON.Shipping.ShippingTypes.Dtos;
+using TACHYON.Shipping.SrPostPriceUpdates;
 using TACHYON.ShippingRequestTripVases;
 using TACHYON.ShippingRequestVases;
 using TACHYON.ShippingRequestVases.Dtos;
@@ -99,7 +100,8 @@ namespace TACHYON.Shipping.ShippingRequests
             ShippingRequestDirectRequestAppService shippingRequestDirectRequestAppService,
             ShippingRequestDirectRequestManager shippingRequestDirectRequestManager,
             DocumentFilesManager documentFilesManager,
-            IRepository<PriceOffer, long> priceOfferRepository)
+            IRepository<PriceOffer, long> priceOfferRepository,
+            SrPostPriceUpdateManager postPriceUpdateManager)
         {
             _vasPriceRepository = vasPriceRepository;
             _shippingRequestRepository = shippingRequestRepository;
@@ -129,6 +131,7 @@ namespace TACHYON.Shipping.ShippingRequests
             _shippingRequestDirectRequestManager = shippingRequestDirectRequestManager;
             _documentFilesManager = documentFilesManager;
             _priceOfferRepository = priceOfferRepository;
+            _postPriceUpdateManager = postPriceUpdateManager;
         }
 
         private readonly IRepository<ShippingRequestsCarrierDirectPricing> _carrierDirectPricingRepository;
@@ -143,7 +146,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
         private readonly IRepository<ShippingRequestDirectRequest, long> _shippingRequestDirectRequestRepository;
 
-        // private readonly IRepository<Route, int> _lookup_routeRepository;
+        private readonly SrPostPriceUpdateManager _postPriceUpdateManager;
         private readonly IRepository<RoutPoint, long> _routPointRepository;
         private readonly IAppNotifier _appNotifier;
         private readonly IRepository<Tenant> _tenantRepository;
@@ -947,6 +950,14 @@ namespace TACHYON.Shipping.ShippingRequests
                 .Include(x => x.ShippingRequestVases)
                 .Where(x => x.Id == (long)input.Id)
                 .FirstOrDefaultAsync();
+
+            if (shippingRequest.Status == ShippingRequestStatus.PostPrice)
+            {
+                await _postPriceUpdateManager.Create(shippingRequest, input,AbpSession.UserId);
+                return;
+            }
+            
+            
             input.IsBid = shippingRequest.IsBid;
             input.IsTachyonDeal = shippingRequest.IsTachyonDeal;
 
