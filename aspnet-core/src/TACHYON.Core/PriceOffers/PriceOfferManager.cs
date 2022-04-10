@@ -176,10 +176,17 @@ namespace TACHYON.PriceOffers
         public async Task<PriceOfferStatus> AcceptOffer(long id)
         {
             DisableTenancyFilters();
-            _reasonProvider.Use(nameof(AcceptShippingRequestPriceOfferTransaction));
             var offer = await GetOffer(id);
             var canAcceptOrRejectOffer = await CanAcceptOrRejectOffer(offer);
             if (!canAcceptOrRejectOffer) throw new UserFriendlyException(L("YouCanNotAcceptTheOffer"));
+
+            return await _AcceptOffer(offer);
+        }
+
+        private async Task<PriceOfferStatus> _AcceptOffer(PriceOffer offer)
+        {
+            _reasonProvider.Use(nameof(AcceptShippingRequestPriceOfferTransaction));
+
             await CheckIfThereOfferAcceptedBefore(offer.ShippingRequestId);
             if (!_abpSession.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer))
             {
@@ -193,7 +200,6 @@ namespace TACHYON.PriceOffers
             //Check if shipper have enough balance to pay 
             await _balanceManager.ShipperCanAcceptOffer(offer);
 
-            List<UserIdentifier> users = new List<UserIdentifier>();
             /// Check if the offer send by TAD on market place
             if (offer.Tenant.EditionId == TachyonEditionId && !offer.ShippingRequestFk.IsTachyonDeal)
             {
@@ -204,7 +210,6 @@ namespace TACHYON.PriceOffers
                 request.BidEndDate = default;
                 request.IsTachyonDeal = true;
                 request.RequestType = ShippingRequestType.TachyonManageService;
-
             }
             /// Check if offer has carrier from parent offer coming
             else if (offer.ParentId.HasValue || !offer.ShippingRequestFk.IsTachyonDeal)
@@ -215,8 +220,17 @@ namespace TACHYON.PriceOffers
                 {
                     parentOffer = await GetOfferById(offer.ParentId.Value);
                 }
-                request.CarrierTenantId = parentOffer?.TenantId ?? offer.TenantId;
-                if (request.IsBid) request.BidStatus = ShippingRequestBidStatus.Closed;
+
+                request.CarrierTenantId = parentOffer?.TenantId;
+                if (request.CarrierTenantId == null)
+                {
+                    request.CarrierTenantId = offer.TenantId;
+                }
+
+                if (request.IsBid)
+                {
+                    request.BidStatus = ShippingRequestBidStatus.Closed;
+                }
 
                 if (parentOffer != null && parentOffer.Channel == PriceOfferChannel.DirectRequest)
                     await ChangeDirectRequestStatus(parentOffer.SourceId.Value, ShippingRequestDirectRequestStatus.Accepted);
@@ -224,52 +238,34 @@ namespace TACHYON.PriceOffers
                     await ChangeDirectRequestStatus(offer.SourceId.Value, ShippingRequestDirectRequestStatus.Accepted);
 
                 if (parentOffer != null) await _appNotifier.TMSAcceptedOffer(parentOffer);
-
-
             }
             else //TAD still need to find carrier to assign to shipping request
             {
                 offer.Status = PriceOfferStatus.AcceptedAndWaitingForCarrier;
                 //request.Status = ShippingRequestStatus.AcceptedAndWaitingCarrier;
-
             }
 
             SetShippingRequestPricing(offer);
             await _appNotifier.ShipperAcceptedOffer(offer);
 
-            await CurrentUnitOfWork.SaveChangesAsync();
             return offer.Status;
         }
+
         public async Task<PriceOfferStatus> AcceptOfferOnBehalfShipper(long id)
         {
+
             DisableTenancyFilters();
             var offer = await GetOffer(id);
+
             var canAcceptOrRejectOffer = await canAcceptOrRejectOfferOnBehalf(offer);
             if (!canAcceptOrRejectOffer) throw new UserFriendlyException(L("YouCanNotAcceptTheOffer"));
-           // await CheckIfThereOfferAcceptedBefore(offer.ShippingRequestId);
 
-            await _balanceManager.ShipperCanAcceptOffer(offer);
-
-            if (offer.ShippingRequestFk.IsTachyonDeal)
+            using (UnitOfWorkManager.Current.SetTenantId(offer.ShippingRequestFk.Tenant.Id))
             {
-                offer.Status = PriceOfferStatus.Accepted;
-                offer.ShippingRequestFk.Status = ShippingRequestStatus.PostPrice;
-                offer.ApprovingTime = Clock.Now;
-                offer.ShippingRequestFk.CarrierTenantId = offer.TenantId;
-                offer.ApprovingUserId = offer.ShippingRequestFk.Tenant.Id;
-
-                if (offer.ShippingRequestFk.IsBid)
-                    offer.ShippingRequestFk.BidStatus = ShippingRequestBidStatus.Closed;
-
-                if (offer.Channel == PriceOfferChannel.DirectRequest)
-                    await ChangeDirectRequestStatus(offer.SourceId.Value, ShippingRequestDirectRequestStatus.Accepted);
-
-                await _appNotifier.TMSAcceptedOffer(offer);
-
+                return await _AcceptOffer(offer);
             }
-            SetShippingRequestPricing(offer);
-            await _appNotifier.ShipperAcceptedOffer(offer);
-            return offer.Status;
+
+
         }
 
         /// <summary>
