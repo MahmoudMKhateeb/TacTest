@@ -22,6 +22,7 @@ import Swal from 'sweetalert2';
 import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
+import { FileViwerComponent } from '@app/shared/common/file-viwer/file-viwer.component';
 
 @Component({
   selector: 'viewTripModal',
@@ -30,6 +31,8 @@ import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUn
 export class ViewTripModalComponent extends AppComponentBase implements OnInit, AfterViewInit {
   @ViewChild('viewTripDetails', { static: false }) modal: ModalDirective;
   @Output() modalSave: EventEmitter<any> = new EventEmitter();
+  @ViewChild('fileViwerComponent', { static: false }) fileViwerComponent: FileViwerComponent;
+
   Vases: CreateOrEditShippingRequestTripVasDto[];
   selectedVases: CreateOrEditShippingRequestTripVasDto[];
   allFacilities: FacilityForDropdownDto[];
@@ -127,6 +130,7 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
   downloadAttachment(id: number) {
     this._shippingRequestTripsService.getTripAttachmentFileDto(id).subscribe((result) => {
       this._fileDownloadService.downloadTempFile(result);
+      this.fileViwerComponent.show(this._fileDownloadService.downloadTempFile(result), 'img');
     });
   }
 
@@ -134,6 +138,7 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
     this.wayBillIsDownloading = true;
     this._waybillsServiceProxy.getSingleDropOrMasterWaybillPdf(id).subscribe((result) => {
       this._fileDownloadService.downloadTempFile(result);
+      this.fileViwerComponent.show(this._fileDownloadService.downloadTempFile(result), 'pdf');
       this.wayBillIsDownloading = false;
     });
   }

@@ -22,6 +22,7 @@ import { FileDownloadService } from '@shared/utils/file-download.service';
 import { NewTrackingConponent } from '@app/main/shippingRequests/shippingRequests/tracking/new-tracking/new-tracking-conponent';
 import { finalize } from '@node_modules/rxjs/operators';
 import Swal from 'sweetalert2';
+import { FileViwerComponent } from '@app/shared/common/file-viwer/file-viwer.component';
 
 @Component({
   templateUrl: './tracking.component.html',
@@ -37,6 +38,7 @@ import Swal from 'sweetalert2';
 export class TrackingComponent extends ScrollPagnationComponentBase implements OnInit {
   @ViewChild('ModelIncident', { static: false }) modelIncident: ViewTripAccidentModelComponent;
   @ViewChild('NewTrackingComponent', { static: false }) newTrackingComponent: NewTrackingConponent;
+  @ViewChild('fileViwerComponent', { static: false }) fileViwerComponent: FileViwerComponent;
 
   public Items: TrackingListDto[] = [];
   direction = 'ltr';
@@ -124,6 +126,7 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
     this.downloadingForItem = id;
     this._waybillsServiceProxy.getSingleDropOrMasterWaybillPdf(id).subscribe((result) => {
       this._fileDownloadService.downloadTempFile(result);
+      this.fileViwerComponent.show(this._fileDownloadService.downloadTempFile(result), 'pdf');
       this.downloadingForItem = null;
     });
   }

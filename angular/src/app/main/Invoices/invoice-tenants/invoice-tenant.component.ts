@@ -19,6 +19,7 @@ import { InvoiceTenantItemsDetailsComponent } from './model/invoice-tenant-items
 import CustomStore from '@node_modules/devextreme/data/custom_store';
 import { LoadOptions } from '@node_modules/devextreme/data/load_options';
 import { DxDataGridComponent } from '@node_modules/devextreme-angular';
+import { FileViwerComponent } from '@app/shared/common/file-viwer/file-viwer.component';
 
 @Component({
   templateUrl: './invoice-tenant.component.html',
@@ -29,6 +30,7 @@ import { DxDataGridComponent } from '@node_modules/devextreme-angular';
 export class InvoiceTenantComponent extends AppComponentBase implements OnInit {
   @ViewChild('InvoiceDetailsModel', { static: true }) InvoiceDetailsModel: InvoiceTenantItemsDetailsComponent;
   @ViewChild('dataGrid', { static: true }) dataGrid: DxDataGridComponent;
+  @ViewChild('fileViwerComponent', { static: false }) fileViwerComponent: FileViwerComponent;
 
   SubmitStatus: any;
   IsStartSearch = false;
@@ -126,6 +128,7 @@ export class InvoiceTenantComponent extends AppComponentBase implements OnInit {
   downloadDocument(id: number): void {
     this._InvoiceServiceProxy.getFileDto(id).subscribe((result) => {
       this._fileDownloadService.downloadTempFile(result);
+      this.fileViwerComponent.show(this._fileDownloadService.downloadTempFile(result), 'pdf');
     });
   }
 

@@ -1726,6 +1726,7 @@
 		<text name="ShippingRequestPricingResponse">Shipping Request Pricing Response</text>
 		<text name="ShippingRequestProperties">Shipping Request Properties</text>
 		<text name="ShippingRequestReceiverCode">Welcome from TACHYON &#xA;&#xA;Please note that shipment {0} on its way. please give this code to the driver when the delivery is completed.&#xA; &#xA;Your shipping code:{1}&#xA;Click here to rate after finish offloading {2}</text>
+		<text name="SMSSaasShippingRequestReceiverCode">Welcome from TACHYON &#xA;&#xA;Please note that shipment {0} on its way. please give this code to the driver when the delivery is completed.&#xA; &#xA;Your shipping code:{1}</text>
 		<text name="ShippingRequests">Shipping Requests</text>
 		<text name="MyShippingRequests">My Shipping Requests</text>
 		<text name="ShippingRequestsCreate">Create Shipping Request</text>

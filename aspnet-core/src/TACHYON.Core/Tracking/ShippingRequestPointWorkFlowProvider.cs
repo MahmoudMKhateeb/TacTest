@@ -910,6 +910,8 @@ namespace TACHYON.Tracking
         {
             var dropOffPoints = await _routPointRepository.GetAll()
                 .Include(x => x.ReceiverFk)
+                .Include(t=>t.ShippingRequestTripFk)
+                .ThenInclude(z=>z.ShippingRequestFk)
                 .Where(x => x.ShippingRequestTripId == tripId && x.PickingType == Routs.RoutPoints.PickingType.Dropoff)
                 .ToListAsync();
             foreach (var point in dropOffPoints)
@@ -925,6 +927,11 @@ namespace TACHYON.Tracking
             var waybillNumber = routType.HasValue && routType == ShippingRequestRouteType.SingleDrop ? tripWaybillNumber : point.WaybillNumber;
 
             string message = L(TACHYONConsts.SMSShippingRequestReceiverCode, waybillNumber, point.Code, ratingLink);
+
+            if (point.ShippingRequestTripFk.ShippingRequestFk.IsSaas())
+                message = L(TACHYONConsts.SMSSaasShippingRequestReceiverCode, waybillNumber, point.Code);
+
+
             if (point.ReceiverFk != null)
                 number = point.ReceiverFk.PhoneNumber;
             await _smsSender.SendAsync(number, message);
