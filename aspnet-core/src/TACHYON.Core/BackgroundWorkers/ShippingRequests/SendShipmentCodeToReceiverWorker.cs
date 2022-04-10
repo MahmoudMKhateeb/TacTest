@@ -39,7 +39,10 @@ namespace TACHYON.BackgroundWorkers.ShippingRequests
                     AsNoTracking().
                     Include(r=>r.ShippingRequestFk).
                     Include(p=>p.RoutPoints).
-                        ThenInclude(r=>r.ReceiverFk).
+                        ThenInclude(r=>r.ReceiverFk)
+                        .Include(x=>x.RoutPoints)
+                        .ThenInclude(m=>m.ShippingRequestTripFk)
+                        .ThenInclude(z=>z.ShippingRequestFk).
                     Where(x => x.ShippingRequestFk.Status == Shipping.ShippingRequests.ShippingRequestStatus.PostPrice &&
                     x.Status == Shipping.Trips.ShippingRequestTripStatus.New && 
                     EF.Functions.DateDiffDay(Clock.Now.Date, x.StartTripDate.Date)==-1).OrderBy(x=>x.ShippingRequestFk.TenantId).ToList();
