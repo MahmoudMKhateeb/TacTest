@@ -162,7 +162,7 @@ namespace TACHYON.Invoices.InvoiceNotes
         }
         public async Task AddNote(NoteInputDto input)
         {
-           await DisableTenancyFiltersIfTachyonDealer();
+            await DisableTenancyFiltersIfTachyonDealer();
             var invoiceNote = await _invoiceNoteRepository.GetAll()
                 .FirstOrDefaultAsync(x => x.Id == input.Id);
             invoiceNote.Note = input.Note;
@@ -430,13 +430,11 @@ namespace TACHYON.Invoices.InvoiceNotes
 
             var document = AsyncHelper.RunSync(() => _documentFileRepository
             .FirstOrDefaultAsync(x => x.TenantId == invoiceNote.TenantId && x.DocumentTypeId == 14));
-
             if (document != null)
                 invoiceNoteDto.CR = document.Number;
 
             var documentVat = AsyncHelper.RunSync(() => _documentFileRepository
             .FirstOrDefaultAsync(x => x.TenantId == invoiceNote.TenantId && x.DocumentTypeId == 15));
-
             if (document != null)
                 invoiceNoteDto.TenantVatNumber = documentVat.Number;
 
@@ -468,34 +466,45 @@ namespace TACHYON.Invoices.InvoiceNotes
             var TotalItem = invoiceNote.InvoiceItems.Count +
                          invoiceNote.InvoiceItems.Sum(v => v.ShippingRequestTripFK.ShippingRequestTripVases.Count);
             int Sequence = 1;
-            List<InvoiceNoteItemDto> Items = new List<InvoiceNoteItemDto>();
-            invoiceNote.InvoiceItems.ToList().ForEach(trip =>
+            if (!invoiceNote.IsManual)
             {
-                Items.Add(new InvoiceNoteItemDto
+                List<InvoiceNoteItemDto> Items = new List<InvoiceNoteItemDto>();
+                invoiceNote.InvoiceItems.ToList().ForEach(trip =>
                 {
-                    Sequence = $"{Sequence}/{TotalItem}",
-                    Price =
-                            AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Carrier)
-                                ? trip.ShippingRequestTripFK.SubTotalAmount.Value
-                                : trip.ShippingRequestTripFK.SubTotalAmountWithCommission.Value,
-                    VatAmount =
-                            AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Carrier)
-                                ? trip.ShippingRequestTripFK.VatAmount.Value
-                                : trip.ShippingRequestTripFK.VatAmountWithCommission.Value,
-                    TotalAmount =
-                            AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Carrier)
-                                ? trip.ShippingRequestTripFK.TotalAmount.Value
-                                : trip.ShippingRequestTripFK.TotalAmountWithCommission.Value,
-                    WayBillNumber = trip.ShippingRequestTripFK.WaybillNumber.ToString(),
-                    Date =
-                        trip.ShippingRequestTripFK.EndTripDate.HasValue
-                            ? trip.ShippingRequestTripFK.EndTripDate.Value.ToString("dd/MM/yyyy")
-                            : trip.InvoiceNoteFK.CreationTime.ToString("dd/MM/yyyy")
+                    Items.Add(new InvoiceNoteItemDto
+                    {
+                        Sequence = $"{Sequence}/{TotalItem}",
+                        Price =
+                                AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Carrier)
+                                    ? trip.ShippingRequestTripFK.SubTotalAmount.Value
+                                    : trip.ShippingRequestTripFK.SubTotalAmountWithCommission.Value,
+                        VatAmount =
+                                AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Carrier)
+                                    ? trip.ShippingRequestTripFK.VatAmount.Value
+                                    : trip.ShippingRequestTripFK.VatAmountWithCommission.Value,
+                        TotalAmount =
+                                AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Carrier)
+                                    ? trip.ShippingRequestTripFK.TotalAmount.Value
+                                    : trip.ShippingRequestTripFK.TotalAmountWithCommission.Value,
+                        WayBillNumber = trip.ShippingRequestTripFK.WaybillNumber.ToString(),
+                        Date =
+                            trip.ShippingRequestTripFK.EndTripDate.HasValue
+                                ? trip.ShippingRequestTripFK.EndTripDate.Value.ToString("dd/MM/yyyy")
+                                : trip.InvoiceNoteFK.CreationTime.ToString("dd/MM/yyyy")
+                    });
+                    Sequence++;
                 });
-                trip.ShippingRequestTripFK.WaybillNumber.ToString();
-                Sequence++;
-            });
-            return Items;
+                return Items;
+            }
+            return _invoiceNoteRepository.GetAll().Where(x => x.Id == invoiceNoteId).Select(x => new InvoiceNoteItemDto()
+            {
+                Sequence = $"{Sequence}/{1}",
+                Date = x.CreationTime.ToString("dd/MM/yyyy"),
+                Price = x.Price,
+                TotalAmount = x.TotalValue,
+                VatAmount = x.VatAmount,
+                WayBillNumber = x.WaybillNumber
+            }).ToList();
         }
         private string GenerateInvoiceNoteReferanceNumber(long id, NoteType noteType)
         {
