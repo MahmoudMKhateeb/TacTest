@@ -135,7 +135,8 @@ namespace TACHYON.EntityLogs
                 .OrderByDescending(x => x.CreationTime);
         public async Task<EntityLogListDto> GetEntityLogById(Guid logId)
         {
-            var log =  await _logRepository.GetAll().AsNoTracking().FirstOrDefaultAsync();
+            DisableTenancyFilters();
+            var log = await _logRepository.GetAll().AsNoTracking().FirstOrDefaultAsync(r => r.Id == logId);
 
             return new EntityLogListDto()
             {

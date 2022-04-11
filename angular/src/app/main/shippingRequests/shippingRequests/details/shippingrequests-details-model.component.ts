@@ -205,7 +205,6 @@ export class ShippingrequestsDetailsModelComponent extends AppComponentBase {
     this.CreateSrUpdateActionInput.status = ShippingRequestUpdateStatus.Dismissed;
     this.CreateSrUpdateActionInput.id = id;
     this.primengTableHelper.showLoadingIndicator();
-
     this._srUpdateService
       .takeAction(this.CreateSrUpdateActionInput)
       .pipe(
@@ -215,8 +214,8 @@ export class ShippingrequestsDetailsModelComponent extends AppComponentBase {
         })
       )
       .subscribe(() => {
+        this.close();
         this.notify.info(this.l('SuccessfullySaved'));
-        abp.event.trigger('dismissOffer', request);
       });
   }
 
@@ -225,9 +224,6 @@ export class ShippingrequestsDetailsModelComponent extends AppComponentBase {
     this.primengTableHelper.adjustScroll(this.dataTable);
     abp.event.on('RepriceOffer', () => {
       this.getAll(this.shippingrequest.offerId);
-    });
-    abp.event.on('dismissOffer', (request) => {
-      this.show(request);
     });
   }
 
