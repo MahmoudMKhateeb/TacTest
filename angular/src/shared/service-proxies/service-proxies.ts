@@ -80350,6 +80350,7 @@ export class PriceOfferItemDto implements IPriceOfferItemDto {
   price!: number | undefined;
   quantity!: number;
   amount!: number;
+  numberOfTrips!: number;
 
   constructor(data?: IPriceOfferItemDto) {
     if (data) {
@@ -80368,6 +80369,7 @@ export class PriceOfferItemDto implements IPriceOfferItemDto {
       this.price = _data['price'];
       this.quantity = _data['quantity'];
       this.amount = _data['amount'];
+      this.numberOfTrips = _data['numberOfTrips'];
     }
   }
 
@@ -80387,6 +80389,7 @@ export class PriceOfferItemDto implements IPriceOfferItemDto {
     data['price'] = this.price;
     data['quantity'] = this.quantity;
     data['amount'] = this.amount;
+    data['numberOfTrips'] = this.numberOfTrips;
     return data;
   }
 }
@@ -80399,6 +80402,7 @@ export interface IPriceOfferItemDto {
   price: number | undefined;
   quantity: number;
   amount: number;
+  numberOfTrips: number;
 }
 
 export class GetShippingRequestForPricingOutput implements IGetShippingRequestForPricingOutput {
