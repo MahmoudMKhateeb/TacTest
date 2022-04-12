@@ -5,7 +5,7 @@
   <hr style="width: 130px" class="d-flex" />
   <div class="form-group">
     <div class="input-group d-flex justify-content-center">
-      <p-rating [(ngModel)]="rate1" [cancel]="false"></p-rating>
+      <p-rating [disabled]="isRateDone" [(ngModel)]="rate1" [cancel]="false"></p-rating>
     </div>
     <h5 style="text-align: center" class="mt-6 text-red">
       {{ 'RateForExperience' | localize }}
@@ -13,13 +13,19 @@
     <hr style="width: 155px" class="d-flex" />
 
     <div class="input-group d-flex justify-content-center">
-      <p-rating [(ngModel)]="rate2" [cancel]="false"></p-rating>
+      <p-rating [disabled]="isRateDone" [(ngModel)]="rate2" [cancel]="false"></p-rating>
     </div>
     <div class="form-group text-light mt-6">
       <label>{{ l('Notes') }}</label>
-      <textarea [(ngModel)]="note" name="notes" class="form-control" style="width: 312px; height: 117px"></textarea>
+      <textarea [disabled]="isRateDone" [(ngModel)]="note" name="notes" class="form-control" style="width: 312px; height: 117px"></textarea>
     </div>
-    <button (click)="onSubmit()" class="btn btn-primary font-weight-bold text-uppercase px-9 py-4 btn-pill" type="submit" [buttonBusy]="saving">
+    <button
+      (click)="onSubmit()"
+      class="btn btn-primary font-weight-bold text-uppercase px-9 py-4 btn-pill"
+      type="submit"
+      *ngIf="!isRateDone"
+      [buttonBusy]="saving"
+    >
       <i class="fa fa-check"></i> {{ l('Submit') }}
     </button>
   </div>

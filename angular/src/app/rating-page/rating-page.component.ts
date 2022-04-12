@@ -26,12 +26,16 @@ export class RatingPageComponent extends AppComponentBase implements OnInit {
   rate1: number;
   rate2: number;
   code = this._Activatedroute.snapshot.paramMap.get('code');
+  isRateDone: boolean;
 
   constructor(injector: Injector, private _ratingServiceProxy: RatingServiceProxy, private _Activatedroute: ActivatedRoute) {
     super(injector);
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.isRateDone = false;
+  }
+
   onSubmit() {
     if (!this.rate1 || !this.rate2) {
       this.notify.error(this.l('YouMustEnterRates'));
@@ -58,6 +62,7 @@ export class RatingPageComponent extends AppComponentBase implements OnInit {
       )
       .subscribe((res) => {
         this.notify.success(this.l('RatingSuccessfully'));
+        this.isRateDone = true;
       });
   }
 }
