@@ -259,8 +259,8 @@ namespace TACHYON.PriceOffers
 
             var canAcceptOrRejectOffer = await canAcceptOrRejectOfferOnBehalf(offer);
             if (!canAcceptOrRejectOffer) throw new UserFriendlyException(L("YouCanNotAcceptTheOffer"));
-
-            using (UnitOfWorkManager.Current.SetTenantId(offer.ShippingRequestFk.Tenant.Id))
+            var userId = _abpSession.UserId;
+            using (_abpSession.Use(offer.ShippingRequestFk.TenantId,userId))
             {
                 return await _AcceptOffer(offer);
             }
