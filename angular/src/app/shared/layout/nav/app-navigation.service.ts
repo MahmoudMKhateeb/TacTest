@@ -22,68 +22,7 @@ export class AppNavigationService {
         '/app/main/dashboard'
       ),
       // ! host item with shared Sub-menu
-      new AppMenuItem(
-        'DocumentManagement',
-        '',
-        'interaction, interact, preferences, preformance, customer, rating, rate, questions.svg',
-        '',
-        [],
-        [
-          new AppMenuItem('DocumentManagement', 'Pages.DocumentTypes', '', '/app/main/documentTypes/documentTypes'),
-          new AppMenuItem('DocumentsEntities', 'Pages.DocumentsEntities', '', '/app/main/documentsEntities/documentsEntities'),
-          //TODO: the contracts subMenu Need Permission and Route
-          new AppMenuItem(
-            'NonMandatoryDocuments',
-            'Pages.DocumentFiles',
-            '',
-            '/tenantNotRequiredDocuments/tenantNotRequiredDocuments',
-            [],
-            undefined,
-            undefined,
-            undefined
-          ),
-          new AppMenuItem('SubmittedDocuments', 'Pages.DocumentFiles', '', '/app/main/documentFiles/documentFiles'),
-          new AppMenuItem(
-            'TrucksSubmittedDocuments',
-            'Pages.DocumentFiles',
-            '',
-            '/app/main/documentFiles/TrucksSubmittedDocuments',
-            [],
-            undefined,
-            undefined,
-            undefined,
-            () => this.isEnabled('App.Carrier') || this.isEnabled('App.TachyonDealer')
-          ),
-          new AppMenuItem(
-            'DriversSubmittedDocuments',
-            'Pages.DocumentFiles',
-            '',
-            '/app/main/documentFiles/DriversSubmittedDocuments',
-            [],
-            undefined,
-            undefined,
-            undefined,
-            () => this.isEnabled('App.Carrier') || this.isEnabled('App.TachyonDealer')
-          ),
-          //TODO: the contracts subMenu Need Permission and Route
-          new AppMenuItem(
-            'contracts',
-            'flaticon2-sheet',
-            'flaticon-file',
-            '/app/main/comingSoon',
-            [],
-            undefined,
-            undefined,
-            undefined,
-            () => this.isEnabled('App.Carrier') || this.isEnabled('App.Shipper')
-          ),
 
-          // new AppMenuItem('TenantRequiredDocuments', '', 'flaticon-settings', '/app/admin/tenantRequiredDocuments'),
-        ],
-        undefined,
-        undefined
-      ),
-      //end of Documents
       //TODO: the operations menu and subMenus Need Permission !important
       //start of operations
       new AppMenuItem(
@@ -104,7 +43,6 @@ export class AppNavigationService {
             undefined,
             () => this.isEnabled('App.MarketPlace') || !this._appSessionService.tenantId
           ),
-          new AppMenuItem('Offers', 'Pages', '', '/app/main/offers'),
           new AppMenuItem('ShipmentTracking', 'Pages', '', '/app/main/tracking'),
           new AppMenuItem(
             'ShipmentHistory',
@@ -138,7 +76,7 @@ export class AppNavigationService {
       //start of requests
       //start shipper menu
       new AppMenuItem(
-        'Requests',
+        'Operations',
         'Pages.ShippingRequests',
         'map, navigation, location, navigate, book, bookmark, pin.svg',
         '/app/main/comingSoon',
@@ -172,17 +110,6 @@ export class AppNavigationService {
           new AppMenuItem('Marketplace', '', '', '/app/main/marketplace/list', undefined, undefined, undefined, undefined, () =>
             this.isEnabled('App.MarketPlace')
           ),
-          new AppMenuItem(
-            'Offers',
-            '',
-            '',
-            '/app/main/offers',
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            () => this.isEnabled('App.Carrier') || this.isEnabled('App.Shipper')
-          ),
           new AppMenuItem('DirectShippingRequests', '', '', '/app/main/directrequest/list', undefined, undefined, undefined, undefined, () =>
             this.isEnabled('App.Carrier')
           ),
@@ -196,7 +123,7 @@ export class AppNavigationService {
       // end shipper menu
       //start carrier menu
       new AppMenuItem(
-        'ShippingRequests',
+        'Operations',
         '',
         'map, navigation, location, navigate, book, bookmark, pin.svg',
         '/app/main/comingSoon',
@@ -231,17 +158,6 @@ export class AppNavigationService {
             () => this.isEnabled('App.Carrier')
           ),
 
-          new AppMenuItem(
-            'Offers',
-            '',
-            '',
-            '/app/main/offers',
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            () => this.isEnabled('App.Carrier') || this.isEnabled('App.Shipper')
-          ),
           new AppMenuItem(
             'DirectShippingRequests',
             '',
@@ -315,13 +231,23 @@ export class AppNavigationService {
       //TODO: not all of these are visable to the TachyonDealer Need to Fix the Permisions in order for it to work
       //start of Invoices
       new AppMenuItem(
-        'Invoices',
+        'Financials',
         'Pages.Invoices',
         'shopping, shop, ecommerce, commerce, clipboard, finance.svg',
         '',
         [],
         [
-          new AppMenuItem('InvoicesList', 'Pages.Invoices', '', '/app/main/invoices/view'),
+          new AppMenuItem(
+            'InvoicesList',
+            'Pages.Invoices',
+            '',
+            '/app/main/invoices/view',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            () => !this.isEnabled('App.Carrier')
+          ),
           new AppMenuItem(
             'BillingInterval',
             'Pages.Invoices',
@@ -399,7 +325,69 @@ export class AppNavigationService {
         // () => !this.isEnabled('App.TachyonDealer')
       ),
       //end of  Invoices
+      //start of Documents
+      new AppMenuItem(
+        'DocumentManagement',
+        '',
+        'interaction, interact, preferences, preformance, customer, rating, rate, questions.svg',
+        '',
+        [],
+        [
+          new AppMenuItem('DocumentManagement', 'Pages.DocumentTypes', '', '/app/main/documentTypes/documentTypes'),
+          new AppMenuItem('DocumentsEntities', 'Pages.DocumentsEntities', '', '/app/main/documentsEntities/documentsEntities'),
+          //TODO: the contracts subMenu Need Permission and Route
+          new AppMenuItem(
+            'NonMandatoryDocuments',
+            'Pages.DocumentFiles',
+            '',
+            '/tenantNotRequiredDocuments/tenantNotRequiredDocuments',
+            [],
+            undefined,
+            undefined,
+            undefined
+          ),
+          new AppMenuItem('SubmittedDocuments', 'Pages.DocumentFiles', '', '/app/main/documentFiles/documentFiles'),
+          new AppMenuItem(
+            'TrucksSubmittedDocuments',
+            'Pages.DocumentFiles',
+            '',
+            '/app/main/documentFiles/TrucksSubmittedDocuments',
+            [],
+            undefined,
+            undefined,
+            undefined,
+            () => this.isEnabled('App.Carrier') || this.isEnabled('App.TachyonDealer')
+          ),
+          new AppMenuItem(
+            'DriversSubmittedDocuments',
+            'Pages.DocumentFiles',
+            '',
+            '/app/main/documentFiles/DriversSubmittedDocuments',
+            [],
+            undefined,
+            undefined,
+            undefined,
+            () => this.isEnabled('App.Carrier') || this.isEnabled('App.TachyonDealer')
+          ),
+          //TODO: the contracts subMenu Need Permission and Route
+          new AppMenuItem(
+            'contracts',
+            'flaticon2-sheet',
+            'flaticon-file',
+            '/app/main/comingSoon',
+            [],
+            undefined,
+            undefined,
+            undefined,
+            () => this.isEnabled('App.Carrier') || this.isEnabled('App.Shipper')
+          ),
 
+          // new AppMenuItem('TenantRequiredDocuments', '', 'flaticon-settings', '/app/admin/tenantRequiredDocuments'),
+        ],
+        undefined,
+        undefined
+      ),
+      //end of Documents
       //start of reports
       //for host only
       //TODO: Need Permission
@@ -672,19 +660,6 @@ export class AppNavigationService {
       ),
       //end of Administration
 
-      //start Of user Manegment
-      new AppMenuItem(
-        'UserManagement',
-        '',
-        'marketing, content marketing, digital marketing, strategy, statistics, analytics, user.svg',
-        '',
-        [],
-        [
-          new AppMenuItem('Roles', 'Pages.Administration.Roles', '', '/app/admin/roles'),
-          new AppMenuItem('Users', 'Pages.Administration.Users', '', '/app/admin/users'),
-        ]
-      ),
-      //end of user Manegment
       //host
 
       new AppMenuItem(
@@ -694,33 +669,18 @@ export class AppNavigationService {
         '',
         [],
         [
+          new AppMenuItem('TMSSettings', '', '', '', [], [], undefined, [], () => this.isEnabled('App.Carrier')),
+          new AppMenuItem('GeneralSettings', 'Pages.Administration.Tenant.Settings', '', '/app/admin/tenantSettings'),
           new AppMenuItem(
-            'TMSSettings',
+            'UserManagement',
             '',
-            'flaticon-cogwheel',
+            '',
             '',
             [],
             [
-              new AppMenuItem(
-                'VasPrices',
-                'Pages.VasPrices',
-                'flaticon-interface-9',
-                '/app/main/vases/vasPrices',
-                undefined,
-                undefined,
-                undefined,
-                undefined
-              ),
-            ],
-            undefined,
-            [],
-            () => this.isEnabled('App.Carrier')
-          ),
-          new AppMenuItem(
-            'GeneralSettings',
-            'Pages.Administration.Tenant.Settings',
-            'user, interface, agent, usability, settings, options, preferences, gears.svg',
-            '/app/admin/tenantSettings'
+              new AppMenuItem('Roles', 'Pages.Administration.Roles', '', '/app/admin/roles'),
+              new AppMenuItem('Users', 'Pages.Administration.Users', '', '/app/admin/users'),
+            ]
           ),
         ]
       ),

@@ -69,6 +69,7 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public ICollection<ShippingRequestTripVas> ShippingRequestTripVases { get; set; }
         public ICollection<RatingLog> RatingLogs { get; set; }
         public ShippingRequestTripDriverStatus DriverStatus { get; set; }
+        public InvoiceTripStatus InvoiceStatus { get; set; }
         public int? RejectReasonId { get; set; }
         [ForeignKey("RejectReasonId")]
         public ShippingRequestTripRejectReason ShippingRequestTripRejectReason { get; set; }

@@ -560,6 +560,7 @@ namespace TACHYON.Shipping.Drivers
                 trip.ActualDeliveryDate = trip.ActualPickupDate = null;
                 trip.StartWorking = null;
                 trip.EndWorking = null;
+                trip.InvoiceStatus = InvoiceTripStatus.CannotBeInvoiced;
                 // trip.RatingLogs.Where(x => x.RateType != RateType.CarrierTripBySystem && x.RateType != RateType.ShipperTripBySystem).ToList().Clear();
                 trip.RoutPoints.ToList().ForEach(item =>
                 {

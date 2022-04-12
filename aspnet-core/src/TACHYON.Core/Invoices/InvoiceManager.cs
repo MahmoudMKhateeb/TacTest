@@ -25,6 +25,7 @@ using TACHYON.MultiTenancy;
 using TACHYON.Notifications;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
+using TACHYON.Shipping.Trips;
 
 namespace TACHYON.Invoices
 {
@@ -234,7 +235,8 @@ namespace TACHYON.Invoices
                 .Include(trip => trip.ShippingRequestFk)
                 .Where(trip => trip.ShippingRequestFk.TenantId == tenant.Id)
                 .Where(trip => !trip.IsShipperHaveInvoice)
-                .Where(trip => trip.Status == Shipping.Trips.ShippingRequestTripStatus.Delivered)
+                .Where(trip => trip.Status == Shipping.Trips.ShippingRequestTripStatus.Delivered
+                || trip.InvoiceStatus == InvoiceTripStatus.CanBeInvoiced)
                 .ToList();
 
             foreach (ShippingRequestTrip trip in trips.ToList())
@@ -273,7 +275,7 @@ namespace TACHYON.Invoices
                 .Include(v => v.ShippingRequestTripVases)
                 .Include(v => v.ShippingRequestFk)
                 .Where(x => x.ShippingRequestFk.CarrierTenantId == tenant.Id
-                            && x.Status == Shipping.Trips.ShippingRequestTripStatus.Delivered
+                            && (x.Status == Shipping.Trips.ShippingRequestTripStatus.Delivered || x.InvoiceStatus == InvoiceTripStatus.CanBeInvoiced)
                             && !x.IsCarrierHaveInvoice)
                 .ToList();
 
@@ -445,8 +447,8 @@ namespace TACHYON.Invoices
 
             if (period.PeriodType != InvoicePeriodType.PayuponDelivery && period.PeriodType != InvoicePeriodType.PayInAdvance)
             {
-                var trips = _shippingRequestTrip.GetAll().Include(x => x.ShippingRequestTripVases).Where(x => x.ShippingRequestFk.TenantId == tenant.Id && !x.IsShipperHaveInvoice
-                && x.Status == Shipping.Trips.ShippingRequestTripStatus.Delivered);
+                var trips = _shippingRequestTrip.GetAll().Include(x => x.ShippingRequestFk).Include(x => x.ShippingRequestTripVases).Where(x => x.ShippingRequestFk.TenantId == tenant.Id && !x.IsShipperHaveInvoice
+                 && (x.Status == Shipping.Trips.ShippingRequestTripStatus.Delivered || x.InvoiceStatus == InvoiceTripStatus.CanBeInvoiced));
                 if (trips != null && trips.Count() > 0)
                 {
                     await GenerateShipperInvoice(tenant, trips.ToList(), period);
