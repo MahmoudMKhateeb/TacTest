@@ -818,6 +818,11 @@ namespace TACHYON.Tracking
             var currentUser = await GetCurrentUserAsync();
             var point = await _routPointRepository.GetAsync(pointId);
             var isCompleted = CheckIfPointIsCompleted(point);
+            var trip = await _shippingRequestTripRepository
+                    .GetAllIncluding(d => d.ShippingRequestTripVases)
+                    .Include(x => x.ShippingRequestFk).ThenInclude(c => c.Tenant)
+                    .FirstOrDefaultAsync(t => t.Id == point.ShippingRequestTripId);
+
             if (isCompleted)
             {
                 point.IsActive = false;
@@ -827,22 +832,39 @@ namespace TACHYON.Tracking
                 var allPointsCompleted = !await _routPointRepository.GetAll()
                .AnyAsync(x => x.ShippingRequestTripId == point.ShippingRequestTripId && !x.IsComplete && x.Id != point.Id);
 
-                var trip = await _shippingRequestTripRepository
-                    .GetAllIncluding(d => d.ShippingRequestTripVases)
-                    .Include(x => x.ShippingRequestFk).ThenInclude(c => c.Tenant)
-                    .FirstOrDefaultAsync(t => t.Id == point.ShippingRequestTripId);
-
                 //if current point is completed and all another point in trip is completed the trip statues should be Delivered
                 if (allPointsCompleted)
                 {
-
                     trip.Status = ShippingRequestTripStatus.Delivered;
                     trip.EndWorking = Clock.Now;
                     await ChangeShippingRequestStatusIfAllTripsDone(trip);
                     await CloseLastTransitionInComplete(trip.Id);
-                    await _invoiceManager.GenertateInvoiceWhenShipmintDelivery(trip);
+
                     await NotificationWhenShipmentDelivered(point, currentUser);
                 }
+            }
+            else
+            {
+                if (trip.ShippingRequestFk.RouteTypeId == ShippingRequestRouteType.SingleDrop)
+                {
+                    trip.InvoiceStatus = InvoiceTripStatus.CanBeInvoiced;
+                    await _invoiceManager.GenertateInvoiceWhenShipmintDelivery(trip);//we will create invoice in this case if shipper period is PayInAdvance
+                }
+                else if (trip.ShippingRequestFk.RouteTypeId == ShippingRequestRouteType.MultipleDrops)
+                {
+                    var allPointHasProofDelivery = await _routPointRepository.GetAll()
+                                        .Where(c => c.Id != pointId && c.PickingType == PickingType.Dropoff && c.ShippingRequestTripId == point.ShippingRequestTripId)
+                                        .AllAsync(x => x.RoutPointStatusTransitions.Any(x => !x.IsReset
+                                         && (x.Status == RoutePointStatus.ReceiverConfirmed
+                                         || x.Status == RoutePointStatus.DeliveryConfirmation)));
+
+                    if (allPointHasProofDelivery)
+                    {
+                        trip.InvoiceStatus = InvoiceTripStatus.CanBeInvoiced;
+                        await _invoiceManager.GenertateInvoiceWhenShipmintDelivery(trip);//we will create invoice in this case if shipper period is PayInAdvance
+                    }
+                }
+
             }
         }
         /// <summary>
@@ -910,8 +932,8 @@ namespace TACHYON.Tracking
         {
             var dropOffPoints = await _routPointRepository.GetAll()
                 .Include(x => x.ReceiverFk)
-                .Include(t=>t.ShippingRequestTripFk)
-                .ThenInclude(z=>z.ShippingRequestFk)
+                .Include(t => t.ShippingRequestTripFk)
+                .ThenInclude(z => z.ShippingRequestFk)
                 .Where(x => x.ShippingRequestTripId == tripId && x.PickingType == Routs.RoutPoints.PickingType.Dropoff)
                 .ToListAsync();
             foreach (var point in dropOffPoints)
