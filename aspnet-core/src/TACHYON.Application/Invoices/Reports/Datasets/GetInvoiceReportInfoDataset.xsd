@@ -39,6 +39,7 @@
               <xs:element name="BankNameArabic" msprop:Generator_ColumnVarNameInTable="columnBankNameArabic" msprop:Generator_ColumnPropNameInRow="BankNameArabic" msprop:Generator_ColumnPropNameInTable="BankNameArabicColumn" msprop:Generator_UserColumnName="BankNameArabic" type="xs:string" minOccurs="0" />
               <xs:element name="BankNameEnglish" msprop:Generator_ColumnVarNameInTable="columnBankNameEnglish" msprop:Generator_ColumnPropNameInRow="BankNameEnglish" msprop:Generator_ColumnPropNameInTable="BankNameEnglishColumn" msprop:Generator_UserColumnName="BankNameEnglish" type="xs:string" minOccurs="0" />
               <xs:element name="TenantVatNumber" msprop:Generator_ColumnVarNameInTable="columnTenantVatNumber" msprop:Generator_ColumnPropNameInRow="TenantVatNumber" msprop:Generator_ColumnPropNameInTable="TenantVatNumberColumn" msprop:Generator_UserColumnName="TenantVatNumber" type="xs:string" minOccurs="0" />
+              <xs:element name="QRCode" msprop:Generator_ColumnVarNameInTable="columnQRCode" msprop:Generator_ColumnPropNameInRow="QRCode" msprop:Generator_ColumnPropNameInTable="QRCodeColumn" msprop:Generator_UserColumnName="QRCode" type="xs:string" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>

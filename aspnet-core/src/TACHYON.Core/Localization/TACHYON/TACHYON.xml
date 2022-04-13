@@ -2745,5 +2745,8 @@
 		<text name="inTransitTrucks">In Transit Trucks</text>
   <text name="YouMustEnterRates">You must enter rates</text>
 		<text name="SelectALicenseType">Select a license type</text>
+		<text name="InvoiceDate">Invoice date</text>
+		<text name="VatNumber">Vat number</text>
+		<text name="TaxInvoice">Tax Invoice</text>
 	</texts>
 </localizationDictionary>
