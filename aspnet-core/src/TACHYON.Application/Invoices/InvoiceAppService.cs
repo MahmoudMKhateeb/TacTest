@@ -22,6 +22,7 @@ using TACHYON.Authorization.Users;
 using TACHYON.Cities.Dtos;
 using TACHYON.Common;
 using TACHYON.Configuration;
+using TACHYON.DataExporting;
 using TACHYON.Documents.DocumentFiles;
 using TACHYON.Dto;
 using TACHYON.Exporting;
@@ -52,6 +53,8 @@ namespace TACHYON.Invoices
         private readonly IRepository<DocumentFile, Guid> _documentFileRepository;
         private readonly IExcelExporterManager<InvoiceItemDto> _excelExporterInvoiceItemManager;
         private readonly IWebUrlService _webUrlService;
+        private readonly PdfExporterBase _pdfExporterBase;
+
         public InvoiceAppService(
             IRepository<Invoice, long> invoiceRepository,
             CommonManager commonManager,
@@ -59,7 +62,7 @@ namespace TACHYON.Invoices
             UserManager userManager,
             InvoiceManager invoiceManager,
             TransactionManager transactionManager,
-            IExcelExporterManager<InvoiceListDto> excelExporterManager, IRepository<ShippingRequestVas, long> shippingRequestVasesRepository, IRepository<DocumentFile, Guid> documentFileRepository, IExcelExporterManager<InvoiceItemDto> excelExporterInvoiceItemManager, IWebUrlService webUrlService)
+            IExcelExporterManager<InvoiceListDto> excelExporterManager, IRepository<ShippingRequestVas, long> shippingRequestVasesRepository, IRepository<DocumentFile, Guid> documentFileRepository, IExcelExporterManager<InvoiceItemDto> excelExporterInvoiceItemManager, IWebUrlService webUrlService, PdfExporterBase pdfExporterBase)
 
         {
             _invoiceRepository = invoiceRepository;
@@ -73,6 +76,7 @@ namespace TACHYON.Invoices
             _documentFileRepository = documentFileRepository;
             _excelExporterInvoiceItemManager = excelExporterInvoiceItemManager;
             _webUrlService = webUrlService;
+            _pdfExporterBase = pdfExporterBase;
         }
 
 
@@ -330,19 +334,11 @@ namespace TACHYON.Invoices
             var documentVat = AsyncHelper.RunSync(() => _documentFileRepository.FirstOrDefaultAsync(x => x.TenantId == invoice.TenantId && x.DocumentTypeId == 15));
             if (document != null) invoiceDto.TenantVatNumber = documentVat.Number;
             var link = $"{_webUrlService.WebSiteRootAddressFormat }account/outsideInvoice?id={invoiceId}";
-            invoiceDto.QRCode = GenerateQrCode(link);
+            invoiceDto.QRCode = _pdfExporterBase.GenerateQrCode(link);
             return new List<InvoiceInfoDto>() { invoiceDto };
         }
 
-        private static string GenerateQrCode(string link)
-        {
-            QRCodeGenerator QrGenerator = new QRCodeGenerator();
-            QRCodeData QrCodeInfo = QrGenerator.CreateQrCode(link, QRCodeGenerator.ECCLevel.Q);
-            QRCode QrCode = new QRCode(QrCodeInfo);
-            Bitmap QrBitmap = QrCode.GetGraphic(6);
-            byte[] BitmapArray = BitmapToByteArray(QrBitmap);
-            return Convert.ToBase64String(BitmapArray);
-        }
+
 
         public IEnumerable<InvoiceItemDto> GetInvoiceShippingRequestsReportInfo(long invoiceId)
         {
@@ -580,14 +576,7 @@ namespace TACHYON.Invoices
 
         #region Helper 
 
-        public static byte[] BitmapToByteArray(Bitmap bitmap)
-        {
-            using (MemoryStream ms = new MemoryStream())
-            {
-                bitmap.Save(ms, ImageFormat.Jpeg);
-                return ms.ToArray();
-            }
-        }
+
 
         private async Task<PagedResultDto<InvoiceListDto>> GetInvoicesWithPaging(InvoiceFilterInput input)
         {
