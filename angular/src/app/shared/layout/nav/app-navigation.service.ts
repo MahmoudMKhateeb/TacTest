@@ -1,9 +1,10 @@
-﻿import { AppSessionService } from '@shared/common/session/app-session.service';
+import { AppSessionService } from '@shared/common/session/app-session.service';
 import { Injectable } from '@angular/core';
 import { AppMenu } from './app-menu';
 import { AppMenuItem } from './app-menu-item';
 import { FeatureCheckerService } from '@node_modules/abp-ng2-module';
 import { PermissionCheckerService } from 'abp-ng2-module';
+import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 
 @Injectable()
 export class AppNavigationService {
@@ -41,20 +42,20 @@ export class AppNavigationService {
             undefined,
             undefined,
             undefined,
-            () => this.isEnabled('App.MarketPlace') || !this._appSessionService.tenantId
+            () => !this.isEnabled('App.Shipper') || !this._appSessionService.tenantId
           ),
           new AppMenuItem('ShipmentTracking', 'Pages', '', '/app/main/tracking'),
-          new AppMenuItem(
-            'ShipmentHistory',
-            'Pages.ShippingRequests',
-            '',
-            '/app/main/shippingRequests/ShipmentHistory',
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            () => this.isEnabled('App.TachyonDealer')
-          ),
+          // new AppMenuItem(
+          //   'ShipmentHistory',
+          //   'Pages.ShippingRequests',
+          //   '',
+          //   '/app/main/shippingRequests/ShipmentHistory',
+          //   undefined,
+          //   undefined,
+          //   undefined,
+          //   undefined,
+          //   () => this.isEnabled('App.TachyonDealer')
+          // ),
           new AppMenuItem('Requests', 'Pages', '', '/app/main/shippingRequests/shippingRequests'),
           new AppMenuItem(
             'DirectShippingRequests',
@@ -96,22 +97,41 @@ export class AppNavigationService {
             () => this.isEnabled('App.Shipper')
           ),
           new AppMenuItem('MyShippingRequests', 'Pages.ShippingRequests', '', '/app/main/shippingRequests/shippingRequests'),
+          // new AppMenuItem(
+          //   'ShipmentHistory',
+          //   'Pages.ShippingRequests',
+          //   '',
+          //   '/app/main/shippingRequests/ShipmentHistory',
+          //   undefined,
+          //   undefined,
+          //   undefined,
+          //   undefined,
+          //   () => this.isEnabled('App.Carrier') || this.isEnabled('App.Shipper')
+          // ),
           new AppMenuItem(
-            'ShipmentHistory',
-            'Pages.ShippingRequests',
+            'Marketplace',
             '',
-            '/app/main/shippingRequests/ShipmentHistory',
+            '',
+            '/app/main/marketplace/list',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            () => !this.isEnabled('App.Shipper')
+          ),
+          new AppMenuItem('DirectShippingRequests', '', '', '/app/main/directrequest/list', undefined, undefined, undefined, undefined, () =>
+            this.isEnabled('App.Carrier')
+          ),
+          new AppMenuItem(
+            'ShipmentTracking',
+            'Pages',
+            '',
+            '/app/main/tracking',
             undefined,
             undefined,
             undefined,
             undefined,
             () => this.isEnabled('App.Carrier') || this.isEnabled('App.Shipper')
-          ),
-          new AppMenuItem('Marketplace', '', '', '/app/main/marketplace/list', undefined, undefined, undefined, undefined, () =>
-            this.isEnabled('App.MarketPlace')
-          ),
-          new AppMenuItem('DirectShippingRequests', '', '', '/app/main/directrequest/list', undefined, undefined, undefined, undefined, () =>
-            this.isEnabled('App.Carrier')
           ),
           // TODO this Hole Component need To be removed Later
           // new AppMenuItem('waybills', undefined, 'flaticon-more', '/app/admin/waybills/waybills'),
@@ -143,20 +163,28 @@ export class AppNavigationService {
             () => this.isEnabled('App.Shipper') || this.isEnabled('App.CarrierAsASaas')
           ),
           new AppMenuItem('MyShippingRequests', 'Pages.ShippingRequests', '', '/app/main/shippingRequests/shippingRequests'),
-          new AppMenuItem('Marketplace', '', '', '/app/main/marketplace/list', undefined, undefined, undefined, undefined, () =>
-            this.isEnabled('App.MarketPlace')
-          ),
           new AppMenuItem(
-            'ShipmentHistory',
-            'Pages',
+            'Marketplace',
             '',
-            '/app/main/shippingRequests/ShipmentHistory',
+            '',
+            '/app/main/marketplace/list',
             undefined,
             undefined,
             undefined,
             undefined,
-            () => this.isEnabled('App.Carrier')
+            () => !this.isEnabled('App.Shipper')
           ),
+          // new AppMenuItem(
+          //   'ShipmentHistory',
+          //   'Pages',
+          //   '',
+          //   '/app/main/shippingRequests/ShipmentHistory',
+          //   undefined,
+          //   undefined,
+          //   undefined,
+          //   undefined,
+          //   () => this.isEnabled('App.Carrier')
+          // ),
 
           new AppMenuItem(
             'DirectShippingRequests',
@@ -169,6 +197,19 @@ export class AppNavigationService {
             undefined,
             () => this.isEnabled('App.Carrier') || this.isEnabled('App.SendDirectRequest')
           ),
+          //start of shipment tracking
+          new AppMenuItem(
+            'ShipmentTracking',
+            'Pages',
+            '',
+            '/app/main/tracking',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            () => this.isEnabled('App.Carrier') || this.isEnabled('App.Shipper')
+          ),
+          //end of shipment tracking
           // TODO this Hole Component need To be removed Later
           // new AppMenuItem('waybills', undefined, 'flaticon-more', '/app/admin/waybills/waybills'),
         ],
@@ -179,20 +220,7 @@ export class AppNavigationService {
       // end carrier menu
 
       //end of requests
-      //start of shipment tracking
-      //TODO: shipmentTracking Carrier Menu item need Permission and Route(Component)
-      new AppMenuItem(
-        'ShipmentTracking',
-        'Pages',
-        'map, navigation, location, navigate, pointer.svg',
-        '/app/main/tracking',
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        () => this.isEnabled('App.Carrier') || this.isEnabled('App.Shipper')
-      ),
-      //end of shipment tracking
+
       new AppMenuItem(
         'TMS',
         '',
@@ -200,21 +228,11 @@ export class AppNavigationService {
         '',
         [],
         [
-          new AppMenuItem(
-            'Drivers',
-            'Pages.Administration.Users',
-            'logistic, delivery, man, package, box.svg',
-            '/app/admin/drivers',
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            undefined
-          ),
+          new AppMenuItem('Drivers', 'Pages.Administration.Users', '', '/app/admin/drivers', undefined, undefined, undefined, undefined, undefined),
           new AppMenuItem(
             'Trucks',
             'Pages.Trucks',
-            'logistic, delivery, transport, transportation, truck, free.svg',
+            '',
             '/app/main/trucks/trucks',
             undefined,
             undefined,
@@ -222,12 +240,30 @@ export class AppNavigationService {
             undefined,
             () => this.isEnabled('App.Carrier') || this.isEnabled('App.TachyonDealer') || !this._appSessionService.tenantId
           ),
+          new AppMenuItem('VasPrices', 'Pages.VasPrices', '', '/app/main/vases/vasPrices', undefined, undefined, undefined, undefined),
         ],
         undefined,
         undefined,
         () => this.isEnabled('App.Carrier') || this.isEnabled('App.TachyonDealer')
       ),
-
+      //Start Of ADdressBook
+      new AppMenuItem(
+        'AddressBook',
+        '',
+        'map, navigation, location, navigate, book, bookmark, pin.svg',
+        '',
+        [],
+        [
+          new AppMenuItem('FacilitiesSetup', 'Pages.Facilities', '', '/app/main/addressBook/facilities'),
+          //TODO: Missing permission need to give host this permission Pages.Receivers
+          new AppMenuItem('ReceiversSetup', 'Pages.Facilities', '', '/app/main/receivers/receivers', undefined, undefined, undefined, undefined),
+        ],
+        //added these line because the tachyon dealer has the above permision and he suppose not to see this menu
+        undefined,
+        undefined,
+        () => (!this.isEnabled('App.TachyonDealer') && !this.isEnabled('App.Carrier')) || this.isEnabled('App.CarrierAsASaas')
+      ),
+      //end  Of ADdressBook
       //TODO: not all of these are visable to the TachyonDealer Need to Fix the Permisions in order for it to work
       //start of Invoices
       new AppMenuItem(
@@ -246,7 +282,11 @@ export class AppNavigationService {
             undefined,
             undefined,
             undefined,
-            () => !this.isEnabled('App.Carrier')
+            () =>
+              this.isEnabled('App.Shipper') ||
+              this.isEnabled('App.TachyonDealer') ||
+              this.isEnabled('App.CarrierAsASaas') ||
+              !isNotNullOrUndefined(this._appSessionService.tenantId)
           ),
           new AppMenuItem(
             'BillingInterval',
@@ -304,7 +344,7 @@ export class AppNavigationService {
             undefined,
             undefined,
             undefined,
-            () => this.isEnabled('App.Carrier') || this.isEnabled('App.TachyonDealer')
+            () => this.isEnabled('App.CarrierAsASaas') || this.isEnabled('App.TachyonDealer')
           ),
 
           // new AppMenuItem(
@@ -325,6 +365,7 @@ export class AppNavigationService {
         // () => !this.isEnabled('App.TachyonDealer')
       ),
       //end of  Invoices
+
       //start of Documents
       new AppMenuItem(
         'DocumentManagement',
@@ -517,23 +558,6 @@ export class AppNavigationService {
       // this.isEnabled('App.Carrier')
       // ),
 
-      new AppMenuItem(
-        'AddressBook',
-        '',
-        'map, navigation, location, navigate, book, bookmark, pin.svg',
-        '',
-        [],
-        [
-          new AppMenuItem('FacilitiesSetup', 'Pages.Facilities', '', '/app/main/addressBook/facilities'),
-          //TODO: Missing permission need to give host this permission Pages.Receivers
-          new AppMenuItem('ReceiversSetup', 'Pages.Facilities', '', '/app/main/receivers/receivers', undefined, undefined, undefined, undefined),
-        ],
-        //added these line because the tachyon dealer has the above permision and he suppose not to see this menu
-        undefined,
-        undefined,
-        () => (!this.isEnabled('App.TachyonDealer') && !this.isEnabled('App.Carrier')) || this.isEnabled('App.CarrierAsASaas')
-      ),
-
       // new AppMenuItem(
       //   'UserManagement',
       //   '',
@@ -669,21 +693,24 @@ export class AppNavigationService {
         '',
         [],
         [
-          new AppMenuItem('TMSSettings', '', '', '', [], [], undefined, [], () => this.isEnabled('App.Carrier')),
+          // new AppMenuItem('TMSSettings', '', '', '', [], [], undefined, [], () => this.isEnabled('App.Carrier')),
           new AppMenuItem('GeneralSettings', 'Pages.Administration.Tenant.Settings', '', '/app/admin/tenantSettings'),
-          new AppMenuItem(
-            'UserManagement',
-            '',
-            '',
-            '',
-            [],
-            [
-              new AppMenuItem('Roles', 'Pages.Administration.Roles', '', '/app/admin/roles'),
-              new AppMenuItem('Users', 'Pages.Administration.Users', '', '/app/admin/users'),
-            ]
-          ),
         ]
       ),
+      //Start Of User Manegment
+
+      new AppMenuItem(
+        'UserManagement',
+        '',
+        'marketing, content marketing, digital marketing, strategy, statistics, analytics, user.svg',
+        '',
+        [],
+        [
+          new AppMenuItem('Roles', 'Pages.Administration.Roles', '', '/app/admin/roles'),
+          new AppMenuItem('Users', 'Pages.Administration.Users', '', '/app/admin/users'),
+        ]
+      ),
+
       //End Of User Manegment
 
       // new AppMenuItem(
