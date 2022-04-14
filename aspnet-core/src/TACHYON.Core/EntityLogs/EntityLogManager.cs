@@ -25,16 +25,19 @@ namespace TACHYON.EntityLogs
     {
         private readonly IRepository<EntityLog, Guid> _logRepository;
         private readonly IRepository<EntityChangeSet, long> _lookupChangeSetRepository;
+        private readonly IRepository<ShippingRequest, long> _lookupShippingRequestRepository;
         private readonly IEventBus _eventBus;
 
         public EntityLogManager(
             IRepository<EntityLog, Guid> logRepository,
             IRepository<EntityChangeSet, long> lookupChangeSetRepository,
+            IRepository<ShippingRequest, long> lookupShippingRequestRepository,
             IEventBus eventBus)
         {
             _logRepository = logRepository;
             _lookupChangeSetRepository = lookupChangeSetRepository;
             _eventBus = eventBus;
+            _lookupShippingRequestRepository = lookupShippingRequestRepository;
         }
         // In Domain Service We Will Get Data As EntityLog Model
         // And in Application Service We Will Convert EntityLog Model to Dto it is Readable to Front-End  
@@ -84,11 +87,21 @@ namespace TACHYON.EntityLogs
 
            if (log.Core.Equals(typeof(ShippingRequest).ToString()))
            {
-               var eventData = new UpdatedShippingRequestEventData()
-               {
-                   EntityLogId = logId, ShippingRequestId = long.Parse(log.CoreId)
-               }; 
-               await _eventBus.TriggerAsync(eventData);
+
+               var requestId = long.Parse(log.CoreId);
+
+               var isUpdateByShipper = await _lookupShippingRequestRepository.GetAll()
+                    .Where(x=> x.Id == requestId)
+                    .AnyAsync(x=> x.TenantId == log.TenantId);
+                if (isUpdateByShipper)
+                {
+                    var eventData = new UpdatedShippingRequestEventData()
+                    {
+                        EntityLogId = logId,
+                        ShippingRequestId = requestId
+                    };
+                    await _eventBus.TriggerAsync(eventData);
+                }
            }
 
             await CurrentUnitOfWork.SaveChangesAsync();

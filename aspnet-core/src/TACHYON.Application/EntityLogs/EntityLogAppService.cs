@@ -41,6 +41,8 @@ namespace TACHYON.EntityLogs
         public virtual async Task<PagedResultDto<EntityLogListDto>> GetAllEntityLogs(GetAllEntityLogInput input)
             => await GetPagedAndFilteredEntityLogs(input);
 
+        // this action used for update pre price
+        // don't use it for any other reasons
         public async Task<EntityLogListDto> GetEntityLog(Guid logId)
         {
             var entityLogDto = await _logManager.GetEntityLogById(logId);
