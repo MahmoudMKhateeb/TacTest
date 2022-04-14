@@ -2498,6 +2498,10 @@
     <text name="RepricedShippingRequestUpdateAction">The PriceOffer is Repriced</text>
     <text name="KeepSamePriceShippingRequestUpdateAction">PriceOffer keeped same price</text>
     <text name="DismissedShippingRequestUpdateAction">PriceOffer is Dismissed</text>
+    <text name="ShippingRequestsUpdates">Shipping Requests Updates</text>
+    <text name="Reprice">Reprice</text>
+    <text name="KeepSamePrice">Keep same price</text>
+    <text name="DismissRequest">Dismiss request</text>
 
 	</texts>
 </localizationDictionary>
