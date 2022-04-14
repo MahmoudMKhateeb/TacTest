@@ -13,7 +13,7 @@ import {
   ShippingRequestStatus,
   PriceOfferStatus,
 } from '@shared/service-proxies/service-proxies';
-import { finalize } from 'rxjs/operators';
+import { OfferPostPriceResponse } from '../shippingRequests/shippingRequests/srpost-price-update/offer-post-price-response';
 
 @Component({
   templateUrl: './price-offer-view-model-component.html',
@@ -26,6 +26,7 @@ export class PriceOfferViewModelComponent extends AppComponentBase {
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
   @Output() modalDelete: EventEmitter<any> = new EventEmitter<any>();
   @Output() modalRefresh: EventEmitter<any> = new EventEmitter<any>();
+  @Output() modalPostPriceResoponse = new EventEmitter<OfferPostPriceResponse>();
   @ViewChild('modal', { static: false }) modal: ModalDirective;
 
   active = false;
@@ -34,11 +35,13 @@ export class PriceOfferViewModelComponent extends AppComponentBase {
   input: CreateOrEditPriceOfferInput = new CreateOrEditPriceOfferInput();
   direction: string;
   Items: PriceOfferItem[] = [];
+  isPostPriceOffer: boolean;
   constructor(injector: Injector, private _CurrentServ: PriceOfferServiceProxy) {
     super(injector);
   }
 
-  show(shippingRequestId: number, offerId: number): void {
+  show(shippingRequestId: number, offerId: number, isPostPriceOffer: boolean = false): void {
+    this.isPostPriceOffer = isPostPriceOffer;
     this.direction = document.getElementsByTagName('html')[0].getAttribute('dir');
     this._CurrentServ.getPriceOfferForView(offerId).subscribe((result) => {
       this.offer = result;
@@ -53,6 +56,7 @@ export class PriceOfferViewModelComponent extends AppComponentBase {
   close(): void {
     this.active = false;
     this.modal.hide();
+    this.isPostPriceOffer = false;
   }
 
   delete(): void {
@@ -68,6 +72,12 @@ export class PriceOfferViewModelComponent extends AppComponentBase {
   }
 
   acceptoffer(): void {
+    if (this.isPostPriceOffer) {
+      this.modalPostPriceResoponse.emit(new OfferPostPriceResponse(false, undefined));
+      this.close();
+      return;
+    }
+
     this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
       if (isConfirmed) {
         this._CurrentServ.accept(this.offer.id).subscribe((result) => {
@@ -150,5 +160,10 @@ export class PriceOfferViewModelComponent extends AppComponentBase {
     this.offer.status = PriceOfferStatus.Rejected;
     this.offer.rejectedReason = reason;
     this.modalRefresh.emit(null);
+  }
+
+  postPriceOfferReject(reason: string) {
+    this.modalPostPriceResoponse.emit(new OfferPostPriceResponse(true, reason));
+    this.close();
   }
 }

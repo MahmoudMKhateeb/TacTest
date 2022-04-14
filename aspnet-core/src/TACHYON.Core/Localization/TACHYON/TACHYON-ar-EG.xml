@@ -2273,5 +2273,8 @@
 		<text name="AcceptedPostPriceUpdateByCarrier">قبول التغيير</text>
 		<text name="ChangePriceRequestedForPostPriceUpdate">قبول مع إعادة التسعير</text>
 		<text name="RejectedPostPriceUpdateByCarrier">رفض التغيير</text>
+    <text name="OfferRejected">تم رفض التسعير</text>
+    <text name="OfferAccepted">تم قبول التسعير</text>
+    <text name="PendingShipperAction">في إنتظار إجراء الشاحن</text>
 	</texts>
 </localizationDictionary>

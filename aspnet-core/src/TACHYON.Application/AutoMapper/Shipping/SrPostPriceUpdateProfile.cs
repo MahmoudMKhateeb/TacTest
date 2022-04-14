@@ -8,10 +8,14 @@ namespace TACHYON.AutoMapper.Shipping
         public SrPostPriceUpdateProfile()
         {
             CreateMap<SrPostPriceUpdate, SrPostPriceUpdateListDto>()
+                .ForMember(x => x.OfferStatusTitle, x =>
+                    x.MapFrom(i => i.OfferStatus.GetEnumDescription()))
                 .ForMember(x=> x.ActionTitle,x=>
                     x.MapFrom(i=> i.Action.GetEnumDescription()));
 
             CreateMap<SrPostPriceUpdate, ViewSrPostPriceUpdateDto>()
+                .ForMember(x => x.OfferStatusTitle, x =>
+                    x.MapFrom(i => i.OfferStatus.GetEnumDescription()))
                 .ForMember(x => x.ActionTitle, x =>
                     x.MapFrom(i => i.Action.GetEnumDescription()));
 

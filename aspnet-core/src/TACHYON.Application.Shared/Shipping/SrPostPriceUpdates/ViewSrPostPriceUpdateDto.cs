@@ -20,6 +20,8 @@ namespace TACHYON.Shipping.SrPostPriceUpdates
 
         public SrPostPriceUpdateOfferStatus OfferStatus { get; set; }
 
+        public string OfferStatusTitle { get; set; }
+
         public List<SrUpdateChangeItem> Changes { get; set; }
     }
 }

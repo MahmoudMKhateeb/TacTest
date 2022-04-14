@@ -13,6 +13,7 @@ using TACHYON.PriceOffers;
 using TACHYON.PriceOffers.Dto;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequests.Dtos;
+using TACHYON.ShippingRequestVases;
 
 namespace TACHYON.Shipping.SrPostPriceUpdates
 {
@@ -23,16 +24,19 @@ namespace TACHYON.Shipping.SrPostPriceUpdates
         private readonly IRepository<ShippingRequest, long> _requestRepository;
         private readonly IAppNotifier _notifier;
         private readonly PriceOfferManager _offerManager;
+        private readonly IRepository<ShippingRequestVas,long> _shippingRequestVasRepository;
 
         public SrPostPriceUpdateManager(
             IRepository<SrPostPriceUpdate, long> updateRepository,
             IAppNotifier notifier, PriceOfferManager offerManager,
-            IRepository<ShippingRequest, long> requestRepository)
+            IRepository<ShippingRequest, long> requestRepository,
+            IRepository<ShippingRequestVas, long> shippingRequestVasRepository)
         {
             _updateRepository = updateRepository;
             _notifier = notifier;
             _offerManager = offerManager;
             _requestRepository = requestRepository;
+            _shippingRequestVasRepository = shippingRequestVasRepository;
         }
 
 
@@ -171,9 +175,10 @@ namespace TACHYON.Shipping.SrPostPriceUpdates
         private async Task RejectOffer(SrPostPriceUpdate update,string rejectionReason)
         {
 
-            var rejectInput = new RejectPriceOfferInput() {Id = update.Id, Reason = rejectionReason};
+            if (!update.PriceOfferId.HasValue) 
+                throw new UserFriendlyException(L("OfferNotFound"));
 
-            await _offerManager.RejectOffer(rejectInput); // todo need to custom method 
+            await _offerManager.RejectPostPriceOffer(update.PriceOfferId.Value,rejectionReason);
             
             update.IsApplied = false;
             update.OfferStatus = SrPostPriceUpdateOfferStatus.Rejected;
@@ -193,6 +198,27 @@ namespace TACHYON.Shipping.SrPostPriceUpdates
                 .SingleOrDefaultAsync(x => x.Id == update.ShippingRequestId);
             
             ObjectMapper.Map(updatedSrDto,shippingRequest);
+
+
+            // check for deleted vases
+
+            foreach (var vas in shippingRequest.ShippingRequestVases)
+            
+                if (updatedSrDto.ShippingRequestVasList.All(x => x.Id != vas.Id))
+                    await _shippingRequestVasRepository.DeleteAsync(vas);
+                
+            
+
+            // check for added vases 
+
+            foreach (var vas in updatedSrDto.ShippingRequestVasList)
+            {
+                if (shippingRequest.ShippingRequestVases.All(x => x.Id != vas.Id))
+                {
+                    var createdVas = ObjectMapper.Map<ShippingRequestVas>(vas);
+                    await _shippingRequestVasRepository.InsertAsync(createdVas);
+                }
+            }
         }
         
         private void ValidateSrUpdateForChangePrice(SrPostPriceUpdate update)

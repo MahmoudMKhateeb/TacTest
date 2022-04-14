@@ -147,7 +147,34 @@ namespace TACHYON.Shipping.SrPostPriceUpdates
                         
 
                     }
-                }
+                    foreach (var item in list)
+                    {
+                        var srUpdateChangeItem = new SrUpdateChangeItem();
+
+                        if (oldList.All(x => x.Id != item.Id))
+                        {
+
+                            srUpdateChangeItem.ChangeName = item.VasName ?? item.VasId.ToString();
+
+                            string message = "New Vas Added With ";
+
+                            if (item.RequestMaxCount > 0)
+                                message += $"Max Count ({ item.RequestMaxCount}) ";
+
+                            if (item.RequestMaxAmount > 0)
+                                message += $",Max Amount ({ item.RequestMaxAmount}) ";
+
+                            if (item.NumberOfTrips > 0)
+                                message += $"and Number Of Trips ({ item.NumberOfTrips})";
+
+                            srUpdateChangeItem.ChangeMsg = message;
+
+                            changesResult.Add(srUpdateChangeItem);
+                            continue;
+                        }
+                    }
+
+                    }
             }
 
 

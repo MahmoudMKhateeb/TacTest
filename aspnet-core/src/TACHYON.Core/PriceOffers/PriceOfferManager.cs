@@ -4,6 +4,7 @@ using Abp.Application.Services.Dto;
 using Abp.Collections.Extensions;
 using Abp.Configuration;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Abp.Linq.Extensions;
 using Abp.Runtime.Session;
 using Abp.Timing;
@@ -369,6 +370,24 @@ namespace TACHYON.PriceOffers
             }
 
             await _appNotifier.RejectedOffer(offer, input.RejectBy);
+        }
+
+        [RequiresFeature(AppFeatures.Shipper)]
+        public async Task RejectPostPriceOffer(long offerId,string reason)
+        {
+            CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant);
+            
+             var result = await _priceOfferRepository.GetAllIncluding(x=> x.Tenant)
+                .Select(x=> new {Offer = x,TenantName = x.Tenant.Name})
+                .SingleAsync(x => x.Offer.Id == offerId);
+
+            if (result.Offer.Status != PriceOfferStatus.New && result.Offer.Status != PriceOfferStatus.AcceptedAndWaitingForShipper)
+                throw new UserFriendlyException(L("OfferActionHasAlreadyTaken"));
+
+            result.Offer.Status = PriceOfferStatus.Rejected;
+            result.Offer.RejectedReason = reason;
+
+            await _appNotifier.RejectedOffer(result.Offer, result.TenantName);
         }
 
         private async Task<PriceOffer> CanAcceptOrRejectOffer(long id)

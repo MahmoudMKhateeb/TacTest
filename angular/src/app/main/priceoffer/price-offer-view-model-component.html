@@ -38,7 +38,7 @@
                 <i class="far fa-trash-alt"></i>
                 {{l('Delete')}}
               </a>
-              <a href="javascript:void(0)" class="reject" (click)="ModelReject.show(offer.id)" *ngIf="canAcceptOrRejectOffer()">
+              <a href="javascript:void(0)" class="reject" (click)="ModelReject.show(offer.id,isPostPriceOffer)" *ngIf="canAcceptOrRejectOffer()">
                 <i class="fas fa-ban"></i>
                 {{l('RejectOffer')}}
               </a>
@@ -149,4 +149,4 @@
   </div>
 </div>
 <price-offer-model #ModelPrice [Channel]="Channel"></price-offer-model>
-<price-offer-reject-model #ModelReject (modalsave)="reject($event)"></price-offer-reject-model>
+<price-offer-reject-model #ModelReject (modalsave)="reject($event)" (postPriceOfferReject)="postPriceOfferReject($event)"></price-offer-reject-model>

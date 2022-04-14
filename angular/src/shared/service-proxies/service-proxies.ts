@@ -29502,6 +29502,75 @@ export class PriceOfferServiceProxy {
    * @param offerId (optional)
    * @return Success
    */
+  getAsInput(id: number | undefined, offerId: number | null | undefined): Observable<CreateOrEditPriceOfferInput> {
+    let url_ = this.baseUrl + '/api/services/app/PriceOffer/GetAsInput?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'id=' + encodeURIComponent('' + id) + '&';
+    if (offerId !== undefined && offerId !== null) url_ += 'offerId=' + encodeURIComponent('' + offerId) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAsInput(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAsInput(<any>response_);
+            } catch (e) {
+              return <Observable<CreateOrEditPriceOfferInput>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<CreateOrEditPriceOfferInput>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAsInput(response: HttpResponseBase): Observable<CreateOrEditPriceOfferInput> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = CreateOrEditPriceOfferInput.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<CreateOrEditPriceOfferInput>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @param offerId (optional)
+   * @return Success
+   */
   getPriceOfferForCreateOrEdit(id: number | undefined, offerId: number | null | undefined): Observable<PriceOfferDto> {
     let url_ = this.baseUrl + '/api/services/app/PriceOffer/GetPriceOfferForCreateOrEdit?';
     if (id === null) throw new Error("The parameter 'id' cannot be null.");
@@ -42746,6 +42815,295 @@ export class ShippingTypesServiceProxy {
   }
 
   protected processDeleteTranslation(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+}
+
+@Injectable()
+export class SrPostPriceUpdateServiceProxy {
+  private http: HttpClient;
+  private baseUrl: string;
+  protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+  constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+    this.http = http;
+    this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : '';
+  }
+
+  /**
+   * @param sorting (optional)
+   * @param maxResultCount (optional)
+   * @param skipCount (optional)
+   * @return Success
+   */
+  getAll(
+    shippingRequestId: number,
+    sorting: string | null | undefined,
+    maxResultCount: number | undefined,
+    skipCount: number | undefined
+  ): Observable<PagedResultDtoOfSrPostPriceUpdateListDto> {
+    let url_ = this.baseUrl + '/api/services/app/SrPostPriceUpdate/GetAll?';
+    if (shippingRequestId === undefined || shippingRequestId === null)
+      throw new Error("The parameter 'shippingRequestId' must be defined and cannot be null.");
+    else url_ += 'ShippingRequestId=' + encodeURIComponent('' + shippingRequestId) + '&';
+    if (sorting !== undefined && sorting !== null) url_ += 'Sorting=' + encodeURIComponent('' + sorting) + '&';
+    if (maxResultCount === null) throw new Error("The parameter 'maxResultCount' cannot be null.");
+    else if (maxResultCount !== undefined) url_ += 'MaxResultCount=' + encodeURIComponent('' + maxResultCount) + '&';
+    if (skipCount === null) throw new Error("The parameter 'skipCount' cannot be null.");
+    else if (skipCount !== undefined) url_ += 'SkipCount=' + encodeURIComponent('' + skipCount) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAll(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAll(<any>response_);
+            } catch (e) {
+              return <Observable<PagedResultDtoOfSrPostPriceUpdateListDto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<PagedResultDtoOfSrPostPriceUpdateListDto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAll(response: HttpResponseBase): Observable<PagedResultDtoOfSrPostPriceUpdateListDto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = PagedResultDtoOfSrPostPriceUpdateListDto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<PagedResultDtoOfSrPostPriceUpdateListDto>(<any>null);
+  }
+
+  /**
+   * @param srUpdateId (optional)
+   * @return Success
+   */
+  getForView(srUpdateId: number | undefined): Observable<ViewSrPostPriceUpdateDto> {
+    let url_ = this.baseUrl + '/api/services/app/SrPostPriceUpdate/GetForView?';
+    if (srUpdateId === null) throw new Error("The parameter 'srUpdateId' cannot be null.");
+    else if (srUpdateId !== undefined) url_ += 'srUpdateId=' + encodeURIComponent('' + srUpdateId) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetForView(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetForView(<any>response_);
+            } catch (e) {
+              return <Observable<ViewSrPostPriceUpdateDto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<ViewSrPostPriceUpdateDto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetForView(response: HttpResponseBase): Observable<ViewSrPostPriceUpdateDto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = ViewSrPostPriceUpdateDto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<ViewSrPostPriceUpdateDto>(<any>null);
+  }
+
+  /**
+   * @param body (optional)
+   * @return Success
+   */
+  createUpdateAction(body: CreateSrPostPriceUpdateActionDto | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/SrPostPriceUpdate/CreateUpdateAction';
+    url_ = url_.replace(/[?&]$/, '');
+
+    const content_ = JSON.stringify(body);
+
+    let options_: any = {
+      body: content_,
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processCreateUpdateAction(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processCreateUpdateAction(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processCreateUpdateAction(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @param body (optional)
+   * @return Success
+   */
+  createOfferAction(body: CreateSrPostPriceUpdateOfferActionDto | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/SrPostPriceUpdate/CreateOfferAction';
+    url_ = url_.replace(/[?&]$/, '');
+
+    const content_ = JSON.stringify(body);
+
+    let options_: any = {
+      body: content_,
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processCreateOfferAction(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processCreateOfferAction(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processCreateOfferAction(response: HttpResponseBase): Observable<void> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -74434,12 +74792,16 @@ export class CreateOrEditPriceOfferInput implements ICreateOrEditPriceOfferInput
   commissionType!: PriceOfferCommissionType;
   vasCommissionPercentageOrAddValue!: number | undefined;
   vasCommissionType!: PriceOfferCommissionType;
+  isPostPrice!: boolean;
 
   constructor(data?: ICreateOrEditPriceOfferInput) {
     if (data) {
       for (var property in data) {
         if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
       }
+    }
+    if (!data) {
+      this.isPostPrice = false;
     }
   }
 
@@ -74457,6 +74819,7 @@ export class CreateOrEditPriceOfferInput implements ICreateOrEditPriceOfferInput
       this.commissionType = _data['commissionType'];
       this.vasCommissionPercentageOrAddValue = _data['vasCommissionPercentageOrAddValue'];
       this.vasCommissionType = _data['vasCommissionType'];
+      this.isPostPrice = _data['isPostPrice'] !== undefined ? _data['isPostPrice'] : false;
     }
   }
 
@@ -74481,6 +74844,7 @@ export class CreateOrEditPriceOfferInput implements ICreateOrEditPriceOfferInput
     data['commissionType'] = this.commissionType;
     data['vasCommissionPercentageOrAddValue'] = this.vasCommissionPercentageOrAddValue;
     data['vasCommissionType'] = this.vasCommissionType;
+    data['isPostPrice'] = this.isPostPrice;
     return data;
   }
 }
@@ -74495,6 +74859,7 @@ export interface ICreateOrEditPriceOfferInput {
   commissionType: PriceOfferCommissionType;
   vasCommissionPercentageOrAddValue: number | undefined;
   vasCommissionType: PriceOfferCommissionType;
+  isPostPrice: boolean;
 }
 
 export enum UserNotificationState {
@@ -89062,6 +89427,339 @@ export interface ICreateOrEditShippingTypeTranslationDto {
   displayName: string;
   description: string | undefined;
   id: number | undefined;
+}
+
+export enum SrPostPriceUpdateAction {
+  Pending = 1,
+  Accept = 2,
+  ChangePrice = 3,
+  Reject = 4,
+}
+
+export enum SrPostPriceUpdateOfferStatus {
+  None = 0,
+  Pending = 1,
+  Accepted = 2,
+  Rejected = 3,
+}
+
+export class SrPostPriceUpdateListDto implements ISrPostPriceUpdateListDto {
+  action!: SrPostPriceUpdateAction;
+  actionTitle!: string | undefined;
+  creationTime!: moment.Moment;
+  isApplied!: boolean;
+  priceOfferId!: number | undefined;
+  offerStatus!: SrPostPriceUpdateOfferStatus;
+  offerStatusTitle!: string | undefined;
+  id!: number;
+
+  constructor(data?: ISrPostPriceUpdateListDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.action = _data['action'];
+      this.actionTitle = _data['actionTitle'];
+      this.creationTime = _data['creationTime'] ? moment(_data['creationTime'].toString()) : <any>undefined;
+      this.isApplied = _data['isApplied'];
+      this.priceOfferId = _data['priceOfferId'];
+      this.offerStatus = _data['offerStatus'];
+      this.offerStatusTitle = _data['offerStatusTitle'];
+      this.id = _data['id'];
+    }
+  }
+
+  static fromJS(data: any): SrPostPriceUpdateListDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new SrPostPriceUpdateListDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['action'] = this.action;
+    data['actionTitle'] = this.actionTitle;
+    data['creationTime'] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+    data['isApplied'] = this.isApplied;
+    data['priceOfferId'] = this.priceOfferId;
+    data['offerStatus'] = this.offerStatus;
+    data['offerStatusTitle'] = this.offerStatusTitle;
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+export interface ISrPostPriceUpdateListDto {
+  action: SrPostPriceUpdateAction;
+  actionTitle: string | undefined;
+  creationTime: moment.Moment;
+  isApplied: boolean;
+  priceOfferId: number | undefined;
+  offerStatus: SrPostPriceUpdateOfferStatus;
+  offerStatusTitle: string | undefined;
+  id: number;
+}
+
+export class PagedResultDtoOfSrPostPriceUpdateListDto implements IPagedResultDtoOfSrPostPriceUpdateListDto {
+  totalCount!: number;
+  items!: SrPostPriceUpdateListDto[] | undefined;
+
+  constructor(data?: IPagedResultDtoOfSrPostPriceUpdateListDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.totalCount = _data['totalCount'];
+      if (Array.isArray(_data['items'])) {
+        this.items = [] as any;
+        for (let item of _data['items']) this.items!.push(SrPostPriceUpdateListDto.fromJS(item));
+      }
+    }
+  }
+
+  static fromJS(data: any): PagedResultDtoOfSrPostPriceUpdateListDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new PagedResultDtoOfSrPostPriceUpdateListDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['totalCount'] = this.totalCount;
+    if (Array.isArray(this.items)) {
+      data['items'] = [];
+      for (let item of this.items) data['items'].push(item.toJSON());
+    }
+    return data;
+  }
+}
+
+export interface IPagedResultDtoOfSrPostPriceUpdateListDto {
+  totalCount: number;
+  items: SrPostPriceUpdateListDto[] | undefined;
+}
+
+export class SrUpdateChangeItem implements ISrUpdateChangeItem {
+  changeName!: string | undefined;
+  changeMsg!: string | undefined;
+
+  constructor(data?: ISrUpdateChangeItem) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.changeName = _data['changeName'];
+      this.changeMsg = _data['changeMsg'];
+    }
+  }
+
+  static fromJS(data: any): SrUpdateChangeItem {
+    data = typeof data === 'object' ? data : {};
+    let result = new SrUpdateChangeItem();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['changeName'] = this.changeName;
+    data['changeMsg'] = this.changeMsg;
+    return data;
+  }
+}
+
+export interface ISrUpdateChangeItem {
+  changeName: string | undefined;
+  changeMsg: string | undefined;
+}
+
+export class ViewSrPostPriceUpdateDto implements IViewSrPostPriceUpdateDto {
+  action!: SrPostPriceUpdateAction;
+  actionTitle!: string | undefined;
+  rejectionReason!: string | undefined;
+  creationTime!: moment.Moment;
+  isApplied!: boolean;
+  priceOfferId!: number | undefined;
+  offerStatus!: SrPostPriceUpdateOfferStatus;
+  offerStatusTitle!: string | undefined;
+  changes!: SrUpdateChangeItem[] | undefined;
+  id!: number;
+
+  constructor(data?: IViewSrPostPriceUpdateDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.action = _data['action'];
+      this.actionTitle = _data['actionTitle'];
+      this.rejectionReason = _data['rejectionReason'];
+      this.creationTime = _data['creationTime'] ? moment(_data['creationTime'].toString()) : <any>undefined;
+      this.isApplied = _data['isApplied'];
+      this.priceOfferId = _data['priceOfferId'];
+      this.offerStatus = _data['offerStatus'];
+      this.offerStatusTitle = _data['offerStatusTitle'];
+      if (Array.isArray(_data['changes'])) {
+        this.changes = [] as any;
+        for (let item of _data['changes']) this.changes!.push(SrUpdateChangeItem.fromJS(item));
+      }
+      this.id = _data['id'];
+    }
+  }
+
+  static fromJS(data: any): ViewSrPostPriceUpdateDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new ViewSrPostPriceUpdateDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['action'] = this.action;
+    data['actionTitle'] = this.actionTitle;
+    data['rejectionReason'] = this.rejectionReason;
+    data['creationTime'] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+    data['isApplied'] = this.isApplied;
+    data['priceOfferId'] = this.priceOfferId;
+    data['offerStatus'] = this.offerStatus;
+    data['offerStatusTitle'] = this.offerStatusTitle;
+    if (Array.isArray(this.changes)) {
+      data['changes'] = [];
+      for (let item of this.changes) data['changes'].push(item.toJSON());
+    }
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+export interface IViewSrPostPriceUpdateDto {
+  action: SrPostPriceUpdateAction;
+  actionTitle: string | undefined;
+  rejectionReason: string | undefined;
+  creationTime: moment.Moment;
+  isApplied: boolean;
+  priceOfferId: number | undefined;
+  offerStatus: SrPostPriceUpdateOfferStatus;
+  offerStatusTitle: string | undefined;
+  changes: SrUpdateChangeItem[] | undefined;
+  id: number;
+}
+
+export class CreateSrPostPriceUpdateActionDto implements ICreateSrPostPriceUpdateActionDto {
+  action!: SrPostPriceUpdateAction;
+  rejectionReason!: string | undefined;
+  offer!: CreateOrEditPriceOfferInput;
+  id!: number;
+
+  constructor(data?: ICreateSrPostPriceUpdateActionDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.action = _data['action'];
+      this.rejectionReason = _data['rejectionReason'];
+      this.offer = _data['offer'] ? CreateOrEditPriceOfferInput.fromJS(_data['offer']) : <any>undefined;
+      this.id = _data['id'];
+    }
+  }
+
+  static fromJS(data: any): CreateSrPostPriceUpdateActionDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new CreateSrPostPriceUpdateActionDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['action'] = this.action;
+    data['rejectionReason'] = this.rejectionReason;
+    data['offer'] = this.offer ? this.offer.toJSON() : <any>undefined;
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+export interface ICreateSrPostPriceUpdateActionDto {
+  action: SrPostPriceUpdateAction;
+  rejectionReason: string | undefined;
+  offer: CreateOrEditPriceOfferInput;
+  id: number;
+}
+
+export enum SrPostPriceUpdateOfferAction {
+  Accept = 1,
+  Reject = 2,
+}
+
+export class CreateSrPostPriceUpdateOfferActionDto implements ICreateSrPostPriceUpdateOfferActionDto {
+  offerAction!: SrPostPriceUpdateOfferAction;
+  offerRejectionReason!: string | undefined;
+  id!: number;
+
+  constructor(data?: ICreateSrPostPriceUpdateOfferActionDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.offerAction = _data['offerAction'];
+      this.offerRejectionReason = _data['offerRejectionReason'];
+      this.id = _data['id'];
+    }
+  }
+
+  static fromJS(data: any): CreateSrPostPriceUpdateOfferActionDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new CreateSrPostPriceUpdateOfferActionDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['offerAction'] = this.offerAction;
+    data['offerRejectionReason'] = this.offerRejectionReason;
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+export interface ICreateSrPostPriceUpdateOfferActionDto {
+  offerAction: SrPostPriceUpdateOfferAction;
+  offerRejectionReason: string | undefined;
+  id: number;
 }
 
 export class StripeConfigurationDto implements IStripeConfigurationDto {

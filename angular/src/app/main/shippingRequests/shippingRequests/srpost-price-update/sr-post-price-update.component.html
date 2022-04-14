@@ -54,13 +54,19 @@
                         <a class="dropdown-item" (click)="acceptChangesWithReprice(update)" *ngIf="update.action == 1">{{
                           l('ChangePriceRequestedForPostPriceUpdate')
                         }}</a>
-                        <a class="dropdown-item" *ngIf="update.action == 1">{{ l('RejectedPostPriceUpdateByCarrier') }}</a>
+                        <a class="dropdown-item" (click)="RejectSrUpdateModal.show(update.id)" *ngIf="update.action == 1">{{
+                          l('RejectedPostPriceUpdateByCarrier')
+                        }}</a>
                       </div>
                     </div>
                     <div *ngIf="isShipper">
                       <div class="dropdown-menu" *dropdownMenu>
                         <a class="dropdown-item" (click)="ViewSrUpdateModal.show(update.id)">{{ l('View') }}</a>
-                        <a class="dropdown-item" (click)="ViewPriceOfferModal.show(shippingRequestId, update.priceOfferId)">{{ l('ViewOffer') }}</a>
+                        <a
+                          class="dropdown-item"
+                          (click)="ViewPriceOfferModal.show(shippingRequestId, update.priceOfferId, true); setActiveId(update.id)"
+                          >{{ l('ViewOffer') }}</a
+                        >
                       </div>
                     </div>
                   </div>
@@ -78,7 +84,7 @@
                     {{ l(update.actionTitle) }}
                   </span>
                 </td>
-                <td>{{ update.isApplied ? l('Applied') : l('NotApplied') }}</td>
+                <td>{{ getUpdateStatus(update) }}</td>
                 <td>{{ update.rejectionReason }}</td>
               </tr>
             </ng-template>
@@ -90,7 +96,7 @@
             <p-paginator
               #Paginator
               (onPageChange)="getSrUpdates($event)"
-              [rows]="primengTableHelper?.defaultRecordsCountPerPage"
+              [rows]="primengTableHelper.predefinedRecordsCountPerPage[0]"
               [totalRecords]="primengTableHelper?.totalRecordsCount"
               [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
             >
@@ -108,6 +114,7 @@
   </div>
   <ViewSrPostPriceUpdatesModal #ViewSrUpdateModal></ViewSrPostPriceUpdatesModal>
   <price-offer-model #PriceOfferModal (postPriceOfferSubmitted)="sendPostPriceOffer($event)"></price-offer-model>
-  <price-offer-view-model #ViewPriceOfferModal></price-offer-view-model>
+  <price-offer-view-model #ViewPriceOfferModal (modalPostPriceResoponse)="takeOfferAction($event)"></price-offer-view-model>
+  <RejectSrPostPriceUpdateModal #RejectSrUpdateModal></RejectSrPostPriceUpdateModal>
   >view-
 </div>

@@ -4,14 +4,18 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 import {
   CreateOrEditPriceOfferInput,
   CreateSrPostPriceUpdateActionDto,
+  CreateSrPostPriceUpdateOfferActionDto,
   SrPostPriceUpdateAction,
   SrPostPriceUpdateListDto,
+  SrPostPriceUpdateOfferAction,
   SrPostPriceUpdateServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { LazyLoadEvent } from 'primeng/api';
 import { Paginator } from 'primeng/paginator';
 import { Table } from 'primeng/table';
 import { PriceOfferModelComponent } from '@app/main/priceoffer/price-offer-model-component';
+import { OfferPostPriceResponse } from './offer-post-price-response';
+import { isNotNullOrUndefined } from 'codelyzer/util/isNotNullOrUndefined';
 
 @Component({
   selector: 'SrPostPriceUpdatesModal',
@@ -96,5 +100,40 @@ export class SrPostPriceUpdateComponent extends AppComponentBase {
       this.refreshPage();
       this.notify.success(this.l('SavedSuccessfully'));
     });
+  }
+
+  takeOfferAction(response: OfferPostPriceResponse) {
+    if (!isNotNullOrUndefined(response.isOfferRejected)) return;
+    let dto = new CreateSrPostPriceUpdateOfferActionDto();
+    dto.id = this.activeUpdateIdForRepricing;
+
+    if (!response.isOfferRejected) {
+      dto.offerAction = SrPostPriceUpdateOfferAction.Accept;
+
+      this._serviceProxy.createOfferAction(dto).subscribe(() => {
+        this.notify.success(this.l('SuccessfullyAccepted'));
+        this.refreshPage();
+      });
+    } else {
+      dto.offerAction = SrPostPriceUpdateOfferAction.Reject;
+      dto.offerRejectionReason = response.rejectionReason;
+
+      this._serviceProxy.createOfferAction(dto).subscribe(() => {
+        this.notify.success(this.l('SuccessfullyRejected'));
+        this.refreshPage();
+      });
+    }
+  }
+
+  setActiveId(updateId: number) {
+    this.activeUpdateIdForRepricing ??= updateId;
+  }
+
+  getUpdateStatus(update: SrPostPriceUpdateListDto) {
+    if (update.offerStatus != 0) {
+      return this.l(update.offerStatusTitle);
+    }
+
+    return update.isApplied ? this.l('Applied') : this.l('NotApplied');
   }
 }

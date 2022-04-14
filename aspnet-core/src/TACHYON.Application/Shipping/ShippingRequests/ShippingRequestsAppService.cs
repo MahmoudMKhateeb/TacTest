@@ -951,7 +951,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 .Where(x => x.Id == (long)input.Id)
                 .FirstOrDefaultAsync();
 
-            if (shippingRequest.Status == ShippingRequestStatus.PostPrice)
+            if (shippingRequest.Status == ShippingRequestStatus.PostPrice || shippingRequest.CarrierTenantId.HasValue)
             {
                 await _postPriceUpdateManager.Create(shippingRequest, input,AbpSession.UserId);
                 return;

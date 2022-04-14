@@ -2512,6 +2512,9 @@
 	<text name="AcceptedPostPriceUpdateByCarrier">Accept Change</text>
 	<text name="ChangePriceRequestedForPostPriceUpdate">Accept with reprice</text>
 	<text name="RejectedPostPriceUpdateByCarrier">Reject Change</text>
+	<text name="OfferRejected">Offer Rejected</text>
+	<text name="OfferAccepted">Offer Accepted</text>
+	<text name="PendingShipperAction">Pending Shipper Action</text>
 
 	
 	</texts>

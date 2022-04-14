@@ -281,6 +281,7 @@ import { ToggleButtonModule } from '@node_modules/primeng/togglebutton';
 import { SrPostPriceUpdateComponent } from './shippingRequests/shippingRequests/srpost-price-update/sr-post-price-update.component';
 import { ViewSrPostPriceUpdateModalComponent } from './shippingRequests/shippingRequests/srpost-price-update/view-sr-post-price-update-modal/view-sr-post-price-update-modal.component';
 import { CardModule } from '@node_modules/primeng/card';
+import { RejectPostPriceUpdateComponent } from './shippingRequests/shippingRequests/srpost-price-update/reject-post-price-update/reject-post-price-update.component';
 
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
@@ -533,6 +534,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ImportCitiesPolygonsModalComponent,
     SrPostPriceUpdateComponent,
     ViewSrPostPriceUpdateModalComponent,
+    RejectPostPriceUpdateComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },
