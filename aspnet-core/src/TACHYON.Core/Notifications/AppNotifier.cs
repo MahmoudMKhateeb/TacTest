@@ -611,13 +611,13 @@ namespace TACHYON.Notifications
             }
         }
         
-        public async Task NotifyOfferOwnerWhenSrUpdated(long srId, params int[] tenantsIds)
+        public async Task NotifyOfferOwnerWhenSrUpdated(long srId,string referanceNumber, params int[] tenantsIds)
         {
             var tenantsAdmin = await GetTenantsAdminUsers(tenantsIds);
 
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(
-                    L("SrUpdatedMsgForOfferOwner"),
+                    L("SrUpdatedMsgForOfferOwner",referanceNumber),
                     TACHYONConsts.LocalizationSourceName))
             {
                 Properties = new Dictionary<string, object>() { { "srId", srId } }

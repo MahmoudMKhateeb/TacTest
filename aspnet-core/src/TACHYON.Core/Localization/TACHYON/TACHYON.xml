@@ -2493,7 +2493,7 @@
     <text name="IsMandatoryExpirationDate">Expiration Date Mandatory</text>
     <text name="ResetReceiverCode">Reset shipment receiver code</text>
     <text name="ReceiverCodeConfirmationMsg">Are you sure you want to reset the receiver code for this shipment?</text>
-    <text name="SrUpdatedMsgForOfferOwner">a request you priced it, has an update now, click to see the request</text>
+    <text name="SrUpdatedMsgForOfferOwner">A Change was made on the details of request with the reference Number {0}.</text>
     <text name="PendingUpdate">Pending Update</text>
     <text name="RepricedShippingRequestUpdateAction">The PriceOffer is Repriced</text>
     <text name="KeepSamePriceShippingRequestUpdateAction">PriceOffer keeped same price</text>

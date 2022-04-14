@@ -832,14 +832,15 @@ namespace TACHYON.Shipping.ShippingRequests
         /// please use this method for pre-priced shipping requests only
         /// </summary>
         /// <param name="shippingRequestId"></param>
-        private async Task CheckHasOffersToNotifyCarriers(long shippingRequestId)
+        /// <param name="referanceNumber"></param>
+        private async Task CheckHasOffersToNotifyCarriers(long shippingRequestId,string referanceNumber)
         {
             DisableTenancyFilters();
             var carriers = await _priceOfferRepository.GetAll()
                 .Where(x => x.ShippingRequestId == shippingRequestId)
                 .Select(x => x.TenantId).ToArrayAsync();
 
-            await _appNotifier.NotifyOfferOwnerWhenSrUpdated(shippingRequestId, carriers);
+            await _appNotifier.NotifyOfferOwnerWhenSrUpdated(shippingRequestId, referanceNumber, carriers);
         }
         private async Task ValidateGoodsCategory(CreateOrEditShippingRequestDto input)
         {
@@ -884,7 +885,7 @@ namespace TACHYON.Shipping.ShippingRequests
             await ValidateGoodsCategory(input);
             
             if (shippingRequest.Status == ShippingRequestStatus.NeedsAction) 
-                await CheckHasOffersToNotifyCarriers(shippingRequest.Id);
+                await CheckHasOffersToNotifyCarriers(shippingRequest.Id,shippingRequest.ReferenceNumber);
 
             ObjectMapper.Map(input, shippingRequest);
         }

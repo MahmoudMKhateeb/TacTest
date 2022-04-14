@@ -201,6 +201,6 @@ namespace TACHYON.Notifications
             string waybillNumber,
             params UserIdentifier[] drivers);
 
-        Task NotifyOfferOwnerWhenSrUpdated(long srId, params int[] tenantsIds);
+        Task NotifyOfferOwnerWhenSrUpdated(long srId, string referanceNumber, params int[] tenantsIds);
     }
 }
