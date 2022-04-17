@@ -723,44 +723,7 @@ namespace TACHYON
 
 
 
-            //NormalPricePackage
 
-            configuration.CreateMap<NormalPricePackage, NormalPricePackageDto>()
-                .ForMember(src => src.PricePerExtraDrop, opt => opt.MapFrom(des => des.PricePerExtraDrop.HasValue ? des.PricePerExtraDrop.ToString() : "---"))
-                .ForMember(src => src.TenantName, opt => opt.MapFrom(des => des.Tenant.Name))
-                .ForMember(src => src.TruckType, opt => opt.MapFrom(des => des.TrucksTypeFk.DisplayName))
-                .ForMember(src => src.Origin, opt => opt.MapFrom(des => des.OriginCityFK.DisplayName))
-                .ForMember(src => src.Destination, opt => opt.MapFrom(des => des.DestinationCityFK.DisplayName));
-
-            configuration.CreateMap<NormalPricePackage, NormalPricePackageProfileDto>()
-                .ForMember(src => src.TruckType, opt => opt.MapFrom(des => des.TrucksTypeFk.DisplayName))
-                .ForMember(src => src.Origin, opt => opt.MapFrom(des => des.OriginCityFK.DisplayName))
-                .ForMember(src => src.Destination, opt => opt.MapFrom(des => des.DestinationCityFK.DisplayName));
-
-            configuration.CreateMap<NormalPricePackage, PricePackageOfferDto>()
-                .ForMember(src => src.PricePerExtraDrop, opt => opt.MapFrom(des => des.PricePerExtraDrop.HasValue ? des.PricePerExtraDrop.ToString() : "---"))
-                .ForMember(src => src.TruckType, opt => opt.MapFrom(des => des.TrucksTypeFk.DisplayName))
-                .ForMember(src => src.Origin, opt => opt.MapFrom(des => des.OriginCityFK.DisplayName))
-                .ForMember(src => src.Destination, opt => opt.MapFrom(des => des.DestinationCityFK.DisplayName))
-                .ForMember(src => src.NormalPricePackageId, opt => opt.MapFrom(des => des.Id));
-
-            configuration.CreateMap<CreateOrEditNormalPricePackageDto, NormalPricePackage>().ReverseMap();
-            configuration.CreateMap<PriceOffer, PricePackageOfferDto>()
-                .ForMember(src => src.Items, opt => opt.MapFrom(des => des.PriceOfferDetails))
-                .ReverseMap();
-
-            configuration.CreateMap<PricePackageOffer, PriceOffer>()
-               .ForMember(src => src.PriceOfferDetails, opt => opt.MapFrom(des => des.Items))
-               .ReverseMap();
-            configuration.CreateMap<PriceOfferDetail, PricePackageOfferItem>()
-               .ReverseMap();
-            configuration.CreateMap<PriceOfferDetail, PricePackageOfferItemDto>().ReverseMap();
-            configuration.CreateMap<PricePackageOffer, PricePackageOfferDto>()
-            //    .ForMember(src => src.TruckType, opt => opt.MapFrom(des => des.TrucksTypeFk.DisplayName))
-            //    .ForMember(src => src.Origin, opt => opt.MapFrom(des => des.OriginCityFK.DisplayName))
-            //    .ForMember(src => src.Destination, opt => opt.MapFrom(des => des.DestinationCityFK.DisplayName))
-                .ReverseMap();
-            configuration.CreateMap<PricePackageOfferItemDto, PricePackageOfferItem>().ReverseMap();
 
         }
         /// <summary>

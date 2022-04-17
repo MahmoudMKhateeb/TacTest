@@ -118,10 +118,6 @@ namespace TACHYON.PricePackages
         {
             var pricePackage = ObjectMapper.Map<NormalPricePackage>(input);
 
-
-            if (AbpSession.TenantId != null)
-                pricePackage.TenantId = (int)AbpSession.TenantId;
-
             await _pricePackageRepository.InsertAndGetIdAsync(pricePackage);
             pricePackage.PricePackageId = _normalPricePackageManager.GeneratePricePackageReferanceNumber(pricePackage.Id, pricePackage.IsMultiDrop, pricePackage.CreationTime);
 
@@ -160,7 +156,7 @@ namespace TACHYON.PricePackages
             DisableTenancyFilters();
             var tenentId = AbpSession.TenantId;
             var filteredPricePackages = _pricePackageRepository
-                .GetAllIncluding(x => x.TrucksTypeFk, c => c.OriginCityFK, f => f.DestinationCityFK, p => p.Tenant).AsNoTracking()
+                .GetAll().AsNoTracking()
                 .WhereIf(tenentId.HasValue && await IsEnabledAsync(AppFeatures.Carrier), p => p.TenantId == tenentId)
                 .ProjectTo<NormalPricePackageDto>(AutoMapperConfigurationProvider);
 

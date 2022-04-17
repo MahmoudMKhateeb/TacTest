@@ -77,7 +77,8 @@ export class ShippingrequestsDetailsModelComponent extends AppComponentBase {
    */
   canSetPrice(): boolean {
     if (!this.Channel) return false;
-    if (this.shippingrequest.status != 0) return false;
+    if (this.shippingrequest.status != ShippingRequestStatus.PrePrice && this.shippingrequest.status != ShippingRequestStatus.NeedsAction)
+      return false;
     if (this.shippingrequest.isPriced) return false;
     if (this.shippingrequest.directRequestStatus != ShippingRequestDirectRequestStatus.New) return false;
     if (this.request.status != ShippingRequestStatus.NeedsAction && this.request.status != ShippingRequestStatus.PrePrice) return false;

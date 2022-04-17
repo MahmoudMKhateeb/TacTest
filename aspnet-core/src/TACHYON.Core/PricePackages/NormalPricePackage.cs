@@ -7,6 +7,7 @@ using TACHYON.Cities;
 
 namespace TACHYON.PricePackages
 {
+    [Table("NormalPricePackages")]
     public class NormalPricePackage : BasePricePackage
     {
         [Range(PricePackagesConst.MinPriceNumber, PricePackagesConst.MaxPriceNumber)]

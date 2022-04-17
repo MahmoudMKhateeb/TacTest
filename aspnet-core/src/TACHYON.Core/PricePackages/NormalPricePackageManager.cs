@@ -190,9 +190,9 @@ namespace TACHYON.PricePackages
         /// <summary>
         /// Get Matching Price Package Id based on truckType, originCityId and destinationCityId
         /// </summary>
-        public async Task<int?> GetMatchingPricePackageId(long? truckType, int? originCityId, int? destinationCityId)
+        public async Task<int?> GetMatchingPricePackageId(long? truckType, int? originCityId, int? destinationCityId, int? CarrierId = null)
         {
-            var query = MatchingPricePackageQuery(truckType, originCityId, destinationCityId);
+            var query = MatchingPricePackageQuery(truckType, originCityId, destinationCityId, CarrierId);
             return await query.Select(x => x.Id).FirstOrDefaultAsync();
         }
 
@@ -238,9 +238,10 @@ namespace TACHYON.PricePackages
                 .Where(x => x.Id == pricePackageOfferId)
                 .FirstOrDefaultAsync();
         }
-        private IQueryable<NormalPricePackage> MatchingPricePackageQuery(long? truckType, int? originCityId, int? destinationCityId)
+        private IQueryable<NormalPricePackage> MatchingPricePackageQuery(long? truckType, int? originCityId, int? destinationCityId, int? CarrierId = null)
         {
             return _normalPricePackageRepository.GetAll()
+                .WhereIf(CarrierId.HasValue, c => c.TenantId == CarrierId.Value)
                 .Where(x => x.TrucksTypeId == truckType && x.OriginCityId == originCityId && x.DestinationCityId == destinationCityId);
         }
 
