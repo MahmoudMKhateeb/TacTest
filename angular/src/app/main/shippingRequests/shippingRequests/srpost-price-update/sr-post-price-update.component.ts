@@ -129,6 +129,10 @@ export class SrPostPriceUpdateComponent extends AppComponentBase {
     this.activeUpdateIdForRepricing ??= updateId;
   }
 
+  isUpdateHasOffer(update: SrPostPriceUpdateListDto): boolean {
+    return update.action === SrPostPriceUpdateAction.ChangePrice && isNotNullOrUndefined(update.priceOfferId);
+  }
+
   getUpdateStatus(update: SrPostPriceUpdateListDto) {
     if (update.offerStatus != 0) {
       return this.l(update.offerStatusTitle);

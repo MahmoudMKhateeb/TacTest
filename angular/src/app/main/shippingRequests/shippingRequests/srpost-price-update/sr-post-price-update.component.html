@@ -63,6 +63,7 @@
                       <div class="dropdown-menu" *dropdownMenu>
                         <a class="dropdown-item" (click)="ViewSrUpdateModal.show(update.id)">{{ l('View') }}</a>
                         <a
+                          *ngIf="isUpdateHasOffer(update)"
                           class="dropdown-item"
                           (click)="ViewPriceOfferModal.show(shippingRequestId, update.priceOfferId, true); setActiveId(update.id)"
                           >{{ l('ViewOffer') }}</a
