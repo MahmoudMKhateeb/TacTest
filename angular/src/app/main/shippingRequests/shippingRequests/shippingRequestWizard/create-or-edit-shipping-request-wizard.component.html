@@ -342,7 +342,7 @@
                           <span class="form-text text-muted">{{ l('SelectaCountry') }}</span>
                         </div>
                       </div>
-                      <div class="col-lg-6" [hidden]="step1Dto.shippingTypeId == 1">
+                      <div class="col-lg-6" [hidden]="step1Dto.shippingTypeId == 1 || step1Dto.shippingTypeId == 2">
                         <div class="form-group">
                           <label> {{ l('DestinationCountry') }}<span class="required-fileds">*</span></label>
                           <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allCountries }">
@@ -392,7 +392,7 @@
                               (ngModelChange)="validateShippingRequestType()"
                               required
                             >
-                              <option value="undefined" selected disabled>{{ l('SelectanOriginCity') }}</option>
+                              <option [value]="null" selected>{{ l('SelectanOriginCity') }}</option>
                               <option *ngFor="let item of sourceCities" value="{{ item.id }}">{{ item.displayName }}</option>
                             </select>
                           </div>
@@ -417,11 +417,11 @@
                                 step2Form.get('destinationCity').invalid &&
                                 (step2Form.get('destinationCity').dirty || step2Form.get('destinationCity').touched)
                               "
-                              [attr.disabled]="step1Dto.shippingTypeId == 1 ? true : null"
+                              [attr.disabled]="step1Dto.shippingTypeId == 1 || !step2Dto.originCityId ? true : null"
                               (ngModelChange)="validateShippingRequestType()"
                               required
                             >
-                              <option value="undefined" selected disabled>{{ l('SelectanDestinationCity') }}</option>
+                              <option [value]="null" selected>{{ l('SelectanDestinationCity') }}</option>
                               <option *ngFor="let item of destinationCities" value="{{ item.id }}">{{ item.displayName }}</option>
                             </select>
                             <div class="invalid-feedback">{{ l('SourceAndDestinationCantBeTheSame') }}</div>
@@ -429,7 +429,6 @@
                           <span class="form-text text-muted">{{ l('SelectaCity') }}</span>
                         </div>
                       </div>
-
                       <div class="col-lg-6">
                         <label> {{ l('RouteType') }} <span class="required-fileds">*</span></label>
                         <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allRoutTypes }">
