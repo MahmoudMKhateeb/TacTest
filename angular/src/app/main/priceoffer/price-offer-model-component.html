@@ -114,7 +114,8 @@
                   <th style="width: 200px">{{l('VasName')}}</th>
                   <th style="width: 150px">{{l('Qty')}}</th>
                   <th style="width: 350px">{{l('Price')}}</th>
-                  <th>{{l('TotalPriceOfAllVASPre-CommissionPre-VAT')}}</th>
+                  <th *ngIf="isTachyonDealer">{{l('TotalPriceOfAllVASPre-CommissionPre-VAT')}}</th>
+                  <th *ngIf="isCarrier">{{l('TotalPriceOfAllVASPre-CommissionPre-VAT-Carrier')}}</th>
                 </tr>
               </thead>
               <tbody>
@@ -180,7 +181,8 @@
               <thead>
                 <tr class="table-active">
                   <th style="width: 350px"></th>
-                  <th style="width: 350px">{{l('PreCommission')}}</th>
+                  <th *ngIf="isTachyonDealer" style="width: 350px">{{l('PreCommission')}}</th>
+                  <th *ngIf="isCarrier" style="width: 350px">{{l('PreCommission-Carrier')}}</th>
                   <th *ngIf="isTachyonDealerOrHost">{{l('PostCommission')}}</th>
                 </tr>
               </thead>
@@ -209,7 +211,8 @@
               <thead>
                 <tr class="table-active">
                   <th style="width: 350px"></th>
-                  <th style="width: 350px">{{l('TotalPricePostVatPreCommission')}}</th>
+                  <th *ngIf="isTachyonDealer" style="width: 350px">{{l('TotalPricePostVatPreCommission')}}</th>
+                  <th *ngIf="isCarrier" style="width: 350px">{{l('TotalPricePostVatPreCommission-Carrier')}}</th>
                   <th *ngIf="isTachyonDealerOrHost">{{l('TotalPricePostVatWithCommission')}}</th>
                 </tr>
               </thead>

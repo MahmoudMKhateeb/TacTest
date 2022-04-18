@@ -2436,12 +2436,15 @@
 		<text name="TotalCommission">مجموع العمولة</text>
 		<text name="TotalPricePostCommission">إجمالي السعر بعد العمولة</text>
 		<text name="PreCommission">قبل العمولة</text>
+		<text name="PreCommission-Carrier">إجمالي ضريبة القيمة المضافة</text>
 		<text name="PostCommission">بعد العمولة</text>
 		<text name="TotalVATForTrip">إجمالي ضريبة القيمة المضافة للرحلات</text>
 		<text name="TotalVATForVas">إجمالي ضريبة القيمة المضافة للخدمات الاضافية</text>
 		<text name="TotalPricePostVatPreCommission">السعر بالإضافة إلى ضريبة القيمة المضافة بدون عمولة</text>
+		<text name="TotalPricePostVatPreCommission-Carrier">إجمالي السعر</text>
 		<text name="TotalPricePostVatWithCommission">السعر بالإضافة إلى ضريبة القيمة المضافة والعمولة</text>
 		<text name="TotalPriceOfAllVASPre-CommissionPre-VAT">إجمالي سعر الخدمات الاضافية بدون ضريبة القيمة المضافة وبدون العمولة</text>
+		<text name="TotalPriceOfAllVASPre-CommissionPre-VAT-Carrier">إجمالي سعر الخدمات الاضافية</text>
 		<text name="PriceOffer">عرض سعر</text>
 		<text name="StartBidding">بدء المزايدة</text>
 		<text name="UplodeDeliveryNote">تحميل مذكرة التسليم</text>
