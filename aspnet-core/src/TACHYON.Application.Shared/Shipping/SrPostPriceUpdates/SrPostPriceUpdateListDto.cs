@@ -20,5 +20,7 @@ namespace TACHYON.Shipping.SrPostPriceUpdates
 
         public string OfferStatusTitle { get; set; }
 
+        public string RejectionReason { get; set; }
+
     }
 }

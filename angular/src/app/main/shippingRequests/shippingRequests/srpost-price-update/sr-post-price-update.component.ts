@@ -8,6 +8,7 @@ import {
   SrPostPriceUpdateAction,
   SrPostPriceUpdateListDto,
   SrPostPriceUpdateOfferAction,
+  SrPostPriceUpdateOfferStatus,
   SrPostPriceUpdateServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { LazyLoadEvent } from 'primeng/api';
@@ -134,10 +135,13 @@ export class SrPostPriceUpdateComponent extends AppComponentBase {
   }
 
   getUpdateStatus(update: SrPostPriceUpdateListDto) {
-    if (update.offerStatus != 0) {
+    if (update.offerStatus !== SrPostPriceUpdateOfferStatus.None) {
       return this.l(update.offerStatusTitle);
     }
 
+    if (update.action === SrPostPriceUpdateAction.Pending) {
+      return this.l('PostPriceUpdateWaitingForCarrierAction');
+    }
     return update.isApplied ? this.l('Applied') : this.l('NotApplied');
   }
 }

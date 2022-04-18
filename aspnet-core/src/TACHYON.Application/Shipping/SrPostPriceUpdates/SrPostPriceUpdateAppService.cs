@@ -89,7 +89,7 @@ namespace TACHYON.Shipping.SrPostPriceUpdates
                     return new SrUpdateChangeItem()
                     {
                         ChangeName = x.Key,
-                        ChangeMsg = $"Changed From ({oldShippingRequest[x.Key]}) To ({x.Value})"
+                        ChangeMsg = L("ChangedFromTo",oldShippingRequest[x.Key],x.Value),
                     };
                 }).ToList();
             
@@ -122,20 +122,20 @@ namespace TACHYON.Shipping.SrPostPriceUpdates
 
                         if (item.RequestMaxCount != oldItem.RequestMaxCount)
                         {
-                            message += $"Max Count Changed From ({oldItem.RequestMaxCount}) To ({ item.RequestMaxCount})";
+                            message += L("MaxCountChangedFromTo",oldItem.RequestMaxCount, item.RequestMaxCount);
                         }
                           
                         if (item.RequestMaxAmount != oldItem.RequestMaxAmount)
                         {
                             if (!message.IsNullOrEmpty()) message += "\n";
-                            message += $"Max Amount Changed From ({oldItem.RequestMaxAmount}) To ({ item.RequestMaxAmount})";
+                            message += L("MaxAmountChangedFromTo", oldItem.RequestMaxAmount, item.RequestMaxAmount);
                         }
                           
 
                         if (item.NumberOfTrips != oldItem.NumberOfTrips)
                         {
                             if (!message.IsNullOrEmpty()) message += "\n";
-                            message += $"Number Of Trips Changed From ({oldItem.NumberOfTrips}) To ({ item.NumberOfTrips})";
+                            message += L("NumberOfTripsChangedFromTo", oldItem.NumberOfTrips, item.NumberOfTrips);
                         }
 
                         if (!message.IsNullOrEmpty())
@@ -156,16 +156,17 @@ namespace TACHYON.Shipping.SrPostPriceUpdates
 
                             srUpdateChangeItem.ChangeName = item.VasName ?? item.VasId.ToString();
 
-                            string message = "New Vas Added With ";
+                            string message = L("NewVasAdded")+": ";
 
                             if (item.RequestMaxCount > 0)
-                                message += $"Max Count ({ item.RequestMaxCount}) ";
+                                message += L("MaxCountWithValue", item.RequestMaxCount);
+                               
 
                             if (item.RequestMaxAmount > 0)
-                                message += $",Max Amount ({ item.RequestMaxAmount}) ";
+                                message += ","+ L("MaxAmountWithValue", item.RequestMaxAmount);
 
                             if (item.NumberOfTrips > 0)
-                                message += $"and Number Of Trips ({ item.NumberOfTrips})";
+                                message += "," + L("NumberOfTripsWtihValue", item.NumberOfTrips);
 
                             srUpdateChangeItem.ChangeMsg = message;
 

@@ -4,7 +4,7 @@ namespace TACHYON.Shipping.SrPostPriceUpdates
 {
     public enum SrPostPriceUpdateAction
     {
-        [Description("PostPriceUpdateWaitingForCarrierAction")]
+        [Description("NoActionYet")]
         Pending = 1,
         [Description("AcceptedPostPriceUpdateByCarrier")]
         Accept = 2,

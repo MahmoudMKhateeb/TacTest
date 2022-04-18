@@ -28,7 +28,7 @@
                   'spinner spinner-success spinner-right mr-1 ml-1': loading
                 }"
               >
-                <input [value]="(srUpdateDto?.creationTime?.toDate() | date: 'DD-MM-yyyy h:mm a') ?? ''" class="form-control" disabled />
+                <input [value]="(srUpdateDto?.creationTime?.toDate() | date: 'dd-MM-yyyy h:mm a') ?? ''" class="form-control" disabled />
               </div>
             </div>
             <div class="col-lg-6 mt-4">
@@ -86,8 +86,8 @@
                 <thead class="thead-light">
                   <tr>
                     <th>#</th>
-                    <th>Change Name</th>
-                    <th>Change Msg</th>
+                    <th>{{ 'ChangeName' | localize }}</th>
+                    <th>{{ 'ChangeDetails' | localize }}</th>
                   </tr>
                 </thead>
                 <tbody>

@@ -1,4 +1,4 @@
-﻿using Abp;
+using Abp;
 using Abp.Application.Features;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
@@ -295,8 +295,8 @@ namespace TACHYON.PriceOffers
             var priceOfferDto = ObjectMapper.Map<PriceOfferViewDto>(offer);
             foreach (var item in priceOfferDto.Items)
             {
-                item.ItemName = offer.ShippingRequestFk.ShippingRequestVases.FirstOrDefault(x => x.Id == item.SourceId)
-                    .VasFk.Name;
+                item.ItemName = offer.ShippingRequestFk?.ShippingRequestVases?.FirstOrDefault(x => x.Id == item.SourceId)?
+                    .VasFk?.Name ?? L("VasRemoved");
                 if (AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper))
                 {
                     item.ItemPrice = item.ItemSubTotalAmountWithCommission;

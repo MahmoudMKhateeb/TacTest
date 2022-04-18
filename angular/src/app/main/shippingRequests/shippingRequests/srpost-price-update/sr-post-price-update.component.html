@@ -34,7 +34,7 @@
                 <th pSortableColumn="creationTime">{{ l('CreationTime') }} <p-sortIcon field="code"></p-sortIcon></th>
                 <th pSortableColumn="action">{{ l('UpdateAction') }} <p-sortIcon field="name"></p-sortIcon></th>
                 <th pSortableColumn="isApplied">{{ l('Status') }} <p-sortIcon field="category"></p-sortIcon></th>
-                <th pSortableColumn="rejectionReason">{{ l('RejectionReason') }}<p-sortIcon field="quantity"></p-sortIcon></th>
+                <th pSortableColumn="rejectionReason">{{ l('UpdateRejectionReason') }}<p-sortIcon field="quantity"></p-sortIcon></th>
               </tr>
             </ng-template>
             <ng-template pTemplate="body" let-update>
@@ -123,5 +123,4 @@
   <price-offer-model #PriceOfferModal (postPriceOfferSubmitted)="sendPostPriceOffer($event)"></price-offer-model>
   <price-offer-view-model #ViewPriceOfferModal (modalPostPriceResoponse)="takeOfferAction($event)"></price-offer-view-model>
   <RejectSrPostPriceUpdateModal #RejectSrUpdateModal></RejectSrPostPriceUpdateModal>
-  >view-
 </div>
