@@ -2546,6 +2546,7 @@
   <text name="MaxCountWithValue">Max count ({0})</text>
   <text name="MaxAmountWithValue">Max amount ({0})</text>
   <text name="NumberOfTripsWtihValue">number of trips ({0})</text>
+  <text name="PostPriceUpdateWarningMsg">You are doing changes in post pricing stage, Any change you are adding will not take effect immediately, You need to wait for carrier action for more details go to shipping request updates </text>
 	
 	</texts>
 </localizationDictionary>

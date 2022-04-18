@@ -2307,6 +2307,7 @@
     <text name="MaxCountWithValue">أقصى عدد ({0})</text>
     <text name="MaxAmountWithValue">أقصى قيمة ({0})</text>
     <text name="NumberOfTripsWtihValue">عدد الرحلات ({0})</text>
+    <text name="PostPriceUpdateWarningMsg">أنت تقوم بالتعديل في مرحلة ما بعد التسعير، اي تغيير تقوم به لن يأخد تأثير على الفور، تحتاج الى إنتظار إجراء الناقل لمزيد من التفاصيل انتقل إلى تحديثات طلب الشحن</text>
     
 	</texts>
 </localizationDictionary>
