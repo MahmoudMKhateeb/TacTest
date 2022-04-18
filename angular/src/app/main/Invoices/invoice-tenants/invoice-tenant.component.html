@@ -116,7 +116,7 @@
                       <a class="dropdown-item" href="javascript:;" (click)="ClaimModel.show(options.data.id)">{{ l('Claim') }}</a>
                     </li>
                     <li *ngIf="options.data.status == 1 && (!appSession.tenantId || feature.isEnabled('App.TachyonDealer'))">
-                      <a class="dropdown-item" href="javascript:;" (click)="Accepted(options.data.id)">{{ l('Accpeted') }}</a>
+                      <a class="dropdown-item" href="javascript:;" (click)="Accepted(options.data.id)">{{ l('Accept') }}</a>
                     </li>
                     <li *ngIf="(options.data.status == 2 && options.data.status != 4) || options.data.status == 5">
                       <a
@@ -142,7 +142,7 @@
                         href="javascript:;"
                         *ngIf="permission.isGranted('Pages.Administration.Host.Invoices.SubmitInvoices.Rejected')"
                         (click)="RejectedModel.show(options.data.id)"
-                        >{{ l('Rejected') }}</a
+                        >{{ l('Reject') }}</a
                       >
                     </li>
                   </ul>
