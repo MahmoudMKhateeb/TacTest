@@ -2602,7 +2602,7 @@
 	<text name="ShippingRequestReference">Shipping Request Reference</text>
 	<text name="ViewOffer">View Offer</text>
 	<text name="PointsDetails">Points Details</text>
-	<text name="DeliveryConfirmation">Delivery conformed</text>
+	<text name="DeliveryConfirmation">POD</text>
 	<text name="StartedMovingToOffLoadingLocation">Start moving to off-loading location</text>
 	<text name="TrackingMap">Tracking Map</text>
 	<text name="Trip">Trip</text>
