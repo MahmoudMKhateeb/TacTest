@@ -21,7 +21,13 @@
       </div>
       <div class="modal-body">
         <div class="card" [busyIf]="loading">
-          <p-table #UpdatesTable [value]="updates" (onLazyLoad)="getSrUpdates($event)" [totalRecords]="primengTableHelper?.totalRecordsCount">
+          <p-table
+            #UpdatesTable
+            [value]="updates"
+            (onLazyLoad)="getSrUpdates($event)"
+            [lazy]="true"
+            [totalRecords]="primengTableHelper?.totalRecordsCount"
+          >
             <ng-template pTemplate="header">
               <tr>
                 <th>{{ l('Actions') }}</th>
