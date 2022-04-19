@@ -100,11 +100,15 @@ namespace TACHYON.EntityLogs
 
             var tenantNames = await _tenantRepository.GetAll()
                 .Where(x => tenantIds.Contains(x.Id))
-                .Select(x => new {x.TenancyName, x.Id}).ToListAsync();
+                .Select(x => new { x.TenancyName, x.Id }).ToListAsync();
 
 
             foreach (EntityLog log in entityLogs)
             {
+
+                if (log.LogTransaction.Equals(EntityLogTransaction.DefaultLogTransaction))
+                    continue;
+
                 var dto = new EntityLogListDto()
                 {
                     Id = log.Id,
@@ -113,7 +117,7 @@ namespace TACHYON.EntityLogs
                     ModifierUserId = log.CreatorUserId,
                     ChangesData = log.Data,
                     ModifierTenantId = log.TenantId,
-                    ModifierTenantName = tenantNames.FirstOrDefault(x=> x.Id == log.TenantId)?.TenancyName ?? ""
+                    ModifierTenantName = tenantNames.FirstOrDefault(x => x.Id == log.TenantId)?.TenancyName ?? ""
                 };
 
                 if (log.CreatorUserId != null)
