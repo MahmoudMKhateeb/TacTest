@@ -62,7 +62,7 @@
       </ng-container>
     </agm-map>
   </div>
-  <div class="col-lg-12" *ngIf="tripsToggle">
+  <div class="col-lg-12" *ngIf="tripsToggle" [busyIf]="loading">
     <p-table [value]="directions">
       <ng-template pTemplate="header">
         <tr>
