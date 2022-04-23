@@ -316,6 +316,7 @@
                 name="ModelName"
                 required
                 type="text"
+                pattern="(.|\s)*\S(.|\s)*"
                 [ngClass]="{
                   'is-valid': modelName.valid,
                   'is-invalid': truckForm.submitted && modelName.invalid
