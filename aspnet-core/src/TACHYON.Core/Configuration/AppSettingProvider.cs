@@ -649,8 +649,124 @@ namespace TACHYON.Configuration
                     {
                         new Page
                         {
-                            Name = TACHYONDashboardCustomizationConsts.DefaultPageName,
+                            Name = "Operation",
                             Widgets = new List<Widget>()
+                            {
+                                new Widget
+                                {
+                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Carrier
+                                        .CarrierNumberOfCompletedTripsTotalMonthlyIncreaseWidget,
+                                    Height = 8,
+                                    Width = 12,
+                                    PositionX = 0,
+                                    PositionY = 0
+                                },
+                                new Widget
+                                {
+                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Carrier
+                                        .CarrierAcceptedVsRejectedPricingWidget,
+                                    Height = 12,
+                                    Width = 6,
+                                    PositionX = 0,
+                                    PositionY = 4
+                                },
+                                new Widget
+                                {
+                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Carrier
+                                        .CarrierMostWorkedWithShipperWidget,
+                                    Height = 12,
+                                    Width = 6,
+                                    PositionX = 6,
+                                    PositionY = 4
+                                }
+                            }
+                        },
+                        new Page
+                        {
+                            Name = "TMS",
+                            Widgets = new List<Widget>()
+                            {
+                                new Widget
+                                {
+                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Carrier
+                                        .CarrierTrucksActivityWidget,
+                                    Height = 8,
+                                    Width = 12,
+                                    PositionX = 0,
+                                    PositionY = 0
+                                },
+                                new Widget
+                                {
+                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Carrier
+                                        .CarrierDriversActivityWidget,
+                                    Height = 8,
+                                    Width = 12,
+                                    PositionX = 0,
+                                    PositionY = 4
+                                },
+                                new Widget
+                                {
+                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Carrier
+                                        .CarrierMostUsedVasWidget,
+                                    Height = 12,
+                                    Width = 12,
+                                    PositionX = 6,
+                                    PositionY = 4
+                                }
+                            }
+
+                        },
+                        new Page
+                        {
+                            Name = "Invoices & Documents",
+                            Widgets = new List<Widget>()
+                            {
+                                new Widget
+                                {
+                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Carrier
+                                        .CarrierInvoicesVsPaidInvoicesWidget,
+                                    Height = 15,
+                                    Width = 12,
+                                    PositionX = 0,
+                                    PositionY = 0
+                                },
+                                new Widget
+                                {
+                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Carrier
+                                        .CarrierDueDateInDaysWidget,
+                                    Height = 2,
+                                    Width = 6,
+                                    PositionX = 0,
+                                    PositionY = 4
+                                },
+                                new Widget
+                                {
+                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Carrier
+                                        .CarrierNextInvoiceFrequenctEndDateWidget,
+                                    Height = 2,
+                                    Width = 6,
+                                    PositionX = 4,
+                                    PositionY = 8
+                                }
+                            }
+
+                        },
+                        new Page
+                        {
+                            Name = "Tracking",
+                            Widgets = new List<Widget>()
+                            {
+                                new Widget
+                                {
+                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Carrier
+                                        .CarrierTrackingMapWidget,
+                                    Height = 30,
+                                    Width = 12,
+                                    PositionX = 0,
+                                    PositionY = 0
+                                }
+                            }
+
                         }
                     }
                 },
@@ -663,8 +779,117 @@ namespace TACHYON.Configuration
                     {
                         new Page
                         {
-                            Name = TACHYONDashboardCustomizationConsts.DefaultPageName,
+                            Name = "Operation",
                             Widgets = new List<Widget>()
+                            {
+                                new Widget
+                                {
+                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Shipper
+                                        .ShipperCompletedTripsVsPodWidget,
+                                    Height = 12,
+                                    Width = 15,
+                                    PositionX = 0,
+                                    PositionY = 0
+                                },
+                                new Widget
+                                {
+                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Shipper
+                                        .ShipperAcceptedVsRejectedRequestsWidget,
+                                    Height = 12,
+                                    Width = 15,
+                                    PositionX = 15,
+                                    PositionY = 0
+                                },
+                                new Widget
+                                {
+                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Shipper
+                                        .ShipperMostUsedOriginsWidget, 
+                                    Height = 12,
+                                    Width = 15,
+                                    PositionX = 0,
+                                    PositionY = 12
+                                },
+                                new Widget
+                                {
+                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Shipper
+                                        .ShipperMostUsedDestinationsWidget, 
+                                    Height = 12,
+                                    Width = 15,
+                                    PositionX = 15,
+                                    PositionY = 12
+                                },
+                                new Widget
+                                {
+                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Shipper
+                                        .ShipperMostWorkedWithCarriersWidget, 
+                                    Height = 12,
+                                    Width = 15,
+                                    PositionX = 0,
+                                    PositionY = 18
+                                },
+                                new Widget
+                                {
+                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Shipper
+                                        .ShipperNumberOfCompletedTripsWidget, 
+                                    Height = 12,
+                                    Width = 15,
+                                    PositionX = 15,
+                                    PositionY = 24
+                                }
+                            }
+
+                        },
+                        new Page
+                        {
+                            Name = "Invoices & Documents",
+                            Widgets = new List<Widget>()
+                            {
+                                new Widget
+                                {
+                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Shipper
+                                        .ShipperInvoicesVsPaidInvoicesWidget,
+                                    Height = 20,
+                                    Width = 30,
+                                    PositionX = 0,
+                                    PositionY = 0
+                                },
+                                new Widget
+                                {
+                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Shipper
+                                        .ShipperDocumentDueDateInDaysWidget,
+                                    Height = 2,
+                                    Width = 12,
+                                    PositionX = 0,
+                                    PositionY = 20
+                                },
+                                new Widget
+                                {
+                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Shipper
+                                        .ShipperInvoiceDueDateInDaysWidget,
+                                    Height = 2,
+                                    Width = 12,
+                                    PositionX = 12,
+                                    PositionY = 20
+                                },
+                                
+                            }
+                        },
+                        new Page
+                        {
+                            Name = "Tracking",
+                            Widgets = new List<Widget>()
+                            {
+                                new Widget
+                                {
+                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Shipper
+                                        .ShipperTrackingMapWidget,
+                                    Height = 30,
+                                    Width = 15,
+                                    PositionX = 0,
+                                    PositionY = 0
+                                }
+                            }
+
                         }
                     }
                 },

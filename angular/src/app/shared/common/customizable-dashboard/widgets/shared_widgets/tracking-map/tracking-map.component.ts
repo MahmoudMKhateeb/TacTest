@@ -4,6 +4,7 @@ import { ShipperDashboardServiceProxy, TrackingMapDto, WaybillsServiceProxy } fr
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/compat/database';
 import { FileDownloadService } from '@shared/utils/file-download.service';
 import { FirebaseHelperClass, trackingIconsList } from '@app/main/shippingRequests/shippingRequests/tracking/firebaseHelper.class';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-tracking-map',
@@ -20,7 +21,6 @@ export class TrackingMapComponent extends AppComponentBase implements OnInit {
   directions: any[];
   loading: boolean = false;
   zoom: 12;
-  colors: any = ['#9604f3', '#0f0', '#0ff', '#dec', '#f0f', '#ff0', '#f99', '#000', '#233', '#dff', '#747', '#944', '#833'];
   private fireDB: AngularFireList<unknown>;
   allDrivers = [];
   map: any;
@@ -44,55 +44,72 @@ export class TrackingMapComponent extends AppComponentBase implements OnInit {
   }
 
   getTableRecords() {
-    this._shipperDashboardServiceProxy.getTrackingMap().subscribe((result) => {
-      this.directions = [];
-      result.forEach((r) => {
-        let renderOptions: google.maps.DirectionsRendererOptions = { polylineOptions: { strokeColor: '#344440' } };
-        let color = this.getRandomColor();
-        let direction: Direction = {
-          origin: undefined,
-          destination: undefined,
-          waypoints: [],
-          renderOptions: {
-            polylineOptions: {
-              strokeWeight: 6,
-              strokeOpacity: 0.55,
-              strokeColor: color,
+    this.loading = true;
+
+    this._shipperDashboardServiceProxy
+      .getTrackingMap()
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+        })
+      )
+      .subscribe((result) => {
+        this.directions = [];
+        result.forEach((r) => {
+          let renderOptions: google.maps.DirectionsRendererOptions = { polylineOptions: { strokeColor: '#344440' } };
+          let color = this.getRandomColor();
+          let direction: Direction = {
+            origin: undefined,
+            destination: undefined,
+            waypoints: [],
+            renderOptions: {
+              polylineOptions: {
+                strokeWeight: 6,
+                strokeOpacity: 0.55,
+                strokeColor: color,
+              },
             },
-          },
-          trackingMapDto: r,
-          show: true,
-          color: color,
-        };
+            trackingMapDto: r,
+            show: true,
+            color: color,
+          };
 
-        r.routPoints.forEach((x) => {
-          if (r.routPoints.indexOf(x) === 0) {
-            direction.origin = new google.maps.LatLng(x.latitude, x.longitude);
-          } else if (r.routPoints.indexOf(x) === r.routPoints.length - 1) {
-            direction.destination = new google.maps.LatLng(x.latitude, x.longitude);
-          } else {
-            direction.waypoints.push({
-              location: new google.maps.LatLng(x.latitude, x.longitude),
-            });
-          }
+          r.routPoints.forEach((x) => {
+            if (r.routPoints.indexOf(x) === 0) {
+              direction.origin = new google.maps.LatLng(x.latitude, x.longitude);
+            } else if (r.routPoints.indexOf(x) === r.routPoints.length - 1) {
+              direction.destination = new google.maps.LatLng(x.latitude, x.longitude);
+            } else {
+              direction.waypoints.push({
+                location: new google.maps.LatLng(x.latitude, x.longitude),
+              });
+            }
+          });
+
+          this.directions.push(direction);
         });
-
-        this.directions.push(direction);
+        this.loading = true;
       });
-      this.loading = true;
-    });
   }
 
   /**
    * get live Tracking Of Drivers For Tenant and Host
    */
   getDriverLiveLocation() {
+    this.loading = true;
     let helper = new FirebaseHelperClass(this._db);
     if (this.isCarrier) {
-      helper.getAllActiveDriversLiveLocationByTenantId(this.appSession.tenantId).subscribe((res) => {
-        this.allDrivers = res;
-        console.log('allDrivers', this.allDrivers);
-      });
+      helper
+        .getAllActiveDriversLiveLocationByTenantId(this.appSession.tenantId)
+        .pipe(
+          finalize(() => {
+            this.loading = false;
+          })
+        )
+        .subscribe((res) => {
+          this.allDrivers = res;
+          console.log('allDrivers', this.allDrivers);
+        });
     } else if (!this.appSession.tenant.id || this.isTachyonDealer) {
       helper.getAllActiveDriversLocationsInTheSystem().subscribe((res) => {
         this.allDrivers = res;
