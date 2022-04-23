@@ -535,7 +535,6 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   }
 
   loadCitiesByCountryId(countryId: number, type: 'source' | 'destination') {
-    console.log('countryId', countryId, this.destinationCountry);
     this.citiesLoading = true;
     this._countriesServiceProxy
       .getAllCitiesForTableDropdown(countryId)
@@ -546,6 +545,10 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
       )
       .subscribe((res) => {
         type === 'source' ? (this.sourceCities = res) : (this.destinationCities = res);
+        if (this.step1Dto.shippingTypeId == 2) {
+          this.sourceCities = this.destinationCities = res;
+          this.step2Dto.originCityId = this.step2Dto.destinationCityId = null;
+        }
       });
   }
 
@@ -732,7 +735,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
       this.step2Dto.destinationCityId = this.step2Dto.originCityId;
     } else if (this.step1Dto.shippingTypeId == 2) {
       // if route type is local betwenn cities check if user select same city in source and destination
-      this.destinationCities = this.sourceCities;
+      // this.destinationCities = this.sourceCities;
       this.destinationCountry = this.originCountry;
       if (this.step2Dto.originCityId == this.step2Dto.destinationCityId) {
         this.step2Form.controls['destinationCity'].setErrors({ invalid: true });

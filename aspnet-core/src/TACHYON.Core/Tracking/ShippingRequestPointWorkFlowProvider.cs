@@ -836,10 +836,8 @@ namespace TACHYON.Tracking
                 if (allPointsCompleted)
                 {
                     trip.Status = ShippingRequestTripStatus.Delivered;
-                    trip.EndWorking = Clock.Now;
                     await ChangeShippingRequestStatusIfAllTripsDone(trip);
                     await CloseLastTransitionInComplete(trip.Id);
-
                     await NotificationWhenShipmentDelivered(point, currentUser);
                 }
             }
@@ -847,6 +845,7 @@ namespace TACHYON.Tracking
             {
                 if (trip.ShippingRequestFk.RouteTypeId == ShippingRequestRouteType.SingleDrop)
                 {
+                    trip.EndWorking = Clock.Now;
                     trip.InvoiceStatus = InvoiceTripStatus.CanBeInvoiced;
                     await _invoiceManager.GenertateInvoiceWhenShipmintDelivery(trip);//we will create invoice in this case if shipper period is PayInAdvance
                 }
@@ -860,6 +859,7 @@ namespace TACHYON.Tracking
 
                     if (allPointHasProofDelivery)
                     {
+                        trip.EndWorking = Clock.Now;
                         trip.InvoiceStatus = InvoiceTripStatus.CanBeInvoiced;
                         await _invoiceManager.GenertateInvoiceWhenShipmintDelivery(trip);//we will create invoice in this case if shipper period is PayInAdvance
                     }

@@ -2603,7 +2603,7 @@
 	<text name="ShippingRequestReference">Shipping Request Reference</text>
 	<text name="ViewOffer">View Offer</text>
 	<text name="PointsDetails">Points Details</text>
-	<text name="DeliveryConfirmation">Delivery conformed</text>
+	<text name="DeliveryConfirmation">POD</text>
 	<text name="StartedMovingToOffLoadingLocation">Start moving to off-loading location</text>
 	<text name="TrackingMap">Tracking Map</text>
 	<text name="Trip">Trip</text>
@@ -2640,12 +2640,15 @@
 	<text name="TotalCommission">Total commission</text>
 	<text name="TotalPricePostCommission">Total price post commission</text>
 	<text name="PreCommission">Pre commission</text>
+	<text name="PreCommission-Carrier">Total VAT price</text>
 	<text name="PostCommission">Post commission</text>
 	<text name="TotalVATForTrip">Total VAT for trip</text>
 	<text name="TotalVATForVas">Total VAT for vas</text>
 	<text name="TotalPricePostVatPreCommission">Total price post vat pre commission	</text>
+	<text name="TotalPricePostVatPreCommission-Carrier">Total price</text>
 	<text name="TotalPricePostVatWithCommission">Total Price Post Vat with commission</text>
 	<text name="TotalPriceOfAllVASPre-CommissionPre-VAT">Total Price of All VAS Pre-Commission Pre-VAT</text>
+	<text name="TotalPriceOfAllVASPre-CommissionPre-VAT-Carrier">Total VAS price</text>
 	<text name="PriceOffer">Price Offer</text>
 	<text name="StartBidding">Start Bidding</text>
 	<text name="UplodeDeliveryNote">Upload Delivery Note</text>

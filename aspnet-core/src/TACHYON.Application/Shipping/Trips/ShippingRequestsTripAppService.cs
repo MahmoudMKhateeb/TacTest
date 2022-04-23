@@ -403,20 +403,20 @@ namespace TACHYON.Shipping.Trips
             switch (isDriverChanged)
             {
                 case true when isTruckChanged:
-                    reason =  nameof(RoutPointAction4);
+                    reason = nameof(RoutPointAction4);
                     break;
                 case true:
-                    reason =  nameof(RoutPointAction1);
+                    reason = nameof(RoutPointAction1);
                     break;
                 case false when isTruckChanged:
-                    reason =  nameof(RoutPointAction2);
+                    reason = nameof(RoutPointAction2);
                     break;
                 default: return;
             }
 
             _reasonProvider.Use(reason);
             #endregion
-       
+
             await UserManager.UpdateUserDriverStatus(input.AssignedDriverUserId, UserDriverStatus.NotAvailable);
 
             if (oldAssignedTruckId != trip.AssignedTruckId && trip.ShippingRequestFk.CarrierTenantId != null)
@@ -437,7 +437,7 @@ namespace TACHYON.Shipping.Trips
                 new UserIdentifier(trip.ShippingRequestFk.CarrierTenantId, trip.AssignedDriverUserId.Value));
 
 
-            
+
             await CurrentUnitOfWork.SaveChangesAsync();
         }
 
@@ -523,7 +523,10 @@ namespace TACHYON.Shipping.Trips
 
             if (input.HasAttachment)
             {
-                await _documentFilesAppService.CreateOrEdit(input.CreateOrEditDocumentFileDto);
+                if (input.CreateOrEditDocumentFileDto.UpdateDocumentFileInput != null)
+                {
+                    await _documentFilesAppService.CreateOrEdit(input.CreateOrEditDocumentFileDto);
+                }
             }
             else
             {
