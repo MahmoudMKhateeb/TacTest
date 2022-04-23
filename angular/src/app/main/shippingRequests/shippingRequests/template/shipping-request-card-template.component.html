@@ -217,9 +217,7 @@
                 </a>
                 <a
                   *ngIf="
-                    permission.isGranted('Pages.ShippingRequests.Edit') &&
-                    !Channel &&
-                    (feature.isEnabled('App.Shipper') || feature.isEnabled('App.CarrierAsASaas'))
+                    permission.isGranted('Pages.ShippingRequests.Edit') && !Channel && (feature.isEnabled('App.Shipper') || isCarrierOwnRequest(item))
                   "
                   [queryParams]="{ id: item.id }"
                   [routerLink]="['/app/main/shippingRequests/shippingRequests/createOrEdit']"
