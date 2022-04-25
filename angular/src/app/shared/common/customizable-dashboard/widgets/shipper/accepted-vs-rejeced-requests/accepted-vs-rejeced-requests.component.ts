@@ -46,6 +46,8 @@ export class AcceptedVsRejecedRequestsComponent extends AppComponentBase impleme
           ],
           chart: {
             type: 'bar',
+            width: 400,
+            height: 200,
           },
           xaxis: {
             type: 'category',

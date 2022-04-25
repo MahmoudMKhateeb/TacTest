@@ -46,6 +46,8 @@ export class CompletedTripVsPodComponent extends AppComponentBase implements OnI
           ],
           chart: {
             type: 'bar',
+            width: 400,
+            height: 250,
           },
           xaxis: {
             type: 'category',

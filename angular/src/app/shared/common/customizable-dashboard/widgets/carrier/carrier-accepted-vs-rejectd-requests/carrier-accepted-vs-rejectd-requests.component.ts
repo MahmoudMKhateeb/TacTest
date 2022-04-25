@@ -45,6 +45,8 @@ export class CarrierAcceptedVsRejectdRequestsComponent extends AppComponentBase 
           ],
           chart: {
             type: 'area',
+            width: 400,
+            height: 250,
           },
           xaxis: {
             type: 'category',
