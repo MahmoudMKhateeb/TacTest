@@ -20,7 +20,7 @@
     <text name="MostUsedOrigins">المدن الأكثر استخداما</text>
     <text name="MostUsedDestantions">الوجهات الأكثر استخدامًا</text>
     <text name="CompletedTripsvsPod">الرحلات المكتملة مقابل إثبات التسليم</text>
-    <text name="DocumentsHasDueDateIn6Days">المستندات لها تاريخ استحقاق في أقل من 6 أيام</text>
+    <text name="DocumentsHasDueDateIn6Days">مستندات ستنتهي صلاحيتها خلال أسبوع</text>
     <text name="InvoiceDueDateIn6Days">فواتير ستكون مستحقة خلال أسبوع</text>
     <text name="InvoicesVsPaidInvoices">الفواتير مقابل الفواتير المدفوعة</text>
     <text name="ShipmentHistory">تأريخ الشحن</text>
