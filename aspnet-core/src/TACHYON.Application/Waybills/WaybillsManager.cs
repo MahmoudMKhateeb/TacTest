@@ -63,16 +63,19 @@ namespace TACHYON.Waybills
 
             ArrayList names = new ArrayList();
             ArrayList data = new ArrayList();
+            var masterWaybill = _shippingRequestAppService.GetMasterWaybill(shippingRequestTripId);
 
             names.Add("DataSet1");
-            data.Add(_shippingRequestAppService.GetMasterWaybill(shippingRequestTripId));
+            data.Add(masterWaybill);
 
             names.Add("GetDropDetailsDS");
             data.Add(_routPointAppService.GetDropsDetailsForMasterWaybill(shippingRequestTripId));
 
             names.Add("SingleDropVasDataSet");
             data.Add(_shippingRequestAppService.GetShippingRequestVasesForSingleDropWaybill(shippingRequestTripId));
-            return _pdfExporterBase.GetRdlcPdfPackageAsBinaryData(reportPath, names, data);
+
+            var number = masterWaybill.FirstOrDefault()?.MasterWaybillNo.ToString();
+            return _pdfExporterBase.GetRdlcPdfPackageAsBinaryData(number, reportPath, names, data);
         }
 
         private byte[] GetSingleDropWaybillPdf(int shippingRequestTripId, long? dropOffId = null)
@@ -83,8 +86,9 @@ namespace TACHYON.Waybills
             ArrayList names = new ArrayList();
             ArrayList data = new ArrayList();
 
+            var dropOff = _shippingRequestAppService.GetDropWaybill(shippingRequestTripId, dropOffId);
             names.Add("SingleDropDataSet");
-            data.Add(_shippingRequestAppService.GetDropWaybill(shippingRequestTripId, dropOffId));
+            data.Add(dropOff);
 
             names.Add("SingleDropGoodsDetailsDataSet");
             data.Add(_goodsDetailsAppService.GetShippingrequestGoodsDetailsForSingleDropWaybill(shippingRequestTripId, dropOffId));
@@ -92,7 +96,8 @@ namespace TACHYON.Waybills
             names.Add("SingleDropVasDataSet");
             data.Add(_shippingRequestAppService.GetShippingRequestVasesForSingleDropWaybill(shippingRequestTripId));
 
-            return _pdfExporterBase.GetRdlcPdfPackageAsBinaryData(reportPath, names, data);
+            var number = dropOff.FirstOrDefault()?.WaybillNumber?.ToString();
+            return _pdfExporterBase.GetRdlcPdfPackageAsBinaryData(number, reportPath, names, data);
         }
 
         private bool IsSingleDropShippingRequest(int shippingRequestTripId)

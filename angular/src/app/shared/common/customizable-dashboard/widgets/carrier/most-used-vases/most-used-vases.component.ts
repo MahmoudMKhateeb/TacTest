@@ -41,6 +41,8 @@ export class MostUsedVasesComponent extends AppComponentBase implements OnInit {
           ],
           chart: {
             type: 'bar',
+            width: 450,
+            height: 200,
           },
           plotOptions: {},
           xaxis: {

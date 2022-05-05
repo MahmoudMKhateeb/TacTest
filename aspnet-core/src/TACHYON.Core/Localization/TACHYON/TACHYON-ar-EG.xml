@@ -2213,7 +2213,7 @@
 		<text name="TruckIsChanged">تم تعيير الشاحنة</text>
 		<text name="IncidentHappened">حصول حادث</text>
 		
-		<text name="MoiNumber">رقم وزارة الداخلية</text>
+		<text name="MoiNumber">رقم الموحد للمنشأة</text>
 		<text name="Phone">الهاتف</text>
 		<text name="ViewTenantProfile">عرض صفحة الشركة</text>
 		<text name="NumberOfVases">عدد الخدمات الإضافية</text>
@@ -2525,5 +2525,6 @@
 		<text name="SelectALicenseType">أختر نوع رخصة السائق</text>
 
     <text name="YouMustEnterRates">يجب عليك إدخال التقييمات</text>
+		<text name="TheNumberInTheTopOfTheCRThatStartsWithSeven">الرقم الموجود أعلى السجل التجاري و الذي يبدأ برقم سبعة</text>
 	</texts>
 </localizationDictionary>

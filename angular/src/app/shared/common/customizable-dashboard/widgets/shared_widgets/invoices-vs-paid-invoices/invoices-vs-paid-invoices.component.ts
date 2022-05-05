@@ -47,6 +47,8 @@ export class InvoicesVsPaidInvoicesComponent extends AppComponentBase implements
           ],
           chart: {
             type: 'bar',
+            width: 400,
+            height: 250,
           },
           xaxis: {
             type: 'category',
