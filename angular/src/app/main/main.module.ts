@@ -278,6 +278,9 @@ import { EmailTemplateTranslationTemplateComponent } from './emailTemplates/emai
 import { CreateOrEditEmailTemplateTranslationModalComponent } from './emailTemplates/emailTemplates/create-or-edit-email-template-translation-modal.component';
 import { ImportCitiesPolygonsModalComponent } from './cities/cities/import-cities-polygoins-modal/import-cities-polygons-modal.component';
 import { ToggleButtonModule } from '@node_modules/primeng/togglebutton';
+import { AddNewRemarksTripModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/add-new-remarks-trip-modal/add-new-remarks-trip-modal.component';
+import { QuartzCronModule } from '@node_modules/@sbzen/ng-cron';
+import { DriverLicenseTypeTranslationsComponent } from './driverLicenseTypes/driverLicenseTypeTranslations/driver-license-type-translations/driver-license-type-translations.component';
 
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
@@ -335,6 +338,8 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     TrackingModule,
     EmailEditorModule,
     ToggleButtonModule,
+    TrackingModule,
+    QuartzCronModule,
   ],
   declarations: [
     EmailTemplatesComponent,
@@ -529,6 +534,8 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     EmailTemplateTranslationTemplateComponent,
     CreateOrEditEmailTemplateTranslationModalComponent,
     ImportCitiesPolygonsModalComponent,
+    AddNewRemarksTripModalComponent,
+    DriverLicenseTypeTranslationsComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },

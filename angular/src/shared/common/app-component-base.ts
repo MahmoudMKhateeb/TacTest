@@ -22,6 +22,7 @@ import { isNumeric } from '@node_modules/rxjs/internal/util/isNumeric';
 import { HttpClient } from '@angular/common/http';
 import { map } from '@node_modules/rxjs/internal/operators';
 import { DevExtremeDataGridHelper } from '@shared/helpers/DevExtremeDataGridHelper';
+import * as rtlDetect from 'rtl-detect';
 
 const capitalize = (s) => {
   if (typeof s !== 'string') return '';
@@ -55,6 +56,7 @@ export abstract class AppComponentBase {
    * max file size that  user can upload
    */
   public maxDocumentFileBytesUserFriendlyValue = 4;
+  isRtl = rtlDetect.isRtlLang(abp.localization.currentLanguage.name);
 
   iconList = [
     // array of icon class list based on type
@@ -251,5 +253,21 @@ export abstract class AppComponentBase {
   }
   get isTachyonDealerOrHost(): boolean {
     return this.isTachyonDealer || !this.appSession.tenantId;
+  }
+
+  IfOther(items: any, id: any) {
+    // id return string or number
+    if (id != undefined) return items?.filter((x) => x.id == id && x.isOther).length > 0;
+    else return false;
+  }
+
+  cannotContainSpace(input: string) {
+    if (input) {
+      if (input.includes(' ') && input.trim().length == 0) return false;
+      else return true;
+    }
+  }
+  get isSaaS(): boolean {
+    return this.feature.isEnabled('App.CarrierAsASaas');
   }
 }

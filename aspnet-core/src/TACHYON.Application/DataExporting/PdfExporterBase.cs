@@ -28,20 +28,18 @@ namespace TACHYON.DataExporting
             ArrayList dsNameArray,
             ArrayList DTArray)
         {
-            byte[] pdf = GetRdlcPdfPackageAsBinaryData(reportPath, dsNameArray, DTArray);
+            byte[] pdf = GetRdlcPdfPackageAsBinaryData(fileName, reportPath, dsNameArray, DTArray);
             var file = new FileDto(fileName, MimeTypeNames.ApplicationPdf);
             Save(pdf, file);
             return file;
         }
 
-        public byte[] GetRdlcPdfPackageAsBinaryData(string reportPath,
-            ArrayList dsNameArray,
-            ArrayList DTArray)
+        public byte[] GetRdlcPdfPackageAsBinaryData(string fileName, string reportPath, ArrayList dsNameArray, ArrayList DTArray)
         {
             reportPath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + reportPath;
             LocalReport report = new LocalReport();
+            report.DisplayName = fileName;
             report.ReportPath = reportPath;
-
             for (int i = 0; i < DTArray.Count; i++)
                 report.DataSources.Add(new ReportDataSource((string)dsNameArray[i], (IEnumerable)DTArray[i]));
 

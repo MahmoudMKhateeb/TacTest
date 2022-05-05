@@ -50,10 +50,8 @@ namespace TACHYON.Authorization
             dangerousGoodTypes.CreateChildPermission(AppPermissions.Pages_DangerousGoodTypes_Delete, L("DeleteDangerousGoodType"), multiTenancySides: MultiTenancySides.Host);
 
             var hostDashboard = pages.CreateChildPermission(AppPermissions.Pages_HostDashboard, L("HostDashboard"));
-            var shipperDashboard = pages.CreateChildPermission(AppPermissions.Pages_ShipperDashboard,
-                L("ShipperDashboard"), multiTenancySides: MultiTenancySides.Tenant);
-            var CarrierDashboard = pages.CreateChildPermission(AppPermissions.Pages_CarrierDashboard,
-                L("CarrierDashboard"), multiTenancySides: MultiTenancySides.Tenant);
+            var shipperDashboard = pages.CreateChildPermission(AppPermissions.Pages_ShipperDashboard, L("ShipperDashboard"), multiTenancySides: MultiTenancySides.Tenant);
+            var CarrierDashboard = pages.CreateChildPermission(AppPermissions.Pages_CarrierDashboard, L("CarrierDashboard"), multiTenancySides: MultiTenancySides.Tenant);
 
             var receivers = pages.CreateChildPermission(AppPermissions.Pages_Receivers, L("Receivers"));
             receivers.CreateChildPermission(AppPermissions.Pages_Receivers_Create, L("CreateNewReceiver"));
@@ -271,14 +269,10 @@ namespace TACHYON.Authorization
             documentTypes.CreateChildPermission(AppPermissions.Pages_DocumentTypes_Delete, L("DeleteDocumentType"),
                 multiTenancySides: MultiTenancySides.Host);
 
-            var shippingRequests = pages.CreateChildPermission(AppPermissions.Pages_ShippingRequests,
-                L("ShippingRequests"), multiTenancySides: MultiTenancySides.Tenant);
-            shippingRequests.CreateChildPermission(AppPermissions.Pages_ShippingRequests_Create,
-                L("CreateNewShippingRequest"), multiTenancySides: MultiTenancySides.Tenant);
-            shippingRequests.CreateChildPermission(AppPermissions.Pages_ShippingRequests_Edit, L("EditShippingRequest"),
-                multiTenancySides: MultiTenancySides.Tenant);
-            shippingRequests.CreateChildPermission(AppPermissions.Pages_ShippingRequests_Delete,
-                L("DeleteShippingRequest"), multiTenancySides: MultiTenancySides.Tenant);
+            var shippingRequests = pages.CreateChildPermission(AppPermissions.Pages_ShippingRequests, L("ShippingRequests"));
+            shippingRequests.CreateChildPermission(AppPermissions.Pages_ShippingRequests_Create, L("CreateNewShippingRequest"), multiTenancySides: MultiTenancySides.Tenant);
+            shippingRequests.CreateChildPermission(AppPermissions.Pages_ShippingRequests_Edit, L("EditShippingRequest"), multiTenancySides: MultiTenancySides.Tenant);
+            shippingRequests.CreateChildPermission(AppPermissions.Pages_ShippingRequests_Delete, L("DeleteShippingRequest"), multiTenancySides: MultiTenancySides.Tenant);
 
             // new AppAuthorizationTripsProvider(pages);
 
@@ -405,12 +399,9 @@ namespace TACHYON.Authorization
                 multiTenancySides: MultiTenancySides.Host);
 
             var trucks = pages.CreateChildPermission(AppPermissions.Pages_Trucks, L("Trucks"));
-            trucks.CreateChildPermission(AppPermissions.Pages_Trucks_Create, L("CreateNewTruck"),
-                multiTenancySides: MultiTenancySides.Tenant);
-            trucks.CreateChildPermission(AppPermissions.Pages_Trucks_Edit, L("EditTruck"),
-                multiTenancySides: MultiTenancySides.Tenant);
-            trucks.CreateChildPermission(AppPermissions.Pages_Trucks_Delete, L("DeleteTruck"),
-                multiTenancySides: MultiTenancySides.Tenant);
+            trucks.CreateChildPermission(AppPermissions.Pages_Trucks_Create, L("CreateNewTruck"));
+            trucks.CreateChildPermission(AppPermissions.Pages_Trucks_Edit, L("EditTruck"));
+            trucks.CreateChildPermission(AppPermissions.Pages_Trucks_Delete, L("DeleteTruck"));
 
             var trucksTypes = pages.CreateChildPermission(AppPermissions.Pages_TrucksTypes, L("TrucksTypes"),
                 multiTenancySides: MultiTenancySides.Host);

@@ -16,6 +16,7 @@ import {
   ShippingRequestsTripServiceProxy,
   UpdateDocumentFileInput,
   WaybillsServiceProxy,
+  FileDto,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { finalize } from '@node_modules/rxjs/operators';
@@ -62,6 +63,8 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   minHijri: NgbDateStruct = { day: 1, month: 1, year: 1342 };
   todayGregorian = this.dateFormatterService.GetTodayGregorian();
   todayHijri = this.dateFormatterService.ToHijri(this.todayGregorian);
+  minHijriTripdate: NgbDateStruct;
+  minGrogTripdate: NgbDateStruct;
   minTripDateAsGrorg: NgbDateStruct;
   minTripDateAsHijri: NgbDateStruct;
   maxTripDateAsGrorg: NgbDateStruct;
@@ -82,6 +85,10 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   public DocsUploader: FileUploader;
   private _DocsUploaderOptions: FileUploaderOptions = {};
   fileToken: string;
+  fileType: string;
+  fileName: string;
+  hasNewUpload: boolean;
+
   /**
    * DocFileUploader onProgressItem progress
    */
@@ -218,6 +225,8 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     this.minTripDateAsGrorg = this.dateFormatterService.ToGregorianDateStruct(todayGregorian, 'D/M/YYYY');
     this.minTripDateAsHijri = this.dateFormatterService.ToHijriDateStruct(todayGregorian, 'D/M/YYYY');
     this.startTripdate = this.minTripDateAsGrorg;
+    this.minHijriTripdate = this.minTripDateAsHijri;
+    this.minGrogTripdate = this.minTripDateAsGrorg;
   }
 
   close(): void {
@@ -226,7 +235,10 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     this.modal.hide();
     this.trip = new CreateOrEditShippingRequestTripDto();
     this.fileToken = undefined;
+    this.hasNewUpload = undefined;
     this.pickupPointSenderId = undefined;
+    this._TripService.updateSourceFacility(null);
+    this._TripService.updateDestFacility(null);
   }
 
   createOrEditTrip() {
@@ -254,34 +266,36 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
           this.close();
           this.modalSave.emit(null);
           this.notify.info(this.l('SuccessfullySaved'));
+          abp.event.trigger('ShippingRequestTripCreatedEvent');
         });
     }
   }
 
   GetSelectedstartDateChange($event: NgbDateStruct, type) {
-    if ($event != null && $event.year < 1900) {
-      //When Date Type is Gregorian
-      const ngDate = this.dateFormatterService.ToGregorian($event);
-      var date = this.dateFormatterService.NgbDateStructToMoment(ngDate);
-      if (type == 'start') {
-        this.trip.startTripDate = date;
-        this.startTripdate = date;
+    if (type == 'start') {
+      this.startTripdate = $event;
+      if ($event != null && $event.year < 1900) {
+        this.minHijriTripdate = $event;
+      } else {
+        this.minGrogTripdate = $event;
       }
-      if (type == 'end') {
-        this.trip.endTripDate = date;
-        this.endTripdate = date;
-      }
-      //When Date Type is Hijri
-    } else if ($event != null && $event.year > 1900) {
-      var fromHijriDate = this.dateFormatterService.NgbDateStructToMoment($event);
-      if (type == 'start') {
-        this.trip.startTripDate = fromHijriDate;
-        this.startTripdate = date;
-      }
-      if (type == 'end') {
-        this.trip.endTripDate = fromHijriDate;
-        this.endTripdate = date;
-      }
+    }
+    if (type == 'end') this.endTripdate = $event;
+
+    var startDate = this.dateFormatterService.NgbDateStructToMoment(this.startTripdate);
+    var endDate = this.dateFormatterService.NgbDateStructToMoment(this.endTripdate);
+
+    if (this.startTripdate != null && this.startTripdate != undefined)
+      this.trip.startTripDate = this.GetGregorianAndhijriFromDatepickerChange(this.startTripdate).GregorianDate;
+
+    this.trip.startTripDate == null ? (this.trip.startTripDate = moment(new Date())) : null;
+
+    if (this.endTripdate != null && this.endTripdate != undefined)
+      this.trip.endTripDate = this.GetGregorianAndhijriFromDatepickerChange(this.endTripdate).GregorianDate;
+
+    //checks if the trips end date is less than trips start date
+    if (startDate != undefined && endDate != undefined) {
+      if (endDate < startDate) this.trip.endTripDate = this.endTripdate = undefined;
     }
   }
 
@@ -344,7 +358,10 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       if (resp.success) {
         //attach each fileToken to his CreateOrEditDocumentFileDto
         this.trip.createOrEditDocumentFileDto.updateDocumentFileInput = new UpdateDocumentFileInput({ fileToken: resp.result.fileToken });
+        this.hasNewUpload = true;
         this.fileToken = resp.result.fileToken;
+        this.fileType = resp.result.fileType;
+        this.fileName = resp.result.fileName;
       } else {
         this.message.error(resp.error.message);
       }
@@ -385,6 +402,21 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     this.DocsUploader.setOptions(this._DocsUploaderOptions);
   }
 
+  downloadAttatchment(): void {
+    if (this.trip.id && !this.hasNewUpload) {
+      this._fileDownloadService.downloadFileByBinary(
+        this.trip.createOrEditDocumentFileDto.binaryObjectId,
+        this.trip.createOrEditDocumentFileDto.name,
+        this.trip.createOrEditDocumentFileDto.extn
+      );
+    } else {
+      var fileDto = new FileDto();
+      fileDto.fileName = this.fileName;
+      fileDto.fileToken = this.fileToken;
+      fileDto.fileType = this.fileType;
+      this._fileDownloadService.downloadTempFile(fileDto);
+    }
+  }
   DocFileChangeEvent(event: any, item: CreateOrEditDocumentFileDto): void {
     if (event.target.files[0].size > 5242880) {
       //5MB

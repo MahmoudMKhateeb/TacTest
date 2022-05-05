@@ -12,5 +12,10 @@
         public string Destination { get; set; }
         public string DateWork { get; set; }
         public string Remarks { get; set; }
+        public string RoundTrip { get; set; }
+        public string ContainerNumber { get; set; }
+
+
+
     }
 }

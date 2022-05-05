@@ -139,6 +139,7 @@ namespace TACHYON.MultiTenancy
                 createInput.ShouldChangePasswordOnNextLogin = false;
                 createInput.SubscriptionEndDateUtc = subscriptionEndDate;
                 createInput.IsInTrialPeriod = isInTrialPeriod;
+                createInput.IsActive = isActive;
                 var tenantId = await _tenantManager.CreateWithAdminUserAsync(
                     createInput, AppUrlService.CreateEmailActivationUrlFormat(tenancyName));
 
@@ -152,9 +153,9 @@ namespace TACHYON.MultiTenancy
                     Name = input.Name,
                     UserName = AbpUserBase.AdminUserName,
                     EmailAddress = input.AdminEmailAddress,
-                    IsActive = tenant.IsActive,
+                    IsActive = isActive,
                     IsEmailConfirmationRequired = isEmailConfirmationRequired,
-                    IsTenantActive = tenant.IsActive
+                    IsTenantActive = isActive
                 };
             }
         }
@@ -338,7 +339,9 @@ namespace TACHYON.MultiTenancy
         public async Task<List<CountyDto>> GetAllCountriesWithCode()
         {
             var countries = await _lookupCountryRepository
-                .GetAll().OrderBy(x => x.DisplayName)
+                .GetAll()
+                .Include(x => x.Translations)
+                .OrderBy(x => x.DisplayName)
                 .ToListAsync();
             var result = ObjectMapper.Map<List<CountyDto>>(countries);
             return result;
@@ -365,7 +368,7 @@ namespace TACHYON.MultiTenancy
                 .Where(x => x.CountyId == countryId)
                 .OrderBy(x => x.DisplayName)
                 .ToListAsync();
-            
+
             return ObjectMapper.Map<List<CityPolygonLookupTableDto>>(cities);
         }
 

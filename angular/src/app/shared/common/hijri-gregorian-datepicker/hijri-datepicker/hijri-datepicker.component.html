@@ -7,7 +7,7 @@
       'is-invalid': parentForm?.submitted && ngbDatepicker.invalid
     }"
     [(ngModel)]="selectedDate"
-    [placeholder]="'d/M/yyyy' | localize"
+    [placeholder]="'DD/MM/YYYY' | localize"
     ngbDatepicker
     (click)="d.toggle()"
     (dateSelect)="changeDate()"

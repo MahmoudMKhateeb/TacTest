@@ -77,7 +77,7 @@
                   </div>
 
                   <div class="row">
-                    <div class="form-group col-6">
+                    <div class="form-group col-6" hidden>
                       <label for="EmailAddress">{{ 'EmailAddress' | localize }} <span class="required-fileds"> *</span></label>
                       <input
                         style="text-align: left !important"
@@ -247,7 +247,7 @@
                 </div>
                 <div class="col-6">
                   <div class="form-group">
-                    <label for="driverLicenseTypeId"> {{ 'driverLicenseType' | localize }}<span class="text-danger">*</span> </label>
+                    <label for="driverLicenseTypeId"> {{ 'DriverLicenseType' | localize }}<span class="text-danger">*</span> </label>
                     <select
                       id="driverLicenseTypeId"
                       #driverLicenseTypeId="ngModel"
@@ -260,6 +260,7 @@
                         'is-invalid': userForm.submitted && !driverLicenseTypeId.valid
                       }"
                     >
+                      <option selected disabled [ngValue]="null">{{ l('SelectALicenseType') }}</option>
                       <option *ngFor="let item of driverLicenseTypes" [value]="item.id">{{ item.displayName }}</option>
                     </select>
                     <validation-messages [formCtrl]="driverLicenseTypeId"></validation-messages>

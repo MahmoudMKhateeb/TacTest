@@ -62,7 +62,7 @@ namespace TACHYON.Authorization.Users
             if (content != null)
                 await _emailSender.SendAsync(new MailMessage
                 {
-                    To = {input.TestEmail},
+                    To = { input.TestEmail },
                     Subject = input.TestTemplate.DisplayName,
                     Body = content.html,
                     IsBodyHtml = true
@@ -101,7 +101,10 @@ namespace TACHYON.Authorization.Users
 
                 await _emailSender.SendAsync(new MailMessage
                 {
-                    To = {user.EmailAddress}, Subject = L("EmailActivation"), Body = html, IsBodyHtml = true
+                    To = { user.EmailAddress },
+                    Subject = L("EmailActivation"),
+                    Body = html,
+                    IsBodyHtml = true
                 });
             }
             catch (Exception e)
@@ -111,18 +114,18 @@ namespace TACHYON.Authorization.Users
         }
 
         [UnitOfWork]
-        public virtual async Task SendApprovedDocumentEmail(int tenantId, string documentName)
+        public virtual async Task SendApprovedDocumentEmail(int tenantId, string loginLink)
         {
             try
             {
                 string html = await GetContent(EmailTemplateTypesEnum.ApprovedDocument);
                 html = html
                     .Replace("{{CompanyName}}", await GetCompanyName(tenantId))
-                    .Replace("{{DocumentName}}", documentName);
+                    .Replace("{{Link}}", loginLink);
 
                 await _emailSender.SendAsync(new MailMessage
                 {
-                    To = {await GetTenantAdminEmailAddress(tenantId)},
+                    To = { await GetTenantAdminEmailAddress(tenantId) },
                     Subject = L("DocumentsApproved"),
                     Body = html,
                     IsBodyHtml = true
@@ -147,7 +150,7 @@ namespace TACHYON.Authorization.Users
 
                 await _emailSender.SendAsync(new MailMessage
                 {
-                    To = {await GetTenantAdminEmailAddress(tenantId)},
+                    To = { await GetTenantAdminEmailAddress(tenantId) },
                     Subject = L("RejectedDocument"),
                     Body = html,
                     IsBodyHtml = true
@@ -166,13 +169,16 @@ namespace TACHYON.Authorization.Users
                 var htmlTemplate = await GetContent(EmailTemplateTypesEnum.ExpiredDocuments);
                 var companyName = await GetCompanyName(tenantId);
                 htmlTemplate = htmlTemplate.Replace("{{CompanyName}}", companyName ?? "")
-                    .Replace("{{DocumentsTable}}",documents.Length.ToString());
+                    .Replace("{{DocumentsTable}}", documents.Length.ToString());
                 var adminEmail = await GetTenantAdminEmailAddress(tenantId);
 
                 if (!adminEmail.IsNullOrEmpty())
                     await _emailSender.SendAsync(new MailMessage
                     {
-                        To = {adminEmail}, Subject = L("ExpiredDocument"), Body = htmlTemplate, IsBodyHtml = true
+                        To = { adminEmail },
+                        Subject = L("ExpiredDocument"),
+                        Body = htmlTemplate,
+                        IsBodyHtml = true
                     });
             }
             catch (Exception e)
@@ -211,7 +217,7 @@ namespace TACHYON.Authorization.Users
                 if (user.TenantId.HasValue)
                     await _emailSender.SendAsync(new MailMessage
                     {
-                        To = {await GetTenantAdminEmailAddress(user.TenantId.Value)},
+                        To = { await GetTenantAdminEmailAddress(user.TenantId.Value) },
                         Subject = L("ResetPassword"),
                         Body = htmlTemplate,
                         IsBodyHtml = true
@@ -234,7 +240,10 @@ namespace TACHYON.Authorization.Users
 
                 await _emailSender.SendAsync(new MailMessage
                 {
-                    To = {userEmail}, Subject = L("PasswordUpdated"), Body = htmlTemplate, IsBodyHtml = true
+                    To = { userEmail },
+                    Subject = L("PasswordUpdated"),
+                    Body = htmlTemplate,
+                    IsBodyHtml = true
                 });
             }
             catch (Exception e)
@@ -256,7 +265,7 @@ namespace TACHYON.Authorization.Users
 
                 await _emailSender.SendAsync(new MailMessage
                 {
-                    To = {await GetTenantAdminEmailAddress(tenantId)},
+                    To = { await GetTenantAdminEmailAddress(tenantId) },
                     Subject = L("WarningSuspendAccount"),
                     Body = emailTemplate,
                     IsBodyHtml = true
@@ -279,7 +288,7 @@ namespace TACHYON.Authorization.Users
 
                 await _emailSender.SendAsync(new MailMessage
                 {
-                    To = {await GetTenantAdminEmailAddress(tenantId)},
+                    To = { await GetTenantAdminEmailAddress(tenantId) },
                     Subject = L("SuspendedAccountDocumentExpired"),
                     Body = emailTemplate,
                     IsBodyHtml = true
@@ -305,7 +314,7 @@ namespace TACHYON.Authorization.Users
 
                 await _emailSender.SendAsync(new MailMessage
                 {
-                    To = {await GetTenantAdminEmailAddress(tenantId)},
+                    To = { await GetTenantAdminEmailAddress(tenantId) },
                     Subject = L("InvoiceDue_Title"),
                     Body = emailTemplate,
                     IsBodyHtml = true
@@ -337,7 +346,7 @@ namespace TACHYON.Authorization.Users
 
                 await _emailSender.SendAsync(new MailMessage
                 {
-                    To = {await GetTenantAdminEmailAddress(tenantId)},
+                    To = { await GetTenantAdminEmailAddress(tenantId) },
                     Subject = L("IssuedInvoice"),
                     Body = emailTemplate,
                     IsBodyHtml = true
@@ -367,7 +376,10 @@ namespace TACHYON.Authorization.Users
 
                 await _emailSender.SendAsync(new MailMessage
                 {
-                    To = {adminEmail}, Subject = L("SubscriptionExpired"), Body = htmlContent, IsBodyHtml = true
+                    To = { adminEmail },
+                    Subject = L("SubscriptionExpired"),
+                    Body = htmlContent,
+                    IsBodyHtml = true
                 });
             }
             catch (Exception e)
@@ -393,7 +405,7 @@ namespace TACHYON.Authorization.Users
 
                 await _emailSender.SendAsync(new MailMessage
                 {
-                    To = {adminEmail},
+                    To = { adminEmail },
                     Subject = L("EditionSubscriptionExpired"),
                     Body = htmlContent,
                     IsBodyHtml = true
@@ -418,7 +430,7 @@ namespace TACHYON.Authorization.Users
 
                 await _emailSender.SendAsync(new MailMessage
                 {
-                    To = {adminEmail},
+                    To = { adminEmail },
                     Subject = L("FailedSubscriptionTerminations"),
                     Body = htmlContent,
                     IsBodyHtml = true
@@ -468,7 +480,7 @@ namespace TACHYON.Authorization.Users
 
                 await _emailSender.SendAsync(new MailMessage
                 {
-                    To = {adminEmail},
+                    To = { adminEmail },
                     Subject = L("SubscriptionExpiringSoon"),
                     Body = htmlContent,
                     IsBodyHtml = true
@@ -525,7 +537,10 @@ namespace TACHYON.Authorization.Users
 
                 await _emailSender.SendAsync(new MailMessage
                 {
-                    To = {user.EmailAddress}, Subject = L("ChatMessage"), Body = htmlContent, IsBodyHtml = true
+                    To = { user.EmailAddress },
+                    Subject = L("ChatMessage"),
+                    Body = htmlContent,
+                    IsBodyHtml = true
                 });
             }
             catch (Exception e)
@@ -586,9 +601,9 @@ namespace TACHYON.Authorization.Users
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
             {
                 return await (from user in _lookupUserRepository.GetAll()
-                    where user.TenantId == tenantId
-                          && user.UserName.Equals(AbpUserBase.AdminUserName)
-                    select user.EmailAddress).FirstOrDefaultAsync();
+                              where user.TenantId == tenantId
+                                    && user.UserName.Equals(AbpUserBase.AdminUserName)
+                              select user.EmailAddress).FirstOrDefaultAsync();
             }
         }
 
@@ -598,8 +613,8 @@ namespace TACHYON.Authorization.Users
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
             {
                 return await (from tenant in _tenantRepository.GetAll()
-                    where tenant.Id == tenantId
-                    select tenant.companyName).FirstOrDefaultAsync();
+                              where tenant.Id == tenantId
+                              select tenant.companyName).FirstOrDefaultAsync();
             }
         }
 

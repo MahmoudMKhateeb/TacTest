@@ -204,4 +204,8 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
   createNewRequest() {
     this.router.navigateByUrl('/app/main/shippingRequests/shippingRequestWizard');
   }
+
+  isCarrierOwnRequest(request: GetShippingRequestForPriceOfferListDto): boolean {
+    return this.feature.isEnabled('App.CarrierAsASaas') && request.isSaas && this.appSession.tenantId === request.tenantId;
+  }
 }

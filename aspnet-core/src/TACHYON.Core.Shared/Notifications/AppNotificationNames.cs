@@ -113,7 +113,9 @@ namespace TACHYON.Notifications
         #endregion
 
         #endregion
-
+        #region PriceOffer
+        public const string SendPriceOfferToShipper = "App.SendPriceOfferToShipper";
+        #endregion
         #region Mobile
 
         public const string DriverTripReminder = "App.DriverTripReminder";

@@ -14,6 +14,8 @@ namespace TACHYON.Invoices.SubmitInvoices
         Task Claim(SubmitInvoiceClaimCreateInput Input);
         Task Accepted(long id);
         Task Rejected(SubmitInvoiceRejectedInput Input);
+        Task<bool> MakeSubmitInvoicePaid(long SubmitinvoiceId);
+        Task MakeSubmitInvoiceUnPaid(long SubmitinvoiceId);
 
         Task<FileDto> GetFileDto(long id);
         Task<FileDto> Exports(SubmitInvoiceFilterInput input);

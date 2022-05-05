@@ -9,13 +9,20 @@ import { HostDashboardServiceProxy } from '@shared/service-proxies/service-proxi
 })
 export class TopThreeShippersHaveRequestsComponent extends AppComponentBase implements OnInit {
   Shippers: any;
+  loading: boolean = false;
 
   constructor(private injector: Injector, private _hostDashboardServiceProxy: HostDashboardServiceProxy) {
     super(injector);
   }
   ngOnInit(): void {
+    this.getData();
+  }
+
+  getData() {
+    this.loading = true;
     this._hostDashboardServiceProxy.getShippersHaveMostRequests().subscribe((result) => {
       this.Shippers = result;
+      this.loading = false;
     });
   }
 }

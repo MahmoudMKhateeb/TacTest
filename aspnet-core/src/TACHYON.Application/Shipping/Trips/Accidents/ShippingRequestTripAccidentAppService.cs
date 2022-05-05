@@ -357,19 +357,14 @@ namespace TACHYON.Shipping.Trips.Accidents
         {
             RoutPoint ActivePoint = await _RoutPointRepository
                 .GetAll()
-                .Include(T => T.ShippingRequestTripFk)
-                .ThenInclude(r => r.ShippingRequestFk)
-                .Where(x => x.IsActive && x.ShippingRequestTripFk.Id == TripId &&
-                            x.ShippingRequestTripFk.Status == ShippingRequestTripStatus.Intransit)
-                .WhereIf(AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Carrier) && !GetCurrentUser().IsDriver,
-                    x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
-                .WhereIf(AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Shipper),
-                    x => x.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId)
-                .WhereIf(!AbpSession.TenantId.HasValue || IsEnabled(AppFeatures.TachyonDealer),
-                    x => x.ShippingRequestTripFk.ShippingRequestFk.IsTachyonDeal)
-                .WhereIf(GetCurrentUser().IsDriver,
-                    x => x.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId)
-                .FirstOrDefaultAsync();
+                    .Include(T => T.ShippingRequestTripFk)
+                    .ThenInclude(r => r.ShippingRequestFk)
+                    .Where(x => x.IsActive && x.ShippingRequestTripFk.Id == TripId && x.ShippingRequestTripFk.Status == ShippingRequestTripStatus.InTransit)
+                    .WhereIf(AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Carrier) && !GetCurrentUser().IsDriver, x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
+                    .WhereIf(AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Shipper), x => x.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId)
+                    .WhereIf(!AbpSession.TenantId.HasValue || IsEnabled(AppFeatures.TachyonDealer), x => x.ShippingRequestTripFk.ShippingRequestFk.IsTachyonDeal)
+                    .WhereIf(GetCurrentUser().IsDriver, x => x.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId)
+                    .FirstOrDefaultAsync();
             if (ActivePoint == null) throw new UserFriendlyException(L("YouCanNotAddAccidentBecauseNoActivePoint"));
             return ActivePoint;
         }

@@ -66,6 +66,14 @@ namespace TACHYON.Extension
             transContext.AddRange(translations);
         }
 
+
+        public static List<FieldInfo> GetAllPublicConstants(this Type type)
+        {
+            return type
+                .GetFields(BindingFlags.Public)
+                .Where(fi => fi.IsLiteral && !fi.IsInitOnly)
+                .ToList();
+        }
         public static string GetTranslatedDisplayName<TEntity,TTranslation,TKey>(this TEntity entity)
             where TEntity : FullAuditedEntity<TKey>, IHasKey, IMultiLingualEntity<TTranslation>
             where TTranslation : class, IEntityTranslation<TEntity, TKey>, IHasDisplayName, new() 
@@ -109,13 +117,23 @@ namespace TACHYON.Extension
             return propInfo.GetValue(obj)?.ToString();
         }
 
-        public static decimal GetEntityRatingAverage(this IEnumerable<Tuple<decimal, RateType>> ratingLogs,
-            Func<Tuple<decimal, RateType>, bool> selector)
+        public static decimal GetEntityRatingAverage(this IEnumerable<Tuple<decimal, RateType>> ratingLogs, Func<Tuple<decimal, RateType>, bool> selector)
         {
             var entityRatingLogs = ratingLogs.Where(selector).ToList();
             if (!entityRatingLogs.Any()) return 0;
 
             return entityRatingLogs.Sum(x => x.Item1) / entityRatingLogs.Count;
         }
+
+
+        //        Usage:
+        //Console.WriteLine(1.In(2, 1, 3));
+        //Console.WriteLine(1.In(2, 3));
+        //Console.WriteLine(UserStatus.Active.In(UserStatus.Removed, UserStatus.Banned));
+        public static bool In<T>(this T val, params T[] values) where T : struct
+        {
+            return values.Contains(val);
+        }
+
     }
 }

@@ -82,7 +82,7 @@
               <dxo-scrolling mode="virtual"></dxo-scrolling>
               <dxo-group-panel [visible]="false"></dxo-group-panel>
               <dxo-grouping #expand [autoExpandAll]="false"></dxo-grouping>
-              <dxo-remote-operations [groupPaging]="false" [sorting]="false" [filtering]="true"> </dxo-remote-operations>
+              <dxo-remote-operations> </dxo-remote-operations>
               <dxo-paging [pageSize]="20"></dxo-paging>
               <dxo-summary>
                 <dxi-group-item column="id" summaryType="count"> </dxi-group-item>
@@ -104,12 +104,12 @@
                   )
                 "
               ></dxi-column>
-              <dxi-column dataField="userName" caption="{{ 'PhoneNumber' | localize }}"></dxi-column>
-              <dxi-column dataField="emailAddress" caption="{{ 'Email' | localize }}"></dxi-column>
-              <dxi-column dataField="accountNumber" caption="{{ 'UserID' | localize }}"></dxi-column>
-              <dxi-column cellTemplate="cellRatingTemplate" dataField="rate" dataType="string" caption="{{ 'rating' | localize }}"></dxi-column>
               <dxi-column dataField="name" caption="{{ 'FirstName' | localize }}"></dxi-column>
               <dxi-column dataField="surname" caption="{{ 'LastName' | localize }}"></dxi-column>
+              <dxi-column dataField="phoneNumber" caption="{{ 'PhoneNumber' | localize }}"></dxi-column>
+              <!-- <dxi-column dataField="emailAddress" caption="{{ 'Email' | localize }}"></dxi-column> -->
+              <dxi-column dataField="accountNumber" caption="{{ 'UserID' | localize }}"></dxi-column>
+              <dxi-column cellTemplate="cellRatingTemplate" dataField="rate" dataType="string" caption="{{ 'rating' | localize }}"></dxi-column>
               <dxi-column dataField="isActive" caption="{{ 'Status' | localize }}"></dxi-column>
               <dxi-column dataField="creationTime" caption="{{ 'DriverCreationDateAndTime' | localize }}" dataType="datetime"></dxi-column>
               <dxi-column dataField="companyName" caption="{{ l('companyName') }}"> </dxi-column>
@@ -209,7 +209,7 @@
       </div>
     </div>
     <viewOrEditEntityDocumentsModal #viewOrEditEntityDocumentsModal></viewOrEditEntityDocumentsModal>
-    <createOrEditDriverModal [creatDriver]="true" #createOrEditUserModal (modalSave)="getUsers()"> </createOrEditDriverModal>
+    <createOrEditDriverModal [creatDriver]="true" #createOrEditUserModal (modalSave)="getDrivers()"> </createOrEditDriverModal>
     <editUserPermissionsModal #editUserPermissionsModal></editUserPermissionsModal>
     <app-driver-tracking-modal #DriverTrackingModal></app-driver-tracking-modal>
   </div>

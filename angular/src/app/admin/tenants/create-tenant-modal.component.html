@@ -84,7 +84,7 @@
 
             <div class="col-6">
               <div class="form-group">
-                <label for="Name">{{ 'CompanyFullLeagalName' | localize }} *</label>
+                <label for="Name">{{ 'CompanyFullLeagalName' | localize }} <span class="required-fileds">*</span></label>
                 <input
                   id="Name"
                   #nameInput="ngModel"
@@ -224,7 +224,7 @@
           </div>
 
           <div class="form-group">
-            <label for="AdminEmailAddress">{{ 'AdminEmailAddress' | localize }} *</label>
+            <label for="AdminEmailAddress">{{ 'AdminEmailAddress' | localize }} <span class="required-fileds">*</span></label>
             <input
               id="AdminEmailAddress"
               #adminEmailAddressInput="ngModel"

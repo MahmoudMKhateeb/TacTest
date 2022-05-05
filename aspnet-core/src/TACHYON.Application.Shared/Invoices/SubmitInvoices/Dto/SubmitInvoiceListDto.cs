@@ -16,6 +16,7 @@ namespace TACHYON.Invoices.SubmitInvoices.Dto
         public string DocumentName { get; set; }
         public string DocumentContentType { get; set; }
         public DateTime CreationTime { get; set; }
+        public DateTime? DueDate { get; set; }
         public decimal TotalAmount { get; set; }
     }
 }

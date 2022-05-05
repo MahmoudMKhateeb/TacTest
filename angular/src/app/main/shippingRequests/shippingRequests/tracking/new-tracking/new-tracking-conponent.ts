@@ -1,7 +1,7 @@
 import { Component, ElementRef, Injector, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import {
-  FileDto,
+  GetAllUploadedFileDto,
   InvokeStatusInputDto,
   PickingType,
   PointTransactionDto,
@@ -12,10 +12,8 @@ import {
   ShippingRequestType,
   TrackingListDto,
   TrackingRoutePointDto,
-  RoutePointStatus,
   TrackingServiceProxy,
   WaybillsServiceProxy,
-  GetAllUploadedFileDto,
 } from '@shared/service-proxies/service-proxies';
 import { finalize } from 'rxjs/operators';
 import { TrackingConfirmModalComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tacking-confirm-code-model.component';
@@ -24,12 +22,15 @@ import { NgbDropdownConfig } from '@node_modules/@ng-bootstrap/ng-bootstrap';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { FileDownloadService } from '@shared/utils/file-download.service';
 import { EntityLogComponent } from '@app/shared/common/entity-log/entity-log.component';
-import { AngularFireDatabase, AngularFireList } from '@angular/fire/compat/database';
+import { AngularFireDatabase } from '@angular/fire/compat/database';
+import { DriverLocation, FirebaseHelperClass, trackingIconsList } from '@app/main/shippingRequests/shippingRequests/tracking/firebaseHelper.class';
+import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
+import { FileViwerComponent } from '@app/shared/common/file-viwer/file-viwer.component';
 
 @Component({
   selector: 'new-tracking-conponent',
   templateUrl: './new-tracking-conponent.html',
-  styleUrls: ['./new-tracking-conponent.css'],
+  styleUrls: ['./new-tracking-conponent.scss'],
   providers: [NgbDropdownConfig],
   animations: [appModuleAnimation()],
 })
@@ -37,11 +38,12 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
   @ViewChild('modelconfirm', { static: false }) modelConfirmCode: TrackingConfirmModalComponent;
   @ViewChild('modelpod', { static: false }) modelpod: TrackingPODModalComponent;
   @ViewChild('appEntityLog', { static: false }) activityLogModal: EntityLogComponent;
+  @ViewChild('fileViwerComponent', { static: false }) fileViwerComponent: FileViwerComponent;
+
   @Input() trip: TrackingListDto = new TrackingListDto();
   active = false;
   item: number;
-  origin = { lat: null, lng: null };
-  destination = { lat: null, lng: null };
+
   routePoints: TrackingRoutePointDto[];
   pointsIsLoading = true;
   distance: string;
@@ -64,25 +66,26 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
   pointPodList: GetAllUploadedFileDto[];
   deliveryGoodPictureId: number;
   mapToggle = true;
-  private fireDB: AngularFireList<unknown>;
-  driverLng: number;
-  driverlat: number;
-  myIcon = {
-    url: 'https://img.icons8.com/external-justicon-flat-justicon/64/000000/external-truck-transportation-justicon-flat-justicon.png',
-    scaledSize: {
-      width: 64,
-      height: 64,
-    },
-  };
   newReceiverCode: string;
+  tripRoute = {
+    origin: { lat: null, lng: null },
+    wayPoints: [],
+    destination: { lat: null, lng: null },
+  };
+  driversToggle = true;
+  tripsToggle = true;
+  driverLiveLocation: DriverLocation = { lng: 0, lat: 0 };
+  trackingIconsList = trackingIconsList;
+  driverOnline: boolean;
+
   constructor(
     injector: Injector,
     private elRef: ElementRef,
     private _trackingServiceProxy: TrackingServiceProxy,
     private _waybillsServiceProxy: WaybillsServiceProxy,
     private _fileDownloadService: FileDownloadService,
-    config: NgbDropdownConfig,
-    private _db: AngularFireDatabase
+    private _db: AngularFireDatabase,
+    config: NgbDropdownConfig
   ) {
     super(injector);
     config.autoClose = true;
@@ -95,19 +98,52 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
    */
   ngOnChanges(changes: SimpleChanges) {
     this.getForView();
-    this.getCordinatesByCityName(this.trip.origin, 'source');
-    this.getCordinatesByCityName(this.trip.destination, 'destanation');
     this.getDriverLiveLocation();
   }
 
+  /**
+   * when map is ready do stuff
+   * @param event
+   */
+  mapReady(event: any) {
+    event.controls[google.maps.ControlPosition.TOP_RIGHT].push(document.getElementById('Settings'));
+  }
+
+  /**
+   * Get source/Destionation/WayPoints For Map Drawing from Drop Points
+   */
+  getTripRouteForMap() {
+    this.tripRoute.origin.lng = this.routePoints[0].lng;
+    this.tripRoute.origin.lat = this.routePoints[0].lat;
+    this.tripRoute.destination.lng = this.routePoints[this.routePoints.length - 1].lng;
+    this.tripRoute.destination.lat = this.routePoints[this.routePoints.length - 1].lat;
+    for (let i = 1; i < this.routePoints.length - 1; i++) {
+      this.tripRoute.wayPoints.push({
+        location: {
+          lat: this.routePoints[i].lat,
+          lng: this.routePoints[i].lng,
+        },
+      });
+    }
+  }
+
+  /**
+   * get live Driver Location
+   */
   getDriverLiveLocation() {
-    this.fireDB = this._db.list('maps', (ref) => ref.orderByChild('tripId').equalTo(this.trip.id));
-    this.fireDB.valueChanges().subscribe((res: any) => {
-      console.log(res);
-      this.driverLng = res[0].lng;
-      this.driverlat = res[0].lat;
+    let firebaseHelper = new FirebaseHelperClass(this._db);
+    firebaseHelper.getDriverLocationLiveByTripId(this.trip.id).subscribe((res) => {
+      this.driverLiveLocation.lat = res[0]?.lat;
+      this.driverLiveLocation.lng = res[0]?.lng;
+      //if the trip is in transit and there is not driver data coming from firebase
+      if (this.trip.status == this.tripStatusesEnum.InTransit && !isNotNullOrUndefined(res[0])) {
+        this.driverOnline = false;
+      } else {
+        this.driverOnline = res[0]?.onlineStatus;
+      }
     });
   }
+
   /**
    * Show Item
    * @param item
@@ -141,12 +177,15 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
       )
       .subscribe((result) => {
         this.trip.status = result.status;
-        this.trip.canStartTrip = result.canStartTrip;
         this.trip.driverStatus = result.driverStatus;
         this.trip.statusTitle = result.statusTitle;
         this.routePoints = result.routPoints;
+        if (result.status === this.tripStatusesEnum.Delivered) {
+          this.emitToMobileApplication('TripIsDelivered', null, 'delete');
+        }
         this.syncTripInGetForView(this.trip);
         this.handleCanGoNextLocation(result.routPoints);
+        this.getTripRouteForMap();
       });
   }
 
@@ -163,6 +202,7 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
         finalize(() => {
           this.saving = false;
           this.getForView();
+          this.emitToMobileApplication('Started', this.routePoints[0], 'write');
         })
       )
       .subscribe(() => {
@@ -170,64 +210,6 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
       });
   }
 
-  /**
-   * Get City Cordinates By Providing its name
-   * this finction is to draw the shipping Request Main Route in View SR Details in marketPlace
-   * @param cityName
-   * @param cityType   source/dest
-   */
-  getCordinatesByCityName(cityName: string, cityType: string) {
-    const geocoder = new google.maps.Geocoder();
-    geocoder.geocode(
-      {
-        address: cityName,
-      },
-      (results, status) => {
-        if (status == google.maps.GeocoderStatus.OK) {
-          const Lat = results[0].geometry.location.lat();
-          const Lng = results[0].geometry.location.lng();
-          if (cityType == 'source') {
-            this.origin = { lat: Lat, lng: Lng };
-          } else {
-            this.destination = { lat: Lat, lng: Lng };
-            this.messuareDistance(this.origin, this.destination);
-          }
-        } else {
-          console.log('Something got wrong ' + status);
-        }
-      }
-    );
-  }
-
-  /**
-   * Measure the Distance Between 2 Points using Cordinates
-   * @param Oring { lat: null, lng: null }
-   * @param destination { lat: null, lng: null }
-   */
-
-  messuareDistance(origin, destination) {
-    origin = this.origin;
-    destination = this.destination;
-    const service = new google.maps.DistanceMatrixService();
-    service.getDistanceMatrix(
-      {
-        origins: [{ lat: origin.lat, lng: origin.lng }],
-        destinations: [{ lat: destination.lat, lng: destination.lng }],
-        travelMode: google.maps.TravelMode.DRIVING,
-        unitSystem: google.maps.UnitSystem.METRIC,
-        avoidHighways: false,
-        avoidTolls: false,
-      },
-      (response, status) => {
-        this.distance = response.rows[0].elements[0].distance.text;
-        this.duration = response.rows[0].elements[0].duration.text;
-      }
-    );
-  }
-
-  /**
-   * accepts the trip
-   */
   accept(tripId?: number): void {
     this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
       if (isConfirmed) {
@@ -242,79 +224,10 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
             })
           )
           .subscribe((result) => {
+            this.emitToMobileApplication('Accepted', this.routePoints[0], 'write');
             this.notify.info(this.l('SuccessfullyAccepted'));
           });
       }
-    });
-  }
-
-  /**
-   * time line Panel Click
-   * @param $event
-   */
-  timeLinePanelClick(point: TrackingRoutePointDto) {
-    this.item = point.id;
-    if (this.markerLong == point.lng && this.markerLat == point.lat) {
-      this.markerLong = null;
-      this.markerLat = null;
-      this.markerFacilityName = '';
-      return;
-    }
-    this.markerLong = point.lng;
-    this.markerLat = point.lat;
-    this.markerFacilityName = '';
-  }
-
-  /**
-   * handels Pod Uploading Process
-   * @param point
-   * @param transaction
-   * @private
-   */
-  private handleUploadPod(point: TrackingRoutePointDto, transaction: PointTransactionDto) {
-    this.modelpod.show(point.id, transaction.action, 'UplodePOD', transaction.toStatus);
-    abp.event.on('PodUploadedSuccess', () => {
-      this.getForView();
-    });
-  }
-
-  /**
-   * handels Good Picture Uploading Process
-   * @param point
-   * @param transaction
-   * @private
-   */
-  private handleUplodeGoodPicture(point: TrackingRoutePointDto, transaction: PointTransactionDto) {
-    this.modelpod.show(point.id, transaction.action, 'UplodeGoodPicture', transaction.toStatus);
-    abp.event.on('DeliveryGoodUploadedSuccess', () => {
-      this.getForView();
-    });
-  }
-
-  /**
-   * handles the Trip Confirmation code process
-   * opens the modal the send a request with the code to the invoke service and if code is correct refresh the data (getforView)
-   * @param point
-   * @param transaction
-   */
-  private handleDeliveryConfirmationCode(point: TrackingRoutePointDto, transaction: PointTransactionDto) {
-    //show the modal
-    this.modelConfirmCode.show(point.id, transaction.action);
-    abp.event.on('trackingConfirmCodeSubmitted', () => {
-      this.getForView();
-    });
-  }
-
-  /**
-   * handels the upload proccess of a delivery note for the points
-   * @param point
-   * @param transaction
-   * @private
-   */
-  private handleUploadDeliveryNotes(point: TrackingRoutePointDto, transaction: PointTransactionDto) {
-    this.modelpod.show(point.id, transaction.action, 'UploadDeliveryNotes', transaction.toStatus);
-    abp.event.on('tripDeliveryNotesUploadSuccess', () => {
-      this.getForView();
     });
   }
 
@@ -330,24 +243,22 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
     invokeRequestBody.id = point.id;
     invokeRequestBody.action = transaction.action;
     //TODO  - Dont Forget to take the secound acound that requires pod for karam
-    if (transaction.toStatus === RoutePointStatus.DeliveryConfirmation) {
+    if (
+      transaction.action === 'FinishOffLoadShipmentDeliveryConfirmation' ||
+      transaction.action === 'DeliveryConfirmation' ||
+      transaction.action === 'UplodeDeliveryNoteDeliveryConfirmation'
+    ) {
       //handle upload Pod
       return this.handleUploadPod(point, transaction);
     }
-    if (transaction.toStatus === RoutePointStatus.DeliveryNoteUploded) {
+    if (transaction.action === 'UplodeDeliveryNote') {
       // this.saving = false;
       return this.handleUploadDeliveryNotes(point, transaction);
     }
-    if (transaction.toStatus === RoutePointStatus.ReceiverConfirmed) {
+    if (transaction.action === 'ReceiverConfirmed' || transaction.action === 'DeliveryConfirmationReceiverConfirmed') {
       // this.saving = false;
       return this.handleDeliveryConfirmationCode(point, transaction);
     }
-    if (transaction.toStatus === RoutePointStatus.UplodeGoodPicture) {
-      // this.saving = false;
-      // this.busyPointId = null;
-      return this.handleUplodeGoodPicture(point, transaction);
-    }
-
     this.busyPointId = point.id;
 
     this._trackingServiceProxy
@@ -360,20 +271,25 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
       .subscribe(() => {
         this.getForView();
       });
+    this.emitToMobileApplication(transaction.action, point, 'write');
   }
 
   /**
    * creates the Steps for the primeng stepper
    * @param statues
    */
-  getStepperSteps(statues: RoutPointTransactionDto[]): {} {
+  getStepperSteps(statues: RoutPointTransactionDto[]): any[] {
     let items = [];
     //TODO change active index back to null
     this.activeIndex = null;
     for (let i = 0; i < statues.length; i++) {
       items.push({
-        label: statues[i].name,
-        styleClass: 'completed',
+        index: i + 1,
+        status: statues[i].name,
+        date: statues[i].name,
+        icon: 'flaticon2-checkmark',
+        time: statues[i].creationTime,
+        isDone: statues[i].isDone,
       });
       if (statues[i].isDone) {
         this.activeIndex = i;
@@ -403,33 +319,6 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
       });
   }
 
-  private handleCanGoNextLocation(routPoints: TrackingRoutePointDto[]): boolean {
-    const singleDrop = this.routeTypeEnum.SingleDrop;
-    const MultipleDrops = this.routeTypeEnum.MultipleDrops;
-    const canStartAnotherPoint = routPoints.find((item) => item.canGoToNextLocation === true) ? true : false;
-    console.log(
-      'routPoints.find((item) => item.canGoToNextLocation)',
-      routPoints.find((item) => item.canGoToNextLocation)
-    );
-    console.log('routPoints', routPoints);
-    console.log('canStartAnotherPoint', canStartAnotherPoint);
-    //single Drop
-    if (this.trip.routeTypeId === singleDrop && canStartAnotherPoint) {
-      console.log('should go next');
-
-      this.saving = true;
-      this.nextLocation(this.routePoints[1]);
-      this.notify.info('CanGoNextForSingleDrop');
-    }
-    //for Multible Drops
-    if (this.trip.routeTypeId === MultipleDrops && canStartAnotherPoint && routPoints[0].isComplete) {
-      this.notify.info('CanGoNext');
-      console.log('can Go Next For MultiDrops');
-      this.canStartAnotherPoint = canStartAnotherPoint;
-    }
-    return (this.canStartAnotherPoint = canStartAnotherPoint);
-  }
-
   /**
    * downloads the wayBill For MultiDrops Points
    * @param id
@@ -438,6 +327,7 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
     this.dropWaybillLoadingId = id;
     this._waybillsServiceProxy.getMultipleDropWaybillPdf(id).subscribe((result) => {
       this._fileDownloadService.downloadTempFile(result);
+      this.fileViwerComponent.show(this._fileDownloadService.downloadTempFile(result), 'pdf');
       this.dropWaybillLoadingId = null;
     });
   }
@@ -481,24 +371,14 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
         this.pointPodList = res;
       });
   }
-  /**
-   * downloads the wayBill For MultiDrops Points
-   * @param id
-   */
-  downloadDeliveryGoodPicture(id: number) {
-    this.deliveryGoodPictureId = id;
-    this._trackingServiceProxy.getDeliveryGoodPicture(id).subscribe((result) => {
-      this._fileDownloadService.downloadFileByBinaryId(result.documentName, result.documentId);
-      this.deliveryGoodPictureId = null;
-    });
-  }
 
   /**
    * download a pod file
    * @param pod
    */
   downloadPOD(pod: GetAllUploadedFileDto): void {
-    this._fileDownloadService.downloadFileByBinary(pod.documentId, pod.fileName, pod.fileType);
+    let image = this._fileDownloadService.downloadFileByBinary(pod.documentId, pod.fileName, pod.fileType);
+    this.fileViwerComponent.show(image, 'img');
   }
 
   showPointLog(pointId: number) {
@@ -523,5 +403,99 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
         });
       }
     });
+  }
+
+  /**
+   * show or hide drivers  from the map
+   */
+  driverToggle() {
+    this.driversToggle = !this.driversToggle;
+  }
+
+  /**
+   * show or hide trips from the map
+   */
+  tripToggle() {
+    this.tripsToggle = !this.tripsToggle;
+  }
+
+  /**
+   * handels Pod Uploading Process
+   * @param point
+   * @param transaction
+   * @private
+   */
+  private handleUploadPod(point: TrackingRoutePointDto, transaction: PointTransactionDto) {
+    this.modelpod.show(point.id, transaction.action);
+    abp.event.on('PodUploadedSuccess', () => {
+      this.getForView();
+    });
+  }
+
+  /**
+   * handles the Trip Confirmation code process
+   * opens the modal the send a request with the code to the invoke service and if code is correct refresh the data (getforView)
+   * @param point
+   * @param transaction
+   */
+  private handleDeliveryConfirmationCode(point: TrackingRoutePointDto, transaction: PointTransactionDto) {
+    //show the modal
+    this.modelConfirmCode.show(point.id, transaction.action);
+    abp.event.on('trackingConfirmCodeSubmitted', () => {
+      this.getForView();
+    });
+  }
+
+  /**
+   * handels the upload proccess of a delivery note for the points
+   * @param point
+   * @param transaction
+   * @private
+   */
+  private handleUploadDeliveryNotes(point: TrackingRoutePointDto, transaction: PointTransactionDto) {
+    this.modelpod.show(point.id, transaction.action);
+    abp.event.on('tripDeliveryNotesUploadSuccess', () => {
+      this.getForView();
+    });
+  }
+
+  private handleCanGoNextLocation(routPoints: TrackingRoutePointDto[]): boolean {
+    const singleDrop = this.routeTypeEnum.SingleDrop;
+    const MultipleDrops = this.routeTypeEnum.MultipleDrops;
+    const canStartAnotherPoint = routPoints.find((item) => item.canGoToNextLocation === true) ? true : false;
+    console.log(
+      'routPoints.find((item) => item.canGoToNextLocation)',
+      routPoints.find((item) => item.canGoToNextLocation)
+    );
+    console.log('routPoints', routPoints);
+    console.log('canStartAnotherPoint', canStartAnotherPoint);
+    //single Drop
+    if (this.trip.routeTypeId === singleDrop && canStartAnotherPoint) {
+      console.log('should go next');
+
+      this.saving = true;
+      this.nextLocation(this.routePoints[1]);
+      this.notify.info('CanGoNextForSingleDrop');
+    }
+    //for Multible Drops
+    if (this.trip.routeTypeId === MultipleDrops && canStartAnotherPoint && routPoints[0].isComplete) {
+      this.notify.info('CanGoNext');
+      console.log('can Go Next For MultiDrops');
+      this.canStartAnotherPoint = canStartAnotherPoint;
+    }
+    return (this.canStartAnotherPoint = canStartAnotherPoint);
+  }
+
+  /**
+   * Send Driver Location to Firebase On Trip Start
+   * @private
+   */
+  private emitToMobileApplication(transaction: string, point?: TrackingRoutePointDto, mode?: 'write' | 'delete') {
+    let helper = new FirebaseHelperClass(this._db);
+    if (mode === 'delete') {
+      helper.unAssignDriver(this.trip);
+    } else if (mode === 'write') {
+      helper.assignDriverToTrip(this.trip, point, this.appSession.tenantId, transaction);
+    }
   }
 }

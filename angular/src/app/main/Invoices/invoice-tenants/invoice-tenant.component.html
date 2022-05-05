@@ -12,7 +12,7 @@
           <div class="row align-items-center">
             <dx-data-grid
               style="height: 45vw"
-              #grid
+              #dataGrid
               id="dataGrid"
               [dataSource]="dataSource"
               [remoteOperations]="true"
@@ -28,7 +28,7 @@
               <dxo-filter-panel [visible]="true"></dxo-filter-panel>
               <dxo-filter-builder-popup></dxo-filter-builder-popup>
               <dxo-scrolling mode="virtual"></dxo-scrolling>
-              <dxo-group-panel [visible]="true"></dxo-group-panel>
+              <dxo-group-panel [visible]="true" emptyPanelText="{{ l('DragAColumnHeaderHereToGroupByThatColumn') }}"></dxo-group-panel>
               <dxo-grouping #expand [autoExpandAll]="false"></dxo-grouping>
               <dxo-remote-operations [groupPaging]="true" [sorting]="true" [filtering]="true"> </dxo-remote-operations>
               <dxo-paging [pageSize]="20"></dxo-paging>
@@ -57,6 +57,7 @@
 
               <dxi-column dataField="totalAmount" caption="  {{ l('TotalAmount') }}"> </dxi-column>
               <dxi-column dataField="creationTime" caption="  {{ l('IssuanceDate') }}" dataType="datetime"> </dxi-column>
+              <dxi-column dataField="dueDate" caption="{{ l('DueDate') }}" dataType="date"> </dxi-column>
               <dxi-column cellTemplate="statusCellTemplate" dataField="status" caption=" {{ l('Status') }}">
                 <dxo-lookup [dataSource]="SubmitStatus" displayExpr="value" valueExpr="key"> </dxo-lookup>
               </dxi-column>
@@ -73,7 +74,9 @@
                       'badge-warning': options.data.statusTitle == 'New',
                       'badge-success': options.data.statusTitle == 'Accepted',
                       'badge-primary': options.data.statusTitle == 'Claim',
-                      'badge-danger': options.data.statusTitle == 'Rejected'
+                      'badge-danger': options.data.statusTitle == 'Rejected',
+                      'badge-secondary': options.data.statusTitle == 'UnPaid',
+                      'badge-info': options.data.statusTitle == 'Paid'
                     }"
                     >{{ l(options.data.statusTitle) }}</span
                   ></span
@@ -103,20 +106,35 @@
                     </span>
                   </a>
                   <ul class="dropdown-menu" *dropdownMenu>
-                    <!--                    <li>-->
-                    <!--                      <a class="dropdown-item" (click)="details(options.data.id)">{{ l('Detail') }}</a>-->
-                    <!--                    </li>-->
                     <li *ngIf="options.data.documentName">
                       <a class="dropdown-item" href="javascript:;" (click)="downloadDocument(options.data.id)">
-                        {{ l('Download') }}
+                        {{ l('View') }}
                       </a>
                     </li>
 
                     <li *ngIf="(options.data.status == 0 || options.data.status == 3) && permission.isGranted('Pages.Invoices.SubmitInvoices.Claim')">
                       <a class="dropdown-item" href="javascript:;" (click)="ClaimModel.show(options.data.id)">{{ l('Claim') }}</a>
                     </li>
-                    <li *ngIf="(options.data.status == 1 && !appSession.tenantId) || feature.isEnabled('App.TachyonDealer')">
-                      <a class="dropdown-item" href="javascript:;" (click)="Accepted(options.data.id)">{{ l('Accpeted') }}</a>
+                    <li *ngIf="options.data.status == 1 && (!appSession.tenantId || feature.isEnabled('App.TachyonDealer'))">
+                      <a class="dropdown-item" href="javascript:;" (click)="Accepted(options.data.id)">{{ l('Accept') }}</a>
+                    </li>
+                    <li *ngIf="(options.data.status == 2 && options.data.status != 4) || options.data.status == 5">
+                      <a
+                        class="dropdown-item"
+                        href="javascript:;"
+                        *ngIf="feature.isEnabled('App.TachyonDealer') || !this.appSession.tenantId"
+                        (click)="MakePaid(options.data)"
+                        >{{ l('MakePaid') }}</a
+                      >
+                    </li>
+                    <li *ngIf="options.data.status == 4">
+                      <a
+                        class="dropdown-item"
+                        href="javascript:;"
+                        *ngIf="feature.isEnabled('App.TachyonDealer') || !this.appSession.tenantId"
+                        (click)="MakeUnPaid(options.data)"
+                        >{{ l('MakeUnPaid') }}</a
+                      >
                     </li>
                     <li *ngIf="options.data.status == 1">
                       <a
@@ -124,7 +142,7 @@
                         href="javascript:;"
                         *ngIf="permission.isGranted('Pages.Administration.Host.Invoices.SubmitInvoices.Rejected')"
                         (click)="RejectedModel.show(options.data.id)"
-                        >{{ l('Rejected') }}</a
+                        >{{ l('Reject') }}</a
                       >
                     </li>
                   </ul>
@@ -139,5 +157,6 @@
   </div>
 </div>
 <deman-model (modalSave)="reloadPage()" #ClaimModel></deman-model>
-<submitinvoice-rejected-modal #RejectedModel (modalSave)="getAll()"></submitinvoice-rejected-modal>
+<submitinvoice-rejected-modal #RejectedModel (modalSave)="reloadPage()"></submitinvoice-rejected-modal>
 <invoice-tenant-items-details #InvoiceDetailsModel></invoice-tenant-items-details>
+<shared-file-viewer #fileViwerComponent></shared-file-viewer>

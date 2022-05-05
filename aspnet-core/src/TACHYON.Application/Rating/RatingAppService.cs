@@ -54,37 +54,56 @@ namespace TACHYON.Rating
             var createdRatingLog = ObjectMapper.Map<RatingLog>(input);
             createdRatingLog.ShipperId = AbpSession.TenantId;
             createdRatingLog.RateType = RateType.CarrierByShipper;
-            createdRatingLog.CarrierId = await GetTripAsync(createdRatingLog, x => x.ShippingRequestFk.CarrierTenantId);
-            ;
+            createdRatingLog.CarrierId = await GetTripAsync(createdRatingLog, x => x.ShippingRequestFk.CarrierTenantId); ;
             await _ratingLogManager.CreateRating(createdRatingLog);
         }
 
         public async Task CreateDriverAndDERatingByReceiver(CreateDriverAndDERatingByReceiverDto input)
         {
-            await CreateDriverByReceiverRating(input.CreateDriverRatingDtoByReceiverInput);
-            var deliveryRatingByReceiver = ObjectMapper.Map<RatingLog>(input.CreateDeliveryExpRateByReceiverInput);
-            deliveryRatingByReceiver.RateType = RateType.DEByReceiver;
-            await _ratingLogManager.CreateRating(deliveryRatingByReceiver);
-        }
 
-        private async Task CreateDriverByReceiverRating(CreateDriverRatingDtoByReceiverDto input)
-        {
-            var driverByReceiverRating = ObjectMapper.Map<RatingLog>(input);
             var point = await _routePointRepository
-                .GetAllIncluding(x => x.ShippingRequestTripFk).AsNoTracking()
-                .Where(x => x.Code == driverByReceiverRating.Code).Select(x => new
-                {
-                    x.ReceiverId, x.Id, DriverId = x.ShippingRequestTripFk.AssignedDriverUserId
-                })
-                .FirstOrDefaultAsync();
+               .GetAllIncluding(x => x.ShippingRequestTripFk).AsNoTracking()
+               .Where(x => x.Code == input.CreateDriverRatingDtoByReceiverInput.Code)
+               .Select(x => new
+               {
+                   x.ReceiverId,
+                   x.Id,
+                   DriverId = x.ShippingRequestTripFk.AssignedDriverUserId,
+                   TripId = x.ShippingRequestTripId,
+               }).FirstOrDefaultAsync();
             if (point == null) throw new AbpValidationException(L("WrongReceiverCode"));
+
+            #region CreateDriverByReceiverRating
+
+            var driverByReceiverRating = ObjectMapper.Map<RatingLog>(input.CreateDriverRatingDtoByReceiverInput);
 
             driverByReceiverRating.ReceiverId = point.ReceiverId;
             driverByReceiverRating.PointId = point.Id;
             driverByReceiverRating.DriverId = point.DriverId;
+            driverByReceiverRating.TripId = point.TripId;
             driverByReceiverRating.RateType = RateType.DriverByReceiver;
+
             await _ratingLogManager.CreateRating(driverByReceiverRating);
+
+            #endregion
+
+
+            #region CreateDeliveryExpRateByReceiver
+
+            var deliveryRatingByReceiver = ObjectMapper.Map<RatingLog>(input.CreateDeliveryExpRateByReceiverInput);
+            deliveryRatingByReceiver.ReceiverId = point.ReceiverId;
+            deliveryRatingByReceiver.PointId = point.Id;
+            deliveryRatingByReceiver.DriverId = point.DriverId;
+            deliveryRatingByReceiver.TripId = point.TripId;
+            deliveryRatingByReceiver.RateType = RateType.DEByReceiver;
+            await _ratingLogManager.CreateRating(deliveryRatingByReceiver);
+
+            #endregion
+
+
         }
+
+
 
         #endregion
 

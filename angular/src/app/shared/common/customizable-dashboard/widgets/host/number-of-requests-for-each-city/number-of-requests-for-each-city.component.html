@@ -1,15 +1,18 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<div class="card-header border-0">
-  <div class="card-title text-center">
-    <h3 class="card-label">{{ l('NumberOfRequestsForEachCity') }}</h3>
+<div class="card card-custom card-stretch">
+  <div class="card-header border-0">
+    <div class="card-title text-center">
+      <h3 class="card-label">{{ l('NumberOfRequestsForEachCity') }}</h3>
+    </div>
   </div>
-</div>
-<div id="chart" *ngIf="loading">
-  <apx-chart
-    [series]="chartOptions.series"
-    [chart]="chartOptions.chart"
-    [dataLabels]="chartOptions.dataLabels"
-    [plotOptions]="chartOptions.plotOptions"
-    [title]="chartOptions.title"
-  ></apx-chart>
+  <div id="chart" [busyIf]="loading">
+    <apx-chart
+      *ngIf="chartOptions && chartOptions.series"
+      [series]="chartOptions.series"
+      [chart]="chartOptions.chart"
+      [dataLabels]="chartOptions.dataLabels"
+      [plotOptions]="chartOptions.plotOptions"
+      [title]="chartOptions.title"
+    ></apx-chart>
+  </div>
 </div>

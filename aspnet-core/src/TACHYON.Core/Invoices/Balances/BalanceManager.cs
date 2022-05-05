@@ -66,18 +66,14 @@ namespace TACHYON.Invoices.Balances
             var tenant = offer.ShippingRequestFk.Tenant;
             if (periodType == InvoicePeriodType.PayInAdvance)
             {
-                if (!await CheckShipperCanPaidFromBalance(offer.ShippingRequestFk.TenantId, offer.TotalAmount))
-                    throw new UserFriendlyException(L("NoEnoughBalance"));
+                if (!await CheckShipperCanPaidFromBalance(offer.ShippingRequestFk.TenantId, offer.TotalAmountWithCommission)) throw new UserFriendlyException(L("NoEnoughBalance"));
                 await ShipperWhenCanAcceptPrice(offer, periodType);
             }
             else
             {
-                decimal creditLimit =
-                    decimal.Parse(await _featureChecker.GetValueAsync(offer.ShippingRequestFk.TenantId,
-                        AppFeatures.ShipperCreditLimit)) * -1;
-                decimal creditBalance = tenant.CreditBalance - offer.TotalAmount;
-                if (!(creditBalance > creditLimit))
-                    throw new UserFriendlyException(L("YouDoNotHaveEnoughCreditInYourCreditCard"));
+                decimal creditLimit = decimal.Parse(await _featureChecker.GetValueAsync(offer.ShippingRequestFk.TenantId, AppFeatures.ShipperCreditLimit)) * -1;
+                decimal creditBalance = tenant.CreditBalance - offer.TotalAmountWithCommission;
+                if (!(creditBalance > creditLimit)) throw new UserFriendlyException(L("YouDoNotHaveEnoughCreditInYourCreditCard"));
             }
         }
 
@@ -103,21 +99,20 @@ namespace TACHYON.Invoices.Balances
             if (periodType == InvoicePeriodType.PayInAdvance)
             {
                 offer.ShippingRequestFk.IsPrePayed = true;
-                await _InvoicesProformarepository.InsertAsync(
-                    new InvoiceProforma // Generate Invoice proforma when the shipper billing interval is pay in advance
-                    {
-                        TenantId = Tenant.Id,
-                        Amount = offer.SubTotalAmountWithCommission,
-                        TotalAmount = offer.TotalAmountWithCommission,
-                        VatAmount = offer.VatAmountWithCommission,
-                        TaxVat = offer.TaxVat,
-                        RequestId = offer.ShippingRequestId
-                    });
-                Tenant.ReservedBalance += offer.TotalAmount;
+                await _InvoicesProformarepository.InsertAsync(new InvoiceProforma // Generate Invoice proforma when the shipper billing interval is pay in advance
+                {
+                    TenantId = Tenant.Id,
+                    Amount = offer.SubTotalAmountWithCommission,
+                    TotalAmount = offer.TotalAmountWithCommission,
+                    VatAmount = offer.VatAmountWithCommission,
+                    TaxVat = offer.TaxVat,
+                    RequestId = offer.ShippingRequestId
+                });
+                Tenant.ReservedBalance += offer.TotalAmountWithCommission;
             }
             else
             {
-                Tenant.CreditBalance -= offer.TotalAmount;
+                Tenant.CreditBalance -= offer.TotalAmountWithCommission;
             }
         }
 

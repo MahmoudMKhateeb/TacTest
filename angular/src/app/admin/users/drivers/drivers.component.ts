@@ -53,7 +53,8 @@ export class DriversComponent extends UsersComponent implements AfterViewInit, O
     this.viewOrEditEntityDocumentsModal.show(driverId, DocumentsEntitiesEnum.Driver);
   }
 
-  getDrivers(filter) {
+  getDrivers() {
+    var filter = this._activatedRoute.snapshot.queryParams['isActive'];
     let self = this;
     this.dataSource = {};
     this.dataSource.store = new CustomStore({
@@ -84,10 +85,9 @@ export class DriversComponent extends UsersComponent implements AfterViewInit, O
   }
 
   ngOnInit(): void {
-    var filter = this._activatedRoute.snapshot.queryParams['isActive'];
-    this.getDrivers(filter);
+    this.getDrivers();
     abp.event.on('UserDeletedEvent', () => {
-      this.getDrivers(filter);
+      this.getDrivers();
       this.notify.success(this.l('SuccessfullyDeleted'));
     });
   }

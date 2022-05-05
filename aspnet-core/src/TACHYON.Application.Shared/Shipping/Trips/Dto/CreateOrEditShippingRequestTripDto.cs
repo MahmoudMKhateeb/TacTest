@@ -46,7 +46,7 @@ namespace TACHYON.Shipping.Trips.Dto
         public void AddValidationErrors(CustomValidationContext context)
         {
             //document validation
-            if (HasAttachment && CreateOrEditDocumentFileDto?.UpdateDocumentFileInput?.FileToken == null)
+            if (HasAttachment && CreateOrEditDocumentFileDto?.UpdateDocumentFileInput != null && CreateOrEditDocumentFileDto?.UpdateDocumentFileInput?.FileToken == null)
                 context.Results.Add(new ValidationResult("document missing: " + CreateOrEditDocumentFileDto?.Name));
 
 

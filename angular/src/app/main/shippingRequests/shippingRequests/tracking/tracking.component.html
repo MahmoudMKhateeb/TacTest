@@ -33,12 +33,15 @@
                     [ngClass]="{
                       'bg-danger': item.status === ShippingRequestTripStatusEnum.Delivered,
                       'bg-info': item.status === ShippingRequestTripStatusEnum.Canceled,
-                      'bg-success': item.status === ShippingRequestTripStatusEnum.Intransit,
+                      'bg-success': item.status === ShippingRequestTripStatusEnum.InTransit,
                       'bg-secondary': item.status === ShippingRequestTripStatusEnum.DeliveredAndNeedsConfirmation,
                       'bg-primary': item.status === ShippingRequestTripStatusEnum.New
                     }"
                   >
                     {{ item.statusTitle | localize }}
+                  </div>
+                  <div *ngIf="item.isSass" class="ribbon-target bg-info" style="top: -2px" [ngClass]="{ left: !isRtl, right: isRtl }">
+                    {{ 'SAASTrip' | localize }}
                   </div>
                 </div>
 
@@ -103,12 +106,7 @@
                         >
                           <i class="flaticon2-up"></i> {{ l('Collapse') }}</a
                         >
-                        <div
-                          *ngIf="item.driver && (isCarrier || (isTachyonDealer && item.requestType === ShippingRequestTypeEnum.TachyonManageService))"
-                          ngbDropdown
-                          container="body"
-                          class="d-inline-block"
-                        >
+                        <div *ngIf="item.driver && (isCarrier || isTachyonDealerOrHost)" ngbDropdown container="body" class="d-inline-block">
                           <a class="btn btn-danger btn-sm font-weight-bolder text-uppercase mr-2" id="dropdownBasic1" ngbDropdownToggle>
                             <i class="flaticon-settings"></i>
                             {{ l('Actions') }}
@@ -215,7 +213,7 @@
                       <i class="flaticon2-box-1 icon-2x text-muted font-weight-bold"></i>
                     </span>
                     <div class="d-flex flex-column text-dark-75">
-                      <span class="font-weight-bolder font-size-sm">{{ l('goodsCategory') }}</span>
+                      <span class="font-weight-bolder font-size-sm">{{ l('GoodCategory') }}</span>
                       <span class="font-weight-bolder font-size-h5">
                         <span class="text-dark-50 font-weight-bold"></span>{{ item.goodsCategory }}</span
                       >
@@ -279,3 +277,4 @@
 <tacking-search-model #ModelSearch (modalsearch)="search()"></tacking-search-model>
 <view-trip-accident-modal #ModelIncident></view-trip-accident-modal>
 <trip-accident-modal #TripAccidentModal></trip-accident-modal>
+<shared-file-viewer #fileViwerComponent></shared-file-viewer>

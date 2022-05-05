@@ -365,44 +365,24 @@ namespace TACHYON.Invoices
                             invoice.Trips.SelectMany(v => v.ShippingRequestTripFK.ShippingRequestTripVases).Count();
             int Sequence = 1;
             List<InvoiceItemDto> Items = new List<InvoiceItemDto>();
-            invoice.Trips.ToList().ForEach(trip =>
+            foreach (var trip in invoice.Trips.ToList())
             {
                 int VasCounter = 0;
                 Items.Add(new InvoiceItemDto
                 {
                     Sequence = $"{Sequence}/{TotalItem}",
-                    SubTotalAmount =
-                        AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Carrier)
-                            ? trip.ShippingRequestTripFK.SubTotalAmount.Value
-                            : trip.ShippingRequestTripFK.SubTotalAmountWithCommission.Value,
-                    VatAmount =
-                        AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Carrier)
-                            ? trip.ShippingRequestTripFK.VatAmount.Value
-                            : trip.ShippingRequestTripFK.VatAmountWithCommission.Value,
-                    TotalAmount =
-                        AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Carrier)
-                            ? trip.ShippingRequestTripFK.TotalAmount.Value
-                            : trip.ShippingRequestTripFK.TotalAmountWithCommission.Value,
+                    SubTotalAmount = trip.ShippingRequestTripFK.SubTotalAmountWithCommission.Value,
+                    VatAmount = trip.ShippingRequestTripFK.VatAmountWithCommission.Value,
+                    TotalAmount = trip.ShippingRequestTripFK.TotalAmountWithCommission.Value,
                     WayBillNumber = trip.ShippingRequestTripFK.WaybillNumber.ToString(),
-                    TruckType =
-                        ObjectMapper.Map<TrucksTypeDto>(trip.ShippingRequestTripFK.AssignedTruckFk.TrucksTypeFk)
-                            .TranslatedDisplayName,
-                    Source =
-                        ObjectMapper.Map<CityDto>(trip.ShippingRequestTripFK.ShippingRequestFk.OriginCityFk)
-                            ?.TranslatedDisplayName ??
-                        trip.ShippingRequestTripFK.ShippingRequestFk.OriginCityFk.DisplayName,
-                    Destination =
-                        ObjectMapper.Map<CityDto>(trip.ShippingRequestTripFK.ShippingRequestFk.DestinationCityFk)
-                            ?.TranslatedDisplayName ??
-                        trip.ShippingRequestTripFK.ShippingRequestFk.DestinationCityFk.DisplayName,
-                    DateWork =
-                        trip.ShippingRequestTripFK.EndTripDate.HasValue
-                            ? trip.ShippingRequestTripFK.EndTripDate.Value.ToString("dd/MM/yyyy")
-                            : trip.InvoiceFK.CreationTime.ToString("dd/MM/yyyy"),
-                    Remarks = trip.ShippingRequestTripFK.ShippingRequestFk.RouteTypeId ==
-                              Shipping.ShippingRequests.ShippingRequestRouteType.MultipleDrops
-                        ? L("TotalOfDrop", trip.ShippingRequestTripFK.ShippingRequestFk.NumberOfDrops)
-                        : ""
+                    TruckType = ObjectMapper.Map<TrucksTypeDto>(trip.ShippingRequestTripFK.AssignedTruckFk.TrucksTypeFk).TranslatedDisplayName,
+                    Source = ObjectMapper.Map<CityDto>(trip.ShippingRequestTripFK.ShippingRequestFk.OriginCityFk)?.TranslatedDisplayName ?? trip.ShippingRequestTripFK.ShippingRequestFk.OriginCityFk.DisplayName,
+                    Destination = ObjectMapper.Map<CityDto>(trip.ShippingRequestTripFK.ShippingRequestFk.DestinationCityFk)?.TranslatedDisplayName ?? trip.ShippingRequestTripFK.ShippingRequestFk.DestinationCityFk.DisplayName,
+                    DateWork = trip.ShippingRequestTripFK.EndTripDate.HasValue ? trip.ShippingRequestTripFK.EndTripDate.Value.ToString("dd/MM/yyyy") : trip.InvoiceFK.CreationTime.ToString("dd/MM/yyyy"),
+                    Remarks = trip.ShippingRequestTripFK.ShippingRequestFk.RouteTypeId == Shipping.ShippingRequests.ShippingRequestRouteType.MultipleDrops ?
+                        L("TotalOfDrop", trip.ShippingRequestTripFK.ShippingRequestFk.NumberOfDrops) : "",
+                    ContainerNumber = trip.ShippingRequestTripFK.CanBePrinted ? trip.ShippingRequestTripFK.ContainerNumber ?? "-" : "-",
+                    RoundTrip = trip.ShippingRequestTripFK.CanBePrinted ? trip.ShippingRequestTripFK.RoundTrip ?? "-" : "-",
                 });
                 Sequence++;
                 if (trip.ShippingRequestTripFK.ShippingRequestTripVases != null &&
@@ -411,6 +391,11 @@ namespace TACHYON.Invoices
                     VasCounter = 1;
                 }
 
+                if (trip.ShippingRequestTripFK.ShippingRequestFk.IsSaas())
+                {
+                    continue;
+
+                }
                 foreach (var vas in trip.ShippingRequestTripFK.ShippingRequestTripVases)
                 {
                     string waybillnumber;
@@ -452,7 +437,8 @@ namespace TACHYON.Invoices
 
                     Sequence++;
                 }
-            });
+
+            }
 
 
             //var invoiceDto = ObjectMapper.Map<InvoiceInfoDto>(invoice);

@@ -27,6 +27,8 @@ namespace TACHYON.Trucks.Dtos
         public string TrucksTypeDisplayName { get; set; }
         public virtual int? CapacityId { get; set; }
         public string CapacityDisplayName { get; set; }
+        public string OtherTransportTypeName { get; set; }
+        public string OtherTrucksTypeName { get; set; }
 
         #endregion
 

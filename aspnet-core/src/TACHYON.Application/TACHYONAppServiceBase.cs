@@ -177,5 +177,10 @@ namespace TACHYON
         {
             return await IsEnabledAsync(AppFeatures.TachyonDealer);
         }
+
+        protected async Task<bool> IsCarrierAsASaas()
+        {
+            return await IsEnabledAsync(AppFeatures.CarrierAsASaas);
+        }
     }
 }

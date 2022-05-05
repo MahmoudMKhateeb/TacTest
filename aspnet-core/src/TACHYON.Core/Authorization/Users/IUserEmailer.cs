@@ -10,10 +10,10 @@ namespace TACHYON.Authorization.Users
     public interface IUserEmailer
     {
         Task SendTestTemplateEmail(TestEmailTemplateInputDto input);
-        
+
         #region TACHYON_Emails
 
-                /// <summary>
+        /// <summary>
         /// Send email activation link to user's email address.
         /// </summary>
         /// <param name="user">User</param>
@@ -29,8 +29,8 @@ namespace TACHYON.Authorization.Users
         /// <param name="documentName"></param>
         /// <param name="tenantId"></param>
         /// <returns></returns>
-        Task SendApprovedDocumentEmail(int tenantId, string documentName);
-        
+        Task SendApprovedDocumentEmail(int tenantId, string loginLink);
+
 
         /// <summary>
         /// Sends a password reset link to user's email.
@@ -94,13 +94,13 @@ namespace TACHYON.Authorization.Users
             string invoiceUrl);
 
         Task SendRejectedDocumentEmail(int tenantId, string documentName, string rejectionReason);
-        
-        Task SendExpiredDocumentsEmail(int tenantId,params DocumentFile[] documents);
-        
+
+        Task SendExpiredDocumentsEmail(int tenantId, params DocumentFile[] documents);
+
         #endregion
 
         #region ABP_Emails
-        
+
         Task SendSubscriptionExpireEmail(int tenantId, DateTime utcNow);
 
         Task SendSubscriptionAssignedToAnotherEmail(int tenantId, DateTime utcNow, int expiringEditionId);
@@ -108,7 +108,7 @@ namespace TACHYON.Authorization.Users
         Task SendFailedSubscriptionTerminationsEmail(List<string> failedTenancyNames, DateTime utcNow);
 
         Task SendSubscriptionExpiringSoonEmail(int tenantId, DateTime dateToCheckRemainingDayCount);
-        
+
         /// <summary>
         /// Sends an email for unread chat message to user's email.
         /// </summary>

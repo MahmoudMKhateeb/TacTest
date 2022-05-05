@@ -63,7 +63,16 @@
                       [class.is-valid]="GoodsWeight.touched && GoodsWeight.valid"
                       required
                     />
-                    <a class="text-muted mt-1"> {{ l('RemainingAllowedWeight') + ': ' + AllowedWeight / (amount || 1) }}</a>
+                    <a class="text-muted mt-1" *ngIf="weight > 0 && amount > 0 && !(AllowedWeight - (weight || 0) * (amount || 1) < 0)">
+                      {{
+                        l('RemainingAllowedWeight') +
+                          ': ' +
+                          (AllowedWeight - (weight || 0) * (amount || 1) < 0 ? 0 : AllowedWeight - (weight || 0) * (amount || 1))
+                      }}
+                    </a>
+                    <span *ngIf="AllowedWeight - (weight || 0) * (amount || 1) < 0"
+                      >{{ l('AllowedWeightShouldBeMaximum') }} : {{ AllowedWeight }}</span
+                    >
                   </div>
                 </div>
 
@@ -104,6 +113,30 @@
                       </select>
                     </div>
                   </div>
+                </div>
+                <div class="col-lg-12 mt-4" *ngIf="IfOther(allUnitOfMeasure, unitOfMeasureId)">
+                  <label>{{ l('OtherUnitOfMeasure') }} <span class="required-fileds">*</span></label>
+                  <div>
+                    <div class="input-group">
+                      <input
+                        #otherUnitOfMeasure="ngModel"
+                        id="otherUnitOfMeasure"
+                        name="otherUnitOfMeasure"
+                        type="text"
+                        class="form-control"
+                        [(ngModel)]="otherUnitOfMeasureName"
+                        [class.is-valid]="otherUnitOfMeasure.touched && otherUnitOfMeasure.valid && cannotContainSpace(otherUnitOfMeasureName)"
+                        [class.is-invalid]="
+                          otherUnitOfMeasure.touched &&
+                          (!otherUnitOfMeasure.valid || !cannotContainSpace(otherUnitOfMeasureName)) &&
+                          IfOther(allUnitOfMeasure, unitOfMeasureId)
+                        "
+                        [required]="IfOther(allUnitOfMeasure, unitOfMeasureId)"
+                      />
+                    </div>
+                  </div>
+                  <span class="form-text text-muted">{{ l('OtherUnitOfMeasure') }}</span>
+                  <br />
                 </div>
 
                 <div class="col-lg-6">

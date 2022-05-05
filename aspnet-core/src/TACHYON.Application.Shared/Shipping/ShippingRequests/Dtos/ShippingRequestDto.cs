@@ -43,7 +43,9 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public string OtherTransportTypeName { get; set; }
         public string OtherTrucksTypeName { get; set; }
 
-        public bool AddTripsByTmsEnabled { get; set; }
+        //public bool AddTripsByTmsEnabled { get; set; }
+
+        public bool CanAddTrip { get; set; }
 
         /// <summary>
         /// This reference shipper add it manually
@@ -55,6 +57,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         /// </summary>
         public string ShipperInvoiceNo { get; set; }
 
+        public bool IsSaas { get; set; }
         public string StatusTitle
         {
             get { return Status.GetEnumDescription(); }

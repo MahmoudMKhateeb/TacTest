@@ -139,8 +139,8 @@
                   class="m-input"
                   [readonly]="true"
                   [isRequired]="false"
-                  [minHijri]="minTripDateAsHijri"
-                  [minGreg]="minTripDateAsGrorg"
+                  [minHijri]="minHijriTripdate"
+                  [minGreg]="minGrogTripdate"
                   [maxHijri]="maxTripDateAsHijri"
                   [maxGreg]="maxTripDateAsGrorg"
                   [selectedDate]="endTripdate"
@@ -190,7 +190,7 @@
                   />
                   <div class="input-group-append">
                     <span class="input-group-text">
-                      <i class="la la-dollar"></i>
+                      {{ l('SAR') }}
                     </span>
                   </div>
                 </div>
@@ -264,15 +264,7 @@
                   <!--end::Symbol-->
                   <!--begin::Text-->
                   <div class="d-flex flex-column flex-grow-1 mr-2">
-                    <a
-                      (click)="
-                        _fileDownloadService.downloadFileByBinaryId(
-                          this.trip.createOrEditDocumentFileDto.name,
-                          this.trip.createOrEditDocumentFileDto.binaryObjectId
-                        )
-                      "
-                      class="font-weight-bold text-dark-75 text-hover-primary font-size-lg mb-1"
-                    >
+                    <a (click)="downloadAttatchment()" class="font-weight-bold text-dark-75 text-hover-primary font-size-lg mb-1">
                       {{ trip.createOrEditDocumentFileDto?.name }}</a
                     >
                     <span class="text-muted font-weight-bold">{{ trip.createOrEditDocumentFileDto?.documentTypeDto?.templateContentType }}</span>
@@ -280,12 +272,7 @@
                   <!--end::Text-->
                   <a
                     *ngIf="trip.createOrEditDocumentFileDto?.binaryObjectId"
-                    (click)="
-                      _fileDownloadService.downloadFileByBinaryId(
-                        this.trip.createOrEditDocumentFileDto.name,
-                        this.trip.createOrEditDocumentFileDto.binaryObjectId
-                      )
-                    "
+                    (click)="downloadAttatchment()"
                     class="btn btn-sm btn-icon btn-bg-light btn-icon-primary btn-hover-primary"
                   >
                     <i class="flaticon2-download"></i>

@@ -11,5 +11,8 @@ namespace TACHYON.Packing.PackingTypes.Dtos
 
         // mapped from PackingTypeTranslations
         public string Description { get; set; }
+        public bool IsOther { get; set; }
+
+
     }
 }

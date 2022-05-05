@@ -22,6 +22,7 @@ import { FileDownloadService } from '@shared/utils/file-download.service';
 import { NewTrackingConponent } from '@app/main/shippingRequests/shippingRequests/tracking/new-tracking/new-tracking-conponent';
 import { finalize } from '@node_modules/rxjs/operators';
 import Swal from 'sweetalert2';
+import { FileViwerComponent } from '@app/shared/common/file-viwer/file-viwer.component';
 
 @Component({
   templateUrl: './tracking.component.html',
@@ -37,6 +38,7 @@ import Swal from 'sweetalert2';
 export class TrackingComponent extends ScrollPagnationComponentBase implements OnInit {
   @ViewChild('ModelIncident', { static: false }) modelIncident: ViewTripAccidentModelComponent;
   @ViewChild('NewTrackingComponent', { static: false }) newTrackingComponent: NewTrackingConponent;
+  @ViewChild('fileViwerComponent', { static: false }) fileViwerComponent: FileViwerComponent;
 
   public Items: TrackingListDto[] = [];
   direction = 'ltr';
@@ -124,6 +126,7 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
     this.downloadingForItem = id;
     this._waybillsServiceProxy.getSingleDropOrMasterWaybillPdf(id).subscribe((result) => {
       this._fileDownloadService.downloadTempFile(result);
+      this.fileViwerComponent.show(this._fileDownloadService.downloadTempFile(result), 'pdf');
       this.downloadingForItem = null;
     });
   }
@@ -139,7 +142,7 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
         return 0;
         break;
       }
-      case ShippingRequestTripStatus.Intransit: {
+      case ShippingRequestTripStatus.InTransit: {
         return 75;
         break;
       }
@@ -223,7 +226,7 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
    * checks if the tenant can report an Accident to the current trip
    */
   canCreateAccident(trip: TrackingListDto) {
-    if (trip.status === ShippingRequestTripStatus.Intransit) {
+    if (trip.status === ShippingRequestTripStatus.InTransit) {
       if (!this.appSession.tenantId || this.feature.isEnabled('App.TachyonDealer')) {
         //if tachyon dealer and is assign return true
         return trip.isAssign;

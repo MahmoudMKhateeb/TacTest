@@ -3,7 +3,9 @@
     <!--begin::Subheader-->
     <sub-header [title]="Title | localize" [description]="'' | localize">
       <div role="actions">
-        <button (click)="createNewRequest()" class="btn btn-success"><i class="fas fa-plus"></i> {{ l('CreateNewRequest') }}</button>
+        <button [hidden]="(isCarrier && !isSaaS) || !appSession.tenantId" (click)="createNewRequest()" class="btn btn-success">
+          <i class="fas fa-plus"></i> {{ l('CreateNewRequest') }}
+        </button>
         <button (click)="ModelSearch.show(searchInput)" class="btn btn-primary red"><i class="fas fa-search"></i> {{ l('Search') }}</button>
       </div>
     </sub-header>
@@ -122,7 +124,7 @@
               </div>
               <div class="routeType">
                 <p>
-                  {{ l('routeType') }}
+                  {{ l('RouteType') }}
                 </p>
                 <p>
                   {{ l(item.routeType) }}
@@ -153,7 +155,13 @@
                 <a *ngIf="canSeeTotalOffers(item)" href="javascript:void(0)" class="infoHighLight green" (click)="ModelOffer.show(item)">
                   {{ item.totalOffers }} {{ getWordTitle(item.totalOffers, 'TotalOffer') }}
                 </a>
-                <a *ngIf="item.isPriced && Channel != 10" href="javascript:void(0)" class="infoHighLight red">{{ l('MarketPlacepriced') }}</a>
+                <a
+                  *ngIf="item.isPriced && Channel != 10"
+                  href="javascript:void(0)"
+                  class="infoHighLight blue"
+                  (click)="ModelViewPrice.show(item.id, item.offerId)"
+                  >{{ l('MarketPlacepriced') }}</a
+                >
                 <a *ngIf="item.price && (item.status == 5 || item.status == 1) && Channel != 10" href="javascript:void(0)" class="infoHighLight red"
                   >{{ item.price | number }} {{ l('SAR') }}</a
                 >
@@ -209,9 +217,7 @@
                 </a>
                 <a
                   *ngIf="
-                    permission.isGranted('Pages.ShippingRequests.Edit') &&
-                    !Channel &&
-                    (feature.isEnabled('App.Shipper') || feature.isEnabled('App.CarrierAsASaas'))
+                    permission.isGranted('Pages.ShippingRequests.Edit') && !Channel && (feature.isEnabled('App.Shipper') || isCarrierOwnRequest(item))
                   "
                   [queryParams]="{ id: item.id }"
                   [routerLink]="['/app/main/shippingRequests/shippingRequests/createOrEdit']"
@@ -222,39 +228,36 @@
               </div>
             </div>
           </div>
+          <div [ngbCollapse]="openCardId == null">
+            <div *ngIf="openCardId == item.id">
+              <!--  start of ShippingRequestType::Details-->
+              <div class="mb-2">
+                <div class="form-group row fv-plugins-icon-container">
+                  <div *ngIf="!this.feature.isEnabled('App.Carrier')">
+                    <shipping-request-offers-list
+                      [shippingRequestId]="item.id"
+                      [isTachyonDeal]="item.isTachyonDeal"
+                      [Channel]="item.bidStatus == 0 ? 2 : 1"
+                    >
+                    </shipping-request-offers-list>
+                  </div>
 
-          <div class="shipCardWhite padding-percent-2" [ngbCollapse]="openCardId == null">
-            <div>
-              <div *ngIf="openCardId == item.id">
-                <!--  start of ShippingRequestType::Details-->
-                <div class="mb-2">
-                  <div class="form-group row fv-plugins-icon-container">
-                    <div *ngIf="!this.feature.isEnabled('App.Carrier')">
-                      <shipping-request-offers-list
-                        [shippingRequestId]="item.id"
-                        [isTachyonDeal]="item.isTachyonDeal"
-                        [Channel]="item.bidStatus == 0 ? 2 : 1"
-                      >
-                      </shipping-request-offers-list>
-                    </div>
+                  <div *ngIf="feature.isEnabled('App.Shipper') || feature.isEnabled('App.TachyonDealer')">
+                    <TripsForViewShippingRequest
+                      *ngIf="item.id && bidsloading == false"
+                      [ShippingRequest]="item"
+                      [VasListFromFather]="undefined"
+                    ></TripsForViewShippingRequest>
+                  </div>
 
-                    <div *ngIf="feature.isEnabled('App.Shipper') || feature.isEnabled('App.TachyonDealer')">
-                      <TripsForViewShippingRequest
-                        *ngIf="item.id && bidsloading == false"
-                        [ShippingRequest]="item"
-                        [VasListFromFather]="undefined"
-                      ></TripsForViewShippingRequest>
-                    </div>
-
-                    <div class="col-lg-12">
-                      <agm-map style="height: 300px" [latitude]="24.717942" [longitude]="46.675761" [zoom]="zoom">
-                        <agm-marker [latitude]="item.latitude || 24.717942" [longitude]="item.longitude || 46.675761"></agm-marker>
-                      </agm-map>
-                    </div>
+                  <div class="col-lg-12">
+                    <agm-map style="height: 300px" [latitude]="24.717942" [longitude]="46.675761" [zoom]="zoom">
+                      <agm-marker [latitude]="item.latitude || 24.717942" [longitude]="item.longitude || 46.675761"></agm-marker>
+                    </agm-map>
                   </div>
                 </div>
-                <!--  end::ShippingRequestType::Details-->
               </div>
+              <!--  end::ShippingRequestType::Details-->
             </div>
           </div>
         </div>
@@ -270,3 +273,4 @@
 <price-offer-list-model [Channel]="Channel" #ModelOffer></price-offer-list-model>
 <shipping-request-card-search-model #ModelSearch (modalsearch)="search()"></shipping-request-card-search-model>
 <shipping-request-card-cancel-model #ModelCancel></shipping-request-card-cancel-model>
+<price-offer-view-model #ModelViewPrice [Channel]="Channel" (modalDelete)="search()"></price-offer-view-model>

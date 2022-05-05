@@ -27,10 +27,11 @@ namespace TACHYON.Invoices.SubmitInvoices
         public ICollection<SubmitInvoiceTrip> Trips { get; set; }
         public SubmitInvoiceStatus Status { get; set; }
         public string RejectedReason { get; set; }
-
+        public DateTime? DueDate { get; set; }
         public SubmitInvoice()
         {
             Trips = new List<SubmitInvoiceTrip>();
-        }
+        } 
+       
     }
 }

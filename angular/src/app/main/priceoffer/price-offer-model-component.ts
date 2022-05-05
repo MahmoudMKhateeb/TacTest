@@ -53,6 +53,7 @@ export class PriceOfferModelComponent extends AppComponentBase {
     this.direction = document.getElementsByTagName('html')[0].getAttribute('dir');
     this._CurrentServ.getPriceOfferForCreateOrEdit(id, offerId).subscribe((result) => {
       this.offer = result;
+      console.log(this.offer);
       this.Items = this.offer.items;
       this.active = true;
       this.modal.show();
@@ -120,6 +121,7 @@ export class PriceOfferModelComponent extends AppComponentBase {
 
     this.input.itemPrice = this.offer.itemPrice;
     if (this.offer.parentId) this.input.parentId = this.offer.parentId;
+    console.log('this.offer.parentId', this.offer.parentId);
     this.input.itemDetails = itemDetails;
     this.input.commissionPercentageOrAddValue = this.offer.commissionPercentageOrAddValue;
     this.input.commissionType = this.offer.commissionType;
@@ -211,8 +213,10 @@ export class PriceOfferModelComponent extends AppComponentBase {
     this.input.commissionType = this.offer.commissionType;
     this.input.vasCommissionPercentageOrAddValue = this.offer.vasCommissionPercentageOrAddValue;
     this.input.vasCommissionType = this.offer.vasCommissionType;
+    const parentId = this.offer.parentId;
     this._CurrentServ.initPriceOffer(this.input).subscribe((result) => {
       this.offer = result;
+      this.offer.parentId = parentId;
       this.Items = this.offer.items;
       console.log(this.offer);
     });

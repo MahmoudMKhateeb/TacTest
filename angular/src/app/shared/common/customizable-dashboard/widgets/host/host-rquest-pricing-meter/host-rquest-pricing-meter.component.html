@@ -7,9 +7,10 @@
           <h3 class="card-label">{{ l('RequestBeingPricedBeforeBidEndDate') }}</h3>
         </div>
       </div>
-      <div class="card-body p-1" *ngIf="loading">
+      <div class="card-body p-1" [busyIf]="loading">
         <div id="chart">
           <apx-chart
+            *ngIf="chartOptions && chartOptions.series"
             [series]="chartOptions.series"
             [chart]="chartOptions.chart"
             [plotOptions]="chartOptions.plotOptions"
@@ -18,6 +19,7 @@
             [stroke]="chartOptions.stroke"
             [colors]="['rgba(199,198,171,0.99)']"
           ></apx-chart>
+          <span class="form-text text-muted text-center mr-btm">{{ l('ForCurrentYear') }}</span>
         </div>
       </div>
     </div>

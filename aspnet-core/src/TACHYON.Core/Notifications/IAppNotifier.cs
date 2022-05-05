@@ -99,8 +99,7 @@ namespace TACHYON.Notifications
 
         Task ShippingRequestSendOfferWhenAddPrice(PriceOffer offer, string carrier);
         Task ShippingRequestSendOfferWhenUpdatePrice(PriceOffer offer, string carrier);
-
-
+        Task NotifyShipperWhenSendPriceOffer(int teanatId, long offerId);
         Task ShipperAcceptedOffer(PriceOffer offer);
         Task TMSAcceptedOffer(PriceOffer offer);
         Task RejectedOffer(PriceOffer offer, string RejectedBy);

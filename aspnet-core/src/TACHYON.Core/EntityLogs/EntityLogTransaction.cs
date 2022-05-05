@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Reflection;
+﻿using TACHYON.EntityLogs.Transactions;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Routs.RoutPoints.RoutPointSmartEnum;
 using TACHYON.SmartEnums;
@@ -11,12 +7,20 @@ namespace TACHYON.EntityLogs
 {
     public abstract class EntityLogTransaction : SmartEnum
     {
-        public static readonly EntityLogTransaction RoutPointPickUpStep1 =
-            new RoutPointPickUpStep1(nameof(RoutPointPickUpStep1),
-                (int)RoutePointStatus.StartedMovingToLoadingLocation);
+        
+        // Tracking Transactions Value From 0 To 49 (min/max)
+        // ShippingRequest Transactions Value From 50 To 79 (min/max)
+        // Notice :-
+        // => if you want to add a new transaction please set your transactions value start from last transaction
+        // for example shipping request transactions max value 79 then you must start from 80 and so on
+        // and please add comment here if you wanna add new transactions to explain what it is 
 
-        public static readonly EntityLogTransaction RoutPointPickUpStep2 =
-            new RoutPointPickUpStep2(nameof(RoutPointPickUpStep2), (int)RoutePointStatus.ArriveToLoadingLocation);
+        #region TrackingTransactions
+
+        public static readonly EntityLogTransaction RoutPointPickUpStep1 = new RoutPointPickUpStep1(nameof(RoutPointPickUpStep1), (int)RoutePointStatus.StartedMovingToLoadingLocation);
+        public static readonly EntityLogTransaction RoutPointPickUpStep2 = new RoutPointPickUpStep2(nameof(RoutPointPickUpStep2), (int)RoutePointStatus.ArriveToLoadingLocation);
+        public static readonly EntityLogTransaction RoutPointPickUpStep3 = new RoutPointPickUpStep3(nameof(RoutPointPickUpStep3), (int)RoutePointStatus.StartLoading);
+        public static readonly EntityLogTransaction RoutPointPickUpStep4 = new RoutPointPickUpStep4(nameof(RoutPointPickUpStep4), (int)RoutePointStatus.FinishLoading);
 
         public static readonly EntityLogTransaction RoutPointDropOffStep1 = new RoutPointDropOffStep1(nameof(RoutPointDropOffStep1), (int)RoutePointStatus.StartedMovingToOffLoadingLocation);
         public static readonly EntityLogTransaction RoutPointDropOffStep2 = new RoutPointDropOffStep2(nameof(RoutPointDropOffStep2), (int)RoutePointStatus.ArrivedToDestination);
@@ -27,17 +31,22 @@ namespace TACHYON.EntityLogs
         public static readonly EntityLogTransaction RoutPointDropOffStep7 = new RoutPointDropOffStep7(nameof(RoutPointDropOffStep7), (int)RoutePointStatus.DeliveryNoteUploded);
         public static readonly EntityLogTransaction RoutPointDropOffStep8 = new RoutPointDropOffStep8(nameof(RoutPointDropOffStep8), (int)RoutePointStatus.UplodeGoodPicture);
 
-        public static readonly EntityLogTransaction RoutPointPickUpStep4 =
-            new RoutPointPickUpStep4(nameof(RoutPointPickUpStep4), (int)RoutePointStatus.FinishLoading);
+        public static readonly EntityLogTransaction RoutPointAction1 = new RoutPointAction1(nameof(RoutPointAction1), 9); 
+        public static readonly EntityLogTransaction RoutPointAction2 = new RoutPointAction2(nameof(RoutPointAction2), 10);
+        public static readonly EntityLogTransaction RoutPointAction3 = new RoutPointAction3(nameof(RoutPointAction3), 11);
+        public static readonly EntityLogTransaction RoutPointAction4 = new RoutPointAction4(nameof(RoutPointAction4), 12);
+ 
 
-        public static readonly EntityLogTransaction
-            RoutPointAction1 = new RoutPointAction1(nameof(RoutPointAction1), 9);
+        #endregion
 
-        public static readonly EntityLogTransaction RoutPointAction2 =
-            new RoutPointAction2(nameof(RoutPointAction2), 10);
+        #region ShippingRequestTransactions
 
-        public static readonly EntityLogTransaction RoutPointAction3 =
-            new RoutPointAction3(nameof(RoutPointAction3), 11);
+        public static readonly EntityLogTransaction UpdateShippingRequest = new UpdateShippingRequestTransaction(nameof(UpdateShippingRequestTransaction), 50);
+        public static readonly EntityLogTransaction CreatePriceOffer = new CreateShippingRequestPriceOfferTransaction(nameof(CreateShippingRequestPriceOfferTransaction), 51);
+        public static readonly EntityLogTransaction UpdatePriceOffer = new UpdateShippingRequestPriceOfferTransaction(nameof(UpdateShippingRequestPriceOfferTransaction), 52);
+        public static readonly EntityLogTransaction AcceptPriceOffer = new AcceptShippingRequestPriceOfferTransaction(nameof(AcceptShippingRequestPriceOfferTransaction), 53);
+
+        #endregion
 
         public static readonly EntityLogTransaction DefaultLogTransaction = new DefaultLogTransaction();
 

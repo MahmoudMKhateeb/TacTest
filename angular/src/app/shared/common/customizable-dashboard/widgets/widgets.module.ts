@@ -50,6 +50,13 @@ import { PaginatorModule } from '@node_modules/primeng/paginator';
 import { UtilsModule } from '@shared/utils/utils.module';
 import { BsDatepickerModule } from '@node_modules/ngx-bootstrap/datepicker';
 import { NgbRatingModule } from '@node_modules/@ng-bootstrap/ng-bootstrap';
+import { AngularFireModule } from '@angular/fire/compat';
+import { environment } from '../../../../../environments/environment';
+import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
+import { RouterModule } from '@angular/router';
+import { CarrierComplitedTripsWidgetComponent } from './carrier/carrier-complited-trips-widget/carrier-complited-trips-widget.component';
+import { CarrierAcceptedVsRejectdRequestsComponent } from './carrier/carrier-accepted-vs-rejectd-requests/carrier-accepted-vs-rejectd-requests.component';
+import { CarrierInvoicesDetailsWidgetComponent } from './carrier/carrier-invoices-details-widget/carrier-invoices-details-widget.component';
 
 @NgModule({
   declarations: [
@@ -94,6 +101,9 @@ import { NgbRatingModule } from '@node_modules/@ng-bootstrap/ng-bootstrap';
     WorstRatedCarriersComponent,
     NumberOfRequestsForEachCityComponent,
     UnpricedRequestsInMarketplaceComponent,
+    CarrierComplitedTripsWidgetComponent,
+    CarrierAcceptedVsRejectdRequestsComponent,
+    CarrierInvoicesDetailsWidgetComponent,
   ],
   imports: [
     CommonModule,
@@ -106,6 +116,9 @@ import { NgbRatingModule } from '@node_modules/@ng-bootstrap/ng-bootstrap';
     UtilsModule,
     BsDatepickerModule,
     NgbRatingModule,
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFirestoreModule,
+    RouterModule,
   ],
   entryComponents: [
     CompletedTripsWidgetComponent,
@@ -127,6 +140,28 @@ import { NgbRatingModule } from '@node_modules/@ng-bootstrap/ng-bootstrap';
     MostUsedVasesComponent,
     MostWorkedWithShippersComponent,
     CarrierNextInvoiceFrequenctEndComponent,
+    NumberOfRegesterdTrucksComponent,
+    NumberOfRegesterdDriversComponent,
+    NumberOfRegesterdShippersComponent,
+    OnGoingTripsComponent,
+    DeleverdTripsComponent,
+    NumberOfRegesterdCarriersComponent,
+    HostNewAccountsChartComponent,
+    HostNewTripsChartComponent,
+    HostTruckTypeUsageChartComponent,
+    HostGoodTypesUsageChartComponent,
+    HostRouteTypeUsageChartComponent,
+    HostRquestPricingMeterComponent,
+    HostRquestAcceptanceMeterComponent,
+    HostInvoicesMeterComponent,
+    TopThreeShippersHaveRequestsComponent,
+    TopThreeCarriersHaveRequestsComponent,
+    TopRatedCarriersComponent,
+    TopRatedShippersComponent,
+    WorstRatedShippersComponent,
+    WorstRatedCarriersComponent,
+    NumberOfRequestsForEachCityComponent,
+    UnpricedRequestsInMarketplaceComponent,
   ],
 })
 export class WidgetsModule {}

@@ -38,12 +38,18 @@ namespace TACHYON.BackgroundWorkers.ShippingRequests
         {
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant))
             {
-                var Trips = _shippingRequestTripRepository.GetAll().AsNoTracking().Include(r => r.ShippingRequestFk)
-                    .Include(p => p.RoutPoints).ThenInclude(r => r.ReceiverFk).Where(x =>
-                        x.ShippingRequestFk.Status == Shipping.ShippingRequests.ShippingRequestStatus.PostPrice &&
-                        x.Status == Shipping.Trips.ShippingRequestTripStatus.New &&
-                        EF.Functions.DateDiffDay(Clock.Now.Date, x.StartTripDate.Date) == -1)
-                    .OrderBy(x => x.ShippingRequestFk.TenantId).ToList();
+                var Trips = _shippingRequestTripRepository.
+                    GetAll().        
+                    AsNoTracking().
+                    Include(r=>r.ShippingRequestFk).
+                    Include(p=>p.RoutPoints).
+                        ThenInclude(r=>r.ReceiverFk)
+                        .Include(x=>x.RoutPoints)
+                        .ThenInclude(m=>m.ShippingRequestTripFk)
+                        .ThenInclude(z=>z.ShippingRequestFk).
+                    Where(x => x.ShippingRequestFk.Status == Shipping.ShippingRequests.ShippingRequestStatus.PostPrice &&
+                    x.Status == Shipping.Trips.ShippingRequestTripStatus.New && 
+                    EF.Functions.DateDiffDay(Clock.Now.Date, x.StartTripDate.Date)==-1).OrderBy(x=>x.ShippingRequestFk.TenantId).ToList();
 
 
                 Trips.ForEach(t =>

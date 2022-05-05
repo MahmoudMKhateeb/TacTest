@@ -30,7 +30,7 @@
               <div *dxTemplate="let options of 'translations'">
                 <app-truck-statuses-translations-template [CoreId]="options.data.id"></app-truck-statuses-translations-template>
               </div>
-              <dxo-remote-operations [sorting]="true" [paging]="true" [filtering]="true"></dxo-remote-operations>
+              <dxo-remote-operations></dxo-remote-operations>
               <dxo-paging [pageSize]="10"></dxo-paging>
               <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20, 50, 200]"></dxo-pager>
 

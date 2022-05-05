@@ -25,7 +25,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
         //Task<FileDto> GetShippingRequestsToExcel(GetAllShippingRequestsForExcelInput input);
         IEnumerable<GetMasterWaybillOutput> GetMasterWaybill(int shippingRequestTripId);
-        IEnumerable<GetSingleDropWaybillOutput> GetSingleDropWaybill(int shippingRequestTripId);
+        IEnumerable<GetDropWaybillOutput> GetDropWaybill(int shippingRequestTripId, long? dropOffId = null);
 
         IEnumerable<GetAllShippingRequestVasesOutput> GetShippingRequestVasesForSingleDropWaybill(
             int shippingRequestTripId);

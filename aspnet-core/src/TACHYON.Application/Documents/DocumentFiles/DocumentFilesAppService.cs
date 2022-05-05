@@ -361,7 +361,7 @@ namespace TACHYON.Documents.DocumentFiles
                     throw new UserFriendlyException(L("document number should be unique message"));
                 }
             }
-            
+
             await _documentFilesManager.CreateDocumentFile(input);
 
         }
@@ -481,7 +481,14 @@ namespace TACHYON.Documents.DocumentFiles
                     new UserIdentifier(documentFile.TenantId, documentFile.CreatorUserId.Value), documentFile);
             }
             if (documentFile.TenantId.HasValue)
-             await _userEmailer.SendApprovedDocumentEmail(documentFile.TenantId.Value, _appUrlService.GetTachyonPlatformLoginUrl());
+            {
+                var isAllDocumentsApproved = await _documentFileRepository.GetAll().Where(x => x.TenantId == documentFile.TenantId && x.Id != documentFile.Id)
+                      .AllAsync(x => x.IsAccepted);
+
+                if (isAllDocumentsApproved)
+                    await _userEmailer.SendApprovedDocumentEmail(documentFile.TenantId.Value, _appUrlService.GetTachyonPlatformLoginUrl());
+            }
+
 
         }
 

@@ -1,16 +1,16 @@
-﻿using System;
-using System.Threading.Tasks;
-using Abp.Application.Services;
+﻿using Abp.Application.Services;
 using Abp.Application.Services.Dto;
-using TACHYON.UnitOfMeasures.Dtos;
+using DevExtreme.AspNet.Data.ResponseModel;
+using System;
+using System.Threading.Tasks;
 using TACHYON.Dto;
-
+using TACHYON.UnitOfMeasures.Dtos;
 
 namespace TACHYON.UnitOfMeasures
 {
     public interface IUnitOfMeasuresAppService : IApplicationService
     {
-        Task<PagedResultDto<GetUnitOfMeasureForViewDto>> GetAll(GetAllUnitOfMeasuresInput input);
+        Task<LoadResult> GetAll(GetAllUnitOfMeasuresInput input);
 
         Task<GetUnitOfMeasureForViewDto> GetUnitOfMeasureForView(int id);
 
@@ -19,5 +19,7 @@ namespace TACHYON.UnitOfMeasures
         Task CreateOrEdit(CreateOrEditUnitOfMeasureDto input);
 
         Task Delete(EntityDto input);
+
+
     }
 }

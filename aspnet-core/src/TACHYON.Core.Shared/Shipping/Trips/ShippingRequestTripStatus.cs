@@ -3,7 +3,7 @@
     public enum ShippingRequestTripStatus : byte
     {
         New = 0,
-        Intransit = 1,
+        InTransit = 1,
         Canceled = 2,
         Delivered = 3,
 

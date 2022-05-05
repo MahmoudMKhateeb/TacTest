@@ -81,6 +81,7 @@ namespace TACHYON.AddressBook
 
         public async Task<GetFacilityForViewOutput> GetFacilityForView(long id)
         {
+            await DisableTenancyFiltersIfTachyonDealer();
             var facility = await _facilityRepository.GetAsync(id);
 
             var output = new GetFacilityForViewOutput { Facility = ObjectMapper.Map<FacilityDto>(facility) };

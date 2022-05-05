@@ -168,8 +168,9 @@ namespace TACHYON.Authorization.Users
             DisableTenancyFiltersIfHost();
             await DisableTenancyFiltersIfTachyonDealer();
 
+
             var drivers = (from user in _userRepository.GetAllIncluding(x=> x.NationalityFk).AsNoTracking()
-                where user.IsDriver && user.NationalityFk != null
+                where user.IsDriver 
                 join tenant in _tenantRepository.GetAll() on user.TenantId equals tenant.Id
                 select new DriverMappingEntity(){ User = user, CompanyName = tenant.companyName})
                 .Where(x=> x.User != null )
@@ -457,7 +458,7 @@ namespace TACHYON.Authorization.Users
             //required Docs
             if (input.User.IsDriver)
             {
-                if (await IsEnabledAsync(AppFeatures.TachyonDealer))
+                if (!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer))
                 {
                     if (input.User?.TenantId == null) throw new AbpValidationException(L("YouMustSetTenant"));
                     if (!await FeatureChecker.IsEnabledAsync(input.User.TenantId.Value, AppFeatures.Carrier))
@@ -470,14 +471,17 @@ namespace TACHYON.Authorization.Users
                 if (requiredDocs.Count > 0)
                 {
                     foreach (var item in requiredDocs)
-                    {
-                        var doc = input.CreateOrEditDocumentFileDtos.FirstOrDefault(x =>
-                            x.DocumentTypeId == item.DocumentTypeId);
+                    {                    
+                        var doc = input.CreateOrEditDocumentFileDtos.FirstOrDefault(x => x.DocumentTypeId == item.DocumentTypeId);
 
-                        if (doc.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
+                        if (item.DocumentTypeDto.IsRequiredDocumentTemplate)
                         {
-                            throw new UserFriendlyException(L("document missing msg :" + item.Name));
+                            if (doc?.UpdateDocumentFileInput == null || doc.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
+                            {
+                                throw new UserFriendlyException(L("document missing msg :" + item.Name));
+                            }
                         }
+
 
                         doc.Name = item.Name;
                     }
@@ -643,8 +647,8 @@ namespace TACHYON.Authorization.Users
 
         public async Task<bool> CheckIfPhoneNumberValid(string phoneNumber, long? driverId)
         {
-            var result =
-                await _userManager.Users.FirstOrDefaultAsync(x => x.PhoneNumber == phoneNumber && x.Id != driverId);
+            DisableTenancyFilters();
+            var result = await _userManager.Users.FirstOrDefaultAsync(x => x.PhoneNumber == phoneNumber && x.Id != driverId);
             return (result == null);
         }
 

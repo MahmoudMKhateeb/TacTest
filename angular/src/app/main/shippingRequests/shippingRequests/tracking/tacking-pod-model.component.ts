@@ -1,8 +1,8 @@
-import { Component, ViewChild, Injector, Output, EventEmitter, OnInit, ElementRef, Input } from '@angular/core';
+import { Component, Injector, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { RoutePointStatus, TrackingServiceProxy } from '@shared/service-proxies/service-proxies';
+import { TrackingServiceProxy } from '@shared/service-proxies/service-proxies';
 import { HttpClient } from '@angular/common/http';
 import { FileUpload } from '@node_modules/primeng/fileupload';
 import { AppConsts } from '@shared/AppConsts';
@@ -20,19 +20,15 @@ export class TrackingPODModalComponent extends AppComponentBase {
   id: number;
   Specifiedtime: Date = new Date();
   action: string;
-  title: string;
   loading = false;
-  toStatus: RoutePointStatus;
   constructor(injector: Injector, private _Service: TrackingServiceProxy, private _httpClient: HttpClient) {
     super(injector);
   }
 
-  public show(pointId: number, action: string, title: string, toStatus: RoutePointStatus): void {
+  public show(pointId: number, action: string): void {
     this.id = pointId;
     this.action = action;
-    this.title = title;
     this.active = true;
-    this.toStatus = toStatus;
     this.modal.show();
   }
 
@@ -45,15 +41,16 @@ export class TrackingPODModalComponent extends AppComponentBase {
     this.active = false;
   }
 
-  upload(data: { files: File }): void {
+  upload(data: { files: File[] }): void {
     this.loading = true;
-    const formData: FormData = new FormData();
-    const file = data.files[0];
-    formData.append('file', file, file.name);
-    formData.append('Action', this.action);
-    formData.append('id', this.id.toString());
+    let files: FormData = new FormData();
+    data.files.forEach((x) => {
+      files.append('file', x, x.name);
+      files.append('Action', this.action);
+      files.append('id', this.id.toString());
+    });
     this._httpClient
-      .post<any>(AppConsts.remoteServiceBaseUrl + '/api/services/app/DropOffPointToDelivery', formData)
+      .post<any>(AppConsts.remoteServiceBaseUrl + '/api/services/app/DropOffPointToDelivery', files)
       .pipe(
         finalize(() => {
           this.fileUpload.clear();
@@ -63,13 +60,7 @@ export class TrackingPODModalComponent extends AppComponentBase {
       .subscribe((response) => {
         if (response.success) {
           this.notify.success(this.l('SuccessfullyUpload'));
-          //check what the toStatus to set the event trigger
-          this.toStatus === RoutePointStatus.DeliveryNoteUploded
-            ? abp.event.trigger('tripDeliveryNotesUploadSuccess')
-            : this.toStatus === RoutePointStatus.DeliveryConfirmation
-            ? abp.event.trigger('PodUploadedSuccess')
-            : abp.event.trigger('DeliveryGoodUploadedSuccess');
-
+          this.action === 'UplodeDeliveryNote' ? abp.event.trigger('tripDeliveryNotesUploadSuccess') : abp.event.trigger('PodUploadedSuccess');
           this.close();
         } else if (response.error != null) {
           this.notify.error(this.l('UploadFailed'));

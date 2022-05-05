@@ -23,6 +23,7 @@ using TACHYON.Routs.RoutPoints;
 using TACHYON.Routs.RoutPoints.Dtos;
 using TACHYON.Routs.RoutSteps;
 using TACHYON.UnitOfMeasures;
+using TACHYON.UnitOfMeasures.Dtos;
 
 namespace TACHYON.Goods.GoodsDetails
 {
@@ -111,6 +112,8 @@ namespace TACHYON.Goods.GoodsDetails
                 .GetAll().Include(e => e.GoodCategoryFk)
                 .ThenInclude(e => e.Translations)
                 .Include(e => e.RoutPointFk)
+                .Include(e => e.UnitOfMeasureFk)
+                .ThenInclude(x => x.Translations)
                 .Where(e => e.Id == id)
                 .FirstOrDefaultAsync();
 
@@ -162,7 +165,7 @@ namespace TACHYON.Goods.GoodsDetails
             var unitOfMeasure = await _lookup_UnitOfMeasureRepository.GetAll()
                 .SingleAsync(x => x.Id == input.UnitOfMeasureId);
 
-            if (unitOfMeasure.DisplayName.ToLower().Contains(TACHYONConsts.OthersDisplayName)
+            if (unitOfMeasure.Key.ToLower().Contains(TACHYONConsts.OthersDisplayName)
                 && input.OtherUnitOfMeasureName.IsNullOrEmpty())
                 throw new UserFriendlyException(L("OtherNameIsRequired"));
 
@@ -266,12 +269,11 @@ namespace TACHYON.Goods.GoodsDetails
         }
 
         #region Waybills
-
-        public IEnumerable<GetGoodsDetailsForWaybillsOutput> GetShippingrequestGoodsDetailsForSingleDropWaybill(
-            int shippingRequestTripId)
+        public IEnumerable<GetGoodsDetailsForWaybillsOutput> GetShippingrequestGoodsDetailsForSingleDropWaybill(int shippingRequestTripId, long? dropOffId = null)
         {
-            var dropPoint = _routPointRepository.Single(x =>
-                x.ShippingRequestTripId == shippingRequestTripId && x.PickingType == PickingType.Dropoff);
+            var dropPoint = _routPointRepository.GetAll()
+                .WhereIf(dropOffId.HasValue, x => x.Id == dropOffId)
+                .Single(x => x.ShippingRequestTripId == shippingRequestTripId && x.PickingType == PickingType.Dropoff);
 
             var goods = _goodsDetailRepository.GetAll()
                 .Include(x => x.GoodCategoryFk)
@@ -283,7 +285,7 @@ namespace TACHYON.Goods.GoodsDetails
                 Description = x.Description,
                 TotalAmount = x.Amount,
                 Weight = x.Weight,
-                UnitOfMeasureDisplayName = x.UnitOfMeasureFk.DisplayName,
+                UnitOfMeasureDisplayName = ObjectMapper.Map<UnitOfMeasureDto>(x.UnitOfMeasureFk).DisplayName,
                 SubCategory = x.GoodCategoryFk
             });
 
@@ -311,7 +313,7 @@ namespace TACHYON.Goods.GoodsDetails
                 Description = x.Description,
                 //Amount which will be dropped
                 TotalAmount = x.Amount,
-                UnitOfMeasureDisplayName = x.UnitOfMeasureFk.DisplayName,
+                UnitOfMeasureDisplayName = ObjectMapper.Map<UnitOfMeasureDto>(x.UnitOfMeasureFk).DisplayName,
                 SubCategory = x.GoodCategoryFk
             });
 

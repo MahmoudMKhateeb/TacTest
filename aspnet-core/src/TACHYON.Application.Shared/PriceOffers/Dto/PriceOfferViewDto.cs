@@ -53,7 +53,6 @@ namespace TACHYON.PriceOffers.Dto
         #region Commission
 
         public PriceOfferCommissionType CommissionType { get; set; }
-
         public string CommissionTypeTitle
         {
             get { return CommissionType.GetEnumDescription(); }
@@ -76,4 +75,16 @@ namespace TACHYON.PriceOffers.Dto
         /// </summary>
         public string RejectedReason { get; set; }
     }
+
+    public class GetOfferForViewOutput
+    {
+        public PriceOfferViewDto PriceOfferViewDto { get; set; }
+
+        public bool CanIAcceptOffer { get; set; }
+        public bool CanIAcceptOrRejectOfferOnBehalf { get; set; }
+        public bool CanIEditOffer { get; set; }
+    }
+
+
+
 }

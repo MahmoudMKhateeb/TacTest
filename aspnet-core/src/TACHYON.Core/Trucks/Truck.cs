@@ -71,13 +71,16 @@ namespace TACHYON.Trucks
         #region Truck Categories
 
         public virtual int? TransportTypeId { get; set; }
-        [ForeignKey("TransportTypeId")] public TransportType TransportTypeFk { get; set; }
-
+        [ForeignKey("TransportTypeId")]
+        public TransportType TransportTypeFk { get; set; }
+        public string OtherTrucksTypeName { get; set; }
 
         public virtual long? TrucksTypeId { get; set; }
 
 
         [ForeignKey("TrucksTypeId")] public TrucksType TrucksTypeFk { get; set; }
+
+        public string OtherTransportTypeName { get; set; }
 
 
         public virtual int? CapacityId { get; set; }

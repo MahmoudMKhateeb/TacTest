@@ -20,5 +20,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public string OtherGoodsCategoryName { get; set; }
         public string OtherTransportTypeName { get; set; }
         public string OtherTrucksTypeName { get; set; }
+        public string OtherPackingTypeName { get; set; }
+
     }
 }

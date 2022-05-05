@@ -3,10 +3,11 @@ using System;
 
 namespace TACHYON.UnitOfMeasures.Dtos
 {
-    public class GetAllUnitOfMeasuresInput : PagedAndSortedResultRequestDto
+    public class GetAllUnitOfMeasuresInput
     {
-        public string Filter { get; set; }
+        public string LoadOptions { get; set; }
 
-        public string DisplayNameFilter { get; set; }
+
+
     }
 }

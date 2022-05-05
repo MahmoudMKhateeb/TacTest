@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Injector, Input, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Injector, Input, OnChanges, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { Table } from '@node_modules/primeng/table';
 import { Paginator } from '@node_modules/primeng/paginator';
@@ -14,25 +14,26 @@ import {
 import { CreateOrEditTripComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/createOrEditTripModal/createOrEditTrip.component';
 import { ViewTripModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/viewTripModal/viewTripModal.component';
 import { TripService } from '../trip.service';
-import Swal from 'sweetalert2';
-import { finalize } from 'rxjs/operators';
+import { AddNewRemarksTripModalComponent } from './add-new-remarks-trip-modal/add-new-remarks-trip-modal.component';
 
 @Component({
   selector: 'TripsForViewShippingRequest',
   templateUrl: './tripsForViewShippingRequest.component.html',
   styleUrls: ['./tripsForViewShippingRequest.component.scss'],
 })
-export class TripsForViewShippingRequestComponent extends AppComponentBase implements AfterViewInit {
+export class TripsForViewShippingRequestComponent extends AppComponentBase implements AfterViewInit, OnChanges {
   @ViewChild('dataTablechild', { static: false }) dataTable: Table;
   @ViewChild('paginatorchild', { static: false }) paginator: Paginator;
   @ViewChild('AddNewTripModal', { static: false }) AddNewTripModal: CreateOrEditTripComponent;
   @ViewChild('ViewTripModal', { static: false }) ViewTripModal: ViewTripModalComponent;
+  @ViewChild('AddRemarksModal', { static: false }) AddRemarksModal: AddNewRemarksTripModalComponent;
+
   @Input() ShippingRequest: ShippingRequestDto;
   @Input() shippingRequestForView: any;
   @Input() VasListFromFather: GetShippingRequestVasForViewDto[];
   tripsByTmsEnabled = false;
   saving = false;
-  ShippingRequestTripStatus = ShippingRequestTripStatus;
+  ShippingRequestTripStatusEnum = ShippingRequestTripStatus;
   constructor(
     injector: Injector,
     private _TripService: TripService,
@@ -77,22 +78,22 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
       });
   }
 
-  updateAddTripsByTmsFeature() {
-    Swal.fire({
-      title: this.l('areYouSure'),
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: this.l('Yes'),
-      cancelButtonText: this.l('No'),
-    }).then((result) => {
-      if (result.value) {
-        this.saving = true;
-        this._shippingRequestTripsService.changeAddTripsByTmsFeature().subscribe(() => {
-          this.saving = false;
-        });
-      } //end of if
-    });
-  }
+  // updateAddTripsByTmsFeature() {
+  //   Swal.fire({
+  //     title: this.l('areYouSure'),
+  //     icon: 'warning',
+  //     showCancelButton: true,
+  //     confirmButtonText: this.l('Yes'),
+  //     cancelButtonText: this.l('No'),
+  //   }).then((result) => {
+  //     if (result.value) {
+  //       this.saving = true;
+  //       this._shippingRequestTripsService.changeAddTripsByTmsFeature().subscribe(() => {
+  //         this.saving = false;
+  //       });
+  //     } //end of if
+  //   });
+  // }
 
   reloadPage(): void {
     this.paginator.changePage(this.paginator.getPage());
@@ -101,11 +102,16 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
     // update Trip Service and send vases list to trip component
     this._shippingRequestsServiceProxy.getShippingRequestForView(this.ShippingRequest.id).subscribe((result) => {
       this.VasListFromFather = result.shippingRequestVasDtoList;
-      this.tripsByTmsEnabled = result.shippingRequest.addTripsByTmsEnabled;
+      this.tripsByTmsEnabled = true;
       this._TripService.updateShippingRequest(result);
     });
 
     this.primengTableHelper.adjustScroll(this.dataTable);
+    abp.event.on('ShippingRequestTripCreatedEvent', (args) => {
+      this._shippingRequestsServiceProxy.canAddTripForShippingRequest(this.ShippingRequest.id).subscribe((result) => {
+        this.ShippingRequest.canAddTrip = result;
+      });
+    });
   }
 
   /**
@@ -116,8 +122,11 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   canResetTrip(record): boolean {
     return (
       (this.isCarrier || this.isTachyonDealer) &&
-      record.status !== this.ShippingRequestTripStatus.New &&
-      record.status !== this.ShippingRequestTripStatus.Delivered
+      record.status !== this.ShippingRequestTripStatusEnum.New &&
+      record.status !== this.ShippingRequestTripStatusEnum.Delivered
     );
+  }
+  ngOnChanges() {
+    this.reloadPage();
   }
 }

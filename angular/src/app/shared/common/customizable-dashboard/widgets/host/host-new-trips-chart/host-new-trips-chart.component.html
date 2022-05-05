@@ -4,12 +4,45 @@
     <div class="card card-custom card-stretch">
       <div class="card-header border-0">
         <div class="card-title text-center">
-          <h3 class="card-label">New Trips</h3>
+          <h3 class="card-label">{{ l('NewTrips') }}</h3>
+        </div>
+        <div class="card-toolbar">
+          <div class="btn-group" data-toggle="buttons">
+            <label
+              class="btn btn-secondary active"
+              [ngClass]="{ active: selectedDatePeriod == filterDatePeriodInterval.Daily }"
+              (click)="reload(filterDatePeriodInterval.Daily)"
+            >
+              <input type="radio" name="filterDatePeriodInterval" [value]="filterDatePeriodInterval.Daily" />
+              {{ 'Daily' | localize }}
+            </label>
+            <label
+              class="btn btn-secondary"
+              [ngClass]="{ active: selectedDatePeriod == filterDatePeriodInterval.Weekly }"
+              (click)="reload(filterDatePeriodInterval.Weekly)"
+            >
+              <input type="radio" name="filterDatePeriodInterval" [value]="filterDatePeriodInterval.Weekly" />
+              {{ 'Weekly' | localize }}
+            </label>
+            <label
+              class="btn btn-secondary"
+              [ngClass]="{ active: selectedDatePeriod == filterDatePeriodInterval.Monthly }"
+              (click)="reload(filterDatePeriodInterval.Monthly)"
+            >
+              <input type="radio" name="filterDatePeriodInterval" [value]="filterDatePeriodInterval.Monthly" />
+              {{ 'Monthly' | localize }}
+            </label>
+          </div>
         </div>
       </div>
-      <div class="card-body p-1">
+
+      <div class="card-body p-1" [busyIf]="loading">
+        <div class="pd-5 text-center" *ngIf="!trips">
+          {{ l('NoData') }}
+        </div>
         <div id="invoicesVsPaidInvoices">
           <apx-chart
+            *ngIf="chartOptions && chartOptions.series && trips"
             [series]="chartOptions.series"
             [chart]="chartOptions.chart"
             [dataLabels]="chartOptions.dataLabels"

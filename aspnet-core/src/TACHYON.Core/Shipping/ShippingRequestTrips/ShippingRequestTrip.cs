@@ -68,6 +68,7 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public ICollection<ShippingRequestTripVas> ShippingRequestTripVases { get; set; }
         public ICollection<RatingLog> RatingLogs { get; set; }
         public ShippingRequestTripDriverStatus DriverStatus { get; set; }
+        public InvoiceTripStatus InvoiceStatus { get; set; }
         public int? RejectReasonId { get; set; }
 
         [ForeignKey("RejectReasonId")]
@@ -112,5 +113,10 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public bool IsWaslIntegrated { get; set; }
         public string WaslIntegrationErrorMsg { get; set; }
 
+        #region Remarks
+        public bool CanBePrinted { get; set; }
+        public string RoundTrip { get; set; }
+        public string ContainerNumber { get; set; }
+        #endregion
     }
 }

@@ -11,7 +11,7 @@
   <div class="modal-dialog modal-lg" style="max-width: 1200px">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Price Offer</h5>
+        <h5 class="modal-title">{{l('PriceOffer')}}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close()">
           <i aria-hidden="true" class="ki ki-close"></i>
         </button>
@@ -20,7 +20,7 @@
         <form #Form="ngForm" novalidate (ngSubmit)="confirmSendOffer()">
           <div class="form-group row">
             <div class="col-lg-4" *ngIf="!feature.isEnabled('App.Carrier')">
-              <label>commissionType:</label>
+              <label>{{ l('CommissionType') }}:</label>
               <select
                 class="form-control"
                 name="CommissionType"
@@ -31,10 +31,10 @@
               </select>
             </div>
             <div class="col-lg-4" *ngIf="!feature.isEnabled('App.Carrier')">
-              <label>commissionTypeValue:</label>
+              <label>{{ l('CommissionTypeValue') }}:</label>
               <input
                 type="number"
-                min="1"
+                min="0"
                 class="form-control"
                 placeholder="Value"
                 (change)="calculator();"
@@ -45,7 +45,7 @@
           </div>
           <div class="form-group row">
             <div class="col-lg-4" *ngIf="!feature.isEnabled('App.Carrier')">
-              <label>vasCommissionType:</label>
+              <label>{{ l('VasCommissionType') }}:</label>
 
               <select
                 class="form-control form-control-sm"
@@ -57,7 +57,7 @@
               </select>
             </div>
             <div class="col-lg-4" *ngIf="!feature.isEnabled('App.Carrier')">
-              <label>vasCommissionPercentageOrAddValue:</label>
+              <label>{{ l('VasCommissionPercentageOrAddValue') }}:</label>
 
               <input
                 type="number"
@@ -75,15 +75,13 @@
             <table class="table table-sm table-bordered rounded">
               <thead>
                 <tr class="table-active">
-                  <th style="width: 200px"></th>
-                  <th style="width: 150px">{{l('Qty')}}</th>
-                  <th style="width: 350px">itemPrice</th>
-                  <th>{{l('Total Price of All Trips Pre-Commission Pre-VAT')}}</th>
+                  <th style="width: 350px">{{l('NoOfTrips')}}</th>
+                  <th style="width: 350px">{{l('itemPrice')}}</th>
+                  <th *ngIf="isTachyonDealer">{{l('ItemPricePostCommission')}}</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>Trip</td>
                   <td>{{offer.quantity}}</td>
                   <td>
                     <input
@@ -98,11 +96,12 @@
                       class="form-control"
                     />
                   </td>
-                  <td>{{offer.itemsTotalPricePreCommissionPreVat}}</td>
+                  <td *ngIf="isTachyonDealer">{{offer.itemSubTotalAmountWithCommission}}</td>
                 </tr>
                 <tr>
-                  <td colspan="3"></td>
-                  <td class="table-primary">{{offer.itemsTotalPricePreCommissionPreVat}}</td>
+                  <td></td>
+                  <td class="table-success">{{offer.itemsTotalPricePreCommissionPreVat}}</td>
+                  <td *ngIf="isTachyonDealer"></td>
                 </tr>
               </tbody>
             </table>
@@ -115,7 +114,8 @@
                   <th style="width: 200px">{{l('VasName')}}</th>
                   <th style="width: 150px">{{l('Qty')}}</th>
                   <th style="width: 350px">{{l('Price')}}</th>
-                  <th>{{l('Total Price of All VAS Pre-Commission Pre-VAT')}}</th>
+                  <th *ngIf="isTachyonDealer">{{l('TotalPriceOfAllVASPre-CommissionPre-VAT')}}</th>
+                  <th *ngIf="isCarrier">{{l('TotalPriceOfAllVASPre-CommissionPre-VAT-Carrier')}}</th>
                 </tr>
               </thead>
               <tbody>
@@ -138,37 +138,38 @@
                 </tr>
                 <tr>
                   <td colspan="3"></td>
-                  <td class="table-primary">{{offer.detailsTotalPricePreCommissionPreVat}}</td>
+                  <td>{{offer.detailsTotalPricePreCommissionPreVat}}</td>
                 </tr>
               </tbody>
             </table>
           </div>
 
-          <div class="table-responsive" *ngIf="Items.length && !feature.isEnabled('App.Carrier')">
+          <div class="table-responsive" *ngIf="isTachyonDealerOrHost">
             <table class="table table-sm table-bordered rounded">
               <thead>
                 <tr class="table-active">
-                  <th style="width: 200px">field</th>
-                  <th style="width: 150px">Price Pre commission</th>
-                  <th style="width: 350px">Total commission</th>
-                  <th>Total Price post commission</th>
+                  <th style="width: 200px"></th>
+                  <th style="width: 150px">{{l('PricePreCommission')}}</th>
+                  <th style="width: 350px">{{l('TotalCommission')}}</th>
+                  <th>{{l('TotalPricePostCommission')}}</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>Trip</td>
+                  <td>{{l('Trip')}}</td>
                   <td>{{offer.itemsTotalPricePreCommissionPreVat}}</td>
                   <td>{{offer.itemsTotalCommission}}</td>
                   <td>{{offer.itemsTotalPricePostCommissionPreVat}}</td>
                 </tr>
-                <tr>
-                  <td>VAS</td>
+                <tr *ngIf="Items.length">
+                  <td>{{l('Vas')}}</td>
                   <td>{{offer.detailsTotalPricePreCommissionPreVat}}</td>
                   <td>{{offer.detailsTotalCommission}}</td>
                   <td>{{offer.detailsTotalPricePostCommissionPreVat}}</td>
                 </tr>
                 <tr>
                   <td colspan="3"></td>
+
                   <td class="table-primary">{{offer.subTotalAmountWithCommission}}</td>
                 </tr>
               </tbody>
@@ -179,26 +180,27 @@
             <table class="table table-sm table-bordered rounded">
               <thead>
                 <tr class="table-active">
-                  <th style="width: 350px"></th>
-                  <th style="width: 350px">Pre commission</th>
-                  <th>Post commission</th>
+                  <th style="width: 350px">{{l('VATDetails')}}</th>
+                  <th *ngIf="isTachyonDealer" style="width: 350px">{{l('PreCommission')}}</th>
+                  <th *ngIf="isCarrier" style="width: 350px">{{l('PreCommission-Carrier')}}</th>
+                  <th *ngIf="isTachyonDealerOrHost">{{l('PostCommission')}}</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>total VAT for Trip</td>
+                  <td>{{l('TotalVATForTrip')}}</td>
                   <td>{{offer.itemsTotalVatAmountPreCommission}}</td>
-                  <td>{{offer.itemsTotalVatPostCommission}}</td>
+                  <td *ngIf="isTachyonDealerOrHost">{{offer.itemsTotalVatPostCommission}}</td>
                 </tr>
                 <tr>
-                  <td>total VAT for VAS</td>
+                  <td>{{l('TotalVATForVas')}}</td>
                   <td>{{offer.detailsTotalVatAmountPreCommission}}</td>
-                  <td>{{offer.detailsTotalVatPostCommission}}</td>
+                  <td *ngIf="isTachyonDealerOrHost">{{offer.detailsTotalVatPostCommission}}</td>
                 </tr>
                 <tr>
-                  <td colspan="2"></td>
-
-                  <td class="table-primary">{{offer.vatAmountWithCommission}}</td>
+                  <td></td>
+                  <td class="table-success">{{offer.vatAmount}}</td>
+                  <td *ngIf="isTachyonDealerOrHost" class="table-primary">{{offer.vatAmountWithCommission}}</td>
                 </tr>
               </tbody>
             </table>
@@ -209,15 +211,16 @@
               <thead>
                 <tr class="table-active">
                   <th style="width: 350px"></th>
-                  <th style="width: 350px"></th>
-                  <th>Total Price Post Vat</th>
+                  <th *ngIf="isTachyonDealer" style="width: 350px">{{l('TotalPricePostVatPreCommission')}}</th>
+                  <th *ngIf="isCarrier" style="width: 350px">{{l('TotalPricePostVatPreCommission-Carrier')}}</th>
+                  <th *ngIf="isTachyonDealerOrHost">{{l('TotalPricePostVatWithCommission')}}</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td></td>
-                  <td></td>
-                  <td class="table-primary">{{offer.totalAmountWithCommission}}</td>
+                  <td class="table-success">{{offer.totalAmount}}</td>
+                  <td *ngIf="isTachyonDealerOrHost" class="table-primary">{{offer.totalAmountWithCommission}}</td>
                 </tr>
               </tbody>
             </table>

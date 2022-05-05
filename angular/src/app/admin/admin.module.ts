@@ -141,6 +141,7 @@ import { VasesTranslationsTemplateComponent } from './vases/vases/vases-translat
 import { RatingModule } from '@node_modules/primeng/rating';
 import { DriverTrackingModalComponent } from './users/drivers/driver-tracking-modal/driver-tracking-modal.component';
 import { AgmCoreModule } from '@node_modules/@agm/core';
+import { UnitOfMeasureTranslationsComponent } from './unitOfMeasures/unitOfMeasures/UnitOfMeasureTranslations/unit-of-measure-translations/unit-of-measure-translations.component';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   // suppressScrollX: true
@@ -290,6 +291,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     VasesTranslationsTemplateComponent,
     TruckStatusesTranslationsTemplateComponent,
     DriverTrackingModalComponent,
+    UnitOfMeasureTranslationsComponent,
   ],
 
   exports: [AddMemberModalComponent, AddRoleModalComponent, ViewOrEditEntityDocumentsModalComponent],

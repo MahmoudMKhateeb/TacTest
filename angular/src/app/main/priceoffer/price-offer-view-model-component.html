@@ -1,7 +1,7 @@
 <div
   bsModal
   #modal="bs-modal"
-  class="modal fade modalSetPrice tachyonDialer {{ direction == 'rtl' ? ' rtl' : '' }}"
+  class="modal fade"
   tabindex="-1"
   role="dialog"
   aria-labelledby="modal"
@@ -10,65 +10,34 @@
 >
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
-      <div class="modal-body">
-        <button type="button" class="close closeModal" data-dismiss="modal" (click)="close()" aria-label="Close">
-          <i class="fas fa-times"></i>
+      <div class="modal-header">
+        <h4 class="modal-title">
+          <span> {{ l('ViewOffer') }}</span>
+        </h4>
+        <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+          <span aria-hidden="true">&times;</span>
         </button>
+      </div>
+
+      <div class="modal-body">
         <form class="contentSetPrice">
-          <ng-template [ngIf]="!feature.isEnabled('App.Carrier')">
-            <div class="infoBasic">
-              <a href="javascript:void(0)" class="companyName"> {{ offer.editionId!=4 ? offer.name:l('TachyonManageService')}} </a>
-            </div>
-            <div class="divirCard"></div>
-          </ng-template>
-          <ng-template [ngIf]="offer.status==2 || offer.status==5">
+          <!--          <ng-template [ngIf]="!feature.isEnabled('App.Carrier')">-->
+          <!--            <div class="infoBasic">-->
+          <!--              <a href="javascript:void(0)" class="companyName"> {{ offer.editionId!=4 ? offer.name:l('TachyonManageService')}} </a>-->
+          <!--            </div>-->
+          <!--       -->
+          <!--          </ng-template>-->
+          <ng-template [ngIf]="offerForEditOutput.priceOfferViewDto.status==2 || offerForEditOutput.priceOfferViewDto.status==5">
             <div class="infoBasic alert alert-warning">
-              <div class="alert alert-warning" role="alert">{{offer.rejectedReason}}</div>
+              <div class="alert alert-warning" role="alert">{{offerForEditOutput.priceOfferViewDto.rejectedReason}}</div>
             </div>
             <div class="divirCard"></div>
           </ng-template>
 
-          <div class="table-sendOffer">
-            <span class="titleSendOffer">
-              <a href="javascript:void(0)" class="edit" (click)="ModelPrice.show(input.shippingRequestId ,offer.id);close()" *ngIf="canEditOffer()">
-                <i class="fas fa-pen"></i>
-                {{offer.status==2? l('RePricing'):l('Edit')}}
-              </a>
-              <a href="javascript:void(0)" (click)="delete()" class="delete" *ngIf="canDeleteOffer()">
-                <i class="far fa-trash-alt"></i>
-                {{l('Delete')}}
-              </a>
-              <a href="javascript:void(0)" class="reject" (click)="ModelReject.show(offer.id)" *ngIf="canAcceptOrRejectOffer()">
-                <i class="fas fa-ban"></i>
-                {{l('RejectOffer')}}
-              </a>
-              <a href="javascript:void(0)" class="accept" (click)="acceptoffer()" *ngIf="canAcceptOrRejectOffer()">
-                <i class="fas fa-check"></i>
-                {{l('AcceptPrice')}}
-              </a>
-
-              <a
-                href="javascript:void(0)"
-                class="accept"
-                (click)="ModelPrice.show(input.shippingRequestId ,offer.id);close()"
-                *ngIf="canSendOfferOrCancel()"
-              >
-                <i class="fas fa-check"></i>
-                {{l('SendOffer')}}
-              </a>
-              <a href="javascript:void(0)" class="acceptTMS" (click)="accepTMStoffer()" *ngIf="canAcceptOrRejectOffer()">
-                <i class="fas fa-check"></i>
-                {{l('AcceptOfferOnBehalfShipper')}}
-              </a>
-
-              <a href="javascript:void(0)" class="delete" (click)="CancelAccepted()" *ngIf="canSendOfferOrCancel()">
-                <i class="fas fa-check"></i>
-                {{l('Cancel')}}
-              </a>
-            </span>
-            <table>
+          <div>
+            <table class="table">
               <thead>
-                <tr>
+                <tr class="table-active">
                   <th>{{l('Price')}}</th>
                   <th *ngIf="feature.isEnabled('App.TachyonDealer') || !appSession.tenantId">{{l('CommissionType')}}</th>
                   <th>{{l('NoOfTrips')}}</th>
@@ -77,22 +46,25 @@
               </thead>
               <tbody>
                 <tr>
-                  <td>{{offer.itemPrice}}</td>
-                  <td *ngIf="feature.isEnabled('App.TachyonDealer') || !appSession.tenantId">{{l(offer.commissionTypeTitle)}}</td>
-                  <td>{{offer.quantity}}</td>
                   <td>
-                    <span>{{(offer.itemPrice * offer.quantity) | number}}</span>
-                    <span>{{l('SAR')}}</span>
+                    <price-sar [value]="offerForEditOutput.priceOfferViewDto.itemPrice"></price-sar>
+                  </td>
+                  <td *ngIf="feature.isEnabled('App.TachyonDealer') || !appSession.tenantId">
+                    {{l(offerForEditOutput.priceOfferViewDto.commissionTypeTitle)}}
+                  </td>
+                  <td>{{offerForEditOutput.priceOfferViewDto.quantity}}</td>
+                  <td>
+                    <price-sar [value]="(offerForEditOutput.priceOfferViewDto.itemPrice * offerForEditOutput.priceOfferViewDto.quantity)"></price-sar>
                   </td>
                 </tr>
               </tbody>
             </table>
           </div>
-          <div class="divirCard"></div>
-          <div class="table-vas" *ngIf="Items.length">
-            <table>
+
+          <div *ngIf="Items.length">
+            <table class="table">
               <thead>
-                <tr>
+                <tr class="table-active">
                   <th>{{l('Name')}}</th>
                   <th>{{l('Price')}}</th>
                   <th>{{l('Qty')}}</th>
@@ -102,48 +74,98 @@
               <tbody>
                 <tr *ngFor="let item of Items; let i = index">
                   <td>{{item.itemName}}</td>
-                  <td>{{item.itemPrice}}</td>
-                  <td>{{item.quantity}}</td>
                   <td>
-                    <span>{{(item.itemPrice * item.quantity) | number}}</span>
-                    <span>{{l('SAR')}}</span>
+                    <price-sar [value]="item.itemPrice"></price-sar>
+                  </td>
+                  <td>
+                    <price-sar [value]="item.quantity"></price-sar>
+                  </td>
+
+                  <td>
+                    <price-sar [value]="(item.itemPrice * item.quantity)"></price-sar>
                   </td>
                 </tr>
               </tbody>
             </table>
           </div>
-          <div class="divirCard"></div>
-          <div class="resultPrice">
-            <div>
-              <p>{{l('SubTotalAmount')}}</p>
-              <p>
-                <span>{{offer.subTotalAmount | number}}</span>
-                <span>{{l('SAR')}}</span>
-              </p>
-            </div>
-            <div>
-              <p>{{l('VatAmount')}}</p>
-              <p>
-                <span>{{offer.vatAmount | number}}</span>
-                <span>{{l('SAR')}}</span>
-              </p>
-            </div>
-            <div>
-              <p>{{l('TotalAmount')}}</p>
-              <p>
-                <span>{{offer.totalAmount | number}}</span>
-                <span>{{l('SAR')}}</span>
-              </p>
-            </div>
-            <div *ngIf="feature.isEnabled('App.TachyonDealer') || !appSession.tenantId">
-              <p>{{l('Commission')}}</p>
-              <p>
-                <span>{{offer.commissionAmount | number}}</span>
-                <span>{{l('SAR')}}</span>
-              </p>
-            </div>
+
+          <div>
+            <table class="table">
+              <thead>
+                <tr class="table-active">
+                  <th scope="col">{{l('SubTotalAmount')}}</th>
+                  <th scope="col">{{l('VatAmount')}}</th>
+                  <th scope="col">{{l('TotalAmount')}}</th>
+                  <th *ngIf="feature.isEnabled('App.TachyonDealer') || !appSession.tenantId" scope="col">{{l('Commission')}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <price-sar [value]="offerForEditOutput.priceOfferViewDto.subTotalAmount"></price-sar>
+                  </td>
+
+                  <td>
+                    <price-sar [value]="offerForEditOutput.priceOfferViewDto.vatAmount"></price-sar>
+                  </td>
+
+                  <td>
+                    <price-sar [value]="offerForEditOutput.priceOfferViewDto.totalAmount"></price-sar>
+                  </td>
+
+                  <td *ngIf="feature.isEnabled('App.TachyonDealer') || !appSession.tenantId">
+                    <price-sar [value]="offerForEditOutput.priceOfferViewDto.commissionAmount"></price-sar>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </form>
+      </div>
+
+      <div class="modal-footer">
+        <button
+          class="btn btn-primary"
+          (click)="ModelPrice.show(input.shippingRequestId ,offerForEditOutput.priceOfferViewDto.id);close()"
+          *ngIf="offerForEditOutput.canIEditOffer"
+        >
+          <i class="fas fa-pen"></i>
+          {{offerForEditOutput.priceOfferViewDto.status==2? l('RePricing'):l('Edit')}}
+        </button>
+        <button (click)="delete()" class="btn btn-danger" *ngIf="canDeleteOffer()">
+          <i class="far fa-trash-alt"></i>
+          {{l('Delete')}}
+        </button>
+        <button
+          class="btn btn-warning"
+          (click)="ModelReject.show(offerForEditOutput.priceOfferViewDto.id)"
+          *ngIf="offerForEditOutput.canIAcceptOffer"
+        >
+          <i class="fas fa-ban"></i>
+          {{l('RejectOffer')}}
+        </button>
+        <button class="btn btn-success" (click)="acceptoffer()" *ngIf="offerForEditOutput.canIAcceptOffer">
+          <i class="fas fa-check"></i>
+          {{l('AcceptPrice')}}
+        </button>
+
+        <button class="btn btn-success" (click)="accepTMStoffer()" *ngIf="offerForEditOutput.canIAcceptOrRejectOfferOnBehalf">
+          <i class="fas fa-check"></i>
+          {{l('AcceptPriceOnBehalfShipper')}}
+        </button>
+
+        <button
+          class="btn btn-primary"
+          (click)="ModelPrice.show(input.shippingRequestId ,offerForEditOutput.priceOfferViewDto.id);close()"
+          *ngIf="canSendOfferOrCancel()"
+        >
+          <i class="fas fa-check"></i>
+          {{l('SendOffer')}}
+        </button>
+        <button class="btn btn-warning" (click)="CancelAccepted()" *ngIf="canSendOfferOrCancel()">
+          <i class="fas fa-check"></i>
+          {{l('Cancel')}}
+        </button>
       </div>
     </div>
   </div>

@@ -31,7 +31,7 @@ namespace TACHYON.Firebases
 
         public async Task PushNotification(
             string notificationName,
-            string msgTitle,
+            string msgBody,
             NotificationData data = null,
             params long[] userIds)
         {
@@ -50,8 +50,8 @@ namespace TACHYON.Firebases
                     Token = token,
                     Notification = new Notification()
                     {
-                        Title = msgTitle,
-                        Body = notificationName,
+                        Title = "TachyonDriver",
+                        Body = msgBody,
                     },
                     Data = data?.Properties.ToDictionary(x => x.Key, x => x.Value.ToString())
                 };
@@ -59,7 +59,8 @@ namespace TACHYON.Firebases
                 {
                     Priority = Priority.High,
                     Notification =
-                        new AndroidNotification() { Title = message.Notification.Title, Body = notificationName, },
+                        new AndroidNotification() { Title = "TachyonDriver",
+                            Body = msgBody, },
                     Data = data?.Properties.ToDictionary(x => x.Key, x => x.Value.ToString())
                 };
                 msgList.Add(message);
