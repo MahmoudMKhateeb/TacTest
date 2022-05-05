@@ -47,6 +47,8 @@ export class CompletedTripsWidgetComponent extends WidgetComponentBase implement
           ],
           chart: {
             type: 'bar',
+            width: 400,
+            height: 250,
           },
           xaxis: {
             type: 'category',
