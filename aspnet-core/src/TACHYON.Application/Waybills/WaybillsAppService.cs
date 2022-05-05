@@ -95,7 +95,7 @@ namespace TACHYON.Waybills
 
             ArrayList names = new ArrayList();
             ArrayList data = new ArrayList();
-
+            var masterWaybill = _shippingRequestAppService.GetMasterWaybill(shippingRequestTripId);
             names.Add("DataSet1");
             data.Add(_shippingRequestAppService.GetMasterWaybill(shippingRequestTripId));
 
@@ -104,7 +104,8 @@ namespace TACHYON.Waybills
 
             names.Add("SingleDropVasDataSet");
             data.Add(_shippingRequestAppService.GetShippingRequestVasesForSingleDropWaybill(shippingRequestTripId));
-            return _pdfExporterBase.CreateRdlcPdfPackageFromList(GetTripWaybilNo(shippingRequestTripId, null), reportPath, names, data);
+            var number = masterWaybill.FirstOrDefault()?.MasterWaybillNo.ToString();
+            return _pdfExporterBase.CreateRdlcPdfPackageFromList(number, reportPath, names, data);
         }
 
         /// <summary>
@@ -120,8 +121,9 @@ namespace TACHYON.Waybills
             ArrayList names = new ArrayList();
             ArrayList data = new ArrayList();
 
+            var dropOff = _shippingRequestAppService.GetDropWaybill(shippingRequestTripId, dropOffId);
             names.Add("SingleDropDataSet");
-            data.Add(_shippingRequestAppService.GetDropWaybill(shippingRequestTripId, dropOffId));
+            data.Add(dropOff);
 
             names.Add("SingleDropGoodsDetailsDataSet");
             data.Add(_goodsDetailsAppService.GetShippingrequestGoodsDetailsForSingleDropWaybill(shippingRequestTripId, dropOffId));
@@ -129,7 +131,8 @@ namespace TACHYON.Waybills
             names.Add("SingleDropVasDataSet");
             data.Add(_shippingRequestAppService.GetShippingRequestVasesForSingleDropWaybill(shippingRequestTripId));
 
-            return _pdfExporterBase.CreateRdlcPdfPackageFromList(GetTripWaybilNo(shippingRequestTripId, null), reportPath, names, data);
+            var number = dropOffId.HasValue ? dropOff.FirstOrDefault()?.WaybillNumber?.ToString() : dropOff.FirstOrDefault()?.MasterWaybillNo.ToString();
+            return _pdfExporterBase.CreateRdlcPdfPackageFromList(number, reportPath, names, data);
         }
 
         private string GetTripWaybilNo(int? tripId, long? pointId)

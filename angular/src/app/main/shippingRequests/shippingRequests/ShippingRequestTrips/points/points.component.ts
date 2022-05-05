@@ -16,6 +16,7 @@ import { FileDownloadService } from '@shared/utils/file-download.service';
 import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
 import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
 import { Subscription } from 'rxjs';
+import { FileViwerComponent } from '@app/shared/common/file-viwer/file-viwer.component';
 
 @Component({
   selector: 'PointsComponent',
@@ -37,6 +38,8 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
   }
   @ViewChild('createOrEditFacilityModal') public createOrEditFacilityModal: ModalDirective;
   @ViewChild('createRouteStepModal') public createRouteStepModal: ModalDirective;
+  @ViewChild('fileViwerComponent', { static: false }) fileViwerComponent: FileViwerComponent;
+
   // @ViewChild('PointGoodDetailsComponent') public PointGoodDetailsComponent: GoodDetailsComponent;
   @Input() usedIn: 'view' | 'createOrEdit';
   @Output() SelectedWayPointsFromChild: EventEmitter<CreateOrEditRoutPointDto[]> = new EventEmitter<CreateOrEditRoutPointDto[]>();
@@ -226,6 +229,7 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
     this._waybillsServiceProxy.getMultipleDropWaybillPdf(i).subscribe((result) => {
       this._fileDownloadService.downloadTempFile(result);
       this.loading = false;
+      this.fileViwerComponent.show(this._fileDownloadService.downloadTempFile(result), 'pdf');
     });
   }
 }
