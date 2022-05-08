@@ -6,7 +6,7 @@ using TACHYON.Invoices.PaymentMethods.Dto;
 
 namespace TACHYON.Invoices.PaymentMethods
 {
-    public interface IInvoicePaymentMethodAppService: IApplicationService
+    public interface IInvoicePaymentMethodAppService : IApplicationService
     {
         ListResultDto<InvoicePaymentMethodListDto> GetAll(FilterInput Input);
         Task<CreateOrEditInvoicePaymentMethod> CreateOrEdit(CreateOrEditInvoicePaymentMethod input);

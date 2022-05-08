@@ -34,43 +34,36 @@ namespace TACHYON.Routs.RoutSteps
         [Range(RoutStepConsts.MinOrderValue, RoutStepConsts.MaxOrderValue)]
         public virtual int Order { get; set; }
 
-        [Required]
-        public virtual long ShippingRequestId { get; set; }
+        [Required] public virtual long ShippingRequestId { get; set; }
 
-        [ForeignKey("ShippingRequestId")]
-        public ShippingRequest ShippingRequestFk { get; set; }
+        [ForeignKey("ShippingRequestId")] public ShippingRequest ShippingRequestFk { get; set; }
 
 
         /// <summary>
         /// assigned Driver
         /// </summary>
         public long? AssignedDriverUserId { get; set; }
-        [ForeignKey("AssignedDriverUserId")]
-        public User AssignedDriverUserFk { get; set; }
+
+        [ForeignKey("AssignedDriverUserId")] public User AssignedDriverUserFk { get; set; }
+
         /// <summary>
         /// assigned Truck
         /// </summary>
         public long? AssignedTruckId { get; set; }
-        [ForeignKey("AssignedTruckId")]
-        public Truck AssignedTruckFk { get; set; }
 
-       
+        [ForeignKey("AssignedTruckId")] public Truck AssignedTruckFk { get; set; }
 
-        [Required]
-        public long SourceRoutPointId { get; set; }
 
-        [ForeignKey("SourceRoutPointId")]
-        public RoutPoint SourceRoutPointFk { get; set; }
+        [Required] public long SourceRoutPointId { get; set; }
 
-        [Required]
-        public long DestinationRoutPointId { get; set; }
+        [ForeignKey("SourceRoutPointId")] public RoutPoint SourceRoutPointFk { get; set; }
 
-        [ForeignKey("DestinationRoutPointId")]
-        public RoutPoint DestinationRoutPointFk { get; set; }
+        [Required] public long DestinationRoutPointId { get; set; }
+
+        [ForeignKey("DestinationRoutPointId")] public RoutPoint DestinationRoutPointFk { get; set; }
 
         public int TotalAmount { get; set; }
         public int ExistingAmount { get; set; }
         public int RemainingAmount { get; set; }
-
     }
 }

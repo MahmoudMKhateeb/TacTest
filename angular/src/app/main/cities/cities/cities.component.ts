@@ -1,6 +1,6 @@
-﻿import { Component, Injector, ViewEncapsulation, ViewChild } from '@angular/core';
+import { Component, Injector, ViewEncapsulation, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CitiesServiceProxy, CityDto } from '@shared/service-proxies/service-proxies';
+import { CitiesServiceProxy, CityDto, LoadOptionsInput } from '@shared/service-proxies/service-proxies';
 import { NotifyService } from 'abp-ng2-module';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { TokenAuthServiceProxy } from '@shared/service-proxies/service-proxies';
@@ -15,6 +15,8 @@ import { FileDownloadService } from '@shared/utils/file-download.service';
 import { EntityTypeHistoryModalComponent } from '@app/shared/common/entityHistory/entity-type-history-modal.component';
 import * as _ from 'lodash';
 import * as moment from 'moment';
+import CustomStore from 'devextreme/data/custom_store';
+import { LoadOptions } from '@node_modules/devextreme/data/load_options';
 
 @Component({
   templateUrl: './cities.component.html',
@@ -39,84 +41,60 @@ export class CitiesComponent extends AppComponentBase {
 
   _entityTypeFullName = 'TACHYON.Cities.City';
   entityHistoryEnabled = false;
-
-  constructor(
-    injector: Injector,
-    private _citiesServiceProxy: CitiesServiceProxy,
-    private _notifyService: NotifyService,
-    private _tokenAuth: TokenAuthServiceProxy,
-    private _activatedRoute: ActivatedRoute,
-    private _fileDownloadService: FileDownloadService
-  ) {
+  dataSource: any = {};
+  countries: any;
+  constructor(injector: Injector, private _citiesServiceProxy: CitiesServiceProxy, private _fileDownloadService: FileDownloadService) {
     super(injector);
   }
 
   ngOnInit(): void {
-    this.entityHistoryEnabled = this.setIsEntityHistoryEnabled();
+    this._citiesServiceProxy.getAllCountyForTableDropdown().subscribe((result) => {
+      this.countries = result;
+    });
+    this.getCities();
   }
 
-  private setIsEntityHistoryEnabled(): boolean {
-    let customSettings = (abp as any).custom;
-    return (
-      this.isGrantedAny('Pages.Administration.AuditLogs') &&
-      customSettings.EntityHistory &&
-      customSettings.EntityHistory.isEnabled &&
-      _.filter(customSettings.EntityHistory.enabledEntities, (entityType) => entityType === this._entityTypeFullName).length === 1
-    );
-  }
+  getCities() {
+    let self = this;
 
-  getCities(event?: LazyLoadEvent) {
-    if (this.primengTableHelper.shouldResetPaging(event)) {
-      this.paginator.changePage(0);
-      return;
-    }
-
-    this.primengTableHelper.showLoadingIndicator();
-
-    this._citiesServiceProxy
-      .getAll(
-        this.filterText,
-        this.displayNameFilter,
-        this.codeFilter,
-        this.latitudeFilter,
-        this.longitudeFilter,
-        this.countyDisplayNameFilter,
-        this.primengTableHelper.getSorting(this.dataTable),
-        this.primengTableHelper.getSkipCount(this.paginator, event),
-        this.primengTableHelper.getMaxResultCount(this.paginator, event)
-      )
-      .subscribe((result) => {
-        this.primengTableHelper.totalRecordsCount = result.totalCount;
-        this.primengTableHelper.records = result.items;
-        this.primengTableHelper.hideLoadingIndicator();
-      });
-  }
-
-  reloadPage(): void {
-    this.paginator.changePage(this.paginator.getPage());
+    this.dataSource = {};
+    this.dataSource.store = new CustomStore({
+      key: 'id',
+      load(loadOptions: LoadOptions) {
+        let Input = new LoadOptionsInput();
+        Input.loadOptions = JSON.stringify(loadOptions);
+        return self._citiesServiceProxy
+          .dxGetAll(Input)
+          .toPromise()
+          .then((response) => {
+            return {
+              data: response.data,
+              totalCount: response.totalCount,
+            };
+          })
+          .catch((error) => {
+            console.log(error);
+            throw new Error('Data Loading Error');
+          });
+      },
+      insert: (values) => {
+        return self._citiesServiceProxy.createOrEdit(values).toPromise();
+      },
+      update: (key, values) => {
+        return self._citiesServiceProxy.createOrEdit(values).toPromise();
+      },
+      remove: (key) => {
+        return self._citiesServiceProxy.delete(key).toPromise();
+      },
+    });
   }
 
   createCity(): void {
     this.createOrEditCityModal.show();
   }
 
-  showHistory(city: CityDto): void {
-    this.entityTypeHistoryModal.show({
-      entityId: city.id.toString(),
-      entityTypeFullName: this._entityTypeFullName,
-      entityTypeDescription: '',
-    });
-  }
-
-  deleteCity(city: CityDto): void {
-    this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
-      if (isConfirmed) {
-        this._citiesServiceProxy.delete(city.id).subscribe(() => {
-          this.reloadPage();
-          this.notify.success(this.l('SuccessfullyDeleted'));
-        });
-      }
-    });
+  updateRow(options) {
+    options.newData = { ...options.oldData, ...options.newData };
   }
 
   exportToExcel(): void {

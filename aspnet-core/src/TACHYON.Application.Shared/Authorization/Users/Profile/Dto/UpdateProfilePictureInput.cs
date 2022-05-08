@@ -7,8 +7,7 @@ namespace TACHYON.Authorization.Users.Profile.Dto
 {
     public class UpdateProfilePictureInput : ICustomValidate
     {
-        [MaxLength(400)]
-        public string FileToken { get; set; }
+        [MaxLength(400)] public string FileToken { get; set; }
 
         public int X { get; set; }
 
@@ -19,6 +18,7 @@ namespace TACHYON.Authorization.Users.Profile.Dto
         public int Height { get; set; }
 
         public bool UseGravatarProfilePicture { get; set; }
+
         public void AddValidationErrors(CustomValidationContext context)
         {
             if (!UseGravatarProfilePicture && FileToken.IsNullOrEmpty())

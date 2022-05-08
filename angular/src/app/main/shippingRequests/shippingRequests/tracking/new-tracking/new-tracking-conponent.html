@@ -1,0 +1,275 @@
+<div class="card card-custom gutter-b card-stretch p-0" [@routerTransition]>
+  <!--begin::Body-->
+  <div class="card-body p-0">
+    <!--begin::Content-->
+    <div class="d-flex flex-wrap" *ngIf="mapToggle">
+      <agm-map [zoom]="zoom" [longitude]="markerLong || 46.675761" [latitude]="markerLat || 24.717942" (mapReady)="mapReady($event)">
+        <div id="Settings" class="rounded bg-white p-2" style="height: 50px">
+          <div class="form-group row p-1">
+            <label class="col-3 col-form-label">{{ l('Drivers') }}</label>
+            <div class="col-3">
+              <span class="switch switch-outline switch-icon switch-danger">
+                <label>
+                  <input [(ngModel)]="driversToggle" type="checkbox" name="driversToggle" (click)="driverToggle()" />
+                  <span></span>
+                </label>
+              </span>
+            </div>
+            <label class="col-3 col-form-label">{{ l('Trip') }}</label>
+            <div class="col-3">
+              <span class="switch switch-outline switch-icon switch-danger">
+                <label>
+                  <input [(ngModel)]="tripsToggle" type="checkbox" name="tripsToggle" (click)="tripToggle()" />
+                  <span></span>
+                </label>
+              </span>
+            </div>
+          </div>
+        </div>
+        <ng-container *ngIf="tripsToggle" id="route">
+          <agm-direction
+            *ngIf="tripRoute.destination.lat && !markerLong"
+            [origin]="{ lat: tripRoute.origin.lat, lng: tripRoute.origin.lng }"
+            [destination]="{ lat: tripRoute.destination.lat, lng: tripRoute.destination.lng }"
+            [waypoints]="tripRoute.wayPoints"
+            [travelMode]="'DRIVING'"
+          ></agm-direction>
+        </ng-container>
+        <ng-container id="markers">
+          <!--  Disconnected Driver Marker          -->
+          <agm-marker
+            *ngIf="driversToggle && driverOnline == false && trip.status === tripStatusesEnum.InTransit"
+            [longitude]="driverLiveLocation.lng || tripRoute.origin.lng + 0.1"
+            [latitude]="driverLiveLocation.lat || tripRoute.origin.lat + 0.1"
+            [iconUrl]="trackingIconsList.offlineDriverIcon"
+          >
+            <agm-info-window>{{ l('DriverOfflineMessage') }}</agm-info-window>
+          </agm-marker>
+          <agm-marker
+            *ngIf="driversToggle && driverOnline == true && driverLiveLocation.lng"
+            [longitude]="driverLiveLocation.lng"
+            [latitude]="driverLiveLocation.lat"
+            [iconUrl]="trackingIconsList.driverIcon"
+          >
+          </agm-marker>
+        </ng-container>
+      </agm-map>
+    </div>
+
+    <!--end::Content-->
+    <!--begin::Text-->
+    <div class="d-flex justify-content-between mb-7 mt-3">
+      <p class="text-dark font-weight-bold font-size-h4">{{ l('PointsDetails')}}</p>
+      <div class="d-flex flex-row">
+        <label class="col-7 col-form-label">{{l('TrackingMap')}}</label>
+        <div class="col-3">
+          <span class="switch switch-danger switch-outline">
+            <label>
+              <input (click)="toggleMap()" [(ngModel)]="mapToggle" type="checkbox" checked="checked" name="mapToggle" />
+              <span></span>
+            </label>
+          </span>
+        </div>
+      </div>
+    </div>
+    <!--end::Text-->
+    <!--begin::Blog-->
+    <div class="d-flex flex-column flex-grow-1">
+      <!--begin::Head-->
+      <div class="card card-custom gutter-b">
+        <!--begin::Body-->
+        <!--end::Body-->
+      </div>
+      <!--end::Head-->
+      <!--begin::Row-->
+      <div class="row d-flex justify-content-center">
+        <div class="col-xl-12">
+          <!--begin::Card-->
+          <div class="card card-custom card-stretch" id="kt_todo_list">
+            <!--begin::Body-->
+            <div class="card-body p-0">
+              <!--begin::Responsive container-->
+              <div class="table-responsive">
+                <!--begin::Items-->
+                <div class="timeline timeline-3">
+                  <ngx-skeleton-loader
+                    count="4"
+                    *ngIf="!routePoints"
+                    [animation]="'pulse'"
+                    [theme]="{ 'border-radius': '0', height: '100px' }"
+                  ></ngx-skeleton-loader>
+                  <div class="timeline-items">
+                    <div *ngFor="let point of routePoints; let i = index" class="timeline-item ribbon ribbon-top">
+                      <div *ngIf="point.isComplete" class="ribbon-target bg-success" style="top: -2px; right: 3%">{{ l('Completed')}}</div>
+                      <a
+                        (click)="downloadMultiDropPointWaybill(point.id)"
+                        [buttonBusy]="dropWaybillLoadingId == point.id"
+                        *ngIf="trip.routeTypeId === routeTypeEnum.MultipleDrops && point.pickingType == pickingTypeEnum.Dropoff"
+                        class="ribbon-target bg-danger"
+                        style="top: -2px; right: 12%; background-color: #6c757d !important"
+                      >
+                        <i class="fas fa-download text-white mr-2 mb-1"></i>
+                        {{ point.waybillNumber}}
+                      </a>
+
+                      <div class="timeline-media pulse pulse-{{ point.pickingType == 1 ? 'primary' : 'danger' }}">
+                        <i
+                          class="flaticon2-{{ point.pickingType == 1 ? 'up' : 'down' }}  {{
+                                                point.pickingType == 1 ? 'text-success' : 'text-danger'
+                                              }}"
+                        ></i>
+                        <span class="pulse-ring"></span>
+                      </div>
+                      <div class="timeline-content" [ngClass]="{ active: item === point.id }">
+                        <div class="d-flex align-items-center justify-content-between mb-3 mt-1">
+                          <div class="mr-2">
+                            <a href="#" class="text-dark-75 text-hover-primary font-weight-bold"
+                              >{{ point.pickingType === pickingTypeEnum.Pickup ? l('Pickup') : l('Drop') }}</a
+                            >
+                            <span class="text-muted ml-2" *ngIf="point.startTime">{{point.startTime | momentFormat: 'L'}}</span>
+                            <span *ngIf="point.endTime"> -</span>
+                            <span class="text-muted ml-2" *ngIf="point.endTime">{{point.endTime | momentFormat: 'L'}}</span>
+                          </div>
+
+                          <div class="btn-group mt-6" *ngIf="trip.driver ">
+                            <!--   POD       -->
+                            <div class="d-inline-block" ngbDropdown *ngIf="point.isPodUploaded">
+                              <button
+                                class="btn btn-sm btn-danger mx-2"
+                                ngbDropdownToggle
+                                [buttonBusy]="loadPodForPointId == point.id"
+                                (click)="getPodListForPoint(point)"
+                              >
+                                {{l('POD')}}
+                              </button>
+                              <div ngbDropdownMenu aria-labelledby="dropdownManual" dropdownConfig>
+                                <button
+                                  ngbDropdownItem
+                                  class="overflow-hidden"
+                                  *ngFor="let pod of pointPodList; let x = index"
+                                  (click)="downloadPOD(pod)"
+                                >
+                                  {{ pod.fileName | slice:0:20 }}{{ '...'}}
+                                </button>
+                              </div>
+                            </div>
+
+                            <button *ngIf="point.isResolve" (click)="showPointLog(point.id)" class="btn btn-sm btn-danger mr-1 ml-1">
+                              {{ l('ActivityLog') }}
+                            </button>
+                            <!--    trip actions-->
+                            <div
+                              class="d-inline-block"
+                              ngbDropdown
+                              *ngIf="point.pickingType == pickingTypeEnum.Pickup &&  trip.status === tripStatusesEnum.New"
+                            >
+                              <button class="btn btn-sm btn-danger" ngbDropdownToggle [buttonBusy]="saving">{{l('Actions')}}</button>
+
+                              <div ngbDropdownMenu aria-labelledby="dropdownManual" dropdownConfig>
+                                <button ngbDropdownItem (click)="accept()" *ngIf="trip.driverStatus === driverStatusesEnum.None">
+                                  {{ l('AcceptTrip') }}
+                                </button>
+                                <button
+                                  ngbDropdownItem
+                                  (click)="start()"
+                                  *ngIf="trip.status == 0 && trip.driverStatus == driverStatusesEnum.Accepted"
+                                >
+                                  {{ l('StartTrip') }}
+                                </button>
+                              </div>
+                            </div>
+                            <!--                      points DropDown Actions      -->
+                            <div
+                              *ngIf="!point.isComplete && trip.status !== tripStatusesEnum.New && trip.driver && (isCarrier || isTachyonDealerOrHost) "
+                              class="d-inline-block"
+                              ngbDropdown
+                            >
+                              <button
+                                [disabled]="!canDoActionsOnPoints(point)"
+                                class="btn btn-sm btn-danger"
+                                id="dropdownConfig"
+                                ngbDropdownToggle
+                                [buttonBusy]="busyPointId == point.id"
+                              >
+                                <!--     || (point.pickingType == 2 && !point.isActive || point.availableTransactions.length === 0)-->
+                                {{l('Actions')}}
+                              </button>
+                              <div ngbDropdownMenu aria-labelledby="dropdownManual" dropdownConfig>
+                                <button
+                                  ngbDropdownItem
+                                  (click)="nextLocation(point)"
+                                  *ngIf="trip.routeTypeId === routeTypeEnum.MultipleDrops && !point.isResolve && !point.isComplete && canStartAnotherPoint"
+                                >
+                                  {{ l('StartDropPoint') }}
+                                </button>
+                                <button
+                                  ngbDropdownItem
+                                  *ngFor="let transaction of point.availableTransactions; let x = index"
+                                  (click)="invokeStatus(point , transaction)"
+                                >
+                                  {{ transaction.name }}
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="d-flex flex-column">
+                          <p class="p-0">{{l('Address')}} : {{point.address}}</p>
+                          <p class="p-0">{{l('Receiver')}} : {{point.receiverFullName}}</p>
+                          <p class="p-0 d-flex flex-row">
+                            <span class="mt-1 mr-2">{{l('FacilityRating')}} :</span>
+                            <p-rating [ngModel]="point.facilityRate" readonly="true" stars="5" [cancel]="false"></p-rating>
+                          </p>
+                          <div class="flex-row" *ngIf="!appSession.tenantId">
+                            <p class="p-0 mr-2">
+                              {{l('ReceiverCode')}} : {{newReceiverCode? newReceiverCode: point.receiverCode}}
+
+                              <i
+                                *ngIf="!point.isResolve && !point.isComplete"
+                                (click)="resetReceiverCode(point.id)"
+                                class="flaticon-refresh text-hover-primary ml-2"
+                                data-toggle="tooltip"
+                                title="{{l('ResetReceiverCode')}}"
+                              ></i>
+                            </p>
+                          </div>
+
+                          <div class="card">
+                            <p-timeline [value]="getStepperSteps(point.statues)" layout="horizontal" align="top">
+                              <ng-template pTemplate="marker" let-event>
+                                <span class="custom-marker p-shadow-2 {{event.isDone ? 'p-disabled' : ''}}" [style.backgroundColor]="event.color">
+                                  {{event.index}}
+                                </span>
+                              </ng-template>
+                              <ng-template pTemplate="content" let-event>
+                                <span class="font-weight-bolder text-dark {{event.isDone ? 'p-disabled' : ''}}">{{event.status}}</span><br />
+                                <span class="text-muted mt-3 font-weight-bold font-size-sm"
+                                  >{{event.time | momentFormat: 'YYYY-MM-DD HH:mm:ss' }}</span
+                                >
+                              </ng-template>
+                            </p-timeline>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!--end::Items-->
+                </div>
+                <!--end::Responsive container-->
+              </div>
+              <!--end::Body-->
+            </div>
+            <!--end::Card-->
+          </div>
+        </div>
+        <!--end::Row-->
+      </div>
+      <!--end::Blog-->
+    </div>
+    <!--end::Body-->
+  </div>
+  <tacking-confirm-code-model #modelconfirm (modalConfirm)="getForView()"></tacking-confirm-code-model>
+  <app-entity-log #appEntityLog [entityType]="1"></app-entity-log>
+  <tacking-pod-model #modelpod (modalConfirm)="getForView()"></tacking-pod-model>
+  <shared-file-viewer #fileViwerComponent></shared-file-viewer>
+</div>

@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace TACHYON.Invoices.Transactions
 {
-   public class TransactionManager: TACHYONDomainServiceBase
+    public class TransactionManager : TACHYONDomainServiceBase
     {
         private readonly IRepository<Transaction, long> _TransactionRepository;
+
         public TransactionManager(IRepository<Transaction, long> TransactionRepository)
         {
             _TransactionRepository = TransactionRepository;
@@ -19,10 +20,12 @@ namespace TACHYON.Invoices.Transactions
             await _TransactionRepository.InsertAsync(transaction);
         }
 
-        public async Task Delete(long SourceId,ChannelType channelType)
+        public async Task Delete(long SourceId, ChannelType channelType)
         {
-            var transaction = await _TransactionRepository.FirstOrDefaultAsync(t => t.SourceId == SourceId && t.ChannelId == channelType);
-           if (transaction !=null) await _TransactionRepository.DeleteAsync(transaction);
+            var transaction =
+                await _TransactionRepository.FirstOrDefaultAsync(t =>
+                    t.SourceId == SourceId && t.ChannelId == channelType);
+            if (transaction != null) await _TransactionRepository.DeleteAsync(transaction);
         }
     }
 }

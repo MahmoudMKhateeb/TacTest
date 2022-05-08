@@ -4,7 +4,11 @@
     <!-- <sub-header [title]="'TenantRequiredDocuments' | localize"
       [description]="'TenantRequiredDocumentsHeaderInfo' | localize"> </sub-header> -->
     <div [class]="containerClass">
-      <div *ngIf="isFormSubmitted && submittedDocumentsList.length != 0" class="alert alert-custom alert-light-primary" role="alert">
+      <div
+        *ngIf="isFormSubmitted && submittedDocumentsList.length != 0 && !IsAllDocumentsAccepted"
+        class="alert alert-custom alert-light-primary"
+        role="alert"
+      >
         <div class="alert-icon">
           <i class="flaticon-warning"></i>
         </div>
@@ -76,7 +80,7 @@
                     </td>
                     <td>
                       <span class="ui-column-title"></span>
-                      {{ record.documentTypeDto.name }}
+                      {{ record.name }}
                     </td>
                     <td>
                       <span class="ui-column-title"></span>

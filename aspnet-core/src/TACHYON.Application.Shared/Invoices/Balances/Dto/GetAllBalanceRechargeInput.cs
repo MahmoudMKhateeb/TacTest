@@ -19,7 +19,5 @@ namespace TACHYON.Invoices.Balances.Dto
         //public decimal? minLongitude { get; set; }
 
         //public decimal? maxLongitude { get; set; }
-
-
     }
 }

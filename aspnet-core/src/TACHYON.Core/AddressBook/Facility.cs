@@ -1,18 +1,21 @@
-﻿using TACHYON.Countries;
-using TACHYON.Cities;
-using System;
-using System.ComponentModel.DataAnnotations;
+﻿using Abp.Domain.Entities;
 using System.ComponentModel.DataAnnotations.Schema;
-using Abp.Domain.Entities.Auditing;
-using Abp.Domain.Entities;
+using TACHYON.Rating;
 
 namespace TACHYON.AddressBook
 {
     [Table("Facilities")]
-    public class Facility : AddressBaseFullAuditedEntity, IMayHaveTenant
+    public class Facility : AddressBaseFullAuditedEntity, IMayHaveTenant, IHasRating
     {
         public int? TenantId { get; set; }
 
         public override string Name { get; set; }
+
+        /// <summary>
+        /// final rate of the facility
+        /// </summary>
+        public decimal Rate { get; set; }
+
+        public int RateNumber { get; set; }
     }
 }

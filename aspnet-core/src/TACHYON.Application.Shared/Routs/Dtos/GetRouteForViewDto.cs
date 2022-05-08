@@ -5,7 +5,5 @@
         public RouteDto Route { get; set; }
 
         public string RoutTypeDisplayName { get; set; }
-
-
     }
 }

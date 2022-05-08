@@ -1,10 +1,15 @@
-﻿namespace TACHYON.Invoices.SubmitInvoices
+﻿using System.ComponentModel;
+
+namespace TACHYON.Invoices.SubmitInvoices
 {
-    public  enum SubmitInvoiceStatus:byte
+    public enum SubmitInvoiceStatus : byte
     {
         New,
+        [Description("Claimed")]
         Claim,
         Accepted,
-        Rejected
+        Rejected,
+        Paid,
+        UnPaid
     }
 }

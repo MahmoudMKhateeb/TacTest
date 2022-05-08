@@ -1,0 +1,24 @@
+<!--begin::Card-->
+<div class="card card-custom card-stretch w-100 h-100" [busyIf]="loading">
+  <div class="card-header border-0">
+    <div class="card-title text-center">
+      <h3 class="card-label">{{ l('AcceptedVSRejectedPricing') }}</h3>
+    </div>
+  </div>
+  <div class="card-body p-1">
+    <div class="pd-5 text-center" *ngIf="acceptedReqs.length == 0 && rejectedReqs.length == 0">
+      {{ l('NoData') }}
+    </div>
+    <div id="acceptedVsRejectedChart" *ngIf="acceptedReqs.length > 0 || rejectedReqs.length > 0">
+      <apx-chart
+        [series]="chartOptions.series"
+        [chart]="chartOptions.chart"
+        [xaxis]="chartOptions.xaxis"
+        [stroke]="chartOptions.stroke"
+        [tooltip]="chartOptions.tooltip"
+        [dataLabels]="chartOptions.dataLabels"
+      ></apx-chart>
+    </div>
+  </div>
+</div>
+<!--end::Card-->

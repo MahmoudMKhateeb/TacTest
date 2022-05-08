@@ -10,11 +10,15 @@ using Abp.MultiTenancy;
 using Abp.Notifications;
 using Abp.Runtime.Security;
 using Abp.Runtime.Session;
+using Abp.Runtime.Validation;
 using Abp.UI;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Rest;
 using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Transactions;
@@ -22,6 +26,7 @@ using TACHYON.Authorization.Roles;
 using TACHYON.Authorization.Users;
 using TACHYON.Editions;
 using TACHYON.MultiTenancy.Demo;
+using TACHYON.MultiTenancy.Dto;
 using TACHYON.MultiTenancy.Payments;
 using TACHYON.Notifications;
 
@@ -60,11 +65,11 @@ namespace TACHYON.MultiTenancy
             IAbpZeroDbMigrator abpZeroDbMigrator,
             IPasswordHasher<User> passwordHasher,
             IRepository<SubscribableEdition> subscribableEditionRepository) : base(
-                tenantRepository,
-                tenantFeatureRepository,
-                editionManager,
-                featureValueStore
-            )
+            tenantRepository,
+            tenantFeatureRepository,
+            editionManager,
+            featureValueStore
+        )
         {
             AbpSession = NullAbpSession.Instance;
 
@@ -80,57 +85,54 @@ namespace TACHYON.MultiTenancy
             _subscribableEditionRepository = subscribableEditionRepository;
         }
 
-        public async Task<int> CreateWithAdminUserAsync(
-            string companyName,
-            string mobileNo,
-            string tenancyName,
-            string name,
-            string address,
-            int cityId,
-            int countryId,
-            string adminPassword,
-            string adminEmailAddress,
-            string connectionString,
-            bool isActive,
-            int? editionId,
-            bool shouldChangePasswordOnNextLogin,
-            bool sendActivationEmail,
-            DateTime? subscriptionEndDate,
-            bool isInTrialPeriod,
-            string emailActivationLink,
-            string userAdminFirstName,
-            string userAdminSurname,
-            string moiNumber)
+        public async Task<int> CreateWithAdminUserAsync(CreateTenantInput input, string emailActivationLink = null)
         {
             int newTenantId;
             long newAdminId;
 
-            await CheckEditionAsync(editionId, isInTrialPeriod);
+            input.SubscriptionEndDateUtc = input.SubscriptionEndDateUtc?.ToUniversalTime();
 
-            if (isInTrialPeriod && !subscriptionEndDate.HasValue)
+            await CheckEditionAsync(input.EditionId, input.IsInTrialPeriod);
+
+            if (input.IsInTrialPeriod && !input.SubscriptionEndDateUtc.HasValue)
             {
-                throw new UserFriendlyException(LocalizationManager.GetString(TACHYONConsts.LocalizationSourceName, "TrialWithoutEndDateErrorMessage"));
+                throw new UserFriendlyException(LocalizationManager.GetString(TACHYONConsts.LocalizationSourceName,
+                    "TrialWithoutEndDateErrorMessage"));
             }
 
             using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
             {
                 //Create tenant
-                var tenant = new Tenant(tenancyName, name)
+                var tenant = new Tenant(input.TenancyName, input.Name)
                 {
-                    companyName = companyName,
-                    Address = address,
-                    CityId = cityId,
-                    CountryId = countryId,
-                    IsActive = isActive,
-                    EditionId = editionId,
-                    SubscriptionEndDateUtc = subscriptionEndDate?.ToUniversalTime(),
-                    IsInTrialPeriod = isInTrialPeriod,
-                    MobileNo = mobileNo,
-                    ConnectionString = connectionString.IsNullOrWhiteSpace() ? null : SimpleStringCipher.Instance.Encrypt(connectionString),
-                    MoiNumber = moiNumber
+                    companyName = input.companyName,
+                    Address = input.Address,
+                    CityId = input.CityId,
+                    CountryId = input.CountryId,
+                    IsActive = input.IsActive,
+                    EditionId = input.EditionId,
+                    SubscriptionEndDateUtc = input.SubscriptionEndDateUtc,
+                    IsInTrialPeriod = input.IsInTrialPeriod,
+                    MobileNo = input.MobileNo,
+                    ConnectionString =
+                        input.ConnectionString.IsNullOrWhiteSpace()
+                            ? null
+                            : SimpleStringCipher.Instance.Encrypt(input.ConnectionString),
+                    MoiNumber = input.MoiNumber
                 };
 
-                await CreateAsync(tenant);
+                try
+                {
+                    await CreateAsync(tenant);
+                }
+                catch (Exception e)
+                {
+                    if (!(e is UserFriendlyException) || !e.Message.Contains("taken"))
+                        throw;
+
+                    throw new AbpValidationException(L("CompanyNameIsAlreadyTaken", input.TenancyName), e);
+                }
+
                 await _unitOfWorkManager.Current.SaveChangesAsync(); //To get new tenant's id.
 
                 //Create tenant database
@@ -153,28 +155,27 @@ namespace TACHYON.MultiTenancy
                     CheckErrors(await _roleManager.UpdateAsync(userRole));
 
                     //Create admin user for the tenant
-                    var adminUser = User.CreateTenantAdminUser(tenant.Id, adminEmailAddress);
-                    adminUser.ShouldChangePasswordOnNextLogin = shouldChangePasswordOnNextLogin;
+                    var adminUser = User.CreateTenantAdminUser(tenant.Id, input.AdminEmailAddress);
+                    adminUser.ShouldChangePasswordOnNextLogin = input.ShouldChangePasswordOnNextLogin;
                     adminUser.IsActive = true;
 
-                    if (adminPassword.IsNullOrEmpty())
+                    if (input.AdminPassword.IsNullOrEmpty())
                     {
-                        adminPassword = await _userManager.CreateRandomPassword();
+                        input.AdminPassword = await _userManager.CreateRandomPassword();
                     }
                     else
                     {
                         await _userManager.InitializeOptionsAsync(AbpSession.TenantId);
                         foreach (var validator in _userManager.PasswordValidators)
                         {
-                            CheckErrors(await validator.ValidateAsync(_userManager, adminUser, adminPassword));
+                            CheckErrors(await validator.ValidateAsync(_userManager, adminUser, input.AdminPassword));
                         }
-
                     }
 
-                    adminUser.Password = _passwordHasher.HashPassword(adminUser, adminPassword);
+                    adminUser.Password = _passwordHasher.HashPassword(adminUser, input.AdminPassword);
 
-                    adminUser.Name = userAdminFirstName;
-                    adminUser.Surname = userAdminSurname;
+                    adminUser.Name = input.UserAdminFirstName;
+                    adminUser.Surname = input.UserAdminSurname;
 
                     CheckErrors(await _userManager.CreateAsync(adminUser));
                     await _unitOfWorkManager.Current.SaveChangesAsync(); //To get admin user's id
@@ -186,10 +187,10 @@ namespace TACHYON.MultiTenancy
                     await _appNotifier.WelcomeToTheApplicationAsync(adminUser);
 
                     //Send activation email
-                    if (sendActivationEmail)
+                    if (!emailActivationLink.IsNullOrEmpty())
                     {
                         adminUser.SetNewEmailConfirmationCode();
-                        await _userEmailer.SendEmailActivationLinkAsync(adminUser, emailActivationLink, adminPassword);
+                        await _userEmailer.SendEmailActivationEmail(adminUser, emailActivationLink, input.AdminPassword);
                     }
 
                     await _unitOfWorkManager.Current.SaveChangesAsync();
@@ -208,7 +209,8 @@ namespace TACHYON.MultiTenancy
             {
                 using (_unitOfWorkManager.Current.SetTenantId(newTenantId))
                 {
-                    await _notificationSubscriptionManager.SubscribeToAllAvailableNotificationsAsync(new UserIdentifier(newTenantId, newAdminId));
+                    await _notificationSubscriptionManager.SubscribeToAllAvailableNotificationsAsync(
+                        new UserIdentifier(newTenantId, newAdminId));
                     await _unitOfWorkManager.Current.SaveChangesAsync();
                     await uow.CompleteAsync();
                 }
@@ -230,7 +232,8 @@ namespace TACHYON.MultiTenancy
                 return;
             }
 
-            var error = LocalizationManager.GetSource(TACHYONConsts.LocalizationSourceName).GetString("FreeEditionsCannotHaveTrialVersions");
+            var error = LocalizationManager.GetSource(TACHYONConsts.LocalizationSourceName)
+                .GetString("FreeEditionsCannotHaveTrialVersions");
             throw new UserFriendlyException(error);
         }
 
@@ -239,7 +242,10 @@ namespace TACHYON.MultiTenancy
             identityResult.CheckErrors(LocalizationManager);
         }
 
-        public decimal GetUpgradePrice(SubscribableEdition currentEdition, SubscribableEdition targetEdition, int totalRemainingHourCount, PaymentPeriodType paymentPeriodType)
+        public decimal GetUpgradePrice(SubscribableEdition currentEdition,
+            SubscribableEdition targetEdition,
+            int totalRemainingHourCount,
+            PaymentPeriodType paymentPeriodType)
         {
             int numberOfHoursPerDay = 24;
 
@@ -256,19 +262,26 @@ namespace TACHYON.MultiTenancy
             if (currentEditionPrice > 0)
             {
                 currentEditionPriceForUnusedPeriod = currentEditionPrice * unusedPeriodCount;
-                currentEditionPriceForUnusedPeriod += (currentEditionPrice / (int)paymentPeriodType) / numberOfHoursPerDay * unusedHoursCount;
+                currentEditionPriceForUnusedPeriod += (currentEditionPrice / (int)paymentPeriodType) /
+                    numberOfHoursPerDay * unusedHoursCount;
             }
 
             if (targetEditionPrice > 0)
             {
                 targetEditionPriceForUnusedPeriod = targetEditionPrice * unusedPeriodCount;
-                targetEditionPriceForUnusedPeriod += (targetEditionPrice / (int)paymentPeriodType) / numberOfHoursPerDay * unusedHoursCount;
+                targetEditionPriceForUnusedPeriod += (targetEditionPrice / (int)paymentPeriodType) /
+                    numberOfHoursPerDay * unusedHoursCount;
             }
 
             return targetEditionPriceForUnusedPeriod - currentEditionPriceForUnusedPeriod;
         }
 
-        public async Task<Tenant> UpdateTenantAsync(int tenantId, bool isActive, bool? isInTrialPeriod, PaymentPeriodType? paymentPeriodType, int editionId, EditionPaymentType editionPaymentType)
+        public async Task<Tenant> UpdateTenantAsync(int tenantId,
+            bool isActive,
+            bool? isInTrialPeriod,
+            PaymentPeriodType? paymentPeriodType,
+            int editionId,
+            EditionPaymentType editionPaymentType)
         {
             var tenant = await FindByIdAsync(tenantId);
 
@@ -289,11 +302,14 @@ namespace TACHYON.MultiTenancy
             return tenant;
         }
 
-        public async Task<EndSubscriptionResult> EndSubscriptionAsync(Tenant tenant, SubscribableEdition edition, DateTime nowUtc)
+        public async Task<EndSubscriptionResult> EndSubscriptionAsync(Tenant tenant,
+            SubscribableEdition edition,
+            DateTime nowUtc)
         {
             if (tenant.EditionId == null || tenant.HasUnlimitedTimeSubscription())
             {
-                throw new Exception($"Can not end tenant {tenant.TenancyName} subscription for {edition.DisplayName} tenant has unlimited time subscription!");
+                throw new Exception(
+                    $"Can not end tenant {tenant.TenancyName} subscription for {edition.DisplayName} tenant has unlimited time subscription!");
             }
 
             Debug.Assert(tenant.SubscriptionEndDateUtc != null, "tenant.SubscriptionEndDateUtc != null");
@@ -301,12 +317,14 @@ namespace TACHYON.MultiTenancy
             var subscriptionEndDateUtc = tenant.SubscriptionEndDateUtc.Value;
             if (!tenant.IsInTrialPeriod)
             {
-                subscriptionEndDateUtc = tenant.SubscriptionEndDateUtc.Value.AddDays(edition.WaitingDayAfterExpire ?? 0);
+                subscriptionEndDateUtc =
+                    tenant.SubscriptionEndDateUtc.Value.AddDays(edition.WaitingDayAfterExpire ?? 0);
             }
 
             if (subscriptionEndDateUtc >= nowUtc)
             {
-                throw new Exception($"Can not end tenant {tenant.TenancyName} subscription for {edition.DisplayName} since subscription has not expired yet!");
+                throw new Exception(
+                    $"Can not end tenant {tenant.TenancyName} subscription for {edition.DisplayName} since subscription has not expired yet!");
             }
 
             if (!tenant.IsInTrialPeriod && edition.ExpiringEditionId.HasValue)
@@ -331,7 +349,8 @@ namespace TACHYON.MultiTenancy
         {
             if (tenant.IsInTrialPeriod && !tenant.SubscriptionEndDateUtc.HasValue)
             {
-                throw new UserFriendlyException(LocalizationManager.GetString(TACHYONConsts.LocalizationSourceName, "TrialWithoutEndDateErrorMessage"));
+                throw new UserFriendlyException(LocalizationManager.GetString(TACHYONConsts.LocalizationSourceName,
+                    "TrialWithoutEndDateErrorMessage"));
             }
 
             return base.UpdateAsync(tenant);
@@ -340,9 +359,19 @@ namespace TACHYON.MultiTenancy
         public async Task<bool> IsCompanyUniqueMoiNumber(string moiNumber, long? tenantId)
         {
             var tenant = await TenantRepository.GetAll()
-                  .WhereIf(tenantId.HasValue, x => x.Id != tenantId)
-                  .FirstOrDefaultAsync(x => x.MoiNumber == moiNumber);
+                .WhereIf(tenantId.HasValue, x => x.Id != tenantId)
+                .FirstOrDefaultAsync(x => x.MoiNumber == moiNumber);
             return tenant == null;
+        }
+
+        private string L(string name, params object[] args)
+        {
+            string text = LocalizationManager.GetString(TACHYONConsts.LocalizationSourceName, name,
+                CultureInfo.CurrentUICulture);
+            for (int i = 0; i < args.Length; i++)
+                text = text.Replace("{" + i + "}", args[i].ToString());
+
+            return text;
         }
     }
 }

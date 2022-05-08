@@ -6,7 +6,6 @@ namespace TACHYON.Organizations.Dto
     {
         public long[] UserIds { get; set; }
 
-        [Range(1, long.MaxValue)]
-        public long OrganizationUnitId { get; set; }
+        [Range(1, long.MaxValue)] public long OrganizationUnitId { get; set; }
     }
 }

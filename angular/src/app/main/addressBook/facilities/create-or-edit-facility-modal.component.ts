@@ -1,39 +1,46 @@
-import { Component, ViewChild, Injector, Output, EventEmitter, NgZone, ElementRef, OnInit, AfterViewInit } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Injector, NgZone, OnInit, Output, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
 import {
-  FacilitiesServiceProxy,
+  CityPolygonLookupTableDto,
+  CountyDto,
   CreateOrEditFacilityDto,
-  FacilityCityLookupTableDto,
-  CountiesServiceProxy,
-  TenantRegistrationServiceProxy,
-  TenantCityLookupTableDto,
+  FacilitiesServiceProxy,
   FacilityForDropdownDto,
+  TenantRegistrationServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { MapsAPILoader } from '@node_modules/@agm/core';
+import { NgForm } from '@angular/forms';
+import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
+import { Pokedex, styleObject } from '@app/main/addressBook/facilities/facilites-helper';
 
 @Component({
   selector: 'createOrEditFacilityModal',
   templateUrl: './create-or-edit-facility-modal.component.html',
+  styleUrls: ['./create-or-edit-facility-modal.component.css'],
 })
 export class CreateOrEditFacilityModalComponent extends AppComponentBase implements OnInit {
   @ViewChild('createOrEditFacilityModal', { static: true }) modal: ModalDirective;
   @ViewChild('search') public searchElementRef: ElementRef;
-  @ViewChild('secountInput') public secountInput: ElementRef;
+  @ViewChild('createFacilityForm') public createFacilityForm: NgForm;
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
-  zoom = 14;
+
+  zoom = 6;
   active = false;
   saving = false;
   facility: CreateOrEditFacilityDto = new CreateOrEditFacilityDto();
-  countries: any;
   cities: any;
-  private geoCoder;
-  allCities: TenantCityLookupTableDto[];
+  allCities: CityPolygonLookupTableDto[];
   countriesLoading: boolean;
   citiesLoading: boolean;
   selectedCountryId: number;
-  selectedCountryCode = 'SA';
+
+  selectedCityJson: Pokedex;
+  Bounds: google.maps.LatLngBounds;
+  countries: CountyDto[];
+  private geoCoder: google.maps.Geocoder;
+  polygonStyle = styleObject;
 
   constructor(
     injector: Injector,
@@ -44,30 +51,29 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
   ) {
     super(injector);
   }
+
   ngOnInit() {
-    this.loadMapApi();
-    this.facility.latitude = 24.67911662122269;
-    this.facility.longitude = 46.6355543345471;
+    this.loadAllCountries();
   }
 
+  private get SelectedCountryCode(): string {
+    return this.countries?.find((x) => x.id == this.selectedCountryId)?.code;
+  }
   show(facilityId?: number): void {
-    this.loadAllCountries();
+    this.active = true;
     if (!facilityId) {
       this.facility = new CreateOrEditFacilityDto();
       this.facility.id = facilityId;
-
-      this.active = true;
-      this.modal.show();
+      this.facility.latitude = 24.67911662122269;
+      this.facility.longitude = 46.6355543345471;
     } else {
       this._facilitiesServiceProxy.getFacilityForEdit(facilityId).subscribe((result) => {
         this.facility = result.facility;
-        this.active = true;
-        this.modal.show();
+        this.selectedCountryId = result.countryId;
+        this.loadCitiesByCountryId(result.countryId);
       });
     }
-    // this._facilitiesServiceProxy.getAllCityForTableDropdown().subscribe((result) => {
-    //   this.allCities = result;
-    // });
+    this.modal.show();
   }
 
   /**
@@ -89,7 +95,6 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
         facilitycallback.displayName = this.facility.name;
         facilitycallback.lat = this.facility.latitude;
         facilitycallback.long = this.facility.longitude;
-
         this.notify.info(this.l('SavedSuccessfully'));
         this.close();
         this.modalSave.emit(facilitycallback);
@@ -97,6 +102,7 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
   }
 
   close(): void {
+    this.facility = null;
     this.active = false;
     this.modal.hide();
   }
@@ -108,11 +114,31 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
   loadMapApi() {
     this.mapsAPILoader.load().then(() => {
       this.geoCoder = new google.maps.Geocoder();
-      let autocomplete = new google.maps.places.Autocomplete(this.searchElementRef.nativeElement, {
-        componentRestrictions: {
-          country: this.selectedCountryCode,
+      let Bounds = new google.maps.LatLngBounds();
+      if (this.selectedCityJson) {
+        this.selectedCityJson.geometry.coordinates[0].forEach((x) => {
+          let lng: number = x[0];
+          let lat: number = x[1];
+          Bounds.extend(new google.maps.LatLng(lat, lng, false));
+        });
+      }
+      this.Bounds = Bounds;
+      let options = {
+        borderRestriction: {
+          bounds: Bounds,
+          strictBounds: true,
         },
-      });
+        countryRestriction: {
+          componentRestrictions: {
+            country: this.SelectedCountryCode,
+          },
+        },
+      };
+
+      let autocomplete = new google.maps.places.Autocomplete(
+        this.searchElementRef.nativeElement,
+        isNotNullOrUndefined(this.selectedCityJson) ? options.borderRestriction : options.countryRestriction
+      );
       autocomplete.addListener('place_changed', () => {
         this.ngZone.run(() => {
           let place: google.maps.places.PlaceResult = autocomplete.getPlace();
@@ -122,7 +148,6 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
           this.facility.latitude = place.geometry.location.lat();
           this.facility.longitude = place.geometry.location.lng();
           this.getAddress(place.geometry.location.lat(), place.geometry.location.lng());
-          this.zoom = 12;
         });
       });
     });
@@ -133,38 +158,53 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
    * @param latitude
    * @param longitude
    */
-  getAddress(latitude, longitude) {
+  getAddress(latitude: number, longitude: number) {
     this.geoCoder.geocode({ location: { lat: latitude, lng: longitude } }, (results, status) => {
       if (status === 'OK') {
+        console.log(results);
         if (results[0]) {
-          this.zoom = 14;
+          this.zoom = 10;
           this.facility.address = results[0].formatted_address;
-        } else {
-          window.alert('No results found');
         }
-      } else {
-        window.alert('Geocoder failed due to: ' + status);
-      } //
+      }
     });
   }
 
   /**
    * Getting The Map Marker Cordinates from The Click
-   * @param $event: MouseEvent
+   * @param $event
    */
-  mapClicked($event: MouseEvent) {
-    // @ts-ignore
-    this.facility.latitude = $event.coords.lat;
-    // @ts-ignore
-    this.facility.longitude = $event.coords.lng;
-    // @ts-ignore
-    this.getAddress($event.coords.lat, $event.coords.lng);
+  mapClicked($event) {
+    let position;
+    if (isNotNullOrUndefined(this.selectedCityJson)) {
+      position = { lat: $event.latLng.lat(), lng: $event.latLng.lng() };
+    } else {
+      position = { lat: $event.coords.lat, lng: $event.coords.lng };
+    }
+    console.log(position);
+    this.facility.latitude = position.lat;
+    this.facility.longitude = position.lng;
+    this.getAddress(Number(this.facility.latitude), Number(this.facility.longitude));
+  }
+
+  /**
+   * Allow the User to Add a Manual Coordinates and Apply Boundaries Validation
+   */
+  manualCords(): void {
+    //check if manual Cord are within the selected city
+    if (this.Bounds.contains(new google.maps.LatLng(this.facility.latitude, this.facility.longitude))) {
+      this.getAddress(Number(this.facility.latitude), Number(this.facility.longitude));
+    } else {
+      this.createFacilityForm.controls['long'].setErrors({ invalid: true });
+      this.createFacilityForm.controls['lat'].setErrors({ invalid: true });
+    }
   }
 
   /**
    * Loads All Countires for Facilities CRUD
    */
   loadAllCountries() {
+    console.log('Countries Loaded');
     this.countriesLoading = true;
     this._countriesServiceProxy.getAllCountriesWithCode().subscribe((res) => {
       this.countries = res;
@@ -177,14 +217,28 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
    * @Input selectedCountryId
    */
 
-  loadCitiesByCountryId() {
-    this.selectedCountryCode = this.countries.find((x) => x.id == this.selectedCountryId).code;
-    this.loadMapApi();
+  loadCitiesByCountryId(countryId): any {
     this.citiesLoading = true;
-    this.facility.cityId = undefined;
-    this._countriesServiceProxy.getAllCitiesForTableDropdown(this.selectedCountryId).subscribe((res) => {
+    this._countriesServiceProxy.getAllCitiesWithPolygonsByCountryId(countryId).subscribe((res) => {
       this.allCities = res;
       this.citiesLoading = false;
+      this.handleCityPolygon();
     });
+  }
+
+  /**
+   * Gets the Selected City Polygons
+   */
+  handleCityPolygon() {
+    let Json = this.allCities[this.allCities.findIndex((x) => x.id === this.facility.cityId.toString())].polygon;
+    this.selectedCityJson = JSON.parse(Json);
+    //empty old address
+    if (!this.facility.id) {
+      this.facility.longitude = null;
+      this.facility.latitude = null;
+      this.facility.address = null;
+    }
+    // Load Map Api
+    this.loadMapApi();
   }
 }

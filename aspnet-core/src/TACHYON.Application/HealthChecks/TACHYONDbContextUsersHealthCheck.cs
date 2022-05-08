@@ -17,13 +17,14 @@ namespace TACHYON.HealthChecks
         public TACHYONDbContextUsersHealthCheck(
             IDbContextProvider<TACHYONDbContext> dbContextProvider,
             IUnitOfWorkManager unitOfWorkManager
-            )
+        )
         {
             _dbContextProvider = dbContextProvider;
             _unitOfWorkManager = unitOfWorkManager;
         }
 
-        public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = new CancellationToken())
+        public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context,
+            CancellationToken cancellationToken = new CancellationToken())
         {
             try
             {
@@ -44,11 +45,12 @@ namespace TACHYON.HealthChecks
 
                         if (user)
                         {
-                            return HealthCheckResult.Healthy("TACHYONDbContext connected to database and checked whether user added");
+                            return HealthCheckResult.Healthy(
+                                "TACHYONDbContext connected to database and checked whether user added");
                         }
 
-                        return HealthCheckResult.Unhealthy("TACHYONDbContext connected to database but there is no user.");
-
+                        return HealthCheckResult.Unhealthy(
+                            "TACHYONDbContext connected to database but there is no user.");
                     }
                 }
             }

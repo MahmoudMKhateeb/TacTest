@@ -16,8 +16,7 @@ namespace TACHYON.Shipping.Trips.Dto
 {
     public class CreateOrEditShippingRequestTripDto : EntityDto<int?>, ICustomValidate, IShouldNormalize
     {
-        [Required]
-        public DateTime StartTripDate { get; set; }
+        [Required] public DateTime? StartTripDate { get; set; }
 
         public DateTime? EndTripDate { get; set; }
 
@@ -27,7 +26,9 @@ namespace TACHYON.Shipping.Trips.Dto
         public long ShippingRequestId { get; set; }
 
         public bool HasAttachment { get; set; }
+
         public bool NeedsDeliveryNote { get; set; }
+
         //Facility
         public virtual long? OriginFacilityId { get; set; }
 
@@ -36,6 +37,7 @@ namespace TACHYON.Shipping.Trips.Dto
 
         [StringLength(ShippingRequestTripConsts.MaxNoteLength)]
         public string Note { get; set; }
+
         public List<CreateOrEditRoutPointDto> RoutPoints { get; set; }
         public List<CreateOrEditShippingRequestTripVasDto> ShippingRequestTripVases { get; set; }
 
@@ -44,7 +46,7 @@ namespace TACHYON.Shipping.Trips.Dto
         public void AddValidationErrors(CustomValidationContext context)
         {
             //document validation
-            if (HasAttachment && CreateOrEditDocumentFileDto?.UpdateDocumentFileInput?.FileToken == null)
+            if (HasAttachment && CreateOrEditDocumentFileDto?.UpdateDocumentFileInput != null && CreateOrEditDocumentFileDto?.UpdateDocumentFileInput?.FileToken == null)
                 context.Results.Add(new ValidationResult("document missing: " + CreateOrEditDocumentFileDto?.Name));
 
 
@@ -53,11 +55,10 @@ namespace TACHYON.Shipping.Trips.Dto
             if (!DestinationFacilityId.HasValue)
                 context.Results.Add(new ValidationResult("You Must Select Destination Facility"));
 
-            if (EndTripDate != null && StartTripDate.Date > EndTripDate.Value.Date)
+            if (EndTripDate != null && StartTripDate?.Date > EndTripDate.Value.Date)
             {
                 context.Results.Add(new ValidationResult("The start date must be or equal to end date."));
             }
-
 
 
             var dropPoints = RoutPoints.Where(x => x.PickingType == PickingType.Dropoff);
@@ -65,7 +66,7 @@ namespace TACHYON.Shipping.Trips.Dto
             {
                 if (drop.ReceiverId == null &&
                     (string.IsNullOrWhiteSpace(drop.ReceiverFullName) ||
-                    string.IsNullOrWhiteSpace(drop.ReceiverPhoneNumber)))
+                     string.IsNullOrWhiteSpace(drop.ReceiverPhoneNumber)))
                 {
                     //throw new UserFriendlyException(L("YouMustEnterReceiver"));
                     throw new UserFriendlyException("YouMustEnterReceiver");
@@ -80,7 +81,6 @@ namespace TACHYON.Shipping.Trips.Dto
             {
                 CreateOrEditDocumentFileDto = null;
             }
-
         }
     }
 }

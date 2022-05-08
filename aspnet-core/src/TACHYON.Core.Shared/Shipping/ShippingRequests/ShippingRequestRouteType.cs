@@ -1,9 +1,10 @@
 ﻿namespace TACHYON.Shipping.ShippingRequests
 {
-    public  enum ShippingRequestRouteType:byte
+    public enum ShippingRequestRouteType : byte
     {
-        SingleDrop=1,
+        SingleDrop = 1,
+
         //TwoWay=2,
-        MultipleDrops=3
+        MultipleDrops = 3
     }
 }

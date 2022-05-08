@@ -27,7 +27,10 @@ namespace TACHYON.Tests.Authorization.Users
                 });
         }
 
-        protected User CreateUserEntity(string userName, string name, string surname, string emailAddress)
+        protected User CreateUserEntity(string userName,
+            string name,
+            string surname,
+            string emailAddress)
         {
             var user = new User
             {
@@ -40,10 +43,22 @@ namespace TACHYON.Tests.Authorization.Users
                 TenantId = AbpSession.TenantId,
                 Permissions = new List<UserPermissionSetting>
                 {
-                    new UserPermissionSetting {Name = "test.permission1", IsGranted = true, TenantId = AbpSession.TenantId},
-                    new UserPermissionSetting {Name = "test.permission2", IsGranted = true, TenantId = AbpSession.TenantId},
-                    new UserPermissionSetting {Name = "test.permission3", IsGranted = false, TenantId = AbpSession.TenantId},
-                    new UserPermissionSetting {Name = "test.permission4", IsGranted = false, TenantId = AbpSession.TenantId}
+                    new UserPermissionSetting
+                    {
+                        Name = "test.permission1", IsGranted = true, TenantId = AbpSession.TenantId
+                    },
+                    new UserPermissionSetting
+                    {
+                        Name = "test.permission2", IsGranted = true, TenantId = AbpSession.TenantId
+                    },
+                    new UserPermissionSetting
+                    {
+                        Name = "test.permission3", IsGranted = false, TenantId = AbpSession.TenantId
+                    },
+                    new UserPermissionSetting
+                    {
+                        Name = "test.permission4", IsGranted = false, TenantId = AbpSession.TenantId
+                    }
                 }
             };
 

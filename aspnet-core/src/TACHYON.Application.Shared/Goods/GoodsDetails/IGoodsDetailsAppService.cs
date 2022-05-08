@@ -25,6 +25,5 @@ namespace TACHYON.Goods.GoodsDetails
         Task<FileDto> GetGoodsDetailsToExcel(GetAllGoodsDetailsForExcelInput input);
 
         Task<List<GetAllGoodsCategoriesForDropDownOutput>> GetAllGoodCategoryForTableDropdown(int? fatherId);
-
     }
 }

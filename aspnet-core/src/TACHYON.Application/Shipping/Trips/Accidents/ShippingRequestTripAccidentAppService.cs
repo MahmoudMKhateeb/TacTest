@@ -2,6 +2,7 @@
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
+using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,7 @@ using TACHYON.Authorization;
 using TACHYON.Authorization.Users;
 using TACHYON.Common;
 using TACHYON.Dto;
+using TACHYON.Extension;
 using TACHYON.Features;
 using TACHYON.Notifications;
 using TACHYON.Routs.RoutPoints;
@@ -30,9 +32,9 @@ namespace TACHYON.Shipping.Trips.Accidents
     public class ShippingRequestTripAccidentAppService : TACHYONAppServiceBase, IShippingRequestTripAccidentAppService
     {
         private readonly IRepository<ShippingRequestTripAccident> _ShippingRequestTripAccidentRepository;
-        private readonly IRepository<RoutPoint,long> _RoutPointRepository;
+        private readonly IRepository<RoutPoint, long> _RoutPointRepository;
         private readonly IRepository<ShippingRequestTrip> _TripRepository;
-        private readonly IRepository<ShippingRequest,long> _ShippingRequestRepository;
+        private readonly IRepository<ShippingRequest, long> _ShippingRequestRepository;
         private readonly IRepository<ShippingRequestTripAccidentResolve> _ResolveRepository;
         private readonly IRepository<ShippingRequestReasonAccidentTranslation> _shippingRequestReasonAccidentRepository;
         private readonly ShippingRequestDriverManager _shippingRequestDriverManager;
@@ -62,35 +64,36 @@ namespace TACHYON.Shipping.Trips.Accidents
             _shippingRequestDriverManager = shippingRequestDriverManager;
             _userManager = userManager;
             _appNotifier = appNotifier;
-          
-           
-
         }
-       // [AbpAuthorize(AppPermissions.Pages_ShippingRequest_Accidents)]
+        // [AbpAuthorize(AppPermissions.Pages_ShippingRequest_Accidents)]
 
-        public ListResultDto<ShippingRequestTripAccidentListDto> GetAll(GetAllForShippingRequestTripAccidentFilterInput Input)
+        public ListResultDto<ShippingRequestTripAccidentListDto> GetAll(
+            GetAllForShippingRequestTripAccidentFilterInput Input)
         {
             CheckIfCanAccessService(true, AppFeatures.Carrier, AppFeatures.TachyonDealer, AppFeatures.Shipper);
-           DisableTenancyFilters();
+            DisableTenancyFilters();
 
-                var query = _ShippingRequestTripAccidentRepository
-                  .GetAll()
-                  .AsNoTracking()
-                  .Include(t=>t.RoutPointFK)
-                   .ThenInclude(f=>f.FacilityFk)
-                    .ThenInclude(c=>c.CityFk)
-                  .Include(r => r.ResoneFK)
-                   .ThenInclude(t=>t.Translations)
-                          .Where(x => x.RoutPointFK.ShippingRequestTripId == Input.TripId)
-                          .WhereIf(Input.PointId.HasValue, x => x.PointId == Input.PointId)
-                          .WhereIf(Input.IsResolve.HasValue, x => x.IsResolve == Input.IsResolve)
-                          .WhereIf(AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Carrier),x=>x.RoutPointFK.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId==AbpSession.TenantId)
-                          .WhereIf(AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Shipper), x => x.RoutPointFK.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId)
-                          .WhereIf(!AbpSession.TenantId.HasValue || IsEnabled(AppFeatures.TachyonDealer), x => true)
-                          .WhereIf(GetCurrentUser().IsDriver, x => x.RoutPointFK.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId)
-                  .OrderBy(Input.Sorting ?? "id asc").ToList();
+            var query = _ShippingRequestTripAccidentRepository
+                .GetAll()
+                .AsNoTracking()
+                .Include(t => t.RoutPointFK)
+                .ThenInclude(f => f.FacilityFk)
+                .ThenInclude(c => c.CityFk)
+                .Include(r => r.ResoneFK)
+                .ThenInclude(t => t.Translations)
+                .Where(x => x.RoutPointFK.ShippingRequestTripId == Input.TripId)
+                .WhereIf(Input.PointId.HasValue, x => x.PointId == Input.PointId)
+                .WhereIf(Input.IsResolve.HasValue, x => x.IsResolve == Input.IsResolve)
+                .WhereIf(AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Carrier),
+                    x => x.RoutPointFK.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
+                .WhereIf(AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Shipper),
+                    x => x.RoutPointFK.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId)
+                .WhereIf(!AbpSession.TenantId.HasValue || IsEnabled(AppFeatures.TachyonDealer), x => true)
+                .WhereIf(GetCurrentUser().IsDriver,
+                    x => x.RoutPointFK.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId)
+                .OrderBy(Input.Sorting ?? "id asc").ToList();
 
-            query.ForEach(  q =>
+            query.ForEach(q =>
             {
                 if (q.ResoneFK != null)
                 {
@@ -100,9 +103,8 @@ namespace TACHYON.Shipping.Trips.Accidents
                 }
             });
 
-                return new ListResultDto<ShippingRequestTripAccidentListDto>(ObjectMapper.Map<List<ShippingRequestTripAccidentListDto>>(query));
-
-
+            return new ListResultDto<ShippingRequestTripAccidentListDto>(
+                ObjectMapper.Map<List<ShippingRequestTripAccidentListDto>>(query));
         }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequest_Accidents_Edit)]
@@ -110,31 +112,66 @@ namespace TACHYON.Shipping.Trips.Accidents
         {
             DisableTenancyFilters();
             var query = await _ShippingRequestTripAccidentRepository
-              .GetAll()
-              .Include(x=>x.RoutPointFK)
-              .AsNoTracking()
-                  .Where(x => x.Id == input.Id)
-                  .WhereIf(IsEnabled(AppFeatures.Carrier), x => x.RoutPointFK.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
-                  .WhereIf(IsEnabled(AppFeatures.Shipper), x => x.RoutPointFK.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId)
-                  .WhereIf(IsEnabled(AppFeatures.TachyonDealer), x => x.RoutPointFK.ShippingRequestTripFk.ShippingRequestFk.IsTachyonDeal)
-                  .WhereIf(GetCurrentUser().IsDriver, x => x.RoutPointFK.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId).FirstOrDefaultAsync();
+                .GetAll()
+                .Include(x => x.RoutPointFK)
+                .Include(r => r.ResoneFK)
+                .AsNoTracking()
+                .Where(x => x.Id == input.Id)
+                .WhereIf(IsEnabled(AppFeatures.Carrier),
+                    x => x.RoutPointFK.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
+                .WhereIf(IsEnabled(AppFeatures.Shipper),
+                    x => x.RoutPointFK.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId)
+                .WhereIf(IsEnabled(AppFeatures.TachyonDealer),
+                    x => x.RoutPointFK.ShippingRequestTripFk.ShippingRequestFk.IsTachyonDeal)
+                .WhereIf(GetCurrentUser().IsDriver,
+                    x => x.RoutPointFK.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId)
+                .FirstOrDefaultAsync();
 
             return ObjectMapper.Map<CreateOrEditShippingRequestTripAccidentDto>(query);
-
         }
 
-        
+        //[AbpAuthorize(AppPermissions.Pages_ShippingRequest_Accidents_Get)]
+        public async Task<ViewShippingRequestTripAccidentDto> Get(EntityDto input)
+        {
+            DisableTenancyFilters();
+            var query = await _ShippingRequestTripAccidentRepository
+                .GetAll()
+                .Include(x => x.RoutPointFK)
+                .Include(r => r.ResoneFK)
+                .ThenInclude(t => t.Translations)
+                .AsNoTracking()
+                .Where(x => x.Id == input.Id)
+                .WhereIf(IsEnabled(AppFeatures.Carrier),
+                    x => x.RoutPointFK.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
+                .WhereIf(IsEnabled(AppFeatures.Shipper),
+                    x => x.RoutPointFK.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId)
+                .WhereIf(IsEnabled(AppFeatures.TachyonDealer),
+                    x => x.RoutPointFK.ShippingRequestTripFk.ShippingRequestFk.IsTachyonDeal)
+                .WhereIf(GetCurrentUser().IsDriver,
+                    x => x.RoutPointFK.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId)
+                .FirstOrDefaultAsync();
+
+            if (query.ResoneFK != null)
+            {
+                var reasone = ObjectMapper.Map<ShippingRequestReasonAccidentListDto>(query.ResoneFK);
+                query.OtherReasonName = reasone.Name;
+            }
+
+            return ObjectMapper.Map<ViewShippingRequestTripAccidentDto>(query);
+        }
+
+
         public async Task CreateOrEdit(CreateOrEditShippingRequestTripAccidentDto input)
         {
             CheckIfCanAccessService(true, AppFeatures.Carrier, AppFeatures.TachyonDealer, AppFeatures.Shipper);
 
             DisableTenancyFilters();
-            if (input.ReasoneId.HasValue && input.ReasoneId.Value == 0) input.ReasoneId = default(int?);
+            //if (input.ReasoneId.HasValue && input.ReasoneId.Value == 0) input.ReasoneId = default(int?);
 
+            await ValidateOtherReason(input);
 
             if (input.Id == 0)
             {
-
                 var ActivePoint = await GetActivePoint(input.TripId);
                 await Create(input, ActivePoint);
             }
@@ -142,7 +179,6 @@ namespace TACHYON.Shipping.Trips.Accidents
             {
                 await Update(input);
             }
-
         }
 
         public async Task<FileDto> GetFile(int Id)
@@ -157,127 +193,161 @@ namespace TACHYON.Shipping.Trips.Accidents
         {
             DisableTenancyFilters();
             var Accident = await _ShippingRequestTripAccidentRepository
-  .GetAll()
-  .AsNoTracking()
-     .Include(t => t.RoutPointFK)
-       .ThenInclude(T => T.ShippingRequestTripFk)
-         .ThenInclude(r => r.ShippingRequestFk)
-      .Where(x => x.Id == input.AccidentId)
-      .WhereIf(IsEnabled(AppFeatures.Carrier), x => x.RoutPointFK.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
-      .WhereIf(IsEnabled(AppFeatures.Shipper), x => x.RoutPointFK.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId)
-      .WhereIf(IsEnabled(AppFeatures.TachyonDealer), x => x.RoutPointFK.ShippingRequestTripFk.ShippingRequestFk.IsTachyonDeal)
-      .WhereIf(GetCurrentUser().IsDriver, x => x.RoutPointFK.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId).FirstOrDefaultAsync();
+                .GetAll()
+                .AsNoTracking()
+                .Include(t => t.RoutPointFK)
+                .ThenInclude(T => T.ShippingRequestTripFk)
+                .ThenInclude(r => r.ShippingRequestFk)
+                .Where(x => x.Id == input.AccidentId)
+                .WhereIf(IsEnabled(AppFeatures.Carrier),
+                    x => x.RoutPointFK.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
+                .WhereIf(IsEnabled(AppFeatures.Shipper),
+                    x => x.RoutPointFK.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId)
+                .WhereIf(IsEnabled(AppFeatures.TachyonDealer),
+                    x => x.RoutPointFK.ShippingRequestTripFk.ShippingRequestFk.IsTachyonDeal)
+                .WhereIf(GetCurrentUser().IsDriver,
+                    x => x.RoutPointFK.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId)
+                .FirstOrDefaultAsync();
 
             if (Accident != null)
             {
-                if (input.Id==0)
+                if (input.Id == 0)
                 {
                     if (!Accident.IsResolve) await CreateResolve(input, Accident);
-
                 }
-                else if (Accident.IsResolve) {
+                else if (Accident.IsResolve)
+                {
                     await UpdateResolve(input);
                 }
-
             }
         }
-        #region Heleper 
-       // [AbpAuthorize(AppPermissions.Pages_ShippingRequest_Accidents_Create)]
+
+        #region Heleper
+
+        // [AbpAuthorize(AppPermissions.Pages_ShippingRequest_Accidents_Create)]
         private async Task Create(CreateOrEditShippingRequestTripAccidentDto input, RoutPoint routPoint)
         {
             DisableTenancyFilters();
-            var document = await _CommonManager.UploadDocumentAsBase64(ObjectMapper.Map<DocumentUpload>(input), AbpSession.TenantId);
-            ObjectMapper.Map(document, input);
+            //entered from web
+            if (!GetCurrentUser().IsDriver)
+            {
+                var document = await _CommonManager.UploadDocumentAsBase64(ObjectMapper.Map<DocumentUpload>(input),
+                    AbpSession.TenantId);
+                ObjectMapper.Map(document, input);
+            }
 
             var Accident = ObjectMapper.Map<ShippingRequestTripAccident>(input);
             if (input.lat.HasValue && input.lng.HasValue)
             {
-                Accident.Location = new NetTopologySuite.Geometries.Point(input.lat.Value, input.lng.Value) { SRID= 4326 };
+                Accident.Location =
+                    new NetTopologySuite.Geometries.Point(input.lat.Value, input.lng.Value) { SRID = 4326 };
             }
+
             var Trip = routPoint.ShippingRequestTripFk;
             var Request = Trip.ShippingRequestFk;
             Accident.PointId = routPoint.Id;
-           var AccidentId= await _ShippingRequestTripAccidentRepository.InsertAndGetIdAsync(Accident);
+            var AccidentId = await _ShippingRequestTripAccidentRepository.InsertAndGetIdAsync(Accident);
             Trip.HasAccident = true;
             Request.HasAccident = true;
             await _shippingRequestDriverManager.SetRoutStatusTransition(routPoint, RoutePointStatus.Issue);
-            await   SentNotification(routPoint, AccidentId);
+            await SentNotification(routPoint, AccidentId);
         }
-        [AbpAuthorize(AppPermissions.Pages_ShippingRequest_Accidents_Edit)]
 
+        [AbpAuthorize(AppPermissions.Pages_ShippingRequest_Accidents_Edit)]
         private async Task Update(CreateOrEditShippingRequestTripAccidentDto input)
         {
             var Accident = await GetAccident(input.Id);
-            var document = await _CommonManager.UploadDocumentAsBase64(ObjectMapper.Map<DocumentUpload>(input), AbpSession.TenantId);
-            ObjectMapper.Map(document, input);
-            ObjectMapper.Map(input, Accident);
+            //entered from web
+            if (!GetCurrentUser().IsDriver)
+            {
+                var document = await _CommonManager.UploadDocumentAsBase64(ObjectMapper.Map<DocumentUpload>(input),
+                    AbpSession.TenantId);
+                ObjectMapper.Map(document, input);
+            }
 
+            ObjectMapper.Map(input, Accident);
         }
 
         private async Task<ShippingRequestTripAccident> GetAccident(int Id)
         {
-            var Accident = await  _ShippingRequestTripAccidentRepository
-    .GetAll()
-            .Where(x => x.Id == Id && !x.IsResolve)
-            .WhereIf(IsEnabled(AppFeatures.Carrier), x => x.RoutPointFK.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
-            .WhereIf(IsEnabled(AppFeatures.Shipper), x => x.RoutPointFK.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId)
-            .WhereIf(GetCurrentUser().IsDriver, x => x.RoutPointFK.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId)
-    .FirstOrDefaultAsync();
-            if (Accident==null) throw new UserFriendlyException(L("NoRecoredFound"));
+            var Accident = await _ShippingRequestTripAccidentRepository
+                .GetAll()
+                .Where(x => x.Id == Id && !x.IsResolve)
+                .WhereIf(IsEnabled(AppFeatures.Carrier),
+                    x => x.RoutPointFK.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
+                .WhereIf(IsEnabled(AppFeatures.Shipper),
+                    x => x.RoutPointFK.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId)
+                .WhereIf(GetCurrentUser().IsDriver,
+                    x => x.RoutPointFK.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId)
+                .FirstOrDefaultAsync();
+            if (Accident == null) throw new UserFriendlyException(L("NoRecoredFound"));
 
             return Accident;
         }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequest_Accidents_Resolve_Create)]
-
-        private async Task CreateResolve(CreateOrEditShippingRequestTripAccidentResolveDto input, ShippingRequestTripAccident Accident)
+        private async Task CreateResolve(CreateOrEditShippingRequestTripAccidentResolveDto input,
+            ShippingRequestTripAccident Accident)
         {
             var trip = Accident.RoutPointFK.ShippingRequestTripFk;
-            var document = await _CommonManager.UploadDocumentAsBase64(ObjectMapper.Map<DocumentUpload>(input), AbpSession.TenantId);
+            var document =
+                await _CommonManager.UploadDocumentAsBase64(ObjectMapper.Map<DocumentUpload>(input),
+                    AbpSession.TenantId);
             ObjectMapper.Map(document, input);
 
             var ResolveIssue = ObjectMapper.Map<ShippingRequestTripAccidentResolve>(input);
             await _ResolveRepository.InsertAsync(ResolveIssue);
             Accident.IsResolve = true;
 
-           await _ShippingRequestTripAccidentRepository.UpdateAsync(Accident);
+            await _ShippingRequestTripAccidentRepository.UpdateAsync(Accident);
             if (!(await
-    _ShippingRequestTripAccidentRepository.GetAll()
-    .AnyAsync(x => !x.IsResolve && x.Id != Accident.Id && x.RoutPointFK.ShippingRequestTripId == trip.Id)))
+                    _ShippingRequestTripAccidentRepository.GetAll()
+                        .AnyAsync(x =>
+                            !x.IsResolve && x.Id != Accident.Id && x.RoutPointFK.ShippingRequestTripId == trip.Id)))
             {
                 trip.HasAccident = false;
                 await _TripRepository.UpdateAsync(trip);
             }
 
             if (!(await
-                _ShippingRequestTripAccidentRepository.GetAll()
-                .AnyAsync(x => !x.IsResolve && x.Id != Accident.Id && x.RoutPointFK.ShippingRequestTripFk.ShippingRequestId == trip.ShippingRequestId)))
+                    _ShippingRequestTripAccidentRepository.GetAll()
+                        .AnyAsync(x =>
+                            !x.IsResolve && x.Id != Accident.Id &&
+                            x.RoutPointFK.ShippingRequestTripFk.ShippingRequestId == trip.ShippingRequestId)))
             {
                 var Request = trip.ShippingRequestFk;
                 Request.HasAccident = false;
-               await _ShippingRequestRepository.UpdateAsync(Request);
+                await _ShippingRequestRepository.UpdateAsync(Request);
             }
         }
+
         [AbpAuthorize(AppPermissions.Pages_ShippingRequest_Accidents_Resolve_Edit)]
         private async Task UpdateResolve(CreateOrEditShippingRequestTripAccidentResolveDto input)
         {
             var ResolveIssue = await _ResolveRepository
-            .GetAll()
-                    .Where(x => x.Id == input.Id)
-                    .WhereIf(IsEnabled(AppFeatures.Carrier), x => x.AccidentFK.RoutPointFK.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
-                    .WhereIf(IsEnabled(AppFeatures.Shipper), x => x.AccidentFK.RoutPointFK.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId)
-                    .WhereIf(IsEnabled(AppFeatures.TachyonDealer), x => x.AccidentFK.RoutPointFK.ShippingRequestTripFk.ShippingRequestFk.IsTachyonDeal)
-                    .WhereIf(GetCurrentUser().IsDriver, x => x.AccidentFK.RoutPointFK.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId)
-            .FirstOrDefaultAsync();
+                .GetAll()
+                .Where(x => x.Id == input.Id)
+                .WhereIf(IsEnabled(AppFeatures.Carrier),
+                    x => x.AccidentFK.RoutPointFK.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId ==
+                         AbpSession.TenantId)
+                .WhereIf(IsEnabled(AppFeatures.Shipper),
+                    x => x.AccidentFK.RoutPointFK.ShippingRequestTripFk.ShippingRequestFk.TenantId ==
+                         AbpSession.TenantId)
+                .WhereIf(IsEnabled(AppFeatures.TachyonDealer),
+                    x => x.AccidentFK.RoutPointFK.ShippingRequestTripFk.ShippingRequestFk.IsTachyonDeal)
+                .WhereIf(GetCurrentUser().IsDriver,
+                    x => x.AccidentFK.RoutPointFK.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId)
+                .FirstOrDefaultAsync();
 
-            if (ResolveIssue !=null)
+            if (ResolveIssue != null)
             {
-                var document = await _CommonManager.UploadDocumentAsBase64(ObjectMapper.Map<DocumentUpload>(input), AbpSession.TenantId);
+                var document = await _CommonManager.UploadDocumentAsBase64(ObjectMapper.Map<DocumentUpload>(input),
+                    AbpSession.TenantId);
                 ObjectMapper.Map(document, input);
                 ObjectMapper.Map(input, ResolveIssue);
             }
-
         }
+
         /// <summary>
         /// Return active point to add or edit accident
         /// </summary>
@@ -289,45 +359,56 @@ namespace TACHYON.Shipping.Trips.Accidents
                 .GetAll()
                     .Include(T => T.ShippingRequestTripFk)
                     .ThenInclude(r => r.ShippingRequestFk)
-                    .Where(x => x.IsActive && x.ShippingRequestTripFk.Id == TripId && x.ShippingRequestTripFk.Status == ShippingRequestTripStatus.Intransit)
-                    .WhereIf(AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Carrier) && !GetCurrentUser().IsDriver, x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId )
-                    .WhereIf(AbpSession.TenantId.HasValue &&  IsEnabled(AppFeatures.Shipper), x => x.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId )
-                    .WhereIf(!AbpSession.TenantId.HasValue ||  IsEnabled(AppFeatures.TachyonDealer), x => x.ShippingRequestTripFk.ShippingRequestFk.IsTachyonDeal)
+                    .Where(x => x.IsActive && x.ShippingRequestTripFk.Id == TripId && x.ShippingRequestTripFk.Status == ShippingRequestTripStatus.InTransit)
+                    .WhereIf(AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Carrier) && !GetCurrentUser().IsDriver, x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
+                    .WhereIf(AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Shipper), x => x.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId)
+                    .WhereIf(!AbpSession.TenantId.HasValue || IsEnabled(AppFeatures.TachyonDealer), x => x.ShippingRequestTripFk.ShippingRequestFk.IsTachyonDeal)
                     .WhereIf(GetCurrentUser().IsDriver, x => x.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId)
                     .FirstOrDefaultAsync();
             if (ActivePoint == null) throw new UserFriendlyException(L("YouCanNotAddAccidentBecauseNoActivePoint"));
             return ActivePoint;
-
         }
 
-        private async Task SentNotification(RoutPoint routPoint,int AccidentId)
+        private async Task SentNotification(RoutPoint routPoint, int AccidentId)
         {
             List<UserIdentifier> UserIdentifiers = new List<UserIdentifier>();
             if (GetCurrentUser().IsDriver)
             {
-               
-                UserIdentifiers.Add(new UserIdentifier(routPoint.ShippingRequestTripFk.ShippingRequestFk.TenantId, (long)routPoint.ShippingRequestTripFk.ShippingRequestFk.CreatorUserId));
-                UserIdentifiers.Add(await GetAdminTenant((int)routPoint.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId));
+                UserIdentifiers.Add(new UserIdentifier(routPoint.ShippingRequestTripFk.ShippingRequestFk.TenantId,
+                    (long)routPoint.ShippingRequestTripFk.ShippingRequestFk.CreatorUserId));
+                UserIdentifiers.Add(
+                    await GetAdminTenant((int)routPoint.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId));
                 UserIdentifiers.Add(await GetHost());
-
             }
             else if (IsEnabled(AppFeatures.Carrier))
             {
-                UserIdentifiers.Add(new UserIdentifier(routPoint.ShippingRequestTripFk.ShippingRequestFk.TenantId, (long)routPoint.ShippingRequestTripFk.ShippingRequestFk.CreatorUserId));
-                UserIdentifiers.Add(new UserIdentifier(routPoint.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId, (long)routPoint.ShippingRequestTripFk.AssignedDriverUserId));
+                UserIdentifiers.Add(new UserIdentifier(routPoint.ShippingRequestTripFk.ShippingRequestFk.TenantId,
+                    (long)routPoint.ShippingRequestTripFk.ShippingRequestFk.CreatorUserId));
+                UserIdentifiers.Add(new UserIdentifier(
+                    routPoint.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId,
+                    (long)routPoint.ShippingRequestTripFk.AssignedDriverUserId));
                 UserIdentifiers.Add(await GetHost());
             }
-            else if( IsEnabled(AppFeatures.Shipper)){
-                UserIdentifiers.Add(await GetAdminTenant((int)routPoint.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId));
-                UserIdentifiers.Add(new UserIdentifier(routPoint.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId, (long)routPoint.ShippingRequestTripFk.AssignedDriverUserId));
+            else if (IsEnabled(AppFeatures.Shipper))
+            {
+                UserIdentifiers.Add(
+                    await GetAdminTenant((int)routPoint.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId));
+                UserIdentifiers.Add(new UserIdentifier(
+                    routPoint.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId,
+                    (long)routPoint.ShippingRequestTripFk.AssignedDriverUserId));
                 UserIdentifiers.Add(await GetHost());
             }
             else
             {
-                UserIdentifiers.Add(new UserIdentifier(routPoint.ShippingRequestTripFk.ShippingRequestFk.TenantId, (long)routPoint.ShippingRequestTripFk.ShippingRequestFk.CreatorUserId));
-                UserIdentifiers.Add(await GetAdminTenant((int)routPoint.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId));
-                UserIdentifiers.Add(new UserIdentifier(routPoint.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId, (long)routPoint.ShippingRequestTripFk.AssignedDriverUserId));
+                UserIdentifiers.Add(new UserIdentifier(routPoint.ShippingRequestTripFk.ShippingRequestFk.TenantId,
+                    (long)routPoint.ShippingRequestTripFk.ShippingRequestFk.CreatorUserId));
+                UserIdentifiers.Add(
+                    await GetAdminTenant((int)routPoint.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId));
+                UserIdentifiers.Add(new UserIdentifier(
+                    routPoint.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId,
+                    (long)routPoint.ShippingRequestTripFk.AssignedDriverUserId));
             }
+
             var data = new Dictionary<string, object>();
             data["id"] = routPoint.ShippingRequestTripFk.ShippingRequestId;
             data["accidentid"] = AccidentId;
@@ -338,21 +419,28 @@ namespace TACHYON.Shipping.Trips.Accidents
 
         private async Task<UserIdentifier> GetAdminTenant(int TenantId)
         {
-            return  new UserIdentifier(TenantId, (await _userManager.GetAdminByTenantIdAsync(TenantId)).Id);
+            return new UserIdentifier(TenantId, (await _userManager.GetAdminByTenantIdAsync(TenantId)).Id);
         }
 
- 
 
         private async Task<UserIdentifier> GetHost()
         {
             return new UserIdentifier(null, (await _userManager.GetAdminHostAsync()).Id);
-
         }
 
+        private async Task ValidateOtherReason(CreateOrEditShippingRequestTripAccidentDto input)
+        {
+            if (input.ReasoneId != null)
+            {
+                var reason = await _shippingRequestReasonAccidentRepository
+                    .FirstOrDefaultAsync(x => x.CoreId == input.ReasoneId);
 
-
+                if (reason.Name.ToLower().Contains(TACHYONConsts.OthersDisplayName.ToLower()) &&
+                    input.OtherReasonName.IsNullOrEmpty())
+                    throw new UserFriendlyException(L("AccidentReasonConNotBeOtherAndEmptyAtTheSameTime"));
+            }
+        }
 
         #endregion
-
     }
 }

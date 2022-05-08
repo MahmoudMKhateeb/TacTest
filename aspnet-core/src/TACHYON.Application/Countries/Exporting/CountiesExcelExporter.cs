@@ -10,7 +10,6 @@ namespace TACHYON.Countries.Exporting
 {
     public class CountiesExcelExporter : NpoiExcelExporterBase, ICountiesExcelExporter
     {
-
         private readonly ITimeZoneConverter _timeZoneConverter;
         private readonly IAbpSession _abpSession;
 
@@ -18,7 +17,7 @@ namespace TACHYON.Countries.Exporting
             ITimeZoneConverter timeZoneConverter,
             IAbpSession abpSession,
             ITempFileCacheManager tempFileCacheManager) :
-    base(tempFileCacheManager)
+            base(tempFileCacheManager)
         {
             _timeZoneConverter = timeZoneConverter;
             _abpSession = abpSession;
@@ -30,23 +29,19 @@ namespace TACHYON.Countries.Exporting
                 "Counties.xlsx",
                 excelPackage =>
                 {
-
                     var sheet = excelPackage.CreateSheet(L("Counties"));
 
                     AddHeader(
                         sheet,
                         L("DisplayName"),
                         L("Code")
-                        );
+                    );
 
                     AddObjects(
                         sheet, 2, counties,
                         _ => _.County.DisplayName,
                         _ => _.County.Code
-                        );
-
-
-
+                    );
                 });
         }
     }

@@ -1,0 +1,96 @@
+<!-- begin::ViewAccidentModal   -->
+<div
+  #AddTripAccidentCommentModal="bs-modal"
+  aria-hidden="true"
+  aria-labelledby="AddTripAccidentCommentModal"
+  bsModal
+  class="modal fade"
+  role="dialog"
+  tabindex="-10010"
+>
+  <div class="modal-dialog modal-lg">
+    <div *ngIf="active" class="modal-content">
+      <!--begin::Card-->
+      <div class="card card-custom">
+        <!--begin::Header-->
+        <div class="card-header align-items-center px-4 py-3">
+          <h3>{{ l('TripIncidentComments') }}</h3>
+        </div>
+        <!--end::Header-->
+        <!--begin::Body-->
+        <div class="card-body" [busyIf]="primengTableHelper.isLoading">
+          <!--begin::Scroll-->
+          <div class="scroll scroll-pull ps ps--active-y" data-height="375" data-mobile-height="300" style="height: 375px; overflow: hidden">
+            <!--begin::Messages-->
+            <div class="messages">
+              <!--begin::Message In-->
+              <div *ngFor="let item of accidentComments" class="d-flex flex-column mb-5 align-items-start">
+                <div class="d-flex align-items-center">
+                  <div class="symbol symbol-circle symbol-40 mr-3">
+                    <img
+                      *ngIf="item.tenantImage == null"
+                      alt="Pic"
+                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Placeholder_no_text.svg/1200px-Placeholder_no_text.svg.png"
+                    />
+                    <img *ngIf="item.tenantImage != null" alt="Pic" src="{{ item.tenantImage }}" />
+                  </div>
+                  <div>
+                    <a href="#" class="text-dark-75 text-hover-primary font-weight-bold font-size-h6">{{ item.tenantName }}</a>
+                    <span class="text-muted font-size-sm"> {{ item.creationTime | date: 'long' }}</span>
+                  </div>
+                </div>
+
+                <div class="txtColor mt-2 rounded p-5 bg-light-success text-dark-50 font-weight-bold font-size-lg text-left max-w-1000px">
+                  {{ item.comment }}
+                </div>
+              </div>
+              <!--end::Message In-->
+              <div class="ps__rail-x" *ngIf="accidentComments.length != 0" style="left: 0px; bottom: -680px">
+                <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px"></div>
+              </div>
+              <div class="ps__rail-y" style="top: 680px; right: -2px; height: 375px">
+                <div class="ps__thumb-y" tabindex="0" style="top: 242px; height: 133px"></div>
+              </div>
+            </div>
+          </div>
+          <!--end::Messages-->
+          <!--end::Scroll-->
+        </div>
+        <!--end::Body-->
+        <!--begin::Footer-->
+        <div class="card-footer align-items-center">
+          <form *ngIf="active" #Form="ngForm" novalidate (ngSubmit)="save()">
+            <!--begin::Compose-->
+            <textarea
+              required
+              autofocus
+              name="comments.comment"
+              [(ngModel)]="comments.comment"
+              class="form-control border-0 p-0"
+              rows="2"
+              placeholder="Add Comment"
+            ></textarea>
+            <div class="d-flex align-items-center justify-content-between mt-5">
+              <div>
+                <button [disabled]="saving" type="button" class="btn btn-secondary" (click)="close()">{{ 'Cancel' | localize }}</button>
+                <button
+                  type="submit"
+                  class="btn btn-primary btn-md text-uppercase font-weight-bold chat-send py-2 px-6"
+                  [disabled]="!Form.form.valid"
+                  [buttonBusy]="saving"
+                  [busyText]="l('SavingWithThreeDot' | localize)"
+                >
+                  <i class="fa fa-save"></i> <span>{{ 'Save' | localize }}</span>
+                </button>
+              </div>
+            </div>
+          </form>
+          <!--begin::Compose-->
+        </div>
+        <!--end::Footer-->
+      </div>
+      <!--end::Card-->
+    </div>
+  </div>
+</div>
+<!-- End::ViewAccidentModal   -->

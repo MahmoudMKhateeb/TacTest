@@ -27,23 +27,18 @@ namespace TACHYON.Offers
 
         public virtual long TrucksTypeId { get; set; }
 
-        [ForeignKey("TrucksTypeId")]
-        public TrucksType TrucksTypeFk { get; set; }
+        [ForeignKey("TrucksTypeId")] public TrucksType TrucksTypeFk { get; set; }
 
         public virtual int TrailerTypeId { get; set; }
 
-        [ForeignKey("TrailerTypeId")]
-        public TrailerType TrailerTypeFk { get; set; }
+        [ForeignKey("TrailerTypeId")] public TrailerType TrailerTypeFk { get; set; }
 
         public virtual int? GoodCategoryId { get; set; }
 
-        [ForeignKey("GoodCategoryId")]
-        public GoodCategory GoodCategoryFk { get; set; }
+        [ForeignKey("GoodCategoryId")] public GoodCategory GoodCategoryFk { get; set; }
 
         public virtual int RouteId { get; set; }
 
-        [ForeignKey("RouteId")]
-        public Route RouteFk { get; set; }
-
+        [ForeignKey("RouteId")] public Route RouteFk { get; set; }
     }
 }

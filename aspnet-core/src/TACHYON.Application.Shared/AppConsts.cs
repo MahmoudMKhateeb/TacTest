@@ -9,14 +9,12 @@ namespace TACHYON
     {
         #region Tachyon consts
 
-
         /// <summary>
         /// for documentType Required from entity
         /// </summary>
         //public const string TruckDocumentsEntityName = "Truck";
         //public const string TenantDocumentsEntityName = "Tenant";
         //public const string DriverDocumentsEntityName = "Driver";
-
 
         #endregion
 
@@ -47,6 +45,7 @@ namespace TACHYON
         public static string UserIdentifier = "user_identifier";
         public static string MobileDeviceToken = "Mobile_DeviceToken";
         public static string MobileDeviceId = "Mobile_DeviceId";
+        public static string UserEditionId = "user_editionId";
 
         public const string ThemeDefault = "default";
         public const string Theme2 = "theme2";
@@ -65,12 +64,9 @@ namespace TACHYON
 
         public const string DateTimeOffsetFormat = "yyyy-MM-ddTHH:mm:sszzz";
 
-        //public const string CarrierEditionName = "f3e9f12ed9d14bcda0a0dbd401b34e01";
-        //public const string TachyonEditionName = "4b4b7016956146c480a7fbb0d4a72554";
-        //public const string ShipperEditionName = "2d84ef198b5f433cac9fbe1690614585";
-        //public const int TachyonEditionId = 3;
-        //public const int ShipperEditionId = 1;
+        public const string TachyonDealEditionName = "TachyonDealer";
         public const string TMS = "TachyonManageService";
+
         public class Message
         {
             public const string NotFoundRecord = "TheRecordNotFound";

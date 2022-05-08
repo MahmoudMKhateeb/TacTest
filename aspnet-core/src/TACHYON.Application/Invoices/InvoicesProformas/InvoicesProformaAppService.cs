@@ -12,7 +12,6 @@ using TACHYON.Invoices.InvoicesProformas.dto;
 
 namespace TACHYON.Invoices.InvoicesProformas
 {
-
     public class InvoicesProformaAppService : TACHYONAppServiceBase, IInvoicesProformaAppService
     {
         private readonly IRepository<InvoiceProforma, long> _invoiceProformaRepository;
@@ -44,12 +43,15 @@ namespace TACHYON.Invoices.InvoicesProformas
                 .GetAll()
                 .AsNoTracking()
                 .Include(t => t.Tenant)
-                 .ThenInclude(e => e.Edition)
-                .WhereIf(AbpSession.TenantId.HasValue && !await IsEnabledAsync(AppFeatures.TachyonDealer), i => i.TenantId == AbpSession.TenantId.Value)
+                .ThenInclude(e => e.Edition)
+                .WhereIf(AbpSession.TenantId.HasValue && !await IsEnabledAsync(AppFeatures.TachyonDealer),
+                    i => i.TenantId == AbpSession.TenantId.Value)
                 .WhereIf(!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer), i => true)
                 .WhereIf(input.TenantId.HasValue, i => i.TenantId == input.TenantId)
-                .WhereIf(input.FromDate.HasValue && input.ToDate.HasValue, i => i.CreationTime >= input.FromDate.Value && i.CreationTime <= input.ToDate.Value)
-                .WhereIf(input.MinAmount.HasValue && input.MaxAmount.HasValue, i => i.TotalAmount >= input.MinAmount.Value && i.TotalAmount <= input.MaxAmount.Value)             
+                .WhereIf(input.FromDate.HasValue && input.ToDate.HasValue,
+                    i => i.CreationTime >= input.FromDate.Value && i.CreationTime <= input.ToDate.Value)
+                .WhereIf(input.MinAmount.HasValue && input.MaxAmount.HasValue,
+                    i => i.TotalAmount >= input.MinAmount.Value && i.TotalAmount <= input.MaxAmount.Value)
                 .OrderBy(!string.IsNullOrEmpty(input.Sorting) ? input.Sorting : "CreationTime desc");
 
             return query;

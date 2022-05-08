@@ -6,8 +6,6 @@ namespace TACHYON.UnitOfMeasures.Dtos
 {
     public class GetUnitOfMeasureForEditOutput
     {
-		public CreateOrEditUnitOfMeasureDto UnitOfMeasure { get; set; }
-
-
+        public CreateOrEditUnitOfMeasureDto UnitOfMeasure { get; set; }
     }
 }

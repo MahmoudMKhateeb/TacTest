@@ -1,0 +1,80 @@
+<div class="col-lg-12">
+  <div class="card card-custom">
+    <!--begin::Header-->
+    <div class="card-header h-auto py-4">
+      <div class="card-title">
+        <h3 class="card-label">{{ l('FleetInformation') }}</h3>
+      </div>
+    </div>
+    <!--end::Header-->
+    <!--begin::Body-->
+    <div class="card-body py-4" [busyIf]="loadingForFleet">
+      <div class="row">
+        <div class="form-group row mx-2">
+          <label class="col-auto col-form-label">{{ l('NumberOfDrivers') }}: {{ totalDrivers }}</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-12">
+          <p-table
+            #FleetTable
+            (onLazyLoad)="getFleet($event)"
+            [value]="primengTableHelper.records"
+            rows="5"
+            [paginator]="false"
+            [lazy]="true"
+            [scrollable]="true"
+            ScrollWidth="100%"
+            [responsive]="primengTableHelper.isResponsive"
+            [resizableColumns]="primengTableHelper.resizableColumns"
+          >
+            <ng-template pTemplate="header">
+              <tr>
+                <th>{{ l('TrucksType') }}</th>
+                <th>{{ l('NumberOfTrucks') }}</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-record="$implicit">
+              <tr>
+                <td>{{ record.truckType }}</td>
+                <td>{{ record.availableTrucksCount }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
+          <div class="primeng-paging-container">
+            <p-paginator
+              #FleetPaginator
+              [rows]="5"
+              (onPageChange)="getFleet($event)"
+              [totalRecords]="primengTableHelper.totalRecordsCount"
+              [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
+            >
+            </p-paginator>
+          </div>
+        </div>
+        <!--            <div class="col-lg-3">-->
+        <!--              <p-table [value]="carrierServiceAreas">-->
+        <!--                <ng-template pTemplate="header">-->
+        <!--                  &lt;!&ndash;                { id: 1, vasName: 'Extra Driver', maxCount: 20, maxAmount: 6, price: 900 },&ndash;&gt;-->
+        <!--                  <tr>-->
+        <!--                    <th>{{ l('ServiceAreas') }}</th>-->
+        <!--                  </tr>-->
+        <!--                </ng-template>-->
+        <!--                <ng-template pTemplate="body" let-record>-->
+        <!--                  <tr [pSelectableRow]="record">-->
+        <!--                    <td>{{ record.areaName }}</td>-->
+        <!--                  </tr>-->
+        <!--                </ng-template>-->
+        <!--              </p-table>-->
+        <!--            </div>-->
+      </div>
+    </div>
+    <!--end::Body-->
+    <!--begin::Footer-->
+    <div class="card-footer">
+      <!--      <a href="#" class="btn btn-primary font-weight-bold mr-2">Manage company</a>-->
+      <!--      <a href="#" class="btn btn-light-primary font-weight-bold">Learn more</a>-->
+    </div>
+    <!--end::Footer-->
+  </div>
+</div>

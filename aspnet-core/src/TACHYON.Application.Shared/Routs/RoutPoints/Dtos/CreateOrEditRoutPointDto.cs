@@ -16,8 +16,7 @@ namespace TACHYON.Routs.RoutPoints.Dtos
     {
         public string DisplayName { get; set; }
         public PickingType PickingType { get; set; }
-        [Required]
-        public long FacilityId { get; set; }
+        [Required] public long FacilityId { get; set; }
 
         /// <summary>
         /// is for UI helpping only and will be ignored in mapping
@@ -28,13 +27,19 @@ namespace TACHYON.Routs.RoutPoints.Dtos
         /// is for UI helpping only and will be ignored in mapping
         /// </summary>
         public double Latitude { get; set; }
-        public int? ReceiverId { get; set; }
-        [JsonIgnore]
-        public string Code { get; set; } = (new Random().Next(100000, 999999)).ToString();
-        [CanBeNull] public string ReceiverFullName { get; set; }
-        [DataType(DataType.PhoneNumber)] [CanBeNull] public string ReceiverPhoneNumber { get; set; }
 
-        [DataType(DataType.EmailAddress)] [CanBeNull] public string ReceiverEmailAddress { get; set; }
+        public int? ReceiverId { get; set; }
+        [JsonIgnore] public string Code { get; set; } = (new Random().Next(100000, 999999)).ToString();
+        [CanBeNull] public string ReceiverFullName { get; set; }
+
+        [DataType(DataType.PhoneNumber)]
+        [CanBeNull]
+        public string ReceiverPhoneNumber { get; set; }
+
+        [DataType(DataType.EmailAddress)]
+        [CanBeNull]
+        public string ReceiverEmailAddress { get; set; }
+
         [CanBeNull] public string ReceiverCardIdNumber { get; set; }
 
         [CanBeNull] public string Note { get; set; }
@@ -43,20 +48,22 @@ namespace TACHYON.Routs.RoutPoints.Dtos
 
         public void AddValidationErrors(CustomValidationContext context)
         {
-
-
             if (PickingType == PickingType.Pickup) return;
             //additional receiver must provided
-            if (!ReceiverId.HasValue && ReceiverPhoneNumber.IsNullOrEmpty() )
+            if (!ReceiverId.HasValue && ReceiverPhoneNumber.IsNullOrEmpty())
             {
                 context.Results.Add(new ValidationResult("AtLeastOneReceiverShouldBeProvided"));
             }
+
             //there is additional receiver
             if (ReceiverPhoneNumber != null)
             {
-                if (string.IsNullOrEmpty(ReceiverFullName)) context.Results.Add(new ValidationResult("PleaseAddAdditionalReceiverFullName"));
-                if (string.IsNullOrEmpty(ReceiverPhoneNumber)) context.Results.Add(new ValidationResult("PleaseAddAdditionalReceiverPhoneNumber"));
-                else if (!isValidMobileNumber(ReceiverPhoneNumber)) context.Results.Add(new ValidationResult("InvalidAdditionalReceiverMobileNumber"));
+                if (string.IsNullOrEmpty(ReceiverFullName))
+                    context.Results.Add(new ValidationResult("PleaseAddAdditionalReceiverFullName"));
+                if (string.IsNullOrEmpty(ReceiverPhoneNumber))
+                    context.Results.Add(new ValidationResult("PleaseAddAdditionalReceiverPhoneNumber"));
+                else if (!isValidMobileNumber(ReceiverPhoneNumber))
+                    context.Results.Add(new ValidationResult("InvalidAdditionalReceiverMobileNumber"));
             }
         }
 

@@ -39,7 +39,7 @@
                         [class.is-invalid]="subgoodsDetail.touched && !subgoodsDetail.valid"
                         [class.is-valid]="subgoodsDetail.touched && subgoodsDetail.valid"
                       >
-                        <option value="">{{ l('SelectAGoodSubCategory') }}</option>
+                        <option [ngValue]="null" selected>{{ l('SelectAGoodSubCategory') }}</option>
                         <option *ngFor="let item of allSubGoodCategorys" [value]="item.id">{{ item.displayName }}</option>
                       </select>
                     </div>
@@ -55,15 +55,24 @@
                       id="GoodsDetail_Weight"
                       [maxLength]="7"
                       [minLength]="1"
-                      (keypress)="numberOnly($event)"
                       [min]="1"
-                      pattern="^[1-9][0-9]*$"
+                      [max]="AllowedWeight / (amount || 1)"
                       name="Weight"
                       type="number"
                       [class.is-invalid]="GoodsWeight.touched && !GoodsWeight.valid"
                       [class.is-valid]="GoodsWeight.touched && GoodsWeight.valid"
                       required
                     />
+                    <a class="text-muted mt-1" *ngIf="weight > 0 && amount > 0 && !(AllowedWeight - (weight || 0) * (amount || 1) < 0)">
+                      {{
+                        l('RemainingAllowedWeight') +
+                          ': ' +
+                          (AllowedWeight - (weight || 0) * (amount || 1) < 0 ? 0 : AllowedWeight - (weight || 0) * (amount || 1))
+                      }}
+                    </a>
+                    <span *ngIf="AllowedWeight - (weight || 0) * (amount || 1) < 0"
+                      >{{ l('AllowedWeightShouldBeMaximum') }} : {{ AllowedWeight }}</span
+                    >
                   </div>
                 </div>
 
@@ -77,11 +86,7 @@
                       id="goodsDetail.amount"
                       name="goodsDetail.amount"
                       type="number"
-                      (keypress)="numberOnly($event)"
-                      [maxLength]="6"
-                      [minLength]="1"
                       [min]="1"
-                      pattern="^[1-9][0-9]*$"
                       [class.is-invalid]="GoodsAmount.touched && !GoodsAmount.valid"
                       [class.is-valid]="GoodsAmount.touched && GoodsAmount.valid"
                       required
@@ -103,11 +108,35 @@
                         [class.is-invalid]="GoodsUnitOfMeasure.touched && !GoodsUnitOfMeasure.valid"
                         required
                       >
-                        <option value="">{{ l('selectAUnitOfMeasure') }}</option>
+                        <option [ngValue]="null" selected>{{ l('selectAUnitOfMeasure') }}</option>
                         <option *ngFor="let item of allUnitOfMeasure" [value]="item.id">{{ item.displayName }}</option>
                       </select>
                     </div>
                   </div>
+                </div>
+                <div class="col-lg-12 mt-4" *ngIf="IfOther(allUnitOfMeasure, unitOfMeasureId)">
+                  <label>{{ l('OtherUnitOfMeasure') }} <span class="required-fileds">*</span></label>
+                  <div>
+                    <div class="input-group">
+                      <input
+                        #otherUnitOfMeasure="ngModel"
+                        id="otherUnitOfMeasure"
+                        name="otherUnitOfMeasure"
+                        type="text"
+                        class="form-control"
+                        [(ngModel)]="otherUnitOfMeasureName"
+                        [class.is-valid]="otherUnitOfMeasure.touched && otherUnitOfMeasure.valid && cannotContainSpace(otherUnitOfMeasureName)"
+                        [class.is-invalid]="
+                          otherUnitOfMeasure.touched &&
+                          (!otherUnitOfMeasure.valid || !cannotContainSpace(otherUnitOfMeasureName)) &&
+                          IfOther(allUnitOfMeasure, unitOfMeasureId)
+                        "
+                        [required]="IfOther(allUnitOfMeasure, unitOfMeasureId)"
+                      />
+                    </div>
+                  </div>
+                  <span class="form-text text-muted">{{ l('OtherUnitOfMeasure') }}</span>
+                  <br />
                 </div>
 
                 <div class="col-lg-6">
@@ -148,7 +177,7 @@
                     </label>
                   </div>
                 </div>
-                <div class="col-lg-6" [hidden]="!isDangerousGood">
+                <div class="col-lg-6" *ngIf="isDangerousGood">
                   <div class="form-group">
                     <label> {{ l('DangerousGoodType') }} <span class="required-fileds">*</span> </label>
                     <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': isDangerousGoodLoading }">
@@ -158,19 +187,20 @@
                         class="form-control"
                         name="goodsDetail.dangerousGoodTypeId"
                         [disabled]="!allSubGoodCategorys"
-                        [class.is-invalid]="DangerousGoodTypes.touched && !DangerousGoodTypes.valid"
-                        [class.is-valid]="DangerousGoodTypes.touched && DangerousGoodTypes.valid"
-                        [required]="goodsDetail.isDangerousGood"
+                        [class.is-invalid]="DangerousGoodTypes.touched && (!DangerousGoodTypes.valid || dangerousGoodsTypeId === undefined)"
+                        [class.is-valid]="DangerousGoodTypes.touched && DangerousGoodTypes.valid && dangerousGoodsTypeId !== undefined"
+                        [required]="isDangerousGood"
+                        [disabled]="!isDangerousGood"
                       >
-                        <option value="">{{ l('SelectADangeroudGoodType') }}</option>
+                        <option [ngValue]="null" selected>{{ l('SelectADangeroudGoodType') }}</option>
                         <option *ngFor="let item of allDangerousGoodTypes" [value]="item.id">{{ item.displayName }}</option>
                       </select>
                     </div>
                   </div>
                 </div>
 
-                <div class="col-lg-6">
-                  <div class="form-group" [hidden]="!isDangerousGood">
+                <div class="col-lg-6" *ngIf="isDangerousGood">
+                  <div class="form-group">
                     <label for="GoodsDetail_DangerousGoodsCode">{{ l('DangerousGoodsCode') }} <span class="required-fileds">*</span> </label>
                     <input
                       #DangerousGoods="ngModel"
@@ -180,6 +210,7 @@
                       name="DangerousGoodsCode"
                       type="text"
                       [required]="isDangerousGood"
+                      [disabled]="!isDangerousGood"
                       [class.is-invalid]="DangerousGoods.touched && !DangerousGoods.valid"
                       [class.is-valid]="DangerousGoods.touched && DangerousGoods.valid"
                     />

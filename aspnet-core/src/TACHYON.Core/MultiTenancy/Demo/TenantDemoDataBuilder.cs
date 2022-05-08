@@ -88,25 +88,32 @@ namespace TACHYON.MultiTenancy.Demo
 
             var producing = await CreateAndSaveOrganizationUnit(organizationUnits, tenant, "Producing");
 
-            var researchAndDevelopment = await CreateAndSaveOrganizationUnit(organizationUnits, tenant, "Research & Development", producing);
+            var researchAndDevelopment =
+                await CreateAndSaveOrganizationUnit(organizationUnits, tenant, "Research & Development", producing);
 
-            var ivrProducts = await CreateAndSaveOrganizationUnit(organizationUnits, tenant, "IVR Related Products", researchAndDevelopment);
-            var voiceTech = await CreateAndSaveOrganizationUnit(organizationUnits, tenant, "Voice Technologies", researchAndDevelopment);
-            var inhouseProjects = await CreateAndSaveOrganizationUnit(organizationUnits, tenant, "Inhouse Projects", researchAndDevelopment);
+            var ivrProducts = await CreateAndSaveOrganizationUnit(organizationUnits, tenant, "IVR Related Products",
+                researchAndDevelopment);
+            var voiceTech = await CreateAndSaveOrganizationUnit(organizationUnits, tenant, "Voice Technologies",
+                researchAndDevelopment);
+            var inhouseProjects = await CreateAndSaveOrganizationUnit(organizationUnits, tenant, "Inhouse Projects",
+                researchAndDevelopment);
 
-            var qualityManagement = await CreateAndSaveOrganizationUnit(organizationUnits, tenant, "Quality Management", producing);
+            var qualityManagement =
+                await CreateAndSaveOrganizationUnit(organizationUnits, tenant, "Quality Management", producing);
             var testing = await CreateAndSaveOrganizationUnit(organizationUnits, tenant, "Testing", producing);
 
             var selling = await CreateAndSaveOrganizationUnit(organizationUnits, tenant, "Selling");
 
             var marketing = await CreateAndSaveOrganizationUnit(organizationUnits, tenant, "Marketing", selling);
             var sales = await CreateAndSaveOrganizationUnit(organizationUnits, tenant, "Sales", selling);
-            var custRelations = await CreateAndSaveOrganizationUnit(organizationUnits, tenant, "Customer Relations", selling);
+            var custRelations =
+                await CreateAndSaveOrganizationUnit(organizationUnits, tenant, "Customer Relations", selling);
 
             var supporting = await CreateAndSaveOrganizationUnit(organizationUnits, tenant, "Supporting");
 
             var buying = await CreateAndSaveOrganizationUnit(organizationUnits, tenant, "Buying", supporting);
-            var humanResources = await CreateAndSaveOrganizationUnit(organizationUnits, tenant, "Human Resources", supporting);
+            var humanResources =
+                await CreateAndSaveOrganizationUnit(organizationUnits, tenant, "Human Resources", supporting);
 
             //Create users
 
@@ -121,7 +128,8 @@ namespace TACHYON.MultiTenancy.Demo
                 await _userManager.AddToRoleAsync(user, StaticRoleNames.Tenants.User);
 
                 //Add to OUs
-                var randomOus = RandomHelper.GenerateRandomizedList(organizationUnits).Take(RandomHelper.GetRandom(0, 3));
+                var randomOus = RandomHelper.GenerateRandomizedList(organizationUnits)
+                    .Take(RandomHelper.GetRandom(0, 3));
                 foreach (var ou in randomOus)
                 {
                     await _userManager.AddToOrganizationUnitAsync(user, ou);
@@ -193,12 +201,17 @@ namespace TACHYON.MultiTenancy.Demo
 
         private async Task EnableIsNewRegisteredUserActiveByDefaultAsync(Tenant tenant)
         {
-            await SettingManager.ChangeSettingForTenantAsync(tenant.Id, AppSettings.UserManagement.IsNewRegisteredUserActiveByDefault, "true");
+            await SettingManager.ChangeSettingForTenantAsync(tenant.Id,
+                AppSettings.UserManagement.IsNewRegisteredUserActiveByDefault, "true");
         }
 
-        private async Task<OrganizationUnit> CreateAndSaveOrganizationUnit(List<OrganizationUnit> organizationUnits, Tenant tenant, string displayName, OrganizationUnit parent = null)
+        private async Task<OrganizationUnit> CreateAndSaveOrganizationUnit(List<OrganizationUnit> organizationUnits,
+            Tenant tenant,
+            string displayName,
+            OrganizationUnit parent = null)
         {
-            var organizationUnit = new OrganizationUnit(tenant.Id, displayName, parent == null ? (long?)null : parent.Id);
+            var organizationUnit =
+                new OrganizationUnit(tenant.Id, displayName, parent == null ? (long?)null : parent.Id);
 
             await _organizationUnitManager.CreateAsync(organizationUnit);
             await CurrentUnitOfWork.SaveChangesAsync();

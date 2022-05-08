@@ -1,6 +1,7 @@
 ﻿import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { DriverLicenseTypesComponent } from './driverLicenseTypes/driverLicenseTypes/driverLicenseTypes.component';
+import { EmailTemplatesComponent } from './emailTemplates/emailTemplates/emailTemplates.component';
 import { DangerousGoodTypesComponent } from './goods/dangerousGoodTypes/dangerousGoodTypes.component';
 import { PackingTypesComponent } from './packingTypes/packingTypes/packingTypes.component';
 import { ShippingTypesComponent } from './shippingTypes/shippingTypes/shippingTypes.component';
@@ -25,10 +26,8 @@ import { PortsComponent } from './ports/ports/ports.component';
 import { FacilitiesComponent } from './addressBook/facilities/facilities.component';
 import { DocumentFilesComponent } from './documentFiles/documentFiles/documentFiles.component';
 import { DocumentTypesComponent } from './documentTypes/documentTypes/documentTypes.component';
-import { ShippingRequestsComponent } from './shippingRequests/shippingRequests/shippingRequests.component';
 import { CreateOrEditShippingRequestComponent } from './shippingRequests/shippingRequests/create-or-edit-shippingRequest.component';
 import { ViewShippingRequestComponent } from './shippingRequests/shippingRequests/view-shippingRequest.component';
-import { GoodsDetailsComponent } from './goodsDetails/goodsDetails/goodsDetails.component';
 //import { OffersComponent } from './offers/offers/offers.component';
 import { RoutStepsComponent } from './routSteps/routSteps/routSteps.component';
 import { RoutesComponent } from './routs/routes/routes.component';
@@ -62,13 +61,12 @@ import { InvoiceTenantDetailsService } from '@app/main/invoices/invoice-tenants/
 import { ProformaListComponent } from '@app/main/invoices/proformas/proforma-list.component';
 import { AccidentReasonComponent } from '@app/main/accidents/reasons/reason.component';
 import { TripRejectReasonComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/rejectreason/trip-reject-reason.component';
-import { AppLocalizationComponent } from '@app/main/applocalizations/applocalization.component';
 import { ComingSoonComponent } from '@app/main/commingSoon/comingSoon.component';
 import { CreateOrEditShippingRequestWizardComponent } from '@app/main/shippingRequests/shippingRequests/shippingRequestWizard/create-or-edit-shipping-request-wizard.component';
-import { TrackingComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tacking.component';
 import { TMSRequestListComponent } from '@app/main/tms/tms-request-list.component';
 import { TrucksSubmittedDocumentsComponent } from '@app/main/documentFiles/documentFiles/trucks-submitted-documents/trucks-submitted-documents.component';
 import { DriversSubmittedDocumentsComponent } from '@app/main/documentFiles/documentFiles/drivers-submitted-documents/drivers-submitted-documents.component';
+import { ShipmentHistoryComponent } from '@app/main/shippingRequests/shippingRequests/shipment-history/shipment-history.component';
 
 @NgModule({
   imports: [
@@ -76,6 +74,7 @@ import { DriversSubmittedDocumentsComponent } from '@app/main/documentFiles/docu
       {
         path: '',
         children: [
+          { path: 'emailTemplates/emailTemplates', component: EmailTemplatesComponent, data: { permission: 'Pages.EmailTemplates' } },
           { path: 'driverLicenseTypes/driverLicenseTypes', component: DriverLicenseTypesComponent, data: { permission: 'Pages.DriverLicenseTypes' } },
           { path: 'goods/dangerousGoodTypes', component: DangerousGoodTypesComponent, data: { permission: 'Pages.DangerousGoodTypes' } },
           {
@@ -233,11 +232,17 @@ import { DriversSubmittedDocumentsComponent } from '@app/main/documentFiles/docu
           },
           { path: 'documentTypes/documentTypes', component: DocumentTypesComponent, data: { permission: 'Pages.DocumentTypes' } },
           { path: 'shippingRequests/shippingRequests', component: ShippingRequestsListComponent },
+          {
+            path: 'shippingRequests/ShipmentHistory',
+            component: ShipmentHistoryComponent,
+
+            data: { permission: 'Pages.ShippingRequests' },
+          },
           { path: 'tms/shippingRequests', component: TMSRequestListComponent },
           {
             path: 'shippingRequests/shippingRequests/createOrEdit',
             component: CreateOrEditShippingRequestComponent,
-            data: { permission: 'Pages.ShippingRequests.Create' },
+            data: { permission: 'Pages.ShippingRequests' },
           },
           {
             path: 'shippingRequests/shippingRequestWizard',
@@ -247,7 +252,10 @@ import { DriversSubmittedDocumentsComponent } from '@app/main/documentFiles/docu
 
           { path: 'shippingRequests/shippingRequests/view', component: ViewShippingRequestComponent, data: { permission: 'Pages.ShippingRequests' } },
           { path: 'marketplace/list', component: MarketPlaceListComponent },
-          { path: 'tracking', component: TrackingComponent },
+          {
+            path: 'tracking',
+            loadChildren: () => import('@app/main/shippingRequests/shippingRequests/tracking/tracking.module').then((m) => m.TrackingModule), //Lazy load main module
+          },
           { path: 'directrequest/list', component: DirectRequestViewComponent },
           { path: 'offers', component: OffersListComponent },
           { path: 'routSteps/routSteps', component: RoutStepsComponent, data: { permission: 'Pages.RoutSteps' } },
@@ -299,6 +307,12 @@ import { DriversSubmittedDocumentsComponent } from '@app/main/documentFiles/docu
           { path: 'accidents/reasons', component: AccidentReasonComponent, data: { permission: 'Pages.ShippingRequestResoneAccidents' } },
           { path: 'trip/reject/reasons', component: TripRejectReasonComponent, data: { permission: 'Pages.ShippingRequestTrips.Reject.Reason' } },
           // { path: 'lanaguages/applocalizations', component: AppLocalizationComponent, data: { permission: 'Pages.AppLocalizations' } },
+
+          {
+            path: 'profile',
+            loadChildren: () => import('app/main/profile/profile.module').then((m) => m.ProfileModule), //Lazy load main module
+            data: { preload: true },
+          },
 
           { path: 'dashboard', component: DashboardComponent, data: { permission: 'Pages.Tenant.Dashboard' } },
           //TODO:// to be removed after menu Structure work is complete

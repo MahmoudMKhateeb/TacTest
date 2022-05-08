@@ -1,0 +1,8 @@
+[dir='ltr'] .leftRightNotification {
+  left: auto !important;
+  right: 0px !important;
+}
+[dir='rtl'] .leftRightNotification {
+  left: 0px !important;
+  right: auto !important;
+}

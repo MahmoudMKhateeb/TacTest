@@ -9,6 +9,5 @@ namespace TACHYON.Trucks.TruckStatusesTranslations.Dtos
         public CreateOrEditTruckStatusesTranslationDto TruckStatusesTranslation { get; set; }
 
         public string TruckStatusDisplayName { get; set; }
-
     }
 }

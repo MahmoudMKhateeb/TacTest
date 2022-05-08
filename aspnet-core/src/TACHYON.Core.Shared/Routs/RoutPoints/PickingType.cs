@@ -2,7 +2,7 @@
 {
     public enum PickingType : byte
     {
-        Pickup=1,
-        Dropoff=2
+        Pickup = 1,
+        Dropoff = 2
     }
 }

@@ -3,7 +3,7 @@ using System;
 
 namespace TACHYON.Trucks.Dtos
 {
-    public class GetAllTrucksInput 
+    public class GetAllTrucksInput
     {
         public string Filter { get; set; }
 
@@ -28,7 +28,5 @@ namespace TACHYON.Trucks.Dtos
         //public string UserNameFilter { get; set; }
 
         //public string UserName2Filter { get; set; }
-
-
     }
 }

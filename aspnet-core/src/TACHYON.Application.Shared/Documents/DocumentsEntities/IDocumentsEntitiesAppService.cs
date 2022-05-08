@@ -8,18 +8,16 @@ using TACHYON.Dto;
 
 namespace TACHYON.Documents.DocumentsEntities
 {
-    public interface IDocumentsEntitiesAppService : IApplicationService 
+    public interface IDocumentsEntitiesAppService : IApplicationService
     {
         Task<PagedResultDto<GetDocumentsEntityForViewDto>> GetAll(GetAllDocumentsEntitiesInput input);
 
         Task<GetDocumentsEntityForViewDto> GetDocumentsEntityForView(int id);
 
-		Task<GetDocumentsEntityForEditOutput> GetDocumentsEntityForEdit(EntityDto input);
+        Task<GetDocumentsEntityForEditOutput> GetDocumentsEntityForEdit(EntityDto input);
 
-		Task CreateOrEdit(CreateOrEditDocumentsEntityDto input);
+        Task CreateOrEdit(CreateOrEditDocumentsEntityDto input);
 
-		Task Delete(EntityDto input);
-
-		
+        Task Delete(EntityDto input);
     }
 }

@@ -4,7 +4,5 @@
     {
         public TrucksTypeDto TrucksType { get; set; }
         public string TransportTypeDisplayName { get; set; }
-
-
     }
 }

@@ -35,7 +35,8 @@ namespace TACHYON.Web.Controllers
 
             try
             {
-                var stripeEvent = EventUtility.ConstructEvent(json, Request.Headers["Stripe-Signature"], _stripeConfiguration.WebhookSecret);
+                var stripeEvent = EventUtility.ConstructEvent(json, Request.Headers["Stripe-Signature"],
+                    _stripeConfiguration.WebhookSecret);
 
                 if (stripeEvent.Type == Events.InvoicePaymentSucceeded)
                 {
@@ -88,10 +89,7 @@ namespace TACHYON.Web.Controllers
             }
 
             await StripePaymentAppService.ConfirmPayment(
-                new StripeConfirmPaymentInput
-                {
-                    StripeSessionId = session.Id
-                });
+                new StripeConfirmPaymentInput { StripeSessionId = session.Id });
         }
     }
 }

@@ -37,9 +37,12 @@ namespace TACHYON.Migrations.Seed.Host
             AddSettingIfNotExists(LocalizationSettingNames.DefaultLanguage, "en", tenantId);
         }
 
-        private void AddSettingIfNotExists(string name, string value, int? tenantId = null)
+        private void AddSettingIfNotExists(string name,
+            string value,
+            int? tenantId = null)
         {
-            if (_context.Settings.IgnoreQueryFilters().Any(s => s.Name == name && s.TenantId == tenantId && s.UserId == null))
+            if (_context.Settings.IgnoreQueryFilters()
+                .Any(s => s.Name == name && s.TenantId == tenantId && s.UserId == null))
             {
                 return;
             }

@@ -77,7 +77,7 @@
                   </div>
 
                   <div class="row">
-                    <div class="form-group col-6">
+                    <div class="form-group col-6" hidden>
                       <label for="EmailAddress">{{ 'EmailAddress' | localize }} <span class="required-fileds"> *</span></label>
                       <input
                         style="text-align: left !important"
@@ -143,6 +143,26 @@
                     </div>
                   </div>
                 </div>
+                <div class="col-sm-12" *ngIf="isUserTenantRequired">
+                  <div class="form-group">
+                    <label>{{ 'Carrier' | localize }}<span class="text-danger">*</span> </label>
+                    <select
+                      #DriverTenantId="ngModel"
+                      class="form-control"
+                      name="DriverTenantId"
+                      id="DriverTenantId"
+                      [(ngModel)]="user.tenantId"
+                      [ngClass]="{
+                        'is-valid': DriverTenantId.touched && DriverTenantId.valid,
+                        'is-invalid': DriverTenantId.touched && !DriverTenantId.valid
+                      }"
+                      [required]="isUserTenantRequired"
+                    >
+                      <option [ngValue]="null" selected disabled>{{ l('SelectACarrier') }}</option>
+                      <option *ngFor="let item of carriers" value="{{ item.id }}">{{ item.displayName }}</option>
+                    </select>
+                  </div>
+                </div>
               </div>
 
               <div class="row">
@@ -199,6 +219,8 @@
                       (selectedDateChange)="dateOfBirthSelectedDateChange($event, user)"
                       [minGreg]="minGreg"
                       [minHijri]="minHijri"
+                      [maxGreg]="maxGreg"
+                      [maxHijri]="maxHijri"
                     >
                     </hijri-gregorian-datepicker-test>
                   </div>
@@ -225,7 +247,7 @@
                 </div>
                 <div class="col-6">
                   <div class="form-group">
-                    <label for="driverLicenseTypeId"> {{ 'driverLicenseType' | localize }}<span class="text-danger">*</span> </label>
+                    <label for="driverLicenseTypeId"> {{ 'DriverLicenseType' | localize }}<span class="text-danger">*</span> </label>
                     <select
                       id="driverLicenseTypeId"
                       #driverLicenseTypeId="ngModel"
@@ -238,6 +260,7 @@
                         'is-invalid': userForm.submitted && !driverLicenseTypeId.valid
                       }"
                     >
+                      <option selected disabled [ngValue]="null">{{ l('SelectALicenseType') }}</option>
                       <option *ngFor="let item of driverLicenseTypes" [value]="item.id">{{ item.displayName }}</option>
                     </select>
                     <validation-messages [formCtrl]="driverLicenseTypeId"></validation-messages>
@@ -271,6 +294,12 @@
                 <label *ngIf="isLockoutEnabled" for="EditUser_IsLockoutEnabled" class="checkbox">
                   <input id="EditUser_IsLockoutEnabled" type="checkbox" name="IsLockoutEnabled" [(ngModel)]="user.isLockoutEnabled" />
                   {{ 'IsLockoutEnabled' | localize }}
+                  <span></span>
+                </label>
+
+                <label *ngIf="user.id !== null" for="EditUser_IsAvailable" class="checkbox">
+                  <input id="EditUser_IsAvailable" type="checkbox" name="IsAvailable" [(ngModel)]="user.isAvailable" />
+                  {{ 'Available' | localize }}
                   <span></span>
                 </label>
               </div>

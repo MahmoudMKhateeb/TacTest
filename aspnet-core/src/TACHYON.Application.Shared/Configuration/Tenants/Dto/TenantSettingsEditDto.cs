@@ -11,15 +11,13 @@ namespace TACHYON.Configuration.Tenants.Dto
     {
         public GeneralSettingsEditDto General { get; set; }
 
-        [Required]
-        public TenantUserManagementSettingsEditDto UserManagement { get; set; }
+        [Required] public TenantUserManagementSettingsEditDto UserManagement { get; set; }
 
         public TenantEmailSettingsEditDto Email { get; set; }
 
         public LdapSettingsEditDto Ldap { get; set; }
 
-        [Required]
-        public SecuritySettingsEditDto Security { get; set; }
+        [Required] public SecuritySettingsEditDto Security { get; set; }
 
         public TenantBillingSettingsEditDto Billing { get; set; }
 
@@ -46,7 +44,8 @@ namespace TACHYON.Configuration.Tenants.Dto
 
             if (validationErrors.Count > 0)
             {
-                throw new AbpValidationException("Method arguments are not valid! See ValidationErrors for details.", validationErrors);
+                throw new AbpValidationException("Method arguments are not valid! See ValidationErrors for details.",
+                    validationErrors);
             }
         }
     }

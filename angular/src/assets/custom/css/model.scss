@@ -57,8 +57,8 @@
 }
 
 .modalSendOffer .modal-body .detailsContent {
-  flex: 0 0 330px;
-  max-width: 330px;
+  flex: 0 0 370px;
+  max-width: 370px;
   background-color: #fff;
   padding: 20px 12px;
 }
@@ -220,7 +220,7 @@
 }
 
 .modalSendOffer .detailsShip p span:nth-child(1) {
-  color: #000;
+  //color: #000;
   font-weight: 500;
 }
 
@@ -489,6 +489,13 @@ label.error::after {
   }
 }
 
+@media (min-width: 991.9px) {
+  .modalSendOffer .modal-body .closeModal,
+  .modalSetPrice .modal-body .closeModal {
+    right: -47px;
+  }
+}
+
 .modalSetPrice {
   background-color: rgba(0, 0, 0, 0.5);
 }
@@ -567,4 +574,7 @@ label.error::after {
 
 .modalSetPrice .table-sendOffer .titleSendOffer a.accept {
   background: #00b74a;
+}
+.modalSetPrice .table-sendOffer .titleSendOffer a.acceptTMS {
+  background: #2c0172;
 }

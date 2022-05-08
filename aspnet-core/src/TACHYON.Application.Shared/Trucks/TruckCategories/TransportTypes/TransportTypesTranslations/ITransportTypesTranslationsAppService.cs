@@ -10,7 +10,8 @@ namespace TACHYON.Trucks.TruckCategories.TransportTypes.TransportTypesTranslatio
 {
     public interface ITransportTypesTranslationsAppService : IApplicationService
     {
-        Task<PagedResultDto<GetTransportTypesTranslationForViewDto>> GetAll(GetAllTransportTypesTranslationsInput input);
+        Task<PagedResultDto<GetTransportTypesTranslationForViewDto>>
+            GetAll(GetAllTransportTypesTranslationsInput input);
 
         Task<GetTransportTypesTranslationForViewDto> GetTransportTypesTranslationForView(int id);
 
@@ -21,6 +22,5 @@ namespace TACHYON.Trucks.TruckCategories.TransportTypes.TransportTypesTranslatio
         Task Delete(EntityDto input);
 
         Task<List<TransportTypesTranslationTransportTypeLookupTableDto>> GetAllTransportTypeForTableDropdown();
-
     }
 }

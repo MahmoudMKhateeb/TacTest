@@ -71,7 +71,10 @@ namespace TACHYON.Web.Controllers
                 tenant.LogoId = logoObject.Id;
                 tenant.LogoFileType = logoFile.ContentType;
 
-                return Json(new AjaxResponse(new { id = logoObject.Id, TenantId = tenant.Id, fileType = tenant.LogoFileType }));
+                return Json(new AjaxResponse(new
+                {
+                    id = logoObject.Id, TenantId = tenant.Id, fileType = tenant.LogoFileType
+                }));
             }
             catch (UserFriendlyException ex)
             {
@@ -125,6 +128,7 @@ namespace TACHYON.Web.Controllers
             {
                 tenantId = AbpSession.TenantId;
             }
+
             if (!tenantId.HasValue)
             {
                 return StatusCode((int)HttpStatusCode.NotFound);
@@ -183,6 +187,7 @@ namespace TACHYON.Web.Controllers
             {
                 tenantId = AbpSession.TenantId;
             }
+
             if (!tenantId.HasValue)
             {
                 return StatusCode((int)HttpStatusCode.NotFound);

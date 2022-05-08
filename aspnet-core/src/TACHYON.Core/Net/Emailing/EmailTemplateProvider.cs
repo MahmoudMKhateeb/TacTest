@@ -10,6 +10,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using TACHYON.Configuration;
+using TACHYON.MultiTenancy;
 using TACHYON.Url;
 
 namespace TACHYON.Net.Emailing
@@ -21,7 +22,9 @@ namespace TACHYON.Net.Emailing
         private readonly ConcurrentDictionary<string, string> _defaultTemplates;
         private readonly ISettingManager _settingManager;
 
-        public EmailTemplateProvider(IWebUrlService webUrlService, ITenantCache tenantCache, ISettingManager settingManager)
+        public EmailTemplateProvider(IWebUrlService webUrlService,
+            ITenantCache tenantCache,
+            ISettingManager settingManager)
         {
             _webUrlService = webUrlService;
             _tenantCache = tenantCache;
@@ -45,15 +48,15 @@ namespace TACHYON.Net.Emailing
         }
 
 
-
-
         public string ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage(int? TenantId, int Percentage)
         {
             var tenancyKey = TenantId.ToString();
 
             return _defaultTemplates.GetOrAdd(tenancyKey, key =>
             {
-                using (var stream = typeof(EmailTemplateProvider).GetAssembly().GetManifestResourceStream("TACHYON.Net.Emailing.EmailTemplates.ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage.html"))
+                using (var stream = typeof(EmailTemplateProvider).GetAssembly()
+                           .GetManifestResourceStream(
+                               "TACHYON.Net.Emailing.EmailTemplates.ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage.html"))
                 {
                     var bytes = stream.GetAllBytes();
                     var template = Encoding.UTF8.GetString(bytes, 3, bytes.Length - 3);
@@ -68,11 +71,13 @@ namespace TACHYON.Net.Emailing
         {
             if (!tenantId.HasValue)
             {
-                return _webUrlService.GetServerRootAddress().EnsureEndsWith('/') + "TenantCustomization/GetTenantLogo?skin=light";
+                return _webUrlService.GetServerRootAddress().EnsureEndsWith('/') +
+                       "TenantCustomization/GetTenantLogo?skin=light";
             }
 
             var tenant = _tenantCache.Get(tenantId.Value);
-            return _webUrlService.GetServerRootAddress(tenant.TenancyName).EnsureEndsWith('/') + "TenantCustomization/GetTenantLogo?skin=light&tenantId=" + tenantId.Value;
+            return _webUrlService.GetServerRootAddress(tenant.TenancyName).EnsureEndsWith('/') +
+                   "TenantCustomization/GetTenantLogo?skin=light&tenantId=" + tenantId.Value;
         }
 
         private string GetOutlineLogoUrl()

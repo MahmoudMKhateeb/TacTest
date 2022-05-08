@@ -61,7 +61,7 @@ export class TripService {
   //Loads All facilities
   GetOrRefreshFacilities(shippingRequestId: number) {
     this.facilitiesLodaing = true;
-    if (this.feature.isEnabled('App.Shipper') || this.feature.isEnabled('App.TachyonDealer')) {
+    if (this.feature.isEnabled('App.Shipper') || this.feature.isEnabled('App.TachyonDealer') || this.feature.isEnabled('App.CarrierAsASaas')) {
       if (shippingRequestId != null && shippingRequestId != undefined) {
         this.currentShippingRequest.subscribe((res) => {
           this.citySourceId = res.originalCityId;
@@ -81,7 +81,7 @@ export class TripService {
           this.facilitiesLodaing = false;
         });
       } else {
-        this._routStepsServiceProxy.getAllFacilitiesForDropdown().subscribe((result) => {
+        this._routStepsServiceProxy.getAllFacilitiesForDropdown(shippingRequestId).subscribe((result) => {
           this.currentSourceFacilitiesItems = this.currentDestinationFacilitiesItems = result;
           this.facilitiesLodaing = false;
         });

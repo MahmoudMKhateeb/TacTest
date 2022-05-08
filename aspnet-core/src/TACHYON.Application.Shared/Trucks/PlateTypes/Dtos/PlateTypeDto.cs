@@ -7,7 +7,6 @@ namespace TACHYON.Trucks.PlateTypes.Dtos
 {
     public class PlateTypeDto : EntityDto
     {
-
         public virtual string Name { get; set; }
 
         public string BayanIntegrationId { get; set; }
@@ -16,6 +15,5 @@ namespace TACHYON.Trucks.PlateTypes.Dtos
         public string DisplayName { get; set; }
 
         public bool IsDefault { get; set; }
-
     }
 }

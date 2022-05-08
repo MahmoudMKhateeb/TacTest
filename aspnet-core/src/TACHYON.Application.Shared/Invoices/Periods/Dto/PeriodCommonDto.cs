@@ -5,10 +5,9 @@ using TACHYON.Common;
 
 namespace TACHYON.Invoices.Periods.Dto
 {
-   public class PeriodCommonDto
+    public class PeriodCommonDto
     {
-        public IEnumerable<KeyValuePair> Weeks { get; set;  }
+        public IEnumerable<KeyValuePair> Weeks { get; set; }
         public IEnumerable<KeyValuePair> Months { get; set; }
-
     }
 }

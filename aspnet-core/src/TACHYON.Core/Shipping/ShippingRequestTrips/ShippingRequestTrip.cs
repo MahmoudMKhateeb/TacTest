@@ -1,4 +1,5 @@
-﻿using Abp.Domain.Entities.Auditing;
+﻿using Abp.Auditing;
+using Abp.Domain.Entities.Auditing;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -7,6 +8,7 @@ using TACHYON.AddressBook;
 using TACHYON.Authorization.Users;
 using TACHYON.Integration.WaslIntegration;
 using TACHYON.PriceOffers;
+using TACHYON.Rating;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.Trips;
@@ -15,6 +17,7 @@ using TACHYON.Trucks;
 
 namespace TACHYON.Shipping.ShippingRequestTrips
 {
+    [Audited]
     [Table("ShippingRequestTrips")]
     public class ShippingRequestTrip : FullAuditedEntity, IWaslIntegrated
     {
@@ -29,44 +32,50 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public RoutePointStatus RoutePointStatus { get; set; }
 
         public long? AssignedDriverUserId { get; set; }
+
         /// <summary>
         /// Used for worker to reminder the driver to accept trip
         /// </summary>
         public DateTime? AssignedDriverTime { get; set; }
-        [ForeignKey("AssignedDriverUserId")]
-        public User AssignedDriverUserFk { get; set; }
+
+        [ForeignKey("AssignedDriverUserId")] public User AssignedDriverUserFk { get; set; }
+
         /// <summary>
         /// if the driver make accident when he work on trip
         /// </summary>
         public bool HasAccident { get; set; }
+
         public bool IsApproveCancledByShipper { get; set; }
         public bool IsApproveCancledByCarrier { get; set; }
+        public bool IsApproveCancledByTachyonDealer { get; set; }
+        public bool IsForcedCanceledByTachyonDealer { get; set; }
         public long? AssignedTruckId { get; set; }
-        [ForeignKey("AssignedTruckId")]
-        public Truck AssignedTruckFk { get; set; }
+        [ForeignKey("AssignedTruckId")] public Truck AssignedTruckFk { get; set; }
         public long ShippingRequestId { get; set; }
-        [ForeignKey("ShippingRequestId")]
-        public ShippingRequest ShippingRequestFk { get; set; }
+        [ForeignKey("ShippingRequestId")] public ShippingRequest ShippingRequestFk { get; set; }
 
 
         //Facility
         public virtual long? OriginFacilityId { get; set; }
 
-        [ForeignKey("OriginFacilityId")]
-        public Facility OriginFacilityFk { get; set; }
+        [ForeignKey("OriginFacilityId")] public Facility OriginFacilityFk { get; set; }
 
         public virtual long? DestinationFacilityId { get; set; }
 
-        [ForeignKey("DestinationFacilityId")]
-        public Facility DestinationFacilityFk { get; set; }
+        [ForeignKey("DestinationFacilityId")] public Facility DestinationFacilityFk { get; set; }
 
         public ICollection<RoutPoint> RoutPoints { get; set; }
         public ICollection<ShippingRequestTripVas> ShippingRequestTripVases { get; set; }
+        public ICollection<RatingLog> RatingLogs { get; set; }
         public ShippingRequestTripDriverStatus DriverStatus { get; set; }
+        public InvoiceTripStatus InvoiceStatus { get; set; }
         public int? RejectReasonId { get; set; }
+
         [ForeignKey("RejectReasonId")]
         public ShippingRequestTripRejectReason ShippingRequestTripRejectReason { get; set; }
+
         public string RejectedReason { get; set; }
+
         /// <summary>
         /// approximate total value of goods
         /// </summary>
@@ -81,7 +90,9 @@ namespace TACHYON.Shipping.ShippingRequestTrips
 
         public DateTime? ActualPickupDate { get; set; }
         public DateTime? ActualDeliveryDate { get; set; }
+
         #region Prices
+
         public bool IsShipperHaveInvoice { get; set; }
         public bool IsCarrierHaveInvoice { get; set; }
         public decimal? TotalAmount { get; set; }
@@ -102,5 +113,10 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public bool IsWaslIntegrated { get; set; }
         public string WaslIntegrationErrorMsg { get; set; }
 
+        #region Remarks
+        public bool CanBePrinted { get; set; }
+        public string RoundTrip { get; set; }
+        public string ContainerNumber { get; set; }
+        #endregion
     }
 }

@@ -7,8 +7,8 @@ import {
   CreateOrEditShippingRequestTripAccidentDto,
   CommonLookupServiceProxy,
   CreateOrEditShippingRequestTripDto,
-  ISelectItemDto,
   ShippingRequestsTripListDto,
+  ShippingRequestAccidentReasonLookupDto,
 } from '@shared/service-proxies/service-proxies';
 
 @Component({
@@ -21,11 +21,12 @@ export class CreateOrEditTripAccidentModalComponent extends AppComponentBase imp
   @ViewChild('modal', { static: false }) modal: ModalDirective;
 
   accident: CreateOrEditShippingRequestTripAccidentDto;
-  reasons: ISelectItemDto[];
+  reasons: ShippingRequestAccidentReasonLookupDto[];
   active: boolean = false;
   saving: boolean = false;
   reasonId: any = '';
   Specifiedtime: Date = new Date();
+  private tripId: number;
   constructor(injector: Injector, private _Service: ShippingRequestTripAccidentServiceProxy, private _CommonSrv: CommonLookupServiceProxy) {
     super(injector);
   }
@@ -36,6 +37,7 @@ export class CreateOrEditTripAccidentModalComponent extends AppComponentBase imp
   }
 
   public show(tripid: number, accidentId: number | null): void {
+    this.tripId = tripid;
     if (accidentId == null) {
       this.accident = new CreateOrEditShippingRequestTripAccidentDto();
       this.accident.tripId = tripid;
@@ -63,6 +65,7 @@ export class CreateOrEditTripAccidentModalComponent extends AppComponentBase imp
         this.notify.info(this.l('SavedSuccessfully'));
         this.close();
         this.modalSave.emit(this.Trip);
+        abp.event.trigger('TripReportedAccident', this.tripId);
       });
   }
 

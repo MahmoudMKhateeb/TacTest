@@ -7,17 +7,13 @@ using System.Text;
 namespace TACHYON.Invoices.Groups
 {
     [Table("GroupPeriodsInvoices")]
-
-    public class GroupPeriodInvoice:Entity<long>
+    public class GroupPeriodInvoice : Entity<long>
     {
         public long InvoiceId { get; set; }
-        [ForeignKey("InvoiceId")]
-        public Invoice Invoice { get; set; }
+        [ForeignKey("InvoiceId")] public Invoice Invoice { get; set; }
 
         public long GroupId { get; set; }
 
-        [ForeignKey("GroupId")]
-        public GroupPeriod GroupPeriod { get; set; }
-
+        [ForeignKey("GroupId")] public GroupPeriod GroupPeriod { get; set; }
     }
 }

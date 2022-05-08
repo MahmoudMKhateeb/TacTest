@@ -1,5 +1,7 @@
-import { Component, EventEmitter, Injector, Output, ViewChild } from '@angular/core';
-import { AppComponentBase } from '@shared/common/app-component-base';
+import { Component, EventEmitter, Injector, Input, Output, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
+import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { AppComponentBase, DatesFormats } from '@shared/common/app-component-base';
 import {
   CommonLookupServiceProxy,
   CreateTenantInput,
@@ -14,16 +16,19 @@ import {
 import * as _ from 'lodash';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
+import { DateType } from '../required-document-files/hijri-gregorian-datepicker/consts';
+import { DateFormatterService } from '@app/shared/common/hijri-gregorian-datepicker/date-formatter.service';
 
 @Component({
   selector: 'createTenantModal',
   templateUrl: './create-tenant-modal.component.html',
+  providers: [DateFormatterService],
 })
 export class CreateTenantModalComponent extends AppComponentBase {
   @ViewChild('createModal', { static: true }) modal: ModalDirective;
 
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
-
+  dates: DatesFormats;
   active = false;
   saving = false;
   setRandomPassword = false;
@@ -42,6 +47,16 @@ export class CreateTenantModalComponent extends AppComponentBase {
   isEmailAvailable = true;
   isEmailValid = true;
   isMoiNumberAvailable = true;
+  subscriptionEndDateUtc1: NgbDateStruct;
+  hijriDateNow = this.dateFormatterService.GetTodayHijri();
+  hDate = this.hijriDateNow.split('-');
+  gregDateNow = this.dateFormatterService.GetTodayGregorian();
+  minGreg: NgbDateStruct = { day: this.gregDateNow.day, month: this.gregDateNow.month, year: this.gregDateNow.year };
+  minHijri: NgbDateStruct = { day: parseInt(this.hDate[2]), month: parseInt(this.hDate[1]), year: parseInt(this.hDate[0]) };
+  @Input() parentForm: NgForm;
+  @ViewChild('userForm', { static: false }) userForm: NgForm;
+  todayGregorian = this.dateFormatterService.GetTodayGregorian();
+  todayHijri = this.dateFormatterService.ToHijri(this.todayGregorian);
   constructor(
     injector: Injector,
     private _tenantService: TenantServiceProxy,
@@ -73,6 +88,7 @@ export class CreateTenantModalComponent extends AppComponentBase {
     this.tenant.sendActivationEmail = false;
     this.tenant.editionId = 0;
     this.tenant.isInTrialPeriod = false;
+    //this.subscriptionEndDateUtc1 = this.dateFormatterService.MomentToNgbDateStruct(this.dates.GregorianDate);
 
     this._commonLookupService.getEditionsForCombobox(false).subscribe((result) => {
       this.editions = result.items;
@@ -152,6 +168,9 @@ export class CreateTenantModalComponent extends AppComponentBase {
 
     if (this.isUnlimited || this.tenant.editionId <= 0) {
       this.tenant.subscriptionEndDateUtc = null;
+    } else {
+      if (this.subscriptionEndDateUtc1 != null && this.subscriptionEndDateUtc1 != undefined)
+        this.tenant.subscriptionEndDateUtc = this.GetGregorianAndhijriFromDatepickerChange(this.subscriptionEndDateUtc1).GregorianDate;
     }
 
     this._tenantService
@@ -166,6 +185,7 @@ export class CreateTenantModalComponent extends AppComponentBase {
 
   close(): void {
     this.active = false;
+    this.subscriptionEndDateUtc1 = undefined;
     this.tenantAdminPasswordRepeat = '';
     this.modal.hide();
   }
@@ -215,7 +235,7 @@ export class CreateTenantModalComponent extends AppComponentBase {
   }
 
   checkIfIsCompanyUniqueName() {
-    this._tenantRegistrationService.checkIfCompanyUniqueNameisAvailable(this.tenant.tenancyName).subscribe((result) => {
+    this._tenantRegistrationService.checkIfCompanyUniqueNameisAvailable(this.tenant.companyName).subscribe((result) => {
       this.isCompanyNameAvailable = result;
     });
   }

@@ -19,10 +19,14 @@ namespace TACHYON.Net.Sms.UnifonicSms
 
         public override void Execute(UnifonicSendSmsJobArgs args)
         {
-            string appSid = AsyncHelper.RunSync(() => _settingManager.GetSettingValueAsync(AppSettings.Sms.UnifonicAppSid));
-            string senderId = AsyncHelper.RunSync(() => _settingManager.GetSettingValueAsync(AppSettings.Sms.UnifonicSenderId));
+            string appSid =
+                AsyncHelper.RunSync(() => _settingManager.GetSettingValueAsync(AppSettings.Sms.UnifonicAppSid));
+            string senderId =
+                AsyncHelper.RunSync(() => _settingManager.GetSettingValueAsync(AppSettings.Sms.UnifonicSenderId));
 
-            var client = new RestClient($"http://basic.unifonic.com/rest/SMS/messages?SenderID={senderId}&Body={args.Text}&Recipient={args.Recipient}&AppSid={appSid}");
+            var client =
+                new RestClient(
+                    $"http://basic.unifonic.com/rest/SMS/messages?SenderID={senderId}&Body={args.Text}&Recipient={args.Recipient}&AppSid={appSid}");
             client.Timeout = -1;
             var request = new RestRequest(Method.POST);
             request.AddHeader("Accept", "application/json");
@@ -33,11 +37,11 @@ namespace TACHYON.Net.Sms.UnifonicSms
             var response = AsyncHelper.RunSync(() => client.ExecuteTaskAsync<UnifonicResponseRoot>(request));
             if (response.ErrorException != null)
             {
-                const string message = "Error retrieving response from Unifonic SMS API.  Check inner details for more info.";
+                const string message =
+                    "Error retrieving response from Unifonic SMS API.  Check inner details for more info.";
                 var exception = new Exception(message, response.ErrorException);
                 throw exception;
             }
-
         }
     }
 }

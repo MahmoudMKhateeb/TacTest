@@ -56,11 +56,7 @@ namespace TACHYON.Chat
                 );
             }
 
-            return new GetUserChatFriendsWithSettingsOutput
-            {
-                Friends = friends,
-                ServerTime = Clock.Now
-            };
+            return new GetUserChatFriendsWithSettingsOutput { Friends = friends, ServerTime = Clock.Now };
         }
 
         [DisableAuditing]
@@ -68,11 +64,11 @@ namespace TACHYON.Chat
         {
             var userId = AbpSession.GetUserId();
             var messages = await _chatMessageRepository.GetAll()
-                    .WhereIf(input.MinMessageId.HasValue, m => m.Id < input.MinMessageId.Value)
-                    .Where(m => m.UserId == userId && m.TargetTenantId == input.TenantId && m.TargetUserId == input.UserId)
-                    .OrderByDescending(m => m.CreationTime)
-                    .Take(50)
-                    .ToListAsync();
+                .WhereIf(input.MinMessageId.HasValue, m => m.Id < input.MinMessageId.Value)
+                .Where(m => m.UserId == userId && m.TargetTenantId == input.TenantId && m.TargetUserId == input.UserId)
+                .OrderByDescending(m => m.CreationTime)
+                .Take(50)
+                .ToListAsync();
 
             messages.Reverse();
 
@@ -86,13 +82,13 @@ namespace TACHYON.Chat
 
             // receiver messages
             var messages = await _chatMessageRepository
-                 .GetAll()
-                 .Where(m =>
-                        m.UserId == userId &&
-                        m.TargetTenantId == input.TenantId &&
-                        m.TargetUserId == input.UserId &&
-                        m.ReadState == ChatMessageReadState.Unread)
-                 .ToListAsync();
+                .GetAll()
+                .Where(m =>
+                    m.UserId == userId &&
+                    m.TargetTenantId == input.TenantId &&
+                    m.TargetUserId == input.UserId &&
+                    m.ReadState == ChatMessageReadState.Unread)
+                .ToListAsync();
 
             if (!messages.Any())
             {

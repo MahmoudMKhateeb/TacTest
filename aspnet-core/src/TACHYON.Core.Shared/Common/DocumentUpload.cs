@@ -11,10 +11,12 @@ namespace TACHYON.Common
 
         public DocumentUpload()
         {
-
         }
 
-        public DocumentUpload(string DocumentBase64,Guid? DocumentId, string DocumentName, string DocumentContentType)
+        public DocumentUpload(string DocumentBase64,
+            Guid? DocumentId,
+            string DocumentName,
+            string DocumentContentType)
         {
             this.DocumentBase64 = DocumentBase64;
             this.DocumentId = DocumentId;

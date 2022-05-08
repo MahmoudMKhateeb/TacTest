@@ -18,6 +18,8 @@ import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 import { InvoiceTenantItemsDetailsComponent } from './model/invoice-tenant-items-details.component';
 import CustomStore from '@node_modules/devextreme/data/custom_store';
 import { LoadOptions } from '@node_modules/devextreme/data/load_options';
+import { DxDataGridComponent } from '@node_modules/devextreme-angular';
+import { FileViwerComponent } from '@app/shared/common/file-viwer/file-viwer.component';
 
 @Component({
   templateUrl: './invoice-tenant.component.html',
@@ -27,6 +29,8 @@ import { LoadOptions } from '@node_modules/devextreme/data/load_options';
 })
 export class InvoiceTenantComponent extends AppComponentBase implements OnInit {
   @ViewChild('InvoiceDetailsModel', { static: true }) InvoiceDetailsModel: InvoiceTenantItemsDetailsComponent;
+  @ViewChild('dataGrid', { static: true }) dataGrid: DxDataGridComponent;
+  @ViewChild('fileViwerComponent', { static: false }) fileViwerComponent: FileViwerComponent;
 
   SubmitStatus: any;
   IsStartSearch = false;
@@ -62,48 +66,37 @@ export class InvoiceTenantComponent extends AppComponentBase implements OnInit {
     });
     this.getAllSubmitInvoices();
   }
-  getAll(event?: LazyLoadEvent): void {
-    // if (this.primengTableHelper.shouldResetPaging(event)) {
-    //   this.paginator.changePage(0);
-    //   return;
-    // }
-    //
-    // this.primengTableHelper.showLoadingIndicator();
-    //
-    // if (this.creationDateRangeActive) {
-    //   this.inputSearch.fromDate = moment(this.creationDateRange[0]);
-    //   this.inputSearch.toDate = moment(this.creationDateRange[1]);
-    // } else {
-    //   this.fromDate = null;
-    //   this.toDate = null;
-    // }
-    //
-    // this.inputSearch.tenantId = this.Tenant ? parseInt(this.Tenant.id) : undefined;
-    // this._InvoiceServiceProxy
-    //   .getAll(
-    //     this.inputSearch.tenantId,
-    //     this.inputSearch.periodId,
-    //     this.inputSearch.fromDate,
-    //     this.inputSearch.toDate,
-    //     this.inputSearch.status,
-    //     this.primengTableHelper.getSorting(this.dataTable),
-    //     this.primengTableHelper.getSkipCount(this.paginator, event),
-    //     this.primengTableHelper.getMaxResultCount(this.paginator, event)
-    //   )
-    //   .subscribe((result) => {
-    //     this.IsStartSearch = true;
-    //     this.primengTableHelper.totalRecordsCount = result.totalCount;
-    //     this.primengTableHelper.records = result.items;
-    //     this.primengTableHelper.hideLoadingIndicator();
-    //     console.log(result.items);
-    //   });
+  reloadPage(): void {
+    this.refreshDataGrid();
   }
-
-  reloadPage(): void {}
-
   search(event) {
     this._CommonServ.getAutoCompleteTenants(event.query, 'carrier').subscribe((result) => {
       this.Tenants = result;
+    });
+  }
+
+  MakePaid(invoice: any): void {
+    this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
+      if (isConfirmed) {
+        this._InvoiceServiceProxy.makeSubmitInvoicePaid(invoice.id).subscribe((r: boolean) => {
+          if (r) {
+            this.notify.success(this.l('Successfully'));
+            this.reloadPage();
+          } else {
+            this.message.warn(this.l('NoEnoughBalance'));
+          }
+        });
+      }
+    });
+  }
+  MakeUnPaid(invoice: any): void {
+    this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
+      if (isConfirmed) {
+        this._InvoiceServiceProxy.makeSubmitInvoiceUnPaid(invoice.id).subscribe(() => {
+          this.notify.success(this.l('Successfully'));
+          this.reloadPage();
+        });
+      }
     });
   }
 
@@ -135,6 +128,7 @@ export class InvoiceTenantComponent extends AppComponentBase implements OnInit {
   downloadDocument(id: number): void {
     this._InvoiceServiceProxy.getFileDto(id).subscribe((result) => {
       this._fileDownloadService.downloadTempFile(result);
+      this.fileViwerComponent.show(this._fileDownloadService.downloadTempFile(result), 'pdf');
     });
   }
 
@@ -176,5 +170,15 @@ export class InvoiceTenantComponent extends AppComponentBase implements OnInit {
           });
       },
     });
+  }
+  refreshDataGrid() {
+    this.dataGrid.instance
+      .refresh()
+      .then(function () {
+        // ...
+      })
+      .catch(function (error) {
+        // ...
+      });
   }
 }

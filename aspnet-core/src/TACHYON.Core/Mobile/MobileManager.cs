@@ -32,6 +32,7 @@ namespace TACHYON.Mobile
         private readonly AbpUserClaimsPrincipalFactory<User, Role> _claimsPrincipalFactory;
         private IClientInfoProvider ClientInfoProvider { get; set; }
         private readonly ISmsSender _smsSender;
+
         public MobileManager(IRepository<UserOTP> userOTPRepository,
             IRepository<Tenant> tenantRepository,
             IRepository<UserLoginAttempt, long> userLoginAttemptRepository,
@@ -47,41 +48,43 @@ namespace TACHYON.Mobile
             ClientInfoProvider = NullClientInfoProvider.Instance;
             _smsSender = smsSender;
         }
-        public async Task CreateOTP(User user,string Language)
+
+        public async Task<double> CreateOTP(User user, string Language)
         {
-            await CheckIsExistOTP(user.Id);
             var userOTP = new UserOTP(user.Id);
             await _userOTPRepository.InsertAsync(userOTP);
-            await _smsSender.SendAsync(user.PhoneNumber, L(TACHYONConsts.SMSOTP, new CultureInfo(Language), userOTP.OTP));
+            await _smsSender.SendAsync(user.PhoneNumber,
+                L(TACHYONConsts.SMSOTP, new CultureInfo(Language), userOTP.OTP));
+            return (userOTP.ExpireTime - Clock.Now).TotalSeconds;
         }
 
-        private async Task CheckIsExistOTP(long userId)
+        public async Task<double?> CheckIsExistOTP(long userId)
         {
-            if (await _userOTPRepository.GetAll().AnyAsync(x => x.UserId == userId && x.ExpireTime >= Clock.Now))
-            {
-                throw new UserFriendlyException(L("TheIsAlreadyHaveOTPSentToYou,PleaseWaitToReceiveTheSMS"));
-            }
             var current = Clock.Now;
-            var oldDate = Clock.Now.Subtract(new TimeSpan(0, 1, 0, 0, 0));
+            var userOtp = await _userOTPRepository.GetAll()
+                .FirstOrDefaultAsync(x => x.UserId == userId && x.ExpireTime >= current);
+            if (userOtp != null)
+                return (userOtp.ExpireTime - current).TotalSeconds;
 
-            var CountAttempts = await _userOTPRepository.GetAll().Where(x => x.UserId == userId && x.CreationTime> oldDate).CountAsync();
-            if (CountAttempts >= 3)
-            {
-                throw new UserFriendlyException(L("PleaseTryAgainInAnHour"));
-            }
+            var oldDate = Clock.Now.Subtract(new TimeSpan(0, 0, 5, 0, 0));
+            var CountAttempts = await _userOTPRepository.GetAll()
+                .Where(x => x.UserId == userId && x.CreationTime > oldDate).CountAsync();
+            if (CountAttempts >= 5)
+                throw new UserFriendlyException(L("InvalidOTPNumberORExpired"));
+            return null;
         }
 
         public async Task OTPValidate(long userId, string OTP)
         {
-            var userOTP = await _userOTPRepository.FirstOrDefaultAsync(x => x.UserId == userId && x.OTP == OTP && x.ExpireTime >= Clock.Now);
+            var userOTP = await _userOTPRepository.FirstOrDefaultAsync(x =>
+                x.UserId == userId && x.OTP == OTP && x.ExpireTime >= Clock.Now);
             if (userOTP != null)
             {
                 await _userOTPRepository.DeleteAsync(userOTP);
             }
             else
-            throw new AbpAuthorizationException(L("InvalidOTPNumberORExpired"));
+                throw new AbpAuthorizationException(L("InvalidOTPNumberORExpired"));
         }
-
 
 
         [UnitOfWork]
@@ -92,13 +95,14 @@ namespace TACHYON.Mobile
             return result;
         }
 
-        private async Task<AbpLoginResult<Tenant, User>> LoginAsyncInternal(string userNameOrEmailAddress, string tenancyName, bool shouldLockout)
+        private async Task<AbpLoginResult<Tenant, User>> LoginAsyncInternal(string userNameOrEmailAddress,
+            string tenancyName,
+            bool shouldLockout)
         {
             //Get and check tenant
             Tenant tenant = default;
             using (UnitOfWorkManager.Current.SetTenantId(null))
             {
-
                 //if (!TACHYONConsts.MultiTenancyEnabled)
                 //{
                 //    tenant = await GetDefaultTenantAsync();
@@ -145,7 +149,6 @@ namespace TACHYON.Mobile
                 }
 
 
-
                 await _userManager.ResetAccessFailedCountAsync(user);
 
                 return await CreateLoginResultAsync(user, tenant);
@@ -154,7 +157,6 @@ namespace TACHYON.Mobile
 
         private async Task<bool> TryLockOutAsync(int? tenantId, long userId)
         {
-
             using (UnitOfWorkManager.Current.SetTenantId(tenantId))
             {
                 var user = await _userManager.FindByIdAsync(userId.ToString());
@@ -167,9 +169,11 @@ namespace TACHYON.Mobile
                 return isLockOut;
             }
         }
+
         private async Task<Tenant> GetDefaultTenantAsync()
         {
-            var tenant = await _tenantRepository.FirstOrDefaultAsync(t => t.TenancyName == AbpTenant<User>.DefaultTenantName);
+            var tenant =
+                await _tenantRepository.FirstOrDefaultAsync(t => t.TenancyName == AbpTenant<User>.DefaultTenantName);
             if (tenant == null)
             {
                 throw new AbpException("There should be a 'Default' tenant if multi-tenancy is disabled!");
@@ -186,7 +190,6 @@ namespace TACHYON.Mobile
             }
 
 
-
             //if (await IsPhoneConfirmationRequiredForLoginAsync(user.TenantId) && !user.IsPhoneNumberConfirmed)
             //{
             //    return new AbpLoginResult<TTenant, TUser>(AbpLoginResultType.UserPhoneNumberIsNotConfirmed);
@@ -201,7 +204,9 @@ namespace TACHYON.Mobile
             );
         }
 
-        private async Task SaveLoginAttemptAsync(AbpLoginResult<Tenant, User> loginResult, string tenancyName, string userNameOrEmailAddress)
+        private async Task SaveLoginAttemptAsync(AbpLoginResult<Tenant, User> loginResult,
+            string tenancyName,
+            string userNameOrEmailAddress)
         {
             var tenantId = loginResult.Tenant != null ? loginResult.Tenant.Id : (int?)null;
             using (UnitOfWorkManager.Current.SetTenantId(tenantId))
@@ -210,12 +215,9 @@ namespace TACHYON.Mobile
                 {
                     TenantId = tenantId,
                     TenancyName = tenancyName,
-
                     UserId = loginResult.User != null ? loginResult.User.Id : (long?)null,
                     UserNameOrEmailAddress = userNameOrEmailAddress,
-
                     Result = loginResult.Result,
-
                     BrowserInfo = ClientInfoProvider.BrowserInfo,
                     ClientIpAddress = ClientInfoProvider.ClientIpAddress,
                     ClientName = ClientInfoProvider.ComputerName,
@@ -224,6 +226,5 @@ namespace TACHYON.Mobile
                 await _userLoginAttemptRepository.InsertAsync(loginAttempt);
             }
         }
-
     }
 }

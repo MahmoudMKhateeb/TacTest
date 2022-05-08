@@ -11,8 +11,7 @@ namespace TACHYON.Shipping.ShippingRequestTrips
     public class ShippingRequestTripPointt : Entity
     {
         public int TripId { get; set; }
-        [ForeignKey("TripId")]
-        public ShippingRequestTrip Trip { get; set; }
+        [ForeignKey("TripId")] public ShippingRequestTrip Trip { get; set; }
         public long PointId { get; set; }
         public DateTime? StartTime { get; set; }
         public DateTime? EndTime { get; set; }
@@ -27,6 +26,5 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public string Code { get; set; }
 
         public int? Rating { get; set; }
-
     }
 }

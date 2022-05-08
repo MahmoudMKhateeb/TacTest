@@ -5,8 +5,7 @@ using TACHYON.Dto;
 
 namespace TACHYON.MultiTenancy.Dto
 {
-   public class TenantCityLookupTableDto : SelectItemDto, ISelectItemDto
+    public class TenantCityLookupTableDto : SelectItemDto, ISelectItemDto
     {
-   
     }
 }

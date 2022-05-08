@@ -2,11 +2,13 @@
 using Abp.Application.Features;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
+using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Abp.Runtime.Session;
+using Abp.Runtime.Validation;
 using Abp.UI;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -16,6 +18,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Linq.Dynamic.Core;
@@ -29,8 +32,10 @@ using TACHYON.Documents.DocumentFiles.Dtos;
 using TACHYON.Documents.DocumentsEntities;
 using TACHYON.Documents.DocumentTypes;
 using TACHYON.Dto;
+using TACHYON.Editions;
 using TACHYON.Features;
 using TACHYON.Integration.WaslIntegration;
+using TACHYON.MultiTenancy;
 using TACHYON.Notifications;
 using TACHYON.Storage;
 using TACHYON.Trucks;
@@ -69,11 +74,19 @@ namespace TACHYON.Trucks
         private readonly IRepository<Capacity, int> _capacityRepository;
         private readonly IRepository<PlateType> _plateTypesRepository;
         private readonly WaslIntegrationManager _waslIntegrationManager;
+        private readonly IRepository<Tenant> _lookupTenantRepository;
 
 
 
 
-        public TrucksAppService(IRepository<DocumentType, long> documentTypeRepository, IRepository<DocumentFile, Guid> documentFileRepository, IRepository<Truck, long> truckRepository, ITrucksExcelExporter trucksExcelExporter, IRepository<TrucksType, long> lookup_trucksTypeRepository, IRepository<TruckStatus, long> lookup_truckStatusRepository, IRepository<User, long> lookup_userRepository, IAppNotifier appNotifier, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager, DocumentFilesAppService documentFilesAppService, IRepository<TransportType, int> transportTypeRepository, IRepository<Capacity, int> capacityRepository, IRepository<PlateType> PlateTypesRepository, WaslIntegrationManager waslIntegrationManager)
+        public TrucksAppService(IRepository<DocumentType, long> documentTypeRepository, IRepository<DocumentFile, Guid> documentFileRepository,
+            IRepository<Truck, long> truckRepository, ITrucksExcelExporter trucksExcelExporter,
+            IRepository<TrucksType, long> lookup_trucksTypeRepository, IRepository<TruckStatus, long> lookup_truckStatusRepository,
+            IRepository<User, long> lookup_userRepository, IAppNotifier appNotifier, ITempFileCacheManager tempFileCacheManager,
+            IBinaryObjectManager binaryObjectManager, DocumentFilesAppService documentFilesAppService,
+            IRepository<TransportType, int> transportTypeRepository, IRepository<Capacity, int> capacityRepository,
+            IRepository<PlateType> PlateTypesRepository, IRepository<Tenant> lookupTenantRepository,
+            WaslIntegrationManager waslIntegrationManager)
         {
             _documentFileRepository = documentFileRepository;
             _documentTypeRepository = documentTypeRepository;
@@ -89,14 +102,46 @@ namespace TACHYON.Trucks
             _transportTypeRepository = transportTypeRepository;
             _capacityRepository = capacityRepository;
             _plateTypesRepository = PlateTypesRepository;
+            _lookupTenantRepository = lookupTenantRepository;
             _waslIntegrationManager = waslIntegrationManager;
         }
 
         public async Task<LoadResult> GetAll(GetAllTrucksInput input)
         {
-            var query = _truckRepository.GetAll()
-                .ProjectTo<TruckDto>(AutoMapperConfigurationProvider);
 
+            DisableTenancyFiltersIfHost();
+            await DisableTenancyFiltersIfTachyonDealer();
+            var documentQuery = _documentFileRepository.GetAll()
+                                               .Where(x => x.DocumentTypeFk.SpecialConstant == TACHYONConsts.TruckIstimaraDocumentTypeSpecialConstant.ToLower());
+            var query = from truck in _truckRepository.GetAll()
+                        join tenant in _lookupTenantRepository.GetAll() on truck.TenantId equals tenant.Id
+                        join document in documentQuery on truck.Id equals document.TruckId
+
+                        select new TruckDto()
+                        {
+                            CompanyName = tenant.companyName,
+                            Capacity = truck.Capacity,
+                            CapacityDisplayName = truck.CapacityFk != null ? truck.CapacityFk.DisplayName : "",
+                            ModelName = truck.ModelName,
+                            ModelYear = truck.ModelYear,
+                            Length = truck.Length,
+                            TruckStatusDisplayName = truck.TruckStatusFk != null ? truck.TruckStatusFk.DisplayName : "",
+                            TransportTypeDisplayName = truck.TransportTypeFk.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)) != null
+                                            ? truck.TransportTypeFk.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName
+                                            : truck.TransportTypeFk.DisplayName,
+                            PlateNumber = truck.PlateNumber,
+                            Note = truck.Note,
+                            TransportTypeId = truck.TransportTypeId,
+                            TrucksTypeDisplayName = truck.TrucksTypeFk.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)) != null
+                                            ? truck.TrucksTypeFk.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName
+                                            : truck.TrucksTypeFk.DisplayName,
+                            CapacityId = truck.CapacityId,
+                            Id = truck.Id,
+                            TrucksTypeId = truck.TrucksTypeId,
+                            IstmaraNumber = document.Number,
+                            OtherTransportTypeName = truck.OtherTransportTypeName,
+                            OtherTrucksTypeName = truck.OtherTrucksTypeName
+                        };
 
             var result = await LoadResultAsync(query, input.Filter);
             await FillIsMissingDocumentFiles(result);
@@ -166,6 +211,7 @@ namespace TACHYON.Trucks
         [AbpAuthorize(AppPermissions.Pages_Trucks_Edit)]
         public async Task<GetTruckForEditOutput> GetTruckForEdit(EntityDto<long> input)
         {
+            await DisableTenancyFiltersIfTachyonDealer();
             var truck = await _truckRepository.FirstOrDefaultAsync(input.Id);
 
             var output = new GetTruckForEditOutput { Truck = ObjectMapper.Map<CreateOrEditTruckDto>(truck) };
@@ -227,12 +273,23 @@ namespace TACHYON.Trucks
         [AbpAuthorize(AppPermissions.Pages_Trucks_Create)]
         protected virtual async Task Create(CreateOrEditTruckDto input)
         {
+            await OthersNameValidation(input);
+
             var truck = ObjectMapper.Map<Truck>(input);
 
 
             if (AbpSession.TenantId != null)
             {
                 truck.TenantId = (int)AbpSession.TenantId;
+            }
+
+            if (!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer))
+            {
+                // Use AbpValidationException to return Status Code => 400 Bad Request
+                if (input.TenantId == null) throw new AbpValidationException(L("YouMustSetTenant"));
+                if (!await FeatureChecker.IsEnabledAsync(input.TenantId.Value, AppFeatures.Carrier))
+                    throw new AbpValidationException(L("TheTenantMustBeCarrier"));
+                truck.TenantId = input.TenantId.Value;
             }
 
             var requiredDocs = await _documentFilesAppService.GetTruckRequiredDocumentFiles("");
@@ -242,11 +299,14 @@ namespace TACHYON.Trucks
                 {
                     var doc = input.CreateOrEditDocumentFileDtos
                         .FirstOrDefault(x => x.DocumentTypeId == item.DocumentTypeId);
-
-                    if (doc.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
+                    if (item.DocumentTypeDto.IsRequiredDocumentTemplate)
                     {
-                        throw new UserFriendlyException(L("document missing msg :" + item.Name));
+                        if (doc.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
+                        {
+                            throw new UserFriendlyException(L("document missing msg :" + item.Name));
+                        }
                     }
+
 
                     doc.Name = item.DocumentTypeDto.DisplayName;
                 }
@@ -277,7 +337,16 @@ namespace TACHYON.Trucks
         [AbpAuthorize(AppPermissions.Pages_Trucks_Edit)]
         protected virtual async Task Update(CreateOrEditTruckDto input)
         {
+            await DisableTenancyFiltersIfTachyonDealer();
+
+            await OthersNameValidation(input);
+
             var truck = await _truckRepository.FirstOrDefaultAsync(input.Id.Value);
+            //if (input.Driver1UserId.HasValue && input.Driver1UserId != truck.Driver1UserId)
+            //{
+            //    await _appNotifier.AssignDriverToTruck(new UserIdentifier(AbpSession.TenantId, input.Driver1UserId.Value), truck.Id);
+            //}
+            input.TenantId = truck.TenantId;
 
             ObjectMapper.Map(input, truck);
 
@@ -528,26 +597,44 @@ namespace TACHYON.Trucks
                 .ToListAsync();
 
             return ObjectMapper.Map<List<PlateTypeSelectItemDto>>(plateTypes);
-            //return await _plateTypesRepository.GetAll()
-            //    .Select(x => new SelectItemDto()
-            //    {
-            //        Id = x.Id.ToString(),
-            //        DisplayName = x.DisplayName
-            //    }).ToListAsync();
         }
 
         #endregion
 
-        public async Task Wasl_VehicleRegistration(long id)
+        #region Helpers
+
+        private async Task OthersNameValidation(CreateOrEditTruckDto input)
         {
-            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
+            #region Validate TransportType
+
+            if (input.TransportTypeId != null)
             {
-                var truck = await _truckRepository.GetAllIncluding(x => x.PlateTypeFk)
-                    .FirstOrDefaultAsync(x => x.Id == id);
-                //Wasl Integration
-                await _waslIntegrationManager.QueueVehicleRegistrationJob(truck.Id);
+                var transportType = await _transportTypeRepository
+                    .FirstOrDefaultAsync(input.TransportTypeId.Value);
+
+                if (transportType.DisplayName.ToLower().Contains(TACHYONConsts.OthersDisplayName) &&
+                    input.OtherTransportTypeName.IsNullOrEmpty())
+                    throw new UserFriendlyException(L("TransportTypeCanNotBeOtherAndEmptyAtSameTime"));
             }
 
+            #endregion
+
+            #region Validate TrucksType
+
+            //? FYI TrucksTypeId Not Nullable 
+            var trucksType = await _lookup_trucksTypeRepository
+                .FirstOrDefaultAsync((long)input.TrucksTypeId);
+
+            if (trucksType.DisplayName.ToLower().Contains(TACHYONConsts.OthersDisplayName) &&
+                input.OtherTrucksTypeName.IsNullOrEmpty())
+                throw new UserFriendlyException(L("TrucksTypeCanNotBeOtherAndEmptyAtSameTime"));
+
+            #endregion
+
+
         }
+
+
+        #endregion
     }
 }

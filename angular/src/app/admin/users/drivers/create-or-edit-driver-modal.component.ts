@@ -2,15 +2,18 @@ import { Component, EventEmitter, Injector, Input, Output, ViewChild } from '@an
 import { AppConsts } from '@shared/AppConsts';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import {
+  CarriersForDropDownDto,
   CreateOrEditDocumentFileDto,
   CreateOrUpdateUserInput,
   DocumentFilesServiceProxy,
   DriverLicenseTypesServiceProxy,
+  GetLicenseTypeForDropDownOutput,
   NationalitiesServiceProxy,
   OrganizationUnitDto,
   PasswordComplexitySetting,
   ProfileServiceProxy,
   SelectItemDto,
+  ShippingRequestsServiceProxy,
   UserEditDto,
   UserServiceProxy,
 } from '@shared/service-proxies/service-proxies';
@@ -35,7 +38,9 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
     private _profileService: ProfileServiceProxy,
     private _nationalitiesServiceProxy: NationalitiesServiceProxy,
     private _documentFilesServiceProxy: DocumentFilesServiceProxy,
-    private _driverLicenseTypesServiceProxy: DriverLicenseTypesServiceProxy
+    private _driverLicenseTypesServiceProxy: DriverLicenseTypesServiceProxy,
+
+    private _shippingRequestServiceProxy: ShippingRequestsServiceProxy
   ) {
     super(injector);
     this.getDriverRequiredDocumentFiles();
@@ -67,6 +72,7 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
   datesInValidList: boolean[] = [];
 
   nationalities: SelectItemDto[] = [];
+  carriers: CarriersForDropDownDto[] = [];
   allOrganizationUnits: OrganizationUnitDto[];
   memberedOrganizationUnits: string[];
   userPasswordRepeat = '';
@@ -74,7 +80,7 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
   isWaintingUserNameValidation = false;
   CheckingIfDriverPhoneNumberIsValid = false;
 
-  driverLicenseTypes: SelectItemDto[] = [];
+  driverLicenseTypes: GetLicenseTypeForDropDownOutput[] = [];
 
   // CheckIfDriverMobileNumberIsValid(mobileNumber: string) {
   //   this.isWaintingUserNameValidation = true;
@@ -84,8 +90,14 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
   //   });
   // }
   selectedDate: NgbDateStruct;
+  hijriDateNow = this.dateFormatterService.GetTodayHijri();
+  hDate = this.hijriDateNow.split('-');
+  gregDateNow = this.dateFormatterService.GetTodayGregorian();
   minGreg: NgbDateStruct = { day: 1, month: 1, year: 1900 };
   minHijri: NgbDateStruct = { day: 1, month: 1, year: 1342 };
+  maxGreg: NgbDateStruct = { day: this.gregDateNow.day, month: this.gregDateNow.month, year: this.gregDateNow.year };
+
+  maxHijri: NgbDateStruct = { day: parseInt(this.hDate[2]), month: parseInt(this.hDate[1]), year: parseInt(this.hDate[0]) };
 
   private getDriverRequiredDocumentFiles() {
     //RequiredDocuments
@@ -95,6 +107,7 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
   }
 
   show(userId?: number): void {
+    this.CheckingIfDriverPhoneNumberIsValid = true;
     if (!userId) {
       this.active = true;
       this.sendActivationEmail = true;
@@ -115,6 +128,9 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
 
         this.sendActivationEmail = false;
         this.selectedDate = this.dateFormatterService.MomentToNgbDateStruct(userResult.user.dateOfBirth);
+      }
+      if (this.isUserTenantRequired) {
+        this._shippingRequestServiceProxy.getAllCarriersForDropDown().subscribe((result) => (this.carriers = result));
       }
 
       this._profileService.getPasswordComplexitySetting().subscribe((passwordComplexityResult) => {
@@ -170,6 +186,7 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
     let input = new CreateOrUpdateUserInput();
 
     input.user = this.user;
+    console.log(input);
     input.setRandomPassword = this.user.id == null;
     input.sendActivationEmail = this.sendActivationEmail;
     input.user.phoneNumber = input.user.userName;
@@ -198,8 +215,8 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
         })
       )
       .subscribe(() => {
-        this.notify.info(this.l('SavedSuccessfully'));
         this.close();
+        this.notify.info(this.l('SavedSuccessfully'));
         this.modalSave.emit(null);
       });
   }
@@ -297,6 +314,9 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
     });
   }
 
+  get isUserTenantRequired(): boolean {
+    return (this.feature.isEnabled('App.TachyonDealer') || !this.appSession.tenantId) && !this.user.id;
+  }
   /**
    * do not delete the function dateSelected() below >
    */

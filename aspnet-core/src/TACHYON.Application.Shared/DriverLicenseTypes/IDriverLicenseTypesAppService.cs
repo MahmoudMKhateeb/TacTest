@@ -1,5 +1,6 @@
 ﻿using Abp.Application.Services;
 using Abp.Application.Services.Dto;
+using DevExtreme.AspNet.Data.ResponseModel;
 using System;
 using System.Threading.Tasks;
 using TACHYON.DriverLicenseTypes.Dtos;
@@ -10,7 +11,7 @@ namespace TACHYON.DriverLicenseTypes
 {
     public interface IDriverLicenseTypesAppService : IApplicationService
     {
-        Task<PagedResultDto<GetDriverLicenseTypeForViewDto>> GetAll(GetAllDriverLicenseTypesInput input);
+        Task<LoadResult> GetAll(GetAllDriverLicenseTypesInput input);
 
         Task<GetDriverLicenseTypeForEditOutput> GetDriverLicenseTypeForEdit(EntityDto input);
 

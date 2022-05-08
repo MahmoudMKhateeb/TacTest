@@ -15,14 +15,16 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public bool HasAccident { get; set; }
         public int TotalsTripsAddByShippier { get; set; }
         public ShippingRequestStatus Status { get; set; }
-
+        public bool CreatedByTachyonDealer { get; set; }
         public string OthersGoodsCategory { get; set; }
         public string OthersTransportType { get; set; }
         public string OthersTrucksType { get; set; }
+
         public string StatusTitle
         {
             get { return Enum.GetName(typeof(ShippingRequestStatus), Status); }
         }
+
         public string Origin { get; set; }
         public string Destination { get; set; }
 

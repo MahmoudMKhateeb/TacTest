@@ -2,8 +2,6 @@
 {
     public class GetUnitOfMeasureForViewDto
     {
-		public UnitOfMeasureDto UnitOfMeasure { get; set; }
-
-
+        public UnitOfMeasureDto UnitOfMeasure { get; set; }
     }
 }

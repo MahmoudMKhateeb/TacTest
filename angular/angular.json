@@ -33,6 +33,11 @@
               "src/metronic",
               "src/favicon.ico",
               {
+                "glob": "web.config",
+                "input": "src",
+                "output": "/"
+              },
+              {
                 "glob": "abp.signalr-client.js",
                 "input": "node_modules/abp-web-resources/Abp/Framework/scripts/libs",
                 "output": "/assets/abp"
@@ -76,6 +81,7 @@
               "node_modules/quill/dist/quill.js",
               "node_modules/sweetalert2/dist/sweetalert2.js",
               "node_modules/cookieconsent/build/cookieconsent.min.js",
+              "node_modules/apexcharts/dist/apexcharts.min.js",
               "src/assets/abp-web-resources/abp.js",
               "src/assets/abp-web-resources/abp.sweet-alert.js",
               "src/assets/abp-web-resources/abp.notify.js",
@@ -205,6 +211,7 @@
               "node_modules/quill/dist/quill.js",
               "node_modules/sweetalert2/dist/sweetalert2.js",
               "node_modules/cookieconsent/build/cookieconsent.min.js",
+              "node_modules/apexcharts/dist/apexcharts.min.js",
               "src/assets/abp-web-resources/abp.js",
               "src/assets/abp-web-resources/abp.sweet-alert.js",
               "src/assets/abp-web-resources/abp.notify.js",

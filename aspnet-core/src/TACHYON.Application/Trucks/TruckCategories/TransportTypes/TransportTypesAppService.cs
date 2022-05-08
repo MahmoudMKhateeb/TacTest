@@ -1,20 +1,17 @@
-﻿
-
-using System;
+﻿using Abp.Application.Services.Dto;
+using Abp.Authorization;
+using Abp.Domain.Repositories;
+using Abp.Linq.Extensions;
+using Abp.UI;
+using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Dynamic.Core;
-using Abp.Linq.Extensions;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Abp.Domain.Repositories;
-using TACHYON.Trucks.TruckCategories.TransportTypes.Dtos;
-using TACHYON.Dto;
-using Abp.Application.Services.Dto;
 using TACHYON.Authorization;
-using Abp.Extensions;
-using Abp.Authorization;
-using Microsoft.EntityFrameworkCore;
-using Abp.UI;
+using TACHYON.Extension;
+using TACHYON.Trucks.TruckCategories.TransportTypes.Dtos;
+using TACHYON.Trucks.TruckCategories.TransportTypes.TransportTypesTranslations;
 
 namespace TACHYON.Trucks.TruckCategories.TransportTypes
 {
@@ -27,37 +24,28 @@ namespace TACHYON.Trucks.TruckCategories.TransportTypes
         public TransportTypesAppService(IRepository<TransportType> transportTypeRepository)
         {
             _transportTypeRepository = transportTypeRepository;
-
         }
 
-        public async Task<PagedResultDto<GetTransportTypeForViewDto>> GetAll(GetAllTransportTypesInput input)
+        public async Task<PagedResultDto<TransportTypeDto>> GetAll(GetAllTransportTypesInput input)
         {
-
             var filteredTransportTypes = _transportTypeRepository.GetAll()
-                        .Include(x=>x.Translations)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter))
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.DisplayName == input.DisplayNameFilter);
+                .Include(x => x.Translations)
+                .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => e.DisplayName.Contains(input.Filter))
+                .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter),
+                    e => e.DisplayName == input.DisplayNameFilter)
+                .OrderBy(input.Sorting ?? "id asc");
 
-            var pagedAndFilteredTransportTypes = filteredTransportTypes
-                .OrderBy(input.Sorting ?? "id asc")
-                .PageBy(input);
 
-            var transportTypes = from o in await pagedAndFilteredTransportTypes.ToListAsync()
-                                 select new GetTransportTypeForViewDto()
-                                 {
-                                     TransportType =ObjectMapper.Map<TransportTypeDto>(o)
-                                     //new TransportTypeDto
-                                     //{
-                                     //    DisplayName = o.DisplayName,
-                                     //    Id = o.Id
-                                     //}
-                                 };
+            var transportTypes = await filteredTransportTypes.PageBy(input)
+                .Select(x => new TransportTypeDto
+                {
+                    Id = x.Id,
+                    TranslatedDisplayName = x.GetTranslatedDisplayName<TransportType, TransportTypesTranslation>()
+                }).ToListAsync();
 
-            var totalCount = await filteredTransportTypes.CountAsync();
-
-            return new PagedResultDto<GetTransportTypeForViewDto>(
-                totalCount,
-                transportTypes.ToList()
+            return new PagedResultDto<TransportTypeDto>(
+                await filteredTransportTypes.CountAsync(),
+                transportTypes
             );
         }
 
@@ -67,7 +55,8 @@ namespace TACHYON.Trucks.TruckCategories.TransportTypes
                 .GetAllIncluding(x => x.Translations)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
-            var output = new GetTransportTypeForViewDto { TransportType = ObjectMapper.Map<TransportTypeDto>(transportType) };
+            var output =
+                new GetTransportTypeForViewDto { TransportType = ObjectMapper.Map<TransportTypeDto>(transportType) };
 
             return output;
         }
@@ -77,7 +66,10 @@ namespace TACHYON.Trucks.TruckCategories.TransportTypes
         {
             var transportType = await _transportTypeRepository.FirstOrDefaultAsync(input.Id);
 
-            var output = new GetTransportTypeForEditOutput { TransportType = ObjectMapper.Map<CreateOrEditTransportTypeDto>(transportType) };
+            var output = new GetTransportTypeForEditOutput
+            {
+                TransportType = ObjectMapper.Map<CreateOrEditTransportTypeDto>(transportType)
+            };
 
             return output;
         }
@@ -101,7 +93,6 @@ namespace TACHYON.Trucks.TruckCategories.TransportTypes
             var transportType = ObjectMapper.Map<TransportType>(input);
 
 
-
             await _transportTypeRepository.InsertAsync(transportType);
         }
 
@@ -109,25 +100,36 @@ namespace TACHYON.Trucks.TruckCategories.TransportTypes
         protected virtual async Task Update(CreateOrEditTransportTypeDto input)
         {
             var transportType = await _transportTypeRepository.FirstOrDefaultAsync((int)input.Id);
+
+            if (transportType.DisplayName.ToLower().Contains(TACHYONConsts.OthersDisplayName)
+                && !input.DisplayName.ToLower().Contains(TACHYONConsts.OthersDisplayName))
+                throw new UserFriendlyException(L("OtherTransportTypeMustContainOther"));
+
             ObjectMapper.Map(input, transportType);
         }
 
         [AbpAuthorize(AppPermissions.Pages_TransportTypes_Delete)]
         public async Task Delete(EntityDto input)
         {
-            await _transportTypeRepository.DeleteAsync(input.Id);
+            var transportType = await _transportTypeRepository.SingleAsync(x => x.Id == input.Id);
+            if (transportType.DisplayName.ToLower().Contains(TACHYONConsts.OthersDisplayName))
+                throw new UserFriendlyException(L("OtherTransportTypeNotRemovable"));
+
+            await _transportTypeRepository.DeleteAsync(transportType);
         }
 
 
         #region Heleper
+
         private async Task CheckNameIsExists(CreateOrEditTransportTypeDto input)
         {
-            if ( await _transportTypeRepository.GetAll().AnyAsync(x => x.DisplayName.ToLower() == input.DisplayName.Trim().ToLower() && x.Id != input.Id)) 
+            if (await _transportTypeRepository.GetAll().AnyAsync(x =>
+                    x.DisplayName.ToLower() == input.DisplayName.Trim().ToLower() && x.Id != input.Id))
             {
                 throw new UserFriendlyException(L("TheNameIsAlreadyExists"));
             }
-
         }
+
         #endregion
     }
 }

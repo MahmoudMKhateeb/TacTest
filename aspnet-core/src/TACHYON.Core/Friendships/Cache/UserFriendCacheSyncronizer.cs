@@ -31,7 +31,7 @@ namespace TACHYON.Friendships.Cache
             _userFriendsCache.AddFriend(
                 eventData.Entity.ToUserIdentifier(),
                 _objectMapper.Map<FriendCacheItem>(eventData.Entity)
-                );
+            );
         }
 
         public void HandleEvent(EntityDeletedEventData<Friendship> eventData)

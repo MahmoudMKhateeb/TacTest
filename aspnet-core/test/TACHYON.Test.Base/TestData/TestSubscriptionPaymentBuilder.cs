@@ -29,7 +29,11 @@ namespace TACHYON.Test.Base.TestData
             CreatePayment(19, defaultEdition.Id, _tenantId, 29, "1477419");
         }
 
-        private void CreatePayment(decimal amount, int editionId, int tenantId, int dayCount, string paymentId)
+        private void CreatePayment(decimal amount,
+            int editionId,
+            int tenantId,
+            int dayCount,
+            string paymentId)
         {
             _context.SubscriptionPayments.Add(new SubscriptionPayment
             {
@@ -41,5 +45,4 @@ namespace TACHYON.Test.Base.TestData
             });
         }
     }
-
 }

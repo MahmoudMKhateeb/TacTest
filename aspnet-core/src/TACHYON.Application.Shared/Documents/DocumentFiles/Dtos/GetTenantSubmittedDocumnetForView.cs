@@ -18,6 +18,5 @@ namespace TACHYON.Documents.DocumentFiles.Dtos
         public string RejectionReason { get; set; }
 
         public DocumentTypeDto DocumentTypeDto { get; set; }
-
     }
 }

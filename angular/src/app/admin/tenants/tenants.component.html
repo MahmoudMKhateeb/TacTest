@@ -34,7 +34,7 @@
               <dxo-filter-panel [visible]="true"></dxo-filter-panel>
               <dxo-filter-builder-popup></dxo-filter-builder-popup>
               <dxo-scrolling mode="virtual"></dxo-scrolling>
-              <dxo-group-panel [visible]="true"></dxo-group-panel>
+              <dxo-group-panel [visible]="true" emptyPanelText="{{ l('DragAColumnHeaderHereToGroupByThatColumn') }}"></dxo-group-panel>
               <dxo-remote-operations [groupPaging]="true" [sorting]="true" [filtering]="true"> </dxo-remote-operations>
               <dxo-paging [pageSize]="20"></dxo-paging>
               <dxo-summary>
@@ -106,6 +106,12 @@
                     </span>
                   </a>
                   <ul class="dropdown-menu z-index-1000" *dropdownMenu>
+                    <li *ngIf="options.data.tenantListDto.editionId == 2 || options.data.tenantListDto.editionId == 3">
+                      <a href="javascript:;" class="dropdown-item" (click)="viewTenantProfile(options.data.tenantListDto.id)">
+                        {{ 'ViewTenantProfile' | localize }}
+                      </a>
+                    </li>
+
                     <li *ngIf="options.data.tenantListDto.editionDisplayName != null" [class.disabled]="!options.data.tenantListDto.isActive">
                       <a
                         href="javascript:;"
@@ -138,16 +144,6 @@
                       <a
                         href="javascript:;"
                         class="dropdown-item"
-                        *ngIf="'Pages.Tenants.Delete' | permission"
-                        (click)="deleteTenant(options.data.tenantListDto)"
-                      >
-                        {{ 'Delete' | localize }}
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="javascript:;"
-                        class="dropdown-item"
                         *ngIf="
                           isGranted('Pages.TenantCarrier') &&
                           options.data.tenantListDto.editionDisplayName.trim().toLowerCase() == shipperEditionDisplayName.trim().toLowerCase()
@@ -168,6 +164,7 @@
                   </ul>
                 </div>
               </div>
+              <dxo-summary> <dxi-total-item column="tenantListDto.companyName" summaryType="count"> </dxi-total-item> </dxo-summary>
             </dx-data-grid>
           </div>
         </div>

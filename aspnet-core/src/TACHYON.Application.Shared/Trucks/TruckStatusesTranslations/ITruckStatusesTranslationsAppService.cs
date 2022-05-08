@@ -20,6 +20,5 @@ namespace TACHYON.Trucks.TruckStatusesTranslations
         Task Delete(EntityDto input);
 
         Task<List<TruckStatusesTranslationTruckStatusLookupTableDto>> GetAllTruckStatusForTableDropdown();
-
     }
 }

@@ -20,7 +20,7 @@ namespace TACHYON.Tests.Localization
     {
         private readonly ILanguageAppService _languageAppService;
         private readonly IApplicationLanguageManager _languageManager;
-        private readonly bool _multiTenancyEnabled  = TACHYONConsts.MultiTenancyEnabled;
+        private readonly bool _multiTenancyEnabled = TACHYONConsts.MultiTenancyEnabled;
 
         public LanguageAppService_Tests()
         {
@@ -37,9 +37,7 @@ namespace TACHYON.Tests.Localization
             fakeApplicationCulturesProvider.GetAllCultures().Returns(
                 new CultureInfo[]
                 {
-                    new CultureInfo("en"),
-                    new CultureInfo("tr"),
-                    new CultureInfo("zh-Hans"),
+                    new CultureInfo("en"), new CultureInfo("tr"), new CultureInfo("zh-Hans"),
                     new CultureInfo("en-US")
                 });
 
@@ -73,7 +71,8 @@ namespace TACHYON.Tests.Localization
 
             //Arrange
             var currentLanguages = await _languageManager.GetLanguagesAsync(AbpSession.TenantId);
-            var nonRegisteredLanguages = output.LanguageNames.Where(l => currentLanguages.All(cl => cl.Name != l.Value)).ToList();
+            var nonRegisteredLanguages =
+                output.LanguageNames.Where(l => currentLanguages.All(cl => cl.Name != l.Value)).ToList();
 
             //Act
             var newLanguageName = nonRegisteredLanguages[RandomHelper.GetRandom(nonRegisteredLanguages.Count)].Value;
@@ -116,10 +115,7 @@ namespace TACHYON.Tests.Localization
 
             //Act
             await _languageAppService.SetDefaultLanguage(
-                new SetDefaultLanguageInput
-                {
-                    Name = randomLanguage.Name
-                });
+                new SetDefaultLanguageInput { Name = randomLanguage.Name });
 
             //Assert
             var defaultLanguage = await _languageManager.GetDefaultLanguageOrNullAsync(AbpSession.TenantId);
@@ -156,7 +152,7 @@ namespace TACHYON.Tests.Localization
             var currentEnabledLanguages =
                 (await _languageManager.GetLanguagesAsync(AbpSession.TenantId)).Where(l => !l.IsDisabled);
             var randomEnabledLanguage = RandomHelper.GetRandomOf(currentEnabledLanguages.ToArray());
-            
+
             //Act
             var output = await _languageAppService.GetLanguageForEdit(new NullableIdDto(null));
 

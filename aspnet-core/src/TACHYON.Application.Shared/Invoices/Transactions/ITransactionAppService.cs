@@ -9,9 +9,8 @@ using TACHYON.Invoices.Transactions.Dto;
 
 namespace TACHYON.Invoices.Transactions
 {
-  public  interface ITransactionAppService: IApplicationService
+    public interface ITransactionAppService : IApplicationService
     {
-       Task<LoadResult> GetAll(TransactionFilterInput input);
-
+        Task<LoadResult> GetAll(TransactionFilterInput input);
     }
 }

@@ -9,13 +9,11 @@ namespace TACHYON.Trailers.PayloadMaxWeights
     [Audited]
     public class PayloadMaxWeight : FullAuditedEntity
     {
-
         [Required]
-        [StringLength(PayloadMaxWeightConsts.MaxDisplayNameLength, MinimumLength = PayloadMaxWeightConsts.MinDisplayNameLength)]
+        [StringLength(PayloadMaxWeightConsts.MaxDisplayNameLength,
+            MinimumLength = PayloadMaxWeightConsts.MinDisplayNameLength)]
         public virtual string DisplayName { get; set; }
 
         public virtual int MaxWeight { get; set; }
-
-
     }
 }

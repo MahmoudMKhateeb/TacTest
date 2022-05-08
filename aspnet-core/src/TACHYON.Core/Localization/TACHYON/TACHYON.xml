@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <localizationDictionary culture="en">
-	<texts>    <text name="DriverLicenseTypes">Driver license types</text>
+	<texts>
+    <text name="DriverLicenseTypes">Driver license types</text>
     <text name="DriverLicenseType">Driver license type</text>
     <text name="TACHYON.DriverLicenseTypes.DriverLicenseType">DriverLicenseType</text>
     <text name="WasIIntegrationId">Was i integration id</text>
@@ -17,9 +18,29 @@
     <text name="CreateNewDangerousGoodType">Create new dangerous good type</text>
     <text name="EditDangerousGoodType">Edit dangerous good type</text>
     <text name="DeleteDangerousGoodType">Delete dangerous good type</text>
-    <text name="DangerousGoodTypes">Dangerous good types</text>
-
-		<text name="{0}IsInvalid">"{0}" is invalid</text>
+    <text name="NumberOfRequests">Number Of Requests</text>
+    <text name="NumberOfDeliveredTrips">Number Of Delivered Trips</text>
+    <text name="MostShippersRequests">Most Shippers Requests</text>
+    <text name="MostCarriersRequests">Most Carriers Requests</text>
+    <text name="TopRatedShippers">Top Rated Shippers</text>
+    <text name="TopRatedCarriers">Top Rated Carriers</text>
+    <text name="RequestBeingPricedBeforeBidEndDate">Request Being Priced before bid end date</text>
+    <text name="RequestAcceptancePercentage">Request Acceptance Percentage</text>
+    <text name="InvoicesPaidBeforeDueDatePercentage">Invoices Paid Before Due Date Percentage</text>
+    <text name="UnPricedShippingRequests">UnPriced Shipping Requests</text>
+    <text name="AcceptedVSRejectedPricing">Accepted VS Rejected Pricing Requests</text>
+    <text name="MostWorkedWithCarriers">Most Worked With Carriers</text>
+    <text name="CompletedTrips">Completed Trips</text>
+    <text name="AcceptedVsRejectedRequests">Accepted vs Rejected Requests</text>
+    <text name="DocumentsHasDueDateIn6Days">Documents has there Due Date in less than 6 Days</text>
+    <text name="InvoiceDueDateIn6Days">Invoice Due Date is In 6 Days</text>
+    <text name="RequestsInMarketPlace">Requests In MarketPlace</text>
+    <text name="MostUsedOrigins">Most Used Origins</text>
+    <text name="CompletedTripsvsPod">Completed Trips vs Proof of delivary</text>
+    <text name="MostUsedDestantions">Most Used Destantions</text>
+    <text name="InvoicesVsPaidInvoices">Invoices Vs Paid Invoices</text>
+    <text name="{0}IsInvalid">"{0}" is invalid</text>
+    <text name="ShipmentHistory">Shipment History</text>
 		<text name="{0}IsRequired">{0} is required.</text>
 		<text name="{0}UserCannotBeDeleted">{0} user can not be deleted.</text>
 		<text name="3rdPartyInsurancecoverage">3rd Party Insurance Coverage</text>
@@ -30,10 +51,13 @@
 		<text name="Accept">Accept</text>
 		<text name="AcceptBid">Accept price</text>
 		<text name="Accepted">Accepted</text>
-		<text name="AcceptedAndWaitingForCarrier">Waiting for carrier approval</text>
+    <text name="PleaseTryAgainIn5Minutes">Please Try Again In 5 Minutes</text>
+    <text name="AcceptedAndWaitingForCarrier">Waiting for carrier approval</text>
 		<text name="AcceptedAndWaitingForShipper">Waiting approve by shipper</text>
 		<text name="AcceptedDate">Accepted date</text>
 		<text name="AcceptPrice">Accept price</text>
+		<text name="AcceptOfferOnBehalfShipper">Accept For Shipper</text>
+
 		<text name="AcceptShippingRequestNotificationMessage">Shipping request bid accepted</text>
 		<text name="Accesstoyourapplicationsandresources,evenwhenyouareoffline">Access to your applications and resources, even when you are offline</text>
 		<text name="AccidentReason">Incident reasons</text>
@@ -130,11 +154,14 @@
 		<text name="Arabic">Arabic</text>
 		<text name="AreYouSure">Are you sure ?</text>
 		<text name="AreYouSure?">Are you sure?</text>
+		<text name="areYouSure">Are you sure?</text>
 		<text name="ArrivedToDestination">Arrive to offloading location</text>
 		<text name="ArriveToLoadingLocation">Arrive to loading location </text>
 		<text name="AShipmentWasAssignedForYouToReceiveOn">A shipment was assigned for you to receive on</text>
 		<text name="AspNetZeroPlatForm">AspNetZero</text>
 		<text name="Assign">Assign</text>
+		<text name="AddRemarks">Add Remarks</text>
+
 		<text name="AssignCarrier">Assign carrier</text>
 		<text name="AssignDriverToTruckNotificationMessage">
 			Assign driver to truck
@@ -297,7 +324,6 @@
 		<text name="CommissionAmount">Commission amount</text>
 		<text name="CommissionMinimumValue">Minimum value</text>
 		<text name="CommissionPercentage">Percentage</text>
-		<text name="CommissionType">Commission type</text>
 		<text name="CommissionValue">Add value</text>
 		<text name="Company">Company</text>
 		<text name="CompanyFullLeagalName">Company legal name</text>
@@ -312,6 +338,8 @@
 		<text name="ConsumerKey">Consumer Key</text>
 		<text name="ConsumerSecret">Consumer Secret</text>
 		<text name="Content">Content</text>
+		<text name="ContainerNumber">Container Number</text>
+		<text name="CanBePrinted">Can Be Printed</text>
 		<text name="ContinueTrip">Continue Trip</text>
 		<text name="Contracts">Contracts</text>
 		<text name="CookieConsent">Cookie consent</text>
@@ -377,7 +405,6 @@
 		<text name="CreateNewRoutType">Add new route type</text>
 		<text name="CreateNewShippingRequest">Create shipping request </text>
 		<text name="CreateNewShippingRequestStatus">Create New Shipping Request Status</text>
-		<text name="CreateNewShippingRequestVas">Create New Shipping Request VAS</text>
 		<text name="CreateNewShippingType">Create new shipping type</text>
 		<text name="CreateNewTenant">Create new company</text>
 		<text name="CreateNewTermAndConditionTranslation">Add new terms and conditions translation</text>
@@ -460,7 +487,7 @@
 		<text name="DeactivateAccountUponexpiration">Deactivate Account Upon expiration</text>
 		<text name="DeactivateSubscriptionWarningMessage">Webhook subscription will be deactivated and your endpoint will no longer get webhooks</text>
 		<text name="DeactiveTenant">Deactivate company</text>
-		<text name="Declined">Declined</text>
+		<text name="Declined">Decline</text>
 		<text name="DeclinedOfPricing">Declined of pricing</text>
 		<text name="DeclineDriectRequest">The carrier {client} Declined of pricing shipment.</text>
 		<text name="Default">Default</text>
@@ -503,7 +530,6 @@
 		<text name="DeletePort">Delete port</text>
 		<text name="DeleteReceiver">Delete receiver</text>
 		<text name="DeleteRoute">Delete route</text>
-		<text name="DeleteRoutStep">Delete rout step</text>
 		<text name="DeleteRoutType">Delete route type</text>
 		<text name="DeleteShippingRequest">Delete shipping request</text>
 		<text name="DeleteShippingRequestStatus">Delete shipping request status</text>
@@ -598,10 +624,9 @@
 		<text name="DownloadAll">Download all</text>
 		<text name="DownloadCollectedData">Download collected data</text>
 		<text name="DownloadCollectedData_Description">Download data belongs to your account</text>
-		<text name="DownloadDropWaybill">Download waybill</text>
 		<text name="DocumentHeaderDetails">Document Details</text>
 		<text name="DownloadInvoice">Download invoice</text>
-		<text name="UploadInvoiceDocument">Upload invoice document</text>
+		<text name="UploadInvoiceDocument">Upload the invoice</text>
 		<text name="DriectRequestCarrierRespone">The {clientname} has established a current view of the  shipment No.: {id}.</text>
 		<text name="Driver">Driver</text>
 		<text name="DriverAcceptTrip">The driver {driver} has been accepted the trip from {source} to {destination}</text>
@@ -617,7 +642,7 @@
 		<text name="DriverTripReminder">You have a new trip tomorrow</text>
 		<text name="DrivingLicense">Driving License</text>
 		<text name="Drop">Drop</text>
-		<text name="DropOff">Drop off</text>
+		<text name="DropOff">Drop-off</text>
 		<text name="DropoffDetailCommodity">Goods details</text>
 		<text name="DropoffDetailDropoff">Dropoff </text>
 		<text name="DropoffDetailID">id</text>
@@ -729,6 +754,10 @@
 		<text name="DearsAt">Dears at</text>	
 		<text name="ApprovalDocumentsEmailMessage">This email is sent to you to inform you that your documents have been accepted, and now you can use the platform.</text>
 		<text name="DocumentsApproved">Documents Approved</text>
+    
+		<text name="SubscriptionExpiringSoon_Title">TTACHYON subscription expiration notice</text>
+		<text name="SubscriptionExpiringSoon_Email_Body">Your TACHYON subscription will expire at {0}.</text>
+		<text name="SubscriptionExpiringSoon_Email_Subject">Your TACHYON subscription expiration notice</text>
 		<text name="InvoiceDue_Title">Invoice Reminder</text>
 		<text name="InvoiceDue">Invoice Due</text>
 		<text name="IssuedInvoice_Title">Invoice</text>
@@ -744,7 +773,7 @@
 		<text name="WarningSuspendAccount">Document Expiration Reminder</text>
 		<text name="WarningSuspendAccount_Title">Expiration document reminder</text>
 		<text name="SuspendedAccountForExpiredDocumentMessage">Your account is currently suspended due to the expiration of the {0} document please submit a renewal one to reactivate your account.</text>
-		<text name="SuspendedAccountDocumentExpired_Title">Expired date document and suspend your account</text>
+		<text name="SuspendedAccountDocumentExpired">Expired date document and suspend your account</text>
 		<text name="ExpiredDateDocuments_Title">Expired date document</text>
 		<text name="Document File: {0} has been expired message">Document File: "{0}" has been expired message</text>
 		<text name="ExpiredDocument">Expired documents</text>
@@ -944,7 +973,7 @@
 		<text name="InvalidMobileNumber">Invalid mobile number</text>
 		<text name="InvalidPasswordResetCode">Invalid password reset code</text>
 		<text name="InvalidPasswordResetCode_Detail">Please be sure you entered this page by clicking the link sent to your email. If this does not solve the problem, you can re-try to request a New password reset link.</text>
-		<text name="InvalidPattern">Invalid</text>
+		<text name="InvalidPattern">Invalid Pattern</text>
 		<text name="InvalidPhoneNumber">The field {0} is not a valid phone number</text>
 		<text name="InvalidRegularExpression">The field {0} is not valid.</text>
 		<text name="InvalidSecurityCode">Invalid security code!</text>
@@ -1130,7 +1159,7 @@
 		<text name="MoveTenantsOfEditionDescription">{0} tenants will be moved</text>
 		<text name="MoveTenantsToAnotherEdition">Move tenants to another edition</text>
 		<text name="MoveTenantsToAnotherEditionStartedNotification">We are moving companies to selected subscription type. You will be notified when the operation is complete.</text>
-		<text name="MultipleDrops">Multiple drops</text>
+		<text name="MultipleDrops">Multiple Drops</text>
 		<text name="MyBiddingHistory">My bidding history</text>
 		<text name="MyBidPrice">My bid price</text>
 		<text name="Myload">My Load</text>
@@ -1223,6 +1252,7 @@
 		<text name="NotificationTypes">Notifications type</text>
 		<text name="NotificationWhenTripDetailsChanged">The shipment {waybillnumber} information has been changed.</text>
 		<text name="NotifyDriverWhenAssignToTrip">You have new trip assign to you</text>
+		<text name="NotifyDriverWhenUnassignedToTrip">You have trip with waybill no {0} Unassigned To You </text>
 		<text name="NotImpersonatedLoginErrorMessage">This is not an impersonated login!</text>
 		<text name="NotIsAttachable">Not is attachable</text>
 		<text name="NotIsDangerousGood">Not is dangerous good</text>
@@ -1403,7 +1433,7 @@
 		<text name="PickupPointFacilityAndSourceTripFacilityareNotTheSame">Pickup point facility and source trip facilityare not the same</text>
 		<text name="PickUser">Select user</text>
 		<text name="PickVas">Select VAS</text>
-		<text name="VASType">VAS Type</text>
+		<text name="VASType">VAS type</text>
 		<text name="Pin">Pin</text>
 		<text name="Pink">Pink</text>
 		<text name="Place">Send</text>
@@ -1456,6 +1486,7 @@
 		<text name="Prices">Prices</text>
 		<text name="PriceSubmitted">Price submitted</text>
 		<text name="Pricing">Pricing</text>
+		<text name="RoundTrip">Round Trip</text>
 		<text name="PricingOffer">Pricing offer</text>
 		<text name="Print">Print</text>
 		<text name="PrintMasterWaybill">Print master waybill</text>
@@ -1503,7 +1534,7 @@
 		<text name="RegisterFormUserNameInvalidMessage">Please do not enter your email address as a username.</text>
 		<text name="Reject">Reject</text>
 		<text name="Rejected">Rejected</text>
-		<text name="RejectedOffer"><![CDATA[You offer has been rejected by {rejectedby}]]></text>
+		<text name="RejectedOffer">You offer has been rejected by {rejectedby}</text>
 		<text name="RejectedReason">Rejected reason</text>
 		<text name="RejectionReason">Rejection reason</text>
 		<text name="RejectOffer">Reject</text>
@@ -1514,7 +1545,6 @@
 		<text name="RemainingDay">Remaining day</text>
 		<text name="RemainingDays">Remaining days</text>
 		<text name="RemainingTime">Remaining time</text>
-		<text name="Remarks">Remarks</text>
 		<text name="RememberMe">Remember me</text>
 		<text name="RememberMyDecision">Remember my decision</text>
 		<text name="RememberThisBrowser">Remember this browser</text>
@@ -1602,7 +1632,7 @@
 		<text name="SelectaCountry">Select country</text>
 		<text name="SelectACounty">Select country</text>
 		<text name="SelectaDestination">Select a destination</text>
-		<text name="SelectaDriver">Selecta driver</text>
+		<text name="SelectaDriver">Select driver</text>
 		<text name="SelectADynamicParameter">Select A DynamicParameter</text>
 		<text name="SelectaFacility">Select facility</text>
 		<text name="SelectAGoodCategory">Select goods category</text>
@@ -1682,10 +1712,10 @@
 		<text name="ShipperName">Shipper name</text>
 		<text name="ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage">You have used more than 70% of your credit limit</text>
 		<text name="ShipperOnlyUsed">Shipper only used</text>
-		<text name="ShipperReminderToCompelteTrips">You have a shipment that has not completed its journeys</text>
+		<text name="ShipperReminderToCompleteTrips">You have a shipment that has not completed its journeys</text>
 		<text name="ShipperShippingRequestFinishNotificationMessage">all shippments are completed for shipping request</text>
 		<text name="ShippingNote">Shipper notes</text>
-		<text name="ShippingRequest">Shipping request</text>
+		<text name="ShippingRequest">Shipping Request</text>
 		<text name="ShippingRequestAccidentsOccure">There has been an accident for shipment No.: {id}.</text>
 		<text name="ShippingRequestAsBidWithSameTruckNotificationMessage">Shipping request with your same trucks is created in marketplace</text>
 		<text name="ShippingRequestCancelTripByAccidents">The shipment No.:{id} cancled by incident.</text>
@@ -1695,13 +1725,14 @@
 		<text name="ShippingRequestPrice">Shipping request price</text>
 		<text name="ShippingRequestPricingResponse">Shipping Request Pricing Response</text>
 		<text name="ShippingRequestProperties">Shipping Request Properties</text>
-		<text name="ShippingRequestReceiverCode">Your Shipping code is {0}</text>
+		<text name="ShippingRequestReceiverCode">Welcome from TACHYON &#xA;&#xA;Please note that shipment {0} on its way. please give this code to the driver when the delivery is completed.&#xA; &#xA;Your shipping code:{1}&#xA;Click here to rate after finish offloading {2}</text>
+		<text name="SMSSaasShippingRequestReceiverCode">Welcome from TACHYON &#xA;&#xA;Please note that shipment {0} on its way. please give this code to the driver when the delivery is completed.&#xA; &#xA;Your shipping code:{1}</text>
 		<text name="ShippingRequests">Shipping Requests</text>
 		<text name="MyShippingRequests">My Shipping Requests</text>
 		<text name="ShippingRequestsCreate">Create Shipping Request</text>
 		<text name="ShippingRequestsEdit">Edit Shipping Request</text>
 		<text name="ShippingRequestSendOfferWhenAddPrice">A new offer has been added to the shipment.</text>
-		<text name="ShippingRequestSendOfferWhenUpdatePrice"><![CDATA[The price has been updated by the carrier {carrier} of the shipment]]></text>
+		<text name="ShippingRequestSendOfferWhenUpdatePrice">The price has been updated by the carrier {carrier} of the shipment</text>
 		<text name="ShippingRequestsHeaderInfo">Shipping requests header info</text>
 		<text name="ShippingRequestStatus">Shipping request status</text>
 		<text name="ShippingRequestStatuses">Shipping request statuses</text>
@@ -1728,9 +1759,9 @@
 		<text name="ShowTimeOutNotificationSecond">Countdown Modal Wait Time (Seconds)</text>
 		<text name="SignInToTachyon">Sign in to Tachyon</text>
 		<text name="SignUp">Sign up</text>
-		<text name="SingleDrop">Single drop</text>
+		<text name="SingleDrop">Single Drop</text>
 		<text name="Sms">SMS</text>
-		<text name="SMSOTP">Your one-time password is code:{0}</text>
+		<text name="SMSOTP">Please use the code below to login.&#xA;Code:{0}</text>
 		<text name="SmsSecurityCodeMessage">Your security code is: {0}</text>
 		<text name="SMSSettings">SMS Settings</text>
 		<text name="SmsVerificationEnabled">Phone number verification enabled (via SMS)</text>
@@ -1745,7 +1776,7 @@
 		<text name="StartDate">Trips pickup date start</text>
 		<text name="StartLoading">Start loading</text>
 		<text name="StartMovingToDestination">Start moving to offloading location</text>
-		<text name="StartedMovingToLoadingLocation">Start Moving To Loading Location</text>
+		<text name="StartedMovingToLoadingLocation">Start moving to loading location</text>
 		<text name="StartShippmentNotificationMessage">Shippment is started</text>
 		<text name="StartTime">Start time</text>
 		<text name="StartTripDate">Pickup date</text>
@@ -1753,7 +1784,7 @@
 		<text name="Static">Static</text>
 		<text name="StaticRole_Tooltip">Static roles can not be deleted.</text>
 		<text name="Status">Status</text>
-		<text name="MissingDocumentFiles">Missingdocument files</text>
+		<text name="MissingDocumentFiles">Documents (Available, Not available)</text>
 		<text name="StatusName">status</text>
 		<text name="StatusTitle">Status title</text>
 		<text name="StopBiddingOnthisRequest">Stop pricing on this request</text>
@@ -1780,10 +1811,9 @@
 		<text name="SubscriptionExpire_SubTitle">This email is sent you to notify about your subscription expiration</text>
 		<text name="SubscriptionExpire_Title">TACHYON subscription expire</text>
 		<text name="SubscriptionExpireNotification">Your subscription will expire in {0} day(s).</text>
-		<text name="SubscriptionExpiringSoon_Email_Body">Your TACHYON subscription will expire at {0}.</text>
-		<text name="SubscriptionExpiringSoon_Email_Subject">Your TACHYON subscription expiration notice</text>
+		<text name="ShipperDoseNotHavedirectRequestCommissionFeautre">The shipper {0} Dose Not Have direct Request Commission Feautre </text>
+		
 		<text name="SubscriptionExpiringSoon_SubTitle">This email is sent you to notify about your subscription expiration.</text>
-		<text name="SubscriptionExpiringSoon_Title">TACHYON subscription expiration notice</text>
 		<text name="SubscriptionExpiringTenants">Subscription expiring tenants</text>
 		<text name="SubscriptionInformation">Subscription information</text>
 		<text name="SubscriptionPaymentGatewayType_Paypal">PayPal</text>
@@ -1990,14 +2020,13 @@
 		<text name="Total">Total</text>
 		<text name="TotalAmount">Total amount</text>
 		<text name="TotalBidsCount">Total bids</text>
-		<text name="TotalCommission">Total commission</text>
 		<text name="TotalDistance">Total distance </text>
 		<text name="TotalOfDrop">Number of drops: {0}</text>
 		<text name="TotalOffer">Offer</text>
 		<text name="TotalOffers">Offers</text>
 		<text name="TotalRecordsCount">Total: {0}</text>
 		<text name="TotalsTripsAddByShippier">Totals trips add by shippier</text>
-		<text name="TotalWeight">Total weight</text>
+		<text name="TotalWeight">Max Weight/Trip</text>
 		<text name="TotalWeightofGoodsinKG">Total weight of shipment</text>
 		<text name="KG">KG</text>
 		<text name="Trailer">Trailer</text>
@@ -2042,7 +2071,7 @@
 		<text name="TripsStartDate">Trips pickup date start</text>
 		<text name="TripStartDate">Trips start date</text>
 		<text name="TripStartDateCantBeGretterThanTripEndDate">Trip start date cant be gretter than trip end date</text>
-		<text name="TripStatus">Trip status</text>
+		<text name="TripStatus">Trip Status</text>
 		<text name="Truck">Truck details</text>
 		<text name="TruckCapacities">Truck Capacity</text>
 		<text name="TruckCapacitiesTranslation">Truck Capacities Translation</text>
@@ -2086,6 +2115,7 @@
 		<text name="Type">Type...</text>
 		<text name="TypeAMessageHere">Type your message here...</text>
 		<text name="TypeTitle">Type</text>
+		<text name="thereisanewpriceoffer">There is a new price offer</text>
 		<text name="UiCustomization_AllowAsideHiding">Allow aside hiding</text>
 		<text name="UiCustomization_AllowAsideMinimizing">Allow aside minimizing</text>
 		<text name="UiCustomization_Boxed">Boxed</text>
@@ -2146,6 +2176,8 @@
 		<text name="UnblockUser">Unblock</text>
 		<text name="UnClaim">Un claim</text>
 		<text name="UnDemand">Un demand</text>
+		<text name="AddRating">Add Rating</text>
+		<text name="Rating">Rating</text>
 		<text name="UnderReview">Under review</text>
 		<text name="UnifonicAppSid">Unifonic AppSid</text>
 		<text name="UnitOfMeasure">Unit Of Measure</text>
@@ -2177,7 +2209,6 @@
 		<text name="UploadDocumentMsg">Please upload the following documents in order to finalize your registration process.</text>
 		<text name="UploadedFile">Uploaded File</text>
 		<text name="UploadLogo_Info">Select a JPG/JPEG/PNG/GIF file with a maximum of 30KB size and 139x35 pixel resolution.</text>
-		<text name="UploadPOD">Upload POD</text>
 		<text name="UploadPODLbl">Upload POD</text>
 		<text name="UploadPODProofOfDelivery">Please upload POD</text>
 		<text name="Urdu">Urdu</text>
@@ -2284,6 +2315,7 @@
 		<text name="WeeklyPrice">Weekly price</text>
 		<text name="Weight">Weight</text>
 		<text name="WelcomePage_Info">Welcome to the application. You can use the menu to start using the application. If you don't see any menu item, probably you don't have permission to see any page. Consider asking a system administrator for permissions.</text>
+		<text name="DriverWelcomeMessageRegistrationNotification">Dear {0},&#xA;Your account has been created in Tachyon Driver application. Your username is your mobile number.&#xA;You can install the application using the following links&#xA;Android App Link: {1}&#xA;IOS App Link:{2}</text>
 		<text name="WelcomePage_Title">Welcome!</text>
 		<text name="WelcomeToTheApplicationNotificationMessage">Welcome to TACHYON! Notification system is used to inform you for intended events. You can select which type of notifications you want to receive from the notification settings.</text>
 		<text name="WeWillSendYouCodeToVerfiyYourEmailPleaseCheckYourInbox">We will send you code to verify your e-mail, please check your Inbox</text>
@@ -2387,25 +2419,337 @@
     <text name="Delivered">Delivered</text>
     <text name="AddIncident">Add incident</text>
     <text name="CompanyNameEmailTemplate">Company name</text>
+    <text name="ClickToRate">Click to rate </text>
     <text name="LoginLink">Login Link</text>
-    <text name="RejectedDocument_Title">Rejected Document</text>
+    <text name="RejectedDocument">Rejected Document</text>
     <text name="RejectedDocumentEmailMessage">This email is sent to you to inform you that your document {0} have been rejected with reason {1} if you have any questions, please contact with support team.</text>
-    
-    
-	<text name="NeedAccept">Need Accept</text>
+		
+	 	<text name="TripDataChanged">You Have Trip With Waybill No {0} Changed Please Review All Of Trip Changes</text> 
+		<text name="ShipperTripUpdatedNotificationMessage">There are some changes on trip with waybill No {0} . For more details please click here</text>
+		<text name="NewBalanceAddedToShippper">New Balance Added Value {0}</text>
+		<text name="CarrierTripUpdatedNotificationMessage">There are some changes on trip with waybill No {0} . For more details please click here</text>
+		<text name="TachyonDealerTripUpdatedNotificationMessage">There are some changes on trip with waybill No {0} . For more details please click here</text>
+		<text name="NotSet">Not Set</text>
+	
+	<text name="CompanyNameIsAlreadyTaken"> Company name {0} is already taken </text>
+		<text name="PickupFacilityAndDropOffFacilityCantBeTheSame">Pickup facility and drop off facility can't be the same</text>
+		<text name="CreateOrEditPoint">Create or Edit Point</text>
+		<text name="SelectADangerousGoodType">Select a Dangerous Good Type</text>
+		<text name="WorkFlowNotExist">WorkFlow for current point does not exist</text>
+		<text name="TransactionNotExist">Transaction does not exist</text>
+		<text name="FinishOffLoadShipmentDeliveryConfirmation">Delivery Confirmation after Finish Off Load Shipment</text>
+		<text name="DeliveryConfirmationReceiverConfirmed">Receiver Confirmed after DeliveryConfirmation</text>
+
+		<text name="NotAccepted">Not Accepted</text>
+		<text name="NotRejected">Not Rejected</text>
+		
+		<text name="StartMovingToLoadingLocation">Start Moving To Loading Location</text>
+		<text name="StartMovingToOffloadingLocation">Start Moving To Offloading Location</text>
+		<text name="ArrivedToOffloadingLocation">Arrived To Offloading Location</text>
+		<text name="StartOffloadingShipment">Start Offloading Shipment</text>
+		<text name="FinishOffloadingShipment">Finish Offloading Shipment</text>
+		<text name="DeliveryConfirmed">Delivery Confirmed</text>
+		<text name="DriverIsChanged">Driver Is Changed</text>
+		<text name="TruckIsChanged">Truck Is Changed</text>
+		<text name="IncidentHappened">Incident Happened</text>
+		
+		<text name="MoiNumber">Moi Number</text>
+		<text name="ViewTenantProfile">View Tenant Profile</text>
+		<text name="NumberOfVases">Number of Vases</text>
+		<text name="NameOfVas">Vas Name</text>
+		<text name="AvailableVases">Available Vases</text>
+		<text name="FleetInformation">Fleet Information</text>
+		<text name="NumberOfDrivers">Number of Drivers</text>
+		<text name="NumberOfTrucks">Number of Trucks</text>
+		<text name="ProfileTitle">Tenant Profile</text>
+		<text name="Location">Location</text> 
+		<text name="NumberOfCompletedShipments">Number of Completed Shipments</text> 
+		<text name="NumberOfRequestedShipments">Number of Requested Shipments</text>
+		<text name="NumberOfFacilities">Number of Facilities</text>
+		<text name="InvoicingInformation">Invoicing Information</text>
+		<text name="CreditLimit">Credit Limit</text>
+		<text name="CurrentBalance">Current Balance</text>
+		<text name="InvoicingFrequency">Invoicing Frequency</text>
+		<text name="InvoicingDuePeriod">Invoicing Due Period</text>
+		<text name="CreditType">Credit Type</text>
+		<text name="ReceiverConfirmed">Receiver conformed</text>
+		<text name="CompletedTripsFromTotal">Completed Trips / No of Trips</text>
+		<text name="CreatedTripsFromTotal">Created Trips / No of Trips</text>
+		<text name="RateForDriver">Rate for Driver</text>
+		<text name="RateForExperience">Rate for Experience</text>
+		
+		<text name="NotAttached">Not uploaded yet</text>
+		<text name="CardNumberId">Receiver ID</text>
+		<text name="AdditionalReceiver">Additional Receiver</text>
+
+		<text name="RateOffloadingFacility">Rate offloading facility</text>
+		<text name="ClickToRateFacility">Please click here to rate the facility</text>
+		<text name="StartOffloading">Start offloading</text>
+		<text name="DeliveredAndNeedsConfirmation">Delivered / needs action</text>
+		<text name="Enter9DigitsNumber">Mobile NO. 9 digits, start with 5 </text>
+		
     <text name="CompanyNamePatternError">Company name is longer than 3 characters, only English letters, numbers, dash and underscore are allowed</text>
     <text name="CompanyLegalNamePatternError">Company legal name is longer than 3 characters, only English and Arabic letters, numbers, dash and underscores are allowed</text>
     <text name="ThereIsNoDriverAssingdToTrip">There Is No Driver Assingd To Trip</text>
-    <text name="TheDriverAlreadyWorkingOnAnotherTrip">The Driver Already Working On Another Trip</text>
     <text name="TheStartDateOfTripNotCome">The Start Date Of Trip NotC ome</text>
     <text name="IsMandatoryDocumentTemplate">Document Template Mandatory</text>
     <text name="IsMandatoryNumber">Number Mandatory</text>
     <text name="IsMandatoryExpirationDate">Expiration Date Mandatory</text>
 
-    <!--<text name="StartOffloading"></text>
-    <text name="ReceiverConfirmed"></text>
-    <text name="DeliveryConfirmation"></text>-->
+
     <text name="ImportTrucksProcessStart">The process of importing Trucks has begun</text>
     <text name="ImportTrucksUploadFailed">Trucks import process has failed.</text>
-  </texts>
+    <text name="facilityNameIsAlreadyExistsForThisTenant">Facility Name Is Already Exists For This Tenant</text>
+	<text name="NumberOfRating">Company Ratings Count</text>
+	<text name="PointNotFoundOrNotCompleted">Point not found or not completed</text>
+	<text name="UploadGoodPicture">Upload Good Picture</text>
+		<text name="UploadDeliveryNotes">Upload Delivery Notes</text>
+		<text name="NoMatchingTrucks">There is no matching trucks</text>
+	<text name="NoMatchingDrivers">There is no Drivers</text>
+    <text name="ResetReceiverCode">Reset shipment receiver code</text>
+    <text name="ReceiverCodeConfirmationMsg">Are you sure you want to reset the receiver code for this shipment?</text>
+	<text name="CompanyDescriptionHint">Company description must be at most 500 characters</text>
+	<text name="SelectAnEmailTemplateType">Select an email template type</text>
+		<text name="AllowedWeightShouldBeMaximum">Allowed Weight Should Be Maximum</text>
+		<text name="RemainingAllowedWeight">Remaining Allowed Weight</text>
+	<text name="ShipperNumberOfCompletedTripsWidget">Number of completed trips</text>
+	<text name="ShipperAcceptedVsRejectedRequestsWidget">Accepted vs rejected requests</text>
+	<text name="ShipperCompletedTripsVsPodWidget">Completed trips vs Prof of delivary</text>
+	<text name="ShipperInvoicesVsPaidInvoicesWidget">Invoices vs Paid invoices</text>
+	<text name="ShipperNextInvoiceFrequencyEndDateWidget">Next invoice frequency end date</text>
+	<text name="ShipperInvoiceDueDateInDaysWidget">Invoice due date in days</text>
+	<text name="ShipperDocumentDueDateInDaysWidget">Document due date in days</text>
+	<text name="ShipperMostWorkedWithCarriersWidget">Most worked with carriers</text>
+	<text name="ShipperMostUsedOriginsWidget">Most used origins</text>
+	<text name="ShipperMostUsedDestinationsWidget">Most used destinations</text>
+	<text name="ShipperRequestsInMarketplaceWidget">Requests in marketplace</text>
+	<text name="ShipperTrackingMapWidget">Tracking map</text>
+	<text name="CarrierDriversActivityWidget">Drivers activity</text>
+	<text name="CarrierTrucksActivityWidget">Trucks activity</text>
+	<text name="CarrierAcceptedVsRejectedPricingWidget">Accepted vs rejected pricing</text>
+	<text name="CarrierInvoicesVsPaidInvoicesWidget">Invoices vs paid invoices</text>
+	<text name="CarrierMostUsedPpWidget">Most used piced packages</text>
+	<text name="CarrierMostUsedVasWidget">Most used vas</text>
+	<text name="CarrierNumberOfCompletedTripsTotalMonthlyIncreaseWidget">Total monthly number of completed trips</text>
+	<text name="CarrierMostWorkedWithShipperWidget">Most worked with shipper</text>
+	<text name="CarrierNextInvoiceFrequencyEndDateWidget">Next invoice frequency end date</text>
+	<text name="CarrierDueDateInDaysWidget">Due date in days</text>
+	<text name="CarrierTrackingMapWidget">Tracking map</text>
+	<text name="TMS_NumberOfRegisteredTrucksWidget">Number of registered trucks</text>
+	<text name="TMS_NumberOfRegisteredShippersWidget">Number of registered shippers</text>
+	<text name="TMS_NumberOfRegisteredCarriersWidget">Number of registered carriers</text>
+	<text name="TMS_NumberOfRegisteredDriversWidget">Number of registered drivers</text>
+	<text name="TMS_NewAccountsRegisteredWidget">New accounts registered</text>
+	<text name="TMS_NewTripsWidget">New trips</text>
+	<text name="TMS_NumberOfDeliveredTripsWidget">Number of delivered trips</text>
+	<text name="TMS_NumberOfOngoingTripsWidget">Number of on going trips</text>
+	<text name="TMS_TruckTypeUsageWidget">Trucks type usage</text>
+	<text name="TMS_GoodTypesUsageWidget">Goods types usage</text>
+	<text name="TMS_RouteTypesUsageWidget">Routes types usage</text>
+	<text name="TMS_MostRequestingShippersWidget">Most requesting shippers</text>
+	<text name="TMS_MostRequestedCarriersWidget">Most requested carriers</text>
+	<text name="TMS_TopRatedShippersWidget">Top rated shippers</text>
+	<text name="TMS_TopRatedCarriersWidget">Top rated carriers</text>
+	<text name="TMS_WorstRatedShippersWidget">Worst rated shippers</text>
+	<text name="TMS_WorstRatedCarriersWidget">Worst rated carriers</text>
+	<text name="TMS_UnPricedRequestsInMarketPlaceWidget">Unpriced requests in marketplace</text>
+	<text name="TMS_RequestsPricingBeforeBidEndingWidget">Requests pricing before bid ending</text>
+	<text name="TMS_RequestsPriceAcceptanceWidget">Requests price acceptance</text>
+	<text name="TMS_InvoicesPaidBeforeDueDateWidget">Invoices paid before due date</text>
+	<text name="TMS_NumberOfRequestsPerAreaOrCityWidget">Number of requests per area or city</text>
+	<text name="TMS_SearchableMapWidget">Searchable Map</text>
+	<text name="TMS_RequestsHeatMapWidget">Heat map for requests</text>
+	<text name="TMS_NormalVsRentalRequestsWidget">Normal vs rental requests</text>
+	<text name="FacilityRating">Facility rating</text>
+	<text name="ViewPointDetails">View point details</text>
+	<text name="ViewGoodsDetails">View goods details</text>
+	<text name="ActivityLog">Activity Logs</text>
+	<text name="AssignDriver">Assign driver</text>
+	<text name="searchForNearestLocation">Search for nearest location</text>
+	<text name="HasToBeWithInCityBounds">Has to be within city bounds</text>
+	<text name="RequestReference">Request reference</text>
+	<text name="InTransit">In transit</text>
+	<text name="MyProfile">My Profile</text>
+	<text name="MyProfile_Description">You can view and edit your information in your profile</text>
+	<text name="ProfileOverview">Profile Overview</text>
+	<text name="AccountInformation">Account Information</text>
+	<text name="CompanyWebsite">Company website</text>
+	<text name="ContactInfo">Contact information</text>
+	<text name="ContactPhone">Contact phone</text>
+	<text name="CompanyDescription">CompanyDescription</text>
+	<text name="UpdateYourCompanyProfileInformation">Update your company profile information</text>
+	<text name="SaveChanges">Save changes</text>
+	<text name="Avatar">Avatar</text>
+	<text name="DriverLicenceType">Driver licence types</text>
+	<text name="DangerousGoodTypes">Dangerous goods types</text>
+
+
+    
+    
+		
+		
+		
+
+    <text name="DocumentTypeName">Document type</text>
+    <text name="submitterTenatTenancyName">Submitter company</text>
+    <text name="ShipperReference">Shipper reference</text>
+    <text name="ShipperInvoiceNumber">Shipper invoice</text>
+    <text name="OriginCountry">Origin country</text>
+    <text name="DestinationCountry">Destination country</text>
+    <text name="SelectanOriginCountry">Select origin country</text>
+	<text name="SelectanDestinationCountry">Select destination country</text>
+	<text name="SelectanDestinationCity">Select destination city</text>
+	<text name="ViewOrAssignDriver">View or assign </text>
+	<text name="ShippingRequestReference">Shipping Request Reference</text>
+	<text name="ViewOffer">View Offer</text>
+	<text name="PointsDetails">Points Details</text>
+	<text name="DeliveryConfirmation">POD</text>
+	<text name="StartedMovingToOffLoadingLocation">Start moving to off-loading location</text>
+	<text name="TrackingMap">Tracking Map</text>
+	<text name="Trip">Trip</text>
+	<text name="DriverTracking">Driver tracking</text>
+	<text name="companyName">Company</text>
+	<text name="rating">Rating</text>
+	<text name="isMissingDocumentFiles">Is missing document files</text>
+	<text name="IstmaraNumber">Istmara Number</text>
+	<text name="SelectCarriers">Select Carriers</text>
+	<text name="SelectaCarrier">Select a Carrier</text>
+	<text name="NumberOfRate">Number Of Rate</text>
+	<text name="EnableAddTripsByTms">Enable Add Trips By Tms</text>
+	<text name="DisableAddTripsByTms">Disable Add Trips By Tms</text>
+	<text name="CreatedByTachyonDealer">Created By TMS</text>
+	<text name="longitute">longitude</text>
+	<text name="latitute">latitude</text>
+	<text name="Rate">Rate</text>
+	<text name="OnGoing">On Going</text>
+	<text name="SelectShipper">Select Shipper</text>
+	<text name="carrier">Carrier</text>
+	<text name="shipper">Shipper</text>
+	<text name="DragAColumnHeaderHereToGroupByThatColumn">Drag a column header here to group by that column</text>
+	<text name="MobileAppManual">Mobile App Manual</text>
+		
+		
+	<text name="CommissionType">Commission type</text>
+	<text name="CommissionTypeValue">Commission type value</text>
+	<text name="VasCommissionType">Vas commission type</text>
+	<text name="VasCommissionPercentageOrAddValue">Vas commission percentage or add value</text>
+	<text name="#Trips">Trips</text>
+	<text name="ItemPrice">Item price</text>
+	<text name="ItemPricePostCommission">Item price post commission</text>
+	<text name="PricePreCommission">Price pre commission</text>
+	<text name="TotalCommission">Total commission</text>
+	<text name="TotalPricePostCommission">Total price post commission</text>
+	<text name="PreCommission">Pre commission</text>
+	<text name="PreCommission-Carrier">VAT amount 15%</text>
+	<text name="VATDetails">VAT Details</text>
+	<text name="PostCommission">Post commission</text>
+	<text name="TotalVATForTrip">Total VAT for trips</text>
+	<text name="TotalVATForVas">Total VAT for VAS</text>
+	<text name="TotalPricePostVatPreCommission">Total price post vat pre commission	</text>
+	<text name="TotalPricePostVatPreCommission-Carrier">Total price</text>
+	<text name="TotalPricePostVatWithCommission">Total Price Post Vat with commission</text>
+	<text name="TotalPriceOfAllVASPre-CommissionPre-VAT">Total Price of All VAS Pre-Commission Pre-VAT</text>
+	<text name="TotalPriceOfAllVASPre-CommissionPre-VAT-Carrier">Total VAS price</text>
+	<text name="PriceOffer">Price Offer</text>
+	<text name="StartBidding">Start Bidding</text>
+	<text name="UplodeDeliveryNote">Upload Delivery Note</text>
+		
+	<text name="ProfileManagement">Profile management</text>
+	<text name="CarrierDashboard">Carrier dashboard</text>
+	<text name="HostDashboard">Host dashboard</text>
+	<text name="RoutPoints">Rout points</text>
+	<text name="CreateRoutPoint">Create rout point</text>
+	<text name="DeleteRoutPoint">Delete rout point</text>
+	<text name="EditRoutPoint">Edit rout point</text>
+	<text name="DeleteRoutStep">Delete rout step</text>
+	<text name="ShipperDashboard">Shipper dashboard</text>
+	<text name="ShippingRequestTrip_Accident_Comments">Shipping request trip Accident Comments</text>
+	<text name="ShippingRequest_Accidents_Comments_CreateOrEdit">Shipping request Accidents Comments Create or edit</text>
+	<text name="ShippingRequest_Accidents_Comments_Delete">Shipping request Accidents Comments Delete</text>
+	<text name="ShippingRequestsTripsAccident">Shipping requests trips accident</text>
+	<text name="CreateNewShippingRequestTripAccidentResolve">Create new shipping request trip accident resolve</text>
+	<text name="CreateNewShippingRequestTripAccident">Create new shipping request trip accident</text>
+	<text name="EditShippingRequestTripAccidentResolve">Edit shipping request trip accident resolve</text>
+	<text name="EditShippingRequestTripAccident">Edit shipping request trip accident</text>
+	<text name="ShippingRerquestBids">Shipping rerquest bids</text>
+	<text name="CreateNewShippingRequestBid">Create new shipping request bid</text>
+	<text name="DeleteNewShippingRequestBid">Delete new shipping request bid</text>
+	<text name="EditNewShippingRequestBid">Edit new shipping request bid</text>
+	<text name="CreateNewShippingRequestVas">Create new shipping request vas</text>
+	<text name="PaidInvoice">Paid invoice</text>
+	<text name="UnPaidInvoice">Unpaid Invoice</text>
+	<text name="ClaimSubmitInvoices">Claim submit invoices</text>
+	<text name="CreateNewShippingRequestTrip">Create new shipping request trip</text>
+	<text name="DeleteShippingRequestTrip">Delete shipping request trip</text>
+	<text name="EditShippingRequestTrip">Edit shipping request trip</text>
+	<text name="AcceptOffer">Accept offer</text>
+	<text name="CreateOffer">Create offer</text>
+	<text name="ShippingRequest_Accidents_Comments_Edit">Shipping Request Accidents Comments Edit</text>
+	<text name="ThereIsNoDriverAssignedToTrip">There Is No Driver Assigned To Trip</text>
+	<text name="TheDriverStatusShouldBeAccepted">The Driver Status Should Be Accepted</text>
+	<text name="TheTripAlreadyStarted">The Trip Already Started</text>
+	<text name="TheDriverAlreadyWorkingOnAnotherTrip">The Driver Already Working On Another Trip</text>
+	<text name="YouCanStartTripAt">You Can Start Trip At {0}</text>
+		<text name="UplodeDeliveryNoteDeliveryConfirmation">Delivery Confirmation After Delivery Note</text>
+	<text name="Remarks">Remarks</text>
+	<text name="YouCannotAddRemarksForThisTrip">You Can't Add Remarks For This Trip</text>
+	<text name="NoReasonProvided">No reason provided</text>
+	<text name="ShippingRequestUpdatedTransaction">Update shipping request</text>
+	<text name="PriceOfferCreatedTransaction">A price offer added</text>
+	<text name="PriceOfferUpdatedTransaction">The price offer was updated</text>
+	<text name="PriceOfferAcceptedTransaction">Price offer accepted</text>
+	<text name="DriverAndTruckIsChanged">Driver and truck changed </text>
+		
+	<text name="CreateNewRequests">Create New Requests</text>
+	<text name="NewShippingRequest">New shipping request</text>
+	<text name="SelectAPickUpAgent">Select a pick-up agent</text>
+	<text name="PickAReceiver">Select a receiver</text>
+	<text name="SelectADangeroudGoodType">Select dangerous good type</text>
+	<text name="Done">Done</text>
+	<text name="AllDropPointsAddedSuccessfully">All Drops have been added</text>
+	<text name="AddNewContact">Add New Contact</text>
+	<text name="EditConatct">Edit Conatct</text>
+	<text name="DownloadDropWaybill">Download waybill</text>
+	<text name="SelectPlateType">Select plate type</text>
+	<text name="itemPrice">Trip price</text>
+	<text name="AcceptTrip">Accept</text>
+	<text name="StartTrip">Start</text>
+	<text name="AcceptedAndWaitingCarrier">Accepted and waiting carrier</text>
+	<text name="UploadDeliveryConfirmation">Upload delivery confirmation</text>
+	<text name="EnterReceiverCode">Enter receiver code</text>
+	<text name="ImportFile">Import file</text>
+	<text name="UnPaid">Unpaid</text>
+	<text name="SAASTrip">Sass</text>
+	<text name="NumberOfShipments">Number of shipments</text>
+	<text name="ProfileNumberOfShipmentsTooltipMsg">Number of shipments whose status is in transit, completed or completed without confirmation</text>
+
+		<text name="NumberOfRequestsForEachCity">Number Of Requests For Each City</text>
+		<text name="ongoingTrips">On Going Trips</text>
+		<text name="NumberOfRegesteredTrucks">Number Of Registered Trucks</text>
+		<text name="NumberOfRegesteredShippers">Number Of Registered Shippers</text>
+		<text name="NumberOfRegesteredDrivers">Number Of Registered Drivers</text>
+		<text name="NumberOfRegesteredCarriers">Number Of Registered Carriers</text>
+		<text name="HostTruckTypesUsage">Truck Types Usage</text>
+		<text name="RouteTypesUsage">Route Types Usage</text>
+		<text name="GoodTypesUsage">Good Types Usage</text>
+		<text name="NewAccounts">New Accounts</text>
+		<text name="NewTrips">New Trips</text>
+		<text name="CurrentlyNonActiveDrivers">Non Active Drivers</text>
+		<text name="CurrentlyActiveDrivers">Active Drivers</text>
+		<text name="CurrentlyActiveTrucks">Active Trucks</text>
+		<text name="CurrentlyNonActiveTrucks">Non Active Trucks</text>
+		<text name="MostUsedVases"> Most Used Vases </text>
+		<text name="MostWorkedWithShippers">Most Worked With Shippers</text>
+		
+		<text name="WorstRatedCarriers">Worst Rated Carriers</text>
+		<text name="WorstRatedShippers">Worst Rated Shippers</text>
+		<text name="ReferanceNumber">Referance Number</text>
+		<text name="ForCurrentYear">For Current Year</text>
+		<text name="YouCanNotRejectTheOffer">You Can Not Reject The Offer</text>
+		<text name="inTransitDrivers">In Transit Drivers</text>
+		<text name="inTransitTrucks">In Transit Trucks</text>
+  <text name="YouMustEnterRates">You must enter rates</text>
+		<text name="SelectALicenseType">Select a license type</text>
+		<text name="TheNumberInTheTopOfTheCRThatStartsWithSeven">The number in the top of the CR that starts with seven</text>
+	</texts>
 </localizationDictionary>

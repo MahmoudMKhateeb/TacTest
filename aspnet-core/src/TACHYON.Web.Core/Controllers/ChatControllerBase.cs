@@ -55,9 +55,7 @@ namespace TACHYON.Web.Controllers
 
                 return Json(new AjaxResponse(new
                 {
-                    id = fileObject.Id,
-                    name = file.FileName,
-                    contentType = file.ContentType
+                    id = fileObject.Id, name = file.FileName, contentType = file.ContentType
                 }));
             }
             catch (UserFriendlyException ex)

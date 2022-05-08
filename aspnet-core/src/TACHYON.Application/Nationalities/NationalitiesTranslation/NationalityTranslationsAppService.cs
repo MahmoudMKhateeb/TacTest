@@ -1,5 +1,4 @@
 ﻿using TACHYON.Nationalities;
-
 using System;
 using System.Linq;
 using System.Linq.Dynamic.Core;
@@ -23,42 +22,42 @@ namespace TACHYON.Nationalities.NationalitiesTranslation
         private readonly IRepository<NationalityTranslation> _nationalityTranslationRepository;
         private readonly IRepository<Nationality, int> _lookup_nationalityRepository;
 
-        public NationalityTranslationsAppService(IRepository<NationalityTranslation> nationalityTranslationRepository, IRepository<Nationality, int> lookup_nationalityRepository)
+        public NationalityTranslationsAppService(IRepository<NationalityTranslation> nationalityTranslationRepository,
+            IRepository<Nationality, int> lookup_nationalityRepository)
         {
             _nationalityTranslationRepository = nationalityTranslationRepository;
             _lookup_nationalityRepository = lookup_nationalityRepository;
-
         }
 
-        public async Task<PagedResultDto<GetNationalityTranslationForViewDto>> GetAll(GetAllNationalityTranslationsInput input)
+        public async Task<PagedResultDto<GetNationalityTranslationForViewDto>> GetAll(
+            GetAllNationalityTranslationsInput input)
         {
-
             var filteredNationalityTranslations = _nationalityTranslationRepository.GetAll()
-                        .Include(e => e.Core)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.TranslatedName.Contains(input.Filter) || e.Language.Contains(input.Filter))
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.TranslatedNameFilter), e => e.TranslatedName == input.TranslatedNameFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.LanguageFilter), e => e.Language == input.LanguageFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.NationalityNameFilter), e => e.Core != null && e.Core.Name == input.NationalityNameFilter)
-                        .WhereIf(input.NationalityIdFilter.HasValue, e => false || e.CoreId == input.NationalityIdFilter.Value);
+                .Include(e => e.Core)
+                .WhereIf(!string.IsNullOrWhiteSpace(input.Filter),
+                    e => false || e.TranslatedName.Contains(input.Filter) || e.Language.Contains(input.Filter))
+                .WhereIf(!string.IsNullOrWhiteSpace(input.TranslatedNameFilter),
+                    e => e.TranslatedName == input.TranslatedNameFilter)
+                .WhereIf(!string.IsNullOrWhiteSpace(input.LanguageFilter), e => e.Language == input.LanguageFilter)
+                .WhereIf(!string.IsNullOrWhiteSpace(input.NationalityNameFilter),
+                    e => e.Core != null && e.Core.Name == input.NationalityNameFilter)
+                .WhereIf(input.NationalityIdFilter.HasValue, e => false || e.CoreId == input.NationalityIdFilter.Value);
 
             var pagedAndFilteredNationalityTranslations = filteredNationalityTranslations
                 .OrderBy(input.Sorting ?? "id asc")
                 .PageBy(input);
 
             var nationalityTranslations = from o in pagedAndFilteredNationalityTranslations
-                                          join o1 in _lookup_nationalityRepository.GetAll() on o.CoreId equals o1.Id into j1
-                                          from s1 in j1.DefaultIfEmpty()
-
-                                          select new GetNationalityTranslationForViewDto()
-                                          {
-                                              NationalityTranslation = new NationalityTranslationDto
-                                              {
-                                                  TranslatedName = o.TranslatedName,
-                                                  Language = o.Language,
-                                                  Id = o.Id
-                                              },
-                                              NationalityName = s1 == null || s1.Name == null ? "" : s1.Name.ToString()
-                                          };
+                join o1 in _lookup_nationalityRepository.GetAll() on o.CoreId equals o1.Id into j1
+                from s1 in j1.DefaultIfEmpty()
+                select new GetNationalityTranslationForViewDto()
+                {
+                    NationalityTranslation = new NationalityTranslationDto
+                    {
+                        TranslatedName = o.TranslatedName, Language = o.Language, Id = o.Id
+                    },
+                    NationalityName = s1 == null || s1.Name == null ? "" : s1.Name.ToString()
+                };
 
             var totalCount = await filteredNationalityTranslations.CountAsync();
 
@@ -72,11 +71,15 @@ namespace TACHYON.Nationalities.NationalitiesTranslation
         {
             var nationalityTranslation = await _nationalityTranslationRepository.GetAsync(id);
 
-            var output = new GetNationalityTranslationForViewDto { NationalityTranslation = ObjectMapper.Map<NationalityTranslationDto>(nationalityTranslation) };
+            var output = new GetNationalityTranslationForViewDto
+            {
+                NationalityTranslation = ObjectMapper.Map<NationalityTranslationDto>(nationalityTranslation)
+            };
 
             if (output.NationalityTranslation.CoreId != null)
             {
-                var _lookupNationality = await _lookup_nationalityRepository.FirstOrDefaultAsync((int)output.NationalityTranslation.CoreId);
+                var _lookupNationality =
+                    await _lookup_nationalityRepository.FirstOrDefaultAsync((int)output.NationalityTranslation.CoreId);
                 output.NationalityName = _lookupNationality?.Name?.ToString();
             }
 
@@ -88,11 +91,16 @@ namespace TACHYON.Nationalities.NationalitiesTranslation
         {
             var nationalityTranslation = await _nationalityTranslationRepository.FirstOrDefaultAsync(input.Id);
 
-            var output = new GetNationalityTranslationForEditOutput { NationalityTranslation = ObjectMapper.Map<CreateOrEditNationalityTranslationDto>(nationalityTranslation) };
+            var output = new GetNationalityTranslationForEditOutput
+            {
+                NationalityTranslation =
+                    ObjectMapper.Map<CreateOrEditNationalityTranslationDto>(nationalityTranslation)
+            };
 
             if (output.NationalityTranslation.CoreId != null)
             {
-                var _lookupNationality = await _lookup_nationalityRepository.FirstOrDefaultAsync((int)output.NationalityTranslation.CoreId);
+                var _lookupNationality =
+                    await _lookup_nationalityRepository.FirstOrDefaultAsync((int)output.NationalityTranslation.CoreId);
                 output.NationalityName = _lookupNationality?.Name?.ToString();
             }
 
@@ -131,6 +139,7 @@ namespace TACHYON.Nationalities.NationalitiesTranslation
         {
             await _nationalityTranslationRepository.DeleteAsync(input.Id);
         }
+
         [AbpAuthorize(AppPermissions.Pages_NationalityTranslations)]
         public async Task<List<NationalityTranslationNationalityLookupTableDto>> GetAllNationalityForTableDropdown()
         {
@@ -141,6 +150,5 @@ namespace TACHYON.Nationalities.NationalitiesTranslation
                     DisplayName = nationality == null || nationality.Name == null ? "" : nationality.Name.ToString()
                 }).ToListAsync();
         }
-
     }
 }

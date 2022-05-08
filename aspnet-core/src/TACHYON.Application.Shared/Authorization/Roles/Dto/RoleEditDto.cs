@@ -6,8 +6,7 @@ namespace TACHYON.Authorization.Roles.Dto
     {
         public int? Id { get; set; }
 
-        [Required]
-        public string DisplayName { get; set; }
+        [Required] public string DisplayName { get; set; }
 
         public bool IsDefault { get; set; }
     }

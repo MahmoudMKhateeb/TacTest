@@ -21,7 +21,5 @@ namespace TACHYON.Trailers.TrailerStatuses
         Task Delete(EntityDto input);
 
         Task<FileDto> GetTrailerStatusesToExcel(GetAllTrailerStatusesForExcelInput input);
-
-
     }
 }

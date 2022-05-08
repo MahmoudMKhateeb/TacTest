@@ -1,7 +1,8 @@
-import { Component, OnInit, Injector, Input, ViewChild } from '@angular/core';
+import { Component, Injector, Input, OnInit, ViewChild } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import {
   GetShippingRequestForPriceOfferListDto,
+  GetShippingRequestForViewOutput,
   PriceOfferChannel,
   PriceOfferServiceProxy,
   ShippingRequestDirectRequestServiceProxy,
@@ -12,10 +13,10 @@ import {
 
 import * as _ from 'lodash';
 import { ScrollPagnationComponentBase } from '@shared/common/scroll/scroll-pagination-component-base';
-import { log } from 'util';
 import { ShippingRequestForPriceOfferGetAllInput } from '../../../../shared/common/search/ShippingRequestForPriceOfferGetAllInput';
 import { Router } from '@angular/router';
 import { ShippingrequestsDetailsModelComponent } from '../details/shippingrequests-details-model.component';
+
 @Component({
   templateUrl: './shipping-request-card-template.component.html',
   // styleUrls: ['/assets/custom/css/style.scss'],
@@ -24,6 +25,7 @@ import { ShippingrequestsDetailsModelComponent } from '../details/shippingreques
 })
 export class ShippingRequestCardTemplateComponent extends ScrollPagnationComponentBase implements OnInit {
   @ViewChild('Model', { static: false }) modalMore: ShippingrequestsDetailsModelComponent;
+  shippingRequestforView: GetShippingRequestForViewOutput;
 
   Items: GetShippingRequestForPriceOfferListDto[] = [];
   searchInput: ShippingRequestForPriceOfferGetAllInput = new ShippingRequestForPriceOfferGetAllInput();
@@ -32,6 +34,11 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
   @Input() Title: string;
   @Input() ShippingRequestId: number | null | undefined = undefined;
   direction = 'ltr';
+  openCardId: number;
+  bidsloading = false;
+  zoom: Number = 13; //map zoom
+  lat: Number = 24.717942;
+  lng: Number = 46.675761;
   constructor(
     injector: Injector,
     private _currentServ: PriceOfferServiceProxy,
@@ -78,11 +85,16 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
         if (result.items.length < this.maxResultCount) {
           this.StopLoading = true;
         }
+        result.items.forEach((r) => {
+          if (this.feature.isEnabled('App.Shipper')) {
+            if (r.requestTypeTitle == 'TachyonManageService' && r.statusTitle == 'NeedsAction') {
+              r.statusTitle = 'New';
+            }
+          }
+        });
         this.Items.push(...result.items);
         console.log('LoadingMore Date .....');
       });
-    console.log(`channed is : `, this.searchInput.channel);
-    console.log(`Title is : `, this.Title);
   }
   canDeleteDirectRequest(input: GetShippingRequestForPriceOfferListDto) {
     if (
@@ -95,6 +107,18 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
     }
     return false;
   }
+  canSeeShippingRequestTrips() {
+    //if there is no carrierTenantId  and the current user in not a carrier Hide Trips Section
+    if (this.feature.isEnabled('App.Carrier') && !this.shippingRequestforView.shippingRequest.carrierTenantId) {
+      return false;
+    } else if (this.feature.isEnabled('App.TachyonDealer')) {
+      //if Tachyon Dealer
+      return true;
+    }
+    //By Default
+    return true;
+  }
+
   delete(input: GetShippingRequestForPriceOfferListDto): void {
     this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
       if (isConfirmed) {
@@ -175,5 +199,13 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
       }
     }
     this.modalMore.show(item);
+  }
+
+  createNewRequest() {
+    this.router.navigateByUrl('/app/main/shippingRequests/shippingRequestWizard');
+  }
+
+  isCarrierOwnRequest(request: GetShippingRequestForPriceOfferListDto): boolean {
+    return this.feature.isEnabled('App.CarrierAsASaas') && request.isSaas && this.appSession.tenantId === request.tenantId;
   }
 }

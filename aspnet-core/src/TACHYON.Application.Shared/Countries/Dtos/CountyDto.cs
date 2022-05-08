@@ -1,5 +1,4 @@
-﻿
-using Abp.Application.Services.Dto;
+﻿using Abp.Application.Services.Dto;
 using System;
 
 namespace TACHYON.Countries.Dtos
@@ -11,7 +10,5 @@ namespace TACHYON.Countries.Dtos
         public string Code { get; set; }
 
         public string TranslatedDisplayName { get; set; }
-
-
     }
 }

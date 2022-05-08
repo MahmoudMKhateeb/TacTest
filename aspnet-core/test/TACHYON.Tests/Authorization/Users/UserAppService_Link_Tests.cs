@@ -55,16 +55,17 @@ namespace TACHYON.Tests.Authorization.Users
             LoginAsDefaultTenantAdmin();
             await _userLinkAppService.LinkToUser(new LinkToUserInput
             {
-                TenancyName = "Test",
-                UsernameOrEmailAddress = "test",
-                Password = "123qwe"
+                TenancyName = "Test", UsernameOrEmailAddress = "test", Password = "123qwe"
             });
 
             //Assert
-            var defaultTenantAdmin = await UsingDbContextAsync(context => context.Users.FirstOrDefaultAsync(u => u.TenantId == AbpSession.TenantId && u.Id == AbpSession.UserId));
-            var defaultTenantAccount = await _userLinkManager.GetUserAccountAsync(defaultTenantAdmin.ToUserIdentifier());
+            var defaultTenantAdmin = await UsingDbContextAsync(context =>
+                context.Users.FirstOrDefaultAsync(u => u.TenantId == AbpSession.TenantId && u.Id == AbpSession.UserId));
+            var defaultTenantAccount =
+                await _userLinkManager.GetUserAccountAsync(defaultTenantAdmin.ToUserIdentifier());
 
-            var testUser = await UsingDbContextAsync(testTenantId, context => context.Users.FirstOrDefaultAsync(u => u.UserName == "test"));
+            var testUser = await UsingDbContextAsync(testTenantId,
+                context => context.Users.FirstOrDefaultAsync(u => u.UserName == "test"));
             var testUserAccount = await _userLinkManager.GetUserAccountAsync(testUser.ToUserIdentifier());
 
             defaultTenantAccount.UserLinkId.ShouldBe(testUserAccount.UserLinkId);
@@ -83,9 +84,7 @@ namespace TACHYON.Tests.Authorization.Users
 
             var linkToTestTenantUserInput = new LinkToUserInput
             {
-                TenancyName = "Test",
-                UsernameOrEmailAddress = "test",
-                Password = "123qwe"
+                TenancyName = "Test", UsernameOrEmailAddress = "test", Password = "123qwe"
             };
 
             //Act
@@ -97,13 +96,18 @@ namespace TACHYON.Tests.Authorization.Users
             await _userLinkAppService.LinkToUser(linkToTestTenantUserInput);
 
             //Assert
-            var defaultTenantAdmin = await UsingDbContextAsync(context => context.Users.FirstOrDefaultAsync(u => u.TenantId == AbpSession.TenantId && u.UserName == AbpUserBase.AdminUserName));
-            var defaultTenantAdminAccount = await _userLinkManager.GetUserAccountAsync(defaultTenantAdmin.ToUserIdentifier());
+            var defaultTenantAdmin = await UsingDbContextAsync(context =>
+                context.Users.FirstOrDefaultAsync(u =>
+                    u.TenantId == AbpSession.TenantId && u.UserName == AbpUserBase.AdminUserName));
+            var defaultTenantAdminAccount =
+                await _userLinkManager.GetUserAccountAsync(defaultTenantAdmin.ToUserIdentifier());
 
-            var jnash = await UsingDbContextAsync(context => context.Users.FirstOrDefaultAsync(u => u.UserName == "jnash"));
+            var jnash = await UsingDbContextAsync(context =>
+                context.Users.FirstOrDefaultAsync(u => u.UserName == "jnash"));
             var jnashAccount = await _userLinkManager.GetUserAccountAsync(jnash.ToUserIdentifier());
 
-            var testTenantUser = await UsingDbContextAsync(testTenantId, context => context.Users.FirstOrDefaultAsync(u => u.UserName == "test"));
+            var testTenantUser = await UsingDbContextAsync(testTenantId,
+                context => context.Users.FirstOrDefaultAsync(u => u.UserName == "test"));
             var testTenantUserAccount = await _userLinkManager.GetUserAccountAsync(testTenantUser.ToUserIdentifier());
 
             jnashAccount.UserLinkId.ShouldBe(jnashAccount.Id);
@@ -118,7 +122,9 @@ namespace TACHYON.Tests.Authorization.Users
         {
             var testTenant = new Tenant("Test", "test")
             {
-                ConnectionString = SimpleStringCipher.Instance.Encrypt("Server=localhost; Database=TACHYONTest_" + Guid.NewGuid().ToString("N") + "; Trusted_Connection=True;")
+                ConnectionString = SimpleStringCipher.Instance.Encrypt("Server=localhost; Database=TACHYONTest_" +
+                                                                       Guid.NewGuid().ToString("N") +
+                                                                       "; Trusted_Connection=True;")
             };
 
             await _tenantManager.CreateAsync(testTenant);
@@ -165,16 +171,16 @@ namespace TACHYON.Tests.Authorization.Users
             //Act
             await _userLinkAppService.LinkToUser(new LinkToUserInput
             {
-                TenancyName = tenancyName,
-                UsernameOrEmailAddress = "jnash",
-                Password = "123qwe"
+                TenancyName = tenancyName, UsernameOrEmailAddress = "jnash", Password = "123qwe"
             });
 
             //Assert
-            var linkedUser = await UsingDbContextAsync(context => context.Users.FirstOrDefaultAsync(u => u.UserName == "jnash"));
+            var linkedUser =
+                await UsingDbContextAsync(context => context.Users.FirstOrDefaultAsync(u => u.UserName == "jnash"));
             var linkedUserAccount = await _userLinkManager.GetUserAccountAsync(linkedUser.ToUserIdentifier());
 
-            var currentUser = await UsingDbContextAsync(context => context.Users.FirstOrDefaultAsync(u => u.Id == AbpSession.UserId));
+            var currentUser = await UsingDbContextAsync(context =>
+                context.Users.FirstOrDefaultAsync(u => u.Id == AbpSession.UserId));
             var currentUserAccount = await _userLinkManager.GetUserAccountAsync(currentUser.ToUserIdentifier());
 
             linkedUserAccount.UserLinkId.HasValue.ShouldBe(true);

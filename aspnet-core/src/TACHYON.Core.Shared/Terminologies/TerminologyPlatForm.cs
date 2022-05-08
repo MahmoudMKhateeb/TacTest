@@ -1,8 +1,8 @@
 ﻿namespace TACHYON.Terminologies
 {
-    public enum TerminologyPlatForm:byte
+    public enum TerminologyPlatForm : byte
     {
-        AspNetZeroPlatForm=1,
-        TachyonPlatForm=2
+        AspNetZeroPlatForm = 1,
+        TachyonPlatForm = 2
     }
 }

@@ -22,7 +22,7 @@ namespace TACHYON.Core.Invoices.Jobs
             _backgroundJobManager = backgroundJobManager;
         }
 
-        public  Task Execute(IJobExecutionContext context)
+        public Task Execute(IJobExecutionContext context)
         {
             JobKey key = context.JobDetail.Key;
             //JobDataMap dataMap = context.JobDetail.JobDataMap;
@@ -31,12 +31,8 @@ namespace TACHYON.Core.Invoices.Jobs
             // AsyncHelper.RunSync(() => _InvoiceManager.GenerateInvoice(PeriodId));
             _backgroundJobManager.Enqueue<InvoiceBackgroundJob, int>(PeriodId);
 
-           // Console.Error.WriteLineAsync("abdulllah");
+            // Console.Error.WriteLineAsync("abdulllah");
             return Task.CompletedTask;
         }
-
-
-
-
     }
 }

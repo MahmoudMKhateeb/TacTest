@@ -13,10 +13,8 @@
       <form *ngIf="active" #receiverForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
         <div class="modal-header">
           <h4 class="modal-title">
-            <span *ngIf="receiver.id && agentType != 'sender'">{{ l('EditReceiver') }}</span>
-            <span *ngIf="!receiver.id && agentType != 'sender'">{{ l('CreateNewReceiver') }}</span>
-            <span *ngIf="receiver.id && agentType != 'sender'">{{ l('EditSender') }}</span>
-            <span *ngIf="!receiver.id && agentType != 'sender'">{{ l('CreateNewSender') }}</span>
+            <span *ngIf="receiver.id">{{ l('EditContact') }}</span>
+            <span *ngIf="!receiver.id">{{ l('AddNewContact') }}</span>
           </h4>
           <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
             <span aria-hidden="true">&times;</span>
@@ -25,15 +23,15 @@
         <div class="modal-body">
           <div class="form-row">
             <div class="form-group col-md-6">
-              <label><span class="required-fileds"> *</span>{{ l('Facility') }}</label>
+              <label>{{ l('Facility') }}<span class="required-fileds"> *</span></label>
               <select name="receiver.facilityId" [(ngModel)]="receiver.facilityId" class="form-control" required [disabled]="facilityIdFromTrips">
-                <option [value]="" disabled>{{ l('SelectAFacility') }}</option>
+                <option [value]="undefined" disabled>{{ l('SelectaFacility') }}</option>
                 <option *ngFor="let item of allFacilitys" [value]="item.id">{{ item.displayName }}</option>
               </select>
             </div>
 
             <div class="form-group col-md-6">
-              <label for="Receiver_FullName"><span class="required-fileds"> *</span>{{ l('ReciverName') }} </label>
+              <label for="Receiver_FullName">{{ l('ReciverName') }}<span class="required-fileds"> *</span> </label>
               <input
                 type="text"
                 #Receiver_FullName="ngModel"
@@ -65,7 +63,7 @@
             </div>
 
             <div class="form-group col-md-6">
-              <label for="Receiver_PhoneNumber">{{ l('PhoneNumber') }} *</label>
+              <label for="Receiver_PhoneNumber">{{ l('PhoneNumber') }} <span class="required-fileds"> *</span></label>
 
               <div class="input-group">
                 <div class="input-group-prepend">

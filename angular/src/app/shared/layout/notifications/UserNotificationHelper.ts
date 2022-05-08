@@ -102,6 +102,17 @@ export class UserNotificationHelper extends AppComponentBase {
         return `/app/main/invoices/submitinvoices/detail/${userNotification.notification.data.properties.id}`;
       case 'App.SubmitInvoiceOnAccepted':
         return `/app/main/invoices/submitinvoices/detail/${userNotification.notification.data.properties.id}`;
+      case 'App.ShippingRequestAsBidWithSameTruck':
+        return `/app/main/marketplace/list`;
+      case 'App.NotificationWhenTripDetailsChanged':
+        return `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.id}`;
+      case 'App.ShippingRequest.Accident':
+        return `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.id}`;
+      case 'App.NotifyShipperWhenTripUpdated':
+        return (
+          `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.srId}` +
+          `&tripId=${userNotification.notification.data.properties.updatedTripId}`
+        );
       //Redirect Invoice Notification
       case 'App.InvoiceShipperGenerated':
         return '/app/main/invoices/detail/' + userNotification.notification.data.properties.invoiceid;
@@ -116,6 +127,21 @@ export class UserNotificationHelper extends AppComponentBase {
       case 'App.TMSAcceptedOffer':
         return `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.id}`;
 
+      case 'App.NotifyTachyonDealWhenTripUpdated':
+        return (
+          `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.srId}` +
+          `&tripId=${userNotification.notification.data.properties.updatedTripId}`
+        );
+      case 'App.NotifyCarrierWhenTripUpdated':
+        return (
+          `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.srId}` +
+          `&tripId=${userNotification.notification.data.properties.id}`
+        );
+      case 'App.NotifyShipperWhenTripUpdated':
+        return (
+          `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.srId}` +
+          `&tripId=${userNotification.notification.data.properties.updatedTripId}`
+        );
       //New Offer Redirection
       case 'App.ShippingRequestSendOfferWhenAddPrice':
         return (

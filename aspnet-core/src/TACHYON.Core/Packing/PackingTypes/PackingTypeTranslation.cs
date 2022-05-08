@@ -15,8 +15,7 @@ namespace TACHYON.Packing.PackingTypes
         [StringLength(PackingTypeConsts.MaxDescriptionLength, MinimumLength = PackingTypeConsts.MinDescriptionLength)]
         public virtual string Description { get; set; }
 
-        [Required]
-        public string Language { get; set; }
+        [Required] public string Language { get; set; }
         public PackingType Core { get; set; }
         public int CoreId { get; set; }
     }

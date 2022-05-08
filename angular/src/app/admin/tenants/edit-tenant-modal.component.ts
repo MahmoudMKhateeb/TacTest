@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Injector, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Injector, Output, ViewChild, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import {
   TenantCityLookupTableDto,
@@ -15,7 +15,7 @@ import { finalize } from 'rxjs/operators';
   selector: 'editTenantModal',
   templateUrl: './edit-tenant-modal.component.html',
 })
-export class EditTenantModalComponent extends AppComponentBase {
+export class EditTenantModalComponent extends AppComponentBase implements OnInit {
   @ViewChild('nameInput', { static: true }) nameInput: ElementRef;
   @ViewChild('editModal', { static: true }) modal: ModalDirective;
   @ViewChild('SubscriptionEndDateUtc') subscriptionEndDateUtc: ElementRef;
@@ -26,7 +26,7 @@ export class EditTenantModalComponent extends AppComponentBase {
   saving = false;
   isUnlimited = false;
   subscriptionEndDateUtcIsValid = false;
-
+  cityLoading: boolean;
   tenant: TenantEditDto = undefined;
   currentConnectionString: string;
   // editions: SubscribableEditionComboboxItemDto[] = [];
@@ -45,20 +45,33 @@ export class EditTenantModalComponent extends AppComponentBase {
   ) {
     super(injector);
   }
+  ngOnInit() {
+    this.GetAllCountries();
+  }
 
   show(tenantId: number): void {
-    this.active = true;
-
     this._tenantService.getTenantForEdit(tenantId).subscribe((tenantResult) => {
       this.tenant = tenantResult;
       this.currentConnectionString = tenantResult.connectionString;
       // this.tenant.editionId = this.tenant.editionId || 0;
       this.isUnlimited = !this.tenant.subscriptionEndDateUtc;
       this.subscriptionEndDateUtcIsValid = this.isUnlimited || this.tenant.subscriptionEndDateUtc !== undefined;
+      this.cityLoading = true;
+      this._tenantService
+        .getAllCitiesForTableDropdown(tenantResult.countryId)
+        .pipe(
+          finalize(() => {
+            this.cityLoading = false;
+          })
+        )
+        .subscribe((result) => {
+          this.allCities = result;
+          this.cityLoading = false;
+        });
+      this.active = true;
       this.modal.show();
       // this.toggleSubscriptionFields();
     });
-    this.GetAllCountries();
   }
 
   onShown(): void {
@@ -115,6 +128,7 @@ export class EditTenantModalComponent extends AppComponentBase {
   close(): void {
     // this.editions = [];
     this.active = false;
+    this.allCities = undefined;
     this.modal.hide();
   }
 

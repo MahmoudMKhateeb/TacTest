@@ -34,6 +34,5 @@ namespace TACHYON.Trailers
         Task<List<TrailerPayloadMaxWeightLookupTableDto>> GetAllPayloadMaxWeightForTableDropdown();
 
         Task<List<TrailerTruckLookupTableDto>> GetAllTruckForTableDropdown();
-
     }
 }

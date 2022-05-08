@@ -12,29 +12,26 @@ using NetTopologySuite.Geometries;
 namespace TACHYON.Shipping.ShippingRequestTrips
 {
     [Table("ShippingRequestTripAccidents")]
-    public class ShippingRequestTripAccident : FullAuditedEntity,IHasDocument
+    public class ShippingRequestTripAccident : FullAuditedEntity, IHasDocument
     {
         public long PointId { get; set; }
-        [ForeignKey("PointId")]
-        public RoutPoint RoutPointFK { get; set; }
+        [ForeignKey("PointId")] public RoutPoint RoutPointFK { get; set; }
         public int? ReasoneId { get; set; }
-        [ForeignKey("ReasoneId")]
-        public ShippingRequestReasonAccident ResoneFK { get; set; }
+        [ForeignKey("ReasoneId")] public ShippingRequestReasonAccident ResoneFK { get; set; }
+
         /// <summary>
         /// when reason refers to others, this field should be filled
         /// </summary>
         public string OtherReasonName { get; set; }
 
-        [StringLength(500,MinimumLength =10)]
-        public string Description {get;set; }
+        [StringLength(500, MinimumLength = 10)]
+        public string Description { get; set; }
+
         public bool IsResolve { get; set; }
         public Guid? DocumentId { get; set; }
         public string DocumentName { get; set; }
         public string DocumentContentType { get; set; }
 
         public Point Location { get; set; }
-
-
     }
-
 }

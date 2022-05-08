@@ -1,4 +1,4 @@
-﻿<div [@routerTransition]>
+<div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
     <sub-header [title]="'SubmittedDocuments' | localize"> </sub-header>
     <!-- <sub-header [title]="'DocumentFiles' | localize" [description]="'DocumentFilesHeaderInfo' | localize"> </sub-header> -->
@@ -24,7 +24,7 @@
               <dxo-filter-panel [visible]="true"></dxo-filter-panel>
               <dxo-filter-builder-popup [position]="popupPosition"></dxo-filter-builder-popup>
               <dxo-scrolling mode="virtual"></dxo-scrolling>
-              <dxo-group-panel [visible]="true"></dxo-group-panel>
+              <dxo-group-panel [visible]="true" emptyPanelText="{{ l('DragAColumnHeaderHereToGroupByThatColumn') }}"></dxo-group-panel>
               <dxo-grouping #expand [autoExpandAll]="false"></dxo-grouping>
               <dxo-remote-operations [groupPaging]="true" [sorting]="true" [filtering]="true"> </dxo-remote-operations>
               <dxo-paging [pageSize]="20"></dxo-paging>
@@ -34,7 +34,7 @@
 
               <dxi-column cellTemplate="cellTemplateActions" [allowFiltering]="false" [allowSorting]="false" [width]="50"></dxi-column>
               <dxi-column *ngIf="!appSession.tenantId" dataField="submitterTenatTenancyName" caption="{{ l('SubmitterTenant') }}"></dxi-column>
-              <dxi-column dataField="creationTime" caption="{{ l('SubmittingTime') }}" dataType="datetime"></dxi-column>
+              <dxi-column dataField="creationTime" caption="{{ l('SubmittingTime') }}" dataType="date"></dxi-column>
               <dxi-column dataField="documentTypeName" caption="{{ l('DatatableDocumentName') }}" [allowGrouping]="false"></dxi-column>
               <dxi-column
                 dataField="expirationDate"
@@ -43,8 +43,8 @@
                 cellTemplate="cellTemplateStatus"
               ></dxi-column>
               <dxi-column dataField="extn" caption="{{ l('Extn') }}" [allowFiltering]="false"></dxi-column>
-              <dxi-column dataField="isAccepted" caption="{{ l('isAccepted') }}"></dxi-column>
-              <dxi-column dataField="isRejected" caption="{{ l('isRejected') }}"></dxi-column>
+              <dxi-column dataField="isAccepted" caption="{{ l('IsAccepted') }}"></dxi-column>
+              <dxi-column dataField="isRejected" caption="{{ l('IsRejected') }}"></dxi-column>
               <dxi-column dataField="number" caption="{{ l('Number') }}"></dxi-column>
 
               <div *dxTemplate="let data of 'cellTemplateStatus'">
@@ -131,6 +131,7 @@
                   </ul>
                 </div>
               </div>
+              <dxo-summary> <dxi-total-item column="submitterTenatTenancyName" summaryType="count"> </dxi-total-item> </dxo-summary>
             </dx-data-grid>
           </div>
         </div>

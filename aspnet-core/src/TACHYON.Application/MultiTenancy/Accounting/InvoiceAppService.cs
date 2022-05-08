@@ -63,10 +63,9 @@ namespace TACHYON.MultiTenancy.Accounting
                 InvoiceDate = invoice.InvoiceDate,
                 Amount = payment.Amount,
                 EditionDisplayName = edition.DisplayName,
-
                 HostAddress = hostAddress.Replace("\r\n", "|").Split('|').ToList(),
-                HostLegalName = await SettingManager.GetSettingValueAsync(AppSettings.HostManagement.BillingLegalName),
-
+                HostLegalName =
+                    await SettingManager.GetSettingValueAsync(AppSettings.HostManagement.BillingLegalName),
                 TenantAddress = invoice.TenantAddress.Replace("\r\n", "|").Split('|').ToList(),
                 TenantLegalName = invoice.TenantLegalName,
                 TenantTaxNo = invoice.TenantTaxNo
@@ -84,11 +83,13 @@ namespace TACHYON.MultiTenancy.Accounting
 
             var invoiceNo = await _invoiceNumberGenerator.GetNewInvoiceNumber();
 
-            var tenantLegalName = await SettingManager.GetSettingValueAsync(AppSettings.TenantManagement.BillingLegalName);
+            var tenantLegalName =
+                await SettingManager.GetSettingValueAsync(AppSettings.TenantManagement.BillingLegalName);
             var tenantAddress = await SettingManager.GetSettingValueAsync(AppSettings.TenantManagement.BillingAddress);
             var tenantTaxNo = await SettingManager.GetSettingValueAsync(AppSettings.TenantManagement.BillingTaxVatNo);
 
-            if (string.IsNullOrEmpty(tenantLegalName) || string.IsNullOrEmpty(tenantAddress) || string.IsNullOrEmpty(tenantTaxNo))
+            if (string.IsNullOrEmpty(tenantLegalName) || string.IsNullOrEmpty(tenantAddress) ||
+                string.IsNullOrEmpty(tenantTaxNo))
             {
                 throw new UserFriendlyException(L("InvoiceInfoIsMissingOrNotCompleted"));
             }

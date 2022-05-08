@@ -22,13 +22,13 @@ namespace TACHYON.Documents.DocumentFiles
     {
         public int? TenantId { get; set; }
 
-        [ForeignKey("TenantId")]
-        public Tenant TenantFk { get; set; }
+        [ForeignKey("TenantId")] public Tenant TenantFk { get; set; }
+
         [Required]
         [StringLength(DocumentFileConsts.MaxNameLength, MinimumLength = DocumentFileConsts.MinNameLength)]
         public virtual string Name { get; set; }
 
-        [Required]
+      
         [StringLength(DocumentFileConsts.MaxExtnLength, MinimumLength = DocumentFileConsts.MinExtnLength)]
         public virtual string Extn { get; set; }
 
@@ -45,8 +45,8 @@ namespace TACHYON.Documents.DocumentFiles
 
         public virtual long? DocumentTypeId { get; set; }
 
-        [ForeignKey("DocumentTypeId")]
-        public DocumentType DocumentTypeFk { get; set; }
+        [ForeignKey("DocumentTypeId")] public DocumentType DocumentTypeFk { get; set; }
+
         /// <summary>
         /// in trip entity case, user select attachment type "document type", when the option selected to others, this field must be filled
         /// </summary>
@@ -54,35 +54,28 @@ namespace TACHYON.Documents.DocumentFiles
 
         public virtual long? TruckId { get; set; }
 
-        [ForeignKey("TruckId")]
-        public Truck TruckFk { get; set; }
+        [ForeignKey("TruckId")] public Truck TruckFk { get; set; }
 
         public virtual long? TrailerId { get; set; }
 
-        [ForeignKey("TrailerId")]
-        public Trailer TrailerFk { get; set; }
+        [ForeignKey("TrailerId")] public Trailer TrailerFk { get; set; }
 
         public virtual long? UserId { get; set; }
 
-        [ForeignKey("UserId")]
-        public User UserFk { get; set; }
+        [ForeignKey("UserId")] public User UserFk { get; set; }
 
         public virtual long? RoutStepId { get; set; }
 
-        [ForeignKey("RoutStepId")]
-        public RoutStep RoutStepFk { get; set; }
+        [ForeignKey("RoutStepId")] public RoutStep RoutStepFk { get; set; }
 
         public virtual int? ShippingRequestTripId { get; set; }
 
-        [ForeignKey("ShippingRequestTripId")]
-        public ShippingRequestTrip ShippingRequestTripFk { get; set; }
+        [ForeignKey("ShippingRequestTripId")] public ShippingRequestTrip ShippingRequestTripFk { get; set; }
 
 
         public string Number { get; set; }
 
         public string Notes { get; set; }
         public string HijriExpirationDate { get; set; }
-
-
     }
 }

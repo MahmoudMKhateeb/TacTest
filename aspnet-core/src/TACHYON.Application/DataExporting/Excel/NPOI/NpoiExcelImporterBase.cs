@@ -47,6 +47,7 @@ namespace TACHYON.DataExporting.Excel.NPOI
                     i++;
                     continue;
                 }
+
                 try
                 {
                     var entity = processExcelRow(worksheet, i++);
@@ -63,6 +64,5 @@ namespace TACHYON.DataExporting.Excel.NPOI
 
             return entities;
         }
-
     }
 }

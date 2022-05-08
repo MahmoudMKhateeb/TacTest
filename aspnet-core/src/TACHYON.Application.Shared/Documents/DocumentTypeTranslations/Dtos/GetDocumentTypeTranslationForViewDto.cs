@@ -2,10 +2,8 @@
 {
     public class GetDocumentTypeTranslationForViewDto
     {
-		public DocumentTypeTranslationDto DocumentTypeTranslation { get; set; }
+        public DocumentTypeTranslationDto DocumentTypeTranslation { get; set; }
 
-		public string DocumentTypeDisplayName { get; set;}
-
-
+        public string DocumentTypeDisplayName { get; set; }
     }
 }

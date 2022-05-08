@@ -22,7 +22,5 @@ namespace TACHYON.Offers.Dtos
         public string GoodCategoryDisplayNameFilter { get; set; }
 
         public string RouteDisplayNameFilter { get; set; }
-
-
     }
 }

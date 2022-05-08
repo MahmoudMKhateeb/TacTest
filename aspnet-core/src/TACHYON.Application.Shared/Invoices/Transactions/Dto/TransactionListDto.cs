@@ -8,7 +8,7 @@ namespace TACHYON.Invoices.Transactions.Dto
 {
     public class TransactionListDto : EntityDto<long>, IHasCreationTime
     {
-        public DateTime CreationTime { get; set ; }
+        public DateTime CreationTime { get; set; }
         public string ClientName { get; set; }
         public string Edition { get; set; }
         public int EditionId { get; set; }
@@ -18,6 +18,5 @@ namespace TACHYON.Invoices.Transactions.Dto
         public int Count { get; set; }
 
         public long SourceId { get; set; }
-
     }
 }

@@ -28,13 +28,13 @@ namespace TACHYON.Drivers
         public string LangaugeCode { get; set; }
         public string LangaugeName { get; set; }
         public string LangaugeNative { get; set; }
+        public string MobileAppManual { get; set; }
 
     }
 
     [AbpAuthorize]
     public class DriverAppService : TACHYONAppServiceBase
     {
-
         private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepository;
         private readonly ProfileImageServiceFactory _profileImageServiceFactory;
         private readonly UserDeviceTokenManager _userDeviceTokenManager;
@@ -42,7 +42,8 @@ namespace TACHYON.Drivers
         public DriverAppService(
             IRepository<ShippingRequestTrip> shippingRequestTripRepository,
             ProfileImageServiceFactory profileImageServiceFactory,
-            UserDeviceTokenManager userDeviceTokenManager, SmsSender smsSender)
+            UserDeviceTokenManager userDeviceTokenManager,
+            SmsSender smsSender)
         {
             _shippingRequestTripRepository = shippingRequestTripRepository;
             _profileImageServiceFactory = profileImageServiceFactory;
@@ -51,6 +52,7 @@ namespace TACHYON.Drivers
 
         public async Task<DriverDetailDto> GetDriverDetails()
         {
+            string fileConst = "/MobilePDF/Mobile-{0}.pdf";
             var user = await GetCurrentUserAsync();
             DriverDetailDto driverDetail = new DriverDetailDto()
             {
@@ -59,7 +61,8 @@ namespace TACHYON.Drivers
                 EmailAddress = user.EmailAddress,
                 LangaugeCode = CultureInfo.CurrentCulture.Name,
                 LangaugeName = CultureInfo.CurrentCulture.DisplayName,
-                LangaugeNative = CultureInfo.CurrentCulture.NativeName
+                LangaugeNative = CultureInfo.CurrentCulture.NativeName,
+                MobileAppManual = string.Format(fileConst, CultureInfo.CurrentCulture.Name ?? "en")
             };
 
             using (var profileImageService = await _profileImageServiceFactory.Get(AbpSession.ToUserIdentifier()))
@@ -68,33 +71,33 @@ namespace TACHYON.Drivers
                     AbpSession.ToUserIdentifier()
                 );
                 driverDetail.Picture = profilePictureContent;
-
             }
 
             var trip = await _shippingRequestTripRepository
                 .GetAll()
                 .AsTracking()
                 .Include(t => t.AssignedTruckFk)
-                    .ThenInclude(t => t.TrucksTypeFk)
-                    .ThenInclude(t => t.Translations)
+                .ThenInclude(t => t.TrucksTypeFk)
+                .ThenInclude(t => t.Translations)
                 .OrderByDescending(x => x.Id)
-                .FirstOrDefaultAsync(d => d.AssignedDriverUserId == user.Id && d.DriverStatus == Shipping.Trips.ShippingRequestTripDriverStatus.Accepted && d.AssignedTruckId != null);
+                .FirstOrDefaultAsync(d =>
+                    d.AssignedDriverUserId == user.Id &&
+                    d.DriverStatus == Shipping.Trips.ShippingRequestTripDriverStatus.Accepted &&
+                    d.AssignedTruckId != null);
             if (trip != null)
             {
                 driverDetail.PlateNumber = trip.AssignedTruckFk.PlateNumber;
-                driverDetail.TrucksType = ObjectMapper.Map<TrucksTypeDto>(trip.AssignedTruckFk.TrucksTypeFk).TranslatedDisplayName;//trip.AssignedTruckFk.TrucksTypeFk.DisplayName ;
-
+                driverDetail.TrucksType = ObjectMapper.Map<TrucksTypeDto>(trip.AssignedTruckFk.TrucksTypeFk)
+                    .TranslatedDisplayName; //trip.AssignedTruckFk.TrucksTypeFk.DisplayName ;
             }
 
             return driverDetail;
-
         }
+
         public async Task RefreshDeviceToken(UserDeviceTokenDto Input)
         {
             Input.UserId = AbpSession.UserId.Value;
             await _userDeviceTokenManager.CreateOrEdit(Input);
         }
-
-
     }
 }

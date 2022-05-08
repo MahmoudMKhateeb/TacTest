@@ -5,17 +5,14 @@ namespace TACHYON.Dto
 {
     public class FileDto
     {
-        [Required]
-        public string FileName { get; set; }
+        [Required] public string FileName { get; set; }
 
         public string FileType { get; set; }
 
-        [Required]
-        public string FileToken { get; set; }
+        [Required] public string FileToken { get; set; }
 
         public FileDto()
         {
-
         }
 
         public FileDto(string fileName, string fileType)

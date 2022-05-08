@@ -43,15 +43,20 @@ namespace TACHYON.Web.UiCustomization.Metronic
 
         protected async Task<T> GetSettingValueForTenantAsync<T>(string settingName, int tenantId) where T : struct
         {
-            return (await SettingManager.GetSettingValueForTenantAsync(ThemeName + "." + settingName, tenantId)).To<T>();
+            return (await SettingManager.GetSettingValueForTenantAsync(ThemeName + "." + settingName, tenantId))
+                .To<T>();
         }
 
-        protected async Task ChangeSettingForUserAsync(UserIdentifier user, string name, string value)
+        protected async Task ChangeSettingForUserAsync(UserIdentifier user,
+            string name,
+            string value)
         {
             await SettingManager.ChangeSettingForUserAsync(user, ThemeName + "." + name, value);
         }
 
-        protected async Task ChangeSettingForTenantAsync(int tenantId, string name, string value)
+        protected async Task ChangeSettingForTenantAsync(int tenantId,
+            string name,
+            string value)
         {
             await SettingManager.ChangeSettingForTenantAsync(tenantId, ThemeName + "." + name, value);
         }

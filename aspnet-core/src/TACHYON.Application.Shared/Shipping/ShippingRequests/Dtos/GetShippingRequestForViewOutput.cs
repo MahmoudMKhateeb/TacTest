@@ -7,15 +7,31 @@ using TACHYON.Vases.Dtos;
 
 namespace TACHYON.Shipping.ShippingRequests.Dtos
 {
+    /// <summary>
+    /// mapped from ShippingRequest
+    /// </summary>
     public class GetShippingRequestForViewOutput
     {
-
         public string ReferenceNumber { get; set; }
 
+        /// <summary>
+        /// This reference shipper add it manually
+        /// </summary>
+        public string ShipperReference { get; set; }
+
+        /// <summary>
+        /// shipper add his invoice number manually
+        /// </summary>
+        public string ShipperInvoiceNo { get; set; }
+
+        public decimal ShipperRating { get; set; }
+        public int ShipperRatingNumber { get; set; }
         public ShippingRequestDto ShippingRequest { get; set; }
 
         public List<ShippingRequestBidDto> ShippingRequestBidDtoList { get; set; }
+
         public List<GetShippingRequestVasForViewDto> ShippingRequestVasDtoList { get; set; }
+
         //public List<RoutPointDto> RoutPointDtoList { get; set; }
         public int VasCount { get; set; }
         public string TruckTypeDisplayName { get; set; }
@@ -35,10 +51,16 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public string ShippingTypeDisplayName { get; set; }
         public bool HasTrips { get; set; }
         public GetTruckForViewOutput AssignedTruckDto { get; set; }
+
         public int TotalsTripsAddByShippier { get; set; }
+
         //this field special to tachyon user
         public decimal? CarrierPrice { get; set; }
         public string CarrierName { get; set; }
 
+        /// <summary>
+        /// shipper
+        /// </summary>
+        public int TenantId { get; set; }
     }
 }

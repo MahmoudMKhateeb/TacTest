@@ -1,4 +1,4 @@
-import { Component, ViewChild, Injector, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, ViewChild, Injector, OnInit, Output, EventEmitter, AfterViewInit } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import {
   FacilityForDropdownDto,
@@ -12,6 +12,7 @@ import {
   AssignDriverAndTruckToShippmentByCarrierInput,
   ShippingRequestDriverServiceProxy,
   GetShippingRequestForViewOutput,
+  ShippingRequestTripStatus,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { finalize } from '@node_modules/rxjs/operators';
@@ -19,14 +20,19 @@ import { FileDownloadService } from '@shared/utils/file-download.service';
 import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
 import Swal from 'sweetalert2';
 import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
+import { FileViwerComponent } from '@app/shared/common/file-viwer/file-viwer.component';
 
 @Component({
   selector: 'viewTripModal',
   templateUrl: './viewTripModal.component.html',
 })
-export class ViewTripModalComponent extends AppComponentBase implements OnInit {
+export class ViewTripModalComponent extends AppComponentBase implements OnInit, AfterViewInit {
   @ViewChild('viewTripDetails', { static: false }) modal: ModalDirective;
   @Output() modalSave: EventEmitter<any> = new EventEmitter();
+  @ViewChild('fileViwerComponent', { static: false }) fileViwerComponent: FileViwerComponent;
+
   Vases: CreateOrEditShippingRequestTripVasDto[];
   selectedVases: CreateOrEditShippingRequestTripVasDto[];
   allFacilities: FacilityForDropdownDto[];
@@ -42,6 +48,9 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit {
   isResetTripLoading = false;
   private TruckTypeId: number;
   pickUpPointSender: string;
+  activeTripId: any;
+
+  shippingRequestTripStatusEnum = ShippingRequestTripStatus;
   constructor(
     injector: Injector,
     private _routStepsServiceProxy: RoutStepsServiceProxy,
@@ -51,7 +60,8 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit {
     private _trucksServiceProxy: TrucksServiceProxy,
     private _shippingRequestDriverServiceProxy: ShippingRequestDriverServiceProxy,
     private _PointsService: PointsService,
-    private _TripService: TripService
+    private _TripService: TripService,
+    private _Router: ActivatedRoute
   ) {
     super(injector);
   }
@@ -60,6 +70,13 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit {
     this._TripService.currentShippingRequest.subscribe((res) => {
       this.TruckTypeId = res.truckTypeId;
     });
+    this.activeTripId = this._Router.snapshot.queryParams['tripId'];
+  }
+
+  ngAfterViewInit() {
+    if (isNotNullOrUndefined(this.activeTripId)) {
+      this.show(this.activeTripId);
+    }
   }
 
   show(id): void {
@@ -93,14 +110,37 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit {
   close(): void {
     this.trip = new ShippingRequestsTripForViewDto();
     //this.wayPointsComponent.wayPointsList = [];
+    this.allDrivers = [];
+    this.allTrucks = [];
     this.loading = true;
     this.modal.hide();
+  }
+
+  checkData() {
+    if (this.allTrucks.length == 0) this.getAlert(this.l('NoMatchingTrucks'));
+    if (this.allDrivers.length == 0) this.getAlert(this.l('NoMatchingDrivers'));
+  }
+
+  getAlert(msg: string) {
+    Swal.fire({
+      title: msg,
+      icon: 'warning',
+      confirmButtonText: this.l('Ok'),
+    });
+  }
+
+  downloadAttachment(id: number) {
+    this._shippingRequestTripsService.getTripAttachmentFileDto(id).subscribe((result) => {
+      this._fileDownloadService.downloadTempFile(result);
+      this.fileViwerComponent.show(this._fileDownloadService.downloadTempFile(result), 'img');
+    });
   }
 
   DownloadSingleDropWaybillPdf(id: number): void {
     this.wayBillIsDownloading = true;
     this._waybillsServiceProxy.getSingleDropOrMasterWaybillPdf(id).subscribe((result) => {
       this._fileDownloadService.downloadTempFile(result);
+      this.fileViwerComponent.show(this._fileDownloadService.downloadTempFile(result), 'pdf');
       this.wayBillIsDownloading = false;
     });
   }

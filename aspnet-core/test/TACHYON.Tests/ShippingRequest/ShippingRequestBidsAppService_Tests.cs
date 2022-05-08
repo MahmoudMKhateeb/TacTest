@@ -10,9 +10,10 @@ using Abp.UI;
 
 namespace TACHYON.Tests.ShippingRequest
 {
-    public class ShippingRequestBidsAppService_Tests: AppTestBase
+    public class ShippingRequestBidsAppService_Tests : AppTestBase
     {
         private readonly IShippingRequestBidsAppService _shippingRequestBidsAppService;
+
         public ShippingRequestBidsAppService_Tests()
         {
             LoginAsTenant("shipper", "admin");

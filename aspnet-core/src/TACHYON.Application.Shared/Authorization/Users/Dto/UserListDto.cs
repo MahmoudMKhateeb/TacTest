@@ -32,7 +32,6 @@ namespace TACHYON.Authorization.Users.Dto
         public DateTime CreationTime { get; set; }
 
         public DateTime? DateOfBirth { get; set; }
-
     }
 
     public class DriverListDto : EntityDto<long>, IPassivable, IHasCreationTime
@@ -51,6 +50,10 @@ namespace TACHYON.Authorization.Users.Dto
         public Guid? ProfilePictureId { get; set; }
 
         public bool IsEmailConfirmed { get; set; }
+        
+        public string CompanyName { get; set; }
+        
+        public string Nationality { get; set; }
 
 
         public bool IsActive { get; set; }
@@ -59,7 +62,6 @@ namespace TACHYON.Authorization.Users.Dto
         public DateTime CreationTime { get; set; }
 
         public DateTime? DateOfBirth { get; set; }
-
+        public decimal Rate { get; set; }
     }
-
 }

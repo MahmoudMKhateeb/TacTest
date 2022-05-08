@@ -25,6 +25,9 @@ export class ViewTripAccidentModelComponent extends AppComponentBase {
   Trip: ShippingRequestsTripListDto = new ShippingRequestsTripListDto();
   active: boolean = false;
   IsStartSearch = false;
+  allReasons: any;
+  CancelationStatus: string =
+    this.feature.isEnabled('App.Shipper') || this.feature.isEnabled('App.Carrier') ? this.l('Cancel') : this.l('ApproveCancel');
 
   constructor(
     injector: Injector,
@@ -46,19 +49,16 @@ export class ViewTripAccidentModelComponent extends AppComponentBase {
       this.primengTableHelper.hideLoadingIndicator();
       this.active = true;
       this.modal.show();
-      console.log(this.Trip);
     });
   }
   canShowCancelButton(): boolean {
-    if (this.Trip.status == ShippingRequestTripStatus.Delivered) {
-      return false;
-    } else if (this.feature.isEnabled('App.Shipper')) {
+    if (this.Trip.status == ShippingRequestTripStatus.Delivered) return false;
+    else if (this.Trip.status == ShippingRequestTripStatus.Canceled) return false;
+    else if (this.feature.isEnabled('App.Shipper')) {
       return !this.Trip.isApproveCancledByShipper;
     } else if (this.feature.isEnabled('App.Carrier')) {
       return !this.Trip.isApproveCancledByCarrier;
-    } else if (this.Trip.isApproveCancledByCarrier && this.Trip.isApproveCancledByShipper) {
-      return false;
-    }
+    } else return true;
   }
   downloadDocument(id: number): void {
     this._ServiceProxy.getFile(id).subscribe((result) => {
@@ -69,10 +69,27 @@ export class ViewTripAccidentModelComponent extends AppComponentBase {
     this.modal.hide();
     this.active = false;
   }
+
   CancelTrip(): void {
     this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
       if (isConfirmed) {
-        this._tripServ.cancelByAccident(this.Trip.id).subscribe(() => {
+        this._tripServ.cancelByAccident(this.Trip.id, false).subscribe(() => {
+          this.notify.success(this.l('SuccessfullyTripCancled'));
+          this.close();
+          this.modalcanceltrip.emit(null);
+        });
+      }
+    });
+  }
+
+  /**
+   * forced cancelation only by tackhyon dealer ,
+   * send isForced nullable param as true for cancel or false in other cases
+   */
+  ForceCancelTrip(): void {
+    this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
+      if (isConfirmed) {
+        this._tripServ.cancelByAccident(this.Trip.id, true).subscribe(() => {
           this.notify.success(this.l('SuccessfullyTripCancled'));
           this.close();
           this.modalcanceltrip.emit(null);

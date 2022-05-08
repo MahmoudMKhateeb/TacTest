@@ -63,6 +63,20 @@ import { ViewDocumentFileModalComponent } from '@app/main/documentFiles/document
 import { RejectionReasonModalComponent } from '@app/main/documentFiles/documentFiles/rejectionReason-modal.component';
 import { ViewRejectionReasonModalComponent } from '@app/admin/required-document-files/view-rejection-reason-modal.component';
 import { TruckSubmitedDocumentsListComponent } from '@app/main/documentFiles/documentFiles/trucks-submitted-documents/truck-submited-documents-list/truck-submited-documents-list.component';
+import { CompletedTripsWidgetComponent } from './customizable-dashboard/widgets/shared_widgets/completed-trips-widget/completed-trips-widget.component';
+import { ChartModule } from '@node_modules/primeng/chart';
+import { CompletedTripVsPodComponent } from './customizable-dashboard/widgets/shipper/completed-trip-vs-pod/completed-trip-vs-pod.component';
+import { AcceptedVsRejecedRequestsComponent } from './customizable-dashboard/widgets/shipper/accepted-vs-rejeced-requests/accepted-vs-rejeced-requests.component';
+import { InvoicesVsPaidInvoicesComponent } from './customizable-dashboard/widgets/shared_widgets/invoices-vs-paid-invoices/invoices-vs-paid-invoices.component';
+import { MostWorkedWithCarriersComponent } from './customizable-dashboard/widgets/shipper/most-worked-with-carriers/most-worked-with-carriers.component';
+import { RequestsInMarketPlaceComponent } from './customizable-dashboard/widgets/shipper/requests-in-market-place/requests-in-market-place.component';
+import { NgApexchartsModule } from '@node_modules/ng-apexcharts';
+import { WidgetsModule } from '@app/shared/common/customizable-dashboard/widgets/widgets.module';
+import { EntityLogComponent } from './entity-log/entity-log.component';
+import { CollapseModule } from '@node_modules/ngx-bootstrap/collapse';
+import { PriceSARComponent } from './price-sar/price-sar.component';
+import { FileViwerComponent } from './file-viwer/file-viwer.component';
+import { PdfJsViewerModule } from '@node_modules/ng2-pdfjs-viewer';
 // import { FileUploadModule } from '@node_modules/primeng';
 
 @NgModule({
@@ -87,6 +101,11 @@ import { TruckSubmitedDocumentsListComponent } from '@app/main/documentFiles/doc
     NgbModule,
     FileUploadModule,
     DevExtremeModule,
+    ChartModule,
+    NgApexchartsModule,
+    WidgetsModule,
+    CollapseModule,
+    PdfJsViewerModule,
   ],
   declarations: [
     TimeZoneComboComponent,
@@ -126,6 +145,9 @@ import { TruckSubmitedDocumentsListComponent } from '@app/main/documentFiles/doc
     RejectionReasonModalComponent,
     ViewRejectionReasonModalComponent,
     TruckSubmitedDocumentsListComponent,
+    EntityLogComponent,
+    PriceSARComponent,
+    FileViwerComponent,
   ],
   exports: [
     TimeZoneComboComponent,
@@ -147,6 +169,10 @@ import { TruckSubmitedDocumentsListComponent } from '@app/main/documentFiles/doc
     RejectionReasonModalComponent,
     ViewRejectionReasonModalComponent,
     TruckSubmitedDocumentsListComponent,
+    EntityLogComponent,
+    EntityLogComponent,
+    PriceSARComponent,
+    FileViwerComponent,
   ],
   providers: [
     DateTimeService,

@@ -10,7 +10,6 @@ namespace TACHYON.Packing.PackingTypes
     [Table("PackingTypes")]
     public class PackingType : FullAuditedEntity, IMultiLingualEntity<PackingTypeTranslation>
     {
-
         [Required]
         [StringLength(PackingTypeConsts.MaxDisplayNameLength, MinimumLength = PackingTypeConsts.MinDisplayNameLength)]
         public virtual string DisplayName { get; set; }

@@ -41,5 +41,4 @@ namespace TACHYON.Invoices.Dto
         /// </summary>
         public string BankNameEnglish { get; set; }
     }
-
 }

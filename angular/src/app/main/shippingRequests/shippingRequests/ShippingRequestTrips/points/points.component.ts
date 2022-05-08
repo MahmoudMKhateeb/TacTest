@@ -1,10 +1,10 @@
+/* tslint:disable:triple-equals */
 import { Component, EventEmitter, Injector, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import {
   CreateOrEditRoutPointDto,
   FacilitiesServiceProxy,
-  FacilityForDropdownDto,
   PickingType,
   RoutesServiceProxy,
   RoutStepsServiceProxy,
@@ -13,10 +13,10 @@ import {
 } from '@shared/service-proxies/service-proxies';
 import Swal from 'sweetalert2';
 import { FileDownloadService } from '@shared/utils/file-download.service';
-import { TripService, DropDownMenu } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
+import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
 import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
-import { GoodDetailsComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/good-details/good-details.component';
 import { Subscription } from 'rxjs';
+import { FileViwerComponent } from '@app/shared/common/file-viwer/file-viwer.component';
 
 @Component({
   selector: 'PointsComponent',
@@ -31,13 +31,15 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
     private _routStepsServiceProxy: RoutStepsServiceProxy,
     private _fileDownloadService: FileDownloadService,
     private _waybillsServiceProxy: WaybillsServiceProxy,
-    private _tripService: TripService,
+    public _tripService: TripService,
     private _PointsService: PointsService
   ) {
     super(injector);
   }
   @ViewChild('createOrEditFacilityModal') public createOrEditFacilityModal: ModalDirective;
   @ViewChild('createRouteStepModal') public createRouteStepModal: ModalDirective;
+  @ViewChild('fileViwerComponent', { static: false }) fileViwerComponent: FileViwerComponent;
+
   // @ViewChild('PointGoodDetailsComponent') public PointGoodDetailsComponent: GoodDetailsComponent;
   @Input() usedIn: 'view' | 'createOrEdit';
   @Output() SelectedWayPointsFromChild: EventEmitter<CreateOrEditRoutPointDto[]> = new EventEmitter<CreateOrEditRoutPointDto[]>();
@@ -51,11 +53,12 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
   RouteTypes = ShippingRequestRouteType;
   wayPointsList: CreateOrEditRoutPointDto[] = [];
 
-  allFacilities: FacilityForDropdownDto[];
+  //allFacilities: FacilityForDropdownDto[];
   PickingType = PickingType;
   active = false;
   saving = false;
   facilityLoading = false;
+  loading = false;
   zoom: Number = 13; //map zoom
   //this dir is for Single Route Step Map Route Draw
   lat: Number = 24.717942;
@@ -64,6 +67,7 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
   wayPoints = [];
   wayPointMapSource = undefined;
   wayPointMapDest = undefined;
+  id: number;
   Point: CreateOrEditRoutPointDto;
   private pointsServiceSubscription$: Subscription;
   private tripDestFacilitySub$: Subscription;
@@ -91,7 +95,7 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
       }
       //validate if point Limit Reached For Multible Drops And Show Success Message
       if (!this.activeTripId && this.RouteType == ShippingRequestRouteType.MultipleDrops && res.length - 1 == this.NumberOfDrops) {
-        Swal.fire(this.l('GoodJob'), this.l('AllDropPointsAddedSuccessfully'), 'success');
+        Swal.fire(this.l('Done'), this.l('AllDropPointsAddedSuccessfully'), 'success');
       }
     });
     //Tell the Service Where this Component is Being Used
@@ -100,9 +104,11 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
     this.currentActiveTripSubs$ = this._tripService.currentActiveTripId.subscribe((res) => (this.activeTripId = res));
     //get some Stuff from ShippingRequest Dto
     this.tripSourceFacilitySub$ = this._tripService.currentShippingRequest.subscribe((res) => {
-      this.RouteType = res.shippingRequest.routeTypeId;
-      this.NumberOfDrops = res.shippingRequest.numberOfDrops;
-      this.MainGoodsCategory = res.shippingRequest.goodCategoryId;
+      if (res.shippingRequest) {
+        this.RouteType = res.shippingRequest.routeTypeId;
+        this.NumberOfDrops = res.shippingRequest.numberOfDrops;
+        this.MainGoodsCategory = res.shippingRequest.goodCategoryId;
+      }
     });
     //Take Trip Source Facility From Trip Service
     this.tripSourceFacilitySub$ = this._tripService.currentSourceFacility.subscribe((res) => {
@@ -218,8 +224,12 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
   }
 
   downloadDropWayBill(i: number) {
+    this.id = i;
+    this.loading = true;
     this._waybillsServiceProxy.getMultipleDropWaybillPdf(i).subscribe((result) => {
       this._fileDownloadService.downloadTempFile(result);
+      this.loading = false;
+      this.fileViwerComponent.show(this._fileDownloadService.downloadTempFile(result), 'pdf');
     });
   }
 }

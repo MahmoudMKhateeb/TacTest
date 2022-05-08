@@ -1,17 +1,12 @@
 ﻿using Abp.Application.Services.Dto;
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace TACHYON.Cities.CitiesTranslations.Dtos
 {
-    public class GetAllCitiesTranslationsInput : PagedAndSortedResultRequestDto
+    public class GetAllCitiesTranslationsInput
     {
-        public string Filter { get; set; }
-
-        public string TranslatedDisplayNameFilter { get; set; }
-
-        public string LanguageFilter { get; set; }
-
-        public string CityDisplayNameFilter { get; set; }
-
+        public string LoadOptions { get; set; }
+        public string CoreId { get; set; }
     }
 }

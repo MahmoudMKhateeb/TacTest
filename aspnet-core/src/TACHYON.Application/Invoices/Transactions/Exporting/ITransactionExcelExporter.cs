@@ -7,9 +7,8 @@ using TACHYON.Invoices.Transactions.Dto;
 
 namespace TACHYON.Invoices.Balances.Exporting
 {
-   public interface ITransactionExcelExporter
+    public interface ITransactionExcelExporter
     {
         FileDto ExportToFile(List<TransactionListDto> input);
-
     }
 }

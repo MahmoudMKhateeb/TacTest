@@ -53,18 +53,12 @@ namespace TACHYON.Tenants.Dashboard
 
         public GetProfitShareOutput GetProfitShare()
         {
-            return new GetProfitShareOutput
-            {
-                ProfitShares = DashboardRandomDataGenerator.GetRandomPercentageArray(3)
-            };
+            return new GetProfitShareOutput { ProfitShares = DashboardRandomDataGenerator.GetRandomPercentageArray(3) };
         }
 
         public GetDailySalesOutput GetDailySales()
         {
-            return new GetDailySalesOutput
-            {
-                DailySales = DashboardRandomDataGenerator.GetRandomArray(30, 10, 50)
-            };
+            return new GetDailySalesOutput { DailySales = DashboardRandomDataGenerator.GetRandomArray(30, 10, 50) };
         }
 
         public GetSalesSummaryOutput GetSalesSummary(GetSalesSummaryInput input)

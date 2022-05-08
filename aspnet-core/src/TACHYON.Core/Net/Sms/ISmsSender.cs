@@ -8,8 +8,13 @@ namespace TACHYON.Net.Sms
     {
         Task<bool> SendAsync(string number, string message);
 
-        Task<bool> SendReceiverSmsAsync(string number, DateTime date, string shipperName, string driverName,
-            string driverPhone, string waybillNumber, string code, string link);
-
+        Task<bool> SendReceiverSmsAsync(string number,
+            DateTime date,
+            string shipperName,
+            string driverName,
+            string driverPhone,
+            string waybillNumber,
+            string code,
+            string link);
     }
 }

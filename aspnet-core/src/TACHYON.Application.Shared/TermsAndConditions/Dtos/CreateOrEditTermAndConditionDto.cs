@@ -1,5 +1,4 @@
-﻿
-using Abp.Application.Services.Dto;
+﻿using Abp.Application.Services.Dto;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -7,7 +6,6 @@ namespace TACHYON.TermsAndConditions.Dtos
 {
     public class CreateOrEditTermAndConditionDto : EntityDto<int?>
     {
-
         [Required]
         [StringLength(TermAndConditionConsts.MaxTitleLength, MinimumLength = TermAndConditionConsts.MinTitleLength)]
         public string Title { get; set; }
@@ -22,8 +20,5 @@ namespace TACHYON.TermsAndConditions.Dtos
 
         public int? EditionId { get; set; }
         public bool IsActive { get; set; }
-
-
-
     }
 }

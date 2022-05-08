@@ -10,7 +10,8 @@ namespace TACHYON.Trucks.TruckCategories.TruckCapacities.TruckCapacitiesTranslat
 {
     public interface ITruckCapacitiesTranslationsAppService : IApplicationService
     {
-        Task<PagedResultDto<GetTruckCapacitiesTranslationForViewDto>> GetAll(GetAllTruckCapacitiesTranslationsInput input);
+        Task<PagedResultDto<GetTruckCapacitiesTranslationForViewDto>> GetAll(
+            GetAllTruckCapacitiesTranslationsInput input);
 
         Task<GetTruckCapacitiesTranslationForViewDto> GetTruckCapacitiesTranslationForView(int id);
 
@@ -21,6 +22,5 @@ namespace TACHYON.Trucks.TruckCategories.TruckCapacities.TruckCapacitiesTranslat
         Task Delete(EntityDto input);
 
         Task<List<TruckCapacitiesTranslationCapacityLookupTableDto>> GetAllCapacityForTableDropdown();
-
     }
 }

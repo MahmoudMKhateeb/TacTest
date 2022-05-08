@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TACHYON.TachyonPriceOffers.dtos
 {
-    public class GetAllTachyonPriceOfferInput :PagedAndSortedResultRequestDto
+    public class GetAllTachyonPriceOfferInput : PagedAndSortedResultRequestDto
     {
         public long? ShippingRequestId { get; set; }
     }

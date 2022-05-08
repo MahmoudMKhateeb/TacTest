@@ -23,6 +23,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="wwwroot\MobilePDF\Mobile-ar-EG.pdf" />
+    <None Include="wwwroot\MobilePDF\Mobile-en.pdf" />
+    <None Include="wwwroot\MobilePDF\Mobile-hi.pdf" />
+    <None Include="wwwroot\MobilePDF\Mobile-ur.pdf" />
     <None Include="wwwroot\Plugins\.gitkeep" />
     <None Update="Dockerfile">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -37,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TACHYON.Web.Core\TACHYON.Web.Core.csproj" />
+    <EmbeddedResource Include="wwwroot\Comoon\Static\*" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Abp.Castle.Log4Net" Version="5.10.1" />

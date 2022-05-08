@@ -55,12 +55,16 @@ namespace TACHYON.Friendships
                 probableFriendUser = await UserManager.FindByIdAsync(input.UserId.ToString());
             }
 
-            var friendTenancyName = probableFriend.TenantId.HasValue ? _tenantCache.Get(probableFriend.TenantId.Value).TenancyName : null;
-            var sourceFriendship = new Friendship(userIdentifier, probableFriend, friendTenancyName, probableFriendUser.UserName, probableFriendUser.ProfilePictureId, FriendshipState.Accepted);
+            var friendTenancyName = probableFriend.TenantId.HasValue
+                ? _tenantCache.Get(probableFriend.TenantId.Value).TenancyName
+                : null;
+            var sourceFriendship = new Friendship(userIdentifier, probableFriend, friendTenancyName,
+                probableFriendUser.UserName, probableFriendUser.ProfilePictureId, FriendshipState.Accepted);
             await _friendshipManager.CreateFriendshipAsync(sourceFriendship);
 
             var userTenancyName = user.TenantId.HasValue ? _tenantCache.Get(user.TenantId.Value).TenancyName : null;
-            var targetFriendship = new Friendship(probableFriend, userIdentifier, userTenancyName, user.UserName, user.ProfilePictureId, FriendshipState.Accepted);
+            var targetFriendship = new Friendship(probableFriend, userIdentifier, userTenancyName, user.UserName,
+                user.ProfilePictureId, FriendshipState.Accepted);
             await _friendshipManager.CreateFriendshipAsync(targetFriendship);
 
             var clients = _onlineClientManager.GetAllByUserId(probableFriend);
@@ -74,7 +78,8 @@ namespace TACHYON.Friendships
             if (senderClients.Any())
             {
                 var isFriendOnline = _onlineClientManager.IsOnline(targetFriendship.ToUserIdentifier());
-                await _chatCommunicator.SendFriendshipRequestToClient(senderClients, sourceFriendship, true, isFriendOnline);
+                await _chatCommunicator.SendFriendshipRequestToClient(senderClients, sourceFriendship, true,
+                    isFriendOnline);
             }
 
             var sourceFriendshipRequest = ObjectMapper.Map<FriendDto>(sourceFriendship);
@@ -88,8 +93,7 @@ namespace TACHYON.Friendships
             var probableFriend = await GetUserIdentifier(input.TenancyName, input.UserName);
             return await CreateFriendshipRequest(new CreateFriendshipRequestInput
             {
-                TenantId = probableFriend.TenantId,
-                UserId = probableFriend.UserId
+                TenantId = probableFriend.TenantId, UserId = probableFriend.UserId
             });
         }
 
@@ -102,7 +106,8 @@ namespace TACHYON.Friendships
             var clients = _onlineClientManager.GetAllByUserId(userIdentifier);
             if (clients.Any())
             {
-                await _chatCommunicator.SendUserStateChangeToClients(clients, friendIdentifier, FriendshipState.Blocked);
+                await _chatCommunicator.SendUserStateChangeToClients(clients, friendIdentifier,
+                    FriendshipState.Blocked);
             }
         }
 
@@ -115,7 +120,8 @@ namespace TACHYON.Friendships
             var clients = _onlineClientManager.GetAllByUserId(userIdentifier);
             if (clients.Any())
             {
-                await _chatCommunicator.SendUserStateChangeToClients(clients, friendIdentifier, FriendshipState.Accepted);
+                await _chatCommunicator.SendUserStateChangeToClients(clients, friendIdentifier,
+                    FriendshipState.Accepted);
             }
         }
 
@@ -128,7 +134,8 @@ namespace TACHYON.Friendships
             var clients = _onlineClientManager.GetAllByUserId(userIdentifier);
             if (clients.Any())
             {
-                await _chatCommunicator.SendUserStateChangeToClients(clients, friendIdentifier, FriendshipState.Blocked);
+                await _chatCommunicator.SendUserStateChangeToClients(clients, friendIdentifier,
+                    FriendshipState.Blocked);
             }
         }
 

@@ -14,7 +14,7 @@ namespace TACHYON.Web.IdentityServer
                 new ApiResource("default-api", "Default (all) API")
                 {
                     Description = "AllFunctionalityYouHaveInTheApplication",
-                    ApiSecrets= {new Secret("secret") }
+                    ApiSecrets = { new Secret("secret") }
                 }
             };
         }
@@ -40,13 +40,17 @@ namespace TACHYON.Web.IdentityServer
                 {
                     ClientId = child["ClientId"],
                     ClientName = child["ClientName"],
-                    AllowedGrantTypes = child.GetSection("AllowedGrantTypes").GetChildren().Select(c => c.Value).ToArray(),
+                    AllowedGrantTypes =
+                        child.GetSection("AllowedGrantTypes").GetChildren().Select(c => c.Value).ToArray(),
                     RequireConsent = bool.Parse(child["RequireConsent"] ?? "false"),
                     AllowOfflineAccess = bool.Parse(child["AllowOfflineAccess"] ?? "false"),
-                    ClientSecrets = child.GetSection("ClientSecrets").GetChildren().Select(secret => new Secret(secret["Value"].Sha256())).ToArray(),
+                    ClientSecrets =
+                        child.GetSection("ClientSecrets").GetChildren()
+                            .Select(secret => new Secret(secret["Value"].Sha256())).ToArray(),
                     AllowedScopes = child.GetSection("AllowedScopes").GetChildren().Select(c => c.Value).ToArray(),
                     RedirectUris = child.GetSection("RedirectUris").GetChildren().Select(c => c.Value).ToArray(),
-                    PostLogoutRedirectUris = child.GetSection("PostLogoutRedirectUris").GetChildren().Select(c => c.Value).ToArray(),
+                    PostLogoutRedirectUris = child.GetSection("PostLogoutRedirectUris").GetChildren()
+                        .Select(c => c.Value).ToArray(),
                 });
             }
 

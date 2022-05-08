@@ -9,6 +9,5 @@ namespace TACHYON.ShippingRequestVases.Dtos
         public CreateOrEditShippingRequestVasDto ShippingRequestVas { get; set; }
 
         public string VasName { get; set; }
-
     }
 }

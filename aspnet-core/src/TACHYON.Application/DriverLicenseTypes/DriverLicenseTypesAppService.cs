@@ -5,6 +5,9 @@ using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
+using Abp.UI;
+using AutoMapper.QueryableExtensions;
+using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -20,42 +23,21 @@ namespace TACHYON.DriverLicenseTypes
     public class DriverLicenseTypesAppService : TACHYONAppServiceBase, IDriverLicenseTypesAppService
     {
         private readonly IRepository<DriverLicenseType> _driverLicenseTypeRepository;
+        private readonly IRepository<DriverLicenseTypeTranslation> _driverLicenseTypeTranslationRepository;
 
-
-        public DriverLicenseTypesAppService(IRepository<DriverLicenseType> driverLicenseTypeRepository)
+        public DriverLicenseTypesAppService(IRepository<DriverLicenseType> driverLicenseTypeRepository, IRepository<DriverLicenseTypeTranslation> driverLicenseTypeTranslationRepository)
         {
             _driverLicenseTypeRepository = driverLicenseTypeRepository;
-
+            _driverLicenseTypeTranslationRepository = driverLicenseTypeTranslationRepository;
         }
 
-        public async Task<PagedResultDto<GetDriverLicenseTypeForViewDto>> GetAll(GetAllDriverLicenseTypesInput input)
+        public async Task<LoadResult> GetAll(GetAllDriverLicenseTypesInput input)
         {
 
             var filteredDriverLicenseTypes = _driverLicenseTypeRepository.GetAll()
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Name.Contains(input.Filter));
+                        .ProjectTo<DriverLicenseTypeDto>(AutoMapperConfigurationProvider);
 
-            var pagedAndFilteredDriverLicenseTypes = filteredDriverLicenseTypes
-                .OrderBy(input.Sorting ?? "id asc")
-                .PageBy(input);
-
-            var driverLicenseTypes = from o in pagedAndFilteredDriverLicenseTypes
-                                     select new GetDriverLicenseTypeForViewDto()
-                                     {
-                                         DriverLicenseType = new DriverLicenseTypeDto
-                                         {
-                                             Name = o.Name,
-                                             WasIIntegrationId = o.WasIIntegrationId,
-                                             ApplicableforWaslRegistration = o.ApplicableforWaslRegistration,
-                                             Id = o.Id
-                                         }
-                                     };
-
-            var totalCount = await filteredDriverLicenseTypes.CountAsync();
-
-            return new PagedResultDto<GetDriverLicenseTypeForViewDto>(
-                totalCount,
-                await driverLicenseTypes.ToListAsync()
-            );
+            return await LoadResultAsync(filteredDriverLicenseTypes, input.LoadOptions);
         }
 
         [AbpAuthorize(AppPermissions.Pages_DriverLicenseTypes_Edit)]
@@ -104,13 +86,56 @@ namespace TACHYON.DriverLicenseTypes
         }
 
 
-        public async Task<List<SelectItemDto>> GetForDropDownList()
+        public async Task<List<GetLicenseTypeForDropDownOutput>> GetForDropDownList()
         {
             DisableTenancyFilters();
-            return await _driverLicenseTypeRepository
+            var list = await _driverLicenseTypeRepository
                 .GetAll()
-                .Select(x => new SelectItemDto(x.Id.ToString(), x.Name))
+                .Include(x => x.Translations)
                 .ToListAsync();
+            return ObjectMapper.Map<List<GetLicenseTypeForDropDownOutput>>(list);
         }
+
+
+        #region MultiLingual
+
+        public async Task CreateOrEditTranslation(DriverLicenseTypeTranslationDto input)
+        {
+
+            var translation = await _driverLicenseTypeTranslationRepository.FirstOrDefaultAsync(x => x.Id == input.Id);
+            if (translation == null)
+            {
+                var newTranslation = ObjectMapper.Map<DriverLicenseTypeTranslation>(input);
+                await _driverLicenseTypeTranslationRepository.InsertAsync(newTranslation);
+            }
+            else
+            {
+                var duplication = await _driverLicenseTypeTranslationRepository.FirstOrDefaultAsync(x => x.CoreId == translation.CoreId && x.Language.Contains(translation.Language) && x.Id != translation.Id);
+                if (duplication != null)
+                {
+                    throw new UserFriendlyException(
+                        "The translation for this language already exists, you can modify it");
+                }
+                ObjectMapper.Map(input, translation);
+            }
+        }
+
+        public async Task<LoadResult> GetAllTranslations(GetAllTranslationsInput input)
+        {
+            var filteredPackingTypes = _driverLicenseTypeTranslationRepository
+                .GetAll()
+                .Where(x => x.CoreId == Convert.ToInt32(input.CoreId))
+                .ProjectTo<DriverLicenseTypeTranslationDto>(AutoMapperConfigurationProvider);
+
+            return await LoadResultAsync(filteredPackingTypes, input.LoadOptions);
+        }
+
+
+        public async Task DeleteTranslation(EntityDto input)
+        {
+            await _driverLicenseTypeTranslationRepository.DeleteAsync(input.Id);
+        }
+
+        #endregion
     }
 }

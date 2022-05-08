@@ -86,18 +86,24 @@
 
             <div class="col-6">
               <div class="form-group">
-                <select
-                  [disabled]="!isCountySelected"
-                  #citySelect="ngModel"
-                  class="form-control form-control-lg custom-select mr-sm-2"
-                  name="tenant.cityId"
-                  [(ngModel)]="tenant.cityId"
-                  required
+                <div
+                  [ngClass]="{
+                    'spinner spinner-success spinner-right mr-1 ml-1': cityLoading
+                  }"
                 >
-                  <option [ngValue]="null">{{ l('Select') }} {{ l('City') }}</option>
-                  <option *ngFor="let city of allCities" value="{{ city.id }}">{{ city.displayName }}</option>
-                  <option value="-1">{{ l('Other') }}</option>
-                </select>
+                  <select
+                    [disabled]="cityLoading || !tenant.countryId"
+                    #citySelect="ngModel"
+                    class="form-control form-control-lg custom-select mr-sm-2"
+                    name="tenant.cityId"
+                    [(ngModel)]="tenant.cityId"
+                    required
+                  >
+                    <option [ngValue]="null">{{ l('Select') }} {{ l('City') }}</option>
+                    <option *ngFor="let city of allCities" value="{{ city.id }}">{{ city.displayName }}</option>
+                    <option value="-1">{{ l('Other') }}</option>
+                  </select>
+                </div>
                 <!-- <span class="form-text text-danger" *ngIf="citySelect.value == -2 && citySelect.touched">City is required</span> -->
                 <validation-messages [formCtrl]="citySelect"></validation-messages>
               </div>

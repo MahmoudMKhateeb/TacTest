@@ -3,7 +3,7 @@ using System;
 
 namespace TACHYON.Invoices.Dto
 {
-    public class InvoiceListDto:CreationAuditedEntityDto<long>
+    public class InvoiceListDto : CreationAuditedEntityDto<long>
     {
         public long InvoiceNumber { get; set; }
         public int PeriodId { get; set; }
@@ -14,9 +14,5 @@ namespace TACHYON.Invoices.Dto
         public InvoiceAccountType AccountType { get; set; }
         public string AccountTypeTitle { get { return AccountType.GetEnumDescription(); } }
         public decimal TotalAmount { get; set; }
-
-
     }
-
-
 }

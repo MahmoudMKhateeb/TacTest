@@ -10,6 +10,5 @@ namespace TACHYON.TermsAndConditions.Dtos
         public string LanguageFilter { get; set; }
 
         public string TermAndConditionTitleFilter { get; set; }
-
     }
 }

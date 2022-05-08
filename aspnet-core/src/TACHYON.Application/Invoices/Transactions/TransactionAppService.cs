@@ -41,9 +41,9 @@ namespace TACHYON.Invoices.Transactions
         {
             DisableTenancyFiltersIfHost();
             var query = _transactionRepository
-                 .GetAll()
-                 .AsNoTracking()
-                 .ProjectTo<TransactionListDto>(AutoMapperConfigurationProvider);
+                .GetAll()
+                .AsNoTracking()
+                .ProjectTo<TransactionListDto>(AutoMapperConfigurationProvider);
             return await LoadResultAsync(query, input.LoadOptions);
         }
 
@@ -53,13 +53,12 @@ namespace TACHYON.Invoices.Transactions
         {
             DisableTenancyFiltersIfHost();
             var query = _transactionRepository
-                 .GetAll()
-                 .AsNoTracking()
-                 .ProjectTo<TransactionListDto>(AutoMapperConfigurationProvider);
+                .GetAll()
+                .AsNoTracking()
+                .ProjectTo<TransactionListDto>(AutoMapperConfigurationProvider);
 
             var data = (await LoadResultWithoutPagingAsync(query, input.LoadOptions)).Items.ToList();
             return _transactionExcelExporter.ExportToFile(data);
-
         }
     }
 }

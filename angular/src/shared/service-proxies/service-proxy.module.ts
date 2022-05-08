@@ -4,10 +4,10 @@ import { NgModule } from '@angular/core';
 import * as ApiServiceProxies from './service-proxies';
 import { ZeroRefreshTokenService } from '@account/auth/zero-refresh-token.service';
 import { ZeroTemplateHttpConfigurationService } from './zero-template-http-configuration.service';
-import { TerminologieServiceProxy } from 'shared/service-proxies/terminologies-ervice-proxy';
 
 @NgModule({
   providers: [
+    ApiServiceProxies.EmailTemplatesServiceProxy,
     ApiServiceProxies.DriverLicenseTypesServiceProxy,
     ApiServiceProxies.DangerousGoodTypesServiceProxy,
     ApiServiceProxies.TruckCapacitiesTranslationsServiceProxy,
@@ -142,9 +142,13 @@ import { TerminologieServiceProxy } from 'shared/service-proxies/terminologies-e
     ApiServiceProxies.ShippingRequestsTachyonDealerServiceProxy,
     ApiServiceProxies.InvoicesProformaServiceProxy,
     ApiServiceProxies.TrackingServiceProxy,
+    ApiServiceProxies.RatingServiceProxy,
     ApiServiceProxies.ShippingRequestDriverServiceProxy,
     ApiServiceProxies.DriverLicenseTypesServiceProxy,
-    TerminologieServiceProxy,
+    ApiServiceProxies.ShippingRequestTripAccidentCommentsServiceProxy,
+    ApiServiceProxies.CarrierDashboardServiceProxy,
+    ApiServiceProxies.EntityLogServiceProxy,
+    ApiServiceProxies.ShipperDashboardServiceProxy,
     { provide: RefreshTokenService, useClass: ZeroRefreshTokenService },
     { provide: AbpHttpConfigurationService, useClass: ZeroTemplateHttpConfigurationService },
     { provide: HTTP_INTERCEPTORS, useClass: AbpHttpInterceptor, multi: true },

@@ -10,15 +10,14 @@ namespace TACHYON.AddressBook.Exporting
 {
     public class FacilitiesExcelExporter : NpoiExcelExporterBase, IFacilitiesExcelExporter
     {
-
         private readonly ITimeZoneConverter _timeZoneConverter;
         private readonly IAbpSession _abpSession;
 
         public FacilitiesExcelExporter(
             ITimeZoneConverter timeZoneConverter,
             IAbpSession abpSession,
-			ITempFileCacheManager tempFileCacheManager) :  
-	base(tempFileCacheManager)
+            ITempFileCacheManager tempFileCacheManager) :
+            base(tempFileCacheManager)
         {
             _timeZoneConverter = timeZoneConverter;
             _abpSession = abpSession;
@@ -30,7 +29,6 @@ namespace TACHYON.AddressBook.Exporting
                 "Facilities.xlsx",
                 excelPackage =>
                 {
-                    
                     var sheet = excelPackage.CreateSheet(L("Facilities"));
 
                     AddHeader(
@@ -40,7 +38,7 @@ namespace TACHYON.AddressBook.Exporting
                         L("Longitude"),
                         L("latitude"),
                         (L("City")) + L("DisplayName")
-                        );
+                    );
 
                     AddObjects(
                         sheet, 2, facilities,
@@ -49,10 +47,7 @@ namespace TACHYON.AddressBook.Exporting
                         _ => _.Facility.Longitude,
                         _ => _.Facility.Latitude,
                         _ => _.CityDisplayName
-                        );
-
-					
-					
+                    );
                 });
         }
     }

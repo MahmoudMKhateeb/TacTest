@@ -3,12 +3,14 @@ import { ChangeDetectorRef, Component, EventEmitter, Injector, Output, ViewChild
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
 import {
+  CarriersForDropDownDto,
   CreateOrEditTruckDto,
   DocumentFileDto,
   DocumentFilesServiceProxy,
   ISelectItemDto,
   PlateTypeSelectItemDto,
   SelectItemDto,
+  ShippingRequestsServiceProxy,
   TrucksServiceProxy,
   TruckTruckStatusLookupTableDto,
 } from '@shared/service-proxies/service-proxies';
@@ -30,6 +32,7 @@ import { EntityTypeHistoryModalComponent } from '@app/shared/common/entityHistor
 import * as moment from '@node_modules/moment';
 import { RequiredDocumentFormChildComponent } from '@app/shared/common/required-document-form-child/required-document-form-child.component';
 import { NgForm } from '@angular/forms';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'createOrEditTruckModal',
@@ -69,6 +72,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
   testCond = null;
   truck: CreateOrEditTruckDto;
   trucksTypeDisplayName = '';
+  capacityLoading: boolean;
   todayGregorian = this.dateFormatterService.GetTodayGregorian();
   todayHijri = this.dateFormatterService.ToHijri(this.todayGregorian);
   userName2 = '';
@@ -83,6 +87,8 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
   public temporaryPictureUrl: string;
   profilePicture = '';
   fileFormateIsInvalideIndexList: boolean[] = [];
+  carriers: CarriersForDropDownDto[] = [];
+  truckTypeLoading: boolean;
 
   selectedDateTypeHijri = DateType.Hijri; // or DateType.Gregorian
   selectedDateTypeGregorian = DateType.Gregorian; // or DateType.Gregorian
@@ -107,7 +113,8 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
     private _localStorageService: LocalStorageService,
     private _documentFilesServiceProxy: DocumentFilesServiceProxy,
     private _fileDownloadService: FileDownloadService,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private _shippingRequestsService: ShippingRequestsServiceProxy
   ) {
     super(injector);
   }
@@ -126,11 +133,16 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
       this.truck.capacityId = null;
       this.truck.plateTypeId = null;
       this.truck.capacity = null;
-
+      this.truck.otherTransportTypeName = null;
+      this.truck.otherTrucksTypeName = null;
       this.initTransportDropDownList();
       this._trucksServiceProxy.getAllTruckStatusForTableDropdown().subscribe((result) => {
         this.allTruckStatuss = result;
       });
+
+      if (this.isTruckTenantRequired) {
+        this._shippingRequestsService.getAllCarriersForDropDown().subscribe((result) => (this.carriers = result));
+      }
 
       this._trucksServiceProxy.getAllPlateTypeIdForDropdown().subscribe((result) => {
         this.allPlateTypes = result;
@@ -161,9 +173,18 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
         });
         this._trucksServiceProxy.getAllTruckTypesByTransportTypeIdForDropdown(this.truck.transportTypeId).subscribe((result) => {
           this.allTruckTypesByTransportType = result;
-        });
-        this._trucksServiceProxy.getAllTuckCapacitiesByTuckTypeIdForDropdown(this.truck.trucksTypeId).subscribe((result) => {
-          this.allTrucksCapByTruckTypeId = result;
+          if (this.IfOther(this.allTruckTypesByTransportType, this.truck.trucksTypeId)) {
+            this._shippingRequestsService.getAllCapacitiesForDropdown().subscribe((result) => {
+              this.allTrucksCapByTruckTypeId = result;
+              this.capacityLoading = false;
+            });
+          } else {
+            this.capacityLoading = true;
+            this._trucksServiceProxy.getAllTuckCapacitiesByTuckTypeIdForDropdown(this.truck.trucksTypeId).subscribe((result) => {
+              this.allTrucksCapByTruckTypeId = result;
+              this.capacityLoading = false;
+            });
+          }
         });
         this._trucksServiceProxy.getAllTruckStatusForTableDropdown().subscribe((result) => {
           this.allTruckStatuss = result;
@@ -179,6 +200,10 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
   } //end of show
 
   createOrEditTruck() {
+    if (!this.validateOthersInputs()) {
+      this.notify.error(this.l('PleaseCompleteMissingFields'));
+      return false;
+    }
     this.truck.modelYear = moment(this.truck.modelYear).locale('en').format('YYYY');
     this._trucksServiceProxy
       .createOrEdit(this.truck)
@@ -195,6 +220,16 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
       });
   }
 
+  validateOthersInputs() {
+    if (this.IfOther(this.allTransportTypes, this.truck.transportTypeId) && !this.truck.otherTransportTypeName.trim()) {
+      return false;
+    }
+    if (this.IfOther(this.allTrucksTypes, this.truck.trucksTypeId) && !this.truck.otherTrucksTypeName.trim()) {
+      return false;
+    }
+
+    return true;
+  }
   save(): void {
     this.saving = true;
 
@@ -239,6 +274,9 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
     this.uploader.clearQueue();
     this.uploader.addToQueue([<File>base64ToFile(event.base64)]);
   }
+  get isTruckTenantRequired(): boolean {
+    return (this.feature.isEnabled('App.TachyonDealer') || !this.appSession.tenantId) && !this.truck?.id;
+  }
 
   getTruckPictureUrl(truckId: number): void {
     let self = this;
@@ -259,20 +297,31 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
       this._trucksServiceProxy.getAllTruckTypesByTransportTypeIdForDropdown(transportTypeId).subscribe((result) => {
         this.allTruckTypesByTransportType = result;
         this.truck.trucksTypeId = null;
+        this.truckTypeLoading = false;
       });
     } else {
       this.truck.trucksTypeId = null;
       this.allTruckTypesByTransportType = null;
       this.allTrucksCapByTruckTypeId = null;
+      this.truckTypeLoading = false;
     }
   }
 
   trucksTypeSelectChange(trucksTypeId?: number) {
     if (trucksTypeId > 0) {
-      this._trucksServiceProxy.getAllTuckCapacitiesByTuckTypeIdForDropdown(trucksTypeId).subscribe((result) => {
-        this.allTrucksCapByTruckTypeId = result;
-        this.truck.capacityId = null;
-      });
+      this.capacityLoading = true;
+      if (this.IfOther(this.allTruckTypesByTransportType, trucksTypeId)) {
+        this._shippingRequestsService.getAllCapacitiesForDropdown().subscribe((result) => {
+          this.allTrucksCapByTruckTypeId = result;
+          this.capacityLoading = false;
+        });
+      } else {
+        this.capacityLoading = true;
+        this._trucksServiceProxy.getAllTuckCapacitiesByTuckTypeIdForDropdown(trucksTypeId).subscribe((result) => {
+          this.allTrucksCapByTruckTypeId = result;
+          this.capacityLoading = false;
+        });
+      }
     } else {
       this.truck.capacityId = null;
       this.allTrucksCapByTruckTypeId = null;

@@ -1,5 +1,5 @@
 <div class="form-group" provideParentForm>
-  <label class="requiredInput" *ngIf="showLabel">  {{ label }}<span *ngIf="isRequired" class="text-danger">*</span> </label>
+  <label class="requiredInput" *ngIf="showLabel"> {{ label }}<span *ngIf="isRequired" class="text-danger">*</span> </label>
 
   <div class="input-group">
     <ng-container *ngIf="selectedDateType == DateType.Gregorian">
@@ -10,7 +10,7 @@
           'is-valid': parentForm?.submitted && ngbDatepicker.valid,
           'is-invalid': parentForm?.submitted && ngbDatepicker.invalid
         }"
-        [placeholder]="'d/M/yyyy' | localize"
+        [placeholder]="'DD/MM/YYYY' | localize"
         [name]="label"
         [(ngModel)]="selectedDate"
         ngbDatepicker
@@ -35,10 +35,9 @@
       [readonly]="readonly"
       [min]="minHijri"
       [max]="maxHijri"
-      style="flex: 1 1 auto;"
+      style="flex: 1 1 auto"
       [name]="label"
       [isRequired]="isRequired"
-      [placeHolder]="placeHolder"
       [disabled]="disabled"
     >
     </hijri-date-picker>

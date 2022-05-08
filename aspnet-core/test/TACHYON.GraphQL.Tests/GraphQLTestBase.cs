@@ -20,7 +20,6 @@ namespace TACHYON.GraphQL.Tests
     public class GraphQLTestBase<TSchema> : GraphQLTestBase<TSchema, GraphQLDocumentBuilder>
         where TSchema : ISchema
     {
-
     }
 
     public class GraphQLTestBase<TSchema, TDocumentBuilder> : AppTestBase<TACHYONGraphQLTestModule>
@@ -102,10 +101,7 @@ namespace TACHYON.GraphQL.Tests
             var actualResult = await Writer
                 .WriteToStringAsync(renderErrors
                     ? executionResult
-                    : new ExecutionResult
-                    {
-                        Data = executionResult.Data
-                    });
+                    : new ExecutionResult { Data = executionResult.Data });
 
             var expectedResult = await Writer.WriteToStringAsync(expectedExecutionResult);
 
@@ -169,11 +165,7 @@ namespace TACHYON.GraphQL.Tests
                 data = JObject.Parse(result);
             }
 
-            return new ExecutionResult
-            {
-                Data = data,
-                Errors = errors
-            };
+            return new ExecutionResult { Data = data, Errors = errors };
         }
     }
 }

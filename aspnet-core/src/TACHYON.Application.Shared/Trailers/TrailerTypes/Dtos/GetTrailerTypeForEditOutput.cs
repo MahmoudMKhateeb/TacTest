@@ -7,7 +7,5 @@ namespace TACHYON.Trailers.TrailerTypes.Dtos
     public class GetTrailerTypeForEditOutput
     {
         public CreateOrEditTrailerTypeDto TrailerType { get; set; }
-
-
     }
 }

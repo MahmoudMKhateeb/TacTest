@@ -15,13 +15,13 @@
           <h4 class="modal-title">
             <span></span>
           </h4>
-          <button type="button" class="close" (click)="close()" style="position: relative; z-index: 99999;" aria-label="Close">
+          <button type="button" class="close" (click)="close()" style="position: relative; z-index: 99999" aria-label="Close">
             <span aria-hidden="false">&times;</span>
           </button>
         </div>
         <div class="modal-body">
           <div class="form-group">
-            <label for="ReceiverCode">{{ 'POD' | localize }}</label>
+            <label for="ReceiverCode">{{ action == 'UplodeDeliveryNote' ? l('upLoadDeliveryNoteDocument') : l('POD') }}</label>
             <p-fileUpload
               customUpload="true"
               name="FileUpload"
@@ -31,6 +31,10 @@
               (uploadHandler)="upload($event)"
               (onError)="onUploadError()"
               chooseLabel="{{ 'ImportFile' | localize }}"
+              uploadLabel="{{ 'Upload' | localize }}"
+              cancelLabel="{{ 'Cancel' | localize }}"
+              [busyIf]="loading"
+              multiple="multiple"
             >
             </p-fileUpload>
           </div>

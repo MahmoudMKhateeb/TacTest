@@ -28,7 +28,7 @@ namespace TACHYON.WebHooks
             IWebhookEventAppService webhookEventAppService,
             IWebhookSubscriptionAppService webhookSubscriptionAppService,
             IRepository<WebhookSubscriptionInfo, Guid> subscriptionRepository
-            )
+        )
         {
             _webhookSendAttemptStore = webhookSendAttemptStore;
             _backgroundJobManager = backgroundJobManager;
@@ -51,10 +51,12 @@ namespace TACHYON.WebHooks
                 input.SkipCount
             );
 
-            return new PagedResultDto<GetAllSendAttemptsOutput>(list.TotalCount, ObjectMapper.Map<List<GetAllSendAttemptsOutput>>(list.Items));
+            return new PagedResultDto<GetAllSendAttemptsOutput>(list.TotalCount,
+                ObjectMapper.Map<List<GetAllSendAttemptsOutput>>(list.Items));
         }
 
-        public async Task<ListResultDto<GetAllSendAttemptsOfWebhookEventOutput>> GetAllSendAttemptsOfWebhookEvent(GetAllSendAttemptsOfWebhookEventInput input)
+        public async Task<ListResultDto<GetAllSendAttemptsOfWebhookEventOutput>> GetAllSendAttemptsOfWebhookEvent(
+            GetAllSendAttemptsOfWebhookEventInput input)
         {
             if (string.IsNullOrEmpty(input.Id))
             {
@@ -69,9 +71,10 @@ namespace TACHYON.WebHooks
             var mappedList = ObjectMapper.Map<List<GetAllSendAttemptsOfWebhookEventOutput>>(list);
             var subscriptionIds = list.Select(x => x.WebhookSubscriptionId).Distinct().ToArray();
 
-            var subscriptionUrisDictionary = _subscriptionRepository.GetAll().Where(subscription => subscriptionIds.Contains(subscription.Id))
-                 .Select(subscription => new { subscription.Id, subscription.WebhookUri })
-                 .ToDictionary(s => s.Id, s => s.WebhookUri);
+            var subscriptionUrisDictionary = _subscriptionRepository.GetAll()
+                .Where(subscription => subscriptionIds.Contains(subscription.Id))
+                .Select(subscription => new { subscription.Id, subscription.WebhookUri })
+                .ToDictionary(s => s.Id, s => s.WebhookUri);
 
             foreach (var output in mappedList)
             {
@@ -84,9 +87,12 @@ namespace TACHYON.WebHooks
         [AbpAuthorize(AppPermissions.Pages_Administration_Webhook_ResendWebhook)]
         public async Task Resend(string sendAttemptId)
         {
-            var webhookSendAttempt = await _webhookSendAttemptStore.GetAsync(AbpSession.TenantId, Guid.Parse(sendAttemptId));
+            var webhookSendAttempt =
+                await _webhookSendAttemptStore.GetAsync(AbpSession.TenantId, Guid.Parse(sendAttemptId));
             var webhookEvent = await _webhookEventAppService.Get(webhookSendAttempt.WebhookEventId.ToString());
-            var webhookSubscription = await _webhookSubscriptionAppService.GetSubscription(webhookSendAttempt.WebhookSubscriptionId.ToString());
+            var webhookSubscription =
+                await _webhookSubscriptionAppService.GetSubscription(
+                    webhookSendAttempt.WebhookSubscriptionId.ToString());
 
             _backgroundJobManager.Enqueue<WebhookSenderJob, WebhookSenderArgs>(new WebhookSenderArgs()
             {

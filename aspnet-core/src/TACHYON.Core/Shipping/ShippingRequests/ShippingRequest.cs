@@ -1,14 +1,15 @@
 ﻿using Abp.Configuration;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using Abp.Timing;
 using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Abp.Timing;
 using System.Threading.Tasks;
 using TACHYON.Authorization.Users;
+using TACHYON.Cities;
 using TACHYON.Configuration;
 using TACHYON.Goods.GoodCategories;
 using TACHYON.Goods.GoodsDetails;
@@ -22,6 +23,8 @@ using TACHYON.Shipping.ShippingRequestBidStatuses;
 using TACHYON.Shipping.ShippingRequestStatuses;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.ShippingTypes;
+using TACHYON.ShippingRequestVases;
+using TACHYON.TachyonPriceOffers;
 using TACHYON.Trailers;
 using TACHYON.Trailers.TrailerTypes;
 using TACHYON.Trucks;
@@ -29,9 +32,6 @@ using TACHYON.Trucks.TruckCategories.TransportTypes;
 using TACHYON.Trucks.TruckCategories.TruckCapacities;
 using TACHYON.Trucks.TrucksTypes;
 using TACHYON.UnitOfMeasures;
-using TACHYON.ShippingRequestVases;
-using TACHYON.TachyonPriceOffers;
-using TACHYON.Cities;
 
 namespace TACHYON.Shipping.ShippingRequests
 {
@@ -39,9 +39,19 @@ namespace TACHYON.Shipping.ShippingRequests
     public class ShippingRequest : FullAuditedEntity<long>, IMustHaveTenant, IHasIsDrafted
     {
         public string ReferenceNumber { get; set; }
+
+        /// <summary>
+        /// This reference shipper add it manually
+        /// </summary>
+        public string ShipperReference { get; set; }
+
+        /// <summary>
+        /// shipper add his invoice number manually
+        /// </summary>
+        public string ShipperInvoiceNo { get; set; }
+
         public int TenantId { get; set; }
-        [ForeignKey("TenantId")]
-        public Tenant Tenant { get; set; }
+        [ForeignKey("TenantId")] public Tenant Tenant { get; set; }
 
         /// <summary>
         /// when it is bidding shipping request
@@ -52,10 +62,14 @@ namespace TACHYON.Shipping.ShippingRequests
         /// when it is not bidding and it is Tachyon Deal
         /// </summary>
         public virtual bool IsTachyonDeal { get; set; }
+
         /// <summary>
         /// Is direct request Field
         /// </summary>
         public virtual bool IsDirectRequest { get; set; }
+
+        public Tenant CarrierTenantForDirectRequestFK { get; set; }
+        public int? CarrierTenantIdForDirectRequest { get; set; }
 
         public ShippingRequestRouteType? RouteTypeId { get; set; }
 
@@ -63,18 +77,17 @@ namespace TACHYON.Shipping.ShippingRequests
         //city
         public virtual int? OriginCityId { get; set; }
 
-        [ForeignKey("OriginCityId")]
-        public City OriginCityFk { get; set; }
+        [ForeignKey("OriginCityId")] public City OriginCityFk { get; set; }
 
         public virtual int? DestinationCityId { get; set; }
 
-        [ForeignKey("DestinationCityId")]
-        public City DestinationCityFk { get; set; }
+        [ForeignKey("DestinationCityId")] public City DestinationCityFk { get; set; }
 
         /// <summary>
         /// The type of shipping request
         /// </summary>
         public ShippingRequestType RequestType { get; set; }
+
         /// <summary>
         /// assigned price after commission
         /// </summary>
@@ -94,6 +107,7 @@ namespace TACHYON.Shipping.ShippingRequests
         /// check if this request is related with shipper invoice
         /// </summary>
         public bool IsShipperHaveInvoice { get; set; }
+
         /// <summary>
         /// check if this request is related with carrirer invoice
         /// </summary>
@@ -101,7 +115,7 @@ namespace TACHYON.Shipping.ShippingRequests
         /// <summary>
         /// when shipper reject tachyon-user price
         /// </summary>
-       // public bool? IsRejected { get; set; }
+        // public bool? IsRejected { get; set; }
 
         /// <summary>
         /// ShippingRequest that this ShippingRequest cloned from
@@ -117,8 +131,7 @@ namespace TACHYON.Shipping.ShippingRequests
         /// </summary>
         public int? CarrierTenantId { get; set; }
 
-        [ForeignKey("CarrierTenantId")]
-        public Tenant CarrierTenantFk { get; set; }
+        [ForeignKey("CarrierTenantId")] public Tenant CarrierTenantFk { get; set; }
 
 
         /// <summary>
@@ -132,22 +145,25 @@ namespace TACHYON.Shipping.ShippingRequests
         //[Required]
         public int? GoodCategoryId { get; set; }
 
-        [ForeignKey("GoodCategoryId")]
-        public GoodCategory GoodCategoryFk { get; set; }
+        [ForeignKey("GoodCategoryId")] public GoodCategory GoodCategoryFk { get; set; }
+
         /// <summary>
         /// when GoodsCategory selected to other, this field must be filled
         /// </summary>
         public string OtherGoodsCategoryName { get; set; }
+
         /// <summary>
         /// Status of shipping request
         /// </summary>
         public ShippingRequestStatus Status { get; set; }
+
         /// <summary>
         /// assigned Driver
         /// </summary>
         public long? AssignedDriverUserId { get; set; }
-        [ForeignKey("AssignedDriverUserId")]
-        public User AssignedDriverUserFk { get; set; }
+
+        [ForeignKey("AssignedDriverUserId")] public User AssignedDriverUserFk { get; set; }
+
         /// <summary>
         /// if the driver make accident when he work on trip
         /// </summary>
@@ -158,14 +174,15 @@ namespace TACHYON.Shipping.ShippingRequests
         /// assigned Truck
         /// </summary>
         public long? AssignedTruckId { get; set; }
-        [ForeignKey("AssignedTruckId")]
-        public Truck AssignedTruckFk { get; set; }
+
+        [ForeignKey("AssignedTruckId")] public Truck AssignedTruckFk { get; set; }
 
 
         public int NumberOfTrips { get; set; }
         public int TotalsTripsAddByShippier { get; set; }
         public DateTime? StartTripDate { get; set; }
         public DateTime? EndTripDate { get; set; }
+
         public double TotalWeight { get; set; }
         // todo make sure those are nullable
 
@@ -173,23 +190,20 @@ namespace TACHYON.Shipping.ShippingRequests
 
         public virtual int? TransportTypeId { get; set; }
 
-        [ForeignKey("TransportTypeId")]
-        public TransportType TransportTypeFk { get; set; }
+        [ForeignKey("TransportTypeId")] public TransportType TransportTypeFk { get; set; }
         public string OtherTransportTypeName { get; set; }
         public virtual long? TrucksTypeId { get; set; }
-        [ForeignKey("TrucksTypeId")]
-        public TrucksType TrucksTypeFk { get; set; }
+        [ForeignKey("TrucksTypeId")] public TrucksType TrucksTypeFk { get; set; }
         public string OtherTrucksTypeName { get; set; }
 
         public virtual int? CapacityId { get; set; }
-        [ForeignKey("CapacityId")]
-        public Capacity CapacityFk { get; set; }
+        [ForeignKey("CapacityId")] public Capacity CapacityFk { get; set; }
 
         #endregion
+
         public int? PackingTypeId { get; set; }
 
-        [ForeignKey("PackingTypeId")]
-        public PackingType PackingTypeFk { get; set; }
+        [ForeignKey("PackingTypeId")] public PackingType PackingTypeFk { get; set; }
 
         public string OtherPackingTypeName { get; set; }
 
@@ -197,18 +211,23 @@ namespace TACHYON.Shipping.ShippingRequests
 
         public int ShippingTypeId { get; set; }
 
-        [ForeignKey("ShippingTypeId")]
-        public ShippingType ShippingTypeFk { get; set; }
+        [ForeignKey("ShippingTypeId")] public ShippingType ShippingTypeFk { get; set; }
 
         /// <summary>
         /// This field describes if the shipping request is draft or not, draft means incomplete request
         /// </summary>
         public bool IsDrafted { get; set; }
 
+        /// <summary>
+        /// when TachyonDealer create a shipping request
+        /// </summary>
+        public bool CreatedByTachyonDealer { get; set; }
+
         public int DraftStep { get; set; }
-        [StringLength(500)]
-        public string CancelReason { get; set; }
+        [StringLength(500)] public string CancelReason { get; set; }
+
         #region Bids Data
+
         public DateTime? BidStartDate { get; set; }
         public DateTime? BidEndDate { get; set; }
         public ShippingRequestBidStatus BidStatus { get; set; }
@@ -224,37 +243,48 @@ namespace TACHYON.Shipping.ShippingRequests
 
         //trips collection
         public ICollection<ShippingRequestTrip> ShippingRequestTrips { get; set; }
+
         #endregion
 
         #region Commission?
+
         public decimal VatSetting { get; set; }
+
         /// <summary>
         /// total of price after commission, before add Vat settings
         /// </summary>
         public decimal SubTotalAmount { get; set; }
+
         /// <summary>
         /// Amount of vat, PriceSubTotal*Vat/100
         /// </summary>
         public decimal VatAmount { get; set; }
+
         public decimal PercentCommissionSetting { get; set; }
         public decimal CommissionValueSetting { get; set; }
         public decimal MinValueCommissionSetting { get; set; }
+
         /// <summary>
         /// total commission always sum of ActualPercentCommission + ActualCommissionValue + ActualMinCommission
         /// </summary>
         public decimal TotalCommission { get; set; }
+
         // profit of final price calculated after all commissions + base carrier price 
-       // public decimal TachyonDealerProfit { get; set; }
+        // public decimal TachyonDealerProfit { get; set; }
         //this field special to tachyonDealer,describes accepted carrier price coming from bidding or direct request, or other; the price source defines in TachyonPriceOffer
         public decimal CarrierPrice { get; set; }
+
         /// <summary>
         /// type of carrier price, describes from where the price comes from, bidding, direct request, ..
         /// </summary>
         public CarrierPriceType CarrierPriceType { get; set; }
+
         public decimal ActualPercentCommission { get; set; }
         public decimal ActualCommissionValue { get; set; }
         public decimal ActualMinCommissionValue { get; set; }
+
         #endregion
+
         public void Close()
         {
             BidStatus = ShippingRequestBidStatus.Closed;
@@ -268,5 +298,9 @@ namespace TACHYON.Shipping.ShippingRequests
             BidStartDate = Clock.Now;
         }
 
+        public bool IsSaas()
+        {
+            return TenantId == CarrierTenantId;
+        }
     }
 }

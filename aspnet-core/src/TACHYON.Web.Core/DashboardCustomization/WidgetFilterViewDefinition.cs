@@ -11,7 +11,6 @@ namespace TACHYON.Web.DashboardCustomization
             string javascriptFile = null,
             string cssFile = null) : base(id, viewFile, javascriptFile, cssFile)
         {
-
         }
     }
 }

@@ -5,7 +5,7 @@ using TACHYON.Shipping.Trips;
 
 namespace TACHYON.Shipping.Drivers.Dto
 {
-    public  class ShippingRequestTripDriverListDto:EntityDto<long>
+    public class ShippingRequestTripDriverListDto : EntityDto<long>
     {
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
@@ -16,9 +16,10 @@ namespace TACHYON.Shipping.Drivers.Dto
 
         public ShippingRequestTripStatus Status { get; set; }
         public string StatusTitle { get; set; }
+        public string TripStatusTitle { get; set; }
         public ShippingRequestTripDriverStatus DriverStatus { get; set; }
         public long? WaybillNumber { get; set; }
-
-
+        public bool HasIncident { get; set; }
+        public bool IsSaas { get; set; }
     }
 }

@@ -16,8 +16,8 @@ namespace TACHYON.TachyonPriceOffers.dtos
         public decimal ActualPercentCommission { get; set; }
         public decimal ActualCommissionValue { get; set; }
         public decimal ActualMinCommissionValue { get; set; }
+
         public decimal TotalCommission { get; set; }
         //to do place direct request ID
-
     }
 }

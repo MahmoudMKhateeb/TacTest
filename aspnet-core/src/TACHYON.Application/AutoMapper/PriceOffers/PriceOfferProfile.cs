@@ -9,15 +9,15 @@ using TACHYON.ShippingRequestVases;
 
 namespace TACHYON.AutoMapper.PriceOffers
 {
-    public class PriceOfferProfile: Profile
+    public class PriceOfferProfile : Profile
     {
         public PriceOfferProfile()
         {
-
             CreateMap<CreateOrEditPriceOfferInput, PriceOffer>();
             CreateMap<PriceOfferDetail, PriceOfferItem>();
             CreateMap<PriceOffer, PriceOfferListDto>()
                 .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Tenant.Name))
+                .ForMember(dto => dto.CarrierTenantId, dto => dto.MapFrom(src => src.TenantId))
                 .ForMember(dst => dst.StatusTitle, opt => opt.MapFrom(src => src.Status.GetEnumDescription()));
 
 
@@ -26,35 +26,36 @@ namespace TACHYON.AutoMapper.PriceOffers
             CreateMap<PriceOffer, PriceOfferViewDto>()
                 .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Tenant.Name))
                 .ForMember(dst => dst.EditionId, opt => opt.MapFrom(src => src.Tenant.EditionId))
-                .ForMember(dst => dst.ShippingRequestStatus, opt => opt.MapFrom(src => src.ShippingRequestFK.Status))
-                .ForMember(dst => dst.IsTachyonDeal, opt => opt.MapFrom(src => src.ShippingRequestFK.IsTachyonDeal))
+                .ForMember(dst => dst.ShippingRequestStatus, opt => opt.MapFrom(src => src.ShippingRequestFk.Status))
+                .ForMember(dst => dst.IsTachyonDeal, opt => opt.MapFrom(src => src.ShippingRequestFk.IsTachyonDeal))
                 .ForMember(dst => dst.Items, opt => opt.MapFrom(src => src.PriceOfferDetails));
-            
+
             CreateMap<ShippingRequestVas, PriceOfferItemDto>()
                 .ForMember(dst => dst.ItemId, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dst => dst.ParentItemId, opt => opt.MapFrom(src => src.VasId))
                 .ForMember(dst => dst.ItemName, opt => opt.MapFrom(src => src.VasFk.Name))
                 .ForMember(dst => dst.PriceType, opt => opt.MapFrom(src => PriceOfferType.Vas))
-                .ForMember(dst => dst.Quantity, opt => opt.MapFrom(src => src.RequestMaxCount>=1?src.RequestMaxCount:1));
+                .ForMember(dst => dst.Quantity, opt => opt.MapFrom(src => src.RequestMaxCount >= 1 ? src.RequestMaxCount : 1))
+                .ForMember(dst => dst.Amount, opt => opt.MapFrom(src => src.RequestMaxAmount >= 1 ? src.RequestMaxAmount : 1));
 
             CreateMap<ShippingRequest, GetShippingRequestForPriceOfferListDto>()
-             .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Tenant.Name))
-             .ForMember(dst => dst.Carrier, opt => opt.MapFrom(src => src.CarrierTenantFk.Name))
-             .ForMember(dst => dst.OriginCity, opt => opt.MapFrom(src => src.OriginCityFk.DisplayName))
-             .ForMember(dst => dst.DestinationCity, opt => opt.MapFrom(src => src.DestinationCityFk.DisplayName))
-             .ForMember(dst => dst.BidStatusTitle, opt => opt.MapFrom(src => src.BidStatus.GetEnumDescription()))
-             .ForMember(dst => dst.StatusTitle, opt => opt.MapFrom(src => src.Status.GetEnumDescription()))
-             .ForMember(dst => dst.RemainingDays, opt => opt.MapFrom(src => "0"))
-             .ForMember(dst => dst.RemainingDays, opt => opt.MapFrom(src => GetRemainingDays(src.BidEndDate, src.BidStatus)))
-             .ForMember(dst => dst.Price, opt => opt.MapFrom(src => src.Price))
-     ;
-
-
-
+                .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Tenant.Name))
+                .ForMember(dst => dst.ShipperRating, opt => opt.MapFrom(src => src.Tenant.Rate))
+                .ForMember(dst => dst.ShipperRatingNumber, opt => opt.MapFrom(src => src.Tenant.RateNumber))
+                .ForMember(dst => dst.Carrier, opt => opt.MapFrom(src => src.CarrierTenantFk.Name))
+                .ForMember(dst => dst.OriginCity, opt => opt.MapFrom(src => src.OriginCityFk.DisplayName))
+                .ForMember(dst => dst.DestinationCity, opt => opt.MapFrom(src => src.DestinationCityFk.DisplayName))
+                .ForMember(dst => dst.BidStatusTitle, opt => opt.MapFrom(src => src.BidStatus.GetEnumDescription()))
+                .ForMember(dst => dst.StatusTitle, opt => opt.MapFrom(src => src.Status.GetEnumDescription()))
+                .ForMember(dst => dst.RemainingDays, opt => opt.MapFrom(src => "0"))
+                .ForMember(dst => dst.RemainingDays,
+                    opt => opt.MapFrom(src => GetRemainingDays(src.BidEndDate, src.BidStatus)))
+                .ForMember(dst => dst.Price, opt => opt.MapFrom(src => src.Price))
+                ;
         }
+
         private string GetRemainingDays(DateTime? BidEndDate, ShippingRequestBidStatus Status)
         {
-
             if (BidEndDate.HasValue && Status != ShippingRequestBidStatus.OnGoing)
             {
                 int TotalDays = (int)((BidEndDate.Value - Clock.Now).TotalDays);
@@ -62,6 +63,7 @@ namespace TACHYON.AutoMapper.PriceOffers
                 if (TotalDays < 9) return $"0{TotalDays}";
                 return TotalDays.ToString();
             }
+
             return "0";
         }
 
@@ -69,9 +71,11 @@ namespace TACHYON.AutoMapper.PriceOffers
         {
             if (StartTripDate.HasValue && EndTripDate.HasValue)
             {
-                return string.Format("{0}-{1}", StartTripDate.Value.ToString("dd/MM/yyyy"), EndTripDate.Value.ToString("dd/MM/yyyy"));
+                return string.Format("{0}-{1}", StartTripDate.Value.ToString("dd/MM/yyyy"),
+                    EndTripDate.Value.ToString("dd/MM/yyyy"));
             }
             else if (StartTripDate.HasValue) return StartTripDate.Value.ToString("dd/MM/yyyy");
+
             return "";
         }
     }

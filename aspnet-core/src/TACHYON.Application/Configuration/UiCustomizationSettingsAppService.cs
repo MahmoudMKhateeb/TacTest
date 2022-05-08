@@ -47,7 +47,8 @@ namespace TACHYON.Configuration
         {
             var settings = (await GetUiManagementSettings()).FirstOrDefault(s => s.Theme == themeName);
 
-            var hasUiCustomizationPagePermission = await PermissionChecker.IsGrantedAsync(AppPermissions.Pages_Administration_UiCustomization);
+            var hasUiCustomizationPagePermission =
+                await PermissionChecker.IsGrantedAsync(AppPermissions.Pages_Administration_UiCustomization);
 
             if (hasUiCustomizationPagePermission)
             {
@@ -83,7 +84,8 @@ namespace TACHYON.Configuration
         {
             if (AbpSession.TenantId.HasValue)
             {
-                var theme = await _settingManager.GetSettingValueForTenantAsync(AppSettings.UiManagement.Theme, AbpSession.TenantId.Value);
+                var theme = await _settingManager.GetSettingValueForTenantAsync(AppSettings.UiManagement.Theme,
+                    AbpSession.TenantId.Value);
                 var themeCustomizer = _uiThemeCustomizerFactory.GetUiCustomizer(theme);
                 var settings = await themeCustomizer.GetTenantUiCustomizationSettings(AbpSession.TenantId.Value);
                 await themeCustomizer.UpdateUserUiManagementSettingsAsync(AbpSession.ToUserIdentifier(), settings);

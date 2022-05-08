@@ -47,7 +47,10 @@ namespace TACHYON.Web.Chat.SignalR
             }
         }
 
-        public async Task SendFriendshipRequestToClient(IReadOnlyList<IOnlineClient> clients, Friendship friendship, bool isOwnRequest, bool isFriendOnline)
+        public async Task SendFriendshipRequestToClient(IReadOnlyList<IOnlineClient> clients,
+            Friendship friendship,
+            bool isOwnRequest,
+            bool isFriendOnline)
         {
             foreach (var client in clients)
             {
@@ -64,7 +67,9 @@ namespace TACHYON.Web.Chat.SignalR
             }
         }
 
-        public async Task SendUserConnectionChangeToClients(IReadOnlyList<IOnlineClient> clients, UserIdentifier user, bool isConnected)
+        public async Task SendUserConnectionChangeToClients(IReadOnlyList<IOnlineClient> clients,
+            UserIdentifier user,
+            bool isConnected)
         {
             foreach (var client in clients)
             {
@@ -78,7 +83,9 @@ namespace TACHYON.Web.Chat.SignalR
             }
         }
 
-        public async Task SendUserStateChangeToClients(IReadOnlyList<IOnlineClient> clients, UserIdentifier user, FriendshipState newState)
+        public async Task SendUserStateChangeToClients(IReadOnlyList<IOnlineClient> clients,
+            UserIdentifier user,
+            FriendshipState newState)
         {
             foreach (var client in clients)
             {
@@ -92,7 +99,8 @@ namespace TACHYON.Web.Chat.SignalR
             }
         }
 
-        public async Task SendAllUnreadMessagesOfUserReadToClients(IReadOnlyList<IOnlineClient> clients, UserIdentifier user)
+        public async Task SendAllUnreadMessagesOfUserReadToClients(IReadOnlyList<IOnlineClient> clients,
+            UserIdentifier user)
         {
             foreach (var client in clients)
             {

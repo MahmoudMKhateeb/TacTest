@@ -8,15 +8,13 @@ using TACHYON.Shipping.ShippingRequests;
 namespace TACHYON.Invoices.Groups
 {
     [Table("GroupShippingRequests")]
-    public class GroupShippingRequests: Entity<long>
+    public class GroupShippingRequests : Entity<long>
     {
         public long RequestId { get; set; }
 
-        [ForeignKey("RequestId")]
-        public ShippingRequest ShippingRequests { get; set; }
+        [ForeignKey("RequestId")] public ShippingRequest ShippingRequests { get; set; }
         public long GroupId { get; set; }
 
-        [ForeignKey("GroupId")]
-        public GroupPeriod Group { get; set; }
+        [ForeignKey("GroupId")] public GroupPeriod Group { get; set; }
     }
 }

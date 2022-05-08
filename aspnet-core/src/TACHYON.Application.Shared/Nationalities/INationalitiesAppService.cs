@@ -18,6 +18,5 @@ namespace TACHYON.Nationalities
         Task CreateOrEdit(CreateOrEditNationalityDto input);
 
         Task Delete(EntityDto input);
-
     }
 }

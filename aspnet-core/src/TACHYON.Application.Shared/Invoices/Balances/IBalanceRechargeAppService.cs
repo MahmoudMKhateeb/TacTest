@@ -15,7 +15,5 @@ namespace TACHYON.Invoices.Balances
         Task Delete(EntityDto input);
 
         Task<FileDto> Exports(GetAllBalanceRechargeInput input);
-
-
     }
 }

@@ -1,5 +1,4 @@
-﻿
-using Abp;
+﻿using Abp;
 using Abp.Dependency;
 using System;
 using System.Threading.Tasks;
@@ -29,6 +28,11 @@ namespace TACHYON.Authorization.Users.Profile
             }
 
             var file = await _binaryObjectManager.GetOrNullAsync(user.ProfilePictureId.Value);
+
+            if (user.IsDriver)
+            {
+                return file != null && file.ThumbnailByte != null ? Convert.ToBase64String(file.ThumbnailByte):"";
+            }
             return file == null ? "" : Convert.ToBase64String(file.Bytes);
         }
     }

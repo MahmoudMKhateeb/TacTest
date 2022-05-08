@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-
-
 using System;
 using System.Linq;
 using System.Linq.Dynamic.Core;
@@ -28,40 +26,39 @@ namespace TACHYON.Trucks.TruckCategories.TruckCapacities
         private readonly IRepository<TrucksType, long> _lookup_trucktypeRepository;
 
 
-        public CapacitiesAppService(IRepository<Capacity> capacityRepository, IRepository<TrucksType, long> lookup_truckTypeRepository)
+        public CapacitiesAppService(IRepository<Capacity> capacityRepository,
+            IRepository<TrucksType, long> lookup_truckTypeRepository)
         {
             _capacityRepository = capacityRepository;
             _lookup_trucktypeRepository = lookup_truckTypeRepository;
-
         }
 
         public async Task<PagedResultDto<GetCapacityForViewDto>> GetAll(GetAllCapacitiesInput input)
         {
-
             var filteredCapacities = _capacityRepository.GetAll()
-                        .Include(e => e.TrucksTypeFk)
-                        .ThenInclude(x=>x.Translations)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter))
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.DisplayName == input.DisplayNameFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.TruckTypeDisplayNameFilter), e => e.TrucksTypeFk != null && e.Translations.Any(x=>x.TranslatedDisplayName.Contains(input.TruckTypeDisplayNameFilter)));
+                .Include(e => e.TrucksTypeFk)
+                .ThenInclude(x => x.Translations)
+                .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter))
+                .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter),
+                    e => e.DisplayName == input.DisplayNameFilter)
+                .WhereIf(!string.IsNullOrWhiteSpace(input.TruckTypeDisplayNameFilter),
+                    e => e.TrucksTypeFk != null && e.Translations.Any(x =>
+                        x.TranslatedDisplayName.Contains(input.TruckTypeDisplayNameFilter)));
 
             var pagedAndFilteredCapacities = filteredCapacities
                 .OrderBy(input.Sorting ?? "id asc")
                 .PageBy(input);
 
             var capacities = from o in await pagedAndFilteredCapacities.ToListAsync()
-                             //join o1 in _lookup_trucktypeRepository.GetAll() on o.TrucksTypeId equals o1.Id into j1
-                             //from s1 in j1.DefaultIfEmpty()
-
-                             select new GetCapacityForViewDto()
-                             {
-                                 Capacity = new CapacityDto
-                                 {
-                                     DisplayName = o.DisplayName,
-                                     Id = o.Id
-                                 },
-                                 TruckTypeDisplayName = ObjectMapper.Map<TrucksTypeDto>(o.TrucksTypeFk)?.TranslatedDisplayName //s1 == null || s1.DisplayName == null ? "" : s1.DisplayName.ToString()
-                             };
+                //join o1 in _lookup_trucktypeRepository.GetAll() on o.TrucksTypeId equals o1.Id into j1
+                //from s1 in j1.DefaultIfEmpty()
+                select new GetCapacityForViewDto()
+                {
+                    Capacity = new CapacityDto { DisplayName = o.DisplayName, Id = o.Id },
+                    TruckTypeDisplayName =
+                        ObjectMapper.Map<TrucksTypeDto>(o.TrucksTypeFk)
+                            ?.TranslatedDisplayName //s1 == null || s1.DisplayName == null ? "" : s1.DisplayName.ToString()
+                };
 
             var totalCount = await filteredCapacities.CountAsync();
 
@@ -79,8 +76,11 @@ namespace TACHYON.Trucks.TruckCategories.TruckCapacities
 
             if (output.Capacity.TrucksTypeId != null)
             {
-                var _lookupTruckType = await _lookup_trucktypeRepository.GetAllIncluding(x=>x.Translations).FirstOrDefaultAsync(x=>x.Id == (int)output.Capacity.TrucksTypeId);
-                output.TruckTypeDisplayName = _lookupTruckType!=null ? ObjectMapper.Map<TrucksTypeDto>(_lookupTruckType).TranslatedDisplayName :"";//_lookupTruckType?.DisplayName?.ToString();
+                var _lookupTruckType = await _lookup_trucktypeRepository.GetAllIncluding(x => x.Translations)
+                    .FirstOrDefaultAsync(x => x.Id == (int)output.Capacity.TrucksTypeId);
+                output.TruckTypeDisplayName = _lookupTruckType != null
+                    ? ObjectMapper.Map<TrucksTypeDto>(_lookupTruckType).TranslatedDisplayName
+                    : ""; //_lookupTruckType?.DisplayName?.ToString();
             }
 
             return output;
@@ -91,12 +91,16 @@ namespace TACHYON.Trucks.TruckCategories.TruckCapacities
         {
             var capacity = await _capacityRepository.FirstOrDefaultAsync(input.Id);
 
-            var output = new GetCapacityForEditOutput { Capacity = ObjectMapper.Map<CreateOrEditCapacityDto>(capacity) };
+            var output =
+                new GetCapacityForEditOutput { Capacity = ObjectMapper.Map<CreateOrEditCapacityDto>(capacity) };
 
             if (output.Capacity.TrucksTypeId != null)
             {
-                var _lookupTruckType = await _lookup_trucktypeRepository.GetAllIncluding(x => x.Translations).FirstOrDefaultAsync(x => x.Id == (int)output.Capacity.TrucksTypeId);
-                output.TruckTypeDisplayName = ObjectMapper.Map<TrucksTypeDto>(_lookupTruckType)?.TranslatedDisplayName; //_lookupTruckType?.DisplayName?.ToString();
+                var _lookupTruckType = await _lookup_trucktypeRepository.GetAllIncluding(x => x.Translations)
+                    .FirstOrDefaultAsync(x => x.Id == (int)output.Capacity.TrucksTypeId);
+                output.TruckTypeDisplayName =
+                    ObjectMapper.Map<TrucksTypeDto>(_lookupTruckType)
+                        ?.TranslatedDisplayName; //_lookupTruckType?.DisplayName?.ToString();
             }
 
             return output;
@@ -118,7 +122,6 @@ namespace TACHYON.Trucks.TruckCategories.TruckCapacities
         protected virtual async Task Create(CreateOrEditCapacityDto input)
         {
             var capacity = ObjectMapper.Map<Capacity>(input);
-
 
 
             await _capacityRepository.InsertAsync(capacity);
@@ -148,6 +151,5 @@ namespace TACHYON.Trucks.TruckCategories.TruckCapacities
 
             return trucksTypeDtos;
         }
-
     }
 }

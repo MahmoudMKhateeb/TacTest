@@ -33,8 +33,8 @@ namespace TACHYON.Web.Controllers
             var exHandlerFeature = HttpContext.Features.Get<IExceptionHandlerFeature>();
 
             var exception = exHandlerFeature != null
-                                ? exHandlerFeature.Error
-                                : new Exception("Unhandled exception!");
+                ? exHandlerFeature.Error
+                : new Exception("Unhandled exception!");
 
             return View(
                 "Error",

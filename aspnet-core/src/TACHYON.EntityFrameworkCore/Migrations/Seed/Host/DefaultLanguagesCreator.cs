@@ -54,7 +54,8 @@ namespace TACHYON.Migrations.Seed.Host
 
         private void AddLanguageIfNotExists(ApplicationLanguage language)
         {
-            if (_context.Languages.IgnoreQueryFilters().Any(l => l.TenantId == language.TenantId && l.Name == language.Name))
+            if (_context.Languages.IgnoreQueryFilters()
+                .Any(l => l.TenantId == language.TenantId && l.Name == language.Name))
             {
                 return;
             }

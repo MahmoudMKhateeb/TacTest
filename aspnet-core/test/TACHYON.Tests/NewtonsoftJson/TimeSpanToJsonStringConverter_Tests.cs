@@ -35,7 +35,8 @@ namespace TACHYON.Tests.NewtonsoftJson
             var jsonString = JsonConvert.SerializeObject(obj);
 
             //WriteJson assert
-            jsonString.ShouldBe("{\"MyTimeSpan\":\"01:12:00\",\"MyTimeSpan2\":null,\"MyNullableTimeSpan\":null,\"MyNullableTimeSpan2\":\"01:12:00\"}");
+            jsonString.ShouldBe(
+                "{\"MyTimeSpan\":\"01:12:00\",\"MyTimeSpan2\":null,\"MyNullableTimeSpan\":null,\"MyNullableTimeSpan2\":\"01:12:00\"}");
 
             var obj2 = JsonConvert.DeserializeObject<TimeSpanModel>(jsonString);
 

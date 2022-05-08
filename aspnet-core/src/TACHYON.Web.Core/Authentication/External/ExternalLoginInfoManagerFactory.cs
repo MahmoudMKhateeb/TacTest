@@ -11,7 +11,8 @@ namespace TACHYON.Web.Authentication.External
             _iocManager = iocManager;
         }
 
-        public IDisposableDependencyObjectWrapper<IExternalLoginInfoManager> GetExternalLoginInfoManager(string loginProvider)
+        public IDisposableDependencyObjectWrapper<IExternalLoginInfoManager> GetExternalLoginInfoManager(
+            string loginProvider)
         {
             if (loginProvider == "WsFederation")
             {

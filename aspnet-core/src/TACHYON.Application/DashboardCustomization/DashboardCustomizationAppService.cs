@@ -59,6 +59,7 @@ namespace TACHYON.DashboardCustomization
             {
                 return;
             }
+            CheckPageName(dashboard, input.Name);
 
             page.Name = input.Name;
 
@@ -69,6 +70,8 @@ namespace TACHYON.DashboardCustomization
         {
             var dashboards = await GetDashboardFromSettings(input.Application);
             var dashboard = GetDashboard(dashboards, input.DashboardName);
+
+            CheckPageName(dashboard, input.Name);
 
             var page = new Page
             {
@@ -91,7 +94,9 @@ namespace TACHYON.DashboardCustomization
 
             if (dashboard.Pages.Count == 0) // return to default
             {
-                var defaultDashboard = (await GetDefaultDashboardValue(input.Application)).FirstOrDefault(d => d.DashboardName == input.DashboardName);
+                var defaultDashboard =
+                    (await GetDefaultDashboardValue(input.Application)).FirstOrDefault(d =>
+                        d.DashboardName == input.DashboardName);
 
                 dashboards.Remove(dashboard);
                 dashboards.Add(defaultDashboard);
@@ -105,8 +110,8 @@ namespace TACHYON.DashboardCustomization
             var dashboards = await GetDashboardFromSettings(input.Application);
             var dashboard = GetDashboard(dashboards, input.DashboardName);
 
-            var page = dashboard.Pages.Single(p => p.Id == input.PageId);
-
+            var page = dashboard.Pages.SingleOrDefault(p => p.Id == input.PageId);
+            CheckPageName(dashboard, input.DashboardName);
             var widget = new Widget
             {
                 WidgetId = input.WidgetId,
@@ -124,7 +129,8 @@ namespace TACHYON.DashboardCustomization
 
         public DashboardOutput GetDashboardDefinition(GetDashboardInput input)
         {
-            var dashboardDefinition = _dashboardConfiguration.DashboardDefinitions.FirstOrDefault(d => d.Name == input.DashboardName);
+            var dashboardDefinition =
+                _dashboardConfiguration.DashboardDefinitions.FirstOrDefault(d => d.Name == input.DashboardName);
             if (dashboardDefinition == null)
             {
                 throw new UserFriendlyException(L("UnknownDashboard", input.DashboardName));
@@ -137,17 +143,18 @@ namespace TACHYON.DashboardCustomization
                 dashboardDefinition.Name,
                 usedWidgetDefinitions
                     .Select(widget => new WidgetOutput(
-                    widget.Id,
-                    widget.Name,
-                    widget.Description,
-                    filters: GetNeededWidgetFiltersOutput(widget))
+                        widget.Id,
+                        widget.Name,
+                        widget.Description,
+                        filters: GetNeededWidgetFiltersOutput(widget))
                     ).ToList()
             );
         }
 
         public List<WidgetOutput> GetAllWidgetDefinitions(GetDashboardInput input)
         {
-            var dashboardDefinition = _dashboardConfiguration.DashboardDefinitions.FirstOrDefault(d => d.Name == input.DashboardName);
+            var dashboardDefinition =
+                _dashboardConfiguration.DashboardDefinitions.FirstOrDefault(d => d.Name == input.DashboardName);
             if (dashboardDefinition == null)
             {
                 throw new UserFriendlyException(L("UnknownDashboard", input.DashboardName));
@@ -160,6 +167,15 @@ namespace TACHYON.DashboardCustomization
         public string GetSettingName(string application)
         {
             return AppSettings.DashboardCustomization.Configuration + "." + application;
+        }
+
+        private void CheckPageName(Dashboard dashboard , string Name)
+        {
+            var pageNameExists = dashboard.Pages.FirstOrDefault(p => p.Name.Equals(Name));
+            if (pageNameExists != null)
+            {
+                throw new UserFriendlyException(L("PageNameAlreadyExists", Name));
+            }
         }
 
         private Dashboard GetDashboard(List<Dashboard> dashboards, string dashboardName)
@@ -189,7 +205,8 @@ namespace TACHYON.DashboardCustomization
         {
             var value = JsonConvert.SerializeObject(dashboards);
 
-            await SettingManager.ChangeSettingForUserAsync(GetCurrentUser().ToUserIdentifier(), GetSettingName(application), value);
+            await SettingManager.ChangeSettingForUserAsync(GetCurrentUser().ToUserIdentifier(),
+                GetSettingName(application), value);
         }
 
         private byte CalculatePositionY(List<Widget> widgets)
@@ -208,11 +225,14 @@ namespace TACHYON.DashboardCustomization
 
             if (AbpSession.MultiTenancySide == MultiTenancySides.Host)
             {
-                dashboardConfigAsJsonString = await SettingManager.GetSettingValueForApplicationAsync(GetSettingName(application));
+                dashboardConfigAsJsonString =
+                    await SettingManager.GetSettingValueForApplicationAsync(GetSettingName(application));
             }
             else
             {
-                dashboardConfigAsJsonString = await SettingManager.GetSettingValueForTenantAsync(GetSettingName(application), AbpSession.GetTenantId());
+                dashboardConfigAsJsonString =
+                    await SettingManager.GetSettingValueForTenantAsync(GetSettingName(application),
+                        AbpSession.GetTenantId());
             }
 
             return string.IsNullOrWhiteSpace(dashboardConfigAsJsonString)

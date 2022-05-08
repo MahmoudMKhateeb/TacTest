@@ -17,7 +17,5 @@ namespace TACHYON.Cities.Dtos
 
 
         public string CountyDisplayNameFilter { get; set; }
-
-
     }
 }

@@ -95,18 +95,12 @@ namespace TACHYON.Install
                 };
             }
 
-            return new AppSettingsJsonDto
-            {
-                WebSiteUrl = appUrl["WebSiteRootAddress"]
-            };
+            return new AppSettingsJsonDto { WebSiteUrl = appUrl["WebSiteRootAddress"] };
         }
 
         public CheckDatabaseOutput CheckDatabase()
         {
-            return new CheckDatabaseOutput
-            {
-                IsDatabaseExist = CheckDatabaseInternal()
-            };
+            return new CheckDatabaseOutput { IsDatabaseExist = CheckDatabaseInternal() };
         }
 
         private bool CheckDatabaseInternal()
@@ -162,21 +156,29 @@ namespace TACHYON.Install
 
         private async Task SetSmtpSettings(EmailSettingsEditDto input)
         {
-            await SettingManager.ChangeSettingForApplicationAsync(EmailSettingNames.DefaultFromAddress, input.DefaultFromAddress);
-            await SettingManager.ChangeSettingForApplicationAsync(EmailSettingNames.DefaultFromDisplayName, input.DefaultFromDisplayName);
+            await SettingManager.ChangeSettingForApplicationAsync(EmailSettingNames.DefaultFromAddress,
+                input.DefaultFromAddress);
+            await SettingManager.ChangeSettingForApplicationAsync(EmailSettingNames.DefaultFromDisplayName,
+                input.DefaultFromDisplayName);
             await SettingManager.ChangeSettingForApplicationAsync(EmailSettingNames.Smtp.Host, input.SmtpHost);
-            await SettingManager.ChangeSettingForApplicationAsync(EmailSettingNames.Smtp.Port, input.SmtpPort.ToString(CultureInfo.InvariantCulture));
+            await SettingManager.ChangeSettingForApplicationAsync(EmailSettingNames.Smtp.Port,
+                input.SmtpPort.ToString(CultureInfo.InvariantCulture));
             await SettingManager.ChangeSettingForApplicationAsync(EmailSettingNames.Smtp.UserName, input.SmtpUserName);
-            await SettingManager.ChangeSettingForApplicationAsync(EmailSettingNames.Smtp.Password, SimpleStringCipher.Instance.Encrypt(input.SmtpPassword));
+            await SettingManager.ChangeSettingForApplicationAsync(EmailSettingNames.Smtp.Password,
+                SimpleStringCipher.Instance.Encrypt(input.SmtpPassword));
             await SettingManager.ChangeSettingForApplicationAsync(EmailSettingNames.Smtp.Domain, input.SmtpDomain);
-            await SettingManager.ChangeSettingForApplicationAsync(EmailSettingNames.Smtp.EnableSsl, input.SmtpEnableSsl.ToString().ToLowerInvariant());
-            await SettingManager.ChangeSettingForApplicationAsync(EmailSettingNames.Smtp.UseDefaultCredentials, input.SmtpUseDefaultCredentials.ToString().ToLowerInvariant());
+            await SettingManager.ChangeSettingForApplicationAsync(EmailSettingNames.Smtp.EnableSsl,
+                input.SmtpEnableSsl.ToString().ToLowerInvariant());
+            await SettingManager.ChangeSettingForApplicationAsync(EmailSettingNames.Smtp.UseDefaultCredentials,
+                input.SmtpUseDefaultCredentials.ToString().ToLowerInvariant());
         }
 
         private async Task SetBillingSettings(HostBillingSettingsEditDto input)
         {
-            await SettingManager.ChangeSettingForApplicationAsync(AppSettings.HostManagement.BillingLegalName, input.LegalName);
-            await SettingManager.ChangeSettingForApplicationAsync(AppSettings.HostManagement.BillingAddress, input.Address);
+            await SettingManager.ChangeSettingForApplicationAsync(AppSettings.HostManagement.BillingLegalName,
+                input.LegalName);
+            await SettingManager.ChangeSettingForApplicationAsync(AppSettings.HostManagement.BillingAddress,
+                input.Address);
         }
 
         private void EditAppSettingsjson(string key, string value)

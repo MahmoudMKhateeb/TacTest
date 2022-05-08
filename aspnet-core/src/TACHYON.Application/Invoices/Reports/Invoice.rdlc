@@ -3433,7 +3433,7 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox259">
+                        <Textbox Name="TotalAmount">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
@@ -3454,7 +3454,7 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox259</rd:DefaultName>
+                          <rd:DefaultName>TotalAmount</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>White</Color>

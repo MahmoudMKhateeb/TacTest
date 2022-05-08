@@ -41,7 +41,7 @@ namespace TACHYON.Configuration.Tenants
             IEmailSender emailSender,
             IBinaryObjectManager binaryObjectManager,
             IAppConfigurationAccessor configurationAccessor
-            ) : base(emailSender, configurationAccessor)
+        ) : base(emailSender, configurationAccessor)
         {
             ExternalLoginOptionsCacheManager = NullExternalLoginOptionsCacheManager.Instance;
 
@@ -87,39 +87,63 @@ namespace TACHYON.Configuration.Tenants
             return new LdapSettingsEditDto
             {
                 IsModuleEnabled = true,
-                IsEnabled = await SettingManager.GetSettingValueForTenantAsync<bool>(LdapSettingNames.IsEnabled, AbpSession.GetTenantId()),
-                Domain = await SettingManager.GetSettingValueForTenantAsync(LdapSettingNames.Domain, AbpSession.GetTenantId()),
-                UserName = await SettingManager.GetSettingValueForTenantAsync(LdapSettingNames.UserName, AbpSession.GetTenantId()),
-                Password = await SettingManager.GetSettingValueForTenantAsync(LdapSettingNames.Password, AbpSession.GetTenantId()),
+                IsEnabled =
+                    await SettingManager.GetSettingValueForTenantAsync<bool>(LdapSettingNames.IsEnabled,
+                        AbpSession.GetTenantId()),
+                Domain =
+                    await SettingManager.GetSettingValueForTenantAsync(LdapSettingNames.Domain,
+                        AbpSession.GetTenantId()),
+                UserName =
+                    await SettingManager.GetSettingValueForTenantAsync(LdapSettingNames.UserName,
+                        AbpSession.GetTenantId()),
+                Password = await SettingManager.GetSettingValueForTenantAsync(LdapSettingNames.Password,
+                    AbpSession.GetTenantId()),
             };
         }
 
         private async Task<TenantEmailSettingsEditDto> GetEmailSettingsAsync()
         {
-            var useHostDefaultEmailSettings = await SettingManager.GetSettingValueForTenantAsync<bool>(AppSettings.Email.UseHostDefaultEmailSettings, AbpSession.GetTenantId());
+            var useHostDefaultEmailSettings =
+                await SettingManager.GetSettingValueForTenantAsync<bool>(AppSettings.Email.UseHostDefaultEmailSettings,
+                    AbpSession.GetTenantId());
 
             if (useHostDefaultEmailSettings)
             {
-                return new TenantEmailSettingsEditDto
-                {
-                    UseHostDefaultEmailSettings = true
-                };
+                return new TenantEmailSettingsEditDto { UseHostDefaultEmailSettings = true };
             }
 
-            var smtpPassword = await SettingManager.GetSettingValueForTenantAsync(EmailSettingNames.Smtp.Password, AbpSession.GetTenantId());
+            var smtpPassword =
+                await SettingManager.GetSettingValueForTenantAsync(EmailSettingNames.Smtp.Password,
+                    AbpSession.GetTenantId());
 
             return new TenantEmailSettingsEditDto
             {
                 UseHostDefaultEmailSettings = false,
-                DefaultFromAddress = await SettingManager.GetSettingValueForTenantAsync(EmailSettingNames.DefaultFromAddress, AbpSession.GetTenantId()),
-                DefaultFromDisplayName = await SettingManager.GetSettingValueForTenantAsync(EmailSettingNames.DefaultFromDisplayName, AbpSession.GetTenantId()),
-                SmtpHost = await SettingManager.GetSettingValueForTenantAsync(EmailSettingNames.Smtp.Host, AbpSession.GetTenantId()),
-                SmtpPort = await SettingManager.GetSettingValueForTenantAsync<int>(EmailSettingNames.Smtp.Port, AbpSession.GetTenantId()),
-                SmtpUserName = await SettingManager.GetSettingValueForTenantAsync(EmailSettingNames.Smtp.UserName, AbpSession.GetTenantId()),
+                DefaultFromAddress =
+                    await SettingManager.GetSettingValueForTenantAsync(EmailSettingNames.DefaultFromAddress,
+                        AbpSession.GetTenantId()),
+                DefaultFromDisplayName =
+                    await SettingManager.GetSettingValueForTenantAsync(EmailSettingNames.DefaultFromDisplayName,
+                        AbpSession.GetTenantId()),
+                SmtpHost =
+                    await SettingManager.GetSettingValueForTenantAsync(EmailSettingNames.Smtp.Host,
+                        AbpSession.GetTenantId()),
+                SmtpPort =
+                    await SettingManager.GetSettingValueForTenantAsync<int>(EmailSettingNames.Smtp.Port,
+                        AbpSession.GetTenantId()),
+                SmtpUserName =
+                    await SettingManager.GetSettingValueForTenantAsync(EmailSettingNames.Smtp.UserName,
+                        AbpSession.GetTenantId()),
                 SmtpPassword = SimpleStringCipher.Instance.Decrypt(smtpPassword),
-                SmtpDomain = await SettingManager.GetSettingValueForTenantAsync(EmailSettingNames.Smtp.Domain, AbpSession.GetTenantId()),
-                SmtpEnableSsl = await SettingManager.GetSettingValueForTenantAsync<bool>(EmailSettingNames.Smtp.EnableSsl, AbpSession.GetTenantId()),
-                SmtpUseDefaultCredentials = await SettingManager.GetSettingValueForTenantAsync<bool>(EmailSettingNames.Smtp.UseDefaultCredentials, AbpSession.GetTenantId())
+                SmtpDomain =
+                    await SettingManager.GetSettingValueForTenantAsync(EmailSettingNames.Smtp.Domain,
+                        AbpSession.GetTenantId()),
+                SmtpEnableSsl =
+                    await SettingManager.GetSettingValueForTenantAsync<bool>(EmailSettingNames.Smtp.EnableSsl,
+                        AbpSession.GetTenantId()),
+                SmtpUseDefaultCredentials =
+                    await SettingManager.GetSettingValueForTenantAsync<bool>(
+                        EmailSettingNames.Smtp.UseDefaultCredentials, AbpSession.GetTenantId())
             };
         }
 
@@ -129,13 +153,16 @@ namespace TACHYON.Configuration.Tenants
 
             if (Clock.SupportsMultipleTimezone)
             {
-                var timezone = await SettingManager.GetSettingValueForTenantAsync(TimingSettingNames.TimeZone, AbpSession.GetTenantId());
+                var timezone =
+                    await SettingManager.GetSettingValueForTenantAsync(TimingSettingNames.TimeZone,
+                        AbpSession.GetTenantId());
 
                 settings.Timezone = timezone;
                 settings.TimezoneForComparison = timezone;
             }
 
-            var defaultTimeZoneId = await _timeZoneService.GetDefaultTimezoneAsync(SettingScopes.Tenant, AbpSession.TenantId);
+            var defaultTimeZoneId =
+                await _timeZoneService.GetDefaultTimezoneAsync(SettingScopes.Tenant, AbpSession.TenantId);
 
             if (settings.Timezone == defaultTimeZoneId)
             {
@@ -149,20 +176,43 @@ namespace TACHYON.Configuration.Tenants
         {
             return new TenantUserManagementSettingsEditDto
             {
-                AllowSelfRegistration = await SettingManager.GetSettingValueAsync<bool>(AppSettings.UserManagement.AllowSelfRegistration),
-                IsNewRegisteredUserActiveByDefault = await SettingManager.GetSettingValueAsync<bool>(AppSettings.UserManagement.IsNewRegisteredUserActiveByDefault),
-                IsEmailConfirmationRequiredForLogin = await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.IsEmailConfirmationRequiredForLogin),
-                UseCaptchaOnRegistration = await SettingManager.GetSettingValueAsync<bool>(AppSettings.UserManagement.UseCaptchaOnRegistration),
-                UseCaptchaOnLogin = await SettingManager.GetSettingValueAsync<bool>(AppSettings.UserManagement.UseCaptchaOnLogin),
-                IsCookieConsentEnabled = await SettingManager.GetSettingValueAsync<bool>(AppSettings.UserManagement.IsCookieConsentEnabled),
-                IsQuickThemeSelectEnabled = await SettingManager.GetSettingValueAsync<bool>(AppSettings.UserManagement.IsQuickThemeSelectEnabled),
-                AllowUsingGravatarProfilePicture = await SettingManager.GetSettingValueAsync<bool>(AppSettings.UserManagement.AllowUsingGravatarProfilePicture),
+                AllowSelfRegistration =
+                    await SettingManager.GetSettingValueAsync<bool>(
+                        AppSettings.UserManagement.AllowSelfRegistration),
+                IsNewRegisteredUserActiveByDefault =
+                    await SettingManager.GetSettingValueAsync<bool>(AppSettings.UserManagement
+                        .IsNewRegisteredUserActiveByDefault),
+                IsEmailConfirmationRequiredForLogin =
+                    await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement
+                        .IsEmailConfirmationRequiredForLogin),
+                UseCaptchaOnRegistration =
+                    await SettingManager.GetSettingValueAsync<bool>(AppSettings.UserManagement
+                        .UseCaptchaOnRegistration),
+                UseCaptchaOnLogin =
+                    await SettingManager.GetSettingValueAsync<bool>(AppSettings.UserManagement.UseCaptchaOnLogin),
+                IsCookieConsentEnabled =
+                    await SettingManager.GetSettingValueAsync<bool>(AppSettings.UserManagement
+                        .IsCookieConsentEnabled),
+                IsQuickThemeSelectEnabled =
+                    await SettingManager.GetSettingValueAsync<bool>(AppSettings.UserManagement
+                        .IsQuickThemeSelectEnabled),
+                AllowUsingGravatarProfilePicture =
+                    await SettingManager.GetSettingValueAsync<bool>(AppSettings.UserManagement
+                        .AllowUsingGravatarProfilePicture),
                 SessionTimeOutSettings = new SessionTimeOutSettingsEditDto()
                 {
-                    IsEnabled = await SettingManager.GetSettingValueAsync<bool>(AppSettings.UserManagement.SessionTimeOut.IsEnabled),
-                    TimeOutSecond = await SettingManager.GetSettingValueAsync<int>(AppSettings.UserManagement.SessionTimeOut.TimeOutSecond),
-                    ShowTimeOutNotificationSecond = await SettingManager.GetSettingValueAsync<int>(AppSettings.UserManagement.SessionTimeOut.ShowTimeOutNotificationSecond),
-                    ShowLockScreenWhenTimedOut = await SettingManager.GetSettingValueAsync<bool>(AppSettings.UserManagement.SessionTimeOut.ShowLockScreenWhenTimedOut)
+                    IsEnabled =
+                        await SettingManager.GetSettingValueAsync<bool>(AppSettings.UserManagement
+                            .SessionTimeOut.IsEnabled),
+                    TimeOutSecond =
+                        await SettingManager.GetSettingValueAsync<int>(AppSettings.UserManagement.SessionTimeOut
+                            .TimeOutSecond),
+                    ShowTimeOutNotificationSecond =
+                        await SettingManager.GetSettingValueAsync<int>(AppSettings.UserManagement.SessionTimeOut
+                            .ShowTimeOutNotificationSecond),
+                    ShowLockScreenWhenTimedOut =
+                        await SettingManager.GetSettingValueAsync<bool>(AppSettings.UserManagement
+                            .SessionTimeOut.ShowLockScreenWhenTimedOut)
                 }
             };
         }
@@ -171,25 +221,46 @@ namespace TACHYON.Configuration.Tenants
         {
             var passwordComplexitySetting = new PasswordComplexitySetting
             {
-                RequireDigit = await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.PasswordComplexity.RequireDigit),
-                RequireLowercase = await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.PasswordComplexity.RequireLowercase),
-                RequireNonAlphanumeric = await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.PasswordComplexity.RequireNonAlphanumeric),
-                RequireUppercase = await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.PasswordComplexity.RequireUppercase),
-                RequiredLength = await SettingManager.GetSettingValueAsync<int>(AbpZeroSettingNames.UserManagement.PasswordComplexity.RequiredLength)
+                RequireDigit =
+                    await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement
+                        .PasswordComplexity.RequireDigit),
+                RequireLowercase =
+                    await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement
+                        .PasswordComplexity.RequireLowercase),
+                RequireNonAlphanumeric =
+                    await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement
+                        .PasswordComplexity.RequireNonAlphanumeric),
+                RequireUppercase =
+                    await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement
+                        .PasswordComplexity.RequireUppercase),
+                RequiredLength =
+                    await SettingManager.GetSettingValueAsync<int>(AbpZeroSettingNames.UserManagement
+                        .PasswordComplexity.RequiredLength)
             };
 
             var defaultPasswordComplexitySetting = new PasswordComplexitySetting
             {
-                RequireDigit = await SettingManager.GetSettingValueForApplicationAsync<bool>(AbpZeroSettingNames.UserManagement.PasswordComplexity.RequireDigit),
-                RequireLowercase = await SettingManager.GetSettingValueForApplicationAsync<bool>(AbpZeroSettingNames.UserManagement.PasswordComplexity.RequireLowercase),
-                RequireNonAlphanumeric = await SettingManager.GetSettingValueForApplicationAsync<bool>(AbpZeroSettingNames.UserManagement.PasswordComplexity.RequireNonAlphanumeric),
-                RequireUppercase = await SettingManager.GetSettingValueForApplicationAsync<bool>(AbpZeroSettingNames.UserManagement.PasswordComplexity.RequireUppercase),
-                RequiredLength = await SettingManager.GetSettingValueForApplicationAsync<int>(AbpZeroSettingNames.UserManagement.PasswordComplexity.RequiredLength)
+                RequireDigit =
+                    await SettingManager.GetSettingValueForApplicationAsync<bool>(AbpZeroSettingNames.UserManagement
+                        .PasswordComplexity.RequireDigit),
+                RequireLowercase =
+                    await SettingManager.GetSettingValueForApplicationAsync<bool>(AbpZeroSettingNames.UserManagement
+                        .PasswordComplexity.RequireLowercase),
+                RequireNonAlphanumeric =
+                    await SettingManager.GetSettingValueForApplicationAsync<bool>(AbpZeroSettingNames.UserManagement
+                        .PasswordComplexity.RequireNonAlphanumeric),
+                RequireUppercase =
+                    await SettingManager.GetSettingValueForApplicationAsync<bool>(AbpZeroSettingNames.UserManagement
+                        .PasswordComplexity.RequireUppercase),
+                RequiredLength =
+                    await SettingManager.GetSettingValueForApplicationAsync<int>(AbpZeroSettingNames.UserManagement
+                        .PasswordComplexity.RequiredLength)
             };
 
             return new SecuritySettingsEditDto
             {
-                UseDefaultPasswordComplexitySettings = passwordComplexitySetting.Equals(defaultPasswordComplexitySetting),
+                UseDefaultPasswordComplexitySettings =
+                    passwordComplexitySetting.Equals(defaultPasswordComplexitySetting),
                 PasswordComplexity = passwordComplexitySetting,
                 DefaultPasswordComplexity = defaultPasswordComplexitySetting,
                 UserLockOut = await GetUserLockOutSettingsAsync(),
@@ -202,7 +273,8 @@ namespace TACHYON.Configuration.Tenants
         {
             return new TenantBillingSettingsEditDto()
             {
-                LegalName = await SettingManager.GetSettingValueAsync(AppSettings.TenantManagement.BillingLegalName),
+                LegalName =
+                    await SettingManager.GetSettingValueAsync(AppSettings.TenantManagement.BillingLegalName),
                 Address = await SettingManager.GetSettingValueAsync(AppSettings.TenantManagement.BillingAddress),
                 TaxVatNo = await SettingManager.GetSettingValueAsync(AppSettings.TenantManagement.BillingTaxVatNo)
             };
@@ -212,7 +284,9 @@ namespace TACHYON.Configuration.Tenants
         {
             return new TenantOtherSettingsEditDto()
             {
-                IsQuickThemeSelectEnabled = await SettingManager.GetSettingValueAsync<bool>(AppSettings.UserManagement.IsQuickThemeSelectEnabled)
+                IsQuickThemeSelectEnabled =
+                    await SettingManager.GetSettingValueAsync<bool>(AppSettings.UserManagement
+                        .IsQuickThemeSelectEnabled)
             };
         }
 
@@ -220,15 +294,22 @@ namespace TACHYON.Configuration.Tenants
         {
             return new UserLockOutSettingsEditDto
             {
-                IsEnabled = await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.UserLockOut.IsEnabled),
-                MaxFailedAccessAttemptsBeforeLockout = await SettingManager.GetSettingValueAsync<int>(AbpZeroSettingNames.UserManagement.UserLockOut.MaxFailedAccessAttemptsBeforeLockout),
-                DefaultAccountLockoutSeconds = await SettingManager.GetSettingValueAsync<int>(AbpZeroSettingNames.UserManagement.UserLockOut.DefaultAccountLockoutSeconds)
+                IsEnabled =
+                    await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.UserLockOut
+                        .IsEnabled),
+                MaxFailedAccessAttemptsBeforeLockout =
+                    await SettingManager.GetSettingValueAsync<int>(AbpZeroSettingNames.UserManagement.UserLockOut
+                        .MaxFailedAccessAttemptsBeforeLockout),
+                DefaultAccountLockoutSeconds =
+                    await SettingManager.GetSettingValueAsync<int>(AbpZeroSettingNames.UserManagement.UserLockOut
+                        .DefaultAccountLockoutSeconds)
             };
         }
 
         private Task<bool> IsTwoFactorLoginEnabledForApplicationAsync()
         {
-            return SettingManager.GetSettingValueForApplicationAsync<bool>(AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsEnabled);
+            return SettingManager.GetSettingValueForApplicationAsync<bool>(AbpZeroSettingNames.UserManagement
+                .TwoFactorLogin.IsEnabled);
         }
 
         private async Task<TwoFactorLoginSettingsEditDto> GetTwoFactorLoginSettingsAsync()
@@ -243,14 +324,24 @@ namespace TACHYON.Configuration.Tenants
                 return settings;
             }
 
-            settings.IsEnabled = await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsEnabled);
-            settings.IsRememberBrowserEnabled = await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsRememberBrowserEnabled);
+            settings.IsEnabled =
+                await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.TwoFactorLogin
+                    .IsEnabled);
+            settings.IsRememberBrowserEnabled =
+                await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.TwoFactorLogin
+                    .IsRememberBrowserEnabled);
 
             if (!_multiTenancyConfig.IsEnabled)
             {
-                settings.IsEmailProviderEnabled = await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsEmailProviderEnabled);
-                settings.IsSmsProviderEnabled = await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsSmsProviderEnabled);
-                settings.IsGoogleAuthenticatorEnabled = await SettingManager.GetSettingValueAsync<bool>(AppSettings.UserManagement.TwoFactorLogin.IsGoogleAuthenticatorEnabled);
+                settings.IsEmailProviderEnabled =
+                    await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.TwoFactorLogin
+                        .IsEmailProviderEnabled);
+                settings.IsSmsProviderEnabled =
+                    await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.TwoFactorLogin
+                        .IsSmsProviderEnabled);
+                settings.IsGoogleAuthenticatorEnabled =
+                    await SettingManager.GetSettingValueAsync<bool>(AppSettings.UserManagement.TwoFactorLogin
+                        .IsGoogleAuthenticatorEnabled);
             }
 
             return settings;
@@ -258,21 +349,36 @@ namespace TACHYON.Configuration.Tenants
 
         private async Task<bool> GetOneConcurrentLoginPerUserSetting()
         {
-            return await SettingManager.GetSettingValueAsync<bool>(AppSettings.UserManagement.AllowOneConcurrentLoginPerUser);
+            return await SettingManager.GetSettingValueAsync<bool>(AppSettings.UserManagement
+                .AllowOneConcurrentLoginPerUser);
         }
 
         private async Task<ExternalLoginProviderSettingsEditDto> GetExternalLoginProviderSettings()
         {
-            var facebookSettings = await SettingManager.GetSettingValueForTenantAsync(AppSettings.ExternalLoginProvider.Tenant.Facebook, AbpSession.GetTenantId());
-            var googleSettings = await SettingManager.GetSettingValueForTenantAsync(AppSettings.ExternalLoginProvider.Tenant.Google, AbpSession.GetTenantId());
-            var twitterSettings = await SettingManager.GetSettingValueForTenantAsync(AppSettings.ExternalLoginProvider.Tenant.Twitter, AbpSession.GetTenantId());
-            var microsoftSettings = await SettingManager.GetSettingValueForTenantAsync(AppSettings.ExternalLoginProvider.Tenant.Microsoft, AbpSession.GetTenantId());
+            var facebookSettings =
+                await SettingManager.GetSettingValueForTenantAsync(AppSettings.ExternalLoginProvider.Tenant.Facebook,
+                    AbpSession.GetTenantId());
+            var googleSettings =
+                await SettingManager.GetSettingValueForTenantAsync(AppSettings.ExternalLoginProvider.Tenant.Google,
+                    AbpSession.GetTenantId());
+            var twitterSettings =
+                await SettingManager.GetSettingValueForTenantAsync(AppSettings.ExternalLoginProvider.Tenant.Twitter,
+                    AbpSession.GetTenantId());
+            var microsoftSettings =
+                await SettingManager.GetSettingValueForTenantAsync(AppSettings.ExternalLoginProvider.Tenant.Microsoft,
+                    AbpSession.GetTenantId());
 
-            var openIdConnectSettings = await SettingManager.GetSettingValueForTenantAsync(AppSettings.ExternalLoginProvider.Tenant.OpenIdConnect, AbpSession.GetTenantId());
-            var openIdConnectMappedClaims = await SettingManager.GetSettingValueAsync(AppSettings.ExternalLoginProvider.OpenIdConnectMappedClaims);
+            var openIdConnectSettings =
+                await SettingManager.GetSettingValueForTenantAsync(
+                    AppSettings.ExternalLoginProvider.Tenant.OpenIdConnect, AbpSession.GetTenantId());
+            var openIdConnectMappedClaims =
+                await SettingManager.GetSettingValueAsync(AppSettings.ExternalLoginProvider.OpenIdConnectMappedClaims);
 
-            var wsFederationSettings = await SettingManager.GetSettingValueForTenantAsync(AppSettings.ExternalLoginProvider.Tenant.WsFederation, AbpSession.GetTenantId());
-            var wsFederationMappedClaims = await SettingManager.GetSettingValueAsync(AppSettings.ExternalLoginProvider.WsFederationMappedClaims);
+            var wsFederationSettings =
+                await SettingManager.GetSettingValueForTenantAsync(
+                    AppSettings.ExternalLoginProvider.Tenant.WsFederation, AbpSession.GetTenantId());
+            var wsFederationMappedClaims =
+                await SettingManager.GetSettingValueAsync(AppSettings.ExternalLoginProvider.WsFederationMappedClaims);
 
             return new ExternalLoginProviderSettingsEditDto
             {
@@ -288,14 +394,12 @@ namespace TACHYON.Configuration.Tenants
                 Microsoft = microsoftSettings.IsNullOrWhiteSpace()
                     ? new MicrosoftExternalLoginProviderSettings()
                     : microsoftSettings.FromJsonString<MicrosoftExternalLoginProviderSettings>(),
-
                 OpenIdConnect = openIdConnectSettings.IsNullOrWhiteSpace()
                     ? new OpenIdConnectExternalLoginProviderSettings()
                     : openIdConnectSettings.FromJsonString<OpenIdConnectExternalLoginProviderSettings>(),
                 OpenIdConnectClaimsMapping = openIdConnectMappedClaims.IsNullOrWhiteSpace()
                     ? new List<JsonClaimMapDto>()
                     : openIdConnectMappedClaims.FromJsonString<List<JsonClaimMapDto>>(),
-
                 WsFederation = wsFederationSettings.IsNullOrWhiteSpace()
                     ? new WsFederationExternalLoginProviderSettings()
                     : wsFederationSettings.FromJsonString<WsFederationExternalLoginProviderSettings>(),
@@ -322,12 +426,15 @@ namespace TACHYON.Configuration.Tenants
             {
                 if (input.General.Timezone.IsNullOrEmpty())
                 {
-                    var defaultValue = await _timeZoneService.GetDefaultTimezoneAsync(SettingScopes.Tenant, AbpSession.TenantId);
-                    await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), TimingSettingNames.TimeZone, defaultValue);
+                    var defaultValue =
+                        await _timeZoneService.GetDefaultTimezoneAsync(SettingScopes.Tenant, AbpSession.TenantId);
+                    await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(),
+                        TimingSettingNames.TimeZone, defaultValue);
                 }
                 else
                 {
-                    await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), TimingSettingNames.TimeZone, input.General.Timezone);
+                    await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(),
+                        TimingSettingNames.TimeZone, input.General.Timezone);
                 }
             }
 
@@ -355,17 +462,24 @@ namespace TACHYON.Configuration.Tenants
 
         private async Task UpdateBillingSettingsAsync(TenantBillingSettingsEditDto input)
         {
-            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), AppSettings.TenantManagement.BillingLegalName, input.LegalName);
-            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), AppSettings.TenantManagement.BillingAddress, input.Address);
-            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), AppSettings.TenantManagement.BillingTaxVatNo, input.TaxVatNo);
+            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(),
+                AppSettings.TenantManagement.BillingLegalName, input.LegalName);
+            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(),
+                AppSettings.TenantManagement.BillingAddress, input.Address);
+            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(),
+                AppSettings.TenantManagement.BillingTaxVatNo, input.TaxVatNo);
         }
 
         private async Task UpdateLdapSettingsAsync(LdapSettingsEditDto input)
         {
-            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), LdapSettingNames.IsEnabled, input.IsEnabled.ToString().ToLowerInvariant());
-            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), LdapSettingNames.Domain, input.Domain.IsNullOrWhiteSpace() ? null : input.Domain);
-            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), LdapSettingNames.UserName, input.UserName.IsNullOrWhiteSpace() ? null : input.UserName);
-            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), LdapSettingNames.Password, input.Password.IsNullOrWhiteSpace() ? null : input.Password);
+            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), LdapSettingNames.IsEnabled,
+                input.IsEnabled.ToString().ToLowerInvariant());
+            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), LdapSettingNames.Domain,
+                input.Domain.IsNullOrWhiteSpace() ? null : input.Domain);
+            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), LdapSettingNames.UserName,
+                input.UserName.IsNullOrWhiteSpace() ? null : input.UserName);
+            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), LdapSettingNames.Password,
+                input.Password.IsNullOrWhiteSpace() ? null : input.Password);
         }
 
         private async Task UpdateEmailSettingsAsync(TenantEmailSettingsEditDto input)
@@ -379,33 +493,57 @@ namespace TACHYON.Configuration.Tenants
 
             if (useHostDefaultEmailSettings)
             {
-                var smtpPassword = await SettingManager.GetSettingValueForApplicationAsync(EmailSettingNames.Smtp.Password);
+                var smtpPassword =
+                    await SettingManager.GetSettingValueForApplicationAsync(EmailSettingNames.Smtp.Password);
 
                 input = new TenantEmailSettingsEditDto
                 {
                     UseHostDefaultEmailSettings = true,
-                    DefaultFromAddress = await SettingManager.GetSettingValueForApplicationAsync(EmailSettingNames.DefaultFromAddress),
-                    DefaultFromDisplayName = await SettingManager.GetSettingValueForApplicationAsync(EmailSettingNames.DefaultFromDisplayName),
+                    DefaultFromAddress =
+                        await SettingManager.GetSettingValueForApplicationAsync(
+                            EmailSettingNames.DefaultFromAddress),
+                    DefaultFromDisplayName =
+                        await SettingManager.GetSettingValueForApplicationAsync(EmailSettingNames
+                            .DefaultFromDisplayName),
                     SmtpHost = await SettingManager.GetSettingValueForApplicationAsync(EmailSettingNames.Smtp.Host),
-                    SmtpPort = await SettingManager.GetSettingValueForApplicationAsync<int>(EmailSettingNames.Smtp.Port),
-                    SmtpUserName = await SettingManager.GetSettingValueForApplicationAsync(EmailSettingNames.Smtp.UserName),
+                    SmtpPort =
+                        await SettingManager.GetSettingValueForApplicationAsync<int>(EmailSettingNames.Smtp.Port),
+                    SmtpUserName =
+                        await SettingManager.GetSettingValueForApplicationAsync(EmailSettingNames.Smtp.UserName),
                     SmtpPassword = SimpleStringCipher.Instance.Decrypt(smtpPassword),
-                    SmtpDomain = await SettingManager.GetSettingValueForApplicationAsync(EmailSettingNames.Smtp.Domain),
-                    SmtpEnableSsl = await SettingManager.GetSettingValueForApplicationAsync<bool>(EmailSettingNames.Smtp.EnableSsl),
-                    SmtpUseDefaultCredentials = await SettingManager.GetSettingValueForApplicationAsync<bool>(EmailSettingNames.Smtp.UseDefaultCredentials)
+                    SmtpDomain =
+                        await SettingManager.GetSettingValueForApplicationAsync(EmailSettingNames.Smtp.Domain),
+                    SmtpEnableSsl =
+                        await SettingManager.GetSettingValueForApplicationAsync<bool>(EmailSettingNames.Smtp
+                            .EnableSsl),
+                    SmtpUseDefaultCredentials =
+                        await SettingManager.GetSettingValueForApplicationAsync<bool>(EmailSettingNames.Smtp
+                            .UseDefaultCredentials)
                 };
             }
 
-            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), AppSettings.Email.UseHostDefaultEmailSettings, useHostDefaultEmailSettings.ToString().ToLowerInvariant());
-            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), EmailSettingNames.DefaultFromAddress, input.DefaultFromAddress);
-            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), EmailSettingNames.DefaultFromDisplayName, input.DefaultFromDisplayName);
-            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), EmailSettingNames.Smtp.Host, input.SmtpHost);
-            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), EmailSettingNames.Smtp.Port, input.SmtpPort.ToString(CultureInfo.InvariantCulture));
-            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), EmailSettingNames.Smtp.UserName, input.SmtpUserName);
-            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), EmailSettingNames.Smtp.Password, SimpleStringCipher.Instance.Encrypt(input.SmtpPassword));
-            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), EmailSettingNames.Smtp.Domain, input.SmtpDomain);
-            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), EmailSettingNames.Smtp.EnableSsl, input.SmtpEnableSsl.ToString().ToLowerInvariant());
-            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), EmailSettingNames.Smtp.UseDefaultCredentials, input.SmtpUseDefaultCredentials.ToString().ToLowerInvariant());
+            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(),
+                AppSettings.Email.UseHostDefaultEmailSettings,
+                useHostDefaultEmailSettings.ToString().ToLowerInvariant());
+            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(),
+                EmailSettingNames.DefaultFromAddress, input.DefaultFromAddress);
+            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(),
+                EmailSettingNames.DefaultFromDisplayName, input.DefaultFromDisplayName);
+            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), EmailSettingNames.Smtp.Host,
+                input.SmtpHost);
+            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), EmailSettingNames.Smtp.Port,
+                input.SmtpPort.ToString(CultureInfo.InvariantCulture));
+            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), EmailSettingNames.Smtp.UserName,
+                input.SmtpUserName);
+            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), EmailSettingNames.Smtp.Password,
+                SimpleStringCipher.Instance.Encrypt(input.SmtpPassword));
+            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), EmailSettingNames.Smtp.Domain,
+                input.SmtpDomain);
+            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), EmailSettingNames.Smtp.EnableSsl,
+                input.SmtpEnableSsl.ToString().ToLowerInvariant());
+            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(),
+                EmailSettingNames.Smtp.UseDefaultCredentials,
+                input.SmtpUseDefaultCredentials.ToString().ToLowerInvariant());
         }
 
         private async Task UpdateUserManagementSettingsAsync(TenantUserManagementSettingsEditDto settings)
@@ -530,9 +668,15 @@ namespace TACHYON.Configuration.Tenants
 
         private async Task UpdateUserLockOutSettingsAsync(UserLockOutSettingsEditDto settings)
         {
-            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), AbpZeroSettingNames.UserManagement.UserLockOut.IsEnabled, settings.IsEnabled.ToString().ToLowerInvariant());
-            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), AbpZeroSettingNames.UserManagement.UserLockOut.DefaultAccountLockoutSeconds, settings.DefaultAccountLockoutSeconds.ToString());
-            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), AbpZeroSettingNames.UserManagement.UserLockOut.MaxFailedAccessAttemptsBeforeLockout, settings.MaxFailedAccessAttemptsBeforeLockout.ToString());
+            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(),
+                AbpZeroSettingNames.UserManagement.UserLockOut.IsEnabled,
+                settings.IsEnabled.ToString().ToLowerInvariant());
+            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(),
+                AbpZeroSettingNames.UserManagement.UserLockOut.DefaultAccountLockoutSeconds,
+                settings.DefaultAccountLockoutSeconds.ToString());
+            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(),
+                AbpZeroSettingNames.UserManagement.UserLockOut.MaxFailedAccessAttemptsBeforeLockout,
+                settings.MaxFailedAccessAttemptsBeforeLockout.ToString());
         }
 
         private async Task UpdateTwoFactorLoginSettingsAsync(TwoFactorLoginSettingsEditDto settings)
@@ -543,15 +687,25 @@ namespace TACHYON.Configuration.Tenants
                 return;
             }
 
-            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsEnabled, settings.IsEnabled.ToString().ToLowerInvariant());
-            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsRememberBrowserEnabled, settings.IsRememberBrowserEnabled.ToString().ToLowerInvariant());
+            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(),
+                AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsEnabled,
+                settings.IsEnabled.ToString().ToLowerInvariant());
+            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(),
+                AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsRememberBrowserEnabled,
+                settings.IsRememberBrowserEnabled.ToString().ToLowerInvariant());
 
             if (!_multiTenancyConfig.IsEnabled)
             {
                 //These settings can only be changed by host, in a multitenant application.
-                await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsEmailProviderEnabled, settings.IsEmailProviderEnabled.ToString().ToLowerInvariant());
-                await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsSmsProviderEnabled, settings.IsSmsProviderEnabled.ToString().ToLowerInvariant());
-                await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), AppSettings.UserManagement.TwoFactorLogin.IsGoogleAuthenticatorEnabled, settings.IsGoogleAuthenticatorEnabled.ToString().ToLowerInvariant());
+                await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(),
+                    AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsEmailProviderEnabled,
+                    settings.IsEmailProviderEnabled.ToString().ToLowerInvariant());
+                await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(),
+                    AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsSmsProviderEnabled,
+                    settings.IsSmsProviderEnabled.ToString().ToLowerInvariant());
+                await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(),
+                    AppSettings.UserManagement.TwoFactorLogin.IsGoogleAuthenticatorEnabled,
+                    settings.IsGoogleAuthenticatorEnabled.ToString().ToLowerInvariant());
             }
         }
 
@@ -561,7 +715,9 @@ namespace TACHYON.Configuration.Tenants
             {
                 return;
             }
-            await SettingManager.ChangeSettingForApplicationAsync(AppSettings.UserManagement.AllowOneConcurrentLoginPerUser, allowOneConcurrentLoginPerUser.ToString());
+
+            await SettingManager.ChangeSettingForApplicationAsync(
+                AppSettings.UserManagement.AllowOneConcurrentLoginPerUser, allowOneConcurrentLoginPerUser.ToString());
         }
 
         private async Task UpdateExternalLoginSettingsAsync(ExternalLoginProviderSettingsEditDto input)
@@ -597,9 +753,12 @@ namespace TACHYON.Configuration.Tenants
             );
 
             var openIdConnectMappedClaimsValue = "";
-            if (input.OpenIdConnect == null || !input.OpenIdConnect.IsValid() || input.OpenIdConnectClaimsMapping.IsNullOrEmpty())
+            if (input.OpenIdConnect == null || !input.OpenIdConnect.IsValid() ||
+                input.OpenIdConnectClaimsMapping.IsNullOrEmpty())
             {
-                openIdConnectMappedClaimsValue = await SettingManager.GetSettingValueForApplicationAsync(AppSettings.ExternalLoginProvider.OpenIdConnectMappedClaims);//set default value
+                openIdConnectMappedClaimsValue =
+                    await SettingManager.GetSettingValueForApplicationAsync(AppSettings.ExternalLoginProvider
+                        .OpenIdConnectMappedClaims); //set default value
             }
             else
             {
@@ -619,9 +778,12 @@ namespace TACHYON.Configuration.Tenants
             );
 
             var wsFederationMappedClaimsValue = "";
-            if (input.WsFederation == null || !input.WsFederation.IsValid() || input.WsFederationClaimsMapping.IsNullOrEmpty())
+            if (input.WsFederation == null || !input.WsFederation.IsValid() ||
+                input.WsFederationClaimsMapping.IsNullOrEmpty())
             {
-                wsFederationMappedClaimsValue = await SettingManager.GetSettingValueForApplicationAsync(AppSettings.ExternalLoginProvider.WsFederationMappedClaims);//set default value
+                wsFederationMappedClaimsValue =
+                    await SettingManager.GetSettingValueForApplicationAsync(AppSettings.ExternalLoginProvider
+                        .WsFederationMappedClaims); //set default value
             }
             else
             {

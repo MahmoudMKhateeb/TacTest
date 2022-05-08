@@ -1,5 +1,6 @@
 ﻿using Abp.MultiTenancy;
 using Abp.Timing;
+using JetBrains.Annotations;
 using Org.BouncyCastle.Asn1.Microsoft;
 using System;
 using System.ComponentModel.DataAnnotations;
@@ -7,6 +8,7 @@ using TACHYON.Authorization.Users;
 using TACHYON.Editions;
 using TACHYON.Invoices.Periods;
 using TACHYON.MultiTenancy.Payments;
+using TACHYON.Rating;
 
 namespace TACHYON.MultiTenancy
 {
@@ -15,7 +17,7 @@ namespace TACHYON.MultiTenancy
     /// A tenant is a isolated customer for the application
     /// which has it's own users, roles and other application entities.
     /// </summary>
-    public class Tenant : AbpTenant<User>
+    public class Tenant : AbpTenant<User>, IHasRating
     {
         public const int MaxLogoMimeTypeLength = 64;
 
@@ -39,35 +41,41 @@ namespace TACHYON.MultiTenancy
 
         public virtual Guid? LogoId { get; set; }
 
-        [MaxLength(MaxLogoMimeTypeLength)]
-        public virtual string LogoFileType { get; set; }
+        [MaxLength(MaxLogoMimeTypeLength)] public virtual string LogoFileType { get; set; }
 
         public decimal Balance { get; set; } = 0;
         public decimal ReservedBalance { get; set; } = 0;
         public decimal CreditBalance { get; set; } = 0;
 
-        [StringLength(12)]
-        public string AccountNumber { get; set; }
-        [StringLength(12)]
-        public string ContractNumber { get; set; }
+        [StringLength(12)] public string AccountNumber { get; set; }
+        [StringLength(12)] public string ContractNumber { get; set; }
+
+        /// <summary>
+        /// This field is final rate for tenant "shipper or carrier"
+        /// </summary>
+        public decimal Rate { get; set; }
+
+        public int RateNumber { get; set; }
         public SubscriptionPaymentType SubscriptionPaymentType { get; set; }
+
+        public string Website { get; set; }
+
+        public string Description { get; set; }
 
         /// <summary>
         /// Moi number for company 
         /// </summary>
-        [Required]
+        [CanBeNull]
         [RegularExpression(TenantConsts.MoiNumberRegex)]
         public string MoiNumber { get; set; }
 
         protected Tenant()
         {
-
         }
 
         public Tenant(string tenancyName, string name)
             : base(tenancyName, name)
         {
-
         }
 
         public virtual bool HasLogo()
@@ -81,7 +89,8 @@ namespace TACHYON.MultiTenancy
             LogoFileType = null;
         }
 
-        public void UpdateSubscriptionDateForPayment(PaymentPeriodType paymentPeriodType, EditionPaymentType editionPaymentType)
+        public void UpdateSubscriptionDateForPayment(PaymentPeriodType paymentPeriodType,
+            EditionPaymentType editionPaymentType)
         {
             switch (editionPaymentType)
             {
@@ -99,6 +108,7 @@ namespace TACHYON.MultiTenancy
                     {
                         SubscriptionEndDateUtc = Clock.Now.ToUniversalTime().AddDays((int)paymentPeriodType);
                     }
+
                     break;
                 default:
                     throw new ArgumentException();
@@ -128,7 +138,8 @@ namespace TACHYON.MultiTenancy
         public int CalculateRemainingHoursCount()
         {
             return SubscriptionEndDateUtc != null
-                ? (int)(SubscriptionEndDateUtc.Value - Clock.Now.ToUniversalTime()).TotalHours //converting it to int is not a problem since max value ((DateTime.MaxValue - DateTime.MinValue).TotalHours = 87649416) is in range of integer.
+                ? (int)(SubscriptionEndDateUtc.Value - Clock.Now.ToUniversalTime())
+                .TotalHours //converting it to int is not a problem since max value ((DateTime.MaxValue - DateTime.MinValue).TotalHours = 87649416) is in range of integer.
                 : 0;
         }
 

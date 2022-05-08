@@ -90,7 +90,8 @@ namespace TACHYON.MultiTenancy.HostDashboard
             );
         }
 
-        public async Task<GetEditionTenantStatisticsOutput> GetEditionTenantStatistics(GetEditionTenantStatisticsInput input)
+        public async Task<GetEditionTenantStatisticsOutput> GetEditionTenantStatistics(
+            GetEditionTenantStatisticsInput input)
         {
             return new GetEditionTenantStatisticsOutput(
                 await GetEditionTenantStatisticsData(input.StartDate, input.EndDate)
@@ -100,19 +101,15 @@ namespace TACHYON.MultiTenancy.HostDashboard
         private async Task<List<TenantEdition>> GetEditionTenantStatisticsData(DateTime startDate, DateTime endDate)
         {
             return (await _tenantRepository.GetAll()
-                .Where(t => t.EditionId.HasValue &&
-                            t.IsActive &&
-                            t.CreationTime >= startDate &&
-                            t.CreationTime <= endDate)
-                .Select(t => new { t.EditionId, t.Edition.DisplayName })
-                .ToListAsync()
+                    .Where(t => t.EditionId.HasValue &&
+                                t.IsActive &&
+                                t.CreationTime >= startDate &&
+                                t.CreationTime <= endDate)
+                    .Select(t => new { t.EditionId, t.Edition.DisplayName })
+                    .ToListAsync()
                 )
                 .GroupBy(t => t.EditionId)
-                .Select(t => new TenantEdition
-                {
-                    Label = t.First().DisplayName,
-                    Value = t.Count()
-                })
+                .Select(t => new TenantEdition { Label = t.First().DisplayName, Value = t.Count() })
                 .OrderBy(t => t.Label)
                 .ToList();
         }
@@ -120,11 +117,11 @@ namespace TACHYON.MultiTenancy.HostDashboard
         private decimal GetNewSubscriptionAmount(DateTime startDate, DateTime endDate)
         {
             return _subscriptionPaymentRepository.GetAll()
-                  .Where(s => s.CreationTime >= startDate &&
-                              s.CreationTime <= endDate &&
-                              s.Status == SubscriptionPaymentStatus.Paid)
-                  .Select(x => x.Amount).AsEnumerable()
-                  .Sum();
+                .Where(s => s.CreationTime >= startDate &&
+                            s.CreationTime <= endDate &&
+                            s.Status == SubscriptionPaymentStatus.Paid)
+                .Select(x => x.Amount).AsEnumerable()
+                .Sum();
         }
 
         private async Task<int> GetTenantsCountByDate(DateTime startDate, DateTime endDate)
@@ -134,18 +131,16 @@ namespace TACHYON.MultiTenancy.HostDashboard
                 .CountAsync();
         }
 
-        private async Task<List<ExpiringTenant>> GetExpiringTenantsData(DateTime subscriptionEndDateStartUtc, DateTime subscriptionEndDateEndUtc, int? maxExpiringTenantsShownCount = null)
+        private async Task<List<ExpiringTenant>> GetExpiringTenantsData(DateTime subscriptionEndDateStartUtc,
+            DateTime subscriptionEndDateEndUtc,
+            int? maxExpiringTenantsShownCount = null)
         {
             var query = _tenantRepository.GetAll()
                 .Where(t =>
                     t.SubscriptionEndDateUtc.HasValue &&
                     t.SubscriptionEndDateUtc.Value >= subscriptionEndDateStartUtc &&
                     t.SubscriptionEndDateUtc.Value <= subscriptionEndDateEndUtc)
-                .Select(t => new
-                {
-                    t.Name,
-                    t.SubscriptionEndDateUtc
-                });
+                .Select(t => new { t.Name, t.SubscriptionEndDateUtc });
 
             if (maxExpiringTenantsShownCount.HasValue)
             {
@@ -156,14 +151,16 @@ namespace TACHYON.MultiTenancy.HostDashboard
                 .Select(t => new ExpiringTenant
                 {
                     TenantName = t.Name,
-                    RemainingDayCount = Convert.ToInt32(t.SubscriptionEndDateUtc.Value.Subtract(subscriptionEndDateStartUtc).TotalDays)
+                    RemainingDayCount = Convert.ToInt32(t.SubscriptionEndDateUtc.Value
+                        .Subtract(subscriptionEndDateStartUtc).TotalDays)
                 })
                 .OrderBy(t => t.RemainingDayCount)
                 .ThenBy(t => t.TenantName)
                 .ToList();
         }
 
-        private async Task<List<RecentTenant>> GetRecentTenantsData(DateTime creationDateStart, int? maxRecentTenantsShownCount = null)
+        private async Task<List<RecentTenant>> GetRecentTenantsData(DateTime creationDateStart,
+            int? maxRecentTenantsShownCount = null)
         {
             var query = _tenantRepository.GetAll()
                 .Where(t => t.CreationTime >= creationDateStart)

@@ -8,9 +8,8 @@ using TACHYON.Routs.RoutPoints.Dtos;
 
 namespace TACHYON.Routs.RoutPoints
 {
-    public interface IRoutPointAppService: IApplicationService
+    public interface IRoutPointAppService : IApplicationService
     {
         Task<PagedResultDto<GetRoutPointForViewOutput>> GetAll(GetAllRoutPointInput input);
-
     }
 }

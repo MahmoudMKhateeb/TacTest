@@ -18,6 +18,5 @@ namespace TACHYON.Packing.PackingTypes.Dtos
         public string Description { get; set; }
 
         public List<PackingTypeTranslationDto> TranslationDtos { get; set; }
-
     }
 }

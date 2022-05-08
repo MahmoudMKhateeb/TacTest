@@ -35,26 +35,33 @@ namespace TACHYON.Notifications
         {
             var totalCount = await _userNotificationManager.GetUserNotificationCountAsync(
                 AbpSession.ToUserIdentifier(), input.State, input.StartDate, input.EndDate
-                );
+            );
 
             var unreadCount = await _userNotificationManager.GetUserNotificationCountAsync(
                 AbpSession.ToUserIdentifier(), UserNotificationState.Unread, input.StartDate, input.EndDate
-                );
+            );
             var notifications = await _userNotificationManager.GetUserNotificationsAsync(
-                AbpSession.ToUserIdentifier(), input.State, input.SkipCount, input.MaxResultCount, input.StartDate, input.EndDate
-                );
+                AbpSession.ToUserIdentifier(), input.State, input.SkipCount, input.MaxResultCount, input.StartDate,
+                input.EndDate
+            );
 
             return new GetNotificationsOutput(totalCount, unreadCount, notifications);
         }
 
         public async Task SetAllNotificationsAsRead()
         {
-            await _userNotificationManager.UpdateAllUserNotificationStatesAsync(AbpSession.ToUserIdentifier(), UserNotificationState.Read);
+            await _userNotificationManager.UpdateAllUserNotificationStatesAsync(AbpSession.ToUserIdentifier(),
+                UserNotificationState.Read);
         }
+
+        public async Task<int> GetUnreadNotificationCount()
+            => await _userNotificationManager.GetUserNotificationCountAsync(AbpSession.ToUserIdentifier(),
+                UserNotificationState.Unread);
 
         public async Task SetNotificationAsRead(EntityDto<Guid> input)
         {
-            var userNotification = await _userNotificationManager.GetUserNotificationAsync(AbpSession.TenantId, input.Id);
+            var userNotification =
+                await _userNotificationManager.GetUserNotificationAsync(AbpSession.TenantId, input.Id);
             if (userNotification == null)
             {
                 return;
@@ -62,25 +69,32 @@ namespace TACHYON.Notifications
 
             if (userNotification.UserId != AbpSession.GetUserId())
             {
-                throw new Exception(string.Format("Given user notification id ({0}) is not belong to the current user ({1})", input.Id, AbpSession.GetUserId()));
+                throw new Exception(string.Format(
+                    "Given user notification id ({0}) is not belong to the current user ({1})", input.Id,
+                    AbpSession.GetUserId()));
             }
 
-            await _userNotificationManager.UpdateUserNotificationStateAsync(AbpSession.TenantId, input.Id, UserNotificationState.Read);
+            await _userNotificationManager.UpdateUserNotificationStateAsync(AbpSession.TenantId, input.Id,
+                UserNotificationState.Read);
         }
 
         public async Task<GetNotificationSettingsOutput> GetNotificationSettings()
         {
             var output = new GetNotificationSettingsOutput();
 
-            output.ReceiveNotifications = await SettingManager.GetSettingValueAsync<bool>(NotificationSettingNames.ReceiveNotifications);
+            output.ReceiveNotifications =
+                await SettingManager.GetSettingValueAsync<bool>(NotificationSettingNames.ReceiveNotifications);
 
             //Get general notifications, not entity related notifications.
-            var notificationDefinitions = (await _notificationDefinitionManager.GetAllAvailableAsync(AbpSession.ToUserIdentifier())).Where(nd => nd.EntityType == null);
+            var notificationDefinitions =
+                (await _notificationDefinitionManager.GetAllAvailableAsync(AbpSession.ToUserIdentifier())).Where(nd =>
+                    nd.EntityType == null);
 
-            output.Notifications = ObjectMapper.Map<List<NotificationSubscriptionWithDisplayNameDto>>(notificationDefinitions);
+            output.Notifications =
+                ObjectMapper.Map<List<NotificationSubscriptionWithDisplayNameDto>>(notificationDefinitions);
 
             var subscribedNotifications = (await _notificationSubscriptionManager
-                .GetSubscribedNotificationsAsync(AbpSession.ToUserIdentifier()))
+                    .GetSubscribedNotificationsAsync(AbpSession.ToUserIdentifier()))
                 .Select(ns => ns.NotificationName)
                 .ToList();
 
@@ -91,17 +105,20 @@ namespace TACHYON.Notifications
 
         public async Task UpdateNotificationSettings(UpdateNotificationSettingsInput input)
         {
-            await SettingManager.ChangeSettingForUserAsync(AbpSession.ToUserIdentifier(), NotificationSettingNames.ReceiveNotifications, input.ReceiveNotifications.ToString());
+            await SettingManager.ChangeSettingForUserAsync(AbpSession.ToUserIdentifier(),
+                NotificationSettingNames.ReceiveNotifications, input.ReceiveNotifications.ToString());
 
             foreach (var notification in input.Notifications)
             {
                 if (notification.IsSubscribed)
                 {
-                    await _notificationSubscriptionManager.SubscribeAsync(AbpSession.ToUserIdentifier(), notification.Name);
+                    await _notificationSubscriptionManager.SubscribeAsync(AbpSession.ToUserIdentifier(),
+                        notification.Name);
                 }
                 else
                 {
-                    await _notificationSubscriptionManager.UnsubscribeAsync(AbpSession.ToUserIdentifier(), notification.Name);
+                    await _notificationSubscriptionManager.UnsubscribeAsync(AbpSession.ToUserIdentifier(),
+                        notification.Name);
                 }
             }
         }
@@ -130,6 +147,5 @@ namespace TACHYON.Notifications
                 input.StartDate,
                 input.EndDate);
         }
-
     }
 }

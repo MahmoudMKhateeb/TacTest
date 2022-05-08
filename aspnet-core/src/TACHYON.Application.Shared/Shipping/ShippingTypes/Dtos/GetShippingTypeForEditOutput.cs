@@ -7,6 +7,5 @@ namespace TACHYON.Shipping.ShippingTypes.Dtos
     public class GetShippingTypeForEditOutput
     {
         public CreateOrEditShippingTypeDto ShippingType { get; set; }
-
     }
 }

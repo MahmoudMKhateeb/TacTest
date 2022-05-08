@@ -77,7 +77,7 @@ export class UserMenuComponent extends ThemesLayoutBaseComponent implements OnIn
   }
 
   getProfilePicture(): void {
-    this._profileServiceProxy.getProfilePicture().subscribe((result) => {
+    this._profileServiceProxy.getProfilePicture(null).subscribe((result) => {
       if (result && result.profilePicture) {
         this.profilePicture = 'data:image/jpeg;base64,' + result.profilePicture;
       }

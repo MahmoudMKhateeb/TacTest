@@ -13,6 +13,7 @@ namespace TACHYON.Migrations.Seed.Host
     public class TransportTypesAndTheirChildrenCreator
     {
         private readonly TACHYONDbContext _context;
+
         public TransportTypesAndTheirChildrenCreator(TACHYONDbContext context)
         {
             _context = context;
@@ -57,11 +58,11 @@ namespace TACHYON.Migrations.Seed.Host
             //CreateOrUpdateCapacity("Payload at 24 Tonnes", 12, 12);
             //CreateOrUpdateCapacity("Payload at 24 Tonnes", 13, 13);
             //CreateOrUpdateCapacity("Payload at 24 Tonnes", 14, 14);
-
         }
 
 
         #region TransportType
+
         private void CreateOrUpdateTransportType(string displayName, int id)
         {
             var item = _context.TransportTypes.IgnoreQueryFilters().FirstOrDefault(x => x.Id == id);
@@ -75,7 +76,7 @@ namespace TACHYON.Migrations.Seed.Host
             }
         }
 
-        private void AddTransportTypeToDB(string displayName,int id)
+        private void AddTransportTypeToDB(string displayName, int id)
         {
             _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[TransportTypes] ON");
             var newItem = new TransportType() { DisplayName = displayName, IsDeleted = false, Id = id };
@@ -84,18 +85,19 @@ namespace TACHYON.Migrations.Seed.Host
             _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[TransportTypes] OFF");
         }
 
-        private void UpdateTransportType(TransportType item,string displayName)
+        private void UpdateTransportType(TransportType item, string displayName)
         {
             item.DisplayName = displayName;
             item.IsDeleted = false;
             _context.TransportTypes.Update(item);
             _context.SaveChanges();
         }
+
         #endregion
 
 
-
         #region TruckType
+
         //private void CreateOrUpdateTruckType(string displayName, int id, int transportSubTypeId)
         //{
         //    var item = _context.TrucksTypes.IgnoreQueryFilters().FirstOrDefault(x => x.Id == id);
@@ -131,7 +133,10 @@ namespace TACHYON.Migrations.Seed.Host
 
 
         #region Capacity
-        private void CreateOrUpdateCapacity(string displayName, int id, int truckSubTypeId)
+
+        private void CreateOrUpdateCapacity(string displayName,
+            int id,
+            int truckSubTypeId)
         {
             var item = _context.Capacities.IgnoreQueryFilters().FirstOrDefault(x => x.Id == id);
             if (item == null)
@@ -144,16 +149,23 @@ namespace TACHYON.Migrations.Seed.Host
             }
         }
 
-        private void AddCapacityToDB(string displayName, int id, int truckTypeId)
+        private void AddCapacityToDB(string displayName,
+            int id,
+            int truckTypeId)
         {
             _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Capacities] ON");
-            var newItem = new Capacity() { DisplayName = displayName, IsDeleted = false, Id = id, TrucksTypeId = truckTypeId };
+            var newItem = new Capacity()
+            {
+                DisplayName = displayName, IsDeleted = false, Id = id, TrucksTypeId = truckTypeId
+            };
             _context.Capacities.Add(newItem);
             _context.SaveChanges();
             _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Capacities] OFF");
         }
 
-        private void UpdateCapacity(Capacity item, string displayName,int truckTypeId)
+        private void UpdateCapacity(Capacity item,
+            string displayName,
+            int truckTypeId)
         {
             item.DisplayName = displayName;
             item.IsDeleted = false;
@@ -161,7 +173,7 @@ namespace TACHYON.Migrations.Seed.Host
             _context.Capacities.Update(item);
             _context.SaveChanges();
         }
-        #endregion
 
+        #endregion
     }
 }

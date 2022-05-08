@@ -17,12 +17,12 @@ namespace TACHYON.MultiTenancy
         private const int CheckPeriodAsMilliseconds = 1 * 60 * 60 * 1000 * 24; //1 day
 
         private readonly IRepository<Tenant> _tenantRepository;
-        private readonly UserEmailer _userEmailer;
+        private readonly IUserEmailer _userEmailer;
 
         public SubscriptionExpireEmailNotifierWorker(
             AbpTimer timer,
             IRepository<Tenant> tenantRepository,
-            UserEmailer userEmailer) : base(timer)
+            IUserEmailer userEmailer) : base(timer)
         {
             _tenantRepository = tenantRepository;
             _userEmailer = userEmailer;
@@ -35,7 +35,10 @@ namespace TACHYON.MultiTenancy
 
         protected override void DoWork()
         {
-            var subscriptionRemainingDayCount = Convert.ToInt32(SettingManager.GetSettingValueForApplication(AppSettings.TenantManagement.SubscriptionExpireNotifyDayCount));
+            var subscriptionRemainingDayCount =
+                Convert.ToInt32(
+                    SettingManager.GetSettingValueForApplication(AppSettings.TenantManagement
+                        .SubscriptionExpireNotifyDayCount));
             var dateToCheckRemainingDayCount = Clock.Now.AddDays(subscriptionRemainingDayCount).ToUniversalTime();
 
             var subscriptionExpiredTenants = _tenantRepository.GetAllList(
@@ -50,7 +53,7 @@ namespace TACHYON.MultiTenancy
                 Debug.Assert(tenant.EditionId.HasValue);
                 try
                 {
-                    AsyncHelper.RunSync(() => _userEmailer.TryToSendSubscriptionExpiringSoonEmail(tenant.Id, dateToCheckRemainingDayCount));
+                    AsyncHelper.RunSync(() => _userEmailer.SendSubscriptionExpiringSoonEmail(tenant.Id, dateToCheckRemainingDayCount));
                 }
                 catch (Exception exception)
                 {

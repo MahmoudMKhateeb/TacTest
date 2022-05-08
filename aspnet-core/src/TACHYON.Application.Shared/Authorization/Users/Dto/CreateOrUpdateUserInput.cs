@@ -6,11 +6,9 @@ namespace TACHYON.Authorization.Users.Dto
 {
     public class CreateOrUpdateUserInput
     {
-        [Required]
-        public UserEditDto User { get; set; }
+        [Required] public UserEditDto User { get; set; }
 
-        [Required]
-        public string[] AssignedRoleNames { get; set; }
+        [Required] public string[] AssignedRoleNames { get; set; }
 
         public bool SendActivationEmail { get; set; }
 
@@ -22,7 +20,7 @@ namespace TACHYON.Authorization.Users.Dto
         {
             OrganizationUnits = new List<long>();
         }
-        public List<CreateOrEditDocumentFileDto> CreateOrEditDocumentFileDtos { get; set; }
 
+        public List<CreateOrEditDocumentFileDto> CreateOrEditDocumentFileDtos { get; set; }
     }
 }

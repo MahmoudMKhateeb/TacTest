@@ -13,7 +13,6 @@ namespace TACHYON.Trucks
     [Audited]
     public class TruckStatus : FullAuditedEntity<long>, IMultiLingualEntity<TruckStatusesTranslation>
     {
-        
         [Required]
         [StringLength(TruckStatusConsts.MaxDisplayNameLength, MinimumLength = TruckStatusConsts.MinDisplayNameLength)]
         public virtual string DisplayName { get; set; }

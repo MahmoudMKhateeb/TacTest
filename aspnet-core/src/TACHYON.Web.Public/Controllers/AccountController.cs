@@ -34,7 +34,10 @@ namespace TACHYON.Web.Public.Controllers
             _tenantManager = tenantManager;
         }
 
-        public async Task<ActionResult> Login(string accessToken, string userId, string tenantId = "", string returnUrl = "")
+        public async Task<ActionResult> Login(string accessToken,
+            string userId,
+            string tenantId = "",
+            string returnUrl = "")
         {
             if (string.IsNullOrEmpty(accessToken) || string.IsNullOrEmpty(userId))
             {
@@ -52,7 +55,8 @@ namespace TACHYON.Web.Public.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            if (!user.SignInToken.Equals(accessToken) || !(user.SignInTokenExpireTimeUtc >= Clock.Now.ToUniversalTime()))
+            if (!user.SignInToken.Equals(accessToken) ||
+                !(user.SignInTokenExpireTimeUtc >= Clock.Now.ToUniversalTime()))
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -85,8 +89,10 @@ namespace TACHYON.Web.Public.Controllers
             var websiteAddress = _webUrlService.GetSiteRootAddress(tenancyName);
 
             var originalReturnUrl = Request.Query.ContainsKey("ReturnUrl") ? Request.Query["ReturnUrl"].ToString() : "";
-            var returnUrl = websiteAddress.EnsureEndsWith('/') + "account/login?returnUrl=" + websiteAddress.EnsureEndsWith('/') + originalReturnUrl.TrimStart('/');
-            return Redirect(serverAddress.EnsureEndsWith('/') + "account/login?ss=true&returnUrl=" + WebUtility.UrlEncode(returnUrl));
+            var returnUrl = websiteAddress.EnsureEndsWith('/') + "account/login?returnUrl=" +
+                            websiteAddress.EnsureEndsWith('/') + originalReturnUrl.TrimStart('/');
+            return Redirect(serverAddress.EnsureEndsWith('/') + "account/login?ss=true&returnUrl=" +
+                            WebUtility.UrlEncode(returnUrl));
         }
 
         private async Task<string> GetCurrentTenancyName()

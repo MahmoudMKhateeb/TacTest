@@ -81,13 +81,10 @@
               <dxo-filter-panel [visible]="true"></dxo-filter-panel>
               <dxo-filter-builder-popup></dxo-filter-builder-popup>
               <dxo-scrolling mode="virtual"></dxo-scrolling>
-              <dxo-group-panel [visible]="true"></dxo-group-panel>
+              <dxo-group-panel [visible]="false"></dxo-group-panel>
               <dxo-grouping #expand [autoExpandAll]="false"></dxo-grouping>
-              <dxo-remote-operations [groupPaging]="true" [sorting]="true" [filtering]="true"> </dxo-remote-operations>
+              <dxo-remote-operations [groupPaging]="false" [sorting]="false" [filtering]="false"> </dxo-remote-operations>
               <dxo-paging [pageSize]="20"></dxo-paging>
-              <dxo-summary>
-                <dxi-group-item column="id" summaryType="count"> </dxi-group-item>
-              </dxo-summary>
 
               <dxi-column
                 cellTemplate="cellTemplateActions"
@@ -101,13 +98,16 @@
               <dxi-column dataField="modelName" caption="{{ l('ModelName') }}"> </dxi-column>
               <dxi-column dataField="modelYear" caption="{{ l('ModelYear') }}"> </dxi-column>
               <dxi-column dataField="length" caption="{{ l('Length') }}"> </dxi-column>
-              <dxi-column dataField="truckStatusDisplayName" caption="{{ l('truckStatus') }}"> </dxi-column>
-              <dxi-column dataField="transportTypeDisplayName" caption="{{ l('transportType') }}"> </dxi-column>
-              <dxi-column dataField="trucksTypeDisplayName" caption="{{ l('trucksType') }}"> </dxi-column>
+              <dxi-column dataField="truckStatusDisplayName" caption="{{ l('TruckStatus') }}"> </dxi-column>
+              <dxi-column dataField="companyName" caption="{{ l('companyName') }}"> </dxi-column>
+              <dxi-column dataField="transportTypeDisplayName" caption="{{ l('TransportType') }}"> </dxi-column>
+              <dxi-column dataField="trucksTypeDisplayName" caption="{{ l('TrucksType') }}"> </dxi-column>
+              <dxi-column dataField="capacityDisplayName" caption="{{ l('Capacity') }}"> </dxi-column>
               <dxi-column dataField="capacity" caption="{{ l('Capacity') }}"> </dxi-column>
+              <dxi-column dataField="istmaraNumber" caption="{{ l('IstmaraNumber') }}"> </dxi-column>
               <dxi-column
                 dataField="isMissingDocumentFiles"
-                caption="{{ l('isMissingDocumentFiles') }}"
+                caption="{{ l('MissingDocumentFiles') }}"
                 [allowFiltering]="false"
                 [allowSorting]="false"
               >
@@ -171,14 +171,15 @@
                   </ul>
                 </div>
               </div>
+              <dxo-summary> <dxi-total-item column="plateNumber" summaryType="count"> </dxi-total-item> </dxo-summary>
             </dx-data-grid>
           </div>
         </div>
       </div>
     </div>
-    <createOrEditTruckModal #createOrEditTruckModal (modalSave)="getAllTrucks()"></createOrEditTruckModal>
+    <createOrEditTruckModal #createOrEditTruckModal (modalSave)="getAllTrucks(undefined)"></createOrEditTruckModal>
     <viewTruckModal #viewTruckModal></viewTruckModal>
-    <app-viwe-truck-documents-modal #viewOrEditEntityDocumentsModal (modalSave)="getAllTrucks()"> </app-viwe-truck-documents-modal>
+    <app-viwe-truck-documents-modal #viewOrEditEntityDocumentsModal (modalSave)="getAllTrucks(undefined)"> </app-viwe-truck-documents-modal>
     <entityTypeHistoryModal #entityTypeHistoryModal></entityTypeHistoryModal>
   </div>
 </div>

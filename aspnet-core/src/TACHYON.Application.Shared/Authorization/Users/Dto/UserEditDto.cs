@@ -39,6 +39,7 @@ namespace TACHYON.Authorization.Users.Dto
         [DisableAuditing]
         public string Password { get; set; }
 
+        public int? TenantId { get; set; }
         public bool IsActive { get; set; }
 
         public bool ShouldChangePasswordOnNextLogin { get; set; }
@@ -47,8 +48,10 @@ namespace TACHYON.Authorization.Users.Dto
 
         public virtual bool IsLockoutEnabled { get; set; }
 
+        public bool IsAvailable { get; set; }
 
         #region Tachyon details
+
         public virtual bool IsDriver { get; set; }
 
         public virtual string Address { get; set; }

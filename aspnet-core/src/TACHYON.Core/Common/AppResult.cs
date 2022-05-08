@@ -4,7 +4,7 @@ using System.Text;
 
 namespace TACHYON.Common
 {
-  public  class AppResult
+    public class AppResult
     {
         public bool Status { get; set; }
 

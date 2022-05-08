@@ -1,31 +1,59 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Injector, Input, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Injector, Input, OnChanges, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { Table } from '@node_modules/primeng/table';
 import { Paginator } from '@node_modules/primeng/paginator';
 import { LazyLoadEvent } from 'primeng/api';
 
-import { GetShippingRequestVasForViewDto, ShippingRequestDto, ShippingRequestsTripServiceProxy } from '@shared/service-proxies/service-proxies';
+import {
+  GetShippingRequestVasForViewDto,
+  ShippingRequestDto,
+  ShippingRequestsServiceProxy,
+  ShippingRequestsTripServiceProxy,
+  ShippingRequestTripStatus,
+} from '@shared/service-proxies/service-proxies';
 import { CreateOrEditTripComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/createOrEditTripModal/createOrEditTrip.component';
 import { ViewTripModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/viewTripModal/viewTripModal.component';
+import { TripService } from '../trip.service';
+import { AddNewRemarksTripModalComponent } from './add-new-remarks-trip-modal/add-new-remarks-trip-modal.component';
 
 @Component({
   selector: 'TripsForViewShippingRequest',
   templateUrl: './tripsForViewShippingRequest.component.html',
   styleUrls: ['./tripsForViewShippingRequest.component.scss'],
 })
-export class TripsForViewShippingRequestComponent extends AppComponentBase implements AfterViewInit {
+export class TripsForViewShippingRequestComponent extends AppComponentBase implements AfterViewInit, OnChanges {
   @ViewChild('dataTablechild', { static: false }) dataTable: Table;
   @ViewChild('paginatorchild', { static: false }) paginator: Paginator;
   @ViewChild('AddNewTripModal', { static: false }) AddNewTripModal: CreateOrEditTripComponent;
   @ViewChild('ViewTripModal', { static: false }) ViewTripModal: ViewTripModalComponent;
+  @ViewChild('AddRemarksModal', { static: false }) AddRemarksModal: AddNewRemarksTripModalComponent;
+
   @Input() ShippingRequest: ShippingRequestDto;
+  @Input() shippingRequestForView: any;
   @Input() VasListFromFather: GetShippingRequestVasForViewDto[];
+  tripsByTmsEnabled = false;
+  saving = false;
+  ShippingRequestTripStatusEnum = ShippingRequestTripStatus;
   constructor(
     injector: Injector,
+    private _TripService: TripService,
+    private _shippingRequestsServiceProxy: ShippingRequestsServiceProxy,
     private changeDetectorRef: ChangeDetectorRef,
     private _shippingRequestTripsService: ShippingRequestsTripServiceProxy
   ) {
     super(injector);
+  }
+
+  /**
+   * checks if the current user has the ability to edit a trip
+   * @constructor
+   */
+  get CanEditTrip(): boolean {
+    //check if shipper or  Carrier has a Saas feature and Can edit this trip
+    return (
+      this.feature.isEnabled('App.Shipper') ||
+      (this.feature.isEnabled('App.CarrierAsASaas') && this.ShippingRequest.carrierTenantId === this.shippingRequestForView.tenantId)
+    );
   }
 
   getShippingRequestsTrips(event?: LazyLoadEvent) {
@@ -50,10 +78,55 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
       });
   }
 
+  // updateAddTripsByTmsFeature() {
+  //   Swal.fire({
+  //     title: this.l('areYouSure'),
+  //     icon: 'warning',
+  //     showCancelButton: true,
+  //     confirmButtonText: this.l('Yes'),
+  //     cancelButtonText: this.l('No'),
+  //   }).then((result) => {
+  //     if (result.value) {
+  //       this.saving = true;
+  //       this._shippingRequestTripsService.changeAddTripsByTmsFeature().subscribe(() => {
+  //         this.saving = false;
+  //       });
+  //     } //end of if
+  //   });
+  // }
+
   reloadPage(): void {
     this.paginator.changePage(this.paginator.getPage());
   }
   ngAfterViewInit(): void {
+    // update Trip Service and send vases list to trip component
+    this._shippingRequestsServiceProxy.getShippingRequestForView(this.ShippingRequest.id).subscribe((result) => {
+      this.VasListFromFather = result.shippingRequestVasDtoList;
+      this.tripsByTmsEnabled = true;
+      this._TripService.updateShippingRequest(result);
+    });
+
     this.primengTableHelper.adjustScroll(this.dataTable);
+    abp.event.on('ShippingRequestTripCreatedEvent', (args) => {
+      this._shippingRequestsServiceProxy.canAddTripForShippingRequest(this.ShippingRequest.id).subscribe((result) => {
+        this.ShippingRequest.canAddTrip = result;
+      });
+    });
+  }
+
+  /**
+   * check if user can reset a trip
+   * if user is Carrier/TMS and the Trip Status is not new/Delivered
+   * @param record
+   */
+  canResetTrip(record): boolean {
+    return (
+      (this.isCarrier || this.isTachyonDealer) &&
+      record.status !== this.ShippingRequestTripStatusEnum.New &&
+      record.status !== this.ShippingRequestTripStatusEnum.Delivered
+    );
+  }
+  ngOnChanges() {
+    this.reloadPage();
   }
 }

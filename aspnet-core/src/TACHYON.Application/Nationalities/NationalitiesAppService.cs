@@ -24,29 +24,20 @@ namespace TACHYON.Nationalities
         public NationalitiesAppService(IRepository<Nationality> nationalityRepository)
         {
             _nationalityRepository = nationalityRepository;
-
         }
 
         public async Task<PagedResultDto<GetNationalityForViewDto>> GetAll(GetAllNationalitiesInput input)
         {
-
             var filteredNationalities = _nationalityRepository.GetAll()
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Name.Contains(input.Filter))
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.NameFilter), e => e.Name == input.NameFilter);
+                .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Name.Contains(input.Filter))
+                .WhereIf(!string.IsNullOrWhiteSpace(input.NameFilter), e => e.Name == input.NameFilter);
 
             var pagedAndFilteredNationalities = filteredNationalities
                 .OrderBy(input.Sorting ?? "id asc")
                 .PageBy(input);
 
             var nationalities = from o in pagedAndFilteredNationalities
-                                select new GetNationalityForViewDto()
-                                {
-                                    Nationality = new NationalityDto
-                                    {
-                                        Name = o.Name,
-                                        Id = o.Id
-                                    }
-                                };
+                select new GetNationalityForViewDto() { Nationality = new NationalityDto { Name = o.Name, Id = o.Id } };
 
             var totalCount = await filteredNationalities.CountAsync();
 
@@ -70,14 +61,16 @@ namespace TACHYON.Nationalities
         {
             var nationality = await _nationalityRepository.FirstOrDefaultAsync(input.Id);
 
-            var output = new GetNationalityForEditOutput { Nationality = ObjectMapper.Map<CreateOrEditNationalityDto>(nationality) };
+            var output = new GetNationalityForEditOutput
+            {
+                Nationality = ObjectMapper.Map<CreateOrEditNationalityDto>(nationality)
+            };
 
             return output;
         }
 
         public async Task CreateOrEdit(CreateOrEditNationalityDto input)
         {
-
             await IsNationalityNameDuplicatedOrEmpty(input.Name);
 
             if (input.Id == null)
@@ -115,13 +108,8 @@ namespace TACHYON.Nationalities
         {
             return await _nationalityRepository
                 .GetAll()
-                .Select(x => new SelectItemDto
-                {
-                    Id = x.Id.ToString(),
-                    DisplayName = x.Name
-                })
+                .Select(x => new SelectItemDto { Id = x.Id.ToString(), DisplayName = x.Name })
                 .ToListAsync();
-
         }
 
         private async Task IsNationalityNameDuplicatedOrEmpty(string name)

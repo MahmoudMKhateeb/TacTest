@@ -96,15 +96,15 @@ namespace TACHYON
             if (DebugHelper.IsDebug)
             {
                 //Disabling email sending in debug mode
-               // Configuration.ReplaceService<IEmailSender, NullEmailSender>(DependencyLifeStyle.Transient);
+                // Configuration.ReplaceService<IEmailSender, NullEmailSender>(DependencyLifeStyle.Transient);
             }
 
             Configuration.ReplaceService(typeof(IEmailSenderConfiguration), () =>
             {
                 Configuration.IocManager.IocContainer.Register(
                     Component.For<IEmailSenderConfiguration, ISmtpEmailSenderConfiguration>()
-                             .ImplementedBy<TACHYONSmtpEmailSenderConfiguration>()
-                             .LifestyleTransient()
+                        .ImplementedBy<TACHYONSmtpEmailSenderConfiguration>()
+                        .LifestyleTransient()
                 );
             });
 
@@ -128,14 +128,6 @@ namespace TACHYON
 
             IocManager.Resolve<ChatUserStateWatcher>().Initialize();
             IocManager.Resolve<AppTimes>().StartupTime = Clock.Now;
-
-
-           
-
-            
-
-
-
         }
     }
 }

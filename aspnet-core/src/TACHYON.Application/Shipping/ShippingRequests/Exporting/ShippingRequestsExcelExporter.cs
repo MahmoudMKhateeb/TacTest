@@ -10,7 +10,6 @@ namespace TACHYON.Shipping.ShippingRequests.Exporting
 {
     public class ShippingRequestsExcelExporter : NpoiExcelExporterBase, IShippingRequestsExcelExporter
     {
-
         private readonly ITimeZoneConverter _timeZoneConverter;
         private readonly IAbpSession _abpSession;
 
@@ -18,7 +17,7 @@ namespace TACHYON.Shipping.ShippingRequests.Exporting
             ITimeZoneConverter timeZoneConverter,
             IAbpSession abpSession,
             ITempFileCacheManager tempFileCacheManager) :
-    base(tempFileCacheManager)
+            base(tempFileCacheManager)
         {
             _timeZoneConverter = timeZoneConverter;
             _abpSession = abpSession;
@@ -50,7 +49,6 @@ namespace TACHYON.Shipping.ShippingRequests.Exporting
         //                _ => _.GoodsDetailName,
         //                _ => _.RouteDisplayName
         //                );
-
 
 
         //        });

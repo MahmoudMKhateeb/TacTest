@@ -1,9 +1,11 @@
 ﻿using Abp.Application.Services;
 using Abp.Application.Services.Dto;
+using DevExtreme.AspNet.Data.ResponseModel;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TACHYON.Cities.Dtos;
+using TACHYON.Common;
 using TACHYON.Dto;
 
 
@@ -11,8 +13,7 @@ namespace TACHYON.Cities
 {
     public interface ICitiesAppService : IApplicationService
     {
-        Task<PagedResultDto<GetCityForViewDto>> GetAll(GetAllCitiesInput input);
-
+        Task<LoadResult> DxGetAll(LoadOptionsInput input);
         Task<GetCityForViewDto> GetCityForView(int id);
 
         Task<GetCityForEditOutput> GetCityForEdit(EntityDto input);
@@ -25,6 +26,5 @@ namespace TACHYON.Cities
 
 
         Task<List<CityCountyLookupTableDto>> GetAllCountyForTableDropdown();
-
     }
 }

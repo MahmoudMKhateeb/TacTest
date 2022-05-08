@@ -9,11 +9,15 @@ using Abp.Events.Bus;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Abp.Runtime.Security;
+using Abp.Runtime.Validation;
 using Abp.Timing;
+using Abp.UI;
 using AutoMapper.QueryableExtensions;
 using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
@@ -39,7 +43,8 @@ namespace TACHYON.MultiTenancy
         private readonly IRepository<City, int> _lookup_cityRepository;
 
 
-        public TenantAppService(IRepository<County, int> lookup_countryRepository, IRepository<City, int> lookup_cityRepository)
+        public TenantAppService(IRepository<County, int> lookup_countryRepository,
+            IRepository<City, int> lookup_cityRepository)
         {
             AppUrlService = NullAppUrlService.Instance;
             EventBus = NullEventBus.Instance;
@@ -51,11 +56,14 @@ namespace TACHYON.MultiTenancy
         {
             var query = TenantManager.Tenants
                 .Include(t => t.Edition)
-                .WhereIf(!input.Filter.IsNullOrWhiteSpace(), t => t.Name.Contains(input.Filter) || t.TenancyName.Contains(input.Filter))
+                .WhereIf(!input.Filter.IsNullOrWhiteSpace(),
+                    t => t.Name.Contains(input.Filter) || t.TenancyName.Contains(input.Filter))
                 .WhereIf(input.CreationDateStart.HasValue, t => t.CreationTime >= input.CreationDateStart.Value)
                 .WhereIf(input.CreationDateEnd.HasValue, t => t.CreationTime <= input.CreationDateEnd.Value)
-                .WhereIf(input.SubscriptionEndDateStart.HasValue, t => t.SubscriptionEndDateUtc >= input.SubscriptionEndDateStart.Value.ToUniversalTime())
-                .WhereIf(input.SubscriptionEndDateEnd.HasValue, t => t.SubscriptionEndDateUtc <= input.SubscriptionEndDateEnd.Value.ToUniversalTime())
+                .WhereIf(input.SubscriptionEndDateStart.HasValue,
+                    t => t.SubscriptionEndDateUtc >= input.SubscriptionEndDateStart.Value.ToUniversalTime())
+                .WhereIf(input.SubscriptionEndDateEnd.HasValue,
+                    t => t.SubscriptionEndDateUtc <= input.SubscriptionEndDateEnd.Value.ToUniversalTime())
                 .WhereIf(input.EditionIdSpecified, t => t.EditionId == input.EditionId);
 
             var tenantCount = await query.CountAsync();
@@ -64,23 +72,24 @@ namespace TACHYON.MultiTenancy
             return new PagedResultDto<TenantListDto>(
                 tenantCount,
                 ObjectMapper.Map<List<TenantListDto>>(tenants)
-                );
+            );
         }
 
         public async Task<LoadResult> GetAllTenants(string loadOptions)
         {
             DisableTenancyFiltersIfHost();
 
-            IQueryable<TenantListDto> tenantListDtos = TenantManager.Tenants.ProjectTo<TenantListDto>(AutoMapperConfigurationProvider);
-            IQueryable<UserListDto> userListDtos = UserManager.Users.Where(x => x.UserName.ToLower() == "admin").ProjectTo<UserListDto>(AutoMapperConfigurationProvider);
+            IQueryable<TenantListDto> tenantListDtos =
+                TenantManager.Tenants.ProjectTo<TenantListDto>(AutoMapperConfigurationProvider);
+            IQueryable<UserListDto> userListDtos = UserManager.Users.Where(x => x.UserName.ToLower() == "admin")
+                .ProjectTo<UserListDto>(AutoMapperConfigurationProvider);
 
             var query = from t in tenantListDtos
-                        join u in userListDtos
-                            on t.Id equals u.TenantId
-                        select new GetAllTenantsOutput { TenantListDto = t, UserListDto = u };
+                join u in userListDtos
+                    on t.Id equals u.TenantId
+                select new GetAllTenantsOutput { TenantListDto = t, UserListDto = u };
 
             return await LoadResultAsync(query, loadOptions);
-
         }
 
         [AbpAuthorize(AppPermissions.Pages_Tenants_Create)]
@@ -88,31 +97,10 @@ namespace TACHYON.MultiTenancy
         public async Task CreateTenant(CreateTenantInput input)
         {
             var tenancyName = input.companyName.Trim().Replace(" ", "_");
-
-            var tenantId = await TenantManager.CreateWithAdminUserAsync(
-                 input.companyName,
-                 input.MobileNo,
-                 tenancyName,
-                 input.Name,
-                 input.Address,
-                 input.CountryId,
-                 input.CityId,
-                 input.AdminPassword,
-                 input.AdminEmailAddress,
-                 input.ConnectionString,
-                 input.IsActive,
-                 input.EditionId,
-                 input.ShouldChangePasswordOnNextLogin,
-                 true,
-                 input.SubscriptionEndDateUtc?.ToUniversalTime(),
-                 input.IsInTrialPeriod,
-                 AppUrlService.CreateEmailActivationUrlFormat(tenancyName),
-                 input.UserAdminFirstName,
-                 input.UserAdminSurname,
-                 input.MoiNumber
-             );
-
-            var tenant = await TenantManager.GetByIdAsync(tenantId);
+            var tenantId =
+                await TenantManager.CreateWithAdminUserAsync(input,
+                    AppUrlService.CreateEmailActivationUrlFormat(tenancyName));
+            await TenantManager.GetByIdAsync(tenantId);
         }
 
         [AbpAuthorize(AppPermissions.Pages_Tenants_Edit)]
@@ -126,7 +114,6 @@ namespace TACHYON.MultiTenancy
         [AbpAuthorize(AppPermissions.Pages_Tenants_Edit)]
         public async Task UpdateTenant(TenantEditDto input)
         {
-
             input.ConnectionString = SimpleStringCipher.Instance.Encrypt(input.ConnectionString);
             var tenant = await TenantManager.GetByIdAsync(input.Id);
 
@@ -171,7 +158,8 @@ namespace TACHYON.MultiTenancy
         [AbpAuthorize(AppPermissions.Pages_Tenants_ChangeFeatures)]
         public async Task UpdateTenantFeatures(UpdateTenantFeaturesInput input)
         {
-            await TenantManager.SetFeatureValuesAsync(input.Id, input.FeatureValues.Select(fv => new NameValue(fv.Name, fv.Value)).ToArray());
+            await TenantManager.SetFeatureValuesAsync(input.Id,
+                input.FeatureValues.Select(fv => new NameValue(fv.Name, fv.Value)).ToArray());
         }
 
         [AbpAuthorize(AppPermissions.Pages_Tenants_ChangeFeatures)]
@@ -200,7 +188,8 @@ namespace TACHYON.MultiTenancy
                 .OrderBy(x => x.DisplayName)
                 .ToListAsync();
 
-            List<TenantCountryLookupTableDto> countryDtos = ObjectMapper.Map<List<TenantCountryLookupTableDto>>(countries);
+            List<TenantCountryLookupTableDto> countryDtos =
+                ObjectMapper.Map<List<TenantCountryLookupTableDto>>(countries);
             return countryDtos;
         }
 

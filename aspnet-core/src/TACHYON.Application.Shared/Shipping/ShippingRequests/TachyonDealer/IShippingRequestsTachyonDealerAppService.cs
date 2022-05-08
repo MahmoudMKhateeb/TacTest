@@ -6,7 +6,7 @@ using TACHYON.Shipping.ShippingRequests.TachyonDealer.Dtos;
 
 namespace TACHYON.Shipping.ShippingRequests.TachyonDealer
 {
-    public interface IShippingRequestsTachyonDealerAppService: IApplicationService
+    public interface IShippingRequestsTachyonDealerAppService : IApplicationService
     {
         Task StartBid(TachyonDealerBidDtoInupt Input);
     }

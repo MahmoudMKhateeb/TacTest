@@ -7,17 +7,15 @@ using System.Text;
 
 namespace TACHYON.Shipping.ShippingRequests.TachyonDealer.Dtos
 {
- public   class TachyonDealerDirectOfferToShipperInputDto: EntityDto<long>, ICustomValidate
+    public class TachyonDealerDirectOfferToShipperInputDto : EntityDto<long>, ICustomValidate
     {
-        [Required]
-        public decimal Price { get; set; }
+        [Required] public decimal Price { get; set; }
 
         public void AddValidationErrors(CustomValidationContext context)
         {
-            if (Price<1)
+            if (Price < 1)
             {
                 context.Results.Add(new ValidationResult("The price  must be higher zero"));
-
             }
         }
     }

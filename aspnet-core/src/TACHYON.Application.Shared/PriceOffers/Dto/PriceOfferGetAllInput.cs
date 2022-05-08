@@ -2,10 +2,9 @@
 
 namespace TACHYON.PriceOffers.Dto
 {
-    public class PriceOfferGetAllInput: PagedAndSortedResultRequestDto
+    public class PriceOfferGetAllInput : PagedAndSortedResultRequestDto
     {
         public long id { get; set; }
         public PriceOfferChannel? Channel { get; set; }
-
     }
 }

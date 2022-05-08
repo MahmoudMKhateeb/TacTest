@@ -1,17 +1,16 @@
-﻿using System;
+﻿using Abp.Application.Services;
+using Abp.Application.Services.Dto;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Abp.Application.Services;
-using Abp.Application.Services.Dto;
 using TACHYON.Shipping.Trips.Dto;
 
 namespace TACHYON.Shipping.Trips
 {
-    public  interface IShippingRequestsTripAppService: IApplicationService
+    public interface IShippingRequestsTripAppService : IApplicationService
     {
-
-        Task<PagedResultDto<ShippingRequestsTripListDto>>  GetAll(ShippingRequestTripFilterInput Input);
+        Task<PagedResultDto<ShippingRequestsTripListDto>> GetAll(ShippingRequestTripFilterInput Input);
 
 
         Task<ShippingRequestsTripForViewDto> GetShippingRequestTripForView(int id);
@@ -20,6 +19,6 @@ namespace TACHYON.Shipping.Trips
         Task<CreateOrEditShippingRequestTripDto> GetShippingRequestTripForEdit(EntityDto input);
 
         Task Delete(EntityDto input);
-        Task CancelByAccident(long Id);
+        Task CancelByAccident(long Id, bool isForce);
     }
 }

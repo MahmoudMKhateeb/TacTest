@@ -2,8 +2,6 @@
 {
     public class GetDangerousGoodTypeForViewDto
     {
-		public DangerousGoodTypeDto DangerousGoodType { get; set; }
-
-
+        public DangerousGoodTypeDto DangerousGoodType { get; set; }
     }
 }

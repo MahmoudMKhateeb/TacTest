@@ -4,16 +4,16 @@ using System;
 
 namespace TACHYON.Shipping.ShippingRequests.Dtos
 {
-    public class GetAllShippingRequestsInput : PagedAndSortedResultRequestDto ,IShouldNormalize
+    public class GetAllShippingRequestsInput : PagedAndSortedResultRequestDto, IShouldNormalize
     {
         public string Filter { get; set; }
 
         public decimal? MaxVasFilter { get; set; }
         public decimal? MinVasFilter { get; set; }
 
-        public  bool? IsBid { get; set; }
+        public bool? IsBid { get; set; }
 
-        public  bool? IsTachyonDeal { get; set; }
+        public bool? IsTachyonDeal { get; set; }
 
         public bool? IsTachyonDealer { get; set; }
         public ShippingRequestStatus? Status { get; set; }
@@ -22,7 +22,6 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
 
         public void Normalize()
         {
-
             if (string.IsNullOrWhiteSpace(Sorting)) return;
             if (Sorting.Contains("originalCityName"))
             {
@@ -38,11 +37,8 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
             }
             else if (Sorting.Contains("routeType"))
             {
-                Sorting=Sorting.Replace("routeType", "RouteTypeId");
+                Sorting = Sorting.Replace("routeType", "RouteTypeId");
             }
-
-     
-
         }
     }
 }

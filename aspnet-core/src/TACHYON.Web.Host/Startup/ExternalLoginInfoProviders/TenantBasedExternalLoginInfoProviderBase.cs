@@ -1,6 +1,7 @@
 ﻿using Abp.AspNetZeroCore.Web.Authentication.External;
 using Abp.Runtime.Caching;
 using Abp.Runtime.Session;
+
 namespace TACHYON.Web.Startup.ExternalLoginInfoProviders
 {
     public abstract class TenantBasedExternalLoginInfoProviderBase : IExternalLoginInfoProvider
@@ -32,7 +33,7 @@ namespace TACHYON.Web.Startup.ExternalLoginInfoProviders
             }
 
             return _cacheManager.GetExternalLoginInfoProviderCache()
-                    .Get(GetCacheKey(), GetHostInformation);
+                .Get(GetCacheKey(), GetHostInformation);
         }
 
         private string GetCacheKey()

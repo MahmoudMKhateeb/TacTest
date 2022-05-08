@@ -1,13 +1,13 @@
-import { Component, ViewChild, Injector, Output, EventEmitter, OnInit, ElementRef } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Injector, OnInit, Output, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import {
-  InvoicePeriodServiceProxy,
+  FrequencyRelativeInterval,
   InvoicePeriodDto,
+  InvoicePeriodServiceProxy,
   InvoicePeriodType,
   KeyValuePair,
-  FrequencyRelativeInterval,
 } from '@shared/service-proxies/service-proxies';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 
@@ -63,11 +63,11 @@ export class InvoicePeriodsModalComponent extends AppComponentBase implements On
       this.Period = period;
       this.active = true;
 
-      if (this.Period.periodType == InvoicePeriodType.Weekly) {
-        this.FreqRecurrenceWeekDays = this.Period.freqRecurrence.split(',').map((x) => parseInt(x));
-      } else if (this.Period.periodType == InvoicePeriodType.Monthly) {
-        this.FreqRecurrenceMonths = this.Period.freqRecurrence.split(',').map((x) => parseInt(x));
-      }
+      // if (this.Period.periodType == InvoicePeriodType.Weekly) {
+      //   this.FreqRecurrenceWeekDays = this.Period.freqRecurrence.split(',').map((x) => parseInt(x));
+      // } else if (this.Period.periodType == InvoicePeriodType.Monthly) {
+      //   this.FreqRecurrenceMonths = this.Period.freqRecurrence.split(',').map((x) => parseInt(x));
+      // }
       this.modal.show();
     }
   }
@@ -80,27 +80,27 @@ export class InvoicePeriodsModalComponent extends AppComponentBase implements On
 
   save(): void {
     this.saving = true;
-    if (this.Period.periodType == InvoicePeriodType.Daily) {
-      this.Period.freqRelativeInterval = 0;
-      this.Period.freqRecurrence = null;
-    } else if (this.Period.periodType == InvoicePeriodType.Weekly) {
-      this.Period.freqRelativeInterval = 0;
-      this.Period.freqRecurrence = this.FreqRecurrenceWeekDays.join();
-    } else if (this.Period.periodType == InvoicePeriodType.Monthly) {
-      this.Period.freqRecurrence = this.FreqRecurrenceMonths.join();
-
-      if (this.MonthType == '1') {
-        this.Period.freqRelativeInterval = 0;
-        this.Period.freqInterval = this.FreqIntervalMonthlyperday;
-      } else {
-        this.Period.freqInterval = this.FreqIntervalMonthlyperweek;
-      }
-    } else {
-      this.Period.freqInterval = 0;
-      this.Period.freqRelativeInterval = 0;
-      this.Period.freqRecurrence = null;
-      this.Period.freqRelativeInterval = 0;
-    }
+    // if (this.Period.periodType == InvoicePeriodType.Daily) {
+    //   this.Period.freqRelativeInterval = 0;
+    //   this.Period.freqRecurrence = null;
+    // } else if (this.Period.periodType == InvoicePeriodType.Weekly) {
+    //   this.Period.freqRelativeInterval = 0;
+    //   this.Period.freqRecurrence = this.FreqRecurrenceWeekDays.join();
+    // } else if (this.Period.periodType == InvoicePeriodType.Monthly) {
+    //   this.Period.freqRecurrence = this.FreqRecurrenceMonths.join();
+    //
+    //   if (this.MonthType == '1') {
+    //     this.Period.freqRelativeInterval = 0;
+    //     this.Period.freqInterval = this.FreqIntervalMonthlyperday;
+    //   } else {
+    //     this.Period.freqInterval = this.FreqIntervalMonthlyperweek;
+    //   }
+    // } else {
+    //   this.Period.freqInterval = 0;
+    //   this.Period.freqRelativeInterval = 0;
+    //   this.Period.freqRecurrence = null;
+    //   this.Period.freqRelativeInterval = 0;
+    // }
     this._periodService
       .createEdit(this.Period)
       .pipe(finalize(() => (this.saving = false)))

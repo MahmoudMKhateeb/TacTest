@@ -45,7 +45,6 @@ namespace TACHYON.Web
         typeof(AbpRedisCacheModule), //AbpRedisCacheModule dependency (and Abp.RedisCache nuget package) can be removed if not using Redis cache
         typeof(AbpHangfireAspNetCoreModule), //AbpHangfireModule dependency (and Abp.Hangfire.AspNetCore nuget package) can be removed if not using Hangfire
         typeof(AbpQuartzModule)
-
     )]
     public class TACHYONWebCoreModule : AbpModule
     {
@@ -78,7 +77,8 @@ namespace TACHYON.Web
                 cache.DefaultAbsoluteExpireTime = TimeSpan.FromMinutes(2);
             });
 
-            if (_appConfiguration["Authentication:JwtBearer:IsEnabled"] != null && bool.Parse(_appConfiguration["Authentication:JwtBearer:IsEnabled"]))
+            if (_appConfiguration["Authentication:JwtBearer:IsEnabled"] != null &&
+                bool.Parse(_appConfiguration["Authentication:JwtBearer:IsEnabled"]))
             {
                 ConfigureTokenAuth();
             }
@@ -105,7 +105,6 @@ namespace TACHYON.Web
             {
                 Configuration.Modules.AbpWebCommon().SendAllExceptionsToClients = true;
             }
-
         }
 
         private void ConfigureTokenAuth()
@@ -113,10 +112,13 @@ namespace TACHYON.Web
             IocManager.Register<TokenAuthConfiguration>();
             var tokenAuthConfig = IocManager.Resolve<TokenAuthConfiguration>();
 
-            tokenAuthConfig.SecurityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_appConfiguration["Authentication:JwtBearer:SecurityKey"]));
+            tokenAuthConfig.SecurityKey =
+                new SymmetricSecurityKey(
+                    Encoding.ASCII.GetBytes(_appConfiguration["Authentication:JwtBearer:SecurityKey"]));
             tokenAuthConfig.Issuer = _appConfiguration["Authentication:JwtBearer:Issuer"];
             tokenAuthConfig.Audience = _appConfiguration["Authentication:JwtBearer:Audience"];
-            tokenAuthConfig.SigningCredentials = new SigningCredentials(tokenAuthConfig.SecurityKey, SecurityAlgorithms.HmacSha256);
+            tokenAuthConfig.SigningCredentials =
+                new SigningCredentials(tokenAuthConfig.SecurityKey, SecurityAlgorithms.HmacSha256);
             tokenAuthConfig.AccessTokenExpiration = AppConsts.AccessTokenExpiration;
             tokenAuthConfig.RefreshTokenExpiration = AppConsts.RefreshTokenExpiration;
         }
@@ -128,21 +130,18 @@ namespace TACHYON.Web
 
         public override void PostInitialize()
         {
-
-
             SetAppFolders();
 
             IocManager.Resolve<ApplicationPartManager>()
                 .AddApplicationPartsIfNotAddedBefore(typeof(TACHYONWebCoreModule).Assembly);
-
-   
         }
 
         private void SetAppFolders()
         {
             var appFolders = IocManager.Resolve<AppFolders>();
 
-            appFolders.SampleProfileImagesFolder = Path.Combine(_env.WebRootPath, $"Common{Path.DirectorySeparatorChar}Images{Path.DirectorySeparatorChar}SampleProfilePics");
+            appFolders.SampleProfileImagesFolder = Path.Combine(_env.WebRootPath,
+                $"Common{Path.DirectorySeparatorChar}Images{Path.DirectorySeparatorChar}SampleProfilePics");
             appFolders.WebLogsFolder = Path.Combine(_env.ContentRootPath, $"App_Data{Path.DirectorySeparatorChar}Logs");
         }
     }

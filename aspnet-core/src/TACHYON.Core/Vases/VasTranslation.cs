@@ -2,14 +2,16 @@
 using Abp.Domain.Entities.Auditing;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using TACHYON.Common;
 
 namespace TACHYON.Vases
 {
     [Table("VasesTranslations")]
-    public class VasTranslation : FullAuditedEntity,IEntityTranslation<Vas>
+    public class VasTranslation : FullAuditedEntity, IEntityTranslation<Vas>, IHasDisplayName
     {
         [StringLength(VasConsts.MaxDisplayNameLength, MinimumLength = VasConsts.MinDisplayNameLength)]
         public virtual string DisplayName { get; set; }
+
         public string Language { get; set; }
         public Vas Core { get; set; }
         public int CoreId { get; set; }

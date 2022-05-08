@@ -6,14 +6,12 @@ using TACHYON.Invoices.SubmitInvoices.Dto;
 
 namespace TACHYON.AutoMapper.Invoices.SubmitInvoices
 {
-    public class SubmitInvoiceProfile:Profile
+    public class SubmitInvoiceProfile : Profile
     {
         public SubmitInvoiceProfile()
         {
             CreateMap<SubmitInvoiceClaimCreateInput, DocumentUpload>();
             CreateMap<IHasDocument, SubmitInvoice>().ReverseMap();
-
-
         }
     }
 }

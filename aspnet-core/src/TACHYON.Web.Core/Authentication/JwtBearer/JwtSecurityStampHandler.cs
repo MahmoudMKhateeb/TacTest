@@ -54,7 +54,9 @@ namespace TACHYON.Web.Authentication.JwtBearer
             return isValid;
         }
 
-        public async Task SetSecurityStampCacheItem(int? tenantId, long userId, string securityStamp)
+        public async Task SetSecurityStampCacheItem(int? tenantId,
+            long userId,
+            string securityStamp)
         {
             await _cacheManager.GetCache(AppConsts.SecurityStampKey)
                 .SetAsync(GenerateCacheKey(tenantId, userId), securityStamp);

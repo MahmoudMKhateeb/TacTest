@@ -11,9 +11,8 @@ namespace TACHYON.Invoices.Balances.Exporting
     public class TransactionExcelExporter : NpoiExcelExporterBase, ITransactionExcelExporter
     {
         public TransactionExcelExporter(
-
-    ITempFileCacheManager tempFileCacheManager) :
-base(tempFileCacheManager)
+            ITempFileCacheManager tempFileCacheManager) :
+            base(tempFileCacheManager)
         {
         }
 
@@ -23,7 +22,6 @@ base(tempFileCacheManager)
                 "Transactions",
                 excelPackage =>
                 {
-
                     var sheet = excelPackage.CreateSheet(L("Transactions"));
 
                     AddHeader(
@@ -31,8 +29,8 @@ base(tempFileCacheManager)
                         L("ClientName"),
                         L("Channel"),
                         L("Amount"),
-                         L("CreationTime")
-                        );
+                        L("CreationTime")
+                    );
 
                     AddObjects(
                         sheet, 1, Transactions,
@@ -40,10 +38,8 @@ base(tempFileCacheManager)
                         _ => L(_.ChannelId.ToString()),
                         _ => _.Amount,
                         _ => _.CreationTime
-                        );
+                    );
                 });
         }
-
-
     }
 }

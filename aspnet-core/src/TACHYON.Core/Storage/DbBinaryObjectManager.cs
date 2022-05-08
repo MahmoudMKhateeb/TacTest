@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace TACHYON.Storage
 {
-    public class DbBinaryObjectManager : IBinaryObjectManager, ITransientDependency
+    public class DbBinaryObjectManager : TACHYONDomainServiceBase, IBinaryObjectManager, ITransientDependency
     {
         private readonly IRepository<BinaryObject, Guid> _binaryObjectRepository;
 
@@ -16,6 +16,7 @@ namespace TACHYON.Storage
 
         public Task<BinaryObject> GetOrNullAsync(Guid id)
         {
+            DisableTenancyFilters();
             return _binaryObjectRepository.FirstOrDefaultAsync(id);
         }
 

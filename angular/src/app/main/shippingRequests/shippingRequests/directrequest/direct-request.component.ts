@@ -2,10 +2,11 @@ import { Component, ViewChild, Injector, Input } from '@angular/core';
 import { ShippingRequestDirectRequestServiceProxy, ShippingRequestDirectRequestListDto } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { LazyLoadEvent } from 'primeng/api';
-
+import { ShippingRequestStatus } from '@shared/service-proxies/service-proxies';
 import { Table } from '@node_modules/primeng/table';
 import { Paginator } from '@node_modules/primeng/paginator';
 import { Router } from '@angular/router';
+import { DirectRequestTenantModelComponent } from '@app/main/shippingRequests/shippingRequests/directrequest/direct-request-tenant-model.component';
 
 @Component({
   selector: 'direct-request',
@@ -13,11 +14,15 @@ import { Router } from '@angular/router';
 })
 export class DirectRequestComponent extends AppComponentBase {
   @ViewChild('dataTableForCarrier', { static: true }) dataTableForCarrier: Table;
+  @ViewChild('DirectRequestTenantModel', { static: true }) public DirectRequestTenantModel: DirectRequestTenantModelComponent;
   @ViewChild('paginatorForCarrier', { static: true }) paginatorForCarrier: Paginator;
   @Input() shippingRequestId: number;
+  @Input() ShippingRequestStatus;
+
   saving = false;
   loading = true;
   filterText: any;
+  ShippingRequestStatuses = ShippingRequestStatus;
 
   constructor(injector: Injector, private _router: Router, private _currentServ: ShippingRequestDirectRequestServiceProxy) {
     super(injector);

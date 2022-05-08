@@ -6,6 +6,7 @@ import {
   Component,
   ElementRef,
   Injector,
+  Input,
   NgZone,
   OnDestroy,
   OnInit,
@@ -16,23 +17,27 @@ import KTWizard from '@metronic/common/js/components/wizard';
 
 import {
   CarriersForDropDownDto,
-  FacilitiesServiceProxy,
-  FacilityForDropdownDto,
-  GetAllGoodsCategoriesForDropDownOutput,
-  GoodsDetailsServiceProxy,
-  ISelectItemDto,
-  RoutStepCityLookupTableDto,
-  SelectItemDto,
-  ShippingRequestsServiceProxy,
-  CreateOrEditShippingRequestVasListDto,
-  ShippingRequestVasListOutput,
-  RoutStepsServiceProxy,
-  ShippingRequestRouteType,
+  CountyDto,
   CreateOrEditShippingRequestStep1Dto,
+  CreateOrEditShippingRequestVasListDto,
   EditShippingRequestStep2Dto,
   EditShippingRequestStep3Dto,
   EditShippingRequestStep4Dto,
+  FacilitiesServiceProxy,
+  FacilityForDropdownDto,
+  GetAllGoodsCategoriesForDropDownOutput,
   GetShippingRequestForViewOutput,
+  GoodsDetailsServiceProxy,
+  ISelectItemDto,
+  RoutStepCityLookupTableDto,
+  RoutStepsServiceProxy,
+  SelectItemDto,
+  ShippersForDropDownDto,
+  ShippingRequestRouteType,
+  ShippingRequestsServiceProxy,
+  ShippingRequestVasListOutput,
+  TenantCityLookupTableDto,
+  TenantRegistrationServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -41,8 +46,11 @@ import { BreadcrumbItem } from '@app/shared/common/sub-header/sub-header.compone
 import { MapsAPILoader } from '@node_modules/@agm/core';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 import { animate, style, transition, trigger } from '@angular/animations';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, NgForm, Validators } from '@angular/forms';
 import * as moment from '@node_modules/moment';
+import { DateType } from '@app/admin/required-document-files/hijri-gregorian-datepicker/consts';
+import { NgbDateStruct } from '@node_modules/@ng-bootstrap/ng-bootstrap';
+import { DateFormatterService } from '@app/shared/common/hijri-gregorian-datepicker/date-formatter.service';
 
 @Component({
   templateUrl: './create-or-edit-shipping-request-wizard.component.html',
@@ -55,7 +63,7 @@ import * as moment from '@node_modules/moment';
       transition(':leave', [animate(200, style({ height: 0, overflow: 'hidden' }))]),
     ]),
   ],
-  providers: [EnumToArrayPipe],
+  providers: [EnumToArrayPipe, DateFormatterService],
 })
 export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase implements OnDestroy, AfterViewInit, OnInit, AfterViewChecked {
   active = false;
@@ -63,7 +71,6 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   allGoodCategorys: GetAllGoodsCategoriesForDropDownOutput[];
   allCarrierTenants: CarriersForDropDownDto[];
   allRoutTypes: any;
-  allCitys: RoutStepCityLookupTableDto[];
   allFacilities: FacilityForDropdownDto[];
   allVases: ShippingRequestVasListOutput[];
   selectedVases: CreateOrEditShippingRequestVasListDto[] = [];
@@ -80,22 +87,46 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   today = new Date();
   activeShippingRequestId: number = this._activatedRoute.snapshot.queryParams['id'];
   stepToCompleteFrom: number = this._activatedRoute.snapshot.queryParams['completedSteps'];
-
+  selectedDateType: DateType = DateType.Hijri; // or DateType.Gregorian
+  @Input() parentForm: NgForm;
+  @ViewChild('userForm', { static: false }) userForm: NgForm;
+  minGreg: NgbDateStruct = { day: 1, month: 1, year: 1900 };
+  minHijri: NgbDateStruct = { day: 1, month: 1, year: 1342 };
+  todayGregorian = this.dateFormatterService.GetTodayGregorian();
+  todayHijri = this.dateFormatterService.ToHijri(this.todayGregorian);
+  minHijriEndDate: NgbDateStruct;
+  minGrogEndDate: NgbDateStruct;
+  minHijriTripdate: NgbDateStruct;
+  minGrogTripdate: NgbDateStruct;
   step1Dto = new CreateOrEditShippingRequestStep1Dto();
   step2Dto = new EditShippingRequestStep2Dto();
   step3Dto = new EditShippingRequestStep3Dto();
   step4Dto = new EditShippingRequestStep4Dto();
   activeStep: number;
   loading = false;
+  startTripdate: any;
+  endTripdate: any;
+  startBiddate: any;
+  endBiddate: any;
   shippingRequestReview: GetShippingRequestForViewOutput = new GetShippingRequestForViewOutput();
   cleanedVases: CreateOrEditShippingRequestVasListDto[] = [];
   selectedVasesProperties = [];
   requestType: any;
+  AllShippers: ShippersForDropDownDto[];
+  public allCarriers: CarriersForDropDownDto[];
+  isCarrierSass = false;
+  sourceCities: TenantCityLookupTableDto[];
+  destinationCities: TenantCityLookupTableDto[];
+  citiesLoading = false;
+  allCountries: CountyDto[];
+  originCountry: number;
+  destinationCountry: number;
 
   constructor(
     injector: Injector,
     private _activatedRoute: ActivatedRoute,
     private _shippingRequestsServiceProxy: ShippingRequestsServiceProxy,
+    private _countriesServiceProxy: TenantRegistrationServiceProxy,
     private _router: Router,
     private _goodsDetailsServiceProxy: GoodsDetailsServiceProxy,
     private mapsAPILoader: MapsAPILoader,
@@ -111,16 +142,22 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   breadcrumbs: BreadcrumbItem[] = [new BreadcrumbItem(this.l('ShippingRequest'), '/app/main/shippingRequests/shippingRequests')];
   @ViewChild('wizard', { static: true }) el: ElementRef;
   step1Form = this.fb.group({
-    shippingRequestType: [{ value: '', disabled: false }, Validators.required],
+    shippingRequestType: [{ value: '', disabled: false }, this.isCarrierSass ? Validators.required : false],
     shippingType: [{ value: '', disabled: false }, Validators.required],
+    carrier: [{ value: '', disabled: false }],
     tripsStartDate: [''],
     tripsEndDate: [''],
     biddingStartDate: [''],
     biddingEndDate: [''],
+    Shipper: [''],
+    ShipperReference: [''],
+    ShipperInvoiceNumber: [''],
   });
   step2Form = this.fb.group({
-    origin: ['', Validators.required],
-    destination: ['', Validators.required],
+    originCountry: ['', Validators.required],
+    destinationCountry: ['', Validators.required],
+    originCity: ['', Validators.required],
+    destinationCity: ['', Validators.required],
     routeType: ['', Validators.required],
     numberOfDrops: ['', [Validators.minLength(1), Validators.maxLength(3)]],
     NumberOfTrips: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(2), Validators.min(1), Validators.max(20)]],
@@ -133,6 +170,10 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     transportType: [null, Validators.required],
     truckType: [null, Validators.required],
     capacity: [null, Validators.required],
+    otherTransportTypeName: [null],
+    otherTrucksTypeName: [null],
+    otherGoodsCategoryName: [null],
+    otherPackingTypeName: [null],
   });
   step4Form = this.fb.group({});
 
@@ -147,6 +188,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   ngOnInit() {
     this.loadAllDropDownLists();
     this.allRoutTypes = this.enumToArray.transform(ShippingRequestRouteType);
+    this.isCarrierSass = this.feature.isEnabled('App.CarrierAsASaas');
   }
 
   ngOnDestroy() {
@@ -195,7 +237,8 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
         }
         case 3: {
           console.log('step 3');
-          if (this.step3Form.invalid) {
+          if (this.step3Form.invalid || !this.validateOthersInputs()) {
+            //console.log(this.step3Form);
             wizardObj.stop();
             this.step3Form.markAllAsTouched();
             this.notify.error(this.l('PleaseCompleteMissingFields'));
@@ -208,18 +251,53 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
         }
         case 4: {
           console.log('step 4');
-          this.createOrEditStep4();
-          wizardObj.goNext();
-          //statements;
-          //if step 4 passed load the review&submit
-          this.reviewAndSubmit();
-          break;
+          //check validation for vases
+          let isVaild = true;
+          var tripsCountNotValid = this.selectedVases.filter(
+            (r) => r.numberOfTrips == null || r.numberOfTrips == 0 || r.numberOfTrips > this.step2Dto.numberOfTrips
+          ).length;
+          this.selectedVases.forEach((element) => {
+            var isDisabledAmount = this.selectedVasesProperties[element.vasId].vasAmountDisabled;
+            var isDisabledCount = this.selectedVasesProperties[element.vasId].vasCountDisabled;
+            if ((element.requestMaxCount <= 0 && !isDisabledCount) || (element.requestMaxAmount <= 0 && !isDisabledAmount)) {
+              isVaild = false;
+              return;
+            }
+          });
+          if (isVaild && tripsCountNotValid == 0) {
+            this.createOrEditStep4();
+            wizardObj.goNext();
+            //statements;
+            //if step 4 passed load the review&submit
+            this.reviewAndSubmit();
+            break;
+          } else {
+            wizardObj.stop();
+            this.step3Form.markAllAsTouched();
+            this.notify.error(this.l('PleaseConfirmVasesFields'));
+          }
         }
       }
     });
   }
   ngAfterViewChecked() {
     this.cdr.detectChanges();
+  }
+
+  validateOthersInputs() {
+    if (this.IfOther(this.allGoodCategorys, this.step3Dto.goodCategoryId) && !this.step3Dto.otherGoodsCategoryName.trim()) {
+      return false;
+    }
+    if (this.IfOther(this.allTransportTypes, this.step3Dto.transportTypeId) && !this.step3Dto.otherTransportTypeName.trim()) {
+      return false;
+    }
+    if (this.IfOther(this.allTrucksTypes, this.step3Dto.trucksTypeId) && !this.step3Dto.otherTrucksTypeName.trim()) {
+      return false;
+    }
+    if (this.IfOther(this.allpackingTypes, this.step3Dto.packingTypeId) && !this.step3Dto.otherPackingTypeName.trim()) {
+      return false;
+    }
+    return true;
   }
 
   //publish
@@ -236,7 +314,8 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
           )
           .subscribe((res) => {
             this.notify.success(this.l('ShippingRequestPublishedSuccessfully'));
-            this._router.navigate(['/app/main/shippingRequests/shippingRequests']);
+            if (this.feature.isEnabled('App.TachyonDealer')) this._router.navigate(['/app/main/tms/shippingRequests']);
+            else this._router.navigate(['/app/main/shippingRequests/shippingRequests']);
           });
       }
     });
@@ -248,8 +327,13 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     this.step1Dto.id = this.activeShippingRequestId || undefined;
     this.shippingRequestType == 'bidding' ? (this.step1Dto.isBid = true) : (this.step1Dto.isBid = false);
     this.shippingRequestType == 'tachyondeal' ? (this.step1Dto.isTachyonDeal = true) : (this.step1Dto.isTachyonDeal = false);
-    this.shippingRequestType == 'directrequest' ? (this.step1Dto.isDirectRequest = true) : (this.step1Dto.isDirectRequest = false);
+    this.shippingRequestType == 'directrequest' || this.isCarrierSass
+      ? (this.step1Dto.isDirectRequest = true)
+      : (this.step1Dto.isDirectRequest = false);
     this.step1Dto.startTripDate == null ? (this.step1Dto.startTripDate = moment(this.today)) : null;
+    if (this.isCarrierSass) {
+      this.step1Dto.carrierTenantIdForDirectRequest = this.appSession.tenantId;
+    }
     this._shippingRequestsServiceProxy
       .createOrEditStep1(this.step1Dto)
       .pipe(
@@ -344,8 +428,10 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
         this.step1Dto = res;
       });
   }
+
   loadStep2ForEdit() {
     this.loading = true;
+    console.log('22');
     return this._shippingRequestsServiceProxy
       .getStep2ForEdit(this.activeShippingRequestId)
       .pipe(
@@ -418,12 +504,15 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   }
 
   loadAllDropDownLists(): void {
+    this._shippingRequestsServiceProxy.getAllShippersForDropDown().subscribe((result) => {
+      this.AllShippers = result;
+    });
     this._goodsDetailsServiceProxy.getAllGoodCategoryForTableDropdown(undefined).subscribe((result) => {
       this.allGoodCategorys = result;
     });
 
-    this._routStepsServiceProxy.getAllCityForTableDropdown().subscribe((result) => {
-      this.allCitys = result;
+    this._countriesServiceProxy.getAllCountriesWithCode().subscribe((res) => {
+      this.allCountries = res;
     });
 
     this._shippingRequestsServiceProxy.getAllTransportTypesForDropdown().subscribe((result) => {
@@ -438,14 +527,29 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
       this.allpackingTypes = result;
     });
 
-    /*this._routesServiceProxy.getAllRoutTypeForTableDropdown().subscribe((result) => {
-          this.allRoutTypes = result;
-        });*/
-
-    this._routStepsServiceProxy.getAllFacilitiesForDropdown().subscribe((result) => {
-      this.allFacilities = result;
+    this._shippingRequestsServiceProxy.getAllCarriersForDropDown().subscribe((result) => {
+      this.allCarriers = result;
     });
+
     this.loadallVases();
+  }
+
+  loadCitiesByCountryId(countryId: number, type: 'source' | 'destination') {
+    this.citiesLoading = true;
+    this._countriesServiceProxy
+      .getAllCitiesForTableDropdown(countryId)
+      .pipe(
+        finalize(() => {
+          this.citiesLoading = false;
+        })
+      )
+      .subscribe((res) => {
+        type === 'source' ? (this.sourceCities = res) : (this.destinationCities = res);
+        if (this.step1Dto.shippingTypeId == 2) {
+          this.sourceCities = this.destinationCities = res;
+          this.step2Dto.originCityId = this.step2Dto.destinationCityId = null;
+        }
+      });
   }
 
   loadTruckandCapacityForEdit() {
@@ -466,6 +570,13 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   trucksTypeSelectChange(trucksTypeId?: number) {
     if (trucksTypeId > 0) {
       this.capacityLoading = true;
+      if (this.IfOther(this.allTrucksTypes, trucksTypeId)) {
+        this._shippingRequestsServiceProxy.getAllCapacitiesForDropdown().subscribe((result) => {
+          this.allCapacities = result;
+          this.step3Dto.capacityId = null;
+          this.capacityLoading = false;
+        });
+      }
       this._shippingRequestsServiceProxy.getAllTuckCapacitiesByTuckTypeIdForDropdown(trucksTypeId).subscribe((result) => {
         this.allCapacities = result;
         this.step3Dto.capacityId = null;
@@ -536,21 +647,58 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   /**
    * validates trips start/end date
    */
-  validateTripsDates() {
+  validateTripsDates($event: NgbDateStruct, type) {
+    if (type == 'tripsStartDate') {
+      this.startTripdate = $event;
+      if ($event != null && $event.year < 1900) {
+        this.minHijriTripdate = $event;
+      } else {
+        this.minGrogTripdate = $event;
+      }
+    }
+    if (type == 'tripsEndDate') this.endTripdate = $event;
+
+    var startDate = this.dateFormatterService.NgbDateStructToMoment(this.startTripdate);
+    var endDate = this.dateFormatterService.NgbDateStructToMoment(this.endTripdate);
+
+    if (this.startTripdate != null && this.startTripdate != undefined)
+      this.step1Dto.startTripDate = this.GetGregorianAndhijriFromDatepickerChange(this.startTripdate).GregorianDate;
+
+    this.step1Dto.startTripDate == null ? (this.step1Dto.startTripDate = moment(new Date())) : null;
+
+    if (this.endTripdate != null && this.endTripdate != undefined)
+      this.step1Dto.endTripDate = this.GetGregorianAndhijriFromDatepickerChange(this.endTripdate).GregorianDate;
+
     //checks if the trips end date is less than trips start date
-    if (this.step1Dto.endTripDate < this.step1Dto.startTripDate) {
-      this.step1Dto.endTripDate = undefined;
+    if (startDate != undefined && endDate != undefined) {
+      if (endDate < startDate) this.step1Dto.endTripDate = this.endTripdate = undefined;
     }
   }
 
   /**
    * validates bidding start+end date
    */
-  validateBiddingDates() {
-    console.log('Validate Bidding Dates Is Working');
-    //if end date is more than start date reset end date
-    if (this.step1Dto.bidStartDate > this.step1Dto.bidEndDate) {
-      this.step1Dto.bidEndDate = undefined;
+  validateBiddingDates($event: NgbDateStruct, type) {
+    if (type == 'biddingStartDate') {
+      this.startBiddate = $event;
+      if ($event != null && $event.year < 1900) {
+        this.minHijriEndDate = $event;
+      } else {
+        this.minGrogEndDate = $event;
+      }
+    }
+    if (type == 'biddingEndDate') this.endBiddate = $event;
+
+    var startDate = this.dateFormatterService.NgbDateStructToMoment(this.startBiddate);
+    var endDate = this.dateFormatterService.NgbDateStructToMoment(this.endBiddate);
+
+    this.step1Dto.bidStartDate = this.GetGregorianAndhijriFromDatepickerChange(this.startBiddate).GregorianDate;
+
+    if (this.endBiddate != undefined) this.step1Dto.bidEndDate = this.GetGregorianAndhijriFromDatepickerChange(this.endBiddate).GregorianDate;
+
+    //   //if end date is more than start date reset end date
+    if (startDate != undefined && endDate != undefined) {
+      if (startDate > endDate) this.step1Dto.bidEndDate = this.endBiddate = undefined;
     }
   }
   /**
@@ -581,16 +729,55 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   validateShippingRequestType() {
     //check if user choose local-inside city  but the origin&des same
     if (this.step1Dto.shippingTypeId == 1) {
+      //local inside city
+      this.destinationCountry = this.originCountry;
+      this.destinationCities = this.sourceCities;
       this.step2Dto.destinationCityId = this.step2Dto.originCityId;
     } else if (this.step1Dto.shippingTypeId == 2) {
-      // check if user select same city in source and destination
+      // if route type is local betwenn cities check if user select same city in source and destination
+      // this.destinationCities = this.sourceCities;
+      this.destinationCountry = this.originCountry;
       if (this.step2Dto.originCityId == this.step2Dto.destinationCityId) {
-        this.step2Form.controls['destination'].setErrors({ invalid: true });
-        // this.step2Form.controls['origin'].setErrors({ invalid: true });
+        this.step2Form.controls['destinationCity'].setErrors({ invalid: true });
+        this.step2Form.controls['destinationCountry'].setErrors({ invalid: true });
+      } else if (this.originCountry !== this.destinationCountry) {
+        this.step2Form.controls['originCountry'].setErrors({ invalid: true });
+        this.step2Form.controls['destinationCountry'].setErrors({ invalid: true });
+      } else {
+        this.clearValidation('destinationCity');
+        this.clearValidation('destinationCountry');
+      }
+    } else if (this.step1Dto.shippingTypeId == 4) {
+      //if route type is cross border prevent the countries to be the same
+      if (this.originCountry === this.destinationCountry) {
+        this.step2Form.controls['originCountry'].setErrors({ invalid: true });
+        this.step2Form.controls['destinationCountry'].setErrors({ invalid: true });
+      } else {
+        this.clearValidation('originCountry');
+        this.clearValidation('destinationCountry');
       }
     }
   }
 
+  /**
+   * clears an input previous validation
+   * @param controlName
+   */
+  clearValidation(controlName: string) {
+    this.step2Form.controls[controlName].setErrors(null);
+    this.step2Form.controls[controlName].updateValueAndValidity();
+  }
+
+  /**
+   * resets step2 inputs if the Route Type Change
+   */
+  resetStep2Inputs() {
+    this.step2Dto.destinationCityId = this.step2Dto.originCityId = this.originCountry = this.destinationCountry = undefined;
+    this.clearValidation('originCity');
+    this.clearValidation('destinationCity');
+    this.clearValidation('originCountry');
+    this.clearValidation('destinationCountry');
+  }
   /**
    * Get City Cordinates By Providing its name
    * this finction is to draw the shipping Request Main Route in View SR Details in marketPlace
@@ -619,5 +806,40 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
         }
       }
     );
+  }
+
+  /**
+   * Control Carrier Field Validation if shipping Request type is Direct request make the carrier required
+   */
+  validateCarrierForDirectRequest() {
+    if (this.shippingRequestType === 'directrequest') {
+      this.step1Form.controls.carrier.setValidators([Validators.required]);
+    } else {
+      this.step1Form.controls.carrier.clearValidators();
+    }
+  }
+
+  isOthersGoodCategoryId(goodCategoryId: number): boolean {
+    const t = this.allGoodCategorys?.find((x) => x.id == goodCategoryId);
+    const r = t?.displayName.toLowerCase().includes('others');
+    if (r) {
+      this.step3Form?.controls?.otherGoodsCategoryName?.setValidators([Validators.required]);
+    } else {
+      this.step3Form?.controls?.otherGoodsCategoryName?.clearValidators();
+    }
+    this.step3Form?.controls?.otherGoodsCategoryName?.updateValueAndValidity();
+    return r;
+  }
+
+  isOthersTrucksTypeId(trucksTypeId: number): boolean {
+    const t = this.allTrucksTypes?.find((x) => x.id == trucksTypeId?.toString());
+    const r = t?.displayName.toLowerCase().includes('others');
+    if (r) {
+      this.step3Form?.controls?.otherTrucksTypeName?.setValidators([Validators.required]);
+    } else {
+      this.step3Form?.controls?.otherTrucksTypeName?.clearValidators();
+    }
+    this.step3Form?.controls?.otherTrucksTypeName?.updateValueAndValidity();
+    return r;
   }
 }

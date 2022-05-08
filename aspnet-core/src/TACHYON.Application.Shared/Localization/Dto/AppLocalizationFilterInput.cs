@@ -3,7 +3,7 @@ using TACHYON.Terminologies;
 
 namespace TACHYON.Localization.Dto
 {
-    public  class AppLocalizationFilterInput: PagedAndSortedResultRequestDto
+    public class AppLocalizationFilterInput : PagedAndSortedResultRequestDto
     {
         public string Filter { get; set; }
         public int? EditionId { get; set; }
@@ -12,7 +12,5 @@ namespace TACHYON.Localization.Dto
         public TerminologyAppVersion? AppVersion { get; set; }
         public TerminologyVersion? Version { get; set; }
         public TerminologySection? Section { get; set; }
-
-
     }
 }

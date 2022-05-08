@@ -14,7 +14,8 @@ namespace TACHYON.HealthChecks
             _checkHelper = checkHelper;
         }
 
-        public Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = new CancellationToken())
+        public Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context,
+            CancellationToken cancellationToken = new CancellationToken())
         {
             if (_checkHelper.Exist("db"))
             {

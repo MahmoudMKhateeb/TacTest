@@ -60,7 +60,8 @@ namespace TACHYON.Authorization.Users
         }
 
         [UnitOfWork]
-        public virtual async Task<bool> AreUsersLinked(UserIdentifier firstUserIdentifier, UserIdentifier secondUserIdentifier)
+        public virtual async Task<bool> AreUsersLinked(UserIdentifier firstUserIdentifier,
+            UserIdentifier secondUserIdentifier)
         {
             var firstUserAccount = await GetUserAccountAsync(firstUserIdentifier);
             var secondUserAccount = await GetUserAccountAsync(secondUserIdentifier);
@@ -85,7 +86,8 @@ namespace TACHYON.Authorization.Users
         [UnitOfWork]
         public virtual async Task<UserAccount> GetUserAccountAsync(UserIdentifier userIdentifier)
         {
-            return await _userAccountRepository.FirstOrDefaultAsync(ua => ua.TenantId == userIdentifier.TenantId && ua.UserId == userIdentifier.UserId);
+            return await _userAccountRepository.FirstOrDefaultAsync(ua =>
+                ua.TenantId == userIdentifier.TenantId && ua.UserId == userIdentifier.UserId);
         }
 
         public async Task<string> GetAccountSwitchToken(long targetUserId, int? targetTenantId)
@@ -125,12 +127,14 @@ namespace TACHYON.Authorization.Users
             //Add claims for audit logging
             if (cacheItem.ImpersonatorTenantId.HasValue)
             {
-                identity.AddClaim(new Claim(AbpClaimTypes.ImpersonatorTenantId, cacheItem.ImpersonatorTenantId.Value.ToString(CultureInfo.InvariantCulture)));
+                identity.AddClaim(new Claim(AbpClaimTypes.ImpersonatorTenantId,
+                    cacheItem.ImpersonatorTenantId.Value.ToString(CultureInfo.InvariantCulture)));
             }
 
             if (cacheItem.ImpersonatorUserId.HasValue)
             {
-                identity.AddClaim(new Claim(AbpClaimTypes.ImpersonatorUserId, cacheItem.ImpersonatorUserId.Value.ToString(CultureInfo.InvariantCulture)));
+                identity.AddClaim(new Claim(AbpClaimTypes.ImpersonatorUserId,
+                    cacheItem.ImpersonatorUserId.Value.ToString(CultureInfo.InvariantCulture)));
             }
 
             //Remove the cache item to prevent re-use

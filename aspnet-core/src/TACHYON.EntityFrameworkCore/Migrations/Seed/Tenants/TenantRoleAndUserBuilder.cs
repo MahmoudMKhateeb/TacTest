@@ -36,29 +36,42 @@ namespace TACHYON.Migrations.Seed.Tenants
         {
             //Admin role
 
-            var adminRole = _context.Roles.IgnoreQueryFilters().FirstOrDefault(r => r.TenantId == _tenantId && r.Name == StaticRoleNames.Tenants.Admin);
+            var adminRole = _context.Roles.IgnoreQueryFilters()
+                .FirstOrDefault(r => r.TenantId == _tenantId && r.Name == StaticRoleNames.Tenants.Admin);
             if (adminRole == null)
             {
-                adminRole = _context.Roles.Add(new Role(_tenantId, StaticRoleNames.Tenants.Admin, StaticRoleNames.Tenants.Admin) { IsStatic = true }).Entity;
+                adminRole = _context.Roles
+                    .Add(new Role(_tenantId, StaticRoleNames.Tenants.Admin, StaticRoleNames.Tenants.Admin)
+                    {
+                        IsStatic = true
+                    }).Entity;
                 _context.SaveChanges();
             }
 
             //User role
 
-            var userRole = _context.Roles.IgnoreQueryFilters().FirstOrDefault(r => r.TenantId == _tenantId && r.Name == StaticRoleNames.Tenants.User);
+            var userRole = _context.Roles.IgnoreQueryFilters()
+                .FirstOrDefault(r => r.TenantId == _tenantId && r.Name == StaticRoleNames.Tenants.User);
             if (userRole == null)
             {
-                _context.Roles.Add(new Role(_tenantId, StaticRoleNames.Tenants.User, StaticRoleNames.Tenants.User) { IsStatic = true, IsDefault = true });
+                _context.Roles.Add(
+                    new Role(_tenantId, StaticRoleNames.Tenants.User, StaticRoleNames.Tenants.User)
+                    {
+                        IsStatic = true, IsDefault = true
+                    });
                 _context.SaveChanges();
             }
 
             //admin user
 
-            var adminUser = _context.Users.IgnoreQueryFilters().FirstOrDefault(u => u.TenantId == _tenantId && u.UserName == AbpUserBase.AdminUserName);
+            var adminUser = _context.Users.IgnoreQueryFilters()
+                .FirstOrDefault(u => u.TenantId == _tenantId && u.UserName == AbpUserBase.AdminUserName);
             if (adminUser == null)
             {
                 adminUser = User.CreateTenantAdminUser(_tenantId, "admin@defaulttenant.com");
-                adminUser.Password = new PasswordHasher<User>(new OptionsWrapper<PasswordHasherOptions>(new PasswordHasherOptions())).HashPassword(adminUser, "123qwe");
+                adminUser.Password =
+                    new PasswordHasher<User>(new OptionsWrapper<PasswordHasherOptions>(new PasswordHasherOptions()))
+                        .HashPassword(adminUser, "123qwe");
                 adminUser.IsEmailConfirmed = true;
                 adminUser.ShouldChangePasswordOnNextLogin = false;
                 adminUser.IsActive = true;
@@ -84,7 +97,9 @@ namespace TACHYON.Migrations.Seed.Tenants
                 }
 
                 //Notification subscription
-                _context.NotificationSubscriptions.Add(new NotificationSubscriptionInfo(SequentialGuidGenerator.Instance.Create(), _tenantId, adminUser.Id, AppNotificationNames.NewUserRegistered));
+                _context.NotificationSubscriptions.Add(new NotificationSubscriptionInfo(
+                    SequentialGuidGenerator.Instance.Create(), _tenantId, adminUser.Id,
+                    AppNotificationNames.NewUserRegistered));
                 _context.SaveChanges();
             }
         }

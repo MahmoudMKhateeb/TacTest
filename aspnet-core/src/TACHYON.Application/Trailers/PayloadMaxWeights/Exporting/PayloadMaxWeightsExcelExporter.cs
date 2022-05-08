@@ -10,7 +10,6 @@ namespace TACHYON.Trailers.PayloadMaxWeights.Exporting
 {
     public class PayloadMaxWeightsExcelExporter : NpoiExcelExporterBase, IPayloadMaxWeightsExcelExporter
     {
-
         private readonly ITimeZoneConverter _timeZoneConverter;
         private readonly IAbpSession _abpSession;
 
@@ -18,7 +17,7 @@ namespace TACHYON.Trailers.PayloadMaxWeights.Exporting
             ITimeZoneConverter timeZoneConverter,
             IAbpSession abpSession,
             ITempFileCacheManager tempFileCacheManager) :
-    base(tempFileCacheManager)
+            base(tempFileCacheManager)
         {
             _timeZoneConverter = timeZoneConverter;
             _abpSession = abpSession;
@@ -30,23 +29,19 @@ namespace TACHYON.Trailers.PayloadMaxWeights.Exporting
                 "PayloadMaxWeights.xlsx",
                 excelPackage =>
                 {
-
                     var sheet = excelPackage.CreateSheet(L("PayloadMaxWeights"));
 
                     AddHeader(
                         sheet,
                         L("DisplayName"),
                         L("MaxWeight")
-                        );
+                    );
 
                     AddObjects(
                         sheet, 2, payloadMaxWeights,
                         _ => _.PayloadMaxWeight.DisplayName,
                         _ => _.PayloadMaxWeight.MaxWeight
-                        );
-
-
-
+                    );
                 });
         }
     }

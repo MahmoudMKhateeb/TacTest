@@ -1,6 +1,4 @@
-﻿
-
-using Abp.Application.Services.Dto;
+﻿using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
@@ -25,33 +23,29 @@ namespace TACHYON.Trailers.TrailerTypes
         private readonly ITrailerTypesExcelExporter _trailerTypesExcelExporter;
 
 
-        public TrailerTypesAppService(IRepository<TrailerType> trailerTypeRepository, ITrailerTypesExcelExporter trailerTypesExcelExporter)
+        public TrailerTypesAppService(IRepository<TrailerType> trailerTypeRepository,
+            ITrailerTypesExcelExporter trailerTypesExcelExporter)
         {
             _trailerTypeRepository = trailerTypeRepository;
             _trailerTypesExcelExporter = trailerTypesExcelExporter;
-
         }
 
         public async Task<PagedResultDto<GetTrailerTypeForViewDto>> GetAll(GetAllTrailerTypesInput input)
         {
-
             var filteredTrailerTypes = _trailerTypeRepository.GetAll()
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter))
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.DisplayName == input.DisplayNameFilter);
+                .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter))
+                .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter),
+                    e => e.DisplayName == input.DisplayNameFilter);
 
             var pagedAndFilteredTrailerTypes = filteredTrailerTypes
                 .OrderBy(input.Sorting ?? "id asc")
                 .PageBy(input);
 
             var trailerTypes = from o in pagedAndFilteredTrailerTypes
-                               select new GetTrailerTypeForViewDto()
-                               {
-                                   TrailerType = new TrailerTypeDto
-                                   {
-                                       DisplayName = o.DisplayName,
-                                       Id = o.Id
-                                   }
-                               };
+                select new GetTrailerTypeForViewDto()
+                {
+                    TrailerType = new TrailerTypeDto { DisplayName = o.DisplayName, Id = o.Id }
+                };
 
             var totalCount = await filteredTrailerTypes.CountAsync();
 
@@ -75,7 +69,10 @@ namespace TACHYON.Trailers.TrailerTypes
         {
             var trailerType = await _trailerTypeRepository.FirstOrDefaultAsync(input.Id);
 
-            var output = new GetTrailerTypeForEditOutput { TrailerType = ObjectMapper.Map<CreateOrEditTrailerTypeDto>(trailerType) };
+            var output = new GetTrailerTypeForEditOutput
+            {
+                TrailerType = ObjectMapper.Map<CreateOrEditTrailerTypeDto>(trailerType)
+            };
 
             return output;
         }
@@ -98,7 +95,6 @@ namespace TACHYON.Trailers.TrailerTypes
             var trailerType = ObjectMapper.Map<TrailerType>(input);
 
 
-
             await _trailerTypeRepository.InsertAsync(trailerType);
         }
 
@@ -117,27 +113,21 @@ namespace TACHYON.Trailers.TrailerTypes
 
         public async Task<FileDto> GetTrailerTypesToExcel(GetAllTrailerTypesForExcelInput input)
         {
-
             var filteredTrailerTypes = _trailerTypeRepository.GetAll()
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter))
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.DisplayName == input.DisplayNameFilter);
+                .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter))
+                .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter),
+                    e => e.DisplayName == input.DisplayNameFilter);
 
             var query = (from o in filteredTrailerTypes
-                         select new GetTrailerTypeForViewDto()
-                         {
-                             TrailerType = new TrailerTypeDto
-                             {
-                                 DisplayName = o.DisplayName,
-                                 Id = o.Id
-                             }
-                         });
+                select new GetTrailerTypeForViewDto()
+                {
+                    TrailerType = new TrailerTypeDto { DisplayName = o.DisplayName, Id = o.Id }
+                });
 
 
             var trailerTypeListDtos = await query.ToListAsync();
 
             return _trailerTypesExcelExporter.ExportToFile(trailerTypeListDtos);
         }
-
-
     }
 }

@@ -192,7 +192,8 @@ namespace TACHYON.Authorization.Users.Importing
             {
                 await _appNotifier.SendMessageAsync(
                     args.User,
-                    new LocalizableString("AllUsersSuccessfullyImportedFromExcel", TACHYONConsts.LocalizationSourceName),
+                    new LocalizableString("AllUsersSuccessfullyImportedFromExcel",
+                        TACHYONConsts.LocalizationSourceName),
                     null,
                     Abp.Notifications.NotificationSeverity.Success);
             }
@@ -210,6 +211,7 @@ namespace TACHYON.Authorization.Users.Importing
                         null,
                         Abp.Notifications.NotificationSeverity.Warn));
                 }
+
                 uow.Complete();
             }
         }

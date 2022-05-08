@@ -4,16 +4,14 @@ using TACHYON.Shipping.Accidents.Dto;
 
 namespace TACHYON.AutoMapper.Shipping
 {
-    public class ShippingRequestResoneAccidentProfile: Profile
+    public class ShippingRequestResoneAccidentProfile : Profile
     {
-        public ShippingRequestResoneAccidentProfile ()
+        public ShippingRequestResoneAccidentProfile()
         {
-            CreateMap<ShippingRequestReasonAccidentTranslationDto, ShippingRequestReasonAccidentTranslation>().ReverseMap();
+            CreateMap<ShippingRequestReasonAccidentTranslationDto, ShippingRequestReasonAccidentTranslation>()
+                .ReverseMap();
             CreateMap<ShippingRequestReasonAccident, CreateOrEditShippingRequestReasonAccidentDto>()
                 .ForMember(dst => dst.Translations, opt => opt.MapFrom(src => src.Translations)).ReverseMap();
-
-
-
         }
     }
 }

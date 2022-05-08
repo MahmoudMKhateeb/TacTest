@@ -1,0 +1,50 @@
+<div
+  bsModal
+  #modal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="modal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <form *ngIf="active" #Form="ngForm" novalidate (ngSubmit)="save()">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            {{ l('AddRating') }}
+          </h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <!--  begin :: Body-->
+            <div class="col-lg-12 form-group">
+              <label class="control-label">{{ l('Rate') }}</label>
+              <p-rating name="rate" [(ngModel)]="rating.rate" stars="5" [cancel]="false"></p-rating>
+            </div>
+            <div class="col-lg-12 form-group">
+              <label class="control-label">{{ l('Note') }}</label>
+              <div class="input-group">
+                <textarea rows="4" class="form-control" name="note" [(ngModel)]="rating.note" maxlength="500" min="5"> </textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- end::Body-->
+        <div class="modal-footer">
+          <button [disabled]="saving" type="button" class="btn btn-secondary" (click)="close()">{{ 'Cancel' | localize }}</button>
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="!Form.form.valid"
+            [buttonBusy]="saving"
+            [busyText]="l('SavingWithThreeDot' | localize)"
+          >
+            <i class="fa fa-save"></i> <span>{{ 'Save' | localize }}</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

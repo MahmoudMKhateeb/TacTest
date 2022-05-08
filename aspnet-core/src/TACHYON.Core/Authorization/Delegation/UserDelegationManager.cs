@@ -27,7 +27,7 @@ namespace TACHYON.Authorization.Delegation
         public bool HasActiveDelegation(long sourceUserId, long targetUserId)
         {
             var activeUserDelegationExpression = new ActiveUserDelegationSpecification(sourceUserId, targetUserId)
-                    .ToExpression();
+                .ToExpression();
 
             var activeDelegation = _userDelegationRepository.FirstOrDefault(activeUserDelegationExpression);
 

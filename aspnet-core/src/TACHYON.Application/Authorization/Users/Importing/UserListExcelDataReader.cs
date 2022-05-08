@@ -35,13 +35,16 @@ namespace TACHYON.Authorization.Users.Importing
 
             try
             {
-                user.UserName = GetRequiredValueFromRowOrNull(worksheet, row, 0, nameof(user.UserName), exceptionMessage);
+                user.UserName =
+                    GetRequiredValueFromRowOrNull(worksheet, row, 0, nameof(user.UserName), exceptionMessage);
                 user.Name = GetRequiredValueFromRowOrNull(worksheet, row, 1, nameof(user.Name), exceptionMessage);
                 user.Surname = GetRequiredValueFromRowOrNull(worksheet, row, 2, nameof(user.Surname), exceptionMessage);
-                user.EmailAddress = GetRequiredValueFromRowOrNull(worksheet, row, 3, nameof(user.EmailAddress), exceptionMessage);
+                user.EmailAddress =
+                    GetRequiredValueFromRowOrNull(worksheet, row, 3, nameof(user.EmailAddress), exceptionMessage);
                 worksheet.GetRow(row).Cells[4].SetCellType(CellType.String);
                 user.PhoneNumber = worksheet.GetRow(row).Cells[4]?.StringCellValue;
-                user.Password = GetRequiredValueFromRowOrNull(worksheet, row, 5, nameof(user.Password), exceptionMessage);
+                user.Password =
+                    GetRequiredValueFromRowOrNull(worksheet, row, 5, nameof(user.Password), exceptionMessage);
                 user.AssignedRoleNames = GetAssignedRoleNamesFromRow(worksheet, row, 6);
             }
             catch (System.Exception exception)
@@ -52,7 +55,11 @@ namespace TACHYON.Authorization.Users.Importing
             return user;
         }
 
-        private string GetRequiredValueFromRowOrNull(ISheet worksheet, int row, int column, string columnName, StringBuilder exceptionMessage)
+        private string GetRequiredValueFromRowOrNull(ISheet worksheet,
+            int row,
+            int column,
+            string columnName,
+            StringBuilder exceptionMessage)
         {
             var cellValue = worksheet.GetRow(row).Cells[column].StringCellValue;
             if (cellValue != null && !string.IsNullOrWhiteSpace(cellValue))
@@ -64,7 +71,9 @@ namespace TACHYON.Authorization.Users.Importing
             return null;
         }
 
-        private string[] GetAssignedRoleNamesFromRow(ISheet worksheet, int row, int column)
+        private string[] GetAssignedRoleNamesFromRow(ISheet worksheet,
+            int row,
+            int column)
         {
             var cellValue = worksheet.GetRow(row).Cells[column].StringCellValue;
             if (cellValue == null || string.IsNullOrWhiteSpace(cellValue))
@@ -72,7 +81,8 @@ namespace TACHYON.Authorization.Users.Importing
                 return new string[0];
             }
 
-            return cellValue.ToString().Split(',').Where(s => !string.IsNullOrWhiteSpace(s)).Select(s => s.Trim()).ToArray();
+            return cellValue.ToString().Split(',').Where(s => !string.IsNullOrWhiteSpace(s)).Select(s => s.Trim())
+                .ToArray();
         }
 
         private string GetLocalizedExceptionMessagePart(string parameter)

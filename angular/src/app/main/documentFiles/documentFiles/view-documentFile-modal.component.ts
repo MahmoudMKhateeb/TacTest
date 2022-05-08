@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild, Injector, Output, EventEmitter } from '@angular/core';
+﻿import { Component, ViewChild, Injector, Output, EventEmitter, OnInit } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import {
   GetDocumentFileForViewDto,
@@ -8,15 +8,15 @@ import {
   DocumentsEntitiesEnum,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
-
+import * as _moment from 'moment';
 @Component({
   selector: 'viewDocumentFileModal',
   templateUrl: './view-documentFile-modal.component.html',
 })
-export class ViewDocumentFileModalComponent extends AppComponentBase {
+export class ViewDocumentFileModalComponent extends AppComponentBase implements OnInit {
   @ViewChild('createOrEditModal', { static: true }) modal: ModalDirective;
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
-
+  _moment = _moment;
   active = false;
   saving = false;
 
@@ -24,10 +24,15 @@ export class ViewDocumentFileModalComponent extends AppComponentBase {
   entityType: DocumentsEntitiesEnum;
   isHost = false;
   documentsEntitiesEnum = DocumentsEntitiesEnum;
-
+  todayMoment = this.dateFormatterService.NgbDateStructToMoment(this.dateFormatterService.GetTodayGregorian());
   constructor(injector: Injector) {
     super(injector);
     this.item = null;
+    // let today = ;
+    //this.todayMoment = ;
+  }
+  ngOnInit() {
+    setInterval(() => {}, 10000);
   }
 
   show(item: any, entityType: DocumentsEntitiesEnum, isHost: boolean): void {

@@ -27,8 +27,5 @@ namespace TACHYON.Invoices.SubmitInvoices.Dto
         public decimal TaxVat { get; set; }
         public long InvoiceNumber { get; set; }
         public List<InvoiceItemDto> Items { get; set; }
-
-
     }
-
 }

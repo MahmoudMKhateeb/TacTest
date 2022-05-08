@@ -37,11 +37,11 @@
           </div>
           <div class="col-6 mb-3">
             <h6>{{ l('IsAccepted') }}:</h6>
-            {{ item?.isAccepted }}
+            {{ item?.isAccepted ? l('Accepted') : l('NotAccepted') }}
           </div>
           <div class="col-6 mb-3">
             <h6>{{ l('IsRejected') }}:</h6>
-            {{ item?.isRejected }}
+            {{ item?.isRejected ? l('Rejected') : l('NotRejected') }}
           </div>
 
           <div class="col-6 mb-3">
@@ -50,7 +50,9 @@
           </div>
           <div *ngIf="item?.expirationDate" class="col-6 mb-3">
             <h6>{{ l('ExpirationDate') }}:</h6>
-            {{ item?.expirationDate | momentFormat: 'YYYY-MM-DD HH:mm:ss' }}
+            <span *ngIf="_moment(item.expirationDate) <= todayMoment" class="text-warning"> {{ item.expirationDate | date }}</span>
+            <span *ngIf="_moment(item.expirationDate) > todayMoment"> {{ item.expirationDate | date }}</span>
+            <!--            {{ item?.expirationDate | momentFormat: 'YYYY-MM-DD HH:mm:ss' }}-->
           </div>
           <div class="col-6 mb-3">
             <h6>{{ l('Number') }}:</h6>

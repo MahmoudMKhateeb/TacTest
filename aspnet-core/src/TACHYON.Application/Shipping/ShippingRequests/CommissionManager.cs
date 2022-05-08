@@ -23,7 +23,7 @@
 //            _settingManager = settingManager;
 //            _shippingRequestRepository = shippingRequestRepository;
 //        }
-        
+
 //        public void AddShippingRequestCommissionSettingInfo(ShippingRequest shippingRequest)
 //        {
 //            if (shippingRequest.IsBid)
@@ -245,3 +245,4 @@
 //        }
 //    }
 //}
+

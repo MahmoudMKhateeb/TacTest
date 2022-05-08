@@ -1,4 +1,5 @@
 ﻿using Abp;
+using Abp.Application.Editions;
 using Abp.Authorization;
 using Abp.Authorization.Users;
 using Abp.Configuration;
@@ -11,18 +12,17 @@ using Abp.Threading;
 using Abp.UI;
 using Abp.Zero.Configuration;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using TACHYON.Authorization.Roles;
-using TACHYON.Security;
-using Abp.Application.Editions;
 using TACHYON.Configuration;
 using TACHYON.MultiTenancy;
+using TACHYON.Security;
 
 namespace TACHYON.Authorization.Users
 {
@@ -61,23 +61,23 @@ namespace TACHYON.Authorization.Users
             IRepository<User, long> userRepository,
             IRepository<Tenant> tenantsRepository)
             : base(
-                  roleManager,
-                  userStore,
-                  optionsAccessor,
-                  passwordHasher,
-                  userValidators,
-                  passwordValidators,
-                  keyNormalizer,
-                  errors,
-                  services,
-                  logger,
-                  permissionManager,
-                  unitOfWorkManager,
-                  cacheManager,
-                  organizationUnitRepository,
-                  userOrganizationUnitRepository,
-                  organizationUnitSettings,
-                  settingManager)
+                roleManager,
+                userStore,
+                optionsAccessor,
+                passwordHasher,
+                userValidators,
+                passwordValidators,
+                keyNormalizer,
+                errors,
+                services,
+                logger,
+                permissionManager,
+                unitOfWorkManager,
+                cacheManager,
+                organizationUnitRepository,
+                userOrganizationUnitRepository,
+                organizationUnitSettings,
+                settingManager)
         {
             _unitOfWorkManager = unitOfWorkManager;
             _settingManager = settingManager;
@@ -137,11 +137,21 @@ namespace TACHYON.Authorization.Users
         {
             var passwordComplexitySetting = new PasswordComplexitySetting
             {
-                RequireDigit = await _settingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.PasswordComplexity.RequireDigit),
-                RequireLowercase = await _settingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.PasswordComplexity.RequireLowercase),
-                RequireNonAlphanumeric = await _settingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.PasswordComplexity.RequireNonAlphanumeric),
-                RequireUppercase = await _settingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.PasswordComplexity.RequireUppercase),
-                RequiredLength = await _settingManager.GetSettingValueAsync<int>(AbpZeroSettingNames.UserManagement.PasswordComplexity.RequiredLength)
+                RequireDigit =
+                    await _settingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement
+                        .PasswordComplexity.RequireDigit),
+                RequireLowercase =
+                    await _settingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement
+                        .PasswordComplexity.RequireLowercase),
+                RequireNonAlphanumeric =
+                    await _settingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement
+                        .PasswordComplexity.RequireNonAlphanumeric),
+                RequireUppercase =
+                    await _settingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement
+                        .PasswordComplexity.RequireUppercase),
+                RequiredLength =
+                    await _settingManager.GetSettingValueAsync<int>(AbpZeroSettingNames.UserManagement
+                        .PasswordComplexity.RequiredLength)
             };
 
             var upperCaseLetters = "ABCDEFGHJKLMNOPQRSTUVWXYZ";
@@ -149,12 +159,7 @@ namespace TACHYON.Authorization.Users
             var digits = "0123456789";
             var nonAlphanumerics = "!@$?_-";
 
-            string[] randomChars = {
-                upperCaseLetters,
-                lowerCaseLetters,
-                digits,
-                nonAlphanumerics
-            };
+            string[] randomChars = { upperCaseLetters, lowerCaseLetters, digits, nonAlphanumerics };
 
             var rand = new Random(Environment.TickCount);
             var chars = new List<char>();
@@ -197,7 +202,7 @@ namespace TACHYON.Authorization.Users
         {
             if (user.Name == AbpUserBase.AdminUserName &&
                 (!permissions.Any(p => p.Name == AppPermissions.Pages_Administration_Roles_Edit) ||
-                !permissions.Any(p => p.Name == AppPermissions.Pages_Administration_Users_ChangePermissions)))
+                 !permissions.Any(p => p.Name == AppPermissions.Pages_Administration_Users_ChangePermissions)))
             {
                 throw new UserFriendlyException(L("YouCannotRemoveUserRolePermissionsFromAdminUser"));
             }
@@ -210,59 +215,75 @@ namespace TACHYON.Authorization.Users
 
         public async Task<User> GetUserByPhoneNumberAsync(string mobileNumber)
         {
-
             using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
             {
                 return await _userRepository.GetAll().FirstOrDefaultAsync(x => x.PhoneNumber == mobileNumber);
             }
-
         }
 
         public async Task<User> GetUserByDriverPhoneNumberAsync(string mobileNumber)
         {
-
             using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
             {
-                return await _userRepository.GetAll().FirstOrDefaultAsync(x => x.PhoneNumber == mobileNumber && x.IsDriver);
+                return await _userRepository.GetAll()
+                    .FirstOrDefaultAsync(x => x.PhoneNumber == mobileNumber && x.IsDriver);
             }
-
         }
+
         public async Task<User> GetUserByEmailAsync(string emailAddress)
         {
-
             using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
             {
                 return await _userRepository.GetAll().FirstOrDefaultAsync(x => x.EmailAddress == emailAddress);
             }
+        }
 
+        public async Task UpdateUserDriverStatus(long userId, UserDriverStatus driverStatus)
+        {
+            // At The Moment I don't need disable tenancy filter you must know why
+            // because carrier or any tenant admin can't change driver status of driver in anther tenant
+            var driverUser = await (from user in _userRepository.GetAll().AsNoTracking()
+                where user.Id == userId
+                      && user.DriverStatus != driverStatus
+                select user).FirstOrDefaultAsync();
+            if (driverUser != null)
+                driverUser.DriverStatus = driverStatus;
         }
 
         public async Task<User> GetAdminByTenantIdAsync(int TenantId)
         {
-
             using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
             {
-                return await _userRepository.GetAll().FirstOrDefaultAsync(x => x.TenantId == TenantId && x.UserName == AbpUserBase.AdminUserName);
+                return await _userRepository.GetAll()
+                    .FirstOrDefaultAsync(x => x.TenantId == TenantId && x.UserName == AbpUserBase.AdminUserName);
             }
-
         }
 
         public async Task<User> GetAdminHostAsync()
         {
-
             using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
             {
-                return await _userRepository.GetAll().FirstOrDefaultAsync(x => !x.TenantId.HasValue && x.UserName == AbpUserBase.AdminUserName);
+                return await _userRepository.GetAll()
+                    .FirstOrDefaultAsync(x => !x.TenantId.HasValue && x.UserName == AbpUserBase.AdminUserName);
             }
-
         }
 
         public async Task<User> GetAdminTachyonDealerAsync()
         {
-            var tachyonEditionId = Convert.ToInt32(await _settingManager.GetSettingValueAsync(AppSettings.Editions.TachyonEditionId));
+            var tachyonEditionId =
+                Convert.ToInt32(await _settingManager.GetSettingValueAsync(AppSettings.Editions.TachyonEditionId));
             var tenant = await _tenantsRepository.FirstOrDefaultAsync(x => x.Edition.Id == tachyonEditionId);
             return await GetAdminByTenantIdAsync(tenant.Id);
+        }
 
+        public async Task<UserIdentifier> GetTachyonDealerUserIdentifierAsync()
+        {
+            var tachyonEditionId =
+                Convert.ToInt32(await _settingManager.GetSettingValueAsync(AppSettings.Editions.TachyonEditionId));
+            var tenant = await _tenantsRepository.FirstOrDefaultAsync(x => x.Edition.Id == tachyonEditionId);
+            var user = await GetAdminByTenantIdAsync(tenant.Id);
+
+            return new UserIdentifier(tenant.Id, user.Id);
         }
     }
 }

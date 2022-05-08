@@ -47,19 +47,20 @@ namespace TACHYON.Queries
             IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository,
             IRepository<OrganizationUnit, long> organizationUnitRepository,
             RoleManager roleManager)
-        : base("users", new Dictionary<string, Type>
-        {
-            {Args.Id, typeof(IdGraphType)},
-            {Args.Name, typeof(StringGraphType)},
-            {Args.Surname, typeof(StringGraphType)},
-            {Args.EmailAddress, typeof(StringGraphType)},
-            {Args.RoleId, typeof(IntGraphType)},
-            {Args.OnlyLockedUsers, typeof(BooleanGraphType)},
-            {Args.Sorting, typeof(StringGraphType)},
-            {Args.Filter, typeof(StringGraphType)},
-            {Args.SkipCount, typeof(IntGraphType)},
-            {Args.MaxResultCount, typeof(IntGraphType)}
-        })
+            : base("users",
+                new Dictionary<string, Type>
+                {
+                    { Args.Id, typeof(IdGraphType) },
+                    { Args.Name, typeof(StringGraphType) },
+                    { Args.Surname, typeof(StringGraphType) },
+                    { Args.EmailAddress, typeof(StringGraphType) },
+                    { Args.RoleId, typeof(IntGraphType) },
+                    { Args.OnlyLockedUsers, typeof(BooleanGraphType) },
+                    { Args.Sorting, typeof(StringGraphType) },
+                    { Args.Filter, typeof(StringGraphType) },
+                    { Args.SkipCount, typeof(IntGraphType) },
+                    { Args.MaxResultCount, typeof(IntGraphType) }
+                })
         {
             _userManager = userManager;
             _userOrganizationUnitRepository = userOrganizationUnitRepository;
@@ -96,14 +97,17 @@ namespace TACHYON.Queries
                 .ToListAsync();
         }
 
-        private async Task IncludeDetails(ResolveFieldContext<object> context, List<User> users, List<UserDto> userDtos)
+        private async Task IncludeDetails(ResolveFieldContext<object> context,
+            List<User> users,
+            List<UserDto> userDtos)
         {
             if (context.HasSelectionField(UserType.ChildFields.GetFieldSelector(UserType.ChildFields.Roles)))
             {
                 AddRolesOfUsers(users, userDtos);
             }
 
-            if (context.HasSelectionField(UserType.ChildFields.GetFieldSelector(UserType.ChildFields.OrganizationUnits)))
+            if (context.HasSelectionField(
+                    UserType.ChildFields.GetFieldSelector(UserType.ChildFields.OrganizationUnits)))
             {
                 await AddOrganizationUnitsOfUsers(users, userDtos);
             }
@@ -164,14 +168,11 @@ namespace TACHYON.Queries
             //TODO: Try to reduce to single query
 
             var userOrgUnits = (await _userOrganizationUnitRepository.GetAll().Where(x => userIdList.Contains(x.UserId))
-                .Select(u => new { u.UserId, u.OrganizationUnitId }).ToListAsync()
+                    .Select(u => new { u.UserId, u.OrganizationUnitId }).ToListAsync()
                 )
                 .GroupBy(x => x.UserId)
-                .Select(x => new
-                {
-                    UserId = x.Key,
-                    OrganizationUnitIds = x.Select(y => y.OrganizationUnitId).ToList()
-                }).ToList();
+                .Select(x => new { UserId = x.Key, OrganizationUnitIds = x.Select(y => y.OrganizationUnitId).ToList() })
+                .ToList();
 
             var distinctOrgUnitIds = new List<long>();
             foreach (var organizationUnitsOfUser in userOrgUnits)
@@ -190,7 +191,8 @@ namespace TACHYON.Queries
             return userOrgUnits.Select(userOrgUnit => new OrganizationUnitsOfUser
             {
                 UserId = userOrgUnit.UserId,
-                OrganizationUnits = organizationUnits.Where(x => userOrgUnit.OrganizationUnitIds.Contains(x.Id)).ToList()
+                OrganizationUnits = organizationUnits.Where(x => userOrgUnit.OrganizationUnitIds.Contains(x.Id))
+                    .ToList()
             }).ToList();
         }
 
@@ -201,7 +203,8 @@ namespace TACHYON.Queries
                 query = query.Include(x => x.Roles);
             }
 
-            if (context.HasSelectionField(UserType.ChildFields.GetFieldSelector(UserType.ChildFields.OrganizationUnits)))
+            if (context.HasSelectionField(
+                    UserType.ChildFields.GetFieldSelector(UserType.ChildFields.OrganizationUnits)))
             {
                 query = query.Include(x => x.OrganizationUnits);
             }
@@ -225,11 +228,12 @@ namespace TACHYON.Queries
                 .ContainsArgument<bool>(Args.OnlyLockedUsers,
                     onlyLocked => query = query.WhereIf(onlyLocked,
                         u => u.LockoutEndDateUtc.HasValue && u.LockoutEndDateUtc.Value > DateTime.UtcNow))
-                .ContainsArgument<string>(Args.Filter, filter => query = query.WhereIf(!string.IsNullOrWhiteSpace(filter),
-                        u => u.Name.Contains(filter) ||
-                        u.Surname.Contains(filter) ||
-                        u.UserName.Contains(filter) ||
-                        u.EmailAddress.Contains(filter)));
+                .ContainsArgument<string>(Args.Filter, filter => query = query.WhereIf(
+                    !string.IsNullOrWhiteSpace(filter),
+                    u => u.Name.Contains(filter) ||
+                         u.Surname.Contains(filter) ||
+                         u.UserName.Contains(filter) ||
+                         u.EmailAddress.Contains(filter)));
 
             return query;
         }

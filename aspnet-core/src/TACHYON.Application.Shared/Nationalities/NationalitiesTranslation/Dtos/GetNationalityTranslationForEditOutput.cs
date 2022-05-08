@@ -9,6 +9,5 @@ namespace TACHYON.Nationalities.NationalitiesTranslation.Dtos
         public CreateOrEditNationalityTranslationDto NationalityTranslation { get; set; }
 
         public string NationalityName { get; set; }
-
     }
 }

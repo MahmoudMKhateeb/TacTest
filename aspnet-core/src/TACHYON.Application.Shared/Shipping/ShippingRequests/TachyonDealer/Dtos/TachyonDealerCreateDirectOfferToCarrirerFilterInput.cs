@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TACHYON.Shipping.ShippingRequests.TachyonDealer.Dtos
 {
-   public class TachyonDealerCreateDirectOfferToCarrirerFilterInput: PagedAndSortedResultRequestDto
+    public class TachyonDealerCreateDirectOfferToCarrirerFilterInput : PagedAndSortedResultRequestDto
     {
         public long? RequestId { get; set; }
     }

@@ -25,6 +25,5 @@ namespace TACHYON.Documents.DocumentTypes
 
         Task<FileDto> GetDocumentTypesToExcel(GetAllDocumentTypesForExcelInput input);
         Task<FileDto> GetFileDto(long Id);
-
     }
 }

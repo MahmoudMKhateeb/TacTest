@@ -8,6 +8,5 @@
 
         public string TruckStatusDisplayName { get; set; }
         public bool IsMissingDocumentFiles { get; set; }
-
     }
 }

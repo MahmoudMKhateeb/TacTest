@@ -1,0 +1,66 @@
+<div class="row">
+  <div class="col-lg-12">
+    <!--begin::Card-->
+    <div class="card card-custom card-stretch" [busyIf]="loading">
+      <div class="card-header border-0">
+        <div class="card-title text-center">
+          <h3 class="card-label">{{ l('UnPricedShippingRequests') }}</h3>
+        </div>
+        <div class="card-toolbar" *ngIf="requests">
+          <div class="btn-group" data-toggle="buttons">
+            <label
+              class="btn btn-secondary active"
+              [ngClass]="{ active: selectedDatePeriod == filterDatePeriodInterval.Daily }"
+              (click)="reload(filterDatePeriodInterval.Daily)"
+            >
+              <input type="radio" name="filterDatePeriodInterval" [value]="filterDatePeriodInterval.Daily" />
+              {{ 'Daily' | localize }}
+            </label>
+            <label
+              class="btn btn-secondary"
+              [ngClass]="{ active: selectedDatePeriod == filterDatePeriodInterval.Weekly }"
+              (click)="reload(filterDatePeriodInterval.Weekly)"
+            >
+              <input type="radio" name="SalesSummaryDateInterval" [value]="filterDatePeriodInterval.Weekly" />
+              {{ 'Weekly' | localize }}
+            </label>
+            <label
+              class="btn btn-secondary"
+              [ngClass]="{ active: selectedDatePeriod == filterDatePeriodInterval.Monthly }"
+              (click)="reload(filterDatePeriodInterval.Monthly)"
+            >
+              <input type="radio" name="filterDatePeriodInterval" [value]="filterDatePeriodInterval.Monthly" />
+              {{ 'Monthly' | localize }}
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="card-body p-0">
+        <!--begin::Body-->
+        <div class="card-body pt-2">
+          <a *ngIf="requests" class="btn btn-danger btn-xs red float-left" target="_blank" href="/app/main/marketplace/list">{{ l('more') }}</a>
+          <br /><br />
+          <p-table [value]="requests" (onLazyLoad)="reload(filterDatePeriodInterval.Daily)">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>{{ l('RequestID') }}</th>
+                <th>{{ l('ShipperName') }}</th>
+                <th>{{ l('BiddingEndDate') }}</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-record>
+              <tr>
+                <td>{{ record.requestReference }}</td>
+                <td>{{ record.shipperName }}</td>
+                <td>{{ record.biddingEndDate | momentFormat: 'YYYY-MM-DD HH:mm:ss' }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+        <div class="pr-2 text-center" *ngIf="noRequests == 0">{{ l('NoData') }}</div>
+        <!--end::Body-->
+      </div>
+    </div>
+    <!--end::Card-->
+  </div>
+</div>

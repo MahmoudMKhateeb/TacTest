@@ -25,32 +25,44 @@ namespace TACHYON.Authentication.TwoFactor.Google
             TryUnmanagedAlgorithmOnFailure = useUnmanagedOnFail;
         }
 
-        public GoogleAuthenticatorSetupCode GenerateSetupCode(string accountTitleNoSpaces, string accountSecretKey, int qrCodeWidth, int qrCodeHeight)
+        public GoogleAuthenticatorSetupCode GenerateSetupCode(string accountTitleNoSpaces,
+            string accountSecretKey,
+            int qrCodeWidth,
+            int qrCodeHeight)
         {
             return GenerateSetupCode(null, accountTitleNoSpaces, accountSecretKey, qrCodeWidth, qrCodeHeight);
         }
 
-        public GoogleAuthenticatorSetupCode GenerateSetupCode(string issuer, string accountTitleNoSpaces, string accountSecretKey, int qrCodeWidth, int qrCodeHeight)
+        public GoogleAuthenticatorSetupCode GenerateSetupCode(string issuer,
+            string accountTitleNoSpaces,
+            string accountSecretKey,
+            int qrCodeWidth,
+            int qrCodeHeight)
         {
             return GenerateSetupCode(issuer, accountTitleNoSpaces, accountSecretKey, qrCodeWidth, qrCodeHeight, true);
         }
 
-        public GoogleAuthenticatorSetupCode GenerateSetupCode(string issuer, string accountTitleNoSpaces, string accountSecretKey, int qrCodeWidth, int qrCodeHeight, bool useHttps)
+        public GoogleAuthenticatorSetupCode GenerateSetupCode(string issuer,
+            string accountTitleNoSpaces,
+            string accountSecretKey,
+            int qrCodeWidth,
+            int qrCodeHeight,
+            bool useHttps)
         {
-            accountTitleNoSpaces = accountTitleNoSpaces?.Replace(" ", "") ?? throw new NullReferenceException("Account Title is null");
+            accountTitleNoSpaces = accountTitleNoSpaces?.Replace(" ", "") ??
+                                   throw new NullReferenceException("Account Title is null");
 
             var setupCode = new GoogleAuthenticatorSetupCode
             {
-                Account = accountTitleNoSpaces,
-                AccountSecretKey = accountSecretKey
+                Account = accountTitleNoSpaces, AccountSecretKey = accountSecretKey
             };
 
             var encodedSecretKey = EncodeAccountSecretKey(accountSecretKey);
             setupCode.ManualEntryKey = encodedSecretKey;
 
-            string provisionUrl = UrlEncode(string.IsNullOrEmpty(issuer) ?
-                $"otpauth://totp/{accountTitleNoSpaces}?secret={encodedSecretKey}" :
-                $"otpauth://totp/{accountTitleNoSpaces}?secret={encodedSecretKey}&issuer={UrlEncode(issuer)}");
+            string provisionUrl = UrlEncode(string.IsNullOrEmpty(issuer)
+                ? $"otpauth://totp/{accountTitleNoSpaces}?secret={encodedSecretKey}"
+                : $"otpauth://totp/{accountTitleNoSpaces}?secret={encodedSecretKey}&issuer={UrlEncode(issuer)}");
 
             var protocol = useHttps ? "https" : "http";
             var url =
@@ -121,24 +133,31 @@ namespace TACHYON.Authentication.TwoFactor.Google
                     if (index == 0)
                         i++;
                 }
+
                 result.Append(alphabet[digit]);
             }
 
             return result.ToString();
         }
 
-        public string GeneratePinAtInterval(string accountSecretKey, long counter, int digits = 6)
+        public string GeneratePinAtInterval(string accountSecretKey,
+            long counter,
+            int digits = 6)
         {
             return GenerateHashedCode(accountSecretKey, counter, digits);
         }
 
-        internal string GenerateHashedCode(string secret, long iterationNumber, int digits = 6)
+        internal string GenerateHashedCode(string secret,
+            long iterationNumber,
+            int digits = 6)
         {
             var key = Encoding.UTF8.GetBytes(secret);
             return GenerateHashedCode(key, iterationNumber, digits);
         }
 
-        internal string GenerateHashedCode(byte[] key, long iterationNumber, int digits = 6)
+        internal string GenerateHashedCode(byte[] key,
+            long iterationNumber,
+            int digits = 6)
         {
             var counter = BitConverter.GetBytes(iterationNumber);
 
@@ -170,7 +189,9 @@ namespace TACHYON.Authentication.TwoFactor.Google
             return GetCurrentCounter(DateTime.UtcNow, Epoch, 30);
         }
 
-        private long GetCurrentCounter(DateTime now, DateTime epoch, int timeStep)
+        private long GetCurrentCounter(DateTime now,
+            DateTime epoch,
+            int timeStep)
         {
             return (long)(now - epoch).TotalSeconds / timeStep;
         }
@@ -185,7 +206,9 @@ namespace TACHYON.Authentication.TwoFactor.Google
             return ValidateTwoFactorPin(accountSecretKey, twoFactorCodeFromClient, DefaultClockDriftTolerance);
         }
 
-        public bool ValidateTwoFactorPin(string accountSecretKey, string twoFactorCodeFromClient, TimeSpan timeTolerance)
+        public bool ValidateTwoFactorPin(string accountSecretKey,
+            string twoFactorCodeFromClient,
+            TimeSpan timeTolerance)
         {
             var codes = GetCurrentPins(accountSecretKey, timeTolerance);
             return codes.Any(c => c == twoFactorCodeFromClient);

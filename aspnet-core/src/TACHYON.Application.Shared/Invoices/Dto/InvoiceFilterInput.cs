@@ -3,7 +3,7 @@ using System;
 
 namespace TACHYON.Invoices.Dto
 {
-    public  class InvoiceFilterInput: PagedAndSortedResultRequestDto
+    public class InvoiceFilterInput : PagedAndSortedResultRequestDto
     {
         public int? TenantId { get; set; }
         public int? PeriodId { get; set; }
@@ -19,6 +19,5 @@ namespace TACHYON.Invoices.Dto
         public DateTime? DueFromDate { get; set; }
 
         public DateTime? DueToDate { get; set; }
-
     }
 }

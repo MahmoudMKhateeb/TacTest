@@ -17,7 +17,6 @@ namespace TACHYON.Authorization.Users
 
         public SwitchToLinkedAccountCacheItem()
         {
-
         }
 
         public SwitchToLinkedAccountCacheItem(
@@ -25,7 +24,7 @@ namespace TACHYON.Authorization.Users
             long targetUserId,
             int? impersonatorTenantId,
             long? impersonatorUserId
-            )
+        )
         {
             TargetTenantId = targetTenantId;
             TargetUserId = targetUserId;

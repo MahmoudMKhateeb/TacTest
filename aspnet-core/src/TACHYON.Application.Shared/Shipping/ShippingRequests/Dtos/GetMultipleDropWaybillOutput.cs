@@ -11,22 +11,26 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public long SubWaybillNo { get; set; }
         public string Date { get; set; }
         public string ShippingRequestStatus { get; set; }
-        public long? InvoiceNumber { get; set; }
+        public string InvoiceNumber { get; set; }
         public string ShipperReference { get; set; }
-        public DateTime? StartTripDate { get; set; }
-        public DateTime? DeliveryDate { get; set; }
+        public string ShipperInvoiceNo { get; set; }
+        public string StartTripDate { get; set; }
+        public string DeliveryDate { get; set; }
         public string CarrierName { get; set; }
         public string ClientName { get; set; }
         public double TotalWeight { get; set; }
         public string GoodsCategoryDisplayName { get; set; }
         public bool HasAttachment { get; set; }
         public bool NeedsDeliveryNote { get; set; }
+        public string ShipperNotes { get; set; }
 
 
         //Sender Details Info
         public string SenderCompanyName { get; set; }
         public string SenderContactName { get; set; }
+
         public string SenderMobile { get; set; }
+
         // Receiver Details info
         public string ReceiverCompanyName { get; set; }
         public string ReceiverContactName { get; set; }

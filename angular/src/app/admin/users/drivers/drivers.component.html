@@ -80,9 +80,9 @@
               <dxo-filter-panel [visible]="true"></dxo-filter-panel>
               <dxo-filter-builder-popup></dxo-filter-builder-popup>
               <dxo-scrolling mode="virtual"></dxo-scrolling>
-              <dxo-group-panel [visible]="true"></dxo-group-panel>
+              <dxo-group-panel [visible]="false"></dxo-group-panel>
               <dxo-grouping #expand [autoExpandAll]="false"></dxo-grouping>
-              <dxo-remote-operations [groupPaging]="true" [sorting]="true" [filtering]="true"> </dxo-remote-operations>
+              <dxo-remote-operations> </dxo-remote-operations>
               <dxo-paging [pageSize]="20"></dxo-paging>
               <dxo-summary>
                 <dxi-group-item column="id" summaryType="count"> </dxi-group-item>
@@ -104,13 +104,21 @@
                   )
                 "
               ></dxi-column>
-              <dxi-column dataField="userName" caption="{{ 'PhoneNumber' | localize }}"></dxi-column>
-              <dxi-column dataField="emailAddress" caption="{{ 'Email' | localize }}"></dxi-column>
-              <dxi-column dataField="accountNumber" caption="{{ 'UserID' | localize }}"></dxi-column>
               <dxi-column dataField="name" caption="{{ 'FirstName' | localize }}"></dxi-column>
               <dxi-column dataField="surname" caption="{{ 'LastName' | localize }}"></dxi-column>
+              <dxi-column dataField="phoneNumber" caption="{{ 'PhoneNumber' | localize }}"></dxi-column>
+              <!-- <dxi-column dataField="emailAddress" caption="{{ 'Email' | localize }}"></dxi-column> -->
+              <dxi-column dataField="accountNumber" caption="{{ 'UserID' | localize }}"></dxi-column>
+              <dxi-column cellTemplate="cellRatingTemplate" dataField="rate" dataType="string" caption="{{ 'rating' | localize }}"></dxi-column>
               <dxi-column dataField="isActive" caption="{{ 'Status' | localize }}"></dxi-column>
               <dxi-column dataField="creationTime" caption="{{ 'DriverCreationDateAndTime' | localize }}" dataType="datetime"></dxi-column>
+              <dxi-column dataField="companyName" caption="{{ l('companyName') }}"> </dxi-column>
+              <dxi-column dataField="nationality" caption="{{ l('Nationality') }}"> </dxi-column>
+              <dxi-column
+                cellTemplate="cellDriverTrackingTemplate"
+                cellTemplate="cellTrackingTemplate"
+                caption="{{ 'DriverTracking' | localize }}"
+              ></dxi-column>
               <dxi-column
                 dataField="isMissingDocumentFiles"
                 caption="{{ 'MissingDocumentFiles' | localize }}"
@@ -184,13 +192,25 @@
                   </ul>
                 </div>
               </div>
+              <div *dxTemplate="let options of 'cellRatingTemplate'" class="d-flex justify-content-center">
+                <p-rating [ngModel]="options.data.rate" readonly="true" stars="5" [cancel]="false"></p-rating>
+              </div>
+              <div *dxTemplate="let options of 'cellTrackingTemplate'" class="d-flex justify-content-center">
+                <i
+                  (click)="DriverTrackingModal.show(options.data.id, null)"
+                  class="icon-2x text-dark-50 flaticon-placeholder-3"
+                  style="cursor: pointer"
+                ></i>
+              </div>
+              <dxo-summary> <dxi-total-item column="userName" summaryType="count"> </dxi-total-item> </dxo-summary>
             </dx-data-grid>
           </div>
         </div>
       </div>
     </div>
     <viewOrEditEntityDocumentsModal #viewOrEditEntityDocumentsModal></viewOrEditEntityDocumentsModal>
-    <createOrEditDriverModal [creatDriver]="true" #createOrEditUserModal (modalSave)="getUsers()"> </createOrEditDriverModal>
+    <createOrEditDriverModal [creatDriver]="true" #createOrEditUserModal (modalSave)="getDrivers()"> </createOrEditDriverModal>
     <editUserPermissionsModal #editUserPermissionsModal></editUserPermissionsModal>
+    <app-driver-tracking-modal #DriverTrackingModal></app-driver-tracking-modal>
   </div>
 </div>

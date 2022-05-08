@@ -10,7 +10,6 @@ namespace TACHYON.Offers.Exporting
 {
     public class OffersExcelExporter : NpoiExcelExporterBase, IOffersExcelExporter
     {
-
         private readonly ITimeZoneConverter _timeZoneConverter;
         private readonly IAbpSession _abpSession;
 
@@ -18,7 +17,7 @@ namespace TACHYON.Offers.Exporting
             ITimeZoneConverter timeZoneConverter,
             IAbpSession abpSession,
             ITempFileCacheManager tempFileCacheManager) :
-    base(tempFileCacheManager)
+            base(tempFileCacheManager)
         {
             _timeZoneConverter = timeZoneConverter;
             _abpSession = abpSession;
@@ -30,7 +29,6 @@ namespace TACHYON.Offers.Exporting
                 "Offers.xlsx",
                 excelPackage =>
                 {
-
                     var sheet = excelPackage.CreateSheet(L("Offers"));
 
                     AddHeader(
@@ -42,7 +40,7 @@ namespace TACHYON.Offers.Exporting
                         (L("TrailerType")) + L("DisplayName"),
                         (L("GoodCategory")) + L("DisplayName"),
                         (L("Route")) + L("DisplayName")
-                        );
+                    );
 
                     AddObjects(
                         sheet, 2, offers,
@@ -53,10 +51,7 @@ namespace TACHYON.Offers.Exporting
                         _ => _.TrailerTypeDisplayName,
                         _ => _.GoodCategoryDisplayName,
                         _ => _.RouteDisplayName
-                        );
-
-
-
+                    );
                 });
         }
     }

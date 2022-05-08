@@ -17,7 +17,9 @@ namespace TACHYON.Documents
         private readonly DocumentFilesManager _documentFilesManager;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
 
-        public ExpiredDocumentsReportBackgroundJob(IUserEmailer userEmailer, DocumentFilesManager documentFilesManager, IUnitOfWorkManager unitOfWorkManager)
+        public ExpiredDocumentsReportBackgroundJob(IUserEmailer userEmailer,
+            DocumentFilesManager documentFilesManager,
+            IUnitOfWorkManager unitOfWorkManager)
         {
             _userEmailer = userEmailer;
             _documentFilesManager = documentFilesManager;
@@ -27,11 +29,9 @@ namespace TACHYON.Documents
         [UnitOfWork]
         protected override async Task ExecuteAsync(int? args)
         {
-            using (var uow = _unitOfWorkManager.Begin())
-            {
-                await _documentFilesManager.SendDocumentsExpiredStatusMonthlyReport();
-                uow.Complete();
-            }
+            using var uow = _unitOfWorkManager.Begin();
+            await _documentFilesManager.SendDocumentsExpiredStatusMonthlyReport();
+            await uow.CompleteAsync();
         }
     }
 }

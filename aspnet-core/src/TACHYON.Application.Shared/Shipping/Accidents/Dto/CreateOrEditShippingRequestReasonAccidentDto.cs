@@ -6,7 +6,7 @@ using System.Text;
 
 namespace TACHYON.Shipping.Accidents.Dto
 {
- public   class CreateOrEditShippingRequestReasonAccidentDto:EntityDto
+    public class CreateOrEditShippingRequestReasonAccidentDto : EntityDto
     {
         public ICollection<ShippingRequestReasonAccidentTranslationDto> Translations { get; set; }
     }

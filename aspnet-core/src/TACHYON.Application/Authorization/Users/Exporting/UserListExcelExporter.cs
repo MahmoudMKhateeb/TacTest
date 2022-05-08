@@ -44,18 +44,18 @@ namespace TACHYON.Authorization.Users.Exporting
                         //L("Roles"),
                         L("Active"),
                         L("CreationTime")
-                        );
+                    );
 
                     AddObjects(
                         sheet, 2, userListDtos,
-                        _ => _.Name +" "+_.Surname,
+                        _ => _.Name + " " + _.Surname,
                         _ => _.PhoneNumber,
                         _ => _.EmailAddress,
                         //_ => _.IsEmailConfirmed,
                         //_ => _.Roles.Select(r => r.RoleName).JoinAsString(", "),
                         _ => _.IsActive,
                         _ => _timeZoneConverter.Convert(_.CreationTime, _abpSession.TenantId, _abpSession.GetUserId())
-                        );
+                    );
 
                     for (var i = 1; i <= userListDtos.Count; i++)
                     {

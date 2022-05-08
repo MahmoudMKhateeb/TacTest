@@ -12,6 +12,5 @@ namespace TACHYON.Web.Models.TokenAuth
         public string ClientId { get; set; }
 
         public Dictionary<string, string> AdditionalParams { get; set; }
-
     }
 }

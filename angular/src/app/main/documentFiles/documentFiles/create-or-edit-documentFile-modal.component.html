@@ -49,7 +49,7 @@
                   type="file"
                   class="custom-file-input"
                   accept="image/x-png,image/jpeg,application/pdf"
-                  required
+                  [required]="documentFile.documentTypeDto.isRequiredDocumentTemplate"
                 />
                 <label class="custom-file-label text-truncate" [for]="documentFile.name">
                   {{ documentFile.name ? documentFile.name : l('SelectFile') }}
@@ -61,30 +61,35 @@
             <div *ngIf="documentFile.documentTypeDto.hasNumber" class="form-group col-md-6">
               <label for="DocumentNumber">{{ l('Number') }} </label>
               <input
+                #inputDocumentNumber="ngModel"
                 type="text"
                 class="form-control"
                 id="DocumentNumber"
-                (change)="numberChange(documentFile)"
-                [maxLength]="documentFile.documentTypeDto.numberMaxDigits"
-                [minLength]="documentFile.documentTypeDto.numberMinDigits"
                 name="documentNumber"
-                required
+                [required]="documentFile.documentTypeDto.isRequiredNumber"
                 [(ngModel)]="documentFile.number"
+                type="text"
+                [pattern]="'[0-9]{' + documentFile.documentTypeDto.numberMinDigits + ',' + documentFile.documentTypeDto.numberMaxDigits + '}'"
+                [ngClass]="{
+                  'is-valid': inputDocumentNumber.valid,
+                  'is-invalid': documentFileForm.submitted && !inputDocumentNumber.valid
+                }"
               />
+              <validation-messages [formCtrl]="inputDocumentNumber"></validation-messages>
               <span
                 *ngIf="documentFile.number == null ? 0 : documentFile.number.length < documentFile.documentTypeDto.numberMinDigits"
-                class="text-danger"
+                class="form-text text-danger"
               >
                 {{ l('TheNumberLengthMustBeMoreThanMinDigits') }}
               </span>
               <span
                 *ngIf="documentFile.number == null ? false : documentFile.number.length > documentFile.documentTypeDto.numberMaxDigits"
-                class="text-danger"
+                class="form-text text-danger"
               >
                 {{ l('TheNumberLengthMustBeLessThanMaxDigits') }}
               </span>
               <span class="form-text text-muted"
-                >{{ l('minDigits:') }} {{ documentFile.documentTypeDto.numberMinDigits }} {{ l('maxDigits:') }}
+                >{{ l('MinDigits') }} {{ documentFile.documentTypeDto.numberMinDigits }} {{ l('MaxDigits') }}
                 {{ documentFile.documentTypeDto.numberMaxDigits }}
               </span>
             </div>
@@ -94,7 +99,7 @@
                 [selectedDateType]="selectedDateType"
                 [label]="l('ExpirationDate')"
                 class="m-input"
-                [isRequired]="true"
+                [isRequired]="documentFile.documentTypeDto.isRequiredExpirationDate"
                 [readonly]="true"
                 [minHijri]="todayHijri"
                 [minGreg]="todayGregorian"
@@ -138,7 +143,7 @@
           <button
             type="submit"
             class="btn btn-save blue"
-            [disabled]="!documentFileForm.form.valid || !isNumberValid || !alldocumentsValid || selectedDate == null"
+            [disabled]="!documentFileForm.form.valid"
             [buttonBusy]="saving"
             [busyText]="l('SavingWithThreeDot')"
           >

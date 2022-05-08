@@ -8,7 +8,9 @@
 
         public int ExpireInSeconds { get; set; }
 
-        public RefreshTokenResult(string accessToken, string encryptedAccessToken, int expireInSeconds)
+        public RefreshTokenResult(string accessToken,
+            string encryptedAccessToken,
+            int expireInSeconds)
         {
             AccessToken = accessToken;
             ExpireInSeconds = expireInSeconds;
@@ -17,7 +19,6 @@
 
         public RefreshTokenResult()
         {
-
         }
     }
 }

@@ -50,7 +50,7 @@
                   <option value="undefined" disabled selected>{{ l('SelectaFacility') }}</option>
                   <option *ngFor="let item of _TripService.currentSourceFacilitiesItems" value="{{ item.id }}">{{ item.displayName }}</option>
                 </select>
-                <div class="input-group-btn">
+                <div *ngIf="this.feature.isEnabled('App.Shipper') || feature.isEnabled('App.CarrierAsASaas')" class="input-group-btn">
                   <button class="btn btn-primary" [disabled]="facilityLoading" (click)="createOrEditFacilityModal.show()">
                     <i class="flaticon-plus"></i>{{ l('AddNew') }}
                   </button>
@@ -72,10 +72,10 @@
                     [disabled]="receiversLoading || !trip.originFacilityId"
                     required
                   >
-                    <option value="">{{ l('SelectAPickUpAgent') }}</option>
+                    <option [ngValue]="undefined" selected>{{ l('SelectAPickUpAgent') }}</option>
                     <option *ngFor="let item of allReceivers" [ngValue]="item.id">{{ item.displayName }}</option>
                   </select>
-                  <div class="input-group-btn">
+                  <div *ngIf="this.feature.isEnabled('App.Shipper') || this.feature.isEnabled('App.CarrierAsASaas')" class="input-group-btn">
                     <button class="btn btn-primary" [disabled]="receiversLoading" (click)="createOrEditReceiverModal.show()">
                       <i class="flaticon-plus"></i>{{ l('New') }}
                     </button>
@@ -102,11 +102,12 @@
                   <option value="undefined" disabled selected>{{ l('SelectaFacility') }}</option>
                   <option *ngFor="let item of _TripService.currentDestinationFacilitiesItems" value="{{ item.id }}">{{ item.displayName }}</option>
                 </select>
-                <div class="input-group-btn">
+                <div *ngIf="this.feature.isEnabled('App.Shipper') || feature.isEnabled('App.CarrierAsASaas')" class="input-group-btn">
                   <button class="btn btn-primary" [disabled]="facilityLoading" (click)="createOrEditFacilityModal.show()">
                     <i class="flaticon-plus"></i>{{ l('AddNew') }}
                   </button>
                 </div>
+                <div class="invalid-feedback">{{ l('PickupFacilityAndDropOffFacilityCantBeTheSame') }}</div>
               </div>
             </div>
             <!--  end:: Source Dest Facilitys  -->
@@ -114,58 +115,38 @@
             <!--  begin:: Trip start&End Dates-->
             <div class="col-lg-6">
               <div class="form-group">
-                <label>{{ l('TripsStartDate') }} <span class="required-fileds">*</span> </label>
-                <div class="input-group date">
-                  <input
-                    id="tripStartDate"
-                    [formControl]="tripStartDate"
-                    type="text"
-                    class="form-control"
-                    name="tripStartDate"
-                    bsDatepicker
-                    datePickerMomentModifier
-                    [class.is-valid]="tripStartDate.valid && tripStartDate.value"
-                    [(date)]="trip.startTripDate"
-                    [minDate]="shippingRequest.startTripDate"
-                    [maxDate]="shippingRequest.startTripDate"
-                    [bsConfig]="{ adaptivePosition: true }"
-                    readonly="readonly"
-                    required
-                  />
-                  <div class="input-group-append">
-                    <span class="input-group-text">
-                      <i class="la la-calendar-check-o"></i>
-                    </span>
-                  </div>
-                </div>
+                <hijri-gregorian-datepicker-test
+                  [parentForm]="parentForm"
+                  [label]="l('TripsStartDate')"
+                  class="m-input"
+                  [readonly]="true"
+                  [isRequired]="true"
+                  [minHijri]="minTripDateAsHijri"
+                  [minGreg]="minTripDateAsGrorg"
+                  [maxHijri]="maxTripDateAsHijri"
+                  [maxGreg]="maxTripDateAsGrorg"
+                  [selectedDate]="startTripdate"
+                  (selectedDateChange)="GetSelectedstartDateChange($event, 'start')"
+                >
+                </hijri-gregorian-datepicker-test>
               </div>
             </div>
             <div class="col-lg-6">
               <div class="form-group">
-                <label> {{ l('TripsEndDate') }} </label>
-                <div class="input-group date">
-                  <input
-                    id="endTripDate"
-                    [formControl]="endTripDate"
-                    type="text"
-                    class="form-control"
-                    name="endTripDate"
-                    bsDatepicker
-                    datePickerMomentModifier
-                    [class.is-invalid]="trip.endTripDate && endTripDate.touched && !endTripDate.valid"
-                    [class.is-valid]="trip.endTripDate && endTripDate.touched && endTripDate.valid"
-                    [(date)]="trip.endTripDate"
-                    [minDate]="trip.startTripDate"
-                    [maxDate]="shippingRequest.endTripDate"
-                    [bsConfig]="{ adaptivePosition: true }"
-                    readonly="readonly"
-                  />
-                  <div class="input-group-append">
-                    <span class="input-group-text">
-                      <i class="la la-calendar-check-o"></i>
-                    </span>
-                  </div>
-                </div>
+                <hijri-gregorian-datepicker-test
+                  [parentForm]="parentForm"
+                  [label]="l('TripsEndDate')"
+                  class="m-input"
+                  [readonly]="true"
+                  [isRequired]="false"
+                  [minHijri]="minHijriTripdate"
+                  [minGreg]="minGrogTripdate"
+                  [maxHijri]="maxTripDateAsHijri"
+                  [maxGreg]="maxTripDateAsGrorg"
+                  [selectedDate]="endTripdate"
+                  (selectedDateChange)="GetSelectedstartDateChange($event, 'end')"
+                >
+                </hijri-gregorian-datepicker-test>
               </div>
             </div>
             <!--  end:: Trip start&End Dates-->
@@ -209,7 +190,7 @@
                   />
                   <div class="input-group-append">
                     <span class="input-group-text">
-                      <i class="la la-dollar"></i>
+                      {{ l('SAR') }}
                     </span>
                   </div>
                 </div>
@@ -283,15 +264,7 @@
                   <!--end::Symbol-->
                   <!--begin::Text-->
                   <div class="d-flex flex-column flex-grow-1 mr-2">
-                    <a
-                      (click)="
-                        _fileDownloadService.downloadFileByBinaryId(
-                          this.trip.createOrEditDocumentFileDto.name,
-                          this.trip.createOrEditDocumentFileDto.binaryObjectId
-                        )
-                      "
-                      class="font-weight-bold text-dark-75 text-hover-primary font-size-lg mb-1"
-                    >
+                    <a (click)="downloadAttatchment()" class="font-weight-bold text-dark-75 text-hover-primary font-size-lg mb-1">
                       {{ trip.createOrEditDocumentFileDto?.name }}</a
                     >
                     <span class="text-muted font-weight-bold">{{ trip.createOrEditDocumentFileDto?.documentTypeDto?.templateContentType }}</span>
@@ -299,12 +272,7 @@
                   <!--end::Text-->
                   <a
                     *ngIf="trip.createOrEditDocumentFileDto?.binaryObjectId"
-                    (click)="
-                      _fileDownloadService.downloadFileByBinaryId(
-                        this.trip.createOrEditDocumentFileDto.name,
-                        this.trip.createOrEditDocumentFileDto.binaryObjectId
-                      )
-                    "
+                    (click)="downloadAttatchment()"
                     class="btn btn-sm btn-icon btn-bg-light btn-icon-primary btn-hover-primary"
                   >
                     <i class="flaticon2-download"></i>

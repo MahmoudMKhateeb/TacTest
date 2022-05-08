@@ -13,7 +13,7 @@ namespace TACHYON.AutoMapper.PlateTypes
         {
             CreateMap<CreateOrEditPlateTypeDto, PlateType>()
                 .ForMember(dest => dest.Translations,
-                opt => opt.MapFrom(src => src.Translations))
+                    opt => opt.MapFrom(src => src.Translations))
                 .ReverseMap();
 
             //CreateMap<PlateTypeDto, PlateType>()
@@ -23,7 +23,7 @@ namespace TACHYON.AutoMapper.PlateTypes
 
             CreateMap<PlateType, GetPlateTypeForViewDto>()
                 .ForMember(dest => dest.PlateType,
-                opt => opt.MapFrom(src => src));
+                    opt => opt.MapFrom(src => src));
         }
     }
 }

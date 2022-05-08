@@ -48,10 +48,10 @@ namespace TACHYON.Friendships
             using (CurrentUnitOfWork.SetTenantId(user.TenantId))
             {
                 return await _friendshipRepository.FirstOrDefaultAsync(friendship =>
-                                    friendship.UserId == user.UserId &&
-                                    friendship.TenantId == user.TenantId &&
-                                    friendship.FriendUserId == probableFriend.UserId &&
-                                    friendship.FriendTenantId == probableFriend.TenantId);
+                    friendship.UserId == user.UserId &&
+                    friendship.TenantId == user.TenantId &&
+                    friendship.FriendUserId == probableFriend.UserId &&
+                    friendship.FriendTenantId == probableFriend.TenantId);
             }
         }
 

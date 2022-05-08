@@ -5,6 +5,5 @@
         public CountriesTranslationDto CountriesTranslation { get; set; }
 
         public string CountyDisplayName { get; set; }
-
     }
 }

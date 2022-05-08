@@ -10,7 +10,6 @@ namespace TACHYON.Receivers.Exporting
 {
     public class ReceiversExcelExporter : NpoiExcelExporterBase, IReceiversExcelExporter
     {
-
         private readonly ITimeZoneConverter _timeZoneConverter;
         private readonly IAbpSession _abpSession;
 
@@ -18,7 +17,7 @@ namespace TACHYON.Receivers.Exporting
             ITimeZoneConverter timeZoneConverter,
             IAbpSession abpSession,
             ITempFileCacheManager tempFileCacheManager) :
-    base(tempFileCacheManager)
+            base(tempFileCacheManager)
         {
             _timeZoneConverter = timeZoneConverter;
             _abpSession = abpSession;
@@ -30,7 +29,6 @@ namespace TACHYON.Receivers.Exporting
                 "Receivers.xlsx",
                 excelPackage =>
                 {
-
                     var sheet = excelPackage.CreateSheet(L("Receivers"));
 
                     AddHeader(
@@ -39,7 +37,7 @@ namespace TACHYON.Receivers.Exporting
                         L("Email"),
                         L("PhoneNumber"),
                         (L("Facility")) + L("Name")
-                        );
+                    );
 
                     AddObjects(
                         sheet, 2, receivers,
@@ -47,8 +45,7 @@ namespace TACHYON.Receivers.Exporting
                         _ => _.Receiver.Email,
                         _ => _.Receiver.PhoneNumber,
                         _ => _.FacilityName
-                        );
-
+                    );
                 });
         }
     }

@@ -37,6 +37,7 @@
                   [(ngModel)]="tenant.companyName"
                   maxlength="32"
                   required
+                  (change)="checkIfIsCompanyUniqueName()"
                 />
 
                 <div *ngIf="companyName.touched && companyName.errors?.pattern" class="form-control-feedback">
@@ -45,6 +46,8 @@
 
                 <validation-messages *ngIf="!companyName.errors?.pattern" [formCtrl]="companyName"></validation-messages>
                 <span class="form-text text-muted">{{ l('Enter') }} {{ l('companyName') }}</span>
+                <span *ngIf="!isCompanyNameAvailable" class="form-text text-danger">{{ l('CompanyName') }} {{ 'AlreadyTaken' | localize }}</span>
+                <validation-messages [formCtrl]="companyName"></validation-messages>
               </div>
             </div>
 
@@ -81,7 +84,7 @@
 
             <div class="col-6">
               <div class="form-group">
-                <label for="Name">{{ 'CompanyFullLeagalName' | localize }} *</label>
+                <label for="Name">{{ 'CompanyFullLeagalName' | localize }} <span class="required-fileds">*</span></label>
                 <input
                   id="Name"
                   #nameInput="ngModel"
@@ -187,7 +190,7 @@
                 />
                 <div>
                   <validation-messages [formCtrl]="MoiNumber"></validation-messages>
-                  <span class="form-text text-muted">{{ l('NumbersOnly') }}</span>
+                  <span class="form-text text-muted">{{ l('TheNumberInTheTopOfTheCRThatStartsWithSeven') }}</span>
                   <span *ngIf="!isMoiNumberAvailable && MoiNumber.valid" class="form-text text-danger text-left"
                     >{{ 'MoiNumber' | localize }} {{ 'AlreadyTaken' | localize }}</span
                   >
@@ -221,7 +224,7 @@
           </div>
 
           <div class="form-group">
-            <label for="AdminEmailAddress">{{ 'AdminEmailAddress' | localize }} *</label>
+            <label for="AdminEmailAddress">{{ 'AdminEmailAddress' | localize }} <span class="required-fileds">*</span></label>
             <input
               id="AdminEmailAddress"
               #adminEmailAddressInput="ngModel"
@@ -398,20 +401,17 @@
             </label>
           </div>
 
-          <div [hidden]="isUnlimited || !isSubscriptionFieldsVisible" class="form-group" [ngClass]="{ 'has-error': !subscriptionEndDateIsValid() }">
-            <label for="SubscriptionEndDate">{{ 'SubscriptionEndDate' | localize }}</label>
-            <input
-              id="SubscriptionEndDate"
-              type="text"
-              #SubscriptionEndDateUtc
-              name="SubscriptionEndDateUtc"
-              class="form-control"
-              bsDatepicker
-              datePickerMomentModifier
-              [(date)]="tenant.subscriptionEndDateUtc"
-              [bsConfig]="{ adaptivePosition: true }"
-              autocomplete="new-password"
-            />
+          <div class="form-group" [ngClass]="{ 'has-error': !subscriptionEndDateIsValid() }">
+            <hijri-gregorian-datepicker-test
+              [parentForm]="userForm"
+              [label]="l('SubscriptionEndDate')"
+              class="m-input"
+              [readonly]="true"
+              [minGreg]="minGreg"
+              [minHijri]="minHijri"
+              [selectedDate]="subscriptionEndDateUtc1"
+            >
+            </hijri-gregorian-datepicker-test>
           </div>
 
           <div [hidden]="isUnlimited || !isSubscriptionFieldsVisible" class="checkbox-list">

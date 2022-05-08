@@ -21,28 +21,22 @@ namespace TACHYON.MultiTenancy.HostDashboard
         private async Task<List<IncomeStastistic>> GetDailyIncomeStatisticsData(DateTime startDate, DateTime endDate)
         {
             var dailyRecords = (await _subscriptionPaymentRepository.GetAll()
-                .Where(s => s.CreationTime >= startDate &&
-                            s.CreationTime <= endDate &&
-                            s.Status == SubscriptionPaymentStatus.Paid)
-                .Select(payment => new
-                {
-                    payment.CreationTime,
-                    payment.Amount
-                })
-                .ToListAsync())
+                    .Where(s => s.CreationTime >= startDate &&
+                                s.CreationTime <= endDate &&
+                                s.Status == SubscriptionPaymentStatus.Paid)
+                    .Select(payment => new { payment.CreationTime, payment.Amount })
+                    .ToListAsync())
                 .GroupBy(s => new DateTime(s.CreationTime.Year, s.CreationTime.Month, s.CreationTime.Day))
-                .Select(s => new IncomeStastistic
-                {
-                    Date = s.Key.Date,
-                    Amount = s.Sum(c => c.Amount)
-                })
+                .Select(s => new IncomeStastistic { Date = s.Key.Date, Amount = s.Sum(c => c.Amount) })
                 .ToList();
 
             FillGapsInDailyIncomeStatistics(dailyRecords, startDate, endDate);
             return dailyRecords.OrderBy(s => s.Date).ToList();
         }
 
-        private static void FillGapsInDailyIncomeStatistics(ICollection<IncomeStastistic> dailyRecords, DateTime startDate, DateTime endDate)
+        private static void FillGapsInDailyIncomeStatistics(ICollection<IncomeStastistic> dailyRecords,
+            DateTime startDate,
+            DateTime endDate)
         {
             var currentDay = startDate;
             while (currentDay <= endDate)
@@ -56,7 +50,8 @@ namespace TACHYON.MultiTenancy.HostDashboard
             }
         }
 
-        public async Task<List<IncomeStastistic>> GetIncomeStatisticsData(DateTime startDate, DateTime endDate,
+        public async Task<List<IncomeStastistic>> GetIncomeStatisticsData(DateTime startDate,
+            DateTime endDate,
             ChartDateInterval dateInterval)
         {
             List<IncomeStastistic> incomeStastistics;
@@ -120,21 +115,19 @@ namespace TACHYON.MultiTenancy.HostDashboard
         private async Task<List<IncomeStastistic>> GetMonthlyIncomeStatisticsData(DateTime startDate, DateTime endDate)
         {
             var dailyRecords = await GetDailyIncomeStatisticsData(startDate, endDate);
-            var query = dailyRecords.GroupBy(d => new
-            {
-                d.Date.Year,
-                d.Date.Month
-            })
-            .Select(grouping => new IncomeStastistic
-            {
-                Date = FindMonthlyDate(startDate, grouping.Key.Year, grouping.Key.Month),
-                Amount = grouping.DefaultIfEmpty().Sum(x => x.Amount)
-            });
+            var query = dailyRecords.GroupBy(d => new { d.Date.Year, d.Date.Month })
+                .Select(grouping => new IncomeStastistic
+                {
+                    Date = FindMonthlyDate(startDate, grouping.Key.Year, grouping.Key.Month),
+                    Amount = grouping.DefaultIfEmpty().Sum(x => x.Amount)
+                });
 
             return query.ToList();
         }
 
-        private static DateTime FindMonthlyDate(DateTime startDate, int groupYear, int groupMonth)
+        private static DateTime FindMonthlyDate(DateTime startDate,
+            int groupYear,
+            int groupMonth)
         {
             if (groupYear == startDate.Year && groupMonth == startDate.Month)
             {

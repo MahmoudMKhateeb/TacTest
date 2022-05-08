@@ -10,7 +10,6 @@ namespace TACHYON.Routs.RoutSteps.Exporting
 {
     public class RoutStepsExcelExporter : NpoiExcelExporterBase, IRoutStepsExcelExporter
     {
-
         private readonly ITimeZoneConverter _timeZoneConverter;
         private readonly IAbpSession _abpSession;
 
@@ -18,7 +17,7 @@ namespace TACHYON.Routs.RoutSteps.Exporting
             ITimeZoneConverter timeZoneConverter,
             IAbpSession abpSession,
             ITempFileCacheManager tempFileCacheManager) :
-    base(tempFileCacheManager)
+            base(tempFileCacheManager)
         {
             _timeZoneConverter = timeZoneConverter;
             _abpSession = abpSession;
@@ -54,7 +53,6 @@ namespace TACHYON.Routs.RoutSteps.Exporting
         //                _ => _.CityDisplayName2,
         //                _ => _.RouteDisplayName
         //                );
-
 
 
         //        });

@@ -19,16 +19,20 @@ import { NgxSpinnerTextService } from '@app/shared/ngx-spinner-text.service';
 import { NgbDateStruct } from '@node_modules/@ng-bootstrap/ng-bootstrap';
 import { DateFormatterService } from '@app/shared/common/hijri-gregorian-datepicker/date-formatter.service';
 import { isNumeric } from '@node_modules/rxjs/internal/util/isNumeric';
-import { TerminologieServiceProxy } from 'shared/service-proxies/terminologies-ervice-proxy';
 import { HttpClient } from '@angular/common/http';
 import { map } from '@node_modules/rxjs/internal/operators';
 import { DevExtremeDataGridHelper } from '@shared/helpers/DevExtremeDataGridHelper';
+import * as rtlDetect from 'rtl-detect';
 
 const capitalize = (s) => {
   if (typeof s !== 'string') return '';
   return s.charAt(0).toUpperCase() + s.slice(1);
 };
 
+export class DatesFormats {
+  hijriDate: string | undefined;
+  GregorianDate!: moment.Moment | undefined;
+}
 export abstract class AppComponentBase {
   localizationSourceName = AppConsts.localization.defaultLocalizationSourceName;
 
@@ -45,7 +49,6 @@ export abstract class AppComponentBase {
   ui: AppUiCustomizationService;
   appUrlService: AppUrlService;
   spinnerService: NgxSpinnerService;
-  private terminologieServiceProxy: TerminologieServiceProxy;
   private ngxSpinnerTextService: NgxSpinnerTextService;
   dateFormatterService: DateFormatterService;
   http: HttpClient;
@@ -53,6 +56,7 @@ export abstract class AppComponentBase {
    * max file size that  user can upload
    */
   public maxDocumentFileBytesUserFriendlyValue = 4;
+  isRtl = rtlDetect.isRtlLang(abp.localization.currentLanguage.name);
 
   iconList = [
     // array of icon class list based on type
@@ -76,7 +80,6 @@ export abstract class AppComponentBase {
     this.spinnerService = injector.get(NgxSpinnerService);
     this.ngxSpinnerTextService = injector.get(NgxSpinnerTextService);
     this.dateFormatterService = injector.get(DateFormatterService);
-    this.terminologieServiceProxy = injector.get(TerminologieServiceProxy);
     this.http = injector.get(HttpClient);
   }
 
@@ -85,10 +88,8 @@ export abstract class AppComponentBase {
   }
 
   l(key: string, ...args: any[]): string {
-    key = capitalize(key);
     args.unshift(key);
     args.unshift(this.localizationSourceName);
-    this.terminologieServiceProxy.Add(key);
     return this.ls.apply(this, args);
   }
 
@@ -184,6 +185,19 @@ export abstract class AppComponentBase {
     }
   }
 
+  GetGregorianAndhijriFromDatepickerChange($event: NgbDateStruct) {
+    var item = new DatesFormats();
+    if ($event != null && $event.year < 1900) {
+      const ngDate = this.dateFormatterService.ToGregorian($event);
+      item.GregorianDate = this.dateFormatterService.NgbDateStructToMoment(ngDate);
+      item.hijriDate = this.dateFormatterService.ToString($event);
+    } else if ($event != null && $event.year > 1900) {
+      item.GregorianDate = this.dateFormatterService.NgbDateStructToMoment($event);
+      const ngDate = this.dateFormatterService.ToHijri($event);
+      item.hijriDate = this.dateFormatterService.ToString(ngDate);
+    }
+    return item;
+  }
   toBase64 = (file) =>
     new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -227,5 +241,33 @@ export abstract class AppComponentBase {
     }
 
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+  }
+  get isCarrier(): boolean {
+    return this.feature.isEnabled('App.Carrier');
+  }
+  get isShipper(): boolean {
+    return this.feature.isEnabled('App.Shipper');
+  }
+  get isTachyonDealer(): boolean {
+    return this.feature.isEnabled('App.TachyonDealer');
+  }
+  get isTachyonDealerOrHost(): boolean {
+    return this.isTachyonDealer || !this.appSession.tenantId;
+  }
+
+  IfOther(items: any, id: any) {
+    // id return string or number
+    if (id != undefined) return items?.filter((x) => x.id == id && x.isOther).length > 0;
+    else return false;
+  }
+
+  cannotContainSpace(input: string) {
+    if (input) {
+      if (input.includes(' ') && input.trim().length == 0) return false;
+      else return true;
+    }
+  }
+  get isSaaS(): boolean {
+    return this.feature.isEnabled('App.CarrierAsASaas');
   }
 }

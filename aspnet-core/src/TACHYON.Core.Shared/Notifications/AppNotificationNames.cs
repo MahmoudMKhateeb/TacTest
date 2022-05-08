@@ -20,7 +20,7 @@ namespace TACHYON.Notifications
 
         public const string AssignDriverToTruck = "App.AssignDriverToTruck";
 
-        
+
         public const string UpdateShippingRequestPrice = "App.UpdateShippingRequestPrice";
         public const string AcceptShippingRequestPrice = "App.AcceptShippingRequestPrice";
         public const string RejectShippingRequest = "App.RejectShippingRequest";
@@ -40,16 +40,23 @@ namespace TACHYON.Notifications
         public const string SubmitInvoiceOnClaim = "App.SubmitInvoiceOnClaim";
         public const string SubmitInvoiceOnAccepted = "App.SubmitInvoiceOnAccepted";
         public const string SubmitInvoiceOnRejected = "App.SubmitInvoiceOnRejected";
+        public const string NewBalanceAddedToShippper = "App.NewBalanceAddedToShippper";
 
-        public const string ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage = "App.ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage";
+        public const string ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage =
+            "App.ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage";
 
         public const string StartShippment = "App.StartShippment";
 
         public const string ShipperShippingRequestFinish = "App.Shipper.ShippingRequest.Finish";
+        public const string DriverGpsOff = "App.DriverGpsOff";
 
         #region Trip
-        public const string ShipperShippingRequestTripNotifyDriverWhenAssignTrip = "App.ShipperShippingRequestTripNotifyDriverWhenAssignTrip";
-        public const string ShipperShippingRequestTripNotifyDriverWhenUnassignedTrip = "App.ShipperShippingRequestTripNotifyDriverWhenUnassignedTrip";
+
+        public const string NotifyDriverWhenAssignTrip = "App.ShipperShippingRequestTripNotifyDriverWhenAssignTrip";
+
+        public const string NotifyDriverWhenUnassignedTrip =
+            "App.ShipperShippingRequestTripNotifyDriverWhenUnassignedTrip";
+
         public const string NotifyDriverWhenAssignToTrip = "App.NotifyDriverWhenAssignToTrip";
         public const string DriverRejectTrip = "App.DriverRejectTrip";
         public const string DriverAcceptTrip = "App.DriverAcceptTrip";
@@ -58,39 +65,63 @@ namespace TACHYON.Notifications
         public const string TripHasAttachment = "App.TripHasAttachment";
         public const string TripNeedsDeliveryNote = "App.NeedsDeliveryNote";
         public const string NotificationWhenTripDetailsChanged = "App.NotificationWhenTripDetailsChanged";
+        public const string NotifyShipperWhenTripUpdated = "App.NotifyShipperWhenTripUpdated";
+        public const string NotifyCarrierWhenTripUpdated = "App.NotifyCarrierWhenTripUpdated";
+        public const string NotifyTachyonDealWhenTripUpdated = "App.NotifyTachyonDealWhenTripUpdated";
 
         #endregion
+
         #region Accident
+
         public const string ShippingRequestAccidents = "App.ShippingRequest.Accident";
         public const string ShippingRequestCancelByTripAccidents = "App.ShippingRequest.trip.Accident.Cancel";
 
         #endregion
+
         #region TachyonDeal
+
         public const string SendDriectRequestForCarrier = "App.SendDriectRequestForCarrier";
         public const string DriectRequestCarrierRespone = "App.DriectRequestCarrierRespone";
         public const string TachyonDealOfferRejectedByShipper = "App.TachyonDealOfferRejectedByShipper";
         public const string TachyonDealOfferAcceptedByShipper = "App.TachyonDealOfferAcceptedByShipper";
         public const string TachyonDealOfferCreated = "App.TachyonDealOfferCreated";
+
         #endregion
+
         #region Shipping Request
-        public const string ShippingRequestNotifyCarrirerWhenShipperAccepted = "App.ShippingRequestNotifyCarrirerWhenShipperAccepted";
-        public const string ShipperReminderToCompelteTrips = "App.ShipperReminderToCompelteTrips";
+
+        public const string ShippingRequestNotifyCarrirerWhenShipperAccepted =
+            "App.ShippingRequestNotifyCarrirerWhenShipperAccepted";
+
+        public const string ShipperReminderToCompleteTrips = "App.ShipperReminderToCompleteTrips";
+
         #region Offer
+
         public const string ShippingRequestSendOfferWhenAddPrice = "App.ShippingRequestSendOfferWhenAddPrice";
         public const string ShippingRequestSendOfferWhenUpdatePrice = "App.ShippingRequestSendOfferWhenUpdatePrice";
         public const string ShipperAcceptedOffer = "App.ShipperAcceptedOffer";
         public const string TMSAcceptedOffer = "App.TMSAcceptedOffer";
-        
+
         public const string SendDriectRequest = "App.SendDriectRequest";
         public const string DeclineDriectRequest = "App.DeclineDriectRequest";
 
         public const string CancelShipment = "App.CancelShipment";
-        
+
         public const string RejectedOffer = "App.RejectedOffer";
-        public const string PendingOffer = "App.PendingOffer";   
-        #endregion
-        #endregion
+        public const string PendingOffer = "App.PendingOffer";
+
         #endregion
 
+        #endregion
+        #region PriceOffer
+        public const string SendPriceOfferToShipper = "App.SendPriceOfferToShipper";
+        #endregion
+        #region Mobile
+
+        public const string DriverTripReminder = "App.DriverTripReminder";
+
+        #endregion
+
+        #endregion
     }
 }

@@ -351,6 +351,14 @@ namespace TACHYON.Waybills.Reports {
             
             private global::System.Data.DataColumn columnActualPickupDate;
             
+            private global::System.Data.DataColumn columnShipperNotes;
+            
+            private global::System.Data.DataColumn columnShipperInvoiceNo;
+            
+            private global::System.Data.DataColumn columnWaybillNumber;
+            
+            private global::System.Data.DataColumn columnIsSingleDrop;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public DataTable1DataTable() {
@@ -674,6 +682,38 @@ namespace TACHYON.Waybills.Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn ShipperNotesColumn {
+                get {
+                    return this.columnShipperNotes;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn ShipperInvoiceNoColumn {
+                get {
+                    return this.columnShipperInvoiceNo;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn WaybillNumberColumn {
+                get {
+                    return this.columnWaybillNumber;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn IsSingleDropColumn {
+                get {
+                    return this.columnIsSingleDrop;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -745,7 +785,11 @@ namespace TACHYON.Waybills.Reports {
                         string CarrierName, 
                         string HasAttachment, 
                         string NeedsDeliveryNote, 
-                        string ActualPickupDate) {
+                        string ActualPickupDate, 
+                        string ShipperNotes, 
+                        string ShipperInvoiceNo, 
+                        string WaybillNumber, 
+                        string IsSingleDrop) {
                 DataTable1Row rowDataTable1Row = ((DataTable1Row)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         MasterWaybillNo,
@@ -783,7 +827,11 @@ namespace TACHYON.Waybills.Reports {
                         CarrierName,
                         HasAttachment,
                         NeedsDeliveryNote,
-                        ActualPickupDate};
+                        ActualPickupDate,
+                        ShipperNotes,
+                        ShipperInvoiceNo,
+                        WaybillNumber,
+                        IsSingleDrop};
                 rowDataTable1Row.ItemArray = columnValuesArray;
                 this.Rows.Add(rowDataTable1Row);
                 return rowDataTable1Row;
@@ -842,6 +890,10 @@ namespace TACHYON.Waybills.Reports {
                 this.columnHasAttachment = base.Columns["HasAttachment"];
                 this.columnNeedsDeliveryNote = base.Columns["NeedsDeliveryNote"];
                 this.columnActualPickupDate = base.Columns["ActualPickupDate"];
+                this.columnShipperNotes = base.Columns["ShipperNotes"];
+                this.columnShipperInvoiceNo = base.Columns["ShipperInvoiceNo"];
+                this.columnWaybillNumber = base.Columns["WaybillNumber"];
+                this.columnIsSingleDrop = base.Columns["IsSingleDrop"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -919,6 +971,14 @@ namespace TACHYON.Waybills.Reports {
                 base.Columns.Add(this.columnNeedsDeliveryNote);
                 this.columnActualPickupDate = new global::System.Data.DataColumn("ActualPickupDate", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnActualPickupDate);
+                this.columnShipperNotes = new global::System.Data.DataColumn("ShipperNotes", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnShipperNotes);
+                this.columnShipperInvoiceNo = new global::System.Data.DataColumn("ShipperInvoiceNo", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnShipperInvoiceNo);
+                this.columnWaybillNumber = new global::System.Data.DataColumn("WaybillNumber", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnWaybillNumber);
+                this.columnIsSingleDrop = new global::System.Data.DataColumn("IsSingleDrop", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnIsSingleDrop);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1637,6 +1697,70 @@ namespace TACHYON.Waybills.Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string ShipperNotes {
+                get {
+                    try {
+                        return ((string)(this[this.tableDataTable1.ShipperNotesColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'ShipperNotes\' in table \'DataTable1\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableDataTable1.ShipperNotesColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string ShipperInvoiceNo {
+                get {
+                    try {
+                        return ((string)(this[this.tableDataTable1.ShipperInvoiceNoColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'ShipperInvoiceNo\' in table \'DataTable1\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableDataTable1.ShipperInvoiceNoColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string WaybillNumber {
+                get {
+                    try {
+                        return ((string)(this[this.tableDataTable1.WaybillNumberColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'WaybillNumber\' in table \'DataTable1\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableDataTable1.WaybillNumberColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string IsSingleDrop {
+                get {
+                    try {
+                        return ((string)(this[this.tableDataTable1.IsSingleDropColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'IsSingleDrop\' in table \'DataTable1\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableDataTable1.IsSingleDropColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public bool IsMasterWaybillNoNull() {
                 return this.IsNull(this.tableDataTable1.MasterWaybillNoColumn);
             }
@@ -2065,6 +2189,54 @@ namespace TACHYON.Waybills.Reports {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public void SetActualPickupDateNull() {
                 this[this.tableDataTable1.ActualPickupDateColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsShipperNotesNull() {
+                return this.IsNull(this.tableDataTable1.ShipperNotesColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetShipperNotesNull() {
+                this[this.tableDataTable1.ShipperNotesColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsShipperInvoiceNoNull() {
+                return this.IsNull(this.tableDataTable1.ShipperInvoiceNoColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetShipperInvoiceNoNull() {
+                this[this.tableDataTable1.ShipperInvoiceNoColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsWaybillNumberNull() {
+                return this.IsNull(this.tableDataTable1.WaybillNumberColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetWaybillNumberNull() {
+                this[this.tableDataTable1.WaybillNumberColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsIsSingleDropNull() {
+                return this.IsNull(this.tableDataTable1.IsSingleDropColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetIsSingleDropNull() {
+                this[this.tableDataTable1.IsSingleDropColumn] = global::System.Convert.DBNull;
             }
         }
         

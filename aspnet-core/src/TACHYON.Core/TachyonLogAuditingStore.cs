@@ -49,14 +49,16 @@ namespace TACHYON
         private async Task CreateJiraIssue(AuditInfo auditInfo)
         {
             AuditLog auditLog = AuditLog.CreateFromAuditInfo(auditInfo);
-        
+
             // create a connection to JIRA using the Rest client
-            var jira = Jira.CreateRestClient("https://tachyonhub.atlassian.net", "ialkhateeb@trustangle.com", "cZNnMDxyJbbPdirRLQQI3A63");
+            var jira = Jira.CreateRestClient("https://tachyonhub.atlassian.net", "ialkhateeb@trustangle.com",
+                "cZNnMDxyJbbPdirRLQQI3A63");
 
             var issue = jira.CreateIssue("TAC");
             issue.Type = "Bug";
             issue.Priority = "Highest";
-            issue.Summary =string.Format("TachyonAudit: {0}.{1} error!.", (object)auditLog.ServiceName, (object)auditLog.MethodName);
+            issue.Summary = string.Format("TachyonAudit: {0}.{1} error!.", (object)auditLog.ServiceName,
+                (object)auditLog.MethodName);
             issue.Description = auditLog.ToJsonString();
 
             await issue.SaveChangesAsync();

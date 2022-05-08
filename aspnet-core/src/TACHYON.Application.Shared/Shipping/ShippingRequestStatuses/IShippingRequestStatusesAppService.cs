@@ -8,18 +8,16 @@ using TACHYON.Dto;
 
 namespace TACHYON.Shipping.ShippingRequestStatuses
 {
-    public interface IShippingRequestStatusesAppService : IApplicationService 
+    public interface IShippingRequestStatusesAppService : IApplicationService
     {
         Task<PagedResultDto<GetShippingRequestStatusForViewDto>> GetAll(GetAllShippingRequestStatusesInput input);
 
         Task<GetShippingRequestStatusForViewDto> GetShippingRequestStatusForView(int id);
 
-		Task<GetShippingRequestStatusForEditOutput> GetShippingRequestStatusForEdit(EntityDto input);
+        Task<GetShippingRequestStatusForEditOutput> GetShippingRequestStatusForEdit(EntityDto input);
 
-		Task CreateOrEdit(CreateOrEditShippingRequestStatusDto input);
+        Task CreateOrEdit(CreateOrEditShippingRequestStatusDto input);
 
-		Task Delete(EntityDto input);
-
-		
+        Task Delete(EntityDto input);
     }
 }

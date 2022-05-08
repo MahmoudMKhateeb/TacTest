@@ -2,8 +2,6 @@
 {
     public class GetPickingTypeForViewDto
     {
-		public PickingTypeDto PickingType { get; set; }
-
-
+        public PickingTypeDto PickingType { get; set; }
     }
 }

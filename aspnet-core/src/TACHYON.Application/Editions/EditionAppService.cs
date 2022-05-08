@@ -41,13 +41,12 @@ namespace TACHYON.Editions
         public async Task<ListResultDto<EditionListDto>> GetEditions()
         {
             var editions = await (from edition in _editionRepository.GetAll()
-                                  join expiringEdition in _editionRepository.GetAll() on edition.ExpiringEditionId equals expiringEdition.Id into expiringEditionJoined
-                                  from expiringEdition in expiringEditionJoined.DefaultIfEmpty()
-                                  select new
-                                  {
-                                      Edition = edition,
-                                      expiringEditionDisplayName = expiringEdition.DisplayName
-                                  }).ToListAsync();
+                    join expiringEdition in _editionRepository.GetAll() on edition.ExpiringEditionId equals
+                        expiringEdition
+                            .Id into expiringEditionJoined
+                    from expiringEdition in expiringEditionJoined.DefaultIfEmpty()
+                    select new { Edition = edition, expiringEditionDisplayName = expiringEdition.DisplayName })
+                .ToListAsync();
 
             var result = new List<EditionListDto>();
 
@@ -121,16 +120,21 @@ namespace TACHYON.Editions
         [AbpAuthorize(AppPermissions.Pages_Editions_MoveTenantsToAnotherEdition)]
         public async Task MoveTenantsToAnotherEdition(MoveTenantsToAnotherEditionDto input)
         {
-            await _backgroundJobManager.EnqueueAsync<MoveTenantsToAnotherEditionJob, MoveTenantsToAnotherEditionJobArgs>(new MoveTenantsToAnotherEditionJobArgs
-            {
-                SourceEditionId = input.SourceEditionId,
-                TargetEditionId = input.TargetEditionId,
-                User = AbpSession.ToUserIdentifier()
-            });
+            await _backgroundJobManager
+                .EnqueueAsync<MoveTenantsToAnotherEditionJob, MoveTenantsToAnotherEditionJobArgs>(
+                    new MoveTenantsToAnotherEditionJobArgs
+                    {
+                        SourceEditionId = input.SourceEditionId,
+                        TargetEditionId = input.TargetEditionId,
+                        User = AbpSession.ToUserIdentifier()
+                    });
         }
 
         [AbpAuthorize(AppPermissions.Pages_Editions, AppPermissions.Pages_Tenants)]
-        public async Task<List<SubscribableEditionComboboxItemDto>> GetEditionComboboxItems(int? selectedEditionId = null, bool addAllItem = false, bool onlyFreeItems = false)
+        public async Task<List<SubscribableEditionComboboxItemDto>> GetEditionComboboxItems(int? selectedEditionId =
+                null,
+            bool addAllItem = false,
+            bool onlyFreeItems = false)
         {
             var editions = await _editionManager.Editions.ToListAsync();
             var subscribableEditions = editions.Cast<SubscribableEdition>()
@@ -139,7 +143,8 @@ namespace TACHYON.Editions
 
             var editionItems =
                 new ListResultDto<SubscribableEditionComboboxItemDto>(subscribableEditions
-                    .Select(e => new SubscribableEditionComboboxItemDto(e.Id.ToString(), e.DisplayName, e.IsFree)).ToList()).Items.ToList();
+                    .Select(e => new SubscribableEditionComboboxItemDto(e.Id.ToString(), e.DisplayName, e.IsFree))
+                    .ToList()).Items.ToList();
 
             var defaultItem = new SubscribableEditionComboboxItemDto("", L("NotAssigned"), null);
             editionItems.Insert(0, defaultItem);
@@ -177,7 +182,8 @@ namespace TACHYON.Editions
 
             if (edition.ExpiringEditionId.HasValue)
             {
-                var expiringEdition = (SubscribableEdition)await _editionManager.GetByIdAsync(edition.ExpiringEditionId.Value);
+                var expiringEdition =
+                    (SubscribableEdition)await _editionManager.GetByIdAsync(edition.ExpiringEditionId.Value);
                 if (!expiringEdition.IsFree)
                 {
                     throw new UserFriendlyException(L("ExpiringEditionMustBeAFreeEdition"));

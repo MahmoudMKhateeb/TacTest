@@ -11,6 +11,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
         /// the shipping request id that we use to obtain the bids from it
         /// </summary>
         public long ShippingReuquestId { get; set; }
+
         /// <summary>
         /// accepted bid id to remove it from rejected list
         /// </summary>

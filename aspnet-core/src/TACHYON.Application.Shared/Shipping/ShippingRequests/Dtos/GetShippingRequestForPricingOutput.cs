@@ -5,10 +5,19 @@ using TACHYON.PriceOffers.Dto;
 
 namespace TACHYON.Shipping.ShippingRequests.Dtos
 {
-    public class GetShippingRequestForPricingOutput:EntityDto<long>
+    /// <summary>
+    /// mapped from ShippingRequest
+    /// </summary>
+    public class GetShippingRequestForPricingOutput : EntityDto<long>
     {
         public long OfferId { get; set; }
         public string Shipper { get; set; }
+        public decimal ShipperRating { get; set; }
+        
+        public decimal FacilitiesRatingAverage { get; set; }
+        
+        public int FacilitiesRatingCount { get; set; }
+        public int ShipperRatingNumber { get; set; }
         public DateTime CreationTime { get; set; }
         public bool IsTachyonDeal { get; set; }
         public string OriginCity { get; set; }
@@ -23,6 +32,11 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public int TotalBids { get; set; }
         public ShippingRequestBidStatus BidStatus { get; set; }
         public ShippingRequestStatus Status { get; set; }
-        public ICollection<PriceOfferItemDto> Items=new List<PriceOfferItemDto>();
+        public ICollection<PriceOfferItemDto> Items = new List<PriceOfferItemDto>();
+
+        /// <summary>
+        /// shipper Id
+        /// </summary>
+        public int TenantId { get; set; }
     }
 }

@@ -19,7 +19,9 @@ namespace TACHYON.Web.Authentication.JwtBearer
         /// <param name="userId"></param>
         /// <param name="securityStamp"></param>
         /// <returns></returns>
-        Task SetSecurityStampCacheItem(int? tenantId, long userId, string securityStamp);
+        Task SetSecurityStampCacheItem(int? tenantId,
+            long userId,
+            string securityStamp);
 
         /// <summary>
         /// Removes the security stamp item from cache for the given user

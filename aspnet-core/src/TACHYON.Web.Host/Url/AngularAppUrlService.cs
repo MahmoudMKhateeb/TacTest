@@ -10,14 +10,13 @@ namespace TACHYON.Web.Url
         public override string PasswordResetRoute => "account/reset-password";
 
         public AngularAppUrlService(
-                IWebUrlService webUrlService,
-                ITenantCache tenantCache
-            ) : base(
-                webUrlService,
-                tenantCache
-            )
+            IWebUrlService webUrlService,
+            ITenantCache tenantCache
+        ) : base(
+            webUrlService,
+            tenantCache
+        )
         {
-
         }
     }
 }

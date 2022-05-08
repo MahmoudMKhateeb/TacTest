@@ -2,15 +2,16 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+
 namespace TACHYON.Invoices.Periods
 {
     [Table("InvoicePeriods")]
     public class InvoicePeriod : FullAuditedEntity
     {
-
         [Required]
         [StringLength(InvoicePeriodConst.MaxDisplayNameLength, MinimumLength = InvoicePeriodConst.MinDisplayNameLength)]
         public string DisplayName { get; set; }
+
         public string Description { get; set; }
         public InvoicePeriodType PeriodType { get; set; }
 
@@ -32,6 +33,5 @@ namespace TACHYON.Invoices.Periods
 
 
         public string Cronexpression { get; set; }
-
     }
 }

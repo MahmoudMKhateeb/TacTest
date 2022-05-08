@@ -6,9 +6,8 @@ using TACHYON.Invoices.InvoicesProformas.dto;
 
 namespace TACHYON.Invoices.InvoicesProformas
 {
-    public interface IInvoicesProformaAppService: IApplicationService
+    public interface IInvoicesProformaAppService : IApplicationService
     {
         Task<PagedResultDto<InvoicesProformaListDto>> GetAll(InvoicesProformaFilterInput input);
-
     }
 }

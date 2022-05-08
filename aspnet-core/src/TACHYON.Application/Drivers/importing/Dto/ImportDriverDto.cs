@@ -6,7 +6,6 @@ namespace TACHYON.Drivers.importing.Dto
 {
     public class ImportDriverDto
     {
-
         public string Name { get; set; }
 
         public string Surname { get; set; }
@@ -17,7 +16,6 @@ namespace TACHYON.Drivers.importing.Dto
 
         public string EmailAddress { get; set; }
         public DateTime? DateOfBirth { get; set; }
-
 
 
         /// <summary>
@@ -33,7 +31,5 @@ namespace TACHYON.Drivers.importing.Dto
         public bool IsDriver { get; set; }
 
         public List<CreateOrEditDocumentFileDto> CreateOrEditDocumentFileDtos { get; set; }
-
-
     }
 }

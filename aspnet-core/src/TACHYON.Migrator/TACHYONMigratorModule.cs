@@ -29,7 +29,7 @@ namespace TACHYON.Migrator
         {
             Configuration.DefaultNameOrConnectionString = _appConfiguration.GetConnectionString(
                 TACHYONConsts.ConnectionStringName
-                );
+            );
             Configuration.Modules.AspNetZero().LicenseCode = _appConfiguration["AbpZeroLicenseCode"];
 
             Configuration.BackgroundJobs.IsJobExecutionEnabled = false;

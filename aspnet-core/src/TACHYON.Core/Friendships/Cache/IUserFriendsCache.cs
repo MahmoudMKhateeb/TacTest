@@ -10,7 +10,9 @@ namespace TACHYON.Friendships.Cache
 
         void ResetUnreadMessageCount(UserIdentifier userIdentifier, UserIdentifier friendIdentifier);
 
-        void IncreaseUnreadMessageCount(UserIdentifier userIdentifier, UserIdentifier friendIdentifier, int change);
+        void IncreaseUnreadMessageCount(UserIdentifier userIdentifier,
+            UserIdentifier friendIdentifier,
+            int change);
 
         void AddFriend(UserIdentifier userIdentifier, FriendCacheItem friend);
 

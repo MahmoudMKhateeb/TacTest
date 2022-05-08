@@ -19,19 +19,16 @@ namespace TACHYON.MultiTenancy.Dto
         public string companyName { get; set; }
 
         public string MobileNo { get; set; }
+
         [Required]
         [StringLength(TenantConsts.MaxNameLength)]
         [RegularExpression(TenantConsts.TenancyLegalNameRegex)]
         public string Name { get; set; }
 
 
-        [Required]
-        public virtual string Address { get; set; }
-        [Required]
-        public virtual int CountryId { get; set; }
-        [Required]
-        public virtual int CityId { get; set; }
-
+        [Required] public virtual string Address { get; set; }
+        [Required] public virtual int CountryId { get; set; }
+        [Required] public virtual int CityId { get; set; }
 
 
         [Required]
@@ -70,6 +67,5 @@ namespace TACHYON.MultiTenancy.Dto
         [Required]
         [RegularExpression(TenantConsts.MoiNumberRegex)]
         public string MoiNumber { get; set; }
-
     }
 }

@@ -10,7 +10,6 @@ namespace TACHYON.Goods.GoodCategories.Exporting
 {
     public class GoodCategoriesExcelExporter : NpoiExcelExporterBase, IGoodCategoriesExcelExporter
     {
-
         private readonly ITimeZoneConverter _timeZoneConverter;
         private readonly IAbpSession _abpSession;
 
@@ -18,7 +17,7 @@ namespace TACHYON.Goods.GoodCategories.Exporting
             ITimeZoneConverter timeZoneConverter,
             IAbpSession abpSession,
             ITempFileCacheManager tempFileCacheManager) :
-    base(tempFileCacheManager)
+            base(tempFileCacheManager)
         {
             _timeZoneConverter = timeZoneConverter;
             _abpSession = abpSession;
@@ -30,23 +29,19 @@ namespace TACHYON.Goods.GoodCategories.Exporting
                 "GoodCategories.xlsx",
                 excelPackage =>
                 {
-
                     var sheet = excelPackage.CreateSheet(L("GoodCategories"));
 
                     AddHeader(
                         sheet,
                         L("DisplayName"),
                         L("FatherCategoryDisplayName")
-                        );
+                    );
 
                     AddObjects(
                         sheet, 2, goodCategories,
                         _ => _.GoodCategory.DisplayName,
                         _ => _.FatherCategoryName
-                        );
-
-
-
+                    );
                 });
         }
     }

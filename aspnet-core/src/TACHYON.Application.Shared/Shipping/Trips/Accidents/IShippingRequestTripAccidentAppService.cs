@@ -11,15 +11,14 @@ namespace TACHYON.Shipping.Trips.Accidents
 {
     public interface IShippingRequestTripAccidentAppService
     {
-
         ListResultDto<ShippingRequestTripAccidentListDto> GetAll(GetAllForShippingRequestTripAccidentFilterInput Input);
 
         Task CreateOrEdit(CreateOrEditShippingRequestTripAccidentDto input);
         Task<CreateOrEditShippingRequestTripAccidentDto> GetForEdit(EntityDto input);
+        Task<ViewShippingRequestTripAccidentDto> Get(EntityDto input);
 
         Task CreateOrEditResolve(CreateOrEditShippingRequestTripAccidentResolveDto input);
 
         Task<FileDto> GetFile(int Id);
-
     }
 }

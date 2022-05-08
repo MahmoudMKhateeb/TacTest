@@ -7,6 +7,13 @@
       <!--          <i class="fa fa-money-bill"></i> {{ l('sendPricingOfferToShipper') }}-->
       <!--        </button>-->
       <!--      </div>-->
+      <div role="actions">
+        <a class="btn btn-outline-success" (click)="appEntityLog.show()"> <i class="flaticon-notes"></i> {{ l('ActivityLog') }} </a>
+        <ng-container *ngIf="feature.isEnabled('App.TachyonDealer') && !shippingRequestforView.shippingRequest.isBid">
+          <a class="btn btn-outline-success" (click)="scrollToDirectRequests()">{{ l('SendDirectRequests') }}</a>
+          <a class="btn btn-outline-success" (click)="tachyonDealToBiddingModal.show(activeShippingRequestId)">{{ l('StartBidding') }}</a>
+        </ng-container>
+      </div>
     </sub-header>
 
     <div [class]="containerClass">
@@ -30,18 +37,7 @@
             <div class="alert-icon"><i class="flaticon-warning"></i></div>
             <div class="alert-text">You have trips that contain accidents</div>
           </div>
-          <div
-            *ngIf="feature.isEnabled('App.TachyonDealer') && !shippingRequestforView.shippingRequest.isBid"
-            class="alert alert-custom alert-light-info"
-            role="alert"
-          >
-            <div class="alert-icon"><i class="flaticon-info"></i></div>
-            <div class="alert-text text-bold">
-              This Shipping Request is still in price offering Stage you can either
-              <a class="mx-1" (click)="scrollToDirectRequests()">Send Direct Request</a> or
-              <a class="mx-1" (click)="tachyonDealToBiddingModal.show(activeShippingRequestId)">Start Bidding</a> on it now
-            </div>
-          </div>
+
           <div class="row">
             <!--  start of truck::Details-->
             <div class="col-12">
@@ -88,7 +84,44 @@
                       <label><span class="required-fileds"></span> {{ l('ShippingRequestType') }}</label>
                       <input class="form-control" type="text" name="ShippingRequestType" [value]="shipppingRequestType()" disabled />
                     </div>
-                    <div *ngIf="shippingRequestforView.shippingRequest.isBid" class="col-lg-3">
+                    <!--  Start::Shipping Type                 -->
+                    <div class="col-lg-6">
+                      <label><span class="required-fileds"></span> {{ l('ShippingType') }}</label>
+                      <input class="form-control" type="text" name="ShippingType" [value]="shippingRequestforView.shippingTypeDisplayName" disabled />
+                    </div>
+                    <!-- End::Shipping Type-->
+
+                    <div class="col-lg-3 mt-5">
+                      <div class="form-group">
+                        <label> {{ l('ShipperReference') }}</label>
+                        <div class="input-group date">
+                          <input
+                            [value]="shippingRequestforView.shippingRequest.shipperReference"
+                            class="form-control"
+                            type="ShipperReference"
+                            placeholder="{{ l('ShipperReference') }}"
+                            name="ShipperReference"
+                            disabled
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-lg-3 mt-5">
+                      <div class="form-group">
+                        <label> {{ l('ShipperInvoiceNumber') }}</label>
+                        <div class="input-group date">
+                          <input
+                            [value]="shippingRequestforView.shippingRequest.shipperInvoiceNo"
+                            class="form-control"
+                            type="ShipperInvoiceNumber"
+                            placeholder="{{ l('ShipperInvoiceNumber') }}"
+                            name="ShipperInvoiceNumber"
+                            disabled
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div *ngIf="shippingRequestforView.shippingRequest.isBid" class="col-lg-3 mt-5">
                       <div class="form-group">
                         <label>{{ l('DiddingStartDate') }}</label>
                         <div class="input-group date">
@@ -109,7 +142,7 @@
                         </div>
                       </div>
                     </div>
-                    <div *ngIf="shippingRequestforView.shippingRequest.isBid" class="col-lg-3">
+                    <div *ngIf="shippingRequestforView.shippingRequest.isBid" class="col-lg-3 mt-5">
                       <label> {{ l('BiddingEndDate') }}</label>
                       <div class="input-group date">
                         <input
@@ -128,12 +161,6 @@
                         </div>
                       </div>
                     </div>
-                    <!--  Start::Shipping Type                 -->
-                    <div class="col-lg-6">
-                      <label><span class="required-fileds"></span> {{ l('ShippingType') }}</label>
-                      <input class="form-control" type="text" name="ShippingType" [value]="shippingRequestforView.shippingTypeDisplayName" disabled />
-                    </div>
-                    <!-- End::Shipping Type-->
                   </div>
                 </div>
               </div>
@@ -290,7 +317,7 @@
                     </div>
                     <div class="col-lg-3">
                       <label>{{ l('RouteType') }}</label>
-                      <input class="form-control" type="text" name="routeType" [value]="shippingRequestforView.routTypeName" disabled />
+                      <input class="form-control" type="text" name="routeType" value="{{ l(shippingRequestforView.routTypeName) }}" disabled />
                     </div>
                     <div class="col-lg-3">
                       <div class="form-group">
@@ -329,7 +356,11 @@
       <!--  start:: DirectOffers      -->
 
       <ng-template [ngIf]="canSeeDirectRequests()">
-        <direct-request [shippingRequestId]="activeShippingRequestId"></direct-request>
+        <direct-request
+          #directRequestComponent
+          [shippingRequestId]="activeShippingRequestId"
+          [ShippingRequestStatus]="shippingRequestforView.shippingRequest.status"
+        ></direct-request>
       </ng-template>
       <!--  end:: DirectOffers        -->
 
@@ -339,6 +370,7 @@
         <TripsForViewShippingRequest
           *ngIf="shippingRequestforView.shippingRequest.id && bidsloading == false"
           [ShippingRequest]="shippingRequestforView.shippingRequest"
+          [shippingRequestForView]="shippingRequestforView"
           [VasListFromFather]="shippingRequestforView.shippingRequestVasDtoList"
         ></TripsForViewShippingRequest>
       </ng-template>
@@ -346,6 +378,8 @@
       <!--    End::Trips Section    -->
       <!--  End of the First Container      -->
     </div>
+
+    <app-entity-log #appEntityLog [entityType]="3" [entityId]="shippingRequestforView.shippingRequest.id"></app-entity-log>
   </div>
   <!--  <sendDirectRequestsModal #sendDirectRequestsModal [shippingRequestId]="activeShippingRequestId"></sendDirectRequestsModal>-->
   <tachyonDealToBiddingModal #tachyonDealToBiddingModal (modalsave)="reloadCurrentPage()"></tachyonDealToBiddingModal>

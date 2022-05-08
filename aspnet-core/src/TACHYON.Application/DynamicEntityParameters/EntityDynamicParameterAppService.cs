@@ -25,7 +25,8 @@ namespace TACHYON.DynamicEntityParameters
             return ObjectMapper.Map<EntityDynamicParameterDto>(entity);
         }
 
-        public async Task<ListResultDto<EntityDynamicParameterDto>> GetAllParametersOfAnEntity(EntityDynamicParameterGetAllInput input)
+        public async Task<ListResultDto<EntityDynamicParameterDto>> GetAllParametersOfAnEntity(
+            EntityDynamicParameterGetAllInput input)
         {
             var entities = await _entityDynamicParameterManager.GetAllAsync(input.EntityFullName);
             return new ListResultDto<EntityDynamicParameterDto>(

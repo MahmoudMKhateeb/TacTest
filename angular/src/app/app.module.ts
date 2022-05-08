@@ -87,9 +87,10 @@ import { MenuSearchBarComponent } from './shared/layout/nav/menu-search-bar/menu
 import { NgxSpinnerModule, NgxSpinnerComponent } from 'ngx-spinner';
 import { ScrollTopComponent } from './shared/layout/scroll-top.component';
 import { AppBsModalModule } from '@shared/common/appBsModal/app-bs-modal.module';
-import { TrackingSignalrService } from './main/shippingRequests/shippingRequests/tracking/tacking-signalr.service';
 import { DxButtonModule } from '@node_modules/devextreme-angular';
 import { BalanceTopbarComponent } from './shared/layout/topbar/balance-topbar/balance-topbar.component';
+import { RatingPageComponent } from './rating-page/rating-page.component';
+import { RatingModule } from '@node_modules/primeng/rating';
 
 @NgModule({
   declarations: [
@@ -146,6 +147,7 @@ import { BalanceTopbarComponent } from './shared/layout/topbar/balance-topbar/ba
     MenuSearchBarComponent,
     ActiveDelegatedUsersComboComponent,
     BalanceTopbarComponent,
+    RatingPageComponent,
   ],
   imports: [
     CommonModule,
@@ -176,18 +178,19 @@ import { BalanceTopbarComponent } from './shared/layout/topbar/balance-topbar/ba
     NgxSpinnerModule,
     AppBsModalModule,
     DxButtonModule,
+    RatingModule,
   ],
   providers: [
     ImpersonationService,
     LinkedAccountService,
     UserNotificationHelper,
     ChatSignalrService,
-    TrackingSignalrService,
     {
       provide: PERFECT_SCROLLBAR_CONFIG,
       useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG,
     },
   ],
   entryComponents: [NgxSpinnerComponent],
+  exports: [ChangeProfilePictureModalComponent],
 })
 export class AppModule {}

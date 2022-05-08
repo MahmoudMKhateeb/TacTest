@@ -1,159 +1,93 @@
-﻿using Abp.Domain.Repositories;
+﻿using Abp.Configuration;
+using Abp.Domain.Repositories;
+using Abp.Localization;
+using Abp.Notifications;
+using Abp.Timing;
 using FirebaseAdmin.Messaging;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TACHYON.Mobile;
-using System.Linq;
-using Abp.Timing;
-using Abp.Localization;
-using System;
-using Abp.Configuration;
-using Abp;
-using System.Globalization;
 
 namespace TACHYON.Firebases
 {
-    public  class FirebaseNotifier: TACHYONServiceBase, IFirebaseNotifier
+    public class FirebaseNotifier : TACHYONDomainServiceBase, IFirebaseNotifier
     {
 
-        public FirebaseMessaging messaging { get; set; }
+        public FirebaseMessaging Messaging { get; set; }
         private readonly IRepository<UserDeviceToken> _userDeviceToken;
-        private readonly ISettingManager _settingManager;
-        public FirebaseNotifier(IRepository<UserDeviceToken> userDeviceToken, ISettingManager settingManager)
+        private readonly ILocalizationContext _localizationContext;
+
+        public FirebaseNotifier(
+            IRepository<UserDeviceToken> userDeviceToken,
+            ILocalizationContext localizationContext)
         {
-            messaging = FirebaseMessaging.DefaultInstance;
+            Messaging = FirebaseMessaging.DefaultInstance;
             _userDeviceToken = userDeviceToken;
-            _settingManager = settingManager;
-
-        }
-        public async Task General
-            (
-                UserIdentifier user,
-                Dictionary<string, string> data,
-                string clickAction,
-                string localizeKey
-            )
-        {
-            string Title = L(localizeKey, GetCulture(user));
-            var message = new Message()
-            {
-                Notification = new Notification
-                {
-                    Title = Title,
-                },
-                Data = data
-            };
-            await SendMessage(user.UserId, message, clickAction);
-        }
-        /// <summary>
-        /// Send notification to driver when the carrier assign new trip
-        /// </summary>
-        /// <param name="user"></param>
-        /// <param name="TripId"></param>
-        /// <param name="wayBillNumber"></param>
-        /// <returns></returns>
-        public async Task PushNotificationToDriverWhenAssignTrip(UserIdentifier user, string TripId,string wayBillNumber)
-        {
-            string Title = L("NewTripAssign", GetCulture(user), wayBillNumber);
-            var message = new Message()
-            {
-                Notification = new Notification
-                {
-                    Title = Title,
-                },
-                Data = new Dictionary<string, string>()
-                {
-                    ["id"] = TripId,
-                    ["tripId"] = TripId
-                }
-            };
-            await SendMessage(user.UserId, message, "ViewComingLoadInfoActivity");
-        }
-        /// <summary>
-        /// Reminder the driver before one day 
-        /// </summary>
-        /// <param name="user"></param>
-        /// <param name="TripId"></param>
-        /// <returns></returns>
-        public async Task ReminderDriverForTrip(UserIdentifier user, string TripId)
-        {
-            string Title = L("DriverTripReminder", GetCulture(user));
-            var message = new Message()
-            {
-                Notification = new Notification
-                {
-                    Title = Title,
-                },
-                Data = new Dictionary<string, string>()
-                {
-                    ["id"] = TripId,
-                    ["tripId"] = TripId
-                }
-            };
-            await SendMessage(user.UserId, message, "ViewComingLoadInfoActivity");
+            _localizationContext = localizationContext;
         }
 
-        /// <summary>
-        /// Reminder the driver before one day 
-        /// </summary>
-        /// <param name="user"></param>
-        /// <param name="TripId"></param>
-        /// <returns></returns>
-        public async Task TripChanged(UserIdentifier user, string TripId)
-        {
-            string Title = L("TripDataChanged");
-            var message = new Message()
-            {
-                Notification = new Notification
-                {
-                    Title = Title,
-                },
-                Data = new Dictionary<string, string>()
-                {
-                    ["id"] = TripId,
-                    ["changed"] = "true"
-                }
-            };
-            await SendMessage(user.UserId, message, "ViewtripchangedActivity");
-        }
 
-        #region Helper
-        private async Task SendMessage(long UserId, Message message,string ClickAction)
+        public async Task PushNotification(
+            string notificationName,
+            string msgBody,
+            NotificationData data = null,
+            params long[] userIds)
         {
-            foreach (var device in await GetUserDevices(UserId))
+            var tokens = await GetUsersDevices(userIds);
+            if (tokens.Length < 1)
             {
-                try
+                Logger.Error($"Failed when try to send notification {notificationName} with notification data {data}" +
+                             $"\nReason => Drivers With IDs:{userIds}, does not have any device token");
+                return;
+            }
+            List<Message> msgList = new List<Message>();
+            foreach (string token in tokens)
+            {
+                Message message = new Message
                 {
-                    message.Token = device.Token;
-                    message.Android = new AndroidConfig()
+                    Token = token,
+                    Notification = new Notification()
                     {
-                        Priority = Priority.High,
-                        Notification = new AndroidNotification
-                        {
-                            Title = message.Notification.Title,
-                            Body = message.Notification.Body,
-                            ClickAction = ClickAction
-
-                        },
-                        Data = message.Data
-                    };
-                    await messaging.SendAsync(message);
-                }
-                catch 
+                        Title = "TachyonDriver",
+                        Body = msgBody,
+                    },
+                    Data = data?.Properties.ToDictionary(x => x.Key, x => x.Value.ToString())
+                };
+                message.Android = new AndroidConfig()
                 {
-                    // todo add log here 
-                }
+                    Priority = Priority.High,
+                    Notification =
+                        new AndroidNotification() { Title = "TachyonDriver",
+                            Body = msgBody, },
+                    Data = data?.Properties.ToDictionary(x => x.Key, x => x.Value.ToString())
+                };
+                msgList.Add(message);
+            }
+
+            try
+            {
+               await Messaging.SendAllAsync(msgList);
+            }
+            catch (FirebaseMessagingException ex)
+            {
+                Logger.Error("Error When Send Notification", ex);
             }
         }
 
-        private Task<IQueryable<UserDeviceToken>> GetUserDevices(long UserId)
+        #region Helper
+
+        private async Task<string[]> GetUsersDevices(params long[] userIds)
         {
-            return Task.FromResult(_userDeviceToken.GetAll().Where(x => x.UserId == UserId && (!x.ExpireDate.HasValue || x.ExpireDate >= Clock.Now)));
+            var devices = await _userDeviceToken.GetAll()
+                .Where(x => userIds.Contains(x.UserId)
+                            && (!x.ExpireDate.HasValue
+                                || x.ExpireDate >= Clock.Now))
+                .Select(x => x.Token).ToArrayAsync();
+            return devices;
         }
-        private  CultureInfo GetCulture(UserIdentifier user)
-        {
-           return new CultureInfo(_settingManager.GetSettingValueForUser(LocalizationSettingNames.DefaultLanguage, user.TenantId, user.UserId, true)) ;
-        }
+
         #endregion
     }
 }

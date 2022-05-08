@@ -1,9 +1,10 @@
 ﻿using Abp.Application.Services;
-using System;
+using Abp.Application.Services.Dto;
 using System.Threading.Tasks;
+using TACHYON.AddressBook.Dtos;
 using TACHYON.Authorization.Users.Dto;
 using TACHYON.Authorization.Users.Profile.Dto;
-using TACHYON.Dto;
+using TACHYON.Vases.Dtos;
 
 namespace TACHYON.Authorization.Users.Profile
 {
@@ -19,7 +20,7 @@ namespace TACHYON.Authorization.Users.Profile
 
         Task<GetPasswordComplexitySettingOutput> GetPasswordComplexitySetting();
 
-        Task<GetProfilePictureOutput> GetProfilePicture();
+        Task<GetProfilePictureOutput> GetProfilePicture(int? tenantId);
 
         Task<GetProfilePictureOutput> GetProfilePictureByUser(long userId);
 
@@ -36,5 +37,21 @@ namespace TACHYON.Authorization.Users.Profile
         Task VerifySmsCode(VerifySmsCodeInputDto input);
 
         Task PrepareCollectedData();
+
+        Task<TenantProfileInformationForViewDto> GetTenantProfileInformationForView(int tenantId);
+
+        Task<UpdateTenantProfileInformationInputDto> GetTenantProfileInformationForEdit();
+
+        Task UpdateTenantProfileInformation(UpdateTenantProfileInformationInputDto input);
+
+        Task<int> GetShipmentCount(int tenantId);
+
+        Task<PagedResultDto<FacilityLocationListDto>> GetFacilitiesInformation(GetFacilitiesInformationInput input);
+
+        Task<InvoicingInformationDto> GetInvoicingInformation(int tenantId);
+
+        Task<FleetInformationDto> GetFleetInformation(GetFleetInformationInputDto input);
+
+        Task<PagedResultDto<AvailableVasDto>> GetAvailableVases(GetAvailableVasesInputDto input);
     }
 }

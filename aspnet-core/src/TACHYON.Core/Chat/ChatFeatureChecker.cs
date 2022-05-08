@@ -21,7 +21,9 @@ namespace TACHYON.Chat
             CheckChatFeaturesInternal(targetTenantId, sourceTenantId, ChatSide.Receiver);
         }
 
-        private void CheckChatFeaturesInternal(int? sourceTenantId, int? targetTenantId, ChatSide side)
+        private void CheckChatFeaturesInternal(int? sourceTenantId,
+            int? targetTenantId,
+            ChatSide side)
         {
             var localizationPosfix = side == ChatSide.Sender ? "ForSender" : "ForReceiver";
             if (sourceTenantId.HasValue)
@@ -40,7 +42,8 @@ namespace TACHYON.Chat
 
                     if (!_featureChecker.IsEnabled(sourceTenantId.Value, AppFeatures.TenantToTenantChatFeature))
                     {
-                        throw new UserFriendlyException(L("TenantToTenantChatFeatureIsNotEnabled" + localizationPosfix));
+                        throw new UserFriendlyException(L("TenantToTenantChatFeatureIsNotEnabled" +
+                                                          localizationPosfix));
                     }
                 }
                 else
@@ -57,7 +60,8 @@ namespace TACHYON.Chat
                 {
                     if (!_featureChecker.IsEnabled(targetTenantId.Value, AppFeatures.TenantToHostChatFeature))
                     {
-                        throw new UserFriendlyException(L("TenantToHostChatFeatureIsNotEnabled" + (side == ChatSide.Sender ? "ForReceiver" : "ForSender")));
+                        throw new UserFriendlyException(L("TenantToHostChatFeatureIsNotEnabled" +
+                                                          (side == ChatSide.Sender ? "ForReceiver" : "ForSender")));
                     }
                 }
             }

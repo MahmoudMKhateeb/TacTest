@@ -19,7 +19,7 @@ namespace TACHYON.Goods.GoodCategories
 
         Task CreateOrEdit(CreateOrEditGoodCategoryDto input);
 
-       // Task Delete(EntityDto input);
+        // Task Delete(EntityDto input);
 
         Task<FileDto> GetGoodCategoriesToExcel(GetAllGoodCategoriesForExcelInput input);
 

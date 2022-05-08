@@ -3,12 +3,17 @@ using Abp.Authorization;
 using Abp.Authorization.Users;
 using Abp.Configuration.Startup;
 using Abp.UI;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Stripe;
+using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
 using TACHYON.Authorization.Accounts;
 using TACHYON.Authorization.Accounts.Dto;
 using TACHYON.Authorization.Users;
+using TACHYON.Configuration;
 using TACHYON.Identity;
 using TACHYON.MultiTenancy;
 using TACHYON.Web.Models.Ui;
@@ -24,13 +29,16 @@ namespace TACHYON.Web.Controllers
         private readonly LogInManager _logInManager;
         private readonly SignInManager _signInManager;
         private readonly AbpLoginResultTypeHelper _abpLoginResultTypeHelper;
+        private readonly IWebHostEnvironment _environment;
+
         public UiController(
             IPerRequestSessionCache sessionCache,
             IMultiTenancyConfig multiTenancyConfig,
             IAccountAppService accountAppService,
             LogInManager logInManager,
             SignInManager signInManager,
-            AbpLoginResultTypeHelper abpLoginResultTypeHelper)
+            AbpLoginResultTypeHelper abpLoginResultTypeHelper,
+            IWebHostEnvironment environment)
         {
             _sessionCache = sessionCache;
             _multiTenancyConfig = multiTenancyConfig;
@@ -38,6 +46,7 @@ namespace TACHYON.Web.Controllers
             _logInManager = logInManager;
             _signInManager = signInManager;
             _abpLoginResultTypeHelper = abpLoginResultTypeHelper;
+            _environment = environment;
         }
 
         [DisableAuditing]
@@ -57,10 +66,26 @@ namespace TACHYON.Web.Controllers
             return View(model);
         }
 
-        [HttpGet]
-        public  IActionResult Login(string returnUrl = "")
+        public async Task<IActionResult> OpenApiHome()
         {
+            var configuration = _environment.GetAppConfiguration();
 
+            ViewBag.BaseUrl = configuration["App:ServerRootAddress"];
+
+            var docFilePath = Path.Combine(_environment.WebRootPath, "Common/Static/documentation.txt");
+            var text = await System.IO.File.ReadAllTextAsync(docFilePath, Encoding.UTF8);
+            if (text.Contains("TachyonHubLogoUrlPath"))
+            {
+                text = text.Replace("TachyonHubLogoUrlPath", $"{ViewBag.BaseUrl}Common/Static/logo.png");
+                await System.IO.File.WriteAllTextAsync(docFilePath, text, Encoding.UTF8);
+            }
+
+            return View("Redoc");
+        }
+
+        [HttpGet]
+        public IActionResult Login(string returnUrl = "")
+        {
             if (!string.IsNullOrEmpty(returnUrl))
             {
                 ViewBag.ReturnUrl = returnUrl;
@@ -88,7 +113,8 @@ namespace TACHYON.Web.Controllers
                 }
             }
 
-            var loginResult = await GetLoginResultAsync(model.UserNameOrEmailAddress, model.Password, model.TenancyName);
+            var loginResult =
+                await GetLoginResultAsync(model.UserNameOrEmailAddress, model.Password, model.TenancyName);
 
             if (loginResult.User.ShouldChangePasswordOnNextLogin)
             {
@@ -117,7 +143,9 @@ namespace TACHYON.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        private async Task<AbpLoginResult<Tenant, User>> GetLoginResultAsync(string usernameOrEmailAddress, string password, string tenancyName)
+        private async Task<AbpLoginResult<Tenant, User>> GetLoginResultAsync(string usernameOrEmailAddress,
+            string password,
+            string tenancyName)
         {
             var loginResult = await _logInManager.LoginAsync(usernameOrEmailAddress, password, tenancyName);
 
@@ -126,7 +154,8 @@ namespace TACHYON.Web.Controllers
                 case AbpLoginResultType.Success:
                     return loginResult;
                 default:
-                    throw _abpLoginResultTypeHelper.CreateExceptionForFailedLoginAttempt(loginResult.Result, usernameOrEmailAddress, tenancyName);
+                    throw _abpLoginResultTypeHelper.CreateExceptionForFailedLoginAttempt(loginResult.Result,
+                        usernameOrEmailAddress, tenancyName);
             }
         }
     }

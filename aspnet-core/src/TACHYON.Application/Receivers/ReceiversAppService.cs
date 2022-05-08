@@ -1,74 +1,74 @@
-﻿using TACHYON.AddressBook;
-
+﻿using Abp.Application.Features;
+using Abp.Application.Services.Dto;
+using Abp.Authorization;
+using Abp.Domain.Repositories;
+using Abp.Extensions;
+using Abp.Linq.Extensions;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
-using Abp.Linq.Extensions;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Abp.Domain.Repositories;
-using TACHYON.Receivers.Exporting;
-using TACHYON.Receivers.Dtos;
-using TACHYON.Dto;
-using Abp.Application.Services.Dto;
+using TACHYON.AddressBook;
 using TACHYON.Authorization;
-using Abp.Extensions;
-using Abp.Authorization;
-using Microsoft.EntityFrameworkCore;
-using Abp.Application.Features;
+using TACHYON.Dto;
 using TACHYON.Features;
+using TACHYON.Receivers.Dtos;
+using TACHYON.Receivers.Exporting;
 
 namespace TACHYON.Receivers
 {
     [AbpAuthorize(AppPermissions.Pages_Receivers)]
-    [RequiresFeature(AppFeatures.Shipper)]
+    [RequiresFeature(AppFeatures.Shipper, AppFeatures.TachyonDealer, AppFeatures.CarrierAsASaas)]
     public class ReceiversAppService : TACHYONAppServiceBase, IReceiversAppService
     {
         private readonly IRepository<Receiver> _receiverRepository;
         private readonly IReceiversExcelExporter _receiversExcelExporter;
         private readonly IRepository<Facility, long> _lookup_facilityRepository;
 
-        public ReceiversAppService(IRepository<Receiver> receiverRepository, IReceiversExcelExporter receiversExcelExporter, IRepository<Facility, long> lookup_facilityRepository)
+        public ReceiversAppService(IRepository<Receiver> receiverRepository,
+            IReceiversExcelExporter receiversExcelExporter,
+            IRepository<Facility, long> lookup_facilityRepository)
         {
             _receiverRepository = receiverRepository;
             _receiversExcelExporter = receiversExcelExporter;
             _lookup_facilityRepository = lookup_facilityRepository;
-
         }
 
         public async Task<PagedResultDto<GetReceiverForViewDto>> GetAll(GetAllReceiversInput input)
         {
-
             var filteredReceivers = _receiverRepository.GetAll()
-                        .Include(e => e.FacilityFk)
-                        .WhereIf(input.FromDate.HasValue && input.ToDate.HasValue, i => i.CreationTime >= input.FromDate && i.CreationTime <= input.ToDate)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.FullName.Contains(input.Filter) || e.Email.Contains(input.Filter) || e.PhoneNumber.Contains(input.Filter))
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.FullNameFilter), e => e.FullName == input.FullNameFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.EmailFilter), e => e.Email == input.EmailFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.PhoneNumberFilter), e => e.PhoneNumber == input.PhoneNumberFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.FacilityNameFilter), e => e.FacilityFk != null && e.FacilityFk.Name == input.FacilityNameFilter)
-                        .WhereIf(input.FacilityId != null, e => e.FacilityId == input.FacilityId);
+                .Include(e => e.FacilityFk)
+                .WhereIf(input.FromDate.HasValue && input.ToDate.HasValue,
+                    i => i.CreationTime >= input.FromDate && i.CreationTime <= input.ToDate)
+                .WhereIf(!string.IsNullOrWhiteSpace(input.Filter),
+                    e => false || e.FullName.Contains(input.Filter) || e.Email.Contains(input.Filter) ||
+                         e.PhoneNumber.Contains(input.Filter))
+                .WhereIf(!string.IsNullOrWhiteSpace(input.FullNameFilter), e => e.FullName == input.FullNameFilter)
+                .WhereIf(!string.IsNullOrWhiteSpace(input.EmailFilter), e => e.Email == input.EmailFilter)
+                .WhereIf(!string.IsNullOrWhiteSpace(input.PhoneNumberFilter),
+                    e => e.PhoneNumber == input.PhoneNumberFilter)
+                .WhereIf(!string.IsNullOrWhiteSpace(input.FacilityNameFilter),
+                    e => e.FacilityFk != null && e.FacilityFk.Name == input.FacilityNameFilter)
+                .WhereIf(input.FacilityId != null, e => e.FacilityId == input.FacilityId);
 
             var pagedAndFilteredReceivers = filteredReceivers
                 .OrderBy(input.Sorting ?? "id asc")
                 .PageBy(input);
 
             var receivers = from o in pagedAndFilteredReceivers
-                            join o1 in _lookup_facilityRepository.GetAll() on o.FacilityId equals o1.Id into j1
-                            from s1 in j1.DefaultIfEmpty()
-
-                            select new GetReceiverForViewDto()
-                            {
-                                Receiver = new ReceiverDto
-                                {
-                                    FullName = o.FullName,
-                                    Email = o.Email,
-                                    PhoneNumber = o.PhoneNumber,
-                                    Id = o.Id
-                                },
-                                FacilityName = s1 == null || s1.Name == null ? "" : s1.Name.ToString(),
-                                CreationTime=o.CreationTime
-                            };
+                join o1 in _lookup_facilityRepository.GetAll() on o.FacilityId equals o1.Id into j1
+                from s1 in j1.DefaultIfEmpty()
+                select new GetReceiverForViewDto()
+                {
+                    Receiver = new ReceiverDto
+                    {
+                        FullName = o.FullName, Email = o.Email, PhoneNumber = o.PhoneNumber, Id = o.Id
+                    },
+                    FacilityName = s1 == null || s1.Name == null ? "" : s1.Name.ToString(),
+                    CreationTime = o.CreationTime
+                };
 
             var totalCount = await filteredReceivers.CountAsync();
 
@@ -86,7 +86,8 @@ namespace TACHYON.Receivers
 
             if (output.Receiver.FacilityId != null)
             {
-                var _lookupFacility = await _lookup_facilityRepository.FirstOrDefaultAsync((int)output.Receiver.FacilityId);
+                var _lookupFacility =
+                    await _lookup_facilityRepository.FirstOrDefaultAsync((int)output.Receiver.FacilityId);
                 output.FacilityName = _lookupFacility?.Name?.ToString();
             }
 
@@ -98,11 +99,13 @@ namespace TACHYON.Receivers
         {
             var receiver = await _receiverRepository.FirstOrDefaultAsync(input.Id);
 
-            var output = new GetReceiverForEditOutput { Receiver = ObjectMapper.Map<CreateOrEditReceiverDto>(receiver) };
+            var output =
+                new GetReceiverForEditOutput { Receiver = ObjectMapper.Map<CreateOrEditReceiverDto>(receiver) };
 
             if (output.Receiver.FacilityId != null)
             {
-                var _lookupFacility = await _lookup_facilityRepository.FirstOrDefaultAsync((int)output.Receiver.FacilityId);
+                var _lookupFacility =
+                    await _lookup_facilityRepository.FirstOrDefaultAsync((int)output.Receiver.FacilityId);
                 output.FacilityName = _lookupFacility?.Name?.ToString();
             }
 
@@ -143,7 +146,8 @@ namespace TACHYON.Receivers
 
         public async Task<bool> CheckIfPhoneNumberValid(string phoneNumber, long? reciverId)
         {
-            var result = await _receiverRepository.FirstOrDefaultAsync(x => x.PhoneNumber == phoneNumber && x.Id != reciverId);
+            var result =
+                await _receiverRepository.FirstOrDefaultAsync(x => x.PhoneNumber == phoneNumber && x.Id != reciverId);
             return (result == null);
         }
 
@@ -155,30 +159,29 @@ namespace TACHYON.Receivers
 
         public async Task<FileDto> GetReceiversToExcel(GetAllReceiversForExcelInput input)
         {
-
             var filteredReceivers = _receiverRepository.GetAll()
-                        .Include(e => e.FacilityFk)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.FullName.Contains(input.Filter) || e.Email.Contains(input.Filter) || e.PhoneNumber.Contains(input.Filter))
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.FullNameFilter), e => e.FullName == input.FullNameFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.EmailFilter), e => e.Email == input.EmailFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.PhoneNumberFilter), e => e.PhoneNumber == input.PhoneNumberFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.FacilityNameFilter), e => e.FacilityFk != null && e.FacilityFk.Name == input.FacilityNameFilter);
+                .Include(e => e.FacilityFk)
+                .WhereIf(!string.IsNullOrWhiteSpace(input.Filter),
+                    e => false || e.FullName.Contains(input.Filter) || e.Email.Contains(input.Filter) ||
+                         e.PhoneNumber.Contains(input.Filter))
+                .WhereIf(!string.IsNullOrWhiteSpace(input.FullNameFilter), e => e.FullName == input.FullNameFilter)
+                .WhereIf(!string.IsNullOrWhiteSpace(input.EmailFilter), e => e.Email == input.EmailFilter)
+                .WhereIf(!string.IsNullOrWhiteSpace(input.PhoneNumberFilter),
+                    e => e.PhoneNumber == input.PhoneNumberFilter)
+                .WhereIf(!string.IsNullOrWhiteSpace(input.FacilityNameFilter),
+                    e => e.FacilityFk != null && e.FacilityFk.Name == input.FacilityNameFilter);
 
             var query = (from o in filteredReceivers
-                         join o1 in _lookup_facilityRepository.GetAll() on o.FacilityId equals o1.Id into j1
-                         from s1 in j1.DefaultIfEmpty()
-
-                         select new GetReceiverForViewDto()
-                         {
-                             Receiver = new ReceiverDto
-                             {
-                                 FullName = o.FullName,
-                                 Email = o.Email,
-                                 PhoneNumber = o.PhoneNumber,
-                                 Id = o.Id
-                             },
-                             FacilityName = s1 == null || s1.Name == null ? "" : s1.Name.ToString()
-                         });
+                join o1 in _lookup_facilityRepository.GetAll() on o.FacilityId equals o1.Id into j1
+                from s1 in j1.DefaultIfEmpty()
+                select new GetReceiverForViewDto()
+                {
+                    Receiver = new ReceiverDto
+                    {
+                        FullName = o.FullName, Email = o.Email, PhoneNumber = o.PhoneNumber, Id = o.Id
+                    },
+                    FacilityName = s1 == null || s1.Name == null ? "" : s1.Name.ToString()
+                });
 
             var receiverListDtos = await query.ToListAsync();
 
@@ -196,16 +199,17 @@ namespace TACHYON.Receivers
                 }).ToListAsync();
         }
 
-        public async Task<List<ReceiverFacilityLookupTableDto>> GetAllReceiversByFacilityForTableDropdown(long facilityId)
+        public async Task<List<ReceiverFacilityLookupTableDto>> GetAllReceiversByFacilityForTableDropdown(
+            long facilityId)
         {
+            if (await FeatureChecker.IsEnabledAsync(AppFeatures.TachyonDealer))
+            {
+                DisableTenancyFilters();
+            }
+
             return await _receiverRepository.GetAll()
                 .Where(x => x.FacilityId == facilityId)
-                .Select(r => new ReceiverFacilityLookupTableDto
-                {
-                    Id = r.Id,
-                    DisplayName = r.FullName
-                }).ToListAsync();
+                .Select(r => new ReceiverFacilityLookupTableDto { Id = r.Id, DisplayName = r.FullName }).ToListAsync();
         }
-
     }
 }

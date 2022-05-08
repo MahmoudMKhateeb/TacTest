@@ -1,5 +1,4 @@
-﻿
-using Abp.Application.Services.Dto;
+﻿using Abp.Application.Services.Dto;
 using System;
 
 namespace TACHYON.Cities.Dtos
@@ -14,10 +13,11 @@ namespace TACHYON.Cities.Dtos
 
         public double Longitude { get; set; }
 
+        public bool HasPolygon { get; set; }
+
         public int CountyId { get; set; }
+        public bool IsActive { get; set; }
 
         public string TranslatedDisplayName { get; set; }
-
-
     }
 }

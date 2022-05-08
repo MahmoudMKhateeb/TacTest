@@ -22,6 +22,7 @@ namespace TACHYON.AddressBook.Dtos
 
         public DateTime? FromDate { get; set; }
         public DateTime? ToDate { get; set; }
+
         public void Normalize()
         {
             if (string.IsNullOrWhiteSpace(Sorting)) return;

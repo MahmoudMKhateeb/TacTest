@@ -9,6 +9,5 @@ namespace TACHYON.TermsAndConditions.Dtos
         public CreateOrEditTermAndConditionTranslationDto TermAndConditionTranslation { get; set; }
 
         public string TermAndConditionTitle { get; set; }
-
     }
 }

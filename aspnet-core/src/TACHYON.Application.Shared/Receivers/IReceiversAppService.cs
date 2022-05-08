@@ -23,6 +23,5 @@ namespace TACHYON.Receivers
         Task<FileDto> GetReceiversToExcel(GetAllReceiversForExcelInput input);
 
         Task<List<ReceiverFacilityLookupTableDto>> GetAllFacilityForTableDropdown();
-
     }
 }

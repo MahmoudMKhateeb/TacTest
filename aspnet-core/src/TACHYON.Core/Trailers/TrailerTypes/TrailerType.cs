@@ -11,11 +11,8 @@ namespace TACHYON.Trailers.TrailerTypes
     [Audited]
     public class TrailerType : FullAuditedEntity
     {
-
         [Required]
         [StringLength(TrailerTypeConsts.MaxDisplayNameLength, MinimumLength = TrailerTypeConsts.MinDisplayNameLength)]
         public virtual string DisplayName { get; set; }
-
-
     }
 }

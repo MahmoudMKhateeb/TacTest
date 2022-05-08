@@ -60,7 +60,7 @@ namespace TACHYON.Auditing.Exporting
                         _ => _.ClientName,
                         _ => _.BrowserInfo,
                         _ => _.Exception.IsNullOrEmpty() ? L("Success") : _.Exception
-                        );
+                    );
 
                     for (var i = 1; i <= auditLogListDtos.Count; i++)
                     {

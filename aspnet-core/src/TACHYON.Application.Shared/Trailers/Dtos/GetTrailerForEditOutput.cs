@@ -15,7 +15,5 @@ namespace TACHYON.Trailers.Dtos
         public string PayloadMaxWeightDisplayName { get; set; }
 
         public string TruckPlateNumber { get; set; }
-
-
     }
 }

@@ -1,0 +1,54 @@
+<div class="card card-custom">
+  <!--begin::Header-->
+  <div class="card-header h-auto py-4">
+    <div class="card-title">
+      <h3 class="card-label">{{ l('InvoicingInformation') }}</h3>
+    </div>
+  </div>
+  <!--end::Header-->
+  <!--begin::Body-->
+  <div class="card-body py-4">
+    <div class="form-group row my-2">
+      <label class="col-4 col-form-label">{{ l('CreditLimit') }}:</label>
+      <div class="col-8">
+        <span class="form-control-plaintext font-weight-bolder">{{ InvoicingInfo.creditLimit }}</span>
+      </div>
+    </div>
+
+    <div class="form-group row my-2">
+      <label class="col-4 col-form-label">{{ l('CurrentBalance') }}:</label>
+      <div class="col-8">
+        <span class="form-control-plaintext">
+          <span class="font-weight-bolder">{{ InvoicingInfo.currentBalance }}</span></span
+        >
+      </div>
+    </div>
+    <div class="form-group row my-2" [busyIf]="loading">
+      <label class="col-4 col-form-label">{{ l('InvoicingFrequency') }}:</label>
+      <div class="col-8">
+        <span class="form-control-plaintext font-weight-bolder">{{ InvoicingInfo.invoicingFrequency ? InvoicingInfo.invoicingFrequency : '_' }}</span>
+      </div>
+    </div>
+    <div class="form-group row my-2">
+      <label class="col-4 col-form-label">{{ l('InvoicingDuePeriod') }}:</label>
+      <div class="col-8">
+        <span class="form-control-plaintext font-weight-bolder">{{ InvoicingInfo.invoicingDuePeriod }}</span>
+      </div>
+    </div>
+    <div class="form-group row my-2">
+      <label class="col-4 col-form-label">{{ l('CreditType') }}:</label>
+      <div class="col-8">
+        <span class="form-control-plaintext font-weight-bolder">
+          {{ InvoicingInfo.creditType }}
+        </span>
+      </div>
+    </div>
+  </div>
+  <!--end::Body-->
+  <!--begin::Footer-->
+  <div class="card-footer">
+    <!--      <a href="#" class="btn btn-primary font-weight-bold mr-2">Manage company</a>-->
+    <!--      <a href="#" class="btn btn-light-primary font-weight-bold">Learn more</a>-->
+  </div>
+  <!--end::Footer-->
+</div>

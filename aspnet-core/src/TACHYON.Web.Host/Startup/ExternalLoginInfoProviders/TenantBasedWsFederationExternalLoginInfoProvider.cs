@@ -31,7 +31,8 @@ namespace TACHYON.Web.Startup.ExternalLoginInfoProviders
 
         private ExternalLoginProviderInfo CreateExternalLoginInfo(WsFederationExternalLoginProviderSettings settings)
         {
-            var mappingSettings = _settingManager.GetSettingValue(AppSettings.ExternalLoginProvider.WsFederationMappedClaims);
+            var mappingSettings =
+                _settingManager.GetSettingValue(AppSettings.ExternalLoginProvider.WsFederationMappedClaims);
             var jsonClaimMappings = mappingSettings.FromJsonString<List<JsonClaimMap>>();
 
             return new ExternalLoginProviderInfo(
@@ -41,9 +42,9 @@ namespace TACHYON.Web.Startup.ExternalLoginInfoProviders
                 typeof(WsFederationAuthProviderApi),
                 new Dictionary<string, string>
                 {
-                    {"Tenant", settings.Tenant},
-                    {"MetaDataAddress", settings.MetaDataAddress},
-                    {"Authority", settings.Authority}
+                    { "Tenant", settings.Tenant },
+                    { "MetaDataAddress", settings.MetaDataAddress },
+                    { "Authority", settings.Authority }
                 },
                 jsonClaimMappings
             );
@@ -51,20 +52,25 @@ namespace TACHYON.Web.Startup.ExternalLoginInfoProviders
 
         protected override bool TenantHasSettings()
         {
-            var settingValue = _settingManager.GetSettingValueForTenant(AppSettings.ExternalLoginProvider.Tenant.WsFederation, _abpSession.TenantId.Value);
+            var settingValue =
+                _settingManager.GetSettingValueForTenant(AppSettings.ExternalLoginProvider.Tenant.WsFederation,
+                    _abpSession.TenantId.Value);
             return !settingValue.IsNullOrWhiteSpace();
         }
 
         protected override ExternalLoginProviderInfo GetTenantInformation()
         {
-            string settingValue = _settingManager.GetSettingValueForTenant(AppSettings.ExternalLoginProvider.Tenant.WsFederation, _abpSession.TenantId.Value);
+            string settingValue =
+                _settingManager.GetSettingValueForTenant(AppSettings.ExternalLoginProvider.Tenant.WsFederation,
+                    _abpSession.TenantId.Value);
             var settings = settingValue.FromJsonString<WsFederationExternalLoginProviderSettings>();
             return CreateExternalLoginInfo(settings);
         }
 
         protected override ExternalLoginProviderInfo GetHostInformation()
         {
-            string settingValue = _settingManager.GetSettingValueForApplication(AppSettings.ExternalLoginProvider.Host.WsFederation);
+            string settingValue =
+                _settingManager.GetSettingValueForApplication(AppSettings.ExternalLoginProvider.Host.WsFederation);
             var settings = settingValue.FromJsonString<WsFederationExternalLoginProviderSettings>();
             return CreateExternalLoginInfo(settings);
         }

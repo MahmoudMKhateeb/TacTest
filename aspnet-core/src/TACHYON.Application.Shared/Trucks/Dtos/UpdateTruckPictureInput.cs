@@ -7,8 +7,7 @@ namespace TACHYON.Trucks.Dtos
 {
     public class UpdateTruckPictureInput : ICustomValidate
     {
-        [MaxLength(400)]
-        public string FileToken { get; set; }
+        [MaxLength(400)] public string FileToken { get; set; }
 
         //public Guid TruckId { get; set; }
 

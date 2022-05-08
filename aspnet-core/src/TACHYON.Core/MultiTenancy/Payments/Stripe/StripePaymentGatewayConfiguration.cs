@@ -23,7 +23,8 @@ namespace TACHYON.MultiTenancy.Payments.Stripe
 
         public bool SupportsRecurringPayments => true;
 
-        public List<string> PaymentMethodTypes => _appConfiguration.GetSection("Payment:Stripe:PaymentMethodTypes").Get<List<string>>();
+        public List<string> PaymentMethodTypes =>
+            _appConfiguration.GetSection("Payment:Stripe:PaymentMethodTypes").Get<List<string>>();
 
         public StripePaymentGatewayConfiguration(IAppConfigurationAccessor configurationAccessor)
         {

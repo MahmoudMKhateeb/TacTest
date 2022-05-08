@@ -49,15 +49,13 @@ namespace TACHYON.Tests.Features
             await _editionAppService.CreateEdition(
                 new CreateEditionDto
                 {
-                    Edition = new EditionCreateDto
-                    {
-                        DisplayName = "Premium Edition"
-                    },
+                    Edition = new EditionCreateDto { DisplayName = "Premium Edition" },
                     FeatureValues = output.FeatureValues
                 });
 
 
-            var premiumEditon = (await _editionAppService.GetEditions()).Items.FirstOrDefault(e => e.DisplayName == "Premium Edition");
+            var premiumEditon =
+                (await _editionAppService.GetEditions()).Items.FirstOrDefault(e => e.DisplayName == "Premium Edition");
             premiumEditon.ShouldNotBeNull();
 
             await UsingDbContextAsync(async context =>
@@ -104,7 +102,8 @@ namespace TACHYON.Tests.Features
                         })
             );
 
-            exception.Message.ShouldContain(_localizationManager.GetString(TACHYONConsts.LocalizationSourceName, "MaximumUserCount_Error_Message"));
+            exception.Message.ShouldContain(_localizationManager.GetString(TACHYONConsts.LocalizationSourceName,
+                "MaximumUserCount_Error_Message"));
         }
     }
 }

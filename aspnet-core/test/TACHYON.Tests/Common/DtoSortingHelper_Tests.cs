@@ -34,6 +34,7 @@ namespace TACHYON.Tests.Common
                 {
                     s = "username desc";
                 }
+
                 return s;
             }).ShouldBe("username desc");
         }

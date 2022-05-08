@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TACHYON.Shipping.Trips.Dto
 {
-    public  class ShippingRequestTripDto : EntityDto
+    public class ShippingRequestTripDto : EntityDto
     {
         public DateTime StartTripDate { get; set; }
         public DateTime? EndTripDate { get; set; }
@@ -25,6 +25,5 @@ namespace TACHYON.Shipping.Trips.Dto
         public virtual long? DestinationFacilityId { get; set; }
         public string TotalValue { get; set; }
         public string Note { get; set; }
-
     }
 }

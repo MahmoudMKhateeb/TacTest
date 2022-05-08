@@ -1,36 +1,21 @@
-import {
-  Component,
-  ViewChild,
-  Injector,
-  Output,
-  EventEmitter,
-  Input,
-  OnInit,
-  ChangeDetectorRef,
-  OnChanges,
-  SimpleChanges,
-  OnDestroy,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Injector, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import {
-  FacilityForDropdownDto,
-  RoutStepsServiceProxy,
-  ShippingRequestsTripServiceProxy,
-  CreateOrEditShippingRequestTripDto,
-  CreateOrEditRoutPointDto,
-  ShippingRequestDto,
-  CreateOrEditShippingRequestTripVasDto,
-  GetShippingRequestVasForViewDto,
-  WaybillsServiceProxy,
   CreateOrEditDocumentFileDto,
-  UpdateDocumentFileInput,
-  DocumentFilesServiceProxy,
-  DocumentTypeDto,
-  ShippingRequestRouteType,
+  CreateOrEditRoutPointDto,
+  CreateOrEditShippingRequestTripDto,
+  CreateOrEditShippingRequestTripVasDto,
+  FacilityForDropdownDto,
+  GetShippingRequestVasForViewDto,
+  PickingType,
   ReceiverFacilityLookupTableDto,
   ReceiversServiceProxy,
-  ShippingRequestTripVasDto,
-  DocumentTypesServiceProxy,
+  RoutStepsServiceProxy,
+  ShippingRequestDto,
+  ShippingRequestRouteType,
+  ShippingRequestsTripServiceProxy,
+  UpdateDocumentFileInput,
+  WaybillsServiceProxy,
   FileDto,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
@@ -42,14 +27,19 @@ import { FileDownloadService } from '@shared/utils/file-download.service';
 import { FileItem, FileUploader, FileUploaderOptions } from '@node_modules/ng2-file-upload';
 import { AppConsts } from '@shared/AppConsts';
 import { IAjaxResponse, TokenService } from '@node_modules/abp-ng2-module';
-import { DropDownMenu, TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
+import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
 import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
 import { FormControl, NgForm, Validators } from '@angular/forms';
+import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { DateType } from '@app/shared/common/hijri-gregorian-datepicker/consts';
+import * as moment from 'moment';
+import { DateFormatterService } from '@app/shared/common/hijri-gregorian-datepicker/date-formatter.service';
 
 @Component({
   selector: 'AddNewTripModal',
   styleUrls: ['./createOrEditTrip.component.css'],
   templateUrl: './createOrEditTrip.component.html',
+  providers: [DateFormatterService],
 })
 export class CreateOrEditTripComponent extends AppComponentBase implements OnInit, OnDestroy {
   @ViewChild('shippingRequestTripsForm') shippingRequestTripsForm: NgForm;
@@ -61,11 +51,25 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
   @Input() shippingRequest: ShippingRequestDto;
   @Input() VasListFromFather: GetShippingRequestVasForViewDto[];
-
+  startTripdate: any;
+  endTripdate: any;
+  minTripDate: any;
   tripStartDate = new FormControl('', Validators.required);
   endTripDate = new FormControl('');
+  selectedDateType: DateType = DateType.Hijri; // or DateType.Gregorian
+  @Input() parentForm: NgForm;
+  @ViewChild('userForm', { static: false }) userForm: NgForm;
+  minGreg: NgbDateStruct = { day: 1, month: 1, year: 1900 };
+  minHijri: NgbDateStruct = { day: 1, month: 1, year: 1342 };
+  todayGregorian = this.dateFormatterService.GetTodayGregorian();
+  todayHijri = this.dateFormatterService.ToHijri(this.todayGregorian);
+  minHijriTripdate: NgbDateStruct;
+  minGrogTripdate: NgbDateStruct;
+  minTripDateAsGrorg: NgbDateStruct;
+  minTripDateAsHijri: NgbDateStruct;
+  maxTripDateAsGrorg: NgbDateStruct;
+  maxTripDateAsHijri: NgbDateStruct;
 
-  allFacilities: FacilityForDropdownDto[];
   trip = new CreateOrEditShippingRequestTripDto();
   facilityLoading = false;
   saving = false;
@@ -81,6 +85,10 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   public DocsUploader: FileUploader;
   private _DocsUploaderOptions: FileUploaderOptions = {};
   fileToken: string;
+  fileType: string;
+  fileName: string;
+  hasNewUpload: boolean;
+
   /**
    * DocFileUploader onProgressItem progress
    */
@@ -134,7 +142,6 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     if (this.trip.originFacilityId == this.trip.destinationFacilityId) {
       this.shippingRequestTripsForm.controls['sourceFacility'].setErrors({ invalid: true });
       this.shippingRequestTripsForm.controls['destFacility'].setErrors({ invalid: true });
-      this.notify.error(this.l('OriginFacilityAndDestinationFacilityCantBeTheSame'));
     } else {
       this.shippingRequestTripsForm.controls['sourceFacility'].setErrors(null);
       this.shippingRequestTripsForm.controls['destFacility'].setErrors(null);
@@ -152,23 +159,34 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
    * takes the Vas List From the Shipping Request And Cleans them to use them in Trips Modal
    */
   vasesHandler() {
-    this.VasListFromFather.forEach((x) => {
-      //Get the Vase List From Father And Attach Them to new Array
-      const vas: CreateOrEditShippingRequestTripVasDto = new CreateOrEditShippingRequestTripVasDto();
-      vas.id = undefined; // vas id in shipping Request trip (Required for edit trip)
-      vas.shippingRequestTripId = this.activeTripId || undefined; //the trip id
-      vas.shippingRequestVasId = x.shippingRequestVas.id; //vas id in shipping request
-      vas.name = x.vasName; //vas Name
-      this.cleanVasesList.push(vas);
-    });
+    if (this.VasListFromFather) {
+      this.VasListFromFather.forEach((x) => {
+        //Get the Vase List From Father And Attach Them to new Array
+        const vas: CreateOrEditShippingRequestTripVasDto = new CreateOrEditShippingRequestTripVasDto();
+        vas.id = undefined; // vas id in shipping Request trip (Required for edit trip)
+        vas.shippingRequestTripId = this.activeTripId || undefined; //the trip id
+        vas.shippingRequestVasId = x.shippingRequestVas.id; //vas id in shipping request
+        vas.name = x.vasName; //vas Name
+        this.cleanVasesList.push(vas);
+      });
+    }
   }
 
   show(record?: CreateOrEditShippingRequestTripDto): void {
+    if (this.shippingRequest) {
+      this.setStartTripDate(this.shippingRequest.startTripDate);
+      const EndDateGregorian = moment(this.shippingRequest.endTripDate).locale('en').format('D/M/YYYY');
+      this.maxTripDateAsGrorg = this.dateFormatterService.ToGregorianDateStruct(EndDateGregorian, 'D/M/YYYY');
+      this.maxTripDateAsHijri = this.dateFormatterService.ToHijriDateStruct(EndDateGregorian, 'D/M/YYYY');
+    }
     if (record) {
       this.activeTripId = record.id;
       this._TripService.updateActiveTripId(this.activeTripId);
       this._shippingRequestTripsService.getShippingRequestTripForEdit(record.id).subscribe((res) => {
         this.trip = res;
+        //this.startTripdate = this.dateFormatterService.MomentToNgbDateStruct(res.startTripDate);
+        if (res.endTripDate != null && res.endTripDate != undefined)
+          this.endTripdate = this.dateFormatterService.MomentToNgbDateStruct(res.endTripDate);
         this._PointsService.updateWayPoints(this.trip.routPoints);
         this.pickupPointSenderId = res.routPoints[0].receiverId;
         this.loadReceivers(this.trip.originFacilityId);
@@ -186,7 +204,13 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       this._TripService.updateActiveTripId(null);
       this._PointsService.updateSinglePoint(new CreateOrEditRoutPointDto());
       this._PointsService.updateWayPoints([]);
-      this._TripService.currentShippingRequest.subscribe((res) => (this.trip.startTripDate = res.shippingRequest.startTripDate));
+      this.loading = true;
+      this._TripService.currentShippingRequest.subscribe((res) => {
+        if (this.loading == true) {
+          this.setStartTripDate(res.shippingRequest.startTripDate);
+        }
+        this.loading = false;
+      });
       this.loading = false;
     }
 
@@ -196,13 +220,25 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     this.cdref.detectChanges();
   }
 
+  setStartTripDate(startTripDate) {
+    const todayGregorian = moment(startTripDate).locale('en').format('D/M/YYYY');
+    this.minTripDateAsGrorg = this.dateFormatterService.ToGregorianDateStruct(todayGregorian, 'D/M/YYYY');
+    this.minTripDateAsHijri = this.dateFormatterService.ToHijriDateStruct(todayGregorian, 'D/M/YYYY');
+    this.startTripdate = this.minTripDateAsGrorg;
+    this.minHijriTripdate = this.minTripDateAsHijri;
+    this.minGrogTripdate = this.minTripDateAsGrorg;
+  }
+
   close(): void {
     this.loading = true;
     this.active = false;
     this.modal.hide();
     this.trip = new CreateOrEditShippingRequestTripDto();
     this.fileToken = undefined;
+    this.hasNewUpload = undefined;
     this.pickupPointSenderId = undefined;
+    this._TripService.updateSourceFacility(null);
+    this._TripService.updateDestFacility(null);
   }
 
   createOrEditTrip() {
@@ -214,6 +250,11 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       if (!this.trip.hasAttachment) {
         this.trip.createOrEditDocumentFileDto = null;
       }
+      this.GetSelectedstartDateChange(this.startTripdate, 'start');
+      if (this.endTripdate !== undefined) {
+        this.GetSelectedstartDateChange(this.endTripdate, 'end');
+      }
+
       this._shippingRequestTripsService
         .createOrEdit(this.trip)
         .pipe(
@@ -225,7 +266,36 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
           this.close();
           this.modalSave.emit(null);
           this.notify.info(this.l('SuccessfullySaved'));
+          abp.event.trigger('ShippingRequestTripCreatedEvent');
         });
+    }
+  }
+
+  GetSelectedstartDateChange($event: NgbDateStruct, type) {
+    if (type == 'start') {
+      this.startTripdate = $event;
+      if ($event != null && $event.year < 1900) {
+        this.minHijriTripdate = $event;
+      } else {
+        this.minGrogTripdate = $event;
+      }
+    }
+    if (type == 'end') this.endTripdate = $event;
+
+    var startDate = this.dateFormatterService.NgbDateStructToMoment(this.startTripdate);
+    var endDate = this.dateFormatterService.NgbDateStructToMoment(this.endTripdate);
+
+    if (this.startTripdate != null && this.startTripdate != undefined)
+      this.trip.startTripDate = this.GetGregorianAndhijriFromDatepickerChange(this.startTripdate).GregorianDate;
+
+    this.trip.startTripDate == null ? (this.trip.startTripDate = moment(new Date())) : null;
+
+    if (this.endTripdate != null && this.endTripdate != undefined)
+      this.trip.endTripDate = this.GetGregorianAndhijriFromDatepickerChange(this.endTripdate).GregorianDate;
+
+    //checks if the trips end date is less than trips start date
+    if (startDate != undefined && endDate != undefined) {
+      if (endDate < startDate) this.trip.endTripDate = this.endTripdate = undefined;
     }
   }
 
@@ -288,7 +358,10 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       if (resp.success) {
         //attach each fileToken to his CreateOrEditDocumentFileDto
         this.trip.createOrEditDocumentFileDto.updateDocumentFileInput = new UpdateDocumentFileInput({ fileToken: resp.result.fileToken });
+        this.hasNewUpload = true;
         this.fileToken = resp.result.fileToken;
+        this.fileType = resp.result.fileType;
+        this.fileName = resp.result.fileName;
       } else {
         this.message.error(resp.error.message);
       }
@@ -329,6 +402,21 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     this.DocsUploader.setOptions(this._DocsUploaderOptions);
   }
 
+  downloadAttatchment(): void {
+    if (this.trip.id && !this.hasNewUpload) {
+      this._fileDownloadService.downloadFileByBinary(
+        this.trip.createOrEditDocumentFileDto.binaryObjectId,
+        this.trip.createOrEditDocumentFileDto.name,
+        this.trip.createOrEditDocumentFileDto.extn
+      );
+    } else {
+      var fileDto = new FileDto();
+      fileDto.fileName = this.fileName;
+      fileDto.fileToken = this.fileToken;
+      fileDto.fileType = this.fileType;
+      this._fileDownloadService.downloadTempFile(fileDto);
+    }
+  }
   DocFileChangeEvent(event: any, item: CreateOrEditDocumentFileDto): void {
     if (event.target.files[0].size > 5242880) {
       //5MB
@@ -398,7 +486,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
    */
   private validatePointsBeforeAddTrip() {
     //if trip Drop Points is less than number of drops Prevent Adding Trip
-    if (this.trip.routPoints.length !== this.shippingRequest.numberOfDrops + 1) {
+    if (this.trip.routPoints.find((x) => x.pickingType == PickingType.Dropoff && !x.goodsDetailListDto)) {
       console.log('first Condition Fired');
       Swal.fire(this.l('IncompleteTripPoint'), this.l('PleaseAddAllTheDropPoints'), 'warning');
       return false;

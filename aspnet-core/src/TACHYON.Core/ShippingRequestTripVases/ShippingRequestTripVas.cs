@@ -14,14 +14,13 @@ namespace TACHYON.ShippingRequestTripVases
     {
         public long ShippingRequestVasId { get; set; }
 
-        [ForeignKey("ShippingRequestVasId")]
-        public ShippingRequestVas ShippingRequestVasFk { get; set; }
+        [ForeignKey("ShippingRequestVasId")] public ShippingRequestVas ShippingRequestVasFk { get; set; }
         public int ShippingRequestTripId { get; set; }
 
-        [ForeignKey("ShippingRequestTripId")]
-        public ShippingRequestTrip ShippingRequestTripFk { get; set; }
+        [ForeignKey("ShippingRequestTripId")] public ShippingRequestTrip ShippingRequestTripFk { get; set; }
 
         #region Prices
+
         public decimal? TotalAmount { get; set; }
         public decimal? SubTotalAmount { get; set; }
         public decimal? VatAmount { get; set; }
@@ -32,6 +31,7 @@ namespace TACHYON.ShippingRequestTripVases
         public decimal? CommissionAmount { get; set; }
         public decimal? CommissionPercentageOrAddValue { get; set; }
         public int Quantity { get; set; } = 1;
+
         #endregion
     }
 }

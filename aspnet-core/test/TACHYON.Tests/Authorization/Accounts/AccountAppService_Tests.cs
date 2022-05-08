@@ -24,10 +24,7 @@ namespace TACHYON.Tests.Authorization.Accounts
         {
             //Act
             var output = await _accountAppService.IsTenantAvailable(
-                new IsTenantAvailableInput
-                {
-                    TenancyName = AbpTenantBase.DefaultTenantName
-                }
+                new IsTenantAvailableInput { TenancyName = AbpTenantBase.DefaultTenantName }
             );
 
             //Assert
@@ -40,10 +37,7 @@ namespace TACHYON.Tests.Authorization.Accounts
         {
             //Act
             var output = await _accountAppService.IsTenantAvailable(
-                new IsTenantAvailableInput
-                {
-                    TenancyName = "UnknownTenant"
-                }
+                new IsTenantAvailableInput { TenancyName = "UnknownTenant" }
             );
 
             //Assert

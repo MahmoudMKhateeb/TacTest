@@ -9,11 +9,10 @@ namespace TACHYON.Shipping.Drivers.Dto
     }
 
 
-    public enum ShippingRequestTripDriverLoadStatusDto :byte
+    public enum ShippingRequestTripDriverLoadStatusDto
     {
         Current = 0,
         Comming = 1,
         Past = 2
     }
-
 }

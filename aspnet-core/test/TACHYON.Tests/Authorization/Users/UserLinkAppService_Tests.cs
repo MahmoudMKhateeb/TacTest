@@ -26,11 +26,7 @@ namespace TACHYON.Tests.Authorization.Users
             AbpSession.UserId = user.Id;
 
             var linkedUsers = await _userLinkAppService.GetLinkedUsers(
-                new GetLinkedUsersInput
-                {
-                    MaxResultCount = 10,
-                    SkipCount = 0
-                }
+                new GetLinkedUsersInput { MaxResultCount = 10, SkipCount = 0 }
             );
 
             linkedUsers.Items.Count.ShouldBe(0);
@@ -62,18 +58,12 @@ namespace TACHYON.Tests.Authorization.Users
             await _userLinkAppService.LinkToUser(
                 new LinkToUserInput
                 {
-                    Password = "123qwe",
-                    TenancyName = "Default",
-                    UsernameOrEmailAddress = "adams_d@gmail.com"
+                    Password = "123qwe", TenancyName = "Default", UsernameOrEmailAddress = "adams_d@gmail.com"
                 }
             );
 
             var linkedUsers = await _userLinkAppService.GetLinkedUsers(
-                new GetLinkedUsersInput
-                {
-                    MaxResultCount = 10,
-                    SkipCount = 0
-                }
+                new GetLinkedUsersInput { MaxResultCount = 10, SkipCount = 0 }
             );
 
             linkedUsers.Items.Count.ShouldBe(1);

@@ -37,6 +37,7 @@ export class GoodDetailsComponent extends AppComponentBase implements OnInit, On
   tripServiceSubs$: Subscription;
   pointServiceSubs$: Subscription;
   usedInSubs$: Subscription;
+  canAddMoreGoods = true;
 
   ngOnDestroy() {
     this.tripServiceSubs$?.unsubscribe();

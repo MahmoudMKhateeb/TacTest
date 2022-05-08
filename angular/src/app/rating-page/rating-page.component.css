@@ -1,0 +1,22 @@
+.vl {
+  border-left: 1px solid rgba(0, 0, 0, 0.1);
+  height: 200px;
+  position: absolute;
+  left: 285px;
+  margin-left: 5px;
+  top: 120px;
+}
+
+.main-login-form {
+  width: 420px;
+}
+textarea {
+  margin-left: auto;
+  margin-right: auto;
+}
+.p-rating .p-rating-icon.pi-star {
+  color: #ffca08 !important;
+}
+.p-rating .p-rating-icon {
+  font-size: 2rem !important;
+}

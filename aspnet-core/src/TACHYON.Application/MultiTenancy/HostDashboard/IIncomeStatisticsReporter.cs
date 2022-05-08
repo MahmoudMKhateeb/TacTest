@@ -7,7 +7,8 @@ namespace TACHYON.MultiTenancy.HostDashboard
 {
     public interface IIncomeStatisticsService
     {
-        Task<List<IncomeStastistic>> GetIncomeStatisticsData(DateTime startDate, DateTime endDate,
+        Task<List<IncomeStastistic>> GetIncomeStatisticsData(DateTime startDate,
+            DateTime endDate,
             ChartDateInterval dateInterval);
     }
 }

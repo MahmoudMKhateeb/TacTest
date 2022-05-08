@@ -36,7 +36,9 @@ namespace TACHYON.Web.Authentication.JwtBearer
             return _tokenHandler.CanReadToken(securityToken);
         }
 
-        public ClaimsPrincipal ValidateToken(string securityToken, TokenValidationParameters validationParameters, out SecurityToken validatedToken)
+        public ClaimsPrincipal ValidateToken(string securityToken,
+            TokenValidationParameters validationParameters,
+            out SecurityToken validatedToken)
         {
             var cacheManager = IocManager.Instance.Resolve<ICacheManager>();
             var principal = _tokenHandler.ValidateToken(securityToken, validationParameters, out validatedToken);
@@ -84,7 +86,8 @@ namespace TACHYON.Web.Authentication.JwtBearer
                         {
                             var userManagerObject = userManager.Object;
                             var user = userManagerObject.GetUser(userIdentifier);
-                            isValid = AsyncHelper.RunSync(() => userManagerObject.IsTokenValidityKeyValidAsync(user, tokenValidityKeyClaim.Value));
+                            isValid = AsyncHelper.RunSync(() =>
+                                userManagerObject.IsTokenValidityKeyValidAsync(user, tokenValidityKeyClaim.Value));
 
                             uow.Complete();
                         }
@@ -140,13 +143,15 @@ namespace TACHYON.Web.Authentication.JwtBearer
                 return;
             }
 
-            var impersonatorTenantId = impersonatorTenant == null ? null : impersonatorTenant.Value.IsNullOrEmpty() ? (int?)null : Convert.ToInt32(impersonatorTenant.Value);
+            var impersonatorTenantId = impersonatorTenant == null ? null :
+                impersonatorTenant.Value.IsNullOrEmpty() ? (int?)null : Convert.ToInt32(impersonatorTenant.Value);
             var sourceUserId = Convert.ToInt64(user.Value);
             var impersonatorUserId = Convert.ToInt64(impersonatorUser.Value);
 
             using (var _permissionChecker = IocManager.Instance.ResolveAsDisposable<PermissionChecker>())
             {
-                if (_permissionChecker.Object.IsGranted(new UserIdentifier(impersonatorTenantId, impersonatorUserId), AppPermissions.Pages_Administration_Users_Impersonation))
+                if (_permissionChecker.Object.IsGranted(new UserIdentifier(impersonatorTenantId, impersonatorUserId),
+                        AppPermissions.Pages_Administration_Users_Impersonation))
                 {
                     return;
                 }
@@ -154,7 +159,8 @@ namespace TACHYON.Web.Authentication.JwtBearer
 
             using (var userDelegationManager = IocManager.Instance.ResolveAsDisposable<IUserDelegationManager>())
             {
-                var hasActiveDelegation = userDelegationManager.Object.HasActiveDelegation(sourceUserId, impersonatorUserId);
+                var hasActiveDelegation =
+                    userDelegationManager.Object.HasActiveDelegation(sourceUserId, impersonatorUserId);
 
                 if (!hasActiveDelegation)
                 {

@@ -15,7 +15,5 @@ namespace TACHYON.Trucks.Dtos
         //public string UserName { get; set; }
 
         //public string UserName2 { get; set; }
-
-
     }
 }

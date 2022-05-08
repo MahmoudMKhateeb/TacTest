@@ -9,7 +9,5 @@ namespace TACHYON.Routs.Dtos
         public CreateOrEditRouteDto Route { get; set; }
 
         public string RoutTypeDisplayName { get; set; }
-
-
     }
 }

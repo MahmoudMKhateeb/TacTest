@@ -10,8 +10,5 @@ namespace TACHYON.Countries.Dtos
         public string DisplayNameFilter { get; set; }
 
         public string CodeFilter { get; set; }
-
-
-
     }
 }

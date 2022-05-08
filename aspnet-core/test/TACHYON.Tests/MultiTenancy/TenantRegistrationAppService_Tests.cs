@@ -16,7 +16,7 @@ namespace TACHYON.Tests.MultiTenancy
     public class TenantRegistrationAppService_Tests : AppTestBase
     {
         private readonly ITenantRegistrationAppService _tenantRegistrationAppService;
-        
+
         public TenantRegistrationAppService_Tests()
         {
             _tenantRegistrationAppService = Resolve<ITenantRegistrationAppService>();
@@ -26,10 +26,7 @@ namespace TACHYON.Tests.MultiTenancy
         public async Task SubscriptionEndDateUtc_ShouldBe_Null_After_Free_Registration()
         {
             //Arrange
-            var edition = new SubscribableEdition
-            {
-                DisplayName = "Free Edition"
-            };
+            var edition = new SubscribableEdition { DisplayName = "Free Edition" };
 
             await UsingDbContextAsync(async context =>
             {
@@ -61,10 +58,7 @@ namespace TACHYON.Tests.MultiTenancy
         public async Task Cannot_Register_To_Free_Edition_As_Trial()
         {
             //Arrange
-            var edition = new SubscribableEdition
-            {
-                DisplayName = "Free Edition"
-            };
+            var edition = new SubscribableEdition { DisplayName = "Free Edition" };
 
             await UsingDbContextAsync(async context =>
             {
@@ -72,15 +66,16 @@ namespace TACHYON.Tests.MultiTenancy
                 await context.SaveChangesAsync();
             });
 
-            var exception = await Assert.ThrowsAsync<Exception>(async () => await _tenantRegistrationAppService.RegisterTenant(new RegisterTenantInput
-            {
-                EditionId = edition.Id,
-                AdminEmailAddress = "admin@volosoft.com",
-                AdminPassword = "123qwe",
-                Name = "Volosoft",
-                SubscriptionStartType = SubscriptionStartType.Trial,
-                TenancyName = "Volosoft"
-            }));
+            var exception = await Assert.ThrowsAsync<Exception>(async () =>
+                await _tenantRegistrationAppService.RegisterTenant(new RegisterTenantInput
+                {
+                    EditionId = edition.Id,
+                    AdminEmailAddress = "admin@volosoft.com",
+                    AdminPassword = "123qwe",
+                    Name = "Volosoft",
+                    SubscriptionStartType = SubscriptionStartType.Trial,
+                    TenancyName = "Volosoft"
+                }));
 
             exception.Message.ShouldBe("Trial is not available for this edition !");
         }
@@ -93,10 +88,7 @@ namespace TACHYON.Tests.MultiTenancy
             var trialDayCount = 10;
             var edition = new SubscribableEdition
             {
-                DisplayName = "Standard Edition",
-                TrialDayCount = trialDayCount,
-                MonthlyPrice = 9,
-                AnnualPrice = 99
+                DisplayName = "Standard Edition", TrialDayCount = trialDayCount, MonthlyPrice = 9, AnnualPrice = 99
             };
 
             await UsingDbContextAsync(async context =>

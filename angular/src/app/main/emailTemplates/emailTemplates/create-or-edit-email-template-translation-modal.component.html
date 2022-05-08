@@ -1,0 +1,58 @@
+<div
+  bsModal
+  #createOrEditModal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="createOrEditModal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content" style="width: fit-content">
+      <form *ngIf="active" #emailTemplateForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            <span *ngIf="emailTemplate.id">{{ l('EditEmailTemplate') }}</span>
+            <span *ngIf="!emailTemplate.id">{{ l('CreateNewEmailTemplate') }}</span>
+          </h4>
+
+          <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="EmailTemplate_Language">{{ l('Language') }} *</label>
+            <input
+              type="text"
+              #EmailTemplate_Language="ngModel"
+              id="EmailTemplate_Language"
+              class="form-control"
+              [(ngModel)]="emailTemplate.language"
+              name="Language"
+              required
+            />
+            <validation-messages [formCtrl]="EmailTemplate_Language"></validation-messages>
+          </div>
+
+          <div class="container">
+            <email-editor minHeight="700px" (loaded)="editorLoaded($event)" (ready)="editorReady($event)"></email-editor>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
+          <button
+            type="submit"
+            class="btn btn-primary blue"
+            [disabled]="!emailTemplateForm.form.valid"
+            [buttonBusy]="saving"
+            [busyText]="l('SavingWithThreeDot')"
+          >
+            <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

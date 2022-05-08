@@ -9,6 +9,5 @@ namespace TACHYON.Trucks.TrucksTypes.TrucksTypesTranslations.Dtos
         public CreateOrEditTrucksTypesTranslationDto TrucksTypesTranslation { get; set; }
 
         public string TrucksTypeDisplayName { get; set; }
-
     }
 }

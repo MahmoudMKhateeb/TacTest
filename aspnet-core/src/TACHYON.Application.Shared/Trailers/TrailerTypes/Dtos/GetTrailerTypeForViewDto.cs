@@ -3,7 +3,5 @@
     public class GetTrailerTypeForViewDto
     {
         public TrailerTypeDto TrailerType { get; set; }
-
-
     }
 }

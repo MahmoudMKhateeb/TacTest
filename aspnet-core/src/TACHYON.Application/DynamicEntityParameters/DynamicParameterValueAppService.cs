@@ -14,7 +14,8 @@ namespace TACHYON.DynamicEntityParameters
         private readonly IDynamicParameterValueManager _dynamicParameterValueManager;
         private readonly IDynamicParameterValueStore _dynamicParameterValueStore;
 
-        public DynamicParameterValueAppService(IDynamicParameterValueManager dynamicParameterValueManager, IDynamicParameterValueStore dynamicParameterValueStore)
+        public DynamicParameterValueAppService(IDynamicParameterValueManager dynamicParameterValueManager,
+            IDynamicParameterValueStore dynamicParameterValueStore)
         {
             _dynamicParameterValueManager = dynamicParameterValueManager;
             _dynamicParameterValueStore = dynamicParameterValueStore;

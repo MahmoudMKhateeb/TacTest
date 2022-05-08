@@ -4,8 +4,10 @@ namespace TACHYON.Vases.Dtos
 {
     public class VasPriceVasLookupTableDto
     {
-		public int Id { get; set; }
+        public int Id { get; set; }
 
-		public string DisplayName { get; set; }
+        public string DisplayName { get; set; }
+
+        public bool IsOther { get; set; }
     }
 }

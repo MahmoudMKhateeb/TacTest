@@ -21,7 +21,7 @@ namespace TACHYON.Web.Host.Controllers
             IIdentityServerInteractionService interaction,
             IClientStore clientStore,
             IResourceStore resourceStore
-            )
+        )
         {
             _interaction = interaction;
             _clientStore = clientStore;
@@ -80,8 +80,7 @@ namespace TACHYON.Web.Host.Controllers
 
                     grantedConsent = new ConsentResponse
                     {
-                        RememberConsent = model.RememberConsent,
-                        ScopesConsented = scopes.ToArray()
+                        RememberConsent = model.RememberConsent, ScopesConsented = scopes.ToArray()
                     };
                 }
                 else
@@ -154,12 +153,17 @@ namespace TACHYON.Web.Host.Controllers
                 AllowRememberConsent = client.AllowRememberConsent
             };
 
-            vm.IdentityScopes = resources.IdentityResources.Select(x => CreateScopeViewModel(x, vm.ScopesConsented.Contains(x.Name) || model == null)).ToArray();
-            vm.ResourceScopes = resources.ApiResources.SelectMany(x => x.Scopes).Select(x => CreateScopeViewModel(x, vm.ScopesConsented.Contains(x.Name) || model == null)).ToArray();
+            vm.IdentityScopes = resources.IdentityResources
+                .Select(x => CreateScopeViewModel(x, vm.ScopesConsented.Contains(x.Name) || model == null)).ToArray();
+            vm.ResourceScopes = resources.ApiResources.SelectMany(x => x.Scopes).Select(x =>
+                CreateScopeViewModel(x, vm.ScopesConsented.Contains(x.Name) || model == null)).ToArray();
             if (ConsentOptions.EnableOfflineAccess && resources.OfflineAccess)
             {
-                vm.ResourceScopes = vm.ResourceScopes.Union(new[] {
-                    GetOfflineAccessScope(vm.ScopesConsented.Contains(IdentityServerConstants.StandardScopes.OfflineAccess) || model == null)
+                vm.ResourceScopes = vm.ResourceScopes.Union(new[]
+                {
+                    GetOfflineAccessScope(
+                        vm.ScopesConsented.Contains(IdentityServerConstants.StandardScopes.OfflineAccess) ||
+                        model == null)
                 });
             }
 

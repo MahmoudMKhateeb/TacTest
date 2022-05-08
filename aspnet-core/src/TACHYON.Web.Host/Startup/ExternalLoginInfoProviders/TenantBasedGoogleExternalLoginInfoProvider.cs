@@ -35,29 +35,30 @@ namespace TACHYON.Web.Startup.ExternalLoginInfoProviders
                 settings.ClientId,
                 settings.ClientSecret,
                 typeof(GoogleAuthProviderApi),
-                new Dictionary<string, string>
-                {
-                    {"UserInfoEndpoint", settings.UserInfoEndpoint}
-                }
+                new Dictionary<string, string> { { "UserInfoEndpoint", settings.UserInfoEndpoint } }
             );
         }
 
         protected override bool TenantHasSettings()
         {
-            var settingValue = _settingManager.GetSettingValueForTenant(AppSettings.ExternalLoginProvider.Tenant.Google, _abpSession.TenantId.Value);
+            var settingValue = _settingManager.GetSettingValueForTenant(AppSettings.ExternalLoginProvider.Tenant.Google,
+                _abpSession.TenantId.Value);
             return !settingValue.IsNullOrWhiteSpace();
         }
 
         protected override ExternalLoginProviderInfo GetTenantInformation()
         {
-            string settingValue = _settingManager.GetSettingValueForTenant(AppSettings.ExternalLoginProvider.Tenant.Google, _abpSession.TenantId.Value);
+            string settingValue =
+                _settingManager.GetSettingValueForTenant(AppSettings.ExternalLoginProvider.Tenant.Google,
+                    _abpSession.TenantId.Value);
             var settings = settingValue.FromJsonString<GoogleExternalLoginProviderSettings>();
             return CreateExternalLoginInfo(settings);
         }
 
         protected override ExternalLoginProviderInfo GetHostInformation()
         {
-            string settingValue = _settingManager.GetSettingValueForApplication(AppSettings.ExternalLoginProvider.Host.Google);
+            string settingValue =
+                _settingManager.GetSettingValueForApplication(AppSettings.ExternalLoginProvider.Host.Google);
             var settings = settingValue.FromJsonString<GoogleExternalLoginProviderSettings>();
             return CreateExternalLoginInfo(settings);
         }

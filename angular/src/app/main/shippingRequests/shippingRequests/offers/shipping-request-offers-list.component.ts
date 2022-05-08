@@ -5,9 +5,11 @@ import { LazyLoadEvent } from 'primeng/api';
 
 import { Table } from '@node_modules/primeng/table';
 import { Paginator } from '@node_modules/primeng/paginator';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'shipping-request-offers-list',
+  styleUrls: ['./shipping-request-offers-list.component.scss'],
   templateUrl: './shipping-request-offers-list.component.html',
 })
 export class ShippingRequestOffersList extends AppComponentBase {
@@ -18,7 +20,7 @@ export class ShippingRequestOffersList extends AppComponentBase {
   @Input() isTachyonDeal: boolean;
   IsStartSearch: boolean = false;
 
-  constructor(injector: Injector, private _currentServ: PriceOfferServiceProxy) {
+  constructor(injector: Injector, private _currentServ: PriceOfferServiceProxy, private _router: Router) {
     super(injector);
   }
 
@@ -46,5 +48,13 @@ export class ShippingRequestOffersList extends AppComponentBase {
 
   Reject() {
     this.reloadPage();
+  }
+
+  openProfileInNewTab(tenantId: number) {
+    // Converts the route into a string that can be used
+    // with the window.open() function
+    const url = this._router.serializeUrl(this._router.createUrlTree([`/app/main/profile`, tenantId]));
+
+    window.open(url, '_blank');
   }
 }

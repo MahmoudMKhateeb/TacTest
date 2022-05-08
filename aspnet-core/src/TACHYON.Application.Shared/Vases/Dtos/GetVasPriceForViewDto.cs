@@ -2,9 +2,9 @@
 {
     public class GetVasPriceForViewDto
     {
-		public VasPriceDto VasPrice { get; set; }
+        public VasPriceDto VasPrice { get; set; }
 
-		public string VasName { get; set;}
+        public string VasName { get; set; }
 
         public bool HasAmount { get; set; }
 

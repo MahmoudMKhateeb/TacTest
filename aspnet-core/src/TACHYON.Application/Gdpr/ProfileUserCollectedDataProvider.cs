@@ -50,12 +50,12 @@ namespace TACHYON.Gdpr
 
             var content = new List<string>
             {
-                L("TenancyName")+ ": " + tenancyName,
-                L("UserName") +": " + profileInfo.UserName,
-                L("Name") +": " + profileInfo.Name,
-                L("Surname") +": " + profileInfo.Surname,
-                L("EmailAddress") +": " + profileInfo.EmailAddress,
-                L("PhoneNumber") +": " + profileInfo.PhoneNumber
+                L("TenancyName") + ": " + tenancyName,
+                L("UserName") + ": " + profileInfo.UserName,
+                L("Name") + ": " + profileInfo.Name,
+                L("Surname") + ": " + profileInfo.Surname,
+                L("EmailAddress") + ": " + profileInfo.EmailAddress,
+                L("PhoneNumber") + ": " + profileInfo.PhoneNumber
             };
 
             var profileInfoBytes = Encoding.UTF8.GetBytes(string.Join("\n\r", content));

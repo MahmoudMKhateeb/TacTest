@@ -24,7 +24,7 @@ namespace TACHYON.Tests.Sessions
 
             //Act
             var output = await _sessionAppService.GetCurrentLoginInformations();
-            
+
             //Assert
             var currentUser = await GetCurrentUserAsync();
             output.User.ShouldNotBe(null);

@@ -10,6 +10,5 @@ namespace TACHYON.Trucks.TruckStatusesTranslations.Dtos
         public string Language { get; set; }
 
         public long CoreId { get; set; }
-
     }
 }

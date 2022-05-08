@@ -21,6 +21,5 @@ namespace TACHYON.Countries.CountriesTranslations
         Task Delete(EntityDto input);
 
         Task<List<CountriesTranslationCountyLookupTableDto>> GetAllCountyForTableDropdown();
-
     }
 }

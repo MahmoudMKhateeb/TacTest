@@ -8,7 +8,11 @@
         public int Closed { get; set; }
         public string Rate { get; set; }
 
-        public MemberActivity(string name, string earnings, int cases, int closed, string rate)
+        public MemberActivity(string name,
+            string earnings,
+            int cases,
+            int closed,
+            string rate)
         {
             Name = name;
             Earnings = earnings;

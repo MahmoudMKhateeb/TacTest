@@ -19,6 +19,5 @@ namespace TACHYON.Tenants.Dashboard.Dto
         public int Growth { get; set; }
 
         public List<SalesSummaryData> SalesSummary { get; set; }
-
     }
 }

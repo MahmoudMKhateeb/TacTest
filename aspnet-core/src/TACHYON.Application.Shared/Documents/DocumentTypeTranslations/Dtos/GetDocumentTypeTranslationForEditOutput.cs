@@ -6,10 +6,8 @@ namespace TACHYON.Documents.DocumentTypeTranslations.Dtos
 {
     public class GetDocumentTypeTranslationForEditOutput
     {
-		public CreateOrEditDocumentTypeTranslationDto DocumentTypeTranslation { get; set; }
+        public CreateOrEditDocumentTypeTranslationDto DocumentTypeTranslation { get; set; }
 
-		public string DocumentTypeDisplayName { get; set;}
-
-
+        public string DocumentTypeDisplayName { get; set; }
     }
 }

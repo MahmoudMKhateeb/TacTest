@@ -28,7 +28,5 @@ namespace TACHYON.Documents.DocumentFiles.Dtos
         public string UserNameFilter { get; set; }
 
         public string RoutStepDisplayNameFilter { get; set; }
-
-
     }
 }

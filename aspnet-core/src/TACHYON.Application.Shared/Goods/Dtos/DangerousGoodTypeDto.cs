@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using Abp.Application.Services.Dto;
 
 namespace TACHYON.Goods.Dtos
@@ -9,6 +8,5 @@ namespace TACHYON.Goods.Dtos
         public string Name { get; set; }
 
         public int? BayanIntegrationId { get; set; }
-
     }
 }

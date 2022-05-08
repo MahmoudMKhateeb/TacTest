@@ -53,13 +53,21 @@ namespace TACHYON.Authorization.Users
             AsyncQueryableExecuter = NullAsyncQueryableExecuter.Instance;
         }
 
-        public async Task<User> RegisterAsync(string name, string surname, string emailAddress, string userName, string plainPassword, bool isEmailConfirmed, string emailActivationLink)
+        public async Task<User> RegisterAsync(string name,
+            string surname,
+            string emailAddress,
+            string userName,
+            string plainPassword,
+            bool isEmailConfirmed,
+            string emailActivationLink)
         {
             CheckForTenant();
             CheckSelfRegistrationIsEnabled();
 
             var tenant = await GetActiveTenantAsync();
-            var isNewRegisteredUserActiveByDefault = await SettingManager.GetSettingValueAsync<bool>(AppSettings.UserManagement.IsNewRegisteredUserActiveByDefault);
+            var isNewRegisteredUserActiveByDefault =
+                await SettingManager.GetSettingValueAsync<bool>(AppSettings.UserManagement
+                    .IsNewRegisteredUserActiveByDefault);
 
             await _userPolicy.CheckMaxUserCountAsync(tenant.Id);
 
@@ -90,7 +98,7 @@ namespace TACHYON.Authorization.Users
             if (!user.IsEmailConfirmed)
             {
                 user.SetNewEmailConfirmationCode();
-                await _userEmailer.SendEmailActivationLinkAsync(user, emailActivationLink,plainPassword);
+                await _userEmailer.SendEmailActivationEmail(user, emailActivationLink,plainPassword);
             }
 
             //Notifications

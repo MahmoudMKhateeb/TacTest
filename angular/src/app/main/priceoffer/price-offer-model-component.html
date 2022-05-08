@@ -1,39 +1,88 @@
 <div
   bsModal
   #modal="bs-modal"
-  class="modal fade modalSetPrice tachyonDialer {{ direction == 'rtl' ? ' rtl' : '' }}"
+  class="modal fade  {{ direction == 'rtl' ? ' rtl' : '' }}"
   tabindex="-1"
   role="dialog"
   aria-labelledby="modal"
   aria-hidden="true"
   [config]="{ backdrop: 'static' }"
 >
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog modal-lg" style="max-width: 1200px">
     <div class="modal-content">
-      <div class="modal-body">
-        <button type="button" class="close closeModal" data-dismiss="modal" (click)="close()" aria-label="Close">
-          <i class="fas fa-times"></i>
+      <div class="modal-header">
+        <h5 class="modal-title">{{l('PriceOffer')}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close()">
+          <i aria-hidden="true" class="ki ki-close"></i>
         </button>
-        <form class="contentSetPrice" #Form="ngForm" novalidate (ngSubmit)="confirmSendOffer()">
-          <div class="table-sendOffer">
-            <table>
-              <thead>
-                <tr>
-                  <th>{{l('Price')}}</th>
-                  <th *ngIf="!feature.isEnabled('App.Carrier')">
-                    <select name="CommissionType" [(ngModel)]="offer.commissionType" (change)="changeItemComissionValue();calculator()">
-                      <option [value]="code.key" *ngFor="let code of priceOfferCommissionType">{{ l(code.value) | localize }}</option>
-                    </select>
-                  </th>
-                  <th *ngIf="!feature.isEnabled('App.Carrier')">{{l('Commission')}}</th>
+      </div>
+      <div class="modal-body">
+        <form #Form="ngForm" novalidate (ngSubmit)="confirmSendOffer()">
+          <div class="form-group row">
+            <div class="col-lg-4" *ngIf="!feature.isEnabled('App.Carrier')">
+              <label>{{ l('CommissionType') }}:</label>
+              <select
+                class="form-control"
+                name="CommissionType"
+                [(ngModel)]="offer.commissionType"
+                (change)="changeItemComissionValue();calculator()"
+              >
+                <option [value]="code.key" *ngFor="let code of priceOfferCommissionType">{{ l(code.value) | localize }}</option>
+              </select>
+            </div>
+            <div class="col-lg-4" *ngIf="!feature.isEnabled('App.Carrier')">
+              <label>{{ l('CommissionTypeValue') }}:</label>
+              <input
+                type="number"
+                min="0"
+                class="form-control"
+                placeholder="Value"
+                (change)="calculator();"
+                name="commissionPercentageOrAddValue"
+                [(ngModel)]="offer.commissionPercentageOrAddValue"
+              />
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-lg-4" *ngIf="!feature.isEnabled('App.Carrier')">
+              <label>{{ l('VasCommissionType') }}:</label>
 
-                  <th>{{l('NumberOfTrips')}}</th>
-                  <th>{{l('Total')}}</th>
-                  <th *ngIf="!feature.isEnabled('App.Carrier')">{{l('Commission')}}</th>
+              <select
+                class="form-control form-control-sm"
+                name="vasCommissionType"
+                [(ngModel)]="offer.vasCommissionType"
+                (change)="changeVasComissionValue();calculator()"
+              >
+                <option [value]="code.key" *ngFor="let code of priceOfferCommissionType">{{ l(code.value) | localize }}</option>
+              </select>
+            </div>
+            <div class="col-lg-4" *ngIf="!feature.isEnabled('App.Carrier')">
+              <label>{{ l('VasCommissionPercentageOrAddValue') }}:</label>
+
+              <input
+                type="number"
+                min="0"
+                class="form-control form-control-sm"
+                placeholder="Value"
+                (change)="calculator()"
+                name="vasCommissionPercentageOrAddValue"
+                [(ngModel)]="offer.vasCommissionPercentageOrAddValue"
+              />
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-sm table-bordered rounded">
+              <thead>
+                <tr class="table-active">
+                  <th style="width: 350px">{{l('NoOfTrips')}}</th>
+                  <th style="width: 350px">{{l('itemPrice')}}</th>
+                  <th *ngIf="isTachyonDealer">{{l('ItemPricePostCommission')}}</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
+                  <td>{{offer.quantity}}</td>
                   <td>
                     <input
                       type="number"
@@ -44,127 +93,139 @@
                       [(ngModel)]="offer.itemPrice"
                       (change)="calculator();"
                       required
+                      class="form-control"
                     />
                   </td>
-                  <td *ngIf="!feature.isEnabled('App.Carrier')">
-                    <input
-                      type="number"
-                      min="1"
-                      class="ml-2"
-                      placeholder="Value"
-                      (change)="calculator();"
-                      name="commissionPercentageOrAddValue"
-                      [(ngModel)]="offer.commissionPercentageOrAddValue"
-                    />
-                  </td>
-                  <td *ngIf="!feature.isEnabled('App.Carrier')">{{offer.itemCommissionAmount}}</td>
-                  <td>{{offer.quantity}}</td>
-                  <td>
-                    <ng-template [ngIf]="offer.itemTotalAmount>0">
-                      <span>{{offer.itemTotalAmount | number}}</span>
-                      <span>{{l('SAR')}}</span>
-                    </ng-template>
-                  </td>
-                  <td *ngIf="!feature.isEnabled('App.Carrier')">
-                    <ng-template [ngIf]="offer.itemSubTotalAmountWithCommission>0">
-                      <span>{{offer.itemSubTotalAmountWithCommission | number}}</span>
-                      <span>{{l('SAR')}}</span>
-                    </ng-template>
-                  </td>
+                  <td *ngIf="isTachyonDealer">{{offer.itemSubTotalAmountWithCommission}}</td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td class="table-success">{{offer.itemsTotalPricePreCommissionPreVat}}</td>
+                  <td *ngIf="isTachyonDealer"></td>
                 </tr>
               </tbody>
             </table>
           </div>
-          <div class="divirCard"></div>
-          <div class="table-vas" *ngIf="Items.length">
-            <div *ngIf="!feature.isEnabled('App.Carrier')">
-              <span class="titleVas"> VAS </span>
-              <div>
-                <select name="vasCommissionType" [(ngModel)]="offer.vasCommissionType" (change)="changeVasComissionValue();calculator()">
-                  <option [value]="code.key" *ngFor="let code of priceOfferCommissionType">{{ l(code.value) | localize }}</option>
-                </select>
-                <input
-                  type="number"
-                  min="1"
-                  class="ml-2"
-                  placeholder="Value"
-                  (change)="calculator()"
-                  name="vasCommissionPercentageOrAddValue"
-                  [(ngModel)]="offer.vasCommissionPercentageOrAddValue"
-                />
-              </div>
-            </div>
-            <table>
+
+          <div class="table-responsive" *ngIf="Items.length && !feature.isEnabled('App.Carrier')">
+            <table class="table table-sm table-bordered rounded">
               <thead>
-                <tr>
-                  <th>{{l('VasName')}}</th>
-                  <th>{{l('Price')}}</th>
-                  <th>{{l('Qty')}}</th>
-                  <th>{{l('Total')}}</th>
+                <tr class="table-active">
+                  <th style="width: 200px">{{l('VasName')}}</th>
+                  <th style="width: 150px">{{l('Qty')}}</th>
+                  <th style="width: 350px">{{l('Price')}}</th>
+                  <th *ngIf="isTachyonDealer">{{l('TotalPriceOfAllVASPre-CommissionPre-VAT')}}</th>
+                  <th *ngIf="isCarrier">{{l('TotalPriceOfAllVASPre-CommissionPre-VAT-Carrier')}}</th>
                 </tr>
               </thead>
               <tbody>
                 <tr *ngFor="let item of Items; let i = index">
                   <td>{{item.itemName}}</td>
+                  <td>{{item.quantity}}</td>
                   <td>
                     <input
                       type="number"
                       [name]="'itemPrice' + i"
                       [(ngModel)]="item.itemPrice"
                       min="1"
-                      (change)="calculatorItem(item)"
+                      (change)="calculator()"
                       (keypress)="numberOnly($event)"
                       required
+                      class="form-control form-control-sm"
                     />
                   </td>
-                  <td>{{item.quantity}}</td>
-                  <td>
-                    <ng-template [ngIf]="item.itemTotalAmount>0">
-                      <span>{{item.itemTotalAmount | number}}</span>
-                      <span>{{l('SAR')}}</span>
-                    </ng-template>
-                  </td>
+                  <td>{{item.itemsTotalPricePreCommissionPreVat}}</td>
+                </tr>
+                <tr>
+                  <td colspan="3"></td>
+                  <td>{{offer.detailsTotalPricePreCommissionPreVat}}</td>
                 </tr>
               </tbody>
             </table>
           </div>
-          <div class="divirCard"></div>
-          <div class="resultPrice">
-            <div>
-              <p>{{l('SubTotalAmount')}}</p>
-              <p>
-                <ng-template [ngIf]="offer.subTotalAmount>0">
-                  <span>{{offer.subTotalAmount | number}}</span>
-                  <span>{{l('SAR')}}</span>
-                </ng-template>
-              </p>
-            </div>
-            <div>
-              <p>{{l('VatAmount')}} 15%</p>
-              <p>
-                <ng-template [ngIf]="offer.vatAmount>0">
-                  <span>{{offer.vatAmount | number}}</span>
-                  <span>{{l('SAR')}}</span>
-                </ng-template>
-              </p>
-            </div>
-            <div>
-              <p>{{l('TotalAmount')}}</p>
-              <p>
-                <ng-template [ngIf]="offer.totalAmount>0">
-                  <span>{{offer.totalAmount | number}}</span>
-                  <span>{{l('SAR')}}</span>
-                </ng-template>
-              </p>
-            </div>
-            <div *ngIf="feature.isEnabled('App.TachyonDealer') || !appSession.tenantId">
-              <p>{{l('Commission')}}</p>
-              <p>
-                <span>{{offer.commissionAmount | number}}</span>
-                <span>{{l('SAR')}}</span>
-              </p>
-            </div>
+
+          <div class="table-responsive" *ngIf="isTachyonDealerOrHost">
+            <table class="table table-sm table-bordered rounded">
+              <thead>
+                <tr class="table-active">
+                  <th style="width: 200px"></th>
+                  <th style="width: 150px">{{l('PricePreCommission')}}</th>
+                  <th style="width: 350px">{{l('TotalCommission')}}</th>
+                  <th>{{l('TotalPricePostCommission')}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{{l('Trip')}}</td>
+                  <td>{{offer.itemsTotalPricePreCommissionPreVat}}</td>
+                  <td>{{offer.itemsTotalCommission}}</td>
+                  <td>{{offer.itemsTotalPricePostCommissionPreVat}}</td>
+                </tr>
+                <tr *ngIf="Items.length">
+                  <td>{{l('Vas')}}</td>
+                  <td>{{offer.detailsTotalPricePreCommissionPreVat}}</td>
+                  <td>{{offer.detailsTotalCommission}}</td>
+                  <td>{{offer.detailsTotalPricePostCommissionPreVat}}</td>
+                </tr>
+                <tr>
+                  <td colspan="3"></td>
+
+                  <td class="table-primary">{{offer.subTotalAmountWithCommission}}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
+
+          <div class="table-responsive" *ngIf="Items.length && !feature.isEnabled('App.Carrier') ">
+            <table class="table table-sm table-bordered rounded">
+              <thead>
+                <tr class="table-active">
+                  <th style="width: 350px">{{l('VATDetails')}}</th>
+                  <th *ngIf="isTachyonDealer" style="width: 350px">{{l('PreCommission')}}</th>
+                  <th *ngIf="isCarrier" style="width: 350px">{{l('PreCommission-Carrier')}}</th>
+                  <th *ngIf="isTachyonDealerOrHost">{{l('PostCommission')}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{{l('TotalVATForTrip')}}</td>
+                  <td>{{offer.itemsTotalVatAmountPreCommission}}</td>
+                  <td *ngIf="isTachyonDealerOrHost">{{offer.itemsTotalVatPostCommission}}</td>
+                </tr>
+                <tr>
+                  <td>{{l('TotalVATForVas')}}</td>
+                  <td>{{offer.detailsTotalVatAmountPreCommission}}</td>
+                  <td *ngIf="isTachyonDealerOrHost">{{offer.detailsTotalVatPostCommission}}</td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td class="table-success">{{offer.vatAmount}}</td>
+                  <td *ngIf="isTachyonDealerOrHost" class="table-primary">{{offer.vatAmountWithCommission}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="table-responsive" *ngIf="Items.length ">
+            <table class="table table-sm table-bordered rounded">
+              <thead>
+                <tr class="table-active">
+                  <th style="width: 350px"></th>
+                  <th *ngIf="isTachyonDealer" style="width: 350px">{{l('TotalPricePostVatPreCommission')}}</th>
+                  <th *ngIf="isCarrier" style="width: 350px">{{l('TotalPricePostVatPreCommission-Carrier')}}</th>
+                  <th *ngIf="isTachyonDealerOrHost">{{l('TotalPricePostVatWithCommission')}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td></td>
+                  <td class="table-success">{{offer.totalAmount}}</td>
+                  <td *ngIf="isTachyonDealerOrHost" class="table-primary">{{offer.totalAmountWithCommission}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
           <div class="sendOffer">
             <button
               type="submit"

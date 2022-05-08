@@ -20,7 +20,6 @@ namespace TACHYON.Authorization.Users
             Turkmenistan = 9,
             SaudiArabia = 10,
             Yemen = 11,
-       
         }
     }
 }

@@ -9,6 +9,5 @@ namespace TACHYON.Goods.GoodCategories.Dtos
         public string Filter { get; set; }
 
         public string DisplayNameFilter { get; set; }
-
     }
 }
