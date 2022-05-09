@@ -1,9 +1,10 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using NetTopologySuite.Geometries;
 
 namespace TACHYON.Migrations
 {
-    public partial class MVP1 : Migration
+    public partial class _1_0 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -465,6 +466,24 @@ namespace TACHYON.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AppLocalizations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    MasterKey = table.Column<string>(nullable: false),
+                    MasterValue = table.Column<string>(nullable: true),
+                    PlatForm = table.Column<byte>(nullable: false),
+                    AppVersion = table.Column<int>(nullable: false),
+                    Version = table.Column<byte>(nullable: false),
+                    Section = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppLocalizations", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AppSubscriptionPaymentsExtensionData",
                 columns: table => new
                 {
@@ -526,6 +545,27 @@ namespace TACHYON.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "DangerousGoodTypes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    Name = table.Column<string>(maxLength: 255, nullable: false),
+                    BayanIntegrationId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DangerousGoodTypes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "DocumentsEntities",
                 columns: table => new
                 {
@@ -546,6 +586,28 @@ namespace TACHYON.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "DriverLicenseTypes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    Name = table.Column<string>(maxLength: 256, nullable: false),
+                    WasIIntegrationId = table.Column<int>(nullable: false),
+                    ApplicableforWaslRegistration = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DriverLicenseTypes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "GoodCategories",
                 columns: table => new
                 {
@@ -558,11 +620,72 @@ namespace TACHYON.Migrations
                     IsDeleted = table.Column<bool>(nullable: false),
                     DeleterUserId = table.Column<long>(nullable: true),
                     DeletionTime = table.Column<DateTime>(nullable: true),
-                    DisplayName = table.Column<string>(maxLength: 256, nullable: false)
+                    Name = table.Column<string>(maxLength: 256, nullable: false),
+                    FatherId = table.Column<int>(nullable: true),
+                    IsActive = table.Column<bool>(nullable: false, defaultValue: true),
+                    BayanIntegrationId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_GoodCategories", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_GoodCategories_GoodCategories_FatherId",
+                        column: x => x.FatherId,
+                        principalTable: "GoodCategories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "InvoicePaymentMethods",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    DisplayName = table.Column<string>(maxLength: 250, nullable: true),
+                    PaymentType = table.Column<byte>(nullable: false),
+                    InvoiceDueDateDays = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_InvoicePaymentMethods", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "InvoicePeriods",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    DisplayName = table.Column<string>(maxLength: 256, nullable: false),
+                    Description = table.Column<string>(nullable: true),
+                    PeriodType = table.Column<byte>(nullable: false),
+                    FreqInterval = table.Column<int>(nullable: false),
+                    FreqRelativeInterval = table.Column<byte>(nullable: false),
+                    FreqRecurrence = table.Column<string>(nullable: true),
+                    NextRunDate = table.Column<DateTime>(nullable: true),
+                    ShipperOnlyUsed = table.Column<bool>(nullable: false),
+                    Enabled = table.Column<bool>(nullable: false),
+                    LastRunDate = table.Column<DateTime>(nullable: true),
+                    Cronexpression = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_InvoicePeriods", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -583,6 +706,27 @@ namespace TACHYON.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Nationalities", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PackingTypes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    DisplayName = table.Column<string>(maxLength: 128, nullable: false),
+                    Description = table.Column<string>(maxLength: 256, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PackingTypes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -607,26 +751,6 @@ namespace TACHYON.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PickingTypes",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CreationTime = table.Column<DateTime>(nullable: false),
-                    CreatorUserId = table.Column<long>(nullable: true),
-                    LastModificationTime = table.Column<DateTime>(nullable: true),
-                    LastModifierUserId = table.Column<long>(nullable: true),
-                    IsDeleted = table.Column<bool>(nullable: false),
-                    DeleterUserId = table.Column<long>(nullable: true),
-                    DeletionTime = table.Column<DateTime>(nullable: true),
-                    DisplayName = table.Column<string>(maxLength: 256, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PickingTypes", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "PlateTypes",
                 columns: table => new
                 {
@@ -639,7 +763,10 @@ namespace TACHYON.Migrations
                     IsDeleted = table.Column<bool>(nullable: false),
                     DeleterUserId = table.Column<long>(nullable: true),
                     DeletionTime = table.Column<DateTime>(nullable: true),
-                    DisplayName = table.Column<string>(maxLength: 64, nullable: false)
+                    Name = table.Column<string>(maxLength: 64, nullable: false),
+                    BayanIntegrationId = table.Column<string>(nullable: true),
+                    IsDefault = table.Column<bool>(nullable: false),
+                    WaslIntegrationId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -668,7 +795,7 @@ namespace TACHYON.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ShippingRequestBidStatuses",
+                name: "ShippingRequestReasonAccidents",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -679,12 +806,11 @@ namespace TACHYON.Migrations
                     LastModifierUserId = table.Column<long>(nullable: true),
                     IsDeleted = table.Column<bool>(nullable: false),
                     DeleterUserId = table.Column<long>(nullable: true),
-                    DeletionTime = table.Column<DateTime>(nullable: true),
-                    DisplayName = table.Column<string>(nullable: false)
+                    DeletionTime = table.Column<DateTime>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ShippingRequestBidStatuses", x => x.Id);
+                    table.PrimaryKey("PK_ShippingRequestReasonAccidents", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -705,6 +831,46 @@ namespace TACHYON.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ShippingRequestStatuses", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ShippingRequestTripRejectReasons",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ShippingRequestTripRejectReasons", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ShippingTypes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    DisplayName = table.Column<string>(maxLength: 128, nullable: false),
+                    Description = table.Column<string>(maxLength: 256, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ShippingTypes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -821,7 +987,6 @@ namespace TACHYON.Migrations
                     DeleterUserId = table.Column<long>(nullable: true),
                     DeletionTime = table.Column<DateTime>(nullable: true),
                     Name = table.Column<string>(maxLength: 256, nullable: true),
-                    DisplayName = table.Column<string>(maxLength: 256, nullable: true),
                     HasAmount = table.Column<bool>(nullable: false),
                     HasCount = table.Column<bool>(nullable: false)
                 },
@@ -848,7 +1013,7 @@ namespace TACHYON.Migrations
                         column: x => x.DynamicParameterId,
                         principalTable: "AbpDynamicParameters",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -869,7 +1034,7 @@ namespace TACHYON.Migrations
                         column: x => x.DynamicParameterId,
                         principalTable: "AbpDynamicParameters",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -894,7 +1059,7 @@ namespace TACHYON.Migrations
                         column: x => x.EditionId,
                         principalTable: "AbpEditions",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -933,7 +1098,7 @@ namespace TACHYON.Migrations
                         column: x => x.EditionId,
                         principalTable: "AbpEditions",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -981,7 +1146,7 @@ namespace TACHYON.Migrations
                         column: x => x.EntityChangeSetId,
                         principalTable: "AbpEntityChangeSets",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1005,7 +1170,74 @@ namespace TACHYON.Migrations
                         column: x => x.WebhookEventId,
                         principalTable: "AbpWebhookEvents",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AppLocalizationTranslations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Value = table.Column<string>(nullable: false),
+                    CoreId = table.Column<int>(nullable: false),
+                    Language = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppLocalizationTranslations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AppLocalizationTranslations_AppLocalizations_CoreId",
+                        column: x => x.CoreId,
+                        principalTable: "AppLocalizations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TerminologieEditions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    EditionId = table.Column<int>(nullable: false),
+                    TerminologieId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TerminologieEditions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TerminologieEditions_AbpEditions_EditionId",
+                        column: x => x.EditionId,
+                        principalTable: "AbpEditions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_TerminologieEditions_AppLocalizations_TerminologieId",
+                        column: x => x.TerminologieId,
+                        principalTable: "AppLocalizations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TerminologiePages",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PageUrl = table.Column<string>(nullable: true),
+                    TerminologieId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TerminologiePages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TerminologiePages_AppLocalizations_TerminologieId",
+                        column: x => x.TerminologieId,
+                        principalTable: "AppLocalizations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1023,8 +1255,7 @@ namespace TACHYON.Migrations
                     DeletionTime = table.Column<DateTime>(nullable: true),
                     DisplayName = table.Column<string>(maxLength: 256, nullable: false),
                     Code = table.Column<string>(maxLength: 64, nullable: true),
-                    Latitude = table.Column<string>(maxLength: 256, nullable: true),
-                    Longitude = table.Column<string>(maxLength: 256, nullable: true),
+                    Location = table.Column<Point>(nullable: true),
                     CountyId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -1035,7 +1266,7 @@ namespace TACHYON.Migrations
                         column: x => x.CountyId,
                         principalTable: "Counties",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1063,53 +1294,28 @@ namespace TACHYON.Migrations
                         column: x => x.CoreId,
                         principalTable: "Counties",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "DocumentTypes",
+                name: "GoodsCategoryTranslations",
                 columns: table => new
                 {
-                    Id = table.Column<long>(nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CreationTime = table.Column<DateTime>(nullable: false),
-                    CreatorUserId = table.Column<long>(nullable: true),
-                    LastModificationTime = table.Column<DateTime>(nullable: true),
-                    LastModifierUserId = table.Column<long>(nullable: true),
-                    IsDeleted = table.Column<bool>(nullable: false),
-                    DeleterUserId = table.Column<long>(nullable: true),
-                    DeletionTime = table.Column<DateTime>(nullable: true),
-                    DisplayName = table.Column<string>(maxLength: 256, nullable: false),
-                    IsRequired = table.Column<bool>(nullable: false),
-                    HasExpirationDate = table.Column<bool>(nullable: false),
-                    DocumentsEntityId = table.Column<int>(nullable: false),
-                    EditionId = table.Column<int>(nullable: true),
-                    HasNumber = table.Column<bool>(nullable: false),
-                    IsNumberUnique = table.Column<bool>(nullable: false),
-                    HasNotes = table.Column<bool>(nullable: false),
-                    SpecialConstant = table.Column<string>(nullable: true),
-                    NumberMinDigits = table.Column<int>(nullable: true),
-                    NumberMaxDigits = table.Column<int>(nullable: true),
-                    ExpirationAlertDays = table.Column<int>(nullable: true),
-                    InActiveAccountExpired = table.Column<bool>(nullable: false),
-                    InActiveToleranceDays = table.Column<int>(nullable: true),
-                    HasHijriExpirationDate = table.Column<bool>(nullable: false)
+                    DisplayName = table.Column<string>(nullable: true),
+                    CoreId = table.Column<int>(nullable: false),
+                    Language = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DocumentTypes", x => x.Id);
+                    table.PrimaryKey("PK_GoodsCategoryTranslations", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_DocumentTypes_DocumentsEntities_DocumentsEntityId",
-                        column: x => x.DocumentsEntityId,
-                        principalTable: "DocumentsEntities",
+                        name: "FK_GoodsCategoryTranslations_GoodCategories_CoreId",
+                        column: x => x.CoreId,
+                        principalTable: "GoodCategories",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_DocumentTypes_AbpEditions_EditionId",
-                        column: x => x.EditionId,
-                        principalTable: "AbpEditions",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1146,6 +1352,7 @@ namespace TACHYON.Migrations
                     NormalizedUserName = table.Column<string>(maxLength: 256, nullable: false),
                     NormalizedEmailAddress = table.Column<string>(maxLength: 256, nullable: false),
                     ConcurrencyStamp = table.Column<string>(maxLength: 128, nullable: true),
+                    AccountNumber = table.Column<string>(maxLength: 12, nullable: true),
                     ProfilePictureId = table.Column<Guid>(nullable: true),
                     ShouldChangePasswordOnNextLogin = table.Column<bool>(nullable: false),
                     SignInTokenExpireTimeUtc = table.Column<DateTime>(nullable: true),
@@ -1156,7 +1363,10 @@ namespace TACHYON.Migrations
                     NationalityId = table.Column<int>(nullable: true),
                     ExperienceField = table.Column<string>(nullable: true),
                     DateOfBirth = table.Column<DateTime>(nullable: true),
-                    HijriDateOfBirth = table.Column<string>(nullable: true)
+                    HijriDateOfBirth = table.Column<string>(nullable: true),
+                    DriverLicenseTypeId = table.Column<int>(nullable: true),
+                    IsWaslIntegrated = table.Column<bool>(nullable: false),
+                    WaslIntegrationErrorMsg = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -1171,6 +1381,12 @@ namespace TACHYON.Migrations
                         name: "FK_AbpUsers_AbpUsers_DeleterUserId",
                         column: x => x.DeleterUserId,
                         principalTable: "AbpUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_AbpUsers_DriverLicenseTypes_DriverLicenseTypeId",
+                        column: x => x.DriverLicenseTypeId,
+                        principalTable: "DriverLicenseTypes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -1212,7 +1428,128 @@ namespace TACHYON.Migrations
                         column: x => x.CoreId,
                         principalTable: "Nationalities",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PackingTypesTranslations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    DisplayName = table.Column<string>(maxLength: 128, nullable: false),
+                    Description = table.Column<string>(maxLength: 256, nullable: true),
+                    Language = table.Column<string>(nullable: false),
+                    CoreId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PackingTypesTranslations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PackingTypesTranslations_PackingTypes_CoreId",
+                        column: x => x.CoreId,
+                        principalTable: "PackingTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PlateTypeTranslations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CoreId = table.Column<int>(nullable: false),
+                    Language = table.Column<string>(nullable: true),
+                    DisplayName = table.Column<string>(maxLength: 64, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PlateTypeTranslations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PlateTypeTranslations_PlateTypes_CoreId",
+                        column: x => x.CoreId,
+                        principalTable: "PlateTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ShippingRequestReasonAccidentTranslations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(maxLength: 60, nullable: false),
+                    CoreId = table.Column<int>(nullable: false),
+                    Language = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ShippingRequestReasonAccidentTranslations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ShippingRequestReasonAccidentTranslations_ShippingRequestReasonAccidents_CoreId",
+                        column: x => x.CoreId,
+                        principalTable: "ShippingRequestReasonAccidents",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ShippingRequestTripRejectReasonTranslations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(maxLength: 60, nullable: false),
+                    CoreId = table.Column<int>(nullable: false),
+                    Language = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ShippingRequestTripRejectReasonTranslations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ShippingRequestTripRejectReasonTranslations_ShippingRequestTripRejectReasons_CoreId",
+                        column: x => x.CoreId,
+                        principalTable: "ShippingRequestTripRejectReasons",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ShippingTypeTranslations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    DisplayName = table.Column<string>(maxLength: 128, nullable: false),
+                    Description = table.Column<string>(maxLength: 256, nullable: true),
+                    Language = table.Column<string>(nullable: true),
+                    CoreId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ShippingTypeTranslations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ShippingTypeTranslations_ShippingTypes_CoreId",
+                        column: x => x.CoreId,
+                        principalTable: "ShippingTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1240,7 +1577,7 @@ namespace TACHYON.Migrations
                         column: x => x.CoreId,
                         principalTable: "TransportTypes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1256,8 +1593,8 @@ namespace TACHYON.Migrations
                     IsDeleted = table.Column<bool>(nullable: false),
                     DeleterUserId = table.Column<long>(nullable: true),
                     DeletionTime = table.Column<DateTime>(nullable: true),
-                    DisplayName = table.Column<string>(maxLength: 256, nullable: false),
-                    TransportTypeId = table.Column<int>(nullable: true)
+                    TransportTypeId = table.Column<int>(nullable: true),
+                    IsActive = table.Column<bool>(nullable: false, defaultValue: true)
                 },
                 constraints: table =>
                 {
@@ -1295,14 +1632,14 @@ namespace TACHYON.Migrations
                         column: x => x.CoreId,
                         principalTable: "TruckStatuses",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "GoodsDetails",
+                name: "VasesTranslations",
                 columns: table => new
                 {
-                    Id = table.Column<long>(nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorUserId = table.Column<long>(nullable: true),
@@ -1311,32 +1648,19 @@ namespace TACHYON.Migrations
                     IsDeleted = table.Column<bool>(nullable: false),
                     DeleterUserId = table.Column<long>(nullable: true),
                     DeletionTime = table.Column<DateTime>(nullable: true),
-                    TenantId = table.Column<int>(nullable: false),
-                    Name = table.Column<string>(maxLength: 256, nullable: false),
-                    Description = table.Column<string>(maxLength: 256, nullable: true),
-                    Quantity = table.Column<string>(maxLength: 128, nullable: true),
-                    Weight = table.Column<string>(maxLength: 64, nullable: true),
-                    Dimentions = table.Column<string>(maxLength: 128, nullable: true),
-                    IsDangerousGood = table.Column<bool>(nullable: false),
-                    DangerousGoodsCode = table.Column<string>(maxLength: 64, nullable: true),
-                    GoodCategoryId = table.Column<int>(nullable: true),
-                    UnitOfMeasureId = table.Column<int>(nullable: false)
+                    DisplayName = table.Column<string>(maxLength: 256, nullable: true),
+                    Language = table.Column<string>(nullable: true),
+                    CoreId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_GoodsDetails", x => x.Id);
+                    table.PrimaryKey("PK_VasesTranslations", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_GoodsDetails_GoodCategories_GoodCategoryId",
-                        column: x => x.GoodCategoryId,
-                        principalTable: "GoodCategories",
+                        name: "FK_VasesTranslations_Vases_CoreId",
+                        column: x => x.CoreId,
+                        principalTable: "Vases",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_GoodsDetails_UnitOfMeasures_UnitOfMeasureId",
-                        column: x => x.UnitOfMeasureId,
-                        principalTable: "UnitOfMeasures",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1366,7 +1690,7 @@ namespace TACHYON.Migrations
                         column: x => x.VasId,
                         principalTable: "Vases",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1388,7 +1712,7 @@ namespace TACHYON.Migrations
                         column: x => x.EntityDynamicParameterId,
                         principalTable: "AbpEntityDynamicParameters",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1409,7 +1733,7 @@ namespace TACHYON.Migrations
                         column: x => x.CoreId,
                         principalTable: "TermAndConditions",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1433,7 +1757,7 @@ namespace TACHYON.Migrations
                         column: x => x.EntityChangeId,
                         principalTable: "AbpEntityChanges",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1461,7 +1785,7 @@ namespace TACHYON.Migrations
                         column: x => x.CoreId,
                         principalTable: "Cities",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1477,12 +1801,11 @@ namespace TACHYON.Migrations
                     IsDeleted = table.Column<bool>(nullable: false),
                     DeleterUserId = table.Column<long>(nullable: true),
                     DeletionTime = table.Column<DateTime>(nullable: true),
-                    Name = table.Column<string>(maxLength: 256, nullable: false),
-                    Adress = table.Column<string>(maxLength: 256, nullable: false),
-                    Longitude = table.Column<decimal>(nullable: false),
-                    Latitude = table.Column<decimal>(nullable: false),
+                    Address = table.Column<string>(maxLength: 256, nullable: false),
                     CityId = table.Column<int>(nullable: false),
-                    TenantId = table.Column<int>(nullable: true)
+                    Location = table.Column<Point>(nullable: true),
+                    TenantId = table.Column<int>(nullable: true),
+                    Name = table.Column<string>(maxLength: 256, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -1492,7 +1815,7 @@ namespace TACHYON.Migrations
                         column: x => x.CityId,
                         principalTable: "Cities",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1509,10 +1832,9 @@ namespace TACHYON.Migrations
                     DeleterUserId = table.Column<long>(nullable: true),
                     DeletionTime = table.Column<DateTime>(nullable: true),
                     Name = table.Column<string>(maxLength: 256, nullable: false),
-                    Adress = table.Column<string>(maxLength: 256, nullable: false),
-                    Longitude = table.Column<decimal>(nullable: false),
-                    Latitude = table.Column<decimal>(nullable: false),
-                    CityId = table.Column<int>(nullable: false)
+                    Address = table.Column<string>(maxLength: 256, nullable: false),
+                    CityId = table.Column<int>(nullable: false),
+                    Location = table.Column<Point>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -1522,28 +1844,7 @@ namespace TACHYON.Migrations
                         column: x => x.CityId,
                         principalTable: "Cities",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "DocumentTypeTranslations",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(maxLength: 256, nullable: false),
-                    Language = table.Column<string>(nullable: false),
-                    CoreId = table.Column<long>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DocumentTypeTranslations", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_DocumentTypeTranslations_DocumentTypes_CoreId",
-                        column: x => x.CoreId,
-                        principalTable: "DocumentTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1639,12 +1940,19 @@ namespace TACHYON.Migrations
                     CityId = table.Column<int>(nullable: false),
                     UserTitle = table.Column<string>(nullable: true),
                     companyName = table.Column<string>(nullable: true),
+                    MobileNo = table.Column<string>(nullable: true),
                     SubscriptionEndDateUtc = table.Column<DateTime>(nullable: true),
                     IsInTrialPeriod = table.Column<bool>(nullable: false),
                     CustomCssId = table.Column<Guid>(nullable: true),
                     LogoId = table.Column<Guid>(nullable: true),
                     LogoFileType = table.Column<string>(maxLength: 64, nullable: true),
-                    SubscriptionPaymentType = table.Column<int>(nullable: false)
+                    Balance = table.Column<decimal>(nullable: false),
+                    ReservedBalance = table.Column<decimal>(nullable: false),
+                    CreditBalance = table.Column<decimal>(nullable: false),
+                    AccountNumber = table.Column<string>(maxLength: 12, nullable: true),
+                    ContractNumber = table.Column<string>(maxLength: 12, nullable: true),
+                    SubscriptionPaymentType = table.Column<int>(nullable: false),
+                    MoiNumber = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -1696,7 +2004,7 @@ namespace TACHYON.Migrations
                         column: x => x.UserId,
                         principalTable: "AbpUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1718,7 +2026,7 @@ namespace TACHYON.Migrations
                         column: x => x.UserId,
                         principalTable: "AbpUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1742,7 +2050,7 @@ namespace TACHYON.Migrations
                         column: x => x.UserId,
                         principalTable: "AbpUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1765,7 +2073,7 @@ namespace TACHYON.Migrations
                         column: x => x.UserId,
                         principalTable: "AbpUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1789,7 +2097,53 @@ namespace TACHYON.Migrations
                         column: x => x.UserId,
                         principalTable: "AbpUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserDeviceTokens",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<long>(nullable: false),
+                    DeviceId = table.Column<string>(nullable: true),
+                    Token = table.Column<string>(nullable: true),
+                    ExpireDate = table.Column<DateTime>(nullable: true),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    LastModificationTime = table.Column<DateTime>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserDeviceTokens", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserDeviceTokens_AbpUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AbpUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserOTPs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<long>(nullable: false),
+                    OTP = table.Column<string>(nullable: true),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    ExpireTime = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserOTPs", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserOTPs_AbpUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AbpUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1816,7 +2170,7 @@ namespace TACHYON.Migrations
                         column: x => x.TrucksTypeId,
                         principalTable: "TrucksTypes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1844,7 +2198,37 @@ namespace TACHYON.Migrations
                         column: x => x.CoreId,
                         principalTable: "TrucksTypes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Receivers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    TenantId = table.Column<int>(nullable: false),
+                    FullName = table.Column<string>(maxLength: 256, nullable: false),
+                    Email = table.Column<string>(maxLength: 256, nullable: true),
+                    PhoneNumber = table.Column<string>(maxLength: 32, nullable: false),
+                    FacilityId = table.Column<long>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Receivers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Receivers_Facilities_FacilityId",
+                        column: x => x.FacilityId,
+                        principalTable: "Facilities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1864,8 +2248,8 @@ namespace TACHYON.Migrations
                     DisplayName = table.Column<string>(maxLength: 256, nullable: true),
                     Description = table.Column<string>(maxLength: 512, nullable: true),
                     RoutTypeId = table.Column<int>(nullable: true),
-                    OriginCityId = table.Column<int>(nullable: true),
-                    DestinationCityId = table.Column<int>(nullable: true),
+                    OriginCityId = table.Column<int>(nullable: false),
+                    DestinationCityId = table.Column<int>(nullable: false),
                     OriginPortId = table.Column<long>(nullable: true),
                     DestinationPortId = table.Column<long>(nullable: true)
                 },
@@ -1877,7 +2261,7 @@ namespace TACHYON.Migrations
                         column: x => x.DestinationCityId,
                         principalTable: "Cities",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Routes_Ports_DestinationPortId",
                         column: x => x.DestinationPortId,
@@ -1889,7 +2273,7 @@ namespace TACHYON.Migrations
                         column: x => x.OriginCityId,
                         principalTable: "Cities",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Routes_Ports_OriginPortId",
                         column: x => x.OriginPortId,
@@ -1927,13 +2311,13 @@ namespace TACHYON.Migrations
                         column: x => x.RoleId,
                         principalTable: "AbpRoles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_AbpPermissions_AbpUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AbpUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1956,6 +2340,270 @@ namespace TACHYON.Migrations
                         name: "FK_AbpRoleClaims_AbpRoles_RoleId",
                         column: x => x.RoleId,
                         principalTable: "AbpRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BalanceRecharges",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TenantId = table.Column<int>(nullable: false),
+                    Amount = table.Column<decimal>(nullable: false),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    ReferenceNo = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BalanceRecharges", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_BalanceRecharges_AbpTenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "AbpTenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DocumentTypes",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    DisplayName = table.Column<string>(maxLength: 256, nullable: false),
+                    IsRequired = table.Column<bool>(nullable: false),
+                    HasExpirationDate = table.Column<bool>(nullable: false),
+                    DocumentsEntityId = table.Column<int>(nullable: false),
+                    EditionId = table.Column<int>(nullable: true),
+                    HasNumber = table.Column<bool>(nullable: false),
+                    IsNumberUnique = table.Column<bool>(nullable: false),
+                    HasNotes = table.Column<bool>(nullable: false),
+                    SpecialConstant = table.Column<string>(nullable: true),
+                    NumberMinDigits = table.Column<int>(nullable: true),
+                    NumberMaxDigits = table.Column<int>(nullable: true),
+                    ExpirationAlertDays = table.Column<int>(nullable: true),
+                    InActiveAccountExpired = table.Column<bool>(nullable: false),
+                    InActiveToleranceDays = table.Column<int>(nullable: true),
+                    HasHijriExpirationDate = table.Column<bool>(nullable: false),
+                    TemplateName = table.Column<string>(nullable: true),
+                    TemplateContentType = table.Column<string>(nullable: true),
+                    TemplateId = table.Column<Guid>(nullable: true),
+                    IsRequiredNumber = table.Column<bool>(nullable: false),
+                    IsRequiredExpirationDate = table.Column<bool>(nullable: false),
+                    IsRequiredDocumentTemplate = table.Column<bool>(nullable: false),
+                    DocumentRelatedWithId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DocumentTypes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DocumentTypes_AbpTenants_DocumentRelatedWithId",
+                        column: x => x.DocumentRelatedWithId,
+                        principalTable: "AbpTenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_DocumentTypes_DocumentsEntities_DocumentsEntityId",
+                        column: x => x.DocumentsEntityId,
+                        principalTable: "DocumentsEntities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DocumentTypes_AbpEditions_EditionId",
+                        column: x => x.EditionId,
+                        principalTable: "AbpEditions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "GroupPeriods",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    TenantId = table.Column<int>(nullable: false),
+                    PeriodId = table.Column<int>(nullable: false),
+                    Note = table.Column<string>(nullable: true),
+                    AmountWithTaxVat = table.Column<decimal>(nullable: false),
+                    VatAmount = table.Column<decimal>(nullable: false),
+                    Amount = table.Column<decimal>(nullable: false),
+                    TaxVat = table.Column<decimal>(nullable: false),
+                    DocumentId = table.Column<Guid>(nullable: true),
+                    DocumentName = table.Column<string>(nullable: true),
+                    DocumentContentType = table.Column<string>(nullable: true),
+                    Status = table.Column<byte>(nullable: false),
+                    RejectedReason = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GroupPeriods", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_GroupPeriods_InvoicePeriods_PeriodId",
+                        column: x => x.PeriodId,
+                        principalTable: "InvoicePeriods",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_GroupPeriods_AbpTenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "AbpTenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Invoices",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    InvoiceNumber = table.Column<long>(nullable: true),
+                    TenantId = table.Column<int>(nullable: false),
+                    PeriodId = table.Column<int>(nullable: false),
+                    Channel = table.Column<byte>(nullable: false),
+                    DueDate = table.Column<DateTime>(nullable: false),
+                    IsPaid = table.Column<bool>(nullable: false),
+                    Note = table.Column<string>(nullable: true),
+                    SubTotalAmount = table.Column<decimal>(nullable: false),
+                    TotalAmount = table.Column<decimal>(nullable: false),
+                    VatAmount = table.Column<decimal>(nullable: false),
+                    TaxVat = table.Column<decimal>(nullable: false),
+                    AccountType = table.Column<byte>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Invoices", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Invoices_InvoicePeriods_PeriodId",
+                        column: x => x.PeriodId,
+                        principalTable: "InvoicePeriods",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Invoices_AbpTenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "AbpTenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SubmitInvoices",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    ReferencNumber = table.Column<long>(nullable: true),
+                    TenantId = table.Column<int>(nullable: false),
+                    PeriodId = table.Column<int>(nullable: false),
+                    Channel = table.Column<byte>(nullable: false),
+                    SubTotalAmount = table.Column<decimal>(nullable: false),
+                    TotalAmount = table.Column<decimal>(nullable: false),
+                    VatAmount = table.Column<decimal>(nullable: false),
+                    TaxVat = table.Column<decimal>(nullable: false),
+                    DocumentId = table.Column<Guid>(nullable: true),
+                    DocumentName = table.Column<string>(nullable: true),
+                    DocumentContentType = table.Column<string>(nullable: true),
+                    Status = table.Column<byte>(nullable: false),
+                    RejectedReason = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SubmitInvoices", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SubmitInvoices_InvoicePeriods_PeriodId",
+                        column: x => x.PeriodId,
+                        principalTable: "InvoicePeriods",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SubmitInvoices_AbpTenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "AbpTenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TenantCarriers",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TenantId = table.Column<int>(nullable: false),
+                    CarrierTenantId = table.Column<int>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    CreationTime = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TenantCarriers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TenantCarriers_AbpTenants_CarrierTenantId",
+                        column: x => x.CarrierTenantId,
+                        principalTable: "AbpTenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_TenantCarriers_AbpTenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "AbpTenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Transactions",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ChannelId = table.Column<byte>(nullable: false),
+                    Amount = table.Column<decimal>(nullable: false),
+                    Count = table.Column<int>(nullable: false),
+                    TenantId = table.Column<int>(nullable: true),
+                    SourceId = table.Column<long>(nullable: false),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Transactions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Transactions_AbpTenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "AbpTenants",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -1985,7 +2633,7 @@ namespace TACHYON.Migrations
                         column: x => x.CoreId,
                         principalTable: "Capacities",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -2014,7 +2662,9 @@ namespace TACHYON.Migrations
                     TrucksTypeId = table.Column<long>(nullable: true),
                     CapacityId = table.Column<int>(nullable: true),
                     Length = table.Column<int>(nullable: true),
-                    PlateTypeId = table.Column<int>(nullable: true)
+                    PlateTypeId = table.Column<int>(nullable: true),
+                    IsWaslIntegrated = table.Column<bool>(nullable: false),
+                    WaslIntegrationErrorMsg = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -2087,15 +2737,217 @@ namespace TACHYON.Migrations
                         column: x => x.RouteId,
                         principalTable: "Routes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Offers_TrailerTypes_TrailerTypeId",
                         column: x => x.TrailerTypeId,
                         principalTable: "TrailerTypes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Offers_TrucksTypes_TrucksTypeId",
+                        column: x => x.TrucksTypeId,
+                        principalTable: "TrucksTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DocumentTypeTranslations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(maxLength: 256, nullable: false),
+                    Language = table.Column<string>(nullable: false),
+                    CoreId = table.Column<long>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DocumentTypeTranslations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DocumentTypeTranslations_DocumentTypes_CoreId",
+                        column: x => x.CoreId,
+                        principalTable: "DocumentTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "GroupPeriodsInvoices",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    InvoiceId = table.Column<long>(nullable: false),
+                    GroupId = table.Column<long>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GroupPeriodsInvoices", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_GroupPeriodsInvoices_GroupPeriods_GroupId",
+                        column: x => x.GroupId,
+                        principalTable: "GroupPeriods",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_GroupPeriodsInvoices_Invoices_InvoiceId",
+                        column: x => x.InvoiceId,
+                        principalTable: "Invoices",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ShippingRequests",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    ReferenceNumber = table.Column<string>(nullable: true),
+                    TenantId = table.Column<int>(nullable: false),
+                    IsBid = table.Column<bool>(nullable: false),
+                    IsTachyonDeal = table.Column<bool>(nullable: false),
+                    IsDirectRequest = table.Column<bool>(nullable: false),
+                    RouteTypeId = table.Column<byte>(nullable: true),
+                    OriginCityId = table.Column<int>(nullable: true),
+                    DestinationCityId = table.Column<int>(nullable: true),
+                    RequestType = table.Column<byte>(nullable: false),
+                    Price = table.Column<decimal>(nullable: true),
+                    IsPriceAccepted = table.Column<bool>(nullable: true),
+                    IsPrePayed = table.Column<bool>(nullable: true),
+                    IsShipperHaveInvoice = table.Column<bool>(nullable: false),
+                    IsCarrierHaveInvoice = table.Column<bool>(nullable: false),
+                    FatherShippingRequestId = table.Column<long>(nullable: true),
+                    CarrierTenantId = table.Column<int>(nullable: true),
+                    NumberOfDrops = table.Column<int>(nullable: false),
+                    GoodCategoryId = table.Column<int>(nullable: true),
+                    OtherGoodsCategoryName = table.Column<string>(nullable: true),
+                    Status = table.Column<byte>(nullable: false),
+                    AssignedDriverUserId = table.Column<long>(nullable: true),
+                    HasAccident = table.Column<bool>(nullable: false),
+                    AssignedTruckId = table.Column<long>(nullable: true),
+                    NumberOfTrips = table.Column<int>(nullable: false),
+                    TotalsTripsAddByShippier = table.Column<int>(nullable: false),
+                    StartTripDate = table.Column<DateTime>(nullable: true),
+                    EndTripDate = table.Column<DateTime>(nullable: true),
+                    TotalWeight = table.Column<double>(nullable: false),
+                    TransportTypeId = table.Column<int>(nullable: true),
+                    OtherTransportTypeName = table.Column<string>(nullable: true),
+                    TrucksTypeId = table.Column<long>(nullable: true),
+                    OtherTrucksTypeName = table.Column<string>(nullable: true),
+                    CapacityId = table.Column<int>(nullable: true),
+                    PackingTypeId = table.Column<int>(nullable: true),
+                    OtherPackingTypeName = table.Column<string>(nullable: true),
+                    NumberOfPacking = table.Column<int>(nullable: false),
+                    ShippingTypeId = table.Column<int>(nullable: false),
+                    IsDrafted = table.Column<bool>(nullable: false),
+                    DraftStep = table.Column<int>(nullable: false),
+                    CancelReason = table.Column<string>(maxLength: 500, nullable: true),
+                    BidStartDate = table.Column<DateTime>(nullable: true),
+                    BidEndDate = table.Column<DateTime>(nullable: true),
+                    BidStatus = table.Column<byte>(nullable: false),
+                    TotalBids = table.Column<int>(nullable: false),
+                    CloseBidDate = table.Column<DateTime>(nullable: true),
+                    TotalOffers = table.Column<int>(nullable: false),
+                    VatSetting = table.Column<decimal>(nullable: false),
+                    SubTotalAmount = table.Column<decimal>(nullable: false),
+                    VatAmount = table.Column<decimal>(nullable: false),
+                    PercentCommissionSetting = table.Column<decimal>(nullable: false),
+                    CommissionValueSetting = table.Column<decimal>(nullable: false),
+                    MinValueCommissionSetting = table.Column<decimal>(nullable: false),
+                    TotalCommission = table.Column<decimal>(nullable: false),
+                    CarrierPrice = table.Column<decimal>(nullable: false),
+                    CarrierPriceType = table.Column<byte>(nullable: false),
+                    ActualPercentCommission = table.Column<decimal>(nullable: false),
+                    ActualCommissionValue = table.Column<decimal>(nullable: false),
+                    ActualMinCommissionValue = table.Column<decimal>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ShippingRequests", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ShippingRequests_AbpUsers_AssignedDriverUserId",
+                        column: x => x.AssignedDriverUserId,
+                        principalTable: "AbpUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ShippingRequests_Trucks_AssignedTruckId",
+                        column: x => x.AssignedTruckId,
+                        principalTable: "Trucks",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ShippingRequests_Capacities_CapacityId",
+                        column: x => x.CapacityId,
+                        principalTable: "Capacities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ShippingRequests_AbpTenants_CarrierTenantId",
+                        column: x => x.CarrierTenantId,
+                        principalTable: "AbpTenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ShippingRequests_Cities_DestinationCityId",
+                        column: x => x.DestinationCityId,
+                        principalTable: "Cities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ShippingRequests_ShippingRequests_FatherShippingRequestId",
+                        column: x => x.FatherShippingRequestId,
+                        principalTable: "ShippingRequests",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ShippingRequests_GoodCategories_GoodCategoryId",
+                        column: x => x.GoodCategoryId,
+                        principalTable: "GoodCategories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ShippingRequests_Cities_OriginCityId",
+                        column: x => x.OriginCityId,
+                        principalTable: "Cities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ShippingRequests_PackingTypes_PackingTypeId",
+                        column: x => x.PackingTypeId,
+                        principalTable: "PackingTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ShippingRequests_ShippingTypes_ShippingTypeId",
+                        column: x => x.ShippingTypeId,
+                        principalTable: "ShippingTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ShippingRequests_AbpTenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "AbpTenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ShippingRequests_TransportTypes_TransportTypeId",
+                        column: x => x.TransportTypeId,
+                        principalTable: "TransportTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ShippingRequests_TrucksTypes_TrucksTypeId",
                         column: x => x.TrucksTypeId,
                         principalTable: "TrucksTypes",
                         principalColumn: "Id",
@@ -2146,145 +2998,81 @@ namespace TACHYON.Migrations
                         column: x => x.PayloadMaxWeightId,
                         principalTable: "PayloadMaxWeights",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Trailers_TrailerStatuses_TrailerStatusId",
                         column: x => x.TrailerStatusId,
                         principalTable: "TrailerStatuses",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Trailers_TrailerTypes_TrailerTypeId",
                         column: x => x.TrailerTypeId,
                         principalTable: "TrailerTypes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "ShippingRequests",
+                name: "GroupShippingRequests",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RequestId = table.Column<long>(nullable: false),
+                    GroupId = table.Column<long>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GroupShippingRequests", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_GroupShippingRequests_GroupPeriods_GroupId",
+                        column: x => x.GroupId,
+                        principalTable: "GroupPeriods",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_GroupShippingRequests_ShippingRequests_RequestId",
+                        column: x => x.RequestId,
+                        principalTable: "ShippingRequests",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "InvoicesProforma",
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorUserId = table.Column<long>(nullable: true),
-                    LastModificationTime = table.Column<DateTime>(nullable: true),
-                    LastModifierUserId = table.Column<long>(nullable: true),
-                    IsDeleted = table.Column<bool>(nullable: false),
-                    DeleterUserId = table.Column<long>(nullable: true),
-                    DeletionTime = table.Column<DateTime>(nullable: true),
                     TenantId = table.Column<int>(nullable: false),
-                    RouteId = table.Column<int>(nullable: false),
-                    IsBid = table.Column<bool>(nullable: false),
-                    IsTachyonDeal = table.Column<bool>(nullable: false),
-                    Price = table.Column<decimal>(nullable: true),
-                    IsPriceAccepted = table.Column<bool>(nullable: true),
-                    IsRejected = table.Column<bool>(nullable: true),
-                    FatherShippingRequestId = table.Column<long>(nullable: true),
-                    CarrierTenantId = table.Column<int>(nullable: true),
-                    NumberOfDrops = table.Column<int>(nullable: false),
-                    StageOneFinish = table.Column<bool>(nullable: false),
-                    StageTowFinish = table.Column<bool>(nullable: false),
-                    StageThreeFinish = table.Column<bool>(nullable: false),
-                    GoodCategoryId = table.Column<int>(nullable: false),
-                    ShippingRequestStatusId = table.Column<int>(nullable: false),
-                    AssignedDriverUserId = table.Column<long>(nullable: true),
-                    AssignedTruckId = table.Column<long>(nullable: true),
-                    AssignedTrailerId = table.Column<long>(nullable: true),
-                    TransportTypeId = table.Column<int>(nullable: true),
-                    TrucksTypeId = table.Column<long>(nullable: false),
-                    CapacityId = table.Column<int>(nullable: true),
-                    BidStartDate = table.Column<DateTime>(nullable: true),
-                    BidEndDate = table.Column<DateTime>(nullable: true),
-                    ShippingRequestBidStatusId = table.Column<int>(nullable: true),
-                    CloseBidDate = table.Column<DateTime>(nullable: true)
+                    RequestId = table.Column<long>(nullable: false),
+                    TotalAmount = table.Column<decimal>(nullable: false),
+                    Amount = table.Column<decimal>(nullable: false),
+                    VatAmount = table.Column<decimal>(nullable: false),
+                    TaxVat = table.Column<decimal>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ShippingRequests", x => x.Id);
+                    table.PrimaryKey("PK_InvoicesProforma", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ShippingRequests_AbpUsers_AssignedDriverUserId",
-                        column: x => x.AssignedDriverUserId,
-                        principalTable: "AbpUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ShippingRequests_Trailers_AssignedTrailerId",
-                        column: x => x.AssignedTrailerId,
-                        principalTable: "Trailers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ShippingRequests_Trucks_AssignedTruckId",
-                        column: x => x.AssignedTruckId,
-                        principalTable: "Trucks",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ShippingRequests_Capacities_CapacityId",
-                        column: x => x.CapacityId,
-                        principalTable: "Capacities",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ShippingRequests_AbpTenants_CarrierTenantId",
-                        column: x => x.CarrierTenantId,
-                        principalTable: "AbpTenants",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ShippingRequests_ShippingRequests_FatherShippingRequestId",
-                        column: x => x.FatherShippingRequestId,
+                        name: "FK_InvoicesProforma_ShippingRequests_RequestId",
+                        column: x => x.RequestId,
                         principalTable: "ShippingRequests",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ShippingRequests_GoodCategories_GoodCategoryId",
-                        column: x => x.GoodCategoryId,
-                        principalTable: "GoodCategories",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ShippingRequests_Routes_RouteId",
-                        column: x => x.RouteId,
-                        principalTable: "Routes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ShippingRequests_ShippingRequestBidStatuses_ShippingRequestBidStatusId",
-                        column: x => x.ShippingRequestBidStatusId,
-                        principalTable: "ShippingRequestBidStatuses",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ShippingRequests_ShippingRequestStatuses_ShippingRequestStatusId",
-                        column: x => x.ShippingRequestStatusId,
-                        principalTable: "ShippingRequestStatuses",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ShippingRequests_AbpTenants_TenantId",
+                        name: "FK_InvoicesProforma_AbpTenants_TenantId",
                         column: x => x.TenantId,
                         principalTable: "AbpTenants",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ShippingRequests_TransportTypes_TransportTypeId",
-                        column: x => x.TransportTypeId,
-                        principalTable: "TransportTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ShippingRequests_TrucksTypes_TrucksTypeId",
-                        column: x => x.TrucksTypeId,
-                        principalTable: "TrucksTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "RoutSteps",
+                name: "PriceOffers",
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
@@ -2296,99 +3084,56 @@ namespace TACHYON.Migrations
                     IsDeleted = table.Column<bool>(nullable: false),
                     DeleterUserId = table.Column<long>(nullable: true),
                     DeletionTime = table.Column<DateTime>(nullable: true),
+                    ReferenceNumber = table.Column<long>(nullable: true),
+                    ParentId = table.Column<long>(nullable: true),
+                    ShippingRequestId = table.Column<long>(nullable: false),
+                    SourceId = table.Column<long>(nullable: true),
                     TenantId = table.Column<int>(nullable: false),
-                    DisplayName = table.Column<string>(maxLength: 256, nullable: true),
-                    Latitude = table.Column<string>(maxLength: 256, nullable: true),
-                    Longitude = table.Column<string>(maxLength: 256, nullable: true),
-                    Order = table.Column<int>(nullable: false),
-                    OriginCityId = table.Column<int>(nullable: true),
-                    DestinationCityId = table.Column<int>(nullable: true),
-                    ShippingRequestId = table.Column<long>(nullable: true),
-                    SourceFacilityId = table.Column<long>(nullable: true),
-                    DestinationFacilityId = table.Column<long>(nullable: true),
-                    TrucksTypeId = table.Column<long>(nullable: true),
-                    TrailerTypeId = table.Column<int>(nullable: true),
-                    GoodsDetailId = table.Column<long>(nullable: true),
-                    AssignedDriverUserId = table.Column<long>(nullable: false),
-                    AssignedTruckId = table.Column<long>(nullable: false),
-                    AssignedTrailerId = table.Column<long>(nullable: false),
-                    PickingTypeId = table.Column<int>(nullable: false)
+                    Channel = table.Column<byte>(nullable: false),
+                    Status = table.Column<byte>(nullable: false),
+                    PriceType = table.Column<byte>(nullable: false),
+                    ItemPrice = table.Column<decimal>(nullable: false),
+                    ItemVatAmount = table.Column<decimal>(nullable: false),
+                    ItemTotalAmount = table.Column<decimal>(nullable: false),
+                    ItemSubTotalAmountWithCommission = table.Column<decimal>(nullable: false),
+                    ItemVatAmountWithCommission = table.Column<decimal>(nullable: false),
+                    ItemTotalAmountWithCommission = table.Column<decimal>(nullable: false),
+                    TotalAmount = table.Column<decimal>(nullable: false),
+                    SubTotalAmount = table.Column<decimal>(nullable: false),
+                    VatAmount = table.Column<decimal>(nullable: false),
+                    TotalAmountWithCommission = table.Column<decimal>(nullable: false),
+                    SubTotalAmountWithCommission = table.Column<decimal>(nullable: false),
+                    VatAmountWithCommission = table.Column<decimal>(nullable: false),
+                    TaxVat = table.Column<decimal>(nullable: false),
+                    CommissionType = table.Column<byte>(nullable: false),
+                    ItemCommissionAmount = table.Column<decimal>(nullable: false),
+                    CommissionPercentageOrAddValue = table.Column<decimal>(nullable: false),
+                    CommissionAmount = table.Column<decimal>(nullable: false),
+                    Quantity = table.Column<int>(nullable: false),
+                    RejectedReason = table.Column<string>(nullable: true),
+                    IsView = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RoutSteps", x => x.Id);
+                    table.PrimaryKey("PK_PriceOffers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_RoutSteps_AbpUsers_AssignedDriverUserId",
-                        column: x => x.AssignedDriverUserId,
-                        principalTable: "AbpUsers",
+                        name: "FK_PriceOffers_PriceOffers_ParentId",
+                        column: x => x.ParentId,
+                        principalTable: "PriceOffers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_RoutSteps_Trailers_AssignedTrailerId",
-                        column: x => x.AssignedTrailerId,
-                        principalTable: "Trailers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_RoutSteps_Trucks_AssignedTruckId",
-                        column: x => x.AssignedTruckId,
-                        principalTable: "Trucks",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_RoutSteps_Cities_DestinationCityId",
-                        column: x => x.DestinationCityId,
-                        principalTable: "Cities",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_RoutSteps_Facilities_DestinationFacilityId",
-                        column: x => x.DestinationFacilityId,
-                        principalTable: "Facilities",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_RoutSteps_GoodsDetails_GoodsDetailId",
-                        column: x => x.GoodsDetailId,
-                        principalTable: "GoodsDetails",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_RoutSteps_Cities_OriginCityId",
-                        column: x => x.OriginCityId,
-                        principalTable: "Cities",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_RoutSteps_PickingTypes_PickingTypeId",
-                        column: x => x.PickingTypeId,
-                        principalTable: "PickingTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_RoutSteps_ShippingRequests_ShippingRequestId",
+                        name: "FK_PriceOffers_ShippingRequests_ShippingRequestId",
                         column: x => x.ShippingRequestId,
                         principalTable: "ShippingRequests",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_RoutSteps_Facilities_SourceFacilityId",
-                        column: x => x.SourceFacilityId,
-                        principalTable: "Facilities",
+                        name: "FK_PriceOffers_AbpTenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "AbpTenants",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_RoutSteps_TrailerTypes_TrailerTypeId",
-                        column: x => x.TrailerTypeId,
-                        principalTable: "TrailerTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_RoutSteps_TrucksTypes_TrucksTypeId",
-                        column: x => x.TrucksTypeId,
-                        principalTable: "TrucksTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -2406,7 +3151,14 @@ namespace TACHYON.Migrations
                     DeletionTime = table.Column<DateTime>(nullable: true),
                     TenantId = table.Column<int>(nullable: false),
                     ShippingRequestId = table.Column<long>(nullable: false),
-                    price = table.Column<double>(nullable: false),
+                    BasePrice = table.Column<decimal>(nullable: false),
+                    price = table.Column<decimal>(nullable: false),
+                    TotalCommission = table.Column<decimal>(nullable: false),
+                    ActualPercentCommission = table.Column<decimal>(nullable: false),
+                    ActualCommissionValue = table.Column<decimal>(nullable: false),
+                    ActualMinCommissionValue = table.Column<decimal>(nullable: false),
+                    PriceSubTotal = table.Column<decimal>(nullable: false),
+                    VatAmount = table.Column<decimal>(nullable: false),
                     IsCancled = table.Column<bool>(nullable: false),
                     CanceledDate = table.Column<DateTime>(nullable: true),
                     CancledReason = table.Column<string>(nullable: true),
@@ -2422,13 +3174,193 @@ namespace TACHYON.Migrations
                         column: x => x.ShippingRequestId,
                         principalTable: "ShippingRequests",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ShippingRequestBids_AbpTenants_TenantId",
                         column: x => x.TenantId,
                         principalTable: "AbpTenants",
                         principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ShippingRequestDirectRequests",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    TenantId = table.Column<int>(nullable: false),
+                    CarrierTenantId = table.Column<int>(nullable: false),
+                    ShippingRequestId = table.Column<long>(nullable: false),
+                    Status = table.Column<byte>(nullable: false),
+                    RejetcReason = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ShippingRequestDirectRequests", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ShippingRequestDirectRequests_AbpTenants_CarrierTenantId",
+                        column: x => x.CarrierTenantId,
+                        principalTable: "AbpTenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ShippingRequestDirectRequests_ShippingRequests_ShippingRequestId",
+                        column: x => x.ShippingRequestId,
+                        principalTable: "ShippingRequests",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ShippingRequestDirectRequests_AbpTenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "AbpTenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ShippingRequestsCarrierDirectPricing",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    TenantId = table.Column<int>(nullable: false),
+                    CarrirerTenantId = table.Column<int>(nullable: false),
+                    RequestId = table.Column<long>(nullable: false),
+                    Price = table.Column<decimal>(nullable: true),
+                    Status = table.Column<int>(nullable: false),
+                    RejetcReason = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ShippingRequestsCarrierDirectPricing", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ShippingRequestsCarrierDirectPricing_AbpTenants_CarrirerTenantId",
+                        column: x => x.CarrirerTenantId,
+                        principalTable: "AbpTenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ShippingRequestsCarrierDirectPricing_ShippingRequests_RequestId",
+                        column: x => x.RequestId,
+                        principalTable: "ShippingRequests",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ShippingRequestsCarrierDirectPricing_AbpTenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "AbpTenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ShippingRequestTrips",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    WaybillNumber = table.Column<long>(nullable: true),
+                    StartTripDate = table.Column<DateTime>(nullable: false),
+                    EndTripDate = table.Column<DateTime>(nullable: true),
+                    StartWorking = table.Column<DateTime>(nullable: true),
+                    EndWorking = table.Column<DateTime>(nullable: true),
+                    HasAttachment = table.Column<bool>(nullable: false),
+                    NeedsDeliveryNote = table.Column<bool>(nullable: false),
+                    Status = table.Column<byte>(nullable: false),
+                    RoutePointStatus = table.Column<byte>(nullable: false),
+                    AssignedDriverUserId = table.Column<long>(nullable: true),
+                    AssignedDriverTime = table.Column<DateTime>(nullable: true),
+                    HasAccident = table.Column<bool>(nullable: false),
+                    IsApproveCancledByShipper = table.Column<bool>(nullable: false),
+                    IsApproveCancledByCarrier = table.Column<bool>(nullable: false),
+                    AssignedTruckId = table.Column<long>(nullable: true),
+                    ShippingRequestId = table.Column<long>(nullable: false),
+                    OriginFacilityId = table.Column<long>(nullable: true),
+                    DestinationFacilityId = table.Column<long>(nullable: true),
+                    DriverStatus = table.Column<int>(nullable: false),
+                    RejectReasonId = table.Column<int>(nullable: true),
+                    RejectedReason = table.Column<string>(nullable: true),
+                    TotalValue = table.Column<string>(nullable: true),
+                    Note = table.Column<string>(maxLength: 512, nullable: true),
+                    ActualPickupDate = table.Column<DateTime>(nullable: true),
+                    ActualDeliveryDate = table.Column<DateTime>(nullable: true),
+                    IsShipperHaveInvoice = table.Column<bool>(nullable: false),
+                    IsCarrierHaveInvoice = table.Column<bool>(nullable: false),
+                    TotalAmount = table.Column<decimal>(nullable: true),
+                    SubTotalAmount = table.Column<decimal>(nullable: true),
+                    VatAmount = table.Column<decimal>(nullable: true),
+                    TotalAmountWithCommission = table.Column<decimal>(nullable: true),
+                    SubTotalAmountWithCommission = table.Column<decimal>(nullable: true),
+                    VatAmountWithCommission = table.Column<decimal>(nullable: true),
+                    TaxVat = table.Column<decimal>(nullable: true),
+                    CommissionType = table.Column<byte>(nullable: true),
+                    CommissionPercentageOrAddValue = table.Column<decimal>(nullable: true),
+                    CommissionAmount = table.Column<decimal>(nullable: true),
+                    BayanId = table.Column<string>(nullable: true),
+                    IsWaslIntegrated = table.Column<bool>(nullable: false),
+                    WaslIntegrationErrorMsg = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ShippingRequestTrips", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ShippingRequestTrips_AbpUsers_AssignedDriverUserId",
+                        column: x => x.AssignedDriverUserId,
+                        principalTable: "AbpUsers",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ShippingRequestTrips_Trucks_AssignedTruckId",
+                        column: x => x.AssignedTruckId,
+                        principalTable: "Trucks",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ShippingRequestTrips_Facilities_DestinationFacilityId",
+                        column: x => x.DestinationFacilityId,
+                        principalTable: "Facilities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ShippingRequestTrips_Facilities_OriginFacilityId",
+                        column: x => x.OriginFacilityId,
+                        principalTable: "Facilities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ShippingRequestTrips_ShippingRequestTripRejectReasons_RejectReasonId",
+                        column: x => x.RejectReasonId,
+                        principalTable: "ShippingRequestTripRejectReasons",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ShippingRequestTrips_ShippingRequests_ShippingRequestId",
+                        column: x => x.ShippingRequestId,
+                        principalTable: "ShippingRequests",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -2444,13 +3376,14 @@ namespace TACHYON.Migrations
                     IsDeleted = table.Column<bool>(nullable: false),
                     DeleterUserId = table.Column<long>(nullable: true),
                     DeletionTime = table.Column<DateTime>(nullable: true),
-                    TenantId = table.Column<int>(nullable: false),
                     DefualtPrice = table.Column<double>(nullable: true),
                     ActualPrice = table.Column<double>(nullable: true),
                     RequestMaxAmount = table.Column<int>(nullable: false),
                     RequestMaxCount = table.Column<int>(nullable: false),
                     VasId = table.Column<int>(nullable: false),
-                    ShippingRequestId = table.Column<long>(nullable: false)
+                    OtherVasName = table.Column<string>(nullable: true),
+                    ShippingRequestId = table.Column<long>(nullable: false),
+                    NumberOfTrips = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -2460,13 +3393,506 @@ namespace TACHYON.Migrations
                         column: x => x.ShippingRequestId,
                         principalTable: "ShippingRequests",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ShippingRequestVases_Vases_VasId",
                         column: x => x.VasId,
                         principalTable: "Vases",
                         principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PriceOfferDetails",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PriceOfferId = table.Column<long>(nullable: false),
+                    SourceId = table.Column<long>(nullable: true),
+                    PriceType = table.Column<byte>(nullable: false),
+                    ItemPrice = table.Column<decimal>(nullable: false),
+                    ItemVatAmount = table.Column<decimal>(nullable: false),
+                    ItemTotalAmount = table.Column<decimal>(nullable: false),
+                    ItemSubTotalAmountWithCommission = table.Column<decimal>(nullable: false),
+                    ItemVatAmountWithCommission = table.Column<decimal>(nullable: false),
+                    ItemTotalAmountWithCommission = table.Column<decimal>(nullable: false),
+                    TotalAmount = table.Column<decimal>(nullable: false),
+                    SubTotalAmount = table.Column<decimal>(nullable: false),
+                    VatAmount = table.Column<decimal>(nullable: false),
+                    TotalAmountWithCommission = table.Column<decimal>(nullable: false),
+                    SubTotalAmountWithCommission = table.Column<decimal>(nullable: false),
+                    VatAmountWithCommission = table.Column<decimal>(nullable: false),
+                    ItemCommissionAmount = table.Column<decimal>(nullable: false),
+                    CommissionAmount = table.Column<decimal>(nullable: false),
+                    CommissionType = table.Column<byte>(nullable: false),
+                    CommissionPercentageOrAddValue = table.Column<decimal>(nullable: false),
+                    Quantity = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PriceOfferDetails", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PriceOfferDetails_PriceOffers_PriceOfferId",
+                        column: x => x.PriceOfferId,
+                        principalTable: "PriceOffers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TachyonPriceOffers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    TenantId = table.Column<int>(nullable: false),
+                    CarrirerTenantId = table.Column<int>(nullable: true),
+                    ShippingRequestId = table.Column<long>(nullable: false),
+                    ShippingRequestBidId = table.Column<long>(nullable: true),
+                    ShippingRequestCarrierDirectPricingId = table.Column<int>(nullable: true),
+                    OfferStatus = table.Column<byte>(nullable: false),
+                    RejectedReason = table.Column<string>(nullable: true),
+                    PriceType = table.Column<byte>(nullable: false),
+                    CarrierPrice = table.Column<decimal>(nullable: true),
+                    SubTotalAmount = table.Column<decimal>(nullable: true),
+                    TotalAmount = table.Column<decimal>(nullable: false),
+                    VatAmount = table.Column<decimal>(nullable: true),
+                    TotalCommission = table.Column<decimal>(nullable: true),
+                    VatSetting = table.Column<decimal>(nullable: true),
+                    CommissionValueSetting = table.Column<decimal>(nullable: true),
+                    PercentCommissionSetting = table.Column<decimal>(nullable: true),
+                    MinCommissionValueSetting = table.Column<decimal>(nullable: true),
+                    ActualCommissionValue = table.Column<decimal>(nullable: true),
+                    ActualPercentCommission = table.Column<decimal>(nullable: true),
+                    ActualMinCommissionValue = table.Column<decimal>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TachyonPriceOffers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TachyonPriceOffers_AbpTenants_CarrirerTenantId",
+                        column: x => x.CarrirerTenantId,
+                        principalTable: "AbpTenants",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_TachyonPriceOffers_ShippingRequestBids_ShippingRequestBidId",
+                        column: x => x.ShippingRequestBidId,
+                        principalTable: "ShippingRequestBids",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_TachyonPriceOffers_ShippingRequestsCarrierDirectPricing_ShippingRequestCarrierDirectPricingId",
+                        column: x => x.ShippingRequestCarrierDirectPricingId,
+                        principalTable: "ShippingRequestsCarrierDirectPricing",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_TachyonPriceOffers_ShippingRequests_ShippingRequestId",
+                        column: x => x.ShippingRequestId,
+                        principalTable: "ShippingRequests",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "InvoiceTrips",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    InvoiceId = table.Column<long>(nullable: false),
+                    TripId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_InvoiceTrips", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_InvoiceTrips_Invoices_InvoiceId",
+                        column: x => x.InvoiceId,
+                        principalTable: "Invoices",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_InvoiceTrips_ShippingRequestTrips_TripId",
+                        column: x => x.TripId,
+                        principalTable: "ShippingRequestTrips",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RoutPoints",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    WaybillNumber = table.Column<long>(nullable: true),
+                    DisplayName = table.Column<string>(nullable: true),
+                    PickingType = table.Column<byte>(nullable: false),
+                    FacilityId = table.Column<long>(nullable: false),
+                    ShippingRequestTripId = table.Column<int>(nullable: false),
+                    Code = table.Column<string>(nullable: true),
+                    Status = table.Column<byte>(nullable: false),
+                    StartTime = table.Column<DateTime>(nullable: true),
+                    EndTime = table.Column<DateTime>(nullable: true),
+                    IsActive = table.Column<bool>(nullable: false),
+                    IsComplete = table.Column<bool>(nullable: false),
+                    DocumentId = table.Column<Guid>(nullable: true),
+                    DocumentName = table.Column<string>(nullable: true),
+                    DocumentContentType = table.Column<string>(nullable: true),
+                    Rating = table.Column<double>(nullable: true),
+                    ReceiverNote = table.Column<string>(nullable: true),
+                    ReceiverId = table.Column<int>(nullable: true),
+                    ReceiverFullName = table.Column<string>(nullable: true),
+                    ReceiverPhoneNumber = table.Column<string>(nullable: true),
+                    ReceiverCardIdNumber = table.Column<string>(nullable: true),
+                    ReceiverEmailAddress = table.Column<string>(nullable: true),
+                    Note = table.Column<string>(nullable: true),
+                    IsDeliveryNoteUploaded = table.Column<bool>(nullable: false),
+                    ActualPickupOrDeliveryDate = table.Column<DateTime>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RoutPoints", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RoutPoints_Facilities_FacilityId",
+                        column: x => x.FacilityId,
+                        principalTable: "Facilities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RoutPoints_Receivers_ReceiverId",
+                        column: x => x.ReceiverId,
+                        principalTable: "Receivers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_RoutPoints_ShippingRequestTrips_ShippingRequestTripId",
+                        column: x => x.ShippingRequestTripId,
+                        principalTable: "ShippingRequestTrips",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SubmitInvoiceTrips",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SubmitId = table.Column<long>(nullable: false),
+                    TripId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SubmitInvoiceTrips", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SubmitInvoiceTrips_SubmitInvoices_SubmitId",
+                        column: x => x.SubmitId,
+                        principalTable: "SubmitInvoices",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SubmitInvoiceTrips_ShippingRequestTrips_TripId",
+                        column: x => x.TripId,
+                        principalTable: "ShippingRequestTrips",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ShippingRequestTripVases",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    ShippingRequestVasId = table.Column<long>(nullable: false),
+                    ShippingRequestTripId = table.Column<int>(nullable: false),
+                    TotalAmount = table.Column<decimal>(nullable: true),
+                    SubTotalAmount = table.Column<decimal>(nullable: true),
+                    VatAmount = table.Column<decimal>(nullable: true),
+                    TotalAmountWithCommission = table.Column<decimal>(nullable: true),
+                    SubTotalAmountWithCommission = table.Column<decimal>(nullable: true),
+                    VatAmountWithCommission = table.Column<decimal>(nullable: true),
+                    CommissionType = table.Column<byte>(nullable: true),
+                    CommissionAmount = table.Column<decimal>(nullable: true),
+                    CommissionPercentageOrAddValue = table.Column<decimal>(nullable: true),
+                    Quantity = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ShippingRequestTripVases", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ShippingRequestTripVases_ShippingRequestTrips_ShippingRequestTripId",
+                        column: x => x.ShippingRequestTripId,
+                        principalTable: "ShippingRequestTrips",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ShippingRequestTripVases_ShippingRequestVases_ShippingRequestVasId",
+                        column: x => x.ShippingRequestVasId,
+                        principalTable: "ShippingRequestVases",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "GoodsDetails",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    Description = table.Column<string>(maxLength: 256, nullable: true),
+                    Amount = table.Column<int>(nullable: false),
+                    Weight = table.Column<double>(maxLength: 64, nullable: false),
+                    Dimentions = table.Column<string>(maxLength: 128, nullable: true),
+                    IsDangerousGood = table.Column<bool>(nullable: false),
+                    DangerousGoodsCode = table.Column<string>(maxLength: 64, nullable: true),
+                    DangerousGoodTypeId = table.Column<int>(nullable: true),
+                    GoodCategoryId = table.Column<int>(nullable: false),
+                    OtherGoodsCategoryName = table.Column<string>(nullable: true),
+                    UnitOfMeasureId = table.Column<int>(nullable: false),
+                    OtherUnitOfMeasureName = table.Column<string>(nullable: true),
+                    RoutPointId = table.Column<long>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GoodsDetails", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_GoodsDetails_DangerousGoodTypes_DangerousGoodTypeId",
+                        column: x => x.DangerousGoodTypeId,
+                        principalTable: "DangerousGoodTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_GoodsDetails_GoodCategories_GoodCategoryId",
+                        column: x => x.GoodCategoryId,
+                        principalTable: "GoodCategories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_GoodsDetails_RoutPoints_RoutPointId",
+                        column: x => x.RoutPointId,
+                        principalTable: "RoutPoints",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_GoodsDetails_UnitOfMeasures_UnitOfMeasureId",
+                        column: x => x.UnitOfMeasureId,
+                        principalTable: "UnitOfMeasures",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RoutPointDocuments",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    RoutPointId = table.Column<long>(nullable: false),
+                    RoutePointDocumentType = table.Column<byte>(nullable: false),
+                    DocumentId = table.Column<Guid>(nullable: true),
+                    DocumentName = table.Column<string>(nullable: true),
+                    DocumentContentType = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RoutPointDocuments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RoutPointDocuments_RoutPoints_RoutPointId",
+                        column: x => x.RoutPointId,
+                        principalTable: "RoutPoints",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RoutPointStatusTransitions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PointId = table.Column<long>(nullable: false),
+                    Status = table.Column<byte>(nullable: false),
+                    CreationTime = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RoutPointStatusTransitions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RoutPointStatusTransitions_RoutPoints_PointId",
+                        column: x => x.PointId,
+                        principalTable: "RoutPoints",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RoutSteps",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    TenantId = table.Column<int>(nullable: false),
+                    DisplayName = table.Column<string>(maxLength: 256, nullable: true),
+                    Order = table.Column<int>(nullable: false),
+                    ShippingRequestId = table.Column<long>(nullable: false),
+                    AssignedDriverUserId = table.Column<long>(nullable: true),
+                    AssignedTruckId = table.Column<long>(nullable: true),
+                    SourceRoutPointId = table.Column<long>(nullable: false),
+                    DestinationRoutPointId = table.Column<long>(nullable: false),
+                    TotalAmount = table.Column<int>(nullable: false),
+                    ExistingAmount = table.Column<int>(nullable: false),
+                    RemainingAmount = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RoutSteps", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RoutSteps_AbpUsers_AssignedDriverUserId",
+                        column: x => x.AssignedDriverUserId,
+                        principalTable: "AbpUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_RoutSteps_Trucks_AssignedTruckId",
+                        column: x => x.AssignedTruckId,
+                        principalTable: "Trucks",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_RoutSteps_RoutPoints_DestinationRoutPointId",
+                        column: x => x.DestinationRoutPointId,
+                        principalTable: "RoutPoints",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RoutSteps_ShippingRequests_ShippingRequestId",
+                        column: x => x.ShippingRequestId,
+                        principalTable: "ShippingRequests",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RoutSteps_RoutPoints_SourceRoutPointId",
+                        column: x => x.SourceRoutPointId,
+                        principalTable: "RoutPoints",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ShippingRequestTripAccidents",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    PointId = table.Column<long>(nullable: false),
+                    ReasoneId = table.Column<int>(nullable: true),
+                    OtherReasonName = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(maxLength: 500, nullable: true),
+                    IsResolve = table.Column<bool>(nullable: false),
+                    DocumentId = table.Column<Guid>(nullable: true),
+                    DocumentName = table.Column<string>(nullable: true),
+                    DocumentContentType = table.Column<string>(nullable: true),
+                    Location = table.Column<Point>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ShippingRequestTripAccidents", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ShippingRequestTripAccidents_RoutPoints_PointId",
+                        column: x => x.PointId,
+                        principalTable: "RoutPoints",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ShippingRequestTripAccidents_ShippingRequestReasonAccidents_ReasoneId",
+                        column: x => x.ReasoneId,
+                        principalTable: "ShippingRequestReasonAccidents",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ShippingRequestTripTransitions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FromPointId = table.Column<long>(nullable: true),
+                    FromLocation = table.Column<Point>(nullable: true),
+                    ToPointId = table.Column<long>(nullable: false),
+                    ToLocation = table.Column<Point>(nullable: true),
+                    IsComplete = table.Column<bool>(nullable: false),
+                    CreationTime = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ShippingRequestTripTransitions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ShippingRequestTripTransitions_RoutPoints_FromPointId",
+                        column: x => x.FromPointId,
+                        principalTable: "RoutPoints",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ShippingRequestTripTransitions_RoutPoints_ToPointId",
+                        column: x => x.ToPointId,
+                        principalTable: "RoutPoints",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -2489,11 +3915,13 @@ namespace TACHYON.Migrations
                     IsAccepted = table.Column<bool>(nullable: false),
                     IsRejected = table.Column<bool>(nullable: false),
                     RejectionReason = table.Column<string>(nullable: true),
-                    DocumentTypeId = table.Column<long>(nullable: false),
+                    DocumentTypeId = table.Column<long>(nullable: true),
+                    OtherDocumentTypeName = table.Column<string>(nullable: true),
                     TruckId = table.Column<long>(nullable: true),
                     TrailerId = table.Column<long>(nullable: true),
                     UserId = table.Column<long>(nullable: true),
                     RoutStepId = table.Column<long>(nullable: true),
+                    ShippingRequestTripId = table.Column<int>(nullable: true),
                     Number = table.Column<string>(nullable: true),
                     Notes = table.Column<string>(nullable: true),
                     HijriExpirationDate = table.Column<string>(nullable: true)
@@ -2511,6 +3939,12 @@ namespace TACHYON.Migrations
                         name: "FK_DocumentFiles_RoutSteps_RoutStepId",
                         column: x => x.RoutStepId,
                         principalTable: "RoutSteps",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_DocumentFiles_ShippingRequestTrips_ShippingRequestTripId",
+                        column: x => x.ShippingRequestTripId,
+                        principalTable: "ShippingRequestTrips",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -2537,6 +3971,36 @@ namespace TACHYON.Migrations
                         principalTable: "AbpUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ShippingRequestTripAccidentResolves",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    AccidentId = table.Column<int>(nullable: false),
+                    Description = table.Column<string>(maxLength: 500, nullable: true),
+                    DocumentId = table.Column<Guid>(nullable: true),
+                    DocumentName = table.Column<string>(nullable: true),
+                    DocumentContentType = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ShippingRequestTripAccidentResolves", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ShippingRequestTripAccidentResolves_ShippingRequestTripAccidents_AccidentId",
+                        column: x => x.AccidentId,
+                        principalTable: "ShippingRequestTripAccidents",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -2735,6 +4199,20 @@ namespace TACHYON.Migrations
                 column: "TenantId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AbpTenants_AccountNumber",
+                table: "AbpTenants",
+                column: "AccountNumber",
+                unique: true,
+                filter: "[AccountNumber] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AbpTenants_ContractNumber",
+                table: "AbpTenants",
+                column: "ContractNumber",
+                unique: true,
+                filter: "[ContractNumber] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AbpTenants_CreationTime",
                 table: "AbpTenants",
                 column: "CreationTime");
@@ -2865,6 +4343,13 @@ namespace TACHYON.Migrations
                 columns: new[] { "TenantId", "UserId" });
 
             migrationBuilder.CreateIndex(
+                name: "IX_AbpUsers_AccountNumber",
+                table: "AbpUsers",
+                column: "AccountNumber",
+                unique: true,
+                filter: "[AccountNumber] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AbpUsers_CreatorUserId",
                 table: "AbpUsers",
                 column: "CreatorUserId");
@@ -2873,6 +4358,11 @@ namespace TACHYON.Migrations
                 name: "IX_AbpUsers_DeleterUserId",
                 table: "AbpUsers",
                 column: "DeleterUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AbpUsers_DriverLicenseTypeId",
+                table: "AbpUsers",
+                column: "DriverLicenseTypeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AbpUsers_LastModifierUserId",
@@ -2955,6 +4445,11 @@ namespace TACHYON.Migrations
                 columns: new[] { "TenantId", "UserId" });
 
             migrationBuilder.CreateIndex(
+                name: "IX_AppLocalizationTranslations_CoreId",
+                table: "AppLocalizationTranslations",
+                column: "CoreId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AppSubscriptionPayments_EditionId",
                 table: "AppSubscriptionPayments",
                 column: "EditionId");
@@ -2987,6 +4482,11 @@ namespace TACHYON.Migrations
                 columns: new[] { "TenantId", "TargetUserId" });
 
             migrationBuilder.CreateIndex(
+                name: "IX_BalanceRecharges_TenantId",
+                table: "BalanceRecharges",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Capacities_TrucksTypeId",
                 table: "Capacities",
                 column: "TrucksTypeId");
@@ -3017,6 +4517,11 @@ namespace TACHYON.Migrations
                 column: "RoutStepId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_DocumentFiles_ShippingRequestTripId",
+                table: "DocumentFiles",
+                column: "ShippingRequestTripId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_DocumentFiles_TenantId",
                 table: "DocumentFiles",
                 column: "TenantId");
@@ -3035,6 +4540,11 @@ namespace TACHYON.Migrations
                 name: "IX_DocumentFiles_UserId",
                 table: "DocumentFiles",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DocumentTypes_DocumentRelatedWithId",
+                table: "DocumentTypes",
+                column: "DocumentRelatedWithId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DocumentTypes_DocumentsEntityId",
@@ -3062,19 +4572,101 @@ namespace TACHYON.Migrations
                 column: "TenantId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_GoodCategories_FatherId",
+                table: "GoodCategories",
+                column: "FatherId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GoodsCategoryTranslations_CoreId",
+                table: "GoodsCategoryTranslations",
+                column: "CoreId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GoodsDetails_DangerousGoodTypeId",
+                table: "GoodsDetails",
+                column: "DangerousGoodTypeId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_GoodsDetails_GoodCategoryId",
                 table: "GoodsDetails",
                 column: "GoodCategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_GoodsDetails_TenantId",
+                name: "IX_GoodsDetails_RoutPointId",
                 table: "GoodsDetails",
-                column: "TenantId");
+                column: "RoutPointId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_GoodsDetails_UnitOfMeasureId",
                 table: "GoodsDetails",
                 column: "UnitOfMeasureId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GroupPeriods_PeriodId",
+                table: "GroupPeriods",
+                column: "PeriodId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GroupPeriods_TenantId",
+                table: "GroupPeriods",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GroupPeriodsInvoices_GroupId",
+                table: "GroupPeriodsInvoices",
+                column: "GroupId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GroupPeriodsInvoices_InvoiceId",
+                table: "GroupPeriodsInvoices",
+                column: "InvoiceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GroupShippingRequests_GroupId",
+                table: "GroupShippingRequests",
+                column: "GroupId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GroupShippingRequests_RequestId",
+                table: "GroupShippingRequests",
+                column: "RequestId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Invoices_InvoiceNumber",
+                table: "Invoices",
+                column: "InvoiceNumber",
+                unique: true,
+                filter: "[InvoiceNumber] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Invoices_PeriodId",
+                table: "Invoices",
+                column: "PeriodId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Invoices_TenantId",
+                table: "Invoices",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_InvoicesProforma_RequestId",
+                table: "InvoicesProforma",
+                column: "RequestId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_InvoicesProforma_TenantId",
+                table: "InvoicesProforma",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_InvoiceTrips_InvoiceId",
+                table: "InvoiceTrips",
+                column: "InvoiceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_InvoiceTrips_TripId",
+                table: "InvoiceTrips",
+                column: "TripId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_NationalityTranslations_CoreId",
@@ -3107,9 +4699,49 @@ namespace TACHYON.Migrations
                 column: "TrucksTypeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_PackingTypesTranslations_CoreId",
+                table: "PackingTypesTranslations",
+                column: "CoreId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PlateTypeTranslations_CoreId",
+                table: "PlateTypeTranslations",
+                column: "CoreId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Ports_CityId",
                 table: "Ports",
                 column: "CityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PriceOfferDetails_PriceOfferId",
+                table: "PriceOfferDetails",
+                column: "PriceOfferId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PriceOffers_ParentId",
+                table: "PriceOffers",
+                column: "ParentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PriceOffers_ShippingRequestId",
+                table: "PriceOffers",
+                column: "ShippingRequestId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PriceOffers_TenantId",
+                table: "PriceOffers",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Receivers_FacilityId",
+                table: "Receivers",
+                column: "FacilityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Receivers_TenantId",
+                table: "Receivers",
+                column: "TenantId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Routes_DestinationCityId",
@@ -3137,9 +4769,36 @@ namespace TACHYON.Migrations
                 column: "RoutTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Routes_TenantId",
-                table: "Routes",
-                column: "TenantId");
+                name: "IX_RoutPointDocuments_RoutPointId",
+                table: "RoutPointDocuments",
+                column: "RoutPointId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RoutPoints_FacilityId",
+                table: "RoutPoints",
+                column: "FacilityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RoutPoints_ReceiverId",
+                table: "RoutPoints",
+                column: "ReceiverId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RoutPoints_ShippingRequestTripId",
+                table: "RoutPoints",
+                column: "ShippingRequestTripId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RoutPoints_WaybillNumber",
+                table: "RoutPoints",
+                column: "WaybillNumber",
+                unique: true,
+                filter: "[WaybillNumber] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RoutPointStatusTransitions_PointId",
+                table: "RoutPointStatusTransitions",
+                column: "PointId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RoutSteps_AssignedDriverUserId",
@@ -3147,39 +4806,14 @@ namespace TACHYON.Migrations
                 column: "AssignedDriverUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RoutSteps_AssignedTrailerId",
-                table: "RoutSteps",
-                column: "AssignedTrailerId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_RoutSteps_AssignedTruckId",
                 table: "RoutSteps",
                 column: "AssignedTruckId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RoutSteps_DestinationCityId",
+                name: "IX_RoutSteps_DestinationRoutPointId",
                 table: "RoutSteps",
-                column: "DestinationCityId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_RoutSteps_DestinationFacilityId",
-                table: "RoutSteps",
-                column: "DestinationFacilityId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_RoutSteps_GoodsDetailId",
-                table: "RoutSteps",
-                column: "GoodsDetailId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_RoutSteps_OriginCityId",
-                table: "RoutSteps",
-                column: "OriginCityId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_RoutSteps_PickingTypeId",
-                table: "RoutSteps",
-                column: "PickingTypeId");
+                column: "DestinationRoutPointId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RoutSteps_ShippingRequestId",
@@ -3187,24 +4821,14 @@ namespace TACHYON.Migrations
                 column: "ShippingRequestId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RoutSteps_SourceFacilityId",
+                name: "IX_RoutSteps_SourceRoutPointId",
                 table: "RoutSteps",
-                column: "SourceFacilityId");
+                column: "SourceRoutPointId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RoutSteps_TenantId",
                 table: "RoutSteps",
                 column: "TenantId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_RoutSteps_TrailerTypeId",
-                table: "RoutSteps",
-                column: "TrailerTypeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_RoutSteps_TrucksTypeId",
-                table: "RoutSteps",
-                column: "TrucksTypeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ShippingRequestBids_ShippingRequestId",
@@ -3217,14 +4841,29 @@ namespace TACHYON.Migrations
                 column: "TenantId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ShippingRequestDirectRequests_CarrierTenantId",
+                table: "ShippingRequestDirectRequests",
+                column: "CarrierTenantId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShippingRequestDirectRequests_ShippingRequestId",
+                table: "ShippingRequestDirectRequests",
+                column: "ShippingRequestId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShippingRequestDirectRequests_TenantId",
+                table: "ShippingRequestDirectRequests",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShippingRequestReasonAccidentTranslations_CoreId",
+                table: "ShippingRequestReasonAccidentTranslations",
+                column: "CoreId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ShippingRequests_AssignedDriverUserId",
                 table: "ShippingRequests",
                 column: "AssignedDriverUserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ShippingRequests_AssignedTrailerId",
-                table: "ShippingRequests",
-                column: "AssignedTrailerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ShippingRequests_AssignedTruckId",
@@ -3242,6 +4881,11 @@ namespace TACHYON.Migrations
                 column: "CarrierTenantId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ShippingRequests_DestinationCityId",
+                table: "ShippingRequests",
+                column: "DestinationCityId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ShippingRequests_FatherShippingRequestId",
                 table: "ShippingRequests",
                 column: "FatherShippingRequestId");
@@ -3252,19 +4896,26 @@ namespace TACHYON.Migrations
                 column: "GoodCategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ShippingRequests_RouteId",
+                name: "IX_ShippingRequests_OriginCityId",
                 table: "ShippingRequests",
-                column: "RouteId");
+                column: "OriginCityId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ShippingRequests_ShippingRequestBidStatusId",
+                name: "IX_ShippingRequests_PackingTypeId",
                 table: "ShippingRequests",
-                column: "ShippingRequestBidStatusId");
+                column: "PackingTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ShippingRequests_ShippingRequestStatusId",
+                name: "IX_ShippingRequests_ReferenceNumber",
                 table: "ShippingRequests",
-                column: "ShippingRequestStatusId");
+                column: "ReferenceNumber",
+                unique: true,
+                filter: "[ReferenceNumber] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShippingRequests_ShippingTypeId",
+                table: "ShippingRequests",
+                column: "ShippingTypeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ShippingRequests_TenantId",
@@ -3282,19 +4933,166 @@ namespace TACHYON.Migrations
                 column: "TrucksTypeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ShippingRequestsCarrierDirectPricing_CarrirerTenantId",
+                table: "ShippingRequestsCarrierDirectPricing",
+                column: "CarrirerTenantId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShippingRequestsCarrierDirectPricing_RequestId",
+                table: "ShippingRequestsCarrierDirectPricing",
+                column: "RequestId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShippingRequestsCarrierDirectPricing_TenantId",
+                table: "ShippingRequestsCarrierDirectPricing",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShippingRequestTripAccidentResolves_AccidentId",
+                table: "ShippingRequestTripAccidentResolves",
+                column: "AccidentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShippingRequestTripAccidents_PointId",
+                table: "ShippingRequestTripAccidents",
+                column: "PointId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShippingRequestTripAccidents_ReasoneId",
+                table: "ShippingRequestTripAccidents",
+                column: "ReasoneId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShippingRequestTripRejectReasonTranslations_CoreId",
+                table: "ShippingRequestTripRejectReasonTranslations",
+                column: "CoreId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShippingRequestTrips_AssignedDriverUserId",
+                table: "ShippingRequestTrips",
+                column: "AssignedDriverUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShippingRequestTrips_AssignedTruckId",
+                table: "ShippingRequestTrips",
+                column: "AssignedTruckId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShippingRequestTrips_DestinationFacilityId",
+                table: "ShippingRequestTrips",
+                column: "DestinationFacilityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShippingRequestTrips_OriginFacilityId",
+                table: "ShippingRequestTrips",
+                column: "OriginFacilityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShippingRequestTrips_RejectReasonId",
+                table: "ShippingRequestTrips",
+                column: "RejectReasonId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShippingRequestTrips_ShippingRequestId",
+                table: "ShippingRequestTrips",
+                column: "ShippingRequestId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShippingRequestTrips_WaybillNumber",
+                table: "ShippingRequestTrips",
+                column: "WaybillNumber",
+                unique: true,
+                filter: "[WaybillNumber] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShippingRequestTripTransitions_FromPointId",
+                table: "ShippingRequestTripTransitions",
+                column: "FromPointId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShippingRequestTripTransitions_ToPointId",
+                table: "ShippingRequestTripTransitions",
+                column: "ToPointId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShippingRequestTripVases_ShippingRequestTripId",
+                table: "ShippingRequestTripVases",
+                column: "ShippingRequestTripId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShippingRequestTripVases_ShippingRequestVasId",
+                table: "ShippingRequestTripVases",
+                column: "ShippingRequestVasId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ShippingRequestVases_ShippingRequestId",
                 table: "ShippingRequestVases",
                 column: "ShippingRequestId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ShippingRequestVases_TenantId",
-                table: "ShippingRequestVases",
-                column: "TenantId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ShippingRequestVases_VasId",
                 table: "ShippingRequestVases",
                 column: "VasId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShippingTypeTranslations_CoreId",
+                table: "ShippingTypeTranslations",
+                column: "CoreId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SubmitInvoices_PeriodId",
+                table: "SubmitInvoices",
+                column: "PeriodId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SubmitInvoices_TenantId",
+                table: "SubmitInvoices",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SubmitInvoiceTrips_SubmitId",
+                table: "SubmitInvoiceTrips",
+                column: "SubmitId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SubmitInvoiceTrips_TripId",
+                table: "SubmitInvoiceTrips",
+                column: "TripId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TachyonPriceOffers_CarrirerTenantId",
+                table: "TachyonPriceOffers",
+                column: "CarrirerTenantId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TachyonPriceOffers_ShippingRequestBidId",
+                table: "TachyonPriceOffers",
+                column: "ShippingRequestBidId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TachyonPriceOffers_ShippingRequestCarrierDirectPricingId",
+                table: "TachyonPriceOffers",
+                column: "ShippingRequestCarrierDirectPricingId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TachyonPriceOffers_ShippingRequestId",
+                table: "TachyonPriceOffers",
+                column: "ShippingRequestId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TachyonPriceOffers_TenantId",
+                table: "TachyonPriceOffers",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TenantCarriers_CarrierTenantId",
+                table: "TenantCarriers",
+                column: "CarrierTenantId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TenantCarriers_TenantId",
+                table: "TenantCarriers",
+                column: "TenantId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TermAndConditions_EditionId",
@@ -3305,6 +5103,21 @@ namespace TACHYON.Migrations
                 name: "IX_TermAndConditionTranslations_CoreId",
                 table: "TermAndConditionTranslations",
                 column: "CoreId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TerminologieEditions_EditionId",
+                table: "TerminologieEditions",
+                column: "EditionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TerminologieEditions_TerminologieId",
+                table: "TerminologieEditions",
+                column: "TerminologieId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TerminologiePages_TerminologieId",
+                table: "TerminologiePages",
+                column: "TerminologieId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Trailers_HookedTruckId",
@@ -3330,6 +5143,11 @@ namespace TACHYON.Migrations
                 name: "IX_Trailers_TrailerTypeId",
                 table: "Trailers",
                 column: "TrailerTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Transactions_TenantId",
+                table: "Transactions",
+                column: "TenantId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TransportTypesTranslations_CoreId",
@@ -3384,6 +5202,21 @@ namespace TACHYON.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_TrucksTypesTranslations_CoreId",
                 table: "TrucksTypesTranslations",
+                column: "CoreId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserDeviceTokens_UserId",
+                table: "UserDeviceTokens",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserOTPs_UserId",
+                table: "UserOTPs",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VasesTranslations_CoreId",
+                table: "VasesTranslations",
                 column: "CoreId");
 
             migrationBuilder.CreateIndex(
@@ -3493,6 +5326,9 @@ namespace TACHYON.Migrations
                 name: "AppInvoices");
 
             migrationBuilder.DropTable(
+                name: "AppLocalizationTranslations");
+
+            migrationBuilder.DropTable(
                 name: "AppSubscriptionPayments");
 
             migrationBuilder.DropTable(
@@ -3500,6 +5336,9 @@ namespace TACHYON.Migrations
 
             migrationBuilder.DropTable(
                 name: "AppUserDelegations");
+
+            migrationBuilder.DropTable(
+                name: "BalanceRecharges");
 
             migrationBuilder.DropTable(
                 name: "CitiesTranslations");
@@ -3514,19 +5353,91 @@ namespace TACHYON.Migrations
                 name: "DocumentTypeTranslations");
 
             migrationBuilder.DropTable(
+                name: "GoodsCategoryTranslations");
+
+            migrationBuilder.DropTable(
+                name: "GoodsDetails");
+
+            migrationBuilder.DropTable(
+                name: "GroupPeriodsInvoices");
+
+            migrationBuilder.DropTable(
+                name: "GroupShippingRequests");
+
+            migrationBuilder.DropTable(
+                name: "InvoicePaymentMethods");
+
+            migrationBuilder.DropTable(
+                name: "InvoicesProforma");
+
+            migrationBuilder.DropTable(
+                name: "InvoiceTrips");
+
+            migrationBuilder.DropTable(
                 name: "NationalityTranslations");
 
             migrationBuilder.DropTable(
                 name: "Offers");
 
             migrationBuilder.DropTable(
-                name: "ShippingRequestBids");
+                name: "PackingTypesTranslations");
 
             migrationBuilder.DropTable(
-                name: "ShippingRequestVases");
+                name: "PlateTypeTranslations");
+
+            migrationBuilder.DropTable(
+                name: "PriceOfferDetails");
+
+            migrationBuilder.DropTable(
+                name: "RoutPointDocuments");
+
+            migrationBuilder.DropTable(
+                name: "RoutPointStatusTransitions");
+
+            migrationBuilder.DropTable(
+                name: "ShippingRequestDirectRequests");
+
+            migrationBuilder.DropTable(
+                name: "ShippingRequestReasonAccidentTranslations");
+
+            migrationBuilder.DropTable(
+                name: "ShippingRequestStatuses");
+
+            migrationBuilder.DropTable(
+                name: "ShippingRequestTripAccidentResolves");
+
+            migrationBuilder.DropTable(
+                name: "ShippingRequestTripRejectReasonTranslations");
+
+            migrationBuilder.DropTable(
+                name: "ShippingRequestTripTransitions");
+
+            migrationBuilder.DropTable(
+                name: "ShippingRequestTripVases");
+
+            migrationBuilder.DropTable(
+                name: "ShippingTypeTranslations");
+
+            migrationBuilder.DropTable(
+                name: "SubmitInvoiceTrips");
+
+            migrationBuilder.DropTable(
+                name: "TachyonPriceOffers");
+
+            migrationBuilder.DropTable(
+                name: "TenantCarriers");
 
             migrationBuilder.DropTable(
                 name: "TermAndConditionTranslations");
+
+            migrationBuilder.DropTable(
+                name: "TerminologieEditions");
+
+            migrationBuilder.DropTable(
+                name: "TerminologiePages");
+
+            migrationBuilder.DropTable(
+                name: "Transactions");
 
             migrationBuilder.DropTable(
                 name: "TransportTypesTranslations");
@@ -3539,6 +5450,15 @@ namespace TACHYON.Migrations
 
             migrationBuilder.DropTable(
                 name: "TrucksTypesTranslations");
+
+            migrationBuilder.DropTable(
+                name: "UserDeviceTokens");
+
+            migrationBuilder.DropTable(
+                name: "UserOTPs");
+
+            migrationBuilder.DropTable(
+                name: "VasesTranslations");
 
             migrationBuilder.DropTable(
                 name: "VasPrices");
@@ -3559,58 +5479,55 @@ namespace TACHYON.Migrations
                 name: "RoutSteps");
 
             migrationBuilder.DropTable(
+                name: "Trailers");
+
+            migrationBuilder.DropTable(
                 name: "DocumentTypes");
+
+            migrationBuilder.DropTable(
+                name: "DangerousGoodTypes");
+
+            migrationBuilder.DropTable(
+                name: "UnitOfMeasures");
+
+            migrationBuilder.DropTable(
+                name: "GroupPeriods");
+
+            migrationBuilder.DropTable(
+                name: "Invoices");
+
+            migrationBuilder.DropTable(
+                name: "Routes");
+
+            migrationBuilder.DropTable(
+                name: "PriceOffers");
+
+            migrationBuilder.DropTable(
+                name: "ShippingRequestTripAccidents");
+
+            migrationBuilder.DropTable(
+                name: "ShippingRequestVases");
+
+            migrationBuilder.DropTable(
+                name: "SubmitInvoices");
+
+            migrationBuilder.DropTable(
+                name: "ShippingRequestBids");
+
+            migrationBuilder.DropTable(
+                name: "ShippingRequestsCarrierDirectPricing");
 
             migrationBuilder.DropTable(
                 name: "TermAndConditions");
 
             migrationBuilder.DropTable(
-                name: "Vases");
+                name: "AppLocalizations");
 
             migrationBuilder.DropTable(
                 name: "AbpDynamicParameters");
 
             migrationBuilder.DropTable(
                 name: "AbpEntityChangeSets");
-
-            migrationBuilder.DropTable(
-                name: "Facilities");
-
-            migrationBuilder.DropTable(
-                name: "GoodsDetails");
-
-            migrationBuilder.DropTable(
-                name: "PickingTypes");
-
-            migrationBuilder.DropTable(
-                name: "ShippingRequests");
-
-            migrationBuilder.DropTable(
-                name: "DocumentsEntities");
-
-            migrationBuilder.DropTable(
-                name: "UnitOfMeasures");
-
-            migrationBuilder.DropTable(
-                name: "Trailers");
-
-            migrationBuilder.DropTable(
-                name: "AbpTenants");
-
-            migrationBuilder.DropTable(
-                name: "GoodCategories");
-
-            migrationBuilder.DropTable(
-                name: "Routes");
-
-            migrationBuilder.DropTable(
-                name: "ShippingRequestBidStatuses");
-
-            migrationBuilder.DropTable(
-                name: "ShippingRequestStatuses");
-
-            migrationBuilder.DropTable(
-                name: "Trucks");
 
             migrationBuilder.DropTable(
                 name: "PayloadMaxWeights");
@@ -3622,16 +5539,58 @@ namespace TACHYON.Migrations
                 name: "TrailerTypes");
 
             migrationBuilder.DropTable(
-                name: "AbpUsers");
-
-            migrationBuilder.DropTable(
-                name: "AbpEditions");
+                name: "DocumentsEntities");
 
             migrationBuilder.DropTable(
                 name: "Ports");
 
             migrationBuilder.DropTable(
                 name: "RoutTypes");
+
+            migrationBuilder.DropTable(
+                name: "RoutPoints");
+
+            migrationBuilder.DropTable(
+                name: "ShippingRequestReasonAccidents");
+
+            migrationBuilder.DropTable(
+                name: "Vases");
+
+            migrationBuilder.DropTable(
+                name: "InvoicePeriods");
+
+            migrationBuilder.DropTable(
+                name: "Receivers");
+
+            migrationBuilder.DropTable(
+                name: "ShippingRequestTrips");
+
+            migrationBuilder.DropTable(
+                name: "Facilities");
+
+            migrationBuilder.DropTable(
+                name: "ShippingRequestTripRejectReasons");
+
+            migrationBuilder.DropTable(
+                name: "ShippingRequests");
+
+            migrationBuilder.DropTable(
+                name: "Trucks");
+
+            migrationBuilder.DropTable(
+                name: "AbpTenants");
+
+            migrationBuilder.DropTable(
+                name: "Cities");
+
+            migrationBuilder.DropTable(
+                name: "GoodCategories");
+
+            migrationBuilder.DropTable(
+                name: "PackingTypes");
+
+            migrationBuilder.DropTable(
+                name: "ShippingTypes");
 
             migrationBuilder.DropTable(
                 name: "Capacities");
@@ -3643,16 +5602,22 @@ namespace TACHYON.Migrations
                 name: "TruckStatuses");
 
             migrationBuilder.DropTable(
-                name: "Nationalities");
+                name: "AbpUsers");
 
             migrationBuilder.DropTable(
-                name: "Cities");
+                name: "AbpEditions");
+
+            migrationBuilder.DropTable(
+                name: "Counties");
 
             migrationBuilder.DropTable(
                 name: "TrucksTypes");
 
             migrationBuilder.DropTable(
-                name: "Counties");
+                name: "DriverLicenseTypes");
+
+            migrationBuilder.DropTable(
+                name: "Nationalities");
 
             migrationBuilder.DropTable(
                 name: "TransportTypes");
