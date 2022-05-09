@@ -72823,6 +72823,41 @@ export interface IEditionSettingsDto {
   shipperEditionId: string | undefined;
 }
 
+export class OtpNumbersSettingsDto implements IOtpNumbersSettingsDto {
+  ignoredOtpNumbers!: string | undefined;
+
+  constructor(data?: IOtpNumbersSettingsDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.ignoredOtpNumbers = _data['ignoredOtpNumbers'];
+    }
+  }
+
+  static fromJS(data: any): OtpNumbersSettingsDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new OtpNumbersSettingsDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['ignoredOtpNumbers'] = this.ignoredOtpNumbers;
+    return data;
+  }
+}
+
+export interface IOtpNumbersSettingsDto {
+  ignoredOtpNumbers: string | undefined;
+}
+
 export class HostSettingsEditDto implements IHostSettingsEditDto {
   general!: GeneralSettingsEditDto;
   userManagement!: HostUserManagementSettingsEditDto;
@@ -72834,6 +72869,7 @@ export class HostSettingsEditDto implements IHostSettingsEditDto {
   externalLoginProviderSettings!: ExternalLoginProviderSettingsEditDto;
   smsSettings!: SmsSettingsEditDto;
   editionSettings!: EditionSettingsDto;
+  otpNumbersSettings!: OtpNumbersSettingsDto;
 
   constructor(data?: IHostSettingsEditDto) {
     if (data) {
@@ -72849,6 +72885,7 @@ export class HostSettingsEditDto implements IHostSettingsEditDto {
       this.security = new SecuritySettingsEditDto();
       this.smsSettings = new SmsSettingsEditDto();
       this.editionSettings = new EditionSettingsDto();
+      this.otpNumbersSettings = new OtpNumbersSettingsDto();
     }
   }
 
@@ -72870,6 +72907,7 @@ export class HostSettingsEditDto implements IHostSettingsEditDto {
         : <any>undefined;
       this.smsSettings = _data['smsSettings'] ? SmsSettingsEditDto.fromJS(_data['smsSettings']) : new SmsSettingsEditDto();
       this.editionSettings = _data['editionSettings'] ? EditionSettingsDto.fromJS(_data['editionSettings']) : new EditionSettingsDto();
+      this.otpNumbersSettings = _data['otpNumbersSettings'] ? OtpNumbersSettingsDto.fromJS(_data['otpNumbersSettings']) : new OtpNumbersSettingsDto();
     }
   }
 
@@ -72892,6 +72930,7 @@ export class HostSettingsEditDto implements IHostSettingsEditDto {
     data['externalLoginProviderSettings'] = this.externalLoginProviderSettings ? this.externalLoginProviderSettings.toJSON() : <any>undefined;
     data['smsSettings'] = this.smsSettings ? this.smsSettings.toJSON() : <any>undefined;
     data['editionSettings'] = this.editionSettings ? this.editionSettings.toJSON() : <any>undefined;
+    data['otpNumbersSettings'] = this.otpNumbersSettings ? this.otpNumbersSettings.toJSON() : <any>undefined;
     return data;
   }
 }
@@ -72907,6 +72946,7 @@ export interface IHostSettingsEditDto {
   externalLoginProviderSettings: ExternalLoginProviderSettingsEditDto;
   smsSettings: SmsSettingsEditDto;
   editionSettings: EditionSettingsDto;
+  otpNumbersSettings: OtpNumbersSettingsDto;
 }
 
 export class TestUnifonicSmsInput implements ITestUnifonicSmsInput {
