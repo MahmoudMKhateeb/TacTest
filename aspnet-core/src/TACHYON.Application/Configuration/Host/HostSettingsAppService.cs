@@ -65,7 +65,8 @@ namespace TACHYON.Configuration.Host
                 OtherSettings = await GetOtherSettingsAsync(),
                 ExternalLoginProviderSettings = await GetExternalLoginProviderSettings(),
                 SmsSettings = await GetSmsSettingsAsync(),
-                EditionSettings = await GetEditionsSettingsAsync()
+                EditionSettings = await GetEditionsSettingsAsync(),
+                OtpNumbersSettings = await GetOtpNumberSettingsAsync()
             };
         }
 
@@ -368,6 +369,16 @@ namespace TACHYON.Configuration.Host
             return settings;
         }
 
+        private async Task<OtpNumbersSettingsDto> GetOtpNumberSettingsAsync()
+        {
+            var otpNumbersSettings = new OtpNumbersSettingsDto()
+            {
+                IgnoredOtpNumbers = 
+                    await SettingManager.GetSettingValueAsync(AppSettings.Mobile.IgnoredOtpNumbers)
+            };
+            return otpNumbersSettings;
+        }
+        
         #endregion
 
         #endregion
@@ -386,6 +397,7 @@ namespace TACHYON.Configuration.Host
             await UpdateExternalLoginSettingsAsync(input.ExternalLoginProviderSettings);
             await UpdateSmsSettingsAsync(input.SmsSettings);
             await UpdateEditionsSettingsAsync(input.EditionSettings);
+            await UpdateOtpNumberSettingsAsync(input.OtpNumbersSettings);
         }
 
         private async Task UpdateOtherSettingsAsync(OtherSettingsEditDto input)
@@ -709,6 +721,14 @@ namespace TACHYON.Configuration.Host
             await SettingManager.ChangeSettingForApplicationAsync(
                 AppSettings.Editions.TachyonEditionId,
                 input.TachyonEditionId
+            );
+        }
+        
+        private async Task UpdateOtpNumberSettingsAsync(OtpNumbersSettingsDto input)
+        {
+            await SettingManager.ChangeSettingForApplicationAsync(
+                AppSettings.Mobile.IgnoredOtpNumbers,
+                input.IgnoredOtpNumbers
             );
         }
 

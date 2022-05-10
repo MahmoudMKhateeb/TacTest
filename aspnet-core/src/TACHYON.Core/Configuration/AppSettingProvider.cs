@@ -180,6 +180,10 @@ namespace TACHYON.Configuration
                 new SettingDefinition(AppSettings.Links.IosAppLink,
                     GetFromAppSettings(AppSettings.Links.IosAppLink, TACHYONConsts.IOSAppLink),
                     isVisibleToClients: true,
+                    scopes: SettingScopes.Application),
+                new SettingDefinition(AppSettings.Mobile.IgnoredOtpNumbers,
+                    GetFromAppSettings(AppSettings.Mobile.IgnoredOtpNumbers, ""),
+                    isVisibleToClients: true,
                     scopes: SettingScopes.Application)
             };
         }

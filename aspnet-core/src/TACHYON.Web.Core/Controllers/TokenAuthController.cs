@@ -82,7 +82,7 @@ namespace TACHYON.Web.Controllers
         private readonly IJwtSecurityStampHandler _securityStampHandler;
         private readonly AbpUserClaimsPrincipalFactory<User, Role> _claimsPrincipalFactory;
         private readonly TenantManager _tenantManager;
-        private List<string> _testMobiles;
+        private readonly List<string> _testMobiles;
         public IRecaptchaValidator RecaptchaValidator { get; set; }
         private readonly IUserDelegationManager _userDelegationManager;
         private readonly UserDeviceTokenManager _userDeviceTokenManager;
@@ -144,12 +144,10 @@ namespace TACHYON.Web.Controllers
             _userDeviceTokenManager = userDeviceTokenManager;
             _mobileManager = mobileManager;
             _workFlowProvider = workFlowProvider;
-            _testMobiles = new List<string>()
-            {
-                // to do => it's a good idea if we bind mobile numbers from settings (use ui)
-                "599925326", // Aiman
-                "500679773", // Esraa
-            };
+            _testMobiles = new List<string>();
+            var ignoredOtpNumber = settingManager.GetSettingValue(AppSettings.Mobile.IgnoredOtpNumbers);
+            if (!ignoredOtpNumber.IsNullOrEmpty()) 
+                _testMobiles.AddRange(ignoredOtpNumber.Split(';'));
         }
 
         [HttpPost]

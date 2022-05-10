@@ -189,5 +189,10 @@
             public const string IBAN = "App.Invoice.IBAN";
             public const string Account = "App.Invoice.Account";
         }
+        
+        public static class Mobile
+        {
+            public const string IgnoredOtpNumbers = "App.Mobile.IgnoredOtpNumbers";
+        }
     }
 }

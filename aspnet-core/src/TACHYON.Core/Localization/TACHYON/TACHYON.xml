@@ -2751,5 +2751,9 @@
   <text name="YouMustEnterRates">You must enter rates</text>
 		<text name="SelectALicenseType">Select a license type</text>
 		<text name="TheNumberInTheTopOfTheCRThatStartsWithSeven">The number in the top of the CR that starts with seven</text>
+		<text name="IgnoredOtpNumbersPatternMsg">Mobile numbers must be added and separated with semicolons like this 12345;56789</text>
+		<text name="ExtraSettingsForMobile">Extra Settings For Mobile</text>
+		<text name="IgnoredOtpNumbers">Ignored phone numbers from OTP validation</text>
+		<text name="MobileSettings">Mobile Settings</text>
 	</texts>
 </localizationDictionary>

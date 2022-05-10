@@ -2525,5 +2525,9 @@
 
     <text name="YouMustEnterRates">يجب عليك إدخال التقييمات</text>
 		<text name="TheNumberInTheTopOfTheCRThatStartsWithSeven">الرقم الموجود أعلى السجل التجاري و الذي يبدأ برقم سبعة</text>
+		<text name="IgnoredOtpNumbersPatternMsg">يجب إضافة أرقام الهواتف المحمولة وفصلها بفواصل منقوطة مثل 12345؛56789</text>
+		<text name="ExtraSettingsForMobile">إعدادات إضافية للجوال</text>
+		<text name="IgnoredOtpNumbers">أرقام الهواتف التي تم تجاهلها من التحقق من صحة كلمة المرور المؤقتة</text>
+		<text name="MobileSettings">إعدادات الجوال </text>
 	</texts>
 </localizationDictionary>
