@@ -8,7 +8,7 @@ stages:
 Preparation:
   stage: preparation
   tags:
-    - staging-runner
+    - dev-runner
   script:
     - Stop-WebSite 'Default Web Site' ## stopping FrontEnd Website
     - Stop-WebSite 'TachyonProdCore' ## stopping Backend Website
@@ -19,7 +19,7 @@ Preparation:
 Project:
   stage: Build
   tags:
-    - staging-runner
+    - dev-runner
   script:
     - Remove-Item 'C:\inetpub\wwwroot\Tachyon\outputs' -Force -Recurse
     - cd ./aspnet-core/build
@@ -31,7 +31,7 @@ Project:
 release:
   stage: release
   tags:
-    - staging-runner
+    - dev-runner
   script:
     - dir
     - Start-WebSite 'TachyonProdCore' ##start Backend Site
