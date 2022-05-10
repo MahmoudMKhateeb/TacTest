@@ -156,12 +156,6 @@ namespace TACHYON.Goods.GoodCategories
             ObjectMapper.Map(input, goodCategory);
         }
 
-        //[AbpAuthorize(AppPermissions.Pages_GoodCategories_Delete)]
-        //public async Task Delete(EntityDto input)
-        //{
-        //    await _goodCategoryRepository.DeleteAsync(input.Id);
-        //}
-
         public async Task<FileDto> GetGoodCategoriesToExcel(GetAllGoodCategoriesForExcelInput input)
         {
             var filteredGoodCategories = _goodCategoryRepository.GetAll()
