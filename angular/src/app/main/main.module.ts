@@ -162,7 +162,6 @@ import { CreateOrEditTruckModalComponent } from './trucks/trucks/create-or-edit-
 import { TruckUserLookupTableModalComponent } from './trucks/trucks/truck-user-lookup-table-modal.component';
 import { TrucksTypesComponent } from './trucksTypes/trucksTypes/trucksTypes.component';
 import { ViewTrucksTypeModalComponent } from './trucksTypes/trucksTypes/view-trucksType-modal.component';
-import { CreateOrEditTrucksTypeModalComponent } from './trucksTypes/trucksTypes/create-or-edit-trucksType-modal.component';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { PaginatorModule } from 'primeng/paginator';
 import { EditorModule } from 'primeng/editor';
@@ -462,7 +461,6 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     TruckUserLookupTableModalComponent,
     TrucksTypesComponent,
     ViewTrucksTypeModalComponent,
-    CreateOrEditTrucksTypeModalComponent,
     DashboardComponent,
     UpdatePriceShippingRequestModalComponent,
     MarketPlaceListComponent,
