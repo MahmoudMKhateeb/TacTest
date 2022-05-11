@@ -16,6 +16,6 @@ namespace TACHYON.Invoices.InoviceNote.Dto
         public decimal Price { get; set; }
         public decimal TotalValue { get; set; }
         public bool IsManual { get; set; }
-        public List<GetAllInvoiceItemDto> InvoiceItem { get; set; }
+        public List<GetAllInvoiceItemDto> InvoiceItems { get; set; }
     }
 }
