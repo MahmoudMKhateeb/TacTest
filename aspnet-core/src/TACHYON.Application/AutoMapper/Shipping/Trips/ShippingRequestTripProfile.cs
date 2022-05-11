@@ -65,7 +65,6 @@ namespace TACHYON.AutoMapper.Shipping.Trips
                 .ForMember(dst => dst.PackingType, opt => opt.MapFrom(src => src.ShippingRequestFk.PackingTypeFk.DisplayName))
                 .ForMember(dst => dst.PlateNumber, opt => opt.MapFrom(src => src.AssignedTruckFk.PlateNumber))
                 .ForMember(dst => dst.RoutePoints, opt => opt.MapFrom(src => src.RoutPoints.OrderBy(x => x.PickingType)))
-                .ForMember(dst => dst.StatusTitle, opt => opt.MapFrom(src => Enum.GetName(typeof(RoutePointStatus), src.RoutePointStatus)))
                 .ForMember(dst => dst.TripStatus, opt => opt.MapFrom(src => Enum.GetName(typeof(ShippingRequestTripStatus), src.Status)))
                 .ForMember(dst => dst.Status, opt => opt.MapFrom(src => src.RoutePointStatus));
 

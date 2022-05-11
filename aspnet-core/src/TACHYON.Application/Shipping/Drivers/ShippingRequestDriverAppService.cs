@@ -14,6 +14,7 @@ using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite.Geometries;
 using NUglify.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
@@ -298,6 +299,13 @@ namespace TACHYON.Shipping.Drivers
 
             //return good category name automatic from default language
             tripDto.GoodsCategory = ObjectMapper.Map<GoodCategoryDto>(trip.ShippingRequestFk.GoodCategoryFk).DisplayName;
+
+            if (trip.Status == ShippingRequestTripStatus.New &&
+                trip.DriverStatus == ShippingRequestTripDriverStatus.Accepted)
+                tripDto.StatusTitle = L("StandBy");
+
+            else tripDto.StatusTitle = L(Enum.GetName(typeof(ShippingRequestTripStatus), trip.Status));
+
             return tripDto;
         }
 
