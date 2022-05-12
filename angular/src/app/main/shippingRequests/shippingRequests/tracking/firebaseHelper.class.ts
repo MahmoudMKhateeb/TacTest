@@ -104,9 +104,9 @@ export class FirebaseHelperClass {
    */
   private envDetector() {
     switch (location.host) {
-      case 'internaltest.tachyonhub.com:4443': {
-        this.database.driverDatabase = 'mapinternaltest';
-        this.database.liveTripDatabase = 'livetripinternaltest';
+      case 'staging.tachyonhub.com': {
+        this.database.driverDatabase = 'mapstaging';
+        this.database.liveTripDatabase = 'livetripstaging';
         break;
       }
       case 'dev.tachyonhub.com': {
@@ -124,7 +124,7 @@ export class FirebaseHelperClass {
         this.database.liveTripDatabase = 'livetripproduction';
         break;
       }
-      case 'uat.tachyonhub.com:4441': {
+      case 'uat.tachyonhub.com': {
         this.database.driverDatabase = 'mapQA';
         this.database.liveTripDatabase = 'livetripQA';
         break;
