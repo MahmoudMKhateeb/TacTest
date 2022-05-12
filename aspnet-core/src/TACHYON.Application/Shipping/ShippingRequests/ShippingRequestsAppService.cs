@@ -804,7 +804,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     .Select(e =>
                         new GetShippingRequestVasForViewDto
                         {
-                            ShippingRequestVas = ObjectMapper.Map<ShippingRequestVasDto>(e), VasName = e.VasFk.Name
+                            ShippingRequestVas = ObjectMapper.Map<ShippingRequestVasDto>(e), VasName = e.VasFk.Key
                         }).ToListAsync();
 
                 //Bids
@@ -1020,7 +1020,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 {
                     VasName = vas.Translations.FirstOrDefault(t => t.Language.Contains(CurrentLanguage)) != null
                         ? vas.Translations.FirstOrDefault(t => t.Language.Contains(CurrentLanguage)).DisplayName
-                        : vas.Name,
+                        : vas.Key,
                     HasAmount = vas.HasAmount,
                     HasCount = vas.HasCount,
                     MaxAmount = 0,
@@ -1042,7 +1042,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 {
                     ShippingRequestVas = new ShippingRequestVasListOutput
                     {
-                        VasName = o.VasFk.Name == null || o.VasFk.Name == null ? "" : o.VasFk.Name,
+                        VasName = o.VasFk.Key == null || o.VasFk.Key == null ? "" : o.VasFk.Key,
                         HasAmount = o.VasFk.HasAmount,
                         HasCount = o.VasFk.HasCount,
                         MaxAmount = o.RequestMaxAmount,
@@ -1069,7 +1069,7 @@ namespace TACHYON.Shipping.ShippingRequests
                         ShippingRequestVasId = x.Id,
                         ShippingRequestVas = new ShippingRequestVasListOutput
                         {
-                            VasName = x.VasFk.Name, MaxAmount = x.RequestMaxAmount, MaxCount = x.RequestMaxCount,
+                            VasName = x.VasFk.Key, MaxAmount = x.RequestMaxAmount, MaxCount = x.RequestMaxCount,
                         }
                     }
                 ).ToListAsync();
@@ -1476,7 +1476,7 @@ namespace TACHYON.Shipping.ShippingRequests
             (
                 x => new GetAllShippingRequestVasesOutput
                 {
-                    VasName = x.ShippingRequestVasFk.VasFk.Name,
+                    VasName = x.ShippingRequestVasFk.VasFk.Key,
                     Amount = x.ShippingRequestVasFk.RequestMaxAmount,
                     Count = x.ShippingRequestVasFk.RequestMaxCount
                 }
@@ -1503,7 +1503,7 @@ namespace TACHYON.Shipping.ShippingRequests
             (
                 x => new GetAllShippingRequestVasesOutput
                 {
-                    VasName = x.ShippingRequestVasFk.VasFk.Name,
+                    VasName = x.ShippingRequestVasFk.VasFk.Key,
                     Amount = x.ShippingRequestVasFk.RequestMaxAmount,
                     Count = x.ShippingRequestVasFk.RequestMaxCount
                 }

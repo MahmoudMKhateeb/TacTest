@@ -40,7 +40,7 @@ namespace TACHYON.Vases.Exporting
 
                     AddObjects(
                         sheet, 2, vases,
-                        _ => _.Vas.Name,
+                        _ => _.Vas.Key,
                         _ => _.Vas.HasAmount,
                         _ => _.Vas.HasCount
                     );

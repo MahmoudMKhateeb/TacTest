@@ -10,10 +10,9 @@ namespace TACHYON.Vases.Dtos
     {
         [Required]
         [StringLength(VasConsts.MaxNameLength, MinimumLength = VasConsts.MinNameLength)]
-        public string Name { get; set; }
-
+        public string Key { get; set; }
         public bool HasAmount { get; set; }
-
         public bool HasCount { get; set; }
+
     }
 }
