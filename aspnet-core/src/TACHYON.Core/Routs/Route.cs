@@ -26,29 +26,24 @@ namespace TACHYON.Routs
 
         public virtual int? RoutTypeId { get; set; }
 
-        [ForeignKey("RoutTypeId")]
-        public RoutType RoutTypeFk { get; set; }
+        [ForeignKey("RoutTypeId")] public RoutType RoutTypeFk { get; set; }
 
         //city
         public virtual int OriginCityId { get; set; }
 
-        [ForeignKey("OriginCityId")]
-        public City OriginCityFk { get; set; }
+        [ForeignKey("OriginCityId")] public City OriginCityFk { get; set; }
 
         public virtual int DestinationCityId { get; set; }
 
-        [ForeignKey("DestinationCityId")]
-        public City DestinationCityFk { get; set; }
+        [ForeignKey("DestinationCityId")] public City DestinationCityFk { get; set; }
+
         //port
         public virtual long? OriginPortId { get; set; }
 
-        [ForeignKey("OriginPortId")]
-        public Port OriginPortFk { get; set; }
+        [ForeignKey("OriginPortId")] public Port OriginPortFk { get; set; }
 
         public virtual long? DestinationPortId { get; set; }
 
-        [ForeignKey("DestinationPortId")]
-        public Port DestinationPortFk { get; set; }
-
+        [ForeignKey("DestinationPortId")] public Port DestinationPortFk { get; set; }
     }
 }

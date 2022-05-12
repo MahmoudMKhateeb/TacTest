@@ -32,7 +32,9 @@ namespace TACHYON.Web.Startup
                     {
                         // The signing key must match!
                         ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(configuration["Authentication:JwtBearer:SecurityKey"])),
+                        IssuerSigningKey =
+                            new SymmetricSecurityKey(
+                                Encoding.ASCII.GetBytes(configuration["Authentication:JwtBearer:SecurityKey"])),
 
                         // Validate the JWT Issuer (iss) claim
                         ValidateIssuer = true,
@@ -52,10 +54,7 @@ namespace TACHYON.Web.Startup
                     options.SecurityTokenValidators.Clear();
                     options.SecurityTokenValidators.Add(new TACHYONJwtSecurityTokenHandler());
 
-                    options.Events = new JwtBearerEvents
-                    {
-                        OnMessageReceived = QueryStringTokenResolver
-                    };
+                    options.Events = new JwtBearerEvents { OnMessageReceived = QueryStringTokenResolver };
                 });
             }
 
@@ -92,8 +91,7 @@ namespace TACHYON.Web.Startup
 
             List<string> urlsUsingEnchAuthToken = new List<string>()
             {
-                "/Chat/GetUploadedObject?",
-                "/Profile/GetProfilePictureByUser?"
+                "/Chat/GetUploadedObject?", "/Profile/GetProfilePictureByUser?"
             };
 
             if (urlsUsingEnchAuthToken.Any(url => context.HttpContext.Request.GetDisplayUrl().Contains(url)))
@@ -129,8 +127,8 @@ namespace TACHYON.Web.Startup
             }
             catch
             {
-
             }
+
             return Task.CompletedTask;
         }
     }

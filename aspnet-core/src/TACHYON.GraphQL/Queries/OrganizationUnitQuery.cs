@@ -15,7 +15,8 @@ using TACHYON.Types;
 
 namespace TACHYON.Queries
 {
-    public class OrganizationUnitQuery : TACHYONQueryBase<ListGraphType<OrganizationUnitType>, List<OrganizationUnitDto>>
+    public class
+        OrganizationUnitQuery : TACHYONQueryBase<ListGraphType<OrganizationUnitType>, List<OrganizationUnitDto>>
     {
         private readonly IRepository<OrganizationUnit, long> _organizationUnitRepository;
 
@@ -27,12 +28,13 @@ namespace TACHYON.Queries
         }
 
         public OrganizationUnitQuery(IRepository<OrganizationUnit, long> organizationUnitRepository)
-            : base("organizationUnits", new Dictionary<string, Type>
-            {
-                {Args.Id, typeof(IdGraphType)},
-                {Args.TenantId, typeof(IntGraphType)},
-                {Args.Code, typeof(StringGraphType)}
-            })
+            : base("organizationUnits",
+                new Dictionary<string, Type>
+                {
+                    { Args.Id, typeof(IdGraphType) },
+                    { Args.TenantId, typeof(IntGraphType) },
+                    { Args.Code, typeof(StringGraphType) }
+                })
         {
             _organizationUnitRepository = organizationUnitRepository;
         }
@@ -44,7 +46,8 @@ namespace TACHYON.Queries
 
             context
                 .ContainsArgument<long>(Args.Id, id => query = query.Where(o => o.Id == id))
-                .ContainsArgument<int?>(Args.TenantId, tenantId => query = query.Where(o => o.TenantId == tenantId.Value))
+                .ContainsArgument<int?>(Args.TenantId,
+                    tenantId => query = query.Where(o => o.TenantId == tenantId.Value))
                 .ContainsArgument<string>(Args.Code, code => query = query.Where(o => o.Code == code));
 
             return await ProjectToListAsync<OrganizationUnitDto>(query);

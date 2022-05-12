@@ -4,10 +4,8 @@ namespace TACHYON.Authorization.Accounts.Dto
 {
     public class SendEmailActivationLinkInput
     {
-        [Required]
-        public string EmailAddress { get; set; }
+        [Required] public string EmailAddress { get; set; }
 
-        [Required]
-        public string UserPassword { get; set; }
+        [Required] public string UserPassword { get; set; }
     }
 }

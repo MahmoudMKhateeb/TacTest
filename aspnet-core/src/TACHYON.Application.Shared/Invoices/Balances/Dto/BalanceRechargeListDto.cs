@@ -8,12 +8,10 @@ using TACHYON.MultiTenancy.Dto;
 
 namespace TACHYON.Invoices.Balances.Dto
 {
-  public class BalanceRechargeListDto : EntityDto, IHasCreationTime
+    public class BalanceRechargeListDto : EntityDto, IHasCreationTime
     {
-        [Required]
-        public string TenantName { get; set; }
-        [Required]
-        public decimal Amount { get; set; }
+        [Required] public string TenantName { get; set; }
+        [Required] public decimal Amount { get; set; }
         public DateTime CreationTime { get; set; }
 
         public string ReferenceNo { get; set; }

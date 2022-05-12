@@ -1,6 +1,6 @@
 ﻿namespace TACHYON.Invoices.Dto
 {
-    public  class InvoiceTenantDto
+    public class InvoiceTenantDto
     {
         public int Id { get; set; }
 

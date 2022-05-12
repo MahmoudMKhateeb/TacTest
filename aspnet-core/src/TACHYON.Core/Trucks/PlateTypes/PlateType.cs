@@ -10,10 +10,10 @@ namespace TACHYON.Trucks.PlateTypes
     [Table("PlateTypes")]
     public class PlateType : FullAuditedEntity, IMultiLingualEntity<PlateTypeTranslation>
     {
-
         [Required]
         [StringLength(PlateTypeConsts.MaxDisplayNameLength, MinimumLength = PlateTypeConsts.MinDisplayNameLength)]
         public virtual string Name { get; set; }
+
         /// <summary>
         /// This field is for Bayan Integration system
         /// </summary>

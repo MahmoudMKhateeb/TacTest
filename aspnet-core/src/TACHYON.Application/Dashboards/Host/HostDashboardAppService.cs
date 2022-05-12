@@ -64,7 +64,6 @@ namespace TACHYON.Dashboards.Host
             _trucksRepository = trucksRepository;
             _goodTypesRepository = goodTypesRepository;
             _invoicesRepository = invoicesRepository;
-
         }
 
         public async Task<List<TruckTypeAvailableTrucksDto>> GetTrucksTypeCount()
@@ -134,10 +133,8 @@ namespace TACHYON.Dashboards.Host
                 .GroupBy(x => x.RouteTypeId)
                 .Select(group => new RouteTypeAvailableDto
                 {
-                    RouteType = group.Key.ToString(),
-                    AvailableRouteTypesCount = group.Count()
+                    RouteType = group.Key.ToString(), AvailableRouteTypesCount = group.Count()
                 }).ToListAsync();
-
         }
 
         public async Task<long> GetOngoingTripsCount()
@@ -148,7 +145,6 @@ namespace TACHYON.Dashboards.Host
             return await _shippingRequestTripRepository.GetAll().AsNoTracking()
                 .Where(x => x.Status == ShippingRequestTripStatus.InTransit && x.CreationTime.Year == DateTime.Now.Year)
                 .CountAsync();
-
         }
 
         public async Task<long> GetDeliveredTripsCount()
@@ -159,7 +155,6 @@ namespace TACHYON.Dashboards.Host
             return await _shippingRequestTripRepository.GetAll().AsNoTracking()
                 .Where(x => x.Status == ShippingRequestTripStatus.Delivered && x.CreationTime.Year == DateTime.Now.Year)
                 .CountAsync();
-
         }
 
         public async Task<long> GetShippersCount()

@@ -14,7 +14,7 @@ namespace TACHYON.PriceOffers.Dto
         public PriceOfferType PriceType { get; set; }
         public PriceOfferChannel Channel { get; set; }
         public decimal TotalAmount { get; set; }
-        public  DateTime CreationTime { get; set; }
+        public DateTime CreationTime { get; set; }
         public string StatusTitle { get; set; }
         public string PriceTypeTitle { get { return PriceType.GetEnumDescription(); } }
 

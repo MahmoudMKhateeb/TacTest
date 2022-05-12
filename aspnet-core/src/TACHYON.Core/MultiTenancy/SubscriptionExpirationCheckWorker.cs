@@ -61,7 +61,6 @@ namespace TACHYON.MultiTenancy
 
                 try
                 {
-
                     var edition = _editionRepository.Get(tenant.EditionId.Value);
 
                     Debug.Assert(tenant.SubscriptionEndDateUtc != null, "tenant.SubscriptionEndDateUtc != null");
@@ -72,7 +71,8 @@ namespace TACHYON.MultiTenancy
                         continue;
                     }
 
-                    var endSubscriptionResult = AsyncHelper.RunSync(() => _tenantManager.EndSubscriptionAsync(tenant, edition, utcNow));
+                    var endSubscriptionResult =
+                        AsyncHelper.RunSync(() => _tenantManager.EndSubscriptionAsync(tenant, edition, utcNow));
 
                     if (endSubscriptionResult == EndSubscriptionResult.TenantSetInActive)
                     {
@@ -86,7 +86,8 @@ namespace TACHYON.MultiTenancy
                 catch (Exception exception)
                 {
                     failedTenancyNames.Add(tenant.TenancyName);
-                    Logger.Error($"Subscription of tenant {tenant.TenancyName} has been expired but tenant couldn't be made passive !");
+                    Logger.Error(
+                        $"Subscription of tenant {tenant.TenancyName} has been expired but tenant couldn't be made passive !");
                     Logger.Error(exception.Message, exception);
                 }
             }

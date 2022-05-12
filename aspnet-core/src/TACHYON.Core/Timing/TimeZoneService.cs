@@ -30,7 +30,8 @@ namespace TACHYON.Timing
             {
                 if (tenantId.HasValue)
                 {
-                    return await _settingManager.GetSettingValueForTenantAsync(TimingSettingNames.TimeZone, tenantId.Value);
+                    return await _settingManager.GetSettingValueForTenantAsync(TimingSettingNames.TimeZone,
+                        tenantId.Value);
                 }
 
                 return await _settingManager.GetSettingValueForApplicationAsync(TimingSettingNames.TimeZone);
@@ -43,7 +44,8 @@ namespace TACHYON.Timing
 
             if (scope == SettingScopes.Application)
             {
-                var timezoneSettingDefinition = _settingDefinitionManager.GetSettingDefinition(TimingSettingNames.TimeZone);
+                var timezoneSettingDefinition =
+                    _settingDefinitionManager.GetSettingDefinition(TimingSettingNames.TimeZone);
                 return timezoneSettingDefinition.DefaultValue;
             }
 
@@ -58,11 +60,7 @@ namespace TACHYON.Timing
         public List<NameValueDto> GetWindowsTimezones()
         {
             return TZConvert.KnownWindowsTimeZoneIds.OrderBy(tz => tz)
-                .Select(tz => new NameValueDto
-                {
-                    Value = tz,
-                    Name = tz
-                }).ToList();
+                .Select(tz => new NameValueDto { Value = tz, Name = tz }).ToList();
         }
     }
 }

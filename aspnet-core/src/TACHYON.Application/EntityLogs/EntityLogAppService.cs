@@ -57,7 +57,8 @@ namespace TACHYON.EntityLogs
                     logs = _logManager.GetAllEntityLogs<RoutPoint, long>(typeof(RoutPoint).ToString(), input.EntityId);
                     break;
                 case EntityLogType.ShippingRequestTrip:
-                    logs = _logManager.GetAllEntityLogs<ShippingRequestTrip, int>(typeof(ShippingRequestTrip).ToString(), input.EntityId);
+                    logs = _logManager.GetAllEntityLogs<ShippingRequestTrip, int>(
+                        typeof(ShippingRequestTrip).ToString(), input.EntityId);
                     break;
                 case EntityLogType.ShippingRequest:
                     // Entity <Generic> Type Not Used (no effect here) but this will be more readable 
@@ -67,7 +68,8 @@ namespace TACHYON.EntityLogs
                     logs = _logManager.GetAllEntityLogs<PriceOffer, long>(typeof(PriceOffer).ToString(), input.EntityId);
                     break;
                 default:
-                    throw new AbpValidationException("Don't Play With Me...Go To Hell"); // Test Msg todo add localization here
+                    throw new AbpValidationException(
+                        "Don't Play With Me...Go To Hell"); // Test Msg todo add localization here
             }
 
             var entityLogs = await logs.PageBy(input).ToListAsync();
@@ -131,7 +133,6 @@ namespace TACHYON.EntityLogs
 
             return logDtos;
         }
-
 
 
         private async Task<TSource> GetUserData<TSource>(long userId, Expression<Func<User, TSource>> selector)

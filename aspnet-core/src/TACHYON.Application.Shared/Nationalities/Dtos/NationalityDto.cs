@@ -6,6 +6,5 @@ namespace TACHYON.Nationalities.Dtos
     public class NationalityDto : EntityDto
     {
         public string Name { get; set; }
-
     }
 }

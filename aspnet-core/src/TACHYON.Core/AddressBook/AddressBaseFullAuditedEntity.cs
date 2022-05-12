@@ -22,8 +22,7 @@ namespace TACHYON.AddressBook
 
         public virtual int CityId { get; set; }
 
-        [ForeignKey("CityId")]
-        public City CityFk { get; set; }
+        [ForeignKey("CityId")] public City CityFk { get; set; }
 
         public Point Location { get; set; }
     }

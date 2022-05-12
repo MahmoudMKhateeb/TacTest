@@ -76,7 +76,8 @@ namespace TACHYON.DynamicEntityParameters
             await _entityDynamicParameterValueManager.DeleteAsync(id);
         }
 
-        public async Task<GetAllEntityDynamicParameterValuesOutput> GetAllEntityDynamicParameterValues(GetAllEntityDynamicParameterValuesInput input)
+        public async Task<GetAllEntityDynamicParameterValuesOutput> GetAllEntityDynamicParameterValues(
+            GetAllEntityDynamicParameterValuesInput input)
         {
             var localCacheOfDynamicParameterValues = new Dictionary<int, List<string>>();
 
@@ -85,7 +86,7 @@ namespace TACHYON.DynamicEntityParameters
                 if (!localCacheOfDynamicParameterValues.ContainsKey(dynamicParameterId))
                 {
                     localCacheOfDynamicParameterValues[dynamicParameterId] = (await _dynamicParameterValueManager
-                        .GetAllValuesOfDynamicParameterAsync(dynamicParameterId))
+                            .GetAllValuesOfDynamicParameterAsync(dynamicParameterId))
                         .Select(x => x.Value).ToList();
                 }
 
@@ -95,7 +96,8 @@ namespace TACHYON.DynamicEntityParameters
             var output = new GetAllEntityDynamicParameterValuesOutput();
             var entityDynamicParameters = await _entityDynamicParameterManager.GetAllAsync(input.EntityFullName);
 
-            var entityDynamicParameterSelectedValues = (await _entityDynamicParameterValueManager.GetValuesAsync(input.EntityFullName, input.EntityId))
+            var entityDynamicParameterSelectedValues =
+                (await _entityDynamicParameterValueManager.GetValuesAsync(input.EntityFullName, input.EntityId))
                 .GroupBy(value => value.EntityDynamicParameterId)
                 .ToDictionary(group => group.Key, items => items.ToList().Select(value => value.Value).ToList());
 
@@ -104,9 +106,12 @@ namespace TACHYON.DynamicEntityParameters
                 var outputItem = new GetAllEntityDynamicParameterValuesOutputItem
                 {
                     EntityDynamicParameterId = entityDynamicParameter.Id,
-                    InputType = _dynamicEntityParameterDefinitionManager.GetOrNullAllowedInputType(entityDynamicParameter.DynamicParameter.InputType),
+                    InputType =
+                        _dynamicEntityParameterDefinitionManager.GetOrNullAllowedInputType(entityDynamicParameter
+                            .DynamicParameter.InputType),
                     ParameterName = entityDynamicParameter.DynamicParameter.ParameterName,
-                    AllValuesInputTypeHas = await LocalGetAllValuesOfDynamicParameter(entityDynamicParameter.DynamicParameter.Id),
+                    AllValuesInputTypeHas =
+                        await LocalGetAllValuesOfDynamicParameter(entityDynamicParameter.DynamicParameter.Id),
                     SelectedValues = entityDynamicParameterSelectedValues.ContainsKey(entityDynamicParameter.Id)
                         ? entityDynamicParameterSelectedValues[entityDynamicParameter.Id]
                         : new List<string>()
@@ -129,7 +134,8 @@ namespace TACHYON.DynamicEntityParameters
 
             foreach (var item in input.Items)
             {
-                await _entityDynamicParameterValueManager.CleanValuesAsync(item.EntityDynamicParameterId, item.EntityId);
+                await _entityDynamicParameterValueManager.CleanValuesAsync(item.EntityDynamicParameterId,
+                    item.EntityId);
 
                 foreach (var newValue in item.Values)
                 {

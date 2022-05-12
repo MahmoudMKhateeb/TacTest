@@ -5,7 +5,6 @@ namespace TACHYON.AddressBook.Dtos
 {
     public class GetFacilitiesInformationInput : PagedAndSortedResultRequestDto
     {
-        [Required]
-        public int TenantId { get; set; }
+        [Required] public int TenantId { get; set; }
     }
 }

@@ -6,7 +6,8 @@ using TACHYON.Authorization.Users;
 
 namespace TACHYON.Authentication.TwoFactor.Google
 {
-    public class GoogleAuthenticatorProvider : TACHYONServiceBase, IUserTwoFactorTokenProvider<User>, ITransientDependency
+    public class GoogleAuthenticatorProvider : TACHYONServiceBase, IUserTwoFactorTokenProvider<User>,
+        ITransientDependency
     {
         private readonly GoogleTwoFactorAuthenticateService _googleTwoFactorAuthenticateService;
 
@@ -17,20 +18,27 @@ namespace TACHYON.Authentication.TwoFactor.Google
 
         public const string Name = "GoogleAuthenticator";
 
-        public Task<string> GenerateAsync(string purpose, UserManager<User> userManager, User user)
+        public Task<string> GenerateAsync(string purpose,
+            UserManager<User> userManager,
+            User user)
         {
             CheckIfGoogleAuthenticatorIsEnabled(user);
 
-            var setupInfo = _googleTwoFactorAuthenticateService.GenerateSetupCode("TACHYON", user.EmailAddress, user.GoogleAuthenticatorKey, 300, 300);
+            var setupInfo = _googleTwoFactorAuthenticateService.GenerateSetupCode("TACHYON", user.EmailAddress,
+                user.GoogleAuthenticatorKey, 300, 300);
 
             return Task.FromResult(setupInfo.QrCodeSetupImageUrl);
         }
 
-        public Task<bool> ValidateAsync(string purpose, string token, UserManager<User> userManager, User user)
+        public Task<bool> ValidateAsync(string purpose,
+            string token,
+            UserManager<User> userManager,
+            User user)
         {
             CheckIfGoogleAuthenticatorIsEnabled(user);
 
-            return Task.FromResult(_googleTwoFactorAuthenticateService.ValidateTwoFactorPin(user.GoogleAuthenticatorKey, token));
+            return Task.FromResult(
+                _googleTwoFactorAuthenticateService.ValidateTwoFactorPin(user.GoogleAuthenticatorKey, token));
         }
 
         private void CheckIfGoogleAuthenticatorIsEnabled(User user)

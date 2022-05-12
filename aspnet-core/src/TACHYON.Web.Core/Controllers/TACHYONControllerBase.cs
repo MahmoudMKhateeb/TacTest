@@ -27,17 +27,13 @@ namespace TACHYON.Web.Controllers
             Response.Cookies.Append(
                 multiTenancyConfig.TenantIdResolveKey,
                 tenantId?.ToString(),
-                new CookieOptions
-                {
-                    Expires = DateTimeOffset.Now.AddYears(5),
-                    Path = "/"
-                }
+                new CookieOptions { Expires = DateTimeOffset.Now.AddYears(5), Path = "/" }
             );
         }
+
         protected virtual void DisableTenancyFilters()
         {
             CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant);
-
         }
     }
 }

@@ -9,8 +9,5 @@
         ////public string TruckPlateNumber { get; set; }
 
         //public string UserName { get; set; }
-
-
-
     }
 }

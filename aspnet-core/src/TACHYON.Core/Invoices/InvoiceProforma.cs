@@ -11,15 +11,12 @@ using TACHYON.Shipping.ShippingRequests;
 namespace TACHYON.Invoices
 {
     [Table("InvoicesProforma")]
-
     public class InvoiceProforma : CreationAuditedEntity<long>, IMustHaveTenant
     {
-        public int TenantId { get ; set ; }
-        [ForeignKey("TenantId")]
-        public Tenant Tenant { get; set; }
+        public int TenantId { get; set; }
+        [ForeignKey("TenantId")] public Tenant Tenant { get; set; }
         public long RequestId { get; set; }
-        [ForeignKey("RequestId")]
-        public ShippingRequest ShippingRequests { get; set; }
+        [ForeignKey("RequestId")] public ShippingRequest ShippingRequests { get; set; }
         public decimal TotalAmount { get; set; }
         public decimal Amount { get; set; }
         public decimal VatAmount { get; set; }

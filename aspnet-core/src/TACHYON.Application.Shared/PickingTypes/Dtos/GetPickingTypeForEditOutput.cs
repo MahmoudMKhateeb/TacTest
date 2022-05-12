@@ -6,8 +6,6 @@ namespace TACHYON.PickingTypes.Dtos
 {
     public class GetPickingTypeForEditOutput
     {
-		public CreateOrEditPickingTypeDto PickingType { get; set; }
-
-
+        public CreateOrEditPickingTypeDto PickingType { get; set; }
     }
 }

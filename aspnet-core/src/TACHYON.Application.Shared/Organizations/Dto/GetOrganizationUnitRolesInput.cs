@@ -7,8 +7,7 @@ namespace TACHYON.Organizations.Dto
 {
     public class GetOrganizationUnitRolesInput : PagedAndSortedInputDto, IShouldNormalize
     {
-        [Range(1, long.MaxValue)]
-        public long Id { get; set; }
+        [Range(1, long.MaxValue)] public long Id { get; set; }
 
         public void Normalize()
         {

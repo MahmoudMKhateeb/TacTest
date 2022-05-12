@@ -2,7 +2,7 @@
 
 namespace TACHYON.Shipping.ShippingRequests.TachyonDealer.Dtos
 {
-    public class ShippingRequestsCarrierDirectPricingListDto:EntityDto
+    public class ShippingRequestsCarrierDirectPricingListDto : EntityDto
     {
         public long RequestId { get; set; }
         public string CarrierName { get; set; }

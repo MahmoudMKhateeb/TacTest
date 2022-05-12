@@ -11,10 +11,12 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public long MasterWaybillNo { get; set; }
         public string Date { get; set; }
         public string ShippingRequestStatus { get; set; }
+
         /// <summary>
         /// Shipper Invoice No
         /// </summary>
         public string InvoiceNumber { get; set; }
+
         public string ShipperReference { get; set; }
         public string ShipperInvoiceNo { get; set; }
         public double TotalWeight { get; set; }
@@ -48,8 +50,8 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
 
         //carrier name
         public string CarrierName { get; set; }
+
         //client name
         public string ClientName { get; set; }
-
     }
 }

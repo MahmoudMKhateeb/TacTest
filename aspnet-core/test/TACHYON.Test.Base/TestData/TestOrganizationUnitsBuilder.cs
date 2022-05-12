@@ -40,12 +40,12 @@ namespace TACHYON.Test.Base.TestData
             var ou21 = CreateOrganizationUnit("OU21", OrganizationUnit.CreateCode(2, 1), ou2.Id);
         }
 
-        private OrganizationUnit CreateOrganizationUnit(string displayName, string code, long? parentId = null)
+        private OrganizationUnit CreateOrganizationUnit(string displayName,
+            string code,
+            long? parentId = null)
         {
-            var organizationUnit = _context.OrganizationUnits.Add(new OrganizationUnit(_tenantId, displayName, parentId)
-            {
-                Code = code
-            }).Entity;
+            var organizationUnit = _context.OrganizationUnits
+                .Add(new OrganizationUnit(_tenantId, displayName, parentId) { Code = code }).Entity;
 
             _context.SaveChanges();
 

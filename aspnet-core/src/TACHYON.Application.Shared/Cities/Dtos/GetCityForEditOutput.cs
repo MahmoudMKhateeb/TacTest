@@ -9,7 +9,5 @@ namespace TACHYON.Cities.Dtos
         public CreateOrEditCityDto City { get; set; }
 
         public string CountyDisplayName { get; set; }
-
-
     }
 }

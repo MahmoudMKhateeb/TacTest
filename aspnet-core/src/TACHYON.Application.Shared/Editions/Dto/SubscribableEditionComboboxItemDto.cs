@@ -6,7 +6,9 @@ namespace TACHYON.Editions.Dto
     {
         public bool? IsFree { get; set; }
 
-        public SubscribableEditionComboboxItemDto(string value, string displayText, bool? isFree) : base(value, displayText)
+        public SubscribableEditionComboboxItemDto(string value,
+            string displayText,
+            bool? isFree) : base(value, displayText)
         {
             IsFree = isFree;
         }

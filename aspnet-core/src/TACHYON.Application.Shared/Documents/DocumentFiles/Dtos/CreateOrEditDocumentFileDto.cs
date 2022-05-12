@@ -1,4 +1,5 @@
 ﻿using Abp.Application.Services.Dto;
+using Abp.Extensions;
 using Abp.Runtime.Validation;
 using Castle.Core.Internal;
 using System;
@@ -79,6 +80,5 @@ namespace TACHYON.Documents.DocumentFiles.Dtos
         //Entity ID is the id of the :truck, user,trailer, shipment or any other entity
         public string EntityId { get; set; }
         public DocumentsEntitiesEnum EntityType { get; set; }
-
     }
 }

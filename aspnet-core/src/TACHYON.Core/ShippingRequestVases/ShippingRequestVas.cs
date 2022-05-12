@@ -22,14 +22,14 @@ namespace TACHYON.ShippingRequestVases
 
         public virtual int VasId { get; set; }
 
-        [ForeignKey("VasId")]
-        public Vas VasFk { get; set; }
+        [ForeignKey("VasId")] public Vas VasFk { get; set; }
 
         public string OtherVasName { get; set; }
 
         public virtual long ShippingRequestId { get; set; }
-        [ForeignKey("ShippingRequestId")]  
-        public ShippingRequest ShippingRequestFk { get; set; }
+
+        [ForeignKey("ShippingRequestId")] public ShippingRequest ShippingRequestFk { get; set; }
+
         //number of trips for each vas, each vas shouldn't assign to more than this number
         public int NumberOfTrips { get; set; }
 

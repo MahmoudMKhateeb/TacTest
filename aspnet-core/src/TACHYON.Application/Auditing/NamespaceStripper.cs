@@ -38,13 +38,15 @@ namespace TACHYON.Auditing
                 var serviceNamePart = serviceNameParts[i];
                 if (serviceNamePart.Contains("`"))
                 {
-                    genericServiceName += GetTextAfterLastDot(serviceNamePart.Substring(0, serviceNamePart.IndexOf('`'))) + "<";
+                    genericServiceName +=
+                        GetTextAfterLastDot(serviceNamePart.Substring(0, serviceNamePart.IndexOf('`'))) + "<";
                     openBracketCount++;
                 }
 
                 if (serviceNamePart.Contains(","))
                 {
-                    genericServiceName += GetTextAfterLastDot(serviceNamePart.Substring(0, serviceNamePart.IndexOf(',')));
+                    genericServiceName +=
+                        GetTextAfterLastDot(serviceNamePart.Substring(0, serviceNamePart.IndexOf(',')));
                     if (i + 1 < serviceNameParts.Count && serviceNameParts[i + 1].Contains(","))
                     {
                         genericServiceName += ", ";

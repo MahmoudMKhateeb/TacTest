@@ -19,29 +19,34 @@ using TACHYON.Shipping.Trips.RejectReasons.Dtos;
 namespace TACHYON.Shipping.Trips.RejectReasons
 {
     [AbpAuthorize()]
-    public class ShippingRequestTripRejectReasonAppService : TACHYONAppServiceBase, IShippingRequestTripRejectReasonAppService
+    public class ShippingRequestTripRejectReasonAppService : TACHYONAppServiceBase,
+        IShippingRequestTripRejectReasonAppService
     {
         private readonly IRepository<ShippingRequestTripRejectReason> _shippingRequestTripRejectReasonRepository;
         private readonly IExcelExporterManager<ShippingRequestTripRejectReasonListDto> _excelExporterManager;
 
 
-        public ShippingRequestTripRejectReasonAppService(IRepository<ShippingRequestTripRejectReason> shippingRequestTripRejectReasonRepository,
+        public ShippingRequestTripRejectReasonAppService(
+            IRepository<ShippingRequestTripRejectReason> shippingRequestTripRejectReasonRepository,
             IExcelExporterManager<ShippingRequestTripRejectReasonListDto> excelExporterManager)
         {
             _shippingRequestTripRejectReasonRepository = shippingRequestTripRejectReasonRepository;
             _excelExporterManager = excelExporterManager;
         }
+
         public ListResultDto<ShippingRequestTripRejectReasonListDto> GetAllRejectReason(FilterInput Input)
         {
-            return new ListResultDto<ShippingRequestTripRejectReasonListDto>(ObjectMapper.Map<List<ShippingRequestTripRejectReasonListDto>>(GetReason(Input)));
+            return new ListResultDto<ShippingRequestTripRejectReasonListDto>(
+                ObjectMapper.Map<List<ShippingRequestTripRejectReasonListDto>>(GetReason(Input)));
         }
 
         public async Task<CreateOrEditShippingRequestTripRejectReasonDto> GetForEdit(EntityDto input)
         {
             return ObjectMapper.Map<CreateOrEditShippingRequestTripRejectReasonDto>(await
                 _shippingRequestTripRejectReasonRepository.GetAllIncluding(x => x.Translations)
-                .FirstOrDefaultAsync(e => e.Id == input.Id));
+                    .FirstOrDefaultAsync(e => e.Id == input.Id));
         }
+
         public async Task CreateOrEdit(CreateOrEditShippingRequestTripRejectReasonDto input)
         {
             await ValidateDuplicateNameAsync(input);
@@ -63,9 +68,10 @@ namespace TACHYON.Shipping.Trips.RejectReasons
                 {
                     throw new UserFriendlyException(L("DisplayNameCannotBeEmpty"));
                 }
+
                 var isDuplicateUserName = await _shippingRequestTripRejectReasonRepository
-                   .FirstOrDefaultAsync(x => x.Translations.Any(i => i.Name == transItem.Name) &&
-                   x.Id != input.Id);
+                    .FirstOrDefaultAsync(x => x.Translations.Any(i => i.Name == transItem.Name) &&
+                                              x.Id != input.Id);
                 if (isDuplicateUserName != null)
                 {
                     throw new UserFriendlyException(string.Format(L("TripRejectReasonDuplicateName"), transItem.Name));
@@ -74,7 +80,6 @@ namespace TACHYON.Shipping.Trips.RejectReasons
         }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Reject_Reason_Delete)]
-
         public async Task Delete(EntityDto input)
         {
             await _shippingRequestTripRejectReasonRepository.DeleteAsync(input.Id);
@@ -89,36 +94,37 @@ namespace TACHYON.Shipping.Trips.RejectReasons
 
             var ReasonListDto = ObjectMapper.Map<List<ShippingRequestTripRejectReasonListDto>>(GetReason(Input));
             return _excelExporterManager.ExportToFile(ReasonListDto, "Reasons", HeaderText, propertySelectors);
-
         }
 
         #region Heleper
-        [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Reject_Reason_Create)]
 
+        [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Reject_Reason_Create)]
         private async Task Create(CreateOrEditShippingRequestTripRejectReasonDto input)
         {
             var Reason = ObjectMapper.Map<ShippingRequestTripRejectReason>(input);
 
             await _shippingRequestTripRejectReasonRepository.InsertAsync(Reason);
         }
-        [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Reject_Reason_Edit)]
 
+        [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Reject_Reason_Edit)]
         private async Task Update(CreateOrEditShippingRequestTripRejectReasonDto input)
         {
-            var Reason = await _shippingRequestTripRejectReasonRepository.GetAllIncluding(x => x.Translations).SingleAsync(e => e.Id == input.Id);
+            var Reason = await _shippingRequestTripRejectReasonRepository.GetAllIncluding(x => x.Translations)
+                .SingleAsync(e => e.Id == input.Id);
             Reason.Translations.Clear();
             ObjectMapper.Map(input, Reason);
-
         }
 
         private IQueryable<ShippingRequestTripRejectReason> GetReason(FilterInput Input)
         {
             return _shippingRequestTripRejectReasonRepository
-             .GetAllIncluding(x => x.Translations)
-              .AsNoTracking()
-              .WhereIf(!string.IsNullOrWhiteSpace(Input.Filter), e => e.Translations.Any(x => x.Name.Contains(Input.Filter.Trim())))
-              .OrderBy(!string.IsNullOrEmpty(Input.Sorting) ? Input.Sorting : "id asc");
+                .GetAllIncluding(x => x.Translations)
+                .AsNoTracking()
+                .WhereIf(!string.IsNullOrWhiteSpace(Input.Filter),
+                    e => e.Translations.Any(x => x.Name.Contains(Input.Filter.Trim())))
+                .OrderBy(!string.IsNullOrEmpty(Input.Sorting) ? Input.Sorting : "id asc");
         }
+
         #endregion
     }
 }

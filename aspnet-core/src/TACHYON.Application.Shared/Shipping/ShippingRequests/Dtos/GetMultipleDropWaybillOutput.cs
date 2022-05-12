@@ -28,7 +28,9 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         //Sender Details Info
         public string SenderCompanyName { get; set; }
         public string SenderContactName { get; set; }
+
         public string SenderMobile { get; set; }
+
         // Receiver Details info
         public string ReceiverCompanyName { get; set; }
         public string ReceiverContactName { get; set; }

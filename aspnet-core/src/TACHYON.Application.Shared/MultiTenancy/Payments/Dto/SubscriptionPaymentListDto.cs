@@ -25,6 +25,5 @@ namespace TACHYON.MultiTenancy.Payments.Dto
         public int TenantId { get; set; }
 
         public string InvoiceNo { get; set; }
-
     }
 }

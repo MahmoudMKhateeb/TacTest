@@ -17,14 +17,19 @@ namespace TACHYON.Importing
                 var workbook = new XSSFWorkbook(stream);
                 sheet = workbook.GetSheetAt(0);
             }
+
             IRow headerRow = sheet.GetRow(0); //Get Header Row
             List<ReportColumn> Columns = new List<ReportColumn>();
             foreach (var cell in headerRow.Cells)
             {
                 if (string.IsNullOrWhiteSpace(cell.ToString())) continue;
 
-                Columns.Add(new ReportColumn { Name = cell.ToString().Replace(" ", "").Trim(), Index = cell.ColumnIndex });
+                Columns.Add(new ReportColumn
+                {
+                    Name = cell.ToString().Replace(" ", "").Trim(), Index = cell.ColumnIndex
+                });
             }
+
             int cellCount = headerRow.LastCellNum;
 
             List<TEntity> Entities = new List<TEntity>();
@@ -45,8 +50,10 @@ namespace TACHYON.Importing
                     else
                         prop.SetValue(Entity, Convert.ChangeType(null, prop.PropertyType), null);
                 }
+
                 Entities.Add(Entity);
             }
+
             return Entities;
         }
 
@@ -65,8 +72,8 @@ namespace TACHYON.Importing
                 case CellType.Numeric:
 
                     return DateUtil.IsCellDateFormatted(cell)
-                            ? (object)cell.DateCellValue
-                            : (object)cell.NumericCellValue;
+                        ? (object)cell.DateCellValue
+                        : (object)cell.NumericCellValue;
                 case CellType.String:
                     return cell.StringCellValue.ToString().Trim();
                 case CellType.Blank:

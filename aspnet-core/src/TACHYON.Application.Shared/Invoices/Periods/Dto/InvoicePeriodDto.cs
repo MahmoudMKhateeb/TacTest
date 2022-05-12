@@ -14,8 +14,9 @@ namespace TACHYON.Invoices.Periods.Dto
         [Required]
         [StringLength(InvoicePeriodConst.MaxDisplayNameLength, MinimumLength = InvoicePeriodConst.MinDisplayNameLength)]
         public string DisplayName { get; set; }
+
         public InvoicePeriodType PeriodType { get; set; }
-        public int FreqInterval { get; set; }= 1;
+        public int FreqInterval { get; set; } = 1;
         public string FreqRecurrence { get; set; }
         public bool Enabled { get; set; }
         public bool ShipperOnlyUsed { get; set; }
@@ -23,18 +24,17 @@ namespace TACHYON.Invoices.Periods.Dto
         public FrequencyRelativeInterval FreqRelativeInterval { get; set; }
 
 
-        [NotMapped]
-        public string Cronexpression { get; set; }
+        [NotMapped] public string Cronexpression { get; set; }
+
         public void AddValidationErrors(CustomValidationContext context)
         {
-            if (PeriodType == InvoicePeriodType.PayInAdvance || PeriodType==InvoicePeriodType.PayuponDelivery)
+            if (PeriodType == InvoicePeriodType.PayInAdvance || PeriodType == InvoicePeriodType.PayuponDelivery)
             {
                 FreqRecurrence = null;
                 FreqInterval = 0;
                 FreqRelativeInterval = 0;
                 FreqRecurrence = null;
             }
-
         }
     }
 }

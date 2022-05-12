@@ -12,10 +12,9 @@ namespace TACHYON.AutoMapper.Goods.GoodCategories
         public GoodCategoriesProfile()
         {
             CreateMap<CreateOrEditGoodCategoryDto, GoodCategory>()
-                    .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations))
-                    .ReverseMap();
+                .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations))
+                .ReverseMap();
             CreateMap<GoodCategoryTranslationDto, GoodCategoryTranslation>().ReverseMap();
-
         }
     }
 }

@@ -10,7 +10,6 @@
         public const string TestCheckFeature2 = "App.TestCheckFeature2";
 
 
-
         #region ######## Tachyon features #########
 
         public const string Shipper = "App.Shipper";
@@ -41,8 +40,11 @@
         public const string InvoicePaymentMethodCrarrier = "App.Shipper.Invoice.Payment.MethodCrarrier";
 
         #region Comission
+
         #region Shipper between carrier
+
         #region Trip Comission
+
         public const string TripCommissionPercentage = "App.Shipper.TripCommissionPercentage";
         public const string TripCommissionValue = "App.Shipper.TripCommissionValue";
         public const string TripMinValueCommission = "App.Shipper.TripMinValueCommission";
@@ -53,15 +55,14 @@
         public static string DirectRequestCommissionType = "App.Shipper.DirectRequestCommissionType";
         public static string DirectRequestCommissionMinValue = "App.Shipper.DirectRequestCommissionMinValue";
 
-
-
         #endregion
+
         #region Vas Comission
+
         public const string VasCommissionPercentage = "App.Shipper.VasCommissionPercentage";
         public const string VasCommissionValue = "App.Shipper.VasCommissionValue";
         public const string VasMinValueCommission = "App.Shipper.VasMinValueCommission";
         public const string VasCommissionType = "App.Shipper.VasCommissionType";
-
 
 
         public static string DirectRequestVasCommissionType = "App.Shipper.DirectRequestVASCommissionType";
@@ -70,23 +71,34 @@
         public static string DirectRequestVasCommissionMinValue = "App.Shipper.DirectRequestVASCommissionMinValue";
 
         #endregion
+
         #endregion
+
         #region TachyonDealer
+
         #region Trip Comission
+
         public const string TachyonDealerTripCommissionPercentage = "App.TachyonDealer.TripCommissionPercentage";
         public const string TachyonDealerTripCommissionValue = "App.TachyonDealer.TripCommissionValue";
         public const string TachyonDealerTripMinValueCommission = "App.TachyonDealer.TripMinValueCommission";
         public const string TachyonDealerTripCommissionType = "App.TachyonDealer.TripCommissionType";
+
         #endregion
+
         #region Vas Comission
+
         public const string TachyonDealerVasCommissionPercentage = "App.TachyonDealer.VasCommissionPercentage";
         public const string TachyonDealerVasCommissionValue = "App.TachyonDealer.VasCommissionValue";
         public const string TachyonDealerVasMinValueCommission = "App.TachyonDealer.VasMinValueCommission";
         public const string TachyonDealerVasCommissionType = "App.TachyonDealer.VasCommissionType";
+
         #endregion
+
         #endregion
+
         #endregion
-         public const string BayanIntegration = "App.BayanIntegration";
+
+        public const string BayanIntegration = "App.BayanIntegration";
         public const string SaasRelatedCarrier = "App.Shipper.SaaSCarrier";
         public const string Saas = "App.Shipper.Saas";
 

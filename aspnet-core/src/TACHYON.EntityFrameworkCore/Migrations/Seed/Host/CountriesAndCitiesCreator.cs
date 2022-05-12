@@ -24,14 +24,27 @@ namespace TACHYON.Migrations.Seed.Host
 
         public void Create()
         {
-            var json = new WebClient().DownloadString("https://raw.githubusercontent.com/David-Haim-zz/CountriesToCitiesJSON/master/countriesToCities.json");
+            var json = new WebClient().DownloadString(
+                "https://raw.githubusercontent.com/David-Haim-zz/CountriesToCitiesJSON/master/countriesToCities.json");
             var countryObject = JObject.Parse(json);
 
-            List<string> countriesList = _context.Counties.Where(x => x.IsDeleted == false).Select(x => x.DisplayName).ToList();
+            List<string> countriesList =
+                _context.Counties.Where(x => x.IsDeleted == false).Select(x => x.DisplayName).ToList();
             List<string> WantedCountriesList = new List<string>
-                    { "Saudi Arabia", "MENA", "United Arab Emirates", "Bahrain", "Oman", "Iraq", "Hashemite Kingdom of Jordan",
-                        "Egypt", "Turkey", "Libya", "Sudan" ,"Kuwait"
-                    };
+            {
+                "Saudi Arabia",
+                "MENA",
+                "United Arab Emirates",
+                "Bahrain",
+                "Oman",
+                "Iraq",
+                "Hashemite Kingdom of Jordan",
+                "Egypt",
+                "Turkey",
+                "Libya",
+                "Sudan",
+                "Kuwait"
+            };
             //insert countries
             foreach (var co in countryObject.Properties())
             {
@@ -75,25 +88,25 @@ namespace TACHYON.Migrations.Seed.Host
                                 string city = ci.ToString();
                                 CreateCityToDB(city, countryId.Value);
                             }
-
                         }
                     }
-
                 }
-
-
             }
-
         }
+
         private County AddCountryToDB(string displayName)
         {
             var itemDB = _context.Cities.FirstOrDefault(x => x.DisplayName == displayName);
             if (itemDB == null)
             {
-                var item = _context.Counties.AddAsync(new County { Code = "", CreationTime = Clock.Now, IsDeleted = false, DisplayName = displayName });
+                var item = _context.Counties.AddAsync(new County
+                {
+                    Code = "", CreationTime = Clock.Now, IsDeleted = false, DisplayName = displayName
+                });
                 _context.SaveChanges();
                 return _context.Counties.FirstOrDefault(x => x.DisplayName == displayName);
             }
+
             return null;
         }
 
@@ -107,10 +120,11 @@ namespace TACHYON.Migrations.Seed.Host
 
         private void CreateCityToDB(string cityName, int countryId)
         {
-            _context.Cities.Add(new City { CountyId = countryId, IsDeleted = false, DisplayName = cityName, CreationTime = Clock.Now });
+            _context.Cities.Add(new City
+            {
+                CountyId = countryId, IsDeleted = false, DisplayName = cityName, CreationTime = Clock.Now
+            });
             _context.SaveChanges();
-
         }
-
     }
 }

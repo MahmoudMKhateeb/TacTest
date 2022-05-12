@@ -3,6 +3,7 @@ using Abp.Application.Services.Dto;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TACHYON.Documents.DocumentFiles.Dtos;
+using TACHYON.Common;
 using TACHYON.Dto;
 using TACHYON.Shipping.Drivers.Dto;
 using TACHYON.Tracking.Dto;
@@ -19,5 +20,6 @@ namespace TACHYON.Tracking
         Task InvokeStatus(InvokeStatusInputDto input);
         Task NextLocation(long id);
         Task<List<GetAllUploadedFileDto>> POD(long id);
+        Task<IHasDocument> GetDeliveryGoodPicture(long id);
     }
 }

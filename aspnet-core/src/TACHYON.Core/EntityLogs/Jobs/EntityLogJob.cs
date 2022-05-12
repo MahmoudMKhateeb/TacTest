@@ -13,7 +13,9 @@ namespace TACHYON.EntityLogs.Jobs
         private readonly IRepository<EntityChange, long> _repository;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
 
-        public EntityLogJob(EntityLogManager logManager, IRepository<EntityChange, long> repository, IUnitOfWorkManager unitOfWorkManager)
+        public EntityLogJob(EntityLogManager logManager,
+            IRepository<EntityChange, long> repository,
+            IUnitOfWorkManager unitOfWorkManager)
         {
             _logManager = logManager;
             _repository = repository;
@@ -25,18 +27,16 @@ namespace TACHYON.EntityLogs.Jobs
         {
             using (var uow = _unitOfWorkManager.Begin())
             {
-
                 var entity = await _repository.GetAll().IgnoreQueryFilters()
-                        .AsNoTracking()
-                        .Include(x => x.PropertyChanges)
-                        .SingleOrDefaultAsync(x => x.Id == args.EntityChangeId);
+                    .AsNoTracking()
+                    .Include(x => x.PropertyChanges)
+                    .SingleOrDefaultAsync(x => x.Id == args.EntityChangeId);
 
                 if (entity != null)
                     await _logManager.CreateEntityLog(entity);
 
                 await uow.CompleteAsync();
             }
-
         }
     }
 }

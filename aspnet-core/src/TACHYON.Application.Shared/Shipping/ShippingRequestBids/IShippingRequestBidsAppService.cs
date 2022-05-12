@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace TACHYON.Shipping.ShippingRequestBids
 {
-    public interface IShippingRequestBidsAppService:IApplicationService
+    public interface IShippingRequestBidsAppService : IApplicationService
     {
         //Task<PagedResultDto<GetShippingRequestBidsForViewDto>> GetAll(GetAllShippingRequestBidsInput input);
         //Task CancelShippingRequestBid(StopShippingRequestBidInput input);
@@ -18,6 +18,5 @@ namespace TACHYON.Shipping.ShippingRequestBids
         //Task CancelBidRequest(CancelShippingRequestBidInput input);
         //Task<PagedResultDto<ViewShipperBidsReqDetailsOutputDto>> GetShipperBidsRequestDetailsForView(PagedAndSortedResultRequestDto input);
         //Task<PagedResultDto<ViewShipperBidsReqDetailsOutputDto>> GetAllMarketPlaceSRForCarrier(PagedAndSortedResultRequestDto input, GetAllBidsInput input2);
-
     }
 }

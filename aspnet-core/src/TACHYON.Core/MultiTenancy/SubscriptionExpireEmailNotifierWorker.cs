@@ -35,7 +35,10 @@ namespace TACHYON.MultiTenancy
 
         protected override void DoWork()
         {
-            var subscriptionRemainingDayCount = Convert.ToInt32(SettingManager.GetSettingValueForApplication(AppSettings.TenantManagement.SubscriptionExpireNotifyDayCount));
+            var subscriptionRemainingDayCount =
+                Convert.ToInt32(
+                    SettingManager.GetSettingValueForApplication(AppSettings.TenantManagement
+                        .SubscriptionExpireNotifyDayCount));
             var dateToCheckRemainingDayCount = Clock.Now.AddDays(subscriptionRemainingDayCount).ToUniversalTime();
 
             var subscriptionExpiredTenants = _tenantRepository.GetAllList(

@@ -26,41 +26,38 @@ namespace TACHYON.Routs
         private readonly IRepository<RoutType, int> _lookup_routTypeRepository;
 
 
-        public RoutesAppService(IRepository<Route> routeRepository, IRoutesExcelExporter routesExcelExporter, IRepository<RoutType, int> lookup_routTypeRepository)
+        public RoutesAppService(IRepository<Route> routeRepository,
+            IRoutesExcelExporter routesExcelExporter,
+            IRepository<RoutType, int> lookup_routTypeRepository)
         {
             _routeRepository = routeRepository;
             _routesExcelExporter = routesExcelExporter;
             _lookup_routTypeRepository = lookup_routTypeRepository;
-
         }
 
         public async Task<PagedResultDto<GetRouteForViewDto>> GetAll(GetAllRoutesInput input)
         {
-
             var filteredRoutes = _routeRepository.GetAll()
-                        .Include(e => e.RoutTypeFk)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter) || e.Description.Contains(input.Filter))
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.DisplayName == input.DisplayNameFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.RoutTypeDisplayNameFilter), e => e.RoutTypeFk != null && e.RoutTypeFk.DisplayName == input.RoutTypeDisplayNameFilter);
+                .Include(e => e.RoutTypeFk)
+                .WhereIf(!string.IsNullOrWhiteSpace(input.Filter),
+                    e => false || e.DisplayName.Contains(input.Filter) || e.Description.Contains(input.Filter))
+                .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter),
+                    e => e.DisplayName == input.DisplayNameFilter)
+                .WhereIf(!string.IsNullOrWhiteSpace(input.RoutTypeDisplayNameFilter),
+                    e => e.RoutTypeFk != null && e.RoutTypeFk.DisplayName == input.RoutTypeDisplayNameFilter);
 
             var pagedAndFilteredRoutes = filteredRoutes
                 .OrderBy(input.Sorting ?? "id asc")
                 .PageBy(input);
 
             var routes = from o in pagedAndFilteredRoutes
-                         join o1 in _lookup_routTypeRepository.GetAll() on o.RoutTypeId equals o1.Id into j1
-                         from s1 in j1.DefaultIfEmpty()
-
-                         select new GetRouteForViewDto()
-                         {
-                             Route = new RouteDto
-                             {
-                                 DisplayName = o.DisplayName,
-                                 Description = o.Description,
-                                 Id = o.Id
-                             },
-                             RoutTypeDisplayName = s1 == null || s1.DisplayName == null ? "" : s1.DisplayName.ToString()
-                         };
+                join o1 in _lookup_routTypeRepository.GetAll() on o.RoutTypeId equals o1.Id into j1
+                from s1 in j1.DefaultIfEmpty()
+                select new GetRouteForViewDto()
+                {
+                    Route = new RouteDto { DisplayName = o.DisplayName, Description = o.Description, Id = o.Id },
+                    RoutTypeDisplayName = s1 == null || s1.DisplayName == null ? "" : s1.DisplayName.ToString()
+                };
 
             var totalCount = await filteredRoutes.CountAsync();
 
@@ -78,7 +75,8 @@ namespace TACHYON.Routs
 
             if (output.Route.RoutTypeId != null)
             {
-                var _lookupRoutType = await _lookup_routTypeRepository.FirstOrDefaultAsync((int)output.Route.RoutTypeId);
+                var _lookupRoutType =
+                    await _lookup_routTypeRepository.FirstOrDefaultAsync((int)output.Route.RoutTypeId);
                 output.RoutTypeDisplayName = _lookupRoutType?.DisplayName?.ToString();
             }
 
@@ -94,7 +92,8 @@ namespace TACHYON.Routs
 
             if (output.Route.RoutTypeId != null)
             {
-                var _lookupRoutType = await _lookup_routTypeRepository.FirstOrDefaultAsync((int)output.Route.RoutTypeId);
+                var _lookupRoutType =
+                    await _lookup_routTypeRepository.FirstOrDefaultAsync((int)output.Route.RoutTypeId);
                 output.RoutTypeDisplayName = _lookupRoutType?.DisplayName?.ToString();
             }
 
@@ -144,27 +143,23 @@ namespace TACHYON.Routs
 
         public async Task<FileDto> GetRoutesToExcel(GetAllRoutesForExcelInput input)
         {
-
             var filteredRoutes = _routeRepository.GetAll()
-                        .Include(e => e.RoutTypeFk)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter) || e.Description.Contains(input.Filter))
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.DisplayName == input.DisplayNameFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.RoutTypeDisplayNameFilter), e => e.RoutTypeFk != null && e.RoutTypeFk.DisplayName == input.RoutTypeDisplayNameFilter);
+                .Include(e => e.RoutTypeFk)
+                .WhereIf(!string.IsNullOrWhiteSpace(input.Filter),
+                    e => false || e.DisplayName.Contains(input.Filter) || e.Description.Contains(input.Filter))
+                .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter),
+                    e => e.DisplayName == input.DisplayNameFilter)
+                .WhereIf(!string.IsNullOrWhiteSpace(input.RoutTypeDisplayNameFilter),
+                    e => e.RoutTypeFk != null && e.RoutTypeFk.DisplayName == input.RoutTypeDisplayNameFilter);
 
             var query = (from o in filteredRoutes
-                         join o1 in _lookup_routTypeRepository.GetAll() on o.RoutTypeId equals o1.Id into j1
-                         from s1 in j1.DefaultIfEmpty()
-
-                         select new GetRouteForViewDto()
-                         {
-                             Route = new RouteDto
-                             {
-                                 DisplayName = o.DisplayName,
-                                 Description = o.Description,
-                                 Id = o.Id
-                             },
-                             RoutTypeDisplayName = s1 == null || s1.DisplayName == null ? "" : s1.DisplayName.ToString()
-                         });
+                join o1 in _lookup_routTypeRepository.GetAll() on o.RoutTypeId equals o1.Id into j1
+                from s1 in j1.DefaultIfEmpty()
+                select new GetRouteForViewDto()
+                {
+                    Route = new RouteDto { DisplayName = o.DisplayName, Description = o.Description, Id = o.Id },
+                    RoutTypeDisplayName = s1 == null || s1.DisplayName == null ? "" : s1.DisplayName.ToString()
+                });
 
 
             var routeListDtos = await query.ToListAsync();
@@ -180,9 +175,10 @@ namespace TACHYON.Routs
                 .Select(routType => new RouteRoutTypeLookupTableDto
                 {
                     Id = routType.Id,
-                    DisplayName = routType == null || routType.DisplayName == null ? "" : routType.DisplayName.ToString()
+                    DisplayName = routType == null || routType.DisplayName == null
+                        ? ""
+                        : routType.DisplayName.ToString()
                 }).ToListAsync();
         }
-
     }
 }

@@ -5,8 +5,7 @@ namespace TACHYON.Common
 {
     public static class OthersExpressions
     {
-
-        public static Expression<Func<IHasKey, bool>> ContainsOthersKeyExpression = item => item.Key.Trim().ToLower().Contains(TACHYONConsts.OthersDisplayName.Trim().ToLower());
-
+        public static Expression<Func<IHasKey, bool>> ContainsOthersKeyExpression = item =>
+            item.Key.Trim().ToLower().Contains(TACHYONConsts.OthersDisplayName.Trim().ToLower());
     }
 }

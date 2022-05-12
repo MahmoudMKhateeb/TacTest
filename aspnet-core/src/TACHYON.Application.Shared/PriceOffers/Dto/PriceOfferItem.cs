@@ -32,7 +32,5 @@
         public decimal? CommissionPercentageOrAddValue { get; set; }
 
         public int Quantity { get; set; } = 1;
-
-
     }
 }

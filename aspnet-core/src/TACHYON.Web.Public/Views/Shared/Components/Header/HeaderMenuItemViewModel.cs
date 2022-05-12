@@ -10,7 +10,9 @@ namespace TACHYON.Web.Public.Views.Shared.Components.Header
 
         public string CurrentPageName { get; set; }
 
-        public HeaderMenuItemViewModel(UserMenuItem menuItem, int currentLevel, string currentPageName)
+        public HeaderMenuItemViewModel(UserMenuItem menuItem,
+            int currentLevel,
+            string currentPageName)
         {
             MenuItem = menuItem;
             CurrentLevel = currentLevel;

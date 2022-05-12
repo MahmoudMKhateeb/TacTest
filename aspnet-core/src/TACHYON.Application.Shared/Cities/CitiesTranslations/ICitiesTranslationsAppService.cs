@@ -19,6 +19,5 @@ namespace TACHYON.Cities.CitiesTranslations
         Task Delete(EntityDto input);
 
         Task<List<CitiesTranslationCityLookupTableDto>> GetAllCityForTableDropdown();
-
     }
 }

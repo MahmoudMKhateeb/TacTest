@@ -28,7 +28,8 @@ namespace TACHYON.Sessions
         public SessionAppService(
             IUiThemeCustomizerFactory uiThemeCustomizerFactory,
             ISubscriptionPaymentRepository subscriptionPaymentRepository,
-            IUserDelegationConfiguration userDelegationConfiguration, DocumentFilesManager documentFilesManager)
+            IUserDelegationConfiguration userDelegationConfiguration,
+            DocumentFilesManager documentFilesManager)
         {
             _uiThemeCustomizerFactory = uiThemeCustomizerFactory;
             _subscriptionPaymentRepository = subscriptionPaymentRepository;
@@ -91,25 +92,27 @@ namespace TACHYON.Sessions
 
             if (output.Tenant.Edition != null)
             {
-                var lastPayment = await _subscriptionPaymentRepository.GetLastCompletedPaymentOrDefaultAsync(output.Tenant.Id, null, null);
+                var lastPayment =
+                    await _subscriptionPaymentRepository.GetLastCompletedPaymentOrDefaultAsync(output.Tenant.Id, null,
+                        null);
                 if (lastPayment != null)
                 {
-                    output.Tenant.Edition.IsHighestEdition = IsEditionHighest(output.Tenant.Edition.Id, lastPayment.GetPaymentPeriodType());
+                    output.Tenant.Edition.IsHighestEdition =
+                        IsEditionHighest(output.Tenant.Edition.Id, lastPayment.GetPaymentPeriodType());
                 }
 
-                var allTenantMissingRequiredDocumentTypesListAsync = await _documentFilesManager.GetAllTenantMissingRequiredDocumentTypesListAsync(output.Tenant.Id);
+                var allTenantMissingRequiredDocumentTypesListAsync =
+                    await _documentFilesManager.GetAllTenantMissingRequiredDocumentTypesListAsync(output.Tenant.Id);
                 output.Tenant.MissingRequiredDocumentTypes = ObjectMapper
                     .Map<List<DocumentTypeDto>>(
-                        allTenantMissingRequiredDocumentTypesListAsync.Where(x=> x.IsRequired)
+                        allTenantMissingRequiredDocumentTypesListAsync.Where(x => x.IsRequired)
                     );
-
             }
 
             output.Tenant.SubscriptionDateString = GetTenantSubscriptionDateString(output);
             output.Tenant.CreationTimeString = output.Tenant.CreationTime.ToString("d");
 
             return output;
-
         }
 
         private bool IsEditionHighest(int editionId, PaymentPeriodType paymentPeriodType)
@@ -136,13 +139,17 @@ namespace TACHYON.Sessions
             switch (paymentPeriodType)
             {
                 case PaymentPeriodType.Daily:
-                    query = query.OrderByDescending(e => e.DailyPrice ?? 0); break;
+                    query = query.OrderByDescending(e => e.DailyPrice ?? 0);
+                    break;
                 case PaymentPeriodType.Weekly:
-                    query = query.OrderByDescending(e => e.WeeklyPrice ?? 0); break;
+                    query = query.OrderByDescending(e => e.WeeklyPrice ?? 0);
+                    break;
                 case PaymentPeriodType.Monthly:
-                    query = query.OrderByDescending(e => e.MonthlyPrice ?? 0); break;
+                    query = query.OrderByDescending(e => e.MonthlyPrice ?? 0);
+                    break;
                 case PaymentPeriodType.Annual:
-                    query = query.OrderByDescending(e => e.AnnualPrice ?? 0); break;
+                    query = query.OrderByDescending(e => e.AnnualPrice ?? 0);
+                    break;
             }
 
             return query.FirstOrDefault();

@@ -11,10 +11,8 @@ namespace TACHYON.Vases.Dtos
             MinimumLength = VasConsts.MinNameLength)]
         public string DisplayName { get; set; }
 
-        [Required]
-        public string Language { get; set; }
+        [Required] public string Language { get; set; }
 
         public int? CoreId { get; set; }
-
     }
 }

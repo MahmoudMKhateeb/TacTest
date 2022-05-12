@@ -5,9 +5,11 @@ namespace TACHYON.Web.DashboardCustomization
 {
     public class DashboardViewConfiguration
     {
-        public Dictionary<string, WidgetViewDefinition> WidgetViewDefinitions { get; } = new Dictionary<string, WidgetViewDefinition>();
+        public Dictionary<string, WidgetViewDefinition> WidgetViewDefinitions { get; } =
+            new Dictionary<string, WidgetViewDefinition>();
 
-        public Dictionary<string, WidgetFilterViewDefinition> WidgetFilterViewDefinitions { get; } = new Dictionary<string, WidgetFilterViewDefinition>();
+        public Dictionary<string, WidgetFilterViewDefinition> WidgetFilterViewDefinitions { get; } =
+            new Dictionary<string, WidgetFilterViewDefinition>();
 
         public DashboardViewConfiguration()
         {
@@ -25,6 +27,7 @@ namespace TACHYON.Web.DashboardCustomization
             );
 
             //add your filters iew definitions here
+
             #endregion
 
             #region WidgetViewDefinitions
@@ -33,12 +36,14 @@ namespace TACHYON.Web.DashboardCustomization
 
            
             //add your tenant side widget definitions here
+
             #endregion
 
             #region HostWidgets
 
            
             //add your host side widgets definitions here
+
             #endregion
 
             #endregion

@@ -10,10 +10,7 @@ namespace TACHYON.Web.Common
         public static bool SwaggerUiEnabled = true;
         public static bool HangfireDashboardEnabled = true;
 
-        public static List<string> ReCaptchaIgnoreWhiteList = new List<string>
-        {
-            TACHYONConsts.AbpApiClientUserAgent
-        };
+        public static List<string> ReCaptchaIgnoreWhiteList = new List<string> { TACHYONConsts.AbpApiClientUserAgent };
 
         public static class GraphQL
         {

@@ -7,6 +7,5 @@ namespace TACHYON.TachyonPriceOffers.dtos
     public class GetAllTachyonPriceOfferOutput
     {
         public TachyonPriceOfferDto tachyonPriceOfferDto { get; set; }
-
     }
 }

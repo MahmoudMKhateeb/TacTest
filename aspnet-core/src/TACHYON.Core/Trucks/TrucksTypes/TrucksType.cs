@@ -24,8 +24,7 @@ namespace TACHYON.Trucks.TrucksTypes
 
         public int? TransportTypeId { get; set; }
 
-        [ForeignKey("TransportTypeId")]
-        public TransportType TransportTypeFk { get; set; }
+        [ForeignKey("TransportTypeId")] public TransportType TransportTypeFk { get; set; }
 
         public ICollection<TrucksTypesTranslation> Translations { get; set; }
         public bool IsActive { get; set; } = true;

@@ -13,8 +13,7 @@ namespace TACHYON.Authorization.Accounts.Dto
 
         public string ResetCode { get; set; }
 
-        [DisableAuditing]
-        public string Password { get; set; }
+        [DisableAuditing] public string Password { get; set; }
 
         public string ReturnUrl { get; set; }
 

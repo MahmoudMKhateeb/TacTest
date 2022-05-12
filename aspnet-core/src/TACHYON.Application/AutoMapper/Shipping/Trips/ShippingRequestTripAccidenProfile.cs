@@ -12,13 +12,18 @@ namespace TACHYON.AutoMapper.Shipping.Trips
         public ShippingRequestTripAccidenProfile()
         {
             CreateMap<ShippingRequestTripAccident, ShippingRequestTripAccidentListDto>()
-            .ForMember(dst => dst.Reason, opt => opt.MapFrom(src => src.OtherReasonName))
-            .ForMember(dst => dst.Address, opt => opt.MapFrom(src => $"{src.RoutPointFK.FacilityFk.CityFk.DisplayName}-{src.RoutPointFK.FacilityFk.Address}"))
-            .ForMember(dst => dst.PickingType, opt => opt.MapFrom(src => Enum.GetName(typeof(PickingType), src.RoutPointFK.PickingType)));
+                .ForMember(dst => dst.Reason, opt => opt.MapFrom(src => src.OtherReasonName))
+                .ForMember(dst => dst.Address,
+                    opt => opt.MapFrom(src =>
+                        $"{src.RoutPointFK.FacilityFk.CityFk.DisplayName}-{src.RoutPointFK.FacilityFk.Address}"))
+                .ForMember(dst => dst.PickingType,
+                    opt => opt.MapFrom(src => Enum.GetName(typeof(PickingType), src.RoutPointFK.PickingType)));
             CreateMap<ShippingRequestTripAccident, CreateOrEditShippingRequestTripAccidentDto>()
-            .ForMember(dst => dst.lat, opt => opt.MapFrom(src => src.Location != null ? src.Location.X : default(double?)))
-            .ForMember(dst => dst.lng, opt => opt.MapFrom(src => src.Location != null ? src.Location.Y : default(double?)))
-            .ReverseMap();
+                .ForMember(dst => dst.lat,
+                    opt => opt.MapFrom(src => src.Location != null ? src.Location.X : default(double?)))
+                .ForMember(dst => dst.lng,
+                    opt => opt.MapFrom(src => src.Location != null ? src.Location.Y : default(double?)))
+                .ReverseMap();
 
             CreateMap<ShippingRequestTripAccident, ViewShippingRequestTripAccidentDto>();
 
@@ -26,10 +31,8 @@ namespace TACHYON.AutoMapper.Shipping.Trips
 
 
             CreateMap<CreateOrEditShippingRequestTripAccidentResolveDto, DocumentUpload>().ReverseMap();
-            CreateMap<CreateOrEditShippingRequestTripAccidentResolveDto, ShippingRequestTripAccidentResolve>().ReverseMap();
-
-
-
+            CreateMap<CreateOrEditShippingRequestTripAccidentResolveDto, ShippingRequestTripAccidentResolve>()
+                .ReverseMap();
         }
     }
 }

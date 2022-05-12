@@ -10,8 +10,5 @@ namespace TACHYON.Trailers.PayloadMaxWeights.Dtos
 
         public int? MaxMaxWeightFilter { get; set; }
         public int? MinMaxWeightFilter { get; set; }
-
-
-
     }
 }

@@ -21,13 +21,13 @@ namespace TACHYON.Authorization.Permissions
                 AddPermission(rootPermission, permissions, result, level);
             }
 
-            return new ListResultDto<FlatPermissionWithLevelDto>
-            {
-                Items = result
-            };
+            return new ListResultDto<FlatPermissionWithLevelDto> { Items = result };
         }
 
-        private void AddPermission(Permission permission, IReadOnlyList<Permission> allPermissions, List<FlatPermissionWithLevelDto> result, int level)
+        private void AddPermission(Permission permission,
+            IReadOnlyList<Permission> allPermissions,
+            List<FlatPermissionWithLevelDto> result,
+            int level)
         {
             var flatPermission = ObjectMapper.Map<FlatPermissionWithLevelDto>(permission);
             flatPermission.Level = level;

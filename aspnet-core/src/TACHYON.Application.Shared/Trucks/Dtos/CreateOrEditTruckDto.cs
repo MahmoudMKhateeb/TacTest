@@ -1,5 +1,4 @@
-﻿
-using Abp.Application.Services.Dto;
+﻿using Abp.Application.Services.Dto;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,7 +8,6 @@ namespace TACHYON.Trucks.Dtos
 {
     public class CreateOrEditTruckDto : EntityDto<long?>
     {
-
         [Required]
         [StringLength(TruckConsts.MaxPlateNumberLength, MinimumLength = TruckConsts.MinPlateNumberLength)]
         [RegularExpression(TruckConsts.PlateNumberRegularExpression)]
@@ -34,8 +32,7 @@ namespace TACHYON.Trucks.Dtos
         [StringLength(TruckConsts.MaxNoteLength, MinimumLength = TruckConsts.MinNoteLength)]
         public string Note { get; set; }
 
-        [Required]
-        public long? TruckStatusId { get; set; }
+        [Required] public long? TruckStatusId { get; set; }
 
 
         public UpdateTruckPictureInput UpdateTruckPictureInput { get; set; }
@@ -52,8 +49,7 @@ namespace TACHYON.Trucks.Dtos
 
         public int? Length { get; set; }
 
-        [Required]
-        public virtual int PlateTypeId { get; set; }
+        [Required] public virtual int PlateTypeId { get; set; }
 
         public int? TenantId { get; set; }
 

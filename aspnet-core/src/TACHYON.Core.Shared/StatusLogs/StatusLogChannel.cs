@@ -1,7 +1,7 @@
 ﻿namespace TACHYON.StatusLogs
 {
-    public enum StatusLogChannel:byte
+    public enum StatusLogChannel : byte
     {
-        DirectRequest=1
+        DirectRequest = 1
     }
 }

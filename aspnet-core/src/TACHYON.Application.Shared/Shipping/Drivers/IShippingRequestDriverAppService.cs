@@ -17,20 +17,26 @@ namespace TACHYON.Shipping.Drivers
         Task<RoutDropOffDto> GetDropOffDetail(long PointId);
 
         Task StartTrip(ShippingRequestTripDriverStartInputDto Input);
+
         //Task ChangeTripStatus();
         Task GotoNextLocation(long PointId);
+
         //Task ConfirmReceiverCode(string Code, long? pointId);
-        Task SetRating(long PointId, int Rate, string Note);
-        Task SetShippingExpRating(int tripId, int rate, string note);
+        Task SetRating(long PointId,
+            int Rate,
+            string Note);
+
+        Task SetShippingExpRating(int tripId,
+            int rate,
+            string note);
+
         Task InvokeStatus(InvokeStatusInputDto input);
+
         Task Accepted(int TripId);
+
         //Task Rejected(CreateShippingRequestTripDriverRejectDto Input);
         Task Reset(int TripId);
-        Task PushNotification(int id,string waybillNumber);
+        Task PushNotification(int id, string waybillNumber);
         Task<LoadResult> GetAllDriverLocationLogs(GetAllDriverLocationLogsInput input);
-
-
-
     }
-
 }

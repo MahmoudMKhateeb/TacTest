@@ -3,6 +3,6 @@
     public class UserConsts
     {
         public const int MaxPhoneNumberLength = 24;
-         public const int DriverPhoneNumberLength = 9;
+        public const int DriverPhoneNumberLength = 9;
     }
 }

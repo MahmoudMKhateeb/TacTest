@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Linq;
+
 namespace TACHYON.CustomValidation
 {
     public class UploadBase64File : ValidationAttribute
@@ -11,6 +12,7 @@ namespace TACHYON.CustomValidation
         /// Maxsize is the maximim file zie by byte, If zero value to accept any size,default value 0
         /// </summary>
         public double MaxLength = 0;
+
         /// <summary>
         /// Array of extension
         /// Example=new string[] {"jpeg","png","jpg"}
@@ -33,9 +35,9 @@ namespace TACHYON.CustomValidation
                 else if (AllowedExtensions != null && !AllowedExtensions.Contains(ext))
                 {
                     return new ValidationResult("The attachment file extension is not allowed.");
-
                 }
             }
+
             return ValidationResult.Success;
         }
     }

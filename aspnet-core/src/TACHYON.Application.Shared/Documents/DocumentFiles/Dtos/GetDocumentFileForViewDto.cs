@@ -7,6 +7,7 @@ namespace TACHYON.Documents.DocumentFiles.Dtos
     {
         public DocumentFileDto DocumentFile { get; set; }
         public string SubmitterTenatTenancyName { get; set; }
+
         public string DocumentEntityDisplayName { get; set; }
         //public string Note { get; set; }
         //public string Number { get; set; }

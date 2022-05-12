@@ -8,6 +8,5 @@ namespace TACHYON.ShippingRequestVases.Dtos
         public string Filter { get; set; }
 
         public string VasNameFilter { get; set; }
-
     }
 }

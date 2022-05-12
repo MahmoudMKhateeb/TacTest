@@ -17,6 +17,5 @@ namespace TACHYON.Shipping.Trips.Dto
 
 
         public string WaybillNumber { get; set; }
-
     }
 }

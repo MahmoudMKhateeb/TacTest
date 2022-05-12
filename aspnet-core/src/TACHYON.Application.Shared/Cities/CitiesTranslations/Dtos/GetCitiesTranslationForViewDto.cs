@@ -5,6 +5,5 @@
         public CitiesTranslationDto CitiesTranslation { get; set; }
 
         public string CityDisplayName { get; set; }
-
     }
 }

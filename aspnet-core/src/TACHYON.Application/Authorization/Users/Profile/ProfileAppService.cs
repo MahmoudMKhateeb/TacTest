@@ -213,6 +213,7 @@ namespace TACHYON.Authorization.Users.Profile
         }
 
         #region SharedServices_Shipper_And_Carrier
+
         public async Task<TenantProfileInformationForViewDto> GetTenantProfileInformationForView(int tenantId)
         {
             var profile = await GetTenantProfileInformation(tenantId);
@@ -229,7 +230,8 @@ namespace TACHYON.Authorization.Users.Profile
         {
             if (!AbpSession.TenantId.HasValue)
                 throw new UserFriendlyException(L("YouDontHaveAccessToThisPage"));
-            return ObjectMapper.Map<UpdateTenantProfileInformationInputDto>(await GetTenantProfileInformation(AbpSession.TenantId.Value));
+            return ObjectMapper.Map<UpdateTenantProfileInformationInputDto>(
+                await GetTenantProfileInformation(AbpSession.TenantId.Value));
         }
 
         [AbpAuthorize(AppPermissions.Pages_Tenant_ProfileManagement)]
@@ -247,7 +249,6 @@ namespace TACHYON.Authorization.Users.Profile
                 var user = await UserManager.GetUserByEmailAsync(oldEmail);
                 user.EmailAddress = input.CompanyEmailAddress;
                 user.IsEmailConfirmed = false;
-
             }
         }
 
@@ -282,8 +283,8 @@ namespace TACHYON.Authorization.Users.Profile
 
         #region ShipperServicesOnly
 
-
-        public async Task<PagedResultDto<FacilityLocationListDto>> GetFacilitiesInformation(GetFacilitiesInformationInput input)
+        public async Task<PagedResultDto<FacilityLocationListDto>> GetFacilitiesInformation(
+            GetFacilitiesInformationInput input)
         {
             DisableTenancyFilters();
             var shipperFacilities = _lookupFacilityRepository.GetAll()
@@ -293,7 +294,10 @@ namespace TACHYON.Authorization.Users.Profile
 
             var facilities = await shipperFacilities.PageBy(input).ToListAsync();
             var totalCount = await shipperFacilities.CountAsync();
-            return new PagedResultDto<FacilityLocationListDto>() { Items = await ToFacilityLocationDto(facilities), TotalCount = totalCount };
+            return new PagedResultDto<FacilityLocationListDto>()
+            {
+                Items = await ToFacilityLocationDto(facilities), TotalCount = totalCount
+            };
         }
 
 
@@ -324,7 +328,6 @@ namespace TACHYON.Authorization.Users.Profile
         #endregion
 
         #region CarrierServicesOnly
-
 
         public async Task<FleetInformationDto> GetFleetInformation(GetFleetInformationInputDto input)
         {
@@ -391,7 +394,10 @@ namespace TACHYON.Authorization.Users.Profile
             var pageResult = await availableVases.PageBy(input).ToListAsync();
             var totalCount = await availableVases.CountAsync();
 
-            return new PagedResultDto<AvailableVasDto>() { Items = ObjectMapper.Map<List<AvailableVasDto>>(pageResult), TotalCount = totalCount };
+            return new PagedResultDto<AvailableVasDto>()
+            {
+                Items = ObjectMapper.Map<List<AvailableVasDto>>(pageResult), TotalCount = totalCount
+            };
         }
 
         #endregion
@@ -440,10 +446,7 @@ namespace TACHYON.Authorization.Users.Profile
             }
             else
             {
-                CheckErrors(IdentityResult.Failed(new IdentityError
-                {
-                    Description = "Incorrect password."
-                }));
+                CheckErrors(IdentityResult.Failed(new IdentityError { Description = "Incorrect password." }));
             }
         }
 
@@ -523,10 +526,7 @@ namespace TACHYON.Authorization.Users.Profile
                         .RequiredLength)
             };
 
-            return new GetPasswordComplexitySettingOutput
-            {
-                Setting = passwordComplexitySetting
-            };
+            return new GetPasswordComplexitySettingOutput { Setting = passwordComplexitySetting };
         }
 
         [DisableAuditing]
@@ -600,9 +600,10 @@ namespace TACHYON.Authorization.Users.Profile
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
             {
                 tenantId = await (from user in _lookupUserRepository.GetAll().AsNoTracking()
-                                  where user.Id == userId
-                                  select user.TenantId).FirstOrDefaultAsync();
+                    where user.Id == userId
+                    select user.TenantId).FirstOrDefaultAsync();
             }
+
             var userIdentifier = new UserIdentifier(tenantId, userId);
             using (var profileImageService = await _profileImageServiceFactory.Get(userIdentifier))
             {
@@ -625,6 +626,7 @@ namespace TACHYON.Authorization.Users.Profile
             var tenant = await TenantManager.GetByIdAsync(tenantId);
             return (!tenant.Description.IsNullOrEmpty() && !tenant.Website.IsNullOrEmpty());
         }
+
         private async Task<byte[]> GetProfilePictureByIdOrNull(Guid profilePictureId)
         {
             var file = await _binaryObjectManager.GetOrNullAsync(profilePictureId);
@@ -659,29 +661,34 @@ namespace TACHYON.Authorization.Users.Profile
         private async Task<string> GetCityNameAsync(int cityId)
         {
             var cityName = await (from city in _lookupCityRepository.GetAll()
-                                  where city.Id == cityId
-                                  select city.Translations.FirstOrDefault(x => x.Language.Contains(CultureInfo.CurrentUICulture.Name)) != null ?
-                                      city.Translations.FirstOrDefault(x => x.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName
-                                  : city.DisplayName).FirstOrDefaultAsync();
+                where city.Id == cityId
+                select city.Translations.FirstOrDefault(x => x.Language.Contains(CultureInfo.CurrentUICulture.Name)) !=
+                       null
+                    ? city.Translations.FirstOrDefault(x => x.Language.Contains(CultureInfo.CurrentUICulture.Name))
+                        .TranslatedDisplayName
+                    : city.DisplayName).FirstOrDefaultAsync();
             return cityName;
         }
 
         private async Task<string> GetCountryNameAsync(int countryId)
         {
             var countryName = await (from city in _lookupCityRepository.GetAll()
-                                     where city.CountyId == countryId
-                                     select city.CountyFk.Translations.FirstOrDefault(x =>
-                                         x.Language.Contains(CultureInfo.CurrentUICulture.Name)) != null
-                                         ? city.CountyFk.Translations.FirstOrDefault(x => x.Language.Contains(CultureInfo.CurrentUICulture.Name))
-                                             .TranslatedDisplayName : city.CountyFk.DisplayName).FirstOrDefaultAsync();
+                where city.CountyId == countryId
+                select city.CountyFk.Translations.FirstOrDefault(x =>
+                    x.Language.Contains(CultureInfo.CurrentUICulture.Name)) != null
+                    ? city.CountyFk.Translations
+                        .FirstOrDefault(x => x.Language.Contains(CultureInfo.CurrentUICulture.Name))
+                        .TranslatedDisplayName
+                    : city.CountyFk.DisplayName).FirstOrDefaultAsync();
             return countryName;
         }
+
         private async Task<String> GetCompanyEmailAddress(int tenantId)
         {
             DisableTenancyFilters();
             return await (from user in _lookupUserRepository.GetAll()
-                          where user.TenantId == tenantId && user.UserName == AbpUserBase.AdminUserName
-                          select user.EmailAddress).FirstOrDefaultAsync();
+                where user.TenantId == tenantId && user.UserName == AbpUserBase.AdminUserName
+                select user.EmailAddress).FirstOrDefaultAsync();
         }
 
         private async Task<List<FacilityLocationListDto>> ToFacilityLocationDto(List<Facility> facilities)
@@ -699,6 +706,5 @@ namespace TACHYON.Authorization.Users.Profile
 
             return pageResult;
         }
-
     }
 }

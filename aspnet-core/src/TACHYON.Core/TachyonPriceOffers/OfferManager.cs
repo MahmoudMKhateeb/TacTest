@@ -19,7 +19,7 @@ namespace TACHYON.TachyonPriceOffers
 
         public async Task<TachyonPriceOffer> GetAcceptedAndWaitingForCarrierOffer(long shippingRequestId)
         {
-            var item=await _tachyonPriceOfferRepository.GetAll()
+            var item = await _tachyonPriceOfferRepository.GetAll()
                 .Where(e => e.ShippingRequestId == shippingRequestId)
                 .Where(x => x.OfferStatus == OfferStatus.AcceptedAndWaitingForCarrier)
                 .FirstOrDefaultAsync();

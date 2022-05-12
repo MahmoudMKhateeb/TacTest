@@ -10,6 +10,5 @@ namespace TACHYON.Trucks.TruckCategories.TransportTypes.TransportTypesTranslatio
         public string Language { get; set; }
 
         public int CoreId { get; set; }
-
     }
 }

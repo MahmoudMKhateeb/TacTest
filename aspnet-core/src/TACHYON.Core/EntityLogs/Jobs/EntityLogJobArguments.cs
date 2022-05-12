@@ -9,7 +9,5 @@
         }
 
         public long EntityChangeId { get; set; }
-
-
     }
 }

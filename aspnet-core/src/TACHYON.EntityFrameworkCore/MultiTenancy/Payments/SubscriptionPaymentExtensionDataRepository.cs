@@ -5,10 +5,12 @@ using TACHYON.EntityFrameworkCore.Repositories;
 
 namespace TACHYON.MultiTenancy.Payments
 {
-    public class SubscriptionPaymentExtensionDataRepository : TACHYONRepositoryBase<SubscriptionPaymentExtensionData, long>,
+    public class SubscriptionPaymentExtensionDataRepository :
+        TACHYONRepositoryBase<SubscriptionPaymentExtensionData, long>,
         ISubscriptionPaymentExtensionDataRepository
     {
-        public SubscriptionPaymentExtensionDataRepository(IDbContextProvider<TACHYONDbContext> dbContextProvider) : base(dbContextProvider)
+        public SubscriptionPaymentExtensionDataRepository(IDbContextProvider<TACHYONDbContext> dbContextProvider) :
+            base(dbContextProvider)
         {
         }
 
@@ -25,7 +27,9 @@ namespace TACHYON.MultiTenancy.Payments
             return data?.SubscriptionPaymentId;
         }
 
-        public async Task SetExtensionDataAsync(long subscriptionPaymentId, string key, string value)
+        public async Task SetExtensionDataAsync(long subscriptionPaymentId,
+            string key,
+            string value)
         {
             var data = await FirstOrDefaultAsync(p => p.SubscriptionPaymentId == subscriptionPaymentId && p.Key == key);
 
@@ -36,11 +40,8 @@ namespace TACHYON.MultiTenancy.Payments
 
             await InsertAsync(new SubscriptionPaymentExtensionData()
             {
-                SubscriptionPaymentId = subscriptionPaymentId,
-                Key = key,
-                Value = value
+                SubscriptionPaymentId = subscriptionPaymentId, Key = key, Value = value
             });
         }
-
     }
 }

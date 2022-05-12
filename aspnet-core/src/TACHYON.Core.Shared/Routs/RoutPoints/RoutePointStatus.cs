@@ -16,5 +16,6 @@
         Delivered = 11,
         Issue = 12,
         DeliveryNoteUploded = 13,
+        UplodeGoodPicture = 14,
     }
 }

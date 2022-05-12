@@ -7,7 +7,7 @@ using TACHYON.Shipping.Accidents.Dto;
 
 namespace TACHYON.Shipping.Accidents
 {
-    public  interface IShippingRequestReasonAccidentAppService: IApplicationService
+    public interface IShippingRequestReasonAccidentAppService : IApplicationService
     {
         ListResultDto<ShippingRequestReasonAccidentListDto> GetAll(FilterInput Input);
 

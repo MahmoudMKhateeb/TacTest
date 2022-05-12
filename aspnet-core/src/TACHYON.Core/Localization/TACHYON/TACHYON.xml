@@ -32,8 +32,8 @@
     <text name="MostWorkedWithCarriers">Most Worked With Carriers</text>
     <text name="CompletedTrips">Completed Trips</text>
     <text name="AcceptedVsRejectedRequests">Accepted vs Rejected Requests</text>
-    <text name="DocumentsHasDueDateIn6Days">Documents has there Due Date in less than 6 Days</text>
-    <text name="InvoiceDueDateIn6Days">Invoice Due Date is In 6 Days</text>
+    <text name="DocumentsHasDueDateIn6Days">document/s that will expire within a week</text>
+    <text name="InvoiceDueDateIn6Days">invoices that will be due within a week</text>
     <text name="RequestsInMarketPlace">Requests In MarketPlace</text>
     <text name="MostUsedOrigins">Most Used Origins</text>
     <text name="CompletedTripsvsPod">Completed Trips vs Proof of delivary</text>
@@ -1534,7 +1534,7 @@
 		<text name="RegisterFormUserNameInvalidMessage">Please do not enter your email address as a username.</text>
 		<text name="Reject">Reject</text>
 		<text name="Rejected">Rejected</text>
-		<text name="RejectedOffer"><![CDATA[You offer has been rejected by {rejectedby}]]></text>
+		<text name="RejectedOffer">You offer has been rejected by {rejectedby}</text>
 		<text name="RejectedReason">Rejected reason</text>
 		<text name="RejectionReason">Rejection reason</text>
 		<text name="RejectOffer">Reject</text>
@@ -1732,7 +1732,7 @@
 		<text name="ShippingRequestsCreate">Create Shipping Request</text>
 		<text name="ShippingRequestsEdit">Edit Shipping Request</text>
 		<text name="ShippingRequestSendOfferWhenAddPrice">A new offer has been added to the shipment.</text>
-		<text name="ShippingRequestSendOfferWhenUpdatePrice"><![CDATA[The price has been updated by the carrier {carrier} of the shipment]]></text>
+		<text name="ShippingRequestSendOfferWhenUpdatePrice">The price has been updated by the carrier {carrier} of the shipment</text>
 		<text name="ShippingRequestsHeaderInfo">Shipping requests header info</text>
 		<text name="ShippingRequestStatus">Shipping request status</text>
 		<text name="ShippingRequestStatuses">Shipping request statuses</text>
@@ -2209,7 +2209,6 @@
 		<text name="UploadDocumentMsg">Please upload the following documents in order to finalize your registration process.</text>
 		<text name="UploadedFile">Uploaded File</text>
 		<text name="UploadLogo_Info">Select a JPG/JPEG/PNG/GIF file with a maximum of 30KB size and 139x35 pixel resolution.</text>
-		<text name="UploadPOD">Upload POD</text>
 		<text name="UploadPODLbl">Upload POD</text>
 		<text name="UploadPODProofOfDelivery">Please upload POD</text>
 		<text name="Urdu">Urdu</text>
@@ -2507,6 +2506,8 @@
 		<text name="UploadDeliveryNotes">Upload Delivery Notes</text>
 		<text name="NoMatchingTrucks">There is no matching trucks</text>
 	<text name="NoMatchingDrivers">There is no Drivers</text>
+    <text name="ResetReceiverCode">Reset shipment receiver code</text>
+    <text name="ReceiverCodeConfirmationMsg">Are you sure you want to reset the receiver code for this shipment?</text>
 	<text name="CompanyDescriptionHint">Company description must be at most 500 characters</text>
 	<text name="SelectAnEmailTemplateType">Select an email template type</text>
 		<text name="AllowedWeightShouldBeMaximum">Allowed Weight Should Be Maximum</text>
@@ -2584,8 +2585,7 @@
 
 
     
-    <text name="ResetReceiverCode">Reset shipment receiver code</text>
-    <text name="ReceiverCodeConfirmationMsg">Are you sure you want to reset the receiver code for this shipment?</text>
+    
 		
 		
 		
@@ -2751,5 +2751,10 @@
   <text name="YouMustEnterRates">You must enter rates</text>
 		<text name="SelectALicenseType">Select a license type</text>
 		<text name="TheNumberInTheTopOfTheCRThatStartsWithSeven">The number in the top of the CR that starts with seven</text>
+		<text name="IgnoredOtpNumbersPatternMsg">Mobile numbers must be added and separated with semicolons like this 12345;56789</text>
+		<text name="ExtraSettingsForMobile">Extra Settings For Mobile</text>
+		<text name="IgnoredOtpNumbers">Ignored phone numbers from OTP validation</text>
+		<text name="MobileSettings">Mobile Settings</text>
+		<text name="ThereAre">There are</text>
 	</texts>
 </localizationDictionary>

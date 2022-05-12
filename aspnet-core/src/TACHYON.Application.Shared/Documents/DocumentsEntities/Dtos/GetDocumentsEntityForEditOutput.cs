@@ -6,8 +6,6 @@ namespace TACHYON.Documents.DocumentsEntities.Dtos
 {
     public class GetDocumentsEntityForEditOutput
     {
-		public CreateOrEditDocumentsEntityDto DocumentsEntity { get; set; }
-
-
+        public CreateOrEditDocumentsEntityDto DocumentsEntity { get; set; }
     }
 }

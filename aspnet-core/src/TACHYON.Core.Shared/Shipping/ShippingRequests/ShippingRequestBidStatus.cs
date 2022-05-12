@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TACHYON.Shipping.ShippingRequests
 {
-  public  enum ShippingRequestBidStatus:byte
+    public enum ShippingRequestBidStatus : byte
     {
         [Description("New")]
         StandBy,

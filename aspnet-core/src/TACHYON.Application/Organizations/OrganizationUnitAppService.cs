@@ -44,41 +44,36 @@ namespace TACHYON.Organizations
 
             var organizationUnitMemberCounts = await _userOrganizationUnitRepository.GetAll()
                 .GroupBy(x => x.OrganizationUnitId)
-                .Select(groupedUsers => new
-                {
-                    organizationUnitId = groupedUsers.Key,
-                    count = groupedUsers.Count()
-                }).ToDictionaryAsync(x => x.organizationUnitId, y => y.count);
+                .Select(groupedUsers => new { organizationUnitId = groupedUsers.Key, count = groupedUsers.Count() })
+                .ToDictionaryAsync(x => x.organizationUnitId, y => y.count);
 
             var organizationUnitRoleCounts = await _organizationUnitRoleRepository.GetAll()
                 .GroupBy(x => x.OrganizationUnitId)
-                .Select(groupedRoles => new
-                {
-                    organizationUnitId = groupedRoles.Key,
-                    count = groupedRoles.Count()
-                }).ToDictionaryAsync(x => x.organizationUnitId, y => y.count);
+                .Select(groupedRoles => new { organizationUnitId = groupedRoles.Key, count = groupedRoles.Count() })
+                .ToDictionaryAsync(x => x.organizationUnitId, y => y.count);
 
             return new ListResultDto<OrganizationUnitDto>(
                 organizationUnits.Select(ou =>
                 {
                     var organizationUnitDto = ObjectMapper.Map<OrganizationUnitDto>(ou);
-                    organizationUnitDto.MemberCount = organizationUnitMemberCounts.ContainsKey(ou.Id) ? organizationUnitMemberCounts[ou.Id] : 0;
-                    organizationUnitDto.RoleCount = organizationUnitRoleCounts.ContainsKey(ou.Id) ? organizationUnitRoleCounts[ou.Id] : 0;
+                    organizationUnitDto.MemberCount = organizationUnitMemberCounts.ContainsKey(ou.Id)
+                        ? organizationUnitMemberCounts[ou.Id]
+                        : 0;
+                    organizationUnitDto.RoleCount = organizationUnitRoleCounts.ContainsKey(ou.Id)
+                        ? organizationUnitRoleCounts[ou.Id]
+                        : 0;
                     return organizationUnitDto;
                 }).ToList());
         }
 
-        public async Task<PagedResultDto<OrganizationUnitUserListDto>> GetOrganizationUnitUsers(GetOrganizationUnitUsersInput input)
+        public async Task<PagedResultDto<OrganizationUnitUserListDto>> GetOrganizationUnitUsers(
+            GetOrganizationUnitUsersInput input)
         {
             var query = from ouUser in _userOrganizationUnitRepository.GetAll()
-                        join ou in _organizationUnitRepository.GetAll() on ouUser.OrganizationUnitId equals ou.Id
-                        join user in UserManager.Users on ouUser.UserId equals user.Id
-                        where ouUser.OrganizationUnitId == input.Id
-                        select new
-                        {
-                            ouUser,
-                            user
-                        };
+                join ou in _organizationUnitRepository.GetAll() on ouUser.OrganizationUnitId equals ou.Id
+                join user in UserManager.Users on ouUser.UserId equals user.Id
+                where ouUser.OrganizationUnitId == input.Id
+                select new { ouUser, user };
 
             var totalCount = await query.CountAsync();
             var items = await query.OrderBy(input.Sorting).PageBy(input).ToListAsync();
@@ -93,17 +88,14 @@ namespace TACHYON.Organizations
                 }).ToList());
         }
 
-        public async Task<PagedResultDto<OrganizationUnitRoleListDto>> GetOrganizationUnitRoles(GetOrganizationUnitRolesInput input)
+        public async Task<PagedResultDto<OrganizationUnitRoleListDto>> GetOrganizationUnitRoles(
+            GetOrganizationUnitRolesInput input)
         {
             var query = from ouRole in _organizationUnitRoleRepository.GetAll()
-                        join ou in _organizationUnitRepository.GetAll() on ouRole.OrganizationUnitId equals ou.Id
-                        join role in _roleManager.Roles on ouRole.RoleId equals role.Id
-                        where ouRole.OrganizationUnitId == input.Id
-                        select new
-                        {
-                            ouRole,
-                            role
-                        };
+                join ou in _organizationUnitRepository.GetAll() on ouRole.OrganizationUnitId equals ou.Id
+                join role in _roleManager.Roles on ouRole.RoleId equals role.Id
+                where ouRole.OrganizationUnitId == input.Id
+                select new { ouRole, role };
 
             var totalCount = await query.CountAsync();
             var items = await query.OrderBy(input.Sorting).PageBy(input).ToListAsync();
@@ -148,7 +140,7 @@ namespace TACHYON.Organizations
 
             return await CreateOrganizationUnitDto(
                 await _organizationUnitRepository.GetAsync(input.Id)
-                );
+            );
         }
 
         [AbpAuthorize(AppPermissions.Pages_Administration_OrganizationUnits_ManageOrganizationTree)]
@@ -262,7 +254,8 @@ namespace TACHYON.Organizations
         private async Task<OrganizationUnitDto> CreateOrganizationUnitDto(OrganizationUnit organizationUnit)
         {
             var dto = ObjectMapper.Map<OrganizationUnitDto>(organizationUnit);
-            dto.MemberCount = await _userOrganizationUnitRepository.CountAsync(uou => uou.OrganizationUnitId == organizationUnit.Id);
+            dto.MemberCount =
+                await _userOrganizationUnitRepository.CountAsync(uou => uou.OrganizationUnitId == organizationUnit.Id);
             return dto;
         }
     }

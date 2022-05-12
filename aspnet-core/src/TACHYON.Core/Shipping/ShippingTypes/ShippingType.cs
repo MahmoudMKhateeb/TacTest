@@ -10,7 +10,6 @@ namespace TACHYON.Shipping.ShippingTypes
     [Table("ShippingTypes")]
     public class ShippingType : FullAuditedEntity, IMultiLingualEntity<ShippingTypeTranslation>
     {
-
         [Required]
         [StringLength(ShippingTypeConsts.MaxDisplayNameLength, MinimumLength = ShippingTypeConsts.MinDisplayNameLength)]
         public virtual string DisplayName { get; set; }

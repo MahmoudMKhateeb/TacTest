@@ -34,10 +34,7 @@ namespace TACHYON.Core.Base
 
         public List<QueryArgument> GetQueryArguments()
         {
-            return Arguments.Select(arg => new QueryArgument(arg.Value)
-            {
-                Name = arg.Key
-            }).ToList();
+            return Arguments.Select(arg => new QueryArgument(arg.Value) { Name = arg.Key }).ToList();
         }
 
         [UnitOfWork]

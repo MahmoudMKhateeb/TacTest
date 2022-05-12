@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TACHYON.Invoices.Dto
 {
-   public class InvoiceShippingRequestDto: IHasCreationTime
+    public class InvoiceShippingRequestDto : IHasCreationTime
     {
         public decimal Price { get; set; }
         public string TruckType { get; set; }

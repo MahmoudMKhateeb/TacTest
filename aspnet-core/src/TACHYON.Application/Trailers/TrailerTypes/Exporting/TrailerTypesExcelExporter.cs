@@ -10,7 +10,6 @@ namespace TACHYON.Trailers.TrailerTypes.Exporting
 {
     public class TrailerTypesExcelExporter : NpoiExcelExporterBase, ITrailerTypesExcelExporter
     {
-
         private readonly ITimeZoneConverter _timeZoneConverter;
         private readonly IAbpSession _abpSession;
 
@@ -18,7 +17,7 @@ namespace TACHYON.Trailers.TrailerTypes.Exporting
             ITimeZoneConverter timeZoneConverter,
             IAbpSession abpSession,
             ITempFileCacheManager tempFileCacheManager) :
-    base(tempFileCacheManager)
+            base(tempFileCacheManager)
         {
             _timeZoneConverter = timeZoneConverter;
             _abpSession = abpSession;
@@ -30,21 +29,17 @@ namespace TACHYON.Trailers.TrailerTypes.Exporting
                 "TrailerTypes.xlsx",
                 excelPackage =>
                 {
-
                     var sheet = excelPackage.CreateSheet(L("TrailerTypes"));
 
                     AddHeader(
                         sheet,
                         L("DisplayName")
-                        );
+                    );
 
                     AddObjects(
                         sheet, 2, trailerTypes,
                         _ => _.TrailerType.DisplayName
-                        );
-
-
-
+                    );
                 });
         }
     }

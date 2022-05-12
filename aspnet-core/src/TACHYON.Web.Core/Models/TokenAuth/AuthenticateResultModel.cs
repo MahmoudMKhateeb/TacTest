@@ -16,7 +16,7 @@ namespace TACHYON.Web.Models.TokenAuth
         public string PasswordResetCode { get; set; }
 
         public long UserId { get; set; }
-        public ShippingRequestTripDto TripDto { get; set; } 
+        public ShippingRequestTripDto TripDto { get; set; }
 
         public bool RequiresTwoFactorVerification { get; set; }
 
@@ -29,5 +29,7 @@ namespace TACHYON.Web.Models.TokenAuth
         public string RefreshToken { get; set; }
 
         public int RefreshTokenExpireInSeconds { get; set; }
+        public string DriverName { get; set; }
+        public int? TenantId { get; set; }
     }
 }

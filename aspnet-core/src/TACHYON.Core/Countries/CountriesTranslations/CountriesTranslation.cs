@@ -11,17 +11,17 @@ namespace TACHYON.Countries.CountriesTranslations
     public class CountriesTranslation : FullAuditedEntity, IEntityTranslation<County>
     {
         [Required]
-        [StringLength(CountriesTranslationConsts.MaxTranslatedDisplayNameLength, MinimumLength = CountriesTranslationConsts.MinTranslatedDisplayNameLength)]
+        [StringLength(CountriesTranslationConsts.MaxTranslatedDisplayNameLength,
+            MinimumLength = CountriesTranslationConsts.MinTranslatedDisplayNameLength)]
         public virtual string TranslatedDisplayName { get; set; }
 
         [Required]
-        [StringLength(CountriesTranslationConsts.MaxLanguageLength, MinimumLength = CountriesTranslationConsts.MinLanguageLength)]
+        [StringLength(CountriesTranslationConsts.MaxLanguageLength,
+            MinimumLength = CountriesTranslationConsts.MinLanguageLength)]
         public virtual string Language { get; set; }
 
         public virtual int CoreId { get; set; }
 
-        [ForeignKey("CoreId")]
-        public County Core { get; set; }
-
+        [ForeignKey("CoreId")] public County Core { get; set; }
     }
 }

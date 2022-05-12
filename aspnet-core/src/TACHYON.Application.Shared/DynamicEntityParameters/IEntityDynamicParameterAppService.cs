@@ -9,7 +9,8 @@ namespace TACHYON.DynamicEntityParameters
     {
         Task<EntityDynamicParameterDto> Get(int id);
 
-        Task<ListResultDto<EntityDynamicParameterDto>> GetAllParametersOfAnEntity(EntityDynamicParameterGetAllInput input);
+        Task<ListResultDto<EntityDynamicParameterDto>> GetAllParametersOfAnEntity(
+            EntityDynamicParameterGetAllInput input);
 
         Task<ListResultDto<EntityDynamicParameterDto>> GetAll();
 

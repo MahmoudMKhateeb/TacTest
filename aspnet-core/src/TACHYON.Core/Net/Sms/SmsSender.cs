@@ -21,8 +21,9 @@ namespace TACHYON.Net.Sms
         private readonly IBackgroundJobManager _backgroundJobManager;
 
 
-
-        public SmsSender(ILocalizationContext localizationContext, ISettingManager settingManager, IBackgroundJobManager backgroundJobManager)
+        public SmsSender(ILocalizationContext localizationContext,
+            ISettingManager settingManager,
+            IBackgroundJobManager backgroundJobManager)
         {
             Logger = NullLogger.Instance;
             _localizationContext = localizationContext;
@@ -35,43 +36,43 @@ namespace TACHYON.Net.Sms
             /* Implement this service to send SMS to users (can be used for two factor auth). */
 
             if (string.IsNullOrEmpty(number) || string.IsNullOrEmpty(message)) return false;
-            var jobId = await _backgroundJobManager.EnqueueAsync<UnifonicSendSmsJob, UnifonicSendSmsJobArgs>(new UnifonicSendSmsJobArgs
-            {
-                Recipient = AddCountryCode(number),
-                Text = message
-            });
+            var jobId = await _backgroundJobManager.EnqueueAsync<UnifonicSendSmsJob, UnifonicSendSmsJobArgs>(
+                new UnifonicSendSmsJobArgs { Recipient = AddCountryCode(number), Text = message });
 
             return jobId.IsNullOrEmpty();
-
         }
 
-        public async Task<bool> SendReceiverSmsAsync(string number, DateTime date, string shipperName,
-            string driverName, string driverPhone, string waybillNumber, string code, string link)
+        public async Task<bool> SendReceiverSmsAsync(string number,
+            DateTime date,
+            string shipperName,
+            string driverName,
+            string driverPhone,
+            string waybillNumber,
+            string code,
+            string link)
         {
-
-            var l1 = L("AShipmentWasAssignedForYouToReceiveOn").Localize(_localizationContext) + ": " + date.ToString("MM/dd/yyyy");
+            var l1 = L("AShipmentWasAssignedForYouToReceiveOn").Localize(_localizationContext) + ": " +
+                     date.ToString("MM/dd/yyyy");
             var l2 = "\n" + L("ShipperName").Localize(_localizationContext) + ": " + shipperName;
             var l3 = "\n" + L("DriverName").Localize(_localizationContext) + ": " + driverName;
             var l4 = "\n" + L("PhoneNumber").Localize(_localizationContext) + ": " + driverPhone;
             var l5 = "\n" + L("WaybillNumber").Localize(_localizationContext) + ": " + waybillNumber;
             var l6 = "\n" + L("VerificationCode").Localize(_localizationContext) + ": " + code;
-            var l7 = "\n" + L("PleaseOnClickFollowingLinkToTrackYourShipmentAndRateTheShippingCompany").Localize(_localizationContext) + ": " + link;
+            var l7 = "\n" + L("PleaseOnClickFollowingLinkToTrackYourShipmentAndRateTheShippingCompany")
+                .Localize(_localizationContext) + ": " + link;
 
             var message = l1 + l2 + l3 + l4 + l5 + l6 + l7;
-            var jobId = await _backgroundJobManager.EnqueueAsync<UnifonicSendSmsJob, UnifonicSendSmsJobArgs>(new UnifonicSendSmsJobArgs
-            {
-                Recipient = AddCountryCode(number),
-                Text = message
-            });
+            var jobId = await _backgroundJobManager.EnqueueAsync<UnifonicSendSmsJob, UnifonicSendSmsJobArgs>(
+                new UnifonicSendSmsJobArgs { Recipient = AddCountryCode(number), Text = message });
 
             return jobId.IsNullOrEmpty();
-
         }
 
         private static ILocalizableString L(string message)
         {
             return new LocalizableString(message, TACHYONConsts.LocalizationSourceName);
         }
+
         private string AddCountryCode(string number)
         {
             if (number.StartsWith("0"))
@@ -84,6 +85,5 @@ namespace TACHYON.Net.Sms
 
             return number;
         }
-
     }
 }

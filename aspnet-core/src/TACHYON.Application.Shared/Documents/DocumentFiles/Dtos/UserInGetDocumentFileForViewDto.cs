@@ -15,7 +15,5 @@ namespace TACHYON.Documents.DocumentFiles.Dtos
 
         public string PhoneNumber { get; set; }
         public bool IsActive { get; set; }
-
-
     }
 }

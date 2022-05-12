@@ -20,8 +20,8 @@
     <text name="MostUsedOrigins">المدن الأكثر استخداما</text>
     <text name="MostUsedDestantions">الوجهات الأكثر استخدامًا</text>
     <text name="CompletedTripsvsPod">الرحلات المكتملة مقابل إثبات التسليم</text>
-    <text name="DocumentsHasDueDateIn6Days">المستندات لها تاريخ استحقاق في أقل من 6 أيام</text>
-    <text name="InvoiceDueDateIn6Days">تاريخ استحقاق الفاتورة في أقل من 6 أيام</text>
+    <text name="DocumentsHasDueDateIn6Days">مستندات ستنتهي صلاحيتها خلال أسبوع</text>
+    <text name="InvoiceDueDateIn6Days">فواتير ستكون مستحقة خلال أسبوع</text>
     <text name="InvoicesVsPaidInvoices">الفواتير مقابل الفواتير المدفوعة</text>
     <text name="ShipmentHistory">تأريخ الشحن</text>
 		<text name="AddRating">أضف تقييم</text>
@@ -1941,7 +1941,6 @@
 		<text name="UploadDocumentMsg">الرجاء تقديم الملفات التالية حتى يتم إكمال عملية إنشاء الحساب</text>
 		<text name="UploadedFile">الملف الذي تم رفعه</text>
 		<text name="UploadLogo_Info">إختر ملف JPG / JPEG / PNG / GIF  بحجم 30 KB  كحد أقصى و 139X35  بكسل.</text>
-		<text name="UploadPOD">فع ملف اثبات التسليم</text>
 		<text name="UploadPODLbl">رفع ملف اثبات التسليم</text>
 		<text name="UploadPODProofOfDelivery">الرجاء رفع ملف إثبات التسليم</text>
 		<text name="Urdu">اردو</text>
@@ -2274,6 +2273,8 @@
 		<text name="SubmitInvoiceOnClaim">تم مطالبة الفاتورة المرسلة</text>
     <text name="NoMatchingTrucks">لا توجد شاحنات مطابقة</text>
 		<text name="NoMatchingDrivers">لا يوجد سائقين</text>
+	<text name="ResetReceiverCode">إعادة تعيين رمز مستلم الشحنة</text>
+	<text name="ReceiverCodeConfirmationMsg">هل أنت متأكد أنك تريد إعادة تعيين رمز المستلم لهذه الشحنة؟</text>
 		<text name="CompanyDescriptionHint">يجب ألا يزيد وصف الشركة عن 500 حرف</text>
 		<text name="SelectAnEmailTemplateType">أختر نوع قالب البريد الإلكتروني</text>
 		<text name="AllowedWeightShouldBeMaximum">يجب أن يكون الوزن المسموح به الحد الأقصى</text>
@@ -2378,8 +2379,6 @@
 		
     <text name="IsMandatoryExpirationDate">تاريخ الإنتهاء إلزامي</text>
 
-	<text name="ResetReceiverCode">إعادة تعيين رمز مستلم الشحنة</text>
-	<text name="ReceiverCodeConfirmationMsg">هل أنت متأكد أنك تريد إعادة تعيين رمز المستلم لهذه الشحنة؟</text>
 
 
 
@@ -2526,5 +2525,10 @@
 
     <text name="YouMustEnterRates">يجب عليك إدخال التقييمات</text>
 		<text name="TheNumberInTheTopOfTheCRThatStartsWithSeven">الرقم الموجود أعلى السجل التجاري و الذي يبدأ برقم سبعة</text>
+		<text name="IgnoredOtpNumbersPatternMsg">يجب إضافة أرقام الهواتف المحمولة وفصلها بفواصل منقوطة مثل 12345؛56789</text>
+		<text name="ExtraSettingsForMobile">إعدادات إضافية للجوال</text>
+		<text name="IgnoredOtpNumbers">أرقام الهواتف التي تم تجاهلها من التحقق من صحة كلمة المرور المؤقتة</text>
+		<text name="MobileSettings">إعدادات الجوال </text>
+		<text name="ThereAre">يوجد</text>
 	</texts>
 </localizationDictionary>

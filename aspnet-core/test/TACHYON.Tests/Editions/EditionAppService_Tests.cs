@@ -53,10 +53,7 @@ namespace TACHYON.Tests.Editions
             await _editionAppService.CreateEdition(
                 new CreateEditionDto
                 {
-                    Edition = new EditionCreateDto
-                    {
-                        DisplayName = "Premium Edition"
-                    },
+                    Edition = new EditionCreateDto { DisplayName = "Premium Edition" },
                     FeatureValues = output.FeatureValues
                 });
 
@@ -67,7 +64,8 @@ namespace TACHYON.Tests.Editions
 
                 if (chatFeature != null)
                 {
-                    var sampleFeatureValue = context.EditionFeatureSettings.FirstOrDefault(s => s.EditionId == premiumEditon.Id && s.Name == AppFeatures.ChatFeature);
+                    var sampleFeatureValue = context.EditionFeatureSettings.FirstOrDefault(s =>
+                        s.EditionId == premiumEditon.Id && s.Name == AppFeatures.ChatFeature);
                     sampleFeatureValue.ShouldNotBe(null);
                     sampleFeatureValue.Value.ShouldBe("true");
                 }
@@ -86,14 +84,13 @@ namespace TACHYON.Tests.Editions
                 {
                     Edition = new EditionCreateDto
                     {
-                        DisplayName = editionName,
-                        MonthlyPrice = monthlyPrice,
-                        AnnualPrice = annualPrice,
+                        DisplayName = editionName, MonthlyPrice = monthlyPrice, AnnualPrice = annualPrice,
                     },
                     FeatureValues = new List<NameValueDto>()
                 });
 
-            var editionRecord = UsingDbContext(context => context.Editions.FirstOrDefault(e => e.DisplayName == editionName));
+            var editionRecord =
+                UsingDbContext(context => context.Editions.FirstOrDefault(e => e.DisplayName == editionName));
 
             var premiumEditon = await _subcribableEditionRepository.GetAsync(editionRecord.Id);
             premiumEditon.ShouldNotBeNull();
@@ -105,7 +102,8 @@ namespace TACHYON.Tests.Editions
         [MultiTenantFact]
         public async Task Should_Update_Edition()
         {
-            var defaultEdition = UsingDbContext(context => context.Editions.FirstOrDefault(e => e.Name == EditionManager.DefaultEditionName));
+            var defaultEdition = UsingDbContext(context =>
+                context.Editions.FirstOrDefault(e => e.Name == EditionManager.DefaultEditionName));
             defaultEdition.ShouldNotBeNull();
 
             var output = await _editionAppService.GetEditionForEdit(new NullableIdDto(defaultEdition.Id));
@@ -120,11 +118,7 @@ namespace TACHYON.Tests.Editions
             await _editionAppService.UpdateEdition(
                 new UpdateEditionDto
                 {
-                    Edition = new EditionEditDto
-                    {
-                        Id = output.Edition.Id,
-                        DisplayName = "Regular Edition"
-                    },
+                    Edition = new EditionEditDto { Id = output.Edition.Id, DisplayName = "Regular Edition" },
                     FeatureValues = output.FeatureValues
                 });
 
@@ -142,10 +136,13 @@ namespace TACHYON.Tests.Editions
             var editions = await _editionAppService.GetEditions();
             editions.Items.Count.ShouldBeGreaterThan(0);
 
-            var defaultEdition = UsingDbContext(context => context.Editions.FirstOrDefault(e => e.Name == EditionManager.DefaultEditionName));
+            var defaultEdition = UsingDbContext(context =>
+                context.Editions.FirstOrDefault(e => e.Name == EditionManager.DefaultEditionName));
 
-            var exception = await Assert.ThrowsAsync<UserFriendlyException>(async () => await _editionAppService.DeleteEdition(new EntityDto(defaultEdition.Id)));
-            exception.Message.ShouldContain(_localizationManager.GetString(TACHYONConsts.LocalizationSourceName, "ThereAreTenantsSubscribedToThisEdition"));
+            var exception = await Assert.ThrowsAsync<UserFriendlyException>(async () =>
+                await _editionAppService.DeleteEdition(new EntityDto(defaultEdition.Id)));
+            exception.Message.ShouldContain(_localizationManager.GetString(TACHYONConsts.LocalizationSourceName,
+                "ThereAreTenantsSubscribedToThisEdition"));
         }
     }
 }

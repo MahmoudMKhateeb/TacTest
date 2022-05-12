@@ -41,7 +41,6 @@ namespace TACHYON.UnitOfMeasures
 
         public async Task<LoadResult> GetAll(GetAllUnitOfMeasuresInput input)
         {
-
             var filteredUnitOfMeasures = _unitOfMeasureRepository.GetAll()
                 .ProjectTo<UnitOfMeasureDto>(AutoMapperConfigurationProvider);
 
@@ -52,7 +51,8 @@ namespace TACHYON.UnitOfMeasures
         {
             var unitOfMeasure = await _unitOfMeasureRepository.GetAsync(id);
 
-            var output = new GetUnitOfMeasureForViewDto { UnitOfMeasure = ObjectMapper.Map<UnitOfMeasureDto>(unitOfMeasure) };
+            var output =
+                new GetUnitOfMeasureForViewDto { UnitOfMeasure = ObjectMapper.Map<UnitOfMeasureDto>(unitOfMeasure) };
 
             return output;
         }
@@ -62,7 +62,10 @@ namespace TACHYON.UnitOfMeasures
         {
             var unitOfMeasure = await _unitOfMeasureRepository.FirstOrDefaultAsync(input.Id);
 
-            var output = new GetUnitOfMeasureForEditOutput { UnitOfMeasure = ObjectMapper.Map<CreateOrEditUnitOfMeasureDto>(unitOfMeasure) };
+            var output = new GetUnitOfMeasureForEditOutput
+            {
+                UnitOfMeasure = ObjectMapper.Map<CreateOrEditUnitOfMeasureDto>(unitOfMeasure)
+            };
 
             return output;
         }

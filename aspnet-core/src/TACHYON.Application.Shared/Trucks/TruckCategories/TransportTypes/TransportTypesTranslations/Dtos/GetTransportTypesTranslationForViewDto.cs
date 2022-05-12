@@ -5,6 +5,5 @@
         public TransportTypesTranslationDto TransportTypesTranslation { get; set; }
 
         public string TransportTypeDisplayName { get; set; }
-
     }
 }

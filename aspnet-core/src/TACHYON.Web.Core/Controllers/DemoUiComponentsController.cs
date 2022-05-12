@@ -51,11 +51,7 @@ namespace TACHYON.Web.Controllers
                     var fileObject = new BinaryObject(AbpSession.TenantId, fileBytes);
                     await _binaryObjectManager.SaveAsync(fileObject);
 
-                    filesOutput.Add(new UploadFileOutput
-                    {
-                        Id = fileObject.Id,
-                        FileName = file.FileName
-                    });
+                    filesOutput.Add(new UploadFileOutput { Id = fileObject.Id, FileName = file.FileName });
                 }
 
                 return Json(new AjaxResponse(filesOutput));

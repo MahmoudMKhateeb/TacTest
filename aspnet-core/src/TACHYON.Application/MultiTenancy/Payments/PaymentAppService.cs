@@ -51,7 +51,9 @@ namespace TACHYON.MultiTenancy.Payments
             }
 
             var currentEdition = (SubscribableEdition)await _editionManager.GetByIdAsync(tenant.EditionId.Value);
-            var targetEdition = input.UpgradeEditionId == null ? currentEdition : (SubscribableEdition)await _editionManager.GetByIdAsync(input.UpgradeEditionId.Value);
+            var targetEdition = input.UpgradeEditionId == null
+                ? currentEdition
+                : (SubscribableEdition)await _editionManager.GetByIdAsync(input.UpgradeEditionId.Value);
 
             decimal additionalPrice = 0;
 
@@ -64,24 +66,23 @@ namespace TACHYON.MultiTenancy.Payments
 
                 using (UnitOfWorkManager.Current.SetTenantId(null))
                 {
-                    additionalPrice = await CalculateAmountForPaymentAsync(targetEdition, lastPayment.PaymentPeriodType, EditionPaymentType.Upgrade, tenant);
+                    additionalPrice = await CalculateAmountForPaymentAsync(targetEdition, lastPayment.PaymentPeriodType,
+                        EditionPaymentType.Upgrade, tenant);
                 }
             }
 
-            var edition = ObjectMapper.Map<EditionSelectDto>(input.UpgradeEditionId == null ? currentEdition : targetEdition);
+            var edition =
+                ObjectMapper.Map<EditionSelectDto>(input.UpgradeEditionId == null ? currentEdition : targetEdition);
 
-            return new PaymentInfoDto
-            {
-                Edition = edition,
-                AdditionalPrice = additionalPrice
-            };
+            return new PaymentInfoDto { Edition = edition, AdditionalPrice = additionalPrice };
         }
 
         public async Task<long> CreatePayment(CreatePaymentDto input)
         {
             if (!AbpSession.TenantId.HasValue)
             {
-                throw new ApplicationException("A payment only can be created for a tenant. TenantId is not set in the IAbpSession!");
+                throw new ApplicationException(
+                    "A payment only can be created for a tenant. TenantId is not set in the IAbpSession!");
             }
 
             decimal amount;
@@ -93,7 +94,8 @@ namespace TACHYON.MultiTenancy.Payments
                 targetEditionName = targetEdition.DisplayName;
 
                 var tenant = await TenantManager.GetByIdAsync(AbpSession.GetTenantId());
-                amount = await CalculateAmountForPaymentAsync(targetEdition, input.PaymentPeriodType, input.EditionPaymentType, tenant);
+                amount = await CalculateAmountForPaymentAsync(targetEdition, input.PaymentPeriodType,
+                    input.EditionPaymentType, tenant);
 
                 if (tenant != null && input.RecurringPaymentEnabled)
                 {
@@ -104,7 +106,9 @@ namespace TACHYON.MultiTenancy.Payments
 
             var payment = new SubscriptionPayment
             {
-                Description = GetPaymentDescription(input.EditionPaymentType, input.PaymentPeriodType, targetEditionName, input.RecurringPaymentEnabled),
+                Description =
+                    GetPaymentDescription(input.EditionPaymentType, input.PaymentPeriodType, targetEditionName,
+                        input.RecurringPaymentEnabled),
                 PaymentPeriodType = input.PaymentPeriodType,
                 EditionId = input.EditionId,
                 TenantId = AbpSession.GetTenantId(),
@@ -123,9 +127,9 @@ namespace TACHYON.MultiTenancy.Payments
         public async Task CancelPayment(CancelPaymentDto input)
         {
             var payment = await _subscriptionPaymentRepository.GetByGatewayAndPaymentIdAsync(
-                    input.Gateway,
-                    input.PaymentId
-                );
+                input.Gateway,
+                input.PaymentId
+            );
 
             payment.SetAsCancelled();
         }
@@ -140,13 +144,15 @@ namespace TACHYON.MultiTenancy.Payments
             var payments = await query.OrderBy(input.Sorting).PageBy(input).ToListAsync();
             var paymentsCount = query.Count();
 
-            return new PagedResultDto<SubscriptionPaymentListDto>(paymentsCount, ObjectMapper.Map<List<SubscriptionPaymentListDto>>(payments));
+            return new PagedResultDto<SubscriptionPaymentListDto>(paymentsCount,
+                ObjectMapper.Map<List<SubscriptionPaymentListDto>>(payments));
         }
 
         public List<PaymentGatewayModel> GetActiveGateways(GetActiveGatewaysInput input)
         {
             return _paymentGatewayStore.GetActiveGateways()
-                .WhereIf(input.RecurringPaymentsEnabled.HasValue, gateway => gateway.SupportsRecurringPayments == input.RecurringPaymentsEnabled.Value)
+                .WhereIf(input.RecurringPaymentsEnabled.HasValue,
+                    gateway => gateway.SupportsRecurringPayments == input.RecurringPaymentsEnabled.Value)
                 .ToList();
         }
 
@@ -252,7 +258,10 @@ namespace TACHYON.MultiTenancy.Payments
             payment.SetAsFailed();
         }
 
-        private async Task<decimal> CalculateAmountForPaymentAsync(SubscribableEdition targetEdition, PaymentPeriodType? periodType, EditionPaymentType editionPaymentType, Tenant tenant)
+        private async Task<decimal> CalculateAmountForPaymentAsync(SubscribableEdition targetEdition,
+            PaymentPeriodType? periodType,
+            EditionPaymentType editionPaymentType,
+            Tenant tenant)
         {
             if (editionPaymentType != EditionPaymentType.Upgrade)
             {
@@ -275,16 +284,21 @@ namespace TACHYON.MultiTenancy.Payments
 
             var currentEdition = (SubscribableEdition)await _editionManager.GetByIdAsync(tenant.EditionId.Value);
 
-            var lastPayment = await _subscriptionPaymentRepository.GetLastCompletedPaymentOrDefaultAsync(tenant.Id, null, null);
+            var lastPayment =
+                await _subscriptionPaymentRepository.GetLastCompletedPaymentOrDefaultAsync(tenant.Id, null, null);
             if (lastPayment?.PaymentPeriodType == null)
             {
                 throw new ApplicationException("There is no completed payment record !");
             }
 
-            return TenantManager.GetUpgradePrice(currentEdition, targetEdition, remainingHoursCount, lastPayment.PaymentPeriodType.Value);
+            return TenantManager.GetUpgradePrice(currentEdition, targetEdition, remainingHoursCount,
+                lastPayment.PaymentPeriodType.Value);
         }
 
-        private string GetPaymentDescription(EditionPaymentType editionPaymentType, PaymentPeriodType? paymentPeriodType, string targetEditionName, bool isRecurring)
+        private string GetPaymentDescription(EditionPaymentType editionPaymentType,
+            PaymentPeriodType? paymentPeriodType,
+            string targetEditionName,
+            bool isRecurring)
         {
             var description = L(editionPaymentType + "_Edition_Description", targetEditionName);
 
@@ -298,7 +312,8 @@ namespace TACHYON.MultiTenancy.Payments
                 return description;
             }
 
-            if (editionPaymentType == EditionPaymentType.NewRegistration || editionPaymentType == EditionPaymentType.BuyNow)
+            if (editionPaymentType == EditionPaymentType.NewRegistration ||
+                editionPaymentType == EditionPaymentType.BuyNow)
             {
                 description += " (" + L(paymentPeriodType.Value.ToString()) + ")";
             }
@@ -313,6 +328,8 @@ namespace TACHYON.MultiTenancy.Payments
 
         public async Task SwitchBetweenFreeEditions(int upgradeEditionId)
         {
+            // at now we don't need to execute this action instead of delete it
+            throw new UserFriendlyException(L("ThisFeatureNotEnabledAtTheMoment"));
             var tenant = await _tenantManager.GetByIdAsync(AbpSession.GetTenantId());
 
             if (!tenant.EditionId.HasValue)
@@ -333,13 +350,13 @@ namespace TACHYON.MultiTenancy.Payments
             }
 
             await _tenantManager.UpdateTenantAsync(
-                    tenant.Id,
-                    true,
-                    null,
-                    null,
-                    upgradeEditionId,
-                    EditionPaymentType.Upgrade
-                );
+                tenant.Id,
+                true,
+                null,
+                null,
+                upgradeEditionId,
+                EditionPaymentType.Upgrade
+            );
         }
 
         public async Task UpgradeSubscriptionCostsLessThenMinAmount(int editionId)
@@ -348,7 +365,8 @@ namespace TACHYON.MultiTenancy.Payments
 
             if (!paymentInfo.IsLessThanMinimumUpgradePaymentAmount())
             {
-                throw new ApplicationException("Subscription payment requires more than minimum upgrade payment amount. Use payment gateway to charge payment amount.");
+                throw new ApplicationException(
+                    "Subscription payment requires more than minimum upgrade payment amount. Use payment gateway to charge payment amount.");
             }
 
             var lastPayment = await _subscriptionPaymentRepository.GetLastCompletedPaymentOrDefaultAsync(
@@ -370,9 +388,9 @@ namespace TACHYON.MultiTenancy.Payments
         public async Task<bool> HasAnyPayment()
         {
             return await _subscriptionPaymentRepository.GetLastCompletedPaymentOrDefaultAsync(
-                       tenantId: AbpSession.GetTenantId(),
-                       gateway: null,
-                       isRecurring: null) != default;
+                tenantId: AbpSession.GetTenantId(),
+                gateway: null,
+                isRecurring: null) != default;
         }
     }
 }

@@ -51586,7 +51586,7 @@ export class TransportTypesServiceProxy {
     sorting: string | null | undefined,
     skipCount: number | undefined,
     maxResultCount: number | undefined
-  ): Observable<PagedResultDtoOfGetTransportTypeForViewDto> {
+  ): Observable<PagedResultDtoOfTransportTypeDto> {
     let url_ = this.baseUrl + '/api/services/app/TransportTypes/GetAll?';
     if (filter !== undefined && filter !== null) url_ += 'Filter=' + encodeURIComponent('' + filter) + '&';
     if (displayNameFilter !== undefined && displayNameFilter !== null)
@@ -51619,14 +51619,14 @@ export class TransportTypesServiceProxy {
             try {
               return this.processGetAll(<any>response_);
             } catch (e) {
-              return <Observable<PagedResultDtoOfGetTransportTypeForViewDto>>(<any>_observableThrow(e));
+              return <Observable<PagedResultDtoOfTransportTypeDto>>(<any>_observableThrow(e));
             }
-          } else return <Observable<PagedResultDtoOfGetTransportTypeForViewDto>>(<any>_observableThrow(response_));
+          } else return <Observable<PagedResultDtoOfTransportTypeDto>>(<any>_observableThrow(response_));
         })
       );
   }
 
-  protected processGetAll(response: HttpResponseBase): Observable<PagedResultDtoOfGetTransportTypeForViewDto> {
+  protected processGetAll(response: HttpResponseBase): Observable<PagedResultDtoOfTransportTypeDto> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -51641,7 +51641,7 @@ export class TransportTypesServiceProxy {
         _observableMergeMap((_responseText) => {
           let result200: any = null;
           let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
-          result200 = PagedResultDtoOfGetTransportTypeForViewDto.fromJS(resultData200);
+          result200 = PagedResultDtoOfTransportTypeDto.fromJS(resultData200);
           return _observableOf(result200);
         })
       );
@@ -51652,7 +51652,7 @@ export class TransportTypesServiceProxy {
         })
       );
     }
-    return _observableOf<PagedResultDtoOfGetTransportTypeForViewDto>(<any>null);
+    return _observableOf<PagedResultDtoOfTransportTypeDto>(<any>null);
   }
 
   /**
@@ -64900,7 +64900,6 @@ export class SelectItemDto implements ISelectItemDto {
   id!: string | undefined;
   isOther!: boolean | undefined;
   displayName!: string | undefined;
-  translatedDisplayName!: string | undefined;
 
   constructor(data?: ISelectItemDto) {
     if (data) {
@@ -64915,7 +64914,6 @@ export class SelectItemDto implements ISelectItemDto {
       this.id = _data['id'];
       this.isOther = _data['isOther'];
       this.displayName = _data['displayName'];
-      this.translatedDisplayName = _data['translatedDisplayName'];
     }
   }
 
@@ -64931,7 +64929,6 @@ export class SelectItemDto implements ISelectItemDto {
     data['id'] = this.id;
     data['isOther'] = this.isOther;
     data['displayName'] = this.displayName;
-    data['translatedDisplayName'] = this.translatedDisplayName;
     return data;
   }
 }
@@ -64940,7 +64937,6 @@ export interface ISelectItemDto {
   id: string | undefined;
   isOther: boolean | undefined;
   displayName: string | undefined;
-  translatedDisplayName: string | undefined;
 }
 
 export class ShippingRequestAccidentReasonLookupDto implements IShippingRequestAccidentReasonLookupDto {
@@ -72827,6 +72823,41 @@ export interface IEditionSettingsDto {
   shipperEditionId: string | undefined;
 }
 
+export class OtpNumbersSettingsDto implements IOtpNumbersSettingsDto {
+  ignoredOtpNumbers!: string | undefined;
+
+  constructor(data?: IOtpNumbersSettingsDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.ignoredOtpNumbers = _data['ignoredOtpNumbers'];
+    }
+  }
+
+  static fromJS(data: any): OtpNumbersSettingsDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new OtpNumbersSettingsDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['ignoredOtpNumbers'] = this.ignoredOtpNumbers;
+    return data;
+  }
+}
+
+export interface IOtpNumbersSettingsDto {
+  ignoredOtpNumbers: string | undefined;
+}
+
 export class HostSettingsEditDto implements IHostSettingsEditDto {
   general!: GeneralSettingsEditDto;
   userManagement!: HostUserManagementSettingsEditDto;
@@ -72838,6 +72869,7 @@ export class HostSettingsEditDto implements IHostSettingsEditDto {
   externalLoginProviderSettings!: ExternalLoginProviderSettingsEditDto;
   smsSettings!: SmsSettingsEditDto;
   editionSettings!: EditionSettingsDto;
+  otpNumbersSettings!: OtpNumbersSettingsDto;
 
   constructor(data?: IHostSettingsEditDto) {
     if (data) {
@@ -72853,6 +72885,7 @@ export class HostSettingsEditDto implements IHostSettingsEditDto {
       this.security = new SecuritySettingsEditDto();
       this.smsSettings = new SmsSettingsEditDto();
       this.editionSettings = new EditionSettingsDto();
+      this.otpNumbersSettings = new OtpNumbersSettingsDto();
     }
   }
 
@@ -72874,6 +72907,7 @@ export class HostSettingsEditDto implements IHostSettingsEditDto {
         : <any>undefined;
       this.smsSettings = _data['smsSettings'] ? SmsSettingsEditDto.fromJS(_data['smsSettings']) : new SmsSettingsEditDto();
       this.editionSettings = _data['editionSettings'] ? EditionSettingsDto.fromJS(_data['editionSettings']) : new EditionSettingsDto();
+      this.otpNumbersSettings = _data['otpNumbersSettings'] ? OtpNumbersSettingsDto.fromJS(_data['otpNumbersSettings']) : new OtpNumbersSettingsDto();
     }
   }
 
@@ -72896,6 +72930,7 @@ export class HostSettingsEditDto implements IHostSettingsEditDto {
     data['externalLoginProviderSettings'] = this.externalLoginProviderSettings ? this.externalLoginProviderSettings.toJSON() : <any>undefined;
     data['smsSettings'] = this.smsSettings ? this.smsSettings.toJSON() : <any>undefined;
     data['editionSettings'] = this.editionSettings ? this.editionSettings.toJSON() : <any>undefined;
+    data['otpNumbersSettings'] = this.otpNumbersSettings ? this.otpNumbersSettings.toJSON() : <any>undefined;
     return data;
   }
 }
@@ -72911,6 +72946,7 @@ export interface IHostSettingsEditDto {
   externalLoginProviderSettings: ExternalLoginProviderSettingsEditDto;
   smsSettings: SmsSettingsEditDto;
   editionSettings: EditionSettingsDto;
+  otpNumbersSettings: OtpNumbersSettingsDto;
 }
 
 export class TestUnifonicSmsInput implements ITestUnifonicSmsInput {
@@ -76334,7 +76370,6 @@ export class TrucksTypeSelectItemDto implements ITrucksTypeSelectItemDto {
   id!: string | undefined;
   isOther!: boolean | undefined;
   displayName!: string | undefined;
-  translatedDisplayName!: string | undefined;
 
   constructor(data?: ITrucksTypeSelectItemDto) {
     if (data) {
@@ -76349,7 +76384,6 @@ export class TrucksTypeSelectItemDto implements ITrucksTypeSelectItemDto {
       this.id = _data['id'];
       this.isOther = _data['isOther'];
       this.displayName = _data['displayName'];
-      this.translatedDisplayName = _data['translatedDisplayName'];
     }
   }
 
@@ -76365,7 +76399,6 @@ export class TrucksTypeSelectItemDto implements ITrucksTypeSelectItemDto {
     data['id'] = this.id;
     data['isOther'] = this.isOther;
     data['displayName'] = this.displayName;
-    data['translatedDisplayName'] = this.translatedDisplayName;
     return data;
   }
 }
@@ -76374,7 +76407,6 @@ export interface ITrucksTypeSelectItemDto {
   id: string | undefined;
   isOther: boolean | undefined;
   displayName: string | undefined;
-  translatedDisplayName: string | undefined;
 }
 
 export class OfferTrailerTypeLookupTableDto implements IOfferTrailerTypeLookupTableDto {
@@ -80410,6 +80442,8 @@ export class GetShippingRequestForPricingOutput implements IGetShippingRequestFo
   offerId!: number;
   shipper!: string | undefined;
   shipperRating!: number;
+  facilitiesRatingAverage!: number;
+  facilitiesRatingCount!: number;
   shipperRatingNumber!: number;
   creationTime!: moment.Moment;
   isTachyonDeal!: boolean;
@@ -80445,6 +80479,8 @@ export class GetShippingRequestForPricingOutput implements IGetShippingRequestFo
       this.offerId = _data['offerId'];
       this.shipper = _data['shipper'];
       this.shipperRating = _data['shipperRating'];
+      this.facilitiesRatingAverage = _data['facilitiesRatingAverage'];
+      this.facilitiesRatingCount = _data['facilitiesRatingCount'];
       this.shipperRatingNumber = _data['shipperRatingNumber'];
       this.creationTime = _data['creationTime'] ? moment(_data['creationTime'].toString()) : <any>undefined;
       this.isTachyonDeal = _data['isTachyonDeal'];
@@ -80481,6 +80517,8 @@ export class GetShippingRequestForPricingOutput implements IGetShippingRequestFo
     data['offerId'] = this.offerId;
     data['shipper'] = this.shipper;
     data['shipperRating'] = this.shipperRating;
+    data['facilitiesRatingAverage'] = this.facilitiesRatingAverage;
+    data['facilitiesRatingCount'] = this.facilitiesRatingCount;
     data['shipperRatingNumber'] = this.shipperRatingNumber;
     data['creationTime'] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
     data['isTachyonDeal'] = this.isTachyonDeal;
@@ -80507,6 +80545,8 @@ export interface IGetShippingRequestForPricingOutput {
   offerId: number;
   shipper: string | undefined;
   shipperRating: number;
+  facilitiesRatingAverage: number;
+  facilitiesRatingCount: number;
   shipperRatingNumber: number;
   creationTime: moment.Moment;
   isTachyonDeal: boolean;
@@ -82483,6 +82523,7 @@ export class RoutPointDto implements IRoutPointDto {
   pickingType!: PickingType;
   facilityId!: number;
   facility!: string | undefined;
+  facilityRate!: number;
   longitude!: number;
   latitude!: number;
   shippingRequestTripId!: number;
@@ -82519,6 +82560,7 @@ export class RoutPointDto implements IRoutPointDto {
       this.pickingType = _data['pickingType'];
       this.facilityId = _data['facilityId'];
       this.facility = _data['facility'];
+      this.facilityRate = _data['facilityRate'];
       this.longitude = _data['longitude'];
       this.latitude = _data['latitude'];
       this.shippingRequestTripId = _data['shippingRequestTripId'];
@@ -82559,6 +82601,7 @@ export class RoutPointDto implements IRoutPointDto {
     data['pickingType'] = this.pickingType;
     data['facilityId'] = this.facilityId;
     data['facility'] = this.facility;
+    data['facilityRate'] = this.facilityRate;
     data['longitude'] = this.longitude;
     data['latitude'] = this.latitude;
     data['shippingRequestTripId'] = this.shippingRequestTripId;
@@ -82592,6 +82635,7 @@ export interface IRoutPointDto {
   pickingType: PickingType;
   facilityId: number;
   facility: string | undefined;
+  facilityRate: number;
   longitude: number;
   latitude: number;
   shippingRequestTripId: number;
@@ -85089,6 +85133,7 @@ export enum RoutePointStatus {
   Delivered = 11,
   Issue = 12,
   DeliveryNoteUploded = 13,
+  UplodeGoodPicture = 14,
 }
 
 export enum RoutePointCompletedStatus {
@@ -91099,7 +91144,6 @@ export class TenantCountryLookupTableDto implements ITenantCountryLookupTableDto
   id!: string | undefined;
   isOther!: boolean | undefined;
   displayName!: string | undefined;
-  translatedDisplayName!: string | undefined;
 
   constructor(data?: ITenantCountryLookupTableDto) {
     if (data) {
@@ -91114,7 +91158,6 @@ export class TenantCountryLookupTableDto implements ITenantCountryLookupTableDto
       this.id = _data['id'];
       this.isOther = _data['isOther'];
       this.displayName = _data['displayName'];
-      this.translatedDisplayName = _data['translatedDisplayName'];
     }
   }
 
@@ -91130,7 +91173,6 @@ export class TenantCountryLookupTableDto implements ITenantCountryLookupTableDto
     data['id'] = this.id;
     data['isOther'] = this.isOther;
     data['displayName'] = this.displayName;
-    data['translatedDisplayName'] = this.translatedDisplayName;
     return data;
   }
 }
@@ -91139,14 +91181,12 @@ export interface ITenantCountryLookupTableDto {
   id: string | undefined;
   isOther: boolean | undefined;
   displayName: string | undefined;
-  translatedDisplayName: string | undefined;
 }
 
 export class TenantCityLookupTableDto implements ITenantCityLookupTableDto {
   id!: string | undefined;
   isOther!: boolean | undefined;
   displayName!: string | undefined;
-  translatedDisplayName!: string | undefined;
 
   constructor(data?: ITenantCityLookupTableDto) {
     if (data) {
@@ -91161,7 +91201,6 @@ export class TenantCityLookupTableDto implements ITenantCityLookupTableDto {
       this.id = _data['id'];
       this.isOther = _data['isOther'];
       this.displayName = _data['displayName'];
-      this.translatedDisplayName = _data['translatedDisplayName'];
     }
   }
 
@@ -91177,7 +91216,6 @@ export class TenantCityLookupTableDto implements ITenantCityLookupTableDto {
     data['id'] = this.id;
     data['isOther'] = this.isOther;
     data['displayName'] = this.displayName;
-    data['translatedDisplayName'] = this.translatedDisplayName;
     return data;
   }
 }
@@ -91186,7 +91224,6 @@ export interface ITenantCityLookupTableDto {
   id: string | undefined;
   isOther: boolean | undefined;
   displayName: string | undefined;
-  translatedDisplayName: string | undefined;
 }
 
 export class TenantCarriersListDto implements ITenantCarriersListDto {
@@ -92206,7 +92243,6 @@ export class CityPolygonLookupTableDto implements ICityPolygonLookupTableDto {
   id!: string | undefined;
   isOther!: boolean | undefined;
   displayName!: string | undefined;
-  translatedDisplayName!: string | undefined;
 
   constructor(data?: ICityPolygonLookupTableDto) {
     if (data) {
@@ -92223,7 +92259,6 @@ export class CityPolygonLookupTableDto implements ICityPolygonLookupTableDto {
       this.id = _data['id'];
       this.isOther = _data['isOther'];
       this.displayName = _data['displayName'];
-      this.translatedDisplayName = _data['translatedDisplayName'];
     }
   }
 
@@ -92241,7 +92276,6 @@ export class CityPolygonLookupTableDto implements ICityPolygonLookupTableDto {
     data['id'] = this.id;
     data['isOther'] = this.isOther;
     data['displayName'] = this.displayName;
-    data['translatedDisplayName'] = this.translatedDisplayName;
     return data;
   }
 }
@@ -92252,7 +92286,6 @@ export interface ICityPolygonLookupTableDto {
   id: string | undefined;
   isOther: boolean | undefined;
   displayName: string | undefined;
-  translatedDisplayName: string | undefined;
 }
 
 export class TermAndConditionDto implements ITermAndConditionDto {
@@ -93300,6 +93333,8 @@ export class AuthenticateResultModel implements IAuthenticateResultModel {
   returnUrl!: string | undefined;
   refreshToken!: string | undefined;
   refreshTokenExpireInSeconds!: number;
+  driverName!: string | undefined;
+  tenantId!: number | undefined;
 
   constructor(data?: IAuthenticateResultModel) {
     if (data) {
@@ -93327,6 +93362,8 @@ export class AuthenticateResultModel implements IAuthenticateResultModel {
       this.returnUrl = _data['returnUrl'];
       this.refreshToken = _data['refreshToken'];
       this.refreshTokenExpireInSeconds = _data['refreshTokenExpireInSeconds'];
+      this.driverName = _data['driverName'];
+      this.tenantId = _data['tenantId'];
     }
   }
 
@@ -93355,6 +93392,8 @@ export class AuthenticateResultModel implements IAuthenticateResultModel {
     data['returnUrl'] = this.returnUrl;
     data['refreshToken'] = this.refreshToken;
     data['refreshTokenExpireInSeconds'] = this.refreshTokenExpireInSeconds;
+    data['driverName'] = this.driverName;
+    data['tenantId'] = this.tenantId;
     return data;
   }
 }
@@ -93373,6 +93412,8 @@ export interface IAuthenticateResultModel {
   returnUrl: string | undefined;
   refreshToken: string | undefined;
   refreshTokenExpireInSeconds: number;
+  driverName: string | undefined;
+  tenantId: number | undefined;
 }
 
 export class OtpCreatedDto implements IOtpCreatedDto {
@@ -94028,6 +94069,7 @@ export class TrackingRoutePointDto implements ITrackingRoutePointDto {
   canGoToNextLocation!: boolean;
   isDeliveryNoteUploaded!: boolean;
   isPodUploaded!: boolean;
+  isGoodPictureUploaded!: boolean;
   facilityRate!: number;
   waybillNumber!: number | undefined;
   receiverCode!: string | undefined;
@@ -94060,6 +94102,7 @@ export class TrackingRoutePointDto implements ITrackingRoutePointDto {
       this.canGoToNextLocation = _data['canGoToNextLocation'];
       this.isDeliveryNoteUploaded = _data['isDeliveryNoteUploaded'];
       this.isPodUploaded = _data['isPodUploaded'];
+      this.isGoodPictureUploaded = _data['isGoodPictureUploaded'];
       this.facilityRate = _data['facilityRate'];
       this.waybillNumber = _data['waybillNumber'];
       this.receiverCode = _data['receiverCode'];
@@ -94099,6 +94142,7 @@ export class TrackingRoutePointDto implements ITrackingRoutePointDto {
     data['canGoToNextLocation'] = this.canGoToNextLocation;
     data['isDeliveryNoteUploaded'] = this.isDeliveryNoteUploaded;
     data['isPodUploaded'] = this.isPodUploaded;
+    data['isGoodPictureUploaded'] = this.isGoodPictureUploaded;
     data['facilityRate'] = this.facilityRate;
     data['waybillNumber'] = this.waybillNumber;
     data['receiverCode'] = this.receiverCode;
@@ -94131,6 +94175,7 @@ export interface ITrackingRoutePointDto {
   canGoToNextLocation: boolean;
   isDeliveryNoteUploaded: boolean;
   isPodUploaded: boolean;
+  isGoodPictureUploaded: boolean;
   facilityRate: number;
   waybillNumber: number | undefined;
   receiverCode: string | undefined;
@@ -95196,6 +95241,51 @@ export interface ITransportTypeDto {
   id: number;
 }
 
+export class PagedResultDtoOfTransportTypeDto implements IPagedResultDtoOfTransportTypeDto {
+  totalCount!: number;
+  items!: TransportTypeDto[] | undefined;
+
+  constructor(data?: IPagedResultDtoOfTransportTypeDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.totalCount = _data['totalCount'];
+      if (Array.isArray(_data['items'])) {
+        this.items = [] as any;
+        for (let item of _data['items']) this.items!.push(TransportTypeDto.fromJS(item));
+      }
+    }
+  }
+
+  static fromJS(data: any): PagedResultDtoOfTransportTypeDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new PagedResultDtoOfTransportTypeDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['totalCount'] = this.totalCount;
+    if (Array.isArray(this.items)) {
+      data['items'] = [];
+      for (let item of this.items) data['items'].push(item.toJSON());
+    }
+    return data;
+  }
+}
+
+export interface IPagedResultDtoOfTransportTypeDto {
+  totalCount: number;
+  items: TransportTypeDto[] | undefined;
+}
+
 export class GetTransportTypeForViewDto implements IGetTransportTypeForViewDto {
   transportType!: TransportTypeDto;
 
@@ -95229,51 +95319,6 @@ export class GetTransportTypeForViewDto implements IGetTransportTypeForViewDto {
 
 export interface IGetTransportTypeForViewDto {
   transportType: TransportTypeDto;
-}
-
-export class PagedResultDtoOfGetTransportTypeForViewDto implements IPagedResultDtoOfGetTransportTypeForViewDto {
-  totalCount!: number;
-  items!: GetTransportTypeForViewDto[] | undefined;
-
-  constructor(data?: IPagedResultDtoOfGetTransportTypeForViewDto) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(_data?: any) {
-    if (_data) {
-      this.totalCount = _data['totalCount'];
-      if (Array.isArray(_data['items'])) {
-        this.items = [] as any;
-        for (let item of _data['items']) this.items!.push(GetTransportTypeForViewDto.fromJS(item));
-      }
-    }
-  }
-
-  static fromJS(data: any): PagedResultDtoOfGetTransportTypeForViewDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new PagedResultDtoOfGetTransportTypeForViewDto();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['totalCount'] = this.totalCount;
-    if (Array.isArray(this.items)) {
-      data['items'] = [];
-      for (let item of this.items) data['items'].push(item.toJSON());
-    }
-    return data;
-  }
-}
-
-export interface IPagedResultDtoOfGetTransportTypeForViewDto {
-  totalCount: number;
-  items: GetTransportTypeForViewDto[] | undefined;
 }
 
 export class CreateOrEditTransportTypeDto implements ICreateOrEditTransportTypeDto {
@@ -96083,7 +96128,6 @@ export class TruckTruckStatusLookupTableDto implements ITruckTruckStatusLookupTa
   id!: string | undefined;
   isOther!: boolean | undefined;
   displayName!: string | undefined;
-  translatedDisplayName!: string | undefined;
 
   constructor(data?: ITruckTruckStatusLookupTableDto) {
     if (data) {
@@ -96098,7 +96142,6 @@ export class TruckTruckStatusLookupTableDto implements ITruckTruckStatusLookupTa
       this.id = _data['id'];
       this.isOther = _data['isOther'];
       this.displayName = _data['displayName'];
-      this.translatedDisplayName = _data['translatedDisplayName'];
     }
   }
 
@@ -96114,7 +96157,6 @@ export class TruckTruckStatusLookupTableDto implements ITruckTruckStatusLookupTa
     data['id'] = this.id;
     data['isOther'] = this.isOther;
     data['displayName'] = this.displayName;
-    data['translatedDisplayName'] = this.translatedDisplayName;
     return data;
   }
 }
@@ -96123,7 +96165,6 @@ export interface ITruckTruckStatusLookupTableDto {
   id: string | undefined;
   isOther: boolean | undefined;
   displayName: string | undefined;
-  translatedDisplayName: string | undefined;
 }
 
 export class TruckUserLookupTableDto implements ITruckUserLookupTableDto {
@@ -96215,7 +96256,6 @@ export class PlateTypeSelectItemDto implements IPlateTypeSelectItemDto {
   id!: string | undefined;
   isOther!: boolean | undefined;
   displayName!: string | undefined;
-  translatedDisplayName!: string | undefined;
 
   constructor(data?: IPlateTypeSelectItemDto) {
     if (data) {
@@ -96231,7 +96271,6 @@ export class PlateTypeSelectItemDto implements IPlateTypeSelectItemDto {
       this.id = _data['id'];
       this.isOther = _data['isOther'];
       this.displayName = _data['displayName'];
-      this.translatedDisplayName = _data['translatedDisplayName'];
     }
   }
 
@@ -96248,7 +96287,6 @@ export class PlateTypeSelectItemDto implements IPlateTypeSelectItemDto {
     data['id'] = this.id;
     data['isOther'] = this.isOther;
     data['displayName'] = this.displayName;
-    data['translatedDisplayName'] = this.translatedDisplayName;
     return data;
   }
 }
@@ -96258,7 +96296,6 @@ export interface IPlateTypeSelectItemDto {
   id: string | undefined;
   isOther: boolean | undefined;
   displayName: string | undefined;
-  translatedDisplayName: string | undefined;
 }
 
 export class TruckStatusDto implements ITruckStatusDto {

@@ -10,13 +10,14 @@ namespace TACHYON.TachyonPriceOffers
 {
     public interface ITachyonPriceOffersAppService : IApplicationService
     {
-        Task<PagedResultDto<GetAllTachyonPriceOfferOutput>> GetAllTachyonPriceOffers(GetAllTachyonPriceOfferInput input);
+        Task<PagedResultDto<GetAllTachyonPriceOfferOutput>>
+            GetAllTachyonPriceOffers(GetAllTachyonPriceOfferInput input);
+
         Task CreateOrEditTachyonPriceOffer(CreateOrEditTachyonPriceOfferDto input);
-      //  Task<GetTachyonPriceOfferForEditOutput> GetTachyonPriceForEdit(EntityDto entity);
-        Task<GetTachyonPriceOfferForViewOutput> GetTachyonPriceOfferForView(EntityDto entity); 
+
+        //  Task<GetTachyonPriceOfferForEditOutput> GetTachyonPriceForEdit(EntityDto entity);
+        Task<GetTachyonPriceOfferForViewOutput> GetTachyonPriceOfferForView(EntityDto entity);
         Task Delete(EntityDto entity);
         Task AcceptOrRejectOfferByShipper(AcceptOrRejectOfferByShipperInput input);
-
-
     }
 }

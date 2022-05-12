@@ -18,10 +18,13 @@ namespace TACHYON.Storage
         {
             _cacheManager = cacheManager;
         }
+
         public void SetFile(string token, byte[] content)
         {
-            _cacheManager.GetCache(TempFileCacheName).Set(token, content, new TimeSpan(0, 0, 20, 0)); // expire time is 1 min by default
+            _cacheManager.GetCache(TempFileCacheName)
+                .Set(token, content, new TimeSpan(0, 0, 20, 0)); // expire time is 1 min by default
         }
+
         public void ClearCache(string token)
         {
             _cacheManager.GetCache(TempFileCacheName).Remove(token);

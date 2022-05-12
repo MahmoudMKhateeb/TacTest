@@ -1,5 +1,4 @@
-﻿
-using Abp;
+﻿using Abp;
 using Abp.Dependency;
 using System;
 using System.Threading.Tasks;

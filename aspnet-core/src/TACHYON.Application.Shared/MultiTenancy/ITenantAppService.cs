@@ -27,6 +27,5 @@ namespace TACHYON.MultiTenancy
         Task UnlockTenantAdmin(EntityDto input);
         Task<List<TenantCityLookupTableDto>> GetAllCitiesForTableDropdown(int input);
         Task<List<TenantCountryLookupTableDto>> GetAllCountryForTableDropdown();
-
     }
 }

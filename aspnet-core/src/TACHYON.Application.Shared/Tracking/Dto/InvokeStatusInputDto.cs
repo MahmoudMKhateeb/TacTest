@@ -11,15 +11,14 @@ namespace TACHYON.Tracking.Dto
 {
     public class InvokeStatusInputDto : EntityDto<long>, IShouldInitialize
     {
-        [Required]
-        public string Action { get; set; }
+        [Required] public string Action { get; set; }
 
         public string Code { get; set; }
 
 
         public void Initialize()
         {
-            if (Action == WorkFlowActionConst.ReceiverConfirmed || Action == WorkFlowActionConst.DeliveryConfirmationReceiverConfirmed)
+            if (Action == WorkFlowActionConst.ReceiverConfirmed || Action == WorkFlowActionConst.UplodeGoodPictureReceiverConfirmed)
             {
                 if (Code.IsNullOrEmpty())
                 {

@@ -9,6 +9,5 @@ namespace TACHYON.Countries.CountriesTranslations.Dtos
         public CreateOrEditCountriesTranslationDto CountriesTranslation { get; set; }
 
         public string CountyDisplayName { get; set; }
-
     }
 }

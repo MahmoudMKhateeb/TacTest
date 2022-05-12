@@ -2,10 +2,8 @@
 {
     public class GetPortForViewDto
     {
-		public PortDto Port { get; set; }
+        public PortDto Port { get; set; }
 
-		public string CityDisplayName { get; set;}
-
-
+        public string CityDisplayName { get; set; }
     }
 }

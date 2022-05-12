@@ -30,7 +30,8 @@ namespace TACHYON.Rating
         public RatingLogManager(
             IRepository<RatingLog, long> ratingLogRepository,
             IRepository<RoutPoint, long> routePointRepository,
-            UserManager userManager, TenantManager tenantManager,
+            UserManager userManager,
+            TenantManager tenantManager,
             IRepository<Facility, long> facilityRepository,
             IRepository<ShippingRequestTrip> tripRepository)
         {
@@ -237,7 +238,9 @@ namespace TACHYON.Rating
         #region helper
 
         private async Task<List<decimal>> GetAllRatingAsync(RateType? rateType = null,
-            long? facilityId = null, int? shipperId = null, int? carrierId = null,
+            long? facilityId = null,
+            int? shipperId = null,
+            int? carrierId = null,
             long? driverId = null)
         {
             return await _ratingLogRepository.GetAll().AsNoTracking()
@@ -292,8 +295,9 @@ namespace TACHYON.Rating
                     ? x.ShippingRequestFk.TenantId
                     : x.ShippingRequestFk.CarrierTenantId)
                 .FirstOrDefaultAsync();
-
         }
+
+        
 
         private async Task<RatingLog> GetTripRating(RateType type, int? tripId, long? pointId)
         {

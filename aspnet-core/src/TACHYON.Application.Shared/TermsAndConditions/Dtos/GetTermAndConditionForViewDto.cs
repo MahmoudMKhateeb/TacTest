@@ -2,8 +2,6 @@
 {
     public class GetTermAndConditionForViewDto
     {
-		public TermAndConditionDto TermAndCondition { get; set; }
-
-
+        public TermAndConditionDto TermAndCondition { get; set; }
     }
 }

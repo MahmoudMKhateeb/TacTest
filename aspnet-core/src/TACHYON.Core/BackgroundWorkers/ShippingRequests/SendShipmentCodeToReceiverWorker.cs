@@ -21,7 +21,10 @@ namespace TACHYON.BackgroundWorkers.ShippingRequests
         private readonly ISettingManager _settingManager;
         private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepository;
         private readonly ShippingRequestManager _shippingRequestManager;
-        public SendShipmentCodeToReceiverWorker(AbpTimer timer, ISettingManager settingManager, IRepository<ShippingRequestTrip> shippingRequestTripRepository,
+
+        public SendShipmentCodeToReceiverWorker(AbpTimer timer,
+            ISettingManager settingManager,
+            IRepository<ShippingRequestTrip> shippingRequestTripRepository,
             ShippingRequestManager shippingRequestManager) : base(timer)
         {
             Timer.Period = CheckPeriodAsMilliseconds;
@@ -29,6 +32,7 @@ namespace TACHYON.BackgroundWorkers.ShippingRequests
             _shippingRequestTripRepository = shippingRequestTripRepository;
             _shippingRequestManager = shippingRequestManager;
         }
+
         [UnitOfWork]
         protected override void DoWork()
         {
@@ -50,24 +54,22 @@ namespace TACHYON.BackgroundWorkers.ShippingRequests
 
                 Trips.ForEach(t =>
                 {
-                    string Culture=default;
-                   
-                    if (t.RoutPoints.Count>0)
+                    string Culture = default;
+
+                    if (t.RoutPoints.Count > 0)
                     {
                         var routPoints = t.RoutPoints.ToList();
-                        Culture = _settingManager.GetSettingValueForUser(LocalizationSettingNames.DefaultLanguage, t.ShippingRequestFk.TenantId, t.ShippingRequestFk.CreatorUserId.Value, true);
+                        Culture = _settingManager.GetSettingValueForUser(LocalizationSettingNames.DefaultLanguage,
+                            t.ShippingRequestFk.TenantId, t.ShippingRequestFk.CreatorUserId.Value, true);
 
                         routPoints.ForEach(p =>
                         {
-                           _shippingRequestManager.SendSmsToReceiver(p, Culture);
+                            _shippingRequestManager.SendSmsToReceiver(p, Culture);
                             Task.Delay(1000);
                         });
                     }
-
                 });
             }
-              
-
         }
     }
 }

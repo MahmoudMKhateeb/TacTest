@@ -24,7 +24,9 @@ namespace TACHYON.Features
         public ISettingManager SettingManager { get; set; }
 
 
-        public AppFeatureProvider(IRepository<InvoicePeriod> periodRepository, IRepository<InvoicePaymentMethod> invoicePaymentMethodRepository, IRepository<Tenant> tenantRepository)
+        public AppFeatureProvider(IRepository<InvoicePeriod> periodRepository,
+            IRepository<InvoicePaymentMethod> invoicePaymentMethodRepository,
+            IRepository<Tenant> tenantRepository)
         {
             _PeriodRepository = periodRepository;
             _invoicePaymentMethodRepository = invoicePaymentMethodRepository;
@@ -34,7 +36,6 @@ namespace TACHYON.Features
         [UnitOfWork]
         public override void SetFeatures(IFeatureDefinitionContext context)
         {
-
             context.Create(
                 AppFeatures.MaxUserCount,
                 "0", //0 = unlimited
@@ -75,7 +76,9 @@ namespace TACHYON.Features
             //};
 
             #endregion
+
             //---Y
+
             #region ######## Tachyon features #########
 
 
@@ -89,11 +92,11 @@ namespace TACHYON.Features
             );
 
             var carrierFeature = context.Create(
-                        AppFeatures.Carrier,
-                        "false",
-                        L("CarrierFeature"), // todo add localization here
-                        inputType: new CheckboxInputType()
-                    );
+                AppFeatures.Carrier,
+                "false",
+                L("CarrierFeature"), // todo add localization here
+                inputType: new CheckboxInputType()
+            );
 
             var payFeature = context.Create(
                 AppFeatures.Pay,
@@ -121,8 +124,7 @@ namespace TACHYON.Features
                 inputType: new CheckboxInputType()
             )[FeatureMetadata.CustomFeatureKey] = new FeatureMetadata
             {
-                IsVisibleOnPricingTable = true,
-                TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f"
+                IsVisibleOnPricingTable = true, TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f"
             };
 
             var receiver = context.Create(
@@ -132,8 +134,7 @@ namespace TACHYON.Features
                 inputType: new CheckboxInputType()
             )[FeatureMetadata.CustomFeatureKey] = new FeatureMetadata
             {
-                IsVisibleOnPricingTable = true,
-                TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f"
+                IsVisibleOnPricingTable = true, TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f"
             };
 
             var tachyonDealer = context.Create(
@@ -144,7 +145,6 @@ namespace TACHYON.Features
             );
 
 
-
             var shippingRequest = context.Create(
                 AppFeatures.ShippingRequest,
                 "false",
@@ -152,8 +152,7 @@ namespace TACHYON.Features
                 inputType: new CheckboxInputType()
             )[FeatureMetadata.CustomFeatureKey] = new FeatureMetadata
             {
-                IsVisibleOnPricingTable = true,
-                TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f"
+                IsVisibleOnPricingTable = true, TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f"
             };
 
 
@@ -184,21 +183,20 @@ namespace TACHYON.Features
             );
 
             var sendTachyonDealShippingRequest = context.Create(
-            AppFeatures.SendTachyonDealShippingRequest,
-            "false",
-            L("SendTachyonDealShippingRequest"), // todo add localization here
-            inputType: new CheckboxInputType()
+                AppFeatures.SendTachyonDealShippingRequest,
+                "false",
+                L("SendTachyonDealShippingRequest"), // todo add localization here
+                inputType: new CheckboxInputType()
             )[FeatureMetadata.CustomFeatureKey] = new FeatureMetadata
             {
-                IsVisibleOnPricingTable = false,
-                TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f"
+                IsVisibleOnPricingTable = false, TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f"
             };
 
 
             ///*Invoices*/
 
-
             #endregion
+
             //---Y
 
             #region Commission
@@ -578,7 +576,8 @@ namespace TACHYON.Features
             );
 
 
-            var carrierEditionId = Convert.ToInt32(SettingManager.GetSettingValue(AppSettings.Editions.CarrierEditionId));
+            var carrierEditionId =
+                Convert.ToInt32(SettingManager.GetSettingValue(AppSettings.Editions.CarrierEditionId));
             ILocalizableComboboxItem[] tenants = _tenantRepository.GetAll()
                 .Where(x => x.EditionId == carrierEditionId)
                 .Select(i => new LocalizableComboboxItem(i.Id.ToString(), L(i.TenancyName + " - " + i.AccountNumber))).ToArray();

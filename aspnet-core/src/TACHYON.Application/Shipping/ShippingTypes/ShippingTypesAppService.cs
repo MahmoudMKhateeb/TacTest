@@ -21,7 +21,8 @@ namespace TACHYON.Shipping.ShippingTypes
         private readonly IRepository<ShippingType> _shippingTypeRepository;
         private readonly IRepository<ShippingTypeTranslation> _shippingTypeTranslationRepository;
 
-        public ShippingTypesAppService(IRepository<ShippingType> shippingTypeRepository, IRepository<ShippingTypeTranslation> shippingTypeTranslationRepository)
+        public ShippingTypesAppService(IRepository<ShippingType> shippingTypeRepository,
+            IRepository<ShippingTypeTranslation> shippingTypeTranslationRepository)
         {
             _shippingTypeRepository = shippingTypeRepository;
             _shippingTypeTranslationRepository = shippingTypeTranslationRepository;
@@ -29,7 +30,6 @@ namespace TACHYON.Shipping.ShippingTypes
 
         public async Task<LoadResult> GetAll(LoadOptionsInput input)
         {
-
             var query = _shippingTypeRepository.GetAll()
                 .ProjectTo<ShippingTypeDto>(AutoMapperConfigurationProvider);
 
@@ -72,15 +72,10 @@ namespace TACHYON.Shipping.ShippingTypes
         public async Task<List<SelectItemDto>> GetAllShippingTypesForDropdown()
         {
             return await _shippingTypeRepository.GetAll()
-                .Select(x => new SelectItemDto()
-                {
-                    Id = x.Id.ToString(),
-                    DisplayName = x.DisplayName
-                }).ToListAsync();
+                .Select(x => new SelectItemDto() { Id = x.Id.ToString(), DisplayName = x.DisplayName }).ToListAsync();
         }
 
         #region Translations
-
 
         public async Task<LoadResult> GetAllTranslations(GetAllTranslationsInput input)
         {
@@ -94,7 +89,6 @@ namespace TACHYON.Shipping.ShippingTypes
 
         public async Task CreateOrEditTranslation(CreateOrEditShippingTypeTranslationDto input)
         {
-
             if (!input.Id.HasValue)
             {
                 var d = await _shippingTypeTranslationRepository
@@ -116,8 +110,6 @@ namespace TACHYON.Shipping.ShippingTypes
                 var updatedTranslation = await _shippingTypeTranslationRepository.SingleAsync(x => x.Id == input.Id);
                 ObjectMapper.Map(input, updatedTranslation);
             }
-
-
         }
 
         public async Task DeleteTranslation(EntityDto input)
@@ -131,6 +123,5 @@ namespace TACHYON.Shipping.ShippingTypes
         }
 
         #endregion
-
     }
 }

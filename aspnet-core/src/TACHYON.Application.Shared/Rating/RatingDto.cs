@@ -7,8 +7,7 @@ namespace TACHYON.Rating
 {
     public abstract class RatingDto
     {
-        [Range(1, 5)]
-        public int Rate { get; set; }
+        [Range(1, 5)] public int Rate { get; set; }
         public string Note { get; set; }
     }
 }

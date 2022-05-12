@@ -6,7 +6,6 @@ namespace TACHYON.Trucks.TrucksTypes.TrucksTypesTranslations.Dtos
 {
     public class CreateOrEditTrucksTypesTranslationDto : EntityDto<int?>
     {
-
         [Required]
         [StringLength(TrucksTypesTranslationConsts.MaxTranslatedDisplayNameLength,
             MinimumLength = TrucksTypesTranslationConsts.MinTranslatedDisplayNameLength)]
@@ -18,6 +17,5 @@ namespace TACHYON.Trucks.TrucksTypes.TrucksTypesTranslations.Dtos
         public string Language { get; set; }
 
         public long CoreId { get; set; }
-
     }
 }

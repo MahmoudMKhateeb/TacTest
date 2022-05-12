@@ -25,11 +25,11 @@ namespace TACHYON.Cities.CitiesTranslations
         private readonly IRepository<CitiesTranslation> _citiesTranslationRepository;
         private readonly IRepository<City, int> _lookup_cityRepository;
 
-        public CitiesTranslationsAppService(IRepository<CitiesTranslation> citiesTranslationRepository, IRepository<City, int> lookup_cityRepository)
+        public CitiesTranslationsAppService(IRepository<CitiesTranslation> citiesTranslationRepository,
+            IRepository<City, int> lookup_cityRepository)
         {
             _citiesTranslationRepository = citiesTranslationRepository;
             _lookup_cityRepository = lookup_cityRepository;
-
         }
 
         public async Task<LoadResult> GetAll(GetAllCitiesTranslationsInput input)
@@ -44,7 +44,6 @@ namespace TACHYON.Cities.CitiesTranslations
 
         public async Task CreateOrEdit(CreateOrEditCitiesTranslationDto input)
         {
-
             var translation = await _citiesTranslationRepository.FirstOrDefaultAsync(x => x.Id == input.Id);
             if (translation == null)
             {
@@ -53,12 +52,15 @@ namespace TACHYON.Cities.CitiesTranslations
             }
             else
             {
-                var duplication = await _citiesTranslationRepository.FirstOrDefaultAsync(x => x.CoreId == translation.CoreId && x.Language.Contains(translation.Language) && x.Id != translation.Id);
+                var duplication = await _citiesTranslationRepository.FirstOrDefaultAsync(x =>
+                    x.CoreId == translation.CoreId && x.Language.Contains(translation.Language) &&
+                    x.Id != translation.Id);
                 if (duplication != null)
                 {
                     throw new UserFriendlyException(
                         "The translation for this language already exists, you can modify it");
                 }
+
                 ObjectMapper.Map(input, translation);
             }
         }
@@ -68,11 +70,15 @@ namespace TACHYON.Cities.CitiesTranslations
         {
             var citiesTranslation = await _citiesTranslationRepository.GetAsync(id);
 
-            var output = new GetCitiesTranslationForViewDto { CitiesTranslation = ObjectMapper.Map<CitiesTranslationDto>(citiesTranslation) };
+            var output = new GetCitiesTranslationForViewDto
+            {
+                CitiesTranslation = ObjectMapper.Map<CitiesTranslationDto>(citiesTranslation)
+            };
 
             if (output.CitiesTranslation.CoreId != null)
             {
-                var _lookupCity = await _lookup_cityRepository.FirstOrDefaultAsync((int)output.CitiesTranslation.CoreId);
+                var _lookupCity =
+                    await _lookup_cityRepository.FirstOrDefaultAsync((int)output.CitiesTranslation.CoreId);
                 output.CityDisplayName = _lookupCity?.DisplayName?.ToString();
             }
 
@@ -84,11 +90,15 @@ namespace TACHYON.Cities.CitiesTranslations
         {
             var citiesTranslation = await _citiesTranslationRepository.FirstOrDefaultAsync(input.Id);
 
-            var output = new GetCitiesTranslationForEditOutput { CitiesTranslation = ObjectMapper.Map<CreateOrEditCitiesTranslationDto>(citiesTranslation) };
+            var output = new GetCitiesTranslationForEditOutput
+            {
+                CitiesTranslation = ObjectMapper.Map<CreateOrEditCitiesTranslationDto>(citiesTranslation)
+            };
 
             if (output.CitiesTranslation.CoreId != null)
             {
-                var _lookupCity = await _lookup_cityRepository.FirstOrDefaultAsync((int)output.CitiesTranslation.CoreId);
+                var _lookupCity =
+                    await _lookup_cityRepository.FirstOrDefaultAsync((int)output.CitiesTranslation.CoreId);
                 output.CityDisplayName = _lookupCity?.DisplayName?.ToString();
             }
 
@@ -116,6 +126,7 @@ namespace TACHYON.Cities.CitiesTranslations
         {
             await _citiesTranslationRepository.DeleteAsync(input.Id);
         }
+
         [AbpAuthorize(AppPermissions.Pages_CitiesTranslations)]
         public async Task<List<CitiesTranslationCityLookupTableDto>> GetAllCityForTableDropdown()
         {
@@ -126,6 +137,5 @@ namespace TACHYON.Cities.CitiesTranslations
                     DisplayName = city == null || city.DisplayName == null ? "" : city.DisplayName.ToString()
                 }).ToListAsync();
         }
-
     }
 }

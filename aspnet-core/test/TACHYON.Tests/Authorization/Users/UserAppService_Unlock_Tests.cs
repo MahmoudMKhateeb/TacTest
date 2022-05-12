@@ -39,7 +39,9 @@ namespace TACHYON.Tests.Authorization.Users
             AbpLoginResultType loginResultType;
             do
             {
-                loginResultType = (await _loginManager.LoginAsync(user.UserName, "wrong-password", AbpTenantBase.DefaultTenantName)).Result;
+                loginResultType =
+                    (await _loginManager.LoginAsync(user.UserName, "wrong-password", AbpTenantBase.DefaultTenantName))
+                    .Result;
             } while (loginResultType != AbpLoginResultType.LockedOut);
 
             (await _userManager.IsLockedOutAsync(await GetUserByUserNameAsync("jnash"))).ShouldBeTrue();
@@ -50,7 +52,8 @@ namespace TACHYON.Tests.Authorization.Users
 
             //Assert
 
-            (await _loginManager.LoginAsync(user.UserName, "wrong-password", AbpTenantBase.DefaultTenantName)).Result.ShouldBe(AbpLoginResultType.InvalidPassword);
+            (await _loginManager.LoginAsync(user.UserName, "wrong-password", AbpTenantBase.DefaultTenantName)).Result
+                .ShouldBe(AbpLoginResultType.InvalidPassword);
         }
     }
 }

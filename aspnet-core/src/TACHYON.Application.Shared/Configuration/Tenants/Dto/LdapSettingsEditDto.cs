@@ -12,7 +12,6 @@ namespace TACHYON.Configuration.Tenants.Dto
 
         public string UserName { get; set; }
 
-        [DisableAuditing]
-        public string Password { get; set; }
+        [DisableAuditing] public string Password { get; set; }
     }
 }

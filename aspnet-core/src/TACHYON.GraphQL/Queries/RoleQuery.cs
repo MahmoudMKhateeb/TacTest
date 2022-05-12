@@ -26,11 +26,12 @@ namespace TACHYON.Queries
         }
 
         public RoleQuery(RoleManager roleManager)
-            : base("roles", new Dictionary<string, Type>
+            : base("roles",
+                new Dictionary<string, Type>
                 {
-                    {Args.Id, typeof(IdGraphType)},
-                    {Args.TenantId, typeof(IntGraphType)},
-                    {Args.Name, typeof(StringGraphType)}
+                    { Args.Id, typeof(IdGraphType) },
+                    { Args.TenantId, typeof(IntGraphType) },
+                    { Args.Name, typeof(StringGraphType) }
                 }
             )
         {

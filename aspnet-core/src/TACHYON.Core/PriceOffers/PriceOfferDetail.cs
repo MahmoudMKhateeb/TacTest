@@ -8,8 +8,7 @@ namespace TACHYON.PriceOffers
     {
         public long PriceOfferId { get; set; }
 
-        [ForeignKey(nameof(PriceOfferId))]
-        public PriceOffer PriceOfferFk { get; set; }
+        [ForeignKey(nameof(PriceOfferId))] public PriceOffer PriceOfferFk { get; set; }
 
         public long? SourceId { get; set; }
         public PriceOfferType PriceType { get; set; }
@@ -42,7 +41,5 @@ namespace TACHYON.PriceOffers
         public decimal CommissionPercentageOrAddValue { get; set; }
 
         public int Quantity { get; set; } = 1;
-
-
     }
 }

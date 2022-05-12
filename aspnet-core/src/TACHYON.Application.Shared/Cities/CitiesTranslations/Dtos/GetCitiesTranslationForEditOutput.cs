@@ -9,6 +9,5 @@ namespace TACHYON.Cities.CitiesTranslations.Dtos
         public CreateOrEditCitiesTranslationDto CitiesTranslation { get; set; }
 
         public string CityDisplayName { get; set; }
-
     }
 }

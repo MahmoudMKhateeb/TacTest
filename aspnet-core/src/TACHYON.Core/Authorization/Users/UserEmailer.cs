@@ -229,7 +229,9 @@ namespace TACHYON.Authorization.Users
             }
         }
 
-        public async Task SendPasswordUpdatedEmail(int? tenantId, string userEmail, string newPassword)
+        public async Task SendPasswordUpdatedEmail(int? tenantId,
+            string userEmail,
+            string newPassword)
         {
             try
             {
@@ -298,7 +300,9 @@ namespace TACHYON.Authorization.Users
             }
         }
 
-        public async Task SendInvoiceDueEmail(int tenantId, string invoiceNumber, decimal invoiceTotalAmount)
+        public async Task SendInvoiceDueEmail(int tenantId,
+            string invoiceNumber,
+            decimal invoiceTotalAmount)
         {
             try
             {
@@ -322,8 +326,11 @@ namespace TACHYON.Authorization.Users
             }
         }
 
-        public async Task SendIssuedInvoiceEmail(int tenantId, DateTime invoiceDueDate,
-            DateTime invoiceIssueDate, decimal invoiceTotalAmount, string invoiceUrl)
+        public async Task SendIssuedInvoiceEmail(int tenantId,
+            DateTime invoiceDueDate,
+            DateTime invoiceIssueDate,
+            decimal invoiceTotalAmount,
+            string invoiceUrl)
         {
             // You Can Get Invoice Url From IAppUrlService , Method Name: CreateInvoiceDetailsFormat()
 

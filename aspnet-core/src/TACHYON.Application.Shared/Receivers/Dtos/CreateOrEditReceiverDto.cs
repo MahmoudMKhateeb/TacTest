@@ -6,7 +6,6 @@ namespace TACHYON.Receivers.Dtos
 {
     public class CreateOrEditReceiverDto : EntityDto<int?>
     {
-
         [Required]
         [StringLength(ReceiverConsts.MaxFullNameLength, MinimumLength = ReceiverConsts.MinFullNameLength)]
         public string FullName { get; set; }
@@ -19,6 +18,5 @@ namespace TACHYON.Receivers.Dtos
         public string PhoneNumber { get; set; }
 
         public long FacilityId { get; set; }
-
     }
 }

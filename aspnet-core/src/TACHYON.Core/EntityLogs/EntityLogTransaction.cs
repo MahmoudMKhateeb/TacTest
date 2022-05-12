@@ -29,6 +29,7 @@ namespace TACHYON.EntityLogs
         public static readonly EntityLogTransaction RoutPointDropOffStep5 = new RoutPointDropOffStep5(nameof(RoutPointDropOffStep5), (int)RoutePointStatus.ReceiverConfirmed);
         public static readonly EntityLogTransaction RoutPointDropOffStep6 = new RoutPointDropOffStep6(nameof(RoutPointDropOffStep6), (int)RoutePointStatus.DeliveryConfirmation);
         public static readonly EntityLogTransaction RoutPointDropOffStep7 = new RoutPointDropOffStep7(nameof(RoutPointDropOffStep7), (int)RoutePointStatus.DeliveryNoteUploded);
+        public static readonly EntityLogTransaction RoutPointDropOffStep8 = new RoutPointDropOffStep8(nameof(RoutPointDropOffStep8), (int)RoutePointStatus.UplodeGoodPicture);
 
         public static readonly EntityLogTransaction RoutPointAction1 = new RoutPointAction1(nameof(RoutPointAction1), 9); 
         public static readonly EntityLogTransaction RoutPointAction2 = new RoutPointAction2(nameof(RoutPointAction2), 10);
@@ -56,12 +57,14 @@ namespace TACHYON.EntityLogs
         {
         }
     }
+
     public class DefaultLogTransaction : EntityLogTransaction
     {
         public DefaultLogTransaction() : base(nameof(DefaultLogTransaction), -1)
         {
         }
 
-        public override string Transaction { get => "NoReasonProvided"; } // Without Spaces To Use It As Localized String Key
+        public override string
+            Transaction { get => "NoReasonProvided"; } // Without Spaces To Use It As Localized String Key
     }
 }

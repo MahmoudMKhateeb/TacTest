@@ -39,9 +39,14 @@ namespace TACHYON
 
         protected IConfigurationProvider AutoMapperConfigurationProvider { get; set; }
 
-        protected int TachyonEditionId => Convert.ToInt32(SettingManager.GetSettingValue(AppSettings.Editions.TachyonEditionId));
-        protected int ShipperEditionId => Convert.ToInt32(SettingManager.GetSettingValue(AppSettings.Editions.ShipperEditionId));
-        protected int CarrierEditionId => Convert.ToInt32(SettingManager.GetSettingValue(AppSettings.Editions.CarrierEditionId));
+        protected int TachyonEditionId =>
+            Convert.ToInt32(SettingManager.GetSettingValue(AppSettings.Editions.TachyonEditionId));
+
+        protected int ShipperEditionId =>
+            Convert.ToInt32(SettingManager.GetSettingValue(AppSettings.Editions.ShipperEditionId));
+
+        protected int CarrierEditionId =>
+            Convert.ToInt32(SettingManager.GetSettingValue(AppSettings.Editions.CarrierEditionId));
 
         protected TACHYONAppServiceBase()
         {
@@ -92,9 +97,11 @@ namespace TACHYON
         {
             if (!AbpSession.TenantId.HasValue)
             {
-                DisableTenancyFilters(); ;
+                DisableTenancyFilters();
+                ;
             }
         }
+
         protected virtual async Task DisableTenancyFiltersIfTachyonDealer()
         {
             if (await FeatureChecker.IsEnabledAsync(AppFeatures.TachyonDealer))
@@ -106,9 +113,7 @@ namespace TACHYON
         protected virtual void DisableTenancyFilters()
         {
             CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant);
-
         }
-
 
 
         /// <summary>
@@ -127,12 +132,10 @@ namespace TACHYON
 
         public async Task<LoadResult> LoadResultAsync<T>(IQueryable<T> query, string filter)
         {
-            DataSourceLoadOptionsBase dataSourceLoadOptionsBase = JsonConvert.DeserializeObject<DataSourceLoadOptionsBase>(filter);
+            DataSourceLoadOptionsBase dataSourceLoadOptionsBase =
+                JsonConvert.DeserializeObject<DataSourceLoadOptionsBase>(filter);
             return await DataSourceLoader.LoadAsync(query, dataSourceLoadOptionsBase);
         }
-
-
-
 
 
         /// <summary>
@@ -154,12 +157,9 @@ namespace TACHYON
         }
 
 
-
         public class TachyonLoadResult<T> : LoadResult
         {
             public new IEnumerable<T> data { get; set; }
-
-
         }
 
 
@@ -167,6 +167,7 @@ namespace TACHYON
         {
             return await IsEnabledAsync(AppFeatures.Carrier);
         }
+
         protected async Task<bool> IsShipper()
         {
             return await IsEnabledAsync(AppFeatures.Shipper);

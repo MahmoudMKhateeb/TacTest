@@ -19,12 +19,8 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public string Comment { get; set; }
         public int AccidentId { get; set; }
 
-        [ForeignKey("AccidentId")]
-        public ShippingRequestTripAccident AccidentFK { get; set; }
+        [ForeignKey("AccidentId")] public ShippingRequestTripAccident AccidentFK { get; set; }
         public int TenantId { get; set; }
-        [ForeignKey("TenantId")]
-        public Tenant TenantFK { get; set; }
-
+        [ForeignKey("TenantId")] public Tenant TenantFK { get; set; }
     }
-
 }

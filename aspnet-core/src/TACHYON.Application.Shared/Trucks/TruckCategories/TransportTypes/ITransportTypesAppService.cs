@@ -8,18 +8,16 @@ using TACHYON.Dto;
 
 namespace TACHYON.Trucks.TruckCategories.TransportTypes
 {
-    public interface ITransportTypesAppService : IApplicationService 
+    public interface ITransportTypesAppService : IApplicationService
     {
-        Task<PagedResultDto<GetTransportTypeForViewDto>> GetAll(GetAllTransportTypesInput input);
+        Task<PagedResultDto<TransportTypeDto>> GetAll(GetAllTransportTypesInput input);
 
         Task<GetTransportTypeForViewDto> GetTransportTypeForView(int id);
 
-		Task<GetTransportTypeForEditOutput> GetTransportTypeForEdit(EntityDto input);
+        Task<GetTransportTypeForEditOutput> GetTransportTypeForEdit(EntityDto input);
 
-		Task CreateOrEdit(CreateOrEditTransportTypeDto input);
+        Task CreateOrEdit(CreateOrEditTransportTypeDto input);
 
-		Task Delete(EntityDto input);
-
-		
+        Task Delete(EntityDto input);
     }
 }

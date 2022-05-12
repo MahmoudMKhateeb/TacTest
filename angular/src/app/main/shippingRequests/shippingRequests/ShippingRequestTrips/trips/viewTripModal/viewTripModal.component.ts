@@ -110,6 +110,8 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
   close(): void {
     this.trip = new ShippingRequestsTripForViewDto();
     //this.wayPointsComponent.wayPointsList = [];
+    this.allDrivers = [];
+    this.allTrucks = [];
     this.loading = true;
     this.modal.hide();
   }

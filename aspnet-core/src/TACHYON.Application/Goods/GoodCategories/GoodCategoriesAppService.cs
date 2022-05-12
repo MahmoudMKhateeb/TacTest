@@ -1,6 +1,4 @@
-﻿
-
-using Abp.Application.Services.Dto;
+﻿using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Configuration;
 using Abp.Domain.Repositories;
@@ -31,36 +29,37 @@ namespace TACHYON.Goods.GoodCategories
         private readonly IRepository<GoodCategory> _goodCategoryRepository;
         private readonly IGoodCategoriesExcelExporter _goodCategoriesExcelExporter;
 
-        public GoodCategoriesAppService(IRepository<GoodCategory> goodCategoryRepository, IGoodCategoriesExcelExporter goodCategoriesExcelExporter)
+        public GoodCategoriesAppService(IRepository<GoodCategory> goodCategoryRepository,
+            IGoodCategoriesExcelExporter goodCategoriesExcelExporter)
         {
             _goodCategoryRepository = goodCategoryRepository;
             _goodCategoriesExcelExporter = goodCategoriesExcelExporter;
-
         }
 
         public async Task<PagedResultDto<GetGoodCategoryForViewDto>> GetAll(GetAllGoodCategoriesInput input)
         {
-
             var filteredGoodCategories = _goodCategoryRepository.GetAll()
-                        .Include(e => e.FatherFk)
-                        .ThenInclude(e => e.Translations)
-                        .Include(x => x.Translations)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Translations.Any(x => x.DisplayName.Contains(input.Filter)))
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.Translations.Any(x => x.DisplayName.Contains(input.DisplayNameFilter)));
+                .Include(e => e.FatherFk)
+                .ThenInclude(e => e.Translations)
+                .Include(x => x.Translations)
+                .WhereIf(!string.IsNullOrWhiteSpace(input.Filter),
+                    e => false || e.Translations.Any(x => x.DisplayName.Contains(input.Filter)))
+                .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter),
+                    e => e.Translations.Any(x => x.DisplayName.Contains(input.DisplayNameFilter)));
 
             var pagedAndFilteredGoodCategories = filteredGoodCategories
                 .OrderBy(input.Sorting ?? "id asc")
                 .PageBy(input);
 
 
-
             var goodCategories = (await pagedAndFilteredGoodCategories.ToListAsync()).Select(o =>
-                                  new GetGoodCategoryForViewDto()
-                                  {
-                                      GoodCategory = ObjectMapper.Map<GoodCategoryDto>(o)
-                                    ,
-                                      FatherCategoryName = ObjectMapper.Map<GoodCategoryDto>(o.FatherFk)?.DisplayName //o.FatherId != null ? o.FatherFk.Translations.Where(x=>x.Language == culture).FirstOrDefault()?.DisplayName :"",
-                                  });
+                new GetGoodCategoryForViewDto()
+                {
+                    GoodCategory = ObjectMapper.Map<GoodCategoryDto>(o),
+                    FatherCategoryName =
+                        ObjectMapper.Map<GoodCategoryDto>(o.FatherFk)
+                            ?.DisplayName //o.FatherId != null ? o.FatherFk.Translations.Where(x=>x.Language == culture).FirstOrDefault()?.DisplayName :"",
+                });
 
             var totalCount = await filteredGoodCategories.CountAsync();
 
@@ -92,7 +91,10 @@ namespace TACHYON.Goods.GoodCategories
             var goodCategory = await _goodCategoryRepository.GetAllIncluding(x => x.Translations)
                 .FirstOrDefaultAsync(e => e.Id == input.Id);
 
-            var output = new GetGoodCategoryForEditOutput { GoodCategory = ObjectMapper.Map<CreateOrEditGoodCategoryDto>(goodCategory) };
+            var output = new GetGoodCategoryForEditOutput
+            {
+                GoodCategory = ObjectMapper.Map<CreateOrEditGoodCategoryDto>(goodCategory)
+            };
 
             return output;
         }
@@ -118,13 +120,15 @@ namespace TACHYON.Goods.GoodCategories
                 {
                     throw new UserFriendlyException(L("DisplayNameCannotBeEmpty"));
                 }
+
                 var isDuplicateUserName = await _goodCategoryRepository
-                   .FirstOrDefaultAsync(x => x.Translations.Any(i => i.DisplayName == transItem.DisplayName) &&
-                   x.FatherId == input.FatherId &&
-                   x.Id != input.Id);
+                    .FirstOrDefaultAsync(x => x.Translations.Any(i => i.DisplayName == transItem.DisplayName) &&
+                                              x.FatherId == input.FatherId &&
+                                              x.Id != input.Id);
                 if (isDuplicateUserName != null)
                 {
-                    throw new UserFriendlyException(string.Format(L("GoodsCategoryDuplicateName"), transItem.DisplayName));
+                    throw new UserFriendlyException(string.Format(L("GoodsCategoryDuplicateName"),
+                        transItem.DisplayName));
                 }
             }
         }
@@ -133,7 +137,6 @@ namespace TACHYON.Goods.GoodCategories
         protected virtual async Task Create(CreateOrEditGoodCategoryDto input)
         {
             var goodCategory = ObjectMapper.Map<GoodCategory>(input);
-
 
 
             await _goodCategoryRepository.InsertAsync(goodCategory);
@@ -146,7 +149,9 @@ namespace TACHYON.Goods.GoodCategories
             {
                 throw new UserFriendlyException(L("Category cannot be father to itself"));
             }
-            var goodCategory = await _goodCategoryRepository.GetAllIncluding(x => x.Translations).FirstOrDefaultAsync(x => x.Id == (int)input.Id);
+
+            var goodCategory = await _goodCategoryRepository.GetAllIncluding(x => x.Translations)
+                .FirstOrDefaultAsync(x => x.Id == (int)input.Id);
             goodCategory.Translations.Clear();
             ObjectMapper.Map(input, goodCategory);
         }
@@ -159,20 +164,21 @@ namespace TACHYON.Goods.GoodCategories
 
         public async Task<FileDto> GetGoodCategoriesToExcel(GetAllGoodCategoriesForExcelInput input)
         {
-
             var filteredGoodCategories = _goodCategoryRepository.GetAll()
                 .Include(x => x.Translations)
-                        .Include(x => x.FatherFk)
-                        .ThenInclude(x => x.Translations)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Translations.Any(x => x.DisplayName.Contains(input.Filter)))
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.Translations.Any(x => x.DisplayName == input.DisplayNameFilter));
+                .Include(x => x.FatherFk)
+                .ThenInclude(x => x.Translations)
+                .WhereIf(!string.IsNullOrWhiteSpace(input.Filter),
+                    e => false || e.Translations.Any(x => x.DisplayName.Contains(input.Filter)))
+                .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter),
+                    e => e.Translations.Any(x => x.DisplayName == input.DisplayNameFilter));
 
             var query = (from o in await filteredGoodCategories.ToListAsync()
-                         select new GetGoodCategoryForViewDto()
-                         {
-                             GoodCategory = ObjectMapper.Map<GoodCategoryDto>(o),
-                             FatherCategoryName = ObjectMapper.Map<GoodCategoryDto>(o.FatherFk).DisplayName
-                         });
+                select new GetGoodCategoryForViewDto()
+                {
+                    GoodCategory = ObjectMapper.Map<GoodCategoryDto>(o),
+                    FatherCategoryName = ObjectMapper.Map<GoodCategoryDto>(o.FatherFk).DisplayName
+                });
 
 
             var goodCategoryListDtos = query.ToList();
@@ -205,7 +211,5 @@ namespace TACHYON.Goods.GoodCategories
             var result = await DataSourceLoader.LoadAsync(query, loadOptions);
             return result;
         }
-
     }
-
 }

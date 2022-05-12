@@ -10,7 +10,5 @@ namespace TACHYON.Tenants.Dashboard.Dto
         }
 
         public List<MemberActivity> MemberActivities { get; set; }
-
-
     }
 }

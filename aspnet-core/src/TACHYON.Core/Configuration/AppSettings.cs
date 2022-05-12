@@ -63,10 +63,16 @@
         public static class TenantManagement
         {
             public const string AllowSelfRegistration = "App.TenantManagement.AllowSelfRegistration";
-            public const string IsNewRegisteredTenantActiveByDefault = "App.TenantManagement.IsNewRegisteredTenantActiveByDefault";
+
+            public const string IsNewRegisteredTenantActiveByDefault =
+                "App.TenantManagement.IsNewRegisteredTenantActiveByDefault";
+
             public const string UseCaptchaOnRegistration = "App.TenantManagement.UseCaptchaOnRegistration";
             public const string DefaultEdition = "App.TenantManagement.DefaultEdition";
-            public const string SubscriptionExpireNotifyDayCount = "App.TenantManagement.SubscriptionExpireNotifyDayCount";
+
+            public const string SubscriptionExpireNotifyDayCount =
+                "App.TenantManagement.SubscriptionExpireNotifyDayCount";
+
             public const string BillingLegalName = "App.TenantManagement.BillingLegalName";
             public const string BillingAddress = "App.TenantManagement.BillingAddress";
             public const string BillingTaxVatNo = "App.TenantManagement.BillingTaxVatNo";
@@ -76,26 +82,37 @@
         {
             public static class TwoFactorLogin
             {
-                public const string IsGoogleAuthenticatorEnabled = "App.UserManagement.TwoFactorLogin.IsGoogleAuthenticatorEnabled";
+                public const string IsGoogleAuthenticatorEnabled =
+                    "App.UserManagement.TwoFactorLogin.IsGoogleAuthenticatorEnabled";
             }
 
             public static class SessionTimeOut
             {
                 public const string IsEnabled = "App.UserManagement.SessionTimeOut.IsEnabled";
                 public const string TimeOutSecond = "App.UserManagement.SessionTimeOut.TimeOutSecond";
-                public const string ShowTimeOutNotificationSecond = "App.UserManagement.SessionTimeOut.ShowTimeOutNotificationSecond";
-                public const string ShowLockScreenWhenTimedOut = "App.UserManagement.SessionTimeOut.ShowLockScreenWhenTimedOut";
+
+                public const string ShowTimeOutNotificationSecond =
+                    "App.UserManagement.SessionTimeOut.ShowTimeOutNotificationSecond";
+
+                public const string ShowLockScreenWhenTimedOut =
+                    "App.UserManagement.SessionTimeOut.ShowLockScreenWhenTimedOut";
             }
 
             public const string AllowSelfRegistration = "App.UserManagement.AllowSelfRegistration";
-            public const string IsNewRegisteredUserActiveByDefault = "App.UserManagement.IsNewRegisteredUserActiveByDefault";
+
+            public const string IsNewRegisteredUserActiveByDefault =
+                "App.UserManagement.IsNewRegisteredUserActiveByDefault";
+
             public const string UseCaptchaOnRegistration = "App.UserManagement.UseCaptchaOnRegistration";
             public const string UseCaptchaOnLogin = "App.UserManagement.UseCaptchaOnLogin";
             public const string SmsVerificationEnabled = "App.UserManagement.SmsVerificationEnabled";
             public const string IsCookieConsentEnabled = "App.UserManagement.IsCookieConsentEnabled";
             public const string IsQuickThemeSelectEnabled = "App.UserManagement.IsQuickThemeSelectEnabled";
             public const string AllowOneConcurrentLoginPerUser = "App.UserManagement.AllowOneConcurrentLoginPerUser";
-            public const string AllowUsingGravatarProfilePicture = "App.UserManagement.AllowUsingGravatarProfilePicture";
+
+            public const string AllowUsingGravatarProfilePicture =
+                "App.UserManagement.AllowUsingGravatarProfilePicture";
+
             public const string UseGravatarProfilePicture = "App.UserManagement.UseGravatarProfilePicture";
         }
 
@@ -149,6 +166,7 @@
             public const string UnifonicAdvertisingSenderId = "App.Sms.UnifonicAdvertisingSenderId";
             public const string UnifonicNotificationSenderId = "App.Sms.UnifonicNotificationSenderId";
         }
+
         public static class BayanIntegration
         {
             public const string Url = "App.BayanIntegration.Url";
@@ -170,6 +188,11 @@
             public const string BankNameArabic = "App.Invoice.BankNameArabic";
             public const string IBAN = "App.Invoice.IBAN";
             public const string Account = "App.Invoice.Account";
+        }
+        
+        public static class Mobile
+        {
+            public const string IgnoredOtpNumbers = "App.Mobile.IgnoredOtpNumbers";
         }
     }
 }

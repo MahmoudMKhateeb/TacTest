@@ -10,10 +10,12 @@ namespace TACHYON.AddressBook
         public int? TenantId { get; set; }
 
         public override string Name { get; set; }
+
         /// <summary>
         /// final rate of the facility
         /// </summary>
         public decimal Rate { get; set; }
+
         public int RateNumber { get; set; }
     }
 }

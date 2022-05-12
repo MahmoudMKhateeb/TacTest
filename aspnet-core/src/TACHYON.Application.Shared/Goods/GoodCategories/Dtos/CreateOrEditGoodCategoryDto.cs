@@ -1,5 +1,4 @@
-﻿
-using Abp.Application.Services.Dto;
+﻿using Abp.Application.Services.Dto;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -18,7 +17,5 @@ namespace TACHYON.Goods.GoodCategories.Dtos
         public bool IsActive { get; set; } = true;
 
         public string BayanIntegrationId { get; set; }
-
-
     }
 }

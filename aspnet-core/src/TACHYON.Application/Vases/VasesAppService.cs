@@ -28,7 +28,9 @@ namespace TACHYON.Vases
         private readonly IRepository<VasTranslation> _vasTranslationRepository;
         private readonly IVasesExcelExporter _vasesExcelExporter;
 
-        public VasesAppService(IRepository<Vas> vasRepository, IVasesExcelExporter vasesExcelExporter, IRepository<VasTranslation> vasTranslationRepository)
+        public VasesAppService(IRepository<Vas> vasRepository,
+            IVasesExcelExporter vasesExcelExporter,
+            IRepository<VasTranslation> vasTranslationRepository)
         {
             _vasRepository = vasRepository;
             _vasesExcelExporter = vasesExcelExporter;
@@ -37,7 +39,6 @@ namespace TACHYON.Vases
 
         public async Task<LoadResult> GetAll(GetAllVasesInput input)
         {
-
             var query = _vasRepository.GetAll()
                 .ProjectTo<VasDto>(AutoMapperConfigurationProvider);
 
@@ -92,7 +93,8 @@ namespace TACHYON.Vases
         {
             var vas = await _vasRepository.FirstOrDefaultAsync((input.Id.Value));
 
-            if (vas.Name.ToLower().Contains(TACHYONConsts.OthersDisplayName) && !input.Name.ToLower().Contains(TACHYONConsts.OthersDisplayName))
+            if (vas.Key.ToLower().Contains(TACHYONConsts.OthersDisplayName) &&
+                !input.Key.ToLower().Contains(TACHYONConsts.OthersDisplayName))
                 throw new UserFriendlyException(L("OtherVasNameMustContainOther"));
 
             ObjectMapper.Map(input, vas);
@@ -101,10 +103,9 @@ namespace TACHYON.Vases
         [AbpAuthorize(AppPermissions.Pages_Administration_Vases_Delete)]
         public async Task Delete(EntityDto input)
         {
-
             var vas = await _vasRepository.SingleAsync(x => x.Id == input.Id);
 
-            if (vas.Name.ToLower().Contains(TACHYONConsts.OthersDisplayName))
+            if (vas.Key.ToLower().Contains(TACHYONConsts.OthersDisplayName))
                 throw new UserFriendlyException(L("OtherVasNotRemovable"));
 
             await _vasRepository.DeleteAsync(vas);
@@ -112,23 +113,18 @@ namespace TACHYON.Vases
 
         public async Task<FileDto> GetVasesToExcel(GetAllVasesForExcelInput input)
         {
-
             var filteredVases = _vasRepository.GetAll()
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Name.Contains(input.Filter))
-                        .WhereIf(input.HasAmountFilter.HasValue && input.HasAmountFilter > -1, e => (input.HasAmountFilter == 1 && e.HasAmount) || (input.HasAmountFilter == 0 && !e.HasAmount))
-                        .WhereIf(input.HasCountFilter.HasValue && input.HasCountFilter > -1, e => (input.HasCountFilter == 1 && e.HasCount) || (input.HasCountFilter == 0 && !e.HasCount));
+                .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Key.Contains(input.Filter))
+                .WhereIf(input.HasAmountFilter.HasValue && input.HasAmountFilter > -1,
+                    e => (input.HasAmountFilter == 1 && e.HasAmount) || (input.HasAmountFilter == 0 && !e.HasAmount))
+                .WhereIf(input.HasCountFilter.HasValue && input.HasCountFilter > -1,
+                    e => (input.HasCountFilter == 1 && e.HasCount) || (input.HasCountFilter == 0 && !e.HasCount));
 
             var query = (from o in filteredVases
-                         select new GetVasForViewDto()
-                         {
-                             Vas = new VasDto
-                             {
-                                 Name = o.Name,
-                                 HasAmount = o.HasAmount,
-                                 HasCount = o.HasCount,
-                                 Id = o.Id
-                             }
-                         });
+                select new GetVasForViewDto()
+                {
+                    Vas = new VasDto { Key = o.Key, HasAmount = o.HasAmount, HasCount = o.HasCount, Id = o.Id }
+                });
 
             var vasListDtos = await query.ToListAsync();
 
@@ -138,7 +134,6 @@ namespace TACHYON.Vases
 
         private async Task CheckIfEmptyOrDuplicatedVasName(CreateOrEditVasDto input)
         {
-
             //if (input.TranslationDtos.Any(x => x.Name.IsNullOrEmpty()))
             //{
             //    throw new UserFriendlyException(L("VasNameCannotBeEmpty"));
@@ -161,7 +156,6 @@ namespace TACHYON.Vases
 
         public async Task CreateOrEditTranslation(VasTranslationDto input)
         {
-
             var translation = await _vasTranslationRepository.FirstOrDefaultAsync(x => x.Id == input.Id);
             if (translation == null)
             {
@@ -170,12 +164,15 @@ namespace TACHYON.Vases
             }
             else
             {
-                var duplication = await _vasTranslationRepository.FirstOrDefaultAsync(x => x.CoreId == translation.CoreId && x.Language.Contains(translation.Language) && x.Id != translation.Id);
+                var duplication = await _vasTranslationRepository.FirstOrDefaultAsync(x =>
+                    x.CoreId == translation.CoreId && x.Language.Contains(translation.Language) &&
+                    x.Id != translation.Id);
                 if (duplication != null)
                 {
                     throw new UserFriendlyException(
                         "The translation for this language already exists, you can modify it");
                 }
+
                 ObjectMapper.Map(input, translation);
             }
         }

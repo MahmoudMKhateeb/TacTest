@@ -11,14 +11,11 @@ namespace TACHYON.Routs.RoutTypes
     [Audited]
     public class RoutType : FullAuditedEntity
     {
-
         [Required]
         [StringLength(RoutTypeConsts.MaxDisplayNameLength, MinimumLength = RoutTypeConsts.MinDisplayNameLength)]
         public virtual string DisplayName { get; set; }
 
         [StringLength(RoutTypeConsts.MaxDescriptionLength, MinimumLength = RoutTypeConsts.MinDescriptionLength)]
         public virtual string Description { get; set; }
-
-
     }
 }

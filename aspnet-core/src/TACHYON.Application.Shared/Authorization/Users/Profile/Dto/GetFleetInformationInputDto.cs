@@ -5,7 +5,6 @@ namespace TACHYON.Authorization.Users.Profile.Dto
 {
     public class GetFleetInformationInputDto : PagedAndSortedResultRequestDto
     {
-        [Required]
-        public int TenantId { get; set; }
+        [Required] public int TenantId { get; set; }
     }
 }

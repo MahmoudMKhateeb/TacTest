@@ -36,7 +36,13 @@ namespace TACHYON.Documents
         private readonly IAppNotifier _appNotifier;
 
 
-        public DocumentFilesManager(IRepository<DocumentFile, Guid> documentFileRepository, TenantManager tenantManager, IRepository<DocumentType, long> documentTypeRepository, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager, IUserEmailer userEmailer, IAppNotifier appNotifier)
+        public DocumentFilesManager(IRepository<DocumentFile, Guid> documentFileRepository,
+            TenantManager tenantManager,
+            IRepository<DocumentType, long> documentTypeRepository,
+            ITempFileCacheManager tempFileCacheManager,
+            IBinaryObjectManager binaryObjectManager,
+            IUserEmailer userEmailer,
+            IAppNotifier appNotifier)
         {
             _documentFileRepository = documentFileRepository;
             TenantManager = tenantManager;
@@ -56,7 +62,6 @@ namespace TACHYON.Documents
         private readonly IBinaryObjectManager _binaryObjectManager;
         private readonly IUserEmailer _userEmailer;
         public IAbpSession AbpSession { get; set; }
-
 
 
         /// <summary>
@@ -102,7 +107,8 @@ namespace TACHYON.Documents
 
             return await _documentTypeRepository.GetAll()
                 .Include(x => x.Translations)
-                .Where(x => (x.EditionId == editionId && !x.DocumentRelatedWithId.HasValue) || x.DocumentRelatedWithId == tenantId)
+                .Where(x => (x.EditionId == editionId && !x.DocumentRelatedWithId.HasValue) ||
+                            x.DocumentRelatedWithId == tenantId)
                 .ToListAsync();
         }
 
@@ -138,16 +144,16 @@ namespace TACHYON.Documents
         {
             DisableTenancyFilters();
             return await _documentFileRepository.GetAll()
-                    .Include(doc => doc.DocumentTypeFk)
-                    .Include(doc => doc.TruckFk)
-                    .Include(doc => doc.UserFk)
-                    .Where(x => x.DocumentTypeFk.DocumentsEntityId == (int)DocumentsEntitiesEnum.Driver ||
-                    x.DocumentTypeFk.DocumentsEntityId == (int)DocumentsEntitiesEnum.Truck)
-                    .Where(x => x.TenantId == tenantId)
+                .Include(doc => doc.DocumentTypeFk)
+                .Include(doc => doc.TruckFk)
+                .Include(doc => doc.UserFk)
+                .Where(x => x.DocumentTypeFk.DocumentsEntityId == (int)DocumentsEntitiesEnum.Driver ||
+                            x.DocumentTypeFk.DocumentsEntityId == (int)DocumentsEntitiesEnum.Truck)
+                .Where(x => x.TenantId == tenantId)
                 .Where(x => x.DocumentTypeFk.HasExpirationDate &&
-                //get documents that is already expired and will be expired within 2 coming months
-                x.ExpirationDate.Value.Date <= DateTime.Now.Date.AddMonths(2)
-                //+DateTime.Now.Date.AddMonths(2).Date.Month <= x.ExpirationDate.Value.Date.Month
+                            //get documents that is already expired and will be expired within 2 coming months
+                            x.ExpirationDate.Value.Date <= DateTime.Now.Date.AddMonths(2)
+                    //+DateTime.Now.Date.AddMonths(2).Date.Month <= x.ExpirationDate.Value.Date.Month
                 )
                 .ToListAsync();
         }
@@ -183,7 +189,8 @@ namespace TACHYON.Documents
             {
                 return await _documentFileRepository.GetAll()
                     .Where(x => x.UserId == driverId)
-                    .Where(x => x.DocumentTypeFk.SpecialConstant == TACHYONConsts.DriverIqamaDocumentTypeSpecialConstant)
+                    .Where(x => x.DocumentTypeFk.SpecialConstant ==
+                                TACHYONConsts.DriverIqamaDocumentTypeSpecialConstant)
                     .FirstOrDefaultAsync();
             }
         }
@@ -198,7 +205,8 @@ namespace TACHYON.Documents
             {
                 return await _documentFileRepository.GetAll()
                     .Where(x => x.TruckId == truckId)
-                    .Where(x => x.DocumentTypeFk.SpecialConstant == TACHYONConsts.TruckIstimaraDocumentTypeSpecialConstant.ToLower())
+                    .Where(x => x.DocumentTypeFk.SpecialConstant ==
+                                TACHYONConsts.TruckIstimaraDocumentTypeSpecialConstant.ToLower())
                     .FirstOrDefaultAsync();
             }
         }
@@ -220,7 +228,8 @@ namespace TACHYON.Documents
 
             if (fileBytes.Length > MaxDocumentFileBytes)
             {
-                throw new UserFriendlyException(L("DocumentFile_Warn_SizeLimit", TACHYONConsts.MaxDocumentFileBytesUserFriendlyValue));
+                throw new UserFriendlyException(L("DocumentFile_Warn_SizeLimit",
+                    TACHYONConsts.MaxDocumentFileBytesUserFriendlyValue));
             }
 
             var storedFile = new BinaryObject(tenantId, fileBytes);
@@ -271,7 +280,6 @@ namespace TACHYON.Documents
             }
 
 
-
             return result;
         }
 
@@ -316,7 +324,6 @@ namespace TACHYON.Documents
 
         public async Task UpdateDocumentFile(CreateOrEditDocumentFileDto input)
         {
-
             DocumentFile documentFile = await _documentFileRepository
                 .GetAll()
                 .Include(x => x.DocumentTypeFk)
@@ -329,10 +336,10 @@ namespace TACHYON.Documents
                     await _binaryObjectManager.DeleteAsync(documentFile.BinaryObjectId.Value);
                 }
 
-                input.BinaryObjectId = await SaveDocumentFileBinaryObject(input.UpdateDocumentFileInput.FileToken, AbpSession.TenantId);
+                input.BinaryObjectId =
+                    await SaveDocumentFileBinaryObject(input.UpdateDocumentFileInput.FileToken, AbpSession.TenantId);
                 input.IsAccepted = false;
                 input.IsRejected = false;
-
             }
 
             if (documentFile.ExpirationDate != input.ExpirationDate)
@@ -343,7 +350,6 @@ namespace TACHYON.Documents
 
             ObjectMapper.Map(input, documentFile);
             documentFile.RejectionReason = "";
-
         }
 
         public async Task DeleteDocumentFile(DocumentFile documentFile)
@@ -352,6 +358,7 @@ namespace TACHYON.Documents
             {
                 await _binaryObjectManager.DeleteAsync(documentFile.BinaryObjectId.Value);
             }
+
             await _documentFileRepository.DeleteAsync(documentFile.Id);
         }
 
@@ -360,15 +367,12 @@ namespace TACHYON.Documents
         {
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant))
             {
-
                 var docs = _documentFileRepository.GetAll()
                     .Include(x => x.DocumentTypeFk)
                     .Include(x => x.TenantFk)
                     .Where(x => x.DocumentTypeFk.HasExpirationDate)
                     .Where(x => x.IsAccepted)
                     .ToList();
-
-
 
 
                 foreach (DocumentFile documentFile in docs)
@@ -385,10 +389,9 @@ namespace TACHYON.Documents
                         var alertDate = documentFile.ExpirationDate.Value.AddDays(-1 * expirationAlertDays.Value).Date;
                         if (alertDate == Clock.Now.Date)
                         {
-
                             var user = new UserIdentifier(documentFile.TenantId, documentFile.CreatorUserId.Value);
-                            await _appNotifier.DocumentFileBeforExpiration(user, documentFile.Id, expirationAlertDays.Value);
-
+                            await _appNotifier.DocumentFileBeforExpiration(user, documentFile.Id,
+                                expirationAlertDays.Value);
                         }
                     }
 
@@ -403,7 +406,6 @@ namespace TACHYON.Documents
                         if (documentFile.TenantId.HasValue)
                          await _userEmailer.SendExpiredDocumentsEmail(documentFile.TenantId.Value, documentFile);
                     }
-
                 }
 
 
@@ -419,15 +421,12 @@ namespace TACHYON.Documents
         {
             public override Expression<Func<DocumentFile, bool>> ToExpression()
             {
-                return x => (x.ExpirationDate > DateTime.Now || x.ExpirationDate == null || !x.DocumentTypeFk.HasExpirationDate)
+                return x => (x.ExpirationDate > DateTime.Now || x.ExpirationDate == null ||
+                             !x.DocumentTypeFk.HasExpirationDate)
                             && (x.DocumentTypeFk.IsRequired)
                             && (!x.IsRejected)
                             && (x.IsAccepted);
             }
         }
-
-
-
-
     }
 }

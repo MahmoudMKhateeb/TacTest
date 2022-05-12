@@ -29,7 +29,11 @@ namespace TACHYON.Documents
         private readonly IUserEmailer _userEmailer;
         private readonly IBackgroundJobManager _backgroundJobManager;
 
-        public ExpiredDocumentFileWorker(AbpTimer timer, IRepository<DocumentFile, Guid> documentFileRepository, IAppNotifier appNotifier, IUserEmailer userEmailer, IBackgroundJobManager backgroundJobManager) : base(timer)
+        public ExpiredDocumentFileWorker(AbpTimer timer,
+            IRepository<DocumentFile, Guid> documentFileRepository,
+            IAppNotifier appNotifier,
+            IUserEmailer userEmailer,
+            IBackgroundJobManager backgroundJobManager) : base(timer)
         {
             _documentFileRepository = documentFileRepository;
             _appNotifier = appNotifier;

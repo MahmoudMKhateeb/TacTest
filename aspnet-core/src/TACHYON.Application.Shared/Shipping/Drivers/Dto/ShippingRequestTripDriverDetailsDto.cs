@@ -35,9 +35,12 @@ namespace TACHYON.Shipping.Drivers.Dto
         public RoutePointStatus Status { get; set; }
         public ShippingRequestTripStatus TripStatus { get; set; }
         public string StatusTitle { get; set; }
-        public ShippingRequestTripDriverActionStatusDto ActionStatus { get; set; } = ShippingRequestTripDriverActionStatusDto.None;
+
+        public ShippingRequestTripDriverActionStatusDto ActionStatus { get; set; } =
+            ShippingRequestTripDriverActionStatusDto.None;
 
         public ShippingRequestTripDriverStatus DriverStatus { get; set; }
+
         //public string ChangeStatusButtonTitle { get; set; }
         public bool IsConfirmReceiver { get; set; }
         public long? WaybillNumber { get; set; }
@@ -47,6 +50,5 @@ namespace TACHYON.Shipping.Drivers.Dto
         public int? CurrentTripId { get; set; }
         public bool HasAttachment { get; set; }
         public bool NeedsDeliveryNote { get; set; }
-
     }
 }

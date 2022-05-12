@@ -23,8 +23,6 @@ namespace TACHYON.Test.Base.TestData
             _context.SaveChanges();
             CreateCity("Maka", "Maka", "SA");
             _context.SaveChanges();
-
-
         }
 
 
@@ -34,7 +32,9 @@ namespace TACHYON.Test.Base.TestData
             _context.Counties.Add(country);
         }
 
-        private void CreateCity(string displayName, string code, string countryCode)
+        private void CreateCity(string displayName,
+            string code,
+            string countryCode)
         {
             var city = new City()
             {
@@ -43,7 +43,7 @@ namespace TACHYON.Test.Base.TestData
                 CountyFk = _context.Counties.Single(x => x.Code == countryCode)
             };
 
-              _context.Cities.Add(city);
+            _context.Cities.Add(city);
         }
     }
 }

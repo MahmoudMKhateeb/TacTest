@@ -6,7 +6,5 @@ namespace TACHYON.Trucks.PlateTypes.Dtos
     public class GetAllPlateTypesInput : PagedAndSortedResultRequestDto
     {
         public string Filter { get; set; }
-
-
     }
 }

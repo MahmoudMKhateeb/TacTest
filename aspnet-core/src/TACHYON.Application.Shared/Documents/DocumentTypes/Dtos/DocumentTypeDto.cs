@@ -53,6 +53,5 @@ namespace TACHYON.Documents.DocumentTypes.Dtos
         public Guid? TemplateId { get; set; }
         public int? DocumentRelatedWithId { get; set; }
         public string DocumentRelatedWithName { get; set; }
-
     }
 }

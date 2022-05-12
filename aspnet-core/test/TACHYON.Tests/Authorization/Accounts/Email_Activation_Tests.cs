@@ -48,18 +48,11 @@ namespace TACHYON.Tests.Authorization.Accounts
             //Act
 
             await accountAppService.SendEmailActivationLink(
-                new SendEmailActivationLinkInput
-                {
-                    EmailAddress = user.EmailAddress
-                }
+                new SendEmailActivationLinkInput { EmailAddress = user.EmailAddress }
             );
 
             await accountAppService.ActivateEmail(
-                new ActivateEmailInput
-                {
-                    UserId = user.Id,
-                    ConfirmationCode = confirmationCode
-                }
+                new ActivateEmailInput { UserId = user.Id, ConfirmationCode = confirmationCode }
             );
 
             //Assert

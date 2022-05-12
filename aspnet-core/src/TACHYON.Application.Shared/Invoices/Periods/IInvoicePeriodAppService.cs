@@ -14,10 +14,7 @@ namespace TACHYON.Invoices.Periods
 
         Task CreateEdit(InvoicePeriodDto input);
         Task Delete(EntityDto input);
-        Task Enabled(int PeriodId,bool IsEnabled);
+        Task Enabled(int PeriodId, bool IsEnabled);
         FileDto ExportToExcel(FilterInput input);
-
-
-
     }
 }

@@ -32,7 +32,8 @@ namespace TACHYON.Web.Url
 
         public string CreateEmailActivationUrlFormat(string tenancyName)
         {
-            var activationLink = WebUrlService.GetSiteRootAddress(tenancyName).EnsureEndsWith('/') + EmailActivationRoute + "?userId={userId}&confirmationCode={confirmationCode}";
+            var activationLink = WebUrlService.GetSiteRootAddress(tenancyName).EnsureEndsWith('/') +
+                                 EmailActivationRoute + "?userId={userId}&confirmationCode={confirmationCode}";
 
             if (tenancyName != null)
             {
@@ -44,7 +45,8 @@ namespace TACHYON.Web.Url
 
         public string CreatePasswordResetUrlFormat(string tenancyName)
         {
-            var resetLink = WebUrlService.GetSiteRootAddress(tenancyName).EnsureEndsWith('/') + PasswordResetRoute + "?userId={userId}&resetCode={resetCode}";
+            var resetLink = WebUrlService.GetSiteRootAddress(tenancyName).EnsureEndsWith('/') + PasswordResetRoute +
+                            "?userId={userId}&resetCode={resetCode}";
 
             if (tenancyName != null)
             {
@@ -55,9 +57,9 @@ namespace TACHYON.Web.Url
         }
 
         public string CreateInvoiceDetailsFormat(long invoiceId)
-        => WebUrlService.GetSiteRootAddress()
-               .EnsureEndsWith('/') +
-           "app/main/invoices/detail/" + invoiceId;
+            => WebUrlService.GetSiteRootAddress()
+                   .EnsureEndsWith('/') +
+               "app/main/invoices/detail/" + invoiceId;
 
 
         public string GetTachyonPlatformLoginUrl()

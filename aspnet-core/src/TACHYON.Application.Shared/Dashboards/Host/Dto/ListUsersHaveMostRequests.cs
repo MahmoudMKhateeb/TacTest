@@ -12,7 +12,5 @@ namespace TACHYON.Dashboards.Host.Dto
         public string Name { get; set; }
         public int NumberOfRequests { get; set; }
         public decimal Rating { get; set; }
-
     }
-
 }

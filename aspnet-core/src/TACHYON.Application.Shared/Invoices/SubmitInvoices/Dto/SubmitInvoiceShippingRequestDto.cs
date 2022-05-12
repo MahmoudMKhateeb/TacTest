@@ -3,7 +3,7 @@ using System;
 
 namespace TACHYON.Invoices.SubmitInvoices.Dto
 {
-    public class SubmitInvoiceShippingRequestDto: IHasCreationTime
+    public class SubmitInvoiceShippingRequestDto : IHasCreationTime
     {
         public decimal Price { get; set; }
         public string TruckType { get; set; }

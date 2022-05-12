@@ -30,13 +30,15 @@ namespace TACHYON.Web.Controllers
         private readonly SignInManager _signInManager;
         private readonly AbpLoginResultTypeHelper _abpLoginResultTypeHelper;
         private readonly IWebHostEnvironment _environment;
+
         public UiController(
             IPerRequestSessionCache sessionCache,
             IMultiTenancyConfig multiTenancyConfig,
             IAccountAppService accountAppService,
             LogInManager logInManager,
             SignInManager signInManager,
-            AbpLoginResultTypeHelper abpLoginResultTypeHelper, IWebHostEnvironment environment)
+            AbpLoginResultTypeHelper abpLoginResultTypeHelper,
+            IWebHostEnvironment environment)
         {
             _sessionCache = sessionCache;
             _multiTenancyConfig = multiTenancyConfig;
@@ -84,7 +86,6 @@ namespace TACHYON.Web.Controllers
         [HttpGet]
         public IActionResult Login(string returnUrl = "")
         {
-
             if (!string.IsNullOrEmpty(returnUrl))
             {
                 ViewBag.ReturnUrl = returnUrl;
@@ -112,7 +113,8 @@ namespace TACHYON.Web.Controllers
                 }
             }
 
-            var loginResult = await GetLoginResultAsync(model.UserNameOrEmailAddress, model.Password, model.TenancyName);
+            var loginResult =
+                await GetLoginResultAsync(model.UserNameOrEmailAddress, model.Password, model.TenancyName);
 
             if (loginResult.User.ShouldChangePasswordOnNextLogin)
             {
@@ -141,7 +143,9 @@ namespace TACHYON.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        private async Task<AbpLoginResult<Tenant, User>> GetLoginResultAsync(string usernameOrEmailAddress, string password, string tenancyName)
+        private async Task<AbpLoginResult<Tenant, User>> GetLoginResultAsync(string usernameOrEmailAddress,
+            string password,
+            string tenancyName)
         {
             var loginResult = await _logInManager.LoginAsync(usernameOrEmailAddress, password, tenancyName);
 
@@ -150,7 +154,8 @@ namespace TACHYON.Web.Controllers
                 case AbpLoginResultType.Success:
                     return loginResult;
                 default:
-                    throw _abpLoginResultTypeHelper.CreateExceptionForFailedLoginAttempt(loginResult.Result, usernameOrEmailAddress, tenancyName);
+                    throw _abpLoginResultTypeHelper.CreateExceptionForFailedLoginAttempt(loginResult.Result,
+                        usernameOrEmailAddress, tenancyName);
             }
         }
     }

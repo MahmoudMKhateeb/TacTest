@@ -1,5 +1,4 @@
-﻿
-using Abp.Application.Services.Dto;
+﻿using Abp.Application.Services.Dto;
 using System;
 
 namespace TACHYON.Documents.DocumentFiles.Dtos
@@ -33,7 +32,5 @@ namespace TACHYON.Documents.DocumentFiles.Dtos
 
         public string HijriExpirationDate { get; set; }
         public virtual DateTime CreationTime { get; set; }
-
-
     }
 }

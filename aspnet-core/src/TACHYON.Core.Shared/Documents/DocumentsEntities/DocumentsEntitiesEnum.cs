@@ -11,13 +11,9 @@ namespace TACHYON.Documents.DocumentsEntities
     [DataContract]
     public enum DocumentsEntitiesEnum : int
     {
-        [Description("Tenant")]
-        Tenant = 1,
-        [Description("Driver")]
-        Driver = 2,
-        [Description("Truck")]
-        Truck = 3,
-        [Description("Trip")]
-        Trip = 3,
+        [Description("Tenant")] Tenant = 1,
+        [Description("Driver")] Driver = 2,
+        [Description("Truck")] Truck = 3,
+        [Description("Trip")] Trip = 3,
     }
 }

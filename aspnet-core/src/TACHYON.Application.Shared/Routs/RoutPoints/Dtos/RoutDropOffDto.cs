@@ -25,22 +25,27 @@ namespace TACHYON.Routs.RoutPoints.Dtos
         public bool IsComplete { get; set; }
         public bool IsSaas { get; set; }
         public ReceiverDto ReceiverDto { get; set; }
+
         /// <summary>
         /// Additional receiver full name
         /// </summary>
         public string ReceiverFullName { get; set; }
+
         /// <summary>
         /// Additional receiver Phone number
         /// </summary>
         public string ReceiverPhoneNumber { get; set; }
+
         /// <summary>
         /// Additional receiver email address
         /// </summary>
         public string ReceiverEmailAddress { get; set; }
+
         /// <summary>
         /// Additional receiver card id
         /// </summary>
         public string ReceiverCardIdNumber { get; set; }
+
         public string Note { get; set; }
         public bool IsDeliveryNoteUploaded { get; set; }
         public List<GoodsDetailDto> GoodsDetailListDto { get; set; }

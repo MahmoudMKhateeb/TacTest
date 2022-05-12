@@ -3,11 +3,13 @@ using System.Collections.Generic;
 
 namespace TACHYON.DynamicEntityParameters
 {
-    public class DynamicEntityParameterDefinitionAppService : TACHYONAppServiceBase, IDynamicEntityParameterDefinitionAppService
+    public class DynamicEntityParameterDefinitionAppService : TACHYONAppServiceBase,
+        IDynamicEntityParameterDefinitionAppService
     {
         private readonly IDynamicEntityParameterDefinitionManager _dynamicEntityParameterDefinitionManager;
 
-        public DynamicEntityParameterDefinitionAppService(IDynamicEntityParameterDefinitionManager dynamicEntityParameterDefinitionManager)
+        public DynamicEntityParameterDefinitionAppService(
+            IDynamicEntityParameterDefinitionManager dynamicEntityParameterDefinitionManager)
         {
             _dynamicEntityParameterDefinitionManager = dynamicEntityParameterDefinitionManager;
         }

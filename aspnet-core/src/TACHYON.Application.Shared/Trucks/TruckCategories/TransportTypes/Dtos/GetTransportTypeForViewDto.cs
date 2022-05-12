@@ -2,8 +2,6 @@
 {
     public class GetTransportTypeForViewDto
     {
-		public TransportTypeDto TransportType { get; set; }
-
-
+        public TransportTypeDto TransportType { get; set; }
     }
 }

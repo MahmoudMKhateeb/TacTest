@@ -106,61 +106,85 @@ namespace TACHYON.Configuration
                     scopes: SettingScopes.All),
                 //Unifonic
                 new SettingDefinition(AppSettings.Sms.UnifonicAppSid,
-                    GetFromAppSettings(AppSettings.Sms.UnifonicAppSid, "D3vqp9VLePqA4NTXhz95h8VrfHyLWx"), isVisibleToClients: true,
+                    GetFromAppSettings(AppSettings.Sms.UnifonicAppSid, "D3vqp9VLePqA4NTXhz95h8VrfHyLWx"),
+                    isVisibleToClients: true,
                     scopes: SettingScopes.Application),
                 new SettingDefinition(AppSettings.Sms.UnifonicSenderId,
                     GetFromAppSettings(AppSettings.Sms.UnifonicSenderId, "TACHYON"), isVisibleToClients: true,
                     scopes: SettingScopes.Application),
                 new SettingDefinition(AppSettings.Sms.UnifonicAdvertisingSenderId,
-                    GetFromAppSettings(AppSettings.Sms.UnifonicAdvertisingSenderId, "TACHYON-AD"), isVisibleToClients: true,
+                    GetFromAppSettings(AppSettings.Sms.UnifonicAdvertisingSenderId, "TACHYON-AD"),
+                    isVisibleToClients: true,
                     scopes: SettingScopes.Application),
                 new SettingDefinition(AppSettings.Sms.UnifonicNotificationSenderId,
-                    GetFromAppSettings(AppSettings.Sms.UnifonicNotificationSenderId, "TACHYON"), isVisibleToClients: true,
+                    GetFromAppSettings(AppSettings.Sms.UnifonicNotificationSenderId, "TACHYON"),
+                    isVisibleToClients: true,
                     scopes: SettingScopes.Application),
                 // need to add this in settings dashboard 
                 new SettingDefinition(AppSettings.Email.EmailLogoPath,
-                    GetFromAppSettings(AppSettings.Email.EmailLogoPath, "Common/Images/EmailLogoOutline.png"), isVisibleToClients: true,
+                    GetFromAppSettings(AppSettings.Email.EmailLogoPath, "Common/Images/EmailLogoOutline.png"),
+                    isVisibleToClients: true,
                     scopes: SettingScopes.Application),
 
                 //Bayan Integration
                 //todo add this to host settings page
                 new SettingDefinition(AppSettings.BayanIntegration.Url,
-                    GetFromAppSettings(AppSettings.BayanIntegration.Url, "https://bayan.api.elm.sa/api/v1/eff/"), isVisibleToClients: true,
+                    GetFromAppSettings(AppSettings.BayanIntegration.Url, "https://bayan.api.elm.sa/api/v1/eff/"),
+                    isVisibleToClients: true,
                     scopes: SettingScopes.Application),
-
                 new SettingDefinition(AppSettings.BayanIntegration.AppId,
                     GetFromAppSettings(AppSettings.BayanIntegration.AppId, "431b4bd1"), isVisibleToClients: true,
                     scopes: SettingScopes.Application),
-
                 new SettingDefinition(AppSettings.BayanIntegration.AppKey,
-                    GetFromAppSettings(AppSettings.BayanIntegration.AppKey, "d4738b317b9fa32a95ec65a39e84adbd"), isVisibleToClients: true,
+                    GetFromAppSettings(AppSettings.BayanIntegration.AppKey, "d4738b317b9fa32a95ec65a39e84adbd"),
+                    isVisibleToClients: true,
                     scopes: SettingScopes.Application),
-
                 new SettingDefinition(AppSettings.BayanIntegration.ClientId,
-                    GetFromAppSettings(AppSettings.BayanIntegration.ClientId, "56beeab2-d96a-4afd-baed-e4a88894629e"), isVisibleToClients: true,
+                    GetFromAppSettings(AppSettings.BayanIntegration.ClientId, "56beeab2-d96a-4afd-baed-e4a88894629e"),
+                    isVisibleToClients: true,
                     scopes: SettingScopes.Application),
-
                 new SettingDefinition(AppSettings.HostManagement.DriverLocationTrackingInterval,
-                GetFromAppSettings(AppSettings.HostManagement.DriverLocationTrackingInterval, "3"), isVisibleToClients: true,
+                    GetFromAppSettings(AppSettings.HostManagement.DriverLocationTrackingInterval, "3"),
+                    isVisibleToClients: true,
                     scopes: SettingScopes.Application),
                 // Editions
-                 //todo add this to host settings page
-                new SettingDefinition(AppSettings.Editions.ShipperEditionId,GetFromAppSettings(AppSettings.Editions.ShipperEditionId,"1"),isVisibleToClients:true,scopes:SettingScopes.Application),
-                new SettingDefinition(AppSettings.Editions.TachyonEditionId,GetFromAppSettings(AppSettings.Editions.TachyonEditionId,"3"),isVisibleToClients:true,scopes:SettingScopes.Application),
-                new SettingDefinition(AppSettings.Editions.CarrierEditionId,GetFromAppSettings(AppSettings.Editions.CarrierEditionId,"2"),isVisibleToClients:true,scopes:SettingScopes.Application),
+                //todo add this to host settings page
+                new SettingDefinition(AppSettings.Editions.ShipperEditionId,
+                    GetFromAppSettings(AppSettings.Editions.ShipperEditionId, "1"), isVisibleToClients: true,
+                    scopes: SettingScopes.Application),
+                new SettingDefinition(AppSettings.Editions.TachyonEditionId,
+                    GetFromAppSettings(AppSettings.Editions.TachyonEditionId, "3"), isVisibleToClients: true,
+                    scopes: SettingScopes.Application),
+                new SettingDefinition(AppSettings.Editions.CarrierEditionId,
+                    GetFromAppSettings(AppSettings.Editions.CarrierEditionId, "2"), isVisibleToClients: true,
+                    scopes: SettingScopes.Application),
 
                 // Host Invoice Settings 
-                new SettingDefinition(AppSettings.Invoice.BankNameEnglish,GetFromAppSettings(AppSettings.Invoice.BankNameEnglish,"Riyad Bank"),isVisibleToClients:true,scopes:SettingScopes.Application),
-                new SettingDefinition(AppSettings.Invoice.BankNameArabic,GetFromAppSettings(AppSettings.Invoice.BankNameArabic,"بنك الرياض"),isVisibleToClients:true,scopes:SettingScopes.Application),
-                new SettingDefinition(AppSettings.Invoice.IBAN,GetFromAppSettings(AppSettings.Invoice.IBAN,"1391708819940"),isVisibleToClients:true,scopes:SettingScopes.Application),
-                new SettingDefinition(AppSettings.Invoice.Account,GetFromAppSettings(AppSettings.Invoice.Account,"SA6420000001391708819940"),isVisibleToClients:true,scopes:SettingScopes.Application),
-
-                new SettingDefinition(AppSettings.Links.AndroidAppLink,
-                    GetFromAppSettings(AppSettings.Links.AndroidAppLink, TACHYONConsts.AndroidAppLink),isVisibleToClients:true,
-                    scopes:SettingScopes.Application),
+                new SettingDefinition(AppSettings.Invoice.BankNameEnglish,
+                    GetFromAppSettings(AppSettings.Invoice.BankNameEnglish, "Riyad Bank"), isVisibleToClients: true,
+                    scopes: SettingScopes.Application),
+                new SettingDefinition(AppSettings.Invoice.BankNameArabic,
+                    GetFromAppSettings(AppSettings.Invoice.BankNameArabic, "بنك الرياض"), isVisibleToClients: true,
+                    scopes: SettingScopes.Application),
+                new SettingDefinition(AppSettings.Invoice.IBAN,
+                    GetFromAppSettings(AppSettings.Invoice.IBAN, "1391708819940"), isVisibleToClients: true,
+                    scopes: SettingScopes.Application),
+                new SettingDefinition(AppSettings.Invoice.Account,
+                    GetFromAppSettings(AppSettings.Invoice.Account, "SA6420000001391708819940"),
+                    isVisibleToClients: true, scopes: SettingScopes.Application),
+                new SettingDefinition(
+                    AppSettings.Links.AndroidAppLink,
+                    GetFromAppSettings(AppSettings.Links.AndroidAppLink, TACHYONConsts.AndroidAppLink),
+                    isVisibleToClients: true,
+                    scopes: SettingScopes.Application),
                 new SettingDefinition(AppSettings.Links.IosAppLink,
-                    GetFromAppSettings(AppSettings.Links.IosAppLink, TACHYONConsts.IOSAppLink),isVisibleToClients:true,
-                    scopes:SettingScopes.Application)
+                    GetFromAppSettings(AppSettings.Links.IosAppLink, TACHYONConsts.IOSAppLink),
+                    isVisibleToClients: true,
+                    scopes: SettingScopes.Application),
+                new SettingDefinition(AppSettings.Mobile.IgnoredOtpNumbers,
+                    GetFromAppSettings(AppSettings.Mobile.IgnoredOtpNumbers, ""),
+                    isVisibleToClients: true,
+                    scopes: SettingScopes.Application)
             };
         }
 
@@ -255,14 +279,12 @@ namespace TACHYON.Configuration
                 new SettingDefinition(themeName + "." + AppSettings.UiManagement.Header.Skin,
                     GetFromAppSettings(themeName + "." + AppSettings.UiManagement.Header.Skin, "light"),
                     isVisibleToClients: true, scopes: SettingScopes.All),
-
                 new SettingDefinition(themeName + "." + AppSettings.UiManagement.SubHeader.Fixed,
                     GetFromAppSettings(themeName + "." + AppSettings.UiManagement.SubHeader.Fixed, "true"),
                     isVisibleToClients: true, scopes: SettingScopes.All),
                 new SettingDefinition(themeName + "." + AppSettings.UiManagement.SubHeader.Style,
                     GetFromAppSettings(themeName + "." + AppSettings.UiManagement.SubHeader.Style, "solid"),
                     isVisibleToClients: true, scopes: SettingScopes.All),
-
                 new SettingDefinition(themeName + "." + AppSettings.UiManagement.LeftAside.AsideSkin,
                     GetFromAppSettings(themeName + "." + AppSettings.UiManagement.LeftAside.AsideSkin, "dark"),
                     isVisibleToClients: true, scopes: SettingScopes.All),
@@ -278,7 +300,6 @@ namespace TACHYON.Configuration
                 new SettingDefinition(themeName + "." + AppSettings.UiManagement.LeftAside.SubmenuToggle,
                     GetFromAppSettings(themeName + "." + AppSettings.UiManagement.LeftAside.SubmenuToggle, "false"),
                     isVisibleToClients: true, scopes: SettingScopes.All),
-
                 new SettingDefinition(themeName + "." + AppSettings.UiManagement.Footer.FixedFooter,
                     GetFromAppSettings(themeName + "." + AppSettings.UiManagement.Footer.FixedFooter, "false"),
                     isVisibleToClients: true, scopes: SettingScopes.All),
@@ -324,14 +345,12 @@ namespace TACHYON.Configuration
                 new SettingDefinition(themeName + "." + AppSettings.UiManagement.Header.MobileFixedHeader,
                     GetFromAppSettings(themeName + "." + AppSettings.UiManagement.Header.MobileFixedHeader, "false"),
                     isVisibleToClients: true, scopes: SettingScopes.All),
-
                 new SettingDefinition(themeName + "." + AppSettings.UiManagement.SubHeader.Fixed,
                     GetFromAppSettings(themeName + "." + AppSettings.UiManagement.SubHeader.Fixed, "true"),
                     isVisibleToClients: true, scopes: SettingScopes.All),
                 new SettingDefinition(themeName + "." + AppSettings.UiManagement.SubHeader.Style,
                     GetFromAppSettings(themeName + "." + AppSettings.UiManagement.SubHeader.Style, "solid"),
                     isVisibleToClients: true, scopes: SettingScopes.All),
-
                 new SettingDefinition(themeName + "." + AppSettings.UiManagement.Footer.FixedFooter,
                     GetFromAppSettings(themeName + "." + AppSettings.UiManagement.Footer.FixedFooter, "false"),
                     isVisibleToClients: true, scopes: SettingScopes.All),
@@ -404,14 +423,12 @@ namespace TACHYON.Configuration
                 new SettingDefinition(themeName + "." + AppSettings.UiManagement.Header.MobileFixedHeader,
                     GetFromAppSettings(themeName + "." + AppSettings.UiManagement.Header.MobileFixedHeader, "false"),
                     isVisibleToClients: true, scopes: SettingScopes.All),
-
                 new SettingDefinition(themeName + "." + AppSettings.UiManagement.SubHeader.Fixed,
                     GetFromAppSettings(themeName + "." + AppSettings.UiManagement.SubHeader.Fixed, "false"),
                     isVisibleToClients: true, scopes: SettingScopes.All),
                 new SettingDefinition(themeName + "." + AppSettings.UiManagement.SubHeader.Style,
                     GetFromAppSettings(themeName + "." + AppSettings.UiManagement.SubHeader.Style, "solid"),
                     isVisibleToClients: true, scopes: SettingScopes.All),
-
                 new SettingDefinition(themeName + "." + AppSettings.UiManagement.Footer.FixedFooter,
                     GetFromAppSettings(themeName + "." + AppSettings.UiManagement.Footer.FixedFooter, "false"),
                     isVisibleToClients: true, scopes: SettingScopes.All),
@@ -433,14 +450,12 @@ namespace TACHYON.Configuration
                 new SettingDefinition(themeName + "." + AppSettings.UiManagement.Header.MobileFixedHeader,
                     GetFromAppSettings(themeName + "." + AppSettings.UiManagement.Header.MobileFixedHeader, "false"),
                     isVisibleToClients: true, scopes: SettingScopes.All),
-
                 new SettingDefinition(themeName + "." + AppSettings.UiManagement.SubHeader.Fixed,
                     GetFromAppSettings(themeName + "." + AppSettings.UiManagement.SubHeader.Fixed, "false"),
                     isVisibleToClients: true, scopes: SettingScopes.All),
                 new SettingDefinition(themeName + "." + AppSettings.UiManagement.SubHeader.Style,
                     GetFromAppSettings(themeName + "." + AppSettings.UiManagement.SubHeader.Style, "solid"),
                     isVisibleToClients: true, scopes: SettingScopes.All),
-
                 new SettingDefinition(themeName + "." + AppSettings.UiManagement.Footer.FixedFooter,
                     GetFromAppSettings(themeName + "." + AppSettings.UiManagement.Footer.FixedFooter, "false"),
                     isVisibleToClients: true, scopes: SettingScopes.All),
@@ -546,21 +561,18 @@ namespace TACHYON.Configuration
                 new SettingDefinition(themeName + "." + AppSettings.UiManagement.Header.MobileFixedHeader,
                     GetFromAppSettings(themeName + "." + AppSettings.UiManagement.Header.MobileFixedHeader, "false"),
                     isVisibleToClients: true, scopes: SettingScopes.All),
-
                 new SettingDefinition(themeName + "." + AppSettings.UiManagement.SubHeader.Fixed,
                     GetFromAppSettings(themeName + "." + AppSettings.UiManagement.SubHeader.Fixed, "false"),
                     isVisibleToClients: true, scopes: SettingScopes.All),
                 new SettingDefinition(themeName + "." + AppSettings.UiManagement.SubHeader.Style,
                     GetFromAppSettings(themeName + "." + AppSettings.UiManagement.SubHeader.Style, "solid"),
                     isVisibleToClients: true, scopes: SettingScopes.All),
-
                 new SettingDefinition(themeName + "." + AppSettings.UiManagement.LeftAside.FixedAside,
                     GetFromAppSettings(themeName + "." + AppSettings.UiManagement.LeftAside.FixedAside, "true"),
                     isVisibleToClients: true, scopes: SettingScopes.All),
                 new SettingDefinition(themeName + "." + AppSettings.UiManagement.LeftAside.SubmenuToggle,
                     GetFromAppSettings(themeName + "." + AppSettings.UiManagement.LeftAside.SubmenuToggle, "false"),
                     isVisibleToClients: true, scopes: SettingScopes.All),
-
                 new SettingDefinition(themeName + "." + AppSettings.UiManagement.Footer.FixedFooter,
                     GetFromAppSettings(themeName + "." + AppSettings.UiManagement.Footer.FixedFooter, "false"),
                     isVisibleToClients: true, scopes: SettingScopes.All),
@@ -950,8 +962,7 @@ namespace TACHYON.Configuration
 
             var facebookExternalLoginProviderInfo = new FacebookExternalLoginProviderSettings()
             {
-                AppId = appId,
-                AppSecret = appSecret
+                AppId = appId, AppSecret = appSecret
             };
 
             return new[]
@@ -961,14 +972,14 @@ namespace TACHYON.Configuration
                     facebookExternalLoginProviderInfo.ToJsonString(),
                     isVisibleToClients: false,
                     scopes: SettingScopes.Application,
-                    isEncrypted:true
+                    isEncrypted: true
                 ),
                 new SettingDefinition( //default is empty for tenants
                     AppSettings.ExternalLoginProvider.Tenant.Facebook,
                     "",
                     isVisibleToClients: false,
                     scopes: SettingScopes.Tenant,
-                    isEncrypted:true
+                    isEncrypted: true
                 ),
             };
         }
@@ -981,9 +992,7 @@ namespace TACHYON.Configuration
 
             var googleExternalLoginProviderInfo = new GoogleExternalLoginProviderSettings()
             {
-                ClientId = clientId,
-                ClientSecret = clientSecret,
-                UserInfoEndpoint = userInfoEndPoint
+                ClientId = clientId, ClientSecret = clientSecret, UserInfoEndpoint = userInfoEndPoint
             };
 
             return new[]
@@ -993,14 +1002,14 @@ namespace TACHYON.Configuration
                     googleExternalLoginProviderInfo.ToJsonString(),
                     isVisibleToClients: false,
                     scopes: SettingScopes.Application,
-                    isEncrypted:true
+                    isEncrypted: true
                 ),
                 new SettingDefinition( //default is empty for tenants
                     AppSettings.ExternalLoginProvider.Tenant.Google,
                     "",
                     isVisibleToClients: false,
                     scopes: SettingScopes.Tenant,
-                    isEncrypted:true
+                    isEncrypted: true
                 ),
             };
         }
@@ -1012,8 +1021,7 @@ namespace TACHYON.Configuration
 
             var twitterExternalLoginProviderInfo = new TwitterExternalLoginProviderSettings()
             {
-                ConsumerKey = consumerKey,
-                ConsumerSecret = consumerSecret
+                ConsumerKey = consumerKey, ConsumerSecret = consumerSecret
             };
 
             return new[]
@@ -1023,14 +1031,14 @@ namespace TACHYON.Configuration
                     twitterExternalLoginProviderInfo.ToJsonString(),
                     isVisibleToClients: false,
                     scopes: SettingScopes.Application,
-                    isEncrypted:true
+                    isEncrypted: true
                 ),
                 new SettingDefinition( //default is empty for tenants
                     AppSettings.ExternalLoginProvider.Tenant.Twitter,
                     "",
                     isVisibleToClients: false,
                     scopes: SettingScopes.Tenant,
-                    isEncrypted:true
+                    isEncrypted: true
                 ),
             };
         }
@@ -1042,8 +1050,7 @@ namespace TACHYON.Configuration
 
             var microsoftExternalLoginProviderInfo = new MicrosoftExternalLoginProviderSettings()
             {
-                ClientId = consumerKey,
-                ClientSecret = consumerSecret
+                ClientId = consumerKey, ClientSecret = consumerSecret
             };
 
 
@@ -1054,15 +1061,14 @@ namespace TACHYON.Configuration
                     microsoftExternalLoginProviderInfo.ToJsonString(),
                     isVisibleToClients: false,
                     scopes: SettingScopes.Application,
-                    isEncrypted:true
+                    isEncrypted: true
                 ),
-
                 new SettingDefinition( //default is empty for tenants
                     AppSettings.ExternalLoginProvider.Tenant.Microsoft,
                     "",
                     isVisibleToClients: false,
                     scopes: SettingScopes.Tenant,
-                    isEncrypted:true
+                    isEncrypted: true
                 ),
             };
         }
@@ -1094,16 +1100,15 @@ namespace TACHYON.Configuration
                     openIdConnectExternalLoginProviderInfo.ToJsonString(),
                     isVisibleToClients: false,
                     scopes: SettingScopes.Application,
-                    isEncrypted:true
+                    isEncrypted: true
                 ),
                 new SettingDefinition( //default is empty for tenants
                     AppSettings.ExternalLoginProvider.Tenant.OpenIdConnect,
                     "",
                     isVisibleToClients: false,
                     scopes: SettingScopes.Tenant,
-                    isEncrypted:true
+                    isEncrypted: true
                 ),
-
                 new SettingDefinition(
                     AppSettings.ExternalLoginProvider.OpenIdConnectMappedClaims,
                     jsonClaimMappings.ToJsonString(),
@@ -1140,14 +1145,14 @@ namespace TACHYON.Configuration
                     wsFederationExternalLoginProviderInfo.ToJsonString(),
                     isVisibleToClients: false,
                     scopes: SettingScopes.Application,
-                    isEncrypted:true
+                    isEncrypted: true
                 ),
                 new SettingDefinition( //default is empty for tenants
                     AppSettings.ExternalLoginProvider.Tenant.WsFederation,
                     "",
                     isVisibleToClients: false,
                     scopes: SettingScopes.Tenant,
-                    isEncrypted:true
+                    isEncrypted: true
                 ),
                 new SettingDefinition(
                     AppSettings.ExternalLoginProvider.WsFederationMappedClaims,

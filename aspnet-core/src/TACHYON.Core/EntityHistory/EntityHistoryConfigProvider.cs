@@ -22,9 +22,7 @@ namespace TACHYON.EntityHistory
                 {
                     {
                         EntityHistoryHelper.EntityHistoryConfigurationName,
-                        new EntityHistoryUiSetting{
-                            IsEnabled = false
-                        }
+                        new EntityHistoryUiSetting { IsEnabled = false }
                     }
                 };
             }
@@ -43,10 +41,7 @@ namespace TACHYON.EntityHistory
             {
                 {
                     EntityHistoryHelper.EntityHistoryConfigurationName,
-                    new EntityHistoryUiSetting {
-                        IsEnabled = true,
-                        EnabledEntities = entityHistoryEnabledEntities
-                    }
+                    new EntityHistoryUiSetting { IsEnabled = true, EnabledEntities = entityHistoryEnabledEntities }
                 }
             };
         }

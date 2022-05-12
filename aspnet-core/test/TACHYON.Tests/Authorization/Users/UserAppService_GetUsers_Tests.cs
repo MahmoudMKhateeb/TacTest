@@ -32,11 +32,7 @@ namespace TACHYON.Tests.Authorization.Users
 
             //Act
             var output = await UserAppService.GetUsers(
-                new GetUsersInput
-                {
-                    MaxResultCount = 2,
-                    Sorting = "Username"
-                });
+                new GetUsersInput { MaxResultCount = 2, Sorting = "Username" });
 
             //Assert
             output.TotalCount.ShouldBe(4);
@@ -54,10 +50,7 @@ namespace TACHYON.Tests.Authorization.Users
 
             //Act
             var output = await UserAppService.GetUsers(
-                new GetUsersInput
-                {
-                    Filter = "Adam"
-                });
+                new GetUsersInput { Filter = "Adam" });
 
             //Assert
             output.TotalCount.ShouldBe(1);
@@ -66,10 +59,7 @@ namespace TACHYON.Tests.Authorization.Users
 
             //Act
             var output2 = await UserAppService.GetUsers(
-                new GetUsersInput
-                {
-                    Permissions = new List<string> { "test.permission1" }
-                });
+                new GetUsersInput { Permissions = new List<string> { "test.permission1" } });
 
             //Assert
             output2.TotalCount.ShouldBe(4);

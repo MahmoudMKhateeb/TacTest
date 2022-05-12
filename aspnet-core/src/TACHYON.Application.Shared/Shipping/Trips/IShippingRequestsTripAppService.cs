@@ -10,7 +10,6 @@ namespace TACHYON.Shipping.Trips
 {
     public interface IShippingRequestsTripAppService : IApplicationService
     {
-
         Task<PagedResultDto<ShippingRequestsTripListDto>> GetAll(ShippingRequestTripFilterInput Input);
 
 

@@ -31,7 +31,8 @@ namespace TACHYON.Editions
         public int? WaitingDayAfterExpire { get; set; }
 
         [NotMapped]
-        public bool IsFree => !DailyPrice.HasValue && !WeeklyPrice.HasValue && !MonthlyPrice.HasValue && !AnnualPrice.HasValue;
+        public bool IsFree => !DailyPrice.HasValue && !WeeklyPrice.HasValue && !MonthlyPrice.HasValue &&
+                              !AnnualPrice.HasValue;
 
         public bool HasTrial()
         {

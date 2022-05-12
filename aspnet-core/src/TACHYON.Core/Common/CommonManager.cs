@@ -38,6 +38,7 @@ namespace TACHYON.Common
             _tempFileCacheManager = tempFileCacheManager;
             UserManager = userManager;
         }
+
         /// <summary>
         /// This function helep developers to execute any query need to disable filter if the user is host or check if tenant have feature to execute this query
         /// </summary>
@@ -47,14 +48,15 @@ namespace TACHYON.Common
         /// <returns></returns>
         public T ExecuteMethodIfHostOrTenantUsers<T>(Func<T> funcToRun, string featurename = "")
         {
-
-            if (_AbpSession.TenantId.HasValue && (string.IsNullOrEmpty(featurename) || _featureChecker.IsEnabled(featurename)))
+            if (_AbpSession.TenantId.HasValue &&
+                (string.IsNullOrEmpty(featurename) || _featureChecker.IsEnabled(featurename)))
             {
                 return funcToRun();
             }
             else if (!_AbpSession.TenantId.HasValue)
             {
-                using (UnitOfWorkManager.Current.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant))
+                using (UnitOfWorkManager.Current.DisableFilter(AbpDataFilters.MustHaveTenant,
+                           AbpDataFilters.MayHaveTenant))
                 {
                     return funcToRun();
                 }
@@ -63,7 +65,6 @@ namespace TACHYON.Common
             {
                 throw new UserFriendlyException(L("YouDontHaveThisPermission"));
             }
-
         }
 
         /// <summary>
@@ -83,11 +84,11 @@ namespace TACHYON.Common
                 if (document.DocumentId.HasValue)
                 {
                     await _binaryObjectManager.DeleteAsync((Guid)document.DocumentId);
-
                 }
-                document.DocumentId = fileObject.Id;
 
+                document.DocumentId = fileObject.Id;
             }
+
             return document;
         }
 
@@ -101,14 +102,17 @@ namespace TACHYON.Common
                 {
                     fileBytes = stream.GetAllBytes();
                 }
+
                 var fileObject = new BinaryObject(TenantId, fileBytes);
                 await _binaryObjectManager.SaveAsync(fileObject);
                 document.DocumentId = fileObject.Id;
                 document.DocumentContentType = File.ContentType;
                 document.DocumentName = Path.GetFileName(File.FileName).Split(".")[0];
             }
+
             return document;
         }
+
         public async Task<List<IHasDocument>> UploadDocuments(IFormFileCollection files, int? tenantId)
         {
             var documents = new List<IHasDocument>();
@@ -122,6 +126,7 @@ namespace TACHYON.Common
                     {
                         fileBytes = stream.GetAllBytes();
                     }
+
                     var fileObject = new BinaryObject(tenantId, fileBytes);
 
                     if (file.ContentType != DocumentTypeConsts.PDF)
@@ -134,6 +139,7 @@ namespace TACHYON.Common
                     documents.Add(document);
                 }
             }
+
             return documents;
         }
 
@@ -146,14 +152,13 @@ namespace TACHYON.Common
         public async Task DeleteDocument(Guid DocumentId)
         {
             await _binaryObjectManager.DeleteAsync(DocumentId);
-
         }
+
         /// <summary>
         /// Get document file to download
         /// </summary>
         /// <param name="Document"></param>
         /// <returns></returns>
-
         public async Task<FileDto> GetDocument(IHasDocument Document)
 
         {
@@ -182,6 +187,7 @@ namespace TACHYON.Common
                 uploadedFile.FileType = item.DocumentContentType;
                 files.Add(uploadedFile);
             }
+
             return files;
         }
         public byte[] MakeThumbnail(byte[] myImage, int thumbWidth, int thumbHeight)

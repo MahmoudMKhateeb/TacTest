@@ -5,7 +5,7 @@ using TACHYON.Shipping.ShippingRequests;
 
 namespace TACHYON.PriceOffers.Dto
 {
-    public class ShippingRequestForPriceOfferGetAllInput: PagedAndSortedResultRequestDto, IShouldNormalize
+    public class ShippingRequestForPriceOfferGetAllInput : PagedAndSortedResultRequestDto, IShouldNormalize
     {
         public string Filter { get; set; }
         public string Carrier { get; set; }
@@ -36,7 +36,6 @@ namespace TACHYON.PriceOffers.Dto
         {
             if (!string.IsNullOrEmpty(Filter)) Filter = Filter.Trim().ToLower();
             if (!string.IsNullOrEmpty(Carrier)) Carrier = Carrier.Trim().ToLower();
-
         }
     }
 }

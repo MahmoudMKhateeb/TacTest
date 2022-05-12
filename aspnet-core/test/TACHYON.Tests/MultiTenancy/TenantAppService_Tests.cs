@@ -72,18 +72,23 @@ namespace TACHYON.Tests.MultiTenancy
             await UsingDbContextAsync(tenantId, async context =>
             {
                 //Check static roles
-                var staticRoleNames = Resolve<IRoleManagementConfig>().StaticRoles.Where(r => r.Side == MultiTenancySides.Tenant).Select(role => role.RoleName).ToList();
+                var staticRoleNames = Resolve<IRoleManagementConfig>().StaticRoles
+                    .Where(r => r.Side == MultiTenancySides.Tenant).Select(role => role.RoleName).ToList();
                 foreach (var staticRoleName in staticRoleNames)
                 {
-                    (await context.Roles.CountAsync(r => r.TenantId == tenantId && r.Name == staticRoleName)).ShouldBe(1);
+                    (await context.Roles.CountAsync(r => r.TenantId == tenantId && r.Name == staticRoleName))
+                        .ShouldBe(1);
                 }
 
                 //Check default admin user
-                var adminUser = await context.Users.FirstOrDefaultAsync(u => u.TenantId == tenantId && u.UserName == AbpUserBase.AdminUserName);
+                var adminUser = await context.Users.FirstOrDefaultAsync(u =>
+                    u.TenantId == tenantId && u.UserName == AbpUserBase.AdminUserName);
                 adminUser.ShouldNotBeNull();
 
                 //Check notification registration
-                (await context.NotificationSubscriptions.FirstOrDefaultAsync(ns => ns.UserId == adminUser.Id && ns.NotificationName == AppNotificationNames.NewUserRegistered)).ShouldNotBeNull();
+                (await context.NotificationSubscriptions.FirstOrDefaultAsync(ns =>
+                        ns.UserId == adminUser.Id && ns.NotificationName == AppNotificationNames.NewUserRegistered))
+                    .ShouldNotBeNull();
             });
 
             //GET FOR EDIT -----------------------------
@@ -126,6 +131,5 @@ namespace TACHYON.Tests.MultiTenancy
         {
             return UsingDbContext(context => context.Counties.Single(p => p.DisplayName == displayName));
         }
-
     }
 }

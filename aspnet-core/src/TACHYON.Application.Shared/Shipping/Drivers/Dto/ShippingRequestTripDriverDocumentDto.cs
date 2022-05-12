@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TACHYON.Shipping.Drivers.Dto
 {
-   public class ShippingRequestTripDriverDocumentDto
+    public class ShippingRequestTripDriverDocumentDto
     {
         public IFormFile Document { get; set; }
 

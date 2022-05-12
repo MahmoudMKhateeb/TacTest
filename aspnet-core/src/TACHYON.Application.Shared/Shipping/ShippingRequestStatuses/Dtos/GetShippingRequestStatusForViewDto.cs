@@ -2,8 +2,6 @@
 {
     public class GetShippingRequestStatusForViewDto
     {
-		public ShippingRequestStatusDto ShippingRequestStatus { get; set; }
-
-
+        public ShippingRequestStatusDto ShippingRequestStatus { get; set; }
     }
 }

@@ -10,7 +10,6 @@ namespace TACHYON.Vases
     [Table("Vases")]
     public class Vas : FullAuditedEntity, IMultiLingualEntity<VasTranslation>, IHasKey
     {
-
         public virtual string Name { get; set; }
 
         [Required]

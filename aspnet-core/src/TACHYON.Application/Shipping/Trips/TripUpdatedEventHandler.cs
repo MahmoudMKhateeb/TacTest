@@ -24,14 +24,17 @@ using TACHYON.Shipping.Trips.Dto;
 
 namespace TACHYON.Shipping.Trips
 {
-    public class TripUpdatedEventHandler : IEventHandler<EntityUpdatedEventData<ShippingRequestTrip>>, ITransientDependency
+    public class TripUpdatedEventHandler : IEventHandler<EntityUpdatedEventData<ShippingRequestTrip>>,
+        ITransientDependency
     {
         private readonly BayanIntegrationManager _bayanIntegrationManager;
         private readonly IAppNotifier _appNotifier;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
 
 
-        public TripUpdatedEventHandler(BayanIntegrationManager bayanIntegrationManager, IAppNotifier appNotifier, IUnitOfWorkManager unitOfWorkManager)
+        public TripUpdatedEventHandler(BayanIntegrationManager bayanIntegrationManager,
+            IAppNotifier appNotifier,
+            IUnitOfWorkManager unitOfWorkManager)
         {
             _bayanIntegrationManager = bayanIntegrationManager;
             _appNotifier = appNotifier;
@@ -50,13 +53,16 @@ namespace TACHYON.Shipping.Trips
                 {
                     if (eventData.Entity.BayanId.IsNullOrEmpty())
                     {
-                        AsyncHelper.RunSync(() => _bayanIntegrationManager.QueueCreateConsignmentNote(eventData.Entity.Id));
+                        AsyncHelper.RunSync(() =>
+                            _bayanIntegrationManager.QueueCreateConsignmentNote(eventData.Entity.Id));
                     }
                     else
                     {
-                        AsyncHelper.RunSync(() => _bayanIntegrationManager.QueueEditConsignmentNote(eventData.Entity.Id));
+                        AsyncHelper.RunSync(
+                            () => _bayanIntegrationManager.QueueEditConsignmentNote(eventData.Entity.Id));
                     }
                 }
+
                 unitOfWork.Complete();
             }
         }

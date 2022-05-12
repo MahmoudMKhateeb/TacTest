@@ -8,10 +8,7 @@ namespace TACHYON.Shipping.Trips.Dto
 {
     public class AssignDriverAndTruckToShippmentByCarrierInput : EntityDto
     {
-        [Required]
-        public long AssignedDriverUserId { get; set; }
-        [Required]
-        public long AssignedTruckId { get; set; }
-        
+        [Required] public long AssignedDriverUserId { get; set; }
+        [Required] public long AssignedTruckId { get; set; }
     }
 }

@@ -20,7 +20,7 @@ namespace TACHYON.Chat.Exporting
             ITempFileCacheManager tempFileCacheManager,
             ITimeZoneConverter timeZoneConverter,
             IAbpSession abpSession
-            ) : base(tempFileCacheManager)
+        ) : base(tempFileCacheManager)
         {
             _timeZoneConverter = timeZoneConverter;
             _abpSession = abpSession;

@@ -18,6 +18,7 @@ namespace TACHYON.BackgroundWorkers.ShippingRequests
         private const int runEvery = 1 * 60 * 60 * 1000 * 24; //1 day
         private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
         private readonly IAppNotifier _appNotifier;
+
         public ShipperReminderToCompelteTripsWroker(
             AbpTimer timer,
             IRepository<ShippingRequest, long> shippingRequestRepository,
@@ -34,22 +35,22 @@ namespace TACHYON.BackgroundWorkers.ShippingRequests
         {
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant))
             {
-                var shippingRequestsToRemind = _shippingRequestRepository.
-                    GetAll().
-                    AsNoTracking().
-                    Where
+                var shippingRequestsToRemind = _shippingRequestRepository.GetAll().AsNoTracking().Where
                     (
-                            x => x.Status == Shipping.ShippingRequests.ShippingRequestStatus.PostPrice &&
-                            x.TotalsTripsAddByShippier < x.NumberOfTrips &&
-                            EF.Functions.DateDiffDay(Clock.Now.Date, x.EndTripDate.Value.Date) >= -5/* before 5 days*/
-                    ).Select(x=> new
-                        {UserIdentifier = new UserIdentifier(x.TenantId, x.CreatorUserId.Value), ShippingRequestId = x.Id})
+                        x => x.Status == Shipping.ShippingRequests.ShippingRequestStatus.PostPrice &&
+                             x.TotalsTripsAddByShippier < x.NumberOfTrips &&
+                             EF.Functions.DateDiffDay(Clock.Now.Date, x.EndTripDate.Value.Date) >= -5 /* before 5 days*/
+                    ).Select(x => new
+                    {
+                        UserIdentifier = new UserIdentifier(x.TenantId, x.CreatorUserId.Value),
+                        ShippingRequestId = x.Id
+                    })
                     .ToList();
 
                 foreach (var item in shippingRequestsToRemind)
-                    AsyncHelper.RunSync(() =>_appNotifier.ShipperReminderToCompleteTrips(item.ShippingRequestId, item.UserIdentifier));
+                    AsyncHelper.RunSync(() =>
+                        _appNotifier.ShipperReminderToCompleteTrips(item.ShippingRequestId, item.UserIdentifier));
             }
-
         }
     }
 }

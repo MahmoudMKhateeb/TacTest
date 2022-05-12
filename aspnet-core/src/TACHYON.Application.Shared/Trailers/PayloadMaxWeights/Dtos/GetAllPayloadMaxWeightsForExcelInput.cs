@@ -8,8 +8,5 @@
 
         public int? MaxMaxWeightFilter { get; set; }
         public int? MinMaxWeightFilter { get; set; }
-
-
-
     }
 }

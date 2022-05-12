@@ -1,5 +1,4 @@
-﻿
-using Abp.Application.Services.Dto;
+﻿using Abp.Application.Services.Dto;
 using System;
 
 namespace TACHYON.Offers.Dtos
@@ -20,7 +19,5 @@ namespace TACHYON.Offers.Dtos
         public int? GoodCategoryId { get; set; }
 
         public int? RouteId { get; set; }
-
-
     }
 }

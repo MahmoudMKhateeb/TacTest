@@ -6,14 +6,11 @@ using Abp.Domain.Entities;
 
 namespace TACHYON.PickingTypes
 {
-	[Table("PickingTypes")]
-    public class PickingType : FullAuditedEntity 
+    [Table("PickingTypes")]
+    public class PickingType : FullAuditedEntity
     {
-
-		[Required]
-		[StringLength(PickingTypeConsts.MaxDisplayNameLength, MinimumLength = PickingTypeConsts.MinDisplayNameLength)]
-		public virtual string DisplayName { get; set; }
-		
-
+        [Required]
+        [StringLength(PickingTypeConsts.MaxDisplayNameLength, MinimumLength = PickingTypeConsts.MinDisplayNameLength)]
+        public virtual string DisplayName { get; set; }
     }
 }

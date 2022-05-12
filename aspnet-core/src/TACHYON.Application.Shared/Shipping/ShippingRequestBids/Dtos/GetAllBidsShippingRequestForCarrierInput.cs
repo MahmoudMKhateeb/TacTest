@@ -15,10 +15,11 @@ namespace TACHYON.Shipping.ShippingRequestBids.Dtos
         public long? TransportType { get; set; }
         public int? CapacityId { get; set; }
         public bool? IsMyAssignedBidsOnly { get; set; }
+
         public void Normalize()
         {
             if (string.IsNullOrWhiteSpace(Sorting)) return;
-            if (Sorting.Contains("shipperName") )
+            if (Sorting.Contains("shipperName"))
             {
                 Sorting = Sorting.Replace("shipperName", "Tenant.TenancyName");
             }
@@ -34,15 +35,11 @@ namespace TACHYON.Shipping.ShippingRequestBids.Dtos
             {
                 Sorting = null; //Sorting.Replace("BasePrice", "ShippingRequestBids.BasePrice");
             }
-
-            
-
         }
     }
 
 
     public class GetAllBidsShippingRequestForShipperInput : PagedAndSortedResultRequestDto
     {
-
     }
 }

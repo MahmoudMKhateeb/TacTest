@@ -1,20 +1,14 @@
-﻿import { Component, Injector, ViewEncapsulation, ViewChild, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { TrucksTypesServiceProxy, TrucksTypeDto, LoadOptionsInput } from '@shared/service-proxies/service-proxies';
+﻿import { Component, Injector, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { LoadOptionsInput, TokenAuthServiceProxy, TrucksTypeDto, TrucksTypesServiceProxy } from '@shared/service-proxies/service-proxies';
 import { NotifyService } from 'abp-ng2-module';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { TokenAuthServiceProxy } from '@shared/service-proxies/service-proxies';
-import { CreateOrEditTrucksTypeModalComponent } from './create-or-edit-trucksType-modal.component';
 
 import { ViewTrucksTypeModalComponent } from './view-trucksType-modal.component';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
-import { Table } from 'primeng/table';
-import { Paginator } from 'primeng/paginator';
-import { LazyLoadEvent } from 'primeng/api';
 import { FileDownloadService } from '@shared/utils/file-download.service';
 import { EntityTypeHistoryModalComponent } from '@app/shared/common/entityHistory/entity-type-history-modal.component';
 import * as _ from 'lodash';
-import * as moment from 'moment';
 import CustomStore from '@node_modules/devextreme/data/custom_store';
 import { LoadOptions } from '@node_modules/devextreme/data/load_options';
 
@@ -27,7 +21,6 @@ export class TrucksTypesComponent extends AppComponentBase implements OnInit {
   dataSource: any = {};
 
   @ViewChild('entityTypeHistoryModal', { static: true }) entityTypeHistoryModal: EntityTypeHistoryModalComponent;
-  @ViewChild('createOrEditTrucksTypeModal', { static: true }) createOrEditTrucksTypeModal: CreateOrEditTrucksTypeModalComponent;
   @ViewChild('viewTrucksTypeModalComponent', { static: true }) viewTrucksTypeModal: ViewTrucksTypeModalComponent;
 
   // @ViewChild('dataTable', { static: true }) dataTable: Table;
@@ -106,10 +99,6 @@ export class TrucksTypesComponent extends AppComponentBase implements OnInit {
   // reloadPage(): void {
   //   this.paginator.changePage(this.paginator.getPage());
   // }
-
-  createTrucksType(): void {
-    this.createOrEditTrucksTypeModal.show();
-  }
 
   showHistory(trucksType: TrucksTypeDto): void {
     this.entityTypeHistoryModal.show({

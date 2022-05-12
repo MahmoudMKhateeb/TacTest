@@ -26,7 +26,5 @@ namespace TACHYON.Routs.RoutSteps.Dtos
         //public string GoodsDetailName { get; set; }
         public GetRoutPointForViewOutput SourceRoutPointDto { get; set; }
         public GetRoutPointForViewOutput DestinationRoutPointDto { get; set; }
-
-
     }
 }

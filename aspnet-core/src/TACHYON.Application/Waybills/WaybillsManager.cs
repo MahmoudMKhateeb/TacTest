@@ -33,6 +33,7 @@ namespace TACHYON.Waybills
             _shippingRequestTripRepository = shippingRequestTripRepository;
             _routPointReqpsitory = routPointReqpsitory;
         }
+
         public byte[] GetSingleDropOrMasterWaybillPdf(int shippingRequestTripId)
         {
             DisableTenancyFilters();
@@ -119,6 +120,5 @@ namespace TACHYON.Waybills
 
             return item.ShippingRequestFk.RouteTypeId == ShippingRequestRouteType.SingleDrop;
         }
-
     }
 }

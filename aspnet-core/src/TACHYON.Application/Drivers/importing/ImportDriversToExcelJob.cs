@@ -56,7 +56,9 @@ namespace TACHYON.Drivers.importing
             IAppNotifier appNotifier,
             IBinaryObjectManager binaryObjectManager,
             IObjectMapper objectMapper,
-            IUnitOfWorkManager unitOfWorkManager, TenantManager tenantManager, IRepository<DocumentFile, Guid> documentFileRepository)
+            IUnitOfWorkManager unitOfWorkManager,
+            TenantManager tenantManager,
+            IRepository<DocumentFile, Guid> documentFileRepository)
         {
             _roleManager = roleManager;
             _driverListExcelDataReader = driverListExcelDataReader;
@@ -183,8 +185,8 @@ namespace TACHYON.Drivers.importing
             {
                 var formattedTenancyName = Regex.Replace(tenancyName, "[-_ ]", "").ToLower();
                 driver.EmailAddress = driver.PhoneNumber + "@" + formattedTenancyName + ".com";
-
             }
+
             //is driver
             driver.IsDriver = true;
 
@@ -199,7 +201,6 @@ namespace TACHYON.Drivers.importing
                 documentFile.TenantId = tenantId;
                 await _documentFileRepository.InsertAsync(documentFile);
             }
-
         }
 
         private async Task ProcessImportDriversResultAsync(ImportDriversFromExcelJobArgs args,
@@ -214,7 +215,8 @@ namespace TACHYON.Drivers.importing
             {
                 await _appNotifier.SendMessageAsync(
                     args.User,
-                    new LocalizableString("AllDriversSuccessfullyImportedFromExcel,PleaseUploadAllMissingDocuments", TACHYONConsts.LocalizationSourceName),
+                    new LocalizableString("AllDriversSuccessfullyImportedFromExcel,PleaseUploadAllMissingDocuments",
+                        TACHYONConsts.LocalizationSourceName),
                     null,
                     Abp.Notifications.NotificationSeverity.Success);
             }
@@ -232,6 +234,7 @@ namespace TACHYON.Drivers.importing
                         null,
                         Abp.Notifications.NotificationSeverity.Warn));
                 }
+
                 uow.Complete();
             }
         }

@@ -11,7 +11,6 @@ namespace TACHYON.AutoMapper.Tracking
 {
     public class TrackingProfile : Profile
     {
-
         public TrackingProfile()
         {
             CreateMap<ShippingRequestTrip, TrackingListDto>()

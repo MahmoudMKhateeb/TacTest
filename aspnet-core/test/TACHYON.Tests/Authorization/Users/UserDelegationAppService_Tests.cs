@@ -49,28 +49,23 @@ namespace TACHYON.Tests.Authorization.Users
             {
                 return;
             }
-            
+
             LoginAsDefaultTenantAdmin();
 
-            var delegations = await _userDelegationAppService.GetDelegatedUsers(new GetUserDelegationsInput
-            {
-                MaxResultCount = 10
-            });
+            var delegations =
+                await _userDelegationAppService.GetDelegatedUsers(new GetUserDelegationsInput { MaxResultCount = 10 });
 
             delegations.TotalCount.ShouldBe(1);
 
-            var george = UsingDbContext(context => { return context.Users.FirstOrDefault(u => u.UserName == "george"); });
+            var george =
+                UsingDbContext(context => { return context.Users.FirstOrDefault(u => u.UserName == "george"); });
             await _userDelegationAppService.DelegateNewUser(new CreateUserDelegationDto
             {
-                TargetUserId = george.Id,
-                StartTime = Clock.Now,
-                EndTime = Clock.Now.AddDays(7)
+                TargetUserId = george.Id, StartTime = Clock.Now, EndTime = Clock.Now.AddDays(7)
             });
 
-            delegations = await _userDelegationAppService.GetDelegatedUsers(new GetUserDelegationsInput
-            {
-                MaxResultCount = 10
-            });
+            delegations =
+                await _userDelegationAppService.GetDelegatedUsers(new GetUserDelegationsInput { MaxResultCount = 10 });
 
             delegations.TotalCount.ShouldBe(2);
         }
@@ -82,15 +77,14 @@ namespace TACHYON.Tests.Authorization.Users
             {
                 return;
             }
-            
+
             LoginAsDefaultTenantAdmin();
 
-            var exception = await Assert.ThrowsAsync<UserFriendlyException>(async () => await _userDelegationAppService.DelegateNewUser(new CreateUserDelegationDto
-            {
-                TargetUserId = AbpSession.GetUserId(),
-                StartTime = Clock.Now,
-                EndTime = Clock.Now.AddDays(7)
-            }));
+            var exception = await Assert.ThrowsAsync<UserFriendlyException>(async () =>
+                await _userDelegationAppService.DelegateNewUser(new CreateUserDelegationDto
+                {
+                    TargetUserId = AbpSession.GetUserId(), StartTime = Clock.Now, EndTime = Clock.Now.AddDays(7)
+                }));
 
             exception.Message.ShouldBe("You can't delegate authorization to yourself !");
         }
@@ -102,23 +96,19 @@ namespace TACHYON.Tests.Authorization.Users
             {
                 return;
             }
-            
+
             LoginAsDefaultTenantAdmin();
 
-            var delegations = await _userDelegationAppService.GetDelegatedUsers(new GetUserDelegationsInput
-            {
-                MaxResultCount = 10
-            });
+            var delegations =
+                await _userDelegationAppService.GetDelegatedUsers(new GetUserDelegationsInput { MaxResultCount = 10 });
 
             delegations.TotalCount.ShouldBe(1);
 
             var delegationId = delegations.Items[0].Id;
             await _userDelegationAppService.RemoveDelegation(new EntityDto<long>(delegationId));
 
-            delegations = await _userDelegationAppService.GetDelegatedUsers(new GetUserDelegationsInput
-            {
-                MaxResultCount = 10
-            });
+            delegations =
+                await _userDelegationAppService.GetDelegatedUsers(new GetUserDelegationsInput { MaxResultCount = 10 });
 
             delegations.TotalCount.ShouldBe(0);
         }
@@ -130,7 +120,7 @@ namespace TACHYON.Tests.Authorization.Users
             {
                 return;
             }
-            
+
             LoginAsDefaultTenantAdmin();
 
             var differentUsersDelegation = UsingDbContext(context =>
@@ -138,8 +128,9 @@ namespace TACHYON.Tests.Authorization.Users
                 var george = context.Users.FirstOrDefault(e => e.UserName == "george");
                 return context.UserDelegations.FirstOrDefault(e => e.SourceUserId == george.Id);
             });
-            
-            var exception = await Assert.ThrowsAsync<Exception>(async () => await _userDelegationAppService.RemoveDelegation(new EntityDto<long>(differentUsersDelegation.Id)));
+
+            var exception = await Assert.ThrowsAsync<Exception>(async () =>
+                await _userDelegationAppService.RemoveDelegation(new EntityDto<long>(differentUsersDelegation.Id)));
             exception.Message.ShouldBe("Only source user can delete a user delegation !");
         }
     }
@@ -163,9 +154,12 @@ namespace TACHYON.Tests.Authorization.Users
 
                     context.SaveChanges();
 
-                    var george = context.Users.FirstOrDefault(u => u.TenantId == AbpSession.TenantId && u.UserName == "george");
-                    var alex = context.Users.FirstOrDefault(u => u.TenantId == AbpSession.TenantId && u.UserName == "alex");
-                    var admin = context.Users.FirstOrDefault(u => u.TenantId == AbpSession.TenantId && u.UserName == "admin");
+                    var george =
+                        context.Users.FirstOrDefault(u => u.TenantId == AbpSession.TenantId && u.UserName == "george");
+                    var alex = context.Users.FirstOrDefault(u =>
+                        u.TenantId == AbpSession.TenantId && u.UserName == "alex");
+                    var admin = context.Users.FirstOrDefault(u =>
+                        u.TenantId == AbpSession.TenantId && u.UserName == "admin");
 
                     context.UserDelegations.Add(new UserDelegation
                     {
@@ -189,7 +183,10 @@ namespace TACHYON.Tests.Authorization.Users
                 });
         }
 
-        protected User CreateUserEntity(string userName, string name, string surname, string emailAddress)
+        protected User CreateUserEntity(string userName,
+            string name,
+            string surname,
+            string emailAddress)
         {
             var user = new User
             {

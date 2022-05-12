@@ -3,6 +3,5 @@
     public class GetShippingTypeForViewDto
     {
         public ShippingTypeDto ShippingType { get; set; }
-
     }
 }

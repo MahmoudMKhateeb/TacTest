@@ -19,7 +19,6 @@ namespace TACHYON.Documents.DocumentTypes
     [Table("DocumentTypes")]
     public class DocumentType : FullAuditedEntity<long>, IMultiLingualEntity<DocumentTypeTranslation>
     {
-
         [Required]
         [StringLength(DocumentTypeConsts.MaxDisplayNameLength, MinimumLength = DocumentTypeConsts.MinDisplayNameLength)]
         public virtual string DisplayName { get; set; }
@@ -30,16 +29,14 @@ namespace TACHYON.Documents.DocumentTypes
 
         public int DocumentsEntityId { get; set; }
 
-        [ForeignKey("DocumentsEntityId")]
-        public DocumentsEntity DocumentsEntityFk { get; set; }
+        [ForeignKey("DocumentsEntityId")] public DocumentsEntity DocumentsEntityFk { get; set; }
 
         /// <summary>
         /// To specify this file type is required from any Edition
         /// </summary>
         public int? EditionId { get; set; }
 
-        [ForeignKey("EditionId")]
-        public Edition EditionFk { get; set; }
+        [ForeignKey("EditionId")] public Edition EditionFk { get; set; }
 
         public bool HasNumber { get; set; }
 
@@ -69,6 +66,7 @@ namespace TACHYON.Documents.DocumentTypes
         /// days prior to the expiration date user notified
         /// </summary>
         public int? ExpirationAlertDays { get; set; }
+
         public bool InActiveAccountExpired { get; set; }
 
         /// <summary>
@@ -88,8 +86,6 @@ namespace TACHYON.Documents.DocumentTypes
         public bool IsRequiredDocumentTemplate { get; set; }
         public int? DocumentRelatedWithId { get; set; }
 
-        [ForeignKey("DocumentRelatedWithId")]
-        public Tenant DocumentRelatedWithFk { get; set; }
-
+        [ForeignKey("DocumentRelatedWithId")] public Tenant DocumentRelatedWithFk { get; set; }
     }
 }

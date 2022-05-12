@@ -10,7 +10,6 @@ namespace TACHYON.Goods.GoodsDetails.Exporting
 {
     public class GoodsDetailsExcelExporter : NpoiExcelExporterBase, IGoodsDetailsExcelExporter
     {
-
         private readonly ITimeZoneConverter _timeZoneConverter;
         private readonly IAbpSession _abpSession;
 
@@ -18,7 +17,7 @@ namespace TACHYON.Goods.GoodsDetails.Exporting
             ITimeZoneConverter timeZoneConverter,
             IAbpSession abpSession,
             ITempFileCacheManager tempFileCacheManager) :
-    base(tempFileCacheManager)
+            base(tempFileCacheManager)
         {
             _timeZoneConverter = timeZoneConverter;
             _abpSession = abpSession;
@@ -30,7 +29,6 @@ namespace TACHYON.Goods.GoodsDetails.Exporting
                 "GoodsDetails.xlsx",
                 excelPackage =>
                 {
-
                     var sheet = excelPackage.CreateSheet(L("GoodsDetails"));
 
                     AddHeader(
@@ -43,7 +41,7 @@ namespace TACHYON.Goods.GoodsDetails.Exporting
                         L("IsDangerousGood"),
                         L("DangerousGoodsCode"),
                         (L("GoodCategory")) + L("DisplayName")
-                        );
+                    );
 
                     AddObjects(
                         sheet, 2, goodsDetails,
@@ -55,10 +53,7 @@ namespace TACHYON.Goods.GoodsDetails.Exporting
                         _ => _.GoodsDetail.IsDangerousGood,
                         _ => _.GoodsDetail.DangerousGoodsCode,
                         _ => _.GoodCategoryDisplayName
-                        );
-
-
-
+                    );
                 });
         }
     }

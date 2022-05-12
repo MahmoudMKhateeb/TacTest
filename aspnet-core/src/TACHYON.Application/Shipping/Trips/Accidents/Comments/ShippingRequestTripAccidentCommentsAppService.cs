@@ -32,7 +32,8 @@ namespace TACHYON.Shipping.Trips.Accidents.Comments
 
 {
     [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrip_Accident_Comments)]
-    public class ShippingRequestTripAccidentCommentsAppService : TACHYONAppServiceBase, IShippingRequestTripAccidentCommentAppService
+    public class ShippingRequestTripAccidentCommentsAppService : TACHYONAppServiceBase,
+        IShippingRequestTripAccidentCommentAppService
     {
         private readonly IRepository<ShippingRequestTripAccidentComment> _ShippingRequestTripAccidentCommentRepository;
         private readonly ProfileAppService _ProfileAppService;
@@ -40,22 +41,24 @@ namespace TACHYON.Shipping.Trips.Accidents.Comments
         public ShippingRequestTripAccidentCommentsAppService(
             ProfileAppService ProfileAppService,
             IRepository<ShippingRequestTripAccidentComment> ShippingRequestTripAccidentCommentRepository
-            )
+        )
         {
             _ShippingRequestTripAccidentCommentRepository = ShippingRequestTripAccidentCommentRepository;
             _ProfileAppService = ProfileAppService;
         }
-        public ListResultDto<ShippingRequestTripAccidentCommentListDto> GetAll(GetAllForShippingRequestTripAccidentCommentFilterInput Input)
+
+        public ListResultDto<ShippingRequestTripAccidentCommentListDto> GetAll(
+            GetAllForShippingRequestTripAccidentCommentFilterInput Input)
         {
             CheckIfCanAccessService(true, AppFeatures.Carrier, AppFeatures.TachyonDealer, AppFeatures.Shipper);
             DisableTenancyFilters();
 
             var query = _ShippingRequestTripAccidentCommentRepository
-              .GetAll()
-              .Include(r => r.AccidentFK)
-              .Include(r => r.TenantFK)
-              .Where(r => r.AccidentFK.Id == Input.AccidentId)
-              .OrderBy(Input.Sorting ?? "id asc").ToList();
+                .GetAll()
+                .Include(r => r.AccidentFK)
+                .Include(r => r.TenantFK)
+                .Where(r => r.AccidentFK.Id == Input.AccidentId)
+                .OrderBy(Input.Sorting ?? "id asc").ToList();
 
             var list = ObjectMapper.Map<List<ShippingRequestTripAccidentCommentListDto>>(query);
             list.ForEach(e =>
@@ -72,14 +75,14 @@ namespace TACHYON.Shipping.Trips.Accidents.Comments
         {
             DisableTenancyFilters();
             var query = await _ShippingRequestTripAccidentCommentRepository
-              .GetAll()
-              .AsNoTracking()
-              .Where(x => x.Id == input.Id)
-              .FirstOrDefaultAsync();
+                .GetAll()
+                .AsNoTracking()
+                .Where(x => x.Id == input.Id)
+                .FirstOrDefaultAsync();
 
             return ObjectMapper.Map<CreateOrEditShippingRequestTripAccidentCommentDto>(query);
-
         }
+
         [AbpAuthorize(AppPermissions.Pages_ShippingRequest_Accidents_Comments_Create)]
         public async Task CreateOrEdit(CreateOrEditShippingRequestTripAccidentCommentDto input)
         {
@@ -97,7 +100,6 @@ namespace TACHYON.Shipping.Trips.Accidents.Comments
             {
                 await Update(input);
             }
-
         }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequest_Accidents_Comments_Delete)]
@@ -106,7 +108,8 @@ namespace TACHYON.Shipping.Trips.Accidents.Comments
             await _ShippingRequestTripAccidentCommentRepository.DeleteAsync((int)input.Id);
         }
 
-        #region Heleper 
+        #region Heleper
+
         private async Task Create(CreateOrEditShippingRequestTripAccidentCommentDto input)
         {
             DisableTenancyFilters();
@@ -116,22 +119,23 @@ namespace TACHYON.Shipping.Trips.Accidents.Comments
             {
                 Comment.TenantId = (int)AbpSession.TenantId;
             }
+
             await _ShippingRequestTripAccidentCommentRepository.InsertAndGetIdAsync(Comment);
         }
+
         [AbpAuthorize(AppPermissions.Pages_ShippingRequest_Accidents_Comments_Edit)]
         private async Task Update(CreateOrEditShippingRequestTripAccidentCommentDto input)
         {
             var Comment = await GetComment(input.Id);
             ObjectMapper.Map(input, Comment);
-
         }
 
         private async Task<ShippingRequestTripAccidentComment> GetComment(int Id)
         {
             var Comment = await _ShippingRequestTripAccidentCommentRepository
-            .GetAll()
-            .Where(x => x.Id == Id)
-            .FirstOrDefaultAsync();
+                .GetAll()
+                .Where(x => x.Id == Id)
+                .FirstOrDefaultAsync();
             if (Comment == null) throw new UserFriendlyException(L("NoRecoredFound"));
 
             return Comment;
@@ -145,8 +149,6 @@ namespace TACHYON.Shipping.Trips.Accidents.Comments
                 throw new UserFriendlyException(L("CommentCanNotBeEmpty"));
         }
 
-
         #endregion
-
     }
 }

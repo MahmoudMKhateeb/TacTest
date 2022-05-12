@@ -26,6 +26,5 @@ namespace TACHYON.Cities
 
 
         Task<List<CityCountyLookupTableDto>> GetAllCountyForTableDropdown();
-
     }
 }

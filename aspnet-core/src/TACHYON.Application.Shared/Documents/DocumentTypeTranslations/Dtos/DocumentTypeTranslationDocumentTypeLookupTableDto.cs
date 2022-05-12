@@ -4,8 +4,8 @@ namespace TACHYON.Documents.DocumentTypeTranslations.Dtos
 {
     public class DocumentTypeTranslationDocumentTypeLookupTableDto
     {
-		public long Id { get; set; }
+        public long Id { get; set; }
 
-		public string DisplayName { get; set; }
+        public string DisplayName { get; set; }
     }
 }

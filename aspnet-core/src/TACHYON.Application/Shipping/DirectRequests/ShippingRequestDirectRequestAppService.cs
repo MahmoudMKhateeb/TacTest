@@ -29,7 +29,12 @@ namespace TACHYON.Shipping.DirectRequests
         private readonly PriceOfferManager _priceOfferManager;
 
 
-        public ShippingRequestDirectRequestAppService(IRepository<TenantCarrier, long> tenantCarrierRepository, IRepository<Tenant> tenantRepository, IRepository<ShippingRequestDirectRequest, long> shippingRequestDirectRequestRepository, ShippingRequestManager shippingRequestManager, IAppNotifier appNotifier, PriceOfferManager priceOfferManager)
+        public ShippingRequestDirectRequestAppService(IRepository<TenantCarrier, long> tenantCarrierRepository,
+            IRepository<Tenant> tenantRepository,
+            IRepository<ShippingRequestDirectRequest, long> shippingRequestDirectRequestRepository,
+            ShippingRequestManager shippingRequestManager,
+            IAppNotifier appNotifier,
+            PriceOfferManager priceOfferManager)
         {
             _tenantCarrierRepository = tenantCarrierRepository;
             _tenantRepository = tenantRepository;
@@ -38,8 +43,10 @@ namespace TACHYON.Shipping.DirectRequests
             _appNotifier = appNotifier;
             _priceOfferManager = priceOfferManager;
         }
+
         [RequiresFeature(AppFeatures.SendDirectRequest)]
-        public async Task<PagedResultDto<ShippingRequestDirectRequestListDto>> GetAll(ShippingRequestDirectRequestGetAllInput input)
+        public async Task<PagedResultDto<ShippingRequestDirectRequestListDto>> GetAll(
+            ShippingRequestDirectRequestGetAllInput input)
         {
             var query = _shippingRequestDirectRequestRepository
                 .GetAll()
@@ -53,8 +60,10 @@ namespace TACHYON.Shipping.DirectRequests
 
             return new PagedResultDto<ShippingRequestDirectRequestListDto>(totalCount, list);
         }
+
         [RequiresFeature(AppFeatures.SendDirectRequest)]
-        public async Task<PagedResultDto<ShippingRequestDirectRequestGetCarrirerListDto>> GetAllCarriers(ShippingRequestDirectRequestGetAllCarrirerInput input)
+        public async Task<PagedResultDto<ShippingRequestDirectRequestGetCarrirerListDto>> GetAllCarriers(
+            ShippingRequestDirectRequestGetAllCarrirerInput input)
         {
             IfCanAccessService();
             IQueryable<ShippingRequestDirectRequestGetCarrirerListDto> query = GetCarriers(input);
@@ -63,7 +72,8 @@ namespace TACHYON.Shipping.DirectRequests
 
             Result.ForEach(r =>
             {
-                r.IsRequestSent = _shippingRequestDirectRequestRepository.FirstOrDefault(f => f.ShippingRequestId == input.ShippingRequestId && f.CarrierTenantId == r.Id) != null;
+                r.IsRequestSent = _shippingRequestDirectRequestRepository.FirstOrDefault(f =>
+                    f.ShippingRequestId == input.ShippingRequestId && f.CarrierTenantId == r.Id) != null;
             });
             var totalCount = await query.CountAsync();
             return new PagedResultDto<ShippingRequestDirectRequestGetCarrirerListDto>(
@@ -71,12 +81,14 @@ namespace TACHYON.Shipping.DirectRequests
                 Result
             );
         }
+
         [RequiresFeature(AppFeatures.SendDirectRequest)]
         public async Task Create(CreateShippingRequestDirectRequestInput input)
         {
             IfCanAccessService();
             await CheckCanAddDriectRequestToCarrirer(input);
-            var id = await _shippingRequestDirectRequestRepository.InsertAndGetIdAsync(ObjectMapper.Map<ShippingRequestDirectRequest>(input));
+            var id = await _shippingRequestDirectRequestRepository.InsertAndGetIdAsync(
+                ObjectMapper.Map<ShippingRequestDirectRequest>(input));
             await _appNotifier.SendDriectRequest(GetCurrentTenant().Name, input.CarrierTenantId, id);
         }
 
@@ -84,98 +96,110 @@ namespace TACHYON.Shipping.DirectRequests
         public async Task Delete(EntityDto<long> input)
         {
             IfCanAccessService();
-            var directRequest = await _shippingRequestDirectRequestRepository.FirstOrDefaultAsync(x => x.Id == input.Id && (x.Status == ShippingRequestDirectRequestStatus.New || x.Status == ShippingRequestDirectRequestStatus.Declined));
-            if (directRequest == null) throw new UserFriendlyException(L("YouCanDeleteDirectRequestOnlyWhenTheStatusIsNew"));
+            var directRequest = await _shippingRequestDirectRequestRepository.FirstOrDefaultAsync(x =>
+                x.Id == input.Id && (x.Status == ShippingRequestDirectRequestStatus.New ||
+                                     x.Status == ShippingRequestDirectRequestStatus.Declined));
+            if (directRequest == null)
+                throw new UserFriendlyException(L("YouCanDeleteDirectRequestOnlyWhenTheStatusIsNew"));
             await _shippingRequestDirectRequestRepository.DeleteAsync(directRequest);
         }
-
-
 
 
         [RequiresFeature(AppFeatures.SendDirectRequest)]
         public async Task Reject(RejectShippingRequestDirectRequestInput input)
         {
             IfCanAccessService();
-            var directRequest = await _shippingRequestDirectRequestRepository.FirstOrDefaultAsync(x => x.Id == input.Id && x.Status == ShippingRequestDirectRequestStatus.Response);
-            if (directRequest == null) throw new UserFriendlyException(L("YouCanRejectDirectRequestOnlyWhenTheStatusIsResponse"));
+            var directRequest = await _shippingRequestDirectRequestRepository.FirstOrDefaultAsync(x =>
+                x.Id == input.Id && x.Status == ShippingRequestDirectRequestStatus.Response);
+            if (directRequest == null)
+                throw new UserFriendlyException(L("YouCanRejectDirectRequestOnlyWhenTheStatusIsResponse"));
             directRequest.Status = ShippingRequestDirectRequestStatus.Rejected;
             directRequest.RejetcReason = input.Reason;
             DisableTenancyFilters();
-            await _appNotifier.RejectedOffer(await _priceOfferManager.GetOfferBySource(directRequest.Id, PriceOfferChannel.DirectRequest), GetCurrentTenant().Name);
+            await _appNotifier.RejectedOffer(
+                await _priceOfferManager.GetOfferBySource(directRequest.Id, PriceOfferChannel.DirectRequest),
+                GetCurrentTenant().Name);
         }
 
         [RequiresFeature(AppFeatures.Carrier)]
         public async Task Decline(long id)
         {
             DisableTenancyFilters();
-            var directRequest = await _shippingRequestDirectRequestRepository.FirstOrDefaultAsync(x => x.Id == id && (x.Status == ShippingRequestDirectRequestStatus.New) && x.CarrierTenantId == AbpSession.TenantId.Value);
-            if (directRequest == null) throw new UserFriendlyException(L("YouCanDeclineDirectRequestOnlyWhenTheStatusIsNew"));
+            var directRequest = await _shippingRequestDirectRequestRepository.FirstOrDefaultAsync(x =>
+                x.Id == id && (x.Status == ShippingRequestDirectRequestStatus.New) &&
+                x.CarrierTenantId == AbpSession.TenantId.Value);
+            if (directRequest == null)
+                throw new UserFriendlyException(L("YouCanDeclineDirectRequestOnlyWhenTheStatusIsNew"));
             directRequest.Status = ShippingRequestDirectRequestStatus.Declined;
             await _appNotifier.DeclineDriectRequest(GetCurrentTenant().Name, directRequest.TenantId, id);
         }
+
         #region Heleper
+
         /// <summary>
         /// Get list of carrier can send direct request
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        private IQueryable<ShippingRequestDirectRequestGetCarrirerListDto> GetCarriers(ShippingRequestDirectRequestGetAllCarrirerInput input)
+        private IQueryable<ShippingRequestDirectRequestGetCarrirerListDto> GetCarriers(
+            ShippingRequestDirectRequestGetAllCarrirerInput input)
         {
             IQueryable<ShippingRequestDirectRequestGetCarrirerListDto> query;
             if (IsEnabled(AppFeatures.TachyonDealer))
             {
                 query = _tenantRepository
-                                .GetAll()
-                                .AsNoTracking()
-                                .Where(t => t.IsActive && t.Edition.DisplayName == TACHYONConsts.CarrierEdtionName)
-                                .WhereIf(!string.IsNullOrEmpty(input.Filter),
-                                        e => e.TenancyName.ToLower().Contains(input.Filter.ToLower()) ||
-                                             e.Name.ToLower().Contains(input.Filter.ToLower()) ||
-                                             e.companyName.ToLower().Contains(input.Filter.ToLower()))
-                                .OrderBy(input.Sorting ?? "id desc")
-                                .Select(r => new ShippingRequestDirectRequestGetCarrirerListDto
-                                {
-                                    Id = r.Id,
-                                    Name = r.Name,
-                                    CarrierRate = r.Rate,
-                                    CarrierRateNumber = r.RateNumber
-                                });
+                    .GetAll()
+                    .AsNoTracking()
+                    .Where(t => t.IsActive && t.Edition.DisplayName == TACHYONConsts.CarrierEdtionName)
+                    .WhereIf(!string.IsNullOrEmpty(input.Filter),
+                        e => e.TenancyName.ToLower().Contains(input.Filter.ToLower()) ||
+                             e.Name.ToLower().Contains(input.Filter.ToLower()) ||
+                             e.companyName.ToLower().Contains(input.Filter.ToLower()))
+                    .OrderBy(input.Sorting ?? "id desc")
+                    .Select(r => new ShippingRequestDirectRequestGetCarrirerListDto
+                    {
+                        Id = r.Id, Name = r.Name, CarrierRate = r.Rate, CarrierRateNumber = r.RateNumber
+                    });
             }
             else if (IsEnabled(AppFeatures.Shipper))
             {
                 query = _tenantCarrierRepository
-                                .GetAll()
-                                .AsNoTracking()
-                                .Where(t => t.CarrierShipper.IsActive)
-                                .WhereIf(!string.IsNullOrEmpty(input.Filter),
-                                e => e.CarrierShipper.TenancyName.ToLower().Contains(input.Filter.ToLower()) ||
-                                     e.CarrierShipper.Name.ToLower().Contains(input.Filter.ToLower()) ||
-                                     e.CarrierShipper.companyName.ToLower().Contains(input.Filter.ToLower())
-                                )
-
-                                .OrderBy(input.Sorting ?? "id desc")
-                                .Select(r => new ShippingRequestDirectRequestGetCarrirerListDto
-                                {
-                                    Id = r.CarrierTenantId,
-                                    Name = r.CarrierShipper.Name,
-                                    CarrierRate = r.CarrierShipper.Rate,
-                                    CarrierRateNumber = r.CarrierShipper.RateNumber
-                                });
+                    .GetAll()
+                    .AsNoTracking()
+                    .Where(t => t.CarrierShipper.IsActive)
+                    .WhereIf(!string.IsNullOrEmpty(input.Filter),
+                        e => e.CarrierShipper.TenancyName.ToLower().Contains(input.Filter.ToLower()) ||
+                             e.CarrierShipper.Name.ToLower().Contains(input.Filter.ToLower()) ||
+                             e.CarrierShipper.companyName.ToLower().Contains(input.Filter.ToLower())
+                    )
+                    .OrderBy(input.Sorting ?? "id desc")
+                    .Select(r => new ShippingRequestDirectRequestGetCarrirerListDto
+                    {
+                        Id = r.CarrierTenantId,
+                        Name = r.CarrierShipper.Name,
+                        CarrierRate = r.CarrierShipper.Rate,
+                        CarrierRateNumber = r.CarrierShipper.RateNumber
+                    });
             }
             else
             {
                 throw new UserFriendlyException(L("NoRecordsFound"));
             }
+
             return query;
         }
 
         private async Task CheckCanAddDriectRequestToCarrirer(CreateShippingRequestDirectRequestInput input)
         {
-            if (await _shippingRequestDirectRequestRepository.GetAll().AnyAsync(x => x.CarrierTenantId == input.CarrierTenantId && x.ShippingRequestId == input.ShippingRequestId)) throw new UserFriendlyException(L("TheCarrierHaveAlreadyDirectRequestSendBefore"));
+            if (await _shippingRequestDirectRequestRepository.GetAll().AnyAsync(x =>
+                    x.CarrierTenantId == input.CarrierTenantId && x.ShippingRequestId == input.ShippingRequestId))
+                throw new UserFriendlyException(L("TheCarrierHaveAlreadyDirectRequestSendBefore"));
             if (IsEnabled(AppFeatures.Shipper))
             {
-                if (!await _tenantCarrierRepository.GetAll().AnyAsync(x => x.CarrierTenantId == input.CarrierTenantId)) throw new UserFriendlyException(L("TheCarrirerSelectedIsNotInYourList"));
+                if (!await _tenantCarrierRepository.GetAll().AnyAsync(x => x.CarrierTenantId == input.CarrierTenantId))
+                    throw new UserFriendlyException(L("TheCarrirerSelectedIsNotInYourList"));
             }
+
             DisableTenancyFilters();
             using (CurrentUnitOfWork.DisableFilter("IHasIsDrafted"))
             {
@@ -185,19 +209,10 @@ namespace TACHYON.Shipping.DirectRequests
 
         private void IfCanAccessService()
         {
-            if (!IsEnabled(AppFeatures.Shipper) && !IsEnabled(AppFeatures.TachyonDealer)) throw new UserFriendlyException(L("YouDoNoHaveAccess"));
+            if (!IsEnabled(AppFeatures.Shipper) && !IsEnabled(AppFeatures.TachyonDealer))
+                throw new UserFriendlyException(L("YouDoNoHaveAccess"));
         }
 
-
-
-
-
-
-
-
         #endregion
-
-
-
     }
 }

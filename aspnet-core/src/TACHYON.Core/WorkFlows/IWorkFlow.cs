@@ -9,7 +9,6 @@ namespace TACHYON.WorkFlows
 {
     public interface IWorkFlow<TArgs, TEnum> : IDomainService where TEnum : Enum
     {
-
         List<WorkFlow<TArgs, TEnum>> Flows { get; set; }
         Task Invoke(TArgs args, string action);
         List<WorkflowTransaction<TArgs, TEnum>> GetTransactions(int workFlowVersion);

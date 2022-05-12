@@ -16,8 +16,6 @@ namespace TACHYON.Goods.Dtos
         [StringLength(5, MinimumLength = 2)]
         public string Language { get; set; }
 
-        [Required]
-        public int CoreId { get; set; }
-
+        [Required] public int CoreId { get; set; }
     }
 }

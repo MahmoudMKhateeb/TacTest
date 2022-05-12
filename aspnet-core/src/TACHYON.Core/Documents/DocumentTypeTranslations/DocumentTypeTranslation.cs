@@ -10,19 +10,16 @@ namespace TACHYON.Documents.DocumentTypeTranslations
     [Table("DocumentTypeTranslations")]
     public class DocumentTypeTranslation : Entity, IEntityTranslation<DocumentType, long>
     {
-
         [Required]
-        [StringLength(DocumentTypeTranslationConsts.MaxNameLength, MinimumLength = DocumentTypeTranslationConsts.MinNameLength)]
+        [StringLength(DocumentTypeTranslationConsts.MaxNameLength,
+            MinimumLength = DocumentTypeTranslationConsts.MinNameLength)]
         public virtual string Name { get; set; }
 
-        [Required]
-        public virtual string Language { get; set; }
+        [Required] public virtual string Language { get; set; }
 
 
         public virtual long CoreId { get; set; }
 
-        [ForeignKey("CoreId")]
-        public DocumentType Core { get; set; }
-
+        [ForeignKey("CoreId")] public DocumentType Core { get; set; }
     }
 }

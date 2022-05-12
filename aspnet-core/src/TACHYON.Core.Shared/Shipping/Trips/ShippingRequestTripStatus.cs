@@ -6,6 +6,7 @@
         InTransit = 1,
         Canceled = 2,
         Delivered = 3,
+
         /// <summary>
         /// When one or more drop in that trip needs receiver confirmation or POD or both
         /// </summary>

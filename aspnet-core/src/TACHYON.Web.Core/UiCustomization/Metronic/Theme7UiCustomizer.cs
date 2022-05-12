@@ -23,21 +23,29 @@ namespace TACHYON.Web.UiCustomization.Metronic
                 {
                     Header = new ThemeHeaderSettingsDto
                     {
-                        DesktopFixedHeader = await GetSettingValueAsync<bool>(AppSettings.UiManagement.Header.DesktopFixedHeader),
-                        MobileFixedHeader = await GetSettingValueAsync<bool>(AppSettings.UiManagement.Header.MobileFixedHeader)
+                        DesktopFixedHeader =
+                            await GetSettingValueAsync<bool>(AppSettings.UiManagement.Header
+                                .DesktopFixedHeader),
+                        MobileFixedHeader =
+                            await GetSettingValueAsync<bool>(AppSettings.UiManagement.Header
+                                .MobileFixedHeader)
                     },
                     SubHeader = new ThemeSubHeaderSettingsDto
                     {
-                        FixedSubHeader = await GetSettingValueAsync<bool>(AppSettings.UiManagement.SubHeader.Fixed),
-                        SubheaderStyle = await GetSettingValueAsync(AppSettings.UiManagement.SubHeader.Style)
+                        FixedSubHeader =
+                            await GetSettingValueAsync<bool>(AppSettings.UiManagement.SubHeader.Fixed),
+                        SubheaderStyle =
+                            await GetSettingValueAsync(AppSettings.UiManagement.SubHeader.Style)
                     },
                     Footer = new ThemeFooterSettingsDto
                     {
-                        FixedFooter = await GetSettingValueAsync<bool>(AppSettings.UiManagement.Footer.FixedFooter)
+                        FixedFooter =
+                            await GetSettingValueAsync<bool>(AppSettings.UiManagement.Footer.FixedFooter)
                     },
                     Menu = new ThemeMenuSettingsDto()
                     {
-                        SearchActive = await GetSettingValueAsync<bool>(AppSettings.UiManagement.SearchActive)
+                        SearchActive =
+                            await GetSettingValueAsync<bool>(AppSettings.UiManagement.SearchActive)
                     }
                 }
             };
@@ -67,36 +75,54 @@ namespace TACHYON.Web.UiCustomization.Metronic
         {
             await SettingManager.ChangeSettingForUserAsync(user, AppSettings.UiManagement.Theme, ThemeName);
 
-            await ChangeSettingForUserAsync(user, AppSettings.UiManagement.Header.DesktopFixedHeader, settings.Header.DesktopFixedHeader.ToString());
-            await ChangeSettingForUserAsync(user, AppSettings.UiManagement.Header.MobileFixedHeader, settings.Header.MobileFixedHeader.ToString());
-            await ChangeSettingForUserAsync(user, AppSettings.UiManagement.SubHeader.Fixed, settings.SubHeader.FixedSubHeader.ToString());
-            await ChangeSettingForUserAsync(user, AppSettings.UiManagement.SubHeader.Style, settings.SubHeader.SubheaderStyle);
-            await ChangeSettingForUserAsync(user, AppSettings.UiManagement.Footer.FixedFooter, settings.Footer.FixedFooter.ToString());
-            await ChangeSettingForUserAsync(user, AppSettings.UiManagement.SearchActive, settings.Menu.SearchActive.ToString());
+            await ChangeSettingForUserAsync(user, AppSettings.UiManagement.Header.DesktopFixedHeader,
+                settings.Header.DesktopFixedHeader.ToString());
+            await ChangeSettingForUserAsync(user, AppSettings.UiManagement.Header.MobileFixedHeader,
+                settings.Header.MobileFixedHeader.ToString());
+            await ChangeSettingForUserAsync(user, AppSettings.UiManagement.SubHeader.Fixed,
+                settings.SubHeader.FixedSubHeader.ToString());
+            await ChangeSettingForUserAsync(user, AppSettings.UiManagement.SubHeader.Style,
+                settings.SubHeader.SubheaderStyle);
+            await ChangeSettingForUserAsync(user, AppSettings.UiManagement.Footer.FixedFooter,
+                settings.Footer.FixedFooter.ToString());
+            await ChangeSettingForUserAsync(user, AppSettings.UiManagement.SearchActive,
+                settings.Menu.SearchActive.ToString());
         }
 
         public async Task UpdateTenantUiManagementSettingsAsync(int tenantId, ThemeSettingsDto settings)
         {
             await SettingManager.ChangeSettingForTenantAsync(tenantId, AppSettings.UiManagement.Theme, ThemeName);
 
-            await ChangeSettingForTenantAsync(tenantId, AppSettings.UiManagement.Header.DesktopFixedHeader, settings.Header.DesktopFixedHeader.ToString());
-            await ChangeSettingForTenantAsync(tenantId, AppSettings.UiManagement.Header.MobileFixedHeader, settings.Header.MobileFixedHeader.ToString());
-            await ChangeSettingForTenantAsync(tenantId, AppSettings.UiManagement.SubHeader.Fixed, settings.SubHeader.FixedSubHeader.ToString());
-            await ChangeSettingForTenantAsync(tenantId, AppSettings.UiManagement.SubHeader.Style, settings.SubHeader.SubheaderStyle);
-            await ChangeSettingForTenantAsync(tenantId, AppSettings.UiManagement.Footer.FixedFooter, settings.Footer.FixedFooter.ToString());
-            await ChangeSettingForTenantAsync(tenantId, AppSettings.UiManagement.SearchActive, settings.Menu.SearchActive.ToString());
+            await ChangeSettingForTenantAsync(tenantId, AppSettings.UiManagement.Header.DesktopFixedHeader,
+                settings.Header.DesktopFixedHeader.ToString());
+            await ChangeSettingForTenantAsync(tenantId, AppSettings.UiManagement.Header.MobileFixedHeader,
+                settings.Header.MobileFixedHeader.ToString());
+            await ChangeSettingForTenantAsync(tenantId, AppSettings.UiManagement.SubHeader.Fixed,
+                settings.SubHeader.FixedSubHeader.ToString());
+            await ChangeSettingForTenantAsync(tenantId, AppSettings.UiManagement.SubHeader.Style,
+                settings.SubHeader.SubheaderStyle);
+            await ChangeSettingForTenantAsync(tenantId, AppSettings.UiManagement.Footer.FixedFooter,
+                settings.Footer.FixedFooter.ToString());
+            await ChangeSettingForTenantAsync(tenantId, AppSettings.UiManagement.SearchActive,
+                settings.Menu.SearchActive.ToString());
         }
 
         public async Task UpdateApplicationUiManagementSettingsAsync(ThemeSettingsDto settings)
         {
             await SettingManager.ChangeSettingForApplicationAsync(AppSettings.UiManagement.Theme, ThemeName);
 
-            await ChangeSettingForApplicationAsync(AppSettings.UiManagement.Header.DesktopFixedHeader, settings.Header.DesktopFixedHeader.ToString());
-            await ChangeSettingForApplicationAsync(AppSettings.UiManagement.Header.MobileFixedHeader, settings.Header.MobileFixedHeader.ToString());
-            await ChangeSettingForApplicationAsync(AppSettings.UiManagement.SubHeader.Fixed, settings.SubHeader.FixedSubHeader.ToString());
-            await ChangeSettingForApplicationAsync(AppSettings.UiManagement.SubHeader.Style, settings.SubHeader.SubheaderStyle);
-            await ChangeSettingForApplicationAsync(AppSettings.UiManagement.Footer.FixedFooter, settings.Footer.FixedFooter.ToString());
-            await ChangeSettingForApplicationAsync(AppSettings.UiManagement.SearchActive, settings.Menu.SearchActive.ToString());
+            await ChangeSettingForApplicationAsync(AppSettings.UiManagement.Header.DesktopFixedHeader,
+                settings.Header.DesktopFixedHeader.ToString());
+            await ChangeSettingForApplicationAsync(AppSettings.UiManagement.Header.MobileFixedHeader,
+                settings.Header.MobileFixedHeader.ToString());
+            await ChangeSettingForApplicationAsync(AppSettings.UiManagement.SubHeader.Fixed,
+                settings.SubHeader.FixedSubHeader.ToString());
+            await ChangeSettingForApplicationAsync(AppSettings.UiManagement.SubHeader.Style,
+                settings.SubHeader.SubheaderStyle);
+            await ChangeSettingForApplicationAsync(AppSettings.UiManagement.Footer.FixedFooter,
+                settings.Footer.FixedFooter.ToString());
+            await ChangeSettingForApplicationAsync(AppSettings.UiManagement.SearchActive,
+                settings.Menu.SearchActive.ToString());
         }
 
         public async Task<ThemeSettingsDto> GetHostUiManagementSettings()
@@ -106,23 +132,34 @@ namespace TACHYON.Web.UiCustomization.Metronic
             return new ThemeSettingsDto
             {
                 Theme = theme,
-                Header = new ThemeHeaderSettingsDto
-                {
-                    DesktopFixedHeader = await GetSettingValueForApplicationAsync<bool>(AppSettings.UiManagement.Header.DesktopFixedHeader),
-                    MobileFixedHeader = await GetSettingValueForApplicationAsync<bool>(AppSettings.UiManagement.Header.MobileFixedHeader)
-                },
+                Header =
+                    new ThemeHeaderSettingsDto
+                    {
+                        DesktopFixedHeader =
+                            await GetSettingValueForApplicationAsync<bool>(AppSettings.UiManagement.Header
+                                .DesktopFixedHeader),
+                        MobileFixedHeader =
+                            await GetSettingValueForApplicationAsync<bool>(AppSettings.UiManagement.Header
+                                .MobileFixedHeader)
+                    },
                 SubHeader = new ThemeSubHeaderSettingsDto
                 {
-                    FixedSubHeader = await GetSettingValueForApplicationAsync<bool>(AppSettings.UiManagement.SubHeader.Fixed),
-                    SubheaderStyle = await GetSettingValueForApplicationAsync(AppSettings.UiManagement.SubHeader.Style)
+                    FixedSubHeader =
+                        await GetSettingValueForApplicationAsync<bool>(AppSettings.UiManagement.SubHeader
+                            .Fixed),
+                    SubheaderStyle =
+                        await GetSettingValueForApplicationAsync(AppSettings.UiManagement.SubHeader.Style)
                 },
                 Footer = new ThemeFooterSettingsDto
                 {
-                    FixedFooter = await GetSettingValueForApplicationAsync<bool>(AppSettings.UiManagement.Footer.FixedFooter)
+                    FixedFooter =
+                        await GetSettingValueForApplicationAsync<bool>(AppSettings.UiManagement.Footer
+                            .FixedFooter)
                 },
                 Menu = new ThemeMenuSettingsDto()
                 {
-                    SearchActive = await GetSettingValueForApplicationAsync<bool>(AppSettings.UiManagement.SearchActive)
+                    SearchActive =
+                        await GetSettingValueForApplicationAsync<bool>(AppSettings.UiManagement.SearchActive)
                 }
             };
         }
@@ -134,23 +171,35 @@ namespace TACHYON.Web.UiCustomization.Metronic
             return new ThemeSettingsDto
             {
                 Theme = theme,
-                Header = new ThemeHeaderSettingsDto
-                {
-                    DesktopFixedHeader = await GetSettingValueForTenantAsync<bool>(AppSettings.UiManagement.Header.DesktopFixedHeader, tenantId),
-                    MobileFixedHeader = await GetSettingValueForTenantAsync<bool>(AppSettings.UiManagement.Header.MobileFixedHeader, tenantId)
-                },
+                Header =
+                    new ThemeHeaderSettingsDto
+                    {
+                        DesktopFixedHeader =
+                            await GetSettingValueForTenantAsync<bool>(
+                                AppSettings.UiManagement.Header.DesktopFixedHeader, tenantId),
+                        MobileFixedHeader =
+                            await GetSettingValueForTenantAsync<bool>(
+                                AppSettings.UiManagement.Header.MobileFixedHeader, tenantId)
+                    },
                 SubHeader = new ThemeSubHeaderSettingsDto
                 {
-                    FixedSubHeader = await GetSettingValueForTenantAsync<bool>(AppSettings.UiManagement.SubHeader.Fixed, tenantId),
-                    SubheaderStyle = await GetSettingValueForTenantAsync(AppSettings.UiManagement.SubHeader.Style, tenantId)
+                    FixedSubHeader =
+                        await GetSettingValueForTenantAsync<bool>(AppSettings.UiManagement.SubHeader.Fixed,
+                            tenantId),
+                    SubheaderStyle =
+                        await GetSettingValueForTenantAsync(AppSettings.UiManagement.SubHeader.Style, tenantId)
                 },
                 Footer = new ThemeFooterSettingsDto
                 {
-                    FixedFooter = await GetSettingValueForTenantAsync<bool>(AppSettings.UiManagement.Footer.FixedFooter, tenantId)
+                    FixedFooter =
+                        await GetSettingValueForTenantAsync<bool>(AppSettings.UiManagement.Footer.FixedFooter,
+                            tenantId)
                 },
                 Menu = new ThemeMenuSettingsDto()
                 {
-                    SearchActive = await GetSettingValueForTenantAsync<bool>(AppSettings.UiManagement.SearchActive, tenantId)
+                    SearchActive =
+                        await GetSettingValueForTenantAsync<bool>(AppSettings.UiManagement.SearchActive,
+                            tenantId)
                 }
             };
         }

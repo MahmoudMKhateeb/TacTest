@@ -8,11 +8,9 @@ namespace TACHYON.Localization
 {
     public class GetLanguageTextsInput : IPagedResultRequest, ISortedResultRequest, IShouldNormalize
     {
-        [Range(0, int.MaxValue)]
-        public int MaxResultCount { get; set; } //0: Unlimited.
+        [Range(0, int.MaxValue)] public int MaxResultCount { get; set; } //0: Unlimited.
 
-        [Range(0, int.MaxValue)]
-        public int SkipCount { get; set; }
+        [Range(0, int.MaxValue)] public int SkipCount { get; set; }
 
         public string Sorting { get; set; }
 

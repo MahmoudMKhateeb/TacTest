@@ -24,7 +24,9 @@ namespace TACHYON.Routs.RoutPoints
     {
         private IRepository<RoutPoint, long> _routPointsRepository;
         private readonly IEntitySnapshotManager _snapshotManager;
-        public RoutPointsAppService(IRepository<RoutPoint, long> routPointsRepository, IEntitySnapshotManager snapshotManager)
+
+        public RoutPointsAppService(IRepository<RoutPoint, long> routPointsRepository,
+            IEntitySnapshotManager snapshotManager)
         {
             _routPointsRepository = routPointsRepository;
             _snapshotManager = snapshotManager;
@@ -41,12 +43,11 @@ namespace TACHYON.Routs.RoutPoints
 
             var PagedAndFilteredRoutPoints = filteredRoutPoints
                 .OrderBy(input.Sorting ?? "id asc")
-                    .PageBy(input);
+                .PageBy(input);
 
             var routPoints = PagedAndFilteredRoutPoints.Select(x => new GetRoutPointForViewOutput
             {
                 RoutPointDto = ObjectMapper.Map<RoutPointDto>(x),
-
                 facilityDto = new GetFacilityForViewOutput
                 {
                     CityDisplayName = x.FacilityFk.CityFk.DisplayName,
@@ -57,7 +58,6 @@ namespace TACHYON.Routs.RoutPoints
 
             var totalCount = await routPoints.CountAsync();
             return new PagedResultDto<GetRoutPointForViewOutput>(totalCount, await routPoints.ToListAsync());
-
         }
 
         public async Task CreateOrEditRoutPoint(CreateOrEditRoutPointDto input)
@@ -70,7 +70,6 @@ namespace TACHYON.Routs.RoutPoints
             {
                 await Edit(input);
             }
-
         }
 
         [AbpAuthorize(AppPermissions.Pages_RoutPoints_Delete)]
@@ -81,21 +80,24 @@ namespace TACHYON.Routs.RoutPoints
 
         #region Waybills
 
-        public IEnumerable<GetDropsDetailsForMasterWaybillOutput> GetDropsDetailsForMasterWaybill(long shippingRequestTripId)
+        public IEnumerable<GetDropsDetailsForMasterWaybillOutput> GetDropsDetailsForMasterWaybill(
+            long shippingRequestTripId)
         {
             var points = _routPointsRepository.GetAll()
                 .Where(e => e.ShippingRequestTripId == shippingRequestTripId)
                 .Where(e => e.PickingType == PickingType.Dropoff);
 
-            var query = points.Select(x => new { Id = x.WaybillNumber, ReceiverName = x.ReceiverFk != null ? x.ReceiverFk.FullName : x.ReceiverFullName });
+            var query = points.Select(x => new
+            {
+                Id = x.WaybillNumber,
+                ReceiverName = x.ReceiverFk != null ? x.ReceiverFk.FullName : x.ReceiverFullName
+            });
             return query.ToList().Select(x => new GetDropsDetailsForMasterWaybillOutput
             {
-                Code = x.Id.ToString(),
-                ReceiverDisplayName = x.ReceiverName
+                Code = x.Id.ToString(), ReceiverDisplayName = x.ReceiverName
             });
             var ll = "";
         }
-
 
         #endregion
 
@@ -116,7 +118,9 @@ namespace TACHYON.Routs.RoutPoints
             ObjectMapper.Map(input, routPoint);
         }
 
-        public async Task<dynamic> GetRoutPointSnapshot(long routePointId, int tripId, DateTime dateTime)
+        public async Task<dynamic> GetRoutPointSnapshot(long routePointId,
+            int tripId,
+            DateTime dateTime)
         {
             var pointSnapshot = await _snapshotManager.GetSnapshotAsync<RoutPoint, long>(routePointId, dateTime);
             var tripSnapshot = await _snapshotManager.GetSnapshotAsync<ShippingRequestTrip, int>(tripId, dateTime);

@@ -20,8 +20,8 @@ namespace TACHYON
     [DependsOn(
         typeof(TACHYONApplicationSharedModule),
         typeof(TACHYONCoreModule),
-         typeof(AbpAutoMapperModule)
-        )]
+        typeof(AbpAutoMapperModule)
+    )]
     public class TACHYONApplicationModule : AbpModule
     {
         public override void PreInitialize()
@@ -30,7 +30,8 @@ namespace TACHYON
 
             Configuration.Authorization.Providers.Add<AppAuthorizationProvider>();
             //Add all permission provider inherit from base class AppAuthorizationBaseProvider
-            foreach (var provider in typeof(AppAuthorizationBaseProvider).Assembly.GetTypes().Where(t => t.BaseType == typeof(AppAuthorizationBaseProvider)))
+            foreach (var provider in typeof(AppAuthorizationBaseProvider).Assembly.GetTypes()
+                         .Where(t => t.BaseType == typeof(AppAuthorizationBaseProvider)))
             {
                 Configuration.Authorization.Providers.Add(provider);
             }
@@ -55,8 +56,8 @@ namespace TACHYON
                     "/Reports/",
                     Assembly.GetExecutingAssembly(),
                     "TACHYON.Waybills.Reports"
-                    )
-                );
+                )
+            );
 
             Configuration.EmbeddedResources.Sources.Add(
                 new EmbeddedResourceSet(
@@ -65,14 +66,15 @@ namespace TACHYON
                     "TACHYON.Invoices.Reports"
                 )
             );
-            IocManager.Register(typeof(IExcelExporterManager<>), typeof(ExcelExporterManager<>), DependencyLifeStyle.Transient);
+            IocManager.Register(typeof(IExcelExporterManager<>), typeof(ExcelExporterManager<>),
+                DependencyLifeStyle.Transient);
 
-            IocManager.Register(typeof(IExcelImportManager<>), typeof(ExcelImportManager<>), DependencyLifeStyle.Transient);
-
+            IocManager.Register(typeof(IExcelImportManager<>), typeof(ExcelImportManager<>),
+                DependencyLifeStyle.Transient);
         }
+
         public override void PostInitialize()
         {
-
             var mapper = IocManager.Resolve<IMapper>();
 
             CustomDtoMapper.SetMapper(mapper);
@@ -82,9 +84,5 @@ namespace TACHYON
         {
             IocManager.RegisterAssemblyByConvention(typeof(TACHYONApplicationModule).GetAssembly());
         }
-
-
-
-
     }
 }

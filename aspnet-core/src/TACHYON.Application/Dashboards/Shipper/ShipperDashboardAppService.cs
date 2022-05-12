@@ -1,4 +1,5 @@
-﻿using Abp.Authorization;
+﻿using Abp.Application.Services.Dto;
+using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
@@ -352,10 +353,10 @@ namespace TACHYON.Dashboards.Shipper
         }
 
         // Tracking Map
-        public async Task<List<TrackingMapDto>> GetTrackingMap()
+        public async Task<PagedResultDto<TrackingMapDto>> GetTrackingMap(GetTripsForTrackingInput input)
         {
             DisableTenancyFilters();
-            return await _shippingRequestTripRepository.GetAll()
+            var trips = _shippingRequestTripRepository.GetAll()
             .Include(r => r.ShippingRequestFk)
             .ThenInclude(r => r.Tenant)
             .Include(r => r.RoutPoints)
@@ -389,8 +390,19 @@ namespace TACHYON.Dashboards.Shipper
                     Latitude = (rp.FacilityFk.Location != null ? rp.FacilityFk.Location.Y : 0)
                 }).ToList()
 
-            })
-            .OrderByDescending(r => r.Id).Take(10).ToListAsync();
+            });
+
+            var pagedAndFilteredTrips = trips
+               .OrderByDescending(r => r.Id)
+               .PageBy(input);
+          
+            var totalCount = await trips.CountAsync();
+
+            return new PagedResultDto<TrackingMapDto>(
+                totalCount,
+                await pagedAndFilteredTrips.ToListAsync()
+            );
+
         }
 
         #region Helpers

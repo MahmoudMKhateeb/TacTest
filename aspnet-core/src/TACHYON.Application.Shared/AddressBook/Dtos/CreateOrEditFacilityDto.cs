@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using Abp.Application.Services.Dto;
 using System.ComponentModel.DataAnnotations;
 
@@ -7,7 +6,6 @@ namespace TACHYON.AddressBook.Dtos
 {
     public class CreateOrEditFacilityDto : EntityDto<long?>
     {
-
         [Required]
         [StringLength(FacilityConsts.MaxNameLength, MinimumLength = FacilityConsts.MinNameLength)]
         public string Name { get; set; }
@@ -23,7 +21,5 @@ namespace TACHYON.AddressBook.Dtos
         public double Latitude { get; set; }
 
         public int CityId { get; set; }
-
-
     }
 }

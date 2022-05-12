@@ -13,6 +13,5 @@ namespace TACHYON.Shipping.ShippingRequestBids.Dtos
         public decimal? MaxPrice { get; set; }
 
         public long ShippingRequestId { get; set; }
-
     }
 }

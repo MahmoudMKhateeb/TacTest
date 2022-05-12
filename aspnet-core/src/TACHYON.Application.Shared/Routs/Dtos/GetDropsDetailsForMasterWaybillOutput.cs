@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TACHYON.Routs.Dtos
 {
-    public class GetDropsDetailsForMasterWaybillOutput 
+    public class GetDropsDetailsForMasterWaybillOutput
     {
         public string Code { get; set; }
         public string ReceiverDisplayName { get; set; }

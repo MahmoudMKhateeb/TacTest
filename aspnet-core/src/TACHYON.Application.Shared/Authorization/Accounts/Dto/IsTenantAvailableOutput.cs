@@ -10,7 +10,6 @@
 
         public IsTenantAvailableOutput()
         {
-
         }
 
         public IsTenantAvailableOutput(TenantAvailabilityState state, int? tenantId = null)
@@ -19,7 +18,9 @@
             TenantId = tenantId;
         }
 
-        public IsTenantAvailableOutput(TenantAvailabilityState state, int? tenantId, string serverRootAddress)
+        public IsTenantAvailableOutput(TenantAvailabilityState state,
+            int? tenantId,
+            string serverRootAddress)
         {
             State = state;
             TenantId = tenantId;

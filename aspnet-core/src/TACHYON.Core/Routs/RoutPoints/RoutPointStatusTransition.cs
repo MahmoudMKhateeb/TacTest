@@ -10,11 +10,9 @@ namespace TACHYON.Shipping.RoutPoints
     public class RoutPointStatusTransition : Entity, IHasCreationTime
     {
         public long PointId { get; set; }
-        [ForeignKey("PointId")]
-        public RoutPoint RoutPointFK { get; set; }
+        [ForeignKey("PointId")] public RoutPoint RoutPointFK { get; set; }
         public RoutePointStatus Status { get; set; }
         public DateTime CreationTime { get; set; }
         public bool IsReset { get; set; }
-
     }
 }

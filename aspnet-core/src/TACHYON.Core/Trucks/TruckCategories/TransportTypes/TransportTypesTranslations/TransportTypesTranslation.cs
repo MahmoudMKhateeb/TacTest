@@ -12,21 +12,19 @@ namespace TACHYON.Trucks.TruckCategories.TransportTypes.TransportTypesTranslatio
     public class TransportTypesTranslation : FullAuditedEntity, IEntityTranslation<TransportType>, IHasDisplayName
 
     {
-
-
-        [StringLength(TransportTypesTranslationConsts.MaxDisplayNameLength, MinimumLength = TransportTypesTranslationConsts.MinDisplayNameLength)]
+        [StringLength(TransportTypesTranslationConsts.MaxDisplayNameLength,
+            MinimumLength = TransportTypesTranslationConsts.MinDisplayNameLength)]
         public virtual string TranslatedDisplayName { get; set; }
 
 
-
         [Required]
-        [StringLength(TransportTypesTranslationConsts.MaxLanguageLength, MinimumLength = TransportTypesTranslationConsts.MinLanguageLength)]
+        [StringLength(TransportTypesTranslationConsts.MaxLanguageLength,
+            MinimumLength = TransportTypesTranslationConsts.MinLanguageLength)]
         public virtual string Language { get; set; }
 
         public virtual int CoreId { get; set; }
 
-        [ForeignKey("CoreId")]
-        public TransportType Core { get; set; }
+        [ForeignKey("CoreId")] public TransportType Core { get; set; }
 
         [Required]
         [StringLength(TransportTypesTranslationConsts.MaxDisplayNameLength,

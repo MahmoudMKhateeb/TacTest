@@ -24,8 +24,7 @@ namespace TACHYON.MultiTenancy
                     tenant.SubscriptionPaymentType = SubscriptionPaymentType.RecurringManual;
                     EventBus.Trigger(new RecurringPaymentsDisabledEventData
                     {
-                        TenantId = AbpSession.GetTenantId(),
-                        EditionId = tenant.EditionId.Value
+                        TenantId = AbpSession.GetTenantId(), EditionId = tenant.EditionId.Value
                     });
                 }
             }
@@ -41,10 +40,7 @@ namespace TACHYON.MultiTenancy
                     tenant.SubscriptionPaymentType = SubscriptionPaymentType.RecurringAutomatic;
                     tenant.SubscriptionEndDateUtc = null;
 
-                    EventBus.Trigger(new RecurringPaymentsEnabledEventData
-                    {
-                        TenantId = AbpSession.GetTenantId()
-                    });
+                    EventBus.Trigger(new RecurringPaymentsEnabledEventData { TenantId = AbpSession.GetTenantId() });
                 }
             }
         }

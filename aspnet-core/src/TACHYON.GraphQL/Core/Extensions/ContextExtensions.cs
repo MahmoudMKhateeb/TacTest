@@ -26,7 +26,9 @@ namespace TACHYON.Core.Extensions
         /// <param name="fieldSelector">The query of the field selector. For example items:organizationUnits:displayName</param>
         /// <param name="namespaceSeperator">The seperator character of the fieldSelector. Default is :</param>
         /// <returns></returns>
-        public static bool HasSelectionField(this ResolveFieldContext<object> context, string fieldSelector, char namespaceSeperator = ':')
+        public static bool HasSelectionField(this ResolveFieldContext<object> context,
+            string fieldSelector,
+            char namespaceSeperator = ':')
         {
             if (string.IsNullOrWhiteSpace(fieldSelector))
             {
@@ -70,7 +72,8 @@ namespace TACHYON.Core.Extensions
                     return false;
                 }
 
-                var field = selections.Select(selection => (Field)selection).FirstOrDefault(f => f.Name == fragments[i]);
+                var field = selections.Select(selection => (Field)selection)
+                    .FirstOrDefault(f => f.Name == fragments[i]);
                 if (field == null)
                 {
                     return false;

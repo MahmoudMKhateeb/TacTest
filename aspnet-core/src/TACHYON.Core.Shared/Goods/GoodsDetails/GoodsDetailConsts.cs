@@ -2,7 +2,6 @@
 {
     public class GoodsDetailConsts
     {
-
         public const int MinNameLength = 0;
         public const int MaxNameLength = 256;
 
@@ -20,6 +19,5 @@
 
         public const int MinDangerousGoodsCodeLength = 0;
         public const int MaxDangerousGoodsCodeLength = 64;
-
     }
 }

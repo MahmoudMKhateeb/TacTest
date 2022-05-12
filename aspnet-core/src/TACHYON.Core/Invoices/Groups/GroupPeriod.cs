@@ -11,18 +11,16 @@ using TACHYON.MultiTenancy;
 namespace TACHYON.Invoices.Groups
 {
     [Table("GroupPeriods")]
-
     public class GroupPeriod : FullAuditedEntity<long>, IMustHaveTenant
     {
         public int TenantId { get; set; }
 
-        [ForeignKey("TenantId")]
-        public Tenant Tenant { get; set; }
+        [ForeignKey("TenantId")] public Tenant Tenant { get; set; }
         public int PeriodId { get; set; }
 
-        [ForeignKey("PeriodId")]
-        public InvoicePeriod InvoicePeriod { get; set; }
-      //  public bool IsDemand { get; set; }
+        [ForeignKey("PeriodId")] public InvoicePeriod InvoicePeriod { get; set; }
+
+        //  public bool IsDemand { get; set; }
         public string Note { get; set; }
         public decimal AmountWithTaxVat { get; set; }
         public decimal VatAmount { get; set; }

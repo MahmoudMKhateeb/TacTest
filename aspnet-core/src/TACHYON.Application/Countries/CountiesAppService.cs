@@ -1,6 +1,4 @@
-﻿
-
-using Abp.Application.Services.Dto;
+﻿using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
@@ -30,31 +28,26 @@ namespace TACHYON.Countries
         {
             _countyRepository = countyRepository;
             _countiesExcelExporter = countiesExcelExporter;
-
         }
 
         public async Task<PagedResultDto<GetCountyForViewDto>> GetAll(GetAllCountiesInput input)
         {
-
             var filteredCounties = _countyRepository.GetAll()
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter) || e.Code.Contains(input.Filter))
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.DisplayName == input.DisplayNameFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.CodeFilter), e => e.Code == input.CodeFilter);
+                .WhereIf(!string.IsNullOrWhiteSpace(input.Filter),
+                    e => false || e.DisplayName.Contains(input.Filter) || e.Code.Contains(input.Filter))
+                .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter),
+                    e => e.DisplayName == input.DisplayNameFilter)
+                .WhereIf(!string.IsNullOrWhiteSpace(input.CodeFilter), e => e.Code == input.CodeFilter);
 
             var pagedAndFilteredCounties = filteredCounties
                 .OrderBy(input.Sorting ?? "id asc")
                 .PageBy(input);
 
             var counties = from o in pagedAndFilteredCounties
-                           select new GetCountyForViewDto()
-                           {
-                               County = new CountyDto
-                               {
-                                   DisplayName = o.DisplayName,
-                                   Code = o.Code,
-                                   Id = o.Id
-                               }
-                           };
+                select new GetCountyForViewDto()
+                {
+                    County = new CountyDto { DisplayName = o.DisplayName, Code = o.Code, Id = o.Id }
+                };
 
             var totalCount = await filteredCounties.CountAsync();
 
@@ -89,11 +82,13 @@ namespace TACHYON.Countries
             {
                 throw new UserFriendlyException(L("CannotCreateEmptyCountry"));
             }
-            if(await _countyRepository.FirstOrDefaultAsync(x => x.DisplayName.ToLower() == input.DisplayName.ToLower()
-            && x.Id!=input.Id) != null)
+
+            if (await _countyRepository.FirstOrDefaultAsync(x => x.DisplayName.ToLower() == input.DisplayName.ToLower()
+                                                                 && x.Id != input.Id) != null)
             {
                 throw new UserFriendlyException(L("countryIsAlreadyExistsMessage"));
             }
+
             if (input.Id == null)
             {
                 await Create(input);
@@ -108,7 +103,6 @@ namespace TACHYON.Countries
         protected virtual async Task Create(CreateOrEditCountyDto input)
         {
             var county = ObjectMapper.Map<County>(input);
-
 
 
             await _countyRepository.InsertAsync(county);
@@ -129,29 +123,23 @@ namespace TACHYON.Countries
 
         public async Task<FileDto> GetCountiesToExcel(GetAllCountiesForExcelInput input)
         {
-
             var filteredCounties = _countyRepository.GetAll()
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter) || e.Code.Contains(input.Filter))
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.DisplayName == input.DisplayNameFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.CodeFilter), e => e.Code == input.CodeFilter);
+                .WhereIf(!string.IsNullOrWhiteSpace(input.Filter),
+                    e => false || e.DisplayName.Contains(input.Filter) || e.Code.Contains(input.Filter))
+                .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter),
+                    e => e.DisplayName == input.DisplayNameFilter)
+                .WhereIf(!string.IsNullOrWhiteSpace(input.CodeFilter), e => e.Code == input.CodeFilter);
 
             var query = (from o in filteredCounties
-                         select new GetCountyForViewDto()
-                         {
-                             County = new CountyDto
-                             {
-                                 DisplayName = o.DisplayName,
-                                 Code = o.Code,
-                                 Id = o.Id
-                             }
-                         });
+                select new GetCountyForViewDto()
+                {
+                    County = new CountyDto { DisplayName = o.DisplayName, Code = o.Code, Id = o.Id }
+                });
 
 
             var countyListDtos = await query.ToListAsync();
 
             return _countiesExcelExporter.ExportToFile(countyListDtos);
         }
-
-
     }
 }

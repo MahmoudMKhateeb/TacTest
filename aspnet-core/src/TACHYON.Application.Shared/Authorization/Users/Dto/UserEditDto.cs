@@ -51,6 +51,7 @@ namespace TACHYON.Authorization.Users.Dto
         public bool IsAvailable { get; set; }
 
         #region Tachyon details
+
         public virtual bool IsDriver { get; set; }
 
         public virtual string Address { get; set; }

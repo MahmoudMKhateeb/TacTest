@@ -16,7 +16,6 @@ namespace TACHYON.EntityFrameworkCore
                 connectionStringResolver,
                 dbContextResolver)
         {
-
         }
     }
 }

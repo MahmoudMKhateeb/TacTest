@@ -10,17 +10,12 @@ namespace TACHYON.Nationalities.NationalitiesTranslation
     [Table("NationalityTranslations")]
     public class NationalityTranslation : FullAuditedEntity
     {
+        [Required] public virtual string TranslatedName { get; set; }
 
-        [Required]
-        public virtual string TranslatedName { get; set; }
+        [Required] public virtual string Language { get; set; }
 
-        [Required]
-        public virtual string Language { get; set; }
+        public virtual int CoreId { get; set; }
 
-        public virtual int CoreId  { get; set; }
-
-        [ForeignKey("CoreId")]
-        public Nationality Core  { get; set; }
-
+        [ForeignKey("CoreId")] public Nationality Core { get; set; }
     }
 }

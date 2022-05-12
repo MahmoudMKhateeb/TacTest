@@ -6,10 +6,8 @@ namespace TACHYON.Nationalities.Dtos
 {
     public class CreateOrEditNationalityDto : EntityDto<int?>
     {
-
         [Required]
         [StringLength(NationalityConsts.MaxNameLength, MinimumLength = NationalityConsts.MinNameLength)]
         public string Name { get; set; }
-
     }
 }

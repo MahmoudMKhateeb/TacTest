@@ -16,8 +16,7 @@ namespace TACHYON.Shipping.Trips.Dto
 {
     public class CreateOrEditShippingRequestTripDto : EntityDto<int?>, ICustomValidate, IShouldNormalize
     {
-        [Required]
-        public DateTime? StartTripDate { get; set; }
+        [Required] public DateTime? StartTripDate { get; set; }
 
         public DateTime? EndTripDate { get; set; }
 
@@ -27,7 +26,9 @@ namespace TACHYON.Shipping.Trips.Dto
         public long ShippingRequestId { get; set; }
 
         public bool HasAttachment { get; set; }
+
         public bool NeedsDeliveryNote { get; set; }
+
         //Facility
         public virtual long? OriginFacilityId { get; set; }
 
@@ -36,6 +37,7 @@ namespace TACHYON.Shipping.Trips.Dto
 
         [StringLength(ShippingRequestTripConsts.MaxNoteLength)]
         public string Note { get; set; }
+
         public List<CreateOrEditRoutPointDto> RoutPoints { get; set; }
         public List<CreateOrEditShippingRequestTripVasDto> ShippingRequestTripVases { get; set; }
 
@@ -59,13 +61,12 @@ namespace TACHYON.Shipping.Trips.Dto
             }
 
 
-
             var dropPoints = RoutPoints.Where(x => x.PickingType == PickingType.Dropoff);
             foreach (var drop in dropPoints)
             {
                 if (drop.ReceiverId == null &&
                     (string.IsNullOrWhiteSpace(drop.ReceiverFullName) ||
-                    string.IsNullOrWhiteSpace(drop.ReceiverPhoneNumber)))
+                     string.IsNullOrWhiteSpace(drop.ReceiverPhoneNumber)))
                 {
                     //throw new UserFriendlyException(L("YouMustEnterReceiver"));
                     throw new UserFriendlyException("YouMustEnterReceiver");
@@ -80,7 +81,6 @@ namespace TACHYON.Shipping.Trips.Dto
             {
                 CreateOrEditDocumentFileDto = null;
             }
-
         }
     }
 }

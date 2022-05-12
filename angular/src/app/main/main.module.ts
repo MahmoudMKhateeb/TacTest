@@ -162,7 +162,6 @@ import { CreateOrEditTruckModalComponent } from './trucks/trucks/create-or-edit-
 import { TruckUserLookupTableModalComponent } from './trucks/trucks/truck-user-lookup-table-modal.component';
 import { TrucksTypesComponent } from './trucksTypes/trucksTypes/trucksTypes.component';
 import { ViewTrucksTypeModalComponent } from './trucksTypes/trucksTypes/view-trucksType-modal.component';
-import { CreateOrEditTrucksTypeModalComponent } from './trucksTypes/trucksTypes/create-or-edit-trucksType-modal.component';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { PaginatorModule } from 'primeng/paginator';
 import { EditorModule } from 'primeng/editor';
@@ -272,12 +271,12 @@ import { RatingModule } from '@node_modules/primeng/rating';
 import { StepsModule } from '@node_modules/primeng/steps';
 import { ViewRatingComponent } from '@app/main/shippingRequests/shippingRequests/rating/view-rating/view-rating.component';
 import { ShipmentHistoryComponent } from '@app/main/shippingRequests/shippingRequests/shipment-history/shipment-history.component';
+import { TrackingModule } from '@app/main/shippingRequests/shippingRequests/tracking/tracking.module';
 import { EmailEditorModule } from '@node_modules/angular-email-editor';
 import { EmailTemplateTranslationTemplateComponent } from './emailTemplates/emailTemplates/email-template-translation-template.component';
 import { CreateOrEditEmailTemplateTranslationModalComponent } from './emailTemplates/emailTemplates/create-or-edit-email-template-translation-modal.component';
 import { ImportCitiesPolygonsModalComponent } from './cities/cities/import-cities-polygoins-modal/import-cities-polygons-modal.component';
 import { ToggleButtonModule } from '@node_modules/primeng/togglebutton';
-import { TrackingModule } from '@app/main/shippingRequests/shippingRequests/tracking/tracking.module';
 import { AddNewRemarksTripModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/add-new-remarks-trip-modal/add-new-remarks-trip-modal.component';
 import { QuartzCronModule } from '@node_modules/@sbzen/ng-cron';
 import { DriverLicenseTypeTranslationsComponent } from './driverLicenseTypes/driverLicenseTypeTranslations/driver-license-type-translations/driver-license-type-translations.component';
@@ -335,6 +334,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     NgbModule,
     NgbDropdownModule,
     StepsModule,
+    TrackingModule,
     EmailEditorModule,
     ToggleButtonModule,
     TrackingModule,
@@ -461,7 +461,6 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     TruckUserLookupTableModalComponent,
     TrucksTypesComponent,
     ViewTrucksTypeModalComponent,
-    CreateOrEditTrucksTypeModalComponent,
     DashboardComponent,
     UpdatePriceShippingRequestModalComponent,
     MarketPlaceListComponent,

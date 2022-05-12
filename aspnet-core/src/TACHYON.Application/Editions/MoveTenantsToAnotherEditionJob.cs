@@ -12,7 +12,8 @@ using TACHYON.Notifications;
 
 namespace TACHYON.Editions
 {
-    public class MoveTenantsToAnotherEditionJob : BackgroundJob<MoveTenantsToAnotherEditionJobArgs>, ITransientDependency
+    public class MoveTenantsToAnotherEditionJob : BackgroundJob<MoveTenantsToAnotherEditionJobArgs>,
+        ITransientDependency
     {
         private readonly IRepository<Tenant> _tenantRepository;
         private readonly EditionManager _editionManager;
@@ -45,7 +46,8 @@ namespace TACHYON.Editions
 
             using (var uow = _unitOfWorkManager.Begin())
             {
-                tenantIds = _tenantRepository.GetAll().Where(t => t.EditionId == args.SourceEditionId).Select(t => t.Id).ToList();
+                tenantIds = _tenantRepository.GetAll().Where(t => t.EditionId == args.SourceEditionId).Select(t => t.Id)
+                    .ToList();
                 uow.Complete();
             }
 
@@ -58,14 +60,17 @@ namespace TACHYON.Editions
 
             if (changedTenantCount != tenantIds.Count)
             {
-                Logger.Warn($"Unable to move all tenants from edition {args.SourceEditionId} to edition {args.TargetEditionId}");
+                Logger.Warn(
+                    $"Unable to move all tenants from edition {args.SourceEditionId} to edition {args.TargetEditionId}");
                 return;
             }
 
             NotifyUser(args);
         }
 
-        private int ChangeEditionOfTenants(List<int> tenantIds, int sourceEditionId, int targetEditionId)
+        private int ChangeEditionOfTenants(List<int> tenantIds,
+            int sourceEditionId,
+            int targetEditionId)
         {
             var changedTenantCount = 0;
 
@@ -101,7 +106,9 @@ namespace TACHYON.Editions
             }
         }
 
-        private bool ChangeEditionOfTenant(int tenantId, int sourceEditionId, int targetEditionId)
+        private bool ChangeEditionOfTenant(int tenantId,
+            int sourceEditionId,
+            int targetEditionId)
         {
             try
             {
@@ -112,9 +119,7 @@ namespace TACHYON.Editions
 
                 EventBus.Trigger(new TenantEditionChangedEventData
                 {
-                    TenantId = tenant.Id,
-                    OldEditionId = sourceEditionId,
-                    NewEditionId = targetEditionId
+                    TenantId = tenant.Id, OldEditionId = sourceEditionId, NewEditionId = targetEditionId
                 });
 
                 return true;

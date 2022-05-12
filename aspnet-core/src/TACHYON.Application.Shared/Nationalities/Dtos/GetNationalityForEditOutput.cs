@@ -7,6 +7,5 @@ namespace TACHYON.Nationalities.Dtos
     public class GetNationalityForEditOutput
     {
         public CreateOrEditNationalityDto Nationality { get; set; }
-
     }
 }

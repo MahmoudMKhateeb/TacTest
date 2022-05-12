@@ -12,6 +12,5 @@ namespace TACHYON.Trucks.TruckCategories.TransportTypes.TransportTypesTranslatio
         public string LanguageFilter { get; set; }
 
         public string TransportTypeTranslatedDisplayNameFilter { get; set; }
-
     }
 }

@@ -32,38 +32,37 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public RoutePointStatus RoutePointStatus { get; set; }
 
         public long? AssignedDriverUserId { get; set; }
+
         /// <summary>
         /// Used for worker to reminder the driver to accept trip
         /// </summary>
         public DateTime? AssignedDriverTime { get; set; }
-        [ForeignKey("AssignedDriverUserId")]
-        public User AssignedDriverUserFk { get; set; }
+
+        [ForeignKey("AssignedDriverUserId")] public User AssignedDriverUserFk { get; set; }
+
         /// <summary>
         /// if the driver make accident when he work on trip
         /// </summary>
         public bool HasAccident { get; set; }
+
         public bool IsApproveCancledByShipper { get; set; }
         public bool IsApproveCancledByCarrier { get; set; }
         public bool IsApproveCancledByTachyonDealer { get; set; }
         public bool IsForcedCanceledByTachyonDealer { get; set; }
         public long? AssignedTruckId { get; set; }
-        [ForeignKey("AssignedTruckId")]
-        public Truck AssignedTruckFk { get; set; }
+        [ForeignKey("AssignedTruckId")] public Truck AssignedTruckFk { get; set; }
         public long ShippingRequestId { get; set; }
-        [ForeignKey("ShippingRequestId")]
-        public ShippingRequest ShippingRequestFk { get; set; }
+        [ForeignKey("ShippingRequestId")] public ShippingRequest ShippingRequestFk { get; set; }
 
 
         //Facility
         public virtual long? OriginFacilityId { get; set; }
 
-        [ForeignKey("OriginFacilityId")]
-        public Facility OriginFacilityFk { get; set; }
+        [ForeignKey("OriginFacilityId")] public Facility OriginFacilityFk { get; set; }
 
         public virtual long? DestinationFacilityId { get; set; }
 
-        [ForeignKey("DestinationFacilityId")]
-        public Facility DestinationFacilityFk { get; set; }
+        [ForeignKey("DestinationFacilityId")] public Facility DestinationFacilityFk { get; set; }
 
         public ICollection<RoutPoint> RoutPoints { get; set; }
         public ICollection<ShippingRequestTripVas> ShippingRequestTripVases { get; set; }
@@ -71,9 +70,12 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public ShippingRequestTripDriverStatus DriverStatus { get; set; }
         public InvoiceTripStatus InvoiceStatus { get; set; }
         public int? RejectReasonId { get; set; }
+
         [ForeignKey("RejectReasonId")]
         public ShippingRequestTripRejectReason ShippingRequestTripRejectReason { get; set; }
+
         public string RejectedReason { get; set; }
+
         /// <summary>
         /// approximate total value of goods
         /// </summary>
@@ -88,7 +90,9 @@ namespace TACHYON.Shipping.ShippingRequestTrips
 
         public DateTime? ActualPickupDate { get; set; }
         public DateTime? ActualDeliveryDate { get; set; }
+
         #region Prices
+
         public bool IsShipperHaveInvoice { get; set; }
         public bool IsCarrierHaveInvoice { get; set; }
         public decimal? TotalAmount { get; set; }

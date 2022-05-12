@@ -11,7 +11,6 @@ namespace TACHYON.Authorization.Users.Profile.Cache
 
         public SmsVerificationCodeCacheItem()
         {
-
         }
 
         public SmsVerificationCodeCacheItem(string code)

@@ -12,10 +12,11 @@ namespace TACHYON.AutoMapper.Shipping.Trips
         public ShippingRequestTripAccidenCommentProfile()
         {
             CreateMap<ShippingRequestTripAccidentComment, ShippingRequestTripAccidentCommentListDto>()
-              .ForMember(dst => dst.TenantName, opt => opt.MapFrom(src => src.TenantFK != null ? src.TenantFK.Name : "")).ReverseMap();
+                .ForMember(dst => dst.TenantName,
+                    opt => opt.MapFrom(src => src.TenantFK != null ? src.TenantFK.Name : "")).ReverseMap();
 
-            CreateMap<ShippingRequestTripAccidentComment, CreateOrEditShippingRequestTripAccidentCommentDto>().ReverseMap();
-
+            CreateMap<ShippingRequestTripAccidentComment, CreateOrEditShippingRequestTripAccidentCommentDto>()
+                .ReverseMap();
         }
     }
 }

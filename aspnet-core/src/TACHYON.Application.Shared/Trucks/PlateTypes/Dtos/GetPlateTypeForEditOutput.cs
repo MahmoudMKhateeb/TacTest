@@ -7,6 +7,5 @@ namespace TACHYON.Trucks.PlateTypes.Dtos
     public class GetPlateTypeForEditOutput
     {
         public CreateOrEditPlateTypeDto PlateType { get; set; }
-
     }
 }

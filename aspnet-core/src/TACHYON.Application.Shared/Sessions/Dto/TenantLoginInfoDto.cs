@@ -41,6 +41,7 @@ namespace TACHYON.Sessions.Dto
         {
             return MissingRequiredDocumentTypes.Any();
         }
+
         public bool IsInTrial()
         {
             return IsInTrialPeriod;
@@ -50,7 +51,8 @@ namespace TACHYON.Sessions.Dto
         {
             if (SubscriptionEndDateUtc.HasValue)
             {
-                return Clock.Now.ToUniversalTime().AddDays(subscriptionExpireNootifyDayCount) >= SubscriptionEndDateUtc.Value;
+                return Clock.Now.ToUniversalTime().AddDays(subscriptionExpireNootifyDayCount) >=
+                       SubscriptionEndDateUtc.Value;
             }
 
             return false;
@@ -63,7 +65,8 @@ namespace TACHYON.Sessions.Dto
                 return 0;
             }
 
-            return Convert.ToInt32(SubscriptionEndDateUtc.Value.ToUniversalTime().Subtract(Clock.Now.ToUniversalTime()).TotalDays);
+            return Convert.ToInt32(SubscriptionEndDateUtc.Value.ToUniversalTime().Subtract(Clock.Now.ToUniversalTime())
+                .TotalDays);
         }
 
         public bool HasRecurringSubscription()

@@ -27,8 +27,6 @@ namespace TACHYON.Receivers
 
         public virtual long FacilityId { get; set; }
 
-        [ForeignKey("FacilityId")]
-        public Facility FacilityFk { get; set; }
-
+        [ForeignKey("FacilityId")] public Facility FacilityFk { get; set; }
     }
 }

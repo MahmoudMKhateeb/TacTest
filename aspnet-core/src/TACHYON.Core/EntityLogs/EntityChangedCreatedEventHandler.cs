@@ -7,7 +7,8 @@ using TACHYON.EntityLogs.Jobs;
 
 namespace TACHYON.Routs.RoutPoints
 {
-    public class EntityChangedCreatedEventHandler : IEventHandler<EntityCreatedEventData<EntityChange>>, ITransientDependency
+    public class EntityChangedCreatedEventHandler : IEventHandler<EntityCreatedEventData<EntityChange>>,
+        ITransientDependency
     {
         private readonly EntityLogHelperManager _logHelper;
 

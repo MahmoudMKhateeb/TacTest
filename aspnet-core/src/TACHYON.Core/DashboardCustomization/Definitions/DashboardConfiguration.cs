@@ -35,20 +35,14 @@ namespace TACHYON.DashboardCustomization.Definitions
 
             #region TenantWidgets
 
-            var tenantWidgetsDefaultPermission = new List<string>
-            {
-                AppPermissions.Pages_Tenant_Dashboard
-            };
+            var tenantWidgetsDefaultPermission = new List<string> { AppPermissions.Pages_Tenant_Dashboard };
 
            
             #endregion
 
             #region HostWidgets
 
-            var hostWidgetsDefaultPermission = new List<string>
-            {
-                AppPermissions.Pages_Administration_Host_Dashboard
-            };
+            var hostWidgetsDefaultPermission = new List<string> { AppPermissions.Pages_Administration_Host_Dashboard };
 
             var hostNumberOfRegisteredTrucksWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.NumberOfRegisteredTrucksWidget, ("NumberOfRegisteredTrucksWidget"), side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
             var hostNumberOfRegisteredShippersWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.NumberOfRegisteredShippersWidget, "NumberOfRegisteredShippersWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
@@ -107,12 +101,10 @@ namespace TACHYON.DashboardCustomization.Definitions
 
             #region ShipperWidgets
 
+            var shipperWidgetsDefaultPermission = new List<string> { AppPermissions.App_Shipper };
 
-            var shipperWidgetsDefaultPermission = new List<string>
-            {
-                AppPermissions.App_Shipper
-            };
 
+           
 
             var shipperNumberOfCompletedTripsWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Shipper.ShipperNumberOfCompletedTripsWidget, "ShipperNumberOfCompletedTripsWidget", side: MultiTenancySides.Tenant, permissions: shipperWidgetsDefaultPermission);
             var shipperAcceptedVsRejectedRequestsWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Shipper.ShipperAcceptedVsRejectedRequestsWidget, "ShipperAcceptedVsRejectedRequestsWidget", side: MultiTenancySides.Tenant, permissions: shipperWidgetsDefaultPermission);
@@ -128,7 +120,6 @@ namespace TACHYON.DashboardCustomization.Definitions
             var shipperRequestsInMarketplaceWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Shipper.ShipperRequestsInMarketplaceWidget, "ShipperRequestsInMarketplaceWidget", side: MultiTenancySides.Tenant, permissions: shipperWidgetsDefaultPermission);
             var shipperTrackingMapWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Shipper.ShipperTrackingMapWidget, "ShipperTrackingMapWidget", side: MultiTenancySides.Tenant, permissions: shipperWidgetsDefaultPermission);
 
-
             WidgetDefinitions.Add(shipperNumberOfCompletedTripsWidget);
             WidgetDefinitions.Add(shipperAcceptedVsRejectedRequestsWidget);
             WidgetDefinitions.Add(shipperCompletedTripsVsPodWidget);
@@ -142,15 +133,11 @@ namespace TACHYON.DashboardCustomization.Definitions
             WidgetDefinitions.Add(shipperRequestsInMarketplaceWidget);
             WidgetDefinitions.Add(shipperTrackingMapWidget);
 
-
             #endregion
 
             #region CarrierWidgets
-            var carrierWidgetsDefaultPermission = new List<string>
-            {
-                AppPermissions.App_Carrier
-            };
 
+            var carrierWidgetsDefaultPermission = new List<string> { AppPermissions.App_Carrier };
 
             var carrierDriversActivityWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Carrier.CarrierDriversActivityWidget, "CarrierDriversActivityWidget", side: MultiTenancySides.Tenant, permissions: carrierWidgetsDefaultPermission);
             var carrierTrucksActivityWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Carrier.CarrierTrucksActivityWidget, "CarrierTrucksActivityWidget", side: MultiTenancySides.Tenant, permissions: carrierWidgetsDefaultPermission);
@@ -164,6 +151,8 @@ namespace TACHYON.DashboardCustomization.Definitions
             var carrierDueDateInDaysWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Carrier.CarrierDueDateInDaysWidget, "CarrierDueDateInDaysWidget", side: MultiTenancySides.Tenant, permissions: carrierWidgetsDefaultPermission);
             var carrierTrackingMapWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Carrier.CarrierTrackingMapWidget, "CarrierTrackingMapWidget", side: MultiTenancySides.Tenant, permissions: carrierWidgetsDefaultPermission);
 
+           
+
 
             WidgetDefinitions.Add(carrierDriversActivityWidget);
             WidgetDefinitions.Add(carrierTrucksActivityWidget);
@@ -176,7 +165,6 @@ namespace TACHYON.DashboardCustomization.Definitions
             //WidgetDefinitions.Add(carrierNextInvoiceFrequenctEndDateWidget);
             WidgetDefinitions.Add(carrierDueDateInDaysWidget);
             WidgetDefinitions.Add(carrierTrackingMapWidget);
-
 
             #endregion
 
@@ -214,6 +202,7 @@ namespace TACHYON.DashboardCustomization.Definitions
             //var tachyonDealerNormalVsRentalRequestsWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.TachyonDealerNormalVsRentalRequestsWidget, "TachyonDealerNormalVsRentalRequestsWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
 
 
+
             WidgetDefinitions.Add(tachyonDealerNumberOfRegisteredTrucksWidget);
             WidgetDefinitions.Add(tachyonDealerNumberOfRegisteredShippersWidget);
             WidgetDefinitions.Add(tachyonDealerNumberOfRegisteredCarriersWidget);
@@ -224,12 +213,6 @@ namespace TACHYON.DashboardCustomization.Definitions
             WidgetDefinitions.Add(tachyonDealerTruckTypeUsageWidget);
             WidgetDefinitions.Add(tachyonDealerGoodTypesUsageWidget);
             WidgetDefinitions.Add(tachyonDealerRouteTypesUsageWidget);
-            WidgetDefinitions.Add(tachyonDealerMostRequestingShippersWidget);
-            WidgetDefinitions.Add(tachyonDealerMostRequestedCarriersWidget);
-            WidgetDefinitions.Add(tachyonDealerTopRatedShippersWidget);
-            WidgetDefinitions.Add(tachyonDealerTopRatedCarriersWidget);
-            WidgetDefinitions.Add(tachyonDealerWorstRatedShippersWidget);
-            WidgetDefinitions.Add(tachyonDealerWorstRatedCarriersWidget);
             WidgetDefinitions.Add(tachyonDealerUnPricedRequestsInMarketPlaceWidget);
             WidgetDefinitions.Add(tachyonDealerRequestsPricingBeforeBidEndingWidget);
             WidgetDefinitions.Add(tachyonDealerRequestsPriceAcceptanceWidget);
@@ -238,7 +221,6 @@ namespace TACHYON.DashboardCustomization.Definitions
             //WidgetDefinitions.Add(tachyonDealerSearchableMapWidget);
             //WidgetDefinitions.Add(tachyonDealerRequestsHeatMapWidget);
             //WidgetDefinitions.Add(tachyonDealerNormalVsRentalRequestsWidget);
-
 
             #endregion
 
@@ -301,13 +283,6 @@ namespace TACHYON.DashboardCustomization.Definitions
                     tachyonDealerTruckTypeUsageWidget.Id,
                     tachyonDealerGoodTypesUsageWidget.Id,
                     tachyonDealerRouteTypesUsageWidget.Id,
-                    tachyonDealerMostRequestingShippersWidget.Id,
-                    tachyonDealerMostRequestedCarriersWidget.Id,
-                    tachyonDealerTopRatedShippersWidget.Id,
-                    tachyonDealerTopRatedCarriersWidget.Id,
-                    tachyonDealerWorstRatedShippersWidget.Id,
-                    tachyonDealerWorstRatedCarriersWidget.Id,
-                    tachyonDealerUnPricedRequestsInMarketPlaceWidget.Id,
                     tachyonDealerRequestsPricingBeforeBidEndingWidget.Id,
                     tachyonDealerRequestsPriceAcceptanceWidget.Id,
                     tachyonDealerInvoicesPaidBeforeDueDateWidget.Id,
@@ -356,8 +331,6 @@ namespace TACHYON.DashboardCustomization.Definitions
             // Add your dashboard definiton here
 
             #endregion
-
         }
-
     }
 }

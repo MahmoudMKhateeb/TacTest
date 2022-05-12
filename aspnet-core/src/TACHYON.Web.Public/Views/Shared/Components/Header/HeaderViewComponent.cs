@@ -61,10 +61,14 @@ namespace TACHYON.Web.Public.Views.Shared.Components.Header
                 IsInHostView = !_abpSession.TenantId.HasValue,
                 Languages = _languageManager.GetActiveLanguages().ToList(),
                 CurrentLanguage = _languageManager.CurrentLanguage,
-                Menu = await _userNavigationManager.GetMenuAsync(FrontEndNavigationProvider.MenuName, _abpSession.ToUserIdentifier()),
+                Menu =
+                    await _userNavigationManager.GetMenuAsync(FrontEndNavigationProvider.MenuName,
+                        _abpSession.ToUserIdentifier()),
                 CurrentPageName = currentPageName,
                 IsMultiTenancyEnabled = _multiTenancyConfig.IsEnabled,
-                TenantRegistrationEnabled = await _settingManager.GetSettingValueAsync<bool>(AppSettings.TenantManagement.AllowSelfRegistration),
+                TenantRegistrationEnabled =
+                    await _settingManager.GetSettingValueAsync<bool>(AppSettings.TenantManagement
+                        .AllowSelfRegistration),
                 AdminWebSiteRootAddress = _webUrlService.GetServerRootAddress(tenancyName).EnsureEndsWith('/'),
                 WebSiteRootAddress = _webUrlService.GetSiteRootAddress(tenancyName).EnsureEndsWith('/')
             };

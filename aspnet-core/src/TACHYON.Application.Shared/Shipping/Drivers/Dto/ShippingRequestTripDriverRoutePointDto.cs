@@ -14,7 +14,6 @@ namespace TACHYON.Shipping.Drivers.Dto
 {
     public class ShippingRequestTripDriverRoutePointDto : EntityDto<long>
     {
-
         public int ShippingRequestTripId { get; set; }
         public PickingType PickingType { get; set; }
 
@@ -44,29 +43,27 @@ namespace TACHYON.Shipping.Drivers.Dto
         public string ReceiverCode { get; set; }
         public long? WaybillNumber { get; set; }
         public List<GoodsDetailDto> GoodsDetails { get; set; }
-        [JsonIgnore]
-        public List<RoutPointStatusTransitionDto> RoutPointStatusTransitions { get; set; }
+        [JsonIgnore] public List<RoutPointStatusTransitionDto> RoutPointStatusTransitions { get; set; }
         public List<PointTransactionDto> AvailableTransactions { get; set; }
         public List<RoutPointTransactionDto> Statues { get; set; }
+
         public bool IsShow
         {
             get
             {
-
                 if (PickingType == PickingType.Pickup)
                 {
                     if (Status != RoutePointStatus.FinishLoading) return true;
                 }
                 else if (PickingType == PickingType.Dropoff)
                 {
-                    if (Status != RoutePointStatus.StandBy && Status != RoutePointStatus.DeliveryConfirmation) return true;
+                    if (Status != RoutePointStatus.StandBy && Status != RoutePointStatus.DeliveryConfirmation)
+                        return true;
                 }
-                return false;
 
+                return false;
             }
             set { }
         }
-
-
     }
 }

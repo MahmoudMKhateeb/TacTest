@@ -6,10 +6,8 @@ namespace TACHYON.AddressBook.Ports.Dtos
 {
     public class GetPortForEditOutput
     {
-		public CreateOrEditPortDto Port { get; set; }
+        public CreateOrEditPortDto Port { get; set; }
 
-		public string CityDisplayName { get; set;}
-
-
+        public string CityDisplayName { get; set; }
     }
 }

@@ -12,7 +12,8 @@ namespace TACHYON.Web.Swagger
     {
         public void Apply(OpenApiParameter parameter, ParameterFilterContext context)
         {
-            var type = Nullable.GetUnderlyingType(context.ApiParameterDescription.Type) ?? context.ApiParameterDescription.Type;
+            var type = Nullable.GetUnderlyingType(context.ApiParameterDescription.Type) ??
+                       context.ApiParameterDescription.Type;
             if (type.IsEnum)
             {
                 AddEnumParamSpec(parameter, type, context);
@@ -25,7 +26,9 @@ namespace TACHYON.Web.Swagger
             }
         }
 
-        private static void AddEnumSpec(OpenApiParameter parameter, Type type, ParameterFilterContext context)
+        private static void AddEnumSpec(OpenApiParameter parameter,
+            Type type,
+            ParameterFilterContext context)
         {
             var schema = context.SchemaRepository.Schemas.GetOrAdd($"#/definitions/{type.Name}", () =>
                 context.SchemaGenerator.GenerateSchema(type, context.SchemaRepository)
@@ -43,7 +46,9 @@ namespace TACHYON.Web.Swagger
             schema.Extensions.Add("x-enumNames", enumNames);
         }
 
-        private static void AddEnumParamSpec(OpenApiParameter parameter, Type type, ParameterFilterContext context)
+        private static void AddEnumParamSpec(OpenApiParameter parameter,
+            Type type,
+            ParameterFilterContext context)
         {
             var schema = context.SchemaGenerator.GenerateSchema(type, context.SchemaRepository);
             if (schema.Reference == null)

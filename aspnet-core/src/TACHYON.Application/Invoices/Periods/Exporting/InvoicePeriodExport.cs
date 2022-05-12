@@ -8,13 +8,9 @@ namespace TACHYON.Invoices.Periods.Exporting
 {
     public class InvoicePeriodExport : NpoiExcelExporterBase, IInvoicePeriodExport
     {
-
-
-
         public InvoicePeriodExport(
-
             ITempFileCacheManager tempFileCacheManager) :
-    base(tempFileCacheManager)
+            base(tempFileCacheManager)
         {
         }
 
@@ -24,20 +20,19 @@ namespace TACHYON.Invoices.Periods.Exporting
                 "Periods",
                 excelPackage =>
                 {
-
                     var sheet = excelPackage.CreateSheet("Sheet1");
 
                     AddHeader(
                         sheet,
                         L("DisplayName"),
                         L("PeriodType")
-                        );
+                    );
 
                     AddObjects(
                         sheet, 2, Periods,
                         _ => _.DisplayName,
                         _ => _.PeriodType
-                        );
+                    );
                 });
         }
     }

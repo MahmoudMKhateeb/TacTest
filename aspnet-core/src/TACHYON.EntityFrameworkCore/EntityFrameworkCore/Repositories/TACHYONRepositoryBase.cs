@@ -9,13 +9,13 @@ namespace TACHYON.EntityFrameworkCore.Repositories
     /// </summary>
     /// <typeparam name="TEntity">Entity type</typeparam>
     /// <typeparam name="TPrimaryKey">Primary key type of the entity</typeparam>
-    public abstract class TACHYONRepositoryBase<TEntity, TPrimaryKey> : EfCoreRepositoryBase<TACHYONDbContext, TEntity, TPrimaryKey>
+    public abstract class
+        TACHYONRepositoryBase<TEntity, TPrimaryKey> : EfCoreRepositoryBase<TACHYONDbContext, TEntity, TPrimaryKey>
         where TEntity : class, IEntity<TPrimaryKey>
     {
         protected TACHYONRepositoryBase(IDbContextProvider<TACHYONDbContext> dbContextProvider)
             : base(dbContextProvider)
         {
-
         }
 
         //add your common methods for all repositories
@@ -32,7 +32,6 @@ namespace TACHYON.EntityFrameworkCore.Repositories
         protected TACHYONRepositoryBase(IDbContextProvider<TACHYONDbContext> dbContextProvider)
             : base(dbContextProvider)
         {
-
         }
 
         //do not add any method here, add to the class above (since this inherits it)!!!

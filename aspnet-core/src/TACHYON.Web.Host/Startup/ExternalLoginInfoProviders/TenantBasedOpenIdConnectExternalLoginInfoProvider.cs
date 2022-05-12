@@ -13,7 +13,8 @@ using TACHYON.Configuration;
 
 namespace TACHYON.Web.Startup.ExternalLoginInfoProviders
 {
-    public class TenantBasedOpenIdConnectExternalLoginInfoProvider : TenantBasedExternalLoginInfoProviderBase, ISingletonDependency
+    public class TenantBasedOpenIdConnectExternalLoginInfoProvider : TenantBasedExternalLoginInfoProviderBase,
+        ISingletonDependency
     {
         private readonly ISettingManager _settingManager;
         private readonly IAbpSession _abpSession;
@@ -30,7 +31,8 @@ namespace TACHYON.Web.Startup.ExternalLoginInfoProviders
 
         private ExternalLoginProviderInfo CreateExternalLoginInfo(OpenIdConnectExternalLoginProviderSettings settings)
         {
-            var mappingSettings = _settingManager.GetSettingValue(AppSettings.ExternalLoginProvider.OpenIdConnectMappedClaims);
+            var mappingSettings =
+                _settingManager.GetSettingValue(AppSettings.ExternalLoginProvider.OpenIdConnectMappedClaims);
             var jsonClaimMappings = mappingSettings.FromJsonString<List<JsonClaimMap>>();
 
             return new ExternalLoginProviderInfo(
@@ -40,9 +42,9 @@ namespace TACHYON.Web.Startup.ExternalLoginInfoProviders
                 typeof(OpenIdConnectAuthProviderApi),
                 new Dictionary<string, string>
                 {
-                    {"Authority", settings.Authority},
-                    {"LoginUrl", settings.LoginUrl},
-                    {"ValidateIssuer", settings.ValidateIssuer.ToString()}
+                    { "Authority", settings.Authority },
+                    { "LoginUrl", settings.LoginUrl },
+                    { "ValidateIssuer", settings.ValidateIssuer.ToString() }
                 },
                 jsonClaimMappings
             );
@@ -50,20 +52,25 @@ namespace TACHYON.Web.Startup.ExternalLoginInfoProviders
 
         protected override bool TenantHasSettings()
         {
-            var settingValue = _settingManager.GetSettingValueForTenant(AppSettings.ExternalLoginProvider.Tenant.OpenIdConnect, _abpSession.TenantId.Value);
+            var settingValue =
+                _settingManager.GetSettingValueForTenant(AppSettings.ExternalLoginProvider.Tenant.OpenIdConnect,
+                    _abpSession.TenantId.Value);
             return !settingValue.IsNullOrWhiteSpace();
         }
 
         protected override ExternalLoginProviderInfo GetTenantInformation()
         {
-            string settingValue = _settingManager.GetSettingValueForTenant(AppSettings.ExternalLoginProvider.Tenant.OpenIdConnect, _abpSession.TenantId.Value);
+            string settingValue =
+                _settingManager.GetSettingValueForTenant(AppSettings.ExternalLoginProvider.Tenant.OpenIdConnect,
+                    _abpSession.TenantId.Value);
             var settings = settingValue.FromJsonString<OpenIdConnectExternalLoginProviderSettings>();
             return CreateExternalLoginInfo(settings);
         }
 
         protected override ExternalLoginProviderInfo GetHostInformation()
         {
-            string settingValue = _settingManager.GetSettingValueForApplication(AppSettings.ExternalLoginProvider.Host.OpenIdConnect);
+            string settingValue =
+                _settingManager.GetSettingValueForApplication(AppSettings.ExternalLoginProvider.Host.OpenIdConnect);
             var settings = settingValue.FromJsonString<OpenIdConnectExternalLoginProviderSettings>();
             return CreateExternalLoginInfo(settings);
         }

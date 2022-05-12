@@ -4,10 +4,9 @@ using System.Text;
 
 namespace TACHYON.Documents.DocumentFiles.Dtos
 {
-  public  class DocumentUniqueCheckOutput
+    public class DocumentUniqueCheckOutput
     {
         public string DocumentTypeId { get; set; }
         public string Number { get; set; }
-
     }
 }

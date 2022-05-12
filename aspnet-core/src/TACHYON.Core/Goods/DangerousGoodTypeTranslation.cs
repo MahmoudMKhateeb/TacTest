@@ -11,6 +11,7 @@ namespace TACHYON.Goods
         [Required]
         [StringLength(DangerousGoodTypeConsts.MaxNameLength, MinimumLength = DangerousGoodTypeConsts.MinNameLength)]
         public virtual string TranslatedName { get; set; }
+
         public string Language { get; set; }
         public DangerousGoodType Core { get; set; }
         public int CoreId { get; set; }

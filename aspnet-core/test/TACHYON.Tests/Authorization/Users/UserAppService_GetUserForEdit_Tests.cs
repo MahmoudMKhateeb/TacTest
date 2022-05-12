@@ -60,7 +60,8 @@ namespace TACHYON.Tests.Authorization.Users
 
         protected Role CreateRole(string roleName)
         {
-            return UsingDbContext(context => context.Roles.Add(new Role(AbpSession.TenantId, roleName, roleName)).Entity);
+            return UsingDbContext(
+                context => context.Roles.Add(new Role(AbpSession.TenantId, roleName, roleName)).Entity);
         }
     }
 }

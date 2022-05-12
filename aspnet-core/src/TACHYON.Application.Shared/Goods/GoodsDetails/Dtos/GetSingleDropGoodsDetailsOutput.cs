@@ -6,7 +6,7 @@ namespace TACHYON.Goods.GoodsDetails.Dtos
 {
     public class GetSingleDropGoodsDetailsOutput
     {
-        public string Name { get; set; } 
+        public string Name { get; set; }
         public string Description { get; set; }
         public int TotalAmount { get; set; }
         public string GoodCategoryDisplayName { get; set; }

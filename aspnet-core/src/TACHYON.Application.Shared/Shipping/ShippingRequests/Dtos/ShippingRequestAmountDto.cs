@@ -2,7 +2,7 @@
 
 namespace TACHYON.Shipping.ShippingRequests.Dtos
 {
-    public class ShippingRequestAmountDto:EntityDto
+    public class ShippingRequestAmountDto : EntityDto
     {
         public int? OfferId { get; set; }
         public long ShippingRequestId { get; set; }

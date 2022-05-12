@@ -5,7 +5,7 @@ using TACHYON.Shipping.Trips;
 
 namespace TACHYON.Tracking.Dto
 {
-    public  class TrackingSearchInputDto: PagedAndSortedResultRequestDto
+    public class TrackingSearchInputDto : PagedAndSortedResultRequestDto
     {
         public ShippingRequestTripStatus? Status { get; set; }
         public string Shipper { get; set; }
@@ -26,6 +26,5 @@ namespace TACHYON.Tracking.Dto
         public DateTime? ToDate { get; set; }
 
         public ShippingRequestRouteType? RouteTypeId { get; set; }
-
     }
 }

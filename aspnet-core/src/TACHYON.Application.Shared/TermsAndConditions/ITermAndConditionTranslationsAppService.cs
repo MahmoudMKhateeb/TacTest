@@ -10,7 +10,8 @@ namespace TACHYON.TermsAndConditions
 {
     public interface ITermAndConditionTranslationsAppService : IApplicationService
     {
-        Task<PagedResultDto<GetTermAndConditionTranslationForViewDto>> GetAll(GetAllTermAndConditionTranslationsInput input);
+        Task<PagedResultDto<GetTermAndConditionTranslationForViewDto>> GetAll(
+            GetAllTermAndConditionTranslationsInput input);
 
         Task<GetTermAndConditionTranslationForViewDto> GetTermAndConditionTranslationForView(int id);
 
@@ -21,6 +22,5 @@ namespace TACHYON.TermsAndConditions
         Task Delete(EntityDto input);
 
         Task<List<TermAndConditionTranslationTermAndConditionLookupTableDto>> GetAllTermAndConditionForTableDropdown();
-
     }
 }

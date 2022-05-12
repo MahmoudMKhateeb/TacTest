@@ -49,10 +49,10 @@ namespace TACHYON.Shipping.ShippingRequests
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
             {
                 var expiresBids = _shippingRequestRepository.GetAll()
-                    .Where(u=>u.IsBid==true)
+                    .Where(u => u.IsBid == true)
                     .Where(u => u.BidEndDate != null)
                     .Where(u => u.BidStatus == ShippingRequestBidStatus.OnGoing)
-                    .Where(u => u.BidEndDate!=null && u.BidEndDate.Value.Date <= Clock.Now.Date)
+                    .Where(u => u.BidEndDate != null && u.BidEndDate.Value.Date <= Clock.Now.Date)
                     .ToList();
 
 
@@ -64,27 +64,26 @@ namespace TACHYON.Shipping.ShippingRequests
                 //todo add notification here 
 
 
-
                 //Open standBy Bids
                 var onGoingBids = _shippingRequestRepository.GetAll()
-                        .Where(x=>x.IsBid==true)
-                        .Where(x => x.BidStartDate != null)
-                        .Where(x => x.BidStatus == ShippingRequestBidStatus.StandBy)
-                        .Where(x => x.BidStartDate.Value.Date == Clock.Now.Date)
-                        .ToList();
+                    .Where(x => x.IsBid == true)
+                    .Where(x => x.BidStartDate != null)
+                    .Where(x => x.BidStatus == ShippingRequestBidStatus.StandBy)
+                    .Where(x => x.BidStartDate.Value.Date == Clock.Now.Date)
+                    .ToList();
 
                 foreach (var item in onGoingBids)
                 {
                     item.BidStatus = ShippingRequestBidStatus.OnGoing;
                     //var users = Task.Run<UserIdentifier[]>(async () => await _bidDomainService.GetCarriersByTruckTypeArrayAsync(item.TrucksTypeId)).Result;
-                    var users = AsyncHelper.RunSync(() => _bidDomainService.GetCarriersByTruckTypeArrayAsync(item.TrucksTypeId.Value));
-                     // to carrier
-                     AsyncHelper.RunSync(() => _appNotifier.ShippingRequestAsBidWithSameTruckAsync(users, item.Id));
-                      //todo add notification here to shipper
+                    var users = AsyncHelper.RunSync(() =>
+                        _bidDomainService.GetCarriersByTruckTypeArrayAsync(item.TrucksTypeId.Value));
+                    // to carrier
+                    AsyncHelper.RunSync(() => _appNotifier.ShippingRequestAsBidWithSameTruckAsync(users, item.Id));
+                    //todo add notification here to shipper
                 }
 
                 CurrentUnitOfWork.SaveChanges();
-               
             }
         }
     }

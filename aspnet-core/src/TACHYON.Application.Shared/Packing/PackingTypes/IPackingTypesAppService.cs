@@ -19,6 +19,5 @@ namespace TACHYON.Packing.PackingTypes
         Task CreateOrEdit(CreateOrEditPackingTypeDto input);
 
         Task Delete(EntityDto input);
-
     }
 }

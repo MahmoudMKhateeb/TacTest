@@ -9,7 +9,8 @@ namespace TACHYON.Configuration
     {
         public void Configure(IConfigurationBuilder builder, IConfigurationRoot config)
         {
-            var azureKeyVaultConfiguration = config.GetSection("Configuration:AzureKeyVault").Get<AzureKeyVaultConfiguration>();
+            var azureKeyVaultConfiguration =
+                config.GetSection("Configuration:AzureKeyVault").Get<AzureKeyVaultConfiguration>();
 
             if (azureKeyVaultConfiguration == null || !azureKeyVaultConfiguration.IsEnabled)
             {

@@ -41,11 +41,13 @@ namespace TACHYON.Authorization.Users
 
         public async Task LinkToUser(LinkToUserInput input)
         {
-            var loginResult = await _logInManager.LoginAsync(input.UsernameOrEmailAddress, input.Password, input.TenancyName);
+            var loginResult =
+                await _logInManager.LoginAsync(input.UsernameOrEmailAddress, input.Password, input.TenancyName);
 
             if (loginResult.Result != AbpLoginResultType.Success)
             {
-                throw _abpLoginResultTypeHelper.CreateExceptionForFailedLoginAttempt(loginResult.Result, input.UsernameOrEmailAddress, input.TenancyName);
+                throw _abpLoginResultTypeHelper.CreateExceptionForFailedLoginAttempt(loginResult.Result,
+                    input.UsernameOrEmailAddress, input.TenancyName);
             }
 
             if (AbpSession.IsUser(loginResult.User))
@@ -121,20 +123,20 @@ namespace TACHYON.Authorization.Users
             var currentUserIdentifier = AbpSession.ToUserIdentifier();
 
             return (from userAccount in _userAccountRepository.GetAll()
-                    join tenant in _tenantRepository.GetAll() on userAccount.TenantId equals tenant.Id into tenantJoined
-                    from tenant in tenantJoined.DefaultIfEmpty()
-                    where
-                        (userAccount.TenantId != currentUserIdentifier.TenantId ||
-                        userAccount.UserId != currentUserIdentifier.UserId) &&
-                        userAccount.UserLinkId.HasValue &&
-                        userAccount.UserLinkId == currentUserAccount.UserLinkId
-                    select new LinkedUserDto
-                    {
-                        Id = userAccount.UserId,
-                        TenantId = userAccount.TenantId,
-                        TenancyName = tenant == null ? "." : tenant.TenancyName,
-                        Username = userAccount.UserName
-                    }).OrderBy(sorting);
+                join tenant in _tenantRepository.GetAll() on userAccount.TenantId equals tenant.Id into tenantJoined
+                from tenant in tenantJoined.DefaultIfEmpty()
+                where
+                    (userAccount.TenantId != currentUserIdentifier.TenantId ||
+                     userAccount.UserId != currentUserIdentifier.UserId) &&
+                    userAccount.UserLinkId.HasValue &&
+                    userAccount.UserLinkId == currentUserAccount.UserLinkId
+                select new LinkedUserDto
+                {
+                    Id = userAccount.UserId,
+                    TenantId = userAccount.TenantId,
+                    TenancyName = tenant == null ? "." : tenant.TenancyName,
+                    Username = userAccount.UserName
+                }).OrderBy(sorting);
         }
     }
 }

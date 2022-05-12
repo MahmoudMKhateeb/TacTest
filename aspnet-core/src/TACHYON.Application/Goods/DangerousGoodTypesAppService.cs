@@ -1,6 +1,4 @@
-﻿
-
-using Abp.Application.Services.Dto;
+﻿using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
@@ -38,13 +36,11 @@ namespace TACHYON.Goods
 
         public async Task<LoadResult> GetAll(LoadOptionsInput input)
         {
-
             var query = _dangerousGoodTypeRepository.GetAll()
-                        .ProjectTo<DangerousGoodTypeDto>(AutoMapperConfigurationProvider);
+                .ProjectTo<DangerousGoodTypeDto>(AutoMapperConfigurationProvider);
 
             return await LoadResultAsync(query, input.LoadOptions);
         }
-
 
 
         public async Task CreateOrEdit(CreateOrEditDangerousGoodTypeDto input)
@@ -63,7 +59,6 @@ namespace TACHYON.Goods
         protected virtual async Task Create(CreateOrEditDangerousGoodTypeDto input)
         {
             var dangerousGoodType = ObjectMapper.Map<DangerousGoodType>(input);
-
 
 
             await _dangerousGoodTypeRepository.InsertAsync(dangerousGoodType);
@@ -86,8 +81,7 @@ namespace TACHYON.Goods
         {
             return await _dangerousGoodTypeRepository.GetAll().Select(x => new SelectItemDto
             {
-                DisplayName = x.Name,
-                Id = x.Id.ToString()
+                DisplayName = x.Name, Id = x.Id.ToString()
             }).ToListAsync();
         }
 
@@ -102,7 +96,6 @@ namespace TACHYON.Goods
 
         public async Task CreateOrEditTranslation(CreateOrEditDangerousGoodTypeTranslationDto input)
         {
-
             var isCoreEntityExist = await _dangerousGoodTypeRepository.GetAll()
                 .AnyAsync(x => x.Id == input.CoreId);
             if (!isCoreEntityExist)
@@ -116,7 +109,6 @@ namespace TACHYON.Goods
 
         protected virtual async Task CreateTranslation(CreateOrEditDangerousGoodTypeTranslationDto input)
         {
-
             var dangerousGoodTypeTranslation = ObjectMapper.Map<DangerousGoodTypeTranslation>(input);
 
             await _dangerousGoodTypeTranslationRepository.InsertAsync(dangerousGoodTypeTranslation);

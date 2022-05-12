@@ -32,7 +32,7 @@ using TACHYON.Trucks.TrucksTypes.Dtos;
 namespace TACHYON.Tracking
 {
     [AbpAuthorize()]
-    public class TrackingAppService : TACHYONAppServiceBase, ITrackingAppService
+    public class TrackingAppService : TACHYONAppServiceBase
     {
         private readonly IRepository<ShippingRequestTrip> _ShippingRequestTripRepository;
         private readonly IRepository<RoutPoint, long> _RoutPointRepository;

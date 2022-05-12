@@ -1,6 +1,6 @@
 ﻿namespace TACHYON.Firebases
 {
-    public  class Firebase
+    public class Firebase
     {
         public string type { get; set; }
         public string project_id { get; set; }

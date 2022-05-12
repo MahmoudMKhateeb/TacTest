@@ -9,22 +9,21 @@ using System.Collections.Generic;
 
 namespace TACHYON.Vases
 {
-    public interface IVasPricesAppService : IApplicationService 
+    public interface IVasPricesAppService : IApplicationService
     {
         Task<PagedResultDto<GetVasPriceForViewDto>> GetAll(GetAllVasPricesInput input);
 
         Task<GetVasPriceForViewDto> GetVasPriceForView(int id);
 
-		Task<GetVasPriceForEditOutput> GetVasPriceForEdit(EntityDto input);
+        Task<GetVasPriceForEditOutput> GetVasPriceForEdit(EntityDto input);
 
-		Task CreateOrEdit(CreateOrEditVasPriceDto input);
+        Task CreateOrEdit(CreateOrEditVasPriceDto input);
 
-		Task Delete(EntityDto input);
+        Task Delete(EntityDto input);
 
-		Task<FileDto> GetVasPricesToExcel(GetAllVasPricesForExcelInput input);
+        Task<FileDto> GetVasPricesToExcel(GetAllVasPricesForExcelInput input);
 
-		
-		Task<List<VasPriceVasLookupTableDto>> GetAllVasForTableDropdown();
-		
+
+        Task<List<VasPriceVasLookupTableDto>> GetAllVasForTableDropdown();
     }
 }

@@ -8,8 +8,5 @@ namespace TACHYON.Routs.RoutTypes.Dtos
         public string Filter { get; set; }
 
         public string DisplayNameFilter { get; set; }
-
-
-
     }
 }

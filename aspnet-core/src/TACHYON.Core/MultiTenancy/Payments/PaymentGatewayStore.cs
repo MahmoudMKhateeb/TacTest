@@ -19,8 +19,7 @@ namespace TACHYON.MultiTenancy.Payments
 
             return gateways.Where(gateway => gateway.IsActive).Select(gateway => new PaymentGatewayModel
             {
-                GatewayType = gateway.GatewayType,
-                SupportsRecurringPayments = gateway.SupportsRecurringPayments
+                GatewayType = gateway.GatewayType, SupportsRecurringPayments = gateway.SupportsRecurringPayments
             }).ToList();
         }
     }

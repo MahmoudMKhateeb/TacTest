@@ -67,7 +67,7 @@ export class TrucksComponent extends AppComponentBase implements OnInit, AfterVi
   ngOnInit(): void {
     this.entityHistoryEnabled = this.setIsEntityHistoryEnabled();
     this.isArabic = abp.localization.currentLanguage.name.startsWith('ar');
-    this.getTrucks();
+    this.refreshData();
   }
 
   ngAfterViewInit(): void {}
@@ -109,6 +109,7 @@ export class TrucksComponent extends AppComponentBase implements OnInit, AfterVi
         this._trucksServiceProxy.delete(truck.id).subscribe(() => {
           this.getTrucks();
           this.notify.success(this.l('SuccessfullyDeleted'));
+          this.refreshData();
           var filter = this._activatedRoute.snapshot.queryParams['Active'];
           this.getAllTrucks(filter);
         });
@@ -116,6 +117,10 @@ export class TrucksComponent extends AppComponentBase implements OnInit, AfterVi
     });
   }
 
+  refreshData() {
+    var filter = this._activatedRoute.snapshot.queryParams['Active'];
+    this.getAllTrucks(filter);
+  }
   exportToExcel(): void {
     this._trucksServiceProxy
       .getTrucksToExcel(

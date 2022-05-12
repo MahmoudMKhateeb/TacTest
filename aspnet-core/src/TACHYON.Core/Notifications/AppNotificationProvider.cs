@@ -16,26 +16,26 @@ namespace TACHYON.Notifications
                     AppNotificationNames.NewUserRegistered,
                     displayName: L("NewUserRegisteredNotificationDefinition"),
                     permissionDependency: new SimplePermissionDependency(AppPermissions.Pages_Administration_Users)
-                    )
-                );
+                )
+            );
 
             context.Manager.Add(
                 new NotificationDefinition(
                     AppNotificationNames.NewTenantRegistered,
                     displayName: L("NewTenantRegisteredNotificationDefinition"),
                     permissionDependency: new SimplePermissionDependency(AppPermissions.Pages_Tenants)
-                    )
-                );
+                )
+            );
 
             #region Tychon notifications
 
             context.Manager.Add(
-               new NotificationDefinition(
-                   AppNotificationNames.AssignDriverToTruck,
-                   displayName: L("AssignDriverToTruckNotificationDefinition"),
-                   featureDependency: new SimpleFeatureDependency(AppFeatures.Carrier)
-                   )
-               );
+                new NotificationDefinition(
+                    AppNotificationNames.AssignDriverToTruck,
+                    displayName: L("AssignDriverToTruckNotificationDefinition"),
+                    featureDependency: new SimpleFeatureDependency(AppFeatures.Carrier)
+                )
+            );
 
             context.Manager.Add(
                 new NotificationDefinition(
@@ -46,12 +46,12 @@ namespace TACHYON.Notifications
             );
 
             context.Manager.Add(
-              new NotificationDefinition(
-                  AppNotificationNames.AcceptShippingRequestPrice,
-                  displayName: L("AcceptShippingRequestPriceNotificationDefinition"),
-                  featureDependency: new SimpleFeatureDependency(AppFeatures.TachyonDealer)
-              )
-          );
+                new NotificationDefinition(
+                    AppNotificationNames.AcceptShippingRequestPrice,
+                    displayName: L("AcceptShippingRequestPriceNotificationDefinition"),
+                    featureDependency: new SimpleFeatureDependency(AppFeatures.TachyonDealer)
+                )
+            );
 
             context.Manager.Add(
                 new NotificationDefinition(
@@ -65,43 +65,43 @@ namespace TACHYON.Notifications
                     AppNotificationNames.CreateShippingRequestBid,
                     displayName: L("CreateShippingRequestBidNotificationDefinition"),
                     featureDependency: new SimpleFeatureDependency(AppFeatures.Carrier)
-                    )
-                );
+                )
+            );
             context.Manager.Add(
                 new NotificationDefinition(
                     AppNotificationNames.UpdateShippingRequestBid,
                     displayName: L("UpdateShippingRequestBidNotificationDefinition"),
                     featureDependency: new SimpleFeatureDependency(AppFeatures.Carrier)
-                    )
-                );
+                )
+            );
             context.Manager.Add(
                 new NotificationDefinition(
                     AppNotificationNames.CancelShippingRequestBid,
                     displayName: L("CancelShippingRequestBidNotificationDefinition"),
                     featureDependency: new SimpleFeatureDependency(AppFeatures.Carrier)
-                    )
-                );
+                )
+            );
             context.Manager.Add(
                 new NotificationDefinition(
                     AppNotificationNames.AcceptShippingRequestBid,
                     displayName: L("AcceptShippingRequestBidNotificationDefinition"),
                     featureDependency: new SimpleFeatureDependency(AppFeatures.Carrier)
-                    )
-                );
+                )
+            );
 
             context.Manager.Add(
                 new NotificationDefinition(
                     AppNotificationNames.ShippingRequestAsBidWithSameTruck,
                     displayName: L("ShippingRequestAsBidWithSameTruckNotificationDefinition"),
                     featureDependency: new SimpleFeatureDependency(AppFeatures.Carrier)
-                    )
-                );
+                )
+            );
 
             context.Manager.Add(
-            new NotificationDefinition(
-                AppNotificationNames.TachyonDealOfferCreated,
-                displayName: L("TachyonDealerOfferCreatedNotificationDefinition"),
-                featureDependency: new SimpleFeatureDependency(AppFeatures.Carrier)
+                new NotificationDefinition(
+                    AppNotificationNames.TachyonDealOfferCreated,
+                    displayName: L("TachyonDealerOfferCreatedNotificationDefinition"),
+                    featureDependency: new SimpleFeatureDependency(AppFeatures.Carrier)
                 )
             );
             context.Manager.Add(
@@ -119,12 +119,12 @@ namespace TACHYON.Notifications
             );
 
             context.Manager.Add(
-          new NotificationDefinition(
-              AppNotificationNames.TenantDocumentFileUpdate,
-              displayName: L("TenantDocumentFileUpdateNotificationDefinition"),
-               permissionDependency: new SimplePermissionDependency(AppPermissions.Pages_Tenants)
-              )
-          );
+                new NotificationDefinition(
+                    AppNotificationNames.TenantDocumentFileUpdate,
+                    displayName: L("TenantDocumentFileUpdateNotificationDefinition"),
+                    permissionDependency: new SimplePermissionDependency(AppPermissions.Pages_Tenants)
+                )
+            );
 
             //context.Manager.Add(
             //    new NotificationDefinition(
@@ -132,43 +132,42 @@ namespace TACHYON.Notifications
 
 
             #region Invoices
+
             #region Shipper
-            context.Manager.Add(
-          new NotificationDefinition(
-              AppNotificationNames.InvoiceShipperGenerated,
-              displayName: L("NewInvoiceShipperGenerated"),
-               permissionDependency: new SimplePermissionDependency(AppFeatures.Shipper)
-          )
-
-      );
 
             context.Manager.Add(
-          new NotificationDefinition(
-              AppNotificationNames.ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage,
-              displayName: L("ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage"),
-               permissionDependency: new SimplePermissionDependency(AppFeatures.Shipper)
-          )
+                new NotificationDefinition(
+                    AppNotificationNames.InvoiceShipperGenerated,
+                    displayName: L("NewInvoiceShipperGenerated"),
+                    permissionDependency: new SimplePermissionDependency(AppFeatures.Shipper)
+                )
+            );
 
-      );
+            context.Manager.Add(
+                new NotificationDefinition(
+                    AppNotificationNames.ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage,
+                    displayName: L("ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage"),
+                    permissionDependency: new SimplePermissionDependency(AppFeatures.Shipper)
+                )
+            );
             context.Manager.Add(
                 new NotificationDefinition(
                     AppNotificationNames.StartShippment,
                     displayName: L("StartShippmentNotificationDefinition")
-                    )
-                );
+                )
+            );
             context.Manager.Add(
                 new NotificationDefinition(
                     AppNotificationNames.ShipperShippingRequestFinish,
                     displayName: L("ShipperShippingRequestFinishNotificationDefinition")
-                    )
-                );
+                )
+            );
+
             #endregion
 
             #region Host
 
             #endregion
-
-
 
             #endregion
 

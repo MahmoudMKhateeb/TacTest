@@ -4,12 +4,12 @@ using TACHYON.Invoices.InvoicesProformas.dto;
 
 namespace TACHYON.AutoMapper.Invoices
 {
-    public  class InvoicesProformaProfile:Profile
+    public class InvoicesProformaProfile : Profile
     {
         public InvoicesProformaProfile()
         {
             CreateMap<InvoiceProforma, InvoicesProformaListDto>()
-             .ForMember(dto => dto.ClientName, options => options.MapFrom(entity => entity.Tenant.Name));
+                .ForMember(dto => dto.ClientName, options => options.MapFrom(entity => entity.Tenant.Name));
         }
     }
 }

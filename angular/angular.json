@@ -33,6 +33,11 @@
               "src/metronic",
               "src/favicon.ico",
               {
+                "glob": "web.config",
+                "input": "src",
+                "output": "/"
+              },
+              {
                 "glob": "abp.signalr-client.js",
                 "input": "node_modules/abp-web-resources/Abp/Framework/scripts/libs",
                 "output": "/assets/abp"

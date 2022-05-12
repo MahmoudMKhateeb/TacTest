@@ -16,9 +16,8 @@ namespace TACHYON.EntityLogs.Jobs
 
         public async Task EnqueueEntityLog(EntityChange entityChange)
         {
-            await _jobManager.EnqueueAsync<EntityLogJob, EntityLogJobArguments>(new EntityLogJobArguments(entityChange.Id));
+            await _jobManager.EnqueueAsync<EntityLogJob, EntityLogJobArguments>(
+                new EntityLogJobArguments(entityChange.Id));
         }
-
-
     }
 }

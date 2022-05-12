@@ -9,6 +9,5 @@ namespace TACHYON.Trucks.TruckCategories.TruckCapacities.TruckCapacitiesTranslat
         public CreateOrEditTruckCapacitiesTranslationDto TruckCapacitiesTranslation { get; set; }
 
         public string CapacityDisplayName { get; set; }
-
     }
 }

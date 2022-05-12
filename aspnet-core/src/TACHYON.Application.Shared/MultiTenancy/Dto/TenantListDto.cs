@@ -17,8 +17,7 @@ namespace TACHYON.MultiTenancy.Dto
 
         public string EditionDisplayName { get; set; }
 
-        [DisableAuditing]
-        public string ConnectionString { get; set; }
+        [DisableAuditing] public string ConnectionString { get; set; }
 
         public bool IsActive { get; set; }
 
@@ -40,12 +39,5 @@ namespace TACHYON.MultiTenancy.Dto
         public decimal Balance { get; set; } = 0;
         public decimal ReservedBalance { get; set; } = 0;
         public decimal CreditBalance { get; set; } = 0;
-
-
-
-
-
-
-
     }
 }

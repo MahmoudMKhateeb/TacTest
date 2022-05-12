@@ -8,8 +8,5 @@ namespace TACHYON.Trailers.TrailerTypes.Dtos
         public string Filter { get; set; }
 
         public string DisplayNameFilter { get; set; }
-
-
-
     }
 }

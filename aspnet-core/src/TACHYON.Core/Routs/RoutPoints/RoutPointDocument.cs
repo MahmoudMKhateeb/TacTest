@@ -10,12 +10,10 @@ namespace TACHYON.Routs.RoutPoints
     public class RoutPointDocument : FullAuditedEntity<long>
     {
         public long RoutPointId { get; set; }
-        [ForeignKey("RoutPointId")]
-        public RoutPoint RoutPointFk { get; set; }
+        [ForeignKey("RoutPointId")] public RoutPoint RoutPointFk { get; set; }
         public RoutePointDocumentType RoutePointDocumentType { get; set; }
         public Guid? DocumentId { get; set; }
         public string DocumentName { get; set; }
         public string DocumentContentType { get; set; }
-
     }
 }

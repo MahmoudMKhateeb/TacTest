@@ -41,10 +41,7 @@ namespace TACHYON.Tests.Organizations
 
             //Act
             await _organizationUnitAppService.GetOrganizationUnitUsers(
-                new GetOrganizationUnitUsersInput
-                {
-                    Id = ou1.Id
-                });
+                new GetOrganizationUnitUsersInput { Id = ou1.Id });
         }
 
         [Fact]
@@ -57,8 +54,7 @@ namespace TACHYON.Tests.Organizations
             //Act
             await _organizationUnitAppService.CreateOrganizationUnit(new CreateOrganizationUnitInput
             {
-                ParentId = ou11.Id,
-                DisplayName = newChildName
+                ParentId = ou11.Id, DisplayName = newChildName
             });
 
             //Assert
@@ -79,8 +75,7 @@ namespace TACHYON.Tests.Organizations
             //Act
             await _organizationUnitAppService.UpdateOrganizationUnit(new UpdateOrganizationUnitInput
             {
-                Id = ou11.Id,
-                DisplayName = "new ou11 display name"
+                Id = ou11.Id, DisplayName = "new ou11 display name"
             });
 
             //Assert
@@ -97,8 +92,7 @@ namespace TACHYON.Tests.Organizations
             //Act
             var output = await _organizationUnitAppService.MoveOrganizationUnit(new MoveOrganizationUnitInput
             {
-                Id = ou11.Id,
-                NewParentId = ou12.Id
+                Id = ou11.Id, NewParentId = ou12.Id
             });
 
             //Assert
@@ -114,7 +108,9 @@ namespace TACHYON.Tests.Organizations
 
             UsingDbContext(context =>
             {
-                context.Users.FirstOrDefault(u => u.Id == AbpSession.UserId.Value && u.TenantId == AbpSession.TenantId.Value).ShouldNotBeNull();
+                context.Users
+                    .FirstOrDefault(u => u.Id == AbpSession.UserId.Value && u.TenantId == AbpSession.TenantId.Value)
+                    .ShouldNotBeNull();
             });
 
             //Act
@@ -133,19 +129,19 @@ namespace TACHYON.Tests.Organizations
 
             //Act
             await _organizationUnitAppService.AddUsersToOrganizationUnit(
-                new UsersToOrganizationUnitInput
-                {
-                    UserIds = new[] { admin.Id },
-                    OrganizationUnitId = ou12.Id
-                });
+                new UsersToOrganizationUnitInput { UserIds = new[] { admin.Id }, OrganizationUnitId = ou12.Id });
 
             //Assert
 
             //check from database
-            UsingDbContext(context => context.UserOrganizationUnits.FirstOrDefault(uou => uou.OrganizationUnitId == ou12.Id && uou.UserId == admin.Id)).ShouldNotBeNull();
+            UsingDbContext(context =>
+                context.UserOrganizationUnits.FirstOrDefault(uou =>
+                    uou.OrganizationUnitId == ou12.Id && uou.UserId == admin.Id)).ShouldNotBeNull();
 
             //Check also from app service
-            var output = await _organizationUnitAppService.GetOrganizationUnitUsers(new GetOrganizationUnitUsersInput { Id = ou12.Id });
+            var output =
+                await _organizationUnitAppService.GetOrganizationUnitUsers(
+                    new GetOrganizationUnitUsersInput { Id = ou12.Id });
             output.Items.FirstOrDefault(u => u.Id == admin.Id).ShouldNotBeNull();
         }
 
@@ -156,15 +152,12 @@ namespace TACHYON.Tests.Organizations
             var ou12 = GetOrganizationUnitByName("OU12");
             var admin = GetUserByUserName(AbpUserBase.AdminUserName);
 
-            UsingDbContext(context => context.UserOrganizationUnits.Add(new UserOrganizationUnit(AbpSession.TenantId, admin.Id, ou12.Id)));
+            UsingDbContext(context =>
+                context.UserOrganizationUnits.Add(new UserOrganizationUnit(AbpSession.TenantId, admin.Id, ou12.Id)));
 
             //Act
             await _organizationUnitAppService.RemoveUserFromOrganizationUnit(
-                new UserToOrganizationUnitInput
-                {
-                    UserId = admin.Id,
-                    OrganizationUnitId = ou12.Id
-                });
+                new UserToOrganizationUnitInput { UserId = admin.Id, OrganizationUnitId = ou12.Id });
 
             //check from database
             UsingDbContext(context =>
@@ -180,14 +173,16 @@ namespace TACHYON.Tests.Organizations
 
         private OrganizationUnit GetOrganizationUnitByName(string diplayName)
         {
-            var organizationUnit = UsingDbContext(context => context.OrganizationUnits.FirstOrDefault(ou => ou.DisplayName == diplayName));
+            var organizationUnit = UsingDbContext(context =>
+                context.OrganizationUnits.FirstOrDefault(ou => ou.DisplayName == diplayName));
             organizationUnit.ShouldNotBeNull();
             return organizationUnit;
         }
 
         private OrganizationUnit GetOrganizationUnitById(long id)
         {
-            var organizationUnit = UsingDbContext(context => context.OrganizationUnits.FirstOrDefault(ou => ou.Id == id));
+            var organizationUnit =
+                UsingDbContext(context => context.OrganizationUnits.FirstOrDefault(ou => ou.Id == id));
             organizationUnit.ShouldNotBeNull();
             return organizationUnit;
         }

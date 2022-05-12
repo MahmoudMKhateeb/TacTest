@@ -1,5 +1,4 @@
-﻿
-using Abp.Application.Services.Dto;
+﻿using Abp.Application.Services.Dto;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -7,7 +6,6 @@ namespace TACHYON.Cities.Dtos
 {
     public class CreateOrEditCityDto : EntityDto<int?>
     {
-
         [Required]
         [StringLength(CityConsts.MaxDisplayNameLength, MinimumLength = CityConsts.MinDisplayNameLength)]
         public string DisplayName { get; set; }
@@ -27,7 +25,5 @@ namespace TACHYON.Cities.Dtos
         public bool IsActive { get; set; } = true;
 
         public int CountyId { get; set; }
-
-
     }
 }

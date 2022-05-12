@@ -6,8 +6,6 @@ namespace TACHYON.TermsAndConditions.Dtos
 {
     public class GetTermAndConditionForEditOutput
     {
-		public CreateOrEditTermAndConditionDto TermAndCondition { get; set; }
-
-
+        public CreateOrEditTermAndConditionDto TermAndCondition { get; set; }
     }
 }

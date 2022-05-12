@@ -14,8 +14,8 @@ namespace TACHYON.AutoMapper.DriverLocationLogs
             CreateMap<CreateDriverLocationLogInput, DriverLocationLog>();
 
             CreateMap<DriverLocationLog, DriverLocationLogDto>()
-              .ForMember(dst => dst.Longitude, opt => opt.MapFrom(src => src.Location.X))
-              .ForMember(dst => dst.Latitude, opt => opt.MapFrom(src => src.Location.Y));
+                .ForMember(dst => dst.Longitude, opt => opt.MapFrom(src => src.Location.X))
+                .ForMember(dst => dst.Latitude, opt => opt.MapFrom(src => src.Location.Y));
         }
     }
 }

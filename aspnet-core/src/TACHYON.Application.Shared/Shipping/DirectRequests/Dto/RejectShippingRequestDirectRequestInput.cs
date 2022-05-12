@@ -5,7 +5,6 @@ namespace TACHYON.Shipping.DirectRequests.Dto
 {
     public class RejectShippingRequestDirectRequestInput : EntityDto<long>
     {
-        [Required]
-        public string Reason { get; set; }
+        [Required] public string Reason { get; set; }
     }
 }

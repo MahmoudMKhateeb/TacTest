@@ -2,7 +2,6 @@
 {
     public class CityConsts
     {
-
         public const int MinDisplayNameLength = 0;
         public const int MaxDisplayNameLength = 256;
 
@@ -14,6 +13,5 @@
 
         public const int MinLongitudeLength = 0;
         public const int MaxLongitudeLength = 256;
-
     }
 }

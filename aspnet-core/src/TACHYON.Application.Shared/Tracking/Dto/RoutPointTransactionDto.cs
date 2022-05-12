@@ -8,7 +8,6 @@ namespace TACHYON.Tracking.Dto
 {
     public class RoutPointTransactionDto
     {
-
         public RoutePointStatus Status { get; set; }
         public bool IsDone { get; set; }
         public string Name { get; set; }

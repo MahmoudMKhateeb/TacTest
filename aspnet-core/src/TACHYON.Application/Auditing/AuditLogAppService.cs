@@ -101,26 +101,34 @@ namespace TACHYON.Auditing
         private IQueryable<AuditLogAndUser> CreateAuditLogAndUsersQuery(GetAuditLogsInput input)
         {
             var query = from auditLog in _auditLogRepository.GetAll()
-                        join user in _userRepository.GetAll() on auditLog.UserId equals user.Id into userJoin
-                        from joinedUser in userJoin.DefaultIfEmpty()
-                        where auditLog.ExecutionTime >= input.StartDate && auditLog.ExecutionTime <= input.EndDate
-                        select new AuditLogAndUser { AuditLog = auditLog, User = joinedUser };
+                join user in _userRepository.GetAll() on auditLog.UserId equals user.Id into userJoin
+                from joinedUser in userJoin.DefaultIfEmpty()
+                where auditLog.ExecutionTime >= input.StartDate && auditLog.ExecutionTime <= input.EndDate
+                select new AuditLogAndUser { AuditLog = auditLog, User = joinedUser };
 
             query = query
                 .WhereIf(!input.UserName.IsNullOrWhiteSpace(), item => item.User.UserName.Contains(input.UserName))
-                .WhereIf(!input.ServiceName.IsNullOrWhiteSpace(), item => item.AuditLog.ServiceName.Contains(input.ServiceName))
-                .WhereIf(!input.MethodName.IsNullOrWhiteSpace(), item => item.AuditLog.MethodName.Contains(input.MethodName))
-                .WhereIf(!input.BrowserInfo.IsNullOrWhiteSpace(), item => item.AuditLog.BrowserInfo.Contains(input.BrowserInfo))
-                .WhereIf(input.MinExecutionDuration.HasValue && input.MinExecutionDuration > 0, item => item.AuditLog.ExecutionDuration >= input.MinExecutionDuration.Value)
-                .WhereIf(input.MaxExecutionDuration.HasValue && input.MaxExecutionDuration < int.MaxValue, item => item.AuditLog.ExecutionDuration <= input.MaxExecutionDuration.Value)
-                .WhereIf(input.HasException == true, item => item.AuditLog.Exception != null && item.AuditLog.Exception != "")
-                .WhereIf(input.HasException == false, item => item.AuditLog.Exception == null || item.AuditLog.Exception == "");
+                .WhereIf(!input.ServiceName.IsNullOrWhiteSpace(),
+                    item => item.AuditLog.ServiceName.Contains(input.ServiceName))
+                .WhereIf(!input.MethodName.IsNullOrWhiteSpace(),
+                    item => item.AuditLog.MethodName.Contains(input.MethodName))
+                .WhereIf(!input.BrowserInfo.IsNullOrWhiteSpace(),
+                    item => item.AuditLog.BrowserInfo.Contains(input.BrowserInfo))
+                .WhereIf(input.MinExecutionDuration.HasValue && input.MinExecutionDuration > 0,
+                    item => item.AuditLog.ExecutionDuration >= input.MinExecutionDuration.Value)
+                .WhereIf(input.MaxExecutionDuration.HasValue && input.MaxExecutionDuration < int.MaxValue,
+                    item => item.AuditLog.ExecutionDuration <= input.MaxExecutionDuration.Value)
+                .WhereIf(input.HasException == true,
+                    item => item.AuditLog.Exception != null && item.AuditLog.Exception != "")
+                .WhereIf(input.HasException == false,
+                    item => item.AuditLog.Exception == null || item.AuditLog.Exception == "");
             return query;
         }
 
         #endregion
 
-        #region entity changes 
+        #region entity changes
+
         public List<NameValueDto> GetEntityHistoryObjectTypes()
         {
             var entityHistoryObjectTypes = new List<NameValueDto>();
@@ -130,11 +138,13 @@ namespace TACHYON.Auditing
 
             if (AbpSession.TenantId == null)
             {
-                enabledEntities = EntityHistoryHelper.HostSideTrackedTypes.Select(t => t.FullName).Intersect(enabledEntities).ToList();
+                enabledEntities = EntityHistoryHelper.HostSideTrackedTypes.Select(t => t.FullName)
+                    .Intersect(enabledEntities).ToList();
             }
             else
             {
-                enabledEntities = EntityHistoryHelper.TenantSideTrackedTypes.Select(t => t.FullName).Intersect(enabledEntities).ToList();
+                enabledEntities = EntityHistoryHelper.TenantSideTrackedTypes.Select(t => t.FullName)
+                    .Intersect(enabledEntities).ToList();
             }
 
             foreach (var enabledEntity in enabledEntities)
@@ -166,15 +176,12 @@ namespace TACHYON.Auditing
             var entityId = "\"" + input.EntityId + "\"";
 
             var query = from entityChangeSet in _entityChangeSetRepository.GetAll()
-                        join entityChange in _entityChangeRepository.GetAll() on entityChangeSet.Id equals entityChange.EntityChangeSetId
-                        join user in _userRepository.GetAll() on entityChangeSet.UserId equals user.Id
-                        where entityChange.EntityTypeFullName == input.EntityTypeFullName &&
-                              (entityChange.EntityId == input.EntityId || entityChange.EntityId == entityId)
-                        select new EntityChangeAndUser
-                        {
-                            EntityChange = entityChange,
-                            User = user
-                        };
+                join entityChange in _entityChangeRepository.GetAll() on entityChangeSet.Id equals entityChange
+                    .EntityChangeSetId
+                join user in _userRepository.GetAll() on entityChangeSet.UserId equals user.Id
+                where entityChange.EntityTypeFullName == input.EntityTypeFullName &&
+                      (entityChange.EntityId == input.EntityId || entityChange.EntityId == entityId)
+                select new EntityChangeAndUser { EntityChange = entityChange, User = user };
 
             var resultCount = await query.CountAsync();
             var results = await query
@@ -222,21 +229,20 @@ namespace TACHYON.Auditing
         private IQueryable<EntityChangeAndUser> CreateEntityChangesAndUsersQuery(GetEntityChangeInput input)
         {
             var query = from entityChangeSet in _entityChangeSetRepository.GetAll()
-                        join entityChange in _entityChangeRepository.GetAll() on entityChangeSet.Id equals entityChange.EntityChangeSetId
-                        join user in _userRepository.GetAll() on entityChangeSet.UserId equals user.Id
-                        where entityChange.ChangeTime >= input.StartDate && entityChange.ChangeTime <= input.EndDate
-                        select new EntityChangeAndUser
-                        {
-                            EntityChange = entityChange,
-                            User = user
-                        };
+                join entityChange in _entityChangeRepository.GetAll() on entityChangeSet.Id equals entityChange
+                    .EntityChangeSetId
+                join user in _userRepository.GetAll() on entityChangeSet.UserId equals user.Id
+                where entityChange.ChangeTime >= input.StartDate && entityChange.ChangeTime <= input.EndDate
+                select new EntityChangeAndUser { EntityChange = entityChange, User = user };
 
             query = query
                 .WhereIf(!input.UserName.IsNullOrWhiteSpace(), item => item.User.UserName.Contains(input.UserName))
-                .WhereIf(!input.EntityTypeFullName.IsNullOrWhiteSpace(), item => item.EntityChange.EntityTypeFullName.Contains(input.EntityTypeFullName));
+                .WhereIf(!input.EntityTypeFullName.IsNullOrWhiteSpace(),
+                    item => item.EntityChange.EntityTypeFullName.Contains(input.EntityTypeFullName));
 
             return query;
         }
+
         #endregion
     }
 }

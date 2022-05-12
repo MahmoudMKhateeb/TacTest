@@ -22,6 +22,5 @@ namespace TACHYON.Common
         Task<List<SelectItemDto>> GetPeriods();
 
         Task<List<ShippingRequestAccidentReasonLookupDto>> GetAccidentReason();
-
     }
 }

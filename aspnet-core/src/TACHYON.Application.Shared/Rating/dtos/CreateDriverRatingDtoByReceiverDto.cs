@@ -2,7 +2,7 @@
 
 namespace TACHYON.Rating.dtos
 {
-    public class CreateDriverRatingDtoByReceiverDto: RatingDto
+    public class CreateDriverRatingDtoByReceiverDto : RatingDto
     {
         [Required]
         [StringLength(6, MinimumLength = 6)]

@@ -22,7 +22,9 @@ namespace TACHYON.Shipping.DirectRequests
         private readonly IRepository<TenantCarrier, long> _tenantCarrierRepository;
 
 
-        public ShippingRequestDirectRequestManager(IFeatureChecker featureChecker, IRepository<Tenant> tenantRepository, IRepository<TenantCarrier, long> tenantCarrierRepository)
+        public ShippingRequestDirectRequestManager(IFeatureChecker featureChecker,
+            IRepository<Tenant> tenantRepository,
+            IRepository<TenantCarrier, long> tenantCarrierRepository)
         {
             _featureChecker = featureChecker;
             _tenantRepository = tenantRepository;
@@ -33,42 +35,38 @@ namespace TACHYON.Shipping.DirectRequests
         /// Get list of carrier for dropdown can send direct request
         /// </summary>
         /// <returns></returns>
-        
         public async Task<List<CarriersForDropDownDto>> GetCarriersForDropDownByPermissionAsync()
         {
             List<CarriersForDropDownDto> list;
             if (await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer))
             {
-                list =await _tenantRepository
-                                .GetAll()
-                                .AsNoTracking()
-                                .Where(t => t.IsActive && t.Edition.DisplayName == TACHYONConsts.CarrierEdtionName)
-                                .Select(r => new CarriersForDropDownDto
-                                {
-                                    Id = r.Id,
-                                    DisplayName = r.TenancyName,
-                                    Rate=r.Rate
-                                }).ToListAsync();
+                list = await _tenantRepository
+                    .GetAll()
+                    .AsNoTracking()
+                    .Where(t => t.IsActive && t.Edition.DisplayName == TACHYONConsts.CarrierEdtionName)
+                    .Select(r => new CarriersForDropDownDto { Id = r.Id, DisplayName = r.TenancyName, Rate = r.Rate })
+                    .ToListAsync();
             }
-            else if (await _featureChecker.IsEnabledAsync(AppFeatures.Shipper) && await _featureChecker.IsEnabledAsync(AppFeatures.SendDirectRequest))
+            else if (await _featureChecker.IsEnabledAsync(AppFeatures.Shipper) &&
+                     await _featureChecker.IsEnabledAsync(AppFeatures.SendDirectRequest))
             {
-                list =await _tenantCarrierRepository
-                                .GetAll()
-                                .AsNoTracking()
-                                .Where(t => t.CarrierShipper.IsActive)
-                                .Select(r => new CarriersForDropDownDto
-                                {
-                                    Id = r.CarrierTenantId,
-                                    DisplayName = r.CarrierShipper.TenancyName,
-                                    Rate=r.CarrierShipper.Rate
-                                }).ToListAsync();
+                list = await _tenantCarrierRepository
+                    .GetAll()
+                    .AsNoTracking()
+                    .Where(t => t.CarrierShipper.IsActive)
+                    .Select(r => new CarriersForDropDownDto
+                    {
+                        Id = r.CarrierTenantId,
+                        DisplayName = r.CarrierShipper.TenancyName,
+                        Rate = r.CarrierShipper.Rate
+                    }).ToListAsync();
             }
             else
             {
                 return null;
             }
+
             return list;
         }
-
     }
 }

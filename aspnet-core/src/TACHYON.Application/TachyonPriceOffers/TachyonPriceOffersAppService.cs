@@ -113,9 +113,8 @@
 //                    await Edit(input, Offer, Request);
 //                }
 //            }
-            
-//        }
 
+//        }
 
 
 //        [RequiresFeature(AppFeatures.TachyonDealer)]
@@ -260,7 +259,7 @@
 
 //        private async Task EditPendingOffer(CreateOrEditTachyonPriceOfferDto input, TachyonPriceOffer offer)
 //        {
-   
+
 //            offer.CarrierPrice = input.CarrierPrice;
 
 //          //  if (offer.OfferStatus == OfferStatus.Pending)
@@ -343,3 +342,4 @@
 
 //    }
 //}
+

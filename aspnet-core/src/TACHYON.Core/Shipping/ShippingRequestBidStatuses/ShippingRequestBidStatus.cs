@@ -10,7 +10,6 @@ namespace TACHYON.Shipping.ShippingRequestBidStatuses
     [Table("ShippingRequestBidStatuses")]
     public class ShippingRequestBidStatus : FullAuditedEntity
     {
-        [Required]
-        public virtual string DisplayName { get; set; }
+        [Required] public virtual string DisplayName { get; set; }
     }
 }

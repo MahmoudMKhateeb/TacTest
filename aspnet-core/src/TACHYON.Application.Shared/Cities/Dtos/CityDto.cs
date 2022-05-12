@@ -1,5 +1,4 @@
-﻿
-using Abp.Application.Services.Dto;
+﻿using Abp.Application.Services.Dto;
 using System;
 
 namespace TACHYON.Cities.Dtos
@@ -20,6 +19,5 @@ namespace TACHYON.Cities.Dtos
         public bool IsActive { get; set; }
 
         public string TranslatedDisplayName { get; set; }
-
     }
 }

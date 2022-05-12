@@ -19,7 +19,5 @@ namespace TACHYON.Trailers.PayloadMaxWeights
         Task Delete(EntityDto input);
 
         Task<FileDto> GetPayloadMaxWeightsToExcel(GetAllPayloadMaxWeightsForExcelInput input);
-
-
     }
 }

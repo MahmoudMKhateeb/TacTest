@@ -9,10 +9,8 @@ namespace TACHYON.Nationalities
     [Table("Nationalities")]
     public class Nationality : FullAuditedEntity
     {
-
         [Required]
         [StringLength(NationalityConsts.MaxNameLength, MinimumLength = NationalityConsts.MinNameLength)]
         public virtual string Name { get; set; }
-
     }
 }

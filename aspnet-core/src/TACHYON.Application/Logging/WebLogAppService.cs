@@ -33,8 +33,8 @@ namespace TACHYON.Logging
             }
 
             var lastLogFile = directory.GetFiles("*.txt", SearchOption.AllDirectories)
-                                        .OrderByDescending(f => f.LastWriteTime)
-                                        .FirstOrDefault();
+                .OrderByDescending(f => f.LastWriteTime)
+                .FirstOrDefault();
 
             if (lastLogFile == null)
             {
@@ -64,10 +64,7 @@ namespace TACHYON.Logging
                 }
             }
 
-            return new GetLatestWebLogsOutput
-            {
-                LatestWebLogLines = lines.Take(lineCount).Reverse().ToList()
-            };
+            return new GetLatestWebLogsOutput { LatestWebLogLines = lines.Take(lineCount).Reverse().ToList() };
         }
 
         public FileDto DownloadWebLogs()
@@ -87,7 +84,8 @@ namespace TACHYON.Logging
                         var entry = zipStream.CreateEntry(logFile.Name);
                         using (var entryStream = entry.Open())
                         {
-                            using (var fs = new FileStream(logFile.FullName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, 0x1000, FileOptions.SequentialScan))
+                            using (var fs = new FileStream(logFile.FullName, FileMode.Open, FileAccess.Read,
+                                       FileShare.ReadWrite, 0x1000, FileOptions.SequentialScan))
                             {
                                 fs.CopyTo(entryStream);
                                 entryStream.Flush();

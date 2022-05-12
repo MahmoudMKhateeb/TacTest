@@ -10,15 +10,14 @@ namespace TACHYON.AddressBook.Ports.Exporting
 {
     public class PortsExcelExporter : NpoiExcelExporterBase, IPortsExcelExporter
     {
-
         private readonly ITimeZoneConverter _timeZoneConverter;
         private readonly IAbpSession _abpSession;
 
         public PortsExcelExporter(
             ITimeZoneConverter timeZoneConverter,
             IAbpSession abpSession,
-			ITempFileCacheManager tempFileCacheManager) :  
-	base(tempFileCacheManager)
+            ITempFileCacheManager tempFileCacheManager) :
+            base(tempFileCacheManager)
         {
             _timeZoneConverter = timeZoneConverter;
             _abpSession = abpSession;
@@ -30,7 +29,6 @@ namespace TACHYON.AddressBook.Ports.Exporting
                 "Ports.xlsx",
                 excelPackage =>
                 {
-                    
                     var sheet = excelPackage.CreateSheet(L("Ports"));
 
                     AddHeader(
@@ -39,7 +37,7 @@ namespace TACHYON.AddressBook.Ports.Exporting
                         L("Adress"),
                         L("Location"),
                         (L("City")) + L("DisplayName")
-                        );
+                    );
 
                     AddObjects(
                         sheet, 2, ports,
@@ -47,10 +45,7 @@ namespace TACHYON.AddressBook.Ports.Exporting
                         _ => _.Port.Address,
                         _ => _.Port.Location,
                         _ => _.CityDisplayName
-                        );
-
-					
-					
+                    );
                 });
         }
     }

@@ -82,12 +82,13 @@ namespace TACHYON.Web.Controllers
         private readonly IJwtSecurityStampHandler _securityStampHandler;
         private readonly AbpUserClaimsPrincipalFactory<User, Role> _claimsPrincipalFactory;
         private readonly TenantManager _tenantManager;
-        private List<string> _testMobiles;
+        private readonly List<string> _testMobiles;
         public IRecaptchaValidator RecaptchaValidator { get; set; }
         private readonly IUserDelegationManager _userDelegationManager;
         private readonly UserDeviceTokenManager _userDeviceTokenManager;
         private readonly MobileManager _mobileManager;
         private readonly ShippingRequestPointWorkFlowProvider _workFlowProvider;
+
         public TokenAuthController(
             LogInManager logInManager,
             ITenantCache tenantCache,
@@ -110,9 +111,11 @@ namespace TACHYON.Web.Controllers
             ISettingManager settingManager,
             IJwtSecurityStampHandler securityStampHandler,
             AbpUserClaimsPrincipalFactory<User, Role> claimsPrincipalFactory,
-            IUserDelegationManager userDelegationManager, TenantManager tenantManager,
+            IUserDelegationManager userDelegationManager,
+            TenantManager tenantManager,
             UserDeviceTokenManager userDeviceTokenManager,
-           MobileManager mobileManager, ShippingRequestPointWorkFlowProvider workFlowProvider)
+            MobileManager mobileManager,
+            ShippingRequestPointWorkFlowProvider workFlowProvider)
         {
             _logInManager = logInManager;
             _tenantCache = tenantCache;
@@ -141,18 +144,15 @@ namespace TACHYON.Web.Controllers
             _userDeviceTokenManager = userDeviceTokenManager;
             _mobileManager = mobileManager;
             _workFlowProvider = workFlowProvider;
-            _testMobiles = new List<string>()
-            { // to do => it's a good idea if we bind mobile numbers from settings (use ui)
-                "599925326", // Aiman
-                "500679773", // Esraa
-            };
+            _testMobiles = new List<string>();
+            var ignoredOtpNumber = settingManager.GetSettingValue(AppSettings.Mobile.IgnoredOtpNumbers);
+            if (!ignoredOtpNumber.IsNullOrEmpty()) 
+                _testMobiles.AddRange(ignoredOtpNumber.Split(';'));
         }
 
         [HttpPost]
         public async Task<AuthenticateResultModel> Authenticate([FromBody] AuthenticateModel model)
         {
-
-
             if (UseCaptchaOnLogin())
             {
                 await ValidateReCaptcha(model.CaptchaResponse);
@@ -169,8 +169,8 @@ namespace TACHYON.Web.Controllers
                 {
                     throw new AbpAuthorizationException(L("InvalidMobileNumber"));
                 }
-                model.UserNameOrEmailAddress = user.UserName;
 
+                model.UserNameOrEmailAddress = user.UserName;
             }
             else // login by email
             {
@@ -180,9 +180,6 @@ namespace TACHYON.Web.Controllers
                 {
                     throw new AbpAuthorizationException(L("InvalidEmailAddress"));
                 }
-
-
-
             }
 
             //  get tenantId from UserName
@@ -192,10 +189,6 @@ namespace TACHYON.Web.Controllers
                 tenancyName = _tenantManager.GetById(user.TenantId.Value).TenancyName;
             }
             //tenancyName = GetTenancyNameOrNull();
-
-
-
-
 
 
             // chick 2 factor auth
@@ -210,10 +203,12 @@ namespace TACHYON.Web.Controllers
 
             var returnUrl = model.ReturnUrl;
 
-            if (model.SingleSignIn.HasValue && model.SingleSignIn.Value && loginResult.Result == AbpLoginResultType.Success)
+            if (model.SingleSignIn.HasValue && model.SingleSignIn.Value &&
+                loginResult.Result == AbpLoginResultType.Success)
             {
                 loginResult.User.SetSignInToken();
-                returnUrl = AddSingleSignInParametersToReturnUrl(model.ReturnUrl, loginResult.User.SignInToken, loginResult.User.Id, loginResult.User.TenantId);
+                returnUrl = AddSingleSignInParametersToReturnUrl(model.ReturnUrl, loginResult.User.SignInToken,
+                    loginResult.User.Id, loginResult.User.TenantId);
             }
 
             //Password reset
@@ -249,7 +244,8 @@ namespace TACHYON.Web.Controllers
                     {
                         RequiresTwoFactorVerification = true,
                         UserId = loginResult.User.Id,
-                        TwoFactorAuthProviders = await _userManager.GetValidTwoFactorProvidersAsync(loginResult.User),
+                        TwoFactorAuthProviders =
+                            await _userManager.GetValidTwoFactorProvidersAsync(loginResult.User),
                         ReturnUrl = returnUrl
                     };
                 }
@@ -261,14 +257,15 @@ namespace TACHYON.Web.Controllers
             if (AllowOneConcurrentLoginPerUser())
             {
                 await _userManager.UpdateSecurityStampAsync(loginResult.User);
-                await _securityStampHandler.SetSecurityStampCacheItem(loginResult.User.TenantId, loginResult.User.Id, loginResult.User.SecurityStamp);
-                loginResult.Identity.ReplaceClaim(new Claim(AppConsts.SecurityStampKey, loginResult.User.SecurityStamp));
+                await _securityStampHandler.SetSecurityStampCacheItem(loginResult.User.TenantId, loginResult.User.Id,
+                    loginResult.User.SecurityStamp);
+                loginResult.Identity.ReplaceClaim(new Claim(AppConsts.SecurityStampKey,
+                    loginResult.User.SecurityStamp));
             }
 
             var accessToken = CreateAccessToken(await CreateJwtClaims(loginResult.Identity, loginResult.User));
-            var refreshToken = CreateRefreshToken(await CreateJwtClaims(loginResult.Identity, loginResult.User, tokenType: TokenType.RefreshToken));
-
-
+            var refreshToken = CreateRefreshToken(await CreateJwtClaims(loginResult.Identity, loginResult.User,
+                tokenType: TokenType.RefreshToken));
 
 
             return new AuthenticateResultModel
@@ -299,10 +296,9 @@ namespace TACHYON.Web.Controllers
 
             var totalSeconds = await _mobileManager.CreateOTP(user, Language);
             return new OtpCreatedDto(totalSeconds);
-
         }
-        [HttpPost]
 
+        [HttpPost]
         public async Task<AuthenticateResultModel> OTPAuthenticate([FromBody] AuthenticateMobileModel model)
         {
             if (string.IsNullOrEmpty(model.Username)) throw new AbpAuthorizationException(L("InvalidMobileNumber"));
@@ -314,6 +310,7 @@ namespace TACHYON.Web.Controllers
             {
                 throw new AbpAuthorizationException(L("InvalidMobileNumber"));
             }
+
             if (!_testMobiles.Contains(model.Username))
                 await _mobileManager.OTPValidate(user.Id, model.OTP);
 
@@ -326,7 +323,6 @@ namespace TACHYON.Web.Controllers
             //tenancyName = GetTenancyNameOrNull();
 
 
-
             // chick 2 factor auth
 
 
@@ -334,7 +330,6 @@ namespace TACHYON.Web.Controllers
                 user.NormalizedUserName,
                 tenancyName
             );
-
 
 
             if (loginResult.Result == AbpLoginResultType.Success)
@@ -347,17 +342,21 @@ namespace TACHYON.Web.Controllers
             await _userManager.InitializeOptionsAsync(loginResult.Tenant?.Id);
 
 
-
             // One Concurrent Login 
             if (AllowOneConcurrentLoginPerUser())
             {
                 await _userManager.UpdateSecurityStampAsync(loginResult.User);
-                await _securityStampHandler.SetSecurityStampCacheItem(loginResult.User.TenantId, loginResult.User.Id, loginResult.User.SecurityStamp);
-                loginResult.Identity.ReplaceClaim(new Claim(AppConsts.SecurityStampKey, loginResult.User.SecurityStamp));
+                await _securityStampHandler.SetSecurityStampCacheItem(loginResult.User.TenantId, loginResult.User.Id,
+                    loginResult.User.SecurityStamp);
+                loginResult.Identity.ReplaceClaim(new Claim(AppConsts.SecurityStampKey,
+                    loginResult.User.SecurityStamp));
             }
 
-            var accessToken = CreateAccessToken(await CreateJwtClaims(loginResult.Identity, loginResult.User, mobileDeviceId: model.DeviceId, mobileDeviceToken: model.DeviceToken));
-            var refreshToken = CreateRefreshToken(await CreateJwtClaims(loginResult.Identity, loginResult.User, tokenType: TokenType.RefreshToken, mobileDeviceId: model.DeviceId, mobileDeviceToken: model.DeviceToken));
+            var accessToken = CreateAccessToken(await CreateJwtClaims(loginResult.Identity, loginResult.User,
+                mobileDeviceId: model.DeviceId, mobileDeviceToken: model.DeviceToken));
+            var refreshToken = CreateRefreshToken(await CreateJwtClaims(loginResult.Identity, loginResult.User,
+                tokenType: TokenType.RefreshToken, mobileDeviceId: model.DeviceId,
+                mobileDeviceToken: model.DeviceToken));
 
 
             if (!string.IsNullOrEmpty(model.Language))
@@ -372,8 +371,13 @@ namespace TACHYON.Web.Controllers
             //DeviceToken
             if (!string.IsNullOrEmpty(model.DeviceToken) && !string.IsNullOrEmpty(model.DeviceId))
             {
-
-                await _userDeviceTokenManager.CreateOrEdit(new UserDeviceTokenDto { DeviceId = model.DeviceId, Token = model.DeviceToken, ExpireDate = model.DeviceExpireDate, UserId = loginResult.User.Id });
+                await _userDeviceTokenManager.CreateOrEdit(new UserDeviceTokenDto
+                {
+                    DeviceId = model.DeviceId,
+                    Token = model.DeviceToken,
+                    ExpireDate = model.DeviceExpireDate,
+                    UserId = loginResult.User.Id
+                });
             }
 
             return new AuthenticateResultModel
@@ -384,7 +388,9 @@ namespace TACHYON.Web.Controllers
                 RefreshTokenExpireInSeconds = (int)_configuration.RefreshTokenExpiration.TotalSeconds,
                 EncryptedAccessToken = GetEncryptedAccessToken(accessToken),
                 UserId = loginResult.User.Id,
-                TripDto = await _workFlowProvider.GetCurrentDriverTrip(loginResult.User.Id)
+                TripDto = await _workFlowProvider.GetCurrentDriverTrip(loginResult.User.Id),
+                DriverName = user.FullName,
+                TenantId = user.TenantId
             };
         }
 
@@ -403,7 +409,8 @@ namespace TACHYON.Web.Controllers
 
             try
             {
-                var user = _userManager.GetUser(UserIdentifier.Parse(principal.Claims.First(x => x.Type == AppConsts.UserIdentifier).Value));
+                var user = _userManager.GetUser(
+                    UserIdentifier.Parse(principal.Claims.First(x => x.Type == AppConsts.UserIdentifier).Value));
                 if (user == null)
                 {
                     throw new UserFriendlyException("Unknown user or user identifier");
@@ -413,7 +420,8 @@ namespace TACHYON.Web.Controllers
 
                 var accessToken = CreateAccessToken(await CreateJwtClaims(principal.Identity as ClaimsIdentity, user));
 
-                return await Task.FromResult(new RefreshTokenResult(accessToken, GetEncryptedAccessToken(accessToken), (int)_configuration.AccessTokenExpiration.TotalSeconds));
+                return await Task.FromResult(new RefreshTokenResult(accessToken, GetEncryptedAccessToken(accessToken),
+                    (int)_configuration.AccessTokenExpiration.TotalSeconds));
             }
             catch (UserFriendlyException)
             {
@@ -438,14 +446,16 @@ namespace TACHYON.Web.Controllers
             if (AbpSession.UserId != null)
             {
                 var tokenValidityKeyInClaims = User.Claims.First(c => c.Type == AppConsts.TokenValidityKey);
-                await _userManager.RemoveTokenValidityKeyAsync(_userManager.GetUser(AbpSession.ToUserIdentifier()), tokenValidityKeyInClaims.Value);
+                await _userManager.RemoveTokenValidityKeyAsync(_userManager.GetUser(AbpSession.ToUserIdentifier()),
+                    tokenValidityKeyInClaims.Value);
                 _cacheManager.GetCache(AppConsts.TokenValidityKey).Remove(tokenValidityKeyInClaims.Value);
 
                 await _userDeviceTokenManager.DeleteUserDeviceToken();
 
                 if (AllowOneConcurrentLoginPerUser())
                 {
-                    await _securityStampHandler.RemoveSecurityStampCacheItem(AbpSession.TenantId, AbpSession.GetUserId());
+                    await _securityStampHandler.RemoveSecurityStampCacheItem(AbpSession.TenantId,
+                        AbpSession.GetUserId());
                 }
             }
         }
@@ -484,9 +494,9 @@ namespace TACHYON.Web.Controllers
             }
 
             _cacheManager.GetTwoFactorCodeCache().Set(
-                    cacheKey,
-                    cacheItem
-                );
+                cacheKey,
+                cacheItem
+            );
             _cacheManager.GetCache("ProviderCache").Set(
                 "Provider",
                 model.Provider
@@ -508,7 +518,8 @@ namespace TACHYON.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<ImpersonatedAuthenticateResultModel> DelegatedImpersonatedAuthenticate(long userDelegationId, string impersonationToken)
+        public async Task<ImpersonatedAuthenticateResultModel> DelegatedImpersonatedAuthenticate(long userDelegationId,
+            string impersonationToken)
         {
             var result = await _impersonationManager.GetImpersonatedUserAndIdentity(impersonationToken);
             var userDelegation = await _userDelegationManager.GetAsync(userDelegationId);
@@ -519,7 +530,8 @@ namespace TACHYON.Web.Controllers
             }
 
             var expiration = userDelegation.EndTime.Subtract(Clock.Now);
-            var accessToken = CreateAccessToken(await CreateJwtClaims(result.Identity, result.User, expiration), expiration);
+            var accessToken = CreateAccessToken(await CreateJwtClaims(result.Identity, result.User, expiration),
+                expiration);
 
             return new ImpersonatedAuthenticateResultModel
             {
@@ -552,25 +564,31 @@ namespace TACHYON.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<ExternalAuthenticateResultModel> ExternalAuthenticate([FromBody] ExternalAuthenticateModel model)
+        public async Task<ExternalAuthenticateResultModel> ExternalAuthenticate(
+            [FromBody] ExternalAuthenticateModel model)
         {
             var externalUser = await GetExternalUserInfo(model);
 
-            var loginResult = await _logInManager.LoginAsync(new UserLoginInfo(model.AuthProvider, model.ProviderKey, model.AuthProvider), GetTenancyNameOrNull());
+            var loginResult = await _logInManager.LoginAsync(
+                new UserLoginInfo(model.AuthProvider, model.ProviderKey, model.AuthProvider), GetTenancyNameOrNull());
 
             switch (loginResult.Result)
             {
                 case AbpLoginResultType.Success:
                     {
-                        var accessToken = CreateAccessToken(await CreateJwtClaims(loginResult.Identity, loginResult.User));
-                        var refreshToken = CreateRefreshToken(await CreateJwtClaims(loginResult.Identity, loginResult.User, tokenType: TokenType.RefreshToken));
+                        var accessToken =
+                            CreateAccessToken(await CreateJwtClaims(loginResult.Identity, loginResult.User));
+                        var refreshToken = CreateRefreshToken(await CreateJwtClaims(loginResult.Identity,
+                            loginResult.User, tokenType: TokenType.RefreshToken));
 
                         var returnUrl = model.ReturnUrl;
 
-                        if (model.SingleSignIn.HasValue && model.SingleSignIn.Value && loginResult.Result == AbpLoginResultType.Success)
+                        if (model.SingleSignIn.HasValue && model.SingleSignIn.Value &&
+                            loginResult.Result == AbpLoginResultType.Success)
                         {
                             loginResult.User.SetSignInToken();
-                            returnUrl = AddSingleSignInParametersToReturnUrl(model.ReturnUrl, loginResult.User.SignInToken, loginResult.User.Id, loginResult.User.TenantId);
+                            returnUrl = AddSingleSignInParametersToReturnUrl(model.ReturnUrl,
+                                loginResult.User.SignInToken, loginResult.User.Id, loginResult.User.TenantId);
                         }
 
                         return new ExternalAuthenticateResultModel
@@ -588,14 +606,13 @@ namespace TACHYON.Web.Controllers
                         var newUser = await RegisterExternalUserAsync(externalUser);
                         if (!newUser.IsActive)
                         {
-                            return new ExternalAuthenticateResultModel
-                            {
-                                WaitingForActivation = true
-                            };
+                            return new ExternalAuthenticateResultModel { WaitingForActivation = true };
                         }
 
                         //Try to login again with newly registered user!
-                        loginResult = await _logInManager.LoginAsync(new UserLoginInfo(model.AuthProvider, model.ProviderKey, model.AuthProvider), GetTenancyNameOrNull());
+                        loginResult = await _logInManager.LoginAsync(
+                            new UserLoginInfo(model.AuthProvider, model.ProviderKey, model.AuthProvider),
+                            GetTenancyNameOrNull());
                         if (loginResult.Result != AbpLoginResultType.Success)
                         {
                             throw _abpLoginResultTypeHelper.CreateExceptionForFailedLoginAttempt(
@@ -605,8 +622,10 @@ namespace TACHYON.Web.Controllers
                             );
                         }
 
-                        var accessToken = CreateAccessToken(await CreateJwtClaims(loginResult.Identity, loginResult.User));
-                        var refreshToken = CreateRefreshToken(await CreateJwtClaims(loginResult.Identity, loginResult.User, tokenType: TokenType.RefreshToken));
+                        var accessToken =
+                            CreateAccessToken(await CreateJwtClaims(loginResult.Identity, loginResult.User));
+                        var refreshToken = CreateRefreshToken(await CreateJwtClaims(loginResult.Identity,
+                            loginResult.User, tokenType: TokenType.RefreshToken));
 
                         return new ExternalAuthenticateResultModel
                         {
@@ -643,7 +662,7 @@ namespace TACHYON.Web.Controllers
                 AbpSession.ToUserIdentifier(),
                 message,
                 severity.ToPascalCase().ToEnum<NotificationSeverity>()
-                );
+            );
 
             return Content("Sent notification: " + message);
         }
@@ -654,7 +673,8 @@ namespace TACHYON.Web.Controllers
         {
             string username;
 
-            using (var providerManager = _externalLoginInfoManagerFactory.GetExternalLoginInfoManager(externalLoginInfo.Provider))
+            using (var providerManager =
+                   _externalLoginInfoManagerFactory.GetExternalLoginInfoManager(externalLoginInfo.Provider))
             {
                 username = providerManager.Object.GetUserNameFromExternalAuthUserInfo(externalLoginInfo);
             }
@@ -695,9 +715,11 @@ namespace TACHYON.Web.Controllers
             return userInfo;
         }
 
-        private async Task<bool> IsTwoFactorAuthRequiredAsync(AbpLoginResult<Tenant, User> loginResult, AuthenticateModel authenticateModel)
+        private async Task<bool> IsTwoFactorAuthRequiredAsync(AbpLoginResult<Tenant, User> loginResult,
+            AuthenticateModel authenticateModel)
         {
-            if (!await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsEnabled))
+            if (!await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.TwoFactorLogin
+                    .IsEnabled))
             {
                 return false;
             }
@@ -720,9 +742,11 @@ namespace TACHYON.Web.Controllers
             return true;
         }
 
-        private async Task<bool> TwoFactorClientRememberedAsync(UserIdentifier userIdentifier, AuthenticateModel authenticateModel)
+        private async Task<bool> TwoFactorClientRememberedAsync(UserIdentifier userIdentifier,
+            AuthenticateModel authenticateModel)
         {
-            if (!await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsRememberBrowserEnabled))
+            if (!await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.TwoFactorLogin
+                    .IsRememberBrowserEnabled))
             {
                 return false;
             }
@@ -747,7 +771,8 @@ namespace TACHYON.Web.Controllers
                     {
                         try
                         {
-                            var principal = validator.ValidateToken(authenticateModel.TwoFactorRememberClientToken, validationParameters, out _);
+                            var principal = validator.ValidateToken(authenticateModel.TwoFactorRememberClientToken,
+                                validationParameters, out _);
                             var useridentifierClaim = principal.FindFirst(c => c.Type == UserIdentifierClaimType);
                             if (useridentifierClaim == null)
                             {
@@ -781,7 +806,8 @@ namespace TACHYON.Web.Controllers
 
             if (provider == GoogleAuthenticatorProvider.Name)
             {
-                if (!await _googleAuthenticatorProvider.ValidateAsync("TwoFactor", authenticateModel.TwoFactorVerificationCode, _userManager, user))
+                if (!await _googleAuthenticatorProvider.ValidateAsync("TwoFactor",
+                        authenticateModel.TwoFactorVerificationCode, _userManager, user))
                 {
                     throw new UserFriendlyException(L("InvalidSecurityCode"));
                 }
@@ -796,12 +822,11 @@ namespace TACHYON.Web.Controllers
 
             if (authenticateModel.RememberClient)
             {
-                if (await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsRememberBrowserEnabled))
+                if (await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.TwoFactorLogin
+                        .IsRememberBrowserEnabled))
                 {
-                    return CreateAccessToken(new[]
-                        {
-                            new Claim(UserIdentifierClaimType, user.ToUserIdentifier().ToString())
-                        },
+                    return CreateAccessToken(
+                        new[] { new Claim(UserIdentifierClaimType, user.ToUserIdentifier().ToString()) },
                         TimeSpan.FromDays(365)
                     );
                 }
@@ -821,7 +846,9 @@ namespace TACHYON.Web.Controllers
         }
 
 
-        private async Task<AbpLoginResult<Tenant, User>> GetLoginResultAsync(string usernameOrEmailAddress, string password, string tenancyName)
+        private async Task<AbpLoginResult<Tenant, User>> GetLoginResultAsync(string usernameOrEmailAddress,
+            string password,
+            string tenancyName)
         {
             var loginResult = await _logInManager.LoginAsync(usernameOrEmailAddress, password, tenancyName);
 
@@ -830,7 +857,8 @@ namespace TACHYON.Web.Controllers
                 case AbpLoginResultType.Success:
                     return loginResult;
                 default:
-                    throw _abpLoginResultTypeHelper.CreateExceptionForFailedLoginAttempt(loginResult.Result, usernameOrEmailAddress, tenancyName);
+                    throw _abpLoginResultTypeHelper.CreateExceptionForFailedLoginAttempt(loginResult.Result,
+                        usernameOrEmailAddress, tenancyName);
             }
         }
 
@@ -843,9 +871,11 @@ namespace TACHYON.Web.Controllers
                 case AbpLoginResultType.Success:
                     return loginResult;
                 default:
-                    throw _abpLoginResultTypeHelper.CreateExceptionForFailedLoginAttempt(loginResult.Result, username, tenancyName);
+                    throw _abpLoginResultTypeHelper.CreateExceptionForFailedLoginAttempt(loginResult.Result, username,
+                        tenancyName);
             }
         }
+
         private string CreateAccessToken(IEnumerable<Claim> claims, TimeSpan? expiration = null)
         {
             return CreateToken(claims, expiration ?? _configuration.AccessTokenExpiration);
@@ -866,9 +896,7 @@ namespace TACHYON.Web.Controllers
                 claims: claims,
                 notBefore: now,
                 signingCredentials: _configuration.SigningCredentials,
-                expires: expiration == null ?
-                    (DateTime?)null :
-                    now.Add(expiration.Value)
+                expires: expiration == null ? (DateTime?)null : now.Add(expiration.Value)
             );
 
             return new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
@@ -879,7 +907,12 @@ namespace TACHYON.Web.Controllers
             return SimpleStringCipher.Instance.Encrypt(accessToken, AppConsts.DefaultPassPhrase);
         }
 
-        private async Task<IEnumerable<Claim>> CreateJwtClaims(ClaimsIdentity identity, User user, TimeSpan? expiration = null, TokenType tokenType = TokenType.AccessToken, string mobileDeviceId = null, string mobileDeviceToken = null)
+        private async Task<IEnumerable<Claim>> CreateJwtClaims(ClaimsIdentity identity,
+            User user,
+            TimeSpan? expiration = null,
+            TokenType tokenType = TokenType.AccessToken,
+            string mobileDeviceId = null,
+            string mobileDeviceToken = null)
         {
             var tokenValidityKey = Guid.NewGuid().ToString();
             var claims = identity.Claims.ToList();
@@ -893,7 +926,8 @@ namespace TACHYON.Web.Controllers
             claims.AddRange(new[]
             {
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.Now.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64),
+                new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.Now.ToUnixTimeSeconds().ToString(),
+                    ClaimValueTypes.Integer64),
                 new Claim(AppConsts.TokenValidityKey, tokenValidityKey),
                 new Claim(AppConsts.UserIdentifier, user.ToUserIdentifier().ToUserIdentifierString()),
                 new Claim(AppConsts.TokenType, tokenType.To<int>().ToString())
@@ -925,7 +959,10 @@ namespace TACHYON.Web.Controllers
             return claims;
         }
 
-        private static string AddSingleSignInParametersToReturnUrl(string returnUrl, string signInToken, long userId, int? tenantId)
+        private static string AddSingleSignInParametersToReturnUrl(string returnUrl,
+            string signInToken,
+            long userId,
+            int? tenantId)
         {
             returnUrl += (returnUrl.Contains("?") ? "&" : "?") +
                          "accessToken=" + signInToken +
@@ -963,7 +1000,8 @@ namespace TACHYON.Web.Controllers
                     {
                         principal = validator.ValidateToken(refreshToken, validationParameters, out _);
 
-                        if (principal.Claims.FirstOrDefault(x => x.Type == AppConsts.TokenType)?.Value == TokenType.RefreshToken.To<int>().ToString())
+                        if (principal.Claims.FirstOrDefault(x => x.Type == AppConsts.TokenType)?.Value ==
+                            TokenType.RefreshToken.To<int>().ToString())
                         {
                             return true;
                         }
@@ -991,16 +1029,13 @@ namespace TACHYON.Web.Controllers
         private async Task ValidateReCaptcha(string captchaResponse)
         {
             var requestUserAgent = Request.Headers["User-Agent"].ToString();
-            if (!requestUserAgent.IsNullOrWhiteSpace() && WebConsts.ReCaptchaIgnoreWhiteList.Contains(requestUserAgent.Trim()))
+            if (!requestUserAgent.IsNullOrWhiteSpace() &&
+                WebConsts.ReCaptchaIgnoreWhiteList.Contains(requestUserAgent.Trim()))
             {
                 return;
             }
 
             await RecaptchaValidator.ValidateAsync(captchaResponse);
         }
-
-
-
-
     }
 }

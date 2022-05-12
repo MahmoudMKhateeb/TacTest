@@ -17,11 +17,7 @@ namespace TACHYON.WebHooks
         {
             var separator = DateTime.Now.Millisecond;
             await _webHookPublisher.PublishAsync(AppWebHookNames.TestWebhook,
-                new
-                {
-                    UserName = "Test Name " + separator,
-                    EmailAddress = "Test Email " + separator
-                }
+                new { UserName = "Test Name " + separator, EmailAddress = "Test Email " + separator }
             );
         }
     }

@@ -46,7 +46,9 @@ namespace TACHYON.Authorization.Users
         /// <param name="userEmail"></param>
         /// /// <param name="tenantId"></param>
         /// <returns></returns>
-        Task SendPasswordUpdatedEmail(int? tenantId, string userEmail, string newPassword);
+        Task SendPasswordUpdatedEmail(int? tenantId,
+            string userEmail,
+            string newPassword);
 
         /// <summary>
         /// Send an Email To Warn User From Suspend Him Account Because That He Has Document Almost Expired
@@ -72,7 +74,9 @@ namespace TACHYON.Authorization.Users
         /// <param name="invoiceNumber"></param>
         /// <param name="invoiceTotalAmount"></param>
         /// <returns></returns>
-        Task SendInvoiceDueEmail(int tenantId, string invoiceNumber, decimal invoiceTotalAmount);
+        Task SendInvoiceDueEmail(int tenantId,
+            string invoiceNumber,
+            decimal invoiceTotalAmount);
 
         /// <summary>
         /// Send Email To Tell User He Have a New Created Invoice
@@ -83,8 +87,11 @@ namespace TACHYON.Authorization.Users
         /// <param name="invoiceTotalAmount"></param>
         /// <param name="invoiceUrl"></param>
         /// <returns></returns>
-        Task SendIssuedInvoiceEmail(int tenantId, DateTime invoiceDueDate,
-            DateTime invoiceIssueDate, decimal invoiceTotalAmount, string invoiceUrl);
+        Task SendIssuedInvoiceEmail(int tenantId,
+            DateTime invoiceDueDate,
+            DateTime invoiceIssueDate,
+            decimal invoiceTotalAmount,
+            string invoiceUrl);
 
         Task SendRejectedDocumentEmail(int tenantId, string documentName, string rejectionReason);
 

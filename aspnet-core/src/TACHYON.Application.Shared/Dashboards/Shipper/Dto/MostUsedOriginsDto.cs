@@ -11,6 +11,4 @@ namespace TACHYON.Dashboards.Shipper.Dto
         public string CityName { get; set; }
         public int NumberOfRequests { get; set; }
     }
-
-
 }

@@ -40,7 +40,8 @@ namespace TACHYON.Authorization.Users.Delegation
         {
             CheckUserDelegationOperation();
 
-            var query = CreateDelegatedUsersQuery(sourceUserId: AbpSession.GetUserId(), targetUserId: null, input.Sorting);
+            var query = CreateDelegatedUsersQuery(sourceUserId: AbpSession.GetUserId(), targetUserId: null,
+                input.Sorting);
             var totalCount = await query.CountAsync();
 
             var userDelegations = await query
@@ -102,22 +103,25 @@ namespace TACHYON.Authorization.Users.Delegation
             }
         }
 
-        private IQueryable<UserDelegationDto> CreateDelegatedUsersQuery(long? sourceUserId, long? targetUserId, string sorting)
+        private IQueryable<UserDelegationDto> CreateDelegatedUsersQuery(long? sourceUserId,
+            long? targetUserId,
+            string sorting)
         {
             var query = _userDelegationRepository.GetAll()
                 .WhereIf(sourceUserId.HasValue, e => e.SourceUserId == sourceUserId)
                 .WhereIf(targetUserId.HasValue, e => e.TargetUserId == targetUserId);
 
             return (from userDelegation in query
-                    join targetUser in _userRepository.GetAll() on userDelegation.TargetUserId equals targetUser.Id into targetUserJoined
-                    from targetUser in targetUserJoined.DefaultIfEmpty()
-                    select new UserDelegationDto
-                    {
-                        Id = userDelegation.Id,
-                        Username = targetUser.UserName,
-                        StartTime = userDelegation.StartTime,
-                        EndTime = userDelegation.EndTime
-                    }).OrderBy(sorting);
+                join targetUser in _userRepository.GetAll() on userDelegation.TargetUserId equals targetUser.Id into
+                    targetUserJoined
+                from targetUser in targetUserJoined.DefaultIfEmpty()
+                select new UserDelegationDto
+                {
+                    Id = userDelegation.Id,
+                    Username = targetUser.UserName,
+                    StartTime = userDelegation.StartTime,
+                    EndTime = userDelegation.EndTime
+                }).OrderBy(sorting);
         }
 
         private IQueryable<UserDelegationDto> CreateActiveUserDelegationsQuery(long targetUserId, string sorting)
@@ -126,15 +130,16 @@ namespace TACHYON.Authorization.Users.Delegation
                 .Where(e => e.TargetUserId == targetUserId);
 
             return (from userDelegation in query
-                    join sourceUser in _userRepository.GetAll() on userDelegation.SourceUserId equals sourceUser.Id into sourceUserJoined
-                    from sourceUser in sourceUserJoined.DefaultIfEmpty()
-                    select new UserDelegationDto
-                    {
-                        Id = userDelegation.Id,
-                        Username = sourceUser.UserName,
-                        StartTime = userDelegation.StartTime,
-                        EndTime = userDelegation.EndTime
-                    }).OrderBy(sorting);
+                join sourceUser in _userRepository.GetAll() on userDelegation.SourceUserId equals sourceUser.Id into
+                    sourceUserJoined
+                from sourceUser in sourceUserJoined.DefaultIfEmpty()
+                select new UserDelegationDto
+                {
+                    Id = userDelegation.Id,
+                    Username = sourceUser.UserName,
+                    StartTime = userDelegation.StartTime,
+                    EndTime = userDelegation.EndTime
+                }).OrderBy(sorting);
         }
     }
 }

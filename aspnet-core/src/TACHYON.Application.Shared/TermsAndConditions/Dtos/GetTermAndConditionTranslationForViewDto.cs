@@ -5,6 +5,5 @@
         public TermAndConditionTranslationDto TermAndConditionTranslation { get; set; }
 
         public string TermAndConditionTitle { get; set; }
-
     }
 }

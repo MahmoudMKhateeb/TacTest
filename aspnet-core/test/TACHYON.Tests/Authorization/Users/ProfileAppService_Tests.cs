@@ -77,11 +77,7 @@ namespace TACHYON.Tests.Authorization.Users
         {
             //Act
             await _profileAppService.ChangePassword(
-                new ChangePasswordInput
-                {
-                    CurrentPassword = "123qwe",
-                    NewPassword = "2mF9d8Ac!5"
-                });
+                new ChangePasswordInput { CurrentPassword = "123qwe", NewPassword = "2mF9d8Ac!5" });
 
             //Assert
             var currentUser = await GetCurrentUserAsync();
@@ -90,6 +86,6 @@ namespace TACHYON.Tests.Authorization.Users
                 .Resolve<IPasswordHasher<User>>()
                 .VerifyHashedPassword(currentUser, currentUser.Password, "2mF9d8Ac!5")
                 .ShouldBe(PasswordVerificationResult.Success);
-        } 
+        }
     }
 }

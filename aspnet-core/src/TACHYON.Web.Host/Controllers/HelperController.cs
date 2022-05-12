@@ -33,7 +33,6 @@ using TACHYON.Trucks.Importing.Dto;
 
 namespace TACHYON.Web.Controllers
 {
-
     public class HelperController : TACHYONControllerBase
     {
         private readonly TrucksAppService _trucksAppService;
@@ -49,7 +48,11 @@ namespace TACHYON.Web.Controllers
         private ShippingRequestPointWorkFlowProvider _workFlowProvider;
         private CommonManager _commonManager;
         private IShippingRequestTripAccidentAppService _shippingRequestTripAccidentAppService;
-        public HelperController(TrucksAppService trucksAppService, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager, IBackgroundJobManager backgroundJobManager,
+
+        public HelperController(TrucksAppService trucksAppService,
+            ITempFileCacheManager tempFileCacheManager,
+            IBinaryObjectManager binaryObjectManager,
+            IBackgroundJobManager backgroundJobManager,
             ShippingRequestDriverManager shippingRequestDriverManager,
             CommonManager commonManager, ShippingRequestPointWorkFlowProvider workFlowProvider, IShippingRequestTripAccidentAppService shippingRequestTripAccidentAppService, CityManager cityManager)
         {
@@ -89,7 +92,8 @@ namespace TACHYON.Web.Controllers
 
                 if (File.Length > MaxDocumentFilePictureSize)
                 {
-                    throw new UserFriendlyException(L("DocumentFile_Warn_SizeLimit", TACHYONConsts.MaxDocumentFileBytesUserFriendlyValue));
+                    throw new UserFriendlyException(L("DocumentFile_Warn_SizeLimit",
+                        TACHYONConsts.MaxDocumentFileBytesUserFriendlyValue));
                 }
 
                 byte[] fileBytes;
@@ -104,11 +108,8 @@ namespace TACHYON.Web.Controllers
 
                 return new UploadDocumentFileOutput
                 {
-                    FileToken = input.FileToken,
-                    FileName = input.FileName,
-                    FileType = input.FileType,
+                    FileToken = input.FileToken, FileName = input.FileName, FileType = input.FileType,
                 };
-
             }
             catch (UserFriendlyException ex)
             {
@@ -145,12 +146,11 @@ namespace TACHYON.Web.Controllers
 
                 await BinaryObjectManager.SaveAsync(fileObject);
 
-                await BackgroundJobManager.EnqueueAsync<ImportTrucksToExcelJob, ImportTrucksFromExcelJobArgs>(new ImportTrucksFromExcelJobArgs
-                {
-                    TenantId = tenantId,
-                    BinaryObjectId = fileObject.Id,
-                    User = AbpSession.ToUserIdentifier()
-                });
+                await BackgroundJobManager.EnqueueAsync<ImportTrucksToExcelJob, ImportTrucksFromExcelJobArgs>(
+                    new ImportTrucksFromExcelJobArgs
+                    {
+                        TenantId = tenantId, BinaryObjectId = fileObject.Id, User = AbpSession.ToUserIdentifier()
+                    });
 
                 return Json(new AjaxResponse(new { }));
             }
@@ -247,7 +247,7 @@ namespace TACHYON.Web.Controllers
                 }
 
                 var document = await _commonManager.UploadDocument(file, AbpSession.TenantId);
-               // await _shippingRequestDriverManager.UploadDeliveredGoodPicture(document, pointId);
+                // await _shippingRequestDriverManager.UploadDeliveredGoodPicture(document, pointId);
 
                 return Json(new AjaxResponse(new { }));
             }
@@ -283,6 +283,7 @@ namespace TACHYON.Web.Controllers
                     input.DocumentContentType = "image/jpeg";
                     input.DocumentId = document.DocumentId;
                 }
+
                 await _shippingRequestTripAccidentAppService.CreateOrEdit(input);
 
                 return Json(new AjaxResponse(new { }));

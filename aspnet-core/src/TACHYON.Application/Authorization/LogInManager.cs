@@ -28,19 +28,18 @@ namespace TACHYON.Authorization
             IPasswordHasher<User> passwordHasher,
             UserClaimsPrincipalFactory claimsPrincipalFactory)
             : base(
-                  userManager,
-                  multiTenancyConfig,
-                  tenantRepository,
-                  unitOfWorkManager,
-                  settingManager,
-                  userLoginAttemptRepository,
-                  userManagementConfig,
-                  iocResolver,
-                  passwordHasher,
-                  roleManager,
-                  claimsPrincipalFactory)
+                userManager,
+                multiTenancyConfig,
+                tenantRepository,
+                unitOfWorkManager,
+                settingManager,
+                userLoginAttemptRepository,
+                userManagementConfig,
+                iocResolver,
+                passwordHasher,
+                roleManager,
+                claimsPrincipalFactory)
         {
-
         }
     }
 }

@@ -24,7 +24,6 @@ using TACHYON.Timing;
 
 namespace TACHYON.Configuration.Host
 {
-
     [AbpAuthorize(AppPermissions.Pages_Administration_Host_Settings)]
     public class HostSettingsAppService : SettingsAppServiceBase, IHostSettingsAppService
     {
@@ -40,7 +39,8 @@ namespace TACHYON.Configuration.Host
             EditionManager editionManager,
             ITimeZoneService timeZoneService,
             ISettingDefinitionManager settingDefinitionManager,
-            IAppConfigurationAccessor configurationAccessor, ISmsSender smsSender) : base(emailSender, configurationAccessor)
+            IAppConfigurationAccessor configurationAccessor,
+            ISmsSender smsSender) : base(emailSender, configurationAccessor)
         {
             ExternalLoginOptionsCacheManager = NullExternalLoginOptionsCacheManager.Instance;
 
@@ -65,18 +65,15 @@ namespace TACHYON.Configuration.Host
                 OtherSettings = await GetOtherSettingsAsync(),
                 ExternalLoginProviderSettings = await GetExternalLoginProviderSettings(),
                 SmsSettings = await GetSmsSettingsAsync(),
-                EditionSettings = await GetEditionsSettingsAsync()
+                EditionSettings = await GetEditionsSettingsAsync(),
+                OtpNumbersSettings = await GetOtpNumberSettingsAsync()
             };
         }
 
         private async Task<GeneralSettingsEditDto> GetGeneralSettingsAsync()
         {
             var timezone = await SettingManager.GetSettingValueForApplicationAsync(TimingSettingNames.TimeZone);
-            var settings = new GeneralSettingsEditDto
-            {
-                Timezone = timezone,
-                TimezoneForComparison = timezone
-            };
+            var settings = new GeneralSettingsEditDto { Timezone = timezone, TimezoneForComparison = timezone };
 
             var defaultTimeZoneId =
                 await _timeZoneService.GetDefaultTimezoneAsync(SettingScopes.Application, AbpSession.TenantId);
@@ -325,14 +322,12 @@ namespace TACHYON.Configuration.Host
                 Microsoft = microsoftSettings.IsNullOrWhiteSpace()
                     ? new MicrosoftExternalLoginProviderSettings()
                     : microsoftSettings.FromJsonString<MicrosoftExternalLoginProviderSettings>(),
-
                 OpenIdConnect = openIdConnectSettings.IsNullOrWhiteSpace()
                     ? new OpenIdConnectExternalLoginProviderSettings()
                     : openIdConnectSettings.FromJsonString<OpenIdConnectExternalLoginProviderSettings>(),
                 OpenIdConnectClaimsMapping = openIdConnectMapperClaims.IsNullOrWhiteSpace()
                     ? new List<JsonClaimMapDto>()
                     : openIdConnectMapperClaims.FromJsonString<List<JsonClaimMapDto>>(),
-
                 WsFederation = wsFederationSettings.IsNullOrWhiteSpace()
                     ? new WsFederationExternalLoginProviderSettings()
                     : wsFederationSettings.FromJsonString<WsFederationExternalLoginProviderSettings>(),
@@ -370,11 +365,20 @@ namespace TACHYON.Configuration.Host
                     await SettingManager.GetSettingValueAsync(AppSettings.Editions.ShipperEditionId),
                 TachyonEditionId =
                     await SettingManager.GetSettingValueAsync(AppSettings.Editions.TachyonEditionId)
-
             };
             return settings;
         }
 
+        private async Task<OtpNumbersSettingsDto> GetOtpNumberSettingsAsync()
+        {
+            var otpNumbersSettings = new OtpNumbersSettingsDto()
+            {
+                IgnoredOtpNumbers = 
+                    await SettingManager.GetSettingValueAsync(AppSettings.Mobile.IgnoredOtpNumbers)
+            };
+            return otpNumbersSettings;
+        }
+        
         #endregion
 
         #endregion
@@ -393,6 +397,7 @@ namespace TACHYON.Configuration.Host
             await UpdateExternalLoginSettingsAsync(input.ExternalLoginProviderSettings);
             await UpdateSmsSettingsAsync(input.SmsSettings);
             await UpdateEditionsSettingsAsync(input.EditionSettings);
+            await UpdateOtpNumberSettingsAsync(input.OtpNumbersSettings);
         }
 
         private async Task UpdateOtherSettingsAsync(OtherSettingsEditDto input)
@@ -411,7 +416,6 @@ namespace TACHYON.Configuration.Host
                 input.Address);
 
             await SettingManager.ChangeSettingForApplicationAsync(AppSettings.HostManagement.TaxVat, input.TaxVat);
-
         }
 
         private async Task UpdateGeneralSettingsAsync(GeneralSettingsEditDto settings)
@@ -702,8 +706,8 @@ namespace TACHYON.Configuration.Host
                 AppSettings.Sms.UnifonicNotificationSenderId,
                 input.UnifonicNotificationSenderId
             );
-
         }
+
         private async Task UpdateEditionsSettingsAsync(EditionSettingsDto input)
         {
             await SettingManager.ChangeSettingForApplicationAsync(
@@ -719,7 +723,14 @@ namespace TACHYON.Configuration.Host
                 input.TachyonEditionId
             );
         }
-
+        
+        private async Task UpdateOtpNumberSettingsAsync(OtpNumbersSettingsDto input)
+        {
+            await SettingManager.ChangeSettingForApplicationAsync(
+                AppSettings.Mobile.IgnoredOtpNumbers,
+                input.IgnoredOtpNumbers
+            );
+        }
 
 
         public async Task<bool> TestUnifonicSms(TestUnifonicSmsInput testUnifonicSmsInput)
@@ -736,7 +747,5 @@ namespace TACHYON.Configuration.Host
     {
         public string Text { get; set; }
         public string Number { get; set; }
-
-
     }
 }

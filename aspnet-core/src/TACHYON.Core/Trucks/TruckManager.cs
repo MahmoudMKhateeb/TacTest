@@ -31,7 +31,6 @@ namespace TACHYON.Trucks
             }
 
             return await _truckRepository.InsertAsync(truck);
-
         }
     }
 }

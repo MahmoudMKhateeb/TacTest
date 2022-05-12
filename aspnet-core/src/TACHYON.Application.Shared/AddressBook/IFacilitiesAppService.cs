@@ -8,22 +8,21 @@ using TACHYON.Dto;
 
 namespace TACHYON.AddressBook
 {
-    public interface IFacilitiesAppService : IApplicationService 
+    public interface IFacilitiesAppService : IApplicationService
     {
         Task<PagedResultDto<GetFacilityForViewOutput>> GetAll(GetAllFacilitiesInput input);
 
         Task<GetFacilityForViewOutput> GetFacilityForView(long id);
 
-		Task<GetFacilityForEditOutput> GetFacilityForEdit(EntityDto<long> input);
+        Task<GetFacilityForEditOutput> GetFacilityForEdit(EntityDto<long> input);
 
-		Task<long> CreateOrEdit(CreateOrEditFacilityDto input);
+        Task<long> CreateOrEdit(CreateOrEditFacilityDto input);
 
-		Task Delete(EntityDto<long> input);
+        Task Delete(EntityDto<long> input);
 
-		Task<FileDto> GetFacilitiesToExcel(GetAllFacilitiesForExcelInput input);
+        Task<FileDto> GetFacilitiesToExcel(GetAllFacilitiesForExcelInput input);
 
-		
-		Task<List<FacilityCityLookupTableDto>> GetAllCityForTableDropdown();
-		
+
+        Task<List<FacilityCityLookupTableDto>> GetAllCityForTableDropdown();
     }
 }

@@ -5,6 +5,5 @@
         public TrucksTypesTranslationDto TrucksTypesTranslation { get; set; }
 
         public string TrucksTypeDisplayName { get; set; }
-
     }
 }

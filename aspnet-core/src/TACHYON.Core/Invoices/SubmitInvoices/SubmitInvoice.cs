@@ -9,16 +9,13 @@ using TACHYON.MultiTenancy;
 namespace TACHYON.Invoices.SubmitInvoices
 {
     [Table("SubmitInvoices")]
-
     public class SubmitInvoice : FullAuditedEntity<long>, IMustHaveTenant
     {
         public long? ReferencNumber { get; set; }
         public int TenantId { get; set; }
-        [ForeignKey(nameof(TenantId))]
-        public Tenant Tenant { get; set; }
+        [ForeignKey(nameof(TenantId))] public Tenant Tenant { get; set; }
         public int PeriodId { get; set; }
-        [ForeignKey(nameof(PeriodId))]
-        public InvoicePeriod InvoicePeriodsFK { get; set; }
+        [ForeignKey(nameof(PeriodId))] public InvoicePeriod InvoicePeriodsFK { get; set; }
         public InvoiceChannel Channel { get; set; }
         public decimal SubTotalAmount { get; set; }
         public decimal TotalAmount { get; set; }

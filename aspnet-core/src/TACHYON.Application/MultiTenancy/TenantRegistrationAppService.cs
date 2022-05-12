@@ -167,7 +167,8 @@ namespace TACHYON.MultiTenancy
                 return false;
             }
 
-            return await SettingManager.GetSettingValueForApplicationAsync<bool>(AppSettings.TenantManagement.IsNewRegisteredTenantActiveByDefault);
+            return await SettingManager.GetSettingValueForApplicationAsync<bool>(AppSettings.TenantManagement
+                .IsNewRegisteredTenantActiveByDefault);
         }
 
         private async Task CheckRegistrationWithoutEdition()
@@ -175,7 +176,8 @@ namespace TACHYON.MultiTenancy
             var editions = await _editionManager.GetAllAsync();
             if (editions.Any())
             {
-                throw new Exception("Tenant registration is not allowed without edition because there are editions defined !");
+                throw new Exception(
+                    "Tenant registration is not allowed without edition because there are editions defined !");
             }
         }
 
@@ -183,7 +185,8 @@ namespace TACHYON.MultiTenancy
         {
             var features = FeatureManager
                 .GetAll()
-                .Where(feature => (feature[FeatureMetadata.CustomFeatureKey] as FeatureMetadata)?.IsVisibleOnPricingTable ?? false);
+                .Where(feature =>
+                    (feature[FeatureMetadata.CustomFeatureKey] as FeatureMetadata)?.IsVisibleOnPricingTable ?? false);
 
             var flatFeatures = ObjectMapper
                 .Map<List<FlatFeatureSelectDto>>(features)
@@ -207,13 +210,14 @@ namespace TACHYON.MultiTenancy
             if (AbpSession.UserId.HasValue)
             {
                 var currentEditionId = (await _tenantManager.GetByIdAsync(AbpSession.GetTenantId()))
-                        .EditionId;
+                    .EditionId;
 
                 if (currentEditionId.HasValue)
                 {
                     editionWithFeatures = editionWithFeatures.Where(e => e.Edition.Id != currentEditionId).ToList();
 
-                    var currentEdition = (SubscribableEdition)(await _editionManager.GetByIdAsync(currentEditionId.Value));
+                    var currentEdition =
+                        (SubscribableEdition)(await _editionManager.GetByIdAsync(currentEditionId.Value));
                     var lastPayment = await _subscriptionPaymentRepository.GetLastCompletedPaymentOrDefaultAsync(
                         AbpSession.GetTenantId(),
                         null,
@@ -231,11 +235,7 @@ namespace TACHYON.MultiTenancy
                 }
             }
 
-            return new EditionsSelectOutput
-            {
-                AllFeatures = flatFeatures,
-                EditionsWithFeatures = editionWithFeatures,
-            };
+            return new EditionsSelectOutput { AllFeatures = flatFeatures, EditionsWithFeatures = editionWithFeatures, };
         }
 
         public async Task<EditionSelectDto> GetEdition(int editionId)
@@ -246,7 +246,8 @@ namespace TACHYON.MultiTenancy
             return editionDto;
         }
 
-        private async Task<EditionWithFeaturesDto> CreateEditionWithFeaturesDto(SubscribableEdition edition, Dictionary<string, Feature> featureDictionary)
+        private async Task<EditionWithFeaturesDto> CreateEditionWithFeaturesDto(SubscribableEdition edition,
+            Dictionary<string, Feature> featureDictionary)
         {
             return new EditionWithFeaturesDto
             {
@@ -276,12 +277,14 @@ namespace TACHYON.MultiTenancy
 
         private bool IsSelfRegistrationEnabled()
         {
-            return SettingManager.GetSettingValueForApplication<bool>(AppSettings.TenantManagement.AllowSelfRegistration);
+            return SettingManager.GetSettingValueForApplication<bool>(
+                AppSettings.TenantManagement.AllowSelfRegistration);
         }
 
         private bool UseCaptchaOnRegistration()
         {
-            return SettingManager.GetSettingValueForApplication<bool>(AppSettings.TenantManagement.UseCaptchaOnRegistration);
+            return SettingManager.GetSettingValueForApplication<bool>(AppSettings.TenantManagement
+                .UseCaptchaOnRegistration);
         }
 
         private async Task CheckEditionSubscriptionAsync(int editionId, SubscriptionStartType subscriptionStartType)
@@ -291,7 +294,8 @@ namespace TACHYON.MultiTenancy
             CheckSubscriptionStart(edition, subscriptionStartType);
         }
 
-        private static void CheckSubscriptionStart(SubscribableEdition edition, SubscriptionStartType subscriptionStartType)
+        private static void CheckSubscriptionStart(SubscribableEdition edition,
+            SubscriptionStartType subscriptionStartType)
         {
             switch (subscriptionStartType)
             {
@@ -300,18 +304,21 @@ namespace TACHYON.MultiTenancy
                     {
                         throw new Exception("This is not a free edition !");
                     }
+
                     break;
                 case SubscriptionStartType.Trial:
                     if (!edition.HasTrial())
                     {
                         throw new Exception("Trial is not available for this edition !");
                     }
+
                     break;
                 case SubscriptionStartType.Paid:
                     if (edition.IsFree)
                     {
                         throw new Exception("This is a free edition and cannot be subscribed as paid !");
                     }
+
                     break;
             }
         }
@@ -324,7 +331,8 @@ namespace TACHYON.MultiTenancy
                 .OrderBy(x => x.DisplayName)
                 .ToListAsync();
 
-            List<TenantCountryLookupTableDto> countryDtos = ObjectMapper.Map<List<TenantCountryLookupTableDto>>(countries);
+            List<TenantCountryLookupTableDto> countryDtos =
+                ObjectMapper.Map<List<TenantCountryLookupTableDto>>(countries);
             return countryDtos;
         }
 
@@ -338,6 +346,7 @@ namespace TACHYON.MultiTenancy
             var result = ObjectMapper.Map<List<CountyDto>>(countries);
             return result;
         }
+
         public async Task<List<TenantCityLookupTableDto>> GetAllCitiesForTableDropdown(int input)
         {
             List<City> cities = await _lookupCityRepository
@@ -378,6 +387,7 @@ namespace TACHYON.MultiTenancy
                 }
             }
         }
+
         public async Task<bool> CheckIfEmailisAvailable(string email)
         {
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant))
@@ -392,7 +402,6 @@ namespace TACHYON.MultiTenancy
                     return false;
                 }
             }
-
         }
 
         public async Task<GetTermAndConditionForViewDto> GetActiveTermAndConditionForViewAndApprove(string editiontId)
@@ -400,16 +409,15 @@ namespace TACHYON.MultiTenancy
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
             {
                 var term = await _termAndConditionRepository.GetAll()
-                .Include(x => x.EditionFk)
-                .Include(x => x.Translations)
-                .FirstOrDefaultAsync(x => x.EditionId == int.Parse(editiontId));
+                    .Include(x => x.EditionFk)
+                    .Include(x => x.Translations)
+                    .FirstOrDefaultAsync(x => x.EditionId == int.Parse(editiontId));
                 var output = new GetTermAndConditionForViewDto
                 {
                     TermAndCondition = ObjectMapper.Map<TermAndConditionDto>(term)
                 };
                 return output;
             }
-
         }
 
         public async Task<bool> IsCompanyUniqueMoiNumber(string moiNumber, long? tenantId)

@@ -22,7 +22,6 @@ namespace TACHYON.AutoMapper.Rating
             CreateMap<CreateShippingExpRateByDriverDto, RatingLog>().ReverseMap();
 
             CreateMap<CreateShipperRateByCarrierDto, RatingLog>().ReverseMap();
-
         }
     }
 }

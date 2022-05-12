@@ -2,10 +2,8 @@
 {
     public class GetCapacityForViewDto
     {
-		public CapacityDto Capacity { get; set; }
+        public CapacityDto Capacity { get; set; }
 
-		public string TruckTypeDisplayName { get; set;}
-
-
+        public string TruckTypeDisplayName { get; set; }
     }
 }

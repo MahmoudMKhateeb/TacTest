@@ -5,13 +5,10 @@ using TACHYON.Invoices.PaymentMethod;
 
 namespace TACHYON.Invoices.PaymentMethods.Dto
 {
-    public  class CreateOrEditInvoicePaymentMethod:EntityDto<int>, ICustomValidate
+    public class CreateOrEditInvoicePaymentMethod : EntityDto<int>, ICustomValidate
     {
-        [StringLength(250)]
-        [Required]
-        public string DisplayName { get; set; }
-        [Required]
-        public InvoicePaymentType PaymentType { get; set; }
+        [StringLength(250)] [Required] public string DisplayName { get; set; }
+        [Required] public InvoicePaymentType PaymentType { get; set; }
         public int? InvoiceDueDateDays { get; set; }
 
         public void AddValidationErrors(CustomValidationContext context)

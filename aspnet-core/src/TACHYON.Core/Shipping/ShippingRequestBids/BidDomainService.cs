@@ -11,9 +11,9 @@ using TACHYON.Trucks;
 
 namespace TACHYON.Shipping.ShippingRequestBids
 {
-    public class BidDomainService: TACHYONDomainServiceBase, IBidDomainService
+    public class BidDomainService : TACHYONDomainServiceBase, IBidDomainService
     {
-        private readonly IRepository<Truck,long> _truckRepository;
+        private readonly IRepository<Truck, long> _truckRepository;
 
         public BidDomainService(IRepository<Truck, long> truckRepository)
         {
@@ -39,7 +39,5 @@ namespace TACHYON.Shipping.ShippingRequestBids
                 return carriersList;
             }
         }
-
-
     }
 }

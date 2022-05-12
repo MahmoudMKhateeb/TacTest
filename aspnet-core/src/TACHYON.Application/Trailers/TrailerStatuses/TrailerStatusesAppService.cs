@@ -1,6 +1,4 @@
-﻿
-
-using Abp.Application.Services.Dto;
+﻿using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
@@ -25,33 +23,29 @@ namespace TACHYON.Trailers.TrailerStatuses
         private readonly ITrailerStatusesExcelExporter _trailerStatusesExcelExporter;
 
 
-        public TrailerStatusesAppService(IRepository<TrailerStatus> trailerStatusRepository, ITrailerStatusesExcelExporter trailerStatusesExcelExporter)
+        public TrailerStatusesAppService(IRepository<TrailerStatus> trailerStatusRepository,
+            ITrailerStatusesExcelExporter trailerStatusesExcelExporter)
         {
             _trailerStatusRepository = trailerStatusRepository;
             _trailerStatusesExcelExporter = trailerStatusesExcelExporter;
-
         }
 
         public async Task<PagedResultDto<GetTrailerStatusForViewDto>> GetAll(GetAllTrailerStatusesInput input)
         {
-
             var filteredTrailerStatuses = _trailerStatusRepository.GetAll()
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter))
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.DisplayName == input.DisplayNameFilter);
+                .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter))
+                .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter),
+                    e => e.DisplayName == input.DisplayNameFilter);
 
             var pagedAndFilteredTrailerStatuses = filteredTrailerStatuses
                 .OrderBy(input.Sorting ?? "id asc")
                 .PageBy(input);
 
             var trailerStatuses = from o in pagedAndFilteredTrailerStatuses
-                                  select new GetTrailerStatusForViewDto()
-                                  {
-                                      TrailerStatus = new TrailerStatusDto
-                                      {
-                                          DisplayName = o.DisplayName,
-                                          Id = o.Id
-                                      }
-                                  };
+                select new GetTrailerStatusForViewDto()
+                {
+                    TrailerStatus = new TrailerStatusDto { DisplayName = o.DisplayName, Id = o.Id }
+                };
 
             var totalCount = await filteredTrailerStatuses.CountAsync();
 
@@ -65,7 +59,8 @@ namespace TACHYON.Trailers.TrailerStatuses
         {
             var trailerStatus = await _trailerStatusRepository.GetAsync(id);
 
-            var output = new GetTrailerStatusForViewDto { TrailerStatus = ObjectMapper.Map<TrailerStatusDto>(trailerStatus) };
+            var output =
+                new GetTrailerStatusForViewDto { TrailerStatus = ObjectMapper.Map<TrailerStatusDto>(trailerStatus) };
 
             return output;
         }
@@ -75,7 +70,10 @@ namespace TACHYON.Trailers.TrailerStatuses
         {
             var trailerStatus = await _trailerStatusRepository.FirstOrDefaultAsync(input.Id);
 
-            var output = new GetTrailerStatusForEditOutput { TrailerStatus = ObjectMapper.Map<CreateOrEditTrailerStatusDto>(trailerStatus) };
+            var output = new GetTrailerStatusForEditOutput
+            {
+                TrailerStatus = ObjectMapper.Map<CreateOrEditTrailerStatusDto>(trailerStatus)
+            };
 
             return output;
         }
@@ -98,7 +96,6 @@ namespace TACHYON.Trailers.TrailerStatuses
             var trailerStatus = ObjectMapper.Map<TrailerStatus>(input);
 
 
-
             await _trailerStatusRepository.InsertAsync(trailerStatus);
         }
 
@@ -117,27 +114,21 @@ namespace TACHYON.Trailers.TrailerStatuses
 
         public async Task<FileDto> GetTrailerStatusesToExcel(GetAllTrailerStatusesForExcelInput input)
         {
-
             var filteredTrailerStatuses = _trailerStatusRepository.GetAll()
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter))
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.DisplayName == input.DisplayNameFilter);
+                .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter))
+                .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter),
+                    e => e.DisplayName == input.DisplayNameFilter);
 
             var query = (from o in filteredTrailerStatuses
-                         select new GetTrailerStatusForViewDto()
-                         {
-                             TrailerStatus = new TrailerStatusDto
-                             {
-                                 DisplayName = o.DisplayName,
-                                 Id = o.Id
-                             }
-                         });
+                select new GetTrailerStatusForViewDto()
+                {
+                    TrailerStatus = new TrailerStatusDto { DisplayName = o.DisplayName, Id = o.Id }
+                });
 
 
             var trailerStatusListDtos = await query.ToListAsync();
 
             return _trailerStatusesExcelExporter.ExportToFile(trailerStatusListDtos);
         }
-
-
     }
 }

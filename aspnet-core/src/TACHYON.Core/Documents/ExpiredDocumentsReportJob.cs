@@ -18,7 +18,9 @@ namespace TACHYON.Documents
         private readonly DocumentFilesManager _documentFilesManager;
         public readonly IBackgroundJobManager _backgroundJobManager;
 
-        public ExpiredDocumentsReportJob(IUserEmailer userEmailer, DocumentFilesManager documentFilesManager, IBackgroundJobManager backgroundJobManager)
+        public ExpiredDocumentsReportJob(IUserEmailer userEmailer,
+            DocumentFilesManager documentFilesManager,
+            IBackgroundJobManager backgroundJobManager)
         {
             _userEmailer = userEmailer;
             _documentFilesManager = documentFilesManager;

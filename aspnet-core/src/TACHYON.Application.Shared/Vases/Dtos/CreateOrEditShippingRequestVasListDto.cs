@@ -14,6 +14,7 @@ namespace TACHYON.Vases.Dtos
 
         public long? ShippingRequestId { get; set; }
         public int NumberOfTrips { get; set; }
+
         /// <summary>
         /// this field is frontend helper
         /// </summary>

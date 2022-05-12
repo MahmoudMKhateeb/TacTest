@@ -1,5 +1,3 @@
-﻿
-
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
@@ -11,6 +9,7 @@ using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
@@ -30,7 +29,9 @@ namespace TACHYON.Trucks.TrucksTypes
     public class TrucksTypesAppService : TACHYONAppServiceBase, ITrucksTypesAppService
     {
         private readonly IRepository<TrucksType, long> _trucksTypeRepository;
+
         private readonly IRepository<TrucksTypesTranslation> _trucksTypeTranslationRepository;
+
         //! Don't Forget Mapping Configurations
         private readonly IRepository<TransportType, int> _transportTypeRepository;
 
@@ -45,13 +46,14 @@ namespace TACHYON.Trucks.TrucksTypes
 
         public async Task<PagedResultDto<GetTrucksTypeForViewDto>> GetAll(GetAllTrucksTypesInput input)
         {
-
             var filteredTrucksTypes = _trucksTypeRepository.GetAll()
                 .Include(x => x.Translations)
                 .Include(x => x.TransportTypeFk)
                 .ThenInclude(x => x.Translations)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Translations.Any(x => x.TranslatedDisplayName.Contains(input.Filter)))
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.Translations.Any(x => x.TranslatedDisplayName.Contains(input.DisplayNameFilter)));
+                .WhereIf(!string.IsNullOrWhiteSpace(input.Filter),
+                    e => false || e.Translations.Any(x => x.TranslatedDisplayName.Contains(input.Filter)))
+                .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter),
+                    e => e.Translations.Any(x => x.TranslatedDisplayName.Contains(input.DisplayNameFilter)));
 
             var pagedAndFilteredTrucksTypes = filteredTrucksTypes
                 .OrderBy(input.Sorting ?? "id asc")
@@ -91,14 +93,16 @@ namespace TACHYON.Trucks.TrucksTypes
             var trucksType = await _trucksTypeRepository.GetAllIncluding(x => x.Translations)
                 .FirstOrDefaultAsync(x => x.Id == input.Id);
 
-            var output = new GetTrucksTypeForEditOutput { TrucksType = ObjectMapper.Map<CreateOrEditTrucksTypeDto>(trucksType) };
+            var output = new GetTrucksTypeForEditOutput
+            {
+                TrucksType = ObjectMapper.Map<CreateOrEditTrucksTypeDto>(trucksType)
+            };
 
             return output;
         }
 
         public async Task CreateOrEdit(CreateOrEditTrucksTypeDto input)
         {
-
             if (input.Id == null)
             {
                 await Create(input);
@@ -120,7 +124,7 @@ namespace TACHYON.Trucks.TrucksTypes
         protected virtual async Task Update(CreateOrEditTrucksTypeDto input)
         {
             var trucksType = await _trucksTypeRepository.FirstOrDefaultAsync(x => x.Id == input.Id.Value);
-            trucksType.Translations.Clear();
+            //trucksType.Translations.Clear();
             ObjectMapper.Map(input, trucksType);
         }
 
@@ -136,7 +140,8 @@ namespace TACHYON.Trucks.TrucksTypes
                 .GetAllIncluding(x => x.Translations)
                 .ToListAsync();
 
-            List<TransportTypeSelectItemDto> transportTypeDtos = ObjectMapper.Map<List<TransportTypeSelectItemDto>>(transportTypes);
+            List<TransportTypeSelectItemDto> transportTypeDtos =
+                ObjectMapper.Map<List<TransportTypeSelectItemDto>>(transportTypes);
 
             return transportTypeDtos;
         }
@@ -153,25 +158,35 @@ namespace TACHYON.Trucks.TrucksTypes
 
         public async Task CreateOrEditTranslation(CreateOrEditTrucksTypesTranslationDto input)
         {
-            //? Check if Core of Translation Is Exist Or Not
-            #region CoreValidation
 
-            var coreTruckType = await _trucksTypeRepository.FirstOrDefaultAsync(input.CoreId);
-            if (coreTruckType == null)
-                throw new UserFriendlyException(L("TruckTypeForThisTranslationNotFound"));
-
-            #endregion
 
             if (!input.Id.HasValue)
-                await CreateTranslation(input);
+            {
+                var d = await _trucksTypeTranslationRepository
+                    .GetAll()
+                    .Where(x => x.CoreId == input.CoreId)
+                    .Where(x => x.TranslatedDisplayName == input.TranslatedDisplayName)
+                    .Where(x => x.Language.Contains(input.Language))
+                    .FirstOrDefaultAsync();
+                if (d != null)
+                {
+                    throw new UserFriendlyException(L("TranslationDuplicated"));
+                }
+
+                var createdTranslation = ObjectMapper.Map<TrucksTypesTranslation>(input);
+                await _trucksTypeTranslationRepository.InsertAsync(createdTranslation);
+            }
             else
-                await UpdateTranslation(input);
+            {
+                TrucksTypesTranslation updatedTranslation = await _trucksTypeTranslationRepository.SingleAsync(x => x.Id == input.Id);
+                ObjectMapper.Map(input, updatedTranslation);
+            }
+
         }
 
         [AbpAuthorize(AppPermissions.Pages_TrucksTypesTranslations_Create)]
         protected virtual async Task CreateTranslation(CreateOrEditTrucksTypesTranslationDto input)
         {
-
             var translation = ObjectMapper.Map<TrucksTypesTranslation>(input);
 
             await _trucksTypeTranslationRepository.InsertAsync(translation);
@@ -191,6 +206,5 @@ namespace TACHYON.Trucks.TrucksTypes
         {
             await _trucksTypeTranslationRepository.DeleteAsync(input.Id);
         }
-
     }
 }

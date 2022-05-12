@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TACHYON.Invoices.Periods.Dto
 {
-  public  class InvoicePeriodList1: FullAuditedEntityDto
+    public class InvoicePeriodList1 : FullAuditedEntityDto
     {
         public string DisplayName { get; set; }
         public InvoicePeriodType PeriodType { get; set; }
@@ -15,6 +15,5 @@ namespace TACHYON.Invoices.Periods.Dto
         public string FreqRecurrence { get; set; }
         public bool Enabled { get; set; }
         public bool ShipperOnlyUsed { get; set; }
-
     }
 }

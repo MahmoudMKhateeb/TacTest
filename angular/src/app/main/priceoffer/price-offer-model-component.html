@@ -107,7 +107,7 @@
             </table>
           </div>
 
-          <div class="table-responsive" *ngIf="Items.length">
+          <div class="table-responsive" *ngIf="Items.length && !feature.isEnabled('App.Carrier')">
             <table class="table table-sm table-bordered rounded">
               <thead>
                 <tr class="table-active">
@@ -176,7 +176,7 @@
             </table>
           </div>
 
-          <div class="table-responsive">
+          <div class="table-responsive" *ngIf="Items.length && !feature.isEnabled('App.Carrier') ">
             <table class="table table-sm table-bordered rounded">
               <thead>
                 <tr class="table-active">
@@ -206,7 +206,7 @@
             </table>
           </div>
 
-          <div class="table-responsive">
+          <div class="table-responsive" *ngIf="Items.length ">
             <table class="table table-sm table-bordered rounded">
               <thead>
                 <tr class="table-active">

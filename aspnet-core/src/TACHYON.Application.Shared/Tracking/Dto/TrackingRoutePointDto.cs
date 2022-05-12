@@ -23,6 +23,7 @@ namespace TACHYON.Tracking.Dto
         public bool CanGoToNextLocation { get; set; }
         public bool IsDeliveryNoteUploaded { get; set; }
         public bool IsPodUploaded { get; set; }
+        public bool IsGoodPictureUploaded { get; set; }
         public decimal FacilityRate { get; set; }
         public long? WaybillNumber { get; set; }
 
