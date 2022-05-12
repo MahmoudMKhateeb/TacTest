@@ -2,58 +2,38 @@ stages:
   - preparation
   - Build
   - release
-  - sonarQube
-  
+
 ### start of Preparation
 Preparation:
   stage: preparation
   tags:
-    - staging-runner
+    - test-runner
   script:
     - Stop-WebSite 'Default Web Site' ## stopping FrontEnd Website
     - Stop-WebSite 'TachyonProdCore' ## stopping Backend Website
   only:
-    - develop
+    - test
 ### end of Preparation
 ### starting Build
 Project:
   stage: Build
   tags:
-    - staging-runner
+    - test-runner
   script:
     - Remove-Item 'C:\inetpub\wwwroot\Tachyon\outputs' -Force -Recurse
     - cd ./aspnet-core/build
     - ./build-with-ng.ps1
   only:
-    - develop
+    - test
 ## end of build
 ### start of release
 release:
   stage: release
   tags:
-    - staging-runner
+    - test-runner
   script:
     - dir
     - Start-WebSite 'TachyonProdCore' ##start Backend Site
     - Start-WebSite 'Default Web Site' ##start fronend Site
   only:
-    - develop
-## SonarQube Merge Requests Test
-sonarqube-check:
-  stage: sonarQube
-  only:
-    changes:
-      - aspnet-core/*
-  tags:
-    - dev-sonar-runner  
-  variables:
-    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
-    GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
-  script:
-    - "cd ./aspnet-core/src/TACHYON.Web.Host"
-    - "dotnet sonarscanner begin /k:\"tachyonhub_tachyon-core_AX5oYDhUYd6JI1APFRVn\" /d:sonar.login=\"$SONAR_TOKEN\" /d:\"sonar.host.url=$SONAR_HOST_URL\" "
-    - "dotnet build"
-    - "dotnet sonarscanner end /d:sonar.login=\"$SONAR_TOKEN\""
-  allow_failure: true
-  only:
-    - merge_requests
+    - test
