@@ -417,7 +417,7 @@ namespace TACHYON.Invoices.Groups
                         VatAmount = vas.VatAmount.Value,
                         TotalAmount = vas.TotalAmount.Value,
                         WayBillNumber = waybillnumber,
-                        TruckType = L("InvoiceVasType", vas.ShippingRequestVasFk.VasFk.Name),
+                        TruckType = L("InvoiceVasType", vas.ShippingRequestVasFk.VasFk.Key),
                         Source = "-",
                         Destination = "-",
                         DateWork = "-",

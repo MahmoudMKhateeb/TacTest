@@ -42,9 +42,9 @@ namespace TACHYON.Vases
         public async Task<PagedResultDto<GetVasPriceForViewDto>> GetAllVASs(GetAllVasPricesInput input)
         {
             var filteredVASs = _lookup_vasRepository.GetAll()
-                .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Name.Contains(input.Filter))
+                .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Key.Contains(input.Filter))
                 .WhereIf(!string.IsNullOrWhiteSpace(input.VasNameFilter),
-                    e => false || e.Name.Contains(input.VasNameFilter));
+                    e => false || e.Key.Contains(input.VasNameFilter));
 
             var vasPrices = from o in filteredVASs
                 join o1 in _vasPriceRepository.GetAll()
@@ -62,7 +62,7 @@ namespace TACHYON.Vases
                     },
                     VasName = o.Translations.FirstOrDefault(t => t.Language.Contains(CurrentLanguage)) != null
                         ? o.Translations.FirstOrDefault(t => t.Language.Contains(CurrentLanguage)).DisplayName
-                        : o.Name,
+                        : o.Key,
                     HasCount = o == null ? false : o.HasCount,
                     HasAmount = o == null ? false : o.HasAmount
                 };
@@ -101,7 +101,7 @@ namespace TACHYON.Vases
                 .WhereIf(input.MinCountFilter != null, e => e.MaxCount >= input.MinCountFilter)
                 .WhereIf(input.MaxCountFilter != null, e => e.MaxCount <= input.MaxCountFilter)
                 .WhereIf(!string.IsNullOrWhiteSpace(input.VasNameFilter),
-                    e => e.VasFk != null && e.VasFk.Name == input.VasNameFilter);
+                    e => e.VasFk != null && e.VasFk.Key == input.VasNameFilter);
 
             var pagedAndFilteredVasPrices = filteredVasPrices
                 .OrderBy(input.Sorting ?? "id asc")
@@ -120,7 +120,7 @@ namespace TACHYON.Vases
                         Id = o.Id,
                         VasId = s1.Id
                     },
-                    VasName = s1 == null || s1.Name == null ? "" : s1.Name.ToString(),
+                    VasName = s1 == null || s1.Key == null ? "" : s1.Key.ToString(),
                     HasCount = s1 == null ? false : s1.HasCount,
                     HasAmount = s1 == null ? false : s1.HasAmount
                 };
@@ -142,7 +142,7 @@ namespace TACHYON.Vases
             if (output.VasPrice.VasId != null)
             {
                 var _lookupVas = await _lookup_vasRepository.FirstOrDefaultAsync((int)output.VasPrice.VasId);
-                output.VasName = _lookupVas?.Name?.ToString();
+                output.VasName = _lookupVas?.Key?.ToString();
             }
 
             return output;
@@ -159,7 +159,7 @@ namespace TACHYON.Vases
             if (output.VasPrice.VasId != null)
             {
                 var _lookupVas = await _lookup_vasRepository.FirstOrDefaultAsync((int)output.VasPrice.VasId);
-                output.VasName = _lookupVas?.Name?.ToString();
+                output.VasName = _lookupVas?.Key?.ToString();
             }
 
             return output;
@@ -217,7 +217,7 @@ namespace TACHYON.Vases
                 .WhereIf(input.MinMaxCountFilter != null, e => e.MaxCount >= input.MinMaxCountFilter)
                 .WhereIf(input.MaxMaxCountFilter != null, e => e.MaxCount <= input.MaxMaxCountFilter)
                 .WhereIf(!string.IsNullOrWhiteSpace(input.VasNameFilter),
-                    e => e.VasFk != null && e.VasFk.Name == input.VasNameFilter);
+                    e => e.VasFk != null && e.VasFk.Key == input.VasNameFilter);
 
             var query = (from o in filteredVasPrices
                 join o1 in _lookup_vasRepository.GetAll() on o.VasId equals o1.Id into j1
@@ -228,7 +228,7 @@ namespace TACHYON.Vases
                     {
                         Price = o.Price, MaxAmount = o.MaxAmount, MaxCount = o.MaxCount, Id = o.Id
                     },
-                    VasName = s1 == null || s1.Name == null ? "" : s1.Name.ToString()
+                    VasName = s1 == null || s1.Key == null ? "" : s1.Key.ToString()
                 });
 
 
@@ -245,7 +245,7 @@ namespace TACHYON.Vases
                 .Select(vas => new VasPriceVasLookupTableDto
                 {
                     Id = vas.Id,
-                    DisplayName = vas == null || vas.Name == null ? "" : vas.Name.ToString(),
+                    DisplayName = vas == null || vas.Key == null ? "" : vas.Key.ToString(),
                     IsOther = vas.ContainsOther()
                 }).ToListAsync();
         }

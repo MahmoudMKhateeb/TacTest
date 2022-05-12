@@ -93,8 +93,8 @@ namespace TACHYON.Vases
         {
             var vas = await _vasRepository.FirstOrDefaultAsync((input.Id.Value));
 
-            if (vas.Name.ToLower().Contains(TACHYONConsts.OthersDisplayName) &&
-                !input.Name.ToLower().Contains(TACHYONConsts.OthersDisplayName))
+            if (vas.Key.ToLower().Contains(TACHYONConsts.OthersDisplayName) &&
+                !input.Key.ToLower().Contains(TACHYONConsts.OthersDisplayName))
                 throw new UserFriendlyException(L("OtherVasNameMustContainOther"));
 
             ObjectMapper.Map(input, vas);
@@ -105,7 +105,7 @@ namespace TACHYON.Vases
         {
             var vas = await _vasRepository.SingleAsync(x => x.Id == input.Id);
 
-            if (vas.Name.ToLower().Contains(TACHYONConsts.OthersDisplayName))
+            if (vas.Key.ToLower().Contains(TACHYONConsts.OthersDisplayName))
                 throw new UserFriendlyException(L("OtherVasNotRemovable"));
 
             await _vasRepository.DeleteAsync(vas);
@@ -114,7 +114,7 @@ namespace TACHYON.Vases
         public async Task<FileDto> GetVasesToExcel(GetAllVasesForExcelInput input)
         {
             var filteredVases = _vasRepository.GetAll()
-                .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Name.Contains(input.Filter))
+                .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Key.Contains(input.Filter))
                 .WhereIf(input.HasAmountFilter.HasValue && input.HasAmountFilter > -1,
                     e => (input.HasAmountFilter == 1 && e.HasAmount) || (input.HasAmountFilter == 0 && !e.HasAmount))
                 .WhereIf(input.HasCountFilter.HasValue && input.HasCountFilter > -1,
@@ -123,7 +123,7 @@ namespace TACHYON.Vases
             var query = (from o in filteredVases
                 select new GetVasForViewDto()
                 {
-                    Vas = new VasDto { Name = o.Name, HasAmount = o.HasAmount, HasCount = o.HasCount, Id = o.Id }
+                    Vas = new VasDto { Key = o.Key, HasAmount = o.HasAmount, HasCount = o.HasCount, Id = o.Id }
                 });
 
             var vasListDtos = await query.ToListAsync();

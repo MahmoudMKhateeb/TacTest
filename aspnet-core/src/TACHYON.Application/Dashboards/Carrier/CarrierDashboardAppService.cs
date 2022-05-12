@@ -250,10 +250,10 @@ namespace TACHYON.Dashboards.Carrier
                     .Include(r => r.VasFk)
                     .Where(x => x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
                     .ToListAsync())
-                .GroupBy(r => new { r.VasFk.Name })
+                .GroupBy(r => new { r.VasFk.Key })
                 .Select(vas => new ChartCategoryPairedValuesDto()
                 {
-                    X = vas.Key.Name,
+                    X = vas.Key.Key,
                     Y = vas.Count()
                 }).Distinct()
                 .OrderByDescending(r => r.Y)

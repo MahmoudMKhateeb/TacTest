@@ -37,7 +37,7 @@ namespace TACHYON.ShippingRequestVases
                 .WhereIf(!string.IsNullOrWhiteSpace(input.Filter),
                     e => false)
                 .WhereIf(!string.IsNullOrWhiteSpace(input.VasNameFilter),
-                    e => e.VasFk != null && e.VasFk.Name == input.VasNameFilter)
+                    e => e.VasFk != null && e.VasFk.Key == input.VasNameFilter)
                 .OrderBy(input.Sorting ?? "id asc");
 
             var pageResult = await shippingRequestVases.PageBy(input).ToListAsync();
@@ -88,7 +88,7 @@ namespace TACHYON.ShippingRequestVases
             if (output.ShippingRequestVas.VasId != null)
             {
                 var _lookupVas = await _lookup_vasRepository.FirstOrDefaultAsync((int)output.ShippingRequestVas.VasId);
-                output.VasName = _lookupVas?.Name?.ToString();
+                output.VasName = _lookupVas?.Key?.ToString();
             }
 
             return output;
@@ -136,7 +136,7 @@ namespace TACHYON.ShippingRequestVases
                 .Select(vas => new ShippingRequestVasVasLookupTableDto
                 {
                     Id = vas.Id,
-                    DisplayName = vas == null || vas.Name == null ? "" : vas.Name.ToString(),
+                    DisplayName = vas == null || vas.Key == null ? "" : vas.Key.ToString(),
                     IsOther = vas.ContainsOther()
                 }).ToListAsync();
         }
@@ -147,7 +147,7 @@ namespace TACHYON.ShippingRequestVases
         {
             var vas = await _lookup_vasRepository.FirstOrDefaultAsync(input.VasId);
 
-            if (vas.Name.ToLower().Contains(TACHYONConsts.OthersDisplayName) && input.OtherVasName.IsNullOrEmpty())
+            if (vas.Key.ToLower().Contains(TACHYONConsts.OthersDisplayName) && input.OtherVasName.IsNullOrEmpty())
                 throw new UserFriendlyException(L("OtherVasNameMustBeNotEmpty"));
         }
 

@@ -151,7 +151,7 @@ namespace TACHYON.PriceOffers
                 priceOfferDto = ObjectMapper.Map<PriceOfferDto>(offer);
                 foreach (var item in priceOfferDto.Items)
                 {
-                    item.ItemName = shippingRequest.ShippingRequestVases.FirstOrDefault(x => x.Id == item.SourceId)?.VasFk.Name;
+                    item.ItemName = shippingRequest.ShippingRequestVases.FirstOrDefault(x => x.Id == item.SourceId)?.VasFk.Key;
                 }
                 if (await IsEnabledAsync(AppFeatures.TachyonDealer))
                 {
@@ -215,7 +215,7 @@ namespace TACHYON.PriceOffers
 
             foreach (var item in priceOfferDto.Items)
             {
-                item.ItemName = offer.ShippingRequestFk.ShippingRequestVases.FirstOrDefault(x => x.Id == item.SourceId)?.VasFk.Name;
+                item.ItemName = offer.ShippingRequestFk.ShippingRequestVases.FirstOrDefault(x => x.Id == item.SourceId)?.VasFk.Key;
                 if (await IsShipper())
                 {
                     item.ItemPrice = item.ItemSubTotalAmountWithCommission;
@@ -287,7 +287,7 @@ namespace TACHYON.PriceOffers
             foreach (var item in priceOfferDto.Items)
             {
                 item.ItemName = shippingRequest.ShippingRequestVases.FirstOrDefault(x => x.Id == item.SourceId)?.VasFk
-                    .Name;
+                    .Key;
             }
 
             return priceOfferDto;
@@ -464,7 +464,7 @@ namespace TACHYON.PriceOffers
                         SourceId = vas.Id,
                         PriceType = PriceOfferType.Vas,
                         Quantity = vas.RequestMaxCount <= 0 ? 1 : vas.RequestMaxCount,
-                        ItemName = vas.VasFk.Name
+                        ItemName = vas.VasFk.Key
                     };
                     var vasDefine = Tenantvases.FirstOrDefault(x => x.VasId == vas.VasId);
                     if (vasDefine != null)

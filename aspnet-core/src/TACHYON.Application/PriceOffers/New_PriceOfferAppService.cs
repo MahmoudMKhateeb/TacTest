@@ -112,7 +112,7 @@ namespace TACHYON.PriceOffers
                 foreach (var item in createOrEditPriceOffer.PriceOfferDto.Items)
                 {
                     item.ItemName = shippingRequest.ShippingRequestVases.FirstOrDefault(x => x.Id == item.SourceId)
-                        ?.VasFk?.Name;
+                        ?.VasFk?.Key;
                 }
 
                 if (await IsTachyonDealer())
@@ -182,7 +182,7 @@ namespace TACHYON.PriceOffers
                     SourceId = vas.Id,
                     PriceType = PriceOfferType.Vas,
                     Quantity = vas.RequestMaxCount <= 0 ? 1 : vas.RequestMaxCount,
-                    ItemName = vas.VasFk.Name
+                    ItemName = vas.VasFk.Key
                 };
                 var vasDefine = tenantVases.FirstOrDefault(x => x.VasId == vas.VasId);
                 if (vasDefine != null)
