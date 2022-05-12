@@ -2751,5 +2751,6 @@
   <text name="YouMustEnterRates">You must enter rates</text>
 		<text name="SelectALicenseType">Select a license type</text>
 		<text name="TheNumberInTheTopOfTheCRThatStartsWithSeven">The number in the top of the CR that starts with seven</text>
+		<text name="PointStandBy">Stand By</text>
 	</texts>
 </localizationDictionary>

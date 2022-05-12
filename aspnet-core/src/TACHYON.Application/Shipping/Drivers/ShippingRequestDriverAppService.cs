@@ -344,7 +344,7 @@ namespace TACHYON.Shipping.Drivers
                  AvailableTransactions = !x.IsResolve ? new List<PointTransactionDto>() : _workFlowProvider.GetTransactionsByStatus(x.WorkFlowVersion, x.RoutPointStatusTransitions.Where(c => !c.IsReset).Select(v => v.Status).ToList(), x.Status)
              }).ToListAsync();
             if (routes == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
-            routes.ForEach(x => x.StatusTitle = L(x.Status.ToString()));
+            routes.ForEach(x => x.StatusTitle = x.Status == RoutePointStatus.StandBy ? L("PointStandBy") : L(x.Status.ToString()));
             var trip = _ShippingRequestTrip.Get(id);
             var mapper = ObjectMapper.Map<DriverRoutPointDto>(trip);
             mapper.RoutPoint = routes;

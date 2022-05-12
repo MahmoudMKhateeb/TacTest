@@ -2526,5 +2526,6 @@
 
     <text name="YouMustEnterRates">يجب عليك إدخال التقييمات</text>
 		<text name="TheNumberInTheTopOfTheCRThatStartsWithSeven">الرقم الموجود أعلى السجل التجاري و الذي يبدأ برقم سبعة</text>
+		<text name="PointStandBy">إستعداد</text>
 	</texts>
 </localizationDictionary>
