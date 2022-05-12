@@ -37,6 +37,7 @@ export class HostSettingsComponent extends AppComponentBase implements OnInit {
   openIdConnectClaimMappings: { key: string; value: string }[];
 
   testUnifonicSmsInput: TestUnifonicSmsInput = new TestUnifonicSmsInput();
+  pattern = '^\\d+(?:;\\d+)*$';
 
   constructor(injector: Injector, private _hostSettingService: HostSettingsServiceProxy, private _commonLookupService: CommonLookupServiceProxy) {
     super(injector);

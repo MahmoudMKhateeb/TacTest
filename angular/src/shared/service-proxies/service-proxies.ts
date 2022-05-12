@@ -36712,10 +36712,22 @@ export class ShipperDashboardServiceProxy {
   }
 
   /**
+   * @param sorting (optional)
+   * @param skipCount (optional)
+   * @param maxResultCount (optional)
    * @return Success
    */
-  getTrackingMap(): Observable<TrackingMapDto[]> {
-    let url_ = this.baseUrl + '/api/services/app/ShipperDashboard/GetTrackingMap';
+  getTrackingMap(
+    sorting: string | null | undefined,
+    skipCount: number | undefined,
+    maxResultCount: number | undefined
+  ): Observable<PagedResultDtoOfTrackingMapDto> {
+    let url_ = this.baseUrl + '/api/services/app/ShipperDashboard/GetTrackingMap?';
+    if (sorting !== undefined && sorting !== null) url_ += 'Sorting=' + encodeURIComponent('' + sorting) + '&';
+    if (skipCount === null) throw new Error("The parameter 'skipCount' cannot be null.");
+    else if (skipCount !== undefined) url_ += 'SkipCount=' + encodeURIComponent('' + skipCount) + '&';
+    if (maxResultCount === null) throw new Error("The parameter 'maxResultCount' cannot be null.");
+    else if (maxResultCount !== undefined) url_ += 'MaxResultCount=' + encodeURIComponent('' + maxResultCount) + '&';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -36739,14 +36751,14 @@ export class ShipperDashboardServiceProxy {
             try {
               return this.processGetTrackingMap(<any>response_);
             } catch (e) {
-              return <Observable<TrackingMapDto[]>>(<any>_observableThrow(e));
+              return <Observable<PagedResultDtoOfTrackingMapDto>>(<any>_observableThrow(e));
             }
-          } else return <Observable<TrackingMapDto[]>>(<any>_observableThrow(response_));
+          } else return <Observable<PagedResultDtoOfTrackingMapDto>>(<any>_observableThrow(response_));
         })
       );
   }
 
-  protected processGetTrackingMap(response: HttpResponseBase): Observable<TrackingMapDto[]> {
+  protected processGetTrackingMap(response: HttpResponseBase): Observable<PagedResultDtoOfTrackingMapDto> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -36761,12 +36773,7 @@ export class ShipperDashboardServiceProxy {
         _observableMergeMap((_responseText) => {
           let result200: any = null;
           let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
-          if (Array.isArray(resultData200)) {
-            result200 = [] as any;
-            for (let item of resultData200) result200!.push(TrackingMapDto.fromJS(item));
-          } else {
-            result200 = <any>null;
-          }
+          result200 = PagedResultDtoOfTrackingMapDto.fromJS(resultData200);
           return _observableOf(result200);
         })
       );
@@ -36777,7 +36784,7 @@ export class ShipperDashboardServiceProxy {
         })
       );
     }
-    return _observableOf<TrackingMapDto[]>(<any>null);
+    return _observableOf<PagedResultDtoOfTrackingMapDto>(<any>null);
   }
 }
 
@@ -72823,6 +72830,41 @@ export interface IEditionSettingsDto {
   shipperEditionId: string | undefined;
 }
 
+export class OtpNumbersSettingsDto implements IOtpNumbersSettingsDto {
+  ignoredOtpNumbers!: string | undefined;
+
+  constructor(data?: IOtpNumbersSettingsDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.ignoredOtpNumbers = _data['ignoredOtpNumbers'];
+    }
+  }
+
+  static fromJS(data: any): OtpNumbersSettingsDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new OtpNumbersSettingsDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['ignoredOtpNumbers'] = this.ignoredOtpNumbers;
+    return data;
+  }
+}
+
+export interface IOtpNumbersSettingsDto {
+  ignoredOtpNumbers: string | undefined;
+}
+
 export class HostSettingsEditDto implements IHostSettingsEditDto {
   general!: GeneralSettingsEditDto;
   userManagement!: HostUserManagementSettingsEditDto;
@@ -72834,6 +72876,7 @@ export class HostSettingsEditDto implements IHostSettingsEditDto {
   externalLoginProviderSettings!: ExternalLoginProviderSettingsEditDto;
   smsSettings!: SmsSettingsEditDto;
   editionSettings!: EditionSettingsDto;
+  otpNumbersSettings!: OtpNumbersSettingsDto;
 
   constructor(data?: IHostSettingsEditDto) {
     if (data) {
@@ -72849,6 +72892,7 @@ export class HostSettingsEditDto implements IHostSettingsEditDto {
       this.security = new SecuritySettingsEditDto();
       this.smsSettings = new SmsSettingsEditDto();
       this.editionSettings = new EditionSettingsDto();
+      this.otpNumbersSettings = new OtpNumbersSettingsDto();
     }
   }
 
@@ -72870,6 +72914,7 @@ export class HostSettingsEditDto implements IHostSettingsEditDto {
         : <any>undefined;
       this.smsSettings = _data['smsSettings'] ? SmsSettingsEditDto.fromJS(_data['smsSettings']) : new SmsSettingsEditDto();
       this.editionSettings = _data['editionSettings'] ? EditionSettingsDto.fromJS(_data['editionSettings']) : new EditionSettingsDto();
+      this.otpNumbersSettings = _data['otpNumbersSettings'] ? OtpNumbersSettingsDto.fromJS(_data['otpNumbersSettings']) : new OtpNumbersSettingsDto();
     }
   }
 
@@ -72892,6 +72937,7 @@ export class HostSettingsEditDto implements IHostSettingsEditDto {
     data['externalLoginProviderSettings'] = this.externalLoginProviderSettings ? this.externalLoginProviderSettings.toJSON() : <any>undefined;
     data['smsSettings'] = this.smsSettings ? this.smsSettings.toJSON() : <any>undefined;
     data['editionSettings'] = this.editionSettings ? this.editionSettings.toJSON() : <any>undefined;
+    data['otpNumbersSettings'] = this.otpNumbersSettings ? this.otpNumbersSettings.toJSON() : <any>undefined;
     return data;
   }
 }
@@ -72907,6 +72953,7 @@ export interface IHostSettingsEditDto {
   externalLoginProviderSettings: ExternalLoginProviderSettingsEditDto;
   smsSettings: SmsSettingsEditDto;
   editionSettings: EditionSettingsDto;
+  otpNumbersSettings: OtpNumbersSettingsDto;
 }
 
 export class TestUnifonicSmsInput implements ITestUnifonicSmsInput {
@@ -84572,6 +84619,51 @@ export interface ITrackingMapDto {
   id: number;
 }
 
+export class PagedResultDtoOfTrackingMapDto implements IPagedResultDtoOfTrackingMapDto {
+  totalCount!: number;
+  items!: TrackingMapDto[] | undefined;
+
+  constructor(data?: IPagedResultDtoOfTrackingMapDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.totalCount = _data['totalCount'];
+      if (Array.isArray(_data['items'])) {
+        this.items = [] as any;
+        for (let item of _data['items']) this.items!.push(TrackingMapDto.fromJS(item));
+      }
+    }
+  }
+
+  static fromJS(data: any): PagedResultDtoOfTrackingMapDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new PagedResultDtoOfTrackingMapDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['totalCount'] = this.totalCount;
+    if (Array.isArray(this.items)) {
+      data['items'] = [];
+      for (let item of this.items) data['items'].push(item.toJSON());
+    }
+    return data;
+  }
+}
+
+export interface IPagedResultDtoOfTrackingMapDto {
+  totalCount: number;
+  items: TrackingMapDto[] | undefined;
+}
+
 export class ShippingRequestDirectRequestListDto implements IShippingRequestDirectRequestListDto {
   carrier!: string | undefined;
   tenantId!: number;
@@ -86699,7 +86791,7 @@ export interface IShippingRequestBidDto {
 }
 
 export class VasDto implements IVasDto {
-  name!: string | undefined;
+  key!: string | undefined;
   hasAmount!: boolean;
   hasCount!: boolean;
   id!: number;
@@ -86714,7 +86806,7 @@ export class VasDto implements IVasDto {
 
   init(_data?: any) {
     if (_data) {
-      this.name = _data['name'];
+      this.key = _data['key'];
       this.hasAmount = _data['hasAmount'];
       this.hasCount = _data['hasCount'];
       this.id = _data['id'];
@@ -86730,7 +86822,7 @@ export class VasDto implements IVasDto {
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data['name'] = this.name;
+    data['key'] = this.key;
     data['hasAmount'] = this.hasAmount;
     data['hasCount'] = this.hasCount;
     data['id'] = this.id;
@@ -86739,7 +86831,7 @@ export class VasDto implements IVasDto {
 }
 
 export interface IVasDto {
-  name: string | undefined;
+  key: string | undefined;
   hasAmount: boolean;
   hasCount: boolean;
   id: number;
@@ -96837,8 +96929,7 @@ export interface ICreateOrEditTrucksTypesTranslationDto {
 export class TrucksTypesTranslationDto implements ITrucksTypesTranslationDto {
   translatedDisplayName!: string | undefined;
   language!: string | undefined;
-  languageDisplayName!: string | undefined;
-  icon!: string | undefined;
+  coreId!: number;
   id!: number;
 
   constructor(data?: ITrucksTypesTranslationDto) {
@@ -96853,8 +96944,7 @@ export class TrucksTypesTranslationDto implements ITrucksTypesTranslationDto {
     if (_data) {
       this.translatedDisplayName = _data['translatedDisplayName'];
       this.language = _data['language'];
-      this.languageDisplayName = _data['languageDisplayName'];
-      this.icon = _data['icon'];
+      this.coreId = _data['coreId'];
       this.id = _data['id'];
     }
   }
@@ -96870,8 +96960,7 @@ export class TrucksTypesTranslationDto implements ITrucksTypesTranslationDto {
     data = typeof data === 'object' ? data : {};
     data['translatedDisplayName'] = this.translatedDisplayName;
     data['language'] = this.language;
-    data['languageDisplayName'] = this.languageDisplayName;
-    data['icon'] = this.icon;
+    data['coreId'] = this.coreId;
     data['id'] = this.id;
     return data;
   }
@@ -96880,8 +96969,7 @@ export class TrucksTypesTranslationDto implements ITrucksTypesTranslationDto {
 export interface ITrucksTypesTranslationDto {
   translatedDisplayName: string | undefined;
   language: string | undefined;
-  languageDisplayName: string | undefined;
-  icon: string | undefined;
+  coreId: number;
   id: number;
 }
 
@@ -98367,7 +98455,7 @@ export interface IGetVasForViewDto {
 }
 
 export class CreateOrEditVasDto implements ICreateOrEditVasDto {
-  name!: string;
+  key!: string;
   hasAmount!: boolean;
   hasCount!: boolean;
   id!: number | undefined;
@@ -98382,7 +98470,7 @@ export class CreateOrEditVasDto implements ICreateOrEditVasDto {
 
   init(_data?: any) {
     if (_data) {
-      this.name = _data['name'];
+      this.key = _data['key'];
       this.hasAmount = _data['hasAmount'];
       this.hasCount = _data['hasCount'];
       this.id = _data['id'];
@@ -98398,7 +98486,7 @@ export class CreateOrEditVasDto implements ICreateOrEditVasDto {
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data['name'] = this.name;
+    data['key'] = this.key;
     data['hasAmount'] = this.hasAmount;
     data['hasCount'] = this.hasCount;
     data['id'] = this.id;
@@ -98407,7 +98495,7 @@ export class CreateOrEditVasDto implements ICreateOrEditVasDto {
 }
 
 export interface ICreateOrEditVasDto {
-  name: string;
+  key: string;
   hasAmount: boolean;
   hasCount: boolean;
   id: number | undefined;

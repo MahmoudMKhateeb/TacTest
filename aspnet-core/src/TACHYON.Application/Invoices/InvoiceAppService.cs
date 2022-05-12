@@ -224,7 +224,7 @@ namespace TACHYON.Invoices
                                 ? vas.TotalAmount.Value
                                 : vas.TotalAmountWithCommission.Value,
                         WayBillNumber = waybillnumber,
-                        TruckType = L("InvoiceVasType", vas.ShippingRequestVasFk.VasFk.Name),
+                        TruckType = L("InvoiceVasType", vas.ShippingRequestVasFk.VasFk.Key),
                         Source = "-",
                         Destination = "-",
                         DateWork = "-",
@@ -427,7 +427,7 @@ namespace TACHYON.Invoices
                                 ? vas.TotalAmount.Value
                                 : vas.TotalAmountWithCommission.Value,
                         WayBillNumber = waybillnumber,
-                        TruckType = L("InvoiceVasType", vas.ShippingRequestVasFk.VasFk.Name),
+                        TruckType = L("InvoiceVasType", vas.ShippingRequestVasFk.VasFk.Key),
                         Source = "-",
                         Destination = "-",
                         DateWork = "-",

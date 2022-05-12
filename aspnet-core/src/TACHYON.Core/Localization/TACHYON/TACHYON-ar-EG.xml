@@ -20,8 +20,8 @@
     <text name="MostUsedOrigins">المدن الأكثر استخداما</text>
     <text name="MostUsedDestantions">الوجهات الأكثر استخدامًا</text>
     <text name="CompletedTripsvsPod">الرحلات المكتملة مقابل إثبات التسليم</text>
-    <text name="DocumentsHasDueDateIn6Days">المستندات لها تاريخ استحقاق في أقل من 6 أيام</text>
-    <text name="InvoiceDueDateIn6Days">تاريخ استحقاق الفاتورة في أقل من 6 أيام</text>
+    <text name="DocumentsHasDueDateIn6Days">مستندات ستنتهي صلاحيتها خلال أسبوع</text>
+    <text name="InvoiceDueDateIn6Days">فواتير ستكون مستحقة خلال أسبوع</text>
     <text name="InvoicesVsPaidInvoices">الفواتير مقابل الفواتير المدفوعة</text>
     <text name="ShipmentHistory">تأريخ الشحن</text>
 		<text name="AddRating">أضف تقييم</text>
@@ -2525,5 +2525,10 @@
 
     <text name="YouMustEnterRates">يجب عليك إدخال التقييمات</text>
 		<text name="TheNumberInTheTopOfTheCRThatStartsWithSeven">الرقم الموجود أعلى السجل التجاري و الذي يبدأ برقم سبعة</text>
+		<text name="IgnoredOtpNumbersPatternMsg">يجب إضافة أرقام الهواتف المحمولة وفصلها بفواصل منقوطة مثل 12345؛56789</text>
+		<text name="ExtraSettingsForMobile">إعدادات إضافية للجوال</text>
+		<text name="IgnoredOtpNumbers">أرقام الهواتف التي تم تجاهلها من التحقق من صحة كلمة المرور المؤقتة</text>
+		<text name="MobileSettings">إعدادات الجوال </text>
+		<text name="ThereAre">يوجد</text>
 	</texts>
 </localizationDictionary>

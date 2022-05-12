@@ -20,6 +20,7 @@ export class AppRouteGuard implements CanActivate, CanActivateChild, CanLoad {
       return of(true);
     }
 
+    //login
     if (!this._sessionService.user) {
       let sessionObservable = new Subject<any>();
 
@@ -44,6 +45,7 @@ export class AppRouteGuard implements CanActivate, CanActivateChild, CanLoad {
       return sessionObservable;
     }
 
+    //required documents
     if (this._sessionService.isTenantHasMissingRequiredDocuments()) {
       console.log('this._sessionService.tenant.missingRequiredDocumentTypes.length data', data['permission']);
       let sessionObservable = new Subject<any>();
@@ -82,14 +84,6 @@ export class AppRouteGuard implements CanActivate, CanActivateChild, CanLoad {
       return '/account/login';
     }
 
-    if (this._permissionChecker.isGranted('Pages.Administration.Host.Dashboard')) {
-      return '/app/admin/hostDashboard';
-    }
-
-    if (this._permissionChecker.isGranted('Pages.Tenant.Dashboard')) {
-      return '/app/main/dashboard';
-    }
-
     if (this._permissionChecker.isGranted('Pages.Tenants')) {
       return '/app/admin/tenants';
     }
@@ -98,6 +92,14 @@ export class AppRouteGuard implements CanActivate, CanActivateChild, CanLoad {
       return '/app/admin/users';
     }
 
-    return '/app/main/dashboard';
+    if (this._permissionChecker.isGranted('Pages.Administration.Host.Dashboard')) {
+      return '/app/admin/hostDashboard';
+    }
+
+    if (this._permissionChecker.isGranted('Pages.Tenant.Dashboard')) {
+      return '/app/main/dashboard';
+    }
+
+    return '/app/notifications';
   }
 }

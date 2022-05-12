@@ -289,7 +289,7 @@ namespace TACHYON
                             CultureInfo.CurrentUICulture.Name.Contains(t.Language)) != null
                             ? i.VasFk.Translations
                                 .FirstOrDefault(t => CultureInfo.CurrentUICulture.Name.Contains(t.Language)).DisplayName
-                            : i.VasFk.Name));
+                            : i.VasFk.Key));
 
             configuration.CreateMap<Vas, GetVasForEditOutput>()
                 .ForMember(x => x.Vas, x
@@ -411,11 +411,11 @@ namespace TACHYON
             configuration.CreateMap<ShippingRequestTrip, TrackingShippingRequestTripDto>();
 
             configuration.CreateMap<ShippingRequestTripVas, CreateOrEditShippingRequestTripVasDto>()
-                .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.ShippingRequestVasFk.VasFk.Name));
+                .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.ShippingRequestVasFk.VasFk.Key));
             configuration.CreateMap<CreateOrEditShippingRequestTripVasDto, ShippingRequestTripVas>();
 
             configuration.CreateMap<ShippingRequestTripVas, ShippingRequestTripVasDto>()
-                .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.ShippingRequestVasFk.VasFk.Name))
+                .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.ShippingRequestVasFk.VasFk.Key))
                 .ReverseMap();
 
             configuration.CreateMap<ShippingRequestVasListOutput, ShippingRequestVas>()
@@ -543,9 +543,7 @@ namespace TACHYON
                 .ForMember(x => x.TrucksTypeDisplayName, x => x.MapFrom(i => i.TranslatedDisplayName))
                 .ForMember(x => x.TrucksTypesTranslation, x => x.MapFrom(i => i));
 
-            configuration.CreateMap<TrucksTypeDto, TrucksType>().ReverseMap()
-                .ForMember(x => x.TranslatedDisplayName, x => x.MapFrom(
-                    i => i.GetTranslatedDisplayName<TrucksType,TrucksTypesTranslation,long>()));
+            configuration.CreateMap<TrucksTypeDto, TrucksType>().ReverseMap();
             configuration.CreateMap<CreateOrEditTruckStatusDto, TruckStatus>()
                 .ForMember(x => x.Translations, x => x.Ignore());
 

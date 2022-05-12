@@ -1,4 +1,4 @@
-﻿using Abp.Application.Services.Dto;
+using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
@@ -9,6 +9,7 @@ using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
@@ -123,7 +124,7 @@ namespace TACHYON.Trucks.TrucksTypes
         protected virtual async Task Update(CreateOrEditTrucksTypeDto input)
         {
             var trucksType = await _trucksTypeRepository.FirstOrDefaultAsync(x => x.Id == input.Id.Value);
-            trucksType.Translations.Clear();
+            //trucksType.Translations.Clear();
             ObjectMapper.Map(input, trucksType);
         }
 
@@ -157,20 +158,30 @@ namespace TACHYON.Trucks.TrucksTypes
 
         public async Task CreateOrEditTranslation(CreateOrEditTrucksTypesTranslationDto input)
         {
-            //? Check if Core of Translation Is Exist Or Not
 
-            #region CoreValidation
-
-            var coreTruckType = await _trucksTypeRepository.FirstOrDefaultAsync(input.CoreId);
-            if (coreTruckType == null)
-                throw new UserFriendlyException(L("TruckTypeForThisTranslationNotFound"));
-
-            #endregion
 
             if (!input.Id.HasValue)
-                await CreateTranslation(input);
+            {
+                var d = await _trucksTypeTranslationRepository
+                    .GetAll()
+                    .Where(x => x.CoreId == input.CoreId)
+                    .Where(x => x.TranslatedDisplayName == input.TranslatedDisplayName)
+                    .Where(x => x.Language.Contains(input.Language))
+                    .FirstOrDefaultAsync();
+                if (d != null)
+                {
+                    throw new UserFriendlyException(L("TranslationDuplicated"));
+                }
+
+                var createdTranslation = ObjectMapper.Map<TrucksTypesTranslation>(input);
+                await _trucksTypeTranslationRepository.InsertAsync(createdTranslation);
+            }
             else
-                await UpdateTranslation(input);
+            {
+                TrucksTypesTranslation updatedTranslation = await _trucksTypeTranslationRepository.SingleAsync(x => x.Id == input.Id);
+                ObjectMapper.Map(input, updatedTranslation);
+            }
+
         }
 
         [AbpAuthorize(AppPermissions.Pages_TrucksTypesTranslations_Create)]
