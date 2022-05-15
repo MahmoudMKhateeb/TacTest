@@ -11,9 +11,6 @@ namespace TACHYON.DriverLicenseTypes
     [Table("DriverLicenseTypes")]
     public class DriverLicenseType : FullAuditedEntity, IMultiLingualEntity<DriverLicenseTypeTranslation>, IHasKey
     {
-
-        //[StringLength(DriverLicenseTypeConsts.MaxNameLength, MinimumLength = DriverLicenseTypeConsts.MinNameLength)]
-        public virtual string Name { get; set; }
         public virtual string Key { get; set; }
 
         [Range(DriverLicenseTypeConsts.MinWasIIntegrationIdValue, DriverLicenseTypeConsts.MaxWasIIntegrationIdValue)]

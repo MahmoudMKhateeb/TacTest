@@ -27,28 +27,28 @@ namespace TACHYON.Migrations.Seed.Host
         {
             var temporaryLicense = new DriverLicenseType()
             {
-                Name = "TEMPORARY LICENSE (PERMISSION)",
+                Key = "TEMPORARY LICENSE (PERMISSION)",
                 CreationTime = DateTime.Now,
                 WasIIntegrationId = 1,
             };
 
             var motorcycle = new DriverLicenseType()
             {
-                Name = "MOTORCYCLE",
+                Key = "MOTORCYCLE",
                 CreationTime = DateTime.Now,
                 WasIIntegrationId = 2,
             };
 
             var privateLicenceType = new DriverLicenseType()
             {
-                Name = "PRIVATE",
+                Key = "PRIVATE",
                 CreationTime = DateTime.Now,
                 WasIIntegrationId = 3,
             };
 
             var publicTaxi = new DriverLicenseType()
             {
-                Name = "Public Taxi",
+                Key = "Public Taxi",
                 CreationTime = DateTime.Now,
                 WasIIntegrationId = 4,
             };
