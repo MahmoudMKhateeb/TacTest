@@ -543,7 +543,8 @@ namespace TACHYON
                 .ForMember(x => x.TrucksTypeDisplayName, x => x.MapFrom(i => i.TranslatedDisplayName))
                 .ForMember(x => x.TrucksTypesTranslation, x => x.MapFrom(i => i));
 
-            configuration.CreateMap<TrucksTypeDto, TrucksType>().ReverseMap();
+            configuration.CreateMap<TrucksType, TrucksTypeDto>()
+                .ForMember(x=> x.TranslatedDisplayName, x=> x.MapFrom(i=> i.Key)).ReverseMap();
             configuration.CreateMap<CreateOrEditTruckStatusDto, TruckStatus>()
                 .ForMember(x => x.Translations, x => x.Ignore());
 
