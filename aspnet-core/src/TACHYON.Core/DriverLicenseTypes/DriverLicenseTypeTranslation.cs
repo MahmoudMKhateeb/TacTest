@@ -10,6 +10,7 @@ namespace TACHYON.DriverLicenseTypes
     public class DriverLicenseTypeTranslation : Entity, IEntityTranslation<DriverLicenseType>
     {
         public string Name { get; set; }
+        public string DisplayName { get; set; }
         public DriverLicenseType Core { get; set; }
         public int CoreId { get; set; }
         public string Language { get; set; }
