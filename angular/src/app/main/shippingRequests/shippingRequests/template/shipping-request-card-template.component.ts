@@ -33,6 +33,8 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
   @Input() isTMS: boolean = false;
   @Input() Title: string;
   @Input() ShippingRequestId: number | null | undefined = undefined;
+  origin: any;
+  destination: any;
   direction = 'ltr';
   openCardId: number;
   bidsloading = false;
@@ -86,6 +88,16 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
           this.StopLoading = true;
         }
         result.items.forEach((r) => {
+          this.origin = null;
+          this.destination = null;
+          if (this.openCardId == r.id) {
+            this.getCordinatesByCityName(r.originCity, 'source');
+            this.getCordinatesByCityName(r.destinationCity, 'destination');
+            r.latitude = this.origin?.lat;
+            r.longitude = this.origin?.lng;
+            this.origin = this.origin;
+            this.destination = this.destination;
+          }
           if (this.feature.isEnabled('App.Shipper')) {
             if (r.requestTypeTitle == 'TachyonManageService' && r.statusTitle == 'NeedsAction') {
               r.statusTitle = 'New';
@@ -141,6 +153,9 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
     });
   }
 
+  mapReady(event: any) {
+    event.controls[google.maps.ControlPosition.TOP_RIGHT].push(document.getElementById('Settings'));
+  }
   setTitle(item: GetShippingRequestForPriceOfferListDto): string {
     if (this.Channel == PriceOfferChannel.DirectRequest) {
       if (this.feature.isEnabled('App.Carrier')) {
@@ -207,5 +222,34 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
 
   isCarrierOwnRequest(request: GetShippingRequestForPriceOfferListDto): boolean {
     return this.feature.isEnabled('App.CarrierAsASaas') && request.isSaas && this.appSession.tenantId === request.tenantId;
+  }
+
+  /**
+   * Get City Cordinates By Providing its name
+   * this finction is to draw the shipping Request Main Route in View SR Details in marketPlace
+   * @param cityName
+   * @param cityType   source/dest
+   */
+  getCordinatesByCityName(cityName: string, cityType: string) {
+    const geocoder = new google.maps.Geocoder();
+    geocoder.geocode(
+      {
+        address: cityName,
+      },
+      (results, status) => {
+        console.log(results);
+        if (status == google.maps.GeocoderStatus.OK) {
+          const Lat = results[0].geometry.location.lat();
+          const Lng = results[0].geometry.location.lng();
+          if (cityType == 'source') {
+            this.origin = { lat: Lat, lng: Lng };
+          } else {
+            this.destination = { lat: Lat, lng: Lng };
+          }
+        } else {
+          console.log('Something got wrong ' + status);
+        }
+      }
+    );
   }
 }
