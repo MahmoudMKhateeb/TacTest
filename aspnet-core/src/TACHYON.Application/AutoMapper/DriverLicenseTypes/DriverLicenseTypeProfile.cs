@@ -13,7 +13,8 @@ namespace TACHYON.AutoMapper.DriverLicenseTypes
         {
             CreateMap<CreateOrEditDriverLicenseTypeDto, DriverLicenseType>().ReverseMap();
 
-            CreateMap<DriverLicenseTypeTranslationDto, DriverLicenseTypeTranslation>().ReverseMap();
+            CreateMap<DriverLicenseTypeTranslationDto, DriverLicenseTypeTranslation>()
+                .ForMember(x=> x.DisplayName,x=> x.MapFrom(i=> i.Name)).ReverseMap();
         }
     }
 }

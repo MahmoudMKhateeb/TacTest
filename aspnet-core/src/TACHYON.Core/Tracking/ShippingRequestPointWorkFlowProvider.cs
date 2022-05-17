@@ -236,6 +236,16 @@ namespace TACHYON.Tracking
                             Permissions = new List<string>{},
                             Features = new List<string>{},
                         },
+                        new WorkflowTransaction<PointTransactionArgs, RoutePointStatus>
+                        {
+                            Action = WorkFlowActionConst.DeliveryConfirmationReceiverConfirmed,
+                            FromStatus = RoutePointStatus.DeliveryConfirmation,
+                            ToStatus = RoutePointStatus.ReceiverConfirmed,
+                            Func = ReceiverConfirmed,
+                            Name = "EnterReceiverCode",
+                            Permissions = new List<string>{},
+                            Features = new List<string>{},
+                        },
                           new WorkflowTransaction<PointTransactionArgs,RoutePointStatus>
                         {
                             Action =  WorkFlowActionConst.UplodeGoodPictureReceiverConfirmed,
@@ -678,6 +688,8 @@ namespace TACHYON.Tracking
             && !x.RoutPointStatusTransitions.Any(s => !s.IsReset && s.Status == RoutePointStatus.DeliveryConfirmation)
             && x.Id != point.Id);
 
+            await HandlePointDelivery(args.PointId);
+            
             if (allPointsHasDeliveryConfirmation)
             {
                 var trip = await _shippingRequestTripRepository

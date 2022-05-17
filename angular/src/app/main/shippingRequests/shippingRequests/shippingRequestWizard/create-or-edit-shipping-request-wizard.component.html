@@ -335,7 +335,7 @@
                               required
                             >
                               <option value="undefined" selected disabled>{{ l('SelectanOriginCountry') }}</option>
-                              <option *ngFor="let item of allCountries" value="{{ item.id }}">{{ item.displayName }}</option>
+                              <option *ngFor="let item of allCountries" value="{{ item.id }}">{{ item.translatedDisplayName }}</option>
                             </select>
                           </div>
 
@@ -392,7 +392,7 @@
                               (ngModelChange)="validateShippingRequestType()"
                               required
                             >
-                              <option [value]="null" selected>{{ l('SelectanOriginCity') }}</option>
+                              <option [ngValue]="null" disabled selected>{{ l('SelectanOriginCity') }}</option>
                               <option *ngFor="let item of sourceCities" value="{{ item.id }}">{{ item.displayName }}</option>
                             </select>
                           </div>
@@ -421,7 +421,7 @@
                               (ngModelChange)="validateShippingRequestType()"
                               required
                             >
-                              <option [value]="null" selected>{{ l('SelectanDestinationCity') }}</option>
+                              <option [ngValue]="null" disabled selected>{{ l('SelectanDestinationCity') }}</option>
                               <option *ngFor="let item of destinationCities" value="{{ item.id }}">{{ item.displayName }}</option>
                             </select>
                             <div class="invalid-feedback">{{ l('SourceAndDestinationCantBeTheSame') }}</div>
@@ -447,7 +447,7 @@
                             (change)="step2Dto.numberOfDrops = undefined"
                             required
                           >
-                            <option value="undefined">{{ l('SelectRouteType') }}</option>
+                            <option [ngValue]="null" disabled selected>{{ l('SelectRouteType') }}</option>
                             <option [value]="code.key" *ngFor="let code of allRoutTypes">
                               {{ l(code.value) }}
                             </option>

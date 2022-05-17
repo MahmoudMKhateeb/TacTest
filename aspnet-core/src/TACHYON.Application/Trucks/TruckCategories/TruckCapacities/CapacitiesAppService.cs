@@ -50,14 +50,10 @@ namespace TACHYON.Trucks.TruckCategories.TruckCapacities
                 .PageBy(input);
 
             var capacities = from o in await pagedAndFilteredCapacities.ToListAsync()
-                //join o1 in _lookup_trucktypeRepository.GetAll() on o.TrucksTypeId equals o1.Id into j1
-                //from s1 in j1.DefaultIfEmpty()
                 select new GetCapacityForViewDto()
                 {
-                    Capacity = new CapacityDto { DisplayName = o.DisplayName, Id = o.Id },
-                    TruckTypeDisplayName =
-                        ObjectMapper.Map<TrucksTypeDto>(o.TrucksTypeFk)
-                            ?.TranslatedDisplayName //s1 == null || s1.DisplayName == null ? "" : s1.DisplayName.ToString()
+                    Capacity = new CapacityDto { DisplayName = o.DisplayName, Id = o.Id, TrucksTypeId = o.TrucksTypeId},
+                    TruckTypeDisplayName = o.TrucksTypeFk.DisplayName
                 };
 
             var totalCount = await filteredCapacities.CountAsync();

@@ -261,7 +261,7 @@
                       }"
                     >
                       <option selected disabled [ngValue]="null">{{ l('SelectALicenseType') }}</option>
-                      <option *ngFor="let item of driverLicenseTypes" [value]="item.id">{{ item.displayName }}</option>
+                      <option *ngFor="let item of driverLicenseTypes" [value]="item.id">{{ item.name }}</option>
                     </select>
                     <validation-messages [formCtrl]="driverLicenseTypeId"></validation-messages>
                   </div>
