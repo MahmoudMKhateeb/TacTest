@@ -500,7 +500,7 @@ namespace TACHYON
             configuration.CreateMap<GoodCategory, GoodCategoryDto>()
                 .ForMember(x => x.HasItems, x => x.MapFrom(i => i.GoodCategories.Any()))
                 .ForMember(x => x.DisplayName,
-                    x => x.MapFrom(i => i.GetTranslatedDisplayName<GoodCategory,GoodCategoryTranslation>()))
+                    x => x.MapFrom(i => i.Key))
                 .ReverseMap();
 
             configuration.CreateMap<CreateOrEditTrailerDto, Trailer>().ReverseMap();
@@ -543,7 +543,8 @@ namespace TACHYON
                 .ForMember(x => x.TrucksTypeDisplayName, x => x.MapFrom(i => i.TranslatedDisplayName))
                 .ForMember(x => x.TrucksTypesTranslation, x => x.MapFrom(i => i));
 
-            configuration.CreateMap<TrucksTypeDto, TrucksType>().ReverseMap();
+            configuration.CreateMap<TrucksType, TrucksTypeDto>()
+                .ForMember(x=> x.TranslatedDisplayName, x=> x.MapFrom(i=> i.Key)).ReverseMap();
             configuration.CreateMap<CreateOrEditTruckStatusDto, TruckStatus>()
                 .ForMember(x => x.Translations, x => x.Ignore());
 
@@ -809,14 +810,10 @@ namespace TACHYON
                 .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
                 .ReverseMap();
 
-            //configuration.CreateMultiLingualMap<City, CitiesTranslation, CityDto>(context)
-            //    .EntityMap
-            //    .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
-            //    .ReverseMap();
-
             configuration.CreateMultiLingualMap<City, CitiesTranslation, TenantCityLookupTableDto>(context)
                 .EntityMap
                 .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
+                .ForMember(x=> x.DisplayName, x=> x.MapFrom(i=> GetCityDisplayName(i)))
                 .ReverseMap();
 
             configuration.CreateMultiLingualMap<City, CitiesTranslation, CityPolygonLookupTableDto>(context)
@@ -894,12 +891,27 @@ namespace TACHYON
             configuration.
                 CreateMultiLingualMap<UnitOfMeasure, UnitOfMeasureTranslation, GetAllUnitOfMeasureForDropDownOutput>(context)
                 .EntityMap.ForMember(x => x.IsOther, x => x.MapFrom(i => i.ContainsOther()));
-            configuration.CreateMultiLingualMap<DriverLicenseType, DriverLicenseTypeTranslation, DriverLicenseTypeDto>(context);
+            configuration.CreateMultiLingualMap<DriverLicenseType, DriverLicenseTypeTranslation, DriverLicenseTypeDto>(context)
+                .EntityMap.ForMember(x=> x.Key, x=> x.MapFrom(i=> GetDriverLicenseTypeDisplayName(i)))
+                .AfterMap((src, dest, otp) => dest.Name = dest.Key);;
             configuration.
                 CreateMultiLingualMap<DriverLicenseType, DriverLicenseTypeTranslation, GetLicenseTypeForDropDownOutput>(context)
-                .EntityMap.ForMember(x => x.IsOther, x => x.MapFrom(i => i.ContainsOther()));
+                .EntityMap.ForMember(x => x.IsOther, x => x.MapFrom(i => i.ContainsOther()))
+                .ForMember(x=> x.Name, x=> x.MapFrom(i=> GetDriverLicenseTypeDisplayName(i)));
+        }
+        
+        private static string GetCityDisplayName(City city)
+        {
+            return city.Translations?.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name))
+                ?.TranslatedDisplayName ?? city.DisplayName;
         }
 
+        private static string GetDriverLicenseTypeDisplayName(DriverLicenseType entity)
+        {
+            return entity.Translations?.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name))
+                ?.DisplayName ?? entity.Key;
+        }
+        
         private static void AddOrUpdateShippingRequest(CreateOrEditShippingRequestDto dto, ShippingRequest Request)
         {
             if (Request.ShippingRequestVases == null)
