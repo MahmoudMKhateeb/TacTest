@@ -2530,5 +2530,7 @@
 		<text name="IgnoredOtpNumbers">أرقام الهواتف التي تم تجاهلها من التحقق من صحة كلمة المرور المؤقتة</text>
 		<text name="MobileSettings">إعدادات الجوال </text>
 		<text name="ThereAre">يوجد</text>
+		<text name="OtherUnitOfMeasure">وحدة القياس الأخرى</text>
+		<text name="OtherUnitOfMeasureHint">أدخل اسم وحدة القياس الأخرى كنص عادي</text>
 	</texts>
 </localizationDictionary>
