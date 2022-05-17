@@ -2,7 +2,7 @@
 
 $buildFolder = (Get-Item -Path "./" -Verbose).FullName
 $slnFolder = Join-Path $buildFolder "../"
-$outputFolder = "C:\inetpub\wwwroot\Tachyon\outputs"
+$outputFolder = "C:\inetpub\wwwroot\Tachyon\Develop"
 $webHostFolder = Join-Path $slnFolder "src/TACHYON.Web.Host"
 #$webPublicFolder = Join-Path $slnFolder "src/TACHYON.Web.Public"
 $ngFolder = Join-Path $buildFolder "../../angular"
