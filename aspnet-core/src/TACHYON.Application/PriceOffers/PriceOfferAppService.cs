@@ -9,6 +9,7 @@ using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
@@ -28,6 +29,7 @@ using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips;
 using TACHYON.Trucks.TrucksTypes;
 using TACHYON.Trucks.TrucksTypes.Dtos;
+using TACHYON.Trucks.TrucksTypes.TrucksTypesTranslations;
 using TACHYON.Vases;
 
 namespace TACHYON.PriceOffers
@@ -43,12 +45,14 @@ namespace TACHYON.PriceOffers
         private readonly IRepository<TrucksType, long> _trucksTypeRepository;
         private readonly IAppNotifier _appNotifier;
         private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepository;
+        private readonly IRepository<TrucksTypesTranslation> _truckTypeTranslationRepository;
+
 
         private IRepository<VasPrice> _vasPriceRepository;
         public PriceOfferAppService(IRepository<ShippingRequestDirectRequest, long> shippingRequestDirectRequestRepository,
             IRepository<ShippingRequest, long> shippingRequestsRepository, PriceOfferManager priceOfferManager,
             IRepository<PriceOffer, long> priceOfferRepository, IRepository<VasPrice> vasPriceRepository,
-            IRepository<City> cityRepository, IRepository<TrucksType, long> trucksTypeRepository, IAppNotifier appNotifier, IRepository<ShippingRequestTrip> shippingRequestTripRepository)
+            IRepository<City> cityRepository, IRepository<TrucksType, long> trucksTypeRepository, IAppNotifier appNotifier, IRepository<ShippingRequestTrip> shippingRequestTripRepository, IRepository<TrucksTypesTranslation> truckTypeTranslationRepository)
         {
             _shippingRequestDirectRequestRepository = shippingRequestDirectRequestRepository;
             _shippingRequestsRepository = shippingRequestsRepository;
@@ -59,6 +63,7 @@ namespace TACHYON.PriceOffers
             _trucksTypeRepository = trucksTypeRepository;
             _appNotifier = appNotifier;
             _shippingRequestTripRepository = shippingRequestTripRepository;
+            _truckTypeTranslationRepository = truckTypeTranslationRepository;
         }
         #region Services
 
@@ -710,7 +715,7 @@ namespace TACHYON.PriceOffers
                 .Include(c => c.GoodCategoryFk)
                  .ThenInclude(x => x.Translations)
                 .Include(t => t.TrucksTypeFk)
-                 .ThenInclude(x => x.Translations)
+                 //.ThenInclude(x => x.Translations)
             .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper), x => x.TenantId == AbpSession.TenantId)
             .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Carrier), x => x.CarrierTenantId == AbpSession.TenantId)
             .WhereIf(input.PickupFromDate.HasValue && input.PickupToDate.HasValue, x => x.StartTripDate >= input.PickupFromDate.Value && x.StartTripDate <= input.PickupToDate.Value)
@@ -727,6 +732,11 @@ namespace TACHYON.PriceOffers
             .OrderBy(input.Sorting ?? "id desc")
             .PageBy(input);
 
+            //get truck type tranlation list
+            var goodscategoryIds = query.Select(x => x.TrucksTypeId).ToList();
+            var truckTypeTranslationList = _truckTypeTranslationRepository.GetAll().Where(x => goodscategoryIds.Contains(x.CoreId)).ToList();
+
+
             List<GetShippingRequestForPriceOfferListDto> ShippingRequestForPriceOfferList = new List<GetShippingRequestForPriceOfferListDto>();
 
             var isCarrier = await IsEnabledAsync(AppFeatures.Carrier);
@@ -736,7 +746,8 @@ namespace TACHYON.PriceOffers
             foreach (var request in await query.ToListAsync())
             {
                 var dto = ObjectMapper.Map<GetShippingRequestForPriceOfferListDto>(request);
-                dto.TruckType = ObjectMapper.Map<TrucksTypeDto>(request.TrucksTypeFk)?.TranslatedDisplayName;
+                //dto.TruckType = ObjectMapper.Map<TrucksTypeDto>(request.TrucksTypeFk)?.TranslatedDisplayName;
+                dto.TruckType = truckTypeTranslationList.Where(x => x.CoreId == request.TrucksTypeId && x.Language == CultureInfo.CurrentCulture.Name).FirstOrDefault()?.TranslatedDisplayName;
                 dto.GoodsCategory = ObjectMapper.Map<GoodCategoryDto>(request.GoodCategoryFk)?.DisplayName;
                 dto.NumberOfCompletedTrips = await getCompletedRequestTripsCount(request);
                 if (AbpSession.TenantId.HasValue && (isCarrier))
