@@ -9,8 +9,8 @@ Preparation:
   tags:
     - test-runner
   script:
-    - Stop-WebSite 'Default Web Site' ## stopping FrontEnd Website
-    - Stop-WebSite 'TachyonProdCore' ## stopping Backend Website
+    - Stop-WebSite 'test' ## stopping FrontEnd Website
+    - Stop-WebSite 'test-back' ## stopping Backend Website
   only:
     - test
 ### end of Preparation
@@ -33,7 +33,7 @@ release:
     - test-runner
   script:
     - dir
-    - Start-WebSite 'TachyonProdCore' ##start Backend Site
-    - Start-WebSite 'Default Web Site' ##start fronend Site
+    - Start-WebSite 'test' ##start Backend Site
+    - Start-WebSite 'test-back' ##start fronend Site
   only:
     - test
