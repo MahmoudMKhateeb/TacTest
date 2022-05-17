@@ -41,11 +41,11 @@ Copy-Item (Join-Path $ngFolder "dist") (Join-Path $outputFolder "ng/") -Recurse
 
 # Change UI configuration
 $ngConfigPath = Join-Path $outputFolder "ng/assets/appconfig.production.json"
-$ngConfigPathBackup = "C:/Users/Islam/Desktop/iis_application-files/appconfig.production.json"
-$ngWbfile = "C:/Users/Islam/Desktop/iis_application-files/web.config"
+$ngConfigPathBackup = "C:/Users/Islam/Desktop/iis_application-files-dev/appconfig.production.json"
+$ngWbfile = "C:/Users/Islam/Desktop/iis_application-files-dev/web.config"
 
 $hostConfigPath = Join-Path $outputFolder "Host/appsettings.json"
-$hostConfigPathBackup = "C:/Users/Islam/Desktop/iis_application-files/appsettings.json"
+$hostConfigPathBackup = "C:/Users/Islam/Desktop/iis_application-files-dev/appsettings.json"
 
 Remove-Item $hostConfigPath -Force -Recurse -ErrorAction Ignore
 Copy-Item ($hostConfigPathBackup) (Join-Path $outputFolder "Host") -Recurse
@@ -53,6 +53,7 @@ Copy-Item ($hostConfigPathBackup) (Join-Path $outputFolder "Host") -Recurse
 
 Remove-Item $ngConfigPath -Force -Recurse -ErrorAction Ignore
 Copy-Item ($ngConfigPathBackup) (Join-Path $outputFolder "ng/assets") -Recurse
+Copy-Item ($ngWbfile) (Join-Path $outputFolder "ng/") -Recurse
 
 #(Get-Content $ngConfigPath) -replace "22742", "9945" | Set-Content $ngConfigPath
 #(Get-Content $ngConfigPath) -replace "4200", "80" | Set-Content $ngConfigPath
