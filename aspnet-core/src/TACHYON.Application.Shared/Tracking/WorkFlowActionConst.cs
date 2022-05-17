@@ -21,6 +21,7 @@ namespace TACHYON.Tracking
         public const string UplodeDeliveryNoteDeliveryConfirmation = "UplodeDeliveryNoteDeliveryConfirmation";
         public const string UplodeGoodPictureReceiverConfirmed = "UplodeGoodPictureReceiverConfirmed";
         public const string DeliveryConfirmationUplodeGoodPicture = "DeliveryConfirmationUplodeGoodPicture";
+        public const string DeliveryConfirmationReceiverConfirmed = "DeliveryConfirmationReceiverConfirmed";
 
     }
 }
