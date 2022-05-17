@@ -23,6 +23,8 @@ namespace TACHYON.Cities
         public virtual string Code { get; set; }
 
         public string Polygon { get; set; }
+        
+        [DisableAuditing]
         public Point Location { get; set; }
         public virtual int CountyId { get; set; }
 
