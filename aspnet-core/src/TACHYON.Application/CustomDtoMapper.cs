@@ -500,7 +500,7 @@ namespace TACHYON
             configuration.CreateMap<GoodCategory, GoodCategoryDto>()
                 .ForMember(x => x.HasItems, x => x.MapFrom(i => i.GoodCategories.Any()))
                 .ForMember(x => x.DisplayName,
-                    x => x.MapFrom(i => i.GetTranslatedDisplayName<GoodCategory,GoodCategoryTranslation>()))
+                    x => x.MapFrom(i => i.Key))
                 .ReverseMap();
 
             configuration.CreateMap<CreateOrEditTrailerDto, Trailer>().ReverseMap();
@@ -809,14 +809,10 @@ namespace TACHYON
                 .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
                 .ReverseMap();
 
-            //configuration.CreateMultiLingualMap<City, CitiesTranslation, CityDto>(context)
-            //    .EntityMap
-            //    .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
-            //    .ReverseMap();
-
             configuration.CreateMultiLingualMap<City, CitiesTranslation, TenantCityLookupTableDto>(context)
                 .EntityMap
                 .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
+                .ForMember(x=> x.DisplayName, x=> x.MapFrom(i=> GetCityDisplayName(i)))
                 .ReverseMap();
 
             configuration.CreateMultiLingualMap<City, CitiesTranslation, CityPolygonLookupTableDto>(context)
@@ -898,6 +894,12 @@ namespace TACHYON
             configuration.
                 CreateMultiLingualMap<DriverLicenseType, DriverLicenseTypeTranslation, GetLicenseTypeForDropDownOutput>(context)
                 .EntityMap.ForMember(x => x.IsOther, x => x.MapFrom(i => i.ContainsOther()));
+        }
+        
+        private static string GetCityDisplayName(City city)
+        {
+            return city.Translations?.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name))
+                ?.TranslatedDisplayName ?? city.DisplayName;
         }
 
         private static void AddOrUpdateShippingRequest(CreateOrEditShippingRequestDto dto, ShippingRequest Request)
