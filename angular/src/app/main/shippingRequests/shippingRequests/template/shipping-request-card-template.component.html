@@ -251,8 +251,18 @@
                   </div>
 
                   <div class="col-lg-12">
-                    <agm-map style="height: 300px" [latitude]="24.717942" [longitude]="46.675761" [zoom]="zoom">
-                      <agm-marker [latitude]="item.latitude || 24.717942" [longitude]="item.longitude || 46.675761"></agm-marker>
+                    <agm-map
+                      minZoom="5"
+                      style="height: 300px"
+                      [longitude]="item.longitude || 46.675761"
+                      [latitude]="item.latitude || 24.717942"
+                      [scrollwheel]="false"
+                      (mapReady)="mapReady($event)"
+                    >
+                      <agm-direction [origin]="item.originCity" [destination]="item.destinationCity" [optimizeWaypoints]="false"> </agm-direction>
+                      <ng-container id="markers">
+                        <agm-marker [longitude]="item.longitude" [latitude]="item.longitude"> </agm-marker>
+                      </ng-container>
                     </agm-map>
                   </div>
                 </div>
