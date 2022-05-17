@@ -890,12 +890,14 @@ namespace TACHYON
                 CreateMultiLingualMap<UnitOfMeasure, UnitOfMeasureTranslation, UnitOfMeasureDto>(context);
             configuration.
                 CreateMultiLingualMap<UnitOfMeasure, UnitOfMeasureTranslation, GetAllUnitOfMeasureForDropDownOutput>(context)
-                .EntityMap.ForMember(x => x.IsOther, x => x.MapFrom(i => i.ContainsOther()))
-                .ForMember(x => x.DisplayName, x => x.MapFrom(i => i.Key));
-            configuration.CreateMultiLingualMap<DriverLicenseType, DriverLicenseTypeTranslation, DriverLicenseTypeDto>(context);
+                .EntityMap.ForMember(x => x.IsOther, x => x.MapFrom(i => i.ContainsOther()));
+            configuration.CreateMultiLingualMap<DriverLicenseType, DriverLicenseTypeTranslation, DriverLicenseTypeDto>(context)
+                .EntityMap.ForMember(x=> x.Key, x=> x.MapFrom(i=> GetDriverLicenseTypeDisplayName(i)))
+                .AfterMap((src, dest, otp) => dest.Name = dest.Key);;
             configuration.
                 CreateMultiLingualMap<DriverLicenseType, DriverLicenseTypeTranslation, GetLicenseTypeForDropDownOutput>(context)
-                .EntityMap.ForMember(x => x.IsOther, x => x.MapFrom(i => i.ContainsOther()));
+                .EntityMap.ForMember(x => x.IsOther, x => x.MapFrom(i => i.ContainsOther()))
+                .ForMember(x=> x.Name, x=> x.MapFrom(i=> GetDriverLicenseTypeDisplayName(i)));
         }
         
         private static string GetCityDisplayName(City city)
@@ -904,6 +906,12 @@ namespace TACHYON
                 ?.TranslatedDisplayName ?? city.DisplayName;
         }
 
+        private static string GetDriverLicenseTypeDisplayName(DriverLicenseType entity)
+        {
+            return entity.Translations?.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name))
+                ?.DisplayName ?? entity.Key;
+        }
+        
         private static void AddOrUpdateShippingRequest(CreateOrEditShippingRequestDto dto, ShippingRequest Request)
         {
             if (Request.ShippingRequestVases == null)
