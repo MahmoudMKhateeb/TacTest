@@ -2453,7 +2453,7 @@
 		<text name="TruckIsChanged">Truck Is Changed</text>
 		<text name="IncidentHappened">Incident Happened</text>
 		
-		<text name="MoiNumber">Moi Number</text>
+		<text name="MoiNumber">MOI Number</text>
 		<text name="ViewTenantProfile">View Tenant Profile</text>
 		<text name="NumberOfVases">Number of Vases</text>
 		<text name="NameOfVas">Vas Name</text>
