@@ -819,6 +819,7 @@ namespace TACHYON
             configuration.CreateMultiLingualMap<City, CitiesTranslation, CityPolygonLookupTableDto>(context)
                 .EntityMap
                 .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
+                .ForMember(dst => dst.DisplayName, opt => opt.MapFrom(src => GetCityDisplayName(src)))
                 .ForMember(dst => dst.HasPolygon, opt => opt.MapFrom(src => !src.Polygon.IsNullOrEmpty()))
                 .ReverseMap();
 
