@@ -9,8 +9,8 @@ Preparation:
   tags:
     - test-runner
   script:
-    - Stop-WebSite 'test' ## stopping FrontEnd Website
-    - Stop-WebSite 'test-back' ## stopping Backend Website
+    - Stop-WebSite 'dev' ## stopping FrontEnd Website
+    - Stop-WebSite 'dev-back' ## stopping Backend Website
   only:
     - test
 ### end of Preparation
@@ -20,7 +20,7 @@ Project:
   tags:
     - test-runner
   script:
-    - Remove-Item 'C:\inetpub\wwwroot\Tachyon\outputs' -Force -Recurse
+    - Remove-Item 'C:\inetpub\wwwroot\Tachyon\Develop' -Force -Recurse
     - cd ./aspnet-core/build
     - ./build-with-ng.ps1
   only:
@@ -33,7 +33,7 @@ release:
     - test-runner
   script:
     - dir
-    - Start-WebSite 'test' ##start Backend Site
-    - Start-WebSite 'test-back' ##start fronend Site
+    - Start-WebSite 'dev' ##start Backend Site
+    - Start-WebSite 'dev-back' ##start fronend Site
   only:
-    - test
+    - develop
