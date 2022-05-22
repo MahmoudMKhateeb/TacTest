@@ -344,6 +344,16 @@ namespace TACHYON.Tracking
                             Permissions = new List<string>{},
                             Features = new List<string>{},
                         },
+                        new WorkflowTransaction<PointTransactionArgs, RoutePointStatus>
+                        {
+                            Action = WorkFlowActionConst.DeliveryConfirmationReceiverConfirmed,
+                            FromStatus = RoutePointStatus.DeliveryConfirmation,
+                            ToStatus = RoutePointStatus.ReceiverConfirmed,
+                            Func = ReceiverConfirmed,
+                            Name = "EnterReceiverCode",
+                            Permissions = new List<string>{},
+                            Features = new List<string>{},
+                        },
                           new WorkflowTransaction<PointTransactionArgs,RoutePointStatus>
                         {
                             Action =  WorkFlowActionConst.UplodeGoodPictureReceiverConfirmed,
