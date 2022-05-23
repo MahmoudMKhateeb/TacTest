@@ -13,7 +13,7 @@ namespace TACHYON.Shipping.ShippingRequests.TachyonDealer.Dtos
 
         public void AddValidationErrors(CustomValidationContext context)
         {
-            if (Price <= 0) context.Results.Add(new ValidationResult("ThePriceMustBeGreaterThanZero"));
+            if (Price < 0) context.Results.Add(new ValidationResult("ThePriceMustBeGreaterThanZero"));
         }
     }
 }
