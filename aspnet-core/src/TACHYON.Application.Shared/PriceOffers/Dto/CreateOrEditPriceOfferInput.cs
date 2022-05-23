@@ -22,7 +22,7 @@ namespace TACHYON.PriceOffers.Dto
 
         public void AddValidationErrors(CustomValidationContext context)
         {
-            if (ItemPrice <= 0)
+            if (ItemPrice < 0)
             {
                 context.Results.Add(new ValidationResult("ThePriceMustBeGreaterThanZero"));
             }
