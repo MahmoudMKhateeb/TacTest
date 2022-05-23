@@ -87,7 +87,7 @@
                     <input
                       type="number"
                       minlength="1"
-                      min="1"
+                      min="0"
                       (keypress)="numberOnly($event)"
                       name="itemPrice"
                       [(ngModel)]="offer.itemPrice"
@@ -127,7 +127,7 @@
                       type="number"
                       [name]="'itemPrice' + i"
                       [(ngModel)]="item.itemPrice"
-                      min="1"
+                      min="0"
                       (change)="calculator()"
                       (keypress)="numberOnly($event)"
                       required
