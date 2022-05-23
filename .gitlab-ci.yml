@@ -9,8 +9,8 @@ Preparation:
   tags:
     - test-runner
   script:
-    - Stop-WebSite 'dev' ## stopping FrontEnd Website
-    - Stop-WebSite 'dev-back' ## stopping Backend Website
+    - Stop-WebSite 'test' ## stopping FrontEnd Website
+    - Stop-WebSite 'test-back' ## stopping Backend Website
   only:
     - test
 ### end of Preparation
@@ -33,7 +33,7 @@ release:
     - test-runner
   script:
     - dir
-    - Start-WebSite 'dev' ##start Backend Site
-    - Start-WebSite 'dev-back' ##start fronend Site
+    - Start-WebSite 'test' ##start Backend Site
+    - Start-WebSite 'test-back' ##start fronend Site
   only:
-    - develop
+    - test
