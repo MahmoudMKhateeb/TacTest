@@ -87,7 +87,7 @@
                     <input
                       type="number"
                       minlength="1"
-                      min="1"
+                      min="0"
                       (keypress)="numberOnly($event)"
                       name="itemPrice"
                       [(ngModel)]="offer.itemPrice"
@@ -127,7 +127,7 @@
                       type="number"
                       [name]="'itemPrice' + i"
                       [(ngModel)]="item.itemPrice"
-                      min="1"
+                      min="0"
                       (change)="calculator()"
                       (keypress)="numberOnly($event)"
                       required
@@ -176,7 +176,7 @@
             </table>
           </div>
 
-          <div class="table-responsive" *ngIf="Items.length ">
+          <div class="table-responsive">
             <table class="table table-sm table-bordered rounded">
               <thead>
                 <tr class="table-active">
@@ -206,7 +206,7 @@
             </table>
           </div>
 
-          <div class="table-responsive" *ngIf="Items.length ">
+          <div class="table-responsive">
             <table class="table table-sm table-bordered rounded">
               <thead>
                 <tr class="table-active">
