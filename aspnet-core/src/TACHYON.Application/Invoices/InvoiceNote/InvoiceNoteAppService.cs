@@ -251,18 +251,8 @@ namespace TACHYON.Invoices.InvoiceNotes
         #region Helper
         private async Task Create(CreateOrEditInvoiceNoteDto input)
         {
-            var invoiceNote = new InvoiceNote();
-            try
-            {
-                invoiceNote = ObjectMapper.Map<InvoiceNote>(input);
-
-            }
-            catch (Exception e)
-            {
-
-                throw;
-            }
-
+            var invoiceNote = ObjectMapper.Map<InvoiceNote>(input);
+            
             var invoiceNoteId = await _invoiceNoteRepository.InsertAndGetIdAsync(invoiceNote);
 
             invoiceNote.ReferanceNumber = GenerateInvoiceNoteReferanceNumber(invoiceNoteId, invoiceNote.NoteType);
