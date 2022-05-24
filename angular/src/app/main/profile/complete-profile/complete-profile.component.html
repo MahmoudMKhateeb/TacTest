@@ -161,6 +161,82 @@
             </div>
           </div>
         </div>
+
+        <div class="row">
+          <label class="col-xl-3"></label>
+          <div class="col-lg-9 col-xl-6">
+            <h5 class="font-weight-bold mt-10 mb-6">{{ l('FinancialDepartmentDetails') }}</h5>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-xl-3 col-lg-3 col-form-label">{{ l('Phone') }}</label>
+          <div class="col-lg-9 col-xl-6">
+            <div class="input-group input-group-lg input-group-solid">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  <i class="la la-phone"></i>
+                </span>
+              </div>
+              <input
+                #financialPhone="ngModel"
+                type="text"
+                class="form-control form-control-lg form-control-solid"
+                placeholder="{{ l('Phone') }}"
+                name="financialPhone"
+                [(ngModel)]="completeFiled.financialPhone"
+                (keypress)="numberOnly($event)"
+                [class.is-invalid]="financialPhone.touched && !financialPhone.valid"
+                [class.is-valid]="financialPhone.touched && financialPhone.valid"
+                maxlength="20"
+              />
+            </div>
+            <validation-messages [formCtrl]="financialPhone"></validation-messages>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-xl-3 col-lg-3 col-form-label">{{ l('EmailAddress') }}</label>
+          <div class="col-lg-9 col-xl-6">
+            <div class="input-group input-group-lg input-group-solid">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  <i class="la la-at"></i>
+                </span>
+              </div>
+              <input
+                #financialEmail="ngModel"
+                type="text"
+                class="form-control form-control-lg form-control-solid"
+                [(ngModel)]="completeFiled.financialEmail"
+                placeholder="{{ l('EnterYourEmail') }}"
+                name="financialEmail"
+                pattern="^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$"
+                [class.is-invalid]="financialEmail.touched && !financialEmail.valid"
+                [class.is-valid]="financialEmail.touched && financialEmail.valid"
+              />
+            </div>
+            <validation-messages [formCtrl]="financialEmail"></validation-messages>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-xl-3 col-lg-3 col-form-label">{{ l('Name') }} </label>
+          <div class="col-lg-9 col-xl-6">
+            <div class="input-group input-group-lg input-group-solid">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  <i class="la la-user"></i>
+                </span>
+              </div>
+              <input
+                #financialName="ngModel"
+                type="text"
+                class="form-control form-control-lg form-control-solid"
+                placeholder="{{ l('Name') }}"
+                [(ngModel)]="completeFiled.financialName"
+                name="financialName"
+              />
+            </div>
+          </div>
+        </div>
       </div>
       <!--end::Body-->
     </form>

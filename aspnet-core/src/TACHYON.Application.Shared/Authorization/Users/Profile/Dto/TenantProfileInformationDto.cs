@@ -23,5 +23,8 @@ namespace TACHYON.Authorization.Users.Profile.Dto
         public decimal Rating { get; set; }
 
         public int RateNumber { get; set; }
+        public string FinancialName { get; set; }
+        public string FinancialPhone { get; set; }
+        public string FinancialEmail { get; set; }
     }
 }

@@ -67,5 +67,9 @@ namespace TACHYON.MultiTenancy.Dto
         [Required]
         [RegularExpression(TenantConsts.MoiNumberRegex)]
         public string MoiNumber { get; set; }
+        public string FinancialName { get; set; }
+        public string FinancialPhone { get; set; }
+        public string FinancialEmail { get; set; }
+
     }
 }
