@@ -57,6 +57,9 @@ namespace TACHYON.Invoices.InvoiceNotes
         }
 
         #region MainFunctions
+        [AbpAuthorize(AppPermissions.Pages_Invoices_InvoiceNote)]
+        [RequiresFeature(AppFeatures.TachyonDealer)]
+
         public async Task<LoadResult> GetAllInoviceNote(LoadOptionsInput input)
         {
             var query = _invoiceNoteRepository.GetAll()
@@ -109,6 +112,8 @@ namespace TACHYON.Invoices.InvoiceNotes
                     throw new UserFriendlyException(L("YouCanNotChangeInvoiceNoteStatus"));
             }
         }
+        [AbpAuthorize(AppPermissions.Pages_InvoiceNote_Edit)]
+        [RequiresFeature(AppFeatures.TachyonDealer)]
         public async Task<CreateOrEditInvoiceNoteDto> GetInvoiceNoteForEdit(int id)
         {
             await DisableTenancyFilterIfTachyonDealerOrHost();
@@ -249,6 +254,8 @@ namespace TACHYON.Invoices.InvoiceNotes
         #endregion
 
         #region Helper
+        [AbpAuthorize(AppPermissions.Pages_InvoiceNote_Create)]
+        [RequiresFeature(AppFeatures.TachyonDealer)]
         private async Task Create(CreateOrEditInvoiceNoteDto input)
         {
             var invoiceNote = ObjectMapper.Map<InvoiceNote>(input);
@@ -259,6 +266,8 @@ namespace TACHYON.Invoices.InvoiceNotes
             if (input.InvoiceItems.Any())
                 await ItemValueCalculator(input.InvoiceNumber, invoiceNote.InvoiceItems, invoiceNote);
         }
+        [AbpAuthorize(AppPermissions.Pages_InvoiceNote_Edit)]
+        [RequiresFeature(AppFeatures.TachyonDealer)]
         private async Task Update(CreateOrEditInvoiceNoteDto model)
         {
             await DisableTenancyFilterIfTachyonDealerOrHost();

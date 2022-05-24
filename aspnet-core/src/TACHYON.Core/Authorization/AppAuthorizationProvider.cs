@@ -651,6 +651,11 @@ namespace TACHYON.Authorization
                 multiTenancySides: _isMultiTenancyEnabled ? MultiTenancySides.Host : MultiTenancySides.Tenant);
             administration.CreateChildPermission(AppPermissions.Pages_Administration_Host_Dashboard, L("Dashboard"),
                 multiTenancySides: MultiTenancySides.Host);
+
+            var normalPricePackage = pages.CreateChildPermission(AppPermissions.Pages_Invoices_InvoiceNote, L("InvoiceNotes"));
+            normalPricePackage.CreateChildPermission(AppPermissions.Pages_InvoiceNote_Create, L("CreateNewInvoiceNote"));
+            normalPricePackage.CreateChildPermission(AppPermissions.Pages_InvoiceNote_Edit, L("EditInvoiceNote"));
+            normalPricePackage.CreateChildPermission(AppPermissions.Pages_InvoiceNote_View, L("ViewInvoiceNote"));
         }
 
         private static ILocalizableString L(string name)

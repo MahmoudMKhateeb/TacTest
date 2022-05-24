@@ -496,8 +496,7 @@
         public const string Pages_Administration_Host_Settings = "Pages.Administration.Host.Settings";
         public const string Pages_Administration_Host_Dashboard = "Pages.Administration.Host.Dashboard";
 
-
-        /*Invoices */
+        #region Invoices
         public const string Pages_Administration_Host_Invoices_Periods = "Pages.Administration.Host.Invoices.Periods";
 
         public const string Pages_Administration_Host_Invoices_Period_Create =
@@ -546,7 +545,6 @@
 
 
         public const string Pages_Invoices_SubmitInvoices = "Pages.Invoices.SubmitInvoices";
-        public const string Pages_Invoices_InvoiceNote = "Pages.Invoices.InvoiceNote";
 
         public const string Pages_Invoices_SubmitInvoices_Claim = "Pages.Invoices.SubmitInvoices.Claim";
 
@@ -560,6 +558,15 @@
             "Pages.Administration.Host.Invoices.SubmitInvoices.Rejected";
 
         public const string Pages_Invoices_Transaction = "Pages.Invoices.Transaction";
+
+        public const string Pages_Invoices_InvoiceNote = "Pages.Invoices.InvoiceNote";
+        public const string Pages_InvoiceNote_Create = "Pages.InvoiceNotes.Create";
+        public const string Pages_InvoiceNote_Edit = "Pages.InvoiceNotes.Edit";
+        public const string Pages_InvoiceNote_View = "Pages.InvoiceNotes.View";
+        #endregion
+
+
+
 
         #region shpping
 
