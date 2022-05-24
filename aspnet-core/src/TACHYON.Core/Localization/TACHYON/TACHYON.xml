@@ -2582,13 +2582,13 @@
 	<text name="Avatar">Avatar</text>
 	<text name="DriverLicenceType">Driver licence types</text>
 	<text name="DangerousGoodTypes">Dangerous goods types</text>
+	<text name="InCorrectWaybillNumber">Waybill number does not match any active waybill number in the platform</text>
+	<text name="DropOffStatus">Drop-off status</text>
+	<text name="SubWaybill">Sub waybill</text>
+		<text name="MasterWaybillNumber">Master waybill number</text>
+		<text name="DropOffDate">Drop-off date</text>
+		<text name="waybillSearch">waybill...</text>
 
-
-    
-    
-		
-		
-		
 
     <text name="DocumentTypeName">Document type</text>
     <text name="submitterTenatTenancyName">Submitter company</text>

@@ -52,6 +52,7 @@ namespace TACHYON.Tracking
     {
         public List<WorkFlow<PointTransactionArgs, RoutePointStatus>> Flows { get; set; }
         private readonly IRepository<RoutPoint, long> _routPointRepository;
+        private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
         private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepository;
         private readonly PriceOfferManager _priceOfferManager;
         private readonly IAppNotifier _appNotifier;
@@ -90,7 +91,8 @@ namespace TACHYON.Tracking
             IWebUrlService webUrlService,
             IPermissionChecker permissionChecker,
             IEntityChangeSetReasonProvider reasonProvider,
-            ITempFileCacheManager tempFileCacheManager)
+            ITempFileCacheManager tempFileCacheManager,
+            IRepository<ShippingRequest, long> shippingRequestRepository)
         {
             _routPointRepository = routPointRepository;
             _shippingRequestTripRepository = shippingRequestTrip;
@@ -110,6 +112,7 @@ namespace TACHYON.Tracking
             _permissionChecker = permissionChecker;
             _reasonProvider = reasonProvider;
             _tempFileCacheManager = tempFileCacheManager;
+            _shippingRequestRepository = shippingRequestRepository;
             Flows = new List<WorkFlow<PointTransactionArgs, RoutePointStatus>>
             {
                 // Pick up workflow 
@@ -367,6 +370,7 @@ namespace TACHYON.Tracking
                     },
                 },
             };
+            
         }
 
         #endregion
@@ -398,7 +402,10 @@ namespace TACHYON.Tracking
                 .Where(x => !statuses.Any(c => c == x.ToStatus) && x.FromStatus == status)
                 .Select(x => new PointTransactionDto
                 {
-                    Action = x.Action, Name = L(x.Name), FromStatus = x.FromStatus, ToStatus = x.ToStatus
+                    Action = x.Action,
+                    Name = L(x.Name),
+                    FromStatus = x.FromStatus,
+                    ToStatus = x.ToStatus
                 }).ToList();
         }
 
@@ -1000,7 +1007,9 @@ namespace TACHYON.Tracking
             fromLocation.SRID = 4326;
             ShippingRequestTripTransition tripTransition = new ShippingRequestTripTransition
             {
-                FromLocation = fromLocation, ToPointId = routPoint.Id, ToLocation = routPoint.FacilityFk.Location
+                FromLocation = fromLocation,
+                ToPointId = routPoint.Id,
+                ToLocation = routPoint.FacilityFk.Location
             };
             await _shippingRequestTripTransitionRepository.InsertAsync(tripTransition);
             await SetRoutStatusTransitionLog(routPoint);
@@ -1100,7 +1109,8 @@ namespace TACHYON.Tracking
         {
             await _routPointStatusTransitionRepository.InsertAsync(new RoutPointStatusTransition
             {
-                PointId = routPoint.Id, Status = routPoint.Status
+                PointId = routPoint.Id,
+                Status = routPoint.Status
             });
         }
 
@@ -1113,6 +1123,16 @@ namespace TACHYON.Tracking
             if (user == null)
                 throw new Exception("There is no current user!");
             return user;
+        }
+        public async Task<List<ShippingRequestFilterListDto>> GetRequestReferancesList()
+        {
+            DisableTenancyFilters();
+            var tenantId = _abpSession.TenantId;
+            return await _shippingRequestRepository.GetAll()
+                        .Where(x=> x.CarrierTenantId.HasValue)
+                        .WhereIf(tenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.CarrierTenantId == tenantId.Value)
+                        .WhereIf(tenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Shipper), x => x.TenantId == tenantId.Value)
+                        .Select(x => new ShippingRequestFilterListDto { ReferenceNumber = x.ReferenceNumber, Id = x.Id}).ToListAsync();
         }
 
         #endregion

@@ -516,9 +516,9 @@ namespace TACHYON
             // #Map_Truck_to_TruckDto
             configuration.CreateMap<Truck, TruckDto>()
                 .ForMember(dto => dto.TrucksTypeDisplayName,
-                    conf => conf.MapFrom(ol => ol.TrucksTypeFk.GetTranslatedDisplayName<TrucksType,TrucksTypesTranslation,long>()))
+                    conf => conf.MapFrom(ol => ol.TrucksTypeFk.GetTranslatedDisplayName<TrucksType, TrucksTypesTranslation, long>()))
                 .ForMember(dto => dto.TransportTypeDisplayName,
-                    conf => conf.MapFrom(ol => ol.TransportTypeFk.GetTranslatedDisplayName<TransportType,TransportTypesTranslation>()))
+                    conf => conf.MapFrom(ol => ol.TransportTypeFk.GetTranslatedDisplayName<TransportType, TransportTypesTranslation>()))
                 .ForMember(dto => dto.CapacityDisplayName,
                     conf => conf.MapFrom(ol =>
                         ol.CapacityFk.Translations
@@ -799,7 +799,7 @@ namespace TACHYON
                 .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
                 .ForMember(dst => dst.IsOther, opt => opt.MapFrom(src => src.ContainsOther()))
                 .ForMember(x => x.DisplayName, x =>
-                    x.MapFrom(i => i.GetTranslatedDisplayName<TransportType,TransportTypesTranslation>()));
+                    x.MapFrom(i => i.GetTranslatedDisplayName<TransportType, TransportTypesTranslation>()));
 
             configuration.CreateMultiLingualMap<County, CountriesTranslation, CountyDto>(context)
                 .EntityMap
@@ -844,10 +844,27 @@ namespace TACHYON
                 .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
                 .ReverseMap();
 
+            configuration.CreateMap<RoutPoint, TrackingByWaybillDto>()
+                .ForMember(dst => dst.CarrierName, opt => opt.MapFrom(src => src.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantFk.Name))
+                .ForMember(dst => dst.ShipperName, opt => opt.MapFrom(src => src.ShippingRequestTripFk.ShippingRequestFk.Tenant.Name))
+                .ForMember(dst => dst.DropOffStatus, opt => opt.MapFrom(src => src.Status.ToString()))
+                .ForMember(dst => dst.TripStatus, opt => opt.MapFrom(src => src.ShippingRequestTripFk.Status.ToString()));
+
+            configuration.CreateMap<RoutPoint, TrackingByWaybillRoutPointDto>()
+            .ForMember(dst => dst.MasterWaybillNumber, opt => opt.MapFrom(src => src.ShippingRequestTripFk.WaybillNumber))
+            .ForMember(dst => dst.Origin, opt => opt.MapFrom(src => src.ShippingRequestTripFk.OriginFacilityFk.Address))
+            .ForMember(dst => dst.Destination, opt => opt.MapFrom(src => src.FacilityFk.Address))
+            .ForMember(dst => dst.CarrierName, opt => opt.MapFrom(src => src.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantFk.Name))
+            .ForMember(dst => dst.ShipperName, opt => opt.MapFrom(src => src.ShippingRequestTripFk.ShippingRequestFk.Tenant.Name))
+            .ForMember(dst => dst.DropOffStatus, opt => opt.MapFrom(src => src.Status.ToString()))
+            .ForMember(dst => dst.DropOffDate, opt => opt.MapFrom(src => src.ActualPickupOrDeliveryDate.HasValue ? src.ActualPickupOrDeliveryDate.Value.ToString("dd/MM/yyyy | hh:mm") : "-"))
+            .ForMember(dst => dst.PickupDate, opt => opt.MapFrom(src => src.ShippingRequestTripFk.ActualPickupDate.HasValue ? src.ShippingRequestTripFk.ActualPickupDate.Value.ToString("dd/MM/yyyy | hh:mm") : "-"))
+            .ForMember(dst => dst.TripStatus, opt => opt.MapFrom(src => src.ShippingRequestTripFk.Status.ToString()));
+
             configuration.CreateMap<TrucksType, TrucksTypeSelectItemDto>()
                 .ForMember(x => x.Id, x => x.MapFrom(i => i.Id.ToString()))
                 .ForMember(x => x.DisplayName, x =>
-                    x.MapFrom(i => i.GetTranslatedDisplayName<TrucksType,TrucksTypesTranslation,long>()));
+                    x.MapFrom(i => i.GetTranslatedDisplayName<TrucksType, TrucksTypesTranslation, long>()));
 
             configuration
                 .CreateMultiLingualMap<ShippingRequestReasonAccident, ShippingRequestReasonAccidentTranslation,
