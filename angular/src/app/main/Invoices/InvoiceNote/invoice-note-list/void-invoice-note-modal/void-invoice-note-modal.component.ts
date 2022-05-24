@@ -57,7 +57,7 @@ export class VoidInvoiceNoteModalComponent extends AppComponentBase implements O
       this.CreateOrEditNoteModalComponent.manualInvoiceNoteIsEnabled = false;
       this.CreateOrEditNoteModalComponent.form.invoiceNumber = this.invoiceData.invoiceNumber;
       this.CreateOrEditNoteModalComponent.form.tenantId = this.invoiceData.tenantId;
-      this.CreateOrEditNoteModalComponent.form.invoiceItem = this.invoiceData.invoiceItems;
+      this.CreateOrEditNoteModalComponent.form.invoiceItems = this.invoiceData.invoiceItems;
       this.CreateOrEditNoteModalComponent.handleCompanyChange();
       this.CreateOrEditNoteModalComponent.getAllWaybillByInvoiceId();
       //ls

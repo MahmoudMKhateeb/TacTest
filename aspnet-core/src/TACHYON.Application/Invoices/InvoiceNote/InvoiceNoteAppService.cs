@@ -122,7 +122,6 @@ namespace TACHYON.Invoices.InvoiceNotes
 
             return ObjectMapper.Map<CreateOrEditInvoiceNoteDto>(invoiceNote);
         }
-        [RequiresFeature(AppFeatures.TachyonDealer)]
         public async Task GenrateFullVoidInvoiceNote(long id)
         {
             await DisableTenancyFilterIfTachyonDealerOrHost();
@@ -214,7 +213,7 @@ namespace TACHYON.Invoices.InvoiceNotes
             {
                 return await _invoiceReposity.GetAll()
                .Where(m => m.TenantId == id)
-               .Select(x => new InvoiceRefreanceNumberDto { Id = x.Id, RefreanceNumber = x.InvoiceNumber })
+               .Select(x => new InvoiceRefreanceNumberDto { Id = x.Id, RefreanceNumber = x.InvoiceNumber})
                .AsNoTracking().ToListAsync();
             }
             return await _submitInvoiceReposity.GetAll()
@@ -227,7 +226,7 @@ namespace TACHYON.Invoices.InvoiceNotes
         /// </summary>
         /// <param name="Id"></param>
         /// <returns></returns>
-        public async Task<List<GetAllInvoiceItemDto>> GetAllInvoiceItemDto(long id)
+        public async Task<List<GetAllInvoiceItemDto>> GetAllInvoicmItemDto(long id)
         {
             DisableTenancyFilters();
             var invoiceTenant = await _invoiceReposity.FirstOrDefaultAsync(x => x.Id == id);
@@ -250,16 +249,25 @@ namespace TACHYON.Invoices.InvoiceNotes
         #endregion
 
         #region Helper
-        private async Task Create(CreateOrEditInvoiceNoteDto model)
+        private async Task Create(CreateOrEditInvoiceNoteDto input)
         {
+            var invoiceNote = new InvoiceNote();
+            try
+            {
+                invoiceNote = ObjectMapper.Map<InvoiceNote>(input);
 
-            var invoiceNote = ObjectMapper.Map<InvoiceNote>(model);
+            }
+            catch (Exception e)
+            {
+
+                throw;
+            }
 
             var invoiceNoteId = await _invoiceNoteRepository.InsertAndGetIdAsync(invoiceNote);
 
             invoiceNote.ReferanceNumber = GenerateInvoiceNoteReferanceNumber(invoiceNoteId, invoiceNote.NoteType);
-            if (model.InvoiceItem.Any())
-                await ItemValueCalculator(model.InvoiceNumber, invoiceNote.InvoiceItems, invoiceNote);
+            if (input.InvoiceItems.Any())
+                await ItemValueCalculator(input.InvoiceNumber, invoiceNote.InvoiceItems, invoiceNote);
         }
         private async Task Update(CreateOrEditInvoiceNoteDto model)
         {

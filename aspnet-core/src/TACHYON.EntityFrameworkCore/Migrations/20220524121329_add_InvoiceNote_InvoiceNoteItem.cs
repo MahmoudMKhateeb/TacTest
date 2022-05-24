@@ -3,22 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TACHYON.Migrations
 {
-    public partial class add_InvoiceNote_InvoiceNoteItem_Tables : Migration
+    public partial class add_InvoiceNote_InvoiceNoteItem : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropIndex(
-                name: "IX_Invoices_InvoiceNumber",
-                table: "Invoices");
-
-            migrationBuilder.AlterColumn<long>(
-                name: "InvoiceNumber",
-                table: "Invoices",
-                nullable: false,
-                oldClrType: typeof(long),
-                oldType: "bigint",
-                oldNullable: true);
-
             migrationBuilder.CreateTable(
                 name: "InvoiceNotes",
                 columns: table => new
@@ -43,7 +31,9 @@ namespace TACHYON.Migrations
                     ReferanceNumber = table.Column<string>(nullable: true),
                     InvoiceNumber = table.Column<long>(nullable: false),
                     VoidType = table.Column<int>(nullable: false),
-                    IsManual = table.Column<bool>(nullable: false)
+                    IsManual = table.Column<bool>(nullable: false),
+                    CanBePrinted = table.Column<bool>(nullable: false),
+                    Note = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -79,14 +69,8 @@ namespace TACHYON.Migrations
                         column: x => x.TripId,
                         principalTable: "ShippingRequestTrips",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Invoices_InvoiceNumber",
-                table: "Invoices",
-                column: "InvoiceNumber",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_InvoiceNoteItem_InvoiceNoteId",
@@ -111,24 +95,6 @@ namespace TACHYON.Migrations
 
             migrationBuilder.DropTable(
                 name: "InvoiceNotes");
-
-            migrationBuilder.DropIndex(
-                name: "IX_Invoices_InvoiceNumber",
-                table: "Invoices");
-
-            migrationBuilder.AlterColumn<long>(
-                name: "InvoiceNumber",
-                table: "Invoices",
-                type: "bigint",
-                nullable: true,
-                oldClrType: typeof(long));
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Invoices_InvoiceNumber",
-                table: "Invoices",
-                column: "InvoiceNumber",
-                unique: true,
-                filter: "[InvoiceNumber] IS NOT NULL");
         }
     }
 }

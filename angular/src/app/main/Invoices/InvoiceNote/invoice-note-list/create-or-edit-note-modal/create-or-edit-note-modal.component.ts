@@ -60,9 +60,9 @@ export class CreateOrEditNoteModalComponent extends AppComponentBase implements 
   }
 
   getAllWaybillByInvoiceId() {
-    if (this.form.id) this.form.invoiceItem = [];
+    if (this.form.id) this.form.invoiceItems = [];
     let id = this.allInvoices.find((x) => x.refreanceNumber == this.form.invoiceNumber).id;
-    this._invoiceNoteServiceProxy.getAllInvoiceItemDto(id).subscribe((res) => {
+    this._invoiceNoteServiceProxy.getAllInvoicmItemDto(id).subscribe((res) => {
       this.allWaybills = res;
     });
   }
@@ -118,7 +118,7 @@ export class CreateOrEditNoteModalComponent extends AppComponentBase implements 
     if (!this.form.isManual) {
       console.log('2handleCompanyChange');
       this.getAllInvoicesByCompanyId();
-      this.form.invoiceItem = [];
+      this.form.invoiceItems = [];
     }
   }
 }

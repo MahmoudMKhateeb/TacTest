@@ -21,7 +21,7 @@
               <div class="col-5">
                 <span class="switch switch-danger switch-outline">
                   <label>
-                    <input [(ngModel)]="form.isManual" type="checkbox" checked="checked" name="IsManual" (change)="form.invoiceItem = []" />
+                    <input [(ngModel)]="form.isManual" type="checkbox" checked="checked" name="IsManual" (change)="form.invoiceItems = []" />
                     <span></span>
                   </label>
                 </span>
@@ -149,7 +149,7 @@
               <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': false }">
                 <p-multiSelect
                   [options]="allWaybills"
-                  [(ngModel)]="form.invoiceItem"
+                  [(ngModel)]="form.invoiceItems"
                   name="Waybills"
                   defaultLabel="{{ l('SelectWayBills') }}"
                   optionLabel="waybillNumber"

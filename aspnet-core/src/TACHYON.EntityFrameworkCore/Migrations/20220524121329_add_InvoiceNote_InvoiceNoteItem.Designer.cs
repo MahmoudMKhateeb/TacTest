@@ -11,8 +11,8 @@ using TACHYON.EntityFrameworkCore;
 namespace TACHYON.Migrations
 {
     [DbContext(typeof(TACHYONDbContext))]
-    [Migration("20220225220933_add_InvoiceNote_InvoiceNoteItem_Tables")]
-    partial class add_InvoiceNote_InvoiceNoteItem_Tables
+    [Migration("20220524121329_add_InvoiceNote_InvoiceNoteItem")]
+    partial class add_InvoiceNote_InvoiceNoteItem
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -2943,6 +2943,9 @@ namespace TACHYON.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<bool>("CanBePrinted")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
 
@@ -2969,6 +2972,9 @@ namespace TACHYON.Migrations
 
                     b.Property<long?>("LastModifierUserId")
                         .HasColumnType("bigint");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<byte>("NoteType")
                         .HasColumnType("tinyint");

@@ -758,6 +758,8 @@ namespace TACHYON
             configuration.CreateMap<RoutPointStatusTransition, RoutPointStatusTransitionDto>();
 
             configuration.CreateMap<InvoiceNote, GetInvoiceNoteDto>()
+                .ForMember(dto=>dto.StatusTitle , options=>options.MapFrom(entity=>entity.Status.ToString()))
+                .ForMember(dto => dto.NoteTypeTitle, options => options.MapFrom(entity => entity.NoteType.GetEnumDescription()))
                 .ForMember(dto => dto.GenerationDate, options => options.MapFrom(entity => entity.CreationTime))
                 .ForMember(dto => dto.ComanyName, options => options.MapFrom(entity => entity.Tenant.companyName));
 
@@ -770,11 +772,12 @@ namespace TACHYON
                 .ForMember(dto => dto.ContractNo, options => options.MapFrom(entity => entity.Tenant.ContractNumber));
 
 
-            configuration.CreateMap<InvoiceNoteItem, GetAllInvoiceItemDto>();
+            configuration.CreateMap<GetAllInvoiceItemDto, InvoiceNoteItem>();
 
             configuration.CreateMap<CreateOrEditInvoiceNoteDto, InvoiceNote>()
-           .AfterMap(AddOrUpdateInvoiceNote)
-           .ReverseMap();
+                .ForMember(dto=>dto.InvoiceItems , options=>options.MapFrom(entity=>entity.InvoiceItems))
+                .AfterMap(AddOrUpdateInvoiceNote)
+                .ReverseMap();
 
 
             configuration.CreateMap<Invoice,PartialVoidInvoiceDto>()
@@ -786,11 +789,9 @@ namespace TACHYON
                 .ForMember(dto => dto.InvoiceNumber, options => options.MapFrom(entity => entity.ReferencNumber))
                 .ReverseMap();
 
-            configuration.CreateMap<InvoiceNote, CreateOrEditInvoiceNoteDto>()
-            .ForMember(dto => dto.InvoiceItems, options => options.MapFrom(entity => entity.InvoiceItems.Select(x => x.ShippingRequestTripFK))).ReverseMap();
-            .ForMember(dto => dto.InvoiceItem, options => options.MapFrom(entity => entity.InvoiceItems.Select(x => x.ShippingRequestTripFK)));
-
             configuration.CreateMap<ShippingRequestTrip, GetAllInvoiceItemDto>();
+
+            configuration.CreateMap<InvoiceNoteItem, GetAllInvoiceItemDto>();
 
             configuration.CreateMap<GroupShippingRequests, SubmitInvoiceShippingRequestDto>()
                 .ForMember(dto => dto.Price, options => options.MapFrom(entity => entity.ShippingRequests.Price))
@@ -1014,11 +1015,11 @@ namespace TACHYON
         }
         private static void AddOrUpdateInvoiceNote(CreateOrEditInvoiceNoteDto dto, InvoiceNote note)
         {
-            if (dto.InvoiceItem != null)
+            if (dto.InvoiceItems != null)
             {
                 if (note.InvoiceItems == null) note.InvoiceItems = new List<InvoiceNoteItem>();
 
-                foreach (var item in dto.InvoiceItem)
+                foreach (var item in dto.InvoiceItems)
                 {
                     if (!item.Id.HasValue)
                     {
