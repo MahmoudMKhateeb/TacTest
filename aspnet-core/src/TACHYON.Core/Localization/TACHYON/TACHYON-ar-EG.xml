@@ -2532,5 +2532,6 @@
 		<text name="ThereAre">يوجد</text>
 		<text name="OtherUnitOfMeasure">وحدة القياس الأخرى</text>
 		<text name="OtherUnitOfMeasureHint">أدخل اسم وحدة القياس الأخرى كنص عادي</text>
+		<text name="Financials">المالية</text>
 	</texts>
 </localizationDictionary>
