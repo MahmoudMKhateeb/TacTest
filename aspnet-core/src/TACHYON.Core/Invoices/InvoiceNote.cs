@@ -32,9 +32,5 @@ namespace TACHYON.Invoices
         public string Note { get; set; }
         #endregion
         public List<InvoiceNoteItem> InvoiceItems { get; set; }
-        public InvoiceNote()
-        {
-            InvoiceItems = new List<InvoiceNoteItem>();
-        }
     }
 }

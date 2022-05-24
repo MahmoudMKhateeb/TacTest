@@ -546,6 +546,8 @@
 
 
         public const string Pages_Invoices_SubmitInvoices = "Pages.Invoices.SubmitInvoices";
+        public const string Pages_Invoices_InvoiceNote = "Pages.Invoices.InvoiceNote";
+
         public const string Pages_Invoices_SubmitInvoices_Claim = "Pages.Invoices.SubmitInvoices.Claim";
 
         public const string Pages_Administration_Host_Invoices_SubmitInvoices_Delete =

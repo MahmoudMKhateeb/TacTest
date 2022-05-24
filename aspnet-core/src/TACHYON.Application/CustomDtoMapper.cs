@@ -16,6 +16,7 @@ using Abp.Webhooks;
 using AutoMapper;
 using DevExtreme.AspNet.Data.ResponseModel;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
@@ -769,6 +770,12 @@ namespace TACHYON
                 .ForMember(dto => dto.ContractNo, options => options.MapFrom(entity => entity.Tenant.ContractNumber));
 
 
+            configuration.CreateMap<InvoiceNoteItem, GetAllInvoiceItemDto>();
+
+            configuration.CreateMap<CreateOrEditInvoiceNoteDto, InvoiceNote>()
+           .AfterMap(AddOrUpdateInvoiceNote)
+           .ReverseMap();
+
 
             configuration.CreateMap<Invoice,PartialVoidInvoiceDto>()
                 .ForMember(dto => dto.InvoiceItems, options => options.MapFrom(entity => entity.Trips.Select(x=> x.ShippingRequestTripFK)))
@@ -781,6 +788,7 @@ namespace TACHYON
 
             configuration.CreateMap<InvoiceNote, CreateOrEditInvoiceNoteDto>()
             .ForMember(dto => dto.InvoiceItems, options => options.MapFrom(entity => entity.InvoiceItems.Select(x => x.ShippingRequestTripFK))).ReverseMap();
+            .ForMember(dto => dto.InvoiceItem, options => options.MapFrom(entity => entity.InvoiceItems.Select(x => x.ShippingRequestTripFK)));
 
             configuration.CreateMap<ShippingRequestTrip, GetAllInvoiceItemDto>();
 
@@ -1001,6 +1009,25 @@ namespace TACHYON
                 else
                 {
                     _Mapper.Map(good, point.GoodsDetails.SingleOrDefault(c => c.Id == good.Id));
+                }
+            }
+        }
+        private static void AddOrUpdateInvoiceNote(CreateOrEditInvoiceNoteDto dto, InvoiceNote note)
+        {
+            if (dto.InvoiceItem != null)
+            {
+                if (note.InvoiceItems == null) note.InvoiceItems = new List<InvoiceNoteItem>();
+
+                foreach (var item in dto.InvoiceItem)
+                {
+                    if (!item.Id.HasValue)
+                    {
+                        note.InvoiceItems.Add(_Mapper.Map<InvoiceNoteItem>(item));
+                    }
+                    else
+                    {
+                        _Mapper.Map(item, note.InvoiceItems.SingleOrDefault(c => c.Id == note.Id));
+                    }
                 }
             }
         }

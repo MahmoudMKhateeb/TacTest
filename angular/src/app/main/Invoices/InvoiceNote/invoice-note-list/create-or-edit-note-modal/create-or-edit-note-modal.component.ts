@@ -83,7 +83,14 @@ export class CreateOrEditNoteModalComponent extends AppComponentBase implements 
         this.close();
       });
   }
-
+  savePartialVoid() {
+    this.saving = true;
+    this._invoiceNoteServiceProxy.generatePartialInvoiceNote(this.form).subscribe((res) => {
+      this.saving = false;
+      this.notify.success('SavedSuccessfully');
+      this.modalSave.emit();
+    });
+  }
   show(id?: number) {
     this.active = true;
     this.form = new CreateOrEditInvoiceNoteDto();
