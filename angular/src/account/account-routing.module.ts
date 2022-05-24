@@ -25,7 +25,7 @@ import { PaymentCompletedComponent } from './payment/payment-completed.component
 import { SessionLockScreenComponent } from './login/session-lock-screen.component';
 import { TermAndConditionRegistrationComponent } from '@account/register/term-and-condition-registration/term-and-condition-registration.component';
 import { RatingPageComponent } from '@app/rating-page/rating-page.component';
-
+import { InvoiceOutsideComponent } from '@account/invoice-outside/invoice-outside.component';
 @NgModule({
   imports: [
     RouterModule.forChild([
@@ -59,6 +59,10 @@ import { RatingPageComponent } from '@app/rating-page/rating-page.component';
           {
             path: 'RatingPage/:code',
             component: RatingPageComponent,
+          },
+          {
+            path: 'outsideInvoice',
+            component: InvoiceOutsideComponent,
           },
           { path: '**', redirectTo: 'login' },
         ],

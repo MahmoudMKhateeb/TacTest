@@ -1,0 +1,40 @@
+<!--begin::Login Sign in form-->
+<div class="login-signin" [@routerTransition]>
+  <div class="mb-20">
+    <h3 class="head-text">{{ 'TaxInvoice' | localize }}</h3>
+    <div class="normal-text">{{ invoice.invoiceNumber }}</div>
+  </div>
+  <div>
+    <table class="table">
+      <tr>
+        <td>{{ l('CompanyName') }}:</td>
+        <td>{{ invoice.companyName }}</td>
+      </tr>
+
+      <tr>
+        <td>{{ l('VatNumber') }}:</td>
+        <td>{{ invoice.vatNumber }}</td>
+      </tr>
+
+      <tr>
+        <td>{{ l('InvoiceDate') }}:</td>
+        <td>{{ invoice.dueDate | momentFormat: 'L' }}</td>
+      </tr>
+
+      <tr>
+        <td>{{ l('SubTotalAmount') }}:</td>
+        <td>{{ invoice.subTotalAmount }}</td>
+      </tr>
+
+      <tr>
+        <td>{{ l('VatAmount') }}:</td>
+        <td>{{ invoice.vatAmount }}</td>
+      </tr>
+
+      <tr>
+        <td>{{ l('TotalAmount') }}:</td>
+        <td>{{ invoice.totalAmount }}</td>
+      </tr>
+    </table>
+  </div>
+</div>

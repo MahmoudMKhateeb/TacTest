@@ -120,10 +120,14 @@
           <DataField>TenantVatNumber</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="QRCode">
+          <DataField>QRCode</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
       </Fields>
       <rd:DataSetInfo>
         <rd:DataSetName>GetInvoiceReportInfoDataset</rd:DataSetName>
-        <rd:SchemaPath>C:\Users\livei\source\repos\tachyon-core\aspnet-core\src\TACHYON.Application\Invoices\Reports\Datasets\GetInvoiceReportInfoDataset.xsd</rd:SchemaPath>
+        <rd:SchemaPath>E:\TrustAngleProjects\aspnet-core\src\TACHYON.Application\Invoices\Reports\Datasets\GetInvoiceReportInfoDataset.xsd</rd:SchemaPath>
         <rd:TableName>DataTable1</rd:TableName>
         <rd:TableAdapterFillMethod />
         <rd:TableAdapterGetDataMethod />
@@ -4349,7 +4353,7 @@
       <Width>29.34734cm</Width>
       <Page>
         <PageHeader>
-          <Height>2.21346cm</Height>
+          <Height>2.24874cm</Height>
           <PrintOnFirstPage>true</PrintOnFirstPage>
           <PrintOnLastPage>true</PrintOnLastPage>
           <ReportItems>
@@ -4418,75 +4422,6 @@
                 <PaddingBottom>2pt</PaddingBottom>
               </Style>
             </Textbox>
-            <Textbox Name="Textbox156">
-              <CanGrow>true</CanGrow>
-              <KeepTogether>true</KeepTogether>
-              <Paragraphs>
-                <Paragraph>
-                  <TextRuns>
-                    <TextRun>
-                      <Value>=First(Fields!InvoiceNumber.Value, "GetInvoiceReportInfoDataset")</Value>
-                      <Style>
-                        <FontFamily>Free 3 of 9</FontFamily>
-                        <FontSize>22pt</FontSize>
-                        <Color>#282828</Color>
-                      </Style>
-                    </TextRun>
-                  </TextRuns>
-                  <Style>
-                    <TextAlign>Right</TextAlign>
-                  </Style>
-                </Paragraph>
-              </Paragraphs>
-              <rd:DefaultName>Textbox3</rd:DefaultName>
-              <Top>0.18575in</Top>
-              <Left>8.69502in</Left>
-              <Height>0.32633in</Height>
-              <Width>2.66528in</Width>
-              <ZIndex>2</ZIndex>
-              <Style>
-                <Border />
-                <VerticalAlign>Middle</VerticalAlign>
-                <PaddingLeft>4pt</PaddingLeft>
-                <PaddingRight>2pt</PaddingRight>
-                <PaddingTop>2pt</PaddingTop>
-                <PaddingBottom>2pt</PaddingBottom>
-              </Style>
-            </Textbox>
-            <Textbox Name="Textbox158">
-              <CanGrow>true</CanGrow>
-              <KeepTogether>true</KeepTogether>
-              <Paragraphs>
-                <Paragraph>
-                  <TextRuns>
-                    <TextRun>
-                      <Value>=First(Fields!InvoiceNumber.Value, "GetInvoiceReportInfoDataset")</Value>
-                      <Style>
-                        <FontSize>6pt</FontSize>
-                        <Color>#282828</Color>
-                      </Style>
-                    </TextRun>
-                  </TextRuns>
-                  <Style>
-                    <TextAlign>Right</TextAlign>
-                  </Style>
-                </Paragraph>
-              </Paragraphs>
-              <rd:DefaultName>Textbox3</rd:DefaultName>
-              <Top>0.51208in</Top>
-              <Left>8.69502in</Left>
-              <Height>0.176in</Height>
-              <Width>2.66528in</Width>
-              <ZIndex>3</ZIndex>
-              <Style>
-                <Border />
-                <VerticalAlign>Top</VerticalAlign>
-                <PaddingLeft>4pt</PaddingLeft>
-                <PaddingRight>2pt</PaddingRight>
-                <PaddingTop>2pt</PaddingTop>
-                <PaddingBottom>2pt</PaddingBottom>
-              </Style>
-            </Textbox>
             <Textbox Name="Textbox169">
               <CanGrow>true</CanGrow>
               <KeepTogether>true</KeepTogether>
@@ -4509,7 +4444,7 @@
               <Left>0.56761cm</Left>
               <Height>0.52944cm</Height>
               <Width>4.53473cm</Width>
-              <ZIndex>4</ZIndex>
+              <ZIndex>2</ZIndex>
               <Style>
                 <Border>
                   <Style>None</Style>
@@ -4520,6 +4455,22 @@
                 <PaddingBottom>2pt</PaddingBottom>
               </Style>
             </Textbox>
+            <Image Name="Image7">
+              <Source>Database</Source>
+              <Value>=System.Convert.FromBase64String(First(Fields!QRCode.Value, "GetInvoiceReportInfoDataset"))</Value>
+              <MIMEType>image/bmp</MIMEType>
+              <Sizing>FitProportional</Sizing>
+              <Top>0cm</Top>
+              <Left>26.35516cm</Left>
+              <Height>2.24874cm</Height>
+              <Width>2.49999cm</Width>
+              <ZIndex>3</ZIndex>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+              </Style>
+            </Image>
           </ReportItems>
           <Style>
             <Border>
