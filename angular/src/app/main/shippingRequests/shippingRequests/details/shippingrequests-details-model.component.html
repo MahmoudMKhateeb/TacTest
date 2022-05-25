@@ -146,11 +146,41 @@
                 </button>
               </div>
             </ng-template>
-            <ng-template [ngIf]="shippingrequest.isPriced">
+            <ng-template [ngIf]="shippingrequest.isPriced && shippingrequest.offerId">
               <div class="divirCard"></div>
               <div class="setPrice">
                 <button type="button" (click)="ModelViewPrice.show(request.id, shippingrequest.offerId)">
                   {{ l('PreviewOffer') }}
+                </button>
+              </div>
+            </ng-template>
+
+            <ng-template [ngIf]="request.pricePackageOfferId && !shippingrequest.isBid">
+              <div class="divirCard"></div>
+              <div class="setPrice">
+                <button type="button" (click)="ModelPriceCalculation.Preview(request.id, request.pricePackageOfferId)">
+                  {{ l('PreviewPricePackageOffer') }}
+                </button>
+              </div>
+            </ng-template>
+            <ng-template [ngIf]="request.matchingPricePackageId && canSetPrice()">
+              <div class="divirCard"></div>
+              <div class="setPrice">
+                <button
+                  type="button"
+                  (click)="
+                    ModelPriceCalculation.PreviewMatching(
+                      request.id,
+                      request.matchingPricePackageId,
+                      Channel,
+                      request.bidStatus,
+                      request.status,
+                      shippingrequest.isBid,
+                      shippingrequest.isTachyonDeal
+                    )
+                  "
+                >
+                  {{ l('PreviewMatchingPricePackage') }}
                 </button>
               </div>
             </ng-template>
@@ -172,3 +202,8 @@
 </div>
 <price-offer-model #ModelPrice [Channel]="Channel" (modalSave)="update($event)"></price-offer-model>
 <price-offer-view-model #ModelViewPrice [Channel]="Channel" (modalDelete)="delete()"></price-offer-view-model>
+<normal-price-package-calculation
+  [directRequestStatus]="shippingrequest.directRequestStatus"
+  (modalSave)="markAsPriced($event)"
+  #ModelPriceCalculation
+></normal-price-package-calculation>

@@ -192,10 +192,14 @@ namespace TACHYON.Features
                 IsVisibleOnPricingTable = false, TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f"
             };
 
-
-            ///*Invoices*/
+            var normalPricePackage = context.Create(
+            AppFeatures.NormalPricePackages,
+             "false",
+             L("NormalPricePackages"),
+               inputType: new CheckboxInputType());
 
             #endregion
+
 
             //---Y
 
@@ -596,8 +600,6 @@ namespace TACHYON.Features
                     new StaticLocalizableComboboxItemSource(tenants)
                 )
             );
-
-
 
         }
 

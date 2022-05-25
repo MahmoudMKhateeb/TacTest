@@ -11,6 +11,7 @@ import {
   PriceOfferServiceProxy,
   ShippingRequestBidStatus,
   ShippingRequestStatus,
+  ShippingRequestDirectRequestStatus,
 } from '@shared/service-proxies/service-proxies';
 
 @Component({
@@ -59,6 +60,14 @@ export class ShippingrequestsDetailsModelComponent extends AppComponentBase {
     this.shippingrequest.offerId = offerId;
     this.shippingrequest.isPriced = true;
   }
+  markAsPriced(offerId: number) {
+    this.shippingrequest.isPriced = true;
+    if (this.shippingrequest.isBid) {
+      this.shippingrequest.offerId = offerId;
+    } else {
+      this.shippingrequest.directRequestStatus = ShippingRequestDirectRequestStatus.Accepted;
+    }
+  }
   delete() {
     this.shippingrequest.offerId = undefined;
     this.shippingrequest.isPriced = false;
@@ -68,7 +77,10 @@ export class ShippingrequestsDetailsModelComponent extends AppComponentBase {
    */
   canSetPrice(): boolean {
     if (!this.Channel) return false;
+    if (this.shippingrequest.status != ShippingRequestStatus.PrePrice && this.shippingrequest.status != ShippingRequestStatus.NeedsAction)
+      return false;
     if (this.shippingrequest.isPriced) return false;
+    if (this.shippingrequest.directRequestStatus != ShippingRequestDirectRequestStatus.New) return false;
     if (this.request.status != ShippingRequestStatus.NeedsAction && this.request.status != ShippingRequestStatus.PrePrice) return false;
     if (this.Channel == PriceOfferChannel.MarketPlace && this.request.bidStatus != ShippingRequestBidStatus.OnGoing) return false;
     if (this.feature.isEnabled('App.Shipper')) return false;

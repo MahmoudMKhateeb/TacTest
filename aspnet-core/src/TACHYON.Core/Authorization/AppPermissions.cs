@@ -562,6 +562,12 @@
 
         public const string Pages_Invoices_Transaction = "Pages.Invoices.Transaction";
 
+
+        public const string Pages_NormalPricePackages = "Pages.NormalPricePackages";
+        public const string Pages_NormalPricePackages_Create = "Pages.NormalPricePackages.Create";
+        public const string Pages_NormalPricePackages_Edit = "Pages.NormalPricePackages.Edit";
+        public const string Pages_NormalPricePackages_Delete = "Pages.NormalPricePackages.Delete";
+
         #region shpping
 
         public const string Pages_Tracking = "Pages.shipment.Tracking";

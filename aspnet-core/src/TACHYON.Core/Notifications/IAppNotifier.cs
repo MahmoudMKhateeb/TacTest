@@ -10,6 +10,7 @@ using TACHYON.Invoices;
 using TACHYON.Invoices.SubmitInvoices;
 using TACHYON.MultiTenancy;
 using TACHYON.PriceOffers;
+using TACHYON.PricePackages.Dto.NormalPricePackage;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequests.TachyonDealer;
 using TACHYON.Shipping.ShippingRequestTrips;
@@ -61,6 +62,7 @@ namespace TACHYON.Notifications
         Task ShipperShippingRequestFinish(UserIdentifier argsUser, ShippingRequest Request);
 
         #region Trips
+
 
         Task NotifyDriverWhenAssignTrip(int tripId, params UserIdentifier[] drivers);
 
@@ -199,5 +201,8 @@ namespace TACHYON.Notifications
         Task NotifyDriverOnlyWhenTripUpdated(int tripId,
             string waybillNumber,
             params UserIdentifier[] drivers);
+        Task NotfiyCarrierWhenReceiveBidPricePackage(int carrierTenantId, string SenderTenantName, string pricePackageId, long directRequestId, string referanceNumber);
+        Task CarrierAcceptPricePackageOffer(int tenantId, string carrierTenantName, string requestReferance, long shippingRequestId);
+        Task ShippingRequestAsBidWithMatchingPricePackage(List<CarrierPricePackageDto> carriers, string shippingRequestReferance, long shippingRequestId);
     }
 }

@@ -27,6 +27,8 @@ using TACHYON.Invoices;
 using TACHYON.Net.Sms;
 using TACHYON.Notifications;
 using TACHYON.PriceOffers;
+using TACHYON.PriceOffers.Base;
+using TACHYON.PricePackages;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Routs.RoutPoints.RoutPointSmartEnum;
 using TACHYON.Shipping.Drivers.Dto;
@@ -54,6 +56,7 @@ namespace TACHYON.Tracking
         private readonly IRepository<RoutPoint, long> _routPointRepository;
         private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepository;
         private readonly PriceOfferManager _priceOfferManager;
+        private readonly NormalPricePackageManager _normalPricePackageManager;
         private readonly IAppNotifier _appNotifier;
         private readonly IFeatureChecker _featureChecker;
         private readonly IAbpSession _abpSession;
@@ -90,7 +93,8 @@ namespace TACHYON.Tracking
             IWebUrlService webUrlService,
             IPermissionChecker permissionChecker,
             IEntityChangeSetReasonProvider reasonProvider,
-            ITempFileCacheManager tempFileCacheManager)
+            ITempFileCacheManager tempFileCacheManager,
+            NormalPricePackageManager normalPricePackageManager)
         {
             _routPointRepository = routPointRepository;
             _shippingRequestTripRepository = shippingRequestTrip;
@@ -367,6 +371,7 @@ namespace TACHYON.Tracking
                     },
                 },
             };
+            _normalPricePackageManager = normalPricePackageManager;
         }
 
         #endregion
@@ -798,8 +803,24 @@ namespace TACHYON.Tracking
         private async Task TransferPricesToTrip(ShippingRequestTrip trip)
         {
             DisableTenancyFilters();
-            var offer = await _priceOfferManager.GetOfferAcceptedByShippingRequestId(trip.ShippingRequestId);
 
+            var priceOffer = await _priceOfferManager.GetOfferAcceptedByShippingRequestId(trip.ShippingRequestId);
+            if (priceOffer != null)
+            {
+                var items = ObjectMapper.Map<List<PricePackageOfferItem>>(priceOffer.PriceOfferDetails);
+                TransferPrices(trip, priceOffer, items, priceOffer.TaxVat);
+            }
+            else
+            {
+                var pricePackageOffer = await _normalPricePackageManager.GetOfferByShippingRequestId(trip.ShippingRequestId);
+                TransferPrices(trip, pricePackageOffer, pricePackageOffer.Items, pricePackageOffer.TaxVat);
+            }
+        }
+        /// <summary>
+        /// Transfer the prices from price offer to trip
+        /// </summary>
+        private void TransferPrices(ShippingRequestTrip trip, PriceOfferBase offer, List<PricePackageOfferItem> items, decimal taxVat)
+        {
             trip.CommissionType = offer.CommissionType;
             trip.SubTotalAmount = offer.ItemPrice;
             trip.VatAmount = offer.ItemVatAmount;
@@ -809,12 +830,12 @@ namespace TACHYON.Tracking
             trip.TotalAmountWithCommission = offer.ItemTotalAmountWithCommission;
             trip.CommissionAmount = offer.ItemCommissionAmount;
             trip.CommissionPercentageOrAddValue = offer.CommissionPercentageOrAddValue;
-            trip.TaxVat = offer.TaxVat;
+            trip.TaxVat = taxVat;
             if (trip.ShippingRequestTripVases == null || trip.ShippingRequestTripVases.Count == 0) return;
+
             foreach (var vas in trip.ShippingRequestTripVases)
             {
-                var item = offer.PriceOfferDetails.FirstOrDefault(x =>
-                    x.SourceId == vas.ShippingRequestVasId && x.PriceType == PriceOfferType.Vas);
+                var item = items.FirstOrDefault(x => x.SourceId == vas.ShippingRequestVasId && x.PriceType == PriceOfferType.Vas);
                 vas.CommissionType = item.CommissionType;
                 vas.SubTotalAmount = item.ItemPrice;
                 vas.VatAmount = item.ItemVatAmount;
@@ -827,7 +848,6 @@ namespace TACHYON.Tracking
                 vas.Quantity = 1;
             }
         }
-
         /// <summary>
         /// Check If user Can Start the trip
         /// </summary>

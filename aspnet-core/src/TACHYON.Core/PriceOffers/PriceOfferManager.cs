@@ -205,7 +205,7 @@ namespace TACHYON.PriceOffers
 
             PriceOffer parentOffer = default;
             //Check if shipper have enough balance to pay 
-            await _balanceManager.ShipperCanAcceptOffer(offer);
+            await _balanceManager.ShipperCanAcceptOffer(offer, offer.TaxVat, offer.ShippingRequestId);
 
             /// Check if the offer send by TAD on market place
             if (offer.Tenant.EditionId == TachyonEditionId && !offer.ShippingRequestFk.IsTachyonDeal)
@@ -344,7 +344,7 @@ namespace TACHYON.PriceOffers
         /// </summary>
         /// <param name="tmsTotalAmount"></param>
         /// <param name="carrierTotalAmount"></param>
-        private void CheckIfPriceLowerThanSendByTms(decimal tmsTotalAmount, decimal carrierTotalAmount)
+        public void CheckIfPriceLowerThanSendByTms(decimal tmsTotalAmount, decimal carrierTotalAmount)
         {
             if (tmsTotalAmount < carrierTotalAmount)
                 throw new UserFriendlyException(L("YouCannotAcceptLowerThanPriceSentToShipper"));
@@ -870,7 +870,7 @@ namespace TACHYON.PriceOffers
             offer.Quantity = shippingRequest.NumberOfTrips;
 
             // TMS user can overwrite default commissions settings 
-            if (_featureChecker.IsEnabled(AppFeatures.TachyonDealer))
+            if (_featureChecker.IsEnabled(AppFeatures.TachyonDealer) && (input.VasCommissionType.HasValue || input.VasCommissionPercentageOrAddValue.HasValue))
             {
                 if (input.VasCommissionType != null)
                 {

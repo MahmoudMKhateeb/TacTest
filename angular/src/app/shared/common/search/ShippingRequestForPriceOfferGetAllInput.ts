@@ -4,6 +4,7 @@ export class ShippingRequestForPriceOfferGetAllInput {
   filter!: string;
   carrier!: string;
   shippingRequestId!: number;
+  directRequestId!: number;
   channel!: PriceOfferChannel;
   requestType!: ShippingRequestType;
   truckTypeId!: number;

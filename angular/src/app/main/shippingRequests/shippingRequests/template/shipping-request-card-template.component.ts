@@ -14,7 +14,7 @@ import {
 import * as _ from 'lodash';
 import { ScrollPagnationComponentBase } from '@shared/common/scroll/scroll-pagination-component-base';
 import { ShippingRequestForPriceOfferGetAllInput } from '../../../../shared/common/search/ShippingRequestForPriceOfferGetAllInput';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ShippingrequestsDetailsModelComponent } from '../details/shippingrequests-details-model.component';
 
 @Component({
@@ -41,13 +41,18 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
   zoom: Number = 13; //map zoom
   lat: Number = 24.717942;
   lng: Number = 46.675761;
+  directRequestId!: number;
+  activeShippingRequestId!: number;
   constructor(
     injector: Injector,
     private _currentServ: PriceOfferServiceProxy,
     private _directRequestSrv: ShippingRequestDirectRequestServiceProxy,
+    private _activatedRoute: ActivatedRoute,
     private router: Router
   ) {
     super(injector);
+    this.directRequestId = this._activatedRoute.snapshot.queryParams['directRequestId'];
+    this.activeShippingRequestId = this._activatedRoute.snapshot.queryParams['srId'];
   }
   ngOnInit(): void {
     this.direction = document.getElementsByTagName('html')[0].getAttribute('dir');
@@ -57,6 +62,7 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
       this.searchInput.requestType = ShippingRequestType.TachyonManageService;
       this.searchInput.isTMS = true;
     }
+    this.searchInput.directRequestId = this.directRequestId;
     this.LoadData();
   }
   LoadData() {
@@ -65,6 +71,7 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
         this.searchInput.filter,
         this.searchInput.carrier,
         this.searchInput.shippingRequestId,
+        this.searchInput.directRequestId,
         this.searchInput.channel,
         this.searchInput.requestType,
         this.searchInput.truckTypeId,
@@ -98,10 +105,18 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
             this.origin = this.origin;
             this.destination = this.destination;
           }
-          if (this.feature.isEnabled('App.Shipper')) {
+          if (this.feature.isEnabled('App.Shipper') || this.feature.isEnabled('App.Carrier')) {
             if (r.requestTypeTitle == 'TachyonManageService' && r.statusTitle == 'NeedsAction') {
               r.statusTitle = 'New';
             }
+          }
+          // only in this case i need to use double equal not triple (type is difference)
+          if (
+            (this.directRequestId && r.directRequestId == this.directRequestId) ||
+            (this.activeShippingRequestId && r.id == this.activeShippingRequestId)
+          ) {
+            this.moreRedirectTo(r);
+            this.directRequestId = undefined;
           }
         });
         this.Items.push(...result.items);
