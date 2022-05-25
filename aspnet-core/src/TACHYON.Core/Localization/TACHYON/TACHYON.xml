@@ -2758,5 +2758,8 @@
 		<text name="ThereAre">There are</text>
 		<text name="OtherUnitOfMeasure">Other Unit Of Measure</text>
 		<text name="OtherUnitOfMeasureHint">Enter the name of other unit of measure as a plain text</text>
+		<text name="NoCurrentLoads">No current loads</text>
+		<text name="NoUpcomingLoads">No upcoming loads</text>
+		<text name="NoPastLoad">No past loads</text>
 	</texts>
 </localizationDictionary>

@@ -2532,5 +2532,8 @@
 		<text name="ThereAre">يوجد</text>
 		<text name="OtherUnitOfMeasure">وحدة القياس الأخرى</text>
 		<text name="OtherUnitOfMeasureHint">أدخل اسم وحدة القياس الأخرى كنص عادي</text>
+		<text name="NoCurrentLoads">لا توجد حمولات حالية</text>
+		<text name="NoUpcomingLoads">لا توجد حمولات قادمة</text>
+		<text name="NoPastLoad">لا توجد حمولات سابقة</text>
 	</texts>
 </localizationDictionary>
