@@ -57,9 +57,6 @@ namespace TACHYON.Invoices.InvoiceNotes
         }
 
         #region MainFunctions
-        [AbpAuthorize(AppPermissions.Pages_Invoices_InvoiceNote)]
-        [RequiresFeature(AppFeatures.TachyonDealer)]
-
         public async Task<LoadResult> GetAllInoviceNote(LoadOptionsInput input)
         {
             var query = _invoiceNoteRepository.GetAll()
@@ -160,6 +157,9 @@ namespace TACHYON.Invoices.InvoiceNotes
 
             if (invoiceNote == null)
                 throw new UserFriendlyException(L("Theinvoicedosenotfound"));
+
+            if (invoiceNote.Status != NoteStatus.Draft)
+                throw new UserFriendlyException(L("YouCanNotCancelTheInvoice"));
 
             invoiceNote.Status = NoteStatus.Canceled;
         }
