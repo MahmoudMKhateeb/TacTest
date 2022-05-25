@@ -125,6 +125,7 @@ import { ZeroTemplateHttpConfigurationService } from './zero-template-http-confi
     ApiServiceProxies.DynamicParameterValueServiceProxy,
     ApiServiceProxies.EntityDynamicParameterValueServiceProxy,
     ApiServiceProxies.InvoicePeriodServiceProxy,
+    ApiServiceProxies.PenaltiesServiceProxy,
     ApiServiceProxies.InvoiceServiceProxy,
     ApiServiceProxies.BalanceRechargeServiceProxy,
     ApiServiceProxies.SubmitInvoicesServiceProxy,

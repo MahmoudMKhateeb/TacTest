@@ -36,5 +36,20 @@ namespace TACHYON.Invoices.Reports
             var number = invoice.FirstOrDefault()?.InvoiceNumber.ToString();
             return _pdfExporterBase.CreateRdlcPdfPackageFromList(number, reportPath, names, data);
         }
+        public FileDto DonwloadPenaltyInvoice(long invoiceId)
+        {
+            var reportPath = "/Invoices/Reports/PenaltyInvoice.rdlc";
+
+            ArrayList names = new ArrayList();
+            ArrayList data = new ArrayList();
+
+            names.Add("GetInvoiceReportInfoDataset");
+            data.Add(_invoiceAppService.GetInvoiceReportInfo(invoiceId));
+
+            names.Add("GetInvoicePenaltiseInvoiceReportInfo");
+            data.Add(_invoiceAppService.GetInvoicePenaltiseInvoiceReportInfo(invoiceId));
+
+            return _pdfExporterBase.CreateRdlcPdfPackageFromList("Invoice", reportPath, names, data);
+        }
     }
 }

@@ -98,7 +98,14 @@
                       <a class="dropdown-item" (click)="details(options.data)">{{ l('Detail') }}</a>
                     </li>
                     <li>
-                      <a class="dropdown-item" (click)="downloadReport(options.data.id)">{{ l('DownloadInvoice') }}</a>
+                      <a class="dropdown-item" *ngIf="options.data.channel != 3" (click)="downloadReport(options.data.id)">{{
+                        l('downloadInvoice')
+                      }}</a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" *ngIf="options.data.channel == 3" (click)="downloadPenaltyReport(options.data.id)">{{
+                        l('downloadPenaltyInvoice')
+                      }}</a>
                     </li>
                     <li *ngIf="!options.data.isPaid">
                       <a

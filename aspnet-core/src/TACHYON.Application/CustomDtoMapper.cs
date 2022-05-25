@@ -162,6 +162,8 @@ using TACHYON.Vases;
 using TACHYON.Vases.Dtos;
 using TACHYON.WebHooks.Dto;
 using TACHYON.WorkFlows;
+using TACHYON.Penalties;
+using TACHYON.Penalties.Dto;
 
 namespace TACHYON
 {
@@ -736,6 +738,19 @@ namespace TACHYON
                 .ForMember(dto => dto.TenantName, options => options.MapFrom(entity => entity.Tenant.Name))
                 .ForMember(dto => dto.Period,
                     options => options.MapFrom(entity => entity.InvoicePeriodsFK.DisplayName));
+
+            configuration.CreateMap<Penalty, GetAllPenaltiesDto>()
+            .ForMember(dto => dto.CompanyName, options => options.MapFrom(entity => entity.Tenant.companyName))
+            .ForMember(dto => dto.WaybillNumber, options => options.MapFrom(entity => entity.ShippingRequestTripFK.WaybillNumber))
+            .ForMember(dto => dto.DestinationCompanyName, options => options.MapFrom(entity => entity.DestinationTenantFK.companyName))
+            .ForMember(dto => dto.PenaltyComplaintId, options => options.MapFrom(entity => entity.PenaltyComplaintFK.Id));
+
+            configuration.CreateMap<CreateOrEditPenaltyDto, Penalty>().ReverseMap();
+
+            configuration.CreateMap<RegisterPenaltyComplaintDto, PenaltyComplaint>().ReverseMap();
+            configuration.CreateMap<PenaltyComplaint, PenaltyComplaintDto>();
+            configuration.CreateMap<PenaltyCommestionDto, Penalty>().ReverseMap();
+
 
             configuration.CreateMap<SubmitInvoice, SubmitInvoiceInfoDto>()
                 .ForMember(dto => dto.ClientName, options => options.MapFrom(entity => entity.Tenant.Name))

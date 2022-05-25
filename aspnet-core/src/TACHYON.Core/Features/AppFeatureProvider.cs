@@ -12,6 +12,7 @@ using TACHYON.Configuration;
 using TACHYON.Invoices.PaymentMethods;
 using TACHYON.Invoices.Periods;
 using TACHYON.MultiTenancy;
+using TACHYON.Penalties.UnitOfMeasures;
 using TACHYON.PriceOffers;
 
 namespace TACHYON.Features
@@ -124,7 +125,8 @@ namespace TACHYON.Features
                 inputType: new CheckboxInputType()
             )[FeatureMetadata.CustomFeatureKey] = new FeatureMetadata
             {
-                IsVisibleOnPricingTable = true, TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f"
+                IsVisibleOnPricingTable = true,
+                TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f"
             };
 
             var receiver = context.Create(
@@ -134,7 +136,8 @@ namespace TACHYON.Features
                 inputType: new CheckboxInputType()
             )[FeatureMetadata.CustomFeatureKey] = new FeatureMetadata
             {
-                IsVisibleOnPricingTable = true, TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f"
+                IsVisibleOnPricingTable = true,
+                TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f"
             };
 
             var tachyonDealer = context.Create(
@@ -152,7 +155,8 @@ namespace TACHYON.Features
                 inputType: new CheckboxInputType()
             )[FeatureMetadata.CustomFeatureKey] = new FeatureMetadata
             {
-                IsVisibleOnPricingTable = true, TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f"
+                IsVisibleOnPricingTable = true,
+                TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f"
             };
 
 
@@ -189,7 +193,8 @@ namespace TACHYON.Features
                 inputType: new CheckboxInputType()
             )[FeatureMetadata.CustomFeatureKey] = new FeatureMetadata
             {
-                IsVisibleOnPricingTable = false, TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f"
+                IsVisibleOnPricingTable = false,
+                TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f"
             };
 
 
@@ -597,9 +602,241 @@ namespace TACHYON.Features
                 )
             );
 
+            #region Penalties
+            List<LocalizableComboboxItem> unitsOfMeasures = new List<LocalizableComboboxItem>();
+            foreach (int i in Enum.GetValues(typeof(UnitOfMeasure)))
+            {
+                if (i != 1 && i != 2) continue;
+                unitsOfMeasures.Add(new LocalizableComboboxItem(i.ToString(),
+                    L(Enum.GetName(typeof(UnitOfMeasure), i))));
+            }
 
+            var penaltiesFeature = context.Create(
+                AppFeatures.Penalties,
+                "true",
+                L("PenaltiesFeature"),
+                inputType: new CheckboxInputType());
+
+            #region tripCancelation
+            var tripCancelation = penaltiesFeature.CreateChildFeature(
+                AppFeatures.TripCancelation,
+                "50",
+                L("TripCancelation"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+            tripCancelation.CreateChildFeature(
+                AppFeatures.TripCancelationCommissionType,
+                "1",
+                L("TripCancelationCommissionType"),
+                inputType: new ComboboxInputType(new StaticLocalizableComboboxItemSource(CommissionTypes.ToArray())));
+
+            tripCancelation.CreateChildFeature(
+                AppFeatures.TripCancelationCommissionMinValue,
+                "50",
+                L("TripCancelationCommissionMinValue"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+            tripCancelation.CreateChildFeature(
+                AppFeatures.TripCancelationCommissionPercentage,
+                "50",
+                L("TripCancelationCommissionPercentage"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+            tripCancelation.CreateChildFeature(
+                AppFeatures.TripCancelationCommissionValue,
+                "50",
+                L("TripCancelationCommissionValue"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+            #endregion
+
+            #region Detention
+            var detention = penaltiesFeature.CreateChildFeature(
+                AppFeatures.Detention,
+                "true",
+                L("Detention"),
+                inputType: new CheckboxInputType());
+
+            detention.CreateChildFeature(
+                AppFeatures.AllowedDetentionPeriod,
+                "1",
+                L("AllowedDetentionPeriod"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+            detention.CreateChildFeature(
+                AppFeatures.DetentionFeesIncreaseRate,
+                "0",
+                L("DetentionFeesIncreaseRate "),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+            detention.CreateChildFeature(
+                AppFeatures.MaxDetentionFeesAmount,
+                "0",
+                L("MaxDetentionFeesAmount"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+            detention.CreateChildFeature(
+                AppFeatures.BaseDetentionFeesAmount,
+                "0",
+                L("BaseDetentionFeesAmount"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+            detention.CreateChildFeature(
+                AppFeatures.DetentionCommissionType,
+                "1",
+                L("DetentionCommissionType"),
+                inputType: new ComboboxInputType(new StaticLocalizableComboboxItemSource(CommissionTypes.ToArray())));
+
+            detention.CreateChildFeature(
+                AppFeatures.DetentionCommissionMinValue,
+                "50",
+                L("DetentionCommissionMinValue"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+            detention.CreateChildFeature(
+                AppFeatures.DetentionCommissionPercentage,
+                "50",
+                L("DetentionCommissionPercentage"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+            detention.CreateChildFeature(
+                AppFeatures.DetentionCommissionValue,
+                "50",
+                L("DetentionCommissionValue"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+            #endregion
+
+            #region notAssignTruckAndDriverStartDate
+            var notAssignTruckAndDriverStartDate = penaltiesFeature.CreateChildFeature(
+                AppFeatures.NotAssignTruckAndDriverStartDate,
+                "true",
+                L("notAssignTruckAndDriverStartDate"),
+                inputType: new CheckboxInputType());
+
+            notAssignTruckAndDriverStartDate.CreateChildFeature(
+                AppFeatures.NotAssignTruckAndDriverStartDate_UnitsOfMeasure,
+                "1",
+                L("UnitsOfMeasure"),
+                inputType: new ComboboxInputType(new StaticLocalizableComboboxItemSource(unitsOfMeasures.ToArray())));
+
+            notAssignTruckAndDriverStartDate.CreateChildFeature(
+                AppFeatures.NotAssignTruckAndDriverStartDate_NumberOfUnitsOfMeasure,
+                "1",
+                L("NumberOfUnitsOfMeasure"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+            notAssignTruckAndDriverStartDate.CreateChildFeature(
+                AppFeatures.NotAssignTruckAndDriverStartDate_Amount,
+                "50",
+                L("Amount "),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+            notAssignTruckAndDriverStartDate.CreateChildFeature(
+                AppFeatures.NotAssignTruckAndDriverStartDate_StartingAmount,
+                "50",
+                L("StartingAmount"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+            notAssignTruckAndDriverStartDate.CreateChildFeature(
+                AppFeatures.NotAssignTruckAndDriverStartDate_MaximumAmount,
+                "100",
+                L("MaximumAmount"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+            notAssignTruckAndDriverStartDate.CreateChildFeature(
+                AppFeatures.NotAssignTruckAndDriverStartDate_CommissionType,
+                "1",
+                L("NotAssignTruckAndDriverStartDate_CommissionType"),
+                inputType: new ComboboxInputType(new StaticLocalizableComboboxItemSource(CommissionTypes.ToArray())));
+
+            notAssignTruckAndDriverStartDate.CreateChildFeature(
+                AppFeatures.NotAssignTruckAndDriverStartDate_CommissionMinValue,
+                "50",
+                L("NotAssignTruckAndDriverStartDate_CommissionMinValue"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+            notAssignTruckAndDriverStartDate.CreateChildFeature(
+                AppFeatures.NotAssignTruckAndDriverStartDate_CommissionPercentage,
+                "50",
+                L("NotAssignTruckAndDriverStartDate_CommissionPercentage"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+            notAssignTruckAndDriverStartDate.CreateChildFeature(
+                AppFeatures.NotAssignTruckAndDriverStartDate_CommissionValue,
+                "50",
+                L("NotAssignTruckAndDriverStartDate_CommissionValue"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+            #endregion
+
+            #region notDeliveringAllDropsBeforeEndDate
+            var notDeliveringAllDropsBeforeEndDate = penaltiesFeature.CreateChildFeature(
+                AppFeatures.NotDeliveringAllDropsBeforeEndDate,
+                "true",
+                L("notDeliveringAllDropsBeforeEndDate"),
+                inputType: new CheckboxInputType());
+
+            notDeliveringAllDropsBeforeEndDate.CreateChildFeature(
+                AppFeatures.NotDeliveringAllDropsBeforeEndDate_UnitsOfMeasure,
+                "1",
+                L("UnitsOfMeasure"),
+                inputType: new ComboboxInputType(new StaticLocalizableComboboxItemSource(unitsOfMeasures.ToArray())));
+
+            notDeliveringAllDropsBeforeEndDate.CreateChildFeature(
+                AppFeatures.NotDeliveringAllDropsBeforeEndDate_NumberOfUnitsOfMeasure,
+                "1",
+                L("NumberOfUnitsOfMeasure"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+            notDeliveringAllDropsBeforeEndDate.CreateChildFeature(
+                AppFeatures.NotDeliveringAllDropsBeforeEndDate_Amount,
+                "50",
+                L("Amount"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+            notDeliveringAllDropsBeforeEndDate.CreateChildFeature(
+                AppFeatures.NotDeliveringAllDropsBeforeEndDate_StartingAmount,
+                "50",
+                L("StartingAmount"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+            notDeliveringAllDropsBeforeEndDate.CreateChildFeature(
+                AppFeatures.NotDeliveringAllDropsBeforeEndDate_MaximumAmount,
+                "10",
+                L("MaximumAmount"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+            notDeliveringAllDropsBeforeEndDate.CreateChildFeature(
+                AppFeatures.NotDeliveringAllDropsBeforeEndDate_CommissionType,
+                "1",
+                L("NotDeliveringAllDropsBeforeEndDate_CommissionType"),
+                inputType: new ComboboxInputType(new StaticLocalizableComboboxItemSource(CommissionTypes.ToArray())));
+
+            notDeliveringAllDropsBeforeEndDate.CreateChildFeature(
+                AppFeatures.NotDeliveringAllDropsBeforeEndDate_CommissionMinValue,
+                "50",
+                L("NotDeliveringAllDropsBeforeEndDate_CommissionMinValue"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+            notDeliveringAllDropsBeforeEndDate.CreateChildFeature(
+                AppFeatures.NotDeliveringAllDropsBeforeEndDate_CommissionPercentage,
+                "50",
+                L("NotDeliveringAllDropsBeforeEndDate_CommissionPercentage"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+            notDeliveringAllDropsBeforeEndDate.CreateChildFeature(
+                AppFeatures.NotDeliveringAllDropsBeforeEndDate_CommissionValue,
+                "50",
+                L("NotDeliveringAllDropsBeforeEndDate_CommissionValue"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+            #endregion
+
+            #endregion
 
         }
+
 
         private static ILocalizableString L(string name)
         {

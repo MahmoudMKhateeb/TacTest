@@ -32,6 +32,7 @@ using TACHYON.Goods.GoodCategories;
 using TACHYON.Goods.GoodsDetails;
 using TACHYON.Notifications;
 using TACHYON.Rating;
+using TACHYON.Penalties;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Routs.RoutPoints.Dtos;
 using TACHYON.Routs.RoutPoints.RoutPointSmartEnum;
@@ -64,6 +65,7 @@ namespace TACHYON.Shipping.Trips
         private readonly ITempFileCacheManager _tempFileCacheManager;
         private readonly RatingLogManager _ratingLogManager;
         private readonly IEntityChangeSetReasonProvider _reasonProvider;
+        private readonly PenaltyManager _penaltyManager;
 
 
         public ShippingRequestsTripAppService(
@@ -74,7 +76,17 @@ namespace TACHYON.Shipping.Trips
             IRepository<GoodsDetail, long> goodsDetailRepository,
             UserManager userManager,
             IAppNotifier appNotifier,
-            ShippingRequestManager shippingRequestManager, DocumentFilesAppService documentFilesAppService, IRepository<GoodCategory> goodCategoryRepository, IRepository<DocumentFile, Guid> documentFileRepository, DocumentFilesManager documentFilesManager, IRepository<DocumentType, long> documentTypeRepository, IBinaryObjectManager binaryObjectManager, ITempFileCacheManager tempFileCacheManager, RatingLogManager ratingLogManager, IEntityChangeSetReasonProvider reasonProvider)
+            ShippingRequestManager shippingRequestManager,
+            DocumentFilesAppService documentFilesAppService,
+            IRepository<GoodCategory> goodCategoryRepository,
+            IRepository<DocumentFile, Guid> documentFileRepository,
+            DocumentFilesManager documentFilesManager,
+            IRepository<DocumentType, long> documentTypeRepository,
+            IBinaryObjectManager binaryObjectManager,
+            ITempFileCacheManager tempFileCacheManager,
+            RatingLogManager ratingLogManager,
+            IEntityChangeSetReasonProvider reasonProvider,
+            PenaltyManager penaltyManager)
         {
             _shippingRequestTripRepository = shippingRequestTripRepository;
             _shippingRequestRepository = shippingRequestRepository;
@@ -93,6 +105,7 @@ namespace TACHYON.Shipping.Trips
             _tempFileCacheManager = tempFileCacheManager;
             _ratingLogManager = ratingLogManager;
             _reasonProvider = reasonProvider;
+            _penaltyManager = penaltyManager;
         }
 
 
@@ -434,6 +447,8 @@ namespace TACHYON.Shipping.Trips
 
                 await _appNotifier.NotifyCarrierWhenTripUpdated(notifyTripInput);
             }
+            if (!oldAssignedTruckId.HasValue && !oldAssignedDriverUserId.HasValue)
+                await _penaltyManager.ApplyNotAssigningTruckAndDriverPenalty(trip.ShippingRequestFk.CarrierTenantId.Value, trip.ShippingRequestFk.TenantId, trip.StartTripDate, trip.Id);
 
             // Send Notification To New Driver
             await _appNotifier.NotifyDriverWhenAssignTrip(trip.Id,
