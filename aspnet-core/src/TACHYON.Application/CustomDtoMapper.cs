@@ -16,6 +16,7 @@ using Abp.Webhooks;
 using AutoMapper;
 using DevExtreme.AspNet.Data.ResponseModel;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
@@ -75,6 +76,7 @@ using TACHYON.Invoices.Balances;
 using TACHYON.Invoices.Balances.Dto;
 using TACHYON.Invoices.Dto;
 using TACHYON.Invoices.Groups;
+using TACHYON.Invoices.InoviceNote.Dto;
 using TACHYON.Invoices.Periods;
 using TACHYON.Invoices.Periods.Dto;
 using TACHYON.Invoices.SubmitInvoices;
@@ -747,6 +749,42 @@ namespace TACHYON
                     options => options.MapFrom(entity => entity.InvoicePeriodsFK.DisplayName));
             configuration.CreateMap<RoutPointStatusTransition, RoutPointStatusTransitionDto>();
 
+            configuration.CreateMap<InvoiceNote, GetInvoiceNoteDto>()
+                .ForMember(dto=>dto.StatusTitle , options=>options.MapFrom(entity=>entity.Status.ToString()))
+                .ForMember(dto => dto.NoteTypeTitle, options => options.MapFrom(entity => entity.NoteType.GetEnumDescription()))
+                .ForMember(dto => dto.GenerationDate, options => options.MapFrom(entity => entity.CreationTime))
+                .ForMember(dto => dto.ComanyName, options => options.MapFrom(entity => entity.Tenant.companyName));
+
+            configuration.CreateMap<InvoiceNote, InvoiceNoteInfoDto>()
+                .ForMember(dto => dto.ClientName ,options => options.MapFrom(entity=>entity.Tenant.companyName))
+                .ForMember(dto => dto.ClientId, options => options.MapFrom(entity => entity.TenantId))
+                .ForMember(dto => dto.Notes , options=>  options.Ignore())
+                .ForMember(dto => dto.Address, options => options.MapFrom(entity => entity.Tenant.Address))
+                .ForMember(dto => dto.CreationTime, options => options.MapFrom(entity => entity.CreationTime.ToString("dd/mm/yyyy mm:hh")))
+                .ForMember(dto => dto.ContractNo, options => options.MapFrom(entity => entity.Tenant.ContractNumber));
+
+
+            configuration.CreateMap<GetAllInvoiceItemDto, InvoiceNoteItem>();
+
+            configuration.CreateMap<CreateOrEditInvoiceNoteDto, InvoiceNote>()
+                .ForMember(dto=>dto.InvoiceItems , options=>options.MapFrom(entity=>entity.InvoiceItems))
+                .AfterMap(AddOrUpdateInvoiceNote)
+                .ReverseMap();
+
+
+            configuration.CreateMap<Invoice,PartialVoidInvoiceDto>()
+                .ForMember(dto => dto.InvoiceItems, options => options.MapFrom(entity => entity.Trips.Select(x=> x.ShippingRequestTripFK)))
+                .ReverseMap();
+
+            configuration.CreateMap<SubmitInvoice, PartialVoidInvoiceDto>()
+                .ForMember(dto => dto.InvoiceItems, options => options.MapFrom(entity => entity.Trips.Select(x => x.ShippingRequestTripFK)))
+                .ForMember(dto => dto.InvoiceNumber, options => options.MapFrom(entity => entity.ReferencNumber))
+                .ReverseMap();
+
+            configuration.CreateMap<ShippingRequestTrip, GetAllInvoiceItemDto>();
+
+            configuration.CreateMap<InvoiceNoteItem, GetAllInvoiceItemDto>();
+
             configuration.CreateMap<GroupShippingRequests, SubmitInvoiceShippingRequestDto>()
                 .ForMember(dto => dto.Price, options => options.MapFrom(entity => entity.ShippingRequests.Price))
                 .ForMember(dto => dto.CreationTime,
@@ -1007,6 +1045,25 @@ namespace TACHYON
                 else
                 {
                     _Mapper.Map(good, point.GoodsDetails.SingleOrDefault(c => c.Id == good.Id));
+                }
+            }
+        }
+        private static void AddOrUpdateInvoiceNote(CreateOrEditInvoiceNoteDto dto, InvoiceNote note)
+        {
+            if (dto.InvoiceItems != null)
+            {
+                if (note.InvoiceItems == null) note.InvoiceItems = new List<InvoiceNoteItem>();
+
+                foreach (var item in dto.InvoiceItems)
+                {
+                    if (!item.Id.HasValue)
+                    {
+                        note.InvoiceItems.Add(_Mapper.Map<InvoiceNoteItem>(item));
+                    }
+                    else
+                    {
+                        _Mapper.Map(item, note.InvoiceItems.SingleOrDefault(c => c.Id == note.Id));
+                    }
                 }
             }
         }

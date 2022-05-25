@@ -30,10 +30,10 @@
               <dxo-scrolling mode="virtual"></dxo-scrolling>
               <dxo-group-panel [visible]="true" emptyPanelText="{{ l('DragAColumnHeaderHereToGroupByThatColumn') }}"></dxo-group-panel>
               <dxo-grouping #expand [autoExpandAll]="false"></dxo-grouping>
-              <dxo-remote-operations [groupPaging]="true" [sorting]="true" [filtering]="true"> </dxo-remote-operations>
+              <dxo-remote-operations [groupPaging]="true" [sorting]="true" [filtering]="true"></dxo-remote-operations>
               <dxo-paging [pageSize]="20"></dxo-paging>
               <dxo-summary>
-                <dxi-group-item column="id" summaryType="count"> </dxi-group-item>
+                <dxi-group-item column="id" summaryType="count"></dxi-group-item>
               </dxo-summary>
 
               <dxi-column
@@ -44,7 +44,7 @@
                 [editorOptions]="{ visible: false }"
                 [width]="50"
               ></dxi-column>
-              <dxi-column dataField="referencNumber" caption="  {{ l('InvoiceNumber') }}"> </dxi-column>
+              <dxi-column dataField="referencNumber" caption="  {{ l('InvoiceNumber') }}"></dxi-column>
               <dxi-column
                 dataField="tenantName"
                 caption="  {{ l('CompanyName') }}"
@@ -52,14 +52,14 @@
               >
               </dxi-column>
               <dxi-column dataField="periodId" caption=" {{ l('period') }}">
-                <dxo-lookup [dataSource]="Periods" displayExpr="displayName" valueExpr="id"> </dxo-lookup>
+                <dxo-lookup [dataSource]="Periods" displayExpr="displayName" valueExpr="id"></dxo-lookup>
               </dxi-column>
 
               <dxi-column dataField="totalAmount" caption="  {{ l('TotalAmount') }}"> </dxi-column>
               <dxi-column dataField="creationTime" caption="  {{ l('IssuanceDate') }}" dataType="datetime"> </dxi-column>
               <dxi-column dataField="dueDate" caption="{{ l('DueDate') }}" dataType="date"> </dxi-column>
               <dxi-column cellTemplate="statusCellTemplate" dataField="status" caption=" {{ l('Status') }}">
-                <dxo-lookup [dataSource]="SubmitStatus" displayExpr="value" valueExpr="key"> </dxo-lookup>
+                <dxo-lookup [dataSource]="SubmitStatus" displayExpr="value" valueExpr="key"></dxo-lookup>
               </dxi-column>
 
               <dxo-master-detail [enabled]="true" template="detail"></dxo-master-detail>
@@ -145,10 +145,16 @@
                         >{{ l('Reject') }}</a
                       >
                     </li>
+
+                    <li>
+                      <a class="dropdown-item" href="javascript:;" (click)="voidModal.show(options.data.id)">{{ l('Void') }}</a>
+                    </li>
                   </ul>
                 </div>
               </div>
-              <dxo-summary> <dxi-total-item column="referencNumber" summaryType="count"> </dxi-total-item> </dxo-summary>
+              <dxo-summary>
+                <dxi-total-item column="referencNumber" summaryType="count"></dxi-total-item>
+              </dxo-summary>
             </dx-data-grid>
           </div>
         </div>
@@ -160,3 +166,4 @@
 <submitinvoice-rejected-modal #RejectedModel (modalSave)="reloadPage()"></submitinvoice-rejected-modal>
 <invoice-tenant-items-details #InvoiceDetailsModel></invoice-tenant-items-details>
 <shared-file-viewer #fileViwerComponent></shared-file-viewer>
+<void-invoice-note-modal #voidModal></void-invoice-note-modal>

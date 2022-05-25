@@ -281,6 +281,11 @@ import { AddNewRemarksTripModalComponent } from '@app/main/shippingRequests/ship
 import { QuartzCronModule } from '@node_modules/@sbzen/ng-cron';
 import { DriverLicenseTypeTranslationsComponent } from './driverLicenseTypes/driverLicenseTypeTranslations/driver-license-type-translations/driver-license-type-translations.component';
 
+import { InvoiceNoteListComponent } from './Invoices/InvoiceNote/invoice-note-list/invoice-note-list.component';
+import { InoviceNoteModalComponent } from './Invoices/InvoiceNote/invoice-note-list/inovice-note-modal/inovice-note-modal.component';
+import { CreateOrEditNoteModalComponent } from './Invoices/InvoiceNote/invoice-note-list/create-or-edit-note-modal/create-or-edit-note-modal.component';
+import { VoidInvoiceNoteModalComponent } from './Invoices/InvoiceNote/invoice-note-list/void-invoice-note-modal/void-invoice-note-modal.component';
+import { NoteModalComponent } from './Invoices/InvoiceNote/invoice-note-list/note-modal/note-modal.component';
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
 @NgModule({
@@ -386,6 +391,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ViewVasPriceModalComponent,
     CreateOrEditVasPriceModalComponent,
     ReceiversComponent,
+    InvoiceNoteListComponent,
     ViewReceiverModalComponent,
     CreateOrEditReceiverModalComponent,
     TermAndConditionsComponent,
@@ -508,7 +514,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     AppLocalizationComponent,
     ApplocalizationModalComponent,
     ViewApplocalizationModalComponent,
-
+    CreateOrEditNoteModalComponent,
     CreateOrEditShippingRequestWizardComponent,
     ShippingrequestsDetailsModelComponent,
     ComingSoonComponent,
@@ -525,6 +531,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     TrucksTypeTranslationTemplateComponent,
     ViewGoodDetailsComponent,
     ViewPointModalComponent,
+    InoviceNoteModalComponent,
     DangerousCoodTypesTranslationsComponent,
     ShippingRequestRatingModalComponent,
     ViewRatingComponent,
@@ -534,6 +541,8 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ImportCitiesPolygonsModalComponent,
     AddNewRemarksTripModalComponent,
     DriverLicenseTypeTranslationsComponent,
+    VoidInvoiceNoteModalComponent,
+    NoteModalComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },

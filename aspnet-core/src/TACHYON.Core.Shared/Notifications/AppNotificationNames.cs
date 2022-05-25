@@ -41,6 +41,7 @@ namespace TACHYON.Notifications
         public const string SubmitInvoiceOnAccepted = "App.SubmitInvoiceOnAccepted";
         public const string SubmitInvoiceOnRejected = "App.SubmitInvoiceOnRejected";
         public const string NewBalanceAddedToShippper = "App.NewBalanceAddedToShippper";
+        public const string NewCreaditOrDebitNoteGenerated = "App.CreaditOrDebitNoteGenerated";
 
         public const string ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage =
             "App.ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage";

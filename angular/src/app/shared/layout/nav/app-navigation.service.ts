@@ -273,6 +273,8 @@ export class AppNavigationService {
         '',
         [],
         [
+          new AppMenuItem('InvoicesNoteList', 'Pages.Invoices', '', '/app/main/invoicenote/view'),
+
           new AppMenuItem(
             'InvoicesList',
             'Pages.Invoices',

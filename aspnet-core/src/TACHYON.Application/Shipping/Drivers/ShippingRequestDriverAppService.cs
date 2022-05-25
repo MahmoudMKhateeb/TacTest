@@ -544,9 +544,12 @@ namespace TACHYON.Shipping.Drivers
                 .Include(x => x.RoutPoints)
                 .ThenInclude(x => x.RatingLogs)
                 .Include(x => x.RatingLogs)
-                .FirstOrDefaultAsync(x => x.Id == TripId);
+                .ToListAsync();
 
-            await ResetTripStatus(trip);
+            foreach (var item in trip)
+            {
+                await ResetTripStatus(item);
+            }
         }
         private async Task ResetTripStatus(ShippingRequestTrip trip)
         {

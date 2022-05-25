@@ -49,6 +49,22 @@
     <Compile Remove="Migrations\20211027080531_addAccidentIdForTripCommentsTbl.Designer.cs" />
     <Compile Remove="Migrations\20211027085020_addTenantRelationForTripCommentsTbl.cs" />
     <Compile Remove="Migrations\20211027085020_addTenantRelationForTripCommentsTbl.Designer.cs" />
+    <Compile Remove="Migrations\20220220125523_add_InvoiceItme_InvoiceNoteItem_Tables.cs" />
+    <Compile Remove="Migrations\20220220125523_add_InvoiceItme_InvoiceNoteItem_Tables.Designer.cs" />
+    <Compile Remove="Migrations\20220220190455_add_InvoiceNote_InvoiceNoteItem_Tables.cs" />
+    <Compile Remove="Migrations\20220220190455_add_InvoiceNote_InvoiceNoteItem_Tables.Designer.cs" />
+    <Compile Remove="Migrations\20220224080459_add_InvoiceNote_InvoiceNoteItem_Tables.cs" />
+    <Compile Remove="Migrations\20220224080459_add_InvoiceNote_InvoiceNoteItem_Tables.Designer.cs" />
+    <Compile Remove="Migrations\20220225211742_add_InvoiceNote_InvoiceNoteItem_Tables.cs" />
+    <Compile Remove="Migrations\20220225211742_add_InvoiceNote_InvoiceNoteItem_Tables.Designer.cs" />
+    <Compile Remove="Migrations\20220225213459_add_InvoiceNote_InvoiceNoteItem_Tables.cs" />
+    <Compile Remove="Migrations\20220225213459_add_InvoiceNote_InvoiceNoteItem_Tables.Designer.cs" />
+    <Compile Remove="Migrations\20220225220933_add_InvoiceNote_InvoiceNoteItem_Tables.cs" />
+    <Compile Remove="Migrations\20220225220933_add_InvoiceNote_InvoiceNoteItem_Tables.Designer.cs" />
+    <Compile Remove="Migrations\20220316075549_Add_InvoiceNote_InvoiceNoteItem_Tables.cs" />
+    <Compile Remove="Migrations\20220316075549_Add_InvoiceNote_InvoiceNoteItem_Tables.Designer.cs" />
+    <Compile Remove="Migrations\20220524121023_Edit_NoteType_Enum.cs" />
+    <Compile Remove="Migrations\20220524121023_Edit_NoteType_Enum.Designer.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.5" />
