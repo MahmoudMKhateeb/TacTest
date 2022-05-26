@@ -2129,7 +2129,7 @@
 		<text name="TypeTitle">Type</text>
 		<text name="thereisanewpriceoffer">There is a new price offer</text>
 		<text name="TheInvoiceNotFound">The Invoice Not Found</text>
-		<text name="Theinvoicedosenotfound">The inovice note dose found </text>
+		<text name="Theinvoicedoesnotfound">The inovice note does not found </text>
 		<text name="UiCustomization_AllowAsideHiding">Allow aside hiding</text>
 		<text name="UiCustomization_AllowAsideMinimizing">Allow aside minimizing</text>
 		<text name="UiCustomization_Boxed">Boxed</text>
