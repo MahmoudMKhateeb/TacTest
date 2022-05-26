@@ -271,6 +271,11 @@ import { RatingModule } from '@node_modules/primeng/rating';
 import { StepsModule } from '@node_modules/primeng/steps';
 import { ViewRatingComponent } from '@app/main/shippingRequests/shippingRequests/rating/view-rating/view-rating.component';
 import { ShipmentHistoryComponent } from '@app/main/shippingRequests/shippingRequests/shipment-history/shipment-history.component';
+import { InvoiceNoteListComponent } from './invoices/invoiceNote/invoice-note-list/invoice-note-list.component';
+import { InoviceNoteModalComponent } from './invoices/invoiceNote/invoice-note-list/inovice-note-modal/inovice-note-modal.component';
+import { CreateOrEditNoteModalComponent } from './invoices/invoiceNote/invoice-note-list/create-or-edit-note-modal/create-or-edit-note-modal.component';
+import { VoidInvoiceNoteModalComponent } from './invoices/invoiceNote/invoice-note-list/void-invoice-note-modal/void-invoice-note-modal.component';
+import { NoteModalComponent } from './invoices/invoiceNote/invoice-note-list/note-modal/note-modal.component';
 import { TrackingModule } from '@app/main/shippingRequests/shippingRequests/tracking/tracking.module';
 import { EmailEditorModule } from '@node_modules/angular-email-editor';
 import { EmailTemplateTranslationTemplateComponent } from './emailTemplates/emailTemplates/email-template-translation-template.component';
@@ -280,12 +285,6 @@ import { ToggleButtonModule } from '@node_modules/primeng/togglebutton';
 import { AddNewRemarksTripModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/add-new-remarks-trip-modal/add-new-remarks-trip-modal.component';
 import { QuartzCronModule } from '@node_modules/@sbzen/ng-cron';
 import { DriverLicenseTypeTranslationsComponent } from './driverLicenseTypes/driverLicenseTypeTranslations/driver-license-type-translations/driver-license-type-translations.component';
-
-import { InvoiceNoteListComponent } from './Invoices/InvoiceNote/invoice-note-list/invoice-note-list.component';
-import { InoviceNoteModalComponent } from './Invoices/InvoiceNote/invoice-note-list/inovice-note-modal/inovice-note-modal.component';
-import { CreateOrEditNoteModalComponent } from './Invoices/InvoiceNote/invoice-note-list/create-or-edit-note-modal/create-or-edit-note-modal.component';
-import { VoidInvoiceNoteModalComponent } from './Invoices/InvoiceNote/invoice-note-list/void-invoice-note-modal/void-invoice-note-modal.component';
-import { NoteModalComponent } from './Invoices/InvoiceNote/invoice-note-list/note-modal/note-modal.component';
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
 @NgModule({
