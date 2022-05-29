@@ -67,6 +67,7 @@ import { TMSRequestListComponent } from '@app/main/tms/tms-request-list.componen
 import { TrucksSubmittedDocumentsComponent } from '@app/main/documentFiles/documentFiles/trucks-submitted-documents/trucks-submitted-documents.component';
 import { DriversSubmittedDocumentsComponent } from '@app/main/documentFiles/documentFiles/drivers-submitted-documents/drivers-submitted-documents.component';
 import { ShipmentHistoryComponent } from '@app/main/shippingRequests/shippingRequests/shipment-history/shipment-history.component';
+import { RequestTemplatesComponent } from '@app/main/shippingRequests/shippingRequests/request-templates/request-templates.component';
 
 @NgModule({
   imports: [
@@ -248,6 +249,10 @@ import { ShipmentHistoryComponent } from '@app/main/shippingRequests/shippingReq
             path: 'shippingRequests/shippingRequestWizard',
             component: CreateOrEditShippingRequestWizardComponent,
             data: { permission: 'Pages.ShippingRequests' },
+          },
+          {
+            path: 'shippingRequests/requestsTemplates',
+            component: RequestTemplatesComponent,
           },
 
           { path: 'shippingRequests/shippingRequests/view', component: ViewShippingRequestComponent, data: { permission: 'Pages.ShippingRequests' } },

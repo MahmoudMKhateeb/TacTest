@@ -8,7 +8,12 @@
       <!--        </button>-->
       <!--      </div>-->
       <div role="actions">
-        <a class="btn btn-outline-success" (click)="appEntityLog.show()"> <i class="flaticon-notes"></i> {{ l('ActivityLog') }} </a>
+        <create-or-edit-template-drop-down-button
+          *ngIf="feature.isEnabled('App.Shipper.Saas') || feature.isEnabled('Shipper') || feature.isEnabled('App.TachyonDealer')"
+          [entityType]="entityTypes.ShippingRequestTemplate"
+          [sourceEntityId]="activeShippingRequestId"
+        ></create-or-edit-template-drop-down-button>
+        <a class="btn btn-outline-success" (click)="appEntityLog.show()"> <i class="flaticon-notes"></i> {{ 'Activity Log' }} </a>
         <ng-container *ngIf="feature.isEnabled('App.TachyonDealer') && !shippingRequestforView.shippingRequest.isBid">
           <a class="btn btn-outline-success" (click)="scrollToDirectRequests()">{{ l('SendDirectRequests') }}</a>
           <a class="btn btn-outline-success" (click)="tachyonDealToBiddingModal.show(activeShippingRequestId)">{{ l('StartBidding') }}</a>
@@ -81,7 +86,7 @@
                 <div class="mb-2">
                   <div class="form-group row fv-plugins-icon-container">
                     <div class="col-lg-6">
-                      <label><span class="required-fileds"></span> {{ l('ShippingRequestType') }}</label>
+                      <label><span class="required-fileds"></span> {{ l('ShippingRequestType') }} </label>
                       <input class="form-control" type="text" name="ShippingRequestType" [value]="shipppingRequestType()" disabled />
                     </div>
                     <!--  Start::Shipping Type                 -->
@@ -185,7 +190,7 @@
                 <div class="mb-2">
                   <div class="row">
                     <div class="col-lg-6">
-                      <label><span class="required-fileds"></span> {{ l('MainGoodCategory') }}</label>
+                      <label><span class="required-fileds"></span> {{ l('MainGoodCategory') }} </label>
                       <input class="form-control" type="text" name="MainGoodCategory" [value]="shippingRequestforView.goodsCategoryName" disabled />
                     </div>
                     <div class="col-lg-6">
@@ -321,7 +326,7 @@
                     </div>
                     <div class="col-lg-3">
                       <div class="form-group">
-                        <label><span class="required-fileds"></span> {{ l('NumberOfDrops') }}</label>
+                        <label><span class="required-fileds"></span> {{ l('NumberOfDrops') }} </label>
                         <input
                           class="form-control"
                           type="number"

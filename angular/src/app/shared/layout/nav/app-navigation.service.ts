@@ -96,6 +96,7 @@ export class AppNavigationService {
             undefined,
             () => this.isEnabled('App.Shipper')
           ),
+
           new AppMenuItem('MyShippingRequests', 'Pages.ShippingRequests', '', '/app/main/shippingRequests/shippingRequests'),
           // new AppMenuItem(
           //   'ShipmentHistory',
@@ -118,6 +119,17 @@ export class AppNavigationService {
             undefined,
             undefined,
             () => !this.isEnabled('App.Shipper')
+          ),
+          new AppMenuItem(
+            'SavedTemplates',
+            'Pages.ShippingRequests',
+            '',
+            '/app/main/shippingRequests/requestsTemplates',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            () => this.isEnabled('App.Shipper') || this.isEnabled('App.TachyonDealer') || this.isEnabled('App.Shipper.Saas')
           ),
           new AppMenuItem('DirectShippingRequests', '', '', '/app/main/directrequest/list', undefined, undefined, undefined, undefined, () =>
             this.isEnabled('App.Carrier')

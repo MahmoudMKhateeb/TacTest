@@ -25,6 +25,7 @@ using TACHYON.DriverLocationLogs;
 using TACHYON.Editions;
 using TACHYON.EmailTemplates;
 using TACHYON.EntityLogs;
+using TACHYON.EntityTemplates;
 using TACHYON.Friendships;
 using TACHYON.Goods;
 using TACHYON.Goods.GoodCategories;
@@ -285,6 +286,8 @@ namespace TACHYON.EntityFrameworkCore
         public DbSet<DriverLocationLog> DriverLocationLogs { get; set; }
 
         public DbSet<EntityLog> EntityLogs { get; set; }
+        
+        public DbSet<EntityTemplate> EntityTemplates { get; set; }
 
         protected virtual bool CurrentIsCanceled => true;
         protected virtual bool CurrentIsDrafted => false;

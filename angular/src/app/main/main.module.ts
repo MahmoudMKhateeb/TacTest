@@ -280,6 +280,10 @@ import { ToggleButtonModule } from '@node_modules/primeng/togglebutton';
 import { AddNewRemarksTripModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/add-new-remarks-trip-modal/add-new-remarks-trip-modal.component';
 import { QuartzCronModule } from '@node_modules/@sbzen/ng-cron';
 import { DriverLicenseTypeTranslationsComponent } from './driverLicenseTypes/driverLicenseTypeTranslations/driver-license-type-translations/driver-license-type-translations.component';
+import { RequestTemplatesComponent } from './shippingRequests/shippingRequests/request-templates/request-templates.component';
+import { CreateNewEntityTemplateModalComponent } from './shippingRequests/shippingRequests/request-templates/create-new-entity-template-modal/create-new-entity-template-modal.component';
+import { CreateOrEditTemplateDropDownButtonComponent } from './shippingRequests/shippingRequests/request-templates/create-or-edit-template-drop-down-button/create-or-edit-template-drop-down-button.component';
+import { LoadEntityTemplateModalComponent } from '@app/main/shippingRequests/shippingRequests/request-templates/load-entity-template-modal/load-entity-template-modal.component';
 
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
@@ -534,6 +538,10 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ImportCitiesPolygonsModalComponent,
     AddNewRemarksTripModalComponent,
     DriverLicenseTypeTranslationsComponent,
+    RequestTemplatesComponent,
+    CreateNewEntityTemplateModalComponent,
+    CreateOrEditTemplateDropDownButtonComponent,
+    LoadEntityTemplateModalComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },
