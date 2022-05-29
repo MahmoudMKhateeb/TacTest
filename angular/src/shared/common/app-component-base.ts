@@ -242,6 +242,13 @@ export abstract class AppComponentBase {
 
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
   }
+
+  checkImportedList(ImportedVasesList) {
+    return ImportedVasesList
+      ? ImportedVasesList.filter((e) => e.exception != undefined && e.exception != null && e.exception != '').length > 0
+      : false;
+  }
+
   get isCarrier(): boolean {
     return this.feature.isEnabled('App.Carrier');
   }

@@ -280,6 +280,10 @@ import { ToggleButtonModule } from '@node_modules/primeng/togglebutton';
 import { AddNewRemarksTripModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/add-new-remarks-trip-modal/add-new-remarks-trip-modal.component';
 import { QuartzCronModule } from '@node_modules/@sbzen/ng-cron';
 import { DriverLicenseTypeTranslationsComponent } from './driverLicenseTypes/driverLicenseTypeTranslations/driver-license-type-translations/driver-license-type-translations.component';
+import { ViewImportedTripsFromExcelModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/trips/ImportedTrips/view-imported-trips-from-excel-modal/view-imported-trips-from-excel-modal.component';
+import { ViewImportedPointsFromExcelModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/trips/ImportedTrips/view-imported-points-from-excel-modal/view-imported-points-from-excel-modal.component';
+import { ViewImportedGoodDetailsFromExcelModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/trips/ImportedTrips/view-imported-good-details-from-excel-modal/view-imported-good-details-from-excel-modal.component';
+import { ViewImportVasesFromExcelModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/trips/ImportedTrips/view-import-vases-from-excel-modal/view-import-vases-from-excel-modal.component';
 
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
@@ -534,6 +538,10 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ImportCitiesPolygonsModalComponent,
     AddNewRemarksTripModalComponent,
     DriverLicenseTypeTranslationsComponent,
+    ViewImportedTripsFromExcelModalComponent,
+    ViewImportedPointsFromExcelModalComponent,
+    ViewImportedGoodDetailsFromExcelModalComponent,
+    ViewImportVasesFromExcelModalComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },

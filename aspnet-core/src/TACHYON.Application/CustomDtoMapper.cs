@@ -119,6 +119,7 @@ using TACHYON.Shipping.ShippingTypes;
 using TACHYON.Shipping.ShippingTypes.Dtos;
 using TACHYON.Shipping.Trips.Accidents.Dto;
 using TACHYON.Shipping.Trips.Dto;
+using TACHYON.Shipping.Trips.Importing.Dto;
 using TACHYON.Shipping.Trips.RejectReasons.Dtos;
 using TACHYON.ShippingRequestTripVases;
 using TACHYON.ShippingRequestTripVases.Dtos;
@@ -431,6 +432,7 @@ namespace TACHYON
             configuration.CreateMap<ShippingRequest, ShippingRequestDto>()
                 .ForMember(x => x.IsSaas, x => x.MapFrom(i => i.IsSaas())).ReverseMap();
             configuration.CreateMap<CreateOrEditGoodsDetailDto, GoodsDetail>().ReverseMap();
+            configuration.CreateMap<ImportGoodsDetailsDto, GoodsDetail>();
             configuration.CreateMap<GoodsDetail, GoodsDetailDto>()
                 .ReverseMap();
             configuration.CreateMap<CreateOrEditOfferDto, Offer>().ReverseMap();

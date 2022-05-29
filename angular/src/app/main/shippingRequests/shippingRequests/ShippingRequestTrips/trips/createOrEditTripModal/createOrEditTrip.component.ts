@@ -188,7 +188,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
         if (res.endTripDate != null && res.endTripDate != undefined)
           this.endTripdate = this.dateFormatterService.MomentToNgbDateStruct(res.endTripDate);
         this._PointsService.updateWayPoints(this.trip.routPoints);
-        this.pickupPointSenderId = res.routPoints[0].receiverId;
+        this.pickupPointSenderId = res.routPoints[0]?.receiverId;
         this.loadReceivers(this.trip.originFacilityId);
         this.loading = false;
       });

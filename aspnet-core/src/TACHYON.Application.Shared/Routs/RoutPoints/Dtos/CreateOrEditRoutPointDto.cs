@@ -12,7 +12,7 @@ using TACHYON.Goods.GoodsDetails.Dtos;
 
 namespace TACHYON.Routs.RoutPoints.Dtos
 {
-    public class CreateOrEditRoutPointDto : EntityDto<long?>, ICustomValidate
+    public class CreateOrEditRoutPointDto : EntityDto<long?>, ICreateOrEditRoutPointDtoBase ,ICustomValidate
     {
         public string DisplayName { get; set; }
         public PickingType PickingType { get; set; }

@@ -28,10 +28,152 @@
       >
         <i class="flaticon-plus"></i> {{ l('AddATrip') }}
       </button>
+      &nbsp; &nbsp;
+      <!-- <div role="actions"> -->
+      <div class="btn-group" dropdown [busyIf]="loading">
+        <button
+          dropdownToggle
+          type="button"
+          class="btn btn-outline-success dropdown-toggle mr-1"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          <i class="far fa-file-excel"></i> {{ 'ExcelOperations' | localize }}
+        </button>
+        <div class="dropdown-menu dropdown-menu-right dropdown-excel-operations" *dropdownMenu>
+          <!-- *ngIf="'Pages.ShippingRequestTrips.Create' | permission" -->
+          <div class="no-padding">
+            <span class="fileinput-button">
+              <p-fileUpload
+                customUpload="true"
+                name="ExcelFileUpload"
+                #ExcelFileUpload
+                maxFileSize="10000000"
+                auto="auto"
+                accept=".csv,.xls,.xlsx"
+                (uploadHandler)="uploadExcel($event)"
+                (onError)="onUploadExcelError()"
+                chooseLabel="{{ 'ImportTripFromExcel' | localize }}"
+                [disabled]="primengTableHelper.totalRecordsCount >= ShippingRequest.numberOfTrips"
+              >
+              </p-fileUpload>
+              <span class="dropdown-item-text text-muted pl-3" href="#">
+                <small
+                  *ngIf="ShippingRequest.routeTypeId != ShippingRequestRouteTypeEnum.SingleDrop"
+                  [innerHTML]="
+                    l('ImportToExcelSampleFileDownloadInfo', '<a href=/assets/sampleFiles/ImportShipmentSampleFile.xlsx>' + l('ClickHere') + '</a>')
+                  "
+                ></small>
+
+                <small
+                  *ngIf="ShippingRequest.routeTypeId == ShippingRequestRouteTypeEnum.SingleDrop"
+                  [innerHTML]="
+                    l(
+                      'ImportToExcelSampleFileDownloadInfo',
+                      '<a href=/assets/sampleFiles/ImportSingleDropShipmentSampleFile.xlsx>' + l('ClickHere') + '</a>'
+                    )
+                  "
+                ></small>
+              </span>
+            </span>
+          </div>
+
+          <div class="no-padding">
+            <span class="fileinput-button" *ngIf="ShippingRequest.routeTypeId != ShippingRequestRouteTypeEnum.SingleDrop">
+              <p-fileUpload
+                customUpload="true"
+                name="PointExcelFileUpload"
+                #PointExcelFileUpload
+                maxFileSize="10000000"
+                auto="auto"
+                accept=".csv,.xls,.xlsx"
+                (uploadHandler)="uploadPointsExcel($event)"
+                (onError)="onUploadExcelError()"
+                chooseLabel="{{ 'ImportPointFromExcel' | localize }}"
+                [disabled]="primengTableHelper.totalRecordsCount == 0"
+              >
+              </p-fileUpload>
+              <span class="dropdown-item-text text-muted pl-3" href="#">
+                <small
+                  [innerHTML]="
+                    l('ImportToExcelSampleFileDownloadInfo', '<a href=/assets/sampleFiles/ImportPointSampleFile.xlsx>' + l('ClickHere') + '</a>')
+                  "
+                ></small>
+              </span>
+            </span>
+          </div>
+
+          <div class="no-padding">
+            <span class="fileinput-button">
+              <p-fileUpload
+                customUpload="true"
+                name="GoodDetailsExcelFileUpload"
+                #GoodDetailsExcelFileUpload
+                maxFileSize="10000000"
+                auto="auto"
+                accept=".csv,.xls,.xlsx"
+                (uploadHandler)="uploadGoodDetailsExcel($event)"
+                (onError)="onUploadExcelError()"
+                chooseLabel="{{ 'ImportGoodDetailsFromExcel' | localize }}"
+                [disabled]="primengTableHelper.totalRecordsCount == 0"
+              >
+              </p-fileUpload>
+              <span class="dropdown-item-text text-muted pl-3" href="#">
+                <small
+                  *ngIf="ShippingRequest.routeTypeId != ShippingRequestRouteTypeEnum.SingleDrop"
+                  [innerHTML]="
+                    l(
+                      'ImportToExcelSampleFileDownloadInfo',
+                      '<a href=/assets/sampleFiles/ImportGoodsDetailsRequestSampleFile.xlsx>' + l('ClickHere') + '</a>'
+                    )
+                  "
+                ></small>
+
+                <small
+                  *ngIf="ShippingRequest.routeTypeId == ShippingRequestRouteTypeEnum.SingleDrop"
+                  [innerHTML]="
+                    l(
+                      'ImportToExcelSampleFileDownloadInfo',
+                      '<a href=/assets/sampleFiles/ImportGoodsDetailsSingleDropRequestSampleFile.xlsx>' + l('ClickHere') + '</a>'
+                    )
+                  "
+                ></small>
+              </span>
+            </span>
+          </div>
+
+          <div class="no-padding">
+            <span class="fileinput-button">
+              <p-fileUpload
+                customUpload="true"
+                name="VasesExcelFileUpload"
+                #VasesExcelFileUpload
+                maxFileSize="10000000"
+                auto="auto"
+                accept=".csv,.xls,.xlsx"
+                (uploadHandler)="uploadVasesExcel($event)"
+                (onError)="onUploadExcelError()"
+                chooseLabel="{{ 'ImportVasesFromExcel' | localize }}"
+                [disabled]="primengTableHelper.totalRecordsCount == 0 || VasListFromFather.length == 0"
+              >
+              </p-fileUpload>
+              <span class="dropdown-item-text text-muted pl-3" href="#">
+                <small
+                  [innerHTML]="
+                    l(
+                      'ImportToExcelSampleFileDownloadInfo',
+                      '<a href=/assets/sampleFiles/ImportTripVasesFromExcelSampleFile.xlsx>' + l('ClickHere') + '</a>'
+                    )
+                  "
+                ></small>
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-  <!--begin::card-body-->
-  <div class="card-body">
+    <!--begin::card-body-->
     <div class="row align-items-center">
       <!--<Primeng-Datatable-Start>-->
       <div [busyIf]="primengTableHelper.isLoading" class="primeng-datatable-container col-12">
@@ -49,6 +191,10 @@
         >
           <ng-template pTemplate="header">
             <tr>
+              <th pSortableColumn="TripReferenceID">
+                {{ l('ReferenceID') }}
+                <p-sortIcon field="TripReferenceID"></p-sortIcon>
+              </th>
               <th pSortableColumn="startTripDate">
                 {{ l('StartDate') }}
                 <p-sortIcon field="startTripDate"></p-sortIcon>
@@ -85,10 +231,10 @@
           </ng-template>
           <ng-template let-record="$implicit" pTemplate="body">
             <tr [ngClass]="record.hasAccident ? 'table-warning' : ''">
-              <!-- <td style="width: 50px;">
-                  <span class="ui-column-title"> {{ l('id') }}</span>
-                  {{ record.id }}
-                </td> -->
+              <td>
+                <span class="ui-column-title"> {{ l('bulkUploadReference') }}</span>
+                {{ record.bulkUploadRef }}
+              </td>
               <td>
                 <span class="ui-column-title"> {{ l('startTripDate') }}</span>
                 {{ record.startTripDate | momentFormat: 'L' }}
@@ -176,8 +322,39 @@
       </div>
       <!--<Primeng-Datatable-End>-->
     </div>
+    <!--end::card-body-->
   </div>
-  <!--end::card-body-->
+
+  <!-- <AddNewTripModal
+    *ngIf="feature.isEnabled('App.Shipper') || feature.isEnabled('App.TachyonDealer')"
+    #AddNewTripModal
+    (modalSave)="reloadPage()"
+    [shippingRequest]="ShippingRequest"
+    [VasListFromFather]="VasListFromFather"
+  ></AddNewTripModal> -->
+  <app-view-imported-trips-from-excel-modal
+    [ImportedTripsList]="list"
+    [isSingleDdrop]="ShippingRequest.routeTypeId == ShippingRequestRouteTypeEnum.SingleDrop"
+    #ViewImportedTripsModal
+    (modalSave)="reloadPage()"
+  ></app-view-imported-trips-from-excel-modal>
+  <app-view-imported-points-from-excel-modal
+    [ImportedPointsList]="pointsList"
+    #ViewImportedPointsModal
+    (modalSave)="reloadPage()"
+  ></app-view-imported-points-from-excel-modal>
+  <app-view-imported-good-details-from-excel-modal
+    [ImportedGoodDetailsList]="goodDetailsList"
+    #ViewImportedGoodDetailsModal
+    (modalSave)="reloadPage()"
+  >
+  </app-view-imported-good-details-from-excel-modal>
+  <app-view-import-vases-from-excel-modal [ImportedVasesList]="vasesList" #ViewImportedVasesModal (modalSave)="reloadPage()">
+  </app-view-import-vases-from-excel-modal>
+  <viewTripModal #ViewTripModal (modalSave)="reloadPage()"></viewTripModal>
+  <trip-accident-modal #TripAccidentModal (modalSave)="getShippingRequestsTrips($event)"></trip-accident-modal>
+  <view-trip-accident-modal #ViewTripAccidentModal (modalcanceltrip)="reloadPage()"></view-trip-accident-modal>
+  <app-shipping-request-rating-modal #shippingRequestRatingModal></app-shipping-request-rating-modal>
 </div>
 
 <AddNewTripModal
@@ -188,8 +365,4 @@
   [VasListFromFather]="VasListFromFather"
 >
 </AddNewTripModal>
-<viewTripModal #ViewTripModal (modalSave)="reloadPage()"></viewTripModal>
-<trip-accident-modal #TripAccidentModal (modalSave)="getShippingRequestsTrips($event)"></trip-accident-modal>
-<view-trip-accident-modal #ViewTripAccidentModal (modalcanceltrip)="reloadPage()"></view-trip-accident-modal>
 <app-add-new-remarks-trip-modal #AddRemarksModal></app-add-new-remarks-trip-modal>
-<app-shipping-request-rating-modal #shippingRequestRatingModal></app-shipping-request-rating-modal>
