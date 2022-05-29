@@ -75,12 +75,12 @@ export class CreateOrEditNoteModalComponent extends AppComponentBase implements 
       .pipe(
         finalize(() => {
           this.saving = false;
-          this.notify.success('SavedSuccessfully');
-          this.modalSave.emit();
         })
       )
       .subscribe(() => {
+        this.notify.info(this.l('SavedSuccessfully'));
         this.close();
+        this.modalSave.emit(null);
       });
   }
   savePartialVoid() {
