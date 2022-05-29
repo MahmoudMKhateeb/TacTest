@@ -68,7 +68,7 @@ import { TrucksSubmittedDocumentsComponent } from '@app/main/documentFiles/docum
 import { DriversSubmittedDocumentsComponent } from '@app/main/documentFiles/documentFiles/drivers-submitted-documents/drivers-submitted-documents.component';
 import { ShipmentHistoryComponent } from '@app/main/shippingRequests/shippingRequests/shipment-history/shipment-history.component';
 import { TrackingComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tracking.component';
-import { InvoiceNoteListComponent } from './invoices/invoiceNote/invoice-note-list/invoice-note-list.component';
+import { InvoiceNoteListComponent } from './invoices/invoice-note/invoice-note-list/invoice-note-list.component';
 
 @NgModule({
   imports: [

@@ -20,7 +20,7 @@ import CustomStore from '@node_modules/devextreme/data/custom_store';
 import { LoadOptions } from '@node_modules/devextreme/data/load_options';
 import { DxDataGridComponent } from '@node_modules/devextreme-angular';
 import { FileViwerComponent } from '@app/shared/common/file-viwer/file-viwer.component';
-import { VoidInvoiceNoteModalComponent } from '@app/main/Invoices/InvoiceNote/invoice-note-list/void-invoice-note-modal/void-invoice-note-modal.component';
+import { VoidInvoiceNoteModalComponent } from '@app/main/invoices/invoice-note/invoice-note-list/void-invoice-note-modal/void-invoice-note-modal.component';
 
 @Component({
   templateUrl: './invoice-tenant.component.html',
