@@ -1,12 +1,13 @@
 using Abp.Auditing;
 using Abp.Authorization.Users;
 using Abp.MultiTenancy;
+using Abp.Runtime.Validation;
 using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace TACHYON.MultiTenancy.Dto
 {
-    public class CreateTenantInput
+    public class CreateTenantInput : IShouldNormalize
     {
         [Required]
         [StringLength(AbpTenantBase.MaxTenancyNameLength)]
@@ -67,5 +68,10 @@ namespace TACHYON.MultiTenancy.Dto
         [Required]
         [RegularExpression(TenantConsts.MoiNumberRegex)]
         public string MoiNumber { get; set; }
+
+        public void Normalize()
+        {
+             TenancyName = companyName.Trim().Replace(" ", "_");
+        }
     }
 }
