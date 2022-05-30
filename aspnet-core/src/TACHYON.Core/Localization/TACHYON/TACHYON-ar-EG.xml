@@ -2373,11 +2373,15 @@
 		<text name="WorstRatedShippers">الشواحن الأقل تقييماً</text>
 		<text name="ReferanceNumber">رقم المرجع للطلب</text>
 		<text name="ForCurrentYear">السنة الحاليه</text>
-
-
+		<text name="InCorrectWaybillNumber">رقم الشحنة لا يطابق اي شحنة في المنصة</text>
+		<text name="DropOffStatus">حالة نقطة التنزيل</text>
+		<text name="SubWaybill">وثيقة الشحن الفرعية</text>
+		<text name="MasterWaybillNumber">وثيقة الشحن الرئيسية</text>
+		<text name="PickupDate">تاريخ الإلتقاط</text>
+		<text name="DropOffDate">تاريخ التنزيل</text>
+		<text name="waybillSearch">رقم وثيقة الشحن ...</text>
 
 		
-    <text name="IsMandatoryExpirationDate">تاريخ الإنتهاء إلزامي</text>
 
 
 
