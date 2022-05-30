@@ -4495,6 +4495,9 @@ namespace TACHYON.Migrations
                     b.Property<DateTime?>("ActualPickupOrDeliveryDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("BulkUploadReference")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("CanGoToNextLocation")
                         .HasColumnType("bit");
 
@@ -5143,6 +5146,9 @@ namespace TACHYON.Migrations
 
                     b.Property<bool>("CanBePrinted")
                         .HasColumnType("bit");
+
+                    b.Property<string>("BulkUploadRef")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("CommissionAmount")
                         .HasColumnType("decimal(18,2)");

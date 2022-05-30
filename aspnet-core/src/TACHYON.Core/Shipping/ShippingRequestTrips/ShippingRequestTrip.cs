@@ -1,4 +1,5 @@
-﻿using Abp.Auditing;
+﻿using Abp;
+using Abp.Auditing;
 using Abp.Domain.Entities.Auditing;
 using System;
 using System.Collections.Generic;
@@ -114,6 +115,12 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public string BayanId { get; set; }
         public bool IsWaslIntegrated { get; set; }
         public string WaslIntegrationErrorMsg { get; set; }
+        /// <summary>
+        /// This reference is for import shipment from excel, it is unique reference for user to know the trips whick contains errors,
+        /// it is either entered menual or auto generated. it is unique in each request.
+        /// </summary>
+        public string BulkUploadRef { get; set; } 
+            = DateTime.Now.ToString("dd") + DateTime.Now.ToString("HH") + RandomHelper.GetRandom(10, 99);
 
         #region Remarks
         public bool CanBePrinted { get; set; }

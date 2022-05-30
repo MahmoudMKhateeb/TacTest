@@ -1143,7 +1143,7 @@
 		<text name="OriginalCity">مدينة الانطلاق</text>
 		<text name="OriginalValue">القيمة الأصلية</text>
 		<text name="OriginCity">مدينة الإنطلاق</text>
-		<text name="OriginFacility" />
+    <text name="OriginFacility">منشأة الانطلاق</text>
 		<text name="Other">أخرى</text>
 		<text name="OtherReason">اسباب اخرى</text>
 		<text name="Others">أخرى</text>
@@ -1331,7 +1331,8 @@
 		<text name="RegisterFormUserNameInvalidMessage">الرجاء عدم ادخال بريدك الإلكتروني كاسم مستخدم</text>
 		<text name="Reject">رفض</text>
 		<text name="Rejected">مرفوض</text>
-		<text name="RejectedOffer">لقد تم رفض عرضك من قبل {rejectedby}.</text>
+    <text name="DataMustBeValid">البيانات غير صحيحة</text>
+    <text name="RejectedOffer">لقد تم رفض عرضك من قبل {rejectedby}.</text>
 		<text name="RejectedReason">سبب الرفض</text>
 		<text name="RejectionReason">سبب رفض المستند</text>
 		<text name="RejectOffer">رفض</text>
@@ -2274,7 +2275,6 @@
     <text name="NoMatchingTrucks">لا توجد شاحنات مطابقة</text>
 		<text name="NoMatchingDrivers">لا يوجد سائقين</text>
 	<text name="ResetReceiverCode">إعادة تعيين رمز مستلم الشحنة</text>
-	<text name="ReceiverCodeConfirmationMsg">هل أنت متأكد أنك تريد إعادة تعيين رمز المستلم لهذه الشحنة؟</text>
 		<text name="CompanyDescriptionHint">يجب ألا يزيد وصف الشركة عن 500 حرف</text>
 		<text name="SelectAnEmailTemplateType">أختر نوع قالب البريد الإلكتروني</text>
 		<text name="AllowedWeightShouldBeMaximum">يجب أن يكون الوزن المسموح به الحد الأقصى</text>
@@ -2398,7 +2398,7 @@
 		<text name="ViewOrAssignDriver">عرض او اسناد الى السائق</text>
 		<text name="ShippingRequestReference">مرجع طلب الشحن</text>
 		<text name="ShippingRequestId">معرف طلب الشحن</text>
-		<text name="ViewOffer">عرض العرض</text>
+		
 		<text name="PointsDetails">تفاصيل نقاط الرحلة</text>
 		<text name="StartedMovingToOffLoadingLocation">بدأ التحرك إلى مكان التنزيل</text>
 		<text name="DeliveryConfirmation">تأكيد التوصيل</text>
@@ -2616,5 +2616,43 @@
     <text name="NumberOfTripsWtihValue">عدد الرحلات ({0})</text>
     <text name="PostPriceUpdateWarningMsg">أنت تقوم بالتعديل في مرحلة ما بعد التسعير، اي تغيير تقوم به لن يأخد تأثير على الفور، تحتاج الى إنتظار إجراء الناقل لمزيد من التفاصيل انتقل إلى تحديثات طلب الشحن</text>
     
+    <text name="DropGoodsDetailsMustBeEmptyForTrip">بيانات البضاعة لبعض النقاط موجودة مسبقاً</text>
+    <text name="invalidShippingRequest">طلب الشحن غير صالح</text>
+    <text name="RequestShouldnotBeSingleDrop">طلب الشحن يجب أن لا تكون ذهاب فقط</text>
+    <text name="DuplicatedReference">الرقم مكرر</text>
+    <text name="DuplicatedPointReference">رقم النقطة مكرر</text>
+    <text name="SomePointsAlreadyAddedToTrip">بعض النقاط موجودة مسبقاً</text>
+    <text name="InvalidTrip">الرحلة غير صالحة</text>
+    <text name="ReceiverCodeConfirmationMsg">هل أنت متأكد أنك تريد إعادة تعيين رمز المستلم لهذه الشحنة؟</text>
+    <text name="ImportProcessStart">جاري البدء في الاستيراد</text>
+    <text name="ImportUploadFailed">فشلت عملية الاستيراد</text>
+    <text name="GoodsSubCategory">التصنيف الفرعي للبضاعة</text>
+    <text name="DangerousGoodsType">نوع الخطر للبضاعة</text>
+    <text name="otherGoodsCategoryName">اسم التصنيف الفرعي الآخر</text>
+    <text name="TripReferenceID">رقم الرحلة</text>
+    <text name="PointReferenceID">رقم النقطة</text>
+    <text name="PointType">نوع النقطة</text>
+    <text name="Agent">المستلم</text>
+    <text name="totalValue">القيمة الكلية</text>
+    <text name="bulkUploadReference">الرقم</text>
+    <text name="The number of trips ">عدد الرحلات</text>
+    <text name="AllDropsMustHaveGoodsDetails">جميع نقاط التسليم يجب أن تحتوي على تفاصيل بضاعة</text>
+		<text name="ImportedGoodDetails">استيراد تفاصيل البضائع</text>
+		<text name="ImportedPoints">استيراد النقاط</text>
+		<text name="ImportedTrips">استيراد الرحلات</text>
+		<text name="ImportTripFromExcel">استيراد الرحلات من اكسل</text>
+		<text name="ImportPointFromExcel">استيراد نقاط التوصيل من اكسل</text>
+		<text name="ImportGoodDetailsFromExcel">استيراد تفاصيل البضائع من اكسل</text>
+    <text name="otherUnitOfMeasure">وحدة قياس أخرى</text>
+	<text name="ImportedVasesDetails">خدمات إضافيه مستوردة</text>
+	<text name="ImportVasesFromExcel">استيراد خدمات إضافية من إكسل</text>
+
+    <text name="SomeTripVasesAlreadyExists">بعض الخدمات الإضافية موجودة مسبقاً</text>
+    <text name="DuplicatedVas">يوجد تكرار</text>
+    <text name="PickupPointFacilityMustBeSameToOriginalTripFacility">منشأة التحميل يجب أن تكون مطابقة لمنشأة تحميل الرحلة</text>
+    <text name="TheBulkReferenceIsAlreadyExists">المرجع موجود مسبقاً</text>
+    <text name="TheTripDateRangeMustBetweenShippingRequestRangeDate">نطاق تاريخ الرحلة يجب أن يكون ضمن نطاق طلب الشحن</text>
+    <text name="OriginalFacility">منشأة الانطلاق</text>
+    <text name="TripPickupDateStart">تاريخ انطلاق الرحلة</text>
 	</texts>
 </localizationDictionary>

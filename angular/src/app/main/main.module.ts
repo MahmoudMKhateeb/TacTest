@@ -290,6 +290,10 @@ import { SrPostPriceUpdateComponent } from './shippingRequests/shippingRequests/
 import { ViewSrPostPriceUpdateModalComponent } from './shippingRequests/shippingRequests/srpost-price-update/view-sr-post-price-update-modal/view-sr-post-price-update-modal.component';
 import { CardModule } from '@node_modules/primeng/card';
 import { RejectPostPriceUpdateComponent } from './shippingRequests/shippingRequests/srpost-price-update/reject-post-price-update/reject-post-price-update.component';
+import { ViewImportedTripsFromExcelModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/trips/ImportedTrips/view-imported-trips-from-excel-modal/view-imported-trips-from-excel-modal.component';
+import { ViewImportedPointsFromExcelModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/trips/ImportedTrips/view-imported-points-from-excel-modal/view-imported-points-from-excel-modal.component';
+import { ViewImportedGoodDetailsFromExcelModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/trips/ImportedTrips/view-imported-good-details-from-excel-modal/view-imported-good-details-from-excel-modal.component';
+import { ViewImportVasesFromExcelModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/trips/ImportedTrips/view-import-vases-from-excel-modal/view-import-vases-from-excel-modal.component';
 
 import { PenaltiesListComponent } from './Penalties/penalties-list/penalties-list.component';
 import { CreateOrEditPenaltyModalComponent } from './Penalties/penalties-list/create-or-edit-penalty-modal/create-or-edit-penalty-modal.component';
@@ -560,6 +564,10 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     SrPostPriceUpdateComponent,
     ViewSrPostPriceUpdateModalComponent,
     RejectPostPriceUpdateComponent,
+    ViewImportedTripsFromExcelModalComponent,
+    ViewImportedPointsFromExcelModalComponent,
+    ViewImportedGoodDetailsFromExcelModalComponent,
+    ViewImportVasesFromExcelModalComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },

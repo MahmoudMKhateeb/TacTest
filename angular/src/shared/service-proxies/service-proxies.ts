@@ -21275,6 +21275,574 @@ export class HostSettingsServiceProxy {
 }
 
 @Injectable()
+export class ImportShipmentFromExcelServiceProxy {
+  private http: HttpClient;
+  private baseUrl: string;
+  protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+  constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+    this.http = http;
+    this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : '';
+  }
+
+  /**
+   * @param body (optional)
+   * @return Success
+   */
+  importShipmentFromExcel(body: ImportShipmentFromExcelInput | undefined): Observable<ImportTripDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/ImportShipmentFromExcel/ImportShipmentFromExcel';
+    url_ = url_.replace(/[?&]$/, '');
+
+    const content_ = JSON.stringify(body);
+
+    let options_: any = {
+      body: content_,
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processImportShipmentFromExcel(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processImportShipmentFromExcel(<any>response_);
+            } catch (e) {
+              return <Observable<ImportTripDto[]>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<ImportTripDto[]>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processImportShipmentFromExcel(response: HttpResponseBase): Observable<ImportTripDto[]> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          if (Array.isArray(resultData200)) {
+            result200 = [] as any;
+            for (let item of resultData200) result200!.push(ImportTripDto.fromJS(item));
+          } else {
+            result200 = <any>null;
+          }
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<ImportTripDto[]>(<any>null);
+  }
+
+  /**
+   * @param body (optional)
+   * @return Success
+   */
+  createShipmentsFromDto(body: ImportTripDto[] | null | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/ImportShipmentFromExcel/CreateShipmentsFromDto';
+    url_ = url_.replace(/[?&]$/, '');
+
+    const content_ = JSON.stringify(body);
+
+    let options_: any = {
+      body: content_,
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processCreateShipmentsFromDto(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processCreateShipmentsFromDto(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processCreateShipmentsFromDto(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @param body (optional)
+   * @return Success
+   */
+  importRoutePointsFromExcel(body: ImportPointsFromExcelInput | undefined): Observable<ImportRoutePointDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/ImportShipmentFromExcel/ImportRoutePointsFromExcel';
+    url_ = url_.replace(/[?&]$/, '');
+
+    const content_ = JSON.stringify(body);
+
+    let options_: any = {
+      body: content_,
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processImportRoutePointsFromExcel(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processImportRoutePointsFromExcel(<any>response_);
+            } catch (e) {
+              return <Observable<ImportRoutePointDto[]>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<ImportRoutePointDto[]>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processImportRoutePointsFromExcel(response: HttpResponseBase): Observable<ImportRoutePointDto[]> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          if (Array.isArray(resultData200)) {
+            result200 = [] as any;
+            for (let item of resultData200) result200!.push(ImportRoutePointDto.fromJS(item));
+          } else {
+            result200 = <any>null;
+          }
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<ImportRoutePointDto[]>(<any>null);
+  }
+
+  /**
+   * @param body (optional)
+   * @return Success
+   */
+  createPointsFromDto(body: ImportRoutePointDto[] | null | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/ImportShipmentFromExcel/CreatePointsFromDto';
+    url_ = url_.replace(/[?&]$/, '');
+
+    const content_ = JSON.stringify(body);
+
+    let options_: any = {
+      body: content_,
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processCreatePointsFromDto(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processCreatePointsFromDto(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processCreatePointsFromDto(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @param body (optional)
+   * @return Success
+   */
+  importGoodsDetailsFromExcel(body: ImportGoodsDetailsFromExcelInput | undefined): Observable<ImportGoodsDetailsDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/ImportShipmentFromExcel/ImportGoodsDetailsFromExcel';
+    url_ = url_.replace(/[?&]$/, '');
+
+    const content_ = JSON.stringify(body);
+
+    let options_: any = {
+      body: content_,
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processImportGoodsDetailsFromExcel(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processImportGoodsDetailsFromExcel(<any>response_);
+            } catch (e) {
+              return <Observable<ImportGoodsDetailsDto[]>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<ImportGoodsDetailsDto[]>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processImportGoodsDetailsFromExcel(response: HttpResponseBase): Observable<ImportGoodsDetailsDto[]> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          if (Array.isArray(resultData200)) {
+            result200 = [] as any;
+            for (let item of resultData200) result200!.push(ImportGoodsDetailsDto.fromJS(item));
+          } else {
+            result200 = <any>null;
+          }
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<ImportGoodsDetailsDto[]>(<any>null);
+  }
+
+  /**
+   * @param body (optional)
+   * @return Success
+   */
+  createGoodsDetailsFromDto(body: ImportGoodsDetailsDto[] | null | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/ImportShipmentFromExcel/CreateGoodsDetailsFromDto';
+    url_ = url_.replace(/[?&]$/, '');
+
+    const content_ = JSON.stringify(body);
+
+    let options_: any = {
+      body: content_,
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processCreateGoodsDetailsFromDto(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processCreateGoodsDetailsFromDto(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processCreateGoodsDetailsFromDto(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @param body (optional)
+   * @return Success
+   */
+  importTripVasesFromExcel(body: ImportTripVasesFromExcelInput | undefined): Observable<ImportTripVasesDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/ImportShipmentFromExcel/ImportTripVasesFromExcel';
+    url_ = url_.replace(/[?&]$/, '');
+
+    const content_ = JSON.stringify(body);
+
+    let options_: any = {
+      body: content_,
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processImportTripVasesFromExcel(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processImportTripVasesFromExcel(<any>response_);
+            } catch (e) {
+              return <Observable<ImportTripVasesDto[]>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<ImportTripVasesDto[]>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processImportTripVasesFromExcel(response: HttpResponseBase): Observable<ImportTripVasesDto[]> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          if (Array.isArray(resultData200)) {
+            result200 = [] as any;
+            for (let item of resultData200) result200!.push(ImportTripVasesDto.fromJS(item));
+          } else {
+            result200 = <any>null;
+          }
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<ImportTripVasesDto[]>(<any>null);
+  }
+
+  /**
+   * @param body (optional)
+   * @return Success
+   */
+  createTripVasesFromDto(body: ImportTripVasesDto[] | null | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/ImportShipmentFromExcel/CreateTripVasesFromDto';
+    url_ = url_.replace(/[?&]$/, '');
+
+    const content_ = JSON.stringify(body);
+
+    let options_: any = {
+      body: content_,
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processCreateTripVasesFromDto(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processCreateTripVasesFromDto(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processCreateTripVasesFromDto(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+}
+
+@Injectable()
 export class InstallServiceProxy {
   private http: HttpClient;
   private baseUrl: string;
@@ -72617,7 +73185,8 @@ export class CreateOrEditGoodsDetailDto implements ICreateOrEditGoodsDetailDto {
   goodCategoryId!: number | undefined;
   unitOfMeasureId!: number;
   otherUnitOfMeasureName!: string | undefined;
-  routPointId!: number | undefined;
+  routPointId!: number;
+  exception!: string | undefined;
   id!: number | undefined;
 
   constructor(data?: ICreateOrEditGoodsDetailDto) {
@@ -72641,6 +73210,7 @@ export class CreateOrEditGoodsDetailDto implements ICreateOrEditGoodsDetailDto {
       this.unitOfMeasureId = _data['unitOfMeasureId'];
       this.otherUnitOfMeasureName = _data['otherUnitOfMeasureName'];
       this.routPointId = _data['routPointId'];
+      this.exception = _data['exception'];
       this.id = _data['id'];
     }
   }
@@ -72665,6 +73235,7 @@ export class CreateOrEditGoodsDetailDto implements ICreateOrEditGoodsDetailDto {
     data['unitOfMeasureId'] = this.unitOfMeasureId;
     data['otherUnitOfMeasureName'] = this.otherUnitOfMeasureName;
     data['routPointId'] = this.routPointId;
+    data['exception'] = this.exception;
     data['id'] = this.id;
     return data;
   }
@@ -72681,7 +73252,8 @@ export interface ICreateOrEditGoodsDetailDto {
   goodCategoryId: number | undefined;
   unitOfMeasureId: number;
   otherUnitOfMeasureName: string | undefined;
-  routPointId: number | undefined;
+  routPointId: number;
+  exception: string | undefined;
   id: number | undefined;
 }
 
@@ -74751,6 +75323,531 @@ export class ExternalLoginSettingsDto implements IExternalLoginSettingsDto {
 
 export interface IExternalLoginSettingsDto {
   enabledSocialLoginSettings: string[] | undefined;
+}
+
+export class ImportShipmentFromExcelInput implements IImportShipmentFromExcelInput {
+  tenantId!: number | undefined;
+  binaryObjectId!: string;
+  shippingRequestId!: number;
+
+  constructor(data?: IImportShipmentFromExcelInput) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.tenantId = _data['tenantId'];
+      this.binaryObjectId = _data['binaryObjectId'];
+      this.shippingRequestId = _data['shippingRequestId'];
+    }
+  }
+
+  static fromJS(data: any): ImportShipmentFromExcelInput {
+    data = typeof data === 'object' ? data : {};
+    let result = new ImportShipmentFromExcelInput();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['tenantId'] = this.tenantId;
+    data['binaryObjectId'] = this.binaryObjectId;
+    data['shippingRequestId'] = this.shippingRequestId;
+    return data;
+  }
+}
+
+export interface IImportShipmentFromExcelInput {
+  tenantId: number | undefined;
+  binaryObjectId: string;
+  shippingRequestId: number;
+}
+
+export class ImportTripDto implements IImportTripDto {
+  id!: number;
+  bulkUploadRef!: string | undefined;
+  exception!: string | undefined;
+  shippingRequestId!: number;
+  startTripDate!: moment.Moment | undefined;
+  endTripDate!: moment.Moment | undefined;
+  hasAttachment!: boolean;
+  needsDeliveryNote!: boolean;
+  note!: string | undefined;
+  totalValue!: string | undefined;
+  originalFacility!: string | undefined;
+  originalFacilityId!: number | undefined;
+  destinationFacility!: string | undefined;
+  destinationFacilityId!: number | undefined;
+  sender!: string | undefined;
+  senderId!: number | undefined;
+  receiver!: string | undefined;
+  receiverId!: number | undefined;
+
+  constructor(data?: IImportTripDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.id = _data['id'];
+      this.bulkUploadRef = _data['bulkUploadRef'];
+      this.exception = _data['exception'];
+      this.shippingRequestId = _data['shippingRequestId'];
+      this.startTripDate = _data['startTripDate'] ? moment(_data['startTripDate'].toString()) : <any>undefined;
+      this.endTripDate = _data['endTripDate'] ? moment(_data['endTripDate'].toString()) : <any>undefined;
+      this.hasAttachment = _data['hasAttachment'];
+      this.needsDeliveryNote = _data['needsDeliveryNote'];
+      this.note = _data['note'];
+      this.totalValue = _data['totalValue'];
+      this.originalFacility = _data['originalFacility'];
+      this.originalFacilityId = _data['originalFacilityId'];
+      this.destinationFacility = _data['destinationFacility'];
+      this.destinationFacilityId = _data['destinationFacilityId'];
+      this.sender = _data['sender'];
+      this.senderId = _data['senderId'];
+      this.receiver = _data['receiver'];
+      this.receiverId = _data['receiverId'];
+    }
+  }
+
+  static fromJS(data: any): ImportTripDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new ImportTripDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['id'] = this.id;
+    data['bulkUploadRef'] = this.bulkUploadRef;
+    data['exception'] = this.exception;
+    data['shippingRequestId'] = this.shippingRequestId;
+    data['startTripDate'] = this.startTripDate ? this.startTripDate.toISOString() : <any>undefined;
+    data['endTripDate'] = this.endTripDate ? this.endTripDate.toISOString() : <any>undefined;
+    data['hasAttachment'] = this.hasAttachment;
+    data['needsDeliveryNote'] = this.needsDeliveryNote;
+    data['note'] = this.note;
+    data['totalValue'] = this.totalValue;
+    data['originalFacility'] = this.originalFacility;
+    data['originalFacilityId'] = this.originalFacilityId;
+    data['destinationFacility'] = this.destinationFacility;
+    data['destinationFacilityId'] = this.destinationFacilityId;
+    data['sender'] = this.sender;
+    data['senderId'] = this.senderId;
+    data['receiver'] = this.receiver;
+    data['receiverId'] = this.receiverId;
+    return data;
+  }
+}
+
+export interface IImportTripDto {
+  id: number;
+  bulkUploadRef: string | undefined;
+  exception: string | undefined;
+  shippingRequestId: number;
+  startTripDate: moment.Moment | undefined;
+  endTripDate: moment.Moment | undefined;
+  hasAttachment: boolean;
+  needsDeliveryNote: boolean;
+  note: string | undefined;
+  totalValue: string | undefined;
+  originalFacility: string | undefined;
+  originalFacilityId: number | undefined;
+  destinationFacility: string | undefined;
+  destinationFacilityId: number | undefined;
+  sender: string | undefined;
+  senderId: number | undefined;
+  receiver: string | undefined;
+  receiverId: number | undefined;
+}
+
+export class ImportPointsFromExcelInput implements IImportPointsFromExcelInput {
+  tenantId!: number | undefined;
+  binaryObjectId!: string;
+  shippingRequestId!: number;
+
+  constructor(data?: IImportPointsFromExcelInput) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.tenantId = _data['tenantId'];
+      this.binaryObjectId = _data['binaryObjectId'];
+      this.shippingRequestId = _data['shippingRequestId'];
+    }
+  }
+
+  static fromJS(data: any): ImportPointsFromExcelInput {
+    data = typeof data === 'object' ? data : {};
+    let result = new ImportPointsFromExcelInput();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['tenantId'] = this.tenantId;
+    data['binaryObjectId'] = this.binaryObjectId;
+    data['shippingRequestId'] = this.shippingRequestId;
+    return data;
+  }
+}
+
+export interface IImportPointsFromExcelInput {
+  tenantId: number | undefined;
+  binaryObjectId: string;
+  shippingRequestId: number;
+}
+
+export enum PickingType {
+  Pickup = 1,
+  Dropoff = 2,
+}
+
+export class ImportRoutePointDto implements IImportRoutePointDto {
+  pickingType!: PickingType;
+  pickingTypeDisplayName!: string | undefined;
+  facility!: string | undefined;
+  facilityId!: number;
+  receiver!: string | undefined;
+  receiverId!: number | undefined;
+  code!: string | undefined;
+  exception!: string | undefined;
+  shippingRequestTripId!: number;
+  tripNeedsDeliveryNote!: boolean;
+  bulkUploadReference!: string | undefined;
+  tripReference!: string | undefined;
+  id!: number | undefined;
+
+  constructor(data?: IImportRoutePointDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.pickingType = _data['pickingType'];
+      this.pickingTypeDisplayName = _data['pickingTypeDisplayName'];
+      this.facility = _data['facility'];
+      this.facilityId = _data['facilityId'];
+      this.receiver = _data['receiver'];
+      this.receiverId = _data['receiverId'];
+      this.code = _data['code'];
+      this.exception = _data['exception'];
+      this.shippingRequestTripId = _data['shippingRequestTripId'];
+      this.tripNeedsDeliveryNote = _data['tripNeedsDeliveryNote'];
+      this.bulkUploadReference = _data['bulkUploadReference'];
+      this.tripReference = _data['tripReference'];
+      this.id = _data['id'];
+    }
+  }
+
+  static fromJS(data: any): ImportRoutePointDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new ImportRoutePointDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['pickingType'] = this.pickingType;
+    data['pickingTypeDisplayName'] = this.pickingTypeDisplayName;
+    data['facility'] = this.facility;
+    data['facilityId'] = this.facilityId;
+    data['receiver'] = this.receiver;
+    data['receiverId'] = this.receiverId;
+    data['code'] = this.code;
+    data['exception'] = this.exception;
+    data['shippingRequestTripId'] = this.shippingRequestTripId;
+    data['tripNeedsDeliveryNote'] = this.tripNeedsDeliveryNote;
+    data['bulkUploadReference'] = this.bulkUploadReference;
+    data['tripReference'] = this.tripReference;
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+export interface IImportRoutePointDto {
+  pickingType: PickingType;
+  pickingTypeDisplayName: string | undefined;
+  facility: string | undefined;
+  facilityId: number;
+  receiver: string | undefined;
+  receiverId: number | undefined;
+  code: string | undefined;
+  exception: string | undefined;
+  shippingRequestTripId: number;
+  tripNeedsDeliveryNote: boolean;
+  bulkUploadReference: string | undefined;
+  tripReference: string | undefined;
+  id: number | undefined;
+}
+
+export class ImportGoodsDetailsFromExcelInput implements IImportGoodsDetailsFromExcelInput {
+  tenantId!: number | undefined;
+  binaryObjectId!: string;
+  shippingRequestId!: number;
+
+  constructor(data?: IImportGoodsDetailsFromExcelInput) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.tenantId = _data['tenantId'];
+      this.binaryObjectId = _data['binaryObjectId'];
+      this.shippingRequestId = _data['shippingRequestId'];
+    }
+  }
+
+  static fromJS(data: any): ImportGoodsDetailsFromExcelInput {
+    data = typeof data === 'object' ? data : {};
+    let result = new ImportGoodsDetailsFromExcelInput();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['tenantId'] = this.tenantId;
+    data['binaryObjectId'] = this.binaryObjectId;
+    data['shippingRequestId'] = this.shippingRequestId;
+    return data;
+  }
+}
+
+export interface IImportGoodsDetailsFromExcelInput {
+  tenantId: number | undefined;
+  binaryObjectId: string;
+  shippingRequestId: number;
+}
+
+export class ImportGoodsDetailsDto implements IImportGoodsDetailsDto {
+  tripReference!: string | undefined;
+  shippingRequestTripId!: number;
+  pointReference!: string | undefined;
+  routPointId!: number;
+  description!: string | undefined;
+  amount!: number;
+  weight!: number;
+  dimentions!: string | undefined;
+  isDangerousGood!: boolean;
+  dangerousGoodsCode!: string | undefined;
+  dangerousGoodTypeId!: number | undefined;
+  dangerousGoodsType!: string | undefined;
+  goodCategoryId!: number | undefined;
+  goodsSubCategory!: string | undefined;
+  otherGoodsCategoryName!: string | undefined;
+  unitOfMeasureId!: number;
+  otherUnitOfMeasureName!: string | undefined;
+  unitOfMeasure!: string | undefined;
+  exception!: string | undefined;
+
+  constructor(data?: IImportGoodsDetailsDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.tripReference = _data['tripReference'];
+      this.shippingRequestTripId = _data['shippingRequestTripId'];
+      this.pointReference = _data['pointReference'];
+      this.routPointId = _data['routPointId'];
+      this.description = _data['description'];
+      this.amount = _data['amount'];
+      this.weight = _data['weight'];
+      this.dimentions = _data['dimentions'];
+      this.isDangerousGood = _data['isDangerousGood'];
+      this.dangerousGoodsCode = _data['dangerousGoodsCode'];
+      this.dangerousGoodTypeId = _data['dangerousGoodTypeId'];
+      this.dangerousGoodsType = _data['dangerousGoodsType'];
+      this.goodCategoryId = _data['goodCategoryId'];
+      this.goodsSubCategory = _data['goodsSubCategory'];
+      this.otherGoodsCategoryName = _data['otherGoodsCategoryName'];
+      this.unitOfMeasureId = _data['unitOfMeasureId'];
+      this.otherUnitOfMeasureName = _data['otherUnitOfMeasureName'];
+      this.unitOfMeasure = _data['unitOfMeasure'];
+      this.exception = _data['exception'];
+    }
+  }
+
+  static fromJS(data: any): ImportGoodsDetailsDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new ImportGoodsDetailsDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['tripReference'] = this.tripReference;
+    data['shippingRequestTripId'] = this.shippingRequestTripId;
+    data['pointReference'] = this.pointReference;
+    data['routPointId'] = this.routPointId;
+    data['description'] = this.description;
+    data['amount'] = this.amount;
+    data['weight'] = this.weight;
+    data['dimentions'] = this.dimentions;
+    data['isDangerousGood'] = this.isDangerousGood;
+    data['dangerousGoodsCode'] = this.dangerousGoodsCode;
+    data['dangerousGoodTypeId'] = this.dangerousGoodTypeId;
+    data['dangerousGoodsType'] = this.dangerousGoodsType;
+    data['goodCategoryId'] = this.goodCategoryId;
+    data['goodsSubCategory'] = this.goodsSubCategory;
+    data['otherGoodsCategoryName'] = this.otherGoodsCategoryName;
+    data['unitOfMeasureId'] = this.unitOfMeasureId;
+    data['otherUnitOfMeasureName'] = this.otherUnitOfMeasureName;
+    data['unitOfMeasure'] = this.unitOfMeasure;
+    data['exception'] = this.exception;
+    return data;
+  }
+}
+
+export interface IImportGoodsDetailsDto {
+  tripReference: string | undefined;
+  shippingRequestTripId: number;
+  pointReference: string | undefined;
+  routPointId: number;
+  description: string | undefined;
+  amount: number;
+  weight: number;
+  dimentions: string | undefined;
+  isDangerousGood: boolean;
+  dangerousGoodsCode: string | undefined;
+  dangerousGoodTypeId: number | undefined;
+  dangerousGoodsType: string | undefined;
+  goodCategoryId: number | undefined;
+  goodsSubCategory: string | undefined;
+  otherGoodsCategoryName: string | undefined;
+  unitOfMeasureId: number;
+  otherUnitOfMeasureName: string | undefined;
+  unitOfMeasure: string | undefined;
+  exception: string | undefined;
+}
+
+export class ImportTripVasesFromExcelInput implements IImportTripVasesFromExcelInput {
+  shippingRequestId!: number;
+  tenantId!: number | undefined;
+  binaryObjectId!: string;
+
+  constructor(data?: IImportTripVasesFromExcelInput) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.shippingRequestId = _data['shippingRequestId'];
+      this.tenantId = _data['tenantId'];
+      this.binaryObjectId = _data['binaryObjectId'];
+    }
+  }
+
+  static fromJS(data: any): ImportTripVasesFromExcelInput {
+    data = typeof data === 'object' ? data : {};
+    let result = new ImportTripVasesFromExcelInput();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['shippingRequestId'] = this.shippingRequestId;
+    data['tenantId'] = this.tenantId;
+    data['binaryObjectId'] = this.binaryObjectId;
+    return data;
+  }
+}
+
+export interface IImportTripVasesFromExcelInput {
+  shippingRequestId: number;
+  tenantId: number | undefined;
+  binaryObjectId: string;
+}
+
+export class ImportTripVasesDto implements IImportTripVasesDto {
+  tripReference!: string | undefined;
+  shippingRequestId!: number;
+  shippingRequestTripId!: number;
+  vasName!: string | undefined;
+  shippingRequestVasId!: number;
+  exception!: string | undefined;
+
+  constructor(data?: IImportTripVasesDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.tripReference = _data['tripReference'];
+      this.shippingRequestId = _data['shippingRequestId'];
+      this.shippingRequestTripId = _data['shippingRequestTripId'];
+      this.vasName = _data['vasName'];
+      this.shippingRequestVasId = _data['shippingRequestVasId'];
+      this.exception = _data['exception'];
+    }
+  }
+
+  static fromJS(data: any): ImportTripVasesDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new ImportTripVasesDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['tripReference'] = this.tripReference;
+    data['shippingRequestId'] = this.shippingRequestId;
+    data['shippingRequestTripId'] = this.shippingRequestTripId;
+    data['vasName'] = this.vasName;
+    data['shippingRequestVasId'] = this.shippingRequestVasId;
+    data['exception'] = this.exception;
+    return data;
+  }
+}
+
+export interface IImportTripVasesDto {
+  tripReference: string | undefined;
+  shippingRequestId: number;
+  shippingRequestTripId: number;
+  vasName: string | undefined;
+  shippingRequestVasId: number;
+  exception: string | undefined;
 }
 
 export class InstallDto implements IInstallDto {
@@ -84522,11 +85619,6 @@ export interface IRouteRoutTypeLookupTableDto {
   displayName: string | undefined;
 }
 
-export enum PickingType {
-  Pickup = 1,
-  Dropoff = 2,
-}
-
 export class RoutPointDto implements IRoutPointDto {
   waybillNumber!: number | undefined;
   displayName!: string | undefined;
@@ -90923,6 +92015,7 @@ export interface IGetShippingRequestStatusForEditOutput {
 }
 
 export class ShippingRequestsTripListDto implements IShippingRequestsTripListDto {
+  bulkUploadRef!: string | undefined;
   startTripDate!: moment.Moment;
   endTripDate!: moment.Moment | undefined;
   startWorking!: moment.Moment | undefined;
@@ -90956,6 +92049,7 @@ export class ShippingRequestsTripListDto implements IShippingRequestsTripListDto
 
   init(_data?: any) {
     if (_data) {
+      this.bulkUploadRef = _data['bulkUploadRef'];
       this.startTripDate = _data['startTripDate'] ? moment(_data['startTripDate'].toString()) : <any>undefined;
       this.endTripDate = _data['endTripDate'] ? moment(_data['endTripDate'].toString()) : <any>undefined;
       this.startWorking = _data['startWorking'] ? moment(_data['startWorking'].toString()) : <any>undefined;
@@ -90990,6 +92084,7 @@ export class ShippingRequestsTripListDto implements IShippingRequestsTripListDto
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
+    data['bulkUploadRef'] = this.bulkUploadRef;
     data['startTripDate'] = this.startTripDate ? this.startTripDate.toISOString() : <any>undefined;
     data['endTripDate'] = this.endTripDate ? this.endTripDate.toISOString() : <any>undefined;
     data['startWorking'] = this.startWorking ? this.startWorking.toISOString() : <any>undefined;
@@ -91017,6 +92112,7 @@ export class ShippingRequestsTripListDto implements IShippingRequestsTripListDto
 }
 
 export interface IShippingRequestsTripListDto {
+  bulkUploadRef: string | undefined;
   startTripDate: moment.Moment;
   endTripDate: moment.Moment | undefined;
   startWorking: moment.Moment | undefined;

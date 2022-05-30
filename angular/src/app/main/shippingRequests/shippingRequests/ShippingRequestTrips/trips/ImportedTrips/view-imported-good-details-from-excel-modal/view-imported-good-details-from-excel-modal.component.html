@@ -1,0 +1,155 @@
+<div
+  bsModal
+  #ViewImportedGoodDetailsModal="bs-modal"
+  class="modal fade"
+  role="dialog"
+  aria-labelledby="createOrEditModal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-dialog-centered modal-xl lgWidth2">
+    <div class="modal-content">
+      <div class="modal-header">
+        <p class="modal-title">
+          <span>{{ l('ImportedGoodDetails') }}</span>
+        </p>
+        <div class="card-toolbar"></div>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-lg-6"></div>
+          <div class="col-lg-12 mt-4">
+            <div class="row align-items-center">
+              <!--<Primeng-Datatable-Start>-->
+              <div [busyIf]="primengTableHelper.isLoading" class="table primeng-datatable-container col-12">
+                <p-table
+                  ScrollWidth="100%"
+                  [paginator]="false"
+                  [resizableColumns]="primengTableHelper.resizableColumns"
+                  [responsive]="primengTableHelper.isResponsive"
+                  [scrollable]="true"
+                  [value]="ImportedGoodDetailsList"
+                  rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"
+                >
+                  <ng-template pTemplate="header">
+                    <tr>
+                      <th>{{ l('TripReferenceID') }}</th>
+                      <th>{{ l('GoodsSubCategory') }}</th>
+                      <th>
+                        {{ l('Amount') }}
+                      </th>
+                      <th>
+                        {{ l('Weight') }}
+                      </th>
+                      <th>{{ l('Dimentions') }}</th>
+                      <th>
+                        {{ l('Description') }}
+                      </th>
+                      <th>
+                        {{ l('IsDangerousGood') }}
+                      </th>
+                      <th>
+                        {{ l('DangerousGoodsCode') }}
+                      </th>
+                      <th>
+                        {{ l('DangerousGoodsType') }}
+                      </th>
+                      <th>
+                        {{ l('otherGoodsCategoryName') }}
+                      </th>
+                      <th>
+                        {{ l('UnitOfMeasure') }}
+                      </th>
+                      <th>
+                        {{ l('otherUnitOfMeasure') }}
+                      </th>
+                    </tr>
+                  </ng-template>
+                  <ng-template let-record="$implicit" pTemplate="body" let-i="rowIndex">
+                    <tr [ngClass]="record.exception ? 'alert customDangerAlert' : 'alert customSuccessAlert'">
+                      <td>
+                        <span class="ui-column-title"> {{ l('TripReference') }}</span>
+                        {{ record.tripReference }}
+                      </td>
+                      <td>
+                        <span class="ui-column-title"> {{ l('goodsSubCategory') }}</span>
+                        {{ record.goodsSubCategory }}
+                      </td>
+
+                      <td>
+                        <span class="ui-column-title"> {{ l('amount') }}</span>
+                        {{ record.amount }}
+                      </td>
+                      <td>
+                        <span class="ui-column-title"> {{ l('weight') }}</span>
+                        {{ record.weight }}
+                      </td>
+                      <td>
+                        <span class="ui-column-title"> {{ l('dimentions') }}</span>
+                        {{ record.dimentions }}
+                      </td>
+                      <td>
+                        <span class="ui-column-title"> {{ l('description') }}</span>
+                        {{ record.description }}
+                      </td>
+                      <td>
+                        <span class="ui-column-title"> {{ l('isDangerousGood') }}</span>
+                        {{ record.isDangerousGood ? l('Yes') : l('No') }}
+                      </td>
+                      <td>
+                        <span class="ui-column-title"> {{ l('dangerousGoodsCode') }}</span>
+                        {{ record.dangerousGoodsCode }}
+                      </td>
+                      <td>
+                        <span class="ui-column-title"> {{ l('dangerousGoodsType') }}</span>
+                        {{ record.dangerousGoodsType }}
+                      </td>
+                      <td>
+                        <span class="ui-column-title"> {{ l('otherGoodsCategoryName') }}</span>
+                        {{ record.otherGoodsCategoryName }}
+                      </td>
+                      <td>
+                        <span class="ui-column-title"> {{ l('unitOfMeasure') }}</span>
+                        {{ record.unitOfMeasure }}
+                      </td>
+                      <td>
+                        <span class="ui-column-title"> {{ l('otherUnitOfMeasure') }}</span>
+                        {{ record.otherUnitOfMeasureName }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colspan="12" *ngIf="record.exception">
+                        <span class="required-fileds font-weight-bolder"> {{ l('Exception') }} : </span>
+                        {{ record.exception }}
+                      </td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+              </div>
+              <!--<Primeng-Datatable-End>-->
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <!--begin::Buttons-->
+
+        <button type="button" class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 text-uppercase" (click)="close()">
+          {{ l('Close') }}
+        </button>
+        <button
+          type="submit"
+          (click)="save()"
+          class="btn btn-save font-weight-bold"
+          [disabled]="ImportedGoodDetailsList ? checkImportedList(ImportedGoodDetailsList) : false"
+          [disabled]="saving"
+          [buttonBusy]="saving"
+          [busyText]="l('SavingWithThreeDot')"
+        >
+          <i class="fa fa-save"></i> <span>{{ 'Save' | localize }}</span>
+        </button>
+        <!--end::Buttons-->
+      </div>
+    </div>
+  </div>
+</div>

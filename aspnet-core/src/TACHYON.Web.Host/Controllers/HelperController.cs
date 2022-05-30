@@ -22,8 +22,11 @@ using TACHYON.Dto;
 using TACHYON.Localization.Importing;
 using TACHYON.Polygons;
 using TACHYON.Shipping.Drivers;
+using TACHYON.Shipping.Trips;
 using TACHYON.Shipping.Trips.Accidents;
 using TACHYON.Shipping.Trips.Accidents.Dto;
+using TACHYON.Shipping.Trips.Dto;
+using TACHYON.Shipping.Trips.Importing.Dto;
 using TACHYON.Storage;
 using TACHYON.Tracking;
 using TACHYON.Tracking.Dto;
@@ -48,13 +51,17 @@ namespace TACHYON.Web.Controllers
         private ShippingRequestPointWorkFlowProvider _workFlowProvider;
         private CommonManager _commonManager;
         private IShippingRequestTripAccidentAppService _shippingRequestTripAccidentAppService;
+        private readonly IImportShipmentFromExcelAppService _importShipmentFromExcelAppService;
 
         public HelperController(TrucksAppService trucksAppService,
             ITempFileCacheManager tempFileCacheManager,
             IBinaryObjectManager binaryObjectManager,
             IBackgroundJobManager backgroundJobManager,
             ShippingRequestDriverManager shippingRequestDriverManager,
-            CommonManager commonManager, ShippingRequestPointWorkFlowProvider workFlowProvider, IShippingRequestTripAccidentAppService shippingRequestTripAccidentAppService, CityManager cityManager)
+            CityManager cityManager,
+            CommonManager commonManager,
+            ShippingRequestPointWorkFlowProvider workFlowProvider,
+            IShippingRequestTripAccidentAppService shippingRequestTripAccidentAppService, IImportShipmentFromExcelAppService importShipmentFromExcelAppService)
         {
             _trucksAppService = trucksAppService;
             _tempFileCacheManager = tempFileCacheManager;
@@ -65,6 +72,7 @@ namespace TACHYON.Web.Controllers
             _workFlowProvider = workFlowProvider;
             _shippingRequestTripAccidentAppService = shippingRequestTripAccidentAppService;
             _cityManager = cityManager;
+            _importShipmentFromExcelAppService = importShipmentFromExcelAppService;
         }
 
         public async Task<FileResult> GetTruckPictureByTruckId(long truckId)
@@ -153,6 +161,190 @@ namespace TACHYON.Web.Controllers
                     });
 
                 return Json(new AjaxResponse(new { }));
+            }
+            catch (UserFriendlyException ex)
+            {
+                return Json(new AjaxResponse(new ErrorInfo(ex.Message)));
+            }
+        }
+
+
+        [HttpPost]
+        [AbpMvcAuthorize(AppPermissions.Pages_ShippingRequestTrips_Create)]
+        public async Task<JsonResult> ImportShipmentsFromExcel(long ShippingRequestId)
+        {
+            try
+            {
+                var file = Request.Form.Files.First();
+
+                if (file == null)
+                {
+                    throw new UserFriendlyException(L("File_Empty_Error"));
+                }
+
+                if (file.Length > 1048576 * 100) //100 MB
+                {
+                    throw new UserFriendlyException(L("File_SizeLimit_Error"));
+                }
+
+                byte[] fileBytes;
+                using (var stream = file.OpenReadStream())
+                {
+                    fileBytes = stream.GetAllBytes();
+                }
+
+                var tenantId = AbpSession.TenantId;
+                var fileObject = new BinaryObject(tenantId, fileBytes);
+
+                await BinaryObjectManager.SaveAsync(fileObject);
+                CurrentUnitOfWork.SaveChanges();
+
+                var importShipmentListDto=await  _importShipmentFromExcelAppService.ImportShipmentFromExcel(new ImportShipmentFromExcelInput
+                {
+                    BinaryObjectId = fileObject.Id,
+                    ShippingRequestId = ShippingRequestId,
+                    TenantId = tenantId
+                });
+
+                return Json(new AjaxResponse(new { importShipmentListDto}));
+            }
+            catch (UserFriendlyException ex)
+            {
+                return Json(new AjaxResponse(new ErrorInfo(ex.Message)));
+            }
+        }
+
+
+        [HttpPost]
+        [AbpMvcAuthorize(AppPermissions.Pages_ShippingRequestTrips_Create)]
+        public async Task<JsonResult> ImportPointsFromExcel(long ShippingRequestId)
+        {
+            try
+            {
+                var file = Request.Form.Files.First();
+
+                if (file == null)
+                {
+                    throw new UserFriendlyException(L("File_Empty_Error"));
+                }
+
+                if (file.Length > 1048576 * 100) //100 MB
+                {
+                    throw new UserFriendlyException(L("File_SizeLimit_Error"));
+                }
+
+                byte[] fileBytes;
+                using (var stream = file.OpenReadStream())
+                {
+                    fileBytes = stream.GetAllBytes();
+                }
+
+                var tenantId = AbpSession.TenantId;
+                var fileObject = new BinaryObject(tenantId, fileBytes);
+
+                await BinaryObjectManager.SaveAsync(fileObject);
+                CurrentUnitOfWork.SaveChanges();
+
+                var importPointListDto = await _importShipmentFromExcelAppService.ImportRoutePointsFromExcel(new ImportPointsFromExcelInput
+                {
+                    BinaryObjectId = fileObject.Id,
+                    ShippingRequestId = ShippingRequestId,
+                    TenantId = tenantId
+                });
+
+                return Json(new AjaxResponse(new { importPointListDto }));
+            }
+            catch (UserFriendlyException ex)
+            {
+                return Json(new AjaxResponse(new ErrorInfo(ex.Message)));
+            }
+        }
+
+
+        [HttpPost]
+        [AbpMvcAuthorize(AppPermissions.Pages_ShippingRequestTrips_Create)]
+        public async Task<JsonResult> ImportGoodsDetailsFromExcel(long ShippingRequestId)
+        {
+            try
+            {
+                var file = Request.Form.Files.First();
+
+                if (file == null)
+                {
+                    throw new UserFriendlyException(L("File_Empty_Error"));
+                }
+
+                if (file.Length > 1048576 * 100) //100 MB
+                {
+                    throw new UserFriendlyException(L("File_SizeLimit_Error"));
+                }
+
+                byte[] fileBytes;
+                using (var stream = file.OpenReadStream())
+                {
+                    fileBytes = stream.GetAllBytes();
+                }
+
+                var tenantId = AbpSession.TenantId;
+                var fileObject = new BinaryObject(tenantId, fileBytes);
+
+                await BinaryObjectManager.SaveAsync(fileObject);
+                CurrentUnitOfWork.SaveChanges();
+
+                var importGoodsDetaiListDto = await _importShipmentFromExcelAppService.ImportGoodsDetailsFromExcel(new ImportGoodsDetailsFromExcelInput
+                {
+                    BinaryObjectId = fileObject.Id,
+                    ShippingRequestId = ShippingRequestId,
+                    TenantId = tenantId
+                });
+
+                return Json(new AjaxResponse(new { importGoodsDetaiListDto }));
+            }
+            catch (UserFriendlyException ex)
+            {
+                return Json(new AjaxResponse(new ErrorInfo(ex.Message)));
+            }
+        }
+
+
+        [HttpPost]
+        [AbpMvcAuthorize(AppPermissions.Pages_ShippingRequestTrips_Create)]
+        public async Task<JsonResult> ImportTripVasesFromExcel(long ShippingRequestId)
+        {
+            try
+            {
+                var file = Request.Form.Files.First();
+
+                if (file == null)
+                {
+                    throw new UserFriendlyException(L("File_Empty_Error"));
+                }
+
+                if (file.Length > 1048576 * 100) //100 MB
+                {
+                    throw new UserFriendlyException(L("File_SizeLimit_Error"));
+                }
+
+                byte[] fileBytes;
+                using (var stream = file.OpenReadStream())
+                {
+                    fileBytes = stream.GetAllBytes();
+                }
+
+                var tenantId = AbpSession.TenantId;
+                var fileObject = new BinaryObject(tenantId, fileBytes);
+
+                await BinaryObjectManager.SaveAsync(fileObject);
+                CurrentUnitOfWork.SaveChanges();
+
+                var importTripVasesListDto = await _importShipmentFromExcelAppService.ImportTripVasesFromExcel(new ImportTripVasesFromExcelInput
+                {
+                    BinaryObjectId = fileObject.Id,
+                    ShippingRequestId = ShippingRequestId,
+                    TenantId = tenantId
+                });
+
+                return Json(new AjaxResponse(new { importTripVasesListDto }));
             }
             catch (UserFriendlyException ex)
             {
