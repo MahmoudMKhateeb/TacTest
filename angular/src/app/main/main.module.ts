@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+﻿import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
@@ -285,6 +285,10 @@ import { CreateNewEntityTemplateModalComponent } from './shippingRequests/shippi
 import { CreateOrEditTemplateDropDownButtonComponent } from './shippingRequests/shippingRequests/request-templates/create-or-edit-template-drop-down-button/create-or-edit-template-drop-down-button.component';
 import { LoadEntityTemplateModalComponent } from '@app/main/shippingRequests/shippingRequests/request-templates/load-entity-template-modal/load-entity-template-modal.component';
 
+import { PenaltiesListComponent } from './Penalties/penalties-list/penalties-list.component';
+import { CreateOrEditPenaltyModalComponent } from './Penalties/penalties-list/create-or-edit-penalty-modal/create-or-edit-penalty-modal.component';
+import { RegisterComplaintModalComponent } from './Penalties/register-complaint/register-complaint-modal.component';
+import { ViewComplaintModalComponent } from './Penalties/penalties-list/view-complaint/view-complaint-modal.component';
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
 @NgModule({
@@ -371,6 +375,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ViewCountriesTranslationModalComponent,
     CreateOrEditCountriesTranslationModalComponent,
     PlateTypesComponent,
+    CreateOrEditPenaltyModalComponent,
     ViewPlateTypeModalComponent,
     CreateOrEditPlateTypeModalComponent,
     NationalitiesComponent,
@@ -542,6 +547,9 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     CreateNewEntityTemplateModalComponent,
     CreateOrEditTemplateDropDownButtonComponent,
     LoadEntityTemplateModalComponent,
+    PenaltiesListComponent,
+    RegisterComplaintModalComponent,
+    ViewComplaintModalComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },

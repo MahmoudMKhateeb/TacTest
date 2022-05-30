@@ -1,0 +1,138 @@
+<div
+  bsModal
+  #modal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="modal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <form *ngIf="active" #Form="ngForm" novalidate (ngSubmit)="save()">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            {{ l('Penalty') }}
+          </h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <!--  begin :: Body-->
+            <div class="col-lg-12 mt-4">
+              <label>{{ l('Company') }} <span class="required-fileds">*</span></label>
+              <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': false }">
+                <p-dropdown
+                  #Company="ngModel"
+                  name="Company"
+                  [options]="allCompanies"
+                  [(ngModel)]="form.tenantId"
+                  optionLabel="displayName"
+                  [filter]="true"
+                  filterBy="displayName"
+                  [showClear]="true"
+                  placeholder="{{ l('SelectCompany') }}"
+                  optionValue="id"
+                  [styleClass]="'CompanyInput'"
+                  class="form-control"
+                  required
+                >
+                </p-dropdown>
+              </div>
+            </div>
+            <div class="col-lg-12 mt-4">
+              <label>{{ l('DestinationCompany') }} <span class="required-fileds">*</span></label>
+              <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': false }">
+                <p-dropdown
+                  #Company="ngModel"
+                  name="destinationTenantId"
+                  [options]="allCompanies"
+                  [(ngModel)]="form.destinationTenantId"
+                  optionLabel="displayName"
+                  [filter]="true"
+                  filterBy="displayName"
+                  [showClear]="true"
+                  placeholder="{{ l('SelectDestinationCompany') }}"
+                  optionValue="id"
+                  [styleClass]="'CompanyInput'"
+                  class="form-control"
+                  required
+                >
+                </p-dropdown>
+              </div>
+            </div>
+            <div class="col-lg-12 mt-4">
+              <label>{{ l('PenaltyName') }} <span class="required-fileds">*</span></label>
+              <input
+                #penaltyName="ngModel"
+                type="text"
+                class="form-control"
+                [(ngModel)]="form.penaltyName"
+                name="penaltyName"
+                [class.is-valid]="penaltyName.valid && (penaltyName.dirty || penaltyName.touched)"
+                [class.is-invalid]="penaltyName.invalid && (penaltyName.dirty || penaltyName.touched)"
+                required
+              />
+            </div>
+            <div class="col-lg-12 mt-4">
+              <label>{{ l('PenaltyDescrption') }} <span class="required-fileds">*</span></label>
+              <input
+                #penaltyDescrption="ngModel"
+                type="text"
+                class="form-control"
+                [(ngModel)]="form.penaltyDescrption"
+                name="penaltyDescrption"
+                [class.is-valid]="penaltyDescrption.valid && (penaltyDescrption.dirty || penaltyDescrption.touched)"
+                [class.is-invalid]="penaltyDescrption.invalid && (penaltyDescrption.dirty || penaltyDescrption.touched)"
+              />
+            </div>
+            <div class="col-lg-12 mt-4">
+              <label>{{ l('Amount') }} <span class="required-fileds">*</span></label>
+              <input
+                #totalAmount="ngModel"
+                type="number"
+                class="form-control"
+                [(ngModel)]="form.totalAmount"
+                name="totalAmount"
+                [class.is-valid]="totalAmount.valid && (totalAmount.dirty || totalAmount.touched)"
+                [class.is-invalid]="totalAmount.invalid && (totalAmount.dirty || totalAmount.touched)"
+              />
+            </div>
+            <div class="col-lg-12 mt-4" *ngIf="!feature.isEnabled('App.Carrier')">
+              <label>{{ l('commissionType') }}:</label>
+              <select class="form-control" name="CommissionType" [(ngModel)]="form.commissionType">
+                <option [value]="code.key" *ngFor="let code of priceOfferCommissionType">{{ l(code.value) | localize }}</option>
+              </select>
+            </div>
+            <div class="col-lg-12 mt-4" *ngIf="!feature.isEnabled('App.Carrier')">
+              <label>{{ l('commissionTypeValue') }}:</label>
+              <input
+                type="number"
+                min="1"
+                class="form-control"
+                placeholder="Value"
+                name="commissionPercentageOrAddValue"
+                [(ngModel)]="form.commissionPercentageOrAddValue"
+              />
+            </div>
+            <!--  end :: Body-->
+          </div>
+        </div>
+        <!-- end::Body-->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="close()">{{ 'Cancel' | localize }}</button>
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="!Form.form.valid"
+            [buttonBusy]="saving"
+            [busyText]="l('SavingWithThreeDot' | localize)"
+            (click)="save()"
+          >
+            <i class="fa fa-save"></i> <span>{{ 'Submit' | localize }}</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

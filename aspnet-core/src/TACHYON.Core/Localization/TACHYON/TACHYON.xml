@@ -319,6 +319,7 @@
 		<text name="Clone">Clone</text>
 		<text name="Close">Close</text>
 		<text name="Code">Code</text>
+		<text name="Complaint">Complaint</text>
 		<text name="Collapse">Collapse</text>
 		<text name="Commission">Commission</text>
 		<text name="CommissionAmount">Commission amount</text>
@@ -535,6 +536,7 @@
 		<text name="DeleteShippingRequestStatus">Delete shipping request status</text>
 		<text name="DeleteShippingRequestVas">Delete VAS for the shipping request</text>
 		<text name="DeleteTermAndConditionTranslation">Delete Terms and Conditions translation</text>
+		<text name="DestinationCompany">Destination Company</text>
 		<text name="DeleteTrailer">Delete trailer</text>
 		<text name="DeleteTrailerStatus">Delete trailer status</text>
 		<text name="DeleteTrailerType">Delete trailer type</text>
@@ -588,6 +590,7 @@
 		<text name="DirectRequest">Direct request</text>
 		<text name="DirectShippingRequests">Direct Shipping Requests</text>
 		<text name="Disable">Disable</text>
+		<text name="ExceedMaximumAllowedTime">Exceed Maximum Allowed Time</text>
 		<text name="Disabled">Disabled</text>
 		<text name="DisableRecurringPayments">Don't bill my account automatically</text>
 		<text name="DisplayName">Display Name</text>
@@ -1214,7 +1217,10 @@
 		<text name="NewTermAndCondition">New Terms and Conditions</text>
 		<text name="NewTransportType">New transport type</text>
 		<text name="NewTripAssign">The new trip has assign to you.</text>
-
+		<text name="NotLogged">Not Logged</text>
+		<text name="TruckAndDriverLateAssigned">Truck And Driver Late Assigned</text>
+		<text name="DropsDeliveringAfterTripEndDate">Drops Delivering After Trip End Date</text>
+		<text name="ApplyNotLoggedPenalty">Apply Not Logged Penalty</text>
 		<text name="TrucktDocuments">Truckt Documents</text>
 
 		<text name="CreateNewTruck">Add new truck</text>
@@ -1472,10 +1478,12 @@
 		<text name="PODProofOfDelivery">POD Proof of delivery</text>
 		<text name="PointsLimitReached">Points limit reached</text>
 		<text name="Port">Port</text>
+		<text name="PenaltyName">Penalty Name</text>
 		<text name="Ports">Ports</text>
 		<text name="PortsHeaderInfo">Ports header info</text>
 		<text name="PostedData">Posted data</text>
 		<text name="PostedValue">Posted value</text>
+		<text name="PenaltyDescrption">Penalty Descrption</text>
 		<text name="PostPrice">Confirmed</text>
 		<text name="PrePrice">New</text>
 		<text name="PreviewOffer">Preview offer</text>
@@ -1542,6 +1550,7 @@
 		<text name="RejectShippingRequestNotificationMessage">Shipping Request is canceled</text>
 		<text name="RejectTheTrip">Reject the trip</text>
 		<text name="RejectThisTrip">Reject This Trip!</text>
+		<text name="RegisteraComplaint">Register a Complaint</text>
 		<text name="RemainingDay">Remaining day</text>
 		<text name="RemainingDays">Remaining days</text>
 		<text name="RemainingTime">Remaining time</text>
@@ -2031,6 +2040,7 @@
 		<text name="KG">KG</text>
 		<text name="Trailer">Trailer</text>
 		<text name="TrailerCode">Trailer Code</text>
+		<text name="TripCancelation">Trip Cancelation</text>
 		<text name="Trailers">Trailers</text>
 		<text name="TrailersHeaderInfo">Trailers header info</text>
 		<text name="TrailerStatus">Trailer status</text>
@@ -2274,6 +2284,7 @@
 		<text name="VeryStrong">Very Strong</text>
 		<text name="VeryWeak">Very Weak</text>
 		<text name="View">View</text>
+		<text name="ViewComplaint">View Complaint</text>
 		<text name="ViewCarrierResponse">View carrier response</text>
 		<text name="ViewDetails">View details</text>
 		<text name="ViewDocuments">View documents</text>
@@ -2781,5 +2792,10 @@
 		<text name="TripTemplate">Trip template</text>
 		<text name="UseTemplate">Use template</text>
 		<text name="TripTemplateUsageMsg">A trip template can be used while creating a new trip only</text>
+        	<text name="NotifyShipperBeforApplyDetention">15 minutes left until the Allowed Detention time ends for the Trip {0}. </text>
+	<text name="YouCanNotChangeTheStatusMultipleTimes">You can't change the status multiple time quickly</text>
+	<text name="NotifyShipperWhenApplyDetention">
+		The Allowed Detention time policy in the Facility {0} was violated on the Trip {1} and according to Tachyon’s policies you will be charged {2}. Please Contact Tachyon platform administration for any Inquiries.
+	</text>
 	</texts>
 </localizationDictionary>

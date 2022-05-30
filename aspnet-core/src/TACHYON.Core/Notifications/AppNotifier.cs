@@ -1295,5 +1295,35 @@ namespace TACHYON.Notifications
         }
 
         #endregion
-    }
+
+        public async Task NotifyShipperBeforApplyDetention(int? shipperTenantId, string waybillNumber, int tripId)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+             new LocalizableString(
+                 L("NotifyShipperBeforApplyDetention", waybillNumber),
+                 TACHYONConsts.LocalizationSourceName
+             )
+         );
+            notificationData["tripId"] = tripId;
+            DisableTenancyFilters();
+            var userIds = _userRepo.GetAll().Where(x => x.TenantId == shipperTenantId)
+                .Select(x => new UserIdentifier(x.TenantId, x.Id)).ToArray();
+            await _notificationPublisher.PublishAsync(AppNotificationNames.NotifyShipperBeforApplyDetention,
+                notificationData, userIds: userIds);
+        }
+            public async Task NotifyShipperWhenApplyDetention(int? shipperTenantId, string facilityName, string waybillNumber, decimal amount, int tripId)
+            {
+                var notificationData = new LocalizableMessageNotificationData(
+                 new LocalizableString(
+                     L("NotifyShipperWhenApplyDetention", facilityName, waybillNumber, amount),
+                     TACHYONConsts.LocalizationSourceName
+                 )
+             );
+                notificationData["tripId"] = tripId;
+            var userIds = _userRepo.GetAll().Where(x => x.TenantId == shipperTenantId)
+                            .Select(x => new UserIdentifier(x.TenantId, x.Id)).ToArray();
+            await _notificationPublisher.PublishAsync(AppNotificationNames.NotifyShipperWhenApplyDetention,
+                    notificationData, userIds: userIds);
+            }
+        }
 }

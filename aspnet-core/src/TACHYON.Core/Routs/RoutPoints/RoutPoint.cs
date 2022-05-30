@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using TACHYON.AddressBook;
 using TACHYON.Goods.GoodsDetails;
+using TACHYON.Penalties;
 using TACHYON.Rating;
 using TACHYON.Receivers;
 using TACHYON.Shipping.RoutPoints;
@@ -40,6 +41,7 @@ namespace TACHYON.Routs.RoutPoints
         public ICollection<RoutPointDocument> RoutPointDocuments { get; set; }
         public ICollection<RatingLog> RatingLogs { get; set; }
         public ICollection<RoutPointStatusTransition> RoutPointStatusTransitions { get; set; }
+        public ICollection<Penalty> Penalties { get; set; }
         public string Code { get; set; }
         public RoutePointStatus Status { get; set; }
         public RoutePointCompletedStatus CompletedStatus { get; set; }

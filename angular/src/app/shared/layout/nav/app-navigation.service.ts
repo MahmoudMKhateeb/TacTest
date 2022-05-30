@@ -285,6 +285,8 @@ export class AppNavigationService {
         '',
         [],
         [
+          new AppMenuItem('PenaltiesList', 'Pages.Invoices', '', '/app/main/penalties/view'),
+
           new AppMenuItem(
             'InvoicesList',
             'Pages.Invoices',

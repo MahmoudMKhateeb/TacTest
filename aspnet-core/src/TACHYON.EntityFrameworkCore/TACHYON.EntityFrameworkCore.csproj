@@ -49,6 +49,20 @@
     <Compile Remove="Migrations\20211027080531_addAccidentIdForTripCommentsTbl.Designer.cs" />
     <Compile Remove="Migrations\20211027085020_addTenantRelationForTripCommentsTbl.cs" />
     <Compile Remove="Migrations\20211027085020_addTenantRelationForTripCommentsTbl.Designer.cs" />
+    <Compile Remove="Migrations\20220313084233_add_Penalties_Table.cs" />
+    <Compile Remove="Migrations\20220313084233_add_Penalties_Table.Designer.cs" />
+    <Compile Remove="Migrations\20220327083114_add_Penalty_table.cs" />
+    <Compile Remove="Migrations\20220327083114_add_Penalty_table.Designer.cs" />
+    <Compile Remove="Migrations\20220328072222_add_penalty_commestion.cs" />
+    <Compile Remove="Migrations\20220328072222_add_penalty_commestion.Designer.cs" />
+    <Compile Remove="Migrations\20220328095717_add_PenaltyComplaint.cs" />
+    <Compile Remove="Migrations\20220328095717_add_PenaltyComplaint.Designer.cs" />
+    <Compile Remove="Migrations\20220328184633_add_status_to_PenaltyComplaint.cs" />
+    <Compile Remove="Migrations\20220328184633_add_status_to_PenaltyComplaint.Designer.cs" />
+    <Compile Remove="Migrations\20220328193025_add_destination_tenant_to_Penalty.cs" />
+    <Compile Remove="Migrations\20220328193025_add_destination_tenant_to_Penalty.Designer.cs" />
+    <Compile Remove="Migrations\20220329112432_edit_trip_fk_in_penalty.cs" />
+    <Compile Remove="Migrations\20220329112432_edit_trip_fk_in_penalty.Designer.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.5" />
