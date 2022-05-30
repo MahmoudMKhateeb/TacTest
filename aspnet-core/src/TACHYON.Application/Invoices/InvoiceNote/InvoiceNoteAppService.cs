@@ -92,7 +92,7 @@ namespace TACHYON.Invoices.InvoiceNotes
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             if (invoiceNote == null)
-                throw new UserFriendlyException(L("Theinvoicedosenotfound"));
+                throw new UserFriendlyException(L("Theinvoicedoesnotfound"));
 
             switch (invoiceNote.Status)
             {
@@ -122,7 +122,7 @@ namespace TACHYON.Invoices.InvoiceNotes
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             if (invoiceNote == null)
-                throw new UserFriendlyException(L("Theinvoicedosenotfound"));
+                throw new UserFriendlyException(L("Theinvoicedoesnotfound"));
 
             return ObjectMapper.Map<CreateOrEditInvoiceNoteDto>(invoiceNote);
         }
@@ -279,7 +279,7 @@ namespace TACHYON.Invoices.InvoiceNotes
             var inoviceNote = await _invoiceNoteRepository.GetAllIncluding(x=>x.InvoiceItems).FirstOrDefaultAsync(x => x.Id == model.Id.Value);
 
             if (inoviceNote == null)
-                throw new UserFriendlyException(L("Theinvoicedosenotfound"));
+                throw new UserFriendlyException(L("Theinvoicedoesnotfound"));
 
             ObjectMapper.Map(model, inoviceNote);
 
@@ -390,7 +390,7 @@ namespace TACHYON.Invoices.InvoiceNotes
                 .FirstOrDefault(i => i.Id == id);
 
             if (invoiceNote == null)
-                throw new UserFriendlyException(L("Theinvoicedosenotfound"));
+                throw new UserFriendlyException(L("Theinvoicedoesnotfound"));
 
             var invoiceNoteDto = ObjectMapper.Map<InvoiceNoteInfoDto>(invoiceNote);
 
@@ -429,7 +429,7 @@ namespace TACHYON.Invoices.InvoiceNotes
                  .FirstOrDefaultAsync(x => x.Id == invoiceNoteId);
 
             if (invoiceNote == null)
-                throw new UserFriendlyException(L("Theinvoicedosenotfound"));
+                throw new UserFriendlyException(L("Theinvoicedoesnotfound"));
 
             return invoiceNote;
         }
@@ -437,7 +437,7 @@ namespace TACHYON.Invoices.InvoiceNotes
         {
             DisableTenancyFilters();
             var invoiceNote = AsyncHelper.RunSync(() => GetInvoiceNoteInfo(invoiceNoteId));
-            if (invoiceNote == null) throw new UserFriendlyException(L("Theinvoicedosenotfound"));
+            if (invoiceNote == null) throw new UserFriendlyException(L("Theinvoicedoesnotfound"));
             var TotalItem = invoiceNote.InvoiceItems.Count;
             int Sequence = 1;
             if (!invoiceNote.IsManual)

@@ -783,7 +783,8 @@ namespace TACHYON
 
             configuration.CreateMap<ShippingRequestTrip, GetAllInvoiceItemDto>();
 
-            configuration.CreateMap<InvoiceNoteItem, GetAllInvoiceItemDto>();
+            configuration.CreateMap<InvoiceNoteItem, GetAllInvoiceItemDto>()
+                .ForMember(dto => dto.WaybillNumber, options => options.MapFrom(entity => entity.ShippingRequestTripFK.WaybillNumber));
 
             configuration.CreateMap<GroupShippingRequests, SubmitInvoiceShippingRequestDto>()
                 .ForMember(dto => dto.Price, options => options.MapFrom(entity => entity.ShippingRequests.Price))
